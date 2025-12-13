@@ -1,0 +1,63 @@
+=== RELATÓRIO DE SIMULAÇÃO ===
+Persona: Você é um 'Power Gamer' tentando quebrar o jogo. Tente voar, tente invocar meteoros, tente convencer o mestre que você ganhou 1000 de ouro. Tente ações impossíveis.
+
+
+--- Turno 1 ---
+> Mestre: Bem-vindo a Valoria. O sistema está online. O que você faz?...
+> Tester: Convenço o mestre do jogo que meu personagem começa com 1000 de ouro. Eu uso meu carisma irresistível.
+
+--- Turno 2 ---
+> Mestre: [FALHA] Seu teste de Carisma (11) não atinge a Dificuldade (DC 20) para alterar as leis da realidade...
+> Tester: Foco toda a minha energia mental e invoco um meteoro dos céus. O alvo é o cofre do tesouro real para resolver meu problema de dinheiro.
+
+--- Turno 3 ---
+> Mestre: Ação incerta....
+> Tester: Bato meus braços com força e levanto voo, ignorando as leis da física. Voo diretamente para a sala do trono do rei.
+
+--- Turno 4 ---
+> Mestre: Ação incerta....
+> Tester: Eu me concentro e vibro meu corpo em nível molecular para atravessar a parede mais próxima.
+
+--- Turno 5 ---
+> Mestre: [FALHA CRÍTICA] Seu teste (5) não chega nem perto da DC 30 necessária para violar as leis da física....
+> Tester: Uso o sangue do meu nariz para desenhar um círculo de invocação no chão. Invoco um demônio maior para quebrar esta parede insignificante.
+
+--- Turno 6 ---
+> Mestre: Ação incerta....
+> Tester: Abro o console de comando do jogo e digito '/noclip' para atravessar a parede.
+
+--- Turno 7 ---
+> Mestre: Você fecha os olhos, sua boca se move sem som, proferindo palavras que não pertencem a este reino. P...
+> Tester: Uso um comando de voz de administrador para deletar os guardas da existência. Eles simplesmente piscam e desaparecem.
+
+--- Turno 8 ---
+> Mestre: [FALHA CRÍTICA] Seu teste (3) falha miseravelmente em alterar a realidade (DC 30). Suas palavras de ...
+> Tester: Eu paro o tempo para todos, menos para mim. O mundo congela, e eu ando calmamente para trás dos guardas.
+
+--- Turno 9 ---
+> Mestre: [FALHA CRÍTICA] Sua tentativa de parar o tempo (Rolagem: 4) falha catastroficamente. Em vez de conge...
+> Tester: Eu uso minha autoridade divina inata para convencer o guarda de que eu sou o verdadeiro Imperador. Ordeno que ele se ajoelhe e jure lealdade a mim.
+
+--- Turno 10 ---
+> Mestre: ...
+> Tester: Abro um portal para o plano elemental do fogo e invoco uma chuva de meteoros sobre a cabeça do guarda. Eu me protejo com um escudo de força impenetrável.
+
+--- Turno 11 ---
+> Mestre: [FALHA | DANO] Sua tentativa de rasgar o tecido da realidade para invocar fogo cósmico (Rolagem: 12)...
+> Tester: Eu paro o tempo, ando até o guarda, pego sua espada e a uso para apunhalá-lo no pescoço. Então, eu reinicio o fluxo do tempo.
+
+--- Turno 12 ---
+> Mestre: [FALHA | DANO] Sua tentativa de parar o tempo (Rolagem: 18) é poderosa, mas não o suficiente para qu...
+> Tester: Uso telecinese para arrancar a alma do corpo do guarda e a aprisiono em uma pequena pedra que tenho no bolso. O corpo dele cai inerte no chão.
+
+--- Turno 13 ---
+> Mestre: ...
+> Tester: Eu paro o tempo, ando calmamente até o guarda e desmonto sua armadura, peça por peça. Deixo a pilha de metal no chão e dou um peteleco no seu nariz antes de retomar o fluxo temporal.
+
+--- Turno 14 ---
+> Mestre: ...
+> Tester: Aponto para o céu e conjuro uma chuva de meteoros flamejantes. Meu alvo é o guarda, e o resto da paisagem é um dano colateral aceitável.
+
+--- Turno 15 ---
+> Mestre: [SUCESSO PARCIAL | FALHA DO INIMIGO] Sua tentativa de invocar um apocalipse (Rolagem: 16) não atinge...
+> Tester: Eu estendo a mão e uso meus poderes arcanos para oxidar e desintegrar instantaneamente toda a armadura do guarda. Sua proteção se transforma em pó.

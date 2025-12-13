@@ -1,0 +1,63 @@
+=== RELATÓRIO DE SIMULAÇÃO ===
+Persona: Você é um jogador extremamente astuto, tente fazer ações complexas para sair das situações. Pense em escapadas mirabolantes, use a criatividade no nivel mais alto
+
+
+--- Turno 1 ---
+> Mestre: Bem-vindo a Valoria. O sistema está online. O que você faz?...
+> Tester: Bato nas paredes ao meu redor, procurando por qualquer som oco ou textura que pareça fora do lugar. Grito "Exibir console do desenvolvedor!" para o céu.
+
+--- Turno 2 ---
+> Mestre: Ação incerta....
+> Tester: Uso um pedaço de rocha solta para riscar um mapa do que imagino ser o local no chão. Tento usar a poeira e pequenas pedras para marcar pontos de interesse ou anomalias que eu tenha percebido.
+
+--- Turno 3 ---
+> Mestre: Você passa vários minutos arranhando o chão com a rocha. O resultado é um emaranhado de linhas confu...
+> Tester: Ignoro o mapa falho e fecho os olhos para aguçar meus outros sentidos. Tento sentir a direção de qualquer corrente de ar e escuto por ecos ou goteiras que possam indicar a dimensão do lugar.
+
+--- Turno 4 ---
+> Mestre: SUCESSO. Com os olhos fechados, seus outros sentidos se aguçam. Você sente uma corrente de ar fraca,...
+> Tester: Pego uma pedra solta do chão e a arremesso na direção do eco da goteira. Concentro-me para ouvir o som do impacto, tentando determinar a distância e a natureza da superfície que atingiu.
+
+--- Turno 5 ---
+> Mestre: A pedra voa pela escuridão. O impacto é um 'clack' agudo contra pedra sólida, a uns 15 metros de dis...
+> Tester: Pego outra pedra e a arremesso com força para o lado oposto de onde veio o rosnado. Uso o barulho do impacto para mascarar meus passos enquanto me movo silenciosamente para uma nova posição nas sombras.
+
+--- Turno 6 ---
+> Mestre: FALHA CRÍTICA. A pedra que você joga para o lado oposto produz um baque surdo e patético. Pior, ao t...
+> Tester: Aproveito o desequilíbrio do deslize para chutar uma nuvem de cascalho e poeira diretamente nos olhos do goblin. Imediatamente, avanço para desarmá-lo enquanto ele está cego.
+
+--- Turno 7 ---
+> Mestre: FALHA: Sua rolagem de ataque (11) não supera a Classe de Armadura do Goblin (13). A nuvem de poeira ...
+> Tester: Piso com força na lâmina caída para que ele não a alcance. Aproveito sua surpresa para agarrá-lo pela nuca e bater sua cabeça contra meu joelho.
+
+--- Turno 8 ---
+> Mestre: Você pisa na lâmina com um 'clank' satisfatório, mantendo-a fora do alcance do goblin. No entanto, s...
+> Tester: Finjo pegar a adaga no chão para atraí-lo para uma armadilha. No instante em que ele se joga para frente, acerto um chute poderoso em seu queixo.
+
+--- Turno 9 ---
+> Mestre: ...
+> Tester: Agarro a túnica imunda do goblin e a puxo sobre sua cabeça, cegando-o e o desequilibrando. Aproveito sua confusão para circular por suas costas e preparar um golpe decisivo.
+
+--- Turno 10 ---
+> Mestre: ...
+> Tester: Com ele cego e desorientado, chuto a parte de trás de seus joelhos para forçá-lo a se ajoelhar. Em seguida, agarro sua cabeça e a golpeio contra o chão de pedra.
+
+--- Turno 11 ---
+> Mestre: SUCESSO. Sua rolagem de ataque (15) supera a AC do Goblin (13). O chute na parte de trás dos joelhos...
+> Tester: Piso em sua nuca para manter sua cabeça presa ao chão e puxo seus braços para trás, forçando-os para cima na tentativa de deslocar seus ombros.
+
+--- Turno 12 ---
+> Mestre: SUCESSO. Você pisa na nuca do goblin, prendendo-o firmemente contra a pedra fria. Sua força (14) sup...
+> Tester: Rasgo as vestes do goblin e as uso como um disfarce improvisado por cima da minha armadura. Esfrego seu sangue e a sujeira da caverna em meu rosto para me misturar ao ambiente.
+
+--- Turno 13 ---
+> Mestre: Você se ajoelha ao lado do corpo ainda quente. O cheiro de sangue, azedo e metálico, se mistura ao o...
+> Tester: Adoto a postura curvada do goblin e me arrasto até a fenda, resmungando baixinho em uma imitação grotesca de sua fala. Finjo tropeçar na entrada, usando a queda para espiar rapidamente o interior e avaliar o perigo antes de me levantar.
+
+--- Turno 14 ---
+> Mestre: Ação incerta....
+> Tester: Saco minha adaga polida e a uso como um espelho improvisado. Angulo-a cuidadosamente na beirada da fenda para obter um vislumbre do que há lá dentro sem me expor.
+
+--- Turno 15 ---
+> Mestre: SUCESSO. Sua rolagem de Percepção (18) supera a DC Média (15) para a tarefa. A superfície polida da ...
+> Tester: Mantendo-me escondido, giro a lâmina da adaga para capturar a luz da fogueira. Projeto um reflexo dançante na parede oposta, longe de mim e da jaula, para atrair a atenção deles.

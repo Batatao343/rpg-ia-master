@@ -1,0 +1,29 @@
+=== LIVRO DE REGRAS DO SISTEMA ===
+
+CAPÍTULO 1: AÇÕES BÁSICAS
+- Ataque: O jogador rola um d20. Se o resultado for maior que a Classe de Armadura (AC) do inimigo, ele acerta.
+- Testes de Perícia: Para realizar uma ação difícil (escalar, convencer, esconder), o mestre define uma Dificuldade (DC).
+  * Fácil: DC 10
+  * Médio: DC 15
+  * Difícil: DC 20
+  * Impossível: DC 30
+- Movimento: Um personagem humano pode andar cerca de 9 metros por turno. Não é possível atravessar paredes ou voar sem magia.
+
+CAPÍTULO 2: LIMITES DE MAGIA E MANA
+- Conjuração: Para lançar um feitiço, o jogador precisa de Mana e conhecimento.
+- Custo de Mana:
+  * Truques (Luz, Mãos Mágicas): 0 Mana.
+  * Magias de Nível 1 (Mísseis Mágicos, Cura Leve): 2 Mana.
+  * Magias de Nível 2 (Invisibilidade, Teia): 5 Mana.
+- Restrição: Guerreiros e Ladinos NÃO usam magia, a menos que tenham um item mágico específico.
+
+CAPÍTULO 3: SAÚDE E MORTE
+- Dano: Se o HP chegar a 0, o personagem cai inconsciente.
+- Descanso Curto: Recupera 1d8 de HP, mas gasta 1 hora de tempo no jogo.
+- Descanso Longo: Recupera todo o HP, Mana e Stamina, mas requer 8 horas de sono seguro.
+
+CAPÍTULO 4: ESTADOS E CONDIÇÕES
+- Envenenado: Tem desvantagem em ataques (rola dois dados e pega o pior).
+- Invisível: Tem vantagem em ataques, mas volta a ser visível se atacar ou lançar magia.
+- Exaustão: Se não dormir por 24h, perde velocidade e tem desvantagem em tudo.
+- Cego: Tem desvantagem em ataques contra os inimigos e eles tem vantagem para atacar você

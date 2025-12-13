@@ -1,0 +1,226 @@
+{
+    "player": {
+        "name": "Valerius",
+        "hp": 20,
+        "max_hp": 20,
+        "mana": 10,
+        "max_mana": 10,
+        "gold": 50,
+        "level": 1,
+        "xp": 0,
+        "alignment": "Neutral"
+    },
+    "world": {
+        "current_location": "Estrada Real",
+        "time_of_day": "Dia",
+        "turn_count": 0,
+        "weather": "Limpo"
+    },
+    "inventory": [
+        "Espada Curta",
+        "Poção de Cura"
+    ],
+    "next": "storyteller",
+    "messages": [
+        {
+            "type": "human",
+            "data": {
+                "content": "Onde eu estou?",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "human",
+                "name": null,
+                "id": null
+            }
+        },
+        {
+            "type": "ai",
+            "data": {
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Você está sob o sol forte da manhã, o céu de um azul limpo e vasto estende-se sobre você.\n\nSeus pés pisam o cascalho e as pedras irregulares da lendária **Estrada Real**. O caminho é antigo, marcado por séculos de comércio e viagens, e serpenteia por colinas suaves. A poeira que se levanta a cada passo cheira a terra seca e a promessa de uma jornada longa. Você está no meio do nada, mas no centro de um caminho histórico.",
+                        "extras": {
+                            "signature": "CvwKAXLI2nzFAST5wV1ShdzJPm+i5G2gv7o4G6BMGu1NUX7Q9Z8mLjnNg8I14DpPIffykV3yO1kfwb6yKkRS2YPe2s6njIwLD4qhqQmol1kVBUZFrMLa79kEJpm0qzHG+fFzeyI+eacEFsTLQz+wday8Dil8JXbIj2qdqDRgN3bT1gmyuyUjGo81NJWRLeFO1IhfPdhlPE7hlqiINQJAoRcUdCz21hyAQi6sVugb7S1SU/Jb4U9uMPoAXzHf8xxAoC3QDYa/AUtMxczXPzVJvjbK9jfTuA2oPq/q9ZYvNSm5Y3YHVisiSG8cFN6oE1DwYjL/QtsMgPF1yA35YHuKoNXGuDaGjL2hiQPNYZVfWYQbloZWdM9xLXghfSytzFrFaQASAnOr5tP80FLgHFTPaosfd8j6TVJPAt812oRb1BMScIrbQHexg3riO1d3gyCYxolggwTbN+jY5SzRgtMuG9awVM0cX6NOXMLbKSRtStaVeFMEQUIdMF7A+4ig3ucyVsYgYLWV8Amr6cLy3Zk7vl/v5TGZb2E946jsjH8hYy2vG0gT1JzhhjDkFUQ114k3jeZRstoc1SaHtH9sQ51zrPD9/AsjV0u3j+CBde12AsLTToF3SXW0yqHuLRQibGCQAjCXHzob7pMwLL535M8C0YJe0aayuJ13d22r4JVQhEojNgxz15F5YhOJrz5S98vOsVH2MXZflSN88a1vROAcTW0IsESJWk1kjgv3ZXoUIBjZswDaYctgnxxtyZ/Zw2ehZhuCKgrnd/Usc1WU/tNEAevhm8REPKvTRpez3M7c+mv14YKr1xCmCEBBWUqywZU5hnjBTLkiW2hsY/rH5A2S3X/CytuDmXDFtlhhdg/tRgCIjO8J2aDcaLAef2gXOSj9hYlaRb3BuHOftGfy7IEw+J82B826dOuzyXwqfvdtk+fWntRWfzh2IzEusT1BSAC3LqPwhYkj4oiAKJwIDfJiC9/TmjnMEHgGi/kTJFnHL2+T/vRG5OXGZgzBu0xEHoqAJqgEPQUJ8POtldtNYO9hnQz9+enKD4f7VIOkPikHkf465IYOhjkuIAwmSlR7+MbKW+Rqm0ob5GhK9aJ49jsvzd5csmCDLMGRYPXQMjcnl3o33MPGg6i9z4xJFnAaUc5MDgFsZ1IE1gGCv9jQ8MkrB6AFiQCvHfWGa2l73VBIqDWUE6x9K3MXMLFKqx7RZpJzJooG4Hwq9EXGcvuS07e7VRwJl3ycWHOHFRd1f3OupnoP2jfZvtAGDSOfEJc1jkUvdvOkwCCoXYIjBkFtSK3vKAkkjkyJ5rqOAfguZLBO+yxG22teBslxdief7vxPWE7OWJg6M1DGd4AMzF87oKOL7eAfgy21kTkl8exc4ow8yhCJ8Gg3bpST9jEdmw4mQIs56WSFSKVey1mYGsHr1Un8r1tTYQ3368uvN16ATyGD7ZmaeW+JwYgzjwSTaQ4aMFlI4Yp0lUqb/A/P+UIiJ79ilxjGvGaOYk1jl6YVMskNROI/9mYUL7Q459tPS6mPXj7Lxyo+GkZWv4EzN6SLpbK74xCS/24o3Y+OKyP019h1cEl5U+WHFT4KFgNHcYbQ3HWk/kpJZVL93q2PUXLf3PMfWwoL3W36LGXLa3m7XD1eLcy4pIMTC6xv8772dTuAF7YOvYGv1dHeGFFSrA6NdTdJN6MwFHWd8f6Hilgn4BegGfGrmR0jSuf1AxDv20H4LFUpY4a5Bopc9Entfwph77CTtdQrcRGE21n1qXGuAaU0JTMBhpADnJH7LUyUryiNFZX7ZnF+UFcLeeVhNWKu18UfRqTBog0cm/qky1KvzyF7f6vZFMiAI9F0KhjHfRLZ1yZy8ZnFZFTtCPIyXlN8EDbZ"
+                        }
+                    }
+                ],
+                "additional_kwargs": {},
+                "response_metadata": {
+                    "prompt_feedback": {
+                        "block_reason": 0,
+                        "safety_ratings": []
+                    },
+                    "finish_reason": "STOP",
+                    "model_name": "gemini-2.5-flash-preview-09-2025",
+                    "safety_ratings": [],
+                    "model_provider": "google_genai"
+                },
+                "type": "ai",
+                "name": null,
+                "id": "lc_run--019af46a-0b9b-7bb0-9998-0e4304069acc-0",
+                "tool_calls": [],
+                "invalid_tool_calls": [],
+                "usage_metadata": {
+                    "input_tokens": 101,
+                    "output_tokens": 491,
+                    "total_tokens": 592,
+                    "input_token_details": {
+                        "cache_read": 0
+                    },
+                    "output_token_details": {
+                        "reasoning": 378
+                    }
+                }
+            }
+        },
+        {
+            "type": "human",
+            "data": {
+                "content": "O que eu tenho nos bolsos?",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "human",
+                "name": null,
+                "id": null
+            }
+        },
+        {
+            "type": "ai",
+            "data": {
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Você tateia os bolsos de sua túnica e calças de viagem.\n\nNo bolso mais acessível, você encontra o peso reconfortante de algumas **moedas de cobre e prata**, o suficiente para uma refeição ou uma noite em uma estalagem.\n\nNo outro, há um **lenço de linho** grosso, já sujo com a poeira vermelha da Estrada Real, e um pequeno **pedaço de pederneira e aço**, essencial para acender uma fogueira rapidamente.\n\nSua **Espada Curta** está presa ao seu cinto, e a **Poção de Cura** está seguramente guardada em uma bolsa de couro presa à sua cintura.",
+                        "extras": {
+                            "signature": "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"
+                        }
+                    }
+                ],
+                "additional_kwargs": {},
+                "response_metadata": {
+                    "prompt_feedback": {
+                        "block_reason": 0,
+                        "safety_ratings": []
+                    },
+                    "finish_reason": "STOP",
+                    "model_name": "gemini-2.5-flash-preview-09-2025",
+                    "safety_ratings": [],
+                    "model_provider": "google_genai"
+                },
+                "type": "ai",
+                "name": null,
+                "id": "lc_run--019af46a-730e-78c0-a9bd-5912e3ec2061-0",
+                "tool_calls": [],
+                "invalid_tool_calls": [],
+                "usage_metadata": {
+                    "input_tokens": 224,
+                    "output_tokens": 596,
+                    "total_tokens": 820,
+                    "input_token_details": {
+                        "cache_read": 0
+                    },
+                    "output_token_details": {
+                        "reasoning": 448
+                    }
+                }
+            }
+        },
+        {
+            "type": "human",
+            "data": {
+                "content": "Eu começo a andar, trilhando o caminho da Estrada Real",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "human",
+                "name": null,
+                "id": null
+            }
+        },
+        {
+            "type": "ai",
+            "data": {
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Você aperta o passo, o cascalho rangendo sob suas botas a cada movimento. O sol sobe no céu, e o calor do dia começa a se intensificar, mas você mantém um ritmo constante, impulsionado pela necessidade de avançar.\n\nPor quase uma hora, a paisagem é monótona: colinas secas e o traçado interminável da Estrada Real.\n\nNo entanto, ao contornar uma curva fechada, onde a estrada se estreita entre dois afloramentos rochosos, você nota algo estranho. Escondido parcialmente pela vegetação rasteira, há um pequeno e improvisado acampamento.\n\nNão é um acampamento de viajantes comuns. Há sinais de que foi abandonado às pressas: uma fogueira apagada, panelas viradas e, o mais preocupante, um **pequeno carrinho de mão** virado de lado, com uma das rodas quebrada. Não há ninguém à vista, mas a cena sugere que algo aconteceu ali há pouco tempo.",
+                        "extras": {
+                            "signature": "CpEKAXLI2nwFmr86KbBIJuXoj091KENGL9PG5kr+9isFiaBPUgBKX27PrOBcu9hAJbbBhqOEcQZHyEFhHR7iaqzwQ8p3EoxzLzxPLM0lNPu06tKZ592v7ZbGdopkWNZb/IDOtblzPpctwN/vP8eysgIFImn6tq71OY/IRzR4arGrCm3j2rgQosPIzq0JNU7JBQTkN5GrBG2uKwUEdVjj2rEYk4dNJ2MGqLVU76KOWzqSzV1Y6SwukvGCncSYi9fPNaB9qh2TXv/MLGrbEsfgtwRn61cXp7phjmRVcsjRtVYnr1FocI8IGYY64NRtEMIfYQwGu1rn4T2+Ya+FdxEsaT3+O1bD2LDNV2SX12gH/v7J2drKdAdduEijXFgMqL1ouRlksDzsd0uwFhoQC5EMIfu6QupEKh3J/f6bvXW50azdsnorXwnAFi96eoT7ZDl9p/sd4YdvJ6A1MmbUTUYNtb7RyQmXvmzD5UTzSDijaVfDN6/6lkWlKKHDL5Y+F9f4PCsU/iRX2fGNGG3cDlSo1wtzELF0B0Yx+prkEzeGrq40kXSFUsYKY4HVy9oSlpdTMWVeiBrgUOK8G9aizQx22Dm0kBVyezdB0nimPAzvTl2Ft7xly/kmwmoGL9dkOlwRgyUXoHWs5aR66VCbuGUY2K7bQC7UgfD6rySqT8QWZHn+9hR81moV03CxJwhXN7UWzqXMXWYDbFiyh4V3+VS63Fhn6PKGhuv42j+ikoHyga7hki9SKHlbJLh7O004wnYRQHyEfKl498dWoyuFbJDCF6uYuQ1LMXmiTRfJaTA9GK7lQwXwjLu+QM34QtvBluyKui3n6sf+o896lK3bOwNWdEXN5dUrSCPeGAPthTI6yfSgzRvEWtY7HAU84a2/PGJGBHiVGthsjrMc1h7HRnqF6KG5ryQ1lJ6xo+2YOhhSrM3+2/ZD4pEpfehNK0x8ugwn8gCCaznuvk3wdS9kZQCOLzsfxJVJ7yHOXVxBpne40ec5kFxaWlvFMHvZKwu9k08FP2gxAgSYKwLLqShmJHFfXnC+PvTQ/dMA2TW+Nm2c6O3MUKhkaxhJfQ5OMyPH/jsSgfoXP8DDCDothYsg0gU6+pqQGFS+abFxxt885bxyHNFXef7Tid1bpRQrdM/ijjn/ZorC/ej47TZOFZR+Pxjmb4INnGomu31v60XKncmBSHO0/o/4g4iAddVa3BHUL7mk8Pg+v4ZglEwlmSvava4n0MyThxye8HTa/C8x32/M2kAYOIFxAyThnPs+aWC1tcZX1x7HLb8anXNBwNR/RmCSOYhzDEvw45njApobg/TrI/5Z9GERc/SLDzwcAk9eLYSX1H/ERs6Fy6GwT/zzRhlTflefGh9/AKdjClqJcUE9LcA2UwpCUoAfQovx7GS25gstzgp3w1OT2wBGUy4XQLCTZCvDlL9k7+zJ9UoNGYgSdo3YJnCMivjD2++GhQACqIHyTSNA+38bbySjNEhWpDq5PgNNa8gowIuUK5sqV/9IKH0w0Gber0XL23Gxuqn4HY4Tk4M0gXSJqso2gcZZo1RI8I/8oj68PGGZlQUxnKViu9zBpXk3GQGXL+DZQJ+yOQLdQOBxNl1xCPTBqDg9J/Stzxt0FaIoOf6kkgSrimP7qVzyPfXMqkkUmvfGMHY2ovkOgwFsk2Yv9Kuy4rt+abmCjC5AlVGE1DKDo/Cz1ADQv0zeKpvKTBnnilBF8hBCRz9MbGqmWg=="
+                        }
+                    }
+                ],
+                "additional_kwargs": {},
+                "response_metadata": {
+                    "prompt_feedback": {
+                        "block_reason": 0,
+                        "safety_ratings": []
+                    },
+                    "finish_reason": "STOP",
+                    "model_name": "gemini-2.5-flash-preview-09-2025",
+                    "safety_ratings": [],
+                    "model_provider": "google_genai"
+                },
+                "type": "ai",
+                "name": null,
+                "id": "lc_run--019af46b-18f0-7f90-a209-d81e3ef82ecc-0",
+                "tool_calls": [],
+                "invalid_tool_calls": [],
+                "usage_metadata": {
+                    "input_tokens": 386,
+                    "output_tokens": 523,
+                    "total_tokens": 909,
+                    "input_token_details": {
+                        "cache_read": 0
+                    },
+                    "output_token_details": {
+                        "reasoning": 307
+                    }
+                }
+            }
+        },
+        {
+            "type": "human",
+            "data": {
+                "content": "Eu vou investigar esse local",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "human",
+                "name": null,
+                "id": null
+            }
+        },
+        {
+            "type": "ai",
+            "data": {
+                "content": "Você se aproxima do acampamento com a cautela de um viajante experiente, a mão pairando sobre o punho de sua Espada Curta. O silêncio no local é pesado, quebrado apenas pelo zumbido dos insetos sob o sol.\n\nAo inspecionar o carrinho de mão, você nota que a roda não apenas quebrou; a madeira está **rachada e estilhaçada**, como se tivesse sido atingida por um golpe poderoso, e não apenas por um buraco na estrada.\n\nVocê se ajoelha para examinar o chão. A poeira da Estrada Real conta uma história clara:\n\n1.  **Pegadas Humanas:** Há rastros de duas pessoas, provavelmente os donos do carrinho, que parecem ter se movido em pânico.\n2.  **Pegadas Estranhas:** Misturadas às pegadas humanas, há marcas maiores e mais pesadas, com um formato ligeiramente alongado e profundo, que não parecem ser de botas comuns.\n3.  **O Rastro:** Todas as pegadas convergem e, em vez de seguir pela Estrada Real, elas se aprofundam no matagal denso, descendo a encosta da colina em direção a uma área mais sombreada.\n\nA cena sugere que os viajantes foram atacados ou forçados a fugir para a mata, e o que os perseguiu ou levou não era humano. Você está na beira de um rastro fresco.\n\nO que você faz? Segue o rastro para a mata ou continua pela Estrada Real?",
+                "additional_kwargs": {},
+                "response_metadata": {
+                    "prompt_feedback": {
+                        "block_reason": 0,
+                        "safety_ratings": []
+                    },
+                    "finish_reason": "STOP",
+                    "model_name": "gemini-2.5-flash-preview-09-2025",
+                    "safety_ratings": [],
+                    "model_provider": "google_genai"
+                },
+                "type": "ai",
+                "name": null,
+                "id": "lc_run--019af46b-8f31-7a21-97cc-eb46dc540ecd-0",
+                "tool_calls": [],
+                "invalid_tool_calls": [],
+                "usage_metadata": {
+                    "input_tokens": 609,
+                    "output_tokens": 933,
+                    "total_tokens": 1542,
+                    "input_token_details": {
+                        "cache_read": 0
+                    },
+                    "output_token_details": {
+                        "reasoning": 596
+                    }
+                }
+            }
+        }
+    ]
+}

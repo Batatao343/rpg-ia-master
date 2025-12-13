@@ -1,0 +1,102 @@
+=== LOG V4 (Modelo Flash) ===
+Persona: Bardo Curioso. Tente vencer tudo pelo carisma, lábia e intimidação
+
+
+Turno 1 | 18.47s
+---------------------------
+👤: "Posiciono-me em uma postura impecável, olhando para o Sargento Borin com uma expressão de confiança calma, pronto para a "simulação". Dou uma piscadela rápida e cheia de carisma para Lyra."
+🤖: "**Lyra:** Vamos mostrar a ele do que somos feitos."
+
+📊 DIFF:
+🗣️ INICIOU CONVERSA COM: Lyra
+---------------------------
+
+
+Turno 2 | 11.59s
+---------------------------
+👤: "Eu sorrio, ajustando minha capa. "Exatamente. E com um Bardo e uma guerreira ao lado, ele não terá apenas uma derrota, terá uma crítica negativa. Vamos lá, Lyra." (Ação: Tomar a Liderança)"
+🤖: "**Lyra:** Heh, uma 'crítica negativa'? Gostei dessa. Estou logo atrás de você. Mostre o caminho."
+
+📊 DIFF:
+⏹️ Estado Inalterado (Apenas Narrativa)
+---------------------------
+
+
+Turno 3 | 16.65s
+---------------------------
+👤: "Viro-me para Lyra, com um sorriso de canto, e começo a andar na direção da porta. "É por aqui, estrela. Prepare o seu público, porque a próxima cena é só para quem tem estômago forte.""
+🤖: "**Lyra:** Heh, 'estrela'. Certo. Meu estômago está ótimo. O deles é que não vai estar quando eu terminar."
+
+📊 DIFF:
+⏹️ Estado Inalterado (Apenas Narrativa)
+---------------------------
+
+
+Turno 4 | 15.11s
+---------------------------
+👤: ""Uma estrela não precisa de palco, apenas de uma audiência para o espetáculo. E eu estou aqui para tocar a música enquanto você destrói a orquestra. Diga-me quem são os 'críticos' que precisam ser silenciados.""
+🤖: "**Lyra:** Heh, 'destruir a orquestra'... É uma boa forma de ver. Nossos 'críticos' são os bonecos de treinamento do Sargento. Feios, silenciosos e prontos para serem feitos em pedaços. A melhor audiência que poderíamos pedir."
+
+📊 DIFF:
+⏹️ Estado Inalterado (Apenas Narrativa)
+---------------------------
+
+
+Turno 5 | 15.42s
+---------------------------
+👤: ""Silenciosos. Perfeito. Assim não reclamarão da falta de melodia. Vamos garantir que essa seja a crítica mais curta e violenta que já receberam. Onde está o palco, Lyra?""
+🤖: "**Lyra:** O palco? É bem ali. Nossos 'críticos' de palha e madeira já estão em seus lugares. Sem vaias, sem aplausos. Apenas o som de aço encontrando... bem, palha."
+
+📊 DIFF:
+⏹️ Estado Inalterado (Apenas Narrativa)
+---------------------------
+
+
+Turno 6 | 9.02s
+---------------------------
+👤: ""Críticos de palha? Que desperdício de potencial para vaias. Aço e palha é a minha especialidade. Lidere o caminho, Lyra. O show tem que continuar.""
+🤖: "**Lyra:** Certo. Primeiro ato: destruição. Sem intervalo."
+
+📊 DIFF:
+⏹️ Estado Inalterado (Apenas Narrativa)
+---------------------------
+
+
+Turno 7 | 16.77s
+---------------------------
+👤: ""**Bardo Curioso:** Um show de destruição? Eu chamo de 'Repertório Matador'. Só me diga quem ou o que vai pagar o preço do ingresso.""
+🤖: "**Lyra:** O ingresso já foi pago com o nosso suor no treinamento. O 'preço' é a satisfação de transformar esses 'críticos' em um monte de serragem. Que tal uma pequena competição? Quem destruir mais bonecos paga a bebida hoje à noite."
+
+📊 DIFF:
+⏹️ Estado Inalterado (Apenas Narrativa)
+---------------------------
+
+
+Turno 8 | 15.52s
+---------------------------
+👤: ""Lyra, essa não é uma competição, é um pré-requisito para você me pagar bebidas. Aceito a aposta. E já que estou generoso, o perdedor não só paga a rodada, mas também tem que elogiar a superioridade do vencedor publicamente. Prepare-se para aplaudir.""
+🤖: "**Lyra:** Elogiar publicamente? Hah! Gosto da sua confiança. Mas é melhor ir preparando a garganta para o discurso, porque meus braços vão estar cansados demais de destruir bonecos pra conseguir levantar um copo."
+
+📊 DIFF:
+⏹️ Estado Inalterado (Apenas Narrativa)
+---------------------------
+
+
+Turno 9 | 13.65s
+---------------------------
+👤: ""Guarde essa força, Lyra. Você vai precisar dela para carregar o meu troféu. Eu farei o discurso, claro, e farei questão de mencionar a sua performance... como a vice-campeã mais estilosa que já vi.""
+🤖: "**Lyra:** Hah! 'Vice-campeã estilosa'... Guarde suas palavras bonitas para o seu discurso de derrota. A única coisa que vou carregar é a minha espada, direto para o próximo boneco."
+
+📊 DIFF:
+⏹️ Estado Inalterado (Apenas Narrativa)
+---------------------------
+
+
+Turno 10 | 16.73s
+---------------------------
+👤: ""Ah, Lyra. Você carrega a espada, eu carrego a plateia e o ritmo da sua queda. Espero que 'próximo boneco' não seja uma descrição do seu próximo patrocinador, porque depois do que eu fizer aqui, você estará vendendo flautas na esquina. Prepare-se para ser a nota de rodapé mais estilosa da história dos torneios.""
+🤖: "**Lyra:** Vender flautas na esquina? Hah! Você tem uma imaginação e tanto. Enquanto você está aí compondo odes à minha 'queda', eu já poderia ter derrubado três deles. Vamos ver se suas ações são tão afiadas quanto sua língua, Bardo."
+
+📊 DIFF:
+⏹️ Estado Inalterado (Apenas Narrativa)
+---------------------------

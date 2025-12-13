@@ -1,0 +1,342 @@
+{
+    "player": {
+        "name": "Valerius",
+        "class_name": "Guerreiro",
+        "hp": 30,
+        "max_hp": 30,
+        "mana": 0,
+        "max_mana": 0,
+        "stamina": 20,
+        "max_stamina": 20,
+        "attributes": {
+            "strength": 16,
+            "dexterity": 12,
+            "constitution": 14,
+            "intelligence": 8,
+            "wisdom": 10,
+            "charisma": 10
+        },
+        "known_abilities": [
+            "Golpe Pesado",
+            "Esquiva Tática"
+        ],
+        "inventory": [
+            "Espada Longa",
+            "Poção de Cura"
+        ],
+        "gold": 10,
+        "level": 1,
+        "xp": 0,
+        "alignment": "N",
+        "defense": 16,
+        "attack_bonus": 0
+    },
+    "world": {
+        "current_location": "Estrada Real",
+        "time_of_day": "Dia",
+        "turn_count": 0,
+        "weather": "Limpo"
+    },
+    "enemies": [],
+    "party": [
+        {
+            "name": "Lyra",
+            "hp": 18,
+            "max_hp": 18,
+            "active": true,
+            "stats": {
+                "hp": 18,
+                "max_hp": 18,
+                "attack": 4,
+                "defense": 14,
+                "abilities": [
+                    "Tiro Preciso",
+                    "Ataque Furtivo"
+                ]
+            }
+        },
+        {
+            "name": "Garrick",
+            "hp": 24,
+            "max_hp": 24,
+            "active": true,
+            "stats": {
+                "hp": 24,
+                "max_hp": 24,
+                "attack": 2,
+                "defense": 16,
+                "abilities": [
+                    "Martelo da Justiça",
+                    "Cura Menor"
+                ]
+            }
+        }
+    ],
+    "npcs": {
+        "Sargento Borin": {
+            "name": "Sargento Borin",
+            "role": "npc",
+            "location": "Estrada Real",
+            "relationship": 3,
+            "memory": [],
+            "last_interaction": ""
+        }
+    },
+    "active_npc_name": "Sargento Borin",
+    "next": "rules_agent",
+    "messages": [
+        {
+            "type": "ai",
+            "data": {
+                "content": "**Bem-vindo a Valoria.**\n\nVocê está na Estrada Real. Lyra e Garrick caminham ao seu lado. O Sargento Borin bloqueia o caminho à frente.",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "ai",
+                "name": null,
+                "id": null,
+                "tool_calls": [],
+                "invalid_tool_calls": [],
+                "usage_metadata": null
+            }
+        },
+        {
+            "type": "human",
+            "data": {
+                "content": "Eu pergunto o que ele quer, educadamente",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "human",
+                "name": null,
+                "id": null
+            }
+        },
+        {
+            "type": "ai",
+            "data": {
+                "content": "**Sargento Borin:** Alto lá! Apenas cumprindo ordens. Preciso saber seus nomes e seus negócios na Estrada Real. Ordens do capitão.",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "ai",
+                "name": null,
+                "id": null,
+                "tool_calls": [],
+                "invalid_tool_calls": [],
+                "usage_metadata": null
+            }
+        },
+        {
+            "type": "human",
+            "data": {
+                "content": "Pergunto a Lyra: O que acha disso?",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "human",
+                "name": null,
+                "id": null
+            }
+        },
+        {
+            "type": "ai",
+            "data": {
+                "content": "Lyra se aproxima, mantendo a voz baixa para que apenas você e Garrick ouçam. Seus olhos não deixam o sargento.\n\n**Lyra:** (sussurrando) \"Ordens do capitão... sempre a mesma desculpa para um pouco de autoridade. Ele não parece mal-intencionado, apenas um peão no tabuleiro. O caminho mais rápido para passar por ele é o mais simples. Diga a verdade, mas não *toda* a verdade. Diga que somos viajantes. É o que somos, afinal.\"\n\nEla lança um olhar de soslaio para Garrick, que já está com a mão no cabo de sua espada, impaciente.\n\n**Lyra:** \"É melhor do que deixar o nosso amigo esquentado ali tentar 'persuadi-lo'.\"",
+                "additional_kwargs": {},
+                "response_metadata": {
+                    "prompt_feedback": {
+                        "block_reason": 0,
+                        "safety_ratings": []
+                    },
+                    "finish_reason": "STOP",
+                    "model_name": "gemini-2.5-pro",
+                    "safety_ratings": [],
+                    "model_provider": "google_genai"
+                },
+                "type": "ai",
+                "name": null,
+                "id": "lc_run--019b0512-3990-71b2-98a7-43c035c03b9c-0",
+                "tool_calls": [],
+                "invalid_tool_calls": [],
+                "usage_metadata": {
+                    "input_tokens": 108,
+                    "output_tokens": 1211,
+                    "total_tokens": 1319,
+                    "input_token_details": {
+                        "cache_read": 0
+                    },
+                    "output_token_details": {
+                        "reasoning": 1036
+                    }
+                }
+            }
+        },
+        {
+            "type": "human",
+            "data": {
+                "content": "Eu tento persuadir Borin",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "human",
+                "name": null,
+                "id": null
+            }
+        },
+        {
+            "type": "ai",
+            "data": {
+                "content": "**Sargento Borin:** Persuadir-me? Palavras bonitas não mudam as ordens do capitão. Desembuche. Para onde estão indo e por quê? Seja breve.",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "ai",
+                "name": null,
+                "id": null,
+                "tool_calls": [],
+                "invalid_tool_calls": [],
+                "usage_metadata": null
+            }
+        },
+        {
+            "type": "human",
+            "data": {
+                "content": "Eu rapidamente saco minha espada e tento arrancar o pescoço dele",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "human",
+                "name": null,
+                "id": null
+            }
+        },
+        {
+            "type": "ai",
+            "data": {
+                "content": "",
+                "additional_kwargs": {
+                    "function_call": {
+                        "name": "roll_dice",
+                        "arguments": "{\"sides\": 20, \"context\": \"Ataque do Jogador\"}"
+                    },
+                    "__gemini_function_call_thought_signatures__": {
+                        "616bf985-977c-4297-a954-96c4bafc28ce": "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"
+                    }
+                },
+                "response_metadata": {
+                    "prompt_feedback": {
+                        "block_reason": 0,
+                        "safety_ratings": []
+                    },
+                    "finish_reason": "STOP",
+                    "model_name": "gemini-2.5-pro",
+                    "safety_ratings": [],
+                    "model_provider": "google_genai"
+                },
+                "type": "ai",
+                "name": null,
+                "id": "lc_run--019b0515-ab07-7730-afb0-60652ab58254-0",
+                "tool_calls": [
+                    {
+                        "name": "roll_dice",
+                        "args": {
+                            "sides": 20,
+                            "context": "Ataque do Jogador"
+                        },
+                        "id": "616bf985-977c-4297-a954-96c4bafc28ce",
+                        "type": "tool_call"
+                    }
+                ],
+                "invalid_tool_calls": [],
+                "usage_metadata": {
+                    "input_tokens": 317,
+                    "output_tokens": 650,
+                    "total_tokens": 967,
+                    "input_token_details": {
+                        "cache_read": 0
+                    },
+                    "output_token_details": {
+                        "reasoning": 624
+                    }
+                }
+            }
+        },
+        {
+            "type": "tool",
+            "data": {
+                "content": "🎲 [Ataque do Jogador] d20 rolou: 13",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "tool",
+                "name": "roll_dice",
+                "id": null,
+                "tool_call_id": "616bf985-977c-4297-a954-96c4bafc28ce",
+                "artifact": null,
+                "status": "success"
+            }
+        },
+        {
+            "type": "human",
+            "data": {
+                "content": "E ai?",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "human",
+                "name": null,
+                "id": null
+            }
+        },
+        {
+            "type": "ai",
+            "data": {
+                "content": "Num piscar de olhos, a cortesia se desfaz. Sua mão voa para o cabo da espada, o aço canta ao deixar a bainha. O movimento é um borrão de velocidade letal, pegando o sargento completamente de surpresa.\n\nA lâmina descreve um arco prateado e faminto.\n\n**[Rolagem de Ataque: 13]**\n\nNão é um corte limpo e perfeito que separa a cabeça do corpo, mas é brutalmente eficaz. A ponta de sua espada rasga a garganta de Borin, cortando couro, músculo e artéria.\n\nUm som gorgolejante e úmido escapa dos lábios dele. Seus olhos, antes cheios de autoridade entediada, agora se arregalam em choque e dor. Ele leva as mãos ao pescoço, tentando inutilmente estancar o sangue que jorra por entre seus dedos. Ele cambaleia para trás, tropeça nos próprios pés e cai pesadamente no chão poeirento, o corpo convulsionando por um momento antes de ficar imóvel.\n\nO silêncio que se segue é pesado, quebrado apenas pelo som do vento nas árvores.\n\nLyra encara você, o queixo caído em puro espanto e horror. **\"Pelos deuses! O que você fez?!\"**\n\nGarrick, por outro lado, já tem sua própria espada em mãos, não para te atacar, mas para vigiar a estrada em ambas as direções. Um sorriso sombrio e satisfeito brinca em seus lábios. **\"Bem... isso resolveu o problema da burocracia.\"**\n\nO corpo do sargento jaz a seus pés em uma poça de sangue que se expande lentamente. A Estrada Real está livre. Por enquanto.\n\n**O que você faz?**",
+                "additional_kwargs": {},
+                "response_metadata": {
+                    "prompt_feedback": {
+                        "block_reason": 0,
+                        "safety_ratings": []
+                    },
+                    "finish_reason": "STOP",
+                    "model_name": "gemini-2.5-pro",
+                    "safety_ratings": [],
+                    "model_provider": "google_genai"
+                },
+                "type": "ai",
+                "name": null,
+                "id": "lc_run--019b0518-f039-7e42-9723-66cb37e346ce-0",
+                "tool_calls": [],
+                "invalid_tool_calls": [],
+                "usage_metadata": {
+                    "input_tokens": 411,
+                    "output_tokens": 1407,
+                    "total_tokens": 1818,
+                    "input_token_details": {
+                        "cache_read": 0
+                    },
+                    "output_token_details": {
+                        "reasoning": 1020
+                    }
+                }
+            }
+        },
+        {
+            "type": "human",
+            "data": {
+                "content": "Eu vasculho o corpo dele em busca de um bom item",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "human",
+                "name": null,
+                "id": null
+            }
+        },
+        {
+            "type": "ai",
+            "data": {
+                "content": "A realidade oscila, mas você mantém o foco. (Ação processada sem mecânica complexa).",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "ai",
+                "name": null,
+                "id": null,
+                "tool_calls": [],
+                "invalid_tool_calls": [],
+                "usage_metadata": null
+            }
+        }
+    ]
+}
