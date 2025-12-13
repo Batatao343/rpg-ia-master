@@ -17,7 +17,10 @@ class StoryUpdate(BaseModel):
 
 def storyteller_node(state: GameState):
     messages = state["messages"]
-    if not isinstance(messages[-1], HumanMessage): return {"messages": []}
+    if not messages:
+        return {"messages": [AIMessage(content="Conte sua ação inicial para começarmos a história.")]}
+    if not isinstance(messages[-1], HumanMessage):
+        return {"messages": [AIMessage(content="Preciso da sua próxima ação para narrar o que acontece em seguida.")]}
     
     last_user_input = messages[-1].content
     loc = state['world']['current_location']
@@ -32,18 +35,27 @@ def storyteller_node(state: GameState):
         lore_context = "Nenhuma lore específica encontrada. Use criatividade Dark Fantasy."
 
     llm = get_llm(temperature=0.7)
+
+    if getattr(llm, "is_fallback", False):
+        return {"messages": [llm.invoke(None)]}
     
     sys = SystemMessage(content=f"""
     Você é o Narrador (Mestre) de um RPG.
     Local Atual: {loc}.
     NPCs já na cena: {existing_npcs}.
-    
+
     === CONTEXTO DO MUNDO (LORE) ===
     {lore_context}
     ================================
-    
-    INSTRUÇÕES:
-    1. Narre a cena com imersão, INTEGRANDO a Lore consultada acima. 
+
+    INSTRUÇÕES DE ESTILO:
+    - Responda em 2 a 3 parágrafos curtos, claros e objetivos.
+    - Termine SEMPRE oferecendo 1 a 3 opções numeradas OU uma pergunta direta que convide ação imediata.
+    - Destaque ganchos relevantes (NPCs, objetos, saídas) para orientar a próxima decisão.
+    - Evite cliffhangers longos ou respostas prolixas.
+
+    REGRAS:
+    1. Narre a cena com imersão, INTEGRANDO a Lore consultada acima.
        (Ex: Se a lore diz que as ruínas brilham verde, descreva o brilho verde).
     2. Se o jogador tentou falar com alguém que não existe, narre que a pessoa não está lá.
     3. Se a SUA narrativa introduzir um novo personagem (ex: "Um guarda entra"), adicione o nome em 'introduced_npcs'.

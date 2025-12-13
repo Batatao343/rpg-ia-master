@@ -40,18 +40,30 @@ class EngineUpdate(BaseModel):
 
 # --- EXECUÇÃO GENÉRICA ---
 def execute_engine(llm, prompt_sys, messages, state, context_name):
+    if not messages:
+        return {"messages": [AIMessage(content="Descreva sua ação inicial para começarmos a aventura.")]}
+
+    if getattr(llm, "is_fallback", False):
+        fallback_msg = llm.invoke(None)
+        return {"messages": [fallback_msg]}
+
     # Contexto Limpo
-    last_human = next((m for m in reversed(messages) if isinstance(m, HumanMessage)), messages[-1])
+    last_human = next((m for m in reversed(messages) if isinstance(m, HumanMessage)), None)
+    if last_human is None:
+        return {"messages": [AIMessage(content="Envie sua próxima ação para continuar a cena.")]}
+
     last_tool = next((m for m in reversed(messages) if isinstance(m, ToolMessage)), None)
-    
+
     last_ai_handoff = None
     if isinstance(messages[-1], AIMessage) and not messages[-1].tool_calls:
         last_ai_handoff = messages[-1]
 
     input_msgs = [prompt_sys]
-    if last_ai_handoff: input_msgs.append(last_ai_handoff)
+    if last_ai_handoff:
+        input_msgs.append(last_ai_handoff)
     input_msgs.append(last_human)
-    if last_tool: input_msgs.append(last_tool)
+    if last_tool:
+        input_msgs.append(last_tool)
 
     # Tool Binding
     from tools import roll_dice

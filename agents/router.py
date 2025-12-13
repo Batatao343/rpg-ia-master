@@ -11,9 +11,12 @@ class RouteDecision(TypedDict):
 
 def dm_router_node(state: GameState):
     messages = state["messages"]
+    if not messages:
+        return {"next": "storyteller"}
+
     # Se a última msg foi da IA (e não foi tool call), o turno acabou.
-    if isinstance(messages[-1], AIMessage) and not messages[-1].tool_calls: 
-        return {"next": END} 
+    if isinstance(messages[-1], AIMessage) and not messages[-1].tool_calls:
+        return {"next": END}
 
     # 1. FILTRO DE REALIDADE (Quem está na cena?)
     loc = state['world']['current_location']
