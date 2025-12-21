@@ -4,7 +4,7 @@ from typing import Dict
 from pydantic import BaseModel, Field
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from state import GameState
-from llm_setup import get_llm
+from llm_setup import ModelTier, get_llm
 
 # --- INTEGRAÇÃO RAG ---
 # Importamos a função de consulta para ler o world_lore.txt
@@ -48,6 +48,14 @@ def get_npc_template(name):
         if name.lower() in k.lower(): return v
     return None
 
+
+def _infer_tier_from_name(name: str) -> ModelTier:
+    lowered = name.lower()
+    important_markers = ["king", "queen", "captain", "wizard", "archmage", "emperor"]
+    if any(marker in lowered for marker in important_markers):
+        return ModelTier.SMART
+    return ModelTier.FAST
+
 # --- FERRAMENTA DE DESIGN (INTEGRADA COM RAG) ---
 # Esta função é chamada pelo storyteller.py quando um novo NPC aparece.
 def generate_new_npc(name, context=""):
@@ -60,7 +68,8 @@ def generate_new_npc(name, context=""):
     if not lore_info:
         lore_info = "Nenhuma lore específica encontrada. Use criatividade Dark Fantasy padrão."
 
-    llm = get_llm(temperature=0.6)
+    tier = _infer_tier_from_name(name)
+    llm = get_llm(temperature=0.6, tier=tier)
     
     try:
         designer = llm.with_structured_output(NPCSchema)
@@ -108,7 +117,7 @@ def npc_actor_node(state: GameState):
     # Memória Recente
     mem_log = "\n".join(npc_data.get('memory', [])[-5:])
     
-    llm = get_llm(temperature=0.5)
+    llm = get_llm(temperature=0.5, tier=ModelTier.FAST)
     
     system_msg = SystemMessage(content=f"""
     <actor_profile>
@@ -139,4 +148,5 @@ def npc_actor_node(state: GameState):
             "messages": [AIMessage(content=f"**{npc_name}:** \"{res.dialogue}\"\n*({res.action_description})*")],
             "npcs": {npc_name: npc_data}
         }
-    except: return {"next": "storyteller"}
+    except:
+        return {"next": "storyteller"}

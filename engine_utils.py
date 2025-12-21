@@ -1,6 +1,6 @@
 import re
 from typing import List, Annotated, Literal, Optional, Any
-from pydantic import BaseModel, Field, BeforeValidator
+from pydantic import BaseModel, Field, BeforeValidator, field_validator
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from state import GameState
 from gamedata import BESTIARY
@@ -21,6 +21,16 @@ class DamageTarget(BaseModel):
     damage_amount: Annotated[int, BeforeValidator(clean_int)]
     is_healing: bool = False
 
+    @field_validator("damage_amount")
+    @classmethod
+    def validate_damage_amount(cls, v: int) -> int:
+        """Clamp negative values to zero and guard against absurd spikes."""
+        if v < 0:
+            return 0
+        if v > 100:
+            raise ValueError("damage_amount acima do limite de sanidade (100)")
+        return v
+
 class ConditionUpdate(BaseModel):
     target_name: str
     condition: str
@@ -37,6 +47,14 @@ class EngineUpdate(BaseModel):
     items_to_add: List[str] = Field(default_factory=list)
     items_to_remove: List[str] = Field(default_factory=list)
     spawn_enemy_type: Optional[str] = None
+
+    @field_validator("player_stamina_change")
+    @classmethod
+    def validate_stamina_change(cls, v: int) -> int:
+        """Restringe variações de Stamina a um intervalo realista por turno."""
+        if v < -20 or v > 20:
+            raise ValueError("player_stamina_change fora do intervalo permitido (-20 a 20)")
+        return v
 
 # --- EXECUÇÃO GENÉRICA ---
 def execute_engine(llm, prompt_sys, messages, state, context_name):

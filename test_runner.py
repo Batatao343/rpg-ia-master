@@ -45,10 +45,12 @@ def create_base_state() -> GameState:
             "active_conditions": []
         },
         "world": {
-            "current_location": "Lab de Testes", 
-            "time_of_day": "Dia", 
-            "turn_count": 0, 
-            "weather": "Neutro"
+            "current_location": "Lab de Testes",
+            "time_of_day": "Dia",
+            "turn_count": 0,
+            "weather": "Neutro",
+            "quest_plan": [],
+            "quest_plan_origin": None,
         },
         "enemies": [], 
         "party": [], 

@@ -16,7 +16,7 @@ initial_state: GameState = {
         "defense": 16, "attack_bonus": 5, "active_conditions": []
     },
     "world": {
-        "current_location": "Arena de Debug", "time_of_day": "Eterno", "turn_count": 0, "weather": "Estático"
+        "current_location": "Arena de Debug", "time_of_day": "Eterno", "turn_count": 0, "weather": "Estático", "quest_plan": [], "quest_plan_origin": None
     },
     # Listas vazias cruciais para V8 não crashar
     "enemies": [], "party": [], "npcs": {}, "active_npc_name": None, "next": None
