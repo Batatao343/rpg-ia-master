@@ -8,6 +8,7 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from character_creator import create_player_character
 from llm_setup import ModelTier, get_llm
 from main import app as dm_graph
+from memory_utils import sanitize_history
 from prologue_manager import generate_prologue
 from test_runner import create_base_state
 
@@ -106,6 +107,7 @@ def run_simulation(turns: int = TURN_LIMIT):
 
         state["messages"].append(HumanMessage(content=action))
         result = dm_graph.invoke(state)
+        result["messages"] = sanitize_history(result.get("messages", []))
         state = result
 
         engine_msg = get_last_ai_narrative(state)

@@ -2,6 +2,7 @@ import sys
 from langchain_core.messages import HumanMessage, AIMessage
 
 from character_creator import create_player_character
+from memory_utils import sanitize_history
 from prologue_manager import generate_prologue
 from main import app as dm_graph
 from test_runner import create_base_state
@@ -49,6 +50,7 @@ def main() -> None:
         state["messages"].append(HumanMessage(content=user_input))
 
         result = dm_graph.invoke(state)
+        result["messages"] = sanitize_history(result.get("messages", []))
         state = result
 
         if state.get("messages"):
