@@ -18,10 +18,11 @@ def create_base_state() -> GameState:
     return {
         "messages": [],
         "player": {
-            "name": "Tester", 
-            "class_name": "Debug", 
-            "hp": 30, 
-            "max_hp": 30, 
+            "name": "Tester",
+            "class_name": "Debug",
+            "race": "Humano",
+            "hp": 30,
+            "max_hp": 30,
             
             # --- CORREÇÃO: Adicionados os limites máximos ---
             "stamina": 20, 
@@ -45,10 +46,12 @@ def create_base_state() -> GameState:
             "active_conditions": []
         },
         "world": {
-            "current_location": "Lab de Testes", 
-            "time_of_day": "Dia", 
-            "turn_count": 0, 
-            "weather": "Neutro"
+            "current_location": "Lab de Testes",
+            "time_of_day": "Dia",
+            "turn_count": 0,
+            "weather": "Neutro",
+            "quest_plan": [],
+            "quest_plan_origin": None,
         },
         "enemies": [], 
         "party": [], 

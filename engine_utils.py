@@ -1,6 +1,6 @@
 import re
 from typing import List, Annotated, Literal, Optional, Any
-from pydantic import BaseModel, Field, BeforeValidator
+from pydantic import BaseModel, Field, BeforeValidator, field_validator
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from state import GameState
 from gamedata import BESTIARY
@@ -21,6 +21,16 @@ class DamageTarget(BaseModel):
     damage_amount: Annotated[int, BeforeValidator(clean_int)]
     is_healing: bool = False
 
+    @field_validator("damage_amount")
+    @classmethod
+    def validate_damage_amount(cls, v: int) -> int:
+        """Clamp negative values to zero and guard against absurd spikes."""
+        if v < 0:
+            return 0
+        if v > 100:
+            raise ValueError("damage_amount acima do limite de sanidade (100)")
+        return v
+
 class ConditionUpdate(BaseModel):
     target_name: str
     condition: str
@@ -38,19 +48,51 @@ class EngineUpdate(BaseModel):
     items_to_remove: List[str] = Field(default_factory=list)
     spawn_enemy_type: Optional[str] = None
 
+    @field_validator("player_stamina_change")
+    @classmethod
+    def validate_stamina_change(cls, v: int) -> int:
+        """Restringe variações de Stamina a um intervalo realista por turno."""
+        if v < -20 or v > 20:
+            raise ValueError("player_stamina_change fora do intervalo permitido (-20 a 20)")
+        return v
+
 # --- EXECUÇÃO GENÉRICA ---
+def _dice_rolled_recently(messages: list) -> bool:
+    """Detecta se uma rolagem de dados ocorreu recentemente para validar danos."""
+    for msg in reversed(messages[-6:]):
+        if isinstance(msg, ToolMessage):
+            name = getattr(msg, "name", "") or ""
+            content = getattr(msg, "content", "") or ""
+            if name == "roll_dice" or "roll_dice" in content:
+                return True
+        if isinstance(msg, AIMessage):
+            for call in getattr(msg, "tool_calls", []) or []:
+                if getattr(call, "get", None):
+                    if call.get("name") == "roll_dice":
+                        return True
+                elif getattr(call, "name", "") == "roll_dice":
+                    return True
+    return False
+
+
 def execute_engine(llm, prompt_sys, messages, state, context_name):
     if not messages:
-        return {"messages": [AIMessage(content="Descreva sua ação inicial para começarmos a aventura.")]}
+        new_state = {**state}
+        new_state["messages"] = [AIMessage(content="Descreva sua ação inicial para começarmos a aventura.")]
+        return new_state
 
     if getattr(llm, "is_fallback", False):
         fallback_msg = llm.invoke(None)
-        return {"messages": [fallback_msg]}
+        new_state = {**state}
+        new_state["messages"] = messages + [fallback_msg]
+        return new_state
 
     # Contexto Limpo
     last_human = next((m for m in reversed(messages) if isinstance(m, HumanMessage)), None)
     if last_human is None:
-        return {"messages": [AIMessage(content="Envie sua próxima ação para continuar a cena.")]}
+        new_state = {**state}
+        new_state["messages"] = messages + [AIMessage(content="Envie sua próxima ação para continuar a cena.")]
+        return new_state
 
     last_tool = next((m for m in reversed(messages) if isinstance(m, ToolMessage)), None)
 
@@ -76,13 +118,19 @@ def execute_engine(llm, prompt_sys, messages, state, context_name):
     try:
         engine = llm.with_structured_output(EngineUpdate).with_retry(stop_after_attempt=3)
         update = engine.invoke(input_msgs)
-        if not update: raise ValueError("JSON Vazio")
+        if not update:
+            raise ValueError("JSON Vazio")
     except Exception as e:
         print(f"[{context_name} ERROR] {e}")
         update = EngineUpdate(
-            reasoning_trace=f"Erro: {e}", 
+            reasoning_trace=f"Erro: {e}",
             narrative_reason="A realidade oscila. Tente uma ação mais direta."
         )
+
+    if update.hp_updates and not _dice_rolled_recently(messages):
+        print("[ENGINE] Blocked hallucinated damage without dice roll.")
+        update.hp_updates = []
+        update.narrative_reason = f"{update.narrative_reason}\n(Algum dano foi ignorado por falta de rolagem de dados.)"
 
     print(f"\n[{context_name.upper()}]: {update.reasoning_trace}")
     return apply_state_update(update, state)
@@ -157,10 +205,14 @@ def apply_state_update(update: EngineUpdate, state: GameState):
         for i in update.items_to_remove:
             if i in player['inventory']: player['inventory'].remove(i)
 
-    return {
-        "messages": [AIMessage(content=update.narrative_reason)],
-        "player": player,
-        "enemies": state.get('enemies', []),
-        "party": state.get('party', []),
-        "npcs": state.get('npcs', {})
-    }
+    response_msg = AIMessage(content=update.narrative_reason)
+
+    new_state = {**state}
+    new_state["player"] = player
+    new_state["enemies"] = state.get('enemies', [])
+    new_state["party"] = state.get('party', [])
+    new_state["npcs"] = state.get('npcs', {})
+    new_state["world"] = state.get('world', {})
+    new_state["messages"] = state.get("messages", []) + [response_msg]
+
+    return new_state

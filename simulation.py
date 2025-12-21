@@ -1,74 +1,122 @@
-import sys
-from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
-from main import app # Importa o grafo V8
-from state import GameState
+"""Autonomous AI-vs-AI simulation with verbose chain-of-thought logging."""
 
-# Configuração Inicial de Teste
-initial_state: GameState = {
-    "messages": [],
-    "player": {
-        "name": "Tester", "class_name": "Debug Warrior",
-        "hp": 30, "max_hp": 30, "mana": 10, "max_mana": 10, 
-        "stamina": 20, "max_stamina": 20, "gold": 100, "xp": 0, "level": 1, "alignment": "N",
-        "attributes": {"strength": 18, "dexterity": 14, "constitution": 14, "intelligence": 10, "wisdom": 12, "charisma": 10},
-        "inventory": ["Espada de Debug", "Poção de Teste"],
-        "known_abilities": ["Golpe Devastador"],
-        "defense": 16, "attack_bonus": 5, "active_conditions": []
-    },
-    "world": {
-        "current_location": "Arena de Debug", "time_of_day": "Eterno", "turn_count": 0, "weather": "Estático"
-    },
-    # Listas vazias cruciais para V8 não crashar
-    "enemies": [], "party": [], "npcs": {}, "active_npc_name": None, "next": None
-}
+import random
+from typing import Tuple
 
-def run_simulation():
-    print("=== RPG ENGINE V8 (TERMINAL MODE) ===")
-    print("Digite 'sair' para encerrar. Digite 'status' para ver stats.")
-    
-    state = initial_state
-    
-    # Loop do Jogo
-    while True:
-        user_input = input("\n👤 Você: ")
-        
-        if user_input.lower() in ["sair", "exit"]:
-            break
-            
-        if user_input.lower() == "status":
-            p = state['player']
-            print(f"\n📊 STATUS: HP {p['hp']}/{p['max_hp']} | ST {p['stamina']} | MANA {p['mana']}")
-            print(f"🗡️ INIMIGOS: {len([e for e in state.get('enemies',[]) if e['status'] == 'ativo'])}")
-            continue
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
-        # Adiciona input
-        state["messages"].append(HumanMessage(content=user_input))
-        
-        print("🤖 Pensando...", end="\r")
-        
-        try:
-            # Executa o Grafo
-            # O Graph V8 retorna o estado final após passar por todos os nós necessários
-            state = app.invoke(state)
-            
-            # Pega a última resposta da IA para exibir
-            last_msg = state["messages"][-1]
-            if isinstance(last_msg, AIMessage):
-                print(f"\n🎲 Mestre: {last_msg.content}")
-                
-            # Mostra diffs rápidos de combate
-            if state.get('enemies'):
-                active = [e for e in state['enemies'] if e['status'] == 'ativo']
-                if active:
-                    print(f"\n[COMBATE] Inimigos Ativos: {len(active)}")
-                    for e in active:
-                        conds = f" {e['active_conditions']}" if e['active_conditions'] else ""
-                        print(f"   - {e['name']}: {e['hp']} HP{conds}")
+from character_creator import create_player_character
+from llm_setup import ModelTier, get_llm
+from main import app as dm_graph
+from memory_utils import sanitize_history
+from prologue_manager import generate_prologue
+from test_runner import create_base_state
 
-        except Exception as e:
-            print(f"\n❌ ERRO CRÍTICO: {e}")
-            import traceback
-            traceback.print_exc()
+
+TURN_LIMIT = 10
+
+
+def get_last_ai_narrative(state) -> str:
+    """Return the most recent AI narrative in the message stack."""
+    for msg in reversed(state.get("messages", [])):
+        if isinstance(msg, AIMessage):
+            return msg.content
+    return "The adventure awaits..."
+
+
+def get_ai_player_action(state) -> Tuple[str, str]:
+    """Use a SMART-tier LLM to propose the player's thought and next action."""
+    narrative = get_last_ai_narrative(state)
+    quest_plan = state.get("world", {}).get("quest_plan", [])
+    player = state.get("player", {})
+
+    system_msg = SystemMessage(
+        content=(
+            "You are the Player. Read the narrative and game state, think privately, "
+            "then output a concise action command the engine can execute."
+        )
+    )
+    human_msg = HumanMessage(
+        content=(
+            "Format exactly two lines:\n"
+            "Thought: <short internal reasoning>\n"
+            "Action: <one actionable command>\n"
+            f"Narrative: {narrative}\n"
+            f"Quest plan: {quest_plan}\n"
+            f"HP: {player.get('hp', '?')}/{player.get('max_hp', '?')} | "
+            f"Stamina: {player.get('stamina', '?')} | Mana: {player.get('mana', '?')}\n"
+            f"Inventory: {player.get('inventory', [])}"
+        )
+    )
+
+    llm = get_llm(temperature=0.4, tier=ModelTier.SMART)
+    result = llm.invoke([system_msg, human_msg])
+    content = result.content if hasattr(result, "content") else str(result)
+
+    thought, action = "", ""
+    for line in content.splitlines():
+        if line.lower().startswith("thought"):
+            thought = line.split(":", 1)[-1].strip()
+        if line.lower().startswith("action"):
+            action = line.split(":", 1)[-1].strip()
+    return thought or content.strip(), action or "Wait and observe"
+
+
+def bootstrap_state():
+    """Generate a random hero, prologue, and initial state."""
+    seed_names = ["Aerin", "Corvin", "Lyra", "Thorne"]
+    seed_classes = ["Ranger", "Wizard", "Warrior", "Bard"]
+    seed_races = ["Human", "Elf", "Dwarf", "Tiefling"]
+    manual_args = {
+        "name": random.choice(seed_names),
+        "class_name": random.choice(seed_classes),
+        "race": random.choice(seed_races),
+    }
+    player_data = create_player_character(manual_args)
+    prologue_data = generate_prologue(player_data)
+
+    state = create_base_state()
+    state["player"] = player_data
+    state["world"].update(
+        {
+            "current_location": prologue_data.get(
+                "starting_location", state["world"].get("current_location", "Unknown")
+            ),
+            "quest_plan": prologue_data.get("quest_plan", []),
+            "quest_plan_origin": prologue_data.get("quest_plan_origin"),
+        }
+    )
+    intro_text = prologue_data.get("intro_narrative", "The adventure begins...")
+    state["messages"] = [AIMessage(content=intro_text)]
+    return state, intro_text
+
+
+def run_simulation(turns: int = TURN_LIMIT):
+    print("=== 🤖 AI vs. AI Simulation (Verbose) ===")
+    state, intro_text = bootstrap_state()
+    print(f"Intro: {intro_text}\n")
+
+    for turn in range(1, turns + 1):
+        narrative = get_last_ai_narrative(state)
+        thought, action = get_ai_player_action(state)
+
+        print("--- TURN", turn, "---")
+        print(f"📝 [NARRATIVE (Storyteller)]: {narrative}")
+        print(f"🧠 [PLAYER THOUGHT]: {thought}")
+        print(f"⚔️ [PLAYER ACTION]: {action}")
+
+        state["messages"].append(HumanMessage(content=action))
+        result = dm_graph.invoke(state)
+        result["messages"] = sanitize_history(result.get("messages", []))
+        state = result
+
+        engine_msg = get_last_ai_narrative(state)
+        print(f"⚙️ [ENGINE RESULT]: {engine_msg}")
+        print("📜 [ARCHIVIST]: Check runtime logs for saved lore entries")
+        print("----------------")
+
+    print("Simulation complete.")
+
 
 if __name__ == "__main__":
     run_simulation()
