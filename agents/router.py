@@ -69,8 +69,10 @@ def dm_router_node(state: GameState):
     try:
         router = llm.with_structured_output(RouterDecision)
         decision = router.invoke([system_msg] + messages)
-    except Exception:
-        return {"next": RouteType.STORY.value}
+    except Exception as exc:  # noqa: BLE001
+        print(f"[ROUTER ERROR] {exc}")
+        fail_msg = AIMessage(content="I'm not sure what you want to do. Let's continue the story for now.")
+        return {"messages": [fail_msg], "next": RouteType.STORY.value}
 
     if decision.confidence < 0.4:
         clarification = AIMessage(

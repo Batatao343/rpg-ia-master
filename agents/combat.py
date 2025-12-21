@@ -29,6 +29,10 @@ def get_mod(score: int) -> int:
 
 
 def combat_node(state: GameState):
+    messages = state.get("messages", [])
+    if not messages:
+        return {"messages": [AIMessage(content="Nenhuma ação recente. Descreva o que deseja fazer para iniciar o combate.")], "world": state.get("world", {})}
+
     player = state["player"]
 
     # Cálculos Básicos
@@ -49,7 +53,7 @@ def combat_node(state: GameState):
     active_enemies = [e for e in enemies if e['status'] == 'ativo']
 
     # Verifica última intenção do jogador para buscar regra
-    last_msg = state["messages"][-1]
+    last_msg = messages[-1]
     player_already_acted = isinstance(last_msg, AIMessage) and not last_msg.tool_calls
 
     last_user_intent = ""
@@ -96,7 +100,11 @@ def combat_node(state: GameState):
     # Se o jogador disse "Agarrar", o RAG busca a regra de Grapple no rules.txt
     combat_rules = ""
     if last_user_intent:
-        combat_rules = query_rag(last_user_intent, index_name="rules")
+        try:
+            combat_rules = query_rag(last_user_intent, index_name="rules")
+        except Exception as exc:  # noqa: BLE001
+            print(f"[COMBAT RAG ERROR] {exc}")
+            combat_rules = ""
         if not combat_rules:
             combat_rules = "Regras Padrão: Ataque x AC. Dano reduz HP."
 
