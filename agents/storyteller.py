@@ -19,22 +19,20 @@ class StoryUpdate(BaseModel):
 class QuestPlan(BaseModel):
     steps: List[str] = Field(min_length=3, max_length=3, description="Sequência de 3 batidas narrativas")
 
+
 def storyteller_node(state: GameState):
     messages = state["messages"]
     if not messages:
         return {"messages": [AIMessage(content="Conte sua ação inicial para começarmos a história.")]}
     if not isinstance(messages[-1], HumanMessage):
         return {"messages": [AIMessage(content="Preciso da sua próxima ação para narrar o que acontece em seguida.")]}
-    
+
     last_user_input = messages[-1].content
     loc = state['world']['current_location']
     existing_npcs = list(state.get('npcs', {}).keys())
-    
-    # 1. CONSULTA A LORE (RAG)
-    # Busca contexto sobre o Local atual + o que o jogador falou
-    # Ex: se o local é "Ruínas de Zarr" e o jogador pergunta "Quem viveu aqui?", o RAG busca a resposta.
-    lore_context = query_rag(f"{loc} {last_user_input}", index_name="lore")
 
+    # 1. CONSULTA A LORE (RAG)
+    lore_context = query_rag(f"{loc} {last_user_input}", index_name="lore")
     if not lore_context:
         lore_context = "Nenhuma lore específica encontrada. Use criatividade Dark Fantasy."
 
@@ -54,7 +52,7 @@ def storyteller_node(state: GameState):
 
     if getattr(llm, "is_fallback", False):
         return {"messages": [llm.invoke(None)]}
-    
+
     sys = SystemMessage(content=f"""
     Você é o Narrador (Mestre) de um RPG.
     Local Atual: {loc}.
@@ -80,7 +78,7 @@ def storyteller_node(state: GameState):
     """)
 
     try:
-        story_engine = llm.with_structured_output(StoryUpdate)
+        story_engine = llm.with_structured_output(StoryUpdate).with_retry(stop_after_attempt=3)
         update = story_engine.invoke([sys] + messages)
 
         narrative_text = update.narrative
@@ -88,37 +86,48 @@ def storyteller_node(state: GameState):
         if world.get("quest_plan"):
             world["quest_plan"] = world["quest_plan"][1:]
 
-        # --- LÓGICA DE SPAWN ---
         if update.introduced_npcs:
-            if 'npcs' not in state: state['npcs'] = {}
-            
+            if 'npcs' not in state:
+                state['npcs'] = {}
+
+            existing_lower = {name.lower(): name for name in state['npcs'].keys()}
             for new_name in update.introduced_npcs:
-                if new_name not in state['npcs']:
-                    print(f"✨ [STORYTELLER] Invocando novo NPC: {new_name}")
-                    
-                    # O generate_new_npc (do agents.npc) JÁ usa RAG internamente também
-                    tpl = generate_new_npc(new_name, context=f"Local: {loc}. Cena: {narrative_text}")
-                    
-                    if tpl:
-                        state['npcs'][new_name] = {
-                            "name": tpl['name'],
-                            "role": tpl['role'],
-                            "persona": tpl['persona'],
-                            "location": loc,
-                            "relationship": tpl['initial_relationship'],
-                            "memory": [],
-                            "last_interaction": ""
-                        }
-        
+                if new_name.lower() in existing_lower:
+                    continue
+                print(f"✨ [STORYTELLER] Invocando novo NPC: {new_name}")
+                tpl = generate_new_npc(new_name, context=f"Local: {loc}. Cena: {narrative_text}")
+
+                if tpl:
+                    state['npcs'][new_name] = {
+                        "name": tpl['name'],
+                        "role": tpl['role'],
+                        "persona": tpl['persona'],
+                        "location": loc,
+                        "relationship": tpl['initial_relationship'],
+                        "memory": [],
+                        "last_interaction": "",
+                    }
+
         return {
             "messages": [AIMessage(content=narrative_text)],
             "npcs": state.get('npcs', {}),
             "world": world,
         }
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"[STORYTELLER ERROR] {e}")
-        return {"messages": [AIMessage(content="O vento sopra... (Erro técnico na narrativa).")]}
+        fallback_llm = get_llm(temperature=0.7)
+        fallback_response = fallback_llm.invoke([sys] + messages)
+        if isinstance(fallback_response, str):
+            fallback_text = fallback_response
+        else:
+            fallback_text = getattr(fallback_response, "content", "O vento sopra... (Erro técnico na narrativa).")
+
+        return {
+            "messages": [AIMessage(content=fallback_text)],
+            "world": world,
+            "npcs": state.get('npcs', {}),
+        }
 
 
 def _generate_campaign_plan(location: str, last_user_input: str, lore_context: str) -> List[str]:

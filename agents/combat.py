@@ -6,6 +6,9 @@ from llm_setup import ModelTier, get_llm
 from gamedata import ITEMS_DB
 from engine_utils import execute_engine
 
+# Importa gerador de inimigos para conversão de NPCs hostis
+from agents.bestiary import generate_new_enemy
+
 # --- INTEGRAÇÃO RAG ---
 from rag import query_rag
 
@@ -44,11 +47,6 @@ def combat_node(state: GameState):
     # Inimigos Ativos
     enemies = state.get('enemies', [])
     active_enemies = [e for e in enemies if e['status'] == 'ativo']
-    enemy_str = "\n".join([
-        f"{idx+1}. {e['name']} (ID:{e['id']} | HP:{e['hp']} | Cond:{e.get('active_conditions',[])})"
-        for idx, e in enumerate(active_enemies)
-    ])
-    boss_enemies = [e for e in active_enemies if e.get("type", "").upper() == "BOSS"]
 
     # Verifica última intenção do jogador para buscar regra
     last_msg = state["messages"][-1]
@@ -57,6 +55,42 @@ def combat_node(state: GameState):
     last_user_intent = ""
     if isinstance(last_msg, HumanMessage):
         last_user_intent = last_msg.content
+
+    # --- PRE-CHECK: converte agressão a NPC em inimigo ativo ---
+    if not active_enemies:
+        target_npc = None
+        if last_user_intent:
+            lowered_intent = last_user_intent.lower()
+            for name, npc in state.get("npcs", {}).items():
+                if name.lower() in lowered_intent:
+                    target_npc = (name, npc)
+                    break
+
+        if target_npc:
+            npc_name, npc_data = target_npc
+            print(f"⚔️ [COMBAT] Jogador iniciou agressão contra NPC '{npc_name}'. Convertendo para inimigo...")
+            enemy_template = generate_new_enemy(npc_name, context=npc_data.get("persona", ""))
+            if enemy_template:
+                if 'enemies' not in state:
+                    state['enemies'] = []
+                new_id = f"{npc_name.lower().replace(' ', '_')}_{len(state['enemies'])}"
+                hostile = enemy_template.copy()
+                hostile['id'] = hostile.get('id', new_id)
+                hostile['status'] = hostile.get('status', 'ativo')
+                hostile.setdefault('active_conditions', [])
+                hostile.setdefault('type', enemy_template.get('type', 'NPC'))
+                state['enemies'].append(hostile)
+                # Opcional: remover NPC social para evitar duplicação
+                state.get('npcs', {}).pop(npc_name, None)
+                active_enemies = [hostile]
+        if not active_enemies:
+            return {"messages": [AIMessage(content="There is no one here to fight. The tension fades as the scene shifts.")], "world": state.get("world", {})}
+
+    enemy_str = "\n".join([
+        f"{idx+1}. {e['name']} (ID:{e['id']} | HP:{e['hp']} | Cond:{e.get('active_conditions',[])})",
+        for idx, e in enumerate(active_enemies)
+    ])
+    boss_enemies = [e for e in active_enemies if e.get("type", "").upper() == "BOSS"]
 
     # 1. CONSULTA O RAG (REGRAS DE COMBATE)
     # Se o jogador disse "Agarrar", o RAG busca a regra de Grapple no rules.txt
