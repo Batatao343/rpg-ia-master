@@ -28,13 +28,22 @@ class PlayerStatsSchema(BaseModel):
     active_conditions: List[str] = Field(default_factory=list)
 
 
-def create_player_character() -> Dict:
-    """Solicita detalhes básicos e gera um personagem equilibrado via LLM."""
+def create_player_character(manual_args: Dict | None = None) -> Dict:
+    """Solicita detalhes básicos e gera um personagem equilibrado via LLM.
 
+    ``manual_args`` permite testes automatizados sem depender de ``input()``.
+    """
+
+    manual_args = manual_args or {}
     print("🧙 Criação de Personagem")
-    name = input("Nome do Herói: ").strip() or "Herói Sem Nome"
-    class_name = input("Classe (ex: Necromancer): ").strip() or "Aventureiro"
-    race = input("Raça (ex: Undead): ").strip() or "Humano"
+    if manual_args:
+        name = manual_args.get("name", "Herói Sem Nome")
+        class_name = manual_args.get("class_name", "Aventureiro")
+        race = manual_args.get("race", "Humano")
+    else:
+        name = input("Nome do Herói: ").strip() or "Herói Sem Nome"
+        class_name = input("Classe (ex: Necromancer): ").strip() or "Aventureiro"
+        race = input("Raça (ex: Undead): ").strip() or "Humano"
 
     system_msg = SystemMessage(
         content=(
