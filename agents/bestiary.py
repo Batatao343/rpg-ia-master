@@ -54,17 +54,17 @@ def _infer_tier_from_name(name: str) -> ModelTier:
 # --- GERADOR (INTEGRADO COM RAG) ---
 # Chamado pelo engine_utils.py quando um monstro novo é spawnado
 def generate_new_enemy(name: str, context: str = "") -> Dict:
-    cached = get_enemy_template(name)
-    if cached:
-        return cached
-
     print(f"👾 [BESTIARY] Consultando Lore (RAG) para criar: {name}...")
 
-    # 1. BUSCA NA LORE
+    # 1. BUSCA NA LORE (sempre consulta)
     lore_info = query_rag(f"{name} {context}", index_name="lore")
 
     if not lore_info:
         lore_info = "Fantasia genérica balanceada."
+
+    cached = get_enemy_template(name)
+    if cached:
+        return cached
 
     tier = _infer_tier_from_name(name)
     llm = get_llm(temperature=0.5, tier=tier)
