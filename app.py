@@ -38,7 +38,7 @@ if "game_state" not in st.session_state:
             "known_abilities": ["Ataque Poderoso"],
             "defense": 15, "attack_bonus": 3, "active_conditions": [], "alignment": "Neutro"
         },
-        "world": {"current_location": "Estrada Real", "time_of_day": "Dia", "turn_count": 1, "weather": "Limpo"},
+        "world": {"current_location": "Estrada Real", "time_of_day": "Dia", "turn_count": 1, "weather": "Limpo", "quest_plan": [], "quest_plan_origin": None},
         "enemies": [], "party": [], "npcs": {}, "active_npc_name": None, "next": None
     }
 

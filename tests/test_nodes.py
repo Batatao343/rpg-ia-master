@@ -43,6 +43,8 @@ def build_base_state(messages):
             "time_of_day": "dia",
             "turn_count": 0,
             "weather": "claro",
+            "quest_plan": [],
+            "quest_plan_origin": None,
         },
         "enemies": [],
         "party": [],
