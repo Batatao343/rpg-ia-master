@@ -18,10 +18,11 @@ def create_base_state() -> GameState:
     return {
         "messages": [],
         "player": {
-            "name": "Tester", 
-            "class_name": "Debug", 
-            "hp": 30, 
-            "max_hp": 30, 
+            "name": "Tester",
+            "class_name": "Debug",
+            "race": "Humano",
+            "hp": 30,
+            "max_hp": 30,
             
             # --- CORREÇÃO: Adicionados os limites máximos ---
             "stamina": 20, 

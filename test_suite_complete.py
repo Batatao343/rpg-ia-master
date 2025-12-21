@@ -5,6 +5,7 @@ Each scenario mirrors architecture features: governance, RAG generation, routing
 
 import json
 import os
+from unittest import mock
 
 from langchain_core.messages import HumanMessage
 
@@ -18,9 +19,12 @@ from agents.npc import _infer_tier_from_name as infer_npc_tier, generate_new_npc
 from agents.router import dm_router_node
 from agents.rules import rules_node
 from agents.storyteller import storyteller_node
+from agents.archivist import archive_narrative
 from engine_utils import DamageTarget, EngineUpdate
 from persistence import load_game, save_game
 from state import GameState
+from character_creator import create_player_character
+from prologue_manager import generate_prologue
 
 
 # === STATE FACTORIES ===
@@ -30,6 +34,7 @@ def create_base_state() -> GameState:
         "player": {
             "name": "Valerius",
             "class_name": "Knight",
+            "race": "Human",
             "hp": 30,
             "max_hp": 30,
             "mana": 10,
@@ -197,6 +202,50 @@ def test_npc_designer():
         print(f"Generated NPC: {npc}")
 
 
+def test_character_pipeline():
+    print_header("Test J: Character Pipeline")
+    hero = create_player_character(
+        {
+            "name": "TestHero",
+            "class_name": "Warrior",
+            "race": "Human",
+        }
+    )
+    required_keys = ["hp", "attributes", "inventory"]
+    missing = [k for k in required_keys if k not in hero]
+    print(f"Hero generated: {hero}")
+    if missing:
+        print(f"⚠️ Missing keys: {missing}")
+    else:
+        print("✅ Character includes HP, attributes, and inventory")
+
+
+def test_prologue_generation():
+    print_header("Test K: Prologue Generation")
+    hero = {
+        "name": "TestHero",
+        "class_name": "Warrior",
+        "race": "Human",
+    }
+    prologue = generate_prologue(hero)
+    print(f"Prologue: {json.dumps(prologue, ensure_ascii=False, indent=2)}")
+    has_fields = all(
+        key in prologue for key in ["starting_location", "intro_narrative", "quest_plan"]
+    )
+    print(f"Field presence OK: {has_fields}")
+
+
+def test_archivist_memory():
+    print_header("Test L: Archivist (Dynamic Memory)")
+    sample_fact = "The Sword of Zorg was forged in the fires of Mount Doom."
+    with mock.patch("rag.add_to_lore_index") as mock_add:
+        archive_narrative(sample_fact)
+        if mock_add.called:
+            print("✅ RAG index updated via archivist.")
+        else:
+            print("⚠️ Archivist returned NONE or skipped update.")
+
+
 def test_router_navigation():
     print_header("Test E: Router (Navigation)")
 
@@ -286,6 +335,10 @@ def run_menu():
             test_rules_agent,
             test_npc_actor_memory,
         ]),
+        "5": (
+            "Dynamic Start & Archivist",
+            [test_character_pipeline, test_prologue_generation, test_archivist_memory],
+        ),
         "0": ("Exit", []),
     }
 

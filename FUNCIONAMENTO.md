@@ -5,7 +5,7 @@ Este documento descreve, passo a passo, como os módulos da engine interagem, qu
 ## Estado de Jogo
 - O estado é um `TypedDict` com mensagens, próximo nó (`next`), jogador, mundo, inimigos, party e NPCs (`state.py`).
 - O mundo guarda `quest_plan` e `quest_plan_origin`, permitindo que a narrativa siga um arco definido.
-- Mensagens acumuladas são usadas pelo LangGraph para manter o histórico conversacional.
+- Mensagens acumuladas são usadas pelo LangGraph para manter o histórico conversacional e são resumidas periodicamente por `sanitize_history` para evitar crescimento infinito.
 
 ## LLMs em Camadas (Tiered Compute)
 - `ModelTier.FAST` usa `gemini-1.5-flash` para lógica simples; `ModelTier.SMART` usa `gemini-1.5-pro` com menos tentativas, priorizando raciocínio (`llm_setup.py`).
@@ -20,7 +20,7 @@ Este documento descreve, passo a passo, como os módulos da engine interagem, qu
 - O pipeline de aplicação de estado usa esses modelos antes de escrever no estado de jogo.
 
 ## Grafo de Agentes (LangGraph)
-1. **Roteador (`agents/router.py`)** analisa a última entrada e decide o próximo nó (`storyteller`, `combat_agent`, `rules_agent`, `npc_actor`).
+1. **Roteador (`agents/router.py`)** analisa a última entrada com `RouterDecision` estruturado (enum `RouteType`, confiança 0-1) e decide o próximo nó (`storyteller`, `combat_agent`, `rules_agent`, `npc_actor`). Com confiança < 0.4 retorna pedido de esclarecimento em vez de roteamento cego.
 2. **Storyteller (`agents/storyteller.py`)**:
    - Se não houver plano ou o local mudou, chama o LLM SMART para criar um `quest_plan` de 3 passos.
    - Na execução, lê o primeiro passo do plano, narra, consome-o (pop) e adiciona mensagens ao histórico.
@@ -31,6 +31,7 @@ Este documento descreve, passo a passo, como os módulos da engine interagem, qu
    - Usa tier FAST para minions e ativa Tree of Thoughts para chefes (BOSS), gerando três estratégias com o tier SMART e escolhendo a melhor.
    - Converte agressões contra NPCs em inimigos hostis dinamicamente quando não há `enemies` ativos.
 6. **Ferramentas**: nós de ferramentas (ex.: rolagem de dados) são chamados quando o nó retorna `tool_calls`.
+7. **Sanitizador de Memória**: após cada ciclo no CLI e simulação AI vs. AI, `sanitize_history` resume mensagens antigas mantendo o prompt de sistema intacto, controlando custo e ruído.
 
 ## Fluxo de Combate com Tree of Thoughts
 1. Detecta inimigos ativos; se vazio e a entrada citar um NPC existente, gera um inimigo via Bestiário e marca-o como `ativo`.

@@ -9,6 +9,7 @@ from agents.npc import generate_new_npc
 
 # --- INTEGRAÇÃO RAG ---
 from rag import query_rag
+from agents.archivist import archive_narrative
 
 # Schema de Saída
 class StoryUpdate(BaseModel):
@@ -21,7 +22,7 @@ class QuestPlan(BaseModel):
 
 
 def storyteller_node(state: GameState):
-    messages = state["messages"]
+    messages = state.get("messages", [])
     if not messages:
         return {"messages": [AIMessage(content="Conte sua ação inicial para começarmos a história.")]}
     if not isinstance(messages[-1], HumanMessage):
@@ -32,7 +33,11 @@ def storyteller_node(state: GameState):
     existing_npcs = list(state.get('npcs', {}).keys())
 
     # 1. CONSULTA A LORE (RAG)
-    lore_context = query_rag(f"{loc} {last_user_input}", index_name="lore")
+    try:
+        lore_context = query_rag(f"{loc} {last_user_input}", index_name="lore")
+    except Exception as exc:  # noqa: BLE001
+        print(f"[STORYTELLER RAG ERROR] {exc}")
+        lore_context = ""
     if not lore_context:
         lore_context = "Nenhuma lore específica encontrada. Use criatividade Dark Fantasy."
 
@@ -84,7 +89,9 @@ def storyteller_node(state: GameState):
         narrative_text = update.narrative
 
         if world.get("quest_plan"):
-            world["quest_plan"] = world["quest_plan"][1:]
+            current_plan = world.get("quest_plan") or []
+            if current_plan:
+                world["quest_plan"] = current_plan[1:]
 
         if update.introduced_npcs:
             if 'npcs' not in state:
@@ -107,6 +114,8 @@ def storyteller_node(state: GameState):
                         "memory": [],
                         "last_interaction": "",
                     }
+
+        archive_narrative(narrative_text)
 
         return {
             "messages": [AIMessage(content=narrative_text)],

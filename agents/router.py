@@ -1,74 +1,93 @@
-from typing import Literal, Optional, TypedDict
-from langchain_core.messages import SystemMessage, AIMessage
-from state import GameState
-from llm_setup import get_llm
-from langgraph.graph import END
+from enum import Enum
+from typing import List
 
-class RouteDecision(TypedDict):
-    destination: Literal["storyteller", "combat_agent", "rules_agent", "npc_actor"]
-    npc_name: Optional[str]
-    reasoning: str
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from langgraph.graph import END
+from pydantic import BaseModel, Field
+
+from llm_setup import ModelTier, get_llm
+from state import GameState
+
+
+class RouteType(str, Enum):
+    STORY = "storyteller"
+    COMBAT = "combat_agent"
+    RULES = "rules_agent"
+    NPC = "npc_actor"
+    NONE = "none"
+
+
+class RouterDecision(BaseModel):
+    route: RouteType = Field(description="Chosen route node")
+    reasoning: str = Field(description="Why this route was selected")
+    confidence: float = Field(ge=0, le=1, description="Confidence from 0 to 1")
+
+
+def _detect_visible_npcs(state: GameState) -> List[str]:
+    loc = state["world"]["current_location"]
+    return [
+        name
+        for name, data in state.get("npcs", {}).items()
+        if data.get("location") in {loc, "Party"}
+    ]
+
+
+def _infer_target_npc(messages, visible_npcs: List[str]):
+    last_human = next((m for m in reversed(messages) if isinstance(m, HumanMessage)), None)
+    if not last_human:
+        return None
+    text = last_human.content.lower()
+    for npc in visible_npcs:
+        if npc.lower() in text:
+            return npc
+    return None
+
 
 def dm_router_node(state: GameState):
     messages = state["messages"]
     if not messages:
-        return {"next": "storyteller"}
+        return {"next": RouteType.STORY.value}
 
-    # Se a última msg foi da IA (e não foi tool call), o turno acabou.
-    if isinstance(messages[-1], AIMessage) and not messages[-1].tool_calls:
+    if isinstance(messages[-1], AIMessage) and not getattr(messages[-1], "tool_calls", None):
         return {"next": END}
 
-    # 1. FILTRO DE REALIDADE (Quem está na cena?)
-    loc = state['world']['current_location']
-    # Lista apenas NPCs que estão no local atual OU na Party
-    visible_npcs = [n for n, d in state.get('npcs', {}).items() 
-                   if d['location'] == loc or d['location'] == 'Party']
+    loc = state["world"]["current_location"]
+    visible_npcs = _detect_visible_npcs(state)
 
-    llm = get_llm(temperature=0.1)
-    
-    # 2. PROMPT COM REGRAS DE INTERAÇÃO
-    sys = SystemMessage(content=f"""
-    <role>Supervisor de Fluxo RPG.</role>
-    <context>
-    Local Atual: {loc}
-    NPCs Visíveis/Existentes: {visible_npcs}
-    </context>
-    <rules>
-    1. INTERAÇÃO SOCIAL ('npc_actor'): 
-       - O jogador SÓ pode falar com NPCs listados em 'NPCs Visíveis'.
-       - Se ele tentar falar com alguém que NÃO está na lista (ex: "Falo com o Rei" e o Rei não está lá), envie para 'storyteller'.
-    
-    2. COMBATE ('combat_agent'):
-       - Ataques, agressão física ou início de hostilidades.
-    
-    3. REGRAS/PERÍCIA ('rules_agent'):
-       - Ações físicas (escalar, esconder), uso de itens ou magia utilitária.
-    
-    4. NARRATIVA ('storyteller'):
-       - Exploração, perguntas sobre o ambiente, falar sozinho ou tentar falar com NPCs inexistentes.
-    </rules>
-    """)
-    
+    llm = get_llm(temperature=0.1, tier=ModelTier.FAST)
+
+    system_msg = SystemMessage(
+        content=(
+            "You are the flow supervisor for a modular RPG engine. "
+            "Read the conversation and choose the correct route.\n"
+            f"Current location: {loc}\n"
+            f"Visible NPCs: {visible_npcs}\n"
+            "Return a structured RouterDecision with route, reasoning, confidence (0-1)."
+        )
+    )
+
     try:
-        router = llm.with_structured_output(RouteDecision)
-        decision = router.invoke([sys] + messages)
-        
-        dest = decision['destination']
-        target = decision['npc_name']
+        router = llm.with_structured_output(RouterDecision)
+        decision = router.invoke([system_msg] + messages)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[ROUTER ERROR] {exc}")
+        fail_msg = AIMessage(content="I'm not sure what you want to do. Let's continue the story for now.")
+        return {"messages": [fail_msg], "next": RouteType.STORY.value}
 
-        # 3. VALIDAÇÃO DE SEGURANÇA (O "LEÃO DE CHÁCARA")
-        # Mesmo que a IA decida 'npc_actor', o Python verifica se é possível.
-        if dest == 'npc_actor' and target:
-            # Normalização para comparação (case insensitive)
-            visible_lower = [n.lower() for n in visible_npcs]
-            
-            # Se o alvo não existe, bloqueia e manda pro Narrador explicar
-            if target.lower() not in visible_lower:
-                return {"next": "storyteller"}
-            
-            # Se existe, libera o acesso
-            return {"next": "npc_actor", "active_npc_name": target}
-            
-        return {"next": dest}
-        
-    except: return {"next": "storyteller"}
+    if decision.confidence < 0.4:
+        clarification = AIMessage(
+            content=(
+                "I didn't clearly understand your intent. Could you clarify if you want to fight, talk, explore, or test a rule?"
+            )
+        )
+        return {"messages": [clarification], "next": RouteType.STORY.value}
+
+    target_npc = _infer_target_npc(messages, visible_npcs) if decision.route == RouteType.NPC else None
+
+    if decision.route == RouteType.NPC:
+        if not target_npc:
+            fallback_msg = AIMessage(content="I don't see that character here. Try addressing someone present.")
+            return {"messages": [fallback_msg], "next": RouteType.STORY.value}
+        return {"next": RouteType.NPC.value, "active_npc_name": target_npc}
+
+    return {"next": decision.route.value}

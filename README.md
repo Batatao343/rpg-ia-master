@@ -7,6 +7,8 @@ Uma engine modular de RPG por turnos, construída sobre LangGraph/LangChain e Go
 - **ModelTier** define dois níveis de LLM (gemini-1.5-flash e gemini-1.5-pro) para escolher custo vs. raciocínio (`llm_setup.py`).
 - **RAG multil índice** consulta lore e regras antes de gerar conteúdo ou resolver física (`rag.py`).
 - **Validações Pydantic** protegem atualizações de estado e entradas de dano/estamina contra alucinações (`engine_utils.py`).
+- **Roteador estruturado** usa `RouterDecision` com confiança e enum `RouteType` para evitar rotas erradas quando a intenção é ambígua (`agents/router.py`).
+- **Sanitização de memória** resume histórico antigo e preserva o prompt de sistema para conter custo e confusão de contexto (`memory_utils.py`, usado após cada ciclo no CLI/Simulação).
 - **Planejamento de campanha** mantém um `quest_plan` que o Storyteller consome para garantir início, meio e fim coerentes (`agents/storyteller.py`).
 
 ## Requisitos
@@ -56,7 +58,8 @@ python -m pytest tests/test_nodes.py
 - `test_suite_complete.py`: suite manual para validar fluxo completo.
 
 ## Fluxo de Um Turno (alto nível)
-1. A entrada do jogador vai para `dm_router`, que decide o próximo nó (storyteller, combate, regras ou NPC).
+1. A entrada do jogador vai para `dm_router`, que decide o próximo nó (storyteller, combate, regras ou NPC) via `RouterDecision` estruturado e confiança mínima.
 2. Cada nó invoca Gemini com o tier adequado e, quando aplicável, consulta RAG para manter consistência de lore e regras.
 3. Atualizações de estado passam por validação; o Storyteller consome `quest_plan` para manter arco narrativo; o combate usa lógica tática especial para chefes.
-4. O grafo encerra o turno ou retorna ao roteador para processar ferramentas (ex.: rolagem de dados).
+4. Após cada ciclo, o histórico pode ser resumido por `sanitize_history` para manter o contexto enxuto.
+5. O grafo encerra o turno ou retorna ao roteador para processar ferramentas (ex.: rolagem de dados).
