@@ -9,6 +9,7 @@ from agents.npc import generate_new_npc
 
 # --- INTEGRAÇÃO RAG ---
 from rag import query_rag
+from agents.archivist import archive_narrative
 
 # Schema de Saída
 class StoryUpdate(BaseModel):
@@ -107,6 +108,8 @@ def storyteller_node(state: GameState):
                         "memory": [],
                         "last_interaction": "",
                     }
+
+        archive_narrative(narrative_text)
 
         return {
             "messages": [AIMessage(content=narrative_text)],

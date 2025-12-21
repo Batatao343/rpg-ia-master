@@ -30,6 +30,7 @@ def create_base_state() -> GameState:
         "player": {
             "name": "Valerius",
             "class_name": "Knight",
+            "race": "Human",
             "hp": 30,
             "max_hp": 30,
             "mana": 10,

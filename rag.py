@@ -1,6 +1,6 @@
 # rag.py (VERSÃO MULTI-INDEX)
 import os
-from typing import Optional
+from typing import List, Optional
 from langchain_community.vectorstores import FAISS
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.document_loaders import TextLoader
@@ -48,6 +48,27 @@ def get_vector_store(index_name: str):
         except Exception as exc:  # noqa: BLE001
             print(f"[RAG] Falha ao carregar índice '{path}': {exc}")
     return None
+
+
+def add_to_lore_index(texts: List[str], index_name: str = "lore") -> None:
+    """Persiste novas passagens no índice especificado imediatamente."""
+
+    embeddings = get_embeddings()
+    if embeddings is None:
+        print("[RAG] Embeddings indisponíveis, não foi possível salvar novas entradas.")
+        return
+
+    db = get_vector_store(index_name)
+    if db is None:
+        db = FAISS.from_texts(texts, embeddings)
+    else:
+        db.add_texts(texts)
+
+    try:
+        db.save_local(get_db_path(index_name))
+        print(f"[RAG] {len(texts)} novas passagens armazenadas no índice '{index_name}'.")
+    except Exception as exc:  # noqa: BLE001
+        print(f"[RAG] Falha ao salvar índice '{index_name}': {exc}")
 
 def ingest_file(file_path: str, index_name: str):
     """
