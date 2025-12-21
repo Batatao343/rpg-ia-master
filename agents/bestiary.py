@@ -3,7 +3,7 @@ import os
 from typing import Dict, List
 from langchain_core.messages import SystemMessage, HumanMessage
 from pydantic import BaseModel, Field
-from llm_setup import get_llm
+from llm_setup import ModelTier, get_llm
 
 # --- INTEGRAÇÃO RAG ---
 from rag import query_rag
@@ -43,19 +43,31 @@ def get_enemy_template(name: str) -> Dict:
         if name.lower() in k.lower(): return v
     return None
 
+
+def _infer_tier_from_name(name: str) -> ModelTier:
+    lowered = name.lower()
+    boss_markers = ["dragon", "lich", "king", "queen", "lord", "tyrant"]
+    if any(marker in lowered for marker in boss_markers):
+        return ModelTier.SMART
+    return ModelTier.FAST
+
 # --- GERADOR (INTEGRADO COM RAG) ---
 # Chamado pelo engine_utils.py quando um monstro novo é spawnado
 def generate_new_enemy(name: str, context: str = "") -> Dict:
+    cached = get_enemy_template(name)
+    if cached:
+        return cached
+
     print(f"👾 [BESTIARY] Consultando Lore (RAG) para criar: {name}...")
-    
+
     # 1. BUSCA NA LORE
-    # Se o nome for "Vampiro", ele busca como vampiros funcionam neste mundo
     lore_info = query_rag(f"{name} {context}", index_name="lore")
-    
+
     if not lore_info:
         lore_info = "Fantasia genérica balanceada."
-    
-    llm = get_llm(temperature=0.5)
+
+    tier = _infer_tier_from_name(name)
+    llm = get_llm(temperature=0.5, tier=tier)
     
     sys_msg = SystemMessage(content=f"""
     Você é um Game Designer responsável pelo Bestiário.
@@ -87,9 +99,22 @@ def generate_new_enemy(name: str, context: str = "") -> Dict:
         print(f"❌ Erro ao criar inimigo: {e}")
         # Fallback de emergência para não travar o combate
         return {
-            "name": name, "hp": 15, "max_hp": 15, "stamina": 10, "mana": 0,
-            "defense": 12, "attack_mod": 3,
-            "attributes": {"strength": 10, "dexterity": 10, "constitution": 10, "intelligence": 10, "wisdom": 10, "charisma": 10},
-            "abilities": ["Ataque Genérico"], "active_conditions": [], 
-            "desc": "Uma criatura indefinida."
+            "name": name,
+            "hp": 15,
+            "max_hp": 15,
+            "stamina": 10,
+            "mana": 0,
+            "defense": 12,
+            "attack_mod": 3,
+            "attributes": {
+                "strength": 10,
+                "dexterity": 10,
+                "constitution": 10,
+                "intelligence": 10,
+                "wisdom": 10,
+                "charisma": 10,
+            },
+            "abilities": ["Ataque Genérico"],
+            "active_conditions": [],
+            "desc": "Uma criatura indefinida.",
         }

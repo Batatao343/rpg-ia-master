@@ -1,9 +1,14 @@
-import os
+from enum import Enum
 from dotenv import load_dotenv
 from langchain_core.messages import AIMessage
 from langchain_google_genai import ChatGoogleGenerativeAI, HarmBlockThreshold, HarmCategory
 
 load_dotenv()
+
+
+class ModelTier(Enum):
+    FAST = "fast"
+    SMART = "smart"
 
 
 class FallbackLLM:
@@ -26,13 +31,16 @@ class FallbackLLM:
         return AIMessage(content=self.error_message)
 
 
-def get_llm(temperature=0.1):
+def get_llm(temperature: float = 0.1, tier: ModelTier = ModelTier.FAST):
     """Retorna uma instância configurada do Gemini ou um fallback resiliente."""
+    model = "gemini-1.5-flash" if tier == ModelTier.FAST else "gemini-1.5-pro"
+    max_retries = 3 if tier == ModelTier.FAST else 1
+
     try:
         return ChatGoogleGenerativeAI(
-            model="gemini-pro-latest",
+            model=model,
             temperature=temperature,
-            max_retries=3,
+            max_retries=max_retries,
             safety_settings={HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE}
         )
     except Exception as exc:  # noqa: BLE001 - captura falhas do provider
@@ -42,3 +50,4 @@ def get_llm(temperature=0.1):
         )
         print(f"[LLM WARNING] Detalhes: {exc}")
         return FallbackLLM("O narrador está indisponível. Configure GOOGLE_API_KEY e tente novamente.")
+

@@ -31,6 +31,7 @@ class CompanionState(TypedDict):
 
 class WorldState(TypedDict):
     current_location: str; time_of_day: str; turn_count: int; weather: str
+    quest_plan: List[str]; quest_plan_origin: Optional[str]
 
 class GameState(TypedDict):
     messages: Annotated[List[BaseMessage], operator.add]
