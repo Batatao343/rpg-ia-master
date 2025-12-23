@@ -33,7 +33,7 @@ class FallbackLLM:
 
 def get_llm(temperature: float = 0.1, tier: ModelTier = ModelTier.FAST):
     """Retorna uma instância configurada do Gemini ou um fallback resiliente."""
-    model = "gemini-1.5-flash" if tier == ModelTier.FAST else "gemini-1.5-pro"
+    model = "gemini-flash-latest" if tier == ModelTier.FAST else "gemini-pro-latest"
     max_retries = 3 if tier == ModelTier.FAST else 1
 
     try:

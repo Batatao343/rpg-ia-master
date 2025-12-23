@@ -1,16 +1,25 @@
 {
-    "Conde Dr\u00e1cula Tech 702": {
-        "name": "Conde Dr\u00e1cula Tech 702",
-        "role": "Antagonista e soberano de sua nave-santu\u00e1rio.",
-        "location": "A ponte de comando de sua nave-santu\u00e1rio, a 'Sombra Alada', um cruzador colossal e g\u00f3tico \u00e0 deriva no vazio.",
-        "persona": "Aristocr\u00e1tico, calculista e melanc\u00f3lico. V\u00ea a vida org\u00e2nica n\u00e3o aprimorada como uma rel\u00edquia do passado, um recurso a ser explorado. Possui um c\u00f3digo de honra distorcido e uma curiosidade m\u00f3rbida pela tecnologia 'primitiva' dos mortais.",
-        "appearance": "Alto e imponente, com tra\u00e7os faciais afiados e pele p\u00e1lida quase transl\u00facida. Veste um traje negro elegante feito de um material nanotecnol\u00f3gico que se ondula como fuma\u00e7a. Seus olhos brilham com uma luz vermelha fraca, e finos cabos de dados prateados est\u00e3o sutilmente integrados em seu pesco\u00e7o e t\u00eamporas, pulsando com energia.",
+    "Conde Drácula Tech 702": {
+        "name": "Conde Drácula Tech 702",
+        "role": "Antagonista e soberano de sua nave-santuário.",
+        "location": "A ponte de comando de sua nave-santuário, a 'Sombra Alada', um cruzador colossal e gótico à deriva no vazio.",
+        "persona": "Aristocrático, calculista e melancólico. Vê a vida orgânica não aprimorada como uma relíquia do passado, um recurso a ser explorado. Possui um código de honra distorcido e uma curiosidade mórbida pela tecnologia 'primitiva' dos mortais.",
+        "appearance": "Alto e imponente, com traços faciais afiados e pele pálida quase translúcida. Veste um traje negro elegante feito de um material nanotecnológico que se ondula como fumaça. Seus olhos brilham com uma luz vermelha fraca, e finos cabos de dados prateados estão sutilmente integrados em seu pescoço e têmporas, pulsando com energia.",
         "initial_relationship": -80,
         "combat_stats": {
-            "agility": "Velocidade rel\u00e2mpago, capaz de se mover como um glitch na realidade.",
-            "weaknesses": "Vulner\u00e1vel a sobrecargas de energia direcionadas (simulando a luz solar) e a armas de energia de alta frequ\u00eancia.",
-            "strength": "For\u00e7a sobre-humana, capaz de rasgar placas de metal com as m\u00e3os.",
-            "technology": "Controle total sobre os sistemas da nave; garras de nanotecnologia retr\u00e1teis e capacidade de se 'teleportar' atrav\u00e9s dos sistemas da nave."
+            "agility": "Velocidade relâmpago, capaz de se mover como um glitch na realidade.",
+            "weaknesses": "Vulnerável a sobrecargas de energia direcionadas (simulando a luz solar) e a armas de energia de alta frequência.",
+            "strength": "Força sobre-humana, capaz de rasgar placas de metal com as mãos.",
+            "technology": "Controle total sobre os sistemas da nave; garras de nanotecnologia retráteis e capacidade de se 'teleportar' através dos sistemas da nave."
         }
+    },
+    "Sargento Kael Valerius": {
+        "name": "Sargento Kael Valerius",
+        "role": "Sargento da Legião de Ferro",
+        "location": "Estrada Real, liderando uma patrulha diurna.",
+        "persona": "Arrogante, impaciente e corrupto até o osso. Kael é o sobrinho do Lorde Protetor Valerius, um fato que ele nunca deixa ninguém esquecer e que o enche de um senso de direito. Ele acredita que este posto de patrulha é um insulto à sua posição e, por isso, desconta sua frustração nos viajantes. Ele fala de forma direta e autoritária, esperando obediência imediata. Vê a lei não como um código a ser seguido, mas como uma ferramenta para extorquir e exercer poder. Um suborno não apenas o fará olhar para o outro lado, mas ele o espera como um tributo ao seu nome. Ele despreza qualquer coisa que não consiga controlar, especialmente magia selvagem, que considera uma afronta à ordem que sua família impôs.",
+        "appearance": "Kael é um homem de constituição robusta, no final dos seus 20 anos. Veste a armadura de placas cinza padrão da Legião de Ferro, embora a sua pareça mais bem cuidada que a dos seus subordinados, apesar da poeira da estrada. A capa vermelha sobre seus ombros é de um veludo ligeiramente mais fino. Ele tem o cabelo escuro cortado à militar e um queixo forte, marcado por uma cicatriz pálida que ele parece exibir com orgulho. Seus olhos são frios e calculistas, e um sorriso de desdém raramente deixa seus lábios. Ele usa um anel com o sinete da casa Valerius em seu dedo mindinho, um lembrete sutil de sua linhagem.",
+        "initial_relationship": 3,
+        "combat_stats": {}
     }
 }

@@ -31,26 +31,33 @@ def get_mod(score: int) -> int:
 def combat_node(state: GameState):
     messages = state.get("messages", [])
     if not messages:
-        return {"messages": [AIMessage(content="Nenhuma ação recente. Descreva o que deseja fazer para iniciar o combate.")], "world": state.get("world", {})}
+        return {
+            "messages": [
+                AIMessage(
+                    content="Nenhuma ação recente. Descreva o que deseja fazer para iniciar o combate."
+                )
+            ],
+            "world": state.get("world", {}),
+        }
 
     player = state["player"]
 
     # Cálculos Básicos
-    attrs = player['attributes']
+    attrs = player["attributes"]
     mods = {k: get_mod(v) for k, v in attrs.items()}
 
     best_bonus = 0
     active_attr = "strength"
-    for i in player.get('inventory', []):
+    for i in player.get("inventory", []):
         d = ITEMS_DB.get(i)
-        if d and d['type'] == 'weapon' and d['bonus'] > best_bonus:
-            best_bonus = d['bonus']
-            active_attr = d['attr']
+        if d and d["type"] == "weapon" and d["bonus"] > best_bonus:
+            best_bonus = d["bonus"]
+            active_attr = d["attr"]
     total_atk = mods[active_attr] + best_bonus
 
     # Inimigos Ativos
-    enemies = state.get('enemies', [])
-    active_enemies = [e for e in enemies if e['status'] == 'ativo']
+    enemies = state.get("enemies", [])
+    active_enemies = [e for e in enemies if e["status"] == "ativo"]
 
     # Verifica última intenção do jogador para buscar regra
     last_msg = messages[-1]
@@ -72,28 +79,39 @@ def combat_node(state: GameState):
 
         if target_npc:
             npc_name, npc_data = target_npc
-            print(f"⚔️ [COMBAT] Jogador iniciou agressão contra NPC '{npc_name}'. Convertendo para inimigo...")
+            print(
+                f"⚔️ [COMBAT] Jogador iniciou agressão contra NPC '{npc_name}'. Convertendo para inimigo..."
+            )
             enemy_template = generate_new_enemy(npc_name, context=npc_data.get("persona", ""))
             if enemy_template:
-                if 'enemies' not in state:
-                    state['enemies'] = []
+                if "enemies" not in state:
+                    state["enemies"] = []
                 new_id = f"{npc_name.lower().replace(' ', '_')}_{len(state['enemies'])}"
                 hostile = enemy_template.copy()
-                hostile['id'] = hostile.get('id', new_id)
-                hostile['status'] = hostile.get('status', 'ativo')
-                hostile.setdefault('active_conditions', [])
-                hostile.setdefault('type', enemy_template.get('type', 'NPC'))
-                state['enemies'].append(hostile)
+                hostile["id"] = hostile.get("id", new_id)
+                hostile["status"] = hostile.get("status", "ativo")
+                hostile.setdefault("active_conditions", [])
+                hostile.setdefault("type", enemy_template.get("type", "NPC"))
+                state["enemies"].append(hostile)
                 # Opcional: remover NPC social para evitar duplicação
-                state.get('npcs', {}).pop(npc_name, None)
+                state.get("npcs", {}).pop(npc_name, None)
                 active_enemies = [hostile]
         if not active_enemies:
-            return {"messages": [AIMessage(content="There is no one here to fight. The tension fades as the scene shifts.")], "world": state.get("world", {})}
+            return {
+                "messages": [
+                    AIMessage(
+                        content="There is no one here to fight. The tension fades as the scene shifts."
+                    )
+                ],
+                "world": state.get("world", {}),
+            }
 
-    enemy_str = "\n".join([
-        f"{idx+1}. {e['name']} (ID:{e['id']} | HP:{e['hp']} | Cond:{e.get('active_conditions',[])})",
+    # ✅ CORREÇÃO AQUI: join com generator (sem vírgula sobrando)
+    enemy_str = "\n".join(
+        f"{idx+1}. {e['name']} (ID:{e['id']} | HP:{e['hp']} | Cond:{e.get('active_conditions', [])})"
         for idx, e in enumerate(active_enemies)
-    ])
+    )
+
     boss_enemies = [e for e in active_enemies if e.get("type", "").upper() == "BOSS"]
 
     # 1. CONSULTA O RAG (REGRAS DE COMBATE)
@@ -110,9 +128,12 @@ def combat_node(state: GameState):
 
     boss_directive = None
     if boss_enemies:
-        boss_directive = _tree_of_thoughts_strategy(player, boss_enemies, combat_rules, last_user_intent, enemy_str)
+        boss_directive = _tree_of_thoughts_strategy(
+            player, boss_enemies, combat_rules, last_user_intent, enemy_str
+        )
 
-    system_msg = SystemMessage(content=f"""
+    system_msg = SystemMessage(
+        content=f"""
     <role>General de Combate (Game Engine).</role>
 
     <state>
@@ -141,17 +162,21 @@ def combat_node(state: GameState):
        - Inimigos vivos contra-atacam.
        - Se Inimigo tem condição 'Cego/Caído', aplique penalidade (Desvantagem).
     </protocol>
-    """)
+    """
+    )
 
     tier = ModelTier.SMART if boss_enemies else ModelTier.FAST
     llm = get_llm(temperature=0.1, tier=tier)
     return execute_engine(llm, system_msg, state["messages"], state, "Combate")
 
 
-def _tree_of_thoughts_strategy(player, bosses, combat_rules: str, last_user_intent: str, enemy_str: str) -> str:
+def _tree_of_thoughts_strategy(
+    player, bosses, combat_rules: str, last_user_intent: str, enemy_str: str
+) -> str:
     """Gera 3 ramos táticos e escolhe o de maior win rate para chefes."""
     llm = get_llm(temperature=0.4, tier=ModelTier.SMART)
-    system_msg = SystemMessage(content=f"""
+    system_msg = SystemMessage(
+        content=f"""
     You are a tactical AI assisting boss monsters in a tabletop RPG.
     Player status: HP {player['hp']}, AC {player['defense']}, Conditions: {player.get('active_conditions',[])}
     Active bosses and enemies:
@@ -165,7 +190,8 @@ def _tree_of_thoughts_strategy(player, bosses, combat_rules: str, last_user_inte
     - 1-2 sentence description
     - win_rate score from 0-10 (higher means better odds this round)
     - action_script describing concrete moves for this turn
-    """)
+    """
+    )
 
     human_msg = HumanMessage(content=f"Player last intent: {last_user_intent}")
 
@@ -176,9 +202,24 @@ def _tree_of_thoughts_strategy(player, bosses, combat_rules: str, last_user_inte
     except Exception as exc:  # noqa: BLE001
         print(f"[BOSS STRATEGY ERROR] {exc}")
         strategies = [
-            BossStrategy(name="Aggressive Claws", description="Investida brutal", win_rate=5.0, action_script="Avançar com golpes consecutivos"),
-            BossStrategy(name="Soaring Breath", description="Ataque aéreo de fôlego", win_rate=7.0, action_script="Alçar voo e usar sopro em área"),
-            BossStrategy(name="Retreat and Mend", description="Recuo para curar", win_rate=4.5, action_script="Recuar, usar cobertura e curar feridas"),
+            BossStrategy(
+                name="Aggressive Claws",
+                description="Investida brutal",
+                win_rate=5.0,
+                action_script="Avançar com golpes consecutivos",
+            ),
+            BossStrategy(
+                name="Soaring Breath",
+                description="Ataque aéreo de fôlego",
+                win_rate=7.0,
+                action_script="Alçar voo e usar sopro em área",
+            ),
+            BossStrategy(
+                name="Retreat and Mend",
+                description="Recuo para curar",
+                win_rate=4.5,
+                action_script="Recuar, usar cobertura e curar feridas",
+            ),
         ]
 
     best = max(strategies, key=lambda s: s.win_rate)
