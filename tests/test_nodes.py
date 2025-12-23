@@ -46,6 +46,8 @@ def build_base_state(messages):
             "quest_plan": [],
             "quest_plan_origin": None,
         },
+        "campaign_plan": None,
+        "needs_replan": False,
         "enemies": [],
         "party": [],
         "npcs": {},
