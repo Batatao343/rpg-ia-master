@@ -70,16 +70,22 @@ def generate_new_enemy(name: str, context: str = "") -> Dict:
     llm = get_llm(temperature=0.5, tier=tier)
     
     sys_msg = SystemMessage(content=f"""
+    <PERSONA>
     Você é um Game Designer responsável pelo Bestiário.
     
-    === ECOLOGIA DO MUNDO (LORE) ===
+    <ECOLOGIA DO MUNDO (LORE)>
     {lore_info}
-    ================================
-    
-    INSTRUÇÕES:
+        
+    <INSTRUÇÕES>
     1. Crie a ficha técnica (JSON) para o inimigo solicitado.
     2. Respeite a Lore: Se vampiros são robôs, dê habilidades tecnológicas.
-    3. Balanceie HP e Dano para um grupo de nível baixo/médio (HP 15-50).
+    3. Balanceie HP e Dano de acordo com a dificuldade que o inimigo representa
+    4. Seja criativo, evite clichês genéricos de fantasia se a Lore indicar o contrário.
+
+    <EXAMPLE>
+    Example: The enemy is a dragon. The enemy should have 120 HP and 10 attack. 
+    The enemy should have the ability to breathe fire. 
+    The enemy should have the ability to fly. 
     """)
     
     hum_msg = HumanMessage(content=f"Criar Inimigo: {name}. Contexto: {context}")

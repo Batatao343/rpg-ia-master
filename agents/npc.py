@@ -75,13 +75,13 @@ def generate_new_npc(name, context=""):
         designer = llm.with_structured_output(NPCSchema)
         res = designer.invoke([
             SystemMessage(content=f"""
-            Você é um Criador de Personagens Sênior para RPG.
+            <PERSONA>
+            Você é um Criador de Personagens para RPG. Você deve criar um NPC consistente com a lore abaixo
             
-            === LORE DO MUNDO (LEI SUPREMA) ===
+            <LORE DO MUNDO (LEI SUPREMA)>
             {lore_info}
-            ===================================
             
-            INSTRUÇÕES:
+            <INSTRUÇÕES>
             1. Crie um NPC consistente com a Lore acima. 
                Ex: Se a Lore diz que Elfos são canibais, o NPC deve refletir isso na aparência/persona.
             2. Seja criativo, evite clichês genéricos de fantasia se a Lore indicar o contrário.

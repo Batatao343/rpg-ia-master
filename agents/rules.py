@@ -22,19 +22,19 @@ def rules_node(state: GameState):
         rules_context = "Use o bom senso e regras padrão de D&D 5e simplificadas."
 
     system_msg = SystemMessage(content=f"""
-    <role>Mestre de Regras e Física do Mundo.</role>
-    <player_stats>Stamina Atual: {player['stamina']}</player_stats>
+    <role>
+    Mestre de Regras e Física do Mundo.
+    <player_stats>Stamina Atual: {player['stamina']}
     
     <consulted_rules>
     {rules_context}
-    </consulted_rules>
-
+    
     <protocol>
     1. Interprete a intenção do jogador.
     2. Se houver uma regra consultada acima aplicável, USE-A (ex: DC específica, dano de queda).
+    3. Se não houver uma regra aplicável, use o bom senso e regras padrão de D&D 5e simplificadas.
     3. Defina a DC (Dificuldade).
     4. Gere a Tool Call `roll_dice` se houver chance de falha.
-    </protocol>
     """)
     
     llm = get_llm(temperature=0.4)
