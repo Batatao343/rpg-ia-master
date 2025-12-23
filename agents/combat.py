@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, Field
 from langchain_core.messages import SystemMessage, AIMessage, HumanMessage
 from state import GameState
@@ -70,38 +70,73 @@ def combat_node(state: GameState):
     # --- PRE-CHECK: converte agressão a NPC em inimigo ativo ---
     if not active_enemies:
         target_npc = None
-        if last_user_intent:
+        
+        # 1. TENTA PEGAR DO ROUTER (Prioridade Máxima)
+        # O Router já resolveu pronomes ("atacá-lo" -> "Valerius")
+        router_target = state.get("combat_target") 
+        
+        found_by_router = False
+
+        if router_target:
+            print(f"🎯 [COMBAT] Router indicou alvo: {router_target}")
+            # Busca fuzzy no dicionário de NPCs
+            for name, npc in state.get("npcs", {}).items():
+                # Verifica se o nome do NPC está dentro do alvo do router ou vice-versa
+                if name.lower() in router_target.lower() or router_target.lower() in name.lower():
+                    target_npc = (name, npc)
+                    found_by_router = True
+                    break
+        
+        # 2. FALLBACK: BUSCA NO TEXTO (Se o Router falhou ou não enviou nada)
+        if not target_npc and last_user_intent:
             lowered_intent = last_user_intent.lower()
             for name, npc in state.get("npcs", {}).items():
                 if name.lower() in lowered_intent:
                     target_npc = (name, npc)
                     break
 
+        # SE ACHOU UM ALVO VÁLIDO (Pelo Router ou Texto)
         if target_npc:
             npc_name, npc_data = target_npc
             print(
                 f"⚔️ [COMBAT] Jogador iniciou agressão contra NPC '{npc_name}'. Convertendo para inimigo..."
             )
+            
+            # Gera a ficha técnica do monstro baseada na persona do NPC
             enemy_template = generate_new_enemy(npc_name, context=npc_data.get("persona", ""))
+            
             if enemy_template:
                 if "enemies" not in state:
                     state["enemies"] = []
+                
                 new_id = f"{npc_name.lower().replace(' ', '_')}_{len(state['enemies'])}"
                 hostile = enemy_template.copy()
                 hostile["id"] = hostile.get("id", new_id)
                 hostile["status"] = hostile.get("status", "ativo")
                 hostile.setdefault("active_conditions", [])
                 hostile.setdefault("type", enemy_template.get("type", "NPC"))
+                
+                # Salva quem ele era antes de virar monstro (para memória póstuma)
                 hostile["origin_npc"] = {
                     "name": npc_name,
                     "persona": npc_data.get("persona"),
                     "relationship": npc_data.get("relationship"),
                     "memory": npc_data.get("memory", [])[-5:],
                 }
+                
+                # Adiciona à lista de inimigos
                 state["enemies"].append(hostile)
-                # Opcional: remover NPC social para evitar duplicação
+                
+                # Opcional: Remove da lista de NPCs sociais para ele não aparecer duplicado
                 state.get("npcs", {}).pop(npc_name, None)
+                
+                # Atualiza a lista local de inimigos ativos para o combate começar AGORA
                 active_enemies = [hostile]
+                
+                # Limpa o combat_target do estado para não causar loops futuros
+                state["combat_target"] = None
+
+        # Se depois de tudo isso ainda não tiver inimigos...
         if not active_enemies:
             return {
                 "messages": [
@@ -121,7 +156,6 @@ def combat_node(state: GameState):
     boss_enemies = [e for e in active_enemies if e.get("type", "").upper() == "BOSS"]
 
     # 1. CONSULTA O RAG (REGRAS DE COMBATE)
-    # Se o jogador disse "Agarrar", o RAG busca a regra de Grapple no rules.txt
     combat_rules = ""
     if last_user_intent:
         try:
@@ -163,6 +197,9 @@ def combat_node(state: GameState):
     1. AÇÃO JOGADOR (Se não agiu):
        - Analise a intenção. Se for Ataque, requer Tool 'Ataque Jogador'.
        - Se for Manobra (Desarmar, Empurrar), siga a regra em <consulted_rules>.
+       
+       IMPORTANTE: O Jogador acabou de iniciar hostilidade contra um novo inimigo ({active_enemies[0]['name']}).
+       Descreva o início do combate e processe o primeiro ataque se a intenção foi clara.
 
     2. REAÇÃO INIMIGA (Se Player já agiu ou sobrou ação):
        - Inimigos vivos contra-atacam.
@@ -173,7 +210,13 @@ def combat_node(state: GameState):
 
     tier = ModelTier.SMART if boss_enemies else ModelTier.FAST
     llm = get_llm(temperature=0.1, tier=tier)
-    return execute_engine(llm, system_msg, state["messages"], state, "Combate")
+    
+    # Retornamos o combat_target como None para limpar o estado global
+    result = execute_engine(llm, system_msg, state["messages"], state, "Combate")
+    if "combat_target" not in result:
+        result["combat_target"] = None # Garante a limpeza
+        
+    return result
 
 
 def _tree_of_thoughts_strategy(

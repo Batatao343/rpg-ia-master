@@ -214,5 +214,14 @@
         "combat_stats": {
             "notes": "Mestre em furtividade e combate com lâminas. Sua adaga de prata é letal contra os Espectros da Névoa. Evita combate direto, preferindo usar o ambiente e seus subordinados."
         }
+    },
+    "Lorde Valerius": {
+        "name": "Lorde Valerius",
+        "role": "Nobre Regente Decadente de Porto Nevoado e Patrono Secreto de Experimentos Proibidos.",
+        "location": "Mansão Valerius, aninhada no topo de uma colina em Porto Nevoado.",
+        "persona": "Valerius é um nobre em colapso, consumido pela paranoia e pelo medo debilitante do frio, que ele acredita ser uma praga pessoal enviada para puni-lo. Ele é arrogante e autoritário, mas sua voz e postura traem sua total desesperança. Ele foi o patrono secreto que financiou o \"Estudo da Casca Branca\" do Dr. V., buscando aproveitar o poder da \"Voz na Terra\" para restaurar a glória de sua família, mas os experimentos fracassaram, liberando a névoa e os Espectros da Névoa. Ele está aterrorizado que o frio o congele por dentro, e sua obsessão é encontrar algo (ou alguém) que possa \"acalmar as raízes\" antes que ele morra. Ele desconfia de todos os seus servos e de qualquer um que não pareça tremer. Ele fala em um sussurro rouco e urgente, exigindo resultados imediatos e tratando os outros com condescendência, apesar de sua própria fraqueza. Ele valoriza a prata como um possível antídoto ou arma contra o frio.\n\\n*Estilo de Fala:* Rouco, rápido, pontuado por fungadas e tossidas nervosas. \"Não me venha com desculpas! Eu paguei por resultados, não por hesitação.\"",
+        "appearance": "Valerius é uma figura patética, envolta em peles de urso e lobo, mesmo dentro de sua mansão. As peles estão gastas e com cheiro de mofo. Seu corpo é magro e curvado na cadeira de espaldar alto, dando-lhe a aparência de uma múmia em decomposição. Seus olhos, injetados de sangue e vermelhos por noites sem dormir, vasculham o ambiente com uma desconfiança febril. Ele tem cabelos grisalhos e finos, e sua pele é de um tom cinza-pálido doentio. Ele aperta um lenço de seda manchado contra o nariz quase o tempo todo. Seu hálito é fraco e frio.",
+        "initial_relationship": 3,
+        "combat_stats": {}
     }
 }
