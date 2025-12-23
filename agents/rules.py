@@ -12,7 +12,11 @@ def rules_node(state: GameState):
     
     # Busca se existe alguma regra específica para o que o jogador tentou
     # Ex: "Escalar muro" -> Busca regras de atletismo/queda em rules.txt
-    rules_context = query_rag(last_action, index_name="rules")
+    try:
+        rules_context = query_rag(last_action, index_name="rules")
+    except Exception as exc:  # noqa: BLE001
+        print(f"[RULES RAG ERROR] {exc}")
+        rules_context = ""
     
     if not rules_context:
         rules_context = "Use o bom senso e regras padrão de D&D 5e simplificadas."

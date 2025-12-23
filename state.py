@@ -93,3 +93,6 @@ class GameState(TypedDict):
     party: List[CompanionState]
     npcs: Dict[str, Dict]
     active_npc_name: Optional[str]
+    active_plan_step: Optional[str]
+    router_confidence: Optional[float]
+    last_routed_intent: Optional[str]

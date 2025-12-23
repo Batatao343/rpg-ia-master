@@ -20,7 +20,11 @@ def generate_prologue(player_data: Dict) -> Dict:
     player_class = player_data.get("class_name", "Adventurer")
     player_race = player_data.get("race", "Human")
 
-    lore = query_rag(f"{player_class} {player_race}", index_name="lore")
+    try:
+        lore = query_rag(f"{player_class} {player_race}", index_name="lore")
+    except Exception as exc:  # noqa: BLE001
+        print(f"[PROLOGUE] Falha RAG: {exc}")
+        lore = ""
 
     system_msg = SystemMessage(
         content=(
@@ -42,9 +46,6 @@ def generate_prologue(player_data: Dict) -> Dict:
         result = planner.invoke(
             [system_msg, human_msg, HumanMessage(content=f"Lore Context:\n{lore}")]
         )
-        result_data = (
-            result.model_dump() if hasattr(result, "model_dump") else dict(result)
-        )
     except Exception as exc:  # noqa: BLE001
         print(f"[PROLOGUE] Falha ao gerar prólogo: {exc}")
         result_data = {
@@ -59,11 +60,25 @@ def generate_prologue(player_data: Dict) -> Dict:
                 "Investigue quem atacou a caravana.",
             ],
         }
+    else:
+        result_data = (
+            result.model_dump() if hasattr(result, "model_dump") else dict(result)
+        )
 
     quest_plan = result_data.get("quest_plan", [])
+    # Fallback garantido para campos obrigatórios
+    starting_location = result_data.get("starting_location") or result_data.get("current_location") or "Local Desconhecido"
+    intro = result_data.get("intro_narrative") or "A jornada começa..."
+    if not quest_plan:
+        quest_plan = [
+            "Avalie seus pertences e ferimentos.",
+            "Encontre abrigo seguro na noite chuvosa.",
+            "Investigue quem atacou a caravana.",
+        ]
     return {
-        "current_location": result_data.get("starting_location", "Local Desconhecido"),
-        "intro_narrative": result_data.get("intro_narrative", "A jornada começa..."),
+        "current_location": starting_location,
+        "starting_location": starting_location,
+        "intro_narrative": intro,
         "quest_plan": quest_plan,
-        "quest_plan_origin": result_data.get("starting_location", ""),
+        "quest_plan_origin": starting_location,
     }

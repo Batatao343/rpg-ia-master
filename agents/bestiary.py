@@ -87,18 +87,14 @@ def generate_new_enemy(name: str, context: str = "") -> Dict:
     try:
         designer = llm.with_structured_output(EnemySchema)
         res = designer.invoke([sys_msg, hum_msg])
-        
         data = res.model_dump()
-        # Garante integridade
-        data['max_hp'] = data['hp']
-        
-        save_enemy(data) # Salva no "HD"
-        return data
-        
     except Exception as e:
         print(f"❌ Erro ao criar inimigo: {e}")
-        # Fallback de emergência para não travar o combate
-        return {
+        data = {}
+
+    # Fallback de emergência para não travar o combate
+    if not data or "hp" not in data:
+        data = {
             "name": name,
             "hp": 15,
             "max_hp": 15,
@@ -118,3 +114,21 @@ def generate_new_enemy(name: str, context: str = "") -> Dict:
             "active_conditions": [],
             "desc": "Uma criatura indefinida.",
         }
+
+    # Integridade mínima
+    data["name"] = data.get("name") or name
+    data["max_hp"] = data.get("max_hp", data.get("hp", 15))
+    data.setdefault("abilities", ["Ataque Genérico"])
+    data.setdefault("active_conditions", [])
+    data.setdefault("desc", "Uma criatura indefinida.")
+    data.setdefault("attributes", {
+        "strength": 10,
+        "dexterity": 10,
+        "constitution": 10,
+        "intelligence": 10,
+        "wisdom": 10,
+        "charisma": 10,
+    })
+
+    save_enemy(data) # Salva no "HD"
+    return data

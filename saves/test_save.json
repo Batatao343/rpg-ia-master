@@ -1,0 +1,63 @@
+{
+    "player": {
+        "name": "Valerius",
+        "class_name": "Knight",
+        "race": "Human",
+        "hp": 30,
+        "max_hp": 30,
+        "mana": 10,
+        "max_mana": 10,
+        "stamina": 20,
+        "max_stamina": 20,
+        "gold": 50,
+        "level": 1,
+        "xp": 0,
+        "alignment": "NG",
+        "attributes": {
+            "strength": 12,
+            "dexterity": 10,
+            "constitution": 12,
+            "intelligence": 10,
+            "wisdom": 10,
+            "charisma": 10
+        },
+        "inventory": [
+            "Espada"
+        ],
+        "known_abilities": [],
+        "defense": 12,
+        "attack_bonus": 1,
+        "active_conditions": []
+    },
+    "world": {
+        "current_location": "Sala de Testes",
+        "time_of_day": "Dia",
+        "turn_count": 0,
+        "weather": "Claro",
+        "quest_plan": [],
+        "quest_plan_origin": null
+    },
+    "enemies": [],
+    "party": [],
+    "npcs": {},
+    "active_npc_name": null,
+    "next": null,
+    "campaign_plan": null,
+    "needs_replan": null,
+    "active_plan_step": null,
+    "router_confidence": null,
+    "last_routed_intent": null,
+    "messages": [
+        {
+            "type": "human",
+            "data": {
+                "content": "Salvar jogo!",
+                "additional_kwargs": {},
+                "response_metadata": {},
+                "type": "human",
+                "name": null,
+                "id": null
+            }
+        }
+    ]
+}

@@ -32,6 +32,11 @@ def save_game(state: GameState, filename: str = "quicksave"):
         "npcs": state.get("npcs", {}),
         "active_npc_name": state.get("active_npc_name"),
         "next": state.get("next"),
+        "campaign_plan": state.get("campaign_plan"),
+        "needs_replan": state.get("needs_replan"),
+        "active_plan_step": state.get("active_plan_step"),
+        "router_confidence": state.get("router_confidence"),
+        "last_routed_intent": state.get("last_routed_intent"),
         "messages": messages_to_dict(state["messages"]) 
     }
     
@@ -69,7 +74,12 @@ def load_game(filename: str) -> GameState:
         "party": data.get("party", []),
         "npcs": data.get("npcs", {}),
         "active_npc_name": data.get("active_npc_name"),
-        "next": data.get("next")
+        "next": data.get("next"),
+        "campaign_plan": data.get("campaign_plan"),
+        "needs_replan": data.get("needs_replan", False),
+        "active_plan_step": data.get("active_plan_step"),
+        "router_confidence": data.get("router_confidence"),
+        "last_routed_intent": data.get("last_routed_intent"),
     }
     
     return restored_state

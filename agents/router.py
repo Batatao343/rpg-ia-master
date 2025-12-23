@@ -106,18 +106,19 @@ def dm_router_node(state: GameState):
         decision = router.invoke([system_msg] + messages)
     except Exception as exc:  # noqa: BLE001
         print(f"[ROUTER ERROR] {exc}")
-        fail_msg = AIMessage(content="I'm not sure what you want to do. Let's continue the story for now.")
+        fail_msg = AIMessage(content="Não entendi sua intenção agora; vou seguir contando a história. Pode repetir com mais clareza se quiser lutar, falar ou testar uma regra.")
         return {
             "messages": [fail_msg],
             "next": RouteType.STORY.value,
             "world": world,
             "active_plan_step": active_plan_step,
+            "router_confidence": 0.0,
         }
 
     if decision.confidence < 0.4:
         clarification = AIMessage(
             content=(
-                "I didn't clearly understand your intent. Could you clarify if you want to fight, talk, explore, or test a rule?"
+                "Não entendi claramente sua intenção. Você quer lutar, conversar, explorar ou testar alguma regra?"
             )
         )
         return {
@@ -125,24 +126,33 @@ def dm_router_node(state: GameState):
             "next": RouteType.STORY.value,
             "world": world,
             "active_plan_step": active_plan_step,
+            "router_confidence": decision.confidence,
         }
 
     target_npc = _infer_target_npc(messages, visible_npcs) if decision.route == RouteType.NPC else None
 
     if decision.route == RouteType.NPC:
         if not target_npc:
-            fallback_msg = AIMessage(content="I don't see that character here. Try addressing someone present.")
+            fallback_msg = AIMessage(content="Não vejo esse personagem na cena. Tente falar com alguém presente.")
             return {
                 "messages": [fallback_msg],
                 "next": RouteType.STORY.value,
                 "world": world,
                 "active_plan_step": active_plan_step,
+                "router_confidence": decision.confidence,
             }
         return {
             "next": RouteType.NPC.value,
             "active_npc_name": target_npc,
             "world": world,
             "active_plan_step": active_plan_step,
+            "router_confidence": decision.confidence,
+            "last_routed_intent": target_npc,
         }
 
-    return {"next": decision.route.value, "world": world, "active_plan_step": active_plan_step}
+    return {
+        "next": decision.route.value,
+        "world": world,
+        "active_plan_step": active_plan_step,
+        "router_confidence": decision.confidence,
+    }

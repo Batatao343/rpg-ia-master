@@ -127,17 +127,21 @@ def execute_engine(llm, prompt_sys, messages, state, context_name):
             narrative_reason="A realidade oscila. Tente uma ação mais direta."
         )
 
-    if update.hp_updates and not _dice_rolled_recently(messages):
+    # Exige uma rolagem no turno atual antes de aceitar dano
+    if update.hp_updates and not last_tool and not _dice_rolled_recently(messages):
         print("[ENGINE] Blocked hallucinated damage without dice roll.")
         update.hp_updates = []
-        update.narrative_reason = f"{update.narrative_reason}\n(Algum dano foi ignorado por falta de rolagem de dados.)"
+        update.narrative_reason = (
+            f"{update.narrative_reason}\n(Algum dano foi ignorado por falta de rolagem de dados.)"
+        )
 
     print(f"\n[{context_name.upper()}]: {update.reasoning_trace}")
     return apply_state_update(update, state)
 
 def apply_state_update(update: EngineUpdate, state: GameState):
-    player = state['player']
-    
+    player = state.get('player', {}).copy()
+    world = state.get('world', {}).copy()
+
     # SPAWN DINÂMICO
     if update.spawn_enemy_type:
         from agents.bestiary import generate_new_enemy, get_enemy_template # Import aqui pra evitar ciclo
@@ -149,17 +153,20 @@ def apply_state_update(update: EngineUpdate, state: GameState):
         
         if not base:
             # GERAÇÃO IA
-            loc = state['world'].get('current_location', 'Desconhecido')
+            loc = world.get('current_location', 'Desconhecido')
             base = generate_new_enemy(update.spawn_enemy_type, context=f"Local: {loc}")
 
         if base:
-            if 'enemies' not in state: state['enemies'] = []
-            new_id = f"{base['name'].lower().replace(' ', '_')}_{len(state['enemies'])}"
+            enemies = list(state.get('enemies', []))
+            base_name = base.get('name', update.spawn_enemy_type)
+            new_id = f"{base_name.lower().replace(' ', '_')}_{len(enemies)}"
             new_enemy = base.copy()
-            new_enemy['id'] = new_id
-            new_enemy['status'] = 'ativo'
-            if 'active_conditions' not in new_enemy: new_enemy['active_conditions'] = []
-            state['enemies'].append(new_enemy)
+            new_enemy['name'] = base_name
+            new_enemy['id'] = new_enemy.get('id', new_id)
+            new_enemy['status'] = new_enemy.get('status', 'ativo')
+            new_enemy.setdefault('active_conditions', [])
+            enemies.append(new_enemy)
+            state['enemies'] = enemies
 
     # Condições
     for cond in update.condition_updates:
@@ -169,20 +176,21 @@ def apply_state_update(update: EngineUpdate, state: GameState):
             elif op == "remove" and val in lst: lst.remove(val)
 
         if "valerius" in tgt or "jogador" in tgt:
-            if 'active_conditions' not in player: player['active_conditions'] = []
+            player.setdefault('active_conditions', [])
             mod_list(player['active_conditions'], cond.operation, cond.condition)
         
         if state.get('enemies'):
             for e in state['enemies']:
-                if e['status'] == 'ativo' and (e['id'] in tgt or e['name'].lower() in tgt):
-                    if 'active_conditions' not in e: e['active_conditions'] = []
+                if e.get('status') == 'ativo' and (e.get('id') in tgt or e.get('name', '').lower() in tgt):
+                    e.setdefault('active_conditions', [])
                     mod_list(e['active_conditions'], cond.operation, cond.condition)
 
     # Dano e Recursos (código padrão mantido)
     for hit in update.hp_updates:
         tgt = hit.target_name.lower()
         amt = hit.damage_amount if not hit.is_healing else -hit.damage_amount
-        if "valerius" in tgt or "jogador" in tgt: player['hp'] = max(0, player['hp'] - amt)
+        if "valerius" in tgt or "jogador" in tgt:
+            player['hp'] = max(0, player.get('hp', 0) - amt)
         elif state.get('party'):
             for c in state['party']:
                 if c['name'].lower() in tgt:
@@ -190,20 +198,20 @@ def apply_state_update(update: EngineUpdate, state: GameState):
                     if c['hp'] == 0: c['active'] = False
         if state.get('enemies'):
             for e in state['enemies']:
-                if e['status'] == 'ativo' and (e['id'] in tgt or e['name'].lower() in tgt):
+                if e.get('status') == 'ativo' and (e.get('id') in tgt or e.get('name', '').lower() in tgt):
                     e['hp'] = max(0, e['hp'] - amt)
                     if e['hp'] == 0: e['status'] = "morto"
 
-    player['mana'] = max(0, min(player['mana'] + update.player_mana_change, player['max_mana']))
-    player['stamina'] = max(0, min(player['stamina'] + update.player_stamina_change, player['max_stamina']))
-    player['gold'] += update.gold_change
+    player['mana'] = max(0, min(player.get('mana', 0) + update.player_mana_change, player.get('max_mana', 0)))
+    player['stamina'] = max(0, min(player.get('stamina', 0) + update.player_stamina_change, player.get('max_stamina', 0)))
+    player['gold'] = player.get('gold', 0) + update.gold_change
     
     if update.items_to_add:
-        if 'inventory' not in player: player['inventory'] = []
+        player.setdefault('inventory', [])
         player['inventory'].extend(update.items_to_add)
     if update.items_to_remove:
         for i in update.items_to_remove:
-            if i in player['inventory']: player['inventory'].remove(i)
+            if i in player.get('inventory', []): player['inventory'].remove(i)
 
     response_msg = AIMessage(content=update.narrative_reason)
 
@@ -212,7 +220,13 @@ def apply_state_update(update: EngineUpdate, state: GameState):
     new_state["enemies"] = state.get('enemies', [])
     new_state["party"] = state.get('party', [])
     new_state["npcs"] = state.get('npcs', {})
-    new_state["world"] = state.get('world', {})
+    new_state["world"] = world
     new_state["messages"] = state.get("messages", []) + [response_msg]
+    # preserva metadados do grafo
+    new_state["next"] = state.get("next")
+    new_state["campaign_plan"] = state.get("campaign_plan")
+    new_state["needs_replan"] = state.get("needs_replan", False)
+    new_state["active_npc_name"] = state.get("active_npc_name")
+    new_state["active_plan_step"] = state.get("active_plan_step")
 
     return new_state

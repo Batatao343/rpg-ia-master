@@ -92,6 +92,12 @@ def combat_node(state: GameState):
                 hostile["status"] = hostile.get("status", "ativo")
                 hostile.setdefault("active_conditions", [])
                 hostile.setdefault("type", enemy_template.get("type", "NPC"))
+                hostile["origin_npc"] = {
+                    "name": npc_name,
+                    "persona": npc_data.get("persona"),
+                    "relationship": npc_data.get("relationship"),
+                    "memory": npc_data.get("memory", [])[-5:],
+                }
                 state["enemies"].append(hostile)
                 # Opcional: remover NPC social para evitar duplicação
                 state.get("npcs", {}).pop(npc_name, None)

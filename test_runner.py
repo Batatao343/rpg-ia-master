@@ -1,18 +1,23 @@
-import sys
+"""Automated sanity tests for core flow (router -> nodes -> spawn)."""
+
+import os
 import random
 from typing import Dict, Any
-from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
 
-# Imports dos Agentes e Estado
+import pytest
+from langchain_core.messages import HumanMessage, AIMessage
+
 from state import GameState
 from agents.router import dm_router_node
 from agents.combat import combat_node
 from agents.rules import rules_node
-from agents.npc import npc_actor_node, generate_new_npc # Importa o gerador direto
+from agents.npc import npc_actor_node, generate_new_npc
 from agents.storyteller import storyteller_node
+from engine_utils import apply_state_update, EngineUpdate
 
-# Imports da Engine para testar Spawn de Inimigo
-from engine_utils import apply_state_update, EngineUpdate 
+
+HAS_API_KEY = bool(os.getenv("GOOGLE_API_KEY"))
+
 
 def create_base_state() -> GameState:
     return {
@@ -23,27 +28,27 @@ def create_base_state() -> GameState:
             "race": "Humano",
             "hp": 30,
             "max_hp": 30,
-            
-            # --- CORREÇÃO: Adicionados os limites máximos ---
-            "stamina": 20, 
-            "max_stamina": 20, 
-            "mana": 10, 
+            "stamina": 20,
+            "max_stamina": 20,
+            "mana": 10,
             "max_mana": 10,
-            # ------------------------------------------------
-            
-            "gold": 100, 
-            "xp": 0, 
-            "level": 1, 
+            "gold": 100,
+            "xp": 0,
+            "level": 1,
             "alignment": "N",
             "attributes": {
-                "strength": 10, "dexterity": 10, "constitution": 10, 
-                "intelligence": 10, "wisdom": 10, "charisma": 10
+                "strength": 10,
+                "dexterity": 10,
+                "constitution": 10,
+                "intelligence": 10,
+                "wisdom": 10,
+                "charisma": 10,
             },
-            "inventory": ["Espada"], 
-            "known_abilities": [], 
-            "defense": 10, 
-            "attack_bonus": 0, 
-            "active_conditions": []
+            "inventory": ["Espada"],
+            "known_abilities": [],
+            "defense": 10,
+            "attack_bonus": 0,
+            "active_conditions": [],
         },
         "world": {
             "current_location": "Lab de Testes",
@@ -53,168 +58,123 @@ def create_base_state() -> GameState:
             "quest_plan": [],
             "quest_plan_origin": None,
         },
-        "enemies": [], 
-        "party": [], 
-        "npcs": {}, 
-        "active_npc_name": None, 
-        "next": None
+        "enemies": [],
+        "party": [],
+        "npcs": {},
+        "active_npc_name": None,
+        "next": None,
     }
 
-# --- 2. FERRAMENTAS DE VISUALIZAÇÃO ---
-def print_header(title):
-    print(f"\n{'='*10} {title} {'='*10}")
 
-def print_result(old_state, new_state, agent_name):
-    print(f"🔍 ANÁLISE DO AGENTE: {agent_name}")
-    
-    # HP Player
-    hp_diff = new_state['player']['hp'] - old_state['player']['hp']
-    if hp_diff != 0: print(f"   ❤️ HP Player: {hp_diff}")
-    
-    # Inimigos
-    if new_state.get('enemies'):
-        for e in new_state['enemies']:
-            old_e = next((x for x in old_state.get('enemies', []) if x['id'] == e['id']), None)
-            if not old_e:
-                print(f"   🆕 INIMIGO NOVO: {e['name']} (HP: {e['hp']})")
-                print(f"      Desc: {e.get('desc', 'N/A')}")
-                print(f"      Habilidades: {e.get('abilities', [])}")
-            else:
-                dmg = e['hp'] - old_e['hp']
-                if dmg != 0: print(f"   ⚔️ Dano no {e['name']}: {dmg}")
-            
-            if e.get('active_conditions'):
-                print(f"   ✨ Condições {e['name']}: {e['active_conditions']}")
-
-    # Próximo Nó
-    if new_state.get('next'):
-        print(f"   ➡️ Próximo Destino: {new_state['next']}")
-
-# --- 3. SUÍTE DE TESTES ---
-
-def test_router():
-    print_header("TESTE 1: ROUTER (NAVEGAÇÃO)")
-    state = create_combat_state()
-    state['messages'].append(HumanMessage(content="Soco a cara do boneco!"))
-    print("\nInput: 'Soco a cara do boneco!' (Com inimigo ativo)")
-    res = dm_router_node(state)
-    print(f"Resultado: {res['next']} (Esperado: combat_agent)")
-    
+def create_combat_state() -> GameState:
     state = create_base_state()
-    state['messages'].append(HumanMessage(content="Falo com o Xuxu."))
-    print("\nInput: 'Falo com o Xuxu.' (NPC não existe)")
-    res = dm_router_node(state)
-    print(f"Resultado: {res['next']} (Esperado: storyteller)")
+    state["enemies"] = [
+        {
+            "id": "enemy_1",
+            "name": "Boneco de Teste",
+            "hp": 10,
+            "max_hp": 10,
+            "stamina": 5,
+            "mana": 0,
+            "defense": 10,
+            "attack_mod": 2,
+            "attributes": {k: 10 for k in ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]},
+            "abilities": [],
+            "active_conditions": [],
+            "status": "ativo",
+        }
+    ]
+    return state
 
-def test_combat():
-    print_header("TESTE 2: COMBATE (MECÂNICA)")
+
+def create_social_state() -> GameState:
+    state = create_base_state()
+    state["npcs"] = {
+        "Bob": {
+            "name": "Bob",
+            "role": "Vendor",
+            "persona": "Jovial merchant",
+            "location": state["world"]["current_location"],
+            "relationship": 5,
+            "memory": [],
+            "last_interaction": "",
+        }
+    }
+    state["active_npc_name"] = "Bob"
+    return state
+
+
+def test_router_storyteller_on_empty():
+    state = create_base_state()
+    res = dm_router_node(state)
+    assert res["next"] == "storyteller"
+
+
+@pytest.mark.skipif(not HAS_API_KEY, reason="GOOGLE_API_KEY não configurada")
+def test_router_combat_when_enemy_and_attack():
     state = create_combat_state()
-    state['messages'].append(HumanMessage(content="Ataco o Boneco com minha espada."))
-    print("\nInput: Ataque básico.")
+    state["messages"].append(HumanMessage(content="Ataco o inimigo."))
+    res = dm_router_node(state)
+    assert res["next"] == "combat_agent"
+
+
+def test_storyteller_produces_narrative():
+    state = create_base_state()
+    state["world"]["quest_plan"] = ["Find clue"]
+    state["messages"].append(HumanMessage(content="Olho ao redor."))
+    res = storyteller_node(state)
+    assert "messages" in res and isinstance(res["messages"][0], AIMessage)
+
+
+def test_combat_returns_message_and_not_empty():
+    state = create_combat_state()
+    state["messages"].append(HumanMessage(content="Atacar com espada."))
     res = combat_node(state)
-    
-    # Simula merge para visualização
-    new_state = state.copy()
-    new_state.update(res)
-    if 'messages' in res: new_state['messages'].extend(res['messages'])
-    print_result(state, new_state, "Combat Agent")
+    assert "messages" in res and res["messages"]
 
-def test_rules():
-    print_header("TESTE 3: RULES (CRIATIVIDADE)")
-    state = create_combat_state() 
-    state['messages'].append(HumanMessage(content="Jogo areia nos olhos do Boneco para cegá-lo."))
-    print("\nInput: Truque Sujo (Cegar).")
-    res = rules_node(state)
-    
-    new_state = state.copy()
-    new_state.update(res)
-    if 'messages' in res: new_state['messages'].extend(res['messages'])
-    print_result(state, new_state, "Rules Agent")
 
-def test_npc():
-    print_header("TESTE 4: NPC ACTOR")
-    state = create_social_state()
-    state['active_npc_name'] = "Bob"
-    state['messages'].append(HumanMessage(content="Me dê um desconto?"))
-    print("\nInput: Negociação com Bob.")
-    res = npc_actor_node(state)
-    
-    if 'messages' in res:
-        print(f"Resposta NPC: {res['messages'][0].content}")
-        bob_data = res['npcs']['Bob']
-        print(f"Relacionamento: {bob_data['relationship']}")
-
-def test_spawning():
-    print_header("TESTE 5: SPAWNERS (CRIAÇÃO DINÂMICA)")
-    
-    # 1. TESTE BESTIÁRIO (Engine Utils)
-    print("\n--- A. Testando Bestiário Automático ---")
-    monster_name = f"Tigre Cibernético {random.randint(100, 999)}"
-    print(f"Tentando spawnar inimigo inexistente: '{monster_name}'")
-    
+def test_rules_agent_returns_response():
     state = create_base_state()
-    
-    # Simulamos um EngineUpdate vindo de algum agente pedindo esse monstro
-    update = EngineUpdate(
-        reasoning_trace="Teste de Spawn",
-        narrative_reason="Um monstro aparece!",
-        spawn_enemy_type=monster_name # O GATILHO
-    )
-    
-    # O apply_state_update contém a lógica que chama o bestiary_agent se não achar no JSON
-    print("⏳ Chamando Agente Designer (pode demorar uns segundos)...")
-    res = apply_state_update(update, state)
-    
-    # Verificação
-    new_state = state.copy()
-    new_state.update(res)
-    
-    created_enemy = new_state['enemies'][0] if new_state['enemies'] else None
-    if created_enemy:
-        print(f"✅ SUCESSO! Inimigo criado: {created_enemy['name']}")
-        print(f"   HP: {created_enemy['hp']} | AC: {created_enemy['defense']}")
-        print(f"   Habilidades: {created_enemy['abilities']}")
-        print(f"   (Ficha salva em data/bestiary.json)")
-    else:
-        print("❌ FALHA: Inimigo não foi criado.")
+    state["messages"].append(HumanMessage(content="Pulo de um muro alto."))
+    res = rules_node(state)
+    assert "messages" in res and res["messages"]
 
-    # 2. TESTE NPC (Simulando Storyteller)
-    print("\n--- B. Testando NPC Designer ---")
-    npc_name = f"Conde Drácula Tech {random.randint(100, 999)}"
-    print(f"Storyteller decidiu introduzir: '{npc_name}'")
-    
-    print("⏳ Chamando NPC Designer...")
-    # Chamamos a função diretamente para testar a integração com o banco de dados
-    # (No jogo real, o storyteller.py faz exatamente essa chamada)
-    template = generate_new_npc(npc_name, context="Um vampiro futurista em uma nave espacial.")
-    
-    if template:
-        print(f"✅ SUCESSO! NPC criado: {template['name']}")
-        print(f"   Role: {template['role']}")
-        print(f"   Persona: {template['persona'][:50]}...")
-        print(f"   (Ficha salva em data/npc_database.json)")
-    else:
-        print("❌ FALHA: Template de NPC vazio.")
 
-def run_menu():
-    while True:
-        print("\n=== 🧪 LABORATÓRIO DE TESTES RPG V8 ===")
-        print("1. Testar Router (Navegação)")
-        print("2. Testar Combate (Dano)")
-        print("3. Testar Regras (Improviso/Status)")
-        print("4. Testar NPC (Atuação)")
-        print("5. Testar Spawners (Criação de Mundo)")
-        print("0. Sair")
-        
-        opt = input("Escolha: ")
-        
-        if opt == "1": test_router()
-        elif opt == "2": test_combat()
-        elif opt == "3": test_rules()
-        elif opt == "4": test_npc()
-        elif opt == "5": test_spawning()
-        elif opt == "0": break
-        else: print("Opção inválida.")
+@pytest.mark.skipif(not HAS_API_KEY, reason="GOOGLE_API_KEY não configurada")
+def test_npc_actor_updates_memory():
+    state = create_social_state()
+    state["messages"].append(HumanMessage(content="Como estão as vendas?"))
+    res = npc_actor_node(state)
+    assert "npcs" in res
+    bob = res["npcs"].get("Bob")
+    assert bob and bob.get("memory") is not None
+
+
+def test_spawn_enemy_via_engine_update():
+    state = create_base_state()
+    update = EngineUpdate(reasoning_trace="spawn", narrative_reason="aparece", spawn_enemy_type="Goblin Batedor")
+    new_state = apply_state_update(update, state)
+    assert new_state.get("enemies")
+
+
+@pytest.mark.skipif(not HAS_API_KEY, reason="GOOGLE_API_KEY não configurada")
+def test_generate_new_npc_template():
+    npc_name = f"Conde Drácula Tech {random.randint(100,999)}"
+    tpl = generate_new_npc(npc_name, context="Teste de loja")
+    assert tpl and "name" in tpl and "persona" in tpl
+
 
 if __name__ == "__main__":
-    run_menu()
+    # Facilita rodar direto: pytest.main não é usado para evitar depender da CLI
+    for fn in [
+        test_router_storyteller_on_empty,
+        test_router_combat_when_enemy_and_attack,
+        test_storyteller_produces_narrative,
+        test_combat_returns_message_and_not_empty,
+        test_rules_agent_returns_response,
+        test_npc_actor_updates_memory,
+        test_spawn_enemy_via_engine_update,
+        test_generate_new_npc_template,
+    ]:
+        fn()
+    print("✅ test_runner: todos os cenários básicos executados.")
