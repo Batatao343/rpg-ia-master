@@ -48,6 +48,8 @@ def build_base_state(messages):
         "party": [],
         "npcs": {},
         "active_npc_name": None,
+        "campaign_plan": None,
+        "active_plan_step": None,
     }
 
 
@@ -69,10 +71,10 @@ class SafetyGuardsTest(unittest.TestCase):
         result = storyteller_node(state)
         self.assertIsInstance(result["messages"][0], AIMessage)
 
-    def test_dm_router_defaults_to_storyteller_on_empty_history(self):
+    def test_dm_router_requests_campaign_when_missing(self):
         state = build_base_state([])
         decision = dm_router_node(state)
-        self.assertEqual(decision["next"], "storyteller")
+        self.assertEqual(decision["next"], "campaign_manager")
 
     def test_execute_engine_requires_human_message(self):
         state = build_base_state([AIMessage(content="oi")])
