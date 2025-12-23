@@ -1,5 +1,8 @@
+"""Typed structures describing the shared game state for the LangGraph workflow."""
+
 import operator
-from typing import Annotated, List, TypedDict, Optional, Dict
+from typing import Annotated, Dict, List, Literal, Optional, TypedDict
+
 from langchain_core.messages import BaseMessage
 
 
@@ -66,11 +69,26 @@ class WorldState(TypedDict):
     quest_plan_origin: Optional[str]
 
 
+class CampaignBeat(TypedDict):
+    description: str
+    status: Literal["pending", "done"]
+
+
+class CampaignPlan(TypedDict, total=False):
+    location: str
+    beats: List[CampaignBeat]
+    climax: str
+    current_step: int
+    last_planned_turn: int
+
+
 class GameState(TypedDict):
     messages: Annotated[List[BaseMessage], operator.add]
     next: Optional[str]
     player: PlayerStats
     world: WorldState
+    campaign_plan: Optional[CampaignPlan]
+    needs_replan: bool
     enemies: List[EnemyStats]
     party: List[CompanionState]
     npcs: Dict[str, Dict]
