@@ -1,8 +1,17 @@
 from typing import Dict
 from langchain_core.messages import SystemMessage, HumanMessage
+from pydantic import BaseModel, Field
 
 from llm_setup import get_llm, ModelTier
 from rag import query_rag
+
+
+class ProloguePlan(BaseModel):
+    """Schema structured for generating consistent prologue details."""
+
+    starting_location: str
+    intro_narrative: str
+    quest_plan: list[str] = Field(min_length=3, max_length=3)
 
 
 def generate_prologue(player_data: Dict) -> Dict:
@@ -29,22 +38,16 @@ def generate_prologue(player_data: Dict) -> Dict:
 
     llm = get_llm(temperature=0.4, tier=ModelTier.SMART)
     try:
-        planner = llm.with_structured_output(
-            {
-                "starting_location": "str",
-                "intro_narrative": "str",
-                "quest_plan": {
-                    "type": "list",
-                    "items": {"type": "str"},
-                    "minItems": 3,
-                    "maxItems": 3,
-                },
-            }
+        planner = llm.with_structured_output(ProloguePlan)
+        result = planner.invoke(
+            [system_msg, human_msg, HumanMessage(content=f"Lore Context:\n{lore}")]
         )
-        result = planner.invoke([system_msg, human_msg, HumanMessage(content=f"Lore Context:\n{lore}")])
+        result_data = (
+            result.model_dump() if hasattr(result, "model_dump") else dict(result)
+        )
     except Exception as exc:  # noqa: BLE001
         print(f"[PROLOGUE] Falha ao gerar prólogo: {exc}")
-        result = {
+        result_data = {
             "starting_location": "Estrada de Caravanas Sombria",
             "intro_narrative": (
                 "Você desperta em uma carroça de mercadores abandonada, com chuva fina"
@@ -57,10 +60,10 @@ def generate_prologue(player_data: Dict) -> Dict:
             ],
         }
 
-    quest_plan = result.get("quest_plan", [])
+    quest_plan = result_data.get("quest_plan", [])
     return {
-        "current_location": result.get("starting_location", "Local Desconhecido"),
-        "intro_narrative": result.get("intro_narrative", "A jornada começa..."),
+        "current_location": result_data.get("starting_location", "Local Desconhecido"),
+        "intro_narrative": result_data.get("intro_narrative", "A jornada começa..."),
         "quest_plan": quest_plan,
-        "quest_plan_origin": result.get("starting_location", ""),
+        "quest_plan_origin": result_data.get("starting_location", ""),
     }
