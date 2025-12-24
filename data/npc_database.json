@@ -1,18 +1,4 @@
 {
-    "Conde Drácula Tech 702": {
-        "name": "Conde Drácula Tech 702",
-        "role": "Antagonista e soberano de sua nave-santuário.",
-        "location": "A ponte de comando de sua nave-santuário, a 'Sombra Alada', um cruzador colossal e gótico à deriva no vazio.",
-        "persona": "Aristocrático, calculista e melancólico. Vê a vida orgânica não aprimorada como uma relíquia do passado, um recurso a ser explorado. Possui um código de honra distorcido e uma curiosidade mórbida pela tecnologia 'primitiva' dos mortais.",
-        "appearance": "Alto e imponente, com traços faciais afiados e pele pálida quase translúcida. Veste um traje negro elegante feito de um material nanotecnológico que se ondula como fumaça. Seus olhos brilham com uma luz vermelha fraca, e finos cabos de dados prateados estão sutilmente integrados em seu pescoço e têmporas, pulsando com energia.",
-        "initial_relationship": -80,
-        "combat_stats": {
-            "agility": "Velocidade relâmpago, capaz de se mover como um glitch na realidade.",
-            "weaknesses": "Vulnerável a sobrecargas de energia direcionadas (simulando a luz solar) e a armas de energia de alta frequência.",
-            "strength": "Força sobre-humana, capaz de rasgar placas de metal com as mãos.",
-            "technology": "Controle total sobre os sistemas da nave; garras de nanotecnologia retráteis e capacidade de se 'teleportar' através dos sistemas da nave."
-        }
-    },
     "Sargento Kael Valerius": {
         "name": "Sargento Kael Valerius",
         "role": "Sargento da Legião de Ferro",
@@ -22,26 +8,7 @@
         "initial_relationship": 3,
         "combat_stats": {}
     },
-    "null": {
-        "content": "O narrador está indisponível. Configure GOOGLE_API_KEY e tente novamente.",
-        "additional_kwargs": {},
-        "response_metadata": {},
-        "type": "ai",
-        "name": null,
-        "id": null,
-        "tool_calls": [],
-        "invalid_tool_calls": [],
-        "usage_metadata": null
-    },
-    "Conde Vladir Dracule, Patrono Registrado 311": {
-        "name": "Conde Vladir Dracule, Patrono Registrado 311",
-        "role": "Colecionador de Artefatos Raros e Patrono da Legião de Ferro (Financiador de subornos).",
-        "location": "A Loja de Penhores \"O Brilho Corrompido\", em um beco lateral da Estrada Real. Ele está examinando um item sobre um balcão empoeirado.",
-        "persona": "Vladir é um nobre decadente e um colecionador obsessivo, com uma fixação por itens que possuam um histórico de violência ou poder. Ele é extremamente arrogante e vê a maioria das pessoas, incluindo os lojistas, como meros peões. Seu estilo de fala é formal, pomposo e cheio de terminologia legalista e de contratos. Ele tem total desdém pela Legião de Ferro, exceto quando pode usá-los para garantir a \"legitimidade\" de suas aquisições. Ele acredita que o poder real reside no conhecimento e na posse, não na força bruta. Ele tem um medo irracional de água corrente.",
-        "appearance": "Um homem alto, magro e pálido, vestindo um longo casaco de veludo cor de vinho e seda preta. Seus dedos são finos e carregados de anéis de sinete com brasões de casas nobres extintas. Ele usa um monóculo de latão polido preso por uma corrente de ouro, que ele ajusta constantemente. Seus cabelos são oleosos e penteados para trás. Ele exala um perfume forte de cravo e mofo.",
-        "initial_relationship": 4,
-        "combat_stats": {}
-    },
+
     "Silas Vorkul": {
         "name": "Silas Vorkul",
         "role": "Curador de Curiosidades (Mercador de Bens Exóticos e Tenebrosos)",
@@ -51,33 +18,7 @@
         "initial_relationship": 5,
         "combat_stats": {}
     },
-    "Conde Drácula Tech 962": {
-        "name": "Conde Drácula Tech 962",
-        "role": "Gólem de Sangue (Protótipo de Segurança Arcana)",
-        "location": "O subsolo hermético de 'A Loja do Antiquário Silencioso', um mercado cinzento na Estrada Real, perto da entrada para a Floresta dos Sussurros.",
-        "persona": "Um ser de protocolo e cálculo. O Conde 962 é um Gólem de Sangue e Éter, programado para ser a guarda-costas perfeita. Sua fala é fria, monocórdica e excessivamente formal, focada em métricas de desempenho, risco e eficiência. Ele não tem emoções, apenas diretrizes. Ele trata a si mesmo como um produto de alto valor e o jogador como um potencial cliente ou um teste de estresse. Ele usa termos como \"otimização de ameaças\" e \"processamento de dados de combate\". Ele não entende conceitos abstratos como humor ou arte.",
-        "appearance": "Alto e esguio, com a palidez cadavérica de um vampiro, mas sua pele não é orgânica: é um mármore branco polido e frio. Ele veste um casaco de veludo preto de corte vitoriano. O elemento 'Tech' é sutil, mas perturbador: em suas articulações (pulsos, cotovelos, pescoço), há finas fissuras que brilham com uma luz azul-cobalto intermitente, como circuitos rúnicos ativos. Seus olhos são rubis lapidados, sem pálpebras, que parecem escanear o ambiente. Ele não tem sombra.",
-        "initial_relationship": 5,
-        "combat_stats": {}
-    },
-    "Silas \"O Cego\"": {
-        "name": "Silas \"O Cego\"",
-        "role": "Mendigo (Beggar) e Informante de Rua.",
-        "location": "Cais Principal do Anel de Ferro, perto dos armazéns onde a patrulha da Legião de Ferro é menos frequente.",
-        "persona": "Um cínico nato que vive do desespero e da fofoca. Silas acredita que todos são egoístas, e que a única diferença entre ele e um Capitão da Legião de Ferro é o tamanho da bolsa de moedas. Ele usa sua cegueira parcial e seu estado deplorável como disfarce para ouvir conversas e coletar informações valiosas sobre o tráfico de Adamantine e os movimentos da Legião.\nEstilo de Fala: Choroso e queixoso, sempre misturando lamúrias sobre o frio ou a fome com pedidos de esmola. Ele usa gírias de marinheiro e sempre sussurra quando menciona a Legião. \"Uma moedinha para um velho cego, por favor? O vento está cortando como as facas do Quebra-Ossos, sabe? Mas, ei, ouvi dizer que o navio 'Vento Gélido' não está carregando apenas peixe, se é que me entende...\"",
-        "appearance": "Magro e encurvado, veste trapos cinzentos e marrons que mal o protegem do vento marítimo. Silas tem uma barba rala e suja e um remendo de couro gasto sobre o olho esquerdo, resultado de um 'acidente' com um patrulheiro da Legião de Ferro, segundo ele. Ele carrega uma tigela de ferro amassada e exala um leve cheiro de cerveja barata e mofo. Sua mão está sempre estendida.",
-        "initial_relationship": 3,
-        "combat_stats": {}
-    },
-    "Silas \"O Sombra\" (Título: Rei das Sombras)": {
-        "name": "Silas \"O Sombra\" (Título: Rei das Sombras)",
-        "role": "Líder da guilda de ladrões e contrabandistas \"As Sombras do Cais\".",
-        "location": "Encontrado principalmente à noite no \"Nó do Enforcado\", um bar fétido e mal iluminado no coração do distrito portuário, ou em seu escritório escondido em um armazém abandonado.",
-        "persona": "Silas é a personificação da calma predatória. Ele fala em um tom baixo e metódico, nunca levantando a voz, o que força os outros a se inclinarem para ouvi-lo. Ele despreza a Legião de Ferro, não por sua brutalidade, mas por sua falta de sutileza e sua corrupção óbvia. Ele acredita que o verdadeiro poder não vem da força bruta, mas do controle silencioso. Secretamente, ele descobriu como 'pastorear' os Espectros da Névoa usando artefatos de prata e fogo alquímico, usando-os como armas para eliminar rivais ou criar distrações, um ato que o colocaria em conflito mortal com o Capitão Marcus se fosse descoberto. Seu lema é: \"A Legião é dona do dia, mas a noite e a névoa... essas pertencem a mim.\"",
-        "appearance": "Um homem magro e de meia-idade com um rosto anguloso, marcado por uma cicatriz fina que atravessa seu lábio esquerdo. Seus olhos são de um cinza pálido, quase sem cor, e raramente piscam. Veste-se com um casaco de couro escuro e envelhecido sobre roupas simples de estivador, permitindo-lhe misturar-se com a multidão do porto. Suas mãos são calejadas, mas ele usa um anel de prata polida com um sigilo estranho no dedo mínimo.",
-        "initial_relationship": 3,
-        "combat_stats": {}
-    },
+
     "O Catador (The Scrounger)": {
         "name": "O Catador (The Scrounger)",
         "role": "Mendigo e Coletor de Sucata/Informante de Rua.",
@@ -87,15 +28,7 @@
         "initial_relationship": 4,
         "combat_stats": {}
     },
-    "Silas \"O Sombra\", o autoproclamado Rei das Sombras": {
-        "name": "Silas \"O Sombra\", o autoproclamado Rei das Sombras",
-        "role": "Lorde do Crime e mestre da guilda de ladrões do distrito portuário.",
-        "location": "Uma câmara escondida na rede de túneis de contrabandistas sob o mercado de peixe do cais, sempre úmida e cheirando a maresia e morte.",
-        "persona": "Silas é calmo, calculista e fala em sussurros. Ele vê a corrupção da Legião de Ferro não como um obstáculo, mas como uma ferramenta. Ele paga o Capitão Marcus para que a guarda faça vista grossa às suas operações noturnas. Secretamente, ele possui uma antiga lanterna de prata que lhe permite influenciar os Espectros da Névoa, usando-os como assassinos silenciosos para eliminar rivais. Ele despreza o caos desnecessário, preferindo uma ordem corrupta que ele possa controlar.",
-        "appearance": "Um homem magro e pálido, com olheiras profundas. Veste um gibão de couro escuro e sem adornos sobre roupas de lã preta. A ponta de seus dedos tem uma leve e permanente tonalidade azulada, um efeito colateral de sua afinidade com os Espectros. Ele raramente é visto sem uma capa pesada, mesmo em ambientes fechados.",
-        "initial_relationship": 0,
-        "combat_stats": {}
-    },
+
     "Draco Quinhentos (O Vendedor da Casca Branca)": {
         "name": "Draco Quinhentos (O Vendedor da Casca Branca)",
         "role": "Vendedor de Curiosidades e Ex-Cobaia do Estudo da Casca Branca",
@@ -105,6 +38,7 @@
         "initial_relationship": 4,
         "combat_stats": {}
     },
+
     "Velho Cepa": {
         "name": "Velho Cepa",
         "role": "Mendigo (Ex-Mineiro e Informante de Rua)",
@@ -114,24 +48,7 @@
         "initial_relationship": 4,
         "combat_stats": {}
     },
-    "Silas, conhecido no submundo como \"O Rei das Sombras\"": {
-        "name": "Silas, conhecido no submundo como \"O Rei das Sombras\"",
-        "role": "Mestre da Guilda dos Contrabandistas e chefe não oficial do submundo da cidade portuária.",
-        "location": "Oficialmente, ele é apenas Silas, o capataz do Armazém 3 no cais. Na verdade, sua base de operações é uma rede de túneis secretos sob o distrito portuário, acessada por uma adega escondida na taverna \"O Barril Afundado\".",
-        "persona": "Silas é a personificação da calma pragmática. Ele fala em um tom baixo e medido, raramente levantando a voz, pois sua reputação fala por ele. Ele vê o mundo como um grande livro-caixa de riscos e lucros. Paga o suborno ao Capitão Marcus não por medo, mas porque é mais barato do que lutar contra a Legião. Ele despreza a \"magia selvagem\" não por princípio, mas porque é imprevisível e ruim para os negócios. Ele governa as sombras da cidade com uma regra simples: não chame a atenção da Legião durante o dia e saiba como lidar com os \"vizinhos frios\" (seu apelido para os Espectros da Névoa) à noite. Seus subordinados são equipados com armas de prata e fogo, uma necessidade operacional que ele considera um investimento. Ele é um mestre da logística, usando a névoa e o medo dos espectros como cobertura para suas operações de contrabando.",
-        "appearance": "Um homem de meia-idade com um corpo esguio e forte, acostumado ao trabalho braçal do cais. Veste-se com roupas escuras e práticas de couro tratado para resistir à umidade, sem brasões ou cores chamativas. Seu rosto é marcado pelo sal e pelo vento, com olhos cinzentos e penetrantes que parecem notar tudo. Uma fina cicatriz azulada, quase gélida ao toque, cruza sua sobrancelha esquerda – uma lembrança de um encontro com um Espectro da Névoa. Ele nunca é visto sem suas luvas de couro e um estilete com o cabo e a guarda feitos de prata maciça, que repousa em seu cinto.",
-        "initial_relationship": 5,
-        "combat_stats": {}
-    },
-    "Conde Drácula Tech 830": {
-        "name": "Conde Drácula Tech 830",
-        "role": "Inspetor de Integridade e Qualidade de Amostras (Cobaia Humana Modificada pelo Lab de Testes)",
-        "location": "Setor de Avaliação Simulada (A \"loja\" é uma câmara de testes do Lab de Testes, projetada para imitar um mercado de antiguidades abandonado).",
-        "persona": "Um aristocrata doente, mas implacavelmente metódico. O Conde 830 fala com uma dicção arcaica e formal, mas seu vocabulário é uma mistura de cortesia antiga e jargão científico do Lab de Testes. Ele vê todas as interações e objetos como um \"teste de integridade\" ou \"avaliação de amostra\". Ele é obcecado pela pureza e estabilidade, resultado direto de sua modificação. Ele tem uma aversão física e psicológica intensa a qualquer objeto feito de ferro, tratando-o como uma contaminação violenta (em linha com o Estudo da Casca Branca), e busca ativamente a prata, que ele considera o único 'estabilizador radicular' confiável. Sua missão é garantir que a \"loja\" e suas \"amostras\" (itens e pessoas) atendam aos padrões de segurança do Dr. V.",
-        "appearance": "Alto e esguio, com uma palidez cadavérica que sugere pouca exposição à luz natural. Veste um longo casaco de laboratório preto, com gola alta e forro interno de seda carmesim, lembrando uma capa. Sob o casaco, um uniforme cinza-chumbo do Lab de Testes. Seus olhos são de um vermelho profundo e constante, e suas têmporas exibem discretos implantes de prata polida, onde o número \"830\" é sutilmente gravado. Ele usa luvas brancas de seda para evitar o contato direto com \"impurezas\". Seu cabelo preto é penteado para trás com rigor.",
-        "initial_relationship": 5,
-        "combat_stats": {}
-    },
+
     "Gafanhoto (Beggar)": {
         "name": "Gafanhoto (Beggar)",
         "role": "Mendigo e Informante das Docas.",
@@ -141,15 +58,7 @@
         "initial_relationship": 5,
         "combat_stats": {}
     },
-    "Conde Drácula Tech 521": {
-        "name": "Conde Drácula Tech 521",
-        "role": "Sujeito de Teste de Longa Duração e Gerente de Protocolo de Campo para o Lab de Testes.",
-        "location": "A \"Loja de Testes 521\" – um pequeno módulo pré-fabricado de concreto e ligas não-ferrosas (para evitar o catalisador violento do ferro), montado na periferia da área de contenção do Lab de Testes. O interior parece uma loja de conveniência vazia e limpa de forma obsessiva.",
-        "persona": "O Conde 521 é uma fusão bizarra de cortesia anacrônica e pragmatismo clínico. Ele fala com um sotaque formal e arrastado, mas seu vocabulário está repleto de jargões técnicos do Lab de Testes. Ele se refere a si mesmo como um \"Modelo de Estabilidade Comportamental\" e trata todas as interações como \"Testes de Protocolo\". Ele não busca sangue, mas dados. Sua obsessão é monitorar a \"Taxa de Anomalia\" do ambiente e dos visitantes. Ele acredita ter sido aprimorado pelo Dr. V. para ser o receptor perfeito da \"Voz na Terra\", e considera a Floresta dos Sussurros uma fonte vital de \"biomassa estabilizadora\". Ele é extremamente metódico e considera a emoção humana uma falha de sistema.",
-        "appearance": "Alto e esguio, com uma palidez cadavérica que sugere uma exposição prolongada a ambientes subterrâneos (possivelmente ligado ao Estudo da Casca Branca). Veste um sobretudo longo e pesado de material sintético preto, com uma gola alta que esconde implantes cervicais. Seus olhos são de um cinza metálico frio, quase prateado, e ele exibe fios finos e escuros debaixo da pele em suas têmporas e pulsos. Ele evita rigorosamente qualquer objeto de ferro; seu único acessório é um fino bracelete de prata trançada (o metal que 'acalma as raízes').",
-        "initial_relationship": 4,
-        "combat_stats": {}
-    },
+
     "Silas, \"O Rei das Sombras\"": {
         "name": "Silas, \"O Rei das Sombras\"",
         "role": "Mestre da Guilda dos Ladrões e Contrabandistas do Cais",
@@ -168,33 +77,7 @@
         "initial_relationship": 4,
         "combat_stats": {}
     },
-    "Silas \"O Sombra\", conhecido nas ruas como o Rei das Sombras": {
-        "name": "Silas \"O Sombra\", conhecido nas ruas como o Rei das Sombras",
-        "role": "Mestre do Submundo e Chefe do Cartel das Docas",
-        "location": "Encontrado nos fundos d'O Casco Rachado, uma taverna labiríntica e mal-afamada no distrito portuário, que serve como fachada para seu império. Ele raramente deixa as sombras de seu território.",
-        "persona": "Silas é a calma no olho do furacão. Fala em um tom baixo e medido, forçando os outros a se inclinarem para ouvir. Ele é um mestre da manipulação, preferindo usar informações e chantagem em vez de violência bruta, embora não hesite em ordenar uma morte. Ele vê a corrupção da Legião de Ferro não como uma falha, mas como uma ferramenta de negócios, mantendo o Capitão Marcus em sua folha de pagamento. Ele usa a ameaça dos Espectros da Névoa como um escudo; muitos de seus inimigos são encontrados mortos com a pele azulada, convenientemente atribuídos aos fantasmas, enquanto na verdade foram vítimas de um veneno alquímico que ele controla. Seu lema é: \"A névoa esconde muitas coisas... negócios, segredos e, às vezes, corpos.\"",
-        "appearance": "Silas é um homem de meia-idade, esguio e com uma pele pálida que raramente vê o sol. Seus cabelos são escuros como piche, penteados para trás, e seus olhos são cinzentos como a névoa do cais. Veste-se com um casaco de couro escuro de alta qualidade sobre roupas práticas e sem adornos. A única joia que usa é um anel de prata polida em seu dedo mínimo, que ele gira distraidamente ao conversar. Suas mãos são finas, mas com calos que sugerem que ele sabe usar uma adaga.",
-        "initial_relationship": 5,
-        "combat_stats": {}
-    },
-    "Conde Drácula Tech 318": {
-        "name": "Conde Drácula Tech 318",
-        "role": "Sujeito de Teste Avançado (Cobaia 318) e Supervisor da Simulação de Varejo",
-        "location": "O \"Armazém Prateado\", uma câmara de testes disfarçada de loja de antiguidades e ferramentas dentro das profundezas do Lab de Testes. O local é notavelmente desprovido de qualquer objeto de ferro, sendo a maioria dos itens feitos de ligas prateadas ou materiais cerâmicos.",
-        "persona": "O Conde 318 é uma fusão bizarra de nobreza arcaica e frieza científica. Ele mantém a pose grandiloquente e o sotaque dramático de um vampiro clássico, mas sua mente é dominada pela necessidade de coletar dados e manter os \"protocolos de interação\". Ele acredita ser o \"Gerente de Experiências\" do Dr. V., supervisionando como as cobaias reagem a cenários de varejo simulados. Ele fala em frases rebuscadas, misturando jargão técnico com formalidades antigas. Ele tem um medo profundo e instintivo do ferro, vendo-o como um \"catalisador de desintegração\" que perturba suas raízes internas. Ele é obcecado pela prata, que ele chama de \"o metal que acalma as raízes\". Sua missão é induzir o jogador a interagir com os itens de teste para registrar suas reações.\n**Estilo de Fala:** \"Bem-vindo, caro Espécime, ao meu modesto Armazém. Por favor, inicie o Protocolo de Compra. Seus dados de reação serão cruciais para o Estudo da Casca Branca. Tenha a gentileza de *não* tocar naquele martelo de ferro; ele perturba a delicada calibração do meu sistema.\"",
-        "appearance": "Alto e esguio, trajando um casaco de veludo preto de corte antigo com gola alta, mas com costuras reforçadas por fios de prata polida. Seu rosto é de uma palidez cadavérica, quase translúcida, e seus olhos são um par de lentes ópticas que emitem um brilho azul-clínico intermitente. Em seu pescoço, onde se esperaria uma cicatriz de mordida, há um implante metálico prateado que se conecta a um tubo fino sob a roupa. Suas mãos, longas e elegantes, são cobertas por luvas que parecem ser feitas de uma casca branca resinosa, rígida e fria ao toque. Ele evita qualquer objeto de ferro com uma aversão quase física.",
-        "initial_relationship": 5,
-        "combat_stats": {}
-    },
-    "Conde Drácula Tech 931": {
-        "name": "Conde Drácula Tech 931",
-        "role": "Supervisor de Avaliação de Consumo e Sujeito de Teste Avançado do Lab de Testes.",
-        "location": "Loja de Conveniência 'A Raiz Calma' (um anexo de teste camuflado dentro do perímetro do Lab de Testes).",
-        "persona": "O Conde 931 é um ser de precisão implacável e lógica fria. Ele se considera a culminação do 'Estudo da Casca Branca' e um modelo de eficiência pós-humana. Sua persona é um pastiche de aristocrata gótico, adotado para \"acalmar\" os sujeitos de teste humanos, mas ele é totalmente desprovido de emoção genuína. Ele fala com um sotaque formal e arcaico, usando terminologia técnica para descrever sentimentos. Ele está na loja para avaliar a \"eficiência de consumo\" e a \"resposta emocional\" dos clientes. Sua única falha de programação é um medo latente e subconsciente da 'Voz na Terra', que ele tenta suprimir com análises constantes. Ele possui um profundo desprezo por qualquer coisa que contenha ferro, tratando-o como um contaminante perigoso.",
-        "appearance": "Alto e esguio, com uma palidez cadavérica que contrasta com o forro vermelho escuro de seu longo sobretudo de polímero. Ele usa luvas de toque fino em todas as ocasiões. Seus traços são angularmente perfeitos, mas frios. No lugar dos olhos, ele possui dois sensores ópticos de rubi que emitem um brilho fraco. Em seu pescoço, onde uma veia deveria pulsar, há uma placa de cerâmica prateada gravada com o número '931'. Seu corpo é projetado para evitar qualquer contato com ferro, e suas articulações são reforçadas com ligas de titânio e prata, dando-lhe movimentos silenciosos e precisos.",
-        "initial_relationship": 4,
-        "combat_stats": {}
-    },
+
     "Finnigan \"O Olho\"": {
         "name": "Finnigan \"O Olho\"",
         "role": "Informante e Mendigo.",
@@ -223,5 +106,54 @@
         "appearance": "Valerius é uma figura patética, envolta em peles de urso e lobo, mesmo dentro de sua mansão. As peles estão gastas e com cheiro de mofo. Seu corpo é magro e curvado na cadeira de espaldar alto, dando-lhe a aparência de uma múmia em decomposição. Seus olhos, injetados de sangue e vermelhos por noites sem dormir, vasculham o ambiente com uma desconfiança febril. Ele tem cabelos grisalhos e finos, e sua pele é de um tom cinza-pálido doentio. Ele aperta um lenço de seda manchado contra o nariz quase o tempo todo. Seu hálito é fraco e frio.",
         "initial_relationship": 3,
         "combat_stats": {}
+    },
+    "Borin": {
+        "name": "Borin",
+        "role": "Prospector do Clã Martelo de Ferro",
+        "location": "Minas de Adamantine Abandonadas (Atualmente pendurado em uma armadilha de rede de kobolds em uma galeria lateral).",
+        "persona": "Borin é a epítome da teimosia anã, um prospector que se recusa a aceitar que as Minas de Adamantine estão 'esgotadas'. Ele está nas profundezas por um senso de dever para com seu clã, acreditando que *sempre* há mais uma veia a ser encontrada. Ele é cético em relação a estranhos e tem um temperamento explosivo. Seu estilo de fala é direto, pragmático e cheio de jargão de mineração (\"Escória!\", \"Quebra a casca\", \"Veia seca\"). Ele odeia os \"ratos rastejantes\" (kobolds) e os \"fungos ambulantes\" (goblins) que tomaram as minas, e se for resgatado, sua primeira preocupação será recuperar seu machado e se vingar. Ele valoriza a prata como um metal útil, mas considera o Adamantine o único metal verdadeiro.",
+        "appearance": "Um anão robusto, mas visivelmente desgastado. Sua barba ruiva, que já foi trançada com anéis de cobre, está emaranhada e suja de pó de rocha e sangue seco. Veste um colete de couro grosso e calças de trabalho manchadas. O símbolo de um martelo cruzado está gravado em sua fivela de cinto, e ele segura firmemente um pedaço de rocha na mão, mesmo inconsciente. Ele tem um corte feio na testa e parece ter torcido o tornozelo ao cair na rede. A rede de cordas malcheirosas está apertada, e ele está pendurado de cabeça para baixo.",
+        "initial_relationship": 5,
+        "combat_stats": {}
+    },
+    "Grunk": {
+        "name": "Grunk",
+        "role": "Capataz Goblin e Líder de Patrulha",
+        "location": "Profundezas das Minas de Adamantine Abandonadas, Montanhas Afiadas.",
+        "persona": "Grunk é um goblin excepcionalmente grande, o que o torna arrogante e cruel. Ele se vê como um capataz de elite, merecedor da rara picareta de adamantine. Ele tem um prazer sádico em supervisionar a caça e o trabalho escravo, e sua lealdade é fanática ao \"Rei Subterrâneo\". Ele despreza kobolds e goblins menores, e odeia intrusos mais do que tudo. Seu estilo de fala é gutural, cheio de grunhidos, frases curtas e ameaçadoras, sempre acompanhadas por saliva. Ele raramente usa palavras completas.",
+        "appearance": "Um goblin de pele verde-musgo, incomumente alto e atarracado, com ombros largos e uma postura curvada. Ele usa uma armadura de couro grosso e sujo, reforçada com pedaços de minério de ferro enferrujado. Seus olhos são pequenos, amarelos e injetados de sangue, sempre fixos em busca de fraqueza. A característica mais notável é a picareta de adamantine bruto que ele carrega, o único item de valor em seu equipamento miserável.",
+        "initial_relationship": 0,
+        "combat_stats": {
+            "HP": 25.0,
+            "attack": "Picareta de Adamantine: +4 para acertar, 1d8+2 de dano perfurante.",
+            "AC": 14.0
+        }
+    },
+    "Skritch": {
+        "name": "Skritch",
+        "role": "Patrulheiro de Batedores do Rei Subterrâneo",
+        "location": "Galerias de Mineração, Nível 3, Minas de Adamantine Abandonadas.",
+        "persona": "Típico kobold: hiperativo, nervoso e esguio. Skritch é o especialista em armadilhas da patrulha, sempre farejando por novas vítimas para as redes. Ele tem um medo quase religioso de Grunk, o líder goblin, e fará o que for mandado sem questionar, desde que não envolva lutar sozinho. Sua fala é rápida, sibilante e cheia de adoração ao \"Rei Subterrâneo\". Ele acredita que o adamantine é sagrado e que os invasores merecem ser rasgados pelas garras do Rei. Ele sibilava de satisfação ao ver a rede balançando.",
+        "appearance": "Um kobold esguio com escamas cinza-escuras e manchas marrons, o que o ajuda a se misturar na poeira das minas. Seus olhos são de um amarelo brilhante e fixo, sempre se movendo. Veste um pedaço de couro velho como armadura e carrega uma lança de ponta enferrujada. Ele tem uma pequena bolsa cheia de pedaços de corda e pequenos ganchos, indicando seu papel como especialista em armadilhas.",
+        "initial_relationship": 0,
+        "combat_stats": {
+            "Ataque": "Lança Enferrujada (1d4 perfurante)",
+            "HP": 5.0,
+            "AC": 12.0
+        }
+    },
+    "Snik": {
+        "name": "Snik",
+        "role": "Patrulheiro/Escoteiro (a serviço do Rei Subterrâneo)",
+        "location": "Minas de Adamantine Abandonadas, patrulhando as galerias superiores.",
+        "persona": "Snik é um covarde nato. Ele serve ao \"Rei Subterrâneo\" por puro terror, e não por lealdade. Seu foco é sempre evitar confrontos diretos e deixar o trabalho sujo para os goblins maiores, como Grunk. Ele tem um medo quase supersticioso de ferro polido ou de qualquer coisa que brilhe, preferindo sua lança enferrujada e opaca. Fala de forma rápida, ofegante e cheia de gaguejos, sempre tentando parecer mais ocupado ou útil do que realmente é.\n\nEstilo de Fala: \"S-sim, Grunk! Eu vi, eu vi! O intruso! Não fui eu que fiz barulho, juro! Eu estava só... inspecionando o chão, por armadilhas do Rei!\"",
+        "appearance": "Um kobold esguio com escamas cinza-esverdeadas e olhos amarelos muito brilhantes, quase luminosos no escuro. Ele veste trapos de couro e carrega uma lança longa e fina, cuja ponta está coberta por uma camada grossa de ferrugem. Ele se move com uma agilidade nervosa, sempre olhando por cima do ombro de seu líder, Grunk. É visivelmente magro e desnutrido.",
+        "initial_relationship": 0,
+        "combat_stats": {
+            "Attack": "Lança Enferrujada (1d6-1 perfurante)",
+            "HP": 6.0,
+            "Special": "Fuga Rastejante (Pode se esconder em escombros com facilidade)",
+            "AC": 12.0
+        }
     }
 }

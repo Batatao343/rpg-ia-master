@@ -35,6 +35,7 @@ def rules_node(state: GameState):
     3. Se não houver uma regra aplicável, use o bom senso e regras padrão de D&D 5e simplificadas.
     3. Defina a DC (Dificuldade).
     4. Gere a Tool Call `roll_dice` se houver chance de falha.
+    5. Se o jogador perguntar sobre o inventário e ele estiver vazio, diga que ele está desarmado e sugira improvisar.
     """)
     
     llm = get_llm(temperature=0.4)

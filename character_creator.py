@@ -49,6 +49,8 @@ def create_player_character(manual_args: Dict | None = None) -> Dict:
         content=(
             "You are a character builder for a dark fantasy RPG. "
             "Generate balanced, level-1 stats with modest gear."
+            "The player should have a modest inventory of item that are related to the race and class."
+            "The HP should never be less than 10"
         )
     )
 

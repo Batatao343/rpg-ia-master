@@ -12,6 +12,8 @@ from agents.bestiary import generate_new_enemy
 # --- INTEGRAÇÃO RAG ---
 from rag import query_rag
 
+# --- INTEGRAÇÃO JUÍZ DE REGRAS (NOVO) ---
+from agents.magic_ruler import resolve_dynamic_action
 
 class BossStrategy(BaseModel):
     name: str
@@ -26,6 +28,14 @@ class BossStrategySet(BaseModel):
 
 def get_mod(score: int) -> int:
     return (score - 10) // 2
+
+def _is_complex_action(intent: str) -> bool:
+    """Heurística simples para decidir se chamamos o Juiz (Adjudicator)."""
+    if not intent: return False
+    intent_lower = intent.lower()
+    keywords = ["conjuro", "uso", "habilidade", "tento", "invoco", "magia", "poder", "cast", "spell", "escondo", "furtividade", "salto"]
+    # Se for longo ou tiver keywords, é complexo. Ataques simples ("bato nele") não precisam de Juiz.
+    return len(intent.split()) > 4 or any(k in intent_lower for k in keywords)
 
 
 def combat_node(state: GameState):
@@ -67,27 +77,22 @@ def combat_node(state: GameState):
     if isinstance(last_msg, HumanMessage):
         last_user_intent = last_msg.content
 
-    # --- PRE-CHECK: converte agressão a NPC em inimigo ativo ---
+    # --- FASE 1: PRE-CHECK (Conversão de NPC -> Inimigo) ---
     if not active_enemies:
         target_npc = None
         
         # 1. TENTA PEGAR DO ROUTER (Prioridade Máxima)
-        # O Router já resolveu pronomes ("atacá-lo" -> "Valerius")
         router_target = state.get("combat_target") 
         
-        found_by_router = False
-
         if router_target:
             print(f"🎯 [COMBAT] Router indicou alvo: {router_target}")
             # Busca fuzzy no dicionário de NPCs
             for name, npc in state.get("npcs", {}).items():
-                # Verifica se o nome do NPC está dentro do alvo do router ou vice-versa
                 if name.lower() in router_target.lower() or router_target.lower() in name.lower():
                     target_npc = (name, npc)
-                    found_by_router = True
                     break
         
-        # 2. FALLBACK: BUSCA NO TEXTO (Se o Router falhou ou não enviou nada)
+        # 2. FALLBACK: BUSCA NO TEXTO
         if not target_npc and last_user_intent:
             lowered_intent = last_user_intent.lower()
             for name, npc in state.get("npcs", {}).items():
@@ -95,14 +100,13 @@ def combat_node(state: GameState):
                     target_npc = (name, npc)
                     break
 
-        # SE ACHOU UM ALVO VÁLIDO (Pelo Router ou Texto)
+        # SE ACHOU UM ALVO VÁLIDO
         if target_npc:
             npc_name, npc_data = target_npc
             print(
                 f"⚔️ [COMBAT] Jogador iniciou agressão contra NPC '{npc_name}'. Convertendo para inimigo..."
             )
             
-            # Gera a ficha técnica do monstro baseada na persona do NPC
             enemy_template = generate_new_enemy(npc_name, context=npc_data.get("persona", ""))
             
             if enemy_template:
@@ -116,7 +120,6 @@ def combat_node(state: GameState):
                 hostile.setdefault("active_conditions", [])
                 hostile.setdefault("type", enemy_template.get("type", "NPC"))
                 
-                # Salva quem ele era antes de virar monstro (para memória póstuma)
                 hostile["origin_npc"] = {
                     "name": npc_name,
                     "persona": npc_data.get("persona"),
@@ -124,19 +127,11 @@ def combat_node(state: GameState):
                     "memory": npc_data.get("memory", [])[-5:],
                 }
                 
-                # Adiciona à lista de inimigos
                 state["enemies"].append(hostile)
-                
-                # Opcional: Remove da lista de NPCs sociais para ele não aparecer duplicado
                 state.get("npcs", {}).pop(npc_name, None)
-                
-                # Atualiza a lista local de inimigos ativos para o combate começar AGORA
                 active_enemies = [hostile]
-                
-                # Limpa o combat_target do estado para não causar loops futuros
-                state["combat_target"] = None
+                state["combat_target"] = None # Limpa loop
 
-        # Se depois de tudo isso ainda não tiver inimigos...
         if not active_enemies:
             return {
                 "messages": [
@@ -147,7 +142,25 @@ def combat_node(state: GameState):
                 "world": state.get("world", {}),
             }
 
-    # ✅ CORREÇÃO AQUI: join com generator (sem vírgula sobrando)
+    # ==============================================================================
+    # FASE 2: O JUIZ DE AÇÕES (ADJUDICATOR) - NOVO BLOCO
+    # ==============================================================================
+    judge_ruling = None
+    
+    # Só chamamos o juiz se o jogador falou algo E for uma ação complexa
+    if last_user_intent and not player_already_acted and _is_complex_action(last_user_intent):
+        print(f"⚖️ [COMBAT] Consultando Juiz para: '{last_user_intent}'")
+        judge_ruling = resolve_dynamic_action(player, last_user_intent)
+        
+        # GUARDRAIL: Se o Juiz negar (Ex: Nível baixo demais, Classe errada)
+        if not judge_ruling["is_allowed"]:
+            print(f"🚫 [COMBAT] Ação Negada: {judge_ruling['rejection_reason']}")
+            return {
+                "messages": [AIMessage(content=f"🚫 **Ação Falhou**: {judge_ruling['rejection_reason']}")],
+                "world": state.get("world", {})
+            }
+
+    # Formatação da Lista de Inimigos
     enemy_str = "\n".join(
         f"{idx+1}. {e['name']} (ID:{e['id']} | HP:{e['hp']} | Cond:{e.get('active_conditions', [])})"
         for idx, e in enumerate(active_enemies)
@@ -166,11 +179,29 @@ def combat_node(state: GameState):
         if not combat_rules:
             combat_rules = "Regras Padrão: Ataque x AC. Dano reduz HP."
 
+    # 2. ESTRATÉGIA DE BOSS (ToT) - MANTIDO
     boss_directive = None
     if boss_enemies:
         boss_directive = _tree_of_thoughts_strategy(
             player, boss_enemies, combat_rules, last_user_intent, enemy_str
         )
+
+    # ==============================================================================
+    # FASE 3: MONTAGEM DO PROMPT
+    # ==============================================================================
+    
+    # Prepara a instrução do Juiz (Se houver)
+    adjudication_context = ""
+    if judge_ruling:
+        adjudication_context = f"""
+        [⚠️ MANDATORY JUDGE RULING]
+        The Game Physics Engine has resolved this action based on Level/Class:
+        - VISUAL DESCRIPTION: {judge_ruling['flavor_text']}
+        - MECHANICS (DAMAGE/DC): {judge_ruling['mechanical_effect']}
+        
+        INSTRUCTION: You MUST use the mechanics above. Do not invent new damage values.
+        Narrate the outcome combining the Visual Description with the enemy's reaction.
+        """
 
     system_msg = SystemMessage(
         content=f"""
@@ -184,6 +215,8 @@ def combat_node(state: GameState):
 
     Player Já Agiu Neste Turno? {player_already_acted}
     </state>
+    
+    {adjudication_context}
 
     <boss_strategy>
     {boss_directive if boss_directive else "Nenhum chefe presente ou estratégia padrão para lacaios."}
@@ -195,8 +228,10 @@ def combat_node(state: GameState):
 
     <protocol>
     1. AÇÃO JOGADOR (Se não agiu):
-       - Analise a intenção. Se for Ataque, requer Tool 'Ataque Jogador'.
-       - Se for Manobra (Desarmar, Empurrar), siga a regra em <consulted_rules>.
+       - Analise a intenção.
+       - Se houver [MANDATORY JUDGE RULING], siga-o estritamente (visual e mecânica).
+       - Se for Manobra, siga <consulted_rules>.
+       - Se for ataque básico, use a arma equipada.
        
        IMPORTANTE: O Jogador acabou de iniciar hostilidade contra um novo inimigo ({active_enemies[0]['name']}).
        Descreva o início do combate e processe o primeiro ataque se a intenção foi clara.

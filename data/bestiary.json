@@ -1,47 +1,4 @@
 {
-    "Tigre Cibernético 661": {
-        "name": "Tigre Cibernético 661",
-        "hp": 25,
-        "max_hp": 25,
-        "stamina": 10,
-        "mana": 0,
-        "defense": 13,
-        "attack_mod": 4,
-        "attributes": {
-            "Constituição": 13,
-            "Força": 14,
-            "Destreza": 15
-        },
-        "abilities": [
-            "Ataque de Garra: Ataque corpo a corpo com garras metálicas. Causa 1d6+2 de dano cortante.",
-            "Mordida Elétrica (Recarga após 2 turnos): O tigre morde, liberando uma carga elétrica. Causa 1d8+2 de dano perfurante mais 1d4 de dano elétrico. O alvo deve ser bem-sucedido em um teste de Constituição (CD 12) ou ficará paralisado por 1 turno.",
-            "Protocolo de Caça: Como uma ação bônus, o tigre marca um alvo. Seus ataques contra o alvo marcado têm vantagem até o final de seu próximo turno."
-        ],
-        "active_conditions": [],
-        "desc": "Um predador felino aprimorado com implantes cibernéticos para testes de combate. Seus olhos brilham com uma luz vermelha fria e cabos percorrem seu corpo metálico. O Modelo 661 é ágil, letal e seus protocolos de combate são instáveis."
-    },
-    "Tigre Cibernético": {
-        "name": "Tigre Cibernético",
-        "hp": 25,
-        "max_hp": 25,
-        "stamina": 10,
-        "mana": 0,
-        "defense": 13,
-        "attack_mod": 4,
-        "attributes": {
-            "Sabedoria": 10,
-            "Constituição": 14,
-            "Força": 16,
-            "Inteligência": 6,
-            "Destreza": 15
-        },
-        "abilities": [
-            "Garras de Energia: Ataque corpo a corpo com suas garras. Causa 1d8+2 de dano cortante.",
-            "Canhão de Plasma (Recarga 5-6): Dispara um raio de plasma em um alvo a até 9 metros. Causa 2d6 de dano de energia."
-        ],
-        "active_conditions": [],
-        "desc": "Uma fera mecânica com garras energizadas, criada em laboratório para ser o predador perfeito. Seus olhos vermelhos brilham com uma luz fria e calculista."
-    },
     "Rato Mutante": {
         "name": "Rato Mutante",
         "hp": 28,
@@ -66,47 +23,7 @@
         "active_conditions": [],
         "desc": "Um rato anormalmente grande, com tufos de pelo caindo e veias saltadas. Seus olhos injetados brilham com uma cor esverdeada fraca, resíduo de algum soro experimental falho do Lab de Testes."
     },
-    "Dragão Ancestral do Vazio": {
-        "name": "Dragão Ancestral do Vazio",
-        "hp": 150,
-        "max_hp": 150,
-        "stamina": 10,
-        "mana": 0,
-        "defense": 18,
-        "attack_mod": 8,
-        "attributes": {
-            "Força": 20,
-            "Inteligência": 16
-        },
-        "abilities": [
-            "Sopro do Vazio (Recarga 2 turnos): Expele um cone de energia escura que causa dano necrótico e impede a cura por 1 rodada.",
-            "Prisão Gravitacional: Prende um alvo no chão, impedindo seu movimento por 1 rodada.",
-            "Cauda Varejante: Um ataque em área que atinge todos os alvos próximos."
-        ],
-        "active_conditions": [],
-        "desc": "Um dragão colossal cujas escamas parecem conter a própria noite estrelada. Fendas de energia roxa pulsam em seu peito e olhos."
-    },
-    "Ancient Void Dragon": {
-        "name": "Ancient Void Dragon",
-        "hp": 300,
-        "max_hp": 300,
-        "stamina": 10,
-        "mana": 0,
-        "defense": 19,
-        "attack_mod": 9,
-        "attributes": {
-            "Constituição": 22,
-            "Força": 26
-        },
-        "abilities": [
-            "Sopro do Vazio",
-            "Poço Gravitacional",
-            "Esfera de Silêncio",
-            "Ataque de Cauda"
-        ],
-        "active_conditions": [],
-        "desc": "Uma criatura colossal cujas escamas parecem conter a própria noite estrelada. Seus olhos são buracos negros de malícia e suas asas absorvem a luz ao redor."
-    },
+
     "Dragão Ancião do Vazio": {
         "name": "Dragão Ancião do Vazio",
         "hp": 180,
@@ -132,43 +49,29 @@
         "active_conditions": [],
         "desc": "Uma criatura colossal cujas escamas parecem absorver a luz, como um buraco negro. Seus olhos são pontos de vácuo e uma energia roxa e crepitante emana de sua mandíbula."
     },
-    "Dragão Antigo do Vazio (Protótipo de Arena)": {
-        "name": "Dragão Antigo do Vazio (Protótipo de Arena)",
-        "hp": 95,
-        "max_hp": 95,
+
+    "Grunk, Capataz de Elite": {
+        "name": "Grunk, Capataz de Elite",
+        "hp": 45,
+        "max_hp": 45,
         "stamina": 10,
         "mana": 0,
-        "defense": 17,
-        "attack_mod": 7,
-        "attributes": {},
-        "abilities": [
-            "Sopro do Vazio (Recarga)",
-            "Mordida Gravitacional",
-            "Cauda Entrópica"
-        ],
-        "active_conditions": [],
-        "desc": "Uma criatura colossal feita de escuridão e poeira estelar. Suas escamas brilham como galáxias distantes e seus olhos são buracos negros famintos."
-    },
-    "Ancient Void Dragon Boss": {
-        "name": "Ancient Void Dragon Boss",
-        "hp": 15,
-        "max_hp": 15,
-        "stamina": 10,
-        "mana": 0,
-        "defense": 12,
-        "attack_mod": 3,
+        "defense": 16,
+        "attack_mod": 8,
         "attributes": {
-            "strength": 10,
-            "dexterity": 10,
-            "constitution": 10,
-            "intelligence": 10,
-            "wisdom": 10,
-            "charisma": 10
+            "WIS": 10,
+            "CHA": 6,
+            "INT": 8,
+            "CON": 14,
+            "STR": 16,
+            "DEX": 10
         },
         "abilities": [
-            "Ataque Genérico"
+            "Picareta de Adamantine: Ataques corpo a corpo ignoram 2 pontos de Defesa (AC) do alvo.",
+            "Grito de Capataz: Uma vez a cada 3 turnos, Grunk pode emitir um grito gutural, concedendo +2 de Bônus de Ataque no próximo turno dele ou de um aliado goblin/kobold próximo.",
+            "Bruto Arrogante: Imune a efeitos de medo ou intimidação. Sua arrogância o impede de recuar."
         ],
         "active_conditions": [],
-        "desc": "Uma criatura indefinida."
+        "desc": "Um goblin de estatura monstruosa, quase do tamanho de um orc pequeno. Sua pele é verde-escura e coberta de cicatrizes. Ele veste um colete de couro sujo e empunha uma picareta de mineração com a ponta brilhando com o raro adamantine. Saliva escorre constantemente de sua boca."
     }
 }
