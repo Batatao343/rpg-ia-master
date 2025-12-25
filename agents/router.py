@@ -27,7 +27,6 @@ class RouteType(str, Enum):
     """
     STORY = "storyteller"    # Exploração, descrição de cenário, viagem
     COMBAT = "combat_agent"  # Início de hostilidade, ataques, sacar armas
-    RULES = "rules_agent"    # Perguntas sobre mecânicas, XP, fichas
     NPC = "npc_actor"        # Conversa direta com um NPC específico
     NONE = "none"            # Fallback
 
@@ -92,7 +91,6 @@ def dm_router_node(state: GameState):
     1. STORY (storyteller): O jogador quer explorar, observar, viajar ou fazer ações gerais. (Padrão).
     2. NPC (npc_actor): O jogador fala DIRETAMENTE com um personagem da lista acima.
     3. COMBAT (combat_agent): O jogador ataca, saca armas, prepara emboscada ou mostra hostilidade agressiva.
-    4. RULES (rules_agent): O jogador pergunta sobre fichas, XP, regras ou inventário (meta-jogo).
 
     INSTRUÇÕES:
     - Se o jogador falar com alguém que NÃO está na lista, escolha 'STORY' (o narrador dirá que não está lá).

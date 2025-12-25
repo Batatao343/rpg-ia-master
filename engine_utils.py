@@ -1,232 +1,128 @@
-import re
-from typing import List, Annotated, Literal, Optional, Any
-from pydantic import BaseModel, Field, BeforeValidator, field_validator
-from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
-from state import GameState
-from gamedata import BESTIARY
+"""
+engine_utils.py
+Gerencia o ciclo de execução da LLM (Re-Act Loop).
+CORREÇÃO: Garante narrativa final e suporta turnos longos.
+"""
+from typing import Dict, Any, List
+from langchain_core.messages import AIMessage, ToolMessage, SystemMessage, BaseMessage
+from langchain_core.runnables import Runnable
+from dice_system import roll_formula
 
-# Importação preguiçosa para evitar ciclo (Bestiary Agent é importado dentro da função)
-
-# --- VALIDATORS ---
-def clean_int(v: Any) -> int:
-    if isinstance(v, int): return v
-    if isinstance(v, str):
-        nums = re.findall(r'-?\d+', v)
-        if nums: return int(nums[0])
-    return 0
-
-# --- MODELS ---
-class DamageTarget(BaseModel):
-    target_name: str
-    damage_amount: Annotated[int, BeforeValidator(clean_int)]
-    is_healing: bool = False
-
-    @field_validator("damage_amount")
-    @classmethod
-    def validate_damage_amount(cls, v: int) -> int:
-        """Clamp negative values to zero and guard against absurd spikes."""
-        if v < 0:
-            return 0
-        if v > 100:
-            raise ValueError("damage_amount acima do limite de sanidade (100)")
-        return v
-
-class ConditionUpdate(BaseModel):
-    target_name: str
-    condition: str
-    operation: Literal["add", "remove"]
-
-class EngineUpdate(BaseModel):
-    reasoning_trace: str
-    narrative_reason: str
-    hp_updates: List[DamageTarget] = Field(default_factory=list)
-    condition_updates: List[ConditionUpdate] = Field(default_factory=list)
-    player_mana_change: Annotated[int, BeforeValidator(clean_int)] = Field(default=0)
-    player_stamina_change: Annotated[int, BeforeValidator(clean_int)] = Field(default=0)
-    gold_change: Annotated[int, BeforeValidator(clean_int)] = Field(default=0)
-    items_to_add: List[str] = Field(default_factory=list)
-    items_to_remove: List[str] = Field(default_factory=list)
-    spawn_enemy_type: Optional[str] = None
-
-    @field_validator("player_stamina_change")
-    @classmethod
-    def validate_stamina_change(cls, v: int) -> int:
-        """Restringe variações de Stamina a um intervalo realista por turno."""
-        if v < -20 or v > 20:
-            raise ValueError("player_stamina_change fora do intervalo permitido (-20 a 20)")
-        return v
-
-# --- EXECUÇÃO GENÉRICA ---
-def _dice_rolled_recently(messages: list) -> bool:
-    """Detecta se uma rolagem de dados ocorreu recentemente para validar danos."""
-    for msg in reversed(messages[-6:]):
-        if isinstance(msg, ToolMessage):
-            name = getattr(msg, "name", "") or ""
-            content = getattr(msg, "content", "") or ""
-            if name == "roll_dice" or "roll_dice" in content:
-                return True
-        if isinstance(msg, AIMessage):
-            for call in getattr(msg, "tool_calls", []) or []:
-                if getattr(call, "get", None):
-                    if call.get("name") == "roll_dice":
-                        return True
-                elif getattr(call, "name", "") == "roll_dice":
-                    return True
-    return False
-
-
-def execute_engine(llm, prompt_sys, messages, state, context_name):
-    if not messages:
-        new_state = {**state}
-        new_state["messages"] = [AIMessage(content="Descreva sua ação inicial para começarmos a aventura.")]
-        return new_state
-
+def execute_engine(
+    llm: Runnable, 
+    system_message: SystemMessage, 
+    history: List[BaseMessage], 
+    state: Dict[str, Any], 
+    node_name: str = "Engine"
+) -> Dict[str, Any]:
+    
+    # 1. Ferramentas
+    tools_schema = [
+        {
+            "name": "roll_dice",
+            "description": "Rola dados. Ex: '1d20+5', 'DC 15 Dex, 8d6 fire'.",
+            "parameters": {"type": "object", "properties": {"formula": {"type": "string"}}, "required": ["formula"]}
+        },
+        {
+            "name": "update_hp",
+            "description": "Aplica dano (negativo) ou cura (positivo).",
+            "parameters": {
+                "type": "object", 
+                "properties": {
+                    "target": {"type": "string"}, 
+                    "amount": {"type": "integer"}
+                }, 
+                "required": ["target", "amount"]
+            }
+        }
+    ]
+    
     if getattr(llm, "is_fallback", False):
-        fallback_msg = llm.invoke(None)
-        new_state = {**state}
-        new_state["messages"] = messages + [fallback_msg]
-        return new_state
+        return {"messages": history + [AIMessage(content="Erro de API.")]}
 
-    # Contexto Limpo
-    last_human = next((m for m in reversed(messages) if isinstance(m, HumanMessage)), None)
-    if last_human is None:
-        new_state = {**state}
-        new_state["messages"] = messages + [AIMessage(content="Envie sua próxima ação para continuar a cena.")]
-        return new_state
-
-    last_tool = next((m for m in reversed(messages) if isinstance(m, ToolMessage)), None)
-
-    last_ai_handoff = None
-    if isinstance(messages[-1], AIMessage) and not messages[-1].tool_calls:
-        last_ai_handoff = messages[-1]
-
-    input_msgs = [prompt_sys]
-    if last_ai_handoff:
-        input_msgs.append(last_ai_handoff)
-    input_msgs.append(last_human)
-    if last_tool:
-        input_msgs.append(last_tool)
-
-    # Tool Binding
-    from tools import roll_dice
-    if not last_tool:
-        tools = llm.bind_tools([roll_dice])
-        first_res = tools.invoke(input_msgs)
-        if first_res.tool_calls: return {"messages": [first_res]}
+    llm_with_tools = llm.bind_tools(tools_schema)
     
-    # Geração Estruturada
-    try:
-        engine = llm.with_structured_output(EngineUpdate).with_retry(stop_after_attempt=3)
-        update = engine.invoke(input_msgs)
-        if not update:
-            raise ValueError("JSON Vazio")
-    except Exception as e:
-        print(f"[{context_name} ERROR] {e}")
-        update = EngineUpdate(
-            reasoning_trace=f"Erro: {e}",
-            narrative_reason="A realidade oscila. Tente uma ação mais direta."
-        )
-
-    # Exige uma rolagem no turno atual antes de aceitar dano
-    if update.hp_updates and not last_tool and not _dice_rolled_recently(messages):
-        print("[ENGINE] Blocked hallucinated damage without dice roll.")
-        update.hp_updates = []
-        update.narrative_reason = (
-            f"{update.narrative_reason}\n(Algum dano foi ignorado por falta de rolagem de dados.)"
-        )
-
-    print(f"\n[{context_name.upper()}]: {update.reasoning_trace}")
-    return apply_state_update(update, state)
-
-def apply_state_update(update: EngineUpdate, state: GameState):
-    player = state.get('player', {}).copy()
-    world = state.get('world', {}).copy()
-
-    # SPAWN DINÂMICO
-    if update.spawn_enemy_type:
-        from agents.bestiary import generate_new_enemy, get_enemy_template # Import aqui pra evitar ciclo
-        
-        base = get_enemy_template(update.spawn_enemy_type)
-        if not base:
-             # Tenta no bestiário estático primeiro
-            base = BESTIARY.get(update.spawn_enemy_type)
-        
-        if not base:
-            # GERAÇÃO IA
-            loc = world.get('current_location', 'Desconhecido')
-            base = generate_new_enemy(update.spawn_enemy_type, context=f"Local: {loc}")
-
-        if base:
-            enemies = list(state.get('enemies', []))
-            base_name = base.get('name', update.spawn_enemy_type)
-            new_id = f"{base_name.lower().replace(' ', '_')}_{len(enemies)}"
-            new_enemy = base.copy()
-            new_enemy['name'] = base_name
-            new_enemy['id'] = new_enemy.get('id', new_id)
-            new_enemy['status'] = new_enemy.get('status', 'ativo')
-            new_enemy.setdefault('active_conditions', [])
-            enemies.append(new_enemy)
-            state['enemies'] = enemies
-
-    # Condições
-    for cond in update.condition_updates:
-        tgt = cond.target_name.lower()
-        def mod_list(lst, op, val):
-            if op == "add" and val not in lst: lst.append(val)
-            elif op == "remove" and val in lst: lst.remove(val)
-
-        if "valerius" in tgt or "jogador" in tgt:
-            player.setdefault('active_conditions', [])
-            mod_list(player['active_conditions'], cond.operation, cond.condition)
-        
-        if state.get('enemies'):
-            for e in state['enemies']:
-                if e.get('status') == 'ativo' and (e.get('id') in tgt or e.get('name', '').lower() in tgt):
-                    e.setdefault('active_conditions', [])
-                    mod_list(e['active_conditions'], cond.operation, cond.condition)
-
-    # Dano e Recursos (código padrão mantido)
-    for hit in update.hp_updates:
-        tgt = hit.target_name.lower()
-        amt = hit.damage_amount if not hit.is_healing else -hit.damage_amount
-        if "valerius" in tgt or "jogador" in tgt:
-            player['hp'] = max(0, player.get('hp', 0) - amt)
-        elif state.get('party'):
-            for c in state['party']:
-                if c['name'].lower() in tgt:
-                    c['hp'] = max(0, c['hp'] - amt)
-                    if c['hp'] == 0: c['active'] = False
-        if state.get('enemies'):
-            for e in state['enemies']:
-                if e.get('status') == 'ativo' and (e.get('id') in tgt or e.get('name', '').lower() in tgt):
-                    e['hp'] = max(0, e['hp'] - amt)
-                    if e['hp'] == 0: e['status'] = "morto"
-
-    player['mana'] = max(0, min(player.get('mana', 0) + update.player_mana_change, player.get('max_mana', 0)))
-    player['stamina'] = max(0, min(player.get('stamina', 0) + update.player_stamina_change, player.get('max_stamina', 0)))
-    player['gold'] = player.get('gold', 0) + update.gold_change
+    current_player = state.get("player", {}).copy()
+    current_enemies = [e.copy() for e in state.get("enemies", [])]
     
-    if update.items_to_add:
-        player.setdefault('inventory', [])
-        player['inventory'].extend(update.items_to_add)
-    if update.items_to_remove:
-        for i in update.items_to_remove:
-            if i in player.get('inventory', []): player['inventory'].remove(i)
+    # Inicia histórico
+    current_messages = [system_message] + history
+    
+    # 2. Loop de Execução (Até 8 passos para garantir turno complexo)
+    steps = 0
+    max_steps = 8
+    
+    for _ in range(max_steps):
+        steps += 1
+        try:
+            ai_msg = llm_with_tools.invoke(current_messages)
+        except Exception as e:
+            print(f"[{node_name} ERROR] {e}")
+            ai_msg = AIMessage(content="Ação interrompida.")
+            break
 
-    response_msg = AIMessage(content=update.narrative_reason)
+        current_messages.append(ai_msg)
+        
+        if not ai_msg.tool_calls:
+            break # É texto, terminamos
+            
+        # Executa Tools
+        tool_outputs = []
+        for tool in ai_msg.tool_calls:
+            t_id, t_name, t_args = tool["id"], tool["name"], tool["args"]
+            result = ""
+            
+            if t_name == "roll_dice":
+                f = t_args.get("formula") or "1d20"
+                result = roll_formula(str(f))
+                print(f"   🎲 [{node_name}] Rolagem: {f} -> {result}")
 
-    new_state = {**state}
-    new_state["player"] = player
-    new_state["enemies"] = state.get('enemies', [])
-    new_state["party"] = state.get('party', [])
-    new_state["npcs"] = state.get('npcs', {})
-    new_state["world"] = world
-    new_state["messages"] = state.get("messages", []) + [response_msg]
-    # preserva metadados do grafo
-    new_state["next"] = state.get("next")
-    new_state["campaign_plan"] = state.get("campaign_plan")
-    new_state["needs_replan"] = state.get("needs_replan", False)
-    new_state["active_npc_name"] = state.get("active_npc_name")
-    new_state["active_plan_step"] = state.get("active_plan_step")
+            elif t_name == "update_hp":
+                tgt = str(t_args.get("target", "")).lower()
+                amt = int(t_args.get("amount", 0))
+                
+                # Player
+                if "player" in tgt or "hero" in tgt or current_player['name'].lower() in tgt:
+                    old = current_player['hp']
+                    current_player['hp'] = max(0, old + amt)
+                    result = f"Player HP updated: {old}->{current_player['hp']}"
+                    print(f"   ❤️ [{node_name}] Player HP: {amt} (Atual: {current_player['hp']})")
+                
+                # Enemies
+                for e in current_enemies:
+                    if e['id'] in tgt or e['name'].lower() in tgt or "enemy" in tgt:
+                        old = e['hp']
+                        e['hp'] = max(0, old + amt)
+                        if e['hp'] <= 0: e['status'] = "morto"
+                        result = f"Enemy {e['name']} HP updated: {old}->{e['hp']}"
+                        print(f"   💀 [{node_name}] Enemy HP: {amt} (Atual: {e['hp']})")
 
-    return new_state
+            tool_outputs.append(ToolMessage(tool_call_id=t_id, content=result or "Done"))
+            
+        current_messages.extend(tool_outputs)
+
+    # 3. GARANTIA DE NARRATIVA (A Correção Principal)
+    # Se o loop acabou e a última mensagem foi um ToolMessage (resultado de HP),
+    # a IA ainda não narrou o final. Forçamos uma chamada extra.
+    last_msg = current_messages[-1]
+    if isinstance(last_msg, ToolMessage):
+        print(f"   📝 [{node_name}] Forçando narrativa final...")
+        try:
+            # Chamamos o LLM puro (sem tools obrigatórias) apenas para narrar
+            final_narrative = llm.invoke(current_messages)
+            current_messages.append(final_narrative)
+        except Exception:
+            pass
+
+    # 4. Retorno
+    start_index = 1 + len(history)
+    new_messages = current_messages[start_index:]
+    
+    return {
+        "messages": new_messages,
+        "player": current_player,
+        "enemies": current_enemies,
+        "world": state.get("world", {}),
+        "combat_target": state.get("combat_target"),
+        "next": state.get("next")
+    }
