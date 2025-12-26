@@ -1,0 +1,15 @@
+{
+    "races": [
+      {"id": "human", "name": "Humano", "desc": "Adaptáveis e numerosos."},
+      {"id": "elf_crystal", "name": "Elfo de Cristal", "desc": "Magia forte, corpo frágil."},
+      {"id": "dwarf_soot", "name": "Anão da Fuligem", "desc": "Tecnologia e resistência."},
+      {"id": "ash_born", "name": "Cinzéu", "desc": "Furtividade e escuridão."}
+    ],
+    "regions": [
+      {"id": "capital", "name": "Nova Arcádia", "bonus": "Start with 50 Gold extra"},
+      {"id": "forest", "name": "Floresta dos Sussurros", "bonus": "Start with Antidote x2"},
+      {"id": "mines", "name": "Montanhas Afiadas", "bonus": "Start with Mining Pick"},
+      {"id": "desert", "name": "Deserto de Zhur", "bonus": "Start with Water Skin x2"},
+      {"id": "north", "name": "Skallgard", "bonus": "Start with Heavy Fur Armor"}
+    ]
+  }

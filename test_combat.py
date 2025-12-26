@@ -1,104 +1,139 @@
 """
 test_combat.py
-Cenário: Horda de Goblins (Teste de Multi-Target e AoE).
+Teste de Estresse: Combate em Grupo (Party) vs Horda com Boss.
+Valida: Party AI, Boss Strategy (ToT), Habilidades Complexas e Uso de Recursos.
 """
-import sys
-from langchain_core.messages import AIMessage, HumanMessage
+import json
+from langchain_core.messages import HumanMessage
 from agents.combat import combat_node
-from character_creator import create_player_character
 
-class C:
-    HEADER = '\033[95m'; BLUE = '\033[94m'; GREEN = '\033[92m'; RED = '\033[91m'; YELLOW = '\033[93m'; RESET = '\033[0m'
-
-def print_hud(state):
-    p = state['player']
-    print(f"\n{C.HEADER}HERÓI: {p['name']} (HP {p['hp']}/{p['max_hp']}){C.RESET}")
-    print("-" * 40)
-    
-    active = [e for e in state['enemies'] if e['status'] == 'ativo']
-    if not active:
-        print(f"{C.GREEN}Nenhum inimigo vivo.{C.RESET}")
-    
-    for e in active:
-        # Minions em amarelo, Bosses em vermelho
-        color = C.RED if e.get('type') == 'BOSS' else C.YELLOW
-        print(f"💀 {e['name']} (HP {e['hp']}/{e.get('max_hp', e['hp'])}) [AC {e['ac']}]")
-    print("="*60)
-
-def run_test():
-    print(f"{C.HEADER}⚔️  ARENA DE TESTE: EMBOSCADA GOBLIN ⚔️{C.RESET}")
-    
-    player = create_player_character({
-        "name": "Kalel", "class_name": "Mago", "race": "Tritão", "level": 10,
-        "backstory": "Especialista em magias de área."
-    })
-    
-    # --- SETUP DA HORDA ---
-    # 3 Goblins e 1 Chefe Hobgoblin para liderar
-    enemies = [
-        {
-            "id": "goblin_1", "name": "Goblin Cortador", "type": "Minion",
-            "hp": 12, "max_hp": 12, "ac": 15, "status": "ativo",
-            "attacks": [{"name": "Cimitarra Enferrujada", "bonus": 4, "damage": "1d6+2 slashing"}]
-        },
-        {
-            "id": "goblin_2", "name": "Goblin Arqueiro", "type": "Minion",
-            "hp": 10, "max_hp": 10, "ac": 14, "status": "ativo",
-            "attacks": [{"name": "Arco Curto", "bonus": 4, "damage": "1d6+2 piercing"}]
-        },
-        {
-            "id": "goblin_3", "name": "Goblin Arqueiro", "type": "Minion",
-            "hp": 10, "max_hp": 10, "ac": 14, "status": "ativo",
-            "attacks": [{"name": "Arco Curto", "bonus": 4, "damage": "1d6+2 piercing"}]
-        },
-        {
-            "id": "hobgoblin_1", "name": "Capitão Hobgoblin", "type": "Elite", # Não é BOSS, então sem ToT complexo
-            "hp": 40, "max_hp": 40, "ac": 18, "status": "ativo",
-            "attacks": [{"name": "Espada Longa", "bonus": 6, "damage": "1d8+3 slashing"}]
-        }
+# --- 1. O JOGADOR (Build: Inquisidor da Cinza - Tanque Ofensivo) ---
+MOCK_PLAYER = {
+    "name": "Kael",
+    "class_name": "Inquisidor da Cinza",
+    "level": 3,
+    "hp": 35,
+    "max_hp": 35,
+    "mana": 20,
+    "max_mana": 20,
+    "stamina": 20,
+    "max_stamina": 20,
+    "defense": 16, # Cota de Malha
+    "attributes": {"str": 16, "dex": 10, "con": 14, "int": 10, "wis": 12, "cha": 14},
+    "inventory": ["Martelo de Guerra", "Símbolo Sagrado de Ferro"],
+    # Habilidades que gastam recursos diferentes para testar a engine
+    "known_abilities": [
+        "Ataque Básico", 
+        "Juramento de Sangue (Custa 5 Stamina, +Dano)", 
+        "Destruição Divina (Custa 10 Mana, Dano Radiante)"
     ]
+}
+
+# --- 2. OS INIMIGOS (Horda + Boss Tático) ---
+MOCK_ENEMIES = [
+    {
+        "id": "boss_grognak",
+        "name": "Grognak, o Quebra-Crânios",
+        "type": "BOSS",  # <--- Isso ativa a IA Tática (ToT)
+        "hp": 60,
+        "max_hp": 60,
+        "defense": 15,
+        "status": "ativo",
+        "attacks": [
+            "Machado Grande: +6 hit, 1d12+4 cortante",
+            "Grito de Guerra (Buff Aliados)"
+        ]
+    },
+    {
+        "id": "gob_1",
+        "name": "Goblin Lanceiro",
+        "hp": 12,
+        "max_hp": 12,
+        "defense": 12,
+        "status": "ativo",
+        "attack": "Lança Curta: +4 hit, 1d6+2 perfurante"
+    },
+    {
+        "id": "gob_2",
+        "name": "Goblin Arqueiro",
+        "hp": 10,
+        "max_hp": 10,
+        "defense": 12,
+        "status": "ativo",
+        "attack": "Arco Curto: +4 hit, 1d6 perfurante"
+    }
+]
+
+# --- 3. A PARTY (Varg, o Açougueiro) ---
+MOCK_PARTY = [
+    {
+        "name": "Varg",
+        "role": "Tanque Sádico",
+        "persona": "Varg gargalha alto quando vê sangue. Ele ignora arqueiros e foca sempre no inimigo maior para provar força.",
+        "hp": 45,
+        "max_hp": 45,
+        "active": True,
+        "stats": {
+            "attack": "Cutelo Enferrujado: +5 hit, 2d6+3 cortante",
+            "AC": 13
+        }
+    }
+]
+
+def run_combat_test():
+    print("\n🔥 TESTE DE COMBATE ÉPICO: PARTY vs BOSS")
+    print("="*60)
+    print(f"HERÓIS: {MOCK_PLAYER['name']} (Inquisidor) & {MOCK_PARTY[0]['name']} (Açougueiro)")
+    print(f"INIMIGOS: Grognak (BOSS) + 2 Goblins")
+    print("-" * 60)
+
+    # CENÁRIO: Kael usa uma habilidade complexa logo de cara
+    action = "Eu ativo meu 'Juramento de Sangue' cortando a mão e avanço para esmagar o Goblin Lanceiro com meu Martelo!"
     
     state = {
-        "player": player, "enemies": enemies,
-        "messages": [AIMessage(content="Você entra na clareira e 4 criaturas saltam dos arbustos! É uma emboscada!")],
-        "combat_target": None, "world": {}
+        "messages": [HumanMessage(content=action)],
+        "player": MOCK_PLAYER,
+        "enemies": MOCK_ENEMIES,
+        "party": MOCK_PARTY,
+        "world": {"current_location": "Salão do Trono Goblin"}
     }
 
-    while True:
-        print_hud(state)
-        
-        # Condição de Vitória/Derrota
-        alive_enemies = [e for e in state['enemies'] if e['hp'] > 0]
-        if state['player']['hp'] <= 0:
-            print(f"\n{C.RED}💀 GAME OVER - A horda te dominou.{C.RESET}"); break
-        if not alive_enemies:
-            print(f"\n{C.GREEN}🏆 VITÓRIA - A clareira está segura.{C.RESET}"); break
+    print(f"📢 AÇÃO DO JOGADOR: \"{action}\"\n")
+    print("⚙️  Processando Turno (Aguarde a IA Tática e Party AI)...\n")
 
-        action = input(f"\n{C.GREEN}➤ Ação: {C.RESET}")
-        if action in ['sair', 'exit']: break
+    try:
+        result = combat_node(state)
         
-        state['messages'].append(HumanMessage(content=action))
-        print(f"{C.YELLOW}⚙️  Processando turno da horda...{C.RESET}")
+        print("\n📝 NARRATIVA DE COMBATE:")
+        print("="*60)
         
-        try:
-            result = combat_node(state)
-            
-            if "player" in result: state['player'] = result['player']
-            if "enemies" in result: state['enemies'] = result['enemies']
-            
-            if "messages" in result:
-                msgs = result['messages']
-                state['messages'].extend(msgs)
-                # Filtra a narrativa final
-                last_text = next((m.content for m in reversed(msgs) if isinstance(m, AIMessage) and m.content and not m.tool_calls), None)
-                if last_text:
-                    print(f"\n{C.BLUE}🤖 DM:{C.RESET} {last_text}")
-                else:
-                    print(f"\n{C.BLUE}🤖 DM:{C.RESET} (Verifique logs)")
+        narrative_found = False
+        for m in result['messages']:
+            if m.type == "ai" and not m.tool_calls:
+                print(f"\n{m.content}\n")
+                narrative_found = True
+        
+        if not narrative_found:
+            print("⚠️ Erro: Nenhuma narrativa gerada.")
 
-        except Exception as e:
-            print(f"❌ ERRO: {e}")
-            import traceback; traceback.print_exc()
+        print("="*60)
+        print("📊 RELATÓRIO PÓS-BATAHLA:")
+        
+        p = result['player']
+        print(f"🔹 Kael: {p['hp']}/{MOCK_PLAYER['max_hp']} HP | Mana: {p['mana']} | Stamina: {p['stamina']}")
+        
+        for ally in result.get('party', []):
+            print(f"🛡️  {ally['name']}: {ally['hp']} HP")
+            
+        print("-" * 20)
+        for e in result.get('enemies', []):
+            status = "MORTO 💀" if e['hp'] <= 0 else "VIVO"
+            print(f"👹 {e['name']}: {e['hp']} HP [{status}]")
+
+    except Exception as e:
+        print(f"❌ CRASH: {e}")
+        import traceback
+        traceback.print_exc()
 
 if __name__ == "__main__":
-    run_test()
+    run_combat_test()

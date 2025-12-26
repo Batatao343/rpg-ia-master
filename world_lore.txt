@@ -1,59 +1,756 @@
-=== CRÔNICAS DE VALORIA - O GRIMÓRIO DO MESTRE ===
+CODEX OMNIA: O MUNDO QUEBRADO DE VALORIA
+[CATEGORIA: COSMOGONIA] [TAGS: Origem, Deuses, Maldição, Criação]
 
-CAPÍTULO 1: GEOGRAFIA E LOCAIS
+O Mito da Chama e da Cinza
+Antes da história escrita, dizem que o mundo era frio e estático. Os Deuses Antigos roubaram o fogo do Abismo para aquecer a criação, mas o fogo tinha vontade própria.
 
-A Capital de Neverwinter (Nova Arcádia)
-Desde a reconstrução, a cidade é dividida em três anéis. O Anel Dourado, no topo da colina, abriga a nobreza e o Palácio do Lorde Protetor. O Anel de Ferro é onde ficam as forjas e o comércio. O Anel de Lama, fora das muralhas, é uma favela labiríntica onde a lei não alcança. A arquitetura mistura pedra negra antiga (indestrutível) com madeira nova e barata.
+A Grande Traição: Ao trazer o fogo, trouxeram também a sombra. A luz cria a escuridão.
 
-A Floresta dos Sussurros
-Ao sul da Estrada Real, a floresta é proibida. As árvores têm cascas brancas como ossos e folhas vermelhas. Diz a lenda que as raízes se alimentam do sangue da Batalha dos Campos Cinzentos. Quem entra lá sem oferendas de prata costuma voltar louco, balbuciando sobre "a Voz na Terra". É o lar das Driades de Sangue.
+A Morte dos Deuses: Os deuses não abandonaram Valoria; eles foram devorados. Malagor, o Dragão de Ferro, não era apenas uma besta, mas a manifestação física da fome do Abismo.
 
-As Montanhas Afiadas
-Uma cordilheira ao norte que corta os ventos gélidos. É lá que ficam as Minas de Adamantine, agora esgotadas e infestadas por goblins e kobolds que servem a um "Rei Subterrâneo" desconhecido.
+A Teoria do Ciclo: Eruditos loucos afirmam que o mundo já acabou seis vezes. Nós estamos vivendo nas "Cinzas da Sétima Era", esperando o fogo apagar de vez.
 
-A Taverna do Dragão Bêbado
-Localizada no Anel de Ferro, é o ponto de encontro de mercenários. O taverneiro, um meio-orc chamado Grum, tem uma regra: "Sangue no chão, paga o dobro". A cerveja da casa é a "Raiz-Forte", capaz de derrubar um anão.
+[CATEGORIA: GEOGRAFIA URBANA] [TAGS: Neverwinter, Anel Dourado, Nobreza, Decadência]
 
-CAPÍTULO 2: HISTÓRIA RECENTE
+Nova Arcádia: O Anel Dourado (A Coroa)
+O único lugar onde ainda existe lei, mas não justiça.
 
-A Guerra das Cinzas (15 anos atrás)
-O antigo Reino de Valoria caiu quando o Dragão de Ferro, Malagor, despertou. Ele queimou metade do continente antes de ser abatido por um grupo de heróis lendários (Os Cinco de Prata). A queda de Malagor liberou uma névoa mágica tóxica que ainda cobre as terras baixas à noite.
+O Palácio de Obsidiana: A sede de Valerius. Uma fortaleza negra sem janelas nos andares inferiores. Dizem que as paredes sangram quando o Lorde está irritado.
 
-A Ascensão de Valerius
-Após a morte da família real no incêndio do castelo, o general Valerius assumiu como "Lorde Protetor". Ele prometeu devolver o trono se um herdeiro legítimo aparecesse, mas 15 anos se passaram e ele continua no poder. Muitos dizem que ele forjou a morte dos herdeiros. Ele é um governante eficiente, mas frio.
+Jardins Suspensos da Ilusão: Um parque mantido por magos escravizados que usam feitiços para fazer flores crescerem sem sol. É o local favorito dos nobres para beber vinho enquanto observam a fumaça da favela abaixo.
 
-O Grande Colapso Econômico
-Com as minas de ouro esgotadas, Valerius introduziu o "Dragão Dourado", uma moeda de liga metálica que vale 10 moedas antigas por decreto. Isso causou inflação. Um pão que custava 1 cobre agora custa 5. A pobreza no Anel de Lama explodiu.
+A Casa dos Espelhos: Um bordel de luxo onde os trabalhadores usam máscaras mágicas para se parecerem com os amores perdidos dos clientes. O preço é a alma, às vezes literalmente.
 
-CAPÍTULO 3: FACÇÕES E PODER
+[CATEGORIA: GEOGRAFIA URBANA] [TAGS: Neverwinter, Anel de Ferro, Indústria, Poluição]
 
-A Legião de Ferro (Lei e Ordem)
-A guarda oficial da cidade. Usam armaduras cinzas e capas vermelhas. São brutais na aplicação da lei, mas corruptos. O Capitão Marcus "Quebra-Ossos" aceita suborno, mas odeia magia selvagem. Eles patrulham a Estrada Real durante o dia.
+Nova Arcádia: O Anel de Ferro (A Forja)
+O motor da cidade, movido a suor e medo.
 
-A Mão Sombria (Guilda dos Ladrões)
-Liderados pela misteriosa "Víbora", eles controlam o submundo. Seu sinal secreto é um lenço roxo no braço esquerdo. Eles não matam sem permissão, preferindo extorsão e contrabando. Eles têm um acordo secreto com alguns nobres para "recuperar" itens roubados por uma taxa.
+A Rua das Chaminés: O ar é tão denso de fuligem que as pessoas usam lenços molhados no rosto 24 horas por dia. A visibilidade é de apenas 10 metros.
 
-Os Filhos da Chama Azul (Culto)
-Fanáticos que acreditam que a Névoa é uma punição divina e que o mundo deve ser purificado pelo fogo. Eles se reúnem em porões e cavernas. Seus membros queimam as próprias digitais para não serem identificados. O objetivo deles é encontrar o "Ovo de Cinzas", que supostamente contém o filho de Malagor.
+O Mercado de Carne: Não apenas animais. Aqui se vendem contratos de servidão. Devedores vendem a si mesmos ou seus filhos para pagar dívidas de jogo ou impostos.
 
-O Círculo dos Druidas (Neutros)
-Vivem na orla da Floresta dos Sussurros. Eles odeiam a cidade e a tecnologia. Vendem poções de cura em troca de sementes raras. Eles sabem como navegar a névoa sem serem atacados pelos espectros.
+As Fundições Valerianas: Fábricas que nunca param. Produzem armas para a Legião e correntes para os escravos. Acidentes são diários; se um trabalhador cai no metal derretido, o lote de aço é considerado "de qualidade superior" (Aço de Sangue).
 
-CAPÍTULO 4: MONSTROS E AMEAÇAS
+[CATEGORIA: GEOGRAFIA URBANA] [TAGS: Neverwinter, Anel de Lama, Favela, Miséria]
 
-Espectros da Névoa
-Fantasmas das vítimas da Guerra das Cinzas. Surgem apenas à noite ou em dias de neblina densa. Armas comuns passam através deles. Apenas prata, magia ou fogo podem feri-los. Eles sugam o calor vital, deixando as vítimas com a pele azulada e congelada.
+Nova Arcádia: O Anel de Lama (A Fossa)
+Um oceano de barracos fora das muralhas, onde a vida vale menos que uma moeda de cobre.
 
-Changelings (Metamorfos)
-Criaturas raras que podem assumir a forma de humanoides. Diz-se que a Mão Sombria usa Changelings como espiões perfeitos. É impossível distingui-los, exceto pelo fato de que eles não conseguem mentir se estiverem tocando em ferro frio.
+O Beco dos Desdentados: Onde os viciados em "Pó de Sonho" (uma droga feita de cogumelos da floresta) se reúnem. Eles arrancam os próprios dentes para vender a necromantes amadores.
 
-Devoradores de Memória
-Pequenas criaturas parecidas com insetos que vivem em bibliotecas antigas. Sua picada não dói, mas faz a vítima esquecer as últimas 24 horas. Magos pagam bem por espécimes vivos para criar venenos de esquecimento.
+A Catedral Afundada: As ruínas de um antigo templo que afundou na lama. Agora serve de refúgio para leprosos e rejeitados. A Legião não entra lá por medo de doenças.
 
-CAPÍTULO 5: ITENS LENDÁRIOS PERDIDOS
+O Fosso dos Cães: Uma arena ilegal onde apostadores jogam prisioneiros contra cães selvagens famintos. O entretenimento número um da plebe.
 
-A Lâmina do Alvorecer
-A espada usada para dar o golpe final em Malagor. Ela brilha na presença de dragões. Foi roubada do museu real há 5 anos e seu paradeiro é desconhecido.
+[CATEGORIA: LOCALIZAÇÃO] [TAGS: Região Selvagem, Pântano, Magia, Perigo]
 
-O Amuleto de Oghma
-Permite ler qualquer língua, mesmo as mortas. Dizem estar nas Ruínas Submersas ao sul.
+O Pântano da Melancolia
+Ao leste, onde os rios da cidade desaguam levando todo o esgoto.
+
+Atmosfera: O fedor é insuportável. A água é oleosa e escura. Gases inflamáveis brotam do lodo espontaneamente (Fogo Fátuo).
+
+Efeito Psicológico: Quem passa muito tempo aqui começa a sentir uma tristeza profunda e vontade de deitar na água e dormir para sempre. É o efeito residual de necromancia antiga na água.
+
+Fauna: Sanguessugas do tamanho de braços humanos e Sapos-Boi que cospem ácido.
+
+[CATEGORIA: LOCALIZAÇÃO] [TAGS: Ruínas, Mar, Tesouro, Maldição]
+
+As Ruínas Submersas de Aethelgard
+Antiga cidade de magos que foi engolida pelo mar durante o Cataclismo.
+
+Acesso: Só é visível durante a maré baixa extrema, que acontece uma vez por mês.
+
+O Perigo da Maré: Exploradores têm apenas 3 horas para entrar e sair. Se a maré subir, eles ficam presos nas câmaras de ar com os "Afogados" (zumbis inchados pela água).
+
+Tesouros: É o local provável do Amuleto de Oghma e de pergaminhos de magias proibidas.
+
+[CATEGORIA: SOCIEDADE] [TAGS: Leis, Crimes, Punição, Valerius]
+
+O Código de Ferro (As Leis de Valerius)
+Não há prisões de longa duração em Valoria; apenas trabalho forçado ou execução.
+
+Roubo: 1ª ofensa = Perda de um dedo. 2ª ofensa = Perda da mão. 3ª ofensa = Minas de Adamantine.
+
+Uso de Magia Não-Registrada: Morte na fogueira (para purificar a corrupção).
+
+Sedição (Falar mal do Lorde): A língua é cortada e pregada na porta da casa do ofensor.
+
+Dívida: Quem não paga vira propriedade do credor.
+
+[CATEGORIA: SOCIEDADE] [TAGS: Comida, Bebida, Sobrevivência]
+
+Culinária da Escassez
+O que as pessoas comem quando o solo é envenenado?
+
+Pão de Cinza: Farinha misturada com serragem e cinzas vulcânicas para dar volume. Pesado, cinza e com gosto de terra.
+
+Ensopado de Rato-do-Canal: A principal fonte de proteína do Anel de Lama. Temperado com pimenta forte para disfarçar o gosto de podre.
+
+Água de Lótus: A bebida dos nobres. Água purificada magicamente e infundida com flores.
+
+Raiz-Forte: A cerveja popular. Barata, alcoólica e espessa. Serve como refeição líquida.
+
+[CATEGORIA: DOENÇA] [TAGS: Praga, Corrupção, Magia, Saúde]
+
+A Praga de Ferro (Ferrugem do Sangue)
+Uma doença nova que surgiu nas minas e se espalhou pelos pobres.
+
+Sintomas: As veias da vítima começam a escurecer e endurecer. A pele fica cinza e rígida. As articulações rangem como metal enferrujado.
+
+Estágio Final: A vítima "trava" completamente, transformando-se em uma estátua viva, consciente mas incapaz de se mover ou respirar, morrendo sufocada dentro do próprio corpo.
+
+Cura: Inexistente. A amputação do membro afetado pode retardar a morte. Druidas vendem um chá que alivia a dor, mas não cura.
+
+[CATEGORIA: NPC] [TAGS: Personagem, Taverneiro, Guerreiro, Passado]
+
+Grum, o Taverneiro do Dragão Bêbado
+Aparência: Meio-orc maciço, falta uma das presas. Metade do rosto é queimadura cicatrizada (resultado de um sopro de dragão jovem).
+
+Personalidade: Cínico, prático e surpreendentemente leal a quem paga. Ele odeia heróis ("Heróis trazem problemas e não pagam a conta").
+
+Segredo: Ele era sargento na antiga Guarda Real. Ele viu o Rei morrer e fugiu. Ele guarda a medalha de honra no fundo de um barril de cerveja azeda.
+
+Falas Comuns: "Se for vomitar, faça lá fora.", "Eu não vi nada, não ouvi nada e essa moeda de ouro prova isso."
+
+[CATEGORIA: NPC] [TAGS: Personagem, Vilão, Governo, Valerius]
+
+Lorde Protetor Valerius
+Aparência: Um homem alto, de cabelos grisalhos impecáveis e armadura cerimonial negra. Seus olhos são frios, sem emoção. Ele nunca é visto comendo ou dormindo.
+
+Motivação: Ordem a qualquer custo. Ele acredita que a liberdade causou a Guerra das Cinzas. Ele vê a população como gado que precisa ser controlado para não se extinguir.
+
+Rumor Sombrio: Servos sussurram que ele conversa com a armadura vazia de Malagor nas masmorras. Alguns dizem que ele é um Lich (morto-vivo) disfarçado de humano.
+
+[CATEGORIA: NPC] [TAGS: Personagem, Ladrão, Mão Sombria, Misterioso]
+
+A Víbora (Líder da Mão Sombria)
+Identidade: Desconhecida. Pode ser homem, mulher ou criança. Muda de aparência constantemente.
+
+Modus Operandi: Nunca usa força bruta. Usa venenos, chantagem e segredos. "Uma faca nas costas dói, mas uma carta revelando que o nobre dorme com a irmã destrói uma dinastia."
+
+Localização: Dizem que seu escritório fica nos esgotos, protegido por armadilhas mágicas e golens de lixo.
+
+[CATEGORIA: MONSTRO] [TAGS: Bestiário, Floresta, Horror, Natureza]
+
+O Urso-de-Espinha
+Predador alfa da Floresta dos Sussurros.
+
+Descrição: Um urso gigante cuja pelagem caiu, revelando uma pele grossa e purulenta. Espinhos de osso crescem para fora de suas costas e ombros.
+
+Comportamento: Extremamente agressivo. Não hiberna. Parece sentir cheiro de medo e magia.
+
+Loot: Suas garras valem muito no mercado negro para fazer adagas que causam feridas que não fecham.
+
+[CATEGORIA: MONSTRO] [TAGS: Bestiário, Névoa, Magia, Espiritual]
+
+O Arauto da Névoa (Entidade Única)
+Não é um espectro comum, mas uma lenda entre os monstros.
+
+Descrição: Uma figura encapuzada de 3 metros de altura, feita inteiramente de fumaça densa, arrastando correntes feitas de almas condensadas.
+
+Aparição: Surge antes de grandes desastres ou ataques em massa de espectros.
+
+Lenda: Dizem que ele é a alma distorcida do Mago Real que traiu o reino e despertou o dragão. Ele busca perdão, mas só sabe causar dor.
+
+[CATEGORIA: ITEM] [TAGS: Equipamento, Droga, Ilegal, Magia]
+
+Pó de Sonho
+Uma substância ilícita refinada a partir dos fungos vermelhos da Floresta dos Sussurros.
+
+Efeito: O usuário entra em um estado de euforia e alucinação vívida onde o mundo é belo e a dor não existe. +2 em Força (não sente dor), -4 em Inteligência.
+
+Vício: Altamente viciante. Após o uso, o usuário sofre "A Queda", uma depressão profunda que pode levar ao suicídio se não consumir mais.
+
+Preço: Barato na primeira dose, a alma na segunda.
+
+[CATEGORIA: HISTÓRIA] [TAGS: Evento, Batalha, Passado, Tragédia]
+
+O Dia do Céu Vermelho (O Início da Guerra)
+O momento exato em que Malagor despertou.
+
+O Evento: O vulcão Monte da Perdição não entrou em erupção com lava, mas com o próprio dragão. O céu ficou vermelho-sangue por três dias devido às cinzas mágicas.
+
+As Sombras Vivas: Durante esses três dias, as sombras das pessoas se soltaram de seus corpos e começaram a estrangular seus donos. Metade da população morreu antes mesmo do dragão chegar.
+
+[CATEGORIA: LENDAS] [TAGS: Boato, Terror, Criança, Folclore]
+
+A Canção de Ninar da Viúva
+Uma música que as mães do Anel de Lama cantam para as crianças, mas que esconde um aviso real.
+
+"Dorme, criança, ou a Névoa virá, O Homem de Cinza te levará. Não chore alto, não faça som, Valerius escuta, e ele não é bom. O Dragão dorme, mas o ovo estala, Quem não se esconde, vira vala."
+
+[CATEGORIA: FACÇÃO] [TAGS: Culto, Rituais, Fogo, Crença]
+
+Os Filhos da Chama Azul: O Rito da Purificação
+Detalhes sobre como o culto opera.
+
+O Batismo de Fogo: O novo membro deve segurar uma brasa quente na boca sem gritar por 1 minuto. A cicatriz nos lábios é uma marca de identificação sutil.
+
+A Profecia: Eles acreditam que o fogo de Malagor não destruiu o mundo, mas tentou salvá-lo de uma ameaça maior que vive nas estrelas (Horror Cósmico). Eles querem terminar o trabalho.
+
+Armamento: Usam frascos de "Fogo de Alquimista" (Napalm medieval) em ataques suicidas contra a Legião.
+
+A Corrosão do Éter (O Custo da Magia)
+Em Valoria, a magia não é um dom, é um empréstimo com juros altos.
+
+O Éter Poluído: Desde a morte de Malagor, a energia mágica ambiente está "suja". Magos sentem um gosto de cobre e cinza na boca ao conjurar.
+
+A Marca da Bruxaria: Conjuradores frequentes começam a apresentar sintomas físicos. Primeiro, sangramentos nasais e tremores. Depois, as veias dos braços ficam pretas. Por fim, a demência.
+
+Cristais de Foco: Para evitar a corrosão direta no corpo, magos ricos usam cristais caros que absorvem o dano. Quando o cristal quebra (escurece totalmente), a próxima magia pode matar o mago.
+
+[CATEGORIA: CULTURA] [TAGS: Festival, Feriado, Medo, Tradição]
+
+O Festival do Silêncio (Noite da Névoa Alta)
+O "feriado" mais importante do ano, que ocorre no solstício de inverno.
+
+A Regra: Do pôr do sol ao amanhecer, nenhum som pode ser emitido na cidade. Sem música, sem conversa, sem choro.
+
+A Crença: Acredita-se que nesta noite a barreira entre os vivos e os mortos (Espectros) é inexistente. O som atrai as almas perdidas.
+
+As Máscaras: Todos usam máscaras de madeira sem boca para simbolizar o silêncio.
+
+O Sacrifício: Se uma criança chora, os pais devem abafar o som a qualquer custo. Famílias inteiras já foram encontradas mortas na manhã seguinte porque alguém derrubou uma panela.
+
+[CATEGORIA: FACÇÃO MENOR] [TAGS: Serviço, Morte, Guilda, Neutro]
+
+A Guilda dos Corvos (Coveiros e Coletores)
+Uma guilda intocável. Nem a Legião, nem a Mão Sombria mexem com eles.
+
+Função: Eles recolhem os corpos das ruas (vítimas da fome, peste ou assassinato) e os queimam nos Crematórios do Setor Leste para evitar que levantem como mortos-vivos.
+
+Aparência: Vestem mantos pretos de couro oleado e máscaras com bicos longos (estilo médico da peste) recheadas de ervas para suportar o cheiro.
+
+Imunidade: Dizem que eles são imunes à Praga de Ferro e à Névoa.
+
+O Pagamento: Eles cobram dos mortos. Pegam botas, anéis ou dentes de ouro dos cadáveres como taxa de serviço.
+
+[CATEGORIA: LOCALIZAÇÃO] [TAGS: Masmorra, Prisão, Tortura, Horror]
+
+O Oubliette (A Prisão de Rocha Negra)
+Uma torre invertida, escavada para baixo na terra, localizada no pátio da Legião de Ferro.
+
+Estrutura: Quanto mais fundo você vai, pior o crime.
+
+Nível 1: Ladrões e devedores.
+
+Nível 5: Assassinos e traidores.
+
+Nível 10 (O Fundo): Magos selvagens e monstros capturados.
+
+O Carcereiro: "O Cego". Um gigante que teve os olhos arrancados, mas ouve a respiração dos prisioneiros. Ele nunca dorme.
+
+Rumor: Dizem que o fundo do Oubliette conecta-se com túneis antigos que levam ao Reino Subterrâneo, e que prisioneiros desaparecem porque algo sobe para comê-los.
+
+[CATEGORIA: NPC MENOR] [TAGS: Vendedor, Loucura, Itens, Informação]
+
+Velha Magda, a Ratoeira
+Uma senhora idosa e encarquilhada que empurra um carrinho de mão cheio de lixo e "comida" no Anel de Lama.
+
+Mercadoria: Vende espetinhos de carne de origem duvidosa ("É frango, querido, juro!"), amuletos feitos de ossos de gato e informações.
+
+Conhecimento: Ela vê tudo. Ninguém presta atenção na velha louca. Ela sabe quem entrou e saiu da sede da Mão Sombria.
+
+Segredo: Ela era uma Sacerdotisa de alto nível antes da guerra. Às vezes, em seus delírios, ela recita profecias reais em línguas mortas.
+
+[CATEGORIA: NPC MENOR] [TAGS: Médico, Ciência, Ética Duvidosa, Cura]
+
+Doutor Silas Vane
+Um ex-médico da corte que foi expulso por "experimentos não éticos". Agora atende no Anel de Ferro.
+
+Serviço: Ele cura qualquer coisa, desde facadas até estágios iniciais da Praga de Ferro, se você tiver dinheiro.
+
+Método: Ele não usa magia (odeia magos). Ele usa sanguessugas modificadas, serras enferrujadas e elixires químicos que causam dor excruciante, mas funcionam.
+
+Obsessão: Ele compra partes de corpos de monstros (como glândulas de Changelings) para tentar criar o "Humano Perfeito", imune à névoa.
+
+[CATEGORIA: ITEM] [TAGS: Arma, Pobreza, Improviso, Brutal]
+
+O "Estripador" (Arma Comum do Anel de Lama)
+No submundo, espadas são caras. O povo improvisa.
+
+Descrição: Uma lâmina curta feita de uma tesoura de tosquiar ovelhas quebrada ao meio, amarrada a um cabo de osso e envolta em arame farpado.
+
+Dano: Causa ferimentos rasgados que dificilmente param de sangrar. Tétano é garantido se o golpe não matar.
+
+Fama: É a arma favorita das gangues de rua.
+
+[CATEGORIA: ITEM] [TAGS: Utilitário, Luz, Magia, Sobrenatural]
+
+Lanterna dos Suspiros
+Um item proibido pela Legião, usado por exploradores de ruínas.
+
+Aparência: Uma lanterna de metal enferrujado que queima com uma chama fria e azul.
+
+Combustível: Não usa óleo, usa o sangue do portador (tem uma agulha na alça).
+
+Efeito: Revela coisas invisíveis (espectros, portas mágicas, armadilhas arcanas).
+
+Colateral: Enquanto está acesa, os espectros são atraídos para o portador como mariposas para a luz.
+
+[CATEGORIA: INIMIGO MENOR] [TAGS: Monstro, Cidade, Esgoto, Praga]
+
+Ratos-da-Peste Gigantes
+Não são ratos comuns. A magia residual e o lixo tóxico os transformaram.
+
+Tamanho: Do tamanho de cães médios.
+
+Inteligência: Caçam em matilhas coordenadas. Um grupo pode derrubar um homem adulto em segundos.
+
+Doença: Sua mordida transmite a "Febre Negra", que faz a vítima suar sangue até desidratar.
+
+[CATEGORIA: LORE HISTÓRICO] [TAGS: Livro, Proibido, Conhecimento, Heresia]
+
+O Tomo das Sombras Vazias
+Um livro cuja posse garante pena de morte imediata.
+
+Conteúdo: Escrito por um mago louco que olhou diretamente para o olho de Malagor. Descreve que os Deuses não morreram, mas estão "dormindo" dentro do núcleo do planeta e que a mineração excessiva vai acordá-los (e eles estarão furiosos).
+
+Efeito de Leitura: Quem lê o livro começa a ouvir batimentos cardíacos vindo do chão.
+
+[CATEGORIA: ENTRETENIMENTO SÓRDIDO] [TAGS: Jogo, Vício, Taverna, Azar]
+
+"Dedo ou Ouro"
+O jogo de azar mais popular nas tavernas do Anel de Ferro.
+
+Regras: Dois jogadores colocam uma moeda de ouro na mesa. Um terceiro joga uma faca entre os dedos deles (estilo "five finger fillet").
+
+Aposta: Quem tirar a mão perde o ouro. Se a faca acertar o dedo, o jogador perde o dedo (e o jogo), mas ganha o respeito da mesa.
+
+Variação: Em versões mais ricas, joga-se com veneno na lâmina.
+
+[CATEGORIA: LOCALIZAÇÃO SECRETA] [TAGS: Mercado Negro, Magia, Ilegal]
+
+O Beco do Sussurro (A Feira Noturna)
+Uma rua que não existe no mapa. Só aparece nas noites de lua nova.
+
+Acesso: Você precisa caminhar de costas por um beco específico no Anel de Lama segurando uma vela negra apagada.
+
+O Que Tem Lá: Venda de itens estritamente proibidos: ovos de monstros, venenos reais, grimórios de necromancia e escravos exóticos (elfos, changelings).
+
+Lei: A Legião de Ferro sabe que o local existe, mas tem medo de entrar lá.
+
+O Deserto de Zhur (O Mar de Vidro)
+Localizado longe ao sul, além das Terras Queimadas. Não é um deserto de areia comum, mas o local onde uma segunda lua caiu há eras.
+
+Geografia: A areia é misturada com pó de vidro e cristais afiados. Tempestades de vento aqui não apenas cegam; elas esfolam a pele e a carne dos ossos em minutos ("Tempestades de Navalha").
+
+O Sol Tirano: O calor é tão intenso que armaduras de metal cozinham quem as usa. Viajantes só se movem à noite.
+
+A Miragem da Loucura: Devido à radiação mágica dos cristais, viajantes veem seus parentes mortos acenando no horizonte. Segui-los leva à morte por desidratação.
+
+[CATEGORIA: TRIBO] [TAGS: Zhur, Canibalismo, Sobrevivência, Selvagem]
+
+Os Devoradores de Sol (Tribo Nômade)
+Os únicos humanos que sobrevivem em Zhur.
+
+Aparência: Cobrem o corpo inteiro com tiras de couro de lagartos gigantes e usam lentes de obsidiana costuradas sobre os olhos para não ficarem cegos.
+
+Cultura: A água é sagrada e nunca é desperdiçada. Eles bebem o sangue de suas montarias e, em tempos de seca, o sangue dos mais velhos da tribo (um sacrifício voluntário).
+
+Relação com Estrangeiros: Eles não negociam. Eles caçam forasteiros por causa da água em seus corpos ("Bolsas de Carne").
+
+[CATEGORIA: MONSTRO] [TAGS: Zhur, Inseto, Gigante, Subterrâneo]
+
+Escorpiões de Cristal
+Descrição: Aracnídeos do tamanho de carruagens. Suas carapaças são translúcidas e duras como diamante.
+
+Camuflagem: Eles se enterram na areia de vidro e ficam invisíveis.
+
+Veneno: O ferrão injeta um líquido que cristaliza o sangue da vítima instantaneamente. A morte é dolorosa e a vítima vira uma estátua frágil que o escorpião depois quebra para comer o interior.
+
+[CATEGORIA: REGIÃO] [TAGS: Selva, Doença, Veneno, Xylos]
+
+A Selva Purulenta de Xylos
+A leste, uma floresta tropical onde a vida cresce rápido demais e apodrece ainda mais rápido.
+
+O Ciclo Acelerado: Uma fruta amadurece e apodrece em uma hora. Se você dormir no chão sem proteção, musgos crescerão na sua pele antes de você acordar.
+
+Atmosfera: O ar é úmido, quente e cheira a adubo e carne doce (o cheiro da podridão).
+
+Perigo: "A Chuva Ácida". Às vezes, as nuvens trazem a poluição vulcânica do norte, queimando as folhas e a pele de quem não encontrar abrigo.
+
+[CATEGORIA: FACÇÃO/TRIBO] [TAGS: Xylos, Parasita, Simbiose, Horror]
+
+Os Hospedeiros (O Povo-Cogumelo)
+Humanos que foram infectados pelo fungo Cordyceps Gigante, mas não morreram.
+
+Estado: Eles mantêm sua consciência, mas seus corpos são deformados por crescimentos fúngicos coloridos. Eles não sentem dor.
+
+Sociedade: Vivem em cidades suspensas nas árvores gigantes para evitar o chão ácido. Eles acreditam que o Fungo é um deus que os protege da morte, pois o fungo regenera feridas mortais.
+
+Ritual: Para se casar, o casal deve inalar esporos da mesma flor gigante, unindo suas mentes em uma alucinação compartilhada permanente.
+
+[CATEGORIA: BESTIÁRIO] [TAGS: Xylos, Predador, Camuflagem, Planta]
+
+A Vinha Estranguladora (Vipera-Flora)
+Parece um cipó grosso pendurado nas árvores, mas é uma cobra vegetal muscular.
+
+Ataque: Ela não morde. Ela cai sobre a presa, enrola-se no pescoço e a puxa para cima, para a copa das árvores.
+
+Alimentação: Ela insere espinhos ocos na vítima e drena os fluidos corporais lentamente ao longo de dias. A vítima muitas vezes permanece viva e consciente, pendurada como um boneco seco.
+
+[CATEGORIA: REINO DISTANTE] [TAGS: Cidade, Escravidão, Mágica, Ophidia]
+
+O Império de Ophidia (A Cidade das Serpentes)
+Um reino isolado em um arquipélago vulcânico, governado por Yuan-Ti (Povo Serpente) e humanos feiticeiros.
+
+Estrutura Social: Baseada na pureza do sangue.
+
+Sangue-Puro: A nobreza, que possui traços ofídios (olhos fendidos, escamas).
+
+Sangue-Quente: A plebe humana e escravos.
+
+Economia: São os maiores exportadores de venenos e antídotos do mundo.
+
+O Fosso dos Sacrifícios: Criminosos são jogados em um poço com milhares de víboras sagradas. Se sobreviverem até o amanhecer, são considerados inocentes (ninguém nunca sobreviveu).
+
+[CATEGORIA: LOCALIZAÇÃO] [TAGS: Mar, Navios, Fantasma, Cemitério]
+
+O Cemitério de Leviatãs (Costa Negra)
+Uma extensão de litoral onde as correntes oceânicas trazem os cadáveres de monstros marinhos gigantes.
+
+Cenário: Quilômetros de praia cobertos por costelas de baleias e bestas marinhas do tamanho de castelos, branqueadas pelo sol.
+
+Habitantes: "Os Caranguejeiros". Catadores que vivem dentro dos crânios dos monstros e mineram o âmbar cinza e óleo das carcaças.
+
+Perigo: Os gases da decomposição acumulam dentro das carcaças. Uma tocha errada pode explodir uma baleia morta como uma bomba, espalhando carne podre e ossos como estilhaços.
+
+[CATEGORIA: LORE ANTIGO] [TAGS: Ruínas, Gelo, Gigantes, Norte]
+
+A Fortaleza Congelada de Vorr
+No extremo norte, além das Montanhas Afiadas, onde o sol mal aparece.
+
+A Lenda: Antiga capital dos Gigantes de Gelo, agora extintos. As portas têm 20 metros de altura e os degraus das escadas chegam na cintura de um humano.
+
+O Horror: Os exploradores que chegam lá relatam que a cidade não está vazia. Está cheia de estátuas de gelo perfeitas de humanos em posições de terror.
+
+A Verdade: Não são estátuas. São aventureiros anteriores que encontraram o "Sopro de Vorr", uma anomalia mágica que congela o tempo e a matéria instantaneamente.
+
+[CATEGORIA: ITEM EXÓTICO] [TAGS: Arma, Zhur, Vidro, Frágil]
+
+Adaga de Vidro-Dragão
+Arma típica dos nômades do deserto.
+
+Material: Feita de areia vitrificada pelo sopro de um dragão antigo.
+
+Propriedade: É mais afiada que qualquer aço, capaz de cortar cota de malha como se fosse seda.
+
+Defeito: É extremamente frágil. Se o ataque for bloqueado ou atingir um escudo, a adaga se estilhaça. O usuário deve atacar para matar em um golpe.
+
+[CATEGORIA: ITEM EXÓTICO] [TAGS: Consumível, Xylos, Veneno, Buff]
+
+Néctar da Fúria (Sangue de Besouro)
+Uma pasta vermelha feita triturando besouros raros da selva.
+
+Uso: Guerreiros selvagens esfregam nas gengivas antes da batalha.
+
+Efeito: Causa uma descarga de adrenalina massiva. O usuário luta mesmo com membros decepados.
+
+Pós-Efeito: Causa falência dos rins e cegueira temporária após 1 hora.
+
+[CATEGORIA: FENÔMENO] [TAGS: Clima, Magia, Perigo, Aleatório]
+
+A Tempestade de Mana (O Céu Violeta)
+Ocorre raramente em regiões ermas onde a realidade é fina.
+
+Visual: Nuvens roxas e relâmpagos que sobem do chão para o céu.
+
+Efeito: A magia se torna instável.
+
+Magos: Se conjurarem algo, há 50% de chance da magia explodir na cara deles ou transformar o alvo em uma galinha.
+
+Gravidade: Pedras e objetos começam a flutuar.
+
+Mutação: Animais expostos à tempestade podem ganhar membros extras ou falar línguas humanas por alguns minutos antes de morrerem.
+
+[CATEGORIA: NPC ESTRANGEIRO] [TAGS: Mercador, Misterioso, Itens, Viajante]
+
+O Mercador de Curiosidades (O Colecionador)
+Um viajante que aparece em oásis no deserto ou clareiras na selva. Ele viaja em uma carroça puxada por "algo" invisível.
+
+Aparência: Usa roupas de seda de muitas cores, mas todas desbotadas e rasgadas. Tem seis dedos em cada mão.
+
+Negócio: Ele não quer ouro. Ele troca itens mágicos de terras distantes por "memórias".
+
+O Custo: Para comprar uma espada de Ophidia, você deve permitir que ele toque sua testa e remova a memória do rosto da sua mãe. Você nunca mais lembrará como ela era.
+
+Notas de Integração (Como o mundo se conecta)
+Economia Sombria: Os venenos usados pela Mão Sombria na capital (Neverwinter) vêm contrabandeados de Ophidia. Se os jogadores interromperem essa rota, os assassinos ficam sem recursos.
+
+Origem das Pragas: A doença que assola o Anel de Lama pode ser uma variante de um fungo da selva de Xylos, trazida por um explorador imprudente.
+
+Refúgio: Criminosos que fogem de Valerius muitas vezes tentam cruzar o deserto de Zhur. 90% morrem, os que sobrevivem voltam mudados e perigosos.
+
+A Humanidade (Os Filhos da Poeira)
+A raça dominante, mas não por mérito, e sim por pura tenacidade e capacidade de reprodução rápida.
+
+Status: Controlam 90% das terras habitáveis (Neverwinter, os Feudos).
+
+Cultura: A maioria vive vidas curtas e brutais. A fé nos deuses morreu; agora a fé é no dinheiro ou na sobrevivência.
+
+A Corrupção: Humanos são os mais suscetíveis à influência moral. É a raça que mais produz cultistas, bandidos e traidores.
+
+Visão Externa: As outras raças veem os humanos como uma praga de gafanhotos: eles chegam, consomem tudo, poluem e se mudam.
+
+[CATEGORIA: RAÇA] [TAGS: Elfos, Magia, Extinção, Doença]
+
+Os Elfos de Cristal (Os Quebrados)
+Antigamente imortais e belos, a poluição da magia (o Éter Sujo) afetou sua biologia ligada à mana.
+
+A Maldição da Ressonância: Como os elfos são seres de pura magia, a atmosfera tóxica de Valoria age como radiação para eles. Sua pele está literalmente rachando como porcelana velha.
+
+Aparência: Pálidos, com veias que brilham em um tom doentio de violeta. Muitos usam máscaras para esconder o rosto descascado.
+
+Status Social: São raríssimos. Nobres humanos pagam fortunas para ter um elfo "de estimação" ou guarda-costas, tratando-os como relíquias vivas.
+
+O Tráfico: O pó dos ossos de um elfo é uma droga alucinógena poderosíssima. Caçadores de recompensas matam elfos apenas para moer seus esqueletos.
+
+[CATEGORIA: RAÇA] [TAGS: Anões, Nômades, Tecnologia, Carvão]
+
+Os Anões da Fuligem (Caravaneiros do Ferro)
+Eles perderam suas montanhas para o "Rei Subterrâneo" e agora vivem em perpétuo movimento. Se pararem, morrem.
+
+As Cidades-Lagarta: Eles não têm cidades fixas. Vivem em fortalezas móveis gigantescas (Landships) puxadas por Colossos a Vapor — autômatos primitivos, barulhentos e que soltam fumaça preta constante.
+
+Cultura: Obsessão por combustível. Ouro não vale nada para um anão; carvão e óleo valem vidas.
+
+Aparência: Quase todos usam respiradores de couro e óculos de proteção devido à fumaça de suas máquinas. Seus barbas são trançadas com fios de cobre e enegrecidas de graxa.
+
+Comércio: Aparecem nas cidades humanas apenas para trocar minérios refinados por comida e água, antes de partirem novamente para o deserto de cinzas.
+
+[CATEGORIA: REGIÃO] [TAGS: Gelo, Norte, Viking, Sobrevivência]
+
+O Ermo Branco (Skallgard)
+A norte das Montanhas Afiadas, onde o oceano congela e o sol é uma memória pálida.
+
+Clima: O frio é tão intenso que se você chorar, suas lágrimas congelam e cegam seus olhos. O vento uiva como lobos famintos.
+
+A Noite Eterna: Durante 6 meses do ano, é escuridão total. A única luz vem da Aurora Boreal, que aqui é verde-tóxica devido à magia residual.
+
+[CATEGORIA: TRIBO] [TAGS: Norte, Guerreiros, Ursos, Brutalidade]
+
+Os Nascidos do Gelo (Tribo Bjorn)
+Humanos gigantescos que rejeitaram a "civilização" do sul.
+
+Montarias: Eles montam os Ursos-Titãs (Ursos Polares do tamanho de elefantes). Eles não usam selas; eles cravam ganchos de osso diretamente na carne do urso para se segurar, criando um vínculo de dor e respeito com a besta.
+
+Filosofia: "O Aço quebra, a Carne rasga, só o Osso dura." Eles usam armaduras feitas dos ossos de baleias e monstros marinhos.
+
+Ritual: Ao completar 15 anos, o jovem é jogado nu na tundra. Se voltar vestindo a pele de um predador, é homem. Se não voltar, era fraco.
+
+[CATEGORIA: MONSTRO/RAÇA] [TAGS: Vampiros, Ferrugem, Sangue, Metal]
+
+Os Vampiros (Os Bebedores de Ferrugem)
+Esqueça os aristocratas charmosos. Em Valoria, vampirismo é uma doença industrial mágica.
+
+Conceito: O sangue deles não coagula; ele oxida. Eles estão literalmente enferrujando de dentro para fora.
+
+A Necessidade: Eles precisam beber sangue fresco não por fome, mas para repor o ferro e impedir que suas veias virem pó de ferrugem sólida.
+
+Aparência: Sua pele é cinza-metálica e descama. Seus dentes são agulhas de ferro. Quando não bebem sangue, eles rangem ao se mover, como dobradiças velhas.
+
+Fraqueza: Água salgada (acelera a corrosão) e ímãs fortes (desorientam seu sistema nervoso metálico). O sol não os queima, mas "seca" o sangue deles instantaneamente, travando seus corpos.
+
+[CATEGORIA: MONSTRO/RAÇA] [TAGS: Lobisomem, Osso, Horror Corporal, Lua]
+
+Os Lycans (A Praga dos Ossos)
+Não é uma transformação mágica bonita; é uma explosão biológica dolorosa.
+
+O Processo: Sob a luz da lua cheia, a medula óssea da vítima cresce descontroladamente. Os ossos quebram a pele de dentro para fora, formando um exoesqueleto branco e pontiagudo.
+
+Aparência: Eles não parecem lobos fofos. Parecem abominações esqueléticas, com o crânio do lobo "vestindo" o rosto humano rasgado. Músculos vermelhos expostos entre as placas de osso.
+
+Comportamento: Eles sentem uma dor constante e excruciante. Eles matam e comem qualquer coisa na tentativa irracional de obter cálcio para sustentar o crescimento ósseo acelerado.
+
+Contágio: Uma mordida injeta farpas de osso na vítima, que começam a crescer como um câncer.
+
+[CATEGORIA: RAÇA EXÓTICA] [TAGS: Subterrâneo, Cego, Cinzas, Sensorial]
+
+Os Cinzéus (The Ash-Born)
+Uma raça mutante surgida nas cavernas profundas abaixo das Montanhas Afiadas após o Cataclismo.
+
+Descrição: Humanoides esguios, sem olhos (apenas pele lisa onde seriam as órbitas), com pele cinza que se camufla perfeitamente na rocha.
+
+Sentidos: Eles "enxergam" através de ecolocalização e calor. Eles podem ouvir o batimento cardíaco de um humano a 100 metros.
+
+Cultura: Silenciosos. Comunicam-se por estalos de língua e sinais de mão. São mercenários exímios para missões noturnas ou subterrâneas.
+
+Superstição: O povo da superfície acredita que eles roubam o fôlego das pessoas enquanto dormem.
+
+[CATEGORIA: RAÇA EXÓTICA] [TAGS: Mar, Monstro, Coral, Simbiose]
+
+O Povo-Recife (Os Afogados)
+Habitantes das ilhas tropicais amaldiçoadas ao sul.
+
+Biologia: Eles não têm pele; têm cracas e corais vivos crescendo sobre a carne. Metade humano, metade colônia de pólipos.
+
+Habilidade: Podem respirar embaixo d'água e são imunes a cortes (armas quebram no coral duro).
+
+Maldição: O coral nunca para de crescer. Os anciões da tribo eventualmente perdem a mobilidade e se tornam estátuas vivas no fundo do mar, formando a "Muralha dos Ancestrais", que protege a ilha.
+
+Interação: Trocam pérolas negras por ferramentas de metal, que eles não conseguem forjar no mar.
+
+[CATEGORIA: LOCALIZAÇÃO] [TAGS: Norte, Isolamento, Mistério, Magia]
+
+O Farol da Chama Negra
+Uma torre solitária no ponto mais ao norte do Ermo Branco.
+
+A Chama: O topo do farol não emite luz, mas uma sombra cônica (uma "anti-luz") que corta a escuridão natural.
+
+Propósito: Ninguém sabe quem o construiu. Os Nascidos do Gelo dizem que ele serve para manter "algo" preso embaixo do gelo, e não para guiar navios.
+
+O Guardião: Existe apenas um habitante, uma figura que nunca morre e nunca fala. A cada 100 anos, um novo andarilho chega ao farol, mata o guardião anterior e assume o posto, sem ninguém saber o porquê.
+
+[CATEGORIA: ITEM ESPECIAL] [TAGS: Norte, Veículo, Anão, Combate]
+
+O "Quebra-Gelo" (Veículo Anão)
+Um exemplo da engenharia brutal dos Anões da Fuligem adaptada para o comércio com o norte.
+
+Descrição: Um trator movido a vapor com uma proa feita de uma serra circular gigante e incandescente.
+
+Uso: Projetado para cortar o gelo grosso do mar congelado ou atropelar hordas de monstros.
+
+Combustível: Consome carvão vorazmente. Em emergências, a caldeira pode queimar ossos ou gordura de baleia.
+
+[CATEGORIA: CLASSE] [TAGS: Guerreiro, Defensor, Honra, Dever]
+
+O Cavaleiro da Vigília (O Baluarte)
+Enquanto a Legião de Ferro é corrupta, existem ordens antigas que mantêm o juramento original de proteger o povo.
+
+Conceito: Guerreiros de armadura pesada, mas não polida. Suas armaduras são cheias de amassados e remendos, contando a história de centenas de batalhas. Eles são a muralha entre a aldeia e o monstro.
+
+Motivação: Dever. Eles sabem que o mundo está ruim, e é exatamente por isso que eles não podem desistir.
+
+Estilo de Combate: Defensivo e tático. Usam escudos grandes e espadas bastardas. Preferem proteger um aliado a matar um inimigo.
+
+Habilidade Especial: A Última Posição. Quando feridos gravemente, lutam com mais vigor, recusando-se a cair enquanto houver aliados em perigo.
+
+[CATEGORIA: CLASSE] [TAGS: Mago, Estudo, Cautela, Arcano]
+
+O Arcanista Cinzento (O Estudioso)
+Eles rejeitam a magia de sangue e o caos. Eles tratam a magia como uma ciência volátil que exige disciplina rigorosa.
+
+Conceito: Acadêmicos que usam luvas de couro isolante, óculos com lentes de filtro e bastões rúnicos para manipular a magia ambiente (o Éter) sem tocar nela diretamente.
+
+A "Corrupção" Suave: Em vez de apodrecer, o uso excessivo de magia causa exaustão extrema e dores de cabeça (a "Enxaqueca de Mana"). Eles precisam descansar e meditar frequentemente.
+
+Estilo de Combate: Controle. Eles criam barreiras de força, manipulam a gravidade ou lançam raios de energia pura e focada. Nada de invocações demoníacas.
+
+Papel: São bibliotecas vivas. Sabem ler as runas antigas e identificar relíquias perigosas.
+
+[CATEGORIA: CLASSE] [TAGS: Ladino, Explorador, Guia, Sobrevivência]
+
+O Batedor das Fronteiras (O Ranger Urbano)
+Eles não são ladrões de rua; são especialistas em navegar o terreno difícil, seja os telhados da favela ou as ruínas antigas.
+
+Conceito: Pragmáticos e ágeis. Vestem capas de viagem, botas reforçadas e carregam kits de ferramentas para qualquer situação (ganchos, cordas, antídotos).
+
+Motivação: Liberdade e descoberta. Eles odeiam ficar presos nas muralhas da cidade. Eles encontram rotas seguras para caravanas e resgatam viajantes perdidos.
+
+Estilo de Combate: Arco e flecha ou lâminas duplas. Ataques rápidos e precisos nos pontos fracos dos monstros.
+
+Habilidade Única: Sentido de Perigo. Conseguem notar emboscadas ou a presença de Espectros antes que eles se manifestem visivelmente.
+
+[CATEGORIA: CLASSE] [TAGS: Clérigo, Médico, Alquimia, Ciência]
+
+O Médico de Campo (O Curandeiro Sem Fé)
+Os deuses não respondem, então a medicina precisa resolver.
+
+Conceito: Uma mistura de cirurgião de guerra e alquimista. Eles não rezam sobre uma ferida; eles limpam, costuram e aplicam emplastros de ervas raras.
+
+Equipamento: Uma bolsa cheia de frascos, bandagens limpas, bisturis e sais revigorantes.
+
+Estilo de Jogo: Suporte. Eles lançam granadas de fumaça curativa, injetam adrenalina em aliados caídos e jogam ácido em inimigos.
+
+Filosofia: "A vida é teimosa." Eles lutam contra a morte com ciência e teimosia humana.
+
+[CATEGORIA: CLASSE] [TAGS: Caçador, Monstros, Bruxo, Especialista]
+
+O Caçador de Maldições (O Exorcista Prático)
+Especialistas em lidar com o sobrenatural sem se tornarem parte dele. Semelhante a um "Witcher", mas menos mutante e mais técnico.
+
+Conceito: Viajantes que aceitam contratos para eliminar bestas que a guarda comum não consegue matar (Lobisomens, Vampiros, Fantasmas).
+
+Preparo: Eles estudam o inimigo. Usam óleos de prata para lobisomens, estacas de madeira de freixo para vampiros e sal grosso para espectros.
+
+Armamento: Bestas de repetição, bombas de luz e espadas de prata.
+
+Personalidade: Profissionais. Não lutam por ódio, lutam porque alguém precisa fazer o trabalho sujo para que os camponeses possam dormir.
+
+[CATEGORIA: CLASSE] [TAGS: Bárbaro, Natureza, Força, Tribal]
+
+O Guardião Selvagem (O Bárbaro do Norte)
+Membros das tribos do norte ou do deserto que respeitam a natureza, mesmo que ela seja cruel.
+
+Conceito: Força bruta e instinto. Eles não odeiam a civilização, mas acham as pessoas da cidade "moles" e desconectadas da realidade.
+
+Conexão Espiritual: Eles invocam os "Espíritos Totêmicos" (Urso, Lobo, Falcão) para ganhar força ou velocidade momentânea. Não é magia corrompida, é uma conexão antiga e pura.
+
+Estilo de Combate: Armas grandes (Machados, Martelos) e pouca armadura. Confiam na resistência da pele e na esquiva.
+
+Código: Respeitam a presa. Matam apenas para sobreviver ou proteger.
+
+[CATEGORIA: CLASSE] [TAGS: Druida, Ciclo, Morte, Fungos]
+
+O Druida do Ciclo Cinzento (O Decompositor)
+A maioria dos druidas venera a vida. Estes veneram o processo necessário que vem depois: a decomposição. Eles entendem que, para a floresta viver, algo tem que morrer e virar adubo.
+
+Conceito: Não são malignos, são práticos. Eles aceleram a degradação de coisas mortas para limpar o mundo. Vestem mantos feitos de fibras mortas e adornos de ossos polidos.
+
+Poderes: Controlam fungos (não para infectar, mas para curar ou criar barreiras), aceleram a ferrugem em armas inimigas e podem falar com os vermes da terra para obter informações.
+
+Filosofia: "A morte alimenta a vida." Eles são excelentes contra mortos-vivos, pois veem zumbis como uma "falha" no ciclo natural que precisa ser corrigida (decomposta) à força.
+
+[CATEGORIA: CLASSE] [TAGS: Bruxo, Espíritos, Fantasmas, Controle]
+
+O Vinculador de Almas (O Carcereiro Espiritual)
+Diferente de um necromante que ergue corpos podres, o Vinculador faz pactos (forçados ou voluntários) com os fantasmas que infestam a Névoa.
+
+Conceito: Um médium combatente. Ele carrega lanternas, sinos e frascos onde guarda espíritos. Ele não luta sozinho; as almas o protegem.
+
+Mecânica: Possessão Consentida. Ele pode permitir que um espírito guerreiro entre em seu corpo por um minuto para ganhar habilidade com espadas, ou um espírito erudito para ler uma língua antiga.
+
+Risco: Se ele perder o controle mental, os espíritos podem tomar o corpo dele para sempre. É uma batalha constante de vontade.
+
+Visual: Olhos com olheiras profundas, sussurrando sozinho constantemente. As sombras ao redor dele se movem contra a luz.
+
+[CATEGORIA: CLASSE] [TAGS: Guerreiro, Anti-Magia, Caçador, Resistência]
+
+O Rompe-Feitiços (Mage Slayer)
+Em um mundo onde a magia quebrou a realidade, alguém precisa saber como "desligar" os magos.
+
+Conceito: Guerreiros treinados para caçar conjuradores, bruxas e bestas mágicas. Eles não usam magia; eles a anulam.
+
+Equipamento: Armaduras gravadas com runas de nulificação (feitas de "Ferro Frio") e bombas de pó de vidro que impedem a fala (silenciando conjurações verbais).
+
+Habilidade Única: Aura de Estática. Eles podem gerar um campo ao redor de si que faz qualquer magia falhar ou explodir na mão do conjurador inimigo.
+
+Motivação: Geralmente são sobreviventes de desastres mágicos que juraram que ninguém mais sofreria o que eles sofreram.
+
+[CATEGORIA: CLASSE] [TAGS: Ladino, Assassino, Veneno, Social]
+
+A Sombra da Corte (O Envenenador)
+O "Rato de Esgoto" domina a favela; a "Sombra da Corte" domina os bailes da nobreza e os corredores de pedra.
+
+Conceito: Um espião e assassino refinado. Usa roupas elegantes que escondem lâminas finas como agulhas.
+
+Especialidade: Alquimia de contato. Eles usam anéis com compartimentos secretos para despejar veneno na bebida do alvo, ou luvas revestidas com toxinas paralisantes (Toque da Medusa).
+
+Estilo de Jogo: Social e Letal. Eles entram pela porta da frente sorrindo e saem antes que o corpo caia no chão.
+
+Arma: O "Estilete", uma adaga fina feita para perfurar entre as placas de armaduras pesadas ou costelas.
+
+[CATEGORIA: CLASSE] [TAGS: Mago, Tecnologia, Cristais, Artifício]
+
+O Cristalante (O Mago Engenheiro)
+Eles descobriram que usar o próprio corpo para canalizar magia é estúpido e perigoso. Eles usam a tecnologia para filtrar o poder.
+
+Conceito: Uma mistura de mago e cientista. Eles carregam um "Rifle de Foco" ou "Luvas de Lentes" cravejadas com cristais refinados.
+
+Mecânica: Magia Estabilizada. Seus feitiços não são selvagens. São raios laser precisos, barreiras geométricas perfeitas e constructos de luz sólida.
+
+Dependência: Eles precisam de "Baterias de Mana" (gemas carregadas). Se as baterias acabarem, eles são apenas acadêmicos com armas pesadas inúteis.
+
+Visual: Steampunk Arcano. Casacos longos, muitas lentes e engrenagens de latão girando em seus cajados.

@@ -1,86 +1,107 @@
 """
 agents/ruler_completo.py
 (O Juiz Universal)
-Define as regras. NÃO importa nada de agents.combat ou agents.storyteller.
+Define as regras e interpreta intenções complexas usando o RAG e o Banco de Habilidades.
 """
+from typing import Optional, Dict
 from langchain_core.messages import SystemMessage, HumanMessage
 from pydantic import BaseModel, Field
 from llm_setup import get_llm, ModelTier
 
-# Fontes de Conhecimento (ajuste os caminhos conforme sua estrutura)
-# Se você não tiver o arquivo themes ou rag, pode comentar os imports para testar
+# --- INTEGRAÇÕES ---
 try:
-    from agents.class_themes import get_class_theme, get_power_guideline
     from rag import query_rag
 except ImportError:
-    # Fallback para caso os arquivos não existam no teste isolado
-    def get_class_theme(*args, **kwargs): return type('obj', (object,), {'style': 'Genérico', 'allowed': 'Tudo'})
-    def get_power_guideline(*args): return "Nível Padrão"
-    def query_rag(*args, **kwargs): return "Regras D&D 5e Padrão"
+    def query_rag(*args, **kwargs): return "Regras D&D 5e Padrão."
 
+# Tenta carregar as habilidades oficiais para o Juiz não alucinar
+try:
+    from gamedata import ABILITIES
+except ImportError:
+    ABILITIES = {}
+
+# --- SCHEMA ROBUSTO ---
 class Ruling(BaseModel):
-    is_allowed: bool
-    rejection_reason: str = ""
+    """Estrutura da decisão do Juiz."""
+    is_allowed: bool = Field(description="Se a ação é possível nas regras.")
+    dice_formula: str = Field(description="A fórmula exata. Ex: '1d20+5', 'DC 13 Str Save', '0' se não tiver rolagem.")
+    mechanical_effect: str = Field(description="O efeito técnico. Ex: 'Dano Cortante', 'Condição Caído', 'Gasta 5 HP'.")
     flavor_text: str = Field(description="Explicação curta da regra aplicada.")
-    dice_formula: str = Field(description="A fórmula exata. Ex: '1d20+5 Attack', 'DC 13 Str Save'.")
-    mechanical_effect: str = Field(description="Efeito. Ex: 'Dano Contundente', 'Condição Caído'.")
 
-def resolve_action(player: dict, intent: str, context: str = "geral") -> dict:
-    """
-    Decide a mecânica para qualquer ação.
-    """
-    level = player.get("level", 1)
-    p_class = player.get("class_name", "Aventureiro")
-    
+def _find_ability_rule(intent: str) -> str:
+    """Procura se a intenção cita alguma habilidade cadastrada."""
     intent_lower = intent.lower()
-    magic_keywords = ["conjuro", "magia", "cast", "spell", "invoco", "fireball", "curar"]
-    is_magic = any(k in intent_lower for k in magic_keywords)
+    for key, data in ABILITIES.items():
+        # Verifica se o nome da habilidade (ou chave) está na frase
+        if key.lower() in intent_lower or data.get("name", "").lower() in intent_lower:
+            return f"""
+            [REGRA OFICIAL ENCONTRADA]
+            Habilidade: {data.get('name')}
+            Custo: {data.get('cost')} {data.get('resource_type')}
+            Efeito: {data.get('effect')}
+            Fórmula de Dano/Cura: {data.get('damage_formula', 'N/A')}
+            Condições: {data.get('conditions', [])}
+            """
+    return ""
+
+def resolve_action(player: dict, intent: str) -> dict:
+    """
+    Decide a mecânica para qualquer ação complexa.
+    """
+    # 1. Preparação do Contexto
+    if not intent:
+        return {"dice_formula": "0", "mechanical_effect": "Nenhuma ação detectada."}
+
+    # Busca regras específicas no Banco de Habilidades (Prioridade 1)
+    ability_context = _find_ability_rule(intent)
     
-    combat_keywords = ["agarro", "grapple", "empurro", "shove", "derrub", "rasteira", "desarm", "esquiva", "dodge"]
-    is_maneuver = any(k in intent_lower for k in combat_keywords)
+    # Busca regras gerais no RAG (Prioridade 2)
+    try:
+        rag_context = query_rag(f"rules for {intent}", index_name="rules")
+    except:
+        rag_context = ""
 
-    knowledge_context = ""
-
-    if is_magic:
-        concept = player.get("concept", "")
-        theme = get_class_theme(p_class, concept_desc=concept)
-        power = get_power_guideline(level)
-        knowledge_context = f"Regras de Magia: {theme.style} | Permitido: {theme.allowed}"
-    
-    elif is_maneuver:
-        try:
-            rag_data = query_rag(f"combat rules for {intent}", index_name="rules")
-            knowledge_context = f"Regras de Combate (RAG): {rag_data}"
-        except:
-            knowledge_context = "Regras Padrão de Combate D&D 5e."
-            
-    else:
-        try:
-            rag_data = query_rag(intent, index_name="rules")
-            knowledge_context = f"Regras Gerais: {rag_data}"
-        except:
-            knowledge_context = "Regras Gerais D&D 5e."
-
+    # Monta o Prompt
     system_msg = SystemMessage(content=f"""
-    <role>Juiz de Regras D&D 5e</role>
-    <library>{knowledge_context}</library>
-    <instructions>
-    Analise a ação: "{intent}".
-    Retorne a 'dice_formula' correta (Ex: 'DC 15 Dex Save', '1d20+5 Attack') e o 'mechanical_effect'.
-    </instructions>
+    Você é o JUIZ DE REGRAS (Game Master) de um RPG Dark Fantasy.
+    Sua função é traduzir a narração do jogador em MECÂNICA DE DADOS.
+
+    <CONTEXTO DO JOGADOR>
+    Nome: {player.get('name')}
+    Classe: {player.get('class_name')}
+    Atributos: {player.get('attributes')}
+    </CONTEXTO>
+
+    <BIBLIOTECA DE REGRAS>
+    {ability_context}
+    {rag_context}
+    </BIBLIOTECA>
+
+    <INSTRUÇÕES>
+    1. Se o jogador usou uma Habilidade Oficial (listada acima), USE EXATAMENTE os dados dela.
+       - Ex: Se "Juramento de Sangue" diz "Gasta 5 HP", o efeito deve ser "Gasta 5 HP, Ganha Buff".
+    2. Se for uma manobra física (agarrar, empurrar), use regras de D&D 5e (Atletismo vs Acrobacia/Força).
+    3. Se for algo impossível, retorne is_allowed=False.
+    4. Em 'dice_formula', retorne APENAS a string de rolagem (ex: '1d20+5'). Se for auto-sucesso ou custo, use '0'.
     """)
 
-    llm = get_llm(temperature=0.1, tier=ModelTier.FAST)
+    # 2. Chamada da IA
+    llm = get_llm(temperature=0.0, tier=ModelTier.FAST)
     
     try:
+        # Structured Output para garantir o JSON
         judge = llm.with_structured_output(Ruling)
         res = judge.invoke([system_msg, HumanMessage(content=intent)])
+        
+        print(f"⚖️ [RULER] Decisão: {res.dice_formula} | Efeito: {res.mechanical_effect}")
         return res.model_dump()
+
     except Exception as e:
-        print(f"[RULER ERROR] {e}")
+        print(f"❌ [RULER ERROR] Falha ao interpretar: {e}")
+        # Fallback seguro para não travar o jogo
         return {
             "is_allowed": True,
-            "dice_formula": "1d20 Check",
-            "flavor_text": "Ação genérica.",
-            "mechanical_effect": "Nenhum"
+            "dice_formula": "1d20",
+            "flavor_text": "Ação improvisada (Fallback).",
+            "mechanical_effect": "Efeito Genérico"
         }

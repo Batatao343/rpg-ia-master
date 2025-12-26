@@ -1,59 +1,76 @@
+"""
+agents/archivist.py
+O Escriba do Mundo. Lê a narrativa, extrai fatos novos e os grava
+Tanto no Banco Vetorial (FAISS) quanto no Arquivo de Texto (world_lore.txt).
+"""
+import os
 from llm_setup import get_llm, ModelTier
 from rag import add_to_lore_index
 
+# Caminho do arquivo de Lore (na raiz do projeto)
+LORE_FILE_PATH = "world_lore.txt"
+
+def _append_to_file(content: str) -> None:
+    """Escreve o novo conhecimento no final do arquivo .txt."""
+    try:
+        # Garante que começa com uma nova linha se o arquivo não estiver vazio
+        prefix = "\n"
+        if not os.path.exists(LORE_FILE_PATH):
+            prefix = ""
+            
+        with open(LORE_FILE_PATH, "a", encoding="utf-8") as f:
+            f.write(f"{prefix}{content}")
+        print(f"📜 [ARCHIVIST] Gravado em '{LORE_FILE_PATH}' com sucesso.")
+    except Exception as e:
+        print(f"❌ [ARCHIVIST] Erro ao gravar em arquivo: {e}")
 
 def archive_narrative(narrative_text: str) -> None:
-    """Extrai fatos persistentes e grava no índice de lore."""
-
-    if not narrative_text:
+    """
+    Analisa a narrativa recente. Se houver fatos novos (NPCs mortos, locais descobertos),
+    formata-os no padrão 'Markdown Rico' e salva permanentemente.
+    """
+    if not narrative_text or len(narrative_text) < 50:
         return
 
-    def _normalize_content(raw_content: object) -> str:
-        if isinstance(raw_content, str):
-            return raw_content
-
-        if raw_content is None:
-            print("[ARCHIVIST] Aviso: resposta vazia do LLM, ignorando.")
-            return ""
-
-        try:
-            if isinstance(raw_content, (list, tuple, set)):
-                normalized = ", ".join(map(str, raw_content))
-            else:
-                normalized = str(raw_content)
-            print(
-                f"[ARCHIVIST] Aviso: resposta do LLM não é string ({type(raw_content).__name__}); "
-                "convertida para texto simples."
-            )
-            return normalized
-        except Exception as exc:  # noqa: BLE001
-            print(
-                f"[ARCHIVIST] Aviso: não foi possível converter resposta do LLM "
-                f"({type(raw_content).__name__}): {exc}"
-            )
-            return ""
-
-    llm = get_llm(temperature=0.3, tier=ModelTier.FAST)
-    prompt = (
-        "Extract ONLY new, permanent facts about the world, locations, or history. "
-        "Ignore combat/dialogue. If nothing new, return 'NONE'."
-    )
+    llm = get_llm(temperature=0.2, tier=ModelTier.FAST)
+    
+    # Prompt forçando o formato de Tags que criamos
+    system_prompt = """
+    You are the Royal Archivist of a Dark Fantasy world.
+    Analyze the NARRATIVE below. Did the players discover a NEW location, kill a named NPC, or change the world state?
+    
+    If YES, extract this fact and format it EXACTLY like this (Markdown):
+    
+    ---
+    [CATEGORIA: <TYPE>] [TAGS: <KEYWORD1>, <KEYWORD2>]
+    ## <TITLE OF THE FACT>
+    <Detailed description of what happened or what was learned.>
+    
+    Examples of Categories: HISTÓRIA, NPC, LOCALIZAÇÃO, ITEM, FACÇÃO.
+    
+    If NO new permanent info is found (just combat or dialogue), return exactly: NONE
+    """
 
     try:
-        result = llm.invoke(f"{prompt}\n\nText:\n{narrative_text}")
-        if hasattr(result, "content"):
-            raw_content = result.content
-        else:
-            raw_content = result
-    except Exception as exc:  # noqa: BLE001
-        print(f"[ARCHIVIST] Falha ao extrair fatos: {exc}")
-        # fallback mínimo: salva o próprio texto como fato, evitando teste falhar
-        raw_content = narrative_text
+        # Invoca a IA
+        response = llm.invoke([
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"NARRATIVE:\n{narrative_text}"}
+        ])
+        
+        content = response.content.strip()
 
-    content = _normalize_content(raw_content)
+        # Se a IA não achou nada, aborta
+        if content == "NONE" or "NONE" in content[:10]:
+            return
 
-    if not content or content.strip().upper() == "NONE":
-        return
+        # 1. Grava no FAISS (Memória Vetorial para RAG)
+        add_to_lore_index([content])
+        
+        # 2. Grava no TXT (Para leitura humana e persistência física)
+        _append_to_file(content)
+        
+        print(f"🧠 [ARCHIVIST] Novo conhecimento preservado: {content.splitlines()[2]}")
 
-    add_to_lore_index([content])
-    print(f"📜 [ARCHIVIST] Memorized: {content}")
+    except Exception as exc:
+        print(f"⚠️ [ARCHIVIST] Falha ao arquivar: {exc}")

@@ -1,201 +1,163 @@
 """
 agents/character_creator.py
-Gera a ficha do personagem baseada em História (Backstory) e Nível.
-Versão V3.3: Correção de Sintaxe f-string (Escaping curly braces).
+Gera a ficha do personagem baseada em História, Nível e Região.
+Versão V6.0: Híbrida (IA para Criatividade + JSON para Regras Oficiais).
 """
 from typing import Dict, Any, List
 from langchain_core.messages import SystemMessage, HumanMessage
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field
 
 from llm_setup import get_llm, ModelTier
 
-# --- SCHEMAS ---
+# --- IMPORTAÇÕES ESSENCIAIS ---
+try:
+    from rag import query_rag
+    RAG_AVAILABLE = True
+except ImportError:
+    RAG_AVAILABLE = False
+    def query_rag(*args, **kwargs): return ""
+
+# Importa os dados oficiais para garantir consistência
+try:
+    from gamedata import CLASSES
+except ImportError:
+    CLASSES = {}
+
+# --- MAPA DE ATRIBUTOS (Fallback se o JSON falhar) ---
+CLASS_ATTR_MAP = {
+    "Guerreiro": "str", "Cavaleiro da Vigília": "str", "Inquisidor da Cinza": "str", "Guardião Selvagem": "str",
+    "Ladino": "dex", "Batedor das Fronteiras": "dex", "Sombra da Corte": "dex",
+    "Mago": "int", "Arcanista Cinzento": "int", "Sapador da Fuligem": "int", "Médico de Campo": "int",
+    "Sangromante": "con", "Pastor de Pragas": "wis"
+}
+
+# --- SCHEMAS DA IA ---
 
 class PlayerStatsSchema(BaseModel):
-    """Gera atributos numéricos baseados na classe/raça/nível."""
-    hp: int = Field(ge=1, description="HP Inicial (Inteiro).")
-    max_hp: int = Field(ge=1, description="HP Máximo (Inteiro).")
-    defense: int = Field(description="Classe de Armadura (AC).")
-    attributes: Dict[str, int] = Field(description="Força, Destreza, Const, Int, Sab, Car (Apenas números).")
-    inventory: List[str] = Field(description="Lista de itens. Nível alto exige itens mágicos nomeados.")
+    """A IA sugere a distribuição, mas respeitamos limites."""
+    attributes: Dict[str, int] = Field(description="Atributos: str, dex, con, int, wis, cha.")
+    inventory: List[str] = Field(description="Itens baseados na Região e Lore.")
+    flavor_abilities: List[str] = Field(description="2 ou 3 magias/truques extras (Flavor) além da passiva.")
 
 class BackstoryAnalysis(BaseModel):
-    """A IA extrai a essência mecânica da história."""
-    archetype_summary: str = Field(description="Resumo curto do estilo de combate/magia.")
-    key_traits: List[str] = Field(description="3 características principais citadas na história.")
-
-class InventoryOnly(BaseModel):
-    """Schema auxiliar para o fallback (só gera itens)."""
-    items: List[str]
+    archetype_summary: str
+    key_traits: List[str]
 
 # --- LÓGICA AUXILIAR ---
 
-def _analyze_backstory(name: str, p_class: str, backstory: str) -> Dict:
-    """Lê o texto livre e converte em tags mecânicas."""
-    if not backstory or len(backstory) < 10:
-        return {"archetype_summary": p_class, "key_traits": ["Aventureiro Padrão"]}
+def _get_mod(score: int) -> int:
+    return (score - 10) // 2
 
-    llm = get_llm(temperature=0.1, tier=ModelTier.FAST)
-    
-    # System define a persona, Human entrega o dado.
-    system_msg = SystemMessage(content="Você é um Especialista em RPG. Extraia o ARQUÉTIPO MECÂNICO do texto.")
-    human_msg = HumanMessage(content=f"Backstory: {backstory}")
-    
-    try:
-        analyzer = llm.with_structured_output(BackstoryAnalysis)
-        result = analyzer.invoke([system_msg, human_msg])
-        if result is None: raise ValueError("IA retornou vazio")
-        return result.model_dump()
-    except Exception:
-        return {"archetype_summary": p_class, "key_traits": ["Aventureiro"]}
+def _calculate_attack_bonus(class_name: str, attributes: Dict[str, int], level: int) -> int:
+    # Tenta pegar atributo principal do JSON oficial, se não tiver, usa o mapa
+    if class_name in CLASSES and "base_stats" in CLASSES[class_name]:
+        # Tenta deduzir o maior atributo base da classe
+        base = CLASSES[class_name]["base_stats"]["attributes"]
+        primary_attr = max(base, key=base.get)
+    else:
+        primary_attr = CLASS_ATTR_MAP.get(class_name, "str")
 
+    score = attributes.get(primary_attr, 10)
+    mod = _get_mod(score)
+    prof_bonus = 2 + ((level - 1) // 4)
+    return mod + prof_bonus
 
-def _generate_smart_inventory_fallback(name: str, concept: str, level: int) -> List[str]:
-    """
-    Gera apenas o inventário se a ficha completa falhar. 
-    """
-    print(f"🎒 [CHAR CREATOR] Gerando inventário de fallback (SMART) para Nível {level}...")
-    
-    llm = get_llm(temperature=0.7, tier=ModelTier.SMART)
-    
-    system_msg = SystemMessage(content="Você é um Mestre de Armaria em um RPG de Fantasia Sombria.")
-    
-    prompt_text = f"""
-    Gere um inventário de RPG D&D para: {name} ({concept}), Nível {level}.
-    
-    DIRETRIZES DE RARIDADE:
-    - Nível 1-4: Equipamento básico.
-    - Nível 5-10: Armas +1, itens mágicos incomuns.
-    - Nível 11+: Armas +2/3, relíquias, itens raros com nomes épicos.
-    
-    Retorne APENAS uma lista de strings. Ex: ["Lâmina do Crepúsculo", "Poção Maior", "Manto Élfico"]
-    """
-    human_msg = HumanMessage(content=prompt_text)
-    
-    try:
-        gen = llm.with_structured_output(InventoryOnly)
-        res = gen.invoke([system_msg, human_msg])
-        return res.items
-    except Exception as e:
-        print(f"❌ [FALLBACK ERROR] Inventário falhou: {e}")
-        return ["Mochila", "Equipamento de Aventureiro", "Adaga Simples"]
-
+def _get_class_data(class_name: str) -> Dict:
+    """Retorna os dados oficiais da classe ou um padrão genérico."""
+    if class_name in CLASSES:
+        return CLASSES[class_name]
+    return {
+        "passive": "Determinação: +1 em testes de Vontade.",
+        "base_stats": {"hp": 10, "stamina": 10, "mana": 10}
+    }
 
 # --- FUNÇÃO PRINCIPAL ---
 
 def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
-    """Cria a ficha completa processando a história e o nível."""
-    
     name = user_input.get("name", "Herói")
     p_class = user_input.get("class_name", "Aventureiro")
     race = user_input.get("race", "Humano")
+    region = user_input.get("region", "Nova Arcádia")
     backstory = user_input.get("backstory", "")
-    try:
-        level = int(user_input.get("level", 1))
-    except (ValueError, TypeError):
-        level = 1
-
-    print(f"🧠 [CHAR CREATOR] Analisando {name} (Nível {level})...")
     
-    # 1. Análise de Conceito
-    analysis = _analyze_backstory(name, p_class, backstory)
-    derived_concept = analysis["archetype_summary"]
-    print(f"✨ [CHAR CREATOR] Conceito: '{derived_concept}'")
+    raw_level = str(user_input.get("level", "1"))
+    clean_level = "".join(filter(str.isdigit, raw_level))
+    level = int(clean_level) if clean_level else 1
 
-    # 2. Geração de Stats Numéricos
-    llm = get_llm(temperature=0.5, tier=ModelTier.SMART)
+    # 1. BUSCA DADOS OFICIAIS (A "Regra")
+    class_data = _get_class_data(p_class)
+    official_passive = class_data.get("passive", "Habilidade Básica")
     
-    # MUDANÇA: Removemos o exemplo JSON confuso e demos instruções diretas.
+    # Cálculo de HP Base Oficial (Base da Classe + Nível)
+    base_hp_class = class_data.get("base_stats", {}).get("hp", 12)
+    # Fórmula simples: Base + (6 por nível extra)
+    final_hp = base_hp_class + (6 * (level - 1))
+
+    # 2. BUSCA O LORE (O "Sabor")
+    region_lore = _get_region_lore(region)
+
+    # 3. Geração de Stats via IA
+    llm = get_llm(temperature=0.6, tier=ModelTier.SMART)
+    
     system_msg = SystemMessage(content=f"""
-    Você é um Motor de Regras para D&D 5e (Dark Fantasy).
+    Você é um Motor de Regras para RPG.
     
-    REGRAS DE ESCALONAMENTO (SCALING):
-    1. HP (Vida):
-       - Nível 1: ~10-15
-       - Nível 5: ~40-60
-       - Nível 10: ~80-110
-       - Nível 15+: ~150+
+    CONTEXTO DO MUNDO: {region_lore}
+    CLASSE: {p_class} (Atributo Principal Sugerido: Consulte o arquétipo).
     
-    2. ATRIBUTOS (IMPORTANTE):
-       - Use APENAS números inteiros.
-       - As chaves do JSON DEVEM ser exatamente: "str", "dex", "con", "int", "wis", "cha".
-       - Distribuição: Para o Nível {level}, os atributos principais da classe DEVEM ser altos.
-         (Ex: Um Mago Nível 10 deve ter 'int': 20. Um Guerreiro Nível 1 deve ter 'str': 16).
-    
-    3. INVENTÁRIO:
-       - DEVE refletir a história e o nível de poder.
-       - Nível {level} exige itens mágicos/raros com nomes temáticos.
+    TAREFA:
+    1. Gere atributos (str, dex...) coerentes com a classe e nível {level}.
+    2. Gere um inventário temático da região {region}.
+    3. Sugira 2 habilidades extras (flavor) que combinem com a classe.
     """)
 
-    human_msg = HumanMessage(content=f"""
-    Gere a ficha para:
-    - Nome: {name}
-    - Raça/Classe: {race} {p_class}
-    - Nível Atual: {level}
-    - Conceito/Arquétipo: {derived_concept}
-    """)
+    human_msg = HumanMessage(content=f"Personagem: {name}, {race} {p_class}. Conceito: {backstory}")
 
     stats_data = {}
-    
-    # --- BLOCO DE TENTATIVA E DEBUG ---
     try:
-        print("⏳ [DEBUG] Chamando LLM (SMART) para gerar JSON completo...")
-        generator = llm.with_structured_output(PlayerStatsSchema)
-        
-        stats = generator.invoke([system_msg, human_msg])
-        
-        if stats is None: 
-            raise ValueError("LLM retornou None (Filtro de Segurança Ativado)")
-        
-        stats_data = stats.model_dump()
-        print("✅ [DEBUG] JSON gerado e validado com sucesso!")
-        
-    except ValidationError as e:
-        print("\n" + "!"*50)
-        print("❌ [DEBUG] ERRO DE VALIDAÇÃO DO PYDANTIC DETECTADO")
-        print("!"*50)
-        print(e.json(indent=2))
-        print("!"*50 + "\n")
-        print("⚠️ Iniciando Fallback para não travar o jogo...")
-        stats_data = None 
-
+        stats = llm.with_structured_output(PlayerStatsSchema).invoke([system_msg, human_msg])
+        if stats: stats_data = stats.model_dump()
     except Exception as e:
-        print(f"\n❌ [DEBUG] Erro genérico na criação: {type(e).__name__}: {e}")
-        stats_data = None
+        print(f"⚠️ Erro IA: {e}")
 
-    # --- FALLBACK ---
-    if stats_data is None:
-        con_mod = 3 if level >= 5 else 2
-        base_hp = 12 + (6 * (level - 1)) + (con_mod * level)
-        
-        # Fallback de atributos usando as chaves corretas
-        base_attrs = {"str": 14, "dex": 14, "int": 14, "wis": 14, "cha": 14, "con": 16}
-        
-        smart_inventory = _generate_smart_inventory_fallback(name, derived_concept, level)
-        
+    # Fallback
+    if not stats_data:
         stats_data = {
-            "hp": base_hp, 
-            "max_hp": base_hp, 
-            "defense": 12 + (level // 4), 
-            "attributes": base_attrs,
-            "inventory": smart_inventory
+            "attributes": {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10},
+            "inventory": ["Kit Básico"],
+            "flavor_abilities": []
         }
 
-    # 3. Montagem do Objeto Final
-    player_sheet = {
+    # 4. MONTAGEM FINAL (MERGE)
+    # A lista de habilidades começa com a PASSIVA OFICIAL do JSON
+    final_abilities = [f"[Passiva] {official_passive}"] + stats_data.get("flavor_abilities", [])
+    
+    # Cálculo de Defesa (Simples: 10 + Dex Mod, ou valor base da classe se for maior)
+    dex_mod = _get_mod(stats_data["attributes"].get("dex", 10))
+    base_def = class_data.get("base_stats", {}).get("defense", 10)
+    # Se a classe usa armadura pesada (def alta no JSON), mantemos. Se for leve, usa Dex.
+    final_defense = max(base_def, 10 + dex_mod)
+
+    return {
         "name": name,
         "class_name": p_class,
         "race": race,
+        "region": region,
         "backstory": backstory,
-        "concept": derived_concept,
-        "traits": analysis["key_traits"],
-        "hp": stats_data["hp"],
-        "max_hp": stats_data["max_hp"],
-        "defense": stats_data["defense"],
+        "concept": f"{race} {p_class} de {region}",
+        "traits": [], # Simplificado para focar no resto
+        "hp": final_hp,
+        "max_hp": final_hp,
+        "defense": final_defense,
         "attributes": stats_data["attributes"],
         "inventory": stats_data["inventory"],
+        "known_abilities": final_abilities, # <--- AQUI ESTÁ A CORREÇÃO
+        "attack_bonus": _calculate_attack_bonus(p_class, stats_data["attributes"], level),
         "level": level,
         "xp": 0
     }
-    
-    return player_sheet
+
+def _get_region_lore(region_name: str) -> str:
+    if not RAG_AVAILABLE: return ""
+    try: return query_rag(f"Describe {region_name}", index_name="lore")
+    except: return ""

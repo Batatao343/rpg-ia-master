@@ -1,29 +1,176 @@
-=== LIVRO DE REGRAS DO SISTEMA ===
+# CÓDIGO DE REGRAS: VALORIA DARK FANTASY (ED. COMPLETA)
 
-CAPÍTULO 1: AÇÕES BÁSICAS
-- Ataque: O jogador rola um d20. Se o resultado for maior que a Classe de Armadura (AC) do inimigo, ele acerta.
-- Testes de Perícia: Para realizar uma ação difícil (escalar, convencer, esconder), o mestre define uma Dificuldade (DC).
-  * Fácil: DC 10
-  * Médio: DC 15
-  * Difícil: DC 20
-  * Impossível: DC 30
-- Movimento: Um personagem humano pode andar cerca de 9 metros por turno. Não é possível atravessar paredes ou voar sem magia.
+==============================================================================
+SEÇÃO 1: MECÂNICAS CENTRAIS E TESTES
+==============================================================================
 
-CAPÍTULO 2: LIMITES DE MAGIA E MANA
-- Conjuração: Para lançar um feitiço, o jogador precisa de Mana e conhecimento.
-- Custo de Mana:
-  * Truques (Luz, Mãos Mágicas): 0 Mana.
-  * Magias de Nível 1 (Mísseis Mágicos, Cura Leve): 2 Mana.
-  * Magias de Nível 2 (Invisibilidade, Teia): 5 Mana.
-- Restrição: Guerreiros e Ladinos NÃO usam magia, a menos que tenham um item mágico específico.
+---
+[CATEGORIA: TESTES] [TAGS: Dificuldade, CD, Sucesso, Falha]
+## A Regra da Dificuldade (DC)
 
-CAPÍTULO 3: SAÚDE E MORTE
-- Dano: Se o HP chegar a 0, o personagem cai inconsciente.
-- Descanso Curto: Recupera 1d8 de HP, mas gasta 1 hora de tempo no jogo.
-- Descanso Longo: Recupera todo o HP, Mana e Stamina, mas requer 8 horas de sono seguro.
+Em Valoria, nada é fácil. A dificuldade padrão (DC) para tarefas moderadas é **13**, não 10.
+* **Muito Fácil (DC 8):** Chutar uma porta podre.
+* **Fácil (DC 11):** Escalar um muro com corda.
+* **Moderado (DC 13):** Rastrear pegadas na lama fresca.
+* **Difícil (DC 16):** Abrir uma fechadura enferrujada da Legião.
+* **Muito Difícil (DC 19):** Convencer um nobre a doar ouro.
+* **Quase Impossível (DC 23+):** Nadar contra a correnteza do Rio de Mercúrio.
 
-CAPÍTULO 4: ESTADOS E CONDIÇÕES
-- Envenenado: Tem desvantagem em ataques (rola dois dados e pega o pior).
-- Invisível: Tem vantagem em ataques, mas volta a ser visível se atacar ou lançar magia.
-- Exaustão: Se não dormir por 24h, perde velocidade e tem desvantagem em tudo.
-- Cego: Tem desvantagem em ataques contra os inimigos e eles tem vantagem para atacar você
+---
+[CATEGORIA: MECÂNICA] [TAGS: Sucesso com Custo, Falha Crítica, Narrativa]
+## Sucesso com Custo (A Regra do "Sim, mas...")
+
+Se o jogador falhar em um teste por 1 ou 2 pontos (Ex: Tirou 14, a DC era 15), o Mestre (IA) pode oferecer um "Sucesso com Custo".
+* **O Jogador consegue o que queria, MAS:**
+    * Perde um item do inventário.
+    * Sofre dano leve (1d4).
+    * Alerta inimigos próximos.
+    * A ferramenta quebra.
+
+---
+[CATEGORIA: VANTAGEM] [TAGS: Ajuda, Posição, Flanquear, High Ground]
+## Vantagem e Desvantagem Tática
+
+* **Flanquear:** Se dois aliados atacam o mesmo inimigo em lados opostos, ambos têm +2 no Ataque (não Vantagem completa, para não banalizar).
+* **Terreno Elevado (High Ground):** Quem está em cima tem +1 no Ataque.
+* **Terreno Instável:** Lutar na lama ou no lixo dá Desvantagem em testes de Destreza.
+
+==============================================================================
+SEÇÃO 2: SOBREVIVÊNCIA E RECURSOS
+==============================================================================
+
+---
+[CATEGORIA: RECURSOS] [TAGS: Vida, Mana, Estamina, Descanso, Recuperação]
+## A Trindade de Sobrevivência
+
+1. **HP (Físico):** Dano real.
+   * *Recuperação:* Descanso Longo recupera tudo. Descanso Curto permite gastar "Dados de Vida" (Hit Dice).
+   * *Ferimentos Persistentes:* Se cair a 0 HP e voltar, o personagem ganha 1 Nível de Exaustão.
+
+2. **MANA (Mágico):** Energia do Éter.
+   * *Recuperação:* Apenas com Descanso Longo ou Poções de Mana (raras).
+   * *Overcharge:* Se o Mana acabar, o mago pode usar HP para conjurar (2 HP por 1 Mana), mas isso causa "Corrupção".
+
+3. **ESTAMINA (Fôlego):** Energia de Combate.
+   * *Uso:* Manobras, corrida, escalada.
+   * *Recuperação:* Recupera totalmente em Descanso Curto.
+   * *Zero Estamina:* Personagem fica "Ofegante" (Velocidade cai pela metade, não pode usar Reações).
+
+---
+[CATEGORIA: AMBIENTE] [TAGS: Fome, Sede, Clima, Névoa]
+## Regras de Exploração Hostil
+
+* **A Névoa Tóxica:** Cobre as terras baixas à noite. Respirar sem máscara por 10 minutos exige teste de CON (DC 12). Falha = Condição [Envenenado] até Descanso Longo.
+* **Frio Extremo (Norte/Noite):** Sem roupa de pele, teste de CON a cada hora. Falha = 1 Nível de Exaustão.
+* **Escuridão Absoluta:** O subsolo de Valoria não tem luz natural. Tochas iluminam 6m. Fora disso, ataques têm Desvantagem total.
+
+==============================================================================
+SEÇÃO 3: COMBATE E VIOLÊNCIA
+==============================================================================
+
+---
+[CATEGORIA: COMBATE] [TAGS: Ações, Turno, Ataque]
+## A Economia de Ação
+
+No turno, o jogador tem:
+1. **Ação Padrão:** Atacar, Conjurar, Usar Item, Habilidade de Classe.
+2. **Ação Bônus:** Poção Rápida (beber), Comando, Ataque de 'Off-hand'.
+3. **Movimento:** Até 9m (padrão). Pode ser quebrado antes e depois da ação.
+
+---
+[CATEGORIA: DANO] [TAGS: Crítico, Morte, Brutalidade]
+## Dano Crítico e Brutalidade
+
+* **Crítico (20 Natural):** O dado de dano é dobrado. Além disso, se o inimigo for "pequeno" ou "fraco", há chance de desmembramento narrativo.
+* **Dano Massivo:** Se um único golpe tirar mais de 50% da vida total do alvo, ele deve fazer um teste de CON (DC 15) ou ficar [Atordoado] até o próximo turno.
+
+---
+[CATEGORIA: MANOBRAS] [TAGS: Agarrar, Empurrar, Derrubar, Desarmar]
+## Manobras Marciais (Sem Habilidade)
+
+Qualquer personagem pode tentar:
+* **Agarrar (Grapple):** Teste de FORÇA (Atletismo) vs FORÇA/DESTREZA do alvo. Sucesso = Alvo com Velocidade 0.
+* **Empurrar/Derrubar (Shove):** Mesma mecânica. Sucesso = Empurra 2m ou deixa Caído (Prone).
+* **Desarmar (Disarm):** Ataque vs Teste de FORÇA/DESTREZA do alvo. Dano é 0, mas a arma cai.
+
+==============================================================================
+SEÇÃO 4: MAGIA E CORRUPÇÃO
+==============================================================================
+
+---
+[CATEGORIA: MAGIA] [TAGS: Éter, Custo, Risco, Wild Magic]
+## A Instabilidade do Éter
+
+Magia não é ciência exata aqui; é negociar com o caos.
+* **O Teste de Foco:** Se o mago sofrer dano enquanto mantém uma magia (Concentração), teste de CON (DC 10 ou metade do dano). Falha = Magia acaba.
+* **A Falha Crítica Mágica (1 Natural):** A magia não apenas falha, ela sai pela culatra.
+    * *Exemplos:* O mago fica cego por 1 turno, invoca um diabrete hostil acidentalmente, ou seus cabelos pegam fogo.
+
+---
+[CATEGORIA: RITUAIS] [TAGS: Sangue, Tempo, Componentes]
+## Magia de Sangue e Rituais
+
+* Magias rituais não gastam Mana, mas levam 10 minutos e exigem componentes (giz, velas, sangue).
+* **Sacrifício:** O jogador pode sacrificar 5 HP máximo (recupera só no fim da aventura) para garantir Sucesso Automático em um ritual de nível baixo.
+
+==============================================================================
+SEÇÃO 5: INTERAÇÃO SOCIAL E CRIME
+==============================================================================
+
+---
+[CATEGORIA: SOCIAL] [TAGS: Persuasão, Intimidação, Enganação, Carisma]
+## A Roda Social
+
+NPCs têm atitudes iniciais: Hostil, Neutro ou Amigável.
+* **Intimidação:** Usa FORÇA ou CARISMA. Se falhar, o alvo se torna Hostil permanentemente e pode chamar guardas.
+* **Suborno:** Quase todos em Valoria têm um preço.
+    * *Guardas:* 10 a 50 Ouro.
+    * *Nobres:* Informação ou Relíquias (Ouro é vulgar).
+    * *Mendigos:* Comida ou Prata.
+
+---
+[CATEGORIA: FURTIVIDADE] [TAGS: Stealth, Crime, Roubo, Visibilidade]
+## Regras de Furtividade
+
+* **Teste de Grupo:** Se o grupo todo for furtivo, metade precisa passar no teste.
+* **Armadura Barulhenta:** Armadura Pesada e Média (metal) dão Desvantagem em Furtividade.
+* **Ataque Surpresa:** Se atacar um inimigo que não te viu, o primeiro ataque é Crítico Automático.
+
+==============================================================================
+SEÇÃO 6: ECONOMIA E CRAFTING
+==============================================================================
+
+---
+[CATEGORIA: ECONOMIA] [TAGS: Ouro, Comércio, Venda, Inflação]
+## O Valor das Coisas
+
+* **Venda de Itens:** Lojistas compram itens de aventureiros por 20% do valor real. (Eles assumem que é roubado).
+* **Itens Mágicos:** Não se vendem em lojas. Apenas leilões do mercado negro ou troca direta com colecionadores.
+* **Custo de Vida:** Dormir na rua é grátis (e perigoso). Taverna segura custa 2 Ouro/noite. Estalagem nobre custa 20 Ouro.
+
+---
+[CATEGORIA: CRAFTING] [TAGS: Alquimia, Ferreiro, Monstros, Loot]
+## Colheita de Monstros
+
+Com um teste de Sobrevivência (DC 15), jogadores podem extrair partes de monstros mortos:
+* **Veneno de Aranha/Cobra:** Aplica na arma (dura 1 hit).
+* **Couro de Lagarto/Urso:** Serve para reforçar armadura (+1 AC, requer ferreiro).
+* **Dentes/Garras:** Valem ouro para alquimistas.
+* **Falha no Teste:** O item é destruído ou o jogador se envenena acidentalmente caso tenha falha crítica.
+
+==============================================================================
+SEÇÃO 7: INSANIDADE E MEDO
+==============================================================================
+
+---
+[CATEGORIA: MENTAL] [TAGS: Sanidade, Medo, Horror, Stress]
+## O Peso do Mundo (Sistema de Sanidade Simplificado)
+
+Certos eventos exigem Teste de SABEDORIA (Sanity Check):
+1. Ver uma abominação de outro mundo.
+2. Ler o "Tomo das Sombras Vazias".
+3. Ser torturado.
+
+* **Falha:** O personagem ganha 1 ponto de "Loucura Temporária".
+    * *Efeito:* Tremedeira (Desvantagem em DEX), Alucinações (Vê inimigos onde não tem), ou Mutismo.
+    * *Cura:* Descanso em local sagrado ou magia de Restauração.

@@ -1,159 +1,392 @@
 {
-    "Sargento Kael Valerius": {
-        "name": "Sargento Kael Valerius",
-        "role": "Sargento da Legião de Ferro",
-        "location": "Estrada Real, liderando uma patrulha diurna.",
-        "persona": "Arrogante, impaciente e corrupto até o osso. Kael é o sobrinho do Lorde Protetor Valerius, um fato que ele nunca deixa ninguém esquecer e que o enche de um senso de direito. Ele acredita que este posto de patrulha é um insulto à sua posição e, por isso, desconta sua frustração nos viajantes. Ele fala de forma direta e autoritária, esperando obediência imediata. Vê a lei não como um código a ser seguido, mas como uma ferramenta para extorquir e exercer poder. Um suborno não apenas o fará olhar para o outro lado, mas ele o espera como um tributo ao seu nome. Ele despreza qualquer coisa que não consiga controlar, especialmente magia selvagem, que considera uma afronta à ordem que sua família impôs.",
-        "appearance": "Kael é um homem de constituição robusta, no final dos seus 20 anos. Veste a armadura de placas cinza padrão da Legião de Ferro, embora a sua pareça mais bem cuidada que a dos seus subordinados, apesar da poeira da estrada. A capa vermelha sobre seus ombros é de um veludo ligeiramente mais fino. Ele tem o cabelo escuro cortado à militar e um queixo forte, marcado por uma cicatriz pálida que ele parece exibir com orgulho. Seus olhos são frios e calculistas, e um sorriso de desdém raramente deixa seus lábios. Ele usa um anel com o sinete da casa Valerius em seu dedo mindinho, um lembrete sutil de sua linhagem.",
-        "initial_relationship": 3,
-        "combat_stats": {}
+    "Lorde Protetor Valerius": {
+      "name": "Lorde Protetor Valerius",
+      "role": "Governante de Nova Arcádia",
+      "location": "Palácio de Obsidiana (Anel Dourado)",
+      "persona": "Frio, calculista e obcecado por ordem. Valerius acredita que a liberdade causou o cataclismo e que apenas um punho de ferro pode impedir a extinção humana. Ele fala pouco, mas suas palavras são decretos absolutos.",
+      "appearance": "Um homem alto de idade indeterminada. Veste uma armadura cerimonial negra polida que nunca retira em público. Seus olhos são cinzentos e sem brilho.",
+      "initial_relationship": 3,
+      "combat_stats": {
+        "HP": 180,
+        "AC": 22,
+        "attack": "Espada da Lei: +10 para acertar, 2d8+5 de dano cortante (ignora resistência)."
+      }
     },
-
-    "Silas Vorkul": {
-        "name": "Silas Vorkul",
-        "role": "Curador de Curiosidades (Mercador de Bens Exóticos e Tenebrosos)",
-        "location": "Nos fundos da Taverna do Dragão Bêbado, onde mantém uma carroça coberta e uma mesa improvisada para expor suas mercadorias. Ele evita o salão principal devido ao cheiro da cerveja Raiz-Forte.",
-        "persona": "Silas é excessivamente formal e fala com um sotaque arrastado e melancólico, como se estivesse sempre à beira de um suspiro. Ele se considera um acadêmico e curador, e não um mero vendedor, tratando os aventureiros com um desdém educado. Acredita que o verdadeiro valor de um objeto reside em sua história e perigo. Ele tem um fascínio mórbido por qualquer coisa ligada à Floresta dos Sussurros, especialmente o \"prata de oferenda\" que os loucos trazem de volta. Sua filosofia é: \"A moralidade é um luxo que apenas os mortos podem pagar.\" Ele é um covarde e se encolhe se Grum, o taverneiro, se aproxima.",
-        "appearance": "Muito pálido, com a pele quase translúcida, como se nunca tivesse visto o sol. Veste um casaco de veludo preto empoeirado, com punhos de renda cinzenta, que parece ter sido fino em outra época. Usa óculos com armação de prata pendurados por uma corrente fina. Seu cabelo preto e oleoso é penteado para trás. Ele carrega uma bengala fina com ponta de prata, que usa para empurrar mercadorias nojentas. Tem um anel de obsidiana no dedo mindinho.",
-        "initial_relationship": 5,
-        "combat_stats": {}
+    "Lady Avelina (A Víbora)": {
+      "name": "Lady Avelina",
+      "role": "Líder da Mão Sombria",
+      "location": "Subsolo da Casa de Ópera",
+      "persona": "Sedutora, manipuladora e letal. Avelina vê Nova Arcádia como um tabuleiro de xadrez. Ela não tem lealdade a ninguém além de si mesma e do lucro.",
+      "appearance": "Sempre usa véus de seda roxa e vestidos que escondem diversas adagas. Seu rosto é belo, mas seus olhos têm a frieza de um réptil.",
+      "initial_relationship": 4,
+      "combat_stats": {
+        "HP": 65,
+        "AC": 16,
+        "attack": "Beijo da Víbora: +8 para acertar, 1d4+4 perfurante + 2d6 veneno."
+      }
     },
-
-    "O Catador (The Scrounger)": {
-        "name": "O Catador (The Scrounger)",
-        "role": "Mendigo e Coletor de Sucata/Informante de Rua.",
-        "location": "Nos cais fétidos da cidade portuária, perto da área de descarga de minério, onde ele pode vasculhar sucata. Próximo ao Anel de Ferro.",
-        "persona": "Antigo mineiro de Adamantine que perdeu a mão em um desabamento nas minas. Ele não pede moedas, mas sim \"metal bom\", engrenagens quebradas ou ferramentas enferrujadas, murmurando sobre \"reconstruir o que foi perdido\". Ele é profundamente desconfiado, especialmente da Legião de Ferro, que ele culpa por não proteger os mineiros. Fala em sussurros roucos, misturando súplicas com avisos crípticos sobre o \"Rei Subterrâneo\" e a \"fome do metal\". Ele pode ser subornado com sucata de qualidade ou informações sobre patrulhas.",
-        "appearance": "Magro e curvado, com a pele pálida e coberta por uma camada fina de poeira de carvão que nunca sai. Veste trapos escuros amarrados com barbantes. Sua característica mais notável é a falta da mão direita, substituída por um gancho enferrujado e mal preso a um coto envolto em bandagens sujas. Seus olhos são grandes e constantemente em movimento, cheios de paranoia.",
-        "initial_relationship": 4,
-        "combat_stats": {}
+    "Capitão Marcus Quebra-Ossos": {
+      "name": "Capitão Marcus Quebra-Ossos",
+      "role": "Comandante da Legião de Ferro",
+      "location": "Quartel General da Legião",
+      "persona": "Brutal, sádico e corrupto. Marcus ama a violência e encontrou na lei a desculpa perfeita para exercê-la. Odeia magos fanaticamente.",
+      "appearance": "Um brutamontes careca com o nariz quebrado. Usa uma armadura de placas amassada e carrega um martelo de guerra.",
+      "initial_relationship": 2,
+      "combat_stats": {
+        "HP": 110,
+        "AC": 18,
+        "attack": "O Pacificador: +7 para acertar, 1d12+4 contundente (Chance de Stun)."
+      }
     },
-
-    "Draco Quinhentos (O Vendedor da Casca Branca)": {
-        "name": "Draco Quinhentos (O Vendedor da Casca Branca)",
-        "role": "Vendedor de Curiosidades e Ex-Cobaia do Estudo da Casca Branca",
-        "location": "Um barraco improvisado feito de madeira e musgo, na orla da Floresta dos Sussurros. Sua \"loja\" é um amontoado de caixas de madeira e prateleiras instáveis.",
-        "persona": "Amargo, paranóico e obsessivo com contagem e catalogação. Sua mente foi fragmentada pelos experimentos do \"Estudo da Casca Branca\", e ele repete números baixinho enquanto organiza seus itens. Ele evita contato visual e treme visivelmente perto de qualquer objeto de ferro (armas, armaduras, moedas), pois a proximidade faz com que as amostras da floresta em seu corpo reajam violentamente, causando-lhe dor. Ele fala com uma voz rouca e sussurrante, sempre usando termos como \"amostra\" ou \"espécime\" para se referir aos clientes. Seu objetivo é acumular sementes raras para os Druidas em troca de uma poção que possa \"limpar\" sua mente. Ele odeia o Lab de Testes acima de tudo.",
-        "appearance": "Pele extremamente pálida e fina, quase translúcida, com veias escuras visíveis—um efeito colateral do Estudo da Casca Branca. Seus olhos são grandes e injetados de sangue, sempre desviando o olhar. Ele veste um casaco longo e puído de lã grossa, que ele fecha firmemente no pescoço, e luvas de couro de cervo para evitar tocar em qualquer coisa que possa estar contaminada. Cicatrizes circulares de agulhas de teste são visíveis em seus antebraços se suas mangas escorregarem. Ele exala um cheiro fraco de musgo e produtos químicos antigos.",
-        "initial_relationship": 4,
-        "combat_stats": {}
+    "Grum": {
+      "name": "Grum",
+      "role": "Taverneiro do Dragão Bêbado",
+      "location": "Taverna do Dragão Bêbado",
+      "persona": "Cínico, prático e leal apenas ao ouro. Mantém a paz na taverna com uma clava e regras estritas.",
+      "appearance": "Um meio-orc envelhecido, com metade do rosto coberto por uma cicatriz de queimadura.",
+      "initial_relationship": 5,
+      "combat_stats": {
+        "HP": 80,
+        "AC": 14,
+        "attack": "Clava Debaixo do Balcão: +6 para acertar, 1d8+3 contundente."
+      }
     },
-
-    "Velho Cepa": {
-        "name": "Velho Cepa",
-        "role": "Mendigo (Ex-Mineiro e Informante de Rua)",
-        "location": "Perto do cais principal, sentado no degrau em frente à Taverna do Dragão Bêbado, no Anel de Ferro.",
-        "persona": "Profundamente cínico, paranoico e desconfiado. Ele acredita que o \"Rei Subterrâneo\" das Montanhas Afiadas está enviando espiões e sabotadores para o porto. Ele não pede moedas, mas sim *Raiz-Forte* (a cerveja forte da taverna) ou pedaços de informação que ele possa vender para mercenários. Seu estilo de fala é rouco, rápido e cheio de gírias do submundo. Ele odeia a Legião de Ferro, chamando-os de \"Capas de Sangue\" e \"Cães de Marcus\".",
-        "appearance": "Baixo e magro, com a pele curtida pelo vento do porto. Veste trapos que já foram uniformes cinzas da Legião de Ferro (agora sujos e rasgados). O traço mais notável é seu olho esquerdo, que é um buraco vazio coberto por uma cicatriz de queimadura antiga. Ele usa um gorro de lã sujo que mal cobre a careca e apoia-se em um toco de madeira gasto.",
-        "initial_relationship": 4,
-        "combat_stats": {}
+    "Velha Magda": {
+      "name": "Velha Magda",
+      "role": "Vendedora de Sucata e Informante",
+      "location": "Beco dos Desdentados",
+      "persona": "Aparentemente louca, mas demonstra intelecto afiado em momentos de lucidez. Fala com ratos.",
+      "appearance": "Uma senhora curvada, vestindo trapos coloridos e empurrando um carrinho de mão.",
+      "initial_relationship": 4,
+      "combat_stats": {
+        "HP": 20,
+        "AC": 10,
+        "attack": "Adaga Enferrujada Escondida: +3 para acertar, 1d4 veneno."
+      }
     },
-
-    "Gafanhoto (Beggar)": {
-        "name": "Gafanhoto (Beggar)",
-        "role": "Mendigo e Informante das Docas.",
-        "location": "As Docas de Carga, especificamente perto do Armazém 4, na rota de patrulha noturna da Legião de Ferro. Ele se esconde em uma pilha de redes de pesca abandonadas.",
-        "persona": "Cínico, paranoico e extremamente observador. Beggar não pede esmolas, ele *compra* informações. Ele vê a si mesmo como o \"olho invisível\" da cidade, sabendo de todos os carregamentos ilegais, subornos pagos e rotas secretas. Ele odeia a Legião de Ferro por sua brutalidade, mas os teme acima de tudo, e nunca os confrontaria diretamente. Seu estilo de fala é sussurrante, rápido e fragmentado, muitas vezes terminando com um pigarro ou um olhar furtivo por cima do ombro. Ele só aceita pagamento em pequenos objetos de valor (como pregos de prata ou tabaco de qualidade) em vez de moedas pesadas.",
-        "appearance": "Um homem magro e curvado, com a pele bronzeada e curtida pelo sal e pelo sol. Beggar usa farrapos que outrora foram sacos de estopa, amarrados com pedaços de corda de navio. Seu cabelo oleoso é ralo e grisalho, e ele tem uma barba desgrenhada que esconde a maioria das suas feições. O detalhe mais notável são seus olhos: de um azul pálido incomum, estão sempre em movimento, fixando-se em sombras e movimentos distantes. Ele manca da perna direita, resultado de um \"encontro infeliz\" com um membro da Legião de Ferro. Ele cheira a peixe velho e um pouco de Raiz-Forte azeda.",
-        "initial_relationship": 5,
-        "combat_stats": {}
+    "Doutor Silas Vane": {
+      "name": "Doutor Silas Vane",
+      "role": "Médico do Submundo",
+      "location": "Clínica Clandestina",
+      "persona": "Um homem da ciência sem ética. Vê pacientes como experimentos. Cura por dinheiro ou 'favores biológicos'.",
+      "appearance": "Alto e magro, usa um avental manchado e óculos de lentes grossas.",
+      "initial_relationship": 5,
+      "combat_stats": {
+        "HP": 40,
+        "AC": 12,
+        "attack": "Serras Cirúrgicas: +4 para acertar, 1d6+2 cortante (sangramento)."
+      }
     },
-
-    "Silas, \"O Rei das Sombras\"": {
-        "name": "Silas, \"O Rei das Sombras\"",
-        "role": "Mestre da Guilda dos Ladrões e Contrabandistas do Cais",
-        "location": "Sua loja de fachada, \"A Lanterna Velha\", uma oficina de velas e suprimentos náuticos no distrito portuário mais decadente. O lugar cheira a cera, piche e maresia.",
-        "persona": "Silas é um mestre da manipulação. Fala baixo e devagar, com um sotaque carregado do cais. Ele governa o submundo não pela força, mas pela informação e pelo medo. Ele paga propinas generosas ao Capitão Marcus para que a Legião de Ferro ignore suas operações noturnas. Ele usa a chegada da névoa e dos Espectros da Névoa como cobertura para seus contrabandos mais arriscados, sabendo que os guardas e cidadãos comuns não se atrevem a sair. Ele se vê como um 'mal necessário' que mantém uma ordem própria no cais.",
-        "appearance": "Um homem idoso, magro e com as costas curvadas. Veste roupas simples de estivador, manchadas de cera de vela e sal. Suas mãos são nodosas, mas seus olhos são incrivelmente astutos e observadores. A única pista de sua riqueza é um anel de prata polida com o sinete de um polvo, que ele usa no dedo mínimo – uma proteção velada contra os Espectros da Névoa.",
-        "initial_relationship": 5,
-        "combat_stats": {}
+    "Irmã Clara": {
+      "name": "Irmã Clara",
+      "role": "Sacerdotisa da Chama de Prata",
+      "location": "Ruínas da Catedral",
+      "persona": "Gentil e resiliente. Distribui comida ilegalmente e cura os pobres. Sua fé é inabalável.",
+      "appearance": "Jovem, com o rosto marcado pela exaustão. Veste um hábito cinza com uma chama prateada bordada.",
+      "initial_relationship": 6,
+      "combat_stats": {
+        "HP": 35,
+        "AC": 11,
+        "attack": "Luz Sagrada: (Magia) DC 13 Wis save, 2d6 radiante."
+      }
     },
-    "Glim": {
-        "name": "Glim",
-        "role": "Mendigo / Olhos do Cais",
-        "location": "O Cais de Sangue (Docks) da cidade portuária, especificamente escondido sob uma pilha de redes de pesca velhas perto do Armazém 7.",
-        "persona": "Glim é extremamente cínico e paranoico. Ele não confia em ninguém que não cheire a sal ou suor. Sua filosofia é que a sobrevivência depende de ser invisível e de saber mais do que os outros. Ele despreza a Legião de Ferro, que o espanca por esporte, mas tem medo mortal de ser pego falando mal deles. Ele fala em sussurros roucos, cheios de gírias náuticas e referências veladas a subornos e corrupção. Ele só oferece informações em troca de cobre, comida ou, preferencialmente, um gole de algo forte.",
-        "appearance": "Magro e curvado, Glim parece feito de trapos e sujeira de cais. Sua pele é curtida pelo sol salgado e ele tem um cheiro perpétuo de peixe podre e mofo. Ele veste camadas de tecidos velhos e remendados, incluindo pedaços de lona de vela desbotada. Seu traço mais notável são os olhos, de um azul pálido e constantemente agitados, como se estivesse sempre procurando por botas cinzentas da Legião de Ferro. Ele manca ligeiramente da perna esquerda, resultado de um \"encontro\" com um guarda.",
-        "initial_relationship": 4,
-        "combat_stats": {}
+    "Eldrin, o Escriba": {
+      "name": "Eldrin",
+      "role": "Tradutor e Viciado",
+      "location": "Biblioteca Esquecida",
+      "persona": "Paranoico e trêmulo. Um elfo que sofre com a poluição mágica, mantido vivo por drogas.",
+      "appearance": "Pele rachada como porcelana velha. Olhos vidrados.",
+      "initial_relationship": 4,
+      "combat_stats": {
+        "HP": 25,
+        "AC": 10,
+        "attack": "Toque Chocante: +4 para acertar, 1d8 elétrico."
+      }
     },
-
-    "Finnigan \"O Olho\"": {
-        "name": "Finnigan \"O Olho\"",
-        "role": "Informante e Mendigo.",
-        "location": "Os Docks do Anel de Ferro, geralmente perto dos armazéns mais movimentados, onde o cheiro de peixe podre mascara seu próprio fedor.",
-        "persona": "Finnigan é um parasita social que se transformou em um mestre da informação. Ele usa sua persona de mendigo patético como um disfarce impenetrável. Sua motivação é a sobrevivência, e ele acredita que a informação é a única moeda que a Legião de Ferro não pode roubar ou taxar.\nEstilo de Fala: Ele alterna entre gemidos lastimáveis para atrair a caridade e sussurros rápidos e codificados quando vendendo informações. Ele usa gírias náuticas e metáforas de maré (\"A maré está baixa para o Capitão Marcus hoje,\" \"O navio da verdade está ancorado no porto\"). Ele é cínico sobre a lei, sabendo que todos os guardas são corruptos. Ele odeia a magia selvagem, pois atrai a atenção indesejada da Legião.",
-        "appearance": "Um homem magro, envolto em trapos úmidos e fedorentos a peixe. Ele manca visivelmente, apoiado em uma muleta de madeira de lei rachada. Seu rosto está coberto por uma barba suja e emaranhada. O traço mais notável é seu olho esquerdo, que é leitoso e cego (resultado de uma briga antiga), contrastando com o olho direito, que é incrivelmente vivo e observador, sempre varrendo o horizonte e as sombras. Ele mantém um copo de lata amassado na mão.",
-        "initial_relationship": 5,
-        "combat_stats": {}
+    "Korg Martelo-Negro": {
+      "name": "Korg Martelo-Negro",
+      "role": "Ferreiro Mestre",
+      "location": "A Grande Forja",
+      "persona": "Anão de poucas palavras. Odeia o metal barato da cidade. Forja armas secretas para rebeldes.",
+      "appearance": "Largo como um barril, coberto de fuligem. Falta-lhe um dedo.",
+      "initial_relationship": 5,
+      "combat_stats": {
+        "HP": 90,
+        "AC": 15,
+        "attack": "Martelo de Forja em Brasa: +6 para acertar, 1d8+3 contundente + 1d4 fogo."
+      }
     },
-    "Kaelen (conhecido apenas como 'O Rei das Sombras')": {
-        "name": "Kaelen (conhecido apenas como 'O Rei das Sombras')",
-        "role": "O verdadeiro poder por trás do submundo da cidade portuária. Mestre de espiões, ladrões e contrabandistas.",
-        "location": "Encontrado nos túneis secretos sob o distrito portuário, com seu 'trono' improvisado em um armazém de contrabando esquecido, perto do cheiro de sal e peixe podre.",
-        "persona": "Kaelen é a personificação da calma e do controle. Ele fala em um tom baixo e deliberado, forçando os outros a se inclinarem para ouvir. Ele governa o submundo da cidade não com força bruta, mas com informação e medo. Ele vê a Legião de Ferro não como inimiga, mas como uma ferramenta; ele paga regularmente o Capitão Marcus para que suas patrulhas 'esqueçam' de olhar nos becos certos. Kaelen usa a noite a seu favor, considerando os Espectros da Névoa uma bênção, pois mantêm os cidadãos e guardas amedrontados fora das ruas, permitindo que suas operações de contrabando e espionagem ocorram sem interrupções. Ele despreza o caos e a imprevisibilidade, incluindo magia selvagem, pois isso atrapalha seus negócios.",
-        "appearance": "Um homem esguio na casa dos 40 anos, com cabelos negros curtos e com fios prateados nas têmporas. Seus olhos são cinzentos e penetrantes, raramente piscando. Veste um gibão de couro escuro e reforçado, sem brasão, sobre roupas pretas de boa qualidade. Ele não usa uma coroa, mas em seu cinto repousa uma adaga com o punho e a guarda feitos de prata polida, uma arma claramente destinada a ferir mais do que meros mortais.",
-        "initial_relationship": 5,
-        "combat_stats": {
-            "notes": "Mestre em furtividade e combate com lâminas. Sua adaga de prata é letal contra os Espectros da Névoa. Evita combate direto, preferindo usar o ambiente e seus subordinados."
-        }
+    "Madame Zola": {
+      "name": "Madame Zola",
+      "role": "Vidente e Médium",
+      "location": "Tenda Roxa",
+      "persona": "Teatral e mística. Vê a morte pairando sobre as pessoas. Cobra caro.",
+      "appearance": "Gorda e extravagante, coberta de joias falsas e xales.",
+      "initial_relationship": 5,
+      "combat_stats": {
+        "HP": 45,
+        "AC": 10,
+        "attack": "Olhar do Medo: (Magia) DC 12 Wis save, alvo fica Amedrontado."
+      }
     },
-    "Lorde Valerius": {
-        "name": "Lorde Valerius",
-        "role": "Nobre Regente Decadente de Porto Nevoado e Patrono Secreto de Experimentos Proibidos.",
-        "location": "Mansão Valerius, aninhada no topo de uma colina em Porto Nevoado.",
-        "persona": "Valerius é um nobre em colapso, consumido pela paranoia e pelo medo debilitante do frio, que ele acredita ser uma praga pessoal enviada para puni-lo. Ele é arrogante e autoritário, mas sua voz e postura traem sua total desesperança. Ele foi o patrono secreto que financiou o \"Estudo da Casca Branca\" do Dr. V., buscando aproveitar o poder da \"Voz na Terra\" para restaurar a glória de sua família, mas os experimentos fracassaram, liberando a névoa e os Espectros da Névoa. Ele está aterrorizado que o frio o congele por dentro, e sua obsessão é encontrar algo (ou alguém) que possa \"acalmar as raízes\" antes que ele morra. Ele desconfia de todos os seus servos e de qualquer um que não pareça tremer. Ele fala em um sussurro rouco e urgente, exigindo resultados imediatos e tratando os outros com condescendência, apesar de sua própria fraqueza. Ele valoriza a prata como um possível antídoto ou arma contra o frio.\n\\n*Estilo de Fala:* Rouco, rápido, pontuado por fungadas e tossidas nervosas. \"Não me venha com desculpas! Eu paguei por resultados, não por hesitação.\"",
-        "appearance": "Valerius é uma figura patética, envolta em peles de urso e lobo, mesmo dentro de sua mansão. As peles estão gastas e com cheiro de mofo. Seu corpo é magro e curvado na cadeira de espaldar alto, dando-lhe a aparência de uma múmia em decomposição. Seus olhos, injetados de sangue e vermelhos por noites sem dormir, vasculham o ambiente com uma desconfiança febril. Ele tem cabelos grisalhos e finos, e sua pele é de um tom cinza-pálido doentio. Ele aperta um lenço de seda manchado contra o nariz quase o tempo todo. Seu hálito é fraco e frio.",
-        "initial_relationship": 3,
-        "combat_stats": {}
+    "Darius, o Queimado": {
+      "name": "Darius",
+      "role": "Líder Cultista",
+      "location": "Esgotos do Setor Norte",
+      "persona": "Fanático e instável. Acredita que a dor é a única verdade e quer purificar o mundo com fogo.",
+      "appearance": "Corpo coberto de queimaduras. Não tem cabelo. Veste trapos azuis.",
+      "initial_relationship": 0,
+      "combat_stats": {
+        "HP": 70,
+        "AC": 14,
+        "attack": "Tocha Viva: +5 para acertar, 1d6 contundente + 2d6 fogo."
+      }
     },
-    "Borin": {
-        "name": "Borin",
-        "role": "Prospector do Clã Martelo de Ferro",
-        "location": "Minas de Adamantine Abandonadas (Atualmente pendurado em uma armadilha de rede de kobolds em uma galeria lateral).",
-        "persona": "Borin é a epítome da teimosia anã, um prospector que se recusa a aceitar que as Minas de Adamantine estão 'esgotadas'. Ele está nas profundezas por um senso de dever para com seu clã, acreditando que *sempre* há mais uma veia a ser encontrada. Ele é cético em relação a estranhos e tem um temperamento explosivo. Seu estilo de fala é direto, pragmático e cheio de jargão de mineração (\"Escória!\", \"Quebra a casca\", \"Veia seca\"). Ele odeia os \"ratos rastejantes\" (kobolds) e os \"fungos ambulantes\" (goblins) que tomaram as minas, e se for resgatado, sua primeira preocupação será recuperar seu machado e se vingar. Ele valoriza a prata como um metal útil, mas considera o Adamantine o único metal verdadeiro.",
-        "appearance": "Um anão robusto, mas visivelmente desgastado. Sua barba ruiva, que já foi trançada com anéis de cobre, está emaranhada e suja de pó de rocha e sangue seco. Veste um colete de couro grosso e calças de trabalho manchadas. O símbolo de um martelo cruzado está gravado em sua fivela de cinto, e ele segura firmemente um pedaço de rocha na mão, mesmo inconsciente. Ele tem um corte feio na testa e parece ter torcido o tornozelo ao cair na rede. A rede de cordas malcheirosas está apertada, e ele está pendurado de cabeça para baixo.",
-        "initial_relationship": 5,
-        "combat_stats": {}
+    "Barão Ghorza": {
+      "name": "Barão Ghorza",
+      "role": "Magnata do Carvão",
+      "location": "Mansão Blindada",
+      "persona": "Ganancioso e covarde. Controla o aquecimento da cidade e deixa os pobres congelarem.",
+      "appearance": "Obeso, carregado em uma liteira. Sempre comendo.",
+      "initial_relationship": 3,
+      "combat_stats": {
+        "HP": 30,
+        "AC": 8,
+        "attack": "Grito por Guardas: Invoca 1d4 guardas (não ataca)."
+      }
     },
-    "Grunk": {
-        "name": "Grunk",
-        "role": "Capataz Goblin e Líder de Patrulha",
-        "location": "Profundezas das Minas de Adamantine Abandonadas, Montanhas Afiadas.",
-        "persona": "Grunk é um goblin excepcionalmente grande, o que o torna arrogante e cruel. Ele se vê como um capataz de elite, merecedor da rara picareta de adamantine. Ele tem um prazer sádico em supervisionar a caça e o trabalho escravo, e sua lealdade é fanática ao \"Rei Subterrâneo\". Ele despreza kobolds e goblins menores, e odeia intrusos mais do que tudo. Seu estilo de fala é gutural, cheio de grunhidos, frases curtas e ameaçadoras, sempre acompanhadas por saliva. Ele raramente usa palavras completas.",
-        "appearance": "Um goblin de pele verde-musgo, incomumente alto e atarracado, com ombros largos e uma postura curvada. Ele usa uma armadura de couro grosso e sujo, reforçada com pedaços de minério de ferro enferrujado. Seus olhos são pequenos, amarelos e injetados de sangue, sempre fixos em busca de fraqueza. A característica mais notável é a picareta de adamantine bruto que ele carrega, o único item de valor em seu equipamento miserável.",
-        "initial_relationship": 0,
-        "combat_stats": {
-            "HP": 25.0,
-            "attack": "Picareta de Adamantine: +4 para acertar, 1d8+2 de dano perfurante.",
-            "AC": 14.0
-        }
+    "O Menino Sem Nome": {
+      "name": "O Menino Sem Nome",
+      "role": "Guia dos Túneis",
+      "location": "Entrada dos Esgotos",
+      "persona": "Arisco e silencioso. Conhece todos os túneis. Dizem que enxerga no escuro total.",
+      "appearance": "Criança suja vestindo um saco de batatas. Olhos totalmente pretos.",
+      "initial_relationship": 4,
+      "combat_stats": {
+        "HP": 15,
+        "AC": 16,
+        "attack": "Morder e Correr: +6 para acertar, 1 dano + Ação de Desengajar."
+      }
     },
-    "Skritch": {
-        "name": "Skritch",
-        "role": "Patrulheiro de Batedores do Rei Subterrâneo",
-        "location": "Galerias de Mineração, Nível 3, Minas de Adamantine Abandonadas.",
-        "persona": "Típico kobold: hiperativo, nervoso e esguio. Skritch é o especialista em armadilhas da patrulha, sempre farejando por novas vítimas para as redes. Ele tem um medo quase religioso de Grunk, o líder goblin, e fará o que for mandado sem questionar, desde que não envolva lutar sozinho. Sua fala é rápida, sibilante e cheia de adoração ao \"Rei Subterrâneo\". Ele acredita que o adamantine é sagrado e que os invasores merecem ser rasgados pelas garras do Rei. Ele sibilava de satisfação ao ver a rede balançando.",
-        "appearance": "Um kobold esguio com escamas cinza-escuras e manchas marrons, o que o ajuda a se misturar na poeira das minas. Seus olhos são de um amarelo brilhante e fixo, sempre se movendo. Veste um pedaço de couro velho como armadura e carrega uma lança de ponta enferrujada. Ele tem uma pequena bolsa cheia de pedaços de corda e pequenos ganchos, indicando seu papel como especialista em armadilhas.",
-        "initial_relationship": 0,
-        "combat_stats": {
-            "Ataque": "Lança Enferrujada (1d4 perfurante)",
-            "HP": 5.0,
-            "AC": 12.0
-        }
+    "Lysa, a Barda Triste": {
+      "name": "Lysa",
+      "role": "Espiã da Resistência",
+      "location": "Praças Públicas",
+      "persona": "Melancólica. Suas músicas contêm códigos para a resistência.",
+      "appearance": "Jovem triste com um alaúde quebrado.",
+      "initial_relationship": 5,
+      "combat_stats": {
+        "HP": 40,
+        "AC": 13,
+        "attack": "Adaga Escondida: +5 para acertar, 1d4+2 perfurante."
+      }
     },
-    "Snik": {
-        "name": "Snik",
-        "role": "Patrulheiro/Escoteiro (a serviço do Rei Subterrâneo)",
-        "location": "Minas de Adamantine Abandonadas, patrulhando as galerias superiores.",
-        "persona": "Snik é um covarde nato. Ele serve ao \"Rei Subterrâneo\" por puro terror, e não por lealdade. Seu foco é sempre evitar confrontos diretos e deixar o trabalho sujo para os goblins maiores, como Grunk. Ele tem um medo quase supersticioso de ferro polido ou de qualquer coisa que brilhe, preferindo sua lança enferrujada e opaca. Fala de forma rápida, ofegante e cheia de gaguejos, sempre tentando parecer mais ocupado ou útil do que realmente é.\n\nEstilo de Fala: \"S-sim, Grunk! Eu vi, eu vi! O intruso! Não fui eu que fiz barulho, juro! Eu estava só... inspecionando o chão, por armadilhas do Rei!\"",
-        "appearance": "Um kobold esguio com escamas cinza-esverdeadas e olhos amarelos muito brilhantes, quase luminosos no escuro. Ele veste trapos de couro e carrega uma lança longa e fina, cuja ponta está coberta por uma camada grossa de ferrugem. Ele se move com uma agilidade nervosa, sempre olhando por cima do ombro de seu líder, Grunk. É visivelmente magro e desnutrido.",
-        "initial_relationship": 0,
-        "combat_stats": {
-            "Attack": "Lança Enferrujada (1d6-1 perfurante)",
-            "HP": 6.0,
-            "Special": "Fuga Rastejante (Pode se esconder em escombros com facilidade)",
-            "AC": 12.0
-        }
+    "Caçador Vorn": {
+      "name": "Vorn",
+      "role": "Ranger Veterano",
+      "location": "Acampamento na Orla",
+      "persona": "Grosseiro e profissional. Odeia amadores. Conhece todas as bestas.",
+      "appearance": "Veste capa de pele de urso. Carrega uma besta pesada.",
+      "initial_relationship": 4,
+      "combat_stats": {
+        "HP": 85,
+        "AC": 15,
+        "attack": "Besta Pesada: +7 para acertar, 1d10+3 perfurante."
+      }
+    },
+    "Mister J": {
+      "name": "Mister J",
+      "role": "Contrabandista Changeling",
+      "location": "Porto",
+      "persona": "Charmoso e volátil. Muda de rosto e lealdade constantemente.",
+      "appearance": "Varia. Forma padrão é um homem andrógino de cabelos brancos.",
+      "initial_relationship": 4,
+      "combat_stats": {
+        "HP": 50,
+        "AC": 14,
+        "attack": "Truque de Mão: +6 para acertar, 1d6+3 perfurante (Soco inglês)."
+      }
+    },
+    "Tork, o Coveiro": {
+      "name": "Tork",
+      "role": "Guilda dos Corvos",
+      "location": "Cemitério",
+      "persona": "Mórbido e silencioso. Limpa corpos de crimes por uma taxa.",
+      "appearance": "Gigante pálido com avental preto e uma pá afiada.",
+      "initial_relationship": 5,
+      "combat_stats": {
+        "HP": 100,
+        "AC": 12,
+        "attack": "Pá de Enterro: +6 para acertar, 1d10+4 cortante."
+      }
+    },
+    "A Matriarca Ysadora": {
+      "name": "Ysadora",
+      "role": "Dona de Bordel",
+      "location": "Casa dos Espelhos",
+      "persona": "Sofisticada e perigosa. Sabe os segredos de todos os nobres.",
+      "appearance": "Mulher madura e bela, usa máscara de porcelana.",
+      "initial_relationship": 4,
+      "combat_stats": {
+        "HP": 50,
+        "AC": 12,
+        "attack": "Leque de Lâminas: +5 para acertar, 1d4+2 cortante."
+      }
+    },
+    "Sargento Rurik": {
+      "name": "Rurik",
+      "role": "Guarda Honesto",
+      "location": "Posto Sul",
+      "persona": "Cansado e desiludido. Tenta fazer o certo em um sistema podre.",
+      "appearance": "Meia-idade, bigode grisalho. Armadura limpa.",
+      "initial_relationship": 5,
+      "combat_stats": {
+        "HP": 60,
+        "AC": 17,
+        "attack": "Espada Longa Padrão: +5 para acertar, 1d8+2 cortante."
+      }
+    },
+    "O Prisioneiro 99": {
+      "name": "O Prisioneiro 99",
+      "role": "Profeta Louco",
+      "location": "O Oubliette",
+      "persona": "Incoerente. Grita verdades sobre o Vazio. Ex-Mago Real.",
+      "appearance": "Esqueleto vivo, sem olhos.",
+      "initial_relationship": 2,
+      "combat_stats": {
+        "HP": 10,
+        "AC": 8,
+        "attack": "Explosão Psíquica: (Magia) DC 14 Int save, 3d6 psíquico."
+      }
+    },
+    "Zara, a Lâmina Alugada": {
+      "name": "Zara",
+      "role": "Mercenária",
+      "location": "Taverna",
+      "persona": "Profissional. Cumpre o contrato sem perguntas.",
+      "appearance": "Musculosa, usa duas espadas curvas.",
+      "initial_relationship": 4,
+      "combat_stats": {
+        "HP": 75,
+        "AC": 16,
+        "attack": "Lâminas Gêmeas: Dois ataques, +6 para acertar, 1d6+3 cada."
+      }
+    },
+    "O Agiota Gob": {
+      "name": "Gob",
+      "role": "Agiota Goblin",
+      "location": "Beco Escuro",
+      "persona": "Viscoso e cruel. Empresta dinheiro a juros impossíveis.",
+      "appearance": "Goblin gordo com anéis de ouro.",
+      "initial_relationship": 3,
+      "combat_stats": {
+        "HP": 30,
+        "AC": 12,
+        "attack": "Besta de Mão Oculta: +5 para acertar, 1d6 perfurante."
+      }
+    },
+    "Arquimago Thassarian": {
+      "name": "Thassarian",
+      "role": "Líder da Academia",
+      "location": "Torre Invisível",
+      "persona": "Arrogante. Despreza não-magos. Estuda o Éter proibido.",
+      "appearance": "Elfo alto, levita do chão.",
+      "initial_relationship": 3,
+      "combat_stats": {
+        "HP": 55,
+        "AC": 12,
+        "attack": "Desintegrar Menor: (Magia) DC 15 Dex save, 4d6 força."
+      }
+    },
+    "Profeta do Fim": {
+      "name": "Profeta do Fim",
+      "role": "Louco de Rua",
+      "location": "Praça Central",
+      "persona": "Grita sobre o apocalipse.",
+      "appearance": "Veste um barril.",
+      "initial_relationship": 4,
+      "combat_stats": {
+        "HP": 15,
+        "AC": 10,
+        "attack": "Mordida de Louco: +2 para acertar, 1d4 dano."
+      }
+    },
+    "Mara, a Lavadeira": {
+      "name": "Mara",
+      "role": "Civil com Quest",
+      "location": "Rio Sujo",
+      "persona": "Desesperada. Procura o filho perdido.",
+      "appearance": "Mãos vermelhas de trabalho.",
+      "initial_relationship": 5,
+      "combat_stats": {
+        "HP": 8,
+        "AC": 10,
+        "attack": "Pedra de Rio: +0 para acertar, 1d4 dano."
+      }
+    },
+    "Cabo Janks": {
+      "name": "Cabo Janks",
+      "role": "Soldado Bêbado",
+      "location": "Taverna",
+      "persona": "Fanfarrão. Solta segredos quando bebe.",
+      "appearance": "Armadura desabotoada.",
+      "initial_relationship": 4,
+      "combat_stats": {
+        "HP": 40,
+        "AC": 14,
+        "attack": "Soco de Bêbado: +4 para acertar, 1d4+2 contundente."
+      }
+    },
+    "Nina": {
+      "name": "Nina",
+      "role": "Criança da Névoa",
+      "location": "Ruas à Noite",
+      "persona": "Silenciosa e estranha. Imune à névoa tóxica.",
+      "appearance": "Menina pálida de cabelos brancos.",
+      "initial_relationship": 4,
+      "combat_stats": {
+        "HP": 10,
+        "AC": 18,
+        "attack": "Toque Congelante: +4 para acertar, 1d6 frio + slow."
+      }
+    },
+    "Varg, o Açougueiro": {
+      "name": "Varg",
+      "role": "Vendedor de Carne",
+      "location": "Mercado Negro",
+      "persona": "Alegre de forma perturbadora. Vende carne duvidosa.",
+      "appearance": "Imenso, avental ensanguentado.",
+      "initial_relationship": 4,
+      "combat_stats": {
+        "HP": 60,
+        "AC": 11,
+        "attack": "Cutelo Pesado: +5 para acertar, 1d8+3 cortante."
+      }
+    },
+    "Quintus": {
+      "name": "Quintus",
+      "role": "Fantasma Bibliotecário",
+      "location": "Biblioteca Real",
+      "persona": "Obcecado por silêncio. Ajuda estudiosos, mata barulhentos.",
+      "appearance": "Espectro azulado com um livro.",
+      "initial_relationship": 3,
+      "combat_stats": {
+        "HP": 45,
+        "AC": 14,
+        "attack": "Silenciar Vida: (Magia) Alvo não pode falar/conjurar, 1d8 psíquico."
+      }
+    },
+    "Grognak": {
+      "name": "Grognak",
+      "role": "Chefe Goblin",
+      "location": "Minas Superiores",
+      "persona": "Se acha rei. Covarde contra fortes.",
+      "appearance": "Coroa de lata e capa de cortina.",
+      "initial_relationship": 1,
+      "combat_stats": {
+        "HP": 35,
+        "AC": 13,
+        "attack": "Cimitarra Enferrujada: +4 para acertar, 1d6+2 cortante."
+      }
     }
-}
+  }

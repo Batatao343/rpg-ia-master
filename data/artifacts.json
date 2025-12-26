@@ -1,0 +1,33 @@
+{
+    "moeda_ouro": {
+      "name": "Moeda de Ouro",
+      "type": "currency",
+      "rarity": "common",
+      "description": "Uma moeda de ouro cunhada em Valoria.",
+      "value_gold": 1,
+      "combat_stats": { "attack_bonus": 0, "damage_dice": "0", "attribute": "none", "ac_bonus": 0 },
+      "mechanics": { "passive_effects": [], "active_ability": null }
+    },
+    "pocao_cura_menor": {
+      "name": "Poção de Cura Menor",
+      "type": "consumable",
+      "rarity": "common",
+      "description": "Um frasco com líquido vermelho. Recupera ferimentos leves.",
+      "value_gold": 50,
+      "combat_stats": { "attack_bonus": 0, "damage_dice": "0", "attribute": "none", "ac_bonus": 0 },
+      "mechanics": { 
+        "damage_type": "heal", 
+        "passive_effects": [], 
+        "active_ability": { "name": "Beber", "cost": "Ação", "effect": "Recupera 2d4+2 HP." } 
+      }
+    },
+    "espada_curta_ferro": {
+      "name": "Espada Curta de Ferro",
+      "type": "weapon",
+      "rarity": "common",
+      "description": "Lâmina simples, mas eficaz.",
+      "value_gold": 10,
+      "combat_stats": { "attack_bonus": 0, "damage_dice": "1d6", "attribute": "dex", "ac_bonus": 0 },
+      "mechanics": { "damage_type": "piercing", "passive_effects": [], "active_ability": null }
+    }
+  }
