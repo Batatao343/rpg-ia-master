@@ -1,56 +1,95 @@
 """
 gamedata.py
-Carrega os dados do jogo (Classes, Itens, Bestiário) a partir dos JSONs.
+Central de Dados Estáticos e Dinâmicos.
+Gerencia o carregamento de regras, itens, bestiário e a persistência de criações da IA.
 """
 import json
 import os
 
-def load_json_data(filename: str):
-    """Carrega um JSON da pasta data/, retornando dict vazio se falhar."""
-    # Ajuste o caminho conforme sua estrutura de pastas
-    base_path = os.path.dirname(__file__)
-    file_path = os.path.join(base_path, "data", filename)
-    
+# --- CONFIGURAÇÃO DE CAMINHOS ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "data")
+
+def load_json_data(filename: str) -> dict:
+    """Carrega um arquivo JSON da pasta data. Retorna dict vazio se falhar."""
+    file_path = os.path.join(DATA_DIR, filename)
     try:
         with open(file_path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        print(f"⚠️ [GAMEDATA] Arquivo não encontrado: {filename}")
+            # Tenta carregar. Se o arquivo estiver vazio, json.load falha.
+            content = f.read().strip()
+            if not content: return {}
+            return json.loads(content)
+    except (FileNotFoundError, json.JSONDecodeError):
+        # Se não existir ou estiver corrompido, retorna vazio para evitar crash
+        if "custom" in filename:
+            return {}
+        print(f"⚠️ Aviso: Arquivo '{filename}' não encontrado ou inválido em {DATA_DIR}.")
         return {}
     except Exception as e:
-        print(f"❌ [GAMEDATA] Erro ao ler {filename}: {e}")
+        print(f"❌ Erro ao ler '{filename}': {e}")
         return {}
 
-# --- CARREGAMENTO DINÂMICO ---
+def save_custom_artifact(item_id: str, item_data: dict):
+    """
+    Salva um item criado pela IA no arquivo de cache persistente.
+    Atualiza tanto o arquivo físico quanto a memória RAM.
+    """
+    file_path = os.path.join(DATA_DIR, "custom_artifacts.json")
+    
+    # 1. Carrega dados atuais do disco
+    current_data = {}
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read().strip()
+                if content: current_data = json.loads(content)
+        except:
+            current_data = {}
+    
+    # 2. Adiciona/Atualiza o novo item
+    current_data[item_id] = item_data
+    
+    # 3. Salva no disco
+    try:
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(current_data, f, indent=2, ensure_ascii=False)
+        print(f"💾 [SYSTEM] Item '{item_id}' salvo em custom_artifacts.json")
+    except Exception as e:
+        print(f"❌ Erro ao salvar artifact: {e}")
 
-# 1. Classes (Vem de data/classes.json)
+    # 4. Atualiza a memória global (Hot Reload)
+    ARTIFACTS_DB[item_id] = item_data
+    CUSTOM_ARTIFACTS[item_id] = item_data # <--- CORREÇÃO: Atualiza a lista de custom também
+    if item_id not in ALL_ARTIFACT_IDS:
+        ALL_ARTIFACT_IDS.append(item_id)
+
+# --- CARREGAMENTO DE DADOS (Load on Startup) ---
+
+# 1. Dados Estáticos de Regras
 CLASSES = load_json_data("classes.json")
-
-# 2. Habilidades (Vem de data/player_abilities.json)
 ABILITIES = load_json_data("player_abilities.json")
-
-# 3. Bestiário (Vem de data/bestiary.json)
 BESTIARY = load_json_data("bestiary.json")
 
-# 4. Itens (Ainda podemos manter hardcoded ou criar data/items.json)
-# Se quiser migrar itens também, crie items.json e use load_json_data("items.json")
-ITEMS_DB = {
-    "Espada Longa": {"type": "weapon", "bonus": 3, "attr": "str", "desc": "Lâmina de aço (+3 Atk)."},
-    "Adaga Sombria": {"type": "weapon", "bonus": 2, "attr": "dex", "desc": "Lâmina rápida (+2 Atk)."},
-    "Machado de Guerra": {"type": "weapon", "bonus": 5, "attr": "str", "desc": "Pesado e brutal (+5 Atk)."},
-    "Besta Pesada": {"type": "weapon", "bonus": 4, "attr": "dex", "desc": "Dispara virotes de ferro."},
-    "Cajado de Cristal": {"type": "weapon", "bonus": 2, "attr": "int", "desc": "Foco arcano."},
-    "Poção de Cura": {"type": "consumable", "effect": "heal_hp", "value": 15, "desc": "Recupera 15 HP."},
-    "Poção de Mana": {"type": "consumable", "effect": "heal_mana", "value": 10, "desc": "Recupera 10 Mana."},
-    "Adaga de Vidro (Zhur)": {"type": "weapon", "bonus": 4, "attr": "dex", "desc": "Muito afiada, mas frágil."},
-    "Máscara de Gás": {"type": "armor", "bonus": 1, "desc": "Essencial contra a névoa."}
+# 2. Sistema de Artefatos (Híbrido)
+BASE_ARTIFACTS = load_json_data("artifacts.json")         
+CUSTOM_ARTIFACTS = load_json_data("custom_artifacts.json") 
+
+# Fusão: Une os dois dicionários.
+ARTIFACTS_DB = {**BASE_ARTIFACTS, **CUSTOM_ARTIFACTS}
+
+# Lista rápida de IDs
+ALL_ARTIFACT_IDS = list(ARTIFACTS_DB.keys())
+
+# Alias para compatibilidade
+ITEMS_DB = ARTIFACTS_DB
+
+# --- TABELA DE XP ---
+XP_TABLE = {
+    1: 0, 2: 300, 3: 900, 4: 2700, 5: 6500,
+    6: 14000, 7: 23000, 8: 34000, 9: 48000, 10: 64000,
+    11: 85000, 12: 100000, 13: 120000, 14: 140000, 15: 165000,
+    16: 195000, 17: 225000, 18: 265000, 19: 305000, 20: 355000
 }
 
-# Fallback se os arquivos não existirem (Para não quebrar o jogo)
-if not CLASSES:
-    CLASSES = {
-        "Aventureiro": {
-            "description": "Classe padrão de teste.",
-            "base_stats": {"hp": 20, "mana": 10, "stamina": 10, "defense": 12, "attributes": {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10}}
-        }
-    }
+# Loot Genérico
+COMMON_LOOT_TABLE = ["moeda_ouro", "corda", "pocao_cura", "adaga_ferro"]

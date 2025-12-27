@@ -1,12 +1,12 @@
 """
 engine_utils.py
-Gerencia o ciclo de execução da LLM (Re-Act Loop).
-ATUALIZAÇÃO: Suporte seguro a Party (Aliados) sem quebrar lógica existente.
+Gerencia o ciclo de execução da LLM e Ferramentas (Roll, UpdateHP, Transaction).
 """
 from typing import Dict, Any, List
 from langchain_core.messages import AIMessage, ToolMessage, SystemMessage, BaseMessage
 from langchain_core.runnables import Runnable
 from dice_system import roll_formula
+from gamedata import ARTIFACTS_DB
 
 def execute_engine(
     llm: Runnable, 
@@ -16,37 +16,44 @@ def execute_engine(
     node_name: str = "Engine"
 ) -> Dict[str, Any]:
     
-    # 1. Ferramentas
+    # 1. Ferramentas (Schema)
     tools_schema = [
         {
             "name": "roll_dice",
-            "description": "Rola dados. Ex: '1d20+5', 'DC 15 Dex', '2d6 damage'.",
+            "description": "Rola dados. Ex: '1d20+5'.",
             "parameters": {"type": "object", "properties": {"formula": {"type": "string"}}, "required": ["formula"]}
         },
         {
             "name": "update_hp",
-            "description": "Aplica dano (negativo) ou cura (positivo) em Player, Aliados ou Inimigos.",
+            "description": "Dano/Cura em Player/NPCs.",
+            "parameters": {
+                "type": "object", 
+                "properties": {"target": {"type": "string"}, "amount": {"type": "integer"}}, 
+                "required": ["target", "amount"]
+            }
+        },
+        {
+            "name": "transaction",
+            "description": "Compra ou Venda de itens.",
             "parameters": {
                 "type": "object", 
                 "properties": {
-                    "target": {"type": "string", "description": "Nome exato do alvo."}, 
-                    "amount": {"type": "integer"}
-                }, 
-                "required": ["target", "amount"]
+                    "action": {"type": "string", "enum": ["buy", "sell"]},
+                    "item_id": {"type": "string", "description": "ID exato do item"}
+                },
+                "required": ["action", "item_id"]
             }
         }
     ]
     
-    # Proteção contra falha de API
-    if getattr(llm, "is_fallback", False):
-        return {"messages": history + [AIMessage(content="Erro de API.")]}
+    if getattr(llm, "is_fallback", False): return {"messages": history + [AIMessage("Erro API.")]}
 
     llm_with_tools = llm.bind_tools(tools_schema)
     
-    # --- CARREGA ESTADO MÚTAVEL (Cópias seguras) ---
+    # Cópias seguras do estado
     current_player = state.get("player", {}).copy()
     current_enemies = [e.copy() for e in state.get("enemies", [])]
-    current_party = [p.copy() for p in state.get("party", [])] # <--- NOVA LISTA (Segura)
+    current_party = [p.copy() for p in state.get("party", [])]
     
     current_messages = [system_message] + history
     
@@ -59,98 +66,105 @@ def execute_engine(
             ai_msg = llm_with_tools.invoke(current_messages)
         except Exception as e:
             print(f"[{node_name} ERROR] {e}")
-            # Em caso de erro crítico, aborta o loop mas salva o que já foi feito
             break
 
         current_messages.append(ai_msg)
         
         if not ai_msg.tool_calls:
-            break # É texto, terminamos o turno
+            break
             
-        # Executa Tools
         tool_outputs = []
         for tool in ai_msg.tool_calls:
             t_id, t_name, t_args = tool["id"], tool["name"], tool["args"]
             result = ""
             
+            # --- TOOL: ROLL DICE ---
             if t_name == "roll_dice":
                 f = t_args.get("formula") or "1d20"
                 result = roll_formula(str(f))
-                print(f"   🎲 [{node_name}] Rolagem: {f} -> {result}")
+                print(f"   🎲 [{node_name}] {f} -> {result}")
 
+            # --- TOOL: TRANSACTION (ECONOMIA) ---
+            elif t_name == "transaction":
+                action = t_args.get("action")
+                iid = t_args.get("item_id")
+                item = ARTIFACTS_DB.get(iid)
+                
+                if not item:
+                    result = f"Item ID '{iid}' não encontrado no banco de dados."
+                else:
+                    price = item.get("value_gold", 0)
+                    if action == "buy":
+                        if current_player.get("gold", 0) >= price:
+                            current_player["gold"] -= price
+                            current_player["inventory"].append(iid)
+                            result = f"Sucesso: Comprou {item['name']} por {price} ouro."
+                            print(f"   💰 Buy: {iid} (-{price}g)")
+                        else:
+                            result = f"Falha: Ouro insuficiente ({current_player.get('gold')} < {price})."
+                    elif action == "sell":
+                        if iid in current_player.get("inventory", []):
+                            current_player["inventory"].remove(iid)
+                            current_player["gold"] += price
+                            result = f"Sucesso: Vendeu {item['name']} por {price} ouro."
+                            print(f"   💰 Sell: {iid} (+{price}g)")
+                        else:
+                            result = "Falha: Você não possui este item."
+
+            # --- TOOL: UPDATE HP ---
             elif t_name == "update_hp":
                 tgt = str(t_args.get("target", "")).lower()
                 amt = int(t_args.get("amount", 0))
                 found = False
                 
-                # 1. Tenta Player
-                if tgt in ["player", "hero", "herói", current_player.get('name', '').lower()]:
+                # Player
+                if tgt in ["player", "hero", current_player.get('name', '').lower()]:
                     old = current_player.get('hp', 0)
                     current_player['hp'] = max(0, old + amt)
-                    result = f"Player HP updated: {old}->{current_player['hp']}"
+                    result = f"Player HP: {old}->{current_player['hp']}"
                     found = True
-                    print(f"   ❤️ [{node_name}] Player HP: {amt} (Atual: {current_player['hp']})")
                 
-                # 2. Tenta Party (Aliados) - LÓGICA NOVA
+                # Party
                 if not found:
                     for ally in current_party:
                         if ally['name'].lower() in tgt:
                             old = ally.get('hp', 0)
                             ally['hp'] = max(0, old + amt)
-                            
-                            status_msg = ""
-                            if ally['hp'] <= 0: 
-                                status_msg = " (CAIU INCONSCIENTE!)"
-                            
-                            result = f"Ally {ally['name']} HP updated: {old}->{ally['hp']}{status_msg}"
+                            result = f"Ally {ally['name']} HP: {old}->{ally['hp']}"
                             found = True
-                            print(f"   🛡️ [{node_name}] Ally {ally['name']} HP: {amt}{status_msg}")
-                            break
-
-                # 3. Tenta Inimigos
-                if not found:
-                    for e in current_enemies:
-                        # Busca flexível por nome ou ID
-                        if e['name'].lower() in tgt or "enemy" in tgt or e.get('id', '').lower() in tgt:
-                            old = e.get('hp', 0)
-                            e['hp'] = max(0, old + amt)
-                            
-                            status_msg = ""
-                            if e['hp'] <= 0: 
-                                e['status'] = "morto"
-                                status_msg = " (MORTO)"
-                                
-                            result = f"Enemy {e['name']} HP updated: {old}->{e['hp']}{status_msg}"
-                            found = True
-                            print(f"   💀 [{node_name}] Enemy {e['name']} HP: {amt}{status_msg}")
                             break
                 
+                # Enemies
                 if not found:
-                    result = f"Target '{tgt}' not found. Available: Player, Party, Enemies."
+                    for e in current_enemies:
+                        if e['name'].lower() in tgt or e.get('id', '').lower() in tgt:
+                            old = e.get('hp', 0)
+                            e['hp'] = max(0, old + amt)
+                            if e['hp'] <= 0: e['status'] = "morto"
+                            result = f"Enemy {e['name']} HP: {old}->{e['hp']}"
+                            found = True
+                            break
+                
+                if not found: result = f"Target '{tgt}' not found."
 
             tool_outputs.append(ToolMessage(tool_call_id=t_id, content=result or "Done"))
             
         current_messages.extend(tool_outputs)
 
-    # 3. GARANTIA DE NARRATIVA
-    # Se a última mensagem foi um ToolMessage (resultado de dado), a IA ainda precisa narrar o final.
     if isinstance(current_messages[-1], ToolMessage):
         try:
-            # Chamada extra apenas para texto final
             final_narrative = llm.invoke(current_messages)
             current_messages.append(final_narrative)
-        except Exception:
-            pass
+        except: pass
 
-    # 4. Retorno Seguro
-    # Filtra as mensagens antigas para não duplicar histórico
+    # Filtra histórico original
     new_messages = current_messages[1 + len(history):]
     
     return {
         "messages": new_messages,
         "player": current_player,
         "enemies": current_enemies,
-        "party": current_party, # <--- Retorna a party atualizada
+        "party": current_party,
         "world": state.get("world", {}),
         "combat_target": state.get("combat_target"),
         "next": state.get("next")

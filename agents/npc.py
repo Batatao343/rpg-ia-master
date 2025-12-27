@@ -1,3 +1,8 @@
+"""
+agents/npc.py
+Gerador de NPCs com Persistência, Memória e RAG.
+Atualizado: Garante Atributos Completos (STR, DEX, CON, INT, WIS, CHA).
+"""
 import json
 import os
 from typing import Dict
@@ -6,21 +11,29 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from state import GameState
 from llm_setup import ModelTier, get_llm
 
-# --- INTEGRAÇÃO RAG ---
-# Importamos a função de consulta para ler o world_lore.txt
-from rag import query_rag
+try:
+    from rag import query_rag
+except ImportError:
+    def query_rag(*args, **kwargs): return ""
+
+from agents.librarian import find_existing_entity
 
 NPC_DB_FILE = "data/npc_database.json"
 
 # --- SCHEMAS ---
 class NPCSchema(BaseModel):
-    name: str = Field(description="Nome do personagem.")
-    role: str = Field(description="Ocupação ou título.")
-    location: str = Field(description="Onde ele vive/foi encontrado.")
-    persona: str = Field(description="Personalidade detalhada, crenças e estilo de fala.")
-    appearance: str = Field(description="Descrição visual (roupas, traços físicos).")
-    initial_relationship: int = Field(default=5, description="0 (Hostil) a 10 (Aliado).")
-    combat_stats: Dict = Field(default={}, description="Se necessário (HP, etc).")
+    name: str
+    role: str
+    location: str
+    persona: str
+    appearance: str
+    initial_relationship: int = 5
+    # ADICIONADO: Atributos completos são obrigatórios agora
+    attributes: Dict[str, int] = Field(
+        description="Stats base: str, dex, con, int, wis, cha. Padrão humano é 10.",
+        example={"str": 10, "dex": 12, "con": 10, "int": 14, "wis": 16, "cha": 18}
+    )
+    combat_stats: Dict = Field(description="HP, AC e Attacks")
 
 class NPCResponse(BaseModel):
     dialogue: str
@@ -28,7 +41,7 @@ class NPCResponse(BaseModel):
     memory_update: str
     relationship_change: int = 0
 
-# --- PERSISTÊNCIA GLOBAL (Banco de Dados JSON) ---
+# --- PERSISTÊNCIA ---
 def load_npc_db():
     if not os.path.exists(NPC_DB_FILE): return {}
     try:
@@ -37,115 +50,111 @@ def load_npc_db():
 
 def save_npc_template(data):
     db = load_npc_db()
-    db[data['name']] = data
+    key = data.get("id", f"npc_{data['name'].lower().replace(' ', '_')}")
+    if "id" not in data: data["id"] = key
+    
+    # Validação de Segurança: Se faltar atributo, preenche com 10
+    if "attributes" not in data:
+        data["attributes"] = {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10}
+    
+    db[key] = data
     if not os.path.exists("data"): os.makedirs("data")
     with open(NPC_DB_FILE, 'w', encoding='utf-8') as f: json.dump(db, f, indent=4, ensure_ascii=False)
 
-def get_npc_template(name):
-    db = load_npc_db()
-    # Busca Case Insensitive
-    for k, v in db.items():
-        if name.lower() in k.lower(): return v
-    return None
-
-
 def _infer_tier_from_name(name: str) -> ModelTier:
     lowered = name.lower()
-    important_markers = ["king", "queen", "captain", "wizard", "archmage", "emperor"]
+    important_markers = ["king", "queen", "captain", "wizard", "archmage", "lord", "boss"]
     if any(marker in lowered for marker in important_markers):
         return ModelTier.SMART
     return ModelTier.FAST
 
-# --- FERRAMENTA DE DESIGN (INTEGRADA COM RAG) ---
-# Esta função é chamada pelo storyteller.py quando um novo NPC aparece.
+# --- FERRAMENTA DE DESIGN ---
 def generate_new_npc(name, context=""):
-    print(f"🎭 [DESIGNER] Consultando Lore (RAG) para criar: {name}...")
+    # 1. CHECK-FIRST
+    db = load_npc_db()
+    existing_ids = list(db.keys())
     
-    # 1. BUSCA CONTEXTUAL NA LORE
-    # Procura referências no world_lore.txt (ex: "Elfo", "Vampiro", "Tecnologia")
+    found_id = find_existing_entity(name, "NPC", existing_ids)
+    if found_id:
+        print(f"♻️ [NPC] Cache Hit: {found_id}")
+        data = db[found_id]
+        
+        # Auto-Correção: Se for NPC antigo sem atributos, adiciona padrão
+        if "attributes" not in data:
+            print(f"🔧 [NPC] Corrigindo atributos faltantes para {name}")
+            data["attributes"] = {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10}
+            save_npc_template(data)
+            
+        return data
+
+    # 2. GERAÇÃO
+    print(f"🎭 [NPC] Criando: {name}...")
     lore_info = query_rag(f"{name} {context}", index_name="lore")
-    
-    if not lore_info:
-        lore_info = "Nenhuma lore específica encontrada. Use criatividade Dark Fantasy padrão."
+    if not lore_info: lore_info = "Dark Fantasy Padrão."
 
     tier = _infer_tier_from_name(name)
-    llm = get_llm(temperature=0.6, tier=tier)
+    llm = get_llm(temperature=0.7, tier=tier)
     
     try:
         designer = llm.with_structured_output(NPCSchema)
         res = designer.invoke([
             SystemMessage(content=f"""
-            <PERSONA>
-            Você é um Criador de Personagens para RPG. Você deve criar um NPC consistente com a lore abaixo
-            
-            <LORE DO MUNDO (LEI SUPREMA)>
-            {lore_info}
-            
-            <INSTRUÇÕES>
-            1. Crie um NPC consistente com a Lore acima. 
-               Ex: Se a Lore diz que Elfos são canibais, o NPC deve refletir isso na aparência/persona.
-            2. Seja criativo, evite clichês genéricos de fantasia se a Lore indicar o contrário.
+            <role>RPG Character Designer</role>
+            <lore>{lore_info}</lore>
+            <task>Create NPC '{name}'. MUST include all 6 attributes (str, dex, con, int, wis, cha).</task>
             """), 
-            HumanMessage(content=f"Nome: {name}. Contexto da cena: {context}")
+            HumanMessage(content=f"Context: {context}")
         ])
         
         data = res.model_dump()
-        save_npc_template(data) # Salva no "HD" para o futuro
+        data["id"] = f"npc_{name.lower().replace(' ', '_')}"
+        save_npc_template(data)
+        
         return data
         
     except Exception as e: 
-        print(f"❌ Erro ao criar NPC: {e}")
-        return None
+        print(f"❌ Erro NPC AI: {e}")
+        return {
+            "name": name, "role": "Desconhecido", "id": "fallback",
+            "attributes": {"str":10, "dex":10, "con":10, "int":10, "wis":10, "cha":10},
+            "combat_stats": {"hp": 10, "ac": 10, "attacks": []}
+        }
 
-# --- NÓ DE ATUAÇÃO (Passivo) ---
-# Este nó apenas interpreta quem JÁ EXISTE no save game.
+# --- NÓ DE ATUAÇÃO ---
 def npc_actor_node(state: GameState):
     messages = state["messages"]
     npc_name = state.get("active_npc_name")
     
-    # Validação de Segurança
-    if not npc_name or npc_name not in state.get('npcs', {}):
-        return {"next": "storyteller"} 
-
-    npc_data = state['npcs'][npc_name]
+    if not npc_name: return {"next": "storyteller"}
     
-    # Fallback para saves antigos
-    if 'persona' not in npc_data:
-        tpl = get_npc_template(npc_name)
-        npc_data['persona'] = tpl['persona'] if tpl else "Um habitante local genérico."
+    npc_data = state.get('npcs', {}).get(npc_name)
+    if not npc_data: return {"next": "storyteller"} 
 
-    # Memória Recente
+    if 'persona' not in npc_data: npc_data['persona'] = "Genérico."
+
     mem_log = "\n".join(npc_data.get('memory', [])[-5:])
     
     llm = get_llm(temperature=0.5, tier=ModelTier.FAST)
     
     system_msg = SystemMessage(content=f"""
-    <actor_profile>
-    Nome: {npc_name}
+    <actor>
+    Nome: {npc_data.get('name')}
     Persona: {npc_data['persona']}
-    Relação Atual: {npc_data['relationship']}/10
-    </actor_profile>
-    
-    <memory_log>
-    {mem_log}
-    </memory_log>
-    
-    <instruction>
-    Responda IN-CHARACTER como o personagem.
-    Se a relação for baixa, seja hostil ou seco. Se alta, seja amigável.
-    </instruction>
+    Relação: {npc_data.get('relationship', 5)}/10
+    </actor>
+    <memory>{mem_log}</memory>
+    Responda IN-CHARACTER.
     """)
     
     try:
         actor = llm.with_structured_output(NPCResponse)
-        res = actor.invoke([system_msg] + messages)
+        res = actor.invoke([system_msg] + messages[-3:])
         
-        # Atualiza Estado
-        npc_data['relationship'] = max(0, min(10, npc_data['relationship'] + res.relationship_change))
-        npc_data['memory'].append(f"Turno {state['world']['turn_count']}: {res.memory_update}")
+        npc_data['relationship'] = max(0, min(10, npc_data.get('relationship', 5) + res.relationship_change))
+        npc_data['memory'].append(f"Turno {state.get('world', {}).get('turn_count', 0)}: {res.memory_update}")
         
         return {
-            "messages": [AIMessage(content=f"**{npc_name}:** \"{res.dialogue}\"\n*({res.action_description})*")],
+            "messages": [AIMessage(content=f"**{npc_data['name']}:** \"{res.dialogue}\"\n*({res.action_description})*")],
             "npcs": {npc_name: npc_data}
         }
     except:

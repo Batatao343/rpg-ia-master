@@ -1,8 +1,7 @@
 """
 agents/bestiary.py
-Gerador de Inimigos V8.
-Gera monstros com Ficha Técnica Completa (HP, AC, Ataques com Fórmulas)
-compatível com a Engine de Combate Re-Act.
+Gerador de Inimigos V8 (Refatorado Check-First + RAG).
+Correção: Prompt reforçado para garantir lista de ataques estruturada.
 """
 import json
 import os
@@ -11,39 +10,35 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from pydantic import BaseModel, Field
 from llm_setup import ModelTier, get_llm
 
-# --- INTEGRAÇÃO RAG ---
-from rag import query_rag
+try:
+    from rag import query_rag
+except ImportError:
+    def query_rag(*args, **kwargs): return ""
+
+from agents.librarian import find_existing_entity
 
 BESTIARY_FILE = "data/bestiary.json"
 
-# --- SCHEMA V8 (Compatível com Engine de Combate) ---
-
+# --- SCHEMA ---
 class AttackAction(BaseModel):
-    name: str = Field(description="Nome do ataque. Ex: 'Espada Longa', 'Mordida'.")
-    type: str = Field(description="'melee', 'ranged' ou 'magic'.")
-    bonus: int = Field(description="Bônus de acerto (apenas o número). Ex: 5 (para 1d20+5).")
-    damage: str = Field(description="Fórmula de dano para a Engine. Ex: '1d8+3 slashing', '2d6 fire'.")
-    range: str = Field(default="1.5m", description="Alcance.")
-    save_dc: Optional[str] = Field(default=None, description="Se for magia/habilidade, ex: 'DC 13 Dex'.")
+    name: str = Field(description="Nome do ataque. Ex: 'Mordida', 'Espada Longa'")
+    type: str = Field(description="'melee', 'ranged', 'magic' ou 'area'")
+    bonus: int = Field(description="Bônus de acerto. Ex: 5")
+    damage: str = Field(description="Fórmula de dano. Ex: '1d8+3 slashing'")
+    range: str = "1.5m"
+    save_dc: Optional[str] = Field(None, description="Se houver save. Ex: 'DC 12 Con'")
 
 class EnemySchema(BaseModel):
     name: str
-    description: str = Field(description="Descrição visual breve e ameaçadora.")
-    type: str = Field(description="Tipo: 'Minion', 'Elite', 'BOSS'.")
-    
-    # Atributos Vitais
-    hp: int = Field(description="Hit Points Máximos.")
+    description: str
+    type: str # Minion, Elite, BOSS
+    hp: int
     max_hp: int
-    ac: int = Field(description="Armor Class (Defesa).")
-    
-    # A Mágica: Lista estruturada para a Engine usar Tools
-    attacks: List[AttackAction] = Field(description="Lista de ataques que o inimigo pode usar.")
-    
-    # Atributos (para testes resistidos se necessário)
-    attributes: Dict[str, int] = Field(description="For, Des, Con, Int, Sab, Car.")
-    
-    abilities: List[str] = Field(default=[], description="Nomes de habilidades passivas.")
-    loot: List[str] = Field(default=[], description="Itens carregados.")
+    ac: int
+    attacks: List[AttackAction] = Field(description="LISTA OBRIGATÓRIA de objetos AttackAction. NÃO use strings.")
+    attributes: Dict[str, int] = Field(description="Atributos: str, dex, con, int, wis, cha")
+    abilities: List[str] = []
+    loot: List[str] = []
 
 # --- PERSISTÊNCIA ---
 def load_bestiary() -> Dict:
@@ -54,102 +49,89 @@ def load_bestiary() -> Dict:
 
 def save_enemy(data: Dict):
     db = load_bestiary()
-    db[data['name']] = data
+    # Usa ID se existir, senão gera slug
+    key = data.get("id", data["name"].lower().replace(" ", "_"))
+    if "id" not in data: data["id"] = key
+    
+    db[key] = data
     if not os.path.exists("data"): os.makedirs("data")
     with open(BESTIARY_FILE, 'w', encoding='utf-8') as f: json.dump(db, f, indent=4, ensure_ascii=False)
 
-def get_enemy_template(name: str) -> Dict:
-    db = load_bestiary()
-    for k, v in db.items():
-        if name.lower() in k.lower(): return v
-    return None
-
 def _infer_tier_from_name(name: str) -> ModelTier:
-    lowered = name.lower()
-    boss_markers = ["dragon", "lich", "king", "queen", "lord", "tyrant", "god", "titan"]
-    if any(marker in lowered for marker in boss_markers):
-        return ModelTier.SMART
+    if any(x in name.lower() for x in ["dragon", "lich", "boss", "god", "lord"]): return ModelTier.SMART
     return ModelTier.FAST
 
 # --- GERADOR ---
 def generate_new_enemy(name: str, context: str = "") -> Dict:
-    print(f"👾 [BESTIARY] Consultando Lore para criar: {name}...")
-
-    # 1. Consulta RAG (Lore)
-    lore_info = ""
-    try:
-        lore_info = query_rag(f"{name} {context}", index_name="lore")
-    except:
-        lore_info = "Fantasia Sombria Padrão."
-
-    if not lore_info: lore_info = "Criatura desconhecida."
-
-    # Verifica Cache
-    cached = get_enemy_template(name)
-    if cached: return cached
-
-    tier = _infer_tier_from_name(name)
-    llm = get_llm(temperature=0.6, tier=tier)
+    # 1. CHECK-FIRST
+    db = load_bestiary()
+    existing_ids = list(db.keys())
     
+    found_id = find_existing_entity(name, "Monster", existing_ids)
+    if found_id:
+        print(f"♻️ [BESTIARY] Cache Hit: {found_id}")
+        data = db[found_id]
+        
+        # Auto-correção de legado
+        if "id" not in data:
+             print(f"🔧 [BESTIARY] Corrigindo monstro legado sem ID: {name}")
+             data["id"] = found_id
+             save_enemy(data)
+
+        data["hp"] = data["max_hp"]
+        data["status"] = "ativo"
+        return data
+
+    # 2. GERAÇÃO
+    print(f"👾 [BESTIARY] Criando: {name}...")
+    
+    lore = query_rag(f"{name} {context}", index_name="lore")
+    if not lore: lore = "Standard RPG Monster."
+
+    llm = get_llm(temperature=0.5, tier=_infer_tier_from_name(name))
+    
+    # Prompt Reforçado com One-Shot Example para o Array de Ataques
     sys_msg = SystemMessage(content=f"""
     <role>D&D 5e Monster Designer</role>
+    <lore_context>{lore}</lore_context>
     
-    <lore>
-    {lore_info}
-    </lore>
-        
-    <instructions>
-    1. Create a STAT BLOCK for "{name}".
-    2. COMBAT READY: You MUST provide explicit dice formulas for attacks.
-       - Bad: "Strong Attack"
-       - Good: "Greataxe", Bonus: 6, Damage: "1d12+4 slashing"
-    3. BALANCE:
-       - Minion: HP 10-30, AC 12-14, Dmg 1d6
-       - Boss: HP 100+, AC 17+, Dmg 3d8+
-    4. If the creature uses magic/breath, use 'save_dc' field (e.g., "DC 15 Dex").
-    </instructions>
+    <CRITICAL_INSTRUCTION>
+    You MUST populate the 'attacks' field as a LIST OF OBJECTS (JSON), not strings.
+    
+    WRONG:
+    "attacks": ["Bite attack dealing 1d6 damage", "Claw attack..."]
+    
+    CORRECT:
+    "attacks": [
+      {{ "name": "Bite", "type": "melee", "bonus": 5, "damage": "1d6+3 piercing" }},
+      {{ "name": "Claw", "type": "melee", "bonus": 5, "damage": "1d4+3 slashing" }}
+    ]
+    
+    Include all 6 attributes (str, dex, con, int, wis, cha).
+    </CRITICAL_INSTRUCTION>
     """)
-    
-    hum_msg = HumanMessage(content=f"Create Enemy: {name}. Context: {context}")
     
     try:
         designer = llm.with_structured_output(EnemySchema)
-        res = designer.invoke([sys_msg, hum_msg])
+        res = designer.invoke([sys_msg, HumanMessage(content=f"Create monster: {name}. Context: {context}")])
         data = res.model_dump()
         
-        # Garante status e ID para o sistema de combate
         data["status"] = "ativo"
-        data["id"] = f"{data['name'].lower().replace(' ', '_')}"
+        data["id"] = f"enemy_{data['name'].lower().replace(' ', '_')}"
+        
+        save_enemy(data)
+        return data
         
     except Exception as e:
         print(f"❌ [BESTIARY ERROR] {e}")
-        # Fallback Robusto (Compatível com Engine V8)
-        data = {
-            "name": name,
-            "type": "Minion",
-            "hp": 20, "max_hp": 20, "ac": 13,
-            "status": "ativo",
-            "id": "fallback_enemy",
-            "description": "Uma criatura genérica das sombras.",
-            "attacks": [
-                {
-                    "name": "Ataque Desesperado",
-                    "type": "melee",
-                    "bonus": 4,
-                    "damage": "1d6+2 bludgeoning",
-                    "range": "1.5m",
-                    "save_dc": None
-                }
-            ],
-            "attributes": {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10},
-            "abilities": [],
-            "loot": []
+        # Fallback de segurança para não quebrar o jogo
+        return {
+            "name": name, 
+            "type": "Minion", 
+            "hp": 20, "max_hp": 20, "ac": 12, 
+            "status": "ativo", 
+            "id": "fallback_monster",
+            "description": "Monstro genérico (Erro de Geração).", 
+            "attributes": {"str":10, "dex":10, "con":10, "int":10, "wis":10, "cha":10},
+            "attacks": [{"name": "Ataque Básico", "type": "melee", "bonus": 3, "damage": "1d4+1"}]
         }
-
-    save_enemy(data)
-    return data
-
-# Teste Rápido
-if __name__ == "__main__":
-    e = generate_new_enemy("Goblin Pyromancer", context="Vulcão")
-    print(json.dumps(e, indent=2))

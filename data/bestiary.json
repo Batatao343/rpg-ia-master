@@ -1,1091 +1,1401 @@
 {
-    "Rato da Peste Gigante": {
-      "name": "Rato da Peste Gigante",
-      "hp": 35,
-      "max_hp": 35,
-      "stamina": 8,
-      "mana": 0,
-      "defense": 12,
-      "attack_mod": 4,
-      "attributes": {
-        "STR": 4,
-        "DEX": 16,
-        "CON": 14,
-        "INT": 2,
-        "WIS": 10,
-        "CHA": 1
-      },
-      "abilities": [
-        "Mordida Infecciosa (Dano + Chance de Tétano)",
-        "Fuga de Esgoto (Ação Bônus)"
-      ],
-      "active_conditions": [],
-      "desc": "Do tamanho de um cão médio, com pelo oleoso e falhas na pele que revelam carne podre. Eles infestam o Anel de Lama."
+    "enemy_rato_peste_anel_lama": {
+        "id": "enemy_rato_peste_anel_lama",
+        "name": "Rato da Peste (Anel de Lama)",
+        "type": "Minion",
+        "description": "Roedor inchado que se alimenta dos cadáveres jogados no fosso de Nova Arcádia.",
+        "hp": 9,
+        "max_hp": 9,
+        "ac": 11,
+        "status": "ativo",
+        "attributes": {
+            "str": 6,
+            "dex": 14,
+            "con": 12,
+            "int": 2,
+            "wis": 10,
+            "cha": 4
+        },
+        "attacks": [
+            {
+                "name": "Mordida Infecciosa",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d4+2 piercing + doença"
+            }
+        ],
+        "loot": []
     },
-    "Cão de Guerra Sarnento": {
-      "name": "Cão de Guerra Sarnento",
-      "hp": 45,
-      "max_hp": 45,
-      "stamina": 12,
-      "mana": 0,
-      "defense": 14,
-      "attack_mod": 6,
-      "attributes": {
-        "STR": 16,
-        "DEX": 12,
-        "CON": 16,
-        "INT": 3,
-        "WIS": 12,
-        "CHA": 2
-      },
-      "abilities": [
-        "Mandíbula Travada (Agarra o alvo)",
-        "Estimulante de Combate (Ignora dor/stamina por 2 turnos)"
-      ],
-      "active_conditions": [],
-      "desc": "Um mastim treinado pela Legião de Ferro, viciado em drogas de combate e coberto de cicatrizes."
+    "enemy_degolador_mao_sombria": {
+        "id": "enemy_degolador_mao_sombria",
+        "name": "Degolador da Mão Sombria",
+        "type": "Minion",
+        "description": "Agente da guilda de assassinos, veste couro preto e máscara de pano.",
+        "hp": 16,
+        "max_hp": 16,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 11,
+            "dex": 16,
+            "con": 12,
+            "int": 10,
+            "wis": 10,
+            "cha": 10
+        },
+        "attacks": [
+            {
+                "name": "Adaga Serrilhada",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d4+3 piercing"
+            },
+            {
+                "name": "Bolsa de Areia",
+                "type": "debuff",
+                "bonus": 0,
+                "damage": "Cegueira (Dex Save DC 11)"
+            }
+        ],
+        "loot": [
+            "moeda_ouro",
+            "adaga_ferro"
+        ]
     },
-    "Golem de Lixo": {
-      "name": "Golem de Lixo",
-      "hp": 80,
-      "max_hp": 80,
-      "stamina": 99,
-      "mana": 0,
-      "defense": 16,
-      "attack_mod": 5,
-      "attributes": {
-        "STR": 18,
-        "DEX": 6,
-        "CON": 20,
-        "INT": 1,
-        "WIS": 1,
-        "CHA": 1
-      },
-      "abilities": [
-        "Arremesso de Destroços",
-        "Nuvem de Tétano (Passiva: Dano em área)"
-      ],
-      "active_conditions": [],
-      "desc": "Uma massa animada de madeira podre, metal enferrujado e restos urbanos, movida por magia residual do esgoto."
+    "enemy_soldado_legiao_ferro": {
+        "id": "enemy_soldado_legiao_ferro",
+        "name": "Soldado da Legião de Ferro",
+        "type": "Elite",
+        "description": "A polícia brutal de Lorde Valerius. Armadura pesada e disciplina rígida.",
+        "hp": 32,
+        "max_hp": 32,
+        "ac": 16,
+        "status": "ativo",
+        "attributes": {
+            "str": 16,
+            "dex": 10,
+            "con": 14,
+            "int": 10,
+            "wis": 10,
+            "cha": 12
+        },
+        "attacks": [
+            {
+                "name": "Espada Longa Regulamentar",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d8+3 slashing"
+            },
+            {
+                "name": "Escudada",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d4+3 bludgeoning"
+            }
+        ],
+        "loot": [
+            "espada_curta",
+            "moeda_ouro"
+        ]
     },
-    "Assassino da Mão Sombria": {
-      "name": "Assassino da Mão Sombria",
-      "hp": 50,
-      "max_hp": 50,
-      "stamina": 15,
-      "mana": 10,
-      "defense": 15,
-      "attack_mod": 8,
-      "attributes": {
-        "STR": 10,
-        "DEX": 18,
-        "CON": 12,
-        "INT": 14,
-        "WIS": 14,
-        "CHA": 12
-      },
-      "abilities": [
-        "Lâmina Envenenada",
-        "Bomba de Fumaça",
-        "Ataque Furtivo (+2d6 dano)"
-      ],
-      "active_conditions": [],
-      "desc": "Veste couro preto e máscaras de pano. Nunca luta justo, preferindo venenos e emboscadas."
+    "enemy_iniciado_chama_azul": {
+        "id": "enemy_iniciado_chama_azul",
+        "name": "Iniciado da Chama Azul",
+        "type": "Minion",
+        "description": "Fanático com cicatrizes de queimadura auto-infligidas.",
+        "hp": 11,
+        "max_hp": 11,
+        "ac": 10,
+        "status": "ativo",
+        "attributes": {
+            "str": 10,
+            "dex": 10,
+            "con": 10,
+            "int": 12,
+            "wis": 14,
+            "cha": 12
+        },
+        "attacks": [
+            {
+                "name": "Tocha",
+                "type": "melee",
+                "bonus": 2,
+                "damage": "1d4 bludgeoning + 1d4 fire"
+            },
+            {
+                "name": "Raio de Fogo Menor",
+                "type": "magic",
+                "bonus": 4,
+                "damage": "1d6 fire"
+            }
+        ],
+        "loot": [
+            "moeda_ouro"
+        ]
     },
-    "O Despejado (Zumbi)": {
-      "name": "O Despejado",
-      "hp": 25,
-      "max_hp": 25,
-      "stamina": 99,
-      "mana": 0,
-      "defense": 8,
-      "attack_mod": 3,
-      "attributes": {
-        "STR": 14,
-        "DEX": 6,
-        "CON": 18,
-        "INT": 1,
-        "WIS": 1,
-        "CHA": 1
-      },
-      "abilities": [
-        "Agarro Incansável",
-        "Vômito Ácido"
-      ],
-      "active_conditions": [],
-      "desc": "Cadáveres inchados de mendigos jogados no rio, reanimados pela poluição mágica da água."
+    "enemy_devorador_sol_zhur": {
+        "id": "enemy_devorador_sol_zhur",
+        "name": "Devorador de Sol (Zhur)",
+        "type": "Minion",
+        "description": "Nômade do deserto com lentes de obsidiana costuradas na pele.",
+        "hp": 22,
+        "max_hp": 22,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 12,
+            "dex": 16,
+            "con": 14,
+            "int": 10,
+            "wis": 12,
+            "cha": 8
+        },
+        "attacks": [
+            {
+                "name": "Lança de Osso",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d6+3 piercing"
+            },
+            {
+                "name": "Arco Composto",
+                "type": "ranged",
+                "bonus": 5,
+                "damage": "1d6+3 piercing"
+            }
+        ],
+        "loot": [
+            "adaga_ferro"
+        ]
     },
-    "Vulto da Fumaça": {
-      "name": "Vulto da Fumaça",
-      "hp": 40,
-      "max_hp": 40,
-      "stamina": 10,
-      "mana": 20,
-      "defense": 18,
-      "attack_mod": 5,
-      "attributes": {
-        "STR": 2,
-        "DEX": 20,
-        "CON": 10,
-        "INT": 6,
-        "WIS": 8,
-        "CHA": 1
-      },
-      "abilities": [
-        "Sufocar (Dano direto na Stamina)",
-        "Forma Gasosa (Imunidade a dano físico normal)"
-      ],
-      "active_conditions": [],
-      "desc": "Um elemental feito da poluição industrial do Anel de Ferro. Entra nos pulmões das vítimas."
+    "enemy_escorpiao_cristal": {
+        "id": "enemy_escorpiao_cristal",
+        "name": "Escorpião de Cristal",
+        "type": "Elite",
+        "description": "Predador alfa de Zhur. Sua carapaça refrata luz e é dura como aço.",
+        "hp": 55,
+        "max_hp": 55,
+        "ac": 17,
+        "status": "ativo",
+        "attributes": {
+            "str": 18,
+            "dex": 12,
+            "con": 16,
+            "int": 2,
+            "wis": 10,
+            "cha": 3
+        },
+        "attacks": [
+            {
+                "name": "Pinça Esmagadora",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "1d10+4 bludgeoning"
+            },
+            {
+                "name": "Ferrão Cristalizante",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "1d8+4 piercing + paralisia (Con Save DC 13)"
+            }
+        ],
+        "loot": []
     },
-    "O Devorador de Órfãos": {
-      "name": "O Devorador de Órfãos",
-      "hp": 120,
-      "max_hp": 120,
-      "stamina": 20,
-      "mana": 0,
-      "defense": 14,
-      "attack_mod": 9,
-      "attributes": {
-        "STR": 22,
-        "DEX": 8,
-        "CON": 20,
-        "INT": 4,
-        "WIS": 8,
-        "CHA": 4
-      },
-      "abilities": [
-        "Esmagar (Dano massivo)",
-        "Grito Aterrorizante",
-        "Regeneração Lenta"
-      ],
-      "active_conditions": [],
-      "desc": "Um ogro deformado e canibal que vive nos túneis mais profundos abaixo da cidade."
+    "enemy_mumia_de_po": {
+        "id": "enemy_mumia_de_po",
+        "name": "Múmia de Pó",
+        "type": "Elite",
+        "description": "Cadáver seco preservado pelas areias mágicas de Zhur.",
+        "hp": 40,
+        "max_hp": 40,
+        "ac": 11,
+        "status": "ativo",
+        "attributes": {
+            "str": 16,
+            "dex": 8,
+            "con": 15,
+            "int": 6,
+            "wis": 10,
+            "cha": 12
+        },
+        "attacks": [
+            {
+                "name": "Toque Dessecante",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "2d6 necrotic"
+            }
+        ],
+        "loot": [
+            "moeda_ouro"
+        ]
     },
-    "Gárgula de Mármore Sujo": {
-      "name": "Gárgula de Mármore Sujo",
-      "hp": 75,
-      "max_hp": 75,
-      "stamina": 99,
-      "mana": 0,
-      "defense": 20,
-      "attack_mod": 6,
-      "attributes": {
-        "STR": 18,
-        "DEX": 10,
-        "CON": 20,
-        "INT": 6,
-        "WIS": 12,
-        "CHA": 1
-      },
-      "abilities": [
-        "Pele de Pedra (Reduz dano cortante)",
-        "Mergulho Aéreo"
-      ],
-      "active_conditions": [],
-      "desc": "Estátuas antigas cobertas de fuligem que ganharam vida por possessão espectral."
+    "enemy_hospedeiro_fungico": {
+        "id": "enemy_hospedeiro_fungico",
+        "name": "Hospedeiro Fúngico (Xylos)",
+        "type": "Minion",
+        "description": "Humano cujos órgãos foram substituídos por micélio. Não sente dor.",
+        "hp": 26,
+        "max_hp": 26,
+        "ac": 9,
+        "status": "ativo",
+        "attributes": {
+            "str": 14,
+            "dex": 8,
+            "con": 18,
+            "int": 2,
+            "wis": 6,
+            "cha": 1
+        },
+        "attacks": [
+            {
+                "name": "Pancada",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d6+2 bludgeoning"
+            },
+            {
+                "name": "Explosão de Esporos",
+                "type": "death_rattle",
+                "bonus": 0,
+                "damage": "1d6 poison em área ao morrer"
+            }
+        ],
+        "loot": []
     },
-    "Alquimista Louco": {
-      "name": "Alquimista Louco",
-      "hp": 40,
-      "max_hp": 40,
-      "stamina": 10,
-      "mana": 30,
-      "defense": 11,
-      "attack_mod": 5,
-      "attributes": {
-        "STR": 8,
-        "DEX": 14,
-        "CON": 10,
-        "INT": 18,
-        "WIS": 6,
-        "CHA": 8
-      },
-      "abilities": [
-        "Frasco de Fogo Grego",
-        "Poção de Mutação Aleatória",
-        "Autodestruição (Ao morrer)"
-      ],
-      "active_conditions": [],
-      "desc": "Um ex-membro da academia que perdeu a sanidade tentando transmutar chumbo em ouro."
+    "enemy_vinha_estranguladora": {
+        "id": "enemy_vinha_estranguladora",
+        "name": "Vinha Estranguladora",
+        "type": "Elite",
+        "description": "Planta carnívora camuflada nas árvores de Xylos.",
+        "hp": 35,
+        "max_hp": 35,
+        "ac": 12,
+        "status": "ativo",
+        "attributes": {
+            "str": 16,
+            "dex": 10,
+            "con": 14,
+            "int": 1,
+            "wis": 10,
+            "cha": 1
+        },
+        "attacks": [
+            {
+                "name": "Constrição",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d8+3 bludgeoning + agarrar"
+            }
+        ],
+        "loot": []
     },
-    "Mímico de Baú Enferrujado": {
-      "name": "Mímico de Baú Enferrujado",
-      "hp": 60,
-      "max_hp": 60,
-      "stamina": 20,
-      "mana": 0,
-      "defense": 14,
-      "attack_mod": 7,
-      "attributes": {
-        "STR": 16,
-        "DEX": 12,
-        "CON": 16,
-        "INT": 8,
-        "WIS": 12,
-        "CHA": 10
-      },
-      "abilities": [
-        "Língua Adesiva",
-        "Mordida Surpresa (Crítico automático se o jogador abrir)"
-      ],
-      "active_conditions": [],
-      "desc": "Parece um baú de tesouro comum, mas seus reforços de metal são dentes e ele cheira a sangue seco."
+    "enemy_guerreiro_bjorn": {
+        "id": "enemy_guerreiro_bjorn",
+        "name": "Guerreiro Bjorn",
+        "type": "Minion",
+        "description": "Bárbaro do Norte vestindo ossos de baleia e peles.",
+        "hp": 45,
+        "max_hp": 45,
+        "ac": 14,
+        "status": "ativo",
+        "attributes": {
+            "str": 18,
+            "dex": 12,
+            "con": 16,
+            "int": 8,
+            "wis": 10,
+            "cha": 10
+        },
+        "attacks": [
+            {
+                "name": "Machado de Osso",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "1d12+4 slashing"
+            }
+        ],
+        "loot": [
+            "moeda_ouro"
+        ]
     },
-    "Bêbado Berserker": {
-      "name": "Bêbado Berserker",
-      "hp": 65,
-      "max_hp": 65,
-      "stamina": 15,
-      "mana": 0,
-      "defense": 10,
-      "attack_mod": 7,
-      "attributes": {
-        "STR": 18,
-        "DEX": 8,
-        "CON": 20,
-        "INT": 6,
-        "WIS": 6,
-        "CHA": 8
-      },
-      "abilities": [
-        "Ignorar Dor (Reduz dano recebido)",
-        "Arremesso de Mesa",
-        "Bafo de Álcool (Atordoa)"
-      ],
-      "active_conditions": [],
-      "desc": "Um mercenário que consumiu tanta 'Raiz-Forte' que não sente mais quando é esfaqueado."
+    "enemy_lobo_invernal": {
+        "id": "enemy_lobo_invernal",
+        "name": "Lobo das Geleiras",
+        "type": "Minion",
+        "description": "Lobo enorme de pelagem branca, olhos azuis brilhantes.",
+        "hp": 30,
+        "max_hp": 30,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 16,
+            "dex": 14,
+            "con": 14,
+            "int": 6,
+            "wis": 12,
+            "cha": 6
+        },
+        "attacks": [
+            {
+                "name": "Mordida Gelada",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "2d6+3 piercing"
+            }
+        ],
+        "loot": [
+            "material_pele_lobo"
+        ]
     },
-    "Dançarino de Vidro": {
-      "name": "Dançarino de Vidro",
-      "hp": 45,
-      "max_hp": 45,
-      "stamina": 12,
-      "mana": 15,
-      "defense": 16,
-      "attack_mod": 9,
-      "attributes": {
-        "STR": 10,
-        "DEX": 22,
-        "CON": 10,
-        "INT": 12,
-        "WIS": 14,
-        "CHA": 16
-      },
-      "abilities": [
-        "Reflexo (Chance de esquiva)",
-        "Corte de Espelho (Causa sangramento)",
-        "Dança Hipnótica"
-      ],
-      "active_conditions": [],
-      "desc": "Assassinos de elite do Anel Dourado que usam fragmentos de vidro afiado como armas."
+    "enemy_sentinela_ferro": {
+        "id": "enemy_sentinela_ferro",
+        "name": "Sentinela de Ferro (Constructo)",
+        "type": "Elite",
+        "description": "Automato movido a vapor e magia, guarda o Palácio de Obsidiana.",
+        "hp": 60,
+        "max_hp": 60,
+        "ac": 18,
+        "status": "ativo",
+        "attributes": {
+            "str": 20,
+            "dex": 8,
+            "con": 18,
+            "int": 3,
+            "wis": 10,
+            "cha": 1
+        },
+        "attacks": [
+            {
+                "name": "Lâmina de Braço",
+                "type": "melee",
+                "bonus": 7,
+                "damage": "2d8+5 slashing"
+            },
+            {
+                "name": "Jato de Vapor",
+                "type": "area",
+                "bonus": 0,
+                "damage": "2d6 fire (Dex Save DC 13)"
+            }
+        ],
+        "loot": []
     },
-    "Lobo-de-Osso": {
-      "name": "Lobo-de-Osso",
-      "hp": 55,
-      "max_hp": 55,
-      "stamina": 14,
-      "mana": 0,
-      "defense": 13,
-      "attack_mod": 6,
-      "attributes": {
-        "STR": 16,
-        "DEX": 14,
-        "CON": 16,
-        "INT": 4,
-        "WIS": 12,
-        "CHA": 2
-      },
-      "abilities": [
-        "Uivo da Alcateia (Chama reforços)",
-        "Mordida Perfurante"
-      ],
-      "active_conditions": [],
-      "desc": "Um lobo da Floresta dos Sussurros cuja pele apodreceu, revelando um exoesqueleto ósseo."
+    "enemy_horror_esgoto": {
+        "id": "enemy_horror_esgoto",
+        "name": "Horror do Esgoto (Ooze)",
+        "type": "Elite",
+        "description": "Amálgama de lixo, excremento e magia necromântica.",
+        "hp": 50,
+        "max_hp": 50,
+        "ac": 8,
+        "status": "ativo",
+        "attributes": {
+            "str": 16,
+            "dex": 6,
+            "con": 18,
+            "int": 2,
+            "wis": 8,
+            "cha": 1
+        },
+        "attacks": [
+            {
+                "name": "Pseudópode Tóxico",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d6+3 bludgeoning + 1d6 acid"
+            }
+        ],
+        "loot": []
     },
-    "Urso-de-Espinha": {
-      "name": "Urso-de-Espinha",
-      "hp": 110,
-      "max_hp": 110,
-      "stamina": 25,
-      "mana": 0,
-      "defense": 15,
-      "attack_mod": 8,
-      "attributes": {
-        "STR": 22,
-        "DEX": 10,
-        "CON": 22,
-        "INT": 3,
-        "WIS": 10,
-        "CHA": 4
-      },
-      "abilities": [
-        "Abraço de Espinhos (Dano ao ser atacado corpo a corpo)",
-        "Investida Furiosa"
-      ],
-      "active_conditions": [],
-      "desc": "O predador alfa da floresta. Espinhos de osso crescem descontroladamente de suas costas."
+    "enemy_necromante_renegado": {
+        "id": "enemy_necromante_renegado",
+        "name": "Necromante Renegado",
+        "type": "Elite",
+        "description": "Mago expulso da Torre, agora pratica nas criptas.",
+        "hp": 40,
+        "max_hp": 40,
+        "ac": 12,
+        "status": "ativo",
+        "attributes": {
+            "str": 8,
+            "dex": 14,
+            "con": 12,
+            "int": 18,
+            "wis": 12,
+            "cha": 10
+        },
+        "attacks": [
+            {
+                "name": "Toque Gélido",
+                "type": "ranged",
+                "bonus": 6,
+                "damage": "2d8 necrotic"
+            },
+            {
+                "name": "Erguer Esqueleto",
+                "type": "magic",
+                "bonus": 0,
+                "damage": "Invoca Esqueleto Guerreiro"
+            }
+        ],
+        "loot": [
+            "pocao_cura"
+        ]
     },
-    "Driade Sangrenta": {
-      "name": "Driade Sangrenta",
-      "hp": 60,
-      "max_hp": 60,
-      "stamina": 15,
-      "mana": 40,
-      "defense": 14,
-      "attack_mod": 5,
-      "attributes": {
-        "STR": 10,
-        "DEX": 16,
-        "CON": 14,
-        "INT": 14,
-        "WIS": 18,
-        "CHA": 18
-      },
-      "abilities": [
-        "Sedução Mortal (Charm)",
-        "Chicote de Vinha",
-        "Drenar Vida"
-      ],
-      "active_conditions": [],
-      "desc": "Uma entidade vegetal que imita uma mulher bela chorando sangue para atrair presas."
+    "enemy_esqueleto_legiao_antiga": {
+        "id": "enemy_esqueleto_legiao_antiga",
+        "name": "Esqueleto da Legião Antiga",
+        "type": "Minion",
+        "description": "Ossos vestindo restos da armadura da velha Arcádia.",
+        "hp": 15,
+        "max_hp": 15,
+        "ac": 14,
+        "status": "ativo",
+        "attributes": {
+            "str": 11,
+            "dex": 12,
+            "con": 12,
+            "int": 6,
+            "wis": 8,
+            "cha": 5
+        },
+        "attacks": [
+            {
+                "name": "Espada Antiga",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d6+2 slashing"
+            }
+        ],
+        "loot": []
     },
-    "Javali de Cobre": {
-      "name": "Javali de Cobre",
-      "hp": 70,
-      "max_hp": 70,
-      "stamina": 18,
-      "mana": 0,
-      "defense": 18,
-      "attack_mod": 7,
-      "attributes": {
-        "STR": 18,
-        "DEX": 10,
-        "CON": 18,
-        "INT": 2,
-        "WIS": 8,
-        "CHA": 2
-      },
-      "abilities": [
-        "Atropelar",
-        "Pele Metálica (Resistência a dano físico)"
-      ],
-      "active_conditions": [],
-      "desc": "Javalis que se alimentam de minério e desenvolveram uma pele dura como metal."
+    "enemy_espectro_lamento": {
+        "id": "enemy_espectro_lamento",
+        "name": "Espectro do Lamento",
+        "type": "Elite",
+        "description": "Espírito de uma vítima da peste, intangível.",
+        "hp": 30,
+        "max_hp": 30,
+        "ac": 12,
+        "status": "ativo",
+        "attributes": {
+            "str": 1,
+            "dex": 14,
+            "con": 11,
+            "int": 10,
+            "wis": 12,
+            "cha": 14
+        },
+        "attacks": [
+            {
+                "name": "Drenar Vida",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "3d6 necrotic"
+            }
+        ],
+        "loot": []
     },
-    "Corvo-de-Três-Olhos": {
-      "name": "Corvo-de-Três-Olhos",
-      "hp": 10,
-      "max_hp": 10,
-      "stamina": 5,
-      "mana": 10,
-      "defense": 12,
-      "attack_mod": 2,
-      "attributes": {
-        "STR": 2,
-        "DEX": 18,
-        "CON": 8,
-        "INT": 10,
-        "WIS": 16,
-        "CHA": 6
-      },
-      "abilities": [
-        "Grito Psíquico (Dano mental)",
-        "Espionar (Avisa outros monstros)"
-      ],
-      "active_conditions": [],
-      "desc": "Pássaros corrompidos que servem como espiões para entidades maiores da floresta."
+    "enemy_gargula_ferro": {
+        "id": "enemy_gargula_ferro",
+        "name": "Gárgula de Ferro",
+        "type": "Minion",
+        "description": "Estátua animada que vigia os telhados da cidade alta.",
+        "hp": 45,
+        "max_hp": 45,
+        "ac": 16,
+        "status": "ativo",
+        "attributes": {
+            "str": 14,
+            "dex": 12,
+            "con": 14,
+            "int": 5,
+            "wis": 10,
+            "cha": 1
+        },
+        "attacks": [
+            {
+                "name": "Garras Metálicas",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d6+2 slashing"
+            }
+        ],
+        "loot": []
     },
-    "Vinha Estranguladora": {
-      "name": "Vinha Estranguladora",
-      "hp": 50,
-      "max_hp": 50,
-      "stamina": 20,
-      "mana": 0,
-      "defense": 10,
-      "attack_mod": 6,
-      "attributes": {
-        "STR": 16,
-        "DEX": 14,
-        "CON": 16,
-        "INT": 1,
-        "WIS": 1,
-        "CHA": 1
-      },
-      "abilities": [
-        "Constrição (Dano contínuo)",
-        "Camuflagem (Parece uma planta comum)"
-      ],
-      "active_conditions": [],
-      "desc": "Um cipó grosso e muscular que cai das árvores para enforcar viajantes."
+    "enemy_assassino_cinzeu": {
+        "id": "enemy_assassino_cinzeu",
+        "name": "Assassino Cinzéu",
+        "type": "Elite",
+        "description": "Humanoide sem olhos dos túneis profundos.",
+        "hp": 35,
+        "max_hp": 35,
+        "ac": 15,
+        "status": "ativo",
+        "attributes": {
+            "str": 12,
+            "dex": 18,
+            "con": 12,
+            "int": 12,
+            "wis": 16,
+            "cha": 8
+        },
+        "attacks": [
+            {
+                "name": "Estilete de Pedra",
+                "type": "melee",
+                "bonus": 7,
+                "damage": "1d4+4 piercing + 2d6 sneak"
+            }
+        ],
+        "loot": []
     },
-    "Cogumelo Explosivo": {
-      "name": "Cogumelo Explosivo",
-      "hp": 5,
-      "max_hp": 5,
-      "stamina": 0,
-      "mana": 0,
-      "defense": 5,
-      "attack_mod": 0,
-      "attributes": {
-        "STR": 1,
-        "DEX": 1,
-        "CON": 1,
-        "INT": 1,
-        "WIS": 1,
-        "CHA": 1
-      },
-      "abilities": [
-        "Detonação de Esporos (Dano em área + Cegueira)"
-      ],
-      "active_conditions": [],
-      "desc": "Não se move. Explode violentamente se alguém pisar perto."
+    "enemy_urso_coruja_mutante": {
+        "id": "enemy_urso_coruja_mutante",
+        "name": "Urso-Coruja Mutante",
+        "type": "Elite",
+        "description": "Monstruosidade de Xylos com placas de fungo.",
+        "hp": 65,
+        "max_hp": 65,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 20,
+            "dex": 12,
+            "con": 18,
+            "int": 3,
+            "wis": 12,
+            "cha": 6
+        },
+        "attacks": [
+            {
+                "name": "Garras Infectadas",
+                "type": "melee",
+                "bonus": 7,
+                "damage": "2d8+5 slashing"
+            },
+            {
+                "name": "Bico",
+                "type": "melee",
+                "bonus": 7,
+                "damage": "1d10+5 piercing"
+            }
+        ],
+        "loot": []
     },
-    "Espantalho Vivo": {
-      "name": "Espantalho Vivo",
-      "hp": 40,
-      "max_hp": 40,
-      "stamina": 99,
-      "mana": 10,
-      "defense": 12,
-      "attack_mod": 5,
-      "attributes": {
-        "STR": 14,
-        "DEX": 12,
-        "CON": 14,
-        "INT": 6,
-        "WIS": 8,
-        "CHA": 10
-      },
-      "abilities": [
-        "Olhar do Medo",
-        "Foice Enferrujada"
-      ],
-      "active_conditions": [],
-      "desc": "Um constructo de palha e pano possuído por um espírito menor. Odeia corvos e humanos."
+    "enemy_elemental_fogo_poluido": {
+        "id": "enemy_elemental_fogo_poluido",
+        "name": "Elemental de Fogo Poluído",
+        "type": "Elite",
+        "description": "Chamas misturadas com a fumaça tóxica das forjas.",
+        "hp": 80,
+        "max_hp": 80,
+        "ac": 14,
+        "status": "ativo",
+        "attributes": {
+            "str": 12,
+            "dex": 16,
+            "con": 16,
+            "int": 6,
+            "wis": 10,
+            "cha": 8
+        },
+        "attacks": [
+            {
+                "name": "Toque de Enxofre",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "2d6 fire + 1d4 poison"
+            }
+        ],
+        "loot": []
     },
-    "Aranha-Tecelã de Sangue": {
-      "name": "Aranha-Tecelã de Sangue",
-      "hp": 65,
-      "max_hp": 65,
-      "stamina": 15,
-      "mana": 15,
-      "defense": 14,
-      "attack_mod": 7,
-      "attributes": {
-        "STR": 12,
-        "DEX": 18,
-        "CON": 12,
-        "INT": 8,
-        "WIS": 14,
-        "CHA": 2
-      },
-      "abilities": [
-        "Teia Ácida (Prende e queima)",
-        "Picada Necrosante"
-      ],
-      "active_conditions": [],
-      "desc": "Aracnídeo gigante vermelho. Sua teia dissolve a armadura das vítimas."
+    "enemy_boss_valerius": {
+        "id": "enemy_boss_valerius",
+        "name": "Lorde Protetor Valerius",
+        "type": "BOSS",
+        "description": "O Tirano de Nova Arcádia. Mestre espadachim em armadura completa.",
+        "hp": 160,
+        "max_hp": 160,
+        "ac": 20,
+        "status": "ativo",
+        "attributes": {
+            "str": 20,
+            "dex": 14,
+            "con": 18,
+            "int": 16,
+            "wis": 16,
+            "cha": 18
+        },
+        "attacks": [
+            {
+                "name": "Julgamento Final (Espada)",
+                "type": "melee",
+                "bonus": 10,
+                "damage": "2d6+5 slashing + 1d8 radiant"
+            },
+            {
+                "name": "Lei de Ferro",
+                "type": "magic",
+                "bonus": 0,
+                "damage": "Stun (Wis Save DC 16)"
+            }
+        ],
+        "loot": [
+            "unique_loot_valerius"
+        ]
     },
-    "Cervo da Galhada Negra": {
-      "name": "Cervo da Galhada Negra",
-      "hp": 80,
-      "max_hp": 80,
-      "stamina": 20,
-      "mana": 20,
-      "defense": 15,
-      "attack_mod": 6,
-      "attributes": {
-        "STR": 18,
-        "DEX": 16,
-        "CON": 16,
-        "INT": 8,
-        "WIS": 16,
-        "CHA": 12
-      },
-      "abilities": [
-        "Investida Espiritual",
-        "Aura de Silêncio"
-      ],
-      "active_conditions": [],
-      "desc": "Um cervo majestoso, porém corrompido, com chifres feitos de obsidiana negra."
+    "enemy_boss_vibora": {
+        "id": "enemy_boss_vibora",
+        "name": "A Víbora (Boss)",
+        "type": "BOSS",
+        "description": "Líder da Mão Sombria. Impossível de segurar.",
+        "hp": 110,
+        "max_hp": 110,
+        "ac": 19,
+        "status": "ativo",
+        "attributes": {
+            "str": 12,
+            "dex": 22,
+            "con": 14,
+            "int": 18,
+            "wis": 16,
+            "cha": 16
+        },
+        "attacks": [
+            {
+                "name": "Tempestade de Adagas",
+                "type": "melee",
+                "bonus": 11,
+                "damage": "1d4+6 piercing (x3 ataques)"
+            },
+            {
+                "name": "Nuvem Tóxica",
+                "type": "area",
+                "bonus": 0,
+                "damage": "4d6 poison (Con Save DC 15)"
+            }
+        ],
+        "loot": [
+            "unique_loot_vibora"
+        ]
     },
-    "Troll de Musgo": {
-      "name": "Troll de Musgo",
-      "hp": 100,
-      "max_hp": 100,
-      "stamina": 30,
-      "mana": 10,
-      "defense": 14,
-      "attack_mod": 8,
-      "attributes": {
-        "STR": 20,
-        "DEX": 8,
-        "CON": 24,
-        "INT": 4,
-        "WIS": 8,
-        "CHA": 4
-      },
-      "abilities": [
-        "Regeneração (Cura HP por turno)",
-        "Vômito de Lodo"
-      ],
-      "active_conditions": [],
-      "desc": "Um gigante coberto de vegetação. Só pode ser morto se queimado, caso contrário se regenera."
+    "enemy_boss_general_escorpiao": {
+        "id": "enemy_boss_general_escorpiao",
+        "name": "General Escorpião",
+        "type": "BOSS",
+        "description": "Abominação híbrida que comanda as bestas de Zhur.",
+        "hp": 150,
+        "max_hp": 150,
+        "ac": 18,
+        "status": "ativo",
+        "attributes": {
+            "str": 22,
+            "dex": 12,
+            "con": 20,
+            "int": 10,
+            "wis": 12,
+            "cha": 14
+        },
+        "attacks": [
+            {
+                "name": "Pinça Real",
+                "type": "melee",
+                "bonus": 9,
+                "damage": "2d10+6 bludgeoning"
+            },
+            {
+                "name": "Ferrão Mortal",
+                "type": "melee",
+                "bonus": 9,
+                "damage": "1d10+6 piercing + 2d8 poison"
+            }
+        ],
+        "loot": [
+            "unique_loot_general_escorpiao"
+        ]
     },
-    "Bruxa da Cabana": {
-      "name": "Bruxa da Cabana",
-      "hp": 55,
-      "max_hp": 55,
-      "stamina": 10,
-      "mana": 60,
-      "defense": 12,
-      "attack_mod": 4,
-      "attributes": {
-        "STR": 6,
-        "DEX": 10,
-        "CON": 12,
-        "INT": 18,
-        "WIS": 16,
-        "CHA": 14
-      },
-      "abilities": [
-        "Maldição do Azar (Desvantagem para o alvo)",
-        "Poção Explosiva",
-        "Metamorfose (Vira um corvo)"
-      ],
-      "active_conditions": [],
-      "desc": "Uma velha eremita que fez pactos com as forças da floresta em troca de poder."
+    "enemy_boss_arauto_nevoa": {
+        "id": "enemy_boss_arauto_nevoa",
+        "name": "O Arauto da Névoa",
+        "type": "BOSS",
+        "description": "Entidade feita de fumaça e lamento que assombra as criptas.",
+        "hp": 130,
+        "max_hp": 130,
+        "ac": 16,
+        "status": "ativo",
+        "attributes": {
+            "str": 10,
+            "dex": 18,
+            "con": 16,
+            "int": 14,
+            "wis": 12,
+            "cha": 20
+        },
+        "attacks": [
+            {
+                "name": "Toque Gélido da Morte",
+                "type": "melee",
+                "bonus": 8,
+                "damage": "4d8 necrotic"
+            },
+            {
+                "name": "Grito do Lamento",
+                "type": "area",
+                "bonus": 0,
+                "damage": "3d6 psychic (Wis Save DC 15)"
+            }
+        ],
+        "loot": [
+            "unique_loot_arauto"
+        ]
     },
-    "Kobold da Ferrugem": {
-      "name": "Kobold da Ferrugem",
-      "hp": 15,
-      "max_hp": 15,
-      "stamina": 5,
-      "mana": 0,
-      "defense": 12,
-      "attack_mod": 3,
-      "attributes": {
-        "STR": 6,
-        "DEX": 14,
-        "CON": 10,
-        "INT": 8,
-        "WIS": 8,
-        "CHA": 6
-      },
-      "abilities": [
-        "Táticas de Bando",
-        "Adaga Enferrujada (Causa doença)"
-      ],
-      "active_conditions": [],
-      "desc": "Pequenos humanoides de pele cinza que infestam minas. Suas armas causam tétano mágico."
+    "enemy_gigante_gelo_norte": {
+        "id": "enemy_gigante_gelo_norte",
+        "name": "Titã de Gelo (Norte)",
+        "type": "BOSS",
+        "description": "Um antigo gigante adormecido sob Skallgard.",
+        "hp": 200,
+        "max_hp": 200,
+        "ac": 17,
+        "status": "ativo",
+        "attributes": {
+            "str": 24,
+            "dex": 10,
+            "con": 22,
+            "int": 9,
+            "wis": 12,
+            "cha": 12
+        },
+        "attacks": [
+            {
+                "name": "Esmagar",
+                "type": "melee",
+                "bonus": 11,
+                "damage": "3d12+7 bludgeoning"
+            },
+            {
+                "name": "Arremessar Rocha",
+                "type": "ranged",
+                "bonus": 11,
+                "damage": "4d10+7 bludgeoning"
+            }
+        ],
+        "loot": [
+            "unique_loot_gigante"
+        ]
     },
-    "Goblin Dinamitista": {
-      "name": "Goblin Dinamitista",
-      "hp": 20,
-      "max_hp": 20,
-      "stamina": 8,
-      "mana": 0,
-      "defense": 11,
-      "attack_mod": 2,
-      "attributes": {
-        "STR": 8,
-        "DEX": 14,
-        "CON": 10,
-        "INT": 12,
-        "WIS": 8,
-        "CHA": 6
-      },
-      "abilities": [
-        "Arremesso de Dinamite (Dano em área)",
-        "Kamikaze (Explode ao morrer)"
-      ],
-      "active_conditions": [],
-      "desc": "Goblins insanos carregando explosivos instáveis roubados dos anões."
+    "enemy_mimico_bau": {
+        "id": "enemy_mimico_bau",
+        "name": "Mímico (Baú)",
+        "type": "Elite",
+        "description": "Predador metamorfo comum em ruínas antigas.",
+        "hp": 58,
+        "max_hp": 58,
+        "ac": 12,
+        "status": "ativo",
+        "attributes": {
+            "str": 17,
+            "dex": 12,
+            "con": 15,
+            "int": 5,
+            "wis": 13,
+            "cha": 8
+        },
+        "attacks": [
+            {
+                "name": "Pseudópode Grudento",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d8+3 bludgeoning + agarrar"
+            }
+        ],
+        "loot": [
+            "moeda_ouro"
+        ]
     },
-    "Hobgoblin Capitão": {
-      "name": "Hobgoblin Capitão",
-      "hp": 60,
-      "max_hp": 60,
-      "stamina": 20,
-      "mana": 0,
-      "defense": 17,
-      "attack_mod": 7,
-      "attributes": {
-        "STR": 16,
-        "DEX": 12,
-        "CON": 16,
-        "INT": 14,
-        "WIS": 12,
-        "CHA": 14
-      },
-      "abilities": [
-        "Ordem de Ataque (Aliados atacam com vantagem)",
-        "Desaparar"
-      ],
-      "active_conditions": [],
-      "desc": "Um estrategista militar goblin, usando armadura roubada da Legião de Ferro."
+    "enemy_basilisco_caverna": {
+        "id": "enemy_basilisco_caverna",
+        "name": "Basilisco da Caverna",
+        "type": "Elite",
+        "description": "Réptil de oito patas cujo olhar petrifica.",
+        "hp": 52,
+        "max_hp": 52,
+        "ac": 15,
+        "status": "ativo",
+        "attributes": {
+            "str": 16,
+            "dex": 8,
+            "con": 15,
+            "int": 2,
+            "wis": 8,
+            "cha": 7
+        },
+        "attacks": [
+            {
+                "name": "Mordida",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "2d6+3 piercing"
+            }
+        ],
+        "loot": []
     },
-    "Ogre de Pedra": {
-      "name": "Ogre de Pedra",
-      "hp": 130,
-      "max_hp": 130,
-      "stamina": 30,
-      "mana": 0,
-      "defense": 18,
-      "attack_mod": 9,
-      "attributes": {
-        "STR": 24,
-        "DEX": 8,
-        "CON": 24,
-        "INT": 4,
-        "WIS": 8,
-        "CHA": 4
-      },
-      "abilities": [
-        "Pele de Rocha (Reduz dano físico em 5)",
-        "Arremesso de Pedregulho"
-      ],
-      "active_conditions": [],
-      "desc": "Um ogro cuja pele se calcificou, tornando-o quase invulnerável a armas comuns."
+    "enemy_troll_ponte": {
+        "id": "enemy_troll_ponte",
+        "name": "Troll de Ponte",
+        "type": "Elite",
+        "description": "Gigante regenerativo que cobra pedágio em carne.",
+        "hp": 84,
+        "max_hp": 84,
+        "ac": 15,
+        "status": "ativo",
+        "attributes": {
+            "str": 18,
+            "dex": 13,
+            "con": 20,
+            "int": 7,
+            "wis": 9,
+            "cha": 7
+        },
+        "attacks": [
+            {
+                "name": "Garras",
+                "type": "melee",
+                "bonus": 7,
+                "damage": "2d6+4 slashing"
+            }
+        ],
+        "loot": [
+            "moeda_ouro"
+        ]
     },
-    "Morcego-Vampiro Gigante": {
-      "name": "Morcego-Vampiro Gigante",
-      "hp": 30,
-      "max_hp": 30,
-      "stamina": 10,
-      "mana": 0,
-      "defense": 13,
-      "attack_mod": 5,
-      "attributes": {
-        "STR": 10,
-        "DEX": 18,
-        "CON": 10,
-        "INT": 2,
-        "WIS": 12,
-        "CHA": 2
-      },
-      "abilities": [
-        "Drenar Sangue (Cura o monstro)",
-        "Ecolocalização (Não pode ser cegado)"
-      ],
-      "active_conditions": [],
-      "desc": "Um morcego com envergadura de 2 metros que caça silenciosamente nas cavernas."
+    "enemy_golem_lixo": {
+        "id": "enemy_golem_lixo",
+        "name": "Golem de Lixo",
+        "type": "Elite",
+        "description": "Constructo feito de detritos do Anel de Lama.",
+        "hp": 65,
+        "max_hp": 65,
+        "ac": 14,
+        "status": "ativo",
+        "attributes": {
+            "str": 18,
+            "dex": 8,
+            "con": 18,
+            "int": 1,
+            "wis": 5,
+            "cha": 1
+        },
+        "attacks": [
+            {
+                "name": "Pancada de Entulho",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "2d8+4 bludgeoning"
+            }
+        ],
+        "loot": []
     },
-    "Verme da Rocha": {
-      "name": "Verme da Rocha",
-      "hp": 150,
-      "max_hp": 150,
-      "stamina": 40,
-      "mana": 0,
-      "defense": 16,
-      "attack_mod": 10,
-      "attributes": {
-        "STR": 26,
-        "DEX": 6,
-        "CON": 22,
-        "INT": 1,
-        "WIS": 8,
-        "CHA": 1
-      },
-      "abilities": [
-        "Engolir Inteiro",
-        "Tremor de Terra"
-      ],
-      "active_conditions": [],
-      "desc": "Um monstro subterrâneo cego que sente vibrações e devora mineiros."
+    "enemy_sombra_espreitadora": {
+        "id": "enemy_sombra_espreitadora",
+        "name": "Sombra Espreitadora",
+        "type": "Minion",
+        "description": "Vulto escuro que drena força.",
+        "hp": 16,
+        "max_hp": 16,
+        "ac": 12,
+        "status": "ativo",
+        "attributes": {
+            "str": 6,
+            "dex": 14,
+            "con": 12,
+            "int": 6,
+            "wis": 10,
+            "cha": 8
+        },
+        "attacks": [
+            {
+                "name": "Toque Drenante",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "2d6 necrotic"
+            }
+        ],
+        "loot": []
     },
-    "Basilisco de Cristal": {
-      "name": "Basilisco de Cristal",
-      "hp": 90,
-      "max_hp": 90,
-      "stamina": 20,
-      "mana": 20,
-      "defense": 16,
-      "attack_mod": 7,
-      "attributes": {
-        "STR": 16,
-        "DEX": 10,
-        "CON": 18,
-        "INT": 4,
-        "WIS": 10,
-        "CHA": 6
-      },
-      "abilities": [
-        "Olhar Cristalizante (Paralisa e transforma sangue em vidro)",
-        "Cauda Espinhosa"
-      ],
-      "active_conditions": [],
-      "desc": "Um lagarto de oito patas. Seu olhar não petrifica, mas transforma fluidos orgânicos em cristal."
+    "enemy_verme_areia_jovem": {
+        "id": "enemy_verme_areia_jovem",
+        "name": "Verme da Areia (Jovem)",
+        "type": "Elite",
+        "description": "Filhote dos titãs que nadam na areia de Zhur.",
+        "hp": 70,
+        "max_hp": 70,
+        "ac": 14,
+        "status": "ativo",
+        "attributes": {
+            "str": 18,
+            "dex": 10,
+            "con": 16,
+            "int": 1,
+            "wis": 8,
+            "cha": 2
+        },
+        "attacks": [
+            {
+                "name": "Mordida Engolidora",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "2d8+4 piercing"
+            }
+        ],
+        "loot": []
     },
-    "Fantasma do Minerador": {
-      "name": "Fantasma do Minerador",
-      "hp": 35,
-      "max_hp": 35,
-      "stamina": 99,
-      "mana": 30,
-      "defense": 12,
-      "attack_mod": 5,
-      "attributes": {
-        "STR": 1,
-        "DEX": 14,
-        "CON": 10,
-        "INT": 8,
-        "WIS": 10,
-        "CHA": 14
-      },
-      "abilities": [
-        "Toque Gélido",
-        "Grito de Desabamento (Dano sônico + Medo)"
-      ],
-      "active_conditions": [],
-      "desc": "A alma inquieta de um anão morto em um desabamento, atacando com uma picareta espectral."
+    "enemy_djinn_menor": {
+        "id": "enemy_djinn_menor",
+        "name": "Djinn Menor",
+        "type": "Elite",
+        "description": "Espírito elemental escravizado pelos feiticeiros de Zhur.",
+        "hp": 60,
+        "max_hp": 60,
+        "ac": 15,
+        "status": "ativo",
+        "attributes": {
+            "str": 14,
+            "dex": 18,
+            "con": 14,
+            "int": 12,
+            "wis": 14,
+            "cha": 16
+        },
+        "attacks": [
+            {
+                "name": "Lâmina de Vento",
+                "type": "melee",
+                "bonus": 7,
+                "damage": "2d6+4 slashing + 1d6 lightning"
+            }
+        ],
+        "loot": []
     },
-    "Escorpião de Cristal": {
-      "name": "Escorpião de Cristal",
-      "hp": 70,
-      "max_hp": 70,
-      "stamina": 15,
-      "mana": 0,
-      "defense": 18,
-      "attack_mod": 7,
-      "attributes": {
-        "STR": 16,
-        "DEX": 14,
-        "CON": 16,
-        "INT": 2,
-        "WIS": 10,
-        "CHA": 2
-      },
-      "abilities": [
-        "Camuflagem de Areia",
-        "Ferrão Cristalizante (Veneno)"
-      ],
-      "active_conditions": [],
-      "desc": "Aracnídeo do deserto de Zhur. Sua carapaça é translúcida e dura como diamante."
+    "enemy_esqueleto_mago": {
+        "id": "enemy_esqueleto_mago",
+        "name": "Esqueleto Arcanista",
+        "type": "Elite",
+        "description": "Restos mortais de um mago que ainda lembra feitiços.",
+        "hp": 24,
+        "max_hp": 24,
+        "ac": 11,
+        "status": "ativo",
+        "attributes": {
+            "str": 8,
+            "dex": 12,
+            "con": 10,
+            "int": 16,
+            "wis": 12,
+            "cha": 10
+        },
+        "attacks": [
+            {
+                "name": "Mísseis Mágicos",
+                "type": "magic",
+                "bonus": 0,
+                "damage": "3d4+3 force"
+            },
+            {
+                "name": "Toque Chocante",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d8 lightning"
+            }
+        ],
+        "loot": []
     },
-    "Guerreiro do Sol": {
-      "name": "Guerreiro do Sol",
-      "hp": 55,
-      "max_hp": 55,
-      "stamina": 12,
-      "mana": 0,
-      "defense": 14,
-      "attack_mod": 6,
-      "attributes": {
-        "STR": 16,
-        "DEX": 14,
-        "CON": 14,
-        "INT": 10,
-        "WIS": 12,
-        "CHA": 10
-      },
-      "abilities": [
-        "Adaga de Vidro-Dragão (Crítico alto, arma quebra se falhar)",
-        "Frenesi de Sangue"
-      ],
-      "active_conditions": [],
-      "desc": "Membro da tribo canibal de Zhur. Usa armadura de couro humano."
+    "enemy_nomade_canibal": {
+        "id": "enemy_nomade_canibal",
+        "name": "Nômade Canibal",
+        "type": "Minion",
+        "description": "Guerreiro do deserto enlouquecido pela fome.",
+        "hp": 25,
+        "max_hp": 25,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 14,
+            "dex": 14,
+            "con": 12,
+            "int": 10,
+            "wis": 12,
+            "cha": 8
+        },
+        "attacks": [
+            {
+                "name": "Machadinha de Pedra",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d6+2 slashing"
+            }
+        ],
+        "loot": [
+            "adaga_ferro"
+        ]
     },
-    "Povo-Cogumelo": {
-      "name": "Povo-Cogumelo",
-      "hp": 40,
-      "max_hp": 40,
-      "stamina": 10,
-      "mana": 10,
-      "defense": 10,
-      "attack_mod": 4,
-      "attributes": {
-        "STR": 12,
-        "DEX": 10,
-        "CON": 16,
-        "INT": 6,
-        "WIS": 14,
-        "CHA": 4
-      },
-      "abilities": [
-        "Nuvem de Esporos (Controle mental/Confusão)",
-        "Simbiose (Cura outros cogumelos próximos)"
-      ],
-      "active_conditions": [],
-      "desc": "Humanos infectados pelo fungo de Xylos. Não sentem dor e agem como uma colmeia."
+    "enemy_yeti": {
+        "id": "enemy_yeti",
+        "name": "Yeti das Cavernas",
+        "type": "Elite",
+        "description": "Predador das neves com pelagem branca e garras negras.",
+        "hp": 51,
+        "max_hp": 51,
+        "ac": 12,
+        "status": "ativo",
+        "attributes": {
+            "str": 18,
+            "dex": 13,
+            "con": 16,
+            "int": 8,
+            "wis": 12,
+            "cha": 7
+        },
+        "attacks": [
+            {
+                "name": "Garras Congelantes",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "1d6+4 slashing + 1d6 cold"
+            }
+        ],
+        "loot": []
     },
-    "Onça-Pintada-Ácida": {
-      "name": "Onça-Pintada-Ácida",
-      "hp": 65,
-      "max_hp": 65,
-      "stamina": 18,
-      "mana": 0,
-      "defense": 15,
-      "attack_mod": 8,
-      "attributes": {
-        "STR": 18,
-        "DEX": 20,
-        "CON": 14,
-        "INT": 4,
-        "WIS": 12,
-        "CHA": 6
-      },
-      "abilities": [
-        "Mordida Corrosiva",
-        "Salto Predatório"
-      ],
-      "active_conditions": [],
-      "desc": "Felino da selva cuja saliva é um ácido potente capaz de derreter metal."
+    "enemy_wyvern_jovem": {
+        "id": "enemy_wyvern_jovem",
+        "name": "Wyvern Jovem",
+        "type": "Elite",
+        "description": "Réptil alado venenoso, comum nos picos de montanha.",
+        "hp": 80,
+        "max_hp": 80,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 18,
+            "dex": 10,
+            "con": 15,
+            "int": 5,
+            "wis": 12,
+            "cha": 6
+        },
+        "attacks": [
+            {
+                "name": "Ferrão",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "2d6+4 piercing + poison"
+            }
+        ],
+        "loot": []
     },
-    "Urso-Titã": {
-      "name": "Urso-Titã",
-      "hp": 160,
-      "max_hp": 160,
-      "stamina": 40,
-      "mana": 0,
-      "defense": 17,
-      "attack_mod": 10,
-      "attributes": {
-        "STR": 26,
-        "DEX": 10,
-        "CON": 26,
-        "INT": 4,
-        "WIS": 10,
-        "CHA": 6
-      },
-      "abilities": [
-        "Esmagar Ossos",
-        "Rugido Ensurdecedor"
-      ],
-      "active_conditions": [],
-      "desc": "Urso polar gigantesco do Norte Gelado, usado como montaria pelos Bjorn. Possui placas ósseas naturais."
+    "enemy_bandido_capitao": {
+        "id": "enemy_bandido_capitao",
+        "name": "Capitão dos Bandidos",
+        "type": "Elite",
+        "description": "Líder carismático e perigoso de um bando de estrada.",
+        "hp": 65,
+        "max_hp": 65,
+        "ac": 15,
+        "status": "ativo",
+        "attributes": {
+            "str": 16,
+            "dex": 16,
+            "con": 14,
+            "int": 14,
+            "wis": 11,
+            "cha": 14
+        },
+        "attacks": [
+            {
+                "name": "Rapieira",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d8+3 piercing"
+            },
+            {
+                "name": "Adaga de Mão",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d4+3 piercing"
+            }
+        ],
+        "loot": [
+            "moeda_ouro",
+            "pocao_cura"
+        ]
     },
-    "Draugr": {
-      "name": "Draugr",
-      "hp": 50,
-      "max_hp": 50,
-      "stamina": 99,
-      "mana": 0,
-      "defense": 14,
-      "attack_mod": 6,
-      "attributes": {
-        "STR": 18,
-        "DEX": 8,
-        "CON": 18,
-        "INT": 6,
-        "WIS": 8,
-        "CHA": 6
-      },
-      "abilities": [
-        "Machado Gélido",
-        "Imunidade ao Frio"
-      ],
-      "active_conditions": [],
-      "desc": "Guerreiro viking morto-vivo, inchado pela água do mar e preservado pelo gelo."
+    "enemy_morcego_vampiro": {
+        "id": "enemy_morcego_vampiro",
+        "name": "Morcego Vampiro Gigante",
+        "type": "Minion",
+        "description": "Morcego do tamanho de uma águia, sedento de sangue.",
+        "hp": 10,
+        "max_hp": 10,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 8,
+            "dex": 16,
+            "con": 10,
+            "int": 2,
+            "wis": 12,
+            "cha": 6
+        },
+        "attacks": [
+            {
+                "name": "Mordida",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d4+3 piercing"
+            }
+        ],
+        "loot": []
     },
-    "Povo-Recife": {
-      "name": "Povo-Recife",
-      "hp": 70,
-      "max_hp": 70,
-      "stamina": 15,
-      "mana": 10,
-      "defense": 19,
-      "attack_mod": 7,
-      "attributes": {
-        "STR": 16,
-        "DEX": 12,
-        "CON": 18,
-        "INT": 10,
-        "WIS": 12,
-        "CHA": 8
-      },
-      "abilities": [
-        "Armadura de Coral (Reflete dano)",
-        "Lança de Arpão"
-      ],
-      "active_conditions": [],
-      "desc": "Humanoides cobertos de cracas e corais vivos. Imunes a sangramento."
+    "enemy_aranha_lobo": {
+        "id": "enemy_aranha_lobo",
+        "name": "Aranha Lobo",
+        "type": "Minion",
+        "description": "Caçadora rápida que não tece teias, apenas persegue.",
+        "hp": 11,
+        "max_hp": 11,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 12,
+            "dex": 16,
+            "con": 13,
+            "int": 3,
+            "wis": 12,
+            "cha": 4
+        },
+        "attacks": [
+            {
+                "name": "Mordida",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d6+3 piercing"
+            }
+        ],
+        "loot": []
     },
-    "Espectro da Névoa": {
-      "name": "Espectro da Névoa",
-      "hp": 40,
-      "max_hp": 40,
-      "stamina": 99,
-      "mana": 30,
-      "defense": 12,
-      "attack_mod": 5,
-      "attributes": {
-        "STR": 1,
-        "DEX": 16,
-        "CON": 10,
-        "INT": 10,
-        "WIS": 10,
-        "CHA": 14
-      },
-      "abilities": [
-        "Drenar Calor (Dano necrótico + Reduz velocidade)",
-        "Incorpóreo (Resistência a físico)"
-      ],
-      "active_conditions": [],
-      "desc": "Alma torturada de uma vítima da Guerra das Cinzas. Só aparece na neblina."
+    "enemy_zumbi_blindado": {
+        "id": "enemy_zumbi_blindado",
+        "name": "Zumbi Blindado",
+        "type": "Minion",
+        "description": "Guarda morto reanimado ainda vestindo sua cota de malha.",
+        "hp": 30,
+        "max_hp": 30,
+        "ac": 16,
+        "status": "ativo",
+        "attributes": {
+            "str": 14,
+            "dex": 6,
+            "con": 16,
+            "int": 3,
+            "wis": 6,
+            "cha": 5
+        },
+        "attacks": [
+            {
+                "name": "Pancada",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d6+2 bludgeoning"
+            }
+        ],
+        "loot": []
     },
-    "Banshee Lamentosa": {
-      "name": "Banshee Lamentosa",
-      "hp": 55,
-      "max_hp": 55,
-      "stamina": 99,
-      "mana": 40,
-      "defense": 13,
-      "attack_mod": 6,
-      "attributes": {
-        "STR": 1,
-        "DEX": 16,
-        "CON": 10,
-        "INT": 12,
-        "WIS": 14,
-        "CHA": 20
-      },
-      "abilities": [
-        "Grito da Morte (Dano sônico em área + Stun)",
-        "Toque da Loucura"
-      ],
-      "active_conditions": [],
-      "desc": "Espírito feminino que anuncia a morte. Seu grito pode estourar os tímpanos."
+    "enemy_polvo_esgoto": {
+        "id": "enemy_polvo_esgoto",
+        "name": "Polvo do Esgoto",
+        "type": "Elite",
+        "description": "Cefalópode mutante adaptado à sujeira.",
+        "hp": 52,
+        "max_hp": 52,
+        "ac": 12,
+        "status": "ativo",
+        "attributes": {
+            "str": 17,
+            "dex": 13,
+            "con": 15,
+            "int": 4,
+            "wis": 10,
+            "cha": 4
+        },
+        "attacks": [
+            {
+                "name": "Tentáculos",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "2d6+3 bludgeoning + agarrar"
+            }
+        ],
+        "loot": []
     },
-    "Vampiro Ferrugento": {
-      "name": "Vampiro Ferrugento",
-      "hp": 85,
-      "max_hp": 85,
-      "stamina": 20,
-      "mana": 20,
-      "defense": 16,
-      "attack_mod": 8,
-      "attributes": {
-        "STR": 20,
-        "DEX": 14,
-        "CON": 18,
-        "INT": 14,
-        "WIS": 12,
-        "CHA": 16
-      },
-      "abilities": [
-        "Mordida de Ferro (Drena sangue/metal)",
-        "Forma de Névoa de Ferrugem"
-      ],
-      "active_conditions": [],
-      "desc": "Vampiro cuja maldição transforma seu sangue em ferrugem. Precisa de sangue fresco para não travar."
+    "enemy_fantasma": {
+        "id": "enemy_fantasma",
+        "name": "Fantasma",
+        "type": "Elite",
+        "description": "Alma que não completou sua missão.",
+        "hp": 45,
+        "max_hp": 45,
+        "ac": 11,
+        "status": "ativo",
+        "attributes": {
+            "str": 7,
+            "dex": 13,
+            "con": 10,
+            "int": 10,
+            "wis": 12,
+            "cha": 17
+        },
+        "attacks": [
+            {
+                "name": "Toque do Medo",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "4d6 necrotic"
+            }
+        ],
+        "loot": []
     },
-    "Lobisomem de Osso": {
-      "name": "Lobisomem de Osso",
-      "hp": 95,
-      "max_hp": 95,
-      "stamina": 25,
-      "mana": 0,
-      "defense": 15,
-      "attack_mod": 9,
-      "attributes": {
-        "STR": 22,
-        "DEX": 16,
-        "CON": 20,
-        "INT": 6,
-        "WIS": 12,
-        "CHA": 6
-      },
-      "abilities": [
-        "Explosão de Ossos (Dano ao ser ferido)",
-        "Frenesi Lunar"
-      ],
-      "active_conditions": [],
-      "desc": "Licantropo cujo esqueleto cresce para fora da pele, formando uma armadura natural grotesca."
+    "enemy_observador_menor": {
+        "id": "enemy_observador_menor",
+        "name": "Observador Menor (Gazer)",
+        "type": "Minion",
+        "description": "Pequena esfera flutuante com quatro olhos.",
+        "hp": 13,
+        "max_hp": 13,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 3,
+            "dex": 17,
+            "con": 14,
+            "int": 3,
+            "wis": 10,
+            "cha": 7
+        },
+        "attacks": [
+            {
+                "name": "Raio de Gelo",
+                "type": "ranged",
+                "bonus": 5,
+                "damage": "3d6 cold"
+            },
+            {
+                "name": "Mordida",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d1"
+            }
+        ],
+        "loot": []
     },
-    "Changeling Infiltrado": {
-      "name": "Changeling Infiltrado",
-      "hp": 45,
-      "max_hp": 45,
-      "stamina": 12,
-      "mana": 15,
-      "defense": 13,
-      "attack_mod": 6,
-      "attributes": {
-        "STR": 10,
-        "DEX": 16,
-        "CON": 12,
-        "INT": 14,
-        "WIS": 14,
-        "CHA": 20
-      },
-      "abilities": [
-        "Ataque Surpresa (Dano x2 se o alvo não souber que é inimigo)",
-        "Mudar Forma"
-      ],
-      "active_conditions": [],
-      "desc": "Espião da Mão Sombria capaz de assumir qualquer rosto. Chia ao tocar ferro puro."
+    "enemy_minotauro_esqueleto": {
+        "id": "enemy_minotauro_esqueleto",
+        "name": "Minotauro Esqueleto",
+        "type": "Elite",
+        "description": "Ossos gigantescos de um guardião do labirinto.",
+        "hp": 67,
+        "max_hp": 67,
+        "ac": 12,
+        "status": "ativo",
+        "attributes": {
+            "str": 18,
+            "dex": 11,
+            "con": 15,
+            "int": 6,
+            "wis": 8,
+            "cha": 5
+        },
+        "attacks": [
+            {
+                "name": "Machado Grande",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "2d12+4 slashing"
+            }
+        ],
+        "loot": []
     },
-    "Devorador de Memória": {
-      "name": "Devorador de Memória",
-      "hp": 20,
-      "max_hp": 20,
-      "stamina": 5,
-      "mana": 30,
-      "defense": 18,
-      "attack_mod": 4,
-      "attributes": {
-        "STR": 4,
-        "DEX": 20,
-        "CON": 8,
-        "INT": 18,
-        "WIS": 14,
-        "CHA": 8
-      },
-      "abilities": [
-        "Picada do Esquecimento (Alvo perde última ação)",
-        "Invisibilidade Psíquica"
-      ],
-      "active_conditions": [],
-      "desc": "Inseto psíquico que se alimenta de lembranças recentes. Encontrado em bibliotecas antigas."
+    "enemy_golem_carne": {
+        "id": "enemy_golem_carne",
+        "name": "Golem de Carne",
+        "type": "Elite",
+        "description": "Frankenstein mágico criado por Silas Vane.",
+        "hp": 93,
+        "max_hp": 93,
+        "ac": 9,
+        "status": "ativo",
+        "attributes": {
+            "str": 19,
+            "dex": 9,
+            "con": 18,
+            "int": 6,
+            "wis": 10,
+            "cha": 5
+        },
+        "attacks": [
+            {
+                "name": "Pancada",
+                "type": "melee",
+                "bonus": 7,
+                "damage": "2d8+4 bludgeoning"
+            }
+        ],
+        "loot": []
     },
-    "O Lorde da Medula": {
-      "name": "O Lorde da Medula",
-      "hp": 250,
-      "max_hp": 250,
-      "stamina": 50,
-      "mana": 40,
-      "defense": 22,
-      "attack_mod": 12,
-      "attributes": {
-        "STR": 24,
-        "DEX": 12,
-        "CON": 24,
-        "INT": 16,
-        "WIS": 16,
-        "CHA": 18
-      },
-      "abilities": [
-        "Espada de Osso de Dragão (Dano massivo + Necrótico)",
-        "Invocar Esqueletos",
-        "Aura de Medo Real"
-      ],
-      "active_conditions": [],
-      "desc": "O tirano de Vorag-Nar, vestindo armadura feita dos ossos de um dragão antigo. Chefe de Zona."
-    },
-    "Avatar de Malagor": {
-      "name": "Avatar de Malagor",
-      "hp": 500,
-      "max_hp": 500,
-      "stamina": 100,
-      "mana": 100,
-      "defense": 25,
-      "attack_mod": 15,
-      "attributes": {
-        "STR": 30,
-        "DEX": 14,
-        "CON": 30,
-        "INT": 20,
-        "WIS": 20,
-        "CHA": 24
-      },
-      "abilities": [
-        "Sopro de Cinzas (Dano Fogo/Veneno em cone)",
-        "Presença Majestosa (Stun em área)",
-        "Chuva de Meteoros"
-      ],
-      "active_conditions": [],
-      "desc": "Uma manifestação menor do Dragão de Ferro morto, feita de fogo, ódio e metal derretido. Chefe Final."
+    "enemy_aranha_de_cristal": {
+        "name": "Aranha de Cristal",
+        "description": "Um aracnídeo gigante, do tamanho de um cavalo, cuja carapaça é composta por um cristal translúcido e duro como diamante. Vive em cavernas subterrâneas onde a luz é abundante, usando sua carapaça reflexiva para se camuflar perfeitamente entre as formações de quartzo. Caça forasteiros, atraída pela água em seus corpos.",
+        "type": "Monstrosidade (Gigante)",
+        "hp": 127,
+        "max_hp": 127,
+        "ac": 18,
+        "attacks": [
+            {
+                "name": "Mordida Cristalina",
+                "type": "melee",
+                "bonus": 7,
+                "damage": "2d6+4 piercing + 3d6 poison",
+                "range": "1.5m",
+                "save_dc": "DC 14 Con"
+            },
+            {
+                "name": "Teia Cintilante",
+                "type": "ranged",
+                "bonus": 6,
+                "damage": "Restrained (DC 14 Str check to escape)",
+                "range": "30/60 ft",
+                "save_dc": null
+            }
+        ],
+        "attributes": {
+            "int": 4,
+            "str": 18,
+            "cha": 6,
+            "dex": 16,
+            "wis": 12,
+            "con": 16
+        },
+        "abilities": [
+            "Camuflagem de Cristal: A aranha tem vantagem em testes de Destreza (Furtividade) feitos em áreas de luz plena ou em superfícies cristalinas. Se permanecer imóvel em tal área, ela é considerada Invisível.",
+            "Carapaça Diamantina: A aranha tem resistência a dano de perfuração e corte de ataques não-mágicos.",
+            "Sentido de Cristal: A aranha tem Vantagem em testes de Sabedoria (Percepção) que dependem de visão em áreas de luz plena."
+        ],
+        "loot": [
+            "1d4 Pedaços de Cristal Puro (10 gp cada)",
+            "1d2 Bolsas de Veneno (Poison, DC 14)"
+        ],
+        "status": "ativo",
+        "id": "enemy_aranha_de_cristal"
     }
-  }
+}

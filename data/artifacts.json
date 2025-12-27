@@ -3,31 +3,48 @@
       "name": "Moeda de Ouro",
       "type": "currency",
       "rarity": "common",
-      "description": "Uma moeda de ouro cunhada em Valoria.",
       "value_gold": 1,
+      "description": "Uma moeda de ouro padrão cunhada no reino.",
       "combat_stats": { "attack_bonus": 0, "damage_dice": "0", "attribute": "none", "ac_bonus": 0 },
       "mechanics": { "passive_effects": [], "active_ability": null }
     },
-    "pocao_cura_menor": {
+    "pocao_cura": {
       "name": "Poção de Cura Menor",
       "type": "consumable",
       "rarity": "common",
-      "description": "Um frasco com líquido vermelho. Recupera ferimentos leves.",
       "value_gold": 50,
+      "description": "Um líquido vermelho que fecha feridas leves.",
       "combat_stats": { "attack_bonus": 0, "damage_dice": "0", "attribute": "none", "ac_bonus": 0 },
       "mechanics": { 
-        "damage_type": "heal", 
         "passive_effects": [], 
-        "active_ability": { "name": "Beber", "cost": "Ação", "effect": "Recupera 2d4+2 HP." } 
+        "active_ability": { "name": "Beber Poção", "cost": "Ação", "effect": "Recupera 2d4+2 HP." } 
       }
     },
-    "espada_curta_ferro": {
-      "name": "Espada Curta de Ferro",
+    "adaga_ferro": {
+      "name": "Adaga de Ferro",
       "type": "weapon",
       "rarity": "common",
-      "description": "Lâmina simples, mas eficaz.",
       "value_gold": 10,
+      "description": "Uma lâmina curta, fácil de esconder.",
+      "combat_stats": { "attack_bonus": 0, "damage_dice": "1d4", "attribute": "dex", "ac_bonus": 0 },
+      "mechanics": { "passive_effects": [], "active_ability": null }
+    },
+    "espada_curta": {
+      "name": "Espada Curta",
+      "type": "weapon",
+      "rarity": "common",
+      "value_gold": 25,
+      "description": "Arma leve e versátil para combates rápidos.",
       "combat_stats": { "attack_bonus": 0, "damage_dice": "1d6", "attribute": "dex", "ac_bonus": 0 },
-      "mechanics": { "damage_type": "piercing", "passive_effects": [], "active_ability": null }
+      "mechanics": { "passive_effects": [], "active_ability": null }
+    },
+    "corda": {
+      "name": "Corda de Cânhamo (15m)",
+      "type": "material",
+      "rarity": "common",
+      "value_gold": 1,
+      "description": "Corda resistente para escalada e amarras.",
+      "combat_stats": { "attack_bonus": 0, "damage_dice": "0", "attribute": "none", "ac_bonus": 0 },
+      "mechanics": { "passive_effects": ["Vantagem em testes de Sobrevivência para amarras."], "active_ability": null }
     }
   }

@@ -1,0 +1,331 @@
+{
+  "amuleto_guardiao_esquecido": {
+    "name": "Amuleto do Guardião Esquecido",
+    "type": "accessory",
+    "rarity": "rare",
+    "description": "Um amuleto de prata e ônix, frio ao toque. Dizem que ele guarda o portador das almas que se perderam no tempo, oferecendo um vislumbre do que foi esquecido.",
+    "value_gold": 500,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "sabedoria",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [
+        "Vantagem em testes de resistência contra feitiços e habilidades de mortos-vivos."
+      ],
+      "active_ability": {
+        "name": "Luz Guia",
+        "cost": "1x por dia",
+        "effect": "O amuleto emite uma luz suave em um raio de 5 metros por 10 minutos. Na área, aliados recebem +1 em testes de ataque contra mortos-vivos e podem ver criaturas etéreas."
+      }
+    }
+  },
+  "vinho_ilusorio_jardins": {
+    "name": "Vinho Ilusório dos Jardins",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "description": "Uma garrafa de vinho caríssimo, encantado pelos magos escravizados dos Jardins Suspensos. Por uma hora, quem o bebe parece mais belo, eloquente e confiável, tornando sua presença e palavras mais agradáveis.",
+    "value_gold": 75,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": {
+        "name": "Beber",
+        "cost": "1 Ação",
+        "effect": "Recebe vantagem em todos os testes de Carisma (Persuasão, Enganação, Performance) por 1 hora. Sua aparência se torna sutilmente mais atraente e idealizada durante o efeito."
+      }
+    }
+  },
+  "adaga_dente_lama": {
+    "name": "Adaga Dente-de-Lama",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "description": "Uma adaga cruel, serrilhada com dentes humanos comprados no Beco dos Desdentados. A lâmina está permanentemente suja com a miséria da Fossa e carrega o risco de infecção a cada corte.",
+    "value_gold": 60,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "1d4 perfurante",
+      "attribute": "Destreza",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        "Ao atingir um inimigo, ele deve fazer um teste de Constituição (CD 12) ou ficará Envenenado por 1 minuto. O alvo pode repetir o teste no final de cada um de seus turnos para remover a condição."
+      ],
+      "active_ability": null
+    }
+  },
+  "unique_loot_general_escorpião": {
+    "id_sugestion": "broquel_cristal",
+    "name": "Broquel de Carapaça de Cristal",
+    "type": "armor",
+    "rarity": "rare",
+    "description": "Um pequeno escudo feito da carapaça translúcida de um Escorpião de Cristal. Ele refrata a luz de maneira estranha e pode desviar ataques com um brilho ofuscante.",
+    "value_gold": 280,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "-",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": {
+        "name": "Flash Cegante",
+        "cost": "Uma reação ao inimigo errar um ataque corpo a corpo.",
+        "effect": "O atacante deve passar em um teste de Constituição CD 13 ou ficará cego até o final de seu próximo turno. Usos: 1 vez por combate."
+      }
+    }
+  },
+  "amuleto_guardiao_espectral": {
+    "name": "Amuleto do Guardião Espectral",
+    "type": "accessory",
+    "rarity": "rare",
+    "description": "Um amuleto de prata enegrecida com uma gema leitosa no centro. Dizem que ele guarda a essência de um antigo protetor da cripta, oferecendo sua vigília ao portador.",
+    "value_gold": 250,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [
+        "Resistência a dano necrótico.",
+        "Vantagem em testes de resistência contra efeitos de medo de mortos-vivos."
+      ],
+      "active_ability": null
+    }
+  },
+  "po_sonho": {
+    "name": "Pó de Sonho",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "description": "Uma droga alucinógena feita de cogumelos moídos. Causa visões e uma falsa sensação de poder, mas pode deixar o usuário vulnerável. Popular no Beco dos Desdentados.",
+    "value_gold": 15,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "N/A",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": {
+        "name": "Inalar Pó de Sonho",
+        "cost": "1 Ação",
+        "effect": "O usuário ganha +2 em testes de Sabedoria por 1 hora, mas sofre -2 em testes de Inteligência. Há 10% de chance de ficar Envenenado por 1d4 horas."
+      }
+    }
+  },
+  "dente_viciado": {
+    "name": "Dente de Viciado",
+    "type": "material",
+    "rarity": "common",
+    "description": "Um dente manchado, arrancado por um viciado para vender. Usado como componente em rituais de necromancia amadora ou como um amuleto macabro.",
+    "value_gold": 2,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "N/A",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        "Componente para rituais de necromancia."
+      ],
+      "active_ability": null
+    }
+  },
+  "vinho_arcadiano": {
+    "name": "Vinho Arcadiano",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "description": "Vinho tinto favorito dos nobres dos Jardins Suspensos. Dizem que seu sabor faz esquecer o cheiro da Fossa do anel de lama.",
+    "value_gold": 25,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "N/A",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": {
+        "name": "Beber Vinho",
+        "cost": "1 Ação",
+        "effect": "Recupera 1d4 de vida. Concede vantagem em testes de Carisma (Persuasão) por 10 minutos."
+      }
+    }
+  },
+  "lamina_obsidiana": {
+    "name": "Lâmina de Obsidiana",
+    "type": "weapon",
+    "rarity": "rare",
+    "description": "Uma adaga forjada com cacos de obsidiana do palácio de Valerius. É fria ao toque e parece absorver a luz, sussurrando ameaças silenciosas.",
+    "value_gold": 250,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "1d6",
+      "attribute": "DEX",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        "Ao acertar um ataque, o alvo deve fazer um teste de Constituição (CD 12) ou fica Assustado por 1 minuto."
+      ],
+      "active_ability": null
+    }
+  },
+  "manto_leproso": {
+    "name": "Manto do Leproso",
+    "type": "accessory",
+    "rarity": "uncommon",
+    "description": "Um capuz esfarrapado da Catedral Afundada. Seu cheiro é horrível, mas afasta tanto pessoas quanto pragas.",
+    "value_gold": 40,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "N/A",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        "Concede vantagem em testes de resistência contra doenças e venenos."
+      ],
+      "active_ability": null
+    }
+  },
+  "unique_loot_general_escorpiao": {
+    "id_sugestion": "carapaca_quimera_cristal",
+    "name": "Carapaça da Quimera de Cristal",
+    "type": "armor",
+    "rarity": "legendary",
+    "description": "Uma armadura pesada forjada a partir das carapaças translúcidas e cristalinas de incontáveis Escorpiões de Cristal. As placas são unidas por tendões endurecidos e suturas grotescas, um testemunho da obsessão do General em criar a forma de vida definitiva. A luz refrata através dela de forma estranha, tornando o usuário uma miragem mortal no deserto.",
+    "value_gold": 25000,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 5
+    },
+    "mechanics": {
+      "passive_effects": [
+        "Camuflagem Cristalina: Quando o usuário permanece imóvel por um turno completo, ele se torna invisível até se mover, atacar ou usar uma habilidade.",
+        "Dureza Adamantina: O usuário tem resistência a dano de corte."
+      ],
+      "active_ability": {
+        "name": "Barragem Cristalina",
+        "cost": "1 Ação",
+        "effect": "O usuário libera uma rajada de estilhaços de cristal da armadura em um cone de 5 metros. Criaturas na área devem fazer um teste de Destreza (CD 17) ou sofrerão 4d8 de dano perfurante. A armadura tem 3 cargas, que recarregam ao amanhecer."
+      }
+    }
+  },
+  "posonho": {
+    "name": "Pó de Sonho",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "description": "Um pó cinzento e fino feito de cogumelos alucinógenos, misturado com cinzas de ossos. Usado pelos viciados do Beco dos Desdentados para escapar da realidade. O cheiro é adocicado e nauseante.",
+    "value_gold": 15,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": {
+        "name": "Transe Onírico",
+        "cost": "1 Ação",
+        "effect": "O usuário ganha +2 em Sabedoria e resistência a dano psíquico por 1 minuto, mas sofre desvantagem em testes de Percepção. Ao final do efeito, deve passar por um teste de Constituição (CD 12) ou sofrerá 1 nível de exaustão."
+      }
+    }
+  },
+  "anelobsidiana": {
+    "name": "Anel de Sinete de Obsidiana",
+    "type": "accessory",
+    "rarity": "rare",
+    "description": "Um anel pesado de obsidiana polida com o selo de uma família nobre menor de Nova Arcádia. É frio ao toque e parece absorver a luz, um símbolo de status usado nos Jardins Suspensos.",
+    "value_gold": 220,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [
+        "Vantagem em testes de Carisma (Enganação, Intimidação) com a nobreza ou a guarda de Nova Arcádia.",
+        "Pode conjurar 'Ilusão Menor' uma vez por dia."
+      ],
+      "active_ability": null
+    }
+  },
+  "maolegiao": {
+    "name": "Mão da Legião",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "description": "Uma manopla de ferro com uma lâmina curta e larga acoplada. Arma padrão da Legião de Valerius, projetada para perfurar armaduras e intimidar os habitantes da Fossa.",
+    "value_gold": 75,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "1d6 perfurante",
+      "attribute": "Força",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        "Ataques com esta arma não podem ser desarmados por meios convencionais."
+      ],
+      "active_ability": null
+    }
+  },
+  "lamina_infernal": {
+    "name": "Lâmina Infernal",
+    "type": "weapon",
+    "rarity": "legendary",
+    "value_gold": 5000,
+    "combat_stats": {
+      "attack_bonus": 10,
+      "damage_dice": "1d8",
+      "attribute": "str",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        "Lâmina em Chamas: Todo ataque bem-sucedido causa +3d6 de dano de fogo extra."
+      ],
+      "active_ability": null
+    }
+  },
+  "lamina_infernal_player": {
+    "name": "Lâmina Infernal",
+    "type": "weapon",
+    "rarity": "legendary",
+    "value_gold": 5000,
+    "combat_stats": {
+      "attack_bonus": 10,
+      "damage_dice": "1d10",
+      "attribute": "str",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        "Chamas Eternas: Acertos causam +3d6 de fogo."
+      ],
+      "active_ability": {
+        "name": "Explosão Solar",
+        "cost": "1 Ação",
+        "effect": "Causa 4d6 em área."
+      }
+    }
+  }
+}
