@@ -327,5 +327,70 @@
         "effect": "Causa 4d6 em área."
       }
     }
+  },
+  "adaga_do_espreitador": {
+    "name": "Adaga do Espreitador",
+    "item_id": "adaga_do_espreitador",
+    "description": "Uma adaga de ferro frio que parece absorver a luz ao seu redor. É fria ao toque e estranhamente silenciosa.",
+    "type": "weapon",
+    "rarity": "Incomum",
+    "gold_value": 75,
+    "combat_stats": {
+      "attack_bonus": 1.0,
+      "damage": "1d4 + 1"
+    },
+    "mechanics": {
+      "passive": "Concede +2 em testes de Furtividade quando portada."
+    }
+  },
+  "pocao_cura_menor_revigorante": {
+    "name": "Poção de Cura Menor Revigorante",
+    "item_id": "pocao_cura_menor_revigorante",
+    "description": "Um líquido vermelho que cintila com uma luz suave. Além de curar, parece despertar os sentidos.",
+    "type": "potion",
+    "rarity": "Comum",
+    "gold_value": 60,
+    "combat_stats": {},
+    "mechanics": {
+      "on_use": "Restaura 2d4 + 2 pontos de vida e remove a condição de Fadiga por 1 hora."
+    }
+  },
+  "espada_restaurada": {
+    "name": "Espada Restaurada",
+    "item_id": "espada_restaurada",
+    "description": "Uma espada antes quebrada, agora reforjada com habilidade. Sua lâmina brilha com nova vida, pronta para a batalha.",
+    "type": "weapon",
+    "rarity": "Comum",
+    "gold_value": 120,
+    "combat_stats": {
+      "damage": "1d8"
+    },
+    "mechanics": {}
+  },
+  "adaga_farpada": {
+    "name": "Adaga Farpada",
+    "item_id": "adaga_farpada",
+    "description": "Uma adaga de ferro com pequenas farpas na lâmina que causam sangramento.",
+    "type": "weapon",
+    "rarity": "Comum",
+    "gold_value": 15,
+    "combat_stats": {
+      "damage": "1d4"
+    },
+    "mechanics": {
+      "on_hit": "O alvo sofre 1 de dano de sangramento por 2 turnos."
+    }
+  },
+  "pocao_cura_menor": {
+    "name": "Poção de Cura Menor",
+    "item_id": "pocao_cura_menor",
+    "description": "Um frasco com um líquido vermelho que cintila suavemente. Restaura uma pequena quantidade de vitalidade.",
+    "type": "potion",
+    "rarity": "Comum",
+    "gold_value": 25,
+    "combat_stats": {},
+    "mechanics": {
+      "on_use": "Restaura 1d8+1 pontos de vida."
+    }
   }
 }

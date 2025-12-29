@@ -754,3 +754,23 @@ Mecânica: Magia Estabilizada. Seus feitiços não são selvagens. São raios la
 Dependência: Eles precisam de "Baterias de Mana" (gemas carregadas). Se as baterias acabarem, eles são apenas acadêmicos com armas pesadas inúteis.
 
 Visual: Steampunk Arcano. Casacos longos, muitas lentes e engrenagens de latão girando em seus cajados.
+---
+[CATEGORIA: LOCALIZAÇÃO] [TAGS: AETHELGARD, RUÍNAS SUBMERSAS, NECROMANCIA, ERMO BRANCO]
+## Confirmação da Localização das Ruínas Submersas de Aethelgard
+A canalização da magia de sangue permitiu ao personagem rastrear a fonte da rede carmesim necromântica que permeia o gelo de Skallgard. Essa rede é a essência cristalizada de incontáveis vidas perdidas, um campo de força necromântico adormecido. A pulsação mais intensa e caótica se concentra ao norte, em direção à costa congelada, indicando que o "coração" dessa rede está situado nas lendárias Ruínas Submersas de Aethelgard.
+---
+[CATEGORIA: HISTÓRIA] [TAGS: NECROMANCIA, MAGIA DE SANGUE, ERMO BRANCO]
+## Natureza da Rede Carmesim do Ermo Branco
+A anomalia sob o gelo, percebida como uma rede de "veias" pulsantes, não é sangue fresco, mas sim a essência vital cristalizada de incontáveis vidas perdidas. Esta rede funciona como um vasto campo de força necromântico adormecido que está começando a despertar, e é a fonte da tristeza esmagadora e do efeito psíquico de ceder ao frio que atinge aqueles que se conectam a ela.
+---
+[CATEGORIA: LOCALIZAÇÃO] [TAGS: MONTANHAS AFIADAS, PÂNTANO DA MELANCOLIA, PONTO DE INTERESSE, OBJETO METÁLICO]
+## Saliência Rochosa na Borda do Pântano
+Uma saliência rochosa íngreme, localizada na borda superior do Pântano da Melancolia, foi identificada como um novo ponto de interesse. A saliência, que se destaca da paisagem doentia do pântano, exibe um brilho frio e metálico, sugerindo a presença de um objeto de metal polido (possivelmente prata) abandonado ou escondido nesta altitude. Este ponto está sob a influência do miasma tóxico que emana do pântano.
+---
+[CATEGORIA: HISTÓRIA] [TAGS: CRIATURA, PREDADOR, LORE, URSO-DE-ESPINHA]
+O Urso-de-Espinha (Urso-de-Espinha) é identificado como o predador responsável pela morte brutal de um caçador experiente nas Montanhas Afiadas. Esta criatura é o predador alfa da Floresta dos Sussurros, caracterizada por:
+1.  **Força Descomunal:** Capaz de rasgar armaduras pesadas como papel.
+2.  **Agressão Extrema:** O padrão de ataque é de destruição total.
+3.  **Farpas Ósseas:** Possui espinhos ou farpas de osso que se quebram e se alojam nas vítimas durante o ataque.
+
+Sua presença nas Montanhas Afiadas (Montanhas Afiadas) é notável, pois é tipicamente o predador alfa da Floresta dos Sussurros, sugerindo uma expansão de seu território ou migração.

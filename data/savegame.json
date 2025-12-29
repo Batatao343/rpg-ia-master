@@ -1,0 +1,137 @@
+{
+    "player": {
+        "name": "Gim",
+        "class": "Batedor das Fronteiras",
+        "race": "Anão da Fuligem",
+        "level": 10,
+        "xp": 0,
+        "hp": 76,
+        "max_hp": 76,
+        "gold": 500,
+        "attributes": {
+            "int": 12,
+            "cha": 10,
+            "wis": 18,
+            "dex": 20,
+            "str": 12,
+            "con": 16
+        },
+        "inventory": [
+            "Arco Longo de Geodo (as flechas criam estilhaços de cristal no impacto)",
+            "Gibão de Couro de Wyvern da Montanha (resistente a frio e perfurações)",
+            "Kit de Alpinista Superior (corda de seda de aranha, ganchos de obsidiana)",
+            "Picareta de Batalha \"Quebra-Pico\"",
+            "Manto de Lã de Íbex da Neve",
+            "Óculos de Fuligem (protegem contra clarões e cinzas)",
+            "Fragmento de Coração de Vulcão (uma pedra que se mantém sempre quente)",
+            "Rações de Viagem (carne seca de iaque e cogumelos de altitude)"
+        ],
+        "equipment": {},
+        "abilities": [
+            "[Passiva] Oportunista: Ataques contra inimigos distraídos causam +1d6 de dano.",
+            "Visão de Cinzas: Seus olhos adaptados à fumaça e cinzas vulcânicas permitem que você enxergue perfeitamente através de névoa, fumaça ou nevascas, ignorando qualquer penalidade de visão nestas condições.",
+            "Passo Silencioso da Pedra: Você pode se mover por terrenos rochosos ou de montanha sem fazer barulho. Em superfícies de pedra, seus testes de Furtividade têm vantagem."
+        ]
+    },
+    "world": {
+        "current_location": "Montanhas Afiadas",
+        "time_of_day": "Amanhecer",
+        "turn_count": 0,
+        "danger_level": 10
+    },
+    "party": [],
+    "enemies": [],
+    "npcs": {},
+    "inventory": [],
+    "quests": [],
+    "campaign_plan": {
+        "location": "Montanhas Afiadas",
+        "beats": [
+            {
+                "description": "Descreva o corpo mutilado, com marcas de garras enormes e farpas de osso cravadas na carne, indicando um Urso-de-Espinha.",
+                "status": "done"
+            },
+            {
+                "description": "Narre um som de rochas se quebrando ao longe. O ar fica pesado e um cheiro de carne podre e ozônio (magia) se intensifica, sinalizando que o predador sentiu sua presença.",
+                "status": "done"
+            },
+            {
+                "description": "O Urso-de-Espinha surge no topo de uma crista rochosa, uma silhueta aterrorizante contra o sol nascente, antes de iniciar sua investida.",
+                "status": "pending"
+            }
+        ],
+        "climax": "Confronto direto com o Urso-de-Espinha, forçando o jogador a lutar pela sobrevivência ou tentar uma fuga desesperada.",
+        "current_step": 2,
+        "last_planned_turn": 0
+    },
+    "message_history": [
+        {
+            "type": "system",
+            "content": "A jornada de Gim começa em Montanhas Afiadas."
+        },
+        {
+            "type": "human",
+            "content": "Descreva o cenário ao meu redor. Sou um Batedor das Fronteiras de nível 10."
+        },
+        {
+            "type": "ai",
+            "content": "Você está no alto das Montanhas Afiadas, onde o ar costuma ser puro e cortante. Hoje, no entanto, ele carrega o peso e o fedor do Pântano da Melancolia, que se estende abaixo como uma chaga oleosa. O cheiro é uma mistura insuportável de esgoto, enxofre e lodo putrefato, que se agarra à sua garganta mesmo a esta altitude. Como um Batedor experiente, você sabe que este miasma tóxico esconde perigos bem maiores do que apenas a náusea.\n\nAo varrer o horizonte, seus olhos registram a paisagem doentia. O pântano é uma mancha escura onde gases inflamáveis brotam espontaneamente do lodo, criando pequenos focos de Fogo Fátuo azul e verde, dançando sobre a água oleosa. É nesse contraste visual de escuridão e luz espectral que você nota algo fora do lugar.\n\nEm uma saliência rochosa íngreme, bem na borda superior do pântano, há um brilho frio e metálico. Não é o reflexo da luz do sol na água, mas o lustre inconfundível de metal polido, talvez prata, chamando a atenção de qualquer um que soubesse o que procurar.\n\nO que você faz?\n\n1.  Descer em direção à saliência rochosa para investigar o brilho metálico.\n2.  Usar sua perícia de Batedor para procurar sinais de movimento ou emboscada na área antes de se mover.\n3.  Ignorar o brilho, assumindo que é lixo ou detrito, e continuar sua patrulha."
+        },
+        {
+            "type": "human",
+            "content": "eu vasculho a região em busca de algo que eu possa atacar"
+        },
+        {
+            "type": "ai",
+            "content": "Seus olhos de Batedor se movem com a precisão de um ponteiro de bússola, varrendo a vegetação densa e o terreno rochoso em busca de movimento ou de um rastro fresco. O cheiro de carne doce (a podridão acelerada) é quase esmagador, mas ele não consegue mascarar o que seus olhos treinam para ver: sinais de atividade humana recente e profissional.\n\nVocê não encontra uma presa, mas sim o artefato de um predador. Cravada a cerca de um metro do chão em um tronco de pinho que já começa a ser coberto por musgo (graças ao Ciclo Acelerado), está uma *besta de repetição*. Não é uma arma rústica. O mecanismo é de aço escurecido, as cordas são de fibra sintética e o acabamento sugere que ela foi feita por um armeiro mestre. É uma arma de caçador de monstros ou de um mercenário de elite, completamente incomum para estas montanhas.\n\nA besta está fincada de forma tão violenta que a ponta da virote está quase totalmente enterrada na madeira, e o mecanismo de recarga está travado. Alguém a usou para prender algo ou a abandonou em uma fuga desesperada. A umidade e o calor já começam a agir sobre o metal exposto, mas a arma foi deixada há pouquíssimo tempo. Onde está o seu dono?\n\nO que você faz?\n\n1.  Puxar a besta da árvore para examiná-la e tentar determinar sua origem.\n2.  Procurar imediatamente por pegadas ou sinais de luta que levem ao dono da arma.\n3.  Ignorar a besta e seguir para a saliência rochosa onde você viu o brilho metálico."
+        },
+        {
+            "type": "human",
+            "content": "Eu continuo procurando algo para matar"
+        },
+        {
+            "type": "ai",
+            "content": "Seu foco não está em objetos, mas em alvos. Você ignora a besta e segue o rastro de destruição que ela deveria estar protegendo. Seus olhos de Batedor detectam a trilha de destruição: galhos quebrados, terra revirada e o que parece ser um rastro de baba oleosa e escura. O cheiro de podridão se intensifica, levando você diretamente à saliência rochosa onde o brilho metálico se torna intenso.\n\nLá, você encontra o que procurava, mas já morto. É o cadáver de uma criatura do pântano, um ser anfíbio e bulboso, mas de uma deformidade grotesca e chocante. Sua pele é cinzenta e coberta de pústulas ósseas; espinhos e farpas de osso parecem ter crescido descontroladamente para fora de sua carne, fazendo-o parecer um ouriço putrefato. O corpo está horrivelmente mutilado, com ferimentos profundos de corte e perfuração, mas o que chama sua atenção é o brilho nos ferimentos: vestígios de um óleo espesso e prateado que ainda escorre. Este é o famoso *óleo de prata* usado por caçadores de criaturas sobrenaturais, conhecido por inibir a regeneração e causar dor excruciante.\n\nA criatura está morta e é a prova de uma luta brutal. A deformidade óssea sugere que você pode ter encontrado um dos temidos **Cinzéus**, a raça mutante que sofre de crescimento ósseo acelerado e dor constante, como as lendas do folclore do Anel de Lama descrevem.\n\nO que você faz?\n\n1.  Examinar o corpo em busca de uma pista sobre o agressor que usou o óleo de prata.\n2.  Seguir o rastro de sangue (ou do óleo de prata) na direção oposta, buscando o caçador ferido ou em fuga.\n3.  Analisar mais de perto a deformidade óssea da criatura para confirmar se é um Cinzéu."
+        },
+        {
+            "type": "human",
+            "content": "eu procuro o que pode ter matado ele para atacar"
+        },
+        {
+            "type": "ai",
+            "content": "Você não quer examinar a vítima, mas sim encontrar o predador. Seus olhos seguem o rastro do óleo de prata – o sangue do caçador, que se misturou ao óleo e pingou no chão enquanto ele se afastava ou fugia. O rastro leva você para uma depressão escura na rocha, onde o cheiro de ozônio e carne fresca se torna insuportável.\n\nO que você encontra não é o caçador, mas a vítima de um predador muito maior.\n\nO corpo está esmagado contra a rocha, e o que resta dele é uma massa irreconhecível de carne e armadura quebrada. Seus instintos de Batedor congelam, pois este não é o trabalho de um Cinzéu ou de um animal comum. A armadura, que parecia ser de um caçador experiente, está rasgada como papel. Marcas de **garras enormes** sulcam a rocha e o que resta da vítima. Pedaços de osso, grandes e farpados, estão cravados na carne exposta – não parecem ser ossos da vítima, mas sim **farpas de osso** que se quebraram e ficaram alojadas nos ferimentos.\n\nVocê reconhece o padrão de ataque: agressão extrema, força descomunal e a presença de espinhos ósseos. É o rastro inconfundível do **Urso-de-Espinha**, o predador alfa da Floresta dos Sussurros, que parece ter subido até as Montanhas Afiadas.\n\nO Urso-de-Espinha não está à vista, mas o rastro de destruição é fresquíssimo. O que você faz?\n\n1.  Usar sua perícia de Batedor para rastrear o Urso-de-Espinha, seguindo as marcas de suas patas e o cheiro forte de pele purulenta que ele deixou.\n2.  Examinar o corpo mutilado do caçador em busca de alguma arma ou objeto de valor que possa ter resistido ao ataque.\n3.  Recuar silenciosamente da cena, evitando confrontar o Urso-de-Espinha em seu território."
+        },
+        {
+            "type": "human",
+            "content": "eu uso minha pericia para rastrear o urso"
+        },
+        {
+            "type": "ai",
+            "content": "Você se agacha, ignorando o horror do cadáver, e foca no chão. Seus olhos de Batedor absorvem cada detalhe: a profundidade das pegadas gigantescas na terra úmida, o rastro oleoso deixado pela pele purulenta da criatura e os fragmentos de farpas ósseas que se desprenderam de seu corpo. O Urso-de-Espinha é uma criatura massiva, e seu rastro é impossível de ser disfarçado. Ele se moveu rapidamente, subindo mais ainda na montanha, em direção ao topo rochoso.\n\nEnquanto você se concentra no rastro, um som ecoa pela montanha quebrando o silêncio mórbido. Não é um rugido, mas o som seco e ensurdecedor de **rochas sendo esmagadas e se quebrando ao longe**, como se uma montanha estivesse sendo mastigada. O ar, que já estava pesado com o cheiro de carne podre, de repente se satura com um aroma agudo de **ozônio**, o cheiro metálico de uma magia bruta ou de uma tempestade elétrica.\n\nA criatura sentiu você. A mudança no ar e a intensificação do cheiro de ozônio e podridão sinalizam que o predador não apenas está próximo, mas também está ciente de sua presença e pode estar se preparando para emboscá-lo. Você está a poucos metros de distância, mas o terreno íngreme e rochoso oferece pouca cobertura.\n\nO que você faz agora que o Urso-de-Espinha sentiu sua presença?\n\n1.  Correr para a cobertura mais próxima (uma formação rochosa saliente) e preparar sua arma para o combate.\n2.  Usar sua perícia de Batedor para encontrar um ponto de vantagem no terreno, subindo uma rocha mais alta para ter uma visão melhor do ambiente.\n3.  Tentar se mover silenciosamente, na esperança de que a criatura não tenha determinado sua localização exata, e continuar seguindo o rastro."
+        },
+        {
+            "type": "human",
+            "content": "eu o ataco vorazmente"
+        },
+        {
+            "type": "system",
+            "content": "SYSTEM: COMBAT START."
+        },
+        {
+            "type": "ai",
+            "content": "O último inimigo cai. O silêncio retorna."
+        },
+        {
+            "type": "human",
+            "content": "eu o ataco"
+        },
+        {
+            "type": "system",
+            "content": "SYSTEM: COMBAT START."
+        },
+        {
+            "type": "ai",
+            "content": "O último inimigo cai. O silêncio retorna."
+        }
+    ]
+}

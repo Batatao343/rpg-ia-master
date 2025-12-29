@@ -1,256 +1,166 @@
 """
 agents/loot.py
-Gerencia Loot Inteligente, Lojas, XP e Level Up.
-Implementa arquitetura Check-First para itens únicos.
-Versão Corrigida: IDs sanitizados (sem acento) e controle de duplicidade.
+Gerenciador de Loot, Comércio e Crafting.
+Versão Corrigida: Prompt de Venda melhorado e tratamento de erro reforçado.
 """
 import random
 import unicodedata
-from typing import Dict, Any, List, Optional
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
-from pydantic import BaseModel, Field, field_validator
+from typing import List, Optional
+from langchain_core.messages import SystemMessage, AIMessage, HumanMessage
+from pydantic import BaseModel, Field
 
+from state import GameState
 from llm_setup import get_llm, ModelTier
-from gamedata import (
-    XP_TABLE, ARTIFACTS_DB, ALL_ARTIFACT_IDS, COMMON_LOOT_TABLE, 
-    save_custom_artifact
-)
+from gamedata import save_custom_artifact, ARTIFACTS_DB
 
-# Tenta RAG
-try:
-    from rag import query_rag
-    RAG_AVAILABLE = True
-except ImportError:
-    RAG_AVAILABLE = False
-    def query_rag(*args, **kwargs): return ""
+# --- SCHEMAS DE DADOS (IA) ---
 
-# --- HELPER: SANITIZAÇÃO DE ID ---
-def sanitize_id(text: str) -> str:
-    """Transforma 'Espada do Dragão' em 'espada_do_dragao'."""
-    # Normaliza unicode (remove acentos: ã -> a, é -> e)
-    normalized = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8')
-    # Remove caracteres especiais, passa para minúsculo e troca espaços por _
-    clean = "".join(c for c in normalized if c.isalnum() or c == " ")
-    return clean.lower().replace(" ", "_")
-
-# --- SCHEMAS ROBUSTOS ---
-class CombatStatsSchema(BaseModel):
-    attack_bonus: int = 0
-    damage_dice: str = "0"
-    attribute: str = "none"
-    ac_bonus: int = 0
-
-    @field_validator('damage_dice', mode='before')
-    @classmethod
-    def set_damage_default(cls, v):
-        return v or "0"
-
-    @field_validator('attribute', mode='before')
-    @classmethod
-    def set_attr_default(cls, v):
-        return v or "none"
-
-class ActiveAbilitySchema(BaseModel):
-    name: str
-    cost: str
-    effect: str
-
-class MechanicsSchema(BaseModel):
-    passive_effects: List[str] = []
-    active_ability: Optional[ActiveAbilitySchema] = None
-
-class NewItemSchema(BaseModel):
-    """Estrutura completa para criar um item novo."""
-    id_sugestion: str = Field(description="Sugestão de nome curto. Ex: 'cetro_zarkon'.")
-    name: str
-    type: str = Field(description="weapon, armor, accessory, consumable, material, currency")
-    rarity: str = Field(description="common, uncommon, rare, legendary")
+class ItemGeneration(BaseModel):
+    name: str = Field(description="Nome épico do item.")
+    item_id: str = Field(description="ID único (snake_case). Ex: espada_fogo_azul")
     description: str
-    value_gold: int
-    combat_stats: CombatStatsSchema
-    mechanics: MechanicsSchema
+    type: str = Field(description="weapon, armor, potion, ou material")
+    rarity: str
+    gold_value: int
+    combat_stats: dict = Field(description="Ex: {'attack_bonus': 2, 'damage': '1d8'}")
+    mechanics: dict = Field(description="Efeitos passivos ou ativos.")
 
-class LootResult(BaseModel):
-    """Decisão da IA."""
-    gold_amount: int
-    existing_item_ids: List[str] = Field(description="IDs do banco para itens comuns.")
-    new_custom_items: List[NewItemSchema] = Field(description="Itens ÚNICOS. Para Bosses, gere APENAS UM item lendário.")
+class TransactionResult(BaseModel):
+    """Resultado de uma operação de Crafting ou Comércio."""
+    success: bool = Field(description="Se a transação foi possível.")
+    message: str = Field(description="Narrativa do resultado.")
+    items_to_remove: List[str] = Field(default=[], description="IDs exatos dos itens consumidos/vendidos.")
+    gold_cost: int = Field(default=0, description="Ouro gasto pelo jogador (negativo se o jogador GANHOU ouro).")
+    new_item: Optional[ItemGeneration] = Field(None, description="O novo item criado. DEIXE NULL SE FOR VENDA.")
 
-# --- LÓGICA DE XP E LEVEL UP ---
+# --- LÓGICA DO NÓ ---
 
-def calculate_xp_gain(enemies: List[Dict]) -> int:
-    total_xp = 0
-    for e in enemies:
-        multiplier = 5 if e.get("type") == "BOSS" else 1
-        base_xp = e.get("max_hp", 10) * 2
-        total_xp += (base_xp * multiplier)
-    return total_xp
-
-def process_level_up(player: Dict) -> str:
-    current_level = player.get("level", 1)
-    if current_level >= 20: return ""
-    
-    current_xp = player.get("xp", 0)
-    next_level = current_level + 1
-    req_xp = XP_TABLE.get(next_level, 999999)
-    
-    if current_xp >= req_xp:
-        player["level"] = next_level
-        hp_gain = 6 + next_level 
-        player["max_hp"] += hp_gain
-        player["hp"] = player["max_hp"] 
-        return f"\n✨ **LEVEL UP!** Você alcançou o Nível {next_level}! Max HP +{hp_gain}."
-    
-    return ""
-
-# --- GERADOR CORE ---
-
-def generate_loot_logic(context_type: str, context_data: Dict) -> Dict:
-    region = context_data.get("region", "Desconhecido")
-    enemies = context_data.get("enemies", [])
-    
-    prompt_context = ""
-    boss_loot_needed = False
-    
-    if context_type == "COMBAT":
-        enemy_names = ", ".join([e["name"] for e in enemies])
-        bosses = [e for e in enemies if e.get("type") == "BOSS"]
-        if bosses:
-            boss_loot_needed = True
-            # Limita a um boss principal para o nome do item
-            boss_name = bosses[0]["name"]
-            if RAG_AVAILABLE:
-                lore = query_rag(f"Artifacts of {boss_name}", index_name="lore")
-                prompt_context = f"BOSS FIGHT: {boss_name}. Lore: {lore}. Gere 1 item lendário temático."
-        else:
-            prompt_context = f"Inimigos comuns: {enemy_names}. Gere loot simples."
-
-    elif context_type == "SHOP":
-        if RAG_AVAILABLE:
-            lore = query_rag(f"Trade items in {region}", index_name="lore")
-        prompt_context = f"LOJA na região {region}. Lore: {lore}. Gere itens variados para venda."
-
-    elif context_type == "TREASURE":
-        prompt_context = f"Baú encontrado em {region}. Gere recompensas de exploração."
-
-    llm = get_llm(temperature=0.7, tier=ModelTier.SMART)
-    
-    system_msg = SystemMessage(content=f"""
-    Você é o Gerador de Itens de RPG.
-    Modo: {context_type}
-    
-    ITENS EXISTENTES: {COMMON_LOOT_TABLE}
-    
-    TAREFA:
-    1. Defina Ouro.
-    2. Selecione itens comuns existentes.
-    3. CRIE NOVOS ITENS (Custom) APENAS SE: BOSS (1 item único), LOJA (2-3 itens) ou BAÚ RARO.
-    
-    IMPORTANTE: Não crie itens duplicados no mesmo loot.
-    """)
-    
-    try:
-        gen = llm.with_structured_output(LootResult)
-        decision = gen.invoke([system_msg, HumanMessage(content=prompt_context)])
-        
-        final_ids = []
-        
-        # 1. Itens Existentes
-        for iid in decision.existing_item_ids:
-            if iid in ARTIFACTS_DB: final_ids.append(iid)
-        
-        # 2. Itens Novos
-        created_names = set() # Controle local de duplicidade
-        
-        for new_item in decision.new_custom_items:
-            # Evita duplicatas na mesma geração (ex: 3 escudos iguais)
-            if new_item.name in created_names:
-                continue
-            created_names.add(new_item.name)
-
-            item_dict = new_item.model_dump()
-            
-            # Geração de ID Determinística e Segura
-            if context_type == "COMBAT" and boss_loot_needed:
-                # Usa a função sanitize para remover acentos
-                boss_slug = sanitize_id(enemies[0]["name"])
-                new_id = f"unique_loot_{boss_slug}"
-            else:
-                # Usa sugestão da IA ou fallback random
-                sug = sanitize_id(item_dict.pop("id_sugestion", ""))
-                if not sug: sug = f"custom_{random.randint(1000,9999)}"
-                new_id = sug
-            
-            # Garante que o ID não sobrescreva algo vital, adiciona random se já existir E não for loot de boss fixo
-            if new_id in ARTIFACTS_DB and not (context_type == "COMBAT" and boss_loot_needed):
-                new_id = f"{new_id}_{random.randint(100,999)}"
-
-            save_custom_artifact(new_id, item_dict)
-            final_ids.append(new_id)
-            
-        return {"gold": decision.gold_amount, "items": final_ids}
-
-    except Exception as e:
-        print(f"❌ Erro Loot AI: {e}")
-        return {"gold": 10, "items": ["moeda_ouro"]}
-
-# --- NÓ PRINCIPAL ---
-
-def loot_node(state: Dict[str, Any]):
+def loot_node(state: GameState):
     player = state["player"]
-    loot_source = state.get("loot_source", "TREASURE") 
-    world = state.get("world", {})
+    loot_source = state.get("loot_source", "TREASURE")
     
-    messages = []
+    # Recupera última msg
+    last_user_msg = "Gerar loot"
+    if state.get("messages"):
+        last_msg = state["messages"][-1]
+        if isinstance(last_msg, HumanMessage):
+            last_user_msg = last_msg.content
     
-    if loot_source == "COMBAT":
-        enemies = state.get("enemies", [])
-        xp_gain = calculate_xp_gain(enemies)
-        player["xp"] = player.get("xp", 0) + xp_gain
-        lvl_msg = process_level_up(player)
-        
-        loot_data = generate_loot_logic("COMBAT", {"enemies": enemies, "region": world.get("current_location")})
-        
-        player["gold"] += loot_data["gold"]
-        player["inventory"].extend(loot_data["items"])
-        
-        item_names = [ARTIFACTS_DB.get(i, {}).get("name", i) for i in loot_data["items"]]
-        items_txt = ", ".join(item_names) if item_names else "Nenhum item."
-        
-        msg_text = (
-            f"⚔️ **Vitória!**\n"
-            f"Ganhou {xp_gain} XP. {lvl_msg}\n"
-            f"💰 Encontrou {loot_data['gold']} Ouro.\n"
-            f"🎒 Loot: {items_txt}"
-        )
-        messages.append(AIMessage(content=msg_text))
+    llm = get_llm(temperature=0.4, tier=ModelTier.SMART)
 
-    elif loot_source == "SHOP":
-        loot_data = generate_loot_logic("SHOP", {"region": world.get("current_location")})
+    # =========================================================
+    # MODO 1: CRAFTING / SHOP
+    # =========================================================
+    if loot_source in ["CRAFT", "SHOP"]:
+        inventory_list = ", ".join(player["inventory"])
+        gold_available = player["gold"]
         
-        shop_list = []
-        for iid in loot_data["items"]:
-            item = ARTIFACTS_DB.get(iid, {})
-            price = item.get('value_gold', 0)
-            shop_list.append(f"- {item.get('name')} ({price} ouro) [ID: {iid}]")
+        sys_prompt = """
+        Você é o Motor de Comércio e Crafting de um RPG.
         
-        shop_txt = "\n".join(shop_list)
-        msg_text = f"🏪 **Mercador Local:**\n\n{shop_txt}\n\n*(Use 'Compro [ID]' para adquirir)*"
-        messages.append(AIMessage(content=msg_text))
+        TAREFA: Decida a transação baseada no pedido e inventário.
+        
+        MODOS:
+        1. CRAFT/UPGRADE/COMPRA: 
+           - Gera um 'new_item'.
+           - Cobra 'gold_cost' (positivo).
+           - Remove itens usados em 'items_to_remove'.
+           
+        2. VENDA (Jogador vendendo item):
+           - Remove o item em 'items_to_remove'.
+           - 'gold_cost' deve ser NEGATIVO (ex: -50 significa que o jogador GANHA 50).
+           - 'new_item' DEVE SER NULL (None).
+        
+        Se faltar recurso ou item, success=False.
+        """
 
-    elif loot_source == "TREASURE":
-        loot_data = generate_loot_logic("TREASURE", {"region": world.get("current_location")})
-        player["gold"] += loot_data["gold"]
-        player["inventory"].extend(loot_data["items"])
+        user_prompt = f"""
+        INVENTÁRIO: [{inventory_list}]
+        OURO: {gold_available}
+        PEDIDO: "{last_user_msg}"
+        """
         
-        item_names = [ARTIFACTS_DB.get(i, {}).get("name", i) for i in loot_data["items"]]
-        msg_text = f"📦 **Baú Aberto!**\n{loot_data['gold']} Ouro e: {', '.join(item_names)}"
-        messages.append(AIMessage(content=msg_text))
-    
-    state["loot_source"] = None
-    
-    return {
-        "player": player,
-        "messages": messages,
-        "next": "storyteller"
-    }
+        try:
+            trans_engine = llm.with_structured_output(TransactionResult)
+            result = trans_engine.invoke([
+                SystemMessage(content=sys_prompt),
+                HumanMessage(content=user_prompt)
+            ])
+            
+            if not result.success:
+                return {
+                    "messages": [AIMessage(content=f"🚫 {result.message}")],
+                    "loot_source": None
+                }
+            
+            # --- APLICAÇÃO DA MECÂNICA ---
+            
+            # A. Remove Itens
+            for item_id in result.items_to_remove:
+                if item_id in player["inventory"]:
+                    player["inventory"].remove(item_id)
+            
+            # B. Atualiza Ouro
+            player["gold"] -= result.gold_cost
+            
+            # C. Adiciona Item (Se houver)
+            # Verifica explicitamente se new_item existe e não é vazio
+            if result.new_item and result.new_item.name:
+                raw_id = result.new_item.item_id.lower().replace(" ", "_")
+                item_data = result.new_item.model_dump()
+                item_data["item_id"] = raw_id
+                save_custom_artifact(raw_id, item_data)
+                
+                player["inventory"].append(raw_id)
+                msg_final = f"{result.message}\n\n[SISTEMA] +1 {result.new_item.name} | {result.gold_cost * -1} Ouro"
+            else:
+                # Caso de Venda (sem item novo)
+                msg_final = f"{result.message}\n\n[SISTEMA] Ouro: {player['gold']} (Variação: {result.gold_cost * -1})"
+
+            return {
+                "player": player,
+                "messages": [AIMessage(content=msg_final)],
+                "loot_source": None
+            }
+
+        except Exception as e:
+            print(f"Erro Crafting Detail: {e}")
+            return {"messages": [AIMessage(content="O mercador franze a testa. (Transação falhou)")]}
+
+    # =========================================================
+    # MODO 2: TREASURE
+    # =========================================================
+    else: 
+        class LootSchema(BaseModel):
+            items: List[ItemGeneration]
+            gold: int
+            narrative: str
+
+        sys_prompt = "Você é um Gerador de Loot de RPG."
+        danger_lvl = state.get('world',{}).get('danger_level', 1)
+        user_prompt = f"Gere loot para perigo nível {danger_lvl}. Máx 2 itens."
+
+        try:
+            loot_llm = llm.with_structured_output(LootSchema)
+            res = loot_llm.invoke([
+                SystemMessage(content=sys_prompt),
+                HumanMessage(content=user_prompt)
+            ])
+            
+            added_names = []
+            for item in res.items:
+                raw_id = item.item_id.lower().replace(" ", "_")
+                save_custom_artifact(raw_id, item.model_dump())
+                player["inventory"].append(raw_id)
+                added_names.append(item.name)
+            
+            player["gold"] += res.gold
+            
+            msg = f"{res.narrative}\n[+ {', '.join(added_names)} | +{res.gold} Ouro]"
+            return {
+                "player": player,
+                "messages": [AIMessage(content=msg)],
+                "loot_source": None
+            }
+        except Exception as e:
+            return {"messages": [AIMessage(content="Você vasculha, mas não encontra nada.")]}

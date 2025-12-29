@@ -4,11 +4,30 @@ O Escriba do Mundo. Lê a narrativa, extrai fatos novos e os grava
 Tanto no Banco Vetorial (FAISS) quanto no Arquivo de Texto (world_lore.txt).
 """
 import os
+from langchain_core.messages import BaseMessage
 from llm_setup import get_llm, ModelTier
 from rag import add_to_lore_index
 
 # Caminho do arquivo de Lore (na raiz do projeto)
 LORE_FILE_PATH = "world_lore.txt"
+
+# --- HELPER DE CORREÇÃO (BLINDAGEM) ---
+def _extract_text(content) -> str:
+    """
+    Extrai texto limpo de qualquer formato (str, list, Message).
+    Resolve o erro 'list object has no attribute strip'.
+    """
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        # Se for lista, junta tudo que for string ou tiver .content
+        return " ".join([_extract_text(item) for item in content])
+    if isinstance(content, BaseMessage):
+        return content.content
+    if hasattr(content, 'content'):
+        return content.content
+    return str(content)
+# --------------------------------------
 
 def _append_to_file(content: str) -> None:
     """Escreve o novo conhecimento no final do arquivo .txt."""
@@ -20,15 +39,18 @@ def _append_to_file(content: str) -> None:
             
         with open(LORE_FILE_PATH, "a", encoding="utf-8") as f:
             f.write(f"{prefix}{content}")
-        print(f"📜 [ARCHIVIST] Gravado em '{LORE_FILE_PATH}' com sucesso.")
+        # print(f"📜 [ARCHIVIST] Gravado em '{LORE_FILE_PATH}' com sucesso.")
     except Exception as e:
         print(f"❌ [ARCHIVIST] Erro ao gravar em arquivo: {e}")
 
-def archive_narrative(narrative_text: str) -> None:
+def archive_narrative(narrative_input) -> None:
     """
     Analisa a narrativa recente. Se houver fatos novos (NPCs mortos, locais descobertos),
     formata-os no padrão 'Markdown Rico' e salva permanentemente.
     """
+    # 1. Limpa a entrada antes de verificar o tamanho
+    narrative_text = _extract_text(narrative_input)
+
     if not narrative_text or len(narrative_text) < 50:
         return
 
@@ -70,7 +92,13 @@ def archive_narrative(narrative_text: str) -> None:
         # 2. Grava no TXT (Para leitura humana e persistência física)
         _append_to_file(content)
         
-        print(f"🧠 [ARCHIVIST] Novo conhecimento preservado: {content.splitlines()[2]}")
+        # Tenta pegar o título para logar bonito
+        try:
+            title = content.splitlines()[2].replace("## ", "")
+        except:
+            title = "Fato novo"
+
+        print(f"🧠 [ARCHIVIST] Novo conhecimento preservado: {title}")
 
     except Exception as exc:
         print(f"⚠️ [ARCHIVIST] Falha ao arquivar: {exc}")

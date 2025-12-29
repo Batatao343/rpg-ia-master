@@ -1,75 +1,79 @@
 """
 main.py
-Graph assembly for the tabletop RPG engine workflow.
-
-ATUALIZAÇÃO V8 (Re-Act Architecture):
-- Removeu 'rules_agent' (agora integrado via logic/ruler.py).
-- Removeu 'tools' node (agora executado internamente via engine_utils.py).
-- Fluxo simplificado: Router -> Agente Especialista -> Fim.
+Definição da Arquitetura do Grafo (LangGraph).
+Conecta os agentes especialistas: Router, Combat, Storyteller, NPC e Loot.
 """
 
 import os
+import sys
 from dotenv import load_dotenv
 from langgraph.graph import END, START, StateGraph
 
-# --- IMPORTAÇÃO DOS AGENTES ---
+# Adiciona raiz ao path para garantir imports
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+# --- IMPORTAÇÃO DOS ESTADOS E AGENTES ---
+from state import GameState
 from agents.campaign_manager import campaign_manager_node
 from agents.combat import combat_node
 from agents.npc import npc_actor_node
 from agents.router import dm_router_node
 from agents.storyteller import storyteller_node
-# from agents.rules import rules_node  <-- REMOVIDO (Obsoleto)
-
-# --- IMPORTAÇÃO DO ESTADO ---
-from state import GameState
+from agents.loot import loot_node  # <--- Nó de Loot Integrado
 
 load_dotenv()
 
-# --- CONSTUÇÃO DO GRAFO ---
-workflow = StateGraph(GameState)
+def build_game_graph():
+    """Constrói e compila o grafo de estados do jogo."""
+    
+    workflow = StateGraph(GameState)
 
-# 1. Adicionar Nós (Agentes)
-workflow.add_node("campaign_manager", campaign_manager_node)
-workflow.add_node("dm_router", dm_router_node)
-workflow.add_node("storyteller", storyteller_node)
-workflow.add_node("combat_agent", combat_node)
-workflow.add_node("npc_actor", npc_actor_node)
+    # 1. Adicionar Nós (Os Agentes Especialistas)
+    workflow.add_node("campaign_manager", campaign_manager_node)
+    workflow.add_node("dm_router", dm_router_node)
+    workflow.add_node("storyteller", storyteller_node)
+    workflow.add_node("combat_agent", combat_node)
+    workflow.add_node("npc_actor", npc_actor_node)
+    workflow.add_node("loot_agent", loot_node)
 
-# 2. Definir o Início
-# Sempre passamos pelo Campaign Manager para verificar quests/progressão antes de rotear
-workflow.add_edge(START, "campaign_manager")
-workflow.add_edge("campaign_manager", "dm_router")
+    # 2. Definir o Fluxo Inicial
+    # Sempre passa pelo Campaign Manager para atualizar quests/beats antes de rotear
+    workflow.add_edge(START, "campaign_manager")
+    workflow.add_edge("campaign_manager", "dm_router")
 
-# 3. Roteamento Central
-# O Router decide quem narra o turno com base na intenção do usuário e estado do jogo
-workflow.add_conditional_edges(
-    "dm_router",
-    lambda s: s.get("next"),
-    {
-        "storyteller": "storyteller",
-        "combat_agent": "combat_agent",
-        "npc_actor": "npc_actor",
-        # "rules_agent": "rules_agent", <-- REMOVIDO
-        END: END,
-    },
-)
+    # 3. Roteamento Central (Router Decision)
+    # O Router define o campo 'next' no estado, e aqui mapeamos para o nó correto
+    workflow.add_conditional_edges(
+        "dm_router",
+        lambda state: state.get("next"),
+        {
+            "storyteller": "storyteller",
+            "combat_agent": "combat_agent",
+            "npc_actor": "npc_actor",
+            "loot": "loot_agent",  # Router retorna "loot" -> vai para nó "loot_agent"
+            END: END,
+        },
+    )
 
-# 4. Encerramento do Turno
-# Como os agentes agora usam 'execute_engine' (que roda dados e atualiza HP internamente),
-# quando eles retornam, o turno está concluído e aguardamos o próximo input do usuário.
-workflow.add_edge("storyteller", END)
-workflow.add_edge("combat_agent", END)
-workflow.add_edge("npc_actor", END)
+    # 4. Encerramento do Turno (Loop Interno)
+    # Após o especialista agir, o turno da IA encerra e volta para o input do usuário
+    workflow.add_edge("storyteller", END)
+    workflow.add_edge("combat_agent", END)
+    workflow.add_edge("npc_actor", END)
+    workflow.add_edge("loot_agent", END)
 
-# Compilação do App
-app = workflow.compile()
+    # Compila o grafo
+    return workflow.compile()
+
+# Instância global do grafo para ser importada pelo engine
+app = build_game_graph()
 
 if __name__ == "__main__":
-    print("🤖 RPG Engine V8 (Internal Loop Edition) carregada e pronta!")
-    # Opcional: Gerar imagem do grafo para visualização
-    # try:
-    #     with open("graph_v8.png", "wb") as f:
-    #         f.write(app.get_graph().draw_mermaid_png())
-    #     print("📸 Grafo salvo como graph_v8.png")
-    # except Exception:
-    #     pass
+    # Apenas gera o diagrama se rodar direto, para debug
+    print("🤖 Grafo definido. Execute 'game_engine.py' para jogar.")
+    try:
+        with open("graph_architecture.png", "wb") as f:
+            f.write(app.get_graph().draw_mermaid_png())
+        print("📸 Diagrama salvo em graph_architecture.png")
+    except:
+        pass
