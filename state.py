@@ -50,8 +50,7 @@ class EnemyStats(TypedDict):
     abilities: List[str]
     status: str  # "ativo", "morto"
     active_conditions: List[str]
-    # Opcional: Ataques estruturados se você estiver usando o novo bestiário
-    attacks: Optional[List[Dict]] 
+    attacks: Optional[List[Dict]]
 
 
 class CompanionState(TypedDict):
@@ -69,7 +68,7 @@ class WorldState(TypedDict):
     weather: str
     quest_plan: List[str]
     quest_plan_origin: Optional[str]
-    danger_level: int # Adicionado para escalar com o nível do jogador
+    danger_level: int
 
 
 class CampaignBeat(TypedDict):
@@ -86,6 +85,11 @@ class CampaignPlan(TypedDict, total=False):
 
 
 class GameState(TypedDict):
+    # --- Identificação e Memória (NOVO) ---
+    game_id: str  # ID único da sessão para isolar o RAG
+    narrative_summary: str # Resumo de curto prazo (contexto comprimido)
+    archivist_last_run: int # Controle de frequência do arquivista
+
     messages: Annotated[List[BaseMessage], operator.add]
     next: Optional[str]
     player: PlayerStats
@@ -100,6 +104,6 @@ class GameState(TypedDict):
     router_confidence: Optional[float]
     last_routed_intent: Optional[str]
     
-    # --- NOVOS CAMPOS PARA O FIX DE TRANSIÇÃO ---
-    combat_target: Optional[str]  # Quem o Router identificou como inimigo
-    loot_source: Optional[str]    # Se é TREASURE, SHOP ou CRAFT
+    # --- Campos de Transição ---
+    combat_target: Optional[str]
+    loot_source: Optional[str]

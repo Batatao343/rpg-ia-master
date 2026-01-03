@@ -1,16 +1,17 @@
 """
 persistence.py
 Gerencia o Salvamento e Carregamento do Estado do Jogo.
-Serializa objetos complexos (como mensagens do LangChain) para JSON.
+Salva em pasta dedicada 'saves/' e serializa novos campos de memória.
 """
 import os
 import json
-from typing import Dict, Any, List
+import glob
+from typing import Dict, Any, List, Optional
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, BaseMessage
 
-# Caminho do arquivo de save
-SAVE_DIR = "data"
-SAVE_FILE = os.path.join(SAVE_DIR, "savegame.json")
+# Configuração de Pastas
+SAVES_DIR = "saves"
+DEFAULT_SAVE_NAME = "autosave"
 
 def _serialize_messages(messages: List[BaseMessage]) -> List[Dict[str, str]]:
     """Converte objetos Message do LangChain para dicionários simples (JSON)."""
@@ -37,41 +38,64 @@ def _deserialize_messages(data: List[Dict[str, str]]) -> List[BaseMessage]:
             messages.append(AIMessage(content=item["content"]))
         elif item["type"] == "system":
             messages.append(SystemMessage(content=item["content"]))
-        # Ignora tipos desconhecidos para evitar quebra
     return messages
+
+def get_latest_save_file() -> Optional[str]:
+    """Retorna o caminho do arquivo de save mais recente na pasta saves/."""
+    if not os.path.exists(SAVES_DIR):
+        return None
+    
+    # Lista todos os .json na pasta saves
+    list_of_files = glob.glob(os.path.join(SAVES_DIR, "*.json"))
+    if not list_of_files:
+        return None
+        
+    # Retorna o mais recente
+    return max(list_of_files, key=os.path.getctime)
 
 def save_game_state(state: Dict[str, Any]) -> bool:
     """
-    Salva o estado completo do jogo em JSON.
-    Retorna True se sucesso, False se falha.
+    Salva o estado completo do jogo em JSON na pasta 'saves/'.
+    Usa o 'game_id' como nome do arquivo.
     """
-    if not state:
-        return False
+    if not state: return False
 
     try:
-        # 1. Prepara os dados serializáveis
-        # Extraímos apenas o que é persistente. 
-        # Campos transitórios (como 'next' ou 'router_confidence') não precisam ser salvos.
+        # Garante que a pasta existe
+        if not os.path.exists(SAVES_DIR):
+            os.makedirs(SAVES_DIR)
+
+        # Define nome do arquivo baseado no ID
+        game_id = state.get("game_id", DEFAULT_SAVE_NAME)
+        file_path = os.path.join(SAVES_DIR, f"{game_id}.json")
+
+        # Prepara os dados serializáveis
         save_data = {
+            # --- Identificação e Memória (Novos Campos) ---
+            "game_id": game_id,
+            "narrative_summary": state.get("narrative_summary", ""),
+            "archivist_last_run": state.get("archivist_last_run", 0),
+            
+            # --- Dados Transicionais ---
+            "combat_target": state.get("combat_target"),
+            "loot_source": state.get("loot_source"),
+
+            # --- Dados Core ---
             "player": state.get("player", {}),
             "world": state.get("world", {}),
             "party": state.get("party", []),
-            "enemies": state.get("enemies", []), # Salva estado dos monstros (HP atual, etc)
-            "npcs": state.get("npcs", {}),       # Salva memória dos NPCs
+            "enemies": state.get("enemies", []), 
+            "npcs": state.get("npcs", {}),       
             "inventory": state.get("inventory", []),
             "quests": state.get("quests", []),
-            "campaign_plan": state.get("campaign_plan", {}), # VITAL para o Storyteller continuar a trama
+            "campaign_plan": state.get("campaign_plan", {}), 
             
-            # Serializa o histórico de mensagens
+            # --- Histórico ---
             "message_history": _serialize_messages(state.get("messages", []))
         }
 
-        # 2. Garante que a pasta existe
-        if not os.path.exists(SAVE_DIR):
-            os.makedirs(SAVE_DIR)
-
-        # 3. Escreve no disco
-        with open(SAVE_FILE, 'w', encoding='utf-8') as f:
+        # Escreve no disco
+        with open(file_path, 'w', encoding='utf-8') as f:
             json.dump(save_data, f, indent=4, ensure_ascii=False)
         
         return True
@@ -80,20 +104,30 @@ def save_game_state(state: Dict[str, Any]) -> bool:
         print(f"❌ Erro crítico ao salvar jogo: {e}")
         return False
 
-def load_game_state() -> Dict[str, Any]:
+def load_game_state(specific_file: str = None) -> Dict[str, Any]:
     """
-    Carrega o jogo do disco e reconstrói o Estado.
-    Retorna None se não houver save ou houver erro.
+    Carrega o jogo. Se specific_file não for passado, carrega o mais recente.
     """
-    if not os.path.exists(SAVE_FILE):
+    target_file = specific_file
+    
+    if not target_file:
+        target_file = get_latest_save_file()
+    
+    if not target_file or not os.path.exists(target_file):
         return None
 
     try:
-        with open(SAVE_FILE, 'r', encoding='utf-8') as f:
+        with open(target_file, 'r', encoding='utf-8') as f:
             raw_data = json.load(f)
 
         # Reconstrói o Estado compatível com GameState
         state = {
+            # --- Recupera Memória ---
+            "game_id": raw_data.get("game_id", "recovered_session"),
+            "narrative_summary": raw_data.get("narrative_summary", ""),
+            "archivist_last_run": raw_data.get("archivist_last_run", 0),
+            
+            # --- Recupera Core ---
             "player": raw_data.get("player", {}),
             "world": raw_data.get("world", {}),
             "party": raw_data.get("party", []),
@@ -103,17 +137,20 @@ def load_game_state() -> Dict[str, Any]:
             "quests": raw_data.get("quests", []),
             "campaign_plan": raw_data.get("campaign_plan", {}),
             
-            # Reconstrói objetos de mensagem
+            # --- Recupera Transicionais ---
+            "combat_target": raw_data.get("combat_target"),
+            "loot_source": raw_data.get("loot_source"),
+
+            # --- Recupera Mensagens ---
             "messages": _deserialize_messages(raw_data.get("message_history", [])),
             
-            # Garante campos técnicos para o grafo não quebrar ao iniciar
+            # Garante campos técnicos de fluxo
             "next": "storyteller", 
-            "loot_source": None,
-            "combat_target": None
+            "needs_replan": False
         }
 
         return state
 
     except Exception as e:
-        print(f"⚠️ Erro ao carregar save (arquivo corrompido?): {e}")
+        print(f"⚠️ Erro ao carregar save '{target_file}': {e}")
         return None
