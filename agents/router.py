@@ -1,7 +1,7 @@
 """
 agents/router.py
 Roteador de Intenções.
-Agora capaz de distinguir 'Conversa Social' de 'Ação de Comércio/Crafting'.
+Agora com detecção explícita de início de combate para acionar o Spawner.
 """
 from enum import Enum
 from typing import Optional
@@ -21,8 +21,8 @@ class RouteType(str, Enum):
 
 class RouterDecision(BaseModel):
     route: RouteType
-    loot_context: Optional[str] = Field(description="Se for LOOT, especifique: 'TREASURE' (saque), 'SHOP' (comprar/vender) ou 'CRAFT' (criar/melhorar).")
-    target: Optional[str]
+    loot_context: Optional[str] = Field(description="Se for LOOT: 'TREASURE', 'SHOP' ou 'CRAFT'.")
+    target: Optional[str] = Field(description="Se for COMBAT, quem é o inimigo? Ex: 'Goblin', 'Guarda', 'O Vulto'.")
     reasoning: str
     confidence: float
 
@@ -31,58 +31,49 @@ def dm_router_node(state: GameState):
     if not messages: return {"next": RouteType.STORY.value}
     
     last_msg = messages[-1]
-    # Se a última msg for da IA e não for tool call, encerra o turno
+    # Evita loop se a IA acabou de falar (exceto tool calls)
     if isinstance(last_msg, AIMessage) and not getattr(last_msg, "tool_calls", None):
         return {"next": END}
 
     world = state.get("world", {})
     loc = world.get("current_location", "Desconhecido")
     
-    # Contexto para a IA decidir
     system_instruction = f"""
     Roteador de RPG. Classifique a intenção da ÚLTIMA mensagem do jogador.
-
-    regras:
-    - LOOT/CRAFT: Se o jogador quer explicitamente TROCAR itens, COMPRAR, VENDER, FORJAR ou MELHORAR equipamento.
-      Ex: "Compro a poção", "Faça uma espada melhor com isso", "Vendo meu escudo".
-      -> Use loot_context='SHOP' (comércio) ou 'CRAFT' (manufatura).
     
-    - LOOT/TREASURE: Se o jogador está vasculhando, saqueando corpos ou abrindo baús.
-      -> Use loot_context='TREASURE'.
-
-    - NPC: Conversa social, perguntas, intimidação, persuasão (sem troca de itens imediata).
-    - COMBAT: Ataques, agressão.
-    - STORY: Exploração, olhar em volta, ir para outro lugar.
-
-    Local: {loc}
+    Local Atual: {loc}
+    
+    REGRAS:
+    - COMBAT: Jogador ataca, saca armas ou reage a uma ameaça narrada. IMPORTANTE: Identifique o 'target' (inimigo).
+    - NPC: Conversa social, diplomacia.
+    - LOOT: "Vasculhar corpo", "Pegar item", "Abrir baú" (TREASURE) ou "Comprar/Vender/Criar" (SHOP/CRAFT).
+    - STORY: Movimentação, exploração, observar cenário.
     """
 
     llm = get_llm(temperature=0.0, tier=ModelTier.FAST)
 
     try:
         router_llm = llm.with_structured_output(RouterDecision)
-        # Analisa as ultimas 3 mensagens para ter contexto
         decision = router_llm.invoke([SystemMessage(content=system_instruction)] + messages[-3:])
     except Exception as e:
         print(f"⚠️ Router Error: {e}")
         return {"next": RouteType.STORY.value}
 
-    print(f"🚦 [ROUTER] {decision.route.value} (Ctx: {decision.loot_context})")
+    print(f"🚦 [ROUTER] {decision.route.value} -> Alvo: {decision.target}")
 
     response_payload = {
         "next": decision.route.value,
         "world": world,
-        "router_confidence": decision.confidence,
-        "combat_target": decision.target,
+        "combat_target": decision.target, # Passa o alvo para ajudar o Spawner
     }
 
-    # Configura Contexto de Loot para o próximo agente
     if decision.route == RouteType.LOOT:
         response_payload["loot_source"] = decision.loot_context or "TREASURE"
     
-    # Se for combate, adiciona flag de inicio
+    # GATILHO DE COMBATE:
+    # Se for combate, adicionamos uma flag no histórico (temporária) para o Combat Agent saber que é o turno 1
     if decision.route == RouteType.COMBAT:
         if "messages" not in response_payload: response_payload["messages"] = []
-        response_payload["messages"].append(SystemMessage(content="SYSTEM: COMBAT START."))
+        response_payload["messages"].append(SystemMessage(content=f"SYSTEM: COMBAT START. TARGET_HINT: {decision.target}"))
 
     return response_payload

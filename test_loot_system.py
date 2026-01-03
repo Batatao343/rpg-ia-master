@@ -1,14 +1,14 @@
 """
 test_loot_system.py
-Script para validar os modos CRAFT, SHOP e TREASURE do agente de Loot.
+Valida os modos CRAFT, SHOP e TREASURE do agente de Loot.
+Versão v2: Com DeepCopy para evitar falsos negativos em comparações de estado.
 """
 import sys
 import os
+import copy # <--- IMPORTANTE
 from langchain_core.messages import HumanMessage
 
-# Adiciona raiz ao path para imports funcionarem
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 from agents.loot import loot_node
 
 # --- CORES ---
@@ -18,9 +18,7 @@ class C:
     WARN = '\033[93m'
     END = '\033[0m'
 
-# --- MOCK STATE ---
 def get_mock_state():
-    """Gera um estado limpo para cada teste."""
     return {
         "player": {
             "name": "Tester",
@@ -28,10 +26,7 @@ def get_mock_state():
             "gold": 100,
             "level": 1
         },
-        "world": {
-            "danger_level": 2,
-            "current_location": "Oficina de Teste"
-        },
+        "world": {"danger_level": 1, "current_location": "Vila Teste"},
         "messages": [],
         "loot_source": "TREASURE"
     }
@@ -40,47 +35,48 @@ def run_test_scenario(scenario_name, loot_mode, user_input, expected_check=None)
     print(f"\n{C.WARN}=== TESTE: {scenario_name} ==={C.END}")
     state = get_mock_state()
     
-    # Configura o Input
+    # Snapshot do estado ANTES da execução (Cópia profunda)
+    p_before = copy.deepcopy(state["player"])
+    
     state["loot_source"] = loot_mode
     state["messages"] = [HumanMessage(content=user_input)]
     
     print(f"📥 Input: '{user_input}' (Modo: {loot_mode})")
-    print(f"🎒 Inv. Antes: {state['player']['inventory']} | 💰 Ouro: {state['player']['gold']}")
+    print(f"🎒 Inv. Antes: {p_before['inventory']} | 💰 Ouro: {p_before['gold']}")
     
     try:
         # Executa o Agente
         result = loot_node(state)
         
-        # Analisa Resultado
+        # Estado DEPOIS
         p_after = result.get("player", state["player"])
         msg = result.get("messages", [])[0].content
         
         print(f"🤖 Resposta: {msg}")
         print(f"🎒 Inv. Depois: {p_after['inventory']} | 💰 Ouro: {p_after['gold']}")
         
-        # Validação Opcional
         if expected_check:
-            if expected_check(state['player'], p_after):
+            # Compara a cópia antiga (p_before) com a nova (p_after)
+            if expected_check(p_before, p_after):
                 print(f"{C.OK}✅ PASSOU{C.END}")
             else:
-                print(f"{C.FAIL}❌ FALHOU (Verifique lógica){C.END}")
+                print(f"{C.FAIL}❌ FALHOU (Lógica não bateu){C.END}")
                 
     except Exception as e:
         print(f"{C.FAIL}❌ ERRO CRÍTICO: {e}{C.END}")
 
 if __name__ == "__main__":
-    print("🛠️ INICIANDO BATERIA DE TESTES DE LOOT")
+    print("🛠️ INICIANDO BATERIA DE TESTES DE LOOT v2")
 
-    # CENÁRIO 1: Treasure (Exploração)
+    # 1. TREASURE: Deve ganhar ouro
     run_test_scenario(
         "Abrir Baú", 
         "TREASURE", 
         "Abro o baú antigo.",
-        lambda p1, p2: p2['gold'] > p1['gold'] # Deve ganhar ouro
+        lambda p1, p2: p2['gold'] > p1['gold']
     )
 
-    # CENÁRIO 2: Crafting Sucesso (Melhorar Espada)
-    # Requer: espada_quebrada + ouro -> espada_nova
+    # 2. CRAFT: Sucesso (Espada nova, menos ouro)
     run_test_scenario(
         "Crafting: Consertar Espada", 
         "CRAFT", 
@@ -88,7 +84,7 @@ if __name__ == "__main__":
         lambda p1, p2: "espada_quebrada" not in p2['inventory'] and p2['gold'] == 50
     )
 
-    # CENÁRIO 3: Shop Venda (Vender Couro)
+    # 3. SHOP: Venda (Perde item, ganha ouro)
     run_test_scenario(
         "Venda: Couro de Lobo", 
         "SHOP", 
@@ -96,11 +92,10 @@ if __name__ == "__main__":
         lambda p1, p2: "couro_lobo" not in p2['inventory'] and p2['gold'] > 100
     )
 
-    # CENÁRIO 4: Falha (Sem item necessário)
-    # Tenta craftar algo com um item que não tem ('diamante')
+    # 4. CRAFT: Falha (Sem item)
     run_test_scenario(
         "Crafting: Falha (Item Inexistente)", 
         "CRAFT", 
         "Use meu diamante para fazer um anel.",
-        lambda p1, p2: p1['inventory'] == p2['inventory'] # Nada deve mudar
+        lambda p1, p2: p1['inventory'] == p2['inventory'] # Nada muda
     )

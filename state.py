@@ -50,6 +50,8 @@ class EnemyStats(TypedDict):
     abilities: List[str]
     status: str  # "ativo", "morto"
     active_conditions: List[str]
+    # Opcional: Ataques estruturados se você estiver usando o novo bestiário
+    attacks: Optional[List[Dict]] 
 
 
 class CompanionState(TypedDict):
@@ -67,6 +69,7 @@ class WorldState(TypedDict):
     weather: str
     quest_plan: List[str]
     quest_plan_origin: Optional[str]
+    danger_level: int # Adicionado para escalar com o nível do jogador
 
 
 class CampaignBeat(TypedDict):
@@ -96,3 +99,7 @@ class GameState(TypedDict):
     active_plan_step: Optional[str]
     router_confidence: Optional[float]
     last_routed_intent: Optional[str]
+    
+    # --- NOVOS CAMPOS PARA O FIX DE TRANSIÇÃO ---
+    combat_target: Optional[str]  # Quem o Router identificou como inimigo
+    loot_source: Optional[str]    # Se é TREASURE, SHOP ou CRAFT
