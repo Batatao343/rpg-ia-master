@@ -1,111 +1,45 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard de Chamados Integração Nexti</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  <style>
-    :root{--bg:#f3f5f9;--card:#fff;--dark:#101317;--text:#20242c;--muted:#677084;--dev:#2b73ff;--sup:#1f9d55;--max:#7d43f0;--all:#2a2f39;}
-    *{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--text)}
-    .header{background:linear-gradient(130deg,#0f1116,#1d2533);color:#fff;padding:28px 20px;text-align:center}
-    .header h1{margin:0;font-size:clamp(1.4rem,3vw,2.1rem)} .header p{margin:.5rem 0 0;color:#c7d0e0}
-    .container{max-width:1280px;margin:0 auto;padding:18px}
-    .cards{display:grid;grid-template-columns:repeat(4,minmax(180px,1fr));gap:14px}
-    .card{background:var(--card);border-radius:14px;padding:16px;box-shadow:0 8px 20px rgba(16,19,23,.08);position:relative;overflow:hidden}
-    .card::before{content:"";position:absolute;left:0;top:0;height:100%;width:5px}.dev::before{background:var(--dev)}.sup::before{background:var(--sup)}.max::before{background:var(--max)}.all::before{background:var(--all)}
-    .card h3{margin:.1rem 0;color:var(--muted);font-size:.9rem}.value{font-size:1.7rem;font-weight:700}.icon{position:absolute;right:14px;top:12px;font-size:1.25rem;opacity:.75}
-    .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}
-    .panel{background:var(--card);border-radius:14px;padding:14px;box-shadow:0 8px 20px rgba(16,19,23,.08)} .panel h2{font-size:1.03rem;margin:0 0 8px}
-    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
-    .toolbar{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:10px;margin-bottom:10px}
-    input,select,button{border:1px solid #d7dbe4;border-radius:8px;padding:9px;font:inherit;background:#fff}
-    table{width:100%;border-collapse:collapse;font-size:.9rem} thead{background:#1d2533;color:#fff}
-    th,td{padding:9px;border-bottom:1px solid #ebedf2;text-align:left;vertical-align:top} tbody tr:nth-child(even){background:#f8f9fd}
-    .high{background:#fff3f3!important}.badge{display:inline-block;padding:2px 8px;border-radius:999px;color:#fff;font-size:.76rem}
-    .tdev{background:var(--dev)}.tsup{background:var(--sup)}.tmax{background:var(--max)}
-    .chips{display:flex;flex-wrap:wrap;gap:8px}.chip{background:#edf2ff;border:1px solid #dce5ff;padding:10px 12px;border-radius:10px;flex:1 1 280px}
-    .rec ul{margin:8px 0 0;padding-left:20px} .muted{color:var(--muted)}
-    @media (max-width:1024px){.cards{grid-template-columns:repeat(2,1fr)}.kpis,.grid3{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr 1fr}}
-    @media (max-width:620px){.cards{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr}}
-  </style>
-</head>
-<body>
-  <header class="header"><h1>Dashboard de Chamados Integração Nexti</h1><p>Período: 01/04 a 24/04</p></header>
-  <main class="container">
-    <section class="cards" id="cards"></section>
-    <section class="kpis">
-      <article class="panel"><h2>Horas por Tipo de Atendimento</h2><canvas id="hoursByType"></canvas></article>
-      <article class="panel"><h2>Distribuição Percentual das Horas</h2><canvas id="hoursDonut"></canvas></article>
-    </section>
-    <section class="grid3">
-      <article class="panel"><h2>Horas por Cliente</h2><canvas id="hoursByClient"></canvas></article>
-      <article class="panel"><h2>Quantidade de Chamados por Tipo</h2><canvas id="countByType"></canvas></article>
-      <article class="panel"><h2>Tickets com Maior Tempo</h2><canvas id="topTickets"></canvas></article>
-    </section>
-    <section class="panel" style="margin-top:14px">
-      <h2>Tabela Detalhada dos Chamados</h2>
-      <div class="toolbar">
-        <input id="search" placeholder="Buscar por ticket, cliente, contexto, observação" />
-        <select id="typeFilter"><option value="">Todos os tipos</option></select>
-        <select id="clientFilter"><option value="">Todos os clientes</option></select>
-        <button id="sortTime">Ordenar por tempo ↓</button>
-      </div>
-      <div style="overflow:auto"><table><thead><tr><th>Ticket</th><th>Tipo</th><th>Cliente</th><th>Responsável/Nome</th><th>Tempo</th><th>Contexto resumido</th><th>Observação resumida</th></tr></thead><tbody id="tableBody"></tbody></table></div>
-    </section>
-    <section class="panel" style="margin-top:14px"><h2>Resumo Executivo</h2><p id="summary" class="muted"></p></section>
-    <section class="panel" style="margin-top:14px"><h2>Principais Causas Identificadas</h2><div id="causes" class="chips"></div></section>
-    <section class="panel rec" style="margin-top:14px"><h2>Insights e Recomendações</h2><ul id="insights"></ul></section>
-  </main>
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Dashboard de Chamados Integração Nexti</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+<style>:root{--dev:#2b73ff;--sup:#1f9d55;--max:#7d43f0;--all:#242833}*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial;background:#f3f5f9}.header{background:#121826;color:#fff;text-align:center;padding:24px}.container{max-width:1280px;margin:auto;padding:16px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 5px 14px #0001;cursor:pointer;border-left:5px solid #ccc}.card.active{outline:2px solid #1113}.card.dev{border-color:var(--dev)}.card.sup{border-color:var(--sup)}.card.max{border-color:var(--max)}.card.all{border-color:var(--all)}.panels{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.panel{background:#fff;border-radius:14px;padding:12px;box-shadow:0 5px 14px #0001}.chart-wrap{position:relative;height:320px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.toolbar{display:grid;grid-template-columns:1.5fr 1fr 1fr auto auto;gap:8px;margin-bottom:8px}input,select,button{padding:8px;border:1px solid #d5dae4;border-radius:8px}table{width:100%;border-collapse:collapse}th{background:#1c2330;color:#fff}th,td{padding:8px;border-bottom:1px solid #eceff5}.high{background:#fff0f0}.badge{padding:2px 8px;border-radius:999px;color:#fff}.tdev{background:var(--dev)}.tsup{background:var(--sup)}.tmax{background:var(--max)}@media(max-width:980px){.cards{grid-template-columns:repeat(2,1fr)}.panels,.grid3{grid-template-columns:1fr}}@media(max-width:640px){.cards{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr}}</style></head>
+<body><header class="header"><h1>Dashboard de Chamados Integração Nexti</h1><p>Período: Chamados de Abril</p></header><main class="container">
+<section id="cards" class="cards"></section>
+<section class="panels"><article class="panel"><h3>Horas por Tipo de Atendimento</h3><div class="chart-wrap"><canvas id="hoursByType"></canvas></div></article><article class="panel"><h3>Distribuição Percentual das Horas</h3><div class="chart-wrap"><canvas id="hoursDonut"></canvas></div></article></section>
+<section class="grid3"><article class="panel"><h3>Horas por Cliente</h3><div class="chart-wrap"><canvas id="hoursByClient"></canvas></div></article><article class="panel"><h3>Quantidade de Chamados por Tipo</h3><div class="chart-wrap"><canvas id="countByType"></canvas></div></article><article class="panel"><h3>Tickets com Maior Tempo</h3><div class="chart-wrap"><canvas id="topTickets"></canvas></div></article></section>
+<section class="panel" style="margin-top:12px"><h3>Tabela Detalhada</h3><div class="toolbar"><input id="search" placeholder="buscar"><select id="typeFilter"><option value="">Todos os tipos</option></select><select id="clientFilter"><option value="">Todos os clientes</option></select><button id="clear">Limpar filtros</button><button id="sortTime">Ordenar tempo ↓</button></div><div style="overflow:auto"><table><thead><tr><th>Ticket</th><th>Tipo</th><th>Cliente</th><th>Nome</th><th>Tempo</th><th>Contexto</th><th>Observação</th></tr></thead><tbody id="tableBody"></tbody></table></div></section>
+</main>
 <script>
 const chamados=[
-{ref:"abr",ticket:"873",tipo:"Maxsystem",cliente:"VSG",nome:"Edson",contexto:"Colaborador não integrava corretamente, exigindo cadastro manual.",tempo:"0h26",observacao:"Problema recorrente e falha intermitente."},
-{ref:"abr",ticket:"876",tipo:"Suporte",cliente:"MAXTEC",nome:"Gabriela Florencio",contexto:"Inconsistências Fortes x Nexti: cargo, posto, duplicidade, atestado e bloqueio.",tempo:"3h45",observacao:"Problema estrutural e recorrente na integração."},
-{ref:"abr",ticket:"883",tipo:"Suporte",cliente:"ENGEFORT",nome:"Rebekka",contexto:"Posto não integrava por cadastro incompleto sem tomador.",tempo:"1h30",observacao:"Erro de cadastro do cliente."},
-{ref:"abr",ticket:"882",tipo:"Suporte",cliente:"ENGEFORT",nome:"Rebekka",contexto:"Inclusão de posto bloqueada por ausência de tomador.",tempo:"1h20",observacao:"Ausência de tomador."},
-{ref:"abr",ticket:"889",tipo:"Suporte",cliente:"JSA",nome:"RH",contexto:"Atestado não integrava por lentidão de servidor.",tempo:"2h25",observacao:"Problema de performance."},
-{ref:"abr",ticket:"894",tipo:"Suporte",cliente:"MAXTEC",nome:"Gabriela Florencio",contexto:"Integração parada; reinício do serviço normalizou envio.",tempo:"2h05",observacao:"Necessidade de reinício de serviço."},
-{ref:"abr",ticket:"898",tipo:"Suporte",cliente:"JSA",nome:"RH",contexto:"Integração parada de colaboradores; normalizada após ação técnica.",tempo:"0h35",observacao:"Falha silenciosa recorrente."},
-{ref:"abr",ticket:"899",tipo:"Suporte",cliente:"JSA",nome:"RH",contexto:"Colaboradoras não integradas; ajuste técnico efetuado.",tempo:"1h54",observacao:"Necessidade de validação manual."},
-{ref:"abr",ticket:"901",tipo:"Suporte",cliente:"ENGEFORT",nome:"Rebekka",contexto:"Escalas sem ID externo não criadas via integração.",tempo:"1h10",observacao:"Cadastro manual fora da integração."},
-{ref:"abr",ticket:"915",tipo:"Maxsystem",cliente:"VSG",nome:"Edson",contexto:"Posto encerrado no cliente bloqueava integração.",tempo:"1h35",observacao:"Cadastro incorreto no cliente."},
-{ref:"abr",ticket:"1001",tipo:"Desenvolvimento",cliente:"MAXTEC",nome:"Time Dev",contexto:"Ajuste de regra de sincronização de cargos e postos.",tempo:"8h",observacao:"Correção estrutural de integração."},
-{ref:"abr",ticket:"1002",tipo:"Desenvolvimento",cliente:"ENGEFORT",nome:"Time Dev",contexto:"Implementação de validações de campos obrigatórios.",tempo:"7h30min",observacao:"Prevenção de cadastro incompleto."},
-{ref:"abr",ticket:"1003",tipo:"Desenvolvimento",cliente:"JSA",nome:"Time Dev",contexto:"Melhoria de rotina de reprocessamento de eventos.",tempo:"4h30",observacao:"Mitigar recorrências e instabilidade."}
+{ref:'abr',ticket:'873',tipo:'Maxsystem',cliente:'VSG',nome:'Edson',contexto:'Colaborador não integrava corretamente.',tempo:'0h26',observacao:'Recorrente.'},
+{ref:'abr',ticket:'908',tipo:'Maxsystem',cliente:'ENGEFORT',nome:'Vitor Campos',contexto:'Divergência de status entre sistemas.',tempo:'2h20',observacao:'Impacto em apuração.'},
+{ref:'abr',ticket:'876',tipo:'Suporte',cliente:'MAXTEC',nome:'Gabriela Florencio',contexto:'Inconsistências integração Fortes x Nexti.',tempo:'3h45',observacao:'Estrutural/recorrente.'},
+{ref:'abr',ticket:'883',tipo:'Suporte',cliente:'ENGEFORT',nome:'Rebekka',contexto:'Cadastro incompleto sem tomador.',tempo:'1h30',observacao:'Campo obrigatório.'},
+{ref:'abr',ticket:'882',tipo:'Suporte',cliente:'ENGEFORT',nome:'Rebekka',contexto:'Posto sem tomador.',tempo:'1h20',observacao:'Ausência de tomador.'},
+{ref:'abr',ticket:'889',tipo:'Suporte',cliente:'JSA',nome:'RH',contexto:'Atestado não integrava por lentidão.',tempo:'2h25',observacao:'Performance.'},
+{ref:'abr',ticket:'894',tipo:'Suporte',cliente:'MAXTEC',nome:'Gabriela Florencio',contexto:'Integração parada; reinício do serviço normalizou envio.',tempo:'2h05',observacao:'Necessidade de reinício de serviço.'},
+{ref:'abr',ticket:'898',tipo:'Suporte',cliente:'JSA',nome:'RH',contexto:'Integração parada de colaboradores.',tempo:'0h35',observacao:'Falha silenciosa recorrente.'},
+{ref:'abr',ticket:'899',tipo:'Suporte',cliente:'JSA',nome:'RH',contexto:'Colaboradoras não integradas; ajuste técnico.',tempo:'1h54',observacao:'Validação manual.'},
+{ref:'abr',ticket:'901',tipo:'Suporte',cliente:'ENGEFORT',nome:'Rebekka',contexto:'Escalas sem ID externo.',tempo:'1h10',observacao:'Cadastro manual.'},
+{ref:'abr',ticket:'1001',tipo:'Desenvolvimento',cliente:'MAXTEC',nome:'Time Dev',contexto:'Ajuste sincronização cargos/postos.',tempo:'8h',observacao:'Estrutural.'},
+{ref:'abr',ticket:'1002',tipo:'Desenvolvimento',cliente:'ENGEFORT',nome:'Time Dev',contexto:'Validações de campos obrigatórios.',tempo:'7h30min',observacao:'Preventivo.'},
+{ref:'abr',ticket:'1003',tipo:'Desenvolvimento',cliente:'JSA',nome:'Time Dev',contexto:'Rotina de reprocessamento.',tempo:'4h30',observacao:'Recorrência.'}
 ];
-const colors={"Desenvolvimento":"#2b73ff","Suporte":"#1f9d55","Maxsystem":"#7d43f0"};
-const toMinutes=t=>{const m=t.toLowerCase().match(/(\d+)h(?:\s*(\d+))?/);return m?(+m[1])*60+ +(m[2]||0):0};
-const fmt=m=>`${Math.floor(m/60)}h${m%60?String(m%60).padStart(2,'0')+'min':''}`;
-const norm=chamados.map(c=>({...c,minutos:toMinutes(c.tempo)}));
-const totals=norm.reduce((a,c)=>{a[c.tipo]=(a[c.tipo]||0)+c.minutos;a.total+=c.minutos;a.count++;a.byTypeCount[c.tipo]=(a.byTypeCount[c.tipo]||0)+1;a.byClient[c.cliente]=(a.byClient[c.cliente]||0)+c.minutos;return a},{total:0,count:0,byTypeCount:{},byClient:{}});
-function renderCards(){const cfg=[["Total Desenvolvimento",totals["Desenvolvimento"],"dev","fa-code"],["Total Suporte",totals["Suporte"],"sup","fa-headset"],["Total Maxsystem",totals["Maxsystem"],"max","fa-server"],["Total Geral",totals.total,"all","fa-stopwatch"]];
-cards.innerHTML=cfg.map(c=>`<div class="card ${c[2]}"><i class="fa-solid ${c[3]} icon"></i><h3>${c[0]}</h3><div class="value">${fmt(c[1]||0)}</div><div class="muted">Chamados: ${c[0].includes('Geral')?totals.count:totals.byTypeCount[c[0].split(' ')[1]]||0}</div></div>`).join('');}
-function chart(id,type,data,opts={}){return new Chart(document.getElementById(id),{type,data,options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},...opts}})}
-function renderCharts(){
-  const labels=["Desenvolvimento","Suporte","Maxsystem"];const values=labels.map(l=>totals[l]||0);
-  chart('hoursByType','bar',{labels,datasets:[{label:'Minutos',data:values,backgroundColor:labels.map(l=>colors[l])}]},{scales:{y:{ticks:{callback:v=>fmt(v)}}}});
-  chart('hoursDonut','doughnut',{labels,datasets:[{data:values,backgroundColor:labels.map(l=>colors[l])}]});
-  const byClient=Object.entries(totals.byClient).sort((a,b)=>b[1]-a[1]);
-  chart('hoursByClient','bar',{labels:byClient.map(x=>x[0]),datasets:[{data:byClient.map(x=>x[1]),backgroundColor:'#4b6cb7'}]},{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>fmt(v)}}}});
-  chart('countByType','bar',{labels,datasets:[{data:labels.map(l=>totals.byTypeCount[l]||0),backgroundColor:labels.map(l=>colors[l])}]},{plugins:{legend:{display:false}}});
-  const top=[...norm].sort((a,b)=>b.minutos-a.minutos).slice(0,7);
-  chart('topTickets','bar',{labels:top.map(t=>`#${t.ticket}`),datasets:[{data:top.map(t=>t.minutos),backgroundColor:'#263238'}]},{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>fmt(v)}}}});
+const colors={Desenvolvimento:'#2b73ff',Suporte:'#1f9d55',Maxsystem:'#7d43f0'};let activeType='';let desc=true;let charts=[];
+const toMinutes=t=>{const m=t.toLowerCase().match(/(\d+)h(?:\s*(\d+))?/);return m?+m[1]*60+ +(m[2]||0):0}; const fmt=m=>`${Math.floor(m/60)}h${m%60?String(m%60).padStart(2,'0')+'min':''}`;
+const base=chamados.map(c=>({...c,minutos:toMinutes(c.tempo)}));
+function agg(rows){return rows.reduce((a,c)=>{a[c.tipo]=(a[c.tipo]||0)+c.minutos;a.total+=c.minutos;a.count++;a.byTypeCount[c.tipo]=(a.byTypeCount[c.tipo]||0)+1;a.byClient[c.cliente]=(a.byClient[c.cliente]||0)+c.minutos;return a},{total:0,count:0,byTypeCount:{},byClient:{}})}
+function dataset(){const q=search.value.toLowerCase();let r=[...base];if(activeType)r=r.filter(x=>x.tipo===activeType);if(typeFilter.value)r=r.filter(x=>x.tipo===typeFilter.value);if(clientFilter.value)r=r.filter(x=>x.cliente===clientFilter.value);if(q)r=r.filter(x=>[x.ticket,x.cliente,x.contexto,x.observacao].join(' ').toLowerCase().includes(q));return r}
+function renderCards(){const t=agg(base);const cfg=[['Desenvolvimento',t.Desenvolvimento||0,'dev','fa-code'],['Suporte',t.Suporte||0,'sup','fa-headset'],['Maxsystem',t.Maxsystem||0,'max','fa-server'],['Geral',t.total,'all','fa-stopwatch']];cards.innerHTML=cfg.map(([n,v,cl,ic])=>`<div class='card ${cl} ${activeType===n||(!activeType&&n==='Geral')?'active':''}' data-type='${n==='Geral'?'':n}'><i class='fa-solid ${ic}'></i><h3>Total ${n}</h3><div style='font-size:2rem;font-weight:700'>${fmt(v)}</div><small>Chamados: ${n==='Geral'?t.count:t.byTypeCount[n]||0}</small></div>`).join('');document.querySelectorAll('.card').forEach(el=>el.onclick=()=>{activeType=el.dataset.type;renderAll();})}
+function mkChart(id,cfg,onClick){const ch=new Chart(document.getElementById(id),{...cfg,options:{responsive:true,maintainAspectRatio:false,onClick,...cfg.options}});charts.push(ch)}
+function renderCharts(rows){charts.forEach(c=>c.destroy());charts=[];const t=agg(rows);const labels=['Desenvolvimento','Suporte','Maxsystem'];const vals=labels.map(l=>t[l]||0);
+mkChart('hoursByType',{type:'bar',data:{labels,datasets:[{data:vals,backgroundColor:labels.map(l=>colors[l])}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>fmt(v)}}}}},(_,els)=>{if(els[0]){activeType=labels[els[0].index];renderAll();}});
+mkChart('hoursDonut',{type:'doughnut',data:{labels,datasets:[{data:vals,backgroundColor:labels.map(l=>colors[l])}]},options:{}},(_,els)=>{if(els[0]){activeType=labels[els[0].index];renderAll();}});
+const bc=Object.entries(t.byClient).sort((a,b)=>b[1]-a[1]);mkChart('hoursByClient',{type:'bar',data:{labels:bc.map(x=>x[0]),datasets:[{data:bc.map(x=>x[1]),backgroundColor:'#456'}]},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>fmt(v)}}}}},(_,els)=>{if(els[0]){clientFilter.value=bc[els[0].index][0];renderAll();}});
+mkChart('countByType',{type:'bar',data:{labels,datasets:[{data:labels.map(l=>t.byTypeCount[l]||0),backgroundColor:labels.map(l=>colors[l])}]},options:{plugins:{legend:{display:false}}}},(_,els)=>{if(els[0]){activeType=labels[els[0].index];renderAll();}});
+const top=[...rows].sort((a,b)=>b.minutos-a.minutos).slice(0,8);mkChart('topTickets',{type:'bar',data:{labels:top.map(x=>'#'+x.ticket),datasets:[{data:top.map(x=>x.minutos),backgroundColor:'#222'}]},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>fmt(v)}}}}},(_,els)=>{if(els[0])search.value=top[els[0].index].ticket,renderAll();});
 }
-let desc=true;
-function renderFilters(){[...new Set(norm.map(c=>c.tipo))].forEach(v=>typeFilter.innerHTML+=`<option>${v}</option>`);[...new Set(norm.map(c=>c.cliente))].forEach(v=>clientFilter.innerHTML+=`<option>${v}</option>`)}
-function short(t){return t.length>140?t.slice(0,140)+"...":t}
-function renderTable(){let rows=[...norm];const q=search.value.toLowerCase();if(typeFilter.value)rows=rows.filter(r=>r.tipo===typeFilter.value);if(clientFilter.value)rows=rows.filter(r=>r.cliente===clientFilter.value);if(q)rows=rows.filter(r=>[r.ticket,r.cliente,r.contexto,r.observacao].join(' ').toLowerCase().includes(q));rows.sort((a,b)=>desc?b.minutos-a.minutos:a.minutos-b.minutos);
- tableBody.innerHTML=rows.map(r=>`<tr class="${r.minutos>=180?'high':''}"><td>#${r.ticket}</td><td><span class="badge ${r.tipo==='Desenvolvimento'?'tdev':r.tipo==='Suporte'?'tsup':'tmax'}">${r.tipo}</span></td><td>${r.cliente}</td><td>${r.nome}</td><td>${fmt(r.minutos)}</td><td>${short(r.contexto)}</td><td>${short(r.observacao)}</td></tr>`).join('');}
-function renderText(){const topType=Object.entries({Desenvolvimento:totals.Desenvolvimento,Suporte:totals.Suporte,Maxsystem:totals.Maxsystem}).sort((a,b)=>b[1]-a[1])[0];
-const topClient=Object.entries(totals.byClient).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([c,m])=>`${c} (${fmt(m)})`).join(', ');
-summary.textContent=`No período de 01/04 a 24/04, foram registrados ${fmt(totals.total)} em ${totals.count} chamados. O tipo com maior consumo foi ${topType[0]} (${fmt(topType[1])}), seguido por Suporte (${fmt(totals.Suporte||0)}) e Maxsystem (${fmt(totals.Maxsystem||0)}). Os clientes com maior impacto foram ${topClient}. Foram identificados padrões de reincidência em falhas de integração, ausência de tomador, cadastro incompleto, problemas de performance e necessidade de reinício de serviço. Chamados como #876, #894 e #898 indicam necessidade de monitoramento preventivo e tratamento de causas estruturais.`;
-const rules=[
-['Falhas de integração',/integr|sincron|status|evento/, 'Alto'],['Cadastro incompleto',/cadastro incompleto|obrigat/, 'Médio'],['Ausência de tomador',/tomador/, 'Alto'],['Problemas de performance',/lentid|performance|consumo/, 'Médio'],['Duplicidade de dados',/duplic/, 'Médio'],['Cargo ou posto divergente',/cargo|posto/, 'Alto'],['Atestados não integrados',/atestado/, 'Médio'],['Instabilidade/falha intermitente',/intermit|silenc|instabil/, 'Alto'],['Necessidade de reinício de serviço',/rein[ií]cio/, 'Médio'],['Problemas recorrentes',/recorrent/, 'Alto']];
-causes.innerHTML=rules.map(([name,re,crit])=>{const hits=norm.filter(c=>re.test((c.contexto+' '+c.observacao).toLowerCase()));return `<div class='chip'><strong>${name}</strong><br><span class='muted'>Ocorrências: ${hits.length} | Criticidade: ${crit}</span><br><span class='muted'>Tickets: ${hits.map(h=>'#'+h.ticket).join(', ')||'N/A'}</span></div>`}).join('');
-insights.innerHTML=["Criar monitoramento preventivo para integrações recorrentes.","Validar campos obrigatórios antes da integração.","Criar alerta para ausência de tomador no cadastro.","Mapear clientes com maior reincidência.","Separar falhas de cadastro do cliente das falhas sistêmicas.","Criar rotina de auditoria para divergência de cargo, posto e atestado.","Registrar recorrências como problemas estruturais.","Avaliar performance do servidor em atrasos de processamento."].map(i=>`<li>${i}</li>`).join('');
-}
-[search,typeFilter,clientFilter].forEach(e=>e.addEventListener('input',renderTable));sortTime.addEventListener('click',()=>{desc=!desc;sortTime.textContent=`Ordenar por tempo ${desc?'↓':'↑'}`;renderTable()});
-renderCards();renderCharts();renderFilters();renderTable();renderText();
-</script>
-</body></html>
+function renderTable(rows){const r=[...rows].sort((a,b)=>desc?b.minutos-a.minutos:a.minutos-b.minutos);tableBody.innerHTML=r.map(x=>`<tr class='${x.minutos>=180?'high':''}'><td>#${x.ticket}</td><td><span class='badge ${x.tipo==='Desenvolvimento'?'tdev':x.tipo==='Suporte'?'tsup':'tmax'}'>${x.tipo}</span></td><td>${x.cliente}</td><td>${x.nome}</td><td>${fmt(x.minutos)}</td><td>${x.contexto}</td><td>${x.observacao}</td></tr>`).join('')}
+function initFilters(){[...new Set(base.map(x=>x.tipo))].forEach(v=>typeFilter.innerHTML+=`<option>${v}</option>`);[...new Set(base.map(x=>x.cliente))].forEach(v=>clientFilter.innerHTML+=`<option>${v}</option>`)}
+function renderAll(){renderCards();const rows=dataset();renderCharts(rows);renderTable(rows)}
+[search,typeFilter,clientFilter].forEach(e=>e.oninput=renderAll);sortTime.onclick=()=>{desc=!desc;sortTime.textContent=`Ordenar tempo ${desc?'↓':'↑'}`;renderTable(dataset())};clear.onclick=()=>{activeType='';search.value='';typeFilter.value='';clientFilter.value='';renderAll()};
+initFilters();renderAll();
+</script></body></html>
