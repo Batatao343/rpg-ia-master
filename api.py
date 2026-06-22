@@ -9,6 +9,7 @@ import uvicorn
 import uuid # <--- Necessário para gerar IDs de sessão
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -59,6 +60,7 @@ class GameResponse(BaseModel):
     current_location: str
     narrative_summary: str # <--- Novo: Frontend pode mostrar o resumo
     last_turn_log: List[Dict[str, Any]]
+    simulated: bool = False # True quando rodando em modo simulado (sem API key)
 
 # --- HELPER: FORMATA RESPOSTA ---
 def format_response(state: dict) -> GameResponse:
@@ -82,21 +84,30 @@ def format_response(state: dict) -> GameResponse:
         message=last_content,
         message_type=msg_type,
         player_stats={
-            "hp": state["player"]["hp"],
-            "max_hp": state["player"]["max_hp"],
-            "gold": state["player"]["gold"],
-            "level": state["player"]["level"],
-            "xp": state["player"]["xp"]
+            "name": state["player"].get("name", "Herói"),
+            "class_name": state["player"].get("class_name") or state["player"].get("class", ""),
+            "race": state["player"].get("race", ""),
+            "hp": state["player"].get("hp", 0),
+            "max_hp": state["player"].get("max_hp", 0),
+            "mana": state["player"].get("mana", 0),
+            "max_mana": state["player"].get("max_mana", 0),
+            "stamina": state["player"].get("stamina", 0),
+            "max_stamina": state["player"].get("max_stamina", 0),
+            "defense": state["player"].get("defense", 0),
+            "gold": state["player"].get("gold", 0),
+            "level": state["player"].get("level", 1),
+            "xp": state["player"].get("xp", 0),
         },
         inventory=state["player"]["inventory"],
         current_location=state["world"]["current_location"],
         narrative_summary=state.get("narrative_summary", ""),
-        last_turn_log=_serialize_messages(state["messages"][-5:]) 
+        last_turn_log=_serialize_messages(state["messages"][-5:]),
+        simulated=(not os.getenv("GOOGLE_API_KEY")) and (not os.getenv("RPG_NO_MOCK")),
     )
 
 # --- ENDPOINTS ---
 
-@app.get("/")
+@app.get("/health")
 def health_check():
     return {"status": "online", "engine": "RPG IA v9.0 Hybrid Memory"}
 
@@ -159,19 +170,23 @@ def new_game(req: CreateCharacterRequest):
         # --- Dados do Player ---
         "player": {
             "name": final_char["name"],
-            "class": final_char["class_name"],
+            "class_name": final_char["class_name"],
             "race": final_char["race"],
             "level": final_char["level"],
             "xp": 0,
             "hp": final_char["hp"],
             "max_hp": final_char["max_hp"],
+            "mana": final_char["mana"],
+            "max_mana": final_char["max_mana"],
+            "stamina": final_char["stamina"],
+            "max_stamina": final_char["max_stamina"],
             "gold": 50 * req.level,
+            "alignment": "Neutro",
             "attributes": final_char["attributes"],
             "inventory": final_char["inventory"],
-            "equipment": {},
-            "abilities": final_char["known_abilities"],
+            "known_abilities": final_char["known_abilities"],
             "defense": final_char["defense"],
-            "attack_bonus": 0,
+            "attack_bonus": final_char.get("attack_bonus", 0),
             "active_conditions": []
         },
         "world": {
@@ -233,6 +248,12 @@ def game_action(req: ActionRequest):
     except Exception as e:
         print(f"Erro na API: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+# --- FRONTEND ESTÁTICO ---
+# Servido na raiz "/". As rotas de API acima têm precedência sobre o mount.
+_FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend")
+if os.path.isdir(_FRONTEND_DIR):
+    app.mount("/", StaticFiles(directory=_FRONTEND_DIR, html=True), name="frontend")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
