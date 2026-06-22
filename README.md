@@ -1,65 +1,71 @@
-# RPG Engine V8 (LangGraph + Gemini)
+# RPG IA Engine
 
-Uma engine modular de RPG por turnos, construída sobre LangGraph/LangChain e Google Gemini, com RAG para manter a lore, contratos de validação e modelos em camadas (FAST/SMART) para equilibrar custo e inteligência.
+RPG de texto **dark fantasy** com narração gerada por IA. Motor multi-agente em **LangGraph** com RAG híbrido (lore global + memória por sessão) e dois tiers de LLM (Google Gemini).
 
-## Visão Geral
-- **Grafo de agentes LangGraph** conecta roteamento, narrativa, combate, regras e NPCs para processar cada turno do jogador (`main.py`).
-- **ModelTier** define dois níveis de LLM (gemini-1.5-flash e gemini-1.5-pro) para escolher custo vs. raciocínio (`llm_setup.py`).
-- **RAG multil índice** consulta lore e regras antes de gerar conteúdo ou resolver física (`rag.py`).
-- **Validações Pydantic** protegem atualizações de estado e entradas de dano/estamina contra alucinações (`engine_utils.py`).
-- **Roteador estruturado** usa `RouterDecision` com confiança e enum `RouteType` para evitar rotas erradas quando a intenção é ambígua (`agents/router.py`).
-- **Sanitização de memória** resume histórico antigo e preserva o prompt de sistema para conter custo e confusão de contexto (`memory_utils.py`, usado após cada ciclo no CLI/Simulação).
-- **Planejamento de campanha** mantém um `quest_plan` que o Storyteller consome para garantir início, meio e fim coerentes (`agents/storyteller.py`).
+O jogador digita ações em linguagem natural; o motor classifica a intenção, executa o agente certo (história, combate, NPC ou loot) e devolve narrativa coerente com o mundo e a sessão.
 
-## Requisitos
-1. Python 3.11+ e dependências do `pyproject.toml` (LangGraph, LangChain, Streamlit, etc.).
-2. Variáveis de ambiente:
-   - `GOOGLE_API_KEY`: chave para Gemini e embeddings.
-   - Opcional: configure proxys de rede conforme necessário.
-3. Índices RAG pre-gerados em `faiss_lore_index/` e `faiss_rules_index/` (ou execute a ingestão abaixo).
+> **Documentação:** `CLAUDE.md` (arquitetura) · `REFERENCE.md` (decisões técnicas) · `ESTADO_ATUAL.md` (estado atual, como rodar, backlog).
 
-## Ingestão de Lore e Regras
-Execute uma vez para criar/atualizar os índices FAISS a partir dos textos base:
+---
+
+## Stack
+
+Python 3.13 · FastAPI · LangGraph · FAISS · Google Gemini (`gemini-flash-latest` / `gemini-pro-latest`) · uv
+
+---
+
+## Setup
+
 ```bash
-python rag.py
-```
-Isso indexa `world_lore.txt` em `lore` e `rules.txt` em `rules` e habilita consultas de contexto para narrativa, combate e regras.
-
-## Como Executar
-### CLI / Simulação
-Use o runner de testes interativos que percorre o grafo completo:
-```bash
-python test_runner.py
-```
-### UI (Streamlit)
-Interface web com HUD, histórico e persistência:
-```bash
-streamlit run app.py
-```
-O app carrega o estado inicial, permite salvar/carregar jogos e encaminha cada entrada pelo grafo de agentes.
-
-## Testes e Diagnóstico
-- Suite completa com cenários interativos e mocks:
-```bash
-python test_suite_complete.py
-```
-- Testes unitários de nós (requer dependências de LangChain instaladas):
-```bash
-python -m pytest tests/test_nodes.py
+uv sync                        # cria o venv (Python 3.13) e instala deps
+cp .env.example .env           # cole sua GOOGLE_API_KEY
 ```
 
-## Estrutura de Pastas (essencial)
-- `agents/`: nós de narrativa (`storyteller.py`), combate (`combat.py`), regras, NPCs e bestiário.
-- `rag.py`: utilitários de embedding, ingestão e consulta multi-índice.
-- `state.py`: schema tipado do estado de jogo (player, mundo, inimigos, npcs, mensagens).
-- `engine_utils.py`: contratos de entrada/saída (Pydantic) e utilidades de aplicação de dano/estado.
-- `llm_setup.py`: seleção de modelo FAST/SMART e fallback resiliente.
-- `app.py`: interface Streamlit.
-- `test_suite_complete.py`: suite manual para validar fluxo completo.
+`GOOGLE_API_KEY`: gere em https://aistudio.google.com/app/apikey
+Sem a chave o jogo roda em **modo degradado** (não quebra, mas o narrador fica indisponível).
 
-## Fluxo de Um Turno (alto nível)
-1. A entrada do jogador vai para `dm_router`, que decide o próximo nó (storyteller, combate, regras ou NPC) via `RouterDecision` estruturado e confiança mínima.
-2. Cada nó invoca Gemini com o tier adequado e, quando aplicável, consulta RAG para manter consistência de lore e regras.
-3. Atualizações de estado passam por validação; o Storyteller consome `quest_plan` para manter arco narrativo; o combate usa lógica tática especial para chefes.
-4. Após cada ciclo, o histórico pode ser resumido por `sanitize_history` para manter o contexto enxuto.
-5. O grafo encerra o turno ou retorna ao roteador para processar ferramentas (ex.: rolagem de dados).
+---
+
+## Rodar
+
+```bash
+# Jogar no terminal (CLI)
+uv run python game_engine.py
+
+# API REST (backend para frontend web/mobile)
+uv run uvicorn api:app --reload --port 8000
+
+# Testes (offline, não exigem API key)
+uv run pytest
+
+# Reindexar lore/regras após editar data/world_lore.txt ou data/rules.txt
+uv run python rag.py
+```
+
+---
+
+## Fluxo de um turno
+
+```
+START
+  → campaign_manager   # planeja arcos (3–5 beats) com RAG de lore; incrementa turn_count
+  → dm_router          # classifica intenção: STORY | COMBAT | NPC | LOOT
+  → agente especializado (storyteller | combat_agent | npc_actor | loot_agent)
+  → archivist          # atualiza resumo (curto prazo) + persiste fatos no FAISS da sessão
+  → END → save
+```
+
+---
+
+## Estrutura
+
+```
+main.py / state.py / llm_setup.py / rag.py / persistence.py
+gamedata.py / dice_system.py / engine_utils.py / character_creator.py
+game_engine.py (CLI)   api.py (REST)
+agents/   # router, campaign_manager, storyteller, combat, npc, loot, archivist, ...
+data/     # world_lore.txt, rules.txt, bestiary.json, classes.json, artifacts.json, ...
+tests/    # suíte offline (test_mvp.py)
+```
+
+Detalhes de cada módulo e convenções em `CLAUDE.md` e `ESTADO_ATUAL.md`.

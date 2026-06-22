@@ -1,3 +1,22 @@
 .env
 __pycache__/
 *.pyc
+
+# Ambiente virtual
+.venv/
+
+# Saves e memória de sessão (dados de jogo, não versionar)
+saves/
+data/saves_memory/
+
+# Caches gerados em runtime
+data/custom_artifacts.json
+
+# Backups de compressão
+*.original.md
+
+# Pytest
+.pytest_cache/
+
+# Skills do Claude (locais, não versionar)
+.claude/skills/
