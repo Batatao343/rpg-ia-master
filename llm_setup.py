@@ -1,3 +1,4 @@
+import os
 from enum import Enum
 from dotenv import load_dotenv
 from langchain_core.messages import AIMessage
@@ -35,6 +36,14 @@ def get_llm(temperature: float = 0.1, tier: ModelTier = ModelTier.FAST):
     """Retorna uma instância configurada do Gemini ou um fallback resiliente."""
     model = "gemini-flash-latest" if tier == ModelTier.FAST else "gemini-pro-latest"
     max_retries = 3 if tier == ModelTier.FAST else 1
+
+    # Sem chave: modo SIMULADO (dados fictícios jogáveis), sem rede.
+    # Defina RPG_NO_MOCK=1 para forçar o fallback de erro puro.
+    if not os.getenv("GOOGLE_API_KEY"):
+        if os.getenv("RPG_NO_MOCK"):
+            return FallbackLLM("O narrador está indisponível. Configure GOOGLE_API_KEY e tente novamente.")
+        from mock_llm import MockLLM
+        return MockLLM(temperature=temperature)
 
     try:
         return ChatGoogleGenerativeAI(

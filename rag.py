@@ -152,7 +152,13 @@ def ingest_file(file_path: str, index_name: str):
 if __name__ == "__main__":
     # Script rápido para re-gerar a Lore Global se rodar este arquivo direto
     print("Recriando índices globais...")
-    if os.path.exists("world_lore.txt"):
-        ingest_file("world_lore.txt", "lore")
-    if os.path.exists("rules.txt"):
-        ingest_file("rules.txt", "rules")
+    lore_path = os.path.join("data", "world_lore.txt")
+    rules_path = os.path.join("data", "rules.txt")
+    if os.path.exists(lore_path):
+        ingest_file(lore_path, "lore")
+    else:
+        print(f"[ERRO] Lore não encontrada em {lore_path}")
+    if os.path.exists(rules_path):
+        ingest_file(rules_path, "rules")
+    else:
+        print(f"[ERRO] Regras não encontradas em {rules_path}")

@@ -59,6 +59,11 @@ def dm_router_node(state: GameState):
         print(f"⚠️ Router Error: {e}")
         return {"next": RouteType.STORY.value}
 
+    # Sem API key (FallbackLLM) o invoke devolve um AIMessage, não um
+    # RouterDecision. Nesse caso seguimos para o storyteller (modo degradado).
+    if not isinstance(decision, RouterDecision):
+        return {"next": RouteType.STORY.value}
+
     print(f"🚦 [ROUTER] {decision.route.value} -> Alvo: {decision.target}")
 
     response_payload = {
@@ -69,7 +74,26 @@ def dm_router_node(state: GameState):
 
     if decision.route == RouteType.LOOT:
         response_payload["loot_source"] = decision.loot_context or "TREASURE"
-    
+
+    # GATILHO DE NPC:
+    # O ator de NPC exige 'active_npc_name'. Sem isso ele responde "Ninguém responde".
+    # Tentamos casar o alvo identificado com um NPC já presente na cena.
+    if decision.route == RouteType.NPC:
+        npcs = state.get("npcs", {}) or {}
+        chosen = None
+        if decision.target:
+            tgt = decision.target.lower()
+            for npc_name in npcs.keys():
+                if tgt in npc_name.lower() or npc_name.lower() in tgt:
+                    chosen = npc_name
+                    break
+        # Fallback: se só há um NPC na cena, fala com ele.
+        if not chosen and len(npcs) == 1:
+            chosen = next(iter(npcs.keys()))
+        if not chosen and decision.target:
+            chosen = decision.target  # deixa o ator tentar carregar do DB
+        response_payload["active_npc_name"] = chosen
+
     # GATILHO DE COMBATE:
     # Se for combate, adicionamos uma flag no histórico (temporária) para o Combat Agent saber que é o turno 1
     if decision.route == RouteType.COMBAT:

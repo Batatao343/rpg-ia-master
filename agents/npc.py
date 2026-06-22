@@ -37,7 +37,7 @@ class NPCSchema(BaseModel):
     initial_relationship: int = 5
     attributes: Dict[str, int] = Field(
         description="Stats base: str, dex, con, int, wis, cha. Padrão humano é 10.",
-        example={"str": 10, "dex": 12, "con": 10, "int": 14, "wis": 16, "cha": 18}
+        json_schema_extra={"example": {"str": 10, "dex": 12, "con": 10, "int": 14, "wis": 16, "cha": 18}}
     )
     combat_stats: Dict = Field(description="HP, AC e Attacks", default={"hp": 10, "ac": 10, "attacks": []})
 
@@ -136,7 +136,13 @@ def npc_actor_node(state: GameState):
     if not npc_data:
         db = load_npc_db()
         npc_data = db.get(npc_name)
-        if not npc_data: return {"messages": [AIMessage(content="NPC não encontrado.")]}
+    if not npc_data:
+        # NPC ainda não existe na cena: gera na hora (persona + ficha) em vez de falhar.
+        loc = state.get("world", {}).get("current_location", "")
+        npc_data = generate_new_npc(npc_name, context=f"Local: {loc}")
+        npc_data.setdefault("location", loc)
+        npc_data.setdefault("relationship", 5)
+        npc_data.setdefault("memory", [])
 
     # Contexto RAG (Filtrado pelo Prompt)
     last_msg = messages[-1].content if messages else ""
@@ -171,8 +177,9 @@ def npc_actor_node(state: GameState):
         actor = llm.with_structured_output(NPCResponse)
         res = actor.invoke([system_msg] + messages[-5:])
         
-        # Atualiza memória e relação
+        # Atualiza memória e relação (com guardas contra chaves ausentes)
         npc_data['relationship'] = max(0, min(10, npc_data.get('relationship', 5) + res.relationship_change))
+        npc_data.setdefault('memory', [])
         npc_data['memory'].append(f"Turno {state.get('world', {}).get('turn_count', 0)}: {res.memory_update}")
         
         # Atualiza o estado global
