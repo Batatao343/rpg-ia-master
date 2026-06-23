@@ -11,7 +11,8 @@ from pydantic import BaseModel, Field
 
 from state import GameState
 from llm_setup import get_llm, ModelTier
-from gamedata import save_custom_artifact, ARTIFACTS_DB
+from gamedata import save_custom_artifact, ARTIFACTS_DB, get_location
+from rag import query_rag
 
 # --- SCHEMAS DE DADOS (IA) ---
 
@@ -38,14 +39,29 @@ class TransactionResult(BaseModel):
 def loot_node(state: GameState):
     player = state["player"]
     loot_source = state.get("loot_source", "TREASURE")
-    
+
     # Recupera última msg
     last_user_msg = "Gerar loot"
     if state.get("messages"):
         last_msg = state["messages"][-1]
         if isinstance(last_msg, HumanMessage):
             last_user_msg = last_msg.content
-    
+
+    # --- Fase 0: contexto regional (itens com a cara do lugar) ---
+    world = state.get("world", {})
+    location = world.get("current_location", "")
+    loc_node = get_location(world.get("current_location_id", "")) or {}
+    region = loc_node.get("region", "")
+    try:
+        loc_lore = query_rag(f"{location} {region}", index_name="lore", game_id=state.get("game_id"))
+    except Exception:
+        loc_lore = ""
+    region_ctx = (
+        f"LOCAL ATUAL: {location} ({region}). "
+        f"Pistas do lugar: {loc_node.get('lore_seed', '')} {loc_lore}\n"
+        "Os itens DEVEM ter a cara deste lugar (materiais, história e perigos locais)."
+    )
+
     llm = get_llm(temperature=0.4, tier=ModelTier.SMART)
 
     # =========================================================
@@ -75,6 +91,7 @@ def loot_node(state: GameState):
         """
 
         user_prompt = f"""
+        {region_ctx}
         INVENTÁRIO: [{inventory_list}]
         OURO: {gold_available}
         PEDIDO: "{last_user_msg}"
@@ -136,9 +153,9 @@ def loot_node(state: GameState):
             gold: int
             narrative: str
 
-        sys_prompt = "Você é um Gerador de Loot de RPG."
+        sys_prompt = "Você é um Gerador de Loot de RPG dark fantasy. Itens coerentes com o local."
         danger_lvl = state.get('world',{}).get('danger_level', 1)
-        user_prompt = f"Gere loot para perigo nível {danger_lvl}. Máx 2 itens."
+        user_prompt = f"{region_ctx}\nGere loot para perigo nível {danger_lvl}. Máx 2 itens."
 
         try:
             loot_llm = llm.with_structured_output(LootSchema)

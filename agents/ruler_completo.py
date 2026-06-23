@@ -20,6 +20,12 @@ try:
 except ImportError:
     ABILITIES = {}
 
+# Temas de classe (gating de habilidades abertas — Fase 0)
+try:
+    from agents.class_themes import get_class_theme
+except ImportError:
+    def get_class_theme(_name): return {"allowed": [], "forbidden": [], "style": ""}
+
 # --- SCHEMA ROBUSTO ---
 class Ruling(BaseModel):
     """Estrutura da decisão do Juiz."""
@@ -61,6 +67,11 @@ def resolve_action(player: dict, intent: str) -> dict:
     except:
         rag_context = ""
 
+    # Tema da classe: o que faz (ou não) sentido este personagem tentar.
+    class_name = player.get("class_name") or player.get("class") or ""
+    theme = get_class_theme(class_name)
+    abilities = player.get("known_abilities", [])
+
     # Monta o Prompt
     system_msg = SystemMessage(content=f"""
     Você é o JUIZ DE REGRAS (Game Master) de um RPG Dark Fantasy.
@@ -68,9 +79,16 @@ def resolve_action(player: dict, intent: str) -> dict:
 
     <CONTEXTO DO JOGADOR>
     Nome: {player.get('name')}
-    Classe: {player.get('class_name')}
+    Classe: {class_name}
     Atributos: {player.get('attributes')}
+    Habilidades conhecidas: {abilities}
     </CONTEXTO>
+
+    <TEMA DA CLASSE>
+    PERMITIDO (faz sentido): {theme.get('allowed')}
+    PROIBIDO (quebra o personagem): {theme.get('forbidden')}
+    Estilo: {theme.get('style')}
+    </TEMA>
 
     <BIBLIOTECA DE REGRAS>
     {ability_context}
@@ -78,11 +96,16 @@ def resolve_action(player: dict, intent: str) -> dict:
     </BIBLIOTECA>
 
     <INSTRUÇÕES>
-    1. Se o jogador usou uma Habilidade Oficial (listada acima), USE EXATAMENTE os dados dela.
-       - Ex: Se "Juramento de Sangue" diz "Gasta 5 HP", o efeito deve ser "Gasta 5 HP, Ganha Buff".
-    2. Se for uma manobra física (agarrar, empurrar), use regras de D&D 5e (Atletismo vs Acrobacia/Força).
-    3. Se for algo impossível, retorne is_allowed=False.
-    4. Em 'dice_formula', retorne APENAS a string de rolagem (ex: '1d20+5'). Se for auto-sucesso ou custo, use '0'.
+    1. AÇÃO ABERTA: o jogador pode TENTAR qualquer coisa. Só permita o que faz sentido
+       para esta classe e ficha. Se a ação está em PROIBIDO ou exige poder que esta classe
+       não tem (ex.: um Guerreiro lançando magia arcana), retorne is_allowed=False e explique
+       no flavor_text por que falha — sem humilhar, mas deixando claro o limite.
+    2. Se for plausível porém difícil, permita com um teste de atributo coerente
+       (ex.: Força para arrombar, Destreza para furtividade).
+    3. Se usou uma Habilidade Oficial (listada acima), USE EXATAMENTE os dados dela.
+    4. Se for manobra física (agarrar, empurrar), use regras de D&D 5e.
+    5. Em 'dice_formula', retorne APENAS a string de rolagem (ex: '1d20+5'). Se for
+       auto-sucesso, custo ou falha automática, use '0'.
     """)
 
     # 2. Chamada da IA

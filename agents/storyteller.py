@@ -4,9 +4,18 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
 from agents.npc import generate_new_npc
+from agents.ruler_completo import resolve_action
 from llm_setup import get_llm
 from rag import query_rag
 from state import GameState
+from world_utils import (
+    apply_rest,
+    apply_travel,
+    clock_label,
+    ensure_world,
+    find_travel_destination,
+    is_rest,
+)
 
 class StoryUpdate(BaseModel):
     narrative: str = Field(description="O texto narrativo da resposta.")
@@ -31,7 +40,37 @@ def storyteller_node(state: GameState):
     if not messages: return {"messages": [AIMessage(content="Comece a história.")]}
     
     last_user_input = messages[-1].content if isinstance(messages[-1], HumanMessage) else ""
-    world = dict(state.get("world", {}))
+    world = ensure_world(state.get("world", {}))
+
+    # --- Fase 0: viagem / descanso / juízo de ação (determinístico + Ruler) ---
+    travel_note = rest_note = ruling_note = ""
+    rested_player = None
+    dest = find_travel_destination(world, last_user_input) if last_user_input else None
+    if dest:
+        world = apply_travel(world, dest)
+        travel_note = (
+            f"O jogador VIAJOU para {dest['name']}. "
+            f"Contexto do local: {dest.get('lore_seed', '')} Descreva a chegada e o que ele vê agora."
+        )
+    elif last_user_input and is_rest(last_user_input):
+        rested_player, world = apply_rest(dict(state.get("player", {})), world)
+        rest_note = (
+            f"O jogador DESCANSOU. O tempo avançou para {clock_label(world)} e ele recuperou parte das forças. "
+            "Narre a passagem do tempo e o estado do mundo ao acordar."
+        )
+    elif last_user_input:
+        try:
+            ruling = resolve_action(state.get("player", {}), last_user_input)
+            if isinstance(ruling, dict):
+                allowed = ruling.get("is_allowed", True)
+                ruling_note = (
+                    f"[JUÍZO DA AÇÃO] permitido={allowed} | "
+                    f"efeito={ruling.get('mechanical_effect', '')} | {ruling.get('flavor_text', '')}. "
+                    "Respeite este juízo: se permitido=False, o personagem FALHA de forma plausível."
+                )
+        except Exception:
+            ruling_note = ""
+
     loc = world.get("current_location", "")
     existing_npcs = list(state.get("npcs", {}).keys())
     
@@ -55,13 +94,20 @@ def storyteller_node(state: GameState):
     llm = get_llm(temperature=0.7)
     
     # PROMPT ATUALIZADO
+    eventos_turno = "\n".join(n for n in (travel_note, rest_note, ruling_note) if n) or "Nenhum evento especial."
+
     sys = SystemMessage(content=f"""
     <PERSONA>
     Você é o Narrador (Mestre) de um RPG.
     Local Atual: {loc}.
+    Momento: {clock_label(world)}.
     NPCs na cena: {existing_npcs}.
     Objetivo Atual: {active_step}
     </PERSONA>
+
+    <EVENTOS_DESTE_TURNO>
+    {eventos_turno}
+    </EVENTOS_DESTE_TURNO>
 
     <MEMORIA_RECENTE>
     Resumo dos fatos anteriores: {narrative_summary}
@@ -94,13 +140,16 @@ def storyteller_node(state: GameState):
         for new_name in update.introduced_npcs:
             new_npcs = _with_new_npc(new_npcs, new_name, loc, narrative_text)
 
-        return {
+        updates = {
             "messages": [AIMessage(content=narrative_text)],
             "npcs": new_npcs,
             "world": world,
             "campaign_plan": campaign_plan,
             "needs_replan": needs_replan,
         }
+        if rested_player is not None:
+            updates["player"] = rested_player
+        return updates
 
     except Exception as e:
         print(f"[STORYTELLER ERROR] {e}")

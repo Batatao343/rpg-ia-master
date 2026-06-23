@@ -14,6 +14,7 @@ from main import app
 from persistence import save_game_state, load_game_state
 from gamedata import CLASSES, load_json_data
 from character_creator import create_player_character
+from world_utils import starting_world
 
 ORIGINS_DATA = load_json_data("origins.json")
 RACES = ORIGINS_DATA.get("races", [])
@@ -135,14 +136,7 @@ def create_character_wizard():
             "attack_bonus": final_char.get("attack_bonus", 0),
             "active_conditions": []
         },
-        "world": {
-            "current_location": final_char["region"],
-            "time_of_day": "Amanhecer",
-            "turn_count": 0,
-            "danger_level": level,
-            "quest_plan": [],
-            "quest_plan_origin": None
-        },
+        "world": starting_world(final_char["region"], level),
         "messages": [
             SystemMessage(content=f"A jornada de {name} começa em {final_char['region']}."),
             HumanMessage(content=f"Descreva o cenário ao meu redor. Sou um {final_char['class_name']} de nível {level}.")

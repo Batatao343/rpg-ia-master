@@ -119,6 +119,9 @@
     $("h-summary").textContent = r.narrative_summary || "A aventura começa.";
     $("t-location").textContent = r.current_location || "—";
 
+    const w = r.world || {};
+    if (w.period) $("t-clock").textContent = `Dia ${w.day} · ${w.period}`;
+
     // morte
     if ((p.hp ?? 1) <= 0) $("overlay-death").hidden = false;
   }

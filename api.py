@@ -22,6 +22,7 @@ from main import app as game_graph
 from persistence import save_game_state, load_game_state, _serialize_messages
 from character_creator import create_player_character
 from gamedata import CLASSES, load_json_data
+from world_utils import starting_world
 
 # --- CONFIGURAÇÃO DA API ---
 app = FastAPI(
@@ -61,6 +62,7 @@ class GameResponse(BaseModel):
     narrative_summary: str # <--- Novo: Frontend pode mostrar o resumo
     last_turn_log: List[Dict[str, Any]]
     simulated: bool = False # True quando rodando em modo simulado (sem API key)
+    world: Dict[str, Any] = {} # location_id, day, period, visited (fog of war), danger
 
 # --- HELPER: FORMATA RESPOSTA ---
 def format_response(state: dict) -> GameResponse:
@@ -103,7 +105,20 @@ def format_response(state: dict) -> GameResponse:
         narrative_summary=state.get("narrative_summary", ""),
         last_turn_log=_serialize_messages(state["messages"][-5:]),
         simulated=(not os.getenv("GOOGLE_API_KEY")) and (not os.getenv("RPG_NO_MOCK")),
+        world=_world_block(state.get("world", {}) or {}),
     )
+
+
+def _world_block(w: dict) -> Dict[str, Any]:
+    clock = w.get("world_clock") or {}
+    return {
+        "location": w.get("current_location", ""),
+        "location_id": w.get("current_location_id", ""),
+        "day": clock.get("day", 1),
+        "period": clock.get("period", "Amanhecer"),
+        "visited": w.get("visited", []),
+        "danger": w.get("danger_level", 1),
+    }
 
 # --- ENDPOINTS ---
 
@@ -189,14 +204,7 @@ def new_game(req: CreateCharacterRequest):
             "attack_bonus": final_char.get("attack_bonus", 0),
             "active_conditions": []
         },
-        "world": {
-            "current_location": final_char["region"],
-            "time_of_day": "Amanhecer",
-            "turn_count": 0,
-            "danger_level": req.level,
-            "quest_plan": [],
-            "quest_plan_origin": None
-        },
+        "world": starting_world(final_char["region"], req.level),
         "messages": [
             SystemMessage(content=f"A jornada de {req.name} começa em {final_char['region']}."),
             HumanMessage(content=f"Descreva o cenário ao meu redor. Sou um {final_char['class_name']} de nível {req.level}.")

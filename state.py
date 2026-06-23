@@ -61,8 +61,16 @@ class CompanionState(TypedDict):
     stats: Dict
 
 
-class WorldState(TypedDict):
+class WorldClock(TypedDict):
+    day: int
+    period: str  # "Amanhecer" | "Manhã" | "Tarde" | "Anoitecer" | "Noite"
+
+
+class WorldState(TypedDict, total=False):
     current_location: str
+    current_location_id: str        # id no grafo data/world_map.json
+    visited: List[str]              # ids de locais já revelados (fog of war)
+    world_clock: WorldClock         # dia + período (relógio do mundo)
     time_of_day: str
     turn_count: int
     weather: str
