@@ -5,6 +5,7 @@ Stack: Python 3.13 · FastAPI · LangGraph · FAISS · Google Gemini · uv
 
 > **AO RETOMAR:** leia `@ESTADO_ATUAL.md` primeiro — estado atual, como rodar,
 > bugs já corrigidos, limitações conhecidas e convenção crítica de resiliência.
+> Visão de produto e próximos passos: `ROADMAP.md` (Fase 0 entregue; Fases 1–3 mapeadas).
 
 ---
 
