@@ -47,8 +47,8 @@ Branch `feat/fase0-mundo`. 39 testes verdes (offline). Fluxo de IA auditado + ha
 > Sprites pixel art **não** entram aqui — viraram a última fase (sourcing pesado).
 
 ### Fase 2 — Mundo vivo
-- [ ] Nó `world_simulator` acionado em descanso/viagem (hook já marcado em `world_utils.apply_rest`): avança o relógio, simula eventos off-screen, grava no RAG da sessão, altera perigo/encontros.
-- [ ] **Fações/vilões com objetivos próprios:** `state.factions[]` (name, goal, progress, location, disposition); avançam a cada tick de descanso/viagem; disparam eventos de mundo. Reputação por facção.
+- [x] **Fações/vilões com objetivos próprios** (núcleo determinístico): `state.factions[]` (id, name, goal, region, progress 0-100, pace, disposition, reputation, completed); avançam a cada tick de descanso (2 períodos)/viagem (1); ao concluir, emitem evento que o storyteller tece na narração. Seed em `data/factions.json` (5 fações por região). Aba "Fações" no HUD. Testes: `tests/test_fase2.py`. **Pendente:** reputação muda por ação do jogador; vilões disparando combates/eventos concretos.
+- [ ] Nó `world_simulator` acionado em descanso/viagem (hook em `world_utils.apply_rest`): avança o relógio, simula eventos off-screen narrados (LLM), grava no RAG da sessão, altera perigo/encontros. (Tick determinístico de fações já existe; falta a camada narrada.)
 - [ ] **Memória de NPC vetorizada:** fatos no FAISS namespaceados por `game_id`+`npc_id`, recuperados por relevância. Reusa `add_memory_to_session`/`query_rag`.
 
 ### Fase 3 — Arte generativa de itens

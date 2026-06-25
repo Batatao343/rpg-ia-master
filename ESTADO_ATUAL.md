@@ -2,18 +2,25 @@
 
 > Documento de estado do projeto. Leia isto **primeiro** ao retomar o trabalho.
 > Complementa `CLAUDE.md` (arquitetura) e `REFERENCE.md` (decisões técnicas).
-> Última atualização: 2026-06-25 (sessão: auditoria do fluxo de IA + hardening).
+> Última atualização: 2026-06-25 (sessão: validação Gemini real + fix embeddings + Fase 2 fações).
 
 ---
 
 ## TL;DR — Em que pé está
 
-**MVP funcional e jogável.** O grafo LangGraph roda fim-a-fim (criar plano → rotear → narrar/combater/NPC/loot → arquivar → salvar) sem crashar. Suíte offline 100% verde (`uv run pytest` — 39 testes).
+**MVP funcional e jogável + Fase 2 iniciada.** O grafo LangGraph roda fim-a-fim (criar plano → rotear → narrar/combater/NPC/loot → arquivar → salvar) sem crashar. Suíte offline 100% verde (`uv run pytest` — **49 testes**).
 
-A chave (`GOOGLE_API_KEY`) já foi configurada. Sem chave o jogo roda no **MockLLM** (jogável, dados
-fictícios). **Atenção:** o caminho do **Gemini real** ainda não foi validado fim-a-fim — a quota free
-tier (20 req/dia por modelo) esgotou durante a auditoria e a chave depois ficou inválida (revogada).
-Ver seção **Quota e teste real** abaixo. A auditoria estática + correções desta sessão estão aplicadas.
+A chave (`GOOGLE_API_KEY`) está **válida** e o caminho do **Gemini real foi validado** fim-a-fim
+(`tests/test_real_llm.py`, 4 passed, ~7-10 req). Sem chave o jogo roda no **MockLLM** (jogável).
+
+**Fix crítico real (esta sessão):** `text-embedding-004` saiu do v1beta (404 em `embedContent`) —
+o RAG global (lore/rules) e a memória de sessão quebravam silenciosamente sob a chave real. Migrado
+para `models/gemini-embedding-001` e índices reindexados (`uv run python rag.py`). Dimensão mudou →
+saves/índices de sessão antigos viram incompatíveis (regerados em runtime).
+
+**Fase 2 — Fações (núcleo determinístico):** `state.factions[]` avançam objetivos no tempo
+(descanso/viagem), 100% offline; aba "Fações" no HUD. Ver `ROADMAP.md` Fase 2. Falta a camada
+narrada (`world_simulator`) e reputação por ação do jogador.
 
 ---
 
