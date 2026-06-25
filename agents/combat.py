@@ -165,6 +165,10 @@ def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
             raise RuntimeError("fallback")
         res = llm.invoke([sys] + [HumanMessage(content=intent or "Continue o combate.")])
         text = getattr(res, "content", "") or ""
+        if isinstance(text, list):
+            text = " ".join(
+                p.get("text", "") if isinstance(p, dict) else str(p) for p in text
+            )
         if text.strip():
             return text
     except Exception as e:

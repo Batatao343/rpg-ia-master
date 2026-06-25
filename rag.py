@@ -30,7 +30,10 @@ def get_embeddings() -> Optional[GoogleGenerativeAIEmbeddings]:
         return None
 
     try:
-        _embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
+        # text-embedding-004 foi removido do v1beta (404). gemini-embedding-001 é o
+        # estável atual. Troca de modelo muda a dimensão → reindexar lore/rules
+        # (`uv run python rag.py`); índices de sessão são regerados em runtime.
+        _embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
     except Exception as exc:
         print(f"[RAG] Falha ao inicializar embeddings: {exc}")
         _embeddings = None
@@ -150,6 +153,15 @@ def ingest_file(file_path: str, index_name: str):
     print(f"✅ Indexado com sucesso em '{path}'!")
 
 if __name__ == "__main__":
+    # Console Windows é cp1252; força UTF-8 p/ os emojis dos prints não quebrarem
+    # (main.py já faz isso no fluxo do jogo; aqui rodamos standalone).
+    import sys
+    for _stream in (sys.stdout, sys.stderr):
+        try:
+            _stream.reconfigure(encoding="utf-8")
+        except Exception:
+            pass
+
     # Script rápido para re-gerar a Lore Global se rodar este arquivo direto
     print("Recriando índices globais...")
     lore_path = os.path.join("data", "world_lore.txt")
