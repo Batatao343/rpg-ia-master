@@ -12,7 +12,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from main import app
 from persistence import save_game_state, load_game_state
-from gamedata import CLASSES, load_json_data
+from gamedata import CLASSES, load_json_data, seed_factions
 from character_creator import create_player_character
 from world_utils import starting_world
 
@@ -143,6 +143,7 @@ def create_character_wizard():
         ],
         "party": [],
         "enemies": [],
+        "factions": seed_factions(),
         "npcs": {},
         "campaign_plan": {},
         "needs_replan": False,

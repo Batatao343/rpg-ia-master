@@ -21,7 +21,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from main import app as game_graph
 from persistence import save_game_state, load_game_state, _serialize_messages
 from character_creator import create_player_character
-from gamedata import CLASSES, load_json_data
+from gamedata import CLASSES, load_json_data, seed_factions
 from world_utils import starting_world
 
 # --- CONFIGURAÇÃO DA API ---
@@ -67,6 +67,7 @@ class GameResponse(BaseModel):
     combat: Dict[str, Any] = {} # inimigos, condições, iniciativa, round, cooldowns
     npcs: List[Dict[str, Any]] = [] # NPCs conhecidos (nome, papel, local, relação, última lembrança)
     chronicle: List[str] = [] # crônica de menestrel: mini-recaps de eventos notáveis (persistente)
+    factions: List[Dict[str, Any]] = [] # fações vivas: objetivo, progresso, postura, reputação
 
 # --- HELPER: FORMATA RESPOSTA ---
 def format_response(state: dict) -> GameResponse:
@@ -115,7 +116,27 @@ def format_response(state: dict) -> GameResponse:
         combat=_combat_block(state),
         npcs=_npcs_block(state.get("npcs", {}) or {}),
         chronicle=[str(c) for c in (state.get("chronicle", []) or []) if str(c).strip()],
+        factions=_factions_block(state.get("factions", []) or []),
     )
+
+
+def _factions_block(factions: list) -> List[Dict[str, Any]]:
+    """Fações vivas para o HUD: objetivo, progresso (0-100), postura e reputação."""
+    out = []
+    for f in factions:
+        if not isinstance(f, dict):
+            continue
+        out.append({
+            "id": f.get("id", ""),
+            "name": f.get("name", ""),
+            "goal": f.get("goal", ""),
+            "region": f.get("region", ""),
+            "progress": int(f.get("progress", 0)),
+            "disposition": f.get("disposition", "neutro"),
+            "reputation": int(f.get("reputation", 0)),
+            "completed": bool(f.get("completed", False)),
+        })
+    return out
 
 
 def _npcs_block(npcs: dict) -> List[Dict[str, Any]]:
@@ -294,6 +315,7 @@ def new_game(req: CreateCharacterRequest):
         ],
         "party": [],
         "enemies": [],
+        "factions": seed_factions(),
         "npcs": {},
         "campaign_plan": {},
         "needs_replan": False,

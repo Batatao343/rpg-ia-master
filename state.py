@@ -87,6 +87,18 @@ class WorldState(TypedDict, total=False):
     danger_level: int
 
 
+class Faction(TypedDict, total=False):
+    id: str
+    name: str
+    goal: str                 # objetivo de longo prazo da facção
+    region: str               # região-base no grafo do mundo
+    progress: int             # 0-100 rumo ao objetivo (avança em ticks de descanso/viagem)
+    pace: int                 # quanto progride por período de tempo (determinístico)
+    disposition: str          # "hostil" | "neutro" | "aliado" — postura geral no mundo
+    reputation: int           # reputação do jogador com a facção (-100..100)
+    completed: bool           # objetivo concluído (dispara evento de mundo)
+
+
 class CampaignBeat(TypedDict):
     description: str
     status: Literal["pending", "done"]
@@ -115,6 +127,7 @@ class GameState(TypedDict):
     needs_replan: bool
     enemies: List[EnemyStats]
     party: List[CompanionState]
+    factions: List[Faction]  # Fase 2: fações com objetivos próprios (mundo vivo)
     npcs: Dict[str, Dict]
     active_npc_name: Optional[str]
     active_plan_step: Optional[str]

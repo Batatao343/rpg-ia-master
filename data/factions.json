@@ -1,0 +1,57 @@
+{
+  "selo_palido": {
+    "id": "selo_palido",
+    "name": "Ordem do Selo Pálido",
+    "goal": "Centralizar o poder das guildas e selar o Portão Oeste contra o norte.",
+    "region": "Nova Arcádia",
+    "progress": 0,
+    "pace": 4,
+    "disposition": "neutro",
+    "reputation": 0,
+    "completed": false
+  },
+  "clas_skallgard": {
+    "id": "clas_skallgard",
+    "name": "Clãs de Skallgard",
+    "goal": "Reunir os clãs do norte para uma marcha de inverno rumo ao sul.",
+    "region": "Skallgard",
+    "progress": 0,
+    "pace": 3,
+    "disposition": "hostil",
+    "reputation": 0,
+    "completed": false
+  },
+  "culto_clareira": {
+    "id": "culto_clareira",
+    "name": "Culto da Clareira",
+    "goal": "Despertar o que dorme sob os ossos da Floresta dos Sussurros.",
+    "region": "Floresta dos Sussurros",
+    "progress": 0,
+    "pace": 5,
+    "disposition": "hostil",
+    "reputation": 0,
+    "completed": false
+  },
+  "guilda_fuligem": {
+    "id": "guilda_fuligem",
+    "name": "Guilda da Fuligem",
+    "goal": "Escavar mais fundo na Mina da Fuligem atrás do veio negro.",
+    "region": "Montanhas Afiadas",
+    "progress": 0,
+    "pace": 4,
+    "disposition": "neutro",
+    "reputation": 0,
+    "completed": false
+  },
+  "hereticos_sol_morto": {
+    "id": "hereticos_sol_morto",
+    "name": "Heréticos do Sol Morto",
+    "goal": "Reerguer o templo soterrado de Zhur e reacender o sol que o matou.",
+    "region": "Deserto de Zhur",
+    "progress": 0,
+    "pace": 3,
+    "disposition": "neutro",
+    "reputation": 0,
+    "completed": false
+  }
+}

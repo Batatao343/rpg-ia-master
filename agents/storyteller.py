@@ -9,13 +9,30 @@ from llm_setup import get_llm
 from rag import query_rag
 from state import GameState
 from world_utils import (
+    advance_factions,
     apply_rest,
     apply_travel,
     clock_label,
+    ensure_factions,
     ensure_world,
     find_travel_destination,
     is_rest,
 )
+
+
+def _faction_note(events: list) -> str:
+    """Transforma fações que concluíram objetivo em nota de narração para o Mestre."""
+    if not events:
+        return ""
+    linhas = []
+    for ev in events:
+        tom = "uma AMEAÇA ganha forma" if ev.get("disposition") == "hostil" else "o mundo muda"
+        linhas.append(f"- {ev.get('name')} cumpriu seu objetivo ({ev.get('goal')}) — {tom}.")
+    return (
+        "[MUNDO VIVO] Enquanto o tempo passava, fações agiram nos bastidores:\n"
+        + "\n".join(linhas)
+        + "\nTeça isso na narração como rumor, sinal ou consequência distante."
+    )
 
 class StoryUpdate(BaseModel):
     narrative: str = Field(description="O texto narrativo da resposta.")
@@ -50,17 +67,23 @@ def storyteller_node(state: GameState):
     world = ensure_world(state.get("world", {}))
 
     # --- Fase 0: viagem / descanso / juízo de ação (determinístico + Ruler) ---
-    travel_note = rest_note = ruling_note = ""
+    # --- Fase 2: o tempo que passa avança as fações off-screen (mundo vivo) ---
+    travel_note = rest_note = ruling_note = faction_note = ""
     rested_player = None
+    factions = ensure_factions(state.get("factions"))
     dest = find_travel_destination(world, last_user_input) if last_user_input else None
     if dest:
         world = apply_travel(world, dest)
+        factions, faction_events = advance_factions(factions, 1)  # viagem = 1 período
+        faction_note = _faction_note(faction_events)
         travel_note = (
             f"O jogador VIAJOU para {dest['name']}. "
             f"Contexto do local: {dest.get('lore_seed', '')} Descreva a chegada e o que ele vê agora."
         )
     elif last_user_input and is_rest(last_user_input):
         rested_player, world = apply_rest(dict(state.get("player", {})), world)
+        factions, faction_events = advance_factions(factions, 2)  # descanso = 2 períodos
+        faction_note = _faction_note(faction_events)
         rest_note = (
             f"O jogador DESCANSOU. O tempo avançou para {clock_label(world)} e ele recuperou parte das forças. "
             "Narre a passagem do tempo e o estado do mundo ao acordar."
@@ -101,7 +124,7 @@ def storyteller_node(state: GameState):
     llm = get_llm(temperature=0.7)
     
     # PROMPT ATUALIZADO
-    eventos_turno = "\n".join(n for n in (travel_note, rest_note, ruling_note) if n) or "Nenhum evento especial."
+    eventos_turno = "\n".join(n for n in (travel_note, rest_note, ruling_note, faction_note) if n) or "Nenhum evento especial."
 
     sys = SystemMessage(content=f"""
     <PERSONA>
@@ -157,6 +180,7 @@ def storyteller_node(state: GameState):
             "messages": [AIMessage(content=narrative_text)],
             "npcs": new_npcs,
             "world": world,
+            "factions": factions,
             "campaign_plan": updated_plan,
             "needs_replan": needs_replan,
         }

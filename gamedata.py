@@ -87,6 +87,15 @@ ITEMS_DB = ARTIFACTS_DB
 WORLD_MAP = load_json_data("world_map.json")
 CLASS_THEMES = load_json_data("class_themes.json")
 
+# 4. Fações (Fase 2 — mundo vivo): objetivos próprios que avançam no tempo
+FACTIONS = load_json_data("factions.json")
+
+
+def seed_factions() -> list:
+    """Lista fresca de fações para uma nova partida (cópia profunda dos seeds)."""
+    import copy
+    return [copy.deepcopy(f) for f in FACTIONS.values()]
+
 _LOCATIONS_BY_ID = {loc["id"]: loc for loc in WORLD_MAP.get("locations", [])}
 START_LOCATION_ID = WORLD_MAP.get("start_location") or next(iter(_LOCATIONS_BY_ID), None)
 # Local inicial por nome de região (ex.: "Nova Arcádia" -> "nova_arcadia")

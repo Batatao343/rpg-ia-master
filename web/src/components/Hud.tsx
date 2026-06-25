@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { mdLite, pct, prettyItem } from "../lib";
-import type { CombatBlock, Condition, GameResponse, NpcView } from "../types";
+import type { CombatBlock, Condition, FactionView, GameResponse, NpcView } from "../types";
 import { WorldMap } from "./WorldMap";
 import { Medallion } from "./ornaments";
 
-type Tab = "ficha" | "combate" | "personagens" | "mapa" | "cronica";
+type Tab = "ficha" | "combate" | "personagens" | "mapa" | "faccoes" | "cronica";
 
 export function Hud({ data, open }: { data: GameResponse | null; open: boolean }) {
   const p = data?.player_stats;
@@ -36,6 +36,7 @@ export function Hud({ data, open }: { data: GameResponse | null; open: boolean }
     ["combate", "Combate"],
     ["personagens", "Pessoas"],
     ["mapa", "Mapa"],
+    ["faccoes", "Fações"],
     ["cronica", "Crônica"],
   ];
 
@@ -77,6 +78,7 @@ export function Hud({ data, open }: { data: GameResponse | null; open: boolean }
             <WorldMap visited={data?.world.visited ?? []} currentId={data?.world.location_id ?? ""} />
           </div>
         )}
+        {tab === "faccoes" && <FactionsTab factions={data?.factions ?? []} />}
         {tab === "cronica" && <ChronicleTab entries={data?.chronicle ?? []} />}
       </div>
     </aside>
@@ -152,6 +154,46 @@ function PeopleTab({ npcs }: { npcs: NpcView[] }) {
               </div>
               <p className="person__meta">{[n.role, n.location].filter(Boolean).join(" · ") || "—"}</p>
               {n.last_memory && <p className="person__mem">“{n.last_memory}”</p>}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function FactionsTab({ factions }: { factions: FactionView[] }) {
+  if (!factions.length) {
+    return (
+      <div>
+        <p className="hud__label">Fações</p>
+        <p className="combat-empty">Os poderes deste mundo ainda se movem nas sombras.</p>
+      </div>
+    );
+  }
+  const dispLabel: Record<string, string> = { hostil: "Hostil", neutro: "Neutra", aliada: "Aliada", aliado: "Aliada" };
+  return (
+    <div>
+      <p className="hud__label">Poderes do mundo ({factions.length})</p>
+      <ul className="factions">
+        {factions.map((f) => {
+          const prog = Math.max(0, Math.min(100, f.progress ?? 0));
+          return (
+            <li key={f.id} className={"faction faction--" + f.disposition + (f.completed ? " is-done" : "")}>
+              <div className="faction__top">
+                <span className="faction__name">{f.name}</span>
+                <span className={"faction__disp faction__disp--" + f.disposition}>
+                  {dispLabel[f.disposition] ?? f.disposition}
+                </span>
+              </div>
+              <p className="faction__goal">{f.goal}</p>
+              <div className="faction__track" title={`${prog}% rumo ao objetivo`}>
+                <div className="faction__fill" style={{ width: prog + "%" }} />
+              </div>
+              <p className="faction__meta">
+                {f.completed ? "Objetivo cumprido" : `${prog}% · ${f.region}`}
+                {f.reputation ? ` · reputação ${f.reputation > 0 ? "+" : ""}${f.reputation}` : ""}
+              </p>
             </li>
           );
         })}

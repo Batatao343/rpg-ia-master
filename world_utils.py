@@ -93,8 +93,57 @@ def apply_rest(player: dict, world: dict) -> Tuple[dict, dict]:
             player[res] = min(ceiling, healed)
     world = dict(world)
     advance_clock(world, 2)
-    # TODO Fase 2: world_simulator — simular eventos off-screen durante o descanso.
+    # Fações avançam no tempo off-screen: o storyteller chama advance_factions(2)
+    # após o descanso (2 períodos). world_simulator narrado virá no próximo slice.
     return player, world
+
+
+# --- Fase 2: fações com objetivos próprios (mundo vivo, determinístico) ---
+
+def ensure_factions(factions) -> list:
+    """Backfill/normaliza a lista de fações (compat com saves sem o campo)."""
+    if not factions:
+        return gamedata.seed_factions()
+    out = []
+    for f in factions:
+        f = dict(f or {})
+        f.setdefault("progress", 0)
+        f.setdefault("pace", 3)
+        f.setdefault("disposition", "neutro")
+        f.setdefault("reputation", 0)
+        f.setdefault("completed", False)
+        out.append(f)
+    return out
+
+
+def advance_factions(factions, periods: int = 1) -> Tuple[list, list]:
+    """
+    Avança o progresso de cada facção em `pace * periods` (determinístico, sem RNG).
+    Marca como concluída ao cruzar 100 e devolve eventos das que ACABARAM de concluir.
+
+    Retorna (novas_factions, eventos) — eventos é lista de dicts
+    {id, name, goal, disposition} prontos para virar evento de mundo/narração.
+    """
+    factions = ensure_factions(factions)
+    periods = max(0, int(periods))
+    if periods == 0:
+        return factions, []
+
+    new_list, events = [], []
+    for f in factions:
+        f = dict(f)
+        if not f.get("completed", False):
+            f["progress"] = min(100, f.get("progress", 0) + f.get("pace", 3) * periods)
+            if f["progress"] >= 100 and not f.get("completed", False):
+                f["completed"] = True
+                events.append({
+                    "id": f.get("id"),
+                    "name": f.get("name"),
+                    "goal": f.get("goal", ""),
+                    "disposition": f.get("disposition", "neutro"),
+                })
+        new_list.append(f)
+    return new_list, events
 
 
 def clock_label(world: dict) -> str:

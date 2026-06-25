@@ -77,6 +77,17 @@ export interface CombatBlock {
   cooldowns: Record<string, number>;
 }
 
+export interface FactionView {
+  id: string;
+  name: string;
+  goal: string;
+  region: string;
+  progress: number; // 0..100 rumo ao objetivo
+  disposition: "hostil" | "neutro" | "aliado";
+  reputation: number; // -100..100
+  completed: boolean;
+}
+
 export type MessageType = "STORY" | "COMBAT" | "NPC" | "LOOT";
 
 export interface GameResponse {
@@ -93,6 +104,7 @@ export interface GameResponse {
   combat: CombatBlock;
   npcs: NpcView[];
   chronicle: string[];
+  factions: FactionView[];
 }
 
 export interface CreateOptions {

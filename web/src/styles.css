@@ -446,8 +446,29 @@ select {
 .chron__text { margin: 0; font-family: var(--body); font-size: 1rem; line-height: 1.6; color: var(--ink); font-style: italic; }
 .chron__text strong { color: var(--accent); font-style: normal; }
 
-/* 5 abas: aperta um pouco a tipografia p/ caber em 360px */
-.tab { font-size: 0.6rem; letter-spacing: 0.04em; padding: 0.5rem 0.1rem; }
+/* ---- Fações (mundo vivo / Fase 2) ---- */
+.factions { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+.faction {
+  padding: 0.6rem 0.7rem; background: var(--bg-deep);
+  border: 1px solid var(--line-soft); border-left: 3px solid var(--line);
+  border-radius: var(--r-sm); transition: border-color 0.16s var(--ease);
+}
+.faction--hostil { border-left-color: var(--danger, oklch(0.54 0.20 25)); }
+.faction--aliado, .faction--aliada { border-left-color: var(--accent); }
+.faction.is-done { opacity: 0.85; }
+.faction__top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+.faction__name { font-family: var(--display); font-size: 0.82rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink); }
+.faction__disp { font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
+.faction__disp--hostil { color: var(--danger, oklch(0.6 0.18 25)); }
+.faction__disp--aliado, .faction__disp--aliada { color: var(--accent); }
+.faction__goal { margin: 0.3rem 0 0.45rem; font-size: 0.9rem; font-style: italic; color: var(--muted); line-height: 1.45; }
+.faction__track { height: 5px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.faction__fill { height: 100%; background: var(--accent); transition: width 0.4s var(--ease); }
+.faction--hostil .faction__fill { background: var(--danger, oklch(0.54 0.20 25)); }
+.faction__meta { margin: 0.35rem 0 0; font-size: 0.78rem; color: var(--faint); }
+
+/* 6 abas: aperta a tipografia p/ caber em 360px */
+.tab { font-size: 0.56rem; letter-spacing: 0.02em; padding: 0.5rem 0.05rem; }
 
 /* ============================================================
    MODO COMBATE — chat fica agressivo e urgente
