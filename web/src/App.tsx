@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import * as api from "./api";
 import { looksDegraded } from "./lib";
 import type { GameResponse, CreatePayload, LogEntry } from "./types";
 import { Banner, type BannerState } from "./components/Banner";
 import { CreateScreen } from "./components/CreateScreen";
 import { PlayScreen } from "./components/PlayScreen";
+import { EmberField } from "./components/EmberField";
 
 const LS_KEY = "cronicas_game_id";
 
@@ -103,27 +105,47 @@ export function App() {
   }
 
   return (
-    <>
+    <MotionConfig reducedMotion="user">
+      <div className="atmosphere" aria-hidden />
+      <EmberField />
       <Banner state={banner} onDone={() => setBanner(null)} />
-      {screen === "create" ? (
-        <CreateScreen
-          busy={busy}
-          continueData={continueData}
-          onCreate={handleCreate}
-          onContinue={handleContinue}
-          onError={(m) => setBanner({ msg: m, kind: "error" })}
-        />
-      ) : (
-        <PlayScreen
-          data={data}
-          log={log}
-          thinking={thinking}
-          busy={busy}
-          onAction={handleAction}
-          onNew={handleNew}
-        />
-      )}
-    </>
+      <AnimatePresence mode="wait">
+        {screen === "create" ? (
+          <motion.div
+            key="create"
+            initial={{ opacity: 0, scale: 0.985 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.01 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <CreateScreen
+              busy={busy}
+              continueData={continueData}
+              onCreate={handleCreate}
+              onContinue={handleContinue}
+              onError={(m) => setBanner({ msg: m, kind: "error" })}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="play"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <PlayScreen
+              data={data}
+              log={log}
+              thinking={thinking}
+              busy={busy}
+              onAction={handleAction}
+              onNew={handleNew}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </MotionConfig>
   );
 }
 

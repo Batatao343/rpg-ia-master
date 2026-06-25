@@ -65,6 +65,8 @@ class GameResponse(BaseModel):
     world: Dict[str, Any] = {} # location_id, day, period, visited (fog of war), danger
     quest: Dict[str, Any] = {} # objetivo atual, beats (status), clímax, progresso
     combat: Dict[str, Any] = {} # inimigos, condições, iniciativa, round, cooldowns
+    npcs: List[Dict[str, Any]] = [] # NPCs conhecidos (nome, papel, local, relação, última lembrança)
+    chronicle: List[str] = [] # crônica de menestrel: mini-recaps de eventos notáveis (persistente)
 
 # --- HELPER: FORMATA RESPOSTA ---
 def format_response(state: dict) -> GameResponse:
@@ -101,6 +103,7 @@ def format_response(state: dict) -> GameResponse:
             "gold": state["player"].get("gold", 0),
             "level": state["player"].get("level", 1),
             "xp": state["player"].get("xp", 0),
+            "abilities": state["player"].get("known_abilities", []) or [],
         },
         inventory=state["player"]["inventory"],
         current_location=state["world"]["current_location"],
@@ -110,7 +113,29 @@ def format_response(state: dict) -> GameResponse:
         world=_world_block(state.get("world", {}) or {}),
         quest=_quest_block(state.get("campaign_plan") or {}),
         combat=_combat_block(state),
+        npcs=_npcs_block(state.get("npcs", {}) or {}),
+        chronicle=[str(c) for c in (state.get("chronicle", []) or []) if str(c).strip()],
     )
+
+
+def _npcs_block(npcs: dict) -> List[Dict[str, Any]]:
+    """NPCs conhecidos pelo jogador (o que sabemos hoje: papel, local, relação, última lembrança)."""
+    out = []
+    for key, n in npcs.items():
+        if not isinstance(n, dict):
+            continue
+        mem = n.get("memory") or []
+        last_mem = mem[-1] if isinstance(mem, list) and mem else ""
+        out.append({
+            "name": n.get("name", key),
+            "role": n.get("role", ""),
+            "location": n.get("location", ""),
+            "relationship": n.get("relationship", 5),
+            "last_memory": last_mem,
+        })
+    return out
+
+
 
 
 def _combat_block(state: dict) -> Dict[str, Any]:
@@ -236,6 +261,7 @@ def new_game(req: CreateCharacterRequest):
         "game_id": new_game_id,
         "narrative_summary": f"A jornada de {req.name} começa em {final_char['region']}. {req.backstory}",
         "archivist_last_run": 0,
+        "chronicle": [],
         "combat_target": None,
         "loot_source": None,
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import * as api from "../api";
 import type { CreateOptions, CreatePayload, GameResponse } from "../types";
+import { Frame, Divider, Medallion } from "./ornaments";
 
 const LEVELS = [
   { v: 1, label: "Iniciante · 1" },
@@ -55,7 +56,8 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onError
 
   return (
     <main className="create">
-      <div className="create__frame">
+      <Frame className="create__frame">
+        <div className="create__seal"><Medallion size={48} /></div>
         <header className="create__head">
           <p className="kicker">Dark Fantasy · Narração por IA</p>
           <h1 className="create__title">Forje sua lenda</h1>
@@ -63,6 +65,8 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onError
             Um mundo sombrio aguarda. Defina quem caminha nele — o resto, a história escreve.
           </p>
         </header>
+
+        <Divider />
 
         <form className="form" autoComplete="off" onSubmit={submit}>
           <div className="field">
@@ -147,7 +151,7 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onError
             </button>
           </div>
         </form>
-      </div>
+      </Frame>
     </main>
   );
 }

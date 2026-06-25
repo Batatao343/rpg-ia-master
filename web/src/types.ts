@@ -14,7 +14,17 @@ export interface PlayerStats {
   gold: number;
   level: number;
   xp: number;
+  abilities: string[];
 }
+
+export interface NpcView {
+  name: string;
+  role: string;
+  location: string;
+  relationship: number; // 0..10
+  last_memory: string;
+}
+
 
 export interface WorldBlock {
   location: string;
@@ -81,6 +91,8 @@ export interface GameResponse {
   world: WorldBlock;
   quest: QuestBlock;
   combat: CombatBlock;
+  npcs: NpcView[];
+  chronicle: string[];
 }
 
 export interface CreateOptions {

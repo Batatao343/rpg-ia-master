@@ -19,6 +19,7 @@ export function PlayScreen({ data, log, thinking, busy, onAction, onNew }: Props
   const w = data?.world;
   const clock = w?.period ? `Dia ${w.day} · ${w.period}` : "Dia 1 · Amanhecer";
   const dead = (data?.player_stats.hp ?? 1) <= 0;
+  const fighting = !!data?.combat?.active;
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,13 +30,16 @@ export function PlayScreen({ data, log, thinking, busy, onAction, onNew }: Props
   }
 
   return (
-    <div className="play">
+    <div className={"play" + (fighting ? " is-combat" : "")}>
+      {fighting && <div className="combat-veil" aria-hidden />}
+
       <header className="topbar">
         <div className="topbar__loc">
           <span className="topbar__place">{data?.current_location || "—"}</span>
           <span className="topbar__meta">{clock}</span>
         </div>
         <div className="topbar__right">
+          {fighting && <span className="combat-flag">⚔ Combate</span>}
           <button className="iconbtn" type="button" onClick={() => setHudOpen((v) => !v)}>
             ☰ Ficha
           </button>
@@ -54,12 +58,16 @@ export function PlayScreen({ data, log, thinking, busy, onAction, onNew }: Props
         <input
           type="text"
           autoComplete="off"
-          placeholder="O que você faz?  (ex.: examino a porta, ataco o vulto, pergunto sobre o rei)"
+          placeholder={
+            fighting
+              ? "O inimigo avança — o que você faz?"
+              : "O que você faz?  (ex.: examino a porta, ataco o vulto, pergunto sobre o rei)"
+          }
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
         <button className="btn btn--primary" type="submit" disabled={busy} aria-label="Agir">
-          {busy ? "…" : "Agir"}
+          {busy ? "…" : fighting ? "Lutar" : "Agir"}
         </button>
       </form>
 

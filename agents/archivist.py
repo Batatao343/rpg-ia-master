@@ -11,6 +11,15 @@ from state import GameState
 class MemoryUpdate(BaseModel):
     new_summary: str = Field(description="Um parágrafo atualizado resumindo a situação ATUAL e imediata da história.")
     important_facts: list[str] = Field(description="Lista de fatos PERMANENTES para salvar no banco de dados (ex: 'Player matou o Rei'). Se nada importante, lista vazia.")
+    chronicle_entry: str = Field(
+        default="",
+        description=(
+            "Se algo digno de uma CANÇÃO aconteceu neste turno (uma batalha, uma morte, uma "
+            "descoberta, um pacto, uma traição), escreva 1 mini-parágrafo curto (1 a 3 frases) em "
+            "PROSA DE MENESTREL — terceira pessoa, evocativo, épico-sombrio, citando o herói pelo nome. "
+            "Se o turno foi banal (andar, observar, conversa fiada), deixe VAZIO ('')."
+        ),
+    )
 
 def archive_node(state: GameState):
     """
@@ -38,6 +47,7 @@ def archive_node(state: GameState):
     <TAREFA>
     1. ATUALIZAR O RESUMO: Escreva um novo parágrafo que combine o resumo anterior com os novos eventos recentes. Mantenha foco no "Aqui e Agora".
     2. EXTRAIR FATOS (LONG TERM): Identifique fatos cruciais que devem ser lembrados para sempre e salvos no banco de dados.
+    3. CRÔNICA DO MENESTREL: se um feito digno de canção ocorreu, escreva 'chronicle_entry' como um mini-parágrafo narrado por um bardo (3ª pessoa, evocativo). Caso contrário, deixe vazio ('').
     
     Se nada grandioso aconteceu, 'important_facts' deve ser [] (vazio).
     """)
@@ -58,7 +68,13 @@ def archive_node(state: GameState):
 
         # 2. Retorna atualização de estado (Curto Prazo)
         updates["narrative_summary"] = result.new_summary
-        
+
+        # 3. Crônica do menestrel (longo prazo, exibível): acumula se houve feito notável.
+        entry = (getattr(result, "chronicle_entry", "") or "").strip()
+        if entry:
+            prev = state.get("chronicle", []) or []
+            updates["chronicle"] = prev + [entry]
+
         # Atualiza timestamp da última execução
         turn = state.get("world", {}).get("turn_count", 0)
         updates["archivist_last_run"] = turn

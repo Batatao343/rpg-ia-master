@@ -67,6 +67,9 @@ Branch `feat/fase0-mundo`. 39 testes verdes (offline). Fluxo de IA auditado + ha
 
 - [x] Objetivos/quests na UI — HUD mostra objetivo atual + beats (pendente/atual/feito) com progresso; storyteller sinaliza `beat_completed` e avança `current_step` (replaneja ao esgotar). Mock avança ~30%/turno no modo simulado.
 - [x] Combate com profundidade: **IA identifica + Python resolve**. Iniciativa (d20+dex), condições/DoT estruturadas, custos (stamina/mana) + cooldowns de habilidade, save por atributo real do inimigo, painel de combate na UI. Núcleo determinístico em `combat_mechanics.py` (testável offline).
+- [ ] **Objetivo do jogador** via IA: o narrador devolve `player_objective` (meta em linguagem de jogador) no `StoryUpdate`, separado dos beats internos do `campaign_manager`. Hoje o HUD não mostra objetivo (removido por ser direção do narrador).
+- [ ] **Conhecimento de NPC profundo** (aba Personagens): o que o jogador sabe vs. não sabe; fatos revelados por interação. Hoje a aba mostra só o básico (nome/papel/local/relação/última lembrança).
+- [ ] **Crônica/diário persistente completo**: hoje a Crônica usa o histórico mantido no save (~últimos 20 turnos). Persistir o diário inteiro à parte para campanhas longas.
 - [ ] Tempo/clima com efeito real (campos existem).
 - [ ] Codex/bestiário revelável (`bestiary.json` já existe).
 - [ ] Gerar arte dos monstros e personagens

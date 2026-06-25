@@ -185,9 +185,21 @@ def _campaign_plan(model, messages):
                          "climax": "Um confronto final contra a verdade enterrada no local."})
 
 
+_BARD_LINES = [
+    "E assim, sob o céu de chumbo, o herói cravou aço em carne e a sombra recuou — por ora.",
+    "Cantam agora os corvos o que os tolos não ousam: que naquele ermo um nome foi forjado em sangue.",
+    "Diz-se que naquele instante o vento parou para ver o herói erguer-se sobre os caídos.",
+    "Uma porta se abriu onde só havia pedra, e com ela um segredo velho como a fome.",
+]
+
+
 def _memory_update(model, messages):
-    return _fill(model, {"new_summary": "A jornada segue por terras sombrias; a tensão cresce.",
-                         "important_facts": []})
+    overrides = {"new_summary": "A jornada segue por terras sombrias; a tensão cresce.",
+                 "important_facts": []}
+    # ~45% dos turnos rendem uma linha de menestrel (para a Crônica progredir no modo simulado).
+    if "chronicle_entry" in getattr(model, "model_fields", {}) and random.random() < 0.45:
+        overrides["chronicle_entry"] = random.choice(_BARD_LINES)
+    return _fill(model, overrides)
 
 
 def _player_stats(model, messages):

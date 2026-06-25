@@ -75,6 +75,7 @@ def save_game_state(state: Dict[str, Any]) -> bool:
             "game_id": game_id,
             "narrative_summary": state.get("narrative_summary", ""),
             "archivist_last_run": state.get("archivist_last_run", 0),
+            "chronicle": state.get("chronicle", []),
             
             # --- Dados Transicionais ---
             "combat_target": state.get("combat_target"),
@@ -127,6 +128,7 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
             "game_id": raw_data.get("game_id", "recovered_session"),
             "narrative_summary": raw_data.get("narrative_summary", ""),
             "archivist_last_run": raw_data.get("archivist_last_run", 0),
+            "chronicle": raw_data.get("chronicle", []),
             
             # --- Recupera Core ---
             "player": raw_data.get("player", {}),
