@@ -30,7 +30,7 @@ from agents.storyteller import storyteller_node
 from agents.loot import loot_node
 from agents.archivist import archive_node # <--- NOVO
 
-load_dotenv()
+load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
 
 def build_game_graph():
     """Constrói e compila o grafo de estados do jogo."""

@@ -119,6 +119,27 @@
           <div class="stat"><span class="muted">Defesa</span><b id="h-def">0</b></div>
         </div>
 
+        <div id="combatblock" class="combatblock" hidden>
+          <p class="hud__label">Combate <span id="h-combat-round" class="muted"></span></p>
+          <ul id="h-enemies" class="enemies"></ul>
+          <p id="h-init-label" class="hud__label hud__label--sub" hidden>Iniciativa</p>
+          <ol id="h-initiative" class="initiative"></ol>
+          <div id="h-pcond-block" hidden>
+            <p class="hud__label hud__label--sub">Suas condições</p>
+            <ul id="h-pconds" class="conds"></ul>
+          </div>
+          <div id="h-cd-block" hidden>
+            <p class="hud__label hud__label--sub">Recarga</p>
+            <div id="h-cooldowns" class="conds__row"></div>
+          </div>
+        </div>
+
+        <div id="questblock" class="questblock" hidden>
+          <p class="hud__label">Objetivo</p>
+          <p id="h-quest-obj" class="quest__obj">—</p>
+          <ol id="h-quest-beats" class="quest__beats"></ol>
+        </div>
+
         <div class="invblock">
           <p class="hud__label">Inventário</p>
           <ul id="h-inv" class="inv"></ul>

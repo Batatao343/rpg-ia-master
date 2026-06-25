@@ -15,7 +15,14 @@ class Attributes(TypedDict):
     charisma: int
 
 
-class PlayerStats(TypedDict):
+class Condition(TypedDict, total=False):
+    name: str
+    dot: int        # dano por turno (0 = buff/debuff sem dano direto)
+    duration: int   # turnos restantes
+    source: str     # quem/que habilidade aplicou
+
+
+class PlayerStats(TypedDict, total=False):
     name: str
     class_name: str
     race: str
@@ -34,7 +41,8 @@ class PlayerStats(TypedDict):
     known_abilities: List[str]
     defense: int
     attack_bonus: int
-    active_conditions: List[str]
+    active_conditions: List[Condition]
+    ability_cooldowns: Dict[str, int]  # ability_id -> turnos restantes
 
 
 class EnemyStats(TypedDict):
@@ -49,7 +57,7 @@ class EnemyStats(TypedDict):
     attributes: Attributes
     abilities: List[str]
     status: str  # "ativo", "morto"
-    active_conditions: List[str]
+    active_conditions: List["Condition"]
     attacks: Optional[List[Dict]]
 
 
@@ -115,3 +123,7 @@ class GameState(TypedDict):
     # --- Campos de Transição ---
     combat_target: Optional[str]
     loot_source: Optional[str]
+
+    # --- Combate determinístico ---
+    # {"round": int, "active": bool, "order": [{"id","name","side","init"}]}
+    combat: Optional[Dict]

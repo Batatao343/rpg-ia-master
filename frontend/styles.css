@@ -275,6 +275,54 @@ select {
 }
 .inv li.empty { color: var(--faint); font-style: italic; border-style: dashed; }
 
+/* --- combate --- */
+.combatblock { margin-bottom: 0.4rem; }
+.hud__label--sub { margin-top: 0.7rem; }
+.enemies { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.enemy {
+  padding: 0.45rem 0.55rem; background: var(--bg);
+  border: 1px solid var(--danger-dim, var(--line)); border-left: 2px solid var(--danger);
+  border-radius: var(--r-sm);
+}
+.enemy__top { display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.3rem; }
+.enemy__track { height: 5px; background: oklch(0.22 0.01 60); border-radius: var(--r-pill, 999px); overflow: hidden; }
+.enemy__fill { height: 100%; background: var(--danger); transition: width 0.4s var(--ease, ease); }
+
+.initiative { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.init {
+  font-size: 0.74rem; padding: 0.15rem 0.45rem; border-radius: var(--r-pill, 999px);
+  border: 1px solid var(--line-soft); color: var(--muted);
+}
+.init--hero { border-color: var(--accent); color: var(--accent); }
+.init--enemy { border-color: var(--danger-dim, var(--line)); }
+
+.conds { list-style: none; margin: 0; padding: 0; }
+.conds__row { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.cond-chip {
+  font-size: 0.72rem; padding: 0.12rem 0.4rem; border-radius: var(--r-sm);
+  background: var(--surface-2, var(--bg)); border: 1px solid var(--line-soft); color: var(--muted);
+}
+.cond-chip.is-dot { border-color: var(--danger); color: var(--danger); }
+
+/* --- objetivos / quests --- */
+.questblock { margin-bottom: 0.2rem; }
+.quest__obj {
+  margin: 0 0 0.6rem; font-size: 0.9rem; line-height: 1.5;
+  color: var(--ink); font-weight: 600;
+}
+.quest__beats { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
+.quest__beat {
+  position: relative; padding-left: 1.1rem;
+  font-size: 0.82rem; line-height: 1.45; color: var(--muted);
+}
+.quest__beat::before {
+  content: "○"; position: absolute; left: 0; color: var(--faint);
+}
+.quest__beat.is-current { color: var(--ink); }
+.quest__beat.is-current::before { content: "▸"; color: var(--accent); }
+.quest__beat.is-done { color: var(--faint); text-decoration: line-through; }
+.quest__beat.is-done::before { content: "●"; color: var(--accent); }
+
 .summary summary { cursor: pointer; font-size: 0.85rem; color: var(--muted); }
 .summary p { margin: 0.6rem 0 0; font-size: 0.85rem; line-height: 1.6; }
 

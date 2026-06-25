@@ -63,6 +63,8 @@ class GameResponse(BaseModel):
     last_turn_log: List[Dict[str, Any]]
     simulated: bool = False # True quando rodando em modo simulado (sem API key)
     world: Dict[str, Any] = {} # location_id, day, period, visited (fog of war), danger
+    quest: Dict[str, Any] = {} # objetivo atual, beats (status), clímax, progresso
+    combat: Dict[str, Any] = {} # inimigos, condições, iniciativa, round, cooldowns
 
 # --- HELPER: FORMATA RESPOSTA ---
 def format_response(state: dict) -> GameResponse:
@@ -106,7 +108,57 @@ def format_response(state: dict) -> GameResponse:
         last_turn_log=_serialize_messages(state["messages"][-5:]),
         simulated=(not os.getenv("GOOGLE_API_KEY")) and (not os.getenv("RPG_NO_MOCK")),
         world=_world_block(state.get("world", {}) or {}),
+        quest=_quest_block(state.get("campaign_plan") or {}),
+        combat=_combat_block(state),
     )
+
+
+def _combat_block(state: dict) -> Dict[str, Any]:
+    """Expõe o estado de combate para o HUD (inimigos vivos, condições, iniciativa)."""
+    meta = state.get("combat") or {}
+    enemies = state.get("enemies") or []
+    player = state.get("player") or {}
+    alive = [e for e in enemies if e.get("status") == "ativo"]
+
+    def _conds(entity):
+        return [{"name": c.get("name", ""), "dot": c.get("dot", 0), "duration": c.get("duration", 0)}
+                for c in (entity.get("active_conditions") or []) if isinstance(c, dict)]
+
+    return {
+        "active": bool(meta.get("active")) and bool(alive),
+        "round": meta.get("round", 0),
+        "order": [{"name": o.get("name", ""), "side": o.get("side", ""), "init": o.get("init", 0)}
+                  for o in (meta.get("order") or [])],
+        "enemies": [
+            {"name": e.get("name", ""), "hp": e.get("hp", 0), "max_hp": e.get("max_hp", 0),
+             "defense": e.get("defense", 0), "conditions": _conds(e)}
+            for e in alive
+        ],
+        "player_conditions": _conds(player),
+        "cooldowns": dict(player.get("ability_cooldowns", {}) or {}),
+    }
+
+
+def _quest_block(plan: dict) -> Dict[str, Any]:
+    plan = plan or {}
+    beats = plan.get("beats", []) or []
+    step = plan.get("current_step", 0)
+    climax = plan.get("climax", "")
+    if 0 <= step < len(beats):
+        objective = beats[step].get("description", "")
+    else:
+        # Todos os beats concluídos → o clímax é o objetivo final da cena.
+        objective = climax
+    return {
+        "objective": objective,
+        "climax": climax,
+        "current_step": step,
+        "total": len(beats),
+        "beats": [
+            {"description": b.get("description", ""), "status": b.get("status", "pending")}
+            for b in beats
+        ],
+    }
 
 
 def _world_block(w: dict) -> Dict[str, Any]:

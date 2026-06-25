@@ -79,6 +79,7 @@ def save_game_state(state: Dict[str, Any]) -> bool:
             # --- Dados Transicionais ---
             "combat_target": state.get("combat_target"),
             "loot_source": state.get("loot_source"),
+            "combat": state.get("combat", {}),
 
             # --- Dados Core ---
             "player": state.get("player", {}),
@@ -140,6 +141,7 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
             # --- Recupera Transicionais ---
             "combat_target": raw_data.get("combat_target"),
             "loot_source": raw_data.get("loot_source"),
+            "combat": raw_data.get("combat", {}),
 
             # --- Recupera Mensagens ---
             "messages": _deserialize_messages(raw_data.get("message_history", [])),

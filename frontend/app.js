@@ -116,6 +116,9 @@
       }
     }
 
+    renderCombat(r.combat || {});
+    renderQuest(r.quest || {});
+
     $("h-summary").textContent = r.narrative_summary || "A aventura começa.";
     $("t-location").textContent = r.current_location || "—";
 
@@ -124,6 +127,108 @@
 
     // morte
     if ((p.hp ?? 1) <= 0) $("overlay-death").hidden = false;
+  }
+
+  function renderCombat(c) {
+    const block = $("combatblock");
+    const enemies = c.enemies || [];
+    if (!c.active || !enemies.length) { block.hidden = true; return; }
+    block.hidden = false;
+
+    $("h-combat-round").textContent = c.round ? `· Round ${c.round}` : "";
+
+    // inimigos com barra de HP + condições
+    const ul = $("h-enemies");
+    ul.innerHTML = "";
+    enemies.forEach((e) => {
+      const li = document.createElement("li");
+      li.className = "enemy";
+      const pct = e.max_hp > 0 ? Math.max(0, Math.min(100, (e.hp / e.max_hp) * 100)) : 0;
+      const top = document.createElement("div");
+      top.className = "enemy__top";
+      top.innerHTML = `<span>${escapeHtml(e.name)}</span><span class="muted">${e.hp}/${e.max_hp}</span>`;
+      const track = document.createElement("div");
+      track.className = "enemy__track";
+      const fill = document.createElement("div");
+      fill.className = "enemy__fill";
+      fill.style.width = pct + "%";
+      track.appendChild(fill);
+      li.append(top, track);
+      if ((e.conditions || []).length) li.appendChild(condChips(e.conditions));
+      ul.appendChild(li);
+    });
+
+    // iniciativa
+    const order = c.order || [];
+    $("h-init-label").hidden = order.length === 0;
+    const ol = $("h-initiative");
+    ol.innerHTML = "";
+    order.forEach((o) => {
+      const li = document.createElement("li");
+      li.className = "init " + (o.side === "hero" ? "init--hero" : "init--enemy");
+      li.textContent = `${o.init} · ${o.name}`;
+      ol.appendChild(li);
+    });
+
+    // condições do player
+    const pconds = c.player_conditions || [];
+    $("h-pcond-block").hidden = pconds.length === 0;
+    const pul = $("h-pconds");
+    pul.innerHTML = "";
+    if (pconds.length) pul.appendChild(condChips(pconds, true));
+
+    // cooldowns de habilidade
+    const cds = c.cooldowns || {};
+    const keys = Object.keys(cds);
+    $("h-cd-block").hidden = keys.length === 0;
+    const cdRow = $("h-cooldowns");
+    cdRow.innerHTML = "";
+    keys.forEach((k) => {
+      const chip = document.createElement("span");
+      chip.className = "cond-chip";
+      chip.textContent = `${prettyItem(k)} (${cds[k]})`;
+      cdRow.appendChild(chip);
+    });
+  }
+
+  function condChips(conds, asChildren) {
+    const wrap = document.createElement(asChildren ? "li" : "div");
+    wrap.className = "conds__row";
+    conds.forEach((cd) => {
+      const chip = document.createElement("span");
+      chip.className = "cond-chip" + (cd.dot > 0 ? " is-dot" : "");
+      const dot = cd.dot > 0 ? ` ${cd.dot}/t` : "";
+      chip.textContent = `${cd.name}${dot} (${cd.duration})`;
+      wrap.appendChild(chip);
+    });
+    return wrap;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function renderQuest(q) {
+    const block = $("questblock");
+    const beats = q.beats || [];
+    if (!q.objective && !beats.length) { block.hidden = true; return; }
+    block.hidden = false;
+
+    const done = beats.filter((b) => b.status === "done").length;
+    const total = q.total || beats.length;
+    const progress = total ? ` (${Math.min(done, total)}/${total})` : "";
+    $("h-quest-obj").textContent = (q.objective || "Avance a trama.") + progress;
+
+    const ol = $("h-quest-beats");
+    ol.innerHTML = "";
+    beats.forEach((b, i) => {
+      const li = document.createElement("li");
+      const isDone = b.status === "done";
+      const isCurrent = !isDone && i === (q.current_step ?? 0);
+      li.className = "quest__beat" + (isDone ? " is-done" : isCurrent ? " is-current" : "");
+      li.textContent = b.description || "";
+      ol.appendChild(li);
+    });
   }
 
   function prettyItem(id) {

@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from langchain_core.messages import AIMessage
 from langchain_google_genai import ChatGoogleGenerativeAI, HarmBlockThreshold, HarmCategory
 
-load_dotenv()
+load_dotenv(override=True)  # .env é a fonte canônica da key (sobrepõe env var do SO)
 
 
 class ModelTier(Enum):
@@ -35,12 +35,19 @@ class FallbackLLM:
 def get_llm(temperature: float = 0.1, tier: ModelTier = ModelTier.FAST):
     """Retorna uma instância configurada do Gemini ou um fallback resiliente."""
     model = "gemini-flash-latest" if tier == ModelTier.FAST else "gemini-pro-latest"
-    max_retries = 3 if tier == ModelTier.FAST else 1
+    # Fail-fast: sem retries automáticos. O erro mais comum (429 quota) NÃO é
+    # transitório (limite diário), e o retry com backoff do langchain trava o
+    # turno por minutos antes de cair no fallback. Cada nó já trata a exceção
+    # (try/except -> fallback resiliente), então falhar rápido é melhor UX.
+    max_retries = 0
 
-    # Sem chave: modo SIMULADO (dados fictícios jogáveis), sem rede.
-    # Defina RPG_NO_MOCK=1 para forçar o fallback de erro puro.
-    if not os.getenv("GOOGLE_API_KEY"):
-        if os.getenv("RPG_NO_MOCK"):
+    # Modo SIMULADO (dados fictícios jogáveis), sem rede, quando:
+    #  - não há GOOGLE_API_KEY, ou
+    #  - RPG_FORCE_MOCK=1 (testes determinísticos mesmo com chave — evita quota/rede).
+    # Defina RPG_NO_MOCK=1 para forçar o fallback de erro puro (só vale sem chave).
+    force_mock = bool(os.getenv("RPG_FORCE_MOCK"))
+    if force_mock or not os.getenv("GOOGLE_API_KEY"):
+        if os.getenv("RPG_NO_MOCK") and not force_mock:
             return FallbackLLM("O narrador está indisponível. Configure GOOGLE_API_KEY e tente novamente.")
         from mock_llm import MockLLM
         return MockLLM(temperature=temperature)

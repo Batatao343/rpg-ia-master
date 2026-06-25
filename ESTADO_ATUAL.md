@@ -2,15 +2,18 @@
 
 > Documento de estado do projeto. Leia isto **primeiro** ao retomar o trabalho.
 > Complementa `CLAUDE.md` (arquitetura) e `REFERENCE.md` (decisões técnicas).
-> Última atualização: 2026-06-22.
+> Última atualização: 2026-06-25 (sessão: auditoria do fluxo de IA + hardening).
 
 ---
 
 ## TL;DR — Em que pé está
 
-**MVP funcional e jogável.** O grafo LangGraph roda fim-a-fim (criar plano → rotear → narrar/combater/NPC/loot → arquivar → salvar) sem crashar. Suíte de testes offline 100% verde (`uv run pytest`).
+**MVP funcional e jogável.** O grafo LangGraph roda fim-a-fim (criar plano → rotear → narrar/combater/NPC/loot → arquivar → salvar) sem crashar. Suíte offline 100% verde (`uv run pytest` — 39 testes).
 
-Falta **apenas** o usuário colar `GOOGLE_API_KEY` no `.env` para a IA narrar de verdade. Sem a chave o jogo roda em **modo degradado**: não quebra, mas o narrador responde mensagens de fallback ("O destino é incerto... (Erro AI)").
+A chave (`GOOGLE_API_KEY`) já foi configurada. Sem chave o jogo roda no **MockLLM** (jogável, dados
+fictícios). **Atenção:** o caminho do **Gemini real** ainda não foi validado fim-a-fim — a quota free
+tier (20 req/dia por modelo) esgotou durante a auditoria e a chave depois ficou inválida (revogada).
+Ver seção **Quota e teste real** abaixo. A auditoria estática + correções desta sessão estão aplicadas.
 
 ---
 
@@ -23,8 +26,8 @@ Falta **apenas** o usuário colar `GOOGLE_API_KEY` no `.env` para a IA narrar de
 ```powershell
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13 (já feito)
-copy .env.example .env               # cole GOOGLE_API_KEY no .env
-uv run pytest                        # 12 testes offline, devem passar
+copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example — é versionada)
+uv run pytest                        # 39 testes offline (conftest força RPG_FORCE_MOCK=1)
 uv run python game_engine.py         # jogar no terminal (CLI)
 uv run uvicorn api:app --port 8000   # API REST + FRONTEND WEB
 uv run python rag.py                 # reindexar lore/regras (data/*.txt)
@@ -38,10 +41,30 @@ serif narrativo + grotesca no HUD, acento âmbar, vermelho só pra perigo).
 **Modo simulado (sem API key):** sem `GOOGLE_API_KEY`, `get_llm()` devolve um
 `MockLLM` ([mock_llm.py](mock_llm.py)) que gera dados fictícios plausíveis para cada
 agente (narrativa, ficha, roteamento por palavra-chave, combate, NPC, loot). O jogo
-fica **jogável e testável** sem chave; o front mostra banner "modo simulado". Com a
+fica **jogável e testável** sem chave; o front mostra banner "modo simulado". `RPG_FORCE_MOCK=1`
+força o MockLLM **mesmo com chave** — usado pela suíte (`tests/conftest.py`) p/ ser determinística
+e não depender de quota/rede. Com a
 chave, a IA real entra automaticamente. Force o fallback de erro puro com `RPG_NO_MOCK=1`.
 
 `GOOGLE_API_KEY`: gerar em https://aistudio.google.com/app/apikey
+
+---
+
+## Quota e teste real (IMPORTANTE)
+
+A chave free tier do Google AI Studio tem **20 requisições/dia POR MODELO**
+(`gemini-flash-latest`≈`gemini-3.5-flash` e `gemini-pro-latest` têm buckets separados, ambos pequenos).
+Um e2e real do grafo gasta dezenas de chamadas → **inviável testar IA real em lote no free tier**.
+
+- Para validar o Gemini de verdade: ativar billing **ou** rodar pouquíssimas chamadas/dia.
+- Harness frugal pronto: ver `t1_provider.py`/`t2_smart.py` (scratchpad da sessão) — 1 chamada por nó,
+  prioriza nós SMART vs FAST (quotas separadas), com detector de degradação (marcadores de fallback).
+- `get_llm()` agora é **fail-fast** (`max_retries=0`): no `429` o turno falha em ~3s e cai no fallback,
+  em vez de travar minutos com retry/backoff.
+
+**Por que o MockLLM não basta como teste:** ele devolve sempre instâncias Pydantic válidas, então
+acesso a campo nunca quebra — **bugs de mapeamento de campo (nome/tipo/ausência) só aparecem no Gemini
+real.** A auditoria estática desta sessão cobriu os nós; falta a confirmação online.
 
 ---
 
@@ -51,8 +74,9 @@ chave, a IA real entra automaticamente. Force o fallback de erro puro com `RPG_N
 - **Loop de turno completo**: `campaign_manager → dm_router → (storyteller|combat|npc|loot) → archivist → save`.
 - **`turn_count`** incrementa por turno (corrigido — antes ficava 0 para sempre).
 - **Rota NPC** casa o alvo da fala com NPC presente na cena (corrigido — antes sempre falhava).
-- **Combate**: spawn de inimigos via bestiário + cache; ao vencer, roteia para loot (aresta condicional).
-- **Loot/Craft/Shop/Treasure**, economia (compra/venda), persistência de itens custom.
+- **Combate com profundidade** (2026-06-25): a **IA só identifica** a ação (linguagem natural → `CombatAction`) e **narra**; **Python resolve tudo** em `combat_mechanics.py` — iniciativa (d20+dex), condições/DoT estruturadas, custos stamina/mana + cooldowns, save por atributo real do alvo, turno dos inimigos. Determinístico, testável offline, jogável sem quota. UI mostra painel de combate (inimigos/HP/condições/iniciativa/cooldowns). Spawn via bestiário+cache mantido; vitória roteia para loot. `state.combat` persistido.
+- **Fase 0 — modelo de mundo** ([world_utils.py](world_utils.py) + `data/world_map.json`): grafo de 9 locais, relógio (dia/período), viagem entre locais conectados (fog of war via `visited`), descanso (cura + tempo), gating de ação por classe (`class_themes` + Ruler). Tudo determinístico (funciona no modo simulado). Testes em `tests/test_fase0.py`.
+- **Loot/Craft/Shop/Treasure**, economia (compra/venda), persistência de itens custom. Sinal do ouro na venda forçado em Python (não depende do LLM).
 - **Memória híbrida**: resumo curto (archivist) + RAG por sessão (FAISS por `game_id`).
 - **Persistência**: saves JSON em `saves/{game_id}.json`, compatível com saves antigos.
 - **Console UTF-8** forçado em `main.py` (corrige crash de emoji no terminal Windows cp1252).
@@ -69,7 +93,11 @@ chave, a IA real entra automaticamente. Force o fallback de erro puro com `RPG_N
 1. Envolva o acesso aos campos em `try/except`, **ou**
 2. Cheque `isinstance(resultado, SeuModelo)` antes de usar.
 
-Já blindados: `router.py`, `character_creator.py`. Os demais agentes acessam dentro de `try`. Mantenha esse padrão.
+Já blindados: `router.py`, `character_creator.py`, `combat.py` (isinstance). Os demais agentes acessam dentro de `try`. Mantenha esse padrão.
+
+**Cuidado — o MockLLM mascara o problema:** ele devolve instâncias Pydantic válidas, então no modo
+simulado (e na suíte) o acesso a campo nunca quebra. O guard só é exercitado no `FallbackLLM`/Gemini
+real. Ao validar um nó novo, teste também com a chave real (respeitando a quota).
 
 ---
 
@@ -77,12 +105,30 @@ Já blindados: `router.py`, `character_creator.py`. Os demais agentes acessam de
 
 Nada disso quebra o jogo — são melhorias:
 
-1. **Beats da campanha não avançam** — `storyteller_node` tem a lógica de avanço de `current_step` como `pass` (no-op). O replan por tempo (a cada 10 turnos) funciona, mas o avanço beat-a-beat não. Implementar sinal de conclusão de beat.
+1. ~~**Beats da campanha não avançam**~~ — **RESOLVIDO** (sessão 2026-06-25). `StoryUpdate.beat_completed` (sinal do narrador) avança `current_step`, marca beat `done` e dispara replan ao esgotar. UI mostra objetivo + beats (HUD). Testes: `tests/test_mvp.py::test_storyteller_*`.
 2. **Combat `next` em rodadas normais** — durante o combate (sem vitória) o nó devolve `next="combat_agent"`; a aresta condicional manda para o archivist (correto). Só a vitória vai para loot. OK para MVP.
 3. **Inventário inicial usa nomes, não IDs** — itens gerados pela IA na criação entram como texto livre; `ARTIFACTS_DB.get(item_id)` não acha (apenas ignora, sem bônus de combate). Padronizar IDs se quiser bônus de item desde o nível 1.
 4. **Saves antigos** (`saves/quicksave.json` etc.) têm schema legado (`class`/`abilities`). Carregam, mas alguns campos novos (mana/stamina/`class_name`) ficam ausentes. Migrar se necessário.
-5. **`dice_system` saving throw** usa bônus fixo (+3) do inimigo, não a ficha real. Melhoria de fidelidade.
+5. ~~**`dice_system` saving throw** usa bônus fixo (+3)~~ — **RESOLVIDO** (sessão 2026-06-25). `roll_formula(..., save_bonus=)` aceita o mod real; o combate determinístico passa o atributo do alvo.
 6. **API é stateless por save** — sem sessão concorrente real; cada request carrega/salva o JSON. Migrar para pgvector/DB se escalar (ver REFERENCE.md).
+
+---
+
+## Histórico de correções (sessão 2026-06-25 — auditoria do fluxo de IA)
+
+Auditoria de todos os nós que usam `with_structured_output` (mapeamento campo→GameState) + hardening:
+
+| Área | Achado / mudança | Arquivo |
+|---|---|---|
+| Segurança | Chave real estava na `.env.example` (versionada) → removida; nunca foi commitada (working tree). **Rotacionar por precaução.** | `.env.example` |
+| NPC | Fallback de `generate_new_npc` sem `initial_relationship` → `KeyError` no storyteller (virava "Erro AI") | `agents/npc.py`, `agents/storyteller.py` |
+| Loot | Venda dependia do sinal de `gold_cost` vindo do LLM (risco de jogador perder ouro) → sinal forçado em Python pela semântica | `agents/loot.py` |
+| Char | Atributos do Gemini com nomes longos/PT (`dexterity`) quebravam mods/attack_bonus → normalizados via `normalize_attr` | `character_creator.py` |
+| LLM | Retry-storm: `429` de quota travava o turno minutos → `max_retries=0` (fail-fast) | `llm_setup.py` |
+
+> Pendente: confirmar o fluxo no Gemini **real** (bloqueado por quota — ver "Quota e teste real").
+> Demais nós (router, storyteller, archivist, campaign_manager, combat, ruler, librarian, bestiary)
+> auditados e OK (guardas presentes, leituras batem com os schemas).
 
 ---
 
@@ -106,41 +152,20 @@ Bugs consertados nesta passada (contexto para não regredir):
 
 ---
 
-## Mapa rápido de arquivos
+## Mapa de arquivos
 
-```
-main.py              # grafo LangGraph (build_game_graph, app) + setup UTF-8
-state.py             # GameState e TypedDicts (fonte da verdade do schema)
-llm_setup.py         # get_llm(tier) + FallbackLLM (NUNCA instanciar Gemini direto)
-rag.py               # query_rag / add_memory_to_session / ingest_file
-persistence.py       # save_game_state / load_game_state (serializa mensagens)
-gamedata.py          # carrega JSONs de data/, ARTIFACTS_DB, save_custom_artifact
-dice_system.py       # roll_formula (parse de dados e saves)
-engine_utils.py      # execute_engine (loop tool-calling: roll/update_hp/transaction)
-character_creator.py # cria ficha do player (IA + JSON oficial)
-game_engine.py       # CLI interativo (wizard + loop)
-api.py               # FastAPI REST (/game/new, /game/action, /game/state)
-agents/
-  router.py          # dm_router_node — classifica intenção + seta NPC/loot/combat
-  campaign_manager.py# planeja arcos + incrementa turn_count
-  storyteller.py     # narração + introduz NPCs
-  combat.py          # spawn (bestiário) + execute_engine
-  npc.py             # generate_new_npc + npc_actor_node
-  loot.py            # loot/craft/shop/treasure
-  archivist.py       # memória curta (resumo) + longa (RAG)
-  bestiary.py / librarian.py / ruler_completo.py / class_themes.py
-tests/
-  test_mvp.py        # suíte offline (não exige API key)
-  conftest.py        # (na raiz) injeta pythonpath
-```
+Mapa completo (raiz + `agents/` + `data/` + `tests/`) está em **`CLAUDE.md` → "Estrutura de pastas"**
+(fonte única, mantida lá para não duplicar). Schema do estado: `state.py`.
 
 ---
 
 ## Checklist ao começar a próxima tarefa
 
-1. `uv run pytest` deve estar verde antes de mexer.
-2. Mudou um nó com `with_structured_output`? Garanta o guard de fallback (ver seção CRÍTICA).
+1. `uv run pytest` deve estar verde antes de mexer (39 testes).
+2. Mudou um nó com `with_structured_output`? Garanta o guard de fallback (ver seção CRÍTICA) — e
+   lembre que o MockLLM não exercita o guard; valide com a chave real se possível.
 3. Mudou o schema do player/estado? Atualize `state.py` **e** os 2 pontos de criação (`game_engine.py`, `api.py`) **e** o creator.
 4. Novo agente no grafo? Conecte ao `archivist` no fim (ver REFERENCE.md).
 5. Editou `data/world_lore.txt` ou `data/rules.txt`? Rode `uv run python rag.py` para reindexar.
-```
+6. Mecânica nova (números)? Resolva em Python determinístico (`combat_mechanics`/`dice_system`/`world_utils`),
+   não no LLM. Não confie em sinal/valor do LLM sem validar.

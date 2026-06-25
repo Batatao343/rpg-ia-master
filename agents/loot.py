@@ -109,9 +109,18 @@ def loot_node(state: GameState):
                     "messages": [AIMessage(content=f"🚫 {result.message}")],
                     "loot_source": None
                 }
-            
+
+            # --- NORMALIZA SINAL DO OURO (não confiar no sinal vindo do LLM) ---
+            # Venda (sem item novo) => jogador GANHA ouro => gold_cost negativo.
+            # Compra/Craft (com item novo) => jogador PAGA => gold_cost positivo.
+            is_sale = not (result.new_item and result.new_item.name)
+            if is_sale:
+                result.gold_cost = -abs(result.gold_cost)
+            else:
+                result.gold_cost = abs(result.gold_cost)
+
             # --- APLICAÇÃO DA MECÂNICA ---
-            
+
             # A. Remove Itens
             for item_id in result.items_to_remove:
                 if item_id in player["inventory"]:

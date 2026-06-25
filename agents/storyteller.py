@@ -20,6 +20,13 @@ from world_utils import (
 class StoryUpdate(BaseModel):
     narrative: str = Field(description="O texto narrativo da resposta.")
     introduced_npcs: List[str] = Field(default_factory=list, description="Lista de nomes de NOVOS personagens.")
+    beat_completed: bool = Field(
+        default=False,
+        description=(
+            "True SOMENTE se a ação deste turno cumpriu de forma clara o Objetivo Atual "
+            "da cena (o beat ativo). Caso contrário False. Não marque True por progresso vago."
+        ),
+    )
 
 def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text: str) -> Dict[str, Dict]:
     existing_lower = {name.lower(): name for name in npcs.keys()}
@@ -29,7 +36,7 @@ def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text
     new_npcs = dict(npcs)
     new_npcs[new_name] = {
         "name": tpl["name"], "role": tpl["role"], "persona": tpl["persona"],
-        "location": loc, "relationship": tpl["initial_relationship"],
+        "location": loc, "relationship": tpl.get("initial_relationship", 5),
         "memory": [], "last_interaction": "",
         "attributes": tpl.get("attributes", {}), "combat_stats": tpl.get("combat_stats", {})
     }
@@ -128,12 +135,18 @@ def storyteller_node(state: GameState):
         update = story_engine.invoke([sys] + messages[-6:]) # Contexto reduzido
 
         narrative_text = update.narrative
-        
-        updated_plan = None
+
+        # --- Avanço de beat: o narrador sinaliza quando o objetivo da cena foi cumprido ---
         needs_replan = state.get("needs_replan", False)
-        if campaign_plan and current_step < len(beats):
-             # Lógica simplificada de avanço de beat
-             pass
+        updated_plan = campaign_plan
+        beat_done = bool(getattr(update, "beat_completed", False))
+        if campaign_plan and beats and beat_done and current_step < len(beats):
+            beats[current_step] = {**beats[current_step], "status": "done"}
+            new_step = current_step + 1
+            updated_plan = {**campaign_plan, "beats": beats, "current_step": new_step}
+            # Esgotou os beats → próximo turno o campaign_manager replaneja (vê _should_replan).
+            if new_step >= len(beats):
+                needs_replan = True
 
         npcs = state.get("npcs", {})
         new_npcs = npcs
@@ -144,7 +157,7 @@ def storyteller_node(state: GameState):
             "messages": [AIMessage(content=narrative_text)],
             "npcs": new_npcs,
             "world": world,
-            "campaign_plan": campaign_plan,
+            "campaign_plan": updated_plan,
             "needs_replan": needs_replan,
         }
         if rested_player is not None:

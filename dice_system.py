@@ -7,7 +7,7 @@ import re
 import random
 from typing import List
 
-def roll_formula(formula_text: str, default_save_bonus: int = 3) -> str:
+def roll_formula(formula_text: str, default_save_bonus: int = 3, save_bonus: int = None) -> str:
     """
     Interpreta fórmulas de RPG e executa as rolagens.
     
@@ -32,17 +32,17 @@ def roll_formula(formula_text: str, default_save_bonus: int = 3) -> str:
     
     if save_match:
         dc = int(save_match.group(1))
-        
-        # Simulação de rolagem do inimigo (d20 + bonus fixo)
-        # Nota: Em um sistema V2, poderíamos passar a ficha do inimigo aqui para usar o bonus real.
-        # Por enquanto, usamos um valor médio (+3) para manter o fluxo rápido.
+
+        # Bônus real do alvo (ficha) quando fornecido; senão usa o genérico (+3).
+        bonus = save_bonus if save_bonus is not None else default_save_bonus
         enemy_roll = random.randint(1, 20)
-        total_save = enemy_roll + default_save_bonus
-        
+        total_save = enemy_roll + bonus
+
         passed = total_save >= dc
         status = "SUCESSO (Metade do Dano)" if passed else "FALHA (Dano Completo)"
-        
-        output_parts.append(f"Save Inimigo: {total_save} (d20:{enemy_roll}+{default_save_bonus}) vs DC {dc} -> {status}")
+
+        sign = f"+{bonus}" if bonus >= 0 else str(bonus)
+        output_parts.append(f"Save Inimigo: {total_save} (d20:{enemy_roll}{sign}) vs DC {dc} -> {status}")
 
     # ==============================================================================
     # 2. DETECÇÃO DE DADOS (ex: "1d20+5", "8d6")

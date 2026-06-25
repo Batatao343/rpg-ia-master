@@ -71,6 +71,29 @@ Simplicidade operacional. Um save é um dict Python serializado — fácil de in
 
 O `game_id` (UUID) é o link entre o JSON de save e o índice FAISS da sessão. Se apagar um save, apagar também `data/saves_memory/{game_id}/`.
 
+### Por que resiliência em dois níveis (MockLLM + FallbackLLM)
+
+`get_llm()` nunca levanta — o loop de jogo não pode morrer por causa de rede/quota/chave. Dois retornos não-Gemini:
+
+- **`MockLLM`** (sem chave ou `RPG_FORCE_MOCK=1`): devolve **dados fictícios válidos** (instâncias Pydantic por agente). O jogo fica jogável e a suíte determinística e offline. Trade-off: como nunca falha o acesso a campo, **esconde bugs de mapeamento** que só aparecem no Gemini real.
+- **`FallbackLLM`** (`RPG_NO_MOCK=1` sem chave, ou falha do provider): `with_structured_output(X).invoke()` devolve um `AIMessage`, **não** um `X`. Por isso todo nó precisa de guard (`try/except` ou `isinstance`). É o motivo da "convenção crítica" em `ESTADO_ATUAL.md`.
+
+`max_retries=0` (fail-fast): o erro dominante é `429` de quota (não transitório, limite diário). Retry com backoff travava o turno por minutos antes de cair no fallback — pior UX que falhar em ~3s.
+
+### Por que a mecânica é Python, não LLM (combate, dados, mundo)
+
+O LLM é ótimo para linguagem, péssimo para aritmética consistente e regras. Então a IA **só identifica e narra**; os números resolvem em código determinístico:
+
+- **Combate** (`combat_mechanics.py`): a IA traduz a fala livre → `CombatAction` (qual habilidade/alvo) e narra o log; Python faz iniciativa (d20+dex), DoT/condições, custos (stamina/mana) + cooldowns, saves por atributo real. Testável offline, jogável sem quota, números reproduzíveis.
+- **Mundo / Fase 0** (`world_utils.py`): relógio, viagem (só entre locais conectados no grafo `data/world_map.json`, com fog of war via `visited`) e descanso são 100% determinísticos. O storyteller só narra o resultado.
+- **Economia** (`loot.py`): o sinal do ouro (venda vs compra) é forçado por semântica em Python — não se confia no sinal que o LLM devolve.
+
+Regra geral: **não confiar em sinal/valor numérico vindo do LLM sem validar.**
+
+### Por que o modelo de mundo veio antes (Fase 0)
+
+Mapa+fog, fações que se movem e itens regionais dependem de um alicerce comum: locais como grafo + relógio + região. Construir essas features sem o alicerce = retrabalho. Por isso a Fase 0 (mundo estruturado determinístico) precedeu a apresentação. Detalhes e sequência: `ROADMAP.md`.
+
 ---
 
 ## Fluxo de um turno completo
@@ -88,10 +111,10 @@ Usuário digita ação
     Injeta SystemMessage "COMBAT START" se for combate
     ↓
 [agente especializado]
-    Storyteller: busca lore RAG + narrative_summary → gera narrativa
-    Combat: executa turno de combate com dice_system
+    Storyteller: viagem/descanso/ruler (world_utils) + lore RAG + narrative_summary → narrativa; sinaliza beat_completed
+    Combat: IA identifica ação/inimigos + narra; Python resolve 1 round (combat_mechanics). Vitória → next="loot"
     NPC: usa persona do NPC + histórico de interações
-    Loot: gera loot baseado em bestiary/artifacts.json
+    Loot: gera loot/transação baseado em bestiary/artifacts.json + contexto regional
     ↓
 [archivist]
     Gemini Pro analisa últimas 8 mensagens
@@ -110,26 +133,35 @@ END → save_game_state()
   "game_id": "uuid-v4",
   "narrative_summary": "string",
   "archivist_last_run": 0,
-  "player": { "name", "class", "race", "level", "xp", "hp", "max_hp", "gold", "attributes", "inventory", "abilities", "defense", "attack_bonus", "active_conditions" },
-  "world": { "current_location", "time_of_day", "turn_count", "danger_level", "quest_plan", "quest_plan_origin" },
+  "player": { "name", "class_name", "race", "level", "xp", "hp", "max_hp", "mana", "max_mana", "stamina", "max_stamina", "gold", "attributes (str/dex/con/int/wis/cha)", "inventory", "known_abilities", "defense", "attack_bonus", "active_conditions", "ability_cooldowns" },
+  "world": { "current_location", "current_location_id", "visited", "world_clock": {"day", "period"}, "time_of_day", "turn_count", "danger_level", "weather", "quest_plan", "quest_plan_origin" },
   "party": [],
   "enemies": [],
   "npcs": {},
   "campaign_plan": { "location", "beats": [{"description", "status"}], "climax", "current_step", "last_planned_turn" },
+  "needs_replan": false,
+  "active_npc_name": null,
+  "combat": null,
   "combat_target": null,
   "loot_source": null,
   "message_history": [{"type": "human|ai|system", "content": "..."}]
 }
 ```
 
+> Saves legados (schema antigo `class`/`abilities`) ainda carregam; campos novos (mana/stamina/`class_name`/`world_clock`/`combat`) entram via backfill (`world_utils.ensure_world`) ou ficam ausentes. Schema canônico: `state.py`.
+
 ---
 
 ## Variáveis de ambiente necessárias
 
 ```env
-# Google AI (LLM + Embeddings)
-GOOGLE_API_KEY=          # obrigatório — Gemini + text-embedding-004
+# Google AI (LLM + Embeddings) — em .env (NUNCA em .env.example, que é versionada)
+GOOGLE_API_KEY=          # opcional — sem ela o jogo roda no MockLLM; Gemini + text-embedding-004
 ```
+
+Free tier = **20 req/dia por modelo** (flash e pro têm buckets separados). E2e real de IA é inviável em lote no free tier; ativar billing para testar de verdade.
+
+Flags de teste (env): `RPG_FORCE_MOCK=1` força MockLLM mesmo com chave (suíte); `RPG_NO_MOCK=1` força o `FallbackLLM` de erro (sem chave).
 
 Sem outras variáveis obrigatórias para rodar localmente. A API REST (api.py) herda as mesmas vars.
 

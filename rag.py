@@ -11,7 +11,7 @@ from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
 
 # Configurações de Caminho
 SAVES_DIR = "data/saves_memory" # Pasta onde ficam os vetores dos saves individuais

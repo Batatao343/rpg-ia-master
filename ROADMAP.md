@@ -29,7 +29,7 @@ Quase todo pedido grande (mapa+fog, fações que se movem, itens regionais) depe
 ## Fases
 
 ### ★ Fase 0 — Fundação + ganhos baratos ✅ ENTREGUE
-Branch `feat/fase0-mundo`. 26 testes verdes.
+Branch `feat/fase0-mundo`. 39 testes verdes (offline). Fluxo de IA auditado + hardening em 2026-06-25 (ver `ESTADO_ATUAL.md`).
 - [x] Modelo de mundo estruturado: `data/world_map.json` (grafo de 9 locais) + helpers em `gamedata.py`.
 - [x] `state`: `current_location_id`, `visited` (fog of war), `world_clock` (dia+período).
 - [x] `world_utils.py`: relógio, viagem entre locais conectados, descanso (cura+tempo).
@@ -57,10 +57,11 @@ Branch `feat/fase0-mundo`. 26 testes verdes.
 
 ## Backlog de diversão (oportunidades soltas)
 
-- [ ] Objetivos/quests na UI — `campaign_plan.beats` já existem; falta exibir e avançar (avanço de beat hoje é no-op).
-- [ ] Combate com profundidade: iniciativa, `active_conditions` (já existe, subusado), cooldowns.
+- [x] Objetivos/quests na UI — HUD mostra objetivo atual + beats (pendente/atual/feito) com progresso; storyteller sinaliza `beat_completed` e avança `current_step` (replaneja ao esgotar). Mock avança ~30%/turno no modo simulado.
+- [x] Combate com profundidade: **IA identifica + Python resolve**. Iniciativa (d20+dex), condições/DoT estruturadas, custos (stamina/mana) + cooldowns de habilidade, save por atributo real do inimigo, painel de combate na UI. Núcleo determinístico em `combat_mechanics.py` (testável offline).
 - [ ] Tempo/clima com efeito real (campos existem).
 - [ ] Codex/bestiário revelável (`bestiary.json` já existe).
+- [ ] Gerar arte dos monstros e personagens
 - [ ] Economia regional (lojas com estoque por região).
 - [ ] Permadeath / runs roguelike, aproveitando memória de mundo entre runs.
 - [ ] Atmosfera sonora por região.
@@ -71,6 +72,7 @@ Branch `feat/fase0-mundo`. 26 testes verdes.
 ## Riscos e princípios
 
 - **Custo & latência:** cada feature soma chamadas de IA/imagem → manter tiers, cache, geração assíncrona. **Estender o MockLLM a todo agente novo** (jogo segue jogável offline).
+- **Quota:** free tier do Gemini = 20 req/dia por modelo → testar IA real em lote exige billing. Validar caminhos novos de structured output com a chave real (o MockLLM esconde bugs de mapeamento de campo).
 - **Consistência visual:** arte por IA deriva de estilo → travar paleta; assets curados no núcleo, IA só nos itens.
 - **Crescimento de estado:** mundo vivo + memória vetorial incham save/FAISS → pruning/resumo.
 - **Escopo:** produto vertical, não MVP. Fatiar **incrementos finos e jogar cada um** antes do próximo.

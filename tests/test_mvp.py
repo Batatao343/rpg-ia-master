@@ -175,3 +175,197 @@ def test_character_creation_fallback(monkeypatch):
         assert key in char, f"campo ausente: {key}"
     assert char["level"] == 3
     assert isinstance(char["attributes"], dict)
+
+
+# --------------------------------------------------------------------------
+# Avanço de beat da campanha (storyteller sinaliza conclusão do objetivo)
+# --------------------------------------------------------------------------
+class _FakeStoryLLM:
+    """LLM controlado: devolve um StoryUpdate com beat_completed definido."""
+
+    def __init__(self, completed):
+        self.completed = completed
+
+    def with_structured_output(self, model, *_a, **_k):
+        self._model = model
+        return self
+
+    def with_retry(self, *_a, **_k):
+        return self
+
+    def invoke(self, _msgs):
+        return self._model(
+            narrative="Você cumpre o objetivo da cena de forma decisiva.",
+            introduced_npcs=[],
+            beat_completed=self.completed,
+        )
+
+
+def _plan(step=0, beats=2):
+    return {
+        "location": "Lab",
+        "beats": [{"description": f"b{i}", "status": "pending"} for i in range(beats)],
+        "climax": "fim",
+        "current_step": step,
+        "last_planned_turn": 0,
+    }
+
+
+def test_storyteller_advances_beat_when_completed(monkeypatch):
+    import agents.storyteller as st
+    monkeypatch.setattr(st, "get_llm", lambda *a, **k: _FakeStoryLLM(True))
+
+    state = _base_state(messages=[HumanMessage(content="executo o objetivo")])
+    state["campaign_plan"] = _plan(step=0, beats=2)
+    out = st.storyteller_node(state)
+
+    plan = out["campaign_plan"]
+    assert plan["current_step"] == 1
+    assert plan["beats"][0]["status"] == "done"
+    assert plan["beats"][1]["status"] == "pending"
+    assert out["needs_replan"] is False
+
+
+def test_storyteller_keeps_beat_when_not_completed(monkeypatch):
+    import agents.storyteller as st
+    monkeypatch.setattr(st, "get_llm", lambda *a, **k: _FakeStoryLLM(False))
+
+    state = _base_state(messages=[HumanMessage(content="olho ao redor")])
+    state["campaign_plan"] = _plan(step=0, beats=2)
+    out = st.storyteller_node(state)
+
+    plan = out["campaign_plan"]
+    assert plan["current_step"] == 0
+    assert all(b["status"] == "pending" for b in plan["beats"])
+
+
+def test_storyteller_flags_replan_on_last_beat(monkeypatch):
+    import agents.storyteller as st
+    monkeypatch.setattr(st, "get_llm", lambda *a, **k: _FakeStoryLLM(True))
+
+    state = _base_state(messages=[HumanMessage(content="executo o objetivo final")])
+    state["campaign_plan"] = _plan(step=1, beats=2)  # último beat
+    out = st.storyteller_node(state)
+
+    plan = out["campaign_plan"]
+    assert plan["current_step"] == 2
+    assert plan["beats"][1]["status"] == "done"
+    assert out["needs_replan"] is True
+
+
+# --------------------------------------------------------------------------
+# Combate determinístico (combat_mechanics.py)
+# --------------------------------------------------------------------------
+import combat_mechanics as cm
+from dice_system import roll_formula
+
+
+def _enemy(hp=12, name="Goblin 1", eid="goblin_1"):
+    return {"id": eid, "name": name, "hp": hp, "max_hp": hp, "defense": 11,
+            "status": "ativo", "attributes": {"dex": 12, "con": 10},
+            "attacks": [{"name": "Adaga", "bonus": 3, "damage": "1d4+1"}],
+            "active_conditions": []}
+
+
+def _combat_player():
+    return {"name": "Kael", "class_name": "Guerreiro", "hp": 30, "max_hp": 30,
+            "stamina": 12, "max_stamina": 12, "mana": 0,
+            "attributes": {"str": 16, "dex": 14, "con": 12},
+            "inventory": [], "attack_bonus": 0,
+            "active_conditions": [], "ability_cooldowns": {}}
+
+
+def test_initiative_order_sorted_desc():
+    random.seed(1)
+    order = cm.roll_initiative(_combat_player(), [_enemy(), _enemy(name="Goblin 2", eid="goblin_2")])
+    assert len(order) == 3
+    inits = [o["init"] for o in order]
+    assert inits == sorted(inits, reverse=True)
+    assert any(o["side"] == "hero" for o in order)
+
+
+def test_parse_condition_dot_and_duration():
+    c = cm.parse_condition("Sangramento (3 dano/turno)")
+    assert c["name"] == "Sangramento" and c["dot"] == 3 and c["duration"] == 3
+    buff = cm.parse_condition("+5 Dano por 2 turnos")
+    assert buff["dot"] == 0 and buff["duration"] == 2
+
+
+def test_condition_tick_applies_dot_and_expires():
+    e = _enemy(hp=10)
+    e["active_conditions"] = [{"name": "Veneno", "dot": 4, "duration": 1, "source": "x"}]
+    logs = cm.tick_conditions(e)
+    assert e["hp"] == 6
+    assert e["active_conditions"] == []  # expirou
+    assert any("Veneno" in l for l in logs)
+
+
+def test_spend_resources_blocks_without_stamina():
+    p = _combat_player()
+    p["stamina"] = 2
+    ability = {"name": "Estocada", "cost": 4, "resource_type": "Estamina"}
+    ok, msg = cm.spend_resources(p, "estocada_renal", ability)
+    assert ok is False and "stamina" in msg.lower()
+    assert "estocada_renal" not in p["ability_cooldowns"]
+
+
+def test_spend_resources_deducts_and_sets_cooldown():
+    p = _combat_player()
+    ability = {"name": "Estocada", "cost": 4, "resource_type": "Estamina"}
+    ok, _ = cm.spend_resources(p, "estocada_renal", ability)
+    assert ok is True
+    assert p["stamina"] == 8
+    assert p["ability_cooldowns"]["estocada_renal"] == cm.COOLDOWN_DEFAULT
+
+
+def test_cooldown_tick_decrements_and_removes():
+    p = _combat_player()
+    p["ability_cooldowns"] = {"a": 2, "b": 1}
+    cm.tick_cooldowns(p)
+    assert p["ability_cooldowns"] == {"a": 1}
+
+
+def test_enemy_save_uses_real_mod_not_fixed_3():
+    random.seed(2)
+    out = roll_formula("DC 10 Con Save", save_bonus=100)
+    assert "+100" in out and "SUCESSO" in out
+    # sem save_bonus, usa o genérico +3
+    assert "+3" in roll_formula("DC 10 Con Save")
+
+
+def test_resolve_player_action_damages_and_applies_condition():
+    random.seed(5)
+    from gamedata import ABILITIES
+    p = _combat_player()
+    enemies = [_enemy(hp=20)]
+    action = {"ability_id": "estocada_renal", "target": "Goblin 1",
+              "is_allowed": True, "reason": ""}
+    logs = cm.resolve_player_action(p, enemies, action, ABILITIES)
+    assert p["stamina"] < 12  # gastou recurso
+    # acertou e causou dano OU errou; se houve dano, condição entra em alvo vivo
+    assert enemies[0]["hp"] <= 20
+    assert isinstance(logs, list) and logs
+
+
+def test_resolve_player_action_blocked_when_not_allowed():
+    p = _combat_player()
+    enemies = [_enemy()]
+    action = {"ability_id": "ataque_basico", "target": "Goblin 1",
+              "is_allowed": False, "reason": "Guerreiro não lança magia arcana"}
+    logs = cm.resolve_player_action(p, enemies, action, {})
+    assert enemies[0]["hp"] == enemies[0]["max_hp"]  # nada aconteceu
+    assert any("magia arcana" in l for l in logs)
+
+
+def test_combat_node_round_runs_and_returns_state():
+    import agents.combat as combat
+    random.seed(9)
+    state = _base_state(messages=[HumanMessage(content="ataco o goblin")])
+    state["player"] = _combat_player()
+    state["enemies"] = [_enemy(hp=14)]
+    state["combat"] = {}
+    out = combat.combat_node(state)
+    assert "enemies" in out and "combat" in out
+    assert out["combat"]["order"]  # iniciativa rolada
+    assert out["messages"] and out["messages"][0].content
+    assert out.get("next") in (None, "loot")

@@ -1,225 +1,253 @@
 """
 agents/combat.py
-Agente de Combate Inteligente.
-Integração: Router -> Identify Enemies -> Bestiary Fetch -> Combat Loop.
+Agente de Combate.
+
+Arquitetura: a IA só IDENTIFICA (linguagem natural -> CombatAction) e NARRA.
+Toda a mecânica é resolvida em Python (combat_mechanics.py), de forma
+determinística e testável offline.
+
+Fluxo de 1 chamada = 1 round completo:
+  spawn (1º round) -> iniciativa -> parse da ação -> resolução em ordem de
+  iniciativa (tick condições/cooldowns, ação do herói, turnos dos inimigos)
+  -> narração do log mecânico.
 """
 from typing import List, Dict, Optional
 from langchain_core.messages import SystemMessage, AIMessage, HumanMessage, ToolMessage
 from pydantic import BaseModel, Field
 
-# Imports do Projeto
 from state import GameState, EnemyStats
 from llm_setup import ModelTier, get_llm
-from gamedata import ARTIFACTS_DB
-from engine_utils import execute_engine
-from agents.ruler_completo import resolve_action
+from gamedata import ABILITIES
+from agents.bestiary import generate_new_enemy
+import combat_mechanics as cm
 
-# --- IMPORTAÇÃO CRÍTICA DO BESTIÁRIO ---
-# Isso garante que usaremos o cache/DB existente
-from agents.bestiary import generate_new_enemy 
 
-# --- MODELOS DE IDENTIFICAÇÃO ---
+# --- MODELOS DE IDENTIFICAÇÃO (IA) ---
 class EnemyIdentification(BaseModel):
     name: str = Field(description="Nome singular do inimigo. Ex: 'Goblin', 'Rato da Peste'")
     count: int = Field(description="Quantidade destes inimigos na cena.")
+
 
 class EncounterScanner(BaseModel):
     detected_enemies: List[EnemyIdentification]
     flavor_text: str = Field(description="Descrição curta da entrada dos inimigos em combate.")
 
-# --- FUNÇÃO DE SPAWN INTEGRADA ---
-def _spawn_enemies_integrated(messages: List, target_hint: str) -> List[EnemyStats]:
-    """
-    1. Lê o contexto narrativo.
-    2. Identifica nomes e quantidades.
-    3. Busca/Gera as fichas usando o Bestiary Agent (mantendo consistência do DB).
-    """
+
+class CombatAction(BaseModel):
+    """A IA traduz a fala livre do jogador para uma ação mecânica canônica."""
+    ability_id: str = Field(description="Chave EXATA do catálogo de habilidades, 'ataque_basico' ou 'improvisado'.")
+    target: str = Field(default="", description="Nome ou id do inimigo alvo. Vazio = primeiro inimigo.")
+    is_allowed: bool = Field(default=True, description="False se a ação não faz sentido para a classe/ficha.")
+    reason: str = Field(default="", description="Curta justificativa do gating (por que falha, se for o caso).")
+
+
+# --- SPAWN (mantém integração com bestiário/cache) ---
+def _spawn_enemies_integrated(messages: List, target_hint: str):
     print(f"⚡ [COMBAT] Escaneando cena por inimigos. Dica: '{target_hint}'...")
-    
     llm = get_llm(temperature=0.0, tier=ModelTier.FAST)
-    
-    # Prompt focado apenas em IDENTIFICAR, não em criar stats
     sys_prompt = f"""
     Analise a narrativa recente. O combate começou.
     Identifique QUAIS inimigos estão presentes e QUANTOS.
     Use a dica do alvo se ajudar: "{target_hint}".
-    
-    Exemplo: Se o texto diz "Três orcs surgem", retorne: [{{name: "Orc", count: 3}}].
+    Exemplo: "Três orcs surgem" -> [{{name: "Orc", count: 3}}].
     """
-    
     try:
         scanner = llm.with_structured_output(EncounterScanner)
         scan_result = scanner.invoke([SystemMessage(content=sys_prompt)] + messages[-4:])
-        
+        if not isinstance(scan_result, EncounterScanner):
+            raise ValueError("scanner fallback")
+
         final_enemies_list = []
-        
         for identified in scan_result.detected_enemies:
-            # AQUI ESTÁ A INTEGRAÇÃO COM O SEU BANCO DE DADOS
-            # Chamamos o bestiary.py. Se o monstro já existir no JSON, ele retorna na hora.
-            # Se não, ele cria, SALVA NO JSON, e retorna.
             template = generate_new_enemy(identified.name, context=target_hint)
-            
-            # Agora instanciamos (criamos cópias únicas para o combate)
             for i in range(identified.count):
-                # Criamos uma cópia profunda para não alterar o template original
                 instance = template.copy()
-                
-                # ID único para o combate (ex: enemy_goblin_1, enemy_goblin_2)
                 instance["id"] = f"{template['id']}_{i+1}"
                 instance["name"] = f"{template['name']} {i+1}" if identified.count > 1 else template["name"]
-                
-                # Garante campos obrigatórios do EnemyStats
-                if "stamina" not in instance: instance["stamina"] = 10
-                if "mana" not in instance: instance["mana"] = 0
-                if "defense" not in instance: instance["defense"] = instance.get("ac", 10)
-                if "attack_mod" not in instance: instance["attack_mod"] = 0 # Usado se não tiver attacks listados
-                
+                instance.setdefault("stamina", 10)
+                instance.setdefault("mana", 0)
+                instance.setdefault("defense", instance.get("ac", 10))
+                instance.setdefault("attack_mod", 0)
+                instance.setdefault("active_conditions", [])
+                instance.setdefault("status", "ativo")
                 final_enemies_list.append(instance)
-                
         return final_enemies_list, scan_result.flavor_text
 
     except Exception as e:
         print(f"⚠️ Erro no Spawn Integrado: {e}")
-        # Fallback genérico se tudo falhar
         return [{
-            "id": "fallback_enemy", "name": "Inimigo Sombrio", "hp": 15, "max_hp": 15, 
-            "defense": 12, "status": "ativo", "active_conditions": [], 
-            "attributes": {}, "abilities": ["Ataque 1d6"], "stamina": 0, "mana": 0
+            "id": "fallback_enemy_1", "name": "Inimigo Sombrio", "hp": 15, "max_hp": 15,
+            "defense": 12, "status": "ativo", "active_conditions": [], "attributes": {"dex": 10},
+            "abilities": [], "attacks": [{"name": "Golpe", "bonus": 3, "damage": "1d6"}],
+            "stamina": 0, "mana": 0, "attack_mod": 3,
         }], "Algo hostil emerge das sombras!"
 
-# --- UTILS DE COMBATE ---
-def get_mod(score: int) -> int: return (score - 10) // 2
-def _normalize_attr_name(attr: str) -> str:
-    mapping = {"strength": "str", "força": "str", "dexterity": "dex", "destreza": "dex", "constitution": "con", "constituição": "con", "intelligence": "int", "wisdom": "wis", "charisma": "cha"}
-    return mapping.get(attr.lower(), attr.lower())
+
+# --- PARSER (IA identifica a ação) ---
+def _last_human_text(messages: List) -> str:
+    for m in reversed(messages or []):
+        if isinstance(m, HumanMessage):
+            return str(m.content)
+    return ""
+
+
+def _ability_catalog() -> str:
+    linhas = []
+    for aid, a in ABILITIES.items():
+        linhas.append(f"- {aid}: {a.get('name')} | custo {a.get('cost')} {a.get('resource_type')} | {a.get('description','')[:60]}")
+    return "\n".join(linhas)
+
+
+def _parse_combat_action(player: Dict, enemies: List[Dict], intent: str) -> Dict:
+    """IA mapeia a fala livre -> CombatAction. Guard de fallback resiliente."""
+    fallback = {"ability_id": "ataque_basico",
+                "target": enemies[0]["name"] if enemies else "",
+                "is_allowed": True, "reason": ""}
+    if not intent:
+        return fallback
+
+    enemy_names = ", ".join(e.get("name", "?") for e in enemies) or "—"
+    sys = SystemMessage(content=f"""
+    Você é o IDENTIFICADOR de ações de combate. NÃO resolva mecânica, só classifique.
+    Traduza a fala do jogador para uma ação canônica.
+
+    Classe: {player.get('class_name', '')}
+    Habilidades conhecidas (texto livre): {player.get('known_abilities', [])}
+    Atributos: {player.get('attributes', {})}
+
+    CATÁLOGO DE HABILIDADES (use a CHAVE exata em ability_id):
+    {_ability_catalog()}
+
+    Inimigos presentes: {enemy_names}
+
+    Regras:
+    - Escolha o ability_id do catálogo que melhor casa com a intenção. Ataque comum -> 'ataque_basico'.
+    - Se a ação for impossível para esta classe/ficha, is_allowed=False e explique em reason.
+    - target = nome de um inimigo presente (ou vazio para o primeiro).
+    """)
+    try:
+        llm = get_llm(temperature=0.0, tier=ModelTier.FAST)
+        res = llm.with_structured_output(CombatAction).invoke([sys, HumanMessage(content=intent)])
+        if isinstance(res, CombatAction):
+            aid = res.ability_id if res.ability_id in ABILITIES else "ataque_basico"
+            return {"ability_id": aid, "target": res.target,
+                    "is_allowed": res.is_allowed, "reason": res.reason}
+    except Exception as e:
+        print(f"⚠️ [COMBAT PARSE] {e}")
+    return fallback
+
+
+# --- NARRAÇÃO (IA descreve o log mecânico) ---
+def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
+             spawned_flavor: Optional[str], intent: str, victory: bool) -> str:
+    log_str = "\n".join(logs) if logs else "Nada acontece."
+    alive = [f"{e['name']} (HP {e['hp']}/{e['max_hp']})" for e in enemies if e.get("status") == "ativo"]
+    sys = SystemMessage(content=f"""
+    <role>Narrador de Combate — Dark Fantasy</role>
+    Descreva o round de combate em 1 a 2 parágrafos, com base APENAS no log mecânico.
+    Não invente dano nem resultados fora do log. Seja visceral mas conciso.
+
+    {("ENTRADA: " + spawned_flavor) if spawned_flavor else ""}
+    Ação do jogador (fala): {intent}
+
+    <log_mecanico>
+    {log_str}
+    </log_mecanico>
+
+    Herói: {player.get('name')} HP {player.get('hp')}/{player.get('max_hp')}
+    Inimigos vivos: {', '.join(alive) if alive else 'nenhum'}
+
+    {"O combate foi VENCIDO — encerre com o respiro da vitória." if victory else "Termine com tensão e uma deixa para a próxima ação do jogador."}
+    """)
+    try:
+        llm = get_llm(temperature=0.6, tier=ModelTier.SMART)
+        if getattr(llm, "is_fallback", False):
+            raise RuntimeError("fallback")
+        res = llm.invoke([sys] + [HumanMessage(content=intent or "Continue o combate.")])
+        text = getattr(res, "content", "") or ""
+        if text.strip():
+            return text
+    except Exception as e:
+        print(f"⚠️ [COMBAT NARRATE] {e}")
+    # Fallback determinístico: devolve o próprio log legível.
+    prefix = (spawned_flavor + "\n\n") if spawned_flavor else ""
+    suffix = "\n\nVitória! O campo silencia." if victory else "\n\nO que você faz?"
+    return f"⚔️ {prefix}" + "\n".join(f"• {l}" for l in logs) + suffix
+
 
 # --- NÓ PRINCIPAL ---
 def combat_node(state: GameState):
     messages = state.get("messages", [])
-    if not messages: return {"next": "dm_router"}
+    if not messages:
+        return {"next": "dm_router"}
 
-    player = state["player"]
-    party = state.get("party", []) 
-    enemies = state.get("enemies", []) or []
-    
-    # 1. VERIFICAÇÃO DE INÍCIO (HANDOFF)
+    player = dict(state["player"])
+    player.setdefault("ability_cooldowns", {})
+    player.setdefault("active_conditions", [])
+    enemies = [dict(e) for e in (state.get("enemies") or [])]
+    combat_meta = dict(state.get("combat") or {})
+
     last_msg = messages[-1]
-    is_combat_start = False
-    if isinstance(last_msg, SystemMessage) and "COMBAT START" in str(last_msg.content):
-        is_combat_start = True
-    
+    is_combat_start = isinstance(last_msg, SystemMessage) and "COMBAT START" in str(last_msg.content)
     combat_target = state.get("combat_target", "Inimigos")
 
-    # 2. LOGICA DE SPAWN (SE NECESSÁRIO)
-    # Se começou agora e não tem ninguém na lista de inimigos...
+    active = [e for e in enemies if e.get("status") == "ativo"]
     spawned_flavor = None
-    active_enemies = [e for e in enemies if e["status"] == "ativo"]
-    
-    if is_combat_start and not active_enemies:
-        # Chama a função que usa o BESTIÁRIO
-        generated_enemies, spawned_flavor = _spawn_enemies_integrated(messages, combat_target)
-        enemies = generated_enemies
-        active_enemies = enemies # Atualiza localmente
-        print(f"⚔️ Combate Configurado: {[e['name'] for e in active_enemies]}")
+    if is_combat_start and not active:
+        enemies, spawned_flavor = _spawn_enemies_integrated(messages, combat_target)
+        active = [e for e in enemies if e.get("status") == "ativo"]
+        print(f"⚔️ Combate: {[e['name'] for e in active]}")
 
-    # 3. CONDIÇÃO DE VITÓRIA (Só verifica se NÃO acabou de spawnar)
-    if not active_enemies:
+    # Sem inimigos = vitória (ou nada a fazer).
+    if not active:
         return {
             "messages": [AIMessage(content="O silêncio retorna ao campo de batalha. Vitória.")],
-            "next": "loot",
-            "combat_target": None,
-            "enemies": []
+            "next": "loot", "combat_target": None, "enemies": [],
+            "combat": {"active": False, "round": combat_meta.get("round", 0), "order": []},
         }
 
-    # --- PREPARAÇÃO DO PROMPT DE ENGINE (Mantido idêntico, apenas montagem de strings) ---
-    attrs = player.get("attributes", {"str": 10})
-    normalized_attrs = {_normalize_attr_name(k): v for k, v in attrs.items()}
-    mods = {k: get_mod(v) for k, v in normalized_attrs.items()}
-    
-    # Inventário e Mecânicas
-    inventory_ids = player.get("inventory", [])
-    best_atk_bonus = 0
-    total_ac_bonus = 0
-    active_attr_key = "str"
-    mechanics_log = []
+    # Iniciativa: rola no 1º round; persiste depois.
+    if is_combat_start or not combat_meta.get("order"):
+        combat_meta = {"round": 1, "active": True, "order": cm.roll_initiative(player, active)}
+    else:
+        combat_meta["round"] = combat_meta.get("round", 1) + 1
+        combat_meta["active"] = True
 
-    for item_id in inventory_ids:
-        item_data = ARTIFACTS_DB.get(item_id)
-        if item_data:
-            stats = item_data.get("combat_stats", {})
-            if item_data.get("type") == "weapon":
-                b = stats.get("attack_bonus", 0)
-                if b > best_atk_bonus:
-                    best_atk_bonus = b
-                    if "attribute" in stats: active_attr_key = _normalize_attr_name(stats["attribute"])
-            total_ac_bonus += stats.get("ac_bonus", 0)
+    # A IA identifica a ação do jogador.
+    intent = _last_human_text(messages)
+    action = _parse_combat_action(player, active, intent)
 
-            mech = item_data.get("mechanics", {})
-            for p in mech.get("passive_effects", []): mechanics_log.append(f"[PASSIVE] {item_data['name']}: {p}")
-            active = mech.get("active_ability")
-            if active: mechanics_log.append(f"[SPELL] {active.get('name')}: {active.get('effect')}")
+    # Resolução determinística em ordem de iniciativa.
+    logs: List[str] = []
+    hero_resolved = False
+    for slot in combat_meta["order"]:
+        if slot["side"] == "hero":
+            logs += cm.tick_conditions(player)
+            cm.tick_cooldowns(player)
+            if int(player.get("hp", 0)) > 0:
+                logs += cm.resolve_player_action(player, enemies, action, ABILITIES)
+            hero_resolved = True
+        else:
+            e = next((x for x in enemies if x.get("id") == slot["id"]), None)
+            if not e or e.get("status") != "ativo":
+                continue
+            logs += cm.tick_conditions(e)
+            if e.get("status") == "ativo" and int(player.get("hp", 0)) > 0:
+                logs += cm.resolve_enemy_turn(e, player)
+    if not hero_resolved and int(player.get("hp", 0)) > 0:
+        logs += cm.resolve_player_action(player, enemies, action, ABILITIES)
 
-    total_atk = mods.get(active_attr_key, 0) + best_atk_bonus
-    current_ac = 10 + mods.get("dex", 0) + total_ac_bonus
+    active_after = [e for e in enemies if e.get("status") == "ativo"]
+    victory = not active_after
+    combat_meta["active"] = bool(active_after)
 
-    # Formatação dos Inimigos
-    enemy_desc_list = []
-    for idx, e in enumerate(active_enemies):
-        atk_str = "Ataque Básico"
-        # Tenta pegar ataques da estrutura do bestiário
-        attacks = e.get("attacks", [])
-        if attacks and isinstance(attacks, list) and len(attacks) > 0:
-            # Pega o primeiro ataque como exemplo
-            atk = attacks[0]
-            if isinstance(atk, dict):
-                atk_str = f"{atk.get('name')} (+{atk.get('bonus')}) {atk.get('damage')}"
-            else:
-                atk_str = str(atk)
-        
-        enemy_desc_list.append(f"{idx+1}. {e['name']} (HP:{e['hp']}/{e['max_hp']} | AC:{e.get('defense', 10)}) | {atk_str}")
-    
-    mechanics_str = "\n".join(mechanics_log) if mechanics_log else "Nenhum."
-    enemy_str = "\n".join(enemy_desc_list)
-    party_str = ", ".join([p['name'] for p in party if p['hp'] > 0]) or "Sozinho"
+    narrative = _narrate(player, enemies, logs, spawned_flavor, intent, victory)
 
-    # Ruler Logic
-    ruling_instruction = ""
-    if is_combat_start and spawned_flavor:
-        ruling_instruction = f"EVENTO INICIAL: {spawned_flavor} O combate começa agora."
-    elif last_msg and not isinstance(last_msg, (ToolMessage, AIMessage, SystemMessage)):
-        try:
-            ruling = resolve_action(player, last_msg.content)
-            ruling_instruction = f"[RULER]: Formula '{ruling.get('dice_formula')}', Effect: {ruling.get('mechanical_effect')}"
-        except: pass
-
-    # 4. EXECUÇÃO
-    system_msg = SystemMessage(content=f"""
-    <role>Combat Engine</role>
-    <hero>
-    {player['name']} | HP: {player['hp']} | AC: {current_ac}
-    ATK: +{total_atk} ({active_attr_key.upper()})
-    </hero>
-    <mechanics>{mechanics_str}</mechanics>
-    <enemies>\n{enemy_str}\n</enemies>
-    <party>{party_str}</party>
-    {ruling_instruction}
-    
-    <instructions>
-    1. Resolve Hero Action based on [RULER] or description.
-    2. Resolve Enemy Counter-Actions (Roll vs AC).
-    3. Narrate broadly.
-    </instructions>
-    """)
-
-    tier = ModelTier.SMART
-    llm = get_llm(temperature=0.2, tier=tier)
-    
-    result = execute_engine(llm, system_msg, messages, state, node_name="Combate")
-    
-    # IMPORTANTE: Se spawnam inimigos, precisamos garantir que o state de retorno tenha eles
-    if is_combat_start and enemies:
-        # Se a engine não retornou enemies (pq não houve dano ainda), injetamos a lista inicial
-        if "enemies" not in result or not result["enemies"]:
-            result["enemies"] = enemies
-            
-    return result
+    return {
+        "messages": [AIMessage(content=narrative)],
+        "player": player,
+        "enemies": enemies,
+        "combat": combat_meta,
+        "combat_target": None if victory else combat_target,
+        "next": "loot" if victory else None,
+    }

@@ -174,7 +174,9 @@ def _route_decision(model, messages):
 
 def _story_update(model, messages):
     narrative = random.choice(_NARRATIVES).format(acao_eco=_acao_eco(messages))
-    return _fill(model, {"narrative": narrative, "introduced_npcs": []})
+    # Avança o beat ~30% das vezes para a UI de objetivos progredir no modo simulado.
+    return _fill(model, {"narrative": narrative, "introduced_npcs": [],
+                         "beat_completed": random.random() < 0.30})
 
 
 def _campaign_plan(model, messages):
@@ -270,6 +272,23 @@ def _entity_match(model, messages):
     return _fill(model, {"match_found": False, "existing_id": None})
 
 
+def _combat_action(model, messages):
+    """Identifica a ação de combate por palavra-chave (offline, determinístico)."""
+    txt = _last_human(messages).lower()
+    ability_id = "ataque_basico"
+    try:
+        from gamedata import ABILITIES
+        for aid, a in ABILITIES.items():
+            nm = str(a.get("name", "")).lower()
+            if (aid.replace("_", " ") in txt) or (nm and nm in txt):
+                ability_id = aid
+                break
+    except Exception:
+        pass
+    return _fill(model, {"ability_id": ability_id, "target": "",
+                         "is_allowed": True, "reason": "[simulado]"})
+
+
 _DISPATCH = {
     "RouterDecision": _route_decision,
     "StoryUpdate": _story_update,
@@ -285,6 +304,7 @@ _DISPATCH = {
     "TransactionResult": _transaction,
     "Ruling": _ruling,
     "EntityMatch": _entity_match,
+    "CombatAction": _combat_action,
 }
 
 

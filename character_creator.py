@@ -8,6 +8,7 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from pydantic import BaseModel, Field
 
 from llm_setup import get_llm, ModelTier
+from combat_mechanics import normalize_attr
 
 # --- IMPORTAÇÕES ESSENCIAIS ---
 try:
@@ -126,6 +127,11 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
             # Só aceita se vier no formato esperado (sem API key, o FallbackLLM
             # devolve um AIMessage cujo dump não tem 'attributes').
             if isinstance(dumped, dict) and "attributes" in dumped:
+                # Normaliza chaves de atributo (Gemini pode devolver nomes longos/PT:
+                # "dexterity"/"destreza" -> "dex"). Sem isso, mods/attack_bonus saem
+                # errados pois a leitura abaixo usa as chaves curtas.
+                raw_attrs = dumped.get("attributes") or {}
+                dumped["attributes"] = {normalize_attr(k): v for k, v in raw_attrs.items()}
                 stats_data = dumped
     except Exception as e:
         print(f"⚠️ Erro IA: {e}")
