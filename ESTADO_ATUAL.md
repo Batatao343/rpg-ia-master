@@ -34,10 +34,13 @@ uv run python rag.py                 # reindexar lore/regras (data/*.txt)
 ```
 
 **Frontend web (jogar no navegador):** suba a API e abra `http://localhost:8000`.
-O FastAPI serve `frontend/` (vanilla HTML/CSS/JS, zero build) na raiz `/`. Tela de
-criação de personagem → tela de jogo com HUD (HP/mana/vigor, ouro, inventário,
-resumo) e barra de ação. Design aplica os skills `impeccable`/`taste` (dark fantasy,
-serif narrativo + grotesca no HUD, acento âmbar, vermelho só pra perigo).
+O cliente principal é **React + Vite + TS** em `web/` (tom dark medieval/The Witcher: Cinzel +
+EB Garamond, paleta aço+pergaminho+sangue+bronze, ornamentos SVG, `motion` p/ animações). Build:
+`cd web && npm install && npm run build` (gera `web/dist`, que o FastAPI serve na raiz; dev:
+`npm run dev` :5173 com proxy p/ a API). Se não houver `web/dist`, cai no `frontend/` vanilla (legado).
+Tela de criação → tela de jogo: narrativa + HUD em abas **Ficha (barras/stats/habilidades/inventário) ·
+Combate · Pessoas (NPCs) · Mapa (fog of war) · Crônica (menestrel)**, **modo combate** no chat (véu
+vermelho/urgência), banner de modo simulado. Cache do navegador: use hard refresh/aba anônima ao trocar build.
 **Modo simulado (sem API key):** sem `GOOGLE_API_KEY`, `get_llm()` devolve um
 `MockLLM` ([mock_llm.py](mock_llm.py)) que gera dados fictícios plausíveis para cada
 agente (narrativa, ficha, roteamento por palavra-chave, combate, NPC, loot). O jogo

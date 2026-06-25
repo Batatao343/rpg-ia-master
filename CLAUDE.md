@@ -27,6 +27,16 @@ uv run pytest                             # suíte offline (força MockLLM, não
 ([mock_llm.py](mock_llm.py)) — jogo jogável e testável sem rede. Flags: `RPG_FORCE_MOCK=1`
 força o mock mesmo com chave (usado pela suíte); `RPG_NO_MOCK=1` força o `FallbackLLM` de erro.
 
+**Frontend (Fase 1):** o cliente principal é um app **React + Vite + TypeScript** em `web/`
+(tom dark medieval/The Witcher; `motion` p/ animações). A API serve `web/dist` na raiz quando
+existe, senão cai no `frontend/` vanilla (legado). Build e dev:
+
+```bash
+cd web && npm install          # uma vez (Node ≥20)
+npm run build                  # gera web/dist (servido por uvicorn na raiz)
+npm run dev                    # dev server :5173 com proxy p/ a API :8000
+```
+
 ---
 
 ## Arquitetura — grafo LangGraph
@@ -98,6 +108,7 @@ Definido em `state.py` como TypedDict. Campos principais:
 game_id             str          — UUID da sessão, isola memória RAG
 narrative_summary   str          — resumo comprimido (short-term memory)
 archivist_last_run  int          — turno da última execução do arquivista
+chronicle           List[str]    — crônica de menestrel: mini-recaps de eventos (archivist; persistido)
 player              PlayerStats  — name, class_name, race, hp/max_hp, mana/max_mana, stamina/max_stamina,
                                    gold, level, xp, attributes (chaves curtas str/dex/...), inventory,
                                    known_abilities, defense, attack_bonus, active_conditions, ability_cooldowns
@@ -136,8 +147,9 @@ world_utils.py        # Fase 0: relógio, viagem (fog of war), descanso — dete
 engine_utils.py       # execute_engine (loop tool-calling: roll/update_hp/transaction) p/ loot/shop
 character_creator.py  # cria ficha do player (IA + JSON oficial); guard de fallback
 game_engine.py        # CLI interativo (wizard + loop)
-api.py                # FastAPI REST (/game/new, /game/action, /game/state) + serve frontend/
-frontend/             # web vanilla (HTML/CSS/JS, zero build) servido pela API
+api.py                # FastAPI REST (/game/new, /game/action, /game/state, /data/map) + serve web/dist|frontend/
+web/                  # FRONTEND PRINCIPAL — React+Vite+TS (src/, build em web/dist; tom Witcher; motion)
+frontend/             # web vanilla legado (zero build) — fallback se web/dist não existir
 # --- agentes (nós do grafo) ---
 agents/
   router.py           # dm_router_node — classifica intenção + seta NPC/loot/combat
