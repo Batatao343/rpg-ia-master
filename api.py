@@ -187,6 +187,11 @@ def get_creation_options():
         "regions": [r["name"] for r in origins.get("regions", [])]
     }
 
+@app.get("/data/map")
+def get_world_map():
+    """Grafo de locais (Fase 0) para o mapa com fog of war no frontend."""
+    return load_json_data("world_map.json")
+
 @app.get("/game/state")
 def get_current_state(game_id: Optional[str] = None):
     """
@@ -311,7 +316,10 @@ def game_action(req: ActionRequest):
 
 # --- FRONTEND ESTÁTICO ---
 # Servido na raiz "/". As rotas de API acima têm precedência sobre o mount.
-_FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend")
+# Prefere a build do app React (web/dist); cai para o frontend vanilla se não houver build.
+_ROOT = os.path.dirname(os.path.abspath(__file__))
+_WEB_DIST = os.path.join(_ROOT, "web", "dist")
+_FRONTEND_DIR = _WEB_DIST if os.path.isdir(_WEB_DIST) else os.path.join(_ROOT, "frontend")
 if os.path.isdir(_FRONTEND_DIR):
     app.mount("/", StaticFiles(directory=_FRONTEND_DIR, html=True), name="frontend")
 

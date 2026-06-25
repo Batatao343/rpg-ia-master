@@ -20,3 +20,11 @@ data/custom_artifacts.json
 
 # Skills do Claude (locais, não versionar)
 .claude/skills/
+
+# Frontend React (web/) — deps, build e artefatos do tsc -b
+web/node_modules/
+web/dist/
+web/*.tsbuildinfo
+web/vite.config.js
+web/vite.config.d.ts
+

@@ -13,14 +13,14 @@ Quase todo pedido grande (mapa+fog, fações que se movem, itens regionais) depe
 
 - Sequência: **Fase 0 primeiro** (feito), depois apresentação.
 - Frontend: migrar para **React + Vite** na fase de apresentação (Fase 1).
-- Arte: **híbrida** — packs pixel art CC0 curados (LPC/Kenney) para personagem/cenário + IA só para itens únicos.
+- Arte: **híbrida** — packs pixel art CC0 curados (LPC/Kenney) para personagem/cenário + IA só para itens únicos. **Sprites são a ÚLTIMA entrega** (sourcing pesado) — só depois de tudo jogável.
 
 ---
 
 ## Pilares
 
 - **P1 — Profundidade de simulação:** mundo estruturado, itens regionais, habilidades abertas com gating, memória de NPC vetorizada.
-- **P2 — Apresentação:** React, mapa com fog of war, sprites pixel art, polish de HUD.
+- **P2 — Apresentação:** React, mapa com fog of war, polish de HUD. (Sprites pixel art ficam para o fim — ver última fase.)
 - **P3 — Mundo vivo:** simulador de eventos em descanso/viagem; fações/vilões com objetivos próprios.
 - **P4 — Arte generativa:** IA gera a arte (pixel) do item a partir da descrição regional.
 
@@ -40,10 +40,11 @@ Branch `feat/fase0-mundo`. 39 testes verdes (offline). Fluxo de IA auditado + ha
 > **Pendência de qualidade:** o gating de habilidade só fica afiado com `GOOGLE_API_KEY` (no modo simulado o juiz é permissivo).
 
 ### Fase 1 — Apresentação (tira o "simplista")
-- [ ] Migrar frontend para **React + Vite** (canvas, sprites, estado de mapa).
-- [ ] **Mapa com fog of war:** renderiza o grafo; revela nós conforme `world.visited` cresce. (Depende da Fase 0 — pronto.)
-- [ ] **Sprites pixel art** (híbrido): packs CC0 para personagem/cenário; IA só nos itens.
+- [ ] Migrar frontend para **React + Vite** (TypeScript; app em `web/`, vanilla `frontend/` como fallback até paridade).
+- [ ] **Mapa com fog of war:** renderiza o grafo (`coords` já no `world_map.json`); revela nós conforme `world.visited` cresce. (Depende da Fase 0 — pronto.)
 - [ ] Polish de HUD.
+
+> Sprites pixel art **não** entram aqui — viraram a última fase (sourcing pesado).
 
 ### Fase 2 — Mundo vivo
 - [ ] Nó `world_simulator` acionado em descanso/viagem (hook já marcado em `world_utils.apply_rest`): avança o relógio, simula eventos off-screen, grava no RAG da sessão, altera perigo/encontros.
@@ -52,6 +53,13 @@ Branch `feat/fase0-mundo`. 39 testes verdes (offline). Fluxo de IA auditado + ha
 
 ### Fase 3 — Arte generativa de itens
 - [ ] IA gera arte pixel do item a partir da descrição regional (Fase 0). Estilo travado, **cache por `item_id`**, geração assíncrona/lazy, fallback de silhueta no modo simulado.
+
+### ★ Fase 4 (ÚLTIMA) — Sprites pixel art de personagem/cenário
+> Deliberadamente por último: exige **trabalho pesado de sourcing** (curar packs CC0 LPC/Kenney,
+> padronizar paleta/escala) antes de qualquer código. Só faz sentido com o jogo já jogável e bonito
+> no resto. Híbrido: assets curados no núcleo, IA só nos itens (Fase 3).
+- [ ] Sourcing/curadoria de packs CC0 (LPC/Kenney) — personagem e cenário.
+- [ ] Integração dos sprites no mapa e na cena (paleta/escala travadas).
 
 ---
 
