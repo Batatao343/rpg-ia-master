@@ -336,6 +336,75 @@ def apply_reputation(factions, faction_id: str, direction: str,
     return new_list, event
 
 
+# --- Fase 2 / Encontros: o mundo perigoso/dominado/ameaçado gera combate (determinístico) ---
+
+_ENCOUNTER_COOLDOWN = 2  # turnos mínimos entre encontros automáticos (anti-spam)
+
+
+def _effective_danger(world: dict, loc_id: str) -> int:
+    """Perigo atual do local: override de ascensão (se houver) senão o base do mapa."""
+    overrides = world.get("danger_overrides") or {}
+    if loc_id in overrides:
+        return int(overrides[loc_id])
+    loc = gamedata.get_location(loc_id) or {}
+    return int(loc.get("danger", world.get("danger_level", 1)))
+
+
+def _hostile_ruler(world: dict, factions, loc_id: str):
+    """Retorna a facção HOSTIL que domina o local atual, ou None."""
+    fid = (world.get("controlled") or {}).get(loc_id)
+    if not fid:
+        return None
+    for f in ensure_factions(factions):
+        if f.get("id") == fid and f.get("disposition") == "hostil":
+            return f
+    return None
+
+
+def check_encounter(world: dict, factions, intel, turn: int = 0):
+    """
+    Gatilho DETERMINÍSTICO de encontro ao entrar/descansar num local perigoso.
+    Dispara se: looming_threat ativo + perigo>=3; OU local dominado por facção hostil;
+    OU perigo efetivo >= 4. Respeita cooldown (`world.last_encounter_turn`).
+
+    Não-onisciência: a dica do inimigo só NOMEIA a facção dominante se o jogador a conhece.
+    Retorna {hint, flavor, reason} ou None.
+    """
+    world = world or {}
+    intel = ensure_faction_intel(intel)
+    if turn - int(world.get("last_encounter_turn", -99)) < _ENCOUNTER_COOLDOWN:
+        return None
+
+    loc_id = world.get("current_location_id", "")
+    danger = _effective_danger(world, loc_id)
+    threat = world.get("looming_threat")
+    ruler = _hostile_ruler(world, factions, loc_id)
+    loc = gamedata.get_location(loc_id) or {}
+    region = loc.get("region", world.get("current_location", "a região"))
+
+    if ruler:
+        fid = ruler.get("id")
+        if intel.get(fid, {}).get("known"):
+            who = ruler.get("name")
+            hint = f"asseclas armados da {who}"
+            flavor = f"Aço da {who} barra o caminho — eles cobram a passagem em sangue."
+        else:
+            hint = "homens armados sob uma bandeira que você não reconhece"
+            flavor = "Homens armados sob uma bandeira estranha cercam você sem dar explicações."
+        return {"hint": hint, "flavor": flavor, "reason": "controlled"}
+
+    if threat and danger >= 3:
+        return {"hint": f"criatura ligada a: {threat}", "flavor": str(threat),
+                "reason": "looming_threat"}
+
+    if danger >= 4:
+        return {"hint": f"feras/perigos de {region}",
+                "flavor": f"O perigo de {region} se materializa: algo hostil avança sobre você.",
+                "reason": "high_danger"}
+
+    return None
+
+
 def clock_label(world: dict) -> str:
     c = world.get("world_clock") or {}
     return f"Dia {c.get('day', 1)} · {c.get('period', PERIODS[0])}"

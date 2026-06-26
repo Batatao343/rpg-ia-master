@@ -307,6 +307,62 @@ def test_completion_note_names_only_known():
     assert "Ordem do Selo Pálido" in note_known
 
 
+# --------------------------------------------------------------------------
+# Encontros: o mundo perigoso/dominado/ameaçado vira combate (determinístico)
+# --------------------------------------------------------------------------
+def test_encounter_high_danger_triggers():
+    world = {"current_location_id": "clareira_ossos"}  # perigo 4 no mapa
+    enc = wu.check_encounter(world, gamedata.seed_factions(), {}, turn=10)
+    assert enc and enc["reason"] == "high_danger"
+
+
+def test_encounter_looming_threat_triggers():
+    world = {"current_location_id": "floresta_sussurros",  # perigo 3
+             "looming_threat": "Algo desperta sob a floresta."}
+    enc = wu.check_encounter(world, gamedata.seed_factions(), {}, turn=10)
+    assert enc and enc["reason"] == "looming_threat"
+
+
+def test_encounter_hostile_controlled_triggers():
+    world = {"current_location_id": "estrada_sul",  # perigo 2: só o domínio dispara
+             "controlled": {"estrada_sul": "clas_skallgard"}}  # facção hostil
+    enc = wu.check_encounter(world, gamedata.seed_factions(), {}, turn=10)
+    assert enc and enc["reason"] == "controlled"
+
+
+def test_encounter_safe_zone_no_trigger():
+    world = {"current_location_id": "estrada_sul"}  # perigo 2, sem ameaça/domínio
+    assert wu.check_encounter(world, gamedata.seed_factions(), {}, turn=10) is None
+
+
+def test_encounter_cooldown_blocks():
+    world = {"current_location_id": "clareira_ossos", "last_encounter_turn": 9}
+    assert wu.check_encounter(world, gamedata.seed_factions(), {}, turn=10) is None  # 1 < cooldown 2
+
+
+def test_encounter_hint_respects_intel():
+    world = {"current_location_id": "estrada_sul",
+             "controlled": {"estrada_sul": "clas_skallgard"}}
+    facs = gamedata.seed_factions()
+    # desconhecida → não nomeia
+    enc = wu.check_encounter(world, facs, {}, turn=10)
+    assert "Skallgard" not in enc["hint"]
+    # conhecida → nomeia
+    enc2 = wu.check_encounter(world, facs, {"clas_skallgard": {"known": True}}, turn=10)
+    assert "Skallgard" in enc2["hint"]
+
+
+def test_graph_rest_in_danger_triggers_combat():
+    from main import app
+    st = _state_for_graph("vou descansar e acampar aqui")
+    st["world"]["current_location_id"] = "clareira_ossos"
+    st["world"]["current_location"] = "Clareira dos Ossos"
+    st["world"]["danger_level"] = 4
+    result = app.invoke(st)
+    enemies = result.get("enemies") or []
+    assert enemies, "descansar em local de perigo 4 deve disparar um encontro (inimigos spawnados)"
+
+
 def test_npc_reveals_faction_to_player():
     from langchain_core.messages import HumanMessage
     from agents.npc import npc_actor_node

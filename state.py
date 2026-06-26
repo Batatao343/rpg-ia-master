@@ -85,6 +85,11 @@ class WorldState(TypedDict, total=False):
     quest_plan: List[str]
     quest_plan_origin: Optional[str]
     danger_level: int
+    # --- Fase 2 / Etapa B: mundo que evolui (escrito por resolve_faction_completions) ---
+    controlled: Dict[str, str]       # location_id -> faction_id (local dominado por fação)
+    danger_overrides: Dict[str, int] # location_id -> perigo elevado por ascensão (teto 4)
+    looming_threat: str              # ameaça invocada (entidade) pairando sobre o mundo
+    last_encounter_turn: int         # turno do último encontro automático (cooldown)
 
 
 class Faction(TypedDict, total=False):

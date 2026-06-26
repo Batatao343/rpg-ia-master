@@ -2,13 +2,13 @@
 
 > Documento de estado do projeto. Leia isto **primeiro** ao retomar o trabalho.
 > Complementa `CLAUDE.md` (arquitetura) e `REFERENCE.md` (decisões técnicas).
-> Última atualização: 2026-06-25 (sessão: Fase 2 — reputação + não-onisciência + ascensão de fações).
+> Última atualização: 2026-06-25 (sessão: Fase 2 — reputação + não-onisciência + ascensão + encontros).
 
 ---
 
 ## TL;DR — Em que pé está
 
-**MVP funcional e jogável + Fase 2 iniciada.** O grafo LangGraph roda fim-a-fim (criar plano → rotear → narrar/combater/NPC/loot → arquivar → salvar) sem crashar. Suíte offline 100% verde (`uv run pytest` — **71 testes**).
+**MVP funcional e jogável + Fase 2 iniciada.** O grafo LangGraph roda fim-a-fim (criar plano → rotear → narrar/combater/NPC/loot → arquivar → salvar) sem crashar. Suíte offline 100% verde (`uv run pytest` — **78 testes**).
 
 A chave (`GOOGLE_API_KEY`) está **válida** e o caminho do **Gemini real foi validado** fim-a-fim
 (`tests/test_real_llm.py`, 4 passed, ~7-10 req). Sem chave o jogo roda no **MockLLM** (jogável).
@@ -38,8 +38,15 @@ verdade (`world_utils.resolve_faction_completions`, determinístico, autorado em
 (`world.danger_overrides`, teto 4), `invocar_entidade` (`world.looming_threat`),
 `eliminar_faccao` (alvo vira `defeated`, sai de jogo/HUD). A nota de mundo **nomeia** a fação só
 se conhecida; senão narra só a consequência sentida. Mapa reflete domínio (selo) e perigo elevado.
-Testes em `tests/test_fase2.py`. Ver `ROADMAP.md` Fase 2. Falta: camada narrada genérica
-(`world_simulator`) e memória de NPC vetorizada.
+Testes em `tests/test_fase2.py`. **Encontros do mundo entregue (esta sessão):** viajar/descansar
+chama `world_utils.check_encounter` (determinístico) — perigo elevado (≥4), local dominado por
+fação hostil, ou `looming_threat`+perigo≥3 disparam **combate temático** (curto-circuito no
+storyteller → `SystemMessage("COMBAT START")` + `combat_target` + `next="combat_agent"`; aresta
+`storyteller→combat|archivist` em `main.py`). Cooldown de 2 turnos; dica do inimigo respeita
+não-onisciência (não nomeia fação desconhecida). Agora o estado de mundo da Etapa B
+(`danger_overrides`/`controlled`/`looming_threat`) **afeta a jogabilidade**, não só o HUD.
+Ver `ROADMAP.md` Fase 2. Falta: camada narrada genérica (`world_simulator`), memória de NPC
+vetorizada e dificuldade do inimigo escalando com o perigo.
 
 ---
 

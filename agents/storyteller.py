@@ -13,6 +13,7 @@ from world_utils import (
     apply_reputation,
     apply_rest,
     apply_travel,
+    check_encounter,
     clock_label,
     ensure_faction_intel,
     ensure_factions,
@@ -102,6 +103,24 @@ def storyteller_node(state: GameState):
                 )
         except Exception:
             ruling_note = ""
+
+    # --- Encontro: o mundo perigoso/dominado/ameaçado (Etapa B) vira combate de verdade ---
+    # Só após avançar o tempo (viagem/descanso). Curto-circuita para o combate.
+    if dest or rested_player is not None:
+        turn = int(world.get("turn_count", 0))
+        enc = check_encounter(world, factions, intel, turn)
+        if enc:
+            world["last_encounter_turn"] = turn
+            updates = {
+                "messages": [SystemMessage(content=f"COMBAT START. {enc['flavor']}")],
+                "world": world,
+                "factions": factions,
+                "combat_target": enc["hint"],
+                "next": "combat_agent",
+            }
+            if rested_player is not None:
+                updates["player"] = rested_player  # já curou no descanso antes da emboscada
+            return updates
 
     loc = world.get("current_location", "")
     existing_npcs = list(state.get("npcs", {}).keys())
