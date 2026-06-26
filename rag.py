@@ -124,6 +124,69 @@ def add_memory_to_session(game_id: str, texts: List[str]):
     except Exception as e:
         print(f"❌ [RAG ERROR] Falha ao salvar memória: {e}")
 
+# --- MEMÓRIA DE NPC VETORIZADA (namespace por game_id + npc_id) ---
+
+def _get_npc_path(game_id: str, npc_id: str) -> str:
+    """Pasta do índice FAISS de UM npc dentro da sessão."""
+    return os.path.join(SAVES_DIR, game_id, npc_id)
+
+
+def add_npc_memory(game_id: str, npc_id: str, texts: List[str]):
+    """
+    Adiciona fatos ao índice do NPC (isolado por game_id+npc_id).
+    No-op se faltar game_id/npc_id/texts ou se não houver embeddings (sem chave).
+    """
+    if not game_id or not npc_id or not texts:
+        return
+
+    embeddings = get_embeddings()
+    if not embeddings:
+        return
+
+    npc_path = _get_npc_path(game_id, npc_id)
+    try:
+        if os.path.exists(npc_path):
+            db = FAISS.load_local(npc_path, embeddings, allow_dangerous_deserialization=True)
+            db.add_texts(texts)
+        else:
+            os.makedirs(os.path.dirname(npc_path), exist_ok=True)
+            db = FAISS.from_texts(texts, embeddings)
+        db.save_local(npc_path)
+        print(f"🧠 [RAG] Memória de NPC '{npc_id}' (sessão '{game_id}'): +{len(texts)} fatos.")
+    except Exception as e:
+        print(f"❌ [RAG ERROR] Falha ao salvar memória do NPC '{npc_id}': {e}")
+
+
+def query_npc_memory(game_id: str, npc_id: str, query: str, k: int = 3) -> str:
+    """
+    Recupera por relevância o que ESTE npc viveu com o jogador. "" se sem índice/sem chave.
+    """
+    if not game_id or not npc_id or not query:
+        return ""
+
+    embeddings = get_embeddings()
+    if not embeddings:
+        return ""
+
+    npc_path = _get_npc_path(game_id, npc_id)
+    if not os.path.exists(npc_path):
+        return ""
+
+    try:
+        db = FAISS.load_local(npc_path, embeddings, allow_dangerous_deserialization=True)
+        docs = db.similarity_search(query, k=k)
+    except Exception:
+        return ""
+
+    seen, out = set(), []
+    for doc in docs:
+        content = doc.page_content.strip()
+        if content and content not in seen:
+            seen.add(content)
+            out.append(content)
+    return "\n---\n".join(out)
+
+
 # --- FUNÇÕES DE UTILIDADE (Setup Inicial) ---
 
 def ingest_file(file_path: str, index_name: str):

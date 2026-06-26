@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 
 from agents.npc import generate_new_npc
 from agents.ruler_completo import resolve_action
+from agents.world_simulator import simulate_world
 from llm_setup import get_llm
 from rag import query_rag
 from state import GameState
@@ -104,12 +105,13 @@ def storyteller_node(state: GameState):
         except Exception:
             ruling_note = ""
 
-    # --- Encontro: o mundo perigoso/dominado/ameaçado (Etapa B) vira combate de verdade ---
-    # Só após avançar o tempo (viagem/descanso). Curto-circuita para o combate.
+    # --- O tempo passou (viagem/descanso): ou cai em emboscada, ou o mundo "respira" ---
+    world_note = ""
     if dest or rested_player is not None:
         turn = int(world.get("turn_count", 0))
         enc = check_encounter(world, factions, intel, turn)
         if enc:
+            # Emboscada: curto-circuita para o combate (sem simular — poupa quota).
             world["last_encounter_turn"] = turn
             updates = {
                 "messages": [SystemMessage(content=f"COMBAT START. {enc['flavor']}")],
@@ -121,6 +123,11 @@ def storyteller_node(state: GameState):
             if rested_player is not None:
                 updates["player"] = rested_player  # já curou no descanso antes da emboscada
             return updates
+        # Sem emboscada: o mundo gera 1 evento off-screen narrado (e grava no RAG da sessão).
+        try:
+            world, world_note = simulate_world(state, world, factions, intel, 1 if dest else 2)
+        except Exception:
+            world_note = ""
 
     loc = world.get("current_location", "")
     existing_npcs = list(state.get("npcs", {}).keys())
@@ -145,7 +152,7 @@ def storyteller_node(state: GameState):
     llm = get_llm(temperature=0.7)
     
     # PROMPT ATUALIZADO
-    eventos_turno = "\n".join(n for n in (travel_note, rest_note, ruling_note, faction_note) if n) or "Nenhum evento especial."
+    eventos_turno = "\n".join(n for n in (travel_note, rest_note, ruling_note, faction_note, world_note) if n) or "Nenhum evento especial."
 
     # Fações que o JOGADOR conhece (não-onisciência): só estas podem ser citadas/afetadas.
     faccoes_conhecidas = "\n".join(

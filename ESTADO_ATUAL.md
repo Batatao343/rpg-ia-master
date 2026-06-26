@@ -2,13 +2,13 @@
 
 > Documento de estado do projeto. Leia isto **primeiro** ao retomar o trabalho.
 > Complementa `CLAUDE.md` (arquitetura) e `REFERENCE.md` (decisões técnicas).
-> Última atualização: 2026-06-25 (sessão: Fase 2 — reputação + não-onisciência + ascensão + encontros).
+> Última atualização: 2026-06-25 (sessão: **Fase 2 COMPLETA** — reputação, não-onisciência, ascensão, encontros, memória de NPC, world_simulator).
 
 ---
 
 ## TL;DR — Em que pé está
 
-**MVP funcional e jogável + Fase 2 iniciada.** O grafo LangGraph roda fim-a-fim (criar plano → rotear → narrar/combater/NPC/loot → arquivar → salvar) sem crashar. Suíte offline 100% verde (`uv run pytest` — **78 testes**).
+**MVP funcional e jogável + Fase 2 COMPLETA.** O grafo LangGraph roda fim-a-fim (criar plano → rotear → narrar/combater/NPC/loot → arquivar → salvar) sem crashar. Suíte offline 100% verde (`uv run pytest` — **87 testes**).
 
 A chave (`GOOGLE_API_KEY`) está **válida** e o caminho do **Gemini real foi validado** fim-a-fim
 (`tests/test_real_llm.py`, 4 passed, ~7-10 req). Sem chave o jogo roda no **MockLLM** (jogável).
@@ -45,8 +45,18 @@ storyteller → `SystemMessage("COMBAT START")` + `combat_target` + `next="comba
 `storyteller→combat|archivist` em `main.py`). Cooldown de 2 turnos; dica do inimigo respeita
 não-onisciência (não nomeia fação desconhecida). Agora o estado de mundo da Etapa B
 (`danger_overrides`/`controlled`/`looming_threat`) **afeta a jogabilidade**, não só o HUD.
-Ver `ROADMAP.md` Fase 2. Falta: camada narrada genérica (`world_simulator`), memória de NPC
-vetorizada e dificuldade do inimigo escalando com o perigo.
+**Memória de NPC vetorizada entregue (esta sessão):** cada NPC tem um índice FAISS próprio em
+`data/saves_memory/{game_id}/npc_{npc_id}/` (`rag.add_npc_memory`/`query_npc_memory`); o
+`npc_actor_node` grava cada fato e recupera por relevância antes de responder (bloco
+`<MEMORIA_RELEVANTE>`), além das 3 últimas linhas. Inerte sem chave (degrada como o RAG). Testes
+em `tests/test_npc_memory.py` (FakeEmbeddings determinístico, offline).
+**world_simulator entregue (esta sessão → Fase 2 COMPLETA):** ao descansar/viajar sem cair em
+emboscada, `agents/world_simulator.simulate_world` gera 1 evento off-screen narrado (IA, `WorldPulse`:
+rumor percebido + fato + danger_shift), tecido como `[ECOS DO MUNDO]` na narração; Python clampa o
+perigo ([1,4]) e persiste o fato no RAG da sessão (`add_memory_to_session`). Não-onisciência: o
+prompt só lista fações conhecidas. Guard de FallbackLLM; inerte sem chave. Testes em
+`tests/test_world_sim.py`. **Próxima fase: Fase 3 (arte generativa de itens).** Backlog de polish:
+dificuldade do inimigo escalando com o perigo efetivo.
 
 ---
 

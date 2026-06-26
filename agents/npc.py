@@ -14,11 +14,18 @@ from world_utils import apply_faction_reveal, ensure_factions, ensure_faction_in
 
 # Fallback para RAG
 try:
-    from rag import query_rag
+    from rag import query_rag, add_npc_memory, query_npc_memory
     RAG_AVAILABLE = True
 except ImportError:
     RAG_AVAILABLE = False
     def query_rag(*args, **kwargs): return ""
+    def add_npc_memory(*args, **kwargs): return None
+    def query_npc_memory(*args, **kwargs): return ""
+
+
+def _npc_id(npc_data: dict, name: str) -> str:
+    """id estável do NPC para namespacing da memória vetorial."""
+    return npc_data.get("id") or f"npc_{(name or 'desconhecido').lower().replace(' ', '_')}"
 
 # Importa Librarian para verificar duplicatas
 try:
@@ -166,6 +173,15 @@ def npc_actor_node(state: GameState):
     last_msg = messages[-1].content if messages else ""
     lore = query_rag(last_msg, index_name="lore") if RAG_AVAILABLE else ""
 
+    # Memória vetorizada DESTE npc: recupera por relevância o que viveu com o jogador
+    # (além das 3 últimas linhas). Inerte sem chave (get_embeddings -> None).
+    game_id = state.get("game_id")
+    npc_id = _npc_id(npc_data, npc_name)
+    try:
+        relevant_memory = query_npc_memory(game_id, npc_id, last_msg) if (RAG_AVAILABLE and game_id) else ""
+    except Exception:
+        relevant_memory = ""
+
     # Fações do mundo: o NPC PODE saber delas (e revelar ao jogador). O conhecimento do
     # jogador (faction_intel) só avança por aqui — fora daqui ele não é onisciente.
     factions = ensure_factions(state.get("factions"))
@@ -187,6 +203,10 @@ def npc_actor_node(state: GameState):
     <MEMORIA>
     {npc_data.get('memory', [])[-3:]}
     </MEMORIA>
+
+    <MEMORIA_RELEVANTE>
+    {relevant_memory or "—"}
+    </MEMORIA_RELEVANTE>
 
     <CONTEXTO_EXTERNO>
     {lore}
@@ -215,7 +235,15 @@ def npc_actor_node(state: GameState):
         turn = state.get('world', {}).get('turn_count', 0)
         npc_data['relationship'] = max(0, min(10, npc_data.get('relationship', 5) + res.relationship_change))
         npc_data.setdefault('memory', [])
-        npc_data['memory'].append(f"Turno {turn}: {res.memory_update}")
+        fato = f"Turno {turn}: {res.memory_update}"
+        npc_data['memory'].append(fato)
+
+        # Memória de longo prazo: vetoriza o fato no índice deste npc (inerte sem chave).
+        if RAG_AVAILABLE and game_id and res.memory_update:
+            try:
+                add_npc_memory(game_id, npc_id, [fato])
+            except Exception:
+                pass
 
         # Atualiza o estado global
         new_npcs = npcs_db.copy()

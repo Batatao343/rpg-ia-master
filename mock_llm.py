@@ -190,6 +190,20 @@ def _story_update(model, messages):
                          "beat_completed": random.random() < 0.30})
 
 
+_WORLD_RUMORS = [
+    "Viajantes falam baixo de fumaça vista ao longe e de estradas que mudaram de dono.",
+    "Um sino distante toca fora de hora; ninguém sabe dizer por quê.",
+    "Mercadores chegam com menos do que partiram, e olham por sobre o ombro.",
+    "Aves abandonaram os galhos numa direção só, como se algo as empurrasse.",
+]
+
+
+def _world_pulse(model, messages):
+    return _fill(model, {"rumor": random.choice(_WORLD_RUMORS),
+                         "fact": "Forças do mundo se moveram nos bastidores enquanto o tempo passava.",
+                         "danger_shift": 0})
+
+
 def _campaign_plan(model, messages):
     return _fill(model, {"location": "Terras Cinzentas",
                          "beats": list(_BEATS),
@@ -321,6 +335,7 @@ def _combat_action(model, messages):
 _DISPATCH = {
     "RouterDecision": _route_decision,
     "StoryUpdate": _story_update,
+    "WorldPulse": _world_pulse,
     "CampaignPlanModel": _campaign_plan,
     "MemoryUpdate": _memory_update,
     "PlayerStatsSchema": _player_stats,
