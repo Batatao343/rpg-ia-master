@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crônicas — RPG de Texto</title>
+  <meta name="description" content="RPG de texto dark fantasy com narração por IA." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Banner de erro / aviso (estado de erro) -->
+  <div id="banner" class="banner" hidden role="alert"></div>
+
+  <!-- ====================== TELA: CRIAÇÃO ====================== -->
+  <main id="screen-create" class="create" data-active>
+    <div class="create__frame">
+      <header class="create__head">
+        <p class="kicker">Dark Fantasy · Narração por IA</p>
+        <h1 class="create__title">Forje sua lenda</h1>
+        <p class="create__sub">Um mundo sombrio aguarda. Defina quem caminha nele — o resto, a história escreve.</p>
+      </header>
+
+      <form id="form-create" class="form" autocomplete="off">
+        <div class="field">
+          <label for="f-name">Nome do herói</label>
+          <input id="f-name" name="name" type="text" placeholder="Ex.: Valerius" maxlength="40" required />
+        </div>
+
+        <div class="form__row">
+          <div class="field">
+            <label for="f-race">Origem (raça)</label>
+            <select id="f-race" name="race" required></select>
+          </div>
+          <div class="field">
+            <label for="f-class">Vocação (classe)</label>
+            <select id="f-class" name="class_name" required></select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-region">Região inicial</label>
+          <select id="f-region" name="region" required></select>
+        </div>
+
+        <div class="field">
+          <label>Nível inicial</label>
+          <div id="f-level" class="segmented" role="radiogroup" aria-label="Nível inicial">
+            <button type="button" class="seg" data-level="1" aria-pressed="true">Iniciante · 1</button>
+            <button type="button" class="seg" data-level="3" aria-pressed="false">Aventureiro · 3</button>
+            <button type="button" class="seg" data-level="5" aria-pressed="false">Veterano · 5</button>
+            <button type="button" class="seg" data-level="10" aria-pressed="false">Herói · 10</button>
+            <button type="button" class="seg" data-level="20" aria-pressed="false">Lenda · 20</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-back">Passado <span class="muted">(opcional)</span></label>
+          <textarea id="f-back" name="backstory" rows="2" maxlength="280"
+            placeholder="Uma linha sobre de onde você veio e o que carrega."></textarea>
+        </div>
+
+        <div class="form__actions">
+          <button id="btn-continue" type="button" class="btn btn--ghost" hidden>Continuar jornada anterior</button>
+          <button id="btn-create" type="submit" class="btn btn--primary">Começar a jornada</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- ====================== TELA: JOGO ====================== -->
+  <div id="screen-play" class="play" hidden>
+    <header class="topbar">
+      <div class="topbar__loc">
+        <span id="t-location" class="topbar__place">—</span>
+        <span class="topbar__meta" id="t-clock">Dia 1 · Amanhecer</span>
+      </div>
+      <div class="topbar__right">
+        <button id="btn-hud" class="iconbtn" type="button" aria-label="Ficha">☰ Ficha</button>
+        <button id="btn-new" class="iconbtn" type="button" aria-label="Nova partida">Nova</button>
+      </div>
+    </header>
+
+    <div class="stage">
+      <!-- Coluna de narrativa -->
+      <section class="story" aria-label="Narrativa">
+        <div id="log" class="log"></div>
+        <div id="thinking" class="thinking" hidden aria-live="polite">
+          <span class="thinking__dot"></span><span class="thinking__dot"></span><span class="thinking__dot"></span>
+          <span class="thinking__label">o narrador tece o destino…</span>
+        </div>
+      </section>
+
+      <!-- HUD / Ficha -->
+      <aside id="hud" class="hud" aria-label="Ficha do personagem">
+        <div class="hud__id">
+          <p id="h-name" class="hud__name">—</p>
+          <p id="h-sub" class="hud__sub muted">—</p>
+        </div>
+
+        <div class="bars">
+          <div class="bar" data-kind="hp">
+            <div class="bar__top"><span>Vida</span><span id="h-hp">0/0</span></div>
+            <div class="bar__track"><div id="h-hp-fill" class="bar__fill"></div></div>
+          </div>
+          <div class="bar" data-kind="mana">
+            <div class="bar__top"><span>Mana</span><span id="h-mana">0/0</span></div>
+            <div class="bar__track"><div id="h-mana-fill" class="bar__fill"></div></div>
+          </div>
+          <div class="bar" data-kind="stamina">
+            <div class="bar__top"><span>Vigor</span><span id="h-stam">0/0</span></div>
+            <div class="bar__track"><div id="h-stam-fill" class="bar__fill"></div></div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><span class="muted">Nível</span><b id="h-level">1</b></div>
+          <div class="stat"><span class="muted">XP</span><b id="h-xp">0</b></div>
+          <div class="stat"><span class="muted">Ouro</span><b id="h-gold">0</b></div>
+          <div class="stat"><span class="muted">Defesa</span><b id="h-def">0</b></div>
+        </div>
+
+        <div id="combatblock" class="combatblock" hidden>
+          <p class="hud__label">Combate <span id="h-combat-round" class="muted"></span></p>
+          <ul id="h-enemies" class="enemies"></ul>
+          <p id="h-init-label" class="hud__label hud__label--sub" hidden>Iniciativa</p>
+          <ol id="h-initiative" class="initiative"></ol>
+          <div id="h-pcond-block" hidden>
+            <p class="hud__label hud__label--sub">Suas condições</p>
+            <ul id="h-pconds" class="conds"></ul>
+          </div>
+          <div id="h-cd-block" hidden>
+            <p class="hud__label hud__label--sub">Recarga</p>
+            <div id="h-cooldowns" class="conds__row"></div>
+          </div>
+        </div>
+
+        <div id="questblock" class="questblock" hidden>
+          <p class="hud__label">Objetivo</p>
+          <p id="h-quest-obj" class="quest__obj">—</p>
+          <ol id="h-quest-beats" class="quest__beats"></ol>
+        </div>
+
+        <div class="invblock">
+          <p class="hud__label">Inventário</p>
+          <ul id="h-inv" class="inv"></ul>
+        </div>
+
+        <details class="summary">
+          <summary>Resumo da história</summary>
+          <p id="h-summary" class="muted"></p>
+        </details>
+      </aside>
+    </div>
+
+    <!-- Barra de ação -->
+    <form id="form-action" class="actionbar">
+      <input id="action-input" type="text" autocomplete="off"
+        placeholder="O que você faz?  (ex.: examino a porta, ataco o vulto, pergunto sobre o rei)" />
+      <button id="btn-send" class="btn btn--primary" type="submit" aria-label="Agir">Agir</button>
+    </form>
+  </div>
+
+  <!-- Overlay de morte -->
+  <div id="overlay-death" class="overlay" hidden>
+    <div class="overlay__inner">
+      <p class="overlay__big">VOCÊ MORREU</p>
+      <p class="muted">O fio do destino se rompeu.</p>
+      <button id="btn-restart" class="btn btn--primary" type="button">Começar de novo</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

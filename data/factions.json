@@ -1,0 +1,84 @@
+{
+  "selo_palido": {
+    "id": "selo_palido",
+    "name": "Ordem do Selo Pálido",
+    "goal": "Centralizar o poder das guildas e selar o Portão Oeste contra o norte.",
+    "region": "Nova Arcádia",
+    "progress": 0,
+    "pace": 4,
+    "disposition": "neutro",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "dominar_local",
+      "target": "portao_oeste",
+      "perceived": "O Portão Oeste amanhece tomado por estandartes pálidos e lanças; ninguém passa sem ser revistado, e ninguém manda mais que eles ali."
+    }
+  },
+  "clas_skallgard": {
+    "id": "clas_skallgard",
+    "name": "Clãs de Skallgard",
+    "goal": "Reunir os clãs do norte para uma marcha de inverno rumo ao sul.",
+    "region": "Skallgard",
+    "progress": 0,
+    "pace": 3,
+    "disposition": "hostil",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "expandir_regiao",
+      "region": "Nova Arcádia",
+      "next_goal": "Saquear as cidades do sul antes que o degelo feche os passos.",
+      "perceived": "Colunas de fumaça mancham o horizonte norte; estradas antes calmas agora cospem homens armados de peles e machados, falando uma língua dura."
+    }
+  },
+  "culto_clareira": {
+    "id": "culto_clareira",
+    "name": "Culto da Clareira",
+    "goal": "Despertar o que dorme sob os ossos da Floresta dos Sussurros.",
+    "region": "Floresta dos Sussurros",
+    "progress": 0,
+    "pace": 5,
+    "disposition": "hostil",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "invocar_entidade",
+      "target": "clareira_ossos",
+      "threat": "Algo antigo e faminto despertou sob a floresta; a terra range e os animais fogem em massa.",
+      "perceived": "O céu sobre a mata fica da cor de um hematoma; os sussurros viram um coro, e bichos correm para longe da floresta como se o chão os repelisse."
+    }
+  },
+  "guilda_fuligem": {
+    "id": "guilda_fuligem",
+    "name": "Guilda da Fuligem",
+    "goal": "Escavar mais fundo na Mina da Fuligem atrás do veio negro.",
+    "region": "Montanhas Afiadas",
+    "progress": 0,
+    "pace": 4,
+    "disposition": "neutro",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "elevar_perigo",
+      "target": "mina_fuligem",
+      "perceived": "Tremores sacodem as montanhas e um fumo negro vaza das galerias; mineiros somem e ninguém mais desce sem voltar diferente — ou sem voltar."
+    }
+  },
+  "hereticos_sol_morto": {
+    "id": "hereticos_sol_morto",
+    "name": "Heréticos do Sol Morto",
+    "goal": "Reerguer o templo soterrado de Zhur e reacender o sol que o matou.",
+    "region": "Deserto de Zhur",
+    "progress": 0,
+    "pace": 3,
+    "disposition": "neutro",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "eliminar_faccao",
+      "target": "culto_clareira",
+      "perceived": "Uma luz doente pulsa no deserto ao longe; por uma noite, um terror distante que crescia simplesmente silencia — engolido por outro maior."
+    }
+  }
+}

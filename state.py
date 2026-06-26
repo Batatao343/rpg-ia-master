@@ -15,7 +15,14 @@ class Attributes(TypedDict):
     charisma: int
 
 
-class PlayerStats(TypedDict):
+class Condition(TypedDict, total=False):
+    name: str
+    dot: int        # dano por turno (0 = buff/debuff sem dano direto)
+    duration: int   # turnos restantes
+    source: str     # quem/que habilidade aplicou
+
+
+class PlayerStats(TypedDict, total=False):
     name: str
     class_name: str
     race: str
@@ -34,7 +41,8 @@ class PlayerStats(TypedDict):
     known_abilities: List[str]
     defense: int
     attack_bonus: int
-    active_conditions: List[str]
+    active_conditions: List[Condition]
+    ability_cooldowns: Dict[str, int]  # ability_id -> turnos restantes
 
 
 class EnemyStats(TypedDict):
@@ -49,7 +57,7 @@ class EnemyStats(TypedDict):
     attributes: Attributes
     abilities: List[str]
     status: str  # "ativo", "morto"
-    active_conditions: List[str]
+    active_conditions: List["Condition"]
     attacks: Optional[List[Dict]]
 
 
@@ -61,14 +69,48 @@ class CompanionState(TypedDict):
     stats: Dict
 
 
-class WorldState(TypedDict):
+class WorldClock(TypedDict):
+    day: int
+    period: str  # "Amanhecer" | "Manhã" | "Tarde" | "Anoitecer" | "Noite"
+
+
+class WorldState(TypedDict, total=False):
     current_location: str
+    current_location_id: str        # id no grafo data/world_map.json
+    visited: List[str]              # ids de locais já revelados (fog of war)
+    world_clock: WorldClock         # dia + período (relógio do mundo)
     time_of_day: str
     turn_count: int
     weather: str
     quest_plan: List[str]
     quest_plan_origin: Optional[str]
     danger_level: int
+    # --- Fase 2 / Etapa B: mundo que evolui (escrito por resolve_faction_completions) ---
+    controlled: Dict[str, str]       # location_id -> faction_id (local dominado por fação)
+    danger_overrides: Dict[str, int] # location_id -> perigo elevado por ascensão (teto 4)
+    looming_threat: str              # ameaça invocada (entidade) pairando sobre o mundo
+    last_encounter_turn: int         # turno do último encontro automático (cooldown)
+
+
+class Faction(TypedDict, total=False):
+    id: str
+    name: str
+    goal: str                 # objetivo de longo prazo da facção
+    region: str               # região-base no grafo do mundo
+    progress: int             # 0-100 rumo ao objetivo (avança em ticks de descanso/viagem)
+    pace: int                 # quanto progride por período de tempo (determinístico)
+    disposition: str          # "hostil" | "neutro" | "aliado" — postura geral no mundo
+    reputation: int           # reputação do jogador com a facção (-100..100)
+    completed: bool           # objetivo concluído (dispara evento de mundo)
+    defeated: bool            # eliminada por outra facção (Fase 2 — sai de jogo)
+
+
+class FactionIntel(TypedDict, total=False):
+    """O que o JOGADOR sabe sobre uma facção (não-onisciência). Chave = faction_id."""
+    known: bool               # existência revelada (só por NPC que sabe)
+    knows_goal: bool          # objetivo/plano revelado
+    progress_seen: int        # SNAPSHOT do progresso no momento em que soube (fica defasado)
+    intel_turn: int           # turno em que o snapshot foi obtido (p/ marcar defasagem)
 
 
 class CampaignBeat(TypedDict):
@@ -89,6 +131,8 @@ class GameState(TypedDict):
     game_id: str  # ID único da sessão para isolar o RAG
     narrative_summary: str # Resumo de curto prazo (contexto comprimido)
     archivist_last_run: int # Controle de frequência do arquivista
+    archive_due: bool       # flag transitória: evento relevante pede arquivamento (cadência)
+    chronicle: List[str]  # Crônica de menestrel: mini-recaps de eventos notáveis (cresce com a jornada)
 
     messages: Annotated[List[BaseMessage], operator.add]
     next: Optional[str]
@@ -98,6 +142,8 @@ class GameState(TypedDict):
     needs_replan: bool
     enemies: List[EnemyStats]
     party: List[CompanionState]
+    factions: List[Faction]  # Fase 2: fações com objetivos próprios (mundo vivo)
+    faction_intel: Dict[str, Dict]  # Fase 2: o que o jogador SABE de cada facção (não-onisciência)
     npcs: Dict[str, Dict]
     active_npc_name: Optional[str]
     active_plan_step: Optional[str]
@@ -107,3 +153,7 @@ class GameState(TypedDict):
     # --- Campos de Transição ---
     combat_target: Optional[str]
     loot_source: Optional[str]
+
+    # --- Combate determinístico ---
+    # {"round": int, "active": bool, "order": [{"id","name","side","init"}]}
+    combat: Optional[Dict]

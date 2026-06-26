@@ -8,6 +8,15 @@ import sys
 from dotenv import load_dotenv
 from langgraph.graph import END, START, StateGraph
 
+# --- Console UTF-8 (Windows) ---
+# Muitos nós imprimem emojis para log. No console Windows (cp1252) isso
+# lança UnicodeEncodeError e derruba o turno inteiro. Forçamos UTF-8.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # Adiciona raiz ao path para garantir imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -21,7 +30,7 @@ from agents.storyteller import storyteller_node
 from agents.loot import loot_node
 from agents.archivist import archive_node # <--- NOVO
 
-load_dotenv()
+load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
 
 def build_game_graph():
     """Constrói e compila o grafo de estados do jogo."""
@@ -56,10 +65,27 @@ def build_game_graph():
 
     # 4. Encerramento com Arquivamento
     # Todo fim de turno passa pelo arquivista para atualizar memórias
-    workflow.add_edge("storyteller", "archivist")
-    workflow.add_edge("combat_agent", "archivist")
     workflow.add_edge("npc_actor", "archivist")
     workflow.add_edge("loot_agent", "archivist")
+
+    # Storyteller pode disparar um ENCONTRO (mundo perigoso/dominado/ameaçado) → combate.
+    # Caso contrário, segue para o arquivista normalmente.
+    workflow.add_conditional_edges(
+        "storyteller",
+        lambda s: "combat_agent" if s.get("next") == "combat_agent" else "archivist",
+        {"combat_agent": "combat_agent", "archivist": "archivist"},
+    )
+
+    # Combate: ao vencer, o nó sinaliza next="loot" para gerar espólio.
+    # Nos demais casos segue direto para o arquivista.
+    workflow.add_conditional_edges(
+        "combat_agent",
+        lambda state: "loot_agent" if state.get("next") == "loot" else "archivist",
+        {
+            "loot_agent": "loot_agent",
+            "archivist": "archivist",
+        },
+    )
     
     workflow.add_edge("archivist", END) # O arquivista encerra o turno
 

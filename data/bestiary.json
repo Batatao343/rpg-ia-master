@@ -1397,5 +1397,95 @@
         ],
         "status": "ativo",
         "id": "enemy_aranha_de_cristal"
+    },
+    "enemy_lobo_sombrio": {
+        "name": "Lobo Sombrio",
+        "description": "Criatura hostil das ruínas.",
+        "type": "Minion",
+        "hp": 17,
+        "max_hp": 17,
+        "ac": 12,
+        "attacks": [
+            {
+                "name": "Ataque",
+                "type": "melee",
+                "bonus": 3,
+                "damage": "1d6+1",
+                "range": "1.5m",
+                "save_dc": null
+            }
+        ],
+        "attributes": {
+            "str": 12,
+            "dex": 11,
+            "con": 11,
+            "int": 6,
+            "wis": 8,
+            "cha": 6
+        },
+        "abilities": [],
+        "loot": [],
+        "status": "ativo",
+        "id": "enemy_lobo_sombrio"
+    },
+    "enemy_carniçal": {
+        "name": "Carniçal",
+        "description": "Criatura hostil das ruínas.",
+        "type": "Minion",
+        "hp": 16,
+        "max_hp": 16,
+        "ac": 12,
+        "attacks": [
+            {
+                "name": "Ataque",
+                "type": "melee",
+                "bonus": 3,
+                "damage": "1d6+1",
+                "range": "1.5m",
+                "save_dc": null
+            }
+        ],
+        "attributes": {
+            "str": 12,
+            "dex": 11,
+            "con": 11,
+            "int": 6,
+            "wis": 8,
+            "cha": 6
+        },
+        "abilities": [],
+        "loot": [],
+        "status": "ativo",
+        "id": "enemy_carniçal"
+    },
+    "enemy_esqueleto": {
+        "name": "Esqueleto",
+        "description": "Criatura hostil das ruínas.",
+        "type": "Minion",
+        "hp": 26,
+        "max_hp": 26,
+        "ac": 12,
+        "attacks": [
+            {
+                "name": "Ataque",
+                "type": "melee",
+                "bonus": 3,
+                "damage": "1d6+1",
+                "range": "1.5m",
+                "save_dc": null
+            }
+        ],
+        "attributes": {
+            "str": 12,
+            "dex": 11,
+            "con": 11,
+            "int": 6,
+            "wis": 8,
+            "cha": 6
+        },
+        "abilities": [],
+        "loot": [],
+        "status": "ativo",
+        "id": "enemy_esqueleto"
     }
 }

@@ -11,7 +11,8 @@ from pydantic import BaseModel, Field
 
 from state import GameState
 from llm_setup import get_llm, ModelTier
-from gamedata import save_custom_artifact, ARTIFACTS_DB
+from gamedata import save_custom_artifact, ARTIFACTS_DB, get_location
+from rag import query_rag
 
 # --- SCHEMAS DE DADOS (IA) ---
 
@@ -36,16 +37,32 @@ class TransactionResult(BaseModel):
 # --- LÓGICA DO NÓ ---
 
 def loot_node(state: GameState):
-    player = state["player"]
+    player = dict(state["player"])  # cópia defensiva: não muta o estado in-place
+    player["inventory"] = list(player.get("inventory", []))
     loot_source = state.get("loot_source", "TREASURE")
-    
+
     # Recupera última msg
     last_user_msg = "Gerar loot"
     if state.get("messages"):
         last_msg = state["messages"][-1]
         if isinstance(last_msg, HumanMessage):
             last_user_msg = last_msg.content
-    
+
+    # --- Fase 0: contexto regional (itens com a cara do lugar) ---
+    world = state.get("world", {})
+    location = world.get("current_location", "")
+    loc_node = get_location(world.get("current_location_id", "")) or {}
+    region = loc_node.get("region", "")
+    try:
+        loc_lore = query_rag(f"{location} {region}", index_name="lore", game_id=state.get("game_id"))
+    except Exception:
+        loc_lore = ""
+    region_ctx = (
+        f"LOCAL ATUAL: {location} ({region}). "
+        f"Pistas do lugar: {loc_node.get('lore_seed', '')} {loc_lore}\n"
+        "Os itens DEVEM ter a cara deste lugar (materiais, história e perigos locais)."
+    )
+
     llm = get_llm(temperature=0.4, tier=ModelTier.SMART)
 
     # =========================================================
@@ -75,6 +92,7 @@ def loot_node(state: GameState):
         """
 
         user_prompt = f"""
+        {region_ctx}
         INVENTÁRIO: [{inventory_list}]
         OURO: {gold_available}
         PEDIDO: "{last_user_msg}"
@@ -90,11 +108,21 @@ def loot_node(state: GameState):
             if not result.success:
                 return {
                     "messages": [AIMessage(content=f"🚫 {result.message}")],
-                    "loot_source": None
+                    "loot_source": None,
+                    "archive_due": True,
                 }
-            
+
+            # --- NORMALIZA SINAL DO OURO (não confiar no sinal vindo do LLM) ---
+            # Venda (sem item novo) => jogador GANHA ouro => gold_cost negativo.
+            # Compra/Craft (com item novo) => jogador PAGA => gold_cost positivo.
+            is_sale = not (result.new_item and result.new_item.name)
+            if is_sale:
+                result.gold_cost = -abs(result.gold_cost)
+            else:
+                result.gold_cost = abs(result.gold_cost)
+
             # --- APLICAÇÃO DA MECÂNICA ---
-            
+
             # A. Remove Itens
             for item_id in result.items_to_remove:
                 if item_id in player["inventory"]:
@@ -120,7 +148,8 @@ def loot_node(state: GameState):
             return {
                 "player": player,
                 "messages": [AIMessage(content=msg_final)],
-                "loot_source": None
+                "loot_source": None,
+                "archive_due": True,
             }
 
         except Exception as e:
@@ -136,9 +165,9 @@ def loot_node(state: GameState):
             gold: int
             narrative: str
 
-        sys_prompt = "Você é um Gerador de Loot de RPG."
+        sys_prompt = "Você é um Gerador de Loot de RPG dark fantasy. Itens coerentes com o local."
         danger_lvl = state.get('world',{}).get('danger_level', 1)
-        user_prompt = f"Gere loot para perigo nível {danger_lvl}. Máx 2 itens."
+        user_prompt = f"{region_ctx}\nGere loot para perigo nível {danger_lvl}. Máx 2 itens."
 
         try:
             loot_llm = llm.with_structured_output(LootSchema)
@@ -160,7 +189,8 @@ def loot_node(state: GameState):
             return {
                 "player": player,
                 "messages": [AIMessage(content=msg)],
-                "loot_source": None
+                "loot_source": None,
+                "archive_due": True,
             }
         except Exception as e:
             return {"messages": [AIMessage(content="Você vasculha, mas não encontra nada.")]}

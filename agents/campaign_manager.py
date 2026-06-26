@@ -146,6 +146,11 @@ def campaign_manager_node(state: GameState):
     if world.get("turn_count") is None:
         world["turn_count"] = 0
 
+    # Cada invocação do grafo equivale a um turno do jogador.
+    # Incrementamos aqui (primeiro nó do fluxo) para que replanejamento,
+    # arquivista e memórias de NPC tenham noção real de tempo.
+    world["turn_count"] = world.get("turn_count", 0) + 1
+
     if not _should_replan(state):
         return {
             "next": "dm_router",

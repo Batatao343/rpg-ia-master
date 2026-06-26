@@ -83,6 +83,60 @@ ALL_ARTIFACT_IDS = list(ARTIFACTS_DB.keys())
 # Alias para compatibilidade
 ITEMS_DB = ARTIFACTS_DB
 
+# 3. Mundo (grafo de locais) e Temas de Classe (Fase 0)
+WORLD_MAP = load_json_data("world_map.json")
+CLASS_THEMES = load_json_data("class_themes.json")
+
+# 4. Fações (Fase 2 — mundo vivo): objetivos próprios que avançam no tempo
+FACTIONS = load_json_data("factions.json")
+
+
+def seed_factions() -> list:
+    """Lista fresca de fações para uma nova partida (cópia profunda dos seeds)."""
+    import copy
+    return [copy.deepcopy(f) for f in FACTIONS.values()]
+
+_LOCATIONS_BY_ID = {loc["id"]: loc for loc in WORLD_MAP.get("locations", [])}
+START_LOCATION_ID = WORLD_MAP.get("start_location") or next(iter(_LOCATIONS_BY_ID), None)
+# Local inicial por nome de região (ex.: "Nova Arcádia" -> "nova_arcadia")
+REGION_START_ID = {
+    loc["region"]: loc["id"]
+    for loc in WORLD_MAP.get("locations", [])
+    if loc.get("start")
+}
+
+
+def get_location(loc_id: str) -> dict:
+    """Retorna o nó de um local pelo id, ou {} se não existir."""
+    return _LOCATIONS_BY_ID.get(loc_id, {})
+
+
+def get_connections(loc_id: str) -> list:
+    """Locais (dicts) conectados ao local informado."""
+    loc = _LOCATIONS_BY_ID.get(loc_id, {})
+    return [_LOCATIONS_BY_ID[c] for c in loc.get("connections", []) if c in _LOCATIONS_BY_ID]
+
+
+def find_location_by_name(name: str) -> dict:
+    """Resolve um local pelo nome de exibição (case-insensitive)."""
+    if not name:
+        return {}
+    low = name.strip().lower()
+    for loc in _LOCATIONS_BY_ID.values():
+        if loc["name"].lower() == low:
+            return loc
+    return {}
+
+
+def start_location_for_region(region_name: str) -> dict:
+    """Local inicial de uma região (pelo nome). Cai no start global se não achar."""
+    loc_id = REGION_START_ID.get(region_name)
+    if not loc_id:
+        # tenta casar por nome de local direto, senão start global
+        direct = find_location_by_name(region_name)
+        loc_id = direct.get("id") if direct else START_LOCATION_ID
+    return _LOCATIONS_BY_ID.get(loc_id, {})
+
 # --- TABELA DE XP ---
 XP_TABLE = {
     1: 0, 2: 300, 3: 900, 4: 2700, 5: 6500,

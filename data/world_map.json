@@ -1,0 +1,100 @@
+{
+  "start_location": "nova_arcadia",
+  "locations": [
+    {
+      "id": "nova_arcadia",
+      "name": "Nova Arcádia",
+      "region": "Nova Arcádia",
+      "start": true,
+      "coords": {"x": 50, "y": 50},
+      "danger": 1,
+      "tags": ["cidade", "seguro", "comércio"],
+      "connections": ["estrada_sul", "portao_oeste"],
+      "lore_seed": "Capital cercada de muralhas, lar de guildas e burocratas; segura por dentro, vigiada por fora."
+    },
+    {
+      "id": "portao_oeste",
+      "name": "Portão Oeste",
+      "region": "Nova Arcádia",
+      "coords": {"x": 30, "y": 45},
+      "danger": 2,
+      "tags": ["estrada", "fronteira"],
+      "connections": ["nova_arcadia", "montanhas_afiadas", "skallgard"],
+      "lore_seed": "Posto avançado onde caravanas param antes de cruzar para as terras altas e o norte gelado."
+    },
+    {
+      "id": "estrada_sul",
+      "name": "Estrada do Sul",
+      "region": "Nova Arcádia",
+      "coords": {"x": 55, "y": 70},
+      "danger": 2,
+      "tags": ["estrada", "campo"],
+      "connections": ["nova_arcadia", "floresta_sussurros", "deserto_zhur"],
+      "lore_seed": "Trilha de terra batida ladeada por campos abandonados; bandidos cobram pedágio com aço."
+    },
+    {
+      "id": "floresta_sussurros",
+      "name": "Floresta dos Sussurros",
+      "region": "Floresta dos Sussurros",
+      "start": true,
+      "coords": {"x": 45, "y": 88},
+      "danger": 3,
+      "tags": ["floresta", "místico", "perigoso"],
+      "connections": ["estrada_sul", "clareira_ossos"],
+      "lore_seed": "Mata densa onde ecos repetem o que não foi dito; raízes guardam segredos antigos e veneno."
+    },
+    {
+      "id": "clareira_ossos",
+      "name": "Clareira dos Ossos",
+      "region": "Floresta dos Sussurros",
+      "coords": {"x": 33, "y": 96},
+      "danger": 4,
+      "tags": ["floresta", "ritual", "morte"],
+      "connections": ["floresta_sussurros"],
+      "lore_seed": "Círculo de árvores brancas sobre solo de ossos; algo foi enterrado aqui para não acordar."
+    },
+    {
+      "id": "montanhas_afiadas",
+      "name": "Montanhas Afiadas",
+      "region": "Montanhas Afiadas",
+      "start": true,
+      "coords": {"x": 18, "y": 30},
+      "danger": 3,
+      "tags": ["montanha", "mineração", "anões"],
+      "connections": ["portao_oeste", "mina_fuligem"],
+      "lore_seed": "Picos cortantes de minério escuro; martelos ecoam nas galerias dos anões da fuligem."
+    },
+    {
+      "id": "mina_fuligem",
+      "name": "Mina da Fuligem",
+      "region": "Montanhas Afiadas",
+      "coords": {"x": 9, "y": 18},
+      "danger": 4,
+      "tags": ["caverna", "industrial", "fundo"],
+      "connections": ["montanhas_afiadas"],
+      "lore_seed": "Galerias profundas tomadas por fumaça e máquinas; cavou-se fundo demais e algo respondeu."
+    },
+    {
+      "id": "deserto_zhur",
+      "name": "Deserto de Zhur",
+      "region": "Deserto de Zhur",
+      "start": true,
+      "coords": {"x": 80, "y": 82},
+      "danger": 3,
+      "tags": ["deserto", "ruínas", "calor"],
+      "connections": ["estrada_sul"],
+      "lore_seed": "Dunas que engolem cidades; sob a areia, templos de um império que adorava o sol que o matou."
+    },
+    {
+      "id": "skallgard",
+      "name": "Skallgard",
+      "region": "Skallgard",
+      "start": true,
+      "coords": {"x": 22, "y": 12},
+      "danger": 4,
+      "tags": ["norte", "gelo", "clãs"],
+      "connections": ["portao_oeste"],
+      "lore_seed": "Fortaleza de gelo dos clãs do norte; honra se mede em cicatrizes e o inverno nunca dorme."
+    }
+  ]
+}

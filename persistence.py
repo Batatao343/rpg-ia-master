@@ -75,20 +75,24 @@ def save_game_state(state: Dict[str, Any]) -> bool:
             "game_id": game_id,
             "narrative_summary": state.get("narrative_summary", ""),
             "archivist_last_run": state.get("archivist_last_run", 0),
+            "chronicle": state.get("chronicle", []),
             
             # --- Dados Transicionais ---
             "combat_target": state.get("combat_target"),
             "loot_source": state.get("loot_source"),
+            "combat": state.get("combat", {}),
 
             # --- Dados Core ---
             "player": state.get("player", {}),
             "world": state.get("world", {}),
             "party": state.get("party", []),
-            "enemies": state.get("enemies", []), 
-            "npcs": state.get("npcs", {}),       
+            "enemies": state.get("enemies", []),
+            "factions": state.get("factions", []),
+            "faction_intel": state.get("faction_intel", {}),
+            "npcs": state.get("npcs", {}),
             "inventory": state.get("inventory", []),
             "quests": state.get("quests", []),
-            "campaign_plan": state.get("campaign_plan", {}), 
+            "campaign_plan": state.get("campaign_plan", {}),
             
             # --- Histórico ---
             "message_history": _serialize_messages(state.get("messages", []))
@@ -126,12 +130,15 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
             "game_id": raw_data.get("game_id", "recovered_session"),
             "narrative_summary": raw_data.get("narrative_summary", ""),
             "archivist_last_run": raw_data.get("archivist_last_run", 0),
+            "chronicle": raw_data.get("chronicle", []),
             
             # --- Recupera Core ---
             "player": raw_data.get("player", {}),
             "world": raw_data.get("world", {}),
             "party": raw_data.get("party", []),
             "enemies": raw_data.get("enemies", []),
+            "factions": raw_data.get("factions", []),
+            "faction_intel": raw_data.get("faction_intel", {}),
             "npcs": raw_data.get("npcs", {}),
             "inventory": raw_data.get("inventory", []),
             "quests": raw_data.get("quests", []),
@@ -140,6 +147,7 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
             # --- Recupera Transicionais ---
             "combat_target": raw_data.get("combat_target"),
             "loot_source": raw_data.get("loot_source"),
+            "combat": raw_data.get("combat", {}),
 
             # --- Recupera Mensagens ---
             "messages": _deserialize_messages(raw_data.get("message_history", [])),

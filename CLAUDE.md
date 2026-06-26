@@ -1,0 +1,225 @@
+# rpg-ia-master
+
+RPG de texto com IA — motor LangGraph multi-agente com RAG híbrido e memória por sessão.
+Stack: Python 3.13 · FastAPI · LangGraph · FAISS · Google Gemini · uv
+
+> **AO RETOMAR:** leia `@ESTADO_ATUAL.md` primeiro — estado atual, como rodar,
+> bugs já corrigidos, limitações conhecidas e convenção crítica de resiliência.
+> Visão de produto e próximos passos: `ROADMAP.md` (Fase 0 entregue; Fases 1–3 mapeadas).
+
+---
+
+## Comandos essenciais
+
+> Use sempre `uv run` (o `python` global deste Windows é 3.14 — errado; o projeto
+> exige 3.13). `uv` fica fora do PATH: `$env:Path="$env:APPDATA\Python\Python314\Scripts;$env:Path"`.
+> Detalhes do ambiente: `ESTADO_ATUAL.md`.
+
+```bash
+uv sync                                   # cria .venv (Python 3.13)
+uv run python game_engine.py              # CLI — jogar no terminal
+uv run uvicorn api:app --port 8000        # API REST + frontend web (http://localhost:8000)
+uv run python rag.py                      # re-indexar lore/regras após editar data/*.txt
+uv run pytest                             # suíte offline (força MockLLM, não precisa de chave)
+```
+
+**Modo simulado / chave:** sem `GOOGLE_API_KEY`, `get_llm()` devolve um `MockLLM`
+([mock_llm.py](mock_llm.py)) — jogo jogável e testável sem rede. Flags: `RPG_FORCE_MOCK=1`
+força o mock mesmo com chave (usado pela suíte); `RPG_NO_MOCK=1` força o `FallbackLLM` de erro.
+
+**Frontend (Fase 1):** o cliente principal é um app **React + Vite + TypeScript** em `web/`
+(tom dark medieval/The Witcher; `motion` p/ animações). A API serve `web/dist` na raiz quando
+existe, senão cai no `frontend/` vanilla (legado). Build e dev:
+
+```bash
+cd web && npm install          # uma vez (Node ≥20)
+npm run build                  # gera web/dist (servido por uvicorn na raiz)
+npm run dev                    # dev server :5173 com proxy p/ a API :8000
+```
+
+---
+
+## Arquitetura — grafo LangGraph
+
+```
+START
+  ↓
+campaign_manager      # planeja arcos narrativos (3–5 beats) com RAG de lore
+  ↓
+dm_router             # classifica intenção: STORY | COMBAT | NPC | LOOT
+  ↓ (condicional)
+storyteller           → archivist → END
+combat_agent          → archivist → END
+npc_actor             → archivist → END
+loot_agent            → archivist → END
+```
+
+**archivist** roda em todo fim de turno: atualiza `narrative_summary` (curto prazo) e persiste fatos no FAISS da sessão (longo prazo).
+
+---
+
+## LLM — dois tiers
+
+`llm_setup.py` expõe `get_llm(temperature, tier)`. Sempre usar essa função — nunca instanciar Gemini direto.
+
+| Tier | Modelo | Uso |
+|---|---|---|
+| `ModelTier.FAST` | `gemini-flash-latest` | router, storyteller, combat (parse/spawn), ruler, librarian |
+| `ModelTier.SMART` | `gemini-pro-latest` | archivist, campaign_manager, loot, npc_actor, character_creator, narração de combate |
+
+Troca de modelo = só mudar `llm_setup.py`. Sem tocar nos agentes.
+
+`get_llm()` nunca levanta: sem chave → `MockLLM`; falha do provider → `FallbackLLM`.
+`max_retries=0` (fail-fast): o erro comum é `429` de quota (não transitório) e o retry com
+backoff travava o turno por minutos. Cada nó trata a exceção e cai no fallback.
+
+Chave em `.env` (`GOOGLE_API_KEY`, free tier = **20 req/dia por modelo** — ver `ESTADO_ATUAL.md`).
+Sem ela o jogo roda no MockLLM.
+
+---
+
+## RAG — sistema híbrido
+
+`rag.py` — `query_rag(query, index_name, game_id)` busca em dois índices:
+
+1. **Global** (`faiss_lore_index/`, `faiss_rules_index/`) — imutável durante o jogo, indexado de `data/world_lore.txt` e `data/rules.txt`
+2. **Sessão** (`data/saves_memory/{game_id}/`) — dinâmico, criado pelo archivist via `add_memory_to_session()`
+
+Embeddings: `models/text-embedding-004` (Google). Chunks: 500 tokens, overlap 50.
+
+Para re-indexar lore global: `python rag.py` (ou chamar `ingest_file()` diretamente).
+
+---
+
+## Persistência
+
+- Saves em `saves/{game_id}.json` — serializa mensagens LangChain para dicts simples
+- `persistence.py` — `save_game_state()` / `load_game_state()`
+- Memória vetorial por sessão em `data/saves_memory/{game_id}/`
+- `load_game_state()` sem argumento carrega o save mais recente (por `ctime`)
+
+---
+
+## Estado do jogo (GameState)
+
+Definido em `state.py` como TypedDict. Campos principais:
+
+```
+game_id             str          — UUID da sessão, isola memória RAG
+narrative_summary   str          — resumo comprimido (short-term memory)
+archivist_last_run  int          — turno da última execução do arquivista
+chronicle           List[str]    — crônica de menestrel: mini-recaps de eventos (archivist; persistido)
+player              PlayerStats  — name, class_name, race, hp/max_hp, mana/max_mana, stamina/max_stamina,
+                                   gold, level, xp, attributes (chaves curtas str/dex/...), inventory,
+                                   known_abilities, defense, attack_bonus, active_conditions, ability_cooldowns
+world               WorldState   — current_location(+_id), visited[] (fog of war), world_clock{day,period},
+                                   time_of_day, turn_count, danger_level, weather, quest_plan
+messages            List[BaseMessage]  — histórico LangChain (operator.add)
+campaign_plan       CampaignPlan — location, beats[{description,status}], climax, current_step, last_planned_turn
+needs_replan        bool         — força replanejamento no próximo campaign_manager
+enemies             List[EnemyStats]
+npcs                Dict[str, Dict]
+active_npc_name     Optional[str]   — alvo da rota NPC (setado pelo router)
+combat              Optional[Dict]  — {round, active, order[]} do combate determinístico
+combat_target       Optional[str]
+loot_source         Optional[str]   — "TREASURE" | "SHOP" | "CRAFT"
+```
+
+`state.py` é a fonte da verdade do schema. Atributos usam **chaves curtas** (`str/dex/con/int/wis/cha`)
+em runtime; `combat_mechanics.normalize_attr` converte nomes longos/PT que o LLM possa devolver.
+
+---
+
+## Estrutura de pastas
+
+```
+# --- raiz: núcleo do motor ---
+main.py               # grafo LangGraph (build_game_graph, app) + setup UTF-8
+state.py              # GameState e TypedDicts — FONTE DA VERDADE do schema
+llm_setup.py          # get_llm(tier) + MockLLM/FallbackLLM (NUNCA instanciar Gemini direto)
+mock_llm.py           # MockLLM — dados fictícios por agente (modo simulado sem chave)
+rag.py                # query_rag / add_memory_to_session / ingest_file (FAISS + embeddings)
+persistence.py        # save_game_state / load_game_state (serializa mensagens)
+gamedata.py           # carrega data/*.json; ARTIFACTS_DB, CLASSES, ABILITIES, helpers de world_map
+dice_system.py        # roll_formula (parse de dados + saving throws; save_bonus real opcional)
+combat_mechanics.py   # NÚCLEO DETERMINÍSTICO do combate (iniciativa, DoT, custos, cooldowns, normalize_attr)
+world_utils.py        # Fase 0: relógio, viagem (fog of war), descanso — determinístico, sem LLM
+engine_utils.py       # execute_engine (loop tool-calling: roll/update_hp/transaction) p/ loot/shop
+character_creator.py  # cria ficha do player (IA + JSON oficial); guard de fallback
+game_engine.py        # CLI interativo (wizard + loop)
+api.py                # FastAPI REST (/game/new, /game/action, /game/state, /data/map) + serve web/dist|frontend/
+web/                  # FRONTEND PRINCIPAL — React+Vite+TS (src/, build em web/dist; tom Witcher; motion)
+frontend/             # web vanilla legado (zero build) — fallback se web/dist não existir
+# --- agentes (nós do grafo) ---
+agents/
+  router.py           # dm_router_node — classifica intenção + seta NPC/loot/combat
+  storyteller.py      # storyteller_node — narração + viagem/descanso/ruler + avanço de beat
+  combat.py           # combat_node — IA identifica ação/inimigos + narra; resolve via combat_mechanics
+  npc.py              # npc_actor_node + generate_new_npc()
+  loot.py             # loot_node — loot/craft/shop/treasure
+  archivist.py        # archive_node — memória curto (resumo) / longo prazo (RAG)
+  campaign_manager.py # campaign_manager_node — planejamento de arcos + incrementa turn_count
+  bestiary.py         # generate_new_enemy + cache de bestiário
+  class_themes.py     # temas/gating narrativo por classe (allowed/forbidden)
+  librarian.py        # find_existing_entity — dedupe semântico de entidades
+  ruler_completo.py   # resolve_action — juízo de ação livre (gating)
+data/
+  world_lore.txt      # lore indexado para FAISS (editar aqui, re-indexar depois)
+  rules.txt           # regras indexadas para FAISS
+  world_map.json      # grafo de locais (Fase 0) — conexões, região, perigo, lore_seed
+  bestiary.json       # criaturas
+  classes.json        # classes jogáveis (base_stats, passive)
+  class_themes.json   # allowed/forbidden por classe (gating)
+  origins.json        # raças e regiões
+  artifacts.json      # artefatos
+  player_abilities.json
+  npc_database.json   # cache de NPCs gerados (runtime)
+tests/
+  test_mvp.py         # suíte offline do MVP (dados, persistência, router, combate, beats)
+  test_fase0.py       # suíte da Fase 0 (mapa, relógio, viagem, descanso, gating, e2e)
+  conftest.py         # força RPG_FORCE_MOCK=1 (suíte determinística e offline)
+conftest.py           # (raiz) injeta pythonpath
+faiss_lore_index/     # índice FAISS gerado — não editar à mão
+faiss_rules_index/    # índice FAISS gerado — não editar à mão
+saves/                # saves JSON por game_id
+data/saves_memory/    # índices FAISS por sessão (gerado em runtime)
+```
+
+---
+
+## Convenções de código
+
+- Python 3.13+ com type hints em tudo
+- Pydantic v2 para structured output do LLM (`llm.with_structured_output(Model)`)
+- Async não usado — LangGraph roda síncrono neste projeto
+- `httpx` se precisar HTTP externo (nunca `requests`)
+- Prefixo `test_` em todos os arquivos e funções de teste
+- Cada agente retorna dict parcial do GameState — nunca retornar o estado completo
+- **Guard de resiliência (CRÍTICO):** `FallbackLLM.with_structured_output(X).invoke()` devolve um
+  `AIMessage`, **não** uma instância de `X`. Acessar `resultado.campo` fora de `try/except` ou sem
+  `isinstance(resultado, X)` estoura. Todo nó novo com structured output precisa desse guard.
+- **Mecânica é Python, não LLM.** A IA só identifica/narra; números (combate, dados, economia)
+  resolvem em código determinístico (`combat_mechanics.py`, `dice_system.py`, `world_utils.py`).
+  Não confiar em sinal/valor vindo do LLM sem validar (ex.: sinal do ouro em `loot.py`).
+- **MockLLM esconde bugs de mapeamento:** ele devolve instâncias Pydantic válidas, então acesso a
+  campo nunca quebra no mock. Bug de nome/tipo de campo só aparece no Gemini real. Validar caminhos
+  novos de structured output com a chave real (ver harness/quota em `ESTADO_ATUAL.md`).
+- **Ao FINALIZAR qualquer tarefa (SEMPRE, sem exceção):**
+  1. Rodar `uv run pytest` e garantir verde antes de declarar a tarefa concluída — nunca afirmar
+     que funcionou sem a saída dos testes.
+  2. Atualizar **`ESTADO_ATUAL.md`** (TL;DR, contagem de testes, o que funciona, correções) **e**
+     **`ROADMAP.md`** (marcar item entregue/pendência) refletindo a mudança. Os dois, sempre.
+
+---
+
+## O que NÃO fazer
+
+- Não instanciar `ChatGoogleGenerativeAI` direto — usar sempre `get_llm()`
+- Não ler FAISS com `allow_dangerous_deserialization=False` — vai quebrar load
+- Não commitar `.env` ou `saves/` com dados reais
+- Não adicionar agentes ao grafo sem conectar ao `archivist` no final
+- Não usar `requests` — projeto usa `httpx` se necessário
+- Não editar os arquivos `faiss_*_index/` à mão — sempre re-gerar via `rag.py`
+
+@REFERENCE.md
+@ESTADO_ATUAL.md

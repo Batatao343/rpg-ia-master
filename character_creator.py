@@ -8,6 +8,7 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from pydantic import BaseModel, Field
 
 from llm_setup import get_llm, ModelTier
+from combat_mechanics import normalize_attr
 
 # --- IMPORTAÇÕES ESSENCIAIS ---
 try:
@@ -89,9 +90,14 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
     official_passive = class_data.get("passive", "Habilidade Básica")
     
     # Cálculo de HP Base Oficial (Base da Classe + Nível)
-    base_hp_class = class_data.get("base_stats", {}).get("hp", 12)
+    base_stats = class_data.get("base_stats", {})
+    base_hp_class = base_stats.get("hp", 12)
     # Fórmula simples: Base + (6 por nível extra)
     final_hp = base_hp_class + (6 * (level - 1))
+
+    # Recursos secundários (stamina/mana) escalam levemente com o nível
+    final_stamina = base_stats.get("stamina", 10) + (2 * (level - 1))
+    final_mana = base_stats.get("mana", 10) + (2 * (level - 1))
 
     # 2. BUSCA O LORE (O "Sabor")
     region_lore = _get_region_lore(region)
@@ -116,7 +122,17 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
     stats_data = {}
     try:
         stats = llm.with_structured_output(PlayerStatsSchema).invoke([system_msg, human_msg])
-        if stats: stats_data = stats.model_dump()
+        if stats:
+            dumped = stats.model_dump()
+            # Só aceita se vier no formato esperado (sem API key, o FallbackLLM
+            # devolve um AIMessage cujo dump não tem 'attributes').
+            if isinstance(dumped, dict) and "attributes" in dumped:
+                # Normaliza chaves de atributo (Gemini pode devolver nomes longos/PT:
+                # "dexterity"/"destreza" -> "dex"). Sem isso, mods/attack_bonus saem
+                # errados pois a leitura abaixo usa as chaves curtas.
+                raw_attrs = dumped.get("attributes") or {}
+                dumped["attributes"] = {normalize_attr(k): v for k, v in raw_attrs.items()}
+                stats_data = dumped
     except Exception as e:
         print(f"⚠️ Erro IA: {e}")
 
@@ -148,6 +164,10 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
         "traits": [], # Simplificado para focar no resto
         "hp": final_hp,
         "max_hp": final_hp,
+        "stamina": final_stamina,
+        "max_stamina": final_stamina,
+        "mana": final_mana,
+        "max_mana": final_mana,
         "defense": final_defense,
         "attributes": stats_data["attributes"],
         "inventory": stats_data["inventory"],

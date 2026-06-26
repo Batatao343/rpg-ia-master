@@ -9,6 +9,7 @@ import uvicorn
 import uuid # <--- Necessário para gerar IDs de sessão
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -20,7 +21,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from main import app as game_graph
 from persistence import save_game_state, load_game_state, _serialize_messages
 from character_creator import create_player_character
-from gamedata import CLASSES, load_json_data
+from gamedata import CLASSES, load_json_data, seed_factions
+from world_utils import starting_world
 
 # --- CONFIGURAÇÃO DA API ---
 app = FastAPI(
@@ -59,6 +61,13 @@ class GameResponse(BaseModel):
     current_location: str
     narrative_summary: str # <--- Novo: Frontend pode mostrar o resumo
     last_turn_log: List[Dict[str, Any]]
+    simulated: bool = False # True quando rodando em modo simulado (sem API key)
+    world: Dict[str, Any] = {} # location_id, day, period, visited (fog of war), danger
+    quest: Dict[str, Any] = {} # objetivo atual, beats (status), clímax, progresso
+    combat: Dict[str, Any] = {} # inimigos, condições, iniciativa, round, cooldowns
+    npcs: List[Dict[str, Any]] = [] # NPCs conhecidos (nome, papel, local, relação, última lembrança)
+    chronicle: List[str] = [] # crônica de menestrel: mini-recaps de eventos notáveis (persistente)
+    factions: List[Dict[str, Any]] = [] # fações vivas: objetivo, progresso, postura, reputação
 
 # --- HELPER: FORMATA RESPOSTA ---
 def format_response(state: dict) -> GameResponse:
@@ -82,21 +91,157 @@ def format_response(state: dict) -> GameResponse:
         message=last_content,
         message_type=msg_type,
         player_stats={
-            "hp": state["player"]["hp"],
-            "max_hp": state["player"]["max_hp"],
-            "gold": state["player"]["gold"],
-            "level": state["player"]["level"],
-            "xp": state["player"]["xp"]
+            "name": state["player"].get("name", "Herói"),
+            "class_name": state["player"].get("class_name") or state["player"].get("class", ""),
+            "race": state["player"].get("race", ""),
+            "hp": state["player"].get("hp", 0),
+            "max_hp": state["player"].get("max_hp", 0),
+            "mana": state["player"].get("mana", 0),
+            "max_mana": state["player"].get("max_mana", 0),
+            "stamina": state["player"].get("stamina", 0),
+            "max_stamina": state["player"].get("max_stamina", 0),
+            "defense": state["player"].get("defense", 0),
+            "gold": state["player"].get("gold", 0),
+            "level": state["player"].get("level", 1),
+            "xp": state["player"].get("xp", 0),
+            "abilities": state["player"].get("known_abilities", []) or [],
         },
         inventory=state["player"]["inventory"],
         current_location=state["world"]["current_location"],
         narrative_summary=state.get("narrative_summary", ""),
-        last_turn_log=_serialize_messages(state["messages"][-5:]) 
+        last_turn_log=_serialize_messages(state["messages"][-5:]),
+        simulated=(not os.getenv("GOOGLE_API_KEY")) and (not os.getenv("RPG_NO_MOCK")),
+        world=_world_block(state.get("world", {}) or {}),
+        quest=_quest_block(state.get("campaign_plan") or {}),
+        combat=_combat_block(state),
+        npcs=_npcs_block(state.get("npcs", {}) or {}),
+        chronicle=[str(c) for c in (state.get("chronicle", []) or []) if str(c).strip()],
+        factions=_factions_block(state.get("factions", []) or [],
+                                 state.get("faction_intel", {}) or {},
+                                 (state.get("world", {}) or {}).get("turn_count", 0)),
     )
+
+
+def _factions_block(factions: list, intel: dict, turn: int = 0) -> List[Dict[str, Any]]:
+    """
+    Fações para o HUD — não-onisciência: só as que o jogador CONHECE (intel.known).
+    Objetivo só se aprendido; progresso é o SNAPSHOT que o jogador viu (nunca o ao vivo);
+    fações eliminadas somem.
+    """
+    intel = intel or {}
+    out = []
+    for f in factions:
+        if not isinstance(f, dict):
+            continue
+        if f.get("defeated"):
+            continue
+        rec = intel.get(f.get("id", ""), {})
+        if not rec.get("known"):
+            continue  # jogador nunca ouviu falar desta facção
+        knows_goal = bool(rec.get("knows_goal"))
+        seen = rec.get("progress_seen")
+        intel_turn = rec.get("intel_turn")
+        stale = seen is not None and isinstance(intel_turn, int) and int(turn) > int(intel_turn)
+        out.append({
+            "id": f.get("id", ""),
+            "name": f.get("name", ""),
+            "goal": f.get("goal", "") if knows_goal else "",
+            "knows_goal": knows_goal,
+            "region": f.get("region", ""),
+            "progress": int(seen) if seen is not None else None,
+            "intel_stale": bool(stale),
+            "disposition": f.get("disposition", "neutro"),
+            "reputation": int(f.get("reputation", 0)),
+            "completed": bool(f.get("completed", False)),
+        })
+    return out
+
+
+def _npcs_block(npcs: dict) -> List[Dict[str, Any]]:
+    """NPCs conhecidos pelo jogador (o que sabemos hoje: papel, local, relação, última lembrança)."""
+    out = []
+    for key, n in npcs.items():
+        if not isinstance(n, dict):
+            continue
+        mem = n.get("memory") or []
+        last_mem = mem[-1] if isinstance(mem, list) and mem else ""
+        out.append({
+            "name": n.get("name", key),
+            "role": n.get("role", ""),
+            "location": n.get("location", ""),
+            "relationship": n.get("relationship", 5),
+            "last_memory": last_mem,
+        })
+    return out
+
+
+
+
+def _combat_block(state: dict) -> Dict[str, Any]:
+    """Expõe o estado de combate para o HUD (inimigos vivos, condições, iniciativa)."""
+    meta = state.get("combat") or {}
+    enemies = state.get("enemies") or []
+    player = state.get("player") or {}
+    alive = [e for e in enemies if e.get("status") == "ativo"]
+
+    def _conds(entity):
+        return [{"name": c.get("name", ""), "dot": c.get("dot", 0), "duration": c.get("duration", 0)}
+                for c in (entity.get("active_conditions") or []) if isinstance(c, dict)]
+
+    return {
+        "active": bool(meta.get("active")) and bool(alive),
+        "round": meta.get("round", 0),
+        "order": [{"name": o.get("name", ""), "side": o.get("side", ""), "init": o.get("init", 0)}
+                  for o in (meta.get("order") or [])],
+        "enemies": [
+            {"name": e.get("name", ""), "hp": e.get("hp", 0), "max_hp": e.get("max_hp", 0),
+             "defense": e.get("defense", 0), "conditions": _conds(e)}
+            for e in alive
+        ],
+        "player_conditions": _conds(player),
+        "cooldowns": dict(player.get("ability_cooldowns", {}) or {}),
+    }
+
+
+def _quest_block(plan: dict) -> Dict[str, Any]:
+    plan = plan or {}
+    beats = plan.get("beats", []) or []
+    step = plan.get("current_step", 0)
+    climax = plan.get("climax", "")
+    if 0 <= step < len(beats):
+        objective = beats[step].get("description", "")
+    else:
+        # Todos os beats concluídos → o clímax é o objetivo final da cena.
+        objective = climax
+    return {
+        "objective": objective,
+        "climax": climax,
+        "current_step": step,
+        "total": len(beats),
+        "beats": [
+            {"description": b.get("description", ""), "status": b.get("status", "pending")}
+            for b in beats
+        ],
+    }
+
+
+def _world_block(w: dict) -> Dict[str, Any]:
+    clock = w.get("world_clock") or {}
+    return {
+        "location": w.get("current_location", ""),
+        "location_id": w.get("current_location_id", ""),
+        "day": clock.get("day", 1),
+        "period": clock.get("period", "Amanhecer"),
+        "visited": w.get("visited", []),
+        "danger": w.get("danger_level", 1),
+        # Etapa B: o mundo muda quando fações ascendem — locais dominados e perigo elevado.
+        "controlled": dict(w.get("controlled") or {}),
+        "danger_overrides": dict(w.get("danger_overrides") or {}),
+    }
 
 # --- ENDPOINTS ---
 
-@app.get("/")
+@app.get("/health")
 def health_check():
     return {"status": "online", "engine": "RPG IA v9.0 Hybrid Memory"}
 
@@ -108,6 +253,11 @@ def get_creation_options():
         "classes": list(CLASSES.keys()),
         "regions": [r["name"] for r in origins.get("regions", [])]
     }
+
+@app.get("/data/map")
+def get_world_map():
+    """Grafo de locais (Fase 0) para o mapa com fog of war no frontend."""
+    return load_json_data("world_map.json")
 
 @app.get("/game/state")
 def get_current_state(game_id: Optional[str] = None):
@@ -153,41 +303,42 @@ def new_game(req: CreateCharacterRequest):
         "game_id": new_game_id,
         "narrative_summary": f"A jornada de {req.name} começa em {final_char['region']}. {req.backstory}",
         "archivist_last_run": 0,
+        "chronicle": [],
         "combat_target": None,
         "loot_source": None,
 
         # --- Dados do Player ---
         "player": {
             "name": final_char["name"],
-            "class": final_char["class_name"],
+            "class_name": final_char["class_name"],
             "race": final_char["race"],
             "level": final_char["level"],
             "xp": 0,
             "hp": final_char["hp"],
             "max_hp": final_char["max_hp"],
+            "mana": final_char["mana"],
+            "max_mana": final_char["max_mana"],
+            "stamina": final_char["stamina"],
+            "max_stamina": final_char["max_stamina"],
             "gold": 50 * req.level,
+            "alignment": "Neutro",
             "attributes": final_char["attributes"],
             "inventory": final_char["inventory"],
-            "equipment": {},
-            "abilities": final_char["known_abilities"],
+            "known_abilities": final_char["known_abilities"],
             "defense": final_char["defense"],
-            "attack_bonus": 0,
+            "attack_bonus": final_char.get("attack_bonus", 0),
             "active_conditions": []
         },
-        "world": {
-            "current_location": final_char["region"],
-            "time_of_day": "Amanhecer",
-            "turn_count": 0,
-            "danger_level": req.level,
-            "quest_plan": [],
-            "quest_plan_origin": None
-        },
+        "world": starting_world(final_char["region"], req.level),
         "messages": [
             SystemMessage(content=f"A jornada de {req.name} começa em {final_char['region']}."),
             HumanMessage(content=f"Descreva o cenário ao meu redor. Sou um {final_char['class_name']} de nível {req.level}.")
         ],
         "party": [],
         "enemies": [],
+        "factions": seed_factions(),
+        "faction_intel": {},  # não-onisciência: jogador começa sem saber de nenhuma facção
+        "archive_due": False,
         "npcs": {},
         "campaign_plan": {},
         "needs_replan": False,
@@ -233,6 +384,15 @@ def game_action(req: ActionRequest):
     except Exception as e:
         print(f"Erro na API: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+# --- FRONTEND ESTÁTICO ---
+# Servido na raiz "/". As rotas de API acima têm precedência sobre o mount.
+# Prefere a build do app React (web/dist); cai para o frontend vanilla se não houver build.
+_ROOT = os.path.dirname(os.path.abspath(__file__))
+_WEB_DIST = os.path.join(_ROOT, "web", "dist")
+_FRONTEND_DIR = _WEB_DIST if os.path.isdir(_WEB_DIST) else os.path.join(_ROOT, "frontend")
+if os.path.isdir(_FRONTEND_DIR):
+    app.mount("/", StaticFiles(directory=_FRONTEND_DIR, html=True), name="frontend")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

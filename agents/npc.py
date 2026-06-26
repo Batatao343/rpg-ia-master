@@ -5,19 +5,27 @@ Contém tanto a fábrica de NPCs (generate_new_npc) quanto o ator (npc_actor_nod
 """
 import json
 import os
-from typing import Dict, Any, Optional
+from typing import Dict, Any, List, Optional
 from pydantic import BaseModel, Field
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from state import GameState
 from llm_setup import ModelTier, get_llm
+from world_utils import apply_faction_reveal, ensure_factions, ensure_faction_intel
 
 # Fallback para RAG
 try:
-    from rag import query_rag
+    from rag import query_rag, add_npc_memory, query_npc_memory
     RAG_AVAILABLE = True
 except ImportError:
     RAG_AVAILABLE = False
     def query_rag(*args, **kwargs): return ""
+    def add_npc_memory(*args, **kwargs): return None
+    def query_npc_memory(*args, **kwargs): return ""
+
+
+def _npc_id(npc_data: dict, name: str) -> str:
+    """id estável do NPC para namespacing da memória vetorial."""
+    return npc_data.get("id") or f"npc_{(name or 'desconhecido').lower().replace(' ', '_')}"
 
 # Importa Librarian para verificar duplicatas
 try:
@@ -37,22 +45,40 @@ class NPCSchema(BaseModel):
     initial_relationship: int = 5
     attributes: Dict[str, int] = Field(
         description="Stats base: str, dex, con, int, wis, cha. Padrão humano é 10.",
-        example={"str": 10, "dex": 12, "con": 10, "int": 14, "wis": 16, "cha": 18}
+        json_schema_extra={"example": {"str": 10, "dex": 12, "con": 10, "int": 14, "wis": 16, "cha": 18}}
     )
     combat_stats: Dict = Field(description="HP, AC e Attacks", default={"hp": 10, "ac": 10, "attacks": []})
+
+class FactionReveal(BaseModel):
+    faction_id: str = Field(description="id EXATO de uma facção listada em <FACÇÕES_DO_MUNDO>.")
+    reveal_level: str = Field(
+        description="O QUANTO este NPC revelou: 'existencia' (citou a facção), "
+                    "'objetivo' (contou o plano) ou 'progresso' (sabe quão perto está)."
+    )
+
 
 class NPCResponse(BaseModel):
     dialogue: str
     action_description: str
     memory_update: str
     relationship_change: int = 0
+    faction_reveals: List[FactionReveal] = Field(
+        default_factory=list,
+        description=(
+            "Facções sobre as quais ESTE NPC contou algo ao jogador NESTE turno. "
+            "Só preencha se o personagem plausivelmente saberia (ocupação/local) E o papo levou a isso. "
+            "Vazio caso contrário. Use o faction_id EXATO da lista."
+        ),
+    )
 
 # --- PERSISTÊNCIA ---
 def load_npc_db():
     if not os.path.exists(NPC_DB_FILE): return {}
     try:
         with open(NPC_DB_FILE, 'r', encoding='utf-8') as f: return json.load(f)
-    except: return {}
+    except Exception as e:
+        print(f"⚠️ [NPC DB] Falha ao ler {NPC_DB_FILE}: {e}")
+        return {}
 
 def save_npc_template(data):
     db = load_npc_db()
@@ -118,6 +144,7 @@ def generate_new_npc(name, context=""):
         # Fallback de segurança
         return {
             "name": name, "role": "Desconhecido", "id": "fallback", "persona": "Genérico",
+            "initial_relationship": 5,
             "attributes": {"str":10, "dex":10, "con":10, "int":10, "wis":10, "cha":10},
             "combat_stats": {"hp": 10, "ac": 10, "attacks": []}
         }
@@ -136,14 +163,36 @@ def npc_actor_node(state: GameState):
     if not npc_data:
         db = load_npc_db()
         npc_data = db.get(npc_name)
-        if not npc_data: return {"messages": [AIMessage(content="NPC não encontrado.")]}
+    if not npc_data:
+        # NPC ainda não existe na cena: gera na hora (persona + ficha) em vez de falhar.
+        loc = state.get("world", {}).get("current_location", "")
+        npc_data = generate_new_npc(npc_name, context=f"Local: {loc}")
+        npc_data.setdefault("location", loc)
+        npc_data.setdefault("relationship", 5)
+        npc_data.setdefault("memory", [])
 
-    # Contexto RAG (Filtrado pelo Prompt)
+    # O NPC NÃO é uma wikipédia: age por persona + memória própria (sem dump de lore global).
     last_msg = messages[-1].content if messages else ""
-    lore = query_rag(last_msg, index_name="lore") if RAG_AVAILABLE else ""
+
+    # Memória vetorizada DESTE npc: recupera por relevância o que viveu com o jogador
+    # (além das 3 últimas linhas). Inerte sem chave (get_embeddings -> None).
+    game_id = state.get("game_id")
+    npc_id = _npc_id(npc_data, npc_name)
+    try:
+        relevant_memory = query_npc_memory(game_id, npc_id, last_msg) if (RAG_AVAILABLE and game_id) else ""
+    except Exception:
+        relevant_memory = ""
+
+    # Fações do mundo: o NPC PODE saber delas (e revelar ao jogador). O conhecimento do
+    # jogador (faction_intel) só avança por aqui — fora daqui ele não é onisciente.
+    factions = ensure_factions(state.get("factions"))
+    faccoes_mundo = "\n".join(
+        f"- id={f.get('id')} · {f.get('name')} ({f.get('region','')}) · plano: {f.get('goal','')}"
+        for f in factions if not f.get("defeated")
+    ) or "Nenhuma facção conhecida no mundo."
 
     llm = get_llm(temperature=0.8, tier=ModelTier.SMART)
-    
+
     system_msg = SystemMessage(content=f"""
     <ROLE>
     Você é {npc_data.get('name')}.
@@ -156,9 +205,17 @@ def npc_actor_node(state: GameState):
     {npc_data.get('memory', [])[-3:]}
     </MEMORIA>
 
-    <CONTEXTO_EXTERNO>
-    {lore}
-    </CONTEXTO_EXTERNO>
+    <MEMORIA_RELEVANTE>
+    {relevant_memory or "—"}
+    </MEMORIA_RELEVANTE>
+
+    <FACÇÕES_DO_MUNDO>
+    {faccoes_mundo}
+    Se — e SOMENTE se — seu personagem plausivelmente saber de uma destas facções (pela ocupação/local)
+    E a conversa levar a isso, você pode contar ao jogador. Registre em 'faction_reveals' o faction_id
+    EXATO e o nível: 'existencia' (só citou), 'objetivo' (contou o plano), 'progresso' (sabe quão perto está).
+    Um camponês comum NÃO conhece os planos de cultos distantes. Na dúvida, deixe vazio ou solte só um rumor.
+    </FACÇÕES_DO_MUNDO>
 
     <REGRAS DE ATUAÇÃO - CRÍTICO>
     1. NÃO SEJA UMA WIKIPÉDIA. Você é uma pessoa limitada pela sua ocupação e local.
@@ -169,19 +226,38 @@ def npc_actor_node(state: GameState):
 
     try:
         actor = llm.with_structured_output(NPCResponse)
-        res = actor.invoke([system_msg] + messages[-5:])
+        res = actor.invoke([system_msg] + messages[-3:])
         
-        # Atualiza memória e relação
+        # Atualiza memória e relação (com guardas contra chaves ausentes)
+        turn = state.get('world', {}).get('turn_count', 0)
         npc_data['relationship'] = max(0, min(10, npc_data.get('relationship', 5) + res.relationship_change))
-        npc_data['memory'].append(f"Turno {state.get('world', {}).get('turn_count', 0)}: {res.memory_update}")
-        
+        npc_data.setdefault('memory', [])
+        fato = f"Turno {turn}: {res.memory_update}"
+        npc_data['memory'].append(fato)
+
+        # Memória de longo prazo: vetoriza o fato no índice deste npc (inerte sem chave).
+        if RAG_AVAILABLE and game_id and res.memory_update:
+            try:
+                add_npc_memory(game_id, npc_id, [fato])
+            except Exception:
+                pass
+
         # Atualiza o estado global
         new_npcs = npcs_db.copy()
         new_npcs[npc_name] = npc_data
 
+        # Não-onisciência: o que o NPC contou vira conhecimento do jogador (Python grava).
+        intel = ensure_faction_intel(state.get("faction_intel"))
+        for rev in getattr(res, "faction_reveals", []) or []:
+            intel = apply_faction_reveal(
+                intel, factions, getattr(rev, "faction_id", ""), getattr(rev, "reveal_level", ""), turn
+            )
+
         return {
             "messages": [AIMessage(content=f"**{npc_data['name']}:** \"{res.dialogue}\"\n*({res.action_description})*")],
-            "npcs": new_npcs
+            "npcs": new_npcs,
+            "faction_intel": intel,
+            "archive_due": True,  # conversa com NPC = evento relevante p/ o arquivista
         }
     except Exception as e:
         print(f"Erro NPC Actor: {e}")

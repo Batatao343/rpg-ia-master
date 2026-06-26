@@ -11,7 +11,7 @@ from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
 
 # Configurações de Caminho
 SAVES_DIR = "data/saves_memory" # Pasta onde ficam os vetores dos saves individuais
@@ -30,7 +30,10 @@ def get_embeddings() -> Optional[GoogleGenerativeAIEmbeddings]:
         return None
 
     try:
-        _embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
+        # text-embedding-004 foi removido do v1beta (404). gemini-embedding-001 é o
+        # estável atual. Troca de modelo muda a dimensão → reindexar lore/rules
+        # (`uv run python rag.py`); índices de sessão são regerados em runtime.
+        _embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
     except Exception as exc:
         print(f"[RAG] Falha ao inicializar embeddings: {exc}")
         _embeddings = None
@@ -121,6 +124,69 @@ def add_memory_to_session(game_id: str, texts: List[str]):
     except Exception as e:
         print(f"❌ [RAG ERROR] Falha ao salvar memória: {e}")
 
+# --- MEMÓRIA DE NPC VETORIZADA (namespace por game_id + npc_id) ---
+
+def _get_npc_path(game_id: str, npc_id: str) -> str:
+    """Pasta do índice FAISS de UM npc dentro da sessão."""
+    return os.path.join(SAVES_DIR, game_id, npc_id)
+
+
+def add_npc_memory(game_id: str, npc_id: str, texts: List[str]):
+    """
+    Adiciona fatos ao índice do NPC (isolado por game_id+npc_id).
+    No-op se faltar game_id/npc_id/texts ou se não houver embeddings (sem chave).
+    """
+    if not game_id or not npc_id or not texts:
+        return
+
+    embeddings = get_embeddings()
+    if not embeddings:
+        return
+
+    npc_path = _get_npc_path(game_id, npc_id)
+    try:
+        if os.path.exists(npc_path):
+            db = FAISS.load_local(npc_path, embeddings, allow_dangerous_deserialization=True)
+            db.add_texts(texts)
+        else:
+            os.makedirs(os.path.dirname(npc_path), exist_ok=True)
+            db = FAISS.from_texts(texts, embeddings)
+        db.save_local(npc_path)
+        print(f"🧠 [RAG] Memória de NPC '{npc_id}' (sessão '{game_id}'): +{len(texts)} fatos.")
+    except Exception as e:
+        print(f"❌ [RAG ERROR] Falha ao salvar memória do NPC '{npc_id}': {e}")
+
+
+def query_npc_memory(game_id: str, npc_id: str, query: str, k: int = 3) -> str:
+    """
+    Recupera por relevância o que ESTE npc viveu com o jogador. "" se sem índice/sem chave.
+    """
+    if not game_id or not npc_id or not query:
+        return ""
+
+    embeddings = get_embeddings()
+    if not embeddings:
+        return ""
+
+    npc_path = _get_npc_path(game_id, npc_id)
+    if not os.path.exists(npc_path):
+        return ""
+
+    try:
+        db = FAISS.load_local(npc_path, embeddings, allow_dangerous_deserialization=True)
+        docs = db.similarity_search(query, k=k)
+    except Exception:
+        return ""
+
+    seen, out = set(), []
+    for doc in docs:
+        content = doc.page_content.strip()
+        if content and content not in seen:
+            seen.add(content)
+            out.append(content)
+    return "\n---\n".join(out)
+
+
 # --- FUNÇÕES DE UTILIDADE (Setup Inicial) ---
 
 def ingest_file(file_path: str, index_name: str):
@@ -150,9 +216,24 @@ def ingest_file(file_path: str, index_name: str):
     print(f"✅ Indexado com sucesso em '{path}'!")
 
 if __name__ == "__main__":
+    # Console Windows é cp1252; força UTF-8 p/ os emojis dos prints não quebrarem
+    # (main.py já faz isso no fluxo do jogo; aqui rodamos standalone).
+    import sys
+    for _stream in (sys.stdout, sys.stderr):
+        try:
+            _stream.reconfigure(encoding="utf-8")
+        except Exception:
+            pass
+
     # Script rápido para re-gerar a Lore Global se rodar este arquivo direto
     print("Recriando índices globais...")
-    if os.path.exists("world_lore.txt"):
-        ingest_file("world_lore.txt", "lore")
-    if os.path.exists("rules.txt"):
-        ingest_file("rules.txt", "rules")
+    lore_path = os.path.join("data", "world_lore.txt")
+    rules_path = os.path.join("data", "rules.txt")
+    if os.path.exists(lore_path):
+        ingest_file(lore_path, "lore")
+    else:
+        print(f"[ERRO] Lore não encontrada em {lore_path}")
+    if os.path.exists(rules_path):
+        ingest_file(rules_path, "rules")
+    else:
+        print(f"[ERRO] Regras não encontradas em {rules_path}")

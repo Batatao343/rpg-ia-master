@@ -12,8 +12,9 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from main import app
 from persistence import save_game_state, load_game_state
-from gamedata import CLASSES, load_json_data
+from gamedata import CLASSES, load_json_data, seed_factions
 from character_creator import create_player_character
+from world_utils import starting_world
 
 ORIGINS_DATA = load_json_data("origins.json")
 RACES = ORIGINS_DATA.get("races", [])
@@ -116,35 +117,35 @@ def create_character_wizard():
         "archivist_last_run": 0,
         "player": {
             "name": final_char["name"],
-            "class": final_char["class_name"],
+            "class_name": final_char["class_name"],
             "race": final_char["race"],
             "level": final_char["level"],
-            "xp": 0, 
+            "xp": 0,
             "hp": final_char["hp"],
             "max_hp": final_char["max_hp"],
-            "gold": 50 * level, 
+            "mana": final_char["mana"],
+            "max_mana": final_char["max_mana"],
+            "stamina": final_char["stamina"],
+            "max_stamina": final_char["max_stamina"],
+            "gold": 50 * level,
+            "alignment": "Neutro",
             "attributes": final_char["attributes"],
             "inventory": final_char["inventory"],
-            "equipment": {},
-            "abilities": final_char["known_abilities"],
+            "known_abilities": final_char["known_abilities"],
             "defense": final_char["defense"],
-            "attack_bonus": 0,
+            "attack_bonus": final_char.get("attack_bonus", 0),
             "active_conditions": []
         },
-        "world": {
-            "current_location": final_char["region"],
-            "time_of_day": "Amanhecer",
-            "turn_count": 0,
-            "danger_level": level,
-            "quest_plan": [],
-            "quest_plan_origin": None
-        },
+        "world": starting_world(final_char["region"], level),
         "messages": [
             SystemMessage(content=f"A jornada de {name} começa em {final_char['region']}."),
             HumanMessage(content=f"Descreva o cenário ao meu redor. Sou um {final_char['class_name']} de nível {level}.")
         ],
         "party": [],
         "enemies": [],
+        "factions": seed_factions(),
+        "faction_intel": {},  # não-onisciência: jogador começa sem saber de nenhuma facção
+        "archive_due": False,
         "npcs": {},
         "campaign_plan": {},
         "needs_replan": False,
