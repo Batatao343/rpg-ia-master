@@ -75,7 +75,12 @@ export function Hud({ data, open }: { data: GameResponse | null; open: boolean }
         {tab === "mapa" && (
           <div>
             <p className="hud__label">Mapa do mundo</p>
-            <WorldMap visited={data?.world.visited ?? []} currentId={data?.world.location_id ?? ""} />
+            <WorldMap
+              visited={data?.world.visited ?? []}
+              currentId={data?.world.location_id ?? ""}
+              controlled={data?.world.controlled ?? {}}
+              dangerOverrides={data?.world.danger_overrides ?? {}}
+            />
           </div>
         )}
         {tab === "faccoes" && <FactionsTab factions={data?.factions ?? []} />}
@@ -174,9 +179,10 @@ function FactionsTab({ factions }: { factions: FactionView[] }) {
   const dispLabel: Record<string, string> = { hostil: "Hostil", neutro: "Neutra", aliada: "Aliada", aliado: "Aliada" };
   return (
     <div>
-      <p className="hud__label">Poderes do mundo ({factions.length})</p>
+      <p className="hud__label">Poderes que você conhece ({factions.length})</p>
       <ul className="factions">
         {factions.map((f) => {
+          const hasProg = f.progress !== null && f.progress !== undefined;
           const prog = Math.max(0, Math.min(100, f.progress ?? 0));
           return (
             <li key={f.id} className={"faction faction--" + f.disposition + (f.completed ? " is-done" : "")}>
@@ -186,12 +192,19 @@ function FactionsTab({ factions }: { factions: FactionView[] }) {
                   {dispLabel[f.disposition] ?? f.disposition}
                 </span>
               </div>
-              <p className="faction__goal">{f.goal}</p>
-              <div className="faction__track" title={`${prog}% rumo ao objetivo`}>
-                <div className="faction__fill" style={{ width: prog + "%" }} />
-              </div>
+              {f.knows_goal ? (
+                <p className="faction__goal">{f.goal}</p>
+              ) : (
+                <p className="faction__goal faction__goal--unknown">Plano desconhecido — descubra com quem sabe.</p>
+              )}
+              {hasProg ? (
+                <div className="faction__track" title={`${prog}% rumo ao objetivo (intel${f.intel_stale ? " antiga" : ""})`}>
+                  <div className="faction__fill" style={{ width: prog + "%" }} />
+                </div>
+              ) : null}
               <p className="faction__meta">
-                {f.completed ? "Objetivo cumprido" : `${prog}% · ${f.region}`}
+                {f.completed ? "Objetivo cumprido" : hasProg ? `${prog}% · ${f.region}` : f.region}
+                {f.intel_stale ? " · intel pode estar desatualizada" : ""}
                 {f.reputation ? ` · reputação ${f.reputation > 0 ? "+" : ""}${f.reputation}` : ""}
               </p>
             </li>

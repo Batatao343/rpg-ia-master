@@ -204,6 +204,11 @@ data/saves_memory/    # índices FAISS por sessão (gerado em runtime)
 - **MockLLM esconde bugs de mapeamento:** ele devolve instâncias Pydantic válidas, então acesso a
   campo nunca quebra no mock. Bug de nome/tipo de campo só aparece no Gemini real. Validar caminhos
   novos de structured output com a chave real (ver harness/quota em `ESTADO_ATUAL.md`).
+- **Ao FINALIZAR qualquer tarefa (SEMPRE, sem exceção):**
+  1. Rodar `uv run pytest` e garantir verde antes de declarar a tarefa concluída — nunca afirmar
+     que funcionou sem a saída dos testes.
+  2. Atualizar **`ESTADO_ATUAL.md`** (TL;DR, contagem de testes, o que funciona, correções) **e**
+     **`ROADMAP.md`** (marcar item entregue/pendência) refletindo a mudança. Os dois, sempre.
 
 ---
 

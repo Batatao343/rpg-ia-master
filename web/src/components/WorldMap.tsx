@@ -4,7 +4,18 @@ import type { MapLocation, WorldMapData } from "../types";
 
 // Mapa do mundo com fog of war: nós conhecidos (visited) aparecem nomeados;
 // os demais ficam como "???" (posição insinuada, identidade oculta). Só exibição.
-export function WorldMap({ visited, currentId }: { visited: string[]; currentId: string }) {
+// Etapa B: locais dominados por fações ganham selo; perigo pode ser elevado por ascensão.
+export function WorldMap({
+  visited,
+  currentId,
+  controlled = {},
+  dangerOverrides = {},
+}: {
+  visited: string[];
+  currentId: string;
+  controlled?: Record<string, string>;
+  dangerOverrides?: Record<string, number>;
+}) {
   const [map, setMap] = useState<WorldMapData | null>(null);
 
   useEffect(() => {
@@ -43,19 +54,29 @@ export function WorldMap({ visited, currentId }: { visited: string[]; currentId:
       {map.locations.map((loc) => {
         const known = seen.has(loc.id);
         const isCurrent = loc.id === currentId;
+        const danger = dangerOverrides[loc.id] ?? loc.danger; // ascensão pode ter elevado o perigo
+        const ruler = controlled[loc.id]; // dominado por uma facção?
         const cls =
-          "worldmap__node" + (isCurrent ? " is-current" : "") + (known ? "" : " is-fog");
-        const title = known ? `${loc.name} · perigo ${loc.danger}\n${loc.lore_seed}` : "Região inexplorada";
+          "worldmap__node" +
+          (isCurrent ? " is-current" : "") +
+          (known ? "" : " is-fog") +
+          (ruler ? " is-controlled" : "");
+        const title = known
+          ? `${loc.name} · perigo ${danger}${ruler ? " · sob domínio" : ""}\n${loc.lore_seed}`
+          : "Região inexplorada";
         return (
           <div
             key={loc.id}
             className={cls}
-            data-danger={loc.danger}
+            data-danger={danger}
             style={{ left: loc.coords.x + "%", top: loc.coords.y + "%" }}
             title={title}
           >
             <span className="worldmap__dot" />
-            <span className="worldmap__label">{known ? loc.name : "???"}</span>
+            <span className="worldmap__label">
+              {ruler ? "☗ " : ""}
+              {known ? loc.name : "???"}
+            </span>
           </div>
         );
       })}

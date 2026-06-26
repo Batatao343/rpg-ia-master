@@ -33,6 +33,8 @@ export interface WorldBlock {
   period: string;
   visited: string[];
   danger: number;
+  controlled: Record<string, string>; // location_id -> faction_id (dominado)
+  danger_overrides: Record<string, number>; // location_id -> perigo elevado (ascensão)
 }
 
 export interface Beat {
@@ -80,9 +82,11 @@ export interface CombatBlock {
 export interface FactionView {
   id: string;
   name: string;
-  goal: string;
+  goal: string; // "" se o jogador ainda não souber o plano
+  knows_goal: boolean;
   region: string;
-  progress: number; // 0..100 rumo ao objetivo
+  progress: number | null; // SNAPSHOT visto pelo jogador (null = desconhecido); nunca o ao vivo
+  intel_stale: boolean; // true se o snapshot pode estar defasado
   disposition: "hostil" | "neutro" | "aliado";
   reputation: number; // -100..100
   completed: boolean;

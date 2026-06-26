@@ -130,3 +130,196 @@ def test_graph_rest_advances_factions():
     assert factions, "estado deve conter fações após o turno"
     # descanso = 2 períodos → ao menos uma facção progrediu além de 0
     assert any(f["progress"] > 0 for f in factions), "descanso deve avançar fações"
+
+
+# --------------------------------------------------------------------------
+# Reputação por ação do jogador (IA identifica, Python resolve)
+# --------------------------------------------------------------------------
+def _reps():
+    return [
+        {"id": "selo_palido", "name": "Ordem", "progress": 0, "pace": 4,
+         "disposition": "neutro", "reputation": 0, "completed": False},
+        {"id": "culto_clareira", "name": "Culto", "progress": 0, "pace": 5,
+         "disposition": "hostil", "reputation": 0, "completed": False},
+    ]
+
+
+def test_apply_reputation_increments_and_clamps():
+    out, ev = wu.apply_reputation(_reps(), "selo_palido", "ajudou")
+    f = next(x for x in out if x["id"] == "selo_palido")
+    assert f["reputation"] == wu.REP_STEP
+    assert ev and ev["delta"] == wu.REP_STEP and ev["direction"] == "ajudou"
+    # outras fações intactas
+    assert next(x for x in out if x["id"] == "culto_clareira")["reputation"] == 0
+
+    # clamp no teto e no piso
+    high = [{"id": "selo_palido", "name": "O", "reputation": 95, "disposition": "aliado"}]
+    out_h, _ = wu.apply_reputation(high, "selo_palido", "ajudou")
+    assert out_h[0]["reputation"] == wu.REP_MAX
+    low = [{"id": "selo_palido", "name": "O", "reputation": -95, "disposition": "hostil"}]
+    out_l, _ = wu.apply_reputation(low, "selo_palido", "prejudicou")
+    assert out_l[0]["reputation"] == wu.REP_MIN
+
+
+def test_apply_reputation_flips_disposition():
+    # de neutro a aliado ao cruzar +40
+    base = [{"id": "selo_palido", "name": "O", "reputation": 36, "disposition": "neutro"}]
+    out, _ = wu.apply_reputation(base, "selo_palido", "ajudou")  # 36 + 12 = 48 >= 40
+    assert out[0]["disposition"] == "aliado"
+    # de neutro a hostil ao cruzar -40
+    base2 = [{"id": "selo_palido", "name": "O", "reputation": -32, "disposition": "neutro"}]
+    out2, _ = wu.apply_reputation(base2, "selo_palido", "prejudicou")  # -32 - 12 = -44 <= -40
+    assert out2[0]["disposition"] == "hostil"
+
+
+def test_apply_reputation_unknown_id_noop():
+    reps = _reps()
+    out, ev = wu.apply_reputation(reps, "nao_existe", "ajudou")
+    assert ev is None
+    assert all(f["reputation"] == 0 for f in out)
+
+
+def test_apply_reputation_invalid_direction_noop():
+    out, ev = wu.apply_reputation(_reps(), "selo_palido", "olhou de lado")
+    assert ev is None
+    assert all(f["reputation"] == 0 for f in out)
+
+
+def test_graph_help_faction_changes_reputation():
+    from main import app
+    # jogador precisa CONHECER a fação para poder agir sobre ela (não-onisciência)
+    st = _state_for_graph("ajudo a Ordem do Selo Pálido na sua causa")
+    st["faction_intel"] = {"selo_palido": {"known": True, "knows_goal": True}}
+    result = app.invoke(st)
+    factions = result.get("factions") or []
+    alvo = next((f for f in factions if f["id"] == "selo_palido"), None)
+    assert alvo is not None
+    assert alvo["reputation"] > 0, "ajudar uma fação conhecida deve elevar sua reputação"
+
+
+# --------------------------------------------------------------------------
+# Não-onisciência: conhecimento de fação em camadas (só via NPC)
+# --------------------------------------------------------------------------
+def test_faction_intel_starts_empty():
+    assert wu.ensure_faction_intel(None) == {}
+    assert wu.ensure_faction_intel({}) == {}
+
+
+def test_apply_faction_reveal_layers():
+    facs = gamedata.seed_factions()
+    # existência: só known
+    intel = wu.apply_faction_reveal({}, facs, "selo_palido", "existencia", turn=1)
+    assert intel["selo_palido"]["known"] is True
+    assert intel["selo_palido"].get("knows_goal") is False
+    # objetivo: known + knows_goal
+    intel = wu.apply_faction_reveal(intel, facs, "selo_palido", "objetivo", turn=2)
+    assert intel["selo_palido"]["knows_goal"] is True
+    # progresso: congela snapshot do progress atual + turno
+    facs2 = [dict(f, progress=37) if f["id"] == "selo_palido" else f for f in facs]
+    intel = wu.apply_faction_reveal(intel, facs2, "selo_palido", "progresso", turn=5)
+    assert intel["selo_palido"]["progress_seen"] == 37
+    assert intel["selo_palido"]["intel_turn"] == 5
+
+
+def test_apply_faction_reveal_unknown_id_noop():
+    facs = gamedata.seed_factions()
+    intel = wu.apply_faction_reveal({}, facs, "nao_existe", "objetivo", turn=1)
+    assert intel == {}
+
+
+def test_factions_block_hides_unknown_and_uses_snapshot():
+    from api import _factions_block
+    facs = [{"id": "selo_palido", "name": "Ordem", "goal": "centralizar", "region": "Arc",
+             "progress": 80, "disposition": "neutro", "reputation": 0, "completed": False}]
+    # sem intel → nada aparece
+    assert _factions_block(facs, {}, turn=3) == []
+    # conhece existência mas não o plano → goal vazio, progress None
+    intel = {"selo_palido": {"known": True, "knows_goal": False}}
+    out = _factions_block(facs, intel, turn=3)
+    assert len(out) == 1 and out[0]["goal"] == "" and out[0]["knows_goal"] is False
+    assert out[0]["progress"] is None
+    # snapshot de progresso defasado → usa o snapshot (não o ao vivo 80) e marca stale
+    intel = {"selo_palido": {"known": True, "knows_goal": True, "progress_seen": 20, "intel_turn": 1}}
+    out = _factions_block(facs, intel, turn=9)
+    assert out[0]["progress"] == 20 and out[0]["intel_stale"] is True
+
+
+def test_factions_block_hides_defeated():
+    from api import _factions_block
+    facs = [{"id": "x", "name": "X", "defeated": True}]
+    intel = {"x": {"known": True, "knows_goal": True}}
+    assert _factions_block(facs, intel, turn=1) == []
+
+
+# --------------------------------------------------------------------------
+# Etapa B: ascensão — concluir objetivo muda o mundo (determinístico)
+# --------------------------------------------------------------------------
+def _complete_one(fid, world=None, intel=None):
+    """Leva a fação `fid` à conclusão e resolve a ascensão. Retorna (factions, world, note, events)."""
+    facs = [dict(f, progress=99) if f["id"] == fid else f for f in gamedata.seed_factions()]
+    facs, events = wu.advance_factions(facs, 1)  # >=100 → completa
+    facs, world, note = wu.resolve_faction_completions(facs, world or {}, events, intel or {})
+    return facs, world, note, events
+
+
+def test_ascension_dominar_local():
+    _, world, _, _ = _complete_one("selo_palido")
+    assert world.get("controlled", {}).get("portao_oeste") == "selo_palido"
+
+
+def test_ascension_expandir_regiao():
+    facs, _, _, _ = _complete_one("clas_skallgard")
+    f = next(x for x in facs if x["id"] == "clas_skallgard")
+    assert f["region"] == "Nova Arcádia"
+    assert f["progress"] == 0 and f["completed"] is False  # cadeia: volta a evoluir
+    assert "sul" in f["goal"].lower()  # next_goal aplicado
+
+
+def test_ascension_elevar_perigo_clamps():
+    _, world, _, _ = _complete_one("guilda_fuligem")
+    assert world.get("danger_overrides", {}).get("mina_fuligem") == 4  # teto 4
+
+
+def test_ascension_invocar_entidade():
+    _, world, _, _ = _complete_one("culto_clareira")
+    assert world.get("looming_threat")
+    assert "clareira_ossos" in world.get("danger_overrides", {})
+
+
+def test_ascension_eliminar_faccao():
+    facs, _, _, _ = _complete_one("hereticos_sol_morto")
+    alvo = next(x for x in facs if x["id"] == "culto_clareira")
+    assert alvo.get("defeated") is True
+
+
+def test_advance_skips_defeated():
+    facs = [{"id": "x", "name": "X", "progress": 50, "pace": 5, "defeated": True, "completed": False}]
+    out, events = wu.advance_factions(facs, 2)
+    assert out[0]["progress"] == 50 and events == []
+
+
+def test_completion_note_names_only_known():
+    # desconhecida → consequência sem nome
+    _, _, note_unknown, _ = _complete_one("selo_palido", intel={})
+    assert note_unknown and "Ordem do Selo Pálido" not in note_unknown
+    # conhecida → narrador nomeia
+    _, _, note_known, _ = _complete_one("selo_palido", intel={"selo_palido": {"known": True}})
+    assert "Ordem do Selo Pálido" in note_known
+
+
+def test_npc_reveals_faction_to_player():
+    from langchain_core.messages import HumanMessage
+    from agents.npc import npc_actor_node
+    state = {
+        "game_id": "intel_test",
+        "active_npc_name": "Guarda Bran",
+        "npcs": {"Guarda Bran": {"name": "Guarda Bran", "role": "Guarda", "persona": "rude",
+                                  "location": "Portão", "relationship": 5, "memory": []}},
+        "factions": gamedata.seed_factions(),
+        "faction_intel": {},
+        "world": {"turn_count": 4, "current_location": "Portão"},
+        "messages": [HumanMessage(content="pergunto ao guarda sobre a Ordem do Selo Pálido")],
+    }
+    out = npc_actor_node(state)
+    intel = out.get("faction_intel") or {}
+    assert intel.get("selo_palido", {}).get("known") is True

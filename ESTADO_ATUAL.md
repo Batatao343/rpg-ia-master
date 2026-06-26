@@ -2,16 +2,19 @@
 
 > Documento de estado do projeto. Leia isto **primeiro** ao retomar o trabalho.
 > Complementa `CLAUDE.md` (arquitetura) e `REFERENCE.md` (decisões técnicas).
-> Última atualização: 2026-06-25 (sessão: validação Gemini real + fix embeddings + Fase 2 fações).
+> Última atualização: 2026-06-25 (sessão: Fase 2 — reputação + não-onisciência + ascensão de fações).
 
 ---
 
 ## TL;DR — Em que pé está
 
-**MVP funcional e jogável + Fase 2 iniciada.** O grafo LangGraph roda fim-a-fim (criar plano → rotear → narrar/combater/NPC/loot → arquivar → salvar) sem crashar. Suíte offline 100% verde (`uv run pytest` — **49 testes**).
+**MVP funcional e jogável + Fase 2 iniciada.** O grafo LangGraph roda fim-a-fim (criar plano → rotear → narrar/combater/NPC/loot → arquivar → salvar) sem crashar. Suíte offline 100% verde (`uv run pytest` — **71 testes**).
 
 A chave (`GOOGLE_API_KEY`) está **válida** e o caminho do **Gemini real foi validado** fim-a-fim
 (`tests/test_real_llm.py`, 4 passed, ~7-10 req). Sem chave o jogo roda no **MockLLM** (jogável).
+Os 2 structured outputs novos desta sessão foram **confirmados no Gemini real**: `FactionReveal`
+(NPC revela → `faction_intel.known/knows_goal`) e `FactionImpact` (ajudar fação conhecida →
+`reputation += REP_STEP`). Mapeamento de campo OK fora do mock.
 
 **Fix crítico real (esta sessão):** `text-embedding-004` saiu do v1beta (404 em `embedContent`) —
 o RAG global (lore/rules) e a memória de sessão quebravam silenciosamente sob a chave real. Migrado
@@ -19,8 +22,24 @@ para `models/gemini-embedding-001` e índices reindexados (`uv run python rag.py
 saves/índices de sessão antigos viram incompatíveis (regerados em runtime).
 
 **Fase 2 — Fações (núcleo determinístico):** `state.factions[]` avançam objetivos no tempo
-(descanso/viagem), 100% offline; aba "Fações" no HUD. Ver `ROADMAP.md` Fase 2. Falta a camada
-narrada (`world_simulator`) e reputação por ação do jogador.
+(descanso/viagem), 100% offline; aba "Fações" no HUD. **Reputação por ação do jogador entregue
+(esta sessão):** o storyteller identifica (IA) qual fação a ação ajuda/prejudica e
+`world_utils.apply_reputation` aplica delta FIXO em Python (`REP_STEP=12`, clamp ±100, disposição
+derivada por limiar ±40); id inválido = no-op; MockLLM reage a palavras-chave (offline).
+**Não-onisciência entregue (esta sessão):** `state.faction_intel` (por fação:
+known/knows_goal/progress_seen snapshot/intel_turn) começa vazio; só um **NPC** revela
+(`NPCResponse.faction_reveals` → `world_utils.apply_faction_reveal`); storyteller e HUD só citam
+fações conhecidas; `api._factions_block` filtra por intel e expõe **snapshot** de progresso (nunca
+o ao vivo) + `intel_stale`; front esconde o objetivo até descobrir.
+**Ascensão de fação entregue (esta sessão):** ao concluir o objetivo, a fação muda o MUNDO de
+verdade (`world_utils.resolve_faction_completions`, determinístico, autorado em
+`data/factions.json` campo `ascension`): `dominar_local` (sela `world.controlled`),
+`expandir_regiao` (muda região/goal e reseta → cadeia de escalada), `elevar_perigo`
+(`world.danger_overrides`, teto 4), `invocar_entidade` (`world.looming_threat`),
+`eliminar_faccao` (alvo vira `defeated`, sai de jogo/HUD). A nota de mundo **nomeia** a fação só
+se conhecida; senão narra só a consequência sentida. Mapa reflete domínio (selo) e perigo elevado.
+Testes em `tests/test_fase2.py`. Ver `ROADMAP.md` Fase 2. Falta: camada narrada genérica
+(`world_simulator`) e memória de NPC vetorizada.
 
 ---
 

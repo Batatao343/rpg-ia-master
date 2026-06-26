@@ -116,22 +116,40 @@ def format_response(state: dict) -> GameResponse:
         combat=_combat_block(state),
         npcs=_npcs_block(state.get("npcs", {}) or {}),
         chronicle=[str(c) for c in (state.get("chronicle", []) or []) if str(c).strip()],
-        factions=_factions_block(state.get("factions", []) or []),
+        factions=_factions_block(state.get("factions", []) or [],
+                                 state.get("faction_intel", {}) or {},
+                                 (state.get("world", {}) or {}).get("turn_count", 0)),
     )
 
 
-def _factions_block(factions: list) -> List[Dict[str, Any]]:
-    """Fações vivas para o HUD: objetivo, progresso (0-100), postura e reputação."""
+def _factions_block(factions: list, intel: dict, turn: int = 0) -> List[Dict[str, Any]]:
+    """
+    Fações para o HUD — não-onisciência: só as que o jogador CONHECE (intel.known).
+    Objetivo só se aprendido; progresso é o SNAPSHOT que o jogador viu (nunca o ao vivo);
+    fações eliminadas somem.
+    """
+    intel = intel or {}
     out = []
     for f in factions:
         if not isinstance(f, dict):
             continue
+        if f.get("defeated"):
+            continue
+        rec = intel.get(f.get("id", ""), {})
+        if not rec.get("known"):
+            continue  # jogador nunca ouviu falar desta facção
+        knows_goal = bool(rec.get("knows_goal"))
+        seen = rec.get("progress_seen")
+        intel_turn = rec.get("intel_turn")
+        stale = seen is not None and isinstance(intel_turn, int) and int(turn) > int(intel_turn)
         out.append({
             "id": f.get("id", ""),
             "name": f.get("name", ""),
-            "goal": f.get("goal", ""),
+            "goal": f.get("goal", "") if knows_goal else "",
+            "knows_goal": knows_goal,
             "region": f.get("region", ""),
-            "progress": int(f.get("progress", 0)),
+            "progress": int(seen) if seen is not None else None,
+            "intel_stale": bool(stale),
             "disposition": f.get("disposition", "neutro"),
             "reputation": int(f.get("reputation", 0)),
             "completed": bool(f.get("completed", False)),
@@ -216,6 +234,9 @@ def _world_block(w: dict) -> Dict[str, Any]:
         "period": clock.get("period", "Amanhecer"),
         "visited": w.get("visited", []),
         "danger": w.get("danger_level", 1),
+        # Etapa B: o mundo muda quando fações ascendem — locais dominados e perigo elevado.
+        "controlled": dict(w.get("controlled") or {}),
+        "danger_overrides": dict(w.get("danger_overrides") or {}),
     }
 
 # --- ENDPOINTS ---
@@ -316,6 +337,7 @@ def new_game(req: CreateCharacterRequest):
         "party": [],
         "enemies": [],
         "factions": seed_factions(),
+        "faction_intel": {},  # não-onisciência: jogador começa sem saber de nenhuma facção
         "npcs": {},
         "campaign_plan": {},
         "needs_replan": False,

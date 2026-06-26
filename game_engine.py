@@ -144,6 +144,7 @@ def create_character_wizard():
         "party": [],
         "enemies": [],
         "factions": seed_factions(),
+        "faction_intel": {},  # não-onisciência: jogador começa sem saber de nenhuma facção
         "npcs": {},
         "campaign_plan": {},
         "needs_replan": False,

@@ -172,10 +172,21 @@ def _route_decision(model, messages):
                          "confidence": 0.8, "target": None, "loot_context": None})
 
 
+_MOCK_FACTION_ID = "selo_palido"  # id real de data/factions.json (modo simulado)
+
+
 def _story_update(model, messages):
     narrative = random.choice(_NARRATIVES).format(acao_eco=_acao_eco(messages))
+    # Fase 2: sem chave, deixa a reputação reagir a palavras-chave (jogável offline).
+    txt = _last_human(messages).lower()
+    impacts = []
+    if any(k in txt for k in ("ajud", "alia", "favor", "apoi")):
+        impacts = [{"faction_id": _MOCK_FACTION_ID, "direction": "ajudou"}]
+    elif any(k in txt for k in ("trai", "sabot", "ataco a", "contra a")):
+        impacts = [{"faction_id": _MOCK_FACTION_ID, "direction": "prejudicou"}]
     # Avança o beat ~30% das vezes para a UI de objetivos progredir no modo simulado.
     return _fill(model, {"narrative": narrative, "introduced_npcs": [],
+                         "faction_impacts": impacts,
                          "beat_completed": random.random() < 0.30})
 
 
@@ -220,10 +231,16 @@ def _npc_schema(model, messages):
 
 
 def _npc_response(model, messages):
+    # Não-onisciência: se o jogador perguntar de fações/rumores, o NPC "revela" algo (offline).
+    txt = _last_human(messages).lower()
+    reveals = []
+    if any(k in txt for k in ("facç", "faccao", "facc", "rumor", "quem manda", "selo", "ordem")):
+        reveals = [{"faction_id": "selo_palido", "reveal_level": "objetivo"}]
     return _fill(model, {"dialogue": random.choice(_NPC_LINES),
                          "action_description": random.choice(_NPC_ACTIONS),
                          "memory_update": "Conversou com o herói.",
-                         "relationship_change": random.choice([-1, 0, 0, 1])})
+                         "relationship_change": random.choice([-1, 0, 0, 1]),
+                         "faction_reveals": reveals})
 
 
 def _enemy_schema(model, messages):

@@ -10,33 +10,34 @@ from rag import query_rag
 from state import GameState
 from world_utils import (
     advance_factions,
+    apply_reputation,
     apply_rest,
     apply_travel,
     clock_label,
+    ensure_faction_intel,
     ensure_factions,
     ensure_world,
     find_travel_destination,
     is_rest,
+    resolve_faction_completions,
 )
 
 
-def _faction_note(events: list) -> str:
-    """Transforma fações que concluíram objetivo em nota de narração para o Mestre."""
-    if not events:
-        return ""
-    linhas = []
-    for ev in events:
-        tom = "uma AMEAÇA ganha forma" if ev.get("disposition") == "hostil" else "o mundo muda"
-        linhas.append(f"- {ev.get('name')} cumpriu seu objetivo ({ev.get('goal')}) — {tom}.")
-    return (
-        "[MUNDO VIVO] Enquanto o tempo passava, fações agiram nos bastidores:\n"
-        + "\n".join(linhas)
-        + "\nTeça isso na narração como rumor, sinal ou consequência distante."
-    )
+class FactionImpact(BaseModel):
+    faction_id: str = Field(description="id EXATO de uma fação listada em <FACÇÕES_CONHECIDAS>; vazio se nenhuma.")
+    direction: str = Field(description="'ajudou' (jogador beneficiou a fação) ou 'prejudicou' (jogador a atrapalhou/traiu/atacou).")
+
 
 class StoryUpdate(BaseModel):
     narrative: str = Field(description="O texto narrativo da resposta.")
     introduced_npcs: List[str] = Field(default_factory=list, description="Lista de nomes de NOVOS personagens.")
+    faction_impacts: List[FactionImpact] = Field(
+        default_factory=list,
+        description=(
+            "Fações afetadas pela AÇÃO do jogador NESTE turno. Vazio se a ação não ajuda "
+            "nem prejudica claramente uma fação listada. Use o faction_id EXATO."
+        ),
+    )
     beat_completed: bool = Field(
         default=False,
         description=(
@@ -71,11 +72,12 @@ def storyteller_node(state: GameState):
     travel_note = rest_note = ruling_note = faction_note = ""
     rested_player = None
     factions = ensure_factions(state.get("factions"))
+    intel = ensure_faction_intel(state.get("faction_intel"))
     dest = find_travel_destination(world, last_user_input) if last_user_input else None
     if dest:
         world = apply_travel(world, dest)
         factions, faction_events = advance_factions(factions, 1)  # viagem = 1 período
-        faction_note = _faction_note(faction_events)
+        factions, world, faction_note = resolve_faction_completions(factions, world, faction_events, intel)
         travel_note = (
             f"O jogador VIAJOU para {dest['name']}. "
             f"Contexto do local: {dest.get('lore_seed', '')} Descreva a chegada e o que ele vê agora."
@@ -83,7 +85,7 @@ def storyteller_node(state: GameState):
     elif last_user_input and is_rest(last_user_input):
         rested_player, world = apply_rest(dict(state.get("player", {})), world)
         factions, faction_events = advance_factions(factions, 2)  # descanso = 2 períodos
-        faction_note = _faction_note(faction_events)
+        factions, world, faction_note = resolve_faction_completions(factions, world, faction_events, intel)
         rest_note = (
             f"O jogador DESCANSOU. O tempo avançou para {clock_label(world)} e ele recuperou parte das forças. "
             "Narre a passagem do tempo e o estado do mundo ao acordar."
@@ -126,6 +128,13 @@ def storyteller_node(state: GameState):
     # PROMPT ATUALIZADO
     eventos_turno = "\n".join(n for n in (travel_note, rest_note, ruling_note, faction_note) if n) or "Nenhum evento especial."
 
+    # Fações que o JOGADOR conhece (não-onisciência): só estas podem ser citadas/afetadas.
+    faccoes_conhecidas = "\n".join(
+        f"- id={f.get('id')} · {f.get('name')} ({f.get('region','')}) · disposição={f.get('disposition','neutro')}"
+        for f in factions
+        if intel.get(f.get("id"), {}).get("known") and not f.get("defeated")
+    ) or "Nenhuma fação conhecida pelo jogador ainda."
+
     sys = SystemMessage(content=f"""
     <PERSONA>
     Você é o Narrador (Mestre) de um RPG.
@@ -138,6 +147,13 @@ def storyteller_node(state: GameState):
     <EVENTOS_DESTE_TURNO>
     {eventos_turno}
     </EVENTOS_DESTE_TURNO>
+
+    <FACÇÕES_CONHECIDAS>
+    {faccoes_conhecidas}
+    Se a ação do jogador NESTE turno claramente ajudar ou prejudicar uma destas fações,
+    registre em 'faction_impacts' (faction_id EXATO + direction 'ajudou'/'prejudicou').
+    Caso contrário, deixe 'faction_impacts' vazio. NÃO invente ids fora da lista.
+    </FACÇÕES_CONHECIDAS>
 
     <MEMORIA_RECENTE>
     Resumo dos fatos anteriores: {narrative_summary}
@@ -158,6 +174,13 @@ def storyteller_node(state: GameState):
         update = story_engine.invoke([sys] + messages[-6:]) # Contexto reduzido
 
         narrative_text = update.narrative
+
+        # --- Fase 2: a ação do jogador altera a reputação das fações (Python resolve) ---
+        # A IA só identifica fação + direção; apply_reputation valida o id e fixa o delta.
+        for imp in getattr(update, "faction_impacts", []) or []:
+            fid = getattr(imp, "faction_id", "")
+            direction = getattr(imp, "direction", "")
+            factions, _ev = apply_reputation(factions, fid, direction)
 
         # --- Avanço de beat: o narrador sinaliza quando o objetivo da cena foi cumprido ---
         needs_replan = state.get("needs_replan", False)

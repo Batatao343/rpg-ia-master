@@ -5,11 +5,12 @@ Contém tanto a fábrica de NPCs (generate_new_npc) quanto o ator (npc_actor_nod
 """
 import json
 import os
-from typing import Dict, Any, Optional
+from typing import Dict, Any, List, Optional
 from pydantic import BaseModel, Field
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from state import GameState
 from llm_setup import ModelTier, get_llm
+from world_utils import apply_faction_reveal, ensure_factions, ensure_faction_intel
 
 # Fallback para RAG
 try:
@@ -41,11 +42,27 @@ class NPCSchema(BaseModel):
     )
     combat_stats: Dict = Field(description="HP, AC e Attacks", default={"hp": 10, "ac": 10, "attacks": []})
 
+class FactionReveal(BaseModel):
+    faction_id: str = Field(description="id EXATO de uma facção listada em <FACÇÕES_DO_MUNDO>.")
+    reveal_level: str = Field(
+        description="O QUANTO este NPC revelou: 'existencia' (citou a facção), "
+                    "'objetivo' (contou o plano) ou 'progresso' (sabe quão perto está)."
+    )
+
+
 class NPCResponse(BaseModel):
     dialogue: str
     action_description: str
     memory_update: str
     relationship_change: int = 0
+    faction_reveals: List[FactionReveal] = Field(
+        default_factory=list,
+        description=(
+            "Facções sobre as quais ESTE NPC contou algo ao jogador NESTE turno. "
+            "Só preencha se o personagem plausivelmente saberia (ocupação/local) E o papo levou a isso. "
+            "Vazio caso contrário. Use o faction_id EXATO da lista."
+        ),
+    )
 
 # --- PERSISTÊNCIA ---
 def load_npc_db():
@@ -149,8 +166,16 @@ def npc_actor_node(state: GameState):
     last_msg = messages[-1].content if messages else ""
     lore = query_rag(last_msg, index_name="lore") if RAG_AVAILABLE else ""
 
+    # Fações do mundo: o NPC PODE saber delas (e revelar ao jogador). O conhecimento do
+    # jogador (faction_intel) só avança por aqui — fora daqui ele não é onisciente.
+    factions = ensure_factions(state.get("factions"))
+    faccoes_mundo = "\n".join(
+        f"- id={f.get('id')} · {f.get('name')} ({f.get('region','')}) · plano: {f.get('goal','')}"
+        for f in factions if not f.get("defeated")
+    ) or "Nenhuma facção conhecida no mundo."
+
     llm = get_llm(temperature=0.8, tier=ModelTier.SMART)
-    
+
     system_msg = SystemMessage(content=f"""
     <ROLE>
     Você é {npc_data.get('name')}.
@@ -167,6 +192,14 @@ def npc_actor_node(state: GameState):
     {lore}
     </CONTEXTO_EXTERNO>
 
+    <FACÇÕES_DO_MUNDO>
+    {faccoes_mundo}
+    Se — e SOMENTE se — seu personagem plausivelmente saber de uma destas facções (pela ocupação/local)
+    E a conversa levar a isso, você pode contar ao jogador. Registre em 'faction_reveals' o faction_id
+    EXATO e o nível: 'existencia' (só citou), 'objetivo' (contou o plano), 'progresso' (sabe quão perto está).
+    Um camponês comum NÃO conhece os planos de cultos distantes. Na dúvida, deixe vazio ou solte só um rumor.
+    </FACÇÕES_DO_MUNDO>
+
     <REGRAS DE ATUAÇÃO - CRÍTICO>
     1. NÃO SEJA UMA WIKIPÉDIA. Você é uma pessoa limitada pela sua ocupação e local.
     2. FILTRO DE CONHECIMENTO: Ignore fatos do Contexto Externo que seu personagem não saberia (ex: um soldado não sabe magia antiga). Se não souber, invente rumores ou seja cínico.
@@ -179,17 +212,26 @@ def npc_actor_node(state: GameState):
         res = actor.invoke([system_msg] + messages[-5:])
         
         # Atualiza memória e relação (com guardas contra chaves ausentes)
+        turn = state.get('world', {}).get('turn_count', 0)
         npc_data['relationship'] = max(0, min(10, npc_data.get('relationship', 5) + res.relationship_change))
         npc_data.setdefault('memory', [])
-        npc_data['memory'].append(f"Turno {state.get('world', {}).get('turn_count', 0)}: {res.memory_update}")
-        
+        npc_data['memory'].append(f"Turno {turn}: {res.memory_update}")
+
         # Atualiza o estado global
         new_npcs = npcs_db.copy()
         new_npcs[npc_name] = npc_data
 
+        # Não-onisciência: o que o NPC contou vira conhecimento do jogador (Python grava).
+        intel = ensure_faction_intel(state.get("faction_intel"))
+        for rev in getattr(res, "faction_reveals", []) or []:
+            intel = apply_faction_reveal(
+                intel, factions, getattr(rev, "faction_id", ""), getattr(rev, "reveal_level", ""), turn
+            )
+
         return {
             "messages": [AIMessage(content=f"**{npc_data['name']}:** \"{res.dialogue}\"\n*({res.action_description})*")],
-            "npcs": new_npcs
+            "npcs": new_npcs,
+            "faction_intel": intel,
         }
     except Exception as e:
         print(f"Erro NPC Actor: {e}")

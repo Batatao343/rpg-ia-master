@@ -88,10 +88,11 @@ def save_game_state(state: Dict[str, Any]) -> bool:
             "party": state.get("party", []),
             "enemies": state.get("enemies", []),
             "factions": state.get("factions", []),
+            "faction_intel": state.get("faction_intel", {}),
             "npcs": state.get("npcs", {}),
             "inventory": state.get("inventory", []),
             "quests": state.get("quests", []),
-            "campaign_plan": state.get("campaign_plan", {}), 
+            "campaign_plan": state.get("campaign_plan", {}),
             
             # --- Histórico ---
             "message_history": _serialize_messages(state.get("messages", []))
@@ -137,6 +138,7 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
             "party": raw_data.get("party", []),
             "enemies": raw_data.get("enemies", []),
             "factions": raw_data.get("factions", []),
+            "faction_intel": raw_data.get("faction_intel", {}),
             "npcs": raw_data.get("npcs", {}),
             "inventory": raw_data.get("inventory", []),
             "quests": raw_data.get("quests", []),

@@ -97,6 +97,15 @@ class Faction(TypedDict, total=False):
     disposition: str          # "hostil" | "neutro" | "aliado" — postura geral no mundo
     reputation: int           # reputação do jogador com a facção (-100..100)
     completed: bool           # objetivo concluído (dispara evento de mundo)
+    defeated: bool            # eliminada por outra facção (Fase 2 — sai de jogo)
+
+
+class FactionIntel(TypedDict, total=False):
+    """O que o JOGADOR sabe sobre uma facção (não-onisciência). Chave = faction_id."""
+    known: bool               # existência revelada (só por NPC que sabe)
+    knows_goal: bool          # objetivo/plano revelado
+    progress_seen: int        # SNAPSHOT do progresso no momento em que soube (fica defasado)
+    intel_turn: int           # turno em que o snapshot foi obtido (p/ marcar defasagem)
 
 
 class CampaignBeat(TypedDict):
@@ -128,6 +137,7 @@ class GameState(TypedDict):
     enemies: List[EnemyStats]
     party: List[CompanionState]
     factions: List[Faction]  # Fase 2: fações com objetivos próprios (mundo vivo)
+    faction_intel: Dict[str, Dict]  # Fase 2: o que o jogador SABE de cada facção (não-onisciência)
     npcs: Dict[str, Dict]
     active_npc_name: Optional[str]
     active_plan_step: Optional[str]
