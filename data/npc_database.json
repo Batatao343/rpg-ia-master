@@ -1084,5 +1084,33 @@
             "hp": 12.0
         },
         "id": "npc_velho_caxias"
+    },
+    "npc_viciado_do_beco": {
+        "name": "Garrick \"O Desdentado\"",
+        "role": "Viciado em Pó de Sonho e Informante Desesperado",
+        "location": "O Beco dos Desdentados, O Anel de Lama (A Fossa), Nova Arcádia",
+        "persona": "Garrick vive em um estado constante de paranoia e euforia induzida pelo Pó de Sonho. Ele fala cuspindo, com uma pronúncia sibilante devido à falta de dentes. Ele é extremamente covarde, mas sua necessidade química o torna imprevisível; ele implorará, chorará ou tentará furtar qualquer um para conseguir uma pitada de pó. Ele frequentemente conversa com \"as sombras nas paredes\", que ele jura que são os espíritos dos dentes que ele vendeu para os necromantes da Fossa. Se receber uma dose de Pó de Sonho, ele se torna temporariamente lúcido e pode revelar segredos úteis sobre os becos.",
+        "appearance": "Extremamente magro, com a pele pálida e coberta por uma camada de sujeira e esporos cinzentos. Seus olhos estão sempre arregalados, com as pupilas dilatadas pela droga. A característica mais marcante é a sua boca: ele não possui um único dente, exibindo apenas gengivas cicatrizadas e ocasionalmente sangrentas. Veste trapos úmidos que cheiram a mofo e esgoto. Suas mãos tremem constantemente, os dedos calejados de tanto escavar a lama em busca de cogumelos caídos.",
+        "initial_relationship": 30,
+        "attributes": {
+            "int": 9,
+            "dex": 12,
+            "str": 7,
+            "cha": 5,
+            "wis": 6,
+            "con": 8
+        },
+        "combat_stats": {
+            "attacks": [
+                {
+                    "damage": "1d4-1 (perfurante/doença)",
+                    "description": "Adaga Enferrujada ou Unhas Sujas. Alvos atingidos devem passar num teste de Constituição (CD 10) ou contrair Febre da Lama.",
+                    "name": "Adaga Enferrujada / Unhas Sujas"
+                }
+            ],
+            "hp": 6.0,
+            "AC": 11.0
+        },
+        "id": "npc_viciado_do_beco"
     }
 }

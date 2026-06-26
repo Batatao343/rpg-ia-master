@@ -150,4 +150,5 @@ export interface LogEntry {
   text: string;
   role: "player" | "narrator";
   type: MessageType;
+  streaming?: boolean;  // true enquanto texto está sendo revelado (typewriter)
 }

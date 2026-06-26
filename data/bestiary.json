@@ -1487,5 +1487,60 @@
         "loot": [],
         "status": "ativo",
         "id": "enemy_esqueleto"
+    },
+    "enemy_garrick,_o_silenciador": {
+        "name": "Garrick, o Silenciador",
+        "description": "Garrick, o Silenciador, é um carrasco implacável que atua nas profundezas da Oubliette sob as ordens diretas d'O Cego. Ele veste uma túnica de couro escurecido e a tradicional máscara de madeira sem boca da seita do Silêncio. Garrick é o encarregado de caçar prisioneiros fugitivos ou heréticos que ousaram quebrar o silêncio sagrado. Ele se move como uma sombra e usa um garrote de aço para garantir que suas vítimas morram sem emitir um único sussurro.",
+        "type": "Humanoid (Human)",
+        "hp": 78,
+        "max_hp": 78,
+        "ac": 16,
+        "attacks": [
+            {
+                "name": "Garrote de Arame",
+                "type": "melee",
+                "bonus": 7,
+                "damage": "2d6+4 slashing",
+                "range": "5 ft.",
+                "save_dc": "DC 14 Dex"
+            },
+            {
+                "name": "Adaga Envenenada",
+                "type": "melee",
+                "bonus": 7,
+                "damage": "1d4+4 piercing",
+                "range": "5 ft.",
+                "save_dc": "DC 13 Con"
+            },
+            {
+                "name": "Besta de Mão Silenciosa",
+                "type": "ranged",
+                "bonus": 7,
+                "damage": "1d6+4 piercing",
+                "range": "30/120 ft.",
+                "save_dc": null
+            }
+        ],
+        "attributes": {
+            "int": 12,
+            "wis": 14,
+            "cha": 8,
+            "dex": 18,
+            "str": 14,
+            "con": 16
+        },
+        "abilities": [
+            "Aura de Silêncio: Uma aura de silêncio absoluto (como a magia silêncio) envolve Garrick em um raio de 3 metros. Nenhum som pode ser criado ou passar por essa área, impedindo conjurações com componentes verbais e qualquer tipo de grito ou alerta.",
+            "Passo Sombrio: Garrick tem vantagem em testes de Destreza (Furtividade) e pode tentar se esconder mesmo se estiver apenas parcialmente observado.",
+            "Sufocamento Ativo: Uma criatura agarrada pelo Garrote de Garrick não consegue respirar ou falar, começando a sufocar imediatamente (regras de asfixia rápida)."
+        ],
+        "loot": [
+            "Máscara de Madeira Sem Boca (Anula sons de respiração do usuário)",
+            "Garrote de Arame de Aço",
+            "Chaves de Ferro da Oubliette",
+            "2x Veneno de Contato (1d6 dano venenoso extra)"
+        ],
+        "status": "ativo",
+        "id": "enemy_garrick,_o_silenciador"
     }
 }

@@ -40,7 +40,22 @@ export function App() {
   function onTurn(r: GameResponse) {
     gameId.current = r.game_id || gameId.current;
     if (gameId.current) localStorage.setItem(LS_KEY, gameId.current);
-    pushLog(r.message, "narrator", r.message_type || "STORY");
+
+    // Cria entrada com streaming=true, que ativa efeito typewriter
+    setLog((prev) => [
+      ...prev,
+      { id: logSeq.current++, text: r.message, role: "narrator", type: r.message_type || "STORY", streaming: true }
+    ]);
+
+    // Após animação estar completa (300ms), finaliza a entrada
+    setTimeout(() => {
+      setLog((prev) => {
+        if (prev.length === 0) return prev;
+        const last = prev[prev.length - 1];
+        return [...prev.slice(0, -1), { ...last, streaming: false }];
+      });
+    }, 300);
+
     setData(r);
     if (r.simulated && !simNoticed.current) {
       simNoticed.current = true;

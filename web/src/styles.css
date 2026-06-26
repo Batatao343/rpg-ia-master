@@ -270,6 +270,14 @@ select {
 .msg--combat .msg__body strong { color: var(--danger-bright); }
 .msg--loot .msg__role { color: var(--accent); }
 
+/* cursor piscante durante typewriter */
+.msg__cursor {
+  display: inline-block; width: 0.16em; height: 1.1em;
+  margin-left: 0.08em; background: var(--accent);
+  vertical-align: -0.08em; animation: blink 1.1s step-start infinite;
+}
+@keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
 .thinking { max-width: var(--read); margin: 1.6rem auto 0; display: flex; align-items: center; gap: 0.4rem; color: var(--faint); font-size: 0.9rem; font-style: italic; }
 .thinking__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 1.1s var(--ease) infinite; }
 .thinking__dot:nth-child(2) { animation-delay: 0.18s; }

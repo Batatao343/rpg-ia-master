@@ -390,3 +390,7 @@ class MockLLM:
     def invoke(self, messages):
         # invoke "puro" (ex.: narrativa final do execute_engine): sem tool_calls
         return AIMessage(content=random.choice(_NARRATIVES).format(acao_eco=_acao_eco(messages)))
+
+    def stream(self, messages):
+        """Yield AIMessage para compatibilidade com chamadas streaming."""
+        yield self.invoke(messages)
