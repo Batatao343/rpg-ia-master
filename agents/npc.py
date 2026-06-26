@@ -76,7 +76,9 @@ def load_npc_db():
     if not os.path.exists(NPC_DB_FILE): return {}
     try:
         with open(NPC_DB_FILE, 'r', encoding='utf-8') as f: return json.load(f)
-    except: return {}
+    except Exception as e:
+        print(f"⚠️ [NPC DB] Falha ao ler {NPC_DB_FILE}: {e}")
+        return {}
 
 def save_npc_template(data):
     db = load_npc_db()
@@ -169,9 +171,8 @@ def npc_actor_node(state: GameState):
         npc_data.setdefault("relationship", 5)
         npc_data.setdefault("memory", [])
 
-    # Contexto RAG (Filtrado pelo Prompt)
+    # O NPC NÃO é uma wikipédia: age por persona + memória própria (sem dump de lore global).
     last_msg = messages[-1].content if messages else ""
-    lore = query_rag(last_msg, index_name="lore") if RAG_AVAILABLE else ""
 
     # Memória vetorizada DESTE npc: recupera por relevância o que viveu com o jogador
     # (além das 3 últimas linhas). Inerte sem chave (get_embeddings -> None).
@@ -208,10 +209,6 @@ def npc_actor_node(state: GameState):
     {relevant_memory or "—"}
     </MEMORIA_RELEVANTE>
 
-    <CONTEXTO_EXTERNO>
-    {lore}
-    </CONTEXTO_EXTERNO>
-
     <FACÇÕES_DO_MUNDO>
     {faccoes_mundo}
     Se — e SOMENTE se — seu personagem plausivelmente saber de uma destas facções (pela ocupação/local)
@@ -229,7 +226,7 @@ def npc_actor_node(state: GameState):
 
     try:
         actor = llm.with_structured_output(NPCResponse)
-        res = actor.invoke([system_msg] + messages[-5:])
+        res = actor.invoke([system_msg] + messages[-3:])
         
         # Atualiza memória e relação (com guardas contra chaves ausentes)
         turn = state.get('world', {}).get('turn_count', 0)
@@ -260,6 +257,7 @@ def npc_actor_node(state: GameState):
             "messages": [AIMessage(content=f"**{npc_data['name']}:** \"{res.dialogue}\"\n*({res.action_description})*")],
             "npcs": new_npcs,
             "faction_intel": intel,
+            "archive_due": True,  # conversa com NPC = evento relevante p/ o arquivista
         }
     except Exception as e:
         print(f"Erro NPC Actor: {e}")

@@ -1,562 +1,1088 @@
 {
-  "npc_lorde_valerius": {
-    "id": "npc_lorde_valerius",
-    "name": "Lorde Protetor Valerius",
-    "role": "Governante de Nova Arcádia",
-    "location": "Palácio de Obsidiana",
-    "persona": "Frio, calculista. Acredita que a liberdade é o caos. Vê humanos como gado a ser gerido.",
-    "appearance": "Armadura cerimonial negra impecável, cabelos grisalhos, olhos sem vida.",
-    "initial_relationship": 1,
-    "attributes": { "str": 18, "dex": 12, "con": 16, "int": 16, "wis": 14, "cha": 18 },
-    "combat_stats": {
-      "hp": 150,
-      "ac": 20,
-      "attacks": [{"name": "Lâmina da Lei", "bonus": 10, "damage": "2d6+5 slashing"}]
+    "npc_lorde_valerius": {
+        "id": "npc_lorde_valerius",
+        "name": "Lorde Protetor Valerius",
+        "role": "Governante de Nova Arcádia",
+        "location": "Palácio de Obsidiana",
+        "persona": "Frio, calculista. Acredita que a liberdade é o caos. Vê humanos como gado a ser gerido.",
+        "appearance": "Armadura cerimonial negra impecável, cabelos grisalhos, olhos sem vida.",
+        "initial_relationship": 1,
+        "attributes": {
+            "str": 18,
+            "dex": 12,
+            "con": 16,
+            "int": 16,
+            "wis": 14,
+            "cha": 18
+        },
+        "combat_stats": {
+            "hp": 150,
+            "ac": 20,
+            "attacks": [
+                {
+                    "name": "Lâmina da Lei",
+                    "bonus": 10,
+                    "damage": "2d6+5 slashing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_a_vibora": {
-    "id": "npc_a_vibora",
-    "name": "A Víbora",
-    "role": "Líder da Mão Sombria",
-    "location": "Esgotos / Beco do Sussurro",
-    "persona": "Indecifrável. Nunca ameaça, apenas promete consequências. Mestre dos segredos.",
-    "appearance": "Figura encapuzada de gênero e idade indefinidos. Usa luvas de couro fino.",
-    "initial_relationship": 3,
-    "attributes": { "str": 10, "dex": 20, "con": 14, "int": 18, "wis": 16, "cha": 16 },
-    "combat_stats": {
-      "hp": 85,
-      "ac": 18,
-      "attacks": [{"name": "Agulhas de Vidro", "bonus": 9, "damage": "1d4+6 piercing + poison"}]
+    "npc_a_vibora": {
+        "id": "npc_a_vibora",
+        "name": "A Víbora",
+        "role": "Líder da Mão Sombria",
+        "location": "Esgotos / Beco do Sussurro",
+        "persona": "Indecifrável. Nunca ameaça, apenas promete consequências. Mestre dos segredos.",
+        "appearance": "Figura encapuzada de gênero e idade indefinidos. Usa luvas de couro fino.",
+        "initial_relationship": 3,
+        "attributes": {
+            "str": 10,
+            "dex": 20,
+            "con": 14,
+            "int": 18,
+            "wis": 16,
+            "cha": 16
+        },
+        "combat_stats": {
+            "hp": 85,
+            "ac": 18,
+            "attacks": [
+                {
+                    "name": "Agulhas de Vidro",
+                    "bonus": 9,
+                    "damage": "1d4+6 piercing + poison"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_grum_taverneiro": {
-    "id": "npc_grum_taverneiro",
-    "name": "Grum",
-    "role": "Taverneiro do Dragão Bêbado",
-    "location": "Anel de Ferro",
-    "persona": "Cínico e prático. Odeia heróis, ama ouro. Ex-militar desiludido.",
-    "appearance": "Meio-orc maciço com metade do rosto queimado por ácido de dragão.",
-    "initial_relationship": 5,
-    "attributes": { "str": 18, "dex": 10, "con": 18, "int": 10, "wis": 14, "cha": 12 },
-    "combat_stats": {
-      "hp": 70,
-      "ac": 14,
-      "attacks": [{"name": "Quebra-Crânios (Clava)", "bonus": 7, "damage": "1d8+4 bludgeoning"}]
+    "npc_grum_taverneiro": {
+        "id": "npc_grum_taverneiro",
+        "name": "Grum",
+        "role": "Taverneiro do Dragão Bêbado",
+        "location": "Anel de Ferro",
+        "persona": "Cínico e prático. Odeia heróis, ama ouro. Ex-militar desiludido.",
+        "appearance": "Meio-orc maciço com metade do rosto queimado por ácido de dragão.",
+        "initial_relationship": 5,
+        "attributes": {
+            "str": 18,
+            "dex": 10,
+            "con": 18,
+            "int": 10,
+            "wis": 14,
+            "cha": 12
+        },
+        "combat_stats": {
+            "hp": 70,
+            "ac": 14,
+            "attacks": [
+                {
+                    "name": "Quebra-Crânios (Clava)",
+                    "bonus": 7,
+                    "damage": "1d8+4 bludgeoning"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_velha_magda": {
-    "id": "npc_velha_magda",
-    "name": "Velha Magda",
-    "role": "Informante (A Ratoeira)",
-    "location": "Anel de Lama",
-    "persona": "Finge demência para ser ignorada. Observadora afiada. Ex-sacerdotisa.",
-    "appearance": "Idosa curvada empurrando um carrinho de lixo fedorento.",
-    "initial_relationship": 4,
-    "attributes": { "str": 8, "dex": 10, "con": 8, "int": 16, "wis": 18, "cha": 14 },
-    "combat_stats": {
-      "hp": 20,
-      "ac": 10,
-      "attacks": [{"name": "Adaga Enferrujada", "bonus": 3, "damage": "1d4 poison"}]
+    "npc_velha_magda": {
+        "id": "npc_velha_magda",
+        "name": "Velha Magda",
+        "role": "Informante (A Ratoeira)",
+        "location": "Anel de Lama",
+        "persona": "Finge demência para ser ignorada. Observadora afiada. Ex-sacerdotisa.",
+        "appearance": "Idosa curvada empurrando um carrinho de lixo fedorento.",
+        "initial_relationship": 4,
+        "attributes": {
+            "str": 8,
+            "dex": 10,
+            "con": 8,
+            "int": 16,
+            "wis": 18,
+            "cha": 14
+        },
+        "combat_stats": {
+            "hp": 20,
+            "ac": 10,
+            "attacks": [
+                {
+                    "name": "Adaga Enferrujada",
+                    "bonus": 3,
+                    "damage": "1d4 poison"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_doutor_silas_vane": {
-    "id": "npc_doutor_silas_vane",
-    "name": "Doutor Silas Vane",
-    "role": "Médico Não-Licenciado",
-    "location": "Anel de Ferro (Clínica)",
-    "persona": "Amoral, científico, sádico. Odeia magia, confia no aço e na química.",
-    "appearance": "Avental de couro manchado de sangue seco, óculos de lentes grossas.",
-    "initial_relationship": 4,
-    "attributes": { "str": 10, "dex": 16, "con": 12, "int": 18, "wis": 10, "cha": 8 },
-    "combat_stats": {
-      "hp": 40,
-      "ac": 12,
-      "attacks": [{"name": "Serra de Ossos", "bonus": 4, "damage": "1d6+2 slashing"}]
+    "npc_doutor_silas_vane": {
+        "id": "npc_doutor_silas_vane",
+        "name": "Doutor Silas Vane",
+        "role": "Médico Não-Licenciado",
+        "location": "Anel de Ferro (Clínica)",
+        "persona": "Amoral, científico, sádico. Odeia magia, confia no aço e na química.",
+        "appearance": "Avental de couro manchado de sangue seco, óculos de lentes grossas.",
+        "initial_relationship": 4,
+        "attributes": {
+            "str": 10,
+            "dex": 16,
+            "con": 12,
+            "int": 18,
+            "wis": 10,
+            "cha": 8
+        },
+        "combat_stats": {
+            "hp": 40,
+            "ac": 12,
+            "attacks": [
+                {
+                    "name": "Serra de Ossos",
+                    "bonus": 4,
+                    "damage": "1d6+2 slashing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_o_cego": {
-    "id": "npc_o_cego",
-    "name": "O Cego",
-    "role": "Carcereiro do Oubliette",
-    "location": "Masmorras da Legião",
-    "persona": "Silencioso, implacável. Ouve batimentos cardíacos.",
-    "appearance": "Gigante humano com órbitas oculares costuradas. Mãos enormes.",
-    "initial_relationship": 0,
-    "attributes": { "str": 22, "dex": 8, "con": 20, "int": 6, "wis": 18, "cha": 6 },
-    "combat_stats": {
-      "hp": 120,
-      "ac": 14,
-      "attacks": [{"name": "Esmagar Pescoço", "bonus": 8, "damage": "2d8+6 bludgeoning"}]
+    "npc_o_cego": {
+        "id": "npc_o_cego",
+        "name": "O Cego",
+        "role": "Carcereiro do Oubliette",
+        "location": "Masmorras da Legião",
+        "persona": "Silencioso, implacável. Ouve batimentos cardíacos.",
+        "appearance": "Gigante humano com órbitas oculares costuradas. Mãos enormes.",
+        "initial_relationship": 0,
+        "attributes": {
+            "str": 22,
+            "dex": 8,
+            "con": 20,
+            "int": 6,
+            "wis": 18,
+            "cha": 6
+        },
+        "combat_stats": {
+            "hp": 120,
+            "ac": 14,
+            "attacks": [
+                {
+                    "name": "Esmagar Pescoço",
+                    "bonus": 8,
+                    "damage": "2d8+6 bludgeoning"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_capitao_darius": {
-    "id": "npc_capitao_darius",
-    "name": "Capitão Darius",
-    "role": "Oficial da Legião",
-    "location": "Portões da Cidade",
-    "persona": "Cansado, corrupto por necessidade, mas protege os seus.",
-    "appearance": "Armadura de placas amassada, capa vermelha desbotada.",
-    "initial_relationship": 4,
-    "attributes": { "str": 16, "dex": 10, "con": 16, "int": 12, "wis": 12, "cha": 14 },
-    "combat_stats": {
-      "hp": 65,
-      "ac": 18,
-      "attacks": [{"name": "Espada Bastarda", "bonus": 6, "damage": "1d10+3 slashing"}]
+    "npc_capitao_darius": {
+        "id": "npc_capitao_darius",
+        "name": "Capitão Darius",
+        "role": "Oficial da Legião",
+        "location": "Portões da Cidade",
+        "persona": "Cansado, corrupto por necessidade, mas protege os seus.",
+        "appearance": "Armadura de placas amassada, capa vermelha desbotada.",
+        "initial_relationship": 4,
+        "attributes": {
+            "str": 16,
+            "dex": 10,
+            "con": 16,
+            "int": 12,
+            "wis": 12,
+            "cha": 14
+        },
+        "combat_stats": {
+            "hp": 65,
+            "ac": 18,
+            "attacks": [
+                {
+                    "name": "Espada Bastarda",
+                    "bonus": 6,
+                    "damage": "1d10+3 slashing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_elara_sussurro": {
-    "id": "npc_elara_sussurro",
-    "name": "Elara Sussurro",
-    "role": "Espiã Freelancer",
-    "location": "Taverna do Gato Preto",
-    "persona": "Sedutora, perigosa, mercenária. Vende segredos caros.",
-    "appearance": "Mulher de beleza afiada, brinca constantemente com uma moeda.",
-    "initial_relationship": 5,
-    "attributes": { "str": 10, "dex": 16, "con": 12, "int": 14, "wis": 14, "cha": 16 },
-    "combat_stats": {
-      "hp": 35,
-      "ac": 15,
-      "attacks": [{"name": "Estilete Oculto", "bonus": 7, "damage": "1d4+4 piercing"}]
+    "npc_elara_sussurro": {
+        "id": "npc_elara_sussurro",
+        "name": "Elara Sussurro",
+        "role": "Espiã Freelancer",
+        "location": "Taverna do Gato Preto",
+        "persona": "Sedutora, perigosa, mercenária. Vende segredos caros.",
+        "appearance": "Mulher de beleza afiada, brinca constantemente com uma moeda.",
+        "initial_relationship": 5,
+        "attributes": {
+            "str": 10,
+            "dex": 16,
+            "con": 12,
+            "int": 14,
+            "wis": 14,
+            "cha": 16
+        },
+        "combat_stats": {
+            "hp": 35,
+            "ac": 15,
+            "attacks": [
+                {
+                    "name": "Estilete Oculto",
+                    "bonus": 7,
+                    "damage": "1d4+4 piercing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_korg_ferreiro": {
-    "id": "npc_korg_ferreiro",
-    "name": "Korg",
-    "role": "Ferreiro",
-    "location": "Distrito das Forjas",
-    "persona": "Lacônico, rabugento. Respeita apenas o trabalho duro.",
-    "appearance": "Anão coberto de fuligem, braços como troncos de árvore.",
-    "initial_relationship": 5,
-    "attributes": { "str": 18, "dex": 12, "con": 18, "int": 10, "wis": 12, "cha": 8 },
-    "combat_stats": {
-      "hp": 60,
-      "ac": 14,
-      "attacks": [{"name": "Martelo em Brasa", "bonus": 6, "damage": "1d8+4 bludgeoning"}]
+    "npc_korg_ferreiro": {
+        "id": "npc_korg_ferreiro",
+        "name": "Korg",
+        "role": "Ferreiro",
+        "location": "Distrito das Forjas",
+        "persona": "Lacônico, rabugento. Respeita apenas o trabalho duro.",
+        "appearance": "Anão coberto de fuligem, braços como troncos de árvore.",
+        "initial_relationship": 5,
+        "attributes": {
+            "str": 18,
+            "dex": 12,
+            "con": 18,
+            "int": 10,
+            "wis": 12,
+            "cha": 8
+        },
+        "combat_stats": {
+            "hp": 60,
+            "ac": 14,
+            "attacks": [
+                {
+                    "name": "Martelo em Brasa",
+                    "bonus": 6,
+                    "damage": "1d8+4 bludgeoning"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_lyra_sabia": {
-    "id": "npc_lyra_sabia",
-    "name": "Lyra, a Sábia",
-    "role": "Arcanista Cinzenta",
-    "location": "Torre de Estudos",
-    "persona": "Acadêmica distraída, fascinada pelo passado. Sofre dores de cabeça mágicas.",
-    "appearance": "Elfa idosa (raridade), pele rachando como porcelana.",
-    "initial_relationship": 6,
-    "attributes": { "str": 8, "dex": 12, "con": 10, "int": 18, "wis": 16, "cha": 10 },
-    "combat_stats": {
-      "hp": 25,
-      "ac": 11,
-      "attacks": [{"name": "Disparo de Força", "bonus": 6, "damage": "2d8 force"}]
+    "npc_lyra_sabia": {
+        "id": "npc_lyra_sabia",
+        "name": "Lyra, a Sábia",
+        "role": "Arcanista Cinzenta",
+        "location": "Torre de Estudos",
+        "persona": "Acadêmica distraída, fascinada pelo passado. Sofre dores de cabeça mágicas.",
+        "appearance": "Elfa idosa (raridade), pele rachando como porcelana.",
+        "initial_relationship": 6,
+        "attributes": {
+            "str": 8,
+            "dex": 12,
+            "con": 10,
+            "int": 18,
+            "wis": 16,
+            "cha": 10
+        },
+        "combat_stats": {
+            "hp": 25,
+            "ac": 11,
+            "attacks": [
+                {
+                    "name": "Disparo de Força",
+                    "bonus": 6,
+                    "damage": "2d8 force"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_varg_o_acougueiro": {
-    "id": "npc_varg_o_acougueiro",
-    "name": "Varg, o Açougueiro",
-    "role": "Mercador de Carnes",
-    "location": "Mercado Público",
-    "persona": "Jovial de forma perturbadora. Vende carnes 'especiais'.",
-    "appearance": "Avental manchado de sangue fresco, sorriso com dentes de ouro.",
-    "initial_relationship": 5,
-    "attributes": { "str": 16, "dex": 10, "con": 16, "int": 8, "wis": 10, "cha": 12 },
-    "combat_stats": {
-      "hp": 45,
-      "ac": 13,
-      "attacks": [{"name": "Cutelo Pesado", "bonus": 5, "damage": "1d8+3 slashing"}]
+    "npc_varg_o_acougueiro": {
+        "id": "npc_varg_o_acougueiro",
+        "name": "Varg, o Açougueiro",
+        "role": "Mercador de Carnes",
+        "location": "Mercado Público",
+        "persona": "Jovial de forma perturbadora. Vende carnes 'especiais'.",
+        "appearance": "Avental manchado de sangue fresco, sorriso com dentes de ouro.",
+        "initial_relationship": 5,
+        "attributes": {
+            "str": 16,
+            "dex": 10,
+            "con": 16,
+            "int": 8,
+            "wis": 10,
+            "cha": 12
+        },
+        "combat_stats": {
+            "hp": 45,
+            "ac": 13,
+            "attacks": [
+                {
+                    "name": "Cutelo Pesado",
+                    "bonus": 5,
+                    "damage": "1d8+3 slashing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_arquimago_solan": {
-    "id": "npc_arquimago_solan",
-    "name": "Solan",
-    "role": "Mago Recluso",
-    "location": "Torre Trancada",
-    "persona": "Paranóico, evita contato físico. Teme a corrupção do Éter.",
-    "appearance": "Manto coberto de runas e lentes flutuantes.",
-    "initial_relationship": 4,
-    "attributes": { "str": 8, "dex": 14, "con": 12, "int": 20, "wis": 14, "cha": 10 },
-    "combat_stats": {
-      "hp": 40,
-      "ac": 12,
-      "attacks": [{"name": "Mísseis Mágicos", "bonus": 0, "damage": "3d4+3 force"}]
+    "npc_arquimago_solan": {
+        "id": "npc_arquimago_solan",
+        "name": "Solan",
+        "role": "Mago Recluso",
+        "location": "Torre Trancada",
+        "persona": "Paranóico, evita contato físico. Teme a corrupção do Éter.",
+        "appearance": "Manto coberto de runas e lentes flutuantes.",
+        "initial_relationship": 4,
+        "attributes": {
+            "str": 8,
+            "dex": 14,
+            "con": 12,
+            "int": 20,
+            "wis": 14,
+            "cha": 10
+        },
+        "combat_stats": {
+            "hp": 40,
+            "ac": 12,
+            "attacks": [
+                {
+                    "name": "Mísseis Mágicos",
+                    "bonus": 0,
+                    "damage": "3d4+3 force"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_inquisidor_garret": {
-    "id": "npc_inquisidor_garret",
-    "name": "Garret",
-    "role": "Caçador de Magos",
-    "location": "Quartel da Inquisição",
-    "persona": "Fanático religioso. Vê bruxaria em tudo. Cruel.",
-    "appearance": "Armadura de ferro frio, olhar febril.",
-    "initial_relationship": 2,
-    "attributes": { "str": 16, "dex": 12, "con": 16, "int": 12, "wis": 16, "cha": 14 },
-    "combat_stats": {
-      "hp": 75,
-      "ac": 17,
-      "attacks": [{"name": "Espada Anuladora", "bonus": 7, "damage": "1d8+3 slashing"}]
+    "npc_inquisidor_garret": {
+        "id": "npc_inquisidor_garret",
+        "name": "Garret",
+        "role": "Caçador de Magos",
+        "location": "Quartel da Inquisição",
+        "persona": "Fanático religioso. Vê bruxaria em tudo. Cruel.",
+        "appearance": "Armadura de ferro frio, olhar febril.",
+        "initial_relationship": 2,
+        "attributes": {
+            "str": 16,
+            "dex": 12,
+            "con": 16,
+            "int": 12,
+            "wis": 16,
+            "cha": 14
+        },
+        "combat_stats": {
+            "hp": 75,
+            "ac": 17,
+            "attacks": [
+                {
+                    "name": "Espada Anuladora",
+                    "bonus": 7,
+                    "damage": "1d8+3 slashing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_thorgard_bjorn": {
-    "id": "npc_thorgard_bjorn",
-    "name": "Thorgard Quebra-Gelo",
-    "role": "Chefe Tribal Bjorn",
-    "location": "Ermo Branco (Norte)",
-    "persona": "Brutal, direto. Acredita apenas na força do osso e da carne.",
-    "appearance": "Gigante de 2 metros vestindo pele de urso polar.",
-    "initial_relationship": 3,
-    "attributes": { "str": 20, "dex": 10, "con": 20, "int": 8, "wis": 12, "cha": 14 },
-    "combat_stats": {
-      "hp": 90,
-      "ac": 15,
-      "attacks": [{"name": "Machado de Osso", "bonus": 8, "damage": "1d12+5 slashing"}]
+    "npc_thorgard_bjorn": {
+        "id": "npc_thorgard_bjorn",
+        "name": "Thorgard Quebra-Gelo",
+        "role": "Chefe Tribal Bjorn",
+        "location": "Ermo Branco (Norte)",
+        "persona": "Brutal, direto. Acredita apenas na força do osso e da carne.",
+        "appearance": "Gigante de 2 metros vestindo pele de urso polar.",
+        "initial_relationship": 3,
+        "attributes": {
+            "str": 20,
+            "dex": 10,
+            "con": 20,
+            "int": 8,
+            "wis": 12,
+            "cha": 14
+        },
+        "combat_stats": {
+            "hp": 90,
+            "ac": 15,
+            "attacks": [
+                {
+                    "name": "Machado de Osso",
+                    "bonus": 8,
+                    "damage": "1d12+5 slashing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_sultao_zafir": {
-    "id": "npc_sultao_zafir",
-    "name": "Sultão Zafir",
-    "role": "Tirano de Zhur",
-    "location": "Palácio de Vidro (Deserto)",
-    "persona": "Hedonista, arrogante. Controla a água e a vida.",
-    "appearance": "Obeso, coberto de sedas e joias, pele oleosa.",
-    "initial_relationship": 2,
-    "attributes": { "str": 12, "dex": 10, "con": 14, "int": 14, "wis": 12, "cha": 16 },
-    "combat_stats": {
-      "hp": 50,
-      "ac": 12,
-      "attacks": [{"name": "Cimitarra de Ouro", "bonus": 4, "damage": "1d6+2 slashing"}]
+    "npc_sultao_zafir": {
+        "id": "npc_sultao_zafir",
+        "name": "Sultão Zafir",
+        "role": "Tirano de Zhur",
+        "location": "Palácio de Vidro (Deserto)",
+        "persona": "Hedonista, arrogante. Controla a água e a vida.",
+        "appearance": "Obeso, coberto de sedas e joias, pele oleosa.",
+        "initial_relationship": 2,
+        "attributes": {
+            "str": 12,
+            "dex": 10,
+            "con": 14,
+            "int": 14,
+            "wis": 12,
+            "cha": 16
+        },
+        "combat_stats": {
+            "hp": 50,
+            "ac": 12,
+            "attacks": [
+                {
+                    "name": "Cimitarra de Ouro",
+                    "bonus": 4,
+                    "damage": "1d6+2 slashing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_malu_recife": {
-    "id": "npc_malu_recife",
-    "name": "Malu",
-    "role": "Comerciante do Povo-Recife",
-    "location": "Porto Clandestino",
-    "persona": "Estranha, voz gorgolejante. Troca pérolas por aço.",
-    "appearance": "Metade do rosto coberta por cracas e coral vivo.",
-    "initial_relationship": 5,
-    "attributes": { "str": 14, "dex": 12, "con": 16, "int": 10, "wis": 12, "cha": 8 },
-    "combat_stats": {
-      "hp": 50,
-      "ac": 18,
-      "attacks": [{"name": "Arpão de Osso", "bonus": 5, "damage": "1d8+3 piercing"}]
+    "npc_malu_recife": {
+        "id": "npc_malu_recife",
+        "name": "Malu",
+        "role": "Comerciante do Povo-Recife",
+        "location": "Porto Clandestino",
+        "persona": "Estranha, voz gorgolejante. Troca pérolas por aço.",
+        "appearance": "Metade do rosto coberta por cracas e coral vivo.",
+        "initial_relationship": 5,
+        "attributes": {
+            "str": 14,
+            "dex": 12,
+            "con": 16,
+            "int": 10,
+            "wis": 12,
+            "cha": 8
+        },
+        "combat_stats": {
+            "hp": 50,
+            "ac": 18,
+            "attacks": [
+                {
+                    "name": "Arpão de Osso",
+                    "bonus": 5,
+                    "damage": "1d8+3 piercing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_xartok_cinzeu": {
-    "id": "npc_xartok_cinzeu",
-    "name": "Xar'Tok",
-    "role": "Guia Cinzéu",
-    "location": "Túneis Profundos",
-    "persona": "Silencioso, comunica-se por estalos. Pragmático.",
-    "appearance": "Humanoide cinza sem olhos, movimentos fluidos.",
-    "initial_relationship": 4,
-    "attributes": { "str": 12, "dex": 18, "con": 14, "int": 10, "wis": 16, "cha": 6 },
-    "combat_stats": {
-      "hp": 40,
-      "ac": 16,
-      "attacks": [{"name": "Adagas de Pedra", "bonus": 6, "damage": "1d4+4 piercing"}]
+    "npc_xartok_cinzeu": {
+        "id": "npc_xartok_cinzeu",
+        "name": "Xar'Tok",
+        "role": "Guia Cinzéu",
+        "location": "Túneis Profundos",
+        "persona": "Silencioso, comunica-se por estalos. Pragmático.",
+        "appearance": "Humanoide cinza sem olhos, movimentos fluidos.",
+        "initial_relationship": 4,
+        "attributes": {
+            "str": 12,
+            "dex": 18,
+            "con": 14,
+            "int": 10,
+            "wis": 16,
+            "cha": 6
+        },
+        "combat_stats": {
+            "hp": 40,
+            "ac": 16,
+            "attacks": [
+                {
+                    "name": "Adagas de Pedra",
+                    "bonus": 6,
+                    "damage": "1d4+4 piercing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_corvus_guilda": {
-    "id": "npc_corvus_guilda",
-    "name": "Corvus",
-    "role": "Mestre da Guilda dos Corvos",
-    "location": "Crematórios",
-    "persona": "Mórbido, profissional. Não julga, apenas queima.",
-    "appearance": "Manto de couro preto, máscara de médico da peste.",
-    "initial_relationship": 5,
-    "attributes": { "str": 12, "dex": 14, "con": 14, "int": 14, "wis": 16, "cha": 10 },
-    "combat_stats": {
-      "hp": 55,
-      "ac": 14,
-      "attacks": [{"name": "Foice de Mão", "bonus": 5, "damage": "1d6+3 slashing"}]
+    "npc_corvus_guilda": {
+        "id": "npc_corvus_guilda",
+        "name": "Corvus",
+        "role": "Mestre da Guilda dos Corvos",
+        "location": "Crematórios",
+        "persona": "Mórbido, profissional. Não julga, apenas queima.",
+        "appearance": "Manto de couro preto, máscara de médico da peste.",
+        "initial_relationship": 5,
+        "attributes": {
+            "str": 12,
+            "dex": 14,
+            "con": 14,
+            "int": 14,
+            "wis": 16,
+            "cha": 10
+        },
+        "combat_stats": {
+            "hp": 55,
+            "ac": 14,
+            "attacks": [
+                {
+                    "name": "Foice de Mão",
+                    "bonus": 5,
+                    "damage": "1d6+3 slashing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_kaelen_bardo": {
-    "id": "npc_kaelen_bardo",
-    "name": "Kaelen",
-    "role": "Bardo da Melancolia",
-    "location": "Itinerante",
-    "persona": "Poético, triste. Canta a glória do passado.",
-    "appearance": "Jovem pálido com alaúde de madeira escura.",
-    "initial_relationship": 6,
-    "attributes": { "str": 10, "dex": 14, "con": 10, "int": 12, "wis": 14, "cha": 16 },
-    "combat_stats": {
-      "hp": 30,
-      "ac": 12,
-      "attacks": [{"name": "Floreio de Lâmina", "bonus": 4, "damage": "1d8+2 piercing"}]
+    "npc_kaelen_bardo": {
+        "id": "npc_kaelen_bardo",
+        "name": "Kaelen",
+        "role": "Bardo da Melancolia",
+        "location": "Itinerante",
+        "persona": "Poético, triste. Canta a glória do passado.",
+        "appearance": "Jovem pálido com alaúde de madeira escura.",
+        "initial_relationship": 6,
+        "attributes": {
+            "str": 10,
+            "dex": 14,
+            "con": 10,
+            "int": 12,
+            "wis": 14,
+            "cha": 16
+        },
+        "combat_stats": {
+            "hp": 30,
+            "ac": 12,
+            "attacks": [
+                {
+                    "name": "Floreio de Lâmina",
+                    "bonus": 4,
+                    "damage": "1d8+2 piercing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_fenrir_cacador": {
-    "id": "npc_fenrir_cacador",
-    "name": "Fenrir",
-    "role": "Caçador de Monstros",
-    "location": "Cabana na Floresta",
-    "persona": "Solitário, paranóico. Especialista em bestas.",
-    "appearance": "Cabelos desgrenhados, cicatrizes de garras no peito.",
-    "initial_relationship": 4,
-    "attributes": { "str": 14, "dex": 16, "con": 14, "int": 10, "wis": 16, "cha": 8 },
-    "combat_stats": {
-      "hp": 50,
-      "ac": 14,
-      "attacks": [{"name": "Besta Pesada", "bonus": 6, "damage": "1d10+2 piercing"}]
+    "npc_fenrir_cacador": {
+        "id": "npc_fenrir_cacador",
+        "name": "Fenrir",
+        "role": "Caçador de Monstros",
+        "location": "Cabana na Floresta",
+        "persona": "Solitário, paranóico. Especialista em bestas.",
+        "appearance": "Cabelos desgrenhados, cicatrizes de garras no peito.",
+        "initial_relationship": 4,
+        "attributes": {
+            "str": 14,
+            "dex": 16,
+            "con": 14,
+            "int": 10,
+            "wis": 16,
+            "cha": 8
+        },
+        "combat_stats": {
+            "hp": 50,
+            "ac": 14,
+            "attacks": [
+                {
+                    "name": "Besta Pesada",
+                    "bonus": 6,
+                    "damage": "1d10+2 piercing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_lady_isolde": {
-    "id": "npc_lady_isolde",
-    "name": "Lady Isolde",
-    "role": "Nobre Decadente",
-    "location": "Jardins Suspensos",
-    "persona": "Viciada em Lótus, alheia à realidade. Compra pessoas.",
-    "appearance": "Vestido de seda sujo na bainha, leque de penas.",
-    "initial_relationship": 5,
-    "attributes": { "str": 8, "dex": 10, "con": 8, "int": 10, "wis": 8, "cha": 14 },
-    "combat_stats": {
-      "hp": 15,
-      "ac": 10,
-      "attacks": [{"name": "Grito de Guarda", "bonus": 0, "damage": "Invoca aliados"}]
+    "npc_lady_isolde": {
+        "id": "npc_lady_isolde",
+        "name": "Lady Isolde",
+        "role": "Nobre Decadente",
+        "location": "Jardins Suspensos",
+        "persona": "Viciada em Lótus, alheia à realidade. Compra pessoas.",
+        "appearance": "Vestido de seda sujo na bainha, leque de penas.",
+        "initial_relationship": 5,
+        "attributes": {
+            "str": 8,
+            "dex": 10,
+            "con": 8,
+            "int": 10,
+            "wis": 8,
+            "cha": 14
+        },
+        "combat_stats": {
+            "hp": 15,
+            "ac": 10,
+            "attacks": [
+                {
+                    "name": "Grito de Guarda",
+                    "bonus": 0,
+                    "damage": "Invoca aliados"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_rashid_guia": {
-    "id": "npc_rashid_guia",
-    "name": "Rashid",
-    "role": "Guia do Deserto",
-    "location": "Borda de Zhur",
-    "persona": "Supersticioso, cauteloso. Teme os cristais.",
-    "appearance": "Envolto em panos brancos, óculos de obsidiana.",
-    "initial_relationship": 5,
-    "attributes": { "str": 12, "dex": 14, "con": 14, "int": 10, "wis": 16, "cha": 10 },
-    "combat_stats": {
-      "hp": 30,
-      "ac": 13,
-      "attacks": [{"name": "Lança Longa", "bonus": 4, "damage": "1d8+2 piercing"}]
+    "npc_rashid_guia": {
+        "id": "npc_rashid_guia",
+        "name": "Rashid",
+        "role": "Guia do Deserto",
+        "location": "Borda de Zhur",
+        "persona": "Supersticioso, cauteloso. Teme os cristais.",
+        "appearance": "Envolto em panos brancos, óculos de obsidiana.",
+        "initial_relationship": 5,
+        "attributes": {
+            "str": 12,
+            "dex": 14,
+            "con": 14,
+            "int": 10,
+            "wis": 16,
+            "cha": 10
+        },
+        "combat_stats": {
+            "hp": 30,
+            "ac": 13,
+            "attacks": [
+                {
+                    "name": "Lança Longa",
+                    "bonus": 4,
+                    "damage": "1d8+2 piercing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_jarek_mendigo": {
-    "id": "npc_jarek_mendigo",
-    "name": "Jarek",
-    "role": "Profeta Louco",
-    "location": "Beco dos Desdentados",
-    "persona": "Delirante, viciado em Pó de Sonho. Fala profecias reais.",
-    "appearance": "Trapos imundos, tremedeira constante.",
-    "initial_relationship": 5,
-    "attributes": { "str": 8, "dex": 10, "con": 10, "int": 8, "wis": 18, "cha": 8 },
-    "combat_stats": {
-      "hp": 10,
-      "ac": 9,
-      "attacks": [{"name": "Mordida", "bonus": 2, "damage": "1d4 piercing"}]
+    "npc_jarek_mendigo": {
+        "id": "npc_jarek_mendigo",
+        "name": "Jarek",
+        "role": "Profeta Louco",
+        "location": "Beco dos Desdentados",
+        "persona": "Delirante, viciado em Pó de Sonho. Fala profecias reais.",
+        "appearance": "Trapos imundos, tremedeira constante.",
+        "initial_relationship": 5,
+        "attributes": {
+            "str": 8,
+            "dex": 10,
+            "con": 10,
+            "int": 8,
+            "wis": 18,
+            "cha": 8
+        },
+        "combat_stats": {
+            "hp": 10,
+            "ac": 9,
+            "attacks": [
+                {
+                    "name": "Mordida",
+                    "bonus": 2,
+                    "damage": "1d4 piercing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_mina_florista": {
-    "id": "npc_mina_florista",
-    "name": "Mina",
-    "role": "Florista / Envenenadora",
-    "location": "Mercado das Flores",
-    "persona": "Doce na superfície, letal nos bastidores.",
-    "appearance": "Jovem sorridente, mãos manchadas de verde.",
-    "initial_relationship": 5,
-    "attributes": { "str": 8, "dex": 12, "con": 10, "int": 14, "wis": 12, "cha": 14 },
-    "combat_stats": {
-      "hp": 15,
-      "ac": 10,
-      "attacks": [{"name": "Spray de Pimenta", "bonus": 4, "damage": "Cegueira"}]
+    "npc_mina_florista": {
+        "id": "npc_mina_florista",
+        "name": "Mina",
+        "role": "Florista / Envenenadora",
+        "location": "Mercado das Flores",
+        "persona": "Doce na superfície, letal nos bastidores.",
+        "appearance": "Jovem sorridente, mãos manchadas de verde.",
+        "initial_relationship": 5,
+        "attributes": {
+            "str": 8,
+            "dex": 12,
+            "con": 10,
+            "int": 14,
+            "wis": 12,
+            "cha": 14
+        },
+        "combat_stats": {
+            "hp": 15,
+            "ac": 10,
+            "attacks": [
+                {
+                    "name": "Spray de Pimenta",
+                    "bonus": 4,
+                    "damage": "Cegueira"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_colecionador": {
-    "id": "npc_colecionador",
-    "name": "O Colecionador",
-    "role": "Mercador Interplanar",
-    "location": "Aleatório",
-    "persona": "Não quer ouro, quer memórias. Fala por enigmas.",
-    "appearance": "Sedas coloridas rasgadas, seis dedos em cada mão.",
-    "initial_relationship": 5,
-    "attributes": { "str": 14, "dex": 14, "con": 14, "int": 20, "wis": 18, "cha": 16 },
-    "combat_stats": {
-      "hp": 200,
-      "ac": 15,
-      "attacks": [{"name": "Toque do Esquecimento", "bonus": 8, "damage": "3d6 psychic"}]
+    "npc_colecionador": {
+        "id": "npc_colecionador",
+        "name": "O Colecionador",
+        "role": "Mercador Interplanar",
+        "location": "Aleatório",
+        "persona": "Não quer ouro, quer memórias. Fala por enigmas.",
+        "appearance": "Sedas coloridas rasgadas, seis dedos em cada mão.",
+        "initial_relationship": 5,
+        "attributes": {
+            "str": 14,
+            "dex": 14,
+            "con": 14,
+            "int": 20,
+            "wis": 18,
+            "cha": 16
+        },
+        "combat_stats": {
+            "hp": 200,
+            "ac": 15,
+            "attacks": [
+                {
+                    "name": "Toque do Esquecimento",
+                    "bonus": 8,
+                    "damage": "3d6 psychic"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_irmao_kaleb": {
-    "id": "npc_irmao_kaleb",
-    "name": "Irmão Kaleb",
-    "role": "Cultista da Chama Azul",
-    "location": "Esgotos",
-    "persona": "Intenso, fanático. Cicatrizes de queimadura na boca.",
-    "appearance": "Manto chamuscado, cheiro de enxofre.",
-    "initial_relationship": 2,
-    "attributes": { "str": 12, "dex": 12, "con": 14, "int": 10, "wis": 8, "cha": 14 },
-    "combat_stats": {
-      "hp": 40,
-      "ac": 12,
-      "attacks": [{"name": "Tocha", "bonus": 4, "damage": "1d6 fire"}]
+    "npc_irmao_kaleb": {
+        "id": "npc_irmao_kaleb",
+        "name": "Irmão Kaleb",
+        "role": "Cultista da Chama Azul",
+        "location": "Esgotos",
+        "persona": "Intenso, fanático. Cicatrizes de queimadura na boca.",
+        "appearance": "Manto chamuscado, cheiro de enxofre.",
+        "initial_relationship": 2,
+        "attributes": {
+            "str": 12,
+            "dex": 12,
+            "con": 14,
+            "int": 10,
+            "wis": 8,
+            "cha": 14
+        },
+        "combat_stats": {
+            "hp": 40,
+            "ac": 12,
+            "attacks": [
+                {
+                    "name": "Tocha",
+                    "bonus": 4,
+                    "damage": "1d6 fire"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_vex_ladrao": {
-    "id": "npc_vex_ladrao",
-    "name": "Vex",
-    "role": "Tenente dos Ladrões",
-    "location": "Telhados",
-    "persona": "Arrogante, ágil. Gosta de apostas.",
-    "appearance": "Roupas escuras ajustadas, brinca com moeda.",
-    "initial_relationship": 4,
-    "attributes": { "str": 10, "dex": 18, "con": 12, "int": 14, "wis": 12, "cha": 14 },
-    "combat_stats": {
-      "hp": 45,
-      "ac": 16,
-      "attacks": [{"name": "Besta de Mão", "bonus": 7, "damage": "1d6+4 piercing"}]
+    "npc_vex_ladrao": {
+        "id": "npc_vex_ladrao",
+        "name": "Vex",
+        "role": "Tenente dos Ladrões",
+        "location": "Telhados",
+        "persona": "Arrogante, ágil. Gosta de apostas.",
+        "appearance": "Roupas escuras ajustadas, brinca com moeda.",
+        "initial_relationship": 4,
+        "attributes": {
+            "str": 10,
+            "dex": 18,
+            "con": 12,
+            "int": 14,
+            "wis": 12,
+            "cha": 14
+        },
+        "combat_stats": {
+            "hp": 45,
+            "ac": 16,
+            "attacks": [
+                {
+                    "name": "Besta de Mão",
+                    "bonus": 7,
+                    "damage": "1d6+4 piercing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_decompositor": {
-    "id": "npc_decompositor",
-    "name": "O Decompositor",
-    "role": "Druida do Ciclo",
-    "location": "Floresta dos Sussurros",
-    "persona": "Acredita que a morte é limpeza. Controla fungos.",
-    "appearance": "Vestes de fibras mortas, coberto de musgo.",
-    "initial_relationship": 4,
-    "attributes": { "str": 10, "dex": 12, "con": 16, "int": 12, "wis": 18, "cha": 8 },
-    "combat_stats": {
-      "hp": 50,
-      "ac": 13,
-      "attacks": [{"name": "Toque Podre", "bonus": 5, "damage": "2d6 necrotic"}]
+    "npc_decompositor": {
+        "id": "npc_decompositor",
+        "name": "O Decompositor",
+        "role": "Druida do Ciclo",
+        "location": "Floresta dos Sussurros",
+        "persona": "Acredita que a morte é limpeza. Controla fungos.",
+        "appearance": "Vestes de fibras mortas, coberto de musgo.",
+        "initial_relationship": 4,
+        "attributes": {
+            "str": 10,
+            "dex": 12,
+            "con": 16,
+            "int": 12,
+            "wis": 18,
+            "cha": 8
+        },
+        "combat_stats": {
+            "hp": 50,
+            "ac": 13,
+            "attacks": [
+                {
+                    "name": "Toque Podre",
+                    "bonus": 5,
+                    "damage": "2d6 necrotic"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_guardiao_farol": {
-    "id": "npc_guardiao_farol",
-    "name": "Guardião Silencioso",
-    "role": "Vigia do Farol",
-    "location": "Norte Extremo",
-    "persona": "Mudo, imortal. Mata invasores.",
-    "appearance": "Armadura coberta de gelo eterno, olhos azuis brilhantes.",
-    "initial_relationship": 0,
-    "attributes": { "str": 20, "dex": 10, "con": 22, "int": 10, "wis": 14, "cha": 6 },
-    "combat_stats": {
-      "hp": 120,
-      "ac": 19,
-      "attacks": [{"name": "Espada de Gelo", "bonus": 9, "damage": "2d8+5 slashing"}]
+    "npc_guardiao_farol": {
+        "id": "npc_guardiao_farol",
+        "name": "Guardião Silencioso",
+        "role": "Vigia do Farol",
+        "location": "Norte Extremo",
+        "persona": "Mudo, imortal. Mata invasores.",
+        "appearance": "Armadura coberta de gelo eterno, olhos azuis brilhantes.",
+        "initial_relationship": 0,
+        "attributes": {
+            "str": 20,
+            "dex": 10,
+            "con": 22,
+            "int": 10,
+            "wis": 14,
+            "cha": 6
+        },
+        "combat_stats": {
+            "hp": 120,
+            "ac": 19,
+            "attacks": [
+                {
+                    "name": "Espada de Gelo",
+                    "bonus": 9,
+                    "damage": "2d8+5 slashing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_zara_dancarina": {
-    "id": "npc_zara_dancarina",
-    "name": "Zara",
-    "role": "Dançarina de Lâminas",
-    "location": "Zhur",
-    "persona": "Graciosa e letal. Assassina de aluguel.",
-    "appearance": "Véus translúcidos, cimitarras duplas.",
-    "initial_relationship": 4,
-    "attributes": { "str": 10, "dex": 18, "con": 12, "int": 10, "wis": 12, "cha": 16 },
-    "combat_stats": {
-      "hp": 40,
-      "ac": 16,
-      "attacks": [{"name": "Dança das Lâminas", "bonus": 7, "damage": "1d6+4 slashing"}]
+    "npc_zara_dancarina": {
+        "id": "npc_zara_dancarina",
+        "name": "Zara",
+        "role": "Dançarina de Lâminas",
+        "location": "Zhur",
+        "persona": "Graciosa e letal. Assassina de aluguel.",
+        "appearance": "Véus translúcidos, cimitarras duplas.",
+        "initial_relationship": 4,
+        "attributes": {
+            "str": 10,
+            "dex": 18,
+            "con": 12,
+            "int": 10,
+            "wis": 12,
+            "cha": 16
+        },
+        "combat_stats": {
+            "hp": 40,
+            "ac": 16,
+            "attacks": [
+                {
+                    "name": "Dança das Lâminas",
+                    "bonus": 7,
+                    "damage": "1d6+4 slashing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_crag_caranguejeiro": {
-    "id": "npc_crag_caranguejeiro",
-    "name": "Crag",
-    "role": "Catador de Carcaças",
-    "location": "Cemitério de Leviatãs",
-    "persona": "Resiliente, cheira a óleo de baleia. Sobrevivente.",
-    "appearance": "Usa armadura feita de carapaça de caranguejo.",
-    "initial_relationship": 5,
-    "attributes": { "str": 16, "dex": 10, "con": 16, "int": 8, "wis": 14, "cha": 8 },
-    "combat_stats": {
-      "hp": 45,
-      "ac": 15,
-      "attacks": [{"name": "Gancho de Abate", "bonus": 6, "damage": "1d8+3 piercing"}]
+    "npc_crag_caranguejeiro": {
+        "id": "npc_crag_caranguejeiro",
+        "name": "Crag",
+        "role": "Catador de Carcaças",
+        "location": "Cemitério de Leviatãs",
+        "persona": "Resiliente, cheira a óleo de baleia. Sobrevivente.",
+        "appearance": "Usa armadura feita de carapaça de caranguejo.",
+        "initial_relationship": 5,
+        "attributes": {
+            "str": 16,
+            "dex": 10,
+            "con": 16,
+            "int": 8,
+            "wis": 14,
+            "cha": 8
+        },
+        "combat_stats": {
+            "hp": 45,
+            "ac": 15,
+            "attacks": [
+                {
+                    "name": "Gancho de Abate",
+                    "bonus": 6,
+                    "damage": "1d8+3 piercing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_madame_zora": {
-    "id": "npc_madame_zora",
-    "name": "Madame Zora",
-    "role": "Vidente",
-    "location": "Tenda no Anel de Lama",
-    "persona": "Dramática, mística. Conselhos reais entre charlatanismo.",
-    "appearance": "Xales coloridos, bola de cristal rachada.",
-    "initial_relationship": 5,
-    "attributes": { "str": 8, "dex": 10, "con": 10, "int": 12, "wis": 16, "cha": 16 },
-    "combat_stats": {
-      "hp": 20,
-      "ac": 10,
-      "attacks": [{"name": "Olhar Hipnótico", "bonus": 0, "damage": "Stun"}]
+    "npc_madame_zora": {
+        "id": "npc_madame_zora",
+        "name": "Madame Zora",
+        "role": "Vidente",
+        "location": "Tenda no Anel de Lama",
+        "persona": "Dramática, mística. Conselhos reais entre charlatanismo.",
+        "appearance": "Xales coloridos, bola de cristal rachada.",
+        "initial_relationship": 5,
+        "attributes": {
+            "str": 8,
+            "dex": 10,
+            "con": 10,
+            "int": 12,
+            "wis": 16,
+            "cha": 16
+        },
+        "combat_stats": {
+            "hp": 20,
+            "ac": 10,
+            "attacks": [
+                {
+                    "name": "Olhar Hipnótico",
+                    "bonus": 0,
+                    "damage": "Stun"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_padre_eldric": {
-    "id": "npc_padre_eldric",
-    "name": "Eldric",
-    "role": "Padre das Ruínas",
-    "location": "Catedral Afundada",
-    "persona": "Gentil, cansado. Cuida dos leprosos.",
-    "appearance": "Batina surrada, mãos calejadas.",
-    "initial_relationship": 6,
-    "attributes": { "str": 10, "dex": 10, "con": 12, "int": 12, "wis": 16, "cha": 14 },
-    "combat_stats": {
-      "hp": 30,
-      "ac": 11,
-      "attacks": [{"name": "Cajado", "bonus": 2, "damage": "1d6 bludgeoning"}]
+    "npc_padre_eldric": {
+        "id": "npc_padre_eldric",
+        "name": "Eldric",
+        "role": "Padre das Ruínas",
+        "location": "Catedral Afundada",
+        "persona": "Gentil, cansado. Cuida dos leprosos.",
+        "appearance": "Batina surrada, mãos calejadas.",
+        "initial_relationship": 6,
+        "attributes": {
+            "str": 10,
+            "dex": 10,
+            "con": 12,
+            "int": 12,
+            "wis": 16,
+            "cha": 14
+        },
+        "combat_stats": {
+            "hp": 30,
+            "ac": 11,
+            "attacks": [
+                {
+                    "name": "Cajado",
+                    "bonus": 2,
+                    "damage": "1d6 bludgeoning"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_yussuf_nomade": {
-    "id": "npc_yussuf_nomade",
-    "name": "Yussuf",
-    "role": "Mercador Nômade",
-    "location": "Estrada do Sul",
-    "persona": "Hospitaleiro, negociante nato. Vende relíquias.",
-    "appearance": "Turbante azul, camelo carregado de tapetes.",
-    "initial_relationship": 5,
-    "attributes": { "str": 12, "dex": 12, "con": 12, "int": 14, "wis": 14, "cha": 16 },
-    "combat_stats": {
-      "hp": 35,
-      "ac": 12,
-      "attacks": [{"name": "Adaga Curva", "bonus": 4, "damage": "1d4+2 slashing"}]
+    "npc_yussuf_nomade": {
+        "id": "npc_yussuf_nomade",
+        "name": "Yussuf",
+        "role": "Mercador Nômade",
+        "location": "Estrada do Sul",
+        "persona": "Hospitaleiro, negociante nato. Vende relíquias.",
+        "appearance": "Turbante azul, camelo carregado de tapetes.",
+        "initial_relationship": 5,
+        "attributes": {
+            "str": 12,
+            "dex": 12,
+            "con": 12,
+            "int": 14,
+            "wis": 14,
+            "cha": 16
+        },
+        "combat_stats": {
+            "hp": 35,
+            "ac": 12,
+            "attacks": [
+                {
+                    "name": "Adaga Curva",
+                    "bonus": 4,
+                    "damage": "1d4+2 slashing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  },
-  "npc_general_krell": {
-    "id": "npc_general_krell",
-    "name": "General Krell",
-    "role": "Líder Invasor Orc",
-    "location": "Fronteira Leste",
-    "persona": "Estrategista, impiedoso. Quer conquistar a cidade.",
-    "appearance": "Orc de armadura completa vermelha, cicatriz no pescoço.",
-    "initial_relationship": 0,
-    "attributes": { "str": 20, "dex": 12, "con": 18, "int": 14, "wis": 12, "cha": 16 },
-    "combat_stats": {
-      "hp": 110,
-      "ac": 18,
-      "attacks": [{"name": "Espada Larga de Sangue", "bonus": 9, "damage": "2d6+5 slashing"}]
+    "npc_general_krell": {
+        "id": "npc_general_krell",
+        "name": "General Krell",
+        "role": "Líder Invasor Orc",
+        "location": "Fronteira Leste",
+        "persona": "Estrategista, impiedoso. Quer conquistar a cidade.",
+        "appearance": "Orc de armadura completa vermelha, cicatriz no pescoço.",
+        "initial_relationship": 0,
+        "attributes": {
+            "str": 20,
+            "dex": 12,
+            "con": 18,
+            "int": 14,
+            "wis": 12,
+            "cha": 16
+        },
+        "combat_stats": {
+            "hp": 110,
+            "ac": 18,
+            "attacks": [
+                {
+                    "name": "Espada Larga de Sangue",
+                    "bonus": 9,
+                    "damage": "2d6+5 slashing"
+                }
+            ]
+        },
+        "memory": []
     },
-    "memory": []
-  }
+    "npc_garrick": {
+        "name": "Garrick",
+        "role": "Mercador de Dentes e Receptador de Bugigangas",
+        "location": "O Anel de Lama (Beco dos Desdentados / Bazar Improvisado), Nova Arcádia",
+        "persona": "Garrick é um sobrevivente pragmático e cínico. Ele não tem escrúpulos morais sobre seu comércio de dentes; para ele, dentes são apenas uma moeda de troca que os viciados em Pó de Sonho não precisam mais. Ele é extremamente desconfiado de estranhos, especialmente aqueles que parecem fortes ou armados demais para a Fossa. Fala em um tom de voz baixo e arrastado, quase um sussurro, e é mestre em fingir submissão para evitar conflitos, embora seja perfeitamente capaz de passar a perna em qualquer um que demonstre fraqueza. Conhece bem os necromantes amadores que compram sua 'mercadoria' e sabe filtrar fofocas locais como ninguém.",
+        "appearance": "Um homem magro de meia-idade, com cabelos ralos e oleosos colados à testa pela umidade. Seus olhos são baixos, mas astutos, sempre vigilantes a qualquer ameaça. Suas mãos são calejadas e têm os dedos permanentemente manchados de graxa preta e resíduos de sangue seco sob as unhas. Veste uma túnica remendada de couro cru e lona, pesada de sujeira e gordura, com vários bolsos ocultos onde guarda suas moedas. No pescoço, carrega um amuleto feito de um osso lascado pendurado em um cordão de couro.",
+        "initial_relationship": 40,
+        "attributes": {
+            "int": 11,
+            "str": 9,
+            "dex": 12,
+            "cha": 11,
+            "wis": 13,
+            "con": 10
+        },
+        "combat_stats": {
+            "attacks": "Adaga Enferrujada (+3 para acertar, dano 1d4+1 perfurante + risco de tétano/infecção)",
+            "ac": 11.0,
+            "hp": 9.0
+        },
+        "id": "npc_garrick"
+    },
+    "npc_velho_galdino": {
+        "name": "Velho Galdino",
+        "role": "Informante Local, Mendigo e Viciado em Pó de Sonho",
+        "location": "O Beco dos Desdentados, O Anel de Lama (A Fossa), Nova Arcádia",
+        "persona": "Cínico, excêntrico e levemente perturbado pelos efeitos colaterais do Pó de Sonho. Galdino é um sobrevivente nato da Fossa; ele vendeu quase todos os seus dentes para necromantes amadores para sustentar seu vício, mas compensa a falta de mastigação com uma língua afiada e um vasto conhecimento sobre os segredos do esgoto, os boatos da Torre e os perigos da Fossa. Ele fala em tom de deboche amigável, tossindo frequentemente, e sempre espera receber uma moeda de cobre, um resto de comida ou uma pitada de pó em troca de suas \"verdades\".",
+        "appearance": "Um velho extremamente magro, com a pele curtida e suja de lama. Seus lábios são murchos e revelam uma boca quase totalmente desprovida de dentes (restam apenas dois, amarelados e tortos). Ele veste trapos úmidos e rasgados que cheiram a esgoto e mofo. Seus olhos, embora injetados e levemente nublados pelo uso de Pó de Sonho, brilham com uma astúcia febril. Ele se apoia em um cajado de madeira lascada e tem as mãos imundas, com unhas compridas e cheias de terra negra.",
+        "initial_relationship": 50,
+        "attributes": {
+            "intelligence": 12,
+            "dexterity": 10,
+            "wisdom": 13,
+            "charisma": 9,
+            "strength": 6,
+            "constitution": 7
+        },
+        "combat_stats": {
+            "attacks": "Cajado de Madeira Lascada: +1 para acertar, dano 1d4-2 de esmagamento",
+            "ac": 10.0,
+            "hp": 9.0
+        },
+        "id": "npc_velho_galdino"
+    },
+    "npc_velho_caxias": {
+        "name": "Velho Caxias",
+        "role": "Corretor de Dentes e Informante do Submundo",
+        "location": "Beco dos Desdentados, O Anel de Lama (A Fossa), Nova Arcádia",
+        "persona": "Paranóico, ganancioso e extremamente sobrevivente. Velho Caxias é o intermediário perfeito da miséria: ele compra dentes arrancados de viciados em Pó de Sonho e os revende para necromantes amadores e charlatões. Ele é covarde diante de ameaças físicas diretas, mas compensa com uma lábia rápida e um conhecimento enciclopédico sobre quem é quem no submundo da Fossa. Ele valoriza o cobre acima de qualquer moralidade.",
+        "appearance": "Um homem esquelético de idade indeterminada, com a pele cinzenta e curtida pela sujeira da Fossa. Suas gengivas são escuras, quase totalmente desprovidas de dentes, exibindo apenas alguns cacos amarelados. Veste trapos imundos cobertos por um avental de couro manchado de sangue seco e terra. Suas mãos são ágeis, com unhas compridas e pretas de sujeira, sempre tateando uma bolsinha de couro onde guarda sua mercadoria 'fresca'.",
+        "initial_relationship": -15,
+        "attributes": {
+            "int": 11,
+            "cha": 7,
+            "str": 8,
+            "dex": 12,
+            "wis": 13,
+            "con": 9
+        },
+        "combat_stats": {
+            "attacks": [
+                {
+                    "name": "Adaga de Extirpação Enferrujada",
+                    "damage": "1d4+1 perfurante (risco de infecção/tétano)"
+                }
+            ],
+            "ac": 11.0,
+            "hp": 12.0
+        },
+        "id": "npc_velho_caxias"
+    }
 }

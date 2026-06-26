@@ -37,7 +37,8 @@ class TransactionResult(BaseModel):
 # --- LÓGICA DO NÓ ---
 
 def loot_node(state: GameState):
-    player = state["player"]
+    player = dict(state["player"])  # cópia defensiva: não muta o estado in-place
+    player["inventory"] = list(player.get("inventory", []))
     loot_source = state.get("loot_source", "TREASURE")
 
     # Recupera última msg
@@ -107,7 +108,8 @@ def loot_node(state: GameState):
             if not result.success:
                 return {
                     "messages": [AIMessage(content=f"🚫 {result.message}")],
-                    "loot_source": None
+                    "loot_source": None,
+                    "archive_due": True,
                 }
 
             # --- NORMALIZA SINAL DO OURO (não confiar no sinal vindo do LLM) ---
@@ -146,7 +148,8 @@ def loot_node(state: GameState):
             return {
                 "player": player,
                 "messages": [AIMessage(content=msg_final)],
-                "loot_source": None
+                "loot_source": None,
+                "archive_due": True,
             }
 
         except Exception as e:
@@ -186,7 +189,8 @@ def loot_node(state: GameState):
             return {
                 "player": player,
                 "messages": [AIMessage(content=msg)],
-                "loot_source": None
+                "loot_source": None,
+                "archive_due": True,
             }
         except Exception as e:
             return {"messages": [AIMessage(content="Você vasculha, mas não encontra nada.")]}

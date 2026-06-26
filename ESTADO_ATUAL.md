@@ -2,13 +2,18 @@
 
 > Documento de estado do projeto. Leia isto **primeiro** ao retomar o trabalho.
 > Complementa `CLAUDE.md` (arquitetura) e `REFERENCE.md` (decisões técnicas).
-> Última atualização: 2026-06-25 (sessão: **Fase 2 COMPLETA** — reputação, não-onisciência, ascensão, encontros, memória de NPC, world_simulator).
+> Última atualização: 2026-06-25 (sessão: **Fase 2 COMPLETA** + pente fino de custo de LLM — ~5-6 → ~2-3 chamadas/turno).
 
 ---
 
 ## TL;DR — Em que pé está
 
-**MVP funcional e jogável + Fase 2 COMPLETA.** O grafo LangGraph roda fim-a-fim (criar plano → rotear → narrar/combater/NPC/loot → arquivar → salvar) sem crashar. Suíte offline 100% verde (`uv run pytest` — **87 testes**).
+**MVP funcional e jogável + Fase 2 COMPLETA + otimização de custo + fix de cura.** O grafo LangGraph roda fim-a-fim (criar plano → rotear → narrar/combater/NPC/loot → arquivar → salvar) sem crashar. Suíte **offline 100% verde** (`uv run pytest --ignore=tests/test_real_llm.py` — **96 testes**; os 4 testes de `test_real_llm.py` exigem chave e podem degradar com quota/None do Gemini).
+
+**Bug de CURA corrigido (esta sessão):** `combat_mechanics.py` não tinha mecânica de cura — habilidades `damage_type: "Cura"` com fórmula negativa (`-2d4`) caíam como ofensivas e **davam dano no inimigo** em vez de curar o herói; lifesteal/recuperação de recurso eram ignorados. Agora: `_is_healing()` (por `damage_type`), `roll_magnitude()` (valor absoluto), cura o caster com clamp em `max_hp`, `_apply_resource_recovery()` ("Recupera N Estamina/Mana"), lifesteal no ramo ofensivo ("Cura metade do dano"), e remoção de condição ("Remove Sangramento"). Testes: `tests/test_combat_heal.py`. **Falsos positivos da auditoria** (avaliados, NÃO-bugs): LangGraph não apaga chave não-retornada (except paths não perdem estado); `.get()` cobre campos ausentes; chaves novas do `world` só são escritas (lidas via `.get()`).
+
+**Pente fino de custo (esta sessão):** turno típico caiu de ~5-6 para ~2-3 chamadas LLM. Mudanças:
+(1) **Ruler removido** do fluxo — o storyteller faz o gating de ação no próprio prompt (o dado/efeito do Ruler nunca era executado); `agents/ruler_completo.py` ficou órfão. (2) Combate usa `_ability_catalog_for(player)` (só habilidades conhecidas + universais), não o dict inteiro por round. (3) Storyteller sem `with_retry` (fail-fast). (4) **Archivist com cadência** (`_should_archive`): roda só em evento relevante (`archive_due`: combate/viagem/descanso/NPC/loot) ou a cada 10 turnos. (5) Slices menores (`messages[-3:]`). (6) **Librarian** com pré-filtro de tokens (sem LLM quando claramente nova entidade). (7) NPC sem dump de lore global (age por persona+memória). Hardening: `except` nu com log; cópia defensiva do player no loot; `.env.example` confirmado sem chave. Validado no Gemini real (turno livre narra+julga em 1 chamada). Testes: `tests/test_efficiency.py`.
 
 A chave (`GOOGLE_API_KEY`) está **válida** e o caminho do **Gemini real foi validado** fim-a-fim
 (`tests/test_real_llm.py`, 4 passed, ~7-10 req). Sem chave o jogo roda no **MockLLM** (jogável).

@@ -1,6 +1,8 @@
 """
 agents/ruler_completo.py
-(O Juiz Universal)
+(O Juiz Universal) — ÓRFÃO desde a otimização de chamadas: o gating de ação livre passou a ser
+feito pelo PRÓPRIO storyteller no prompt (1 chamada em vez de 2; o dado/efeito devolvido aqui
+nunca era executado). Mantido para referência/reuso futuro; não está no fluxo do grafo.
 Define as regras e interpreta intenções complexas usando o RAG e o Banco de Habilidades.
 """
 from typing import Optional, Dict

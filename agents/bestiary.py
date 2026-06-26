@@ -45,7 +45,9 @@ def load_bestiary() -> Dict:
     if not os.path.exists(BESTIARY_FILE): return {}
     try:
         with open(BESTIARY_FILE, 'r', encoding='utf-8') as f: return json.load(f)
-    except: return {}
+    except Exception as e:
+        print(f"⚠️ [BESTIARY] Falha ao ler {BESTIARY_FILE}: {e}")
+        return {}
 
 def save_enemy(data: Dict):
     db = load_bestiary()

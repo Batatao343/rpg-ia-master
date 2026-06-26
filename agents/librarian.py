@@ -2,6 +2,7 @@
 agents/librarian.py
 Utilitário de consistência. Verifica se entidades já existem antes de criar novas.
 """
+import difflib
 from typing import List, Optional
 from langchain_core.messages import SystemMessage, HumanMessage
 from pydantic import BaseModel, Field
@@ -25,16 +26,29 @@ def find_existing_entity(user_query: str, entity_type: str, existing_ids: List[s
     if query_slug in existing_ids:
         return query_slug
 
-    # 3. Match Semântico com IA
-    # Se a lista for gigantesca, pegar apenas os primeiros 100 ou fazer filtro fuzzy antes seria ideal
-    # Para este escopo, assumimos listas gerenciáveis.
-    
+    # 3. Pré-filtro SEM LLM (orientado a RECALL): só chama a IA se houver candidato plausível.
+    # Sobreposição de tokens (ignora prefixos tipo npc_/item_/enemy_) + similaridade textual.
+    # "Varg" -> {varg} casa com "npc_varg_acougueiro"; "Dragão Vermelho" sem token comum = nova.
+    _STOP = {"npc", "item", "enemy", "monster", "o", "a", "de", "da", "do", "the"}
+    q_tokens = {t for t in query_slug.split("_") if t and t not in _STOP}
+    candidates = []
+    for eid in existing_ids:
+        e_tokens = {t for t in str(eid).split("_") if t and t not in _STOP}
+        if (q_tokens & e_tokens) or query_slug in str(eid) or str(eid) in query_slug:
+            candidates.append(eid)
+    candidates += [c for c in difflib.get_close_matches(query_slug, existing_ids, n=8, cutoff=0.7)
+                   if c not in candidates]
+    if not candidates:
+        print(f"🆕 [LIBRARIAN] Sem candidato plausível p/ '{user_query}' — entidade nova (sem LLM).")
+        return None
+
+    # 4. Match Semântico com IA — só entre os candidatos próximos (prompt enxuto).
     print(f"🔍 [LIBRARIAN] Verificando duplicatas para: '{user_query}' em {entity_type}...")
-    
+
     llm = get_llm(temperature=0.0, tier=ModelTier.FAST)
-    
-    ids_str = ", ".join(existing_ids[:200]) # Limite de segurança para context window
-    
+
+    ids_str = ", ".join(candidates)
+
     system_msg = SystemMessage(content=f"""
     Você é um Bibliotecário de Banco de Dados de um RPG.
     Identifique se o pedido do usuário se refere a uma entidade que JÁ EXISTE no banco.

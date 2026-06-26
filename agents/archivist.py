@@ -38,9 +38,24 @@ def _extract_summary_plain(llm, context_msgs: list, current_summary: str) -> str
         return ""
 
 
+_ARCHIVE_EVERY = 10  # turnos sem evento relevante antes de forçar um arquivamento
+
+
+def _should_archive(state: GameState, turn: int) -> bool:
+    """
+    Cadência do arquivista: só roda o LLM em EVENTO RELEVANTE (flag archive_due, setada por
+    combate/viagem/descanso/NPC/loot) OU a cada ~10 turnos. Exploração trivial não dispara.
+    """
+    if state.get("archive_due"):
+        return True
+    last = int(state.get("archivist_last_run", 0) or 0)
+    return (turn - last) >= _ARCHIVE_EVERY
+
+
 def archive_node(state: GameState):
     """
     Compacta o histórico recente em um resumo e extrai fatos para o RAG.
+    Roda com cadência (evento relevante OU a cada ~10 turnos) — não em todo turno.
     """
     messages = state.get("messages", [])
     game_id = state.get("game_id")
@@ -48,9 +63,12 @@ def archive_node(state: GameState):
     if not game_id:
         return {}
 
-    current_summary = state.get("narrative_summary", "A aventura segue.")
-    context_msgs = messages[-8:] if len(messages) > 8 else messages
     turn = state.get("world", {}).get("turn_count", 0)
+    if not _should_archive(state, turn):
+        return {"archive_due": False}  # turno trivial: pula o LLM do arquivista
+
+    current_summary = state.get("narrative_summary", "A aventura segue.")
+    context_msgs = messages[-6:] if len(messages) > 6 else messages
 
     llm = get_llm(temperature=0.3, tier=ModelTier.SMART)
 
@@ -82,7 +100,7 @@ def archive_node(state: GameState):
             summary = _extract_summary_plain(llm, context_msgs, current_summary)
             if summary:
                 print("📝 [ARCHIVIST] narrative_summary salvo via fallback de texto.")
-                return {"narrative_summary": summary, "archivist_last_run": turn}
+                return {"narrative_summary": summary, "archivist_last_run": turn, "archive_due": False}
             # Plain-text também falhou — mantém estado atual.
             print("⚠️ [ARCHIVIST] Ambos os caminhos falharam. Estado mantido.")
             return {}
@@ -104,6 +122,7 @@ def archive_node(state: GameState):
             updates["chronicle"] = prev + [entry]
 
         updates["archivist_last_run"] = turn
+        updates["archive_due"] = False
 
         return updates
 

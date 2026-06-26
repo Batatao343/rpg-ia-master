@@ -338,6 +338,7 @@ def new_game(req: CreateCharacterRequest):
         "enemies": [],
         "factions": seed_factions(),
         "faction_intel": {},  # não-onisciência: jogador começa sem saber de nenhuma facção
+        "archive_due": False,
         "npcs": {},
         "campaign_plan": {},
         "needs_replan": False,

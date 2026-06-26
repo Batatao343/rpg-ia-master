@@ -53,7 +53,7 @@ def _spawn_enemies_integrated(messages: List, target_hint: str):
     """
     try:
         scanner = llm.with_structured_output(EncounterScanner)
-        scan_result = scanner.invoke([SystemMessage(content=sys_prompt)] + messages[-4:])
+        scan_result = scanner.invoke([SystemMessage(content=sys_prompt)] + messages[-2:])
         if not isinstance(scan_result, EncounterScanner):
             raise ValueError("scanner fallback")
 
@@ -91,10 +91,26 @@ def _last_human_text(messages: List) -> str:
     return ""
 
 
-def _ability_catalog() -> str:
+_UNIVERSAL_ABILITIES = ("ataque_basico", "improvisado")
+
+
+def _ability_catalog_for(player: Dict) -> str:
+    """Só as habilidades RELEVANTES (conhecidas do jogador + universais) — não o dict inteiro.
+    Economiza centenas de tokens por parse de combate."""
+    known = [str(k).lower() for k in (player.get("known_abilities") or [])]
+
+    def _line(aid, a):
+        return f"- {aid}: {a.get('name')} | custo {a.get('cost')} {a.get('resource_type')} | {a.get('description','')[:60]}"
+
     linhas = []
     for aid, a in ABILITIES.items():
-        linhas.append(f"- {aid}: {a.get('name')} | custo {a.get('cost')} {a.get('resource_type')} | {a.get('description','')[:60]}")
+        name = str(a.get("name", "")).lower()
+        if aid in _UNIVERSAL_ABILITIES or any(k and (k in aid.lower() or k in name or name in k) for k in known):
+            linhas.append(_line(aid, a))
+    if not linhas:  # fallback mínimo: as universais
+        for aid in _UNIVERSAL_ABILITIES:
+            a = ABILITIES.get(aid, {})
+            linhas.append(_line(aid, a) if a else f"- {aid}: {aid}")
     return "\n".join(linhas)
 
 
@@ -116,7 +132,7 @@ def _parse_combat_action(player: Dict, enemies: List[Dict], intent: str) -> Dict
     Atributos: {player.get('attributes', {})}
 
     CATÁLOGO DE HABILIDADES (use a CHAVE exata em ability_id):
-    {_ability_catalog()}
+    {_ability_catalog_for(player)}
 
     Inimigos presentes: {enemy_names}
 
@@ -208,6 +224,7 @@ def combat_node(state: GameState):
             "messages": [AIMessage(content="O silêncio retorna ao campo de batalha. Vitória.")],
             "next": "loot", "combat_target": None, "enemies": [],
             "combat": {"active": False, "round": combat_meta.get("round", 0), "order": []},
+            "archive_due": True,  # fim de combate = evento relevante
         }
 
     # Iniciativa: rola no 1º round; persiste depois.
@@ -254,4 +271,5 @@ def combat_node(state: GameState):
         "combat": combat_meta,
         "combat_target": None if victory else combat_target,
         "next": "loot" if victory else None,
+        "archive_due": victory,  # fim de combate (vitória) = evento relevante
     }

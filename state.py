@@ -131,6 +131,7 @@ class GameState(TypedDict):
     game_id: str  # ID único da sessão para isolar o RAG
     narrative_summary: str # Resumo de curto prazo (contexto comprimido)
     archivist_last_run: int # Controle de frequência do arquivista
+    archive_due: bool       # flag transitória: evento relevante pede arquivamento (cadência)
     chronicle: List[str]  # Crônica de menestrel: mini-recaps de eventos notáveis (cresce com a jornada)
 
     messages: Annotated[List[BaseMessage], operator.add]

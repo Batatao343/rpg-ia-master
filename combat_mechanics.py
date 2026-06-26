@@ -88,6 +88,56 @@ def resolve_damage_formula(formula: str, actor: Dict) -> Tuple[int, str]:
 
 
 # --------------------------------------------------------------------------
+# Cura / recuperação de recurso (mecânica determinística; o engine não tinha)
+# --------------------------------------------------------------------------
+def _is_healing(ability: Dict) -> bool:
+    """Cura = damage_type 'Cura'/'Heal'. (Fórmula negativa sozinha é ambígua: '-5 Dano
+    Verdadeiro' é custo, não cura — por isso o tipo decide.)"""
+    return str(ability.get("damage_type", "")).lower() in ("cura", "heal")
+
+
+def roll_magnitude(formula: str, actor: Dict) -> Tuple[int, str]:
+    """Igual a resolve_damage_formula, mas pelo VALOR ABSOLUTO (cura usa fórmula negativa)."""
+    mods = attr_mods(actor.get("attributes", {}))
+    text = str(formula or "0")
+    for key, val in mods.items():
+        text = re.sub(rf"\b{key}_mod\b", str(val), text)
+    text = re.sub(r"\b[a-zA-Z_]+_mod\b", "0", text)
+    text = text.replace("-", "")  # magnitude: ignora sinais (cura é positiva)
+    if not re.search(r"\d+d\d+", text):
+        n = re.search(r"\d+", text)
+        v = int(n.group(0)) if n else 0
+        return v, text
+    return roll_dice_numeric(text)
+
+
+def _heal(entity: Dict, amount: int) -> int:
+    """Soma HP até o teto (max_hp). Retorna o quanto curou de fato."""
+    if amount <= 0:
+        return 0
+    cur = int(entity.get("hp", 0))
+    ceiling = int(entity.get("max_hp", cur + amount))
+    new = min(ceiling, cur + amount)
+    entity["hp"] = new
+    return new - cur
+
+
+def _apply_resource_recovery(player: Dict, conditions: List[str]) -> List[str]:
+    """'Recupera N Estamina/Mana/Vigor' -> restaura o recurso (clampado ao máximo)."""
+    logs: List[str] = []
+    for c in conditions or []:
+        m = re.search(r"recupera\s+(\d+)\s*(estamina|vigor|mana)", str(c), re.IGNORECASE)
+        if not m:
+            continue
+        amount = int(m.group(1))
+        field = "mana" if "mana" in m.group(2).lower() else "stamina"
+        mx = int(player.get(f"max_{field}", player.get(field, 0) + amount))
+        player[field] = min(mx, int(player.get(field, 0)) + amount)
+        logs.append(f"{player.get('name','Herói')} recupera {amount} de {field} ({player[field]}/{mx})")
+    return logs
+
+
+# --------------------------------------------------------------------------
 # Condições / DoT
 # --------------------------------------------------------------------------
 def parse_condition(text: str, source: str = "") -> Dict:
@@ -275,28 +325,54 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
     if not ok:
         return logs
 
+    name = ability.get("name", ability_id)
+    formula = ability.get("damage_formula", "0")
+    conditions = ability.get("conditions", [])
+
+    # CURA: soma HP no PRÓPRIO herói (não ataca o inimigo). Não precisa de alvo.
+    if _is_healing(ability):
+        heal, detail = roll_magnitude(formula, player)
+        # "Ganha N HP Temporário" tratado como cura simples (sem pool separado).
+        for c in conditions:
+            mt = re.search(r"ganha\s+(\d+)\s*hp", str(c), re.IGNORECASE)
+            if mt:
+                heal += int(mt.group(1))
+        done = _heal(player, heal)
+        logs.append(f"{player.get('name','Herói')} usa {name}: recupera {done} de HP (HP {player.get('hp')}) [{detail}]")
+        logs += _apply_resource_recovery(player, conditions)
+        # condições não-danosas (ex.: "Remove Sangramento")
+        for c in conditions:
+            mr = re.search(r"remove\s+([\wçãéõ ]+)", str(c), re.IGNORECASE)
+            if mr:
+                alvo = mr.group(1).strip().lower()
+                before = player.get("active_conditions", []) or []
+                player["active_conditions"] = [x for x in before if alvo not in x.get("name", "").lower()]
+                if len(player["active_conditions"]) < len(before):
+                    logs.append(f"{player.get('name','Herói')}: removeu {mr.group(1).strip()}")
+        return logs
+
     target = _find_target(enemies, action.get("target", ""))
     if not target:
         logs.append("Não há alvo válido.")
         return logs
 
     pstats = compute_player_combat_stats(player)
-    name = ability.get("name", ability_id)
 
-    # Buff/cura/sem dano direto: aplica condições no próprio player e sai.
-    formula = ability.get("damage_formula", "0")
+    # Buff/sem dano direto: aplica condições no próprio player e sai.
     is_offensive = bool(re.search(r"\d+d\d+", str(formula))) and str(ability.get("damage_type", "")).lower() != "buff"
 
     if not is_offensive:
         logs.append(f"{player.get('name','Herói')} usa {name}.")
-        for c in ability.get("conditions", []):
+        for c in conditions:
             logs.append(apply_condition(player, parse_condition(c, source=name)))
         # efeito de auto-dano ("Sofre 5 dano")
-        for c in ability.get("conditions", []):
+        for c in conditions:
             m = re.search(r"sofre\s+(\d+)\s*dano", c, re.IGNORECASE)
             if m:
                 player["hp"] = max(0, int(player.get("hp", 0)) - int(m.group(1)))
                 logs.append(f"{player.get('name','Herói')} sofre {m.group(1)} de dano (HP {player['hp']})")
+        # recuperação de recurso ("Recupera 10 Estamina")
+        logs += _apply_resource_recovery(player, conditions)
         return logs
 
     # Ataque ofensivo: d20 + atk vs AC do alvo
@@ -328,14 +404,21 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
     hit_word = "CRÍTICO!" if crit else "acerta"
     logs.append(f"{player.get('name','Herói')} usa {name} e {hit_word} {target['name']}: {dmg} de dano (HP {target['hp']}) [{detail}]")
 
+    # Lifesteal: condição "Cura metade do dano causado" / "drena vida" → cura o herói.
+    if any(re.search(r"cura.*dano|drena.*vida|lifesteal|roubo? de vida", str(c), re.IGNORECASE)
+           for c in conditions):
+        got = _heal(player, dmg // 2)
+        if got:
+            logs.append(f"{player.get('name','Herói')} drena {got} de HP (HP {player.get('hp')})")
+
     if target["hp"] <= 0:
         target["status"] = "morto"
         logs.append(f"{target['name']} cai derrotado.")
     else:
         # condições só em alvo vivo (e que não resistiu totalmente já tratado acima)
-        for c in ability.get("conditions", []):
-            if re.search(r"sofre\s+\d+\s*dano", c, re.IGNORECASE):
-                continue  # auto-dano não vai pro inimigo
+        for c in conditions:
+            if re.search(r"sofre\s+\d+\s*dano|cura.*dano|drena.*vida|lifesteal", c, re.IGNORECASE):
+                continue  # auto-dano / lifesteal não viram condição do inimigo
             logs.append(apply_condition(target, parse_condition(c, source=name)))
     return logs
 

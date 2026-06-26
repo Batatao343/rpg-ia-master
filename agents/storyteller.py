@@ -4,7 +4,6 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
 from agents.npc import generate_new_npc
-from agents.ruler_completo import resolve_action
 from agents.world_simulator import simulate_world
 from llm_setup import get_llm
 from rag import query_rag
@@ -71,7 +70,7 @@ def storyteller_node(state: GameState):
 
     # --- Fase 0: viagem / descanso / juízo de ação (determinístico + Ruler) ---
     # --- Fase 2: o tempo que passa avança as fações off-screen (mundo vivo) ---
-    travel_note = rest_note = ruling_note = faction_note = ""
+    travel_note = rest_note = faction_note = ""
     rested_player = None
     factions = ensure_factions(state.get("factions"))
     intel = ensure_faction_intel(state.get("faction_intel"))
@@ -92,18 +91,7 @@ def storyteller_node(state: GameState):
             f"O jogador DESCANSOU. O tempo avançou para {clock_label(world)} e ele recuperou parte das forças. "
             "Narre a passagem do tempo e o estado do mundo ao acordar."
         )
-    elif last_user_input:
-        try:
-            ruling = resolve_action(state.get("player", {}), last_user_input)
-            if isinstance(ruling, dict):
-                allowed = ruling.get("is_allowed", True)
-                ruling_note = (
-                    f"[JUÍZO DA AÇÃO] permitido={allowed} | "
-                    f"efeito={ruling.get('mechanical_effect', '')} | {ruling.get('flavor_text', '')}. "
-                    "Respeite este juízo: se permitido=False, o personagem FALHA de forma plausível."
-                )
-        except Exception:
-            ruling_note = ""
+    # (Ação livre: o gating é feito pelo PRÓPRIO narrador no prompt — sem chamada extra ao Ruler.)
 
     # --- O tempo passou (viagem/descanso): ou cai em emboscada, ou o mundo "respira" ---
     world_note = ""
@@ -119,6 +107,7 @@ def storyteller_node(state: GameState):
                 "factions": factions,
                 "combat_target": enc["hint"],
                 "next": "combat_agent",
+                "archive_due": True,  # emboscada = evento relevante
             }
             if rested_player is not None:
                 updates["player"] = rested_player  # já curou no descanso antes da emboscada
@@ -152,7 +141,7 @@ def storyteller_node(state: GameState):
     llm = get_llm(temperature=0.7)
     
     # PROMPT ATUALIZADO
-    eventos_turno = "\n".join(n for n in (travel_note, rest_note, ruling_note, faction_note, world_note) if n) or "Nenhum evento especial."
+    eventos_turno = "\n".join(n for n in (travel_note, rest_note, faction_note, world_note) if n) or "Nenhum evento especial."
 
     # Fações que o JOGADOR conhece (não-onisciência): só estas podem ser citadas/afetadas.
     faccoes_conhecidas = "\n".join(
@@ -191,13 +180,15 @@ def storyteller_node(state: GameState):
 
     <INSTRUÇÕES>
     - Responda em 2 a 3 parágrafos.
+    - JULGUE a ação: se for implausível para a classe/ficha do personagem ({state.get('player', {}).get('class_name', '')})
+      ou impossível no contexto, faça-a FALHAR de forma crível na narração (não conceda o impossível).
     - Termine com opções ou pergunta para ação.
     - Se introduzir NPC novo, adicione em 'introduced_npcs'.
     """)
 
     try:
-        story_engine = llm.with_structured_output(StoryUpdate).with_retry(stop_after_attempt=3)
-        update = story_engine.invoke([sys] + messages[-6:]) # Contexto reduzido
+        story_engine = llm.with_structured_output(StoryUpdate)
+        update = story_engine.invoke([sys] + messages[-3:]) # Contexto reduzido
 
         narrative_text = update.narrative
 
@@ -235,6 +226,9 @@ def storyteller_node(state: GameState):
         }
         if rested_player is not None:
             updates["player"] = rested_player
+        # Viagem/descanso/beat concluído = evento relevante → pede arquivamento.
+        if dest or rested_player is not None or beat_done:
+            updates["archive_due"] = True
         return updates
 
     except Exception as e:
