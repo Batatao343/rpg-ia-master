@@ -8,16 +8,30 @@
 
 ## TL;DR — Em que pé está
 
-**Fase 2.6 DONE — Structured world changes (LLM propõe, motor valida/aplica).**
-O ciclo do mundo estruturado fechou: agentes escrevem propostas em `pending_world_events`;
-o `archivist` (fim de todo turno) chama `process_pending_events`, que **valida** contra o
-grafo/estado e só então grava no `event_log` + atualiza a `world_projection`. Evento inválido
-é descartado com log, sem quebrar o turno. Suíte **177 testes offline verdes** (146 baseline
-+ 31 da 2.6). Smoke real com Gemini ✅ (§6 da spec): storyteller propôs `secret_revealed` com
-id canônico exato, validado; turno banal veio vazio.
+**Fase 2.7 DONE — Rules engine sistêmica (cascata determinística, zero if por NPC).**
+A morte de um líder/governante agora dispara consequência sistêmica: fação desestabiliza →
+controle do local muda → rival ocupa. Genérico via componente `power_vacuum_trigger` + regras
+declarativas (`world_rules.json`), executadas sem `eval` (paths + ops whitelisted). Roda no
+`event_processor` logo após cada `apply_event`; derivados entram no `event_log` com
+`source="rule_engine"`, cascata limitada a profundidade 2. Suíte **201 testes offline verdes**
+(177 baseline + 24 da 2.7). Smoke offline: matar `npc_valerius` → `location_control_changed`
+derivado, controller de nova_arcadia vira `mao_sombria`, stability +5 (ripple depth-2). Smoke
+LLM real pendente de quota (fase é 100% determinística — MockLLM irrelevante aqui).
 
-**Próximo passo:** Fase 2.7 (rules engine — cascata sistêmica: líder morre → facção
-desestabiliza; entra entre `apply_event` e o próximo turno).
+**Próximo passo:** Fase 2.8 (context builder com orçamento de tokens — `build_context_pack`).
+
+Entregas da 2.7 (spec `specs/fase-2.7-rules-engine.md`):
+- `services/rule_engine.py` — `resolve_path` seguro (só literais/`event.`/`target.`/
+  `component:`; dunder + expressão arbitrária → `RuleActionError`), `check_conditions`,
+  `execute_action` (ops: set_entity_state, adjust_faction_stability, disable_controls_edges,
+  create_dynamic_edge, emit_event), `run_rules` (dona da cascata + anti-loop depth 2).
+- `data/graph/world_rules.json` (5 regras) + `data/graph/components.json` (overlay
+  `power_vacuum_trigger` em 22 líderes/governantes). Overlay é **migration-safe**
+  (`migrate_lore_nova.py` sobrescreve entities.json com `components:{}`), mergeado por
+  `graph_resolver.load_entities`.
+- Modelo HÍBRIDO: estrutura (líder/controle/rival) DERIVADA dos edges (`leads`/`controls`/
+  `enemy_of`/`operates_in`); componente só carrega delta/sucessor/override + é o discriminador.
+- `event_processor.process_pending_events` chama `run_rules` após cada `apply_event`.
 
 Entregas da 2.6 (spec `specs/fase-2.6-structured-events.md`):
 - `services/structured_outputs.py` — `ProposedWorldEvent` / `WorldChangeProposal` (Pydantic).

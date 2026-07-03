@@ -1,0 +1,72 @@
+{
+  "_meta": {
+    "purpose": "Overlay de componentes por entidade (Fase 2.7). migrate_lore_nova.py NAO toca este arquivo — componentes autorados em entities.json seriam apagados. graph_resolver.load_entities() faz merge daqui no campo `components`.",
+    "component:power_vacuum_trigger": "Morte do lider/governante desestabiliza a facao liderada e (se ela ou o NPC controla local) troca o controle. base_instability_delta: nudge de stability (-100..100). successor_id: sucessor canonico opcional. rival_faction_override: quem ocupa o vacuo; se null, deriva de enemy_of -> operates_in."
+  },
+  "npc_valerius": {
+    "power_vacuum_trigger": {"base_instability_delta": -50, "successor_id": null, "rival_faction_override": "mao_sombria"}
+  },
+  "npc_kahen": {
+    "power_vacuum_trigger": {"base_instability_delta": -50, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_o_que_ouve_mais_longe": {
+    "power_vacuum_trigger": {"base_instability_delta": -50, "successor_id": null, "rival_faction_override": "druidas_ciclo_cinzento"}
+  },
+  "npc_comandante_thrace": {
+    "power_vacuum_trigger": {"base_instability_delta": -45, "successor_id": "npc_korvus", "rival_faction_override": null}
+  },
+  "npc_velha_magda": {
+    "power_vacuum_trigger": {"base_instability_delta": -45, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_mestre_fundidor_kald": {
+    "power_vacuum_trigger": {"base_instability_delta": -35, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_bors_martelo_partido": {
+    "power_vacuum_trigger": {"base_instability_delta": -35, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_pardal": {
+    "power_vacuum_trigger": {"base_instability_delta": -30, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_vehkr_punho_de_gelo": {
+    "power_vacuum_trigger": {"base_instability_delta": -40, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_astrin_veia_fina": {
+    "power_vacuum_trigger": {"base_instability_delta": -35, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_korrin_sem_cla": {
+    "power_vacuum_trigger": {"base_instability_delta": -30, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_mare_funda": {
+    "power_vacuum_trigger": {"base_instability_delta": -40, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_lyss": {
+    "power_vacuum_trigger": {"base_instability_delta": -40, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_lady_aerwen": {
+    "power_vacuum_trigger": {"base_instability_delta": -40, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_groth_algema_fria": {
+    "power_vacuum_trigger": {"base_instability_delta": -35, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_gruumsha_quebra_espinha": {
+    "power_vacuum_trigger": {"base_instability_delta": -45, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_skriit_mil_olhos": {
+    "power_vacuum_trigger": {"base_instability_delta": -35, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_durgrim_ultimo_martelo": {
+    "power_vacuum_trigger": {"base_instability_delta": -40, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_arcante_gresh": {
+    "power_vacuum_trigger": {"base_instability_delta": -40, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_saelwen_a_que_afundou": {
+    "power_vacuum_trigger": {"base_instability_delta": -35, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_khatarn_olhos_de_obsidiana": {
+    "power_vacuum_trigger": {"base_instability_delta": -40, "successor_id": null, "rival_faction_override": null}
+  },
+  "npc_corvane_o_mestre_destilador": {
+    "power_vacuum_trigger": {"base_instability_delta": -35, "successor_id": null, "rival_faction_override": null}
+  }
+}

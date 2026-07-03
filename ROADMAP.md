@@ -69,13 +69,18 @@ grafo e `event_processor` aplica na projection (via archivist, todo fim de turno
 
 **Aceite:** ✅ nenhuma mudança persistente sem validação; evento rejeitado não quebra o jogo.
 
-### Fase 2.7 — Rules engine sistêmica → [spec](specs/fase-2.7-rules-engine.md)
+### Fase 2.7 — Rules engine sistêmica → [spec](specs/fase-2.7-rules-engine.md) ✅ ENTREGUE (2026-07-02)
 
-Entidades ganham tags + componentes (`faction_leader`, `power_vacuum_trigger`...); eventos
-disparam regras genéricas declarativas (`world_rules.json`) executadas sem eval (paths e
-ops whitelisted). Cascata auditável no event_log com profundidade limitada.
+Entidades com componente `power_vacuum_trigger` (overlay `data/graph/components.json`,
+migration-safe) disparam regras genéricas declarativas (`data/graph/world_rules.json`)
+executadas sem eval (paths + ops whitelisted em `services/rule_engine.py`). Modelo HÍBRIDO:
+estrutura (líder/controle/rival) derivada dos edges do grafo; componente só carrega
+delta/sucessor/override. Cascata (líder morre → fação desestabiliza → controle do local
+muda → rival ocupa) roda no `event_processor` após cada `apply_event`, auditável no
+`event_log` com `source="rule_engine"` e profundidade limitada a 2 (anti-loop).
 
-**Aceite:** matar qualquer chefe de fação destabiliza sistemicamente; zero ifs por NPC no código.
+**Aceite:** ✅ matar qualquer chefe de fação destabiliza sistemicamente (2 líderes testados);
+zero ifs por NPC em `services/`/`agents/`; op/regra malformada não quebra o turno.
 
 ### Fase 2.8 — Context builder com orçamento de tokens → [spec](specs/fase-2.8-context-builder.md)
 

@@ -47,11 +47,19 @@ def test_entities_merge_includes_extra(entities):
 
 
 def test_entities_extra_never_overrides_canonical(entities):
-    # nenhum id do extra pode divergir do canônico carregado
+    # nenhum id do extra pode divergir do canônico carregado. Exceção: o overlay de
+    # componentes (Fase 2.7, components.json) AUMENTA `components` sem tocar nos demais
+    # campos — canônico continua sendo superconjunto em tudo menos `components`.
     with open(os.path.join(DATA, "graph", "entities.json"), encoding="utf-8") as f:
         canon = json.load(f)
     for eid, ent in canon.items():
-        assert entities[eid] == ent
+        loaded = entities[eid]
+        for k, v in ent.items():
+            if k == "components":
+                # componentes canônicos preservados (overlay só adiciona)
+                assert all(loaded["components"].get(ck) == cv for ck, cv in v.items())
+            else:
+                assert loaded[k] == v
 
 
 # --------------------------------------------------------------------------

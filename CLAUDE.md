@@ -221,7 +221,7 @@ Toda feature/fase nova segue o fluxo de `specs/`:
 5. **ROADMAP.md é resumo + link;** o detalhe técnico mora SÓ na spec (fonte única).
 
 Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `in-progress`; 2.6 (structured events) `done`;
-2.7 (rules engine) `draft` — próxima; 2.8 `draft`.
+2.7 (rules engine) `done`; 2.8 (context builder) `draft` — próxima.
 
 ---
 

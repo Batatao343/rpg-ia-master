@@ -152,12 +152,13 @@ def test_fila_vazia_e_noop():
 
 
 def test_npc_killed_aplica_na_projection():
+    # npc_grum: npc comum SEM power_vacuum_trigger → pipeline 2.6 puro, sem cascata 2.7.
     st = _state(pending_world_events=[
-        {"type": "npc_killed", "actor_id": "player", "target_id": "npc_valerius",
+        {"type": "npc_killed", "actor_id": "player", "target_id": "npc_grum",
          "source": "combat"},
     ])
     up = process_pending_events(st)
-    assert gr.is_alive("npc_valerius", up["world_projection"]) is False
+    assert gr.is_alive("npc_grum", up["world_projection"]) is False
     assert len(up["event_log"]) == 1
     assert up["event_log"][0]["type"] == "npc_killed"
     assert up["event_log"][0]["source"] == "combat"
@@ -203,9 +204,10 @@ def test_location_control_changed_troca_edge():
 
 
 def test_duplicata_no_mesmo_lote_so_aplica_uma():
+    # npc_grum (sem cascata 2.7) isola a checagem de duplicata.
     st = _state(pending_world_events=[
-        {"type": "npc_killed", "target_id": "npc_valerius"},
-        {"type": "npc_killed", "target_id": "npc_valerius"},  # duplicata no lote
+        {"type": "npc_killed", "target_id": "npc_grum"},
+        {"type": "npc_killed", "target_id": "npc_grum"},  # duplicata no lote
     ])
     up = process_pending_events(st)
     assert len(up["event_log"]) == 1
@@ -228,11 +230,11 @@ def test_apply_event_e_puro():
 def test_archivist_processa_pendings():
     from agents.archivist import archive_node
     st = _state(game_id="t26", archivist_last_run=5, messages=[],
-                pending_world_events=[{"type": "npc_killed", "target_id": "npc_valerius"}])
+                pending_world_events=[{"type": "npc_killed", "target_id": "npc_grum"}])
     up = archive_node(st)
     assert up["archive_due"] is False           # turno trivial (não rodou o LLM)
     assert len(up["event_log"]) == 1
-    assert gr.is_alive("npc_valerius", up["world_projection"]) is False
+    assert gr.is_alive("npc_grum", up["world_projection"]) is False
     assert up["pending_world_events"] == []
 
 

@@ -5,11 +5,13 @@ event_processor.py — Proposta válida → GameEvent → world_projection (Fase
 `world_projection`. Roda no `archivist` (fim de todo turno). Fecha o ciclo:
 LLM/combate PROPÕE (pending_world_events) → aqui VALIDA → APLICA ou descarta com log.
 
-`apply_event` é PURA (recebe/retorna projection, sem cascata) — a rules engine da
-Fase 2.7 entrará entre a validação e o próximo turno. Efeitos em cascata (líder morre
-→ facção desestabiliza) NÃO acontecem aqui; `npc_killed` só marca `alive=False`.
+`apply_event` é PURA (recebe/retorna projection, sem cascata). A cascata sistêmica
+(Fase 2.7) roda LOGO APÓS cada `apply_event`, via `rule_engine.run_rules`: líder morre →
+facção desestabiliza → controle do local muda → rival ocupa. `run_rules` é dono da cascata
+(aplica os derivados na projection e recursa até depth 2); aqui só anexamos os derivados ao
+`event_log` (não re-aplicamos).
 
-Spec: specs/fase-2.6-structured-events.md §3.
+Spec: specs/fase-2.6-structured-events.md §3 · specs/fase-2.7-rules-engine.md §3.
 """
 
 from __future__ import annotations
@@ -19,6 +21,7 @@ import uuid
 from typing import Dict
 
 from services import graph_resolver as gr
+from services import rule_engine
 from services.world_validators import validate_proposal
 
 
@@ -125,6 +128,15 @@ def process_pending_events(state: Dict) -> Dict:
         event_log.append(event)
         projection = apply_event(event, projection)
         print(f"✅ [EVENT] {event['type']} → {event['target_id']} (id={event['event_id'][:8]})")
+
+        # Fase 2.7: cascata sistêmica. run_rules muta a projection in place e recursa
+        # (depth <= 2); aqui só logamos os derivados (source="rule_engine").
+        working["world_projection"] = projection
+        working["event_log"] = event_log
+        for d in rule_engine.run_rules(event, working, depth=0):
+            event_log.append(d)
+            print(f"⚙️ [RULE] {d['type']} → {d['target_id']} (src=rule_engine, id={d['event_id'][:8]})")
+        projection = working["world_projection"]
 
     return {
         "event_log": event_log,

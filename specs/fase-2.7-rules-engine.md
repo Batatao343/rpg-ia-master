@@ -1,7 +1,7 @@
 # SPEC — Fase 2.7: Rules engine sistêmica
 
-> **Status:** `draft`
-> **Criada:** 2026-07-01 · **Atualizada:** 2026-07-01
+> **Status:** `done`
+> **Criada:** 2026-07-01 · **Atualizada:** 2026-07-02
 > **Depende de:** [fase-2.6-structured-events.md](fase-2.6-structured-events.md) (`done`)
 > **Desbloqueia:** [fase-2.8-context-builder.md](fase-2.8-context-builder.md)
 
@@ -219,14 +219,32 @@ def process_pending_events(state) -> dict:
 
 ## 5. Critérios de aceite
 
-- [ ] Matar qualquer chefe de fação gera destabilização sistêmica (2 líderes testados)
-- [ ] Nenhum arquivo em `services/`/`agents/` menciona id de NPC específico
-- [ ] Eventos derivados aparecem no `event_log` com `source="rule_engine"` (auditável)
-- [ ] Regra malformada/op desconhecido não quebra o turno
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Saves antigos continuam carregando
+- [x] Matar qualquer chefe de fação gera destabilização sistêmica (2 líderes testados:
+  `npc_kahen`, `npc_o_que_ouve_mais_longe`)
+- [x] Nenhum arquivo em `services/`/`agents/` menciona id de NPC específico
+  (`test_codigo_nao_menciona_valerius`)
+- [x] Eventos derivados aparecem no `event_log` com `source="rule_engine"` (auditável)
+- [x] Regra malformada/op desconhecido não quebra o turno (`test_op_desconhecido_nao_quebra`)
+- [x] `uv run pytest` verde (201 offline; `test_real_llm` precisa de chave, falha pré-existente)
+- [x] Saves antigos continuam carregando (`test_save_antigo_sem_projection_nao_quebra`)
+
+> **Divergências vs. rascunho da spec** (dados reais 2.5b): ids-exemplo (`selo_palido`,
+> `clas_skallgard`, `culto_clareira`, `npc_darius`) não existem — usados os canônicos reais
+> (`legiao_ferro`, `mao_sombria`, `poder_kahen`, `colmeia_hospedeiros`, ...). Modelo HÍBRIDO:
+> estrutura (líder/controle/rival) DERIVADA dos edges (`leads`/`controls`/`enemy_of`/
+> `operates_in`); componente `power_vacuum_trigger` guarda só delta/sucessor/override e é o
+> DISCRIMINADOR da regra. Componentes vivem em `data/graph/components.json` (overlay
+> migration-safe, mergeado por `graph_resolver.load_entities`), NÃO em `entities.json` (que
+> `migrate_lore_nova.py` sobrescreve). `run_rules` é dono da cascata (aplica derivados +
+> recursa até depth 2); `event_processor` só anexa ao `event_log`.
 
 ## 6. Smoke test com LLM real
+
+> **Status:** pendente (quota Gemini). A fase é 100% determinística (zero LLM novo) — a
+> cascata foi validada por smoke offline: matar `npc_valerius` → `event_log` ganha
+> `location_control_changed` (`source=rule_engine`), `get_current_controller("nova_arcadia")`
+> vira `mao_sombria`, stability do novo dono +5 (ripple depth-2). Rodar o roteiro abaixo
+> quando houver quota.
 
 1. Campanha real: provocar combate com um líder canônico até a morte → conferir
    `event_log` no save: `npc_killed` + derivados da regra.

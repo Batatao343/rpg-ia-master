@@ -51,6 +51,19 @@ def load_entities() -> Dict[str, dict]:
                 print(f"⚠️ [GRAPH] entities_extra ignorado: id '{eid}' já existe no canônico.")
                 continue
             merged[eid] = ent
+        # Fase 2.7: overlay de componentes (migration-safe — migrate_lore_nova.py não toca).
+        # Sobrepõe `components` na entidade sem apagar os demais campos. Chaves `_meta`/`_*`
+        # são documentação, não entidades.
+        components = _read_json("components.json", {})
+        for eid, comps in components.items():
+            if eid.startswith("_"):
+                continue
+            if eid not in merged:
+                print(f"⚠️ [GRAPH] components.json ignorado: id '{eid}' não existe.")
+                continue
+            ent = dict(merged[eid])
+            ent["components"] = {**(ent.get("components") or {}), **comps}
+            merged[eid] = ent
         _entities_cache = merged
     return _entities_cache
 
