@@ -129,13 +129,21 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
         with open(target_file, 'r', encoding='utf-8') as f:
             raw_data = json.load(f)
 
+        # Fase 3.1: backfill de saves pré-capítulos (chronicle era List[str])
+        raw_chron = raw_data.get("chronicle", [])
+        if raw_chron and isinstance(raw_chron[0], str):
+            raw_chron = [{
+                "title": "Crônica da jornada", "started_turn": 0, "location": "",
+                "entries": [{"text": t, "turn": 0, "kind": "prose"} for t in raw_chron],
+            }]
+
         # Reconstrói o Estado compatível com GameState
         state = {
             # --- Recupera Memória ---
             "game_id": raw_data.get("game_id", "recovered_session"),
             "narrative_summary": raw_data.get("narrative_summary", ""),
             "archivist_last_run": raw_data.get("archivist_last_run", 0),
-            "chronicle": raw_data.get("chronicle", []),
+            "chronicle": raw_chron,
             
             # --- Recupera Core ---
             "player": raw_data.get("player", {}),

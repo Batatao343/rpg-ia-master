@@ -1,6 +1,6 @@
 # SPEC — Fase 3.1: Diário + Crônica melhorada (capítulos por arco)
 
-> **Status:** `draft`
+> **Status:** `done` (smoke com LLM real pendente de quota — ver §6)
 > **Criada:** 2026-07-03 · **Atualizada:** 2026-07-03
 > **Depende de:** [fase-2.6-structured-events.md](fase-2.6-structured-events.md) (`done`),
 > [fase-2.7-rules-engine.md](fase-2.7-rules-engine.md) (`done`)
@@ -292,17 +292,20 @@ if raw_chron and isinstance(raw_chron[0], str):
 
 ## 5. Critérios de aceite
 
-- [ ] Morte de líder de fação (validada) SEMPRE aparece na crônica como milestone, mesmo
-      em turno em que o archivist não roda o LLM
-- [ ] Cascata da rules engine (controle de local mudou) vira milestone auditável (`event_id`)
-- [ ] Turno trivial (sem evento aplicado, sem prosa) não toca a crônica
-- [ ] Replan com arc_title novo abre capítulo; replan de rotina (mesmo arco) não abre
-- [ ] Save antigo (`List[str]`) carrega e aparece como capítulo único
-- [ ] Frontend mostra capítulos com separadores e distingue milestone de prosa
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (arc_title acessado
+- [x] Morte de líder de fação (validada) SEMPRE aparece na crônica como milestone, mesmo
+      em turno em que o archivist não roda o LLM (`test_evento_aplicado_gera_milestone`)
+- [x] Cascata da rules engine (controle de local mudou) vira milestone auditável
+      (`event_id`) — `test_cascata_gera_milestone`
+- [x] Turno trivial (sem evento aplicado, sem prosa) não toca a crônica
+      (`test_evento_rejeitado_sem_milestone`, `test_replan_mesmo_arco_nao_abre`)
+- [x] Replan com arc_title novo abre capítulo; replan de rotina (mesmo arco) não abre
+- [x] Save antigo (`List[str]`) carrega e aparece como capítulo único
+- [x] Frontend mostra capítulos com separadores e distingue milestone de prosa
+      (`ChronicleTab` por capítulos; ⚔ + `chron--milestone` vs ❧; `npm run build` ok)
+- [x] `uv run pytest` verde (228 offline)
+- [x] Guard de FallbackLLM em todo `with_structured_output` novo (arc_title acessado
       dentro do try existente; archivist já tem isinstance)
-- [ ] Saves antigos continuam carregando
+- [x] Saves antigos continuam carregando
 
 ## 6. Smoke test com LLM real
 

@@ -5,6 +5,41 @@
 
 ---
 
+## 2026-07-03 (3) — Fase 3.1: Diário + Crônica por capítulos (`done`)
+
+- **`services/chronicle.py`** (novo, puro): `CHRONICLE_EVENT_TYPES` (npc_killed,
+  location_control_changed, quest_completed, secret_revealed — faction_relation_changed
+  fica FORA por ruído), `CHRONICLE_TEMPLATES` voltados ao jogador, `render_milestone`
+  (nome canônico via `context_builder._name`; `{by_player}` derivado de
+  `actor_id == "player"`), `append_entry`/`open_chapter` puros,
+  `default_chapter_title(region)`.
+- **Schema:** `ChronicleEntry`/`ChronicleChapter` em `state.py`;
+  `GameState.chronicle: List[ChronicleChapter]`; `CampaignPlan.arc_title`.
+- **event_processor:** todo evento APLICADO (base + cascata da rules engine) de tipo
+  crônica gera milestone determinístico com `event_id` auditável; chave `chronicle`
+  só entra nos updates quando houve mudança.
+- **archivist:** prosa (`chronicle_entry`) vira entrada `kind="prose"` appendada SOBRE
+  o chronicle já atualizado pelos milestones (merge `{**event_updates, **updates}` —
+  ordem invertida de propósito); prompt instrui a não repetir fatos secos.
+- **campaign_manager:** `CampaignPlanModel.arc_title` (mesmo call do planner, zero
+  request extra) com instrução de persistência; título novo → `open_chapter`; fallback
+  mantém arco atual (não fragmenta por erro de LLM). MockLLM devolve
+  `"A Verdade Enterrada"` estável.
+- **Persistência:** backfill em `load_game_state` — `chronicle: List[str]` antigo vira
+  capítulo único "Crônica da jornada" (entradas `prose`, turn 0).
+- **API/frontend:** `GameResponse.chronicle` = capítulos (`_chronicle_block` filtra
+  entradas vazias); `/game/new` e `game_engine.py` criam capítulo 1 no turno 0
+  (`default_chapter_title`); `ChronicleTab` renderiza capítulos reversos com header
+  (título + "desde o turno N"), milestone = ⚔ + `chron--milestone`, prosa = ❧.
+- **Suíte:** 211 → **228 verdes** (+17 em `tests/test_fase31.py`). `npm run build` ok.
+  Smoke API real ok (capítulo inicial + capítulo novo no primeiro replan). Falha do
+  `smoke_api.sh` no /game/new é encoding de acento do curl do Git Bash (ambiente,
+  não código — body ASCII passa).
+- **Pendência:** smoke com LLM real (mapeamento do `arc_title` no Gemini — MockLLM
+  não pega bug de campo novo) aguardando quota; ver spec §6.
+
+---
+
 ## 2026-07-03 (2) — Faxina de código morto + auditoria de gameplay → Fase 4
 
 - **Removidos** (zero importadores em produção, verificado por grep): `agents/ruler_completo.py`

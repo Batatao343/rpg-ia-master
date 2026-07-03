@@ -10,6 +10,7 @@ from state import CampaignBeat, CampaignPlan, GameState
 
 # --- INTEGRAÇÃO RAG ---
 from rag import query_rag  # <--- Importação necessária
+from services.chronicle import default_chapter_title, open_chapter
 from services.context_builder import build_context_pack
 
 
@@ -21,6 +22,14 @@ class CampaignPlanModel(BaseModel):
         min_length=3, max_length=5, description="Ordered story beats leading to the climax"
     )
     climax: str = Field(description="The intended climactic moment")
+    arc_title: str = Field(
+        default="",
+        description=(
+            "Short evocative arc title (3-6 words, PT-BR). "
+            "KEEP the previous title if the story arc continues; "
+            "change it ONLY when a truly new arc begins."
+        ),
+    )
 
     @field_validator("beats")
     @classmethod
@@ -62,7 +71,8 @@ def _build_plan(state: GameState) -> CampaignPlan:
     world = state.get("world", {})
     messages = state.get("messages", [])
     current_loc = world.get("current_location", "Unknown")
-    
+    current_arc = (state.get("campaign_plan") or {}).get("arc_title", "")
+
     last_human = next((m for m in reversed(messages) if isinstance(m, HumanMessage)), None)
     last_intent = last_human.content if last_human else ""
 
@@ -97,6 +107,9 @@ def _build_plan(state: GameState) -> CampaignPlan:
             "1. USE THE LORE: If the lore mentions specific dangers, factions, or secrets, weave them into the beats.\n"
             "2. PACING: Start with atmosphere/hook, rise tension, and lead to a climax.\n"
             "3. ACTIONABLE: Beats must be clear instructions for the Storyteller AI (e.g., 'Reveal the ancient inscription on the wall').\n"
+            "4. ARC TITLE: current arc title is "
+            f"'{current_arc or '(none yet)'}'. KEEP it if the story arc continues; "
+            "change it ONLY when a truly new arc begins (3-6 words, PT-BR).\n"
 
             "<EXAMPLE>\n"
             "Lore: 'The Whispering Caves are haunted by echoes of the past.'\n"
@@ -124,6 +137,7 @@ def _build_plan(state: GameState) -> CampaignPlan:
             "climax": plan.climax,
             "current_step": 0,
             "last_planned_turn": world.get("turn_count", 0),
+            "arc_title": (plan.arc_title or "").strip() or current_arc,
         }
     except Exception as exc:  # noqa: BLE001
         print(f"[CAMPAIGN MANAGER ERROR] {exc}")
@@ -138,6 +152,8 @@ def _build_plan(state: GameState) -> CampaignPlan:
             "climax": "Resolve the immediate conflict.",
             "current_step": 0,
             "last_planned_turn": world.get("turn_count", 0),
+            # Fallback: mantém o arco atual (não fragmenta a crônica por erro de LLM)
+            "arc_title": current_arc or default_chapter_title(current_loc),
         }
 
 
@@ -163,7 +179,7 @@ def campaign_manager_node(state: GameState):
 
     print(f"🗺️ [CAMPAIGN] Generating new plot for: {world.get('current_location')}")
     new_plan = _build_plan(state)
-    
+
     updated_state = {
         "campaign_plan": new_plan,
         "needs_replan": False,
@@ -171,4 +187,15 @@ def campaign_manager_node(state: GameState):
         # Importante: Não sobrescrevemos 'messages' aqui para não perder histórico
         "next": "dm_router",
     }
+
+    # Fase 3.1: arco novo → capítulo novo na crônica (mesmo título → no-op).
+    new_title = (new_plan.get("arc_title") or "").strip()
+    old_title = (state.get("campaign_plan") or {}).get("arc_title", "")
+    if new_title and new_title != old_title:
+        updated_state["chronicle"] = open_chapter(
+            state.get("chronicle") or [],
+            title=new_title,
+            turn=world["turn_count"],
+            location=world.get("current_location", ""),
+        )
     return updated_state

@@ -131,6 +131,23 @@ class CampaignPlan(TypedDict, total=False):
     climax: str
     current_step: int
     last_planned_turn: int
+    arc_title: str         # Fase 3.1: título do arco atual — muda → capítulo novo na crônica
+
+
+# --- Fase 3.1: crônica por capítulos (milestones determinísticos + prosa) ---
+
+class ChronicleEntry(TypedDict, total=False):
+    text: str
+    turn: int
+    kind: str        # "milestone" (determinístico, do event_log) | "prose" (menestrel LLM)
+    event_id: str    # só milestones — auditoria (aponta para GameEvent.event_id)
+
+
+class ChronicleChapter(TypedDict, total=False):
+    title: str
+    started_turn: int
+    location: str            # current_location no momento da abertura
+    entries: List[ChronicleEntry]
 
 
 # --- Fase 2.5: eventos estruturados + estado projetado do mundo ---
@@ -187,7 +204,7 @@ class GameState(TypedDict):
     narrative_summary: str # Resumo de curto prazo (contexto comprimido)
     archivist_last_run: int # Controle de frequência do arquivista
     archive_due: bool       # flag transitória: evento relevante pede arquivamento (cadência)
-    chronicle: List[str]  # Crônica de menestrel: mini-recaps de eventos notáveis (cresce com a jornada)
+    chronicle: List[ChronicleChapter]  # Crônica por capítulos: milestones (event_log) + prosa de menestrel
 
     messages: Annotated[List[BaseMessage], operator.add]
     next: Optional[str]

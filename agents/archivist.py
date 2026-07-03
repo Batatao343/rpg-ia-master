@@ -7,6 +7,7 @@ from langchain_core.messages import SystemMessage
 from pydantic import BaseModel, Field
 from llm_setup import get_llm, ModelTier
 from rag import add_memory_to_session
+from services.chronicle import append_entry
 from services.event_processor import process_pending_events
 from state import GameState
 
@@ -90,6 +91,7 @@ def archive_node(state: GameState):
     1. ATUALIZAR O RESUMO: Escreva um novo parágrafo que combine o resumo anterior com os novos eventos recentes. Mantenha foco no "Aqui e Agora".
     2. EXTRAIR FATOS (LONG TERM): Identifique fatos cruciais que devem ser lembrados para sempre e salvos no banco de dados.
     3. CRÔNICA DO MENESTREL: se um feito digno de canção ocorreu, escreva 'chronicle_entry' como um mini-parágrafo narrado por um bardo (3ª pessoa, evocativo). Caso contrário, deixe vazio ('').
+       NÃO registre mortes, conquistas de locais ou missões concluídas como fato seco (o registro oficial já existe); escreva apenas a cor narrativa, ou deixe vazio.
 
     Se nada grandioso aconteceu, 'important_facts' deve ser [] (vazio).
     """)
@@ -122,16 +124,17 @@ def archive_node(state: GameState):
         # 2. Resumo (curto prazo)
         updates["narrative_summary"] = result.new_summary
 
-        # 3. Crônica do menestrel
+        # 3. Crônica do menestrel (prosa) — appenda SOBRE o chronicle já atualizado
+        # pelos milestones do event_processor (mesma chave; updates vence no merge).
         entry = (getattr(result, "chronicle_entry", "") or "").strip()
         if entry:
-            prev = state.get("chronicle", []) or []
-            updates["chronicle"] = prev + [entry]
+            base_chron = event_updates.get("chronicle", state.get("chronicle") or [])
+            updates["chronicle"] = append_entry(base_chron, text=entry, turn=turn, kind="prose")
 
         updates["archivist_last_run"] = turn
         updates["archive_due"] = False
 
-        return {**updates, **event_updates}
+        return {**event_updates, **updates}
 
     except Exception as e:
         print(f"⚠️ Erro no Arquivista: {e}")

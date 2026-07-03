@@ -115,14 +115,14 @@ Definido em `state.py` como TypedDict. Campos principais:
 game_id             str          — UUID da sessão, isola memória RAG
 narrative_summary   str          — resumo comprimido (short-term memory)
 archivist_last_run  int          — turno da última execução do arquivista
-chronicle           List[str]    — crônica de menestrel: mini-recaps de eventos (archivist; persistido)
+chronicle           List[ChronicleChapter] — capítulos (arc_title): milestones do event_log + prosa (persistido)
 player              PlayerStats  — name, class_name, race, hp/max_hp, mana/max_mana, stamina/max_stamina,
                                    gold, level, xp, attributes (chaves curtas str/dex/...), inventory,
                                    known_abilities, defense, attack_bonus, active_conditions, ability_cooldowns
 world               WorldState   — current_location(+_id), visited[] (fog of war), world_clock{day,period},
                                    time_of_day, turn_count, danger_level, weather, quest_plan
 messages            List[BaseMessage]  — histórico LangChain (operator.add)
-campaign_plan       CampaignPlan — location, beats[{description,status}], climax, current_step, last_planned_turn
+campaign_plan       CampaignPlan — location, beats[{description,status}], climax, current_step, last_planned_turn, arc_title
 needs_replan        bool         — força replanejamento no próximo campaign_manager
 enemies             List[EnemyStats]
 npcs                Dict[str, Dict]
@@ -167,9 +167,14 @@ agents/
   bestiary.py         # generate_new_enemy + cache de bestiário
   class_themes.py     # temas/gating narrativo por classe (allowed/forbidden)
   librarian.py        # find_existing_entity — dedupe semântico de entidades
-services/             # serviços determinísticos (Fase 2.5)
+services/             # serviços determinísticos (Fases 2.5–3.1)
   graph_resolver.py   # consultas ao grafo de mundo (base − disabled + dynamic, visibility)
   codex_loader.py     # parse/split/ingest do Codex no FAISS (metadados por chunk)
+  world_validators.py # valida propostas de evento do LLM contra grafo/projection (2.6)
+  event_processor.py  # proposta válida → GameEvent → projection + milestones da crônica (2.6/3.1)
+  rule_engine.py      # cascata sistêmica determinística pós-evento, anti-loop (2.7)
+  context_builder.py  # build_context_pack — contexto ranqueado com orçamento de tokens (2.8)
+  chronicle.py        # crônica por capítulos: templates de milestone + append/open puros (3.1)
 scripts/
   migrate_lore_nova.py # gera data/codex/ (inclui timeline/) + entities.json de lore_nova/ (SOBRESCREVE curadoria)
 lore_nova/            # FONTE do lore Valoria (11 .txt, inclui timeline_completa.txt) — editar aqui e re-rodar o script
@@ -217,10 +222,10 @@ Toda feature/fase nova segue o fluxo de `specs/`:
 5. **ROADMAP.md é resumo + link;** o detalhe técnico mora SÓ na spec (fonte única).
 
 Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `in-progress`; 2.6 (structured events) `done`;
-2.7 (rules engine) `done`; 2.8 (context builder) `done`.
-Fase 3 fatiada em 4 specs, todas `draft` aguardando aprovação (3.1 diário+crônica ·
-3.2 conhecimento revelável · 3.3 quest log · 3.4 visualização de estado) — ordem de
-implementação: 3.1 → 3.2 → 3.3 (usa arc_title da 3.1) → 3.4. Ver ROADMAP § Fase 3.
+2.7 (rules engine) `done`; 2.8 (context builder) `done`; 3.1 (diário+crônica) `done`.
+Fase 3 restante em 3 specs `draft` aguardando aprovação (3.2 conhecimento revelável ·
+3.3 quest log · 3.4 visualização de estado) — ordem de implementação:
+3.2 → 3.3 (usa arc_title da 3.1) → 3.4. Ver ROADMAP § Fase 3.
 Fase 4 (Gameplay Core) mapeada no ROADMAP em 6 fatias `draft` (4.1 progressão/árvore de
 habilidades · 4.2 buffs mecânicos · 4.3 inventário/equip · 4.4 economia determinística ·
 4.5 party · 4.6 dificuldade/IA) — specs ainda não escritas. Ver ROADMAP § Fase 4.

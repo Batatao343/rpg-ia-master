@@ -92,6 +92,20 @@ export interface FactionView {
   completed: boolean;
 }
 
+export interface ChronicleEntry {
+  text: string;
+  turn: number;
+  kind: "milestone" | "prose"; // milestone = determinístico (event_log); prose = menestrel LLM
+  event_id?: string; // só milestones — auditoria
+}
+
+export interface ChronicleChapter {
+  title: string;
+  started_turn: number;
+  location: string;
+  entries: ChronicleEntry[];
+}
+
 export type MessageType = "STORY" | "COMBAT" | "NPC" | "LOOT";
 
 export interface GameResponse {
@@ -107,7 +121,7 @@ export interface GameResponse {
   quest: QuestBlock;
   combat: CombatBlock;
   npcs: NpcView[];
-  chronicle: string[];
+  chronicle: ChronicleChapter[];
   factions: FactionView[];
 }
 

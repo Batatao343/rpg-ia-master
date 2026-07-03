@@ -456,6 +456,20 @@ select {
 .chron__text { margin: 0; font-family: var(--body); font-size: 1rem; line-height: 1.6; color: var(--ink); font-style: italic; }
 .chron__text strong { color: var(--accent); font-style: normal; }
 
+/* ---- Crônica por capítulos (Fase 3.1) ---- */
+.chron-chapter { margin: 0 0 1.2rem; }
+.chron-chapter__head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem;
+  margin: 0 0 0.6rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--line-soft);
+}
+.chron-chapter__title {
+  margin: 0; font-family: var(--display); font-size: 0.86rem;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent);
+}
+.chron-chapter__turn { font-size: 0.78rem; color: var(--faint); white-space: nowrap; }
+.chron--milestone { border-left: 3px solid var(--accent); }
+.chron--milestone .chron__text { font-style: normal; }
+
 /* ---- Fações (mundo vivo / Fase 2) ---- */
 .factions { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
 .faction {

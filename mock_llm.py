@@ -207,7 +207,9 @@ def _world_pulse(model, messages):
 def _campaign_plan(model, messages):
     return _fill(model, {"location": "Terras Cinzentas",
                          "beats": list(_BEATS),
-                         "climax": "Um confronto final contra a verdade enterrada no local."})
+                         "climax": "Um confronto final contra a verdade enterrada no local.",
+                         # Fase 3.1: título estável (não fragmenta capítulos no modo simulado)
+                         "arc_title": "A Verdade Enterrada"})
 
 
 _BARD_LINES = [

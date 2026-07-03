@@ -22,6 +22,7 @@ from typing import Dict
 
 from services import graph_resolver as gr
 from services import rule_engine
+from services.chronicle import append_entry, render_milestone
 from services.world_validators import validate_proposal
 
 
@@ -111,6 +112,16 @@ def process_pending_events(state: Dict) -> Dict:
     turn = (state.get("world") or {}).get("turn_count", 0)
     event_log = list(state.get("event_log") or [])
     projection = copy.deepcopy(state.get("world_projection") or {})
+    chronicle = state.get("chronicle") or []
+    chronicle_changed = False
+
+    def _chronicle_milestone(ev: Dict, proj: Dict) -> None:
+        nonlocal chronicle, chronicle_changed
+        milestone = render_milestone(ev, proj)
+        if milestone:
+            chronicle = append_entry(chronicle, text=milestone, turn=ev.get("turn", 0),
+                                     kind="milestone", event_id=ev["event_id"])
+            chronicle_changed = True
 
     # Estado de trabalho: valida cada proposta contra o já-aplicado nesta rodada
     # (pega duplicatas dentro do mesmo lote).
@@ -128,6 +139,7 @@ def process_pending_events(state: Dict) -> Dict:
         event_log.append(event)
         projection = apply_event(event, projection)
         print(f"✅ [EVENT] {event['type']} → {event['target_id']} (id={event['event_id'][:8]})")
+        _chronicle_milestone(event, projection)  # Fase 3.1: evento aplicado → crônica
 
         # Fase 2.7: cascata sistêmica. run_rules muta a projection in place e recursa
         # (depth <= 2); aqui só logamos os derivados (source="rule_engine").
@@ -136,10 +148,14 @@ def process_pending_events(state: Dict) -> Dict:
         for d in rule_engine.run_rules(event, working, depth=0):
             event_log.append(d)
             print(f"⚙️ [RULE] {d['type']} → {d['target_id']} (src=rule_engine, id={d['event_id'][:8]})")
+            _chronicle_milestone(d, working["world_projection"])
         projection = working["world_projection"]
 
-    return {
+    updates = {
         "event_log": event_log,
         "world_projection": projection,
         "pending_world_events": [],
     }
+    if chronicle_changed:
+        updates["chronicle"] = chronicle
+    return updates

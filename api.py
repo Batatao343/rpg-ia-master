@@ -22,6 +22,7 @@ from main import app as game_graph
 from persistence import save_game_state, load_game_state, _serialize_messages
 from character_creator import create_player_character
 from gamedata import CLASSES, load_json_data, seed_factions
+from services.chronicle import default_chapter_title
 from world_utils import starting_world
 
 # --- CONFIGURAÇÃO DA API ---
@@ -66,7 +67,7 @@ class GameResponse(BaseModel):
     quest: Dict[str, Any] = {} # objetivo atual, beats (status), clímax, progresso
     combat: Dict[str, Any] = {} # inimigos, condições, iniciativa, round, cooldowns
     npcs: List[Dict[str, Any]] = [] # NPCs conhecidos (nome, papel, local, relação, última lembrança)
-    chronicle: List[str] = [] # crônica de menestrel: mini-recaps de eventos notáveis (persistente)
+    chronicle: List[Dict[str, Any]] = [] # capítulos: {title, started_turn, location, entries[{text,turn,kind,event_id?}]}
     factions: List[Dict[str, Any]] = [] # fações vivas: objetivo, progresso, postura, reputação
 
 # --- HELPER: FORMATA RESPOSTA ---
@@ -115,11 +116,28 @@ def format_response(state: dict) -> GameResponse:
         quest=_quest_block(state.get("campaign_plan") or {}),
         combat=_combat_block(state),
         npcs=_npcs_block(state.get("npcs", {}) or {}),
-        chronicle=[str(c) for c in (state.get("chronicle", []) or []) if str(c).strip()],
+        chronicle=_chronicle_block(state.get("chronicle", []) or []),
         factions=_factions_block(state.get("factions", []) or [],
                                  state.get("faction_intel", {}) or {},
                                  (state.get("world", {}) or {}).get("turn_count", 0)),
     )
+
+
+def _chronicle_block(chronicle: list) -> List[Dict[str, Any]]:
+    """Capítulos da crônica para o HUD (Fase 3.1) — filtra entradas vazias."""
+    out: List[Dict[str, Any]] = []
+    for cap in chronicle:
+        if not isinstance(cap, dict):
+            continue
+        entries = [e for e in (cap.get("entries") or [])
+                   if isinstance(e, dict) and str(e.get("text", "")).strip()]
+        out.append({
+            "title": cap.get("title", ""),
+            "started_turn": cap.get("started_turn", 0),
+            "location": cap.get("location", ""),
+            "entries": entries,
+        })
+    return out
 
 
 def _factions_block(factions: list, intel: dict, turn: int = 0) -> List[Dict[str, Any]]:
@@ -305,7 +323,9 @@ def new_game(req: CreateCharacterRequest):
         "game_id": new_game_id,
         "narrative_summary": f"A jornada de {req.name} começa em {final_char['region']}. {req.backstory}",
         "archivist_last_run": 0,
-        "chronicle": [],
+        # Fase 3.1: capítulo 1 existe desde o turno 0 (determinístico, sem LLM)
+        "chronicle": [{"title": default_chapter_title(final_char["region"]),
+                       "started_turn": 0, "location": final_char["region"], "entries": []}],
         "combat_target": None,
         "loot_source": None,
 

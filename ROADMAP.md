@@ -107,9 +107,10 @@ Smoke LLM real pendente de quota (fase determinística, sem `with_structured_out
 
 **Fatiamento em 4 specs** (decidido 2026-07-03):
 
-- [ ] **3.1 — Diário + Crônica** → [spec](specs/fase-3.1-diario-cronica.md) `draft` —
+- [x] **3.1 — Diário + Crônica** → [spec](specs/fase-3.1-diario-cronica.md) `done` (2026-07-03) —
   milestones determinísticos do event_log + prosa de menestrel, capítulos por arco
-  (`arc_title` no campaign_plan); trivial fica na memória, importante na crônica
+  (`arc_title` no campaign_plan); trivial fica na memória, importante na crônica.
+  Smoke com LLM real (mapeamento do `arc_title` no Gemini) pendente de quota
 - [ ] **3.2 — Conhecimento revelável** → [spec](specs/fase-3.2-conhecimento-revelavel.md) `draft` —
   Codex do jogador como VIEW derivada do save (visited/intel/npcs/revealed_facts, zero
   estado novo) + bestiário progressivo com contadores determinísticos (4 graus: rumores →

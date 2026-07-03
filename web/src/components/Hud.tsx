@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { mdLite, pct, prettyItem } from "../lib";
-import type { CombatBlock, Condition, FactionView, GameResponse, NpcView } from "../types";
+import type { ChronicleChapter, CombatBlock, Condition, FactionView, GameResponse, NpcView } from "../types";
 import { WorldMap } from "./WorldMap";
 import { Medallion } from "./ornaments";
 
@@ -84,7 +84,7 @@ export function Hud({ data, open }: { data: GameResponse | null; open: boolean }
           </div>
         )}
         {tab === "faccoes" && <FactionsTab factions={data?.factions ?? []} />}
-        {tab === "cronica" && <ChronicleTab entries={data?.chronicle ?? []} />}
+        {tab === "cronica" && <ChronicleTab chapters={data?.chronicle ?? []} />}
       </div>
     </aside>
   );
@@ -215,8 +215,8 @@ function FactionsTab({ factions }: { factions: FactionView[] }) {
   );
 }
 
-function ChronicleTab({ entries }: { entries: string[] }) {
-  if (!entries.length) {
+function ChronicleTab({ chapters }: { chapters: ChronicleChapter[] }) {
+  if (!chapters.length) {
     return (
       <div>
         <p className="hud__label">Crônica</p>
@@ -224,19 +224,31 @@ function ChronicleTab({ entries }: { entries: string[] }) {
       </div>
     );
   }
-  // mais recente primeiro
-  const ordered = entries.slice().reverse();
+  // capítulo mais recente primeiro; dentro do capítulo, entrada mais recente primeiro
+  const ordered = chapters.slice().reverse();
   return (
     <div>
       <p className="hud__label">Crônica da jornada</p>
-      <ol className="chronicle">
-        {ordered.map((text, i) => (
-          <li key={i} className="chron">
-            <span className="chron__mark" aria-hidden>❧</span>
-            <p className="chron__text" dangerouslySetInnerHTML={{ __html: mdLite(text) }} />
-          </li>
-        ))}
-      </ol>
+      {ordered.map((cap, ci) => (
+        <section key={ci} className="chron-chapter">
+          <header className="chron-chapter__head">
+            <h4 className="chron-chapter__title">{cap.title}</h4>
+            <span className="chron-chapter__turn">desde o turno {cap.started_turn}</span>
+          </header>
+          {cap.entries.length === 0 ? (
+            <p className="combat-empty">Nenhum feito digno de canção — ainda.</p>
+          ) : (
+            <ol className="chronicle">
+              {cap.entries.slice().reverse().map((e, i) => (
+                <li key={e.event_id ?? i} className={e.kind === "milestone" ? "chron chron--milestone" : "chron"}>
+                  <span className="chron__mark" aria-hidden>{e.kind === "milestone" ? "⚔" : "❧"}</span>
+                  <p className="chron__text" dangerouslySetInnerHTML={{ __html: mdLite(e.text) }} />
+                </li>
+              ))}
+            </ol>
+          )}
+        </section>
+      ))}
     </div>
   );
 }

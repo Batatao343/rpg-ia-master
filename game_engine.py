@@ -14,6 +14,7 @@ from main import app
 from persistence import save_game_state, load_game_state
 from gamedata import CLASSES, load_json_data, seed_factions
 from character_creator import create_player_character
+from services.chronicle import default_chapter_title
 from world_utils import starting_world
 
 ORIGINS_DATA = load_json_data("origins.json")
@@ -117,6 +118,9 @@ def create_character_wizard():
         "game_id": str(uuid.uuid4()),
         "narrative_summary": f"A jornada de {name} começa em {final_char['region']}. {backstory}",
         "archivist_last_run": 0,
+        # Fase 3.1: capítulo 1 existe desde o turno 0 (determinístico, sem LLM)
+        "chronicle": [{"title": default_chapter_title(final_char["region"]),
+                       "started_turn": 0, "location": final_char["region"], "entries": []}],
         "player": {
             "name": final_char["name"],
             "class_name": final_char["class_name"],
