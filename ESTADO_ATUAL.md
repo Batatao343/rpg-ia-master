@@ -18,8 +18,10 @@ local, mesmo em turno em que o LLM do archivist não roda. Prosa do menestrel co
 invertida de propósito: `{**event_updates, **updates}`). Saves antigos: backfill no
 load (capítulo único). Frontend: `ChronicleTab` por capítulos (⚔ milestone / ❧ prosa).
 Suíte offline: **228 verdes** (+17 `test_fase31.py`). `npm run build` + smoke API mock
-ok. **Smoke com LLM real pendente de quota** (risco: mapeamento do `arc_title` no
-Gemini — MockLLM não pega campo novo). Detalhes: `CHANGELOG.md`.
+ok. **Smoke com LLM real executado e verde** (2 req: planner inventa `arc_title` sem
+arco anterior e MANTÉM título quando o arco continua). `smoke_api.sh` corrigido:
+curl do Git Bash corrompia UTF-8 inline (`-d`) — body agora vai via `--data-binary
+@arquivo`. Detalhes: `CHANGELOG.md`.
 
 Sessão 2026-07-03 (2) — faxina de código morto + auditoria de gameplay → **Fase 4 —
 Gameplay Core** no ROADMAP (6 fatias `draft`): ver `CHANGELOG.md`. Achados-chave:

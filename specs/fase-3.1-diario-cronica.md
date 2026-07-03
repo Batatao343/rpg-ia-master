@@ -1,6 +1,6 @@
 # SPEC — Fase 3.1: Diário + Crônica melhorada (capítulos por arco)
 
-> **Status:** `done` (smoke com LLM real pendente de quota — ver §6)
+> **Status:** `done` (smoke com LLM real executado 2026-07-03 — ver §6)
 > **Criada:** 2026-07-03 · **Atualizada:** 2026-07-03
 > **Depende de:** [fase-2.6-structured-events.md](fase-2.6-structured-events.md) (`done`),
 > [fase-2.7-rules-engine.md](fase-2.7-rules-engine.md) (`done`)
@@ -318,6 +318,12 @@ if raw_chron and isinstance(raw_chron[0], str):
 3. Forçar replan em local novo → verificar se o planner troca `arc_title` com bom senso
    (novo arco = novo capítulo; continuação = mesmo capítulo). Este é o ponto com maior
    risco de mapeamento (campo novo no structured output) — MockLLM não pega.
+
+**Executado 2026-07-03** (2 req gemini-pro, direto em `_build_plan`): (A) sem arco
+anterior → planner inventou `arc_title` "Fagulhas na Chuva Fria" (mapeamento ok,
+PT-BR, 3-6 palavras); (B) com arco "A Sombra sobre Nova Arcádia" e mesma situação →
+MANTEVE o título (instrução de persistência respeitada). Itens 1–2 são determinísticos
+e já cobertos pela suíte offline (`test_fase31.py`) + smoke API mock.
 
 ## 7. Riscos & compatibilidade
 

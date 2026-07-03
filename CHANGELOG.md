@@ -35,8 +35,13 @@
   Smoke API real ok (capítulo inicial + capítulo novo no primeiro replan). Falha do
   `smoke_api.sh` no /game/new é encoding de acento do curl do Git Bash (ambiente,
   não código — body ASCII passa).
-- **Pendência:** smoke com LLM real (mapeamento do `arc_title` no Gemini — MockLLM
-  não pega bug de campo novo) aguardando quota; ver spec §6.
+- **Smoke com LLM real executado** (mesma sessão, 2 req gemini-pro direto em
+  `_build_plan`): sem arco anterior o planner inventou "Fagulhas na Chuva Fria"
+  (mapeamento do campo novo ok); com arco "A Sombra sobre Nova Arcádia" e mesma
+  situação, MANTEVE o título (persistência ok). Ver spec §6.
+- **Fix `scripts/smoke_api.sh`:** curl do Git Bash no Windows corrompe UTF-8 inline
+  (`-d` com "Nova Arcádia" → bytes cp1252 → 422 "error parsing the body"); body do
+  `/game/new` agora vai via `--data-binary @arquivo`. SMOKE OK completo.
 
 ---
 
