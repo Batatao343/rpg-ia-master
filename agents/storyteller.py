@@ -9,8 +9,9 @@ from llm_setup import get_llm
 from rag import query_rag
 from services import discovery as disc
 from services import graph_resolver as gr
+from services import quest_log
 from services.context_builder import build_context_pack
-from services.structured_outputs import ProposedWorldEvent
+from services.structured_outputs import ProposedQuest, ProposedWorldEvent
 from state import GameState
 from world_utils import (
     advance_factions,
@@ -55,7 +56,18 @@ class StoryUpdate(BaseModel):
         description=(
             "APENAS se a ação deste turno causou mudança PERSISTENTE no mundo "
             "(morte de personagem NOMEADO, segredo revelado, mudança de controle de local). "
-            "Use ids EXATOS do bloco <ENTIDADES_CANONICAS>. Deixe vazio na dúvida."
+            "Use ids EXATOS do bloco <ENTIDADES_CANONICAS>. Deixe vazio na dúvida. "
+            "Para CONCLUIR uma quest listada em <QUESTS_ATIVAS>, proponha um evento "
+            "type='quest_completed' com target_id=quest_id e payload={'quest_id': quest_id}."
+        ),
+    )
+    proposed_quests: List[ProposedQuest] = Field(
+        default_factory=list,
+        description=(
+            "APENAS se um personagem PRESENTE NA CENA ofereceu uma missão CONCRETA ao "
+            "jogador NESTE turno. origin_name = quem pediu; origin_entity_id = id EXATO "
+            "do bloco <ENTIDADES_CANONICAS> se houver, senão vazio; location_id só se o "
+            "destino for claro. Deixe vazio na dúvida — não invente missões."
         ),
     )
 
@@ -92,6 +104,15 @@ def _scene_canonical_entities(state: GameState, factions: list, intel: dict, loc
             lines.append(f"- id={eid} · {ename} · npc")
             seen.add(eid)
     return "\n".join(lines) or "Nenhuma entidade canônica identificada na cena."
+
+
+def _quests_ativas_block(quests: List[Dict]) -> str:
+    """Fase 3.3: side quests ativas — o LLM só pode referenciar estes ids em quest_completed."""
+    ativas = [q for q in (quests or []) if q.get("status") == "active"]
+    if not ativas:
+        return "Nenhuma missão pendente registrada."
+    return "\n".join(f"- id={q.get('id')} · {q.get('title')} · origem: {q.get('origin_name', '?')}"
+                     for q in ativas)
 
 
 def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text: str) -> Dict[str, Dict]:
@@ -204,6 +225,8 @@ def storyteller_node(state: GameState):
 
     # Fase 2.6: ids canônicos que o LLM pode usar em proposed_events (defesa em profundidade).
     entidades_canonicas = _scene_canonical_entities(state, factions, intel, loc)
+    # Fase 3.3: quests ativas que o LLM pode concluir via proposed_events(quest_completed).
+    quests_ativas = _quests_ativas_block(state.get("quests", []))
 
     sys = SystemMessage(content=f"""
     <PERSONA>
@@ -232,6 +255,16 @@ def storyteller_node(state: GameState):
     'proposed_events' usando os ids EXATOS acima. Na dúvida, deixe vazio. NUNCA invente
     ids fora desta lista.
     </ENTIDADES_CANONICAS>
+
+    <QUESTS_ATIVAS>
+    {quests_ativas}
+    Se um personagem PRESENTE NA CENA ofereceu uma missão concreta ao jogador NESTE
+    turno, registre em 'proposed_quests' (origem = quem pediu; location_id só se o
+    destino é claro). Se a ação deste turno CONCLUIU uma das quests listadas acima,
+    proponha em 'proposed_events' um evento type='quest_completed' com
+    target_id=quest_id e payload={{"quest_id": quest_id}} usando o id EXATO. Na
+    dúvida, deixe vazio. NUNCA invente ids.
+    </QUESTS_ATIVAS>
 
     {pack.world_state_block}
     (Se o ESTADO ATUAL DO MUNDO acima contradisser o lore/fatos passados abaixo, o ESTADO ATUAL VENCE.)
@@ -300,6 +333,15 @@ def storyteller_node(state: GameState):
         if pending:
             updates["pending_world_events"] = (state.get("pending_world_events", []) or []) + pending
             updates["archive_due"] = True  # mudança de mundo é evento relevante
+
+        # Fase 3.3: side quests propostas nesta cena (validadas/criadas em Python).
+        turn = int(world.get("turn_count", 0))
+        new_quests, created = quest_log.register_proposed_quests(
+            state.get("quests", []), getattr(update, "proposed_quests", []) or [], turn=turn
+        )
+        if created:
+            updates["quests"] = new_quests
+            updates["archive_due"] = True  # nova missão é evento relevante
         return updates
 
     except Exception as e:

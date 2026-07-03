@@ -70,6 +70,14 @@ def _v_location_control_changed(ev: ProposedWorldEvent, state: dict, proj: dict)
 
 
 def _v_quest_completed(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    # Fase 3.3: side quest — payload.quest_id aponta pra GameState.quests (não pro grafo).
+    qid = ev.payload.get("quest_id")
+    if qid:
+        ativas = {q.get("id") for q in state.get("quests", []) or [] if q.get("status") == "active"}
+        if qid in ativas:
+            return ValidationResult(True)
+        return ValidationResult(False, f"quest_id {qid} não é uma quest ativa")
+    # Modo beat (Fase 2.6, comportamento original — sem quest_id no payload).
     plan = state.get("campaign_plan") or {}
     beats = plan.get("beats") or []
     if not beats:

@@ -43,12 +43,37 @@ export interface Beat {
   status: "pending" | "done";
 }
 
-export interface QuestBlock {
+export interface MainQuest {
   objective: string;
   climax: string;
   current_step: number;
   total: number;
+  arc_title: string;
   beats: Beat[];
+}
+
+export interface Quest {
+  id: string;
+  title: string;
+  description: string;
+  status: "active" | "completed" | "failed";
+  origin_name: string;
+  origin_entity_id: string;
+  location_id: string;
+  created_turn: number;
+  resolved_turn: number;
+  reward_hint: string;
+}
+
+export interface QuestMarker {
+  quest_id: string;
+  location_id: string;
+}
+
+export interface QuestBlock {
+  main: MainQuest;
+  side: Quest[];
+  markers: QuestMarker[];
 }
 
 export interface Condition {

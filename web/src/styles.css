@@ -407,6 +407,7 @@ select {
 .worldmap__node.is-fog .worldmap__label { color: var(--faint); opacity: 0.5; }
 .worldmap__node[data-danger="3"] .worldmap__dot, .worldmap__node[data-danger="4"] .worldmap__dot { border-color: var(--danger); }
 .worldmap__node.is-controlled .worldmap__dot { background: var(--danger); border-color: var(--danger); box-shadow: 0 0 8px 1px var(--danger); }
+.worldmap__node.is-quest-target .worldmap__label { color: var(--accent-strong); font-weight: 600; }
 .worldmap__node.is-controlled .worldmap__label { color: var(--danger); }
 
 /* --- barra de ação --- */
@@ -491,6 +492,28 @@ select {
 .faction__fill { height: 100%; background: var(--accent); transition: width 0.4s var(--ease); }
 .faction--hostil .faction__fill { background: var(--danger, oklch(0.54 0.20 25)); }
 .faction__meta { margin: 0.35rem 0 0; font-size: 0.78rem; color: var(--faint); }
+
+/* ---- Missões (Fase 3.3) ---- */
+.quest {
+  padding: 0.6rem 0.7rem; background: var(--bg-deep);
+  border: 1px solid var(--line-soft); border-left: 3px solid var(--line);
+  border-radius: var(--r-sm); transition: border-color 0.16s var(--ease);
+}
+.quest--main { border-left-color: var(--accent); margin: 0 0 1rem; }
+.quest__arc { margin: 0 0 0.2rem; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+.quest__title { margin: 0; font-family: var(--display); font-size: 0.86rem; color: var(--ink); }
+.quest__track { margin-top: 0.5rem; height: 5px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.quest__fill { height: 100%; background: var(--accent); transition: width 0.4s var(--ease); }
+
+.quests { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+.quest--completed { border-left-color: var(--accent); opacity: 0.85; }
+.quest--failed { border-left-color: var(--danger, oklch(0.54 0.20 25)); opacity: 0.85; }
+.quest__top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+.quest__status { font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
+.quest__status--completed { color: var(--accent); }
+.quest__status--failed { color: var(--danger, oklch(0.6 0.18 25)); }
+.quest__desc { margin: 0.3rem 0 0.3rem; font-size: 0.9rem; font-style: italic; color: var(--muted); line-height: 1.45; }
+.quest__meta { margin: 0.2rem 0 0; font-size: 0.78rem; color: var(--faint); }
 
 /* ---- Codex do jogador (Fase 3.2) ---- */
 .codex-cats { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0 0 0.8rem; }

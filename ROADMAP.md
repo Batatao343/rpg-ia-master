@@ -115,10 +115,11 @@ Smoke LLM real pendente de quota (fase determinística, sem `with_structured_out
   Codex do jogador como VIEW derivada do save (visited/intel/npcs/revealed_facts, zero
   estado novo) + bestiário progressivo com contadores determinísticos (4 graus: rumores →
   encontrada → estudada → dominada); docs `hidden`/`secret` nunca aparecem. Zero LLM.
-- [ ] **3.3 — Quest log** → [spec](specs/fase-3.3-quest-log.md) `draft` —
+- [x] **3.3 — Quest log** → [spec](specs/fase-3.3-quest-log.md) `done` (2026-07-03) —
   main quest = view do campaign_plan (arc_title); side quests propostas pelo LLM e
-  validadas pelo motor; conclusão via pipeline 2.6; NPC-origem morto → quest falha
-  sistemicamente; marker de objetivo no mapa
+  validadas pelo motor; conclusão via pipeline 2.6 (reusa `quest_completed`, sem schema
+  novo); NPC-origem canônico morto → quest falha sistemicamente; marker no mapa. Smoke
+  com LLM real ok (criação + conclusão mapeadas corretamente nos dois agentes)
 - [ ] **3.4 — Visualização de estado** → [spec](specs/fase-3.4-visualizacao-estado.md) `draft` —
   overlays do mapa derivados do event_log/projection (controle recente, ameaças,
   looming_threat, fog of war respeitado) + timeline de reputação por facção (evento novo

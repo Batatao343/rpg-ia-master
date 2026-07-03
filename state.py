@@ -143,6 +143,21 @@ class CampaignPlan(TypedDict, total=False):
     arc_title: str         # Fase 3.1: título do arco atual — muda → capítulo novo na crônica
 
 
+# --- Fase 3.3: quest log — side quests persistentes (main quest = view do CampaignPlan) ---
+
+class Quest(TypedDict, total=False):
+    id: str                  # uuid4 hex
+    title: str
+    description: str
+    status: str              # "active" | "completed" | "failed"
+    origin_name: str         # quem/o que originou (nome exibível)
+    origin_entity_id: str    # id canônico se houver (habilita falha sistêmica); "" senão
+    location_id: str         # alvo no mapa ("" se não aplicável)
+    created_turn: int
+    resolved_turn: int
+    reward_hint: str         # texto livre ("o ferreiro prometeu 50 moedas")
+
+
 # --- Fase 3.1: crônica por capítulos (milestones determinísticos + prosa) ---
 
 class ChronicleEntry(TypedDict, total=False):
@@ -226,6 +241,7 @@ class GameState(TypedDict):
     factions: List[Faction]  # Fase 2: fações com objetivos próprios (mundo vivo)
     faction_intel: Dict[str, Dict]  # Fase 2: o que o jogador SABE de cada facção (não-onisciência)
     bestiary_knowledge: Dict[str, BestiaryKnowledge]  # Fase 3.2: contadores por criatura (chave = id do bestiário)
+    quests: List[Quest]  # Fase 3.3: side quests persistentes (main quest deriva de campaign_plan)
     npcs: Dict[str, Dict]
     active_npc_name: Optional[str]
     active_plan_step: Optional[str]

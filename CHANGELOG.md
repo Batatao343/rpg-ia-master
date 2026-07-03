@@ -5,6 +5,62 @@
 
 ---
 
+## 2026-07-03 (5) — Fase 3.3: Quest log (`done`)
+
+- **`state.py`:** `Quest(TypedDict, total=False)` (`id/title/description/status/
+  origin_name/origin_entity_id/location_id/created_turn/resolved_turn/reward_hint`);
+  `GameState.quests: List[Quest]` (só side quests — main quest continua view pura do
+  `campaign_plan`, zero estado novo).
+- **`services/structured_outputs.py`:** `ProposedQuest` — schema de CRIAÇÃO de side
+  quest. Conclusão não ganhou schema novo: reusa `ProposedWorldEvent(type=
+  "quest_completed", target_id=quest_id, payload={"quest_id": ...})`, mesmo canal já
+  usado por `npc_killed`/`secret_revealed` desde a 2.6.
+- **`services/quest_log.py`** (novo, puro): `register_proposed_quests` (dedupe por
+  `difflib.SequenceMatcher≥0.75` contra ativas, zera `location_id`/`origin_entity_id`
+  inválidos em vez de rejeitar a quest, teto `MAX_ACTIVE_QUESTS=8`), `complete_quest`,
+  `fail_orphan_quests` (gera `GameEvent` `quest_failed`, `source="system"`),
+  `quest_markers`.
+- **Hooks nos agentes:** `StoryUpdate`/`NPCResponse` ganham `proposed_quests`, lidos
+  dentro dos trys já existentes (mesmo guard de `proposed_events`/`faction_reveals`).
+  No `npc_actor`, `origin_name`/`origin_entity_id` são SOBRESCRITOS em Python
+  (`_canonical_npc_id`, match por nome no grafo) — o LLM só controla title/description/
+  location_id/reward_hint. `storyteller` ganha bloco de prompt `<QUESTS_ATIVAS>`
+  (análogo a `<ENTIDADES_CANONICAS>`, Fase 2.6).
+- **`services/world_validators.py`:** `_v_quest_completed` ganha branch `payload.
+  quest_id` no topo (checa `state.quests` ativas); ausência de `quest_id` cai no modo
+  beat original (Fase 2.6, sem mudança — `test_fase26.py` continua verde).
+- **`services/event_processor.py`:** `apply_event` ficou INTOCADO (contrato "só mexe
+  em projection" preservado — quest completion/failure não é efeito de projection).
+  `process_pending_events` ganha variável local `quests`/`quests_changed`, mesmo
+  padrão de `chronicle`/`chronicle_changed`: ao aplicar `quest_completed` com
+  `quest_id`, embute `payload["quest_title"]` (lookup em `state.quests`) ANTES do
+  milestone; ao aplicar `npc_killed`, chama `fail_orphan_quests` e anexa os
+  `quest_failed` resultantes ao `event_log`.
+- **`services/chronicle.py`:** `quest_failed` entra em `CHRONICLE_EVENT_TYPES`/
+  `CHRONICLE_TEMPLATES`; `render_milestone` usa `payload.get("quest_title") or
+  _name(target_id)` — `target_id` de quest é um uuid (quest_id), não id de grafo,
+  `_name()` não resolveria (mudança no-op pros outros tipos de evento).
+  `_v_npc_killed` só aceita NPC canônico → falha sistêmica (R4) só existe pra quests
+  com origem no grafo; NPC gerado em runtime nunca falha quest por essa via (aceitável).
+- **API/frontend:** `_quest_block(plan, quests)` vira `{main, side, markers}` (main =
+  shape antigo + `arc_title`; side = ativas + até 5 resolvidas mais recentes; markers =
+  `[{quest_id, location_id}]` pro mapa). Achado da exploração: o bloco `quest` antigo
+  NUNCA teve componente React consumindo — aba "Missões" (`QuestsTab.tsx`) é
+  greenfield puro, não migração. `WorldMap` ganha prop `markers` (selo ◆ no local).
+- **Suíte:** 258 → **290 verdes** (+32 em `tests/test_fase33.py`, ids reais de
+  `data/graph/entities.json` — `npc_valerius`/`npc_grum`/`nova_arcadia`). `npm run
+  build` ok. `smoke_api.sh` ok.
+- **Smoke com LLM real executado e verde** (4 requests): NPC "Valdir" (Gemini SMART)
+  propôs quest real ("A Sede do Quebrado") com `origin_name` corretamente sobrescrito
+  pelo código a partir do `npc_data`, `origin_entity_id=""` (NPC runtime, não
+  canônico — comportamento esperado); turno seguinte concluiu a quest via
+  `quest_completed` proposto pelo LLM com `quest_id` correto; milestone na crônica
+  mostrou "A missão "A Sede do Quebrado" foi concluída." — título, não uuid.
+  Confirma mapeamento correto de `proposed_quests` nos DOIS agentes (risco clássico
+  "MockLLM esconde bug de mapeamento" — mitigado).
+
+---
+
 ## 2026-07-03 (4) — Fase 3.2: Codex do jogador + bestiário progressivo (`done`)
 
 - **`state.py`:** `BestiaryKnowledge(TypedDict, total=False)` (`seen/fought/defeated/

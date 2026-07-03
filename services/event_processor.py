@@ -21,6 +21,7 @@ import uuid
 from typing import Dict
 
 from services import graph_resolver as gr
+from services import quest_log
 from services import rule_engine
 from services.chronicle import append_entry, render_milestone
 from services.world_validators import validate_proposal
@@ -114,6 +115,8 @@ def process_pending_events(state: Dict) -> Dict:
     projection = copy.deepcopy(state.get("world_projection") or {})
     chronicle = state.get("chronicle") or []
     chronicle_changed = False
+    quests = list(state.get("quests") or [])
+    quests_changed = False
 
     def _chronicle_milestone(ev: Dict, proj: Dict) -> None:
         nonlocal chronicle, chronicle_changed
@@ -138,6 +141,18 @@ def process_pending_events(state: Dict) -> Dict:
         event = _build_event(proposal, turn)
         event_log.append(event)
         projection = apply_event(event, projection)
+
+        # Fase 3.3: conclusão de side quest — nada na projection (apply_event não
+        # mexe), só em `quests`. Embute o título no payload ANTES do milestone.
+        if event["type"] == "quest_completed":
+            qid = event["payload"].get("quest_id")
+            if qid:
+                origem = next((q for q in quests if q.get("id") == qid), None)
+                if origem:
+                    event["payload"]["quest_title"] = origem.get("title", "")
+                quests = quest_log.complete_quest(quests, qid, turn)
+                quests_changed = True
+
         print(f"✅ [EVENT] {event['type']} → {event['target_id']} (id={event['event_id'][:8]})")
         _chronicle_milestone(event, projection)  # Fase 3.1: evento aplicado → crônica
 
@@ -151,6 +166,17 @@ def process_pending_events(state: Dict) -> Dict:
             _chronicle_milestone(d, working["world_projection"])
         projection = working["world_projection"]
 
+        # Fase 3.3 (R4): NPC canônico morto → toda quest órfã falha sistemicamente.
+        if event["type"] == "npc_killed":
+            quests, qfailed = quest_log.fail_orphan_quests(quests, event.get("target_id"), turn)
+            if qfailed:
+                quests_changed = True
+                for qf in qfailed:
+                    event_log.append(qf)
+                    print(f"⚰️ [QUEST] {qf['payload'].get('quest_title','?')} fracassou "
+                          f"(origem morta, id={qf['event_id'][:8]})")
+                    _chronicle_milestone(qf, projection)
+
     updates = {
         "event_log": event_log,
         "world_projection": projection,
@@ -158,4 +184,6 @@ def process_pending_events(state: Dict) -> Dict:
     }
     if chronicle_changed:
         updates["chronicle"] = chronicle
+    if quests_changed:
+        updates["quests"] = quests
     return updates

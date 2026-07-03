@@ -184,9 +184,17 @@ def _story_update(model, messages):
         impacts = [{"faction_id": _MOCK_FACTION_ID, "direction": "ajudou"}]
     elif any(k in txt for k in ("trai", "sabot", "ataco a", "contra a")):
         impacts = [{"faction_id": _MOCK_FACTION_ID, "direction": "prejudicou"}]
+    # Fase 3.3: ~15% dos turnos propõe 1 missão (offline exercita validação/zeragem de
+    # ids inválidos — location_id/origin_entity_id de propósito fora do grafo).
+    quests = []
+    if random.random() < 0.15:
+        quests = [{"title": "Recuperar o medalhão perdido",
+                   "description": "Um estranho pediu ajuda para achar uma relíquia.",
+                   "origin_name": "Um estranho encapuzado", "origin_entity_id": "",
+                   "location_id": "", "reward_hint": "algumas moedas"}]
     # Avança o beat ~30% das vezes para a UI de objetivos progredir no modo simulado.
     return _fill(model, {"narrative": narrative, "introduced_npcs": [],
-                         "faction_impacts": impacts,
+                         "faction_impacts": impacts, "proposed_quests": quests,
                          "beat_completed": random.random() < 0.30})
 
 

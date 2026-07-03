@@ -1,6 +1,6 @@
 # SPEC — Fase 3.3: Quest log (objetivos visíveis)
 
-> **Status:** `draft`
+> **Status:** `done`
 > **Criada:** 2026-07-03 · **Atualizada:** 2026-07-03
 > **Depende de:** [fase-2.6-structured-events.md](fase-2.6-structured-events.md) (`done`),
 > [fase-3.1-diario-cronica.md](fase-3.1-diario-cronica.md) (`draft` — usa `arc_title` e o
@@ -248,19 +248,21 @@ quest = {
 
 ## 5. Critérios de aceite
 
-- [ ] NPC oferece missão em cena → aparece na aba Missões com origem e local; sobrevive
-      a replans da campanha
-- [ ] Concluir a missão → status muda via evento validado; crônica registra milestone
-- [ ] Matar o NPC que deu a missão → quest falha automaticamente (evento `quest_failed`
-      auditável no event_log)
-- [ ] Proposta com id inventado (entidade/local) não quebra: campos zerados ou proposta
-      ignorada
-- [ ] Main quest sempre presente e sincronizada com o arco/beat atual (deriva do plan)
-- [ ] Mapa destaca o local de quest ativa (marker mínimo)
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (campos novos acessados
-      dentro dos trys existentes de storyteller/npc)
-- [ ] Saves antigos continuam carregando (`quests` default `[]`)
+- [x] NPC oferece missão em cena → aparece na aba Missões com origem e local; sobrevive
+      a replans da campanha (validado com Gemini real: NPC "Valdir" propôs quest,
+      origem sobrescrita pelo código)
+- [x] Concluir a missão → status muda via evento validado; crônica registra milestone
+      com o TÍTULO da quest (validado com Gemini real)
+- [x] Matar o NPC que deu a missão → quest falha automaticamente (evento `quest_failed`
+      auditável no event_log) — coberto por `test_pipeline_npc_killed_falha_quest_orfa`
+- [x] Proposta com id inventado (entidade/local) não quebra: campos zerados
+- [x] Main quest sempre presente e sincronizada com o arco/beat atual (deriva do plan)
+- [x] Mapa destaca o local de quest ativa (marker mínimo)
+- [x] `uv run pytest` verde (290 testes offline, +32 de `test_fase33.py`)
+- [x] Guard de FallbackLLM: campos novos só acessados dentro dos trys existentes de
+      storyteller/npc (mesmo padrão de `proposed_events`/`faction_reveals`)
+- [x] Saves antigos continuam carregando (`quests` default `[]` já existia em
+      `persistence.py` antes desta fase)
 
 ## 6. Smoke test com LLM real
 
@@ -292,3 +294,21 @@ quest = {
   no grafo: storyteller → archivist). Teste de integração do fluxo completo cobre isso.
 - **Saves antigos:** `quests` ausente → `[]`; `arc_title` ausente → main sem título (ok).
 - **Quota/latência:** zero chamadas novas (campos pegam carona nos calls existentes).
+
+## 8. Desvios confirmados durante implementação (2026-07-03)
+
+1. Conclusão de quest NÃO ganhou campo estruturado novo — reusa `proposed_events` (2.6):
+   `EventType`/`_VALIDATORS`/`CHRONICLE_EVENT_TYPES` já tinham `"quest_completed"`. LLM
+   propõe `ProposedWorldEvent(type="quest_completed", target_id=<quest_id>,
+   payload={"quest_id": ...})` pelo mesmo canal de `npc_killed`/`secret_revealed`.
+2. `apply_event` ficou intocado (contrato "só mexe em projection" preservado). Mutação
+   de `state["quests"]` (conclusão/falha) vive só no laço de `process_pending_events`,
+   mesmo padrão de `chronicle`/`chronicle_changed`.
+3. `render_milestone` (`chronicle.py`) usa `payload.get("quest_title") or
+   _name(target_id)` — `target_id` de quest é um uuid (quest_id), não id de grafo;
+   `event_processor` embute `quest_title` no payload antes do milestone.
+4. `quest_failed` é 100% sistêmico (nunca passa por `validate_proposal`), montado em
+   `services/quest_log.py::fail_orphan_quests`, `source="system"`.
+5. NPC-origem da quest é resolvido em Python no `npc_actor` (nome + match canônico via
+   `graph_resolver.load_entities()`), não confiado ao LLM.
+Detalhe completo: plano de implementação da sessão (`vamos-seguir-com-a-velvety-kite`).

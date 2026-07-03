@@ -11,7 +11,10 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from state import GameState
 from llm_setup import ModelTier, get_llm
 from world_utils import apply_faction_reveal, ensure_factions, ensure_faction_intel
+from services import graph_resolver as gr
+from services import quest_log
 from services.context_builder import build_context_pack
+from services.structured_outputs import ProposedQuest
 
 # Fallback para RAG
 try:
@@ -27,6 +30,24 @@ except ImportError:
 def _npc_id(npc_data: dict, name: str) -> str:
     """id estável do NPC para namespacing da memória vetorial."""
     return npc_data.get("id") or f"npc_{(name or 'desconhecido').lower().replace(' ', '_')}"
+
+
+def _canonical_npc_id(name: str) -> str:
+    """Id canônico (entities.json, type npc) por match de nome — "" se não achar.
+
+    Fase 3.3: habilita falha sistêmica de quest (origin_entity_id) só para NPCs do
+    grafo canônico — NPC gerado em runtime não tem id aqui (mesma restrição de
+    `_v_npc_killed`, que só aceita npc_killed contra ids canônicos).
+    """
+    try:
+        entities = gr.load_entities()
+    except Exception:
+        return ""
+    name_l = (name or "").strip().lower()
+    for eid, ent in entities.items():
+        if ent.get("type") == "npc" and ent.get("name", "").strip().lower() == name_l:
+            return eid
+    return ""
 
 # Importa Librarian para verificar duplicatas
 try:
@@ -69,6 +90,15 @@ class NPCResponse(BaseModel):
             "Facções sobre as quais ESTE NPC contou algo ao jogador NESTE turno. "
             "Só preencha se o personagem plausivelmente saberia (ocupação/local) E o papo levou a isso. "
             "Vazio caso contrário. Use o faction_id EXATO da lista."
+        ),
+    )
+    proposed_quests: List[ProposedQuest] = Field(
+        default_factory=list,
+        description=(
+            "APENAS se você (o NPC) pediu algo CONCRETO ao jogador NESTE turno (uma "
+            "tarefa, um recado, um favor com objetivo claro). title/description curtos, "
+            "location_id só se o destino é claro. Vazio caso contrário — não invente "
+            "missão de um papo qualquer."
         ),
     )
 
@@ -222,6 +252,12 @@ def npc_actor_node(state: GameState):
     Um camponês comum NÃO conhece os planos de cultos distantes. Na dúvida, deixe vazio ou solte só um rumor.
     </FACÇÕES_DO_MUNDO>
 
+    <MISSÃO>
+    Se seu personagem tem um pedido/tarefa CONCRETA para o jogador (recuperar algo,
+    entregar algo, investigar algo, resgatar alguém), registre em 'proposed_quests'.
+    Vazio se a conversa não chegou a um pedido concreto.
+    </MISSÃO>
+
     <REGRAS DE ATUAÇÃO - CRÍTICO>
     1. NÃO SEJA UMA WIKIPÉDIA. Você é uma pessoa limitada pela sua ocupação e local.
     2. FILTRO DE CONHECIMENTO: Ignore fatos do Contexto Externo que seu personagem não saberia (ex: um soldado não sabe magia antiga). Se não souber, invente rumores ou seja cínico.
@@ -258,12 +294,31 @@ def npc_actor_node(state: GameState):
                 intel, factions, getattr(rev, "faction_id", ""), getattr(rev, "reveal_level", ""), turn
             )
 
-        return {
+        updates = {
             "messages": [AIMessage(content=f"**{npc_data['name']}:** \"{res.dialogue}\"\n*({res.action_description})*")],
             "npcs": new_npcs,
             "faction_intel": intel,
             "archive_due": True,  # conversa com NPC = evento relevante p/ o arquivista
         }
+
+        # Fase 3.3: quem originou a missão é o NPC em cena — resolvido em Python
+        # (não confiado ao LLM). Só title/description/location_id/reward_hint vêm do LLM.
+        proposals = getattr(res, "proposed_quests", []) or []
+        if proposals:
+            canonical_id = _canonical_npc_id(npc_data.get("name", npc_name))
+            stamped = []
+            for p in proposals:
+                p = p.model_dump() if hasattr(p, "model_dump") else dict(p)
+                p["origin_name"] = npc_data.get("name", npc_name)
+                p["origin_entity_id"] = canonical_id
+                stamped.append(p)
+            new_quests, created = quest_log.register_proposed_quests(
+                state.get("quests", []), stamped, turn=turn
+            )
+            if created:
+                updates["quests"] = new_quests
+
+        return updates
     except Exception as e:
         print(f"Erro NPC Actor: {e}")
         return {"messages": [AIMessage(content="...")]}

@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { mdLite, pct, prettyItem } from "../lib";
 import type { ChronicleChapter, CombatBlock, Condition, FactionView, GameResponse, NpcView } from "../types";
 import { CodexTab } from "./CodexTab";
+import { QuestsTab } from "./QuestsTab";
 import { WorldMap } from "./WorldMap";
 import { Medallion } from "./ornaments";
 
-type Tab = "ficha" | "combate" | "personagens" | "mapa" | "faccoes" | "cronica" | "codex";
+type Tab = "ficha" | "combate" | "personagens" | "mapa" | "faccoes" | "missoes" | "cronica" | "codex";
 
 export function Hud({ data, open }: { data: GameResponse | null; open: boolean }) {
   const p = data?.player_stats;
@@ -38,6 +39,7 @@ export function Hud({ data, open }: { data: GameResponse | null; open: boolean }
     ["personagens", "Pessoas"],
     ["mapa", "Mapa"],
     ["faccoes", "Fações"],
+    ["missoes", "Missões"],
     ["cronica", "Crônica"],
     ["codex", "Codex"],
   ];
@@ -82,10 +84,12 @@ export function Hud({ data, open }: { data: GameResponse | null; open: boolean }
               currentId={data?.world.location_id ?? ""}
               controlled={data?.world.controlled ?? {}}
               dangerOverrides={data?.world.danger_overrides ?? {}}
+              markers={data?.quest.markers ?? []}
             />
           </div>
         )}
         {tab === "faccoes" && <FactionsTab factions={data?.factions ?? []} />}
+        {tab === "missoes" && <QuestsTab quest={data?.quest} />}
         {tab === "cronica" && <ChronicleTab chapters={data?.chronicle ?? []} />}
         {tab === "codex" && (
           <CodexTab gameId={data?.game_id} turnCount={data?.world.turn_count} open={tab === "codex"} />

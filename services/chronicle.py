@@ -22,7 +22,8 @@ from services.context_builder import _name
 # Tipos que merecem crônica (alto impacto). faction_relation_changed fica FORA
 # (ruído — mudanças de relação são frequentes e já aparecem via reputação/2.7).
 CHRONICLE_EVENT_TYPES = {
-    "npc_killed", "location_control_changed", "quest_completed", "secret_revealed",
+    "npc_killed", "location_control_changed", "quest_completed", "quest_failed",
+    "secret_revealed",
 }
 
 # Templates voltados ao JOGADOR (prosa curta), diferentes dos EVENT_TEMPLATES
@@ -31,6 +32,7 @@ CHRONICLE_TEMPLATES: Dict[str, str] = {
     "npc_killed": "{target} tombou{by_player}.",
     "location_control_changed": "{controller} tomou o controle de {target}.",
     "quest_completed": "A missão \"{target}\" foi concluída.",
+    "quest_failed": "A missão \"{target}\" fracassou.",
     "secret_revealed": "Um segredo veio à luz: {fact}",
 }
 
@@ -56,8 +58,10 @@ def render_milestone(event: Dict, projection: Dict) -> str:
         return tmpl.format(fact=fact)
 
     by_player = " pelas mãos do herói" if event.get("actor_id") == "player" else ""
+    # Fase 3.3: target_id de quest_completed/quest_failed é um quest_id (não id de
+    # grafo) — payload.quest_title (embutido pelo event_processor) tem prioridade.
     return tmpl.format(
-        target=_name(event.get("target_id")),
+        target=payload.get("quest_title") or _name(event.get("target_id")),
         controller=_name(payload.get("new_controller_id")),
         by_player=by_player,
     )

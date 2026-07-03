@@ -34,3 +34,17 @@ class ProposedWorldEvent(BaseModel):
 class WorldChangeProposal(BaseModel):
     events: List[ProposedWorldEvent] = Field(default_factory=list)
     reason: str = Field(default="", description="Por que a narrativa implica essas mudanças.")
+
+
+class ProposedQuest(BaseModel):
+    """Proposta de SIDE QUEST nova (Fase 3.3) — criação, não conclusão.
+
+    Conclusão de quest reusa `ProposedWorldEvent(type="quest_completed",
+    target_id=<quest_id>, payload={"quest_id": ...})`, não este schema.
+    """
+    title: str
+    description: str = ""
+    origin_name: str = Field(default="", description="Quem/o que originou a missão (nome exibível).")
+    origin_entity_id: str = Field(default="", description="Id canônico EXATO de entities.json, ou vazio.")
+    location_id: str = Field(default="", description="Id de local EXATO de world_map.json, ou vazio.")
+    reward_hint: str = ""

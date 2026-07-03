@@ -22,6 +22,7 @@ from main import app as game_graph
 from persistence import save_game_state, load_game_state, _serialize_messages
 from character_creator import create_player_character
 from gamedata import CLASSES, load_json_data, seed_factions
+from services import quest_log
 from services.chronicle import default_chapter_title
 from services.discovery import player_codex
 from world_utils import starting_world
@@ -114,7 +115,7 @@ def format_response(state: dict) -> GameResponse:
         last_turn_log=_serialize_messages(state["messages"][-5:]),
         simulated=(not os.getenv("GOOGLE_API_KEY")) and (not os.getenv("RPG_NO_MOCK")),
         world=_world_block(state.get("world", {}) or {}),
-        quest=_quest_block(state.get("campaign_plan") or {}),
+        quest=_quest_block(state.get("campaign_plan") or {}, state.get("quests", []) or []),
         combat=_combat_block(state),
         npcs=_npcs_block(state.get("npcs", {}) or {}),
         chronicle=_chronicle_block(state.get("chronicle", []) or []),
@@ -222,7 +223,8 @@ def _combat_block(state: dict) -> Dict[str, Any]:
     }
 
 
-def _quest_block(plan: dict) -> Dict[str, Any]:
+def _quest_block(plan: dict, quests: list) -> Dict[str, Any]:
+    """Fase 3.3: main (view do campaign_plan) + side quests + markers pro mapa."""
     plan = plan or {}
     beats = plan.get("beats", []) or []
     step = plan.get("current_step", 0)
@@ -232,16 +234,22 @@ def _quest_block(plan: dict) -> Dict[str, Any]:
     else:
         # Todos os beats concluídos → o clímax é o objetivo final da cena.
         objective = climax
-    return {
+    main = {
         "objective": objective,
         "climax": climax,
         "current_step": step,
         "total": len(beats),
+        "arc_title": plan.get("arc_title", ""),
         "beats": [
             {"description": b.get("description", ""), "status": b.get("status", "pending")}
             for b in beats
         ],
     }
+    quests = [q for q in (quests or []) if isinstance(q, dict)]
+    active = [q for q in quests if q.get("status") == "active"]
+    resolved = sorted((q for q in quests if q.get("status") != "active"),
+                      key=lambda q: q.get("resolved_turn", 0), reverse=True)[:5]
+    return {"main": main, "side": active + resolved, "markers": quest_log.quest_markers(quests)}
 
 
 def _world_block(w: dict) -> Dict[str, Any]:
@@ -374,6 +382,7 @@ def new_game(req: CreateCharacterRequest):
         "factions": seed_factions(),
         "faction_intel": {},  # não-onisciência: jogador começa sem saber de nenhuma facção
         "bestiary_knowledge": {},
+        "quests": [],
         "archive_due": False,
         "npcs": {},
         "campaign_plan": {},
