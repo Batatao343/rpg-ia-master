@@ -11,6 +11,7 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from state import GameState
 from llm_setup import ModelTier, get_llm
 from world_utils import apply_faction_reveal, ensure_factions, ensure_faction_intel
+from services.context_builder import build_context_pack
 
 # Fallback para RAG
 try:
@@ -178,10 +179,11 @@ def npc_actor_node(state: GameState):
     # (além das 3 últimas linhas). Inerte sem chave (get_embeddings -> None).
     game_id = state.get("game_id")
     npc_id = _npc_id(npc_data, npc_name)
-    try:
-        relevant_memory = query_npc_memory(game_id, npc_id, last_msg) if (RAG_AVAILABLE and game_id) else ""
-    except Exception:
-        relevant_memory = ""
+    # Fase 2.8: pack centraliza memória do NPC + estado atual do mundo (NPC ciente de
+    # mudanças: líder morto, controle trocado). purpose="npc".
+    pack = build_context_pack(state, query=(last_msg or npc_data.get("location", "")),
+                              purpose="npc", game_id=game_id, npc_id=npc_id)
+    relevant_memory = pack.memory_block
 
     # Fações do mundo: o NPC PODE saber delas (e revelar ao jogador). O conhecimento do
     # jogador (faction_intel) só avança por aqui — fora daqui ele não é onisciente.
@@ -208,6 +210,9 @@ def npc_actor_node(state: GameState):
     <MEMORIA_RELEVANTE>
     {relevant_memory or "—"}
     </MEMORIA_RELEVANTE>
+
+    {pack.world_state_block}
+    (O mundo mudou desde que você o conheceu? O estado atual acima é a verdade de AGORA.)
 
     <FACÇÕES_DO_MUNDO>
     {faccoes_mundo}

@@ -10,6 +10,7 @@ from state import CampaignBeat, CampaignPlan, GameState
 
 # --- INTEGRAÇÃO RAG ---
 from rag import query_rag  # <--- Importação necessária
+from services.context_builder import build_context_pack
 
 
 class CampaignPlanModel(BaseModel):
@@ -65,14 +66,12 @@ def _build_plan(state: GameState) -> CampaignPlan:
     last_human = next((m for m in reversed(messages) if isinstance(m, HumanMessage)), None)
     last_intent = last_human.content if last_human else ""
 
-    # --- 1. BUSCA DE LORE (RAG) ---
-    # Buscamos informações sobre o local atual e o que o jogador quer fazer
+    # --- 1. CONTEXTO (Fase 2.8: pack centraliza lore + estado atual do mundo) ---
+    # purpose="planning" → o arquiteto pode ver edges hidden/secret (visão de mundo).
     search_query = f"{current_loc} {last_intent}"
-    try:
-        lore_context = query_rag(search_query, index_name="lore")
-    except Exception as exc:  # noqa: BLE001
-        print(f"[CAMPAIGN RAG ERROR] {exc}")
-        lore_context = "No specific lore available for this location."
+    pack = build_context_pack(state, query=search_query, purpose="planning")
+    lore_context = pack.lore_block or "No specific lore available for this location."
+    world_state_context = pack.world_state_block
 
     # --- 2. CONFIGURAÇÃO DO LLM ---
     planner_llm = get_llm(temperature=0.4, tier=ModelTier.SMART) # Aumentei levemente a temp para criatividade
@@ -86,6 +85,9 @@ def _build_plan(state: GameState) -> CampaignPlan:
             f"Location: {current_loc}\n"
             f"Weather/Time: {world.get('weather', 'unknown')} / {world.get('time_of_day', 'unknown')}\n"
             
+            f"{world_state_context}\n"
+            "(Se o estado atual do mundo contradisser o lore, o estado atual VENCE.)\n"
+
             "<LORE_CONTEXT>\n"
             f"{lore_context}\n"
             "</LORE_CONTEXT>\n"

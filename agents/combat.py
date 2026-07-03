@@ -22,6 +22,7 @@ from llm_setup import ModelTier, get_llm
 from gamedata import ABILITIES
 from agents.bestiary import generate_new_enemy
 from services import graph_resolver as gr
+from services.context_builder import build_context_pack
 import combat_mechanics as cm
 
 
@@ -192,16 +193,20 @@ def _parse_combat_action(player: Dict, enemies: List[Dict], intent: str) -> Dict
 
 # --- NARRAÇÃO (IA descreve o log mecânico) ---
 def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
-             spawned_flavor: Optional[str], intent: str, victory: bool) -> str:
+             spawned_flavor: Optional[str], intent: str, victory: bool,
+             world_ctx: str = "") -> str:
     log_str = "\n".join(logs) if logs else "Nada acontece."
     alive = [f"{e['name']} (HP {e['hp']}/{e['max_hp']})" for e in enemies if e.get("status") == "ativo"]
     sys = SystemMessage(content=f"""
     <role>Narrador de Combate — Dark Fantasy</role>
     Descreva o round de combate em 1 a 2 parágrafos, com base APENAS no log mecânico.
     Não invente dano nem resultados fora do log. Seja visceral mas conciso.
+    Use o CONTEXTO DO MUNDO só para AMBIENTAR (local, quem manda) — números vêm só do log.
 
     {("ENTRADA: " + spawned_flavor) if spawned_flavor else ""}
     Ação do jogador (fala): {intent}
+
+    {world_ctx}
 
     <log_mecanico>
     {log_str}
@@ -303,7 +308,12 @@ def combat_node(state: GameState):
     combat_over = not active_after
     victory = combat_over and bool(dead)  # vitória "com espólio" só se alguém caiu
 
-    narrative = _narrate(player, enemies, logs, spawned_flavor, intent, combat_over)
+    # Fase 2.8: pack enxuto (só ambientação; mecânica segue 100% Python).
+    loc = state.get("world", {}).get("current_location", "")
+    world_pack = build_context_pack(state, query=f"{loc} {intent}",
+                                    purpose="combat_narration", token_budget=1200)
+    narrative = _narrate(player, enemies, logs, spawned_flavor, intent, combat_over,
+                         world_pack.world_state_block)
 
     result = {
         "messages": [AIMessage(content=narrative)],

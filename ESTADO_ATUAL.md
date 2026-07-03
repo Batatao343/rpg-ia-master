@@ -2,23 +2,40 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-02
+> Última atualização: 2026-07-03
 
 ---
 
 ## TL;DR — Em que pé está
 
-**Fase 2.7 DONE — Rules engine sistêmica (cascata determinística, zero if por NPC).**
-A morte de um líder/governante agora dispara consequência sistêmica: fação desestabiliza →
-controle do local muda → rival ocupa. Genérico via componente `power_vacuum_trigger` + regras
-declarativas (`world_rules.json`), executadas sem `eval` (paths + ops whitelisted). Roda no
-`event_processor` logo após cada `apply_event`; derivados entram no `event_log` com
-`source="rule_engine"`, cascata limitada a profundidade 2. Suíte **201 testes offline verdes**
-(177 baseline + 24 da 2.7). Smoke offline: matar `npc_valerius` → `location_control_changed`
-derivado, controller de nova_arcadia vira `mao_sombria`, stability +5 (ripple depth-2). Smoke
-LLM real pendente de quota (fase é 100% determinística — MockLLM irrelevante aqui).
+**Fase 2.8 DONE — Context builder com orçamento de tokens (`build_context_pack`).**
+Fim da montagem de prompt na mão: `services/context_builder.py` ranqueia fatos dinâmicos
+(event_log/edges/entities/summaries/revealed_facts) por relevância+local+recência, respeita
+orçamento por seção (cota rola pra frente, corte global c/ margem 5%) e devolve um `ContextPack`
+com `<ESTADO_ATUAL_DO_MUNDO>` pronto. **Estado atual entra ANTES da lore base** — a verdade viva
+vence o canônico. 100% determinístico (zero LLM extra; só o `query_rag` que já existia, agora
+dentro do builder e com try/except). 4 agentes integrados: storyteller (`purpose="story"`,
+`game_id`), npc (`purpose="npc"` + memória do NPC), combat (`purpose="combat_narration"`,
+`token_budget=1200`, só ambienta — mecânica segue Python), campaign_manager
+(`purpose="planning"`, edges hidden visíveis). Blocos de reputação (`factions`) ficam nos
+agentes (sistema à parte). Suíte **216 testes offline verdes** (201 baseline + 15 da 2.8).
+Smoke LLM real pendente de quota (fase determinística, sem `with_structured_output` novo).
 
-**Próximo passo:** Fase 2.8 (context builder com orçamento de tokens — `build_context_pack`).
+**Próximo passo:** Fase 3 (ver ROADMAP) — clareza de campanha / encontros sistêmicos / clima.
+
+Entregas da 2.8 (spec `specs/fase-2.8-context-builder.md`):
+- `services/context_builder.py` — `estimate_tokens` (chars/4), `score_fact`
+  (0.35 rel + 0.25 local + 0.20 entidade + 0.10 impacto + 0.10 recência), `render_event`
+  (`EVENT_TEMPLATES`; nome canônico via `gr.get_entity`, não id cru), `collect_dynamic_facts`,
+  `_assemble` (budget por seção + carry), `assemble_pack`, `build_context_pack`.
+- Correções vs spec (aplicadas): evento usa `turn` (não `day`), `actor_id`/`target_id`;
+  sem `visibility` no evento (lore filtra por `query_rag(max_visibility)`; `secret_revealed`
+  só via `revealed_facts`); `location_summaries`/`revealed_facts` moram em `world_projection`;
+  `build_context_pack` ganhou `game_id`/`npc_id` opcionais.
+- Agentes: `agents/storyteller.py`, `agents/npc.py`, `agents/combat.py`,
+  `agents/campaign_manager.py` — `query_rag`+`narrative_summary` manuais → pack.
+
+Entregas da 2.7 (spec `specs/fase-2.7-rules-engine.md`):
 
 Entregas da 2.7 (spec `specs/fase-2.7-rules-engine.md`):
 - `services/rule_engine.py` — `resolve_path` seguro (só literais/`event.`/`target.`/
@@ -64,7 +81,7 @@ existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arquivar
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 177 testes offline verdes (test_real_llm precisa de chave)
+uv run pytest                        # 216 testes offline verdes (test_real_llm precisa de chave)
 uv run python game_engine.py         # CLI
 uv run uvicorn api:app --port 8000   # API + frontend web (http://localhost:8000)
 uv run python rag.py                 # reindexar lore (data/codex/) + regras (data/rules.txt)

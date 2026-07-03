@@ -79,17 +79,21 @@ delta/sucessor/override. Cascata (líder morre → fação desestabiliza → con
 muda → rival ocupa) roda no `event_processor` após cada `apply_event`, auditável no
 `event_log` com `source="rule_engine"` e profundidade limitada a 2 (anti-loop).
 
+
+
 **Aceite:** ✅ matar qualquer chefe de fação destabiliza sistemicamente (2 líderes testados);
 zero ifs por NPC em `services/`/`agents/`; op/regra malformada não quebra o turno.
 
-### Fase 2.8 — Context builder com orçamento de tokens → [spec](specs/fase-2.8-context-builder.md)
+### Fase 2.8 — Context builder com orçamento de tokens → [spec](specs/fase-2.8-context-builder.md) ✅ ENTREGUE (2026-07-03)
 
 `build_context_pack(state, query, purpose, budget)` ranqueia fatos dinâmicos
 (relevância/local/entidade/impacto/recência), respeita budget por seção e monta o bloco
 `<ESTADO_ATUAL_DO_MUNDO>` (estado vivo ANTES de lore base). storyteller, npc_actor,
-combat e campaign_manager consomem o builder.
+combat e campaign_manager consomem o builder. 100% determinístico (zero LLM extra).
 
-**Aceite:** contexto nunca excede orçamento; 50 eventos em 1 local → só top relevantes no prompt.
+**Aceite:** ✅ contexto nunca excede orçamento (teste 200 fatos); 50 eventos em 1 local →
+só top relevantes no prompt; segredo não revelado não vaza; 216 testes offline verdes.
+Smoke LLM real pendente de quota (fase determinística, sem `with_structured_output` novo).
 
 
 ---

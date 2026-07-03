@@ -8,6 +8,7 @@ from agents.world_simulator import simulate_world
 from llm_setup import get_llm
 from rag import query_rag
 from services import graph_resolver as gr
+from services.context_builder import build_context_pack
 from services.structured_outputs import ProposedWorldEvent
 from state import GameState
 from world_utils import (
@@ -170,13 +171,12 @@ def storyteller_node(state: GameState):
     game_id = state.get("game_id")
     narrative_summary = state.get("narrative_summary", "")
     
-    try:
-        # Busca Lore Global + Memória da Sessão
-        lore_context = query_rag(f"{loc} {last_user_input}", index_name="lore", game_id=game_id)
-    except Exception:
-        lore_context = ""
-
-    if not lore_context: lore_context = "Dark Fantasy Genérica."
+    # --- Fase 2.8: contexto centralizado (estado dinâmico + lore + memória, com budget) ---
+    # ESTADO ATUAL entra ANTES da lore base: a verdade viva vence o canônico.
+    pack = build_context_pack(state, query=f"{loc} {last_user_input}",
+                              purpose="story", game_id=game_id)
+    lore_context = pack.lore_block or "Dark Fantasy Genérica."
+    memoria_recente = pack.memory_block or narrative_summary
 
     campaign_plan = state.get("campaign_plan") or {}
     beats = [dict(beat) for beat in campaign_plan.get("beats", [])]
@@ -226,8 +226,11 @@ def storyteller_node(state: GameState):
     ids fora desta lista.
     </ENTIDADES_CANONICAS>
 
+    {pack.world_state_block}
+    (Se o ESTADO ATUAL DO MUNDO acima contradisser o lore/fatos passados abaixo, o ESTADO ATUAL VENCE.)
+
     <MEMORIA_RECENTE>
-    Resumo dos fatos anteriores: {narrative_summary}
+    Resumo dos fatos anteriores: {memoria_recente}
     </MEMORIA_RECENTE>
 
     <LORE_E_FATOS_PASSADOS>
