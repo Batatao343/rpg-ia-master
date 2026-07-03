@@ -120,12 +120,13 @@ Smoke LLM real pendente de quota (fase determinística, sem `with_structured_out
   validadas pelo motor; conclusão via pipeline 2.6 (reusa `quest_completed`, sem schema
   novo); NPC-origem canônico morto → quest falha sistemicamente; marker no mapa. Smoke
   com LLM real ok (criação + conclusão mapeadas corretamente nos dois agentes)
-- [ ] **3.4 — Visualização de estado** → [spec](specs/fase-3.4-visualizacao-estado.md) `draft` —
+- [x] **3.4 — Visualização de estado** → [spec](specs/fase-3.4-visualizacao-estado.md) `done` (2026-07-03) —
   overlays do mapa derivados do event_log/projection (controle recente, ameaças,
   looming_threat, fog of war respeitado) + timeline de reputação por facção (evento novo
-  `reputation_changed` no log; estabilidade só qualitativa)
+  `reputation_changed` no log, gerado 100% em Python — zero LLM; estabilidade só
+  qualitativa, número interno nunca exposto)
 
-**Critério de aceite:** Após fechar e voltar dias depois, jogador sabe: quem é, onde está, o que aconteceu, quem são aliados/inimigos, quais objetivos pode perseguir.
+**Fase 3 completa (2026-07-03).** Critério de aceite atingido: jogador sabe quem é, onde está, o que aconteceu, quem são aliados/inimigos, quais objetivos pode perseguir.
 
 ---
 

@@ -85,6 +85,8 @@ export function Hud({ data, open }: { data: GameResponse | null; open: boolean }
               controlled={data?.world.controlled ?? {}}
               dangerOverrides={data?.world.danger_overrides ?? {}}
               markers={data?.quest.markers ?? []}
+              overlays={data?.world.map_overlays}
+              currentTurn={data?.world.turn_count ?? 0}
             />
           </div>
         )}
@@ -176,6 +178,27 @@ function PeopleTab({ npcs }: { npcs: NpcView[] }) {
   );
 }
 
+const STABILITY_CLASS: Record<string, string> = {
+  "estável": "is-stable", "instável": "is-unstable", "em colapso": "is-collapsing",
+};
+
+function ReputationSparkline({ history }: { history: FactionView["history"] }) {
+  if (history.length < 2) return null;
+  const W = 100, H = 24;
+  const pts = history
+    .map((h, i) => {
+      const x = (i / (history.length - 1)) * W;
+      const y = H - ((h.value + 100) / 200) * H;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .join(" ");
+  return (
+    <svg className="faction__spark" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden>
+      <polyline points={pts} />
+    </svg>
+  );
+}
+
 function FactionsTab({ factions }: { factions: FactionView[] }) {
   if (!factions.length) {
     return (
@@ -193,6 +216,7 @@ function FactionsTab({ factions }: { factions: FactionView[] }) {
         {factions.map((f) => {
           const hasProg = f.progress !== null && f.progress !== undefined;
           const prog = Math.max(0, Math.min(100, f.progress ?? 0));
+          const recent = f.history.slice(-3).reverse();
           return (
             <li key={f.id} className={"faction faction--" + f.disposition + (f.completed ? " is-done" : "")}>
               <div className="faction__top">
@@ -216,6 +240,20 @@ function FactionsTab({ factions }: { factions: FactionView[] }) {
                 {f.intel_stale ? " · intel pode estar desatualizada" : ""}
                 {f.reputation ? ` · reputação ${f.reputation > 0 ? "+" : ""}${f.reputation}` : ""}
               </p>
+              <div className={"faction__stability " + (STABILITY_CLASS[f.stability_label] ?? "")}>
+                <ReputationSparkline history={f.history} />
+                <span className="faction__stability-label">{f.stability_label}</span>
+              </div>
+              {recent.length > 0 && (
+                <p className="faction__history">
+                  {recent.map((h, i) => (
+                    <span key={i}>
+                      turno {h.turn}: {h.delta > 0 ? "+" : ""}{h.delta}
+                      {i < recent.length - 1 ? " · " : ""}
+                    </span>
+                  ))}
+                </p>
+              )}
             </li>
           );
         })}

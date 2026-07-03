@@ -23,6 +23,7 @@ from persistence import save_game_state, load_game_state, _serialize_messages
 from character_creator import create_player_character
 from gamedata import CLASSES, load_json_data, seed_factions
 from services import quest_log
+from services import state_views as sv
 from services.chronicle import default_chapter_title
 from services.discovery import player_codex
 from world_utils import starting_world
@@ -114,14 +115,17 @@ def format_response(state: dict) -> GameResponse:
         narrative_summary=state.get("narrative_summary", ""),
         last_turn_log=_serialize_messages(state["messages"][-5:]),
         simulated=(not os.getenv("GOOGLE_API_KEY")) and (not os.getenv("RPG_NO_MOCK")),
-        world=_world_block(state.get("world", {}) or {}),
+        world=_world_block(state.get("world", {}) or {}, state.get("world_projection", {}) or {},
+                          state.get("event_log", []) or []),
         quest=_quest_block(state.get("campaign_plan") or {}, state.get("quests", []) or []),
         combat=_combat_block(state),
         npcs=_npcs_block(state.get("npcs", {}) or {}),
         chronicle=_chronicle_block(state.get("chronicle", []) or []),
         factions=_factions_block(state.get("factions", []) or [],
                                  state.get("faction_intel", {}) or {},
-                                 (state.get("world", {}) or {}).get("turn_count", 0)),
+                                 (state.get("world", {}) or {}).get("turn_count", 0),
+                                 state.get("event_log", []) or [],
+                                 state.get("world_projection", {}) or {}),
     )
 
 
@@ -142,11 +146,14 @@ def _chronicle_block(chronicle: list) -> List[Dict[str, Any]]:
     return out
 
 
-def _factions_block(factions: list, intel: dict, turn: int = 0) -> List[Dict[str, Any]]:
+def _factions_block(factions: list, intel: dict, turn: int = 0,
+                    event_log: Optional[list] = None, projection: Optional[dict] = None) -> List[Dict[str, Any]]:
     """
     Fações para o HUD — não-onisciência: só as que o jogador CONHECE (intel.known).
     Objetivo só se aprendido; progresso é o SNAPSHOT que o jogador viu (nunca o ao vivo);
-    fações eliminadas somem.
+    fações eliminadas somem. Fase 3.4: history/stability_label são views derivadas do
+    event_log/projection — só pra fações já filtradas por known (não vaza timeline de
+    fação desconhecida).
     """
     intel = intel or {}
     out = []
@@ -162,8 +169,9 @@ def _factions_block(factions: list, intel: dict, turn: int = 0) -> List[Dict[str
         seen = rec.get("progress_seen")
         intel_turn = rec.get("intel_turn")
         stale = seen is not None and isinstance(intel_turn, int) and int(turn) > int(intel_turn)
+        fid = f.get("id", "")
         out.append({
-            "id": f.get("id", ""),
+            "id": fid,
             "name": f.get("name", ""),
             "goal": f.get("goal", "") if knows_goal else "",
             "knows_goal": knows_goal,
@@ -173,6 +181,8 @@ def _factions_block(factions: list, intel: dict, turn: int = 0) -> List[Dict[str
             "disposition": f.get("disposition", "neutro"),
             "reputation": int(f.get("reputation", 0)),
             "completed": bool(f.get("completed", False)),
+            "history": sv.reputation_history(event_log or [], fid),
+            "stability_label": sv.stability_label(projection or {}, fid),
         })
     return out
 
@@ -252,8 +262,9 @@ def _quest_block(plan: dict, quests: list) -> Dict[str, Any]:
     return {"main": main, "side": active + resolved, "markers": quest_log.quest_markers(quests)}
 
 
-def _world_block(w: dict) -> Dict[str, Any]:
+def _world_block(w: dict, projection: Optional[dict] = None, event_log: Optional[list] = None) -> Dict[str, Any]:
     clock = w.get("world_clock") or {}
+    turn = w.get("turn_count", 0)
     return {
         "location": w.get("current_location", ""),
         "location_id": w.get("current_location_id", ""),
@@ -261,10 +272,16 @@ def _world_block(w: dict) -> Dict[str, Any]:
         "period": clock.get("period", "Amanhecer"),
         "visited": w.get("visited", []),
         "danger": w.get("danger_level", 1),
-        "turn_count": w.get("turn_count", 0),  # Fase 3.2: refetch do Codex quando o turno muda
-        # Etapa B: o mundo muda quando fações ascendem — locais dominados e perigo elevado.
-        "controlled": dict(w.get("controlled") or {}),
+        "turn_count": turn,  # Fase 3.2: refetch do Codex quando o turno muda
+        # Fase 3.4: controlador por local visitado (verdade 2.5+/projection vence o
+        # legado da Fase 2; NOME, não id — ver services/state_views.visible_controllers).
+        "controlled": sv.visible_controllers(w, projection or {}),
         "danger_overrides": dict(w.get("danger_overrides") or {}),
+        "map_overlays": {
+            "control_changes": sv.recent_control_changes(event_log or [], w.get("visited", []), turn),
+            "threats": sv.active_threats(w, turn),
+            "looming_threat": w.get("looming_threat", ""),
+        },
     }
 
 # --- ENDPOINTS ---

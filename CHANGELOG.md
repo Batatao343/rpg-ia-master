@@ -5,6 +5,50 @@
 
 ---
 
+## 2026-07-03 (6) — Fase 3.4: Visualização de estado (`done`) — Fase 3 completa
+
+- **`services/state_views.py`** (novo, puro): `reputation_history` (últimos 20 eventos
+  `reputation_changed` da fação, cronológico), `stability_label` (3 rótulos por
+  limiares ascendentes sobre `projection.entities[fid].stability` — o número NUNCA sai
+  da API), `recent_control_changes` (`location_control_changed` dos últimos 30 turnos,
+  só locais `visited` — fog of war), `active_threats` (leitura de `world.threat_alerts`
+  não expirados, mesmo TTL de `world_utils._ALERT_TTL`, sem consumir o alerta),
+  `visible_controllers` (local visitado → NOME de quem domina).
+- **`graph_resolver.get_current_controller`** ganha `include_hidden: bool = True`
+  (default retrocompatível) — `visible_controllers` chama com `False` pra visão do
+  jogador, sem duplicar a lógica "dynamic edge vence base".
+- **Evento `reputation_changed`** entra no pipeline 2.6 mas é **gerado 100% em Python**
+  (`agents/storyteller.py`, no loop que já chama `apply_reputation` — usa `event["id"]/
+  ["delta"]/["reputation"]/["direction"]` que a função já devolvia e descartava antes).
+  Zero campo estruturado novo no LLM, zero guard de `FallbackLLM` necessário.
+- **Achado que simplificou a etapa 2 inteira:** `services/event_processor.py` não
+  precisou de NENHUMA mudança. `apply_event` já tem fallthrough (tipo sem `elif` →
+  projection intocada) e `_chronicle_milestone` já pula tipo fora de
+  `CHRONICLE_EVENT_TYPES` — `reputation_changed` fica de fora do set de propósito
+  (timeline da fação é o lugar dela, não a crônica) e os dois comportamentos pedidos
+  pelo R1 (no-op na projection + não vira milestone) já existiam de graça.
+- **`api.py`:** `_world_block` ganha `map_overlays` (`control_changes`/`threats`/
+  `looming_threat`) e `controlled` passa a vir de `visible_controllers` (NOME, não
+  mais id de fação — e agora respeitando fog of war por local visitado, o que a
+  versão antiga não fazia). `_factions_block` ganha `history`/`stability_label` por
+  fação já filtrada por `intel.known` (timeline nunca vaza fação desconhecida).
+- **Frontend:** `WorldMap` ganha badge `is-contested` (controle mudou há ≤10 turnos),
+  ícone ⚠ por `region_id` (locais agrupam por região — `MapLocation.region_id`, campo
+  que já vinha cru de `GET /data/map` mas faltava no tipo TS) e banner de
+  `looming_threat`. `FactionsTab` ganha sparkline SVG inline (`<polyline>`, sem lib) +
+  rótulo de estabilidade colorido + últimas 3 mudanças de reputação.
+- **Suíte:** 290 → **313 verdes** (+23 em `tests/test_fase34.py`, ids reais —
+  `nova_arcadia`/`legiao_ferro`/`mao_sombria`).  `npm run build` ok, `smoke_api.sh` ok.
+- **Smoke com LLM real:** confirmado `map_overlays`/`controlled` corretos num jogo real
+  (`controlled: {"nova_arcadia": "Lorde Protetor Valerius"}` — nome do controlador
+  canônico, não id de fação). A criação do evento `reputation_changed` em si não
+  depende de nenhum schema LLM novo (Python puro) — risco "MockLLM esconde bug de
+  mapeamento" não se aplica aqui, já coberto por teste de integração determinístico
+  (`test_pipeline_reputation_changed_completo`).
+- **Fase 3 (Clareza de campanha) fecha nesta sessão** — 3.1/3.2/3.3/3.4 todas `done`.
+
+---
+
 ## 2026-07-03 (5) — Fase 3.3: Quest log (`done`)
 
 - **`state.py`:** `Quest(TypedDict, total=False)` (`id/title/description/status/

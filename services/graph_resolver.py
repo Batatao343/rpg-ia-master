@@ -124,12 +124,14 @@ def resolve_edges(projection: Optional[dict], *,
     return result
 
 
-def get_current_controller(location_id: str, projection: Optional[dict]) -> Optional[str]:
+def get_current_controller(location_id: str, projection: Optional[dict],
+                           include_hidden: bool = True) -> Optional[str]:
     """Quem controla o local AGORA. Dynamic edge vence base (é mais recente).
 
-    Verdade do mundo, não visão do jogador — considera edges hidden/secret.
+    Default (`include_hidden=True`) é a verdade do mundo, considera edges hidden/
+    secret. Fase 3.4: `include_hidden=False` dá a visão do JOGADOR (HUD/mapa).
     """
-    controls = resolve_edges(projection, edge_type="controls", include_hidden=True)
+    controls = resolve_edges(projection, edge_type="controls", include_hidden=include_hidden)
     controller = None
     for edge in controls:  # dynamic vem depois da base → última vence
         if edge.get("target") == location_id:

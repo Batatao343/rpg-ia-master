@@ -293,10 +293,20 @@ def storyteller_node(state: GameState):
 
         # --- Fase 2: a ação do jogador altera a reputação das fações (Python resolve) ---
         # A IA só identifica fação + direção; apply_reputation valida o id e fixa o delta.
+        # Fase 3.4: cada mudança vira proposta reputation_changed (Python, não LLM) —
+        # entra no event_log auditável pelo mesmo pipeline 2.6, alimenta a timeline.
+        rep_events = []
         for imp in getattr(update, "faction_impacts", []) or []:
             fid = getattr(imp, "faction_id", "")
             direction = getattr(imp, "direction", "")
-            factions, _ev = apply_reputation(factions, fid, direction)
+            factions, rep_ev = apply_reputation(factions, fid, direction)
+            if rep_ev:
+                rep_events.append({
+                    "type": "reputation_changed", "actor_id": "player", "target_id": rep_ev["id"],
+                    "payload": {"delta": rep_ev["delta"], "new_value": rep_ev["reputation"],
+                               "reason": rep_ev["direction"]},
+                    "source": "storyteller",
+                })
 
         # --- Avanço de beat: o narrador sinaliza quando o objetivo da cena foi cumprido ---
         needs_replan = state.get("needs_replan", False)
@@ -329,7 +339,8 @@ def storyteller_node(state: GameState):
         if dest or rested_player is not None or beat_done:
             updates["archive_due"] = True
         # Fase 2.6: enfileira propostas de evento estruturado (motor valida no archivist).
-        pending = [e.model_dump() for e in getattr(update, "proposed_events", []) or []]
+        # Fase 3.4: reputation_changed (Python) entra na mesma fila.
+        pending = [e.model_dump() for e in getattr(update, "proposed_events", []) or []] + rep_events
         if pending:
             updates["pending_world_events"] = (state.get("pending_world_events", []) or []) + pending
             updates["archive_due"] = True  # mudança de mundo é evento relevante

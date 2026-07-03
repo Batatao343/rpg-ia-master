@@ -1,6 +1,6 @@
 # SPEC — Fase 3.4: Visualização de estado (mapa dinâmico + histórico de reputação)
 
-> **Status:** `draft`
+> **Status:** `done`
 > **Criada:** 2026-07-03 · **Atualizada:** 2026-07-03
 > **Depende de:** [fase-2.7-rules-engine.md](fase-2.7-rules-engine.md) (`done`),
 > [fase-2.5b-valoria-dados-mecanicos.md](fase-2.5b-valoria-dados-mecanicos.md)
@@ -223,19 +223,19 @@ atualiza junto. Fallback: se resolver não achar nada, manda o valor legado.
 
 ## 5. Critérios de aceite
 
-- [ ] Matar líder de fação (cascata 2.7 muda controle) → mapa mostra badge de novo
+- [x] Matar líder de fação (cascata 2.7 muda controle) → mapa mostra badge de novo
       controlador no local (se visitado) sem tocar código específico do NPC
-- [ ] Ajudar/prejudicar fação em 3 turnos → sparkline com 3 pontos e lista de mudanças
-      com turnos
-- [ ] Fação desconhecida (intel) não expõe history nem estabilidade; número interno de
-      stability nunca aparece na API
-- [ ] Local não visitado não aparece em `control_changes` (fog of war)
-- [ ] threat_alert ativo aparece no mapa; expirado some
-- [ ] Save antigo carrega com overlays vazios e fações sem history
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM: N/A (zero structured output novo — proposta de evento é
-      gerada por Python)
-- [ ] Saves antigos continuam carregando
+- [x] Ajudar/prejudicar fação em turnos distintos → sparkline com pontos e lista de
+      mudanças com turnos (`test_history_ordena_e_limita`)
+- [x] Fação desconhecida (intel) não expõe history nem estabilidade; número interno de
+      stability nunca aparece na API (`test_factions_block_history_so_known`)
+- [x] Local não visitado não aparece em `control_changes` (fog of war)
+- [x] threat_alert ativo aparece no mapa; expirado some (TTL de `world_utils._ALERT_TTL`)
+- [x] Save antigo carrega com overlays vazios e fações sem history
+- [x] `uv run pytest` verde (313 testes offline, +23 de `test_fase34.py`)
+- [x] Guard de FallbackLLM: N/A confirmado — zero structured output novo (evento
+      `reputation_changed` é gerado por Python, não proposto pelo LLM)
+- [x] Saves antigos continuam carregando
 
 ## 6. Smoke test com LLM real
 
@@ -262,3 +262,16 @@ atualiza junto. Fallback: se resolver não achar nada, manda o valor legado.
 - **MockLLM/FallbackLLM:** nada muda (zero LLM novo).
 - **Quota/latência:** zero chamadas LLM; +1 evento por mudança de reputação no save
   (bytes, não requests).
+
+## 8. Desvios confirmados durante implementação (2026-07-03)
+
+1. `event_processor.py` NÃO precisou de nenhuma mudança: `apply_event` já tem
+   fallthrough no-op pra tipo sem `elif`; `_chronicle_milestone` já pula tipos fora de
+   `CHRONICLE_EVENT_TYPES`. `reputation_changed` só precisou de entrada no `EventType`
+   Literal + validador.
+2. `get_current_controller` (`graph_resolver.py`) ganhou `include_hidden: bool = True`
+   (default retrocompatível) em vez de duplicar a lógica "dynamic edge vence base" em
+   `visible_controllers`.
+3. `region_id` por local já vinha cru de `GET /data/map` (world_map.json já tem o
+   campo) — só o tipo TS `MapLocation` estava desatualizado.
+Detalhe completo: plano de implementação da sessão (`vamos-seguir-com-a-velvety-kite`).

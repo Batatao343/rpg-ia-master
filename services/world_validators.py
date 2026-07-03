@@ -101,12 +101,24 @@ def _v_faction_relation_changed(ev: ProposedWorldEvent, state: dict, proj: dict)
     return ValidationResult(True)
 
 
+def _v_reputation_changed(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    """Fase 3.4: evento enfileirado pelo Python (storyteller), não pelo LLM — a
+    validação aqui é sanidade (fação existe/viva), não gate de alucinação."""
+    f = gr.get_entity(ev.target_id)
+    if not f or f.get("type") != "faction":
+        return ValidationResult(False, f"{ev.target_id} não é facção")
+    if not gr.is_alive(ev.target_id, proj):
+        return ValidationResult(False, f"facção {ev.target_id} está derrotada")
+    return ValidationResult(True)
+
+
 _VALIDATORS = {
     "npc_killed": _v_npc_killed,
     "secret_revealed": _v_secret_revealed,
     "location_control_changed": _v_location_control_changed,
     "quest_completed": _v_quest_completed,
     "faction_relation_changed": _v_faction_relation_changed,
+    "reputation_changed": _v_reputation_changed,
 }
 
 

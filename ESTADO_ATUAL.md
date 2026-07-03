@@ -2,35 +2,40 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-03 (sessão 5: Fase 3.3 — Quest log)
+> Última atualização: 2026-07-03 (sessão 6: Fase 3.4 — Visualização de estado — Fase 3 completa)
 
 ---
 
 ## TL;DR — Em que pé está
 
-**Sessão 2026-07-03 (5): Fase 3.3 DONE — Quest log (objetivos visíveis).**
-`GameState.quests: List[Quest]` (side quests persistentes) somado à main quest, que
-continua sendo VIEW pura do `campaign_plan` (zero estado novo). Criação: `StoryUpdate`/
-`NPCResponse` ganham `proposed_quests` (campo novo, dentro dos trys existentes);
-`services/quest_log.py::register_proposed_quests` valida/zera ids inválidos (location/
-origin), deduplica por similaridade de título, aplica teto de 8 ativas. No `npc_actor`,
-`origin_name`/`origin_entity_id` são SOBRESCRITOS em Python (match por nome no grafo
-canônico) — não confiados ao LLM. **Conclusão reusa o pipeline 2.6**: nenhum campo
-estruturado novo — o LLM propõe `ProposedWorldEvent(type="quest_completed",
-target_id=quest_id, payload={"quest_id":...})` pelo MESMO canal de `npc_killed`;
-`_v_quest_completed` ganhou branch de `quest_id` (modo beat antigo intacto como
-fallback). Falha sistêmica (`quest_failed`) roda 100% em Python após `npc_killed`
-aplicado — nunca passa pelo LLM. `render_milestone` usa `payload.quest_title` (embutido
-pelo `event_processor` antes do milestone) em vez de resolver `target_id` no grafo —
-`target_id` de quest é um uuid, não id canônico. Endpoint: `_quest_block` virou
-`{main, side, markers}`; aba nova "Missões" no HUD (`QuestsTab.tsx`, greenfield — o
-bloco antigo de "Objetivo Atual" nunca tinha componente algum) + selo no `WorldMap`
-pro local de quest ativa. Suíte offline: 258 → **290 verdes** (+32
-`tests/test_fase33.py`). `npm run build` + `smoke_api.sh` ok. **Smoke com LLM real
-executado e verde**: NPC (Gemini SMART) propôs quest real com origem corretamente
-sobrescrita pelo código; turno seguinte (Gemini) concluiu a quest via
-`quest_completed`, milestone na crônica mostrou o TÍTULO (não o uuid). Detalhes/desvios
-da spec: `CHANGELOG.md` e `specs/fase-3.3-quest-log.md` §8.
+**Sessão 2026-07-03 (6): Fase 3.4 DONE — Visualização de estado. FASE 3 COMPLETA.**
+`services/state_views.py` (novo, 100% puro): `visible_controllers` (mapa mostra quem
+domina cada local visitado — verdade `world_projection` 2.5+ vence o legado
+`world.controlled` da Fase 2; nome, não id), `recent_control_changes`/`active_threats`
+(overlays do mapa: mudança de controle recente, `threat_alerts` ativos, ambos
+respeitando fog of war), `reputation_history`/`stability_label` (timeline de fação —
+número interno de `stability` NUNCA sai da API, só rótulo qualitativo). Evento novo
+`reputation_changed` entra no `event_log` pelo pipeline 2.6 — mas **gerado 100% em
+Python** (`agents/storyteller.py`, dentro do loop que já chama `apply_reputation`), não
+proposto pelo LLM: zero risco de mapeamento, zero guard de `FallbackLLM` necessário.
+Achado que simplificou a implementação: `event_processor.py` não precisou de NENHUMA
+mudança — `apply_event` já tinha fallthrough no-op pra tipo sem handler, e
+`_chronicle_milestone` já pulava tipo fora de `CHRONICLE_EVENT_TYPES` (reputação não
+vira milestone, timeline da fação é o lugar dela). `WorldMap` ganha badge de controle
+recém-mudado, ícone ⚠ de ameaça por região e banner de `looming_threat`; `FactionsTab`
+ganha sparkline SVG inline (sem lib) + rótulo de estabilidade + últimas mudanças.
+Suíte offline: 290 → **313 verdes** (+23 `tests/test_fase34.py`). `npm run build` +
+`smoke_api.sh` ok. Smoke com LLM real confirmou `map_overlays`/`controlled` corretos
+em jogo real (controlador resolvido = "Lorde Protetor Valerius", não id de fação);
+`reputation_changed` em si não depende de schema LLM novo (é Python puro), já coberto
+por testes de integração determinísticos. Detalhes/desvios da spec: `CHANGELOG.md` e
+`specs/fase-3.4-visualizacao-estado.md` §8.
+
+**Fase 3 (Clareza de campanha) fecha aqui** — 3.1 diário/crônica, 3.2 codex do
+jogador/bestiário, 3.3 quest log, 3.4 visualização de estado, todas `done`. Próximo:
+Fase 4 — Gameplay Core.
+
+Sessão 2026-07-03 (5) — Fase 3.3 (quest log) `done`; ver `CHANGELOG.md`.
 
 Sessão 2026-07-03 (4) — Fase 3.2 (Codex do jogador + bestiário progressivo) `done`; ver
 `CHANGELOG.md`.
@@ -51,9 +56,8 @@ ranqueia fatos por relevância+local+recência com orçamento por seção; estad
 ANTES da lore base; 4 agentes integrados: storyteller/npc/combat/campaign_manager).
 Smoke LLM real das 3 fases pendente de quota.
 
-**Próximo passo:** Fase 3.4 (visualização de estado, spec `draft`) — fecha a Fase 3;
-depois Fase 4 — Gameplay Core (cada fatia vira spec antes de implementar; ver ROADMAP
-§ Fase 4).
+**Próximo passo:** Fase 3 fechada — próxima é Fase 4 — Gameplay Core (cada fatia vira
+spec antes de implementar; ver ROADMAP § Fase 4).
 
 Entregas da 2.5b (detalhes no `CHANGELOG.md`): mapa de Valoria 30 nós, 18 fações,
 6 raças com traits mecânicos (`apply_racial_traits`), bestiário 84 entradas com
@@ -76,7 +80,7 @@ existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arquivar
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 290 testes offline verdes (test_real_llm precisa de chave)
+uv run pytest                        # 313 testes offline verdes (test_real_llm precisa de chave)
 uv run python game_engine.py         # CLI
 uv run uvicorn api:app --port 8000   # API + frontend web (http://localhost:8000)
 uv run python rag.py                 # reindexar lore (data/codex/) + regras (data/rules.txt)
@@ -120,6 +124,10 @@ em ~3s. **MockLLM esconde bugs de mapeamento** — validar nós novos com a chav
 - **Fase 3.3:** quest log (aba "Missões") — main quest deriva do `campaign_plan`; side
   quests (`GameState.quests`) propostas por NPC/narrador, concluídas via pipeline 2.6
   (`quest_completed`), falha sistêmica automática se a origem canônica morre
+- **Fase 3.4:** mapa mostra controlador real por local (verdade 2.5+/projection, não
+  o legado da Fase 2), badge de controle recém-mudado, ícone de ameaça regional
+  (`threat_alerts`), banner de `looming_threat`; timeline de reputação por facção
+  (sparkline + rótulo qualitativo de estabilidade, número interno nunca exposto)
 - Multi-provider LLM + typewriter effect no frontend React
 - Loot/Craft/Shop/Treasure + economia (sinal do ouro forçado em Python)
 - Memória híbrida (resumo + RAG por sessão) + persistência JSON por `game_id`

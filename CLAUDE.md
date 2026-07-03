@@ -223,8 +223,8 @@ Toda feature/fase nova segue o fluxo de `specs/`:
 
 Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `in-progress`; 2.6 (structured events) `done`;
 2.7 (rules engine) `done`; 2.8 (context builder) `done`; 3.1 (diário+crônica) `done`;
-3.2 (conhecimento revelável) `done`; 3.3 (quest log) `done`.
-Fase 3 restante: 3.4 (visualização de estado) `draft`, aguardando aprovação. Ver ROADMAP § Fase 3.
+3.2 (conhecimento revelável) `done`; 3.3 (quest log) `done`; 3.4 (visualização de
+estado) `done` — **Fase 3 completa**. Próxima: Fase 4 — Gameplay Core. Ver ROADMAP § Fase 4.
 Fase 4 (Gameplay Core) mapeada no ROADMAP em 6 fatias `draft` (4.1 progressão/árvore de
 habilidades · 4.2 buffs mecânicos · 4.3 inventário/equip · 4.4 economia determinística ·
 4.5 party · 4.6 dificuldade/IA) — specs ainda não escritas. Ver ROADMAP § Fase 4.

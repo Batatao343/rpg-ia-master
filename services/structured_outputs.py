@@ -20,6 +20,7 @@ EventType = Literal[
     "location_control_changed",
     "quest_completed",
     "faction_relation_changed",
+    "reputation_changed",
 ]
 
 

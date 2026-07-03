@@ -410,6 +410,28 @@ select {
 .worldmap__node.is-quest-target .worldmap__label { color: var(--accent-strong); font-weight: 600; }
 .worldmap__node.is-controlled .worldmap__label { color: var(--danger); }
 
+/* ---- Overlays de estado (Fase 3.4) ---- */
+.worldmap__banner {
+  margin: 0 0 0.6rem; padding: 0.5rem 0.7rem; background: var(--bg-deep);
+  border: 1px solid var(--danger); border-radius: var(--r-sm);
+  color: var(--danger); font-size: 0.85rem; font-style: italic;
+}
+.worldmap__node.is-contested .worldmap__dot {
+  animation: beacon 1.4s var(--ease) infinite; box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.worldmap__node.is-threatened .worldmap__label { color: var(--danger); }
+
+/* ---- Estabilidade/timeline de facção (Fase 3.4) ---- */
+.faction__stability { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem; }
+.faction__spark { width: 100%; max-width: 90px; height: 20px; flex: none; }
+.faction__spark polyline { fill: none; stroke: var(--accent); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.faction__stability-label { font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
+.faction__stability.is-unstable .faction__stability-label { color: var(--accent-strong); }
+.faction__stability.is-unstable .faction__spark polyline { stroke: var(--accent-strong); }
+.faction__stability.is-collapsing .faction__stability-label { color: var(--danger); }
+.faction__stability.is-collapsing .faction__spark polyline { stroke: var(--danger); }
+.faction__history { margin: 0.25rem 0 0; font-size: 0.74rem; color: var(--faint); }
+
 /* --- barra de ação --- */
 .actionbar { flex: none; display: flex; gap: 0.6rem; padding: 0.9rem clamp(0.9rem, 3vw, 2.9rem); border-top: 1px solid var(--line-soft); background: oklch(0.13 0.012 250 / 0.92); backdrop-filter: blur(10px); }
 .actionbar input { flex: 1 1 auto; }

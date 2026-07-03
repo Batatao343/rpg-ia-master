@@ -26,6 +26,24 @@ export interface NpcView {
 }
 
 
+export interface ControlChange {
+  location_id: string;
+  controller_name: string;
+  turn: number;
+}
+
+export interface ThreatAlert {
+  region_id: string;
+  hint: string;
+  turn: number;
+}
+
+export interface MapOverlays {
+  control_changes: ControlChange[];
+  threats: ThreatAlert[];
+  looming_threat: string;
+}
+
 export interface WorldBlock {
   location: string;
   location_id: string;
@@ -33,9 +51,10 @@ export interface WorldBlock {
   period: string;
   visited: string[];
   danger: number;
-  controlled: Record<string, string>; // location_id -> faction_id (dominado)
+  controlled: Record<string, string>; // Fase 3.4: location_id -> NOME de quem domina (era faction_id)
   danger_overrides: Record<string, number>; // location_id -> perigo elevado (ascensão)
   turn_count: number; // Fase 3.2: dispara refetch do Codex quando o turno muda
+  map_overlays: MapOverlays; // Fase 3.4
 }
 
 export interface Beat {
@@ -105,6 +124,12 @@ export interface CombatBlock {
   cooldowns: Record<string, number>;
 }
 
+export interface ReputationPoint {
+  turn: number;
+  delta: number;
+  value: number;
+}
+
 export interface FactionView {
   id: string;
   name: string;
@@ -116,6 +141,8 @@ export interface FactionView {
   disposition: "hostil" | "neutro" | "aliado";
   reputation: number; // -100..100
   completed: boolean;
+  history: ReputationPoint[]; // Fase 3.4: derivado do event_log (reputation_changed)
+  stability_label: "estável" | "instável" | "em colapso"; // Fase 3.4: nunca o número interno
 }
 
 export interface ChronicleEntry {
@@ -171,6 +198,7 @@ export interface MapLocation {
   id: string;
   name: string;
   region: string;
+  region_id: string; // Fase 3.4: agrupa locais pra overlay de ameaça (threat_alerts)
   coords: { x: number; y: number };
   danger: number;
   tags: string[];
