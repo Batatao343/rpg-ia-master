@@ -23,13 +23,12 @@
 
 ---
 
-## 🚨 PRIORIDADE CRÍTICA — Fase 2.5 a 2.8: Mundo vivo v1
+## ✅ ENTREGUE — Fase 2.5 a 2.8: Mundo vivo v1
 
-Antes de adicionar mais features (economia, crafting, sprites, arte), o sistema precisa de **fundação arquitetural sólida**.
-
-Problema atual: mundo muda via narrativa textual. Com campanhas longas, risco de contradição (NPC morto fala, local controlado muda sem evento, segredo vaza cedo).
-
-Solução: Separar camadas → motor de regras sistêmico → contexto orçamentado → estado auditável.
+Fundação arquitetural: mundo não muda mais por narrativa textual livre — camadas
+separadas (Codex ≠ event_log ≠ projection), motor de regras sistêmico, contexto
+orçamentado, estado auditável. **Todas as 4 fases entregues** (2.5b pendente só de
+smoke LLM real).
 
 > **Specs completas (fonte da verdade técnica):** [specs/fase-2.5](specs/fase-2.5-codex-world-state.md) · [specs/fase-2.6](specs/fase-2.6-structured-events.md) · [specs/fase-2.7](specs/fase-2.7-rules-engine.md) · [specs/fase-2.8](specs/fase-2.8-context-builder.md)
 
@@ -99,9 +98,7 @@ Smoke LLM real pendente de quota (fase determinística, sem `with_structured_out
 
 ---
 
-## Próximas entregas (após Fase 2.5-2.8)
-
-### Fase 3 — Clareza de campanha (Jogador entende o mundo)
+## ✅ ENTREGUE — Fase 3: Clareza de campanha (Jogador entende o mundo)
 
 **Objetivo:** Transformar estado abstrato em interface legível. Jogador sabe onde está, o que descobriu, quem odeia ele, quais objetivos estão abertos.
 
@@ -138,73 +135,40 @@ Smoke LLM real pendente de quota (fase determinística, sem `with_structured_out
 > do LLM, poção inutilizável em combate, inventário inicial com nomes livres que o
 > `ARTIFACTS_DB` não resolve, spawn narrativo sem teto de CR.
 >
-> Cada item abaixo vira uma spec em `specs/` (fase-4.x) antes de implementar.
-> Ordem sugerida: **4.1 → 4.2 → 4.3 → 4.4 → 4.5 → 4.6** (4.2 e 4.3 podem paralelizar).
+> **7 specs escritas (2026-07-03), todas `draft` aguardando aprovação** — links abaixo.
+> Ordem: **4.1 → 4.1b (Fable) → 4.2 → 4.3 → 4.4 → 4.5 → 4.6** (4.2 e 4.3 podem paralelizar; 4.4 depende da 4.3; 4.5 da 4.2; 4.6 de 4.1+4.2+4.5).
 
-### Fase 4.1 — Progressão: XP, level up e árvore de habilidades `draft`
+Resumo por fatia (detalhe técnico SÓ nas specs — fonte única):
 
-O maior buraco de gameplay. `XP_TABLE` (20 níveis) já existe em `gamedata.py` — falta tudo em volta.
-
-- [ ] XP determinístico em Python: por kill (tier do inimigo: minion/elite/boss) e por beat/quest concluído — nunca o LLM decide valor
-- [ ] `level_up()` determinístico: HP/mana/stamina/pontos de atributo por classe (curvas em `classes.json`)
-- [ ] **Árvore de habilidades por classe:** `player_abilities.json` ganha `class`, `tier`, `level_req`, `requires` (pré-requisitos) — hoje são 45 habilidades flat sem dono
-- [ ] `known_abilities` passa a guardar **ids canônicos** (hoje: texto livre casado por substring em `combat.py`)
-- [ ] Aprender habilidade ao subir de nível (escolha do jogador; CLI + frontend)
-- [ ] **Expansão de conteúdo:** mais classes e mais feitiços/habilidades (autoria manual, validada contra o schema da árvore)
-- [ ] Frontend: tela de level up + visualização da árvore
-
-### Fase 4.2 — Buffs, passivas e condições mecânicas de verdade `draft`
-
-Motor de condições já existe (DoT funciona); falta os modificadores serem LIDOS.
-
-- [ ] `active_conditions` tipadas: `{stat: "damage"|"ac"|"attack"|"save", delta}` além de `dot`
-- [ ] `resolve_damage_formula` / `compute_player_combat_stats` somam buffs/debuffs ativos — "+5 Dano por 3 turnos" passa a dar +5 de dano
-- [ ] Passivas de classe viram efeito mecânico data-driven (`classes.json` → `passive_effects`); hoje "Muralha Humana: +2 Defesa" é string decorativa
-- [ ] Condições de controle: atordoado perde turno, enredado não foge, medo penaliza acerto
-- [ ] Vale para player E inimigos (simetria)
-
-### Fase 4.3 — Inventário e equipamento `draft`
-
-- [ ] Slots de equipamento (arma/armadura/acessório) — hoje o motor auto-escolhe a melhor arma do inventário inteiro
-- [ ] **Itens usáveis em combate:** "bebo a poção" vira ação válida no parser (hoje só habilidades resolvem — poção comprada é inútil em luta)
-- [ ] Inventário inicial com **ids canônicos** (bug conhecido: "Espada Gasta" não existe no `ARTIFACTS_DB` → arma inicial não dá bônus)
-- [ ] Stack/quantidade para consumíveis e materiais
-- [ ] Bugs conhecidos: item narrado pelo storyteller não entra no inventário; capitalização errada
-- [ ] Frontend: aba de inventário com equip/uso
-
-### Fase 4.4 — Economia determinística: craft, mercadores e loot tables `draft`
-
-Tirar 3 sistemas da mão do LLM (mecânica é Python; LLM só narra). Absorve os itens
-"Sistema de crafting" e conecta com "Economia regional" do backlog.
-
-- [ ] **Craft robusto:** `data/recipes.json` (ingredientes + local de craft + skill/classe → resultado); Python valida ingredientes/ouro e aplica; LLM só narra o processo. Locais de craft no mapa (forja, laboratório, altar)
-- [ ] **Mercadores por região:** estoque curado e persistente (`data/merchants.json` ou tags por local); reabastecimento por relógio de mundo
-- [ ] **Preços em Python:** tabela por raridade × modificador regional (economy_tags) × reputação com a facção dominante — LLM deixa de inventar preço
-- [ ] **Drop tables por região/perigo:** raridade rolada em Python; LLM só descreve o item sorteado
-- [ ] Estado do mundo afeta comércio: local controlado por facção hostil = preços piores/estoque restrito (hoje só afeta encontros)
-
-### Fase 4.5 — Party: aliados em combate `draft`
-
-`CompanionState` já existe em `state.py`/persistence — zero lógica. Absorve "Sistema de Aliados (Party)" do backlog. Meta: **eu + 3 NPCs vs 5 orcs**.
-
-- [ ] Recrutamento: NPC com relationship alto pode ser convidado → vira `CompanionState` com ficha de combate
-- [ ] Generalizar o loop de combate para N vs N: `roll_initiative` inclui aliados; `resolve_ally_turn` reutiliza os perfis de comportamento (`choose_enemy_attack`)
-- [ ] Inimigos escolhem alvo taticamente (player OU aliado) — hoje só atacam o player
-- [ ] Morte de aliado: narrativa + evento de mundo (npc_killed se canônico)
-- [ ] Comandos de party fora de combate (esperar, seguir, dispensar)
-- [ ] Frontend: HP bars da party
-
-### Fase 4.6 — Dificuldade, IA de combate e morte `draft`
-
-- [ ] **Clamp determinístico do spawn narrativo:** count/tier limitados pelo danger do local (hoje `EncounterScanner` LLM decide quantos inimigos sem teto)
-- [ ] Orçamento de encontro por nível do player + danger (scaling real de dificuldade)
-- [ ] Inimigos usam as próprias habilidades: campo `abilities` do bestiário hoje é decorativo — virar ações mecânicas
-- [ ] **Morte do player com narrativa** (bug conhecido: CLI imprime "VOCÊ MORREU" seco; frontend só tela de morte)
-- [ ] Boss fights: perfil `implacavel` + fases por threshold de HP
+- **4.1 — Progressão** [`draft` → spec](specs/fase-4.1-progressao.md) — XP determinístico
+  (kill por tier / beat / quest), level up com curvas por classe, árvore com ramos =
+  subclasses mutuamente exclusivas, `known_abilities` vira ids canônicos, escolha
+  pendente não bloqueia o loop, evento `level_up` na crônica.
+- **4.1b — Árvores de Valoria** [`draft` → spec](specs/fase-4.1b-arvores-valoria.md) —
+  **executor obrigatório: Fable.** Conteúdo das árvores: 10 classes × 2 ramos ancorados
+  nos pilares do mundo (mundo vazio / Abismo / magia corrompe / sacrifício ou tecnologia),
+  ~120 habilidades com impacto mecânico, anti-spoiler, apêndice de design permanente.
+- **4.2 — Buffs mecânicos** [`draft` → spec](specs/fase-4.2-buffs-mecanicos.md) —
+  condições tipadas lidas em dano/AC/acerto/save; stun/root/fear reais; 10 passivas
+  data-driven; simetria player/inimigo.
+- **4.3 — Inventário/equipamento** [`draft` → spec](specs/fase-4.3-inventario-equipamento.md) —
+  inventário `{id, qty}` + slots; poção usável em combate; fecha 3 bugs conhecidos
+  (arma inicial sem bônus, item narrado que some, capitalização).
+- **4.4 — Economia determinística** [`draft` → spec](specs/fase-4.4-economia-deterministica.md) —
+  receitas/mercadores/loot tables em JSON; preço = raridade × região × reputação, em
+  Python; `TradeIntent` substitui o LLM-decide-tudo; estado do mundo afeta comércio.
+- **4.5 — Party** [`draft` → spec](specs/fase-4.5-party-aliados.md) — recrutamento com
+  gate de relationship; combate N vs N no mesmo motor (perfis 2.5b p/ aliados); alvo
+  tático dos inimigos; morte de companion alimenta o mundo (npc_killed).
+- **4.6 — Dificuldade/IA/morte** [`draft` → spec](specs/fase-4.6-dificuldade-ia-morte.md) —
+  clamp+piso do spawn por orçamento de pontos; inimigos usam habilidades; boss com
+  fases; morte do player com fecho narrativo e save-memorial.
 
 **Critério de aceite da Fase 4:** personagem sobe de nível e aprende habilidade nova; buff de habilidade muda número de dano observável; poção usada em combate cura; craft falha sem ingrediente; mercador de Skallgard vende coisa diferente do de Nova Arcádia; combate 4 (party) vs 5 (orcs) resolve sem crash; morte tem narrativa.
 
-### Fase 5 — Agentic playtest + telemetria
+---
+
+## Fase 5 — Agentic playtest + telemetria
 
 **Objetivo:** Agentes testadores jogam campanhas automáticas. Detectam inconsistências, medem qualidade, reduzem custo de API.
 
@@ -253,25 +217,17 @@ Depende de Fase 2.5+ estar estável (world_projection, revealed_facts).
 
 ### Encontros sistêmicos (A+B+D)
 
-Depende de Fase 2.8 (context builder) estar estável.
+Depende da Fase 4.6.
 
-Hoje: storyteller detecta encontro → combate sempre (1 inimigo, sem contexto).  
-Novo: `encounter_agent` centraliza lógica (detecção, tipo, composição).
+> **Orçamento/composição de encontro por danger+nível → absorvido pela spec 4.6**
+> (`encounter_budget.py`, clamp/fill do spawn). O que sobra aqui é a parte de
+> DETECÇÃO e VARIEDADE de encontro (nem todo encontro é combate).
 
-**Fluxo:**
-```
-storyteller (viagem)
-  → check_encounter() [Python: d20 + wis vs DC]
-  → encontro_agent (tipo: story/trap/combat + composição)
-  → combate | storyteller (condicional)
-```
+**Tarefas restantes:**
 
-**Tarefas:**
-
-- [ ] `agents/encounter.py` — detection check, encounter type por danger, composição de inimigos
-- [ ] `world_utils.py` — ENCOUNTER_BUDGET, generate_encounter_spec(), detection_check()
-- [ ] `main.py` — nó + arestas condicionais (encounter_agent → combat_agent | storyteller)
-- [ ] `storyteller.py` — parar de short-circuit; emitir next="encounter_agent"
+- [ ] `check_encounter()` em Python: d20 + wis vs DC (detecção/surpresa)
+- [ ] Tipos de encontro além de combate: story/trap/social por danger e região
+- [ ] `agents/encounter.py` + nó no grafo com arestas condicionais (encounter → combat_agent | storyteller); storyteller para de short-circuit
 
 ### Clima com efeito real
 
@@ -288,37 +244,30 @@ Depende de context builder estável.
 - [ ] `campaign_manager` — emitir fenômenos globais em beats específicos
 - [ ] Frontend — ícone de clima com tooltip
 
-### Economia regional
-
-Depende da Fase 4.4 (economia determinística) — é a evolução dela com estado do mundo.
-
-**Regra:** item com economy_tags só aparece em locais com tags correspondentes; preço = abundante (×0.6) ou escasso (×1.8).
-
-**Tarefas:**
-
-- [ ] `data/artifacts.json` — adicionar economy_tags + unique flag
-- [ ] `data/world_map.json` — adicionar economy_tags por local
-- [ ] `gamedata.py` — PRICE_MODIFIERS (item_id + tag → multiplicador)
-- [ ] `agents/loot.py` — filtrar pool por tags, aplicar preço modificado
+### ~~Economia regional~~ → fundida na **Fase 6** (era duplicata; base determinística é a spec 4.4)
 
 ---
 
-## Fase 6 — Conteúdo sistêmico
+## Fase 6 — Conteúdo sistêmico (evolução da economia 4.4)
 
-Depende de Fases 2.5-3 estáveis (world_projection, context builder, clareza de campanha).
+Depende da **Fase 4.4** (economia determinística) — Fase 6 é a evolução dela com
+estado do mundo dinâmico. Absorve o item "Economia regional" do backlog (era duplicata).
 
-**Objetivo:** Economia, loot e encontros afetados visivamente pelo estado do mundo.
+> **Já coberto em outro lugar (não refazer aqui):**
+> preço por controle de facção hostil + reputação → spec 4.4 (R4/R6);
+> quest falha quando NPC-origem morre → ✅ entregue na 3.3;
+> contexto muda quando facção perde local → ✅ entregue na 2.8;
+> reforços/ameaça regional afetam encontros → ✅ parcial na 2.5b (`threat_alerts`).
 
-**Entregas:**
+**Entregas (o que sobra de verdade):**
 
-- [ ] Economia regional: preços afetados por controle de facção, bloqueio de rotas, guerra
-- [ ] Rotas comerciais: fluxo de itens por conexões de mapa
-- [ ] Estoques em lojas: variam por acesso regional e eventos (bloquei porto → peixe suma)
-- [ ] Quests dinâmicas: ajustadas por mudanças de mundo (aliado morreu? quest falha; facção perdeu local? contexto muda)
-- [ ] NPCs reagem a histórico: preço sobe se traiu, desconto se salvou
-- [ ] Monstros migram por ameaça: danger regional afeta composição de encontros
+- [ ] Rotas comerciais: fluxo de itens por conexões do mapa (bloqueio de rota corta oferta)
+- [ ] Estoques reagem a EVENTOS do event_log (bloquear porto → peixe some da loja e preço explode — hoje o estoque 4.4 só reage a controle/relógio)
+- [ ] `economy_tags` avançadas: item abundante (×0.6) / escasso (×1.8) por região (multiplicadores finos sobre a base da 4.4)
+- [ ] Itens `unique` (um por mundo, rastreados no event_log)
+- [ ] Migração real de monstros: danger/ameaça muda a COMPOSIÇÃO das loot/encounter tables com o tempo (2.5b só adiciona reforço pontual)
 
-**Critério de aceite:** Bloquear um porto → peixe some de lojas, preço explode. NPC que salvou paga menos.
+**Critério de aceite:** Bloquear um porto → peixe some de lojas, preço explode — rastreável no event_log.
 
 ---
 
@@ -438,10 +387,10 @@ Depende de: Fases 2.5-5 estáveis.
 
 ### Melhorias da Crônica
 
-- [ ] **Arcos:** arc_title + chapters (mudança de título = quebra de capítulo)
+- [x] ~~**Arcos:** arc_title + chapters~~ → ✅ entregue na **Fase 3.1**
 - [ ] **Compressão:** capítulo antigo > 20 entradas → archivist comprime
 - [ ] **Busca:** endpoint `POST /game/chronicle/search` via RAG
-- [ ] **Frontend:** separadores, search, download .txt
+- [ ] **Frontend restante:** search + download .txt (separadores por capítulo já existem, 3.1)
 
 ### ~~Lore Multi-Índice~~ → OBSOLETO
 
@@ -454,7 +403,7 @@ Mapa de Valoria com 30 nós já entregue (2.5b). Sobra:
 
 - [ ] Sub-locais (distritos, masmorras internas)
 - [ ] Tempo de viagem variável por conexão (hoje: sempre 1 período)
-- [ ] `economy_tags` por local (pré-requisito da Fase 4.4 / Economia regional)
+- [x] ~~`economy_tags` por local~~ → absorvido pela **spec 4.4** (R2: `craft_tags` + `economy_tags` nos 30 nós)
 
 ### ~~Sistema de crafting~~ → promovido para **Fase 4.4**
 
@@ -490,13 +439,14 @@ Antes: "mais features, sprites depois".
 ### Ordem crítica
 
 1. **Fases 2.5-2.8** ✅ ENTREGUES: Codex, event_log, world_projection, rules engine, context builder.
-2. **Fase 3** (agora): Clareza de campanha — jogador entende o mundo.
-3. **Fase 4** (na sequência): Gameplay Core — progressão/level up, buffs mecânicos, inventário/equip, economia determinística (craft/mercadores/loot), party, dificuldade.
-4. **Fase 5** (mês seguinte): agentic playtest + telemetria.
-5. **Fase 6+** (depois): conteúdo sistêmico, autoria, arte, sprites.
+2. **Fase 3** ✅ ENTREGUE (2026-07-03): Clareza de campanha — diário/crônica, codex do jogador, quest log, visualização de estado.
+3. **Fase 4** (AGORA — 7 specs `draft` escritas): Gameplay Core — progressão + árvores lore-driven (4.1/4.1b), buffs mecânicos, inventário/equip, economia determinística, party, dificuldade/morte.
+4. **Fase 5** (na sequência): agentic playtest + telemetria (depende da progressão 4.1 p/ "jogar até nível 10").
+5. **Fase 6+** (depois): conteúdo sistêmico (evolução da 4.4), autoria, arte, sprites.
 
 Sem 2.5-2.8, as features de economia/craft/encontros ficariam acopladas, contraditórias e não-testáveis — fundação entregue; Fase 4 constrói gameplay em cima dela.
 
 ### Métrica de sucesso
 
-Fim de Fase 2.8: Campanha 50 turnos roda sem contradição. Event log rastreável. Estado auditável. Context nunca explode.
+- ✅ Fase 2.8: campanha 50 turnos sem contradição; event log rastreável; contexto nunca explode.
+- **Fase 4 (atual):** critério de aceite da seção Fase 4 (progressão + buff observável + poção em combate + craft com receita + mercadores distintos + 4v5 + morte com narrativa).
