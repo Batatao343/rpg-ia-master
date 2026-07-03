@@ -2,26 +2,34 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-03 (sessão 3: Fase 3.1 — crônica por capítulos)
+> Última atualização: 2026-07-03 (sessão 4: Fase 3.2 — Codex do jogador + bestiário progressivo)
 
 ---
 
 ## TL;DR — Em que pé está
 
-**Sessão 2026-07-03 (3): Fase 3.1 DONE — Diário + Crônica por capítulos.** `chronicle`
-deixou de ser `List[str]`: agora é `List[ChronicleChapter]` (capítulos ancorados no
-`arc_title` novo do `campaign_plan`). Todo GameEvent APLICADO (inclusive cascata da
-rules engine) de tipo relevante vira **milestone determinístico** (`services/chronicle.py`,
-template Python + `event_id` auditável) — jogador nunca perde morte de líder/queda de
-local, mesmo em turno em que o LLM do archivist não roda. Prosa do menestrel continua
-(`kind="prose"`, appendada POR CIMA dos milestones — ordem de merge no archivist
-invertida de propósito: `{**event_updates, **updates}`). Saves antigos: backfill no
-load (capítulo único). Frontend: `ChronicleTab` por capítulos (⚔ milestone / ❧ prosa).
-Suíte offline: **228 verdes** (+17 `test_fase31.py`). `npm run build` + smoke API mock
-ok. **Smoke com LLM real executado e verde** (2 req: planner inventa `arc_title` sem
-arco anterior e MANTÉM título quando o arco continua). `smoke_api.sh` corrigido:
-curl do Git Bash corrompia UTF-8 inline (`-d`) — body agora vai via `--data-binary
-@arquivo`. Detalhes: `CHANGELOG.md`.
+**Sessão 2026-07-03 (4): Fase 3.2 DONE — Codex do jogador + bestiário progressivo.**
+`GameState.bestiary_knowledge: Dict[str, BestiaryKnowledge]` (contadores `seen/fought/
+defeated`, 100% Python) alimenta `services/discovery.py::knowledge_tier` (4 graus:
+Rumores/Encontrada/Estudada/Dominada) e `bestiary_view` (revela mais ficha por grau).
+`player_codex(state)` agrega — SEM estado novo além do bestiário — locais visitados,
+fações conhecidas (`goal` só se `knows_goal`, mesma regra do HUD), NPCs (match por nome
+em `load_entities()`) e segredos revelados; corpo vem do Codex (`data/codex/`) só se
+`visibility: public` (`services/codex_loader.py::codex_index`/`codex_body`, cache
+módulo-level). Hooks: spawn de combate → `record_encounter` (1x/combate, não por round);
+morte de instância → `record_kills`; `check_encounter` (emboscada) nomeia criatura ANTES
+do combate → `agents/storyteller.py` registra `record_rumor` (seen sem fought) —
+ajuste em relação à spec original: o rumor não nasce no `threat_alert` em si (a criatura
+que fugiu já teria `fought≥1`), nasce quando o hint nomeia a criatura pro jogador antes
+da luta. Endpoint `GET /game/codex` on-demand (fora do `GameResponse`, não incha o
+turno); frontend `CodexTab` com fetch próprio (novo padrão — `ChronicleTab` só usa
+props) + refetch quando `world.turn_count` muda com a aba aberta. Suíte offline:
+228 → **258 verdes** (+30 `tests/test_fase32.py`, ids reais de `data/bestiary.json`/
+`data/codex/`, zero fixture inventada). `npm run build` + `smoke_api.sh` (com
+`/game/codex` novo) ok. Zero LLM na fase — sem guard de `FallbackLLM`. Detalhes/desvios
+da spec: `CHANGELOG.md` e `specs/fase-3.2-conhecimento-revelavel.md` §8.
+
+Sessão 2026-07-03 (3) — Fase 3.1 (crônica por capítulos) `done`; ver `CHANGELOG.md`.
 
 Sessão 2026-07-03 (2) — faxina de código morto + auditoria de gameplay → **Fase 4 —
 Gameplay Core** no ROADMAP (6 fatias `draft`): ver `CHANGELOG.md`. Achados-chave:
@@ -37,9 +45,9 @@ ranqueia fatos por relevância+local+recência com orçamento por seção; estad
 ANTES da lore base; 4 agentes integrados: storyteller/npc/combat/campaign_manager).
 Smoke LLM real das 3 fases pendente de quota.
 
-**Próximo passo:** Fase 3.2 (conhecimento revelável, spec `draft`), depois 3.3 (quest
-log — usa o `arc_title` da 3.1) e 3.4 (visualização de estado); depois Fase 4 —
-Gameplay Core (cada fatia vira spec antes de implementar; ver ROADMAP § Fase 4).
+**Próximo passo:** Fase 3.3 (quest log — usa o `arc_title` da 3.1, spec `draft`), depois
+3.4 (visualização de estado); depois Fase 4 — Gameplay Core (cada fatia vira spec antes
+de implementar; ver ROADMAP § Fase 4).
 
 Entregas da 2.5b (detalhes no `CHANGELOG.md`): mapa de Valoria 30 nós, 18 fações,
 6 raças com traits mecânicos (`apply_racial_traits`), bestiário 84 entradas com
@@ -62,7 +70,7 @@ existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arquivar
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 228 testes offline verdes (test_real_llm precisa de chave)
+uv run pytest                        # 258 testes offline verdes (test_real_llm precisa de chave)
 uv run python game_engine.py         # CLI
 uv run uvicorn api:app --port 8000   # API + frontend web (http://localhost:8000)
 uv run python rag.py                 # reindexar lore (data/codex/) + regras (data/rules.txt)
@@ -100,6 +108,9 @@ em ~3s. **MockLLM esconde bugs de mapeamento** — validar nós novos com a chav
 - **Fase 3.1:** crônica por capítulos (`arc_title` do planner) — milestones
   determinísticos do event_log (auditáveis por `event_id`) + prosa de menestrel;
   backfill de saves antigos; HUD distingue ⚔ milestone de ❧ prosa
+- **Fase 3.2:** Codex do jogador (`GET /game/codex`, aba `CodexTab`) — locais/fações/
+  NPCs/segredos derivados do save (zero estado novo); bestiário progressivo com 4 graus
+  (`bestiary_knowledge`, 100% Python) revelando ficha crescente da criatura
 - Multi-provider LLM + typewriter effect no frontend React
 - Loot/Craft/Shop/Treasure + economia (sinal do ouro forçado em Python)
 - Memória híbrida (resumo + RAG por sessão) + persistência JSON por `game_id`

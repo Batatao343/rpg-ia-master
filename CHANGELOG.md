@@ -5,6 +5,55 @@
 
 ---
 
+## 2026-07-03 (4) — Fase 3.2: Codex do jogador + bestiário progressivo (`done`)
+
+- **`state.py`:** `BestiaryKnowledge(TypedDict, total=False)` (`seen/fought/defeated/
+  first_seen_turn/last_update_turn`); `GameState.bestiary_knowledge: Dict[str,
+  BestiaryKnowledge]` (chave = id de `data/bestiary.json`).
+- **`services/discovery.py`** (novo, puro): `normalize_bestiary_id` (id de instância
+  `{bestiary_id}_{N}` → id real, valida contra `gamedata.BESTIARY`), `record_encounter`/
+  `record_kills`/`record_rumor` (contadores aditivos, dict novo), `knowledge_tier`
+  (`BESTIARY_TIERS`: 1 Rumores/seen≥1, 2 Encontrada/fought≥1, 3 Estudada/defeated≥3,
+  4 Dominada/defeated≥7), `bestiary_view` (campos crescentes por grau: nome+regiões →
+  +descrição/tipo → +HP/defesa/nomes de ataque → +dano/behavior/loot), `player_codex`
+  (agrega locations/factions/characters/creatures/secrets — 100% derivado do save já
+  existente, zero estado novo para essas 4 categorias).
+- **`services/codex_loader.py`:** `codex_index()` (cache módulo-level, id→path, mesmo
+  padrão de `os.walk` de `load_codex`) e `codex_body(entity_id)` (corpo truncado a
+  2000 chars, `""` se `visibility != "public"` ou id não achado — não-onisciência).
+- **Hooks de combate (`agents/combat.py`):** spawn (`is_combat_start and not active`) →
+  `record_encounter` (1x/combate, contorna dupla contagem por round); bloco de `dead`
+  (fim de round) → `record_kills`.
+- **Rumor sem combate (R3) — desvio da spec original:** a leitura literal ("threat_alert
+  cria rumor") não fechava — a criatura que fugiu já teria `fought≥1` nesse combate,
+  contradizendo "seen sem fought". Resolvido em `check_encounter` (`world_utils.py`):
+  os branches que NOMEIAM uma criatura concreta ANTES do combate (reforços consumindo
+  `threat_alert.enemy_id`; `ruler`/`danger>=4` via `pick_encounter_enemy`) agora
+  retornam `enemy_id`; `agents/storyteller.py` (onde o `SystemMessage("COMBAT START")`
+  é montado) chama `record_rumor` só quando `enemy_id` existe — antes do spawn real.
+  `register_flee_alert` ganhou parâmetro `enemy_id` (opcional, retrocompatível) pra
+  carregar o id do bestiário no alerta até o consumo.
+- **Persistência/API:** `bestiary_knowledge` com default `{}` em save/load (sem
+  migração — save antigo simplesmente não tem o campo); `initial_state` em
+  `game_engine.py` E `api.py::new_game` (duas cópias independentes); `_world_block`
+  ganhou `turn_count` (não existia — necessário pro refetch da aba); `GET /game/codex`
+  segue o padrão real de `/game/state` (`f"saves/{game_id}.json"`, não
+  `load_game_state(game_id)` como a spec sugeria de forma simplificada).
+- **Frontend:** `CodexTab.tsx` (novo) — 5 categorias com sub-nav, selo I–IV por
+  criatura (silhueta CSS em cinza no grau 1), corpo do Codex renderizado via `mdLite`;
+  primeira aba do HUD com fetch próprio (`useEffect` + `getCodex`), refeito quando
+  `world.turn_count` muda com a aba aberta (`ChronicleTab`, por comparação, só usa
+  props — não tinha esse padrão antes).
+- **Suíte:** 228 → **258 verdes** (+30 em `tests/test_fase32.py`, usando ids reais de
+  `data/bestiary.json`/`data/codex/` — zero fixture inventada, evita mascarar bug de
+  id/path). `npm run build` ok. `smoke_api.sh` com checagem nova de `/game/codex`
+  (200 OK) — smoke completo verde numa API local (mock, sem chave).
+- **Zero LLM na fase** — sem guard de `FallbackLLM` necessário (100% Python
+  determinístico). Detalhe completo dos desvios: `specs/fase-3.2-conhecimento-
+  revelavel.md` §8.
+
+---
+
 ## 2026-07-03 (3) — Fase 3.1: Diário + Crônica por capítulos (`done`)
 
 - **`services/chronicle.py`** (novo, puro): `CHRONICLE_EVENT_TYPES` (npc_killed,

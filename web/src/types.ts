@@ -35,6 +35,7 @@ export interface WorldBlock {
   danger: number;
   controlled: Record<string, string>; // location_id -> faction_id (dominado)
   danger_overrides: Record<string, number>; // location_id -> perigo elevado (ascensão)
+  turn_count: number; // Fase 3.2: dispara refetch do Codex quando o turno muda
 }
 
 export interface Beat {
@@ -156,6 +157,57 @@ export interface MapLocation {
 export interface WorldMapData {
   start_location: string;
   locations: MapLocation[];
+}
+
+// Codex do jogador (GET /game/codex) — Fase 3.2. On-demand, fora do GameResponse.
+export interface CodexLocation {
+  id: string;
+  name: string;
+  body: string; // "" se doc hidden/secret ou não achado
+}
+
+export interface CodexFaction {
+  id: string;
+  name: string;
+  goal: string; // "" se knows_goal for false (não-onisciência)
+  knows_goal: boolean;
+  body: string;
+}
+
+export interface CodexCharacter {
+  name: string;
+  role: string;
+  location: string;
+  body: string;
+}
+
+export interface CodexCreature {
+  id: string;
+  tier: 1 | 2 | 3 | 4;
+  tier_name: string; // "Rumores" | "Encontrada" | "Estudada" | "Dominada"
+  name: string;
+  regions: string[];
+  description?: string;
+  type?: string;
+  max_hp?: number;
+  defense?: number;
+  attacks?: string[] | Array<{ name: string; type: string; bonus: number; damage: string }>;
+  behavior?: Record<string, unknown>;
+  loot?: string[];
+}
+
+export interface CodexSecret {
+  entity_id: string;
+  fact: string;
+  turn: number;
+}
+
+export interface PlayerCodex {
+  locations: CodexLocation[];
+  factions: CodexFaction[];
+  characters: CodexCharacter[];
+  creatures: CodexCreature[];
+  secrets: CodexSecret[];
 }
 
 // Mensagem renderizada no log da história.

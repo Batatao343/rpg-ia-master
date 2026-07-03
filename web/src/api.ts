@@ -3,6 +3,7 @@ import type {
   CreateOptions,
   CreatePayload,
   GameResponse,
+  PlayerCodex,
   WorldMapData,
 } from "./types";
 
@@ -41,3 +42,6 @@ export const sendAction = (input_text: string, game_id: string | null) =>
 
 export const getState = (game_id: string) =>
   req<GameResponse>("/game/state?game_id=" + encodeURIComponent(game_id));
+
+export const getCodex = (game_id: string) =>
+  req<PlayerCodex>("/game/codex?game_id=" + encodeURIComponent(game_id));

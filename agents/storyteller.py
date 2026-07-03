@@ -7,6 +7,7 @@ from agents.npc import generate_new_npc
 from agents.world_simulator import simulate_world
 from llm_setup import get_llm
 from rag import query_rag
+from services import discovery as disc
 from services import graph_resolver as gr
 from services.context_builder import build_context_pack
 from services.structured_outputs import ProposedWorldEvent
@@ -157,6 +158,12 @@ def storyteller_node(state: GameState):
             }
             if rested_player is not None:
                 updates["player"] = rested_player  # já curou no descanso antes da emboscada
+            # Fase 3.2 (R3): criatura nomeada no hint ANTES do combate = rumor (seen, sem fought).
+            enemy_id = enc.get("enemy_id")
+            if enemy_id:
+                updates["bestiary_knowledge"] = disc.record_rumor(
+                    state.get("bestiary_knowledge", {}), enemy_id, turn
+                )
             return updates
         # Sem emboscada: o mundo gera 1 evento off-screen narrado (e grava no RAG da sessão).
         try:

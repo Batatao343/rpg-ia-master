@@ -492,6 +492,36 @@ select {
 .faction--hostil .faction__fill { background: var(--danger, oklch(0.54 0.20 25)); }
 .faction__meta { margin: 0.35rem 0 0; font-size: 0.78rem; color: var(--faint); }
 
+/* ---- Codex do jogador (Fase 3.2) ---- */
+.codex-cats { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0 0 0.8rem; }
+.codex-cat {
+  padding: 0.28rem 0.6rem; background: var(--bg-deep); border: 1px solid var(--line-soft);
+  border-radius: 999px; color: var(--faint); font-size: 0.74rem; letter-spacing: 0.04em;
+  text-transform: uppercase; cursor: pointer; transition: border-color 0.16s var(--ease), color 0.16s var(--ease);
+}
+.codex-cat:hover { border-color: var(--line); color: var(--muted); }
+.codex-cat.is-active { border-color: var(--accent); color: var(--accent); }
+
+.codex-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+.codex-entry {
+  padding: 0.6rem 0.7rem; background: var(--bg-deep); border: 1px solid var(--line-soft);
+  border-radius: var(--r-sm); transition: border-color 0.16s var(--ease);
+}
+.codex-entry:hover { border-color: var(--line); }
+.codex-entry__name { margin: 0; font-family: var(--display); font-size: 0.82rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink); }
+.codex-entry__meta { margin: 0.2rem 0 0; font-size: 0.82rem; color: var(--faint); }
+.codex-entry__body { margin: 0.35rem 0 0; font-size: 0.92rem; font-style: italic; color: var(--muted); line-height: 1.5; }
+
+.codex-beast__top { display: flex; align-items: flex-start; gap: 0.6rem; }
+.codex-beast__seal {
+  flex: none; width: 1.9rem; height: 1.9rem; display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); border-radius: 50%; font-family: var(--display);
+  font-size: 0.85rem; color: var(--accent);
+}
+.codex-beast--tier1 { opacity: 0.65; filter: grayscale(0.6); }
+.codex-beast--tier1 .codex-beast__seal { border-color: var(--line-soft); color: var(--faint); }
+.codex-beast--tier4 { border-color: var(--accent); }
+
 /* 6 abas: aperta a tipografia p/ caber em 360px */
 .tab { font-size: 0.56rem; letter-spacing: 0.02em; padding: 0.5rem 0.05rem; }
 

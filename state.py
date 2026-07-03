@@ -120,6 +120,15 @@ class FactionIntel(TypedDict, total=False):
     intel_turn: int           # turno em que o snapshot foi obtido (p/ marcar defasagem)
 
 
+class BestiaryKnowledge(TypedDict, total=False):
+    """O que o JOGADOR sabe sobre uma criatura do bestiário. Chave = id de data/bestiary.json."""
+    seen: int               # avistada/citada em alerta ou hint de encontro (rumor)
+    fought: int              # combates iniciados contra ela
+    defeated: int             # instâncias mortas pelo player
+    first_seen_turn: int
+    last_update_turn: int
+
+
 class CampaignBeat(TypedDict):
     description: str
     status: Literal["pending", "done"]
@@ -216,6 +225,7 @@ class GameState(TypedDict):
     party: List[CompanionState]
     factions: List[Faction]  # Fase 2: fações com objetivos próprios (mundo vivo)
     faction_intel: Dict[str, Dict]  # Fase 2: o que o jogador SABE de cada facção (não-onisciência)
+    bestiary_knowledge: Dict[str, BestiaryKnowledge]  # Fase 3.2: contadores por criatura (chave = id do bestiário)
     npcs: Dict[str, Dict]
     active_npc_name: Optional[str]
     active_plan_step: Optional[str]

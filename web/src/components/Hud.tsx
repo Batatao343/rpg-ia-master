@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { mdLite, pct, prettyItem } from "../lib";
 import type { ChronicleChapter, CombatBlock, Condition, FactionView, GameResponse, NpcView } from "../types";
+import { CodexTab } from "./CodexTab";
 import { WorldMap } from "./WorldMap";
 import { Medallion } from "./ornaments";
 
-type Tab = "ficha" | "combate" | "personagens" | "mapa" | "faccoes" | "cronica";
+type Tab = "ficha" | "combate" | "personagens" | "mapa" | "faccoes" | "cronica" | "codex";
 
 export function Hud({ data, open }: { data: GameResponse | null; open: boolean }) {
   const p = data?.player_stats;
@@ -38,6 +39,7 @@ export function Hud({ data, open }: { data: GameResponse | null; open: boolean }
     ["mapa", "Mapa"],
     ["faccoes", "Fações"],
     ["cronica", "Crônica"],
+    ["codex", "Codex"],
   ];
 
   return (
@@ -85,6 +87,9 @@ export function Hud({ data, open }: { data: GameResponse | null; open: boolean }
         )}
         {tab === "faccoes" && <FactionsTab factions={data?.factions ?? []} />}
         {tab === "cronica" && <ChronicleTab chapters={data?.chronicle ?? []} />}
+        {tab === "codex" && (
+          <CodexTab gameId={data?.game_id} turnCount={data?.world.turn_count} open={tab === "codex"} />
+        )}
       </div>
     </aside>
   );

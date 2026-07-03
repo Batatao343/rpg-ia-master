@@ -21,6 +21,7 @@ from state import GameState, EnemyStats
 from llm_setup import ModelTier, get_llm
 from gamedata import ABILITIES
 from agents.bestiary import generate_new_enemy
+from services import discovery as disc
 from services import graph_resolver as gr
 from services.context_builder import build_context_pack
 import combat_mechanics as cm
@@ -255,10 +256,16 @@ def combat_node(state: GameState):
 
     active = [e for e in enemies if e.get("status") == "ativo"]
     spawned_flavor = None
+    bestiary_knowledge = dict(state.get("bestiary_knowledge") or {})
+    bk_changed = False
+    turn = int(state.get("world", {}).get("turn_count", 0) or 0)
     if is_combat_start and not active:
         enemies, spawned_flavor = _spawn_enemies_integrated(messages, combat_target)
         active = [e for e in enemies if e.get("status") == "ativo"]
         print(f"⚔️ Combate: {[e['name'] for e in active]}")
+        # Fase 3.2 (R2): 1ª vez que estas criaturas entram em cena neste combate.
+        bestiary_knowledge = disc.record_encounter(bestiary_knowledge, active, turn)
+        bk_changed = True
 
     # Sem inimigos = vitória (ou nada a fazer).
     if not active:
@@ -308,6 +315,11 @@ def combat_node(state: GameState):
     combat_over = not active_after
     victory = combat_over and bool(dead)  # vitória "com espólio" só se alguém caiu
 
+    # Fase 3.2 (R2): morte de instância vira `defeated` no bestiário do jogador.
+    if dead:
+        bestiary_knowledge = disc.record_kills(bestiary_knowledge, dead, turn)
+        bk_changed = True
+
     # Fase 2.8: pack enxuto (só ambientação; mecânica segue 100% Python).
     loc = state.get("world", {}).get("current_location", "")
     world_pack = build_context_pack(state, query=f"{loc} {intent}",
@@ -325,6 +337,8 @@ def combat_node(state: GameState):
         "next": "loot" if victory else None,
         "archive_due": combat_over,  # fim de combate = evento relevante
     }
+    if bk_changed:
+        result["bestiary_knowledge"] = bestiary_knowledge
     combat_meta["active"] = bool(active_after)
 
     # Fase 2.6 (R5): morte de inimigo CANÔNICO vira npc_killed determinístico (sem LLM).
@@ -343,6 +357,7 @@ def combat_node(state: GameState):
             fled_hint=fled[0].get("name", "o fugitivo"),
             faction_id=faction_id,
             turn=int(world.get("turn_count", 0) or 0),
+            enemy_id=disc.normalize_bestiary_id(fled[0]),
         )
         result["world"] = world
 

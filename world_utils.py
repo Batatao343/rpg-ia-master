@@ -367,11 +367,15 @@ def _hostile_ruler(world: dict, factions, loc_id: str):
 _ALERT_TTL = 6  # turnos de validade de um alerta de fuga
 
 
-def register_flee_alert(world: dict, fled_hint: str, faction_id=None, turn: int = 0) -> dict:
+def register_flee_alert(world: dict, fled_hint: str, faction_id=None, turn: int = 0,
+                         enemy_id: str = "") -> dict:
     """
     Fase 2.5b (R10): registra que um inimigo FUGIU do combate — ele pode voltar
     com reforços. O alerta vale para a REGIÃO atual por ~_ALERT_TTL turnos e é
     consumido quando dispara um encontro.
+
+    Fase 3.2 (R3): `enemy_id` (id canônico do bestiário, se resolvido) viaja com o
+    alerta para que o encontro de reforços possa registrar rumor determinístico.
     """
     world = dict(world or {})
     loc = gamedata.get_location(world.get("current_location_id", "")) or {}
@@ -384,6 +388,7 @@ def register_flee_alert(world: dict, fled_hint: str, faction_id=None, turn: int 
         "hint": hint,
         "faction_id": faction_id,
         "turn": int(turn),
+        "enemy_id": enemy_id or "",
     })
     world["threat_alerts"] = alerts
     return world
@@ -477,7 +482,8 @@ def check_encounter(world: dict, factions, intel, turn: int = 0):
         hint = alert.get("hint", "os que fugiram")
         return {"hint": hint,
                 "flavor": f"Eles voltaram — e não vieram sós. {hint} lidera o grupo que te cerca.",
-                "reason": "reinforcements"}
+                "reason": "reinforcements",
+                "enemy_id": alert.get("enemy_id", "")}
 
     if ruler:
         fid = ruler.get("id")
@@ -489,16 +495,17 @@ def check_encounter(world: dict, factions, intel, turn: int = 0):
         else:
             hint = entry.get("name") if entry else "homens armados sob uma bandeira que você não reconhece"
             flavor = "Homens armados sob uma bandeira estranha cercam você sem dar explicações."
-        return {"hint": hint, "flavor": flavor, "reason": "controlled"}
+        return {"hint": hint, "flavor": flavor, "reason": "controlled",
+                "enemy_id": entry.get("id", "") if entry else ""}
 
     if threat and danger >= 3:
         return {"hint": f"criatura ligada a: {threat}", "flavor": str(threat),
-                "reason": "looming_threat"}
+                "reason": "looming_threat", "enemy_id": ""}
 
     if danger >= 4:
         entry = pick_encounter_enemy(loc, danger, turn)
         hint = entry.get("name") if entry else f"feras/perigos de {region}"
-        return {"hint": hint,
+        return {"hint": hint, "enemy_id": entry.get("id", "") if entry else "",
                 "flavor": f"O perigo de {region} se materializa: algo hostil avança sobre você.",
                 "reason": "high_danger"}
 

@@ -1,6 +1,6 @@
 # SPEC — Fase 3.2: Conhecimento revelável (Codex do jogador + bestiário progressivo)
 
-> **Status:** `draft`
+> **Status:** `done`
 > **Criada:** 2026-07-03 · **Atualizada:** 2026-07-03
 > **Depende de:** [fase-2.5-codex-world-state.md](fase-2.5-codex-world-state.md) (`done`),
 > [fase-2.6-structured-events.md](fase-2.6-structured-events.md) (`done`)
@@ -229,16 +229,17 @@ ganhar `codex_counts` (nº de entradas por categoria) para badge na aba — opci
 
 ## 5. Critérios de aceite
 
-- [ ] Matar 3 lobos-de-gelo → bestiário mostra grau "Estudada" com stats; 7 → "Dominada"
-      com behavior/loot
-- [ ] Criatura citada em threat_alert aparece como "Rumores" (sem stats)
-- [ ] Local nunca visitado / fação desconhecida / doc `hidden` NÃO aparecem no codex
-- [ ] Segredo revelado (2.5/2.6) aparece na categoria Segredos com turno
-- [ ] Fação conhecida sem `knows_goal` não expõe objetivo no codex (não-onisciência)
-- [ ] Save antigo carrega; codex funciona só com visited/intel/npcs existentes
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM: N/A (fase 100% determinística, zero structured output novo)
-- [ ] Saves antigos continuam carregando
+- [x] Matar 3 lobos-de-gelo → bestiário mostra grau "Estudada" com stats; 7 → "Dominada"
+      com behavior/loot (`test_view_grau3_ataques_sem_dano`/`test_view_grau4_completo`)
+- [x] Criatura citada em hint de encontro (ANTES do combate) aparece como "Rumores"
+      (sem stats) — ver §8 item 4 (ajuste: não é o `threat_alert` em si, é o hint nomeado)
+- [x] Local nunca visitado / fação desconhecida / doc `hidden` NÃO aparecem no codex
+- [x] Segredo revelado (2.5/2.6) aparece na categoria Segredos com turno
+- [x] Fação conhecida sem `knows_goal` não expõe objetivo no codex (não-onisciência)
+- [x] Save antigo carrega; codex funciona só com visited/intel/npcs existentes
+- [x] `uv run pytest` verde (258 testes offline, +30 de `test_fase32.py`)
+- [x] Guard de FallbackLLM: N/A (fase 100% determinística, zero structured output novo)
+- [x] Saves antigos continuam carregando (`bestiary_knowledge` default `{}`)
 
 ## 6. Smoke test com LLM real
 
@@ -263,3 +264,31 @@ ganhar `codex_counts` (nº de entradas por categoria) para badge na aba — opci
 - **MockLLM/FallbackLLM:** nada muda (zero LLM na fase).
 - **Quota/latência:** zero chamadas LLM; endpoint lê save + arquivos locais.
 - **Saves antigos:** campo novo com default `{}`; nenhum backfill estrutural necessário.
+
+## 8. Desvios confirmados durante implementação (2026-07-03)
+
+Correções ao design acima, encontradas lendo o código real antes de implementar:
+
+1. `GET /game/codex` monta o caminho como `/game/state` faz
+   (`file_to_load = f"saves/{game_id}.json" if game_id else None`), não
+   `load_game_state(game_id)` direto.
+2. Ids de instância = `{bestiary_id}_{N}` (sufixo numérico simples, não `#2`).
+   `normalize_bestiary_id` reusa a regex de `_canonical_enemy_id`
+   (`agents/combat.py:29-43`), validando contra `gamedata.BESTIARY` (cache já
+   carregado), não contra `agents/bestiary.py::load_bestiary()` (releitura de disco)
+   nem `entities.json`.
+3. R2 ("1x por combate"): sinal real é `is_combat_start and not active`
+   (`agents/combat.py:258`) — não existe flag dedicada de "spawn novo".
+4. R3 (threat_alert → rumor): o rumor é registrado quando `check_encounter`
+   (`world_utils.py`) NOMEIA uma criatura concreta ANTES do combate começar (branches
+   de `ruler`/reforços/`danger>=4`), consumido em `agents/storyteller.py` (onde o
+   `SystemMessage("COMBAT START...")` é montado) — não em `world_utils.py` no momento
+   de criação do alerta (a criatura que foge já teria `fought≥1` nesse combate,
+   contradizendo "seen sem fought"). `register_flee_alert` e `check_encounter` passam a
+   carregar `enemy_id` opcional para viabilizar isso.
+5. `bestiary_knowledge: {}` precisa entrar no state inicial em DOIS lugares
+   (`game_engine.py` E `api.py::new_game`), não só no primeiro.
+6. `WorldBlock`/`_world_block` ganham `turn_count` (não existiam antes) — necessário
+   pro refetch da aba Codex quando o turno muda.
+
+Detalhe completo: plano de implementação da sessão (`vamos-seguir-com-a-velvety-kite`).

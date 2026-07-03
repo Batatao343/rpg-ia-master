@@ -39,6 +39,7 @@ game_id=$(printf '%s' "$new" | python -c "import sys,json;print(json.load(sys.st
 # 4. estado + 1 turno de ação (payload = ActionRequest)
 if [ -n "$game_id" ]; then
   check "GET /game/state" 200 "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/game/state?game_id=$game_id")"
+  check "GET /game/codex" 200 "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/game/codex?game_id=$game_id")"
   act=$(curl -s -X POST "$BASE/game/action" -H "Content-Type: application/json" \
         -d "{\"input_text\": \"olho ao redor\", \"game_id\": \"$game_id\"}")
   msg=$(printf '%s' "$act" | python -c "import sys,json;d=json.load(sys.stdin);print(len(d.get('message','')))" 2>/dev/null)

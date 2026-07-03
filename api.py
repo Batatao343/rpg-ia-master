@@ -23,6 +23,7 @@ from persistence import save_game_state, load_game_state, _serialize_messages
 from character_creator import create_player_character
 from gamedata import CLASSES, load_json_data, seed_factions
 from services.chronicle import default_chapter_title
+from services.discovery import player_codex
 from world_utils import starting_world
 
 # --- CONFIGURAÇÃO DA API ---
@@ -252,6 +253,7 @@ def _world_block(w: dict) -> Dict[str, Any]:
         "period": clock.get("period", "Amanhecer"),
         "visited": w.get("visited", []),
         "danger": w.get("danger_level", 1),
+        "turn_count": w.get("turn_count", 0),  # Fase 3.2: refetch do Codex quando o turno muda
         # Etapa B: o mundo muda quando fações ascendem — locais dominados e perigo elevado.
         "controlled": dict(w.get("controlled") or {}),
         "danger_overrides": dict(w.get("danger_overrides") or {}),
@@ -298,6 +300,17 @@ def get_current_state(game_id: Optional[str] = None):
     if not state:
         raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
     return format_response(state)
+
+@app.get("/game/codex")
+def get_player_codex(game_id: Optional[str] = None):
+    """Codex do jogador (Fase 3.2) — locais/fações/personagens/criaturas/segredos
+    já registrados no save. On-demand (fora do GameResponse) para não inchar o turno."""
+    file_to_load = f"saves/{game_id}.json" if game_id else None
+    state = load_game_state(file_to_load)
+
+    if not state:
+        raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
+    return player_codex(state)
 
 @app.post("/game/new", response_model=GameResponse)
 def new_game(req: CreateCharacterRequest):
@@ -360,6 +373,7 @@ def new_game(req: CreateCharacterRequest):
         "enemies": [],
         "factions": seed_factions(),
         "faction_intel": {},  # não-onisciência: jogador começa sem saber de nenhuma facção
+        "bestiary_knowledge": {},
         "archive_due": False,
         "npcs": {},
         "campaign_plan": {},
