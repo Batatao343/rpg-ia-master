@@ -2,63 +2,36 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-03
+> Última atualização: 2026-07-03 (sessão 2: faxina + auditoria de gameplay)
 
 ---
 
 ## TL;DR — Em que pé está
 
-**Fase 2.8 DONE — Context builder com orçamento de tokens (`build_context_pack`).**
-Fim da montagem de prompt na mão: `services/context_builder.py` ranqueia fatos dinâmicos
-(event_log/edges/entities/summaries/revealed_facts) por relevância+local+recência, respeita
-orçamento por seção (cota rola pra frente, corte global c/ margem 5%) e devolve um `ContextPack`
-com `<ESTADO_ATUAL_DO_MUNDO>` pronto. **Estado atual entra ANTES da lore base** — a verdade viva
-vence o canônico. 100% determinístico (zero LLM extra; só o `query_rag` que já existia, agora
-dentro do builder e com try/except). 4 agentes integrados: storyteller (`purpose="story"`,
-`game_id`), npc (`purpose="npc"` + memória do NPC), combat (`purpose="combat_narration"`,
-`token_budget=1200`, só ambienta — mecânica segue Python), campaign_manager
-(`purpose="planning"`, edges hidden visíveis). Blocos de reputação (`factions`) ficam nos
-agentes (sistema à parte). Suíte **216 testes offline verdes** (201 baseline + 15 da 2.8).
-Smoke LLM real pendente de quota (fase determinística, sem `with_structured_output` novo).
+**Sessão 2026-07-03 (2): FAXINA de código morto + auditoria de gameplay → Fase 4 no ROADMAP.**
+Removidos (zero importadores em produção, verificado por grep): `agents/ruler_completo.py`,
+`engine_utils.py`, `dice_system.py`, `COMMON_LOOT_TABLE`; testes órfãos de `test_mvp.py`
+removidos junto. Suíte offline: **211 verdes** (era 216; −5 testes de código morto).
+CLAUDE.md/README corrigidos (documentavam módulos mortos como vivos). Auditoria completa
+de jogabilidade virou a **Fase 4 — Gameplay Core** no ROADMAP (6 fatias `draft`:
+4.1 progressão/XP/árvore de habilidades · 4.2 buffs/passivas mecânicos · 4.3 inventário/
+equip/itens usáveis · 4.4 economia determinística (craft/mercadores/loot tables) ·
+4.5 party em combate · 4.6 dificuldade/IA/morte narrativa). Achados-chave da auditoria:
+`XP_TABLE` nunca foi consumida (não existe progressão), buffs são só texto (dano/AC não
+leem `active_conditions`), party só schema, craft/shop/loot 100% LLM, poção inutilizável
+em combate. Fases antigas renumeradas no ROADMAP (playtest 4→5, conteúdo 5→6, ... 10→11).
 
-**Próximo passo:** Fase 3 (ver ROADMAP) — clareza de campanha / encontros sistêmicos / clima.
+**Fases 2.6, 2.7 e 2.8 DONE** (detalhes no `CHANGELOG.md`; specs em `specs/`):
+2.6 = LLM propõe eventos estruturados, motor valida/aplica (`world_validators` +
+`event_processor`; combate gera `npc_killed` determinístico). 2.7 = rules engine
+(`services/rule_engine.py`, cascata determinística com anti-loop, `world_rules.json` +
+overlay `components.json` migration-safe). 2.8 = context builder (`build_context_pack`
+ranqueia fatos por relevância+local+recência com orçamento por seção; estado vivo entra
+ANTES da lore base; 4 agentes integrados: storyteller/npc/combat/campaign_manager).
+Smoke LLM real das 3 fases pendente de quota.
 
-Entregas da 2.8 (spec `specs/fase-2.8-context-builder.md`):
-- `services/context_builder.py` — `estimate_tokens` (chars/4), `score_fact`
-  (0.35 rel + 0.25 local + 0.20 entidade + 0.10 impacto + 0.10 recência), `render_event`
-  (`EVENT_TEMPLATES`; nome canônico via `gr.get_entity`, não id cru), `collect_dynamic_facts`,
-  `_assemble` (budget por seção + carry), `assemble_pack`, `build_context_pack`.
-- Correções vs spec (aplicadas): evento usa `turn` (não `day`), `actor_id`/`target_id`;
-  sem `visibility` no evento (lore filtra por `query_rag(max_visibility)`; `secret_revealed`
-  só via `revealed_facts`); `location_summaries`/`revealed_facts` moram em `world_projection`;
-  `build_context_pack` ganhou `game_id`/`npc_id` opcionais.
-- Agentes: `agents/storyteller.py`, `agents/npc.py`, `agents/combat.py`,
-  `agents/campaign_manager.py` — `query_rag`+`narrative_summary` manuais → pack.
-
-Entregas da 2.7 (spec `specs/fase-2.7-rules-engine.md`):
-
-Entregas da 2.7 (spec `specs/fase-2.7-rules-engine.md`):
-- `services/rule_engine.py` — `resolve_path` seguro (só literais/`event.`/`target.`/
-  `component:`; dunder + expressão arbitrária → `RuleActionError`), `check_conditions`,
-  `execute_action` (ops: set_entity_state, adjust_faction_stability, disable_controls_edges,
-  create_dynamic_edge, emit_event), `run_rules` (dona da cascata + anti-loop depth 2).
-- `data/graph/world_rules.json` (5 regras) + `data/graph/components.json` (overlay
-  `power_vacuum_trigger` em 22 líderes/governantes). Overlay é **migration-safe**
-  (`migrate_lore_nova.py` sobrescreve entities.json com `components:{}`), mergeado por
-  `graph_resolver.load_entities`.
-- Modelo HÍBRIDO: estrutura (líder/controle/rival) DERIVADA dos edges (`leads`/`controls`/
-  `enemy_of`/`operates_in`); componente só carrega delta/sucessor/override + é o discriminador.
-- `event_processor.process_pending_events` chama `run_rules` após cada `apply_event`.
-
-Entregas da 2.6 (spec `specs/fase-2.6-structured-events.md`):
-- `services/structured_outputs.py` — `ProposedWorldEvent` / `WorldChangeProposal` (Pydantic).
-- `services/world_validators.py` — `validate_proposal(dict, state)` → `ValidationResult(ok, reason)`;
-  regras por tipo (npc_killed, secret_revealed, location_control_changed, quest_completed,
-  faction_relation_changed) via `graph_resolver`; revalida do zero (dict malformado = rejeitado).
-- `services/event_processor.py` — `process_pending_events` (valida→GameEvent→append→aplica→limpa fila)
-  + `apply_event` puro (efeito direto na projection, SEM cascata — isso é a 2.7).
-- `storyteller` propõe via `StoryUpdate.proposed_events` + bloco `<ENTIDADES_CANONICAS>` no prompt.
-- `combat` gera `npc_killed` **determinístico** (`_kill_events`) p/ inimigo canônico — sem LLM.
+**Próximo passo:** Fase 3 (clareza de campanha, specs 3.1–3.4 em `draft`) e depois
+Fase 4 — Gameplay Core (cada fatia vira spec antes de implementar; ver ROADMAP § Fase 4).
 
 Entregas da 2.5b (detalhes no `CHANGELOG.md`): mapa de Valoria 30 nós, 18 fações,
 6 raças com traits mecânicos (`apply_racial_traits`), bestiário 84 entradas com
@@ -81,7 +54,7 @@ existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arquivar
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 216 testes offline verdes (test_real_llm precisa de chave)
+uv run pytest                        # 211 testes offline verdes (test_real_llm precisa de chave)
 uv run python game_engine.py         # CLI
 uv run uvicorn api:app --port 8000   # API + frontend web (http://localhost:8000)
 uv run python rag.py                 # reindexar lore (data/codex/) + regras (data/rules.txt)
@@ -138,12 +111,12 @@ agentes: dentro de `try`.
 
 ## Bugs conhecidos (sessão 2026-06-26)
 
-| Bug | Local provável |
+| Bug | Local provável / destino |
 |---|---|
-| Inventário: item narrado não entra no inventário | `agents/loot.py` ou `world_utils.add_to_inventory` |
-| Capitalização estranha em itens | Grep `title()` / `capitalize()` nos agentes |
+| Inventário: item narrado não entra no inventário | `agents/loot.py` — mapeado na **Fase 4.3** |
+| Capitalização estranha em itens | Grep `title()` / `capitalize()` — mapeado na **Fase 4.3** |
 | NPC errado responde fala destinada a outro | `agents/router.py` — `active_npc_name` não filtra |
-| Morte do player sem narrativa (só tela de morte) | Fluxo final de combate — adicionar death_narrative |
+| Morte do player sem narrativa (só tela de morte) | Fluxo final de combate — mapeado na **Fase 4.6** |
 
 **Design:** campaign manager coloca plot twists com muita frequência — aumentar
 intervalo de triggers de replan.
@@ -151,6 +124,7 @@ intervalo de triggers de replan.
 ## Limitações conhecidas
 
 - **Inventário inicial** usa nomes livres, não IDs — `ARTIFACTS_DB.get(item_id)` não acha
+  (arma inicial não dá bônus de combate) — mapeado na **Fase 4.3**
 - **API stateless por save** — sem sessão concorrente; migrar p/ Postgres+pgvector ao escalar
 - **Saves antigos** (schema `class`/`abilities`) carregam mas campos novos ficam ausentes
 

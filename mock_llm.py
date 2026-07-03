@@ -388,7 +388,7 @@ class MockLLM:
         return self
 
     def invoke(self, messages):
-        # invoke "puro" (ex.: narrativa final do execute_engine): sem tool_calls
+        # invoke "puro" (narrativa direta): sem tool_calls
         return AIMessage(content=random.choice(_NARRATIVES).format(acao_eco=_acao_eco(messages)))
 
     def stream(self, messages):

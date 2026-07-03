@@ -144,6 +144,3 @@ XP_TABLE = {
     11: 85000, 12: 100000, 13: 120000, 14: 140000, 15: 165000,
     16: 195000, 17: 225000, 18: 265000, 19: 305000, 20: 355000
 }
-
-# Loot Genérico
-COMMON_LOOT_TABLE = ["moeda_ouro", "corda", "pocao_cura", "adaga_ferro"]

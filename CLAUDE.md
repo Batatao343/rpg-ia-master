@@ -147,11 +147,9 @@ llm_setup.py          # get_llm(tier) + MockLLM/FallbackLLM (NUNCA instanciar Ge
 mock_llm.py           # MockLLM — dados fictícios por agente (modo simulado sem chave)
 rag.py                # query_rag / add_memory_to_session / ingest_file (FAISS + embeddings)
 persistence.py        # save_game_state / load_game_state (serializa mensagens)
-gamedata.py           # carrega data/*.json; ARTIFACTS_DB, CLASSES, ABILITIES, helpers de world_map
-dice_system.py        # roll_formula (parse de dados + saving throws; save_bonus real opcional)
+gamedata.py           # carrega data/*.json; ARTIFACTS_DB, CLASSES, ABILITIES, XP_TABLE, helpers de world_map
 combat_mechanics.py   # NÚCLEO DETERMINÍSTICO do combate (iniciativa, DoT, custos, cooldowns, normalize_attr)
 world_utils.py        # Fase 0: relógio, viagem (fog of war), descanso — determinístico, sem LLM
-engine_utils.py       # execute_engine (loop tool-calling: roll/update_hp/transaction) p/ loot/shop
 character_creator.py  # cria ficha do player (IA + JSON oficial); guard de fallback
 game_engine.py        # CLI interativo (wizard + loop)
 api.py                # FastAPI REST (/game/new, /game/action, /game/state, /data/map) + serve web/dist|frontend/
@@ -160,7 +158,7 @@ frontend/             # web vanilla legado (zero build) — fallback se web/dist
 # --- agentes (nós do grafo) ---
 agents/
   router.py           # dm_router_node — classifica intenção + seta NPC/loot/combat
-  storyteller.py      # storyteller_node — narração + viagem/descanso/ruler + avanço de beat
+  storyteller.py      # storyteller_node — narração + viagem/descanso + avanço de beat
   combat.py           # combat_node — IA identifica ação/inimigos + narra; resolve via combat_mechanics
   npc.py              # npc_actor_node + generate_new_npc()
   loot.py             # loot_node — loot/craft/shop/treasure
@@ -169,7 +167,6 @@ agents/
   bestiary.py         # generate_new_enemy + cache de bestiário
   class_themes.py     # temas/gating narrativo por classe (allowed/forbidden)
   librarian.py        # find_existing_entity — dedupe semântico de entidades
-  ruler_completo.py   # resolve_action — juízo de ação livre (gating)
 services/             # serviços determinísticos (Fase 2.5)
   graph_resolver.py   # consultas ao grafo de mundo (base − disabled + dynamic, visibility)
   codex_loader.py     # parse/split/ingest do Codex no FAISS (metadados por chunk)
@@ -180,9 +177,8 @@ data/
   codex/              # Codex Valoria gerado — .md com frontmatter id/type/tags/visibility
                       #   timeline/ = história do mundo por era (reveals de secrets.txt ficam visibility:hidden)
   graph/              # entities.json (gerado) + edges.json/relation_types.json (curados à mão)
-  world_lore.txt      # lore ANTIGO — não é mais ingerido (remoção na 2.5b)
   rules.txt           # regras indexadas para FAISS
-  world_map.json      # grafo de locais (Fase 0) — AINDA do universo antigo (realinhar na 2.5b)
+  world_map.json      # grafo de locais — mapa de Valoria, 30 nós (Fase 2.5b)
   bestiary.json       # criaturas
   classes.json        # classes jogáveis (base_stats, passive)
   class_themes.json   # allowed/forbidden por classe (gating)
@@ -221,7 +217,13 @@ Toda feature/fase nova segue o fluxo de `specs/`:
 5. **ROADMAP.md é resumo + link;** o detalhe técnico mora SÓ na spec (fonte única).
 
 Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `in-progress`; 2.6 (structured events) `done`;
-2.7 (rules engine) `done`; 2.8 (context builder) `draft` — próxima.
+2.7 (rules engine) `done`; 2.8 (context builder) `done`.
+Fase 3 fatiada em 4 specs, todas `draft` aguardando aprovação (3.1 diário+crônica ·
+3.2 conhecimento revelável · 3.3 quest log · 3.4 visualização de estado) — ordem de
+implementação: 3.1 → 3.2 → 3.3 (usa arc_title da 3.1) → 3.4. Ver ROADMAP § Fase 3.
+Fase 4 (Gameplay Core) mapeada no ROADMAP em 6 fatias `draft` (4.1 progressão/árvore de
+habilidades · 4.2 buffs mecânicos · 4.3 inventário/equip · 4.4 economia determinística ·
+4.5 party · 4.6 dificuldade/IA) — specs ainda não escritas. Ver ROADMAP § Fase 4.
 
 ---
 
@@ -237,7 +239,7 @@ Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `in-progress`; 2.6 (structure
   `AIMessage`, **não** uma instância de `X`. Acessar `resultado.campo` fora de `try/except` ou sem
   `isinstance(resultado, X)` estoura. Todo nó novo com structured output precisa desse guard.
 - **Mecânica é Python, não LLM.** A IA só identifica/narra; números (combate, dados, economia)
-  resolvem em código determinístico (`combat_mechanics.py`, `dice_system.py`, `world_utils.py`).
+  resolvem em código determinístico (`combat_mechanics.py`, `world_utils.py`).
   Não confiar em sinal/valor vindo do LLM sem validar (ex.: sinal do ouro em `loot.py`).
 - **MockLLM esconde bugs de mapeamento:** ele devolve instâncias Pydantic válidas, então acesso a
   campo nunca quebra no mock. Bug de nome/tipo de campo só aparece no Gemini real. Validar caminhos

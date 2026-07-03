@@ -114,7 +114,7 @@ def storyteller_node(state: GameState):
     last_user_input = messages[-1].content if isinstance(messages[-1], HumanMessage) else ""
     world = ensure_world(state.get("world", {}))
 
-    # --- Fase 0: viagem / descanso / juízo de ação (determinístico + Ruler) ---
+    # --- Fase 0: viagem / descanso (determinístico) ---
     # --- Fase 2: o tempo que passa avança as fações off-screen (mundo vivo) ---
     travel_note = rest_note = faction_note = ""
     rested_player = None

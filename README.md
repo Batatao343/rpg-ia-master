@@ -38,7 +38,7 @@ uv run uvicorn api:app --reload --port 8000
 # Testes (offline, não exigem API key)
 uv run pytest
 
-# Reindexar lore/regras após editar data/world_lore.txt ou data/rules.txt
+# Reindexar lore/regras após editar data/codex/ ou data/rules.txt
 uv run python rag.py
 ```
 
@@ -61,10 +61,10 @@ START
 
 ```
 main.py / state.py / llm_setup.py / rag.py / persistence.py
-gamedata.py / dice_system.py / engine_utils.py / character_creator.py
+gamedata.py / combat_mechanics.py / world_utils.py / character_creator.py
 game_engine.py (CLI)   api.py (REST)
 agents/   # router, campaign_manager, storyteller, combat, npc, loot, archivist, ...
-data/     # world_lore.txt, rules.txt, bestiary.json, classes.json, artifacts.json, ...
+data/     # codex/, rules.txt, bestiary.json, classes.json, artifacts.json, ...
 tests/    # suíte offline (test_mvp.py)
 ```
 

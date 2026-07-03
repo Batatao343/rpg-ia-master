@@ -2,11 +2,9 @@
 Suíte de sanidade do MVP — roda 100% OFFLINE (não exige GOOGLE_API_KEY).
 
 Cobre os pontos que não dependem de chamada real ao LLM:
-- Sistema de dados
 - Persistência (save/load roundtrip)
 - Carregamento de dados estáticos (gamedata)
 - Roteador (atalhos determinísticos)
-- Guarda de segurança do motor (FallbackLLM)
 - Compilação do grafo
 - Criação de personagem em modo fallback (sem chave de API)
 """
@@ -15,11 +13,9 @@ import random
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
-from dice_system import roll_formula
 from persistence import save_game_state, load_game_state
 from gamedata import load_json_data, ARTIFACTS_DB
 from agents.router import dm_router_node
-from engine_utils import execute_engine
 from llm_setup import FallbackLLM, get_llm
 from character_creator import create_player_character
 
@@ -55,26 +51,6 @@ def _base_state(messages=None):
         "enemies": [], "party": [], "npcs": {}, "active_npc_name": None,
         "combat_target": None, "loot_source": None,
     }
-
-
-# --------------------------------------------------------------------------
-# Dados
-# --------------------------------------------------------------------------
-def test_roll_formula_basic():
-    random.seed(1)
-    out = roll_formula("2d6+3")
-    assert "Rolagem Total" in out
-
-
-def test_roll_formula_save_throw():
-    random.seed(1)
-    out = roll_formula("DC 15 Dex Save")
-    assert "Save Inimigo" in out and "DC 15" in out
-
-
-def test_roll_formula_fallback_when_no_dice():
-    out = roll_formula("atacar sem fórmula")
-    assert "Rolagem Genérica" in out
 
 
 # --------------------------------------------------------------------------
@@ -132,19 +108,6 @@ def test_router_ends_on_ai_last_message():
 # --------------------------------------------------------------------------
 # Motor / Fallback
 # --------------------------------------------------------------------------
-def test_execute_engine_fallback_does_not_crash():
-    state = _base_state([HumanMessage(content="Ataco.")])
-    res = execute_engine(
-        FallbackLLM("LLM indisponível"),
-        SystemMessage(content="ctx"),
-        state["messages"],
-        state,
-        "TEST",
-    )
-    assert "messages" in res
-    assert isinstance(res["messages"][-1], AIMessage)
-
-
 def test_get_llm_without_key_returns_fallback(monkeypatch):
     monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
     # Mesmo com chave válida o objeto é criado; aqui garantimos que a função
@@ -257,7 +220,6 @@ def test_storyteller_flags_replan_on_last_beat(monkeypatch):
 # Combate determinístico (combat_mechanics.py)
 # --------------------------------------------------------------------------
 import combat_mechanics as cm
-from dice_system import roll_formula
 
 
 def _enemy(hp=12, name="Goblin 1", eid="goblin_1"):
@@ -323,14 +285,6 @@ def test_cooldown_tick_decrements_and_removes():
     p["ability_cooldowns"] = {"a": 2, "b": 1}
     cm.tick_cooldowns(p)
     assert p["ability_cooldowns"] == {"a": 1}
-
-
-def test_enemy_save_uses_real_mod_not_fixed_3():
-    random.seed(2)
-    out = roll_formula("DC 10 Con Save", save_bonus=100)
-    assert "+100" in out and "SUCESSO" in out
-    # sem save_bonus, usa o genérico +3
-    assert "+3" in roll_formula("DC 10 Con Save")
 
 
 def test_resolve_player_action_damages_and_applies_condition():

@@ -5,6 +5,73 @@
 
 ---
 
+## 2026-07-03 (2) — Faxina de código morto + auditoria de gameplay → Fase 4
+
+- **Removidos** (zero importadores em produção, verificado por grep): `agents/ruler_completo.py`
+  (CLAUDE.md alegava uso pelo storyteller — falso), `engine_utils.py` + `dice_system.py`
+  (só testes importavam), `COMMON_LOOT_TABLE` (gamedata.py). 5 testes órfãos de
+  `test_mvp.py` removidos junto. Suíte 216 → **211 verdes**.
+- **Mantidos de propósito:** `XP_TABLE` (consumidor chega na 4.1), `party`/`CompanionState`
+  (4.5), `frontend/` vanilla (fallback VIVO no api.py quando `web/dist` não existe).
+- **Docs corrigidos:** CLAUDE.md (estrutura de pastas, storyteller sem "ruler",
+  `world_lore.txt` fantasma, `world_map.json` → Valoria 30 nós), README.md, comentários
+  mortos em `storyteller.py`/`mock_llm.py`.
+- **Auditoria de jogabilidade** (achados-chave): `XP_TABLE` sem consumidor — xp nunca
+  incrementa, NÃO existe progressão; buffs/passivas só texto (dano/AC não leem
+  `active_conditions`; só DoT funciona); party só schema (combate é 1×N estrito);
+  craft/shop/loot 100% LLM (sem receitas/estoque/drop tables); poção inutilizável em
+  combate (parser só resolve habilidades); inventário inicial com nomes livres que o
+  `ARTIFACTS_DB` não resolve; spawn narrativo sem teto de CR; campo `abilities` de
+  inimigo decorativo; morte do player sem narrativa.
+- **ROADMAP:** nova **Fase 4 — Gameplay Core** em 6 fatias `draft` (4.1 progressão/XP/
+  árvore de habilidades · 4.2 buffs/passivas mecânicos · 4.3 inventário/equip/itens
+  usáveis · 4.4 economia determinística · 4.5 party · 4.6 dificuldade/IA/morte).
+  Fases antigas renumeradas (playtest 4→5 ... contract tests 10→11). Backlog consolidado:
+  Party→4.5, Crafting→4.4, Lore Multi-Índice obsoleto (Codex 2.5 cobre), Mapa robusto
+  reduzido ao restante (sub-locais, tempo de viagem variável, economy_tags).
+
+## 2026-07-03 — Fase 2.8: Context builder com orçamento de tokens
+
+Entregas (spec `specs/fase-2.8-context-builder.md`):
+- `services/context_builder.py` — `estimate_tokens` (chars/4), `score_fact`
+  (0.35 rel + 0.25 local + 0.20 entidade + 0.10 impacto + 0.10 recência), `render_event`
+  (`EVENT_TEMPLATES`; nome canônico via `gr.get_entity`, não id cru), `collect_dynamic_facts`,
+  `_assemble` (budget por seção + carry), `assemble_pack`, `build_context_pack`.
+- Correções vs spec (aplicadas): evento usa `turn` (não `day`), `actor_id`/`target_id`;
+  sem `visibility` no evento (lore filtra por `query_rag(max_visibility)`; `secret_revealed`
+  só via `revealed_facts`); `location_summaries`/`revealed_facts` moram em `world_projection`;
+  `build_context_pack` ganhou `game_id`/`npc_id` opcionais.
+- Agentes: `agents/storyteller.py`, `agents/npc.py`, `agents/combat.py`,
+  `agents/campaign_manager.py` — `query_rag`+`narrative_summary` manuais → pack.
+- Suíte na época: 216 verdes (201 baseline + 15 da 2.8). Smoke LLM real pendente de quota.
+
+## 2026-07-02 — Fase 2.7: Rules engine sistêmica
+
+Entregas (spec `specs/fase-2.7-rules-engine.md`):
+- `services/rule_engine.py` — `resolve_path` seguro (só literais/`event.`/`target.`/
+  `component:`; dunder + expressão arbitrária → `RuleActionError`), `check_conditions`,
+  `execute_action` (ops: set_entity_state, adjust_faction_stability, disable_controls_edges,
+  create_dynamic_edge, emit_event), `run_rules` (dona da cascata + anti-loop depth 2).
+- `data/graph/world_rules.json` (5 regras) + `data/graph/components.json` (overlay
+  `power_vacuum_trigger` em 22 líderes/governantes). Overlay é **migration-safe**
+  (`migrate_lore_nova.py` sobrescreve entities.json com `components:{}`), mergeado por
+  `graph_resolver.load_entities`.
+- Modelo HÍBRIDO: estrutura (líder/controle/rival) DERIVADA dos edges (`leads`/`controls`/
+  `enemy_of`/`operates_in`); componente só carrega delta/sucessor/override + é o discriminador.
+- `event_processor.process_pending_events` chama `run_rules` após cada `apply_event`.
+
+## 2026-07-02 — Fase 2.6: Structured world changes
+
+Entregas (spec `specs/fase-2.6-structured-events.md`):
+- `services/structured_outputs.py` — `ProposedWorldEvent` / `WorldChangeProposal` (Pydantic).
+- `services/world_validators.py` — `validate_proposal(dict, state)` → `ValidationResult(ok, reason)`;
+  regras por tipo (npc_killed, secret_revealed, location_control_changed, quest_completed,
+  faction_relation_changed) via `graph_resolver`; revalida do zero (dict malformado = rejeitado).
+- `services/event_processor.py` — `process_pending_events` (valida→GameEvent→append→aplica→limpa fila)
+  + `apply_event` puro (efeito direto na projection, SEM cascata — isso é a 2.7).
+- `storyteller` propõe via `StoryUpdate.proposed_events` + bloco `<ENTIDADES_CANONICAS>` no prompt.
+- `combat` gera `npc_killed` **determinístico** (`_kill_events`) p/ inimigo canônico — sem LLM.
+
 ## 2026-07-02 — DX: tooling do Claude Code (auditoria de fricção)
 
 Auditoria de 20 sessões de transcripts achou: prefixo de PATH repetido 180×, ~36KB de
