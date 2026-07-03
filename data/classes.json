@@ -1,92 +1,282 @@
 {
-    "Cavaleiro da Vigília": {
-      "description": "Um guardião de armadura pesada que jurou proteger os fracos.",
-      "passive": "Muralha Humana: +2 de Defesa se houver aliados adjacentes.",
-      "base_stats": {
-        "hp": 35, "mana": 0, "stamina": 25,
-        "defense": 17,
-        "attributes": {"str": 16, "dex": 10, "con": 16, "int": 8, "wis": 12, "cha": 12}
+  "Cavaleiro da Vigília": {
+    "description": "Um guardião de armadura pesada que jurou proteger os fracos.",
+    "passive": "Muralha Humana: +2 de Defesa se houver aliados adjacentes.",
+    "base_stats": {
+      "hp": 35,
+      "mana": 0,
+      "stamina": 25,
+      "defense": 17,
+      "attributes": {
+        "str": 16,
+        "dex": 10,
+        "con": 16,
+        "int": 8,
+        "wis": 12,
+        "cha": 12
       }
     },
-    "Batedor das Fronteiras": {
-      "description": "Explorador ágil especializado em sobreviver fora das muralhas.",
-      "passive": "Oportunista: Ataques contra inimigos distraídos causam +1d6 de dano.",
-      "base_stats": {
-        "hp": 22, "mana": 5, "stamina": 20,
-        "defense": 14,
-        "attributes": {"str": 10, "dex": 18, "con": 12, "int": 12, "wis": 14, "cha": 10}
+    "level_gains": {
+      "hp": 7,
+      "mana": 0,
+      "stamina": 3
+    },
+    "starting_abilities": [
+      "investida_do_touro",
+      "pele_de_ferro"
+    ],
+    "branches": {}
+  },
+  "Batedor das Fronteiras": {
+    "description": "Explorador ágil especializado em sobreviver fora das muralhas.",
+    "passive": "Oportunista: Ataques contra inimigos distraídos causam +1d6 de dano.",
+    "base_stats": {
+      "hp": 22,
+      "mana": 5,
+      "stamina": 20,
+      "defense": 14,
+      "attributes": {
+        "str": 10,
+        "dex": 18,
+        "con": 12,
+        "int": 12,
+        "wis": 14,
+        "cha": 10
       }
     },
-    "Arcanista Cinzento": {
-      "description": "Estudioso que usa magia filtrada por tecnologia.",
-      "passive": "Mente Analítica: Pode usar Inteligência em vez de Destreza para iniciativa.",
-      "base_stats": {
-        "hp": 16, "mana": 30, "stamina": 8,
-        "defense": 11,
-        "attributes": {"str": 8, "dex": 12, "con": 10, "int": 18, "wis": 14, "cha": 10}
+    "level_gains": {
+      "hp": 5,
+      "mana": 1,
+      "stamina": 3
+    },
+    "starting_abilities": [
+      "estocada_renal",
+      "bomba_de_fumaca"
+    ],
+    "branches": {}
+  },
+  "Arcanista Cinzento": {
+    "description": "Estudioso que usa magia filtrada por tecnologia.",
+    "passive": "Mente Analítica: Pode usar Inteligência em vez de Destreza para iniciativa.",
+    "base_stats": {
+      "hp": 16,
+      "mana": 30,
+      "stamina": 8,
+      "defense": 11,
+      "attributes": {
+        "str": 8,
+        "dex": 12,
+        "con": 10,
+        "int": 18,
+        "wis": 14,
+        "cha": 10
       }
     },
-    "Sangromante": {
-      "description": "Mago proibido que usa a própria vitalidade.",
-      "passive": "Sacrifício de Sangue: Pode gastar HP em vez de Mana (2 HP = 1 Mana).",
-      "base_stats": {
-        "hp": 25, "mana": 20, "stamina": 10,
-        "defense": 10,
-        "attributes": {"str": 8, "dex": 10, "con": 18, "int": 16, "wis": 10, "cha": 8}
+    "level_gains": {
+      "hp": 3,
+      "mana": 6,
+      "stamina": 1
+    },
+    "starting_abilities": [
+      "dardos_de_forca",
+      "espelho_ilusorio"
+    ],
+    "branches": {}
+  },
+  "Sangromante": {
+    "description": "Mago proibido que usa a própria vitalidade.",
+    "passive": "Sacrifício de Sangue: Pode gastar HP em vez de Mana (2 HP = 1 Mana).",
+    "base_stats": {
+      "hp": 25,
+      "mana": 20,
+      "stamina": 10,
+      "defense": 10,
+      "attributes": {
+        "str": 8,
+        "dex": 10,
+        "con": 18,
+        "int": 16,
+        "wis": 10,
+        "cha": 8
       }
     },
-    "Inquisidor da Cinza": {
-      "description": "Fanático que usa fogo e medo. Tanque ofensivo.",
-      "passive": "Fervor: Imune a efeitos de Medo. Causa +2 de dano de fogo.",
-      "base_stats": {
-        "hp": 30, "mana": 10, "stamina": 20,
-        "defense": 16,
-        "attributes": {"str": 16, "dex": 8, "con": 14, "int": 10, "wis": 10, "cha": 16}
+    "level_gains": {
+      "hp": 5,
+      "mana": 4,
+      "stamina": 1
+    },
+    "starting_abilities": [
+      "combustao_sanguinea",
+      "toque_necrotico"
+    ],
+    "branches": {}
+  },
+  "Inquisidor da Cinza": {
+    "description": "Fanático que usa fogo e medo. Tanque ofensivo.",
+    "passive": "Fervor: Imune a efeitos de Medo. Causa +2 de dano de fogo.",
+    "base_stats": {
+      "hp": 30,
+      "mana": 10,
+      "stamina": 20,
+      "defense": 16,
+      "attributes": {
+        "str": 16,
+        "dex": 8,
+        "con": 14,
+        "int": 10,
+        "wis": 10,
+        "cha": 16
       }
     },
-    "Pastor de Pragas": {
-      "description": "Druida simbiótico que controla insetos e fungos.",
-      "passive": "Hospedeiro: Inimigos que atacam corpo-a-corpo recebem 1d4 veneno.",
-      "base_stats": {
-        "hp": 28, "mana": 25, "stamina": 12,
-        "defense": 13,
-        "attributes": {"str": 10, "dex": 10, "con": 16, "int": 8, "wis": 18, "cha": 8}
+    "level_gains": {
+      "hp": 6,
+      "mana": 2,
+      "stamina": 2
+    },
+    "starting_abilities": [
+      "juramento_de_sangue",
+      "pisao_sismico"
+    ],
+    "branches": {}
+  },
+  "Pastor de Pragas": {
+    "description": "Druida simbiótico que controla insetos e fungos.",
+    "passive": "Hospedeiro: Inimigos que atacam corpo-a-corpo recebem 1d4 veneno.",
+    "base_stats": {
+      "hp": 28,
+      "mana": 25,
+      "stamina": 12,
+      "defense": 13,
+      "attributes": {
+        "str": 10,
+        "dex": 10,
+        "con": 16,
+        "int": 8,
+        "wis": 18,
+        "cha": 8
       }
     },
-    "Sombra da Corte": {
-      "description": "Assassino social especializado em venenos.",
-      "passive": "Toque da Víbora: Todas as armas aplicam veneno fraco automaticamente.",
-      "base_stats": {
-        "hp": 20, "mana": 10, "stamina": 15,
-        "defense": 13,
-        "attributes": {"str": 8, "dex": 16, "con": 10, "int": 14, "wis": 10, "cha": 16}
+    "level_gains": {
+      "hp": 5,
+      "mana": 5,
+      "stamina": 1
+    },
+    "starting_abilities": [
+      "enxame_de_insetos",
+      "nuvem_toxica"
+    ],
+    "branches": {}
+  },
+  "Sombra da Corte": {
+    "description": "Assassino social especializado em venenos.",
+    "passive": "Toque da Víbora: Todas as armas aplicam veneno fraco automaticamente.",
+    "base_stats": {
+      "hp": 20,
+      "mana": 10,
+      "stamina": 15,
+      "defense": 13,
+      "attributes": {
+        "str": 8,
+        "dex": 16,
+        "con": 10,
+        "int": 14,
+        "wis": 10,
+        "cha": 16
       }
     },
-    "Sapador da Fuligem": {
-      "description": "Engenheiro anão com explosivos e armadilhas.",
-      "passive": "Demolidor: Causa dano dobrado contra estruturas.",
-      "base_stats": {
-        "hp": 26, "mana": 0, "stamina": 25,
-        "defense": 15,
-        "attributes": {"str": 14, "dex": 14, "con": 14, "int": 16, "wis": 10, "cha": 8}
+    "level_gains": {
+      "hp": 4,
+      "mana": 2,
+      "stamina": 3
+    },
+    "starting_abilities": [
+      "lamina_envenenada",
+      "cegar"
+    ],
+    "branches": {}
+  },
+  "Sapador da Fuligem": {
+    "description": "Engenheiro anão com explosivos e armadilhas.",
+    "passive": "Demolidor: Causa dano dobrado contra estruturas.",
+    "base_stats": {
+      "hp": 26,
+      "mana": 0,
+      "stamina": 25,
+      "defense": 15,
+      "attributes": {
+        "str": 14,
+        "dex": 14,
+        "con": 14,
+        "int": 16,
+        "wis": 10,
+        "cha": 8
       }
     },
-    "Médico de Campo": {
-      "description": "Curandeiro sem magia que usa alquimia e serras.",
-      "passive": "Triagem: Cura +5 HP extra se o alvo tiver < 25% vida.",
-      "base_stats": {
-        "hp": 24, "mana": 5, "stamina": 20,
-        "defense": 14,
-        "attributes": {"str": 12, "dex": 14, "con": 12, "int": 16, "wis": 12, "cha": 10}
+    "level_gains": {
+      "hp": 5,
+      "mana": 0,
+      "stamina": 4
+    },
+    "starting_abilities": [
+      "tiro_de_bacamarte",
+      "armadilha_de_urso"
+    ],
+    "branches": {}
+  },
+  "Médico de Campo": {
+    "description": "Curandeiro sem magia que usa alquimia e serras.",
+    "passive": "Triagem: Cura +5 HP extra se o alvo tiver < 25% vida.",
+    "base_stats": {
+      "hp": 24,
+      "mana": 5,
+      "stamina": 20,
+      "defense": 14,
+      "attributes": {
+        "str": 12,
+        "dex": 14,
+        "con": 12,
+        "int": 16,
+        "wis": 12,
+        "cha": 10
       }
     },
-    "Guardião Selvagem": {
-      "description": "Bárbaro tribal conectado à natureza brutal.",
-      "passive": "Pele Grossa: Se sem armadura, AC = 10 + Dex + Con.",
-      "base_stats": {
-        "hp": 40, "mana": 5, "stamina": 30,
-        "defense": 14,
-        "attributes": {"str": 18, "dex": 14, "con": 16, "int": 6, "wis": 12, "cha": 8}
+    "level_gains": {
+      "hp": 5,
+      "mana": 1,
+      "stamina": 3
+    },
+    "starting_abilities": [
+      "sutura_de_campo",
+      "estimulante_alquimico"
+    ],
+    "branches": {}
+  },
+  "Guardião Selvagem": {
+    "description": "Bárbaro tribal conectado à natureza brutal.",
+    "passive": "Pele Grossa: Se sem armadura, AC = 10 + Dex + Con.",
+    "base_stats": {
+      "hp": 40,
+      "mana": 5,
+      "stamina": 30,
+      "defense": 14,
+      "attributes": {
+        "str": 18,
+        "dex": 14,
+        "con": 16,
+        "int": 6,
+        "wis": 12,
+        "cha": 8
       }
-    }
+    },
+    "level_gains": {
+      "hp": 6,
+      "mana": 3,
+      "stamina": 2
+    },
+    "starting_abilities": [
+      "invocar_vinhas",
+      "quebra_joelhos"
+    ],
+    "branches": {}
   }
+}
