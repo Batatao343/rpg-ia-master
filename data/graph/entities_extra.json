@@ -1,0 +1,966 @@
+{
+  "na_anel_dourado": {
+    "id": "na_anel_dourado",
+    "type": "location",
+    "name": "Anel Dourado",
+    "aliases": [
+      "Anel Dourado de Nova Arcádia"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "cidade",
+      "nobreza"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "na_anel_ferro": {
+    "id": "na_anel_ferro",
+    "type": "location",
+    "name": "Anel de Ferro",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "cidade",
+      "industrial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "na_anel_lama": {
+    "id": "na_anel_lama",
+    "type": "location",
+    "name": "Anel de Lama",
+    "aliases": [
+      "A Fossa"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "favela"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "pm_profundezas": {
+    "id": "pm_profundezas",
+    "type": "location",
+    "name": "Profundezas do Pântano",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "perigoso"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "dz_borda_do_vazio": {
+    "id": "dz_borda_do_vazio",
+    "type": "location",
+    "name": "Borda do Vazio",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "vazio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "fs_fronteira_xylos": {
+    "id": "fs_fronteira_xylos",
+    "type": "location",
+    "name": "Fronteira com Xylos",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "selva_xylos",
+      "fronteira"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "sx_cidades_hospedeiros": {
+    "id": "sx_cidades_hospedeiros",
+    "type": "location",
+    "name": "Cidades nas Copas",
+    "aliases": [
+      "Cidades dos Hospedeiros"
+    ],
+    "tags": [
+      "selva_xylos",
+      "cidade",
+      "hospedeiros"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "sx_profundezas": {
+    "id": "sx_profundezas",
+    "type": "location",
+    "name": "Profundezas de Morrakh",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "morrakh",
+      "perigoso"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "sk_fortaleza_vorr": {
+    "id": "sk_fortaleza_vorr",
+    "type": "location",
+    "name": "Fortaleza de Vorr",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "gigantes",
+      "ruina"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "sk_farol_chama_negra": {
+    "id": "sk_farol_chama_negra",
+    "type": "location",
+    "name": "Farol da Chama Negra",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "gigantes",
+      "farol"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "ae_ruinas_submersas": {
+    "id": "ae_ruinas_submersas",
+    "type": "location",
+    "name": "Ruínas Submersas de Aethelgard",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "submerso",
+      "ruina"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "cn_o_trono": {
+    "id": "cn_o_trono",
+    "type": "location",
+    "name": "O Trono",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "leviata"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "ma_saidas_baixas": {
+    "id": "ma_saidas_baixas",
+    "type": "location",
+    "name": "Saídas Baixas",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "orcs",
+      "goblins"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "ma_boca": {
+    "id": "ma_boca",
+    "type": "location",
+    "name": "A Boca",
+    "aliases": [
+      "Entrada do Reino Subterrâneo"
+    ],
+    "tags": [
+      "montanhas_afiadas",
+      "reino_subterraneo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "pr_vaelorn": {
+    "id": "pr_vaelorn",
+    "type": "location",
+    "name": "Vaelorn",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "cidade",
+      "elfos"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "pr_solvhen": {
+    "id": "pr_solvhen",
+    "type": "location",
+    "name": "Solvhen",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "cidade",
+      "cinzeus"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "pr_ruinas_assombradas": {
+    "id": "pr_ruinas_assombradas",
+    "type": "location",
+    "name": "Ruínas Assombradas",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "espectros"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "bk_docas_velhas": {
+    "id": "bk_docas_velhas",
+    "type": "location",
+    "name": "Docas Velhas",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "docas"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_rato_peste_anel_lama": {
+    "id": "enemy_rato_peste_anel_lama",
+    "type": "monster",
+    "name": "Rato da Peste (Anel de Lama)",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_degolador_mao_sombria": {
+    "id": "enemy_degolador_mao_sombria",
+    "type": "monster",
+    "name": "Degolador da Mão Sombria",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "brekmar",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_soldado_legiao_ferro": {
+    "id": "enemy_soldado_legiao_ferro",
+    "type": "monster",
+    "name": "Soldado da Legião de Ferro",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_iniciado_chama_azul": {
+    "id": "enemy_iniciado_chama_azul",
+    "type": "monster",
+    "name": "Iniciado da Chama Azul",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_devorador_sol_zhur": {
+    "id": "enemy_devorador_sol_zhur",
+    "type": "monster",
+    "name": "Devorador de Sol (Zhur)",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_escorpiao_cristal": {
+    "id": "enemy_escorpiao_cristal",
+    "type": "monster",
+    "name": "Escorpião de Cristal",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_mumia_de_po": {
+    "id": "enemy_mumia_de_po",
+    "type": "monster",
+    "name": "Múmia de Pó",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_hospedeiro_fungico": {
+    "id": "enemy_hospedeiro_fungico",
+    "type": "monster",
+    "name": "Hospedeiro Fúngico (Xylos)",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_vinha_estranguladora": {
+    "id": "enemy_vinha_estranguladora",
+    "type": "monster",
+    "name": "Vinha Estranguladora",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "floresta_sussurros",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_guerreiro_bjorn": {
+    "id": "enemy_guerreiro_bjorn",
+    "type": "monster",
+    "name": "Guerreiro Bjorn",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_lobo_invernal": {
+    "id": "enemy_lobo_invernal",
+    "type": "monster",
+    "name": "Lobo das Geleiras",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_sentinela_ferro": {
+    "id": "enemy_sentinela_ferro",
+    "type": "monster",
+    "name": "Sentinela de Ferro (Constructo)",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "montanhas_afiadas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_horror_esgoto": {
+    "id": "enemy_horror_esgoto",
+    "type": "monster",
+    "name": "Horror do Esgoto (Ooze)",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_necromante_renegado": {
+    "id": "enemy_necromante_renegado",
+    "type": "monster",
+    "name": "Necromante Renegado",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "pantano_melancolia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_esqueleto_legiao_antiga": {
+    "id": "enemy_esqueleto_legiao_antiga",
+    "type": "monster",
+    "name": "Esqueleto da Legião Antiga",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_espectro_lamento": {
+    "id": "enemy_espectro_lamento",
+    "type": "monster",
+    "name": "Espectro do Lamento",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "pantano_melancolia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_gargula_ferro": {
+    "id": "enemy_gargula_ferro",
+    "type": "monster",
+    "name": "Gárgula de Ferro",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_assassino_cinzeu": {
+    "id": "enemy_assassino_cinzeu",
+    "type": "monster",
+    "name": "Assassino Cinzéu",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "nova_arcadia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_urso_coruja_mutante": {
+    "id": "enemy_urso_coruja_mutante",
+    "type": "monster",
+    "name": "Urso-Coruja Mutante",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_elemental_fogo_poluido": {
+    "id": "enemy_elemental_fogo_poluido",
+    "type": "monster",
+    "name": "Elemental de Fogo Poluído",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_boss_valerius": {
+    "id": "enemy_boss_valerius",
+    "type": "monster",
+    "name": "Lorde Protetor Valerius",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_boss_vibora": {
+    "id": "enemy_boss_vibora",
+    "type": "monster",
+    "name": "A Víbora (Boss)",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_boss_general_escorpiao": {
+    "id": "enemy_boss_general_escorpiao",
+    "type": "monster",
+    "name": "General Escorpião",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_boss_arauto_nevoa": {
+    "id": "enemy_boss_arauto_nevoa",
+    "type": "monster",
+    "name": "O Arauto da Névoa",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "skallgard",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_gigante_gelo_norte": {
+    "id": "enemy_gigante_gelo_norte",
+    "type": "monster",
+    "name": "Titã de Gelo (Norte)",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_mimico_bau": {
+    "id": "enemy_mimico_bau",
+    "type": "monster",
+    "name": "Mímico (Baú)",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "aethelgard",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_basilisco_caverna": {
+    "id": "enemy_basilisco_caverna",
+    "type": "monster",
+    "name": "Basilisco da Caverna",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_troll_ponte": {
+    "id": "enemy_troll_ponte",
+    "type": "monster",
+    "name": "Troll de Ponte",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "pradaria_ruinas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_golem_lixo": {
+    "id": "enemy_golem_lixo",
+    "type": "monster",
+    "name": "Golem de Lixo",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_sombra_espreitadora": {
+    "id": "enemy_sombra_espreitadora",
+    "type": "monster",
+    "name": "Sombra Espreitadora",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "pradaria_ruinas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_verme_areia_jovem": {
+    "id": "enemy_verme_areia_jovem",
+    "type": "monster",
+    "name": "Verme da Areia (Jovem)",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_djinn_menor": {
+    "id": "enemy_djinn_menor",
+    "type": "monster",
+    "name": "Djinn Menor",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_esqueleto_mago": {
+    "id": "enemy_esqueleto_mago",
+    "type": "monster",
+    "name": "Esqueleto Arcanista",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "pradaria_ruinas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_nomade_canibal": {
+    "id": "enemy_nomade_canibal",
+    "type": "monster",
+    "name": "Nômade Canibal",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_yeti": {
+    "id": "enemy_yeti",
+    "type": "monster",
+    "name": "Yeti das Cavernas",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "montanhas_afiadas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_wyvern_jovem": {
+    "id": "enemy_wyvern_jovem",
+    "type": "monster",
+    "name": "Wyvern Jovem",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "skallgard",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_bandido_capitao": {
+    "id": "enemy_bandido_capitao",
+    "type": "monster",
+    "name": "Capitão dos Bandidos",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "brekmar",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_morcego_vampiro": {
+    "id": "enemy_morcego_vampiro",
+    "type": "monster",
+    "name": "Morcego Vampiro Gigante",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_aranha_lobo": {
+    "id": "enemy_aranha_lobo",
+    "type": "monster",
+    "name": "Aranha Lobo",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_zumbi_blindado": {
+    "id": "enemy_zumbi_blindado",
+    "type": "monster",
+    "name": "Zumbi Blindado",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "aethelgard",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_polvo_esgoto": {
+    "id": "enemy_polvo_esgoto",
+    "type": "monster",
+    "name": "Polvo do Esgoto",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_fantasma": {
+    "id": "enemy_fantasma",
+    "type": "monster",
+    "name": "Fantasma",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "pradaria_ruinas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_observador_menor": {
+    "id": "enemy_observador_menor",
+    "type": "monster",
+    "name": "Observador Menor (Gazer)",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_minotauro_esqueleto": {
+    "id": "enemy_minotauro_esqueleto",
+    "type": "monster",
+    "name": "Minotauro Esqueleto",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_golem_carne": {
+    "id": "enemy_golem_carne",
+    "type": "monster",
+    "name": "Golem de Carne",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_aranha_de_cristal": {
+    "id": "enemy_aranha_de_cristal",
+    "type": "monster",
+    "name": "Aranha de Cristal",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_lobo_sombrio": {
+    "id": "enemy_lobo_sombrio",
+    "type": "monster",
+    "name": "Lobo Sombrio",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_carniçal": {
+    "id": "enemy_carniçal",
+    "type": "monster",
+    "name": "Carniçal",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "pradaria_ruinas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_esqueleto": {
+    "id": "enemy_esqueleto",
+    "type": "monster",
+    "name": "Esqueleto",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "aethelgard",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_garrick,_o_silenciador": {
+    "id": "enemy_garrick,_o_silenciador",
+    "type": "monster",
+    "name": "Garrick, o Silenciador",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_goblin": {
+    "id": "enemy_goblin",
+    "type": "monster",
+    "name": "Goblin",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_bandido": {
+    "id": "enemy_bandido",
+    "type": "monster",
+    "name": "Bandido",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "brekmar",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_renegado_ermo": {
+    "id": "enemy_renegado_ermo",
+    "type": "monster",
+    "name": "Renegado do Ermo",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_druida_renegado": {
+    "id": "enemy_druida_renegado",
+    "type": "monster",
+    "name": "Druida-Renegado",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_cultista_destilacao": {
+    "id": "enemy_cultista_destilacao",
+    "type": "monster",
+    "name": "Cultista da Destilação",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_pirata_brekmar": {
+    "id": "enemy_pirata_brekmar",
+    "type": "monster",
+    "name": "Pirata de Brekmar",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "costa_negra",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_arpoador_osshari": {
+    "id": "enemy_arpoador_osshari",
+    "type": "monster",
+    "name": "Arpoador Osshari",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "costa_negra",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_orc_saidas_baixas": {
+    "id": "enemy_orc_saidas_baixas",
+    "type": "monster",
+    "name": "Orc das Saídas Baixas",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "enemy_capturador_groth": {
+    "id": "enemy_capturador_groth",
+    "type": "monster",
+    "name": "Capturador de Groth",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario"
+    ],
+    "visibility": "public",
+    "components": {}
+  }
+}

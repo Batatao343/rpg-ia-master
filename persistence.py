@@ -93,7 +93,12 @@ def save_game_state(state: Dict[str, Any]) -> bool:
             "inventory": state.get("inventory", []),
             "quests": state.get("quests", []),
             "campaign_plan": state.get("campaign_plan", {}),
-            
+
+            # --- Fase 2.5: eventos estruturados + projeção do mundo ---
+            "event_log": state.get("event_log", []),
+            "world_projection": state.get("world_projection", {}),
+            "pending_world_events": state.get("pending_world_events", []),
+
             # --- Histórico ---
             "message_history": _serialize_messages(state.get("messages", []))
         }
@@ -143,7 +148,12 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
             "inventory": raw_data.get("inventory", []),
             "quests": raw_data.get("quests", []),
             "campaign_plan": raw_data.get("campaign_plan", {}),
-            
+
+            # --- Fase 2.5: eventos estruturados + projeção do mundo ---
+            "event_log": raw_data.get("event_log", []),
+            "world_projection": raw_data.get("world_projection", {}),
+            "pending_world_events": raw_data.get("pending_world_events", []),
+
             # --- Recupera Transicionais ---
             "combat_target": raw_data.get("combat_target"),
             "loot_source": raw_data.get("loot_source"),

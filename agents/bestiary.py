@@ -28,6 +28,12 @@ class AttackAction(BaseModel):
     range: str = "1.5m"
     save_dc: Optional[str] = Field(None, description="Se houver save. Ex: 'DC 12 Con'")
 
+class EnemyBehavior(BaseModel):
+    """Perfil de comportamento em combate (Fase 2.5b) — resolvido em Python."""
+    profile: str = Field(description="'tatico' (esperto, foge por moral), 'feroz' (até a morte, frenesi), 'covarde' (foge cedo) ou 'implacavel' (nunca foge)")
+    flee_below: float = Field(default=0.35, description="Foge com HP abaixo desta fração (só tatico/covarde)")
+    pack_morale: bool = Field(default=False, description="True se foge quando a maioria do grupo cai")
+
 class EnemySchema(BaseModel):
     name: str
     description: str
@@ -39,6 +45,8 @@ class EnemySchema(BaseModel):
     attributes: Dict[str, int] = Field(description="Atributos: str, dex, con, int, wis, cha")
     abilities: List[str] = []
     loot: List[str] = []
+    behavior: Optional[EnemyBehavior] = Field(None, description="Como a criatura luta: bestas = 'feroz'; soldados/bandidos = 'tatico'; presas = 'covarde'; mortos-vivos/constructos/bosses = 'implacavel'")
+    regions: List[str] = Field(default_factory=list, description="Ids das regiões onde a criatura ocorre (ex.: 'skallgard')")
 
 # --- PERSISTÊNCIA ---
 def load_bestiary() -> Dict:
@@ -117,10 +125,14 @@ def generate_new_enemy(name: str, context: str = "") -> Dict:
         designer = llm.with_structured_output(EnemySchema)
         res = designer.invoke([sys_msg, HumanMessage(content=f"Create monster: {name}. Context: {context}")])
         data = res.model_dump()
-        
+
         data["status"] = "ativo"
         data["id"] = f"enemy_{data['name'].lower().replace(' ', '_')}"
-        
+        # Fase 2.5b: garante behavior válido (LLM pode omitir/errar o enum)
+        b = data.get("behavior") or {}
+        if str(b.get("profile", "")).lower() not in ("tatico", "feroz", "covarde", "implacavel"):
+            data["behavior"] = {"profile": "feroz"}
+
         save_enemy(data)
         return data
         

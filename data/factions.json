@@ -1,8 +1,24 @@
 {
-  "selo_palido": {
-    "id": "selo_palido",
-    "name": "Ordem do Selo Pálido",
-    "goal": "Centralizar o poder das guildas e selar o Portão Oeste contra o norte.",
+  "legiao_ferro": {
+    "id": "legiao_ferro",
+    "name": "A Legião de Ferro",
+    "goal": "Cumprir as quotas do Código de Ferro e caçar magos não registrados nos três anéis de Nova Arcádia.",
+    "region": "Nova Arcádia",
+    "progress": 0,
+    "pace": 3,
+    "disposition": "neutro",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "dominar_local",
+      "target": "na_anel_lama",
+      "perceived": "Pela primeira vez a Legião ocupa o Anel de Lama de verdade: barreiras nos becos, fogueiras de 'sedição' acesas por dias, e os Inquisidores do Código revistando casa por casa com artefatos que sugam Éter."
+    }
+  },
+  "mao_sombria": {
+    "id": "mao_sombria",
+    "name": "A Mão Sombria",
+    "goal": "Expandir a rota de venenos de Ophidia e amarrar o comércio proibido entre Nova Arcádia e Brekmar.",
     "region": "Nova Arcádia",
     "progress": 0,
     "pace": 4,
@@ -10,16 +26,260 @@
     "reputation": 0,
     "completed": false,
     "ascension": {
-      "type": "dominar_local",
-      "target": "portao_oeste",
-      "perceived": "O Portão Oeste amanhece tomado por estandartes pálidos e lanças; ninguém passa sem ser revistado, e ninguém manda mais que eles ali."
+      "type": "expandir_regiao",
+      "region": "Brekmar",
+      "next_goal": "Colocar um agente da Víbora dentro de cada um dos três sindicatos do porto.",
+      "perceived": "Os preços do mercado negro mudaram da noite para o dia, e mercadorias que só existiam no Beco do Sussurro agora aparecem nas docas de Brekmar — alguém costurou as duas cidades por baixo."
     }
   },
-  "clas_skallgard": {
-    "id": "clas_skallgard",
-    "name": "Clãs de Skallgard",
-    "goal": "Reunir os clãs do norte para uma marcha de inverno rumo ao sul.",
+  "filhos_chama_azul": {
+    "id": "filhos_chama_azul",
+    "name": "Os Filhos da Chama Azul",
+    "goal": "Libertar Malagor da armadura selada no Palácio de Obsidiana e 'terminar o trabalho' do fogo.",
+    "region": "Nova Arcádia",
+    "progress": 0,
+    "pace": 2,
+    "disposition": "hostil",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "invocar_entidade",
+      "target": "na_anel_dourado",
+      "threat": "Um calor errado emana do Palácio de Obsidiana; a armadura no salão do trono racha, e chamas azuis lambem as frestas sem consumir nada.",
+      "perceived": "Cicatrizes de queimadura nos lábios aparecem em cada vez mais rostos na multidão; incêndios de chama azul irrompem em três pontos da cidade na mesma noite, e ninguém viu quem os acendeu."
+    }
+  },
+  "clas_combate": {
+    "id": "clas_combate",
+    "name": "Os Clãs de Combate de Skallgard",
+    "goal": "Acumular suprimentos e contatos para tornar os caçadores independentes dos clãs tecnológicos.",
     "region": "Skallgard",
+    "progress": 0,
+    "pace": 3,
+    "disposition": "neutro",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "dominar_local",
+      "target": "skallgard",
+      "perceived": "Os caçadores tomaram a Sala Fria e a distribuição de comida: Vehkr Punho-de-Gelo fala pela cidade agora, e os engenheiros negociam calor por carne em vez de ditar os termos."
+    }
+  },
+  "renegados_ermo": {
+    "id": "renegados_ermo",
+    "name": "Os Renegados do Ermo",
+    "goal": "Saquear expedições no Ermo Branco e juntar provas da armação que exilou Korrin Sem-Clã.",
+    "region": "Skallgard",
+    "progress": 0,
+    "pace": 4,
+    "disposition": "hostil",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "elevar_perigo",
+      "target": "skallgard",
+      "perceived": "Expedições inteiras deixaram de voltar; os Renegados atacam agora à vista das muralhas de Skallgard, e a Parede dos Mortos ganhou uma fileira nova em uma única lua."
+    }
+  },
+  "bandos_orc_saidas_baixas": {
+    "id": "bandos_orc_saidas_baixas",
+    "name": "Os Bandos Orc das Saídas Baixas",
+    "goal": "Fechar o cerco sobre as passagens das Montanhas Afiadas e cobrar pedágio em bens ou sangue.",
+    "region": "Montanhas Afiadas",
+    "progress": 0,
+    "pace": 4,
+    "disposition": "hostil",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "dominar_local",
+      "target": "ma_saidas_baixas",
+      "perceived": "Gruumsha Quebra-Espinha uniu os bandos: as saídas baixas viraram um pedágio permanente com paliçadas de osso, e nenhuma caravana passa sem pagar — ou sem sangrar."
+    }
+  },
+  "goblins_mineiros": {
+    "id": "goblins_mineiros",
+    "name": "Os Goblins-Mineiros",
+    "goal": "Saquear as relíquias do Reino Anão perdido antes que qualquer outro chegue a elas.",
+    "region": "Montanhas Afiadas",
+    "progress": 0,
+    "pace": 3,
+    "disposition": "neutro",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "elevar_perigo",
+      "target": "ma_boca",
+      "perceived": "Skriit Mil-Olhos escavou fundo demais atrás de relíquias: algo respondeu lá embaixo, e agora até os Goblins evitam os níveis que eles mesmos abriram — o que sobe pela Boca não calcula números."
+    }
+  },
+  "ultimos_anoes_reino": {
+    "id": "ultimos_anoes_reino",
+    "name": "Os Últimos Anões do Reino",
+    "goal": "Recuperar os Registros Perdidos do Reino e a verdade sobre a Falha Crítica de Contenção.",
+    "region": "Montanhas Afiadas",
+    "progress": 0,
+    "pace": 2,
+    "disposition": "neutro",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "eliminar_faccao",
+      "target": "goblins_mineiros",
+      "perceived": "Durgrim Último-Martelo comprou, chantageou e guiou aventureiros até expulsar os Goblins dos níveis intermediários; os túneis agora têm marcas Anãs novas por cima das antigas."
+    }
+  },
+  "druidas_ciclo_cinzento": {
+    "id": "druidas_ciclo_cinzento",
+    "name": "Os Druidas do Ciclo Cinzento",
+    "goal": "Conter o avanço do Pântano da Melancolia e manter vivo o fornecimento do chá da Praga de Ferro.",
+    "region": "Pântano da Melancolia",
+    "progress": 0,
+    "pace": 3,
+    "disposition": "neutro",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "eliminar_faccao",
+      "target": "druidas_renegados",
+      "perceived": "As estacas de medição voltaram a ficar de pé: Arcante Gresh encontrou os jardins de Tumores de Saelwen e os queimou com fogo cinzento. O pântano ainda avança — mas ninguém mais o ajuda."
+    }
+  },
+  "druidas_renegados": {
+    "id": "druidas_renegados",
+    "name": "Os Druidas-Renegados",
+    "goal": "Sabotar a contenção do Ciclo Cinzento e cultivar os Tumores para que o pântano cresça.",
+    "region": "Pântano da Melancolia",
+    "progress": 0,
+    "pace": 3,
+    "disposition": "hostil",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "elevar_perigo",
+      "target": "pantano_melancolia",
+      "perceived": "A névoa do pântano engrossou e avançou uma légua em uma estação; viajantes somem da estrada leste, e os que voltam falam de uma mulher bela na água que oferece descanso."
+    }
+  },
+  "tribos_devoradores_sol": {
+    "id": "tribos_devoradores_sol",
+    "name": "As Tribos dos Devoradores de Sol",
+    "goal": "Caçar forasteiros no Mar de Vidro pela água do corpo e beber suas memórias nos Cristais de Urath.",
+    "region": "Deserto de Zhur",
+    "progress": 0,
+    "pace": 3,
+    "disposition": "hostil",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "dominar_local",
+      "target": "deserto_zhur",
+      "perceived": "As tribos pararam de guerrear entre si: Khatarn Olhos-de-Obsidiana as uniu sob um único propósito, e agora nenhuma rota cruza o Mar de Vidro sem ser vista pelas lentes de obsidiana."
+    }
+  },
+  "colmeia_hospedeiros": {
+    "id": "colmeia_hospedeiros",
+    "name": "A Colmeia dos Hospedeiros",
+    "goal": "Defender as cidades nas copas e conter o avanço do contágio de Morrakh sobre a Árvore-Mãe.",
+    "region": "Selva de Xylos",
+    "progress": 0,
+    "pace": 2,
+    "disposition": "neutro",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "dominar_local",
+      "target": "selva_xylos",
+      "perceived": "A selva inteira parece acordada: cipós fecham trilhas atrás de quem entra, e os Hospedeiros sabem de cada passo de um forasteiro antes que ele veja a primeira plataforma. A colmeia traçou uma fronteira — e a selva a obedece."
+    }
+  },
+  "cultistas_destilacao": {
+    "id": "cultistas_destilacao",
+    "name": "Os Cultistas da Destilação",
+    "goal": "Recuperar o Amuleto de Oghma e reaprender a Destilação — o refino de Éter a partir de almas.",
+    "region": "Aethelgard",
+    "progress": 0,
+    "pace": 2,
+    "disposition": "hostil",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "invocar_entidade",
+      "target": "ae_ruinas_submersas",
+      "threat": "Corvane reativou uma câmara de Destilação parcial: os Afogados patrulham em formação agora, e à noite o lago brilha por baixo — algo nas profundezas voltou a trabalhar.",
+      "perceived": "Pescadores da margem juram que o lago 'canta' depois do anoitecer; barcos amanhecem arrastados para dentro d'água, e desapareceram pessoas de três vilas próximas — todas com talento para magia."
+    }
+  },
+  "poder_kahen": {
+    "id": "poder_kahen",
+    "name": "O Poder de Kahen",
+    "goal": "Manter o equilíbrio entre sindicatos, piratas e contrabandistas — sem deixar ninguém dominar Brekmar.",
+    "region": "Brekmar",
+    "progress": 0,
+    "pace": 3,
+    "disposition": "neutro",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "dominar_local",
+      "target": "brekmar",
+      "perceived": "Depois de uma noite de sangue que ninguém descreve igual, os três sindicatos mandaram emissários ao navio de Kahen no mesmo dia. O porto tem dono agora — mesmo que ele nunca use essa palavra."
+    }
+  },
+  "grupos_piratas_rivais": {
+    "id": "grupos_piratas_rivais",
+    "name": "Os Grupos Piratas Rivais",
+    "goal": "Vencer a guerra pela rota de alto valor do mar oeste — a que passa perto do horizonte de Ophidia.",
+    "region": "Brekmar",
+    "progress": 0,
+    "pace": 4,
+    "disposition": "hostil",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "expandir_regiao",
+      "region": "Costa Negra",
+      "next_goal": "Montar um porto de saque entre as ossadas para emboscar tudo que navega a rota do oeste.",
+      "perceived": "Velas negras ancoram entre as costelas dos leviatãs: a guerra das rotas transbordou para a Costa Negra, e caranguejeiros dividem a praia com acampamentos de piratas que atiram primeiro."
+    }
+  },
+  "osshari_brekmar": {
+    "id": "osshari_brekmar",
+    "name": "Os Osshari de Brekmar",
+    "goal": "Guardar a neutralidade sagrada do Ossário do Leviatã e os mistérios do mar oeste.",
+    "region": "Brekmar",
+    "progress": 0,
+    "pace": 2,
+    "disposition": "neutro",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "dominar_local",
+      "target": "bk_docas_velhas",
+      "perceived": "Depois que 'O Que Come nas Praias' levou mais um estivador, os Osshari fecharam as docas velhas com fileiras de arpões fincados: agora ninguém carrega nem descarrega ali sem a bênção de Maré-Funda."
+    }
+  },
+  "bandos_nomades": {
+    "id": "bandos_nomades",
+    "name": "Os Bandos Nômades da Pradaria",
+    "goal": "Dominar as rotas da Pradaria das Ruínas pelo terror de Kaarg e pelo pedágio dos Cavaleiros-Cinza.",
+    "region": "Pradaria das Ruínas",
+    "progress": 0,
+    "pace": 4,
+    "disposition": "hostil",
+    "reputation": 0,
+    "completed": false,
+    "ascension": {
+      "type": "dominar_local",
+      "target": "pradaria_ruinas",
+      "perceived": "Crânios pintados marcam cada encruzilhada da Pradaria: os bandos pararam de disputar entre si e passaram a cobrar juntos. Viajar sem pagar o Osso Pintado virou aposta de vida."
+    }
+  },
+  "mercadores_escravos_pradaria": {
+    "id": "mercadores_escravos_pradaria",
+    "name": "Os Mercadores de Escravos da Pradaria",
+    "goal": "Capturar viajantes e esvaziar vilas isoladas para alimentar a rede continental de tráfico de Groth.",
+    "region": "Pradaria das Ruínas",
     "progress": 0,
     "pace": 3,
     "disposition": "hostil",
@@ -28,57 +288,24 @@
     "ascension": {
       "type": "expandir_regiao",
       "region": "Nova Arcádia",
-      "next_goal": "Saquear as cidades do sul antes que o degelo feche os passos.",
-      "perceived": "Colunas de fumaça mancham o horizonte norte; estradas antes calmas agora cospem homens armados de peles e machados, falando uma língua dura."
+      "next_goal": "Fechar contrato fixo com Lorde Vespério e escoar 'inventário' direto pelo Mercado de Carne.",
+      "perceived": "As jaulas de Groth Algema-Fria agora chegam até os portões de Nova Arcádia sem serem paradas; vilas inteiras da Pradaria amanhecem vazias, e o Mercado de Carne anuncia 'estoque novo' toda semana."
     }
   },
-  "culto_clareira": {
-    "id": "culto_clareira",
-    "name": "Culto da Clareira",
-    "goal": "Despertar o que dorme sob os ossos da Floresta dos Sussurros.",
-    "region": "Floresta dos Sussurros",
+  "cidades_estado_sobreviventes_vaelorn_solvhen": {
+    "id": "cidades_estado_sobreviventes_vaelorn_solvhen",
+    "name": "As Cidades-Estado Sobreviventes",
+    "goal": "Preservar a memória élfica e cinzéu e proteger Vaelorn e Solvhen dos bandos e traficantes.",
+    "region": "Pradaria das Ruínas",
     "progress": 0,
-    "pace": 5,
-    "disposition": "hostil",
-    "reputation": 0,
-    "completed": false,
-    "ascension": {
-      "type": "invocar_entidade",
-      "target": "clareira_ossos",
-      "threat": "Algo antigo e faminto despertou sob a floresta; a terra range e os animais fogem em massa.",
-      "perceived": "O céu sobre a mata fica da cor de um hematoma; os sussurros viram um coro, e bichos correm para longe da floresta como se o chão os repelisse."
-    }
-  },
-  "guilda_fuligem": {
-    "id": "guilda_fuligem",
-    "name": "Guilda da Fuligem",
-    "goal": "Escavar mais fundo na Mina da Fuligem atrás do veio negro.",
-    "region": "Montanhas Afiadas",
-    "progress": 0,
-    "pace": 4,
-    "disposition": "neutro",
-    "reputation": 0,
-    "completed": false,
-    "ascension": {
-      "type": "elevar_perigo",
-      "target": "mina_fuligem",
-      "perceived": "Tremores sacodem as montanhas e um fumo negro vaza das galerias; mineiros somem e ninguém mais desce sem voltar diferente — ou sem voltar."
-    }
-  },
-  "hereticos_sol_morto": {
-    "id": "hereticos_sol_morto",
-    "name": "Heréticos do Sol Morto",
-    "goal": "Reerguer o templo soterrado de Zhur e reacender o sol que o matou.",
-    "region": "Deserto de Zhur",
-    "progress": 0,
-    "pace": 3,
+    "pace": 2,
     "disposition": "neutro",
     "reputation": 0,
     "completed": false,
     "ascension": {
       "type": "eliminar_faccao",
-      "target": "culto_clareira",
-      "perceived": "Uma luz doente pulsa no deserto ao longe; por uma noite, um terror distante que crescia simplesmente silencia — engolido por outro maior."
+      "target": "mercadores_escravos_pradaria",
+      "perceived": "Lady Aerwen e Keeper Morvan fizeram o que ninguém esperava: agiram juntos. As jaulas de Groth foram encontradas abertas e queimadas na estrada — e os capturados, devolvidos às vilas por escoltas élficas."
     }
   }
 }

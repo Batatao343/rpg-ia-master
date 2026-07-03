@@ -70,6 +70,9 @@ def _spawn_enemies_integrated(messages: List, target_hint: str):
                 instance.setdefault("attack_mod", 0)
                 instance.setdefault("active_conditions", [])
                 instance.setdefault("status", "ativo")
+                # Fase 2.5b: perfil de comportamento (bestiário curado traz; LLM pode
+                # omitir -> default feroz = comportamento clássico "luta até morrer")
+                instance.setdefault("behavior", {"profile": "feroz"})
                 final_enemies_list.append(instance)
         return final_enemies_list, scan_result.flavor_text
 
@@ -241,6 +244,7 @@ def combat_node(state: GameState):
     # Resolução determinística em ordem de iniciativa.
     logs: List[str] = []
     hero_resolved = False
+    rnd = int(combat_meta.get("round", 1))
     for slot in combat_meta["order"]:
         if slot["side"] == "hero":
             logs += cm.tick_conditions(player)
@@ -254,22 +258,42 @@ def combat_node(state: GameState):
                 continue
             logs += cm.tick_conditions(e)
             if e.get("status") == "ativo" and int(player.get("hp", 0)) > 0:
-                logs += cm.resolve_enemy_turn(e, player)
+                logs += cm.resolve_enemy_turn(e, player, allies=enemies, rnd=rnd)
     if not hero_resolved and int(player.get("hp", 0)) > 0:
         logs += cm.resolve_player_action(player, enemies, action, ABILITIES)
 
+    # Fase 2.5b: fugido sai do combate — não conta como ativo, não vira loot.
     active_after = [e for e in enemies if e.get("status") == "ativo"]
-    victory = not active_after
-    combat_meta["active"] = bool(active_after)
+    fled = [e for e in enemies if e.get("status") == "fugiu"]
+    dead = [e for e in enemies if e.get("status") == "morto"]
+    combat_over = not active_after
+    victory = combat_over and bool(dead)  # vitória "com espólio" só se alguém caiu
 
-    narrative = _narrate(player, enemies, logs, spawned_flavor, intent, victory)
+    narrative = _narrate(player, enemies, logs, spawned_flavor, intent, combat_over)
 
-    return {
+    result = {
         "messages": [AIMessage(content=narrative)],
         "player": player,
-        "enemies": enemies,
+        "enemies": [] if combat_over else enemies,
         "combat": combat_meta,
-        "combat_target": None if victory else combat_target,
+        "combat_target": None if combat_over else combat_target,
+        # todos fugiram e ninguém morreu -> sem loot; volta ao fluxo normal
         "next": "loot" if victory else None,
-        "archive_due": victory,  # fim de combate (vitória) = evento relevante
+        "archive_due": combat_over,  # fim de combate = evento relevante
     }
+    combat_meta["active"] = bool(active_after)
+
+    # Fase 2.5b (R10): fuga vira alerta de mundo — o fugitivo pode voltar com amigos.
+    if fled:
+        import world_utils as wu
+        world = wu.ensure_world(dict(state.get("world") or {}))
+        faction_id = next((e.get("faction") for e in fled if e.get("faction")), None)
+        world = wu.register_flee_alert(
+            world,
+            fled_hint=fled[0].get("name", "o fugitivo"),
+            faction_id=faction_id,
+            turn=int(world.get("turn_count", 0) or 0),
+        )
+        result["world"] = world
+
+    return result

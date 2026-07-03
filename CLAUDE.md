@@ -19,9 +19,13 @@ Stack: Python 3.13 · FastAPI · LangGraph · FAISS · Google Gemini · uv
 uv sync                                   # cria .venv (Python 3.13)
 uv run python game_engine.py              # CLI — jogar no terminal
 uv run uvicorn api:app --port 8000        # API REST + frontend web (http://localhost:8000)
-uv run python rag.py                      # re-indexar lore/regras após editar data/*.txt
+uv run python rag.py                      # re-indexar lore (data/codex/) + regras (data/rules.txt)
 uv run pytest                             # suíte offline (força MockLLM, não precisa de chave)
+bash scripts/smoke_api.sh [porta]         # smoke da API (health, /data/map, /game/new, /game/action)
 ```
+
+**Skills do projeto:** `/qa` = pytest token-lean durante iteração (só falhas);
+`/wrap-up` = ritual de fim de tarefa (suíte completa + docs + commit).
 
 **Modo simulado / chave:** sem `GOOGLE_API_KEY`, `get_llm()` devolve um `MockLLM`
 ([mock_llm.py](mock_llm.py)) — jogo jogável e testável sem rede. Flags: `RPG_FORCE_MOCK=1`
@@ -82,7 +86,10 @@ Sem ela o jogo roda no MockLLM.
 
 `rag.py` — `query_rag(query, index_name, game_id)` busca em dois índices:
 
-1. **Global** (`faiss_lore_index/`, `faiss_rules_index/`) — imutável durante o jogo, indexado de `data/world_lore.txt` e `data/rules.txt`
+1. **Global** (`faiss_lore_index/`, `faiss_rules_index/`) — imutável durante o jogo; lore
+   vem do **Codex** (`data/codex/**/*.md` via `services/codex_loader.ingest_codex`, metadados
+   `id/type/tags/visibility` por chunk; Fase 2.5), regras de `data/rules.txt`.
+   `query_rag(..., max_visibility="public")` filtra chunks `hidden`/`secret` do narrador
 2. **Sessão** (`data/saves_memory/{game_id}/`) — dinâmico, criado pelo archivist via `add_memory_to_session()`
 
 Embeddings: `models/text-embedding-004` (Google). Chunks: 500 tokens, overlap 50.
@@ -163,10 +170,19 @@ agents/
   class_themes.py     # temas/gating narrativo por classe (allowed/forbidden)
   librarian.py        # find_existing_entity — dedupe semântico de entidades
   ruler_completo.py   # resolve_action — juízo de ação livre (gating)
+services/             # serviços determinísticos (Fase 2.5)
+  graph_resolver.py   # consultas ao grafo de mundo (base − disabled + dynamic, visibility)
+  codex_loader.py     # parse/split/ingest do Codex no FAISS (metadados por chunk)
+scripts/
+  migrate_lore_nova.py # gera data/codex/ (inclui timeline/) + entities.json de lore_nova/ (SOBRESCREVE curadoria)
+lore_nova/            # FONTE do lore Valoria (11 .txt, inclui timeline_completa.txt) — editar aqui e re-rodar o script
 data/
-  world_lore.txt      # lore indexado para FAISS (editar aqui, re-indexar depois)
+  codex/              # Codex Valoria gerado — .md com frontmatter id/type/tags/visibility
+                      #   timeline/ = história do mundo por era (reveals de secrets.txt ficam visibility:hidden)
+  graph/              # entities.json (gerado) + edges.json/relation_types.json (curados à mão)
+  world_lore.txt      # lore ANTIGO — não é mais ingerido (remoção na 2.5b)
   rules.txt           # regras indexadas para FAISS
-  world_map.json      # grafo de locais (Fase 0) — conexões, região, perigo, lore_seed
+  world_map.json      # grafo de locais (Fase 0) — AINDA do universo antigo (realinhar na 2.5b)
   bestiary.json       # criaturas
   classes.json        # classes jogáveis (base_stats, passive)
   class_themes.json   # allowed/forbidden por classe (gating)
@@ -174,9 +190,13 @@ data/
   artifacts.json      # artefatos
   player_abilities.json
   npc_database.json   # cache de NPCs gerados (runtime)
+specs/
+  TEMPLATE.md         # template de spec (desenvolvimento spec-driven — ver seção acima)
+  fase-2.5*.md ...    # specs das fases 2.5–2.8 (Mundo Vivo v1)
 tests/
   test_mvp.py         # suíte offline do MVP (dados, persistência, router, combate, beats)
   test_fase0.py       # suíte da Fase 0 (mapa, relógio, viagem, descanso, gating, e2e)
+  test_fase25.py      # suíte da Fase 2.5 (event_log/projection, grafo, resolver, codex)
   conftest.py         # força RPG_FORCE_MOCK=1 (suíte determinística e offline)
 conftest.py           # (raiz) injeta pythonpath
 faiss_lore_index/     # índice FAISS gerado — não editar à mão
@@ -184,6 +204,23 @@ faiss_rules_index/    # índice FAISS gerado — não editar à mão
 saves/                # saves JSON por game_id
 data/saves_memory/    # índices FAISS por sessão (gerado em runtime)
 ```
+
+---
+
+## Desenvolvimento spec-driven
+
+Toda feature/fase nova segue o fluxo de `specs/`:
+
+1. **Spec antes de código.** Feature nova começa como `specs/<nome>.md` (copiar
+   `specs/TEMPLATE.md`), status `draft`. Nada de implementar direto do ROADMAP.
+2. **Aprovação.** O usuário revisa; spec vira `approved`. Só então implementar.
+3. **Implementação segue o plano da spec** (etapas ordenadas, testes primeiro).
+   Desvio necessário durante a implementação? Atualizar a spec no mesmo commit.
+4. **Conclusão:** critérios de aceite todos marcados + `uv run pytest` verde +
+   smoke test real da spec executado → status `done` + atualizar ROADMAP/ESTADO_ATUAL.
+5. **ROADMAP.md é resumo + link;** o detalhe técnico mora SÓ na spec (fonte única).
+
+Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `draft` — próxima; 2.6–2.8 `draft`.
 
 ---
 
@@ -220,6 +257,13 @@ data/saves_memory/    # índices FAISS por sessão (gerado em runtime)
 - Não adicionar agentes ao grafo sem conectar ao `archivist` no final
 - Não usar `requests` — projeto usa `httpx` se necessário
 - Não editar os arquivos `faiss_*_index/` à mão — sempre re-gerar via `rag.py`
+- **Não fazer `Read` inteiro de arquivos de lore** (`lore_nova/*.txt`, `data/codex/**`) — têm
+  30–100KB cada e estouram o contexto. Usar `Grep` primeiro, `Read` com offset/limit no trecho,
+  ou delegar a um subagent (Explore) e trazer só a conclusão. Vale também para `data/*.json`
+  grandes (bestiary, npc_database): Grep pelo id/campo, não Read completo.
 
-@REFERENCE.md
+> **REFERENCE.md** (decisões arquiteturais e seus porquês) NÃO é carregado automaticamente —
+> ler sob demanda quando a tarefa envolver decisão estrutural (novo agente, troca de provider,
+> persistência, RAG). **CHANGELOG.md** = histórico de sessões antigas, também sob demanda.
+
 @ESTADO_ATUAL.md

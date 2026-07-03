@@ -48,24 +48,47 @@ def _get_session_path(game_id: str) -> str:
     """Retorna o caminho da pasta de memória da SESSÃO específica."""
     return os.path.join(SAVES_DIR, game_id)
 
-def query_rag(query: str, index_name: str = "lore", game_id: Optional[str] = None) -> str:
+# --- Visibilidade do Codex (Fase 2.5): public < hidden < secret ---
+_VIS_ORDER = {"public": 0, "hidden": 1, "secret": 2}
+
+
+def vis_rank(visibility: Optional[str]) -> int:
+    """Rank de visibilidade. Sem metadado = public; valor desconhecido = secret
+    (falha fechada: nunca vazar por typo)."""
+    if visibility is None:
+        return _VIS_ORDER["public"]
+    return _VIS_ORDER.get(visibility, _VIS_ORDER["secret"])
+
+
+def query_rag(query: str, index_name: str = "lore", game_id: Optional[str] = None,
+              max_visibility: str = "public") -> str:
     """
     Busca contexto de forma híbrida:
     1. Índice Global (Lore/Regras) - Imutável durante o jogo.
     2. Índice da Sessão (Memórias do Save) - Dinâmico, se game_id for fornecido.
+
+    `max_visibility` filtra chunks do Codex pelo metadado `visibility`
+    (public < hidden < secret). Default preserva o comportamento antigo:
+    o jogador/narrador só vê `public`; chunks sem metadado contam como public.
     """
     embeddings = get_embeddings()
     if not embeddings: return ""
 
     results = []
+    max_rank = vis_rank(max_visibility)
 
     # 1. Busca Global (Baseado no index_name: 'lore' ou 'rules')
+    # Busca k maior e corta após o filtro de visibilidade (spec 2.5 §3).
     global_path = get_global_db_path(index_name)
     if os.path.exists(global_path):
         try:
             global_db = FAISS.load_local(global_path, embeddings, allow_dangerous_deserialization=True)
-            # Busca 2 chunks globais
-            results.extend(global_db.similarity_search(query, k=2))
+            candidatos = global_db.similarity_search(query, k=6)
+            visiveis = [
+                d for d in candidatos
+                if vis_rank(d.metadata.get("visibility")) <= max_rank
+            ]
+            results.extend(visiveis[:2])
         except Exception as e:
             print(f"⚠️ [RAG] Erro ao ler Global '{index_name}': {e}")
 
@@ -192,7 +215,7 @@ def query_npc_memory(game_id: str, npc_id: str, query: str, k: int = 3) -> str:
 def ingest_file(file_path: str, index_name: str):
     """
     Ingere um arquivo de texto para criar os índices GLOBAIS (lore/rules).
-    Use isso no setup ou quando alterar o world_lore.txt.
+    Use isso no setup ou quando alterar o data/rules.txt.
     """
     if not os.path.exists(file_path):
         print(f"[ERRO] Arquivo não encontrado: {file_path}")
@@ -225,14 +248,12 @@ if __name__ == "__main__":
         except Exception:
             pass
 
-    # Script rápido para re-gerar a Lore Global se rodar este arquivo direto
+    # Script rápido para re-gerar os índices globais se rodar este arquivo direto.
+    # Fase 2.5: lore vem do Codex (data/codex/); world_lore.txt foi removido na 2.5b (R5).
     print("Recriando índices globais...")
-    lore_path = os.path.join("data", "world_lore.txt")
+    from services.codex_loader import ingest_codex
+    ingest_codex()
     rules_path = os.path.join("data", "rules.txt")
-    if os.path.exists(lore_path):
-        ingest_file(lore_path, "lore")
-    else:
-        print(f"[ERRO] Lore não encontrada em {lore_path}")
     if os.path.exists(rules_path):
         ingest_file(rules_path, "rules")
     else:

@@ -1,0 +1,1658 @@
+CODEX OMNIA: ITENS E MATERIAIS DE VALORIA
+Para uso do narrador. Recursos, materiais, consumíveis, armas, artefatos e componentes mágicos organizados por local.
+=======================================================
+
+NOTA DE ORGANIZAÇÃO:
+Cada local tem DUAS grandes seções:
+
+>> MATERIAIS << — o que a terra dá: matérias-primas, recursos naturais,
+   componentes mágicos e alquímicos que se extraem, colhem ou mineram.
+
+>> ITENS << — o que se faz com isso: armas, ferramentas, armaduras,
+   consumíveis, drogas processadas, e ARTEFATOS lendários únicos.
+
+Cada entrada traz: TIPO, ORIGEM, USO, VALOR/RARIDADE e PERIGO (quando houver).
+Artefatos lendários únicos estão marcados com [ARTEFATO ÚNICO] e ficam na seção ITENS.
+
+=======================================================
+
+
+#########################################################
+LOCAL: SKALLGARD E O ERMO BRANCO (NORTE)
+#########################################################
+
+==================== MATERIAIS ====================
+
+[MATERIAL: Liga de Vorr (Aço Azulado)]
+Tipo: Metal forjado / segredo industrial
+Origem: Fornalha de Vorr, pelo controle de temperatura derivado do estudo do Sopro de Vorrnak. Segredo dos clãs tecnológicos.
+Uso: Forja de armas e ferramentas que mantêm o fio em temperaturas que estilhaçam aço comum. A cor azulada é propriedade da liga.
+Valor/Raridade: Altíssimo. Brynja Forja-Fria controla a venda.
+Perigo: Nenhum no uso; o perigo é tentar roubar o processo.
+
+[MATERIAL: Pele de Lobo-de-Vidro]
+Tipo: Couro / pelagem cristalizada
+Origem: Lobos-de-Vidro do Ermo, cujo pelo cristalizou em fios rígidos que refletem a aurora.
+Uso: Armadura leve que não racha no frio; ornamental pelo brilho.
+Valor/Raridade: Médio-alto. Exige caçar uma alcateia silenciosa.
+
+[MATERIAL: Marfim de Mamute-da-Névoa]
+Tipo: Osso nobre
+Origem: Presas dos raros Mamutes-da-Névoa do Ermo.
+Uso: Esculturas, cabos de arma, itens de status. Uma caça abastece Skallgard por uma estação.
+Valor/Raridade: Alto. Cada peça custou vidas.
+
+[MATERIAL: Óleo Geotérmico do Ventre]
+Tipo: Combustível mineral
+Origem: Subprodutos térmicos das câmaras profundas do Ventre.
+Uso: Alimenta o aquecimento de Skallgard; lubrificante de maquinário.
+Valor/Raridade: Vital localmente, raro fora do norte.
+Perigo: Inflamável e tóxico em espaço fechado.
+
+[MATERIAL: Couro de Touro-Almiscarado-Negro]
+Tipo: Couro espesso
+Origem: Os bovídeos de pelo negro denso que formam círculos defensivos no Ermo.
+Uso: Agasalhos e armaduras de frio extremo; resiste a temperaturas que matam.
+Valor/Raridade: Médio.
+
+[MATERIAL: Osso de Urso-Titã]
+Tipo: Osso estrutural / ritual
+Origem: Os ursos de guerra dos clãs de combate, mortos no rito ou na caça.
+Uso: Armas, ganchos de doma, ornamentos de status entre os caçadores. As peles vão para o Corredor.
+Valor/Raridade: Alto; matar um é prova de valor.
+
+[MATERIAL: Cristal-Sanguíneo (Éter da Rede Carmesim)]
+Tipo: Componente mágico / Éter necromântico
+Origem: Afloramentos de Éter cristalizado da Rede Carmesim, onde muitos morreram. Vermelho-escuro, morno apesar do frio.
+Uso: Componente necromântico potente; carrega memórias da morte que o criou.
+Valor/Raridade: Alto e perigoso de comerciar.
+Perigo: Tocar transmite a morte que o gerou; extrair acelera o despertar local da Rede.
+
+[MATERIAL: Fragmento de Sopro-Errante]
+Tipo: Componente mágico quase incontrolável
+Origem: Resíduo capturado de um bolsão do Sopro de Vorrnak, em recipiente isolante.
+Uso: Em teoria congela tempo e som num raio pequeno. Raríssimo.
+Valor/Raridade: Lendário entre alquimistas.
+Perigo: Vazamento transforma o portador em estátua consciente.
+
+[MATERIAL: Veia-de-Calor (filamento)]
+Tipo: Componente mágico-orgânico
+Origem: Os filamentos luminosos que crescem nas paredes do Ventre onde calor encontra Éter.
+Uso: Emite calor e luz estáveis; cultivado pelos tecnológicos para as câmaras profundas e luvas de cirurgia (Yrsa).
+Valor/Raridade: Médio.
+Perigo: Cresce descontrolado se não podado; uma câmara tomada superaquece até matar.
+
+[MATERIAL: Sal Mineral do Ermo]
+Tipo: Recurso / conservante
+Origem: Cristais de sal que afloram nas rochas do Ermo, lambidos pelas Raposas-de-Sal.
+Uso: Conservação de carne (vital para a Sala Fria), tempero, e alquimia leve.
+Valor/Raridade: Baixo-médio; essencial para estocar comida.
+
+[MATERIAL: Gelo-Eterno do Ermo]
+Tipo: Recurso mágico-ambiental
+Origem: O gelo que nunca derrete do Ermo Branco, saturado da entropia do Abismo.
+Uso: Preserva indefinidamente o que congela; usado pelos tecnológicos para guardar amostras e (extraoficialmente) na Sala Fria.
+Valor/Raridade: Médio; difícil de transportar sem derreter o resíduo de Abismo.
+Perigo: Saturado de Abismo, pode "preservar" demais — incluindo coisas que deviam morrer.
+
+==================== ITENS ====================
+
+[ITEM: Lança-de-Gancho Nascida-do-Gelo]
+Tipo: Arma
+Origem: Forjada localmente, ideal com ponta de Liga de Vorr.
+Uso: Caça e guerra dos clãs de combate; o gancho ancora presas grandes e doma Ursos-Titã.
+Valor/Raridade: Médio; mais valiosa com Liga de Vorr.
+
+[ITEM: Machado Azulado de Vorr]
+Tipo: Arma
+Origem: Forjado de Liga de Vorr na Fornalha.
+Uso: Mantém o fio no frio que quebra aço comum; arma de elite dos caçadores.
+Valor/Raridade: Alto.
+
+[ITEM: Máscara-Filtro do Ventre]
+Tipo: Ferramenta / proteção
+Origem: Couro tratado e filtros de carvão dos clãs tecnológicos.
+Uso: Permite trabalhar no calor e gases tóxicos do Ventre.
+Valor/Raridade: Médio; indispensável no Ventre.
+
+[ITEM: Traje de Camuflagem Branca]
+Tipo: Equipamento / sobrevivência
+Origem: Peles brancas tratadas, usado pelos batedores (Hrok).
+Uso: Camuflagem no Ermo Branco e isolamento térmico. Essencial para incursões longas no branco.
+Valor/Raridade: Médio.
+
+[ITEM: Botas de Sola Isolante]
+Tipo: Equipamento
+Origem: Couro de touro-negro com sola de material isolante tecnológico.
+Uso: Andar no Ventre quente e no Ermo congelante sem perder os pés.
+Valor/Raridade: Médio.
+
+[ITEM: Luvas de Veia-de-Calor]
+Tipo: Ferramenta médica/artesanal
+Origem: Veias-de-Calor cultivadas costuradas em luvas de couro.
+Uso: Mantêm as mãos quentes para trabalho fino no frio — cirurgia (Yrsa), forja delicada.
+Valor/Raridade: Médio-alto.
+
+[ITEM: Carne Curada da Sala Fria]
+Tipo: Consumível / alimento
+Origem: Caça preservada no frio eterno da Sala Fria.
+Uso: Alimento que dura estações. Base da sobrevivência no inverno de seis meses.
+Valor/Raridade: Baixo-médio; moeda social. Seu desvio é o estopim da guerra silenciosa.
+
+[ITEM: Aguardente de Líquen]
+Tipo: Consumível / bebida
+Origem: Fermentação dos líquens sob a neve, destilada nos túneis.
+Uso: Aquece e entorpece; servida na Toca Quente de Gamli. Vaza segredos.
+Valor/Raridade: Baixo.
+
+[ITEM: Amuleto de Osso Anti-Espírito]
+Tipo: Item ritual
+Origem: Talhado de osso por gente como Old Hekla, para a Parede dos Mortos.
+Uso: Dizem que acalma os espíritos-animais que despertam na Parede; permite passar sem despertá-los.
+Valor/Raridade: Médio; conhecimento de Hekla.
+Perigo: Falso ou mal-feito, não protege — e a pessoa descobre tarde.
+
+[ITEM: Bússola-de-Aurora]
+Tipo: Ferramenta / navegação
+Origem: Aparato tecnológico que se orienta pela frequência da aurora, não pelo norte magnético (inútil no Ermo).
+Uso: Navegar o Ermo Branco onde bússolas comuns falham e as Bússolas-Mortas confundem.
+Valor/Raridade: Alto; raro e cobiçado por exploradores.
+
+[ITEM: A Chama Negra do Farol] [ARTEFATO ÚNICO]
+Tipo: Artefato único / fenômeno contido
+Origem: Anti-luz acesa pelos Gigantes no Farol para suprimir a Rede Carmesim. Mantida pelo guardião Volkar.
+Uso: Enquanto arde, contém o despertar da Rede sob o norte. Não transportável — é o coração da contenção.
+Valor/Raridade: Inestimável.
+Perigo: Aproximar-se sem propósito atrai os Guardiões-Sem-Rosto. Apagá-la é catástrofe continental.
+
+[ITEM: O Diário de Nehla] [ARTEFATO ÚNICO]
+Tipo: Artefato único / registro secreto
+Origem: Escrito por Nehla Ouvido-de-Aurora fora dos registros oficiais.
+Uso: Contém as medições reais da aceleração da Rede Carmesim e a estimativa de quando o Farol falhará.
+Valor/Raridade: Inestimável para quem quer a verdade sobre o norte.
+Perigo: Possuí-lo torna alvo dos clãs tecnológicos.
+
+
+#########################################################
+LOCAL: AS MONTANHAS AFIADAS (CENTRO-NORTE)
+#########################################################
+
+==================== MATERIAIS ====================
+
+[MATERIAL: Minério das Veias Profundas]
+Tipo: Metal bruto
+Origem: As minas do Reino Subterrâneo, abertas pelos Anões e hoje saqueadas pelos Goblins.
+Uso: Metal de qualidade superior para forja. Abundante, mas guardado por Goblins e pelo que mora fundo.
+Valor/Raridade: Médio-alto; o acesso é o perigo.
+
+[MATERIAL: Cristal-Cantante]
+Tipo: Cristal mágico-sonoro
+Origem: Veios nas paredes do Reino que vibram e emitem tons na presença de movimento.
+Uso: Sistema de alarme (como os Anões usavam), instrumentos, avisos sonoros.
+Valor/Raridade: Médio.
+
+[MATERIAL: Brasa-Profunda (carvão eterno)]
+Tipo: Combustível mágico
+Origem: As forjas abandonadas do Reino, onde o fogo arde sem combustível há eras, por Éter preso.
+Uso: Calor e luz que não se apagam. Valiosíssimo no frio das profundezas.
+Valor/Raridade: Alto; raro fora das Montanhas.
+Perigo: Atrai o que vive no escuro; às vezes "salta" da forja para perseguir sangue quente.
+
+[MATERIAL: Flor-de-Profundidade]
+Tipo: Reagente raro
+Origem: Flores negras que só crescem nas câmaras mais próximas do Rei Subterrâneo.
+Uso: Alquimia ligada ao peso e à gravidade. Murcham longe das profundezas.
+Valor/Raridade: Altíssimo; estar tão perto do Rei é quase suicídio.
+
+[MATERIAL: Chifre de Cabra-Navalha]
+Tipo: Material cortante natural
+Origem: Os caprídeos que escalam as paredes verticais com cascos que cortam rocha.
+Uso: Lâminas improvisadas, pontas, ferramentas; afiados como navalha.
+Valor/Raridade: Baixo-médio.
+
+[MATERIAL: Pedra-Ímã das Profundezas]
+Tipo: Mineral magnético
+Origem: Veios magnéticos nas câmaras fundas, intensificados pela presença do Rei (peso/gravidade).
+Uso: Bússolas (que enlouquecem perto do Rei), travas, e — diz-se — proteção contra Vampiros (que controlam metais não-magnéticos).
+Valor/Raridade: Médio-alto.
+
+[MATERIAL: Couro de Aranha-de-Pedra]
+Tipo: Material resistente
+Origem: As aranhas predadoras camufladas das passagens.
+Uso: Material leve e resistente; a seda das teias serve para cordas fortíssimas.
+Valor/Raridade: Médio; matar uma é perigoso.
+
+[MATERIAL: Estilhaço de Espelho-de-Pedra]
+Tipo: Componente mágico / vidência
+Origem: Lascas das formações da Era 0 que "lembram" tudo desde o início do mundo.
+Uso: Alquimia adivinhatória; vislumbra o passado de um lugar.
+Valor/Raridade: Muito alto.
+Perigo: Quem usa demais vive no passado refletido e esquece o presente.
+
+[MATERIAL: Pó de Osso-Anão]
+Tipo: Componente ritual
+Origem: Os restos dos Anões mortos na queda do Reino (Anões-Eco), pulverizados.
+Uso: Rituais de memória e contato com os Anões-Eco; reverenciado e tabu.
+Valor/Raridade: Médio; perturbador de obter.
+Perigo: Profanar os mortos Anões atrai a fúria dos Anões-Eco.
+
+[MATERIAL: Cristal-de-Gravidade]
+Tipo: Componente mágico primordial
+Origem: Formações dos Poços-de-Gravidade, onde a presença do Rei entorta o peso.
+Uso: Reagente raro para magia de força, peso e ancoragem.
+Valor/Raridade: Altíssimo.
+Perigo: Colhê-lo exige entrar num Poço-de-Gravidade, onde a exaustão mata.
+
+==================== ITENS ====================
+
+[ITEM: Relíquia-Arma Anã]
+Tipo: Arma / relíquia funcional
+Origem: Saqueadas das ruínas do Reino pelos Goblins (Skriit as comercia).
+Uso: Armas Anãs de qualidade perdida — machados, martelos, engenhocas.
+Valor/Raridade: Alto; forja Anã é insubstituível.
+
+[ITEM: Martelo de Guerra Anão]
+Tipo: Arma
+Origem: Forja Anã do Reino, recuperada das profundezas.
+Uso: Arma pesada de impacto devastador; símbolo dos Anões.
+Valor/Raridade: Alto.
+
+[ITEM: Lanterna de Aranha-Lanterna]
+Tipo: Ferramenta / luz
+Origem: Abdômen bioluminescente da Aranha-Lanterna, colhido pelos Goblins.
+Uso: Luz natural durável para o escuro, sem combustível.
+Valor/Raridade: Baixo-médio.
+
+[ITEM: Crampons de Escalada]
+Tipo: Equipamento
+Origem: Metal e chifre de cabra-navalha, fabricados por quem cruza as Montanhas.
+Uso: Escalar as paredes verticais e o gelo de altitude; essencial para travessias.
+Valor/Raridade: Médio.
+
+[ITEM: Corda de Seda-de-Aranha]
+Tipo: Ferramenta
+Origem: Teias das Aranhas-de-Pedra processadas.
+Uso: Corda leve e fortíssima para escalada e travessia de abismos internos.
+Valor/Raridade: Médio-alto.
+
+[ITEM: Líquen-de-Brasa (preparado)]
+Tipo: Consumível / luz e alimento
+Origem: Líquen das forjas eternas, cultivado por Goblins e Escavadores.
+Uso: Comestível em pequena dose; fonte de luz e calor.
+Valor/Raridade: Baixo nas profundezas.
+Perigo: Em excesso, febre e visões de fogo.
+
+[ITEM: Ração-de-Cogumelo-Cego]
+Tipo: Consumível / alimento de subsolo
+Origem: Fungos pálidos das câmaras úmidas, tratados.
+Uso: Alimento básico dos Goblins.
+Valor/Raridade: Baixo.
+Perigo: Cru, libera esporos que criam raiz na pele.
+
+[ITEM: Sino-de-Aviso Goblin]
+Tipo: Ferramenta / alarme
+Origem: Cristal-Cantante montado pelos Goblins.
+Uso: Avisa da aproximação de algo (ou de quem sobe das profundezas). Os Goblins leem seus tons.
+Valor/Raridade: Baixo-médio.
+
+[ITEM: Amuleto-Ímã Anti-Vampiro]
+Tipo: Item de proteção
+Origem: Pedra-Ímã das profundezas, talhada em amuleto.
+Uso: Diz-se que interfere no controle de metais dos Vampiros; proteção rara e cobiçada.
+Valor/Raridade: Alto.
+
+[ITEM: Os Registros Perdidos do Reino] [ARTEFATO ÚNICO]
+Tipo: Artefato único / documentação Anã
+Origem: A documentação Anã do que escavaram e despertaram, perdida na queda. Durgrim Último-Martelo a busca.
+Uso: Revela a verdade sobre a "Falha Crítica de Contenção", o que despertou o Rei e por que ele teme o que está abaixo.
+Valor/Raridade: Inestimável.
+Perigo: Recuperá-la exige descer perto do Rei.
+
+[ITEM: A Coroa-de-Pressão do Rei-Anão] [ARTEFATO ÚNICO]
+Tipo: Artefato único / relíquia real
+Origem: A coroa do último rei Anão, perdida quando o Reino caiu.
+Uso: Lenda diz que confere autoridade sobre os sistemas Anões e resistência à presença esmagadora do Rei Subterrâneo.
+Valor/Raridade: Inestimável e quase inalcançável.
+Perigo: Está perto demais do Rei; quem a busca pode virar Filho-do-Rei.
+
+
+#########################################################
+LOCAL: A PRADARIA DAS RUÍNAS (CENTRO)
+#########################################################
+
+==================== MATERIAIS ====================
+
+[MATERIAL: Couro de Auroque-Ruína]
+Tipo: Couro
+Origem: Os auroques selvagens que pastam entre as fundações cobertas de grama.
+Uso: Armaduras, tendas, equipamento nômade. Base material da vida na Pradaria.
+Valor/Raridade: Baixo-médio; abundante mas perigoso de caçar.
+
+[MATERIAL: Galhada de Caribu / Chifre de Auroque]
+Tipo: Osso
+Origem: Caça das manadas.
+Uso: Ferramentas, cabos, pontas de flecha, ornamentos, gravações nômades.
+Valor/Raridade: Baixo.
+
+[MATERIAL: Pedra-Memória das Ruínas]
+Tipo: Cantaria mágica
+Origem: Fragmentos de esculturas e paredes Élficas/Cinzéus com Éter residual.
+Uso: Construção valiosa, levemente mágica; alguns fragmentos guardam imagens ou frases.
+Valor/Raridade: Médio; os Desenterrados os saqueiam.
+
+[MATERIAL: Crina de Cavalo-Selvagem]
+Tipo: Fibra
+Origem: As manadas de equinos livres da Pradaria.
+Uso: Cordas, arcos compostos, tecidos. Material valorizado dos Andarilhos.
+Valor/Raridade: Baixo-médio.
+
+[MATERIAL: Grama-Navalha (fibra)]
+Tipo: Material cortante / fibra
+Origem: A grama endurecida em lâminas que cresce ao redor das ruínas.
+Uso: Fios cortantes para armadilhas, cercas naturais; tecida com cuidado vira tecido resistente.
+Valor/Raridade: Baixo.
+Perigo: Corta quem colhe sem cuidado.
+
+[MATERIAL: Pó-Sussurrante Cinzéu]
+Tipo: Componente mágico
+Origem: Pó das frases gravadas nas paredes Cinzéus, séculos de contemplação no ar.
+Uso: Reagente de visões contemplativas e acesso a pensamentos antigos.
+Valor/Raridade: Médio.
+Perigo: Respirar muito induz melancolia paralisante.
+
+[MATERIAL: Lágrima de Espectro]
+Tipo: Componente mágico raro
+Origem: Resíduo etéreo dos Espectros Élficos e Cinzéus das ruínas isoladas.
+Uso: Magia de memória, ilusão e comunicação com mortos.
+Valor/Raridade: Alto; obtê-lo é enfrentar ou apaziguar um espectro.
+
+[MATERIAL: Seiva de Trepadeira-Estranguladora]
+Tipo: Componente alquímico
+Origem: As plantas que tomaram as ruínas, algumas movidas por Éter.
+Uso: Base de venenos paralisantes e adesivos fortes.
+Valor/Raridade: Médio.
+Perigo: A planta viva prende quem a colhe desatento.
+
+[MATERIAL: Bronze-de-Gafanhoto]
+Tipo: Material / carapaça metálica
+Origem: A carapaça dos Gafanhotos-de-Bronze, recolhida após as pragas.
+Uso: Placas leves para armadura, ornamentos. Subproduto raro de uma calamidade.
+Valor/Raridade: Médio.
+
+[MATERIAL: Osso-do-Primeiro-Rebanho]
+Tipo: Componente primordial
+Origem: Restos raríssimos do Primeiro-Rebanho da Era 0, achados onde a migração eterna passa.
+Uso: Componente primordial poderoso para magia antiga; quase impossível de obter.
+Valor/Raridade: Altíssimo.
+Perigo: Encontrá-los significa estar no caminho do Primeiro-Rebanho quando ele passa de verdade.
+
+==================== ITENS ====================
+
+[ITEM: Arco Composto Nômade]
+Tipo: Arma
+Origem: Fabricado pelos Andarilhos com chifre, tendão e madeira das ruínas.
+Uso: Arma de cavalaria leve, disparada em movimento. Símbolo dos bandos montados.
+Valor/Raridade: Médio.
+
+[ITEM: Lança de Cavalaria Cinza]
+Tipo: Arma
+Origem: Os Cavaleiros-Cinza, com pontas de osso ou metal saqueado.
+Uso: Carga montada nas rotas que controlam.
+Valor/Raridade: Médio.
+
+[ITEM: Ossos Pintados de Guerra]
+Tipo: Item ritual / armadura psicológica
+Origem: Ossos de mortos pintados e vestidos pelo Bando do Osso Pintado (Kaarg).
+Uso: Armadura leve e, sobretudo, terror — a reputação é a arma.
+Valor/Raridade: Valor simbólico imenso entre nômades.
+
+[ITEM: Sela Nômade de Longa-Jornada]
+Tipo: Equipamento / montaria
+Origem: Couro de auroque e crina, fabricada pelos Andarilhos.
+Uso: Permite cavalgar dias sem exaustão; a vida de um nômade depende dela.
+Valor/Raridade: Médio.
+
+[ITEM: Tenda-de-Couro Desmontável]
+Tipo: Equipamento / abrigo
+Origem: Couro de auroque sobre estrutura de osso.
+Uso: Abrigo móvel essencial para a vida nômade na Pradaria aberta.
+Valor/Raridade: Baixo-médio.
+
+[ITEM: Chá de Erva-do-Esquecimento]
+Tipo: Droga / consumível mágico
+Origem: A erva das ruínas Cinzéus, impregnada de melancolia.
+Uso: Apaga memórias dolorosas; usado para suportar perdas.
+Valor/Raridade: Médio.
+Perigo: Uso contínuo apaga memórias demais — há nômades que esqueceram quem são.
+
+[ITEM: Carne-Seca de Viagem]
+Tipo: Consumível / alimento
+Origem: Caça da Pradaria, seca ao sol e ao vento.
+Uso: Provisão dos nômades. Comer o próprio cavalo é tabu; o do inimigo, insulto.
+Valor/Raridade: Baixo.
+
+[ITEM: Talismã de Lebre-de-Duas-Cabeças]
+Tipo: Item de superstição
+Origem: A mutação rara das ruínas, preservada.
+Uso: Amuleto de sorte (ou azar) entre os bandos; alguns juram que mostra o futuro em sonhos.
+Valor/Raridade: Médio; valor cultural.
+
+[ITEM: Gazua de Profanador]
+Tipo: Ferramenta
+Origem: Fabricada pelos Desenterrados (Dedos-Longos Rhen) para abrir túmulos.
+Uso: Abrir sepulturas Élficas e Cinzéus lacradas; ferramenta da profissão mais amaldiçoada da Pradaria.
+Valor/Raridade: Baixo.
+Perigo: Profanar desperta os espectros.
+
+[ITEM: A Ampulheta de Vaelorn] [ARTEFATO ÚNICO]
+Tipo: Artefato único / relíquia élfica
+Origem: Relíquia da casa governante de Vaelorn, ligada à ampulheta de vida élfica. Em posse de Lady Aerwen.
+Uso: Diz a lenda que mede a vida que resta a quem a segura — e que poderia, talvez, ser virada.
+Valor/Raridade: Inestimável para os Elfos.
+Perigo: Mexer com o tempo de vida élfico é magia que ninguém compreende.
+
+[ITEM: Máscara-Funerária do Primeiro Contemplador] [ARTEFATO ÚNICO]
+Tipo: Artefato único / relíquia cinzéu
+Origem: A máscara do mais antigo contemplador de Solvhen, no arquivo da cidade.
+Uso: Quem a veste acessa séculos de contemplação Cinzéu — sabedoria e melancolia em medida igual.
+Valor/Raridade: Inestimável; Keeper Morvan a protege.
+Perigo: A mente despreparada se afoga na melancolia de gerações.
+
+
+#########################################################
+LOCAL: O PÂNTANO DA MELANCOLIA
+#########################################################
+
+==================== MATERIAIS ====================
+
+[MATERIAL: Lágrimas-de-Éter]
+Tipo: Cristal mágico
+Origem: Gotas de Éter cristalizado nas plantas mortas e gotejando dos Salgueiros-Chorão.
+Uso: Ingrediente alquímico raro e poderoso. Druidas colhem com luvas tratadas e contam cada uma.
+Valor/Raridade: Altíssimo; vendido em Nova Arcádia.
+Perigo: Tocar sem proteção transmite a tristeza concentrada do pântano.
+
+[MATERIAL: Pele de Sapo-Boi-Ácido]
+Tipo: Componente alquímico
+Origem: Os Sapos-Boi mutados que cospem ácido.
+Uso: Base de venenos, ácidos controlados, curtumes especiais.
+Valor/Raridade: Médio-alto.
+Perigo: A pele retém ácido; manuseio descuidado queima.
+
+[MATERIAL: Musgo-da-Lembrança-Triste]
+Tipo: Componente mágico
+Origem: Musgo sobre os corpos da batalha, embebido das últimas emoções dos mortos.
+Uso: Magia de emoção, memória e necromancia leve.
+Valor/Raridade: Médio.
+Perigo: Tocar transmite a tristeza dos mortos; ficar sobre ele rouba a vontade de viver.
+
+[MATERIAL: Esporo de Tumor-do-Pântano]
+Tipo: Componente mágico perigoso
+Origem: Os crescimentos de carne-vegetal onde o Éter é mais denso.
+Uso: Reagente de transformação e corrupção; cultivado pelos Renegados.
+Valor/Raridade: Alto e proibido.
+Perigo: Infecta feridas, fazendo o pântano "crescer dentro" da vítima.
+
+[MATERIAL: Água-Oleosa do Pântano]
+Tipo: Recurso / base alquímica
+Origem: A água densa e oleosa das poças do pântano, saturada de decomposição e Éter.
+Uso: Base de poções sombrias, óleos inflamáveis, e reagentes necromânticos.
+Valor/Raridade: Baixo bruto, médio refinado.
+Perigo: Beber é fatal; manusear muito tempo deprime.
+
+[MATERIAL: Couro-de-Crocodilo-Cinzento]
+Tipo: Couro resistente
+Origem: Os répteis enormes da água oleosa.
+Uso: Armadura impermeável e resistente; valorizada por quem trabalha o pântano.
+Valor/Raridade: Médio.
+
+[MATERIAL: Néctar de Salgueiro-Chorão]
+Tipo: Componente alquímico
+Origem: A seiva dos Salgueiros-Chorão-de-Éter que gotejam Lágrimas.
+Uso: Sedativo poderoso e base de poções de sono; os Renegados o usam para fazer a tristeza crescer.
+Valor/Raridade: Médio-alto.
+Perigo: Induz a melancolia paralisante do pântano.
+
+[MATERIAL: Flor-de-Nenúfar-Devorador]
+Tipo: Componente carnívoro
+Origem: A flor branca isca dos Nenúfares-Devoradores.
+Uso: Reagente de armadilhas vegetais e adesivos; bela e traiçoeira.
+Valor/Raridade: Médio.
+Perigo: Colhê-la é arriscar a planta que afunda quem pisa.
+
+[MATERIAL: Sangue-Estagnado de Afogado]
+Tipo: Componente necromântico
+Origem: O fluido escuro que escorre dos mortos-vivos do pântano, saturado de Éter.
+Uso: Componente necromântico potente para reanimação e controle de mortos.
+Valor/Raridade: Alto e sombrio.
+Perigo: Obtê-lo significa enfrentar os Afogados.
+
+[MATERIAL: Cristal-de-Raiz-Mãe]
+Tipo: Componente primordial
+Origem: Fragmentos cristalizados perto da Raiz-Mãe primordial no coração do pântano.
+Uso: Reagente primordial ligado ao crescimento e à vida-em-morte; raríssimo.
+Valor/Raridade: Altíssimo.
+Perigo: Está no ponto mais fundo e mortal, guardado por tudo que o pântano gerou.
+
+==================== ITENS ====================
+
+[ITEM: Chá da Praga de Ferro]
+Tipo: Consumível / remédio
+Origem: Preparado pelos Druidas com plantas medicinais do pântano.
+Uso: Trata (não cura) a Praga de Ferro de Nova Arcádia. Vital para infectados.
+Valor/Raridade: Alto; controlado por Gresh. A Doutora Isera o busca para Vane.
+Perigo: Nenhum no uso correto.
+
+[ITEM: Antídoto-de-Melancolia]
+Tipo: Consumível / proteção mental
+Origem: Preparado pelos Druidas e por Orric (O Homem Que Não Dorme) contra o efeito do pântano.
+Uso: Resiste temporariamente à melancolia esmagadora; permite atravessar a névoa densa.
+Valor/Raridade: Médio-alto; conhecimento raro.
+
+[ITEM: Lâmina-de-Osso de Afogado]
+Tipo: Arma
+Origem: Forjada do osso e metal corroído dos mortos-vivos.
+Uso: Arma improvisada dos Coletores e Saqueadores.
+Valor/Raridade: Baixo-médio.
+Perigo: O Éter residual perturba quem a usa muito tempo.
+
+[ITEM: Bota-Palafita do Pântano]
+Tipo: Equipamento
+Origem: Madeira leve e couro de crocodilo, fabricada por quem conhece o pântano.
+Uso: Distribui o peso para não afundar na lama e nos Nenúfares-Devoradores.
+Valor/Raridade: Médio.
+
+[ITEM: Vara-de-Sondagem]
+Tipo: Ferramenta
+Origem: Madeira tratada usada pelos guias (Ferro-Velho Baldr).
+Uso: Testa a profundidade da lama e detecta poças fundas e Afogados submersos.
+Valor/Raridade: Baixo; salva vidas.
+
+[ITEM: Tampão-de-Ouvido Druídico]
+Tipo: Ferramenta / proteção
+Origem: Cera e ervas dos Druidas.
+Uso: Protege do canto dos Sapos-Cantores e dos Choros-na-Névoa que atraem para a morte.
+Valor/Raridade: Baixo-médio.
+
+[ITEM: Lanterna-de-Fogo-Fátuo]
+Tipo: Ferramenta / luz
+Origem: Gás do pântano capturado num invólucro tratado.
+Uso: Luz fria que não atrai certos predadores; mas pode ser confundida com os Fogos-Fátuos traiçoeiros.
+Valor/Raridade: Médio.
+Perigo: Imita o perigo que ela tenta evitar.
+
+[ITEM: Frasco-de-Lágrima Selado]
+Tipo: Ferramenta / recipiente
+Origem: Vidro tratado para conter Lágrimas-de-Éter com segurança.
+Uso: Transportar Lágrimas sem ser afetado pela tristeza; essencial para os coletores.
+Valor/Raridade: Médio.
+
+[ITEM: O Estandarte do General-Sem-Nome] [ARTEFATO ÚNICO]
+Tipo: Artefato único / relíquia de guerra
+Origem: O estandarte do comandante que morreu na batalha final e virou o General-Sem-Nome.
+Uso: Quem o porta, dizem, comanda os Afogados — ou lhes dá descanso. Ligado ao nome perdido do General.
+Valor/Raridade: Inestimável e perigoso.
+Perigo: Empunhá-lo perto do General o atrai; sem saber o nome dele, o controle é incerto.
+
+[ITEM: Coração-de-Éter da Batalha] [ARTEFATO ÚNICO]
+Tipo: Artefato único / núcleo mágico
+Origem: O ponto mais denso de Éter no coração do pântano, ligado à Raiz-Mãe.
+Uso: Lenda diz que destruí-lo pararia o avanço do pântano — ou liberaria tudo que ele contém de uma vez.
+Valor/Raridade: Inestimável.
+Perigo: Guardado pela Raiz-Mãe, pela Carniça-Mãe e por tudo que o pântano gerou.
+
+
+#########################################################
+LOCAL: NOVA ARCÁDIA (CENTRO-SUL)
+#########################################################
+
+==================== MATERIAIS ====================
+
+[MATERIAL: Aço de Sangue]
+Tipo: Metal amaldiçoado
+Origem: Forjado nas Fundições Valerianas do lote onde um trabalhador caiu na fornalha. Kald o trata como sagrado.
+Uso: Metal superior que, dizem, ganha "alma". Cobiçado pelos colecionadores do Anel Dourado.
+Valor/Raridade: Alto; cada peça custou uma vida.
+Perigo: Algumas lâminas ganham vontade — viram na mão, buscam repetir a morte que as criou.
+
+[MATERIAL: Ferro das Fundições]
+Tipo: Metal comum
+Origem: Produção em massa das Fundições do Anel de Ferro.
+Uso: A base industrial — armas da Legião, ferramentas, estruturas.
+Valor/Raridade: Baixo; à custa da saúde dos operários (Tosse de Ferro).
+
+[MATERIAL: Fuligem-Negra das Chaminés]
+Tipo: Recurso tóxico / componente
+Origem: O resíduo das chaminés da Rua das Chaminés, que causa a Tosse de Ferro.
+Uso: Pigmento negro, componente de pólvora rudimentar, e (raro) reagente da Tosse-Viva.
+Valor/Raridade: Baixo.
+Perigo: Inalar causa a Tosse de Ferro; acumula nos pulmões.
+
+[MATERIAL: Vidro-de-Espelho da Casa]
+Tipo: Componente mágico
+Origem: Os espelhos da Casa dos Espelhos, que acumulam memórias drenadas.
+Uso: Base mágica para itens de memória e ilusão; raro fora da Casa.
+Valor/Raridade: Alto.
+Perigo: Pode conter memórias que reagem a quem as reconhece.
+
+[MATERIAL: Memória Engarrafada]
+Tipo: Componente mágico
+Origem: Memórias drenadas dos frequentadores da Casa dos Espelhos.
+Uso: Reagente de magia de mente; pode-se "viver" a memória de outro. Comerciada no Beco do Sussurro.
+Valor/Raridade: Alto.
+Perigo: Reconhecer a própria memória perdida pode enlouquecer.
+
+[MATERIAL: Flor-Impossível dos Jardins]
+Tipo: Componente mágico botânico
+Origem: As flores dos Jardins Suspensos, sustentadas por magos escravizados.
+Uso: Reagentes raríssimos de beleza e poder; cada flor é um feitiço vivo.
+Valor/Raridade: Altíssimo; restrito ao Anel Dourado.
+Perigo: Colhê-las pode liberar a magia descontrolada que as sustenta.
+
+[MATERIAL: Ouro do Anel Dourado]
+Tipo: Metal precioso / moeda
+Origem: A riqueza concentrada no anel superior da cidade.
+Uso: Moeda, ornamento, suborno — o sangue que move o poder de Nova Arcádia.
+Valor/Raridade: Alto; concentrado nas mãos de poucos (Oswin controla as dívidas).
+
+[MATERIAL: Lama-Sagrada da Catedral Afundada]
+Tipo: Componente ritual
+Origem: A lama da Catedral Afundada do Anel de Lama, onde fiéis se afogaram rezando.
+Uso: Componente de rituais fúnebres e magia de desespero; sagrada para os desesperados.
+Valor/Raridade: Baixo material, alto simbólico.
+
+[MATERIAL: Veneno-de-Esgoto]
+Tipo: Toxina
+Origem: Destilado das Coisas-do-Esgoto e do despejo dos três anéis.
+Uso: Veneno barato e brutal do submundo; a Mão Sombria o usa.
+Valor/Raridade: Baixo.
+Perigo: Contato causa infecção; é feito do pior da cidade.
+
+[MATERIAL: Éter-Roubado (de mago)]
+Tipo: Componente mágico ilícito
+Origem: Éter drenado de magos perseguidos ou escravizados, comerciado no mercado negro.
+Uso: Atalho mágico proibido; alimenta feitiços sem o custo pessoal usual.
+Valor/Raridade: Alto e ilegal (o Código de Ferro o proíbe).
+Perigo: Possuí-lo é sentença de fogueira pelos Inquisidores.
+
+==================== ITENS ====================
+
+[ITEM: Lâmina de Aço de Sangue]
+Tipo: Arma / amaldiçoada
+Origem: Forjada por Kald e os Encapuzados da Fornalha.
+Uso: Arma superior, afiadíssima, que "lembra" da morte que a criou.
+Valor/Raridade: Altíssimo.
+Perigo: Numa mão fraca, a lâmina controla a mão.
+
+[ITEM: Espada-Padrão da Legião]
+Tipo: Arma
+Origem: Forjada em massa do Ferro das Fundições para os soldados de Valerius.
+Uso: Arma disciplinada da Legião; comum mas confiável.
+Valor/Raridade: Baixo-médio.
+
+[ITEM: Selo da Legião de Ferro]
+Tipo: Ferramenta / autoridade
+Origem: Emitido pela Legião aos seus oficiais.
+Uso: Autoridade legal — abre portões entre anéis, comanda soldados, impõe o Código.
+Valor/Raridade: Inestimável para passagem; falsificá-lo é morte.
+
+[ITEM: Máscara da Casa dos Espelhos]
+Tipo: Item mágico / disfarce
+Origem: As máscaras que fazem o portador parecer o amor perdido de outra pessoa.
+Uso: Disfarce mágico perfeito de identidade; cobiçado por espiões.
+Valor/Raridade: Alto e perigoso.
+Perigo: As que consumiram memórias demais drenam a identidade de quem as veste.
+
+[ITEM: Pó de Sonho (refinado)]
+Tipo: Droga / consumível mágico
+Origem: O fungo da Floresta, processado nos mercados de Nova Arcádia.
+Uso: Revela o oculto. Move parte da economia clandestina.
+Valor/Raridade: Alto; altamente viciante.
+Perigo: Vício severo; mostra o que era melhor não ver.
+
+[ITEM: Elixir do Doutor Vane]
+Tipo: Consumível / remédio brutal
+Origem: Preparado por Vane com métodos não-éticos.
+Uso: Cura quase tudo ao custo de dor excruciante.
+Valor/Raridade: Alto; só para quem paga.
+Perigo: O tratamento é tão violento quanto a doença; Vane colhe amostras.
+
+[ITEM: Documento Forjado]
+Tipo: Item / ferramenta social
+Origem: Falsários da Mão Sombria e do Cais (importado de Brekmar).
+Uso: Identidades falsas, contratos, salvo-condutos. Mobilidade na cidade segregada.
+Valor/Raridade: Médio; arriscado de usar.
+Perigo: Ser pego com um falso perante a Legião é grave.
+
+[ITEM: Gazua da Quadrilha dos Telhados]
+Tipo: Ferramenta
+Origem: Fabricada pelos ladrões dos telhados (Pardal).
+Uso: Arrombamento e escalada; o instrumento dos que se movem por cima.
+Valor/Raridade: Baixo.
+
+[ITEM: Arma-Suga-Magia dos Inquisidores]
+Tipo: Ferramenta / anti-magia
+Origem: Artefatos dos Inquisidores do Código que detectam e sugam Éter.
+Uso: Enfraquece qualquer conjurador por perto; caça magos não registrados.
+Valor/Raridade: Alto; restrito aos Inquisidores.
+Perigo: Tê-la por perto enfraquece magos aliados também.
+
+[ITEM: O Código de Ferro (original)] [ARTEFATO ÚNICO]
+Tipo: Artefato único / livro de leis sobrenatural
+Origem: Centenas de páginas que apareceram numa noite em caligrafia desconhecida, da mente de Valerius após o pacto.
+Uso: As leis que regem Nova Arcádia. Revela a lógica desumana do regime e pistas sobre o pacto.
+Valor/Raridade: Inestimável; guardado no Palácio de Obsidiana.
+Perigo: Compreendê-lo profundamente arrisca a sanidade.
+
+[ITEM: O Testamento Real no Barril] [ARTEFATO ÚNICO]
+Tipo: Artefato único / documento político
+Origem: O testamento do antigo Rei, escondido no barril de Grum, que nunca o leu.
+Uso: Nomeia um herdeiro legítimo ao trono — capaz de abalar a legitimidade de Valerius.
+Valor/Raridade: Inestimável e explosivo.
+Perigo: Ser ligado a ele é alvo certo da Legião.
+
+[ITEM: A Armadura Vazia de Malagor] [ARTEFATO ÚNICO]
+Tipo: Artefato único / prisão de dragão
+Origem: A armadura que contém o dragão-rei Malagor, nas masmorras do Palácio. Ainda quente.
+Uso: Contém a consciência e a fome infinita de Malagor. Valerius a visita; o Código surgiu daí.
+Valor/Raridade: Inestimável e intocável.
+Perigo: Conversar com Malagor é ouvir o argumento sedutor de que tudo deveria acabar.
+
+
+#########################################################
+LOCAL: A FLORESTA DOS SUSSURROS (LESTE)
+#########################################################
+
+==================== MATERIAIS ====================
+
+[MATERIAL: Pó de Sonho (fungo bruto)]
+Tipo: Fungo mágico
+Origem: O fungo vermelho com fragmento do Oculto de Thessavar, colhido nas bordas (Vestra).
+Uso: Matéria-prima da droga refinada; revela o oculto.
+Valor/Raridade: Alto; viciante mesmo bruto.
+Perigo: Colher fundo demais é nunca voltar.
+
+[MATERIAL: Madeira-Sussurrante]
+Tipo: Madeira mágica
+Origem: As árvores que sussurram, cuja madeira retém som e memória.
+Uso: Instrumentos, caixas de segredo, itens que guardam sons.
+Valor/Raridade: Médio-alto; cortar a floresta tem consequências.
+
+[MATERIAL: Casca de Javali-de-Casca]
+Tipo: Blindagem natural
+Origem: A pele em placas de casca dos Javalis-de-Casca corrompidos.
+Uso: Armadura leve camuflada; usada por caçadores como Sholven.
+Valor/Raridade: Médio.
+
+[MATERIAL: Semente-do-Oculto]
+Tipo: Componente mágico
+Origem: Plantas negras que crescem onde um segredo foi enterrado.
+Uso: Magia de revelação e ocultação; força segredos à tona.
+Valor/Raridade: Alto.
+Perigo: Tocar força o próprio segredo do portador à mente.
+
+[MATERIAL: Olho-de-Flor Colhido]
+Tipo: Componente mágico / vigilância
+Origem: O centro úmido das Flores-Olho, pelas quais Thessavar enxerga.
+Uso: Magia de visão à distância e espionagem.
+Valor/Raridade: Alto.
+Perigo: Colhê-las "fere" a floresta; talvez Thessavar continue vendo pela flor.
+
+[MATERIAL: Seiva-Negra de Tronco-Faminto]
+Tipo: Componente alquímico
+Origem: As árvores predadoras que o Éter tornou carnívoras.
+Uso: Base de adesivos mortais e venenos paralisantes.
+Valor/Raridade: Médio-alto.
+Perigo: Colhê-la é arriscar a própria árvore que prende e devora.
+
+[MATERIAL: Cogumelo-Espelho]
+Tipo: Componente mágico
+Origem: Fungos que mostram a quem entra em seu círculo a própria verdade oculta.
+Uso: Reagente de magia de revelação e autoconhecimento forçado.
+Valor/Raridade: Alto.
+Perigo: Encarar a própria verdade oculta nem todos sobrevivem.
+
+[MATERIAL: Resina de Árvore-Sussurrante]
+Tipo: Componente mágico-acústico
+Origem: A seiva endurecida das árvores que sussurram.
+Uso: Captura e reproduz sons; base de itens de escuta e mensagens.
+Valor/Raridade: Médio.
+
+[MATERIAL: Penugem de Mariposa-Memória]
+Tipo: Componente mágico
+Origem: As asas das mariposas que mostram memórias.
+Uso: Reagente de magia de lembrança e ilusão; induz visões da própria memória.
+Valor/Raridade: Médio-alto.
+Perigo: Pode hipnotizar quem a manuseia com as próprias lembranças.
+
+[MATERIAL: Galho-Da-Raiz-Que-Lembra]
+Tipo: Componente primordial
+Origem: As raízes primordiais que antecedem Thessavar e guardam memória do mundo antes do Oculto.
+Uso: Componente raríssimo de magia de verdade e revelação — escapa ao ocultamento de Thessavar.
+Valor/Raridade: Altíssimo.
+Perigo: Thessavar não gosta dessas raízes; colhê-las atrai a atenção do Oculto.
+
+==================== ITENS ====================
+
+[ITEM: Arco de Madeira-Sussurrante]
+Tipo: Arma
+Origem: Fabricado com a madeira mágica da floresta.
+Uso: Dizem que as flechas "encontram" o alvo guiadas por sussurros.
+Valor/Raridade: Alto.
+
+[ITEM: Adaga de Casca-Endurecida]
+Tipo: Arma
+Origem: Talhada da Casca de Javali endurecida.
+Uso: Lâmina leve e silenciosa dos caçadores da floresta.
+Valor/Raridade: Médio.
+
+[ITEM: Mel-de-Memória]
+Tipo: Droga / consumível leve
+Origem: Colhido de colmeias que se alimentaram das plantas do Oculto.
+Uso: Induz lembranças vívidas, às vezes de vidas alheias.
+Valor/Raridade: Médio.
+Perigo: Pode misturar memórias alheias às próprias.
+
+[ITEM: Marca-Trilha do Caçador]
+Tipo: Ferramenta / sobrevivência
+Origem: Sistema de marcas que caçadores como Sholven usam.
+Uso: Resistir à desorientação da floresta.
+Valor/Raridade: Conhecimento que salva vidas.
+Perigo: A Trepadeira-Mentirosa imita marcas.
+
+[ITEM: Tampão-de-Cera Anti-Sussurro]
+Tipo: Ferramenta / proteção
+Origem: Cera e resina tratadas pelos que conhecem a floresta.
+Uso: Abafa as Vozes-de-Morto-Conhecido e os sussurros que atraem para o fundo.
+Valor/Raridade: Médio.
+
+[ITEM: Frasco de Pó de Sonho]
+Tipo: Consumível / droga (dose)
+Origem: Pó de Sonho refinado em dose individual.
+Uso: Revela o oculto por um tempo; visões de verdade e perigo.
+Valor/Raridade: Alto.
+Perigo: Viciante; mostra o que era melhor não ver.
+
+[ITEM: Bússola-Inútil-da-Floresta]
+Tipo: Item / aviso
+Origem: Bússolas comuns que a floresta enlouquece.
+Uso: Não funciona — mas o modo como gira indica proximidade do coração da floresta. Os experientes a leem ao contrário.
+Valor/Raridade: Baixo; valor de aviso.
+
+[ITEM: Caixa-de-Segredo de Madeira-Sussurrante]
+Tipo: Item / recipiente mágico
+Origem: Madeira-Sussurrante trabalhada.
+Uso: Guarda um segredo falado dentro dela; só se abre para quem souber a palavra certa.
+Valor/Raridade: Alto.
+
+[ITEM: A Lanterna dos Suspiros] [ARTEFATO ÚNICO]
+Tipo: Artefato único / luz contra o Oculto
+Origem: Relíquia antiga, anterior à expansão da floresta, ligada a Thael Veia-Antiga.
+Uso: Sua luz revela o que Thessavar oculta — trilhas verdadeiras, ilusões desfeitas, Filhos-de-Thessavar expostos.
+Valor/Raridade: Inestimável.
+Perigo: A floresta "sente" quando é acesa e reage para apagá-la.
+
+[ITEM: O Segredo Enterrado de Thessavar] [ARTEFATO ÚNICO]
+Tipo: Artefato único / conhecimento proibido
+Origem: No coração da floresta, aquilo que até o Oculto esconde de si mesma.
+Uso: Desconhecido. Poderia dar poder sobre Thessavar, ou ser a perdição de quem o achar.
+Valor/Raridade: Inestimável e mortal.
+Perigo: Chegar ao coração é enfrentar a Coisa-Sussurrante e a própria Thessavar.
+
+
+#########################################################
+LOCAL: A SELVA DE XYLOS (LESTE)
+#########################################################
+
+==================== MATERIAIS ====================
+
+[MATERIAL: Resina Viva (cristalizada)]
+Tipo: Resina mágica
+Origem: Depósitos cristalizados pelo ciclo acelerado, com propriedades do parasita Xylos. Os Hospedeiros a comerciam.
+Uso: Componente alquímico de regeneração, conexão mental e quitina. Tecelão de Esporo é o canal.
+Valor/Raridade: Alto.
+Perigo: Tocá-la sem ser Hospedeiro causa visões da colmeia e início de infecção.
+
+[MATERIAL: Quitina Bruta]
+Tipo: Material estrutural
+Origem: As estruturas de quitina que o Xylos produz, colhidas pelos Hospedeiros.
+Uso: Material leve e resistente, base de armaduras e lâminas.
+Valor/Raridade: Médio-alto; só os Hospedeiros a trabalham bem.
+
+[MATERIAL: Madeira-de-Ciclo-Rápido]
+Tipo: Madeira instável
+Origem: Árvores da selva de crescimento acelerado.
+Uso: Tratada certo (pelos Hospedeiros) endurece como ferro; bruta, apodrece rápido demais.
+Valor/Raridade: Baixo bruta, alto tratada.
+
+[MATERIAL: Veneno-de-Rã-de-Cor]
+Tipo: Toxina variada
+Origem: A pele das Rãs-Veneno-de-Cor, cada cor um efeito.
+Uso: Flechas e medicina; só os Hospedeiros dominam o código das cores.
+Valor/Raridade: Médio-alto.
+Perigo: Manusear errado envenena o próprio coletor.
+
+[MATERIAL: Esporo da Colmeia]
+Tipo: Componente biológico mágico
+Origem: Os esporos do parasita Xylos, base da mente-colmeia.
+Uso: Pesquisado por cultistas e alquimistas; ligado a conexão mental forçada.
+Valor/Raridade: Alto e perigosíssimo.
+Perigo: É o vetor da infecção; manuseá-lo é arriscar virar Hospedeiro.
+
+[MATERIAL: Pólen de Flor-da-Colmeia]
+Tipo: Componente mágico
+Origem: As flores conectadas ao Xylos onde a colmeia é mais forte.
+Uso: Magia mental e de sedução; induz o desejo de "pertencer".
+Valor/Raridade: Médio.
+Perigo: Respirar muito é o primeiro passo rumo à infecção.
+
+[MATERIAL: Seiva-Ácida da Vipera-Flora]
+Tipo: Componente alquímico
+Origem: O cipó muscular predador que drena fluidos.
+Uso: Base de ácidos e drenos alquímicos; reagente raro.
+Valor/Raridade: Médio-alto.
+Perigo: A planta ainda viva enrola e drena quem a colhe.
+
+[MATERIAL: Casca-de-Macaco-Quitina]
+Tipo: Material blindado
+Origem: As placas de quitina natural dos Macacos-Quitina.
+Uso: Placas de armadura leve; convergência com o Xylos sem infecção.
+Valor/Raridade: Médio.
+
+[MATERIAL: Âmbar-de-Esporo-Antigo]
+Tipo: Componente primordial
+Origem: Resina endurecida onde os Primeiros-Hospedeiros (Era 0) deixaram esporos milenares.
+Uso: Componente primordial de conexão com a colmeia ancestral; raríssimo.
+Valor/Raridade: Altíssimo.
+Perigo: Pode conectar o portador à consciência primordial e dissolver o eu.
+
+[MATERIAL: Lágrima-Negra de Morrakh (essência)]
+Tipo: Componente de contágio
+Origem: Gotas da substância de Morrakh nas profundezas mais perigosas.
+Uso: Essência do contágio que origina Vampiros e Lycans; estudada por quem quer criar as pragas.
+Valor/Raridade: Inestimável e amaldiçoada.
+Perigo: Portá-la é carregar o contágio do Abismo; pode iniciar a transformação.
+
+==================== ITENS ====================
+
+[ITEM: Lâmina-de-Quitina]
+Tipo: Arma
+Origem: Forjada da quitina processada dos Hospedeiros.
+Uso: Leve, afiada, resistente; rara fora da selva.
+Valor/Raridade: Alto.
+
+[ITEM: Flecha-Veneno-de-Cor]
+Tipo: Arma / munição
+Origem: Pontas tratadas com o veneno das Rãs, cada cor um efeito.
+Uso: Munição mortal e variada dos Hospedeiros.
+Valor/Raridade: Médio-alto.
+Perigo: Manusear errado envenena o arqueiro.
+
+[ITEM: Néctar da Fúria]
+Tipo: Droga / estimulante de combate
+Origem: A química dos Besouros-da-Fúria, raros, do interior.
+Uso: Pasta nas gengivas que dá descarga de adrenalina — luta-se com membros decepados. Vale fortunas.
+Valor/Raridade: Altíssimo; coletá-lo é quase suicida.
+Perigo: A queda após o efeito é devastadora; uso repetido destrói o corpo.
+
+[ITEM: Fruto-do-Instante (colhido)]
+Tipo: Consumível / alimento perigoso
+Origem: Frutas do ciclo acelerado, comestíveis só na janela exata (uma hora).
+Uso: Nutritivas no momento certo; os Hospedeiros sabem a hora.
+Valor/Raridade: Baixo, mas exige conhecimento que mata forasteiros.
+
+[ITEM: Armadura-de-Quitina]
+Tipo: Equipamento / proteção
+Origem: Quitina trabalhada pelos Hospedeiros.
+Uso: Proteção leve e resistente, esteticamente alienígena; rara e valiosa.
+Valor/Raridade: Alto.
+
+[ITEM: Manto-Anti-Esporo]
+Tipo: Equipamento / proteção
+Origem: Tecido tratado pelos garimpeiros (Casca-Grossa Nok) e Hospedeiros.
+Uso: Protege parcialmente dos Insetos-Semeadores e esporos da selva. Essencial para forasteiros.
+Valor/Raridade: Médio-alto.
+
+[ITEM: Cataplasma-de-Resina]
+Tipo: Consumível / cura
+Origem: Resina Viva preparada pelos Hospedeiros.
+Uso: Acelera a cura de ferimentos (propriedade do Xylos); funciona melhor em quem aceita o risco.
+Valor/Raridade: Médio.
+Perigo: Em forasteiros, pode iniciar uma infecção leve.
+
+[ITEM: Mapa-Vivo de Hospedeiro]
+Tipo: Ferramenta / guia
+Origem: Conhecimento da selva que um Hospedeiro compartilha (raro) — não um objeto, mas uma rota memorizada.
+Uso: A única forma segura de atravessar a selva mortal; O Que Pergunta pode oferecer.
+Valor/Raridade: Inestimável; depende da boa vontade da colmeia.
+
+[ITEM: O Coração-Quitina dos Primeiros-Hospedeiros] [ARTEFATO ÚNICO]
+Tipo: Artefato único / relíquia biológica primordial
+Origem: Fragmento de quitina dos Primeiros-Hospedeiros (Era 0), nas profundezas.
+Uso: Conecta o portador à consciência primordial da colmeia — sabedoria de milênios, ao custo da individualidade.
+Valor/Raridade: Inestimável; sagrado para os Hospedeiros.
+Perigo: A conexão pode dissolver o eu na mente-colmeia ancestral.
+
+[ITEM: Lágrima Negra de Morrakh] [ARTEFATO ÚNICO]
+Tipo: Artefato único / essência de contágio
+Origem: Uma gota solidificada da substância de Morrakh, das profundezas mais perigosas.
+Uso: Essência do contágio que origina Vampiros e Lycans; cobiçada por quem estuda ou quer criar as pragas.
+Valor/Raridade: Inestimável e amaldiçoada.
+Perigo: Portá-la é carregar o contágio do Abismo; pode iniciar a transformação no portador.
+
+
+#########################################################
+LOCAL: O DESERTO DE ZHUR — O MAR DE VIDRO (SUL)
+#########################################################
+
+==================== MATERIAIS ====================
+
+[MATERIAL: Vidro-do-Mar (vitrificado)]
+Tipo: Vidro mágico
+Origem: O solo vitrificado de Zhur, do impacto da lua sobre Urath.
+Uso: Vidro de pureza e dureza sobrenaturais; lentes, lâminas, ornamentos.
+Valor/Raridade: Médio-alto fora do deserto.
+
+[MATERIAL: Cristal de Urath]
+Tipo: Cristal amaldiçoado
+Origem: Os cristais que afloram com o resíduo do demônio do Orgulho.
+Uso: Componente mágico potente; os Devoradores acessam memórias do sangue por eles.
+Valor/Raridade: Alto e perigoso.
+Perigo: Tocar muito tempo infunde o Orgulho de Urath — arrogância que mata.
+
+[MATERIAL: Carapaça de Escorpião-de-Cristal]
+Tipo: Blindagem rara
+Origem: A carapaça diamantina dos Escorpiões-de-Cristal gigantes.
+Uso: Armadura quase impenetrável e leve.
+Valor/Raridade: Altíssimo; matar um adulto é façanha.
+
+[MATERIAL: Couro de Lagarto-Espelho]
+Tipo: Couro reflexivo
+Origem: A pele dos lagartos quase invisíveis.
+Uso: Vestes camufladas e resistentes ao calor; os Devoradores se cobrem dele.
+Valor/Raridade: Médio.
+
+[MATERIAL: Areia-de-Tempo-Morto]
+Tipo: Componente temporal
+Origem: Areia dos bolsões onde Vaelith pousou e o tempo trava.
+Uso: Magia temporal — manipula envelhecimento e duração.
+Valor/Raridade: Altíssimo e instável.
+Perigo: Manuseio errado envelhece ou rejuvenesce partes do corpo.
+
+[MATERIAL: Veneno de Escorpião-de-Cristal]
+Tipo: Toxina cristalizante
+Origem: O ferrão dos Escorpiões-de-Cristal.
+Uso: Veneno que cristaliza o sangue — a vítima vira estátua frágil. Arma e componente.
+Valor/Raridade: Alto.
+Perigo: Manuseio descuidado cristaliza o próprio coletor.
+
+[MATERIAL: Quitina de Besouro-de-Espelho]
+Tipo: Material reflexivo
+Origem: A carapaça refletiva dos besouros que se enterram no vidro.
+Uso: Ornamentos, camuflagem, lentes baratas.
+Valor/Raridade: Baixo.
+
+[MATERIAL: Polpa de Cacto-de-Cristal]
+Tipo: Recurso / água
+Origem: O interior dos Cactos-de-Cristal, atrás de espinhos-lâmina.
+Uso: Água preciosa e polpa nutritiva; vida ou morte no deserto.
+Valor/Raridade: Inestimável no deserto.
+Perigo: Os espinhos cortam quem não sabe extrair.
+
+[MATERIAL: Pó-de-Estrela-Caída]
+Tipo: Componente primordial
+Origem: Resíduo da cratera de impacto original, ligado ao Que Caiu com a Lua.
+Uso: Componente primordial raríssimo de magia celeste e de queda.
+Valor/Raridade: Altíssimo.
+Perigo: A cratera é onde algo respira muito devagar lá embaixo; os Devoradores a evitam.
+
+[MATERIAL: Vidro-Cantante (lasca)]
+Tipo: Componente mágico-sonoro
+Origem: As formações que o vento faz vibrar com frequências de Urath.
+Uso: Induz estados mentais (arrogância, paranoia, fúria); usado em rituais e armas psicológicas.
+Valor/Raridade: Médio-alto.
+Perigo: Manusear afeta a própria mente.
+
+==================== ITENS ====================
+
+[ITEM: Lâmina-de-Vidro-Negro]
+Tipo: Arma
+Origem: Forjada do Vidro-do-Mar mais escuro e puro.
+Uso: Afiadíssima, corta como navalha; quebra mais fácil que metal.
+Valor/Raridade: Alto.
+Perigo: Frágil; estilhaça se mal usada.
+
+[ITEM: Lentes de Obsidiana]
+Tipo: Ferramenta / proteção
+Origem: Vidro-do-Mar lapidado, usado pelos Devoradores sobre os olhos.
+Uso: Protege a visão do brilho cegante do Mar de Vidro.
+Valor/Raridade: Médio; essencial para travessias.
+
+[ITEM: Armadura-de-Carapaça-de-Cristal]
+Tipo: Equipamento / proteção
+Origem: Carapaça de Escorpião-de-Cristal trabalhada.
+Uso: Armadura leve quase impenetrável; troféu de elite.
+Valor/Raridade: Altíssimo.
+
+[ITEM: Flecha-Cristalizante]
+Tipo: Arma / munição
+Origem: Pontas tratadas com veneno de Escorpião-de-Cristal.
+Uso: Cristaliza o sangue do alvo; mortal e cruel.
+Valor/Raridade: Alto.
+Perigo: Manusear envenena o arqueiro.
+
+[ITEM: Manto-de-Lagarto Camuflado]
+Tipo: Equipamento
+Origem: Couro de Lagarto-Espelho.
+Uso: Camuflagem no deserto e proteção do calor; os Devoradores o vestem.
+Valor/Raridade: Médio.
+
+[ITEM: Cantil-de-Cacto]
+Tipo: Ferramenta / sobrevivência
+Origem: Cacto-de-Cristal oco tratado.
+Uso: Armazena a água preciosa do deserto; vital para qualquer travessia.
+Valor/Raridade: Médio.
+
+[ITEM: Amuleto-de-Vidro Anti-Miragem]
+Tipo: Item / proteção mental
+Origem: Vidro-do-Mar tratado com Flor-da-Meia-Noite pelos Devoradores.
+Uso: Protege parcialmente contra as miragens de Vaelith; distingue o real do projetado.
+Valor/Raridade: Alto.
+
+[ITEM: Cachimbo-de-Vidro-Cantante]
+Tipo: Item ritual
+Origem: Vidro-Cantante trabalhado pelos Bebedores-de-Memória.
+Uso: Induz transe para acessar memórias do sangue; ferramenta mística dos Devoradores.
+Valor/Raridade: Médio-alto.
+Perigo: Uso afeta a mente com frequências de Urath.
+
+[ITEM: Adaga de Vidro-Dragão] [ARTEFATO ÚNICO]
+Tipo: Artefato único / arma lendária
+Origem: Forjada de Vidro-do-Mar fundido com escama (ou essência) de Vaelith, no calor de Zhur.
+Uso: Lâmina lendária que fere o tempo além da carne — ferimentos que custam a fechar, ou que "atrasam" quem é cortado.
+Valor/Raridade: Inestimável; uma das armas mais cobiçadas de Valoria.
+Perigo: Carrega resíduo de Vaelith; o tempo se comporta de forma estranha ao redor do portador.
+
+[ITEM: O Selo de Urath] [ARTEFATO ÚNICO]
+Tipo: Artefato único / fragmento de selo
+Origem: Parte do que mantém Urath selado e fragmentado sob o Mar de Vidro.
+Uso: Conhecimento e poder ligados ao mais antigo dos treze demônios.
+Valor/Raridade: Inestimável e perigosíssimo.
+Perigo: Enfraquecer o selo arrisca libertar o Orgulho primordial; a prole de Urath o cobiça.
+
+
+#########################################################
+LOCAL: AS RUÍNAS SUBMERSAS DE AETHELGARD (LAGO)
+#########################################################
+
+==================== MATERIAIS ====================
+
+[MATERIAL: Éter Cristalizado de Oghma]
+Tipo: Éter puro
+Origem: Fragmentos do Éter de Oghma cristalizados nas câmaras — a maior concentração mágica de Valoria.
+Uso: Componente mágico supremo, estável mas potente. Cobiçado por todo mago.
+Valor/Raridade: Inestimável.
+Perigo: Segurá-lo muito tempo destila a alma do portador.
+
+[MATERIAL: Cristal de Memória de Aethelgard]
+Tipo: Registro mágico
+Origem: Corais e formações das câmaras da Destilação, impressos com as últimas memórias das vítimas.
+Uso: Recupera conhecimento e magia perdidos; os Cultistas os estudam.
+Valor/Raridade: Altíssimo.
+Perigo: As memórias são de mortes por Destilação; podem sobrecarregar a mente.
+
+[MATERIAL: Água-Escura de Oghma]
+Tipo: Recurso mágico perigoso
+Origem: A água profunda e escura sobre Oghma, saturada de Éter.
+Uso: Reagente mágico potente, mas instável e tóxico.
+Valor/Raridade: Alto.
+Perigo: Beber ou tocar demais é envenenamento mágico.
+
+[MATERIAL: Alga-Luminosa-de-Éter]
+Tipo: Componente bioluminescente
+Origem: Algas que absorveram Éter e brilham conforme a profundidade.
+Uso: Luz subaquática, reagente de magia de luz; referência de profundidade para mergulhadores.
+Valor/Raridade: Médio.
+Perigo: Comê-la causa visões e perturba a magia.
+
+[MATERIAL: Coral-de-Memória]
+Tipo: Componente mágico
+Origem: Corais nas paredes da Destilação, alimentados pelo Éter das almas.
+Uso: Magia de memória; os Cultistas buscam reaprender a Destilação neles.
+Valor/Raridade: Alto.
+Perigo: Tocar transmite fragmentos das mortes.
+
+[MATERIAL: Escama de Enguia-de-Éter]
+Tipo: Componente mágico-elétrico
+Origem: As enguias que descarregam pulsos de Éter.
+Uso: Reagente de magia elétrica e de perturbação mágica.
+Valor/Raridade: Médio-alto.
+Perigo: A enguia viva para o coração de quem se aproxima.
+
+[MATERIAL: Lodo-de-Pergaminho]
+Tipo: Recurso / conhecimento degradado
+Origem: O que restou da biblioteca de Aethelgard, virado lodo pela água.
+Uso: Com magia certa, fragmentos de conhecimento podem ser recuperados do lodo. O Bibliotecário-Afogado o protege.
+Valor/Raridade: Variável; potencialmente inestimável.
+
+[MATERIAL: Cristal-de-Oghma-Bruto]
+Tipo: Componente mágico supremo
+Origem: Veios de Éter ainda não totalmente cristalizados perto de Oghma.
+Uso: Magia de altíssima potência; instável.
+Valor/Raridade: Inestimável.
+Perigo: Mais instável que o cristalizado; pode destilar quem o toca rápido.
+
+[MATERIAL: Pérola-Afogada]
+Tipo: Componente / ornamento mágico
+Origem: Formada nas conchas das profundezas alimentadas por Éter.
+Uso: Foco mágico menor; ornamento valioso com leve propriedade etérea.
+Valor/Raridade: Médio-alto.
+
+[MATERIAL: Sal-de-Lágrima de Aethelgard]
+Tipo: Componente alquímico
+Origem: Cristalizações nas bordas onde a água do lago evapora, carregadas de Éter e luto.
+Uso: Reagente de magia de água, memória e melancolia.
+Valor/Raridade: Médio.
+
+==================== ITENS ====================
+
+[ITEM: Equipamento de Mergulho de Yera]
+Tipo: Ferramenta / sobrevivência aquática
+Origem: Aparato improvisado e refinado pelos mergulhadores (Fôlego-Longo Yera é mestra).
+Uso: Mergulho prolongado nas ruínas; essencial para as câmaras profundas.
+Valor/Raridade: Médio; vital para qualquer expedição.
+
+[ITEM: Lâmina-Encantada de Conselheiro]
+Tipo: Arma / relíquia mágica
+Origem: Armas dos conselheiros, preservadas pelo Éter, recuperáveis dos Conselheiros-Afogados.
+Uso: Lâminas que retêm encantamentos da era de ouro mágica.
+Valor/Raridade: Alto.
+Perigo: Recuperá-las significa enfrentar os Conselheiros-Afogados.
+
+[ITEM: Lanterna-de-Alga-Luminosa]
+Tipo: Ferramenta / luz
+Origem: Alga-Luminosa-de-Éter em invólucro de vidro.
+Uso: Luz subaquática que não se apaga na água; referência de profundidade.
+Valor/Raridade: Médio.
+
+[ITEM: Corrente-de-Éter Engarrafada]
+Tipo: Consumível mágico / instável
+Origem: Porção capturada das correntes de Éter puro.
+Uso: Amplifica enormemente um feitiço.
+Valor/Raridade: Altíssimo e raríssimo.
+Perigo: Um mago pode queimar de dentro; um não-mago se desfaz.
+
+[ITEM: Máscara-de-Respiração de Conselheiro]
+Tipo: Equipamento / relíquia
+Origem: Relíquias dos conselheiros que permitiam longa permanência submersa.
+Uso: Respirar debaixo d'água por mais tempo; raríssima e cobiçada pelos mergulhadores.
+Valor/Raridade: Alto.
+
+[ITEM: Bússola-de-Corrente]
+Tipo: Ferramenta / navegação
+Origem: Aparato que detecta as Correntes-de-Éter para evitá-las (ou achá-las).
+Uso: Navegar as ruínas sem cair numa corrente mortal.
+Valor/Raridade: Médio-alto.
+
+[ITEM: Amuleto-Anti-Sussurro de Thessrak]
+Tipo: Item / proteção mental
+Origem: Feito com sal-de-lágrima e técnica do Último Conselheiro (Aelwin).
+Uso: Protege parcialmente da loucura das Bocas de Thessrak ao mergulhar fundo.
+Valor/Raridade: Alto.
+
+[ITEM: Oghma, o Coração de Aethelgard] [ARTEFATO ÚNICO]
+Tipo: Artefato único / fonte de Éter
+Origem: O núcleo de Éter puro no fundo de Aethelgard, o que tornava a cidade a capital mágica.
+Uso: Poder mágico quase ilimitado. A razão de Aethelgard ter existido — e caído.
+Valor/Raridade: Inestimável; o objeto mais poderoso conhecido de Valoria.
+Perigo: Destila almas. Os Conselheiros-Afogados e Thessrak o guardam. Buscá-lo repete a tragédia.
+
+[ITEM: O Amuleto da Destilação] [ARTEFATO ÚNICO]
+Tipo: Artefato único / foco mágico proibido
+Origem: O amuleto que focalizava a Destilação que Daruun ensinou a Aethelgard.
+Uso: Permite refinar Éter de almas — o conhecimento mais perigoso de Valoria. Corvane (o Mestre-Destilador) o busca.
+Valor/Raridade: Inestimável e amaldiçoado.
+Perigo: Usá-lo destila almas; foi o que destruiu Aethelgard. Aelwin dedica a vida a impedir sua recuperação.
+
+[ITEM: Os Registros de Aethelgard] [ARTEFATO ÚNICO]
+Tipo: Artefato único / biblioteca submersa
+Origem: O que resta da grande biblioteca, em parte lodo, em parte preservado. O Bibliotecário-Afogado os protege.
+Uso: O saber mágico perdido do mundo — incluindo o que o aprendiz descobriu antes de destruir a cidade.
+Valor/Raridade: Inestimável.
+Perigo: Recuperá-los exige mergulhar onde Thessrak sussurra.
+
+
+#########################################################
+LOCAL: BREKMAR E A COSTA OESTE (PORTO SEM LEI)
+#########################################################
+
+==================== MATERIAIS ====================
+
+[MATERIAL: Osso de Leviatã (para quilha)]
+Tipo: Material naval supremo
+Origem: Trazido do Cemitério de Leviatãs; Durrak o usa nas quilhas (acordo tácito com os Osshari).
+Uso: Navios mais rápidos e resistentes. O material naval supremo de Valoria.
+Valor/Raridade: Altíssimo; o segredo de Durrak.
+Perigo: Atrai Leviatãs para o navio.
+
+[MATERIAL: Veneno de Ophidia]
+Tipo: Toxina exótica
+Origem: Frascos vendidos no Cais da Transparência, supostamente do arquipélago.
+Uso: Venenos de efeitos variados e exóticos.
+Valor/Raridade: Alto; autenticidade duvidosa.
+Perigo: Efeitos imprevisíveis; alguns frascos são fraudes, outros mortais demais.
+
+[MATERIAL: Sal-Marinho de Brekmar]
+Tipo: Recurso / conservante
+Origem: Evaporação da água do mar oeste nas salinas da costa.
+Uso: Conservar peixe e carne, tempero, e — diz-se — repelir Vampiros (que temem água salgada).
+Valor/Raridade: Baixo.
+
+[MATERIAL: Madeira-de-Naufrágio]
+Tipo: Recurso / madeira tratada
+Origem: Destroços de navios recolhidos nas docas velhas.
+Uso: Construção barata, reparo de barcos, e a estrutura da Boca do Fundo.
+Valor/Raridade: Baixo.
+
+[MATERIAL: Tinta-de-Polvo]
+Tipo: Componente alquímico
+Origem: Os Polvos-dos-Destroços sob as docas.
+Uso: Tinta de escrita e disfarce, base de fumaça alquímica e poções de ocultação.
+Valor/Raridade: Baixo-médio.
+
+[MATERIAL: Pérola-Negra do Recife]
+Tipo: Ornamento / componente
+Origem: As águas perigosas da costa oeste, colhida por mergulhadores ousados.
+Uso: Ornamento valioso e foco mágico menor de água.
+Valor/Raridade: Alto.
+
+[MATERIAL: Couro-de-Tubarão-de-Casco]
+Tipo: Material resistente
+Origem: Os tubarões de pele dura que raspam os cascos dos navios.
+Uso: Couro abrasivo para lixas, empunhaduras antiderrapantes, armadura leve.
+Valor/Raridade: Médio.
+
+[MATERIAL: Âmbar-Cinza Importado]
+Tipo: Componente alquímico (importado)
+Origem: Trazido do Cemitério de Leviatãs e comerciado em Brekmar.
+Uso: Alquimia ligada ao Éter; um dos bens mais valiosos do mercado.
+Valor/Raridade: Altíssimo.
+
+[MATERIAL: Sangue-Sangrinomante (resíduo)]
+Tipo: Componente mágico raro
+Origem: Resíduo da prática da sangrinomancia de Kahen e Véu-de-Sangue.
+Uso: Componente de magia de sangue; raríssimo e perigoso de obter.
+Valor/Raridade: Alto.
+Perigo: Associado ao poder de Kahen; obtê-lo sem permissão é fatal.
+
+[MATERIAL: Essência-da-Casa-das-Marés]
+Tipo: Componente mágico / demoníaco
+Origem: Resíduo do consumo lento que Lyss opera na Casa das Marés.
+Uso: Componente de magia de prazer, vício e consumo; perigosíssimo.
+Valor/Raridade: Alto e amaldiçoado.
+Perigo: Manuseá-lo é arriscar a dependência que Lyss cultiva.
+
+==================== ITENS ====================
+
+[ITEM: Pistola de Pederneira]
+Tipo: Arma rara
+Origem: Tecnologia rara possuída por capitães de prestígio (Tormenta Ruíva tem uma).
+Uso: Arma de fogo primitiva, mortal e intimidante. Status pirata.
+Valor/Raridade: Alto; munição é problema.
+
+[ITEM: Sabre de Pirata]
+Tipo: Arma
+Origem: Forjado ou saqueado, a arma padrão das tripulações.
+Uso: Combate próximo no convés; símbolo dos piratas de Brekmar.
+Valor/Raridade: Baixo-médio.
+
+[ITEM: Arpão de Osso de Leviatã]
+Tipo: Arma / ferramenta de caça
+Origem: Os Osshari forjam arpões rituais do osso de suas presas.
+Uso: Caça de leviatãs e arma formidável; Onda-Profunda empunha um.
+Valor/Raridade: Alto; sagrado para os Osshari.
+
+[ITEM: Navio do Estaleiro das Almas]
+Tipo: Item / embarcação
+Origem: Construído por Durrak com osso de leviatã na quilha.
+Uso: Mais rápido e resistente que qualquer navio comum; a melhor (e mais amaldiçoada) embarcação de Valoria.
+Valor/Raridade: Altíssimo.
+Perigo: Atrai Leviatãs; dois não voltaram nos últimos anos.
+
+[ITEM: Doce-de-Maré (da Casa das Marés)]
+Tipo: Droga / consumível sedutor
+Origem: Iguarias servidas na Casa das Marés de Lyss.
+Uso: Prazer superior a qualquer outro; parte do sistema de consumo da demônia.
+Valor/Raridade: Médio em preço, altíssimo em custo oculto.
+Perigo: Consumir inicia a dependência que torna tudo fora da Casa insípido.
+
+[ITEM: Grogue de Brekmar]
+Tipo: Consumível / bebida
+Origem: Destilado forte do porto, servido na Boca do Fundo.
+Uso: Bebida dos marinheiros; lubrifica apostas, brigas e informação.
+Valor/Raridade: Baixo.
+
+[ITEM: Documento Forjado de Brekmar]
+Tipo: Item / ferramenta social
+Origem: Os melhores falsários de Valoria operam no Cais da Transparência.
+Uso: Identidades, salvo-condutos, contratos falsos — exportados até para Nova Arcádia.
+Valor/Raridade: Médio.
+
+[ITEM: Bússola-Náutica de Qualidade]
+Tipo: Ferramenta / navegação
+Origem: Comerciada por mercadores como Pérola.
+Uso: Navegação no mar oeste; essencial e cobiçada (mas inútil perto de Ophidia).
+Valor/Raridade: Médio-alto.
+
+[ITEM: Mapas Contraditórios de Ophidia] [ARTEFATO ÚNICO (conjunto)]
+Tipo: Artefato / coleção de pistas
+Origem: O mercado informal de Ophidia — mapas, relatos e teorias que nunca concordam. Névoa e Selune os comerciam.
+Uso: A única "informação" sobre Ophidia. Juntos, podem (ou não) revelar um padrão.
+Valor/Raridade: Valor obsessivo.
+Perigo: Seguir os mapas leva a Ophidia, de onde ninguém volta.
+
+[ITEM: O Registro de Dívidas do Poço] [ARTEFATO ÚNICO]
+Tipo: Artefato único / registro de poder
+Origem: As placas gravadas do Poço das Dívidas — o sistema jurídico de Brekmar.
+Uso: Mapa real do poder e das obrigações. Kahen lê as dívidas da Casa das Marés nele para rastrear Lyss.
+Valor/Raridade: Não vendável; informação é tudo.
+Perigo: Ter o nome gravado é sentença; raspar o nome errado inicia guerras.
+
+
+#########################################################
+LOCAL: O CEMITÉRIO DE LEVIATÃS (COSTA OESTE)
+#########################################################
+Um dos locais mais ricos em recursos raros de Valoria.
+
+==================== MATERIAIS ====================
+
+[MATERIAL: Âmbar Cinza]
+Tipo: Reagente precioso
+Origem: Secretado pelos Caranguejeiros, nas câmaras internas das carcaças antigas.
+Uso: Alquimia — compostos que interagem com o Éter como nenhum outro. Vale fortunas por peso.
+Valor/Raridade: Altíssimo. Pulmão-de-Couro Greb é o mestre coletor.
+Perigo: Extraí-lo significa gás, Caranguejeiros territoriais e a Sombra.
+
+[MATERIAL: Óleo de Leviatã]
+Tipo: Combustível nobre
+Origem: Extraído das carcaças em decomposição.
+Uso: Combustível de queima limpa e longa (Skallgard o importa). Os Osshari controlam a extração.
+Valor/Raridade: Alto.
+
+[MATERIAL: Osso de Leviatã (bruto)]
+Tipo: Material supremo
+Origem: As ossadas; o material mais resistente de Valoria para construção.
+Uso: Quilhas (Durrak), estruturas, armas.
+Valor/Raridade: Altíssimo.
+Perigo: As ossadas têm gás, predadores e, nas antigas, coisas piores.
+
+[MATERIAL: Âmbar-Vivo]
+Tipo: Cristal pulsante
+Origem: O âmbar das câmaras mais antigas que ganhou pulsação, alimentado pelo Éter.
+Uso: Reagente mágico potente; pulsa em sincronia com o Trono.
+Valor/Raridade: Altíssimo e raro.
+Perigo: Arrancá-lo "machuca" algo que reage.
+
+[MATERIAL: Éter Cristalizado de Leviatã]
+Tipo: Componente mágico
+Origem: O Éter das ossadas antigas, cristalizado nas paredes internas.
+Uso: Concentra energia mágica de forma estável; raro.
+Valor/Raridade: Altíssimo.
+Perigo: Extraí-lo pode "acordar" um eco do leviatã.
+
+[MATERIAL: Tutano-Fóssil]
+Tipo: Componente alquímico
+Origem: O tutano semi-fossilizado dentro dos ossos mais antigos.
+Uso: Reagente raro de magia de vida e longevidade.
+Valor/Raridade: Alto.
+Perigo: Extraí-lo exige perfurar ossadas habitadas (Polvos-de-Crânio, Vermes-de-Osso).
+
+[MATERIAL: Couro-Coriáceo de Carcaça]
+Tipo: Material resistente
+Origem: O que resta da pele das carcaças mais recentes, curtida pelo sal e Éter.
+Uso: Couro extremamente resistente para armaduras pesadas.
+Valor/Raridade: Médio-alto.
+
+[MATERIAL: Casca-de-Caranguejeiro]
+Tipo: Material blindado
+Origem: A carapaça dos Caranguejeiros e do Caranguejo-Rei.
+Uso: Escudos e placas de armadura; o do Rei é quase indestrutível.
+Valor/Raridade: Médio (Rei: alto).
+
+[MATERIAL: Sal-de-Maré-que-Lembra]
+Tipo: Componente mágico primordial
+Origem: Cristalizações deixadas pela Maré-Que-Lembra (a água que ganha consciência).
+Uso: Reagente primordial de magia de água e memória.
+Valor/Raridade: Altíssimo.
+Perigo: Colhê-lo depende do humor imprevisível da maré consciente.
+
+[MATERIAL: Cinza-de-Gás-de-Carcaça]
+Tipo: Recurso / explosivo
+Origem: Resíduo dos gases de decomposição acumulados nas carcaças.
+Uso: Base de explosivos e fumaça; o que causa as explosões fatais é refinável em arma.
+Valor/Raridade: Baixo-médio.
+Perigo: Volátil; manuseio errado explode como as carcaças.
+
+==================== ITENS ====================
+
+[ITEM: Clava de Osso-de-Leviatã]
+Tipo: Arma
+Origem: Talhada de fragmentos de osso de leviatã.
+Uso: Arma pesada e quase indestrutível; os náufragos de Brakk as usam.
+Valor/Raridade: Médio-alto.
+
+[ITEM: Lança-Arpão de Caçador]
+Tipo: Arma
+Origem: Osso de leviatã afiado, ferramenta dos coletores e Osshari.
+Uso: Defesa contra a fauna do Cemitério e caça.
+Valor/Raridade: Médio.
+
+[ITEM: Ferramenta-de-Extração de Âmbar]
+Tipo: Ferramenta
+Origem: Instrumentos finos dos coletores (Greb).
+Uso: Extrair âmbar e Éter sem destruí-los.
+Valor/Raridade: Médio; o conhecimento de uso vale mais.
+
+[ITEM: Máscara-Anti-Gás de Coletor]
+Tipo: Ferramenta / proteção
+Origem: Couro e filtro improvisados pelos coletores.
+Uso: Protege dos gases de decomposição dentro das carcaças.
+Valor/Raridade: Médio; salva vidas.
+
+[ITEM: Lanterna-de-Verme-Luminoso]
+Tipo: Ferramenta / luz
+Origem: Vermes-Luminosos-de-Osso em invólucro.
+Uso: Luz para o interior escuro das carcaças; não produz faísca (seguro perto do gás).
+Valor/Raridade: Médio.
+
+[ITEM: Escudo-de-Casca-de-Caranguejeiro]
+Tipo: Equipamento / proteção
+Origem: Carapaça de Caranguejeiro (ou do Rei) trabalhada.
+Uso: Escudo leve e durável; o do Rei resiste a quase tudo.
+Valor/Raridade: Médio-alto.
+
+[ITEM: Lampião-de-Óleo-de-Leviatã]
+Tipo: Item / luz
+Origem: Óleo de leviatã num lampião tratado.
+Uso: Luz de queima limpa e longuíssima; cobiçado em regiões sem combustível.
+Valor/Raridade: Médio.
+
+[ITEM: Bomba-de-Gás-de-Carcaça]
+Tipo: Arma / explosivo
+Origem: Cinza-de-gás refinada num invólucro.
+Uso: Explosivo improvisado devastador; usado por coletores desesperados e náufragos.
+Valor/Raridade: Baixo-médio.
+Perigo: Instável; pode explodir o portador.
+
+[ITEM: O Coração do Trono] [ARTEFATO ÚNICO]
+Tipo: Artefato único / órgão primordial
+Origem: O Coração-Que-Bate-Ainda nas profundezas do Trono — possivelmente o último órgão vivo do maior leviatã.
+Uso: Concentração de Éter e vida primordial sem igual; pulsa com poder sobre a vida e a morte.
+Valor/Raridade: Inestimável e mortal de alcançar.
+Perigo: O Trono "não terminou de morrer"; absorve ossos, carniça e exploradores. Os Osshari proíbem entrar.
+
+[ITEM: O Arpão do Primeiro-Osshari] [ARTEFATO ÚNICO]
+Tipo: Artefato único / relíquia ancestral
+Origem: O arpão do primeiro Osshari a caçar um leviatã, que morreu na caçada e virou entidade do Cemitério.
+Uso: Relíquia sagrada; dizem que confere a bênção (ou maldição) do ancestral na caça de leviatãs.
+Valor/Raridade: Inestimável; Voz-das-Profundezas o guarda.
+Perigo: Profaná-lo desperta a fúria ancestral do Cemitério.
+
+
+#########################################################
+LOCAL: OPHIDIA (OCEANO OESTE — INALCANÇÁVEL)
+#########################################################
+Mistério absoluto. Materiais e itens de Ophidia são quase todos conjecturais — o que se diz existir, não o que se confirma. O horror é não ter resposta.
+
+==================== MATERIAIS (conjecturais) ====================
+
+[MATERIAL: Pedra-de-Cor-Errada]
+Tipo: Mineral conjectural
+Origem: Supostamente das encostas vulcânicas de Ophidia, em cores que não correspondem a mineral nenhum.
+Uso: Desconhecido; alquimistas pagam fortunas pela possibilidade. A maioria é fraude.
+Valor/Raridade: Obsessivo; autenticidade quase impossível de verificar.
+Perigo: Desconhecido — e isso é o mais assustador.
+
+[MATERIAL: Cinza-de-Fumaça-Errada]
+Tipo: Componente mágico conjectural
+Origem: Resíduo supostamente recolhido por quem chegou perto da fumaça colorida e (raramente) voltou.
+Uso: Rumores variados — transporte, dissolução, transformação. Nenhum confirmado.
+Valor/Raridade: Lendário.
+Perigo: Quem coletou de perto geralmente não voltou.
+
+[MATERIAL: Água-do-Mar-Que-Some]
+Tipo: Recurso conjectural
+Origem: A água do mar próxima a Ophidia, onde os barcos somem; dizem que tem propriedade estranha.
+Uso: Rumores de que dissolve ou transporta o que nela mergulha. Ninguém confirmou e voltou.
+Valor/Raridade: Lendário.
+Perigo: Aproximar-se de onde ela está é desaparecer.
+
+[MATERIAL: Coral-de-Cor-Impossível]
+Tipo: Componente conjectural
+Origem: Supostos recifes ao redor de Ophidia, em cores que ferem os olhos.
+Uso: Desconhecido; comerciado como curiosidade duvidosa em Brekmar.
+Valor/Raridade: Obsessivo.
+Perigo: Desconhecido.
+
+==================== ITENS (conjecturais) ====================
+
+[ITEM: O Que Selune Trouxe] [ARTEFATO ÚNICO]
+Tipo: Artefato único / objeto ambíguo
+Origem: Aquilo que Selune (A Que Voltou Uma Vez) afirma ter trazido de Ophidia — se é que voltou, e se é que é ela mesma.
+Uso: Desconhecido. Ela o usa para dar credibilidade aos relatos e vender fragmentos de "experiência".
+Valor/Raridade: Inestimável se verdadeiro, inútil se fraude — impossível saber.
+Perigo: Pode ser prova de que algo volta de Ophidia. Pode ser isca de algo que voltou no lugar de Selune.
+
+[ITEM: O Mapa que Mestre Albrecht Decifrou] [ARTEFATO ÚNICO]
+Tipo: Artefato único / mapa fatal
+Origem: A síntese de Mestre Albrecht de todos os mapas contraditórios, que ele crê revelar a rota para Ophidia e de volta.
+Uso: Supostamente o caminho para chegar e retornar — onde todos falharam.
+Valor/Raridade: Inestimável para os obcecados.
+Perigo: Quase certamente uma sentença de morte. Mas e se estiver certo?
+
+[ITEM: Bússola-que-Aponta-para-Ophidia] [ARTEFATO ÚNICO]
+Tipo: Artefato único / item amaldiçoado
+Origem: Uma bússola que, ao contrário de todas as outras, aponta firme para Ophidia — encontrada num dos raros destroços que voltaram.
+Uso: Aponta sempre para o arquipélago, onde nenhuma navegação funciona. Atrai obcecados.
+Valor/Raridade: Lendário.
+Perigo: Segui-la é ir para onde os barcos somem. Por que ela aponta para lá? Ninguém sabe.

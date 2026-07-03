@@ -167,8 +167,19 @@ def parse_condition(text: str, source: str = "") -> Dict:
     return {"name": name, "dot": dot, "duration": duration, "source": source}
 
 
+def is_condition_resisted(entity: Dict, cond_name: str) -> bool:
+    """True se o nome da condição bate (substring) com um resist racial do alvo."""
+    name = str(cond_name or "").lower()
+    return any(r and r in name for r in entity.get("condition_resists", []) or [])
+
+
 def apply_condition(entity: Dict, cond: Dict) -> str:
-    """Anexa/atualiza uma condição no alvo. Refresca duração se já existir."""
+    """Anexa/atualiza uma condição no alvo. Refresca duração se já existir.
+
+    Fase 2.5b: resists raciais (`entity["condition_resists"]`) anulam a condição
+    por substring do nome (ex.: Anão da Fuligem ignora 'veneno')."""
+    if is_condition_resisted(entity, cond.get("name", "")):
+        return f"{entity.get('name','Alvo')} resiste a {cond.get('name','condição')} (trait racial)"
     conds = entity.setdefault("active_conditions", [])
     for c in conds:
         if c.get("name", "").lower() == cond.get("name", "").lower():
@@ -392,7 +403,9 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
     save_stat = ability.get("save_stat")
     if save_stat:
         dc = 10 + max(pstats["attack"], 0)
-        save_mod = attr_mods(target.get("attributes", {})).get(normalize_attr(save_stat), 0)
+        stat = normalize_attr(save_stat)
+        save_mod = attr_mods(target.get("attributes", {})).get(stat, 0)
+        save_mod += int((target.get("racial_save_bonus") or {}).get(stat, 0))
         save_roll = random.randint(1, 20) + save_mod
         if save_roll >= dc:
             dmg = dmg // 2
@@ -423,17 +436,146 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
     return logs
 
 
-def resolve_enemy_turn(enemy: Dict, player: Dict) -> List[str]:
-    """IA simples: 1º ataque do inimigo vs AC do player; aplica dano."""
+# --------------------------------------------------------------------------
+# Comportamento de inimigos (Fase 2.5b) — perfis determinísticos
+#
+# behavior = {"profile": "tatico"|"feroz"|"covarde"|"implacavel",
+#             "flee_below": float 0..1, "pack_morale": bool}
+# - tatico:     escolhe o melhor ataque para a situação; foge por moral
+# - feroz:      maior dano sempre; FRENESI (+2 dano) com HP < 50%; nunca foge
+# - covarde:    ataque mais seguro; foge cedo (HP baixo ou 1º aliado caído)
+# - implacavel: rotaciona ataques; nunca foge (bosses, mortos-vivos, aberrações)
+# --------------------------------------------------------------------------
+PROFILES = ("tatico", "feroz", "covarde", "implacavel")
+_DEFAULT_FLEE = {"tatico": 0.35, "covarde": 0.6}
+
+# Palavras de condição reconhecidas na string de dano de um ataque de inimigo
+# (ex.: "1d4+2 piercing + doença"). Viram Condition aplicada no player.
+_ATTACK_CONDITIONS = {
+    "veneno": 2, "doença": 2, "doenca": 2, "peste": 2, "sangramento": 2,
+    "queimadura": 2, "esporos": 1, "melancolia": 0, "medo": 0,
+    "enredado": 0, "atordoa": 0,
+}
+
+
+def get_behavior(enemy: Dict) -> Dict:
+    """Behavior efetivo do inimigo, com defaults seguros (feroz = comportamento antigo)."""
+    b = dict(enemy.get("behavior") or {})
+    profile = str(b.get("profile", "")).lower()
+    if profile not in PROFILES:
+        profile = "feroz"
+    b["profile"] = profile
+    if "flee_below" not in b and profile in _DEFAULT_FLEE:
+        b["flee_below"] = _DEFAULT_FLEE[profile]
+    b.setdefault("pack_morale", False)
+    return b
+
+
+def _avg_damage(damage: str) -> float:
+    """Dano médio esperado de uma fórmula 'NdM+K ...' (para escolha de ataque)."""
+    total = 0.0
+    for m in re.finditer(r"(\d+)d(\d+)(?:\s*([+-])\s*(\d+))?", str(damage or "")):
+        n, s = int(m.group(1)), int(m.group(2))
+        total += n * (s + 1) / 2
+        if m.group(3) == "+":
+            total += int(m.group(4))
+        elif m.group(3) == "-":
+            total -= int(m.group(4))
+    return total
+
+
+def _attack_applies_condition(atk: Dict) -> bool:
+    dmg = str(atk.get("damage", "")).lower()
+    return any(w in dmg for w in _ATTACK_CONDITIONS)
+
+
+def choose_enemy_attack(enemy: Dict, player_ac: int, rnd: int, player: Optional[Dict] = None) -> Dict:
+    """Escolha determinística do ataque conforme o perfil (sem RNG)."""
+    attacks = [a for a in (enemy.get("attacks") or []) if isinstance(a, dict)]
+    if not attacks:
+        return {"name": "Ataque", "bonus": int(enemy.get("attack_mod", 0) or 0), "damage": "1d6"}
+    if len(attacks) == 1:
+        return attacks[0]
+
+    profile = get_behavior(enemy)["profile"]
+    if profile == "feroz":
+        return max(attacks, key=lambda a: _avg_damage(a.get("damage")))
+    if profile == "implacavel":
+        return attacks[(max(1, int(rnd)) - 1) % len(attacks)]
+    if profile == "covarde":
+        ranged = [a for a in attacks if "ranged" in str(a.get("type", "")).lower()]
+        pool = ranged or attacks
+        return max(pool, key=lambda a: int(a.get("bonus", 0) or 0))
+    # tatico: abre com condição se o alvo ainda não tem nenhuma; senão,
+    # AC alta -> maior bônus de acerto; AC baixa -> maior dano.
+    if player is not None and not (player.get("active_conditions") or []):
+        cond_atks = [a for a in attacks if _attack_applies_condition(a)]
+        if cond_atks:
+            return cond_atks[0]
+    if int(player_ac) >= 15:
+        return max(attacks, key=lambda a: int(a.get("bonus", 0) or 0))
+    return max(attacks, key=lambda a: _avg_damage(a.get("damage")))
+
+
+def check_morale(enemy: Dict, allies: Optional[List[Dict]] = None) -> Optional[str]:
+    """
+    Teste de moral no início do turno do inimigo. Retorna o log de fuga
+    (e seta status='fugiu') ou None se ele continua lutando.
+
+    feroz/implacavel NUNCA fogem — um urso-titã não conhece o conceito.
+    """
+    b = get_behavior(enemy)
+    profile = b["profile"]
+    if profile in ("feroz", "implacavel"):
+        return None
+
+    max_hp = max(1, int(enemy.get("max_hp", 1)))
+    ratio = int(enemy.get("hp", 0)) / max_hp
+    flee_below = float(b.get("flee_below", _DEFAULT_FLEE.get(profile, 0.35)))
+
+    group = [a for a in (allies or []) if a.get("id") != enemy.get("id")]
+    downed = [a for a in group if a.get("status") in ("morto", "fugiu")]
+
+    reason = None
+    if ratio < flee_below:
+        reason = "ferido demais"
+    elif profile == "covarde" and downed:
+        reason = f"viu {downed[0].get('name', 'um aliado')} cair"
+    elif profile == "tatico" and b.get("pack_morale") and group and len(downed) * 2 > len(group):
+        reason = "o grupo quebrou"
+
+    if not reason:
+        return None
+    enemy["status"] = "fugiu"
+    return f"{enemy.get('name','Inimigo')} FOGE do combate ({reason})."
+
+
+def _apply_attack_conditions(atk: Dict, player: Dict) -> List[str]:
+    """Condições embutidas na string de dano do ataque (ex.: '+ veneno') no player."""
+    logs: List[str] = []
+    dmg = str(atk.get("damage", "")).lower()
+    for word, dot in _ATTACK_CONDITIONS.items():
+        if word in dmg:
+            cond = {"name": word.capitalize(), "dot": dot, "duration": 2,
+                    "source": atk.get("name", "ataque")}
+            logs.append(apply_condition(player, cond))
+    return logs
+
+
+def resolve_enemy_turn(enemy: Dict, player: Dict,
+                       allies: Optional[List[Dict]] = None, rnd: int = 1) -> List[str]:
+    """Turno do inimigo: moral -> escolha de ataque por perfil -> d20 vs AC -> dano
+    (+frenesi feroz, +condições do ataque). Muta enemy/player; retorna logs."""
     logs: List[str] = []
     if enemy.get("status") != "ativo":
         return logs
 
+    flee_log = check_morale(enemy, allies)
+    if flee_log:
+        return [flee_log]
+
     pstats = compute_player_combat_stats(player)
-    attacks = enemy.get("attacks") or []
-    atk = attacks[0] if attacks and isinstance(attacks[0], dict) else {
-        "name": "Ataque", "bonus": int(enemy.get("attack_mod", 0) or 0), "damage": "1d6",
-    }
+    atk = choose_enemy_attack(enemy, pstats["ac"], rnd, player)
     bonus = int(atk.get("bonus", 0) or 0)
     atk_roll = random.randint(1, 20)
     total = atk_roll + bonus
@@ -445,7 +587,16 @@ def resolve_enemy_turn(enemy: Dict, player: Dict) -> List[str]:
     dmg, detail = roll_dice_numeric(atk.get("damage", "1d6"))
     if crit:
         dmg *= 2
+
+    # FRENESI: feroz com HP < 50% bate mais forte — ele não recua, acelera.
+    b = get_behavior(enemy)
+    if b["profile"] == "feroz" and int(enemy.get("hp", 0)) * 2 < int(enemy.get("max_hp", 1)):
+        dmg += 2
+        detail = f"{detail} +2 frenesi"
+
     player["hp"] = max(0, int(player.get("hp", 0)) - dmg)
     hit = "CRÍTICO!" if crit else "acerta"
     logs.append(f"{enemy['name']} {hit} com {atk.get('name','ataque')}: {dmg} de dano (HP {player['hp']}) [{detail}]")
+    if int(player.get("hp", 0)) > 0:
+        logs += _apply_attack_conditions(atk, player)
     return logs

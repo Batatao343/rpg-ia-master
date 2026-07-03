@@ -1,0 +1,9 @@
+{
+  "controls":    {"description": "Entidade controla local", "target": "location"},
+  "enemy_of":    {"description": "Hostilidade mútua", "symmetric": true},
+  "member_of":   {"description": "NPC pertence a fação", "source": "npc", "target": "faction"},
+  "operates_in": {"description": "Fação/NPC atua na região", "target": "location"},
+  "located_in":  {"description": "Entidade fica em local", "target": "location"},
+  "leads":       {"description": "NPC lidera fação", "source": "npc", "target": "faction"},
+  "pact_with":   {"description": "Pacto/vínculo sobrenatural entre entidades", "symmetric": true}
+}

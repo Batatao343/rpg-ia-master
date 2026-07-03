@@ -250,6 +250,8 @@ def get_creation_options():
     origins = load_json_data("origins.json")
     return {
         "races": [r["name"] for r in origins.get("races", [])],
+        # Fase 2.5b: raças completas (desc + traits) p/ o frontend exibir na criação
+        "races_full": origins.get("races", []),
         "classes": list(CLASSES.keys()),
         "regions": [r["name"] for r in origins.get("regions", [])]
     }
@@ -342,7 +344,11 @@ def new_game(req: CreateCharacterRequest):
         "npcs": {},
         "campaign_plan": {},
         "needs_replan": False,
-        "next": "storyteller"
+        "next": "storyteller",
+        # --- Fase 2.5: mundo estruturado ---
+        "event_log": [],
+        "world_projection": {},
+        "pending_world_events": []
     }
 
     # 3. Roda o Grafo

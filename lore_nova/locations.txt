@@ -1,0 +1,477 @@
+CODEX OMNIA: LOCALIZAÇÕES DE VALORIA
+Descrição sensorial e informações para o narrador.
+===================================================
+
+[CATEGORIA: LOCALIZAÇÃO]
+[TAGS: Nova_Arcádia, Cidade, Presente]
+
+NOVA ARCÁDIA
+A maior cidade de Valoria. Fundada das cinzas da Guerra do Céu Vermelho onde as rotas de suprimento da coalizão convergiam — não por planejamento, mas por inevitabilidade. Quem não tinha para onde ir parou aqui. A cidade cresceu ao redor disso.
+
+Governada por Valerius sob o Código de Ferro. Dominada por humanos por número e fundação. O resto do mundo existe em relação a ela — como destino, como mercado, como fuga, como ameaça.
+
+GEOGRAFIA
+Construída numa confluência de rios que fornece água potável e rotas comerciais naturais. Os rios chegam do norte e do leste, se encontram no centro onde o Anel Dourado fica — terreno mais alto, mais seco, primeiro a ser reivindicado por quem chegou com recursos. A cidade cresceu em direção aos rios e depois além deles, descendo em altitude conforme descia em classe social, até que o Anel de Lama fica literalmente na lama das margens que as águas inundam todo ano na chuva. Os mesmos rios que fornecem água potável para o Anel Dourado carregam o esgoto de toda a cidade para o Pântano da Melancolia a leste. A cidade bebe de um lado o que despeja do outro.
+
+MURALHAS E ACESSO
+Muralhas externas de pedra e obsidiana cercam o Anel Dourado e o Anel de Ferro completamente — construídas nos primeiros anos da cidade quando havia ameaça real de ataque, mantidas agora porque delimitam quem pertence ao interior e quem não pertence. O Anel de Lama fica do lado de fora dessas muralhas, tecnicamente não é parte oficial de Nova Arcádia. Na prática é onde a maioria da população vive.
+
+A Legião patrulha os portões que conectam os anéis e as entradas na muralha externa. Entrar no Anel de Ferro requer identificação — nome, origem, propósito. Entrar no Anel Dourado requer identificação, propósito aprovado e, na maioria dos casos, alguém de dentro que responda por você. Sair é irrestrito. A muralha foi construída para controlar quem entra, não quem sai.
+
+A ESTRUTURA DE CLASSES
+Nova Arcádia é segregada por classe, não por raça. Um Elfo rico vive no Anel Dourado sem objeção formal. Um humano sem dinheiro vive no Anel de Lama sem escolha. O Código de Ferro não discrimina por raça — discrimina por capacidade de cumprir o Código, e cumprir o Código exige recursos que não estão igualmente distribuídos. A mobilidade ascendente existe em teoria. Na prática, quem nasce no Anel de Lama morre no Anel de Lama — não porque seja impossível subir, mas porque as estruturas que manteriam alguém de baixo subindo são as mesmas estruturas que o mantêm de baixo.
+
+MAGIA
+Registrada e licenciada no Anel Dourado — magos pagam taxas anuais, declaram seus conhecimentos, e recebem um documento que os autoriza a praticar dentro dos limites especificados. Na prática, esses limites raramente são enforçados para quem tem dinheiro suficiente para não incomodar ninguém importante. No Anel de Ferro, magia não registrada é sedição — punível com morte na fogueira, publicamente, com data anunciada com antecedência para que a população possa comparecer. No Anel de Lama, a Legião não entra com frequência suficiente para enforçar a regra de forma consistente, então a magia existe nas sombras com a mesma legalidade que tudo mais no Anel de Lama — nenhuma.
+
+ECONOMIA
+Moeda oficial cunhada com o rosto de Valerius em prata e ouro circula no Anel Dourado e nas transações formais do Anel de Ferro. No Anel de Lama e nas camadas mais pobres do Anel de Ferro, o escambo domina: comida por trabalho, trabalho por proteção, proteção por informação, informação por silêncio. A Mão Sombria opera em ambos os sistemas e lucra especificamente na fronteira entre eles — converte o que é ilegal em moeda e o que é moeda em acesso a coisas ilegais.
+
+VALERIUS E A POPULAÇÃO
+Não é figura do cotidiano — é presença que pesa sem ser vista. A Legião age em seu nome. Os decretos chegam assinados com o selo do Código de Ferro. A maioria dos habitantes de Nova Arcádia nunca o viu pessoalmente. Aparece apenas em momentos de crise ou execuções públicas de alto valor simbólico — traidores, magos selvagens, membros capturados dos Filhos da Chama Azul.
+
+Quando aparece para execuções, a praça enche não por entusiasmo mas porque ausência é registrada. A Legião nota quem não está presente em eventos onde presença é esperada.
+
+---
+
+ANEL DOURADO — Lei sem justiça
+
+O terreno mais alto da cidade, coberto de pedra polida e obsidiana que absorve a luz de uma forma que outras pedras não fazem. À noite, o Anel Dourado fica mais escuro que o Anel de Ferro iluminado pelas fundições — a obsidiana não reflete nada. De dia, brilha de forma que parece intencional, como algo que foi projetado para impressionar antes de qualquer outra consideração.
+
+O cheiro é de flores que não crescem naturalmente — os Jardins Suspensos perfumam quarteirões ao redor com fragrâncias de plantas que não existem em nenhuma estação real. Embaixo do perfume, para quem presta atenção, há algo que não tem nome mas que os servos descrevem como o cheiro de pedra úmida em lugares fechados.
+
+O Palácio de Obsidiana domina o centro — fortaleza negra sem janelas nos andares inferiores, construída de blocos de obsidiana talhados com precisão que os construtores da época não conseguiam explicar satisfatoriamente. Cada bloco encaixa no próximo sem argamassa visível, como se a pedra tivesse sido dobrada em vez de cortada. Os andares superiores têm janelas estreitas que não iluminam nada — são aberturas para observação, não para luz. Os andares subterrâneos não têm janelas nem aberturas conhecidas. Servos que trabalham lá falam sobre correntes de ar frio que não têm origem identificável e sobre o cheiro de metal oxidado que não corresponde a nenhum metal que as câmaras contenham.
+
+As paredes sangram quando o Lorde está irritado — não metáfora, não rumor. Servos descrevem um líquido escuro que aparece nas pedras dos andares inferiores em certas noites. Um servo que tentou limpar o líquido relatou que o pano ficou rígido e enegrecido. Ele jogou o pano fora e nunca mencionou o assunto de novo.
+
+Os Jardins Suspensos da Ilusão ficam adjacentes ao Palácio — parque elevado mantido por magos escravizados que usam feitiços contínuos para fazer flores crescerem sem sol, flores que nunca existiram em nenhuma estação real, de cores que a natureza não produziu. O efeito é de beleza levemente errada — bonita demais, perfeita demais, sem as imperfeições que plantas reais têm. Nobres visitam para beber Água de Lótus e observar a fumaça da favela abaixo como se fosse paisagem. Os magos que mantêm os jardins são substituídos a cada dois anos. Os anteriores "se aposentam". Ninguém pergunta para onde vão — mas quem trabalha no jardim por dois anos começa a confundir o que é real com o que é ilusão, chamando as flores pelo nome, chorando quando elas murcham.
+
+A Casa dos Espelhos é o bordel mais famoso do Anel Dourado — trabalhadores que usam máscaras mágicas para se parecerem com os amores perdidos dos clientes. A entrada custa fortunas. A saída é irrestrita mas não é gratuita. Frequentadores regulares — os que voltam dezenas de vezes — relatam memórias que somem: não a memória de visitas específicas, mas memórias outras, não relacionadas. Um frequentador veterano relatou que não consegue mais lembrar o nome da própria filha. Lembra do rosto. O nome sumiu.
+
+Sensação de estar no Anel Dourado: a sensação constante de que todo mundo na sala está calculando quanto você vale para eles, quanto custaria eliminá-lo e se o valor justifica o custo. Não é paranoia — é leitura correta do ambiente.
+
+---
+
+ANEL DE FERRO — O motor movido a suor e medo
+
+A transição do Anel Dourado para o Anel de Ferro acontece em questão de metros e é imediata nos sentidos. O cheiro de flores artificiais desaparece e é substituído por fuligem — não o cheiro de coisa queimando, mas o cheiro de fuligem acumulada, de metal aquecido, de suor de trabalho que não termina. A visibilidade cai para dez metros na Rua das Chaminés porque o ar é literal e quimicamente diferente do ar fora dela.
+
+Trabalhadores do Anel de Ferro usam lenços molhados no rosto vinte e quatro horas por dia — não por escolha, mas porque respirar sem o lenço equivale a morder carvão. A fuligem entra mesmo assim, acumulando nos pulmões ao longo de anos até produzir o que os médicos chamam de Tosse de Ferro: seca, progressiva, sem cura. O trabalhador aprende a tosse como aprende o trabalho — gradualmente, inevitavelmente, sem que ninguém marque o momento em que começou.
+
+As Fundições Valerianas nunca param. Produzem armas para a Legião, estrutura para a cidade, correntes para os que o Mercado de Carne vende. O sino que marca os turnos bate a cada quatro horas — não existe relógio no Anel de Ferro, o sino é a única forma de saber a hora, e quem não acorda com ele é marcado como ausente. Acidentes são diários. Quando um trabalhador cai no metal derretido, a produção não para — o lote de aço recebe a designação de Aço de Sangue, considerado de qualidade superior pelos ferreiros supersticiosos. Ferreiros mais experientes recusam trabalhar com ele. Dizem que range sozinho na bainha à noite. Dizem que armas feitas de Aço de Sangue ocasionalmente viram para a mão do portador durante treino.
+
+O Mercado de Carne funciona todos os dias exceto na Noite do Silêncio. Vende contratos de servidão — devedores que assinaram a si mesmos ou aos filhos como pagamento de dívidas de jogo, de impostos, de empréstimos com juros que nunca foram explicados completamente antes da assinatura. Os contratos têm prazo legal. As taxas administrativas — manutenção do contrato, alimentação do servo, depreciação do trabalho executado — aumentam a dívida mais rápido que qualquer trabalhador consegue pagar. Ninguém que entende o sistema acredita que os contratos vencem. Os que assinam geralmente não entendem o sistema.
+
+O Oubliette fica no pátio da Legião — torre invertida escavada para baixo, com os níveis mais profundos mais longe do céu. Quanto mais fundo, pior o crime e piores as condições. Nível 1 tem luz e palha. Nível 5 tem escuro e pedra fria. Nível 10 tem o que foi capturado que não pode ser executado facilmente — magos selvagens, criaturas que a Legião não sabe classificar, coisas que chegaram do Anel de Lama sem que ninguém soubesse exatamente o que eram. O Carcereiro do Oubliette — O Cego, que teve os olhos arrancados na função anterior mas conserva o cargo — ouve a respiração dos prisioneiros a distâncias que não fazem sentido fisiológico. Nunca dorme. Há um rumor persistente sobre o fundo do Nível 10: que conecta com túneis que chegam às Montanhas Afiadas, e que prisioneiros desaparecem porque algo sobe pelos túneis para buscá-los.
+
+Sensação de estar no Anel de Ferro: a sensação de ser parte de uma máquina que vai continuar funcionando depois que você parar. O barulho nunca cessa completamente. Mesmo longe das fundições, há vibração no chão que os trabalhadores aprendem a não notar. Os que saem do Anel de Ferro por tempo suficiente às vezes relatam que o silêncio os incomoda.
+
+---
+
+ANEL DE LAMA — A Fossa (fora das muralhas)
+
+Tecnicamente não é parte oficial de Nova Arcádia — o Código de Ferro não menciona o Anel de Lama, não regula o Anel de Lama, não provê serviços para o Anel de Lama. Na prática é onde a maioria da população da cidade vive: os que chegaram depois que os lugares bons já tinham donos, os que foram empurrados para fora das muralhas pela matemática do que custam e do que produzem, os que nasceram aqui e nunca tiveram razão para acreditar que poderiam estar em outro lugar.
+
+A lama que dá nome ao anel não é metáfora. É o material disponível nas bordas da cidade onde a drenagem não foi construída porque ninguém planejou que haveria bordas tão populosas. Quando chove, as ruas se tornam canais. Quando não chove, a lama endurece e racha como pele velha, e as crianças aprendem a andar pela borda das ruas onde o chão é mais firme.
+
+O cheiro é de esgoto fermentado e algo mais doce e pior que quem conhece reconhece sem conseguir nomear — o cheiro de muita gente em pouco espaço com pouca água limpa disponível. Abaixo disso, em noites quentes, um fundo de doença que os médicos do Anel de Ferro chamam de miasma e os moradores do Anel de Lama chamam de o cheiro de lá.
+
+O Beco dos Desdentados é o ponto de venda de Pó de Sonho mais conhecido do Anel de Lama, mas não o único — é apenas onde os viciados em estágio avançado se reúnem abertamente, porque não têm mais razão para esconder o que são. Arrancam os próprios dentes para vender a necromantes amadores que usam componentes biológicos nos rituais. Dentes de ouro valem mais. Qualquer dente tem mercado. O Pó que compram com o dinheiro vai durar até amanhã de manhã. Depois vem A Queda — depressão física, peso que não é cansaço, escuridão que não é ausência de luz. Depois buscam o próximo dente.
+
+A Catedral Afundada é o que sobrou de um templo que afundou na lama quando o terreno cedeu décadas atrás — o teto ainda está de pé, as paredes estão inclinadas, e o interior está metade submerso em água escura que ninguém testou para saber o que contém. Leprosos e rejeitados que não têm outro lugar habitam as partes mais altas do que ainda está de pé. A Legião não entra — não por compaixão, mas por medo de doenças. A Guilda dos Corvos entra regularmente para recolher os mortos.
+
+O Fosso dos Cães funciona em horários irregulares em locais que mudam com frequência suficiente para frustrar qualquer tentativa sistemática da Legião de fechar. A premissa é simples: cães famintos numa vala, prisioneiro ou voluntário desesperado na mesma vala, apostadores em volta. Quem sobrevive até o sino, ganha. Quem não sobrevive, alimentou os cães. É o entretenimento mais barato disponível para quem não tem dinheiro para o entretenimento do Anel Dourado, e a plateia nos dias de funcionamento é a maior de qualquer evento regular da cidade.
+
+O Beco do Sussurro aparece apenas em noites de lua nova — não porque seja mágico, mas porque foi projetado para aparecer apenas nessas noites, com sinalizadores específicos e pontos de acesso que mudam com padrão que os frequentadores memorizam e os de fora não sabem. O acesso requer caminhar de costas por um beco específico segurando uma vela negra apagada — não ritual mágico, mas código de identificação. Quem sabe, sabe. Quem não sabe, não encontra. O que tem lá: venenos de Ophidia, grimórios de necromancia proibidos pelo Código, itens que a Mão Sombria não consegue vender pelos canais normais, e às vezes pessoas — Elfos escravizados, devedores cujos contratos foram adquiridos para uso específico, indivíduos que alguém quer sumir sem que pareça que sumiram. A Legião sabe que o Beco existe. Não entra. Há uma explicação para isso que ninguém confirmou mas que todos os que frequentam o Beco acreditam.
+
+Sensação de estar no Anel de Lama: a sensação de que as regras que regem o resto da cidade não chegaram até aqui. Não é liberdade — é ausência de proteção. Qualquer coisa pode acontecer e a única pergunta relevante é se alguém vai se importar o suficiente para fazer algo a respeito. A resposta geralmente é não. A Canção de Ninar da Viúva que as mães cantam para os filhos ecoa em algum lugar que você não consegue identificar — sempre ao longe, sempre na mesma melodia, sempre como se fosse a mesma voz cantando em becos diferentes ao mesmo tempo.
+
+---
+
+[CATEGORIA: LOCALIZAÇÃO]
+[TAGS: Pântano_da_Melancolia, Leste, Perigo]
+
+O PÂNTANO DA MELANCOLIA
+Localização: Entre Nova Arcádia e as pradarias centrais
+Origem: Pradaria central da batalha final contra Malagor. Mortos em número incompreensível criaram concentração de Éter que a terra não absorveu — a pradaria afundou sob o peso, os rios perderam direção, e o que havia sido terra firme tornou-se pântano ao longo de décadas.
+
+APARÊNCIA E SENSAÇÃO
+Água oleosa e escura que não reflete luz corretamente. Fedor de decomposição e algo mais doce por baixo — o cheiro do Éter concentrado, que não tem equivalente natural. Gases inflamáveis brotam espontaneamente da lama em bolhas que às vezes se acendem sozinhas — os Fogos Fátuos, que se movem como se tivessem propósito. Névoa baixa mesmo nos dias de sol.
+
+O efeito psicológico começa antes do cheiro. Quem se aproxima do pântano sente primeiro um peso inexplicável — não cansaço físico, mas a sensação de que tudo importa menos do que parecia. Que continuar andando exige uma justificativa que não está encontrando. A tristeza não é o efeito principal — é o sintoma visível de algo maior cedendo por baixo: o Éter concentrado dissolvendo a estabilidade emocional de quem se aproxima. Quem fica tempo demais sente vontade de deitar na água e dormir para sempre. A água parece confortável. Esse é o perigo real.
+
+O ECOSSISTEMA DE HORROR
+A fauna do pântano foi transformada pelo Éter concentrado ao longo de décadas. Sanguessugas do tamanho de braços humanos que detectam calor através da lama. Sapos-Boi que cospem ácido concentrado e que cresceram para o tamanho de cães médios. Plantas carnívoras que o ciclo acelerado de decomposição produziu — crescem, capturam, digerem e reiniciam em dias. E os mortos-vivos: o Éter preso ressuscitou alguns dos que morreram na batalha final, que vagam nas águas mais profundas sem direção clara mas com instinto de aproximação quando percebem vida.
+
+Não são mortos-vivos coordenados. São resíduo — consciências fragmentadas presas no Éter concentrado, usando os corpos como ancoragem. Perigosos não por inteligência mas por número e pela resistência que o Éter lhes dá.
+
+OS DRUIDAS DO CICLO CINZENTO
+Os únicos que habitam o pântano com intenção são os Druidas — postos fixos dentro da área, onde monges do Ciclo Cinzento trabalham em turnos rotativos que nenhum dura mais que duas semanas seguidas. Mais do que isso, o efeito psicológico começa a penetrar mesmo os rituais de proteção.
+
+Os Druidas fazem três coisas no pântano: medem a borda com estacas para rastrear o avanço (o pântano cresce cerca de cinco metros por ano), coletam plantas específicas que crescem apenas no Éter concentrado e têm propriedades medicinais únicas (ingrediente principal do chá que atenua a Praga de Ferro), e recolhem o que encontram dos mortos-vivos que conseguem neutralizar — às vezes armas, às vezes artefatos, às vezes fragmentos de armadura que identificam de qual raça da coalizão vieram.
+
+O CHÁ E O ESPÓLIO
+O chá dos Druidas é produzido com plantas do pântano e atenua os sintomas da Praga de Ferro — não cura, mas retarda. É o único tratamento acessível para quem não pode pagar os serviços do Doutor Vane. Os Druidas vendem nas bordas do pântano e em Nova Arcádia.
+
+O espólio da batalha final está nas profundezas — armaduras, armas, artefatos de todas as raças da coalizão que lutaram aqui, itens que ninguém foi buscar porque o pântano cresceu em cima de tudo antes que pudessem ser recuperados. Camadas de lama cobrindo décadas de equipamento de guerra. Para quem está disposto a entrar no pântano com proteção adequada e sair antes que o efeito psicológico se torne permanente, há riqueza real nas profundezas. Os Druidas não vão buscar — dizem que perturbar os mortos-vivos que guardam o espólio é irresponsável. Não dizem que é impossível.
+
+---
+
+[CATEGORIA: LOCALIZAÇÃO]
+[TAGS: Deserto_de_Zhur, Sul, Zhur, Perigoso]
+
+O DESERTO DE ZHUR — O MAR DE VIDRO
+Localização: Extremo sul do continente, terminando em borda de queda para o vazio
+Origem: Impacto da lua lançada pelos Elfos sobre Urath. A areia foi vitrificada pelo calor.
+
+Características: Areia misturada com pó de vidro e cristais afiados. Tempestades de Navalha — ventos que esfola a carne dos ossos em minutos. Calor que cozinha armaduras de metal.
+
+A Radiação dos Cristais: Fragmentos de Urath ainda pulsam sob o vidro. Vaelith habita o deserto. Miragens de parentes mortos acenam no horizonte — resultado da interação dos dois.
+
+Habitantes: Devoradores de Sol. Cobrem o corpo com couro de lagartos gigantes. Lentes de obsidiana costuradas nos olhos. Bebem sangue dos mais velhos para acessar memórias via cristais. Cruéis, sádicos, inteligência radicalmente diferente. Não negociam — caçam forasteiros pelo corpo cheio de água.
+
+Fauna: Escorpiões de Cristal do tamanho de carruagens. Carapaças translúcidas e duras como diamante. Veneno cristaliza o sangue instantaneamente.
+
+Borda sul: Onde o deserto termina em queda para o vazio. Som sem nome — não vento, não eco. Os Devoradores de Sol não se aproximam.
+
+---
+
+[CATEGORIA: LOCALIZAÇÃO]
+[TAGS: Floresta_dos_Sussurros, Leste, Thessavar]
+
+A FLORESTA DOS SUSSURROS
+Localização: Leste do continente, borda com a Selva de Xylos
+Origem: Criada por Thessavar na Era 3 como esconderijo do escuro.
+
+Características: Árvores antigas que bloqueiam a luz nos andares inferiores com precisão intencional. Silêncio que não é ausência de som — é presença de algo que escolheu o silêncio. Vozes chamando pelo nome dos visitantes na voz de mortos conhecidos.
+
+Fauna: Urso-de-Espinha (predador alfa — pelagem caída, pele purulenta, espinhos de osso). Suas garras fazem feridas que não fecham. Migrou parcialmente para as Montanhas Afiadas — mau sinal.
+
+Pó de Sonho: Fungo vermelho que cresce apenas onde Thessavar é mais forte. Carrega fragmento do Oculto — revela o que normalmente está escondido. Altamente viciante.
+
+Fronteira com Xylos: O lugar mais estranho da região — onde o escuro seco da floresta encontra o escuro úmido da selva. Criaturas não cruzam de um lado para o outro.
+
+---
+
+[CATEGORIA: LOCALIZAÇÃO]
+[TAGS: Selva_de_Xylos, Leste, Hospedeiros, Morrakh]
+
+A SELVA DE XYLOS
+Localização: Leste do continente, cresceu além da borda da Floresta dos Sussurros na Era 4
+Origem: A borda da floresta de Thessavar interagiu com energia residual das guerras Élficas e de sangue vindas de Zhur, produzindo algo que Thessavar não planejou e não controla. A Selva de Xylos não é a floresta de Thessavar — é o que aconteceu quando o escuro dela encontrou calor e umidade que não eram seus.
+
+A PRIMEIRA IMPRESSÃO
+Entrar na Selva de Xylos é diferente de entrar na Floresta dos Sussurros de todas as formas possíveis. Onde a floresta é fria e silenciosa e escura, a selva é quente e barulhenta e saturada de cor — verdes impossíveis, amarelos que parecem emitir luz própria, flores que abrem e fecham em tempo que você consegue ver acontecer. O choque sensorial começa antes de cruzar a borda: o calor que sai de dentro como bafo de coisa viva, a umidade que transforma o ar em algo que se bebe mais do que se respira, o cheiro que é ao mesmo tempo adubo rico e podridão doce e algo que não tem equivalente fora da selva — o cheiro do ciclo acelerado, de vida e morte acontecendo simultaneamente na mesma planta no mesmo segundo.
+
+Depois do cheiro vem o ácido. Não imediatamente, mas como percepção crescente — os olhos irritando levemente, a garganta com sabor de metal suave, a pele reagindo ao ar como reagiria a algo levemente corrosivo. A Chuva Ácida periódica da selva é versão concentrada do que o ar carrega constantemente em doses baixas. Armaduras de metal começam a mostrar sinais de corrosão após algumas horas. Couro resiste melhor. A pele dos forasteiros reage mais devagar, mas reage.
+
+O CICLO ACELERADO
+A biologia da Selva de Xylos opera em tempo diferente do resto do mundo. Uma fruta amadurece e apodrece em uma hora. Flores abrem, são polinizadas e morrem em um dia. Árvores que levariam décadas em qualquer outro lugar estabelecem-se em semanas aqui. O chão é camada viva de decomposição ativa — húmus que está sempre quente, sempre úmido, sempre processando.
+
+A velocidade do crescimento varia por região dentro da selva. Nas bordas, onde o ciclo ainda está calibrado para o contato com o mundo exterior, o crescimento é rápido mas gerenciável — parar por uma hora num ponto fixo começa a atrair musgos e raízes explorando o contorno do corpo, mas levantar e se mover desfaz o processo. No interior, onde o ciclo é mais intenso, o crescimento é mais rápido e mais persistente. Parar por tempo suficiente no interior significa que a selva começa a incorporar o que parou como parte do substrato — primeiro os pés, depois os tornozelos, depois a escolha entre arrancar o que cresceu ou permanecer. Hospedeiros que dormem no interior acordam com a sensação de que o parasita Xylos negociou com a selva em seu lugar durante o sono.
+
+A QUESTÃO DO PERIGO
+Para os Hospedeiros — lar. O parasita os torna parte do sistema de uma forma que a selva reconhece como interna. Podem se mover pela selva, podem dormir no chão, podem beber a água dos rios sem filtro.
+
+Para todos os outros, a selva é mortal com a eficiência tranquila de sistema que não foi projetado para matar mas que mata como consequência de existir.
+
+A FAUNA
+A Selva de Xylos produziu fauna que não existe em nenhum outro lugar — resultado de gerações de criaturas vivendo no ciclo acelerado, crescendo mais rápido, adaptando mais rápido, produzindo variações que em qualquer outro ambiente levariam séculos.
+
+A Vipera-Flora é o mais conhecido: cipó muscular que enrola no pescoço da presa, puxa para a copa e drena fluidos lentamente por dias, mantendo a vítima viva porque fluidos frescos rendem mais que fluidos de coisa morta. Não é planta nem animal completamente — algo no meio, com sistema nervoso primitivo que responde a movimento e calor.
+
+Além dela: insetos do tamanho de pássaros que evoluíram para usar o ciclo acelerado como vantagem — picam e injetam esporos da própria selva no tecido da vítima, iniciando crescimento interno. Serpentes que mudaram de pele tantas vezes em ciclos acelerados que a pele atual é mais resistente que couro curtido. Predadores mamíferos que cresceram além do tamanho que seus ancestrais atingiam — não por mutação, mas porque o alimento abundante do ciclo acelerado permitiu crescimento que outros ambientes não sustentariam.
+
+E criaturas que são linha tênue entre animal e vegetal: coisas que se movem quando há presa e ficam imóveis quando não há, que fotossintetizam quando paradas mas que caçam quando necessário. A selva não faz distinção clara entre as categorias que o mundo exterior usa.
+
+O Néctar da Fúria — pasta feita de besouros raros da selva que guerreiros esfregam nas gengivas antes de batalha para produzir descarga de adrenalina que permite lutar mesmo com membros decepados — vem de uma espécie específica que só existe no interior da selva, onde o ciclo acelerado produziu criaturas com química interna que nenhum alquimista conseguiu replicar artificialmente.
+
+OS RECURSOS
+A selva é repositório de recursos que não existem em nenhum outro lugar e que justificam o risco para quem sabe o que busca e como buscar.
+
+Plantas medicinais que só crescem no ciclo acelerado — algumas com propriedades que os Druidas do Ciclo Cinzento ainda não mapearam completamente. O chá que atenua a Praga de Ferro usa componentes que crescem nas bordas da selva. O que cresce no interior é mais potente e mais perigoso de coletar.
+
+Madeiras tratadas pelo ciclo acelerado têm densidade e resistência que madeiras de crescimento normal não atingem — resultado de décadas de crescimento comprimidas em anos, produzindo fibra mais densa. Construtores que sabem o que buscam entram nas bordas para cortar madeira específica.
+
+Componentes de criaturas raras: veneno dos insetos gigantes tem aplicações medicinais e militares. Glândulas de certas serpentes produzem substância que neutraliza alguns efeitos do Éter corrosivo. Ossos de predadores que cresceram além do tamanho normal têm densidade que ferreiros de Nova Arcádia pagam fortunas para trabalhar.
+
+E ocasionalmente — em pontos que os Hospedeiros conhecem mas não compartilham com facilidade — depósitos de resina que o ciclo acelerado cristalizou em formato que carrega propriedades do Xylos. Os Hospedeiros commerciam essa resina nas bordas. Não explicam de onde vem. O preço é sempre alto.
+
+AS CIDADES DOS HOSPEDEIROS
+Suspensas nas copas das árvores gigantes, conectadas por pontes de madeira tratada e cordas de fibra da selva que o ciclo acelerado produziu mais resistentes que qualquer corda sintética. Construídas acima do nível do chão ácido, com acesso por escalada ou pelas árvores cujos galhos chegam à altura das plataformas.
+
+A arquitetura é orgânica e crescida tanto quanto construída — estruturas que incorporam as árvores vivas, que o ciclo acelerado faz crescer em torno das construções de formas que os Hospedeiros às vezes guiam e às vezes apenas observam. As colônias do parasita Xylos nas construções mantêm comunicação com o Xylos nos Hospedeiros, criando consciência difusa do estado da cidade. Um Hospedeiro a duzentos metros sabe se algo entrou nas plataformas. Não como alarme — como sensação, como a diferença que o corpo registra antes que o cérebro processe.
+
+MORRAKH NAS PROFUNDEZAS
+O dragão do contágio habita as profundezas da selva — abaixo do nível das copas, abaixo do nível do chão, nas câmaras de raízes e pedra onde a umidade é absoluta e a luz nunca chegou. Os Hospedeiros sabem que está lá. Sabem o que é. Mantêm distância deliberada — não por medo exatamente, mas por entendimento prático de que Morrakh e o parasita Xylos operam em lógicas que podem interagir de formas que nenhum dos dois controla completamente.
+
+Hospedeiros que desceram fundo demais voltaram com o Xylos operando em padrões que os outros Hospedeiros não reconhecem. A colmeia sente a diferença mas não tem linguagem para descrevê-la — apenas sabe que esses indivíduos específicos carregam algo que os outros não carregam, e que a fronteira entre eles e o que está nas profundezas ficou mais permeável do que deveria.
+
+A fronteira entre território dos Hospedeiros e território de Morrakh não é marcada fisicamente. É sentida pelo parasita como limite que o Xylos reconhece sem que nenhum Hospedeiro precise ter aprendido onde fica. Os mais velhos dizem que o limite se move. Que está ficando mais próximo das cidades nas copas do que costumava estar.
+
+---
+
+[CATEGORIA: LOCALIZAÇÃO]
+[TAGS: Ermo_Branco, Norte, Skallgard, Rede_Carmesim]
+
+O ERMO BRANCO — SKALLGARD E ARREDORES
+Localização: Norte do continente, além das Montanhas Afiadas
+Origem: O Abismo concentrado congelou o norte quando os Cinzéus nasceram na Era 4.
+
+Características: Frio como condição do Abismo, não clima — drena calor para redistribuir ao sul (Zhur queima porque Skallgard puxa). Noite eterna por 6 meses. Aurora Boreal verde-tóxica pela magia residual — agora com ritmo regular (mau sinal: a Rede Carmesim).
+
+Skallgard: Cidade fundada pelos humanos do norte. Dividida em clãs por função: tecnológicos (nunca pegam em arma) e de combate (ferozes, disciplinados, exportam mercenários). Hostis a forasteiros — consideram vidas quentes "fáceis demais". Única exceção: Vrel nos conselhos de pesquisa. Tecnologia de aquecimento e combate sem precedente.
+
+Fortaleza de Vorr: Antiga construção dos Gigantes. Degraus na cintura de um humano, portas de 20 metros. "Estátuas" são aventureiros congelados pelo Sopro de Vorr — anomalia de Vorrnak. Ainda conscientes.
+
+Farol da Chama Negra: Construído pelos Gigantes. Emite anti-luz que suprime o despertar da Rede Carmesim. Guardião único que nunca fala — ciclo de 100 anos onde um andarilho chega, mata o anterior e assume. O Abismo cobra vida como compensação pela contenção.
+
+---
+
+[CATEGORIA: LOCALIZAÇÃO]
+[TAGS: Aethelgard, Submersa, Oghma, Ruínas]
+
+AS RUÍNAS SUBMERSAS DE AETHELGARD
+Localização: Centro-leste do continente — num lago formado pelo colapso da cidade
+Origem: Destruída pelo aprendiz que desativou todos os cristais de contenção em uma noite. Aethelgard implodiu de dentro para fora — o solo cedeu, as estruturas afundaram, e a cratera que ficou encheu com as chuvas dos anos seguintes. O que havia sido a cidade mais magicamente poderosa de Valoria tornou-se um lago.
+
+O LAGO
+O lago de Aethelgard não tem nome oficial — os locais o chamam de O Lago, como se não houvesse outro. É grande o suficiente para que a outra margem seja visível mas distante, e fundo o suficiente para que as ruínas nas profundezas estejam além do alcance de mergulhadores sem equipamento específico.
+
+A água varia por região do lago. Nas bordas e nas partes rasas, é cristalina — tão clara que estruturas submersas são visíveis do barco, pedra trabalhada e arcos que ainda se sustentam iluminados pela luz que chega do alto. Nas regiões mais profundas, especialmente acima do coração de Aethelgard onde Oghma fica, a água é escura — não turva, mas escura, como se a luz simplesmente não penetrasse além de certo ponto. O Éter concentrado que Oghma acumulou altera a refração da luz. Mergulhadores que chegaram perto descrevem uma sensação de pressão não física — não a pressão da profundidade, mas algo que empurra de dentro para fora.
+
+A VIDA DO LAGO
+O lago produziu flora e fauna que não existem em nenhum outro lugar — resultado de décadas de vida aquática se desenvolvendo em água com concentração anormal de Éter.
+
+Plantas que crescem verticalmente das ruínas submersas em direção à luz, com folhas que bioluminescam levemente à noite e que, quando tocadas, produzem descarga de Éter que perturba a magia do tocador por horas. Peixes com olhos grandes adaptados ao escuro das profundezas que têm escamas que refletem o Éter em padrões — pescadores que os capturam nas bordas relatam que olhar para os padrões por tempo suficiente induz visões. Criaturas que patrulham as profundezas sem que nenhum estudioso tenha conseguido classificá-las — que chegaram pelo lago das regiões ao redor e que o Éter de Aethelgard transformou em algo diferente do que eram.
+
+E os Afogados: o que restou das últimas pessoas que estavam em Aethelgard quando o aprendiz agiu, e das que tentaram entrar depois. Thessrak — selado nas câmaras mais profundas — ainda fala através deles de formas intermitentes. Os Afogados patrulham rotas específicas com intervalos regulares que sugerem coordenação, mas que nenhum observador conseguiu mapear completamente. Alguém ou algo ainda comanda, de alguma forma que a pressão do lago e os anos de imersão não apagaram.
+
+O ACESSO — A ENTRADA SECA
+O lago cobre Aethelgard, mas não completamente. Nos primeiros anos depois do colapso, quando o nível da água ainda estava subindo, alguns dos estudiosos que sobreviveram — e que tinham razões para voltar às ruínas — encontraram uma entrada que ficou acima do nível do lago: um túnel que o aprendiz usava antes da noite em que agiu, que saía na margem norte do lago e que descia para o interior das ruínas por uma rota que evitava as câmaras mais profundas.
+
+Os que sabem da entrada seca são poucos e velhos. Não documentaram a rota em nada que qualquer biblioteca de Nova Arcádia guarda — o conhecimento existe em memória de pessoas específicas que decidiram que não deveria ser mais fácil de encontrar do que é.
+
+O INTERIOR DAS RUÍNAS
+Entrar em Aethelgard — pela entrada seca ou por mergulho nas partes mais rasas — é entrar num espaço onde a arquitetura da cidade ainda existe mas onde a cidade não existe mais. Corredores de pedra trabalhada que os Elfos esculpiram, câmaras com os restos de equipamentos que a Destilação exigia, paredes com marcas das almas que passaram pelas câmaras antes de serem consumidas.
+
+O Éter concentrado nas paredes produz efeito sobre quem tem sensibilidade mágica: fragmentos das últimas experiências das vítimas da Destilação ainda estão presentes, impressos no Éter que impregnou a pedra. Não são fantasmas com forma definida — são memórias que o ambiente carrega, que surgem na consciência de quem passa perto como imagens sem contexto, emoções sem causa, certezas sem origem.
+
+Morvath — o demônio da Decadência — visita as ruínas regularmente. Encontrá-lo aqui não é improvável para quem desce suficientemente fundo. Ele não ataca. Observa. E às vezes comenta, em língua que não deveria mais ser falada, sobre o quanto as coisas poderiam ter durado mais se certas escolhas fossem diferentes.
+
+O QUE HÁ LÁ DENTRO
+Oghma — a câmara de refinamento de Éter no coração das ruínas, nas profundezas escuras onde a luz não chega. Ainda intacta. O cristal que armazena Éter puro não se dissolve em água — décadas de imersão não afetaram o que está guardado ali. A maior concentração de energia mágica que existe em Valoria, preservada no fundo de um lago, acessível apenas a quem conseguir chegar até lá e souber o que fazer com o que encontrar.
+
+O Amuleto de Oghma nas câmaras internas — o artefato que o conselho usava para regular a Destilação, que contém o conhecimento completo do processo. Encontrá-lo seria encontrar instruções para o que Daruun ensinou ao conselho, preservadas em objeto físico.
+
+Registros do conselho — documentos em câmaras que a água não penetrou completamente, em pergaminho que o Éter conservou além do que pergaminho deveria durar. Nomes dos membros. Detalhes do processo. Listas das vítimas com nomes que ninguém registrou em nenhum outro lugar. E possivelmente — em câmaras que nenhum estudioso chegou ainda — o nome do que Daruun recebeu em troca de ensinar a Destilação, e o nome do aprendiz que acabou com tudo.
+
+Thessrak nas profundezas mais escuras — selado, mas não silenciado. As bocas ainda falam em eras e línguas diferentes. Quem desce fundo o suficiente começa a ouvir antes de chegar perto.
+
+---
+
+[CATEGORIA: LOCALIZAÇÃO]
+[TAGS: Ophidia, Arquipélago, Mistério]
+
+OPHIDIA
+Localização: Arquipélago vulcânico no oceano oeste, visível da costa mas distante
+Origem: Surgiu do fundo vulcânico na Era 3 como efeito do transbordamento do Abismo. Entrou em erupção durante a Guerra do Céu Vermelho com o calor residual de Malagor — mais ativa, mais visível, mais presente no horizonte do que antes. Nunca menos.
+
+O QUE SE VÊ DA COSTA
+Visível num dia claro da costa oeste e de Brekmar — ilhas no horizonte com vulcões que fumegam em cores que não correspondem ao que vulcões deveriam produzir. Não cinza, não branca. Às vezes amarela. Às vezes de um vermelho que não é fogo. Às vezes cor que marinheiros descrevem e que os que ouvem a descrição não conseguem visualizar completamente, porque é cor que não tem referência fora do que Ophidia produz.
+
+As ilhas parecem mudar de posição. Não dramaticamente, não de forma que qualquer cartógrafo consiga documentar com certeza — mas navegantes que usam Ophidia como ponto de referência para rota relatam que o arquipélago não está exatamente onde estava da última vez. As posições variam por graus pequenos que poderiam ser erro de observação, poderiam ser corrente marítima, poderiam ser outra coisa. Nenhum mapa de Ophidia concorda completamente com nenhum outro mapa de Ophidia.
+
+O QUE ACONTECE COM QUEM SE APROXIMA
+Barcos que chegam perto o suficiente não voltam. Não há relatos de naufrágios — sem destroços nas costas próximas, sem corpos, sem equipamento flutuando. Os barcos simplesmente deixam de existir no registro do que pode ser rastreado. Os que estavam em outros navios e viram um barco se aproximar de Ophidia descrevem o momento em que deixou de ser visível de formas que não são consistentes entre si: alguns dizem que o barco virou e sumiu normalmente pelo horizonte. Outros dizem que simplesmente deixou de estar lá sem ter virado. Outros dizem que havia névoa de cor estranha e que quando a névoa dissipou o barco não estava mais.
+
+Nenhuma dessas descrições é útil para entender o que aconteceu. Todas são consistentes com o resultado: quem chegou perto não voltou.
+
+QUEM TENTA MESMO ASSIM
+Sempre há alguém. A lista de expedições a Ophidia é longa e inclui uma variedade perturbadora de motivações: cartógrafos financiados por academias que acreditavam que os relatos eram exagero, capitães em dívida que aceitaram o contrato porque a alternativa era pior, exploradores que acreditavam genuinamente que havia algo de valor lá dentro, pessoas que estavam fugindo de algo e que Ophidia parecia distante o suficiente. O resultado é sempre o mesmo.
+
+Em Brekmar existe mercado informal para informação sobre Ophidia — não expedições organizadas, mas compra e venda de qualquer fragmento que alguém acredite ter relevância. Mapas contraditórios. Relatos de segunda mão. Teorias. Nada confirma nada. O mercado existe porque há compradores, e há compradores porque Ophidia ainda está lá no horizonte toda manhã, fumegando em cores erradas, existindo sem se importar se alguém entende o que é.
+
+O STATUS
+Ninguém sabe o que Ophidia é. Ninguém sabe o que há lá. Ninguém sabe por que os barcos somem. As teorias existem — que é território de uma entidade do Abismo, que é resto de algo que existia antes das raças racionais, que as ilhas que mudam de posição são uma única coisa muito grande se movendo — mas nenhuma tem mais evidência que as outras. Ophidia existe. Está lá. E isso é tudo que se sabe com certeza.
+
+---
+
+[CATEGORIA: LOCALIZAÇÃO]
+[TAGS: Costa_Negra, Cemitério_de_Leviatãs, Osshari]
+
+O CEMITÉRIO DE LEVIATÃS — COSTA NEGRA
+Localização: Costa oeste, entre os territórios Osshari e o oceano
+Origem: Cada leviatã que os Osshari caçaram desde a Era 4 foi trazido para a costa — não por ritual, mas por necessidade prática de processar as carcaças em terra. Com o tempo, o que não foi processado ficou. Gerações de ossadas acumuladas criaram uma paisagem que não existe em nenhum outro lugar de Valoria.
+
+A PAISAGEM
+Quilômetros de praia cobertos de ossos branqueados pelo sol — costelas do tamanho de árvores, crânios que poderiam abrigar uma casa, vértebras que formam colinas artificiais. As carcaças mais antigas estão parcialmente enterradas na areia, com apenas as partes maiores ainda visíveis. As mais recentes ainda têm tecido nos interstícios, em decomposição lenta que produz gases que se acumulam dentro das câmaras ósseas fechadas. Uma tocha acesa perto da abertura errada de uma carcaça antiga é o suficiente para uma explosão que espalha carne podre e fragmentos de osso como projéteis em raio de cinquenta metros. Caranguejeiros que trabalham no Cemitério há anos têm cicatrizes específicas que outros reconhecem como marca de quem sobreviveu a pelo menos um desses acidentes.
+
+O ÉTER
+Leviatãs são criaturas antigas — algumas das que os Osshari caçaram na Era 4 tinham séculos de vida, e vida longa em Valoria significa Éter acumulado. Cada carcaça libera o Éter da criatura lentamente ao longo de décadas de decomposição. Com centenas de carcaças acumuladas ao longo de eras, o Cemitério de Leviatãs tem concentração de Éter que não tem equivalente em nenhum ambiente terrestre de Valoria.
+
+O Éter produz três efeitos simultâneos no Cemitério. Efeitos mágicos passivos que variam por localização — perto de certas ossadas a visão muda levemente, perto de outras sons chegam de direções que não correspondem à fonte, perto das mais antigas o tempo parece ter textura diferente. Criaturas que habitam o Cemitério há gerações desenvolveram dependência do Éter — funcionam normalmente dentro do Cemitério e deterioram fisicamente fora dele, o que as torna impossíveis de capturar vivas para estudo externo. E demônios menores que habitam as carcaças maiores, atraídos pela concentração de Éter como animais são atraídos por água — não organizados, não coordenados, mas presentes e perigosos para quem não sabe que estão lá.
+
+A FAUNA
+O Cemitério tem ecossistema de múltiplas camadas construído inteiramente ao redor das ossadas e do Éter.
+
+Os Caranguejeiros são os mais conhecidos — crustáceos do tamanho de cães médios que habitam os crânios dos leviatãs, se alimentam de tecido em decomposição e de âmbar cinza que cresce nas câmaras internas. Conhecem cada carcaça do Cemitério com precisão que nenhum mapa externo replica. Quando dois grupos de Caranguejeiros disputam território numa carcaça, o conflito é violento e rápido — garras que cortam osso, se necessário.
+
+Criaturas únicas que não existem fora do Cemitério: vermes luminescentes que crescem dentro dos canais vasculares das ossadas mais antigas, alimentados pelo Éter cristalizado que se forma nas paredes internas. Aves com bicos de osso calcificado que perfuram as carcaças para extrair o tutano que ainda existe nas mais recentes. Algo que os Osshari chamam de Sombra de Leviatã — presença que se move entre as ossadas à noite, que não tem forma definida quando observada diretamente mas que deixa rastros no dia seguinte, e que os Caranguejeiros claramente evitam mas que nunca atacou um humano que se saiba.
+
+Predadores que caçam os Caranguejeiros e as criaturas menores: serpentes marinhas que entraram pela maré e nunca saíram, adaptadas ao ambiente de Éter ao longo de gerações. Aves de rapina de envergadura anormal que constroem ninhos nos pontos mais altos das ossadas e que mergulham sobre qualquer coisa que se mova nos corredores entre as carcaças.
+
+OS RECURSOS
+É um dos locais mais ricos em recursos raros de Valoria, o que explica por que pessoas entram sabendo os riscos.
+
+Âmbar cinza — secretado pelos Caranguejeiros e encontrado nas câmaras internas das carcaças mais antigas. Usado em alquimia, na produção de compostos que interagem com o Éter de formas que materiais comuns não conseguem. Vale fortunas por peso.
+
+Óleo de leviatã — extraído das carcaças em decomposição. Combustível de queima limpa e longa, usado para lanternas e aquecimento em regiões como Skallgard onde combustível regular é escasso. Os Osshari controlam a maior parte da extração mas vendem o excesso.
+
+Osso de leviatã processado — o material mais resistente disponível em Valoria para construção. Durrak no Estaleiro das Almas de Brekmar obtém daqui o que usa nas quilhas. Construtores que sabem o que procuram entram no Cemitério para extrair fragmentos específicos de ossadas específicas.
+
+Éter cristalizado — nas ossadas mais antigas, o Éter liberado ao longo de décadas se cristaliza nas paredes internas das câmaras ósseas em formações que concentram energia mágica de forma estável. Os cristais são raros, difíceis de extrair sem destruir, e valiosos o suficiente para que o risco de entrar nas carcaças mais antigas — com demônios menores, gases acumulados e Caranguejeiros territoriais — seja considerado aceitável por quem tem comprador garantido.
+
+"O TRONO"
+A maior carcaça do Cemitério — leviatã de dimensões que os Osshari que o caçaram na Era 5 descreveram como além do que conseguiam processar completamente. O crânio tem câmaras internas grandes o suficiente para uma vila. As costelas formam arcos de vinte metros. Dizem que ainda respira em ciclos de seis horas — expansão e contração imperceptível das câmaras internas que produz som baixo e rítmico que quem está dentro sente mais do que ouve.
+
+Os Osshari não caçam perto do Trono. Não extraem recursos de dentro. Quando perguntados por que, respondem que o Trono não terminou de morrer ainda. Não elaboram.
+
+---
+
+[CATEGORIA: LOCALIZAÇÃO]
+[TAGS: Montanhas_Afiadas, Norte, Anões, Rei_Subterrâneo]
+
+AS MONTANHAS AFIADAS
+Localização: Centro-norte do continente, separando as pradarias do Ermo Branco
+Origem: Surgiram num terremoto imenso na Era 2 — os Anões emergiram junto com elas, no meio da pedra e da poeira.
+
+GEOGRAFIA E APARÊNCIA
+Montanhas que rasgaram o chão em vez de crescerem dele — verticais demais, afiadas demais, sem a suavidade que erosão de milênios produziria. Ainda parecem novas apesar da idade, como se a terra não tivesse aceitado completamente a ruptura. Neve permanente nas altitudes superiores. Rocha exposta e cortante nas encostas. Sem vegetação acima de certa altitude — o vento não permite.
+
+AS PASSAGENS
+Território neutro por exaustão — ninguém controla as passagens porque o custo de controlá-las é maior que o benefício. Os Cinzéus tomaram na Era 4 e eventualmente cederam às pressões de raças que precisavam da rota. Os humanos tentaram estabelecer postos e os postos sumiram. Hoje qualquer um usa as passagens com o risco que isso implica, sem pagar pedágio a ninguém, sem proteção de ninguém.
+
+Atravessar as Montanhas Afiadas é uma das rotas mais mortais de Valoria pelos três motivos que existem para morrer em montanha simultaneamente. O clima nas altitudes mata quem não tem equipamento adequado. Criaturas que saem do Reino Subterrâneo pelas saídas baixas — Orcs, Goblins e coisas sem nome — aparecem nas passagens com frequência suficiente para tornar qualquer travessia um risco real. E as passagens são genuinamente labirínticas: deslizamentos de pedra e gelo mudam rotas constantemente, mapas envelhecem rápido, e perseguições por criaturas nas partes baixas desorientam viajantes que acabam saindo em pontos completamente diferentes de onde planejavam. Quem emerge do lado norte querendo sair no centro às vezes sai dezenas de quilômetros fora do curso, sem entender como chegou lá — não por magia, mas por horas de fuga em túneis que não conhece.
+
+Grupos que atravessam regularmente contratam guias Cinzéus — a única raça que atravessou essas montanhas em número suficiente para ter o conhecimento necessário, e que não sente dor suficiente para se importar com as condições.
+
+AS SAÍDAS BAIXAS — TERRITÓRIO ORC E GOBLIN
+As partes mais baixas das montanhas, onde as passagens encontram o solo das pradarias ao sul e o Ermo Branco ao norte, são território de Orcs e Goblins — criaturas que saíram do Reino Subterrâneo quando o Rei despertou e que nunca voltaram completamente para as profundezas. Não são organizados o suficiente para controlar território formalmente, mas estão presentes o suficiente para tornar as saídas baixas permanentemente perigosas. Acampam nas bocas das passagens, atacam grupos pequenos, fogem de grupos grandes. São o primeiro obstáculo de qualquer travessia e o último antes de chegar ao destino.
+
+O QUE HÁ EMBAIXO
+O Reino Subterrâneo que os Anões construíram ainda existe nas profundezas — câmaras polidas, sistemas de ventilação, rotas comerciais — agora habitadas pelo Rei Subterrâneo e pelas criaturas que convergiram para ele. A entrada mais conhecida fica no lado norte, num ponto que os Nascidos do Gelo chamam de A Boca e evitam.
+
+Quem desce longe o suficiente entra num labirinto que os próprios Anões não mapearam completamente antes de perder o Reino. Câmaras que parecem idênticas em sequências que não terminam. Rotas que os Anões marcaram mas que criaturas do Rei Subterrâneo apagaram ou modificaram. Quem volta raramente conta coerentemente o que viu — não pela geometria do espaço, mas pelo trauma de horas ou dias perdido no escuro com algo imenso que não ataca mas que está sempre presente em qualquer direção que você olhe.
+
+Rumor persistente: o fundo do Oubliette em Nova Arcádia conecta-se com túneis que chegam aqui. Prisioneiros desaparecem porque algo sobe.
+
+---
+
+[CATEGORIA: LOCALIZAÇÃO]
+[TAGS: Pradaria_das_Ruínas, Centro, Ruínas, Assombrada]
+
+A PRADARIA DAS RUÍNAS
+Localização: Centro do continente, entre as Montanhas Afiadas ao norte e o Pântano da Melancolia ao sul
+Origem: Foi aqui que as civilizações Élficas e Cinzéus floresceram por eras — e aqui que a Guerra do Céu Vermelho as destruiu. O que sobrou é o que existe agora.
+
+APARÊNCIA
+Pradaria aberta com fragmentos do que foi. As fundações das antigas cidades-estado afloram do solo entre a grama — pedra trabalhada, esculturas parcialmente intactas, arcos que ficaram de pé enquanto tudo ao redor colapsou. A vegetação tomou o resto: trepadeiras sobre pilares que ainda suportam o próprio peso, árvores crescendo dentro de câmaras sem teto, grama alta cobrindo ruas que ainda existem sob ela. Quem caminha pela Pradaria das Ruínas está sempre caminhando sobre história que não pode ver completamente.
+
+Os Elfos que ainda habitam a região esculpiram nas fundações restantes — paredes com ranhuras, fragmentos de beleza dentro da destruição que não conseguiram reparar. Os Cinzéus deixaram frases escritas em pedra que a vegetação progressivamente cobre.
+
+OS HABITANTES
+A Pradaria das Ruínas é habitada por várias comunidades que coexistem com graus variados de tensão e cooperação.
+
+Vaelorn — a maior cidade Élfica da região. Não é grande no sentido de Nova Arcádia, mas é o centro político e cultural dos Elfos que restaram nas pradarias. Construída sobre as fundações de uma cidade-estado que existiu por eras antes de ser destruída na guerra — as paredes novas convivem com as antigas, e é impossível dizer onde termina a ruína e começa a reconstrução. Governada pela mulher do mago mais poderoso da comunidade, como todas as vilas Élficas. Conhecida pelo mercado de itens mágicos e pelo arquivo de memória coletiva Élfica que tenta preservar o que o Éter ainda não corroeu.
+
+Solvhen — a cidade Cinzéu da Pradaria. Reconhecível de longe pela arquitetura sem bordas de proteção e pelos Cinzéus que ficam imóveis em posições que outras raças achariam dolorosas. As paredes estão cobertas de frases em preto sobre cinza — observações filosóficas, questões sem resposta, poemas que continuam de parede em parede. Os pergaminhos armazenados em Solvhen representam séculos de contemplação Cinzéu. É o lugar mais silencioso da Pradaria das Ruínas, e o mais perturbador para visitantes não acostumados com o peso do silêncio Cinzéu.
+
+Vilas humanas menores — espalhadas pela Pradaria, cada uma com sua própria hierarquia e relação com os nômades. Algumas comerciam com os Andarilhos regularmente. Outras se defendem deles com a mesma regularidade.
+
+Vilas Élficas e Cinzéus menores — além de Vaelorn e Solvhen, existem comunidades menores dessas raças espalhadas pela Pradaria, geralmente construídas dentro ou ao redor de ruínas das suas próprias civilizações antigas. São mais isoladas, menos conectadas ao comércio regional, e tendem a ter relações mais distantes com os grupos humanos ao redor.
+
+OS NÔMADES
+Andarilhos da Pradaria e grupos Vrel nômades circulam pela região em rotas que seguem recursos e oportunidades. Alguns grupos têm relações estabelecidas com as vilas fixas — comércio, proteção mútua, troca de informação. Outros atacam oportunisticamente. Grupos mistos de humanos e Vrel existem, com sua própria dinâmica interna onde as memórias embaralhadas dos Vrel e o pragmatismo dos Andarilhos humanos produzem combinações imprevisíveis.
+
+Não há como saber, ao avistar um grupo nômade na Pradaria, se é ameaça ou oportunidade de comércio. Depende do grupo específico, do dia, e às vezes do humor de quem está na frente.
+
+O PERIGO NA PRADARIA
+Diferente das regiões mais ermas de Valoria — a Floresta dos Sussurros, o Ermo Branco, o Deserto de Zhur — a Pradaria das Ruínas foi colonizada demais para as criaturas primordiais. Os males ancestrais recuaram para lugares onde a presença de raças racionais é esparsa. O perigo aqui é moderno: grupos nômades cruéis, disputas entre vilas por recursos, bandidos que usam as ruínas como esconderijo, e a tensão constante entre comunidades fixas e nômades que compartilham o mesmo território sem acordo formal sobre quem tem direito a quê.
+
+O assombramento é o único perigo verdadeiramente antigo que restou — e mesmo os espectros tendem a se concentrar nas ruínas mais isoladas, longe das áreas mais habitadas.
+
+O ASSOMBRAMENTO
+As almas que morreram nas antigas cidades-estado não foram todas para onde as almas vão. Algumas ficaram — por apego, por violência da morte, por Éter concentrado nas ruínas que as ancorou antes que pudessem se dissolver. Elfos que existiram por décadas nas mesmas paredes antes de morrerem subitamente pela ampulheta. Cinzéus que foram devastados pelo luto de perdas que não conseguiram processar. Soldados de todas as raças que morreram nas batalhas da Guerra do Céu Vermelho nas pradarias.
+
+Os espectros da Pradaria das Ruínas não são uniformemente agressivos — alguns são apenas presença, existindo nos fragmentos de onde viveram sem interagir com os vivos. Outros são violentos de formas que refletem quem foram: um Elfo espectral pode ser perturbadoramente belo e mortalmente perigoso ao mesmo tempo. Um Cinzéu espectral pode ficar imóvel por horas e então agir com uma velocidade que sua raça em vida raramente demonstrava.
+
+As ruínas mais antigas têm mais espectros. As áreas onde a vegetação tomou completamente são as mais densas — como se o crescimento natural atraísse o que não pôde crescer além da morte.
+
+
+---
+
+[CATEGORIA: LOCALIZAÇÃO]
+[TAGS: Brekmar, Porto, Pirata, Costa_Oeste]
+
+BREKMAR — O PORTO SEM LEI
+Localização: Costa oeste, entre os territórios Osshari
+Origem: Ninguém fundou Brekmar. Piratas pararam aqui porque a baía era boa e o fundo do mar era profundo o suficiente para navios pesados, e depois pararam de partir porque havia razão para ficar. A cidade cresceu ao redor disso — um armazém virou dois, dois viraram um bairro, o bairro virou uma cidade que ninguém planejou e que por isso mesmo nunca teve planta, nunca teve ordem e nunca precisou de nenhuma das duas.
+
+GEOGRAFIA E ESTRUTURA
+Terra firme na costa rochosa da costa oeste, com docas que avançam para o mar em extensões irregulares — algumas de madeira pesada, algumas de pedra, algumas de material que ninguém soube identificar de onde veio. A cidade sobe da costa em direção às colinas por trás, sem planejamento urbano visível: ruas que seguem onde havia espaço entre as construções, becos que terminam em paredes ou em outras ruas, edificações que encostam umas nas outras e às vezes se sustentam mutuamente de formas que qualquer arquiteto de Nova Arcádia classificaria como acidente esperando para acontecer.
+
+A costa cheira a sal e peixe e alcatrão de navio e algo mais doce que as docas mais antigas acumularam de décadas de comerciar tudo que passa por aqui. À noite, a cidade é iluminada por lanternas de óleo em quantidades que a tornam visível do mar a distância considerável — sinal de que há porto, sinal de que há negócio, sinal de que há pessoas que ficaram acordadas esperando pelo que você traz.
+
+KAHEN E O NÃO-GOVERNO
+Brekmar não tem governo no sentido formal. Tem Kahen.
+
+O Cinzéu ex-escravo que ascendeu pela sangrinomancia opera de um navio ancorado permanentemente nas docas centrais — não o maior navio do porto, não o mais ostensivo, mas o que está sempre lá enquanto outros chegam e partem. Kahen não dorme em terra. A razão que dá quando perguntado é que em terra há muitas variáveis que não consegue controlar. A razão que não dá é que num navio tem rotas de saída em todas as direções.
+
+Sua relação com a cidade não é de governante para súditos — é de árbitro de última instância para uma população que resolveu a maioria das coisas antes de chegar a ele. Quando dois capitães têm disputa que nenhum consegue resolver e que está perturbando o porto, vão ao navio. Quando alguém fez algo que a cidade inteira considerou atravessado demais para ignorar, vai ao navio. As decisões de Kahen são finais — não porque há Legião para enforçá-las, mas porque Kahen é sangrinomante poderoso o suficiente para que contestar suas decisões seja exercício de otimismo.
+
+Ele ouve antes de falar. Sempre. O silêncio antes de uma resposta de Kahen é a parte mais intimidante de qualquer conversa com ele — não por hesitação, mas porque quem está na frente dele sabe que quando ele abre a boca já decidiu.
+
+AS LEIS DE BREKMAR
+Não existem. Brekmar opera em liberdade total — qualquer coisa vai, consequências são pessoais. Isso não significa caos constante. Significa que a ordem que existe é produzida por reputação, força e cálculo de custo-benefício, não por código escrito.
+
+Matar alguém em Brekmar não é proibido. Mas matar alguém que tem amigos em Brekmar é arriscado. Roubar não é proibido. Mas roubar de alguém que pode contratar mais facas que você tem amigos é logisticamente desvantajoso. A violência existe como regulador permanente de comportamento — não a ameaça de autoridade, mas a ameaça concreta de consequências físicas imediatas.
+
+O resultado prático é uma cidade que funciona com eficiência surpreendente para quem a vê de fora. As transações acontecem. Os navios são reparados. As mercadorias chegam e partem. O sistema que sustenta isso não é lei — é reputação acumulada ao longo do tempo, e o custo de destruir reputação em Brekmar é alto o suficiente para que a maioria das pessoas prefira não.
+
+A POPULAÇÃO
+Principalmente humanos — piratas, mercadores, artesãos que servem ao porto, pessoas que chegaram por alguma razão e ficaram por outra. Osshari em número significativo, especialmente nas docas onde a interface entre terra e mar é constante e onde a cultura Osshari de caça e capacidade física tem mercado natural como mão de obra especializada e como segurança de carga. Vrel comerciantes que descobriram que Brekmar é o melhor lugar do mundo para vender informação — porque quem está aqui quer saber o que está acontecendo nos portos que visitou, nas rotas que percorreu, nas cidades que passou. Elfos em menor número, alguns estabelecidos há anos, outros de passagem.
+
+Nenhuma raça tem bairro exclusivo. A cidade cresceu ao redor de quem chegou primeiro em cada ponto, e quem chegou primeiro era qualquer um. Um Cinzéu e um humano podem ter construído as casas ao lado um do outro décadas atrás e os descendentes de ambos ainda moram lá, sem que isso seja considerado incomum por ninguém.
+
+A estratificação que existe não é por raça — é por reputação marítima e por dinheiro, que em Brekmar são frequentemente a mesma coisa.
+
+O QUE SE COMERCIALIZA
+Brekmar é o hub de tudo que não pode passar por Nova Arcádia. O Código de Ferro proíbe uma quantidade significativa de coisas que pessoas querem comprar — e Brekmar existe como ponto de acesso a todas elas, com o benefício adicional de que está suficientemente distante de Nova Arcádia para que a Legião não possa chegar de forma prática.
+
+Drogas que o Código classifica como sedição. Armas que o Código requer licença para comercializar. Informação que certas pessoas pagariam para não circular — e que outras pagariam mais para obter. Artefatos de origem questionável que passaram por muitas mãos antes de chegar aqui. Serviços que Nova Arcádia não oferece oficialmente mas que existem em Brekmar com fachada de nada em particular.
+
+E o comércio legítimo também: navios precisam de reparos, tripulações precisam de suprimentos, capitães precisam de cartas de rota e de informação sobre o que há no caminho. Brekmar oferece tudo isso com eficiência que qualquer porto legítimo teria dificuldade em igualar, porque aqui ninguém pergunta de onde vem o navio ou o que carregava antes.
+
+A RELAÇÃO COM NOVA ARCÁDIA
+Brekmar e Nova Arcádia se ignoram mutuamente com o cuidado de quem decidiu que a ignorância mútua serve a ambos. Valerius não tem alcance marítimo para ameaçar Brekmar de forma prática — a Legião opera em terra e as águas da costa oeste não são território onde Nova Arcádia tem presença. Tentar mudar isso exigiria construir uma frota, o que exigiria recursos e tempo que o Código de Ferro não contemplou.
+
+A Mão Sombria de Nova Arcádia tem relações comerciais com Brekmar. Os venenos de Ophidia que circulam no Beco do Sussurro chegam via Brekmar. Itens que desaparecem de Nova Arcádia às vezes reaparecem aqui. Ninguém fala sobre isso oficialmente. Todo mundo que precisa saber, sabe.
+
+OS RITMOS DA CIDADE
+
+As docas nunca dormem completamente — navios chegam e partem em qualquer hora, e as docas precisam de gente a qualquer hora. O ritmo das docas é determinado pela maré e pelo vento, não pelo relógio. Trabalhadores das docas existem num ciclo diferente do resto da cidade.
+
+O interior da cidade tem seu próprio ritmo. Os armazéns e os mercadores que trabalham de dia, as tavernas que começam a encher quando os armazéns fecham, os estabelecimentos que não têm horário porque o que oferecem não tem horário.
+
+As docas mais antigas, nas extremidades do porto, têm cultura própria — mais Osshari, mais violência casual, mais negócios que não se discutem em voz alta. Quem chega novo a Brekmar aprende rápido que as docas velhas são território diferente das docas novas, e que a distinção importa.
+
+O navio de Kahen fica nas docas centrais — ponto de referência permanente que a cidade inteira usa para orientação. "Antes do navio" e "depois do navio" são direções reais em Brekmar.
+
+SENSAÇÃO DE ESTAR EM BREKMAR
+Liberdade com peso. A ausência de lei não produz leveza — produz a consciência constante de que você é a única proteção de si mesmo e que todos ao redor estão fazendo o mesmo cálculo sobre você que você está fazendo sobre eles. Não é paranoia. É calibração.
+
+O cheiro é de mar e de cidade ao mesmo tempo — sal e alcatrão e comida de múltiplas culturas cozinhando em lugares próximos e fumaça de pipe e às vezes sangue que alguém limpou antes que secasse completamente. O barulho é de madeira rangendo nos navios e de conversas em línguas que você não reconhece completamente e de transações acontecendo o tempo todo ao redor.
+
+É a cidade onde qualquer coisa pode ser comprada e onde qualquer coisa pode ser perdida. Às vezes ao mesmo tempo.
+

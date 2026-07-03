@@ -20,9 +20,10 @@ except ImportError:
 
 # Importa os dados oficiais para garantir consistência
 try:
-    from gamedata import CLASSES
+    from gamedata import CLASSES, load_json_data
 except ImportError:
     CLASSES = {}
+    def load_json_data(_): return {}
 
 # --- MAPA DE ATRIBUTOS (Fallback se o JSON falhar) ---
 CLASS_ATTR_MAP = {
@@ -62,6 +63,59 @@ def _calculate_attack_bonus(class_name: str, attributes: Dict[str, int], level: 
     mod = _get_mod(score)
     prof_bonus = 2 + ((level - 1) // 4)
     return mod + prof_bonus
+
+def find_race(race: str) -> Dict:
+    """Resolve a raça de data/origins.json por id ou nome (case-insensitive)."""
+    races = (load_json_data("origins.json") or {}).get("races", [])
+    key = str(race or "").strip().lower()
+    for r in races:
+        if key in (str(r.get("id", "")).lower(), str(r.get("name", "")).lower()):
+            return r
+    return {}
+
+
+def apply_racial_traits(sheet: Dict[str, Any], race: str) -> Dict[str, Any]:
+    """
+    Aplica os traits mecânicos da raça (Fase 2.5b) sobre a ficha, em Python
+    determinístico — pós-LLM, nunca confiando na IA para números.
+    Muta e retorna a própria `sheet`.
+    """
+    race_data = find_race(race)
+    traits = race_data.get("traits", []) or []
+    names: List[str] = []
+    resists: List[str] = []
+    save_bonus: Dict[str, int] = {}
+
+    for t in traits:
+        names.append(t.get("name", t.get("id", "?")))
+        fx = t.get("effects", {}) or {}
+        for attr, inc in (fx.get("attr_bonus") or {}).items():
+            k = normalize_attr(attr)
+            attrs = sheet.setdefault("attributes", {})
+            attrs[k] = int(attrs.get(k, 10)) + int(inc)
+        for field, key in (("hp_bonus", "hp"), ("mana_bonus", "mana"), ("stamina_bonus", "stamina")):
+            inc = int(fx.get(field, 0) or 0)
+            if inc:
+                sheet[key] = int(sheet.get(key, 0)) + inc
+                sheet[f"max_{key}"] = int(sheet.get(f"max_{key}", 0)) + inc
+        if fx.get("defense_bonus"):
+            sheet["defense"] = int(sheet.get("defense", 10)) + int(fx["defense_bonus"])
+        if fx.get("gold_bonus"):
+            sheet["gold"] = int(sheet.get("gold", 0)) + int(fx["gold_bonus"])
+        for item in fx.get("start_items") or []:
+            inv = sheet.setdefault("inventory", [])
+            if item not in inv:
+                inv.append(item)
+        resists.extend(str(c).lower() for c in fx.get("condition_resist") or [])
+        for attr, inc in (fx.get("save_bonus") or {}).items():
+            k = normalize_attr(attr)
+            save_bonus[k] = save_bonus.get(k, 0) + int(inc)
+
+    sheet["racial_traits"] = names
+    sheet["condition_resists"] = resists
+    sheet["racial_save_bonus"] = save_bonus
+    return sheet
+
 
 def _get_class_data(class_name: str) -> Dict:
     """Retorna os dados oficiais da classe ou um padrão genérico."""
@@ -147,14 +201,8 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
     # 4. MONTAGEM FINAL (MERGE)
     # A lista de habilidades começa com a PASSIVA OFICIAL do JSON
     final_abilities = [f"[Passiva] {official_passive}"] + stats_data.get("flavor_abilities", [])
-    
-    # Cálculo de Defesa (Simples: 10 + Dex Mod, ou valor base da classe se for maior)
-    dex_mod = _get_mod(stats_data["attributes"].get("dex", 10))
-    base_def = class_data.get("base_stats", {}).get("defense", 10)
-    # Se a classe usa armadura pesada (def alta no JSON), mantemos. Se for leve, usa Dex.
-    final_defense = max(base_def, 10 + dex_mod)
 
-    return {
+    sheet = {
         "name": name,
         "class_name": p_class,
         "race": race,
@@ -168,14 +216,26 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
         "max_stamina": final_stamina,
         "mana": final_mana,
         "max_mana": final_mana,
-        "defense": final_defense,
         "attributes": stats_data["attributes"],
         "inventory": stats_data["inventory"],
         "known_abilities": final_abilities, # <--- AQUI ESTÁ A CORREÇÃO
-        "attack_bonus": _calculate_attack_bonus(p_class, stats_data["attributes"], level),
         "level": level,
         "xp": 0
     }
+
+    # 5. TRAITS RACIAIS (Fase 2.5b) — determinístico, ANTES de defesa/ataque
+    #    (bônus racial de atributo deve refletir nos mods derivados).
+    apply_racial_traits(sheet, race)
+
+    # Cálculo de Defesa (Simples: 10 + Dex Mod, ou valor base da classe se for maior)
+    dex_mod = _get_mod(sheet["attributes"].get("dex", 10))
+    base_def = class_data.get("base_stats", {}).get("defense", 10)
+    # Se a classe usa armadura pesada (def alta no JSON), mantemos. Se for leve, usa Dex.
+    # defense_bonus racial (se houver) já foi somado em sheet["defense"] — preserva.
+    racial_def_bonus = int(sheet.get("defense", 0) or 0) - 10 if "defense" in sheet else 0
+    sheet["defense"] = max(base_def, 10 + dex_mod) + max(0, racial_def_bonus)
+    sheet["attack_bonus"] = _calculate_attack_bonus(p_class, sheet["attributes"], level)
+    return sheet
 
 def _get_region_lore(region_name: str) -> str:
     if not RAG_AVAILABLE: return ""

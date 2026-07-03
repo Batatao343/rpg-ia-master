@@ -172,7 +172,7 @@ def _route_decision(model, messages):
                          "confidence": 0.8, "target": None, "loot_context": None})
 
 
-_MOCK_FACTION_ID = "selo_palido"  # id real de data/factions.json (modo simulado)
+_MOCK_FACTION_ID = "legiao_ferro"  # id real de data/factions.json (modo simulado)
 
 
 def _story_update(model, messages):
@@ -248,8 +248,8 @@ def _npc_response(model, messages):
     # Não-onisciência: se o jogador perguntar de fações/rumores, o NPC "revela" algo (offline).
     txt = _last_human(messages).lower()
     reveals = []
-    if any(k in txt for k in ("facç", "faccao", "facc", "rumor", "quem manda", "selo", "ordem")):
-        reveals = [{"faction_id": "selo_palido", "reveal_level": "objetivo"}]
+    if any(k in txt for k in ("facç", "faccao", "facc", "rumor", "quem manda", "legi", "ordem")):
+        reveals = [{"faction_id": "legiao_ferro", "reveal_level": "objetivo"}]
     return _fill(model, {"dialogue": random.choice(_NPC_LINES),
                          "action_description": random.choice(_NPC_ACTIONS),
                          "memory_update": "Conversou com o herói.",

@@ -24,7 +24,15 @@
                 "damage": "1d4+2 piercing + doença"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "nova_arcadia"
+        ],
+        "behavior": {
+            "profile": "covarde",
+            "flee_below": 0.6,
+            "pack_morale": false
+        }
     },
     "enemy_degolador_mao_sombria": {
         "id": "enemy_degolador_mao_sombria",
@@ -60,7 +68,17 @@
         "loot": [
             "moeda_ouro",
             "adaga_ferro"
-        ]
+        ],
+        "regions": [
+            "nova_arcadia",
+            "brekmar"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.35,
+            "pack_morale": true
+        },
+        "faction": "mao_sombria"
     },
     "enemy_soldado_legiao_ferro": {
         "id": "enemy_soldado_legiao_ferro",
@@ -96,7 +114,16 @@
         "loot": [
             "espada_curta",
             "moeda_ouro"
-        ]
+        ],
+        "regions": [
+            "nova_arcadia"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.3,
+            "pack_morale": true
+        },
+        "faction": "legiao_ferro"
     },
     "enemy_iniciado_chama_azul": {
         "id": "enemy_iniciado_chama_azul",
@@ -131,7 +158,14 @@
         ],
         "loot": [
             "moeda_ouro"
-        ]
+        ],
+        "regions": [
+            "nova_arcadia"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        },
+        "faction": "filhos_chama_azul"
     },
     "enemy_devorador_sol_zhur": {
         "id": "enemy_devorador_sol_zhur",
@@ -166,7 +200,16 @@
         ],
         "loot": [
             "adaga_ferro"
-        ]
+        ],
+        "regions": [
+            "deserto_zhur"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.25,
+            "pack_morale": true
+        },
+        "faction": "tribos_devoradores_sol"
     },
     "enemy_escorpiao_cristal": {
         "id": "enemy_escorpiao_cristal",
@@ -199,7 +242,13 @@
                 "damage": "1d8+4 piercing + paralisia (Con Save DC 13)"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "deserto_zhur"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
     },
     "enemy_mumia_de_po": {
         "id": "enemy_mumia_de_po",
@@ -228,7 +277,13 @@
         ],
         "loot": [
             "moeda_ouro"
-        ]
+        ],
+        "regions": [
+            "deserto_zhur"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_hospedeiro_fungico": {
         "id": "enemy_hospedeiro_fungico",
@@ -261,7 +316,13 @@
                 "damage": "1d6 poison em área ao morrer"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "selva_xylos"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_vinha_estranguladora": {
         "id": "enemy_vinha_estranguladora",
@@ -288,7 +349,14 @@
                 "damage": "1d8+3 bludgeoning + agarrar"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "selva_xylos",
+            "floresta_sussurros"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_guerreiro_bjorn": {
         "id": "enemy_guerreiro_bjorn",
@@ -317,7 +385,16 @@
         ],
         "loot": [
             "moeda_ouro"
-        ]
+        ],
+        "regions": [
+            "skallgard"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.25,
+            "pack_morale": true
+        },
+        "faction": "clas_combate"
     },
     "enemy_lobo_invernal": {
         "id": "enemy_lobo_invernal",
@@ -346,7 +423,15 @@
         ],
         "loot": [
             "material_pele_lobo"
-        ]
+        ],
+        "regions": [
+            "skallgard"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.3,
+            "pack_morale": true
+        }
     },
     "enemy_sentinela_ferro": {
         "id": "enemy_sentinela_ferro",
@@ -379,7 +464,14 @@
                 "damage": "2d6 fire (Dex Save DC 13)"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "nova_arcadia",
+            "montanhas_afiadas"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_horror_esgoto": {
         "id": "enemy_horror_esgoto",
@@ -406,7 +498,13 @@
                 "damage": "1d6+3 bludgeoning + 1d6 acid"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "nova_arcadia"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_necromante_renegado": {
         "id": "enemy_necromante_renegado",
@@ -441,7 +539,16 @@
         ],
         "loot": [
             "pocao_cura"
-        ]
+        ],
+        "regions": [
+            "pradaria_ruinas",
+            "pantano_melancolia"
+        ],
+        "behavior": {
+            "profile": "covarde",
+            "flee_below": 0.6,
+            "pack_morale": false
+        }
     },
     "enemy_esqueleto_legiao_antiga": {
         "id": "enemy_esqueleto_legiao_antiga",
@@ -468,7 +575,13 @@
                 "damage": "1d6+2 slashing"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "pradaria_ruinas"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_espectro_lamento": {
         "id": "enemy_espectro_lamento",
@@ -495,7 +608,14 @@
                 "damage": "3d6 necrotic"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "pradaria_ruinas",
+            "pantano_melancolia"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_gargula_ferro": {
         "id": "enemy_gargula_ferro",
@@ -522,7 +642,13 @@
                 "damage": "1d6+2 slashing"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "nova_arcadia"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_assassino_cinzeu": {
         "id": "enemy_assassino_cinzeu",
@@ -549,7 +675,16 @@
                 "damage": "1d4+4 piercing + 2d6 sneak"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "pradaria_ruinas",
+            "nova_arcadia"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.4,
+            "pack_morale": false
+        }
     },
     "enemy_urso_coruja_mutante": {
         "id": "enemy_urso_coruja_mutante",
@@ -582,7 +717,13 @@
                 "damage": "1d10+5 piercing"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "floresta_sussurros"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
     },
     "enemy_elemental_fogo_poluido": {
         "id": "enemy_elemental_fogo_poluido",
@@ -609,7 +750,13 @@
                 "damage": "2d6 fire + 1d4 poison"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "nova_arcadia"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_boss_valerius": {
         "id": "enemy_boss_valerius",
@@ -644,7 +791,14 @@
         ],
         "loot": [
             "unique_loot_valerius"
-        ]
+        ],
+        "regions": [
+            "nova_arcadia"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        },
+        "faction": "legiao_ferro"
     },
     "enemy_boss_vibora": {
         "id": "enemy_boss_vibora",
@@ -679,7 +833,16 @@
         ],
         "loot": [
             "unique_loot_vibora"
-        ]
+        ],
+        "regions": [
+            "nova_arcadia"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.15,
+            "pack_morale": false
+        },
+        "faction": "mao_sombria"
     },
     "enemy_boss_general_escorpiao": {
         "id": "enemy_boss_general_escorpiao",
@@ -714,7 +877,13 @@
         ],
         "loot": [
             "unique_loot_general_escorpiao"
-        ]
+        ],
+        "regions": [
+            "deserto_zhur"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
     },
     "enemy_boss_arauto_nevoa": {
         "id": "enemy_boss_arauto_nevoa",
@@ -749,7 +918,14 @@
         ],
         "loot": [
             "unique_loot_arauto"
-        ]
+        ],
+        "regions": [
+            "pantano_melancolia",
+            "skallgard"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_gigante_gelo_norte": {
         "id": "enemy_gigante_gelo_norte",
@@ -784,7 +960,13 @@
         ],
         "loot": [
             "unique_loot_gigante"
-        ]
+        ],
+        "regions": [
+            "skallgard"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
     },
     "enemy_mimico_bau": {
         "id": "enemy_mimico_bau",
@@ -813,7 +995,14 @@
         ],
         "loot": [
             "moeda_ouro"
-        ]
+        ],
+        "regions": [
+            "montanhas_afiadas",
+            "aethelgard"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_basilisco_caverna": {
         "id": "enemy_basilisco_caverna",
@@ -840,7 +1029,13 @@
                 "damage": "2d6+3 piercing"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "montanhas_afiadas"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
     },
     "enemy_troll_ponte": {
         "id": "enemy_troll_ponte",
@@ -869,7 +1064,14 @@
         ],
         "loot": [
             "moeda_ouro"
-        ]
+        ],
+        "regions": [
+            "montanhas_afiadas",
+            "pradaria_ruinas"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
     },
     "enemy_golem_lixo": {
         "id": "enemy_golem_lixo",
@@ -896,7 +1098,13 @@
                 "damage": "2d8+4 bludgeoning"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "nova_arcadia"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_sombra_espreitadora": {
         "id": "enemy_sombra_espreitadora",
@@ -923,7 +1131,16 @@
                 "damage": "2d6 necrotic"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "floresta_sussurros",
+            "pradaria_ruinas"
+        ],
+        "behavior": {
+            "profile": "covarde",
+            "flee_below": 0.7,
+            "pack_morale": false
+        }
     },
     "enemy_verme_areia_jovem": {
         "id": "enemy_verme_areia_jovem",
@@ -950,7 +1167,13 @@
                 "damage": "2d8+4 piercing"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "deserto_zhur"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
     },
     "enemy_djinn_menor": {
         "id": "enemy_djinn_menor",
@@ -977,7 +1200,15 @@
                 "damage": "2d6+4 slashing + 1d6 lightning"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "deserto_zhur"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.35,
+            "pack_morale": false
+        }
     },
     "enemy_esqueleto_mago": {
         "id": "enemy_esqueleto_mago",
@@ -1010,7 +1241,14 @@
                 "damage": "1d8 lightning"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "aethelgard",
+            "pradaria_ruinas"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_nomade_canibal": {
         "id": "enemy_nomade_canibal",
@@ -1039,7 +1277,16 @@
         ],
         "loot": [
             "adaga_ferro"
-        ]
+        ],
+        "regions": [
+            "pradaria_ruinas"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.4,
+            "pack_morale": true
+        },
+        "faction": "bandos_nomades"
     },
     "enemy_yeti": {
         "id": "enemy_yeti",
@@ -1066,7 +1313,14 @@
                 "damage": "1d6+4 slashing + 1d6 cold"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "skallgard",
+            "montanhas_afiadas"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
     },
     "enemy_wyvern_jovem": {
         "id": "enemy_wyvern_jovem",
@@ -1093,7 +1347,14 @@
                 "damage": "2d6+4 piercing + poison"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "montanhas_afiadas",
+            "skallgard"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
     },
     "enemy_bandido_capitao": {
         "id": "enemy_bandido_capitao",
@@ -1129,7 +1390,16 @@
         "loot": [
             "moeda_ouro",
             "pocao_cura"
-        ]
+        ],
+        "regions": [
+            "pradaria_ruinas",
+            "brekmar"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.3,
+            "pack_morale": true
+        }
     },
     "enemy_morcego_vampiro": {
         "id": "enemy_morcego_vampiro",
@@ -1156,7 +1426,15 @@
                 "damage": "1d4+3 piercing"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "montanhas_afiadas"
+        ],
+        "behavior": {
+            "profile": "covarde",
+            "flee_below": 0.6,
+            "pack_morale": false
+        }
     },
     "enemy_aranha_lobo": {
         "id": "enemy_aranha_lobo",
@@ -1183,7 +1461,15 @@
                 "damage": "1d6+3 piercing"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "floresta_sussurros"
+        ],
+        "behavior": {
+            "profile": "covarde",
+            "flee_below": 0.5,
+            "pack_morale": false
+        }
     },
     "enemy_zumbi_blindado": {
         "id": "enemy_zumbi_blindado",
@@ -1210,7 +1496,14 @@
                 "damage": "1d6+2 bludgeoning"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "pantano_melancolia",
+            "aethelgard"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_polvo_esgoto": {
         "id": "enemy_polvo_esgoto",
@@ -1237,7 +1530,13 @@
                 "damage": "2d6+3 bludgeoning + agarrar"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "nova_arcadia"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
     },
     "enemy_fantasma": {
         "id": "enemy_fantasma",
@@ -1264,7 +1563,14 @@
                 "damage": "4d6 necrotic"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "aethelgard",
+            "pradaria_ruinas"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_observador_menor": {
         "id": "enemy_observador_menor",
@@ -1297,7 +1603,15 @@
                 "damage": "1d1"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "montanhas_afiadas"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.5,
+            "pack_morale": false
+        }
     },
     "enemy_minotauro_esqueleto": {
         "id": "enemy_minotauro_esqueleto",
@@ -1324,7 +1638,13 @@
                 "damage": "2d12+4 slashing"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "montanhas_afiadas"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_golem_carne": {
         "id": "enemy_golem_carne",
@@ -1351,7 +1671,13 @@
                 "damage": "2d8+4 bludgeoning"
             }
         ],
-        "loot": []
+        "loot": [],
+        "regions": [
+            "aethelgard"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_aranha_de_cristal": {
         "name": "Aranha de Cristal",
@@ -1396,70 +1722,16 @@
             "1d2 Bolsas de Veneno (Poison, DC 14)"
         ],
         "status": "ativo",
-        "id": "enemy_aranha_de_cristal"
+        "id": "enemy_aranha_de_cristal",
+        "regions": [
+            "deserto_zhur"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
     },
     "enemy_lobo_sombrio": {
         "name": "Lobo Sombrio",
-        "description": "Criatura hostil das ruínas.",
-        "type": "Minion",
-        "hp": 17,
-        "max_hp": 17,
-        "ac": 12,
-        "attacks": [
-            {
-                "name": "Ataque",
-                "type": "melee",
-                "bonus": 3,
-                "damage": "1d6+1",
-                "range": "1.5m",
-                "save_dc": null
-            }
-        ],
-        "attributes": {
-            "str": 12,
-            "dex": 11,
-            "con": 11,
-            "int": 6,
-            "wis": 8,
-            "cha": 6
-        },
-        "abilities": [],
-        "loot": [],
-        "status": "ativo",
-        "id": "enemy_lobo_sombrio"
-    },
-    "enemy_carniçal": {
-        "name": "Carniçal",
-        "description": "Criatura hostil das ruínas.",
-        "type": "Minion",
-        "hp": 16,
-        "max_hp": 16,
-        "ac": 12,
-        "attacks": [
-            {
-                "name": "Ataque",
-                "type": "melee",
-                "bonus": 3,
-                "damage": "1d6+1",
-                "range": "1.5m",
-                "save_dc": null
-            }
-        ],
-        "attributes": {
-            "str": 12,
-            "dex": 11,
-            "con": 11,
-            "int": 6,
-            "wis": 8,
-            "cha": 6
-        },
-        "abilities": [],
-        "loot": [],
-        "status": "ativo",
-        "id": "enemy_carniçal"
-    },
-    "enemy_esqueleto": {
-        "name": "Esqueleto",
         "description": "Criatura hostil das ruínas.",
         "type": "Minion",
         "hp": 26,
@@ -1485,8 +1757,86 @@
         },
         "abilities": [],
         "loot": [],
+        "behavior": {
+            "profile": "feroz"
+        },
+        "regions": [],
         "status": "ativo",
-        "id": "enemy_esqueleto"
+        "id": "enemy_lobo_sombrio"
+    },
+    "enemy_carniçal": {
+        "name": "Carniçal",
+        "description": "Criatura hostil das ruínas.",
+        "type": "Minion",
+        "hp": 14,
+        "max_hp": 14,
+        "ac": 12,
+        "attacks": [
+            {
+                "name": "Ataque",
+                "type": "melee",
+                "bonus": 3,
+                "damage": "1d6+1",
+                "range": "1.5m",
+                "save_dc": null
+            }
+        ],
+        "attributes": {
+            "str": 12,
+            "dex": 11,
+            "con": 11,
+            "int": 6,
+            "wis": 8,
+            "cha": 6
+        },
+        "abilities": [],
+        "loot": [],
+        "status": "ativo",
+        "id": "enemy_carniçal",
+        "regions": [
+            "pantano_melancolia",
+            "pradaria_ruinas"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
+    },
+    "enemy_esqueleto": {
+        "name": "Esqueleto",
+        "description": "Criatura hostil das ruínas.",
+        "type": "Minion",
+        "hp": 25,
+        "max_hp": 25,
+        "ac": 12,
+        "attacks": [
+            {
+                "name": "Ataque",
+                "type": "melee",
+                "bonus": 3,
+                "damage": "1d6+1",
+                "range": "1.5m",
+                "save_dc": null
+            }
+        ],
+        "attributes": {
+            "str": 12,
+            "dex": 11,
+            "con": 11,
+            "int": 6,
+            "wis": 8,
+            "cha": 6
+        },
+        "abilities": [],
+        "loot": [],
+        "status": "ativo",
+        "id": "enemy_esqueleto",
+        "regions": [
+            "pradaria_ruinas",
+            "aethelgard"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
     },
     "enemy_garrick,_o_silenciador": {
         "name": "Garrick, o Silenciador",
@@ -1541,6 +1891,1332 @@
             "2x Veneno de Contato (1d6 dano venenoso extra)"
         ],
         "status": "ativo",
-        "id": "enemy_garrick,_o_silenciador"
+        "id": "enemy_garrick,_o_silenciador",
+        "regions": [
+            "nova_arcadia"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.25,
+            "pack_morale": false
+        }
+    },
+    "enemy_goblin": {
+        "name": "Goblin",
+        "description": "Criatura hostil das ruínas.",
+        "type": "Minion",
+        "hp": 14,
+        "max_hp": 14,
+        "ac": 12,
+        "attacks": [
+            {
+                "name": "Ataque",
+                "type": "melee",
+                "bonus": 3,
+                "damage": "1d6+1",
+                "range": "1.5m",
+                "save_dc": null
+            }
+        ],
+        "attributes": {
+            "str": 12,
+            "dex": 11,
+            "con": 11,
+            "int": 6,
+            "wis": 8,
+            "cha": 6
+        },
+        "abilities": [],
+        "loot": [],
+        "behavior": {
+            "profile": "feroz"
+        },
+        "regions": [],
+        "status": "ativo",
+        "id": "enemy_goblin"
+    },
+    "enemy_bandido": {
+        "name": "Bandido",
+        "description": "Criatura hostil das ruínas.",
+        "type": "Minion",
+        "hp": 13,
+        "max_hp": 13,
+        "ac": 12,
+        "attacks": [
+            {
+                "name": "Ataque",
+                "type": "melee",
+                "bonus": 3,
+                "damage": "1d6+1",
+                "range": "1.5m",
+                "save_dc": null
+            }
+        ],
+        "attributes": {
+            "str": 12,
+            "dex": 11,
+            "con": 11,
+            "int": 6,
+            "wis": 8,
+            "cha": 6
+        },
+        "abilities": [],
+        "loot": [],
+        "behavior": {
+            "profile": "feroz"
+        },
+        "regions": [],
+        "status": "ativo",
+        "id": "enemy_bandido"
+    },
+    "mon_urso_tita": {
+        "id": "mon_urso_tita",
+        "name": "Urso-Titã",
+        "type": "BOSS",
+        "description": "Colosso do Ermo Branco, pelagem branca sobre músculo antigo. Não conhece o conceito de fuga: luta até a morte porque nada no gelo jamais o fez recuar.",
+        "hp": 140,
+        "max_hp": 140,
+        "ac": 15,
+        "status": "ativo",
+        "attributes": {
+            "str": 22,
+            "dex": 8,
+            "con": 20,
+            "int": 2,
+            "wis": 12,
+            "cha": 8
+        },
+        "attacks": [
+            {
+                "name": "Patada Esmagadora",
+                "type": "melee",
+                "bonus": 9,
+                "damage": "2d10+6"
+            },
+            {
+                "name": "Mordida de Titã",
+                "type": "melee",
+                "bonus": 8,
+                "damage": "2d8+6"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "skallgard"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
+    },
+    "mon_lobo_de_vidro": {
+        "id": "mon_lobo_de_vidro",
+        "name": "Lobo de Vidro",
+        "type": "Minion",
+        "description": "Predador do Ermo com pelagem translúcida que confunde o olho na neve. Caça em matilha; quando a matilha quebra, dispersa.",
+        "hp": 24,
+        "max_hp": 24,
+        "ac": 14,
+        "status": "ativo",
+        "attributes": {
+            "str": 12,
+            "dex": 16,
+            "con": 12,
+            "int": 4,
+            "wis": 12,
+            "cha": 6
+        },
+        "attacks": [
+            {
+                "name": "Mordida Cristalina",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d8+2"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "skallgard"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.3,
+            "pack_morale": true
+        }
+    },
+    "mon_verme_do_gelo": {
+        "id": "mon_verme_do_gelo",
+        "name": "Verme do Gelo",
+        "type": "Elite",
+        "description": "Escava sob a neve compacta e ataca de baixo. O frio dentro dele é condição do Abismo, não temperatura.",
+        "hp": 70,
+        "max_hp": 70,
+        "ac": 14,
+        "status": "ativo",
+        "attributes": {
+            "str": 18,
+            "dex": 8,
+            "con": 18,
+            "int": 2,
+            "wis": 8,
+            "cha": 4
+        },
+        "attacks": [
+            {
+                "name": "Investida Subterrânea",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "2d8+4"
+            },
+            {
+                "name": "Sopro Gélido",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "2d6 cold"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "skallgard"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
+    },
+    "enemy_renegado_ermo": {
+        "id": "enemy_renegado_ermo",
+        "name": "Renegado do Ermo",
+        "type": "Minion",
+        "description": "Ex-caçador exilado de Skallgard que sobreviveu ao Ermo e voltou selvagem. Pensa como a cidade que o expulsou — e ataca como quem não tem mais nada a perder, até a matemática dizer o contrário.",
+        "hp": 28,
+        "max_hp": 28,
+        "ac": 14,
+        "status": "ativo",
+        "attributes": {
+            "str": 14,
+            "dex": 14,
+            "con": 14,
+            "int": 10,
+            "wis": 12,
+            "cha": 8
+        },
+        "attacks": [
+            {
+                "name": "Machado de Caçada",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d8+3"
+            },
+            {
+                "name": "Arremesso de Arpão",
+                "type": "ranged",
+                "bonus": 4,
+                "damage": "1d6+2"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "skallgard"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.35,
+            "pack_morale": true
+        },
+        "faction": "renegados_ermo"
+    },
+    "mon_sanguessuga_braco": {
+        "id": "mon_sanguessuga_braco",
+        "name": "Sanguessuga-Braço",
+        "type": "Minion",
+        "description": "Sanguessuga do tamanho de um braço humano que detecta calor através da lama e não solta enquanto houver sangue.",
+        "hp": 12,
+        "max_hp": 12,
+        "ac": 10,
+        "status": "ativo",
+        "attributes": {
+            "str": 10,
+            "dex": 12,
+            "con": 14,
+            "int": 1,
+            "wis": 8,
+            "cha": 2
+        },
+        "attacks": [
+            {
+                "name": "Ventosa Dilacerante",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d6+1 + sangramento"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "pantano_melancolia"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
+    },
+    "mon_sapo_boi_acido": {
+        "id": "mon_sapo_boi_acido",
+        "name": "Sapo-Boi Ácido",
+        "type": "Minion",
+        "description": "Do tamanho de um cão médio, cospe ácido concentrado. O Éter do pântano o fez crescer — e o deixou sem medo.",
+        "hp": 20,
+        "max_hp": 20,
+        "ac": 12,
+        "status": "ativo",
+        "attributes": {
+            "str": 12,
+            "dex": 12,
+            "con": 14,
+            "int": 2,
+            "wis": 8,
+            "cha": 4
+        },
+        "attacks": [
+            {
+                "name": "Cusparada Ácida",
+                "type": "ranged",
+                "bonus": 4,
+                "damage": "1d8+2 acid"
+            },
+            {
+                "name": "Bote",
+                "type": "melee",
+                "bonus": 3,
+                "damage": "1d6+1"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "pantano_melancolia"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
+    },
+    "mon_afogado_da_batalha": {
+        "id": "mon_afogado_da_batalha",
+        "name": "Afogado da Batalha",
+        "type": "Elite",
+        "description": "Morto da batalha final contra Malagor, ancorado no Éter concentrado. Não tem inteligência — tem número e a resistência que o Éter lhe dá.",
+        "hp": 45,
+        "max_hp": 45,
+        "ac": 12,
+        "status": "ativo",
+        "attributes": {
+            "str": 16,
+            "dex": 6,
+            "con": 16,
+            "int": 2,
+            "wis": 6,
+            "cha": 4
+        },
+        "attacks": [
+            {
+                "name": "Agarrão Afogado",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d10+3"
+            },
+            {
+                "name": "Peso da Melancolia",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d6 + melancolia"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "pantano_melancolia"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
+    },
+    "enemy_druida_renegado": {
+        "id": "enemy_druida_renegado",
+        "name": "Druida-Renegado",
+        "type": "Elite",
+        "description": "Ex-membro do Ciclo Cinzento convertido pela melancolia. Guia vítimas para a névoa densa falando de misericórdia — e recua quando a misericórdia encontra resistência.",
+        "hp": 38,
+        "max_hp": 38,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 10,
+            "dex": 12,
+            "con": 12,
+            "int": 14,
+            "wis": 16,
+            "cha": 14
+        },
+        "attacks": [
+            {
+                "name": "Vinha do Afundamento",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d8+2"
+            },
+            {
+                "name": "Sussurro da Água",
+                "type": "ranged",
+                "bonus": 5,
+                "damage": "2d4 psychic + melancolia"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "pantano_melancolia"
+        ],
+        "behavior": {
+            "profile": "covarde",
+            "flee_below": 0.55,
+            "pack_morale": false
+        },
+        "faction": "druidas_renegados"
+    },
+    "mon_urso_de_espinha": {
+        "id": "mon_urso_de_espinha",
+        "name": "Urso-de-Espinha",
+        "type": "Elite",
+        "description": "Predador alfa da floresta: pelagem caída, pele purulenta, espinhos de osso. Suas garras fazem feridas que não fecham. Quer porradaria até a morte — fugir não existe no que restou da mente dele.",
+        "hp": 90,
+        "max_hp": 90,
+        "ac": 14,
+        "status": "ativo",
+        "attributes": {
+            "str": 20,
+            "dex": 10,
+            "con": 18,
+            "int": 2,
+            "wis": 10,
+            "cha": 6
+        },
+        "attacks": [
+            {
+                "name": "Garras Purulentas",
+                "type": "melee",
+                "bonus": 7,
+                "damage": "2d8+5 + sangramento"
+            },
+            {
+                "name": "Abraço de Espinhos",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "2d6+5"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "floresta_sussurros"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
+    },
+    "mon_serpente_raiz": {
+        "id": "mon_serpente_raiz",
+        "name": "Serpente-Raiz",
+        "type": "Minion",
+        "description": "Indistinguível das raízes até se mover. O veneno carrega um eco do escuro de Thessavar.",
+        "hp": 16,
+        "max_hp": 16,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 10,
+            "dex": 16,
+            "con": 10,
+            "int": 2,
+            "wis": 10,
+            "cha": 4
+        },
+        "attacks": [
+            {
+                "name": "Bote Venenoso",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d6+2 + veneno"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "floresta_sussurros"
+        ],
+        "behavior": {
+            "profile": "covarde",
+            "flee_below": 0.5,
+            "pack_morale": false
+        }
+    },
+    "mon_vipera_flora": {
+        "id": "mon_vipera_flora",
+        "name": "Vipera-Flora",
+        "type": "Elite",
+        "description": "Cipó muscular que enrola no pescoço, puxa para a copa e drena fluidos por dias. Nem planta nem animal — e nenhuma das duas metades sabe fugir.",
+        "hp": 55,
+        "max_hp": 55,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 18,
+            "dex": 12,
+            "con": 16,
+            "int": 1,
+            "wis": 10,
+            "cha": 2
+        },
+        "attacks": [
+            {
+                "name": "Enforcamento Vegetal",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "1d10+4"
+            },
+            {
+                "name": "Drenagem",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d6+2 + drena vida"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "selva_xylos"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
+    },
+    "mon_predador_crescido": {
+        "id": "mon_predador_crescido",
+        "name": "Predador Crescido",
+        "type": "Elite",
+        "description": "Mamífero de caça que o ciclo acelerado alimentou além do tamanho possível. A fome cresceu junto.",
+        "hp": 75,
+        "max_hp": 75,
+        "ac": 14,
+        "status": "ativo",
+        "attributes": {
+            "str": 19,
+            "dex": 14,
+            "con": 16,
+            "int": 3,
+            "wis": 12,
+            "cha": 6
+        },
+        "attacks": [
+            {
+                "name": "Mandíbula Acelerada",
+                "type": "melee",
+                "bonus": 7,
+                "damage": "2d8+4"
+            },
+            {
+                "name": "Garra Dupla",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "2d6+4"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "selva_xylos"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
+    },
+    "mon_sentinela_hospedeiro": {
+        "id": "mon_sentinela_hospedeiro",
+        "name": "Sentinela Hospedeiro",
+        "type": "Elite",
+        "description": "Hospedeiro dedicado à defesa do território da colmeia. Luta com coordenação de muitos; recua quando a colmeia decide que o custo não vale.",
+        "hp": 42,
+        "max_hp": 42,
+        "ac": 15,
+        "status": "ativo",
+        "attributes": {
+            "str": 16,
+            "dex": 14,
+            "con": 14,
+            "int": 10,
+            "wis": 14,
+            "cha": 8
+        },
+        "attacks": [
+            {
+                "name": "Lança de Madeira Tratada",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "1d10+3"
+            },
+            {
+                "name": "Nuvem de Esporos",
+                "type": "ranged",
+                "bonus": 5,
+                "damage": "1d6 + esporos"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "selva_xylos"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.3,
+            "pack_morale": true
+        },
+        "faction": "colmeia_hospedeiros"
+    },
+    "mon_afogado_de_aethelgard": {
+        "id": "mon_afogado_de_aethelgard",
+        "name": "Afogado de Aethelgard",
+        "type": "Elite",
+        "description": "O que restou de quem estava na cidade quando o aprendiz agiu. Thessrak ainda fala através deles — e o que fala não recua.",
+        "hp": 48,
+        "max_hp": 48,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 16,
+            "dex": 8,
+            "con": 16,
+            "int": 6,
+            "wis": 8,
+            "cha": 6
+        },
+        "attacks": [
+            {
+                "name": "Toque Afogado",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "1d10+3"
+            },
+            {
+                "name": "Eco de Thessrak",
+                "type": "ranged",
+                "bonus": 5,
+                "damage": "2d4 psychic"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "aethelgard"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
+    },
+    "mon_mergulhadores_saqueadores": {
+        "id": "mon_mergulhadores_saqueadores",
+        "name": "Mergulhador Saqueador",
+        "type": "Minion",
+        "description": "Caça-tesouros que arrisca as partes rasas das ruínas. Corajoso até a primeira sombra errada na água.",
+        "hp": 22,
+        "max_hp": 22,
+        "ac": 12,
+        "status": "ativo",
+        "attributes": {
+            "str": 12,
+            "dex": 14,
+            "con": 12,
+            "int": 10,
+            "wis": 10,
+            "cha": 8
+        },
+        "attacks": [
+            {
+                "name": "Arpão de Mergulho",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d8+2"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "aethelgard"
+        ],
+        "behavior": {
+            "profile": "covarde",
+            "flee_below": 0.6,
+            "pack_morale": true
+        }
+    },
+    "enemy_cultista_destilacao": {
+        "id": "enemy_cultista_destilacao",
+        "name": "Cultista da Destilação",
+        "type": "Elite",
+        "description": "Mago proibido que estuda os Afogados como professores e vê pessoas como matéria-prima de almas. Brilhante, moralmente morto — e pragmático quando o ritual dá errado.",
+        "hp": 36,
+        "max_hp": 36,
+        "ac": 12,
+        "status": "ativo",
+        "attributes": {
+            "str": 8,
+            "dex": 12,
+            "con": 12,
+            "int": 16,
+            "wis": 14,
+            "cha": 12
+        },
+        "attacks": [
+            {
+                "name": "Lâmina de Éter",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d8+2"
+            },
+            {
+                "name": "Extração Parcial",
+                "type": "ranged",
+                "bonus": 6,
+                "damage": "2d6 necrotic + drena vida"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "aethelgard"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.4,
+            "pack_morale": false
+        },
+        "faction": "cultistas_destilacao"
+    },
+    "mon_sereia_de_ophidia": {
+        "id": "mon_sereia_de_ophidia",
+        "name": "Sereia de Ophidia",
+        "type": "Elite",
+        "description": "O que canta nas águas ao redor do arquipélago. Quem ouve de perto descreve o canto de formas que não são consistentes entre si. Ninguém descreve duas vezes.",
+        "hp": 60,
+        "max_hp": 60,
+        "ac": 15,
+        "status": "ativo",
+        "attributes": {
+            "str": 14,
+            "dex": 16,
+            "con": 14,
+            "int": 12,
+            "wis": 14,
+            "cha": 18
+        },
+        "attacks": [
+            {
+                "name": "Canto Errado",
+                "type": "ranged",
+                "bonus": 6,
+                "damage": "2d6 psychic + medo"
+            },
+            {
+                "name": "Garras de Coral",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "1d10+3"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "ophidia"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
+    },
+    "mon_fumaca_de_cor_errada": {
+        "id": "mon_fumaca_de_cor_errada",
+        "name": "Fumaça de Cor Errada",
+        "type": "Elite",
+        "description": "A névoa que os vulcões de Ophidia produzem — em cores que não têm referência fora dali. Envolve. Não persegue: já está em toda parte.",
+        "hp": 50,
+        "max_hp": 50,
+        "ac": 14,
+        "status": "ativo",
+        "attributes": {
+            "str": 10,
+            "dex": 18,
+            "con": 12,
+            "int": 6,
+            "wis": 12,
+            "cha": 10
+        },
+        "attacks": [
+            {
+                "name": "Abraço Sufocante",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "2d6 + veneno"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "ophidia"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
+    },
+    "mon_os_que_voltaram_e_nao_eram_eles": {
+        "id": "mon_os_que_voltaram_e_nao_eram_eles",
+        "name": "Os Que Voltaram (e não eram eles)",
+        "type": "Elite",
+        "description": "Marinheiros de barcos que sumiram perto de Ophidia — devolvidos à costa, exatamente iguais, exceto por tudo. Não fogem: para onde fugiriam?",
+        "hp": 55,
+        "max_hp": 55,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 16,
+            "dex": 12,
+            "con": 16,
+            "int": 10,
+            "wis": 10,
+            "cha": 6
+        },
+        "attacks": [
+            {
+                "name": "Mãos que Lembram",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "1d10+3"
+            },
+            {
+                "name": "Olhar de Horizonte",
+                "type": "ranged",
+                "bonus": 5,
+                "damage": "2d4 psychic + medo"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "ophidia",
+            "brekmar"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
+    },
+    "mon_tubarao_de_casco": {
+        "id": "mon_tubarao_de_casco",
+        "name": "Tubarão de Casco",
+        "type": "Elite",
+        "description": "Predador da maré entre as ossadas, couro grosso como madeira de quilha. Ataca tudo que sangra.",
+        "hp": 65,
+        "max_hp": 65,
+        "ac": 15,
+        "status": "ativo",
+        "attributes": {
+            "str": 18,
+            "dex": 14,
+            "con": 16,
+            "int": 1,
+            "wis": 10,
+            "cha": 4
+        },
+        "attacks": [
+            {
+                "name": "Mordida de Quilha",
+                "type": "melee",
+                "bonus": 7,
+                "damage": "2d8+4"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "costa_negra"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
+    },
+    "mon_caranguejo_mare": {
+        "id": "mon_caranguejo_mare",
+        "name": "Caranguejeiro da Maré",
+        "type": "Minion",
+        "description": "Crustáceo do tamanho de um cão que habita os crânios dos leviatãs. Territorial: garras que cortam osso quando a carcaça é disputada.",
+        "hp": 26,
+        "max_hp": 26,
+        "ac": 16,
+        "status": "ativo",
+        "attributes": {
+            "str": 14,
+            "dex": 10,
+            "con": 14,
+            "int": 2,
+            "wis": 10,
+            "cha": 2
+        },
+        "attacks": [
+            {
+                "name": "Garra Corta-Osso",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d8+2"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "costa_negra"
+        ],
+        "behavior": {
+            "profile": "feroz"
+        }
+    },
+    "mon_gaivota_ladra": {
+        "id": "mon_gaivota_ladra",
+        "name": "Gaivota-Ladra",
+        "type": "Minion",
+        "description": "Ave de rapina de envergadura anormal que mergulha sobre qualquer coisa que se mova entre as carcaças — e desiste na primeira resistência séria.",
+        "hp": 12,
+        "max_hp": 12,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 8,
+            "dex": 16,
+            "con": 10,
+            "int": 2,
+            "wis": 12,
+            "cha": 4
+        },
+        "attacks": [
+            {
+                "name": "Mergulho de Bico Ósseo",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d6+1"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "costa_negra"
+        ],
+        "behavior": {
+            "profile": "covarde",
+            "flee_below": 0.7,
+            "pack_morale": false
+        }
+    },
+    "mon_o_que_come_nas_praias": {
+        "id": "mon_o_que_come_nas_praias",
+        "name": "O Que Come nas Praias",
+        "type": "BOSS",
+        "description": "A coisa sob as docas e entre as ossadas que se alimenta dos corpos. Os Osshari sabem que existe. Não explicam. Não recua — o mar inteiro é dela.",
+        "hp": 160,
+        "max_hp": 160,
+        "ac": 16,
+        "status": "ativo",
+        "attributes": {
+            "str": 22,
+            "dex": 10,
+            "con": 20,
+            "int": 6,
+            "wis": 12,
+            "cha": 8
+        },
+        "attacks": [
+            {
+                "name": "Bocarra da Maré",
+                "type": "melee",
+                "bonus": 9,
+                "damage": "2d12+6"
+            },
+            {
+                "name": "Tentáculo de Ressaca",
+                "type": "melee",
+                "bonus": 8,
+                "damage": "2d8+6"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "costa_negra",
+            "brekmar"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
+    },
+    "enemy_pirata_brekmar": {
+        "id": "enemy_pirata_brekmar",
+        "name": "Pirata de Brekmar",
+        "type": "Minion",
+        "description": "Tripulante da guerra de rotas do mar oeste. Briga suja, aposta alto — e sabe exatamente quando uma luta deixou de valer o saque.",
+        "hp": 24,
+        "max_hp": 24,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 13,
+            "dex": 14,
+            "con": 12,
+            "int": 10,
+            "wis": 10,
+            "cha": 10
+        },
+        "attacks": [
+            {
+                "name": "Cutelo de Abordagem",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d8+2"
+            },
+            {
+                "name": "Pistola de Pederneira",
+                "type": "ranged",
+                "bonus": 4,
+                "damage": "1d10"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "brekmar",
+            "costa_negra"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.4,
+            "pack_morale": true
+        },
+        "faction": "grupos_piratas_rivais"
+    },
+    "mon_capangas_do_poco": {
+        "id": "mon_capangas_do_poco",
+        "name": "Capanga do Poço",
+        "type": "Minion",
+        "description": "Cobrador de dívidas dos sindicatos. Trabalha em dupla, quebra o que foi mandado quebrar, e some quando o serviço azeda.",
+        "hp": 28,
+        "max_hp": 28,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 15,
+            "dex": 12,
+            "con": 14,
+            "int": 8,
+            "wis": 10,
+            "cha": 8
+        },
+        "attacks": [
+            {
+                "name": "Porrete de Cobrança",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d8+3"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "brekmar"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.35,
+            "pack_morale": true
+        }
+    },
+    "enemy_arpoador_osshari": {
+        "id": "enemy_arpoador_osshari",
+        "name": "Arpoador Osshari",
+        "type": "Elite",
+        "description": "Caçador de leviatãs deslocado para as docas. Sente pouco — inclusive medo. Só recua quando a caça deixa de ser caça.",
+        "hp": 50,
+        "max_hp": 50,
+        "ac": 14,
+        "status": "ativo",
+        "attributes": {
+            "str": 18,
+            "dex": 12,
+            "con": 16,
+            "int": 8,
+            "wis": 12,
+            "cha": 6
+        },
+        "attacks": [
+            {
+                "name": "Arpão de Leviatã",
+                "type": "melee",
+                "bonus": 7,
+                "damage": "1d12+4"
+            },
+            {
+                "name": "Arremesso de Arpão",
+                "type": "ranged",
+                "bonus": 6,
+                "damage": "1d10+3"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "brekmar",
+            "costa_negra"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.2,
+            "pack_morale": false
+        },
+        "faction": "osshari_brekmar"
+    },
+    "enemy_orc_saidas_baixas": {
+        "id": "enemy_orc_saidas_baixas",
+        "name": "Orc das Saídas Baixas",
+        "type": "Minion",
+        "description": "Refugiado do Reino Subterrâneo que nunca voltou às profundezas. Embosca grupos pequenos, foge de grupos grandes — Gruumsha entende números.",
+        "hp": 30,
+        "max_hp": 30,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 16,
+            "dex": 12,
+            "con": 14,
+            "int": 7,
+            "wis": 10,
+            "cha": 8
+        },
+        "attacks": [
+            {
+                "name": "Cutelo Serrilhado",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d10+3"
+            },
+            {
+                "name": "Arremesso de Pedra",
+                "type": "ranged",
+                "bonus": 3,
+                "damage": "1d6+2"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "montanhas_afiadas"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.3,
+            "pack_morale": true
+        },
+        "faction": "bandos_orc_saidas_baixas"
+    },
+    "mon_cabra_navalha": {
+        "id": "mon_cabra_navalha",
+        "name": "Cabra-Navalha",
+        "type": "Minion",
+        "description": "Herbívoro das encostas com chifres que cortam corda e couro. Ataca se encurralada, foge quando pode.",
+        "hp": 18,
+        "max_hp": 18,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 13,
+            "dex": 15,
+            "con": 12,
+            "int": 2,
+            "wis": 10,
+            "cha": 4
+        },
+        "attacks": [
+            {
+                "name": "Chifrada Cortante",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d8+2"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "montanhas_afiadas"
+        ],
+        "behavior": {
+            "profile": "covarde",
+            "flee_below": 0.7,
+            "pack_morale": false
+        }
+    },
+    "mon_anao_eco": {
+        "id": "mon_anao_eco",
+        "name": "Anão-Eco",
+        "type": "Elite",
+        "description": "Morto do Reino que não partiu: ainda 'trabalha' nas galerias, martelo fantasma em ritmo de turno. Interrompê-lo é virar parte do serviço.",
+        "hp": 52,
+        "max_hp": 52,
+        "ac": 15,
+        "status": "ativo",
+        "attributes": {
+            "str": 18,
+            "dex": 8,
+            "con": 18,
+            "int": 6,
+            "wis": 8,
+            "cha": 4
+        },
+        "attacks": [
+            {
+                "name": "Martelo do Turno Eterno",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "2d8+4"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "montanhas_afiadas"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
+    },
+    "mon_espectro_elfico": {
+        "id": "mon_espectro_elfico",
+        "name": "Espectro Élfico",
+        "type": "Elite",
+        "description": "Alma élfica ancorada no Éter das ruínas: perturbadoramente belo e mortalmente perigoso ao mesmo tempo. Não foge — já não há para onde.",
+        "hp": 44,
+        "max_hp": 44,
+        "ac": 14,
+        "status": "ativo",
+        "attributes": {
+            "str": 6,
+            "dex": 18,
+            "con": 10,
+            "int": 12,
+            "wis": 14,
+            "cha": 16
+        },
+        "attacks": [
+            {
+                "name": "Toque da Ampulheta",
+                "type": "melee",
+                "bonus": 6,
+                "damage": "2d6 necrotic"
+            },
+            {
+                "name": "Lamento Belo",
+                "type": "ranged",
+                "bonus": 5,
+                "damage": "1d8 psychic + medo"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "pradaria_ruinas"
+        ],
+        "behavior": {
+            "profile": "implacavel"
+        }
+    },
+    "mon_lobo_da_pradaria": {
+        "id": "mon_lobo_da_pradaria",
+        "name": "Lobo da Pradaria",
+        "type": "Minion",
+        "description": "Caçador da grama alta. A matilha cerca, morde e recua — e volta quando a presa cansa.",
+        "hp": 22,
+        "max_hp": 22,
+        "ac": 13,
+        "status": "ativo",
+        "attributes": {
+            "str": 13,
+            "dex": 15,
+            "con": 13,
+            "int": 3,
+            "wis": 12,
+            "cha": 6
+        },
+        "attacks": [
+            {
+                "name": "Mordida de Cerco",
+                "type": "melee",
+                "bonus": 4,
+                "damage": "1d8+2"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "pradaria_ruinas"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.3,
+            "pack_morale": true
+        }
+    },
+    "enemy_capturador_groth": {
+        "id": "enemy_capturador_groth",
+        "name": "Capturador de Groth",
+        "type": "Elite",
+        "description": "Mercador de escravos da rede de Groth Algema-Fria. Trata pessoas como inventário; luta como quem protege carga, não como quem tem causa.",
+        "hp": 40,
+        "max_hp": 40,
+        "ac": 14,
+        "status": "ativo",
+        "attributes": {
+            "str": 15,
+            "dex": 13,
+            "con": 14,
+            "int": 11,
+            "wis": 10,
+            "cha": 9
+        },
+        "attacks": [
+            {
+                "name": "Rede com Pesos",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d6+2 + enredado"
+            },
+            {
+                "name": "Maça de Ferro",
+                "type": "melee",
+                "bonus": 5,
+                "damage": "1d8+3"
+            }
+        ],
+        "abilities": [],
+        "loot": [],
+        "regions": [
+            "pradaria_ruinas"
+        ],
+        "behavior": {
+            "profile": "tatico",
+            "flee_below": 0.45,
+            "pack_morale": true
+        },
+        "faction": "mercadores_escravos_pradaria"
     }
 }

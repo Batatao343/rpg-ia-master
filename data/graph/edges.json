@@ -1,0 +1,79 @@
+[
+  {"id": "e_valerius_controla_arcadia",   "source": "npc_valerius",                 "type": "controls",    "target": "nova_arcadia",        "visibility": "public"},
+  {"id": "e_legiao_opera_arcadia",        "source": "legiao_ferro",                 "type": "operates_in", "target": "nova_arcadia",        "visibility": "public"},
+  {"id": "e_mao_opera_arcadia",           "source": "mao_sombria",                  "type": "operates_in", "target": "nova_arcadia",        "visibility": "public"},
+  {"id": "e_chama_opera_arcadia",         "source": "filhos_chama_azul",            "type": "operates_in", "target": "nova_arcadia",        "visibility": "public"},
+  {"id": "e_corvos_opera_arcadia",        "source": "guilda_corvos",                "type": "operates_in", "target": "nova_arcadia",        "visibility": "public"},
+  {"id": "e_encapuzados_opera_arcadia",   "source": "encapuzados_fornalha",         "type": "operates_in", "target": "nova_arcadia",        "visibility": "public"},
+  {"id": "e_resistencia_opera_arcadia",   "source": "resistencia_operaria_martelos_partidos", "type": "operates_in", "target": "nova_arcadia", "visibility": "public"},
+  {"id": "e_quadrilha_opera_arcadia",     "source": "quadrilha_telhados",           "type": "operates_in", "target": "nova_arcadia",        "visibility": "public"},
+
+  {"id": "e_thrace_lidera_legiao",        "source": "npc_comandante_thrace",        "type": "leads",       "target": "legiao_ferro",        "visibility": "public"},
+  {"id": "e_magda_lidera_mao",            "source": "npc_velha_magda",              "type": "leads",       "target": "mao_sombria",         "visibility": "secret"},
+  {"id": "e_kald_lidera_encapuzados",     "source": "npc_mestre_fundidor_kald",     "type": "leads",       "target": "encapuzados_fornalha", "visibility": "public"},
+  {"id": "e_bors_lidera_resistencia",     "source": "npc_bors_martelo_partido",     "type": "leads",       "target": "resistencia_operaria_martelos_partidos", "visibility": "public"},
+  {"id": "e_pardal_lidera_quadrilha",     "source": "npc_pardal",                   "type": "leads",       "target": "quadrilha_telhados",  "visibility": "public"},
+
+  {"id": "e_chama_inimiga_legiao",        "source": "filhos_chama_azul",            "type": "enemy_of",    "target": "legiao_ferro",        "visibility": "public"},
+  {"id": "e_resistencia_inimiga_legiao",  "source": "resistencia_operaria_martelos_partidos", "type": "enemy_of", "target": "legiao_ferro", "visibility": "public"},
+  {"id": "e_resistencia_rival_encapuzados", "source": "resistencia_operaria_martelos_partidos", "type": "enemy_of", "target": "encapuzados_fornalha", "visibility": "public"},
+
+  {"id": "e_korvus_membro_legiao",        "source": "npc_korvus",                   "type": "member_of",   "target": "legiao_ferro",        "visibility": "hidden"},
+  {"id": "e_valerius_pacto_daruun",       "source": "npc_valerius",                 "type": "pact_with",   "target": "npc_daruun",          "visibility": "secret"},
+  {"id": "e_malagor_em_arcadia",          "source": "npc_malagor",                  "type": "located_in",  "target": "nova_arcadia",        "visibility": "hidden"},
+  {"id": "e_grum_em_arcadia",             "source": "npc_grum",                     "type": "located_in",  "target": "nova_arcadia",        "visibility": "public"},
+  {"id": "e_magda_em_arcadia",            "source": "npc_velha_magda",              "type": "located_in",  "target": "nova_arcadia",        "visibility": "public"},
+  {"id": "e_cego_em_arcadia",             "source": "npc_o_cego",                   "type": "located_in",  "target": "nova_arcadia",        "visibility": "public"},
+
+  {"id": "e_clas_combate_opera_skallgard",     "source": "clas_combate",            "type": "operates_in", "target": "skallgard",           "visibility": "public"},
+  {"id": "e_clas_tecnologicos_opera_skallgard","source": "clas_tecnologicos",       "type": "operates_in", "target": "skallgard",           "visibility": "public"},
+  {"id": "e_renegados_opera_skallgard",   "source": "renegados_ermo",               "type": "operates_in", "target": "skallgard",           "visibility": "public"},
+  {"id": "e_vehkr_lidera_clas_combate",   "source": "npc_vehkr_punho_de_gelo",      "type": "leads",       "target": "clas_combate",        "visibility": "public"},
+  {"id": "e_astrin_lidera_clas_tec",      "source": "npc_astrin_veia_fina",         "type": "leads",       "target": "clas_tecnologicos",   "visibility": "public"},
+  {"id": "e_korrin_lidera_renegados",     "source": "npc_korrin_sem_cla",           "type": "leads",       "target": "renegados_ermo",      "visibility": "public"},
+  {"id": "e_renegados_inimigos_clas_tec", "source": "renegados_ermo",               "type": "enemy_of",    "target": "clas_tecnologicos",   "visibility": "public"},
+  {"id": "e_rede_carmesim_em_skallgard",  "source": "mon_rede_carmesim",            "type": "located_in",  "target": "skallgard",           "visibility": "hidden"},
+  {"id": "e_vorrnak_em_skallgard",        "source": "npc_vorrnak",                  "type": "located_in",  "target": "skallgard",           "visibility": "public"},
+
+  {"id": "e_kahen_controla_brekmar",      "source": "poder_kahen",                  "type": "controls",    "target": "brekmar",             "visibility": "public"},
+  {"id": "e_kahen_lidera_poder",          "source": "npc_kahen",                    "type": "leads",       "target": "poder_kahen",         "visibility": "public"},
+  {"id": "e_sindicatos_opera_brekmar",    "source": "tres_sindicatos_comercio",     "type": "operates_in", "target": "brekmar",             "visibility": "public"},
+  {"id": "e_piratas_opera_brekmar",       "source": "grupos_piratas_rivais",        "type": "operates_in", "target": "brekmar",             "visibility": "public"},
+  {"id": "e_osshari_opera_brekmar",       "source": "osshari_brekmar",              "type": "operates_in", "target": "brekmar",             "visibility": "public"},
+  {"id": "e_mare_funda_lidera_osshari",   "source": "npc_mare_funda",               "type": "leads",       "target": "osshari_brekmar",     "visibility": "public"},
+  {"id": "e_casa_mares_em_brekmar",       "source": "casa_mares_dominio_lyss",      "type": "located_in",  "target": "brekmar",             "visibility": "public"},
+  {"id": "e_lyss_lidera_casa_mares",      "source": "npc_lyss",                     "type": "leads",       "target": "casa_mares_dominio_lyss", "visibility": "secret"},
+
+  {"id": "e_cidades_opera_pradaria",      "source": "cidades_estado_sobreviventes_vaelorn_solvhen", "type": "operates_in", "target": "pradaria_ruinas", "visibility": "public"},
+  {"id": "e_aerwen_lidera_cidades",       "source": "npc_lady_aerwen",              "type": "leads",       "target": "cidades_estado_sobreviventes_vaelorn_solvhen", "visibility": "public"},
+  {"id": "e_nomades_opera_pradaria",      "source": "bandos_nomades",               "type": "operates_in", "target": "pradaria_ruinas",     "visibility": "public"},
+  {"id": "e_groth_lidera_mercadores",     "source": "npc_groth_algema_fria",        "type": "leads",       "target": "mercadores_escravos_pradaria", "visibility": "public"},
+  {"id": "e_mercadores_opera_pradaria",   "source": "mercadores_escravos_pradaria", "type": "operates_in", "target": "pradaria_ruinas",     "visibility": "public"},
+
+  {"id": "e_orcs_opera_montanhas",        "source": "bandos_orc_saidas_baixas",     "type": "operates_in", "target": "montanhas_afiadas",   "visibility": "public"},
+  {"id": "e_gruumsha_lidera_orcs",        "source": "npc_gruumsha_quebra_espinha",  "type": "leads",       "target": "bandos_orc_saidas_baixas", "visibility": "public"},
+  {"id": "e_goblins_opera_montanhas",     "source": "goblins_mineiros",             "type": "operates_in", "target": "montanhas_afiadas",   "visibility": "public"},
+  {"id": "e_skriit_lidera_goblins",       "source": "npc_skriit_mil_olhos",         "type": "leads",       "target": "goblins_mineiros",    "visibility": "public"},
+  {"id": "e_anoes_opera_montanhas",       "source": "ultimos_anoes_reino",          "type": "operates_in", "target": "montanhas_afiadas",   "visibility": "public"},
+  {"id": "e_durgrim_lidera_anoes",        "source": "npc_durgrim_ultimo_martelo",   "type": "leads",       "target": "ultimos_anoes_reino", "visibility": "public"},
+  {"id": "e_rei_sub_controla_montanhas",  "source": "mon_rei_subterraneo",          "type": "controls",    "target": "montanhas_afiadas",   "visibility": "hidden"},
+
+  {"id": "e_druidas_opera_pantano",       "source": "druidas_ciclo_cinzento",       "type": "operates_in", "target": "pantano_melancolia",  "visibility": "public"},
+  {"id": "e_gresh_lidera_druidas",        "source": "npc_arcante_gresh",            "type": "leads",       "target": "druidas_ciclo_cinzento", "visibility": "public"},
+  {"id": "e_renegados_opera_pantano",     "source": "druidas_renegados",            "type": "operates_in", "target": "pantano_melancolia",  "visibility": "public"},
+  {"id": "e_saelwen_lidera_renegados",    "source": "npc_saelwen_a_que_afundou",    "type": "leads",       "target": "druidas_renegados",   "visibility": "public"},
+  {"id": "e_druidas_inimigos_renegados",  "source": "druidas_ciclo_cinzento",       "type": "enemy_of",    "target": "druidas_renegados",   "visibility": "public"},
+
+  {"id": "e_colmeia_controla_xylos",      "source": "colmeia_hospedeiros",          "type": "controls",    "target": "selva_xylos",         "visibility": "public"},
+  {"id": "e_ouve_longe_lidera_colmeia",   "source": "npc_o_que_ouve_mais_longe",    "type": "leads",       "target": "colmeia_hospedeiros", "visibility": "public"},
+  {"id": "e_morrakh_em_xylos",            "source": "npc_morrakh",                  "type": "located_in",  "target": "selva_xylos",         "visibility": "hidden"},
+
+  {"id": "e_tribos_opera_zhur",           "source": "tribos_devoradores_sol",       "type": "operates_in", "target": "deserto_zhur",        "visibility": "public"},
+  {"id": "e_khatarn_lidera_tribos",       "source": "npc_khatarn_olhos_de_obsidiana", "type": "leads",     "target": "tribos_devoradores_sol", "visibility": "public"},
+
+  {"id": "e_cultistas_opera_aethelgard",  "source": "cultistas_destilacao",         "type": "operates_in", "target": "aethelgard",          "visibility": "public"},
+  {"id": "e_corvane_lidera_cultistas",    "source": "npc_corvane_o_mestre_destilador", "type": "leads",    "target": "cultistas_destilacao", "visibility": "public"},
+
+  {"id": "e_thessavar_em_floresta",       "source": "npc_thessavar",                "type": "located_in",  "target": "floresta_sussurros",  "visibility": "hidden"},
+  {"id": "e_mercadores_curio_opera_costa","source": "mercadores_curiosidades",      "type": "operates_in", "target": "costa_negra",         "visibility": "public"}
+]

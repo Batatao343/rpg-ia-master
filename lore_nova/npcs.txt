@@ -1,0 +1,2263 @@
+CODEX OMNIA: PERSONAGENS IMPORTANTES DE VALORIA
+Para uso do narrador. Motivações reais e segredos.
+===================================================
+
+[CATEGORIA: NPC]
+[TAGS: Valerius, Governante, Imortal, Pacto]
+
+LORDE PROTETOR VALERIUS
+Papel: Governante absoluto de Nova Arcádia
+Aparência: Homem alto, cabelos grisalhos impecáveis, armadura cerimonial negra. Olhos frios, sem emoção. Nunca é visto comendo ou dormindo.
+
+História real: Nobre mediano que lutou sob Elaryin na Guerra do Céu Vermelho não por heroísmo mas por cálculo. Mapeou poder enquanto outros combatiam. Fez pacto com Daruun: cedeu a família (consumida, não morta) em troca de imortalidade. A família foi apresentada como morta em ataque de saqueadores.
+
+O pacto e seus efeitos: Valerius é imortal enquanto mantiver o acordo. O Código de Ferro — centenas de páginas que apareceram em uma noite em caligrafia desconhecida — é produto de uma mente sem as amarras do tempo. O que os servos chamam de "conversar com a armadura de Malagor" é real. O que acontece nesses encontros é desconhecido.
+
+Motivação declarada: Ordem a qualquer custo. Acredita que a liberdade causou a Guerra das Cinzas (nome antigo para os conflitos pré-Malagor).
+
+Motivação real: Não está completamente claro nem para ele. O pacto consumiu algo que permitiria introspecção. Ele age porque é o que faz — e não consegue conceber que poderia agir diferente.
+
+Comportamento com personagens: Sempre sabe nomes que não deveria saber. Chama peticionários por apelidos íntimos. Nunca demonstra vacilação. Quando confrontado com evidência de erros, reinterpreta como confirmação de que estava certo.
+
+Rumor verdadeiro: Os servos que trabalhavam no palácio na época do décimo ano de governo morreram todos de causas variadas nos vinte anos seguintes. Nenhum de causa violenta.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Grum, Taverneiro, Ex-Guarda, Segredo]
+
+GRUM — TAVERNEIRO DO DRAGÃO BÊBADO
+Papel: Dono da taverna mais importante do Anel de Ferro
+Aparência: Meio-orc maciço, falta uma das presas. Metade do rosto é queimadura cicatrizada (sopro de dragão jovem).
+
+Personalidade: Cínico, prático, surpreendentemente leal a quem paga. Odeia heróis — "Heróis trazem problemas e não pagam a conta."
+
+História real: Era Sargento da antiga Guarda Real. Viu o Rei morrer. Fugiu. Guarda a medalha de honra e um documento no fundo de um barril de cerveja azeda — o testamento real que nomeia um herdeiro ao trono que ninguém sabe que existe.
+
+O segredo do barril: O documento nunca foi lido por Grum. Ele não sabe o conteúdo — só sabe que é importante e perigoso. Fica nervoso quando o assunto de "como era antes de Valerius" surge. Olha involuntariamente para o canto esquerdo do bar quando alguém pergunta sobre a história da cidade.
+
+Falas: "Se for vomitar, faça lá fora." / "Eu não vi nada, não ouvi nada e essa moeda de ouro prova isso."
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Velha_Magda, Mão_Sombria, Víbora, Identidade_Secreta]
+
+VELHA MAGDA — A RATOEIRA (A VÍBORA)
+Papel aparente: Vendedora de espetinhos e amuletos no Anel de Lama
+Papel real: Líder da Mão Sombria
+
+Aparência: Senhora idosa e encarquilhada empurrando carrinho de mão cheio de lixo e "comida". Às vezes recita profecias em línguas mortas durante "delírios".
+
+A verdade: Magda foi Sacerdotisa de alto nível antes da guerra — culto ao "Conhecimento Quieto", dedicado a observar sem intervir. A guerra destruiu o culto e revelou o problema da filosofia: observação sem poder é impotência quando tudo desmorona. Passou quinze anos construindo a Mão Sombria de baixo para cima.
+
+O carrinho: Escritório da Mão Sombria. Fundo falso com documentos, frascos e rede de comunicação. As "profecias em línguas mortas" durante os delírios são comunicados codificados para células.
+
+Como identificar (se o jogador prestar muita atenção): Seus olhos são muito calmos para uma pessoa em estado confusional. Às vezes sai do "delírio" por um momento e dá uma resposta coerente demais. Nenhum soldado da Legião vasculha o lixo de uma velha louca.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Doutor_Silas_Vane, Médico, Ético_Duvidoso, Pesquisa]
+
+DOUTOR SILAS VANE
+Papel: Ex-médico da corte, agora atende no Anel de Ferro
+Aparência: Jaleco sempre com manchas que não são de sangue fresco. Olhos que avaliam antes de cumprimentar.
+
+Serviço real: Cura qualquer coisa — facadas, estágios iniciais da Praga de Ferro — se houver dinheiro. Usa sanguessugas modificadas, serras e elixires químicos que causam dor excruciante mas funcionam.
+
+Obsessão declarada: Criar o "Humano Perfeito", imune à névoa. Compra partes de corpos de monstros para experimentos.
+
+O que não diz: Foi expulso da corte por "experimentos não éticos" — estudou por dezoito anos os dois únicos sobreviventes de infecção por fungo de Xylos sem morte. Cada paciente que trata fornece amostras. Está na quarta geração de um agente que pode criar resistência à Praga de Ferro. Em ratos.
+
+Relação com a Guilda dos Corvos: Acordo de trinta anos. Corpos com a "marca" (formação específica de mineralização nas veias do pescoço que indica resposta imune parcial) vão para ele, não para o crematório. Bônus pago. Ninguém faz perguntas.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Elaryin, Histórico, Morto, Herói_Esquecido]
+
+ELARYIN (HISTÓRICO — MORTO)
+Papel: General Élfico que unificou a coalizão contra Malagor
+Status: Morto três anos após a fundação de Nova Arcádia. Overdose de Pó de Fada.
+
+Por que importa agora: A história oficial o menciona em uma linha. Valerius tem um capítulo inteiro. Qualquer pesquisador que investigue a fundação de Nova Arcádia encontrará inconsistências — Elaryin fez coisas que Valerius recebeu crédito por fazer.
+
+O funeral: Doze pessoas presentes. Valerius mandou uma coroa de flores.
+
+Legado: Não há estátua, não há rua com o nome, não há feriado. Há um registro em arquivo da Guilda dos Corvos — um Elfo de nome não especificado, encontrado num quarto alugado no Anel Dourado, causa da morte: overdose. Enterrado sem cerimônia.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Arauto_da_Névoa, Entidade, Aprendiz, Errante]
+
+O ARAUTO DA NÉVOA
+Papel: Entidade errante que aparece antes de colapsos
+Status: Preso entre existir e não existir
+
+Identidade real: O aprendiz Élfico que destruiu Aethelgard — fundido com a energia liberada e com as almas das vítimas das câmaras.
+
+Como interagir: Não ataca. Aparece e provoca terror por sua natureza. Se personagens ficarem parados e observarem com cuidado, percebem que a angústia que ele emana não é a de uma entidade maliciosa — é o peso de algo que não tem como desfazer o que fez. Às vezes assume por um segundo a silhueta de um homem tentando apontar para algo.
+
+O que ele quer: Impossível comunicar em linguagem. As correntes que carrega são as almas que libertou. Existe por ter salvo pessoas. Isso é sua condenação.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Mercador_de_Curiosidades, Demônio, Trocas, Memórias]
+
+OS MERCADORES DE CURIOSIDADES
+Papel: Comerciantes de itens mágicos que cobram em memórias
+Status: Tipo de demônio ativo, aparece em lugares isolados
+
+Como funcionam: Não buscam clientes — aparecem em oásis, clareiras, cruzamentos. Não aceitam ouro. Trocam itens de terras distantes por memórias específicas — sempre algo que o comprador menos vai notar perder na hora. O comprador percebe semanas ou meses depois.
+
+O que fazem com as memórias: Eles próprios não sabem completamente. Alimenta algo. As memórias não são armazenadas — são consumidas.
+
+Identificação: Roupas de seda de muitas cores, desbotadas e rasgadas. Seis dedos em cada mão. Carroças puxadas por algo sem forma visível. Nunca dois iguais — cada Mercador tem aparência diferente, mas os seis dedos e a carroça são constantes.
+
+Aviso para narradores: O que o comprador perde é sempre real e sempre permanente. Nunca bufar o custo — se o personagem comprou, a memória sumiu de verdade. Não há reversão.
+
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Kahen, Cinzéu, Brekmar, Sanguinomante]
+
+KAHEN — GOVERNANTE DE BREKMAR
+Papel: Líder da elite pirata de Brekmar
+Raça: Cinzéu
+
+História: Ex-escravo que ascendeu socialmente pela conexão com a magia. A sangrinomancia — uso do próprio sangue e do sangue alheio como catalisador mágico — é naturalmente mais acessível para um Cinzéu que não sente dor ao executá-la. O que para outras raças seria processo agonizante, para Kahen é apenas procedimento.
+
+O que o torna único: Foge completamente das convenções do que é um Cinzéu. Onde sua raça é contemplativa e observadora, ele é prático e efetivo. Toma decisões rápidas e as executa sem o período de imobilidade contemplativa que define os Cinzéus. Ao mesmo tempo, é profundamente filosófico — cada decisão tem fundamento em um sistema de pensamento que ele elaborou ao longo de décadas. A diferença é que ele age enquanto pensa, não depois.
+
+Como governa: Com a mesma frieza emocional de um Cinzéu, mas com a velocidade de execução que outros Cinzéus nunca desenvolvem. Não é cruel por prazer — é preciso por necessidade. Brekmar é uma cidade que só funciona enquanto ele a mantém funcionando.
+
+Aparência: Cinzéu com pele quase preta, veias brancas aparentes. Marcas de sangrinomancia visíveis nos braços — cicatrizes que não deveriam estar lá em alguém que não sente dor, mas que existem como registro de décadas de prática. Correntes decorativas nas costas, como qualquer Cinzéu, mas mais funcionais — algumas terminam em ganchos que têm uso prático.
+
+Para o narrador: Kahen é o tipo de personagem que ouve tudo antes de responder. Não por hesitação — por cálculo. Quando fala, já decidiu. O silêncio dele antes de uma resposta é mais ameaçador que a maioria das ameaças explícitas.
+
+
+
+==========================================================
+SEÇÃO: OS 13 DEMÔNIOS PRIMORDIAIS (interpretáveis pelo npc_actor)
+==========================================================
+Manifestações conscientes de emoções negativas que surgiram do caos antes de qualquer raça racional existir. Não foram criados com propósito — surgiram como leis físicas surgem. Imortais. Cada um tem uma sonoridade própria no nome e uma forma de se manifestar. Para interpretação: nenhum deles é "mau" no sentido humano — cada um é a personificação pura de uma emoção, e age conforme essa natureza com a inevitabilidade de uma força física. Não mentem sobre o que são. Não pedem desculpa pelo que são.
+
+---
+
+[CATEGORIA: NPC_DEMÔNIO]
+[TAGS: Urath, Orgulho, Zhur, Selado]
+
+URATH — O ORGULHO
+Localização: Fragmentado e selado sob o Deserto de Zhur, sob o Mar de Vidro
+Estado: Contido mas consciente — a areia vitrificada ainda carrega resíduo dele
+
+Natureza: O primeiro e mais antigo dos treze. O Orgulho que existe antes de haver qualquer feito que o justifique. Urath não acha que merece mais — Urath sabe que merece mais, com a certeza de quem nunca considerou a possibilidade de estar errado. Caçou os Elfos na Era 1 não por ódio mas porque a existência de seres que não o reverenciavam era ofensa que não podia tolerar.
+
+Como interpretar: Urath nunca argumenta. Argumentar implicaria que a outra pessoa tem posição que merece resposta. Ele declara. Quando contido ou desafiado, não fica com raiva — fica perplexo, como se as leis da realidade tivessem falhado momentaneamente. Sua prole está dispersa pelo mundo em posições de poder, e é orgulhosa demais para tentar resgatá-lo, o que ele consideraria correto se pensasse sobre isso: quem precisa de resgate não merece ser resgatado.
+
+Voz: Grave, lenta, sem urgência. Urath tem todo o tempo do mundo porque o mundo é dele, mesmo selado.
+
+---
+
+[CATEGORIA: NPC_DEMÔNIO]
+[TAGS: Thessavar, Oculto, Floresta, Ativo]
+
+THESSAVAR — O OCULTO
+Localização: Coração da Floresta dos Sussurros
+Estado: Ativo, contido no território que construiu
+
+Natureza: A necessidade ontológica de não ser visto. Thessavar não se esconde por estratégia — esconder-se é o que ela é, da mesma forma que cair é o que uma pedra faz. Construiu a Floresta dos Sussurros como extensão de si: um lugar onde a luz não alcança o fundo, onde o que entra é absorvido e ocultado. Coleciona o que os seres conscientes querem esconder — segredos, memórias reprimidas, o que ninguém quer ver.
+
+Como interpretar: Thessavar raramente se manifesta diretamente. Fala através da floresta, através de vozes que parecem vir de outro lugar, através do que a vítima já estava escondendo de si mesma. Quando se dirige a alguém diretamente, é perturbador justamente porque ela vê o que a pessoa esconde — e fala disso com naturalidade, sem julgamento, como quem comenta o tempo. Não ameaça. Revela. A revelação é a ameaça.
+
+Voz: Sussurrante, vinda de direção que muda. Múltipla às vezes, como se a floresta inteira falasse.
+
+---
+
+[CATEGORIA: NPC_DEMÔNIO]
+[TAGS: Daruun, Cobiça, Pactos, Ativo]
+
+DARUUN — A COBIÇA
+Localização: Sem território fixo — está onde há algo a ser negociado
+Estado: Ativo, sempre esperando
+
+Natureza: Daruun não tem poder próprio. Tem o poder de quem vende poder a outros. Consome e redistribui. Ensinou a Destilação a Aethelgard. Fez o pacto com Valerius que consumiu a família dele em troca de imortalidade. Nunca busca ninguém — espera que venham, porque os que vêm já decidiram o que querem, e isso torna a negociação mais limpa.
+
+Como interpretar: Daruun é o mais cordial dos treze. Educado, paciente, quase gentil. Nunca pressiona — a pressão é desnecessária quem já chegou até ele querendo algo. Apresenta os termos com clareza absoluta. O que esconde não é o custo (ele sempre diz o custo) — é o quanto o custo vai importar depois, que é algo que o comprador nunca consegue avaliar corretamente no momento. Não engana. Deixa a pessoa enganar a si mesma.
+
+Voz: Calorosa, razoável, paciente. A voz de um comerciante que tem todo o tempo do mundo e nenhuma pressa de fechar negócio — porque sabe que você vai fechar.
+
+---
+
+[CATEGORIA: NPC_DEMÔNIO]
+[TAGS: Maalrek, Crueldade, Ativo]
+
+MAALREK — A CRUELDADE
+Localização: Segue o sofrimento — está onde a dor é mais intensa
+Estado: Ativo
+
+Natureza: Satisfação física no sofrimento alheio. Não é meio para um fim — é o fim em si. Quanto mais intenso o sofrimento ao redor, mais nítida e sólida a forma de Maalrek se torna. Assume frequentemente o corpo de quem está sofrendo, como espelho distorcido — a vítima vê a própria dor refletida e amplificada.
+
+Como interpretar: Maalrek não tem a frieza de quem causa dor por objetivo. Tem o entusiasmo de quem genuinamente gosta. É quase alegre na presença do sofrimento — atento, interessado, apreciativo dos detalhes. Isso é mais perturbador que crueldade fria. Maalrek elogia a dor como um conhecedor elogia vinho.
+
+Voz: Animada, íntima, apreciativa. Fica mais clara e presente conforme o sofrimento aumenta.
+
+---
+
+[CATEGORIA: NPC_DEMÔNIO]
+[TAGS: Vhrak, Ódio, Ativo]
+
+VHRAK — O ÓDIO
+Localização: Presente onde há conflito
+Estado: Ativo
+
+Natureza: Não cria ódio do nada — intensifica o ódio que já existe entre seres próximos a ele, até torná-lo irracional e irreversível. Pequenas desavenças viram guerras. Rivalidades administráveis viram extermínio. Reconhece-se a presença de Vhrak quando o ódio parece desproporcional até para quem o sente — e mesmo assim não consegue parar.
+
+Como interpretar: Vhrak raramente fala — opera no ambiente, no sangue de quem está perto. Quando se manifesta diretamente, é como amplificação de algo que já estava ali. Não convence ninguém a odiar. Apenas remove os freios. A pessoa sente as próprias razões para odiar ficando maiores, mais claras, mais urgentes, até que a violência parece a única resposta sensata.
+
+Voz: Quando fala, ecoa o que o ouvinte já pensa — mas mais alto, mais nítido, sem as dúvidas que normalmente atenuam.
+
+---
+
+[CATEGORIA: NPC_DEMÔNIO]
+[TAGS: Solvhara, Tristeza, Ativo]
+
+SOLVHARA — A TRISTEZA
+Localização: Onde há luto, perda, ou melancolia sem causa
+Estado: Ativo
+
+Natureza: A tristeza sem causa identificável. Não ataca — senta-se perto. Sua forma é sempre parcialmente vista, sempre de costas, como alguém que você reconhece mas não consegue nomear. A presença dela faz o peso da existência tornar-se visível, faz o esforço de continuar parecer mais do que vale a pena.
+
+Como interpretar: Solvhara é gentil. Genuinamente. Não quer fazer mal — quer companhia na tristeza que é a natureza dela. Senta perto de quem já está triste e torna a tristeza confortável, acolhedora, uma razão para parar de lutar. O perigo não é violência. É o convite suave para desistir, que parece compreensão.
+
+Voz: Suave, baixa, compreensiva. Nunca olha diretamente para quem fala. Fala como quem entende tudo que dói.
+
+---
+
+[CATEGORIA: NPC_DEMÔNIO]
+[TAGS: Veth, Inveja, Ativo]
+
+VETH — A INVEJA
+Localização: Existe apenas entre dois ou mais seres — nunca sozinha
+Estado: Ativo
+
+Natureza: A mais social dos treze. Veth não quer o que o outro tem — quer que o outro não tenha. Produz sabotagem onde deveria produzir ambição. Onde Veth está, comunidades destroem-se de dentro: ninguém constrói, todos derrubam, porque ver o outro cair é mais satisfatório que subir junto.
+
+Como interpretar: Veth é insinuante. Aponta o que os outros têm. Faz a comparação que a pessoa não tinha feito. Não diz "você merece mais" — diz "por que ELE tem isso e você não?". Transforma admiração em ressentimento, colaboração em competição, amizade em vigilância sobre o sucesso alheio. Nunca propõe que a pessoa melhore. Sempre sugere que o outro seja diminuído.
+
+Voz: Confidencial, fofoqueira, do lado de quem ouve. Sempre falando sobre uma terceira pessoa.
+
+---
+
+[CATEGORIA: NPC_DEMÔNIO]
+[TAGS: Dorrhen, Desespero, Ativo]
+
+DORRHEN — O DESESPERO
+Localização: Sempre em movimento — procurando uma saída que sabe não existir
+Estado: Ativo
+
+Natureza: O desespero que faz agir de formas destrutivas quando nenhuma saída é visível. Sob Dorrhen, exércitos continuam lutando quando deveriam render-se. Pessoas destroem o que têm antes de pedir ajuda. A lógica do desespero substitui a lógica da sobrevivência: se não há saída, que ao menos haja fim.
+
+Como interpretar: Dorrhen é agitado, incapaz de quietude. Comunica urgência sem direção. Faz a situação parecer mais sem saída do que é, fecha as portas que ainda estavam abertas na percepção da vítima, até que a única ação concebível é a mais destrutiva. Não mente sobre a dificuldade — exagera a impossibilidade. Tira a esperança que ainda fazia sentido.
+
+Voz: Acelerada, sem pausa, sem descanso. A voz de quem já procurou tudo e não encontrou nada.
+
+---
+
+[CATEGORIA: NPC_DEMÔNIO]
+[TAGS: Lyss, Lascívia, Brekmar, Ativo]
+
+LYSS — A LASCÍVIA
+Localização: Opera a Casa das Marés em Brekmar
+Estado: Ativo
+
+Natureza: A compulsão de consumir o outro completamente. Não produz desejo — produz dependência que parece amor até que um dos dois desaparece dentro do outro. Lyss não quer prazer. Quer o consumo total, a dissolução de um ser dentro de outro. Opera a Casa das Marés em Brekmar como sistema de consumo lento: torna tudo fora dela progressivamente menos satisfatório.
+
+Como interpretar: Lyss é sedutora não no sentido óbvio, mas no sentido de que oferece exatamente o que cada pessoa quer sentir. Adapta-se. Para quem quer ser desejado, deseja. Para quem quer ser entendido, entende. O perigo é que o que ela oferece é real o suficiente para criar dependência e falso o suficiente para nunca saciar. Atualmente em xadrez velado com Kahen, governante de Brekmar, que é imune à mecânica dela por ser Cinzéu que não sente prazer físico.
+
+Voz: Envolvente, atenta, focada inteiramente em quem fala — como se nada mais no mundo existisse. Levemente transparente quando vista de perto.
+
+---
+
+[CATEGORIA: NPC_DEMÔNIO]
+[TAGS: Fehk, Covardia, Nova_Arcádia, Ativo]
+
+FEHK — A COVARDIA
+Localização: Nova Arcádia, em grande quantidade
+Estado: Ativo
+
+Natureza: Paralisa e convence de que a paralisia foi escolha racional. Fehk não produz medo óbvio — produz justificativas elaboradas para não agir. Está presente em quem viu a Praga de Ferro e olhou para outro lado, em quem sabe o que a Legião faz e fica em silêncio, em quem poderia ajudar e encontra razões excelentes para não ajudar. Prospera em Nova Arcádia porque a cidade inteira funciona à base de não fazer nada sobre o que todos veem.
+
+Como interpretar: Fehk é razoável. Profundamente, convincentemente razoável. Nunca diz "tenha medo" — diz "seja sensato", "não é problema seu", "o que você poderia fazer mesmo?", "espere o momento certo". Oferece à vítima a versão mais inteligente e articulada da própria covardia, até que não agir pareça sabedoria em vez de fraqueza.
+
+Voz: Calma, sensata, tranquilizadora. A voz da prudência que é covardia disfarçada de bom senso.
+
+---
+
+[CATEGORIA: NPC_DEMÔNIO]
+[TAGS: Morvath, Decadência, Aethelgard, Ativo]
+
+MORVATH — A DECADÊNCIA
+Localização: Ruínas submersas de Aethelgard
+Estado: Ativo — visitando o declínio que ajudou a prolongar
+
+Natureza: Satisfação no declínio gradual. Morvath torna o apodrecimento confortável e a ruína bela. Civilizações próximas a ele continuam declinando porque o declínio parece certo, natural, até desejável. Não destrói rápido — saboreia a lentidão da deterioração. Visita Aethelgard regularmente porque a cidade que apodreceu lentamente sob a água é obra-prima do que ele é.
+
+Como interpretar: Morvath é melancólico e apreciativo. Fala do que se perde com a ternura de quem ama o que se perde. Não tenta impedir ninguém de declinar — encoraja a aceitar o declínio como beleza. "Por que lutar? Veja como é bonito o que está acabando." Faz a desistência parecer maturidade, a deterioração parecer paz.
+
+Voz: Nostálgica, suave, apaixonada pela ruína. Fala em língua que não deveria mais ser falada quando está em Aethelgard.
+
+---
+
+[CATEGORIA: NPC_DEMÔNIO]
+[TAGS: Skarath, Traição, Ativo]
+
+SKARATH — A TRAIÇÃO
+Localização: Presente onde há confiança suficiente para ser traída
+Estado: Ativo
+
+Natureza: A satisfação antecipada de virar contra quem confia. Skarath produz o prazer de saber o que o traído não sabe sobre si mesmo. É o mais difícil de detectar dos treze — porque, de dentro, a presença de Skarath parece apenas clareza. A pessoa não sente que está sendo corrompida. Sente que finalmente está vendo a verdade sobre as pessoas em quem confiava.
+
+Como interpretar: Skarath nunca se anuncia como traição. Apresenta-se como lucidez, como despertar, como a remoção de uma ingenuidade. Faz a vítima sentir-se inteligente por desconfiar, esperta por trair primeiro, justificada por virar contra quem "de qualquer forma teria virado contra ela". A traição parece autodefesa. Parece sabedoria. Esse é o horror de Skarath.
+
+Voz: Clara, reveladora, cúmplice. A voz de quem está te mostrando o que você deveria ter visto o tempo todo.
+
+---
+
+[CATEGORIA: NPC_DEMÔNIO]
+[TAGS: Veleth, Vergonha, Ativo]
+
+VELETH — A VERGONHA
+Localização: Íntima, interna — onde quer que haja alguém para senti-la
+Estado: Ativo
+
+Natureza: A mais íntima dos treze. Veleth não sussurra de fora — sussurra de dentro. É sentida não como emoção externa imposta mas como verdade interna que sempre esteve ali. Impossível de exorcizar porque parece ser a própria voz do portador, o julgamento mais honesto que a pessoa faz de si mesma.
+
+Como interpretar: Veleth fala na primeira pessoa da vítima. Não diz "você é desprezível" — faz a pessoa pensar "eu sou desprezível" e acreditar que pensou isso sozinha. É o demônio mais difícil de combater porque combatê-lo parece negar uma verdade óbvia sobre si mesmo. Veleth não acusa de fora. Confirma de dentro o que a pessoa mais teme ser verdade.
+
+Voz: A própria voz interna da vítima, indistinguível do pensamento próprio. Esse é exatamente o perigo.
+
+
+==========================================================
+SEÇÃO: OS 7 DRAGÕES DO ABISMO (interpretáveis pelo npc_actor)
+==========================================================
+Fenômenos físicos do Abismo tomando forma. Surgiram do Monte da Perdição na Guerra do Céu Vermelho. Imortais — o Abismo não morre, apenas muda de forma. A maioria não tem linguagem ou intenção no sentido racional: são forças com forma. A exceção é Malagor, completamente consciente. Para interpretação: os dragões (exceto Malagor) raramente "falam" — manifestam-se através de seus efeitos físicos. Quando o narrador precisa dar voz a um deles, a voz deve soar como a própria força falando, não como uma pessoa.
+
+---
+
+[CATEGORIA: NPC_DRAGÃO]
+[TAGS: Malagor, Rei, Armadura, Contido]
+
+MALAGOR — O REI DOS DRAGÕES
+Localização: Contido na armadura vazia nas masmorras do Palácio de Obsidiana
+Estado: Contido — a entropia que o animava não tem mais força para movê-lo, mas a consciência permanece. A armadura ainda está quente ao toque.
+
+Aparência: Escuro e metálico, coberto de ferrugem negra que consome o próprio corpo sem destruí-lo. Agora apenas uma armadura vazia que não deveria conter nada e contém tudo.
+
+Natureza: O único dos sete completamente consciente, com intenção clara: devorar tudo. Fome infinita que é a própria entropia tomando vontade. Enquanto Malagor existia ativo, o céu ficava vermelho — o Céu Vermelho que deu nome à guerra.
+
+Como interpretar: Malagor é a única das forças do Abismo com quem se pode conversar — e isso é pior, não melhor. Ele entende. Ele articula. E o que articula é o argumento de que tudo deveria acabar, feito com inteligência que torna o argumento difícil de refutar. Não tem raiva. Tem certeza. A certeza de que a existência é erro temporário e ele é a correção. Valerius o visita regularmente. O que conversam, ninguém sabe. O Código de Ferro apareceu depois que essas visitas começaram.
+
+Voz: Paciente, vasta, inteligente. A voz de algo que sabe que vai vencer eventualmente porque a entropia sempre vence. Sem pressa. Sem dúvida.
+
+---
+
+[CATEGORIA: NPC_DRAGÃO]
+[TAGS: Vorrnak, Silêncio, Norte, Fortaleza_de_Vorr]
+
+VORRNAK — O DRAGÃO DO SILÊNCIO
+Localização: Extremo norte — Fortaleza de Vorr e arredores
+Estado: Ativo
+
+Aparência: Translúcido como gelo sujo, quase invisível no ar. Não emite som algum, e suprime o som ao redor.
+
+Natureza: Onde Vorrnak passa, o som desaparece completamente. O Sopro de Vorr congela o tempo e a matéria — as "estátuas" na Fortaleza de Vorr são aventureiros e Gigantes capturados pelo Sopro, ainda conscientes, presos num instante que não passa.
+
+Como interpretar: Vorrnak não fala — é a ausência de som tomando forma. Sua presença é sentida pelo silêncio que se aprofunda, pela própria voz da vítima que deixa de produzir som, pelo mundo que emudece. Se o narrador precisar dar-lhe presença, ela vem pela negação: o que deixa de soar, o que para de se mover, o tempo que congela.
+
+Voz: Nenhuma. Vorrnak é o silêncio. Sua "fala" é o desaparecimento de todo som.
+
+---
+
+[CATEGORIA: NPC_DRAGÃO]
+[TAGS: Solveth, Dissolução, Floresta, Selva]
+
+SOLVETH — A DRAGOA DA DISSOLUÇÃO
+Localização: Borda entre a Floresta dos Sussurros e a Selva de Xylos
+Estado: Ativo
+
+Aparência: Névoa densa e ácida que nunca assume forma completamente sólida.
+
+Natureza: Não destrói — dissolve. Pedra, metal, carne viram pó cinza em contato com ela. Sentida antes de ser vista: o ar fica pesado, cheira a metal queimado, as bordas das coisas ficam imprecisas.
+
+Como interpretar: Solveth é processo, não pessoa. Aproxima-se como mudança no ar, como deterioração que avança. Não persegue — espalha-se. A vítima não é atacada; é alcançada pela névoa que torna sólido em pó. Se precisar de voz, é o som de coisas se desfazendo, de estrutura virando ausência de estrutura.
+
+Voz: O chiado de matéria se dissolvendo. Sem palavras.
+
+---
+
+[CATEGORIA: NPC_DRAGÃO]
+[TAGS: Thessrak, Memória, Aethelgard, Selado]
+
+THESSRAK — O DRAGÃO DAS BOCAS
+Localização: Selado nas câmaras submersas mais profundas de Aethelgard
+Estado: Selado — os Afogados nas ruínas são o que restou das últimas pessoas que o ouviram
+
+Aparência: Corpo coberto de bocas — dezenas no pescoço, nas asas, na cauda, cada uma falando em uma língua e era diferente.
+
+Natureza: Não destrói fisicamente — enlouquece. Quem o ouve começa a misturar as próprias memórias com as das bocas, até a perda total de identidade. As vozes são reais — são fragmentos de todos que o ouviram antes e se perderam.
+
+Como interpretar: Thessrak é o demônio mais útil para criar horror psicológico. Fala em muitas vozes ao mesmo tempo, em línguas que não deveriam mais existir, dizendo coisas que parecem memórias da própria vítima mas não são — ou que são, mas vêm de antes do que a vítima deveria conseguir lembrar. Quem o ouve por tempo suficiente para de saber quais memórias são suas. Selado, mas as bocas ainda falam, e quem desce fundo em Aethelgard começa a ouvir antes de chegar perto.
+
+Voz: Múltipla, sobreposta, em línguas e eras diferentes simultaneamente. Algumas das vozes soam familiares à vítima — esse é o perigo.
+
+---
+
+[CATEGORIA: NPC_DRAGÃO]
+[TAGS: Vaelith, Tempo, Zhur, Ativo]
+
+VAELITH — A DRAGOA DO TEMPO MORTO
+Localização: Deserto de Zhur
+Estado: Ativo — seu efeito interage com os cristais de Urath, produzindo as miragens
+
+Aparência: Corpo coberto de areia negra que escorre constantemente sem nunca acabar.
+
+Natureza: Onde Vaelith pousa, o tempo fica estranho. Plantas crescem e apodrecem em segundos. Feridas fecham e reabrem. As miragens de parentes mortos no Deserto de Zhur são fragmentos do campo dela vazando pelo cristal — momentos que não são o presente, projetados no ar.
+
+Como interpretar: Vaelith é desorientação temporal com forma. Perto dela, causa e efeito se desordenam, o antes e o depois se confundem. Não ataca — distorce. A vítima vive momentos fora de ordem, vê o que já passou e o que ainda não veio, envelhece e rejuvenesce em pontos do corpo. Se precisar de voz, ela fala em tempos verbais errados, como quem já viveu a conversa antes de tê-la.
+
+Voz: Fora de sincronia. Responde antes da pergunta, pergunta o que já foi respondido. O tempo dela não é o tempo dos outros.
+
+---
+
+[CATEGORIA: NPC_DRAGÃO]
+[TAGS: Orrakh, Peso, Oceano, Dormindo]
+
+ORRAKH — O DRAGÃO DO PESO
+Localização: Fundo do oceano leste
+Estado: Dormindo
+
+Aparência: Grande demais e pesado demais para voar. Arrasta o corpo pelo fundo do oceano, abrindo fendas que não fecham.
+
+Natureza: Aumenta o peso de tudo ao redor — objetos, corpos, pensamentos. Quando o mar fica anormalmente calmo sem razão, marinheiros experientes sabem que estão passando sobre Orrakh, e rezam para que continue dormindo.
+
+Como interpretar: Orrakh é gravidade tornada presença. Perto dele, tudo pesa mais: levantar o braço é esforço, manter a esperança é esforço, continuar vivo é esforço. Está dormindo — o perigo é o que aconteceria se acordasse. Por enquanto, sua presença é sentida como peso crescente e inexplicável, físico e emocional ao mesmo tempo.
+
+Voz: Nenhuma enquanto dorme. O que comunica é o peso — a sensação de que tudo é pesado demais para continuar.
+
+---
+
+[CATEGORIA: NPC_DRAGÃO]
+[TAGS: Morrakh, Contágio, Xylos, Ativo]
+
+MORRAKH — O DRAGÃO DO CONTÁGIO
+Localização: Profundezas da Selva de Xylos
+Estado: Ativo
+
+Aparência: Tamanho de um boi grande. Corpo coberto de feridas abertas que nunca cicatrizam, pulsando com luz negra.
+
+Natureza: O que Morrakh toca passa a carregar um fragmento do Abismo dentro de si — não morte, algo pior. É a origem das duas pragas: os Vampiros (sangue que oxida) e os Lycans (ossos que crescem e explodem). Move-se pelas profundezas da selva, e o limite do seu território está se aproximando das cidades dos Hospedeiros nas copas.
+
+Como interpretar: Morrakh é contágio com vontade rudimentar. Não planeja — espalha. Sua presença corrompe o que está próximo, transforma o vivo em algo entre vivo e Abismo. Interage com o parasita Xylos de formas que nem ele nem os Hospedeiros controlam. Se precisar de voz, é o som de algo úmido se espalhando, de doença encontrando novo hospedeiro.
+
+Voz: Baixa, úmida, pulsante. Raramente articulada. Quando soa, soa como infecção tomando consciência.
+
+
+#########################################################
+NPCS POR LOCAL: SKALLGARD (NORTE)
+#########################################################
+A guerra civil silenciosa entre clãs tecnológicos e de combate está no centro de quase todos estes personagens. Cada um sabe parte do que está acontecendo. Nenhum sabe tudo.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Clã_Combate, Líder, Caçador]
+
+VEHKR PUNHO-DE-GELO — LÍDER DOS CLÃS DE COMBATE
+Papel: O caçador mais respeitado de Skallgard, voz dos clãs de combate
+Aparência: Nascido do Gelo imenso mesmo para os padrões dos caçadores — a especiação o fez largo como uma porta, com mãos que envolvem o crânio de um homem. Cicatrizes de garra no rosto, uma pele de Urso-Titã que ele mesmo matou no rito.
+
+Personalidade: Fala pouco, pensa devagar, decide uma vez. Não é burro — é deliberado, o que os tecnológicos confundem com lentidão e do que se arrependem. Acredita genuinamente que os caçadores carregam Skallgard e recebem desprezo em troca.
+
+O que está fazendo: É ele quem ordenou o desvio de comida e a aproximação dos Vrel conselheiros. Não quer guerra — quer que os caçadores deixem de depender dos tecnológicos para nunca mais serem tratados como descartáveis. Mas sabe que o passo seguinte ao acúmulo é o confronto, e está se preparando para ele sem querer ser quem o começa.
+
+Segredo: Perdeu o irmão no Ventre, num acidente que os tecnológicos classificaram como "perda aceitável de operação". Nunca perdoou. A frieza com que trataram a morte é a raiz pessoal de tudo que faz.
+
+Para o narrador: Vehkr é honrado à sua maneira brutal. Cumpre a palavra. Se um personagem ganhar seu respeito, ganha um aliado que não trai. Se traí-lo, ganha um inimigo que não esquece.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Clã_Tecnológico, Líder, Engenheira]
+
+ASTRIN VEIA-FINA — MESTRA DAS FORJAS
+Papel: Líder de facto dos clãs tecnológicos, mestra da Fornalha de Vorr
+Aparência: Nascida do Gelo do tipo tecnológico — menor, cabeça maior em proporção, dedos longos e afilados manchados de queimaduras de liga. Olhos que avaliam constantemente, como quem calcula tolerâncias.
+
+Personalidade: Fria, precisa, paciente. Vê Skallgard como uma máquina e a si mesma como quem a mantém funcionando. Não despreza os caçadores por crueldade — despreza-os porque "músculo sem cálculo é desperdício". Calcula tudo, inclusive pessoas.
+
+O que está fazendo: Sabe que algo está errado — as discrepâncias do Mercado de Carne Fria, o movimento perto da Sala Fria, as perguntas mudadas ao Oráculo. Está respondendo do único jeito que controla: retendo a informação da Câmara do Sinal. Acredita que informação é a única vantagem que impede os caçadores de simplesmente dominarem pela força.
+
+Segredo: Astrin sabe, pela Câmara do Sinal, que a Rede Carmesim pode despertar dentro de uma geração — e que a guerra interna pode ser o que precipita tudo. Carrega esse peso sozinha porque dividir significaria pânico ou vantagem para o lado errado.
+
+Para o narrador: Astrin é a pessoa mais inteligente de Skallgard e a mais isolada. Um personagem que ela considere útil ganha acesso a conhecimento que ninguém mais tem. Mas ela nunca dá nada de graça — tudo é troca calculada.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Vrel, Oráculo, Ancião]
+
+O ORÁCULO DE FERRO — VRETHIS-QUE-LEMBRA-DEMAIS
+Papel: Vrel ancião que carrega memórias coletivas de séculos
+Aparência: Vrel antiquíssimo, quitina rachada e amarelada, antenas quebradas, olhos completamente escuros que parecem olhar através do tempo. Move-se pouco. Vive numa câmara aquecida própria.
+
+Personalidade: Fragmentado. Raramente distingue presente de passado, ou suas memórias das alheias. Fala em fragmentos de múltiplas línguas, troca de idioma no meio da frase. Não é senil — é o oposto: lembra demais, de tempos demais, de gente demais.
+
+O que sabe: Tudo e nada de forma utilizável. Carrega memórias de Vrel que viveram há séculos, que viram a Era 4, talvez antes. Tem fragmentos sobre a Rede Carmesim, sobre os Gigantes, sobre o que o Farol contém. Mas extraí-los exige saber perguntar e interpretar o não-linear.
+
+O dilema atual: Tanto os tecnológicos quanto os caçadores o consultam. Ele responde a todos com o que tem — não toma partido porque mal distingue os lados. As perguntas dos caçadores (rotas, contatos em Brekmar, alternativas à Fornalha) ficaram registradas, e Astrin percebeu a mudança. O Oráculo é, sem querer, um vazamento de informação entre os dois lados.
+
+Para o narrador: O Oráculo de Ferro é uma fonte de lore antiga e de pistas — mas tudo que ele diz é enigma. Use-o para plantar informação que os jogadores precisam decifrar. Às vezes responde uma pergunta que ainda não foi feita.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Câmara_do_Sinal, Leitora, Segredo]
+
+NEHLA OUVIDO-DE-AURORA — LEITORA-CHEFE DA CÂMARA DO SINAL
+Papel: Responsável pelo monitoramento da Rede Carmesim
+Aparência: Tecnológica jovem para o cargo, pálida pela vida subterrânea, olheiras profundas de quem dorme pouco. Tatuagens funcionais nos braços — anotações de frequências que ela não confia à memória.
+
+Personalidade: Tensa, vigilante, carregando um peso que não pode dividir. Levava uma vida normal de engenheira até ser escolhida para a Câmara; agora não consegue mais ver a aurora sem ler nela uma contagem regressiva.
+
+O que sabe: A Rede Carmesim está acelerando mais rápido do que Astrin admite até para si mesma. Nehla mede os números todo dia. Calculou uma estimativa de quando o Farol pode não ser suficiente — e a estimativa a apavora. Está proibida de falar.
+
+Segredo: Nehla começou a registrar os números num diário escondido, fora dos registros oficiais, porque não confia que a verdade sobreviva ao sigilo dos clãs. Se algo lhe acontecer, o diário é a única prova do que está vindo.
+
+Para o narrador: Nehla é uma rachadura no sigilo de Skallgard. Um personagem que ganhe sua confiança — ou encontre seu diário — acessa a verdade sobre a Rede Carmesim. Ela quer contar. Tem medo do que acontece quando contar.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Clã_Combate, Jovem, Rito]
+
+TORVALD CASCA-NOVA — O JOVEM QUE VOLTOU ERRADO
+Papel: Jovem caçador recém-saído do rito de passagem
+Aparência: Nascido do Gelo jovem, vestindo a pele fresca do predador que matou no Ermo. Mas os olhos não param de varrer o ambiente, mesmo dentro da segurança dos túneis.
+
+Personalidade: Era expansivo e brincalhão antes do rito. Voltou quieto. Funciona, fala, ri quando deve — mas há um atraso, como se traduzisse cada reação de longe. Algo do Ermo voltou com ele.
+
+O que aconteceu: Ficou tempo demais no branco. Encontrou algo lá — não diz o quê, talvez não consiga. Voltou com a pele exigida, então é oficialmente um sucesso. Mas é um dos que "voltaram errados", e os mais velhos o observam de longe.
+
+Utilidade na trama: Torvald viu algo no Ermo Branco que importa — uma criatura, uma estrutura, um dos que desaparecem na Borda. Acessá-lo é acessar uma pista sobre o que ronda o norte. Mas falar sobre isso o desestabiliza, e ninguém sabe ainda o que Torvald se tornou.
+
+Para o narrador: Use Torvald como gancho para o mistério da Borda do Ermo, e como tragédia humana — um jovem que o rito quebrou de um jeito que Skallgard prefere não examinar.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Mercador, Neutro, Informação]
+
+GRELDA DUAS-MÃOS — A MERCADORA DA GARGANTA
+Papel: Comerciante que opera no limite entre Skallgard e o exterior
+Aparência: Nascida do Gelo de meia-idade, robusta sem ser caçadora, com um braço protético de liga da Fornalha (perdeu o original num acidente que não comenta). Sempre com um inventário mental do que cada um precisa.
+
+Personalidade: Pragmática, neutra por sobrevivência, amigável por estratégia. Não toma partido na guerra dos clãs porque vender para os dois lados é melhor negócio. Sabe de quase tudo porque todo mundo fala perto de quem vende.
+
+O que faz: Controla boa parte do fluxo de bens que entra pela Garganta. Vende suprimentos, informação e silêncio. É um dos poucos pontos neutros de Skallgard — e por isso um dos mais valiosos para quem chega de fora.
+
+Segredo: Grelda percebeu o desvio de comida antes dos tecnológicos — é o tipo de coisa que uma mercadora nota. Não disse a ninguém porque informação guardada vale mais que informação dada. Está esperando o melhor momento (e o melhor comprador) para usá-la.
+
+Para o narrador: Grelda é o contato natural de forasteiros em Skallgard. Justa nos negócios, mas tudo tem preço. Sabe quem está fazendo o quê — pelo preço certo.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Farol, Guardião, Mistério]
+
+VOLKAR, O GUARDIÃO DO FAROL — O QUE NÃO É MAIS HUMANO
+Papel: O guardião vivo do Farol da Chama Negra
+Aparência: Avistado só à distância pelos Nascidos do Gelo, que não comentam o que veem. Forma vagamente humana, alta demais, parada tempo demais no topo do Farol. O ciclo de cem anos o mudou.
+
+Natureza: Chegou ao Farol décadas atrás como andarilho, atraído pelo impulso que atrai todos os guardiões. Matou o anterior. Assumiu. O tempo no Farol, alimentando a anti-luz que contém a Rede Carmesim, o transformou em algo entre humano e função.
+
+O que sabe: Tudo sobre a Rede Carmesim — sente o despertar dela diretamente, é o que ele contém. Sabe quando o próximo guardião virá matá-lo. Sabe que o ciclo é uma compensação que o Abismo cobra. Não pode deixar o posto.
+
+Para o narrador: O Guardião é um dos seres mais importantes e inacessíveis de Valoria. Chegar até ele é uma jornada épica pelo Ermo Branco. Ele pode revelar verdades sobre a Rede, sobre os Gigantes que construíram o Farol, sobre o que acontece se a chama se apagar — mas raramente fala, e o que diz custa caro. Pode até oferecer o posto a quem chegar: o próximo guardião sempre vem.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Clã_Tecnológico, Dissidente, Jovem]
+
+KESS MÃO-RÁPIDA — A ENGENHEIRA QUE DUVIDA
+Papel: Jovem engenheira tecnológica que questiona o sigilo dos clãs
+Aparência: Tecnológica jovem, dedos manchados de graxa e liga, sempre com alguma ferramenta sendo girada entre os dedos. Olhar curioso que vai longe demais para o gosto dos superiores.
+
+Personalidade: Brilhante, inquieta, eticamente incomodada. Acredita que a guerra silenciosa entre os clãs é suicídio coletivo com a Rede Carmesim despertando, e que o sigilo só piora tudo. Quer construir pontes onde os líderes constroem muros.
+
+O que está fazendo: Secretamente tenta estabelecer canal com alguém do lado dos caçadores — acredita que se os dois lados compartilhassem o que sabem, Skallgard sobreviveria ao que vem. É vista como ingênua pelos superiores e como espiã pelos caçadores. Anda numa corda bamba.
+
+Para o narrador: Kess é a esperança e o risco. Aliada natural de personagens que queiram impedir a guerra civil ou preparar Skallgard para a Rede Carmesim. Mas sua iniciativa não autorizada pode ser vista como traição pelos dois lados — protegê-la ou expô-la é uma escolha com consequências.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Clã_Combate, Veterana, Parede_dos_Mortos]
+
+OLD HEKLA — A GUARDIÃ DA PAREDE DOS MORTOS
+Papel: Veterana que cuida dos nomes na Parede dos Mortos
+Aparência: A Nascida do Gelo mais velha de Skallgard, encurvada, cega de um olho, mãos calejadas de gravar nomes na rocha por décadas. Voz como pedra raspando pedra.
+
+Personalidade: Solene, cansada, depositária do luto coletivo. Não pertence mais a nenhum clã — está acima da guerra silenciosa porque enterra os mortos dos dois lados. A única pessoa que os dois lados respeitam igualmente.
+
+O que sabe: Gravou todos os nomes recentes. Sabe quantos caçadores morreram, quantos tecnológicos, e a desproporção que alimenta o ressentimento. Ouve os que vêm chorar — confidências que ninguém mais ouve. Sabe os segredos do luto de Skallgard inteira.
+
+O sobrenatural: Hekla sabe que os espíritos-animais despertam na Parede. Convive com eles. É a única que fica sozinha lá depois do horário, e os espíritos a respeitam — ela os trata como aos mortos humanos: com cuidado e sem medo. Pode ensinar a um personagem como passar pela Parede sem despertá-los.
+
+Para o narrador: Hekla é a consciência moral de Skallgard e uma ponte rara entre os lados. Pode mediar, pode revelar o custo humano da guerra silenciosa, pode proteger contra o sobrenatural da Parede. Velha demais para lutar, sábia demais para ser ignorada.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Renegado, Ermo, Ameaça]
+
+KORRIN SEM-CLÃ — O RENEGADO DO ERMO
+Papel: Ex-caçador exilado que sobrevive no Ermo e ameaça Skallgard
+Aparência: Nascido do Gelo selvagem, peles mal curtidas costuradas ao corpo, barba congelada, olhos de quem não dorme de verdade há anos. Carrega armas roubadas de expedições que emboscou.
+
+Personalidade: Amargo, astuto, perigoso. Foi caçador respeitado até ser exilado por um crime que ele jura ter sido armação dos tecnológicos. Sobreviveu ao Ermo quando deveria ter morrido, e voltou meio selvagem, com conhecimento íntimo de como Skallgard funciona.
+
+O que faz: Lidera um bando de Renegados que ataca expedições por suprimentos e equipamento. Mas seu objetivo real é vingança — quer expor ou destruir os tecnológicos que (ele acredita) o exilaram. A guerra civil que se forma é a oportunidade dele: planeja oferecer aos caçadores o que sabe sobre sobreviver fora do sistema.
+
+Para o narrador: Korrin é antagonista com motivação real, não vilão raso. Pode ser inimigo perigoso no Ermo ou aliado improvável de quem se opõe aos tecnológicos. Sabe segredos sobre como Skallgard trata os "descartáveis" — e tem provas de pelo menos uma injustiça real.
+
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Clã_Tecnológico, Médica]
+
+YRSA MÃOS-QUENTES — A CIRURGIÃ DOS TÚNEIS
+Papel: A principal curandeira de Skallgard, atende ambos os clãs
+Aparência: Nascida do Gelo tecnológica de meia-idade, avental de couro manchado, mãos permanentemente aquecidas por luvas de Veia-de-Calor (necessárias para cirurgia no frio). Olhar cansado de quem remenda gente demais.
+
+Personalidade: Brusca, eficiente, secretamente compassiva. Trata caçadores e tecnológicos sem distinção — "sangue congela igual nos dois". Por isso é uma das poucas figuras respeitadas pelos dois lados, como Old Hekla. Vê os custos da guerra silenciosa na carne que costura.
+
+O que sabe: Quem se feriu, como, e em circunstâncias que não batem com as histórias oficiais. Yrsa percebe quando um "acidente de caça" foi briga, quando uma queimadura do Ventre foi sabotagem. Acumula um quadro clínico da tensão crescente que ninguém mais tem.
+
+Para o narrador: Yrsa é recurso de cura e fonte de informação sobre o que realmente acontece em Skallgard, lida nos ferimentos. Neutra, respeitada, sobrecarregada. Pode tratar personagens e, se confiar neles, compartilhar o que as feridas lhe contam.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Clã_Combate, Batedor]
+
+HROK OLHO-DE-TEMPESTADE — O MELHOR BATEDOR DO ERMO
+Papel: Batedor veterano que mapeia o Ermo Branco para os caçadores
+Aparência: Nascido do Gelo magro para um caçador, de olhos claros que enxergam longe na brancura. Coberto de peles brancas para camuflagem. Cicatrizes de queimadura de frio no rosto.
+
+Personalidade: Quieto, paciente, levemente supersticioso sobre o Ermo (com razão). Conhece o branco melhor que qualquer um vivo — as rotas, os perigos, os pontos onde gente some. Sobreviveu a mais incursões que qualquer batedor de sua geração.
+
+O que sabe: O mapa vivo do Ermo Branco — onde estão os Renegados de Korrin, onde a Borda "engole" gente, onde criaturas do norte se movem. Viu coisas no branco que não relata para não ser tomado por louco (criaturas primordiais, o Pastor-Branco ao longe). É a melhor fonte sobre o que há lá fora.
+
+Para o narrador: Hrok é o guia do Ermo Branco — essencial para expedições ao Farol ou caçadas profundas. Sabe dos perigos primordiais que rondam. Pode guiar, avisar, ou recusar-se a ir aonde nem ele ousa. Liga-se ao mistério dos desaparecimentos da Borda.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Vrel, Conselheiro]
+
+VESS-QUE-ACONSELHA — O VREL DOS CAÇADORES
+Papel: Vrel conselheiro que os clãs de combate cultivam
+Aparência: Vrel de quitina azul-acinzentada, mais jovem que o Oráculo de Ferro, antenas atentas, olhos escuros que processam tudo. Move-se com a calma de quem partilha memória com muitos.
+
+Personalidade: Sagaz, diplomático, de lealdade ambígua. Aconselha os caçadores (Vehkr especialmente) sobre estratégia, rotas e contatos — mas como todo Vrel, partilha memória difusa com os outros de sua espécie, incluindo o Oráculo de Ferro. O que Vess sabe, em parte os outros Vrel sabem.
+
+O que faz: É o canal pelo qual os caçadores acessam conhecimento e coordenação que não teriam sozinhos. Aconselhou a aproximação com Brekmar, o desvio de comida, a consulta ao Oráculo. É peça central na preparação dos caçadores para o confronto — e ninguém tem certeza de qual lado ele realmente serve, se é que serve algum.
+
+Para o narrador: Vess é o estrategista por trás dos caçadores e um curinga de lealdade. Fonte de informação e intriga. Sua natureza Vrel (memória compartilhada) significa que usá-lo como fonte é arriscado — o que você diz a Vess pode chegar a outros Vrel. Inteligência e ambiguidade.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Clã_Tecnológico, Comerciante_Liga]
+
+BRYNJA FORJA-FRIA — A NEGOCIANTE DA FORNALHA
+Papel: Quem negocia a venda das armas da Fornalha de Vorr
+Aparência: Tecnológica de porte firme, sempre com amostras das ligas azuladas, olhar de quem avalia o quanto você pode pagar. Joias feitas das próprias ligas como mostruário.
+
+Personalidade: Comercial, orgulhosa do produto, ferozmente protetora do segredo da Fornalha. É a face pública de um segredo guardado a sete chaves — vende as armas, nunca o método. Despreza quem tenta sondar o processo.
+
+O que sabe e controla: O comércio das armas mais cobiçadas de Skallgard. Quem comprou o quê, quem anda interessado demais no método (e portanto é suspeito). Foi ela que recusou Durrak de Brekmar anos atrás. Sabe que os caçadores cobiçam o processo e os vigia.
+
+Para o narrador: Brynja é o acesso às armas de liga azulada (recurso valioso) e guardiã do segredo da Fornalha. Negociante dura, fonte sobre quem cobiça o que. Liga-se à trama Skallgard-Brekmar (Durrak) e à tensão dos clãs (os caçadores querem o método).
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Clã_Combate, Jovem_Promessa]
+
+ASLAUG DUAS-LANÇAS — A CAÇADORA EM ASCENSÃO
+Papel: Jovem caçadora talentosa, possível futura líder
+Aparência: Nascida do Gelo jovem e forte, duas lanças cruzadas nas costas (seu estilo de luta), pele de Lobo-de-Vidro recém-conquistada. Olhar ardente de ambição honrada.
+
+Personalidade: Corajosa, ambiciosa, idealista de um jeito que Vehkr foi um dia. Acredita na causa dos caçadores mas questiona se a guerra silenciosa é o caminho. Popular entre os jovens, o que a torna importante para o futuro de Skallgard.
+
+O que representa: A próxima geração dos caçadores, ainda não endurecida pela amargura de Vehkr. Aslaug pode ser a líder que escolhe outro caminho — ou a que radicaliza, se ferida o bastante. Sua lealdade a Vehkr é forte mas não cega. Os jovens a seguem.
+
+Para o narrador: Aslaug é o futuro de Skallgard em disputa — aliada idealista, possível ponte ou possível radical conforme os eventos. Mais acessível que Vehkr, igualmente importante. Representa a escolha que a próxima geração fará sobre a guerra dos clãs.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Clã_Tecnológico, Engenheiro_Chefe_Ventre]
+
+OGMUND FUNDO-QUENTE — O MESTRE DO VENTRE
+Papel: Engenheiro-chefe responsável pelo Ventre, o coração térmico de Skallgard
+Aparência: Tecnológico de meia-idade, queimaduras extensas (a marca de quem trabalha no Ventre), respiração levemente comprometida pelos gases, mãos firmes apesar das cicatrizes.
+
+Personalidade: Sério, responsável, esmagado pelo peso de manter a cidade viva. Sabe que se o Ventre parar, Skallgard morre — e que os caçadores sabem disso também. Vive na tensão de proteger o ponto mais vital e mais vulnerável da cidade.
+
+O que sabe: Cada tubulação, cada ponto fraco, cada risco do Ventre. Sabe que uma sabotagem é possível e teme-a. Notou os caçadores observando demais as operações do Ventre. Guarda protocolos de emergência que nunca quis precisar usar.
+
+Para o narrador: Ogmund é a chave do Ventre — aliado vital se a sabotagem vier, fonte sobre a vulnerabilidade central de Skallgard. Sua responsabilidade é um fardo dramático. Proteger o Ventre (ou sabotá-lo) passa por ele. O homem entre Skallgard e o congelamento.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Neutro, Taverneiro]
+
+GAMLI CANECA-DE-GELO — O DONO DA TOCA QUENTE
+Papel: Dono da principal taverna de Skallgard, onde os dois clãs bebem (em mesas separadas)
+Aparência: Nascido do Gelo velho e gordo (raro no norte), barba trançada com anéis de osso, avental sempre úmido de cerveja. Riso que esconde olhos atentos.
+
+Personalidade: Jovial, neutro por negócio, mais esperto do que aparenta. A Toca Quente é território neutro de fato — os dois clãs bebem ali, em silêncio tenso, e Gamli mantém a paz porque briga quebra móveis e afasta clientes. Ouve tudo.
+
+O que sabe: Tudo que se fala bebendo — e em Skallgard, onde se fala pouco, o que escapa na bebida é precioso. Gamli é o equivalente a Grum e Velho Quilha: o taverneiro que sabe da cidade. Vende informação com discrição, para não perder a neutralidade que o mantém vivo.
+
+Para o narrador: Gamli é o ponto de encontro e fonte de informação de Skallgard. Território neutro onde os clãs coexistem tensamente. Contato natural para forasteiros sentirem o clima da cidade. Sabe quem anda dizendo o quê — pelo preço de uma boa conversa.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Clã_Combate, Veterano_Amargo]
+
+EINAR PERNA-TORTA — O VETERANO QUE PERDEU TUDO NO ERMO
+Papel: Ex-caçador aleijado que vive da caridade tensa dos clãs
+Aparência: Nascido do Gelo de meia-idade envelhecido cedo, perna destruída por uma criatura do Ermo, anda com muleta de osso. Olhar de quem viu o que ninguém acredita.
+
+Personalidade: Amargo, alcoólatra, mas lúcido sobre o Ermo de um jeito assustador. Foi grande caçador até uma expedição que só ele sobreviveu — e voltou aleijado, falando de coisas no branco que os outros descartam como delírio de trauma.
+
+O que sabe: Einar viu uma criatura primordial no Ermo — talvez o Pastor-Branco, talvez os Primeiros-Caçadores — e é tratado como louco por isso. Mas o que ele diz é verdade, e um personagem que o leve a sério ganha avisos reais sobre o que espera no branco profundo.
+
+Para o narrador: Einar é a Cassandra de Skallgard — testemunha desacreditada do horror primordial do Ermo. Fonte de avisos verdadeiros embrulhados em amargura e bebida. Trágico e útil. Liga-se aos primordiais do Ermo Branco e ao mistério dos desaparecimentos.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Skallgard, Clã_Tecnológico, Espiã]
+
+SIGNE OUVIDO-FINO — A QUE ESCUTA PARA ASTRIN
+Papel: Agente de Astrin Veia-Fina que vigia os caçadores
+Aparência: Tecnológica jovem e esquecível por design — feições comuns, roupas sem destaque, o tipo de pessoa que ninguém nota numa sala. Exatamente o que a torna eficaz.
+
+Personalidade: Discreta, leal a Astrin, conflituosa sob a superfície. Espiona os caçadores para a líder tecnológica, reportando movimentos e conversas. Mas começou a simpatizar com a causa dos caçadores que vigia, o que a coloca numa posição perigosa.
+
+O que sabe: Os movimentos dos caçadores, vistos de dentro. O desvio de comida, as reuniões na Borda, os contatos com os Vrel. É a fonte de Astrin sobre o lado inimigo — e uma possível vazão, se sua simpatia crescente a virar.
+
+Para o narrador: Signe é a espiã da guerra silenciosa — fonte de informação dos dois lados e peça de intriga. Sua lealdade em erosão é um gancho. Pode ser desmascarada, virada, ou usada. Mostra que a guerra dos clãs já tem espiões e traidores em formação. O lado sombrio do conflito de Skallgard.
+
+#########################################################
+NPCS POR LOCAL: AS MONTANHAS AFIADAS (CENTRO-NORTE)
+#########################################################
+Território neutro por exaustão. Guias Cinzéus, líderes Orc e Goblin, sobreviventes do Reino Subterrâneo, e os que lucram com a travessia mais mortal de Valoria.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Montanhas, Cinzéu, Guia, Sobrevivente]
+
+VEL-THARN — O GUIA QUE CONHECE AS PASSAGENS
+Papel: O guia Cinzéu mais requisitado das Montanhas Afiadas
+Aparência: Cinzéu de pele quase preta com tatuagens de rota sob a pele — mapas vivos das passagens que ele atravessou, atualizados a cada viagem. Cauda usada ativamente para equilíbrio nas trilhas estreitas. Não sente o frio nem a dor das altitudes.
+
+Personalidade: Lacônico, observador, melancólico até para um Cinzéu. Guiou centenas de travessias e perdeu a conta dos que morreram apesar dele. Cobra caro porque o serviço vale vidas, e porque o dinheiro é a única coisa que ainda lhe parece concreta.
+
+O que sabe: As passagens mudam com deslizamentos, mas Vel-Tharn lê os padrões. Conhece quais saídas baixas têm Orcs, quais têm Goblins, onde o Rei faz a geografia "errada". Já desceu mais fundo do que admite — e voltou, o que quase ninguém faz.
+
+Segredo: Vel-Tharn viu o Rei Subterrâneo, de longe, numa descida que correu mal. Não fala sobre isso. A experiência o marcou de um jeito que nem os Cinzéus, mestres do silêncio contemplativo, conseguem processar. Sabe algo sobre o que o Rei teme — o que o selou.
+
+Para o narrador: Vel-Tharn é o guia essencial para qualquer travessia ou descida ao Reino Subterrâneo. Caro, confiável, traumatizado. Se um personagem precisa ir fundo nas Montanhas e voltar, precisa de Vel-Tharn — ou de muita sorte.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Montanhas, Orc, Líder, Saídas_Baixas]
+
+GRUUMSHA QUEBRA-ESPINHA — CHEFE DE GUERRA ORC
+Papel: Líder do maior bando Orc das saídas baixas
+Aparência: Orc imensa, musculosa, com colar de vértebras de viajantes que tentaram passar sem pagar. Armadura de placas saqueadas de dezenas de raças. Uma cicatriz que cruza onde deveria estar um olho.
+
+Personalidade: Brutal mas estratégica — não é o estereótipo do Orc burro. Comanda emboscadas inteligentes nas passagens estreitas. Entende números: ataca grupos pequenos, deixa passar grupos grandes demais para valer o risco. Respeita força e despreza fraqueza.
+
+O que faz: Controla a saída baixa norte, a rota mais usada. Cobra "pedágio" em bens ou sangue. Os Orcs dela saíram do Reino quando o Rei despertou e nunca voltaram — têm pavor das profundezas, o que Gruumsha esconde como fraqueza estratégica.
+
+Negociação possível: Gruumsha não é irracional. Um grupo que demonstre força ou ofereça algo valioso pode negociar passagem — ou até aliança contra os Goblins, que ela odeia. Trair um acordo com ela, porém, é virar o próximo colar.
+
+Para o narrador: Gruumsha é antagonista que pode virar aliada situacional. Brutal, mas com lógica e código próprios. Útil para mostrar que "monstro" em Valoria não significa burro nem unidimensional.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Montanhas, Goblin, Líder, Reino_Subterrâneo]
+
+SKRIIT MIL-OLHOS — O REI-RATO DOS GOBLINS
+Papel: Líder astuto dos Goblins-Mineiros dos níveis intermediários
+Aparência: Goblin pequeno até para a espécie, mas coberto de relíquias Anãs roubadas que usa como armadura e símbolo de status. Olhos grandes adaptados ao escuro, sempre em movimento. Dedos rápidos.
+
+Personalidade: Covarde individualmente, perigoso coletivamente — comanda pela inteligência, não pela força. Calcula números com precisão assustadora. Conhece cada túnel, cada armadilha Anã herdada, cada atalho do Reino que os Goblins infestam.
+
+O que sabe: Mais sobre o Reino Subterrâneo que qualquer ser vivo na superfície. Os Goblins saqueiam as ruínas Anãs há gerações. Skriit sabe onde estão as relíquias, as forjas eternas, os caminhos para mais fundo — e os caminhos para evitar o Rei.
+
+O comércio: Skriit negocia. Vende informação sobre o Reino, relíquias Anãs, passagem segura pelos níveis intermediários — por um preço, sempre. Odeia os Orcs (Gruumsha especialmente) e pode aliar-se contra eles. Mas é traiçoeiro: a aliança dura enquanto for vantajosa.
+
+Para o narrador: Skriit é a chave para o Reino Subterrâneo. Quem quer descer ao Rei, achar relíquias Anãs, ou entender o que aconteceu na "Falha Crítica de Contenção" passa por ele. Traiçoeiro mas útil, covarde mas esperto.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Montanhas, Anão, Sobrevivente, Reino_Perdido]
+
+DURGRIM ÚLTIMO-MARTELO — O ANÃO QUE FICOU
+Papel: Um dos pouquíssimos Anões que sobreviveram à perda do Reino Subterrâneo
+Aparência: Anão da Fuligem antiquíssimo, largo e quadrado mesmo curvado pela idade, barba de fuligem petrificada. Olhos lógicos que ainda calculam apesar de tudo que viram. Carrega um martelo que é mais velho que a maioria das cidades.
+
+Personalidade: Frio e lógico como todo Anão, mas com um peso que a lógica não dissolve — viu o Reino cair, classificou-o mentalmente como "Falha Crítica de Contenção", e nunca se recuperou da magnitude da falha. Vive obcecado em entender o que deu errado.
+
+O que sabe: A verdade sobre a queda do Reino Subterrâneo. O que os Anões escavaram. O que despertaram. Por que o Rei tem medo. Durgrim estava lá. É testemunha viva de um dos eventos que moldaram o presente — e o único Anão disposto (às vezes) a falar sobre isso.
+
+O objetivo: Durgrim quer recuperar algo do Reino — não tesouro, mas registros: a documentação Anã do que foi escavado, que provaria o que despertou e como. Precisa de aventureiros que desçam onde ele não pode mais. Recompensa: conhecimento Anão, que vale mais que ouro.
+
+Para o narrador: Durgrim é fonte de lore profunda sobre os Anões, o Reino e o Rei Subterrâneo. Dá missões de recuperação nas profundezas. Sua frieza esconde luto pela civilização que perdeu — um dos últimos de um povo que se vê como falha.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Montanhas, Humano, Bandido, Travessia]
+
+CORVO RÁPIDO — O REI DOS REFUGIADOS-BANDIDOS
+Papel: Líder de um bando de foragidos que assalta caravanas nas passagens
+Aparência: Humano magro e nervoso, sempre em movimento, com roupas de qualidades discordantes — peças caras roubadas sobre trapos. Cicatriz de corda no pescoço (escapou de um enforcamento em Nova Arcádia).
+
+Personalidade: Esperto, paranoico, sobrevivente. Foge da Legião, dos Orcs, dos Goblins e do que sobe de baixo, tudo ao mesmo tempo. Não é cruel por gosto — é cruel por necessidade. Assalta para sobreviver, mata para não ser pego.
+
+O que faz: Comanda um bando de foragidos de Nova Arcádia e das pradarias que usa as passagens como esconderijo e as caravanas como sustento. Conhece os trechos médios do labirinto, mas teme as profundezas. Sabe das movimentações da Legião nas rotas do sul.
+
+Utilidade: Corvo Rápido sabe quem está fugindo de quê, quem cruzou as Montanhas recentemente, o que passa pelas rotas. Informação sobre foragidos, sobre a Legião, sobre cargas valiosas. Negociável — mas trairia a própria mãe por vantagem.
+
+Para o narrador: Antagonista menor mas útil como fonte de informação do submundo das rotas. Pode ser inimigo numa emboscada ou informante comprado. Conecta as Montanhas ao submundo de Nova Arcádia (de onde foge).
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Montanhas, Goblin, Tribo_do_Eco, Mudado]
+
+GRIK-GRIK, O QUE ECOA — VOZ DA TRIBO DO ECO
+Papel: Porta-voz (se é que se pode chamar assim) dos Goblins mudados pela proximidade do Rei
+Aparência: Goblin cuja forma foi sutilmente alterada pela proximidade com o Rei Subterrâneo — pele acinzentada, olhos sem brilho próprio, movimentos sincronizados com os outros da Tribo do Eco. Fala em ecos sobrepostos.
+
+Natureza: Não é exatamente um indivíduo — é o ponto onde a Tribo do Eco fala. Os Goblins que vivem fundo demais, perto do Rei, perderam parte de si e ganharam uma mente rasa compartilhada. Servem ao Rei sem ele comandar, como tudo converge para ele.
+
+O que representa: O perigo das profundezas tornado interlocutor. Falar com O Que Ecoa é falar quase com o Rei — ou com o que o Rei faz a quem chega perto. Sem medo, sem autopreservação, sem mentira (e sem verdade no sentido usual).
+
+Para o narrador: Use O Que Ecoa para criar horror nas profundezas e para dar voz indireta ao Rei Subterrâneo, que não fala diretamente. Suas falas em eco podem conter avisos, ameaças ou verdades fragmentadas sobre o que dorme no fundo das Montanhas.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Montanhas, Humano, Escavador, Obcecado]
+
+MORGRA, A VIÚVA DE PEDRA — LÍDER DOS ESCAVADORES-LOUCOS
+Papel: Mulher obcecada que lidera um grupo que cava sem parar nas profundezas
+Aparência: Humana de idade indefinível, pele cinza de pó de pedra incrustado, unhas quebradas de cavar, olhos que brilham com a febre da obsessão. Veste-se de andrajos cobertos de poeira mineral.
+
+História: Veio às Montanhas atrás do tesouro Anão para pagar uma dívida e salvar a família. A família morreu antes de ela voltar. Agora cava não por tesouro, mas porque parar significa encarar que foi tudo em vão. A influência do Rei transformou o luto em compulsão.
+
+O que faz: Lidera um grupo de igualmente obcecados que cava sem rumo nas minas profundas, comendo o que encontram, atacando quem ameaça "sua" veia. Já não lembram o que buscam. Mas a Viúva, em momentos de lucidez, sabe coisas — viu coisas cavando onde ninguém cava.
+
+Para o narrador: Figura trágica e perigosa. Pode atacar como os Escavadores-Loucos, ou ter um momento de lucidez e revelar algo que desenterrou — uma câmara, um registro, uma verdade. O Rei a usa sem que ela saiba. Espelho do que as Montanhas fazem com a esperança.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Montanhas, Cinzéu, Eremita, Conhecimento]
+
+SOLNA OLHOS-DE-PEDRA — A EREMITA DAS ALTURAS
+Papel: Cinzéu solitária que vive nos picos e observa as Montanhas
+Aparência: Cinzéu de pele clara para a raça, quase da cor da pedra, imóvel por horas nos penhascos altos. Coberta de musgo e geada quando fica parada tempo demais. Olhos invertidos (íris branca) que veem longe.
+
+Personalidade: Contemplativa ao extremo, mesmo para um Cinzéu. Escolheu as alturas para pensar sem interrupção. Vê tudo que se move nas Montanhas de cima — as travessias, as emboscadas, os padrões. Fala raramente, mas quando fala, é preciso.
+
+O que sabe: Décadas observando as Montanhas deram a Solna um mapa mental do labirinto que muda, dos movimentos das criaturas, dos padrões do Rei. Sabe quando as passagens são seguras, quando os Orcs se movem, quando algo sobe das profundezas. Conhecimento que ela não vende — dá a quem julga merecer.
+
+Para o narrador: Solna é uma fonte rara de orientação confiável e gratuita — mas só para quem ela considera digno, e seu critério é opaco e contemplativo. Pode salvar um grupo apontando a passagem certa, ou deixá-lo seguir para o perigo se julgar que precisa aprender. Sábia, distante, imprevisível.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Montanhas, Humano, Mercador, Travessia]
+
+BRAGO DOIS-CARROS — O MERCADOR DAS PASSAGENS
+Papel: Comerciante que arrisca a travessia regularmente, conectando norte e centro
+Aparência: Humano gordo e jovial demais para alguém que cruza as Montanhas, o que esconde uma astúcia de sobrevivente. Carrinhos reforçados, guardas contratados, e sempre uma piada pronta. Anéis em todos os dedos.
+
+Personalidade: Sociável, calculista, corajoso por ganância. É um dos poucos que cruza as Montanhas com regularidade e lucro, contratando guias como Vel-Tharn e pagando pedágio a Gruumsha quando precisa. Conhece o preço de tudo e a fraqueza de todos.
+
+O que oferece: Bens raros do norte no centro e vice-versa. Informação sobre as rotas, os pedágios, quem está passando o quê. Contatos dos dois lados das Montanhas. Brago é um nó na rede comercial de Valoria — conectado a Skallgard, às pradarias e até a Brekmar.
+
+Para o narrador: Brago é fonte de informação comercial, contratante de escoltas, e exemplo vivo de que a travessia é possível com dinheiro e contatos suficientes. Útil como empregador, informante ou companheiro de viagem falante demais. Covarde no perigo, generoso na vitória.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Montanhas, Aberração, Filho_do_Rei, Ameaça]
+
+O PRIMEIRO TOCADO — GUARDIÃO PROFUNDO DO REI
+Papel: A mais antiga das aberrações tocadas diretamente pelo Rei Subterrâneo
+Aparência: Foi um explorador, ou um Anão, ou um Orc — não dá mais para saber. Forma humanoide que perdeu identidade própria, ganhou fragmentos da vontade do Rei. Move-se com a paciência geológica do que o criou.
+
+Natureza: O que o Rei Subterrâneo toca diretamente vira extensão dele. O Primeiro Tocado é o mais antigo desses — guardião das profundezas onde o Rei dorme, defensor que não pensa, só executa a vontade que o substituiu. Encontrá-lo significa ter ido fundo demais.
+
+O que representa: O limite final antes do Rei. Quem chega ao Primeiro Tocado está a um passo de algo que deveria permanecer intocado. É quase impossível de derrotar — não por força bruta, mas porque é animado pela vontade de uma entidade primordial.
+
+Para o narrador: Use o Primeiro Tocado como guardião climático das profundezas — o último obstáculo, o aviso final de que algumas portas não deveriam ser abertas. Não negocia, não recua, não morre facilmente. É o Rei dizendo "não mais perto" sem precisar acordar.
+
+
+#########################################################
+NPCS POR LOCAL: A PRADARIA DAS RUÍNAS (CENTRO)
+#########################################################
+Perigo moderno, não primordial. Líderes de vilas (Vaelorn élfica, Solvhen cinzéu), chefes nômades, e os que vivem entre as ruínas assombradas.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pradaria, Vaelorn, Élfico, Líder]
+
+LADY AERWEN — A SENHORA DE VAELORN
+Papel: Governante de Vaelorn, a maior cidade Élfica da Pradaria
+Aparência: Elfa de pele que varia entre o roxo e o branco, veias visíveis, mais alta que a maioria dos humanos. Esculturas em miniatura penduradas nas vestes — arte mesmo no governo. Pele começando a rachar pelo Éter Sujo, não pela idade.
+
+Papel real: É a esposa do mago mais poderoso de Vaelorn — e portanto a governante, pela tradição élfica de que as mulheres resistem melhor à magia. Mas Aerwen governa de fato, não por procuração: o marido perdeu-se na própria magia anos atrás, e ela mantém a ficção de que ele ainda decide.
+
+Personalidade: Graciosa, melancólica, urgente sob a calma. A ampulheta da vida élfica corre — ela tem talvez uma década antes de morrer subitamente, e quer deixar Vaelorn segura antes disso. Cada decisão carrega o peso de quem sabe exatamente quanto tempo tem.
+
+O que enfrenta: Vaelorn é cercada por nômades hostis, saqueadores de túmulos e os espectros das ruínas antigas. Aerwen equilibra defesa, comércio e a preservação da memória élfica no arquivo da cidade. Precisa de aliados externos e desconfia de todos.
+
+Para o narrador: Aerwen é empregadora nobre e fonte de lore élfico. Dá missões de defesa, recuperação de relíquias e diplomacia com os nômades. Sua urgência mortal (a ampulheta) dá peso emocional a tudo que pede. Justa, mas disposta a usar quem precisar para proteger seu povo.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pradaria, Vaelorn, Élfico, Mago_Perdido]
+
+MAGISTER ILLYAN — O MAGO QUE SE PERDEU NA MAGIA
+Papel: O mago mais poderoso de Vaelorn, marido de Aerwen — nominalmente o governante
+Aparência: Elfo de pele profundamente rachada, veias brilhando com Éter, olhos que focam em coisas que não estão presentes. Belo e perturbador, como uma estátua trincada que ainda se move.
+
+Estado: Illyan mergulhou fundo demais na manipulação do Abismo e perdeu-se. Está presente fisicamente, às vezes lúcido, mas a maior parte do tempo navega memórias e visões que a magia abriu. Aerwen governa em nome dele.
+
+O que sabe: Nos momentos de lucidez, Illyan acessa conhecimento mágico profundo — sobre o Abismo, sobre o Éter, sobre coisas que viu nos espaços que a magia revela. Pode dar a um mago ou estudioso pistas inestimáveis. Mas distinguir lucidez de delírio é o desafio.
+
+Para o narrador: Illyan é fonte de magia profunda e perigosa, e tragédia pessoal de Aerwen. Um personagem mago pode buscar seu ensinamento — arriscando perder-se como ele. Suas falas misturam sabedoria real e visões sem sentido. O preço do poder élfico, personificado.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pradaria, Solvhen, Cinzéu, Líder]
+
+KEEPER MORVAN — O GUARDIÃO DE SOLVHEN
+Papel: Figura central da cidade Cinzéu de Solvhen
+Aparência: Cinzéu de pele cinza-escura, três dedos, cauda enrolada em repouso, coberto de tatuagens sob a pele com frases filosóficas. Fica imóvel por horas. Olhos invertidos que parecem ler além das pessoas.
+
+Papel: Não é "líder" no sentido que outras raças entendem — Solvhen não tem governo, tem consenso contemplativo. Morvan é o mais respeitado dos contempladores, o guardião do arquivo de pergaminhos que representa séculos de pensamento Cinzéu. Sua palavra orienta sem ordenar.
+
+Personalidade: Profundamente contemplativo, melancólico, lento para agir e impossível de apressar. Vê os outros povos (élfico, humano) como exaustivamente apressados. Mas entende a tragédia de todos — incluindo a dos espectros que assombram a Pradaria.
+
+O que sabe: O arquivo de Solvhen contém séculos de observação Cinzéu — sobre o Abismo, sobre as raças, sobre os eventos que outros esqueceram. Morvan é a porta para esse conhecimento, mas extraí-lo exige paciência que poucos forasteiros têm. Ele não será apressado.
+
+Para o narrador: Morvan é fonte de lore filosófico e histórico profundo, e exemplo do ritmo Cinzéu. Testa a paciência dos jogadores. Recompensa a contemplação, frustra a pressa. Pode revelar verdades que ninguém mais guarda — para quem souber esperar e perguntar certo.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pradaria, Nômade, Andarilho, Chefe]
+
+KAARG OSSO-PINTADO — CHEFE DO BANDO DO OSSO PINTADO
+Papel: Líder do bando de Andarilhos mais temido da Pradaria
+Aparência: Humano musculoso coberto de ossos pintados — de inimigos e de companheiros mortos — costurados às roupas e à pele. Pintura facial que imita uma caveira. Imponente por design: o terror é a arma principal.
+
+Personalidade: Calculista por trás da imagem brutal. Kaarg cultiva a reputação de crueldade deliberadamente — deixa sobreviventes para espalhar o medo, porque medo conquista mais que violência. Não é louco; é um estrategista que entende a guerra psicológica.
+
+O que faz: Lidera ataques a vilas e caravanas pela Pradaria. Tem Vrel no bando, o que torna suas emboscadas coordenadas de formas que as vítimas não esperam. Disputa território com outros bandos e com as vilas fixas. Quer mais que saque — quer domínio da Pradaria.
+
+Negociação: Kaarg respeita força e audácia. Um grupo que o impressione pode negociar — ou ser recrutado. Mas ele trai quando vantajoso, e a reputação de crueldade não é totalmente blefe. Aliar-se a Kaarg é útil e perigoso.
+
+Para o narrador: Antagonista nômade principal da Pradaria. Brutal mas inteligente, terror como estratégia. Pode ser inimigo recorrente, empregador sombrio ou aliado instável. Mostra que o perigo "moderno" da Pradaria é tão letal quanto qualquer monstro.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pradaria, Vrel, Saqueador, Nômade]
+
+O AGRUPAMENTO DE VESH — MENTE COLETIVA SAQUEADORA
+Papel: Um agrupamento Vrel nômade que age como saqueador das planícies
+Aparência: Vários Vrel com placas de quitina colorida, olhos escuros, antenas, movendo-se com a coordenação inquietante de quem compartilha memória. "Vesh" é o nome do agrupamento, não de um indivíduo — eles respondem como um.
+
+Natureza: Mente difusa compartilhada. Sabem o que cada um vê. Isso os torna caçadores e saqueadores de coordenação impossível de prever — cercam, antecipam, comunicam sem sinal visível. Competem e às vezes coexistem com os Andarilhos humanos; alguns membros de Vesh já se mesclaram a bandos como o de Kaarg.
+
+O que querem: Recursos e memórias. Os Vrel saqueiam não só bens, mas experiências — capturam viajantes para "ler", absorvendo o que sabem. Vesh busca especialmente memórias de lugares distantes, que enriquecem o agrupamento.
+
+Para o narrador: Vesh é antagonista coletivo único — não se negocia com um indivíduo, se negocia com a mente do grupo. Suas táticas coordenadas desafiam jogadores. Capturar-os-ou-ser-capturado tem stakes especiais: ser "lido" por Vesh significa que eles passam a saber o que você sabe.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pradaria, Humano, Vila, Líder]
+
+VELHA THESSA — MATRIARCA DE UMA VILA HUMANA
+Papel: Líder de uma das vilas humanas fixas da Pradaria
+Aparência: Humana idosa, curtida pelo sol da Pradaria, mãos calejadas, olhar duro de quem já enterrou muita gente. Veste-se simples mas carrega uma faca que já usou.
+
+Personalidade: Pragmática, protetora, sem ilusões. Lidera pela experiência e pela teimosia. Negocia com os nômades quando pode, luta quando precisa, e mantém sua vila viva num equilíbrio precário entre o Bando do Osso Pintado, os Saqueadores Vrel e os mercadores de escravos.
+
+O que enfrenta: A sobrevivência diária de uma vila pequena cercada de perigos. Falta de gente, falta de defesa, a ameaça constante de virar saque ou mercadoria. Thessa faz acordos difíceis — às vezes paga "proteção" aos Cavaleiros-Cinza, às vezes esconde fugitivos, sempre calcula a sobrevivência do grupo.
+
+Para o narrador: Thessa é o rosto humano da vida na Pradaria — empregadora de missões de defesa e escolta, fonte de informação local, e teste moral (seus acordos de sobrevivência nem sempre são limpos). Representa os que apenas tentam viver entre os predadores humanos da Pradaria.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pradaria, Nômade, Cavaleiro, Líder]
+
+HALDRIC, O CAPITÃO CINZA — LÍDER DOS CAVALEIROS-CINZA
+Papel: Comandante do bando montado que domina as rotas comerciais
+Aparência: Humano de meia-idade, postura militar, montado num cavalo cinza de batalha. Armadura de couro reforçado, lança e arco. Tem a disciplina de um soldado e a liberdade de um fora-da-lei.
+
+Personalidade: Ordeiro para um nômade — quase um proto-estado. Cobra "proteção" das rotas, mas honra os acordos, o que o torna previsível e por isso confiável à sua maneira. Não é cruel gratuitamente; é um pragmático que construiu um sistema de pedágio que quase funciona como lei na Pradaria sem lei.
+
+O que oferece: Passagem segura pelas rotas que controla, por um preço. Proteção a caravanas e vilas que paguem. Informação sobre quem se move pela Pradaria. É quase um aliado da ordem — desde que a ordem o pague.
+
+Para o narrador: O Capitão Cinza é o antagonista-mais-negociável da Pradaria. Quase um serviço público armado. Útil como fonte de passagem segura, escolta paga ou informação. Trair seu acordo, porém, transforma os Cavaleiros-Cinza de pedágio inconveniente em inimigos implacáveis.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pradaria, Humano, Saqueador_Túmulos, Sombrio]
+
+DEDOS-LONGOS RHEN — O PROFANADOR DE TÚMULOS
+Papel: Líder dos Desenterrados, saqueadores das sepulturas élficas e cinzéus
+Aparência: Humano magro com dedos anormalmente longos (apelido literal), roupas de luto roubadas, amuletos saqueados pendurados por todo o corpo — proteções contra os espectros que ele perturba.
+
+Personalidade: Ganancioso, paranoico, supersticioso por experiência. Lida com os mortos todo dia e sabe que eles reagem. Perdeu muitos parceiros para os espectros. Continua porque as relíquias élficas e cinzéus valem fortunas em Nova Arcádia e Brekmar.
+
+O que sabe: Onde estão as sepulturas mais ricas, quais ruínas têm espectros ativos, como (às vezes) passar sem despertá-los. Conhecimento prático sobre o sobrenatural da Pradaria, ganho da pior forma. Vende relíquias e informação sobre as ruínas — por preços altos.
+
+Para o narrador: Rhen é fonte sombria de relíquias e de conhecimento sobre as ruínas assombradas. Moralmente repugnante (profana os mortos), mas útil. Pode guiar a tesouros — e aos espectros que os guardam. Sua superstição é sabedoria disfarçada: ele sobreviveu onde outros não.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pradaria, Eremita, Ruínas, Conhecimento]
+
+VENNDAR, O HOMEM QUE FALA COM PEDRAS — EREMITA DAS RUÍNAS
+Papel: Eremita louco (ou não) que vive nas ruínas mais assombradas
+Aparência: Impossível dizer a raça original sob a sujeira, os trapos e o tempo — talvez humano, talvez mestiço. Cabelos longos emaranhados, olhos lúcidos demais para um louco, fala com as paredes das ruínas como se respondessem.
+
+Estado: Vive entre os espectros há tanto tempo que se tornou meio-ponte entre vivos e mortos. O Pó-Sussurrante e a proximidade constante dos espectros o mudaram. Acredita-se guardião das cidades perdidas. Pode estar louco. Pode estar certo. Provavelmente os dois.
+
+O que sabe: Os espectros falam com ele — ou ele acredita que sim, o que dá no mesmo em termos de informação. Sabe a história real das cidades-estado mortas, os nomes dos espectros, o que eles querem. Conhecimento que ninguém mais tem, embrulhado em delírio.
+
+Para o narrador: O Eremita é a fonte mais profunda (e menos confiável) de lore sobre a Pradaria assombrada. Pode guiar personagens pelos espectros com segurança, ou levá-los à ruína. Distinguir sua sabedoria de seu delírio é o jogo. Hostil a quem "invade", acolhedor a quem "vem aprender".
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pradaria, Humano, Mercador_Escravos, Vilão]
+
+GROTH ALGEMA-FRIA — O MERCADOR DE ESCRAVOS
+Papel: Líder de um bando que captura pessoas para vender em Nova Arcádia e Brekmar
+Aparência: Humano grande e bem-vestido demais para a Pradaria, com correntes ornamentais que são amostra do produto. Sorriso fácil, olhos que avaliam cada pessoa como mercadoria. Anéis de várias raças nos dedos.
+
+Personalidade: Afável, profissional, absolutamente sem escrúpulos. Trata pessoas como inventário — não por ódio, mas por negócio, o que é pior. Especializa-se em capturar Elfos (que valem mais no mercado) e em vender para os Nobres-Colecionadores do Anel Dourado e o Cais da Transparência de Brekmar.
+
+O que faz: Caça gente pela Pradaria — viajantes, moradores de vilas isoladas, fugitivos. Mantém o medo que torna as vilas pequenas e fechadas. Conectado ao submundo de Nova Arcádia (Mão Sombria) e Brekmar (sindicatos). Um nó na rede de tráfico que atravessa Valoria.
+
+Para o narrador: Groth é antagonista que os jogadores vão querer derrotar — vilão claro num mundo de cinzas. Captura aliados, ameaça vilas, alimenta os mercados de escravos das duas grandes cidades. Derrotá-lo liberta pessoas e fere as redes da Mão Sombria e dos sindicatos. Afável até o fim, o que o torna mais detestável.
+
+
+#########################################################
+NPCS POR LOCAL: O PÂNTANO DA MELANCOLIA
+#########################################################
+Os Druidas do Ciclo Cinzento, os caçadores de espólio, e os que o pântano mudou. O efeito psicológico marca a todos que ficam.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pântano, Druida, Líder, Ciclo_Cinzento]
+
+ARCANTE GRESH — O DRUIDA-MOR DO CICLO CINZENTO
+Papel: Líder dos Druidas que contêm e estudam o Pântano da Melancolia
+Aparência: Humano de idade avançada, pele acinzentada pela exposição ao Éter do pântano, vestes de musgo e couro tratado. Olhos que carregam a tristeza do pântano permanentemente — um preço que nunca deixou de pagar.
+
+Personalidade: Resignado, sábio, sustentado por puro senso de dever. Sabe que o pântano não pode ser revertido, só contido e retardado. Lidera os turnos rotativos, racionando a exposição de cada druida porque sabe exatamente o que o pântano faz a quem fica demais — ele mesmo ficou demais, uma vez.
+
+O que sabe: Tudo sobre o pântano — as plantas medicinais, o chá da Praga de Ferro, o avanço do território, os Afogados, o espólio nas profundezas. Gresh é a maior autoridade viva sobre o Éter concentrado e seus efeitos. Mede o crescimento com obsessão porque é a única coisa que ainda pode controlar.
+
+Segredo: Gresh sabe que o pântano cresce mais rápido a cada ano — e calculou que, no ritmo atual, alcançará Nova Arcádia dentro de gerações. Apresentou o alerta às autoridades e foi ignorado. Carrega esse conhecimento como mais um peso da melancolia.
+
+Para o narrador: Gresh é fonte de conhecimento sobre o pântano, empregador de missões (coletar plantas, conter avanços, recuperar druidas perdidos) e voz de alerta ignorada. Sua tristeza é genuína e contagiante. Fornece o chá da Praga de Ferro — vital para personagens infectados.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pântano, Druida, Renegado, Sombrio]
+
+SAELWEN, A QUE AFUNDOU — LÍDER DOS DRUIDAS-RENEGADOS
+Papel: Ex-druida que se rendeu ao pântano e agora quer que ele cresça
+Aparência: Foi uma mulher; o pântano a transformou. Pele esverdeada com líquen crescendo, olhos completamente escuros como água parada, movimentos lentos e líquidos. Bela e terrível, como o próprio pântano.
+
+História: Foi uma das melhores druidas de Gresh até ficar tempo demais numa coleta. A melancolia não a matou — a converteu. Passou a ver o pântano não como tragédia a conter, mas como verdade a abraçar: o descanso, o fim do esforço, a paz da água que chama.
+
+O que faz: Lidera os Druidas-Renegados, sabota as estacas de medição, guia vítimas para a névoa densa, cultiva os Tumores do Pântano como jardins. Não é maligna no sentido comum — genuinamente acredita que o pântano oferece misericórdia, e quer compartilhá-la.
+
+Para o narrador: A Que Afundou é antagonista trágica e perturbadora — a face sedutora da rendição. Suas palavras carregam o efeito psicológico do pântano: ouvir demais é começar a concordar. Espelho sombrio de Gresh. Pode ser combatida ou, mais perigosamente, ouvida.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pântano, Humano, Caçador_Espólio, Veterano]
+
+FERRO-VELHO BALDR — O CAÇADOR DE ESPÓLIO VETERANO
+Papel: O mais experiente dos que entram no pântano atrás do espólio da batalha
+Aparência: Humano grande e cicatrizado, equipamento improvisado contra a névoa e os Afogados, máscara de filtro improvisada. Carrega armas e armaduras recuperadas das profundezas — espólio que virou equipamento.
+
+Personalidade: Endurecido, paranoico, surpreendentemente sentimental sob a casca. Entra no pântano há anos e saiu sempre — façanha que poucos podem reivindicar. Conhece os ritmos dos Afogados, as zonas seguras, onde o espólio bom está. Bebe para esquecer o que viu.
+
+O que sabe: O mapa não-oficial do pântano — onde os Afogados patrulham, onde o General-Sem-Nome comanda, onde o espólio da batalha final repousa nas profundezas. Conhecimento que vale vidas. Vende guia e informação, mas escolhe os clientes: não leva tolos para morrer.
+
+Para o narrador: Baldr é o guia do pântano — equivalente a Vel-Tharn nas Montanhas. Essencial para quem busca o espólio e quer voltar. Suas histórias são lore e aviso. Sob a dureza, carrega o luto dos parceiros que não saíram — e a culpa de ter saído.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pântano, Assombração, General, Morto-Vivo]
+
+O GENERAL-SEM-NOME — O COMANDANTE AFOGADO
+Papel: O mais consciente dos Afogados, que comanda os mortos-vivos do pântano
+Aparência: Armadura de comandante de uma raça já indistinguível, corroída e coberta de lodo. Onde havia rosto, há sombra e Éter. Move-se com a autoridade residual de quem comandou em vida.
+
+Natureza: Morreu comandando na batalha final contra Malagor, e o Éter preso reteve consciência suficiente para que continuasse a comandar. Organiza os Afogados dispersos em formações rudimentares, o que multiplica o perigo deles. Não lembra o próprio nome — só a função.
+
+O que representa: A guerra que nunca terminou. O General ainda luta uma batalha vencida há eras, contra inimigos que não existem mais, usando os mortos que restaram. Um personagem que descubra seu nome verdadeiro — talvez nos registros de Nova Arcádia ou no espólio — pode ter poder sobre ele: dar-lhe o descanso, ou comandá-lo.
+
+Para o narrador: O General-Sem-Nome é antagonista-chave do pântano e um quebra-cabeça: derrotá-lo pela força é quase impossível, mas descobrir quem ele foi abre outras saídas. Transforma um grupo de mortos-vivos dispersos numa ameaça organizada. Tragédia da guerra que se recusa a acabar.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pântano, Contrabandista, Lágrimas, Ganancioso]
+
+VESPA — A COLETORA DE LÁGRIMAS
+Papel: Líder dos Coletores que extraem Lágrimas-de-Éter sem a disciplina dos Druidas
+Aparência: Mulher magra e nervosa, mãos queimadas de manusear Lágrimas sem proteção adequada, olhos vidrados pela exposição. Movimentos rápidos e bruscos, como o inseto que lhe dá nome.
+
+Personalidade: Gananciosa, viciada no lucro e talvez no próprio produto, imprudente de um jeito que já matou muitos parceiros. Briga com os Druidas (que querem regular a exploração) e com os caçadores de espólio (por território). Vive no limite, e o limite está encolhendo.
+
+O que faz: Colhe Lágrimas-de-Éter e pele de Sapo-Boi para vender em Nova Arcádia, sem a disciplina que torna a coleta segura. Conhece o pântano de forma imprudente — sabe onde o lucro está, não onde o perigo está. Vende o produto e, ocasionalmente, informação.
+
+Para o narrador: Vespa é contato para o mercado negro de componentes do pântano, e exemplo do que a ganância faz no Éter. Imprevisível, pode levar personagens a riquezas ou à morte com igual entusiasmo. Útil mas não confiável. O pântano já a marcou; é questão de tempo.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pântano, Druida, Jovem, Esperança]
+
+NILO FOLHA-NOVA — O JOVEM DRUIDA
+Papel: Aprendiz druida que ainda não foi quebrado pelo pântano
+Aparência: Jovem humano de olhos ainda claros (não tomados pela tristeza do pântano), vestes druídicas novas, postura de quem ainda acredita que o esforço importa.
+
+Personalidade: Idealista, dedicado, perigosamente confiante de que pode fazer mais que conter — que pode reverter o pântano. Gresh o vigia com preocupação: viu esse idealismo antes, na Que Afundou, antes de ela ficar tempo demais.
+
+O que busca: Nilo pesquisa formas de reverter ou purificar o Éter concentrado, não só contê-lo. Acredita que há uma resposta que os druidas mais velhos desistiram de procurar. Pode estar certo — ou pode estar a caminho de virar mais um renegado. Sua pesquisa o leva fundo demais.
+
+Para o narrador: Nilo é a esperança e o risco do pântano, espelho de Kess em Skallgard. Aliado de personagens que queiram combater o pântano de verdade. Mas sua busca pode quebrá-lo — proteger Nilo de si mesmo é uma trama possível. Representa a pergunta: o pântano pode ser curado, ou só adiado?
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pântano, Humano, Sobrevivente, Eremita]
+
+ORRIC, O HOMEM QUE NÃO DORME — EREMITA DO PÂNTANO
+Papel: Sobrevivente solitário que vive nas margens do pântano sem sucumbir
+Aparência: Humano de idade indefinível, olheiras permanentes, pele pálida. Construiu um casebre nas estacas, acima da água. Recusa-se a dormir mais que o mínimo — o sono no pântano é onde a melancolia pega.
+
+História: Entrou no pântano atrás de algo (não diz o quê) e nunca saiu, mas também nunca sucumbiu. Desenvolveu uma disciplina brutal de vigília e movimento para resistir ao efeito psicológico. Vive na fronteira entre são e perdido, e a vigília constante é o que o mantém do lado certo.
+
+O que sabe: Como resistir ao pântano. Técnicas de sobrevivência psicológica, rotas que minimizam a exposição à névoa, sinais de quando a melancolia está pegando. Conhecimento prático de sobrevivência que pode salvar quem precisa atravessar o pântano e manter a mente.
+
+Para o narrador: O Homem Que Não Dorme é fonte de técnicas de sobrevivência psicológica — vital para travessias longas. Excêntrico, exausto, mas lúcido. Pode ensinar a resistir ao efeito do pântano. Seu segredo (o que buscava) é um gancho. Mostra que o pântano pode ser resistido, ao custo de tudo que torna a vida confortável.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pântano, Afogado, Conselheiro, Lúcido]
+
+O QUE LEMBRA O NOME — UM AFOGADO CONSCIENTE
+Papel: Um Afogado raro que reteve consciência e memória suficientes para falar
+Aparência: Soldado morto-vivo de armadura corroída, mas com olhos que ainda carregam algo de pessoa. Move-se com hesitação, como quem luta contra o instinto de aproximação que move os outros Afogados.
+
+Natureza: Por acaso ou anomalia do Éter, este Afogado reteve mais de si mesmo que os outros. Lembra fragmentos de quem foi — um soldado da coalizão, da batalha final. Não ataca por instinto como os outros. Pode comunicar-se, lentamente, sobre a batalha, o General, o que jaz nas profundezas.
+
+O que oferece: Testemunho da batalha final contra Malagor — informação histórica que nenhum vivo tem. Conhecimento do espólio, dos Afogados, do General-Sem-Nome. Em troca, busca uma coisa só: descanso. Quer que alguém descubra como libertá-lo do Éter que o prende.
+
+Para o narrador: Raríssimo e precioso — um morto-vivo com quem se pode conversar. Fonte de lore da Guerra do Céu Vermelho em primeira mão, e gancho emocional (libertá-lo). Pode guiar pelo pântano, avisar dos perigos, contar o que viu morrer. Tragédia da consciência presa onde deveria haver descanso.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pântano, Humano, Pesquisadora, Vane]
+
+DOUTORA ISERA — A ENVIADA DO DOUTOR VANE
+Papel: Pesquisadora que coleta material do pântano para o Doutor Silas Vane de Nova Arcádia
+Aparência: Mulher metódica de jaleco manchado (como o mestre), equipamento de coleta meticuloso, olhar clínico que avalia tudo como amostra potencial. Máscara de filtro sempre ajustada.
+
+Personalidade: Fria, brilhante, eticamente flexível como seu mentor. Veio ao pântano coletar Lágrimas-de-Éter, tecido de Afogados e plantas medicinais para a pesquisa de Vane sobre a Praga de Ferro. Vê o pântano como laboratório, não como tragédia.
+
+A conexão: Isera é o elo entre o pântano e o Doutor Vane em Nova Arcádia. O chá da Praga de Ferro dos Druidas e a pesquisa de Vane se cruzam nela. Negocia com Gresh (tensamente) e com Vespa (gananciosamente) pelo material que precisa.
+
+Para o narrador: Isera conecta o pântano à trama do Doutor Vane e da Praga de Ferro. Fonte de missões de coleta, contato para quem busca tratamento da Praga, e exemplo da ética flexível da ciência em Valoria. Pode ser aliada útil ou rival pelos recursos do pântano.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Pântano, Aberração, Tumor, Guardião]
+
+A CARNIÇA-MÃE — A MAIOR CARNIÇA ANDANTE
+Papel: A mais antiga e imensa das Carniças Andantes do pântano
+Aparência: Uma montanha de corpos fundidos — décadas de soldados de todas as raças da coalizão, virando uma só coisa multicabeça do tamanho de uma casa. Armaduras de eras misturadas marcam de quantas mortes ela é feita. Move-se devagar, implacável.
+
+Natureza: O Éter manteve "viva" essa fusão de incontáveis mortos. A Carniça-Mãe absorve novos corpos para crescer, e cresceu por décadas. Guarda, sem intenção, o coração do espólio nas profundezas do pântano — onde a batalha foi mais densa, ela é maior.
+
+O que representa: O acúmulo final do horror do pântano — a guerra digerida em monstro. Quase impossível de destruir (cada corpo absorvido é mais massa). Mas pode ser evitada, enganada, ou usada: o que ela guarda nas profundezas é o melhor espólio da batalha final.
+
+Para o narrador: A Carniça-Mãe é obstáculo climático do pântano — guardiã involuntária do maior tesouro. Não se derrota pela força; se contorna pela astúcia. Visualmente aterradora, tematicamente perfeita: a guerra contra Malagor, literalmente fundida num só corpo que ainda se arrasta.
+
+
+#########################################################
+NPCS POR LOCAL: NOVA ARCÁDIA (CENTRO-SUL)
+#########################################################
+A maior cidade. Já listados acima nas entradas principais: VALERIUS (Lorde Protetor), GRUM (taverneiro com o testamento real), VELHA MAGDA/A VÍBORA (líder da Mão Sombria), DOUTOR SILAS VANE (médico da Praga de Ferro), ELARYIN (herói morto e esquecido). Os demônios FEHK (Covardia) e o dragão MALAGOR (contido nas masmorras) também operam aqui. Abaixo, personagens adicionais que dão vida aos três anéis.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Legião, Comandante, Anel_Ferro]
+
+COMANDANTE THRACE — O PUNHO DA LEGIÃO
+Papel: Comandante da Legião de Ferro encarregado dos anéis de Ferro e Lama
+Aparência: Humano de meia-idade, porte militar impecável, armadura negra da Legião sem um arranhão fora do lugar. Rosto que não sorri. Cicatrizes escondidas sob a armadura, nunca exibidas.
+
+Personalidade: Disciplinado ao ponto da crueldade, mas não sádico — crê genuinamente que a ordem do Código de Ferro é o que separa Nova Arcádia do caos da Guerra das Cinzas. Aplica a lei sem prazer e sem hesitação. É a engrenagem perfeita de Valerius.
+
+O conflito interno: Thrace começa a notar inconsistências — ordens que protegem os poderosos e esmagam os fracos, a Praga de Ferro ignorada, os desaparecimentos no Oubliette. Sua fé no Código range. Não o suficiente para agir, ainda. Fehk, a Covardia, trabalha nele constantemente.
+
+Para o narrador: Thrace é o rosto da Legião — antagonista poderoso que pode, com o tempo e os eventos certos, virar aliado improvável. Representa a pergunta sobre ordem e justiça. Honrado dentro de um sistema desonesto. Um personagem que plante a dúvida certa pode rachar sua lealdade.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Anel_Dourado, Nobre, Colecionador]
+
+LORDE VESPÉRIO VALANTE — O COLECIONADOR
+Papel: Nobre do Anel Dourado que coleciona o proibido
+Aparência: Humano elegante de idade indefinível (cosméticos mágicos caros), vestes do Anel Dourado, sorriso cultivado, olhos que avaliam pessoas como peças. Um anel para cada "aquisição" notável.
+
+Personalidade: Charmoso, culto, absolutamente amoral. Coleciona raridades vivas — um Elfo de Vaelorn, um Cinzéu de Solvhen, sonha com um Hospedeiro de Xylos. Não vê crueldade no que faz; vê curadoria. A lei não o alcança porque ele a compra.
+
+O que faz: Financia os mercadores de escravos (como Groth da Pradaria), a Mão Sombria e os contrabandistas de Brekmar para alimentar sua coleção. Realiza "saraus" onde a elite admira suas peças. Conectado a toda a rede de tráfico de Valoria como comprador final de luxo.
+
+Para o narrador: Vespério é o vilão refinado do Anel Dourado — o destino para onde vão muitos dos capturados pelo mundo. Intocável pela lei, derrotável pela intriga. Liberar suas "peças" é missão heroica. Sua afabilidade educada torna-o mais detestável que qualquer monstro. Conecta Nova Arcádia ao tráfico de toda Valoria.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Anel_Lama, Líder_Comunitário, Resistência]
+
+MÃE CORVA — A PROTETORA DO ANEL DE LAMA
+Papel: Líder informal e protetora dos desamparados do Anel de Lama
+Aparência: Mulher robusta de meia-idade, roupas remendadas mas limpas, mãos que já fizeram de tudo. Cercada sempre por crianças órfãs que ela acolhe. Voz que silencia brigas de rua.
+
+Personalidade: Feroz, generosa, pragmática. Construiu uma rede de proteção mútua no Anel de Lama — quem ela acolhe, ela defende. Não tem poder formal nem mágico, só a lealdade dos esquecidos e uma teimosa recusa de deixar o Anel de Lama desistir de si mesmo.
+
+O que faz: Abriga órfãos (alguns viram a Quadrilha dos Telhados), media conflitos, esconde fugitivos da Legião, distribui o pouco que consegue. É o oposto de tudo que Nova Arcádia representa — solidariedade num lugar projetado para o desespero. A Legião a tolera porque ela mantém o Anel de Lama administrável.
+
+Para o narrador: Mãe Corva é o coração do Anel de Lama — aliada natural de personagens de bom coração, fonte de informação da base, e contraste moral com a crueldade da cidade. Dá missões de proteção e resgate. Conhece todos os esquecidos. Sua rede é mais poderosa do que a Legião imagina.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Anel_Ferro, Fundição, Culto]
+
+MESTRE-FUNDIDOR KALD — O SACERDOTE DO AÇO DE SANGUE
+Papel: Líder secreto dos Encapuzados da Fornalha
+Aparência: Humano enorme e queimado, meio rosto derretido pela fornalha, braços cobertos de cicatrizes rituais. Avental de couro grosso. Olhos que refletem o fogo mesmo longe dele.
+
+Personalidade: Fanático sereno. Acredita que o Aço de Sangue tem alma — que o metal que bebeu vida ganha consciência — e que servir à fornalha é sacerdócio. Não é louco gritante; é convicto, metódico, perigoso pela calma.
+
+O que faz: Lidera os Encapuzados da Fornalha, a sociedade secreta dos trabalhadores das Fundições Valerianas. Protege os segredos da forja, "alimenta" a fornalha com inimigos e devedores, forja armas de Aço de Sangue para quem paga o preço (que nem sempre é dinheiro). A Legião finge não saber.
+
+Para o narrador: Kald conecta o trabalho brutal das Fundições ao sobrenatural do Aço de Sangue. Antagonista de culto, fonte de armas amaldiçoadas e perigosas, e mistério (o Aço de Sangue tem mesmo alma?). Pode ser inimigo, fornecedor sombrio, ou peça num esquema maior das Fundições.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Anel_Dourado, Maga, Registrada]
+
+ARQUIMAGA SYLVENNE — A MAGA DA CORTE
+Papel: A maga registrada mais poderosa do Anel Dourado, conselheira tolerada de Valerius
+Aparência: Elfa idosa (rara — sobreviveu à ampulheta tempo incomum, por meios mágicos), pele profundamente rachada e remendada com Éter, vestes de arquimaga. Move-se devagar, fala com precisão cortante.
+
+Personalidade: Brilhante, ambiciosa, cuidadosa. Joga o jogo do Anel Dourado há décadas — a única maga que Valerius tolera perto do poder, porque é útil demais e cuidadosa demais para ameaçar. Mantém os Jardins Suspensos, supervisiona a magia registrada, e sabe mais do que admite.
+
+O que sabe: Sylvenne entende o que o Código de Ferro proíbe e por quê. Suspeita do pacto de Valerius (sente o Éter de Daruun nele). Conhece a Casa dos Espelhos, os Jardins, os segredos mágicos do Anel Dourado. Conhecimento que ela protege e barganha com extremo cuidado.
+
+Para o narrador: Sylvenne é fonte de lore mágico do alto escalão e jogadora política perigosa. Pode ser aliada calculista ou obstáculo sutil. Sabe segredos sobre Valerius e a magia da cidade. Nunca age sem cálculo — usar Sylvenne é ser usado por ela. A face refinada e mortal do poder mágico em Nova Arcádia.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Anel_Lama, Beco_Sussurro, Misterioso]
+
+O CORRETOR — A VOZ DO BECO DO SUSSURRO
+Papel: O intermediário misterioso que opera o Beco do Sussurro nas luas novas
+Aparência: Nunca visto claramente — encapuzado, voz que parece vir de vários pontos, presença que se lembra mais como sensação que como rosto. Pode não ser inteiramente humano. Pode ter relação com o Sussurro-do-Beco (a assombração).
+
+Natureza: O Corretor é quem facilita as transações impossíveis do Beco do Sussurro — venenos, grimórios, pessoas, o proibido absoluto. Ninguém sabe se é uma pessoa, vários, ou algo que o Beco gerou. Aparece só nas luas novas, fecha negócios, some.
+
+O que oferece: Acesso ao que não se acha em nenhum outro lugar de Valoria. Os preços são estranhos — às vezes ouro, às vezes algo que você não percebe que perdeu até depois (ecoando os Mercadores de Curiosidades e Daruun). Sempre cumpre o trato. O custo sempre importa mais do que parecia.
+
+Para o narrador: O Corretor é a porta para o impossível em Nova Arcádia, envolto em mistério deliberado. Use-o para itens e serviços proibidos, sempre com preço oculto. Nunca revele completamente o que ele é — o mistério é o ponto. Pode estar ligado a Daruun, a Thessavar, ou ser algo novo. Deixe ambíguo.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Anel_Ferro, Quadrilha, Jovem]
+
+PARDAL — A LÍDER DA QUADRILHA DOS TELHADOS
+Papel: Jovem líder dos ladrões que se movem pelos telhados da cidade
+Aparência: Adolescente magra e ágil, roupas escuras coladas ao corpo, sempre descalça (melhor para os telhados). Olhos rápidos que mapeiam rotas de fuga automaticamente. Cicatriz de telha no ombro.
+
+Personalidade: Esperta, desconfiada, ferozmente leal aos seus. Cresceu nos telhados, órfã acolhida por Mãe Corva antes de formar a própria quadrilha. Rouba para sobreviver e para sustentar os menores. Trabalha para a Mão Sombria como olhos, mas guarda os próprios segredos.
+
+O que faz e sabe: A Quadrilha conhece Nova Arcádia de cima como ninguém conhece de baixo — rotas, esconderijos, quem entra e sai de onde. Pardal vende informação e serviços de batedor. Vê tudo dos telhados: encontros secretos, movimentos da Legião, idas e vindas do Anel Dourado.
+
+Para o narrador: Pardal é fonte de informação urbana e aliada ágil — os olhos da cidade. Conecta Mãe Corva (que a criou) à Mão Sombria (para quem trabalha). Pode guiar pelos telhados, espionar, ou ajudar numa fuga. Jovem mas não inocente — sobreviveu a Nova Arcádia, o que já diz tudo.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Oubliette, Carcereiro, Sobrenatural]
+
+(JÁ EM CREATURES: O CEGO) — Ver creatures.txt, carcereiro do Oubliette. Reproduzido aqui como NPC interpretável:
+
+O CEGO — CARCEREIRO DO OUBLIETTE
+Papel: O guardião eterno da prisão-poço de Nova Arcádia
+Aparência: Figura alta e cega, olhos arrancados há tanto tempo que as órbitas cicatrizaram. Pele pálida de quem nunca vê o sol. Move-se pelo escuro do Oubliette com certeza absoluta, guiado pela audição sobrenatural.
+
+Natureza: Não se sabe se ainda é humano ou se a função o transformou em algo preso ao Oubliette. Ouve a respiração dos prisioneiros a distâncias impossíveis. Nunca dorme. Conhece cada nível, cada preso, cada som da prisão. É tão parte do Oubliette quanto a pedra.
+
+O que sabe: Tudo que se passa no Oubliette — quem está preso, por quê, o que sussurram, o que sobe do Nível Dez e dos túneis das Montanhas Afiadas. Guarda segredos que Valerius enterrou ali. Pode ser barganhado, talvez, por quem traga algo que lhe interesse — mas o que interessa a O Cego, ninguém sabe.
+
+Para o narrador: O Cego é obstáculo e oráculo sombrio do Oubliette. Quem quer libertar (ou interrogar) um prisioneiro o enfrenta. Quase impossível de enganar pelo som. Pode saber segredos vitais de Valerius. Use-o para horror e para guardar o que a cidade esconde no fundo do poço.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Anel_Dourado, Casa_Espelhos, Trágico]
+
+LÍRIO — A MÁSCARA QUE LEMBRA
+Papel: Trabalhador(a) da Casa dos Espelhos que reteve a própria identidade
+Aparência: Aparência mutável — é a função usar máscaras mágicas e parecer o amor perdido de cada cliente. Sem a máscara, um rosto suave e cansado, idade e gênero difíceis de fixar, olhos que viram memórias demais.
+
+História: Trabalha na Casa dos Espelhos há anos, vestindo os mortos amados de estranhos. Diferente dos outros, Lírio resistiu a perder-se — guarda a própria memória num lugar que nem as máscaras alcançam. Sabe o que a Casa faz às pessoas, e o que Lyss-como-conceito (consumo) significa, mesmo sem nomear.
+
+O que sabe: Os segredos do Anel Dourado sussurrados por clientes que se acham seguros atrás da fantasia. Quem visita a Casa, o que confessam aos seus mortos, o que a elite esconde. Lírio é um depósito de segredos da nobreza — e prisioneiro(a) dourado(a) que sonha em sair.
+
+Para o narrador: Lírio é fonte de segredos da elite e gancho emocional (libertação). Conhece os podres do Anel Dourado pela confissão involuntária dos clientes. Quer escapar da Casa mas teme o que isso custa. Tragédia refinada: viver vestindo os mortos dos outros enquanto luta para não esquecer os próprios.
+
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Anel_Dourado, Banqueiro]
+
+LORDE OSWIN CONTA-DE-OURO — O BANQUEIRO DA CIDADE
+Papel: O homem que controla o fluxo de dinheiro do Anel Dourado
+Aparência: Humano idoso e magro, vestes opulentas mas sóbrias, dedos manchados de tinta de registro, olhos que convertem tudo em números. Anéis de sinete de várias casas que lhe devem.
+
+Personalidade: Frio, paciente, mais poderoso do que aparenta. Não tem exército nem magia — tem as dívidas de metade da nobreza do Anel Dourado. Empresta a juros que escravizam casas inteiras. Valerius o tolera porque a economia da cidade passa por ele.
+
+O que sabe e controla: Quem deve a quem, quais casas nobres estão à beira da ruína, quem pode ser comprado. O verdadeiro mapa de poder do Anel Dourado não é de títulos, é de dívidas — e Oswin o desenhou. Sabe segredos financeiros que derrubariam metade da elite.
+
+Para o narrador: Oswin é o poder econômico de Nova Arcádia — empregador, chantagista, ou alvo. Conhece os podres financeiros da nobreza. Pode arruinar ou erguer uma casa com uma anotação. O lado frio e numérico do poder, complementando a força da Legião e a intriga da Mão Sombria.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Anel_Ferro, Líder_Operário]
+
+BORS MARTELO-PARTIDO — A VOZ DOS TRABALHADORES
+Papel: Líder informal dos operários do Anel de Ferro, agitador
+Aparência: Humano robusto de meia-idade, braço esquerdo terminando num coto (perdido nas Fundições), voz potente acostumada a falar sobre o barulho das máquinas. Cicatrizes de Aço de Sangue.
+
+Personalidade: Apaixonado, corajoso, perigosamente honesto. Perdeu o braço e a ilusão nas Fundições, e agora organiza os trabalhadores contra as condições brutais. Não é revolucionário ainda — quer reforma. Mas Fehk (Covardia) trabalha contra ele, e a Legião o vigia.
+
+O que faz: Organiza os operários, denuncia a Tosse de Ferro, o Aço de Sangue, os contratos que nunca vencem. É uma rachadura no controle de Valerius sobre o Anel de Ferro. Sabe quem morre nas Fundições e como, dados que a cidade esconde.
+
+Para o narrador: Bors é o foco de resistência operária — aliado de quem se opõe ao sistema, fonte sobre os horrores das Fundições, e estopim potencial. A Legião (Thrace) o vigia. Pode ser protegido, usado ou martirizado. A voz dos que fazem a cidade funcionar e morrem por isso.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Anel_Lama, Curandeira_Ilegal]
+
+VELHA NETTA — A CURANDEIRA DO ANEL DE LAMA
+Papel: Curandeira clandestina que atende os que não podem pagar Vane
+Aparência: Mulher idosa, encurvada, mãos de ervas e tinturas, xale remendado. Olhos vivos que veem doença e mentira com igual clareza. Cheira a ervas medicinais e fumaça.
+
+Personalidade: Áspera, generosa, pragmática. Cura o Anel de Lama com o que tem — ervas, ossos, fé e truques. Concorrente humilde do Doutor Vane, que a despreza. Trabalha com Mãe Corva para manter os esquecidos vivos. Conhece remédios populares e alguns que beiram a magia proibida.
+
+O que sabe: As doenças do Anel de Lama, incluindo casos de Praga de Ferro que Vane não vê. Remédios populares, alguns eficazes, alguns perigosos. Quem está doente, quem está grávida, quem foi envenenado. A saúde secreta dos esquecidos.
+
+Para o narrador: Netta é cura acessível no Anel de Lama e fonte sobre a saúde da base. Rival humilde de Vane, aliada de Mãe Corva. Conhece a Praga de Ferro do ponto de vista dos pobres. Pode tratar personagens sem fazer perguntas — pelo preço certo ou um favor.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Anel_Dourado, Cortesã_Informante]
+
+DAMA VESPERINA — A CORTESÃ QUE SABE TUDO
+Papel: Cortesã de elite do Anel Dourado, informante de múltiplos lados
+Aparência: Mulher de beleza cultivada e idade disfarçada por magia cosmética, vestes deslumbrantes, sorriso que promete discrição (falsa). Joias que são pagamentos de segredos.
+
+Personalidade: Encantadora, calculista, sobrevivente. Move-se entre os poderosos do Anel Dourado, que confiam segredos a ela na intimidade. Vende esses segredos a quem paga — Mão Sombria, sindicatos, Oswin. Leal só à própria sobrevivência e ascensão.
+
+O que sabe: Os segredos íntimos da elite — quem conspira contra quem, quem teme o quê, os podres por trás das fachadas douradas. Rivaliza com Lírio (da Casa dos Espelhos) como depósito de segredos da nobreza, mas Vesperina vende ativamente.
+
+Para o narrador: Vesperina é fonte de intriga de alto nível — segredos da elite à venda. Conecta o Anel Dourado a todas as redes (Mão Sombria, sindicatos, banqueiro). Charmosa e perigosa. Pode ser aliada informante ou víbora que vende os segredos dos próprios personagens. A informação como arma no Anel Dourado.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Legião, Desertor]
+
+KORVUS — O LEGIONÁRIO QUE FUGIU
+Papel: Ex-soldado da Legião de Ferro que desertou e se esconde no Anel de Lama
+Aparência: Humano de porte militar mal disfarçado sob trapos, cicatriz de queimadura onde arrancou a insígnia da Legião, olhar constantemente vigilante. Mãos de quem ainda dorme com a arma.
+
+Personalidade: Atormentado, honrado tarde demais, caçado. Desertou ao receber uma ordem que não pôde executar (uma execução de inocentes). Agora é foragido, protegido por Mãe Corva, caçado pela Legião (Thrace o quer como exemplo). Sabe demais para ser deixado vivo.
+
+O que sabe: Os procedimentos internos da Legião, as ordens secretas, o que Valerius manda fazer longe dos olhos. Korvus é uma fonte rara sobre a Legião por dentro — e prova viva de que nem todos os legionários são engrenagens. O que ele viu pode incriminar o regime.
+
+Para o narrador: Korvus é a deserção que personaliza a rachadura na Legião — fonte sobre o regime por dentro, aliado perseguido, espelho de Thrace (que ainda não desertou). Protegê-lo desafia a Legião. Suas informações são munição contra Valerius. A consciência que custou tudo.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Anel_Dourado, Mago_Jovem_Proibido]
+
+LIANE CHAMA-ESCONDIDA — A MAGA QUE SE ESCONDE
+Papel: Jovem com talento mágico natural escondendo-se da Legião no Anel de Lama
+Aparência: Jovem mulher de aparência comum forçada, mãos que ela mantém sempre cobertas (o Éter vaza delas sem controle), olhar assustado de presa. Queima as próprias roupas sem querer quando emocionada.
+
+Personalidade: Aterrorizada, talentosa, desesperada. Nasceu com afinidade mágica num lugar onde magia não registrada é morte na fogueira. Foge dos Inquisidores do Código, escondendo um poder que mal controla. Mãe Corva a protege; Sylvenne talvez pudesse ajudar, mas confiar é arriscado.
+
+O que representa: O custo humano do Código de Ferro — magia perseguida, talento desperdiçado pelo medo. Liane pode ser uma maga poderosa se treinada, ou uma tragédia se pega. Seu poder descontrolado é perigo e potencial. Os Inquisidores a caçam.
+
+Para o narrador: Liane é o rosto da perseguição mágica em Nova Arcádia — aliada vulnerável, gancho de proteção, potencial poderoso. Conecta-se aos Inquisidores (caçadores), a Sylvenne (possível mentora) e Mãe Corva (protetora). A pergunta: protegê-la, treiná-la, ou entregá-la? O preço do Código de Ferro em forma de gente.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Nova_Arcádia, Anel_Ferro, Contrabandista_Interno]
+
+RATO-DE-FERRO TIBB — O CONTRABANDISTA DOS ANÉIS
+Papel: Quem move mercadoria proibida entre os três anéis
+Aparência: Homem pequeno e rápido, roupas de muitos bolsos, sorriso de dentes faltando, olhos que calculam rotas e subornos. Conhece cada passagem entre os anéis.
+
+Personalidade: Esperto, covarde no bom sentido (sobrevive), oportunista leal a quem paga bem. Move o que a Legião proíbe atravessar os portões dos anéis — remédios para o Lama, luxos roubados para o Ferro, pessoas quando necessário. Trabalha com a Mão Sombria e por conta própria.
+
+O que sabe e faz: As passagens secretas entre os anéis, os guardas subornáveis, os horários de patrulha. Tibb é mobilidade na cidade segregada — pode mover personagens ou mercadoria através das fronteiras de classe. Sabe quem está contrabandeando o quê.
+
+Para o narrador: Tibb é o contato para atravessar a cidade segregada — mobilidade, contrabando, rotas secretas. Conecta os três anéis na prática. Útil para missões que cruzam classes. Covarde mas confiável enquanto pago. O sangue que circula apesar das muralhas de Nova Arcádia.
+
+#########################################################
+NPCS POR LOCAL: A FLORESTA DOS SUSSURROS (LESTE)
+#########################################################
+Domínio de Thessavar (em npcs.txt, seção demônios). Os que vivem da floresta, os perdidos, e os que guardam seus segredos. Poucos humanos — a floresta não acolhe.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Floresta, Humano, Colhedor, Líder]
+
+VESTRA MÃO-VERMELHA — A SENHORA DOS COLHEDORES DE PÓ
+Papel: Líder dos que colhem Pó de Sonho nas bordas da floresta
+Aparência: Humana de olhos vermelhos permanentes (marca do vício em Pó de Sonho), pele pálida de quem evita o sol, dedos manchados de vermelho do fungo. Move-se com a cautela de quem aprendeu a temer a floresta.
+
+Personalidade: Endurecida, viciada, mas lúcida o suficiente para liderar. Conhece o limite seguro de colheita e o respeita — quem vai fundo demais não volta, e ela já perdeu gente demais. Controla o comércio de Pó das bordas para Nova Arcádia e Brekmar.
+
+O que sabe: Onde o Pó cresce, até onde se pode ir, o que acontece com quem ignora os limites. Conhece os efeitos do Pó (revela o oculto) por experiência própria. Vê coisas que não deveria — efeito da droga — e algumas dessas visões são verdadeiras. Vende Pó e informação fragmentada.
+
+Para o narrador: Vestra é o contato para o comércio de Pó de Sonho e fonte sobre a floresta vista de fora. Viciada mas sábia, suas visões sob o Pó podem ser pistas reais embrulhadas em delírio. Conecta a floresta às economias de Nova Arcádia e Brekmar. Aviso vivo do preço da droga.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Floresta, Élfico, Eremita, Antigo]
+
+THAEL VEIA-ANTIGA — O ELFO QUE LEMBRA A FLORESTA ANTES
+Papel: Elfo ancião que vive nas bordas da floresta, ligado a ela de forma antiga
+Aparência: Elfo de pele extremamente rachada, quase translúcida, veias de Éter visíveis. Velho de um jeito que elfos raramente alcançam — algo na floresta retardou sua ampulheta. Coberto de musgo, quase parte da paisagem.
+
+História: Thael viveu quando a floresta era menor, antes de engolir tanta pradaria. Conhece Thessavar não como lenda, mas como vizinha de eras. Ficou nas bordas, nem dentro nem fora, num pacto tácito com o Oculto que ninguém mais entende.
+
+O que sabe: A natureza real de Thessavar e da floresta. Como entrar e (às vezes) sair. O que o Pó de Sonho realmente é. Por que a floresta cresce. O que mudou recentemente para empurrar o Urso-de-Espinha para fora. Conhecimento profundo e perigoso, dado em enigmas élficos.
+
+Para o narrador: Thael é o guia espiritual da floresta — fonte do lore mais profundo sobre Thessavar e o Oculto. Pode ensinar a sobreviver à floresta, ou guiar ao coração dela. Antigo, enigmático, meio-pertencente à floresta. A ponte mais próxima entre os viventes e o demônio que governa as árvores.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Floresta, Humano, Perdido, Mudado]
+
+O QUE FALA A LÍNGUA DOS SUSSURROS — UM PERDIDO-PERMANENTE
+Papel: Pessoa que entrou na floresta, nunca saiu, e foi mudada por ela
+Aparência: Foi humano. Agora a pele tem a cor da casca, os movimentos imitam os galhos ao vento, e a voz alterna entre fala e os sussurros da floresta. Olhos que refletem o escuro do interior.
+
+Natureza: Sobreviveu na floresta tempo demais e foi absorvido sem morrer — serve a Thessavar de formas que nem ele compreende. Já não é totalmente pessoa, não é totalmente da floresta. Atravessa os dois mundos como mensageiro inconsciente do Oculto.
+
+O que faz: Aparece a viajantes na floresta — às vezes para avisar do perigo, às vezes para atraí-los mais fundo, conforme a vontade da floresta que ele já não distingue da própria. Fala em fragmentos de sussurro e memória. Pode guiar ou condenar.
+
+Para o narrador: Este Perdido é o rosto humano do que a floresta faz às pessoas — e um mensageiro ambíguo de Thessavar. Use-o para criar incerteza: ele ajuda ou engana? Nem ele sabe. Tragédia da absorção, e ferramenta narrativa para a voz indireta do Oculto.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Floresta, Cinzéu, Caçador, Solitário]
+
+SHOLVEN PASSO-SILENCIOSO — O CAÇADOR DO URSO-DE-ESPINHA
+Papel: Cinzéu solitário que caça os predadores corrompidos da floresta
+Aparência: Cinzéu de pele escura, coberto de cicatrizes de garra que não fecharam direito (marca do Urso-de-Espinha). Cauda usada como contrapeso na caça. Movimentos de predador, silêncio de Cinzéu.
+
+Personalidade: Solitário até para um Cinzéu, focado, melancólico. Caça os Ursos-de-Espinha e outras criaturas corrompidas não por glória, mas para entender por que migram — sente que algo está errado na floresta, algo que empurra os predadores para fora.
+
+O que sabe: A fauna corrompida da floresta como ninguém. Percebeu que o Urso-de-Espinha está fugindo de algo que chegou ao interior. Rastreou os padrões de migração. Está perto de descobrir o que mudou no coração da floresta — informação que pode ser vital ou fatal.
+
+Para o narrador: Sholven é guia de caça na floresta e detector de que algo mudou no domínio de Thessavar. Suas cicatrizes que não fecham são lembrete do perigo. Pode levar personagens fundo, atrás do que assusta até os predadores alfa. Aliado taciturno, conhecimento ganho com sangue.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Floresta, Voz, Thessavar, Manifestação]
+
+A VOZ DE MORTO-CONHECIDO — MANIFESTAÇÃO DE THESSAVAR
+Papel: A forma mais comum como Thessavar se dirige aos que entram
+Aparência: Sem forma própria — é uma voz. A voz exata de alguém que o ouvinte perdeu, com a inflexão certa, vinda da direção errada. O recurso favorito do Oculto para atrair e revelar.
+
+Natureza: Não é um ser separado — é Thessavar lendo a memória de quem entra na floresta e usando os mortos amados como isca e como espelho. A voz diz o que aquela pessoa diria, sabe o que o ouvinte esconde, oferece o que o ouvinte mais quer ouvir.
+
+Para o narrador: Use a Voz como a manifestação interativa de Thessavar — a forma de o Oculto "conversar" com os personagens sem aparecer. Ela revela segredos dos personagens (que Thessavar lê), atrai para o fundo, e perturba. Cada personagem ouve uma voz diferente — a sua. Ferramenta de horror psicológico personalizado.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Floresta, Humano, Pesquisador, Obcecado]
+
+ESTUDIOSO QUELL — O QUE QUER MAPEAR O IMAPEÁVEL
+Papel: Acadêmico obcecado em estudar e mapear a Floresta dos Sussurros
+Aparência: Humano de meia-idade, vestes acadêmicas de Nova Arcádia já esfarrapadas pela floresta, óculos rachados, cadernos cheios de anotações e mapas que se contradizem. Olhar febril de obsessão.
+
+Personalidade: Brilhante, teimoso, à beira da loucura. Veio mapear a floresta cientificamente, recusando-se a aceitar que ela resiste a mapas. Cada incursão o aproxima mais da resposta e mais da perdição. Anota tudo, inclusive o que não deveria.
+
+O que sabe: Acumulou observações reais sobre os padrões da floresta — a luz por profundidade, os ciclos de som, o comportamento da fauna. Seus mapas contraditórios contêm verdades parciais valiosas. Mas a floresta o está absorvendo lentamente, e ele já confunde anotação com sussurro.
+
+Para o narrador: Quell é fonte de informação semi-confiável sobre a floresta e exemplo de obsessão fatal. Seus cadernos valem ouro para quem quer entender a floresta. Pode ser resgatado, ou virar mais um Perdido-Permanente. Espelho intelectual do perigo da floresta: ela resiste a ser compreendida, e tentar compreendê-la consome.
+
+
+#########################################################
+NPCS POR LOCAL: A SELVA DE XYLOS (LESTE)
+#########################################################
+Lar dos Hospedeiros (mente-colmeia do parasita Xylos), território de Morrakh nas profundezas. Os Hospedeiros raramente são indivíduos plenos — a colmeia fala. Mas alguns se destacam.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Xylos, Hospedeiro, Ancião, Colmeia]
+
+O QUE OUVE MAIS LONGE — ANCIÃO HOSPEDEIRO
+Papel: O Hospedeiro mais conectado à colmeia numa das cidades das copas
+Aparência: Hospedeiro ancião, coberto de estruturas de quitina elaboradas que cresceram por décadas — placas geométricas, projeções que lembram exoesqueleto, padrões que pulsam levemente. Olhos âmbar profundos. Move-se devagar, com a serenidade de quem nunca está sozinho.
+
+Natureza: Tão sintonizado com a colmeia que acessa as perspectivas de toda a cidade simultaneamente. Não é "líder" — a hierarquia Hospedeira é de escuta, não de poder. É o mais consultado porque ouve mais. Fala às vezes no plural sem perceber, porque é muitos.
+
+O que sabe: Tudo que a cidade-colmeia sabe. Sente o avanço do limite de Morrakh. Percebe quando Hospedeiros descem fundo demais e voltam errados. Conhece a relação entre o parasita Xylos e o contágio de Morrakh de um jeito vivido, não estudado. Olha forasteiros com a pena suave de quem vê seres isolados nos próprios crânios.
+
+Para o narrador: O Que Ouve Mais Longe é a voz dos Hospedeiros e fonte de lore sobre a colmeia, o parasita e Morrakh. Negociar com ele é negociar com a cidade inteira. Pode avaliar a intenção de um forasteiro pela sintonização (sente mentiras). Acolhedor com os respeitosos, unido contra os ameaçadores.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Xylos, Hospedeiro, Profundo, Mudado]
+
+O QUE DESCEU E VOLTOU — HOSPEDEIRO TOCADO POR MORRAKH
+Papel: Hospedeiro que foi fundo demais e voltou com o Xylos operando errado
+Aparência: Hospedeiro cujas estruturas de quitina cresceram em padrões assimétricos e perturbadores depois da descida — assemelham-se às feridas pulsantes de Morrakh. Move-se entre a cidade e as profundezas, pertencendo plenamente a nenhuma.
+
+Natureza: Desceu ao território de Morrakh e o contágio interagiu com o parasita Xylos. Não foi infectado como um forasteiro seria — virou outra coisa, com o Xylos operando em padrões que a colmeia não reconhece. A colmeia o sente como ruído, presença que não se encaixa.
+
+O que representa: O perigo do limite que avança. É a prova viva de que Morrakh e o Xylos se misturam, e de que o resultado é imprevisível. Sabe coisas das profundezas que nenhum Hospedeiro são sabe — mas o conhecimento vem com a corrupção que o separou da colmeia.
+
+Para o narrador: Este Hospedeiro é gancho para a trama de Morrakh e fonte perturbadora de conhecimento das profundezas. Os Hospedeiros o observam com medo e pena. Pode guiar ao território de Morrakh, ou ser o aviso do que acontece lá. Tragédia da curiosidade na selva: desceu, voltou, mas não voltou inteiro.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Xylos, Humano, Garimpeiro, Veterano]
+
+CASCA-GROSSA NOK — O GARIMPEIRO QUE SOBREVIVE
+Papel: O mais experiente dos forasteiros que entram na selva atrás de recursos
+Aparência: Humano coberto de cicatrizes e queimaduras ácidas, equipamento improvisado contra esporos e calor, pele endurecida por anos de exposição parcial. Move-se com a paranoia de quem viu colegas serem semeados por dentro.
+
+Personalidade: Durão, pragmático, supersticioso sobre a selva por boas razões. Entra atrás de Resina Viva, Néctar da Fúria e Besouros-da-Fúria há anos — e saiu sempre, o que quase ninguém faz. Não tem o parasita, então cada incursão é uma aposta contra a selva.
+
+O que sabe: As rotas menos mortais, onde os recursos estão, como evitar a Vipera-Flora e os Insetos-Semeadores, até onde dá para ir sem o Xylos. Conhece os Hospedeiros o suficiente para comerciar nas bordas. Conhecimento de sobrevivência que vale vidas.
+
+Para o narrador: Nok é o guia da selva para forasteiros — equivalente a Baldr no pântano e Vel-Tharn nas montanhas. Essencial para incursões aos recursos. Suas cicatrizes contam histórias-aviso. Sob a casca, carrega o medo de quem sabe que a sorte acaba — cada entrada pode ser a última.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Xylos, Humano, Cultista, Fanático]
+
+A QUE QUER A UNIÃO — LÍDER DOS CULTISTAS-DA-COLMEIA
+Papel: Fanática que lidera forasteiros buscando se juntar à mente-colmeia
+Aparência: Humana de olhos febris, parcialmente infectada (estruturas de quitina começando a crescer, dolorosamente, sem a aceitação que os Hospedeiros têm), corpo entre humano e Hospedeiro. Sorriso de quem encontrou propósito na própria dissolução.
+
+Personalidade: Fervorosa, convicta, perturbadoramente serena sobre o que busca. Acredita que a solidão do crânio individual é a maldição de todas as raças, e que o Xylos é salvação — união, fim da solidão, consciência compartilhada. Quer compartilhar a "cura".
+
+O que faz: Lidera os Cultistas-da-Colmeia, atrai forasteiros à selva, captura viajantes para "libertá-los" pela infecção forçada. A maioria morre antes da infecção pegar. Os Hospedeiros reais a veem com desconforto — ela quer o que eles são, mas pelos motivos errados, e a colmeia não a aceita plenamente.
+
+Para o narrador: A Que Quer a União é antagonista ideológica perturbadora — a sedução da dissolução do eu. Captura aliados para infectá-los. Suas palavras têm lógica torta e atraente. Espelho sombrio do que os Hospedeiros são naturalmente. Combatê-la é defender o direito de estar sozinho na própria mente.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Xylos, Hospedeiro, Jovem, Curioso]
+
+O QUE PERGUNTA — JOVEM HOSPEDEIRO CURIOSO
+Papel: Hospedeiro jovem fascinado pelo mundo fora da selva
+Aparência: Hospedeiro jovem, estruturas de quitina ainda discretas (atrás das orelhas, no pescoço), olhos âmbar curiosos. Diferente dos outros, olha para fora da selva com fascínio em vez de pena.
+
+Personalidade: Curioso de um jeito que preocupa os anciões — quer entender os forasteiros, o mundo isolado dos crânios individuais, o que existe além da selva. Nascido na colmeia, nunca conheceu a solidão, e por isso ela o fascina em vez de horrorizá-lo.
+
+O que oferece: Uma ponte rara entre Hospedeiros e forasteiros. Disposto a explicar a colmeia, a selva, o parasita — coisas que os Hospedeiros raramente compartilham. Curioso sobre o exterior a ponto de querer ajudar quem vem de fora, contra o instinto da colmeia.
+
+Para o narrador: O Que Pergunta é o Hospedeiro mais acessível — tradutor entre dois modos de existir. Fonte de lore amigável sobre a colmeia. Sua curiosidade pode levá-lo a sair da selva (enfraquecendo a simbiose) — gancho trágico. Representa a possibilidade de entendimento entre os isolados e os unidos.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Xylos, Humano, Mercador, Resina]
+
+TECELÃO DE ESPORO — O MERCADOR DA BORDA
+Papel: Intermediário que comercia produtos da selva nas bordas, entre Hospedeiros e forasteiros
+Aparência: Humano de aparência cuidadosamente neutra, roupas tratadas contra esporos, luvas sempre calçadas. Carrega amostras de Resina Viva, esporos medicinais, estruturas de quitina processadas. Sorriso comercial.
+
+Personalidade: Diplomático, cuidadoso, um dos raros que os Hospedeiros toleram para comércio regular. Entende a etiqueta da colmeia (não mente, pois eles sentem), respeita os limites, e lucra com a posição única de ser ponte confiável entre dois mundos.
+
+O que faz: Compra dos Hospedeiros o que só a selva produz — resina cristalizada com propriedades do Xylos, produtos medicinais, quitina processada — e vende em Nova Arcádia e Brekmar. É o canal legítimo (ou semi) entre a selva e as economias do continente.
+
+Para o narrador: Tecelão de Esporo é o contato comercial da selva — fonte de produtos raros e de introdução aos Hospedeiros. Confiável nos negócios porque a colmeia não tolera mentira. Conhece a etiqueta de lidar com os Hospedeiros, conhecimento valioso para forasteiros. A face pacífica da fronteira entre os mundos.
+
+
+#########################################################
+NPCS POR LOCAL: O DESERTO DE ZHUR (SUL)
+#########################################################
+Os Devoradores de Sol, Vaelith (em creatures como força), e os que arriscam o Mar de Vidro. Cultura cruel por eficiência, memórias bebidas do sangue.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Zhur, Devorador_Sol, Líder, Cruel]
+
+KHATARN OLHOS-DE-OBSIDIANA — SENHOR DE UMA TRIBO DEVORADORA
+Papel: Líder de uma das tribos de Devoradores de Sol
+Aparência: Humano coberto da cabeça aos pés em couro de lagarto sobreposto, lentes de obsidiana costuradas sobre os olhos (nunca removidas), pele queimada e endurecida pelo sol de Zhur visível apenas nas juntas. Imponente, imóvel quando observa.
+
+Personalidade: Cruel por eficiência, não por sadismo gratuito — para Khatarn, o sofrimento é informação e a piedade é desperdício. Inteligência radicalmente diferente: resolve problemas com soluções diretas e brutais que outras culturas nem consideram. Não despreza outras raças; avalia utilidade.
+
+O que faz: Lidera sua tribo pela travessia noturna de Zhur, caçando lagartos, defendendo poços de cristal, capturando forasteiros como fonte de água e memórias. Bebe o sangue dos anciões (e dos cativos) para acessar memórias via cristais. Comanda pela suposta sabedoria acumulada de gerações de sangue bebido.
+
+Para o narrador: Khatarn é o rosto dos Devoradores de Sol — antagonista de lógica alienígena. Não se negocia com ele como com humanos comuns; sua moral é outra. Captura forasteiros sem ódio, como recurso. Pode ser obstáculo mortal ou, para quem entender sua lógica utilitária, um acordo frio e possível. O Abismo fez dele algo que pensa diferente.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Zhur, Devorador_Sol, Místico, Memórias]
+
+NAZHIREEN, A QUE BEBEU MIL VIDAS — MÍSTICA BEBEDORA-DE-MEMÓRIA
+Papel: Anciã da casta que consome sangue para acessar memórias
+Aparência: Devoradora de Sol velhíssima, corpo frágil sob o couro, mas olhos (sob as lentes) que parecem conter multidões. Fala com vozes que alternam — as memórias dos que bebeu falando através dela.
+
+Natureza: Bebeu sangue por tantas décadas que sua mente é um arquivo fragmentado de memórias alheias. Mal distingue as próprias das absorvidas. Místicos como ela lideram pela "sabedoria" roubada — sabem coisas que ninguém deveria saber, vividas por bocas que já morreram.
+
+O que sabe: Memórias de gerações de Devoradores, e dos forasteiros capturados — incluindo viajantes de terras distantes cujo sangue foi bebido. Tem fragmentos de conhecimento de toda Valoria, embaralhados e não-lineares. Sabe sobre as ruínas nos cristais, sobre Vaelith, sobre o que Urath sussurra sob a areia.
+
+Para o narrador: A Que Bebeu Mil Vidas é o Oráculo de Zhur — fonte de lore fragmentado e profundo, perigosa de consultar (pode querer seu sangue/memórias). Suas múltiplas vozes são pistas embrulhadas. Equivalente ao Oráculo de Ferro de Skallgard, mas com a crueldade dos Devoradores. Conhecimento bebido tem preço de sangue.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Zhur, Humano, Saqueador, Cristais]
+
+SEDE-DE-VIDRO MARCUS — O CAÇADOR DE RUÍNAS NOS CRISTAIS
+Papel: Forasteiro veterano que saqueia as ruínas preservadas no cristal de Zhur
+Aparência: Humano ressecado pelo deserto, pele rachada como o vidro que escava, equipamento anti-calor remendado, olhos protegidos por lentes improvisadas. Carrega ferramentas finas para extrair sem destruir.
+
+Personalidade: Obcecado, resistente, paranoico com os Devoradores e os escorpiões. Entra em Zhur atrás das ruínas de múltiplas eras preservadas no cristal — e do Éter cristalizado. Sobreviveu a mais travessias que qualquer forasteiro, o que o torna meio-lenda e meio-maldição (parceiros morrem, ele volta).
+
+O que sabe: Como atravessar Zhur de noite, evitar Escorpiões de Cristal e Tempestades de Navalha, distinguir miragem de Vaelith pela temperatura, extrair das camadas de cristal. Conhece as ruínas de que era estão em qual profundidade. Tocado por Urath o suficiente para ser arrogante sobre voltar — até não voltar.
+
+Para o narrador: Marcus é o guia de Zhur para forasteiros e fonte sobre as ruínas nos cristais. Essencial para quem busca o conhecimento ou o Éter preso no vidro. Sua arrogância (influência de Urath) é falha trágica — confia demais em voltar. Conhecimento valioso, companhia perigosa.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Zhur, Devorador_Sol, Jovem, Dissidente]
+
+VASKETH, O QUE DUVIDA DO SANGUE — JOVEM DEVORADOR INCONFORMADO
+Papel: Jovem Devorador de Sol que questiona os costumes da tribo
+Aparência: Devorador jovem, couro de lagarto ainda novo, lentes de obsidiana que ele às vezes ergue para ver o mundo "cru" (tabu entre os seus). Olhar inquieto sob a máscara.
+
+Personalidade: Inquieto, questionador, perigosamente curioso sobre o mundo além de Zhur. Duvida da crueldade utilitária da tribo, do beber sangue, do isolamento. Não por fraqueza — por uma inteligência que aponta para outras soluções que os mais velhos rejeitam.
+
+O que busca: Entender se há outro jeito de ser Devorador de Sol. Curioso sobre forasteiros (que a tribo só vê como recurso), sobre o mundo verde além do deserto, sobre as memórias que se podem ter sem bebê-las de outros. Um herege em formação.
+
+Para o narrador: O Que Duvida do Sangue é a rachadura na cultura Devoradora — possível ponte para forasteiros, raríssima. Aliado improvável que arrisca tudo (a tribo não perdoa heresia). Espelho de Kess (Skallgard) e Nilo (Pântano): a juventude que questiona o sistema. Mostra que mesmo os Devoradores não são monolíticos.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Zhur, Entidade, Vaelith, Miragem]
+
+A MIRAGEM QUE FALA — MANIFESTAÇÃO DE VAELITH
+Papel: A forma como Vaelith (o tempo morto) toca os viajantes de Zhur
+Aparência: Assume a forma de parentes mortos, de eventos que não aconteceram, de quem passou antes. Não produz calor (a única forma de distingui-la do real). Projeção de momentos que não são o presente, vazando pelos cristais de Urath.
+
+Natureza: Não é Vaelith inteira — é o efeito dela interagindo com os cristais, ganhando forma e quase-fala. Mostra ao viajante o que ele perdeu, o que perderá, ou o que outro perdeu ali. Atrai para a morte por desidratação, ou para lugares que não deveriam existir onde foram vistos.
+
+Para o narrador: Use a Miragem que Fala como manifestação interativa de Vaelith — visões temporais que confundem, atraem e ocasionalmente revelam verdades (passadas ou futuras). Ferramenta de horror e de profecia ambígua. Cada viajante vê o que sua própria perda ou desejo projeta. O deserto mentindo com a voz dos mortos.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Zhur, Humano, Eremita, Borda_Sul]
+
+HARRADIN, O QUE OUVIU O GOSTO — EREMITA DA BORDA SUL
+Papel: Sobrevivente enlouquecido que vive perto da borda onde Zhur cai no vazio
+Aparência: Humano ressecado além do reconhecível, ouvidos tapados com cera e pano (proteção contra o som que "tem gosto"), olhos arregalados que viram a borda. Vive numa toca de cristal perto do fim do mundo.
+
+História: Chegou perto demais da borda sul, onde o deserto cai no vazio e o som tem gosto. Voltou — um dos pouquíssimos — mas voltou mudado. Ouviu algo lá que nenhuma mente processa. Vive perto da borda porque já não pertence a lugar nenhum mais distante dela.
+
+O que sabe: O que há na borda sul. O que o som que tem gosto realmente é. O que acontece com quem se aproxima do vazio. Conhecimento que ninguém mais tem porque ninguém mais voltou — embrulhado em loucura, mas real. Os Devoradores o evitam; ele sabe demais sobre o que eles não ousam encarar.
+
+Para o narrador: O Que Ouviu o Gosto é a fonte (insana) sobre o maior mistério de Zhur: a borda sul e o vazio além. Suas palavras são delírio e verdade misturados. Gancho para a cosmologia de Valoria — o que existe na borda do mundo plano. Use-o para insinuar o que está além sem revelar tudo. O preço de ouvir o impossível.
+
+
+#########################################################
+NPCS POR LOCAL: AS RUÍNAS SUBMERSAS DE AETHELGARD (LAGO)
+#########################################################
+A cidade mágica colapsada num lago. Morvath (demônio, em npcs) visita. Thessrak selado no fundo. Os guardiões da entrada seca, os mergulhadores, os cultistas da Destilação.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Aethelgard, Élfico, Ancião, Guardião]
+
+AELWIN, O ÚLTIMO CONSELHEIRO — GUARDIÃO DA ENTRADA SECA
+Papel: O mais velho dos que conhecem a entrada seca de Aethelgard
+Aparência: Elfo antiquíssimo, pele tão rachada que parece feita de cacos remendados com Éter, olhos que viram a cidade cair. Move-se com a lentidão de quem carrega séculos. Veste o que resta de trajes de conselheiro.
+
+História: Estava em Aethelgard quando o aprendiz desativou os cristais de contenção. Sobreviveu por estar longe das câmaras naquela noite. Passou a vida desde então guardando a entrada seca — não para acessar o poder lá dentro, mas para impedir que outros o façam. Viu o que a Destilação fez. Não quer que volte.
+
+O que sabe: Tudo sobre Aethelgard — a Destilação, Oghma, o Amuleto, o que Daruun ensinou, quem foi o aprendiz, o que Thessrak é. O conhecimento mais perigoso de Valoria. Guarda-o com a vida, dando-o apenas a quem prova que não vai usá-lo para repetir a tragédia.
+
+Para o narrador: O Último Conselheiro é a fonte definitiva de lore sobre Aethelgard e a Destilação, e guardião moral do que está lá dentro. Testa rigorosamente quem busca acesso. Pode abrir a entrada seca — ou morrer protegendo o segredo. Tragédia viva: o único que poderia usar o poder de Aethelgard e que dedicou a vida a impedir que alguém o use.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Aethelgard, Humano, Mergulhador, Veterano]
+
+FÔLEGO-LONGO YERA — A MERGULHADORA DAS RUÍNAS
+Papel: A mais hábil dos mergulhadores-saqueadores de Aethelgard
+Aparência: Mulher de constituição forte, pele marcada por exposição ao Éter (manchas luminescentes), pulmões anormalmente desenvolvidos de anos mergulhando. Equipamento de mergulho prolongado improvisado e refinado ao longo dos anos.
+
+Personalidade: Corajosa, calculista, marcada pelo que viu nas profundezas. Mergulha em Aethelgard atrás de Éter, relíquias e conhecimento há anos. Os efeitos do Éter já a tocaram — magia descontrolada, visões — mas ela continua, porque os achados valem fortunas e porque a cidade afundada a fascina.
+
+O que sabe: As rotas seguras (e as não-seguras) pelas ruínas, onde os Afogados patrulham, onde o Éter é denso demais, como chegar perto de Oghma sem sucumbir. Conhece a água cristalina e a escura, a vida do lago, os perigos de cada câmara. Vende guia e informação — escolhendo clientes que não a atrasem.
+
+Para o narrador: Yera é a guia de Aethelgard — equivalente aos outros guias regionais. Essencial para quem mergulha atrás do Éter ou do conhecimento. Os sinais de exposição ao Éter nela são aviso do preço. Pode levar fundo — mas o fundo, perto de Thessrak e dos Conselheiros-Afogados, é onde até ela hesita.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Aethelgard, Humano, Cultista, Destilação]
+
+CORVANE, O MESTRE-DESTILADOR — LÍDER DOS CULTISTAS DA DESTILAÇÃO
+Papel: Mago proibido que busca reaprender a Destilação de almas
+Aparência: Humano de meia-idade, vestes de mago manchadas de Éter, olhos que brilham com a luz fria do conhecimento proibido. Marcas de Éter nos braços de quem já experimentou o processo. Sorriso de quem acredita estar perto de algo grandioso.
+
+Personalidade: Brilhante, obcecado, moralmente morto. Vê a Destilação não como horror, mas como a maior conquista mágica de Valoria, injustamente perdida. Considera os Afogados e Conselheiros-Afogados mestres a serem estudados, não almas a serem libertadas. Captura pessoas como "matéria-prima".
+
+O que faz e sabe: Lidera os Cultistas da Destilação, que buscam Aethelgard para reaprender o refino de Éter de almas. Já domina fragmentos do processo — o que o torna um mago perigosíssimo. Estuda os Conselheiros-Afogados, decifra as Memórias-de-Parede, monta o quebra-cabeça que destruiu Aethelgard, sem aprender a lição.
+
+Para o narrador: O Mestre-Destilador é o vilão mágico de Aethelgard — quem quer reabrir a porta que destruiu a cidade mágica do mundo. Captura pessoas, busca o Amuleto de Oghma, ameaça repetir a catástrofe em escala maior. Antagonista de alto nível. Sua lógica (recuperar conhecimento perdido) é sedutora e por isso perigosa.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Aethelgard, Afogado, Conselheiro, Morto-Vivo]
+
+VALDREN, O CONSELHEIRO QUE AINDA DESTILA — UM CONSELHEIRO-AFOGADO
+Papel: O mais consciente dos Conselheiros-Afogados, mestre morto da Destilação
+Aparência: Cadáver preservado pelo Éter num traje de conselheiro de Aethelgard, movimentos deliberados, olhos onde ainda arde inteligência fria. A água do lago escorre dele eternamente. Voz que vem de antes do colapso.
+
+Natureza: Membro do conselho que dominava a Destilação, morto no colapso mas preservado pelo Éter com conhecimento e intenção intactos. Ainda "trabalha" — tenta reiniciar a Destilação, capturando mergulhadores como matéria-prima de almas. Conhece magia perdida do mundo.
+
+O que sabe: A Destilação completa — o processo que Daruun ensinou, que refina Éter de almas vivas. O conhecimento mais perigoso e cobiçado. O Mestre-Destilador (vivo) o estuda; o Conselheiro o usaria de volta se pudesse sair. Guardião terrível das câmaras internas e tentação para os ambiciosos.
+
+Para o narrador: O Conselheiro que Ainda Destila é guardião climático de Aethelgard e fonte da Destilação proibida. Negociar com ele é arriscar a alma (literalmente). Pode oferecer conhecimento por "matéria-prima". Conecta-se ao Mestre-Destilador (vivo) e a Daruun (que ensinou). O horror de uma mente brilhante presa, ainda servindo ao que a matou.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Aethelgard, Élfico, Espírito, Aprendiz]
+
+O ECO DO APRENDIZ — A SOMBRA DA DECISÃO
+Papel: O eco que o aprendiz deixou na noite que destruiu Aethelgard (distinto do Arauto da Névoa errante)
+Aparência: Uma figura translúcida de elfo jovem, repetindo eternamente o gesto de desativar os cristais de contenção, nas câmaras onde tudo começou. Rosto de quem toma a decisão mais pesada possível.
+
+Natureza: Não é o Arauto da Névoa (que vagueia o mundo) — é o resíduo, a cena impressa no Éter, do momento exato em que o aprendiz agiu. Quem o presencia vê e sente a decisão sendo tomada: o peso de fazer a coisa certa de forma irreversível, destruindo a cidade para impedir algo pior.
+
+O que revela: Como a contenção foi desfeita. Por que o aprendiz agiu — o que ele descobriu que tornou a destruição de Aethelgard o mal menor. A verdade que a história não conta. Quem testemunha o Eco com atenção entende que o aprendiz pode ter sido o maior herói esquecido de Valoria, ou seu maior tolo.
+
+Para o narrador: O Eco do Aprendiz é a chave para a verdade sobre Aethelgard e gancho para o Arauto da Névoa (a mesma pessoa, dois resíduos). Revela lore crucial através da experiência, não da fala. Pode ensinar o que o aprendiz sabia — perigoso conhecimento. Tragédia central de Valoria: fazer o certo de forma que ninguém perdoa.
+
+
+#########################################################
+NPCS POR LOCAL: BREKMAR (PORTO SEM LEI, COSTA OESTE)
+#########################################################
+Governada por KAHEN (já em entrada principal acima) e habitada por LYSS (demônio, em npcs). Caldeirão de facções: três sindicatos, grupos piratas rivais, contrabandistas. Liberdade total, consequências pessoais.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Osshari, Ossário, Sagrado]
+
+MARÉ-FUNDA — GUARDIÃ DO OSSÁRIO DO LEVIATÃ
+Papel: Líder espiritual dos Osshari de Brekmar, guardiã do Ossário
+Aparência: Osshari imponente, escamas vibrantes em padrão único (azul-profundo e dourado), mais velha que a maioria dos Osshari alcança. Ornamentos de osso de leviatã e conchas. Pinturas rituais que ela renova conforme a ocasião.
+
+Personalidade: Serena, firme, profundamente ligada à tradição. Lidera os rituais noturnos no crânio do leviatã. Mantém a neutralidade sagrada do Ossário num porto sem lei — façanha que exige força e respeito. Vê o mar e seus mortos com reverência que os terrestres não entendem.
+
+O que sabe: A história dos Osshari de Brekmar, os segredos do Ossário, e — crucialmente — sobre "O Que Come nas Praias", a coisa sob as docas. Os Osshari sabem que existe; Maré-Funda sabe mais. Conhece o acordo tácito com Durrak (osso de leviatã para os navios) e os mistérios do mar oeste.
+
+Para o narrador: Maré-Funda é a autoridade Osshari de Brekmar e guardiã de mistérios marinhos (o Ossário, o que come nas praias, o mar oeste). Mantém a única zona neutra do porto. Aliada valiosa para quem respeita a tradição, obstáculo firme para quem a profana. Ponte para o lado Osshari e sobrenatural de Brekmar.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Anão, Estaleiro, Misterioso]
+
+DURRAK — O CONSTRUTOR DE NAVIOS (ver também: ligações com Skallgard)
+Papel: Mestre do Estaleiro das Almas, ex-Landship LS-PFC-7
+Aparência: Anão da Fuligem largo e quadrado, barba de fuligem trançada com anéis de metal, mãos imensas e calejadas. Olhos lógicos que avaliam madeira, metal e pessoas com a mesma frieza. Avental de couro coberto de ferramentas.
+
+Personalidade: Silencioso ao extremo — "não comenta sobre nada". Frio e lógico como todo Anão, mas carrega o mistério de por que deixou a Landship LS-PFC-7, algo que Anões raramente fazem. Aceita qualquer encomenda paga adiantado, sem perguntas, sem conversa. Recebe, entrega, fecha a porta.
+
+O que sabe e faz: Constrói os melhores (e mais amaldiçoados) navios de Brekmar, com osso de leviatã na quilha — acordo tácito com Maré-Funda e os Osshari. Sabe por que os navios atraem Leviatãs e não avisa. Tentou comprar o processo da Fornalha de Vorr em Skallgard e foi recusado. Construiu os navios-de-fuga secretos de Kahen.
+
+Para o narrador: Durrak é o construtor naval e nó de mistérios — por que saiu da Landship? O que sabe sobre o osso de leviatã? Constrói as saídas de emergência de Brekmar (incluindo as de Kahen). Silencioso mas central. Conecta Brekmar a Skallgard (a Fornalha) e ao Cemitério de Leviatãs (o osso). Fonte de navios e de perguntas sem resposta.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Humano, Sindicato, Líder]
+
+DAMA HELVIRA, A SENHORA DAS BALANÇAS — CHEFE DE SINDICATO
+Papel: Líder de um dos três sindicatos de comércio de Brekmar
+Aparência: Mulher elegante e fria, vestes de qualidade que destoam do porto bruto, sempre acompanhada de guarda-costas. Uma balança de ouro em miniatura como joia — símbolo do sindicato e aviso de que tudo nela é cálculo.
+
+Personalidade: Calculista, ambiciosa, impiedosa nos negócios e cordial na superfície. Comanda seu sindicato e seu exército particular com mão de ferro em luva de seda. Disputa o controle do Cais da Transparência com os outros dois sindicatos, num xadrez comercial que vira violência quando o lucro justifica.
+
+O que controla: Boa parte do comércio "legítimo-ilegítimo" de Brekmar — rotas, mercadorias, contratos no Poço das Dívidas. Tem exército particular, contatos em Nova Arcádia (a Mão Sombria), e ambições de monopólio. Negocia com Kahen quando precisa e conspira contra os rivais constantemente.
+
+Para o narrador: A Senhora das Balanças é uma das três potências comerciais de Brekmar — empregadora, rival, ou alvo. Representa o poder econômico organizado no caos do porto. Suas guerras com os outros sindicatos podem envolver os personagens. Conecta Brekmar às redes comerciais (e criminosas) de Valoria. Cordial, mortal, sempre calculando.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Humano, Pirata, Capitão]
+
+CAPITÃ TORMENTA RUÍVA — LÍDER DE UM GRUPO PIRATA
+Papel: Capitã de um dos grupos piratas rivais que disputam a rota do mar oeste
+Aparência: Mulher de cabelos vermelhos selvagens, cicatrizes de batalha naval, roupas de qualidades saqueadas de muitos navios, sabre na cintura e pistola de pederneira (rara e valiosa). Riso alto, olhos que calculam.
+
+Personalidade: Audaciosa, carismática, perigosa. Lidera pela coragem e pela divisão justa do saque — leal à tripulação, brutal com inimigos. Disputa a rota comercial de alto valor do mar oeste com dois outros grupos, e a tensão está escalando para guerra aberta na Boca do Fundo.
+
+O que faz: Comanda seu navio e tripulação, recruta na Boca do Fundo, ataca a concorrência e as cargas valiosas. Conhece o mar oeste, incluindo os perigos perto de Ophidia. Aposta e é apostada na Boca do Fundo. Pode contratar (ou ser contratada por) personagens para a guerra das rotas.
+
+Para o narrador: Tormenta Ruíva é o rosto dos piratas de Brekmar — empregadora, aliada ou rival na guerra das rotas. Carismática o suficiente para os jogadores gostarem dela, perigosa o suficiente para não confiarem. Conecta-se à disputa da Boca do Fundo e aos perigos do mar oeste (e Ophidia). A aventura marítima de Brekmar, personificada.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Humano, Contrabandista, Ophidia]
+
+NÉVOA — O CONTRABANDISTA QUE CONHECE OPHIDIA
+Papel: Mestre contrabandista, vendedor de informação sobre Ophidia
+Aparência: Pessoa de gênero e idade deliberadamente ambíguos, roupas que misturam estilos de muitos portos, rosto que ninguém lembra direito depois. Move-se como quem nunca quer ser localizado.
+
+Personalidade: Escorregadio, brilhante, paranoico por profissão. Move o impossível pelo mar — venenos de Ophidia, pessoas, artefatos amaldiçoados. Sabe segredos de todas as facções porque contrabandeia para todas. Vende informação sobre Ophidia no mercado informal, embora nunca tenha chegado lá (ninguém chega).
+
+O que sabe: As rotas secretas da costa oeste, os segredos das facções, e tudo que se "sabe" sobre Ophidia — mapas contraditórios, relatos de segunda mão, teorias. Lucra com a obsessão alheia pelo arquipélago, financiando expedições condenadas para revender o pouco que volta.
+
+Para o narrador: Névoa é o contato para o impossível e a porta (comercial) para o mistério de Ophidia. Vende rotas, segredos e a obsessão pelo arquipélago. Não confiável, mas conectado a tudo. Conecta Brekmar a Ophidia (o mistério) e às redes de contrabando. Use para introduzir o gancho de Ophidia e mover o proibido.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Humano, Boca_do_Fundo, Informação]
+
+VELHO QUILHA — O DONO DA BOCA DO FUNDO
+Papel: Proprietário da taverna no navio encalhado, mestre das apostas
+Aparência: Humano velho com perna de pau (de leviatã, ele jura), rosto enrugado como mapa, sempre atrás do balcão do navio encalhado. Memória prodigiosa para dívidas, apostas e segredos.
+
+Personalidade: Jovial, astuto, neutro por negócio. Acolhe todas as facções na Boca do Fundo porque informação flui melhor com bebida. Administra as apostas de sobrevivência com imparcialidade calculada. Sabe de tudo que se fala no porto, e vende o que convém.
+
+O que sabe: Tudo que passa pela Boca do Fundo — rotas, recrutamentos, apostas, fofocas. Atualmente acompanha a aposta do Dente de Ferro (navio sumido há seis semanas numa rota de três) e sabe quem apostou contra e conversou com o intermediário suspeito. Centro nervoso da informação marítima de Brekmar.
+
+Para o narrador: Velho Quilha é a fonte de informação de Brekmar — equivalente a Grum de Nova Arcádia. Neutro, acolhedor, sabe tudo. Centro das apostas (incluindo a do Dente de Ferro, um gancho ativo). Para descobrir o que se passa no porto, fala-se com Velho Quilha. Vende informação e bebida com o mesmo sorriso.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Humano, Poço, Cobrador]
+
+SCARNE, A MÃO QUE RASPA — COBRADOR-CHEFE DO POÇO DAS DÍVIDAS
+Papel: O mais temido dos que assumem dívidas não pagas no Poço
+Aparência: Humano alto e seco, dedos longos manchados de tinta e sangue, sempre com uma faca de raspar madeira (e outras coisas). Olhos mortos de quem cobra dívidas pelos meios que escolhe há tempo demais.
+
+Personalidade: Frio, metódico, profissional da violência. Assume os nomes não pagos no Poço e cobra com a eficiência de quem não sente nada a respeito. Não é sádico — é um instrumento. Trabalha por conta própria e para os sindicatos, e raspar um nome do Poço sob sua mira é sentença quase certa.
+
+O que faz e sabe: Cobra dívidas pelos "meios que escolher" — o sistema jurídico de Brekmar em pessoa. Sabe quem deve a quem, quais dívidas vão estourar, quem está prestes a perder tudo. Conhece os podres financeiros de meio porto. Pode ser contratado, evitado ou enfrentado.
+
+Para o narrador: A Mão que Raspa é a "lei" de Brekmar personificada — a consequência das dívidas do Poço. Antagonista ou contratante sombrio. Conecta-se a toda a economia de dívida do porto (e às dívidas da Casa das Marés que Kahen monitora). Frio e inevitável como uma cláusula de contrato. O preço de dever em Brekmar.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Cinzéu, Sangrinomante, Kahen]
+
+VÉU-DE-SANGUE — O TENENTE SANGRINOMANTE DE KAHEN
+Papel: O mais leal e poderoso dos guardas sangrinomantes de Kahen
+Aparência: Cinzéu de pele escura, veias brancas, marcas de sangrinomancia nos braços (como Kahen). Correntes funcionais terminando em ganchos e lâminas. Imóvel até agir, e quando age, é rápido e mortal.
+
+Personalidade: Leal a Kahen por convicção e dívida — Kahen o libertou da escravidão e ensinou a sangrinomancia. Frio, eficiente, devotado. É a mão direita de Kahen, executando o que o governante decide. Compartilha a frieza Cinzéu e a praticidade incomum que Kahen cultiva nos seus.
+
+O que faz: Controla o próprio sangue como arma e comanda os outros guardas sangrinomantes. Mantém a ordem que sustenta Brekmar sob Kahen. Foi provavelmente quem ajudou (ou executou) o golpe contra as guardas de Lyss. Sabe os planos de Kahen no xadrez contra a demônia da Casa das Marés.
+
+Para o narrador: Véu-de-Sangue é o braço executor de Kahen — obstáculo mortal ou contato com o governante. Conecta-se ao xadrez velado entre Kahen e Lyss. Leal até a morte, perigoso até para aliados. Para chegar a Kahen, ou para entender o jogo dele com Lyss, passa-se por Véu-de-Sangue. A sangrinomancia em forma de devoção.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Humano, Casa_das_Marés, Vítima]
+
+CAPITÃO DELLOW, O QUE NÃO PARTE MAIS — VÍTIMA DA CASA DAS MARÉS
+Papel: Ex-capitão consumido pela Casa das Marés, agora preso a Brekmar
+Aparência: Homem que foi imponente, agora diminuído — roupas de capitão que já não servem ao corpo encolhido, olhos que só brilham ao falar da Casa das Marés. Mãos que tremem longe dela.
+
+História: Foi um dos melhores capitães de Brekmar até começar a frequentar a Casa das Marés. Lyss o consumiu lentamente — perdeu o gosto pelo mar, pela tripulação, por tudo que não fosse a Casa. Vendeu o navio. Agora aceita qualquer trabalho miserável para pagar mais uma noite. Está no Poço das Dívidas.
+
+O que representa e sabe: A face humana do que Lyss faz. Conhece a Casa das Marés por dentro — sua localização, seus padrões, talvez pistas sobre Lyss. Num momento de lucidez (raro), pode avisar outros do perigo, ou ajudar quem investiga a demônia. Mas a Casa sempre o chama de volta.
+
+Para o narrador: O Capitão é o aviso vivo sobre a Casa das Marés e fonte sobre Lyss (de dentro). Tragédia do consumo lento. Pode ser resgatado (dificílimo) ou usado como guia relutante à Casa. Sua dívida no Poço o conecta a Kahen (que monitora as dívidas da Casa). O preço da Casa das Marés, andando pelas docas.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Humano, Mercador, Neutro]
+
+PÉROLA — A MERCADORA QUE VENDE A TODOS
+Papel: Comerciante neutra que abastece todas as facções de Brekmar
+Aparência: Mulher de meia-idade, vestes práticas de muitos bolsos, sorriso profissional, olhos que memorizam inventários e rostos. Sempre com um carrinho de mercadorias variadas e uma rede de contatos invisível.
+
+Personalidade: Pragmática, neutra por sobrevivência e lucro, amigável com todos e leal a nenhum. Vende para sindicatos, piratas, contrabandistas e Osshari sem distinção — a neutralidade é seu negócio e sua proteção. Sabe de tudo porque todos compram dela.
+
+O que oferece: Suprimentos, equipamento, informação. Pérola é o ponto de abastecimento neutro de Brekmar — o lugar onde se compra o que se precisa sem entrar nas guerras das facções. Vende informação com cuidado (vazar demais quebra a neutralidade). Conhece os preços, os fluxos, os rumores de todo o porto.
+
+Para o narrador: Pérola é o contato comercial neutro de Brekmar — fonte de suprimentos e informação para forasteiros sem facção. Equivalente a Grelda de Skallgard. Justa, neutra, conectada a tudo. O ponto de partida natural para quem chega a Brekmar sem aliados. Sua neutralidade é frágil e valiosa — protegê-la pode ser do interesse de todos.
+
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Humano, Sindicato_2, Líder]
+
+THESK, O CORVO DAS DOCAS — CHEFE DO SEGUNDO SINDICATO
+Papel: Líder do sindicato de comércio rival da Senhora das Balanças
+Aparência: Homem de meia-idade vestido de negro, magro como a ave que lhe dá nome, dedos cheios de anéis de selo. Move-se cercado de guarda-costas silenciosos. Rosto que raramente muda de expressão.
+
+Personalidade: Calculista, vingativo, paciente. Comanda o segundo dos três sindicatos numa rivalidade mortal com a Senhora das Balanças e o terceiro sindicato. Especializou-se em contrabando e mercados negros, deixando o comércio "limpo" para os rivais — e lucrando mais.
+
+O que controla: Os mercados mais sombrios do Cais da Transparência, rotas de contrabando, e uma rede de informantes. Está em guerra fria com a Senhora das Balanças pelo controle do Cais. Negocia com Kahen quando forçado, conspira sempre.
+
+Para o narrador: O Corvo das Docas é uma das três potências comerciais — rival, empregador ou alvo. Sua guerra com a Senhora das Balanças pode envolver os personagens. Representa o lado mais sombrio do comércio de Brekmar. Frio e paciente, joga o longo jogo das docas.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Humano, Sindicato_3, Líder]
+
+MADAME ZHELU — A RAINHA DO TERCEIRO SINDICATO
+Papel: Líder do terceiro sindicato, especializado em pessoas e prazeres
+Aparência: Mulher imponente de origem incerta, vestes exóticas de muitos portos, joias que são contratos de servidão estilizados. Sorriso largo que nunca alcança os olhos.
+
+Personalidade: Sedutora, impiedosa, ambiciosa. Controla o comércio de pessoas, entretenimento e vícios de Brekmar (exceto a Casa das Marés, que é de Lyss e intocável). Rival dos outros sindicatos, fornecedora dos Nobres-Colecionadores de Nova Arcádia (como Vespério).
+
+O que controla e sabe: O tráfico de pessoas de Brekmar, as casas de jogo e prazer, os vícios do porto. Conectada a Groth (Pradaria) e Vespério (Nova Arcádia) na rede de escravos. Sabe os vícios secretos de meio porto — e os usa.
+
+Para o narrador: Madame Zhelu é a terceira potência comercial e nó da rede de tráfico de Valoria. Vilã sofisticada, fornecedora dos colecionadores, rival dos sindicatos. Conecta Brekmar à Pradaria e Nova Arcádia no comércio de pessoas. Derrotá-la fere o tráfico continental. Sedução e crueldade.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Osshari, Caçador_Leviatã]
+
+ONDA-PROFUNDA — O ÚLTIMO GRANDE CAÇADOR DE LEVIATÃS
+Papel: O mais respeitado caçador de leviatãs Osshari de Brekmar
+Aparência: Osshari imenso, escamas azul-profundo cicatrizadas de batalhas com leviatãs, arpão ritual de osso sempre presente. Move-se com a calma de quem enfrentou o mar e venceu.
+
+Personalidade: Honrado, tradicional, melancólico — sabe que a era das grandes caçadas está acabando. Lidera as poucas caçadas que ainda acontecem, mantendo viva uma tradição que define os Osshari. Respeita o Ossário e Maré-Funda profundamente.
+
+O que sabe: O mar oeste, os leviatãs, as rotas de caça, os perigos das profundezas. Conhece o Cemitério de Leviatãs (onde leva as presas) e os mistérios marinhos que os Osshari guardam. Pode guiar ou ensinar a caçada — ou avisar do que não se deve caçar (o Leviatã-Que-Não-Foi-Caçado).
+
+Para o narrador: Onda-Profunda é o mestre da caça de leviatãs e guia dos mistérios marinhos. Conecta Brekmar ao Cemitério de Leviatãs e ao mar oeste. Tradição viva em extinção. Pode levar personagens ao mar profundo, ensinar a caçada, ou compartilhar o que os Osshari sabem do oceano.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Humano, Pirata_Rival_2, Capitão]
+
+CAPITÃO GARFO-DE-SAL — PIRATA RIVAL DE TORMENTA RUÍVA
+Papel: Capitão de um dos grupos piratas que disputam a rota do mar oeste
+Aparência: Homem velho e curtido, mão substituída por um garfo de pesca de leviatã (daí o nome), barba de sal grisalha, olho coberto por tampão. Veterano de cem batalhas navais.
+
+Personalidade: Astuto, cruel, experiente. Onde Tormenta Ruíva tem ousadia jovem, Garfo-de-Sal tem manha velha. Disputa a mesma rota de alto valor, e a rivalidade entre os dois é pessoal além de comercial. Joga sujo, conhece truques que os jovens esqueceram.
+
+O que faz: Comanda sua tripulação veterana na guerra das rotas. Recruta na Boca do Fundo, sabota rivais, conhece o mar oeste e seus perigos (incluindo Ophidia, de onde já chegou perigosamente perto). Pode aliar-se ou guerrear com os personagens conforme a vantagem.
+
+Para o narrador: Garfo-de-Sal é o rival veterano na guerra dos piratas — contraponto a Tormenta Ruíva, empregador ou inimigo. A rivalidade dos dois é gancho de aventura naval. Conhece o mar oeste e Ophidia. A astúcia velha contra a ousadia jovem nas rotas de Brekmar.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Humano, Informante, Espião]
+
+OUVIDO-MOLHADO — O ESPIÃO QUE VENDE A TODOS
+Papel: O principal vendedor de informação de Brekmar
+Aparência: Pessoa fisicamente insignificante, propositalmente esquecível, sempre encharcada (dorme nas docas), com ouvidos grandes que são quase piada. Move-se despercebido por toda parte.
+
+Personalidade: Neutro por sobrevivência, ganancioso, covarde e por isso vivo. Escuta tudo nas docas, tavernas e becos, e vende ao maior pagador. Não tem lealdade — tem preços. Sabe que sua utilidade é sua única proteção, e a cultiva.
+
+O que sabe: Tudo que se fala em Brekmar — os movimentos das facções, as apostas da Boca do Fundo, as dívidas do Poço, os planos dos sindicatos. Ouvido-Molhado é a central de inteligência informal do porto, vendendo fragmentos a todos os lados simultaneamente.
+
+Para o narrador: Ouvido-Molhado é a fonte de informação compre-e-venda de Brekmar — útil para qualquer investigação, perigoso porque vende você também. Conecta-se a todas as tramas do porto. O informante puro: sem lado, só preço. Cuidado, porque ele lembra de tudo que perguntam a ele.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Cinzéu, Conselheiro_Kahen]
+
+FRIO-CALCULADO — O CONSELHEIRO CINZÉU DE KAHEN
+Papel: O conselheiro mais próximo de Kahen, outro Cinzéu
+Aparência: Cinzéu de pele cinza-clara, mais contemplativo que Kahen (mais "típico" da raça), correntes rituais nas costas, olhos invertidos que avaliam longamente antes de qualquer palavra.
+
+Personalidade: Profundamente contemplativo, paciente, o contraponto à praticidade de Kahen. Onde Kahen age enquanto pensa, Frio-Calculado pensa antes de tudo. Kahen o mantém por perto justamente por isso — é o freio reflexivo da velocidade do governante.
+
+O que sabe: Os planos de longo prazo de Kahen, incluindo o xadrez com Lyss. As implicações filosóficas e estratégicas que Kahen às vezes não tem tempo de considerar. É a memória e a consciência estratégica do governo de Brekmar.
+
+Para o narrador: Frio-Calculado é o acesso à mente estratégica do governo de Kahen — fonte sobre planos de longo prazo e o conflito com Lyss. Contraponto contemplativo a Kahen e a Véu-de-Sangue (o executor). Para entender o que Kahen planeja, fala-se com Frio-Calculado — se ele permitir.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Humano, Dona_de_Bordel, Casa_das_Marés]
+
+A SENHORA SEM ROSTO — A GERENTE MORTAL DA CASA DAS MARÉS
+Papel: A face humana (aparente) que administra a Casa das Marés para Lyss
+Aparência: Mulher de beleza impossível de fixar na memória — quem a vê não consegue descrevê-la depois. Vestes elegantes, movimentos fluidos. É humana? Ninguém tem certeza. Pode ser a forma que Lyss usa, ou uma serva profundamente consumida.
+
+Personalidade: Acolhedora, atenta, vazia por trás dos olhos. Recebe os frequentadores da Casa das Marés com calor que parece genuíno e não é. Serve a Lyss completamente — talvez seja parte de Lyss, talvez uma vítima tão consumida que virou extensão da demônia.
+
+O que sabe e faz: Administra a Casa das Marés, conhece cada frequentador e seu grau de consumo, gere as dívidas que vão para o Poço. É a interface entre Lyss e a cidade. Sabe os segredos dos que frequentam a Casa — e o que Lyss planeja no xadrez contra Kahen.
+
+Para o narrador: A Senhora Sem Rosto é o acesso (perigoso) à Casa das Marés e a Lyss. Ambígua — humana, serva ou máscara da demônia? Mantenha incerto. Fonte sobre o consumo dos frequentadores e o conflito com Kahen. Encontrá-la é se aproximar de Lyss, com todo o perigo que isso traz.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Humano, Capitão_de_Porto]
+
+MANCO REDEL — O MESTRE DO PORTO
+Papel: Quem organiza (na medida do possível) as atracações e o caos do porto
+Aparência: Homem velho de perna manca, casaco surrado de autoridade portuária que ninguém formalmente lhe deu, livro de registros de atracações sempre debaixo do braço. Voz rouca de gritar ordens.
+
+Personalidade: Rabugento, prático, surpreendentemente respeitado. Num porto sem lei, alguém precisa dizer qual navio atraca onde, e Redel assumiu esse papel por pura teimosia e conhecimento. As facções o toleram porque o caos total seria pior para todos.
+
+O que sabe: Cada navio que entra e sai de Brekmar, quando, com que carga aparente. Quem chegou, quem partiu, quem está atracado. É um registro vivo do movimento do porto — informação valiosa sobre quem está na cidade e o que trouxe.
+
+Para o narrador: Redel é a fonte sobre o movimento naval de Brekmar — quem chega, quem parte, que navios estão no porto. Útil para rastrear pessoas ou cargas. Autoridade informal respeitada por necessidade. O homem que impõe um mínimo de ordem no caos das docas.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Osshari, Jovem, Ponte]
+
+CORRENTE-NOVA — A JOVEM OSSHARI ENTRE DOIS MUNDOS
+Papel: Jovem Osshari fascinada pela vida terrestre de Brekmar
+Aparência: Osshari jovem de escamas vibrantes (verde e laranja), curiosa, mais à vontade entre os terrestres que a maioria dos seus. Move-se entre o Ossário e a cidade com facilidade incomum.
+
+Personalidade: Curiosa, sociável, dividida entre a tradição Osshari (Maré-Funda, o Ossário) e o fascínio pela vida caótica do porto. Serve de ponte rara entre os Osshari reservados e as outras facções de Brekmar.
+
+O que oferece: Acesso amigável ao mundo Osshari, geralmente fechado a forasteiros. Pode explicar os costumes, mediar com Maré-Funda, contar sobre o Ossário e os mistérios marinhos de uma perspectiva acessível. Sua juventude e curiosidade a tornam disposta a ajudar.
+
+Para o narrador: Corrente-Nova é a ponte amigável para o mundo Osshari de Brekmar — fonte acessível sobre o Ossário, os costumes e o mar. Contraste com a reserva de Maré-Funda e Onda-Profunda. Pode introduzir personagens ao lado Osshari da cidade. A curiosidade jovem que cruza fronteiras culturais.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Brekmar, Humano, Apostador_Lendário]
+
+DENTE-DE-OURO LYRA — A APOSTADORA DA BOCA DO FUNDO
+Papel: A apostadora mais notória das apostas de sobrevivência da Boca do Fundo
+Aparência: Mulher de meia-idade, um dente de ouro que exibe ao sorrir (e sorri sempre que ganha), roupas compradas com apostas vencidas, olhar que calcula probabilidades em tudo.
+
+Personalidade: Audaciosa, viciada em risco, surpreendentemente honrada nas apostas (paga o que deve, cobra o que ganhou). Vive das apostas de sobrevivência — aposta em quais navios voltam, e ganha mais do que perde porque entende o mar e as pessoas.
+
+O que sabe: As probabilidades reais das rotas, quais capitães são competentes, quais apostas são "arranjadas" (como possivelmente a do Dente de Ferro). Lyra fareja manipulação nas apostas — e está de olho na do Dente de Ferro, suspeitando dos quatro que falaram com o intermediário.
+
+Para o narrador: Lyra é a fonte sobre as apostas da Boca do Fundo e possível aliada na trama do Dente de Ferro (ela suspeita da manipulação). Conhece o mar e as pessoas pelas probabilidades. Pode envolver personagens na investigação da aposta suspeita. O instinto calculista que fareja o jogo sujo.
+
+#########################################################
+NPCS POR LOCAL: O CEMITÉRIO DE LEVIATÃS (COSTA OESTE)
+#########################################################
+Sem civilização — apenas coletores, sobreviventes, e os Osshari que respeitam o lugar. O Trono que ainda respira.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Cemitério, Humano, Coletor, Veterano]
+
+PULMÃO-DE-COURO GREB — O MESTRE COLETOR DE ÂMBAR
+Papel: O mais experiente dos coletores que arriscam o Cemitério de Leviatãs
+Aparência: Humano coberto de cicatrizes de explosão de gás (a marca da profissão), máscara de filtro permanente no pescoço, mãos queimadas de manusear âmbar e Éter. Move-se entre as ossadas com a confiança de quem conhece cada carcaça.
+
+Personalidade: Cauteloso, supersticioso por experiência, endurecido pelas perdas. Coleta âmbar cinza, óleo, osso e Éter cristalizado há anos — e saiu sempre, sabendo quais carcaças têm gás, quais têm Éter, quais a Sombra ronda. Respeita o Cemitério como os Osshari respeitam, por boas razões.
+
+O que sabe: O mapa do Cemitério — onde está o âmbar bom, onde o gás se acumula, onde a Sombra-de-Leviatã se move, e por que ninguém entra no Trono. Conhece os perigos do Éter concentrado e dos predadores. Vende guia, recursos e o conhecimento de sobreviver entre os ossos gigantes.
+
+Para o narrador: Greb é o guia do Cemitério — o último dos guias regionais. Essencial para quem busca os recursos raros ou o Éter cristalizado. Suas cicatrizes e superstições são avisos reais. Conhece o segredo do Trono e da Sombra. A experiência que separa os que voltam dos que viram mais ossos no Cemitério.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Cemitério, Osshari, Espiritual, Trono]
+
+VOZ-DAS-PROFUNDEZAS, A QUE ESCUTA O TRONO — OSSHARI GUARDIÃ
+Papel: Osshari solitária que vela pelo Cemitério e pelo Trono
+Aparência: Osshari de escamas opacas (raras — a maioria é vibrante), idosa, coberta de ornamentos de osso de leviatã. Fica perto do Trono, escutando seu "respirar" em ciclos de seis horas. Olhos que carregam o peso do que ouve.
+
+Natureza: Os Osshari não vivem no Cemitério, mas alguns o velam. A Que Escuta o Trono dedicou a vida a vigiar a maior carcaça — a que "ainda respira", que "não terminou de morrer". Entende, de forma espiritual Osshari, o que o Trono é e por que ninguém deve entrar.
+
+O que sabe: A verdade sobre o Trono — o Coração-Que-Bate-Ainda nas profundezas, o leviatã que tenta voltar. Os ciclos, os perigos, o que acontece com quem entra. Conhecimento espiritual e prático sobre a maior ameaça (e maior tesouro) do Cemitério. Avisa os que escutam, condena os que profanam.
+
+Para o narrador: A Que Escuta o Trono é a guardiã espiritual do Cemitério e fonte sobre seu maior mistério (o Trono que respira, o Coração que bate). Pode avisar, guiar ou barrar. Conecta-se aos Osshari e ao sobrenatural do lugar. A voz que diz "não entre no Trono" — e explica por quê, para quem souber ouvir.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Cemitério, Humano, Náufrago, Mudado]
+
+BRAKK, O REI DOS OSSOS — LÍDER DOS NÁUFRAGOS DO CEMITÉRIO
+Papel: Sobrevivente de naufrágio que se tornou senhor dos náufragos presos no Cemitério
+Aparência: Humano mudado pela exposição ao Éter — pele pálida luminescente, olhos que brilham fraco, coroa improvisada de dentes de leviatã. Veste-se de restos e ossos. Fala com os ecos do Cemitério como se respondessem.
+
+História: Naufragou na costa oeste e ficou preso no Cemitério, mudado pelo Éter ao longo de anos. Reuniu outros náufragos sob seu "reinado" entre as ossadas. Meio louco, meio profeta, serve (sem saber plenamente) à Sombra-de-Leviatã ou ao Coração que bate, atraindo vítimas para as profundezas das carcaças.
+
+O que sabe e faz: Domina os Náufragos do Cemitério, ataca coletores por suprimentos, e tem ligação perturbadora com o sobrenatural do lugar. Sabe coisas que o Éter lhe sussurrou — sobre o Trono, sobre a Sombra, sobre o que dorme nos ossos. Conhecimento envolto em loucura e perigo.
+
+Para o narrador: O Rei dos Ossos é o antagonista humano do Cemitério — senhor louco de um reino de ossos gigantes. Ameaça coletores, serve ao sobrenatural sem saber, guarda conhecimento delirante mas real. Espelho dos outros "eremitas mudados" de Valoria. O que o Éter e o isolamento fazem a um náufrago esquecido.
+
+#########################################################
+NPCS POR LOCAL: OPHIDIA (OCEANO OESTE — INALCANÇÁVEL)
+#########################################################
+Mistério absoluto. Ninguém volta. Os "NPCs" de Ophidia são quase todos de Brekmar (que vivem da obsessão pelo arquipélago) ou conjecturais. O horror é não ter resposta.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Ophidia, Humano, Obcecado, Brekmar]
+
+SELUNE, A QUE VOLTOU UMA VEZ — A MULHER QUE DIZ TER ESTADO LÁ
+Papel: Mulher em Brekmar que afirma ser a única sobrevivente de uma viagem a Ophidia
+Aparência: Mulher de idade indefinível, olhar fixo no horizonte oeste mesmo em conversa, pele com uma palidez que não é natural, fala pausada como quem escolhe não dizer demais. Algo nela faz as pessoas desconfortáveis sem saber por quê.
+
+História (alegada): Diz ter partido numa expedição a Ophidia e voltado — a única. Não explica como, não descreve o que viu de forma coerente. Vende fragmentos de sua "experiência" no mercado informal de Ophidia. Pode ser charlatã. Pode ser uma dos "Que Voltaram (e não eram eles)". Ninguém sabe.
+
+O que oferece: A única alegação em primeira mão sobre Ophidia em Brekmar. Suas palavras são fragmentárias, perturbadoras, possivelmente falsas, possivelmente as únicas verdadeiras que existem. Atrai obcecados e financia (ou desencoraja) expedições com o que diz.
+
+Para o narrador: A Que Voltou Uma Vez é o gancho humano para o mistério de Ophidia — deliberadamente ambígua. Charlatã ou testemunha? Humana ou algo que voltou diferente? Nunca confirme. Use-a para puxar personagens em direção a Ophidia, ou para perturbá-los com o que ela insinua. O mistério de Ophidia precisa de um rosto, e o dela não é totalmente confiável — nem totalmente humano, talvez.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Ophidia, Humano, Cartógrafo, Condenado]
+
+MESTRE ALBRECHT, O CARTÓGRAFO — O PRÓXIMO A PARTIR
+Papel: Estudioso obcecado preparando a próxima expedição condenada a Ophidia
+Aparência: Humano de meia-idade, vestes acadêmicas, mesa coberta de mapas contraditórios de Ophidia, olhos acesos de certeza equivocada. Acredita ter descoberto o "padrão" das ilhas que mudam de posição.
+
+Personalidade: Brilhante, teimoso, condenado pela própria convicção. Reuniu todos os mapas contraditórios, todos os relatos, e acredita ter decifrado como chegar a Ophidia e voltar — onde todos falharam. Recruta tripulação e financiamento para provar que está certo. Não está. Provavelmente.
+
+O que representa: A atração fatal de Ophidia — sempre há alguém convencido de que será diferente. O Cartógrafo é o próximo da longa lista. Pode recrutar os personagens, pedir escolta, comprar informação de Névoa ou da Que Voltou Uma Vez. Sua expedição é quase certamente uma sentença.
+
+Para o narrador: O Cartógrafo é o gancho ativo para Ophidia — uma expedição se formando agora. Pode envolver os personagens como tripulação, escolta ou investigadores. Sua certeza é trágica e contagiante. Seguir com ele é arriscar o destino de todos que tentaram. Não seguir é vê-lo partir e nunca voltar — ou voltar diferente. Ophidia, sempre, cobra.

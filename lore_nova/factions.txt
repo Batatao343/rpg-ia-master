@@ -1,0 +1,573 @@
+CODEX OMNIA: FACÇÕES DE VALORIA
+Estrutura, objetivos reais vs declarados, perspectivas internas, e como cada facção se conecta às outras.
+Organizado por região. Facções de Nova Arcádia primeiro (as mais antigas do códice), depois por local.
+================================================================
+
+
+#########################################################
+FACÇÕES DE NOVA ARCÁDIA
+#########################################################
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Legião_de_Ferro, Ordem, Valerius, Corrupta]
+
+A LEGIÃO DE FERRO
+Papel declarado: Manutenção da lei e ordem sob o Código de Ferro
+Papel real: Braço executivo do poder pessoal de Valerius
+
+Origem: Soldados da Guerra do Céu Vermelho reaproveitados para policiamento urbano. Tornou-se instituição própria com hierarquia, quota e cultura específica.
+
+Como funciona: Hierarquia rígida. Quotas mensais de prisões e execuções — independente de haver crime suficiente. Punições codificadas: roubo = dedos, sedição = língua, magia não registrada = fogueira. O ramo dos Inquisidores do Código caça especificamente magos não registrados, usando artefatos que sugam Éter.
+
+Cultura interna: Pragmatismo sem crueldade declarada. "Demonstramos consequência porque a plebe entende dor, não abstração." Veteranos distinguem crimes reais de crimes de quota — mas cumprem ambos.
+
+Liderança: O Comandante Thrace comanda os anéis de Ferro e Lama; sua fé no Código começa a rachar ao notar que ele protege os poderosos e esmaga os fracos. Fehk (a Covardia) trabalha contra qualquer impulso seu de agir.
+
+Rachaduras atuais: Korvus, um legionário que desertou ao receber ordem de executar inocentes, está foragido no Anel de Lama (protegido por Mãe Corva) e sabe segredos internos que incriminam o regime. Prova viva de que nem todo legionário é engrenagem.
+
+O que a Legião sabe sobre Valerius: Quase nada. A maioria nunca o viu. Obedece ao Código porque funciona — e porque desobedecer tem consequências que o Código especifica.
+
+Ponto fraco: A Legião é leal ao Código, não a Valerius. Provar que Valerius viola o próprio Código (ele faz — o pacto com Daruun, as visitas a Malagor) torna a lealdade questão aberta. O Testamento Real no barril de Grum e o Diário de Nehla-equivalentes podem ser a alavanca.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Mão_Sombria, Crime, Víbora, Magda]
+
+A MÃO SOMBRIA
+Papel declarado: Organização criminosa que opera nos esgotos
+Papel real: Ecossistema paralelo que existe porque o Código cria demanda para o que proíbe
+
+Origem: Nasceu como rede de pessoas que precisavam do que o Código não permitia. A estrutura veio depois, quando ficou claro que havia mercado.
+
+A Víbora (Velha Magda): Ex-Sacerdotisa do culto ao "Conhecimento Quieto". Construiu a Mão Sombria em quinze anos com observação, memória perfeita e prática de ser invisível. O carrinho de lixo é o escritório; os "delírios" são comunicados codificados.
+
+Filosofia operacional: Não é inimiga do sistema — é parte do ecossistema. Valerius cria leis → leis criam demanda reprimida → demanda cria mercado → mercado cria a Mão Sombria. Derrubar Valerius destruiria o mercado.
+
+Rede e operações: Usa a Quadrilha dos Telhados (Pardal) como olhos, o contrabandista Tibb para mover mercadoria entre os anéis, e a cortesã Dama Vesperina como fonte de segredos da elite. Conectada aos mercadores de escravos da Pradaria (Groth) e aos sindicatos de Brekmar para tráfico.
+
+O que vende: Venenos (importados de Ophidia via Brekmar), informação, proteção, acesso ao Beco do Sussurro, e o que o Código proíbe.
+
+Ponto fraco: Depende da Víbora. Nenhum membro de nível médio sabe que Magda é a Víbora. Se ela morrer sem transferir o conhecimento, a organização fragmenta em semanas.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Filhos_da_Chama_Azul, Culto, Fogo, Malagor]
+
+OS FILHOS DA CHAMA AZUL
+Papel declarado: Culto religioso que venera o fogo purificador
+Papel real: Os que concluíram que Malagor deveria ter vencido
+
+Origem: Surgiram da Guerra do Céu Vermelho — pessoas que olharam para Malagor e concluíram que a vitória foi um erro, que o mundo estava errado antes e continua errado depois.
+
+O Batismo de Fogo: Segurar brasa quente na boca por um minuto sem gritar. A cicatriz nos lábios é a marca. O rito filtra psicológica e fisicamente os membros — quem não aguenta não entra.
+
+A Profecia: O fogo de Malagor não destruía o mundo — tentava salvá-lo de uma ameaça maior além do conhecimento atual. Querem terminar o trabalho.
+
+Conexão com a verdade: Estão parcialmente certos. A "ameaça maior" que intuem existe — o Abismo despertando (a Rede Carmesim em Skallgard, Morrakh em Xylos, o que dorme sob Zhur e as Montanhas). Mas o fogo não é a resposta, e seu modelo os impede de ver que fazem a pesquisa certa com a conclusão errada. Sabem que Malagor está contido na armadura do Palácio de Obsidiana, e alguns sonham em libertá-lo.
+
+Por que são perigosos: Imunes aos métodos convencionais. Chantagem não funciona em quem não tem o que perder; veneno não funciona em quem quer morrer; dinheiro insulta quem rejeita o sistema.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Guilda_dos_Corvos, Mortos, Neutra, Segredos]
+
+A GUILDA DOS CORVOS
+Papel declarado: Coleta e cremação de mortos para evitar mortos-vivos
+Papel real: Serviço necessário com operações paralelas que ninguém questiona
+
+Origem: Fundada na reconstrução pós-guerra, quando os mortos eram numerosos o bastante para criar surtos de mortos-vivos.
+
+Imunidade: Nem a Legião nem a Mão Sombria mexem com eles — ambas precisam do serviço. Existe um braço informal em Brekmar (o homem com carroça do Cais da Transparência que remove corpos sem perguntas).
+
+O pagamento: Cobram dos mortos — botas, anéis, dentes de ouro como taxa.
+
+O segredo dos Corvos: Corpos com a "marca" (mineralização nas veias do pescoço, indício de resposta imune parcial à Praga de Ferro) não vão ao crematório — vão para o Doutor Silas Vane. Acordo de trinta anos. Coveiros veteranos sabem da marca e não perguntam: "é mais seguro não saber."
+
+Imunidade à Praga de Ferro: Nunca confirmada. Treinamento? Exposição gradual? Outra coisa? Os Corvos não explicam.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Encapuzados_da_Fornalha, Culto, Aço_de_Sangue, Anel_Ferro]
+
+OS ENCAPUZADOS DA FORNALHA
+Papel declarado: Sociedade de trabalhadores das Fundições Valerianas
+Papel real: Culto secreto ao Aço de Sangue, meio sindicato meio seita
+
+Origem: Trabalhadores das Fundições do Anel de Ferro que, vendo colegas caírem nas fornalhas e o "Aço de Sangue" resultante ganhar fama, passaram a acreditar que o metal que bebeu vida tem alma.
+
+Liderança: O Mestre-Fundidor Kald, meio-rosto derretido, sacerdote sereno e fanático. Acredita que servir à fornalha é sacerdócio.
+
+O que fazem: Protegem os segredos da forja, "alimentam" a fornalha com inimigos e devedores, e forjam armas de Aço de Sangue para quem paga o preço (nem sempre dinheiro). A Legião finge não saber.
+
+Tensão com outra facção: Bors Martelo-Partido, líder da resistência operária, é o oposto deles — quer reforma e denuncia as condições das Fundições, enquanto os Encapuzados sacralizam a brutalidade. Os dois disputam a alma dos trabalhadores do Anel de Ferro.
+
+Ponto fraco: A crença de que o Aço de Sangue tem alma pode ser verdade — algumas lâminas ganham vontade. Se isso sair de controle dentro da própria fornalha, o culto pode ser devorado pelo que venera.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Resistência_Operária, Anel_Ferro, Reforma, Bors]
+
+A RESISTÊNCIA OPERÁRIA (OS MARTELOS PARTIDOS)
+Papel declarado: Não se declara — é movimento informal, não organização
+Papel real: A primeira rachadura organizada no controle de Valerius sobre o Anel de Ferro
+
+Origem: Bors Martelo-Partido, que perdeu o braço e as ilusões nas Fundições, começou a organizar os operários contra as condições brutais — a Tosse de Ferro, o Aço de Sangue, os contratos que nunca vencem.
+
+O que querem: Reforma, não revolução — ainda. Condições melhores, fim dos contratos eternos, reconhecimento dos mortos das Fundições.
+
+Obstáculos: Fehk (a Covardia) trabalha contra eles, fazendo cada operário encontrar razões para não agir. A Legião (Thrace) os vigia. Os Encapuzados da Fornalha são rivais ideológicos. Mãe Corva os apoia discretamente.
+
+Potencial: Se Bors for martirizado, a reforma pode virar revolta. A Resistência é o estopim possível de uma convulsão no Anel de Ferro.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Quadrilha_dos_Telhados, Ladrões, Anel_Ferro, Pardal]
+
+A QUADRILHA DOS TELHADOS
+Papel declarado: Bando de ladrões e batedores de carteira
+Papel real: Os olhos de Nova Arcádia vista de cima, rede de informação urbana
+
+Origem: Órfãos do Anel de Lama (muitos criados por Mãe Corva) que aprenderam a se mover pelos telhados, nunca pelo chão.
+
+Liderança: Pardal, adolescente ágil e desconfiada, ferozmente leal aos seus.
+
+O que fazem: Roubo, espionagem, batedores para quem pagar. Trabalham para a Mão Sombria como olhos, mas guardam os próprios segredos. Conhecem a cidade de cima como ninguém de baixo — rotas, esconderijos, encontros secretos, movimentos da Legião.
+
+Relações: Devem lealdade a Mãe Corva (que criou muitos), trabalham para a Mão Sombria, e veem tudo do Anel Dourado ao de Lama. Mobilidade e informação são seu poder.
+
+
+#########################################################
+FACÇÕES DE SKALLGARD (NORTE)
+#########################################################
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Clãs_de_Combate, Skallgard, Caçadores, Vehkr]
+
+OS CLÃS DE COMBATE
+Papel declarado: Os caçadores e guerreiros que alimentam e defendem Skallgard
+Papel real: Metade de uma cidade em guerra civil silenciosa, preparando-se para um confronto que nenhum lado quer começar
+
+Origem: A divisão dos Nascidos do Gelo entre tipos físicos (a especiação acelerada pelo Abismo) criou dois povos numa cidade: os maiores e parrudos viraram os caçadores.
+
+Liderança: Vehkr Punho-de-Gelo, o caçador mais respeitado, voz dos clãs. Perdeu o irmão num acidente do Ventre tratado como "perda aceitável" pelos tecnológicos — a raiz pessoal de sua amargura. A jovem Aslaug Duas-Lanças é a promessa que pode escolher outro caminho.
+
+O que fazem: Caçam no Ermo Branco (a única fonte de carne), enfrentam o rito de passagem, e morrem pelas expedições — os nomes na Parede dos Mortos são quase todos deles.
+
+A jogada atual: Sob orientação de Vehkr e do conselheiro Vrel Vess-que-Aconselha, estão acumulando comida escondida perto da Sala Fria, cultivando os Vrel conselheiros, consultando o Oráculo de Ferro sobre rotas e contatos em Brekmar (Durrak), e preparando independência dos tecnológicos. Não querem guerra — querem deixar de ser descartáveis.
+
+Ressentimento central: Morrem pelo sistema que os tecnológicos controlam sentados nos túneis aquecidos. A desproporção de mortes é visível na Parede.
+
+Ponto fraco: Dependem da Fornalha de Vorr (armas) e do Ventre (calor), ambos controlados pelos tecnológicos. A independência exige resolver isso — daí o interesse em Brekmar.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Clãs_Tecnológicos, Skallgard, Engenheiros, Astrin]
+
+OS CLÃS TECNOLÓGICOS
+Papel declarado: Os engenheiros que mantêm Skallgard habitável
+Papel real: A outra metade da guerra silenciosa, guardando um segredo que pode condenar a todos
+
+Origem: Os Nascidos do Gelo menores, de cabeça maior e dedos finos — a outra ponta da especiação. Viraram os engenheiros, ferreiros e leitores.
+
+Liderança: Astrin Veia-Fina, mestra das forjas, a pessoa mais inteligente e isolada de Skallgard. Calcula tudo, inclusive pessoas. Carrega sozinha o peso do que a Câmara do Sinal mede.
+
+O que controlam: O Ventre (calor da cidade), a Fornalha de Vorr (as melhores armas), a Câmara do Sinal (o monitoramento da Rede Carmesim), e a distribuição de comida. Conhecimento é seu único recurso exclusivo — e o protegem retendo informação.
+
+O segredo: A Câmara do Sinal mede a Rede Carmesim acelerando mais rápido do que admitem. Nehla Ouvido-de-Aurora registra os números num diário secreto, temendo que a verdade não sobreviva ao sigilo. Se o Farol falhar, Skallgard pode não conter o despertar.
+
+Tensão interna: Kess Mão-Rápida tenta construir pontes com os caçadores, vendo a guerra como suicídio com a Rede despertando. Signe Ouvido-Fino espiona os caçadores para Astrin, mas sua lealdade erode.
+
+Ponto fraco: O sigilo. Se os caçadores descobrirem que estão sendo mantidos ignorantes sobre uma ameaça existencial, o ressentimento vira fúria.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Renegados_do_Ermo, Skallgard, Exilados, Korrin]
+
+OS RENEGADOS DO ERMO
+Papel declarado: Bandidos exilados que sobrevivem no Ermo Branco
+Papel real: A terceira força de Skallgard — os descartados que voltaram com conhecimento e rancor
+
+Origem: Nascidos do Gelo exilados, desertores, e produtos do rito de passagem que deu errado, que sobreviveram sozinhos ao Ermo e voltaram selvagens.
+
+Liderança: Korrin Sem-Clã, ex-caçador respeitado exilado por um crime que jura ter sido armação dos tecnológicos. Quer vingança e exposição da injustiça.
+
+O que fazem: Atacam expedições por suprimentos e equipamento. Conhecem Skallgard e o Ermo como os caçadores — porque foram caçadores. Mais perigosos que qualquer besta porque pensam como a cidade que os expulsou.
+
+A oportunidade: A guerra civil que se forma é a chance de Korrin — planeja oferecer aos caçadores o que sabe sobre sobreviver fora do sistema, e tem provas de pelo menos uma injustiça real dos tecnológicos.
+
+Conexão: Sabem dos primordiais do Ermo (o Pastor-Branco, os que desaparecem na Borda) por experiência direta. Einar Perna-Torta, embora viva em Skallgard, é uma testemunha-Cassandra ligada ao que os Renegados conhecem.
+
+
+#########################################################
+FACÇÕES DE BREKMAR (PORTO SEM LEI)
+#########################################################
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Governo_de_Kahen, Brekmar, Sangrinomancia, Kahen]
+
+O PODER DE KAHEN
+Papel declarado: Não há governo formal em Brekmar — Kahen "apenas mantém a ordem"
+Papel real: A única força que impede o porto sem lei de se autodestruir, sustentada por sangrinomancia e equilíbrio frágil
+
+Origem: Kahen, um Cinzéu sangrinomante, estabeleceu-se como governante de Brekmar não por exército, mas por ser perigoso e inteligente demais para ser desafiado — tanto que até a demônia Lyss o respeita.
+
+Estrutura: Kahen comanda através de poucos sangrinomantes leais. Véu-de-Sangue é seu tenente executor; Frio-Calculado, seu conselheiro Cinzéu contemplativo, é o freio reflexivo de sua praticidade.
+
+O que faz: Mantém o equilíbrio entre os três sindicatos, os piratas rivais e os contrabandistas — não impondo paz, mas impedindo que qualquer facção domine. Lê o Poço das Dívidas toda semana, rastreando especificamente as dívidas da Casa das Marés para monitorar o avanço de Lyss.
+
+O xadrez com Lyss: Kahen sabe o que Lyss é e que ela consome a cidade lentamente. Joga um jogo velado contra ela — imune à mecânica dela por ser Cinzéu que não sente prazer físico. Encomendou navios-de-fuga secretos a Durrak, sinal de que considera a possibilidade de perder.
+
+Ponto fraco: Brekmar depende dele pessoalmente. Sem Kahen, o equilíbrio rui e as facções entram em guerra aberta. Lyss sabe disso — não pode destruí-lo sem destruir o ecossistema que a alimenta.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Sindicatos_de_Comércio, Brekmar, Poder_Econômico]
+
+OS TRÊS SINDICATOS DE COMÉRCIO
+Papel declarado: Associações de comerciantes do porto
+Papel real: Três potências econômicas com exércitos particulares em guerra fria permanente pelo controle de Brekmar
+
+Origem: O comércio de Brekmar se organizou em três blocos rivais que dividem o Cais da Transparência por acordos tácitos rompidos com violência sempre que o lucro justifica.
+
+O Primeiro Sindicato — Dama Helvira, a Senhora das Balanças: comércio "limpo", rotas e contratos. Cordial e mortal, calcula tudo.
+O Segundo Sindicato — Thesk, o Corvo das Docas: contrabando e mercados negros, lucrando mais que os rivais "honestos". Frio, vingativo, paciente.
+O Terceiro Sindicato — Madame Zhelu: tráfico de pessoas, jogo e vícios (exceto a Casa das Marés, intocável). Conectada a Groth (Pradaria) e Lorde Vespério (Nova Arcádia) na rede continental de escravos.
+
+Como operam: Cada um tem exército particular. Guerras entre sindicatos transformam ruas em campos de batalha por uma noite, e a cidade segue na manhã seguinte. Usam o Poço das Dívidas para pressionar devedores e medir a força uns dos outros. A Mão que Raspa (Scarne) é o cobrador que todos contratam.
+
+Equilíbrio: Kahen impede que qualquer um domine. Se um sindicato eliminar os outros, controla Brekmar — e nem Kahen quer descobrir o que isso significa.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Grupos_Piratas, Brekmar, Mar_Oeste]
+
+OS GRUPOS PIRATAS RIVAIS
+Papel declarado: Tripulações livres que usam Brekmar como base
+Papel real: Facções armadas e móveis em guerra escalante por uma rota de alto valor no mar oeste
+
+Origem: Brekmar atrai tripulações piratas que disputam rotas, presas e tripulação. Três grupos disputam atualmente a mesma rota comercial valiosa, e a tensão escala a cada semana na Boca do Fundo.
+
+Capitães principais:
+Capitã Tormenta Ruíva — ousadia jovem, carisma, divisão justa do saque, leal à tripulação.
+Capitão Garfo-de-Sal — manha velha, crueldade, truques que os jovens esqueceram. Rivalidade pessoal com Tormenta Ruíva.
+(Um terceiro grupo disputa a mesma rota, mantendo o triângulo instável.)
+
+Onde se enfrentam: A Boca do Fundo é o ponto de recrutamento e confronto. Quatro brigas nas últimas duas semanas; a próxima será maior — os grupos estão escalando o número de recrutadores, sinal de intenção crescente.
+
+O fator Ophidia: Os mais ousados (Garfo-de-Sal, e o contrabandista Névoa) já chegaram perigosamente perto de Ophidia. A rota disputada passa perto do horizonte do arquipélago.
+
+Ligação com o Estaleiro: Quem compra navios de Durrak (osso de leviatã na quilha) ganha vantagem de velocidade — e o risco de atrair Leviatãs. A guerra das rotas alimenta o Estaleiro das Almas.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Osshari_de_Brekmar, Ossário, Tradição, Maré-Funda]
+
+OS OSSHARI DE BREKMAR
+Papel declarado: A comunidade Osshari do porto, trabalhadores e caçadores de leviatã
+Papel real: Os guardiões da única zona neutra de Brekmar e dos mistérios marinhos que a cidade ignora
+
+Origem: Os Osshari fundaram parte de Brekmar e mantêm o Ossário do Leviatã — a carcaça do maior leviatã trazido há três gerações, hoje território sagrado.
+
+Liderança: Maré-Funda, guardiã espiritual do Ossário, que lidera os rituais noturnos e mantém a neutralidade sagrada num porto sem lei. Onda-Profunda é o último grande caçador de leviatãs. Corrente-Nova, jovem e curiosa, é a ponte com as outras facções.
+
+O que mantêm: A não-violência do Ossário (violá-la é guerra com todos os Osshari simultaneamente — provado uma vez, há doze anos, com resultado que desencorajou repetições). São os trabalhadores mais perigosos das docas.
+
+O que sabem e guardam: A existência de "O Que Come nas Praias" (a coisa sob as docas que se alimenta dos corpos), o acordo tácito com Durrak (osso de leviatã), e os mistérios do mar oeste. Não compartilham com forasteiros.
+
+Neutralidade: Não tomam partido nas guerras das facções. O Ossário é onde rivais se encontram em terreno neutro. Até Kahen respeita a fronteira e nunca entra no crânio.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Casa_das_Marés, Lyss, Consumo, Demônio]
+
+A CASA DAS MARÉS (O DOMÍNIO DE LYSS)
+Papel declarado: Um estabelecimento de entretenimento superior, sem nome oficial
+Papel real: O instrumento pelo qual a demônia Lyss consome Brekmar lentamente
+
+Origem: Lyss, a Lascívia (uma das treze demônias primordiais), instalou-se na Casa das Marés como sistema de consumo — não um bordel, mas uma máquina de tornar tudo fora dela progressivamente menos satisfatório.
+
+Estrutura: A Senhora Sem Rosto administra a Casa — humana, serva consumida, ou máscara da própria Lyss, ninguém sabe. Os frequentadores não percebem que estão sendo consumidos até não conseguirem mais encontrar satisfação em lugar nenhum.
+
+O alcance: Piratas aceitam contratos piores para pagar mais uma noite; capitães tomam decisões de rota que os mantêm perto de Brekmar. O Capitão Dellow é o aviso vivo — um dos melhores capitães do porto, hoje diminuído, vendendo tudo pela Casa. As dívidas geradas vão ao Poço, onde Kahen as lê.
+
+O conflito: Kahen joga xadrez velado contra Lyss. Ela não pode destruí-lo (é imune e governa o ecossistema que a alimenta); ele não pode eliminá-la sem desestabilizar algo de tamanho desconhecido. Os dois calculam.
+
+Ponto fraco: Lyss depende de Brekmar funcionando para ter o que consumir. É um parasita que não pode matar o hospedeiro.
+
+
+#########################################################
+FACÇÕES DA PRADARIA DAS RUÍNAS (CENTRO)
+#########################################################
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Cidades-Estado, Pradaria, Élfico, Cinzéu]
+
+AS CIDADES-ESTADO SOBREVIVENTES (VAELORN E SOLVHEN)
+Papel declarado: Os últimos baluartes civilizados élficos e cinzéus da Pradaria
+Papel real: Ilhas de ordem cercadas e em declínio, lutando para preservar memória e povo antes do fim
+
+Origem: Vaelorn (élfica) e Solvhen (cinzéu) são o que restou das cidades-estado que cobriam a Pradaria antes da Guerra do Céu Vermelho. As ruínas das outras assombram as planícies.
+
+Liderança: Lady Aerwen governa Vaelorn de fato (seu marido, Magister Illyan, perdeu-se na própria magia), com a ampulheta da vida élfica correndo. Keeper Morvan orienta Solvhen pelo consenso contemplativo, guardando o arquivo de séculos de pensamento Cinzéu.
+
+O que enfrentam: Cercadas por nômades hostis, saqueadores de túmulos e mercadores de escravos. Aerwen equilibra defesa, comércio e a preservação da memória élfica antes de sua morte. Solvhen resiste pela paciência e pelo isolamento.
+
+Relações: Desconfiam dos nômades, comerciam com mercadores honestos, e veem os espectros das ruínas isoladas com pena, não ódio. Possíveis aliadas de forasteiros contra os bandos.
+
+Tesouros: A Ampulheta de Vaelorn e a Máscara-Funerária do Primeiro Contemplador são relíquias que guardam.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Bandos_Nômades, Pradaria, Andarilhos, Kaarg]
+
+OS BANDOS NÔMADES
+Papel declarado: Andarilhos livres das planícies
+Papel real: Predadores humanos que dominam a Pradaria pelo terror e pela mobilidade
+
+Origem: Humanos que abraçaram a vida nômade nas planícies abertas, organizados em bandos rivais de crueldade variável.
+
+Principais bandos:
+O Bando do Osso Pintado — Kaarg Osso-Pintado, o mais temido, que cultiva a reputação de crueldade como arma. Tem Vrel entre eles (emboscadas coordenadas).
+Os Cavaleiros-Cinza — o Capitão Cinza (Haldric), quase um proto-estado: cobra "proteção" das rotas mas honra acordos.
+Os Saqueadores Vrel (Agrupamento de Vesh) — mente coletiva que saqueia bens e memórias.
+
+O que fazem: Atacam vilas, caravanas e as cidades-estado. Disputam território, manadas e rotas entre si. Alguns bandos são mistos (humanos e Vrel).
+
+Variação moral: De Kaarg (terror deliberado) a Haldric (pedágio quase ordeiro). Negociáveis em graus diferentes; todos perigosos se traídos.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Mercadores_de_Escravos, Pradaria, Tráfico, Groth]
+
+OS MERCADORES DE ESCRAVOS DA PRADARIA
+Papel declarado: Comerciantes itinerantes
+Papel real: O elo da Pradaria na rede continental de tráfico de pessoas
+
+Origem: Bandos especializados em capturar viajantes e moradores de vilas isoladas para vender nas grandes cidades.
+
+Liderança: Groth Algema-Fria, afável e absolutamente sem escrúpulos, que trata pessoas como inventário. Especializa-se em capturar Elfos (valem mais).
+
+A rede: Conecta a Pradaria a Madame Zhelu (Brekmar) e Lorde Vespério (Nova Arcádia) — captura na Pradaria, venda nas cidades. O medo deles mantém as vilas pequenas e fechadas.
+
+Inimigos naturais: As cidades-estado (que perdem gente), as vilas (presas), e qualquer um de bom coração. Derrotá-los fere a rede continental de escravos. Vilã clara num mundo de cinzas.
+
+
+#########################################################
+FACÇÕES DAS MONTANHAS AFIADAS (CENTRO-NORTE)
+#########################################################
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Orcs, Montanhas, Saídas_Baixas, Gruumsha]
+
+OS BANDOS ORC DAS SAÍDAS BAIXAS
+Papel declarado: Hordas selvagens que bloqueiam as passagens
+Papel real: Refugiados do Reino Subterrâneo organizados em força bruta, presos entre o Rei lá embaixo e a superfície
+
+Origem: Orcs que saíram do Reino Subterrâneo quando o Rei despertou e nunca voltaram — têm pavor das profundezas.
+
+Liderança: Gruumsha Quebra-Espinha, chefe de guerra brutal mas estratégica, que monta emboscadas inteligentes e entende números.
+
+O que fazem: Controlam as saídas baixas, cobram pedágio em bens ou sangue, atacam grupos pequenos. São o primeiro e último obstáculo das travessias.
+
+Negociáveis: Gruumsha respeita força e pode negociar passagem ou aliança contra os Goblins (que odeia). Trair um acordo é virar troféu.
+
+Fraqueza oculta: O pavor das profundezas, escondido como fraqueza estratégica.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Goblins, Montanhas, Reino_Subterrâneo, Skriit]
+
+OS GOBLINS-MINEIROS
+Papel declarado: Praga que infesta o Reino Subterrâneo
+Papel real: Os verdadeiros senhores dos níveis intermediários, com mais conhecimento do Reino que qualquer vivo
+
+Origem: Goblins que infestam o Reino Anão perdido há gerações, saqueando suas relíquias.
+
+Liderança: Skriit Mil-Olhos, o rei-rato astuto, covarde individualmente mas perigoso coletivamente, que comanda pela inteligência e pelo conhecimento dos túneis.
+
+O que fazem: Saqueiam relíquias Anãs (que Skriit comercia), conhecem cada túnel e armadilha, atacam em massa ou não atacam (calculam números). A Tribo do Eco são Goblins mudados pela proximidade do Rei, que servem a ele sem comando.
+
+Relações: Odeiam os Orcs (Gruumsha). Skriit negocia informação e passagem — traiçoeiramente. São a chave para acessar o Reino e entender o que aconteceu lá.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Últimos_Anões, Montanhas, Reino_Perdido, Durgrim]
+
+OS ÚLTIMOS ANÕES DO REINO
+Papel declarado: Sobreviventes dispersos de um povo quase extinto
+Papel real: Os guardiões da verdade sobre o que despertou nas profundezas, obcecados em recuperar o que perderam
+
+Origem: Os pouquíssimos Anões que sobreviveram à queda do Reino Subterrâneo (a "Falha Crítica de Contenção").
+
+Figura central: Durgrim Último-Martelo, testemunha viva da queda, obcecado em entender o que deu errado e recuperar os Registros Perdidos do Reino.
+
+O que querem: Recuperar a documentação Anã do que foi escavado e despertado — não tesouro, mas verdade. Precisam de aventureiros que desçam onde eles não podem mais.
+
+Conhecimento: A verdade sobre o Rei Subterrâneo, o que os Anões despertaram, e por que o Rei teme o que está abaixo (possivelmente o Verme-Primordial das Raízes do Mundo). Os Anões-Eco (mortos que não partiram) ainda "trabalham" no Reino.
+
+
+#########################################################
+FACÇÕES DO PÂNTANO DA MELANCOLIA
+#########################################################
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Druidas_do_Ciclo_Cinzento, Pântano, Contenção, Gresh]
+
+OS DRUIDAS DO CICLO CINZENTO
+Papel declarado: Guardiões do ciclo natural de vida e morte
+Papel real: Os únicos que entendem o que o Pântano faz — e não podem pará-lo, só retardá-lo
+
+Origem: Existiam antes de Nova Arcádia, preservando conhecimento de plantas e magia natural. O Pântano da Melancolia tornou seu trabalho urgente.
+
+Liderança: Arcante Gresh, o druida-mor resignado, que mede o avanço com obsessão porque é tudo que ainda controla. Nilo Folha-Nova é o jovem idealista que busca reverter, não só conter — e que pode se quebrar tentando.
+
+O que fazem: Produzem o chá da Praga de Ferro (paliativo vital), medem o avanço do pântano (~5m/ano), contêm o que podem, e tratam os infectados. Trabalham com a Doutora Isera (enviada de Vane) no fornecimento de material.
+
+O que sabem e temem: O Pântano avança em direção a Nova Arcádia (gerações de distância, mas inevitável no ritmo atual). A Raiz-Mãe primordial é o motor do crescimento. Apresentaram o alerta às autoridades e foram ignorados.
+
+Relação com o Abismo: Gerenciam danos, não combatem. Não acreditam que Nova Arcádia possa ser salva a longo prazo — trabalham para dar tempo ao que precisa migrar.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Druidas_Renegados, Pântano, Rendição, Saelwen]
+
+OS DRUIDAS-RENEGADOS
+Papel declarado: Não se declaram — são ex-Druidas tidos por perdidos
+Papel real: Os que se renderam ao Pântano e agora querem que ele cresça
+
+Origem: Ex-membros do Ciclo Cinzento que passaram tempo demais no pântano e foram convertidos pela melancolia, ou que decidiram que o pântano deveria crescer, não ser contido.
+
+Liderança: Saelwen, A Que Afundou, ex-druida brilhante transformada pelo pântano — bela e terrível, genuinamente crente de que o pântano oferece misericórdia (o fim do esforço, a paz da água que chama).
+
+O que fazem: Sabotam as estacas de medição, guiam vítimas para a névoa densa, cultivam os Tumores do Pântano como jardins. Não são malignos no sentido comum — querem compartilhar a "misericórdia".
+
+Perigo: Suas palavras carregam o efeito psicológico do pântano — ouvi-los demais é começar a concordar. Espelho sombrio dos Druidas. Podem ser combatidos ou, mais perigosamente, ouvidos.
+
+
+#########################################################
+FACÇÕES DA SELVA DE XYLOS (LESTE)
+#########################################################
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Colmeia_Hospedeira, Xylos, Mente-Colmeia]
+
+A COLMEIA DOS HOSPEDEIROS
+Papel declarado: Não é uma facção no sentido comum — é uma consciência coletiva
+Papel real: Uma civilização-colmeia que não dá nomes individuais, defendendo seu território e simbiose contra o avanço de Morrakh
+
+Origem: Humanos infectados pelo parasita Xylos que abraçaram a simbiose, formando cidades nas copas da selva. A mente-colmeia partilha percepção entre todos.
+
+"Liderança": Não há líder — há os mais conectados. O Que Ouve Mais Longe é o ancião mais sintonizado, consultado por ouvir mais. As decisões são consenso de escuta, não de poder.
+
+Como agem: Defendem o território com coordenação total (a colmeia move todos como um). Sentem mentira e intenção pela sintonização. Avaliam forasteiros antes de acolher ou repelir. O Que Pergunta (jovem curioso) e o Tecelão de Esporo (mercador) são as pontes raras com o exterior.
+
+A ameaça: Morrakh, o dragão do contágio, avança em direção às cidades das copas. O contágio dele interage com o Xylos de formas imprevisíveis (O Que Desceu e Voltou é a prova). Se Morrakh alcançar a Árvore-Mãe-Primordial, a catástrofe é incalculável.
+
+Inimigos internos: A Que Quer a União lidera cultistas forasteiros que buscam infecção forçada — querem o que os Hospedeiros são, pelos motivos errados, e a colmeia não os aceita plenamente.
+
+
+#########################################################
+FACÇÕES DO DESERTO DE ZHUR (SUL)
+#########################################################
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Devoradores_de_Sol, Zhur, Tribos, Memória-Sangue]
+
+AS TRIBOS DOS DEVORADORES DE SOL
+Papel declarado: Os habitantes humanos do Mar de Vidro
+Papel real: Uma cultura de lógica alienígena moldada pelo Abismo, que vê o sofrimento como informação e bebe memórias do sangue
+
+Origem: Os humanos de Zhur, transformados pela vida no deserto vitrificado e pela proximidade de Urath — desenvolveram uma inteligência radicalmente diferente, cruel por eficiência.
+
+Liderança: Khatarn Olhos-de-Obsidiana lidera uma tribo pela suposta sabedoria; Nazhireen, A Que Bebeu Mil Vidas, é a mística cuja mente é um arquivo de memórias alheias. Vasketh, O Que Duvida do Sangue, é o jovem herege que questiona os costumes.
+
+Cultura: Bebem o sangue dos anciões (e cativos) via Cristais de Urath para acessar memórias — gerações de conhecimento. Veem forasteiros como recurso (água, memórias), não inimigos. Não negociam como humanos comuns; sua moral é outra.
+
+Perigo e abertura: Mortais para quem não entende sua lógica. Mas Vasketh prova que não são monolíticos — há rachaduras. Tocados por Urath, tendem à arrogância que os mata no deserto que subestimam.
+
+Conhecimento: Sabem das ruínas nas camadas de cristal, das miragens de Vaelith, e do que Urath sussurra. Harradin, O Que Ouviu o Gosto, eremita da borda sul, sabe o que há no vazio além do mundo.
+
+
+#########################################################
+FACÇÕES DE AETHELGARD (LAGO)
+#########################################################
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Cultistas_da_Destilação, Aethelgard, Magia_Proibida, Corvane]
+
+OS CULTISTAS DA DESTILAÇÃO
+Papel declarado: Estudiosos da magia perdida de Aethelgard
+Papel real: Magos proibidos que querem reabrir a porta que destruiu a capital mágica do mundo
+
+Origem: Magos atraídos às ruínas submersas em busca de reaprender a Destilação — o refino de Éter de almas que Daruun ensinou a Aethelgard.
+
+Liderança: Corvane, o Mestre-Destilador, brilhante e moralmente morto, que vê a Destilação como conquista injustamente perdida, não horror. Já domina fragmentos do processo.
+
+O que fazem: Buscam o Amuleto da Destilação e os Cristais de Memória, capturam pessoas como "matéria-prima de almas", e estudam os Conselheiros-Afogados como mestres. Veem os mortos-vivos de Aethelgard como professores, não ameaças.
+
+A ameaça: Se recuperarem a Destilação completa, criam magos capazes de repetir a catástrofe de Aethelgard em escala maior. O Conselheiro que Ainda Destila (Valdren) usaria o conhecimento de volta se pudesse sair.
+
+O obstáculo: Aelwin, o Último Conselheiro, guardião da entrada seca, dedica a vida a impedir que qualquer um — especialmente os Cultistas — recupere o poder de Aethelgard. O Eco do Aprendiz guarda a verdade sobre por que a cidade teve de morrer.
+
+
+#########################################################
+FACÇÕES TRANSREGIONAIS (operam por toda Valoria)
+#########################################################
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Mercadores_de_Curiosidades, Transregional, Pactos, Mistério]
+
+OS MERCADORES DE CURIOSIDADES
+Papel declarado: Comerciantes errantes do exótico e do raro
+Papel real: Algo mais antigo e estranho que comércio — vendem o impossível por preços que só fazem sentido depois
+
+Origem: Surgiram cedo na história de Valoria (Era 0), não claramente humanos nem claramente outra coisa. Aparecem onde há algo a ser desejado.
+
+Como operam: Não têm sede nem rota fixa. Surgem, oferecem exatamente o que a pessoa mais quer, cobram um preço que parece razoável e cujo verdadeiro custo só se revela depois. Ecoam a mecânica de Daruun (a Cobiça) sem serem ele — ou talvez sirvam a ele sem saber.
+
+O que vendem: Itens únicos, conhecimento proibido, encontros com o que deveria ser inalcançável. O Corretor do Beco do Sussurro (Nova Arcádia) pode ser um deles, um agente, ou algo relacionado.
+
+Por que são perigosos: Nunca enganam tecnicamente — dizem o preço. Mas ninguém avalia corretamente o que o preço vai custar no futuro. Negociar com eles é sempre uma aposta contra a própria capacidade de prever as consequências.
+
+Mistério deliberado: Ninguém sabe o que realmente são. Mantenha assim.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Cultos_do_Abismo, Transregional, Apocalipse, Despertar]
+
+OS CULTOS DO DESPERTAR (dispersos)
+Papel declarado: Seitas isoladas sem ligação aparente
+Papel real: Múltiplos grupos que, cada um à sua maneira, querem acelerar o despertar do Abismo — sem saberem uns dos outros
+
+Origem: Em vários cantos de Valoria, pessoas que tocaram o Abismo (pelo Éter, pelos demônios, pelas pragas) concluíram que o despertar é inevitável ou desejável, e trabalham para acelerá-lo.
+
+Os grupos conhecidos:
+Os Filhos da Chama Azul (Nova Arcádia) — querem libertar Malagor e "terminar o trabalho".
+A Que Quer a União e os Cultistas-da-Colmeia (Xylos) — buscam a dissolução do eu na mente-colmeia.
+Os Cultistas da Destilação (Aethelgard) — querem reabrir o poder que destruiu uma cidade.
+Os Druidas-Renegados (Pântano) — querem que o pântano cresça.
+Indivíduos tocados por demônios e dragões espalhados pelo mundo.
+
+O que os une (sem que saibam): Cada um faz "a pesquisa certa com a conclusão errada" — sentem a verdade de que o Abismo desperta (a Rede Carmesim, Morrakh, o que dorme sob Zhur e as Montanhas), mas concluem que devem ajudar em vez de impedir.
+
+Por que importam: Não há uma conspiração única — há uma ressonância. O Abismo desperta, e em todo lugar gente sensível a ele chega à mesma conclusão suicida de forma independente. Essa convergência é mais assustadora que qualquer conspiração organizada seria.
+
+A ironia central de Valoria: Os cultos sentem corretamente que algo se aproxima. Estão errados sobre o que fazer. E ninguém que está certo sobre o perigo tem um plano melhor que "conter mais um pouco" — o Farol, os Druidas, os clãs tecnológicos, todos apenas adiando.

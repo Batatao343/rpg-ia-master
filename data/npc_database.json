@@ -1112,5 +1112,27 @@
             "AC": 11.0
         },
         "id": "npc_viciado_do_beco"
+    },
+    "npc_garm": {
+        "name": "Garm",
+        "role": "Vendedor Ambulante de Carne Seca e Informante de Baixo Calão",
+        "location": "O Anel de Lama (A Fossa), Nova Arcádia",
+        "persona": "Garm é a personificação da sobrevivência rasteira. Ele é bajulador, servil e insistente, implorando por moedas com uma voz trêmula e patética. No entanto, por trás da fachada de mendigo miserável, esconde-se uma mente astuta de sobrevivente. Ele ouve tudo o que acontece no Anel de Lama e conhece os becos como a palma de sua mão suja. Ele é viciado em Pó de Sonho, mas ainda mantém lucidez suficiente para saber que informações valem mais que carne podre para as pessoas certas. Ele teme a Legião e os cobradores de dívidas locais, e fará qualquer coisa por algumas moedas de cobre, mas trairá qualquer um se sua vida estiver em risco.",
+        "appearance": "Um homem idoso, curvado e extremamente magro. Sua pele tem um tom cinzento e doentio, coberta por uma crosta de lama seca e fuligem. Quase não lhe restam dentes na boca — os poucos que sobram são escuros e podres. Veste trapos úmidos e rasgados que parecem costurados a partir de sacos de estopa. Suas mãos tremem constantemente, mas seus olhos, embora cavos e amarelados, movem-se com uma rapidez febril, avaliando tudo ao seu redor. Ele carrega uma bandeja improvisada de madeira podre pendurada no pescoço por uma corda, onde expõe pedaços de carne seca enegrecida e de formato duvidoso.",
+        "initial_relationship": 50,
+        "attributes": {
+            "charisma": 8,
+            "dexterity": 12,
+            "intelligence": 10,
+            "wisdom": 13,
+            "strength": 7,
+            "constitution": 9
+        },
+        "combat_stats": {
+            "attacks": "Adaga enferrujada (+3 para atingir, dano 1d4-1 perfurante)",
+            "ac": 11.0,
+            "hp": 9.0
+        },
+        "id": "npc_garm"
     }
 }

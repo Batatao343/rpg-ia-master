@@ -22,7 +22,7 @@ def test_simulate_world_returns_eco_note():
 def test_simulate_world_danger_shift_zero_no_change():
     # mock devolve danger_shift=0 → não cria override
     state = {"game_id": "ws_test"}
-    world, _ = ws.simulate_world(state, _world("estrada_sul"), gamedata.seed_factions(), {}, periods=1)
+    world, _ = ws.simulate_world(state, _world("pradaria_ruinas"), gamedata.seed_factions(), {}, periods=1)
     assert not world.get("danger_overrides")
 
 
@@ -35,8 +35,8 @@ def test_simulate_world_fallback_guard(monkeypatch):
 
 
 def test_apply_danger_shift_clamps():
-    w = ws._apply_danger_shift(_world("estrada_sul"), "estrada_sul", 1)  # base 2 → 3
-    assert w["danger_overrides"]["estrada_sul"] == 3
+    w = ws._apply_danger_shift(_world("pradaria_ruinas"), "pradaria_ruinas", 1)  # base 2 → 3
+    assert w["danger_overrides"]["pradaria_ruinas"] == 3
     w2 = ws._apply_danger_shift(_world("nova_arcadia"), "nova_arcadia", -1)  # base 1 → piso 1
     assert w2["danger_overrides"]["nova_arcadia"] == 1
     # teto 4: parte de um override 4
@@ -47,7 +47,7 @@ def test_apply_danger_shift_clamps():
 def test_known_factions_ctx_respects_intel():
     facs = gamedata.seed_factions()
     assert "Nenhuma facção conhecida" in ws._known_factions_ctx(facs, {})
-    ctx = ws._known_factions_ctx(facs, {"selo_palido": {"known": True}})
-    assert "Ordem do Selo Pálido" in ctx
+    ctx = ws._known_factions_ctx(facs, {"legiao_ferro": {"known": True}})
+    assert "A Legião de Ferro" in ctx
     # fação não-conhecida não aparece
-    assert "Clãs de Skallgard" not in ctx
+    assert "Bandos Nômades" not in ctx

@@ -1,0 +1,7075 @@
+{
+  "nova_arcadia": {
+    "id": "nova_arcadia",
+    "type": "location",
+    "name": "Nova Arcádia",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "cidade",
+      "presente"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "pantano_melancolia": {
+    "id": "pantano_melancolia",
+    "type": "location",
+    "name": "O Pântano da Melancolia",
+    "aliases": [],
+    "tags": [
+      "pantano_da_melancolia",
+      "leste",
+      "perigo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "deserto_zhur": {
+    "id": "deserto_zhur",
+    "type": "location",
+    "name": "O Deserto de Zhur",
+    "aliases": [],
+    "tags": [
+      "deserto_de_zhur",
+      "sul",
+      "zhur",
+      "perigoso"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "floresta_sussurros": {
+    "id": "floresta_sussurros",
+    "type": "location",
+    "name": "A Floresta dos Sussurros",
+    "aliases": [],
+    "tags": [
+      "floresta_dos_sussurros",
+      "leste",
+      "thessavar"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "selva_xylos": {
+    "id": "selva_xylos",
+    "type": "location",
+    "name": "A Selva de Xylos",
+    "aliases": [],
+    "tags": [
+      "selva_de_xylos",
+      "leste",
+      "hospedeiros",
+      "morrakh"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "skallgard": {
+    "id": "skallgard",
+    "type": "location",
+    "name": "Skallgard e o Ermo Branco",
+    "aliases": [
+      "Skallgard",
+      "Ermo Branco"
+    ],
+    "tags": [
+      "ermo_branco",
+      "norte",
+      "skallgard",
+      "rede_carmesim"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "aethelgard": {
+    "id": "aethelgard",
+    "type": "location",
+    "name": "As Ruínas Submersas de Aethelgard",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "submersa",
+      "oghma",
+      "ruinas"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "ophidia": {
+    "id": "ophidia",
+    "type": "location",
+    "name": "Ophidia",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "arquipelago",
+      "misterio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "costa_negra": {
+    "id": "costa_negra",
+    "type": "location",
+    "name": "O Cemitério de Leviatãs",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "cemiterio_de_leviatas",
+      "osshari"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "montanhas_afiadas": {
+    "id": "montanhas_afiadas",
+    "type": "location",
+    "name": "As Montanhas Afiadas",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "norte",
+      "anoes",
+      "rei_subterraneo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "pradaria_ruinas": {
+    "id": "pradaria_ruinas",
+    "type": "location",
+    "name": "A Pradaria das Ruínas",
+    "aliases": [],
+    "tags": [
+      "pradaria_das_ruinas",
+      "centro",
+      "ruinas",
+      "assombrada"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "brekmar": {
+    "id": "brekmar",
+    "type": "location",
+    "name": "Brekmar",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "porto",
+      "pirata",
+      "costa_oeste"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "legiao_ferro": {
+    "id": "legiao_ferro",
+    "type": "faction",
+    "name": "A Legião de Ferro",
+    "aliases": [],
+    "tags": [
+      "legiao_de_ferro",
+      "ordem",
+      "valerius",
+      "corrupta"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mao_sombria": {
+    "id": "mao_sombria",
+    "type": "faction",
+    "name": "A Mão Sombria",
+    "aliases": [],
+    "tags": [
+      "mao_sombria",
+      "crime",
+      "vibora",
+      "magda"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "filhos_chama_azul": {
+    "id": "filhos_chama_azul",
+    "type": "faction",
+    "name": "Os Filhos da Chama Azul",
+    "aliases": [],
+    "tags": [
+      "filhos_da_chama_azul",
+      "culto",
+      "fogo",
+      "malagor"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "guilda_corvos": {
+    "id": "guilda_corvos",
+    "type": "faction",
+    "name": "A Guilda dos Corvos",
+    "aliases": [],
+    "tags": [
+      "guilda_dos_corvos",
+      "mortos",
+      "neutra",
+      "segredos"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "encapuzados_fornalha": {
+    "id": "encapuzados_fornalha",
+    "type": "faction",
+    "name": "Os Encapuzados da Fornalha",
+    "aliases": [],
+    "tags": [
+      "encapuzados_da_fornalha",
+      "culto",
+      "aco_de_sangue",
+      "anel_ferro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "resistencia_operaria_martelos_partidos": {
+    "id": "resistencia_operaria_martelos_partidos",
+    "type": "faction",
+    "name": "A Resistência Operária (os Martelos Partidos)",
+    "aliases": [],
+    "tags": [
+      "resistencia_operaria",
+      "anel_ferro",
+      "reforma",
+      "bors"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "quadrilha_telhados": {
+    "id": "quadrilha_telhados",
+    "type": "faction",
+    "name": "A Quadrilha dos Telhados",
+    "aliases": [],
+    "tags": [
+      "quadrilha_dos_telhados",
+      "ladroes",
+      "anel_ferro",
+      "pardal"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "clas_combate": {
+    "id": "clas_combate",
+    "type": "faction",
+    "name": "Os Clãs de Combate",
+    "aliases": [],
+    "tags": [
+      "clas_de_combate",
+      "skallgard",
+      "cacadores",
+      "vehkr"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "clas_tecnologicos": {
+    "id": "clas_tecnologicos",
+    "type": "faction",
+    "name": "Os Clãs Tecnológicos",
+    "aliases": [],
+    "tags": [
+      "clas_tecnologicos",
+      "skallgard",
+      "engenheiros",
+      "astrin"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "renegados_ermo": {
+    "id": "renegados_ermo",
+    "type": "faction",
+    "name": "Os Renegados do Ermo",
+    "aliases": [],
+    "tags": [
+      "renegados_do_ermo",
+      "skallgard",
+      "exilados",
+      "korrin"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "poder_kahen": {
+    "id": "poder_kahen",
+    "type": "faction",
+    "name": "O Poder de Kahen",
+    "aliases": [],
+    "tags": [
+      "governo_de_kahen",
+      "brekmar",
+      "sangrinomancia",
+      "kahen"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "tres_sindicatos_comercio": {
+    "id": "tres_sindicatos_comercio",
+    "type": "faction",
+    "name": "Os Três Sindicatos de Comércio",
+    "aliases": [],
+    "tags": [
+      "sindicatos_de_comercio",
+      "brekmar",
+      "poder_economico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "grupos_piratas_rivais": {
+    "id": "grupos_piratas_rivais",
+    "type": "faction",
+    "name": "Os Grupos Piratas Rivais",
+    "aliases": [],
+    "tags": [
+      "grupos_piratas",
+      "brekmar",
+      "mar_oeste"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "osshari_brekmar": {
+    "id": "osshari_brekmar",
+    "type": "faction",
+    "name": "Os Osshari de Brekmar",
+    "aliases": [],
+    "tags": [
+      "osshari_de_brekmar",
+      "ossario",
+      "tradicao",
+      "mare_funda"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "casa_mares_dominio_lyss": {
+    "id": "casa_mares_dominio_lyss",
+    "type": "faction",
+    "name": "A Casa das Marés (o Domínio de Lyss)",
+    "aliases": [],
+    "tags": [
+      "casa_das_mares",
+      "lyss",
+      "consumo",
+      "demonio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "cidades_estado_sobreviventes_vaelorn_solvhen": {
+    "id": "cidades_estado_sobreviventes_vaelorn_solvhen",
+    "type": "faction",
+    "name": "As Cidades-estado Sobreviventes (Vaelorn e Solvhen)",
+    "aliases": [],
+    "tags": [
+      "cidades_estado",
+      "pradaria",
+      "elfico",
+      "cinzeu"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "bandos_nomades": {
+    "id": "bandos_nomades",
+    "type": "faction",
+    "name": "Os Bandos Nômades",
+    "aliases": [],
+    "tags": [
+      "bandos_nomades",
+      "pradaria",
+      "andarilhos",
+      "kaarg"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mercadores_escravos_pradaria": {
+    "id": "mercadores_escravos_pradaria",
+    "type": "faction",
+    "name": "Os Mercadores de Escravos da Pradaria",
+    "aliases": [],
+    "tags": [
+      "mercadores_de_escravos",
+      "pradaria",
+      "trafico",
+      "groth"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "bandos_orc_saidas_baixas": {
+    "id": "bandos_orc_saidas_baixas",
+    "type": "faction",
+    "name": "Os Bandos Orc das Saídas Baixas",
+    "aliases": [],
+    "tags": [
+      "orcs",
+      "montanhas",
+      "saidas_baixas",
+      "gruumsha"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "goblins_mineiros": {
+    "id": "goblins_mineiros",
+    "type": "faction",
+    "name": "Os Goblins-mineiros",
+    "aliases": [],
+    "tags": [
+      "goblins",
+      "montanhas",
+      "reino_subterraneo",
+      "skriit"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "ultimos_anoes_reino": {
+    "id": "ultimos_anoes_reino",
+    "type": "faction",
+    "name": "Os Últimos Anões do Reino",
+    "aliases": [],
+    "tags": [
+      "ultimos_anoes",
+      "montanhas",
+      "reino_perdido",
+      "durgrim"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "druidas_ciclo_cinzento": {
+    "id": "druidas_ciclo_cinzento",
+    "type": "faction",
+    "name": "Os Druidas do Ciclo Cinzento",
+    "aliases": [],
+    "tags": [
+      "druidas_do_ciclo_cinzento",
+      "pantano",
+      "contencao",
+      "gresh"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "druidas_renegados": {
+    "id": "druidas_renegados",
+    "type": "faction",
+    "name": "Os Druidas-renegados",
+    "aliases": [],
+    "tags": [
+      "druidas_renegados",
+      "pantano",
+      "rendicao",
+      "saelwen"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "colmeia_hospedeiros": {
+    "id": "colmeia_hospedeiros",
+    "type": "faction",
+    "name": "A Colmeia dos Hospedeiros",
+    "aliases": [],
+    "tags": [
+      "colmeia_hospedeira",
+      "xylos",
+      "mente_colmeia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "tribos_devoradores_sol": {
+    "id": "tribos_devoradores_sol",
+    "type": "faction",
+    "name": "As Tribos dos Devoradores de Sol",
+    "aliases": [],
+    "tags": [
+      "devoradores_de_sol",
+      "zhur",
+      "tribos",
+      "memoria_sangue"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "cultistas_destilacao": {
+    "id": "cultistas_destilacao",
+    "type": "faction",
+    "name": "Os Cultistas da Destilação",
+    "aliases": [],
+    "tags": [
+      "cultistas_da_destilacao",
+      "aethelgard",
+      "magia_proibida",
+      "corvane"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mercadores_curiosidades": {
+    "id": "mercadores_curiosidades",
+    "type": "faction",
+    "name": "Os Mercadores de Curiosidades",
+    "aliases": [],
+    "tags": [
+      "mercadores_de_curiosidades",
+      "transregional",
+      "pactos",
+      "misterio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "cultos_despertar_dispersos": {
+    "id": "cultos_despertar_dispersos",
+    "type": "faction",
+    "name": "Os Cultos do Despertar (Dispersos)",
+    "aliases": [],
+    "tags": [
+      "cultos_do_abismo",
+      "transregional",
+      "apocalipse",
+      "despertar"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_valerius": {
+    "id": "npc_valerius",
+    "type": "npc",
+    "name": "Lorde Protetor Valerius",
+    "aliases": [],
+    "tags": [
+      "valerius",
+      "governante",
+      "imortal",
+      "pacto"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_grum": {
+    "id": "npc_grum",
+    "type": "npc",
+    "name": "Grum",
+    "aliases": [],
+    "tags": [
+      "grum",
+      "taverneiro",
+      "ex_guarda",
+      "segredo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_velha_magda": {
+    "id": "npc_velha_magda",
+    "type": "npc",
+    "name": "Velha Magda",
+    "aliases": [],
+    "tags": [
+      "velha_magda",
+      "mao_sombria",
+      "vibora",
+      "identidade_secreta"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_doutor_silas_vane": {
+    "id": "npc_doutor_silas_vane",
+    "type": "npc",
+    "name": "Doutor Silas Vane",
+    "aliases": [],
+    "tags": [
+      "doutor_silas_vane",
+      "medico",
+      "etico_duvidoso",
+      "pesquisa"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_elaryin_historico": {
+    "id": "npc_elaryin_historico",
+    "type": "npc",
+    "name": "Elaryin (Histórico",
+    "aliases": [],
+    "tags": [
+      "elaryin",
+      "historico",
+      "morto",
+      "heroi_esquecido"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_o_arauto_da_nevoa": {
+    "id": "npc_o_arauto_da_nevoa",
+    "type": "npc",
+    "name": "O Arauto da Névoa",
+    "aliases": [],
+    "tags": [
+      "arauto_da_nevoa",
+      "entidade",
+      "aprendiz",
+      "errante"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_os_mercadores_de_curiosidades": {
+    "id": "npc_os_mercadores_de_curiosidades",
+    "type": "npc",
+    "name": "Os Mercadores de Curiosidades",
+    "aliases": [],
+    "tags": [
+      "mercador_de_curiosidades",
+      "demonio",
+      "trocas",
+      "memorias"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_kahen": {
+    "id": "npc_kahen",
+    "type": "npc",
+    "name": "Kahen",
+    "aliases": [],
+    "tags": [
+      "kahen",
+      "cinzeu",
+      "brekmar",
+      "sanguinomante"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_urath": {
+    "id": "npc_urath",
+    "type": "npc",
+    "name": "Urath",
+    "aliases": [],
+    "tags": [
+      "urath",
+      "orgulho",
+      "zhur",
+      "selado",
+      "demonio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_thessavar": {
+    "id": "npc_thessavar",
+    "type": "npc",
+    "name": "Thessavar",
+    "aliases": [],
+    "tags": [
+      "thessavar",
+      "oculto",
+      "floresta",
+      "ativo",
+      "demonio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_daruun": {
+    "id": "npc_daruun",
+    "type": "npc",
+    "name": "Daruun",
+    "aliases": [],
+    "tags": [
+      "daruun",
+      "cobica",
+      "pactos",
+      "ativo",
+      "demonio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_maalrek": {
+    "id": "npc_maalrek",
+    "type": "npc",
+    "name": "Maalrek",
+    "aliases": [],
+    "tags": [
+      "maalrek",
+      "crueldade",
+      "ativo",
+      "demonio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_vhrak": {
+    "id": "npc_vhrak",
+    "type": "npc",
+    "name": "Vhrak",
+    "aliases": [],
+    "tags": [
+      "vhrak",
+      "odio",
+      "ativo",
+      "demonio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_solvhara": {
+    "id": "npc_solvhara",
+    "type": "npc",
+    "name": "Solvhara",
+    "aliases": [],
+    "tags": [
+      "solvhara",
+      "tristeza",
+      "ativo",
+      "demonio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_veth": {
+    "id": "npc_veth",
+    "type": "npc",
+    "name": "Veth",
+    "aliases": [],
+    "tags": [
+      "veth",
+      "inveja",
+      "ativo",
+      "demonio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_dorrhen": {
+    "id": "npc_dorrhen",
+    "type": "npc",
+    "name": "Dorrhen",
+    "aliases": [],
+    "tags": [
+      "dorrhen",
+      "desespero",
+      "ativo",
+      "demonio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_lyss": {
+    "id": "npc_lyss",
+    "type": "npc",
+    "name": "Lyss",
+    "aliases": [],
+    "tags": [
+      "lyss",
+      "lascivia",
+      "brekmar",
+      "ativo",
+      "demonio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_fehk": {
+    "id": "npc_fehk",
+    "type": "npc",
+    "name": "Fehk",
+    "aliases": [],
+    "tags": [
+      "fehk",
+      "covardia",
+      "nova_arcadia",
+      "ativo",
+      "demonio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_morvath": {
+    "id": "npc_morvath",
+    "type": "npc",
+    "name": "Morvath",
+    "aliases": [],
+    "tags": [
+      "morvath",
+      "decadencia",
+      "aethelgard",
+      "ativo",
+      "demonio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_skarath": {
+    "id": "npc_skarath",
+    "type": "npc",
+    "name": "Skarath",
+    "aliases": [],
+    "tags": [
+      "skarath",
+      "traicao",
+      "ativo",
+      "demonio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_veleth": {
+    "id": "npc_veleth",
+    "type": "npc",
+    "name": "Veleth",
+    "aliases": [],
+    "tags": [
+      "veleth",
+      "vergonha",
+      "ativo",
+      "demonio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_malagor": {
+    "id": "npc_malagor",
+    "type": "npc",
+    "name": "Malagor",
+    "aliases": [],
+    "tags": [
+      "malagor",
+      "rei",
+      "armadura",
+      "contido",
+      "dragao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_vorrnak": {
+    "id": "npc_vorrnak",
+    "type": "npc",
+    "name": "Vorrnak",
+    "aliases": [],
+    "tags": [
+      "vorrnak",
+      "silencio",
+      "norte",
+      "fortaleza_de_vorr",
+      "dragao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_solveth": {
+    "id": "npc_solveth",
+    "type": "npc",
+    "name": "Solveth",
+    "aliases": [],
+    "tags": [
+      "solveth",
+      "dissolucao",
+      "floresta",
+      "selva",
+      "dragao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_thessrak": {
+    "id": "npc_thessrak",
+    "type": "npc",
+    "name": "Thessrak",
+    "aliases": [],
+    "tags": [
+      "thessrak",
+      "memoria",
+      "aethelgard",
+      "selado",
+      "dragao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_vaelith": {
+    "id": "npc_vaelith",
+    "type": "npc",
+    "name": "Vaelith",
+    "aliases": [],
+    "tags": [
+      "vaelith",
+      "tempo",
+      "zhur",
+      "ativo",
+      "dragao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_orrakh": {
+    "id": "npc_orrakh",
+    "type": "npc",
+    "name": "Orrakh",
+    "aliases": [],
+    "tags": [
+      "orrakh",
+      "peso",
+      "oceano",
+      "dormindo",
+      "dragao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_morrakh": {
+    "id": "npc_morrakh",
+    "type": "npc",
+    "name": "Morrakh",
+    "aliases": [],
+    "tags": [
+      "morrakh",
+      "contagio",
+      "xylos",
+      "ativo",
+      "dragao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_vehkr_punho_de_gelo": {
+    "id": "npc_vehkr_punho_de_gelo",
+    "type": "npc",
+    "name": "Vehkr Punho-de-gelo",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "cla_combate",
+      "lider",
+      "cacador"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_astrin_veia_fina": {
+    "id": "npc_astrin_veia_fina",
+    "type": "npc",
+    "name": "Astrin Veia-fina",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "cla_tecnologico",
+      "lider",
+      "engenheira"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_o_oraculo_de_ferro": {
+    "id": "npc_o_oraculo_de_ferro",
+    "type": "npc",
+    "name": "O Oráculo de Ferro",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "vrel",
+      "oraculo",
+      "anciao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_nehla_ouvido_de_aurora": {
+    "id": "npc_nehla_ouvido_de_aurora",
+    "type": "npc",
+    "name": "Nehla Ouvido-de-aurora",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "camara_do_sinal",
+      "leitora",
+      "segredo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_torvald_casca_nova": {
+    "id": "npc_torvald_casca_nova",
+    "type": "npc",
+    "name": "Torvald Casca-nova",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "cla_combate",
+      "jovem",
+      "rito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_grelda_duas_maos": {
+    "id": "npc_grelda_duas_maos",
+    "type": "npc",
+    "name": "Grelda Duas-mãos",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "mercador",
+      "neutro",
+      "informacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_volkar_o_guardiao_do_farol": {
+    "id": "npc_volkar_o_guardiao_do_farol",
+    "type": "npc",
+    "name": "Volkar, o Guardião do Farol",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "farol",
+      "guardiao",
+      "misterio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_kess_mao_rapida": {
+    "id": "npc_kess_mao_rapida",
+    "type": "npc",
+    "name": "Kess Mão-rápida",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "cla_tecnologico",
+      "dissidente",
+      "jovem"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_old_hekla": {
+    "id": "npc_old_hekla",
+    "type": "npc",
+    "name": "Old Hekla",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "cla_combate",
+      "veterana",
+      "parede_dos_mortos"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_korrin_sem_cla": {
+    "id": "npc_korrin_sem_cla",
+    "type": "npc",
+    "name": "Korrin Sem-clã",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "renegado",
+      "ermo",
+      "ameaca"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_yrsa_maos_quentes": {
+    "id": "npc_yrsa_maos_quentes",
+    "type": "npc",
+    "name": "Yrsa Mãos-quentes",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "cla_tecnologico",
+      "medica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_hrok_olho_de_tempestade": {
+    "id": "npc_hrok_olho_de_tempestade",
+    "type": "npc",
+    "name": "Hrok Olho-de-tempestade",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "cla_combate",
+      "batedor"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_vess_que_aconselha": {
+    "id": "npc_vess_que_aconselha",
+    "type": "npc",
+    "name": "Vess-que-aconselha",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "vrel",
+      "conselheiro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_brynja_forja_fria": {
+    "id": "npc_brynja_forja_fria",
+    "type": "npc",
+    "name": "Brynja Forja-fria",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "cla_tecnologico",
+      "comerciante_liga"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_aslaug_duas_lancas": {
+    "id": "npc_aslaug_duas_lancas",
+    "type": "npc",
+    "name": "Aslaug Duas-lanças",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "cla_combate",
+      "jovem_promessa"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_ogmund_fundo_quente": {
+    "id": "npc_ogmund_fundo_quente",
+    "type": "npc",
+    "name": "Ogmund Fundo-quente",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "cla_tecnologico",
+      "engenheiro_chefe_ventre"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_gamli_caneca_de_gelo": {
+    "id": "npc_gamli_caneca_de_gelo",
+    "type": "npc",
+    "name": "Gamli Caneca-de-gelo",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "neutro",
+      "taverneiro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_einar_perna_torta": {
+    "id": "npc_einar_perna_torta",
+    "type": "npc",
+    "name": "Einar Perna-torta",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "cla_combate",
+      "veterano_amargo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_signe_ouvido_fino": {
+    "id": "npc_signe_ouvido_fino",
+    "type": "npc",
+    "name": "Signe Ouvido-fino",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "cla_tecnologico",
+      "espia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_vel_tharn": {
+    "id": "npc_vel_tharn",
+    "type": "npc",
+    "name": "Vel-tharn",
+    "aliases": [],
+    "tags": [
+      "montanhas",
+      "cinzeu",
+      "guia",
+      "sobrevivente"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_gruumsha_quebra_espinha": {
+    "id": "npc_gruumsha_quebra_espinha",
+    "type": "npc",
+    "name": "Gruumsha Quebra-espinha",
+    "aliases": [],
+    "tags": [
+      "montanhas",
+      "orc",
+      "lider",
+      "saidas_baixas"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_skriit_mil_olhos": {
+    "id": "npc_skriit_mil_olhos",
+    "type": "npc",
+    "name": "Skriit Mil-olhos",
+    "aliases": [],
+    "tags": [
+      "montanhas",
+      "goblin",
+      "lider",
+      "reino_subterraneo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_durgrim_ultimo_martelo": {
+    "id": "npc_durgrim_ultimo_martelo",
+    "type": "npc",
+    "name": "Durgrim Último-martelo",
+    "aliases": [],
+    "tags": [
+      "montanhas",
+      "anao",
+      "sobrevivente",
+      "reino_perdido"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_corvo_rapido": {
+    "id": "npc_corvo_rapido",
+    "type": "npc",
+    "name": "Corvo Rápido",
+    "aliases": [],
+    "tags": [
+      "montanhas",
+      "humano",
+      "bandido",
+      "travessia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_grik_grik_o_que_ecoa": {
+    "id": "npc_grik_grik_o_que_ecoa",
+    "type": "npc",
+    "name": "Grik-grik, o que Ecoa",
+    "aliases": [],
+    "tags": [
+      "montanhas",
+      "goblin",
+      "tribo_do_eco",
+      "mudado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_morgra_a_viuva_de_pedra": {
+    "id": "npc_morgra_a_viuva_de_pedra",
+    "type": "npc",
+    "name": "Morgra, a Viúva de Pedra",
+    "aliases": [],
+    "tags": [
+      "montanhas",
+      "humano",
+      "escavador",
+      "obcecado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_solna_olhos_de_pedra": {
+    "id": "npc_solna_olhos_de_pedra",
+    "type": "npc",
+    "name": "Solna Olhos-de-pedra",
+    "aliases": [],
+    "tags": [
+      "montanhas",
+      "cinzeu",
+      "eremita",
+      "conhecimento"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_brago_dois_carros": {
+    "id": "npc_brago_dois_carros",
+    "type": "npc",
+    "name": "Brago Dois-carros",
+    "aliases": [],
+    "tags": [
+      "montanhas",
+      "humano",
+      "mercador",
+      "travessia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_o_primeiro_tocado": {
+    "id": "npc_o_primeiro_tocado",
+    "type": "npc",
+    "name": "O Primeiro Tocado",
+    "aliases": [],
+    "tags": [
+      "montanhas",
+      "aberracao",
+      "filho_do_rei",
+      "ameaca"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_lady_aerwen": {
+    "id": "npc_lady_aerwen",
+    "type": "npc",
+    "name": "Lady Aerwen",
+    "aliases": [],
+    "tags": [
+      "pradaria",
+      "vaelorn",
+      "elfico",
+      "lider"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_magister_illyan": {
+    "id": "npc_magister_illyan",
+    "type": "npc",
+    "name": "Magister Illyan",
+    "aliases": [],
+    "tags": [
+      "pradaria",
+      "vaelorn",
+      "elfico",
+      "mago_perdido"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_keeper_morvan": {
+    "id": "npc_keeper_morvan",
+    "type": "npc",
+    "name": "Keeper Morvan",
+    "aliases": [],
+    "tags": [
+      "pradaria",
+      "solvhen",
+      "cinzeu",
+      "lider"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_kaarg_osso_pintado": {
+    "id": "npc_kaarg_osso_pintado",
+    "type": "npc",
+    "name": "Kaarg Osso-pintado",
+    "aliases": [],
+    "tags": [
+      "pradaria",
+      "nomade",
+      "andarilho",
+      "chefe"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_o_agrupamento_de_vesh": {
+    "id": "npc_o_agrupamento_de_vesh",
+    "type": "npc",
+    "name": "O Agrupamento de Vesh",
+    "aliases": [],
+    "tags": [
+      "pradaria",
+      "vrel",
+      "saqueador",
+      "nomade"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_velha_thessa": {
+    "id": "npc_velha_thessa",
+    "type": "npc",
+    "name": "Velha Thessa",
+    "aliases": [],
+    "tags": [
+      "pradaria",
+      "humano",
+      "vila",
+      "lider"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_haldric_o_capitao_cinza": {
+    "id": "npc_haldric_o_capitao_cinza",
+    "type": "npc",
+    "name": "Haldric, o Capitão Cinza",
+    "aliases": [],
+    "tags": [
+      "pradaria",
+      "nomade",
+      "cavaleiro",
+      "lider"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_dedos_longos_rhen": {
+    "id": "npc_dedos_longos_rhen",
+    "type": "npc",
+    "name": "Dedos-longos Rhen",
+    "aliases": [],
+    "tags": [
+      "pradaria",
+      "humano",
+      "saqueador_tumulos",
+      "sombrio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_venndar_o_homem_que_fala_com_pedras": {
+    "id": "npc_venndar_o_homem_que_fala_com_pedras",
+    "type": "npc",
+    "name": "Venndar, o Homem que Fala com Pedras",
+    "aliases": [],
+    "tags": [
+      "pradaria",
+      "eremita",
+      "ruinas",
+      "conhecimento"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_groth_algema_fria": {
+    "id": "npc_groth_algema_fria",
+    "type": "npc",
+    "name": "Groth Algema-fria",
+    "aliases": [],
+    "tags": [
+      "pradaria",
+      "humano",
+      "mercador_escravos",
+      "vilao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_arcante_gresh": {
+    "id": "npc_arcante_gresh",
+    "type": "npc",
+    "name": "Arcante Gresh",
+    "aliases": [],
+    "tags": [
+      "pantano",
+      "druida",
+      "lider",
+      "ciclo_cinzento"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_saelwen_a_que_afundou": {
+    "id": "npc_saelwen_a_que_afundou",
+    "type": "npc",
+    "name": "Saelwen, a que Afundou",
+    "aliases": [],
+    "tags": [
+      "pantano",
+      "druida",
+      "renegado",
+      "sombrio"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_ferro_velho_baldr": {
+    "id": "npc_ferro_velho_baldr",
+    "type": "npc",
+    "name": "Ferro-velho Baldr",
+    "aliases": [],
+    "tags": [
+      "pantano",
+      "humano",
+      "cacador_espolio",
+      "veterano"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_o_general_sem_nome": {
+    "id": "npc_o_general_sem_nome",
+    "type": "npc",
+    "name": "O General-sem-nome",
+    "aliases": [],
+    "tags": [
+      "pantano",
+      "assombracao",
+      "general",
+      "morto_vivo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_vespa": {
+    "id": "npc_vespa",
+    "type": "npc",
+    "name": "Vespa",
+    "aliases": [],
+    "tags": [
+      "pantano",
+      "contrabandista",
+      "lagrimas",
+      "ganancioso"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_nilo_folha_nova": {
+    "id": "npc_nilo_folha_nova",
+    "type": "npc",
+    "name": "Nilo Folha-nova",
+    "aliases": [],
+    "tags": [
+      "pantano",
+      "druida",
+      "jovem",
+      "esperanca"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_orric_o_homem_que_nao_dorme": {
+    "id": "npc_orric_o_homem_que_nao_dorme",
+    "type": "npc",
+    "name": "Orric, o Homem que Não Dorme",
+    "aliases": [],
+    "tags": [
+      "pantano",
+      "humano",
+      "sobrevivente",
+      "eremita"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_o_que_lembra_o_nome": {
+    "id": "npc_o_que_lembra_o_nome",
+    "type": "npc",
+    "name": "O que Lembra o Nome",
+    "aliases": [],
+    "tags": [
+      "pantano",
+      "afogado",
+      "conselheiro",
+      "lucido"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_doutora_isera": {
+    "id": "npc_doutora_isera",
+    "type": "npc",
+    "name": "Doutora Isera",
+    "aliases": [],
+    "tags": [
+      "pantano",
+      "humano",
+      "pesquisadora",
+      "vane"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_a_carnica_mae": {
+    "id": "npc_a_carnica_mae",
+    "type": "npc",
+    "name": "A Carniça-mãe",
+    "aliases": [],
+    "tags": [
+      "pantano",
+      "aberracao",
+      "tumor",
+      "guardiao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_comandante_thrace": {
+    "id": "npc_comandante_thrace",
+    "type": "npc",
+    "name": "Comandante Thrace",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "legiao",
+      "comandante",
+      "anel_ferro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_lorde_vesperio_valante": {
+    "id": "npc_lorde_vesperio_valante",
+    "type": "npc",
+    "name": "Lorde Vespério Valante",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "anel_dourado",
+      "nobre",
+      "colecionador"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_mae_corva": {
+    "id": "npc_mae_corva",
+    "type": "npc",
+    "name": "Mãe Corva",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "anel_lama",
+      "lider_comunitario",
+      "resistencia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_mestre_fundidor_kald": {
+    "id": "npc_mestre_fundidor_kald",
+    "type": "npc",
+    "name": "Mestre-fundidor Kald",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "anel_ferro",
+      "fundicao",
+      "culto"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_arquimaga_sylvenne": {
+    "id": "npc_arquimaga_sylvenne",
+    "type": "npc",
+    "name": "Arquimaga Sylvenne",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "anel_dourado",
+      "maga",
+      "registrada"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_o_corretor": {
+    "id": "npc_o_corretor",
+    "type": "npc",
+    "name": "O Corretor",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "anel_lama",
+      "beco_sussurro",
+      "misterioso"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_pardal": {
+    "id": "npc_pardal",
+    "type": "npc",
+    "name": "Pardal",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "anel_ferro",
+      "quadrilha",
+      "jovem"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_o_cego": {
+    "id": "npc_o_cego",
+    "type": "npc",
+    "name": "O Cego",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "oubliette",
+      "carcereiro",
+      "sobrenatural"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_lirio": {
+    "id": "npc_lirio",
+    "type": "npc",
+    "name": "Lírio",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "anel_dourado",
+      "casa_espelhos",
+      "tragico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_lorde_oswin_conta_de_ouro": {
+    "id": "npc_lorde_oswin_conta_de_ouro",
+    "type": "npc",
+    "name": "Lorde Oswin Conta-de-ouro",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "anel_dourado",
+      "banqueiro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_bors_martelo_partido": {
+    "id": "npc_bors_martelo_partido",
+    "type": "npc",
+    "name": "Bors Martelo-partido",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "anel_ferro",
+      "lider_operario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_velha_netta": {
+    "id": "npc_velha_netta",
+    "type": "npc",
+    "name": "Velha Netta",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "anel_lama",
+      "curandeira_ilegal"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_dama_vesperina": {
+    "id": "npc_dama_vesperina",
+    "type": "npc",
+    "name": "Dama Vesperina",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "anel_dourado",
+      "cortesa_informante"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_korvus": {
+    "id": "npc_korvus",
+    "type": "npc",
+    "name": "Korvus",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "legiao",
+      "desertor"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_liane_chama_escondida": {
+    "id": "npc_liane_chama_escondida",
+    "type": "npc",
+    "name": "Liane Chama-escondida",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "anel_dourado",
+      "mago_jovem_proibido"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_rato_de_ferro_tibb": {
+    "id": "npc_rato_de_ferro_tibb",
+    "type": "npc",
+    "name": "Rato-de-ferro Tibb",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "anel_ferro",
+      "contrabandista_interno"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_vestra_mao_vermelha": {
+    "id": "npc_vestra_mao_vermelha",
+    "type": "npc",
+    "name": "Vestra Mão-vermelha",
+    "aliases": [],
+    "tags": [
+      "floresta",
+      "humano",
+      "colhedor",
+      "lider"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_thael_veia_antiga": {
+    "id": "npc_thael_veia_antiga",
+    "type": "npc",
+    "name": "Thael Veia-antiga",
+    "aliases": [],
+    "tags": [
+      "floresta",
+      "elfico",
+      "eremita",
+      "antigo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_o_que_fala_a_lingua_dos_sussurros": {
+    "id": "npc_o_que_fala_a_lingua_dos_sussurros",
+    "type": "npc",
+    "name": "O que Fala a Língua dos Sussurros",
+    "aliases": [],
+    "tags": [
+      "floresta",
+      "humano",
+      "perdido",
+      "mudado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_sholven_passo_silencioso": {
+    "id": "npc_sholven_passo_silencioso",
+    "type": "npc",
+    "name": "Sholven Passo-silencioso",
+    "aliases": [],
+    "tags": [
+      "floresta",
+      "cinzeu",
+      "cacador",
+      "solitario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_a_voz_de_morto_conhecido": {
+    "id": "npc_a_voz_de_morto_conhecido",
+    "type": "npc",
+    "name": "A Voz de Morto-conhecido",
+    "aliases": [],
+    "tags": [
+      "floresta",
+      "voz",
+      "thessavar",
+      "manifestacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_estudioso_quell": {
+    "id": "npc_estudioso_quell",
+    "type": "npc",
+    "name": "Estudioso Quell",
+    "aliases": [],
+    "tags": [
+      "floresta",
+      "humano",
+      "pesquisador",
+      "obcecado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_o_que_ouve_mais_longe": {
+    "id": "npc_o_que_ouve_mais_longe",
+    "type": "npc",
+    "name": "O que Ouve Mais Longe",
+    "aliases": [],
+    "tags": [
+      "xylos",
+      "hospedeiro",
+      "anciao",
+      "colmeia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_o_que_desceu_e_voltou": {
+    "id": "npc_o_que_desceu_e_voltou",
+    "type": "npc",
+    "name": "O que Desceu e Voltou",
+    "aliases": [],
+    "tags": [
+      "xylos",
+      "hospedeiro",
+      "profundo",
+      "mudado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_casca_grossa_nok": {
+    "id": "npc_casca_grossa_nok",
+    "type": "npc",
+    "name": "Casca-grossa Nok",
+    "aliases": [],
+    "tags": [
+      "xylos",
+      "humano",
+      "garimpeiro",
+      "veterano"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_a_que_quer_a_uniao": {
+    "id": "npc_a_que_quer_a_uniao",
+    "type": "npc",
+    "name": "A que Quer a União",
+    "aliases": [],
+    "tags": [
+      "xylos",
+      "humano",
+      "cultista",
+      "fanatico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_o_que_pergunta": {
+    "id": "npc_o_que_pergunta",
+    "type": "npc",
+    "name": "O que Pergunta",
+    "aliases": [],
+    "tags": [
+      "xylos",
+      "hospedeiro",
+      "jovem",
+      "curioso"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_tecelao_de_esporo": {
+    "id": "npc_tecelao_de_esporo",
+    "type": "npc",
+    "name": "Tecelão de Esporo",
+    "aliases": [],
+    "tags": [
+      "xylos",
+      "humano",
+      "mercador",
+      "resina"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_khatarn_olhos_de_obsidiana": {
+    "id": "npc_khatarn_olhos_de_obsidiana",
+    "type": "npc",
+    "name": "Khatarn Olhos-de-obsidiana",
+    "aliases": [],
+    "tags": [
+      "zhur",
+      "devorador_sol",
+      "lider",
+      "cruel"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_nazhireen_a_que_bebeu_mil_vidas": {
+    "id": "npc_nazhireen_a_que_bebeu_mil_vidas",
+    "type": "npc",
+    "name": "Nazhireen, a que Bebeu Mil Vidas",
+    "aliases": [],
+    "tags": [
+      "zhur",
+      "devorador_sol",
+      "mistico",
+      "memorias"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_sede_de_vidro_marcus": {
+    "id": "npc_sede_de_vidro_marcus",
+    "type": "npc",
+    "name": "Sede-de-vidro Marcus",
+    "aliases": [],
+    "tags": [
+      "zhur",
+      "humano",
+      "saqueador",
+      "cristais"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_vasketh_o_que_duvida_do_sangue": {
+    "id": "npc_vasketh_o_que_duvida_do_sangue",
+    "type": "npc",
+    "name": "Vasketh, o que Duvida do Sangue",
+    "aliases": [],
+    "tags": [
+      "zhur",
+      "devorador_sol",
+      "jovem",
+      "dissidente"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_a_miragem_que_fala": {
+    "id": "npc_a_miragem_que_fala",
+    "type": "npc",
+    "name": "A Miragem que Fala",
+    "aliases": [],
+    "tags": [
+      "zhur",
+      "entidade",
+      "vaelith",
+      "miragem"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_harradin_o_que_ouviu_o_gosto": {
+    "id": "npc_harradin_o_que_ouviu_o_gosto",
+    "type": "npc",
+    "name": "Harradin, o que Ouviu o Gosto",
+    "aliases": [],
+    "tags": [
+      "zhur",
+      "humano",
+      "eremita",
+      "borda_sul"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_aelwin_o_ultimo_conselheiro": {
+    "id": "npc_aelwin_o_ultimo_conselheiro",
+    "type": "npc",
+    "name": "Aelwin, o Último Conselheiro",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "elfico",
+      "anciao",
+      "guardiao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_folego_longo_yera": {
+    "id": "npc_folego_longo_yera",
+    "type": "npc",
+    "name": "Fôlego-longo Yera",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "humano",
+      "mergulhador",
+      "veterano"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_corvane_o_mestre_destilador": {
+    "id": "npc_corvane_o_mestre_destilador",
+    "type": "npc",
+    "name": "Corvane, o Mestre-destilador",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "humano",
+      "cultista",
+      "destilacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_valdren_o_conselheiro_que_ainda_destila": {
+    "id": "npc_valdren_o_conselheiro_que_ainda_destila",
+    "type": "npc",
+    "name": "Valdren, o Conselheiro que Ainda Destila",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "afogado",
+      "conselheiro",
+      "morto_vivo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_o_eco_do_aprendiz": {
+    "id": "npc_o_eco_do_aprendiz",
+    "type": "npc",
+    "name": "O Eco do Aprendiz",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "elfico",
+      "espirito",
+      "aprendiz"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_mare_funda": {
+    "id": "npc_mare_funda",
+    "type": "npc",
+    "name": "Maré-funda",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "osshari",
+      "ossario",
+      "sagrado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_durrak": {
+    "id": "npc_durrak",
+    "type": "npc",
+    "name": "Durrak",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "anao",
+      "estaleiro",
+      "misterioso"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_dama_helvira_a_senhora_das_balancas": {
+    "id": "npc_dama_helvira_a_senhora_das_balancas",
+    "type": "npc",
+    "name": "Dama Helvira, a Senhora das Balanças",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "humano",
+      "sindicato",
+      "lider"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_capita_tormenta_ruiva": {
+    "id": "npc_capita_tormenta_ruiva",
+    "type": "npc",
+    "name": "Capitã Tormenta Ruíva",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "humano",
+      "pirata",
+      "capitao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_nevoa": {
+    "id": "npc_nevoa",
+    "type": "npc",
+    "name": "Névoa",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "humano",
+      "contrabandista",
+      "ophidia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_velho_quilha": {
+    "id": "npc_velho_quilha",
+    "type": "npc",
+    "name": "Velho Quilha",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "humano",
+      "boca_do_fundo",
+      "informacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_scarne_a_mao_que_raspa": {
+    "id": "npc_scarne_a_mao_que_raspa",
+    "type": "npc",
+    "name": "Scarne, a Mão que Raspa",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "humano",
+      "poco",
+      "cobrador"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_veu_de_sangue": {
+    "id": "npc_veu_de_sangue",
+    "type": "npc",
+    "name": "Véu-de-sangue",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "cinzeu",
+      "sangrinomante",
+      "kahen"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_capitao_dellow_o_que_nao_parte_mais": {
+    "id": "npc_capitao_dellow_o_que_nao_parte_mais",
+    "type": "npc",
+    "name": "Capitão Dellow, o que Não Parte Mais",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "humano",
+      "casa_das_mares",
+      "vitima"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_perola": {
+    "id": "npc_perola",
+    "type": "npc",
+    "name": "Pérola",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "humano",
+      "mercador",
+      "neutro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_thesk_o_corvo_das_docas": {
+    "id": "npc_thesk_o_corvo_das_docas",
+    "type": "npc",
+    "name": "Thesk, o Corvo das Docas",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "humano",
+      "sindicato_2",
+      "lider"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_madame_zhelu": {
+    "id": "npc_madame_zhelu",
+    "type": "npc",
+    "name": "Madame Zhelu",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "humano",
+      "sindicato_3",
+      "lider"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_onda_profunda": {
+    "id": "npc_onda_profunda",
+    "type": "npc",
+    "name": "Onda-profunda",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "osshari",
+      "cacador_leviata"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_capitao_garfo_de_sal": {
+    "id": "npc_capitao_garfo_de_sal",
+    "type": "npc",
+    "name": "Capitão Garfo-de-sal",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "humano",
+      "pirata_rival_2",
+      "capitao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_ouvido_molhado": {
+    "id": "npc_ouvido_molhado",
+    "type": "npc",
+    "name": "Ouvido-molhado",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "humano",
+      "informante",
+      "espiao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_frio_calculado": {
+    "id": "npc_frio_calculado",
+    "type": "npc",
+    "name": "Frio-calculado",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "cinzeu",
+      "conselheiro_kahen"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_a_senhora_sem_rosto": {
+    "id": "npc_a_senhora_sem_rosto",
+    "type": "npc",
+    "name": "A Senhora sem Rosto",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "humano",
+      "dona_de_bordel",
+      "casa_das_mares"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_manco_redel": {
+    "id": "npc_manco_redel",
+    "type": "npc",
+    "name": "Manco Redel",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "humano",
+      "capitao_de_porto"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_corrente_nova": {
+    "id": "npc_corrente_nova",
+    "type": "npc",
+    "name": "Corrente-nova",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "osshari",
+      "jovem",
+      "ponte"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_dente_de_ouro_lyra": {
+    "id": "npc_dente_de_ouro_lyra",
+    "type": "npc",
+    "name": "Dente-de-ouro Lyra",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "humano",
+      "apostador_lendario"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_pulmao_de_couro_greb": {
+    "id": "npc_pulmao_de_couro_greb",
+    "type": "npc",
+    "name": "Pulmão-de-couro Greb",
+    "aliases": [],
+    "tags": [
+      "cemiterio",
+      "humano",
+      "coletor",
+      "veterano"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_voz_das_profundezas_a_que_escuta_o_trono": {
+    "id": "npc_voz_das_profundezas_a_que_escuta_o_trono",
+    "type": "npc",
+    "name": "Voz-das-profundezas, a que Escuta o Trono",
+    "aliases": [],
+    "tags": [
+      "cemiterio",
+      "osshari",
+      "espiritual",
+      "trono"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_brakk_o_rei_dos_ossos": {
+    "id": "npc_brakk_o_rei_dos_ossos",
+    "type": "npc",
+    "name": "Brakk, o Rei dos Ossos",
+    "aliases": [],
+    "tags": [
+      "cemiterio",
+      "humano",
+      "naufrago",
+      "mudado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_selune_a_que_voltou_uma_vez": {
+    "id": "npc_selune_a_que_voltou_uma_vez",
+    "type": "npc",
+    "name": "Selune, a que Voltou Uma Vez",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "humano",
+      "obcecado",
+      "brekmar"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_mestre_albrecht_o_cartografo": {
+    "id": "npc_mestre_albrecht_o_cartografo",
+    "type": "npc",
+    "name": "Mestre Albrecht, o Cartógrafo",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "humano",
+      "cartografo",
+      "condenado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "race_elfos": {
+    "id": "race_elfos",
+    "type": "race",
+    "name": "Os Elfos",
+    "aliases": [],
+    "tags": [
+      "elfos",
+      "fisicos",
+      "ampulheta",
+      "decadencia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "race_anoes_fuligem": {
+    "id": "race_anoes_fuligem",
+    "type": "race",
+    "name": "Os Anões da Fuligem",
+    "aliases": [],
+    "tags": [
+      "anoes",
+      "landships",
+      "burocracia",
+      "exilados"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "race_vrel": {
+    "id": "race_vrel",
+    "type": "race",
+    "name": "Os Vrel",
+    "aliases": [],
+    "tags": [
+      "vrel",
+      "proto_colmeia",
+      "memoria",
+      "espalhados"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "race_cinzeus": {
+    "id": "race_cinzeus",
+    "type": "race",
+    "name": "Os Cinzéus",
+    "aliases": [],
+    "tags": [
+      "cinzeus",
+      "contemplativos",
+      "sem_dor",
+      "gelo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "race_osshari": {
+    "id": "race_osshari",
+    "type": "race",
+    "name": "Os Osshari",
+    "aliases": [],
+    "tags": [
+      "osshari",
+      "anfibios",
+      "vicio",
+      "costa"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "race_humanos": {
+    "id": "race_humanos",
+    "type": "race",
+    "name": "Os Humanos",
+    "aliases": [],
+    "tags": [
+      "humanos",
+      "dominantes",
+      "adaptaveis",
+      "nova_arcadia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "race_hospedeiros_xylos": {
+    "id": "race_hospedeiros_xylos",
+    "type": "race",
+    "name": "Os Hospedeiros de Xylos",
+    "aliases": [],
+    "tags": [
+      "hospedeiros",
+      "fungo",
+      "xylos",
+      "simbiose"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "race_povo_recife": {
+    "id": "race_povo_recife",
+    "type": "race",
+    "name": "O Povo-recife",
+    "aliases": [],
+    "tags": [
+      "povo_recife",
+      "mar",
+      "maldicao",
+      "desdem"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "race_vampiros_bebedores_ferrugem": {
+    "id": "race_vampiros_bebedores_ferrugem",
+    "type": "race",
+    "name": "Vampiros",
+    "aliases": [],
+    "tags": [
+      "vampiros",
+      "praga",
+      "morrakh",
+      "ferro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "race_lycans_praga_ossos": {
+    "id": "race_lycans_praga_ossos",
+    "type": "race",
+    "name": "Lycans",
+    "aliases": [],
+    "tags": [
+      "lycans",
+      "praga",
+      "morrakh",
+      "ossos"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_rede_carmesim": {
+    "id": "mon_rede_carmesim",
+    "type": "monster",
+    "name": "A Rede Carmesim",
+    "aliases": [],
+    "tags": [
+      "rede_carmesim",
+      "skallgard",
+      "despertando",
+      "primordial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_rei_subterraneo": {
+    "id": "mon_rei_subterraneo",
+    "type": "monster",
+    "name": "O Rei Subterrâneo",
+    "aliases": [],
+    "tags": [
+      "rei_subterraneo",
+      "montanhas_afiadas",
+      "reinando",
+      "primordial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_gigantes": {
+    "id": "mon_gigantes",
+    "type": "monster",
+    "name": "Os Gigantes",
+    "aliases": [],
+    "tags": [
+      "gigantes",
+      "norte",
+      "imortais",
+      "raros",
+      "primordial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_urso_tita": {
+    "id": "mon_urso_tita",
+    "type": "monster",
+    "name": "Urso-Titã",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lobo_de_vidro": {
+    "id": "mon_lobo_de_vidro",
+    "type": "monster",
+    "name": "Lobo-de-Vidro",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_foca_lamina": {
+    "id": "mon_foca_lamina",
+    "type": "monster",
+    "name": "Foca-Lâmina",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_caribu_cinza": {
+    "id": "mon_caribu_cinza",
+    "type": "monster",
+    "name": "Caribu-Cinza",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_corvo_da_aurora": {
+    "id": "mon_corvo_da_aurora",
+    "type": "monster",
+    "name": "Corvo-da-Aurora",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mamute_da_nevoa": {
+    "id": "mon_mamute_da_nevoa",
+    "type": "monster",
+    "name": "Mamute-da-Névoa",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_verme_do_gelo": {
+    "id": "mon_verme_do_gelo",
+    "type": "monster",
+    "name": "Verme-do-Gelo",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_raposa_de_sal": {
+    "id": "mon_raposa_de_sal",
+    "type": "monster",
+    "name": "Raposa-de-Sal",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_touro_almiscarado_negro": {
+    "id": "mon_touro_almiscarado_negro",
+    "type": "monster",
+    "name": "Touro-Almiscarado-Negro",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cintilacao": {
+    "id": "mon_cintilacao",
+    "type": "monster",
+    "name": "Cintilação",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sopro_errante": {
+    "id": "mon_sopro_errante",
+    "type": "monster",
+    "name": "Sopro-Errante",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cristal_sanguineo": {
+    "id": "mon_cristal_sanguineo",
+    "type": "monster",
+    "name": "Cristal-Sanguíneo",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_eco_congelado": {
+    "id": "mon_eco_congelado",
+    "type": "monster",
+    "name": "Eco-Congelado",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_chama_fatua_azul": {
+    "id": "mon_chama_fatua_azul",
+    "type": "monster",
+    "name": "Chama-Fátua-Azul",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_aurora_viva": {
+    "id": "mon_aurora_viva",
+    "type": "monster",
+    "name": "Aurora-Viva",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_espirito_animal_da_parede": {
+    "id": "mon_espirito_animal_da_parede",
+    "type": "monster",
+    "name": "Espírito-Animal da Parede",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_que_volta_do_branco": {
+    "id": "mon_o_que_volta_do_branco",
+    "type": "monster",
+    "name": "O Que Volta do Branco",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lamento_de_geada": {
+    "id": "mon_lamento_de_geada",
+    "type": "monster",
+    "name": "Lamento-de-Geada",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_guardiao_sem_rosto": {
+    "id": "mon_guardiao_sem_rosto",
+    "type": "monster",
+    "name": "Guardião-Sem-Rosto",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coisa_da_sala_fria": {
+    "id": "mon_coisa_da_sala_fria",
+    "type": "monster",
+    "name": "Coisa-da-Sala-Fria",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_filho_do_vento_branco": {
+    "id": "mon_filho_do_vento_branco",
+    "type": "monster",
+    "name": "Filho-do-Vento-Branco",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_boca_no_gelo": {
+    "id": "mon_boca_no_gelo",
+    "type": "monster",
+    "name": "Boca-no-Gelo",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_renegados_do_ermo": {
+    "id": "mon_renegados_do_ermo",
+    "type": "monster",
+    "name": "Renegados do Ermo",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cacadores_cegos": {
+    "id": "mon_cacadores_cegos",
+    "type": "monster",
+    "name": "Caçadores-Cegos",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cla_sem_fogo": {
+    "id": "mon_cla_sem_fogo",
+    "type": "monster",
+    "name": "Clã-Sem-Fogo",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coruja_de_osso": {
+    "id": "mon_coruja_de_osso",
+    "type": "monster",
+    "name": "Coruja-de-Osso",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestial_continuacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_doninha_termica": {
+    "id": "mon_doninha_termica",
+    "type": "monster",
+    "name": "Doninha-Térmica",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestial_continuacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_alce_espectral": {
+    "id": "mon_alce_espectral",
+    "type": "monster",
+    "name": "Alce-Espectral",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestial_continuacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_salmao_de_ferro": {
+    "id": "mon_salmao_de_ferro",
+    "type": "monster",
+    "name": "Salmão-de-Ferro",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestial_continuacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_bussola_morta": {
+    "id": "mon_bussola_morta",
+    "type": "monster",
+    "name": "Bússola-Morta",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "magica_continuacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_veia_de_calor": {
+    "id": "mon_veia_de_calor",
+    "type": "monster",
+    "name": "Veia-de-Calor",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "magica_continuacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_reflexo_da_aurora": {
+    "id": "mon_reflexo_da_aurora",
+    "type": "monster",
+    "name": "Reflexo-da-Aurora",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "magica_continuacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_procissao_branca": {
+    "id": "mon_procissao_branca",
+    "type": "monster",
+    "name": "Procissão-Branca",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "assombracao_continuacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_frio_que_lembra": {
+    "id": "mon_o_frio_que_lembra",
+    "type": "monster",
+    "name": "O Frio que Lembra",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "assombracao_continuacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_enxofre_vivo": {
+    "id": "mon_enxofre_vivo",
+    "type": "monster",
+    "name": "Enxofre-Vivo",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "aberracao_continuacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_costura_de_pele": {
+    "id": "mon_costura_de_pele",
+    "type": "monster",
+    "name": "Costura-de-Pele",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "aberracao_continuacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_salteadores_da_garganta": {
+    "id": "mon_salteadores_da_garganta",
+    "type": "monster",
+    "name": "Salteadores da Garganta",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "humanoide_hostil_continuacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mascateiros_do_gelo": {
+    "id": "mon_mascateiros_do_gelo",
+    "type": "monster",
+    "name": "Mascateiros do Gelo",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "humanoide_hostil_continuacao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_pastor_branco": {
+    "id": "mon_o_pastor_branco",
+    "type": "monster",
+    "name": "O Pastor-Branco",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "primordial_era_0_sobreviventes_do_branco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_filho_do_frio": {
+    "id": "mon_filho_do_frio",
+    "type": "monster",
+    "name": "Filho-do-Frio",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "primordial_era_0_sobreviventes_do_branco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_a_coisa_sob_o_gelo_antigo": {
+    "id": "mon_a_coisa_sob_o_gelo_antigo",
+    "type": "monster",
+    "name": "A Coisa-Sob-o-Gelo Antigo",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "primordial_era_0_sobreviventes_do_branco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mae_das_nevascas": {
+    "id": "mon_mae_das_nevascas",
+    "type": "monster",
+    "name": "Mãe-das-Nevascas",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "primordial_era_0_sobreviventes_do_branco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_os_primeiros_cacadores": {
+    "id": "mon_os_primeiros_cacadores",
+    "type": "monster",
+    "name": "Os Primeiros-Caçadores",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "primordial_era_0_sobreviventes_do_branco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_que_restou_do_gigante": {
+    "id": "mon_o_que_restou_do_gigante",
+    "type": "monster",
+    "name": "O Que Restou do Gigante",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "primordial_era_0_sobreviventes_do_branco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cabra_navalha": {
+    "id": "mon_cabra_navalha",
+    "type": "monster",
+    "name": "Cabra-Navalha",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_aguia_das_lascas": {
+    "id": "mon_aguia_das_lascas",
+    "type": "monster",
+    "name": "Águia-das-Lascas",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_toupeira_gigante_cega": {
+    "id": "mon_toupeira_gigante_cega",
+    "type": "monster",
+    "name": "Toupeira-Gigante-Cega",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_morcego_de_ferro": {
+    "id": "mon_morcego_de_ferro",
+    "type": "monster",
+    "name": "Morcego-de-Ferro",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_aranha_de_pedra": {
+    "id": "mon_aranha_de_pedra",
+    "type": "monster",
+    "name": "Aranha-de-Pedra",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_carneiro_trovao": {
+    "id": "mon_carneiro_trovao",
+    "type": "monster",
+    "name": "Carneiro-Trovão",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_eco_de_profundidade": {
+    "id": "mon_eco_de_profundidade",
+    "type": "monster",
+    "name": "Eco-de-Profundidade",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cristal_cantante": {
+    "id": "mon_cristal_cantante",
+    "type": "monster",
+    "name": "Cristal-Cantante",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_poco_de_gravidade": {
+    "id": "mon_poco_de_gravidade",
+    "type": "monster",
+    "name": "Poço-de-Gravidade",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_brasa_profunda": {
+    "id": "mon_brasa_profunda",
+    "type": "monster",
+    "name": "Brasa-Profunda",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_anao_eco": {
+    "id": "mon_anao_eco",
+    "type": "monster",
+    "name": "Anão-Eco",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ultima_sentinela": {
+    "id": "mon_ultima_sentinela",
+    "type": "monster",
+    "name": "Última-Sentinela",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coro_soterrado": {
+    "id": "mon_coro_soterrado",
+    "type": "monster",
+    "name": "Coro-Soterrado",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_amalgama_de_minerio": {
+    "id": "mon_amalgama_de_minerio",
+    "type": "monster",
+    "name": "Amálgama-de-Minério",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_filho_do_rei": {
+    "id": "mon_filho_do_rei",
+    "type": "monster",
+    "name": "Filho-do-Rei",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_verme_mastigador_de_rocha": {
+    "id": "mon_verme_mastigador_de_rocha",
+    "type": "monster",
+    "name": "Verme-Mastigador-de-Rocha",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_orcs_das_saidas_baixas": {
+    "id": "mon_orcs_das_saidas_baixas",
+    "type": "monster",
+    "name": "Orcs das Saídas Baixas",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_goblins_mineiros": {
+    "id": "mon_goblins_mineiros",
+    "type": "monster",
+    "name": "Goblins-Mineiros",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tribo_do_eco": {
+    "id": "mon_tribo_do_eco",
+    "type": "monster",
+    "name": "Tribo-do-Eco",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_refugiados_bandidos": {
+    "id": "mon_refugiados_bandidos",
+    "type": "monster",
+    "name": "Refugiados-Bandidos",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_escavadores_loucos": {
+    "id": "mon_escavadores_loucos",
+    "type": "monster",
+    "name": "Escavadores-Loucos",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_os_que_ja_estavam_cavando": {
+    "id": "mon_os_que_ja_estavam_cavando",
+    "type": "monster",
+    "name": "Os Que Já Estavam Cavando",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "primordial_anteriores_ao_reino_anao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_verme_primordial_das_raizes_do_mundo": {
+    "id": "mon_verme_primordial_das_raizes_do_mundo",
+    "type": "monster",
+    "name": "Verme-Primordial das Raízes do Mundo",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "primordial_anteriores_ao_reino_anao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_espelho_de_pedra": {
+    "id": "mon_espelho_de_pedra",
+    "type": "monster",
+    "name": "Espelho-de-Pedra",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "primordial_anteriores_ao_reino_anao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cria_do_rei": {
+    "id": "mon_cria_do_rei",
+    "type": "monster",
+    "name": "Cria-do-Rei",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "primordial_anteriores_ao_reino_anao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_sino_que_nao_foi_forjado": {
+    "id": "mon_o_sino_que_nao_foi_forjado",
+    "type": "monster",
+    "name": "O Sino-Que-Não-Foi-Forjado",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "primordial_anteriores_ao_reino_anao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_liquen_de_brasa": {
+    "id": "mon_liquen_de_brasa",
+    "type": "monster",
+    "name": "Líquen-de-Brasa",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "flora_fungo_subterranea"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cogumelo_cego": {
+    "id": "mon_cogumelo_cego",
+    "type": "monster",
+    "name": "Cogumelo-Cego",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "flora_fungo_subterranea"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_trepadeira_de_ferro": {
+    "id": "mon_trepadeira_de_ferro",
+    "type": "monster",
+    "name": "Trepadeira-de-Ferro",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "flora_fungo_subterranea"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_flor_de_profundidade": {
+    "id": "mon_flor_de_profundidade",
+    "type": "monster",
+    "name": "Flor-de-Profundidade",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "flora_fungo_subterranea"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_salamandra_de_forja": {
+    "id": "mon_salamandra_de_forja",
+    "type": "monster",
+    "name": "Salamandra-de-Forja",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestial_magica_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_morcego_bussola": {
+    "id": "mon_morcego_bussola",
+    "type": "monster",
+    "name": "Morcego-Bússola",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestial_magica_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_rato_de_pedra_cinzento": {
+    "id": "mon_rato_de_pedra_cinzento",
+    "type": "monster",
+    "name": "Rato-de-Pedra-Cinzento",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestial_magica_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_aranha_lanterna": {
+    "id": "mon_aranha_lanterna",
+    "type": "monster",
+    "name": "Aranha-Lanterna",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestial_magica_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_eco_predador": {
+    "id": "mon_eco_predador",
+    "type": "monster",
+    "name": "Eco-Predador",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestial_magica_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lobo_da_pradaria": {
+    "id": "mon_lobo_da_pradaria",
+    "type": "monster",
+    "name": "Lobo-da-Pradaria",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_auroque_ruina": {
+    "id": "mon_auroque_ruina",
+    "type": "monster",
+    "name": "Auroque-Ruína",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_falcao_carniceiro": {
+    "id": "mon_falcao_carniceiro",
+    "type": "monster",
+    "name": "Falcão-Carniceiro",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_javali_de_presa_longa": {
+    "id": "mon_javali_de_presa_longa",
+    "type": "monster",
+    "name": "Javali-de-Presa-Longa",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_serpente_da_grama_alta": {
+    "id": "mon_serpente_da_grama_alta",
+    "type": "monster",
+    "name": "Serpente-da-Grama-Alta",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cavalo_selvagem_cinza": {
+    "id": "mon_cavalo_selvagem_cinza",
+    "type": "monster",
+    "name": "Cavalo-Selvagem-Cinza",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_fogo_memoria": {
+    "id": "mon_fogo_memoria",
+    "type": "monster",
+    "name": "Fogo-Memória",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_po_sussurrante": {
+    "id": "mon_po_sussurrante",
+    "type": "monster",
+    "name": "Pó-Sussurrante",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_marco_vivo": {
+    "id": "mon_marco_vivo",
+    "type": "monster",
+    "name": "Marco-Vivo",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_espectro_elfico": {
+    "id": "mon_espectro_elfico",
+    "type": "monster",
+    "name": "Espectro-Élfico",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_espectro_cinzeu": {
+    "id": "mon_espectro_cinzeu",
+    "type": "monster",
+    "name": "Espectro-Cinzéu",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_soldado_sem_guerra": {
+    "id": "mon_soldado_sem_guerra",
+    "type": "monster",
+    "name": "Soldado-Sem-Guerra",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_carpideira_de_pedra": {
+    "id": "mon_carpideira_de_pedra",
+    "type": "monster",
+    "name": "Carpideira-de-Pedra",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_a_procissao_fundadora": {
+    "id": "mon_a_procissao_fundadora",
+    "type": "monster",
+    "name": "A Procissão Fundadora",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_bando_do_osso_pintado": {
+    "id": "mon_bando_do_osso_pintado",
+    "type": "monster",
+    "name": "Bando do Osso Pintado",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_saqueadores_vrel": {
+    "id": "mon_saqueadores_vrel",
+    "type": "monster",
+    "name": "Saqueadores Vrel",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cavaleiros_cinza": {
+    "id": "mon_cavaleiros_cinza",
+    "type": "monster",
+    "name": "Cavaleiros-Cinza",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_os_desenterrados": {
+    "id": "mon_os_desenterrados",
+    "type": "monster",
+    "name": "Os Desenterrados",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_eremitas_loucos_das_ruinas": {
+    "id": "mon_eremitas_loucos_das_ruinas",
+    "type": "monster",
+    "name": "Eremitas-Loucos das Ruínas",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mercadores_de_escravos_da_pradaria": {
+    "id": "mon_mercadores_de_escravos_da_pradaria",
+    "type": "monster",
+    "name": "Mercadores-de-Escravos da Pradaria",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_primeiro_rebanho": {
+    "id": "mon_o_primeiro_rebanho",
+    "type": "monster",
+    "name": "O Primeiro-Rebanho",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "primordial_o_que_a_pradaria_esconde_sob_a_grama"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_a_coisa_nos_alicerces": {
+    "id": "mon_a_coisa_nos_alicerces",
+    "type": "monster",
+    "name": "A Coisa-nos-Alicerces",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "primordial_o_que_a_pradaria_esconde_sob_a_grama"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_cacador_antes_dos_nomes": {
+    "id": "mon_o_cacador_antes_dos_nomes",
+    "type": "monster",
+    "name": "O Caçador-Antes-dos-Nomes",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "primordial_o_que_a_pradaria_esconde_sob_a_grama"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_semente_do_vazio": {
+    "id": "mon_semente_do_vazio",
+    "type": "monster",
+    "name": "Semente-do-Vazio",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "primordial_o_que_a_pradaria_esconde_sob_a_grama"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_grama_navalha": {
+    "id": "mon_grama_navalha",
+    "type": "monster",
+    "name": "Grama-Navalha",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "flora_a_pradaria_viva"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_flor_cadaver_da_pradaria": {
+    "id": "mon_flor_cadaver_da_pradaria",
+    "type": "monster",
+    "name": "Flor-Cadáver-da-Pradaria",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "flora_a_pradaria_viva"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_trepadeira_estranguladora": {
+    "id": "mon_trepadeira_estranguladora",
+    "type": "monster",
+    "name": "Trepadeira-Estranguladora",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "flora_a_pradaria_viva"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_erva_do_esquecimento": {
+    "id": "mon_erva_do_esquecimento",
+    "type": "monster",
+    "name": "Erva-do-Esquecimento",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "flora_a_pradaria_viva"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cao_da_pradaria_gigante": {
+    "id": "mon_cao_da_pradaria_gigante",
+    "type": "monster",
+    "name": "Cão-da-Pradaria-Gigante",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_corcel_espectral": {
+    "id": "mon_corcel_espectral",
+    "type": "monster",
+    "name": "Corcel-Espectral",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_gafanhoto_de_bronze": {
+    "id": "mon_gafanhoto_de_bronze",
+    "type": "monster",
+    "name": "Gafanhoto-de-Bronze",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coruja_dos_tumulos": {
+    "id": "mon_coruja_dos_tumulos",
+    "type": "monster",
+    "name": "Coruja-dos-Túmulos",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lebre_de_duas_cabecas": {
+    "id": "mon_lebre_de_duas_cabecas",
+    "type": "monster",
+    "name": "Lebre-de-Duas-Cabeças",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_vigia_de_pedra": {
+    "id": "mon_o_vigia_de_pedra",
+    "type": "monster",
+    "name": "O Vigia-de-Pedra",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sanguessuga_braco": {
+    "id": "mon_sanguessuga_braco",
+    "type": "monster",
+    "name": "Sanguessuga-Braço",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sapo_boi_acido": {
+    "id": "mon_sapo_boi_acido",
+    "type": "monster",
+    "name": "Sapo-Boi-Ácido",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_enguia_da_lama": {
+    "id": "mon_enguia_da_lama",
+    "type": "monster",
+    "name": "Enguia-da-Lama",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mosca_de_cadaver": {
+    "id": "mon_mosca_de_cadaver",
+    "type": "monster",
+    "name": "Mosca-de-Cadáver",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_garca_palida": {
+    "id": "mon_garca_palida",
+    "type": "monster",
+    "name": "Garça-Pálida",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_fogo_fatuo": {
+    "id": "mon_fogo_fatuo",
+    "type": "monster",
+    "name": "Fogo-Fátuo",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_nevoa_pesada": {
+    "id": "mon_nevoa_pesada",
+    "type": "monster",
+    "name": "Névoa-Pesada",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lagrima_de_eter": {
+    "id": "mon_lagrima_de_eter",
+    "type": "monster",
+    "name": "Lágrima-de-Éter",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_reflexo_afogado": {
+    "id": "mon_reflexo_afogado",
+    "type": "monster",
+    "name": "Reflexo-Afogado",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_afogado_da_batalha": {
+    "id": "mon_afogado_da_batalha",
+    "type": "monster",
+    "name": "Afogado-da-Batalha",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_general_sem_nome": {
+    "id": "mon_general_sem_nome",
+    "type": "monster",
+    "name": "General-Sem-Nome",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_choro_na_nevoa": {
+    "id": "mon_choro_na_nevoa",
+    "type": "monster",
+    "name": "Choro-na-Névoa",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_carnica_andante": {
+    "id": "mon_carnica_andante",
+    "type": "monster",
+    "name": "Carniça-Andante",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_flor_carnivora_de_eter": {
+    "id": "mon_flor_carnivora_de_eter",
+    "type": "monster",
+    "name": "Flor-Carnívora-de-Éter",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tumor_do_pantano": {
+    "id": "mon_tumor_do_pantano",
+    "type": "monster",
+    "name": "Tumor-do-Pântano",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_saqueadores_de_espolio": {
+    "id": "mon_saqueadores_de_espolio",
+    "type": "monster",
+    "name": "Saqueadores-de-Espólio",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_druidas_renegados": {
+    "id": "mon_druidas_renegados",
+    "type": "monster",
+    "name": "Druidas-Renegados",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coletores_de_lagrima": {
+    "id": "mon_coletores_de_lagrima",
+    "type": "monster",
+    "name": "Coletores-de-Lágrima",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_que_bebeu_a_batalha": {
+    "id": "mon_o_que_bebeu_a_batalha",
+    "type": "monster",
+    "name": "O Que Bebeu a Batalha",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "primordial_o_que_o_eter_da_batalha_despertou_de_antigo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_raiz_mae": {
+    "id": "mon_raiz_mae",
+    "type": "monster",
+    "name": "Raiz-Mãe",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "primordial_o_que_o_eter_da_batalha_despertou_de_antigo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_os_afogados_antes": {
+    "id": "mon_os_afogados_antes",
+    "type": "monster",
+    "name": "Os Afogados-Antes",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "primordial_o_que_o_eter_da_batalha_despertou_de_antigo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_nevoa_que_pensa": {
+    "id": "mon_nevoa_que_pensa",
+    "type": "monster",
+    "name": "Névoa-Que-Pensa",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "primordial_o_que_o_eter_da_batalha_despertou_de_antigo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_salgueiro_chorao_de_eter": {
+    "id": "mon_salgueiro_chorao_de_eter",
+    "type": "monster",
+    "name": "Salgueiro-Chorão-de-Éter",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "flora_o_pantano_que_cresce"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_nenufar_devorador": {
+    "id": "mon_nenufar_devorador",
+    "type": "monster",
+    "name": "Nenúfar-Devorador",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "flora_o_pantano_que_cresce"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_musgo_da_lembranca_triste": {
+    "id": "mon_musgo_da_lembranca_triste",
+    "type": "monster",
+    "name": "Musgo-da-Lembrança-Triste",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "flora_o_pantano_que_cresce"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cipo_pescador": {
+    "id": "mon_cipo_pescador",
+    "type": "monster",
+    "name": "Cipó-Pescador",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "flora_o_pantano_que_cresce"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_crocodilo_cinzento": {
+    "id": "mon_crocodilo_cinzento",
+    "type": "monster",
+    "name": "Crocodilo-Cinzento",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_libelula_lamina": {
+    "id": "mon_libelula_lamina",
+    "type": "monster",
+    "name": "Libélula-Lâmina",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_peixe_cego_das_profundezas": {
+    "id": "mon_peixe_cego_das_profundezas",
+    "type": "monster",
+    "name": "Peixe-Cego-das-Profundezas",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sapo_cantor_hipnotico": {
+    "id": "mon_sapo_cantor_hipnotico",
+    "type": "monster",
+    "name": "Sapo-Cantor-Hipnótico",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_a_coisa_que_foi_cavalo": {
+    "id": "mon_a_coisa_que_foi_cavalo",
+    "type": "monster",
+    "name": "A Coisa-que-Foi-Cavalo",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_verme_sanguessuga_mestre": {
+    "id": "mon_verme_sanguessuga_mestre",
+    "type": "monster",
+    "name": "Verme-Sanguessuga-Mestre",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_legiao_de_ferro_soldados": {
+    "id": "mon_legiao_de_ferro_soldados",
+    "type": "monster",
+    "name": "Legião de Ferro (soldados)",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "humanoide_hostil_gangues_e_faccoes"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mao_sombria_agentes": {
+    "id": "mon_mao_sombria_agentes",
+    "type": "monster",
+    "name": "Mão Sombria (agentes)",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "humanoide_hostil_gangues_e_faccoes"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cortadores_de_dente": {
+    "id": "mon_cortadores_de_dente",
+    "type": "monster",
+    "name": "Cortadores de Dente",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "humanoide_hostil_gangues_e_faccoes"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_os_encapuzados_da_fornalha": {
+    "id": "mon_os_encapuzados_da_fornalha",
+    "type": "monster",
+    "name": "Os Encapuzados da Fornalha",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "humanoide_hostil_gangues_e_faccoes"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_quadrilha_dos_telhados": {
+    "id": "mon_quadrilha_dos_telhados",
+    "type": "monster",
+    "name": "Quadrilha dos Telhados",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "humanoide_hostil_gangues_e_faccoes"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_servo_iluminado": {
+    "id": "mon_servo_iluminado",
+    "type": "monster",
+    "name": "Servo-Iluminado",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mascara_da_casa": {
+    "id": "mon_mascara_da_casa",
+    "type": "monster",
+    "name": "Máscara-da-Casa",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_eco_do_espelho": {
+    "id": "mon_eco_do_espelho",
+    "type": "monster",
+    "name": "Eco-do-Espelho",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sangue_de_aco": {
+    "id": "mon_sangue_de_aco",
+    "type": "monster",
+    "name": "Sangue-de-Aço",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_cego_carcereiro_do_oubliette": {
+    "id": "mon_o_cego_carcereiro_do_oubliette",
+    "type": "monster",
+    "name": "O Cego (carcereiro do Oubliette)",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sussurro_do_beco": {
+    "id": "mon_sussurro_do_beco",
+    "type": "monster",
+    "name": "Sussurro-do-Beco",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_penitentes_da_catedral": {
+    "id": "mon_penitentes_da_catedral",
+    "type": "monster",
+    "name": "Penitentes da Catedral",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ladainha_da_viuva": {
+    "id": "mon_ladainha_da_viuva",
+    "type": "monster",
+    "name": "Ladainha-da-Viúva",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coisa_do_esgoto": {
+    "id": "mon_coisa_do_esgoto",
+    "type": "monster",
+    "name": "Coisa-do-Esgoto",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_prisioneiro_do_nivel_dez": {
+    "id": "mon_prisioneiro_do_nivel_dez",
+    "type": "monster",
+    "name": "Prisioneiro-do-Nível-Dez",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tosse_viva": {
+    "id": "mon_tosse_viva",
+    "type": "monster",
+    "name": "Tosse-Viva",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_refugo_do_mercado": {
+    "id": "mon_refugo_do_mercado",
+    "type": "monster",
+    "name": "Refugo-do-Mercado",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_nobres_colecionadores": {
+    "id": "mon_nobres_colecionadores",
+    "type": "monster",
+    "name": "Nobres-Colecionadores",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "humanoide_hostil_anel_dourado_perigos_refinados"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_inquisidores_do_codigo": {
+    "id": "mon_inquisidores_do_codigo",
+    "type": "monster",
+    "name": "Inquisidores do Código",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "humanoide_hostil_anel_dourado_perigos_refinados"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lobo_de_olhar_errado": {
+    "id": "mon_lobo_de_olhar_errado",
+    "type": "monster",
+    "name": "Lobo-de-Olhar-Errado",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_corrompida"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cervo_sem_fuga": {
+    "id": "mon_cervo_sem_fuga",
+    "type": "monster",
+    "name": "Cervo-Sem-Fuga",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_corrompida"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ave_imovel": {
+    "id": "mon_ave_imovel",
+    "type": "monster",
+    "name": "Ave-Imóvel",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_corrompida"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_urso_de_espinha": {
+    "id": "mon_urso_de_espinha",
+    "type": "monster",
+    "name": "Urso-de-Espinha",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_corrompida"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_javali_de_casca": {
+    "id": "mon_javali_de_casca",
+    "type": "monster",
+    "name": "Javali-de-Casca",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_corrompida"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coruja_de_duas_vozes": {
+    "id": "mon_coruja_de_duas_vozes",
+    "type": "monster",
+    "name": "Coruja-de-Duas-Vozes",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_corrompida"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mae_da_folhagem": {
+    "id": "mon_mae_da_folhagem",
+    "type": "monster",
+    "name": "Mãe-da-Folhagem",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_primordial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_serpente_raiz": {
+    "id": "mon_serpente_raiz",
+    "type": "monster",
+    "name": "Serpente-Raiz",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_primordial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coletor_de_galhos": {
+    "id": "mon_coletor_de_galhos",
+    "type": "monster",
+    "name": "Coletor-de-Galhos",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_primordial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_po_de_sonho_fungo": {
+    "id": "mon_po_de_sonho_fungo",
+    "type": "monster",
+    "name": "Pó-de-Sonho (fungo)",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_luz_mentirosa": {
+    "id": "mon_luz_mentirosa",
+    "type": "monster",
+    "name": "Luz-Mentirosa",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_memoria_errante": {
+    "id": "mon_memoria_errante",
+    "type": "monster",
+    "name": "Memória-Errante",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_semente_do_oculto": {
+    "id": "mon_semente_do_oculto",
+    "type": "monster",
+    "name": "Semente-do-Oculto",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_voz_de_morto_conhecido": {
+    "id": "mon_voz_de_morto_conhecido",
+    "type": "monster",
+    "name": "Voz-de-Morto-Conhecido",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_os_que_nao_sairam": {
+    "id": "mon_os_que_nao_sairam",
+    "type": "monster",
+    "name": "Os Que Não Saíram",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coisa_sussurrante": {
+    "id": "mon_coisa_sussurrante",
+    "type": "monster",
+    "name": "Coisa-Sussurrante",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tronco_faminto": {
+    "id": "mon_tronco_faminto",
+    "type": "monster",
+    "name": "Tronco-Faminto",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_colhedores_de_po": {
+    "id": "mon_colhedores_de_po",
+    "type": "monster",
+    "name": "Colhedores-de-Pó",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_perdidos_permanentes": {
+    "id": "mon_perdidos_permanentes",
+    "type": "monster",
+    "name": "Perdidos-Permanentes",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_as_que_estavam_antes_das_arvores": {
+    "id": "mon_as_que_estavam_antes_das_arvores",
+    "type": "monster",
+    "name": "As Que Estavam Antes das Árvores",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "primordial_a_floresta_antes_de_thessavar_e_o_que_ela_abriga"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_coletor_primordial": {
+    "id": "mon_o_coletor_primordial",
+    "type": "monster",
+    "name": "O Coletor-Primordial",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "primordial_a_floresta_antes_de_thessavar_e_o_que_ela_abriga"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_filho_de_thessavar": {
+    "id": "mon_filho_de_thessavar",
+    "type": "monster",
+    "name": "Filho-de-Thessavar",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "primordial_a_floresta_antes_de_thessavar_e_o_que_ela_abriga"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_a_raiz_que_lembra_de_antes": {
+    "id": "mon_a_raiz_que_lembra_de_antes",
+    "type": "monster",
+    "name": "A Raiz-Que-Lembra-de-Antes",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "primordial_a_floresta_antes_de_thessavar_e_o_que_ela_abriga"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_arvore_sussurrante": {
+    "id": "mon_arvore_sussurrante",
+    "type": "monster",
+    "name": "Árvore-Sussurrante",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "flora_a_floresta_viva_e_corrompida"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_flor_olho": {
+    "id": "mon_flor_olho",
+    "type": "monster",
+    "name": "Flor-Olho",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "flora_a_floresta_viva_e_corrompida"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_trepadeira_mentirosa": {
+    "id": "mon_trepadeira_mentirosa",
+    "type": "monster",
+    "name": "Trepadeira-Mentirosa",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "flora_a_floresta_viva_e_corrompida"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cogumelo_espelho": {
+    "id": "mon_cogumelo_espelho",
+    "type": "monster",
+    "name": "Cogumelo-Espelho",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "flora_a_floresta_viva_e_corrompida"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_veado_branco_de_muitos_chifres": {
+    "id": "mon_veado_branco_de_muitos_chifres",
+    "type": "monster",
+    "name": "Veado-Branco-de-Muitos-Chifres",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mariposa_memoria": {
+    "id": "mon_mariposa_memoria",
+    "type": "monster",
+    "name": "Mariposa-Memória",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_aranha_da_nevoa_negra": {
+    "id": "mon_aranha_da_nevoa_negra",
+    "type": "monster",
+    "name": "Aranha-da-Névoa-Negra",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_cacador_de_costas": {
+    "id": "mon_o_cacador_de_costas",
+    "type": "monster",
+    "name": "O Caçador-de-Costas",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_os_galhos_que_apontam": {
+    "id": "mon_os_galhos_que_apontam",
+    "type": "monster",
+    "name": "Os Galhos-Que-Apontam",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_eco_de_passos": {
+    "id": "mon_eco_de_passos",
+    "type": "monster",
+    "name": "Eco-de-Passos",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_vipera_flora": {
+    "id": "mon_vipera_flora",
+    "type": "monster",
+    "name": "Vipera-Flora",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestial_fauna_unica_do_ciclo_acelerado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_inseto_semeador": {
+    "id": "mon_inseto_semeador",
+    "type": "monster",
+    "name": "Inseto-Semeador",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestial_fauna_unica_do_ciclo_acelerado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_serpente_de_mil_peles": {
+    "id": "mon_serpente_de_mil_peles",
+    "type": "monster",
+    "name": "Serpente-de-Mil-Peles",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestial_fauna_unica_do_ciclo_acelerado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_predador_crescido": {
+    "id": "mon_predador_crescido",
+    "type": "monster",
+    "name": "Predador-Crescido",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestial_fauna_unica_do_ciclo_acelerado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ave_podre": {
+    "id": "mon_ave_podre",
+    "type": "monster",
+    "name": "Ave-Podre",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestial_fauna_unica_do_ciclo_acelerado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_besouro_da_furia": {
+    "id": "mon_besouro_da_furia",
+    "type": "monster",
+    "name": "Besouro-da-Fúria",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestial_fauna_unica_do_ciclo_acelerado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_macaco_quitina": {
+    "id": "mon_macaco_quitina",
+    "type": "monster",
+    "name": "Macaco-Quitina",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestial_fauna_unica_do_ciclo_acelerado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_esporo_sonifero": {
+    "id": "mon_esporo_sonifero",
+    "type": "monster",
+    "name": "Esporo-Sonífero",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_resina_viva": {
+    "id": "mon_resina_viva",
+    "type": "monster",
+    "name": "Resina-Viva",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_flor_da_memoria_curta": {
+    "id": "mon_flor_da_memoria_curta",
+    "type": "monster",
+    "name": "Flor-da-Memória-Curta",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tocado_por_morrakh": {
+    "id": "mon_tocado_por_morrakh",
+    "type": "monster",
+    "name": "Tocado-por-Morrakh",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "aberracao_influencia_de_morrakh"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_hospedeiro_profundo": {
+    "id": "mon_hospedeiro_profundo",
+    "type": "monster",
+    "name": "Hospedeiro-Profundo",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "aberracao_influencia_de_morrakh"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_quitina_orfa": {
+    "id": "mon_quitina_orfa",
+    "type": "monster",
+    "name": "Quitina-Órfã",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "aberracao_influencia_de_morrakh"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sentinela_hospedeiro": {
+    "id": "mon_sentinela_hospedeiro",
+    "type": "monster",
+    "name": "Sentinela-Hospedeiro",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "humanoide_hospedeiros_e_forasteiros"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_garimpeiros_de_resina": {
+    "id": "mon_garimpeiros_de_resina",
+    "type": "monster",
+    "name": "Garimpeiros-de-Resina",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "humanoide_hospedeiros_e_forasteiros"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cultistas_da_colmeia": {
+    "id": "mon_cultistas_da_colmeia",
+    "type": "monster",
+    "name": "Cultistas-da-Colmeia",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "humanoide_hospedeiros_e_forasteiros"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_os_primeiros_hospedeiros": {
+    "id": "mon_os_primeiros_hospedeiros",
+    "type": "monster",
+    "name": "Os Primeiros-Hospedeiros",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "primordial_morrakh_e_o_que_a_selva_esconde_de_antigo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cria_de_morrakh": {
+    "id": "mon_cria_de_morrakh",
+    "type": "monster",
+    "name": "Cria-de-Morrakh",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "primordial_morrakh_e_o_que_a_selva_esconde_de_antigo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_a_arvore_mae_primordial": {
+    "id": "mon_a_arvore_mae_primordial",
+    "type": "monster",
+    "name": "A Árvore-Mãe-Primordial",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "primordial_morrakh_e_o_que_a_selva_esconde_de_antigo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_que_apodrece_e_volta": {
+    "id": "mon_o_que_apodrece_e_volta",
+    "type": "monster",
+    "name": "O Que Apodrece e Volta",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "primordial_morrakh_e_o_que_a_selva_esconde_de_antigo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cipo_relampago": {
+    "id": "mon_cipo_relampago",
+    "type": "monster",
+    "name": "Cipó-Relâmpago",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "flora_a_selva_que_cresce_rapido_demais"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_fruta_bomba": {
+    "id": "mon_fruta_bomba",
+    "type": "monster",
+    "name": "Fruta-Bomba",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "flora_a_selva_que_cresce_rapido_demais"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_flor_da_colmeia": {
+    "id": "mon_flor_da_colmeia",
+    "type": "monster",
+    "name": "Flor-da-Colmeia",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "flora_a_selva_que_cresce_rapido_demais"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_musgo_devorador_rapido": {
+    "id": "mon_musgo_devorador_rapido",
+    "type": "monster",
+    "name": "Musgo-Devorador-Rápido",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "flora_a_selva_que_cresce_rapido_demais"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_passaro_espelho_de_quitina": {
+    "id": "mon_passaro_espelho_de_quitina",
+    "type": "monster",
+    "name": "Pássaro-Espelho-de-Quitina",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_formiga_cortadeira_gigante": {
+    "id": "mon_formiga_cortadeira_gigante",
+    "type": "monster",
+    "name": "Formiga-Cortadeira-Gigante",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ra_veneno_de_cor": {
+    "id": "mon_ra_veneno_de_cor",
+    "type": "monster",
+    "name": "Rã-Veneno-de-Cor",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_serpente_cipo_constritora": {
+    "id": "mon_serpente_cipo_constritora",
+    "type": "monster",
+    "name": "Serpente-Cipó-Constritora",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_enxame_de_esporo_consciente": {
+    "id": "mon_enxame_de_esporo_consciente",
+    "type": "monster",
+    "name": "Enxame-de-Esporo-Consciente",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_caido_que_floresceu": {
+    "id": "mon_o_caido_que_floresceu",
+    "type": "monster",
+    "name": "O Caído-Que-Floresceu",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_escorpiao_de_cristal": {
+    "id": "mon_escorpiao_de_cristal",
+    "type": "monster",
+    "name": "Escorpião-de-Cristal",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lagarto_espelho": {
+    "id": "mon_lagarto_espelho",
+    "type": "monster",
+    "name": "Lagarto-Espelho",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_serpente_do_crepusculo": {
+    "id": "mon_serpente_do_crepusculo",
+    "type": "monster",
+    "name": "Serpente-do-Crepúsculo",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_verme_de_vidro": {
+    "id": "mon_verme_de_vidro",
+    "type": "monster",
+    "name": "Verme-de-Vidro",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_abutre_de_sal": {
+    "id": "mon_abutre_de_sal",
+    "type": "monster",
+    "name": "Abutre-de-Sal",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_camelo_de_cristal": {
+    "id": "mon_camelo_de_cristal",
+    "type": "monster",
+    "name": "Camelo-de-Cristal",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_miragem_de_vaelith": {
+    "id": "mon_miragem_de_vaelith",
+    "type": "monster",
+    "name": "Miragem-de-Vaelith",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cristal_de_urath": {
+    "id": "mon_cristal_de_urath",
+    "type": "monster",
+    "name": "Cristal-de-Urath",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tempo_morto": {
+    "id": "mon_tempo_morto",
+    "type": "monster",
+    "name": "Tempo-Morto",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_vidro_cantante": {
+    "id": "mon_vidro_cantante",
+    "type": "monster",
+    "name": "Vidro-Cantante",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_eco_da_lua": {
+    "id": "mon_eco_da_lua",
+    "type": "monster",
+    "name": "Eco-da-Lua",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_caravana_fantasma": {
+    "id": "mon_caravana_fantasma",
+    "type": "monster",
+    "name": "Caravana-Fantasma",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_homem_de_vidro": {
+    "id": "mon_homem_de_vidro",
+    "type": "monster",
+    "name": "Homem-de-Vidro",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coisa_da_borda_sul": {
+    "id": "mon_coisa_da_borda_sul",
+    "type": "monster",
+    "name": "Coisa-da-Borda-Sul",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_devoradores_de_sol_guerreiros": {
+    "id": "mon_devoradores_de_sol_guerreiros",
+    "type": "monster",
+    "name": "Devoradores de Sol (guerreiros)",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_bebedores_de_memoria": {
+    "id": "mon_bebedores_de_memoria",
+    "type": "monster",
+    "name": "Bebedores-de-Memória",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_saqueadores_de_cristal": {
+    "id": "mon_saqueadores_de_cristal",
+    "type": "monster",
+    "name": "Saqueadores-de-Cristal",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_a_prole_de_urath": {
+    "id": "mon_a_prole_de_urath",
+    "type": "monster",
+    "name": "A Prole-de-Urath",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "primordial_urath_vaelith_e_o_que_jaz_sob_o_vidro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_que_caiu_com_a_lua": {
+    "id": "mon_o_que_caiu_com_a_lua",
+    "type": "monster",
+    "name": "O Que Caiu com a Lua",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "primordial_urath_vaelith_e_o_que_jaz_sob_o_vidro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_verme_de_vidro_anciao": {
+    "id": "mon_verme_de_vidro_anciao",
+    "type": "monster",
+    "name": "Verme-de-Vidro-Ancião",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "primordial_urath_vaelith_e_o_que_jaz_sob_o_vidro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_miragem_primordial": {
+    "id": "mon_miragem_primordial",
+    "type": "monster",
+    "name": "Miragem-Primordial",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "primordial_urath_vaelith_e_o_que_jaz_sob_o_vidro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cacto_de_cristal": {
+    "id": "mon_cacto_de_cristal",
+    "type": "monster",
+    "name": "Cacto-de-Cristal",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "flora_a_vida_impossivel_do_deserto_de_vidro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_flor_da_meia_noite_de_zhur": {
+    "id": "mon_flor_da_meia_noite_de_zhur",
+    "type": "monster",
+    "name": "Flor-da-Meia-Noite-de-Zhur",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "flora_a_vida_impossivel_do_deserto_de_vidro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_liquen_de_vidro": {
+    "id": "mon_liquen_de_vidro",
+    "type": "monster",
+    "name": "Líquen-de-Vidro",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "flora_a_vida_impossivel_do_deserto_de_vidro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_raiz_bebedora_profunda": {
+    "id": "mon_raiz_bebedora_profunda",
+    "type": "monster",
+    "name": "Raiz-Bebedora-Profunda",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "flora_a_vida_impossivel_do_deserto_de_vidro"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lince_de_areia_de_vidro": {
+    "id": "mon_lince_de_areia_de_vidro",
+    "type": "monster",
+    "name": "Lince-de-Areia-de-Vidro",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_falcao_de_obsidiana": {
+    "id": "mon_falcao_de_obsidiana",
+    "type": "monster",
+    "name": "Falcão-de-Obsidiana",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_besouro_de_espelho": {
+    "id": "mon_besouro_de_espelho",
+    "type": "monster",
+    "name": "Besouro-de-Espelho",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cobra_chocalho_de_cristal": {
+    "id": "mon_cobra_chocalho_de_cristal",
+    "type": "monster",
+    "name": "Cobra-Chocalho-de-Cristal",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_os_reis_enterrados": {
+    "id": "mon_os_reis_enterrados",
+    "type": "monster",
+    "name": "Os Reis-Enterrados",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_vento_com_vozes": {
+    "id": "mon_vento_com_vozes",
+    "type": "monster",
+    "name": "Vento-com-Vozes",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_peixe_de_padrao": {
+    "id": "mon_peixe_de_padrao",
+    "type": "monster",
+    "name": "Peixe-de-Padrão",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestial_fauna_do_lago"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_enguia_de_eter": {
+    "id": "mon_enguia_de_eter",
+    "type": "monster",
+    "name": "Enguia-de-Éter",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestial_fauna_do_lago"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_planta_vertical": {
+    "id": "mon_planta_vertical",
+    "type": "monster",
+    "name": "Planta-Vertical",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestial_fauna_do_lago"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_caranguejo_reliquia": {
+    "id": "mon_caranguejo_reliquia",
+    "type": "monster",
+    "name": "Caranguejo-Reliquia",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestial_fauna_do_lago"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_memoria_de_parede": {
+    "id": "mon_memoria_de_parede",
+    "type": "monster",
+    "name": "Memória-de-Parede",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_corrente_de_eter": {
+    "id": "mon_corrente_de_eter",
+    "type": "monster",
+    "name": "Corrente-de-Éter",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cristal_de_oghma": {
+    "id": "mon_cristal_de_oghma",
+    "type": "monster",
+    "name": "Cristal-de-Oghma",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_luz_afogada": {
+    "id": "mon_luz_afogada",
+    "type": "monster",
+    "name": "Luz-Afogada",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_afogado_de_aethelgard": {
+    "id": "mon_afogado_de_aethelgard",
+    "type": "monster",
+    "name": "Afogado de Aethelgard",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "assombracao_morto_vivo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_conselheiro_afogado": {
+    "id": "mon_conselheiro_afogado",
+    "type": "monster",
+    "name": "Conselheiro-Afogado",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "assombracao_morto_vivo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_eco_do_aprendiz": {
+    "id": "mon_eco_do_aprendiz",
+    "type": "monster",
+    "name": "Eco-do-Aprendiz",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "assombracao_morto_vivo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_amalgama_submerso": {
+    "id": "mon_amalgama_submerso",
+    "type": "monster",
+    "name": "Amálgama-Submerso",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_voz_de_thessrak": {
+    "id": "mon_voz_de_thessrak",
+    "type": "monster",
+    "name": "Voz-de-Thessrak",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mergulhadores_saqueadores": {
+    "id": "mon_mergulhadores_saqueadores",
+    "type": "monster",
+    "name": "Mergulhadores-Saqueadores",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cultistas_da_destilacao": {
+    "id": "mon_cultistas_da_destilacao",
+    "type": "monster",
+    "name": "Cultistas-da-Destilação",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_guardioes_da_entrada_seca": {
+    "id": "mon_guardioes_da_entrada_seca",
+    "type": "monster",
+    "name": "Guardiões-da-Entrada-Seca",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_as_bocas_filhas_de_thessrak": {
+    "id": "mon_as_bocas_filhas_de_thessrak",
+    "type": "monster",
+    "name": "As Bocas-Filhas de Thessrak",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "primordial_thessrak_e_o_que_o_eter_despertou_no_fundo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_que_estava_no_fundo_antes_da_cidade": {
+    "id": "mon_o_que_estava_no_fundo_antes_da_cidade",
+    "type": "monster",
+    "name": "O Que Estava no Fundo Antes da Cidade",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "primordial_thessrak_e_o_que_o_eter_despertou_no_fundo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_corrente_primordial_de_eter": {
+    "id": "mon_corrente_primordial_de_eter",
+    "type": "monster",
+    "name": "Corrente-Primordial-de-Éter",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "primordial_thessrak_e_o_que_o_eter_despertou_no_fundo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_peixe_que_sonha_a_cidade": {
+    "id": "mon_o_peixe_que_sonha_a_cidade",
+    "type": "monster",
+    "name": "O Peixe-Que-Sonha-a-Cidade",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "primordial_thessrak_e_o_que_o_eter_despertou_no_fundo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_alga_luminosa_de_eter": {
+    "id": "mon_alga_luminosa_de_eter",
+    "type": "monster",
+    "name": "Alga-Luminosa-de-Éter",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "flora_a_vida_do_lago_de_eter"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lirio_d_agua_afogado": {
+    "id": "mon_lirio_d_agua_afogado",
+    "type": "monster",
+    "name": "Lírio-d'Água-Afogado",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "flora_a_vida_do_lago_de_eter"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coral_de_memoria": {
+    "id": "mon_coral_de_memoria",
+    "type": "monster",
+    "name": "Coral-de-Memória",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "flora_a_vida_do_lago_de_eter"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_junco_sussurrante_submerso": {
+    "id": "mon_junco_sussurrante_submerso",
+    "type": "monster",
+    "name": "Junco-Sussurrante-Submerso",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "flora_a_vida_do_lago_de_eter"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_enguia_eletrica_de_profundidade": {
+    "id": "mon_enguia_eletrica_de_profundidade",
+    "type": "monster",
+    "name": "Enguia-Elétrica-de-Profundidade",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tartaruga_ruina": {
+    "id": "mon_tartaruga_ruina",
+    "type": "monster",
+    "name": "Tartaruga-Ruína",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cardume_espelho": {
+    "id": "mon_cardume_espelho",
+    "type": "monster",
+    "name": "Cardume-Espelho",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_bibliotecario_afogado": {
+    "id": "mon_o_bibliotecario_afogado",
+    "type": "monster",
+    "name": "O Bibliotecário-Afogado",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_reflexo_na_agua_parada": {
+    "id": "mon_reflexo_na_agua_parada",
+    "type": "monster",
+    "name": "Reflexo-na-Água-Parada",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_a_ultima_chama_submersa": {
+    "id": "mon_a_ultima_chama_submersa",
+    "type": "monster",
+    "name": "A Última-Chama-Submersa",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestial_assombracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sindicatos_de_comercio": {
+    "id": "mon_sindicatos_de_comercio",
+    "type": "monster",
+    "name": "Sindicatos de Comércio",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "humanoide_hostil_faccoes"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_grupos_piratas_rivais": {
+    "id": "mon_grupos_piratas_rivais",
+    "type": "monster",
+    "name": "Grupos Piratas Rivais",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "humanoide_hostil_faccoes"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_contrabandistas_da_nevoa": {
+    "id": "mon_contrabandistas_da_nevoa",
+    "type": "monster",
+    "name": "Contrabandistas-da-Névoa",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "humanoide_hostil_faccoes"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_capangas_do_poco": {
+    "id": "mon_capangas_do_poco",
+    "type": "monster",
+    "name": "Capangas-do-Poço",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "humanoide_hostil_faccoes"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tripulacao_amaldicoada": {
+    "id": "mon_tripulacao_amaldicoada",
+    "type": "monster",
+    "name": "Tripulação-Amaldiçoada",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "humanoide_hostil_faccoes"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tubarao_de_casco": {
+    "id": "mon_tubarao_de_casco",
+    "type": "monster",
+    "name": "Tubarão-de-Casco",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial_mar_e_costa"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_polvo_dos_destrocos": {
+    "id": "mon_polvo_dos_destrocos",
+    "type": "monster",
+    "name": "Polvo-dos-Destroços",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial_mar_e_costa"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_caranguejo_mare": {
+    "id": "mon_caranguejo_mare",
+    "type": "monster",
+    "name": "Caranguejo-Maré",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial_mar_e_costa"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_gaivota_ladra": {
+    "id": "mon_gaivota_ladra",
+    "type": "monster",
+    "name": "Gaivota-Ladra",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial_mar_e_costa"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_enguia_do_cais": {
+    "id": "mon_enguia_do_cais",
+    "type": "monster",
+    "name": "Enguia-do-Cais",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial_mar_e_costa"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_que_come_nas_praias": {
+    "id": "mon_o_que_come_nas_praias",
+    "type": "monster",
+    "name": "O Que Come nas Praias",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "magica_aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mare_vermelha_viva": {
+    "id": "mon_mare_vermelha_viva",
+    "type": "monster",
+    "name": "Maré-Vermelha-Viva",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "magica_aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sussurro_do_leviata": {
+    "id": "mon_sussurro_do_leviata",
+    "type": "monster",
+    "name": "Sussurro-do-Leviatã",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "magica_aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_afogados_do_porto": {
+    "id": "mon_afogados_do_porto",
+    "type": "monster",
+    "name": "Afogados-do-Porto",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_capitao_sem_porto": {
+    "id": "mon_capitao_sem_porto",
+    "type": "monster",
+    "name": "Capitão-Sem-Porto",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "assombracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_guarda_sangrinomante_de_kahen": {
+    "id": "mon_guarda_sangrinomante_de_kahen",
+    "type": "monster",
+    "name": "Guarda-Sangrinomante de Kahen",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "humanoide_hostil_kahen_e_poder"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_caranguejeiro": {
+    "id": "mon_caranguejeiro",
+    "type": "monster",
+    "name": "Caranguejeiro",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_verme_luminoso_de_osso": {
+    "id": "mon_verme_luminoso_de_osso",
+    "type": "monster",
+    "name": "Verme-Luminoso-de-Osso",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ave_perfuradora": {
+    "id": "mon_ave_perfuradora",
+    "type": "monster",
+    "name": "Ave-Perfuradora",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_serpente_de_mare": {
+    "id": "mon_serpente_de_mare",
+    "type": "monster",
+    "name": "Serpente-de-Maré",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_rapina_de_osso": {
+    "id": "mon_rapina_de_osso",
+    "type": "monster",
+    "name": "Rapina-de-Osso",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_charadeiro_de_ambar": {
+    "id": "mon_charadeiro_de_ambar",
+    "type": "monster",
+    "name": "Charadeiro-de-Âmbar",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_nevoa_de_eter": {
+    "id": "mon_nevoa_de_eter",
+    "type": "monster",
+    "name": "Névoa-de-Éter",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_eter_cristalizado_formacao": {
+    "id": "mon_eter_cristalizado_formacao",
+    "type": "monster",
+    "name": "Éter-Cristalizado (formação)",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_canto_do_trono": {
+    "id": "mon_canto_do_trono",
+    "type": "monster",
+    "name": "Canto-do-Trono",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "magica"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sombra_de_leviata": {
+    "id": "mon_sombra_de_leviata",
+    "type": "monster",
+    "name": "Sombra-de-Leviatã",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "assombracao_aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_eco_de_cacada": {
+    "id": "mon_eco_de_cacada",
+    "type": "monster",
+    "name": "Eco-de-Caçada",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "assombracao_aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coracao_que_bate_ainda": {
+    "id": "mon_coracao_que_bate_ainda",
+    "type": "monster",
+    "name": "Coração-Que-Bate-Ainda",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "assombracao_aberracao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coletores_de_ambar": {
+    "id": "mon_coletores_de_ambar",
+    "type": "monster",
+    "name": "Coletores-de-Âmbar",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_naufragos_do_cemiterio": {
+    "id": "mon_naufragos_do_cemiterio",
+    "type": "monster",
+    "name": "Náufragos-do-Cemitério",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "humanoide_hostil"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_leviata_que_nao_foi_cacado": {
+    "id": "mon_o_leviata_que_nao_foi_cacado",
+    "type": "monster",
+    "name": "O Leviatã-Que-Não-Foi-Caçado",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "primordial_o_que_os_leviatas_eram_e_o_que_jaz_entre_os_ossos"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_os_comedores_de_deus_morto": {
+    "id": "mon_os_comedores_de_deus_morto",
+    "type": "monster",
+    "name": "Os Comedores-de-Deus-Morto",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "primordial_o_que_os_leviatas_eram_e_o_que_jaz_entre_os_ossos"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_a_mare_que_lembra": {
+    "id": "mon_a_mare_que_lembra",
+    "type": "monster",
+    "name": "A Maré-Que-Lembra",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "primordial_o_que_os_leviatas_eram_e_o_que_jaz_entre_os_ossos"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_primeiro_osshari_afogado": {
+    "id": "mon_o_primeiro_osshari_afogado",
+    "type": "monster",
+    "name": "O Primeiro-Osshari-Afogado",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "primordial_o_que_os_leviatas_eram_e_o_que_jaz_entre_os_ossos"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ambar_vivo": {
+    "id": "mon_ambar_vivo",
+    "type": "monster",
+    "name": "Âmbar-Vivo",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "flora_a_vida_impossivel_entre_os_ossos"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coral_de_osso": {
+    "id": "mon_coral_de_osso",
+    "type": "monster",
+    "name": "Coral-de-Osso",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "flora_a_vida_impossivel_entre_os_ossos"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_erva_salgada_luminosa": {
+    "id": "mon_erva_salgada_luminosa",
+    "type": "monster",
+    "name": "Erva-Salgada-Luminosa",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "flora_a_vida_impossivel_entre_os_ossos"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cogumelo_de_carnica_de_leviata": {
+    "id": "mon_cogumelo_de_carnica_de_leviata",
+    "type": "monster",
+    "name": "Cogumelo-de-Carniça-de-Leviatã",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "flora_a_vida_impossivel_entre_os_ossos"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_caranguejo_rei_de_carcaca": {
+    "id": "mon_caranguejo_rei_de_carcaca",
+    "type": "monster",
+    "name": "Caranguejo-Rei-de-Carcaça",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_gaivota_carniceira_gigante": {
+    "id": "mon_gaivota_carniceira_gigante",
+    "type": "monster",
+    "name": "Gaivota-Carniceira-Gigante",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_polvo_de_cranio": {
+    "id": "mon_polvo_de_cranio",
+    "type": "monster",
+    "name": "Polvo-de-Crânio",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_verme_de_osso": {
+    "id": "mon_verme_de_osso",
+    "type": "monster",
+    "name": "Verme-de-Osso",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_que_se_vestiu_de_leviata": {
+    "id": "mon_o_que_se_vestiu_de_leviata",
+    "type": "monster",
+    "name": "O Que Se Vestiu de Leviatã",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sombra_de_cardume": {
+    "id": "mon_sombra_de_cardume",
+    "type": "monster",
+    "name": "Sombra-de-Cardume",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestial_aberracao_expansao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_o_que_move_as_ilhas": {
+    "id": "mon_o_que_move_as_ilhas",
+    "type": "monster",
+    "name": "O Que Move as Ilhas",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "conjectural_rumor"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_fumaca_de_cor_errada": {
+    "id": "mon_fumaca_de_cor_errada",
+    "type": "monster",
+    "name": "Fumaça-de-Cor-Errada",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "conjectural_rumor"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_os_que_voltaram_e_nao_eram_eles": {
+    "id": "mon_os_que_voltaram_e_nao_eram_eles",
+    "type": "monster",
+    "name": "Os Que Voltaram (e não eram eles)",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "conjectural_rumor"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sereia_de_ophidia": {
+    "id": "mon_sereia_de_ophidia",
+    "type": "monster",
+    "name": "Sereia-de-Ophidia",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "conjectural_rumor"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mercado_de_ophidia_em_brekmar": {
+    "id": "mon_mercado_de_ophidia_em_brekmar",
+    "type": "monster",
+    "name": "Mercado-de-Ophidia (em Brekmar)",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "conjectural_rumor"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_chama_negra_farol": {
+    "id": "art_chama_negra_farol",
+    "type": "artifact",
+    "name": "A Chama Negra do Farol",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_diario_nehla": {
+    "id": "art_diario_nehla",
+    "type": "artifact",
+    "name": "O Diário de Nehla",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_registros_perdidos_reino": {
+    "id": "art_registros_perdidos_reino",
+    "type": "artifact",
+    "name": "Os Registros Perdidos do Reino",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_coroa_pressao_rei_anao": {
+    "id": "art_coroa_pressao_rei_anao",
+    "type": "artifact",
+    "name": "A Coroa-de-Pressão do Rei-Anão",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_ampulheta_vaelorn": {
+    "id": "art_ampulheta_vaelorn",
+    "type": "artifact",
+    "name": "A Ampulheta de Vaelorn",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_mascara_funeraria_primeiro_contemplador": {
+    "id": "art_mascara_funeraria_primeiro_contemplador",
+    "type": "artifact",
+    "name": "Máscara-Funerária do Primeiro Contemplador",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_estandarte_general_sem_nome": {
+    "id": "art_estandarte_general_sem_nome",
+    "type": "artifact",
+    "name": "O Estandarte do General-Sem-Nome",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_coracao_eter_batalha": {
+    "id": "art_coracao_eter_batalha",
+    "type": "artifact",
+    "name": "Coração-de-Éter da Batalha",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_codigo_ferro_original": {
+    "id": "art_codigo_ferro_original",
+    "type": "artifact",
+    "name": "O Código de Ferro (original)",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_testamento_real_no_barril": {
+    "id": "art_testamento_real_no_barril",
+    "type": "artifact",
+    "name": "O Testamento Real no Barril",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_armadura_vazia_malagor": {
+    "id": "art_armadura_vazia_malagor",
+    "type": "artifact",
+    "name": "A Armadura Vazia de Malagor",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_lanterna_suspiros": {
+    "id": "art_lanterna_suspiros",
+    "type": "artifact",
+    "name": "A Lanterna dos Suspiros",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_segredo_enterrado_thessavar": {
+    "id": "art_segredo_enterrado_thessavar",
+    "type": "artifact",
+    "name": "O Segredo Enterrado de Thessavar",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_coracao_quitina_primeiros_hospedeiros": {
+    "id": "art_coracao_quitina_primeiros_hospedeiros",
+    "type": "artifact",
+    "name": "O Coração-Quitina dos Primeiros-Hospedeiros",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_lagrima_negra_morrakh": {
+    "id": "art_lagrima_negra_morrakh",
+    "type": "artifact",
+    "name": "Lágrima Negra de Morrakh",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_adaga_vidro_dragao": {
+    "id": "art_adaga_vidro_dragao",
+    "type": "artifact",
+    "name": "Adaga de Vidro-Dragão",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_selo_urath": {
+    "id": "art_selo_urath",
+    "type": "artifact",
+    "name": "O Selo de Urath",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_oghma_coracao_aethelgard": {
+    "id": "art_oghma_coracao_aethelgard",
+    "type": "artifact",
+    "name": "Oghma, o Coração de Aethelgard",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_amuleto_destilacao": {
+    "id": "art_amuleto_destilacao",
+    "type": "artifact",
+    "name": "O Amuleto da Destilação",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_registros_aethelgard": {
+    "id": "art_registros_aethelgard",
+    "type": "artifact",
+    "name": "Os Registros de Aethelgard",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_mapas_contraditorios_ophidia": {
+    "id": "art_mapas_contraditorios_ophidia",
+    "type": "artifact",
+    "name": "Mapas Contraditórios de Ophidia",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_registro_dividas_poco": {
+    "id": "art_registro_dividas_poco",
+    "type": "artifact",
+    "name": "O Registro de Dívidas do Poço",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_coracao_trono": {
+    "id": "art_coracao_trono",
+    "type": "artifact",
+    "name": "O Coração do Trono",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_arpao_primeiro_osshari": {
+    "id": "art_arpao_primeiro_osshari",
+    "type": "artifact",
+    "name": "O Arpão do Primeiro-Osshari",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_que_selune_trouxe": {
+    "id": "art_que_selune_trouxe",
+    "type": "artifact",
+    "name": "O Que Selune Trouxe",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_mapa_que_mestre_albrecht_decifrou": {
+    "id": "art_mapa_que_mestre_albrecht_decifrou",
+    "type": "artifact",
+    "name": "O Mapa que Mestre Albrecht Decifrou",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "art_bussola_que_aponta_para_ophidia": {
+    "id": "art_bussola_que_aponta_para_ophidia",
+    "type": "artifact",
+    "name": "Bússola-que-Aponta-para-Ophidia",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "artefato_unico"
+    ],
+    "visibility": "public",
+    "components": {}
+  }
+}

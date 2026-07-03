@@ -31,6 +31,9 @@ def ensure_world(world: dict) -> dict:
     if cid and cid not in world["visited"]:
         world["visited"] = world["visited"] + [cid]
 
+    # Fase 2.5b (R10): alertas de fuga (inimigo fugido pode voltar com reforços)
+    world.setdefault("threat_alerts", [])
+
     # mantém o nome em sincronia, se possível
     loc = gamedata.get_location(cid) if cid else {}
     if loc:
@@ -361,13 +364,99 @@ def _hostile_ruler(world: dict, factions, loc_id: str):
     return None
 
 
+_ALERT_TTL = 6  # turnos de validade de um alerta de fuga
+
+
+def register_flee_alert(world: dict, fled_hint: str, faction_id=None, turn: int = 0) -> dict:
+    """
+    Fase 2.5b (R10): registra que um inimigo FUGIU do combate — ele pode voltar
+    com reforços. O alerta vale para a REGIÃO atual por ~_ALERT_TTL turnos e é
+    consumido quando dispara um encontro.
+    """
+    world = dict(world or {})
+    loc = gamedata.get_location(world.get("current_location_id", "")) or {}
+    # nome-base sem sufixo de instância ("Soldado da Legião 2" -> "Soldado da Legião")
+    import re as _re
+    hint = _re.sub(r"\s+\d+$", "", str(fled_hint or "o fugitivo")).strip()
+    alerts = list(world.get("threat_alerts") or [])
+    alerts.append({
+        "region_id": loc.get("region_id", world.get("current_location_id", "")),
+        "hint": hint,
+        "faction_id": faction_id,
+        "turn": int(turn),
+    })
+    world["threat_alerts"] = alerts
+    return world
+
+
+def _pop_active_alert(world: dict, loc: dict, turn: int):
+    """Alerta válido para a região atual (consome-o e descarta expirados). Muta world."""
+    region_id = (loc or {}).get("region_id", world.get("current_location_id", ""))
+    fresh, hit = [], None
+    for a in world.get("threat_alerts") or []:
+        if turn - int(a.get("turn", -99)) > _ALERT_TTL:
+            continue  # expirado
+        if hit is None and a.get("region_id") == region_id:
+            hit = a  # consome o primeiro alerta da região
+            continue
+        fresh.append(a)
+    world["threat_alerts"] = fresh
+    return hit
+
+
+def _bestiary_by_faction(faction_id: str):
+    """Combatente de uma facção no bestiário (campo `faction` — Fase 2.5b)."""
+    for entry in (gamedata.BESTIARY or {}).values():
+        if entry.get("faction") == faction_id:
+            return entry
+    return None
+
+
+def pick_encounter_enemy(loc: dict, danger: int, turn: int = 0, faction_id: str = ""):
+    """
+    Fase 2.5b (R11): sorteio DETERMINÍSTICO de criatura concreta do bestiário.
+    - facção informada -> combatente daquela facção (se curado);
+    - senão, criatura com `regions` contendo a região do local, com porte
+      compatível com o perigo (1-2: Minion; 3: Minion/Elite; 4: Elite). BOSS nunca
+      sai em encontro aleatório.
+    Retorna a ENTRADA do bestiário ou None (chamador cai no hint genérico).
+    """
+    if faction_id:
+        entry = _bestiary_by_faction(faction_id)
+        if entry:
+            return entry
+
+    region_id = (loc or {}).get("region_id", "")
+    if not region_id:
+        return None
+    pool = [e for e in (gamedata.BESTIARY or {}).values()
+            if region_id in (e.get("regions") or []) and "BOSS" not in str(e.get("type", "")).upper()]
+    if not pool:
+        return None
+
+    def tier(e):
+        return "elite" if "elite" in str(e.get("type", "")).lower() else "minion"
+
+    if danger <= 2:
+        filtered = [e for e in pool if tier(e) == "minion"]
+    elif danger == 3:
+        filtered = pool
+    else:
+        filtered = [e for e in pool if tier(e) == "elite"] or pool
+    pool = sorted(filtered or pool, key=lambda e: e.get("id", ""))
+    return pool[int(turn) % len(pool)]
+
+
 def check_encounter(world: dict, factions, intel, turn: int = 0):
     """
     Gatilho DETERMINÍSTICO de encontro ao entrar/descansar num local perigoso.
-    Dispara se: looming_threat ativo + perigo>=3; OU local dominado por facção hostil;
-    OU perigo efetivo >= 4. Respeita cooldown (`world.last_encounter_turn`).
+    Dispara se: alerta de fuga ativo na região (reforços — R10); OU looming_threat
+    ativo + perigo>=3; OU local dominado por facção hostil; OU perigo efetivo >= 4.
+    Respeita cooldown (`world.last_encounter_turn`).
 
     Não-onisciência: a dica do inimigo só NOMEIA a facção dominante se o jogador a conhece.
+    O hint traz o NOME EXATO de uma criatura do bestiário quando possível (R11) —
+    o spawn cai no cache em vez de gerar via LLM.
     Retorna {hint, flavor, reason} ou None.
     """
     world = world or {}
@@ -382,14 +471,23 @@ def check_encounter(world: dict, factions, intel, turn: int = 0):
     loc = gamedata.get_location(loc_id) or {}
     region = loc.get("region", world.get("current_location", "a região"))
 
+    # R10: reforços — o fugitivo voltou, e não veio sozinho.
+    alert = _pop_active_alert(world, loc, turn)
+    if alert:
+        hint = alert.get("hint", "os que fugiram")
+        return {"hint": hint,
+                "flavor": f"Eles voltaram — e não vieram sós. {hint} lidera o grupo que te cerca.",
+                "reason": "reinforcements"}
+
     if ruler:
         fid = ruler.get("id")
+        entry = pick_encounter_enemy(loc, danger, turn, faction_id=fid)
         if intel.get(fid, {}).get("known"):
             who = ruler.get("name")
-            hint = f"asseclas armados da {who}"
+            hint = f"{entry['name']} ({who})" if entry else f"asseclas armados da {who}"
             flavor = f"Aço da {who} barra o caminho — eles cobram a passagem em sangue."
         else:
-            hint = "homens armados sob uma bandeira que você não reconhece"
+            hint = entry.get("name") if entry else "homens armados sob uma bandeira que você não reconhece"
             flavor = "Homens armados sob uma bandeira estranha cercam você sem dar explicações."
         return {"hint": hint, "flavor": flavor, "reason": "controlled"}
 
@@ -398,7 +496,9 @@ def check_encounter(world: dict, factions, intel, turn: int = 0):
                 "reason": "looming_threat"}
 
     if danger >= 4:
-        return {"hint": f"feras/perigos de {region}",
+        entry = pick_encounter_enemy(loc, danger, turn)
+        hint = entry.get("name") if entry else f"feras/perigos de {region}"
+        return {"hint": hint,
                 "flavor": f"O perigo de {region} se materializa: algo hostil avança sobre você.",
                 "reason": "high_danger"}
 

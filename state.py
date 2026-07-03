@@ -43,6 +43,10 @@ class PlayerStats(TypedDict, total=False):
     attack_bonus: int
     active_conditions: List[Condition]
     ability_cooldowns: Dict[str, int]  # ability_id -> turnos restantes
+    # --- Fase 2.5b: traits raciais (aplicados na criação; ver data/origins.json) ---
+    racial_traits: List[str]           # nomes dos traits (narração/HUD)
+    condition_resists: List[str]       # substrings de condições que a raça ignora
+    racial_save_bonus: Dict[str, int]  # attr curto -> bônus em saving throws
 
 
 class EnemyStats(TypedDict):
@@ -56,9 +60,12 @@ class EnemyStats(TypedDict):
     attack_mod: int
     attributes: Attributes
     abilities: List[str]
-    status: str  # "ativo", "morto"
+    status: str  # "ativo", "morto", "fugiu"
     active_conditions: List["Condition"]
     attacks: Optional[List[Dict]]
+    # --- Fase 2.5b: comportamento de combate (ver data/bestiary.json) ---
+    # {"profile": "tatico"|"feroz"|"covarde"|"implacavel", "flee_below": float, "pack_morale": bool}
+    behavior: Optional[Dict]
 
 
 class CompanionState(TypedDict):
@@ -126,6 +133,54 @@ class CampaignPlan(TypedDict, total=False):
     last_planned_turn: int
 
 
+# --- Fase 2.5: eventos estruturados + estado projetado do mundo ---
+# Lore base (Codex/data/graph) é imutável; o que MUDA no mundo vive aqui.
+
+class GameEvent(TypedDict, total=False):
+    event_id: str      # uuid4 hex
+    turn: int          # world.turn_count no momento do evento
+    type: str          # "npc_killed" | "secret_revealed" | "location_control_changed" | ...
+    actor_id: str      # quem causou ("player", npc id, faction id, "system")
+    target_id: str     # entidade afetada (id canônico de data/graph/entities.json)
+    payload: Dict      # dados específicos do tipo
+    source: str        # "combat" | "storyteller" | "rule_engine" | "system" | "test"
+
+
+class EntityState(TypedDict, total=False):
+    alive: bool
+    location_id: str
+    stability: int         # fações: -100..100
+    extra: Dict            # estado adicional por componente
+
+
+class DynamicEdge(TypedDict, total=False):
+    id: str
+    source: str
+    type: str
+    target: str
+    created_by_event: str  # event_id de origem (auditoria)
+
+
+class DisabledEdge(TypedDict, total=False):
+    edge_id: str           # id da edge base desativada
+    disabled_by_event: str
+
+
+class RevealedFact(TypedDict, total=False):
+    entity_id: str
+    fact: str
+    revealed_at_turn: int
+    revealed_by_event: str
+
+
+class WorldProjection(TypedDict, total=False):
+    entities: Dict[str, EntityState]
+    dynamic_edges: List[DynamicEdge]
+    disabled_edges: List[DisabledEdge]
+    revealed_facts: Dict[str, RevealedFact]     # chave = event_id revelador
+    location_summaries: Dict[str, str]          # loc_id -> resumo dinâmico curto
+
+
 class GameState(TypedDict):
     # --- Identificação e Memória (NOVO) ---
     game_id: str  # ID único da sessão para isolar o RAG
@@ -157,3 +212,8 @@ class GameState(TypedDict):
     # --- Combate determinístico ---
     # {"round": int, "active": bool, "order": [{"id","name","side","init"}]}
     combat: Optional[Dict]
+
+    # --- Fase 2.5: mundo estruturado (LLM propõe, motor aplica) ---
+    event_log: List[GameEvent]            # append-only; auditoria do que mudou
+    world_projection: WorldProjection     # estado calculado a partir do event_log
+    pending_world_events: List[Dict]      # propostas ainda não validadas (Fase 2.6)

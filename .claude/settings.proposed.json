@@ -1,0 +1,24 @@
+{
+  "_COMO_ATIVAR": "Revise e renomeie este arquivo para settings.json (em .claude/). Depois apague esta chave _COMO_ATIVAR. allow: pytest (suíte offline determinística) + o export de PATH que prefixa todo comando composto — sem ele o match de permissão do comando inteiro falha. Hook: lembra de reindexar FAISS ao editar lore_nova/, data/codex/ ou data/rules.txt (1x por sessão).",
+  "permissions": {
+    "allow": [
+      "Bash(uv run pytest)",
+      "Bash(uv run pytest *)",
+      "Bash(export PATH=\"$APPDATA/Python/Python314/Scripts:$PATH\")"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\nodejs\\node.exe\" \"C:\\Users\\guilh\\OneDrive\\Área de Trabalho\\rpg-ia-master\\.claude\\hooks\\reindex-reminder.js\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

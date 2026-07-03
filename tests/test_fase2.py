@@ -13,7 +13,7 @@ import world_utils as wu
 # --------------------------------------------------------------------------
 def test_factions_data_loads():
     assert gamedata.FACTIONS, "factions.json deve carregar"
-    assert "culto_clareira" in gamedata.FACTIONS
+    assert "legiao_ferro" in gamedata.FACTIONS
 
 
 def test_seed_factions_fresh_copy():
@@ -188,11 +188,11 @@ def test_apply_reputation_invalid_direction_noop():
 def test_graph_help_faction_changes_reputation():
     from main import app
     # jogador precisa CONHECER a fação para poder agir sobre ela (não-onisciência)
-    st = _state_for_graph("ajudo a Ordem do Selo Pálido na sua causa")
-    st["faction_intel"] = {"selo_palido": {"known": True, "knows_goal": True}}
+    st = _state_for_graph("ajudo a Legião de Ferro na sua causa")
+    st["faction_intel"] = {"legiao_ferro": {"known": True, "knows_goal": True}}
     result = app.invoke(st)
     factions = result.get("factions") or []
-    alvo = next((f for f in factions if f["id"] == "selo_palido"), None)
+    alvo = next((f for f in factions if f["id"] == "legiao_ferro"), None)
     assert alvo is not None
     assert alvo["reputation"] > 0, "ajudar uma fação conhecida deve elevar sua reputação"
 
@@ -208,17 +208,17 @@ def test_faction_intel_starts_empty():
 def test_apply_faction_reveal_layers():
     facs = gamedata.seed_factions()
     # existência: só known
-    intel = wu.apply_faction_reveal({}, facs, "selo_palido", "existencia", turn=1)
-    assert intel["selo_palido"]["known"] is True
-    assert intel["selo_palido"].get("knows_goal") is False
+    intel = wu.apply_faction_reveal({}, facs, "legiao_ferro", "existencia", turn=1)
+    assert intel["legiao_ferro"]["known"] is True
+    assert intel["legiao_ferro"].get("knows_goal") is False
     # objetivo: known + knows_goal
-    intel = wu.apply_faction_reveal(intel, facs, "selo_palido", "objetivo", turn=2)
-    assert intel["selo_palido"]["knows_goal"] is True
+    intel = wu.apply_faction_reveal(intel, facs, "legiao_ferro", "objetivo", turn=2)
+    assert intel["legiao_ferro"]["knows_goal"] is True
     # progresso: congela snapshot do progress atual + turno
-    facs2 = [dict(f, progress=37) if f["id"] == "selo_palido" else f for f in facs]
-    intel = wu.apply_faction_reveal(intel, facs2, "selo_palido", "progresso", turn=5)
-    assert intel["selo_palido"]["progress_seen"] == 37
-    assert intel["selo_palido"]["intel_turn"] == 5
+    facs2 = [dict(f, progress=37) if f["id"] == "legiao_ferro" else f for f in facs]
+    intel = wu.apply_faction_reveal(intel, facs2, "legiao_ferro", "progresso", turn=5)
+    assert intel["legiao_ferro"]["progress_seen"] == 37
+    assert intel["legiao_ferro"]["intel_turn"] == 5
 
 
 def test_apply_faction_reveal_unknown_id_noop():
@@ -263,32 +263,32 @@ def _complete_one(fid, world=None, intel=None):
 
 
 def test_ascension_dominar_local():
-    _, world, _, _ = _complete_one("selo_palido")
-    assert world.get("controlled", {}).get("portao_oeste") == "selo_palido"
+    _, world, _, _ = _complete_one("legiao_ferro")
+    assert world.get("controlled", {}).get("na_anel_lama") == "legiao_ferro"
 
 
 def test_ascension_expandir_regiao():
-    facs, _, _, _ = _complete_one("clas_skallgard")
-    f = next(x for x in facs if x["id"] == "clas_skallgard")
-    assert f["region"] == "Nova Arcádia"
+    facs, _, _, _ = _complete_one("mao_sombria")
+    f = next(x for x in facs if x["id"] == "mao_sombria")
+    assert f["region"] == "Brekmar"
     assert f["progress"] == 0 and f["completed"] is False  # cadeia: volta a evoluir
-    assert "sul" in f["goal"].lower()  # next_goal aplicado
+    assert "sindicato" in f["goal"].lower()  # next_goal aplicado
 
 
 def test_ascension_elevar_perigo_clamps():
-    _, world, _, _ = _complete_one("guilda_fuligem")
-    assert world.get("danger_overrides", {}).get("mina_fuligem") == 4  # teto 4
+    _, world, _, _ = _complete_one("druidas_renegados")
+    assert world.get("danger_overrides", {}).get("pantano_melancolia") == 4  # base 3 + 1 (teto 4)
 
 
 def test_ascension_invocar_entidade():
-    _, world, _, _ = _complete_one("culto_clareira")
+    _, world, _, _ = _complete_one("filhos_chama_azul")
     assert world.get("looming_threat")
-    assert "clareira_ossos" in world.get("danger_overrides", {})
+    assert "na_anel_dourado" in world.get("danger_overrides", {})
 
 
 def test_ascension_eliminar_faccao():
-    facs, _, _, _ = _complete_one("hereticos_sol_morto")
-    alvo = next(x for x in facs if x["id"] == "culto_clareira")
+    facs, _, _, _ = _complete_one("ultimos_anoes_reino")
+    alvo = next(x for x in facs if x["id"] == "goblins_mineiros")
     assert alvo.get("defeated") is True
 
 
@@ -300,18 +300,18 @@ def test_advance_skips_defeated():
 
 def test_completion_note_names_only_known():
     # desconhecida → consequência sem nome
-    _, _, note_unknown, _ = _complete_one("selo_palido", intel={})
-    assert note_unknown and "Ordem do Selo Pálido" not in note_unknown
+    _, _, note_unknown, _ = _complete_one("legiao_ferro", intel={})
+    assert note_unknown and "A Legião de Ferro" not in note_unknown
     # conhecida → narrador nomeia
-    _, _, note_known, _ = _complete_one("selo_palido", intel={"selo_palido": {"known": True}})
-    assert "Ordem do Selo Pálido" in note_known
+    _, _, note_known, _ = _complete_one("legiao_ferro", intel={"legiao_ferro": {"known": True}})
+    assert "A Legião de Ferro" in note_known
 
 
 # --------------------------------------------------------------------------
 # Encontros: o mundo perigoso/dominado/ameaçado vira combate (determinístico)
 # --------------------------------------------------------------------------
 def test_encounter_high_danger_triggers():
-    world = {"current_location_id": "clareira_ossos"}  # perigo 4 no mapa
+    world = {"current_location_id": "pr_ruinas_assombradas"}  # perigo 4 no mapa
     enc = wu.check_encounter(world, gamedata.seed_factions(), {}, turn=10)
     assert enc and enc["reason"] == "high_danger"
 
@@ -324,39 +324,39 @@ def test_encounter_looming_threat_triggers():
 
 
 def test_encounter_hostile_controlled_triggers():
-    world = {"current_location_id": "estrada_sul",  # perigo 2: só o domínio dispara
-             "controlled": {"estrada_sul": "clas_skallgard"}}  # facção hostil
+    world = {"current_location_id": "pradaria_ruinas",  # perigo 2: só o domínio dispara
+             "controlled": {"pradaria_ruinas": "bandos_nomades"}}  # facção hostil
     enc = wu.check_encounter(world, gamedata.seed_factions(), {}, turn=10)
     assert enc and enc["reason"] == "controlled"
 
 
 def test_encounter_safe_zone_no_trigger():
-    world = {"current_location_id": "estrada_sul"}  # perigo 2, sem ameaça/domínio
+    world = {"current_location_id": "pradaria_ruinas"}  # perigo 2, sem ameaça/domínio
     assert wu.check_encounter(world, gamedata.seed_factions(), {}, turn=10) is None
 
 
 def test_encounter_cooldown_blocks():
-    world = {"current_location_id": "clareira_ossos", "last_encounter_turn": 9}
+    world = {"current_location_id": "pr_ruinas_assombradas", "last_encounter_turn": 9}
     assert wu.check_encounter(world, gamedata.seed_factions(), {}, turn=10) is None  # 1 < cooldown 2
 
 
 def test_encounter_hint_respects_intel():
-    world = {"current_location_id": "estrada_sul",
-             "controlled": {"estrada_sul": "clas_skallgard"}}
+    world = {"current_location_id": "pradaria_ruinas",
+             "controlled": {"pradaria_ruinas": "bandos_nomades"}}
     facs = gamedata.seed_factions()
-    # desconhecida → não nomeia
+    # desconhecida → não nomeia a facção
     enc = wu.check_encounter(world, facs, {}, turn=10)
-    assert "Skallgard" not in enc["hint"]
+    assert "Bandos Nômades" not in enc["hint"]
     # conhecida → nomeia
-    enc2 = wu.check_encounter(world, facs, {"clas_skallgard": {"known": True}}, turn=10)
-    assert "Skallgard" in enc2["hint"]
+    enc2 = wu.check_encounter(world, facs, {"bandos_nomades": {"known": True}}, turn=10)
+    assert "Bandos Nômades" in enc2["hint"]
 
 
 def test_graph_rest_in_danger_triggers_combat():
     from main import app
     st = _state_for_graph("vou descansar e acampar aqui")
-    st["world"]["current_location_id"] = "clareira_ossos"
-    st["world"]["current_location"] = "Clareira dos Ossos"
+    st["world"]["current_location_id"] = "pr_ruinas_assombradas"
+    st["world"]["current_location"] = "Ruínas Assombradas"
     st["world"]["danger_level"] = 4
     result = app.invoke(st)
     enemies = result.get("enemies") or []
@@ -374,8 +374,8 @@ def test_npc_reveals_faction_to_player():
         "factions": gamedata.seed_factions(),
         "faction_intel": {},
         "world": {"turn_count": 4, "current_location": "Portão"},
-        "messages": [HumanMessage(content="pergunto ao guarda sobre a Ordem do Selo Pálido")],
+        "messages": [HumanMessage(content="pergunto ao guarda sobre a Legião de Ferro")],
     }
     out = npc_actor_node(state)
     intel = out.get("faction_intel") or {}
-    assert intel.get("selo_palido", {}).get("known") is True
+    assert intel.get("legiao_ferro", {}).get("known") is True

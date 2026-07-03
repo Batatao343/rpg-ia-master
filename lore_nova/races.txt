@@ -1,0 +1,535 @@
+CODEX OMNIA: RAÇAS DE VALORIA
+Documento de referência para narrador e jogadores.
+===============================================
+
+[CATEGORIA: RAÇA]
+[TAGS: Elfos, Físicos, Ampulheta, Decadência]
+
+OS ELFOS
+Ordem de surgimento: 1ª raça
+Status atual: Minoria decadente. Vilas em meio a ruínas, espalhadas por regiões que os humanos ainda não quiseram.
+
+HISTÓRIA
+
+O Despertar no Mundo Vazio
+Os Elfos foram a primeira raça racional a existir — simplesmente se viram existindo num mundo que não os esperava. Não houve transição, não houve infância coletiva. Acordaram adultos, sem memória anterior, num mundo habitado por demônios e criaturas primordiais que não tinham interesse em coexistência. O mundo que encontraram não era hostil por escolha — era simplesmente indiferente à sua existência, o que é uma forma diferente de ser perigoso.
+
+A Caça de Urath
+Antes que pudessem construir qualquer coisa, encontraram Urath — o demônio do Orgulho, que existia antes deles e havia esperado algo que valesse dominar. Os Elfos eram novos, conscientes, capazes de sofrer de formas que criaturas sem razão não conseguiam. Para Urath, eram a presa perfeita. Séculos de fuga e guerra constante — não uma rebelião heroica, mas uma sobrevivência exausta. O que os Elfos construíram nesse período foram coisas pequenas e temporárias, destruídas antes de ficarem grandes o suficiente para importar. A única vitória veio do desespero: lançar uma lua sobre Urath, criar o Deserto de Zhur, selar o demônio sob o Mar de Vidro. Funcionou parcialmente. A prole de Urath sobreviveu.
+
+A Idade das Cidades-Estado
+Com Urath selado, os Elfos finalmente puderam construir. As cidades-estado que surgiram eram pequenas mas densas em cultura — paredes esculpidas, artes têxteis, arquitetura que priorizava superfície e textura. Eram também violentamente competitivas entre si, em paz instável que qualquer provocação rompia. Os Elfos nunca aprenderam a cooperar em escala grande — suas cidades eram ilhas de beleza cercadas de desconfiança mútua.
+
+A Escravidão pelos Anões
+Quando os Anões surgiram das Montanhas Afiadas, a cidade-estado Élfica que os encontrou primeiro tentou dominá-los. Subestimou o que eram. A resposta Anã foi calculada, rápida e sem crueldade desnecessária — em semanas, a cidade era deles. Em meses, mais algumas. A escravidão que se seguiu não tinha malícia: os Anões simplesmente não concebem ócio como necessidade, e um Elfo parado é recurso desperdiçado. Para uma raça que existe para sentir, ser tratada como ferramenta foi uma forma específica de destruição que nenhuma guerra havia produzido.
+
+Aethelgard e a Destilação
+A única cidade Élfica que prosperou durante esse período foi Aethelgard — governada por um conselho de magos, sem governo centralizado, próspera o suficiente para que os Anões a respeitassem em vez de conquistá-la. O preço dessa prosperidade era escondido nas câmaras de cristal onde Elfos se voluntariavam para uma "experiência mística" e encontravam desintegração. O conselho não considerava segredo — considerava administração. Quando o aprendiz que havia estudado o sistema por anos o destruiu numa noite, Aethelgard afundou no mar junto com o conhecimento da Destilação e com ele mesmo.
+
+A Inundação Humana e o Colapso
+Os humanos chegaram na Era 5 em números que tornavam qualquer cálculo anterior irrelevante. As cidades-estado Élficas — já enfraquecidas, já competindo entre si, já com população corroída pelo Éter ao longo de eras — cederam pela matemática simples de dez humanos para cada Elfo. Não houve batalha decisiva. Houve inevitabilidade. Os Elfos recuaram para regiões que os humanos ainda não queriam, mantendo vilas onde antes havia cidades.
+
+A Guerra do Céu Vermelho e o Presente
+Elaryin — general Élfico que havia dedicado a vida a estudar os registros das guerras anteriores — foi o único que conseguiu unir todas as raças contra Malagor. A coalizão venceu. Elaryin morreu três anos depois de overdose de Pó de Fada num quarto alugado no Anel Dourado, com doze pessoas no funeral. A história oficial o menciona em uma linha.
+
+O que restou dos Elfos após a guerra são as vilas nas ruínas — comunidades pequenas que cultivam beleza dentro da destruição que não conseguiram reparar. Em Nova Arcádia existe uma presença Élfica considerável, atraída pela variedade sensorial que só uma grande cidade oferece. Em Skallgard, poucos: o frio para uma raça que sente tudo com intensidade corporal é punição constante.
+
+APARÊNCIA
+Mais altos que humanos. Quatro dedos em cada mão. Orelhas pontudas — mais pronunciadas que qualquer descrição comum, longas o suficiente para serem o primeiro detalhe que se nota. Traços angulosos.
+
+A pele varia entre o roxo profundo e o branco quase translúcido — não como tons de pele humana variam, mas como espectro próprio, sem equivalente em outras raças. Elfos mais roxos têm veias que saltam em cores claras, quase luminosas. Elfos mais brancos têm veias roxas visíveis como mapa sob a superfície. As veias são sempre aparentes — não como doença, mas como característica.
+
+A pele não é elástica. Pelo Éter Sujo que permeia Valoria, ela resseca e quebra — não como corte, mas como porcelana velha que racha sem sangrar. Elfos mais expostos ao Éter (magos, habitantes de cidades) têm rachaduras mais pronunciadas. Elfos de vilas isoladas mantêm a pele mais intacta, mas nenhum escapa completamente.
+
+CICLO DE VIDA
+Nascem e tornam-se adultos em 2-3 anos. A partir daí não envelhecem visivelmente — o corpo para. Entre os 60 e 70 anos morrem subitamente, sem aviso, sem sintoma prévio. A tradição diz que quando um Elfo nasce, uma ampulheta de areia começa a escorrer. Quando a areia acaba, ele morre — sem que nada possa ser feito.
+
+O impacto psicológico dessa morte é peculiar: não produz niilismo, mas urgência crescente. Quanto mais perto chegam da idade em que isso costuma acontecer, mais ávidos pela vida ficam. Um Elfo de sessenta anos não desacelera — acelera. Toca mais, experimenta mais, dorme menos. A ampulheta que não pode ser vista impulsiona em vez de paralisar.
+
+NATUREZA
+Sentem dor e prazer com intensidade que nenhuma outra raça alcança. São físicos, táteis, exploradores compulsivos de sensação. A beleza os paralisa genuinamente — um Elfo diante de algo extraordinariamente belo para. A dor tem textura para eles. O prazer tem peso.
+
+As emoções são normais em intensidade — sentem o que outras raças sentem, na mesma medida. O que os distingue é o corpo, não o coração. Um Elfo triste sente a tristeza igual a um humano triste. Mas um Elfo com dor física sente uma dor que um humano não conseguiria suportar sem desmaiar.
+
+São a raça mais propensa à autodestruição — não por desespero, mas por excesso. Vivem tanto e tão intensamente que o corpo raramente acompanha o que querem sentir. A ampulheta começa a escorrer mais rápido quando um Elfo encontra algo que vale cada grão.
+
+CULTURA
+Visuais e táteis por natureza, a cultura Élfica é construída ao redor de superfície e textura. Até o mais pobre dos Elfos tem esculturas esculpidas nas paredes de casa — não como decoração, mas como necessidade. Paredes com ranhuras que os dedos percorrem. Tecidos aveludados. Detalhes em madeira e pedra que não têm função além de existir para ser tocados.
+
+As vilas que restaram após a Guerra do Céu Vermelho são pequenas comunidades em meio a ruínas do que foram cidades. O contraste é parte da identidade atual: beleza cuidadosa dentro de destruição que não conseguiram reparar. As pinturas nas paredes das casas existem ao lado de fachadas que desmoronam.
+
+GOVERNO
+As vilas Élficas são governadas pela mulher do mago mais poderoso da comunidade. Não o mago — a parceira. Mulheres Élficas sentem a mesma atração pela intensidade da magia que os homens, mas resistem melhor — direcionam essa intensidade para outras formas de sentir em vez de se consumir no Éter. O resultado é que chegam aos sessenta anos com lucidez suficiente para governar, enquanto os homens frequentemente se destroem antes. A tradição não é lei escrita — é observação de milênios: as que ficam inteiras mais tempo são as mais qualificadas para liderar.
+
+RELAÇÃO COM MAGIA
+Atraídos pela intensidade que a magia produz. Pagam o custo físico de bom grado — destruição gradual é apenas outra forma de sentir. Homens Elfos são particularmente vulneráveis: a magia oferece sensação além do que o corpo normal produz, e para uma raça definida por buscar sensação, isso é resistência quase impossível.
+
+MEMÓRIA COLETIVA
+Passada de geração em geração com cuidado extremo — a única forma de preservar história numa raça que morre antes de envelhecer. Corroída pelo Éter ao longo das eras. O que resta hoje é fragmentado e não confiável: os Elfos sabem que sofreram algo enorme no passado, sabem que há eras de história por trás deles, mas os detalhes se dissolverem. São a raça com mais história e menos acesso a ela.
+
+COMO VÊM AS OUTRAS RAÇAS
+Humanos — Afinidade genuína. Humanos também amam sentir, também são curiosos, também inventam e exploram. O Pó de Fada que os Elfos consomem veio dos humanos — isso cria gratidão e vínculo. Dos humanos, os Elfos admiram especialmente a capacidade de criar sem precisar de milênios de tradição.
+
+Anões — Richa antiga e não resolvida. Os Anões escravizaram os Elfos quando surgiram, e o pragmatismo Anão — tratar emoção como ineficiência, tratar o Elfo parado como recurso desperdiçado — é o oposto de tudo que os Elfos valorizam. Não é só ressentimento histórico: é incompatibilidade fundamental de valores.
+
+Cinzéus — Irritação com nuance de inveja não admitida. Os Elfos acham os Cinzéus sem graça, contemplativos demais, paralisados demais para viver. Mas invejam — e nunca dizem — a capacidade de não sentir dor física. Para uma raça que sente tudo no corpo, a ideia de existir sem esse custo é simultaneamente incompreensível e desejável.
+
+Vrel — Condescendência. Os Elfos valorizam a experiência individual acima de tudo — a memória que é só sua, a sensação que você viveu e mais ninguém. Os Vrel têm memórias embaralhadas de experiências que não são suas, vividas por outros. Para um Elfo, isso é existência diminuída. Tratam os Vrel como inferiores com a convicção tranquila de quem nunca questionou a própria hierarquia.
+
+Osshari — Admiração sincera, baseada em mal-entendido. Os Elfos veem nos Osshari uma ânsia de viver que reconhecem e respeitam. Não sabem — e os Osshari não dizem — que essa ânsia vem de não conseguir sentir o suficiente, não de amar demais a vida. A admiração seria menor se soubessem a verdade.
+
+---
+
+[CATEGORIA: RAÇA]
+[TAGS: Anões, Landships, Burocracia, Exilados]
+
+OS ANÕES DA FULIGEM
+Ordem de surgimento: 2ª raça
+Status atual: Nômades em 12 Landships autônomas, sem território fixo
+
+HISTÓRIA
+
+O Surgimento nas Montanhas
+Os Anões não surgiram do caos como os Elfos — surgiram de um evento. Um terremoto imenso rasgou o chão do norte e criou as Montanhas Afiadas. Os Anões estavam lá no meio da pedra e da poeira, nus e sem contexto, e imediatamente começaram a organizar o que existia ao redor. Não houve desorientação. Houve avaliação. Essa foi a primeira e última vez que os Anões foram pegos de surpresa por algo que não tinham planejado.
+
+A Conquista das Cidades Élficas
+O primeiro contato com os Elfos foi simples: os Elfos tentaram dominá-los, presumindo que novo significava fraco. Os Anões responderam com ofensiva calculada. Em semanas a primeira cidade era deles. Em meses, mais algumas. Pararam quando a logística ficou boa — não por compaixão, não por acordo, mas porque expandir mais criaria desordem administrativa. O suficiente era suficiente. As cidades conquistadas ficaram provavelmente melhor administradas do que antes. Esse foi o detalhe mais humilhante para os Elfos.
+
+A Idade de Ouro e o Comércio com Aethelgard
+Com território estável e população de mão de obra não especializada garantida, os Anões construíram o sistema mais eficiente que Valoria havia visto. O comércio com Aethelgard era o melhor negócio da era — metais refinados por cristais e conhecimento arcano que os Anões usavam não para magia, mas para engenharia. Dois sistemas que consumiam Elfos de formas diferentes, fazendo negócios prósperos sem perguntas inconvenientes.
+
+O Reino Subterrâneo
+A conclusão lógica do projeto Anão: enterrar-se completamente. Se a superfície tinha variáveis incontroláveis — clima, criaturas, raças imprevisíveis — a solução era eliminar a superfície da equação. O Reino Subterrâneo foi o maior projeto que qualquer raça havia tentado. Décadas de trabalho metódico, cada câmara catalogada, cada túnel mapeado. Quando ficou pronto, era perfeito. Uma raça havia construído exatamente o que queria.
+
+A Falha Crítica de Contenção
+Os Anões desceram fundo demais. O que encontraram no nível mais profundo — o Rei Subterrâneo, entidade primordial selada por guerra antes das raças racionais — não cabia em nenhum modelo disponível. A fuga foi caótica de uma forma que os Anões nunca haviam experimentado: registros perdidos, rotas cortadas, grupos isolados. As 12 Landships — plano de emergência já pronto, porque os Anões sempre têm plano B — saíram em ondas desorganizadas. O evento é registrado internamente como "Falha Crítica de Contenção — Evento Rei Subterrâneo". Reuniões de análise de falha ainda acontecem.
+
+A Guerra do Céu Vermelho e o Presente
+Na guerra contra Malagor, os Anões participaram da coalizão de Elaryin com cálculo pragmático: a destruição total seria pior para os negócios do que o custo de combater. As Landships bombardearam do ar enquanto outras raças lutavam no chão. Após a guerra, voltaram às rotas definidas por necessidade de recursos, ao comércio de minérios por comida e água, às reuniões de protocolo e às análises de eficiência. O mundo mudou ao redor deles. O sistema se adaptou. Seguir em frente é o protocolo correto.
+
+APARÊNCIA
+Baixos — parte fundamental de quem são, não detalhe secundário. Mas onde outras raças de estatura menor são esguias ou delicadas, os Anões são largos de uma forma que desafia proporção humana: quase quadrados, com largura de ombros que rivaliza com a altura. Os braços são desproporcionalmente longos, chegando quase ao chão quando relaxados — resultado de gerações de trabalho em espaços apertados onde braços longos são vantagem operacional. Barbas trançadas com fios de cobre, enegrecidas de graxa. Respiradores de couro e óculos de proteção são equipamento padrão, não acessório.
+
+NATUREZA
+Frios e lógicos não como descrição de personalidade, mas como estrutura cognitiva. Os Anões não suprimem emoções — simplesmente não as processam como dados relevantes para tomada de decisão. Amor, ódio, medo existem em graus mínimos, mas nunca informam uma escolha. O que informa é custo-benefício, eficiência logística e protocolo estabelecido.
+
+A burocracia não é burocracia para eles — é a forma natural de organizar o mundo. Um sistema sem registro é um sistema que não existe. Uma decisão sem protocolo é uma decisão que pode dar errado da mesma forma novamente.
+
+COMO VÊM AS OUTRAS RAÇAS
+Todas da mesma forma: bagunçadas demais. Elfos que param para contemplar beleza estão desperdiçando tempo operacional. Humanos que tomam decisões por emoção são variáveis imprevisíveis. Cinzéus que ficam imóveis processando sentimentos são recursos parados. Vrel com memórias embaralhadas são dados corrompidos. Não há hostilidade nessa visão — apenas avaliação técnica de ineficiência.
+
+AS 12 LANDSHIPS
+Plano de contingência construído décadas antes do Rei Subterrâneo despertar — porque os Anões sempre têm plano B. As doze naves já estavam prontas quando a diáspora começou. Cada uma tem código de identificação no formato LS-PFC-[número]: LandShip, Plano de Fuga C, sequência. Não têm nomes. Os Anões não veem sentido em nomear.
+
+Cada Landship é autônoma — toma suas próprias decisões operacionais, define suas próprias rotas baseadas em necessidade de recursos. A comunicação entre elas acontece por sistema de pombos-correio. Não há hierarquia entre as doze: há o conjunto de protocolos que todas seguem, e esse conjunto é o governo.
+
+Não há como fabricar mais Landships — o processo exigia infraestrutura do Reino perdido. Se uma for destruída, não há reposição. Isso não é mencionado em conversas. É simplesmente sabido.
+
+COMO É VIVER DENTRO
+Bunker gigante cruzado com metalúrgica. Iluminação artificial calibrada para produtividade, não conforto. Ventilação calculada para manter o ar respirável sob carga máxima de trabalho. Cada espaço tem função definida e dimensão otimizada para essa função — nenhum centímetro desperdiçado. Barulho constante de máquinas, caldeiras e metal trabalhado.
+
+Rotas são definidas por necessidade de recursos: a Landship vai onde há o que precisa, pega o que precisa, parte. Paradas em cidades são transações, não visitas. Minérios refinados por comida e água. O comércio é encerrado assim que os recursos necessários foram obtidos.
+
+MÃO DE OBRA NÃO ESPECIALIZADA
+Os Anões atacam vilas de outras raças e caravanas de Vrel para obter o que internamente chamam de "mão de obra não especializada". O termo escravos nunca é usado — não por eufemismo moral, mas porque escravos implica relação social que os Anões não reconhecem. São recursos humanos com capacidade de trabalho mensurável.
+
+O tratamento segue lógica de manutenção de ativo: punições por não rendimento são permitidas, mas não podem aleijá-los — aleijado perde capacidade produtiva, o que é ineficiente. Se um trabalhador acumula punições suficientes para indicar que está custando mais do que produz, é executado. Sem dor, sem tortura — corte de gastos. Se há crueldade nisso, não é intencional. É o sistema funcionando como projetado.
+
+O GRANDE IMPREVISTO LOGÍSTICO
+A perda do Reino Subterrâneo é registrada internamente como "Falha Crítica de Contenção — Evento Rei Subterrâneo". Reuniões de análise de falha ainda acontecem regularmente — não por dor ou nostalgia, mas para garantir que o protocolo seja atualizado para prevenir recorrência.
+
+Recuperar o Reino não está nos planos. O cálculo logístico foi feito e não fecha: custo de reconquista supera benefício de território, especialmente com o inimigo atual impossível de modelar em parâmetros convencionais. As Landships funcionam. O sistema adaptou. Seguir em frente é o protocolo correto.
+
+Que perderam o único lugar completamente seu — isso os Anões sabem em algum nível que não conseguem acessar diretamente. Se houvesse vocabulário para isso, seria chamado de luto. Não há vocabulário. Então não é nada.
+
+---
+
+[CATEGORIA: RAÇA]
+[TAGS: Vrel, Proto-Colmeia, Memória, Espalhados]
+
+OS VREL
+Ordem de surgimento: 3ª raça
+Status atual: Espalhados por todo o continente em agrupamentos distintos, sem estrutura coletiva unificada
+
+HISTÓRIA
+
+O Surgimento Simultâneo
+Os Vrel não surgiram em um lugar — surgiram em todos. Na Era 3, grupos pequenos apareceram simultaneamente em pradarias, bordas de floresta, costas rochosas, arredores de cidades Élficas e Anãs. Cada grupo acordou olhando ao redor com olhos iridescentes, tentando reconhecer um lugar que nunca tinham visto mas que de alguma forma lembravam — porque as memórias de todos os outros grupos já estavam lá, embaralhadas, sem contexto, sem forma de distinguir o que era seu do que era de outro Vrel a centenas de quilômetros.
+
+Os Primeiros Encontros
+Os Elfos foram os primeiros a tentar entendê-los — e a explorar o que encontraram. Um Vrel chegando a uma cidade-estado Élfica sabia coisas que não deveria saber: detalhes de batalhas distantes, nomes de criaturas extintas, eventos de eras anteriores acessados via proto-mente. Os Elfos viram valor informacional e agiram de acordo. Os Anões que encontraram grupos Vrel fizeram o mesmo cálculo mais friamente: criaturas que sabem o que acontece em lugares distantes têm utilidade logística óbvia. Alguns grupos foram escravizados. Outros foram integrados. A proto-mente coletiva que conectava todos os Vrel começou a divergir conforme cada agrupamento desenvolvia trajetórias diferentes.
+
+A Especiação Acelerada
+O Abismo acelera a especiação em Valoria — raças adaptam ao ambiente mais rápido do que a biologia convencional explicaria. Os Vrel, espalhados por climas e condições radicalmente diferentes, começaram a divergir fisicamente em gerações. Grupos em regiões costeiras ficaram mais robustos. Grupos em pradarias ficaram mais altos. Grupos confinados em Landships Anãs desenvolveram características que os tornavam mais funcionais nos espaços apertados das naves. Com o tempo, agrupamentos diferentes tornaram-se visualmente distintos o suficiente para parecerem subespécies — unidos pela proto-mente mas separados pelo corpo.
+
+A Guerra do Céu Vermelho e o Presente
+Os Vrel não tiveram papel unificado na guerra contra Malagor — cada agrupamento respondeu conforme sua trajetória. Alguns lutaram. Outros fugiram. Outros simplesmente continuaram fazendo o que faziam. Após a guerra, espalharam-se ainda mais pelo mundo que havia mudado ao redor deles, adaptando-se como sempre adaptaram: por agrupamento, por necessidade, sem plano central.
+
+APARÊNCIA
+Humanoides à primeira vista — proporções gerais de bípede ereto, rosto frontal, dois braços. O segundo olhar revela o que são. Placas de quitina colorida cobrem partes do corpo em padrões que variam por agrupamento: algumas finas e iridescentes, outras grossas e opacas, em cores que vão do amarelo terroso ao azul profundo ao vermelho ferruginoso. Os dentes são de quitina, não de cálcio — mais resistentes, visualmente distintos, com coloração que combina com as placas do indivíduo.
+
+Os olhos não têm parte branca — são inteiramente escuros, como superfície de obsidiana úmida. Pseudoantenas finas saem da cabeça e se movem de forma involuntária, reagindo a estímulos que outros não percebem. A voz tem ressonância levemente dupla — como se duas pessoas falassem com mínimo atraso entre si.
+
+A faixa de altura é enorme: de 1,5 metro a 2,5 metros, dependendo do agrupamento e do ambiente onde cresceram. A especiação acelerada pelo Abismo produziu variações adicionais: alguns Vrel têm quatro olhos em vez de dois, um par auxiliar menor acima do principal. Alguns têm estruturas de quitina projetadas do lado da boca, lembrando mandíbulas auxiliares. Alguns têm antenas mais numerosas ou mais longas. Cada agrupamento tende a compartilhar as mesmas variações — a proto-mente local convergiu a biologia ao longo de gerações.
+
+A PROTO-MENTE COLETIVA
+Memórias de todos os Vrel chegam embaralhadas a cada indivíduo — não como comunicação consciente, mas como ruído de fundo constante que às vezes produz clareza acidental. Um Vrel pode acordar com a memória vívida de uma batalha que não travou, de um rosto que nunca viu, de uma língua que nunca aprendeu mas consegue falar por algumas horas.
+
+A sintonização entre Vrel do mesmo agrupamento é forte — convivência longa produziu uma frequência compartilhada onde as memórias se organizam de forma mais coerente, ainda embaralhadas mas com padrões reconhecíveis. Entre Vrel de agrupamentos diferentes, a sintonização precisa de tempo: é como tentar ouvir duas estações de rádio ao mesmo tempo, onde aos poucos uma começa a predominar sem a outra desaparecer completamente.
+
+Vrel mais poderosos acessam mais a proto-mente — têm acesso a memórias mais antigas e mais profundas, e suas próprias memórias e impulsos pesam mais na frequência coletiva. Um Vrel muito poderoso num grupo de Vrel fracos pode sobrescrever memórias deles sem querer. Isso torna Vrel poderosos simultaneamente valiosos e perigosos para qualquer agrupamento.
+
+OS AGRUPAMENTOS
+Nenhum grupo Vrel é igual a outro — a proto-mente produz caos compartilhado, não uniformidade. Os principais agrupamentos conhecidos:
+
+Vrel Piratas — Grupos costeiros que operam em alto mar. Fisicamente robustos, com placas de quitina mais espessas. Especialistas em navegação e em extrair informação de outros navios via proto-mente acumulada de décadas no mar.
+
+Vrel Saqueadores das Planícies — Grupos nômades das pradarias centrais e das Ruínas. Altos, rápidos, com placas mais leves. Atacam caravanas e assentamentos menores, não por crueldade mas por necessidade de recursos. A proto-mente do agrupamento é rica em rotas, padrões de patrulha e pontos fracos de defesa.
+
+Vrel das Vilas Dispersas — Comunidades pequenas nas pradarias das Ruínas, entre os restos das antigas cidades-estado. Menos especializados, mais generalistas. Comerciam informação com quem paga.
+
+Vrel Urbanos Comunitários — Grupos que se estabeleceram em cidades humanas, especialmente Nova Arcádia. Vivem em bairros próprios, mantêm coesão de agrupamento. Trabalham principalmente como comerciantes de informação e intermediários.
+
+Vrel Funcionários das Landships — Os agrupamentos que interagiram com os Anões desde o surgimento e foram absorvidos pela estrutura das naves. A proto-mente desses grupos evoluiu especificamente para isso: pensam em termos de protocolo, eficiência e hierarquia burocrática. São tratados pelos Anões não como mão de obra não especializada, mas como componentes funcionais do sistema — a única distinção que os Anões fazem entre tipos de trabalhadores.
+
+Vrel Solitários — Indivíduos que vivem sem agrupamento, geralmente em cidades. Dois tipos: os que nunca conseguiram se sintonizar com nenhum grupo por serem demasiadamente únicos — sua frequência na proto-mente não encontra correspondência em nenhum agrupamento existente. E os opostos: Vrel tão poderosos na proto-mente que distorcem os outros ao redor, cujas memórias e impulsos sobrescrevem os dos demais involuntariamente, até serem expulsos pelo agrupamento por autopreservação. Ambos chegam ao mesmo resultado de isolamento por razões opostas.
+
+Em Skallgard: Únicos forasteiros aceitos pela cidade inteira — suas memórias embaralhadas de todo o continente têm valor logístico para os clãs tecnológicos. Trabalham nos conselhos de pesquisa.
+
+---
+
+[CATEGORIA: RAÇA]
+[TAGS: Cinzéus, Contemplativos, Sem_Dor, Gelo]
+
+OS CINZÉUS
+Ordem de surgimento: 4ª raça
+Status atual: Cidades-estado nas pradarias centrais, território reduzido pelos humanos
+
+HISTÓRIA
+
+O Nascimento do Gelo
+Os Cinzéus não surgiram do caos como as raças anteriores — surgiram de uma condição. Quando o Abismo concentrou na Era 4 e o norte congelou, estátuas de gelo apareceram nas pradarias setentrionais: silhuetas humanoides presas na espessura transparente, como se sempre tivessem estado lá e o gelo apenas as revelasse. As estátuas aqueceram de dentro. Racharam. E os Cinzéus saíram — sem memória anterior, sem contexto, no meio de um ambiente que os produziu mas que eles imediatamente odearam.
+
+O Norte e a Migração
+O gelo eterno do norte não era apenas frio para os Cinzéus — era horror existencial. Não de predador ou perigo, mas da imensidão sem forma, sem limite visível, sem nada que os olhos pudessem ancorar. Uma raça que sente emoções com profundidade extrema, num ambiente que comunica apenas vazio e ausência de centro, simplesmente não conseguia ficar. Migraram para o sul em massa — e encontraram os Anões nas passagens das Montanhas Afiadas.
+
+A Guerra das Passagens
+Os Anões que controlavam as passagens das Montanhas Afiadas encontraram nos Cinzéus um inimigo que não cabia nos modelos disponíveis: seres que não recuavam quando feridos porque ferimentos não produziam o sinal que faz criaturas recuar. Um Cinzéu com três ossos quebrados lutava exatamente igual a um Cinzéu intacto. As passagens foram perdidas não por bravura ou estratégia Cinzéu — apenas pela física de não poder usar dor como ferramenta de dissuasão contra quem não a sente.
+
+As Pradarias e o Estabelecimento
+Chegando às pradarias centrais, os Cinzéus pararam. Não porque encontraram resistência — as cidades-estado Élficas da região não tinham força para detê-los. Pararam porque as pradarias tinham forma. Tinham horizonte identificável, rios que delimitavam espaço, árvores que criavam pontos de referência. O horror existencial do norte desapareceu. Construíram.
+
+A Guerra do Céu Vermelho e o Presente
+Na guerra contra Malagor, os Cinzéus foram os mais eficazes no combate terrestre — não por coragem, mas pela mesma razão que haviam atravessado as passagens Anãs. Malagor e seus dragões não podiam usar dor como dissuasão. Após a guerra, o território Cinzéu nas pradarias foi progressivamente reduzido pela chegada de humanos em número que a matemática não favorecia. As cidades-estado Cinzéus sobreviventes existem hoje como ilhas de estranheza nas pradarias — reconhecíveis de longe pela ausência de qualquer elemento de segurança nas estruturas.
+
+APARÊNCIA
+Pele que varia entre cinza claro e preto profundo — um espectro sem equivalente em outras raças, sem tons quentes, sem variação que lembre pele humana. Sem pelos em nenhuma parte do corpo. Ligeiramente menores que a média humana em estatura, diferença não imediatamente perceptível.
+
+Os olhos são o inverso dos humanos: íris branca, o restante em cores variadas — vermelho escuro, azul profundo, amarelo dourado. O efeito é de olho que não funciona como olho deveria funcionar, o que produz desconforto em outras raças ao fazer contato visual.
+
+Três dedos em cada mão. A cauda — sem pelos, com estrutura óssea projetando-se da ponta — é forte o suficiente para manipular objetos leves. Guerreiros Cinzéus de alto nível aprendem a usá-la como membro de combate auxiliar.
+
+O que define a aparência Cinzéu não é a estrutura base — é o que fazem com ela. Sem sentir dor, o corpo torna-se material de trabalho. Tatuagens em preto e branco cobrindo grandes extensões de pele, criando contrastes que aproveitam a variação natural de tom. Piercings em locais que outras raças não tolerariam. Correntes decorativas presas nas costas atravessando a pele. Anéis cravejados nos braços. Próteses que entram por baixo da pele — não funcionais, estéticas, como escultura que usa o próprio corpo como suporte. Deformidades corporais deliberadas que seriam bizarras em qualquer raça que sentisse o processo de criá-las.
+
+NATUREZA
+Não sentem dor física nem prazer físico. O corpo é silêncio. Podem quebrar um osso sem saber, identificando o problema apenas pelo ângulo errado do membro ou pela limitação de movimento. Não sentem frio nem calor como sensações — apenas como informação.
+
+O que sentem são emoções, e essas chegam com uma profundidade que outras raças raramente alcançam. A contemplação é o estado natural — não como escolha filosófica, mas como o que acontece quando um ser com emoções intensas e nenhuma sensação física fica parado. Ficam muito parados. Processam muito. Agem de menos. A melancolia não é humor — é conclusão: contemplar o mundo suficientemente leva à percepção de que ele é fundamentalmente errado, e os Cinzéus não conseguem parar de contemplar.
+
+CULTURA E HABITAÇÃO
+Onde os Elfos decoram para tocar, os Cinzéus escrevem para contemplar. As casas são planas e funcionais na estrutura — sem ornamentos nas superfícies, sem texturas intencionais — mas com imensas quantidades de pergaminhos armazenados e frases escritas diretamente nas paredes. Pensamentos, poemas, observações sobre o mundo, questões sem resposta. Uma casa Cinzéu lida de dentro para fora é um arquivo de contemplação.
+
+As passagens internas têm ângulos estranhos — não por erro arquitetural, mas por indiferença às consequências físicas de ângulos pontiagudos. O que outras raças lixariam e arredondariam por segurança, os Cinzéus deixam como é. Cantos cortantes, bordas sem proteção, superfícies que arranhariam qualquer visitante desatento. Não há locais confortáveis no sentido que outras raças reconheceriam — conforto físico não é categoria relevante para quem não sente desconforto físico.
+
+A MORTE E O LUTO
+Os Cinzéus vivem cerca de 160 anos com processo de envelhecimento gradual — tempo suficiente para acumular relações e perdas em quantidade que a maioria das raças não experimenta. A morte é o ponto onde a ausência de dor física encontra o excesso de emoção: o luto Cinzéu é profundo de uma forma que surpreende quem os conhece apenas como contemplativos frios.
+
+Os cemitérios são lugares centrais na cultura Cinzéu — não periféricos ou evitados, mas visitados regularmente. Os túmulos são pedras de granito cobertas de canções escritas sobre os que faleceram: não epitáfios breves, mas composições longas que tentam capturar quem a pessoa foi em toda a complexidade que viveram juntos. Um túmulo antigo tem camadas de texto adicionadas por diferentes mãos ao longo de gerações — cada visita podendo acrescentar uma observação nova sobre quem está enterrado ali.
+
+COMO VÊM AS OUTRAS RAÇAS
+Elfos — Exaustivos e exagerados. Uma raça que nunca para, que transforma tudo em sensação física, que acelera em vez de contemplar. Os Cinzéus entendem teoricamente a intensidade física dos Elfos mas não conseguem imaginar querer isso.
+
+Humanos — Existem demais e são barulhentos demais. Os Cinzéus admiram genuinamente a curiosidade humana e a capacidade de adaptação — uma raça que surgiu em todos os ambientes e sobreviveu em todos é digna de nota. Mas desprezam o egoísmo humano, a incapacidade de contemplar além do interesse próprio imediato.
+
+Osshari — O mesmo julgamento dos Elfos, mas com camada de compreensão que os Elfos não merecem. Os Cinzéus percebem que os Osshari anseiam por sensação não por amor à vida, mas por sofrimento da ausência. Não os acham exagerados — acham trágicos. A distinção importa para uma raça que leva emoção a sério.
+
+Vrel — Fascínio genuíno. A proto-mente coletiva embaralhada dos Vrel levanta questões filosóficas que os Cinzéus passam horas — às vezes dias — contemplando. O que significa experienciar memórias que não são suas? A identidade é o que você viveu ou o que você lembra? Um Cinzéu que encontra um Vrel disposto a conversar pode monopolizar a conversa por tempo que constrange ambos.
+
+Anões — Odeiam. Não com a intensidade emocional que o ódio Cinzéu pode atingir, mas com a firmeza de uma conclusão filosófica: o pragmatismo Anão é o oposto de tudo que os Cinzéus valorizam. Uma raça que trata emoção como dado irrelevante, que reduz existência a protocolo e custo-benefício, é uma raça que escolheu não entender o que importa.
+
+---
+
+[CATEGORIA: RAÇA]
+[TAGS: Osshari, Anfíbios, Vício, Costa]
+
+OS OSSHARI
+Ordem de surgimento: 5ª raça
+Status atual: Costa oeste e grandes rios do continente, em vilarejos de palafitas
+
+HISTÓRIA
+
+O Surgimento na Borda
+Os Osshari surgiram na areia úmida entre a terra e o mar — não em um nem no outro, mas exatamente na fronteira. Escamas cobertas de sal, rostos voltados para o horizonte como se reconhecessem o mar antes de reconhecerem qualquer outra coisa. O mundo que encontraram era vasto e imediato e completamente indiferente a eles. E eles tentaram senti-lo. E o mundo chegou amortecido, como sempre chegaria. A fome de sentir que os definiria começou no momento em que abriram os olhos pela primeira vez e o mundo não foi suficiente.
+
+Os Leviatãs
+As criaturas colossais que habitavam o mar além da costa não eram agressivas por natureza — eram simplesmente enormes, e enormes criaturas causam destruição como consequência de existir. Os Osshari encontraram nos Leviatãs a única coisa que havia funcionado: o medo real de morrer diante de algo genuinamente maior. A adrenalina de caçar um Leviatã chegava com uma intensidade que nenhuma outra sensação replicava. Era insuficiente, como tudo era insuficiente para eles. Mas era o mais próximo que tinham. A caça tornou-se centro cultural — e as ossadas acumuladas na costa deram origem ao Cemitério de Leviatãs.
+
+A Divisão entre Mar e Rio
+Com o tempo, grupos de Osshari migraram para o interior seguindo os grandes rios. O que encontraram não foram Leviatãs — mas criaturas terrestres gigantes e ancestrais: bestas primordiais, demônios menores que se escondiam nas florestas e pântanos ribeirinhos. A mesma lógica da caça ao Leviatã aplicada a um ambiente diferente produziu uma cultura diferente. Os Osshari de rio são mais terrestres em comportamento, mais conectados ao mundo das outras raças, e caçam o que é antigo e perigoso em terra firme em vez do que é colossal no mar.
+
+O Encontro com os Humanos e o Presente
+Quando os humanos chegaram na Era 5, encontraram Osshari na costa e não recuaram — não por bravura, mas por número. Os Osshari esperavam que cedessem como presa sensata cede. Os humanos não cederam. O impasse virou respeito, o respeito virou troca. Hoje Osshari e humanos coexistem ao longo da costa oeste com uma relação funcional que nenhum dos dois chamaria de amizade mas que ambos reconheceriam como útil. Osshari nas grandes cidades são geralmente escravos capturados em conflitos ou mercenários deslocados de seus vilarejos — indivíduos sem o contexto de agrupamento que define quem são.
+
+APARÊNCIA
+Mais altos e mais robustos que humanos. Escamas cobrem os braços, as costas e partes das pernas — não chegam ao rosto, que tem couro duro e espesso sem escamas. Rosto alongado e animalesco, olhos com pupila vertical, membrana entre os dedos. Anfíbios por natureza: pulmões que funcionam em ambos os ambientes, visão adaptada tanto à superfície quanto às profundezas.
+
+Cada Osshari tem padrão de escamas único — cores vibrantes e variadas que funcionam como identidade visual. Não há dois iguais, e o padrão é imediatamente reconhecível para outros Osshari. Usam pouca vestimenta por conta da pele grossa que serve de proteção natural. O que usam em termos de adorno são pinturas corporais — não tatuagens permanentes como os Cinzéus, mas pinturas aplicadas e reaplicadas, em padrões que mudam conforme o contexto. Para uma caça, um padrão. Para um ritual, outro.
+
+NATUREZA
+Sentem menos que qualquer outra raça viva. O Abismo embotou algo fundamental na capacidade deles de receber o mundo — não completamente, mas o suficiente para que tudo chegue com uma camada de distância que nunca desaparece. Não são emocionalmente vazios como os Anões. Sentem — mas o que sentem nunca parece suficiente para o que deveriam estar sentindo. A fome de intensidade é constante e nunca saciada.
+
+São violentos sem ser sádicos. A violência é ferramenta — para caçar, para estabelecer liderança, para resolver disputas de forma direta. Não há prazer no sofrimento alheio. Quando causam sofrimento, é consequência da violência, não o objetivo dela. A distinção é real e os próprios Osshari a reconheceriam se perguntados.
+
+São de mente aberta sem preconceitos formados sobre outras raças. Julgam pelo que viveram diretamente — um indivíduo específico, uma interação específica. Generalizações sobre raças inteiras não fazem sentido para quem nunca ficou parado tempo suficiente para construí-las.
+
+SOCIEDADE E LIDERANÇA
+Organizam-se em torno de um líder forte — homem ou mulher, pois ambos têm o mesmo tamanho e força física na raça. A liderança é conquistada e mantida por demonstração de capacidade, especialmente em caça. Um líder que não caça mais ou que caça mal pode ser desafiado por qualquer membro do grupo.
+
+Os vilarejos são pequenos — grupos grandes demais perdem coesão e recursos. Espalhados ao longo de toda a costa oeste e dos grandes rios, cada vilarejo é suficientemente autônomo para sobreviver sozinho mas conectado aos outros por redes de comércio e relacionamentos entre líderes.
+
+AS PALAFITAS
+Os vilarejos Osshari são construídos sobre a água — palafitas que ficam acima da superfície, acessíveis por estruturas de madeira ou por natação. A construção é funcional na estrutura mas vibrante na estética: pinturas coloridas nas madeiras, conchas presas nas bordas, ornamentos de osso pendurados nas entradas, flores frescas trocadas regularmente. O ambiente aquático abaixo serve como despensa, rota de fuga e extensão natural do espaço habitável. Um Osshari em casa está igualmente confortável acima ou abaixo da superfície.
+
+OSSHARI DE MAR vs OSSHARI DE RIO
+Os de mar são os mais conhecidos — focados na caça aos Leviatãs, com cultura centrada na provação aquática e no exibicionismo em torno das caças. Mais isolados do mundo das outras raças, mais definidos pela relação com o oceano.
+
+Os de rio desenvolveram cultura própria: caçam criaturas terrestres gigantes e ancestrais — bestas primordiais, demônios menores que habitam florestas e pântanos ribeirinhos. São mais terrestres no comportamento, têm mais contato com outras raças, e sua experiência de caça envolve ambientes onde o mundo das criaturas primordiais da Era 0 ainda respira. Um Osshari de rio que caçou um demônio ancestral tem histórias que os Osshari de mar não têm — e vice-versa.
+
+---
+
+[CATEGORIA: RAÇA]
+[TAGS: Humanos, Dominantes, Adaptáveis, Nova_Arcádia]
+
+OS HUMANOS
+Ordem de surgimento: 6ª raça (mais recente)
+Status atual: Dominantes em Nova Arcádia e na maioria do mundo habitável
+
+HISTÓRIA
+
+A Inundação
+Os humanos surgiram na Era 5 de uma forma que nenhuma raça havia experimentado: em todos os lugares ao mesmo tempo, em números que tornavam qualquer cálculo anterior irrelevante. Não chegaram como os Vrel, em grupos pequenos espalhados — chegaram como maré. O mundo havia produzido, de uma vez, mais seres racionais do que havia produzido em todas as eras anteriores combinadas.
+
+O que os diferenciava entre si era o lugar onde haviam aberto os olhos pela primeira vez. O ambiente os moldou antes que tivessem tempo de moldar o ambiente — e como os ambientes de Valoria são radicalmente diferentes entre si, os humanos que surgiram em cada um tornaram-se radicalmente diferentes entre si em gerações.
+
+A Tomada das Pradarias
+Nas pradarias centrais, os humanos tomaram cidades que os Elfos haviam construído ao longo de eras — não sempre pela força, mas pela matemática. Dez humanos para cada Elfo, e quando chegam dez mil humanos para cada Elfo, a discussão sobre quem governa torna-se acadêmica. Os Cinzéus resistiram melhor, mas também recuaram. O mundo das pradarias tornou-se humano não por conquista declarada, mas por presença inevitável.
+
+A Guerra do Céu Vermelho
+Na guerra contra Malagor, os humanos foram o volume que segurou as linhas enquanto outras raças usavam habilidades específicas. Não eram os mais fortes nem os mais resistentes — eram os mais numerosos, e número é argumento. Após a guerra, fundaram Nova Arcádia onde as rotas de suprimento convergiam, e a cidade cresceu com a mesma lógica que os humanos crescem em tudo: rápido, em número, sem muito planejamento central.
+
+O Presente
+Os humanos são a raça dominante não por mérito mas por quantidade e novidade — o Abismo não os corroeu tanto ainda. Controlam a maior parte das terras habitáveis, dominam Nova Arcádia por fundação e número, e continuam se espalhando e se diferenciando conforme habitam ambientes novos.
+
+APARÊNCIA
+Tão diversos quanto os Vrel — todas as alturas, todos os tons de pele, todas as proporções corporais. Não há aparência humana típica em Valoria porque os ambientes radicalmente diferentes onde surgiram produziram variações físicas significativas em poucas gerações. O que é constante: cinco dedos, sem escamas ou quitina, sem cauda, sem características não-humanas visíveis. O resto varia.
+
+NATUREZA
+Curiosos, adaptáveis, egoístas em escala que outras raças raramente alcançam. A raça que mais produz cultistas, bandidos e traidores — e também exploradores, inventores e líderes improváveis. A corrupção moral humana não é falha do design: é a mesma adaptabilidade que os faz dominantes aplicada sem filtro ético. São o que o ambiente faz deles, e ambientes em Valoria raramente são gentis.
+
+São a raça mais suscetível à influência moral — para o bem e para o mal. Um humano bem influenciado pode ser extraordinário. Um humano mal influenciado pode ser o problema mais imediato de qualquer vila num raio de cem quilômetros.
+
+AS CULTURAS HUMANAS
+
+Nascidos do Gelo (norte/Skallgard)
+Robustos, densos, com relação com o frio que não é resistência mas familiaridade. Filosofia de eugenismo prático — o fraco não sobrevive ao inverno, e isso é considerado correto, não trágico. Montam Ursos-Titãs com ganchos de osso cravados diretamente na carne da besta — vínculo de dor e respeito. Sem tolerância para o que consideram "vida fácil" das raças do sul. Visão das outras raças filtrada por esse critério: vale o que aguenta.
+
+Devoradores de Sol (Deserto de Zhur)
+Cruéis e sádicos de uma forma que outras raças reconhecem como maldade mas que para eles é eficiência — o sofrimento alheio é informação. Inteligência radicalmente diferente da convencional: soluções simples para problemas complexos, sem burocracia, sem passos intermediários desnecessários. Bebem sangue dos mais velhos para acessar memórias via cristais de Zhur. Não fazem distinção por raça — fazem por utilidade. Um Elfo útil é tratado melhor que um humano inútil.
+
+Andarilhos da Pradaria
+Grupos nômades que habitam as pradarias centrais entre as ruínas das antigas cidades-estado. Competem e coexistem com os Vrel Saqueadores — há grupos mistos de humanos e Vrel, há grupos que se atacam mutuamente, há grupos que ignoram uns aos outros por território. Vivem de caça, saque e comércio oportunista. Cada bando tem sua própria hierarquia e visão de mundo construída a partir de quem encontraram e como foram tratados.
+
+Piratas
+Operam no mesmo mar que os Osshari da costa oeste. Alguns em conflito, alguns em aliança, alguns em territórios separados que raramente se cruzam. Têm base em Brekmar — a cidade portuária sem lei governada por Kahen. Cultura construída em torno de reputação, força e capacidade de navegar em mares onde Leviatãs e Orrakh adormecido são riscos reais.
+
+Populações Urbanas (Nova Arcádia e cidades)
+A maioria dos humanos. Vidas curtas e brutais nos anéis mais baixos, vidas longas e parasitárias nos anéis mais altos. A fé nos deuses morreu — agora a fé é no dinheiro ou na sobrevivência. Cosmopolitas por necessidade: em Nova Arcádia convivem com Elfos, Cinzéus, Vrel e ocasionalmente Anões. A distinção que importa não é raça — é classe social. Um Elfo rico é mais bem tratado que um humano pobre. Isso é o que os humanos urbanos entendem por igualdade.
+
+Povo-Recife (costa sul)
+Tecnicamente humanos — ou foram. Amaldiçoados pelos magos da coalizão por não lutar na Guerra do Céu Vermelho, cada geração fica mais aquática e menos terrestre. Constroem cultura de superioridade em torno da maldição: não foram punidos, foram escolhidos pelo mar. Desdém profundo por qualquer coisa que não seja oceano. Raramente interagem com outras culturas humanas — quando o fazem, é com a paciência de quem tolera inferiores.
+
+COMO VÊM AS OUTRAS RAÇAS
+Não há resposta única — cada cultura humana tem a sua.
+
+Os Nascidos do Gelo julgam por resistência física e mental. Elfos são fracos demais. Cinzéus são estranhos mas respeitáveis em combate. Osshari são dignos de respeito. Anões são eficientes mas sem alma.
+
+Os Devoradores de Sol não distinguem por raça, apenas por utilidade. Um Vrel com memórias valiosas é mais interessante que um humano sem nada a oferecer.
+
+Os urbanos de Nova Arcádia julgam por classe. Raça é detalhe secundário — o que importa é o que você tem e quem você conhece.
+
+Os Andarilhos julgam pelo que viveram diretamente. Sem generalização — cada interação individual conta mais que qualquer reputação prévia da raça.
+
+Os Piratas julgam por competência náutica e reputação. Um Osshari que navega bem é parceiro. Um humano covarde é problema.
+
+---
+
+[CATEGORIA: RAÇA]
+[TAGS: Hospedeiros, Fungo, Xylos, Simbiose]
+
+OS HOSPEDEIROS DE XYLOS
+Origem: Humanos infectados pelo fungo Cordyceps Gigante da Selva de Xylos
+Status atual: Habitam a selva em cidades suspensas nas árvores gigantes
+
+HISTÓRIA
+
+A Entrada na Selva
+Quando os humanos surgiram na Era 5 e começaram a explorar o continente, a Selva de Xylos era um dos lugares mais estranhos disponíveis — densa, quente, com ciclo de vida acelerado que amadurecia e apodreecia fruta em horas. Exatamente o tipo de lugar que uma raça nova e curiosa vai investigar.
+
+O fungo Cordyceps Gigante que habitava Xylos — presente no ar, na água, no solo, em toda superfície de toda árvore — não era predador. Não atacou. Simplesmente fez o que fungos fazem: colonizou o ambiente disponível. Os humanos que entraram eram ambiente disponível.
+
+A Primeira Geração
+A transformação era lenta o suficiente para não ser percebida imediatamente. Crescimentos pequenos atrás das orelhas. Uma resistência nova a doenças. Sonhos que pareciam compartilhados com outros que também haviam entrado na selva. A primeira geração sabia o que havia sido antes da infecção — lembrava do corpo sem fungos, da mente sem a voz suave da colmeia no fundo. Sabia o que havia perdido. E a maioria escolheu ficar assim mesmo.
+
+Essa é a diferença fundamental: o fungo não forçou. Ofereceu algo que os humanos, raça curiosa e adaptável por natureza, reconheceram como valioso — e ficaram.
+
+A Escolha das Gerações Seguintes
+As gerações seguintes não têm a memória de antes. Para elas o fungo não é transformação — é simplesmente o que são. Não perderam nada que lembrem. Ganharam tudo que conhecem. A simbiose é celebrada, não tolerada. Os Hospedeiros mais jovens olham para humanos não infectados com algo próximo de pena — seres isolados dentro dos próprios crânios, sem a possibilidade de conexão real com outro ser.
+
+Não voltaram para o mundo externo não por aprisionamento, mas porque fora da selva a simbiose enfraquece. O fungo precisa do ambiente de Xylos para manter a conexão em plena força. Hospedeiros que saem da selva por muito tempo relatam que a voz da colmeia fica mais distante, mais silenciosa, como perder gradualmente a audição. A maioria volta antes que desapareça completamente.
+
+APARÊNCIA
+Humanoides com crescimentos fúngicos coloridos em partes do corpo — não uniformes, mas específicos por indivíduo. Alguns têm fungos bioluminescentes nos ombros. Outros têm estruturas que lembram corais crescendo ao longo dos braços. Outros têm apenas discretos florescimentos atrás das orelhas e no pescoço. A quantidade e visibilidade dos crescimentos aumenta com a idade — Hospedeiros anciões são inconfundíveis, cobertos de vida fúngica que pulsa levemente em ritmos próprios.
+
+A pele sob os crescimentos é mais clara que a original, como tecido que nunca viu sol. Os olhos têm tonalidade levemente dourada — efeito do esporo que circula constantemente no sangue.
+
+Não sentem dor — o fungo regenera ativamente o tecido danificado. Ferimentos que matariam um humano comum são inconveniências que o fungo começa a reparar em horas.
+
+A SIMBIOSE
+O fungo conecta os Hospedeiros numa rede de consciência difusa — não telepatia direta, não leitura de pensamentos, mas uma presença constante e suave de outros. Como ouvir respiração num quarto escuro: você sabe que não está sozinho sem saber o que o outro está pensando. Em momentos de emoção intensa ou perigo, a conexão intensifica e fragmentos de experiência passam entre os conectados.
+
+A força da conexão depende da proximidade física e do tempo de convivência. Hospedeiros que vivem juntos por décadas desenvolvem sintonização profunda. Hospedeiros de cidades diferentes são conexões mais tênues — presença, não comunicação.
+
+O CASAMENTO RITUAL
+Para se casar, o casal inala esporos da mesma flor gigante simultaneamente — um ritual que une as mentes numa alucinação compartilhada permanente. Não é metáfora: após o ritual, os dois carregam fragmentos da consciência um do outro indefinidamente. Segredos tornam-se impossíveis. Mentiras tornam-se detectáveis pela incongruência entre o que é dito e o que o parceiro sente.
+
+Hospedeiros casados descrevem o estado como "saber sem precisar perguntar". Outras raças que presenciaram casamentos Hospedeiros frequentemente ficam perturbadas — não pela cerimônia em si, mas pela quietude completa do casal depois. Duas pessoas que não precisam mais de palavras para se comunicar são, de alguma forma, mais assustadoras do que qualquer monstruosidade visível.
+
+CIDADES E SOCIEDADE
+Cidades suspensas nas árvores gigantes de Xylos — construídas acima do chão ácido da selva, conectadas por pontes de madeira e cipó tratado. A arquitetura é orgânica, crescida tanto quanto construída: estruturas que incorporam as árvores vivas em vez de cortá-las, com fungos bioluminescentes integrados como iluminação.
+
+A sociedade é organizada em torno de redes de conexão — quem está mais sintonizado com quem, quais anciões têm a conexão mais ampla com a colmeia difusa. Não é hierarquia de poder, é hierarquia de escuta: os mais conectados são os mais consultados porque têm acesso a mais perspectivas simultâneas.
+
+RELAÇÃO COM O MUNDO EXTERNO
+Comerciam com outras raças na borda da selva — pérolas de fungo medicinal, esporos com propriedades específicas, madeiras tratadas pela química da selva. São negociadores cuidadosos e difíceis de enganar — a sintonização os torna sensíveis a incongruências emocionais em outros, mesmo sem conexão fúngica.
+
+Olham para as outras raças com curiosidade e uma pena suave que tentam não demonstrar. Seres isolados dentro dos próprios crânios, sem acesso ao que sentem um ao outro a não ser pelas imperfeitas ferramentas da linguagem. Os Hospedeiros consideram isso uma forma de solidão que as outras raças simplesmente não sabem que têm.
+
+---
+
+[CATEGORIA: RAÇA]
+[TAGS: Povo-Recife, Mar, Maldição, Desdém]
+
+O POVO-RECIFE
+Origem: Humanos amaldiçoados pelos magos da coalizão por não lutar na Guerra do Céu Vermelho
+Status atual: Vivem completamente na água nas costas rochosas do sul
+
+HISTÓRIA
+
+A Covardia e a Maldição
+O Povo-Recife eram humanos costeiros que habitavam as costas rochosas do sul quando Malagor emergiu. Calcularam que a distância os protegia — que morrer por uma guerra que não era especificamente sua não era obrigação. O cálculo era compreensível. Os magos da coalizão, quando a guerra terminou, não perdoaram assim mesmo.
+
+A maldição não foi violenta — foi precisa. Cada geração do Povo-Recife seria mais adaptada à água, menos confortável em terra. O mar que haviam escolhido em vez da luta os reivindicaria gradualmente.
+
+A Transformação da Identidade
+O que os magos esperavam era humilhação duradoura. O que produziram foi outra coisa. As primeiras gerações sentiram a maldição como punição — a pele ficando mais fria, os olhos mudando, a terra ficando progressivamente mais desconfortável sob os pés. As gerações seguintes sentiram como herança. As gerações depois dessas sentiram como superioridade.
+
+Não chamam de maldição. Chamam de escolha confirmada pelo mar — o mar os reconheceu como seus, e os transformou para que pudessem pertencer completamente. As raças terrestres ficaram para trás. O Povo-Recife avançou.
+
+APARÊNCIA
+Humanoides que parecem mais com o mar do que com humanos à primeira vista. A pele é mole e úmida — não como pele humana saudável, mas como tecido que passou tempo demais na água, com a textura e palidez de algo que vive nas profundezas. Sobre essa pele, corais e cracas crescem diretamente na carne — não como adorno, não como parasita, mas como parte do corpo. As colônias de recife crescem especialmente nos ombros, nos braços, ao longo da espinha e no crânio. Nenhum Povo-Recife tem o mesmo padrão — as colônias crescem conforme o ambiente onde vivem e a história do corpo individual.
+
+Olhos adaptados para ver nas profundezas onde outras raças enxergam apenas escuro. Pulmões que seguram ar por tempo que desafia explicação humana. Membrana entre os dedos. E uma calcificação progressiva que começa nas extremidades e avança para o centro do corpo com a idade — o mesmo processo que eventualmente imobiliza os anciões.
+
+VIDA NA ÁGUA
+Vivem completamente submersos — não em estruturas na superfície, não em palafitas, mas no fundo do mar nas costas rochosas do sul. As comunidades são construídas em cavernas submarinas e sobre recifes, em profundidades que outras raças não conseguem alcançar sem equipamento. A arquitetura usa o recife natural como estrutura base, expandido e moldado ao longo de gerações.
+
+A linguagem evoluiu para o ambiente: sons e vibrações que se propagam melhor na água do que no ar, com frequências que outros seres não percebem fora do meio líquido. Quando sobem à superfície para o raro comércio com raças terrestres, falam línguas terrestres com esforço visível — como quem traduz de um idioma que considera mais rico para um mais pobre.
+
+CULTURA E ARTE
+A arte do Povo-Recife é feita para durar na água — esculturas em pedra e coral no fundo do mar, visíveis apenas para quem mergulha o suficiente. Nenhuma raça terrestre vê a arte do Povo-Recife. Isso é intencional: não criam para ser admirados pelos de fora, criam para si mesmos e para seus mortos. Uma galeria de esculturas submarinas que pode ter séculos de idade e que o mundo terrestre desconhece completamente.
+
+A MURALHA DOS ANCESTRAIS
+Quando um ancião começa a perder a mobilidade pela calcificação progressiva — quando os corais e as cracas avançam o suficiente para fixar os membros, quando o corpo começa a se tornar extensão do recife — não é tratado como morte mas como ascensão. A comunidade o acompanha ao ponto onde vai se fixar: um lugar específico na Muralha dos Ancestrais, a formação de recife construída ao longo de gerações pelos corpos calcificados dos que vieram antes.
+
+O ancião ainda está consciente quando se fixa. Ainda pode ser "consultado" — os mais jovens mergulham até a Muralha e ficam próximos, sentindo as vibrações que os calcificados ainda produzem, interpretando-as como orientação. A linha entre os vivos e os mortos no Povo-Recife é mais tênue do que em qualquer outra raça: os ancestrais literalmente ainda estão lá, fixos na pedra, conscientes de graus decrescentes mas presentes.
+
+A Muralha protege a comunidade — não como barreira física, mas como presença acumulada de todos os que viveram antes, formando um recife vivo e antigo ao redor do assentamento.
+
+RELAÇÃO COM O MUNDO EXTERNO
+Raramente sobem para o comércio. Quando o fazem, encerram rápido, com o olhar no horizonte do mar como quem tolera uma visita a lugar inferior. O desdém pelas raças terrestres não é ressentimento — é conclusão filosófica: ficaram para trás. O Povo-Recife avançou.
+
+Cada geração lembra menos o que era ser completamente terrestre. O que se tornarão nas próximas gerações não está claro ainda — mas a direção está.
+
+---
+
+[CATEGORIA: RAÇA]
+[TAGS: Vampiros, Praga, Morrakh, Ferro]
+
+VAMPIROS — BEBEDORES DE FERRUGEM
+Origem: Contágio de Morrakh durante a Guerra do Céu Vermelho
+Status atual: Espalhados por todo o mundo, integrados em graus variados na sociedade
+
+HISTÓRIA E ORIGEM
+O contágio de Morrakh durante a Guerra do Céu Vermelho produziu dois ramos distintos de transformação. O primeiro ataca o sangue diretamente: oxida, enferruja de dentro para fora, exigindo reposição constante de ferro para não paralisar completamente. Os afetados não morrem — sobrevivem, mas com uma necessidade biológica que a sociedade raramente perdoa.
+
+NATUREZA
+Doença industrial mágica, não criatura sobrenatural. O sangue de um Vampiro oxida constantemente — sem reposição, as veias endurecem progressivamente até que o corpo trava como maquinário sem óleo. Sangue fresco repõe o ferro e mantém o sistema em funcionamento.
+
+A consciência e a personalidade permanecem intactas — um Vampiro é a mesma pessoa que era antes do contágio, com um problema biológico grave sobreposto. Podem ter famílias, trabalhos, vidas sociais funcionais. A maioria faz exatamente isso, em silêncio, resolvendo a necessidade de sangue da forma menos perturbadora possível.
+
+APARÊNCIA
+Pele cinza-metálica que descama nas extremidades quando o ferro está baixo. Dentes de agulhas de ferro — não crescem, são o resultado da mineralização do esmalte original. Quando não bebem por tempo suficiente, rangem ao se mover — como dobradiças velhas, o som vindo das articulações onde o sangue oxidado acumula. No estágio avançado de privação, travam completamente.
+
+Vampiros bem alimentados são quase indistinguíveis de humanos à primeira vista — a pele tem tom ligeiramente acinzentado, os dentes são notáveis de perto. Vampiros em privação são imediatamente reconhecíveis.
+
+PODER E PROGRESSÃO
+Quanto mais velho o Vampiro, mais poderoso. A mineralização progressiva que seria fatal em humanos torna-se, com o tempo, fonte de controle: o metal que permeia o sistema nervoso de um Vampiro antigo pode ser estendido para o metal ao redor. O poder deles é magnetismo oposto — não atraem metal, controlam metal que não responde ao magnetismo convencional. Metais raros, ligas específicas, materiais que ímãs não afetam ficam sob controle de Vampiros suficientemente antigos.
+
+Um Vampiro jovem controla fragmentos pequenos. Um Vampiro de séculos pode mover estruturas inteiras.
+
+COMO CONSEGUEM SANGUE
+Existe mercado — Nova Arcádia tem vendedores discretos, especialmente no Beco do Sussurro, que fornecem sangue de fontes variadas sem perguntas. Alguns Vampiros têm acordos com indivíduos que vendem voluntariamente por dinheiro. Outros atacam — os mais desesperados ou os que simplesmente não se importam com as consequências. A variedade de abordagens reflete a variedade de pessoas: a doença não cria monstros, revela quem a pessoa já era.
+
+FRAQUEZAS
+Água salgada acelera a corrosão — contato prolongado com o mar é incapacitante. Ímãs fortes desorientam o sistema nervoso metalizado. Sol intensa seca o sangue nas veias rapidamente, acelerando o processo de travamento.
+
+---
+
+[CATEGORIA: RAÇA]
+[TAGS: Lycans, Praga, Morrakh, Ossos]
+
+LYCANS — A PRAGA DOS OSSOS
+Origem: Segundo ramo do contágio de Morrakh, divergido por razões não completamente compreendidas
+Status atual: Espalhados, vivendo com o ciclo de 9 semanas
+
+HISTÓRIA E ORIGEM
+O segundo ramo do contágio de Morrakh ataca a medula óssea em vez do sangue. Por razões que nenhum médico explicou completamente, o mesmo parasita produziu uma transformação radicalmente diferente em alguns infectados — não mineralização do sangue, mas crescimento ósseo descontrolado que quebra a pele de dentro para fora.
+
+O CICLO
+A transformação não é permanente nem aleatória — é cíclica, ocorrendo a cada 9 semanas exatas a partir da primeira transformação. Um Lycan sabe com precisão quando vai transformar. Tem quase dois meses de vida normal — tempo para trabalhar, para amar, para tentar construir algo — sabendo exatamente quando tudo isso vai parar temporariamente e algo diferente vai tomar o lugar.
+
+A TRANSFORMAÇÃO
+Quando o ciclo chega, a medula óssea começa a crescer descontroladamente. Os ossos quebram a pele de dentro para fora em horas, formando exoesqueleto branco e pontiagudo. O processo é agonizante — ossos quebrando a própria carne, músculos rasgando para acomodar estruturas que não deveriam existir. O que emerge não parece lobo nem humano: crânio de predador vestindo o rosto humano rasgado, músculos vermelhos expostos entre placas de osso que não cobrem tudo.
+
+Durante a transformação, a personalidade desaparece completamente. O frenesi que toma o lugar não é raiva nem instinto animal — é dor e fome simultâneas, o corpo exigindo cálcio para sustentar o crescimento ósseo acelerado. O Lycan transformado mata e consome qualquer coisa disponível. Não há preferência, não há reconhecimento de rostos familiares, não há memória de quem era antes.
+
+Quando o ciclo passa e os ossos recuam — processo igualmente doloroso — o Lycan acorda sem memória do que fez. Descobre o que aconteceu pelas consequências ao redor.
+
+CONTÁGIO
+Farpas de osso injetadas pela mordida durante o frenesi. Não é garantido — nem toda mordida transmite. Mas o risco é suficiente para que comunidades inteiras fujam de Lycans em transformação.
+
+VIDA ENTRE OS CICLOS
+Entre as transformações, Lycans são pessoas completamente normais — com o peso de saber o que acontecerá em semanas e sem memória de o que fizeram nas últimas. A maioria enfrenta o ciclo sozinho, em isolamento preventivo quando a data se aproxima. Algumas comunidades de Lycans existem — lugares onde se retiram juntos quando o ciclo chega, onde constroem estruturas para conter o frenesi, onde não precisam explicar por que trancam as portas a cada 9 semanas.
+
+Essas comunidades são poucas e julgadas. O resto do mundo prefere não saber que existem.
+

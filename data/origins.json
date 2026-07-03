@@ -1,15 +1,132 @@
 {
     "races": [
-      {"id": "human", "name": "Humano", "desc": "Adaptáveis e numerosos."},
-      {"id": "elf_crystal", "name": "Elfo de Cristal", "desc": "Magia forte, corpo frágil."},
-      {"id": "dwarf_soot", "name": "Anão da Fuligem", "desc": "Tecnologia e resistência."},
-      {"id": "ash_born", "name": "Cinzéu", "desc": "Furtividade e escuridão."}
+      {
+        "id": "race_humanos",
+        "name": "Humano",
+        "desc": "A maré que dominou Valoria por número e novidade — o Abismo ainda não os corroeu tanto. Curiosos, adaptáveis, moralmente maleáveis.",
+        "traits": [
+          {
+            "id": "inundacao",
+            "name": "Inundação",
+            "desc": "Surgiram em todos os ambientes ao mesmo tempo e sobreviveram em todos. O corpo e a lábia se adaptam a qualquer terreno.",
+            "effects": {"attr_bonus": {"con": 1, "cha": 1}}
+          },
+          {
+            "id": "improviso",
+            "name": "Improviso",
+            "desc": "Onde outras raças precisam de milênios de tradição, o humano se vira com o que tem no bolso.",
+            "effects": {"gold_bonus": 25, "start_items": ["Kit de Viajante"]}
+          }
+        ]
+      },
+      {
+        "id": "race_elfos",
+        "name": "Elfo",
+        "desc": "A primeira raça. Pele que racha como porcelana, veias visíveis, uma ampulheta invisível correndo — morrem entre os 60 e 70 anos, sem aviso. Sentem dor e prazer como nenhuma outra raça.",
+        "traits": [
+          {
+            "id": "fome_de_sentir",
+            "name": "Fome de Sentir",
+            "desc": "Atraídos pela intensidade que a magia produz, pagam o custo físico de bom grado. O Éter responde a quem o deseja tanto.",
+            "effects": {"attr_bonus": {"int": 1, "cha": 1}, "mana_bonus": 10}
+          },
+          {
+            "id": "ampulheta",
+            "name": "A Ampulheta",
+            "desc": "Quanto menos areia resta, mais ávido o Elfo fica. A urgência de viver empurra o corpo além do razoável.",
+            "effects": {"stamina_bonus": 5}
+          }
+        ]
+      },
+      {
+        "id": "race_anoes_fuligem",
+        "name": "Anão da Fuligem",
+        "desc": "Quase quadrados, braços longos de gerações em túneis, barbas trançadas com cobre e graxa. Frios e lógicos: emoção não é dado relevante. Nômades nas 12 Landships desde a Falha Crítica de Contenção.",
+        "traits": [
+          {
+            "id": "pulmoes_de_fornalha",
+            "name": "Pulmões de Fornalha",
+            "desc": "Gerações respirando fuligem, graxa e miasma de caldeira: veneno e doença mordem menos.",
+            "effects": {"condition_resist": ["veneno", "doença", "doenca", "peste"], "save_bonus": {"con": 2}}
+          },
+          {
+            "id": "protocolo",
+            "name": "Protocolo",
+            "desc": "Todo Anão carrega o sistema no corpo — resistência calculada, ferramentas conferidas duas vezes.",
+            "effects": {"attr_bonus": {"con": 2}, "hp_bonus": 5, "start_items": ["Respirador de Couro"]}
+          }
+        ]
+      },
+      {
+        "id": "race_vrel",
+        "name": "Vrel",
+        "desc": "Placas de quitina iridescente, olhos de obsidiana úmida, voz com ressonância dupla. A proto-mente coletiva traz memórias embaralhadas de Vrel que nunca conheceram — ruído de fundo que às vezes vira clareza acidental.",
+        "traits": [
+          {
+            "id": "proto_mente",
+            "name": "Proto-Mente",
+            "desc": "Memórias de todo o continente chegam embaralhadas. Às vezes, no momento certo, uma delas é exatamente a que você precisava.",
+            "effects": {"attr_bonus": {"wis": 1, "int": 1}, "save_bonus": {"wis": 2}}
+          },
+          {
+            "id": "placas_de_quitina",
+            "name": "Placas de Quitina",
+            "desc": "A armadura que nasce com o corpo — leve, iridescente e mais dura do que parece.",
+            "effects": {"defense_bonus": 1, "hp_bonus": 3}
+          }
+        ]
+      },
+      {
+        "id": "race_cinzeus",
+        "name": "Cinzéu",
+        "desc": "Nascidos de estátuas de gelo, pele em espectro de cinza, íris branca, cauda óssea. Não sentem dor nem prazer físico — o corpo é silêncio. O que sentem são emoções, em profundidade que assusta.",
+        "traits": [
+          {
+            "id": "corpo_silencioso",
+            "name": "Corpo Silencioso",
+            "desc": "Um Cinzéu com três ossos quebrados luta exatamente igual a um Cinzéu intacto. Dor não é ferramenta de dissuasão contra quem não a sente.",
+            "effects": {"condition_resist": ["dor", "atordoa", "sangramento"], "stamina_bonus": 5}
+          },
+          {
+            "id": "contemplacao",
+            "name": "Contemplação",
+            "desc": "Ficam muito parados. Processam muito. Quando finalmente agem, já entenderam o que os outros ainda estão olhando.",
+            "effects": {"attr_bonus": {"wis": 2}}
+          }
+        ]
+      },
+      {
+        "id": "race_osshari",
+        "name": "Osshari",
+        "desc": "Anfíbios da costa oeste: escamas em padrão único, pupila vertical, couro espesso. Sentem menos que qualquer raça viva — a fome de intensidade nunca sacia. Caçam leviatãs porque é o mais perto que chegam de sentir de verdade.",
+        "traits": [
+          {
+            "id": "sangue_amortecido",
+            "name": "Sangue Amortecido",
+            "desc": "O Abismo embotou o que recebe o mundo. Medo e desespero chegam com a mesma camada de distância que tudo mais.",
+            "effects": {"condition_resist": ["medo", "terror", "melancolia"], "save_bonus": {"wis": 1}}
+          },
+          {
+            "id": "cacador_de_leviatas",
+            "name": "Caçador de Leviatãs",
+            "desc": "Uma cultura inteira construída ao redor de enfrentar o que é genuinamente maior. Corpo robusto, couro que dispensa armadura.",
+            "effects": {"attr_bonus": {"str": 2}, "defense_bonus": 1}
+          }
+        ]
+      }
     ],
     "regions": [
-      {"id": "capital", "name": "Nova Arcádia", "bonus": "Start with 50 Gold extra"},
-      {"id": "forest", "name": "Floresta dos Sussurros", "bonus": "Start with Antidote x2"},
-      {"id": "mines", "name": "Montanhas Afiadas", "bonus": "Start with Mining Pick"},
-      {"id": "desert", "name": "Deserto de Zhur", "bonus": "Start with Water Skin x2"},
-      {"id": "north", "name": "Skallgard", "bonus": "Start with Heavy Fur Armor"}
+      {"id": "nova_arcadia", "name": "Nova Arcádia", "bonus": "Começa com 30 de ouro extra — moeda com o rosto de Valerius"},
+      {"id": "pantano_melancolia", "name": "Pântano da Melancolia", "bonus": "Começa com Chá dos Druidas x2 (atenua a Praga de Ferro)"},
+      {"id": "deserto_zhur", "name": "Deserto de Zhur", "bonus": "Começa com Odre de Água x2 e Lentes de Obsidiana"},
+      {"id": "floresta_sussurros", "name": "Floresta dos Sussurros", "bonus": "Começa com Antídoto x2"},
+      {"id": "selva_xylos", "name": "Selva de Xylos", "bonus": "Começa com Capa de Couro Tratado (resiste ao ar ácido)"},
+      {"id": "skallgard", "name": "Skallgard", "bonus": "Começa com Casaco de Peles Pesado"},
+      {"id": "aethelgard", "name": "Aethelgard", "bonus": "Começa com Lamparina de Óleo e Corda de 15m"},
+      {"id": "ophidia", "name": "Ophidia", "bonus": "Ninguém 'vem' de Ophidia — mas quem jura que veio começa com um Mapa Contraditório"},
+      {"id": "costa_negra", "name": "Costa Negra", "bonus": "Começa com Fragmento de Âmbar Cinza (vale bom ouro)"},
+      {"id": "montanhas_afiadas", "name": "Montanhas Afiadas", "bonus": "Começa com Picareta e Corda de Escalada"},
+      {"id": "pradaria_ruinas", "name": "Pradaria das Ruínas", "bonus": "Começa com Ração de Viagem x3 e um fragmento de ruína élfica"},
+      {"id": "brekmar", "name": "Brekmar", "bonus": "Começa com Adaga Escondida e 15 de ouro de origem duvidosa"}
     ]
   }

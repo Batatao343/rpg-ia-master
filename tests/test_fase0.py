@@ -21,7 +21,7 @@ def test_get_location_and_connections():
     loc = gamedata.get_location("nova_arcadia")
     assert loc["name"] == "Nova Arcádia"
     conns = {c["id"] for c in gamedata.get_connections("nova_arcadia")}
-    assert "estrada_sul" in conns and "portao_oeste" in conns
+    assert "na_anel_lama" in conns and "pradaria_ruinas" in conns
 
 
 def test_start_location_for_region():
@@ -50,22 +50,22 @@ def test_ensure_world_backfills():
 # --------------------------------------------------------------------------
 def test_find_travel_destination_connected():
     w = wu.ensure_world({"current_location_id": "nova_arcadia"})
-    dest = wu.find_travel_destination(w, "vou para o Portão Oeste")
-    assert dest and dest["id"] == "portao_oeste"
+    dest = wu.find_travel_destination(w, "vou para o Anel de Lama")
+    assert dest and dest["id"] == "na_anel_lama"
 
 
 def test_find_travel_destination_rejects_unconnected():
     w = wu.ensure_world({"current_location_id": "nova_arcadia"})
-    # Skallgard não conecta direto a Nova Arcádia
+    # Skallgard não conecta direto a Nova Arcádia (fica além das Montanhas Afiadas)
     assert wu.find_travel_destination(w, "vou para Skallgard") is None
 
 
 def test_apply_travel_reveals_and_advances():
     w = wu.ensure_world({"current_location_id": "nova_arcadia"})
     period0 = w["world_clock"]["period"]
-    w2 = wu.apply_travel(w, gamedata.get_location("estrada_sul"))
-    assert w2["current_location_id"] == "estrada_sul"
-    assert "estrada_sul" in w2["visited"]
+    w2 = wu.apply_travel(w, gamedata.get_location("pradaria_ruinas"))
+    assert w2["current_location_id"] == "pradaria_ruinas"
+    assert "pradaria_ruinas" in w2["visited"]
     assert w2["world_clock"]["period"] != period0  # tempo passou
 
 
@@ -119,7 +119,7 @@ def _state_for_graph():
         "game_id": "fase0_test",
         "narrative_summary": "",
         "archivist_last_run": 0,
-        "messages": [HumanMessage(content="vou para a Estrada do Sul")],
+        "messages": [HumanMessage(content="vou para a Pradaria das Ruínas")],
         "next": "storyteller",
         "player": {
             "name": "T", "class_name": "Guerreiro", "race": "Humano",
@@ -141,5 +141,5 @@ def test_graph_travel_end_to_end():
     from main import app
     result = app.invoke(_state_for_graph())
     w = result["world"]
-    assert w["current_location_id"] == "estrada_sul"
-    assert "estrada_sul" in w["visited"]
+    assert w["current_location_id"] == "pradaria_ruinas"
+    assert "pradaria_ruinas" in w["visited"]

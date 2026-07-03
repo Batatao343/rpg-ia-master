@@ -61,6 +61,8 @@ def create_character_wizard():
     name = input("Nome do Herói: ").strip() or "Desconhecido"
     selected_race = select_from_list(RACES, title_key="name", prompt="Selecione sua Origem (Raça)")
     print(f"-> Raça: {Colors.GREEN}{selected_race['name']}{Colors.ENDC}")
+    for trait in selected_race.get("traits", []) or []:
+        print(f"   Trait: {Colors.BOLD}{trait.get('name')}{Colors.ENDC} — {trait.get('desc')}")
 
     classes_list = [{"name": k, **v} for k, v in CLASSES.items()]
     selected_class = select_from_list(classes_list, title_key="name", prompt="Selecione sua Vocação (Classe)")
@@ -151,7 +153,11 @@ def create_character_wizard():
         "needs_replan": False,
         "next": "storyteller",
         "combat_target": None,
-        "loot_source": None
+        "loot_source": None,
+        # --- Fase 2.5: mundo estruturado ---
+        "event_log": [],
+        "world_projection": {},
+        "pending_world_events": []
     }
 
 def run_game_loop():
