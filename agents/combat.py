@@ -15,11 +15,45 @@ from typing import List, Dict, Optional
 from langchain_core.messages import SystemMessage, AIMessage, HumanMessage, ToolMessage
 from pydantic import BaseModel, Field
 
+import re
+
 from state import GameState, EnemyStats
 from llm_setup import ModelTier, get_llm
 from gamedata import ABILITIES
 from agents.bestiary import generate_new_enemy
+from services import graph_resolver as gr
 import combat_mechanics as cm
+
+
+def _canonical_enemy_id(enemy: Dict) -> Optional[str]:
+    """Id canônico (entities.json, type npc) de um inimigo morto, ou None se genérico.
+
+    O spawn dá ids do tipo `{template_id}_{i}` — remove o sufixo de instância e casa
+    contra o grafo. Inimigo de bestiário sem entrada canônica → None (não gera evento).
+    """
+    raw = (enemy.get("id") or "").strip()
+    if not raw:
+        return None
+    base = re.sub(r"_\d+$", "", raw)
+    for cand in (base, raw):
+        ent = gr.get_entity(cand)
+        if ent and ent.get("type") == "npc":
+            return cand
+    return None
+
+
+def _kill_events(dead: List[Dict]) -> List[Dict]:
+    """Propostas npc_killed para os mortos CANÔNICos deste round (genéricos são ignorados)."""
+    kills = []
+    for e in dead:
+        cid = _canonical_enemy_id(e)
+        if cid:
+            kills.append({
+                "type": "npc_killed", "actor_id": "player", "target_id": cid,
+                "detail": f"{e.get('name', 'inimigo')} morto em combate",
+                "payload": {}, "source": "combat",
+            })
+    return kills
 
 
 # --- MODELOS DE IDENTIFICAÇÃO (IA) ---
@@ -282,6 +316,12 @@ def combat_node(state: GameState):
         "archive_due": combat_over,  # fim de combate = evento relevante
     }
     combat_meta["active"] = bool(active_after)
+
+    # Fase 2.6 (R5): morte de inimigo CANÔNICO vira npc_killed determinístico (sem LLM).
+    # O motor já sabe quem caiu; ids genéricos de bestiário não geram evento.
+    canonical_kills = _kill_events(dead)
+    if canonical_kills:
+        result["pending_world_events"] = (state.get("pending_world_events", []) or []) + canonical_kills
 
     # Fase 2.5b (R10): fuga vira alerta de mundo — o fugitivo pode voltar com amigos.
     if fled:

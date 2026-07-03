@@ -1,0 +1,36 @@
+"""
+structured_outputs.py — Schemas Pydantic de PROPOSTA de mudança no mundo (Fase 2.6).
+
+Princípio: *LLM propõe, motor aplica.* O agente devolve um `ProposedWorldEvent`
+(ou lista, via `WorldChangeProposal`); nada disso altera o mundo até passar por
+`services.world_validators.validate_proposal` e `services.event_processor`.
+
+Spec: specs/fase-2.6-structured-events.md §3.
+"""
+
+from __future__ import annotations
+
+from typing import Dict, List, Literal
+
+from pydantic import BaseModel, Field
+
+EventType = Literal[
+    "npc_killed",
+    "secret_revealed",
+    "location_control_changed",
+    "quest_completed",
+    "faction_relation_changed",
+]
+
+
+class ProposedWorldEvent(BaseModel):
+    type: EventType
+    actor_id: str = Field(default="player", description="Quem causou. 'player' ou id canônico.")
+    target_id: str = Field(description="Entidade afetada — id EXATO de entities.json.")
+    detail: str = Field(default="", description="1 frase objetiva do que aconteceu.")
+    payload: Dict = Field(default_factory=dict, description="Dados extras por tipo (ex.: new_controller_id).")
+
+
+class WorldChangeProposal(BaseModel):
+    events: List[ProposedWorldEvent] = Field(default_factory=list)
+    reason: str = Field(default="", description="Por que a narrativa implica essas mudanças.")

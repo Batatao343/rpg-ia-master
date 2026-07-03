@@ -7,6 +7,7 @@ from langchain_core.messages import SystemMessage
 from pydantic import BaseModel, Field
 from llm_setup import get_llm, ModelTier
 from rag import add_memory_to_session
+from services.event_processor import process_pending_events
 from state import GameState
 
 
@@ -63,9 +64,14 @@ def archive_node(state: GameState):
     if not game_id:
         return {}
 
+    # Fase 2.6: valida/aplica a fila de eventos estruturados em TODO turno, ANTES da
+    # guarda de cadência — turno trivial ainda precisa consolidar o mundo. No-op se
+    # a fila está vazia (retorna {}).
+    event_updates = process_pending_events(state)
+
     turn = state.get("world", {}).get("turn_count", 0)
     if not _should_archive(state, turn):
-        return {"archive_due": False}  # turno trivial: pula o LLM do arquivista
+        return {"archive_due": False, **event_updates}  # turno trivial: pula o LLM do arquivista
 
     current_summary = state.get("narrative_summary", "A aventura segue.")
     context_msgs = messages[-6:] if len(messages) > 6 else messages
@@ -100,10 +106,11 @@ def archive_node(state: GameState):
             summary = _extract_summary_plain(llm, context_msgs, current_summary)
             if summary:
                 print("📝 [ARCHIVIST] narrative_summary salvo via fallback de texto.")
-                return {"narrative_summary": summary, "archivist_last_run": turn, "archive_due": False}
-            # Plain-text também falhou — mantém estado atual.
+                return {"narrative_summary": summary, "archivist_last_run": turn,
+                        "archive_due": False, **event_updates}
+            # Plain-text também falhou — mantém estado atual (mas eventos já processados).
             print("⚠️ [ARCHIVIST] Ambos os caminhos falharam. Estado mantido.")
-            return {}
+            return dict(event_updates)
 
         updates: dict = {}
 
@@ -124,11 +131,11 @@ def archive_node(state: GameState):
         updates["archivist_last_run"] = turn
         updates["archive_due"] = False
 
-        return updates
+        return {**updates, **event_updates}
 
     except Exception as e:
         print(f"⚠️ Erro no Arquivista: {e}")
-        return {}
+        return dict(event_updates)
 
 
 # Helper para compatibilidade

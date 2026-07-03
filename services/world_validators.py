@@ -1,0 +1,122 @@
+"""
+world_validators.py — Valida propostas de evento contra o grafo e o estado (Fase 2.6).
+
+Uma proposta (`dict`, vinda de `pending_world_events`) só vira `GameEvent` se
+`validate_proposal` devolver `ok=True`. Rejeição NÃO quebra o turno — o processor
+descarta com log. Revalida do zero via Pydantic (defesa em profundidade: o LLM pode
+ter inventado id/tipo mesmo com o bloco <ENTIDADES_CANONICAS> no prompt).
+
+Spec: specs/fase-2.6-structured-events.md §3.
+"""
+
+from __future__ import annotations
+
+from typing import NamedTuple
+
+from services import graph_resolver as gr
+from services.structured_outputs import ProposedWorldEvent
+
+
+class ValidationResult(NamedTuple):
+    ok: bool
+    reason: str = ""
+
+
+# --- validadores por tipo ---------------------------------------------------
+# Cada um recebe (ev: ProposedWorldEvent, state: dict, projection: dict) e devolve
+# ValidationResult. A checagem comum (Pydantic, entidade-alvo, duplicata) roda antes.
+
+
+def _v_npc_killed(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    ent = gr.get_entity(ev.target_id)
+    if not ent:
+        return ValidationResult(False, f"id desconhecido em entities.json: {ev.target_id}")
+    if ent.get("type") != "npc":
+        return ValidationResult(False, f"{ev.target_id} não é do type npc (é {ent.get('type')})")
+    if not gr.is_alive(ev.target_id, proj):
+        return ValidationResult(False, f"{ev.target_id} já está morto")
+    return ValidationResult(True)
+
+
+def _v_secret_revealed(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    if not gr.get_entity(ev.target_id):
+        return ValidationResult(False, f"id desconhecido em entities.json: {ev.target_id}")
+    # existe edge hidden/secret ligada ao alvo? (o segredo tem de EXISTIR no grafo)
+    edges = gr.resolve_edges(proj, entity_id=ev.target_id, include_hidden=True)
+    if not any(e.get("visibility") in ("hidden", "secret") for e in edges):
+        return ValidationResult(False, f"nenhum segredo (edge hidden/secret) ligado a {ev.target_id}")
+    # fato ainda não revelado?
+    revealed = proj.get("revealed_facts", {}) or {}
+    if any(rf.get("entity_id") == ev.target_id for rf in revealed.values()):
+        return ValidationResult(False, f"segredo de {ev.target_id} já revelado")
+    return ValidationResult(True)
+
+
+def _v_location_control_changed(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    ent = gr.get_entity(ev.target_id)
+    if not ent:
+        return ValidationResult(False, f"id desconhecido em entities.json: {ev.target_id}")
+    if ent.get("type") != "location":
+        return ValidationResult(False, f"{ev.target_id} não é do type location")
+    ncid = ev.payload.get("new_controller_id")
+    if not ncid:
+        return ValidationResult(False, "payload.new_controller_id ausente")
+    nc = gr.get_entity(ncid)
+    if not nc or nc.get("type") != "faction":
+        return ValidationResult(False, f"new_controller_id {ncid} não é uma facção conhecida")
+    if not gr.is_alive(ncid, proj):
+        return ValidationResult(False, f"facção {ncid} está derrotada")
+    return ValidationResult(True)
+
+
+def _v_quest_completed(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    plan = state.get("campaign_plan") or {}
+    beats = plan.get("beats") or []
+    if not beats:
+        return ValidationResult(False, "sem campaign_plan/beats para concluir")
+    idx = ev.payload.get("beat_index")
+    if idx is not None and not (0 <= int(idx) < len(beats)):
+        return ValidationResult(False, f"beat_index {idx} fora do plano (0..{len(beats)-1})")
+    return ValidationResult(True)
+
+
+def _v_faction_relation_changed(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    other = ev.payload.get("other_faction_id") or ev.actor_id
+    a, b = gr.get_entity(ev.target_id), gr.get_entity(other)
+    if not a or a.get("type") != "faction":
+        return ValidationResult(False, f"{ev.target_id} não é facção")
+    if not b or b.get("type") != "faction":
+        return ValidationResult(False, f"{other} não é facção")
+    relation = ev.payload.get("relation") or ev.detail
+    if relation not in gr.load_relation_types():
+        return ValidationResult(False, f"relação desconhecida: {relation!r}")
+    return ValidationResult(True)
+
+
+_VALIDATORS = {
+    "npc_killed": _v_npc_killed,
+    "secret_revealed": _v_secret_revealed,
+    "location_control_changed": _v_location_control_changed,
+    "quest_completed": _v_quest_completed,
+    "faction_relation_changed": _v_faction_relation_changed,
+}
+
+
+def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
+    """Valida UMA proposta contra grafo + estado. Nunca levanta."""
+    # 1. Revalida do zero — dict malformado / tipo desconhecido = rejeitado sem exceção.
+    try:
+        ev = ProposedWorldEvent.model_validate(proposal)
+    except Exception as exc:
+        return ValidationResult(False, f"proposta malformada: {exc}")
+
+    projection = state.get("world_projection") or {}
+    turn = (state.get("world") or {}).get("turn_count", 0)
+
+    # 2. Sem duplicata (mesmo type+target já no event_log DESTE turno).
+    for e in state.get("event_log") or []:
+        if e.get("type") == ev.type and e.get("target_id") == ev.target_id and e.get("turn") == turn:
+            return ValidationResult(False, f"duplicata: {ev.type}/{ev.target_id} já no turno {turn}")
+
+    # 3. Regra específica do tipo.
+    return _VALIDATORS[ev.type](ev, state, projection)

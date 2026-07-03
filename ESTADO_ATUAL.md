@@ -8,13 +8,26 @@
 
 ## TL;DR — Em que pé está
 
-**Fase 2.5b IMPLEMENTADA — Valoria nos dados mecânicos + combate com comportamento.**
-Grafo LangGraph roda fim-a-fim sem crashar. Suíte **146 testes offline verdes**
-(`uv run pytest --ignore=tests/test_real_llm.py`). Spec 2.5b fica `in-progress` até o
-smoke real com Gemini (3 requests — §6 da spec); todo o resto está entregue.
+**Fase 2.6 DONE — Structured world changes (LLM propõe, motor valida/aplica).**
+O ciclo do mundo estruturado fechou: agentes escrevem propostas em `pending_world_events`;
+o `archivist` (fim de todo turno) chama `process_pending_events`, que **valida** contra o
+grafo/estado e só então grava no `event_log` + atualiza a `world_projection`. Evento inválido
+é descartado com log, sem quebrar o turno. Suíte **177 testes offline verdes** (146 baseline
++ 31 da 2.6). Smoke real com Gemini ✅ (§6 da spec): storyteller propôs `secret_revealed` com
+id canônico exato, validado; turno banal veio vazio.
 
-**Próximo passo:** smoke real da 2.5b (§6 da spec, 3 requests) → spec `done` →
-Fase 2.6 (structured events).
+**Próximo passo:** Fase 2.7 (rules engine — cascata sistêmica: líder morre → facção
+desestabiliza; entra entre `apply_event` e o próximo turno).
+
+Entregas da 2.6 (spec `specs/fase-2.6-structured-events.md`):
+- `services/structured_outputs.py` — `ProposedWorldEvent` / `WorldChangeProposal` (Pydantic).
+- `services/world_validators.py` — `validate_proposal(dict, state)` → `ValidationResult(ok, reason)`;
+  regras por tipo (npc_killed, secret_revealed, location_control_changed, quest_completed,
+  faction_relation_changed) via `graph_resolver`; revalida do zero (dict malformado = rejeitado).
+- `services/event_processor.py` — `process_pending_events` (valida→GameEvent→append→aplica→limpa fila)
+  + `apply_event` puro (efeito direto na projection, SEM cascata — isso é a 2.7).
+- `storyteller` propõe via `StoryUpdate.proposed_events` + bloco `<ENTIDADES_CANONICAS>` no prompt.
+- `combat` gera `npc_killed` **determinístico** (`_kill_events`) p/ inimigo canônico — sem LLM.
 
 Entregas da 2.5b (detalhes no `CHANGELOG.md`): mapa de Valoria 30 nós, 18 fações,
 6 raças com traits mecânicos (`apply_racial_traits`), bestiário 84 entradas com
@@ -37,7 +50,7 @@ existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arquivar
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 146 testes offline verdes (test_real_llm precisa de chave)
+uv run pytest                        # 177 testes offline verdes (test_real_llm precisa de chave)
 uv run python game_engine.py         # CLI
 uv run uvicorn api:app --port 8000   # API + frontend web (http://localhost:8000)
 uv run python rag.py                 # reindexar lore (data/codex/) + regras (data/rules.txt)

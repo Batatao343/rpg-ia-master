@@ -57,15 +57,17 @@ grafo conexo), 18 fações com goal/ascension, 6 raças jogáveis com **traits m
 **Combate com personalidade (R8-R10):** perfis `tatico/feroz/covarde/implacavel` — guardas
 escolhem ataque e fogem por moral; urso-titã luta até a morte com frenesi; fugitivo gera
 alerta de mundo que volta como reforço. Encontros sorteiam criatura concreta do bestiário
-por região/fação (menos 1 chamada LLM). `world_lore.txt` removido. 146 testes offline.
+por região/fação (menos 1 chamada LLM). `world_lore.txt` removido.
 
-### Fase 2.6 — Structured world changes → [spec](specs/fase-2.6-structured-events.md)
+### Fase 2.6 — Structured world changes → [spec](specs/fase-2.6-structured-events.md) ✅ ENTREGUE (2026-07-02)
 
 LLM não altera mundo por narrativa livre: storyteller propõe eventos estruturados
 (Pydantic), combate gera `npc_killed` determinístico; `world_validators` valida contra o
 grafo e `event_processor` aplica na projection (via archivist, todo fim de turno).
+`services/` ganhou `structured_outputs.py`, `world_validators.py`, `event_processor.py`.
+177 testes offline. Smoke real Gemini ✅ (secret_revealed com id canônico validado; turno banal vazio).
 
-**Aceite:** nenhuma mudança persistente sem validação; evento rejeitado não quebra o jogo.
+**Aceite:** ✅ nenhuma mudança persistente sem validação; evento rejeitado não quebra o jogo.
 
 ### Fase 2.7 — Rules engine sistêmica → [spec](specs/fase-2.7-rules-engine.md)
 

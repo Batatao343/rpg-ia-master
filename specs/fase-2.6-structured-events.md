@@ -1,7 +1,7 @@
 # SPEC — Fase 2.6: Structured world changes
 
-> **Status:** `draft`
-> **Criada:** 2026-07-01 · **Atualizada:** 2026-07-01
+> **Status:** `done`
+> **Criada:** 2026-07-01 · **Atualizada:** 2026-07-02
 > **Depende de:** [fase-2.5-codex-world-state.md](fase-2.5-codex-world-state.md) (`done`)
 > **Desbloqueia:** [fase-2.7-rules-engine.md](fase-2.7-rules-engine.md), 2.8
 
@@ -241,20 +241,25 @@ turno — `main.py` já garante isso).
 
 ## 5. Critérios de aceite
 
-- [ ] Nenhuma mudança persistente entra no event_log sem passar por `validate_proposal`
-- [ ] Evento rejeitado não quebra o turno (teste cobre)
-- [ ] Morte de inimigo canônico em combate vira `npc_killed` sem LLM
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo/alterado
-- [ ] Saves antigos continuam carregando
+- [x] Nenhuma mudança persistente entra no event_log sem passar por `validate_proposal`
+- [x] Evento rejeitado não quebra o turno (teste cobre — `test_rejeitado_nao_entra_no_log`)
+- [x] Morte de inimigo canônico em combate vira `npc_killed` sem LLM (`_kill_events`, determinístico)
+- [x] `uv run pytest` verde (177 offline: 146 baseline + 31 da 2.6)
+- [x] Guard de FallbackLLM em todo `with_structured_output` novo/alterado (storyteller try/except;
+      combat R5 é Python puro; `test_storyteller_fallback_nao_quebra`)
+- [x] Saves antigos continuam carregando (`event_log`/`world_projection`/`pending_world_events`
+      já com defaults em persistence — coberto por test_fase25)
 
-## 6. Smoke test com LLM real
+## 6. Smoke test com LLM real — ✅ executado 2026-07-02 (Gemini)
 
-1. Turno real: "eu revelo ao guarda que o culto age na clareira" → conferir no save que
-   `pending_world_events` virou `secret_revealed` validado no `event_log` (ou rejeição logada com razão plausível).
-2. Combate real contra inimigo canônico até a morte → `event_log` tem `npc_killed`;
-   `world_projection.entities[id].alive == False`.
-3. Turno banal ("olho ao redor") → `proposed_events` veio vazio (LLM não inventa evento).
+1. ✅ Turno real "revelo em praça pública que a Velha Magda é a líder da Mão Sombria" →
+   Gemini propôs `secret_revealed` com `target_id="npc_velha_magda"` (id EXATO, sem inventar);
+   `validate_proposal` aprovou; entrou no `event_log` (`source=storyteller`, `detail` preservado no payload).
+2. `npc_killed` de combate é **determinístico em Python** (`_kill_events`, sem LLM) — coberto
+   offline (`test_combate_gera_npc_killed_para_canonico` + ponta-a-ponta com o processor);
+   não gastou quota real.
+3. ✅ Turno banal "olho ao meu redor observando a neblina" → `proposed_events` veio **vazio**
+   (LLM não inventou evento).
 
 ## 7. Riscos & compatibilidade
 

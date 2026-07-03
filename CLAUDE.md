@@ -220,7 +220,8 @@ Toda feature/fase nova segue o fluxo de `specs/`:
    smoke test real da spec executado → status `done` + atualizar ROADMAP/ESTADO_ATUAL.
 5. **ROADMAP.md é resumo + link;** o detalhe técnico mora SÓ na spec (fonte única).
 
-Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `draft` — próxima; 2.6–2.8 `draft`.
+Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `in-progress`; 2.6 (structured events) `done`;
+2.7 (rules engine) `draft` — próxima; 2.8 `draft`.
 
 ---
 

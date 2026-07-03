@@ -7,6 +7,8 @@ from agents.npc import generate_new_npc
 from agents.world_simulator import simulate_world
 from llm_setup import get_llm
 from rag import query_rag
+from services import graph_resolver as gr
+from services.structured_outputs import ProposedWorldEvent
 from state import GameState
 from world_utils import (
     advance_factions,
@@ -46,6 +48,49 @@ class StoryUpdate(BaseModel):
             "da cena (o beat ativo). Caso contrário False. Não marque True por progresso vago."
         ),
     )
+    proposed_events: List[ProposedWorldEvent] = Field(
+        default_factory=list,
+        description=(
+            "APENAS se a ação deste turno causou mudança PERSISTENTE no mundo "
+            "(morte de personagem NOMEADO, segredo revelado, mudança de controle de local). "
+            "Use ids EXATOS do bloco <ENTIDADES_CANONICAS>. Deixe vazio na dúvida."
+        ),
+    )
+
+
+def _scene_canonical_entities(state: GameState, factions: list, intel: dict, loc: str) -> str:
+    """Ids+nomes canônicos (entities.json) das entidades da cena — o LLM só pode usar estes.
+
+    Fações conhecidas já trazem id canônico; local e NPCs presentes casam por nome com o
+    grafo (best-effort). Defensivo: qualquer falha vira lista vazia (o validator é o gate real).
+    """
+    lines: List[str] = []
+    seen = set()
+    for f in factions:
+        fid = f.get("id")
+        if fid and intel.get(fid, {}).get("known") and not f.get("defeated") \
+                and fid not in seen and gr.get_entity(fid):
+            lines.append(f"- id={fid} · {f.get('name')} · faction")
+            seen.add(fid)
+    try:
+        entities = gr.load_entities()
+    except Exception:
+        entities = {}
+    names_present = {n.lower() for n in state.get("npcs", {}).keys()}
+    loc_l = (loc or "").strip().lower()
+    for eid, ent in entities.items():
+        if eid in seen:
+            continue
+        etype, ename = ent.get("type"), ent.get("name", "")
+        nl = ename.lower()
+        if etype == "location" and loc_l and (nl == loc_l or eid == loc_l):
+            lines.append(f"- id={eid} · {ename} · location")
+            seen.add(eid)
+        elif etype == "npc" and nl in names_present:
+            lines.append(f"- id={eid} · {ename} · npc")
+            seen.add(eid)
+    return "\n".join(lines) or "Nenhuma entidade canônica identificada na cena."
+
 
 def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text: str) -> Dict[str, Dict]:
     existing_lower = {name.lower(): name for name in npcs.keys()}
@@ -150,6 +195,9 @@ def storyteller_node(state: GameState):
         if intel.get(f.get("id"), {}).get("known") and not f.get("defeated")
     ) or "Nenhuma fação conhecida pelo jogador ainda."
 
+    # Fase 2.6: ids canônicos que o LLM pode usar em proposed_events (defesa em profundidade).
+    entidades_canonicas = _scene_canonical_entities(state, factions, intel, loc)
+
     sys = SystemMessage(content=f"""
     <PERSONA>
     Você é o Narrador (Mestre) de um RPG.
@@ -169,6 +217,14 @@ def storyteller_node(state: GameState):
     registre em 'faction_impacts' (faction_id EXATO + direction 'ajudou'/'prejudicou').
     Caso contrário, deixe 'faction_impacts' vazio. NÃO invente ids fora da lista.
     </FACÇÕES_CONHECIDAS>
+
+    <ENTIDADES_CANONICAS>
+    {entidades_canonicas}
+    Se — e SÓ se — a ação deste turno causou mudança PERSISTENTE no mundo (morte de
+    personagem NOMEADO, segredo revelado, mudança de controle de local), registre em
+    'proposed_events' usando os ids EXATOS acima. Na dúvida, deixe vazio. NUNCA invente
+    ids fora desta lista.
+    </ENTIDADES_CANONICAS>
 
     <MEMORIA_RECENTE>
     Resumo dos fatos anteriores: {narrative_summary}
@@ -229,6 +285,11 @@ def storyteller_node(state: GameState):
         # Viagem/descanso/beat concluído = evento relevante → pede arquivamento.
         if dest or rested_player is not None or beat_done:
             updates["archive_due"] = True
+        # Fase 2.6: enfileira propostas de evento estruturado (motor valida no archivist).
+        pending = [e.model_dump() for e in getattr(update, "proposed_events", []) or []]
+        if pending:
+            updates["pending_world_events"] = (state.get("pending_world_events", []) or []) + pending
+            updates["archive_due"] = True  # mudança de mundo é evento relevante
         return updates
 
     except Exception as e:
