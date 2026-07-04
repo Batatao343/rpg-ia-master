@@ -1,6 +1,7 @@
 # SPEC — Fase 4.3: Inventário e equipamento
 
-> **Status:** `draft`
+> **Status:** `in-progress` — **Etapas 1–6 implementadas** (2026-07-04, 401 testes
+> verdes + build web + smoke_api ok); falta SÓ o smoke com LLM real (§6) para `done`.
 > **Criada:** 2026-07-03 · **Atualizada:** 2026-07-03
 > **Depende de:** Fase 4.1 (padrão de ids canônicos + backfill em persistence)
 > **Desbloqueia:** Fase 4.4 (economia usa inventário estruturado/stacks)

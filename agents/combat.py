@@ -75,6 +75,8 @@ class CombatAction(BaseModel):
     target: str = Field(default="", description="Nome ou id do inimigo alvo. Vazio = primeiro inimigo.")
     is_allowed: bool = Field(default=True, description="False se a ação não faz sentido para a classe/ficha.")
     reason: str = Field(default="", description="Curta justificativa do gating (por que falha, se for o caso).")
+    # Fase 4.3: "bebo a poção" -> uso de item (id da lista de USÁVEIS do prompt).
+    item_id: str = Field(default="", description="Se o jogador USA UM ITEM (poção etc.): id exato do item. Vazio caso contrário.")
 
 
 # --- SPAWN (mantém integração com bestiário/cache) ---
@@ -163,21 +165,33 @@ def _parse_combat_action(player: Dict, enemies: List[Dict], intent: str) -> Dict
         return fallback
 
     enemy_names = ", ".join(e.get("name", "?") for e in enemies) or "—"
+    # Fase 4.3: itens consumíveis presentes no inventário (id: nome xqty)
+    import inventory as inv_mod
+    usables = []
+    for e in (player.get("inventory") or []):
+        if isinstance(e, dict):
+            item = inv_mod.ARTIFACTS_DB.get(e.get("id", "")) or {}
+            if str(item.get("type", "")).lower() in ("consumable", "potion"):
+                usables.append(f"- {e['id']}: {item.get('name', e['id'])} x{e.get('qty', 1)}")
+    usables_block = "\n".join(usables) or "- (nenhum)"
     sys = SystemMessage(content=f"""
     Você é o IDENTIFICADOR de ações de combate. NÃO resolva mecânica, só classifique.
     Traduza a fala do jogador para uma ação canônica.
 
     Classe: {player.get('class_name', '')}
-    Habilidades conhecidas (texto livre): {player.get('known_abilities', [])}
     Atributos: {player.get('attributes', {})}
 
     CATÁLOGO DE HABILIDADES (use a CHAVE exata em ability_id):
     {_ability_catalog_for(player)}
 
+    ITENS USÁVEIS no inventário (se o jogador USAR um item, preencha item_id com a chave exata):
+    {usables_block}
+
     Inimigos presentes: {enemy_names}
 
     Regras:
     - Escolha o ability_id do catálogo que melhor casa com a intenção. Ataque comum -> 'ataque_basico'.
+    - Se o jogador usa um ITEM ("bebo a poção"), preencha item_id e deixe ability_id='ataque_basico'.
     - Se a ação for impossível para esta classe/ficha, is_allowed=False e explique em reason.
     - target = nome de um inimigo presente (ou vazio para o primeiro).
     """)
@@ -185,6 +199,10 @@ def _parse_combat_action(player: Dict, enemies: List[Dict], intent: str) -> Dict
         llm = get_llm(temperature=0.0, tier=ModelTier.FAST)
         res = llm.with_structured_output(CombatAction).invoke([sys, HumanMessage(content=intent)])
         if isinstance(res, CombatAction):
+            # Fase 4.3: uso de item tem prioridade (gate real fica no use_item_in_combat)
+            if getattr(res, "item_id", ""):
+                return {"ability_id": "ataque_basico", "target": res.target,
+                        "is_allowed": True, "reason": "", "item_id": res.item_id}
             aid = res.ability_id if res.ability_id in ABILITIES else "ataque_basico"
             # Fase 4.1 (R7): gate DETERMINÍSTICO — habilidade fora da ficha não
             # passa nem se o LLM disser que pode (id alucinado/de outra classe).
@@ -313,7 +331,15 @@ def combat_node(state: GameState):
             if stunned:
                 logs.append(f"{player.get('name','Herói')} está ATORDOADO e perde o turno.")
             elif int(player.get("hp", 0)) > 0:
-                logs += cm.resolve_player_action(player, enemies, action, ABILITIES)
+                if action.get("item_id"):
+                    # Fase 4.3: usar item consome o turno; resolução 100% Python
+                    import inventory as inv_mod
+                    player_new, item_logs = inv_mod.use_item_in_combat(player, action["item_id"])
+                    player.clear()
+                    player.update(player_new)
+                    logs += item_logs
+                else:
+                    logs += cm.resolve_player_action(player, enemies, action, ABILITIES)
             hero_resolved = True
         else:
             e = next((x for x in enemies if x.get("id") == slot["id"]), None)

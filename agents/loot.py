@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field
 from state import GameState
 from llm_setup import get_llm, ModelTier
 from gamedata import save_custom_artifact, ARTIFACTS_DB, get_location
+from inventory import add_item, find_in_inventory, item_display, remove_item
 from rag import query_rag
 
 # --- SCHEMAS DE DADOS (IA) ---
@@ -69,7 +70,11 @@ def loot_node(state: GameState):
     # MODO 1: CRAFTING / SHOP
     # =========================================================
     if loot_source in ["CRAFT", "SHOP"]:
-        inventory_list = ", ".join(player["inventory"])
+        # Fase 4.3: inventário estruturado — prompt vê "nome xqty (id)"
+        inventory_list = ", ".join(
+            f"{item_display(e)} x{e.get('qty', 1)} (id: {e.get('id')})"
+            for e in player["inventory"] if isinstance(e, dict)
+        )
         gold_available = player["gold"]
         
         sys_prompt = """
@@ -123,10 +128,11 @@ def loot_node(state: GameState):
 
             # --- APLICAÇÃO DA MECÂNICA ---
 
-            # A. Remove Itens
-            for item_id in result.items_to_remove:
-                if item_id in player["inventory"]:
-                    player["inventory"].remove(item_id)
+            # A. Remove Itens (Fase 4.3: resolve referência e decrementa qty)
+            for item_ref in result.items_to_remove:
+                iid = find_in_inventory(player["inventory"], str(item_ref))
+                if iid:
+                    player["inventory"], _ = remove_item(player["inventory"], iid, 1)
             
             # B. Atualiza Ouro
             player["gold"] -= result.gold_cost
@@ -138,8 +144,8 @@ def loot_node(state: GameState):
                 item_data = result.new_item.model_dump()
                 item_data["item_id"] = raw_id
                 save_custom_artifact(raw_id, item_data)
-                
-                player["inventory"].append(raw_id)
+
+                player["inventory"] = add_item(player["inventory"], raw_id, 1)
                 msg_final = f"{result.message}\n\n[SISTEMA] +1 {result.new_item.name} | {result.gold_cost * -1} Ouro"
             else:
                 # Caso de Venda (sem item novo)
@@ -180,7 +186,7 @@ def loot_node(state: GameState):
             for item in res.items:
                 raw_id = item.item_id.lower().replace(" ", "_")
                 save_custom_artifact(raw_id, item.model_dump())
-                player["inventory"].append(raw_id)
+                player["inventory"] = add_item(player["inventory"], raw_id, 1)
                 added_names.append(item.name)
             
             player["gold"] += res.gold

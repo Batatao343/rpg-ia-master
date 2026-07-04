@@ -48,6 +48,11 @@
         "delta": 2,
         "note": "aprox de 'aliados adjacentes' — vira condicional a party ativa na 4.5"
       }
+    ],
+    "starting_equipment": [
+      "espada_gasta",
+      "escudo_amassado",
+      "pocao_cura"
     ]
   },
   "Batedor das Fronteiras": {
@@ -99,6 +104,11 @@
         "delta": 2,
         "note": "aprox media de +1d6 vs distraidos — vira condicional real na 4.6"
       }
+    ],
+    "starting_equipment": [
+      "arco_de_caca",
+      "adaga_ferro",
+      "pocao_cura"
     ]
   },
   "Arcanista Cinzento": {
@@ -148,6 +158,11 @@
         "trigger": "initiative_attr",
         "attr": "int"
       }
+    ],
+    "starting_equipment": [
+      "cajado_rachado",
+      "gibao_de_couro",
+      "pocao_cura"
     ]
   },
   "Sangromante": {
@@ -197,6 +212,11 @@
         "trigger": "hp_as_mana",
         "rate": 2
       }
+    ],
+    "starting_equipment": [
+      "adaga_ritual",
+      "gibao_de_couro",
+      "pocao_cura"
     ]
   },
   "Inquisidor da Cinza": {
@@ -252,6 +272,11 @@
         "stat": "damage",
         "delta": 2
       }
+    ],
+    "starting_equipment": [
+      "maca_de_ferro",
+      "gibao_de_couro",
+      "pocao_cura"
     ]
   },
   "Pastor de Pragas": {
@@ -302,6 +327,11 @@
         "formula": "1d4",
         "name": "veneno do Hospedeiro"
       }
+    ],
+    "starting_equipment": [
+      "cajado_de_galhos",
+      "gibao_de_couro",
+      "pocao_cura"
     ]
   },
   "Sombra da Corte": {
@@ -353,6 +383,11 @@
         "duration": 2,
         "name": "Veneno fraco"
       }
+    ],
+    "starting_equipment": [
+      "adaga_ferro",
+      "gibao_de_couro",
+      "pocao_cura"
     ]
   },
   "Sapador da Fuligem": {
@@ -402,6 +437,11 @@
         "trigger": "declarative",
         "note": "dano dobrado vs estruturas — motor nao tem estruturas (unico caso declarativo, spec 4.2 R5)"
       }
+    ],
+    "starting_equipment": [
+      "bacamarte_remendado",
+      "gibao_de_couro",
+      "pocao_cura"
     ]
   },
   "Médico de Campo": {
@@ -452,6 +492,11 @@
         "delta": 5,
         "threshold": 0.25
       }
+    ],
+    "starting_equipment": [
+      "serra_cirurgica",
+      "kit_medico",
+      "pocao_cura"
     ]
   },
   "Guardião Selvagem": {
@@ -500,6 +545,10 @@
       {
         "trigger": "unarmored_ac_con"
       }
+    ],
+    "starting_equipment": [
+      "bordao_de_carvalho",
+      "pocao_cura"
     ]
   }
 }

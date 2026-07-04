@@ -12,9 +12,10 @@ interface Props {
   onAction: (text: string) => void;
   onNew: () => void;
   onLevelUp: (choiceId: string, pick: { ability_id?: string; attr?: string }) => void;
+  onEquip: (pick: { item_id?: string; unequip_slot?: string }) => void;
 }
 
-export function PlayScreen({ data, log, thinking, busy, onAction, onNew, onLevelUp }: Props) {
+export function PlayScreen({ data, log, thinking, busy, onAction, onNew, onLevelUp, onEquip }: Props) {
   const [input, setInput] = useState("");
   const [hudOpen, setHudOpen] = useState(false);
   const [luDismissed, setLuDismissed] = useState(false);
@@ -66,7 +67,7 @@ export function PlayScreen({ data, log, thinking, busy, onAction, onNew, onLevel
 
       <div className="stage">
         <StoryLog entries={log} thinking={thinking} />
-        <Hud data={data} open={hudOpen} />
+        <Hud data={data} open={hudOpen} onEquip={onEquip} busy={busy} />
       </div>
 
       <form className="actionbar" onSubmit={submit}>

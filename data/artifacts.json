@@ -1,50 +1,313 @@
 {
-    "moeda_ouro": {
-      "name": "Moeda de Ouro",
-      "type": "currency",
-      "rarity": "common",
-      "value_gold": 1,
-      "description": "Uma moeda de ouro padrão cunhada no reino.",
-      "combat_stats": { "attack_bonus": 0, "damage_dice": "0", "attribute": "none", "ac_bonus": 0 },
-      "mechanics": { "passive_effects": [], "active_ability": null }
+  "moeda_ouro": {
+    "name": "Moeda de Ouro",
+    "type": "currency",
+    "rarity": "common",
+    "value_gold": 1,
+    "description": "Uma moeda de ouro padrão cunhada no reino.",
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
     },
-    "pocao_cura": {
-      "name": "Poção de Cura Menor",
-      "type": "consumable",
-      "rarity": "common",
-      "value_gold": 50,
-      "description": "Um líquido vermelho que fecha feridas leves.",
-      "combat_stats": { "attack_bonus": 0, "damage_dice": "0", "attribute": "none", "ac_bonus": 0 },
-      "mechanics": { 
-        "passive_effects": [], 
-        "active_ability": { "name": "Beber Poção", "cost": "Ação", "effect": "Recupera 2d4+2 HP." } 
-      }
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
     },
-    "adaga_ferro": {
-      "name": "Adaga de Ferro",
-      "type": "weapon",
-      "rarity": "common",
-      "value_gold": 10,
-      "description": "Uma lâmina curta, fácil de esconder.",
-      "combat_stats": { "attack_bonus": 0, "damage_dice": "1d4", "attribute": "dex", "ac_bonus": 0 },
-      "mechanics": { "passive_effects": [], "active_ability": null }
+    "stackable": true
+  },
+  "pocao_cura": {
+    "name": "Poção de Cura Menor",
+    "type": "consumable",
+    "rarity": "common",
+    "value_gold": 50,
+    "description": "Um líquido vermelho que fecha feridas leves.",
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
     },
-    "espada_curta": {
-      "name": "Espada Curta",
-      "type": "weapon",
-      "rarity": "common",
-      "value_gold": 25,
-      "description": "Arma leve e versátil para combates rápidos.",
-      "combat_stats": { "attack_bonus": 0, "damage_dice": "1d6", "attribute": "dex", "ac_bonus": 0 },
-      "mechanics": { "passive_effects": [], "active_ability": null }
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": {
+        "name": "Beber Poção",
+        "cost": "Ação",
+        "effect": "Recupera 2d4+2 HP."
+      },
+      "heal": "2d4+2"
     },
-    "corda": {
-      "name": "Corda de Cânhamo (15m)",
-      "type": "material",
-      "rarity": "common",
-      "value_gold": 1,
-      "description": "Corda resistente para escalada e amarras.",
-      "combat_stats": { "attack_bonus": 0, "damage_dice": "0", "attribute": "none", "ac_bonus": 0 },
-      "mechanics": { "passive_effects": ["Vantagem em testes de Sobrevivência para amarras."], "active_ability": null }
+    "stackable": true
+  },
+  "adaga_ferro": {
+    "name": "Adaga de Ferro",
+    "type": "weapon",
+    "rarity": "common",
+    "value_gold": 10,
+    "description": "Uma lâmina curta, fácil de esconder.",
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "1d4",
+      "attribute": "dex",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "espada_curta": {
+    "name": "Espada Curta",
+    "type": "weapon",
+    "rarity": "common",
+    "value_gold": 25,
+    "description": "Arma leve e versátil para combates rápidos.",
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "1d6",
+      "attribute": "dex",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "corda": {
+    "name": "Corda de Cânhamo (15m)",
+    "type": "material",
+    "rarity": "common",
+    "value_gold": 1,
+    "description": "Corda resistente para escalada e amarras.",
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        "Vantagem em testes de Sobrevivência para amarras."
+      ],
+      "active_ability": null
+    },
+    "stackable": true
+  },
+  "espada_gasta": {
+    "name": "Espada Gasta",
+    "type": "weapon",
+    "rarity": "common",
+    "value_gold": 8,
+    "description": "Uma lâmina que já viu guerras demais. Ainda corta.",
+    "stackable": false,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "1d6",
+      "attribute": "str",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "arco_de_caca": {
+    "name": "Arco de Caça",
+    "type": "weapon",
+    "rarity": "common",
+    "value_gold": 8,
+    "description": "Arco simples de fronteira, madeira vergada à mão.",
+    "stackable": false,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "1d6",
+      "attribute": "dex",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "cajado_rachado": {
+    "name": "Cajado Rachado",
+    "type": "weapon",
+    "rarity": "common",
+    "value_gold": 8,
+    "description": "Conduíte de Éter de segunda mão; a rachadura assobia ao conjurar.",
+    "stackable": false,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "1d4",
+      "attribute": "int",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "adaga_ritual": {
+    "name": "Adaga Ritual",
+    "type": "weapon",
+    "rarity": "common",
+    "value_gold": 8,
+    "description": "Curta, afiada, com calha para o sangue — o do dono, geralmente.",
+    "stackable": false,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "1d4",
+      "attribute": "dex",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "maca_de_ferro": {
+    "name": "Maça de Ferro",
+    "type": "weapon",
+    "rarity": "common",
+    "value_gold": 8,
+    "description": "Ferro fundido honesto. Convence sem argumentos.",
+    "stackable": false,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "1d6",
+      "attribute": "str",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "cajado_de_galhos": {
+    "name": "Cajado de Galhos",
+    "type": "weapon",
+    "rarity": "common",
+    "value_gold": 8,
+    "description": "Ainda brota folha em ano bom.",
+    "stackable": false,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "1d4",
+      "attribute": "wis",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "bacamarte_remendado": {
+    "name": "Bacamarte Remendado",
+    "type": "weapon",
+    "rarity": "common",
+    "value_gold": 8,
+    "description": "Dispara. Na maioria das vezes na direção certa.",
+    "stackable": false,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "1d8",
+      "attribute": "dex",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "serra_cirurgica": {
+    "name": "Serra Cirúrgica",
+    "type": "weapon",
+    "rarity": "common",
+    "value_gold": 8,
+    "description": "Instrumento de salvar vidas — e de terminá-las.",
+    "stackable": false,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "1d4",
+      "attribute": "dex",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "bordao_de_carvalho": {
+    "name": "Bordão de Carvalho",
+    "type": "weapon",
+    "rarity": "common",
+    "value_gold": 8,
+    "description": "Peso de raiz antiga na ponta.",
+    "stackable": false,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "1d6",
+      "attribute": "str",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "escudo_amassado": {
+    "name": "Escudo Amassado",
+    "type": "armor",
+    "rarity": "common",
+    "value_gold": 10,
+    "description": "Cada amasso é um golpe que não chegou.",
+    "stackable": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "gibao_de_couro": {
+    "name": "Gibão de Couro",
+    "type": "armor",
+    "rarity": "common",
+    "value_gold": 10,
+    "description": "Couro fervido, remendado, confiável.",
+    "stackable": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "kit_medico": {
+    "name": "Kit Médico",
+    "type": "material",
+    "rarity": "common",
+    "value_gold": 15,
+    "description": "Linha, agulha, tala e álcool de queimar.",
+    "stackable": true,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
     }
   }
+}

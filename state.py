@@ -20,6 +20,10 @@ class Condition(TypedDict, total=False):
     dot: int        # dano por turno (0 = buff/debuff sem dano direto)
     duration: int   # turnos restantes
     source: str     # quem/que habilidade aplicou
+    # --- Fase 4.2: modificadores tipados (lidos por combat_mechanics.condition_modifiers)
+    stat: Optional[str]     # "damage" | "ac" | "attack" | "save"
+    delta: int              # soma no stat enquanto durar
+    control: Optional[str]  # "stun" (perde turno) | "root" (não foge) | "fear" (-2 acerto)
 
 
 class PlayerStats(TypedDict, total=False):
@@ -37,8 +41,15 @@ class PlayerStats(TypedDict, total=False):
     xp: int
     alignment: str
     attributes: Attributes
-    inventory: List[str]
-    known_abilities: List[str]
+    # Fase 4.3: inventário estruturado — {"id": str, "qty": int, "display_name"?: str}
+    # (id resolve no ARTIFACTS_DB; item_desconhecido preserva nome de save antigo)
+    inventory: List[Dict]
+    # Fase 4.3: slots de equipamento — {"weapon"|"armor"|"accessory": item_id|None}
+    # combate lê SÓ os slots (inventory.equip/unequip; backfill auto-equipa 1x)
+    equipment: Dict[str, Optional[str]]
+    known_abilities: List[str]  # Fase 4.1: ids canônicos de player_abilities.json
+    # Fase 4.1: escolhas de level up pendentes — {"id", "level", "kind": ability|attribute}
+    pending_choices: List[Dict]
     defense: int
     attack_bonus: int
     active_conditions: List[Condition]

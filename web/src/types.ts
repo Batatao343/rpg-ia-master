@@ -204,12 +204,22 @@ export interface ChronicleChapter {
 
 export type MessageType = "STORY" | "COMBAT" | "NPC" | "LOOT";
 
+// Fase 4.3: inventário estruturado (nome canônico vem da API — nunca title(id))
+export interface InventoryEntry {
+  id: string;
+  name: string;
+  qty: number;
+  type: string; // weapon | armor | consumable | material | ...
+  equipped: boolean;
+  slot: string | null;
+}
+
 export interface GameResponse {
   game_id: string;
   message: string;
   message_type: MessageType;
   player_stats: PlayerStats;
-  inventory: string[];
+  inventory: InventoryEntry[];
   current_location: string;
   narrative_summary: string;
   simulated: boolean;

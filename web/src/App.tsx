@@ -119,6 +119,21 @@ export function App() {
     setData(null);
   }
 
+  // Fase 4.3: equipar/desequipar e recarregar o estado completo (AC/ataque derivam).
+  async function handleEquip(pick: { item_id?: string; unequip_slot?: string }) {
+    if (busy || !gameId.current) return;
+    setBusy(true);
+    try {
+      await api.postEquip({ ...pick, game_id: gameId.current });
+      const r = await api.getState(gameId.current);
+      setData(r);
+    } catch (err) {
+      setBanner({ msg: "Não deu para equipar: " + errMsg(err), kind: "error" });
+    } finally {
+      setBusy(false);
+    }
+  }
+
   // Fase 4.1: aplica escolha de level up e mescla o player atualizado no estado.
   async function handleLevelUp(choiceId: string, pick: { ability_id?: string; attr?: string }) {
     if (busy) return;
@@ -173,6 +188,7 @@ export function App() {
               onAction={handleAction}
               onNew={handleNew}
               onLevelUp={handleLevelUp}
+              onEquip={handleEquip}
             />
           </motion.div>
         )}

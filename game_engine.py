@@ -256,9 +256,27 @@ def run_game_loop():
                 break
             
             if user_input.lower() == "status":
+                from inventory import item_display
+                eq = p.get("equipment") or {}
+                inv_txt = ", ".join(
+                    f"{item_display(e)} x{e.get('qty', 1)}" +
+                    (" [equipado]" if e.get("id") in eq.values() else "")
+                    for e in (p.get("inventory") or []) if isinstance(e, dict)
+                ) or "vazio"
                 print(f"\n{Colors.CYAN}--- FICHA DE {p['name'].upper()} ---")
                 print(f"Resumo da História: {state.get('narrative_summary')}")
-                print(f"Inventário: {p['inventory']}{Colors.ENDC}")
+                print(f"Inventário: {inv_txt}{Colors.ENDC}")
+                continue
+
+            # Fase 4.3: "equipar <item>" resolve local, sem gastar turno de LLM
+            if user_input.lower().startswith("equipar "):
+                from inventory import equip
+                novo, err = equip(p, user_input[8:].strip())
+                if err:
+                    print(f"{Colors.WARNING}{err}{Colors.ENDC}")
+                else:
+                    state["player"] = novo
+                    print(f"{Colors.GREEN}✔ Equipado.{Colors.ENDC}")
                 continue
 
             current_msgs = state.get("messages", [])

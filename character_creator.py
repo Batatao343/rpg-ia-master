@@ -103,9 +103,12 @@ def apply_racial_traits(sheet: Dict[str, Any], race: str) -> Dict[str, Any]:
         if fx.get("gold_bonus"):
             sheet["gold"] = int(sheet.get("gold", 0)) + int(fx["gold_bonus"])
         for item in fx.get("start_items") or []:
+            # Fase 4.3: inventário estruturado ({id, qty}); nome vira id se resolver
+            from inventory import add_item, item_display
             inv = sheet.setdefault("inventory", [])
-            if item not in inv:
-                inv.append(item)
+            if not any(item_display(e) == item or e.get("id") == item
+                       for e in inv if isinstance(e, dict)):
+                sheet["inventory"] = add_item(inv, item, 1)
         resists.extend(str(c).lower() for c in fx.get("condition_resist") or [])
         for attr, inc in (fx.get("save_bonus") or {}).items():
             k = normalize_attr(attr)
@@ -221,16 +224,30 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
         "mana": final_mana,
         "max_mana": final_mana,
         "attributes": stats_data["attributes"],
-        "inventory": stats_data["inventory"],
-        "known_abilities": final_abilities, # <--- AQUI ESTÁ A CORREÇÃO
+        "inventory": [],  # Fase 4.3: preenchido abaixo (ids canônicos + flavor)
+        "known_abilities": final_abilities,
         "level": level,
         "xp": 0,
         "pending_choices": []
     }
 
+    # Fase 4.3: inventário estruturado — starting_equipment CANÔNICO da classe
+    # (arma inicial COM stats — fecha o bug da "Espada Gasta") + flavor do LLM
+    # (resolve para id quando der; senão vira item_desconhecido com display_name).
+    from inventory import add_item, backfill_inventory
+    inv = []
+    for iid in class_data.get("starting_equipment", []) or []:
+        inv = add_item(inv, iid, 1)
+    for free_name in stats_data.get("inventory", []) or []:
+        inv = add_item(inv, str(free_name), 1)
+    sheet["inventory"] = inv
+
     # 5. TRAITS RACIAIS (Fase 2.5b) — determinístico, ANTES de defesa/ataque
     #    (bônus racial de atributo deve refletir nos mods derivados).
     apply_racial_traits(sheet, race)
+
+    # Fase 4.3: slots de equipamento (auto-equipa melhor arma/armadura UMA vez)
+    sheet.update(backfill_inventory(sheet))
 
     # Cálculo de Defesa (Simples: 10 + Dex Mod, ou valor base da classe se for maior)
     dex_mod = _get_mod(sheet["attributes"].get("dex", 10))

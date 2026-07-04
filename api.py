@@ -57,6 +57,12 @@ class ActionRequest(BaseModel):
     input_text: str
     game_id: Optional[str] = None # Opcional: permite especificar qual save carregar
 
+class EquipRequest(BaseModel):
+    """Fase 4.3: equipa item do inventário (slot deduzido do tipo) ou desequipa slot."""
+    item_id: Optional[str] = None   # equipar este item
+    unequip_slot: Optional[str] = None  # OU esvaziar este slot
+    game_id: Optional[str] = None
+
 class LevelUpRequest(BaseModel):
     """Fase 4.1: consome UMA pending_choice. kind=ability -> ability_id;
     kind=attribute -> attr (str/dex/con/int/wis/cha ou nome longo/PT)."""
@@ -68,9 +74,10 @@ class LevelUpRequest(BaseModel):
 class GameResponse(BaseModel):
     game_id: str # <--- Novo: Frontend precisa saber o ID
     message: str
-    message_type: str 
+    message_type: str
     player_stats: Dict[str, Any]
-    inventory: List[str]
+    # Fase 4.3: estruturado — {id, name, qty, type, equipped, slot}
+    inventory: List[Dict[str, Any]]
     current_location: str
     narrative_summary: str # <--- Novo: Frontend pode mostrar o resumo
     last_turn_log: List[Dict[str, Any]]
@@ -127,7 +134,7 @@ def format_response(state: dict) -> GameResponse:
             "pending_choices": state["player"].get("pending_choices", []) or [],
             "level_up": _levelup_block(state["player"]),
         },
-        inventory=state["player"]["inventory"],
+        inventory=_inventory_block(state["player"]),
         current_location=state["world"]["current_location"],
         narrative_summary=state.get("narrative_summary", ""),
         last_turn_log=_serialize_messages(state["messages"][-5:]),
@@ -144,6 +151,27 @@ def format_response(state: dict) -> GameResponse:
                                  state.get("event_log", []) or [],
                                  state.get("world_projection", {}) or {}),
     )
+
+
+def _inventory_block(player: dict) -> List[Dict[str, Any]]:
+    """Fase 4.3: inventário estruturado com nome canônico (nunca title() sobre id)."""
+    import inventory as inv_mod
+    from gamedata import ARTIFACTS_DB
+    eq = player.get("equipment") or {}
+    equipped = {v: k for k, v in eq.items() if v}
+    out = []
+    for e in player.get("inventory") or []:
+        if not isinstance(e, dict):  # tolerância a estado antigo em memória
+            e = inv_mod.make_entry(str(e), 1)
+        item = ARTIFACTS_DB.get(e.get("id", "")) or {}
+        out.append({
+            "id": e.get("id"), "name": inv_mod.item_display(e),
+            "qty": int(e.get("qty", 1)),
+            "type": item.get("type", "desconhecido"),
+            "equipped": e.get("id") in equipped,
+            "slot": equipped.get(e.get("id")) or inv_mod.slot_for(e.get("id", "")),
+        })
+    return out
 
 
 def _levelup_block(player: dict) -> Dict[str, Any]:
@@ -494,6 +522,33 @@ def game_action(req: ActionRequest):
     except Exception as e:
         print(f"Erro na API: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/game/equip")
+def game_equip(req: EquipRequest):
+    """Fase 4.3: equipar/desequipar — validação 100% Python (inventory.equip)."""
+    import inventory as inv_mod
+    file_to_load = f"saves/{req.game_id}.json" if req.game_id else None
+    state = load_game_state(file_to_load)
+    if not state:
+        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+
+    if req.item_id:
+        player, err = inv_mod.equip(state["player"], req.item_id)
+    elif req.unequip_slot:
+        player, err = inv_mod.unequip(state["player"], req.unequip_slot)
+    else:
+        raise HTTPException(status_code=400, detail="Informe item_id ou unequip_slot.")
+    if err:
+        raise HTTPException(status_code=400, detail=err)
+
+    state["player"] = player
+    save_game_state(state)
+    import combat_mechanics as cm_mod
+    stats = cm_mod.compute_player_combat_stats(player)
+    return {"ok": True, "equipment": player.get("equipment"),
+            "inventory": _inventory_block(player),
+            "derived": {"ac": stats["ac"], "attack": stats["attack"]}}
+
 
 @app.post("/game/levelup")
 def game_levelup(req: LevelUpRequest):

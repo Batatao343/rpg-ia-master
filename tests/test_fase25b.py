@@ -147,7 +147,9 @@ def test_apply_racial_traits_anao():
     assert sheet["hp"] == 35 and sheet["max_hp"] == 35
     assert "veneno" in sheet["condition_resists"]
     assert sheet["racial_save_bonus"].get("con") == 2
-    assert "Respirador de Couro" in sheet["inventory"]
+    # Fase 4.3: inventário estruturado — item racial entra com display_name preservado
+    from inventory import item_display
+    assert any(item_display(e) == "Respirador de Couro" for e in sheet["inventory"])
     assert len(sheet["racial_traits"]) == 2
 
 

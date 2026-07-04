@@ -54,6 +54,17 @@ export interface LevelUpResult {
   };
 }
 
+// Fase 4.3: equipar/desequipar (validação server-side).
+export const postEquip = (payload: {
+  item_id?: string;
+  unequip_slot?: string;
+  game_id?: string | null;
+}) =>
+  req<{ ok: boolean }>("/game/equip", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
 export const postLevelUp = (payload: {
   choice_id: string;
   ability_id?: string;

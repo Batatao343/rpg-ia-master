@@ -643,3 +643,10 @@ select {
 @keyframes lvl-pulse { 0%, 100% { box-shadow: 0 0 0 0 transparent; } 50% { box-shadow: 0 0 14px 2px var(--accent-glow); } }
 .lvlup-hint { margin: 0.2rem 0 0; font-size: 0.8rem; color: var(--accent); }
 .ability__branch { color: var(--accent); }
+
+/* ---------- Fase 4.3: inventário com equipar ---------- */
+.inv__item { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
+.inv__item.is-equipped { color: var(--accent); }
+.inv__tag { font-style: normal; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.inv__equip { font: inherit; font-size: 0.72rem; padding: 0.1rem 0.5rem; border: 1px solid var(--line-soft); border-radius: 6px; background: var(--surface-2); color: var(--muted); cursor: pointer; }
+.inv__equip:hover { border-color: var(--accent); color: var(--ink); }

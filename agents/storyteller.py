@@ -70,6 +70,14 @@ class StoryUpdate(BaseModel):
             "destino for claro. Deixe vazio na dúvida — não invente missões."
         ),
     )
+    items_gained: List[str] = Field(
+        default_factory=list,
+        description=(
+            "APENAS se a narrativa deu um item CONCRETO ao jogador NESTE turno "
+            "(recebeu, pegou, ganhou). Nome do item conhecido — NÃO invente itens "
+            "novos (criação de item é papel do baú/loja). Vazio na dúvida."
+        ),
+    )
 
 
 def _scene_canonical_entities(state: GameState, factions: list, intel: dict, loc: str) -> str:
@@ -345,6 +353,25 @@ def storyteller_node(state: GameState):
             updates["player"] = rested_player
         if leveled_player is not None:  # Fase 4.1: XP do beat (inclui o descanso, se houve)
             updates["player"] = leveled_player
+
+        # Fase 4.3 (R5): item narrado ENTRA no inventário — só se resolver no
+        # ARTIFACTS_DB (storyteller não cria item; isso é papel do loot_node).
+        gained = [g for g in (getattr(update, "items_gained", []) or []) if str(g).strip()]
+        if gained:
+            from inventory import add_item, resolve_item_name
+            cur_p = dict(updates.get("player") or state.get("player") or {})
+            inv = list(cur_p.get("inventory") or [])
+            changed = False
+            for g in gained:
+                iid = resolve_item_name(str(g))
+                if iid:
+                    inv = add_item(inv, iid, 1)
+                    changed = True
+                else:
+                    print(f"⚠️ [STORYTELLER] item narrado desconhecido ignorado: {g!r}")
+            if changed:
+                cur_p["inventory"] = inv
+                updates["player"] = cur_p
         # Viagem/descanso/beat concluído = evento relevante → pede arquivamento.
         if dest or rested_player is not None or beat_done:
             updates["archive_due"] = True

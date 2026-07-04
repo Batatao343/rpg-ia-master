@@ -8,7 +8,11 @@ import { Medallion } from "./ornaments";
 
 type Tab = "ficha" | "combate" | "personagens" | "mapa" | "faccoes" | "missoes" | "cronica" | "codex";
 
-export function Hud({ data, open }: { data: GameResponse | null; open: boolean }) {
+type EquipFn = (pick: { item_id?: string; unequip_slot?: string }) => void;
+
+export function Hud({ data, open, onEquip, busy }: {
+  data: GameResponse | null; open: boolean; onEquip?: EquipFn; busy?: boolean;
+}) {
   const p = data?.player_stats;
   const sub = [p?.class_name, p?.race].filter(Boolean).join(" · ") || "—";
   const fighting = !!data?.combat?.active;
@@ -73,7 +77,7 @@ export function Hud({ data, open }: { data: GameResponse | null; open: boolean }
       </nav>
 
       <div className="tabpanel" role="tabpanel">
-        {tab === "ficha" && <FichaTab data={data} hpHitKey={hpHit} />}
+        {tab === "ficha" && <FichaTab data={data} hpHitKey={hpHit} onEquip={onEquip} busy={busy} />}
         {tab === "combate" && <CombatTab c={data?.combat} hitKey={hpHit} />}
         {tab === "personagens" && <PeopleTab npcs={data?.npcs ?? []} />}
         {tab === "mapa" && (
@@ -101,7 +105,9 @@ export function Hud({ data, open }: { data: GameResponse | null; open: boolean }
   );
 }
 
-function FichaTab({ data, hpHitKey }: { data: GameResponse | null; hpHitKey: number }) {
+function FichaTab({ data, hpHitKey, onEquip, busy }: {
+  data: GameResponse | null; hpHitKey: number; onEquip?: EquipFn; busy?: boolean;
+}) {
   const p = data?.player_stats;
   const hpLow = p ? pct(p.hp, p.max_hp) <= 30 : false;
   const abilities = p?.abilities ?? [];
@@ -149,7 +155,27 @@ function FichaTab({ data, hpHitKey }: { data: GameResponse | null; hpHitKey: num
           {(data?.inventory ?? []).length === 0 ? (
             <li className="empty">Vazio</li>
           ) : (
-            data!.inventory.map((it, i) => <li key={i}>{prettyItem(it)}</li>)
+            data!.inventory.map((it, i) => (
+              <li key={`${it.id}-${i}`} className={"inv__item" + (it.equipped ? " is-equipped" : "")}>
+                <span>
+                  {it.name}
+                  {it.qty > 1 ? ` ×${it.qty}` : ""}
+                  {it.equipped ? <em className="inv__tag"> equipado</em> : null}
+                </span>
+                {onEquip && it.slot && !it.equipped && it.id !== "item_desconhecido" && (
+                  <button className="inv__equip" disabled={busy}
+                          onClick={() => onEquip({ item_id: it.id })}>
+                    equipar
+                  </button>
+                )}
+                {onEquip && it.equipped && it.slot && (
+                  <button className="inv__equip" disabled={busy}
+                          onClick={() => onEquip({ unequip_slot: it.slot! })}>
+                    tirar
+                  </button>
+                )}
+              </li>
+            ))
           )}
         </ul>
       </div>

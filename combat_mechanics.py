@@ -358,20 +358,31 @@ def tick_cooldowns(player: Dict) -> None:
 # Stats de combate do player (centraliza a lógica antes em combat.py)
 # --------------------------------------------------------------------------
 def compute_player_combat_stats(player: Dict) -> Dict:
-    """AC, bônus de ataque e atributo de ataque, considerando itens do ARTIFACTS_DB."""
+    """AC, bônus de ataque e atributo de ataque a partir do EQUIPAMENTO (Fase 4.3:
+    só os slots contam — fim do auto-scan do inventário inteiro). Sem `equipment`
+    (fichas antigas em memória/testes), cai no scan legado por compatibilidade."""
     mods = attr_mods(player.get("attributes", {}))
     best_atk_bonus = 0
     ac_bonus = 0
     attack_attr = "str"
-    for item_id in player.get("inventory", []) or []:
+
+    equipment = player.get("equipment")
+    if isinstance(equipment, dict):
+        equipped_ids = [v for v in equipment.values() if v]
+    else:
+        # legado: inventário de strings OU estruturado ({id, qty}) sem slots
+        equipped_ids = [e.get("id") if isinstance(e, dict) else e
+                        for e in (player.get("inventory") or [])]
+
+    for item_id in equipped_ids:
         item = ARTIFACTS_DB.get(item_id)
         if not item:
             continue
         stats = item.get("combat_stats", {})
         if item.get("type") == "weapon":
             b = stats.get("attack_bonus", 0)
-            if b > best_atk_bonus:
-                best_atk_bonus = b
+            if b > best_atk_bonus or (best_atk_bonus == 0 and "attribute" in stats):
+                best_atk_bonus = max(best_atk_bonus, b)
                 if "attribute" in stats:
                     attack_attr = normalize_attr(stats["attribute"])
         ac_bonus += stats.get("ac_bonus", 0)

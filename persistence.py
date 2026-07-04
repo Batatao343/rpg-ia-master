@@ -144,6 +144,9 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
         if raw_player:
             from progression import canonicalize_known_abilities
             raw_player = canonicalize_known_abilities(raw_player)
+            # Fase 4.3 (R7): inventário de strings -> {id, qty} + slots default
+            from inventory import backfill_inventory
+            raw_player = backfill_inventory(raw_player)
 
         # Reconstrói o Estado compatível com GameState
         state = {
