@@ -473,6 +473,60 @@ def test_combat_kill_da_xp(monkeypatch):
     assert lvl and lvl[0]["source"] == "progression"
 
 
+# ---------------------------------------------------------------------------
+# Etapa 6 — API: /game/levelup + state expõe progressão
+# ---------------------------------------------------------------------------
+
+def test_levelup_endpoint_aplica_e_invalida(tmp_path, monkeypatch):
+    from fastapi.testclient import TestClient
+    import api as api_mod
+
+    player = make_player(level=2, pending_choices=[
+        {"id": "lvl2-ability", "level": 2, "kind": "ability"},
+        {"id": "lvl2-attr", "level": 2, "kind": "attribute"}])
+    fake_state = _pipeline_state(player=player,
+                                 messages=[], narrative_summary="")
+
+    saved = {}
+    monkeypatch.setattr(api_mod, "load_game_state", lambda f=None: dict(fake_state))
+    monkeypatch.setattr(api_mod, "save_game_state", lambda s: saved.update(s))
+    client = TestClient(api_mod.app)
+
+    # habilidade elegível (tronco do Cavaleiro, lv2)
+    r = client.post("/game/levelup", json={"choice_id": "lvl2-ability",
+                                           "ability_id": "postura_vigilante"})
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert any(a["id"] == "postura_vigilante" for a in body["player_stats"]["abilities"])
+    assert saved["player"]["known_abilities"][-1] == "postura_vigilante"
+
+    # inelegível (ramo sem nível) -> 400, save intocado
+    saved.clear()
+    r2 = client.post("/game/levelup", json={"choice_id": "lvl2-ability",
+                                            "ability_id": "ultimo_bastiao"})
+    assert r2.status_code == 400
+    assert not saved
+
+    # atributo
+    r3 = client.post("/game/levelup", json={"choice_id": "lvl2-attr", "attr": "força"})
+    assert r3.status_code == 200
+    assert saved["player"]["attributes"]["str"] == 17
+
+
+def test_levelup_block_no_state():
+    import api as api_mod
+    p = make_player(level=2, pending_choices=[
+        {"id": "lvl2-ability", "level": 2, "kind": "ability"}])
+    block = api_mod._levelup_block(p)
+    assert block["pending"]
+    ids = [e["id"] for e in block["eligible"]]
+    assert "postura_vigilante" in ids
+    assert block["current_branch"] is None
+    assert "muralha" in block["branches"]
+    # sem pendência -> bloco vazio (payload enxuto)
+    assert api_mod._levelup_block(make_player()) == {}
+
+
 def test_backfill_save_antigo():
     p = make_player(known_abilities=[
         "[Passiva] Muralha Humana: +2 Defesa",

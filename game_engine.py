@@ -12,7 +12,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from main import app
 from persistence import save_game_state, load_game_state
-from gamedata import CLASSES, load_json_data, seed_factions
+from gamedata import ABILITIES, CLASSES, load_json_data, seed_factions
+import progression
 from character_creator import create_player_character
 from services.chronicle import default_chapter_title
 from world_utils import starting_world
@@ -33,6 +34,48 @@ class Colors:
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def _resolve_pending_choices(player: dict) -> dict:
+    """Fase 4.1: prompt de level up no fim do turno. ENTER adia (não bloqueia)."""
+    while player.get("pending_choices"):
+        choice = player["pending_choices"][0]
+        kind = choice.get("kind")
+        print(f"\n{Colors.HEADER}⬆ NÍVEL {choice.get('level')} — "
+              f"{'nova habilidade' if kind == 'ability' else 'ponto de atributo'}!{Colors.ENDC}")
+
+        if kind == "ability":
+            elig = progression.eligible_abilities(player)
+            if not elig:
+                print(f"{Colors.WARNING}Nenhuma habilidade elegível agora — escolha fica pendente.{Colors.ENDC}")
+                return player
+            branches = (CLASSES.get(player.get("class_name", "")) or {}).get("branches") or {}
+            for i, aid in enumerate(elig, 1):
+                a = ABILITIES.get(aid, {})
+                br = a.get("branch")
+                tag = f" [{(branches.get(br) or {}).get('name', br)}]" if br else ""
+                print(f"  {i}. {a.get('name', aid)}{tag} — {a.get('description', '')[:70]}")
+            raw = input(f"{Colors.BOLD}Escolha (número, ENTER = depois): {Colors.ENDC}").strip()
+            if not raw:
+                return player
+            try:
+                aid = elig[int(raw) - 1]
+            except (ValueError, IndexError):
+                print(f"{Colors.WARNING}Opção inválida — escolha fica pendente.{Colors.ENDC}")
+                return player
+            player, err = progression.apply_choice(player, choice["id"], ability_id=aid)
+        else:
+            raw = input(f"{Colors.BOLD}+1 em qual atributo (str/dex/con/int/wis/cha, "
+                        f"ENTER = depois)? {Colors.ENDC}").strip()
+            if not raw:
+                return player
+            player, err = progression.apply_choice(player, choice["id"], attr=raw)
+
+        if err:
+            print(f"{Colors.WARNING}{err}{Colors.ENDC}")
+            return player
+        print(f"{Colors.GREEN}✔ Escolha aplicada.{Colors.ENDC}")
+    return player
 
 def select_from_list(options, title_key="name", prompt="Escolha"):
     print(f"\n--- {prompt} ---")
@@ -199,7 +242,9 @@ def run_game_loop():
     while True:
         try:
             p = state["player"]
-            status_line = f"[{p['name']} (Lv {p['level']}) | HP: {p['hp']}/{p['max_hp']} | Ouro: {p['gold']}]"
+            pend = len(p.get("pending_choices", []) or [])
+            badge = f" | ⬆ {pend} escolha(s) de nível" if pend else ""
+            status_line = f"[{p['name']} (Lv {p['level']}) | HP: {p['hp']}/{p['max_hp']} | Ouro: {p['gold']}{badge}]"
             
             user_input = input(f"\n{Colors.BOLD}{status_line}\n> Você: {Colors.ENDC}").strip()
             
@@ -236,6 +281,10 @@ def run_game_loop():
                 print(f"\n{Colors.GREEN}🗣️  {content}{Colors.ENDC}")
             else:
                 print(f"\n{Colors.BLUE}📜 {content}{Colors.ENDC}")
+
+            # Fase 4.1: level up pendente? Resolve no fim do turno (não bloqueia o jogo:
+            # ENTER pula e a escolha continua pendente para depois).
+            state["player"] = _resolve_pending_choices(state["player"])
 
             if state["player"]["hp"] <= 0:
                 print(f"\n{Colors.FAIL}💀 VOCÊ MORREU.{Colors.ENDC}")

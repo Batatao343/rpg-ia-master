@@ -21,7 +21,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from main import app as game_graph
 from persistence import save_game_state, load_game_state, _serialize_messages
 from character_creator import create_player_character
-from gamedata import CLASSES, load_json_data, seed_factions
+from gamedata import ABILITIES, CLASSES, load_json_data, seed_factions
+import progression
 from services import quest_log
 from services import state_views as sv
 from services.chronicle import default_chapter_title
@@ -55,6 +56,14 @@ class CreateCharacterRequest(BaseModel):
 class ActionRequest(BaseModel):
     input_text: str
     game_id: Optional[str] = None # Opcional: permite especificar qual save carregar
+
+class LevelUpRequest(BaseModel):
+    """Fase 4.1: consome UMA pending_choice. kind=ability -> ability_id;
+    kind=attribute -> attr (str/dex/con/int/wis/cha ou nome longo/PT)."""
+    choice_id: str
+    ability_id: Optional[str] = None
+    attr: Optional[str] = None
+    game_id: Optional[str] = None
 
 class GameResponse(BaseModel):
     game_id: str # <--- Novo: Frontend precisa saber o ID
@@ -108,7 +117,15 @@ def format_response(state: dict) -> GameResponse:
             "gold": state["player"].get("gold", 0),
             "level": state["player"].get("level", 1),
             "xp": state["player"].get("xp", 0),
-            "abilities": state["player"].get("known_abilities", []) or [],
+            # Fase 4.1: ids canônicos + nome exibível (frontend não mostra id cru)
+            "abilities": [
+                {"id": aid, "name": ABILITIES.get(aid, {}).get("name", aid),
+                 "branch": ABILITIES.get(aid, {}).get("branch")}
+                for aid in (state["player"].get("known_abilities", []) or [])
+            ],
+            "xp_next_level": progression.xp_to_next(int(state["player"].get("level", 1) or 1)),
+            "pending_choices": state["player"].get("pending_choices", []) or [],
+            "level_up": _levelup_block(state["player"]),
         },
         inventory=state["player"]["inventory"],
         current_location=state["world"]["current_location"],
@@ -127,6 +144,33 @@ def format_response(state: dict) -> GameResponse:
                                  state.get("event_log", []) or [],
                                  state.get("world_projection", {}) or {}),
     )
+
+
+def _levelup_block(player: dict) -> Dict[str, Any]:
+    """Fase 4.1: escolhas pendentes + elegíveis da árvore (vazio se nada pendente)."""
+    pending = player.get("pending_choices", []) or []
+    if not pending:
+        return {}
+    class_name = str(player.get("class_name", ""))
+    branches = (CLASSES.get(class_name) or {}).get("branches") or {}
+    eligible = []
+    for aid in progression.eligible_abilities(player):
+        a = ABILITIES.get(aid, {})
+        br = a.get("branch")
+        eligible.append({
+            "id": aid, "name": a.get("name", aid),
+            "description": a.get("description", ""),
+            "branch": br,
+            "branch_name": (branches.get(br) or {}).get("name") if br else None,
+            "tier": a.get("tier", 1), "cost": a.get("cost", 0),
+            "resource_type": a.get("resource_type", ""),
+        })
+    return {
+        "pending": pending,
+        "eligible": eligible,
+        "current_branch": progression.player_branch(player),
+        "branches": branches,
+    }
 
 
 def _chronicle_block(chronicle: list) -> List[Dict[str, Any]]:
@@ -450,6 +494,44 @@ def game_action(req: ActionRequest):
     except Exception as e:
         print(f"Erro na API: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/game/levelup")
+def game_levelup(req: LevelUpRequest):
+    """Fase 4.1: aplica UMA escolha de level up (habilidade ou atributo).
+
+    Validação 100% server-side (progression.apply_choice): escolha inexistente,
+    habilidade inelegível (classe/nível/pré-requisito/ramo rival) ou atributo
+    inválido → 400 e o save fica intocado."""
+    file_to_load = f"saves/{req.game_id}.json" if req.game_id else None
+    state = load_game_state(file_to_load)
+    if not state:
+        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+
+    player, err = progression.apply_choice(
+        state["player"], req.choice_id,
+        ability_id=req.ability_id, attr=req.attr)
+    if err:
+        raise HTTPException(status_code=400, detail=err)
+
+    state["player"] = player
+    save_game_state(state)
+    return {
+        "ok": True,
+        "player_stats": {
+            "level": player.get("level", 1),
+            "xp": player.get("xp", 0),
+            "xp_next_level": progression.xp_to_next(int(player.get("level", 1) or 1)),
+            "attributes": player.get("attributes", {}),
+            "abilities": [
+                {"id": aid, "name": ABILITIES.get(aid, {}).get("name", aid),
+                 "branch": ABILITIES.get(aid, {}).get("branch")}
+                for aid in (player.get("known_abilities", []) or [])
+            ],
+            "pending_choices": player.get("pending_choices", []) or [],
+            "level_up": _levelup_block(player),
+        },
+    }
+
 
 # --- FRONTEND ESTÁTICO ---
 # Servido na raiz "/". As rotas de API acima têm precedência sobre o mount.
