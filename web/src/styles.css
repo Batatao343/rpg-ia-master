@@ -616,3 +616,30 @@ select {
   *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
   .ember-canvas { display: none; }
 }
+
+/* ---------- Fase 4.1: level up (modal + acentos) ---------- */
+.overlay--levelup { background: radial-gradient(circle at 50% 38%, oklch(0.16 0.03 76 / 0.84), oklch(0.08 0.015 250 / 0.96)); overflow-y: auto; }
+.lvlup { width: min(680px, 92vw); max-height: 88vh; overflow-y: auto; padding: 1.6rem 1.8rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: 0 0 60px var(--accent-glow); display: grid; gap: 0.9rem; text-align: left; }
+.lvlup__kicker { margin: 0; font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); }
+.lvlup__title { margin: 0; font-family: var(--decorative); font-size: 1.6rem; color: var(--ink); }
+.lvlup__groups { display: grid; gap: 1rem; }
+.lvlup__group--branch { border-top: 1px solid var(--line-soft); padding-top: 0.7rem; }
+.lvlup__branch { margin: 0 0 0.15rem; font-size: 1.02rem; color: var(--accent); display: flex; align-items: center; gap: 0.5rem; }
+.lvlup__locked { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.1rem 0.45rem; border: 1px solid currentColor; border-radius: 999px; color: var(--accent); }
+.lvlup__theme { margin: 0 0 0.4rem; font-size: 0.82rem; color: var(--muted); }
+.lvlup__theme em { color: var(--danger-bright, oklch(0.68 0.19 25)); font-style: normal; }
+.lvlup__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
+.lvlup__card { width: 100%; text-align: left; display: grid; gap: 0.2rem; padding: 0.55rem 0.7rem; border: 1px solid var(--line-soft); border-radius: 8px; background: var(--surface-2); color: var(--ink); cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; font: inherit; }
+.lvlup__card:hover { border-color: var(--accent); }
+.lvlup__card.is-picked { border-color: var(--accent-strong); box-shadow: 0 0 18px var(--accent-glow); }
+.lvlup__card-top { display: flex; justify-content: space-between; gap: 0.6rem; align-items: baseline; }
+.lvlup__tier { font-size: 0.72rem; color: var(--faint); white-space: nowrap; }
+.lvlup__desc { font-size: 0.82rem; color: var(--muted); }
+.lvlup__attrs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+.lvlup__attr { display: grid; gap: 0.1rem; justify-items: center; padding: 0.65rem 0.4rem; border: 1px solid var(--line-soft); border-radius: 8px; background: var(--surface-2); color: var(--ink); cursor: pointer; font: inherit; }
+.lvlup__attr.is-picked { border-color: var(--accent-strong); box-shadow: 0 0 14px var(--accent-glow); }
+.lvlup__actions { display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 0.3rem; }
+.iconbtn--levelup { border-color: var(--accent); color: var(--accent); animation: lvl-pulse 1.6s ease-in-out infinite; }
+@keyframes lvl-pulse { 0%, 100% { box-shadow: 0 0 0 0 transparent; } 50% { box-shadow: 0 0 14px 2px var(--accent-glow); } }
+.lvlup-hint { margin: 0.2rem 0 0; font-size: 0.8rem; color: var(--accent); }
+.ability__branch { color: var(--accent); }

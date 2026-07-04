@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { GameResponse, LogEntry } from "../types";
 import { StoryLog } from "./StoryLog";
 import { Hud } from "./Hud";
+import { LevelUpModal } from "./LevelUpModal";
 
 interface Props {
   data: GameResponse | null;
@@ -10,16 +11,24 @@ interface Props {
   busy: boolean;
   onAction: (text: string) => void;
   onNew: () => void;
+  onLevelUp: (choiceId: string, pick: { ability_id?: string; attr?: string }) => void;
 }
 
-export function PlayScreen({ data, log, thinking, busy, onAction, onNew }: Props) {
+export function PlayScreen({ data, log, thinking, busy, onAction, onNew, onLevelUp }: Props) {
   const [input, setInput] = useState("");
   const [hudOpen, setHudOpen] = useState(false);
+  const [luDismissed, setLuDismissed] = useState(false);
 
   const w = data?.world;
   const clock = w?.period ? `Dia ${w.day} · ${w.period}` : "Dia 1 · Amanhecer";
   const dead = (data?.player_stats.hp ?? 1) <= 0;
   const fighting = !!data?.combat?.active;
+
+  // Fase 4.1: escolha pendente reabre o modal quando MUDA (novo level up).
+  const pending = data?.player_stats?.pending_choices ?? [];
+  const pendingKey = pending[0]?.id ?? "";
+  useEffect(() => setLuDismissed(false), [pendingKey]);
+  const showLevelUp = pending.length > 0 && !luDismissed && !dead && !fighting;
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -40,6 +49,12 @@ export function PlayScreen({ data, log, thinking, busy, onAction, onNew }: Props
         </div>
         <div className="topbar__right">
           {fighting && <span className="combat-flag">⚔ Combate</span>}
+          {pending.length > 0 && !showLevelUp && !dead && (
+            <button className="iconbtn iconbtn--levelup" type="button"
+                    onClick={() => setLuDismissed(false)}>
+              ⬆ Nível!
+            </button>
+          )}
           <button className="iconbtn" type="button" onClick={() => setHudOpen((v) => !v)}>
             ☰ Ficha
           </button>
@@ -70,6 +85,15 @@ export function PlayScreen({ data, log, thinking, busy, onAction, onNew }: Props
           {busy ? "…" : fighting ? "Lutar" : "Agir"}
         </button>
       </form>
+
+      {showLevelUp && data && (
+        <LevelUpModal
+          player={data.player_stats}
+          busy={busy}
+          onChoose={onLevelUp}
+          onLater={() => setLuDismissed(true)}
+        />
+      )}
 
       {dead && (
         <div className="overlay">

@@ -45,3 +45,22 @@ export const getState = (game_id: string) =>
 
 export const getCodex = (game_id: string) =>
   req<PlayerCodex>("/game/codex?game_id=" + encodeURIComponent(game_id));
+
+// Fase 4.1: aplica UMA escolha de level up (validação é server-side).
+export interface LevelUpResult {
+  ok: boolean;
+  player_stats: Partial<import("./types").PlayerStats> & {
+    attributes?: Record<string, number>;
+  };
+}
+
+export const postLevelUp = (payload: {
+  choice_id: string;
+  ability_id?: string;
+  attr?: string;
+  game_id?: string | null;
+}) =>
+  req<LevelUpResult>("/game/levelup", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });

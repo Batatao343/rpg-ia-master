@@ -1,5 +1,45 @@
 // Espelha os DTOs da API (api.py :: GameResponse / blocos auxiliares).
 
+// Fase 4.1: habilidade conhecida (id canônico + nome exibível)
+export interface AbilityRef {
+  id: string;
+  name: string;
+  branch: string | null;
+}
+
+export interface PendingChoice {
+  id: string;
+  level: number;
+  kind: "ability" | "attribute";
+}
+
+export interface EligibleAbility {
+  id: string;
+  name: string;
+  description: string;
+  branch: string | null;
+  branch_name: string | null;
+  tier: number;
+  cost: number;
+  resource_type: string;
+}
+
+export interface BranchInfo {
+  name: string;
+  theme: string;
+  lore_ref?: string | null;
+  identity: string;
+  description: string;
+}
+
+// Vazio ({}) quando não há escolha pendente — payload enxuto.
+export interface LevelUpBlock {
+  pending?: PendingChoice[];
+  eligible?: EligibleAbility[];
+  current_branch?: string | null;
+  branches?: Record<string, BranchInfo>;
+}
+
 export interface PlayerStats {
   name: string;
   class_name: string;
@@ -14,7 +54,10 @@ export interface PlayerStats {
   gold: number;
   level: number;
   xp: number;
-  abilities: string[];
+  abilities: AbilityRef[];
+  xp_next_level: number | null; // null = nível máximo
+  pending_choices: PendingChoice[];
+  level_up: LevelUpBlock;
 }
 
 export interface NpcView {

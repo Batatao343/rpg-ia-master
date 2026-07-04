@@ -119,6 +119,22 @@ export function App() {
     setData(null);
   }
 
+  // Fase 4.1: aplica escolha de level up e mescla o player atualizado no estado.
+  async function handleLevelUp(choiceId: string, pick: { ability_id?: string; attr?: string }) {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const r = await api.postLevelUp({ choice_id: choiceId, ...pick, game_id: gameId.current });
+      setData((prev) =>
+        prev ? { ...prev, player_stats: { ...prev.player_stats, ...r.player_stats } } : prev
+      );
+    } catch (err) {
+      setBanner({ msg: "Escolha recusada: " + errMsg(err), kind: "error" });
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <MotionConfig reducedMotion="user">
       <div className="atmosphere" aria-hidden />
@@ -156,6 +172,7 @@ export function App() {
               busy={busy}
               onAction={handleAction}
               onNew={handleNew}
+              onLevelUp={handleLevelUp}
             />
           </motion.div>
         )}

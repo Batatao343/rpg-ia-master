@@ -115,10 +115,17 @@ function FichaTab({ data, hpHitKey }: { data: GameResponse | null; hpHitKey: num
 
       <div className="stats">
         <div className="stat"><span>Nível</span><b>{p?.level ?? 1}</b></div>
-        <div className="stat"><span>XP</span><b>{p?.xp ?? 0}</b></div>
+        <div className="stat">
+          <span>XP</span>
+          <b>{p?.xp ?? 0}{p?.xp_next_level != null ? ` / ${p.xp_next_level}` : ""}</b>
+        </div>
         <div className="stat"><span>Ouro</span><b>{p?.gold ?? 0}</b></div>
         <div className="stat"><span>Defesa</span><b>{p?.defense ?? 0}</b></div>
       </div>
+
+      {(p?.pending_choices?.length ?? 0) > 0 && (
+        <p className="lvlup-hint">⬆ Escolha de nível pendente — botão “Nível!” no topo.</p>
+      )}
 
       <div>
         <p className="hud__label">Habilidades</p>
@@ -126,7 +133,12 @@ function FichaTab({ data, hpHitKey }: { data: GameResponse | null; hpHitKey: num
           {abilities.length === 0 ? (
             <li className="empty">Nenhuma habilidade conhecida</li>
           ) : (
-            abilities.map((a, i) => <li key={i}>{a}</li>)
+            abilities.map((a, i) => (
+              <li key={typeof a === "string" ? i : a.id}>
+                {typeof a === "string" ? a : a.name}
+                {typeof a !== "string" && a.branch ? <span className="ability__branch"> ◆</span> : null}
+              </li>
+            ))
           )}
         </ul>
       </div>
