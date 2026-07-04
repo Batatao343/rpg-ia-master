@@ -16,9 +16,12 @@ import random
 import re
 from typing import Dict, List, Optional, Tuple
 
-from gamedata import ARTIFACTS_DB
+from gamedata import ARTIFACTS_DB, CLASSES
 
 COOLDOWN_DEFAULT = 2  # turnos de recarga para habilidades com custo
+
+# Fase 4.2: nomes canônicos das condições de controle
+_CONTROL_NAMES = {"stun": "Atordoado", "root": "Enredado", "fear": "Medo"}
 
 _ATTR_ALIASES = {
     "strength": "str", "força": "str", "forca": "str",
@@ -164,13 +167,71 @@ def parse_condition(text: str, source: str = "") -> Dict:
 
     # nome curto: parte antes do parêntese / número
     name = re.split(r"[(\d]", t, maxsplit=1)[0].strip(" +-") or t
-    return {"name": name, "dot": dot, "duration": duration, "source": source}
+    cond = {"name": name, "dot": dot, "duration": duration, "source": source}
+
+    # Fase 4.2: fallback tipado p/ strings legadas — "+5 Dano por 3 turnos" vira
+    # {stat: "damage", delta: 5} (lido por condition_modifiers). Habilidade nova
+    # usa `effects` tipado direto; isto cobre só o acervo textual antigo.
+    low = t.lower()
+    m_stat = re.search(r"([+-]\s*\d+)\s*(dano|defesa|de\s*acerto|acerto)", low)
+    if m_stat and not dot:
+        delta = int(m_stat.group(1).replace(" ", ""))
+        word = m_stat.group(2)
+        cond["stat"] = ("damage" if "dano" in word
+                        else "ac" if "defesa" in word else "attack")
+        cond["delta"] = delta
+    if re.search(r"atordoa", low):
+        cond["control"] = "stun"
+        cond["name"] = _CONTROL_NAMES["stun"]
+    elif re.search(r"enredad|enraiza|agarrad", low):
+        cond["control"] = "root"
+        cond["name"] = _CONTROL_NAMES["root"]
+    elif re.search(r"\bmedo\b|apavora|aterroriza", low):
+        cond["control"] = "fear"
+        cond["name"] = _CONTROL_NAMES["fear"]
+    return cond
+
+
+def class_passives(entity: Dict) -> List[Dict]:
+    """Fase 4.2: passive_effects data-driven da classe (classes.json). [] p/ inimigos."""
+    cname = entity.get("class_name")
+    if not cname:
+        return []
+    return (CLASSES.get(cname) or {}).get("passive_effects") or []
+
+
+def condition_modifiers(entity: Dict) -> Dict[str, int]:
+    """Fase 4.2: soma dos deltas das condições ativas por stat.
+
+    Buff/debuff tipado ({stat, delta}) entra direto; `fear` embute -2 de acerto.
+    """
+    out = {"damage": 0, "ac": 0, "attack": 0, "save": 0}
+    for c in entity.get("active_conditions", []) or []:
+        stat = c.get("stat")
+        if stat in out:
+            try:
+                out[stat] += int(c.get("delta", 0) or 0)
+            except (TypeError, ValueError):
+                pass
+        if c.get("control") == "fear":
+            out["attack"] -= 2
+    return out
+
+
+def has_control(entity: Dict, kind: str) -> bool:
+    """Fase 4.2: True se há condição de controle ativa ("stun"/"root"/"fear")."""
+    return any(c.get("control") == kind
+               for c in entity.get("active_conditions", []) or [])
 
 
 def is_condition_resisted(entity: Dict, cond_name: str) -> bool:
-    """True se o nome da condição bate (substring) com um resist racial do alvo."""
+    """True se o nome da condição bate (substring) com um resist do alvo
+    (racial 2.5b em `condition_resists` OU passiva de classe 4.2 trigger=resist)."""
     name = str(cond_name or "").lower()
-    return any(r and r in name for r in entity.get("condition_resists", []) or [])
+    resists = [str(r).lower() for r in entity.get("condition_resists", []) or []]
+    resists += [str(pe.get("name", "")).lower() for pe in class_passives(entity)
+                if pe.get("trigger") == "resist"]
+    return any(r and r in name for r in resists)
 
 
 def apply_condition(entity: Dict, cond: Dict) -> str:
@@ -216,11 +277,18 @@ def tick_conditions(entity: Dict) -> List[str]:
 # Iniciativa
 # --------------------------------------------------------------------------
 def roll_initiative(player: Dict, enemies: List[Dict]) -> List[Dict]:
-    """d20 + mod de destreza por combatente. Ordena desc. Lados: hero/enemy."""
+    """d20 + mod de destreza por combatente. Ordena desc. Lados: hero/enemy.
+
+    Fase 4.2: passiva `initiative_attr` (Arcanista) usa o melhor entre dex e o
+    atributo declarado."""
     order: List[Dict] = []
-    p_dex = attr_mods(player.get("attributes", {}))["dex"]
+    p_mods = attr_mods(player.get("attributes", {}))
+    p_init = p_mods["dex"]
+    for pe in class_passives(player):
+        if pe.get("trigger") == "initiative_attr":
+            p_init = max(p_init, p_mods.get(normalize_attr(pe.get("attr", "dex")), 0))
     order.append({"id": "player", "name": player.get("name", "Herói"),
-                  "side": "hero", "init": random.randint(1, 20) + p_dex})
+                  "side": "hero", "init": random.randint(1, 20) + p_init})
     for e in enemies:
         e_dex = attr_mods(e.get("attributes", {}))["dex"]
         order.append({"id": e.get("id", e.get("name", "?")), "name": e.get("name", "Inimigo"),
@@ -254,6 +322,21 @@ def spend_resources(player: Dict, ability_id: str, ability: Dict) -> Tuple[bool,
     cost = int(ability.get("cost", 0) or 0)
     field = _resource_field(ability.get("resource_type", "")) if cost > 0 else None
     if field and int(player.get(field, 0)) < cost:
+        # Fase 4.2: Sangromante (hp_as_mana) paga a mana que falta com HP (rate HP = 1 mana)
+        if field == "mana":
+            pe = next((p for p in class_passives(player)
+                       if p.get("trigger") == "hp_as_mana"), None)
+            if pe:
+                rate = int(pe.get("rate", 2) or 2)
+                missing = cost - int(player.get("mana", 0))
+                hp_cost = missing * rate
+                if int(player.get("hp", 0)) > hp_cost:
+                    paid_mana = int(player.get("mana", 0))
+                    player["mana"] = 0
+                    player["hp"] = int(player.get("hp", 0)) - hp_cost
+                    player.setdefault("ability_cooldowns", {})[ability_id] = COOLDOWN_DEFAULT
+                    return True, (f"Sacrifício de Sangue: paga {paid_mana} de mana e "
+                                  f"{hp_cost} de HP (HP {player['hp']})")
         return False, f"Sem {field} para {ability.get('name', ability_id)} ({player.get(field,0)}/{cost})"
 
     if field and cost > 0:
@@ -292,9 +375,29 @@ def compute_player_combat_stats(player: Dict) -> Dict:
                 if "attribute" in stats:
                     attack_attr = normalize_attr(stats["attribute"])
         ac_bonus += stats.get("ac_bonus", 0)
+
+    ac = 10 + mods["dex"] + ac_bonus
+    attack = mods.get(attack_attr, 0) + best_atk_bonus + int(player.get("attack_bonus", 0) or 0)
+
+    # Fase 4.2: passivas data-driven da classe
+    for pe in class_passives(player):
+        trig = pe.get("trigger")
+        if trig == "always" and pe.get("stat") == "ac":
+            ac += int(pe.get("delta", 0) or 0)
+        elif trig == "always" and pe.get("stat") == "attack":
+            attack += int(pe.get("delta", 0) or 0)
+        elif trig == "unarmored_ac_con" and ac_bonus == 0:
+            # Guardião: sem armadura, AC = 10 + Dex + Con
+            ac = max(ac, 10 + mods["dex"] + mods["con"])
+
+    # Fase 4.2: buffs/debuffs ativos (condições tipadas) — fear inclui -2 attack
+    cmods = condition_modifiers(player)
+    ac += cmods["ac"]
+    attack += cmods["attack"]
+
     return {
-        "ac": 10 + mods["dex"] + ac_bonus,
-        "attack": mods.get(attack_attr, 0) + best_atk_bonus + int(player.get("attack_bonus", 0) or 0),
+        "ac": ac,
+        "attack": attack,
         "attack_attr": attack_attr,
     }
 
@@ -311,6 +414,68 @@ def _find_target(enemies: List[Dict], target: str) -> Optional[Dict]:
 # --------------------------------------------------------------------------
 # Resolução de turnos
 # --------------------------------------------------------------------------
+def _condition_from_effect(eff: Dict, source: str) -> Optional[Dict]:
+    """Fase 4.2: effect tipado (schema 4.1) -> Condition. heal não vira condição."""
+    kind = eff.get("kind")
+    dur = int(eff.get("duration", 1) or 1)
+    delta = int(eff.get("delta", 0) or 0)
+    if kind == "dot":
+        return {"name": source, "dot": max(0, delta), "duration": dur, "source": source}
+    if kind in ("buff", "debuff"):
+        stat = eff.get("stat")
+        label = {"damage": "Dano", "ac": "Defesa", "attack": "Acerto", "save": "Save"}.get(stat, "")
+        signed = f"+{delta}" if delta >= 0 else str(delta)
+        return {"name": f"{source} ({signed} {label})".strip(), "dot": 0, "duration": dur,
+                "source": source, "stat": stat, "delta": delta}
+    if kind == "control":
+        ckind = str(eff.get("control") or "stun")
+        return {"name": _CONTROL_NAMES.get(ckind, ckind), "dot": 0, "duration": dur,
+                "source": source, "control": ckind}
+    return None
+
+
+def _split_typed_effects(ability: Dict) -> Tuple[List[Dict], List[Dict]]:
+    """(efeitos no PRÓPRIO conjurador, efeitos HOSTIS no alvo)."""
+    selfs, hostiles = [], []
+    for eff in ability.get("effects") or []:
+        if not isinstance(eff, dict):
+            continue
+        if eff.get("kind") == "buff":
+            selfs.append(eff)
+        elif eff.get("kind") in ("debuff", "dot", "control"):
+            hostiles.append(eff)
+    return selfs, hostiles
+
+
+def _apply_self_costs(player: Dict, conditions: List, logs: List[str]) -> None:
+    """Custos textuais no conjurador: 'Sofre N dano' / 'Custa N HP'."""
+    for c in conditions or []:
+        m = re.search(r"(?:sofre|custa)\s+(\d+)\s*(?:de\s*)?(?:dano|hp)", str(c), re.IGNORECASE)
+        if m:
+            player["hp"] = max(0, int(player.get("hp", 0)) - int(m.group(1)))
+            logs.append(f"{player.get('name','Herói')} paga {m.group(1)} de HP (HP {player['hp']})")
+
+
+def damage_bonus(player: Dict, ability: Dict) -> Tuple[int, List[str]]:
+    """Fase 4.2: bônus de dano de condições ativas + passivas (always / damage_type)."""
+    notes: List[str] = []
+    bonus = condition_modifiers(player)["damage"]
+    if bonus:
+        notes.append(f"{'+' if bonus >= 0 else ''}{bonus} de condições")
+    dtype = str(ability.get("damage_type", "")).lower()
+    for pe in class_passives(player):
+        trig = pe.get("trigger")
+        if trig == "always" and pe.get("stat") == "damage":
+            d = int(pe.get("delta", 0) or 0)
+            bonus += d
+            notes.append(f"+{d} passiva")
+        elif trig == "damage_type" and str(pe.get("damage_type", "")).lower() in dtype and dtype:
+            d = int(pe.get("delta", 0) or 0)
+            bonus += d
+            notes.append(f"+{d} {pe.get('damage_type')}")
+    return bonus, notes
+
+
 def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
                           abilities_db: Dict) -> List[str]:
     """
@@ -348,9 +513,24 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
             mt = re.search(r"ganha\s+(\d+)\s*hp", str(c), re.IGNORECASE)
             if mt:
                 heal += int(mt.group(1))
+        # Fase 4.2: Médico (heal_bonus_low) — alvo abaixo do limiar cura mais.
+        for pe in class_passives(player):
+            if pe.get("trigger") == "heal_bonus_low":
+                thr = float(pe.get("threshold", 0.25) or 0.25)
+                if int(player.get("hp", 0)) < thr * max(1, int(player.get("max_hp", 1))):
+                    heal += int(pe.get("delta", 5) or 5)
+                    detail = f"{detail} +{pe.get('delta', 5)} triagem".strip()
+        # custo textual ("Custa 4 HP" da Panaceia Negra) ANTES da cura
+        _apply_self_costs(player, conditions, logs)
         done = _heal(player, heal)
         logs.append(f"{player.get('name','Herói')} usa {name}: recupera {done} de HP (HP {player.get('hp')}) [{detail}]")
         logs += _apply_resource_recovery(player, conditions)
+        # buffs tipados embutidos na cura (ex.: Milagre de Campo: +2 Defesa)
+        for eff in ability.get("effects") or []:
+            if isinstance(eff, dict) and eff.get("kind") == "buff":
+                cond = _condition_from_effect(eff, name)
+                if cond:
+                    logs.append(apply_condition(player, cond))
         # condições não-danosas (ex.: "Remove Sangramento")
         for c in conditions:
             mr = re.search(r"remove\s+([\wçãéõ ]+)", str(c), re.IGNORECASE)
@@ -369,43 +549,77 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
 
     pstats = compute_player_combat_stats(player)
 
-    # Buff/sem dano direto: aplica condições no próprio player e sai.
+    # Fase 4.2: effects tipado tem PRECEDÊNCIA sobre o parse textual das conditions
+    # (evita dupla aplicação — a string vira só flavor/custos quando há effects).
+    self_effs, hostile_effs = _split_typed_effects(ability)
+    has_typed = bool(self_effs or hostile_effs)
+
+    # Buff/sem dano direto: aplica efeitos e sai.
     is_offensive = bool(re.search(r"\d+d\d+", str(formula))) and str(ability.get("damage_type", "")).lower() != "buff"
 
     if not is_offensive:
         logs.append(f"{player.get('name','Herói')} usa {name}.")
-        for c in conditions:
-            logs.append(apply_condition(player, parse_condition(c, source=name)))
-        # efeito de auto-dano ("Sofre 5 dano")
-        for c in conditions:
-            m = re.search(r"sofre\s+(\d+)\s*dano", c, re.IGNORECASE)
-            if m:
-                player["hp"] = max(0, int(player.get("hp", 0)) - int(m.group(1)))
-                logs.append(f"{player.get('name','Herói')} sofre {m.group(1)} de dano (HP {player['hp']})")
-        # recuperação de recurso ("Recupera 10 Estamina")
+        if has_typed:
+            for eff in self_effs:
+                cond = _condition_from_effect(eff, name)
+                if cond:
+                    logs.append(apply_condition(player, cond))
+            # hostis de habilidade não-ofensiva (ex.: debuff puro) vão no alvo,
+            # com save se a habilidade declarar (sucesso nega o efeito).
+            if hostile_effs and target.get("status") == "ativo":
+                resisted = False
+                save_stat = ability.get("save_stat")
+                if save_stat:
+                    dc = 10 + max(pstats["attack"], 0)
+                    stat = normalize_attr(save_stat)
+                    save_mod = attr_mods(target.get("attributes", {})).get(stat, 0)
+                    save_mod += int((target.get("racial_save_bonus") or {}).get(stat, 0))
+                    save_mod += condition_modifiers(target)["save"]
+                    roll = random.randint(1, 20) + save_mod
+                    if roll >= dc:
+                        resisted = True
+                        logs.append(f"{target['name']} resiste a {name} (save {roll} vs CD {dc}).")
+                if not resisted:
+                    for eff in hostile_effs:
+                        cond = _condition_from_effect(eff, name)
+                        if cond:
+                            logs.append(apply_condition(target, cond))
+        else:
+            for c in conditions:
+                logs.append(apply_condition(player, parse_condition(c, source=name)))
+        # custos ("Sofre 5 dano" / "Custa 5 HP") e recuperação de recurso
+        _apply_self_costs(player, conditions, logs)
         logs += _apply_resource_recovery(player, conditions)
         return logs
 
-    # Ataque ofensivo: d20 + atk vs AC do alvo
+    # Ataque ofensivo: d20 + atk vs AC do alvo (AC inclui condições do alvo — 4.2)
     atk_roll = random.randint(1, 20)
     total_atk = atk_roll + pstats["attack"]
-    target_ac = int(target.get("defense", target.get("ac", 10)))
+    target_ac = int(target.get("defense", target.get("ac", 10))) + condition_modifiers(target)["ac"]
     crit = atk_roll == 20
     if total_atk < target_ac and not crit:
         logs.append(f"{player.get('name','Herói')} usa {name}: erra ({total_atk} vs AC {target_ac}).")
+        _apply_self_costs(player, conditions, logs)  # custo pago mesmo errando
         return logs
 
     dmg, detail = resolve_damage_formula(formula, player)
     if crit:
         dmg *= 2
 
-    # Saving throw do alvo (mod real do atributo) reduz dano pela metade.
+    # Fase 4.2: buffs ativos + passivas somam no dano — "+5 Dano" agora É +5.
+    extra, notes = damage_bonus(player, ability)
+    if extra:
+        dmg = max(0, dmg + extra)
+        detail = f"{detail} {' '.join(notes)}".strip()
+
+    # Saving throw do alvo (mod real do atributo + condições) reduz dano pela metade.
     save_stat = ability.get("save_stat")
     if save_stat:
         dc = 10 + max(pstats["attack"], 0)
         stat = normalize_attr(save_stat)
         save_mod = attr_mods(target.get("attributes", {})).get(stat, 0)
         save_mod += int((target.get("racial_save_bonus") or {}).get(stat, 0))
+        save_mod += condition_modifiers(target)["save"]
         save_roll = random.randint(1, 20) + save_mod
         if save_roll >= dc:
             dmg = dmg // 2
@@ -417,22 +631,53 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
     hit_word = "CRÍTICO!" if crit else "acerta"
     logs.append(f"{player.get('name','Herói')} usa {name} e {hit_word} {target['name']}: {dmg} de dano (HP {target['hp']}) [{detail}]")
 
-    # Lifesteal: condição "Cura metade do dano causado" / "drena vida" → cura o herói.
+    # Custos no conjurador ("Custa 8 HP" da Hemorragia etc.) — pagos ao usar.
+    _apply_self_costs(player, conditions, logs)
+
+    # Lifesteal: "Cura metade do dano causado" / "drena vida" → cura o herói.
     if any(re.search(r"cura.*dano|drena.*vida|lifesteal|roubo? de vida", str(c), re.IGNORECASE)
            for c in conditions):
         got = _heal(player, dmg // 2)
         if got:
             logs.append(f"{player.get('name','Herói')} drena {got} de HP (HP {player.get('hp')})")
+    # Cura fixa no conjurador ("Cura o conjurador em 5")
+    for c in conditions:
+        mflat = re.search(r"cura o conjurador em (\d+)$", str(c).strip(), re.IGNORECASE)
+        if mflat:
+            got = _heal(player, int(mflat.group(1)))
+            if got:
+                logs.append(f"{player.get('name','Herói')} recupera {got} de HP (HP {player.get('hp')})")
+
+    # Buffs tipados no próprio conjurador (ex.: Coração de Forja: dano + buff)
+    for eff in self_effs:
+        cond = _condition_from_effect(eff, name)
+        if cond:
+            logs.append(apply_condition(player, cond))
 
     if target["hp"] <= 0:
         target["status"] = "morto"
         logs.append(f"{target['name']} cai derrotado.")
     else:
-        # condições só em alvo vivo (e que não resistiu totalmente já tratado acima)
-        for c in conditions:
-            if re.search(r"sofre\s+\d+\s*dano|cura.*dano|drena.*vida|lifesteal", c, re.IGNORECASE):
-                continue  # auto-dano / lifesteal não viram condição do inimigo
-            logs.append(apply_condition(target, parse_condition(c, source=name)))
+        if has_typed:
+            for eff in hostile_effs:
+                cond = _condition_from_effect(eff, name)
+                if cond:
+                    logs.append(apply_condition(target, cond))
+        else:
+            # legado: condições textuais no alvo vivo
+            for c in conditions:
+                if re.search(r"sofre\s+\d+\s*dano|custa\s+\d+|cura.*(dano|conjurador)|drena.*vida|lifesteal", c, re.IGNORECASE):
+                    continue  # auto-dano / custo / lifesteal não viram condição do inimigo
+                logs.append(apply_condition(target, parse_condition(c, source=name)))
+        # Fase 4.2: Sombra da Corte (basic_attack_dot) — toda arma aplica veneno fraco.
+        if ability_id == "ataque_basico":
+            for pe in class_passives(player):
+                if pe.get("trigger") == "basic_attack_dot":
+                    cond = {"name": pe.get("name", "Veneno fraco"),
+                            "dot": int(pe.get("dot", 1) or 1),
+                            "duration": int(pe.get("duration", 2) or 2),
+                            "source": "Toque da Víbora"}
+                    logs.append(apply_condition(target, cond))
     return logs
 
 
@@ -546,6 +791,9 @@ def check_morale(enemy: Dict, allies: Optional[List[Dict]] = None) -> Optional[s
 
     if not reason:
         return None
+    # Fase 4.2: enredado não foge — quer, mas não consegue.
+    if has_control(enemy, "root"):
+        return f"{enemy.get('name','Inimigo')} tenta fugir ({reason}), mas está ENREDADO e não escapa."
     enemy["status"] = "fugiu"
     return f"{enemy.get('name','Inimigo')} FOGE do combate ({reason})."
 
@@ -570,6 +818,10 @@ def resolve_enemy_turn(enemy: Dict, player: Dict,
     if enemy.get("status") != "ativo":
         return logs
 
+    # Fase 4.2: atordoado perde o turno (simetria com o player).
+    if has_control(enemy, "stun"):
+        return [f"{enemy.get('name','Inimigo')} está ATORDOADO e perde o turno."]
+
     flee_log = check_morale(enemy, allies)
     if flee_log:
         return [flee_log]
@@ -577,6 +829,8 @@ def resolve_enemy_turn(enemy: Dict, player: Dict,
     pstats = compute_player_combat_stats(player)
     atk = choose_enemy_attack(enemy, pstats["ac"], rnd, player)
     bonus = int(atk.get("bonus", 0) or 0)
+    # Fase 4.2: condições do inimigo modificam o acerto dele (fear = -2 embutido)
+    bonus += condition_modifiers(enemy)["attack"]
     atk_roll = random.randint(1, 20)
     total = atk_roll + bonus
     crit = atk_roll == 20
@@ -594,9 +848,28 @@ def resolve_enemy_turn(enemy: Dict, player: Dict,
         dmg += 2
         detail = f"{detail} +2 frenesi"
 
+    # Fase 4.2: buff/debuff de dano no inimigo (simetria)
+    edmg = condition_modifiers(enemy)["damage"]
+    if edmg:
+        dmg = max(0, dmg + edmg)
+        detail = f"{detail} {'+' if edmg >= 0 else ''}{edmg} condições"
+
     player["hp"] = max(0, int(player.get("hp", 0)) - dmg)
     hit = "CRÍTICO!" if crit else "acerta"
     logs.append(f"{enemy['name']} {hit} com {atk.get('name','ataque')}: {dmg} de dano (HP {player['hp']}) [{detail}]")
     if int(player.get("hp", 0)) > 0:
         logs += _apply_attack_conditions(atk, player)
+        # Fase 4.2: Pastor de Pragas (melee_retaliate) — quem morde, prova o veneno.
+        atype = str(atk.get("type", "melee")).lower()
+        if "melee" in atype or atype == "":
+            for pe in class_passives(player):
+                if pe.get("trigger") == "melee_retaliate":
+                    ret, rdet = roll_dice_numeric(str(pe.get("formula", "1d4")))
+                    if ret > 0:
+                        enemy["hp"] = max(0, int(enemy.get("hp", 0)) - ret)
+                        logs.append(f"{enemy['name']} sofre {ret} de {pe.get('name', 'retaliação')} "
+                                    f"(HP {enemy['hp']}) [{rdet}]")
+                        if enemy["hp"] <= 0 and enemy.get("status") == "ativo":
+                            enemy["status"] = "morto"
+                            logs.append(f"{enemy['name']} sucumbe à retaliação.")
     return logs

@@ -294,15 +294,25 @@ def combat_node(state: GameState):
     intent = _last_human_text(messages)
     action = _parse_combat_action(player, active, intent)
 
+    # Fase 4.2: enredado não foge — gate determinístico ANTES de resolver.
+    if (cm.has_control(player, "root")
+            and re.search(r"\bfuj|fugir|escap|retir|corr[oe]\b", intent.lower())):
+        action = {"ability_id": "ataque_basico", "target": "", "is_allowed": False,
+                  "reason": f"{player.get('name','O herói')} está ENREDADO — impossível fugir."}
+
     # Resolução determinística em ordem de iniciativa.
     logs: List[str] = []
     hero_resolved = False
     rnd = int(combat_meta.get("round", 1))
     for slot in combat_meta["order"]:
         if slot["side"] == "hero":
+            # Fase 4.2: atordoado perde o turno (tick roda; ação não).
+            stunned = cm.has_control(player, "stun")
             logs += cm.tick_conditions(player)
             cm.tick_cooldowns(player)
-            if int(player.get("hp", 0)) > 0:
+            if stunned:
+                logs.append(f"{player.get('name','Herói')} está ATORDOADO e perde o turno.")
+            elif int(player.get("hp", 0)) > 0:
                 logs += cm.resolve_player_action(player, enemies, action, ABILITIES)
             hero_resolved = True
         else:

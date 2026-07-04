@@ -40,7 +40,15 @@
         "identity": "Dano focado: cargas, execução, quebra de formação inimiga",
         "description": "A Legião ensina que muralha nenhuma segura o que já entrou. A lança sai na frente e volta suja."
       }
-    }
+    },
+    "passive_effects": [
+      {
+        "trigger": "always",
+        "stat": "ac",
+        "delta": 2,
+        "note": "aprox de 'aliados adjacentes' — vira condicional a party ativa na 4.5"
+      }
+    ]
   },
   "Batedor das Fronteiras": {
     "description": "Explorador ágil especializado em sobreviver fora das muralhas.",
@@ -83,7 +91,15 @@
         "identity": "Emboscada: burst de abertura, evasão, silêncio que atordoa",
         "description": "Dos Renegados se diz que a fronteira os comeu. Mentira: eles viraram a fronteira."
       }
-    }
+    },
+    "passive_effects": [
+      {
+        "trigger": "always",
+        "stat": "damage",
+        "delta": 2,
+        "note": "aprox media de +1d6 vs distraidos — vira condicional real na 4.6"
+      }
+    ]
   },
   "Arcanista Cinzento": {
     "description": "Estudioso que usa magia filtrada por tecnologia.",
@@ -126,7 +142,13 @@
         "identity": "Risco/retorno: dano alto com custo de corpo, controle mental, deslocamento instável",
         "description": "Há quem dispense o filtro. As veias escurecem um dedo por ano — e um dedo, dizem eles, é um preço honesto pelo que se sente."
       }
-    }
+    },
+    "passive_effects": [
+      {
+        "trigger": "initiative_attr",
+        "attr": "int"
+      }
+    ]
   },
   "Sangromante": {
     "description": "Mago proibido que usa a própria vitalidade.",
@@ -169,7 +191,13 @@
         "identity": "Burst all-in: dano máximo pago em HP, apoteoses curtas",
         "description": "Medir é para quem planeja envelhecer. Abrir a veia inteira de uma vez é a única aposta que o Abismo respeita."
       }
-    }
+    },
+    "passive_effects": [
+      {
+        "trigger": "hp_as_mana",
+        "rate": 2
+      }
+    ]
   },
   "Inquisidor da Cinza": {
     "description": "Fanático que usa fogo e medo. Tanque ofensivo.",
@@ -212,7 +240,19 @@
         "identity": "Fogo sustentado: queimaduras, ligas proibidas, autodano controlado",
         "description": "Nas Fundições aprende-se cedo: o metal só obedece quem já se queimou. Os Encapuzados fazem do incêndio um ofício."
       }
-    }
+    },
+    "passive_effects": [
+      {
+        "trigger": "resist",
+        "name": "medo"
+      },
+      {
+        "trigger": "damage_type",
+        "damage_type": "fogo",
+        "stat": "damage",
+        "delta": 2
+      }
+    ]
   },
   "Pastor de Pragas": {
     "description": "Druida simbiótico que controla insetos e fungos.",
@@ -255,7 +295,14 @@
         "identity": "Transformação: enxames hospedados, quitina, percepção partilhada — pago em carne",
         "description": "Em Xylos, os Hospedeiros provaram que dividir o corpo é multiplicá-lo. O enxame cuida de quem o abriga. Quase sempre."
       }
-    }
+    },
+    "passive_effects": [
+      {
+        "trigger": "melee_retaliate",
+        "formula": "1d4",
+        "name": "veneno do Hospedeiro"
+      }
+    ]
   },
   "Sombra da Corte": {
     "description": "Assassino social especializado em venenos.",
@@ -298,7 +345,15 @@
         "identity": "Manipulação: chantagem que paralisa, redes de informantes, lâmina no momento exato",
         "description": "Os Corvos cobram em segredos. Um nome sussurrado na hora certa derruba mais gente que dez adagas."
       }
-    }
+    },
+    "passive_effects": [
+      {
+        "trigger": "basic_attack_dot",
+        "dot": 1,
+        "duration": 2,
+        "name": "Veneno fraco"
+      }
+    ]
   },
   "Sapador da Fuligem": {
     "description": "Engenheiro anão com explosivos e armadilhas.",
@@ -341,7 +396,13 @@
         "identity": "Gambiarras: dano alto e instável, misturas que cobram do próprio corpo",
         "description": "Os goblins-mineiros não leem esquema nenhum e continuam vivos. Estatisticamente. A sucata recompensa os rápidos."
       }
-    }
+    },
+    "passive_effects": [
+      {
+        "trigger": "declarative",
+        "note": "dano dobrado vs estruturas — motor nao tem estruturas (unico caso declarativo, spec 4.2 R5)"
+      }
+    ]
   },
   "Médico de Campo": {
     "description": "Curandeiro sem magia que usa alquimia e serras.",
@@ -384,7 +445,14 @@
         "identity": "Química dual: corrosivos, vapores debilitantes, panaceias com preço",
         "description": "Todo frasco tem duas doses: a que salva e a que sobra. Os Mercadores de Curiosidades vendem as duas pelo mesmo preço."
       }
-    }
+    },
+    "passive_effects": [
+      {
+        "trigger": "heal_bonus_low",
+        "delta": 5,
+        "threshold": 0.25
+      }
+    ]
   },
   "Guardião Selvagem": {
     "description": "Bárbaro tribal conectado à natureza brutal.",
@@ -427,6 +495,11 @@
         "identity": "Feral: garras, instinto que cobra em sangue, uivo que apavora",
         "description": "Os renegados pararam de perguntar o que a natureza era. Perguntam o que ela virou — e imitam a resposta."
       }
-    }
+    },
+    "passive_effects": [
+      {
+        "trigger": "unarmored_ac_con"
+      }
+    ]
   }
 }
