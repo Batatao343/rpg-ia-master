@@ -140,14 +140,14 @@ Smoke LLM real pendente de quota (fase determinística, sem `with_structured_out
 
 Resumo por fatia (detalhe técnico SÓ nas specs — fonte única):
 
-- **4.1 — Progressão** [`draft` → spec](specs/fase-4.1-progressao.md) — XP determinístico
-  (kill por tier / beat / quest), level up com curvas por classe, árvore com ramos =
-  subclasses mutuamente exclusivas, `known_abilities` vira ids canônicos, escolha
-  pendente não bloqueia o loop, evento `level_up` na crônica.
-- **4.1b — Árvores de Valoria** [`draft` → spec](specs/fase-4.1b-arvores-valoria.md) —
-  **executor obrigatório: Fable.** Conteúdo das árvores: 10 classes × 2 ramos ancorados
-  nos pilares do mundo (mundo vazio / Abismo / magia corrompe / sacrifício ou tecnologia),
-  ~120 habilidades com impacto mecânico, anti-spoiler, apêndice de design permanente.
+- **4.1 — Progressão** [✅ implementada 2026-07-04 → spec](specs/fase-4.1-progressao.md) —
+  XP determinístico (kill por tier / beat / quest), level up com curvas por classe,
+  árvore com ramos = subclasses mutuamente exclusivas, ids canônicos + backfill,
+  `/game/levelup` + modal no frontend, `level_up` na crônica com gate anti-LLM.
+  **Falta só smoke com LLM real** (quota) para `done`.
+- **4.1b — Árvores de Valoria** [✅ `done` 2026-07-04 → spec](specs/fase-4.1b-arvores-valoria.md) —
+  executada por Fable: 10 classes × 2 ramos ancorados nos pilares do mundo, 111
+  habilidades (66 novas) com impacto mecânico, anti-spoiler ok, apêndice A preenchido.
 - **4.2 — Buffs mecânicos** [`draft` → spec](specs/fase-4.2-buffs-mecanicos.md) —
   condições tipadas lidas em dano/AC/acerto/save; stun/root/fear reais; 10 passivas
   data-driven; simetria player/inimigo.

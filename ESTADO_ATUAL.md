@@ -2,13 +2,41 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-03 (sessão 6: Fase 3.4 — Visualização de estado — Fase 3 completa)
+> Última atualização: 2026-07-04 (sessão 7: Fase 4.1 implementada + 4.1b done)
 
 ---
 
 ## TL;DR — Em que pé está
 
-**Sessão 2026-07-03 (6): Fase 3.4 DONE — Visualização de estado. FASE 3 COMPLETA.**
+**Sessão 2026-07-04 (7): Fase 4 iniciada — specs 4.1–4.6 escritas; 4.1b DONE; 4.1 implementada.**
+Specs da Fase 4 inteira em `specs/` (aprovadas) + ROADMAP limpo de duplicatas (Fase 6
+reescrita como evolução da 4.4; "Economia regional"/"Encontros sistêmicos"/"arcos da
+crônica" desduplicados).
+**4.1b (árvores de Valoria, executor Fable) `done`:** 10 classes × 2 ramos = subclasses
+ancoradas nos pilares do mundo (mundo vazio / Abismo / magia corrompe / sacrifício ou
+tecnologia prévia); 111 habilidades (66 novas), todas com impacto mecânico (`effects`
+tipado pronto p/ 4.2); anti-spoiler ok; design registrado no apêndice A da spec.
+**4.1 (progressão) etapas 1–7 implementadas:** `progression.py` puro — XP por kill
+(50/200/1000 por `type` do bestiário; fugitivo não conta), beat 150, quest 200;
+`grant_xp` multi-level cura só o delta; `pending_choices` não bloqueia o loop;
+`player_branch` deriva a subclasse de `known_abilities` (ramo rival tranca pra sempre,
+zero campo novo de estado). `known_abilities` virou **ids canônicos**: creator usa
+`starting_abilities` da classe, combate casa por id EXATO + gate determinístico (LLM
+não libera habilidade fora da ficha), `load_game_state` faz backfill nome→id (descarta
+"[Passiva] ..." e flavor não-mapeável, garante `ataque_basico`). Evento `level_up` no
+pipeline 2.6 com **gate anti-LLM**: validator exige `source="progression"` — campo que
+o schema de proposta do LLM (`ProposedWorldEvent`) não tem; multi-level no mesmo turno
+não é duplicata; milestone "O herói alcançou o nível N." na crônica. `POST
+/game/levelup` (400 não toca o save); `player_stats` expõe `xp_next_level`/
+`pending_choices`/`level_up` (elegíveis + ramos). CLI pergunta no fim do turno (ENTER
+adia). Frontend: `LevelUpModal` agrupado por ramo (tema + aviso de escolha
+irreversível), botão pulsante "⬆ Nível!" no topbar, Ficha com XP/próximo nível.
+Suíte: 313 → **357 verdes**. `npm run build` + `smoke_api.sh` ok (inclui 400 do
+levelup). **Pendente p/ `done` da 4.1: smoke com LLM real** (§6 da spec, ~6 requests).
+Próximo: smoke real 4.1 → **Fase 4.2** (buffs mecânicos — spec pronta; consome o
+`effects` que a 4.1b já preencheu).
+
+Sessão 2026-07-03 (6): Fase 3.4 DONE — Visualização de estado. FASE 3 COMPLETA.
 `services/state_views.py` (novo, 100% puro): `visible_controllers` (mapa mostra quem
 domina cada local visitado — verdade `world_projection` 2.5+ vence o legado
 `world.controlled` da Fase 2; nome, não id), `recent_control_changes`/`active_threats`
@@ -56,8 +84,8 @@ ranqueia fatos por relevância+local+recência com orçamento por seção; estad
 ANTES da lore base; 4 agentes integrados: storyteller/npc/combat/campaign_manager).
 Smoke LLM real das 3 fases pendente de quota.
 
-**Próximo passo:** Fase 3 fechada — próxima é Fase 4 — Gameplay Core (cada fatia vira
-spec antes de implementar; ver ROADMAP § Fase 4).
+**Próximo passo:** smoke com LLM real da 4.1 (§6 da spec) → Fase 4.2 — buffs
+mecânicos (spec aprovada em `specs/fase-4.2-buffs-mecanicos.md`).
 
 Entregas da 2.5b (detalhes no `CHANGELOG.md`): mapa de Valoria 30 nós, 18 fações,
 6 raças com traits mecânicos (`apply_racial_traits`), bestiário 84 entradas com
@@ -80,7 +108,7 @@ existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arquivar
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 313 testes offline verdes (test_real_llm precisa de chave)
+uv run pytest                        # 357 testes offline verdes (test_real_llm precisa de chave)
 uv run python game_engine.py         # CLI
 uv run uvicorn api:app --port 8000   # API + frontend web (http://localhost:8000)
 uv run python rag.py                 # reindexar lore (data/codex/) + regras (data/rules.txt)
@@ -115,6 +143,9 @@ em ~3s. **MockLLM esconde bugs de mapeamento** — validar nós novos com a chav
   `world_projection` no save + RAG com visibilidade (`secret`/`hidden` não vaza ao
   narrador); timeline por era em `data/codex/timeline/`
 - Beats de campanha avançam via `StoryUpdate.beat_completed`; HUD mostra objetivo
+- **Fase 4.1 (novo):** progressão completa — XP por kill/beat/quest (Python), level up
+  com curvas por classe, árvore de 111 habilidades em 20 ramos-subclasse (4.1b),
+  escolha via CLI/modal web/`POST /game/levelup`; saves antigos backfillados
 - **Fase 3.1:** crônica por capítulos (`arc_title` do planner) — milestones
   determinísticos do event_log (auditáveis por `event_id`) + prosa de menestrel;
   backfill de saves antigos; HUD distingue ⚔ milestone de ❧ prosa

@@ -1,6 +1,8 @@
 # SPEC — Fase 4.1: Progressão — XP, level up e árvore de habilidades
 
-> **Status:** `in-progress` (aprovada 2026-07-03)
+> **Status:** `in-progress` — **Etapas 1–7 implementadas** (2026-07-04, suíte 357
+> verde + smoke_api ok); falta SÓ o smoke com LLM real (§6, pendente de quota)
+> para virar `done`.
 > **Criada:** 2026-07-03 · **Atualizada:** 2026-07-03
 > **Depende de:** Fase 2.6 (structured events, `done`) · Fase 3.1 (crônica, `done`)
 > **Desbloqueia:** Fase 4.1b (conteúdo das árvores), 4.2 (buffs mecânicos), 4.5 (party), 4.6 (orçamento de encontro por nível)
