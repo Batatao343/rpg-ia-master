@@ -1,6 +1,9 @@
 # SPEC — Fase 4.4: Economia determinística — craft, mercadores e loot tables
 
-> **Status:** `draft`
+> **Status:** `in-progress` — **Etapas 1–6 implementadas** (2026-07-04, 424 testes
+> verdes + smoke_api ok); falta SÓ o smoke com LLM real (§6) para `done`.
+> Nota de implementação: v1 sem `TradeOutcome` exposto na API (aba de comércio
+> futura); narração usa 1 SMART com fallback determinístico.
 > **Criada:** 2026-07-03 · **Atualizada:** 2026-07-03
 > **Depende de:** Fase 4.3 (inventário estruturado `{id, qty}` + stacks)
 > **Desbloqueia:** "Economia regional" (backlog) — esta spec é a fundação dela

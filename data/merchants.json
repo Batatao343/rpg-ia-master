@@ -1,0 +1,78 @@
+{
+  "ferreiro_skallgard": {
+    "location_id": "skallgard",
+    "name": "Forja dos Clãs",
+    "specialty": "weapon",
+    "price_mult": 1.1,
+    "restock_days": 3,
+    "base_stock": {
+      "espada_aco_temperado": 1,
+      "escudo_de_aco": 1,
+      "minerio_ferro": 5,
+      "maca_de_ferro": 1
+    }
+  },
+  "mercado_anel_dourado": {
+    "location_id": "na_anel_dourado",
+    "name": "Empório do Anel Dourado",
+    "specialty": "general",
+    "price_mult": 1.2,
+    "restock_days": 2,
+    "base_stock": {
+      "pocao_cura": 3,
+      "adaga_ferro": 2,
+      "gibao_de_couro": 2,
+      "corda": 3,
+      "espada_gasta": 1
+    }
+  },
+  "boticario_anel_ferro": {
+    "location_id": "na_anel_ferro",
+    "name": "Botica da Fuligem",
+    "specialty": "potion",
+    "price_mult": 1.0,
+    "restock_days": 2,
+    "base_stock": {
+      "pocao_cura": 4,
+      "erva_amarga": 6,
+      "kit_medico": 2
+    }
+  },
+  "quinquilharias_brekmar": {
+    "location_id": "brekmar",
+    "name": "Quinquilharias da Maré",
+    "specialty": "material",
+    "price_mult": 0.9,
+    "restock_days": 3,
+    "base_stock": {
+      "corda": 5,
+      "minerio_ferro": 3,
+      "arco_de_caca": 1,
+      "pocao_cura": 2
+    }
+  },
+  "curandeira_pantano": {
+    "location_id": "pantano_melancolia",
+    "name": "Tenda da Curandeira",
+    "specialty": "herbs",
+    "price_mult": 1.0,
+    "restock_days": 4,
+    "base_stock": {
+      "erva_amarga": 8,
+      "musgo_cinzento": 4,
+      "pocao_cura_maior": 1
+    }
+  },
+  "armeiro_vaelorn": {
+    "location_id": "pr_vaelorn",
+    "name": "Armeiro de Vaelorn",
+    "specialty": "weapon",
+    "price_mult": 1.0,
+    "restock_days": 3,
+    "base_stock": {
+      "espada_gasta": 2,
+      "maca_de_ferro": 1,
+      "escudo_amassado": 2
+    }
+  }
+}

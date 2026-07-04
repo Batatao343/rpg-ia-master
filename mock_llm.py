@@ -325,6 +325,36 @@ def _entity_match(model, messages):
     return _fill(model, {"match_found": False, "existing_id": None})
 
 
+def _trade_intent(model, messages):
+    """Fase 4.4: intenção de comércio por palavra-chave (offline)."""
+    txt = _last_human(messages).lower()
+    mode = "buy"
+    if any(w in txt for w in ("vend", "negoci minha", "ofereço")):
+        mode = "sell"
+    elif any(w in txt for w in ("forj", "cri", "fabric", "melhor", "temper", "destil")):
+        mode = "craft"
+    # item_ref: casa nome de artefato/receita conhecido dentro da fala
+    ref = txt.strip()[:60] or "item"
+    try:
+        import unicodedata
+
+        def _fold(s):
+            n = unicodedata.normalize("NFKD", str(s))
+            return "".join(c for c in n if not unicodedata.combining(c)).lower()
+
+        from gamedata import ARTIFACTS_DB, load_json_data
+        folded_txt = _fold(txt)
+        candidates = [a.get("name", "") for a in ARTIFACTS_DB.values()]
+        candidates += [rid.replace("_", " ") for rid in (load_json_data("recipes.json") or {})]
+        for nm in sorted(candidates, key=len, reverse=True):
+            if nm and _fold(nm) in folded_txt:
+                ref = nm
+                break
+    except Exception:
+        pass
+    return _fill(model, {"mode": mode, "item_ref": ref, "qty": 1})
+
+
 def _combat_action(model, messages):
     """Identifica a ação de combate por palavra-chave (offline, determinístico)."""
     txt = _last_human(messages).lower()
@@ -359,6 +389,7 @@ _DISPATCH = {
     "Ruling": _ruling,
     "EntityMatch": _entity_match,
     "CombatAction": _combat_action,
+    "TradeIntent": _trade_intent,
 }
 
 

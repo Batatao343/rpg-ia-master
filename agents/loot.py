@@ -1,202 +1,141 @@
 """
-agents/loot.py
-Gerenciador de Loot, Comércio e Crafting.
-Versão Corrigida: Prompt de Venda melhorado e tratamento de erro reforçado.
+agents/loot.py — Loot, Comércio e Crafting (Fase 4.4: economia determinística).
+
+Padrão do combate: o LLM só IDENTIFICA a intenção (TradeIntent) e NARRA o
+resultado; preços, estoques, receitas e raridade de drop resolvem em Python
+(services/economy.py). O antigo TransactionResult (LLM decidia sucesso, preço
+e itens) morreu aqui.
 """
 import random
-import unicodedata
-from typing import List, Optional
-from langchain_core.messages import SystemMessage, AIMessage, HumanMessage
+from typing import List, Literal, Optional
+
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
+from gamedata import get_location
+from llm_setup import ModelTier, get_llm
+from services import economy
 from state import GameState
-from llm_setup import get_llm, ModelTier
-from gamedata import save_custom_artifact, ARTIFACTS_DB, get_location
-from inventory import add_item, find_in_inventory, item_display, remove_item
-from rag import query_rag
 
-# --- SCHEMAS DE DADOS (IA) ---
 
-class ItemGeneration(BaseModel):
-    name: str = Field(description="Nome épico do item.")
-    item_id: str = Field(description="ID único (snake_case). Ex: espada_fogo_azul")
-    description: str
-    type: str = Field(description="weapon, armor, potion, ou material")
-    rarity: str
-    gold_value: int
-    combat_stats: dict = Field(description="Ex: {'attack_bonus': 2, 'damage': '1d8'}")
-    mechanics: dict = Field(description="Efeitos passivos ou ativos.")
+class TradeIntent(BaseModel):
+    """A IA traduz a fala livre em UMA transação canônica (Python resolve)."""
+    mode: Literal["buy", "sell", "craft"] = Field(description="buy=comprar, sell=vender, craft=forjar/criar.")
+    item_ref: str = Field(description="Nome do item/receita como o jogador disse. NÃO invente.")
+    qty: int = Field(default=1, description="Quantidade (default 1).")
 
-class TransactionResult(BaseModel):
-    """Resultado de uma operação de Crafting ou Comércio."""
-    success: bool = Field(description="Se a transação foi possível.")
-    message: str = Field(description="Narrativa do resultado.")
-    items_to_remove: List[str] = Field(default=[], description="IDs exatos dos itens consumidos/vendidos.")
-    gold_cost: int = Field(default=0, description="Ouro gasto pelo jogador (negativo se o jogador GANHOU ouro).")
-    new_item: Optional[ItemGeneration] = Field(None, description="O novo item criado. DEIXE NULL SE FOR VENDA.")
 
-# --- LÓGICA DO NÓ ---
+def _last_human(state: GameState) -> str:
+    for m in reversed(state.get("messages") or []):
+        if isinstance(m, HumanMessage):
+            return str(m.content)
+    return ""
+
+
+def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeIntent:
+    """FAST + guard de FallbackLLM (isinstance). Fallback: heurística por fonte."""
+    default_mode = "craft" if loot_source == "CRAFT" else "buy"
+    fallback = TradeIntent(mode=default_mode, item_ref=text[:60] or "item", qty=1)
+    try:
+        llm = get_llm(temperature=0.0, tier=ModelTier.FAST)
+        sys = SystemMessage(content=(
+            "Você identifica transações de RPG. Classifique a fala do jogador em "
+            "buy (comprar do mercador), sell (vender item próprio) ou craft "
+            "(forjar/criar/melhorar). item_ref = o nome do item/receita citado. "
+            f"Contexto da cena: {loot_source}."))
+        res = llm.with_structured_output(TradeIntent).invoke(
+            [sys, HumanMessage(content=text or "negociar")])
+        if isinstance(res, TradeIntent) and res.item_ref:
+            return res
+    except Exception as e:
+        print(f"⚠️ [TRADE PARSE] {e}")
+    return fallback
+
+
+def _narrate(context: str, fallback_text: str) -> str:
+    """1 chamada SMART para prosa curta; qualquer falha cai no texto mecânico."""
+    try:
+        llm = get_llm(temperature=0.6, tier=ModelTier.SMART)
+        if getattr(llm, "is_fallback", False):
+            raise RuntimeError("fallback")
+        res = llm.invoke([SystemMessage(content=(
+            "Narre em 1-2 frases, tom dark fantasy (Valoria), o resultado MECÂNICO "
+            "abaixo. NÃO altere números nem invente itens extras.\n" + context))])
+        text = str(getattr(res, "content", "") or "").strip()
+        if text:
+            return text
+    except Exception as e:
+        print(f"⚠️ [LOOT NARRATE] {e}")
+    return fallback_text
+
 
 def loot_node(state: GameState):
-    player = dict(state["player"])  # cópia defensiva: não muta o estado in-place
+    player = dict(state["player"])
     player["inventory"] = list(player.get("inventory", []))
     loot_source = state.get("loot_source", "TREASURE")
+    text = _last_human(state)
+    world = dict(state.get("world") or {})
 
-    # Recupera última msg
-    last_user_msg = "Gerar loot"
-    if state.get("messages"):
-        last_msg = state["messages"][-1]
-        if isinstance(last_msg, HumanMessage):
-            last_user_msg = last_msg.content
-
-    # --- Fase 0: contexto regional (itens com a cara do lugar) ---
-    world = state.get("world", {})
-    location = world.get("current_location", "")
-    loc_node = get_location(world.get("current_location_id", "")) or {}
-    region = loc_node.get("region", "")
-    try:
-        loc_lore = query_rag(f"{location} {region}", index_name="lore", game_id=state.get("game_id"))
-    except Exception:
-        loc_lore = ""
-    region_ctx = (
-        f"LOCAL ATUAL: {location} ({region}). "
-        f"Pistas do lugar: {loc_node.get('lore_seed', '')} {loc_lore}\n"
-        "Os itens DEVEM ter a cara deste lugar (materiais, história e perigos locais)."
-    )
-
-    llm = get_llm(temperature=0.4, tier=ModelTier.SMART)
+    # restock determinístico pelo relógio (barato, idempotente)
+    world = economy.restock(world)
+    work_state = {**state, "player": player, "world": world}
 
     # =========================================================
-    # MODO 1: CRAFTING / SHOP
+    # CRAFT / SHOP — Python decide, LLM narra
     # =========================================================
-    if loot_source in ["CRAFT", "SHOP"]:
-        # Fase 4.3: inventário estruturado — prompt vê "nome xqty (id)"
-        inventory_list = ", ".join(
-            f"{item_display(e)} x{e.get('qty', 1)} (id: {e.get('id')})"
-            for e in player["inventory"] if isinstance(e, dict)
-        )
-        gold_available = player["gold"]
-        
-        sys_prompt = """
-        Você é o Motor de Comércio e Crafting de um RPG.
-        
-        TAREFA: Decida a transação baseada no pedido e inventário.
-        
-        MODOS:
-        1. CRAFT/UPGRADE/COMPRA: 
-           - Gera um 'new_item'.
-           - Cobra 'gold_cost' (positivo).
-           - Remove itens usados em 'items_to_remove'.
-           
-        2. VENDA (Jogador vendendo item):
-           - Remove o item em 'items_to_remove'.
-           - 'gold_cost' deve ser NEGATIVO (ex: -50 significa que o jogador GANHA 50).
-           - 'new_item' DEVE SER NULL (None).
-        
-        Se faltar recurso ou item, success=False.
-        """
+    if loot_source in ("CRAFT", "SHOP"):
+        intent = _parse_trade_intent(state, loot_source, text)
+        if intent.mode == "craft":
+            outcome = economy.execute_craft(work_state, intent.item_ref)
+        else:
+            outcome = economy.execute_trade(work_state, intent.mode,
+                                            intent.item_ref, intent.qty)
 
-        user_prompt = f"""
-        {region_ctx}
-        INVENTÁRIO: [{inventory_list}]
-        OURO: {gold_available}
-        PEDIDO: "{last_user_msg}"
-        """
-        
-        try:
-            trans_engine = llm.with_structured_output(TransactionResult)
-            result = trans_engine.invoke([
-                SystemMessage(content=sys_prompt),
-                HumanMessage(content=user_prompt)
-            ])
-            
-            if not result.success:
-                return {
-                    "messages": [AIMessage(content=f"🚫 {result.message}")],
-                    "loot_source": None,
-                    "archive_due": True,
-                }
+        if not outcome.get("ok"):
+            msg = _narrate(f"TRANSAÇÃO RECUSADA: {outcome.get('reason')}",
+                           f"🚫 {outcome.get('reason')}")
+            return {"messages": [AIMessage(content=f"{msg}\n\n[SISTEMA] {outcome.get('reason')}")],
+                    "world": world, "loot_source": None, "archive_due": True}
 
-            # --- NORMALIZA SINAL DO OURO (não confiar no sinal vindo do LLM) ---
-            # Venda (sem item novo) => jogador GANHA ouro => gold_cost negativo.
-            # Compra/Craft (com item novo) => jogador PAGA => gold_cost positivo.
-            is_sale = not (result.new_item and result.new_item.name)
-            if is_sale:
-                result.gold_cost = -abs(result.gold_cost)
-            else:
-                result.gold_cost = abs(result.gold_cost)
-
-            # --- APLICAÇÃO DA MECÂNICA ---
-
-            # A. Remove Itens (Fase 4.3: resolve referência e decrementa qty)
-            for item_ref in result.items_to_remove:
-                iid = find_in_inventory(player["inventory"], str(item_ref))
-                if iid:
-                    player["inventory"], _ = remove_item(player["inventory"], iid, 1)
-            
-            # B. Atualiza Ouro
-            player["gold"] -= result.gold_cost
-            
-            # C. Adiciona Item (Se houver)
-            # Verifica explicitamente se new_item existe e não é vazio
-            if result.new_item and result.new_item.name:
-                raw_id = result.new_item.item_id.lower().replace(" ", "_")
-                item_data = result.new_item.model_dump()
-                item_data["item_id"] = raw_id
-                save_custom_artifact(raw_id, item_data)
-
-                player["inventory"] = add_item(player["inventory"], raw_id, 1)
-                msg_final = f"{result.message}\n\n[SISTEMA] +1 {result.new_item.name} | {result.gold_cost * -1} Ouro"
-            else:
-                # Caso de Venda (sem item novo)
-                msg_final = f"{result.message}\n\n[SISTEMA] Ouro: {player['gold']} (Variação: {result.gold_cost * -1})"
-
-            return {
-                "player": player,
-                "messages": [AIMessage(content=msg_final)],
-                "loot_source": None,
-                "archive_due": True,
-            }
-
-        except Exception as e:
-            print(f"Erro Crafting Detail: {e}")
-            return {"messages": [AIMessage(content="O mercador franze a testa. (Transação falhou)")]}
+        delta = int(outcome.get("gold_delta", 0))
+        sistema = (f"[SISTEMA] {'+' if outcome['mode'] == 'sell' else ''}"
+                   f"{outcome['qty']}x {outcome['item_name']}"
+                   f" | Ouro {'+' if delta >= 0 else ''}{delta}"
+                   f" (total {outcome['player'].get('gold', 0)})")
+        resumo = (f"{outcome['mode'].upper()}: {outcome['qty']}x {outcome['item_name']}, "
+                  f"ouro {delta:+d}, ouro final {outcome['player'].get('gold', 0)}")
+        msg = _narrate(resumo, sistema)
+        return {
+            "player": outcome["player"],
+            "world": outcome.get("world", world),
+            "messages": [AIMessage(content=f"{msg}\n\n{sistema}")],
+            "loot_source": None,
+            "archive_due": True,
+        }
 
     # =========================================================
-    # MODO 2: TREASURE
+    # TREASURE — raridade/item saem da TABELA da região (Python)
     # =========================================================
-    else: 
-        class LootSchema(BaseModel):
-            items: List[ItemGeneration]
-            gold: int
-            narrative: str
+    loc = get_location(world.get("current_location_id", "")) or {}
+    region_id = loc.get("region_id", "default")
+    danger = int(world.get("danger_level", 1) or 1)
+    roll = economy.roll_loot(region_id, danger, random.Random())
 
-        sys_prompt = "Você é um Gerador de Loot de RPG dark fantasy. Itens coerentes com o local."
-        danger_lvl = state.get('world',{}).get('danger_level', 1)
-        user_prompt = f"{region_ctx}\nGere loot para perigo nível {danger_lvl}. Máx 2 itens."
+    player["gold"] = int(player.get("gold", 0)) + int(roll["gold"])
+    achado = f"+{roll['gold']} de ouro"
+    if roll["item_id"]:
+        from inventory import add_item, item_display, make_entry
+        player["inventory"] = add_item(player["inventory"], roll["item_id"], 1)
+        achado = f"{item_display(make_entry(roll['item_id']))} ({roll['rarity']}) e {achado}"
 
-        try:
-            loot_llm = llm.with_structured_output(LootSchema)
-            res = loot_llm.invoke([
-                SystemMessage(content=sys_prompt),
-                HumanMessage(content=user_prompt)
-            ])
-            
-            added_names = []
-            for item in res.items:
-                raw_id = item.item_id.lower().replace(" ", "_")
-                save_custom_artifact(raw_id, item.model_dump())
-                player["inventory"] = add_item(player["inventory"], raw_id, 1)
-                added_names.append(item.name)
-            
-            player["gold"] += res.gold
-            
-            msg = f"{res.narrative}\n[+ {', '.join(added_names)} | +{res.gold} Ouro]"
-            return {
-                "player": player,
-                "messages": [AIMessage(content=msg)],
-                "loot_source": None,
-                "archive_due": True,
-            }
-        except Exception as e:
-            return {"messages": [AIMessage(content="Você vasculha, mas não encontra nada.")]}
+    sistema = f"[SISTEMA] {achado}"
+    msg = _narrate(
+        f"O jogador vasculha {loc.get('name', 'o local')} (perigo {danger}) e encontra: {achado}.",
+        f"Você vasculha os escombros. {achado}.")
+    return {
+        "player": player,
+        "world": world,
+        "messages": [AIMessage(content=f"{msg}\n\n{sistema}")],
+        "loot_source": None,
+        "archive_due": True,
+    }

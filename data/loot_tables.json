@@ -1,0 +1,129 @@
+{
+  "default": {
+    "1-2": {
+      "comum": 80,
+      "incomum": 20
+    },
+    "3-4": {
+      "comum": 45,
+      "incomum": 40,
+      "raro": 15
+    },
+    "pools": {
+      "comum": [
+        "moeda_ouro",
+        "corda",
+        "erva_amarga",
+        "pocao_cura"
+      ],
+      "incomum": [
+        "pocao_cura_maior",
+        "adaga_serrilhada"
+      ],
+      "raro": [
+        "espada_aco_temperado",
+        "escudo_de_aco"
+      ]
+    }
+  },
+  "skallgard": {
+    "1-2": {
+      "comum": 75,
+      "incomum": 25
+    },
+    "3-4": {
+      "comum": 40,
+      "incomum": 42,
+      "raro": 18
+    },
+    "pools": {
+      "comum": [
+        "minerio_ferro",
+        "moeda_ouro",
+        "corda"
+      ],
+      "incomum": [
+        "escudo_amassado",
+        "maca_de_ferro"
+      ],
+      "raro": [
+        "espada_aco_temperado",
+        "escudo_de_aco"
+      ]
+    }
+  },
+  "nova_arcadia": {
+    "1-2": {
+      "comum": 85,
+      "incomum": 15
+    },
+    "3-4": {
+      "comum": 50,
+      "incomum": 38,
+      "raro": 12
+    },
+    "pools": {
+      "comum": [
+        "moeda_ouro",
+        "pocao_cura",
+        "corda"
+      ],
+      "incomum": [
+        "adaga_ferro",
+        "gibao_de_couro"
+      ],
+      "raro": [
+        "adaga_serrilhada"
+      ]
+    }
+  },
+  "pantano_melancolia": {
+    "1-2": {
+      "comum": 78,
+      "incomum": 22
+    },
+    "3-4": {
+      "comum": 42,
+      "incomum": 40,
+      "raro": 18
+    },
+    "pools": {
+      "comum": [
+        "erva_amarga",
+        "musgo_cinzento",
+        "moeda_ouro"
+      ],
+      "incomum": [
+        "pocao_cura",
+        "kit_medico"
+      ],
+      "raro": [
+        "pocao_cura_maior"
+      ]
+    }
+  },
+  "deserto_zhur": {
+    "1-2": {
+      "comum": 80,
+      "incomum": 20
+    },
+    "3-4": {
+      "comum": 40,
+      "incomum": 40,
+      "raro": 20
+    },
+    "pools": {
+      "comum": [
+        "moeda_ouro",
+        "corda"
+      ],
+      "incomum": [
+        "adaga_ferro",
+        "arco_de_caca"
+      ],
+      "raro": [
+        "espada_aco_temperado"
+      ]
+    }
+  }
+}

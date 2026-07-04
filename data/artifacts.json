@@ -38,7 +38,10 @@
       },
       "heal": "2d4+2"
     },
-    "stackable": true
+    "stackable": true,
+    "economy_tags": [
+      "ervas"
+    ]
   },
   "adaga_ferro": {
     "name": "Adaga de Ferro",
@@ -308,6 +311,145 @@
     "mechanics": {
       "passive_effects": [],
       "active_ability": null
+    }
+  },
+  "minerio_ferro": {
+    "name": "Minério de Ferro",
+    "type": "material",
+    "rarity": "comum",
+    "value_gold": 8,
+    "description": "Pedra pesada das veias de Skallgard.",
+    "stackable": true,
+    "economy_tags": [
+      "mineracao"
+    ],
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "erva_amarga": {
+    "name": "Erva Amarga",
+    "type": "material",
+    "rarity": "comum",
+    "value_gold": 5,
+    "description": "Cresce onde o Pântano deixa. Base de todo tônico honesto.",
+    "stackable": true,
+    "economy_tags": [
+      "ervas"
+    ],
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "musgo_cinzento": {
+    "name": "Musgo Cinzento",
+    "type": "material",
+    "rarity": "comum",
+    "value_gold": 6,
+    "description": "Colhido sob supervisão dos Druidas — ou não.",
+    "stackable": true,
+    "economy_tags": [
+      "ervas"
+    ],
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "espada_aco_temperado": {
+    "name": "Espada de Aço Temperado",
+    "type": "weapon",
+    "rarity": "incomum",
+    "value_gold": 120,
+    "description": "Forjada e reforjada até calar reclamação.",
+    "stackable": false,
+    "combat_stats": {
+      "attack_bonus": 2,
+      "damage_dice": "1d8",
+      "attribute": "str",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "adaga_serrilhada": {
+    "name": "Adaga Serrilhada",
+    "type": "weapon",
+    "rarity": "incomum",
+    "value_gold": 90,
+    "description": "Os dentes fazem a ferida lembrar de você.",
+    "stackable": false,
+    "combat_stats": {
+      "attack_bonus": 2,
+      "damage_dice": "1d4",
+      "attribute": "dex",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "escudo_de_aco": {
+    "name": "Escudo de Aço",
+    "type": "armor",
+    "rarity": "incomum",
+    "value_gold": 100,
+    "description": "Aço de verdade, peso de verdade.",
+    "stackable": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 2
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "pocao_cura_maior": {
+    "name": "Poção de Cura Maior",
+    "type": "consumable",
+    "rarity": "incomum",
+    "value_gold": 150,
+    "description": "Destilada no limiar entre remédio e reza.",
+    "stackable": true,
+    "economy_tags": [
+      "ervas"
+    ],
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null,
+      "heal": "4d4+4"
     }
   }
 }

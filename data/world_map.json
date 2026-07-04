@@ -27,7 +27,11 @@
         "brekmar"
       ],
       "lore_seed": "A maior cidade de Valoria, erguida na confluência de rios e governada por Valerius sob o Código de Ferro; a Legião patrulha portões que separam os anéis — e as classes.",
-      "region_id": "nova_arcadia"
+      "region_id": "nova_arcadia",
+      "craft_tags": [],
+      "economy_tags": [
+        "comercio"
+      ]
     },
     {
       "id": "na_anel_dourado",
@@ -48,7 +52,13 @@
         "na_anel_ferro"
       ],
       "lore_seed": "Pedra polida e obsidiana que não reflete nada; o Palácio de Obsidiana sangra quando o Lorde se irrita, e nos Jardins Suspensos flores impossíveis perfumam a fumaça da favela abaixo.",
-      "region_id": "nova_arcadia"
+      "region_id": "nova_arcadia",
+      "craft_tags": [
+        "laboratorio"
+      ],
+      "economy_tags": [
+        "comercio"
+      ]
     },
     {
       "id": "na_anel_ferro",
@@ -70,7 +80,12 @@
         "na_anel_lama"
       ],
       "lore_seed": "As Fundições Valerianas nunca param: fuligem que vira Tosse de Ferro, o Mercado de Carne vendendo contratos de servidão, e o Oubliette — torre invertida onde o Cego ouve cada respiração.",
-      "region_id": "nova_arcadia"
+      "region_id": "nova_arcadia",
+      "craft_tags": [
+        "forja",
+        "laboratorio"
+      ],
+      "economy_tags": []
     },
     {
       "id": "na_anel_lama",
@@ -91,7 +106,9 @@
         "na_anel_ferro"
       ],
       "lore_seed": "A Fossa fora das muralhas, onde o Código de Ferro não chega: o Beco dos Desdentados vende Pó de Sonho, a Catedral Afundada abriga leprosos e o Fosso dos Cães diverte quem nada tem.",
-      "region_id": "nova_arcadia"
+      "region_id": "nova_arcadia",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "pantano_melancolia",
@@ -116,7 +133,13 @@
         "pradaria_ruinas"
       ],
       "lore_seed": "Nasceu da batalha final contra Malagor: Éter de mortos demais afundou a pradaria. A água oleosa convida a deitar e dormir para sempre; só os Druidas do Ciclo Cinzento trabalham aqui, em turnos de duas semanas.",
-      "region_id": "pantano_melancolia"
+      "region_id": "pantano_melancolia",
+      "craft_tags": [
+        "altar"
+      ],
+      "economy_tags": [
+        "ervas"
+      ]
     },
     {
       "id": "pm_profundezas",
@@ -136,7 +159,9 @@
         "pantano_melancolia"
       ],
       "lore_seed": "Camadas de lama sobre décadas de equipamento de guerra da coalizão — riqueza real guardada por mortos-vivos ancorados no Éter, resíduo sem inteligência mas com número.",
-      "region_id": "pantano_melancolia"
+      "region_id": "pantano_melancolia",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "deserto_zhur",
@@ -159,7 +184,9 @@
         "dz_borda_do_vazio"
       ],
       "lore_seed": "O Mar de Vidro: areia vitrificada pelo impacto da lua que matou Urath. Tempestades de Navalha esfolam a carne, fragmentos do demônio pulsam sob o vidro e os Devoradores de Sol caçam forasteiros pela água do corpo.",
-      "region_id": "deserto_zhur"
+      "region_id": "deserto_zhur",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "dz_borda_do_vazio",
@@ -179,7 +206,9 @@
         "deserto_zhur"
       ],
       "lore_seed": "Onde o deserto termina em queda para o nada. Um som sem nome sobe da borda — não é vento, não é eco. Nem os Devoradores de Sol se aproximam.",
-      "region_id": "deserto_zhur"
+      "region_id": "deserto_zhur",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "floresta_sussurros",
@@ -203,7 +232,13 @@
         "fs_fronteira_xylos"
       ],
       "lore_seed": "Criada por Thessavar como esconderijo do escuro: árvores que bloqueiam a luz com precisão intencional, silêncio que é presença, e vozes chamando seu nome com a voz de mortos conhecidos.",
-      "region_id": "floresta_sussurros"
+      "region_id": "floresta_sussurros",
+      "craft_tags": [
+        "altar"
+      ],
+      "economy_tags": [
+        "ervas"
+      ]
     },
     {
       "id": "fs_fronteira_xylos",
@@ -224,7 +259,9 @@
         "selva_xylos"
       ],
       "lore_seed": "O lugar mais estranho do leste: onde o escuro seco da floresta encontra o escuro úmido da selva. As criaturas de um lado não cruzam para o outro — e ninguém sabe o que ambas temem.",
-      "region_id": "floresta_sussurros"
+      "region_id": "floresta_sussurros",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "selva_xylos",
@@ -247,7 +284,9 @@
         "sx_profundezas"
       ],
       "lore_seed": "Calor de bafo vivo, ar que corrói metal e o ciclo acelerado: frutas apodrecem em uma hora, e parar tempo demais significa ser incorporado ao substrato. Para os Hospedeiros é lar; para o resto, morte tranquila e eficiente.",
-      "region_id": "selva_xylos"
+      "region_id": "selva_xylos",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "sx_cidades_hospedeiros",
@@ -268,7 +307,9 @@
         "selva_xylos"
       ],
       "lore_seed": "Plataformas suspensas nas árvores gigantes, arquitetura crescida tanto quanto construída. As colônias de Xylos sentem qualquer intruso a duzentos metros — os Hospedeiros comerciam resina nas bordas, sem explicar de onde vem.",
-      "region_id": "selva_xylos"
+      "region_id": "selva_xylos",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "sx_profundezas",
@@ -288,7 +329,9 @@
         "selva_xylos"
       ],
       "lore_seed": "Abaixo das copas, abaixo do chão, onde a luz nunca chegou: Morrakh, o dragão do contágio. Hospedeiros que desceram fundo demais voltaram com o parasita operando em padrões que a colmeia não reconhece.",
-      "region_id": "selva_xylos"
+      "region_id": "selva_xylos",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "skallgard",
@@ -312,7 +355,13 @@
         "sk_farol_chama_negra"
       ],
       "lore_seed": "Cidade do Ermo Branco onde o frio é condição do Abismo, não clima. Clãs tecnológicos que nunca pegam em arma e clãs de combate que exportam mercenários — todos hostis a forasteiros de 'vidas quentes'.",
-      "region_id": "skallgard"
+      "region_id": "skallgard",
+      "craft_tags": [
+        "forja"
+      ],
+      "economy_tags": [
+        "mineracao"
+      ]
     },
     {
       "id": "sk_fortaleza_vorr",
@@ -332,7 +381,9 @@
         "skallgard"
       ],
       "lore_seed": "Construção dos Gigantes: degraus na altura da cintura, portas de vinte metros. As 'estátuas' são aventureiros congelados pelo Sopro de Vorr — e ainda estão conscientes.",
-      "region_id": "skallgard"
+      "region_id": "skallgard",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "sk_farol_chama_negra",
@@ -352,7 +403,9 @@
         "skallgard"
       ],
       "lore_seed": "Ergue anti-luz que suprime o despertar da Rede Carmesim. Um guardião que nunca fala; a cada cem anos um andarilho chega, mata o anterior e assume. O Abismo cobra a vida como preço da contenção.",
-      "region_id": "skallgard"
+      "region_id": "skallgard",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "aethelgard",
@@ -375,7 +428,9 @@
         "ae_ruinas_submersas"
       ],
       "lore_seed": "O Lago sem nome sobre a cidade que implodiu numa noite. Nas bordas a água é cristalina sobre arcos submersos; sobre o coração de Aethelgard, escura — a luz simplesmente não desce até Oghma.",
-      "region_id": "aethelgard"
+      "region_id": "aethelgard",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "ae_ruinas_submersas",
@@ -396,7 +451,9 @@
         "aethelgard"
       ],
       "lore_seed": "Corredores élficos onde o Éter guarda as últimas memórias das vítimas da Destilação. Os Afogados patrulham em rotas coordenadas, Morvath observa e comenta, e Thessrak — selado — ainda fala.",
-      "region_id": "aethelgard"
+      "region_id": "aethelgard",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "ophidia",
@@ -417,7 +474,9 @@
         "brekmar"
       ],
       "lore_seed": "Vulcões que fumegam em cores que não existem, ilhas que não estão onde estavam ontem. Barcos que se aproximam não naufragam — simplesmente deixam de existir no registro do que pode ser rastreado.",
-      "region_id": "ophidia"
+      "region_id": "ophidia",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "costa_negra",
@@ -440,7 +499,11 @@
         "cn_o_trono"
       ],
       "lore_seed": "Quilômetros de praia sob costelas do tamanho de árvores: gerações de leviatãs caçados pelos Osshari. O Éter das carcaças atrai demônios menores, e o âmbar cinza dos Caranguejeiros vale fortunas.",
-      "region_id": "costa_negra"
+      "region_id": "costa_negra",
+      "craft_tags": [],
+      "economy_tags": [
+        "porto"
+      ]
     },
     {
       "id": "cn_o_trono",
@@ -460,7 +523,9 @@
         "costa_negra"
       ],
       "lore_seed": "A maior carcaça do Cemitério — crânio com câmaras do tamanho de uma vila, costelas em arcos de vinte metros. Dizem que ainda respira em ciclos de seis horas. Os Osshari dizem apenas: ele não terminou de morrer.",
-      "region_id": "costa_negra"
+      "region_id": "costa_negra",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "montanhas_afiadas",
@@ -484,7 +549,11 @@
         "ma_boca"
       ],
       "lore_seed": "Rasgaram o chão num terremoto na Era 2 — os Anões emergiram junto. Passagens labirínticas que deslizamentos redesenham; só guias Cinzéus atravessam com segurança, porque não sentem dor suficiente para se importar.",
-      "region_id": "montanhas_afiadas"
+      "region_id": "montanhas_afiadas",
+      "craft_tags": [],
+      "economy_tags": [
+        "mineracao"
+      ]
     },
     {
       "id": "ma_saidas_baixas",
@@ -505,7 +574,11 @@
         "ma_boca"
       ],
       "lore_seed": "Bocas das passagens tomadas por Orcs e Goblins que saíram do Reino Subterrâneo quando o Rei despertou. Acampam, atacam grupos pequenos, fogem de grupos grandes — primeiro e último obstáculo de qualquer travessia.",
-      "region_id": "montanhas_afiadas"
+      "region_id": "montanhas_afiadas",
+      "craft_tags": [],
+      "economy_tags": [
+        "mineracao"
+      ]
     },
     {
       "id": "ma_boca",
@@ -526,7 +599,9 @@
         "ma_saidas_baixas"
       ],
       "lore_seed": "A entrada mais conhecida do Reino Subterrâneo perdido dos Anões. Quem desce entra num labirinto de câmaras idênticas com algo imenso que não ataca — mas está sempre presente, em qualquer direção que você olhe.",
-      "region_id": "montanhas_afiadas"
+      "region_id": "montanhas_afiadas",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "pradaria_ruinas",
@@ -553,7 +628,9 @@
         "pr_ruinas_assombradas"
       ],
       "lore_seed": "Onde as civilizações Élficas e Cinzéus floresceram e a Guerra do Céu Vermelho as destruiu. Fundações afloram da grama alta; nômades circulam — e não há como saber, de longe, se são comércio ou ameaça.",
-      "region_id": "pradaria_ruinas"
+      "region_id": "pradaria_ruinas",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "pr_vaelorn",
@@ -573,7 +650,11 @@
         "pradaria_ruinas"
       ],
       "lore_seed": "A maior cidade Élfica restante, construída sobre fundações de uma cidade-estado morta — impossível dizer onde termina a ruína e começa a reconstrução. Mercado de itens mágicos e arquivo da memória coletiva Élfica.",
-      "region_id": "pradaria_ruinas"
+      "region_id": "pradaria_ruinas",
+      "craft_tags": [
+        "forja"
+      ],
+      "economy_tags": []
     },
     {
       "id": "pr_solvhen",
@@ -593,7 +674,9 @@
         "pradaria_ruinas"
       ],
       "lore_seed": "A cidade Cinzéu: paredes cobertas de frases em preto sobre cinza, séculos de contemplação em pergaminho. O lugar mais silencioso da Pradaria — e o mais perturbador para quem não conhece o peso do silêncio Cinzéu.",
-      "region_id": "pradaria_ruinas"
+      "region_id": "pradaria_ruinas",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "pr_ruinas_assombradas",
@@ -613,7 +696,9 @@
         "pradaria_ruinas"
       ],
       "lore_seed": "As ruínas mais antigas, onde a vegetação tomou tudo e as almas da Guerra do Céu Vermelho ficaram ancoradas no Éter. Um Elfo espectral pode ser belo e mortal ao mesmo tempo; um Cinzéu espectral, imóvel por horas — e então rápido demais.",
-      "region_id": "pradaria_ruinas"
+      "region_id": "pradaria_ruinas",
+      "craft_tags": [],
+      "economy_tags": []
     },
     {
       "id": "brekmar",
@@ -638,7 +723,13 @@
         "bk_docas_velhas"
       ],
       "lore_seed": "O porto sem lei que ninguém fundou: tudo que não pode passar por Nova Arcádia passa por aqui. Não há governo — há Kahen, o sangrinomante no navio ancorado, árbitro de última instância que ouve antes de falar.",
-      "region_id": "brekmar"
+      "region_id": "brekmar",
+      "craft_tags": [
+        "laboratorio"
+      ],
+      "economy_tags": [
+        "porto"
+      ]
     },
     {
       "id": "bk_docas_velhas",
@@ -658,7 +749,9 @@
         "brekmar"
       ],
       "lore_seed": "As extremidades do porto: mais Osshari, mais violência casual, mais negócios que não se discutem em voz alta. Quem chega novo aprende rápido que as docas velhas são outro território — e que a distinção importa.",
-      "region_id": "brekmar"
+      "region_id": "brekmar",
+      "craft_tags": [],
+      "economy_tags": []
     }
   ]
 }

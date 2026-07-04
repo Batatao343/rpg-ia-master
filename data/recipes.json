@@ -1,0 +1,67 @@
+{
+  "lamina_temperada": {
+    "result_id": "espada_aco_temperado",
+    "result_qty": 1,
+    "ingredients": {
+      "espada_gasta": 1,
+      "minerio_ferro": 2
+    },
+    "gold_cost": 40,
+    "craft_tag": "forja",
+    "classes": []
+  },
+  "escudo_reforjado": {
+    "result_id": "escudo_de_aco",
+    "result_qty": 1,
+    "ingredients": {
+      "escudo_amassado": 1,
+      "minerio_ferro": 2
+    },
+    "gold_cost": 30,
+    "craft_tag": "forja",
+    "classes": []
+  },
+  "adaga_dentada": {
+    "result_id": "adaga_serrilhada",
+    "result_qty": 1,
+    "ingredients": {
+      "adaga_ferro": 1,
+      "minerio_ferro": 1
+    },
+    "gold_cost": 25,
+    "craft_tag": "forja",
+    "classes": []
+  },
+  "tonico_simples": {
+    "result_id": "pocao_cura",
+    "result_qty": 1,
+    "ingredients": {
+      "erva_amarga": 2
+    },
+    "gold_cost": 10,
+    "craft_tag": "laboratorio",
+    "classes": []
+  },
+  "kit_de_campanha": {
+    "result_id": "kit_medico",
+    "result_qty": 1,
+    "ingredients": {
+      "erva_amarga": 1,
+      "corda": 1
+    },
+    "gold_cost": 5,
+    "craft_tag": "laboratorio",
+    "classes": []
+  },
+  "balsamo_do_ciclo": {
+    "result_id": "pocao_cura_maior",
+    "result_qty": 1,
+    "ingredients": {
+      "erva_amarga": 2,
+      "musgo_cinzento": 1
+    },
+    "gold_cost": 20,
+    "craft_tag": "altar",
+    "classes": []
+  }
+}
