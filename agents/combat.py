@@ -133,19 +133,20 @@ def _last_human_text(messages: List) -> str:
 _UNIVERSAL_ABILITIES = ("ataque_basico", "improvisado")
 
 
-def _ability_catalog_for(player: Dict) -> str:
-    """Só as habilidades RELEVANTES (conhecidas do jogador + universais) — não o dict inteiro.
-    Economiza centenas de tokens por parse de combate."""
-    known = [str(k).lower() for k in (player.get("known_abilities") or [])]
+def _allowed_ability_ids(player: Dict) -> set:
+    """Ids que ESTA ficha pode usar: conhecidas (ids canônicos, Fase 4.1) + universais."""
+    known = {str(k) for k in (player.get("known_abilities") or [])}
+    return {aid for aid in known if aid in ABILITIES} | set(_UNIVERSAL_ABILITIES)
 
+
+def _ability_catalog_for(player: Dict) -> str:
+    """Só as habilidades RELEVANTES (conhecidas + universais) — match por id EXATO
+    (Fase 4.1: known_abilities guarda ids canônicos). Economiza tokens no parse."""
     def _line(aid, a):
         return f"- {aid}: {a.get('name')} | custo {a.get('cost')} {a.get('resource_type')} | {a.get('description','')[:60]}"
 
-    linhas = []
-    for aid, a in ABILITIES.items():
-        name = str(a.get("name", "")).lower()
-        if aid in _UNIVERSAL_ABILITIES or any(k and (k in aid.lower() or k in name or name in k) for k in known):
-            linhas.append(_line(aid, a))
+    linhas = [_line(aid, ABILITIES[aid])
+              for aid in sorted(_allowed_ability_ids(player)) if aid in ABILITIES]
     if not linhas:  # fallback mínimo: as universais
         for aid in _UNIVERSAL_ABILITIES:
             a = ABILITIES.get(aid, {})
@@ -185,6 +186,12 @@ def _parse_combat_action(player: Dict, enemies: List[Dict], intent: str) -> Dict
         res = llm.with_structured_output(CombatAction).invoke([sys, HumanMessage(content=intent)])
         if isinstance(res, CombatAction):
             aid = res.ability_id if res.ability_id in ABILITIES else "ataque_basico"
+            # Fase 4.1 (R7): gate DETERMINÍSTICO — habilidade fora da ficha não
+            # passa nem se o LLM disser que pode (id alucinado/de outra classe).
+            if aid not in _allowed_ability_ids(player):
+                nome = ABILITIES.get(aid, {}).get("name", aid)
+                return {"ability_id": aid, "target": res.target, "is_allowed": False,
+                        "reason": f"{player.get('name', 'O herói')} não conhece {nome}."}
             return {"ability_id": aid, "target": res.target,
                     "is_allowed": res.is_allowed, "reason": res.reason}
     except Exception as e:

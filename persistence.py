@@ -138,6 +138,13 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
                 "entries": [{"text": t, "turn": 0, "kind": "prose"} for t in raw_chron],
             }]
 
+        # Fase 4.1 (R8): known_abilities texto-livre -> ids canônicos
+        # ("[Passiva] ..." sai; não-mapeável descarta; garante ataque_basico).
+        raw_player = raw_data.get("player", {})
+        if raw_player:
+            from progression import canonicalize_known_abilities
+            raw_player = canonicalize_known_abilities(raw_player)
+
         # Reconstrói o Estado compatível com GameState
         state = {
             # --- Recupera Memória ---
@@ -147,7 +154,7 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
             "chronicle": raw_chron,
             
             # --- Recupera Core ---
-            "player": raw_data.get("player", {}),
+            "player": raw_player,
             "world": raw_data.get("world", {}),
             "party": raw_data.get("party", []),
             "enemies": raw_data.get("enemies", []),

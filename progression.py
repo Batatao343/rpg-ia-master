@@ -15,6 +15,7 @@ Convenções:
 - Evento level_up segue o shape de proposta do pipeline 2.6 (gerado 100% em
   Python, padrão reputation_changed da 3.4 — o validator rejeita se o LLM propuser).
 """
+import unicodedata
 from typing import Dict, List, Optional, Tuple
 
 from gamedata import ABILITIES, CLASSES, XP_TABLE
@@ -172,3 +173,47 @@ def apply_choice(player: Dict, choice_id: str, *,
 
     p["pending_choices"] = [c for c in pending if c.get("id") != choice_id]
     return p, None
+
+
+# ---------------------------------------------------------------------------
+# Backfill de saves antigos (R8): known_abilities texto-livre -> ids canônicos
+# ---------------------------------------------------------------------------
+def _fold(s: str) -> str:
+    """lower + sem acento, p/ casar nome livre com nome canônico."""
+    nfkd = unicodedata.normalize("NFKD", str(s or ""))
+    return "".join(c for c in nfkd if not unicodedata.combining(c)).strip().lower()
+
+
+def canonicalize_known_abilities(player: Dict, *,
+                                 abilities_db: Optional[Dict] = None) -> Dict:
+    """Converte known_abilities texto-livre em ids canônicos (in-place-safe: cópia).
+
+    - id já canônico: mantém
+    - "[Passiva] ..." : descarta (passiva vive em CLASSES[class]["passive"])
+    - nome que casa (case/acento-insensitive) com name de habilidade: vira o id
+    - não-mapeável: descartado (nunca funcionou mecanicamente antes)
+    - garante 'ataque_basico' e defaults de pending_choices/xp/level
+    """
+    db = abilities_db if abilities_db is not None else ABILITIES
+    by_name = {_fold(a.get("name", "")): aid for aid, a in db.items()}
+
+    p = dict(player)
+    out: List[str] = []
+    for entry in p.get("known_abilities") or []:
+        e = str(entry)
+        if e.startswith("[Passiva]"):
+            continue
+        if e in db:
+            if e not in out:
+                out.append(e)
+            continue
+        mapped = by_name.get(_fold(e))
+        if mapped and mapped not in out:
+            out.append(mapped)
+    if "ataque_basico" not in out:
+        out.insert(0, "ataque_basico")
+    p["known_abilities"] = out
+    p.setdefault("pending_choices", [])
+    p.setdefault("xp", 0)
+    p.setdefault("level", 1)
+    return p

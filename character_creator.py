@@ -141,7 +141,6 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
 
     # 1. BUSCA DADOS OFICIAIS (A "Regra")
     class_data = _get_class_data(p_class)
-    official_passive = class_data.get("passive", "Habilidade Básica")
     
     # Cálculo de HP Base Oficial (Base da Classe + Nível)
     base_stats = class_data.get("base_stats", {})
@@ -199,8 +198,13 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
         }
 
     # 4. MONTAGEM FINAL (MERGE)
-    # A lista de habilidades começa com a PASSIVA OFICIAL do JSON
-    final_abilities = [f"[Passiva] {official_passive}"] + stats_data.get("flavor_abilities", [])
+    # Fase 4.1 (R6): known_abilities guarda SÓ ids canônicos da árvore.
+    # A passiva vive em CLASSES[classe]["passive"] (exibição busca lá);
+    # flavor do LLM é descartado (nunca teve efeito mecânico).
+    final_abilities = ["ataque_basico"] + [
+        aid for aid in class_data.get("starting_abilities", [])
+        if aid not in ("ataque_basico",)
+    ]
 
     sheet = {
         "name": name,
@@ -220,7 +224,8 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
         "inventory": stats_data["inventory"],
         "known_abilities": final_abilities, # <--- AQUI ESTÁ A CORREÇÃO
         "level": level,
-        "xp": 0
+        "xp": 0,
+        "pending_choices": []
     }
 
     # 5. TRAITS RACIAIS (Fase 2.5b) — determinístico, ANTES de defesa/ataque

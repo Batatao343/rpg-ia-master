@@ -301,3 +301,69 @@ def test_starting_abilities_validas():
             classes = a.get("classes") or []
             assert "all" in classes or cname in classes, \
                 f"{cname}: starting {aid} não pertence à classe"
+
+
+# ---------------------------------------------------------------------------
+# Etapa 4 — Ids canônicos: creator, catálogo/gate do combate, backfill de save
+# ---------------------------------------------------------------------------
+
+def test_creator_ids_canonicos():
+    from character_creator import create_player_character
+    sheet = create_player_character({
+        "name": "Teste", "class_name": "Cavaleiro da Vigília", "race": "Humano",
+        "region": "Nova Arcádia", "backstory": "x", "level": "1"})
+    known = sheet["known_abilities"]
+    assert known and all(k in ABILITIES for k in known), known
+    assert "ataque_basico" in known
+    assert not any(str(k).startswith("[Passiva]") for k in known)
+    for aid in CLASSES["Cavaleiro da Vigília"]["starting_abilities"]:
+        assert aid in known
+    assert sheet["pending_choices"] == []
+
+
+def test_catalogo_por_id_exato():
+    from agents.combat import _ability_catalog_for
+    p = make_player(known_abilities=["ataque_basico", "investida_do_touro"])
+    cat = _ability_catalog_for(p)
+    assert "investida_do_touro" in cat
+    # habilidade de outra classe com nome parecido NÃO entra por substring
+    assert "dardos_de_forca" not in cat
+    # texto livre antigo não casa mais nada além das universais
+    p2 = make_player(known_abilities=["Golpe Fantasma da Lua"])
+    cat2 = _ability_catalog_for(p2)
+    assert "ataque_basico" in cat2
+    assert "Golpe Fantasma" not in cat2
+
+
+def test_gate_uso_deterministico(monkeypatch):
+    """LLM aprova habilidade que a ficha não tem -> gate Python nega."""
+    from agents import combat as cbt
+
+    class _FakeStructured:
+        def invoke(self, msgs):
+            return cbt.CombatAction(ability_id="decapitar", target="Orc",
+                                    is_allowed=True, reason="")
+
+    class _FakeLLM:
+        def with_structured_output(self, model):
+            return _FakeStructured()
+
+    monkeypatch.setattr(cbt, "get_llm", lambda **kw: _FakeLLM())
+    p = make_player(known_abilities=["ataque_basico"])
+    out = cbt._parse_combat_action(p, [{"name": "Orc", "status": "ativo"}], "decapito ele")
+    assert out["is_allowed"] is False
+    assert "não conhece" in out["reason"]
+
+
+def test_backfill_save_antigo():
+    p = make_player(known_abilities=[
+        "[Passiva] Muralha Humana: +2 Defesa",
+        "Investida do Touro",        # nome livre -> id
+        "pele_de_ferro",             # já canônico
+        "Golpe do Dragão Celestial", # flavor não-mapeável -> descarta
+    ])
+    p.pop("pending_choices")
+    out = pg.canonicalize_known_abilities(p)
+    assert out["known_abilities"] == ["ataque_basico", "investida_do_touro", "pele_de_ferro"]
+    assert out["pending_choices"] == []
+    assert out["level"] == 1 and out["xp"] == 0
