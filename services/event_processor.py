@@ -117,6 +117,7 @@ def process_pending_events(state: Dict) -> Dict:
     chronicle_changed = False
     quests = list(state.get("quests") or [])
     quests_changed = False
+    quests_completed = 0  # Fase 4.1: cada conclusão vale XP_PER_QUEST
 
     def _chronicle_milestone(ev: Dict, proj: Dict) -> None:
         nonlocal chronicle, chronicle_changed
@@ -152,6 +153,7 @@ def process_pending_events(state: Dict) -> Dict:
                     event["payload"]["quest_title"] = origem.get("title", "")
                 quests = quest_log.complete_quest(quests, qid, turn)
                 quests_changed = True
+                quests_completed += 1
 
         print(f"✅ [EVENT] {event['type']} → {event['target_id']} (id={event['event_id'][:8]})")
         _chronicle_milestone(event, projection)  # Fase 3.1: evento aplicado → crônica
@@ -182,6 +184,20 @@ def process_pending_events(state: Dict) -> Dict:
         "world_projection": projection,
         "pending_world_events": [],
     }
+
+    # Fase 4.1: quest concluída dá XP determinístico. Level ups são eventos do
+    # motor (sãos por construção) — entram direto no log + crônica, sem revalidar.
+    if quests_completed:
+        from progression import XP_PER_QUEST, grant_xp
+        player, lvl_props = grant_xp(dict(state.get("player") or {}),
+                                     XP_PER_QUEST * quests_completed)
+        updates["player"] = player
+        for prop in lvl_props:
+            ev = _build_event(prop, turn)
+            event_log.append(ev)
+            print(f"⬆️ [XP] level_up → nível {ev['payload'].get('new_level')} (id={ev['event_id'][:8]})")
+            _chronicle_milestone(ev, projection)
+
     if chronicle_changed:
         updates["chronicle"] = chronicle
     if quests_changed:

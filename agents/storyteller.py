@@ -312,6 +312,14 @@ def storyteller_node(state: GameState):
         needs_replan = state.get("needs_replan", False)
         updated_plan = campaign_plan
         beat_done = bool(getattr(update, "beat_completed", False))
+        # Fase 4.1: beat concluído = XP determinístico (o LLM só sinaliza o beat;
+        # valor/level up são do motor). Level ups viram eventos source="progression".
+        leveled_player = None
+        level_up_events: list = []
+        if beat_done:
+            from progression import grant_xp, XP_PER_BEAT
+            base_p = rested_player if rested_player is not None else dict(state.get("player") or {})
+            leveled_player, level_up_events = grant_xp(base_p, XP_PER_BEAT)
         if campaign_plan and beats and beat_done and current_step < len(beats):
             beats[current_step] = {**beats[current_step], "status": "done"}
             new_step = current_step + 1
@@ -335,12 +343,15 @@ def storyteller_node(state: GameState):
         }
         if rested_player is not None:
             updates["player"] = rested_player
+        if leveled_player is not None:  # Fase 4.1: XP do beat (inclui o descanso, se houve)
+            updates["player"] = leveled_player
         # Viagem/descanso/beat concluído = evento relevante → pede arquivamento.
         if dest or rested_player is not None or beat_done:
             updates["archive_due"] = True
         # Fase 2.6: enfileira propostas de evento estruturado (motor valida no archivist).
-        # Fase 3.4: reputation_changed (Python) entra na mesma fila.
-        pending = [e.model_dump() for e in getattr(update, "proposed_events", []) or []] + rep_events
+        # Fase 3.4: reputation_changed (Python) entra na mesma fila. 4.1: level_up idem.
+        pending = ([e.model_dump() for e in getattr(update, "proposed_events", []) or []]
+                   + rep_events + level_up_events)
         if pending:
             updates["pending_world_events"] = (state.get("pending_world_events", []) or []) + pending
             updates["archive_due"] = True  # mudança de mundo é evento relevante

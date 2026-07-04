@@ -327,6 +327,16 @@ def combat_node(state: GameState):
         bestiary_knowledge = disc.record_kills(bestiary_knowledge, dead, turn)
         bk_changed = True
 
+    # Fase 4.1: XP determinístico por kill (tier do bestiário; fugitivo não conta).
+    # grant_xp devolve cópia — reatribui ANTES de montar o result.
+    level_up_events: List[Dict] = []
+    if dead:
+        import progression as pg
+        xp = pg.xp_for_kills(dead)
+        if xp:
+            player, level_up_events = pg.grant_xp(player, xp)
+            logs.append(f"+{xp} XP" + (f" — NÍVEL {player['level']}!" if level_up_events else ""))
+
     # Fase 2.8: pack enxuto (só ambientação; mecânica segue 100% Python).
     loc = state.get("world", {}).get("current_location", "")
     world_pack = build_context_pack(state, query=f"{loc} {intent}",
@@ -350,9 +360,10 @@ def combat_node(state: GameState):
 
     # Fase 2.6 (R5): morte de inimigo CANÔNICO vira npc_killed determinístico (sem LLM).
     # O motor já sabe quem caiu; ids genéricos de bestiário não geram evento.
-    canonical_kills = _kill_events(dead)
-    if canonical_kills:
-        result["pending_world_events"] = (state.get("pending_world_events", []) or []) + canonical_kills
+    # Fase 4.1: level_up (source=progression) entra na mesma fila.
+    engine_events = _kill_events(dead) + level_up_events
+    if engine_events:
+        result["pending_world_events"] = (state.get("pending_world_events", []) or []) + engine_events
 
     # Fase 2.5b (R10): fuga vira alerta de mundo — o fugitivo pode voltar com amigos.
     if fled:

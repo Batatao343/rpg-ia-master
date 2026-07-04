@@ -112,6 +112,16 @@ def _v_reputation_changed(ev: ProposedWorldEvent, state: dict, proj: dict) -> Va
     return ValidationResult(True)
 
 
+def _v_level_up(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    """Fase 4.1: evento do motor (grant_xp). O gate anti-LLM (source='progression')
+    fica em validate_proposal; aqui só sanidade do payload."""
+    if ev.target_id != "player" or ev.actor_id != "player":
+        return ValidationResult(False, "level_up é sempre do player")
+    if not isinstance(ev.payload.get("new_level"), int):
+        return ValidationResult(False, "payload.new_level ausente/inválido")
+    return ValidationResult(True)
+
+
 _VALIDATORS = {
     "npc_killed": _v_npc_killed,
     "secret_revealed": _v_secret_revealed,
@@ -119,6 +129,7 @@ _VALIDATORS = {
     "quest_completed": _v_quest_completed,
     "faction_relation_changed": _v_faction_relation_changed,
     "reputation_changed": _v_reputation_changed,
+    "level_up": _v_level_up,
 }
 
 
@@ -130,12 +141,20 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
     except Exception as exc:
         return ValidationResult(False, f"proposta malformada: {exc}")
 
+    # Fase 4.1: level_up só nasce no motor (grant_xp) — proposta do LLM chega sem
+    # `source` (o schema ProposedWorldEvent não tem o campo) e é rejeitada aqui.
+    if ev.type == "level_up" and proposal.get("source") != "progression":
+        return ValidationResult(False, "level_up é gerado pelo motor, não proposto")
+
     projection = state.get("world_projection") or {}
     turn = (state.get("world") or {}).get("turn_count", 0)
 
     # 2. Sem duplicata (mesmo type+target já no event_log DESTE turno).
+    #    Exceção: multi-level no mesmo turno (boss XP) — level_up distingue por new_level.
     for e in state.get("event_log") or []:
         if e.get("type") == ev.type and e.get("target_id") == ev.target_id and e.get("turn") == turn:
+            if ev.type == "level_up" and (e.get("payload") or {}).get("new_level") != ev.payload.get("new_level"):
+                continue
             return ValidationResult(False, f"duplicata: {ev.type}/{ev.target_id} já no turno {turn}")
 
     # 3. Regra específica do tipo.

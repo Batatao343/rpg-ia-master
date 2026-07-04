@@ -355,6 +355,124 @@ def test_gate_uso_deterministico(monkeypatch):
     assert "não conhece" in out["reason"]
 
 
+# ---------------------------------------------------------------------------
+# Etapa 5 — Hooks de XP no grafo (combate/beat/quest) + pipeline 2.6
+# ---------------------------------------------------------------------------
+
+def _pipeline_state(**over):
+    base = {
+        "world": {"turn_count": 5, "current_location": "nova_arcadia"},
+        "world_projection": {}, "event_log": [], "pending_world_events": [],
+        "chronicle": [], "quests": [], "player": make_player(),
+        "campaign_plan": {"beats": [{"description": "b0", "status": "active"}]},
+    }
+    base.update(over)
+    return base
+
+
+def test_quest_completed_da_xp():
+    from services.event_processor import process_pending_events
+    quests = [{"id": "q1", "title": "Recuperar o medalhão", "status": "active",
+               "created_turn": 1, "resolved_turn": 0}]
+    state = _pipeline_state(quests=quests, pending_world_events=[
+        {"type": "quest_completed", "target_id": "q1", "payload": {"quest_id": "q1"}}])
+    out = process_pending_events(state)
+    assert out["player"]["xp"] == pg.XP_PER_QUEST
+
+
+def test_level_up_pipeline_vira_milestone():
+    from services.event_processor import process_pending_events
+    prop = {"type": "level_up", "actor_id": "player", "target_id": "player",
+            "detail": "nível 2", "payload": {"new_level": 2}, "source": "progression"}
+    out = process_pending_events(_pipeline_state(pending_world_events=[prop]))
+    assert [e for e in out["event_log"] if e["type"] == "level_up"]
+    texts = [e["text"] for e in out["chronicle"][-1]["entries"]]
+    assert any("nível 2" in t for t in texts)
+
+
+def test_llm_nao_propoe_level_up():
+    """Proposta SEM source='progression' (como toda proposta de LLM) é rejeitada."""
+    from services.world_validators import validate_proposal
+    prop = {"type": "level_up", "actor_id": "player", "target_id": "player",
+            "payload": {"new_level": 2}}
+    res = validate_proposal(prop, _pipeline_state())
+    assert not res.ok
+    assert "motor" in res.reason
+
+
+def test_multi_level_mesmo_turno_nao_e_duplicata():
+    from services.event_processor import process_pending_events
+    props = [
+        {"type": "level_up", "actor_id": "player", "target_id": "player",
+         "payload": {"new_level": n}, "source": "progression"} for n in (2, 3)]
+    out = process_pending_events(_pipeline_state(pending_world_events=props))
+    levels = [e["payload"]["new_level"] for e in out["event_log"]
+              if e["type"] == "level_up"]
+    assert levels == [2, 3]
+
+
+def test_beat_da_xp(monkeypatch):
+    import agents.storyteller as st
+
+    class _FakeStoryLLM:
+        def with_structured_output(self, model, *a, **k):
+            self._m = model
+            return self
+
+        def invoke(self, _msgs):
+            return self._m(narrative="Objetivo cumprido.", introduced_npcs=[],
+                           beat_completed=True)
+
+    monkeypatch.setattr(st, "get_llm", lambda *a, **k: _FakeStoryLLM())
+    from langchain_core.messages import HumanMessage
+    state = _pipeline_state(
+        messages=[HumanMessage(content="executo o objetivo")],
+        campaign_plan={"location": "x", "climax": "y", "current_step": 0,
+                       "last_planned_turn": 0,
+                       "beats": [{"description": "b0", "status": "pending"},
+                                 {"description": "b1", "status": "pending"}]},
+        factions=[], npcs={})
+    out = st.storyteller_node(state)
+    assert out["player"]["xp"] == pg.XP_PER_BEAT
+    # nenhum level (150 < 300) -> fila sem level_up
+    assert not [e for e in out.get("pending_world_events", [])
+                if e.get("type") == "level_up"]
+
+
+def test_combat_kill_da_xp(monkeypatch):
+    from agents import combat as cbt
+
+    monkeypatch.setattr(cbt, "_parse_combat_action",
+                        lambda p, e, i: {"ability_id": "ataque_basico",
+                                         "target": e[0]["name"], "is_allowed": True,
+                                         "reason": ""})
+    monkeypatch.setattr(cbt, "_narrate", lambda *a, **k: "Fim.")
+    monkeypatch.setattr(cbt.cm, "roll_initiative",
+                        lambda p, e: [{"id": "player", "name": p.get("name"),
+                                       "side": "hero", "init": 20}] +
+                                     [{"id": x.get("id"), "name": x.get("name"),
+                                       "side": "enemy", "init": 1} for x in e])
+
+    player = make_player(xp=250, attributes={"str": 18, "dex": 14, "con": 16,
+                                             "int": 8, "wis": 12, "cha": 12})
+    enemy = {"id": "enemy_rato_1", "name": "Rato", "type": "Minion",
+             "hp": 1, "max_hp": 1, "defense": 1, "status": "ativo",
+             "attributes": {"dex": 10}, "active_conditions": [],
+             "attacks": [{"name": "Mordida", "bonus": 0, "damage": "1d1"}],
+             "stamina": 0, "mana": 0, "attack_mod": 0, "abilities": []}
+    from langchain_core.messages import HumanMessage
+    state = _pipeline_state(
+        player=player, enemies=[enemy], combat={"round": 1, "active": True},
+        combat_target="Rato", messages=[HumanMessage(content="ataco o rato")],
+        bestiary_knowledge={})
+    out = cbt.combat_node(state)
+    # minion morto: +50 XP (250+50=300 -> nível 2) e level_up na fila do motor
+    assert out["player"]["xp"] == 300
+    assert out["player"]["level"] == 2
+    lvl = [e for e in out.get("pending_world_events", []) if e["type"] == "level_up"]
+    assert lvl and lvl[0]["source"] == "progression"
+
+
 def test_backfill_save_antigo():
     p = make_player(known_abilities=[
         "[Passiva] Muralha Humana: +2 Defesa",

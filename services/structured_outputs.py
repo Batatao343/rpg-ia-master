@@ -21,6 +21,10 @@ EventType = Literal[
     "quest_completed",
     "faction_relation_changed",
     "reputation_changed",
+    # Fase 4.1: gerado 100% em Python (progression.grant_xp). O LLM não consegue
+    # propor: validate_proposal exige source="progression", e o schema de proposta
+    # do LLM não tem campo source (model_dump nunca o carrega).
+    "level_up",
 ]
 
 

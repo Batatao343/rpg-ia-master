@@ -23,7 +23,7 @@ from services.context_builder import _name
 # (ruído — mudanças de relação são frequentes e já aparecem via reputação/2.7).
 CHRONICLE_EVENT_TYPES = {
     "npc_killed", "location_control_changed", "quest_completed", "quest_failed",
-    "secret_revealed",
+    "secret_revealed", "level_up",
 }
 
 # Templates voltados ao JOGADOR (prosa curta), diferentes dos EVENT_TEMPLATES
@@ -34,6 +34,7 @@ CHRONICLE_TEMPLATES: Dict[str, str] = {
     "quest_completed": "A missão \"{target}\" foi concluída.",
     "quest_failed": "A missão \"{target}\" fracassou.",
     "secret_revealed": "Um segredo veio à luz: {fact}",
+    "level_up": "O herói alcançou o nível {new_level}.",
 }
 
 _DEFAULT_TITLE = "Crônica da jornada"
@@ -48,6 +49,10 @@ def render_milestone(event: Dict, projection: Dict) -> str:
     if not tmpl:
         return ""
     payload = event.get("payload", {}) or {}
+
+    if etype == "level_up":
+        n = payload.get("new_level")
+        return tmpl.format(new_level=n) if isinstance(n, int) else ""
 
     if etype == "secret_revealed":
         facts = (projection or {}).get("revealed_facts", {}) or {}
