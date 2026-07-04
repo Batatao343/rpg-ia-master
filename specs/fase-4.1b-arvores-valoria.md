@@ -1,6 +1,6 @@
 # SPEC — Fase 4.1b: Árvores de Valoria — subclasses e habilidades lore-driven
 
-> **Status:** `approved` (2026-07-03)
+> **Status:** `done` (2026-07-04 — executada por Fable; smoke LLM real coberto pelo item 3 do smoke da 4.1)
 > **Criada:** 2026-07-03 · **Atualizada:** 2026-07-03
 > **Depende de:** Fase 4.1 Etapas 1–2a (schema da árvore + validadores) — o schema é
 > definido lá; esta spec só produz CONTEÚDO válido contra ele
@@ -235,12 +235,43 @@ para conferir que a narração convive bem com o nome da habilidade.
 
 ---
 
-## Apêndice A — Registro de design (preencher na execução)
+## Apêndice A — Registro de design
 
-> Executor: _______ (modelo/data)
+> Executor: **Claude Fable 5** (claude-fable-5), 2026-07-04.
+> 111 habilidades (66 novas + 45 reatribuídas), 20 ramos, 10 troncos.
+> Fontes de tom pesquisadas: `timeline/` (magia provém do caos do Abismo; custo
+> corporal — "veias escurecem, mente se dissolve"; Destilação = transferir o custo),
+> `factions/` (Fornalha/Chama Azul/Clãs/Druidas/Colmeia/Corvos/Mão/Anões/goblins/
+> Martelos), `world_story/` (Éter denso de Aethelgard).
 
-| Classe | Ramo | Theme (pilar + postura) | Cor de lore (lore_ref, opcional) | Identidade mecânica | Habilidades (ids) |
+| Classe | Ramo | Theme (pilar + postura) | lore_ref | Identidade mecânica | Habilidades |
 |---|---|---|---|---|---|
-| _(preencher)_ | | | | | |
+| Cavaleiro da Vigília | Juramento da Muralha | mundo vazio — resistir | cidades_estado_sobreviventes_vaelorn_solvhen | tank: AC, provocação, punição | muralha_de_escudos, golpe_do_escudo, provocacao_de_ferro, ultimo_bastiao |
+| Cavaleiro da Vigília | Lança da Vigília | mundo vazio — eliminar antes | legiao_ferro | burst focado, quebra de linha, medo | carga_de_lanca, quebra_linha, decapitar, julgamento_da_vigilia |
+| Batedor das Fronteiras | Leitor do Ermo | mundo vazio — ler o que restou | bandos_nomades | atrito: sangramento, marca, precisão | flecha_farpada, marca_do_cacador, tiro_certeiro, chuva_do_ermo |
+| Batedor das Fronteiras | Fantasma da Fronteira | mundo vazio — virar parte dele | renegados_ermo | emboscada: burst, evasão, stun | emboscada, passo_do_ermo, golpe_do_silencio, apagar_se |
+| Arcanista Cinzento | Mão Instrumentada | tecnologia prévia — filtrar tudo | clas_tecnologicos | recurso: dreno, dano calibrado | sifao_de_mana, condensador_de_eter, descarga_calibrada, poco_de_gravidade |
+| Arcanista Cinzento | Toque Descoberto | magia corrompe — pagar aos poucos | cultos_despertar_dispersos | risco/retorno: autodano, controle | teleporte_instavel, chama_do_abismo, veias_negras, sussurro_de_controle |
+| Sangromante | Dívida Medida | sacrifício — contabilizado | cultistas_destilacao | sustain: dreno, pactos com prazo | drenar_vida, pacto_medido, sangria_ritual, camara_de_cristal |
+| Sangromante | Hemorragia Total | sacrifício — tudo de uma vez | — | burst all-in pago em HP | explosao_de_cadaver, erupcao_carmesim, ultimo_folego, apoteose_do_sangue |
+| Inquisidor da Cinza | Chama que Purga | Abismo — queimar a corrupção | filhos_chama_azul | medo, fogo punitivo, pira | batismo_de_brasa, chama_do_juizo, interrogatorio_ardente, pira_da_pureza |
+| Inquisidor da Cinza | Discípulo da Fornalha | tecnologia prévia — virar o incêndio | encapuzados_fornalha | fogo sustentado + autodano | lanca_chamas, aco_de_sangue, bafo_da_fundicao, coracao_de_forja |
+| Pastor de Pragas | Guardião do Ciclo | Abismo — conter a podridão | druidas_ciclo_cinzento | DoT de área, root, dreno+cura | mortalha_de_esporos, seiva_cinzenta, enraizar, equilibrio_do_pantano |
+| Pastor de Pragas | Voz da Colmeia | magia corrompe — simbiose extrema | colmeia_hospedeiros | transformação paga em carne | hospedar_enxame, erupcao_de_quitina, sentinelas_aladas, mente_partilhada |
+| Sombra da Corte | Lâmina Contratada | mundo vazio — morte como serviço | mao_sombria | execução single-target, veneno | garrote, chuva_de_agulhas, veneno_do_contrato, golpe_de_misericordia |
+| Sombra da Corte | Olho do Corvo | mundo vazio — informação > sangue | guilda_corvos | debuff, manipulação, medo | chantagem, rede_de_informantes, lamina_no_escuro, xeque_da_corte |
+| Sapador da Fuligem | Engenheiro de Cerco | tecnologia prévia — o manual anão | ultimos_anoes_reino | preparo, área, torreta, escudo | granada_flashbang, escudo_de_energia, carga_de_demolicao, torreta_automatica |
+| Sapador da Fuligem | Alquimista da Sucata | mundo vazio — improviso volátil | goblins_mineiros | gambiarras: dano alto instável | sobrecarga, bomba_de_pregos, mistura_instavel, obra_prima_de_refugo |
+| Médico de Campo | Cirurgião de Trincheira | mundo vazio — vivo a qualquer custo | resistencia_operaria_martelos_partidos | cura pesada, stun químico | granada_de_cura, serra_de_campo, anestesia_bruta, milagre_de_campo |
+| Médico de Campo | Boticário do Limiar | magia corrompe — remédio do veneno | mercadores_curiosidades | química dual: corrosivo, panaceia | injecao_de_furia, frasco_corrosivo, vapores_do_limiar, panaceia_negra |
+| Guardião Selvagem | Raiz que Resta | mundo vazio — guardar o verde | floresta_sussurros | proteção territorial, root | pele_de_casca, prisao_de_raizes, chicote_espinhoso, coracao_da_floresta |
+| Guardião Selvagem | O Que Ela Virou | magia corrompe — canalizar o corrompido | druidas_renegados | feral: garras, instinto, uivo | garras_negras, instinto_corrompido, uivo_do_vazio, forma_do_abismo |
 
-> Passe anti-spoiler (R6) executado em: _______ · Resultado: _______
+Troncos novos: postura_vigilante (Cav), bencao_dos_fungos (Pas), diagnostico_frio
+(Méd), passo_da_mata (Gua). Reatribuições notáveis: estocada_renal e quebra_joelhos
+compartilhadas entre 2 classes; raio_de_ferrugem e lanca_chamas idem.
+
+> Passe anti-spoiler (R6) executado em 2026-07-04 · Resultado: **ok** — nomes/
+> descrições usam só material `public` (Batismo de Fogo, Fundições, Destilação,
+> Colmeia, Éter, Abismo genérico); nenhuma referência aos 4 reveals protegidos
+> (Arauto, Rei Subterrâneo, pacto, Rede Carmesim) nem a Thessrak/Urath.

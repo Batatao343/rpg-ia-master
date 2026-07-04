@@ -34,7 +34,7 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Inquisidor da Cinza"
     ],
     "branch": null,
     "tier": 1,
@@ -56,7 +56,8 @@
     "save_stat": "con",
     "scaling_formula": "1d6",
     "classes": [
-      "all"
+      "Batedor das Fronteiras",
+      "Sombra da Corte"
     ],
     "branch": null,
     "tier": 1,
@@ -78,7 +79,7 @@
     "save_stat": "str",
     "scaling_formula": "1d6",
     "classes": [
-      "all"
+      "Cavaleiro da Vigília"
     ],
     "branch": null,
     "tier": 1,
@@ -101,7 +102,7 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Cavaleiro da Vigília"
     ],
     "branch": null,
     "tier": 1,
@@ -123,11 +124,11 @@
     "save_stat": "dex",
     "scaling_formula": "1d10",
     "classes": [
-      "all"
+      "Cavaleiro da Vigília"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
+    "branch": "lanca",
+    "tier": 2,
+    "level_req": 5,
     "requires": [],
     "effects": []
   },
@@ -145,11 +146,11 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Cavaleiro da Vigília"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
+    "branch": "muralha",
+    "tier": 2,
+    "level_req": 3,
     "requires": [],
     "effects": []
   },
@@ -168,7 +169,7 @@
     "save_stat": "dex",
     "scaling_formula": "1d4",
     "classes": [
-      "all"
+      "Inquisidor da Cinza"
     ],
     "branch": null,
     "tier": 1,
@@ -190,11 +191,11 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Batedor das Fronteiras"
     ],
     "branch": null,
     "tier": 1,
-    "level_req": 1,
+    "level_req": 2,
     "requires": [],
     "effects": []
   },
@@ -212,7 +213,8 @@
     "save_stat": "con",
     "scaling_formula": "1d4",
     "classes": [
-      "all"
+      "Guardião Selvagem",
+      "Batedor das Fronteiras"
     ],
     "branch": null,
     "tier": 1,
@@ -235,7 +237,7 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Batedor das Fronteiras"
     ],
     "branch": null,
     "tier": 1,
@@ -257,7 +259,7 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Sombra da Corte"
     ],
     "branch": null,
     "tier": 1,
@@ -280,11 +282,11 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Sombra da Corte"
     ],
     "branch": null,
     "tier": 1,
-    "level_req": 1,
+    "level_req": 2,
     "requires": [],
     "effects": []
   },
@@ -302,7 +304,7 @@
     "save_stat": "dex",
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Sombra da Corte"
     ],
     "branch": null,
     "tier": 1,
@@ -325,11 +327,11 @@
     "save_stat": null,
     "scaling_formula": "1d6",
     "classes": [
-      "all"
+      "Sombra da Corte"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
+    "branch": "lamina",
+    "tier": 2,
+    "level_req": 3,
     "requires": [],
     "effects": []
   },
@@ -347,11 +349,11 @@
     "save_stat": "dex",
     "scaling_formula": "1d4",
     "classes": [
-      "all"
+      "Sombra da Corte"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
+    "branch": "lamina",
+    "tier": 2,
+    "level_req": 4,
     "requires": [],
     "effects": []
   },
@@ -369,12 +371,14 @@
     "save_stat": null,
     "scaling_formula": "1d8",
     "classes": [
-      "all"
+      "Sombra da Corte"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
-    "requires": [],
+    "branch": "lamina",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "garrote"
+    ],
     "effects": []
   },
   "dardos_de_forca": {
@@ -391,7 +395,7 @@
     "save_stat": null,
     "scaling_formula": "1d4+1",
     "classes": [
-      "all"
+      "Arcanista Cinzento"
     ],
     "branch": null,
     "tier": 1,
@@ -413,7 +417,7 @@
     "save_stat": "con",
     "scaling_formula": "1d6",
     "classes": [
-      "all"
+      "Sangromante"
     ],
     "branch": null,
     "tier": 1,
@@ -436,11 +440,11 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Inquisidor da Cinza"
     ],
     "branch": null,
     "tier": 1,
-    "level_req": 1,
+    "level_req": 2,
     "requires": [],
     "effects": []
   },
@@ -458,7 +462,7 @@
     "save_stat": null,
     "scaling_formula": "1d8",
     "classes": [
-      "all"
+      "Sangromante"
     ],
     "branch": null,
     "tier": 1,
@@ -480,11 +484,12 @@
     "save_stat": "dex",
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Arcanista Cinzento",
+      "Sapador da Fuligem"
     ],
     "branch": null,
     "tier": 1,
-    "level_req": 1,
+    "level_req": 2,
     "requires": [],
     "effects": []
   },
@@ -502,12 +507,14 @@
     "save_stat": "wis",
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Arcanista Cinzento"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
-    "requires": [],
+    "branch": "exposicao",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "veias_negras"
+    ],
     "effects": []
   },
   "nuvem_toxica": {
@@ -525,7 +532,7 @@
     "save_stat": "con",
     "scaling_formula": "1d6",
     "classes": [
-      "all"
+      "Pastor de Pragas"
     ],
     "branch": null,
     "tier": 1,
@@ -547,11 +554,11 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Sangromante"
     ],
     "branch": null,
     "tier": 1,
-    "level_req": 1,
+    "level_req": 3,
     "requires": [],
     "effects": []
   },
@@ -570,11 +577,11 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Arcanista Cinzento"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
+    "branch": "exposicao",
+    "tier": 2,
+    "level_req": 3,
     "requires": [],
     "effects": []
   },
@@ -592,11 +599,11 @@
     "save_stat": "con",
     "scaling_formula": "1d6",
     "classes": [
-      "all"
+      "Sangromante"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
+    "branch": "destilacao",
+    "tier": 2,
+    "level_req": 3,
     "requires": [],
     "effects": []
   },
@@ -615,11 +622,11 @@
     "save_stat": "dex",
     "scaling_formula": "1d6",
     "classes": [
-      "all"
+      "Sangromante"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
+    "branch": "hemorragia",
+    "tier": 2,
+    "level_req": 3,
     "requires": [],
     "effects": []
   },
@@ -637,7 +644,7 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Arcanista Cinzento"
     ],
     "branch": null,
     "tier": 1,
@@ -660,11 +667,11 @@
     "save_stat": "int",
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Arcanista Cinzento"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
+    "branch": "instrumento",
+    "tier": 2,
+    "level_req": 3,
     "requires": [],
     "effects": []
   },
@@ -682,12 +689,14 @@
     "save_stat": "str",
     "scaling_formula": "1d8",
     "classes": [
-      "all"
+      "Arcanista Cinzento"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
-    "requires": [],
+    "branch": "instrumento",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "descarga_calibrada"
+    ],
     "effects": []
   },
   "sutura_de_campo": {
@@ -704,7 +713,7 @@
     "save_stat": null,
     "scaling_formula": "-1d8",
     "classes": [
-      "all"
+      "Médico de Campo"
     ],
     "branch": null,
     "tier": 1,
@@ -726,7 +735,7 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Médico de Campo"
     ],
     "branch": null,
     "tier": 1,
@@ -748,11 +757,11 @@
     "save_stat": null,
     "scaling_formula": "-1d4",
     "classes": [
-      "all"
+      "Médico de Campo"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
+    "branch": "triagem",
+    "tier": 2,
+    "level_req": 3,
     "requires": [],
     "effects": []
   },
@@ -770,7 +779,7 @@
     "save_stat": "str",
     "scaling_formula": "1d6",
     "classes": [
-      "all"
+      "Guardião Selvagem"
     ],
     "branch": null,
     "tier": 1,
@@ -792,7 +801,7 @@
     "save_stat": "con",
     "scaling_formula": "2d4",
     "classes": [
-      "all"
+      "Pastor de Pragas"
     ],
     "branch": null,
     "tier": 1,
@@ -815,7 +824,7 @@
     "save_stat": "dex",
     "scaling_formula": "1d6",
     "classes": [
-      "all"
+      "Sapador da Fuligem"
     ],
     "branch": null,
     "tier": 1,
@@ -837,7 +846,7 @@
     "save_stat": "dex",
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Sapador da Fuligem"
     ],
     "branch": null,
     "tier": 1,
@@ -860,11 +869,12 @@
     "save_stat": "dex",
     "scaling_formula": "1d6",
     "classes": [
-      "all"
+      "Inquisidor da Cinza",
+      "Sapador da Fuligem"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
+    "branch": "fornalha",
+    "tier": 2,
+    "level_req": 3,
     "requires": [],
     "effects": []
   },
@@ -883,11 +893,11 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Sapador da Fuligem"
     ],
     "branch": null,
     "tier": 1,
-    "level_req": 1,
+    "level_req": 2,
     "requires": [],
     "effects": []
   },
@@ -905,12 +915,14 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Sapador da Fuligem"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
-    "requires": [],
+    "branch": "engenharia",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "granada_flashbang"
+    ],
     "effects": []
   },
   "granada_flashbang": {
@@ -927,13 +939,21 @@
     "save_stat": "con",
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Sapador da Fuligem"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
+    "branch": "engenharia",
+    "tier": 2,
+    "level_req": 3,
     "requires": [],
-    "effects": []
+    "effects": [
+      {
+        "kind": "control",
+        "stat": null,
+        "delta": 0,
+        "duration": 1,
+        "control": "stun"
+      }
+    ]
   },
   "injecao_de_furia": {
     "name": "Injeção de Fúria",
@@ -951,11 +971,11 @@
     "save_stat": null,
     "scaling_formula": "0",
     "classes": [
-      "all"
+      "Médico de Campo"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
+    "branch": "alquimia",
+    "tier": 2,
+    "level_req": 3,
     "requires": [],
     "effects": []
   },
@@ -973,13 +993,20 @@
     "save_stat": null,
     "scaling_formula": "5",
     "classes": [
-      "all"
+      "Sapador da Fuligem"
     ],
-    "branch": null,
-    "tier": 1,
-    "level_req": 1,
+    "branch": "engenharia",
+    "tier": 2,
+    "level_req": 4,
     "requires": [],
-    "effects": []
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "ac",
+        "delta": 3,
+        "duration": 2
+      }
+    ]
   },
   "sobrecarga": {
     "name": "Sobrecarga",
@@ -996,12 +1023,1865 @@
     "save_stat": "dex",
     "scaling_formula": "1d6",
     "classes": [
-      "all"
+      "Sapador da Fuligem"
+    ],
+    "branch": "sucata",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": []
+  },
+  "postura_vigilante": {
+    "name": "Postura Vigilante",
+    "category": "Marcial",
+    "description": "Pés fincados, escudo alto: a postura que as muralhas ensinam a quem as guarda.",
+    "cost": 3,
+    "resource_type": "Estamina",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "+2 Defesa por 2 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Cavaleiro da Vigília"
     ],
     "branch": null,
     "tier": 1,
-    "level_req": 1,
+    "level_req": 2,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "ac",
+        "delta": 2,
+        "duration": 2
+      }
+    ]
+  },
+  "golpe_do_escudo": {
+    "name": "Golpe do Escudo",
+    "category": "Marcial",
+    "description": "O escudo não é só parede — pesa, e cai como uma.",
+    "cost": 5,
+    "resource_type": "Estamina",
+    "damage_formula": "1d8+str_mod",
+    "damage_type": "Contundente",
+    "conditions": [
+      "Derrubado (Prone)"
+    ],
+    "save_stat": "str",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Cavaleiro da Vigília"
+    ],
+    "branch": "muralha",
+    "tier": 2,
+    "level_req": 3,
     "requires": [],
     "effects": []
+  },
+  "provocacao_de_ferro": {
+    "name": "Provocação de Ferro",
+    "category": "Marcial",
+    "description": "Um insulto batido no aço. O inimigo esquece o resto do mundo — que é exatamente o plano.",
+    "cost": 4,
+    "resource_type": "Estamina",
+    "damage_formula": "0",
+    "damage_type": "DeBuff",
+    "conditions": [
+      "-2 de acerto por 2 turnos"
+    ],
+    "save_stat": "wis",
+    "scaling_formula": "0",
+    "classes": [
+      "Cavaleiro da Vigília"
+    ],
+    "branch": "muralha",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "debuff",
+        "stat": "attack",
+        "delta": -2,
+        "duration": 2
+      }
+    ]
+  },
+  "ultimo_bastiao": {
+    "name": "Último Bastião",
+    "category": "Marcial",
+    "description": "Quando tudo caiu, sobra o juramento. O corpo vira a muralha que a cidade não teve.",
+    "cost": 10,
+    "resource_type": "Estamina",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "+4 Defesa por 3 turnos",
+      "Recupera 10 HP"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Cavaleiro da Vigília"
+    ],
+    "branch": "muralha",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "muralha_de_escudos"
+    ],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "ac",
+        "delta": 4,
+        "duration": 3
+      }
+    ]
+  },
+  "carga_de_lanca": {
+    "name": "Carga de Lança",
+    "category": "Marcial",
+    "description": "A doutrina da Legião em um gesto: distância é só o tempo que a ponta leva pra chegar.",
+    "cost": 6,
+    "resource_type": "Estamina",
+    "damage_formula": "2d6+str_mod",
+    "damage_type": "Perfurante",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "1d6",
+    "classes": [
+      "Cavaleiro da Vigília"
+    ],
+    "branch": "lanca",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": []
+  },
+  "quebra_linha": {
+    "name": "Quebra-Linha",
+    "category": "Marcial",
+    "description": "Onde a formação inimiga dobra, a lança entra. Onde entra, a linha deixa de existir.",
+    "cost": 7,
+    "resource_type": "Estamina",
+    "damage_formula": "1d10+str_mod",
+    "damage_type": "Perfurante",
+    "conditions": [
+      "Derrubado (Prone)"
+    ],
+    "save_stat": "dex",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Cavaleiro da Vigília"
+    ],
+    "branch": "lanca",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": []
+  },
+  "julgamento_da_vigilia": {
+    "name": "Julgamento da Vigília",
+    "category": "Marcial",
+    "description": "O golpe reservado ao que ameaça o portão. Quem sobrevive a ele conta com medo — e longe.",
+    "cost": 12,
+    "resource_type": "Estamina",
+    "damage_formula": "3d8+str_mod",
+    "damage_type": "Perfurante",
+    "conditions": [
+      "Medo (2 turnos)"
+    ],
+    "save_stat": "wis",
+    "scaling_formula": "1d8",
+    "classes": [
+      "Cavaleiro da Vigília"
+    ],
+    "branch": "lanca",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "carga_de_lanca"
+    ],
+    "effects": [
+      {
+        "kind": "control",
+        "stat": null,
+        "delta": 0,
+        "duration": 2,
+        "control": "fear"
+      }
+    ]
+  },
+  "flecha_farpada": {
+    "name": "Flecha Farpada",
+    "category": "Marcial",
+    "description": "Farpa de osso, à moda dos bandos: sai fácil na ida, nunca na volta.",
+    "cost": 4,
+    "resource_type": "Estamina",
+    "damage_formula": "1d8+dex_mod",
+    "damage_type": "Perfurante",
+    "conditions": [
+      "Sangramento (3 dano/turno, 3 turnos)"
+    ],
+    "save_stat": null,
+    "scaling_formula": "1d6",
+    "classes": [
+      "Batedor das Fronteiras"
+    ],
+    "branch": "rastreador",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "dot",
+        "stat": null,
+        "delta": 3,
+        "duration": 3
+      }
+    ]
+  },
+  "marca_do_cacador": {
+    "name": "Marca do Caçador",
+    "category": "Marcial",
+    "description": "Lê-se a presa como se lê o chão: por onde vai quebrar. Depois disso, nenhum tiro é às cegas.",
+    "cost": 3,
+    "resource_type": "Estamina",
+    "damage_formula": "0",
+    "damage_type": "DeBuff",
+    "conditions": [
+      "Alvo marcado: -2 Defesa por 3 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Batedor das Fronteiras"
+    ],
+    "branch": "rastreador",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "debuff",
+        "stat": "ac",
+        "delta": -2,
+        "duration": 3
+      }
+    ]
+  },
+  "tiro_certeiro": {
+    "name": "Tiro Certeiro",
+    "category": "Marcial",
+    "description": "Um fôlego, meio, e a flecha vai onde o vento não conta pra ninguém.",
+    "cost": 6,
+    "resource_type": "Estamina",
+    "damage_formula": "2d8+dex_mod",
+    "damage_type": "Perfurante",
+    "conditions": [],
+    "save_stat": "dex",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Batedor das Fronteiras"
+    ],
+    "branch": "rastreador",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": []
+  },
+  "chuva_do_ermo": {
+    "name": "Chuva do Ermo",
+    "category": "Marcial",
+    "description": "O céu da Pradaria escurece de flechas. Os bandos chamam isso de negociação encerrada.",
+    "cost": 10,
+    "resource_type": "Estamina",
+    "damage_formula": "3d6+dex_mod",
+    "damage_type": "Perfurante",
+    "conditions": [
+      "Sangramento (2 dano/turno, 2 turnos)"
+    ],
+    "save_stat": "dex",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Batedor das Fronteiras"
+    ],
+    "branch": "rastreador",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "flecha_farpada"
+    ],
+    "effects": [
+      {
+        "kind": "dot",
+        "stat": null,
+        "delta": 2,
+        "duration": 2
+      }
+    ]
+  },
+  "emboscada": {
+    "name": "Emboscada",
+    "category": "Marcial",
+    "description": "O primeiro golpe decide a conversa. Os Renegados nunca dão o segundo aviso — nem o primeiro.",
+    "cost": 5,
+    "resource_type": "Estamina",
+    "damage_formula": "2d6+dex_mod",
+    "damage_type": "Perfurante",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "1d8",
+    "classes": [
+      "Batedor das Fronteiras"
+    ],
+    "branch": "fantasma",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": []
+  },
+  "passo_do_ermo": {
+    "name": "Passo do Ermo",
+    "category": "Marcial",
+    "description": "Andar como quem não deixa peso no mundo. A fronteira ensina, ou enterra.",
+    "cost": 4,
+    "resource_type": "Estamina",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "+3 Defesa por 2 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Batedor das Fronteiras"
+    ],
+    "branch": "fantasma",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "ac",
+        "delta": 3,
+        "duration": 2
+      }
+    ]
+  },
+  "golpe_do_silencio": {
+    "name": "Golpe do Silêncio",
+    "category": "Marcial",
+    "description": "Atrás da orelha, com o punho da faca. O alvo acorda depois — se acordar, e sem saber de nada.",
+    "cost": 6,
+    "resource_type": "Estamina",
+    "damage_formula": "1d6+dex_mod",
+    "damage_type": "Contundente",
+    "conditions": [
+      "Atordoado (1 turno)"
+    ],
+    "save_stat": "con",
+    "scaling_formula": "0",
+    "classes": [
+      "Batedor das Fronteiras"
+    ],
+    "branch": "fantasma",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "control",
+        "stat": null,
+        "delta": 0,
+        "duration": 1,
+        "control": "stun"
+      }
+    ]
+  },
+  "apagar_se": {
+    "name": "Apagar-se",
+    "category": "Marcial",
+    "description": "O último truque de quem virou fronteira: deixar de estar. O ermo cobre o resto.",
+    "cost": 8,
+    "resource_type": "Estamina",
+    "damage_formula": "3d6+dex_mod",
+    "damage_type": "Perfurante",
+    "conditions": [],
+    "save_stat": "wis",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Batedor das Fronteiras"
+    ],
+    "branch": "fantasma",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "emboscada"
+    ],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "ac",
+        "delta": 4,
+        "duration": 1
+      }
+    ]
+  },
+  "condensador_de_eter": {
+    "name": "Condensador de Éter",
+    "category": "Tecnologia",
+    "description": "O aparelho range, filtra e devolve o Éter domado. As veias agradecem o cobre.",
+    "cost": 4,
+    "resource_type": "Mana",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "+3 Dano por 3 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": "instrumento",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "damage",
+        "delta": 3,
+        "duration": 3
+      }
+    ]
+  },
+  "descarga_calibrada": {
+    "name": "Descarga Calibrada",
+    "category": "Tecnologia",
+    "description": "Nada de fúria: voltagem exata, medida em Skallgard, cobrada do alvo.",
+    "cost": 5,
+    "resource_type": "Mana",
+    "damage_formula": "2d6+int_mod",
+    "damage_type": "Energia",
+    "conditions": [],
+    "save_stat": "con",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": "instrumento",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": []
+  },
+  "chama_do_abismo": {
+    "name": "Chama do Abismo",
+    "category": "Magia",
+    "description": "Fogo sem filtro, tirado direto do caos. Queima o alvo agora; o conjurador, aos poucos.",
+    "cost": 6,
+    "resource_type": "Mana",
+    "damage_formula": "3d6+int_mod",
+    "damage_type": "Fogo",
+    "conditions": [
+      "Conjurador sofre 2 de dano"
+    ],
+    "save_stat": "dex",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": "exposicao",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": []
+  },
+  "veias_negras": {
+    "name": "Veias Negras",
+    "category": "Magia",
+    "description": "Deixar o Éter correr cru na veia. O braço escurece um tom — e o mundo, por três turnos, obedece.",
+    "cost": 5,
+    "resource_type": "Mana",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "+4 Dano por 3 turnos",
+      "Conjurador sofre 3 de dano"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": "exposicao",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "damage",
+        "delta": 4,
+        "duration": 3
+      }
+    ]
+  },
+  "pacto_medido": {
+    "name": "Pacto Medido",
+    "category": "Magia",
+    "description": "Cinco gotas, nem uma a mais. A Destilação ensinou que dívida anotada não vira maldição.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "Custa 5 HP",
+      "+2 Dano e +2 de acerto por 3 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "destilacao",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "damage",
+        "delta": 2,
+        "duration": 3
+      },
+      {
+        "kind": "buff",
+        "stat": "attack",
+        "delta": 2,
+        "duration": 3
+      }
+    ]
+  },
+  "sangria_ritual": {
+    "name": "Sangria Ritual",
+    "category": "Magia",
+    "description": "O corte certo no lugar certo: o sangue do alvo sai devagar e trabalha para outro dono.",
+    "cost": 4,
+    "resource_type": "Mana",
+    "damage_formula": "2d6+con_mod",
+    "damage_type": "Necrótico",
+    "conditions": [
+      "Sangramento (3 dano/turno, 3 turnos)"
+    ],
+    "save_stat": "con",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "destilacao",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "dot",
+        "stat": null,
+        "delta": 3,
+        "duration": 3
+      }
+    ]
+  },
+  "camara_de_cristal": {
+    "name": "Câmara de Cristal",
+    "category": "Magia",
+    "description": "A técnica proibida das câmaras, em miniatura: o custo atravessa o ar e cai na conta do inimigo.",
+    "cost": 8,
+    "resource_type": "Mana",
+    "damage_formula": "3d6+con_mod",
+    "damage_type": "Necrótico",
+    "conditions": [
+      "Cura o conjurador em metade do dano"
+    ],
+    "save_stat": "wis",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "destilacao",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "pacto_medido"
+    ],
+    "effects": []
+  },
+  "erupcao_carmesim": {
+    "name": "Erupção Carmesim",
+    "category": "Magia",
+    "description": "A veia aberta inteira, de uma vez. O que sai não é sangue — é decisão.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "3d6+con_mod",
+    "damage_type": "Necrótico",
+    "conditions": [
+      "Custa 8 HP"
+    ],
+    "save_stat": null,
+    "scaling_formula": "1d8",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "hemorragia",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": []
+  },
+  "ultimo_folego": {
+    "name": "Último Fôlego",
+    "category": "Magia",
+    "description": "Apostar a própria vitalidade na mesa. O Abismo respeita quem não guarda troco.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "Custa 10 HP",
+      "+6 Dano por 2 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "hemorragia",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "damage",
+        "delta": 6,
+        "duration": 2
+      }
+    ]
+  },
+  "apoteose_do_sangue": {
+    "name": "Apoteose do Sangue",
+    "category": "Magia",
+    "description": "Por um instante, o sangromante é só poder e nenhum corpo. Quem assiste não esquece — nem dorme.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "4d6+con_mod",
+    "damage_type": "Necrótico",
+    "conditions": [
+      "Custa 12 HP",
+      "Medo (2 turnos)"
+    ],
+    "save_stat": "wis",
+    "scaling_formula": "1d8",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "hemorragia",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "erupcao_carmesim"
+    ],
+    "effects": [
+      {
+        "kind": "control",
+        "stat": null,
+        "delta": 0,
+        "duration": 2,
+        "control": "fear"
+      }
+    ]
+  },
+  "batismo_de_brasa": {
+    "name": "Batismo de Brasa",
+    "category": "Marcial",
+    "description": "A brasa na boca, o minuto inteiro, sem gritar. Quem passou carrega o fogo por dentro.",
+    "cost": 3,
+    "resource_type": "Mana",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "+2 Dano de Fogo por 3 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Inquisidor da Cinza"
+    ],
+    "branch": "chama_azul",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "damage",
+        "delta": 2,
+        "duration": 3
+      }
+    ]
+  },
+  "chama_do_juizo": {
+    "name": "Chama do Juízo",
+    "category": "Magia",
+    "description": "O fogo azul não pergunta duas vezes. O que há de podre no alvo responde primeiro — gritando.",
+    "cost": 6,
+    "resource_type": "Mana",
+    "damage_formula": "2d6+cha_mod",
+    "damage_type": "Fogo",
+    "conditions": [
+      "Medo (2 turnos)"
+    ],
+    "save_stat": "wis",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Inquisidor da Cinza"
+    ],
+    "branch": "chama_azul",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "control",
+        "stat": null,
+        "delta": 0,
+        "duration": 2,
+        "control": "fear"
+      }
+    ]
+  },
+  "interrogatorio_ardente": {
+    "name": "Interrogatório Ardente",
+    "category": "Marcial",
+    "description": "Perguntas simples, ferro quente. A vontade do alvo derrete antes da pele.",
+    "cost": 5,
+    "resource_type": "Estamina",
+    "damage_formula": "1d6+cha_mod",
+    "damage_type": "Fogo",
+    "conditions": [
+      "-2 de acerto por 3 turnos"
+    ],
+    "save_stat": "cha",
+    "scaling_formula": "0",
+    "classes": [
+      "Inquisidor da Cinza"
+    ],
+    "branch": "chama_azul",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "debuff",
+        "stat": "attack",
+        "delta": -2,
+        "duration": 3
+      }
+    ]
+  },
+  "pira_da_pureza": {
+    "name": "Pira da Pureza",
+    "category": "Magia",
+    "description": "A purga completa: um círculo de chama azul onde só entra o que merece sair.",
+    "cost": 12,
+    "resource_type": "Mana",
+    "damage_formula": "3d8+cha_mod",
+    "damage_type": "Fogo",
+    "conditions": [
+      "Queimadura (3 dano/turno, 2 turnos)"
+    ],
+    "save_stat": "dex",
+    "scaling_formula": "1d8",
+    "classes": [
+      "Inquisidor da Cinza"
+    ],
+    "branch": "chama_azul",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "chama_do_juizo"
+    ],
+    "effects": [
+      {
+        "kind": "dot",
+        "stat": null,
+        "delta": 3,
+        "duration": 2
+      }
+    ]
+  },
+  "aco_de_sangue": {
+    "name": "Aço de Sangue",
+    "category": "Marcial",
+    "description": "A liga proibida das fundições aceita só um pagamento. A arma bebe primeiro do dono.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "Custa 3 HP",
+      "+3 Dano por 3 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Inquisidor da Cinza"
+    ],
+    "branch": "fornalha",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "damage",
+        "delta": 3,
+        "duration": 3
+      }
+    ]
+  },
+  "bafo_da_fundicao": {
+    "name": "Bafo da Fundição",
+    "category": "Tecnologia",
+    "description": "O ar que sai das Fundições Valerianas derrete botina. Engarrafado, faz pior.",
+    "cost": 6,
+    "resource_type": "Estamina",
+    "damage_formula": "2d6+cha_mod",
+    "damage_type": "Fogo",
+    "conditions": [
+      "Queimadura (2 dano/turno, 3 turnos)"
+    ],
+    "save_stat": "dex",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Inquisidor da Cinza"
+    ],
+    "branch": "fornalha",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "dot",
+        "stat": null,
+        "delta": 2,
+        "duration": 3
+      }
+    ]
+  },
+  "coracao_de_forja": {
+    "name": "Coração de Forja",
+    "category": "Marcial",
+    "description": "O discípulo para de resistir ao calor e vira parte dele. O que encostar, funde.",
+    "cost": 10,
+    "resource_type": "Estamina",
+    "damage_formula": "3d8+str_mod",
+    "damage_type": "Fogo",
+    "conditions": [
+      "Custa 5 HP"
+    ],
+    "save_stat": "con",
+    "scaling_formula": "1d8",
+    "classes": [
+      "Inquisidor da Cinza"
+    ],
+    "branch": "fornalha",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "aco_de_sangue"
+    ],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "damage",
+        "delta": 2,
+        "duration": 2
+      }
+    ]
+  },
+  "bencao_dos_fungos": {
+    "name": "Bênção dos Fungos",
+    "category": "Magia",
+    "description": "O bolor certo, na ferida certa. O Pântano tira, mas também empresta.",
+    "cost": 4,
+    "resource_type": "Mana",
+    "damage_formula": "-1d6-wis_mod",
+    "damage_type": "Cura",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "1d4",
+    "classes": [
+      "Pastor de Pragas"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 2,
+    "requires": [],
+    "effects": []
+  },
+  "mortalha_de_esporos": {
+    "name": "Mortalha de Esporos",
+    "category": "Magia",
+    "description": "A nuvem cinzenta desce mansa, como tudo que o Pântano faz. Depois começa a digerir.",
+    "cost": 6,
+    "resource_type": "Mana",
+    "damage_formula": "2d6+wis_mod",
+    "damage_type": "Veneno",
+    "conditions": [
+      "Envenenado (3 dano/turno, 3 turnos)"
+    ],
+    "save_stat": "con",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Pastor de Pragas"
+    ],
+    "branch": "ciclo",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "dot",
+        "stat": null,
+        "delta": 3,
+        "duration": 3
+      }
+    ]
+  },
+  "seiva_cinzenta": {
+    "name": "Seiva Cinzenta",
+    "category": "Magia",
+    "description": "A seiva que os Druidas recolhem onde o Ciclo ainda gira: amarga, viva, teimosa.",
+    "cost": 5,
+    "resource_type": "Mana",
+    "damage_formula": "-2d4-wis_mod",
+    "damage_type": "Cura",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "1d4",
+    "classes": [
+      "Pastor de Pragas"
+    ],
+    "branch": "ciclo",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": []
+  },
+  "enraizar": {
+    "name": "Enraizar",
+    "category": "Magia",
+    "description": "O chão lembra do que já foi floresta. Basta pedir que ele segure.",
+    "cost": 5,
+    "resource_type": "Mana",
+    "damage_formula": "1d4+wis_mod",
+    "damage_type": "Perfurante",
+    "conditions": [
+      "Enredado (2 turnos)"
+    ],
+    "save_stat": "str",
+    "scaling_formula": "0",
+    "classes": [
+      "Pastor de Pragas"
+    ],
+    "branch": "ciclo",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "control",
+        "stat": null,
+        "delta": 0,
+        "duration": 2,
+        "control": "root"
+      }
+    ]
+  },
+  "equilibrio_do_pantano": {
+    "name": "Equilíbrio do Pântano",
+    "category": "Magia",
+    "description": "Tudo que apodrece alimenta algo. O Guardião do Ciclo só escolhe o quê.",
+    "cost": 10,
+    "resource_type": "Mana",
+    "damage_formula": "3d6+wis_mod",
+    "damage_type": "Veneno",
+    "conditions": [
+      "Envenenado (2 dano/turno, 3 turnos)",
+      "Cura o conjurador em 5"
+    ],
+    "save_stat": "con",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Pastor de Pragas"
+    ],
+    "branch": "ciclo",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "mortalha_de_esporos"
+    ],
+    "effects": [
+      {
+        "kind": "dot",
+        "stat": null,
+        "delta": 2,
+        "duration": 3
+      }
+    ]
+  },
+  "hospedar_enxame": {
+    "name": "Hospedar Enxame",
+    "category": "Magia",
+    "description": "Abrir espaço sob a pele. O enxame paga o aluguel defendendo a casa.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "Custa 4 HP",
+      "+3 Dano por 3 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Pastor de Pragas"
+    ],
+    "branch": "colmeia",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "damage",
+        "delta": 3,
+        "duration": 3
+      }
+    ]
+  },
+  "erupcao_de_quitina": {
+    "name": "Erupção de Quitina",
+    "category": "Magia",
+    "description": "As placas rompem a pele num estalo e voam como lâminas. Dói mais em quem está na frente.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "2d8+con_mod",
+    "damage_type": "Perfurante",
+    "conditions": [
+      "Custa 4 HP"
+    ],
+    "save_stat": null,
+    "scaling_formula": "1d6",
+    "classes": [
+      "Pastor de Pragas"
+    ],
+    "branch": "colmeia",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": []
+  },
+  "sentinelas_aladas": {
+    "name": "Sentinelas Aladas",
+    "category": "Magia",
+    "description": "As aves de quitina de Xylos veem o forasteiro antes de qualquer olho humano — e vão direto nos dele.",
+    "cost": 5,
+    "resource_type": "Mana",
+    "damage_formula": "1d6+wis_mod",
+    "damage_type": "Perfurante",
+    "conditions": [
+      "-2 de acerto por 2 turnos"
+    ],
+    "save_stat": "dex",
+    "scaling_formula": "0",
+    "classes": [
+      "Pastor de Pragas"
+    ],
+    "branch": "colmeia",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "debuff",
+        "stat": "attack",
+        "delta": -2,
+        "duration": 2
+      }
+    ]
+  },
+  "mente_partilhada": {
+    "name": "Mente Partilhada",
+    "category": "Magia",
+    "description": "Por um instante o alvo ouve a Colmeia inteira pensando. Poucos continuam de pé com tanta gente dentro.",
+    "cost": 10,
+    "resource_type": "Mana",
+    "damage_formula": "2d6+wis_mod",
+    "damage_type": "Psíquico",
+    "conditions": [
+      "Atordoado (1 turno)"
+    ],
+    "save_stat": "wis",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Pastor de Pragas"
+    ],
+    "branch": "colmeia",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "hospedar_enxame"
+    ],
+    "effects": [
+      {
+        "kind": "control",
+        "stat": null,
+        "delta": 0,
+        "duration": 1,
+        "control": "stun"
+      }
+    ]
+  },
+  "veneno_do_contrato": {
+    "name": "Veneno do Contrato",
+    "category": "Submundo",
+    "description": "A Mão Sombria assina com isto. O alvo tem até o fim da cláusula — três turnos, em média.",
+    "cost": 5,
+    "resource_type": "Estamina",
+    "damage_formula": "2d6+dex_mod",
+    "damage_type": "Veneno",
+    "conditions": [
+      "Envenenado (4 dano/turno, 3 turnos)"
+    ],
+    "save_stat": "con",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Sombra da Corte"
+    ],
+    "branch": "lamina",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "dot",
+        "stat": null,
+        "delta": 4,
+        "duration": 3
+      }
+    ]
+  },
+  "chantagem": {
+    "name": "Chantagem",
+    "category": "Submundo",
+    "description": "Um nome, uma data, um sussurro. O alvo luta pior quando luta pensando em quem mais sabe.",
+    "cost": 3,
+    "resource_type": "Estamina",
+    "damage_formula": "0",
+    "damage_type": "DeBuff",
+    "conditions": [
+      "-3 de acerto por 2 turnos"
+    ],
+    "save_stat": "wis",
+    "scaling_formula": "0",
+    "classes": [
+      "Sombra da Corte"
+    ],
+    "branch": "corvo",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "debuff",
+        "stat": "attack",
+        "delta": -3,
+        "duration": 2
+      }
+    ]
+  },
+  "rede_de_informantes": {
+    "name": "Rede de Informantes",
+    "category": "Submundo",
+    "description": "Os Corvos cobram caro, mas avisam antes. Saber onde o golpe nasce é quase não apanhar.",
+    "cost": 4,
+    "resource_type": "Estamina",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "+2 de acerto e +1 Defesa por 3 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sombra da Corte"
+    ],
+    "branch": "corvo",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "attack",
+        "delta": 2,
+        "duration": 3
+      },
+      {
+        "kind": "buff",
+        "stat": "ac",
+        "delta": 1,
+        "duration": 3
+      }
+    ]
+  },
+  "lamina_no_escuro": {
+    "name": "Lâmina no Escuro",
+    "category": "Submundo",
+    "description": "A informação diz onde; a lâmina só confirma. O corte chega antes da suspeita.",
+    "cost": 6,
+    "resource_type": "Estamina",
+    "damage_formula": "2d6+dex_mod",
+    "damage_type": "Perfurante",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "1d8",
+    "classes": [
+      "Sombra da Corte"
+    ],
+    "branch": "corvo",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": []
+  },
+  "xeque_da_corte": {
+    "name": "Xeque da Corte",
+    "category": "Submundo",
+    "description": "O segredo certo, dito em voz alta, no meio da luta. O alvo congela: o mundo dele acabou primeiro.",
+    "cost": 8,
+    "resource_type": "Estamina",
+    "damage_formula": "2d8+cha_mod",
+    "damage_type": "Psíquico",
+    "conditions": [
+      "Medo (2 turnos)"
+    ],
+    "save_stat": "wis",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Sombra da Corte"
+    ],
+    "branch": "corvo",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "chantagem"
+    ],
+    "effects": [
+      {
+        "kind": "control",
+        "stat": null,
+        "delta": 0,
+        "duration": 2,
+        "control": "fear"
+      }
+    ]
+  },
+  "carga_de_demolicao": {
+    "name": "Carga de Demolição",
+    "category": "Tecnologia",
+    "description": "Esquema anão, pavio curto, matemática honesta: tudo dentro do raio deixa de ser problema.",
+    "cost": 7,
+    "resource_type": "Estamina",
+    "damage_formula": "3d6+int_mod",
+    "damage_type": "Fogo",
+    "conditions": [],
+    "save_stat": "dex",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Sapador da Fuligem"
+    ],
+    "branch": "engenharia",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": []
+  },
+  "bomba_de_pregos": {
+    "name": "Bomba de Pregos",
+    "category": "Tecnologia",
+    "description": "Lata, pólvora de segunda e tudo que o chão deu. Os goblins chamam de artilharia.",
+    "cost": 4,
+    "resource_type": "Estamina",
+    "damage_formula": "2d6+dex_mod",
+    "damage_type": "Perfurante",
+    "conditions": [
+      "Sangramento (2 dano/turno, 3 turnos)"
+    ],
+    "save_stat": "dex",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Sapador da Fuligem"
+    ],
+    "branch": "sucata",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "dot",
+        "stat": null,
+        "delta": 2,
+        "duration": 3
+      }
+    ]
+  },
+  "mistura_instavel": {
+    "name": "Mistura Instável",
+    "category": "Tecnologia",
+    "description": "Dois frascos que nunca deviam se conhecer. Enquanto durar, cada golpe leva um pouco da explosão.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "Custa 3 HP",
+      "+4 Dano por 2 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sapador da Fuligem"
+    ],
+    "branch": "sucata",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "damage",
+        "delta": 4,
+        "duration": 2
+      }
+    ]
+  },
+  "obra_prima_de_refugo": {
+    "name": "Obra-prima de Refugo",
+    "category": "Tecnologia",
+    "description": "O improviso definitivo: peças de três eras diferentes, nenhuma no lugar certo, todas funcionando uma única vez.",
+    "cost": 10,
+    "resource_type": "Estamina",
+    "damage_formula": "4d6+int_mod",
+    "damage_type": "Fogo",
+    "conditions": [
+      "Custa 4 HP"
+    ],
+    "save_stat": "dex",
+    "scaling_formula": "1d8",
+    "classes": [
+      "Sapador da Fuligem"
+    ],
+    "branch": "sucata",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "mistura_instavel"
+    ],
+    "effects": []
+  },
+  "diagnostico_frio": {
+    "name": "Diagnóstico Frio",
+    "category": "Tecnologia",
+    "description": "Um olhar clínico no meio do caos: onde dobra errado, onde sangra por dentro. Ali se bate.",
+    "cost": 2,
+    "resource_type": "Estamina",
+    "damage_formula": "0",
+    "damage_type": "DeBuff",
+    "conditions": [
+      "-2 Defesa do alvo por 3 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 2,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "debuff",
+        "stat": "ac",
+        "delta": -2,
+        "duration": 3
+      }
+    ]
+  },
+  "serra_de_campo": {
+    "name": "Serra de Campo",
+    "category": "Tecnologia",
+    "description": "A mesma serra que salva na mesa amputa em combate. O aço não distingue paciente de inimigo.",
+    "cost": 5,
+    "resource_type": "Estamina",
+    "damage_formula": "2d6+dex_mod",
+    "damage_type": "Cortante",
+    "conditions": [
+      "Sangramento (2 dano/turno, 2 turnos)"
+    ],
+    "save_stat": "con",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "triagem",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "dot",
+        "stat": null,
+        "delta": 2,
+        "duration": 2
+      }
+    ]
+  },
+  "anestesia_bruta": {
+    "name": "Anestesia Bruta",
+    "category": "Tecnologia",
+    "description": "Dose de cavalo, agulha de trincheira. O alvo dorme onde estiver, do jeito que der.",
+    "cost": 6,
+    "resource_type": "Estamina",
+    "damage_formula": "1d4+int_mod",
+    "damage_type": "Veneno",
+    "conditions": [
+      "Atordoado (1 turno)"
+    ],
+    "save_stat": "con",
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "triagem",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "control",
+        "stat": null,
+        "delta": 0,
+        "duration": 1,
+        "control": "stun"
+      }
+    ]
+  },
+  "milagre_de_campo": {
+    "name": "Milagre de Campo",
+    "category": "Tecnologia",
+    "description": "Sem magia, sem oração: linha, grampo, teimosia. Os Martelos Partidos chamam isso de milagre mesmo assim.",
+    "cost": 10,
+    "resource_type": "Estamina",
+    "damage_formula": "-3d4-int_mod",
+    "damage_type": "Cura",
+    "conditions": [
+      "+2 Defesa por 2 turnos no curado"
+    ],
+    "save_stat": null,
+    "scaling_formula": "1d4",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "triagem",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "granada_de_cura"
+    ],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "ac",
+        "delta": 2,
+        "duration": 2
+      }
+    ]
+  },
+  "frasco_corrosivo": {
+    "name": "Frasco Corrosivo",
+    "category": "Tecnologia",
+    "description": "O rótulo diz remédio. A dose diz outra coisa. O Limiar é exatamente essa diferença.",
+    "cost": 4,
+    "resource_type": "Estamina",
+    "damage_formula": "2d6+int_mod",
+    "damage_type": "Ácido",
+    "conditions": [
+      "Corroído (2 dano/turno, 3 turnos)"
+    ],
+    "save_stat": "dex",
+    "scaling_formula": "1d6",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "alquimia",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "dot",
+        "stat": null,
+        "delta": 2,
+        "duration": 3
+      }
+    ]
+  },
+  "vapores_do_limiar": {
+    "name": "Vapores do Limiar",
+    "category": "Tecnologia",
+    "description": "O vapor que sobra da destilação errada. Respirou, lutou pela metade.",
+    "cost": 5,
+    "resource_type": "Estamina",
+    "damage_formula": "1d4+int_mod",
+    "damage_type": "Veneno",
+    "conditions": [
+      "-2 de acerto por 3 turnos"
+    ],
+    "save_stat": "con",
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "alquimia",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "debuff",
+        "stat": "attack",
+        "delta": -2,
+        "duration": 3
+      }
+    ]
+  },
+  "panaceia_negra": {
+    "name": "Panaceia Negra",
+    "category": "Tecnologia",
+    "description": "A cura destilada do veneno do mundo. Funciona — e deixa no corpo um aviso de onde veio.",
+    "cost": 8,
+    "resource_type": "Estamina",
+    "damage_formula": "-3d6-int_mod",
+    "damage_type": "Cura",
+    "conditions": [
+      "Custa 4 HP",
+      "+3 Dano por 2 turnos no curado"
+    ],
+    "save_stat": null,
+    "scaling_formula": "1d6",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "alquimia",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "frasco_corrosivo"
+    ],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "damage",
+        "delta": 3,
+        "duration": 2
+      }
+    ]
+  },
+  "passo_da_mata": {
+    "name": "Passo da Mata",
+    "category": "Marcial",
+    "description": "Andar onde a floresta deixa. Quem aprende, a mata esconde.",
+    "cost": 3,
+    "resource_type": "Estamina",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "+2 Defesa por 2 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Guardião Selvagem"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 2,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "ac",
+        "delta": 2,
+        "duration": 2
+      }
+    ]
+  },
+  "pele_de_casca": {
+    "name": "Pele de Casca",
+    "category": "Magia",
+    "description": "A casca das árvores antigas aceita cobrir quem as defende. Pesa como dívida, protege como muralha.",
+    "cost": 5,
+    "resource_type": "Mana",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "+3 Defesa por 3 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Guardião Selvagem"
+    ],
+    "branch": "guardiao",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "ac",
+        "delta": 3,
+        "duration": 3
+      }
+    ]
+  },
+  "prisao_de_raizes": {
+    "name": "Prisão de Raízes",
+    "category": "Magia",
+    "description": "As raízes da Floresta dos Sussurros ainda obedecem a quem escuta. E seguram como quem tem saudade.",
+    "cost": 5,
+    "resource_type": "Mana",
+    "damage_formula": "1d6+wis_mod",
+    "damage_type": "Contundente",
+    "conditions": [
+      "Enredado (2 turnos)"
+    ],
+    "save_stat": "str",
+    "scaling_formula": "0",
+    "classes": [
+      "Guardião Selvagem"
+    ],
+    "branch": "guardiao",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "control",
+        "stat": null,
+        "delta": 0,
+        "duration": 2,
+        "control": "root"
+      }
+    ]
+  },
+  "chicote_espinhoso": {
+    "name": "Chicote Espinhoso",
+    "category": "Magia",
+    "description": "Um cipó com opinião própria. Os espinhos ficam de lembrança.",
+    "cost": 4,
+    "resource_type": "Mana",
+    "damage_formula": "2d6+wis_mod",
+    "damage_type": "Perfurante",
+    "conditions": [
+      "Sangramento (2 dano/turno, 2 turnos)"
+    ],
+    "save_stat": null,
+    "scaling_formula": "1d6",
+    "classes": [
+      "Guardião Selvagem"
+    ],
+    "branch": "guardiao",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "dot",
+        "stat": null,
+        "delta": 2,
+        "duration": 2
+      }
+    ]
+  },
+  "coracao_da_floresta": {
+    "name": "Coração da Floresta",
+    "category": "Magia",
+    "description": "Por três turnos, o guardião é o último pedaço verde do mundo — e o mundo verde não cai fácil.",
+    "cost": 10,
+    "resource_type": "Mana",
+    "damage_formula": "-2d6-wis_mod",
+    "damage_type": "Cura",
+    "conditions": [
+      "+3 Defesa por 3 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "1d6",
+    "classes": [
+      "Guardião Selvagem"
+    ],
+    "branch": "guardiao",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "pele_de_casca"
+    ],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "ac",
+        "delta": 3,
+        "duration": 3
+      }
+    ]
+  },
+  "garras_negras": {
+    "name": "Garras Negras",
+    "category": "Magia",
+    "description": "As mãos lembram do que a floresta virou. As garras que crescem não são de nenhum animal que ainda exista.",
+    "cost": 5,
+    "resource_type": "Mana",
+    "damage_formula": "2d6+str_mod",
+    "damage_type": "Cortante",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "1d8",
+    "classes": [
+      "Guardião Selvagem"
+    ],
+    "branch": "feral",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": []
+  },
+  "instinto_corrompido": {
+    "name": "Instinto Corrompido",
+    "category": "Magia",
+    "description": "Deixar entrar só um fio do que corrompeu a mata. O fio morde por dentro — e guia a mão.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Buff",
+    "conditions": [
+      "Custa 2 HP",
+      "+3 Dano e +1 de acerto por 3 turnos"
+    ],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Guardião Selvagem"
+    ],
+    "branch": "feral",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "damage",
+        "delta": 3,
+        "duration": 3
+      },
+      {
+        "kind": "buff",
+        "stat": "attack",
+        "delta": 1,
+        "duration": 3
+      }
+    ]
+  },
+  "uivo_do_vazio": {
+    "name": "Uivo do Vazio",
+    "category": "Magia",
+    "description": "O som que a floresta faz à noite, saindo de uma garganta humana. Nenhum inimigo fica indiferente.",
+    "cost": 6,
+    "resource_type": "Mana",
+    "damage_formula": "1d6+wis_mod",
+    "damage_type": "Psíquico",
+    "conditions": [
+      "Medo (2 turnos)"
+    ],
+    "save_stat": "wis",
+    "scaling_formula": "0",
+    "classes": [
+      "Guardião Selvagem"
+    ],
+    "branch": "feral",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [
+      {
+        "kind": "control",
+        "stat": null,
+        "delta": 0,
+        "duration": 2,
+        "control": "fear"
+      }
+    ]
+  },
+  "forma_do_abismo": {
+    "name": "Forma do Abismo",
+    "category": "Magia",
+    "description": "A resposta final à pergunta dos renegados. Por instantes, o guardião mostra o que a natureza virou — por inteiro.",
+    "cost": 12,
+    "resource_type": "Mana",
+    "damage_formula": "3d8+str_mod",
+    "damage_type": "Cortante",
+    "conditions": [
+      "Custa 5 HP"
+    ],
+    "save_stat": "con",
+    "scaling_formula": "1d8",
+    "classes": [
+      "Guardião Selvagem"
+    ],
+    "branch": "feral",
+    "tier": 3,
+    "level_req": 6,
+    "requires": [
+      "instinto_corrompido"
+    ],
+    "effects": [
+      {
+        "kind": "buff",
+        "stat": "damage",
+        "delta": 3,
+        "duration": 2
+      }
+    ]
   }
 }

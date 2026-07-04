@@ -25,7 +25,22 @@
       "investida_do_touro",
       "pele_de_ferro"
     ],
-    "branches": {}
+    "branches": {
+      "muralha": {
+        "name": "Juramento da Muralha",
+        "theme": "mundo vazio — resistir: o corpo como última parede entre o que restou e o que vem",
+        "lore_ref": "cidades_estado_sobreviventes_vaelorn_solvhen",
+        "identity": "Tanque: redução de dano, provocação, punição a quem ataca a linha",
+        "description": "Nas cidades-estado que sobraram, ainda se faz o velho juramento: enquanto um escudo estiver de pé, a muralha não caiu."
+      },
+      "lanca": {
+        "name": "Lança da Vigília",
+        "theme": "mundo vazio — eliminar: a ameaça se mata na estrada, antes que chegue ao portão",
+        "lore_ref": "legiao_ferro",
+        "identity": "Dano focado: cargas, execução, quebra de formação inimiga",
+        "description": "A Legião ensina que muralha nenhuma segura o que já entrou. A lança sai na frente e volta suja."
+      }
+    }
   },
   "Batedor das Fronteiras": {
     "description": "Explorador ágil especializado em sobreviver fora das muralhas.",
@@ -53,7 +68,22 @@
       "estocada_renal",
       "bomba_de_fumaca"
     ],
-    "branches": {}
+    "branches": {
+      "rastreador": {
+        "name": "Leitor do Ermo",
+        "theme": "mundo vazio — ler o que restou: rastro, vento e fome dizem tudo antes da flecha",
+        "lore_ref": "bandos_nomades",
+        "identity": "Atrito à distância: sangramento, marcas, tiros precisos",
+        "description": "Os bandos da Pradaria não sobrevivem por força — sobrevivem porque leem o chão como os antigos liam livros."
+      },
+      "fantasma": {
+        "name": "Fantasma da Fronteira",
+        "theme": "mundo vazio — tornar-se parte dele: quem o ermo engoliu não é mais visto, é sofrido",
+        "lore_ref": "renegados_ermo",
+        "identity": "Emboscada: burst de abertura, evasão, silêncio que atordoa",
+        "description": "Dos Renegados se diz que a fronteira os comeu. Mentira: eles viraram a fronteira."
+      }
+    }
   },
   "Arcanista Cinzento": {
     "description": "Estudioso que usa magia filtrada por tecnologia.",
@@ -81,7 +111,22 @@
       "dardos_de_forca",
       "espelho_ilusorio"
     ],
-    "branches": {}
+    "branches": {
+      "instrumento": {
+        "name": "Mão Instrumentada",
+        "theme": "controle pela tecnologia prévia — a magia só passa filtrada pelo aparelho, nunca pela veia",
+        "lore_ref": "clas_tecnologicos",
+        "identity": "Controle de recurso: dreno de mana, dano calibrado, campo de força",
+        "description": "Os Clãs de Skallgard não confiam no Éter cru. Condensadores, válvulas e cobre: o preço da magia paga-se em manutenção, não em carne."
+      },
+      "exposicao": {
+        "name": "Toque Descoberto",
+        "theme": "magia corrompe — exposição calculada: tocar a fonte crua e pagar aos poucos, com juros",
+        "lore_ref": "cultos_despertar_dispersos",
+        "identity": "Risco/retorno: dano alto com custo de corpo, controle mental, deslocamento instável",
+        "description": "Há quem dispense o filtro. As veias escurecem um dedo por ano — e um dedo, dizem eles, é um preço honesto pelo que se sente."
+      }
+    }
   },
   "Sangromante": {
     "description": "Mago proibido que usa a própria vitalidade.",
@@ -109,7 +154,22 @@
       "combustao_sanguinea",
       "toque_necrotico"
     ],
-    "branches": {}
+    "branches": {
+      "destilacao": {
+        "name": "Dívida Medida",
+        "theme": "controle pelo sacrifício — o custo é real, então que seja contabilizado gota a gota",
+        "lore_ref": "cultistas_destilacao",
+        "identity": "Sustain: drenar vida, pactos com prazo, converter dor em poder controlado",
+        "description": "A velha Destilação provou que o custo da magia pode ser medido, movido, cobrado. O sangromante prudente é um contador do próprio sangue."
+      },
+      "hemorragia": {
+        "name": "Hemorragia Total",
+        "theme": "controle pelo sacrifício — tudo de uma vez: o corpo é munição, não cofre",
+        "lore_ref": null,
+        "identity": "Burst all-in: dano máximo pago em HP, apoteoses curtas",
+        "description": "Medir é para quem planeja envelhecer. Abrir a veia inteira de uma vez é a única aposta que o Abismo respeita."
+      }
+    }
   },
   "Inquisidor da Cinza": {
     "description": "Fanático que usa fogo e medo. Tanque ofensivo.",
@@ -137,7 +197,22 @@
       "juramento_de_sangue",
       "pisao_sismico"
     ],
-    "branches": {}
+    "branches": {
+      "chama_azul": {
+        "name": "Chama que Purga",
+        "theme": "o Abismo domina — queimar a corrupção antes que se espalhe; o medo é ferramenta de purga",
+        "lore_ref": "filhos_chama_azul",
+        "identity": "Controle por medo: fogo punitivo, interrogatório, pira ritual",
+        "description": "O Batismo de Fogo marca os lábios de quem aguenta. A chama azul não aquece — separa o que fica do que arde."
+      },
+      "fornalha": {
+        "name": "Discípulo da Fornalha",
+        "theme": "controle pela tecnologia prévia — o fogo industrial não se teme: vira-se ele",
+        "lore_ref": "encapuzados_fornalha",
+        "identity": "Fogo sustentado: queimaduras, ligas proibidas, autodano controlado",
+        "description": "Nas Fundições aprende-se cedo: o metal só obedece quem já se queimou. Os Encapuzados fazem do incêndio um ofício."
+      }
+    }
   },
   "Pastor de Pragas": {
     "description": "Druida simbiótico que controla insetos e fungos.",
@@ -165,7 +240,22 @@
       "enxame_de_insetos",
       "nuvem_toxica"
     ],
-    "branches": {}
+    "branches": {
+      "ciclo": {
+        "name": "Guardião do Ciclo",
+        "theme": "o Abismo domina — conter: a podridão medida é o que impede a podridão total",
+        "lore_ref": "druidas_ciclo_cinzento",
+        "identity": "Atrito de área: esporos, raízes, dreno lento que devolve equilíbrio",
+        "description": "Os Druidas do Ciclo não curam o Pântano — retardam-no. Todo apodrecimento que eles regem é um que não rege sozinho."
+      },
+      "colmeia": {
+        "name": "Voz da Colmeia",
+        "theme": "magia corrompe — simbiose extrema: entregar o corpo ao enxame e falar com bocas demais",
+        "lore_ref": "colmeia_hospedeiros",
+        "identity": "Transformação: enxames hospedados, quitina, percepção partilhada — pago em carne",
+        "description": "Em Xylos, os Hospedeiros provaram que dividir o corpo é multiplicá-lo. O enxame cuida de quem o abriga. Quase sempre."
+      }
+    }
   },
   "Sombra da Corte": {
     "description": "Assassino social especializado em venenos.",
@@ -193,7 +283,22 @@
       "lamina_envenenada",
       "cegar"
     ],
-    "branches": {}
+    "branches": {
+      "lamina": {
+        "name": "Lâmina Contratada",
+        "theme": "mundo vazio — a morte limpa é serviço, e serviço se cumpre no prazo",
+        "lore_ref": "mao_sombria",
+        "identity": "Execução single-target: venenos de contrato, garrote, golpe final",
+        "description": "A Mão Sombria não odeia ninguém. Ódio é ruído. Existe o contrato, o alvo e a entrega — de preferência sem terceira testemunha."
+      },
+      "corvo": {
+        "name": "Olho do Corvo",
+        "theme": "mundo vazio — informação vale mais que sangue: quem sabe, manda em quem mata",
+        "lore_ref": "guilda_corvos",
+        "identity": "Manipulação: chantagem que paralisa, redes de informantes, lâmina no momento exato",
+        "description": "Os Corvos cobram em segredos. Um nome sussurrado na hora certa derruba mais gente que dez adagas."
+      }
+    }
   },
   "Sapador da Fuligem": {
     "description": "Engenheiro anão com explosivos e armadilhas.",
@@ -221,7 +326,22 @@
       "tiro_de_bacamarte",
       "armadilha_de_urso"
     ],
-    "branches": {}
+    "branches": {
+      "engenharia": {
+        "name": "Engenheiro de Cerco",
+        "theme": "tecnologia prévia — o que a era anterior construiu ainda segura o mundo; aprende-se o manual",
+        "lore_ref": "ultimos_anoes_reino",
+        "identity": "Preparo e área: demolições planejadas, torretas, escudos de campo",
+        "description": "Os últimos anões guardam esquemas de máquinas que ninguém mais sabe fundir. Copiar é heresia; aprender, dever."
+      },
+      "sucata": {
+        "name": "Alquimista da Sucata",
+        "theme": "mundo vazio — improviso volátil: o lixo das eras ainda explode, se souber onde bater",
+        "lore_ref": "goblins_mineiros",
+        "identity": "Gambiarras: dano alto e instável, misturas que cobram do próprio corpo",
+        "description": "Os goblins-mineiros não leem esquema nenhum e continuam vivos. Estatisticamente. A sucata recompensa os rápidos."
+      }
+    }
   },
   "Médico de Campo": {
     "description": "Curandeiro sem magia que usa alquimia e serras.",
@@ -249,7 +369,22 @@
       "sutura_de_campo",
       "estimulante_alquimico"
     ],
-    "branches": {}
+    "branches": {
+      "triagem": {
+        "name": "Cirurgião de Trincheira",
+        "theme": "mundo vazio — manter vivo a qualquer custo, com serra, agulha e pressa",
+        "lore_ref": "resistencia_operaria_martelos_partidos",
+        "identity": "Cura pesada: triagem, anestesia bruta, milagres de campo sem magia",
+        "description": "Nas greves e nos desabamentos, os Martelos Partidos aprenderam: quem espera cura limpa morre esperando."
+      },
+      "alquimia": {
+        "name": "Boticário do Limiar",
+        "theme": "magia corrompe — o remédio destila-se do próprio veneno do mundo, em dose exata",
+        "lore_ref": "mercadores_curiosidades",
+        "identity": "Química dual: corrosivos, vapores debilitantes, panaceias com preço",
+        "description": "Todo frasco tem duas doses: a que salva e a que sobra. Os Mercadores de Curiosidades vendem as duas pelo mesmo preço."
+      }
+    }
   },
   "Guardião Selvagem": {
     "description": "Bárbaro tribal conectado à natureza brutal.",
@@ -277,6 +412,21 @@
       "invocar_vinhas",
       "quebra_joelhos"
     ],
-    "branches": {}
+    "branches": {
+      "guardiao": {
+        "name": "Raiz que Resta",
+        "theme": "mundo vazio — guardar os últimos lugares verdes com o corpo e o terreno",
+        "lore_ref": "floresta_sussurros",
+        "identity": "Proteção territorial: casca, raízes que prendem, espinhos que respondem",
+        "description": "A Floresta dos Sussurros ainda fala com quem ficou. O guardião não defende árvores — defende a última conversa do mundo antigo."
+      },
+      "feral": {
+        "name": "O Que Ela Virou",
+        "theme": "magia corrompe — a natureza tocada pelo Abismo morde de volta; canaliza-se o corrompido sem virar ele",
+        "lore_ref": "druidas_renegados",
+        "identity": "Feral: garras, instinto que cobra em sangue, uivo que apavora",
+        "description": "Os renegados pararam de perguntar o que a natureza era. Perguntam o que ela virou — e imitam a resposta."
+      }
+    }
   }
 }
