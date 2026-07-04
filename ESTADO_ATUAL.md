@@ -31,10 +31,26 @@ não é duplicata; milestone "O herói alcançou o nível N." na crônica. `POST
 `pending_choices`/`level_up` (elegíveis + ramos). CLI pergunta no fim do turno (ENTER
 adia). Frontend: `LevelUpModal` agrupado por ramo (tema + aviso de escolha
 irreversível), botão pulsante "⬆ Nível!" no topbar, Ficha com XP/próximo nível.
-Suíte: 313 → **357 verdes**. `npm run build` + `smoke_api.sh` ok (inclui 400 do
-levelup). **Pendente p/ `done` da 4.1: smoke com LLM real** (§6 da spec, ~6 requests).
-Próximo: smoke real 4.1 → **Fase 4.2** (buffs mecânicos — spec pronta; consome o
-`effects` que a 4.1b já preencheu).
+**4.2 (buffs mecânicos) implementada:** `condition_modifiers` lido em dano/AC/
+acerto/save nos DOIS lados; `effects` tipado da 4.1b aplicado com precedência sobre
+texto; parser legado tipa strings ("+5 Dano" → stat/delta); stun perde turno, root
+bloqueia fuga, fear -2 acerto; 9/10 passivas data-driven em `passive_effects`
+(Sangromante paga mana com HP, Inquisidor imune a medo +2 fogo, Pastor retalia,
+Sombra envenena ataque básico, Médico +5 cura <25%, Guardião AC sem armadura...);
+Sapador é o único declarativo (sem estruturas no motor — documentado).
+**4.3 (inventário/equipamento) implementada:** `inventory.py` puro — `{id, qty}`
+com stack, nome→id com acentos, `item_desconhecido` preserva save antigo; slots
+weapon/armor/accessory e o combate lê SÓ os slots (fim do auto-scan); "bebo a
+poção" vira ação de combate resolvida em Python (cura, decrementa, consome turno);
+**3 bugs históricos fechados** (arma inicial canônica com bônus via
+`starting_equipment` + 12 artefatos novos; item narrado entra validado via
+`StoryUpdate.items_gained`, nunca fantasma; capitalização morta na fonte — API
+manda nome canônico). `POST /game/equip`, botão equipar no HUD, comando `equipar`
+no CLI, backfill no load.
+Suíte: 313 → **401 verdes**. `npm run build` + `smoke_api.sh` ok.
+**Pendente p/ `done` de 4.1/4.2/4.3: smoke com LLM real** (§6 das specs — gasta
+quota Gemini; rodar quando quota fresca). Próximo: **Fase 4.4** (economia
+determinística — spec pronta, depende da 4.3 ✓).
 
 Sessão 2026-07-03 (6): Fase 3.4 DONE — Visualização de estado. FASE 3 COMPLETA.
 `services/state_views.py` (novo, 100% puro): `visible_controllers` (mapa mostra quem

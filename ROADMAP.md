@@ -148,12 +148,13 @@ Resumo por fatia (detalhe técnico SÓ nas specs — fonte única):
 - **4.1b — Árvores de Valoria** [✅ `done` 2026-07-04 → spec](specs/fase-4.1b-arvores-valoria.md) —
   executada por Fable: 10 classes × 2 ramos ancorados nos pilares do mundo, 111
   habilidades (66 novas) com impacto mecânico, anti-spoiler ok, apêndice A preenchido.
-- **4.2 — Buffs mecânicos** [`draft` → spec](specs/fase-4.2-buffs-mecanicos.md) —
-  condições tipadas lidas em dano/AC/acerto/save; stun/root/fear reais; 10 passivas
-  data-driven; simetria player/inimigo.
-- **4.3 — Inventário/equipamento** [`draft` → spec](specs/fase-4.3-inventario-equipamento.md) —
-  inventário `{id, qty}` + slots; poção usável em combate; fecha 3 bugs conhecidos
-  (arma inicial sem bônus, item narrado que some, capitalização).
+- **4.2 — Buffs mecânicos** [✅ implementada 2026-07-04 → spec](specs/fase-4.2-buffs-mecanicos.md) —
+  condições tipadas lidas em dano/AC/acerto/save; stun/root/fear reais dos dois lados;
+  9/10 passivas data-driven (Sapador declarativo, documentado). Falta só smoke LLM real.
+- **4.3 — Inventário/equipamento** [✅ implementada 2026-07-04 → spec](specs/fase-4.3-inventario-equipamento.md) —
+  inventário `{id, qty}` + slots (combate lê só slots); poção usável em combate;
+  3 bugs fechados (arma inicial, item narrado, capitalização); `/game/equip` + HUD.
+  Falta só smoke LLM real.
 - **4.4 — Economia determinística** [`draft` → spec](specs/fase-4.4-economia-deterministica.md) —
   receitas/mercadores/loot tables em JSON; preço = raridade × região × reputação, em
   Python; `TradeIntent` substitui o LLM-decide-tudo; estado do mundo afeta comércio.
