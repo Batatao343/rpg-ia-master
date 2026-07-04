@@ -47,10 +47,18 @@ poção" vira ação de combate resolvida em Python (cura, decrementa, consome t
 `StoryUpdate.items_gained`, nunca fantasma; capitalização morta na fonte — API
 manda nome canônico). `POST /game/equip`, botão equipar no HUD, comando `equipar`
 no CLI, backfill no load.
-Suíte: 313 → **401 verdes**. `npm run build` + `smoke_api.sh` ok.
-**Pendente p/ `done` de 4.1/4.2/4.3: smoke com LLM real** (§6 das specs — gasta
-quota Gemini; rodar quando quota fresca). Próximo: **Fase 4.4** (economia
-determinística — spec pronta, depende da 4.3 ✓).
+**4.4 (economia determinística) implementada:** `services/economy.py` puro — preço =
+base × regional (`economy_tags`) × mercador × reputação da fação controladora
+(projection) × 0.5 venda, arredondado a 5; mercadores com estoque persistente no
+world state e restock por relógio; hostil esconde raros e encarece 50%; craft
+valida local (`craft_tags`)/ingredientes/ouro; drop tables por região×perigo;
+`loot_node` reescrito (TradeIntent FAST com guard → Python resolve → 1 SMART narra
+com fallback) — `TransactionResult` (LLM decidia preço) morreu. Dados novos:
+`recipes.json`/`merchants.json`/`loot_tables.json` + tags nos 30 nós do mapa.
+Suíte: 313 → **424 verdes**. `npm run build` + `smoke_api.sh` ok.
+**Pendente p/ `done` de 4.1/4.2/4.3/4.4: smoke com LLM real** (§6 das specs — gasta
+quota Gemini; rodar quando quota fresca). Próximo: **Fase 4.5** (party — spec
+pronta, depende da 4.2 ✓).
 
 Sessão 2026-07-03 (6): Fase 3.4 DONE — Visualização de estado. FASE 3 COMPLETA.
 `services/state_views.py` (novo, 100% puro): `visible_controllers` (mapa mostra quem

@@ -155,9 +155,10 @@ Resumo por fatia (detalhe técnico SÓ nas specs — fonte única):
   inventário `{id, qty}` + slots (combate lê só slots); poção usável em combate;
   3 bugs fechados (arma inicial, item narrado, capitalização); `/game/equip` + HUD.
   Falta só smoke LLM real.
-- **4.4 — Economia determinística** [`draft` → spec](specs/fase-4.4-economia-deterministica.md) —
-  receitas/mercadores/loot tables em JSON; preço = raridade × região × reputação, em
-  Python; `TradeIntent` substitui o LLM-decide-tudo; estado do mundo afeta comércio.
+- **4.4 — Economia determinística** [✅ implementada 2026-07-04 → spec](specs/fase-4.4-economia-deterministica.md) —
+  `services/economy.py`; preço = raridade × região × reputação em Python; mercadores
+  persistentes com restock; craft com receita/local; drop tables; `TradeIntent` matou
+  o `TransactionResult`. Falta só smoke LLM real.
 - **4.5 — Party** [`draft` → spec](specs/fase-4.5-party-aliados.md) — recrutamento com
   gate de relationship; combate N vs N no mesmo motor (perfis 2.5b p/ aliados); alvo
   tático dos inimigos; morte de companion alimenta o mundo (npc_killed).
