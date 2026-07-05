@@ -140,36 +140,36 @@ Smoke LLM real pendente de quota (fase determinística, sem `with_structured_out
 
 Resumo por fatia (detalhe técnico SÓ nas specs — fonte única):
 
-- **4.1 — Progressão** [✅ implementada 2026-07-04 → spec](specs/fase-4.1-progressao.md) —
+- **4.1 — Progressão** [✅ `done` → spec](specs/fase-4.1-progressao.md) —
   XP determinístico (kill por tier / beat / quest), level up com curvas por classe,
   árvore com ramos = subclasses mutuamente exclusivas, ids canônicos + backfill,
   `/game/levelup` + modal no frontend, `level_up` na crônica com gate anti-LLM.
-  **Falta só smoke com LLM real** (quota) para `done`.
+
 - **4.1b — Árvores de Valoria** [✅ `done` 2026-07-04 → spec](specs/fase-4.1b-arvores-valoria.md) —
   executada por Fable: 10 classes × 2 ramos ancorados nos pilares do mundo, 111
   habilidades (66 novas) com impacto mecânico, anti-spoiler ok, apêndice A preenchido.
-- **4.2 — Buffs mecânicos** [✅ implementada 2026-07-04 → spec](specs/fase-4.2-buffs-mecanicos.md) —
+- **4.2 — Buffs mecânicos** [✅ `done` → spec](specs/fase-4.2-buffs-mecanicos.md) —
   condições tipadas lidas em dano/AC/acerto/save; stun/root/fear reais dos dois lados;
-  9/10 passivas data-driven (Sapador declarativo, documentado). Falta só smoke LLM real.
-- **4.3 — Inventário/equipamento** [✅ implementada 2026-07-04 → spec](specs/fase-4.3-inventario-equipamento.md) —
+  9/10 passivas data-driven (Sapador declarativo, documentado).
+- **4.3 — Inventário/equipamento** [✅ `done` → spec](specs/fase-4.3-inventario-equipamento.md) —
   inventário `{id, qty}` + slots (combate lê só slots); poção usável em combate;
   3 bugs fechados (arma inicial, item narrado, capitalização); `/game/equip` + HUD.
-  Falta só smoke LLM real.
-- **4.4 — Economia determinística** [✅ implementada 2026-07-04 → spec](specs/fase-4.4-economia-deterministica.md) —
+ 
+- **4.4 — Economia determinística** [✅ `done` → spec](specs/fase-4.4-economia-deterministica.md) —
   `services/economy.py`; preço = raridade × região × reputação em Python; mercadores
   persistentes com restock; craft com receita/local; drop tables; `TradeIntent` matou
-  o `TransactionResult`. Falta só smoke LLM real.
-- **4.5 — Party** [✅ implementada 2026-07-05 → spec](specs/fase-4.5-party-aliados.md) —
+  o `TransactionResult`.
+- **4.5 — Party** [✅ `done` → spec](specs/fase-4.5-party-aliados.md) —
   recrutamento com gate determinístico (relationship ≥7, teto 3); N vs N no mesmo
   motor; alvo tático; morte de companion vira npc_killed; 4v5 sem crash testado.
-  Falta só smoke LLM real.
-- **4.6 — Dificuldade/IA/morte** [✅ implementada 2026-07-05 → spec](specs/fase-4.6-dificuldade-ia-morte.md) —
+ 
+- **4.6 — Dificuldade/IA/morte** [✅ `done` → spec](specs/fase-4.6-dificuldade-ia-morte.md) —
   clamp+piso por orçamento de pontos; 19 inimigos com habilidades mecânicas; 7 bosses
-  com fases; morte com fecho de saga + save-memorial (409). Falta só smoke LLM real.
+  com fases; morte com fecho de saga + save-memorial (409).
 
-**Status da Fase 4 (2026-07-05): TODAS as 7 fatias implementadas** (313 → 461 testes
-offline). Pendência única para fechar a fase: **smoke com LLM real** de 4.1–4.6
-(gasta quota Gemini — rodar com quota fresca) + playtest de balanceamento.
+**Status da Fase 4 (2026-07-05): ✅ COMPLETA — 7 specs `done`** (313 → 461 testes
+offline + smoke com LLM real executado; 4 bugs de integração achados e corrigidos
+no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
 
 **Critério de aceite da Fase 4:** personagem sobe de nível e aprende habilidade nova; buff de habilidade muda número de dano observável; poção usada em combate cura; craft falha sem ingrediente; mercador de Skallgard vende coisa diferente do de Nova Arcádia; combate 4 (party) vs 5 (orcs) resolve sem crash; morte tem narrativa.
 
