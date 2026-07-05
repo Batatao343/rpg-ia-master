@@ -9,9 +9,19 @@
 ## TL;DR — Em que pé está
 
 **Sessão 2026-07-04/05 (7): FASE 4 (Gameplay Core) INTEIRA implementada em uma sessão.**
-313 → **461 testes offline verdes**. Todas as 7 specs (4.1, 4.1b, 4.2–4.6) com etapas
-de implementação completas; pendência ÚNICA para `done` formal: **smoke com LLM real**
-de cada spec (§6 — gasta quota Gemini, rodar com quota fresca) + playtest de balance.
+313 → **461 testes offline verdes** + **smoke com LLM REAL executado (2026-07-05)** —
+todas as 7 specs `done`. Smoke real validou em jogo vivo: criação com ids canônicos e
+auto-equip; Gemini mapeou HABILIDADE NOVA da árvore ("carga de lança" → cooldown+custo
+reais); kill → +50 XP → nível 2 → `/game/levelup` com lock de ramo em produção (ramo
+rival 400); compra real no Empório (TradeIntent → preço Python 50×1.2=60, estoque
+decrementa); poção bebida EM combate (item_id do Gemini, qty 2→1); morte com fecho de
+saga narrado pelo Gemini + milestone "Aqui termina a saga" + memorial 409.
+**4 bugs achados e corrigidos pelo smoke** (MockLLM escondia todos): (1) `/game/new`
+descartava `equipment`/`pending_choices` ao remontar o player (api+CLI); (2) XP de
+beat grátis no prólogo (gate turn_count>1 — abertura roda com turn=1); (3) `_narrate`
+do loot só mandava SystemMessage (Gemini exige HumanMessage) e duplicava o [SISTEMA]
+no fallback; (4) `game_over` não existia no `GameState` → LangGraph DESCARTAVA o
+update do nó (canal validado via grafo). Pendente: playtest de balanceamento.
 **4.5 (party):** companion = ficha estilo bestiário no MESMO motor (perfis 2.5b via
 `resolve_ally_turn`); recrutamento/esperar/seguir/dispensar interceptados por regex +
 gate Python no npc_actor (relationship ≥7, teto 3, fação hostil nega — LLM não decide);

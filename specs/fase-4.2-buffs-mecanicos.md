@@ -1,7 +1,6 @@
 # SPEC — Fase 4.2: Buffs, passivas e condições mecânicas de verdade
 
-> **Status:** `in-progress` — **Etapas 1–5 implementadas** (2026-07-04, 382 testes
-> verdes); falta SÓ o smoke com LLM real (§6) para `done`.
+> **Status:** `done` (2026-07-05 — smoke com LLM real executado; ver ESTADO_ATUAL/CHANGELOG)
 > **Criada:** 2026-07-03 · **Atualizada:** 2026-07-03
 > **Depende de:** Fase 4.1 (schema `effects` tipado nas habilidades; árvores da 4.1b o preenchem)
 > **Desbloqueia:** Fase 4.5 (aliados usam o mesmo motor de condições), 4.6 (habilidades de inimigos com efeitos)

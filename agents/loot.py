@@ -58,9 +58,13 @@ def _narrate(context: str, fallback_text: str) -> str:
         llm = get_llm(temperature=0.6, tier=ModelTier.SMART)
         if getattr(llm, "is_fallback", False):
             raise RuntimeError("fallback")
-        res = llm.invoke([SystemMessage(content=(
-            "Narre em 1-2 frases, tom dark fantasy (Valoria), o resultado MECÂNICO "
-            "abaixo. NÃO altere números nem invente itens extras.\n" + context))])
+        # Gemini exige >=1 mensagem não-system (achado do smoke real 2026-07-05)
+        res = llm.invoke([
+            SystemMessage(content=(
+                "Narre em 1-2 frases, tom dark fantasy (Valoria), o resultado MECÂNICO "
+                "do jogador. NÃO altere números nem invente itens extras.")),
+            HumanMessage(content=context),
+        ])
         text = str(getattr(res, "content", "") or "").strip()
         if text:
             return text
@@ -104,7 +108,7 @@ def loot_node(state: GameState):
                    f" (total {outcome['player'].get('gold', 0)})")
         resumo = (f"{outcome['mode'].upper()}: {outcome['qty']}x {outcome['item_name']}, "
                   f"ouro {delta:+d}, ouro final {outcome['player'].get('gold', 0)}")
-        msg = _narrate(resumo, sistema)
+        msg = _narrate(resumo, "O negócio se fecha sem cerimônia.")
         return {
             "player": outcome["player"],
             "world": outcome.get("world", world),
@@ -131,7 +135,7 @@ def loot_node(state: GameState):
     sistema = f"[SISTEMA] {achado}"
     msg = _narrate(
         f"O jogador vasculha {loc.get('name', 'o local')} (perigo {danger}) e encontra: {achado}.",
-        f"Você vasculha os escombros. {achado}.")
+        "Você vasculha os escombros e recolhe o que a poeira escondia.")
     return {
         "player": player,
         "world": world,

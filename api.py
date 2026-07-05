@@ -461,10 +461,18 @@ def new_game(req: CreateCharacterRequest):
             "alignment": "Neutro",
             "attributes": final_char["attributes"],
             "inventory": final_char["inventory"],
+            # Fase 4.3: slots do creator (auto-equip) — sem isto o HUD nasce sem arma
+            "equipment": final_char.get("equipment",
+                                        {"weapon": None, "armor": None, "accessory": None}),
             "known_abilities": final_char["known_abilities"],
+            "pending_choices": final_char.get("pending_choices", []),
             "defense": final_char["defense"],
             "attack_bonus": final_char.get("attack_bonus", 0),
-            "active_conditions": []
+            "active_conditions": [],
+            # Fase 2.5b: traits raciais calculados no creator
+            "racial_traits": final_char.get("racial_traits", []),
+            "condition_resists": final_char.get("condition_resists", []),
+            "racial_save_bonus": final_char.get("racial_save_bonus", {}),
         },
         "world": starting_world(final_char["region"], req.level),
         "messages": [

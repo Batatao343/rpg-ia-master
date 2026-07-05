@@ -243,6 +243,8 @@ class GameState(TypedDict):
     narrative_summary: str # Resumo de curto prazo (contexto comprimido)
     archivist_last_run: int # Controle de frequência do arquivista
     archive_due: bool       # flag transitória: evento relevante pede arquivamento (cadência)
+    game_over: bool         # Fase 4.6: player morreu — save vira memorial (sem chave no
+                            # GameState o LangGraph DESCARTA o update; achado do smoke real)
     chronicle: List[ChronicleChapter]  # Crônica por capítulos: milestones (event_log) + prosa de menestrel
 
     messages: Annotated[List[BaseMessage], operator.add]

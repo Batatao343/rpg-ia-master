@@ -180,10 +180,17 @@ def create_character_wizard():
             "alignment": "Neutro",
             "attributes": final_char["attributes"],
             "inventory": final_char["inventory"],
+            # Fase 4.3: slots do creator (auto-equip)
+            "equipment": final_char.get("equipment",
+                                        {"weapon": None, "armor": None, "accessory": None}),
             "known_abilities": final_char["known_abilities"],
+            "pending_choices": final_char.get("pending_choices", []),
             "defense": final_char["defense"],
             "attack_bonus": final_char.get("attack_bonus", 0),
-            "active_conditions": []
+            "active_conditions": [],
+            "racial_traits": final_char.get("racial_traits", []),
+            "condition_resists": final_char.get("condition_resists", []),
+            "racial_save_bonus": final_char.get("racial_save_bonus", {}),
         },
         "world": starting_world(final_char["region"], level),
         "messages": [

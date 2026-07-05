@@ -1,7 +1,6 @@
 # SPEC — Fase 4.5: Party — aliados em combate
 
-> **Status:** `in-progress` — **Etapas 1–5 implementadas** (2026-07-05, 443 testes
-> verdes + build web); falta SÓ o smoke com LLM real (§6) para `done`.
+> **Status:** `done` (2026-07-05 — smoke com LLM real executado; ver ESTADO_ATUAL/CHANGELOG)
 > Desvios da spec: recrutamento/comandos de party interceptados DETERMINISTICAMENTE
 > no npc_actor (regex + gate Python, sem campo novo no structured output — mais
 > robusto que pedir ao LLM); limiar de relationship = 7 na escala real 0..10 (spec

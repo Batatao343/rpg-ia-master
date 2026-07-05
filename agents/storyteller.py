@@ -324,7 +324,10 @@ def storyteller_node(state: GameState):
         # valor/level up são do motor). Level ups viram eventos source="progression".
         leveled_player = None
         level_up_events: list = []
-        if beat_done:
+        # Cena de abertura roda com turn_count==1 (campaign_manager incrementa antes):
+        # narrador generoso marcando beat no prólogo não pode virar XP grátis na
+        # criação (achado do smoke real 2026-07-05). XP de beat só do turno 2 em diante.
+        if beat_done and int(world.get("turn_count", 0) or 0) > 1:
             from progression import grant_xp, XP_PER_BEAT
             base_p = rested_player if rested_player is not None else dict(state.get("player") or {})
             leveled_player, level_up_events = grant_xp(base_p, XP_PER_BEAT)

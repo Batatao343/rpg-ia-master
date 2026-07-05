@@ -1,7 +1,6 @@
 # SPEC — Fase 4.6: Dificuldade, IA de combate e morte
 
-> **Status:** `in-progress` — **Etapas 1–5 implementadas** (2026-07-05, 461 testes
-> verdes + smoke_api + build web); falta SÓ o smoke com LLM real (§6) para `done`.
+> **Status:** `done` (2026-07-05 — smoke com LLM real executado; ver ESTADO_ATUAL/CHANGELOG)
 > Desvios: narração de morte reusa a chamada SMART do próprio round (com instrução
 > de fecho de saga) + template determinístico SEMPRE anexado (☠); tela de morte da
 > web reusa o overlay existente (a narrativa chega pelo log normal); curadoria R4
