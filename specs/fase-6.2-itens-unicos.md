@@ -21,10 +21,15 @@ antes de entregar. Zero sistema paralelo.
 
 ## 2. Requisitos
 
-- **R1 (flag)** — `artifacts.json`: `"unique": true` em artefatos nomeados.
-  Primeira leva: criar 3–5 artefatos únicos ancorados no Codex (`data/codex/items/`
-  tem candidatos: Lágrima Negra de Morrakh, Coração de Éter...) com stats de
-  verdade e `rarity: "lendario"`. Anti-spoiler (regra 4.1b) vale para descrição.
+- **R1 (flag + autoria)** — `artifacts.json`: `"unique": true` em artefatos
+  nomeados. **Leva: ~20 artefatos únicos** ancorados no Codex (`data/codex/items/`
+  tem candidatos prontos: Lágrima Negra de Morrakh, Coração de Éter...; completar
+  com autoria nova nos pilares do mundo — processo e anti-spoiler da 4.1b, incl.
+  pesquisa via Grep e **executor Fable para a etapa de autoria**). Mix de
+  raridades para não inflacionar: ~10 `raro`, ~7 `epico`, ~3 `lendario`; stats
+  de verdade (`combat_stats`/`mechanics` que o motor resolve — zero item só-texto,
+  mesmo assert da 4.1b) e ~2 por região temática nas loot tables/mercadores
+  (curadoria: o machado anão fica em Skallgard, não no pântano).
 - **R2 (evento)** — Item único entrando no inventário do player → motor enfileira
   `unique_item_claimed` (`target_id` = item_id, `source="engine"`, gate anti-LLM
   no validator como `level_up`). `apply_event` registra em
@@ -53,7 +58,7 @@ antes de entregar. Zero sistema paralelo.
 
 | Arquivo | Mudança |
 |---|---|
-| `data/artifacts.json` | 3–5 únicos novos (`unique: true`, `rarity: lendario`, stats reais, lore do Codex sem spoiler) |
+| `data/artifacts.json` | ~20 únicos (`unique: true`, raridade rara/épica/lendária, stats reais, lore do Codex sem spoiler — autoria Fable) |
 | `services/structured_outputs.py` | `unique_item_claimed`/`unique_item_lost` no EventType |
 | `services/world_validators.py` | gate `source == "engine"` (padrão level_up) + item existe e é `unique` |
 | `services/event_processor.py` | `apply_event`: mantém `projection["unique_items"]` |
@@ -77,13 +82,20 @@ Decisões:
 1. **`source="engine"`** — únicos nunca são "reclamados" por proposta de LLM;
    o motor observa o inventário mudar e registra o fato.
 2. **Vendeu = mercador segura** — único não evapora nem re-dropa; rastreável.
-3. **Loot table**: único entra em pool `lendario` da tabela apenas de regiões
-   temáticas (curadoria) — chance real de achar, uma vez só.
+3. **Loot table**: único entra no pool da SUA raridade apenas em regiões
+   temáticas (~2 por região, curadoria) — chance real de achar, uma vez só;
+   alguns ficam em mercador especial (comprável caro) em vez de drop.
+4. **20 únicos ≠ 20 lendários**: mix de raridade segura a inflação; o que torna
+   especial é a unicidade + a história, não o número.
 
 ## 4. Plano passo a passo
 
-1. **Etapa 1 — dados**: 3–5 únicos autorados (pesquisa em `data/codex/items/` via
-   Grep; anti-spoiler). Testes de schema (`unique` ⇒ lendario + stats).
+1. **Etapa 1 — dados (autoria Fable)**: ~20 únicos autorados — pesquisa em
+   `data/codex/items/` + `world_story/` via Grep (candidatos existentes primeiro,
+   autoria nova nos pilares depois; anti-spoiler da 4.1b); distribuição ~2 por
+   região nas loot tables/mercadores. Testes de schema: `unique` ⇒ raridade ∈
+   {raro, epico, lendario} + stats reais (zero só-texto) + registrar tabela de
+   design (item × região × origem no Codex) em apêndice desta spec.
 2. **Etapa 2 — evento + projection**: testes de validator (gate engine, item
    inexistente/não-único rejeitado), apply, milestone.
 3. **Etapa 3 — gates de entrada**: testes por caminho (re-sorteio do loot,
@@ -93,6 +105,7 @@ Decisões:
 
 ## 5. Critérios de aceite
 
+- [ ] ~20 únicos autorados (mix raro/épico/lendário, ancorados no Codex, ~2 por região, zero só-texto)
 - [ ] Mesmo único NUNCA aparece duas vezes (loot/loja/craft/narrado) — teste e2e com rng varrido
 - [ ] Claim vira milestone na crônica com event_id auditável
 - [ ] Vender único → rastreado no mercador; recomprável; sem re-drop
