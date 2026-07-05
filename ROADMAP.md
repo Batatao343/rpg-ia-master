@@ -238,7 +238,9 @@ Depende de Fase 2.5+ estar estável (world_projection, revealed_facts).
 
 ## 🎮 PRIORIDADE ALTA — Fase 6 — Conteúdo sistêmico (evolução da economia 4.4) `AGORA`
 
-> **Priorizada antes da Fase 5** (decisão 2026-07-05). Specs escritas, `draft`:
+> **Priorizada antes da Fase 5** (decisão 2026-07-05).
+> **STATUS 2026-07-05: 6.1–6.5 IMPLEMENTADAS** (461 → 520 testes offline; falta
+> só o smoke com LLM real de cada fatia — rodar com quota fresca). Specs:
 > [6.1 — Economia viva (rotas/escassez/eventos)](specs/fase-6.1-economia-viva.md) ·
 > [6.2 — Itens únicos](specs/fase-6.2-itens-unicos.md) ·
 > [6.3 — Migração de monstros](specs/fase-6.3-migracao-de-monstros.md) ·
@@ -439,7 +441,7 @@ Antes: "mais features, sprites depois".
 1. **Fases 2.5-2.8** ✅ ENTREGUES: Codex, event_log, world_projection, rules engine, context builder.
 2. **Fase 3** ✅ ENTREGUE (2026-07-03): Clareza de campanha — diário/crônica, codex do jogador, quest log, visualização de estado.
 3. **Fase 4** ✅ COMPLETA (2026-07-05, 7 specs `done` + smoke real): Gameplay Core.
-4. **Fase 6** (AGORA — priorizada antes da 5, specs 6.1–6.3 `draft`): conteúdo sistêmico — economia viva (rotas/escassez), itens únicos, migração de monstros.
+4. **Fase 6** ✅ implementada (2026-07-05, smoke real pendente): economia viva, 20 itens únicos, migração de monstros, encontros sistêmicos, clima mecânico.
 5. **Fase 5** (depois da 6, quando o mundo estiver robusto): agentic playtest + telemetria.
 6. **Fase 7+** (depois): autoria/validação, arte, sprites.
 

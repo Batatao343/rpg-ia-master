@@ -8,6 +8,36 @@
 
 ## TL;DR — Em que pé está
 
+**Sessão 2026-07-05 (8): FASE 6 (Conteúdo sistêmico) INTEIRA implementada — 5 fatias.**
+461 → **520 testes offline verdes** + build web + smoke_api. Fase 6 foi PRIORIZADA
+antes da Fase 5 (playtest) por decisão do usuário. Pendente: smoke LLM real das
+fatias (§6 das specs — quota).
+**6.1 economia viva:** `route_blocked/cleared` no pipeline 2.6 (validator exige
+conexão direta do mapa); escassez por ALCANÇABILIDADE (BFS − rotas bloqueadas):
+produtor local ×0.6, alcançável ×1.0, isolado ×1.8 e some da loja; regra 2.7
+"porto hostil → rotas bloqueadas" (conditions novas `target_map_tag`/
+`new_controller_hostile`, targets `map_connections`); WorldMap traceja a rota.
+**6.2 itens únicos:** 20 artefatos do Codex (10 raros/7 épicos/3 lendários, ~2 por
+região, anti-spoiler) com `unique: true`; posse = fato do mundo
+(`unique_item_claimed/lost`, gate `source=engine` — LLM nunca decide); gates em
+loot/loja/craft/narrado; vendeu → mercador segura (recompra rastreada); milestone
+na crônica; ◆ no HUD.
+**6.3 migração de monstros:** `services/ecology.py` — `bestiary_knowledge` (3.2) é
+o censo; pressão de caça com decay (6 kills → peso 0.1; parar de caçar devolve),
+fação no controle ×2, migrante de região conectada (rotas 6.1 barram); loot
+regional perde drops de criatura suprimida; Codex mostra raridade.
+**6.4 encontros sistêmicos:** `detection_check` d20+WIS vs DC 8+2×danger →
+surpresa (±5 iniciativa, flag one-shot); tipos combate/armadilha/social/rastro
+por danger (reforço/fação = combate sempre); armadilha 100% Python (`traps.json`,
+condições 4.2, XP 25 na esquiva); rastro alimenta Codex + pista de tesouro
+(TREASURE seguinte rola banda alta); social = cena negociável. Zero LLM novo.
+**6.5 clima mecânico:** `weather.json` com cadeias de Markov por região; efeito é
+LEITURA (`weather_effects`), nunca condição gravada; neblina −detecção, nevasca
++1 período de viagem, miasma NEGA descanso ao relento e morde 1 HP/round outdoor
+(abrigo anula), chuva −1 acerto simétrico; fenômeno global de lista curada
+(`trigger_global_weather`; canal LLM fica p/ spec de clímax). Clima no topbar.
+
+
 **Sessão 2026-07-04/05 (7): FASE 4 (Gameplay Core) INTEIRA implementada em uma sessão.**
 313 → **461 testes offline verdes** + **smoke com LLM REAL executado (2026-07-05)** —
 todas as 7 specs `done`. Smoke real validou em jogo vivo: criação com ids canônicos e
@@ -160,7 +190,7 @@ existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arquivar
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 461 testes offline verdes (test_real_llm precisa de chave)
+uv run pytest                        # 520 testes offline verdes (test_real_llm precisa de chave)
 uv run python game_engine.py         # CLI
 uv run uvicorn api:app --port 8000   # API + frontend web (http://localhost:8000)
 uv run python rag.py                 # reindexar lore (data/codex/) + regras (data/rules.txt)
