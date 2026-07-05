@@ -100,6 +100,9 @@ def save_game_state(state: Dict[str, Any]) -> bool:
             "world_projection": state.get("world_projection", {}),
             "pending_world_events": state.get("pending_world_events", []),
 
+            # --- Fase 4.6: save morto vira memorial (não aceita ações) ---
+            "game_over": bool(state.get("game_over", False)),
+
             # --- Histórico ---
             "message_history": _serialize_messages(state.get("messages", []))
         }
@@ -183,8 +186,11 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
             # --- Recupera Mensagens ---
             "messages": _deserialize_messages(raw_data.get("message_history", [])),
             
+            # Fase 4.6: memorial
+            "game_over": bool(raw_data.get("game_over", False)),
+
             # Garante campos técnicos de fluxo
-            "next": "storyteller", 
+            "next": "storyteller",
             "needs_replan": False
         }
 

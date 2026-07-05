@@ -197,7 +197,7 @@ def test_codex_body_none_vazio():
 def test_combate_registra_encounter(monkeypatch):
     import agents.combat as combat
 
-    def fake_spawn(messages, target_hint):
+    def fake_spawn(messages, target_hint, state=None):
         enemy = dict(gamedata.BESTIARY[RATO])
         enemy["id"] = f"{RATO}_1"
         enemy["status"] = "ativo"

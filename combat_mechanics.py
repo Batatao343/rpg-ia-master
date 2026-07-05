@@ -894,6 +894,137 @@ def resolve_ally_turn(ally: Dict, enemies: List[Dict], rnd: int = 1) -> List[str
     return logs
 
 
+def usable_enemy_abilities(enemy: Dict) -> List[Dict]:
+    """Fase 4.6: habilidades MECÂNICAS do inimigo (dicts com id/custo/fórmula).
+    Strings legadas (decorativas) são ignoradas. Filtra custo e cooldown."""
+    out = []
+    cds = enemy.get("ability_cooldowns") or {}
+    for ab in enemy.get("abilities") or []:
+        if not isinstance(ab, dict) or not ab.get("id"):
+            continue
+        if int(cds.get(ab["id"], 0) or 0) > 0:
+            continue
+        cost = int(ab.get("cost", 0) or 0)
+        field = _resource_field(ab.get("resource_type", "")) if cost > 0 else None
+        if field and int(enemy.get(field, 0)) < cost:
+            continue
+        out.append(ab)
+    return out
+
+
+def _pick_enemy_ability(enemy: Dict, target: Dict, rnd: int) -> Optional[Dict]:
+    """Perfil decide QUANDO usar habilidade em vez de ataque básico (sem RNG)."""
+    usable = usable_enemy_abilities(enemy)
+    if not usable:
+        return None
+    profile = get_behavior(enemy)["profile"]
+    if profile == "tatico":
+        # abre com controle/efeito se o alvo ainda está limpo
+        if not (target.get("active_conditions") or []):
+            with_fx = [a for a in usable if a.get("effects") or a.get("conditions")]
+            if with_fx:
+                return with_fx[0]
+        return None
+    if profile == "feroz":
+        best = max(usable, key=lambda a: _avg_damage(a.get("damage_formula")))
+        return best if _avg_damage(best.get("damage_formula")) > 0 else None
+    if profile == "covarde":
+        deb = [a for a in usable
+               if any(e.get("kind") in ("debuff", "control")
+                      for e in (a.get("effects") or []) if isinstance(e, dict))]
+        return deb[0] if deb else None
+    # implacavel: rotação — habilidade nos rounds pares
+    return usable[(rnd // 2) % len(usable)] if rnd % 2 == 0 else None
+
+
+def _resolve_enemy_ability(enemy: Dict, ability: Dict, target: Dict,
+                           is_player: bool) -> List[str]:
+    """Resolve habilidade de inimigo com o MESMO vocabulário do player:
+    custo/cooldown -> d20 vs AC (se tem dano) -> save reduz metade -> effects 4.2."""
+    logs: List[str] = []
+    name = ability.get("name", ability.get("id", "habilidade"))
+    cost = int(ability.get("cost", 0) or 0)
+    field = _resource_field(ability.get("resource_type", "")) if cost > 0 else None
+    if field:
+        enemy[field] = int(enemy.get(field, 0)) - cost
+    cd = int(ability.get("cooldown", COOLDOWN_DEFAULT) or COOLDOWN_DEFAULT)
+    enemy.setdefault("ability_cooldowns", {})[ability["id"]] = cd
+
+    formula = str(ability.get("damage_formula", "0"))
+    has_dmg = bool(re.search(r"\d+d\d+", formula))
+    dmg = 0
+    if has_dmg:
+        atk_roll = random.randint(1, 20)
+        bonus = int(enemy.get("attack_mod", 0) or 0) + condition_modifiers(enemy)["attack"]
+        tgt_ac = _target_ac(target) if is_player else (
+            int(target.get("defense", 10)) + condition_modifiers(target)["ac"])
+        if atk_roll + bonus < tgt_ac and atk_roll != 20:
+            logs.append(f"{enemy['name']} usa {name}: erra ({atk_roll + bonus} vs AC {tgt_ac}).")
+            return logs
+        dmg, detail = resolve_damage_formula(formula, enemy)
+        if atk_roll == 20:
+            dmg *= 2
+    save_stat = ability.get("save_stat")
+    resisted = False
+    if save_stat:
+        dc = 10 + max(int(enemy.get("attack_mod", 0) or 0), 0)
+        stat = normalize_attr(save_stat)
+        save_mod = attr_mods(target.get("attributes", {})).get(stat, 0)
+        save_mod += int((target.get("racial_save_bonus") or {}).get(stat, 0))
+        save_mod += condition_modifiers(target)["save"]
+        roll = random.randint(1, 20) + save_mod
+        if roll >= dc:
+            resisted = True
+            dmg //= 2
+            logs.append(f"{target.get('name','Alvo')} resiste a {name} (save {roll} vs CD {dc}).")
+    if has_dmg:
+        target["hp"] = max(0, int(target.get("hp", 0)) - dmg)
+        logs.append(f"{enemy['name']} usa {name} em {target.get('name','o alvo')}: "
+                    f"{dmg} de dano (HP {target['hp']})")
+    else:
+        logs.append(f"{enemy['name']} usa {name}.")
+    if int(target.get("hp", 1)) > 0 and not resisted:
+        for eff in ability.get("effects") or []:
+            if not isinstance(eff, dict):
+                continue
+            if eff.get("kind") == "buff":
+                cond = _condition_from_effect(eff, name)
+                if cond:
+                    logs.append(apply_condition(enemy, cond))
+            else:
+                cond = _condition_from_effect(eff, name)
+                if cond:
+                    logs.append(apply_condition(target, cond))
+    if int(target.get("hp", 1)) <= 0:
+        if not is_player and target.get("status", "ativo") == "ativo":
+            target["status"] = "morto"
+            target["active"] = False
+            logs.append(f"{target.get('name','O aliado')} CAI em combate.")
+    return logs
+
+
+def apply_boss_phase(enemy: Dict) -> Optional[str]:
+    """Fase 4.6 (R5): threshold de HP% troca perfil/adiciona habilidades UMA vez.
+    behavior.phases = [{below, profile?, add_abilities?[dicts], once_log?}]."""
+    phases = (enemy.get("behavior") or {}).get("phases") or []
+    if not phases:
+        return None
+    ratio = int(enemy.get("hp", 0)) / max(1, int(enemy.get("max_hp", 1)))
+    cur = int(enemy.get("_phase", -1))
+    for idx, ph in enumerate(phases):
+        if idx > cur and ratio <= float(ph.get("below", 0) or 0):
+            enemy["_phase"] = idx
+            b = dict(enemy.get("behavior") or {})
+            if ph.get("profile"):
+                b["profile"] = ph["profile"]
+            enemy["behavior"] = b
+            for ab in ph.get("add_abilities") or []:
+                if isinstance(ab, dict):
+                    enemy.setdefault("abilities", []).append(dict(ab))
+            return ph.get("once_log") or f"{enemy.get('name','O inimigo')} muda de postura!"
+    return None
+
+
 def resolve_enemy_turn(enemy: Dict, player: Dict,
                        allies: Optional[List[Dict]] = None, rnd: int = 1,
                        hero_side: Optional[List[Dict]] = None) -> List[str]:
@@ -907,14 +1038,25 @@ def resolve_enemy_turn(enemy: Dict, player: Dict,
     if has_control(enemy, "stun"):
         return [f"{enemy.get('name','Inimigo')} está ATORDOADO e perde o turno."]
 
+    # Fase 4.6: cooldowns do inimigo tickam; boss pode trocar de FASE (uma vez).
+    tick_cooldowns(enemy)
+    phase_log = apply_boss_phase(enemy)
+    if phase_log:
+        logs.append(f"⚠ {phase_log}")
+
     flee_log = check_morale(enemy, allies)
     if flee_log:
-        return [flee_log]
+        return logs + [flee_log]
 
     # Fase 4.5 (R4): alvo tático entre player + aliados ativos (perfil decide).
     targets = [t for t in (hero_side or [player]) if t is not None]
     target = pick_target(enemy, targets) or player
     is_player = (target is player) or ("class_name" in target)
+
+    # Fase 4.6 (R3): perfil decide se usa HABILIDADE em vez de ataque básico.
+    ability = _pick_enemy_ability(enemy, target, rnd)
+    if ability:
+        return logs + _resolve_enemy_ability(enemy, ability, target, is_player)
 
     tgt_ac = _target_ac(target)
     atk = choose_enemy_attack(enemy, tgt_ac, rnd, target if is_player else None)

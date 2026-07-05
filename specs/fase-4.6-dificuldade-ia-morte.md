@@ -1,6 +1,11 @@
 # SPEC — Fase 4.6: Dificuldade, IA de combate e morte
 
-> **Status:** `draft`
+> **Status:** `in-progress` — **Etapas 1–5 implementadas** (2026-07-05, 461 testes
+> verdes + smoke_api + build web); falta SÓ o smoke com LLM real (§6) para `done`.
+> Desvios: narração de morte reusa a chamada SMART do próprio round (com instrução
+> de fecho de saga) + template determinístico SEMPRE anexado (☠); tela de morte da
+> web reusa o overlay existente (a narrativa chega pelo log normal); curadoria R4
+> por tema/palavra-chave cobriu 12 elites + 7 bosses (todos com fases).
 > **Criada:** 2026-07-03 · **Atualizada:** 2026-07-03
 > **Depende de:** Fase 4.1 (nível do player p/ orçamento) · 4.2 (condições — habilidades de inimigo aplicam) · 4.5 (party no orçamento de encontro)
 > **Desbloqueia:** fecha a Fase 4 (Gameplay Core)

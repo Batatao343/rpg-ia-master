@@ -122,6 +122,13 @@ def _v_level_up(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationRe
     return ValidationResult(True)
 
 
+def _v_player_died(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    """Fase 4.6: evento do motor (combate) — gate anti-LLM em validate_proposal."""
+    if ev.target_id != "player":
+        return ValidationResult(False, "player_died é sempre do player")
+    return ValidationResult(True)
+
+
 _VALIDATORS = {
     "npc_killed": _v_npc_killed,
     "secret_revealed": _v_secret_revealed,
@@ -130,6 +137,7 @@ _VALIDATORS = {
     "faction_relation_changed": _v_faction_relation_changed,
     "reputation_changed": _v_reputation_changed,
     "level_up": _v_level_up,
+    "player_died": _v_player_died,
 }
 
 
@@ -145,6 +153,9 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
     # `source` (o schema ProposedWorldEvent não tem o campo) e é rejeitada aqui.
     if ev.type == "level_up" and proposal.get("source") != "progression":
         return ValidationResult(False, "level_up é gerado pelo motor, não proposto")
+    # Fase 4.6: player_died idem — só o combate emite.
+    if ev.type == "player_died" and proposal.get("source") != "combat":
+        return ValidationResult(False, "player_died é gerado pelo motor, não proposto")
 
     projection = state.get("world_projection") or {}
     turn = (state.get("world") or {}).get("turn_count", 0)

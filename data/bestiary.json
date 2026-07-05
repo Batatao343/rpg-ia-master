@@ -123,7 +123,29 @@
             "flee_below": 0.3,
             "pack_morale": true
         },
-        "faction": "legiao_ferro"
+        "faction": "legiao_ferro",
+        "abilities": [
+            {
+                "id": "grito_de_comando",
+                "name": "Grito de Comando",
+                "cost": 5,
+                "resource_type": "Estamina",
+                "damage_formula": "0",
+                "damage_type": "Buff",
+                "save_stat": null,
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "buff",
+                        "stat": "damage",
+                        "delta": 3,
+                        "duration": 2
+                    }
+                ]
+            }
+        ],
+        "stamina": 12,
+        "mana": 10
     },
     "enemy_iniciado_chama_azul": {
         "id": "enemy_iniciado_chama_azul",
@@ -248,7 +270,29 @@
         ],
         "behavior": {
             "profile": "feroz"
-        }
+        },
+        "abilities": [
+            {
+                "id": "presas_peconhentas",
+                "name": "Presas Peçonhentas",
+                "cost": 4,
+                "resource_type": "Estamina",
+                "damage_formula": "1d6",
+                "damage_type": "Veneno",
+                "save_stat": "con",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "dot",
+                        "stat": null,
+                        "delta": 3,
+                        "duration": 3
+                    }
+                ]
+            }
+        ],
+        "stamina": 12,
+        "mana": 10
     },
     "enemy_mumia_de_po": {
         "id": "enemy_mumia_de_po",
@@ -283,7 +327,29 @@
         ],
         "behavior": {
             "profile": "implacavel"
-        }
+        },
+        "abilities": [
+            {
+                "id": "grito_de_comando",
+                "name": "Grito de Comando",
+                "cost": 5,
+                "resource_type": "Estamina",
+                "damage_formula": "0",
+                "damage_type": "Buff",
+                "save_stat": null,
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "buff",
+                        "stat": "damage",
+                        "delta": 3,
+                        "duration": 2
+                    }
+                ]
+            }
+        ],
+        "stamina": 12,
+        "mana": 10
     },
     "enemy_hospedeiro_fungico": {
         "id": "enemy_hospedeiro_fungico",
@@ -356,7 +422,30 @@
         ],
         "behavior": {
             "profile": "implacavel"
-        }
+        },
+        "abilities": [
+            {
+                "id": "investida_brutal",
+                "name": "Investida Brutal",
+                "cost": 5,
+                "resource_type": "Estamina",
+                "damage_formula": "2d6",
+                "damage_type": "Contundente",
+                "save_stat": "str",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 1,
+                        "control": "root"
+                    }
+                ]
+            }
+        ],
+        "stamina": 12,
+        "mana": 10
     },
     "enemy_guerreiro_bjorn": {
         "id": "enemy_guerreiro_bjorn",
@@ -471,7 +560,30 @@
         ],
         "behavior": {
             "profile": "implacavel"
-        }
+        },
+        "abilities": [
+            {
+                "id": "investida_brutal",
+                "name": "Investida Brutal",
+                "cost": 5,
+                "resource_type": "Estamina",
+                "damage_formula": "2d6",
+                "damage_type": "Contundente",
+                "save_stat": "str",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 1,
+                        "control": "root"
+                    }
+                ]
+            }
+        ],
+        "stamina": 12,
+        "mana": 10
     },
     "enemy_horror_esgoto": {
         "id": "enemy_horror_esgoto",
@@ -504,7 +616,30 @@
         ],
         "behavior": {
             "profile": "implacavel"
-        }
+        },
+        "abilities": [
+            {
+                "id": "investida_brutal",
+                "name": "Investida Brutal",
+                "cost": 5,
+                "resource_type": "Estamina",
+                "damage_formula": "2d6",
+                "damage_type": "Contundente",
+                "save_stat": "str",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 1,
+                        "control": "root"
+                    }
+                ]
+            }
+        ],
+        "stamina": 12,
+        "mana": 10
     },
     "enemy_necromante_renegado": {
         "id": "enemy_necromante_renegado",
@@ -548,7 +683,30 @@
             "profile": "covarde",
             "flee_below": 0.6,
             "pack_morale": false
-        }
+        },
+        "abilities": [
+            {
+                "id": "investida_brutal",
+                "name": "Investida Brutal",
+                "cost": 5,
+                "resource_type": "Estamina",
+                "damage_formula": "2d6",
+                "damage_type": "Contundente",
+                "save_stat": "str",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 1,
+                        "control": "root"
+                    }
+                ]
+            }
+        ],
+        "stamina": 12,
+        "mana": 10
     },
     "enemy_esqueleto_legiao_antiga": {
         "id": "enemy_esqueleto_legiao_antiga",
@@ -615,7 +773,29 @@
         ],
         "behavior": {
             "profile": "implacavel"
-        }
+        },
+        "abilities": [
+            {
+                "id": "toque_gelido",
+                "name": "Toque Gélido",
+                "cost": 4,
+                "resource_type": "Mana",
+                "damage_formula": "2d6",
+                "damage_type": "Necrótico",
+                "save_stat": "wis",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "debuff",
+                        "stat": "attack",
+                        "delta": -2,
+                        "duration": 2
+                    }
+                ]
+            }
+        ],
+        "stamina": 12,
+        "mana": 10
     },
     "enemy_gargula_ferro": {
         "id": "enemy_gargula_ferro",
@@ -684,7 +864,29 @@
             "profile": "tatico",
             "flee_below": 0.4,
             "pack_morale": false
-        }
+        },
+        "abilities": [
+            {
+                "id": "golpe_covarde",
+                "name": "Golpe Covarde",
+                "cost": 5,
+                "resource_type": "Estamina",
+                "damage_formula": "2d6",
+                "damage_type": "Perfurante",
+                "save_stat": null,
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "dot",
+                        "stat": null,
+                        "delta": 2,
+                        "duration": 2
+                    }
+                ]
+            }
+        ],
+        "stamina": 12,
+        "mana": 10
     },
     "enemy_urso_coruja_mutante": {
         "id": "enemy_urso_coruja_mutante",
@@ -723,7 +925,30 @@
         ],
         "behavior": {
             "profile": "feroz"
-        }
+        },
+        "abilities": [
+            {
+                "id": "pisao_esmagador",
+                "name": "Pisão Esmagador",
+                "cost": 6,
+                "resource_type": "Estamina",
+                "damage_formula": "2d8",
+                "damage_type": "Contundente",
+                "save_stat": "str",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 1,
+                        "control": "stun"
+                    }
+                ]
+            }
+        ],
+        "stamina": 12,
+        "mana": 10
     },
     "enemy_elemental_fogo_poluido": {
         "id": "enemy_elemental_fogo_poluido",
@@ -756,7 +981,29 @@
         ],
         "behavior": {
             "profile": "implacavel"
-        }
+        },
+        "abilities": [
+            {
+                "id": "labareda",
+                "name": "Labareda",
+                "cost": 5,
+                "resource_type": "Mana",
+                "damage_formula": "2d6",
+                "damage_type": "Fogo",
+                "save_stat": "dex",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "dot",
+                        "stat": null,
+                        "delta": 2,
+                        "duration": 2
+                    }
+                ]
+            }
+        ],
+        "stamina": 12,
+        "mana": 10
     },
     "enemy_boss_valerius": {
         "id": "enemy_boss_valerius",
@@ -796,9 +1043,77 @@
             "nova_arcadia"
         ],
         "behavior": {
-            "profile": "implacavel"
+            "profile": "implacavel",
+            "phases": [
+                {
+                    "below": 0.5,
+                    "profile": "feroz",
+                    "add_abilities": [
+                        {
+                            "id": "furia_final",
+                            "name": "Fúria Final",
+                            "cost": 0,
+                            "resource_type": "Nenhum",
+                            "damage_formula": "3d6",
+                            "damage_type": "Físico",
+                            "save_stat": null,
+                            "cooldown": 2,
+                            "effects": [
+                                {
+                                    "kind": "buff",
+                                    "stat": "damage",
+                                    "delta": 2,
+                                    "duration": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "once_log": "Lorde Protetor Valerius desperta de verdade — a luta muda de tom."
+                }
+            ]
         },
-        "faction": "legiao_ferro"
+        "faction": "legiao_ferro",
+        "abilities": [
+            {
+                "id": "grito_de_comando",
+                "name": "Grito de Comando",
+                "cost": 5,
+                "resource_type": "Estamina",
+                "damage_formula": "0",
+                "damage_type": "Buff",
+                "save_stat": null,
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "buff",
+                        "stat": "damage",
+                        "delta": 3,
+                        "duration": 2
+                    }
+                ]
+            },
+            {
+                "id": "rugido_aterrador",
+                "name": "Rugido Aterrador",
+                "cost": 6,
+                "resource_type": "Estamina",
+                "damage_formula": "0",
+                "damage_type": "Controle",
+                "save_stat": "wis",
+                "cooldown": 4,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 2,
+                        "control": "fear"
+                    }
+                ]
+            }
+        ],
+        "stamina": 20,
+        "mana": 15
     },
     "enemy_boss_vibora": {
         "id": "enemy_boss_vibora",
@@ -840,9 +1155,77 @@
         "behavior": {
             "profile": "tatico",
             "flee_below": 0.15,
-            "pack_morale": false
+            "pack_morale": false,
+            "phases": [
+                {
+                    "below": 0.5,
+                    "profile": "feroz",
+                    "add_abilities": [
+                        {
+                            "id": "furia_final",
+                            "name": "Fúria Final",
+                            "cost": 0,
+                            "resource_type": "Nenhum",
+                            "damage_formula": "3d6",
+                            "damage_type": "Físico",
+                            "save_stat": null,
+                            "cooldown": 2,
+                            "effects": [
+                                {
+                                    "kind": "buff",
+                                    "stat": "damage",
+                                    "delta": 2,
+                                    "duration": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "once_log": "A Víbora (Boss) desperta de verdade — a luta muda de tom."
+                }
+            ]
         },
-        "faction": "mao_sombria"
+        "faction": "mao_sombria",
+        "abilities": [
+            {
+                "id": "presas_peconhentas",
+                "name": "Presas Peçonhentas",
+                "cost": 4,
+                "resource_type": "Estamina",
+                "damage_formula": "1d6",
+                "damage_type": "Veneno",
+                "save_stat": "con",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "dot",
+                        "stat": null,
+                        "delta": 3,
+                        "duration": 3
+                    }
+                ]
+            },
+            {
+                "id": "rugido_aterrador",
+                "name": "Rugido Aterrador",
+                "cost": 6,
+                "resource_type": "Estamina",
+                "damage_formula": "0",
+                "damage_type": "Controle",
+                "save_stat": "wis",
+                "cooldown": 4,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 2,
+                        "control": "fear"
+                    }
+                ]
+            }
+        ],
+        "stamina": 20,
+        "mana": 15
     },
     "enemy_boss_general_escorpiao": {
         "id": "enemy_boss_general_escorpiao",
@@ -882,8 +1265,76 @@
             "deserto_zhur"
         ],
         "behavior": {
-            "profile": "feroz"
-        }
+            "profile": "feroz",
+            "phases": [
+                {
+                    "below": 0.5,
+                    "profile": "feroz",
+                    "add_abilities": [
+                        {
+                            "id": "furia_final",
+                            "name": "Fúria Final",
+                            "cost": 0,
+                            "resource_type": "Nenhum",
+                            "damage_formula": "3d6",
+                            "damage_type": "Físico",
+                            "save_stat": null,
+                            "cooldown": 2,
+                            "effects": [
+                                {
+                                    "kind": "buff",
+                                    "stat": "damage",
+                                    "delta": 2,
+                                    "duration": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "once_log": "General Escorpião desperta de verdade — a luta muda de tom."
+                }
+            ]
+        },
+        "abilities": [
+            {
+                "id": "presas_peconhentas",
+                "name": "Presas Peçonhentas",
+                "cost": 4,
+                "resource_type": "Estamina",
+                "damage_formula": "1d6",
+                "damage_type": "Veneno",
+                "save_stat": "con",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "dot",
+                        "stat": null,
+                        "delta": 3,
+                        "duration": 3
+                    }
+                ]
+            },
+            {
+                "id": "rugido_aterrador",
+                "name": "Rugido Aterrador",
+                "cost": 6,
+                "resource_type": "Estamina",
+                "damage_formula": "0",
+                "damage_type": "Controle",
+                "save_stat": "wis",
+                "cooldown": 4,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 2,
+                        "control": "fear"
+                    }
+                ]
+            }
+        ],
+        "stamina": 20,
+        "mana": 15
     },
     "enemy_boss_arauto_nevoa": {
         "id": "enemy_boss_arauto_nevoa",
@@ -924,8 +1375,76 @@
             "skallgard"
         ],
         "behavior": {
-            "profile": "implacavel"
-        }
+            "profile": "implacavel",
+            "phases": [
+                {
+                    "below": 0.5,
+                    "profile": "feroz",
+                    "add_abilities": [
+                        {
+                            "id": "furia_final",
+                            "name": "Fúria Final",
+                            "cost": 0,
+                            "resource_type": "Nenhum",
+                            "damage_formula": "3d6",
+                            "damage_type": "Físico",
+                            "save_stat": null,
+                            "cooldown": 2,
+                            "effects": [
+                                {
+                                    "kind": "buff",
+                                    "stat": "damage",
+                                    "delta": 2,
+                                    "duration": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "once_log": "O Arauto da Névoa desperta de verdade — a luta muda de tom."
+                }
+            ]
+        },
+        "abilities": [
+            {
+                "id": "toque_gelido",
+                "name": "Toque Gélido",
+                "cost": 4,
+                "resource_type": "Mana",
+                "damage_formula": "2d6",
+                "damage_type": "Necrótico",
+                "save_stat": "wis",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "debuff",
+                        "stat": "attack",
+                        "delta": -2,
+                        "duration": 2
+                    }
+                ]
+            },
+            {
+                "id": "rugido_aterrador",
+                "name": "Rugido Aterrador",
+                "cost": 6,
+                "resource_type": "Estamina",
+                "damage_formula": "0",
+                "damage_type": "Controle",
+                "save_stat": "wis",
+                "cooldown": 4,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 2,
+                        "control": "fear"
+                    }
+                ]
+            }
+        ],
+        "stamina": 20,
+        "mana": 15
     },
     "enemy_gigante_gelo_norte": {
         "id": "enemy_gigante_gelo_norte",
@@ -965,8 +1484,77 @@
             "skallgard"
         ],
         "behavior": {
-            "profile": "feroz"
-        }
+            "profile": "feroz",
+            "phases": [
+                {
+                    "below": 0.5,
+                    "profile": "feroz",
+                    "add_abilities": [
+                        {
+                            "id": "furia_final",
+                            "name": "Fúria Final",
+                            "cost": 0,
+                            "resource_type": "Nenhum",
+                            "damage_formula": "3d6",
+                            "damage_type": "Físico",
+                            "save_stat": null,
+                            "cooldown": 2,
+                            "effects": [
+                                {
+                                    "kind": "buff",
+                                    "stat": "damage",
+                                    "delta": 2,
+                                    "duration": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "once_log": "Titã de Gelo (Norte) desperta de verdade — a luta muda de tom."
+                }
+            ]
+        },
+        "abilities": [
+            {
+                "id": "pisao_esmagador",
+                "name": "Pisão Esmagador",
+                "cost": 6,
+                "resource_type": "Estamina",
+                "damage_formula": "2d8",
+                "damage_type": "Contundente",
+                "save_stat": "str",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 1,
+                        "control": "stun"
+                    }
+                ]
+            },
+            {
+                "id": "rugido_aterrador",
+                "name": "Rugido Aterrador",
+                "cost": 6,
+                "resource_type": "Estamina",
+                "damage_formula": "0",
+                "damage_type": "Controle",
+                "save_stat": "wis",
+                "cooldown": 4,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 2,
+                        "control": "fear"
+                    }
+                ]
+            }
+        ],
+        "stamina": 20,
+        "mana": 15
     },
     "enemy_mimico_bau": {
         "id": "enemy_mimico_bau",
@@ -1002,7 +1590,30 @@
         ],
         "behavior": {
             "profile": "implacavel"
-        }
+        },
+        "abilities": [
+            {
+                "id": "investida_brutal",
+                "name": "Investida Brutal",
+                "cost": 5,
+                "resource_type": "Estamina",
+                "damage_formula": "2d6",
+                "damage_type": "Contundente",
+                "save_stat": "str",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 1,
+                        "control": "root"
+                    }
+                ]
+            }
+        ],
+        "stamina": 12,
+        "mana": 10
     },
     "enemy_basilisco_caverna": {
         "id": "enemy_basilisco_caverna",
@@ -1768,8 +2379,8 @@
         "name": "Carniçal",
         "description": "Criatura hostil das ruínas.",
         "type": "Minion",
-        "hp": 14,
-        "max_hp": 14,
+        "hp": 22,
+        "max_hp": 22,
         "ac": 12,
         "attacks": [
             {
@@ -1791,22 +2402,19 @@
         },
         "abilities": [],
         "loot": [],
-        "status": "ativo",
-        "id": "enemy_carniçal",
-        "regions": [
-            "pantano_melancolia",
-            "pradaria_ruinas"
-        ],
         "behavior": {
             "profile": "feroz"
-        }
+        },
+        "regions": [],
+        "status": "ativo",
+        "id": "enemy_carniçal"
     },
     "enemy_esqueleto": {
         "name": "Esqueleto",
         "description": "Criatura hostil das ruínas.",
         "type": "Minion",
-        "hp": 25,
-        "max_hp": 25,
+        "hp": 24,
+        "max_hp": 24,
         "ac": 12,
         "attacks": [
             {
@@ -1828,15 +2436,12 @@
         },
         "abilities": [],
         "loot": [],
-        "status": "ativo",
-        "id": "enemy_esqueleto",
-        "regions": [
-            "pradaria_ruinas",
-            "aethelgard"
-        ],
         "behavior": {
-            "profile": "implacavel"
-        }
+            "profile": "feroz"
+        },
+        "regions": [],
+        "status": "ativo",
+        "id": "enemy_esqueleto"
     },
     "enemy_garrick,_o_silenciador": {
         "name": "Garrick, o Silenciador",
@@ -1905,8 +2510,8 @@
         "name": "Goblin",
         "description": "Criatura hostil das ruínas.",
         "type": "Minion",
-        "hp": 14,
-        "max_hp": 14,
+        "hp": 13,
+        "max_hp": 13,
         "ac": 12,
         "attacks": [
             {
@@ -1939,8 +2544,8 @@
         "name": "Bandido",
         "description": "Criatura hostil das ruínas.",
         "type": "Minion",
-        "hp": 13,
-        "max_hp": 13,
+        "hp": 16,
+        "max_hp": 16,
         "ac": 12,
         "attacks": [
             {
@@ -2000,14 +2605,82 @@
                 "damage": "2d8+6"
             }
         ],
-        "abilities": [],
+        "abilities": [
+            {
+                "id": "pisao_esmagador",
+                "name": "Pisão Esmagador",
+                "cost": 6,
+                "resource_type": "Estamina",
+                "damage_formula": "2d8",
+                "damage_type": "Contundente",
+                "save_stat": "str",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 1,
+                        "control": "stun"
+                    }
+                ]
+            },
+            {
+                "id": "rugido_aterrador",
+                "name": "Rugido Aterrador",
+                "cost": 6,
+                "resource_type": "Estamina",
+                "damage_formula": "0",
+                "damage_type": "Controle",
+                "save_stat": "wis",
+                "cooldown": 4,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 2,
+                        "control": "fear"
+                    }
+                ]
+            }
+        ],
         "loot": [],
         "regions": [
             "skallgard"
         ],
         "behavior": {
-            "profile": "feroz"
-        }
+            "profile": "feroz",
+            "phases": [
+                {
+                    "below": 0.5,
+                    "profile": "feroz",
+                    "add_abilities": [
+                        {
+                            "id": "furia_final",
+                            "name": "Fúria Final",
+                            "cost": 0,
+                            "resource_type": "Nenhum",
+                            "damage_formula": "3d6",
+                            "damage_type": "Físico",
+                            "save_stat": null,
+                            "cooldown": 2,
+                            "effects": [
+                                {
+                                    "kind": "buff",
+                                    "stat": "damage",
+                                    "delta": 2,
+                                    "duration": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "once_log": "Urso-Titã desperta de verdade — a luta muda de tom."
+                }
+            ]
+        },
+        "stamina": 20,
+        "mana": 15
     },
     "mon_lobo_de_vidro": {
         "id": "mon_lobo_de_vidro",
@@ -2853,15 +3526,83 @@
                 "damage": "2d8+6"
             }
         ],
-        "abilities": [],
+        "abilities": [
+            {
+                "id": "investida_brutal",
+                "name": "Investida Brutal",
+                "cost": 5,
+                "resource_type": "Estamina",
+                "damage_formula": "2d6",
+                "damage_type": "Contundente",
+                "save_stat": "str",
+                "cooldown": 3,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 1,
+                        "control": "root"
+                    }
+                ]
+            },
+            {
+                "id": "rugido_aterrador",
+                "name": "Rugido Aterrador",
+                "cost": 6,
+                "resource_type": "Estamina",
+                "damage_formula": "0",
+                "damage_type": "Controle",
+                "save_stat": "wis",
+                "cooldown": 4,
+                "effects": [
+                    {
+                        "kind": "control",
+                        "stat": null,
+                        "delta": 0,
+                        "duration": 2,
+                        "control": "fear"
+                    }
+                ]
+            }
+        ],
         "loot": [],
         "regions": [
             "costa_negra",
             "brekmar"
         ],
         "behavior": {
-            "profile": "implacavel"
-        }
+            "profile": "implacavel",
+            "phases": [
+                {
+                    "below": 0.5,
+                    "profile": "feroz",
+                    "add_abilities": [
+                        {
+                            "id": "furia_final",
+                            "name": "Fúria Final",
+                            "cost": 0,
+                            "resource_type": "Nenhum",
+                            "damage_formula": "3d6",
+                            "damage_type": "Físico",
+                            "save_stat": null,
+                            "cooldown": 2,
+                            "effects": [
+                                {
+                                    "kind": "buff",
+                                    "stat": "damage",
+                                    "delta": 2,
+                                    "duration": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "once_log": "O Que Come nas Praias desperta de verdade — a luta muda de tom."
+                }
+            ]
+        },
+        "stamina": 20,
+        "mana": 15
     },
     "enemy_pirata_brekmar": {
         "id": "enemy_pirata_brekmar",

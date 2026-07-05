@@ -79,8 +79,23 @@ class CombatAction(BaseModel):
     item_id: str = Field(default="", description="Se o jogador USA UM ITEM (poção etc.): id exato do item. Vazio caso contrário.")
 
 
+def _instance_from_template(template: Dict, i: int) -> Dict:
+    """Entrada de bestiário -> instância de combate (mesmos defaults do spawn)."""
+    inst = dict(template)
+    inst["id"] = f"{template.get('id', 'enemy')}_{i}"
+    inst.setdefault("stamina", 10)
+    inst.setdefault("mana", 0)
+    inst["defense"] = inst.get("defense", inst.get("ac", 10))
+    inst.setdefault("attack_mod", 0)
+    inst["active_conditions"] = []
+    inst.setdefault("status", "ativo")
+    inst.setdefault("behavior", {"profile": "feroz"})
+    inst["hp"] = inst.get("max_hp", inst.get("hp", 10))
+    return inst
+
+
 # --- SPAWN (mantém integração com bestiário/cache) ---
-def _spawn_enemies_integrated(messages: List, target_hint: str):
+def _spawn_enemies_integrated(messages: List, target_hint: str, state: Optional[Dict] = None):
     print(f"⚡ [COMBAT] Escaneando cena por inimigos. Dica: '{target_hint}'...")
     llm = get_llm(temperature=0.0, tier=ModelTier.FAST)
     sys_prompt = f"""
@@ -112,6 +127,26 @@ def _spawn_enemies_integrated(messages: List, target_hint: str):
                 # omitir -> default feroz = comportamento clássico "luta até morrer")
                 instance.setdefault("behavior", {"profile": "feroz"})
                 final_enemies_list.append(instance)
+        # Fase 4.6 (R1/R2): CLAMP + PISO determinísticos — o LLM narra a horda,
+        # o motor decide quantos entram de fato (orçamento por tier/nível/party).
+        if state is not None:
+            import encounter_budget as eb
+            import party as party_mod
+            from gamedata import get_location
+            world = state.get("world") or {}
+            danger = int(world.get("danger_level", 1) or 1)
+            level = int((state.get("player") or {}).get("level", 1) or 1)
+            n_allies = len(party_mod.active_allies(state))
+            budget = eb.encounter_budget(level, danger, n_allies)
+            final_enemies_list, cut_logs = eb.clamp_encounter(final_enemies_list, budget)
+            loc = get_location(world.get("current_location_id", "")) or {}
+            final_enemies_list, fill_logs = eb.fill_encounter(
+                final_enemies_list, budget, loc, danger,
+                turn=int(world.get("turn_count", 0) or 0),
+                make_instance=_instance_from_template)
+            extra = " ".join(cut_logs + fill_logs)
+            if extra:
+                return final_enemies_list, f"{scan_result.flavor_text} {extra}".strip()
         return final_enemies_list, scan_result.flavor_text
 
     except Exception as e:
@@ -218,9 +253,19 @@ def _parse_combat_action(player: Dict, enemies: List[Dict], intent: str) -> Dict
 
 
 # --- NARRAÇÃO (IA descreve o log mecânico) ---
+def _death_template(player: Dict, enemies: List[Dict], world: Dict) -> str:
+    """Fase 4.6: fecho determinístico de morte (mock/fallback/quota) — digno."""
+    killer = next((e.get("name") for e in enemies if e.get("status") == "ativo"), "as feridas")
+    loc = world.get("current_location", "terras desconhecidas")
+    day = (world.get("world_clock") or {}).get("day", "?")
+    return (f"{player.get('name', 'O herói')}, {player.get('class_name', 'andarilho')}, "
+            f"caiu em {loc} no dia {day}, diante de {killer}. "
+            f"A crônica guarda o que a estrada levou.")
+
+
 def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
              spawned_flavor: Optional[str], intent: str, victory: bool,
-             world_ctx: str = "") -> str:
+             world_ctx: str = "", player_dead: bool = False) -> str:
     log_str = "\n".join(logs) if logs else "Nada acontece."
     alive = [f"{e['name']} (HP {e['hp']}/{e['max_hp']})" for e in enemies if e.get("status") == "ativo"]
     sys = SystemMessage(content=f"""
@@ -241,7 +286,7 @@ def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
     Herói: {player.get('name')} HP {player.get('hp')}/{player.get('max_hp')}
     Inimigos vivos: {', '.join(alive) if alive else 'nenhum'}
 
-    {"O combate foi VENCIDO — encerre com o respiro da vitória." if victory else "Termine com tensão e uma deixa para a próxima ação do jogador."}
+    {"O HERÓI MORREU NESTE ROUND — narre a queda como o FECHO de uma saga: solene, definitivo, digno da crônica (3 a 4 frases). Sem deixa para próxima ação." if player_dead else ("O combate foi VENCIDO — encerre com o respiro da vitória." if victory else "Termine com tensão e uma deixa para a próxima ação do jogador.")}
     """)
     try:
         llm = get_llm(temperature=0.6, tier=ModelTier.SMART)
@@ -285,7 +330,7 @@ def combat_node(state: GameState):
     bk_changed = False
     turn = int(state.get("world", {}).get("turn_count", 0) or 0)
     if is_combat_start and not active:
-        enemies, spawned_flavor = _spawn_enemies_integrated(messages, combat_target)
+        enemies, spawned_flavor = _spawn_enemies_integrated(messages, combat_target, state)
         active = [e for e in enemies if e.get("status") == "ativo"]
         print(f"⚔️ Combate: {[e['name'] for e in active]}")
         # Fase 3.2 (R2): 1ª vez que estas criaturas entram em cena neste combate.
@@ -392,12 +437,18 @@ def combat_node(state: GameState):
             player, level_up_events = pg.grant_xp(player, xp)
             logs.append(f"+{xp} XP" + (f" — NÍVEL {player['level']}!" if level_up_events else ""))
 
+    # Fase 4.6 (R6): morte do player — fecho de saga (1 SMART com guard; sem LLM
+    # cai no template determinístico digno).
+    player_dead = int(player.get("hp", 0)) <= 0
+
     # Fase 2.8: pack enxuto (só ambientação; mecânica segue 100% Python).
     loc = state.get("world", {}).get("current_location", "")
     world_pack = build_context_pack(state, query=f"{loc} {intent}",
                                     purpose="combat_narration", token_budget=1200)
     narrative = _narrate(player, enemies, logs, spawned_flavor, intent, combat_over,
-                         world_pack.world_state_block)
+                         world_pack.world_state_block, player_dead=player_dead)
+    if player_dead:
+        narrative = f"{narrative}\n\n☠️ {_death_template(player, enemies, state.get('world') or {})}"
 
     result = {
         "messages": [AIMessage(content=narrative)],
@@ -429,10 +480,24 @@ def combat_node(state: GameState):
                     "payload": {}, "source": "combat",
                 })
 
+    # Fase 4.6 (R6/R7): morte do player fecha a campanha — save vira MEMORIAL.
+    death_events = []
+    if player_dead:
+        result["game_over"] = True
+        result["combat"] = {**combat_meta, "active": False}
+        killer = next((e.get("name") for e in enemies if e.get("status") == "ativo"), "")
+        death_events.append({
+            "type": "player_died", "actor_id": "player", "target_id": "player",
+            "detail": f"{player.get('name','O herói')} caiu em combate"
+                      + (f" diante de {killer}" if killer else ""),
+            "payload": {"killer": killer, "location": loc},
+            "source": "combat",
+        })
+
     # Fase 2.6 (R5): morte de inimigo CANÔNICO vira npc_killed determinístico (sem LLM).
     # O motor já sabe quem caiu; ids genéricos de bestiário não geram evento.
     # Fase 4.1: level_up (source=progression) entra na mesma fila.
-    engine_events = _kill_events(dead) + level_up_events + fallen_events
+    engine_events = _kill_events(dead) + level_up_events + fallen_events + death_events
     if engine_events:
         result["pending_world_events"] = (state.get("pending_world_events", []) or []) + engine_events
 

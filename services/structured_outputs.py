@@ -25,6 +25,8 @@ EventType = Literal[
     # propor: validate_proposal exige source="progression", e o schema de proposta
     # do LLM não tem campo source (model_dump nunca o carrega).
     "level_up",
+    # Fase 4.6: idem — gerado só pelo combate (source="combat" exigido no validator).
+    "player_died",
 ]
 
 

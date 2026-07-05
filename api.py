@@ -507,9 +507,14 @@ def game_action(req: ActionRequest):
         file_to_load = f"saves/{req.game_id}.json"
 
     state = load_game_state(file_to_load)
-    
+
     if not state:
         raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+
+    # Fase 4.6 (R7): save morto é MEMORIAL — a crônica fica, ações não.
+    if state.get("game_over"):
+        raise HTTPException(status_code=409,
+                            detail="Esta saga terminou. A crônica permanece como memorial — comece uma nova jornada.")
 
     # Adiciona Input
     user_msg = HumanMessage(content=req.input_text)
