@@ -169,8 +169,10 @@ def storyteller_node(state: GameState):
         )
     # (Ação livre: o gating é feito pelo PRÓPRIO narrador no prompt — sem chamada extra ao Ruler.)
 
-    # --- O tempo passou (viagem/descanso): ou cai em emboscada, ou o mundo "respira" ---
+    # --- O tempo passou (viagem/descanso): ou cai em encontro, ou o mundo "respira" ---
     world_note = ""
+    extra_engine_events: list = []
+    track_bk = None  # Fase 6.4: rastro atualiza o Codex do jogador
     if dest or rested_player is not None:
         turn = int(world.get("turn_count", 0))
         # Fase 6.3: sorteio ponderado — pressão de caça/fação/migração
@@ -178,25 +180,61 @@ def storyteller_node(state: GameState):
                               bestiary_knowledge=state.get("bestiary_knowledge"),
                               projection=state.get("world_projection"))
         if enc:
-            # Emboscada: curto-circuita para o combate (sem simular — poupa quota).
             world["last_encounter_turn"] = turn
-            updates = {
-                "messages": [SystemMessage(content=f"COMBAT START. {enc['flavor']}")],
-                "world": world,
-                "factions": factions,
-                "combat_target": enc["hint"],
-                "next": "combat_agent",
-                "archive_due": True,  # emboscada = evento relevante
-            }
-            if rested_player is not None:
-                updates["player"] = rested_player  # já curou no descanso antes da emboscada
-            # Fase 3.2 (R3): criatura nomeada no hint ANTES do combate = rumor (seen, sem fought).
-            enemy_id = enc.get("enemy_id")
-            if enemy_id:
-                updates["bestiary_knowledge"] = disc.record_rumor(
-                    state.get("bestiary_knowledge", {}), enemy_id, turn
-                )
-            return updates
+            danger = int(world.get("danger_level", 1) or 1)
+            base_p = rested_player if rested_player is not None else dict(state.get("player") or {})
+
+            # Fase 6.4 (R1): percepção decide surpresa; (R2): nem todo perigo é combate.
+            # Reforço/fação dominante SEMPRE é combate (eles vieram POR você).
+            from world_utils import detection_check, resolve_trap, resolve_track, roll_encounter_type
+            det = detection_check(base_p, danger)
+            kind = ("combat" if enc.get("reason") in ("reinforcements", "controlled")
+                    else roll_encounter_type(danger))
+
+            if kind == "combat":
+                # surpresa: percebeu -> herói embosca; falhou -> inimigo age antes
+                world["encounter_surprise"] = "player" if det["perceived"] else "enemy"
+                sur_txt = ("Você os percebe ANTES — a primeira lâmina é sua."
+                           if det["perceived"] else
+                           "Eles saem do nada — você é pego de surpresa.")
+                updates = {
+                    "messages": [SystemMessage(content=f"COMBAT START. {enc['flavor']} {sur_txt}")],
+                    "world": world,
+                    "factions": factions,
+                    "combat_target": enc["hint"],
+                    "next": "combat_agent",
+                    "archive_due": True,  # emboscada = evento relevante
+                }
+                if rested_player is not None:
+                    updates["player"] = rested_player  # já curou no descanso antes da emboscada
+                # Fase 3.2 (R3): criatura nomeada no hint ANTES do combate = rumor.
+                enemy_id = enc.get("enemy_id")
+                if enemy_id:
+                    updates["bestiary_knowledge"] = disc.record_rumor(
+                        state.get("bestiary_knowledge", {}), enemy_id, turn)
+                return updates
+
+            from gamedata import get_location
+            loc_node = get_location(world.get("current_location_id", "")) or {}
+            if kind == "trap":
+                new_p, trap_logs, info = resolve_trap(base_p, loc_node, danger)
+                rested_player = new_p  # reusa o encanamento de player existente
+                world_note = "ENCONTRO NA ESTRADA (armadilha — números JÁ resolvidos, narre-os):\n" \
+                    + "\n".join(trap_logs)
+                if info:
+                    extra_engine_events += info.get("level_up_events", [])
+            elif kind == "track":
+                track_bk, note, hint = resolve_track(state.get("bestiary_knowledge", {}),
+                                                     loc_node, danger, turn)
+                if hint:
+                    world["treasure_hint"] = True
+                world_note = f"ENCONTRO NA ESTRADA (rastro): {note}"
+            else:  # social
+                world_note = (
+                    "ENCONTRO NA ESTRADA (social): um grupo HOSTIL-MAS-NEGOCIÁVEL aborda o "
+                    "jogador (ligado ao perigo local). Narre a abordagem tensa SEM iniciar "
+                    "combate — eles querem algo (pedágio, informação, escolta). Se surgir um "
+                    "porta-voz, registre-o em introduced_npcs.")
         # Sem emboscada: o mundo gera 1 evento off-screen narrado (e grava no RAG da sessão).
         try:
             world, world_note = simulate_world(state, world, factions, intel, 1 if dest else 2)
@@ -389,10 +427,13 @@ def storyteller_node(state: GameState):
         # Viagem/descanso/beat concluído = evento relevante → pede arquivamento.
         if dest or rested_player is not None or beat_done:
             updates["archive_due"] = True
+        if track_bk is not None:  # Fase 6.4: rastro alimenta o Codex (3.2)
+            updates["bestiary_knowledge"] = track_bk
         # Fase 2.6: enfileira propostas de evento estruturado (motor valida no archivist).
         # Fase 3.4: reputation_changed (Python) entra na mesma fila. 4.1: level_up idem.
+        # Fase 6.4: XP de esquiva de armadilha pode ter gerado level_up.
         pending = ([e.model_dump() for e in getattr(update, "proposed_events", []) or []]
-                   + rep_events + level_up_events)
+                   + rep_events + level_up_events + extra_engine_events)
         if pending:
             updates["pending_world_events"] = (state.get("pending_world_events", []) or []) + pending
             updates["archive_due"] = True  # mudança de mundo é evento relevante

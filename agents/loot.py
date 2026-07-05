@@ -128,10 +128,13 @@ def loot_node(state: GameState):
     loc = get_location(world.get("current_location_id", "")) or {}
     region_id = loc.get("region_id", "default")
     danger = int(world.get("danger_level", 1) or 1)
+    # Fase 6.4: pista de rastro descoberta na estrada melhora ESTE baú (one-shot)
+    boost = bool(world.pop("treasure_hint", False))
     roll = economy.roll_loot(region_id, danger, random.Random(),
                              projection=state.get("world_projection"),
                              bestiary_knowledge=state.get("bestiary_knowledge"),
-                             turn=int(world.get("turn_count", 0) or 0))
+                             turn=int(world.get("turn_count", 0) or 0),
+                             boost=boost)
 
     player["gold"] = int(player.get("gold", 0)) + int(roll["gold"])
     achado = f"+{roll['gold']} de ouro"

@@ -1,6 +1,6 @@
 # SPEC — Fase 6.4: Encontros sistêmicos — detecção, surpresa e variedade
 
-> **Status:** `draft`
+> **Status:** `in-progress` — Etapas 1–5 implementadas (2026-07-05, 509 testes); falta smoke real (§6). Desvios: percebeu = emboscada AUTOMÁTICA (+5 iniciativa; a escolha evitar-vs-emboscar exigiria input no meio do turno — API stateless; evitar fica pela fala do jogador); social = cena guiada no prompt do storyteller (porta-voz via introduced_npcs), sem rota forçada.
 > **Criada:** 2026-07-05 · **Atualizada:** 2026-07-05
 > **Depende de:** Fase 4.6 (orçamento de encontro, `done`) · 6.3 (sorteio ponderado — integrar, não duplicar)
 > **Desbloqueia:** viagem com tensão real (nem todo perigo é combate)

@@ -546,6 +546,94 @@ def check_encounter(world: dict, factions, intel, turn: int = 0,
     return None
 
 
+# ---------------------------------------------------------------------------
+# Fase 6.4 — Encontros sistêmicos: detecção, tipo, armadilha, rastro
+# ---------------------------------------------------------------------------
+_ENCOUNTER_TYPES_LOW = (("combat", 50), ("track", 30), ("social", 20))
+_ENCOUNTER_TYPES_HIGH = (("combat", 60), ("trap", 20), ("social", 10), ("track", 10))
+TRAP_DODGE_XP = 25
+
+
+def detection_check(player: dict, danger: int, rng=None) -> dict:
+    """Fase 6.4 (R1): d20 + mod WIS (+ bônus racial de save WIS) vs DC 8+2×danger.
+    Percebeu -> vantagem (embosca); falhou -> surpreendido (inimigo age antes)."""
+    import random as _random
+    rng = rng or _random
+    from combat_mechanics import attr_mods
+    wis = attr_mods(player.get("attributes", {})).get("wis", 0)
+    wis += int((player.get("racial_save_bonus") or {}).get("wis", 0) or 0)
+    roll = rng.randint(1, 20) + wis
+    dc = 8 + 2 * max(1, min(4, int(danger or 1)))
+    return {"perceived": roll >= dc, "roll": roll, "dc": dc}
+
+
+def roll_encounter_type(danger: int, rng=None) -> str:
+    """Fase 6.4 (R2): nem todo perigo é combate. Distribuição por danger."""
+    import random as _random
+    rng = rng or _random
+    table = _ENCOUNTER_TYPES_LOW if int(danger or 1) <= 2 else _ENCOUNTER_TYPES_HIGH
+    kinds, weights = zip(*table)
+    return rng.choices(list(kinds), weights=list(weights), k=1)[0]
+
+
+def resolve_trap(player: dict, loc: dict, danger: int, rng=None) -> tuple:
+    """Fase 6.4 (R3): armadilha 100%% Python — save vs DC 10+2×danger; falha =
+    {danger}d6 + condição temática da região (data/traps.json); sucesso = XP de
+    esquiva. Retorna (player_atualizado, logs, trap_dict)."""
+    import random as _random
+    rng = rng or _random
+    import combat_mechanics as cm
+    from gamedata import load_json_data
+
+    traps_db = load_json_data("traps.json") or {}
+    region = (loc or {}).get("region_id", "")
+    pool = traps_db.get(region) or traps_db.get("default") or []
+    if not pool:
+        return player, [], None
+    trap = pool[rng.randint(0, len(pool) - 1)] if len(pool) > 1 else pool[0]
+
+    p = dict(player)
+    danger = max(1, min(4, int(danger or 1)))
+    dc = 10 + 2 * danger
+    stat = cm.normalize_attr(trap.get("save_stat", "dex"))
+    mod = cm.attr_mods(p.get("attributes", {})).get(stat, 0)
+    mod += int((p.get("racial_save_bonus") or {}).get(stat, 0) or 0)
+    roll = rng.randint(1, 20) + mod
+    logs = [f"⚠ {trap['name']}! {trap.get('desc', '')}"]
+    if roll >= dc:
+        from progression import grant_xp
+        p, lvl_events = grant_xp(p, TRAP_DODGE_XP)
+        logs.append(f"{p.get('name', 'O herói')} ESQUIVA (save {roll} vs CD {dc}) — +{TRAP_DODGE_XP} XP.")
+        return p, logs, {"trap": trap, "dodged": True, "level_up_events": lvl_events}
+    dmg, detail = cm.roll_dice_numeric(f"{danger}d6")
+    p["hp"] = max(0, int(p.get("hp", 0)) - dmg)
+    logs.append(f"{p.get('name', 'O herói')} falha (save {roll} vs CD {dc}): "
+                f"{dmg} de dano (HP {p['hp']}) [{detail}]")
+    cond = trap.get("condition")
+    if cond and p["hp"] > 0:
+        p.setdefault("active_conditions", [])
+        logs.append(cm.apply_condition(p, dict(cond)))
+    return p, logs, {"trap": trap, "dodged": False, "level_up_events": []}
+
+
+def resolve_track(state_bk: dict, loc: dict, danger: int, turn: int, rng=None) -> tuple:
+    """Fase 6.4 (R4): rastro — revela criatura regional no Codex (grau rumor, 3.2)
+    e/ou marca pista de tesouro (próximo TREASURE da região rola banda alta).
+    Retorna (bestiary_knowledge, note, treasure_hint: bool)."""
+    from services import discovery as disc
+    entry = pick_encounter_enemy(loc, danger, turn)
+    note = "Você encontra rastros antigos, ilegíveis."
+    bk = state_bk or {}
+    if entry:
+        bk = disc.record_rumor(bk, entry.get("id", ""), turn)
+        note = (f"Rastros frescos de {entry.get('name', 'algo grande')} — "
+                "você grava os sinais na memória (Codex atualizado).")
+    treasure = bool((rng or __import__('random')).randint(0, 1))
+    if treasure:
+        note += " Entre as marcas, sinais de carga abandonada — algo valioso ficou para trás por perto."
+    return bk, note, treasure
+
+
 def clock_label(world: dict) -> str:
     c = world.get("world_clock") or {}
     return f"Dia {c.get('day', 1)} · {c.get('period', PERIODS[0])}"

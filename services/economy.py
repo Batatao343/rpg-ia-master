@@ -361,14 +361,16 @@ def execute_craft(state: dict, item_ref: str) -> dict:
 # ---------------------------------------------------------------------------
 def roll_loot(region_id: str, danger: int, rng: Optional[random.Random] = None,
               projection: Optional[dict] = None,
-              bestiary_knowledge: Optional[dict] = None, turn: int = 0) -> dict:
+              bestiary_knowledge: Optional[dict] = None, turn: int = 0,
+              boost: bool = False) -> dict:
     """Sorteia raridade (pesos por banda de perigo) e item do pool da região.
     Retorna {"item_id", "rarity", "gold"} — item_id None se pool vazio (só ouro).
     Fase 6.2: único já reclamado sai do pool ANTES do sorteio (nunca re-dropa).
-    Fase 6.3: drops de criaturas quase-extintas na região somem temporariamente."""
+    Fase 6.3: drops de criaturas quase-extintas na região somem temporariamente.
+    Fase 6.4: `boost` (pista de rastro) força a banda alta — one-shot."""
     rng = rng or random.Random()
     table = LOOT_TABLES.get(region_id) or LOOT_TABLES.get("default") or {}
-    band = "1-2" if int(danger or 1) <= 2 else "3-4"
+    band = "3-4" if boost else ("1-2" if int(danger or 1) <= 2 else "3-4")
     weights: Dict[str, int] = dict(table.get(band) or {"comum": 100})
     rarities = list(weights.keys())
     pick = rng.choices(rarities, weights=[max(0, int(weights[r])) for r in rarities], k=1)[0]

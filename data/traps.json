@@ -1,0 +1,35 @@
+{
+  "default": [
+    {"id": "fosso_oculto", "name": "Fosso Oculto", "save_stat": "dex",
+     "condition": null,
+     "desc": "O chão cede — galhos e lona escondiam um fosso de caçador."},
+    {"id": "lamina_de_arame", "name": "Lâmina de Arame", "save_stat": "dex",
+     "condition": {"name": "Sangramento", "dot": 2, "duration": 2, "source": "armadilha"},
+     "desc": "Um arame na altura do tornozelo, afiado dos dois lados."}
+  ],
+  "pantano_melancolia": [
+    {"id": "lodo_toxico", "name": "Bolsão de Lodo Tóxico", "save_stat": "dex",
+     "condition": {"name": "Envenenado", "dot": 2, "duration": 3, "source": "armadilha"},
+     "desc": "O lodo borbulha — o Pântano não avisa duas vezes."}
+  ],
+  "skallgard": [
+    {"id": "fenda_de_gelo", "name": "Fenda de Gelo", "save_stat": "dex",
+     "condition": {"name": "Enredado", "dot": 0, "duration": 1, "source": "armadilha", "control": "root"},
+     "desc": "A neve esconde a boca da fenda. O gelo range e agarra."}
+  ],
+  "deserto_zhur": [
+    {"id": "areia_movedica", "name": "Areia Movediça", "save_stat": "str",
+     "condition": {"name": "Enredado", "dot": 0, "duration": 2, "source": "armadilha", "control": "root"},
+     "desc": "O Deserto engole devagar — e sem pressa nenhuma."}
+  ],
+  "nova_arcadia": [
+    {"id": "alcapao_do_anel", "name": "Alçapão do Anel de Lama", "save_stat": "dex",
+     "condition": null,
+     "desc": "Tábuas podres sobre um poço de despejo. A cidade também morde."}
+  ],
+  "montanhas_afiadas": [
+    {"id": "queda_de_pedras", "name": "Queda de Pedras", "save_stat": "dex",
+     "condition": null,
+     "desc": "Um fio de couro solta a trava — a encosta inteira responde."}
+  ]
+}

@@ -355,9 +355,23 @@ def combat_node(state: GameState):
     player["_party_active"] = bool(allies_active)
 
     # Iniciativa: rola no 1º round; persiste depois.
+    surprise_world_update = None
     if is_combat_start or not combat_meta.get("order"):
-        combat_meta = {"round": 1, "active": True,
-                       "order": cm.roll_initiative(player, active, allies_active)}
+        order = cm.roll_initiative(player, active, allies_active)
+        # Fase 6.4 (R6): surpresa da detecção — quem foi pego de surpresa cede
+        # a iniciativa (±5 no lado); flag transitória consumida AQUI.
+        wstate = dict(state.get("world") or {})
+        surprise = wstate.pop("encounter_surprise", None)
+        if surprise in ("player", "enemy"):
+            for slot in order:
+                hero_side_slot = slot["side"] in ("hero", "ally")
+                if surprise == "player" and hero_side_slot:
+                    slot["init"] += 5
+                elif surprise == "enemy" and not hero_side_slot:
+                    slot["init"] += 5
+            order.sort(key=lambda x: x["init"], reverse=True)
+            surprise_world_update = wstate
+        combat_meta = {"round": 1, "active": True, "order": order}
     else:
         combat_meta["round"] = combat_meta.get("round", 1) + 1
         combat_meta["active"] = True
@@ -514,5 +528,12 @@ def combat_node(state: GameState):
             enemy_id=disc.normalize_bestiary_id(fled[0]),
         )
         result["world"] = world
+
+    # Fase 6.4: flag de surpresa é one-shot — garante que não persiste.
+    if surprise_world_update is not None:
+        if "world" in result:
+            result["world"].pop("encounter_surprise", None)
+        else:
+            result["world"] = surprise_world_update
 
     return result

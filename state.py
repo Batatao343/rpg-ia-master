@@ -106,6 +106,9 @@ class WorldState(TypedDict, total=False):
     # --- Fase 4.4: economia — estoque persistente por mercador + último restock ---
     merchant_stocks: Dict[str, Dict[str, int]]   # merchant_id -> {item_id: qty}
     merchant_restock_day: Dict[str, int]         # merchant_id -> dia do último restock
+    # --- Fase 6.4: encontros sistêmicos (flags one-shot, consumidas no uso) ---
+    encounter_surprise: Optional[str]  # "player" (emboscou) | "enemy" (surpreendido)
+    treasure_hint: bool                # pista de rastro: próximo TREASURE rola banda alta
     # --- Fase 2 / Etapa B: mundo que evolui (escrito por resolve_faction_completions) ---
     controlled: Dict[str, str]       # location_id -> faction_id (local dominado por fação)
     danger_overrides: Dict[str, int] # location_id -> perigo elevado por ascensão (teto 4)
