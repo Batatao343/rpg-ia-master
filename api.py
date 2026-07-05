@@ -359,6 +359,11 @@ def _world_block(w: dict, projection: Optional[dict] = None, event_log: Optional
             "threats": sv.active_threats(w, turn),
             "looming_threat": w.get("looming_threat", ""),
         },
+        # Fase 6.1: rotas comerciais bloqueadas (WorldMap traceja a conexão)
+        "blocked_routes": [
+            {"a": r.get("a", ""), "b": r.get("b", "")}
+            for r in (projection or {}).get("blocked_routes", []) or []
+        ],
     }
 
 # --- ENDPOINTS ---

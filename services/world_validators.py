@@ -122,6 +122,36 @@ def _v_level_up(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationRe
     return ValidationResult(True)
 
 
+def _route_pair_blocked(proj: dict, a: str, b: str) -> bool:
+    pair = frozenset((a, b))
+    return any(frozenset((r.get("a"), r.get("b"))) == pair
+               for r in (proj or {}).get("blocked_routes", []) or [])
+
+
+def _v_route_blocked(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    """Fase 6.1: rota só existe entre locais DIRETAMENTE conectados no mapa."""
+    from gamedata import get_location
+    a = ev.target_id
+    b = str(ev.payload.get("other_location_id") or "")
+    if not get_location(a):
+        return ValidationResult(False, f"{a} não é local do mapa")
+    if not b or not get_location(b):
+        return ValidationResult(False, f"{b!r} não é local do mapa")
+    if b not in (get_location(a).get("connections") or []):
+        return ValidationResult(False, f"{a} e {b} não têm conexão direta")
+    if _route_pair_blocked(proj, a, b):
+        return ValidationResult(False, f"rota {a}↔{b} já está bloqueada")
+    return ValidationResult(True)
+
+
+def _v_route_cleared(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    a = ev.target_id
+    b = str(ev.payload.get("other_location_id") or "")
+    if not _route_pair_blocked(proj, a, b):
+        return ValidationResult(False, f"rota {a}↔{b} não está bloqueada")
+    return ValidationResult(True)
+
+
 def _v_player_died(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
     """Fase 4.6: evento do motor (combate) — gate anti-LLM em validate_proposal."""
     if ev.target_id != "player":
@@ -138,6 +168,8 @@ _VALIDATORS = {
     "reputation_changed": _v_reputation_changed,
     "level_up": _v_level_up,
     "player_died": _v_player_died,
+    "route_blocked": _v_route_blocked,
+    "route_cleared": _v_route_cleared,
 }
 
 
@@ -165,6 +197,10 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
     for e in state.get("event_log") or []:
         if e.get("type") == ev.type and e.get("target_id") == ev.target_id and e.get("turn") == turn:
             if ev.type == "level_up" and (e.get("payload") or {}).get("new_level") != ev.payload.get("new_level"):
+                continue
+            # Fase 6.1: mesmo local pode bloquear/limpar rotas para PARES diferentes
+            if ev.type in ("route_blocked", "route_cleared") and \
+                    (e.get("payload") or {}).get("other_location_id") != ev.payload.get("other_location_id"):
                 continue
             return ValidationResult(False, f"duplicata: {ev.type}/{ev.target_id} já no turno {turn}")
 

@@ -95,11 +95,14 @@ def resolve_path(expr: Any, ctx: dict) -> Any:
 
 # --- conditions -------------------------------------------------------------
 
-def check_conditions(rule: dict, event: dict, projection: dict) -> bool:
+def check_conditions(rule: dict, event: dict, projection: dict,
+                     state: Optional[dict] = None) -> bool:
     """True se TODAS as conditions da regra passarem (AND). Regra sem conditions → True.
 
     Suporta: target_has_component | target_missing_component | target_has_tag |
-             event_payload_equals {"key":..., "value":...}.
+             event_payload_equals {"key":..., "value":...} |
+             target_map_tag (Fase 6.1: tag/economy_tag do NÓ do world_map) |
+             new_controller_hostile (Fase 6.1: disposition da fação do payload).
     Condition de tipo desconhecido → False (regra não casa; conservador).
     """
     target = gr.get_entity(event.get("target_id")) or {}
@@ -108,6 +111,20 @@ def check_conditions(rule: dict, event: dict, projection: dict) -> bool:
     payload = event.get("payload", {}) or {}
 
     for cond in rule.get("conditions", []) or []:
+        if "target_map_tag" in cond:
+            from gamedata import get_location
+            loc = get_location(event.get("target_id", "")) or {}
+            loc_tags = set(loc.get("tags") or []) | set(loc.get("economy_tags") or [])
+            if cond["target_map_tag"] not in loc_tags:
+                return False
+            continue
+        if "new_controller_hostile" in cond:
+            fid = payload.get("new_controller_id")
+            disp = next((f.get("disposition") for f in (state or {}).get("factions", []) or []
+                         if f.get("id") == fid), None)
+            if (disp == "hostil") != bool(cond["new_controller_hostile"]):
+                return False
+            continue
         if "target_has_component" in cond:
             if cond["target_has_component"] not in components:
                 return False
@@ -287,6 +304,20 @@ def execute_action(action: dict, event: dict, state: dict) -> List[dict]:
     if op == "emit_event":
         etype = action.get("type")
         targets_spec = action.get("targets")
+        if targets_spec == "map_connections":
+            # Fase 6.1: um evento por CONEXÃO do local-alvo (ex.: porto tomado
+            # bloqueia todas as rotas dele). Par já bloqueado é pulado.
+            from gamedata import get_location
+            blocked = {frozenset((r.get("a"), r.get("b")))
+                       for r in proj.get("blocked_routes", []) or []}
+            derived = []
+            for conn in (get_location(target_id) or {}).get("connections", []) or []:
+                if frozenset((target_id, conn)) in blocked:
+                    continue
+                derived.append(_new_event(
+                    etype, target_id, {"other_location_id": conn},
+                    actor_id=event.get("actor_id", "player")))
+            return derived
         if targets_spec == "controlled_locations":
             dead_faction = _led_faction(target_id, proj)
             derived = []
@@ -326,7 +357,7 @@ def run_rules(event: dict, state: dict, depth: int = 0) -> List[dict]:
     for rule in load_rules():
         if rule.get("trigger") != event.get("type"):
             continue
-        if not check_conditions(rule, event, state["world_projection"]):
+        if not check_conditions(rule, event, state["world_projection"], state):
             continue
         try:
             emitted: List[dict] = []

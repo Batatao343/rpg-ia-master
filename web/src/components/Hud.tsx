@@ -91,6 +91,7 @@ export function Hud({ data, open, onEquip, busy }: {
               markers={data?.quest.markers ?? []}
               overlays={data?.world.map_overlays}
               currentTurn={data?.world.turn_count ?? 0}
+              blockedRoutes={data?.world.blocked_routes ?? []}
             />
           </div>
         )}

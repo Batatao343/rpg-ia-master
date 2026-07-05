@@ -17,6 +17,7 @@ export function WorldMap({
   markers = [],
   overlays,
   currentTurn = 0,
+  blockedRoutes = [],
 }: {
   visited: string[];
   currentId: string;
@@ -25,6 +26,7 @@ export function WorldMap({
   markers?: QuestMarker[];
   overlays?: MapOverlays;
   currentTurn?: number;
+  blockedRoutes?: Array<{ a: string; b: string }>; // Fase 6.1
 }) {
   const [map, setMap] = useState<WorldMapData | null>(null);
 
@@ -61,16 +63,21 @@ export function WorldMap({
       )}
       <div className="worldmap">
       <svg className="worldmap__edges" viewBox="0 0 100 100" preserveAspectRatio="none">
-        {edges.map(([a, b], i) => (
-          <line
-            key={i}
-            className="worldmap__edge"
-            x1={a.coords.x}
-            y1={a.coords.y}
-            x2={b.coords.x}
-            y2={b.coords.y}
-          />
-        ))}
+        {edges.map(([a, b], i) => {
+          const blocked = blockedRoutes.some(
+            (r) => (r.a === a.id && r.b === b.id) || (r.a === b.id && r.b === a.id)
+          );
+          return (
+            <line
+              key={i}
+              className={"worldmap__edge" + (blocked ? " is-blocked" : "")}
+              x1={a.coords.x}
+              y1={a.coords.y}
+              x2={b.coords.x}
+              y2={b.coords.y}
+            />
+          );
+        })}
       </svg>
 
       {map.locations.map((loc) => {

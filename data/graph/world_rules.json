@@ -3,43 +3,95 @@
     "id": "rule_faction_leader_death",
     "trigger": "npc_killed",
     "conditions": [
-      {"target_has_component": "power_vacuum_trigger"}
+      {
+        "target_has_component": "power_vacuum_trigger"
+      }
     ],
     "actions": [
-      {"op": "set_entity_state", "entity": "target", "field": "alive", "value": false},
-      {"op": "adjust_faction_stability", "delta": "component:power_vacuum_trigger.base_instability_delta"},
-      {"op": "emit_event", "type": "location_control_changed", "targets": "controlled_locations"}
+      {
+        "op": "set_entity_state",
+        "entity": "target",
+        "field": "alive",
+        "value": false
+      },
+      {
+        "op": "adjust_faction_stability",
+        "delta": "component:power_vacuum_trigger.base_instability_delta"
+      },
+      {
+        "op": "emit_event",
+        "type": "location_control_changed",
+        "targets": "controlled_locations"
+      }
     ]
   },
   {
     "id": "rule_npc_death_generic",
     "trigger": "npc_killed",
     "conditions": [
-      {"target_missing_component": "power_vacuum_trigger"}
+      {
+        "target_missing_component": "power_vacuum_trigger"
+      }
     ],
     "actions": [
-      {"op": "set_entity_state", "entity": "target", "field": "alive", "value": false}
+      {
+        "op": "set_entity_state",
+        "entity": "target",
+        "field": "alive",
+        "value": false
+      }
     ]
   },
   {
     "id": "rule_control_change_ripple",
     "trigger": "location_control_changed",
     "actions": [
-      {"op": "adjust_faction_stability", "faction": "event.payload.new_controller_id", "delta": 5}
+      {
+        "op": "adjust_faction_stability",
+        "faction": "event.payload.new_controller_id",
+        "delta": 5
+      }
     ]
   },
   {
     "id": "rule_secret_revealed_v1",
     "trigger": "secret_revealed",
     "actions": [
-      {"op": "adjust_faction_stability", "delta": -10}
+      {
+        "op": "adjust_faction_stability",
+        "delta": -10
+      }
     ]
   },
   {
     "id": "rule_quest_completed_v1",
     "trigger": "quest_completed",
     "actions": [
-      {"op": "set_entity_state", "entity": "target", "field": "quest_completed", "value": true}
+      {
+        "op": "set_entity_state",
+        "entity": "target",
+        "field": "quest_completed",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "rule_hostile_port_blockade",
+    "trigger": "location_control_changed",
+    "conditions": [
+      {
+        "target_map_tag": "porto"
+      },
+      {
+        "new_controller_hostile": true
+      }
+    ],
+    "actions": [
+      {
+        "op": "emit_event",
+        "type": "route_blocked",
+        "targets": "map_connections"
+      }
     ]
   }
 ]

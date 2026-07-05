@@ -77,6 +77,20 @@ def apply_event(event: Dict, projection: Dict) -> Dict:
             "created_by_event": event_id,
         })
 
+    elif etype == "route_blocked":
+        # Fase 6.1: par não-direcionado; dedupe defensivo (validator já barra)
+        pair = frozenset((target, payload.get("other_location_id")))
+        routes = proj.setdefault("blocked_routes", [])
+        if not any(frozenset((r.get("a"), r.get("b"))) == pair for r in routes):
+            routes.append({"a": target, "b": payload.get("other_location_id"),
+                           "blocked_by_event": event_id})
+
+    elif etype == "route_cleared":
+        pair = frozenset((target, payload.get("other_location_id")))
+        proj["blocked_routes"] = [
+            r for r in proj.get("blocked_routes", []) or []
+            if frozenset((r.get("a"), r.get("b"))) != pair]
+
     # quest_completed: nada na projection — o registro no event_log já é o efeito.
 
     return proj

@@ -41,6 +41,8 @@ _IMPACT_BY_TYPE = {
     "npc_killed": 1.0,
     "location_control_changed": 1.0,
     "secret_revealed": 0.8,
+    "route_blocked": 0.8,   # Fase 6.1: rota fechada muda a cena (comércio/viagem)
+    "route_cleared": 0.6,
 }
 _DEFAULT_IMPACT = 0.4
 
@@ -49,6 +51,8 @@ EVENT_TEMPLATES: Dict[str, str] = {
     "location_control_changed": "[turno {turn}] {controller} assumiu o controle de {target}.",
     "faction_relation_changed": "[turno {turn}] Relação de {target} mudou ({relation}) com {other}.",
     "quest_completed": "[turno {turn}] Missão concluída: {target}.",
+    "route_blocked": "[turno {turn}] A rota entre {target} e {other_loc} está BLOQUEADA (comércio cortado).",
+    "route_cleared": "[turno {turn}] A rota entre {target} e {other_loc} foi reaberta.",
 }
 
 _WORD = re.compile(r"[\wáàâãéêíóôõúüç]+", re.IGNORECASE)
@@ -149,6 +153,7 @@ def render_event(event: Dict, projection: Optional[Dict] = None) -> str:
         controller=_name(payload.get("new_controller_id")),
         relation=payload.get("relation") or event.get("detail", "") or payload.get("detail", ""),
         other=_name(payload.get("other_faction_id") or event.get("actor_id")),
+        other_loc=_name(payload.get("other_location_id")),
     )
 
 

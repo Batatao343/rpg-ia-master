@@ -69,12 +69,70 @@ def regional_modifier(item_id: str, location_id: str) -> float:
     return ABUNDANT_MULT if loc_tags & item_tags else 1.0
 
 
+# ---------------------------------------------------------------------------
+# Fase 6.1 — rotas comerciais: alcançabilidade e escassez
+# ---------------------------------------------------------------------------
+SCARCE_MULT = 1.8
+
+
+def _blocked_pairs(projection: Optional[dict]) -> set:
+    return {frozenset((r.get("a"), r.get("b")))
+            for r in (projection or {}).get("blocked_routes", []) or []}
+
+
+def is_reachable(loc_a: str, loc_b: str, projection: Optional[dict]) -> bool:
+    """BFS nas connections do mapa MENOS as rotas bloqueadas (par não-direcionado)."""
+    if loc_a == loc_b:
+        return True
+    blocked = _blocked_pairs(projection)
+    seen = {loc_a}
+    frontier = [loc_a]
+    while frontier:
+        cur = frontier.pop()
+        for nxt in (get_location(cur) or {}).get("connections", []) or []:
+            if nxt in seen or frozenset((cur, nxt)) in blocked:
+                continue
+            if nxt == loc_b:
+                return True
+            seen.add(nxt)
+            frontier.append(nxt)
+    return False
+
+
+def producing_locations(item_id: str) -> List[str]:
+    """Locais cujo economy_tags intersecta o do item (regiões produtoras)."""
+    from gamedata import WORLD_MAP
+    item_tags = set((ARTIFACTS_DB.get(item_id) or {}).get("economy_tags") or [])
+    if not item_tags:
+        return []
+    return [l["id"] for l in WORLD_MAP.get("locations", [])
+            if item_tags & set(l.get("economy_tags") or [])]
+
+
+def supply_factor(item_id: str, location_id: str,
+                  projection: Optional[dict] = None) -> float:
+    """Fase 6.1: 0.6 produzido AQUI · 1.0 produtor alcançável · 1.8 escasso
+    (todas as rotas até produtores bloqueadas). Item sem tags → 1.0 sempre."""
+    producers = producing_locations(item_id)
+    if not producers:
+        return 1.0
+    loc_tags = set((get_location(location_id) or {}).get("economy_tags") or [])
+    item_tags = set((ARTIFACTS_DB.get(item_id) or {}).get("economy_tags") or [])
+    if loc_tags & item_tags:
+        return ABUNDANT_MULT
+    if any(is_reachable(location_id, p, projection) for p in producers):
+        return 1.0
+    return SCARCE_MULT
+
+
 def price(item_id: str, *, mode: str, state: dict,
           merchant: Optional[dict] = None) -> int:
     """Preço final determinístico. mode: 'buy' (jogador compra) | 'sell' (vende)."""
     location_id = (state.get("world") or {}).get("current_location_id", "")
     p = float(base_price(item_id))
-    p *= regional_modifier(item_id, location_id)
+    # Fase 6.1: escassez por alcançabilidade (subsume o regional_modifier da 4.4:
+    # sem rota bloqueada os valores são idênticos)
+    p *= supply_factor(item_id, location_id, state.get("world_projection"))
     if merchant:
         p *= float(merchant.get("price_mult", 1.0) or 1.0)
     if mode == "buy" and _controller_disposition(state, location_id) == "hostil":
@@ -124,6 +182,12 @@ def merchant_stock(state: dict, location_id: str) -> Tuple[Optional[str], Dict[s
     if _controller_disposition(state, location_id) == "hostil":
         stock = {iid: q for iid, q in stock.items()
                  if _RARITY_RANK.get(str((ARTIFACTS_DB.get(iid) or {}).get("rarity", "comum")).lower(), 0) < 2}
+    # Fase 6.1: item escasso (produtores inalcançáveis) SOME da prateleira —
+    # o mercador não vende o que não chega. Restock não repõe enquanto bloqueado
+    # (o estoque base segue lá; a view esconde até route_cleared).
+    proj = state.get("world_projection")
+    stock = {iid: q for iid, q in stock.items()
+             if supply_factor(iid, location_id, proj) < SCARCE_MULT}
     return mid, {iid: q for iid, q in stock.items() if q > 0}
 
 

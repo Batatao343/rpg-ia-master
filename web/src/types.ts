@@ -98,6 +98,7 @@ export interface WorldBlock {
   danger_overrides: Record<string, number>; // location_id -> perigo elevado (ascensão)
   turn_count: number; // Fase 3.2: dispara refetch do Codex quando o turno muda
   map_overlays: MapOverlays; // Fase 3.4
+  blocked_routes: Array<{ a: string; b: string }>; // Fase 6.1: comércio cortado
 }
 
 export interface Beat {

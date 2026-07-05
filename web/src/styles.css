@@ -658,3 +658,6 @@ select {
 .party__top { display: flex; justify-content: space-between; font-size: 0.82rem; }
 .party__track { height: 6px; border-radius: 4px; background: var(--steel); overflow: hidden; }
 .party__fill { height: 100%; background: var(--accent); transition: width 0.4s ease; }
+
+/* ---------- Fase 6.1: rota bloqueada ---------- */
+.worldmap__edge.is-blocked { stroke: var(--danger-bright, oklch(0.6 0.19 25)); stroke-dasharray: 2 2.5; opacity: 0.8; }

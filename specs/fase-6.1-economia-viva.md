@@ -1,6 +1,6 @@
 # SPEC — Fase 6.1: Economia viva — rotas, escassez e eventos no comércio
 
-> **Status:** `draft`
+> **Status:** `in-progress` — Etapas 1–5 implementadas (2026-07-05, 475 testes); falta smoke real (§6).
 > **Criada:** 2026-07-05 · **Atualizada:** 2026-07-05
 > **Depende de:** Fase 4.4 (economia determinística, `done`) · Fase 2.6 (pipeline de eventos, `done`)
 > **Desbloqueia:** 6.2 (itens únicos), 6.3 (migração de monstros) — mesmo padrão de view derivada

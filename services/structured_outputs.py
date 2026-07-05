@@ -27,6 +27,10 @@ EventType = Literal[
     "level_up",
     # Fase 4.6: idem — gerado só pelo combate (source="combat" exigido no validator).
     "player_died",
+    # Fase 6.1: rotas comerciais — PROPONÍVEL pelo LLM (desabamento, bloqueio
+    # militar) e gerável pelo motor/regras; validator exige conexão direta real.
+    "route_blocked",
+    "route_cleared",
 ]
 
 
