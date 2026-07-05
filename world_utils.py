@@ -83,19 +83,32 @@ def apply_travel(world: dict, dest: dict) -> dict:
     world["visited"] = visited
     world["danger_level"] = dest.get("danger", world.get("danger_level", 1))
     advance_clock(world, 1)
+    # Fase 6.5: período mudou -> clima transiciona; clima bravo encarece a viagem
+    advance_weather(world)
+    extra = weather_effects(world, dest).get("travel_cost_extra", 0)
+    if extra:
+        advance_clock(world, extra)
     return world
 
 
 def apply_rest(player: dict, world: dict) -> Tuple[dict, dict]:
-    """Descanso: recupera ~metade dos recursos e avança 2 períodos."""
+    """Descanso: recupera ~metade dos recursos e avança 2 períodos.
+    Fase 6.5: clima com `rest_block` (miasma etc.) NEGA o descanso ao relento —
+    o tempo passa (1 período de tentativa), mas nada recupera."""
+    world = dict(world)
+    blocked = weather_effects(world).get("rest_block", False)
+    if blocked:
+        advance_clock(world, 1)
+        advance_weather(world)
+        return dict(player), world
     player = dict(player)
     for res, mx in (("hp", "max_hp"), ("mana", "max_mana"), ("stamina", "max_stamina")):
         if mx in player:
             ceiling = player.get(mx, 0)
             healed = player.get(res, 0) + max(1, ceiling // 2)
             player[res] = min(ceiling, healed)
-    world = dict(world)
     advance_clock(world, 2)
+    advance_weather(world)
     # Fações avançam no tempo off-screen: o storyteller chama advance_factions(2)
     # após o descanso (2 períodos). world_simulator narrado virá no próximo slice.
     return player, world
@@ -547,6 +560,85 @@ def check_encounter(world: dict, factions, intel, turn: int = 0,
 
 
 # ---------------------------------------------------------------------------
+# Fase 6.5 — Clima com efeito real (cadeias por região; efeito é LEITURA,
+# nunca condição gravada — mudou o clima, mudou o efeito, zero limpeza)
+# ---------------------------------------------------------------------------
+_SHELTER_TAGS = {"cidade", "urbano", "abrigo", "seguro"}
+
+
+def _weather_table(region_id: str) -> dict:
+    from gamedata import load_json_data
+    db = load_json_data("weather.json") or {}
+    return db.get(region_id) or db.get("default") or {}
+
+
+def advance_weather(world: dict, rng=None) -> dict:
+    """Transição de clima (cadeia de Markov por região) — chamar quando o
+    PERÍODO do relógio muda (viagem/descanso). Muta e retorna world."""
+    import random as _random
+    rng = rng or _random
+    from gamedata import get_location
+    loc = get_location(world.get("current_location_id", "")) or {}
+    table = _weather_table(loc.get("region_id", "default"))
+    states = table.get("states") or {}
+    if not states:
+        return world
+    cur = world.get("weather_state")
+    if cur not in states:
+        cur = table.get("start") or next(iter(states))
+    trans = states[cur].get("transitions") or {cur: 100}
+    nxt = rng.choices(list(trans.keys()),
+                      weights=[max(0, int(w)) for w in trans.values()], k=1)[0]
+    world["weather_state"] = nxt if nxt in states else cur
+    world["weather"] = states[world["weather_state"]].get("label", world["weather_state"])
+    # fenômeno global expira por períodos restantes
+    g = world.get("weather_global")
+    if g:
+        g = dict(g)
+        g["periods_left"] = int(g.get("periods_left", 0)) - 1
+        world["weather_global"] = g if g["periods_left"] > 0 else None
+    return world
+
+
+def weather_effects(world: dict, loc: dict = None) -> dict:
+    """Efeitos mecânicos do clima ATUAL (leitura pontual, Fase 6.5).
+    Local com tag de abrigo/urbano anula dot_outdoor e rest_block."""
+    from gamedata import get_location
+    loc = loc if loc is not None else (get_location(world.get("current_location_id", "")) or {})
+    table = _weather_table((loc or {}).get("region_id", "default"))
+    state = (table.get("states") or {}).get(world.get("weather_state") or "", {})
+    g = world.get("weather_global") or {}
+    if g:
+        from gamedata import load_json_data
+        gdef = ((load_json_data("weather.json") or {}).get("global_events") or {}) \
+            .get(g.get("id", ""), {})
+        state = {**state, **{k: v for k, v in gdef.items()
+                             if k in ("perception_mod", "combat_attack_mod",
+                                      "dot_outdoor", "rest_block", "travel_cost_extra", "label")}}
+    sheltered = bool(_SHELTER_TAGS & set((loc or {}).get("tags") or []))
+    return {
+        "label": state.get("label", world.get("weather", "")),
+        "perception_mod": int(state.get("perception_mod", 0) or 0),
+        "combat_attack_mod": int(state.get("combat_attack_mod", 0) or 0),
+        "travel_cost_extra": int(state.get("travel_cost_extra", 0) or 0),
+        "rest_block": bool(state.get("rest_block")) and not sheltered,
+        "dot_outdoor": 0 if sheltered else int(state.get("dot_outdoor", 0) or 0),
+    }
+
+
+def trigger_global_weather(world: dict, event_id: str) -> tuple:
+    """Fenômeno global da LISTA CURADA (weather.json). Id fora da lista -> (world,
+    None). Gancho p/ clímax de campanha; sem canal LLM ainda (desvio da spec)."""
+    from gamedata import load_json_data
+    gdef = ((load_json_data("weather.json") or {}).get("global_events") or {}).get(event_id)
+    if not gdef:
+        return world, None
+    world["weather_global"] = {"id": event_id,
+                               "periods_left": int(gdef.get("duration_periods", 2))}
+    return world, gdef.get("desc", gdef.get("label", event_id))
+
+
+# ---------------------------------------------------------------------------
 # Fase 6.4 — Encontros sistêmicos: detecção, tipo, armadilha, rastro
 # ---------------------------------------------------------------------------
 _ENCOUNTER_TYPES_LOW = (("combat", 50), ("track", 30), ("social", 20))
@@ -554,15 +646,17 @@ _ENCOUNTER_TYPES_HIGH = (("combat", 60), ("trap", 20), ("social", 10), ("track",
 TRAP_DODGE_XP = 25
 
 
-def detection_check(player: dict, danger: int, rng=None) -> dict:
+def detection_check(player: dict, danger: int, rng=None,
+                    perception_mod: int = 0) -> dict:
     """Fase 6.4 (R1): d20 + mod WIS (+ bônus racial de save WIS) vs DC 8+2×danger.
-    Percebeu -> vantagem (embosca); falhou -> surpreendido (inimigo age antes)."""
+    Percebeu -> vantagem (embosca); falhou -> surpreendido (inimigo age antes).
+    Fase 6.5: `perception_mod` do clima (neblina -3 etc.) soma na rolagem."""
     import random as _random
     rng = rng or _random
     from combat_mechanics import attr_mods
     wis = attr_mods(player.get("attributes", {})).get("wis", 0)
     wis += int((player.get("racial_save_bonus") or {}).get("wis", 0) or 0)
-    roll = rng.randint(1, 20) + wis
+    roll = rng.randint(1, 20) + wis + int(perception_mod or 0)
     dc = 8 + 2 * max(1, min(4, int(danger or 1)))
     return {"perceived": roll >= dc, "roll": roll, "dc": dc}
 
@@ -643,6 +737,10 @@ def starting_world(region_name: str, level: int) -> dict:
     """Monta o WorldState inicial a partir do local de início da região escolhida."""
     loc = gamedata.start_location_for_region(region_name) or {}
     loc_id = loc.get("id") or gamedata.START_LOCATION_ID
+    # Fase 6.5: clima canônico da região desde o turno 0
+    table = _weather_table(loc.get("region_id", "default"))
+    wstate = table.get("start") or "limpo"
+    wlabel = ((table.get("states") or {}).get(wstate) or {}).get("label", "Nublado")
     return {
         "current_location": loc.get("name") or region_name,
         "current_location_id": loc_id,
@@ -651,7 +749,8 @@ def starting_world(region_name: str, level: int) -> dict:
         "time_of_day": PERIODS[0],
         "turn_count": 0,
         "danger_level": loc.get("danger", level),
-        "weather": "Nublado",
+        "weather": wlabel,
+        "weather_state": wstate,
         "quest_plan": [],
         "quest_plan_origin": None,
     }

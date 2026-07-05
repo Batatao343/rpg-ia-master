@@ -358,9 +358,15 @@ def test_graph_rest_in_danger_triggers_combat():
     st["world"]["current_location_id"] = "pr_ruinas_assombradas"
     st["world"]["current_location"] = "Ruínas Assombradas"
     st["world"]["danger_level"] = 4
+    import random
+    random.seed(3)  # Fase 6.4: tipo de encontro é roleta — semeia p/ determinismo
     result = app.invoke(st)
     enemies = result.get("enemies") or []
-    assert enemies, "descansar em local de perigo 4 deve disparar um encontro (inimigos spawnados)"
+    world_out = result.get("world") or {}
+    # Fase 6.4: perigo 4 DISPARA encontro, mas nem todo encontro é combate
+    # (armadilha/rastro/social também contam). O que NÃO pode: nada acontecer.
+    encounter_fired = bool(enemies) or         int(world_out.get("last_encounter_turn", -99)) >= 0
+    assert encounter_fired, "descansar em perigo 4 deve disparar um encontro (combate OU armadilha/rastro/social)"
 
 
 def test_npc_reveals_faction_to_player():

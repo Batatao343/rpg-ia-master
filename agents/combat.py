@@ -346,6 +346,17 @@ def combat_node(state: GameState):
             "archive_due": True,  # fim de combate = evento relevante
         }
 
+    # Fase 6.5: clima em campo aberto — modificador de acerto SIMÉTRICO (leitura
+    # pontual via flags _env; nunca condição gravada) + dot de miasma outdoor.
+    import world_utils as wu_mod
+    wfx = wu_mod.weather_effects(state.get("world") or {})
+    env_atk = int(wfx.get("combat_attack_mod", 0) or 0)
+    env_dot = int(wfx.get("dot_outdoor", 0) or 0)
+    if env_atk:
+        player["_env_attack_mod"] = env_atk
+        for e in enemies:
+            e["_env_attack_mod"] = env_atk
+
     # Fase 4.5: aliados ativos entram no combate (mesmo motor, lado 'ally').
     import party as party_mod
     party = party_mod.backfill_party(state.get("party") or [])
@@ -390,6 +401,14 @@ def combat_node(state: GameState):
     logs: List[str] = []
     hero_resolved = False
     rnd = int(combat_meta.get("round", 1))
+
+    # Fase 6.5: miasma/tempestade mordem TODOS em campo aberto (1x por round)
+    if env_dot:
+        for ent in [player] + [e for e in enemies if e.get("status") == "ativo"]:
+            ent["hp"] = max(0, int(ent.get("hp", 0)) - env_dot)
+            if ent is not player and ent["hp"] <= 0:
+                ent["status"] = "morto"
+        logs.append(f"O clima ({wfx.get('label', 'miasma')}) morde a todos: -{env_dot} HP.")
     for slot in combat_meta["order"]:
         if slot["side"] == "hero":
             # Fase 4.2: atordoado perde o turno (tick roda; ação não).

@@ -413,6 +413,8 @@ def compute_player_combat_stats(player: Dict) -> Dict:
     cmods = condition_modifiers(player)
     ac += cmods["ac"]
     attack += cmods["attack"]
+    # Fase 6.5: clima (flag transitória setada pelo combate; simétrica)
+    attack += int(player.get("_env_attack_mod", 0) or 0)
 
     return {
         "ac": ac,
@@ -1063,6 +1065,8 @@ def resolve_enemy_turn(enemy: Dict, player: Dict,
     bonus = int(atk.get("bonus", 0) or 0)
     # Fase 4.2: condições do inimigo modificam o acerto dele (fear = -2 embutido)
     bonus += condition_modifiers(enemy)["attack"]
+    # Fase 6.5: clima é simétrico — inimigo também erra na chuva
+    bonus += int(enemy.get("_env_attack_mod", 0) or 0)
     atk_roll = random.randint(1, 20)
     total = atk_roll + bonus
     crit = atk_roll == 20

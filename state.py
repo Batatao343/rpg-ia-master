@@ -109,6 +109,9 @@ class WorldState(TypedDict, total=False):
     # --- Fase 6.4: encontros sistêmicos (flags one-shot, consumidas no uso) ---
     encounter_surprise: Optional[str]  # "player" (emboscou) | "enemy" (surpreendido)
     treasure_hint: bool                # pista de rastro: próximo TREASURE rola banda alta
+    # --- Fase 6.5: clima (efeito é LEITURA via weather_effects, nunca condição) ---
+    weather_state: str                 # id canônico do estado (weather.json da região)
+    weather_global: Optional[Dict]     # fenômeno global ativo {id, periods_left}
     # --- Fase 2 / Etapa B: mundo que evolui (escrito por resolve_faction_completions) ---
     controlled: Dict[str, str]       # location_id -> faction_id (local dominado por fação)
     danger_overrides: Dict[str, int] # location_id -> perigo elevado por ascensão (teto 4)

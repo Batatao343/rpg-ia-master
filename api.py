@@ -350,6 +350,7 @@ def _world_block(w: dict, projection: Optional[dict] = None, event_log: Optional
         "period": clock.get("period", "Amanhecer"),
         "visited": w.get("visited", []),
         "danger": w.get("danger_level", 1),
+        "weather": w.get("weather", ""),  # Fase 6.5: rótulo do clima atual
         "turn_count": turn,  # Fase 3.2: refetch do Codex quando o turno muda
         # Fase 3.4: controlador por local visitado (verdade 2.5+/projection vence o
         # legado da Fase 2; NOME, não id — ver services/state_views.visible_controllers).

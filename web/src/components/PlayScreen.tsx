@@ -21,7 +21,8 @@ export function PlayScreen({ data, log, thinking, busy, onAction, onNew, onLevel
   const [luDismissed, setLuDismissed] = useState(false);
 
   const w = data?.world;
-  const clock = w?.period ? `Dia ${w.day} · ${w.period}` : "Dia 1 · Amanhecer";
+  const clock = (w?.period ? `Dia ${w.day} · ${w.period}` : "Dia 1 · Amanhecer")
+    + (w?.weather ? ` · ${w.weather}` : "");
   const dead = (data?.player_stats.hp ?? 1) <= 0;
   const fighting = !!data?.combat?.active;
 

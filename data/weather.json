@@ -1,0 +1,73 @@
+{
+  "default": {
+    "start": "limpo",
+    "states": {
+      "limpo":   {"label": "Céu limpo",
+                  "transitions": {"limpo": 60, "nublado": 30, "chuva": 10}},
+      "nublado": {"label": "Nublado", "perception_mod": -1,
+                  "transitions": {"nublado": 40, "limpo": 35, "chuva": 25}},
+      "chuva":   {"label": "Chuva", "perception_mod": -2, "combat_attack_mod": -1,
+                  "transitions": {"chuva": 40, "nublado": 40, "limpo": 20}}
+    }
+  },
+  "pantano_melancolia": {
+    "start": "neblina",
+    "states": {
+      "neblina": {"label": "Neblina baixa", "perception_mod": -3,
+                  "transitions": {"neblina": 50, "miasma": 30, "nublado": 20}},
+      "miasma":  {"label": "Miasma denso", "perception_mod": -2,
+                  "dot_outdoor": 1, "rest_block": true,
+                  "transitions": {"miasma": 40, "neblina": 40, "nublado": 20}},
+      "nublado": {"label": "Nublado pesado", "perception_mod": -1,
+                  "transitions": {"nublado": 30, "neblina": 50, "miasma": 20}}
+    }
+  },
+  "skallgard": {
+    "start": "limpo",
+    "states": {
+      "limpo":   {"label": "Frio seco",
+                  "transitions": {"limpo": 50, "nublado": 30, "nevasca": 20}},
+      "nublado": {"label": "Céu de chumbo", "perception_mod": -1,
+                  "transitions": {"nublado": 40, "nevasca": 30, "limpo": 30}},
+      "nevasca": {"label": "Nevasca", "perception_mod": -3,
+                  "combat_attack_mod": -1, "travel_cost_extra": 1,
+                  "transitions": {"nevasca": 35, "nublado": 45, "limpo": 20}}
+    }
+  },
+  "deserto_zhur": {
+    "start": "limpo",
+    "states": {
+      "limpo":    {"label": "Sol de rachar",
+                   "transitions": {"limpo": 65, "vendaval": 35}},
+      "vendaval": {"label": "Vendaval de areia", "perception_mod": -3,
+                   "combat_attack_mod": -1, "travel_cost_extra": 1,
+                   "transitions": {"vendaval": 40, "limpo": 60}}
+    }
+  },
+  "montanhas_afiadas": {
+    "start": "nublado",
+    "states": {
+      "nublado": {"label": "Nuvens rasgadas", "perception_mod": -1,
+                  "transitions": {"nublado": 45, "limpo": 30, "nevasca": 25}},
+      "limpo":   {"label": "Ar rarefeito",
+                  "transitions": {"limpo": 50, "nublado": 50}},
+      "nevasca": {"label": "Nevasca de altitude", "perception_mod": -3,
+                  "combat_attack_mod": -1, "travel_cost_extra": 1,
+                  "transitions": {"nevasca": 30, "nublado": 70}}
+    }
+  },
+  "global_events": {
+    "tempestade_de_eter": {
+      "label": "Tempestade de Éter",
+      "perception_mod": -3, "combat_attack_mod": -1, "dot_outdoor": 1,
+      "duration_periods": 4,
+      "desc": "O céu racha em cores erradas — Éter cru chove sobre Valoria."
+    },
+    "noite_sem_estrelas": {
+      "label": "Noite Sem Estrelas",
+      "perception_mod": -4, "rest_block": true,
+      "duration_periods": 2,
+      "desc": "Nenhuma estrela. Nenhuma. Os velhos trancam as portas e não explicam."
+    }
+  }
+}

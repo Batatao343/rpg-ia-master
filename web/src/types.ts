@@ -94,6 +94,7 @@ export interface WorldBlock {
   period: string;
   visited: string[];
   danger: number;
+  weather: string; // Fase 6.5: rótulo do clima ("Miasma denso", "Nevasca"...)
   controlled: Record<string, string>; // Fase 3.4: location_id -> NOME de quem domina (era faction_id)
   danger_overrides: Record<string, number>; // location_id -> perigo elevado (ascensão)
   turn_count: number; // Fase 3.2: dispara refetch do Codex quando o turno muda

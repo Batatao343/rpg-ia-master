@@ -160,13 +160,22 @@ def storyteller_node(state: GameState):
             f"Contexto do local: {dest.get('lore_seed', '')} Descreva a chegada e o que ele vê agora."
         )
     elif last_user_input and is_rest(last_user_input):
+        from world_utils import weather_effects
+        rest_blocked = weather_effects(world).get("rest_block", False)  # Fase 6.5
         rested_player, world = apply_rest(dict(state.get("player", {})), world)
         factions, faction_events = advance_factions(factions, 2)  # descanso = 2 períodos
         factions, world, faction_note = resolve_faction_completions(factions, world, faction_events, intel)
-        rest_note = (
-            f"O jogador DESCANSOU. O tempo avançou para {clock_label(world)} e ele recuperou parte das forças. "
-            "Narre a passagem do tempo e o estado do mundo ao acordar."
-        )
+        if rest_blocked:
+            rest_note = (
+                f"O jogador TENTOU descansar, mas o clima ({world.get('weather', 'o miasma')}) "
+                f"NÃO permite descanso seguro ao relento — NADA foi recuperado e o tempo passou "
+                f"({clock_label(world)}). Narre a noite péssima e a exaustão."
+            )
+        else:
+            rest_note = (
+                f"O jogador DESCANSOU. O tempo avançou para {clock_label(world)} e ele recuperou parte das forças. "
+                "Narre a passagem do tempo e o estado do mundo ao acordar."
+            )
     # (Ação livre: o gating é feito pelo PRÓPRIO narrador no prompt — sem chamada extra ao Ruler.)
 
     # --- O tempo passou (viagem/descanso): ou cai em encontro, ou o mundo "respira" ---
@@ -186,8 +195,11 @@ def storyteller_node(state: GameState):
 
             # Fase 6.4 (R1): percepção decide surpresa; (R2): nem todo perigo é combate.
             # Reforço/fação dominante SEMPRE é combate (eles vieram POR você).
-            from world_utils import detection_check, resolve_trap, resolve_track, roll_encounter_type
-            det = detection_check(base_p, danger)
+            from world_utils import (detection_check, resolve_trap, resolve_track,
+                                     roll_encounter_type, weather_effects)
+            # Fase 6.5: neblina/vendaval atrapalham a percepção
+            det = detection_check(base_p, danger,
+                                  perception_mod=weather_effects(world).get("perception_mod", 0))
             kind = ("combat" if enc.get("reason") in ("reinforcements", "controlled")
                     else roll_encounter_type(danger))
 
