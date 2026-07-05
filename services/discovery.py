@@ -100,8 +100,10 @@ def knowledge_tier(entry: Dict) -> int:
     return tier
 
 
-def bestiary_view(bk: Dict) -> List[Dict]:
-    """Junta contadores + data/bestiary.json, revelando campos por grau."""
+def bestiary_view(bk: Dict, turn: int = 0) -> List[Dict]:
+    """Junta contadores + data/bestiary.json, revelando campos por grau.
+    Fase 6.3: entrada ganha rótulo de raridade regional (pressão de caça)."""
+    from services.ecology import regional_rarity_label
     db = gamedata.BESTIARY or {}
     out: List[Dict] = []
     for creature_id, entry in (bk or {}).items():
@@ -118,6 +120,9 @@ def bestiary_view(bk: Dict) -> List[Dict]:
             "name": base.get("name", ""),
             "regions": base.get("regions", []),
         }
+        rarity_note = regional_rarity_label(creature_id, bk, turn)
+        if rarity_note:
+            view["rarity_note"] = rarity_note
         if tier >= 2:
             view["description"] = base.get("description", "")
             view["type"] = base.get("type", "")
@@ -205,6 +210,7 @@ def player_codex(state: Dict) -> Dict[str, List[Dict]]:
         "locations": _locations_block(state),
         "factions": _factions_block(state),
         "characters": _characters_block(state),
-        "creatures": bestiary_view(state.get("bestiary_knowledge") or {}),
+        "creatures": bestiary_view(state.get("bestiary_knowledge") or {},
+                                   turn=int((state.get("world") or {}).get("turn_count", 0) or 0)),
         "secrets": _secrets_block(state),
     }

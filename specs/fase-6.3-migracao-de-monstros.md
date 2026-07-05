@@ -1,6 +1,6 @@
 # SPEC — Fase 6.3: Migração de monstros — população reage à caça e ao poder
 
-> **Status:** `draft`
+> **Status:** `in-progress` — Etapas 1–4 implementadas (2026-07-05, 499 testes); falta smoke real (§6). Desvio: nota do NARRADOR sobre escassez ficou de fora (o rótulo aparece no Codex do jogador; injetar no prompt entra quando houver demanda de playtest).
 > **Criada:** 2026-07-05 · **Atualizada:** 2026-07-05
 > **Depende de:** Fase 2.5b (pick_encounter_enemy/behavior) · 3.2 (bestiary_knowledge) · 4.4 (loot tables) · 4.6 (fill_encounter)
 > **Desbloqueia:** mundo que responde ao estilo de jogo (farm tem consequência)

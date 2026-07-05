@@ -417,13 +417,21 @@ def _bestiary_by_faction(faction_id: str):
     return None
 
 
-def pick_encounter_enemy(loc: dict, danger: int, turn: int = 0, faction_id: str = ""):
+def pick_encounter_enemy(loc: dict, danger: int, turn: int = 0, faction_id: str = "",
+                         *, bestiary_knowledge: dict = None, projection: dict = None,
+                         rng=None):
     """
     Fase 2.5b (R11): sorteio DETERMINÍSTICO de criatura concreta do bestiário.
     - facção informada -> combatente daquela facção (se curado);
     - senão, criatura com `regions` contendo a região do local, com porte
       compatível com o perigo (1-2: Minion; 3: Minion/Elite; 4: Elite). BOSS nunca
       sai em encontro aleatório.
+
+    Fase 6.3: com `bestiary_knowledge`/`projection`, o sorteio é PONDERADO —
+    pressão de caça rebaixa a criatura farmada, criatura da fação que controla o
+    local pesa x2, e fauna local rareada abre vaga p/ 1 migrante de região
+    conectada (rotas bloqueadas da 6.1 barram). Sem os dados -> comportamento
+    legado (round-robin por turno), retrocompatível.
     Retorna a ENTRADA do bestiário ou None (chamador cai no hint genérico).
     """
     if faction_id:
@@ -449,10 +457,32 @@ def pick_encounter_enemy(loc: dict, danger: int, turn: int = 0, faction_id: str 
     else:
         filtered = [e for e in pool if tier(e) == "elite"] or pool
     pool = sorted(filtered or pool, key=lambda e: e.get("id", ""))
-    return pool[int(turn) % len(pool)]
+
+    if bestiary_knowledge is None and projection is None:
+        return pool[int(turn) % len(pool)]  # legado: determinístico por turno
+
+    # --- Fase 6.3: sorteio ponderado -------------------------------------
+    from services import ecology as eco3
+    loc_id = (loc or {}).get("id", "")
+    weights = [eco3.hunt_pressure(e.get("id", ""), bestiary_knowledge, turn)
+               * eco3.faction_boost(e, loc_id, projection)
+               for e in pool]
+
+    # fauna local rareada -> no máx. 1 migrante entra no sorteio (peso 0.5)
+    avg = sum(weights) / max(1, len(weights))
+    if avg < eco3.MIGRANT_THRESHOLD + 0.2:
+        migrants = eco3.migrant_candidates(loc, gamedata.BESTIARY or {}, projection)
+        migrants = [m for m in migrants if tier(m) == "minion" or danger >= 3]
+        if migrants:
+            m = sorted(migrants, key=lambda e: e.get("id", ""))[int(turn) % len(migrants)]
+            pool = pool + [m]
+            weights = weights + [eco3.MIGRANT_WEIGHT]
+
+    return eco3.weighted_pick(pool, weights, rng)
 
 
-def check_encounter(world: dict, factions, intel, turn: int = 0):
+def check_encounter(world: dict, factions, intel, turn: int = 0,
+                    bestiary_knowledge: dict = None, projection: dict = None):
     """
     Gatilho DETERMINÍSTICO de encontro ao entrar/descansar num local perigoso.
     Dispara se: alerta de fuga ativo na região (reforços — R10); OU looming_threat
@@ -487,7 +517,9 @@ def check_encounter(world: dict, factions, intel, turn: int = 0):
 
     if ruler:
         fid = ruler.get("id")
-        entry = pick_encounter_enemy(loc, danger, turn, faction_id=fid)
+        entry = pick_encounter_enemy(loc, danger, turn, faction_id=fid,
+                                     bestiary_knowledge=bestiary_knowledge,
+                                     projection=projection)
         if intel.get(fid, {}).get("known"):
             who = ruler.get("name")
             hint = f"{entry['name']} ({who})" if entry else f"asseclas armados da {who}"
@@ -503,7 +535,9 @@ def check_encounter(world: dict, factions, intel, turn: int = 0):
                 "reason": "looming_threat", "enemy_id": ""}
 
     if danger >= 4:
-        entry = pick_encounter_enemy(loc, danger, turn)
+        entry = pick_encounter_enemy(loc, danger, turn,
+                                     bestiary_knowledge=bestiary_knowledge,
+                                     projection=projection)
         hint = entry.get("name") if entry else f"feras/perigos de {region}"
         return {"hint": hint, "enemy_id": entry.get("id", "") if entry else "",
                 "flavor": f"O perigo de {region} se materializa: algo hostil avança sobre você.",

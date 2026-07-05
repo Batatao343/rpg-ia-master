@@ -360,10 +360,12 @@ def execute_craft(state: dict, item_ref: str) -> dict:
 # Drop tables — raridade rolada em Python (LLM só descreve)
 # ---------------------------------------------------------------------------
 def roll_loot(region_id: str, danger: int, rng: Optional[random.Random] = None,
-              projection: Optional[dict] = None) -> dict:
+              projection: Optional[dict] = None,
+              bestiary_knowledge: Optional[dict] = None, turn: int = 0) -> dict:
     """Sorteia raridade (pesos por banda de perigo) e item do pool da região.
     Retorna {"item_id", "rarity", "gold"} — item_id None se pool vazio (só ouro).
-    Fase 6.2: único já reclamado sai do pool ANTES do sorteio (nunca re-dropa)."""
+    Fase 6.2: único já reclamado sai do pool ANTES do sorteio (nunca re-dropa).
+    Fase 6.3: drops de criaturas quase-extintas na região somem temporariamente."""
     rng = rng or random.Random()
     table = LOOT_TABLES.get(region_id) or LOOT_TABLES.get("default") or {}
     band = "1-2" if int(danger or 1) <= 2 else "3-4"
@@ -371,8 +373,14 @@ def roll_loot(region_id: str, danger: int, rng: Optional[random.Random] = None,
     rarities = list(weights.keys())
     pick = rng.choices(rarities, weights=[max(0, int(weights[r])) for r in rarities], k=1)[0]
     pools = table.get("pools") or {}
+    suppressed: set = set()
+    if bestiary_knowledge is not None:
+        from gamedata import BESTIARY
+        from services.ecology import suppressed_loot
+        suppressed = suppressed_loot(region_id, BESTIARY or {}, bestiary_knowledge, turn)
     pool = [i for i in (pools.get(pick) or [])
-            if i in ARTIFACTS_DB and is_unique_available(i, projection)]
+            if i in ARTIFACTS_DB and is_unique_available(i, projection)
+            and i not in suppressed]
     item_id = rng.choice(pool) if pool else None
     gold = rng.randint(3, 12) * max(1, int(danger or 1))
     return {"item_id": item_id, "rarity": pick, "gold": gold}

@@ -173,7 +173,10 @@ def storyteller_node(state: GameState):
     world_note = ""
     if dest or rested_player is not None:
         turn = int(world.get("turn_count", 0))
-        enc = check_encounter(world, factions, intel, turn)
+        # Fase 6.3: sorteio ponderado — pressão de caça/fação/migração
+        enc = check_encounter(world, factions, intel, turn,
+                              bestiary_knowledge=state.get("bestiary_knowledge"),
+                              projection=state.get("world_projection"))
         if enc:
             # Emboscada: curto-circuita para o combate (sem simular — poupa quota).
             world["last_encounter_turn"] = turn

@@ -129,7 +129,9 @@ def loot_node(state: GameState):
     region_id = loc.get("region_id", "default")
     danger = int(world.get("danger_level", 1) or 1)
     roll = economy.roll_loot(region_id, danger, random.Random(),
-                             projection=state.get("world_projection"))
+                             projection=state.get("world_projection"),
+                             bestiary_knowledge=state.get("bestiary_knowledge"),
+                             turn=int(world.get("turn_count", 0) or 0))
 
     player["gold"] = int(player.get("gold", 0)) + int(roll["gold"])
     achado = f"+{roll['gold']} de ouro"
