@@ -196,10 +196,14 @@ def test_resist_racial_anula_controle():
 # ---------------------------------------------------------------------------
 
 def test_muralha_humana_ac():
-    p = make_player(class_name="Cavaleiro da Vigília")
+    # Fase 4.5: passiva virou condicional a party ativa (flag setada no combate)
+    p = make_player(class_name="Cavaleiro da Vigília", _party_active=True)
     base = make_player()
     assert cm.compute_player_combat_stats(p)["ac"] == \
         cm.compute_player_combat_stats(base)["ac"] + 2
+    solo = make_player(class_name="Cavaleiro da Vigília")
+    assert cm.compute_player_combat_stats(solo)["ac"] == \
+        cm.compute_player_combat_stats(base)["ac"]
 
 
 def test_batedor_dano_passivo():
@@ -277,7 +281,8 @@ def test_passive_effects_schema():
     from gamedata import CLASSES
     ok_triggers = {"always", "initiative_attr", "hp_as_mana", "resist",
                    "damage_type", "melee_retaliate", "basic_attack_dot",
-                   "declarative", "heal_bonus_low", "unarmored_ac_con"}
+                   "declarative", "heal_bonus_low", "unarmored_ac_con",
+                   "party_active"}
     for cname, c in CLASSES.items():
         pes = c.get("passive_effects")
         assert isinstance(pes, list) and pes, f"{cname}: passive_effects ausente"

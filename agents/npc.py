@@ -205,6 +205,40 @@ def npc_actor_node(state: GameState):
     # O NPC NÃO é uma wikipédia: age por persona + memória própria (sem dump de lore global).
     last_msg = messages[-1].content if messages else ""
 
+    # --- Fase 4.5: comandos de party são DETERMINÍSTICOS (gate em Python; o LLM
+    # nunca decide se o NPC aceita — no máximo narraria; aqui nem precisa dele). ---
+    import party as party_mod
+    cmd = party_mod.detect_party_command(str(last_msg))
+    if cmd:
+        loc = state.get("world", {}).get("current_location", "")
+        if cmd == "recruit":
+            new_party, reason = party_mod.recruit(
+                {**state, "npcs": {**npcs_db, npc_name: npc_data}}, npc_name)
+            if new_party is None:
+                return {"messages": [AIMessage(content=f'🗣️ {npc_name} recusa: "{reason}"')],
+                        "archive_due": True}
+            return {"party": new_party,
+                    "messages": [AIMessage(content=(
+                        f"🗣️ {npc_name} ajeita o equipamento e assente. "
+                        f'"Estou com você." ({npc_name} junta-se ao grupo.)'))],
+                    "archive_due": True}
+        if cmd == "dismiss":
+            new_party, found = party_mod.dismiss(state, npc_name)
+            msg = (f"{npc_name} assente e segue o próprio caminho."
+                   if found else f"{npc_name} não está no seu grupo.")
+            return {"party": new_party, "messages": [AIMessage(content=f"🗣️ {msg}")],
+                    "archive_due": found}
+        if cmd == "wait":
+            new_party, found = party_mod.set_waiting(state, npc_name, loc)
+            msg = (f"{npc_name} monta guarda em {loc} e espera."
+                   if found else f"{npc_name} não está no seu grupo.")
+            return {"party": new_party, "messages": [AIMessage(content=f"🗣️ {msg}")]}
+        if cmd == "follow":
+            new_party, found = party_mod.set_following(state, npc_name)
+            msg = (f"{npc_name} retoma a marcha ao seu lado."
+                   if found else f"{npc_name} não está no seu grupo.")
+            return {"party": new_party, "messages": [AIMessage(content=f"🗣️ {msg}")]}
+
     # Memória vetorizada DESTE npc: recupera por relevância o que viveu com o jogador
     # (além das 3 últimas linhas). Inerte sem chave (get_embeddings -> None).
     game_id = state.get("game_id")

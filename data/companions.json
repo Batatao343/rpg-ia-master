@@ -1,0 +1,34 @@
+{
+  "guerreiro": {
+    "hp": 22, "defense": 14,
+    "attributes": {"str": 14, "dex": 10, "con": 14, "int": 8, "wis": 10, "cha": 10},
+    "attacks": [{"name": "Espada Curta", "type": "melee", "bonus": 4, "damage": "1d8+2"}],
+    "behavior": {"profile": "feroz"}
+  },
+  "arqueiro": {
+    "hp": 16, "defense": 13,
+    "attributes": {"str": 10, "dex": 15, "con": 10, "int": 10, "wis": 12, "cha": 10},
+    "attacks": [{"name": "Arco Curto", "type": "ranged", "bonus": 4, "damage": "1d6+2"},
+                {"name": "Adaga", "type": "melee", "bonus": 2, "damage": "1d4"}],
+    "behavior": {"profile": "tatico"}
+  },
+  "curandeiro": {
+    "hp": 14, "defense": 11,
+    "attributes": {"str": 8, "dex": 10, "con": 12, "int": 14, "wis": 14, "cha": 10},
+    "attacks": [{"name": "Cajado", "type": "melee", "bonus": 2, "damage": "1d4"},
+                {"name": "Frasco Corrosivo", "type": "ranged", "bonus": 3, "damage": "1d6 + veneno"}],
+    "behavior": {"profile": "covarde", "flee_below": 0.25}
+  },
+  "mago": {
+    "hp": 12, "defense": 11,
+    "attributes": {"str": 8, "dex": 12, "con": 10, "int": 16, "wis": 12, "cha": 10},
+    "attacks": [{"name": "Dardo Arcano", "type": "magic", "bonus": 5, "damage": "1d8+2"}],
+    "behavior": {"profile": "tatico"}
+  },
+  "capanga": {
+    "hp": 14, "defense": 12,
+    "attributes": {"str": 12, "dex": 10, "con": 12, "int": 8, "wis": 8, "cha": 8},
+    "attacks": [{"name": "Porrete", "type": "melee", "bonus": 3, "damage": "1d6+1"}],
+    "behavior": {"profile": "tatico"}
+  }
+}

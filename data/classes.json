@@ -43,10 +43,10 @@
     },
     "passive_effects": [
       {
-        "trigger": "always",
+        "trigger": "party_active",
         "stat": "ac",
         "delta": 2,
-        "note": "aprox de 'aliados adjacentes' — vira condicional a party ativa na 4.5"
+        "note": "Muralha Humana: +2 AC com aliado da party ativo em combate (4.5)"
       }
     ],
     "starting_equipment": [

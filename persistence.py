@@ -159,7 +159,8 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
             # --- Recupera Core ---
             "player": raw_player,
             "world": raw_data.get("world", {}),
-            "party": raw_data.get("party", []),
+            # Fase 4.5: party antiga (schema mínimo) ganha ficha de combate default
+            "party": __import__("party").backfill_party(raw_data.get("party", [])),
             "enemies": raw_data.get("enemies", []),
             "factions": raw_data.get("factions", []),
             "faction_intel": raw_data.get("faction_intel", {}),

@@ -78,7 +78,7 @@ export function Hud({ data, open, onEquip, busy }: {
 
       <div className="tabpanel" role="tabpanel">
         {tab === "ficha" && <FichaTab data={data} hpHitKey={hpHit} onEquip={onEquip} busy={busy} />}
-        {tab === "combate" && <CombatTab c={data?.combat} hitKey={hpHit} />}
+        {tab === "combate" && <CombatTab c={data?.combat} hitKey={hpHit} party={data?.party ?? []} />}
         {tab === "personagens" && <PeopleTab npcs={data?.npcs ?? []} />}
         {tab === "mapa" && (
           <div>
@@ -338,12 +338,47 @@ function ChronicleTab({ chapters }: { chapters: ChronicleChapter[] }) {
   );
 }
 
-function CombatTab({ c, hitKey }: { c: CombatBlock | undefined; hitKey: number }) {
+function PartyBars({ party }: { party: import("../types").PartyMember[] }) {
+  const shown = party.filter((m) => m.status !== "morto" || m.hp > 0 ? true : true);
+  if (!shown.length) return null;
+  return (
+    <div className="partyblock">
+      <p className="hud__label hud__label--sub">Companheiros</p>
+      <ul className="party">
+        {shown.map((m, i) => (
+          <li key={i} className={"party__member" + (m.status === "morto" ? " is-dead" : "") + (!m.active ? " is-waiting" : "")}>
+            <div className="party__top">
+              <span>{m.name}{!m.active && m.status !== "morto" ? " (esperando)" : ""}{m.status === "morto" ? " †" : ""}</span>
+              <span>{`${m.hp}/${m.max_hp}`}</span>
+            </div>
+            <div className="party__track">
+              <div className="party__fill" style={{ width: pct(m.hp, m.max_hp) + "%" }} />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function CombatTab({ c, hitKey, party }: {
+  c: CombatBlock | undefined; hitKey: number; party: import("../types").PartyMember[];
+}) {
   if (!c || !c.active || !c.enemies.length) {
-    return <p className="combat-empty">Nenhuma ameaça à vista. O aço descansa.</p>;
+    return (
+      <div>
+        <p className="combat-empty">Nenhuma ameaça à vista. O aço descansa.</p>
+        <PartyBars party={party} />
+      </div>
+    );
   }
   const cds = Object.entries(c.cooldowns || {});
-  return <Combat c={c} hitKey={hitKey} cds={cds} />;
+  return (
+    <div>
+      <Combat c={c} hitKey={hitKey} cds={cds} />
+      <PartyBars party={party} />
+    </div>
+  );
 }
 
 function Combat({ c, hitKey, cds }: { c: CombatBlock; hitKey: number; cds: [string, number][] }) {

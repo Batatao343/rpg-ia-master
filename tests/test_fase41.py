@@ -448,10 +448,10 @@ def test_combat_kill_da_xp(monkeypatch):
                                          "reason": ""})
     monkeypatch.setattr(cbt, "_narrate", lambda *a, **k: "Fim.")
     monkeypatch.setattr(cbt.cm, "roll_initiative",
-                        lambda p, e: [{"id": "player", "name": p.get("name"),
-                                       "side": "hero", "init": 20}] +
-                                     [{"id": x.get("id"), "name": x.get("name"),
-                                       "side": "enemy", "init": 1} for x in e])
+                        lambda p, e, allies=None: [{"id": "player", "name": p.get("name"),
+                                                    "side": "hero", "init": 20}] +
+                                                  [{"id": x.get("id"), "name": x.get("name"),
+                                                    "side": "enemy", "init": 1} for x in e])
 
     player = make_player(xp=250, attributes={"str": 18, "dex": 14, "con": 16,
                                              "int": 8, "wis": 12, "cha": 12})

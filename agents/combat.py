@@ -301,9 +301,18 @@ def combat_node(state: GameState):
             "archive_due": True,  # fim de combate = evento relevante
         }
 
+    # Fase 4.5: aliados ativos entram no combate (mesmo motor, lado 'ally').
+    import party as party_mod
+    party = party_mod.backfill_party(state.get("party") or [])
+    allies_active = [a for a in party if a.get("active")
+                     and a.get("status", "ativo") == "ativo" and int(a.get("hp", 0)) > 0]
+    # passiva do Cavaleiro (Muralha Humana) agora é condicional a party ativa
+    player["_party_active"] = bool(allies_active)
+
     # Iniciativa: rola no 1º round; persiste depois.
     if is_combat_start or not combat_meta.get("order"):
-        combat_meta = {"round": 1, "active": True, "order": cm.roll_initiative(player, active)}
+        combat_meta = {"round": 1, "active": True,
+                       "order": cm.roll_initiative(player, active, allies_active)}
     else:
         combat_meta["round"] = combat_meta.get("round", 1) + 1
         combat_meta["active"] = True
@@ -341,13 +350,23 @@ def combat_node(state: GameState):
                 else:
                     logs += cm.resolve_player_action(player, enemies, action, ABILITIES)
             hero_resolved = True
+        elif slot["side"] == "ally":
+            a = next((x for x in party if x.get("id") == slot["id"]), None)
+            if not a or a.get("status", "ativo") != "ativo" or not a.get("active"):
+                continue
+            logs += cm.tick_conditions(a)
+            logs += cm.resolve_ally_turn(a, enemies, rnd=rnd)
         else:
             e = next((x for x in enemies if x.get("id") == slot["id"]), None)
             if not e or e.get("status") != "ativo":
                 continue
             logs += cm.tick_conditions(e)
             if e.get("status") == "ativo" and int(player.get("hp", 0)) > 0:
-                logs += cm.resolve_enemy_turn(e, player, allies=enemies, rnd=rnd)
+                hero_side = [player] + [a for a in party if a.get("active")
+                                        and a.get("status", "ativo") == "ativo"
+                                        and int(a.get("hp", 0)) > 0]
+                logs += cm.resolve_enemy_turn(e, player, allies=enemies, rnd=rnd,
+                                              hero_side=hero_side)
     if not hero_resolved and int(player.get("hp", 0)) > 0:
         logs += cm.resolve_player_action(player, enemies, action, ABILITIES)
 
@@ -394,10 +413,26 @@ def combat_node(state: GameState):
         result["bestiary_knowledge"] = bestiary_knowledge
     combat_meta["active"] = bool(active_after)
 
+    # Fase 4.5: party atualizada volta ao estado; aliado canônico morto vira
+    # npc_killed (actor=enemy) — crônica/quests órfãs/cascata 2.7 reagem de graça.
+    result["party"] = party
+    fallen_events = []
+    for a in party:
+        if a.get("status") == "morto" and not a.get("_death_logged"):
+            a["_death_logged"] = True
+            origin = a.get("origin_npc") or ""
+            ent = gr.get_entity(origin) if origin else None
+            if ent and ent.get("type") == "npc":
+                fallen_events.append({
+                    "type": "npc_killed", "actor_id": "enemy", "target_id": origin,
+                    "detail": f"{a.get('name','aliado')} caiu lutando ao lado do herói",
+                    "payload": {}, "source": "combat",
+                })
+
     # Fase 2.6 (R5): morte de inimigo CANÔNICO vira npc_killed determinístico (sem LLM).
     # O motor já sabe quem caiu; ids genéricos de bestiário não geram evento.
     # Fase 4.1: level_up (source=progression) entra na mesma fila.
-    engine_events = _kill_events(dead) + level_up_events
+    engine_events = _kill_events(dead) + level_up_events + fallen_events
     if engine_events:
         result["pending_world_events"] = (state.get("pending_world_events", []) or []) + engine_events
 

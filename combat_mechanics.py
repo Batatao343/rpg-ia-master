@@ -276,11 +276,12 @@ def tick_conditions(entity: Dict) -> List[str]:
 # --------------------------------------------------------------------------
 # Iniciativa
 # --------------------------------------------------------------------------
-def roll_initiative(player: Dict, enemies: List[Dict]) -> List[Dict]:
-    """d20 + mod de destreza por combatente. Ordena desc. Lados: hero/enemy.
+def roll_initiative(player: Dict, enemies: List[Dict],
+                    allies: Optional[List[Dict]] = None) -> List[Dict]:
+    """d20 + mod de destreza por combatente. Ordena desc. Lados: hero/ally/enemy.
 
     Fase 4.2: passiva `initiative_attr` (Arcanista) usa o melhor entre dex e o
-    atributo declarado."""
+    atributo declarado. Fase 4.5: aliados entram no lado 'ally'."""
     order: List[Dict] = []
     p_mods = attr_mods(player.get("attributes", {}))
     p_init = p_mods["dex"]
@@ -289,6 +290,10 @@ def roll_initiative(player: Dict, enemies: List[Dict]) -> List[Dict]:
             p_init = max(p_init, p_mods.get(normalize_attr(pe.get("attr", "dex")), 0))
     order.append({"id": "player", "name": player.get("name", "Herói"),
                   "side": "hero", "init": random.randint(1, 20) + p_init})
+    for a in allies or []:
+        a_dex = attr_mods(a.get("attributes", {}))["dex"]
+        order.append({"id": a.get("id", a.get("name", "?")), "name": a.get("name", "Aliado"),
+                      "side": "ally", "init": random.randint(1, 20) + a_dex})
     for e in enemies:
         e_dex = attr_mods(e.get("attributes", {}))["dex"]
         order.append({"id": e.get("id", e.get("name", "?")), "name": e.get("name", "Inimigo"),
@@ -397,6 +402,9 @@ def compute_player_combat_stats(player: Dict) -> Dict:
             ac += int(pe.get("delta", 0) or 0)
         elif trig == "always" and pe.get("stat") == "attack":
             attack += int(pe.get("delta", 0) or 0)
+        elif trig == "party_active" and pe.get("stat") == "ac" and player.get("_party_active"):
+            # Fase 4.5: Muralha Humana só com aliado AO LADO (flag setada no combate)
+            ac += int(pe.get("delta", 0) or 0)
         elif trig == "unarmored_ac_con" and ac_bonus == 0:
             # Guardião: sem armadura, AC = 10 + Dex + Con
             ac = max(ac, 10 + mods["dex"] + mods["con"])
@@ -821,8 +829,74 @@ def _apply_attack_conditions(atk: Dict, player: Dict) -> List[str]:
     return logs
 
 
+def pick_target(enemy: Dict, targets: List[Dict]) -> Optional[Dict]:
+    """Fase 4.5 (R4): escolha TÁTICA de alvo entre player + aliados, por perfil.
+
+    tatico -> menor HP%; covarde -> menor defense; implacavel -> o player;
+    feroz -> aleatório (sem memória de dano por round na v1)."""
+    alive = [t for t in targets or []
+             if int(t.get("hp", 0)) > 0 and t.get("status", "ativo") == "ativo"]
+    if not alive:
+        return None
+    if len(alive) == 1:
+        return alive[0]
+    profile = get_behavior(enemy)["profile"]
+    if profile == "implacavel":
+        for t in alive:
+            if t.get("side") == "hero" or "class_name" in t:
+                return t
+        return alive[0]
+    if profile == "tatico":
+        return min(alive, key=lambda t: int(t.get("hp", 1)) / max(1, int(t.get("max_hp", 1))))
+    if profile == "covarde":
+        return min(alive, key=lambda t: int(t.get("defense", 10)))
+    return random.choice(alive)  # feroz
+
+
+def _target_ac(target: Dict) -> int:
+    """AC efetiva de um alvo do lado herói (player usa compute; aliado usa defense)."""
+    if "class_name" in target:
+        return compute_player_combat_stats(target)["ac"]
+    return int(target.get("defense", 10)) + condition_modifiers(target)["ac"]
+
+
+def resolve_ally_turn(ally: Dict, enemies: List[Dict], rnd: int = 1) -> List[str]:
+    """Fase 4.5: turno de UM aliado — MESMO motor do inimigo, lado invertido.
+    Perfil 2.5b decide o ataque; alvo = inimigo ativo de menor HP. Muta in-place."""
+    logs: List[str] = []
+    if int(ally.get("hp", 0)) <= 0 or ally.get("status", "ativo") != "ativo":
+        return logs
+    if has_control(ally, "stun"):
+        return [f"{ally.get('name','Aliado')} está ATORDOADO e perde o turno."]
+    alive = [e for e in enemies if e.get("status") == "ativo"]
+    if not alive:
+        return logs
+    target = min(alive, key=lambda e: int(e.get("hp", 1)))
+    atk = choose_enemy_attack(ally, int(target.get("defense", 10)), rnd)
+    bonus = int(atk.get("bonus", 0) or 0) + condition_modifiers(ally)["attack"]
+    roll = random.randint(1, 20)
+    total = roll + bonus
+    tgt_ac = int(target.get("defense", target.get("ac", 10))) + condition_modifiers(target)["ac"]
+    crit = roll == 20
+    if total < tgt_ac and not crit:
+        logs.append(f"{ally['name']} ({atk.get('name','ataque')}) erra {target['name']} ({total} vs AC {tgt_ac}).")
+        return logs
+    dmg, detail = roll_dice_numeric(atk.get("damage", "1d6"))
+    if crit:
+        dmg *= 2
+    dmg = max(0, dmg + condition_modifiers(ally)["damage"])
+    target["hp"] = max(0, int(target.get("hp", 0)) - dmg)
+    logs.append(f"{ally['name']} {'CRÍTICO!' if crit else 'acerta'} {target['name']} "
+                f"com {atk.get('name','ataque')}: {dmg} de dano (HP {target['hp']}) [{detail}]")
+    if target["hp"] <= 0:
+        target["status"] = "morto"
+        logs.append(f"{target['name']} cai derrotado.")
+    return logs
+
+
 def resolve_enemy_turn(enemy: Dict, player: Dict,
-                       allies: Optional[List[Dict]] = None, rnd: int = 1) -> List[str]:
+                       allies: Optional[List[Dict]] = None, rnd: int = 1,
+                       hero_side: Optional[List[Dict]] = None) -> List[str]:
     """Turno do inimigo: moral -> escolha de ataque por perfil -> d20 vs AC -> dano
     (+frenesi feroz, +condições do ataque). Muta enemy/player; retorna logs."""
     logs: List[str] = []
@@ -837,16 +911,22 @@ def resolve_enemy_turn(enemy: Dict, player: Dict,
     if flee_log:
         return [flee_log]
 
-    pstats = compute_player_combat_stats(player)
-    atk = choose_enemy_attack(enemy, pstats["ac"], rnd, player)
+    # Fase 4.5 (R4): alvo tático entre player + aliados ativos (perfil decide).
+    targets = [t for t in (hero_side or [player]) if t is not None]
+    target = pick_target(enemy, targets) or player
+    is_player = (target is player) or ("class_name" in target)
+
+    tgt_ac = _target_ac(target)
+    atk = choose_enemy_attack(enemy, tgt_ac, rnd, target if is_player else None)
     bonus = int(atk.get("bonus", 0) or 0)
     # Fase 4.2: condições do inimigo modificam o acerto dele (fear = -2 embutido)
     bonus += condition_modifiers(enemy)["attack"]
     atk_roll = random.randint(1, 20)
     total = atk_roll + bonus
     crit = atk_roll == 20
-    if total < pstats["ac"] and not crit:
-        logs.append(f"{enemy['name']} ({atk.get('name','ataque')}) erra ({total} vs AC {pstats['ac']}).")
+    if total < tgt_ac and not crit:
+        logs.append(f"{enemy['name']} ({atk.get('name','ataque')}) erra "
+                    f"{target.get('name','o alvo')} ({total} vs AC {tgt_ac}).")
         return logs
 
     dmg, detail = roll_dice_numeric(atk.get("damage", "1d6"))
@@ -865,15 +945,17 @@ def resolve_enemy_turn(enemy: Dict, player: Dict,
         dmg = max(0, dmg + edmg)
         detail = f"{detail} {'+' if edmg >= 0 else ''}{edmg} condições"
 
-    player["hp"] = max(0, int(player.get("hp", 0)) - dmg)
+    target["hp"] = max(0, int(target.get("hp", 0)) - dmg)
     hit = "CRÍTICO!" if crit else "acerta"
-    logs.append(f"{enemy['name']} {hit} com {atk.get('name','ataque')}: {dmg} de dano (HP {player['hp']}) [{detail}]")
-    if int(player.get("hp", 0)) > 0:
-        logs += _apply_attack_conditions(atk, player)
+    logs.append(f"{enemy['name']} {hit} {target.get('name','o alvo')} com "
+                f"{atk.get('name','ataque')}: {dmg} de dano (HP {target['hp']}) [{detail}]")
+    if int(target.get("hp", 0)) > 0:
+        logs += _apply_attack_conditions(atk, target)
         # Fase 4.2: Pastor de Pragas (melee_retaliate) — quem morde, prova o veneno.
+        # (class_passives só devolve algo para o PLAYER — aliado não tem class_name.)
         atype = str(atk.get("type", "melee")).lower()
         if "melee" in atype or atype == "":
-            for pe in class_passives(player):
+            for pe in class_passives(target):
                 if pe.get("trigger") == "melee_retaliate":
                     ret, rdet = roll_dice_numeric(str(pe.get("formula", "1d4")))
                     if ret > 0:
@@ -883,4 +965,9 @@ def resolve_enemy_turn(enemy: Dict, player: Dict,
                         if enemy["hp"] <= 0 and enemy.get("status") == "ativo":
                             enemy["status"] = "morto"
                             logs.append(f"{enemy['name']} sucumbe à retaliação.")
+    elif not is_player:
+        # Fase 4.5 (R5): aliado caiu — vira baixa; o nó de combate decide evento.
+        target["status"] = "morto"
+        target["active"] = False
+        logs.append(f"{target.get('name','O aliado')} CAI em combate.")
     return logs

@@ -88,6 +88,7 @@ class GameResponse(BaseModel):
     npcs: List[Dict[str, Any]] = [] # NPCs conhecidos (nome, papel, local, relação, última lembrança)
     chronicle: List[Dict[str, Any]] = [] # capítulos: {title, started_turn, location, entries[{text,turn,kind,event_id?}]}
     factions: List[Dict[str, Any]] = [] # fações vivas: objetivo, progresso, postura, reputação
+    party: List[Dict[str, Any]] = [] # Fase 4.5: companheiros {name, hp, max_hp, active, archetype, status}
 
 # --- HELPER: FORMATA RESPOSTA ---
 def format_response(state: dict) -> GameResponse:
@@ -145,6 +146,10 @@ def format_response(state: dict) -> GameResponse:
         combat=_combat_block(state),
         npcs=_npcs_block(state.get("npcs", {}) or {}),
         chronicle=_chronicle_block(state.get("chronicle", []) or []),
+        party=[{"name": c.get("name", "?"), "hp": c.get("hp", 0),
+                "max_hp": c.get("max_hp", 1), "active": bool(c.get("active")),
+                "archetype": c.get("archetype", ""), "status": c.get("status", "ativo")}
+               for c in (state.get("party") or []) if isinstance(c, dict)],
         factions=_factions_block(state.get("factions", []) or [],
                                  state.get("faction_intel", {}) or {},
                                  (state.get("world", {}) or {}).get("turn_count", 0),

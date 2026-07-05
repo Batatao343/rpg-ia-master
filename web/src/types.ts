@@ -214,6 +214,16 @@ export interface InventoryEntry {
   slot: string | null;
 }
 
+// Fase 4.5: companheiro da party (HP bar no HUD)
+export interface PartyMember {
+  name: string;
+  hp: number;
+  max_hp: number;
+  active: boolean;
+  archetype: string;
+  status: string; // "ativo" | "morto"
+}
+
 export interface GameResponse {
   game_id: string;
   message: string;
@@ -229,6 +239,7 @@ export interface GameResponse {
   npcs: NpcView[];
   chronicle: ChronicleChapter[];
   factions: FactionView[];
+  party: PartyMember[];
 }
 
 export interface CreateOptions {

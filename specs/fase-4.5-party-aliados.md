@@ -1,6 +1,12 @@
 # SPEC — Fase 4.5: Party — aliados em combate
 
-> **Status:** `draft`
+> **Status:** `in-progress` — **Etapas 1–5 implementadas** (2026-07-05, 443 testes
+> verdes + build web); falta SÓ o smoke com LLM real (§6) para `done`.
+> Desvios da spec: recrutamento/comandos de party interceptados DETERMINISTICAMENTE
+> no npc_actor (regex + gate Python, sem campo novo no structured output — mais
+> robusto que pedir ao LLM); limiar de relationship = 7 na escala real 0..10 (spec
+> dizia 60 numa escala 0..100 que não existe); `pick_target` feroz = aleatório
+> (memória de dano por round fica p/ 4.6).
 > **Criada:** 2026-07-03 · **Atualizada:** 2026-07-03
 > **Depende de:** Fase 4.2 (condições/modificadores simétricos — aliado usa o mesmo motor)
 > **Desbloqueia:** Fase 4.6 (orçamento de encontro considera tamanho da party); passiva "aliados adjacentes" do Cavaleiro vira real (nota da 4.2)

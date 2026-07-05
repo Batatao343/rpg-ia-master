@@ -650,3 +650,11 @@ select {
 .inv__tag { font-style: normal; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
 .inv__equip { font: inherit; font-size: 0.72rem; padding: 0.1rem 0.5rem; border: 1px solid var(--line-soft); border-radius: 6px; background: var(--surface-2); color: var(--muted); cursor: pointer; }
 .inv__equip:hover { border-color: var(--accent); color: var(--ink); }
+
+/* ---------- Fase 4.5: party HP bars ---------- */
+.party { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
+.party__member.is-dead { opacity: 0.45; }
+.party__member.is-waiting { opacity: 0.7; }
+.party__top { display: flex; justify-content: space-between; font-size: 0.82rem; }
+.party__track { height: 6px; border-radius: 4px; background: var(--steel); overflow: hidden; }
+.party__fill { height: 100%; background: var(--accent); transition: width 0.4s ease; }
