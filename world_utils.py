@@ -59,15 +59,22 @@ def is_rest(text: str) -> bool:
     return any(w in t for w in _REST_WORDS)
 
 
+def _fold_txt(s: str) -> str:
+    """lower + sem acento — 'Pantano' tem que casar 'Pântano' (smoke 2026-07-05)."""
+    import unicodedata
+    nfkd = unicodedata.normalize("NFKD", str(s or ""))
+    return "".join(c for c in nfkd if not unicodedata.combining(c)).lower()
+
+
 def find_travel_destination(world: dict, text: str) -> Optional[dict]:
     """
     Se o texto cita um local CONECTADO ao atual (com ou sem verbo de movimento),
-    retorna o nó de destino; senão None.
+    retorna o nó de destino; senão None. Case/acento-insensitive.
     """
-    t = (text or "").lower()
+    t = _fold_txt(text)
     cur_id = world.get("current_location_id")
     for dest in gamedata.get_connections(cur_id):
-        if dest["name"].lower() in t or dest["id"] in t:
+        if _fold_txt(dest["name"]) in t or dest["id"] in t:
             return dest
     return None
 

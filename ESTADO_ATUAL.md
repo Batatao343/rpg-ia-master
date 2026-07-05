@@ -9,9 +9,22 @@
 ## TL;DR — Em que pé está
 
 **Sessão 2026-07-05 (8): FASE 6 (Conteúdo sistêmico) INTEIRA implementada — 5 fatias.**
-461 → **520 testes offline verdes** + build web + smoke_api. Fase 6 foi PRIORIZADA
-antes da Fase 5 (playtest) por decisão do usuário. Pendente: smoke LLM real das
-fatias (§6 das specs — quota).
+461 → **520 testes offline verdes** + build web + smoke_api + **smoke com LLM REAL
+executado — 5 specs `done`**. Smoke real validou em jogo vivo: miasma NEGOU o
+descanso (HP intacto + noite narrada); viagem transicionou o clima
+(miasma→neblina) e disparou encontro com SURPRESA real (neblina −3 derrubou a
+detecção; Afogados agiram antes, init 21/13 vs 7); Adaga de Vidro-Dragão obtida
+por narrativa → claim engine → milestone "não há outro no mundo"; tentativa de
+SEGUNDA adaga barrada pelos DOIS caminhos (items_gained e loot — pool entregou
+Musgo Cinzento no lugar); tabelas regionais em uso (Kit Médico do pool do
+Pântano). **3 fixes de robustez achados no smoke** (MockLLM escondia):
+StoryUpdate.narrative agora tem default + fallback digno com as notas mecânicas
+(Gemini às vezes omite o campo — turno não morre mais); _narrate do loot
+normaliza content em parts (lista) do Gemini; find_travel_destination faz fold
+de acentos ("Pantano" casa "Pântano" — viagem não falha mais silenciosa).
+Pendência residual: proposta espontânea de route_blocked pelo LLM não ocorreu no
+smoke (canal idêntico ao já validado na 2.6; motor 100% coberto offline);
+1 flaky isolado na suíte (3 runs verdes depois — observar).
 **6.1 economia viva:** `route_blocked/cleared` no pipeline 2.6 (validator exige
 conexão direta do mapa); escassez por ALCANÇABILIDADE (BFS − rotas bloqueadas):
 produtor local ×0.6, alcançável ×1.0, isolado ×1.8 e some da loja; regra 2.7

@@ -65,7 +65,11 @@ def _narrate(context: str, fallback_text: str) -> str:
                 "do jogador. NÃO altere números nem invente itens extras.")),
             HumanMessage(content=context),
         ])
-        text = str(getattr(res, "content", "") or "").strip()
+        text = getattr(res, "content", "") or ""
+        if isinstance(text, list):  # Gemini pode devolver parts (smoke 2026-07-05)
+            text = " ".join(p.get("text", "") if isinstance(p, dict) else str(p)
+                            for p in text)
+        text = str(text).strip()
         if text:
             return text
     except Exception as e:

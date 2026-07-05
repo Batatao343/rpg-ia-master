@@ -1,6 +1,6 @@
 # SPEC — Fase 6.2: Itens únicos — um por mundo, rastreados no event_log
 
-> **Status:** `in-progress` — Etapas 1–4 implementadas (2026-07-05, 488 testes); falta smoke real (§6).
+> **Status:** `done` (2026-07-05 — smoke com LLM real executado; ver ESTADO_ATUAL)
 > **Criada:** 2026-07-05 · **Atualizada:** 2026-07-05
 > **Depende de:** Fase 4.3 (inventário estruturado) · 4.4 (loot tables/mercadores) · 2.6 (event_log)
 > **Desbloqueia:** artefatos de campanha com peso real (ganchos p/ quests da Fase 3.3)

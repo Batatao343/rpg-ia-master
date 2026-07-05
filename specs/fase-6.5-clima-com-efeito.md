@@ -1,6 +1,6 @@
 # SPEC — Fase 6.5: Clima com efeito real — cadeias por região e mecânica
 
-> **Status:** `in-progress` — Etapas 1–5 implementadas (2026-07-05, 520 testes); falta smoke real (§6). Desvio: fenômeno global ficou como `trigger_global_weather()` (lista curada, testado) SEM canal LLM no campaign_manager ainda — liga-se quando a spec de clímax de campanha existir (evita campo novo de structured output sem consumidor).
+> **Status:** `done` (2026-07-05 — smoke com LLM real executado; ver ESTADO_ATUAL)
 > **Criada:** 2026-07-05 · **Atualizada:** 2026-07-05
 > **Depende de:** Fase 0 (relógio/período) · 4.2 (condições tipadas) · 6.4 (detecção — clima modifica)
 > **Desbloqueia:** fenômenos de campanha (Tempestade de Éter como beat de clímax)

@@ -35,7 +35,9 @@ class FactionImpact(BaseModel):
 
 
 class StoryUpdate(BaseModel):
-    narrative: str = Field(description="O texto narrativo da resposta.")
+    # default "" (não required): Gemini real às vezes omite o campo num schema
+    # grande — melhor narrar via fallback do que perder o turno (smoke 2026-07-05)
+    narrative: str = Field(default="", description="O texto narrativo da resposta. OBRIGATÓRIO: sempre preencha.")
     introduced_npcs: List[str] = Field(default_factory=list, description="Lista de nomes de NOVOS personagens.")
     faction_impacts: List[FactionImpact] = Field(
         default_factory=list,
@@ -351,6 +353,12 @@ def storyteller_node(state: GameState):
         update = story_engine.invoke([sys] + messages[-3:]) # Contexto reduzido
 
         narrative_text = update.narrative
+        if not str(narrative_text).strip():
+            # Fallback digno: o TURNO MECÂNICO sobrevive mesmo com LLM flaky —
+            # as notas determinísticas (viagem/descanso/encontro) viram a narração.
+            partes = [n for n in (travel_note, rest_note, world_note, faction_note) if n]
+            narrative_text = ("\n".join(partes)
+                              or "O momento passa em silêncio; o mundo aguarda seu próximo passo.")
 
         # --- Fase 2: a ação do jogador altera a reputação das fações (Python resolve) ---
         # A IA só identifica fação + direção; apply_reputation valida o id e fixa o delta.
