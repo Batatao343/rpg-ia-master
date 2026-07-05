@@ -158,7 +158,8 @@ function FichaTab({ data, hpHitKey, onEquip, busy }: {
           ) : (
             data!.inventory.map((it, i) => (
               <li key={`${it.id}-${i}`} className={"inv__item" + (it.equipped ? " is-equipped" : "")}>
-                <span>
+                <span className={it.unique ? "inv__unique" : undefined}>
+                  {it.unique ? "◆ " : ""}
                   {it.name}
                   {it.qty > 1 ? ` ×${it.qty}` : ""}
                   {it.equipped ? <em className="inv__tag"> equipado</em> : null}

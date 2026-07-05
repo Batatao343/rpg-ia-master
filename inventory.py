@@ -48,6 +48,11 @@ def resolve_item_name(name: str) -> Optional[str]:
     return None
 
 
+def is_unique(item_id: str) -> bool:
+    """Fase 6.2: item único — existe UM no mundo (flag em artifacts.json)."""
+    return bool((ARTIFACTS_DB.get(item_id) or {}).get("unique"))
+
+
 def is_stackable(item_id: str) -> bool:
     item = ARTIFACTS_DB.get(item_id) or {}
     if "stackable" in item:

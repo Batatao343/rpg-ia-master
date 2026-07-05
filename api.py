@@ -175,6 +175,7 @@ def _inventory_block(player: dict) -> List[Dict[str, Any]]:
             "type": item.get("type", "desconhecido"),
             "equipped": e.get("id") in equipped,
             "slot": equipped.get(e.get("id")) or inv_mod.slot_for(e.get("id", "")),
+            "unique": bool(item.get("unique")),  # Fase 6.2: ◆ um por mundo
         })
     return out
 

@@ -7,7 +7,9 @@
     "3-4": {
       "comum": 45,
       "incomum": 40,
-      "raro": 15
+      "raro": 15,
+      "epico": 4,
+      "lendario": 1
     },
     "pools": {
       "comum": [
@@ -22,7 +24,18 @@
       ],
       "raro": [
         "espada_aco_temperado",
-        "escudo_de_aco"
+        "escudo_de_aco",
+        "art_ampulheta_vaelorn",
+        "art_que_selune_trouxe"
+      ],
+      "epico": [
+        "art_selo_urath",
+        "art_estandarte_general_sem_nome"
+      ],
+      "lendario": [
+        "art_adaga_vidro_dragao",
+        "art_lagrima_negra_morrakh",
+        "art_armadura_vazia_malagor"
       ]
     }
   },
@@ -34,7 +47,9 @@
     "3-4": {
       "comum": 40,
       "incomum": 42,
-      "raro": 18
+      "raro": 18,
+      "epico": 4,
+      "lendario": 1
     },
     "pools": {
       "comum": [
@@ -49,6 +64,15 @@
       "raro": [
         "espada_aco_temperado",
         "escudo_de_aco"
+      ],
+      "epico": [
+        "art_coroa_pressao_rei_anao",
+        "art_coracao_eter_batalha"
+      ],
+      "lendario": [
+        "art_adaga_vidro_dragao",
+        "art_lagrima_negra_morrakh",
+        "art_armadura_vazia_malagor"
       ]
     }
   },
@@ -60,7 +84,9 @@
     "3-4": {
       "comum": 50,
       "incomum": 38,
-      "raro": 12
+      "raro": 12,
+      "epico": 4,
+      "lendario": 1
     },
     "pools": {
       "comum": [
@@ -73,7 +99,17 @@
         "gibao_de_couro"
       ],
       "raro": [
-        "adaga_serrilhada"
+        "adaga_serrilhada",
+        "art_codigo_ferro_original",
+        "art_lanterna_suspiros"
+      ],
+      "epico": [
+        "art_amuleto_destilacao"
+      ],
+      "lendario": [
+        "art_adaga_vidro_dragao",
+        "art_lagrima_negra_morrakh",
+        "art_armadura_vazia_malagor"
       ]
     }
   },
@@ -85,7 +121,9 @@
     "3-4": {
       "comum": 42,
       "incomum": 40,
-      "raro": 18
+      "raro": 18,
+      "epico": 4,
+      "lendario": 1
     },
     "pools": {
       "comum": [
@@ -98,7 +136,15 @@
         "kit_medico"
       ],
       "raro": [
-        "pocao_cura_maior"
+        "pocao_cura_maior",
+        "art_diario_nehla",
+        "art_coracao_quitina_primeiros_hospedeiros"
+      ],
+      "epico": [],
+      "lendario": [
+        "art_adaga_vidro_dragao",
+        "art_lagrima_negra_morrakh",
+        "art_armadura_vazia_malagor"
       ]
     }
   },
@@ -110,7 +156,9 @@
     "3-4": {
       "comum": 40,
       "incomum": 40,
-      "raro": 20
+      "raro": 20,
+      "epico": 4,
+      "lendario": 1
     },
     "pools": {
       "comum": [
@@ -122,7 +170,16 @@
         "arco_de_caca"
       ],
       "raro": [
-        "espada_aco_temperado"
+        "espada_aco_temperado",
+        "art_mascara_funeraria_primeiro_contemplador"
+      ],
+      "epico": [
+        "art_oghma_coracao_aethelgard"
+      ],
+      "lendario": [
+        "art_adaga_vidro_dragao",
+        "art_lagrima_negra_morrakh",
+        "art_armadura_vazia_malagor"
       ]
     }
   }

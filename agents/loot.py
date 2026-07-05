@@ -109,13 +109,18 @@ def loot_node(state: GameState):
         resumo = (f"{outcome['mode'].upper()}: {outcome['qty']}x {outcome['item_name']}, "
                   f"ouro {delta:+d}, ouro final {outcome['player'].get('gold', 0)}")
         msg = _narrate(resumo, "O negócio se fecha sem cerimônia.")
-        return {
+        result = {
             "player": outcome["player"],
             "world": outcome.get("world", world),
             "messages": [AIMessage(content=f"{msg}\n\n{sistema}")],
             "loot_source": None,
             "archive_due": True,
         }
+        # Fase 6.2: posse de item único muda de mãos → evento do motor na fila
+        if outcome.get("pending_events"):
+            result["pending_world_events"] = (state.get("pending_world_events", []) or []) \
+                + outcome["pending_events"]
+        return result
 
     # =========================================================
     # TREASURE — raridade/item saem da TABELA da região (Python)
@@ -123,23 +128,30 @@ def loot_node(state: GameState):
     loc = get_location(world.get("current_location_id", "")) or {}
     region_id = loc.get("region_id", "default")
     danger = int(world.get("danger_level", 1) or 1)
-    roll = economy.roll_loot(region_id, danger, random.Random())
+    roll = economy.roll_loot(region_id, danger, random.Random(),
+                             projection=state.get("world_projection"))
 
     player["gold"] = int(player.get("gold", 0)) + int(roll["gold"])
     achado = f"+{roll['gold']} de ouro"
+    unique_events = []
     if roll["item_id"]:
-        from inventory import add_item, item_display, make_entry
+        from inventory import add_item, is_unique, item_display, make_entry
         player["inventory"] = add_item(player["inventory"], roll["item_id"], 1)
         achado = f"{item_display(make_entry(roll['item_id']))} ({roll['rarity']}) e {achado}"
+        if is_unique(roll["item_id"]):  # Fase 6.2: achou um único — fato do mundo
+            unique_events.append(economy.claim_event(roll["item_id"], "player"))
 
     sistema = f"[SISTEMA] {achado}"
     msg = _narrate(
         f"O jogador vasculha {loc.get('name', 'o local')} (perigo {danger}) e encontra: {achado}.",
         "Você vasculha os escombros e recolhe o que a poeira escondia.")
-    return {
+    result = {
         "player": player,
         "world": world,
         "messages": [AIMessage(content=f"{msg}\n\n{sistema}")],
         "loot_source": None,
         "archive_due": True,
     }
+    if unique_events:
+        result["pending_world_events"] = (state.get("pending_world_events", []) or []) + unique_events
+    return result

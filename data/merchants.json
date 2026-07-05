@@ -9,7 +9,8 @@
       "espada_aco_temperado": 1,
       "escudo_de_aco": 1,
       "minerio_ferro": 5,
-      "maca_de_ferro": 1
+      "maca_de_ferro": 1,
+      "art_coroa_pressao_rei_anao": 1
     }
   },
   "mercado_anel_dourado": {
@@ -23,7 +24,8 @@
       "adaga_ferro": 2,
       "gibao_de_couro": 2,
       "corda": 3,
-      "espada_gasta": 1
+      "espada_gasta": 1,
+      "art_bussola_que_aponta_para_ophidia": 1
     }
   },
   "boticario_anel_ferro": {
@@ -48,7 +50,8 @@
       "corda": 5,
       "minerio_ferro": 3,
       "arco_de_caca": 1,
-      "pocao_cura": 2
+      "pocao_cura": 2,
+      "art_arpao_primeiro_osshari": 1
     }
   },
   "curandeira_pantano": {

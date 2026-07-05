@@ -31,6 +31,10 @@ EventType = Literal[
     # militar) e gerável pelo motor/regras; validator exige conexão direta real.
     "route_blocked",
     "route_cleared",
+    # Fase 6.2: itens únicos — SÓ o motor emite (source="engine" no validator);
+    # o LLM nunca decide quem possui um artefato único.
+    "unique_item_claimed",
+    "unique_item_lost",
 ]
 
 

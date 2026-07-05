@@ -213,6 +213,7 @@ export interface InventoryEntry {
   type: string; // weapon | armor | consumable | material | ...
   equipped: boolean;
   slot: string | null;
+  unique: boolean; // Fase 6.2: um por mundo (◆)
 }
 
 // Fase 4.5: companheiro da party (HP bar no HUD)

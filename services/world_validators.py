@@ -152,6 +152,17 @@ def _v_route_cleared(ev: ProposedWorldEvent, state: dict, proj: dict) -> Validat
     return ValidationResult(True)
 
 
+def _v_unique_item(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    """Fase 6.2: gate de source fica em validate_proposal; aqui sanidade do item."""
+    from gamedata import ARTIFACTS_DB
+    item = ARTIFACTS_DB.get(ev.target_id)
+    if not item:
+        return ValidationResult(False, f"{ev.target_id} não existe no ARTIFACTS_DB")
+    if not item.get("unique"):
+        return ValidationResult(False, f"{ev.target_id} não é item único")
+    return ValidationResult(True)
+
+
 def _v_player_died(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
     """Fase 4.6: evento do motor (combate) — gate anti-LLM em validate_proposal."""
     if ev.target_id != "player":
@@ -170,6 +181,8 @@ _VALIDATORS = {
     "player_died": _v_player_died,
     "route_blocked": _v_route_blocked,
     "route_cleared": _v_route_cleared,
+    "unique_item_claimed": _v_unique_item,
+    "unique_item_lost": _v_unique_item,
 }
 
 
@@ -188,6 +201,10 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
     # Fase 4.6: player_died idem — só o combate emite.
     if ev.type == "player_died" and proposal.get("source") != "combat":
         return ValidationResult(False, "player_died é gerado pelo motor, não proposto")
+    # Fase 6.2: posse de item único é observada pelo motor, nunca proposta.
+    if ev.type in ("unique_item_claimed", "unique_item_lost") and \
+            proposal.get("source") != "engine":
+        return ValidationResult(False, "posse de item único é registrada pelo motor, não proposta")
 
     projection = state.get("world_projection") or {}
     turn = (state.get("world") or {}).get("turn_count", 0)

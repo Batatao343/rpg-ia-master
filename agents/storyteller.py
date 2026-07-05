@@ -361,17 +361,25 @@ def storyteller_node(state: GameState):
         # ARTIFACTS_DB (storyteller não cria item; isso é papel do loot_node).
         gained = [g for g in (getattr(update, "items_gained", []) or []) if str(g).strip()]
         if gained:
-            from inventory import add_item, resolve_item_name
+            from inventory import add_item, is_unique, resolve_item_name
+            from services.economy import claim_event, is_unique_available
+            proj = state.get("world_projection") or {}
             cur_p = dict(updates.get("player") or state.get("player") or {})
             inv = list(cur_p.get("inventory") or [])
             changed = False
             for g in gained:
                 iid = resolve_item_name(str(g))
-                if iid:
-                    inv = add_item(inv, iid, 1)
-                    changed = True
-                else:
+                if not iid:
                     print(f"⚠️ [STORYTELLER] item narrado desconhecido ignorado: {g!r}")
+                    continue
+                # Fase 6.2: único já reclamado NUNCA re-entra pela narrativa
+                if is_unique(iid) and not is_unique_available(iid, proj):
+                    print(f"⚠️ [STORYTELLER] item ÚNICO já reclamado ignorado: {iid}")
+                    continue
+                inv = add_item(inv, iid, 1)
+                changed = True
+                if is_unique(iid):
+                    rep_events.append(claim_event(iid, "player"))
             if changed:
                 cur_p["inventory"] = inv
                 updates["player"] = cur_p

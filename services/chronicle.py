@@ -23,7 +23,7 @@ from services.context_builder import _name
 # (ruído — mudanças de relação são frequentes e já aparecem via reputação/2.7).
 CHRONICLE_EVENT_TYPES = {
     "npc_killed", "location_control_changed", "quest_completed", "quest_failed",
-    "secret_revealed", "level_up", "player_died",
+    "secret_revealed", "level_up", "player_died", "unique_item_claimed",
 }
 
 # Templates voltados ao JOGADOR (prosa curta), diferentes dos EVENT_TEMPLATES
@@ -36,6 +36,7 @@ CHRONICLE_TEMPLATES: Dict[str, str] = {
     "secret_revealed": "Um segredo veio à luz: {fact}",
     "level_up": "O herói alcançou o nível {new_level}.",
     "player_died": "Aqui termina a saga: {detail}.",
+    "unique_item_claimed": "{item} agora pertence ao herói — não há outro no mundo.",
 }
 
 _DEFAULT_TITLE = "Crônica da jornada"
@@ -58,6 +59,15 @@ def render_milestone(event: Dict, projection: Dict) -> str:
     if etype == "player_died":
         detail = payload.get("detail", "") or "o herói caiu"
         return tmpl.format(detail=detail)
+
+    if etype == "unique_item_claimed":
+        # holder != player (mercador etc.) não é feito do herói — sem milestone
+        if payload.get("holder", "player") != "player":
+            return ""
+        from gamedata import ARTIFACTS_DB
+        item = (ARTIFACTS_DB.get(event.get("target_id", "")) or {}).get(
+            "name", event.get("target_id", ""))
+        return tmpl.format(item=item)
 
     if etype == "secret_revealed":
         facts = (projection or {}).get("revealed_facts", {}) or {}

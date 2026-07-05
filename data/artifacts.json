@@ -451,5 +451,385 @@
       "active_ability": null,
       "heal": "4d4+4"
     }
+  },
+  "art_adaga_vidro_dragao": {
+    "name": "Adaga de Vidro-Dragão",
+    "type": "weapon",
+    "rarity": "lendario",
+    "value_gold": 6000,
+    "description": "Lascada de algo que já foi maior. O vidro negro corta o que aço nenhum morde — e canta baixinho perto de fogo.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 3,
+      "damage_dice": "1d6",
+      "attribute": "dex",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_lagrima_negra_morrakh": {
+    "name": "Lágrima Negra de Morrakh",
+    "type": "accessory",
+    "rarity": "lendario",
+    "value_gold": 6000,
+    "description": "Uma gota endurecida de escuridão que pesa mais do que deveria. Quem a carrega bate como quem tem motivo.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 2,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_armadura_vazia_malagor": {
+    "name": "A Armadura Vazia de Malagor",
+    "type": "armor",
+    "rarity": "lendario",
+    "value_gold": 6000,
+    "description": "Ninguém nunca a viu ser vestida — e no entanto as juntas rangem sozinhas. Protege como se ainda houvesse alguém dentro.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 4
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_arpao_primeiro_osshari": {
+    "name": "O Arpão do Primeiro-Osshari",
+    "type": "weapon",
+    "rarity": "epico",
+    "value_gold": 1500,
+    "description": "Osso de leviatã polido por sete gerações de maré. Brekmar inteira conhece a silhueta dele — e abaixa a voz.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 2,
+      "damage_dice": "1d10",
+      "attribute": "str",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_amuleto_destilacao": {
+    "name": "O Amuleto da Destilação",
+    "type": "accessory",
+    "rarity": "epico",
+    "value_gold": 1500,
+    "description": "Câmara de cristal em miniatura. Aquece na pele quando magia passa perto, como se sentisse saudade do trabalho.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 2,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_coroa_pressao_rei_anao": {
+    "name": "A Coroa de Pressão do Rei Anão",
+    "type": "accessory",
+    "rarity": "epico",
+    "value_gold": 1500,
+    "description": "Forjada para aguentar o peso da montanha — e do cargo. Quem a usa não abaixa a cabeça com facilidade.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 2
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_coracao_eter_batalha": {
+    "name": "O Coração de Éter da Batalha",
+    "type": "accessory",
+    "rarity": "epico",
+    "value_gold": 1500,
+    "description": "Pulsa devagar, no ritmo de um tambor de guerra que ninguém mais toca. O braço que o carrega não trava.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 2,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_coracao_trono": {
+    "name": "O Coração do Trono",
+    "type": "accessory",
+    "rarity": "epico",
+    "value_gold": 1500,
+    "description": "Pedra da Costa Negra lapidada em ângulo errado de propósito. Sentar perto dele é lembrar quem manda.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 2
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_selo_urath": {
+    "name": "O Selo de Urath",
+    "type": "accessory",
+    "rarity": "epico",
+    "value_gold": 1500,
+    "description": "Um anel de metal que nenhuma forja de Valoria admite ter fundido. Frio no verão, quente no inverno. Melhor não perguntar.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 2
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_oghma_coracao_aethelgard": {
+    "name": "Oghma, o Coração de Aethelgard",
+    "type": "accessory",
+    "rarity": "epico",
+    "value_gold": 1500,
+    "description": "Fragmento da cidade mais bonita do mundo, de antes do lago. Ainda tenta iluminar o que já afundou.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_lanterna_suspiros": {
+    "name": "A Lanterna dos Suspiros",
+    "type": "accessory",
+    "rarity": "raro",
+    "value_gold": 400,
+    "description": "A chama dela não esquenta e não apaga com vento. Ilumina exatamente o que você preferia não ver.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_ampulheta_vaelorn": {
+    "name": "A Ampulheta de Vaelorn",
+    "type": "accessory",
+    "rarity": "raro",
+    "value_gold": 400,
+    "description": "A areia élfica desce quando quer. Dizem em Vaelorn que ela desce mais devagar para quem tem pressa.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_mascara_funeraria_primeiro_contemplador": {
+    "name": "Máscara Funerária do Primeiro Contemplador",
+    "type": "accessory",
+    "rarity": "raro",
+    "value_gold": 400,
+    "description": "Feita para olhar o Deserto sem piscar. Atrás dela, o rosto descansa — e a mão não treme.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_coracao_quitina_primeiros_hospedeiros": {
+    "name": "Coração de Quitina dos Primeiros Hospedeiros",
+    "type": "armor",
+    "rarity": "raro",
+    "value_gold": 400,
+    "description": "Placas de Xylos que se ajustam sozinhas ao peito de quem as veste. É melhor não pensar em como.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 2
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_estandarte_general_sem_nome": {
+    "name": "O Estandarte do General Sem Nome",
+    "type": "accessory",
+    "rarity": "raro",
+    "value_gold": 400,
+    "description": "Rasgado, sem brasão, sem cor definida. Soldados velhos endireitam as costas quando ele passa.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_chama_negra_farol": {
+    "name": "A Chama Negra do Farol",
+    "type": "accessory",
+    "rarity": "raro",
+    "value_gold": 400,
+    "description": "Um vidro com uma chama que produz sombra em vez de luz. Os pilotos da Costa Negra juram que ela guia — para onde, é outra conversa.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_bussola_que_aponta_para_ophidia": {
+    "name": "Bússola-que-Aponta-para-Ophidia",
+    "type": "accessory",
+    "rarity": "raro",
+    "value_gold": 400,
+    "description": "Não aponta o norte. Aponta Ophidia, de onde quer que você esteja — inclusive quando você não quer ir.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_codigo_ferro_original": {
+    "name": "O Código de Ferro Original",
+    "type": "accessory",
+    "rarity": "raro",
+    "value_gold": 400,
+    "description": "O exemplar primeiro, de capa metálica, anotado em três caligrafias. Pesa no bolso como pesa na cidade.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_que_selune_trouxe": {
+    "name": "O-que-Selune-Trouxe",
+    "type": "accessory",
+    "rarity": "raro",
+    "value_gold": 400,
+    "description": "Ninguém sabe nomear direito. Veio do mar, seco. A pele de quem o segura arrepia na direção da água.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 1,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
+  "art_diario_nehla": {
+    "name": "O Diário de Nehla",
+    "type": "accessory",
+    "rarity": "raro",
+    "value_gold": 400,
+    "description": "Metade mapa, metade confissão. As margens ensinam mais sobre sobreviver ao Pântano do que qualquer guia.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
   }
 }

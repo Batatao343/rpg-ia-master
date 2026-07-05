@@ -1,6 +1,6 @@
 # SPEC — Fase 6.2: Itens únicos — um por mundo, rastreados no event_log
 
-> **Status:** `draft`
+> **Status:** `in-progress` — Etapas 1–4 implementadas (2026-07-05, 488 testes); falta smoke real (§6).
 > **Criada:** 2026-07-05 · **Atualizada:** 2026-07-05
 > **Depende de:** Fase 4.3 (inventário estruturado) · 4.4 (loot tables/mercadores) · 2.6 (event_log)
 > **Desbloqueia:** artefatos de campanha com peso real (ganchos p/ quests da Fase 3.3)
@@ -126,3 +126,19 @@ Decisões:
   JÁ tem um único no inventário (impossível — ids novos), n/a.
 - MockLLM: caminho todo determinístico; smoke só confirma narração.
 - Balance: stats de lendário são chute declarado (playtest ajusta).
+
+
+---
+
+## Apêndice — Registro de design (executado por Fable, 2026-07-05)
+
+20 únicos, todos de `data/codex/items/` (public; descrições vagas — anti-spoiler):
+
+| Raridade | Itens (slot) | Onde encontrar |
+|---|---|---|
+| Lendário (3) | Adaga de Vidro-Dragão (arma dex), Lágrima Negra de Morrakh (aces.), Armadura Vazia de Malagor (armadura) | pool `lendario` (peso 1) das bandas 3-4 de todas as tabelas |
+| Épico (7) | Arpão do Primeiro-Osshari (arma str), Amuleto da Destilação, Coroa de Pressão do Rei Anão, Coração de Éter da Batalha, Coração do Trono, Selo de Urath, Oghma | pools `epico` temáticos: Skallgard (coroa/coração de éter), Nova Arcádia (amuleto), Deserto (Oghma), default (selo/estandarte); Arpão comprável em Brekmar |
+| Raro (10) | Lanterna dos Suspiros, Ampulheta de Vaelorn, Máscara Funerária, Coração de Quitina, Estandarte do General Sem Nome, Chama Negra do Farol, Bússola de Ophidia, Código de Ferro Original, O-que-Selune-Trouxe, Diário de Nehla | pools `raro` por região temática; Bússola comprável no Anel Dourado; Coroa comprável em Skallgard |
+
+Documentos puros do Codex (registros, mapas, testamento) ficaram FORA — sem
+mecânica honesta de combate; candidatos a itens de quest na 3.3.

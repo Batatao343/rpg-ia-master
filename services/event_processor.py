@@ -85,6 +85,17 @@ def apply_event(event: Dict, projection: Dict) -> Dict:
             routes.append({"a": target, "b": payload.get("other_location_id"),
                            "blocked_by_event": event_id})
 
+    elif etype == "unique_item_claimed":
+        # Fase 6.2: um por mundo — registra o dono atual (claim re-escreve holder)
+        uniques = proj.setdefault("unique_items", {})
+        uniques[target] = {"holder": payload.get("holder", "player"),
+                           "event_id": event_id, "turn": turn}
+
+    elif etype == "unique_item_lost":
+        uniques = proj.setdefault("unique_items", {})
+        uniques[target] = {"holder": payload.get("holder", "unknown"),
+                           "event_id": event_id, "turn": turn}
+
     elif etype == "route_cleared":
         pair = frozenset((target, payload.get("other_location_id")))
         proj["blocked_routes"] = [
