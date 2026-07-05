@@ -226,34 +226,11 @@ Depende de Fase 2.5+ estar estável (world_projection, revealed_facts).
 - [ ] `npc_actor` — validar layer 3; aplicar trait modifiers; revelação progressiva; incrementar interaction_count
 - [ ] Frontend — aba Personagens com layer 2 + source + revealed_traits
 
-### Encontros sistêmicos (A+B+D)
+### ~~Encontros sistêmicos~~ → promovido para **Fase 6.4** ([spec](specs/fase-6.4-encontros-sistemicos.md))
 
-Depende da Fase 4.6.
 
-> **Orçamento/composição de encontro por danger+nível → absorvido pela spec 4.6**
-> (`encounter_budget.py`, clamp/fill do spawn). O que sobra aqui é a parte de
-> DETECÇÃO e VARIEDADE de encontro (nem todo encontro é combate).
+### ~~Clima com efeito real~~ → promovido para **Fase 6.5** ([spec](specs/fase-6.5-clima-com-efeito.md))
 
-**Tarefas restantes:**
-
-- [ ] `check_encounter()` em Python: d20 + wis vs DC (detecção/surpresa)
-- [ ] Tipos de encontro além de combate: story/trap/social por danger e região
-- [ ] `agents/encounter.py` + nó no grafo com arestas condicionais (encounter → combat_agent | storyteller); storyteller para de short-circuit
-
-### Clima com efeito real
-
-Depende de context builder estável.
-
-**Cadeias de clima por local:** cada local tem sequência (limpo → nublado → chuva). Fenômenos globais (Tempestade de Mana) sobrepõem.
-
-**Efeitos mecânicos:** penalidades de percepção, HP, saves, viagem, combate.
-
-**Tarefas:**
-
-- [ ] `world_utils.py` — WEATHER_CHAINS (por local), WEATHER_EFFECTS (dataclass), advance_weather()
-- [ ] `storyteller`, `combat`, `encounter_agent` — aplicar efeitos
-- [ ] `campaign_manager` — emitir fenômenos globais em beats específicos
-- [ ] Frontend — ícone de clima com tooltip
 
 ### ~~Economia regional~~ → fundida na **Fase 6** (era duplicata; base determinística é a spec 4.4)
 
@@ -264,8 +241,12 @@ Depende de context builder estável.
 > **Priorizada antes da Fase 5** (decisão 2026-07-05). Specs escritas, `draft`:
 > [6.1 — Economia viva (rotas/escassez/eventos)](specs/fase-6.1-economia-viva.md) ·
 > [6.2 — Itens únicos](specs/fase-6.2-itens-unicos.md) ·
-> [6.3 — Migração de monstros](specs/fase-6.3-migracao-de-monstros.md)
-> Ordem: 6.1 → 6.2 → 6.3 (6.3 usa rotas da 6.1 p/ migração).
+> [6.3 — Migração de monstros](specs/fase-6.3-migracao-de-monstros.md) ·
+> [6.4 — Encontros sistêmicos](specs/fase-6.4-encontros-sistemicos.md) ·
+> [6.5 — Clima com efeito real](specs/fase-6.5-clima-com-efeito.md)
+> (6.4/6.5 absorvem os itens homônimos do backlog — eram conteúdo sistêmico.)
+> Ordem: **6.1 → 6.2 → 6.3 → 6.4 → 6.5** (6.3 usa rotas da 6.1; 6.4 usa sorteio
+> da 6.3; 6.5 modifica a detecção da 6.4).
 
 Depende da **Fase 4.4** (economia determinística) — Fase 6 é a evolução dela com
 estado do mundo dinâmico. Absorve o item "Economia regional" do backlog (era duplicata).
