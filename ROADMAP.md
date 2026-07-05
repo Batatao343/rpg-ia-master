@@ -175,7 +175,11 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
 
 ---
 
-## Fase 5 — Agentic playtest + telemetria
+## Fase 5 — Agentic playtest + telemetria `ADIADA — roda DEPOIS da Fase 6`
+
+> Decisão 2026-07-05: Fase 6 (conteúdo sistêmico) passa NA FRENTE — playtest
+> automatizado rende mais quando o mundo estiver mais robusto. Specs da Fase 5
+> ficam para depois da 6.
 
 **Objetivo:** Agentes testadores jogam campanhas automáticas. Detectam inconsistências, medem qualidade, reduzem custo de API.
 
@@ -255,7 +259,13 @@ Depende de context builder estável.
 
 ---
 
-## Fase 6 — Conteúdo sistêmico (evolução da economia 4.4)
+## 🎮 PRIORIDADE ALTA — Fase 6 — Conteúdo sistêmico (evolução da economia 4.4) `AGORA`
+
+> **Priorizada antes da Fase 5** (decisão 2026-07-05). Specs escritas, `draft`:
+> [6.1 — Economia viva (rotas/escassez/eventos)](specs/fase-6.1-economia-viva.md) ·
+> [6.2 — Itens únicos](specs/fase-6.2-itens-unicos.md) ·
+> [6.3 — Migração de monstros](specs/fase-6.3-migracao-de-monstros.md)
+> Ordem: 6.1 → 6.2 → 6.3 (6.3 usa rotas da 6.1 p/ migração).
 
 Depende da **Fase 4.4** (economia determinística) — Fase 6 é a evolução dela com
 estado do mundo dinâmico. Absorve o item "Economia regional" do backlog (era duplicata).
@@ -447,9 +457,10 @@ Antes: "mais features, sprites depois".
 
 1. **Fases 2.5-2.8** ✅ ENTREGUES: Codex, event_log, world_projection, rules engine, context builder.
 2. **Fase 3** ✅ ENTREGUE (2026-07-03): Clareza de campanha — diário/crônica, codex do jogador, quest log, visualização de estado.
-3. **Fase 4** (AGORA — 7 specs `draft` escritas): Gameplay Core — progressão + árvores lore-driven (4.1/4.1b), buffs mecânicos, inventário/equip, economia determinística, party, dificuldade/morte.
-4. **Fase 5** (na sequência): agentic playtest + telemetria (depende da progressão 4.1 p/ "jogar até nível 10").
-5. **Fase 6+** (depois): conteúdo sistêmico (evolução da 4.4), autoria, arte, sprites.
+3. **Fase 4** ✅ COMPLETA (2026-07-05, 7 specs `done` + smoke real): Gameplay Core.
+4. **Fase 6** (AGORA — priorizada antes da 5, specs 6.1–6.3 `draft`): conteúdo sistêmico — economia viva (rotas/escassez), itens únicos, migração de monstros.
+5. **Fase 5** (depois da 6, quando o mundo estiver robusto): agentic playtest + telemetria.
+6. **Fase 7+** (depois): autoria/validação, arte, sprites.
 
 Sem 2.5-2.8, as features de economia/craft/encontros ficariam acopladas, contraditórias e não-testáveis — fundação entregue; Fase 4 constrói gameplay em cima dela.
 
