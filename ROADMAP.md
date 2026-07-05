@@ -159,12 +159,17 @@ Resumo por fatia (detalhe técnico SÓ nas specs — fonte única):
   `services/economy.py`; preço = raridade × região × reputação em Python; mercadores
   persistentes com restock; craft com receita/local; drop tables; `TradeIntent` matou
   o `TransactionResult`. Falta só smoke LLM real.
-- **4.5 — Party** [`draft` → spec](specs/fase-4.5-party-aliados.md) — recrutamento com
-  gate de relationship; combate N vs N no mesmo motor (perfis 2.5b p/ aliados); alvo
-  tático dos inimigos; morte de companion alimenta o mundo (npc_killed).
-- **4.6 — Dificuldade/IA/morte** [`draft` → spec](specs/fase-4.6-dificuldade-ia-morte.md) —
-  clamp+piso do spawn por orçamento de pontos; inimigos usam habilidades; boss com
-  fases; morte do player com fecho narrativo e save-memorial.
+- **4.5 — Party** [✅ implementada 2026-07-05 → spec](specs/fase-4.5-party-aliados.md) —
+  recrutamento com gate determinístico (relationship ≥7, teto 3); N vs N no mesmo
+  motor; alvo tático; morte de companion vira npc_killed; 4v5 sem crash testado.
+  Falta só smoke LLM real.
+- **4.6 — Dificuldade/IA/morte** [✅ implementada 2026-07-05 → spec](specs/fase-4.6-dificuldade-ia-morte.md) —
+  clamp+piso por orçamento de pontos; 19 inimigos com habilidades mecânicas; 7 bosses
+  com fases; morte com fecho de saga + save-memorial (409). Falta só smoke LLM real.
+
+**Status da Fase 4 (2026-07-05): TODAS as 7 fatias implementadas** (313 → 461 testes
+offline). Pendência única para fechar a fase: **smoke com LLM real** de 4.1–4.6
+(gasta quota Gemini — rodar com quota fresca) + playtest de balanceamento.
 
 **Critério de aceite da Fase 4:** personagem sobe de nível e aprende habilidade nova; buff de habilidade muda número de dano observável; poção usada em combate cura; craft falha sem ingrediente; mercador de Skallgard vende coisa diferente do de Nova Arcádia; combate 4 (party) vs 5 (orcs) resolve sem crash; morte tem narrativa.
 

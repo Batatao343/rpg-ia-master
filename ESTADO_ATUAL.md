@@ -2,13 +2,33 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-04 (sessão 7: Fase 4.1 implementada + 4.1b done)
+> Última atualização: 2026-07-05 (sessão 7: FASE 4 INTEIRA implementada — 4.1 a 4.6 + 4.1b)
 
 ---
 
 ## TL;DR — Em que pé está
 
-**Sessão 2026-07-04 (7): Fase 4 iniciada — specs 4.1–4.6 escritas; 4.1b DONE; 4.1 implementada.**
+**Sessão 2026-07-04/05 (7): FASE 4 (Gameplay Core) INTEIRA implementada em uma sessão.**
+313 → **461 testes offline verdes**. Todas as 7 specs (4.1, 4.1b, 4.2–4.6) com etapas
+de implementação completas; pendência ÚNICA para `done` formal: **smoke com LLM real**
+de cada spec (§6 — gasta quota Gemini, rodar com quota fresca) + playtest de balance.
+**4.5 (party):** companion = ficha estilo bestiário no MESMO motor (perfis 2.5b via
+`resolve_ally_turn`); recrutamento/esperar/seguir/dispensar interceptados por regex +
+gate Python no npc_actor (relationship ≥7, teto 3, fação hostil nega — LLM não decide);
+inimigo escolhe alvo por perfil (tático→menor HP%, implacável→player); companion
+canônico morto vira `npc_killed` (crônica/quests órfãs/cascata de graça); Muralha
+Humana do Cavaleiro virou condicional real a party ativa; HP bars no HUD; critério
+4v5 sem crash testado.
+**4.6 (dificuldade/IA/morte):** `encounter_budget.py` — spawn clampado por orçamento
+de pontos (minion 2/elite 5/boss 12; base por danger + nível + 2×party; boss nunca
+corta, variedade primeiro) + piso com reforço regional; inimigos usam habilidades
+MECÂNICAS (schema do player, custo/cooldown/effects 4.2, perfil decide quando —
+curadoria: 12 elites + 7 bosses); bosses com FASES por threshold de HP; morte do
+player = fecho de saga (SMART com guard + template digno SEMPRE), evento
+`player_died` (gate anti-LLM `source=combat`) fecha a crônica, save vira MEMORIAL
+(`game_over` persistido, `/game/action` → 409).
+
+**Sessão 2026-07-04 (7a): Fase 4 iniciada — specs 4.1–4.6 escritas; 4.1b DONE; 4.1 implementada.**
 Specs da Fase 4 inteira em `specs/` (aprovadas) + ROADMAP limpo de duplicatas (Fase 6
 reescrita como evolução da 4.4; "Economia regional"/"Encontros sistêmicos"/"arcos da
 crônica" desduplicados).
@@ -56,9 +76,7 @@ valida local (`craft_tags`)/ingredientes/ouro; drop tables por região×perigo;
 com fallback) — `TransactionResult` (LLM decidia preço) morreu. Dados novos:
 `recipes.json`/`merchants.json`/`loot_tables.json` + tags nos 30 nós do mapa.
 Suíte: 313 → **424 verdes**. `npm run build` + `smoke_api.sh` ok.
-**Pendente p/ `done` de 4.1/4.2/4.3/4.4: smoke com LLM real** (§6 das specs — gasta
-quota Gemini; rodar quando quota fresca). Próximo: **Fase 4.5** (party — spec
-pronta, depende da 4.2 ✓).
+Próximo: smoke real de 4.1–4.6 + playtest de balanceamento → Fase 5 (agentic playtest).
 
 Sessão 2026-07-03 (6): Fase 3.4 DONE — Visualização de estado. FASE 3 COMPLETA.
 `services/state_views.py` (novo, 100% puro): `visible_controllers` (mapa mostra quem
@@ -132,7 +150,7 @@ existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arquivar
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 357 testes offline verdes (test_real_llm precisa de chave)
+uv run pytest                        # 461 testes offline verdes (test_real_llm precisa de chave)
 uv run python game_engine.py         # CLI
 uv run uvicorn api:app --port 8000   # API + frontend web (http://localhost:8000)
 uv run python rag.py                 # reindexar lore (data/codex/) + regras (data/rules.txt)
