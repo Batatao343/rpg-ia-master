@@ -175,11 +175,23 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
 
 ---
 
-## 🎮 AGORA — Fase 5 — Agentic playtest + telemetria
+## 🎮 AGORA — Roteamento multi-provider → depois Fase 5
 
-> Decisão 2026-07-05: Fase 6 passou na frente (entregue) e a Fase 7 aproveitou o
-> embalo do Codex (entregue). Com mundo robusto e conteúdo validado, a Fase 5 é
-> a atual. **3 specs escritas 2026-07-06 (`draft`, aguardando aprovação).**
+> Decisão 2026-07-06: **roteamento-multi-provider entra ANTES da Fase 5** — o
+> jogo vira produto pago (chave por provider), então o playtest/telemetria da
+> Fase 5 precisa rodar já sobre as rotas novas e medir provider/modelo/custo.
+
+- [ ] **Roteamento multi-provider** ([spec](specs/roteamento-multi-provider.md),
+  `draft`): 3 tiers (`CLASSIFY`/`FAST`/`SMART`) + `ROUTES` (tier → lista de
+  candidatos `(provider, modelo)`) + fallback em tempo de invoke via `RoutedLLM`;
+  providers OpenAI-compat (Groq/Qwen/GLM/MiniMax/Kimi) reusam `_build_openai`,
+  Anthropic ganha builder próprio. Hook de telemetria alimenta a 5.3. Mantém a
+  convenção CRÍTICA (pior caso ainda é `AIMessage`).
+
+## Fase 5 — Agentic playtest + telemetria
+
+> Com mundo robusto (Fase 6) e conteúdo validado (Fase 7). **3 specs escritas
+> 2026-07-06 (`draft`), ajustadas p/ o roteamento multi-provider.**
 > Ordem: **5.1 → 5.2 → 5.3** (5.2 pluga no hook do 5.1; 5.3 agrega o que os dois produzem).
 
 **Objetivo:** Agentes testadores jogam campanhas automáticas offline (MockLLM = custo zero). Detectam inconsistências, medem estado, embasam balanceamento — o que só aparece no turno 30 e o smoke manual nunca alcança.
@@ -200,8 +212,9 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
 - [ ] **5.3 — Telemetria + relatório** ([spec](specs/fase-5.3-telemetria-relatorio.md)):
   JSONL por turno (shape do log da Fase 10) + `summary.json` por campanha +
   `playtest/report.py` (`aggregate` + `render_markdown`, comparação `--baseline`);
-  teto `--max-requests` protege quota no `--real`. Relatório Markdown, sem
-  dashboard web até haver demanda.
+  grava provider/modelo/custo por turno (hook do roteamento); tetos
+  `--max-requests`/`--max-cost` protegem o bolso no `--real`. Relatório Markdown,
+  sem dashboard web até haver demanda.
 
 **Critério de aceite:** Campanhas de 50 turnos dos 10 perfis não quebram invariantes (ou o bug achado é corrigido — achado é entrega); relatório agregado embasa 1 decisão de balanceamento real.
 
@@ -471,8 +484,9 @@ Antes: "mais features, sprites depois".
 3. **Fase 4** ✅ COMPLETA (2026-07-05, 7 specs `done` + smoke real): Gameplay Core.
 4. **Fase 6** ✅ COMPLETA (2026-07-05, specs `done` com smoke real): economia viva, 20 itens únicos, migração de monstros, encontros sistêmicos, clima mecânico.
 5. **Fase 7** ✅ COMPLETA (2026-07-05, 3 specs `done` + smoke real): lint de conteúdo + CI, curadoria migration-safe + templates, segredos de NPC separados.
-6. **Fase 5** 🎮 PRÓXIMA: agentic playtest + telemetria (specs a escrever).
-7. **Fases 8+** (depois): arte, sprites/som, hardening, contract tests.
+6. **Roteamento multi-provider** 🎯 PRÓXIMA (spec `draft`): 3 tiers + rotas com fallback (produto pago).
+7. **Fase 5** 🎮 depois: agentic playtest + telemetria (3 specs `draft`, ajustadas p/ roteamento).
+8. **Fases 8+** (depois): arte, sprites/som, hardening, contract tests.
 
 Sem 2.5-2.8, as features de economia/craft/encontros ficariam acopladas, contraditórias e não-testáveis — fundação entregue; Fases 4/6/7 construíram gameplay, conteúdo sistêmico e pipeline de autoria em cima dela.
 

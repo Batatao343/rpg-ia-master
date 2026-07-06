@@ -2,7 +2,9 @@
 
 > **Status:** `draft`
 > **Criada:** 2026-07-06 · **Atualizada:** 2026-07-06
-> **Depende de:** 5.1 (harness) `done`; 5.2 (invariantes) `done`
+> **Depende de:** 5.1 (harness) `done`; 5.2 (invariantes) `done`;
+> **roteamento-multi-provider `done`** (telemetria grava provider/modelo/custo
+> por turno e conta fallbacks)
 > **Desbloqueia:** decisões de balanceamento baseadas em dado (playtest da Fase 4 pendente); critério de aceite da Fase 5
 
 ---
@@ -30,11 +32,15 @@ Princípio: **estado auditável** — playtest sem número vira anedota.
   shape do logger `rpg.turn` da Fase 10 (`turn`, `route`, `latency_ms`,
   `events_applied`, `events_rejected`, `error`) + campos de playtest
   (`action`, `location_id`, `player_hp`, `player_level`, `gold`,
-  `violations: [check_ids]`).
+  `violations: [check_ids]`) + campos de roteamento (do hook
+  `set_llm_telemetry_hook`): `provider`, `model`, `tier`, `fell_back` (bool),
+  `cost_usd` (estimado por tabela de preço por modelo × tokens in/out).
 - **R2 — Resumo por campanha (JSON):** ao fim, `summary.json` por campanha:
   turnos completados, erros, violações por check_id, distribuição de rotas,
   latência p50/p95, HP médio, mortes, nível final, ouro final, locais
-  visitados, quests criadas/concluídas, requests de LLM (real) estimados.
+  visitados, quests criadas/concluídas, requests de LLM por provider,
+  **custo total estimado (USD)**, custo por tier, e contagem de `fell_back`
+  (quantos turnos caíram no candidato de fallback — sinal de provider instável).
 - **R3 — Métricas agregadas:** `playtest/report.py` —
   `aggregate(run_dir) -> RunReport` cruza todas as campanhas do run:
   totais por perfil, top violações, top erros por rota, campanha mais curta
@@ -47,10 +53,12 @@ Princípio: **estado auditável** — playtest sem número vira anedota.
 - **R5 — Integração no CLI 5.1:** `python -m playtest run --all` já grava
   telemetria (R1/R2) e imprime o caminho do run; `report` é comando separado
   (rodar N vezes sobre o mesmo run).
-- **R6 — Custo LLM real:** com `--real`, o resumo registra contagem de
-  requests (proxy `get_llm` da Fase 11) e aborta a campanha educadamente ao
-  atingir teto configurável (`--max-requests`, default 15) — nunca estoura a
-  quota do dia por acidente.
+- **R6 — Orçamento LLM real:** com `--real`, o resumo registra requests por
+  provider E custo estimado (USD, via hook do roteamento). Aborta a campanha
+  educadamente ao atingir teto de requests (`--max-requests`, default 15) OU de
+  custo (`--max-cost`, USD, default 0 = desligado) — nunca estoura orçamento por
+  acidente. (Produto paga por chave própria de cada provider; o teto protege o
+  bolso, não uma quota grátis.)
 - **R7 — Suíte:** teste offline roda 1 campanha curta + `aggregate` + geração
   do relatório e asserta: JSONL parseável linha a linha, summary com campos
   obrigatórios, report.md contém as seções canônicas.
@@ -86,7 +94,9 @@ Princípio: **estado auditável** — playtest sem número vira anedota.
 {"turn": 12, "action": "Viajo para Brekmar", "route": "storyteller",
  "latency_ms": 40, "events_applied": 1, "events_rejected": 0, "error": null,
  "location_id": "brekmar", "player_hp": 22, "player_level": 2, "gold": 35,
- "violations": []}
+ "violations": [],
+ "provider": "minimax", "model": "MiniMax-M2.5", "tier": "fast",
+ "fell_back": false, "cost_usd": 0.0021}
 ```
 
 `summary.json`:
@@ -97,7 +107,9 @@ Princípio: **estado auditável** — playtest sem número vira anedota.
  "combat_agent": 6, "npc_actor": 2, "loot": 1}, "latency_ms": {"p50": 38,
  "p95": 95}, "deaths": 0, "final_level": 3, "final_gold": 120,
  "locations_visited": 14, "quests": {"created": 2, "completed": 1},
- "llm_requests": 0}
+ "llm_requests_by_provider": {"groq": 50, "minimax": 41, "glm": 8},
+ "cost_usd_total": 0.14, "cost_usd_by_tier": {"classify": 0.01, "fast": 0.09,
+ "smart": 0.04}, "fell_back_turns": 2, "mock": true}
 ```
 
 ### Assinaturas
@@ -141,11 +153,15 @@ no `.gitignore` (relatório interessante é commitado à mão quando embasar dec
 2. **Implementação:** `report.py` + subcomando CLI.
 3. **Verificação:** `/qa` verde.
 
-### Etapa 3 — Teto de quota no --real + fechamento
+### Etapa 3 — Teto de orçamento no --real + fechamento
 
 1. **Testes:** `test_max_requests_aborta_educadamente` (contador fake atinge
-   teto no turno 2 → campanha para, summary marca `aborted_reason`).
-2. **Implementação:** contador (reusa proxy da Fase 11) + flag; `.gitignore`.
+   teto no turno 2 → campanha para, summary marca `aborted_reason`);
+   `test_max_cost_aborta_educadamente` (custo acumulado passa `--max-cost` →
+   para); `test_custo_por_modelo_da_tabela` (tabela de preço × tokens → USD).
+2. **Implementação:** contador de requests + custo (consome o hook do
+   roteamento; tabela de preço por modelo em `playtest/pricing.py`) + flags
+   `--max-requests`/`--max-cost`; `.gitignore`.
 3. **Verificação:** `uv run pytest` completo; rodar
    `python -m playtest run --all --turns 30` + `report` e LER o relatório —
    achados viram issues/pendências no ROADMAP (entrega da Fase 5 é o CICLO,
@@ -154,9 +170,11 @@ no `.gitignore` (relatório interessante é commitado à mão quando embasar dec
 ## 5. Critérios de aceite
 
 - [ ] `run --all --turns 30` gera JSONL + summary por campanha e imprime run_id
-- [ ] `report <run_id>` gera report.md legível com per-perfil/violações/erros
-- [ ] `--baseline` mostra deltas entre dois runs
-- [ ] `--real --max-requests 10` para no teto sem estourar quota
+- [ ] JSONL/summary trazem provider/modelo/tier/custo/`fell_back` por turno
+- [ ] `report <run_id>` gera report.md legível com per-perfil/violações/erros +
+      custo por tier/provider e turnos com fallback
+- [ ] `--baseline` mostra deltas entre dois runs (inclui delta de custo)
+- [ ] `--real --max-requests 10` e `--max-cost 0.50` param no teto
 - [ ] 1ª rodada completa executada e lida; achados registrados no ROADMAP
 - [ ] `uv run pytest` verde (suíte completa offline)
 - [ ] Guard de FallbackLLM — N/A (zero LLM novo)

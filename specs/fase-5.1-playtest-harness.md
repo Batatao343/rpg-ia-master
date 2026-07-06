@@ -2,7 +2,9 @@
 
 > **Status:** `draft`
 > **Criada:** 2026-07-06 · **Atualizada:** 2026-07-06
-> **Depende de:** motor estável (Fases 0–7, 10, 11 `done`); MockLLM da suíte
+> **Depende de:** motor estável (Fases 0–7, 10, 11 `done`); MockLLM da suíte;
+> **roteamento-multi-provider `done`** (playtest roda sobre as rotas novas; o
+> `TurnRecord` captura provider/modelo via hook de telemetria do roteamento)
 > **Desbloqueia:** 5.2 (invariantes), 5.3 (telemetria/relatório)
 
 ---
@@ -94,6 +96,11 @@ PROFILES: Dict[str, Profile]  # os 10 do R2
 @dataclass
 class TurnRecord:
     turn: int; action: str; route: str; latency_ms: int
+    # roteamento-multi-provider: qual provider/modelo/tier serviu o turno
+    # (via set_llm_telemetry_hook). None no MockLLM. `route` = rota do GRAFO
+    # (storyteller/combat/...), NÃO o tier — não confundir.
+    provider: Optional[str] = None; model: Optional[str] = None
+    tier: Optional[str] = None; fell_back: bool = False
 
 @dataclass
 class CampaignResult:
