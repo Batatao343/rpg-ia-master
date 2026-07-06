@@ -40,6 +40,9 @@ contava o pacto com Valerius no parágrafo "Natureza:" — corrigido na FONTE
 cresceu 8→15 na auditoria ("identidade real", "a verdade", "o que nao diz"...).
 Pendência de curadoria: NPCs públicos do norte citam a Rede Carmesim enquanto a
 timeline era-7 é `hidden` — ver ROADMAP § Fase 7.
+**Próximo:** Fase 5 — agentic playtest + telemetria (specs a escrever; spec-driven).
+Pendências menores: conferir Action `validate.yml` verde no primeiro push;
+playtest de balanceamento da Fase 4.
 
 **Sessão 2026-07-05 (8): FASE 6 (Conteúdo sistêmico) INTEIRA implementada — 5 fatias.**
 461 → **520 testes offline verdes** + build web + smoke_api + **smoke com LLM REAL

@@ -1,4 +1,4 @@
-# ROADMAP — RPG IA (Revisado 2026-07-03)
+# ROADMAP — RPG IA (Revisado 2026-07-05)
 
 > **Objetivo central:** Mundo vivo persistente com estado consultável, antes de features novas.
 > 
@@ -127,7 +127,7 @@ Smoke LLM real pendente de quota (fase determinística, sem `with_structured_out
 
 ---
 
-## 🎮 PRIORIDADE ALTA — Fase 4: Gameplay Core (sistemas de RPG)
+## ✅ ENTREGUE — Fase 4: Gameplay Core (sistemas de RPG)
 
 > Origem: auditoria de jogabilidade de 2026-07-03. Constatações: `XP_TABLE` sem consumidor
 > (xp nunca incrementa — **não existe progressão**), buffs/passivas são só texto (dano/AC
@@ -175,11 +175,11 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
 
 ---
 
-## Fase 5 — Agentic playtest + telemetria `ADIADA — roda DEPOIS da Fase 6`
+## 🎮 PRÓXIMA — Fase 5 — Agentic playtest + telemetria
 
-> Decisão 2026-07-05: Fase 6 (conteúdo sistêmico) passa NA FRENTE — playtest
-> automatizado rende mais quando o mundo estiver mais robusto. Specs da Fase 5
-> ficam para depois da 6.
+> Decisão 2026-07-05: Fase 6 passou na frente (entregue) e a Fase 7 aproveitou o
+> embalo do Codex (entregue). Com mundo robusto e conteúdo validado, a Fase 5 é
+> a próxima — specs ainda não escritas (spec-driven: escrever antes de codar).
 
 **Objetivo:** Agentes testadores jogam campanhas automáticas. Detectam inconsistências, medem qualidade, reduzem custo de API.
 
@@ -236,7 +236,7 @@ Depende de Fase 2.5+ estar estável (world_projection, revealed_facts).
 
 ---
 
-## 🎮 PRIORIDADE ALTA — Fase 6 — Conteúdo sistêmico (evolução da economia 4.4) `AGORA`
+## ✅ ENTREGUE — Fase 6 — Conteúdo sistêmico (evolução da economia 4.4)
 
 > **Priorizada antes da Fase 5** (decisão 2026-07-05).
 > **STATUS 2026-07-05: ✅ FASE 6 COMPLETA — 6.1–6.5 `done`** (461 → 520 testes
@@ -259,19 +259,19 @@ estado do mundo dinâmico. Absorve o item "Economia regional" do backlog (era du
 > contexto muda quando facção perde local → ✅ entregue na 2.8;
 > reforços/ameaça regional afetam encontros → ✅ parcial na 2.5b (`threat_alerts`).
 
-**Entregas (o que sobra de verdade):**
+**Entregas (o que sobrava de verdade — tudo feito):**
 
-- [ ] Rotas comerciais: fluxo de itens por conexões do mapa (bloqueio de rota corta oferta)
-- [ ] Estoques reagem a EVENTOS do event_log (bloquear porto → peixe some da loja e preço explode — hoje o estoque 4.4 só reage a controle/relógio)
-- [ ] `economy_tags` avançadas: item abundante (×0.6) / escasso (×1.8) por região (multiplicadores finos sobre a base da 4.4)
-- [ ] Itens `unique` (um por mundo, rastreados no event_log)
-- [ ] Migração real de monstros: danger/ameaça muda a COMPOSIÇÃO das loot/encounter tables com o tempo (2.5b só adiciona reforço pontual)
+- [x] Rotas comerciais: fluxo de itens por conexões do mapa (bloqueio de rota corta oferta) — 6.1
+- [x] Estoques reagem a EVENTOS do event_log (`route_blocked/cleared` no pipeline 2.6) — 6.1
+- [x] `economy_tags` avançadas: produtor local ×0.6 / isolado ×1.8 por ALCANÇABILIDADE (BFS) — 6.1
+- [x] Itens `unique` (um por mundo, claim engine no event_log, gates em loot/loja/craft/narrado) — 6.2
+- [x] Migração real de monstros: pressão de caça com decay + fação no controle mudam a composição das tabelas — 6.3
 
-**Critério de aceite:** Bloquear um porto → peixe some de lojas, preço explode — rastreável no event_log.
+**Critério de aceite:** ✅ Bloquear um porto → peixe some de lojas, preço explode — rastreável no event_log (validado no smoke real da sessão 8).
 
 ---
 
-## Fase 7 — Pipeline de autoria + validação
+## ✅ ENTREGUE — Fase 7 — Pipeline de autoria + validação
 
 Depende de Codex estruturado (Fase 2.5) estar estável.
 
@@ -455,12 +455,16 @@ Antes: "mais features, sprites depois".
 2. **Fase 3** ✅ ENTREGUE (2026-07-03): Clareza de campanha — diário/crônica, codex do jogador, quest log, visualização de estado.
 3. **Fase 4** ✅ COMPLETA (2026-07-05, 7 specs `done` + smoke real): Gameplay Core.
 4. **Fase 6** ✅ COMPLETA (2026-07-05, specs `done` com smoke real): economia viva, 20 itens únicos, migração de monstros, encontros sistêmicos, clima mecânico.
-5. **Fase 5** (depois da 6, quando o mundo estiver robusto): agentic playtest + telemetria.
-6. **Fase 7+** (depois): autoria/validação, arte, sprites.
+5. **Fase 7** ✅ COMPLETA (2026-07-05, 3 specs `done` + smoke real): lint de conteúdo + CI, curadoria migration-safe + templates, segredos de NPC separados.
+6. **Fase 5** 🎮 PRÓXIMA: agentic playtest + telemetria (specs a escrever).
+7. **Fases 8+** (depois): arte, sprites/som, hardening, contract tests.
 
-Sem 2.5-2.8, as features de economia/craft/encontros ficariam acopladas, contraditórias e não-testáveis — fundação entregue; Fase 4 constrói gameplay em cima dela.
+Sem 2.5-2.8, as features de economia/craft/encontros ficariam acopladas, contraditórias e não-testáveis — fundação entregue; Fases 4/6/7 construíram gameplay, conteúdo sistêmico e pipeline de autoria em cima dela.
 
 ### Métrica de sucesso
 
 - ✅ Fase 2.8: campanha 50 turnos sem contradição; event log rastreável; contexto nunca explode.
-- **Fase 4 (atual):** critério de aceite da seção Fase 4 (progressão + buff observável + poção em combate + craft com receita + mercadores distintos + 4v5 + morte com narrativa).
+- ✅ Fase 4: progressão + buff observável + poção em combate + craft com receita + mercadores distintos + 4v5 + morte com narrativa (smoke real 2026-07-05).
+- ✅ Fase 6: porto bloqueado → escassez rastreável no event_log (smoke real 2026-07-05).
+- ✅ Fase 7: NPC novo via template validado automaticamente; segredo de NPC não chega ao narrador (smoke real 2026-07-05).
+- **Fase 5 (próxima):** campanha de 50 turnos automatizada sem quebrar invariantes; agente joga até nível 10 autonomamente.
