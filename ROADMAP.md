@@ -175,28 +175,35 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
 
 ---
 
-## 🎮 PRÓXIMA — Fase 5 — Agentic playtest + telemetria
+## 🎮 AGORA — Fase 5 — Agentic playtest + telemetria
 
 > Decisão 2026-07-05: Fase 6 passou na frente (entregue) e a Fase 7 aproveitou o
 > embalo do Codex (entregue). Com mundo robusto e conteúdo validado, a Fase 5 é
-> a próxima — specs ainda não escritas (spec-driven: escrever antes de codar).
+> a atual. **3 specs escritas 2026-07-06 (`draft`, aguardando aprovação).**
+> Ordem: **5.1 → 5.2 → 5.3** (5.2 pluga no hook do 5.1; 5.3 agrega o que os dois produzem).
 
-**Objetivo:** Agentes testadores jogam campanhas automáticas. Detectam inconsistências, medem qualidade, reduzem custo de API.
+**Objetivo:** Agentes testadores jogam campanhas automáticas offline (MockLLM = custo zero). Detectam inconsistências, medem estado, embasam balanceamento — o que só aparece no turno 30 e o smoke manual nunca alcança.
 
-**Perfis:** agressivo, explorador, comerciante, diplomático, troll, mapa-breaker, combate, NPC-only, loot-abuser, secret-rushed.
+**Fatias:**
 
-**Invariantes:** HP válido, inventário sem dupe, ouro não nega, NPC morto não fala, facção derrotada não controla, relação dinâmica > lore base, segredo oculto não vaza.
+- [ ] **5.1 — Harness + 10 perfis** ([spec](specs/fase-5.1-playtest-harness.md)):
+  `playtest/runner.py` (`run_campaign` via `app.invoke`, mesmo caminho da API) +
+  10 perfis determinísticos em Python (`next_action(state, rng) -> str`, seed
+  reproduz a campanha): agressivo, explorador, comerciante, diplomático, troll,
+  mapa_breaker, combate, npc_only, loot_abuser, secret_rusher. `--real` opt-in.
+  Teste permanente na suíte (10 turnos, sem exceção).
+- [ ] **5.2 — Invariantes de estado** ([spec](specs/fase-5.2-invariantes.md)):
+  `playtest/invariants.py` — `check_all(state, prev_state)` puro plugado no
+  `on_turn_end` do 5.1. HP válido, ouro ≥ 0, item único sem dupe, NPC morto não
+  fala, fação derrotada não controla, relógio monotônico, segredo oculto não
+  vaza (assinaturas 7.3). `assert_invariants` reusável em qualquer teste.
+- [ ] **5.3 — Telemetria + relatório** ([spec](specs/fase-5.3-telemetria-relatorio.md)):
+  JSONL por turno (shape do log da Fase 10) + `summary.json` por campanha +
+  `playtest/report.py` (`aggregate` + `render_markdown`, comparação `--baseline`);
+  teto `--max-requests` protege quota no `--real`. Relatório Markdown, sem
+  dashboard web até haver demanda.
 
-**Métricas:** turnos/campanha, erros/turno, latência, custo, contexto size, eventos gerados, mudanças rejeitadas, fatos prioritários.
-
-**Entrega:**
-
-- [ ] `agents/test_player.py` — 10 perfis com estratégias diferentes
-- [ ] Invariant checks ao fim de cada turno
-- [ ] Logger estruturado (eventos, mudanças, erros) para análise
-- [ ] Dashboard simples: turnos, erros encontrados, custo acumulado
-
-**Critério de aceite:** Campanha de 50 turnos não quebra invariantes. Agente consegue jogar até nível 10 autonomamente.
+**Critério de aceite:** Campanhas de 50 turnos dos 10 perfis não quebram invariantes (ou o bug achado é corrigido — achado é entrega); relatório agregado embasa 1 decisão de balanceamento real.
 
 ---
 
