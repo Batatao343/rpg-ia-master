@@ -210,21 +210,13 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
 
 ### Melhorias de Personagens (NPCs) — Sistema de 3 camadas
 
+> **Spec escrita 2026-07-05 (`draft`):** [specs/npcs-3-camadas-traits.md](specs/npcs-3-camadas-traits.md)
+> — 3 camadas (sessão → conhecidos → em cena), gate determinístico do
+> npc_actor ("X não está aqui" sem LLM — fecha o bug "NPC errado responde"),
+> `data/traits.json` (80 traits, sorteio seeded, DC modifiers em 6.4/4.4),
+> revelação progressiva por interações, aba Personagens. Detalhe SÓ na spec.
+
 Depende de Fase 2.5+ estar estável (world_projection, revealed_facts).
-
-**Camada 1:** Todos os NPCs da sessão (dedup interno, jogador não vê).  
-**Camada 2:** NPCs conhecidos pelo jogador (aba Personagens, conhecimento revelado progressivamente).  
-**Camada 3:** NPCs em cena (visíveis para npc_actor; ausentes retornam "X não está aqui").
-
-**Traits ocultos** (Python): gerados na criação, aplicam DC modifiers, revelados progressivamente após 5 interações.
-
-**Tarefas:**
-
-- [ ] `traits.py` — 80 traits com modificadores de DC e dificuldade de revelação
-- [ ] `state.py` — campos de NPC (home_location_id, hidden_traits, revealed_traits, interaction_count, known_by_player, knowledge_source, in_scene)
-- [ ] `storyteller` — gerenciar in_scene ao entrar/sair; criar layer 2 quando NPC menciona outro
-- [ ] `npc_actor` — validar layer 3; aplicar trait modifiers; revelação progressiva; incrementar interaction_count
-- [ ] Frontend — aba Personagens com layer 2 + source + revealed_traits
 
 ### ~~Encontros sistêmicos~~ → promovido para **Fase 6.4** ([spec](specs/fase-6.4-encontros-sistemicos.md))
 
@@ -347,6 +339,11 @@ Depende de: arte de itens pronta, Fase 6+ estável.
 
 ## Fase 10 — Hardening técnico e escala
 
+> **Spec escrita 2026-07-05 (`draft`):** [specs/fase-10-hardening-tecnico.md](specs/fase-10-hardening-tecnico.md)
+> — fatia local (game_id UUID anti-traversal, `schema_version`+migrations,
+> CORS por env, rate limit mínimo, log JSON por turno). Postgres/pgvector/
+> auth/fila = **Fase 10b** (só com usuários externos).
+
 Antes de abrir para usuários externos.
 
 **Problemas atuais:**
@@ -375,6 +372,11 @@ Antes de abrir para usuários externos.
 ---
 
 ## Fase 11 — LLM contract tests
+
+> **Spec escrita 2026-07-05 (`draft`):** [specs/fase-11-llm-contract-tests.md](specs/fase-11-llm-contract-tests.md)
+> — suíte `-m llm_contract` (skip sem chave, ≤15 requests, 7 contratos:
+> router, eventos 2.6, combate, não-onisciência de NPC, TradeIntent,
+> archivist, fallback); migra `tests/test_real_llm.py`; fora do CI padrão.
 
 Depende de: Fases 2.5-5 estáveis.
 
@@ -412,7 +414,12 @@ por chunk (timeline separada, secrets como `hidden`). `world_lore.txt` não exis
 
 ### Mapa robusto — restante
 
-Mapa de Valoria com 30 nós já entregue (2.5b). Sobra:
+> **Spec escrita 2026-07-05 (`draft`):** [specs/mapa-sublocais-viagem-variavel.md](specs/mapa-sublocais-viagem-variavel.md)
+> — `travel_times` por conexão (default 1; intra-cidade 0 sem virar relógio),
+> nós `kind: interior` (masmorras/tavernas com danger próprio, abrigo de
+> clima, fora do mapa-mundi), 4-6 interiores curados. Detalhe SÓ na spec.
+
+Mapa de Valoria com 30 nós já entregue (2.5b). Sobra (coberto pela spec acima):
 
 - [ ] Sub-locais (distritos, masmorras internas)
 - [ ] Tempo de viagem variável por conexão (hoje: sempre 1 período)
