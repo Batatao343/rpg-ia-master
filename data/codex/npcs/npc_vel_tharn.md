@@ -21,6 +21,4 @@ Personalidade: Lacônico, observador, melancólico até para um Cinzéu. Guiou c
 
 O que sabe: As passagens mudam com deslizamentos, mas Vel-Tharn lê os padrões. Conhece quais saídas baixas têm Orcs, quais têm Goblins, onde o Rei faz a geografia "errada". Já desceu mais fundo do que admite — e voltou, o que quase ninguém faz.
 
-Segredo: Vel-Tharn viu o Rei Subterrâneo, de longe, numa descida que correu mal. Não fala sobre isso. A experiência o marcou de um jeito que nem os Cinzéus, mestres do silêncio contemplativo, conseguem processar. Sabe algo sobre o que o Rei teme — o que o selou.
-
 Para o narrador: Vel-Tharn é o guia essencial para qualquer travessia ou descida ao Reino Subterrâneo. Caro, confiável, traumatizado. Se um personagem precisa ir fundo nas Montanhas e voltar, precisa de Vel-Tharn — ou de muita sorte.

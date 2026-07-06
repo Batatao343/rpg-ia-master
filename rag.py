@@ -238,6 +238,36 @@ def ingest_file(file_path: str, index_name: str):
     db.save_local(path)
     print(f"✅ Indexado com sucesso em '{path}'!")
 
+def reindex_global() -> None:
+    """Re-gera os índices globais (lore do Codex + regras).
+
+    Fase 7.2: roda o lint de conteúdo ANTES de ingerir — qualquer ERRO aborta
+    com exit 1 sem tocar nos índices FAISS. Só este caminho valida; `query_rag`
+    em runtime não (custo por turno desnecessário; índice já nasceu válido).
+    """
+    import sys
+
+    from services import content_validator
+
+    findings = content_validator.validate_all()
+    errors = [f for f in findings if f.severity == "error"]
+    if errors:
+        for f in errors:
+            print(f"❌ [{f.validator}] {f.path}: {f.message}")
+        print(f"Lint de conteúdo falhou ({len(errors)} erro(s)) — reindexação abortada.")
+        sys.exit(1)
+
+    # Fase 2.5: lore vem do Codex (data/codex/); world_lore.txt foi removido na 2.5b (R5).
+    print("Recriando índices globais...")
+    from services.codex_loader import ingest_codex
+    ingest_codex()
+    rules_path = os.path.join("data", "rules.txt")
+    if os.path.exists(rules_path):
+        ingest_file(rules_path, "rules")
+    else:
+        print(f"[ERRO] Regras não encontradas em {rules_path}")
+
+
 if __name__ == "__main__":
     # Console Windows é cp1252; força UTF-8 p/ os emojis dos prints não quebrarem
     # (main.py já faz isso no fluxo do jogo; aqui rodamos standalone).
@@ -248,13 +278,4 @@ if __name__ == "__main__":
         except Exception:
             pass
 
-    # Script rápido para re-gerar os índices globais se rodar este arquivo direto.
-    # Fase 2.5: lore vem do Codex (data/codex/); world_lore.txt foi removido na 2.5b (R5).
-    print("Recriando índices globais...")
-    from services.codex_loader import ingest_codex
-    ingest_codex()
-    rules_path = os.path.join("data", "rules.txt")
-    if os.path.exists(rules_path):
-        ingest_file(rules_path, "rules")
-    else:
-        print(f"[ERRO] Regras não encontradas em {rules_path}")
+    reindex_global()

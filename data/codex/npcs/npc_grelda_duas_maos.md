@@ -22,6 +22,4 @@ Personalidade: Pragmática, neutra por sobrevivência, amigável por estratégia
 
 O que faz: Controla boa parte do fluxo de bens que entra pela Garganta. Vende suprimentos, informação e silêncio. É um dos poucos pontos neutros de Skallgard — e por isso um dos mais valiosos para quem chega de fora.
 
-Segredo: Grelda percebeu o desvio de comida antes dos tecnológicos — é o tipo de coisa que uma mercadora nota. Não disse a ninguém porque informação guardada vale mais que informação dada. Está esperando o melhor momento (e o melhor comprador) para usá-la.
-
 Para o narrador: Grelda é o contato natural de forasteiros em Skallgard. Justa nos negócios, mas tudo tem preço. Sabe quem está fazendo o quê — pelo preço certo.

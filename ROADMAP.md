@@ -275,23 +275,36 @@ estado do mundo dinâmico. Absorve o item "Economia regional" do backlog (era du
 
 Depende de Codex estruturado (Fase 2.5) estar estável.
 
-**Objetivo:** Evitar inconsistência conforme conteúdo cresce. Documentos, IDs, relacionamentos validados automaticamente.
+**Objetivo:** Evitar inconsistência conforme conteúdo cresce. Documentos, IDs, relacionamentos validados automaticamente. Paga os 3 débitos técnicos da Fase 2.5 (encoding, curadoria sobrescrita, NPC público+segredo).
 
-**Entregas:**
+> **FASE 7 COMPLETA (2026-07-05)** — 7.1/7.2/7.3 `done`, 581 testes offline,
+> lint verde no repo, reindex feito, smoke real de não-vazamento executado.
 
-- [ ] ⚠️ **TECHNICAL DEBT (da Fase 2.5):**
-  - **Encoding:** Lore em PT-BR (acentos). Script e loaders explicitam `encoding="utf-8"` (Windows default cp1252). Validar em CI que arquivos .md entram como UTF-8.
-  - **Script sobrescreve curadoria:** `migrate_lore_nova.py` regera `data/codex/` + `entities.json` do zero. Curadoria manual (aliases, `related_entities`, overrides de visibility) é PERDIDA. Docstring avisa, mas documentar workflow pós-script ou versionar curadoria separadamente (ex.: `entities-curated.json` que merge com gerado).
-  - **NPC miscel público+segredo:** Arquivos de NPC mesclam "Descrição pública" com "História real" (motivação/segredos) no mesmo `.md` `public`. Separar em seções `visibility: hidden` ou criar NPCs_secrets.md paralelos. Hoje: contexto público vê motivação real (não é erro crítico, mas compromete revelação controlada de segredos).
-- [ ] Templates Markdown para: local, facção, raça, NPC, monstro, artefato
-- [ ] Validador de frontmatter (id, type, name, tags, visibility obrigatórios)
-- [ ] Validador de referências (edges apontam para entidade que existe)
-- [ ] Validador de alias (sem duplicação entre entidades)
-- [ ] Validador de visibilidade (segredo não marcado como público)
-- [ ] Comando para reindexar Codex
-- [ ] CI hook: validar novo conteúdo antes de merge
+**Fatias:**
 
-**Critério de aceite:** Adicionar NPC novo segue template, é validado automaticamente, entra em entities.json com IDs únicos.
+- [x] **7.1 — Validadores de conteúdo + CI** ([spec](specs/fase-7.1-validadores-conteudo.md)):
+  `services/content_validator.py` puro — frontmatter (id/type/name/tags/visibility, id = nome do arquivo),
+  ids únicos (codex + entities_extra + components), referências (edges → entidade existente, constraints
+  de `relation_types.json`, `related_entities` órfão), aliases sem duplicação (normalizado sem acento),
+  visibilidade (secret não vaza em doc public), encoding UTF-8 (débito 2.5). CLI
+  `scripts/validate_content.py` (exit 1 com erro) + teste-gate sobre os dados reais do repo +
+  GitHub Action rodando `uv run pytest` em PR (fecha "CI hook antes de merge").
+- [x] **7.2 — Pipeline de autoria: curadoria preservada, templates, reindex com gate**
+  ([spec](specs/fase-7.2-autoria-curadoria.md)): `data/codex_overrides.yaml` — patches de frontmatter
+  por id aplicados pelo `migrate_lore_nova.py` no fim da geração (curadoria sobrevive à regeração —
+  débito 2.5); arquivos manuais com `curated: true` não são apagados pelo script (entidade em
+  `entities_extra.json`, padrão 2.5b); templates Markdown por tipo em `docs/templates/codex/`
+  (local, facção, raça, NPC, monstro, artefato); `rag.py` roda o lint 7.1 ANTES de reindexar e
+  aborta com erro (fecha "comando para reindexar"); workflow documentado em `docs/AUTORIA.md`.
+- [x] **7.3 — Separação público/segredo nos NPCs** ([spec](specs/fase-7.3-npc-segredos.md)):
+  migrate divide cada NPC por rótulo de parágrafo (lista curada: "História real", "Motivação real",
+  "O pacto e seus efeitos"...) → doc paralelo `npcs/segredos/{npc_id}_segredo.md` com
+  `visibility: hidden` (débito 2.5 — hoje `codex_body`/RAG entregam o pacto de Valerius ao narrador);
+  lint anti-regressão (rótulo secreto em doc public = ERRO); regeneração + auditoria manual + reindex.
+
+**Critério de aceite:** Adicionar NPC novo segue template, é validado automaticamente, entra em entities.json com IDs únicos — e segredo de NPC não chega ao narrador público. ✅ **Validado em smoke real 2026-07-05** (NPC de teste via template sobreviveu ao migrate e passou no lint; narrador Gemini descreveu Valerius só pela persona pública, zero Daruun/pacto; `query_rag` public não devolve chunks de segredo).
+
+**Pendência de curadoria (fora do escopo 7.3):** alguns NPCs públicos citam a Rede Carmesim como ameaça conhecida (Kess, Volkar, Oráculo de Ferro) enquanto a timeline da era 7 marca o despertar como `hidden` — revisar na próxima passada de lore se isso é conhecimento comum do norte ou spoiler.
 
 ---
 

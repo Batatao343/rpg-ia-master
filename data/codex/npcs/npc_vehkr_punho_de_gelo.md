@@ -22,6 +22,4 @@ Personalidade: Fala pouco, pensa devagar, decide uma vez. Não é burro — é d
 
 O que está fazendo: É ele quem ordenou o desvio de comida e a aproximação dos Vrel conselheiros. Não quer guerra — quer que os caçadores deixem de depender dos tecnológicos para nunca mais serem tratados como descartáveis. Mas sabe que o passo seguinte ao acúmulo é o confronto, e está se preparando para ele sem querer ser quem o começa.
 
-Segredo: Perdeu o irmão no Ventre, num acidente que os tecnológicos classificaram como "perda aceitável de operação". Nunca perdoou. A frieza com que trataram a morte é a raiz pessoal de tudo que faz.
-
 Para o narrador: Vehkr é honrado à sua maneira brutal. Cumpre a palavra. Se um personagem ganhar seu respeito, ganha um aliado que não trai. Se traí-lo, ganha um inimigo que não esquece.

@@ -22,6 +22,4 @@ Personalidade: Resignado, sábio, sustentado por puro senso de dever. Sabe que o
 
 O que sabe: Tudo sobre o pântano — as plantas medicinais, o chá da Praga de Ferro, o avanço do território, os Afogados, o espólio nas profundezas. Gresh é a maior autoridade viva sobre o Éter concentrado e seus efeitos. Mede o crescimento com obsessão porque é a única coisa que ainda pode controlar.
 
-Segredo: Gresh sabe que o pântano cresce mais rápido a cada ano — e calculou que, no ritmo atual, alcançará Nova Arcádia dentro de gerações. Apresentou o alerta às autoridades e foi ignorado. Carrega esse conhecimento como mais um peso da melancolia.
-
 Para o narrador: Gresh é fonte de conhecimento sobre o pântano, empregador de missões (coletar plantas, conter avanços, recuperar druidas perdidos) e voz de alerta ignorada. Sua tristeza é genuína e contagiante. Fornece o chá da Praga de Ferro — vital para personagens infectados.

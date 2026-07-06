@@ -1,0 +1,17 @@
+# Curadoria migration-safe — aplicada por scripts/migrate_lore_nova.py DEPOIS da
+# geração do Codex. Rode o migrate quantas vezes quiser: o que estiver aqui
+# sobrevive. Fluxo completo: docs/AUTORIA.md.
+#
+# Chaves por id do Codex (id órfão = ERRO de lint). Campos suportados:
+#   aliases:          SUBSTITUI a lista de aliases
+#   tags_extra:       tags ADICIONADAS às geradas (nunca remove)
+#   visibility:       sobrescreve (public | hidden | secret)
+#   related_entities: SUBSTITUI a lista
+#   append_body:      markdown anexado ao fim do corpo
+#
+# Arquivo `curated: true` NUNCA recebe override (é 100% manual; lint avisa).
+#
+# Exemplo (descomente e ajuste):
+# npc_valerius:
+#   aliases: ["Lorde Protetor", "O Imortal de Arcádia"]
+#   tags_extra: ["governante_supremo"]

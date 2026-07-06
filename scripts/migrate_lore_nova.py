@@ -4,10 +4,15 @@ Valoria) para o Codex estruturado (`data/codex/**/*.md`) + `data/graph/entities.
 
 Spec: specs/fase-2.5-codex-world-state.md §3 (tabela fonte → destino).
 
-ATENÇÃO: rodar este script REGERA data/codex/ e data/graph/entities.json do zero —
-curadoria manual feita nesses arquivos é sobrescrita. Cure só depois da saída
-estabilizar. `data/graph/edges.json` e `relation_types.json` são curados à mão e
-NUNCA são tocados por este script.
+ATENÇÃO: rodar este script REGERA data/codex/ e data/graph/entities.json do zero.
+Curadoria que SOBREVIVE à regeração (Fase 7.2):
+  - `data/codex_overrides.yaml` — patches de frontmatter/corpo por id, aplicados
+    no fim da geração (`apply_overrides`);
+  - arquivos `.md` com `curated: true` no frontmatter — nunca apagados/reescritos
+    (entidade correspondente vive em `entities_extra.json`);
+  - `data/graph/edges.json`, `relation_types.json`, `entities_extra.json` e
+    `components.json` — curados à mão, NUNCA tocados por este script.
+Qualquer outra edição manual nos `.md` gerados é sobrescrita.
 
 Uso:  uv run python scripts/migrate_lore_nova.py
 """
@@ -24,6 +29,10 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
 import yaml
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from services.content_validator import NPC_SECRET_LABELS  # noqa: E402 — lista compartilhada (7.3)
 
 LORE_DIR = "lore_nova"
 CODEX_DIR = os.path.join("data", "codex")
@@ -353,10 +362,143 @@ def parse_marker_entries(path: str, marker: str) -> List[Tuple[str, str, str, st
 def write_codex_file(folder: str, frontmatter: dict, body: str) -> str:
     os.makedirs(os.path.join(CODEX_DIR, folder), exist_ok=True)
     path = os.path.join(CODEX_DIR, folder, f"{frontmatter['id']}.md")
+    _dump_md(path, frontmatter, body)
+    return path
+
+
+def _dump_md(path: str, frontmatter: dict, body: str) -> None:
     fm = yaml.safe_dump(frontmatter, allow_unicode=True, sort_keys=False, width=100).strip()
     with open(path, "w", encoding="utf-8") as f:
         f.write(f"---\n{fm}\n---\n\n{body}\n")
-    return path
+
+
+def _parse_md(path: str) -> Tuple[dict, str]:
+    """(frontmatter, corpo) de um .md do Codex; frontmatter quebrado -> ({}, "")."""
+    with open(path, "r", encoding="utf-8") as f:
+        text = f.read()
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        return {}, ""
+    frontmatter = yaml.safe_load(parts[1])
+    if not isinstance(frontmatter, dict):
+        return {}, ""
+    return frontmatter, parts[2].strip()
+
+
+# ---------------------------------------------------------------------------
+# Segredos de NPC (Fase 7.3)
+# ---------------------------------------------------------------------------
+
+def split_npc_secrets(body: str) -> Tuple[str, str]:
+    """Divide o corpo de um NPC em (publico, secreto) por rótulo de parágrafo.
+
+    Parágrafo = bloco separado por linha em branco. Rótulo = texto antes do
+    primeiro ':' na primeira linha do bloco, normalizado via _strip_accents +
+    casefold, comparado contra NPC_SECRET_LABELS (content_validator — lista
+    compartilhada com o lint anti-regressão). Sem rótulo (linha sem ':') =
+    público. Título '# ...' fica no público.
+    """
+    publicos: List[str] = []
+    secretos: List[str] = []
+    for paragraph in re.split(r"\n\s*\n", body):
+        if not paragraph.strip():
+            continue
+        first = paragraph.strip().splitlines()[0]
+        rotulo = ""
+        if ":" in first and not first.lstrip().startswith("#"):
+            rotulo = _strip_accents(first.split(":", 1)[0]).casefold().strip()
+        if rotulo in NPC_SECRET_LABELS:
+            secretos.append(paragraph.strip())
+        else:
+            publicos.append(paragraph.strip())
+    return "\n\n".join(publicos), "\n\n".join(secretos)
+
+
+# ---------------------------------------------------------------------------
+# Curadoria migration-safe (Fase 7.2)
+# ---------------------------------------------------------------------------
+
+OVERRIDES_PATH = os.path.join("data", "codex_overrides.yaml")
+
+
+def is_curated(path: str) -> bool:
+    """True se o frontmatter tem `curated: true` (delete loop pula o arquivo)."""
+    try:
+        frontmatter, _body = _parse_md(path)
+    except Exception:
+        return False
+    return bool(frontmatter.get("curated"))
+
+
+def load_overrides(path: str = OVERRIDES_PATH) -> dict:
+    """Lê data/codex_overrides.yaml -> {id: patch}. Ausente/vazio -> {}."""
+    if not os.path.isfile(path):
+        return {}
+    with open(path, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+    return data if isinstance(data, dict) else {}
+
+
+def _codex_paths_by_id(codex_dir: str) -> Dict[str, str]:
+    """id -> path; write_codex_file garante nome do arquivo == id (lint 7.1 valida)."""
+    mapping: Dict[str, str] = {}
+    for root, _dirs, files in os.walk(codex_dir):
+        for fname in files:
+            if fname.endswith(".md"):
+                mapping[fname[:-3]] = os.path.join(root, fname)
+    return mapping
+
+
+def apply_overrides(entities: Dict[str, dict], overrides: dict,
+                    codex_dir: str = CODEX_DIR) -> List[str]:
+    """Aplica patches nos .md gerados e no dict de entidades.
+
+    Precedência: gerado < override. Arquivo `curated: true` nunca recebe
+    override (lint 7.2 acusa AVISO). Retorna ids não encontrados no Codex
+    (o main imprime; lint acusa como ERRO).
+    """
+    orfaos: List[str] = []
+    paths = _codex_paths_by_id(codex_dir)
+    for override_id in sorted(overrides):
+        patch = overrides[override_id] or {}
+        path = paths.get(override_id)
+        if path is None:
+            orfaos.append(override_id)
+            continue
+        frontmatter, body = _parse_md(path)
+        if frontmatter.get("curated"):
+            continue
+
+        if "aliases" in patch:
+            frontmatter["aliases"] = list(patch["aliases"])
+        if "tags_extra" in patch:
+            tags = list(frontmatter.get("tags") or [])
+            for tag in patch["tags_extra"]:
+                if tag not in tags:
+                    tags.append(tag)
+            frontmatter["tags"] = tags
+        if "visibility" in patch:
+            frontmatter["visibility"] = patch["visibility"]
+        if "related_entities" in patch:
+            frontmatter["related_entities"] = list(patch["related_entities"])
+        if "append_body" in patch:
+            body = f"{body}\n\n{str(patch['append_body']).strip()}"
+        _dump_md(path, frontmatter, body)
+
+        ent = entities.get(override_id)
+        if ent is not None:
+            if "aliases" in patch:
+                ent["aliases"] = list(patch["aliases"])
+            if "visibility" in patch:
+                ent["visibility"] = patch["visibility"]
+            if "tags_extra" in patch:
+                etags = list(ent.get("tags") or [])
+                for tag in patch["tags_extra"]:
+                    slug = slugify(tag, drop_stopwords=False)
+                    if slug not in etags:
+                        etags.append(slug)
+                ent["tags"] = etags
+    return orfaos
 
 
 def unique_id(base: str, taken: set, fallback_suffix: str = "") -> str:
@@ -373,11 +515,16 @@ def unique_id(base: str, taken: set, fallback_suffix: str = "") -> str:
 def main() -> Dict[str, dict]:
     # regenera do zero (idempotente por substituição total). Apaga só os .md —
     # rmtree do diretório falha no Windows/OneDrive (lock de sync).
+    # Arquivos `curated: true` são manuais e sobrevivem (Fase 7.2).
     if os.path.isdir(CODEX_DIR):
         for root, _dirs, files in os.walk(CODEX_DIR):
             for fname in files:
-                if fname.endswith(".md"):
-                    os.remove(os.path.join(root, fname))
+                if not fname.endswith(".md"):
+                    continue
+                path = os.path.join(root, fname)
+                if is_curated(path):
+                    continue
+                os.remove(path)
     os.makedirs(GRAPH_DIR, exist_ok=True)
 
     entities: Dict[str, dict] = {}
@@ -423,6 +570,9 @@ def main() -> Dict[str, dict]:
         }, f"# {blk.title}\n\n{blk.body}")
 
     # --- npcs.txt — 1 md por NPC (inclui demônios e dragões) --------------------
+    # Fase 7.3: parágrafos de rótulo secreto (História real, Motivação real...)
+    # saem do doc público e viram doc paralelo `npc_secret` com visibility hidden.
+    n_npcs = n_npc_segredos = 0
     for blk in parse_categoria_blocks(os.path.join(LORE_DIR, "npcs.txt")):
         short = blk.title.split("—")[0].strip()
         npc_id = _NPC_ID_OVERRIDES.get(
@@ -438,11 +588,23 @@ def main() -> Dict[str, dict]:
             extra_tags.append("dragao")
         region = resolve_location(" ".join(blk.tags) + " " + blk.section)
         register(npc_id, "npc", name, extra_tags)
+        publico, secreto = split_npc_secrets(blk.body)
         write_codex_file("npcs", {
             "id": npc_id, "type": "npc", "name": name, "aliases": [],
             "tags": extra_tags, "visibility": "public",
             "related_entities": [region] if region else [],
-        }, f"# {blk.title}\n\n{blk.body}")
+        }, f"# {blk.title}\n\n{publico}")
+        n_npcs += 1
+        if secreto:
+            # NÃO registra entidade (mesmo padrão de secrets/ e timeline/)
+            write_codex_file(os.path.join("npcs", "segredos"), {
+                "id": f"{npc_id}_segredo", "type": "npc_secret",
+                "name": f"{name} — Segredos", "aliases": [],
+                "tags": extra_tags, "visibility": "hidden",
+                "related_entities": [npc_id],
+            }, f"# {blk.title} — O QUE NÃO É DITO\n\n{secreto}")
+            n_npc_segredos += 1
+    print(f"NPCs: {n_npcs}, com doc de segredo: {n_npc_segredos}")
 
     # --- races.txt — 1 md por raça ----------------------------------------------
     for blk in parse_categoria_blocks(os.path.join(LORE_DIR, "races.txt")):
@@ -564,6 +726,11 @@ def main() -> Dict[str, dict]:
                 "aliases": [], "tags": ["timeline", f"era_{sec.era}"],
                 "visibility": sec.visibility,
             }, body)
+
+    # --- curadoria migration-safe (Fase 7.2) --------------------------------------
+    orfaos = apply_overrides(entities, load_overrides(), CODEX_DIR)
+    for override_id in orfaos:
+        print(f"⚠️ override órfão: '{override_id}' não existe no Codex gerado")
 
     # --- entities.json -----------------------------------------------------------
     with open(os.path.join(GRAPH_DIR, "entities.json"), "w", encoding="utf-8") as f:

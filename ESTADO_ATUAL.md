@@ -2,11 +2,44 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-05 (sessão 7: FASE 4 INTEIRA implementada — 4.1 a 4.6 + 4.1b)
+> Última atualização: 2026-07-05 (sessão 9: FASE 7 INTEIRA — 7.1 validadores+CI,
+> 7.2 autoria/curadoria, 7.3 segredos de NPC)
 
 ---
 
 ## TL;DR — Em que pé está
+
+**Sessão 2026-07-05 (9): FASE 7 (Pipeline de autoria + validação) INTEIRA — 3 specs `done`.**
+520 → **581 testes offline verdes** + lint do repo 0 ERROs + reindex FAISS feito +
+**smoke real executado** (não-vazamento fim a fim: narrador Gemini descreveu
+Valerius só pela persona pública; `query_rag` public não devolve o pacto, hidden
+devolve — a cerca funciona nas duas direções).
+**7.1 lint de conteúdo:** `services/content_validator.py` puro (frontmatter, ids
+únicos, referências/constraints de edges, aliases normalizados, visibilidade,
+encoding UTF-8 + heurística de mojibake) + CLI `scripts/validate_content.py`
+(exit 1 com ERRO) + gate `test_repo_content_sem_erros` nos dados reais (repo
+passou limpo, whitelist vazia) + CI `.github/workflows/validate.yml` (pytest em
+push/PR — conferir Action verde no primeiro push).
+**7.2 autoria migration-safe:** `data/codex_overrides.yaml` — patches por id que
+o migrate reaplica após regenerar (aliases/tags_extra/visibility/related_entities/
+append_body, refletem também em entities.json); arquivos `curated: true`
+sobrevivem ao delete loop; validador `overrides` (órfão = ERRO, override em
+curated = AVISO, curated registrável sem entidade = AVISO); `rag.py` ganhou
+`reindex_global()` com gate de lint — conteúdo inválido nunca entra no FAISS;
+6 templates em `docs/templates/codex/` + fluxos em `docs/AUTORIA.md` (CLAUDE.md
+aponta). Migrate 2× = idempotente; smoke real: NPC de teste via template passou
+no lint, apareceu em `load_entities()` e sobreviveu ao migrate.
+**7.3 segredos de NPC:** `split_npc_secrets` no migrate divide o corpo por rótulo
+de parágrafo (`NPC_SECRET_LABELS` vive em content_validator, compartilhada com o
+lint) → doc paralelo `npcs/segredos/{id}_segredo.md` com `type: npc_secret` /
+`visibility: hidden`, sem registrar entidade; 141 NPCs, 14 com doc de segredo;
+lint anti-regressão (rótulo secreto em NPC público = ERRO; npc_secret público =
+ERRO). **Auditoria achou e fechou vazamento real:** o doc público do Daruun
+contava o pacto com Valerius no parágrafo "Natureza:" — corrigido na FONTE
+(`lore_nova/npcs.txt`, frase movida p/ parágrafo "Segredo:"); lista de rótulos
+cresceu 8→15 na auditoria ("identidade real", "a verdade", "o que nao diz"...).
+Pendência de curadoria: NPCs públicos do norte citam a Rede Carmesim enquanto a
+timeline era-7 é `hidden` — ver ROADMAP § Fase 7.
 
 **Sessão 2026-07-05 (8): FASE 6 (Conteúdo sistêmico) INTEIRA implementada — 5 fatias.**
 461 → **520 testes offline verdes** + build web + smoke_api + **smoke com LLM REAL
@@ -203,7 +236,7 @@ existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arquivar
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 520 testes offline verdes (test_real_llm precisa de chave)
+uv run pytest                        # 581 testes offline verdes (test_real_llm precisa de chave)
 uv run python game_engine.py         # CLI
 uv run uvicorn api:app --port 8000   # API + frontend web (http://localhost:8000)
 uv run python rag.py                 # reindexar lore (data/codex/) + regras (data/rules.txt)
@@ -254,6 +287,10 @@ em ~3s. **MockLLM esconde bugs de mapeamento** — validar nós novos com a chav
   o legado da Fase 2), badge de controle recém-mudado, ícone de ameaça regional
   (`threat_alerts`), banner de `looming_threat`; timeline de reputação por facção
   (sparkline + rótulo qualitativo de estabilidade, número interno nunca exposto)
+- **Fase 7:** lint de conteúdo (CLI + gate em teste + CI) · curadoria
+  migration-safe (`codex_overrides.yaml`, `curated: true`, templates,
+  `docs/AUTORIA.md`) · segredos de NPC em docs `hidden` separados (narrador
+  não recebe o pacto de Valerius)
 - Multi-provider LLM + typewriter effect no frontend React
 - Loot/Craft/Shop/Treasure + economia (sinal do ouro forçado em Python)
 - Memória híbrida (resumo + RAG por sessão) + persistência JSON por `game_id`

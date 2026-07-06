@@ -27,6 +27,11 @@ bash scripts/smoke_api.sh [porta]         # smoke da API (health, /data/map, /ga
 **Skills do projeto:** `/qa` = pytest token-lean durante iteração (só falhas);
 `/wrap-up` = ritual de fim de tarefa (suíte completa + docs + commit).
 
+**Autoria de conteúdo (Fase 7.2):** adicionar/curar entidade do mundo segue
+`docs/AUTORIA.md` — templates em `docs/templates/codex/`, lint via
+`uv run python scripts/validate_content.py`, curadoria migration-safe em
+`data/codex_overrides.yaml` + arquivos `curated: true`.
+
 **Modo simulado / chave:** sem `GOOGLE_API_KEY`, `get_llm()` devolve um `MockLLM`
 ([mock_llm.py](mock_llm.py)) — jogo jogável e testável sem rede. Flags: `RPG_FORCE_MOCK=1`
 força o mock mesmo com chave (usado pela suíte); `RPG_NO_MOCK=1` força o `FallbackLLM` de erro.
@@ -222,12 +227,11 @@ Toda feature/fase nova segue o fluxo de `specs/`:
 5. **ROADMAP.md é resumo + link;** o detalhe técnico mora SÓ na spec (fonte única).
 
 Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `in-progress`; 2.6 (structured events) `done`;
-2.7 (rules engine) `done`; 2.8 (context builder) `done`; 3.1 (diário+crônica) `done`;
-3.2 (conhecimento revelável) `done`; 3.3 (quest log) `done`; 3.4 (visualização de
-estado) `done` — **Fase 3 completa**. Próxima: Fase 4 — Gameplay Core. Ver ROADMAP § Fase 4.
-Fase 4 (Gameplay Core) mapeada no ROADMAP em 6 fatias `draft` (4.1 progressão/árvore de
-habilidades · 4.2 buffs mecânicos · 4.3 inventário/equip · 4.4 economia determinística ·
-4.5 party · 4.6 dificuldade/IA) — specs ainda não escritas. Ver ROADMAP § Fase 4.
+2.7 (rules engine) `done`; 2.8 (context builder) `done`; 3.1–3.4 `done` — **Fase 3 completa**;
+4.1–4.6 + 4.1b `done` — **Fase 4 completa**; 6.1–6.5 `done` — **Fase 6 completa**;
+7.1 (validadores+CI) · 7.2 (autoria/curadoria) · 7.3 (segredos de NPC) `done` —
+**Fase 7 completa** (lint `services/content_validator.py` + CLI
+`scripts/validate_content.py`; gate no `rag.py`; autoria em `docs/AUTORIA.md`).
 
 ---
 

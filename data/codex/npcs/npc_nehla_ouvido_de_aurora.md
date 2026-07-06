@@ -22,6 +22,4 @@ Personalidade: Tensa, vigilante, carregando um peso que não pode dividir. Levav
 
 O que sabe: A Rede Carmesim está acelerando mais rápido do que Astrin admite até para si mesma. Nehla mede os números todo dia. Calculou uma estimativa de quando o Farol pode não ser suficiente — e a estimativa a apavora. Está proibida de falar.
 
-Segredo: Nehla começou a registrar os números num diário escondido, fora dos registros oficiais, porque não confia que a verdade sobreviva ao sigilo dos clãs. Se algo lhe acontecer, o diário é a única prova do que está vindo.
-
 Para o narrador: Nehla é uma rachadura no sigilo de Skallgard. Um personagem que ganhe sua confiança — ou encontre seu diário — acessa a verdade sobre a Rede Carmesim. Ela quer contar. Tem medo do que acontece quando contar.

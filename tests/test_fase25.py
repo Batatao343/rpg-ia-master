@@ -251,8 +251,10 @@ def test_codex_frontmatter_valido():
         assert frontmatter["visibility"] in {"public", "hidden", "secret"}
         assert body.strip(), f"{path} sem corpo"
         cid = frontmatter["id"]
-        # story_/secret_/timeline_ são documentos de mundo, não entidades do grafo
-        if not cid.startswith(("story_", "secret_", "timeline_")):
+        # story_/secret_/timeline_ são documentos de mundo, não entidades do grafo;
+        # *_segredo (type npc_secret, Fase 7.3) também não registra entidade
+        if not cid.startswith(("story_", "secret_", "timeline_")) \
+                and frontmatter["type"] != "npc_secret":
             assert cid in entities, f"{path}: id '{cid}' não existe em entities.json"
 
 
