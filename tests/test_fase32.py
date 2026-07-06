@@ -339,7 +339,8 @@ def test_endpoint_codex():
     import api
     import persistence
 
-    game_id = "t32-endpoint-pytest"
+    import uuid
+    game_id = str(uuid.uuid4())  # Fase 10: game_id da API precisa ser UUID
     save_path = os.path.join(persistence.SAVES_DIR, f"{game_id}.json")
     state = _base_state()
     state["game_id"] = game_id
@@ -359,9 +360,11 @@ def test_endpoint_codex():
 
 
 def test_endpoint_codex_game_id_inexistente_404():
+    import uuid
     from fastapi.testclient import TestClient
 
     import api
     client = TestClient(api.app)
-    resp = client.get("/game/codex", params={"game_id": "nao_existe_de_jeito_nenhum"})
+    # UUID válido sem save no disco -> 404 (não-UUID vira 400 — Fase 10)
+    resp = client.get("/game/codex", params={"game_id": str(uuid.uuid4())})
     assert resp.status_code == 404

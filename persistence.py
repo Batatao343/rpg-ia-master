@@ -2,16 +2,111 @@
 persistence.py
 Gerencia o Salvamento e Carregamento do Estado do Jogo.
 Salva em pasta dedicada 'saves/' e serializa novos campos de memória.
+
+Fase 10: `save_path()` é o ÚNICO lugar que monta caminho de save a partir de
+game_id vindo do cliente (valida UUID — anti path-traversal); saves carregam
+`schema_version` e passam pelo pipeline `_MIGRATIONS` no load.
 """
 import os
 import json
 import glob
-from typing import Dict, Any, List, Optional
+import uuid
+from typing import Any, Callable, Dict, List, Optional
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, BaseMessage
 
 # Configuração de Pastas
 SAVES_DIR = "saves"
 DEFAULT_SAVE_NAME = "autosave"
+
+# Versão atual do schema de save (Fase 10). Save sem o campo = versão 0.
+# v2 = campos de camada dos NPCs (spec npcs-3-camadas-traits).
+SCHEMA_VERSION = 2
+
+
+def save_path(game_id: str) -> str:
+    """Caminho canônico do save de `game_id`.
+
+    Levanta ValueError se o game_id não for UUID ou se o caminho resolvido
+    escapar de `saves/` — input do cliente nunca chega cru ao filesystem.
+    """
+    try:
+        uuid.UUID(str(game_id))
+    except (ValueError, TypeError):
+        raise ValueError(f"game_id inválido (esperado UUID): {game_id!r}")
+    path = os.path.join(SAVES_DIR, f"{game_id}.json")
+    root = os.path.abspath(SAVES_DIR)
+    if not os.path.abspath(path).startswith(root + os.sep):
+        raise ValueError(f"caminho de save fora de {SAVES_DIR}/: {game_id!r}")
+    return path
+
+
+# --- Migrations de save (Fase 10) ------------------------------------------
+
+def _migrate_v0_to_v1(raw: Dict[str, Any]) -> Dict[str, Any]:
+    """Consolida os backfills heurísticos pré-Fase 10 num passo único:
+    chronicle List[str] -> capítulos (3.1); known_abilities -> ids canônicos
+    (4.1); inventário strings -> {id, qty} + slots (4.3); party sem ficha ->
+    ficha default (4.5); game_over default (4.6). Idempotente."""
+    raw = dict(raw)
+
+    chron = raw.get("chronicle", [])
+    if chron and isinstance(chron[0], str):
+        raw["chronicle"] = [{
+            "title": "Crônica da jornada", "started_turn": 0, "location": "",
+            "entries": [{"text": t, "turn": 0, "kind": "prose"} for t in chron],
+        }]
+
+    player = raw.get("player", {})
+    if player:
+        from progression import canonicalize_known_abilities
+        from inventory import backfill_inventory
+        player = canonicalize_known_abilities(player)
+        player = backfill_inventory(player)
+        raw["player"] = player
+
+    from party import backfill_party
+    raw["party"] = backfill_party(raw.get("party", []))
+
+    raw["game_over"] = bool(raw.get("game_over", False))
+    return raw
+
+
+def _migrate_v1_to_v2(raw: Dict[str, Any]) -> Dict[str, Any]:
+    """spec npcs-3-camadas (R1): NPCs antigos ganham campos de camada + traits
+    sorteados (seed npc_id+game_id — determinístico). `in_scene` fica AUSENTE
+    de propósito (gate trata ausente como presente — save no meio de cena não
+    fica órfão; a primeira viagem normaliza). Idempotente."""
+    raw = dict(raw)
+    npcs = raw.get("npcs") or {}
+    if npcs:
+        from services.npc_layers import ensure_npc_fields
+        game_id = str(raw.get("game_id", ""))
+        home = str((raw.get("world") or {}).get("current_location_id", ""))
+        raw["npcs"] = {
+            nome: ensure_npc_fields(npc, game_id, home_location_id=home)
+            if isinstance(npc, dict) else npc
+            for nome, npc in npcs.items()
+        }
+    return raw
+
+
+_MIGRATIONS: Dict[int, Callable[[Dict[str, Any]], Dict[str, Any]]] = {
+    0: _migrate_v0_to_v1,
+    1: _migrate_v1_to_v2,
+}
+
+
+def migrate_state(raw: Dict[str, Any]) -> Dict[str, Any]:
+    """Aplica migrations de raw['schema_version'] (default 0) até SCHEMA_VERSION.
+
+    Puro e idempotente: save já na versão atual não passa por migration nenhuma.
+    """
+    version = int(raw.get("schema_version", 0) or 0)
+    while version < SCHEMA_VERSION:
+        raw = _MIGRATIONS[version](raw)
+        version += 1
+        raw["schema_version"] = version
+    return raw
 
 def _serialize_messages(messages: List[BaseMessage]) -> List[Dict[str, str]]:
     """Converte objetos Message do LangChain para dicionários simples (JSON)."""
@@ -71,6 +166,8 @@ def save_game_state(state: Dict[str, Any]) -> bool:
 
         # Prepara os dados serializáveis
         save_data = {
+            # --- Fase 10: versão do schema (migrations no load) ---
+            "schema_version": SCHEMA_VERSION,
             # --- Identificação e Memória (Novos Campos) ---
             "game_id": game_id,
             "narrative_summary": state.get("narrative_summary", ""),
@@ -133,23 +230,8 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
         with open(target_file, 'r', encoding='utf-8') as f:
             raw_data = json.load(f)
 
-        # Fase 3.1: backfill de saves pré-capítulos (chronicle era List[str])
-        raw_chron = raw_data.get("chronicle", [])
-        if raw_chron and isinstance(raw_chron[0], str):
-            raw_chron = [{
-                "title": "Crônica da jornada", "started_turn": 0, "location": "",
-                "entries": [{"text": t, "turn": 0, "kind": "prose"} for t in raw_chron],
-            }]
-
-        # Fase 4.1 (R8): known_abilities texto-livre -> ids canônicos
-        # ("[Passiva] ..." sai; não-mapeável descarta; garante ataque_basico).
-        raw_player = raw_data.get("player", {})
-        if raw_player:
-            from progression import canonicalize_known_abilities
-            raw_player = canonicalize_known_abilities(raw_player)
-            # Fase 4.3 (R7): inventário de strings -> {id, qty} + slots default
-            from inventory import backfill_inventory
-            raw_player = backfill_inventory(raw_player)
+        # Fase 10: pipeline de migrations (consolida os backfills 3.1/4.1/4.3/4.5)
+        raw_data = migrate_state(raw_data)
 
         # Reconstrói o Estado compatível com GameState
         state = {
@@ -157,13 +239,12 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
             "game_id": raw_data.get("game_id", "recovered_session"),
             "narrative_summary": raw_data.get("narrative_summary", ""),
             "archivist_last_run": raw_data.get("archivist_last_run", 0),
-            "chronicle": raw_chron,
-            
+            "chronicle": raw_data.get("chronicle", []),
+
             # --- Recupera Core ---
-            "player": raw_player,
+            "player": raw_data.get("player", {}),
             "world": raw_data.get("world", {}),
-            # Fase 4.5: party antiga (schema mínimo) ganha ficha de combate default
-            "party": __import__("party").backfill_party(raw_data.get("party", [])),
+            "party": raw_data.get("party", []),
             "enemies": raw_data.get("enemies", []),
             "factions": raw_data.get("factions", []),
             "faction_intel": raw_data.get("faction_intel", {}),

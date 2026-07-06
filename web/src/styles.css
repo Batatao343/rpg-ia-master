@@ -661,3 +661,16 @@ select {
 
 /* ---------- Fase 6.1: rota bloqueada ---------- */
 .worldmap__edge.is-blocked { stroke: var(--danger-bright, oklch(0.6 0.19 25)); stroke-dasharray: 2 2.5; opacity: 0.8; }
+
+/* spec mapa-sublocais: chips de interiores ("Locais daqui") */
+.placesbar { flex: none; display: flex; flex-wrap: wrap; gap: 0.45rem; padding: 0.45rem clamp(0.9rem, 3vw, 2.9rem); border-bottom: 1px solid var(--line-soft); background: oklch(0.13 0.012 250 / 0.7); }
+.placechip { font: inherit; font-size: 0.82rem; color: var(--ink-soft, #cbc6ba); background: oklch(0.18 0.015 250 / 0.8); border: 1px solid var(--line-soft); border-radius: 999px; padding: 0.25rem 0.75rem; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+.placechip:hover:not(:disabled) { border-color: var(--accent, #b3852f); color: var(--ink, #efe9dc); }
+.placechip:disabled { opacity: 0.5; cursor: default; }
+.placechip--exit { border-style: dashed; }
+
+/* spec npcs-3-camadas: traits revelados + "ouviu falar" */
+.codex-entry--heard { opacity: 0.65; }
+.codex-entry__hint { font-size: 0.75rem; color: var(--ink-soft, #9a958a); font-style: italic; }
+.codex-entry__traits { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0.3rem 0; }
+.traitchip { font-size: 0.72rem; padding: 0.1rem 0.5rem; border: 1px solid var(--line-soft); border-radius: 999px; color: var(--accent, #b3852f); cursor: help; }

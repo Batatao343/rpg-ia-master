@@ -1,6 +1,6 @@
 # SPEC — NPCs em 3 camadas + traits ocultos com revelação progressiva
 
-> **Status:** `draft`
+> **Status:** `done` (2026-07-06)
 > **Criada:** 2026-07-05 · **Atualizada:** 2026-07-05
 > **Depende de:** 2.6 (structured events) `done`; 3.2 (codex do jogador) `done`; 2.8 (context builder) `done`
 > **Desbloqueia:** correção estrutural do bug "NPC errado responde"; profundidade de NPC sem custo de LLM
@@ -187,14 +187,30 @@ def trait_dc_modifier(npc: dict, contexto: str) -> int:
 
 ## 5. Critérios de aceite
 
-- [ ] Falar com NPC que não está em cena → "X não está aqui" sem request de LLM
-- [ ] Viajar → ninguém segue o jogador (in_scene zerado; companion 4.5 intacto)
-- [ ] 5 interações com Grum → trait revelado, linha no diário, aparece na aba Personagens
-- [ ] `hidden_traits` invisível em API/prompt/frontend (teste R9)
-- [ ] Save antigo carrega com backfill completo
-- [ ] `uv run pytest` verde (suíte completa offline) + `npm run build` ok
-- [ ] Guard de FallbackLLM nos campos novos do StoryUpdate
-- [ ] Saves antigos continuam carregando
+- [x] Falar com NPC que não está em cena → "X não está aqui" sem request de LLM
+- [x] Viajar → ninguém segue o jogador (in_scene zerado; companion 4.5 intacto)
+- [x] Interações revelam trait (reveal_after do catálogo), nota na resposta, aba Personagens
+- [x] `hidden_traits` invisível em API/prompt/frontend (teste R9)
+- [x] Save antigo carrega com backfill completo (migration v2)
+- [x] `uv run pytest` verde (629 testes) + `npm run build` ok
+- [x] Guard de FallbackLLM nos campos novos do StoryUpdate (defaults [])
+- [x] Saves antigos continuam carregando
+
+**Desvios:**
+- Canal de entrada em cena REUSA `introduced_npcs` (campo já existia no
+  StoryUpdate); só `npcs_left_scene` é novo — menos schema pro Gemini errar.
+- Gate trata `in_scene` AUSENTE como presente (compat: save antigo no meio de
+  cena não fica órfão; backfill não força False — primeira viagem normaliza).
+- R6 (DC modifiers): consumidor entregue = gate de recrutamento 4.5
+  (`persuasao` ajusta o limiar de relationship); social 6.4/mercador 4.4
+  ficam para quando NPC↔mercador se unificarem (mercadores não vivem em
+  GameState.npcs).
+- Catálogo: 40 traits (lote 1 previsto no §7 da spec; teste exige ≥40).
+- "Linha no diário" virou nota na própria resposta do NPC (*(Você percebe...)*)
+  — a crônica 3.1 é por milestone de evento, não caber trait ali é decisão.
+- Smoke real (2026-07-06): viagem p/ interior zerou a cena; Gemini
+  RE-INTRODUZIU a NPC conhecida via introduced_npcs (canal funcionando —
+  semântica de "quem a narrativa traz entra em cena"; vigiar em playtest).
 
 ## 6. Smoke test com LLM real
 

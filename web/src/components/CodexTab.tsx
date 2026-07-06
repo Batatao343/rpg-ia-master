@@ -116,9 +116,19 @@ export function CodexTab({
         codex.characters.length ? (
           <ul className="codex-list">
             {codex.characters.map((c, i) => (
-              <li key={i} className="codex-entry">
-                <p className="codex-entry__name">{c.name}</p>
+              <li key={i} className={"codex-entry" + (c.knowledge_source === "mentioned" ? " codex-entry--heard" : "")}>
+                <p className="codex-entry__name">
+                  {c.name}
+                  {c.knowledge_source === "mentioned" && <span className="codex-entry__hint"> · ouviu falar</span>}
+                </p>
                 <p className="codex-entry__meta">{[c.role, c.location].filter(Boolean).join(" · ") || "—"}</p>
+                {(c.revealed_traits?.length ?? 0) > 0 && (
+                  <p className="codex-entry__traits">
+                    {c.revealed_traits!.map((t) => (
+                      <span key={t.id} className="traitchip" title={t.description}>{t.name}</span>
+                    ))}
+                  </p>
+                )}
                 {c.body && (
                   <p className="codex-entry__body" dangerouslySetInnerHTML={{ __html: mdLite(c.body) }} />
                 )}

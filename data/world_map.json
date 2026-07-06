@@ -31,7 +31,14 @@
       "craft_tags": [],
       "economy_tags": [
         "comercio"
-      ]
+      ],
+      "travel_times": {
+        "na_anel_dourado": 0,
+        "na_anel_ferro": 0,
+        "na_anel_lama": 0,
+        "deserto_zhur": 2,
+        "brekmar": 2
+      }
     },
     {
       "id": "na_anel_dourado",
@@ -58,7 +65,11 @@
       ],
       "economy_tags": [
         "comercio"
-      ]
+      ],
+      "travel_times": {
+        "nova_arcadia": 0,
+        "na_anel_ferro": 0
+      }
     },
     {
       "id": "na_anel_ferro",
@@ -85,7 +96,12 @@
         "forja",
         "laboratorio"
       ],
-      "economy_tags": []
+      "economy_tags": [],
+      "travel_times": {
+        "nova_arcadia": 0,
+        "na_anel_dourado": 0,
+        "na_anel_lama": 0
+      }
     },
     {
       "id": "na_anel_lama",
@@ -103,12 +119,17 @@
       ],
       "connections": [
         "nova_arcadia",
-        "na_anel_ferro"
+        "na_anel_ferro",
+        "na_taverna_javali"
       ],
       "lore_seed": "A Fossa fora das muralhas, onde o Código de Ferro não chega: o Beco dos Desdentados vende Pó de Sonho, a Catedral Afundada abriga leprosos e o Fosso dos Cães diverte quem nada tem.",
       "region_id": "nova_arcadia",
       "craft_tags": [],
-      "economy_tags": []
+      "economy_tags": [],
+      "travel_times": {
+        "nova_arcadia": 0,
+        "na_anel_ferro": 0
+      }
     },
     {
       "id": "pantano_melancolia",
@@ -156,7 +177,8 @@
         "mortos_vivos"
       ],
       "connections": [
-        "pantano_melancolia"
+        "pantano_melancolia",
+        "pm_cripta_afogada"
       ],
       "lore_seed": "Camadas de lama sobre décadas de equipamento de guerra da coalizão — riqueza real guardada por mortos-vivos ancorados no Éter, resíduo sem inteligência mas com número.",
       "region_id": "pantano_melancolia",
@@ -186,7 +208,10 @@
       "lore_seed": "O Mar de Vidro: areia vitrificada pelo impacto da lua que matou Urath. Tempestades de Navalha esfolam a carne, fragmentos do demônio pulsam sob o vidro e os Devoradores de Sol caçam forasteiros pela água do corpo.",
       "region_id": "deserto_zhur",
       "craft_tags": [],
-      "economy_tags": []
+      "economy_tags": [],
+      "travel_times": {
+        "nova_arcadia": 2
+      }
     },
     {
       "id": "dz_borda_do_vazio",
@@ -261,7 +286,10 @@
       "lore_seed": "O lugar mais estranho do leste: onde o escuro seco da floresta encontra o escuro úmido da selva. As criaturas de um lado não cruzam para o outro — e ninguém sabe o que ambas temem.",
       "region_id": "floresta_sussurros",
       "craft_tags": [],
-      "economy_tags": []
+      "economy_tags": [],
+      "travel_times": {
+        "selva_xylos": 2
+      }
     },
     {
       "id": "selva_xylos",
@@ -286,7 +314,10 @@
       "lore_seed": "Calor de bafo vivo, ar que corrói metal e o ciclo acelerado: frutas apodrecem em uma hora, e parar tempo demais significa ser incorporado ao substrato. Para os Hospedeiros é lar; para o resto, morte tranquila e eficiente.",
       "region_id": "selva_xylos",
       "craft_tags": [],
-      "economy_tags": []
+      "economy_tags": [],
+      "travel_times": {
+        "fs_fronteira_xylos": 2
+      }
     },
     {
       "id": "sx_cidades_hospedeiros",
@@ -352,7 +383,8 @@
       "connections": [
         "montanhas_afiadas",
         "sk_fortaleza_vorr",
-        "sk_farol_chama_negra"
+        "sk_farol_chama_negra",
+        "sk_salao_do_jarl"
       ],
       "lore_seed": "Cidade do Ermo Branco onde o frio é condição do Abismo, não clima. Clãs tecnológicos que nunca pegam em arma e clãs de combate que exportam mercenários — todos hostis a forasteiros de 'vidas quentes'.",
       "region_id": "skallgard",
@@ -361,7 +393,10 @@
       ],
       "economy_tags": [
         "mineracao"
-      ]
+      ],
+      "travel_times": {
+        "montanhas_afiadas": 2
+      }
     },
     {
       "id": "sk_fortaleza_vorr",
@@ -448,7 +483,8 @@
         "thessrak"
       ],
       "connections": [
-        "aethelgard"
+        "aethelgard",
+        "ae_camara_seca"
       ],
       "lore_seed": "Corredores élficos onde o Éter guarda as últimas memórias das vítimas da Destilação. Os Afogados patrulham em rotas coordenadas, Morvath observa e comenta, e Thessrak — selado — ainda fala.",
       "region_id": "aethelgard",
@@ -476,7 +512,10 @@
       "lore_seed": "Vulcões que fumegam em cores que não existem, ilhas que não estão onde estavam ontem. Barcos que se aproximam não naufragam — simplesmente deixam de existir no registro do que pode ser rastreado.",
       "region_id": "ophidia",
       "craft_tags": [],
-      "economy_tags": []
+      "economy_tags": [],
+      "travel_times": {
+        "brekmar": 3
+      }
     },
     {
       "id": "costa_negra",
@@ -503,7 +542,10 @@
       "craft_tags": [],
       "economy_tags": [
         "porto"
-      ]
+      ],
+      "travel_times": {
+        "brekmar": 2
+      }
     },
     {
       "id": "cn_o_trono",
@@ -553,7 +595,10 @@
       "craft_tags": [],
       "economy_tags": [
         "mineracao"
-      ]
+      ],
+      "travel_times": {
+        "skallgard": 2
+      }
     },
     {
       "id": "ma_saidas_baixas",
@@ -596,7 +641,8 @@
       ],
       "connections": [
         "montanhas_afiadas",
-        "ma_saidas_baixas"
+        "ma_saidas_baixas",
+        "ma_forja_profunda"
       ],
       "lore_seed": "A entrada mais conhecida do Reino Subterrâneo perdido dos Anões. Quem desce entra num labirinto de câmaras idênticas com algo imenso que não ataca — mas está sempre presente, em qualquer direção que você olhe.",
       "region_id": "montanhas_afiadas",
@@ -729,7 +775,13 @@
       ],
       "economy_tags": [
         "porto"
-      ]
+      ],
+      "travel_times": {
+        "bk_docas_velhas": 0,
+        "nova_arcadia": 2,
+        "costa_negra": 2,
+        "ophidia": 3
+      }
     },
     {
       "id": "bk_docas_velhas",
@@ -751,6 +803,129 @@
       "lore_seed": "As extremidades do porto: mais Osshari, mais violência casual, mais negócios que não se discutem em voz alta. Quem chega novo aprende rápido que as docas velhas são outro território — e que a distinção importa.",
       "region_id": "brekmar",
       "craft_tags": [],
+      "economy_tags": [],
+      "travel_times": {
+        "brekmar": 0
+      }
+    },
+    {
+      "id": "na_taverna_javali",
+      "name": "Taverna do Javali Dourado",
+      "kind": "interior",
+      "parent_id": "na_anel_lama",
+      "region": "Nova Arcádia",
+      "region_id": "nova_arcadia",
+      "coords": {
+        "x": 38,
+        "y": 60
+      },
+      "danger": 0,
+      "tags": [
+        "taverna",
+        "abrigo",
+        "urbano"
+      ],
+      "connections": [
+        "na_anel_lama"
+      ],
+      "lore_seed": "A taverna de Grum no Anel de Lama: cerveja aguada, fofoca fresca — e um barril no canto esquerdo que o taverneiro vigia sem perceber que vigia.",
+      "craft_tags": [],
+      "economy_tags": []
+    },
+    {
+      "id": "pm_cripta_afogada",
+      "name": "Cripta dos Afogados",
+      "kind": "interior",
+      "parent_id": "pm_profundezas",
+      "region": "Pântano da Melancolia",
+      "region_id": "pantano_melancolia",
+      "coords": {
+        "x": 60,
+        "y": 58
+      },
+      "danger": 4,
+      "tags": [
+        "masmorra",
+        "abrigo"
+      ],
+      "connections": [
+        "pm_profundezas"
+      ],
+      "lore_seed": "Uma cripta meio submersa nas profundezas do Pântano da Melancolia; os Afogados não gostam de visitas, e o que foi enterrado ali não foi enterrado por acaso.",
+      "craft_tags": [],
+      "economy_tags": []
+    },
+    {
+      "id": "sk_salao_do_jarl",
+      "name": "Salão do Jarl",
+      "kind": "interior",
+      "parent_id": "skallgard",
+      "region": "Skallgard",
+      "region_id": "skallgard",
+      "coords": {
+        "x": 45,
+        "y": 8
+      },
+      "danger": 1,
+      "tags": [
+        "salao",
+        "abrigo",
+        "urbano"
+      ],
+      "connections": [
+        "skallgard"
+      ],
+      "lore_seed": "O grande salão de madeira negra de Skallgard: fogo alto, juramentos, e clãs que se odeiam bebendo sob o mesmo teto.",
+      "craft_tags": [],
+      "economy_tags": []
+    },
+    {
+      "id": "ae_camara_seca",
+      "name": "Câmara Seca de Aethelgard",
+      "kind": "interior",
+      "parent_id": "ae_ruinas_submersas",
+      "region": "Aethelgard",
+      "region_id": "aethelgard",
+      "coords": {
+        "x": 72,
+        "y": 44
+      },
+      "danger": 3,
+      "tags": [
+        "masmorra",
+        "abrigo"
+      ],
+      "connections": [
+        "ae_ruinas_submersas"
+      ],
+      "lore_seed": "A única entrada seca das ruínas submersas — guardada há séculos por Aelwin, o Último Conselheiro, que decide quem entra e quem esquece o caminho.",
+      "craft_tags": [],
+      "economy_tags": []
+    },
+    {
+      "id": "ma_forja_profunda",
+      "name": "Forja Profunda",
+      "kind": "interior",
+      "parent_id": "ma_boca",
+      "region": "Montanhas Afiadas",
+      "region_id": "montanhas_afiadas",
+      "coords": {
+        "x": 52,
+        "y": 25
+      },
+      "danger": 3,
+      "tags": [
+        "masmorra",
+        "abrigo",
+        "forja"
+      ],
+      "connections": [
+        "ma_boca"
+      ],
+      "lore_seed": "Uma forja anã abandonada perto da Boca: as bigornas ainda estão quentes, e ninguém sabe dizer quem as alimenta.",
+      "craft_tags": [
+        "forja"
+      ],
       "economy_tags": []
     }
   ]

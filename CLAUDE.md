@@ -179,6 +179,7 @@ services/             # serviços determinísticos (Fases 2.5–3.1)
   event_processor.py  # proposta válida → GameEvent → projection + milestones da crônica (2.6/3.1)
   rule_engine.py      # cascata sistêmica determinística pós-evento, anti-loop (2.7)
   context_builder.py  # build_context_pack — contexto ranqueado com orçamento de tokens (2.8)
+  npc_layers.py       # NPCs 3 camadas: traits seeded, gate in_scene, view da API (spec npcs-3-camadas)
   chronicle.py        # crônica por capítulos: templates de milestone + append/open puros (3.1)
 scripts/
   migrate_lore_nova.py # gera data/codex/ (inclui timeline/) + entities.json de lore_nova/ (SOBRESCREVE curadoria)
@@ -232,6 +233,10 @@ Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `in-progress`; 2.6 (structure
 7.1 (validadores+CI) · 7.2 (autoria/curadoria) · 7.3 (segredos de NPC) `done` —
 **Fase 7 completa** (lint `services/content_validator.py` + CLI
 `scripts/validate_content.py`; gate no `rag.py`; autoria em `docs/AUTORIA.md`).
+2026-07-06: fase 10 fatia local (hardening: `save_path` UUID, `schema_version`+
+migrations, CORS/rate-limit/log) · fase 11 (contratos `-m llm_contract`, 9 verdes
+no Gemini real) · mapa (interiores + `travel_times`) · NPCs 3 camadas
+(`services/npc_layers.py` + `data/traits.json`) — todas `done`. Próxima: Fase 5.
 
 ---
 

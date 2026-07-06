@@ -1,0 +1,527 @@
+{
+  "traits": [
+    {
+      "id": "supersticioso",
+      "name": "Supersticioso",
+      "description": "Vê presságio em tudo; símbolos sagrados o acalmam, magia aberta o apavora.",
+      "dc_modifiers": {
+        "persuasao": 2,
+        "intimidacao": -2
+      },
+      "reveal_after": 4,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "ganancioso",
+      "name": "Ganancioso",
+      "description": "Tudo tem preço; lealdade inclusive.",
+      "dc_modifiers": {
+        "comercio": -2,
+        "persuasao": 2
+      },
+      "reveal_after": 3,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "honesto_demais",
+      "name": "Honesto Demais",
+      "description": "Incapaz de sustentar mentira; cora, gagueja, entrega.",
+      "dc_modifiers": {
+        "insight": -3
+      },
+      "reveal_after": 3,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "covarde",
+      "name": "Covarde",
+      "description": "Cede sob pressão, mas guarda rancor de quem o pressiona.",
+      "dc_modifiers": {
+        "intimidacao": -3,
+        "persuasao": 1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "orgulhoso",
+      "name": "Orgulhoso",
+      "description": "Elogio abre portas; humilhação fecha para sempre.",
+      "dc_modifiers": {
+        "persuasao": -1,
+        "intimidacao": 2
+      },
+      "reveal_after": 4,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "desconfiado",
+      "name": "Desconfiado",
+      "description": "Trata todo forasteiro como golpe em andamento.",
+      "dc_modifiers": {
+        "persuasao": 3,
+        "comercio": 2
+      },
+      "reveal_after": 5,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "tagarela",
+      "name": "Tagarela",
+      "description": "Fala mais do que devia; segredos escorrem com cerveja.",
+      "dc_modifiers": {
+        "insight": -2
+      },
+      "reveal_after": 3,
+      "tags": [
+        "comum",
+        "taverna"
+      ]
+    },
+    {
+      "id": "leal_a_familia",
+      "name": "Leal à Família",
+      "description": "Qualquer coisa pela família — inclusive o que não devia.",
+      "dc_modifiers": {
+        "persuasao": 2
+      },
+      "reveal_after": 5,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "devoto",
+      "name": "Devoto",
+      "description": "A fé decide antes da razão; heresia encerra a conversa.",
+      "dc_modifiers": {
+        "persuasao": 2,
+        "intimidacao": 1
+      },
+      "reveal_after": 4,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "cinico",
+      "name": "Cínico",
+      "description": "Já viu tudo ruir uma vez; promessas grandiosas o entediam.",
+      "dc_modifiers": {
+        "persuasao": 2,
+        "insight": 1
+      },
+      "reveal_after": 4,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "sentimental",
+      "name": "Sentimental",
+      "description": "Uma boa história de perda o desarma por completo.",
+      "dc_modifiers": {
+        "persuasao": -2
+      },
+      "reveal_after": 4,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "teimoso",
+      "name": "Teimoso",
+      "description": "Mudar de ideia é derrota; pressão só o enrijece.",
+      "dc_modifiers": {
+        "persuasao": 3,
+        "intimidacao": 3
+      },
+      "reveal_after": 4,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "curioso",
+      "name": "Curioso",
+      "description": "Informação nova vale mais que ouro; troca segredo por segredo.",
+      "dc_modifiers": {
+        "comercio": -1,
+        "insight": -1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "rancoroso",
+      "name": "Rancoroso",
+      "description": "Nunca esquece desfeita; cobra com juros, anos depois.",
+      "dc_modifiers": {
+        "persuasao": 2
+      },
+      "reveal_after": 6,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "generoso_escondido",
+      "name": "Generoso Escondido",
+      "description": "Faz caridade no escuro e negaria sob tortura.",
+      "dc_modifiers": {
+        "comercio": -2
+      },
+      "reveal_after": 6,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "medo_de_magia",
+      "name": "Medo de Magia",
+      "description": "Trava diante de qualquer feitiçaria aberta.",
+      "dc_modifiers": {
+        "intimidacao": -3
+      },
+      "reveal_after": 3,
+      "tags": [
+        "comum",
+        "nova_arcadia"
+      ]
+    },
+    {
+      "id": "veterano_de_guerra",
+      "name": "Veterano de Guerra",
+      "description": "Cicatrizes da Guerra das Cinzas; violência o deixa frio, não nervoso.",
+      "dc_modifiers": {
+        "intimidacao": 3,
+        "insight": 1
+      },
+      "reveal_after": 5,
+      "tags": [
+        "comum",
+        "pradaria_ruinas"
+      ]
+    },
+    {
+      "id": "dividas",
+      "name": "Endividado",
+      "description": "Deve a quem não perdoa; dinheiro rápido fala alto.",
+      "dc_modifiers": {
+        "comercio": -3,
+        "persuasao": -1
+      },
+      "reveal_after": 4,
+      "tags": [
+        "comum",
+        "brekmar"
+      ]
+    },
+    {
+      "id": "informante",
+      "name": "Informante",
+      "description": "Vende o que ouve — para mais de um comprador.",
+      "dc_modifiers": {
+        "insight": 2,
+        "comercio": -1
+      },
+      "reveal_after": 6,
+      "tags": [
+        "comum",
+        "cidade"
+      ]
+    },
+    {
+      "id": "saudade_do_mar",
+      "name": "Saudade do Mar",
+      "description": "Fala do mar como de um amor perdido; navios o distraem.",
+      "dc_modifiers": {
+        "persuasao": -1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "costa_negra",
+        "brekmar"
+      ]
+    },
+    {
+      "id": "marcado_pela_praga",
+      "name": "Marcado pela Praga",
+      "description": "Perdeu alguém para a Praga de Ferro; esconde o próprio medo de sintomas.",
+      "dc_modifiers": {
+        "persuasao": 1,
+        "insight": 2
+      },
+      "reveal_after": 5,
+      "tags": [
+        "nova_arcadia",
+        "brekmar"
+      ]
+    },
+    {
+      "id": "simpatiza_chama_azul",
+      "name": "Simpatizante Clandestino",
+      "description": "Concorda em segredo com os Filhos da Chama Azul; nega três vezes.",
+      "dc_modifiers": {
+        "insight": 3
+      },
+      "reveal_after": 7,
+      "tags": [
+        "nova_arcadia"
+      ]
+    },
+    {
+      "id": "odeia_o_codigo",
+      "name": "Ressentido do Código",
+      "description": "O Código de Ferro levou algo dele; obedece com os dentes trincados.",
+      "dc_modifiers": {
+        "persuasao": -1,
+        "insight": 2
+      },
+      "reveal_after": 5,
+      "tags": [
+        "nova_arcadia"
+      ]
+    },
+    {
+      "id": "orgulho_de_cla",
+      "name": "Orgulho de Clã",
+      "description": "O clã acima de tudo; insulto ao clã é insulto de sangue.",
+      "dc_modifiers": {
+        "intimidacao": 2,
+        "persuasao": 1
+      },
+      "reveal_after": 4,
+      "tags": [
+        "skallgard"
+      ]
+    },
+    {
+      "id": "ouviu_a_rede",
+      "name": "Ouviu Algo no Gelo",
+      "description": "Jura que o gelo sussurra à noite; ninguém acredita nele.",
+      "dc_modifiers": {
+        "persuasao": -1,
+        "insight": 1
+      },
+      "reveal_after": 6,
+      "tags": [
+        "skallgard"
+      ]
+    },
+    {
+      "id": "contrabandista",
+      "name": "Mãos de Contrabando",
+      "description": "Conhece toda rota que a guarda não olha; nada disso é confessável.",
+      "dc_modifiers": {
+        "comercio": -2,
+        "insight": 2
+      },
+      "reveal_after": 5,
+      "tags": [
+        "brekmar",
+        "costa_negra"
+      ]
+    },
+    {
+      "id": "pescador_de_ossos",
+      "name": "Pescador de Ossos",
+      "description": "Saqueia o Cemitério dos Leviatãs; supersticioso sobre o que tira de lá.",
+      "dc_modifiers": {
+        "comercio": -1,
+        "intimidacao": -1
+      },
+      "reveal_after": 4,
+      "tags": [
+        "costa_negra"
+      ]
+    },
+    {
+      "id": "mordido_pelo_deserto",
+      "name": "Mordido pelo Deserto",
+      "description": "Sobreviveu à Borda do Vazio; não fala do que viu lá.",
+      "dc_modifiers": {
+        "intimidacao": 2,
+        "insight": 3
+      },
+      "reveal_after": 7,
+      "tags": [
+        "deserto_zhur"
+      ]
+    },
+    {
+      "id": "negocia_com_espiritos",
+      "name": "Negocia com Espíritos",
+      "description": "Deixa oferendas que ninguém vê; os sussurros respondem.",
+      "dc_modifiers": {
+        "persuasao": 1,
+        "insight": 2
+      },
+      "reveal_after": 6,
+      "tags": [
+        "floresta_sussurros",
+        "pantano_melancolia"
+      ]
+    },
+    {
+      "id": "fungo_na_pele",
+      "name": "Toque de Xylos",
+      "description": "Uma mancha que cresce devagar; manga comprida em qualquer calor.",
+      "dc_modifiers": {
+        "insight": 3
+      },
+      "reveal_after": 8,
+      "tags": [
+        "selva_xylos"
+      ]
+    },
+    {
+      "id": "saqueador_de_ruinas",
+      "name": "Saqueador de Ruínas",
+      "description": "Vive do que Aethelgard afundou; sabe onde NÃO mergulhar.",
+      "dc_modifiers": {
+        "comercio": -2,
+        "insight": 1
+      },
+      "reveal_after": 5,
+      "tags": [
+        "aethelgard"
+      ]
+    },
+    {
+      "id": "ex_legionario",
+      "name": "Ex-Legionário",
+      "description": "Serviu na Legião e desertou; estremece com o passo de marcha.",
+      "dc_modifiers": {
+        "intimidacao": 1,
+        "insight": 2
+      },
+      "reveal_after": 6,
+      "tags": [
+        "nova_arcadia",
+        "pradaria_ruinas"
+      ]
+    },
+    {
+      "id": "lingua_de_ophidia",
+      "name": "Língua de Ophidia",
+      "description": "Negociou com o império e voltou; escolhe cada palavra como veneno.",
+      "dc_modifiers": {
+        "persuasao": 3,
+        "comercio": 2
+      },
+      "reveal_after": 6,
+      "tags": [
+        "ophidia",
+        "brekmar"
+      ]
+    },
+    {
+      "id": "minerador_fundo",
+      "name": "Desceu Fundo Demais",
+      "description": "Trabalhou nas galerias baixas das Montanhas; não desce mais, nem por ouro.",
+      "dc_modifiers": {
+        "intimidacao": -1,
+        "insight": 2
+      },
+      "reveal_after": 5,
+      "tags": [
+        "montanhas_afiadas"
+      ]
+    },
+    {
+      "id": "culto_quieto",
+      "name": "Observador Quieto",
+      "description": "Aprendeu a olhar sem intervir; percebe mais do que demonstra.",
+      "dc_modifiers": {
+        "insight": -2,
+        "persuasao": 1
+      },
+      "reveal_after": 7,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "colecionador",
+      "name": "Colecionador Obsessivo",
+      "description": "Procura UMA coisa específica; menção a ela muda seu preço na hora.",
+      "dc_modifiers": {
+        "comercio": -3
+      },
+      "reveal_after": 4,
+      "tags": [
+        "comum",
+        "cidade"
+      ]
+    },
+    {
+      "id": "dorme_pouco",
+      "name": "Insone",
+      "description": "Vigília permanente; sabe quem anda na rua de madrugada.",
+      "dc_modifiers": {
+        "insight": -1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "comum",
+        "cidade"
+      ]
+    },
+    {
+      "id": "protege_alguem",
+      "name": "Protege Alguém",
+      "description": "Há alguém que ele esconde; perguntas sobre família o fecham.",
+      "dc_modifiers": {
+        "insight": 3,
+        "persuasao": 1
+      },
+      "reveal_after": 7,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "apostador",
+      "name": "Apostador",
+      "description": "Não resiste a um jogo — e o jogo raramente resiste a ele.",
+      "dc_modifiers": {
+        "comercio": -2,
+        "persuasao": -1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "comum",
+        "taverna"
+      ]
+    },
+    {
+      "id": "cozinheiro_orgulhoso",
+      "name": "Cozinheiro Orgulhoso",
+      "description": "Elogiar a comida vale mais que suborno.",
+      "dc_modifiers": {
+        "persuasao": -2,
+        "comercio": -1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "comum",
+        "taverna"
+      ]
+    }
+  ]
+}

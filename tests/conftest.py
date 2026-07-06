@@ -5,3 +5,5 @@ import os
 
 # Precisa estar setado antes de qualquer chamada a get_llm() nos nós do grafo.
 os.environ.setdefault("RPG_FORCE_MOCK", "1")
+# Fase 10: rate limit da API desligado na suíte (TestClient compartilha IP).
+os.environ.setdefault("RPG_RATE_LIMIT", "0")

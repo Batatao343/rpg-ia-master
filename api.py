@@ -2,12 +2,18 @@
 api.py
 Interface REST API para o RPG Engine.
 Atualizado para suportar Memória Híbrida (Game ID e Resumo).
+Fase 10: game_id validado (UUID) na borda, CORS por env, rate limit mínimo,
+log JSON por turno.
 """
+import json
+import logging
 import sys
 import os
+import time
 import uvicorn
 import uuid # <--- Necessário para gerar IDs de sessão
-from fastapi import FastAPI, HTTPException
+from collections import defaultdict, deque
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -19,7 +25,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Imports do seu motor
 from main import app as game_graph
-from persistence import save_game_state, load_game_state, _serialize_messages
+from persistence import save_game_state, load_game_state, save_path, _serialize_messages
 from character_creator import create_player_character
 from gamedata import ABILITIES, CLASSES, load_json_data, seed_factions
 import progression
@@ -36,13 +42,74 @@ app = FastAPI(
     version="v2.0 Hybrid Memory"
 )
 
+# Fase 10 (R5): CORS restrito por default; configurável via RPG_CORS_ORIGINS
+# (CSV no .env; "*" só se explicitamente configurado).
+_CORS_ORIGINS = [
+    o.strip() for o in os.getenv(
+        "RPG_CORS_ORIGINS", "http://localhost:8000,http://localhost:5173"
+    ).split(",") if o.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=_CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Fase 10 (R7): 1 linha JSON por turno no stderr (base de observabilidade).
+_turn_logger = logging.getLogger("rpg.turn")
+if not _turn_logger.handlers:
+    _handler = logging.StreamHandler(sys.stderr)
+    _handler.setFormatter(logging.Formatter("%(message)s"))
+    _turn_logger.addHandler(_handler)
+    _turn_logger.setLevel(logging.INFO)
+    _turn_logger.propagate = False
+
+
+def _resolve_save_file(game_id: Optional[str]) -> Optional[str]:
+    """game_id do cliente -> caminho de save validado (Fase 10, R1/R2).
+
+    None passa (carrega o save mais recente); não-UUID -> HTTP 400 sem tocar
+    no filesystem.
+    """
+    if not game_id:
+        return None
+    try:
+        return save_path(game_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="game_id inválido (esperado UUID).")
+
+
+# Fase 10 (R6): rate limit mínimo por IP (janela deslizante em memória).
+# RPG_RATE_LIMIT = req/min em /game/action e /game/new; 0 desliga (suíte/smoke).
+_RATE_WINDOW_S = 60.0
+_rate_hits: Dict[str, deque] = defaultdict(deque)
+
+
+def _rate_limit_max() -> int:
+    try:
+        return int(os.getenv("RPG_RATE_LIMIT", "30"))
+    except ValueError:
+        return 30
+
+
+@app.middleware("http")
+async def _rate_limit(request: Request, call_next):
+    limit = _rate_limit_max()
+    if limit > 0 and request.url.path in ("/game/action", "/game/new"):
+        ip = request.client.host if request.client else "?"
+        now = time.monotonic()
+        hits = _rate_hits[ip]
+        while hits and now - hits[0] > _RATE_WINDOW_S:
+            hits.popleft()
+        if len(hits) >= limit:
+            from fastapi.responses import JSONResponse
+            return JSONResponse(status_code=429,
+                                content={"detail": "Muitas requisições — aguarde um instante."})
+        hits.append(now)
+    return await call_next(request)
 
 # --- MODELOS DE DADOS (DTOs) ---
 class CreateCharacterRequest(BaseModel):
@@ -266,20 +333,10 @@ def _factions_block(factions: list, intel: dict, turn: int = 0,
 
 
 def _npcs_block(npcs: dict) -> List[Dict[str, Any]]:
-    """NPCs conhecidos pelo jogador (o que sabemos hoje: papel, local, relação, última lembrança)."""
-    out = []
-    for key, n in npcs.items():
-        if not isinstance(n, dict):
-            continue
-        mem = n.get("memory") or []
-        last_mem = mem[-1] if isinstance(mem, list) and mem else ""
-        out.append({
-            "name": n.get("name", key),
-            "role": n.get("role", ""),
-            "location": n.get("location", ""),
-            "relationship": n.get("relationship", 5),
-            "last_memory": last_mem,
-        })
+    """Camada 2 (spec npcs-3-camadas): só NPCs conhecidos, com traits REVELADOS
+    — hidden_traits NUNCA sai pela API (R9)."""
+    from services.npc_layers import visible_npc_view
+    out = visible_npc_view(npcs)
     return out
 
 
@@ -366,7 +423,26 @@ def _world_block(w: dict, projection: Optional[dict] = None, event_log: Optional
             {"a": r.get("a", ""), "b": r.get("b", "")}
             for r in (projection or {}).get("blocked_routes", []) or []
         ],
+        # spec mapa-sublocais (R7): interiores do local atual ("Locais daqui")
+        # + caminho de volta quando o jogador está DENTRO de um interior.
+        "interiors": _interiors_block(w.get("current_location_id", "")),
     }
+
+
+def _interiors_block(loc_id: str) -> Dict[str, Any]:
+    from gamedata import get_location, interiors_of
+    loc = get_location(loc_id) or {}
+    here = [
+        {"id": i["id"], "name": i["name"], "danger": i.get("danger", 0),
+         "tags": i.get("tags", [])}
+        for i in interiors_of(loc_id)
+    ]
+    exit_to = None
+    if loc.get("kind") == "interior":
+        parent = get_location(loc.get("parent_id", "")) or {}
+        if parent:
+            exit_to = {"id": parent["id"], "name": parent["name"]}
+    return {"here": here, "exit_to": exit_to}
 
 # --- ENDPOINTS ---
 
@@ -387,8 +463,17 @@ def get_creation_options():
 
 @app.get("/data/map")
 def get_world_map():
-    """Grafo de locais (Fase 0) para o mapa com fog of war no frontend."""
-    return load_json_data("world_map.json")
+    """Grafo de locais (Fase 0) para o mapa com fog of war no frontend.
+
+    spec mapa-sublocais (R7): interiores NÃO aparecem no mapa-múndi —
+    são expostos como "Locais daqui" no bloco `world` de /game/state.
+    """
+    data = dict(load_json_data("world_map.json") or {})
+    data["locations"] = [
+        loc for loc in data.get("locations", [])
+        if loc.get("kind") != "interior"
+    ]
+    return data
 
 @app.get("/game/state")
 def get_current_state(game_id: Optional[str] = None):
@@ -401,8 +486,7 @@ def get_current_state(game_id: Optional[str] = None):
     # Se você implementou o load_game_state(specific_file), usaria aqui
     
     file_to_load = None
-    if game_id:
-        file_to_load = f"saves/{game_id}.json"
+    file_to_load = _resolve_save_file(game_id)
         
     state = load_game_state(file_to_load)
     
@@ -414,7 +498,7 @@ def get_current_state(game_id: Optional[str] = None):
 def get_player_codex(game_id: Optional[str] = None):
     """Codex do jogador (Fase 3.2) — locais/fações/personagens/criaturas/segredos
     já registrados no save. On-demand (fora do GameResponse) para não inchar o turno."""
-    file_to_load = f"saves/{game_id}.json" if game_id else None
+    file_to_load = _resolve_save_file(game_id)
     state = load_game_state(file_to_load)
 
     if not state:
@@ -517,9 +601,7 @@ def game_action(req: ActionRequest):
     """Envia uma ação do jogador."""
     
     # Tenta carregar pelo ID se fornecido, ou o ultimo
-    file_to_load = None
-    if req.game_id:
-        file_to_load = f"saves/{req.game_id}.json"
+    file_to_load = _resolve_save_file(req.game_id)
 
     state = load_game_state(file_to_load)
 
@@ -539,12 +621,31 @@ def game_action(req: ActionRequest):
         state["messages"] = state["messages"][-20:]
 
     # Executa Engine
+    t0 = time.monotonic()
+    eventos_antes = len(state.get("event_log", []))
     try:
         new_state = game_graph.invoke(state)
         save_game_state(new_state)
+        _turn_logger.info(json.dumps({
+            "evt": "turn",
+            "game_id": new_state.get("game_id", "?"),
+            "turn": (new_state.get("world") or {}).get("turn_count", 0),
+            "route": new_state.get("next", ""),
+            "latency_ms": int((time.monotonic() - t0) * 1000),
+            "events_applied": len(new_state.get("event_log", [])) - eventos_antes,
+            "events_rejected": len(new_state.get("pending_world_events", []) or []),
+            "error": None,
+        }, ensure_ascii=False))
         return format_response(new_state)
-    
+
     except Exception as e:
+        _turn_logger.info(json.dumps({
+            "evt": "turn", "game_id": state.get("game_id", "?"),
+            "turn": (state.get("world") or {}).get("turn_count", 0),
+            "route": state.get("next", ""),
+            "latency_ms": int((time.monotonic() - t0) * 1000),
+            "events_applied": 0, "events_rejected": 0, "error": str(e)[:200],
+        }, ensure_ascii=False))
         print(f"Erro na API: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -552,7 +653,7 @@ def game_action(req: ActionRequest):
 def game_equip(req: EquipRequest):
     """Fase 4.3: equipar/desequipar — validação 100% Python (inventory.equip)."""
     import inventory as inv_mod
-    file_to_load = f"saves/{req.game_id}.json" if req.game_id else None
+    file_to_load = _resolve_save_file(req.game_id)
     state = load_game_state(file_to_load)
     if not state:
         raise HTTPException(status_code=404, detail="Jogo não encontrado.")
@@ -582,7 +683,7 @@ def game_levelup(req: LevelUpRequest):
     Validação 100% server-side (progression.apply_choice): escolha inexistente,
     habilidade inelegível (classe/nível/pré-requisito/ramo rival) ou atributo
     inválido → 400 e o save fica intocado."""
-    file_to_load = f"saves/{req.game_id}.json" if req.game_id else None
+    file_to_load = _resolve_save_file(req.game_id)
     state = load_game_state(file_to_load)
     if not state:
         raise HTTPException(status_code=404, detail="Jogo não encontrado.")

@@ -1,6 +1,6 @@
 # SPEC — Mapa robusto: interiores (masmorras/prédios) + tempo de viagem variável
 
-> **Status:** `draft`
+> **Status:** `done` (2026-07-06)
 > **Criada:** 2026-07-05 · **Atualizada:** 2026-07-05
 > **Depende de:** Fase 2.5b (mapa de Valoria 30 nós) `done`; Fase 6.5 (clima) `done`
 > **Desbloqueia:** dungeons com fog of war próprio; ritmo de viagem realista; item "Mapa robusto — restante" do backlog
@@ -166,13 +166,20 @@ def interiors_of(loc_id: str) -> list[dict]: ...
 
 ## 5. Critérios de aceite
 
-- [ ] Viagem Skallgard→Montanhas custa 2 períodos; Anel de Lama→Anel de Ferro custa 0 (relógio parado)
-- [ ] Entrar na taverna: sem encontro, sem transição de clima, miasma não morde (abrigo)
-- [ ] Interior não aparece no mapa de Valoria; aparece em "Locais daqui"; "Sair" volta ao pai
-- [ ] `test_mapa_real_valido` verde (dados curados íntegros)
-- [ ] `uv run pytest` verde (suíte completa offline) + `npm run build` ok
-- [ ] Guard de FallbackLLM — N/A (zero LLM novo)
-- [ ] Saves antigos continuam carregando (R9)
+- [x] Viagem Skallgard→Montanhas custa 2 períodos; Anel de Lama→Anel de Ferro custa 0 (relógio parado)
+- [x] Entrar na taverna: sem encontro, sem transição de clima, miasma não morde (abrigo)
+- [x] Interior não aparece no mapa de Valoria; aparece em "Locais daqui"; "Sair" volta ao pai
+- [x] `test_mapa_real_valido` verde (dados curados íntegros)
+- [x] `uv run pytest` verde (629 testes) + `npm run build` ok
+- [x] Guard de FallbackLLM — N/A (zero LLM novo)
+- [x] Saves antigos continuam carregando (R9)
+
+**Desvios:** 5 interiores entregues (taverna do Grum, Cripta dos Afogados,
+Salão do Jarl, Câmara Seca de Aethelgard, Forja Profunda) + registrados em
+`entities_extra.json` (teste 2.5b exige todo nó do mapa no grafo); chips
+"Locais daqui"/"Sair" viraram barra acima do stage no PlayScreen. Smoke real
+(2026-07-06): entrar na taverna com Gemini vivo → relógio PARADO, taverna
+revelada no fog, narração de chegada correta.
 
 ## 6. Smoke test com LLM real
 

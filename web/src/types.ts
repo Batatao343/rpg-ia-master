@@ -87,6 +87,13 @@ export interface MapOverlays {
   looming_threat: string;
 }
 
+export interface InteriorRef {
+  id: string;
+  name: string;
+  danger: number;
+  tags: string[];
+}
+
 export interface WorldBlock {
   location: string;
   location_id: string;
@@ -100,6 +107,8 @@ export interface WorldBlock {
   turn_count: number; // Fase 3.2: dispara refetch do Codex quando o turno muda
   map_overlays: MapOverlays; // Fase 3.4
   blocked_routes: Array<{ a: string; b: string }>; // Fase 6.1: comércio cortado
+  // spec mapa-sublocais: interiores do local atual + saída quando dentro de um
+  interiors?: { here: InteriorRef[]; exit_to: { id: string; name: string } | null };
 }
 
 export interface Beat {
@@ -299,6 +308,9 @@ export interface CodexCharacter {
   role: string;
   location: string;
   body: string;
+  // spec npcs-3-camadas (R8): fonte do conhecimento + traits revelados
+  knowledge_source?: "met" | "mentioned" | "lore";
+  revealed_traits?: Array<{ id: string; name: string; description: string }>;
 }
 
 export interface CodexCreature {

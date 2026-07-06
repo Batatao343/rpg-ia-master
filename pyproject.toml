@@ -34,4 +34,9 @@ dev = [
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
-addopts = "-q"
+# Fase 11: contratos de LLM real ficam FORA da suíte offline default —
+# rodar com: uv run pytest -m llm_contract -v -s (o -m da CLI sobrepõe)
+addopts = "-q -m \"not llm_contract\""
+markers = [
+    "llm_contract: contrato contra provider LLM real (gasta quota; requer GOOGLE_API_KEY)",
+]

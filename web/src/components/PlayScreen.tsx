@@ -23,6 +23,9 @@ export function PlayScreen({ data, log, thinking, busy, onAction, onNew, onLevel
   const w = data?.world;
   const clock = (w?.period ? `Dia ${w.day} · ${w.period}` : "Dia 1 · Amanhecer")
     + (w?.weather ? ` · ${w.weather}` : "");
+  // spec mapa-sublocais: interiores do local atual + saída quando dentro de um
+  const interiorsHere = w?.interiors?.here ?? [];
+  const exitTo = w?.interiors?.exit_to ?? null;
   const dead = (data?.player_stats.hp ?? 1) <= 0;
   const fighting = !!data?.combat?.active;
 
@@ -65,6 +68,23 @@ export function PlayScreen({ data, log, thinking, busy, onAction, onNew, onLevel
           </button>
         </div>
       </header>
+
+      {(interiorsHere.length > 0 || exitTo) && !fighting && !dead && (
+        <div className="placesbar">
+          {exitTo && (
+            <button className="placechip placechip--exit" type="button" disabled={busy}
+                    onClick={() => onAction(`Saio para ${exitTo.name}`)}>
+              ↩ Sair para {exitTo.name}
+            </button>
+          )}
+          {interiorsHere.map((i) => (
+            <button key={i.id} className="placechip" type="button" disabled={busy}
+                    onClick={() => onAction(`Entro em ${i.name}`)}>
+              ⌂ {i.name}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="stage">
         <StoryLog entries={log} thinking={thinking} />

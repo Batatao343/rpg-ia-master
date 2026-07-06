@@ -38,7 +38,12 @@ class StoryUpdate(BaseModel):
     # default "" (não required): Gemini real às vezes omite o campo num schema
     # grande — melhor narrar via fallback do que perder o turno (smoke 2026-07-05)
     narrative: str = Field(default="", description="O texto narrativo da resposta. OBRIGATÓRIO: sempre preencha.")
-    introduced_npcs: List[str] = Field(default_factory=list, description="Lista de nomes de NOVOS personagens.")
+    introduced_npcs: List[str] = Field(
+        default_factory=list,
+        description="Nomes de personagens que ENTRARAM na cena neste turno (novos ou conhecidos que reapareceram).")
+    npcs_left_scene: List[str] = Field(
+        default_factory=list,
+        description="Nomes de personagens JÁ CONHECIDOS que SAÍRAM da cena neste turno (foram embora, morreram, sumiram). Vazio se ninguém saiu.")
     faction_impacts: List[FactionImpact] = Field(
         default_factory=list,
         description=(
@@ -125,18 +130,31 @@ def _quests_ativas_block(quests: List[Dict]) -> str:
                      for q in ativas)
 
 
-def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text: str) -> Dict[str, Dict]:
+def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text: str,
+                  game_id: str = "", home_id: str = "") -> Dict[str, Dict]:
+    from services import npc_layers
+
     existing_lower = {name.lower(): name for name in npcs.keys()}
-    if new_name.lower() in existing_lower: return npcs
+    if new_name.lower() in existing_lower:
+        # já conhecido: a cena o trouxe de volta (camada 3)
+        canonical = existing_lower[new_name.lower()]
+        new_npcs = dict(npcs)
+        if isinstance(new_npcs.get(canonical), dict):
+            new_npcs[canonical] = {**new_npcs[canonical], "in_scene": True}
+        return new_npcs
     tpl = generate_new_npc(new_name, context=f"Local: {loc}. Cena: {narrative_text}")
     if not tpl: return npcs
     new_npcs = dict(npcs)
-    new_npcs[new_name] = {
+    novo = {
         "name": tpl["name"], "role": tpl["role"], "persona": tpl["persona"],
         "location": loc, "relationship": tpl.get("initial_relationship", 5),
         "memory": [], "last_interaction": "",
         "attributes": tpl.get("attributes", {}), "combat_stats": tpl.get("combat_stats", {})
     }
+    # spec npcs-3-camadas: quem a cena introduziu está EM cena e é conhecido.
+    novo = npc_layers.ensure_npc_fields(novo, game_id, home_location_id=home_id,
+                                        in_scene=True)
+    new_npcs[new_name] = novo
     return new_npcs
 
 def storyteller_node(state: GameState):
@@ -153,14 +171,24 @@ def storyteller_node(state: GameState):
     factions = ensure_factions(state.get("factions"))
     intel = ensure_faction_intel(state.get("faction_intel"))
     dest = find_travel_destination(world, last_user_input) if last_user_input else None
+    travel_periods = 0
     if dest:
+        from world_utils import travel_cost
+        travel_periods = travel_cost(world, dest)  # custo ANTES de mover (usa origem)
         world = apply_travel(world, dest)
-        factions, faction_events = advance_factions(factions, 1)  # viagem = 1 período
+        factions, faction_events = advance_factions(factions, travel_periods)
         factions, world, faction_note = resolve_faction_completions(factions, world, faction_events, intel)
-        travel_note = (
-            f"O jogador VIAJOU para {dest['name']}. "
-            f"Contexto do local: {dest.get('lore_seed', '')} Descreva a chegada e o que ele vê agora."
-        )
+        if travel_periods == 0:
+            travel_note = (
+                f"O jogador ENTROU em {dest['name']} (mesma cidade — o tempo não passou). "
+                f"Contexto do local: {dest.get('lore_seed', '')} Descreva o que ele vê ao entrar."
+            )
+        else:
+            travel_note = (
+                f"O jogador VIAJOU para {dest['name']}"
+                + (f" (viagem longa: {travel_periods} períodos). " if travel_periods > 1 else ". ")
+                + f"Contexto do local: {dest.get('lore_seed', '')} Descreva a chegada e o que ele vê agora."
+            )
     elif last_user_input and is_rest(last_user_input):
         from world_utils import weather_effects
         rest_blocked = weather_effects(world).get("rest_block", False)  # Fase 6.5
@@ -184,7 +212,8 @@ def storyteller_node(state: GameState):
     world_note = ""
     extra_engine_events: list = []
     track_bk = None  # Fase 6.4: rastro atualiza o Codex do jogador
-    if dest or rested_player is not None:
+    # spec mapa-sublocais (R2): custo 0 (intra-cidade/interior) não rola encontro
+    if (dest and travel_periods >= 1) or rested_player is not None:
         turn = int(world.get("turn_count", 0))
         # Fase 6.3: sorteio ponderado — pressão de caça/fação/migração
         enc = check_encounter(world, factions, intel, turn,
@@ -345,7 +374,8 @@ def storyteller_node(state: GameState):
     - JULGUE a ação: se for implausível para a classe/ficha do personagem ({state.get('player', {}).get('class_name', '')})
       ou impossível no contexto, faça-a FALHAR de forma crível na narração (não conceda o impossível).
     - Termine com opções ou pergunta para ação.
-    - Se introduzir NPC novo, adicione em 'introduced_npcs'.
+    - Se um personagem ENTRAR na cena (novo ou conhecido que reapareceu), adicione o nome em 'introduced_npcs'.
+    - Se um personagem conhecido SAIR da cena (foi embora, sumiu), adicione o nome em 'npcs_left_scene'.
     """)
 
     try:
@@ -400,10 +430,21 @@ def storyteller_node(state: GameState):
             if new_step >= len(beats):
                 needs_replan = True
 
+        # spec npcs-3-camadas (R5): viagem zera a cena (ninguém teleporta junto);
+        # introduced_npcs entram em cena; npcs_left_scene saem.
+        from services import npc_layers
         npcs = state.get("npcs", {})
+        if dest:
+            npcs = npc_layers.reset_scene(npcs)
         new_npcs = npcs
+        home_id = world.get("current_location_id", "")
         for new_name in update.introduced_npcs:
-            new_npcs = _with_new_npc(new_npcs, new_name, loc, narrative_text)
+            new_npcs = _with_new_npc(new_npcs, new_name, loc, narrative_text,
+                                     game_id=str(game_id or ""), home_id=home_id)
+        for gone_name in getattr(update, "npcs_left_scene", []) or []:
+            key = next((k for k in new_npcs if k.lower() == str(gone_name).lower()), None)
+            if key and isinstance(new_npcs.get(key), dict):
+                new_npcs = {**new_npcs, key: {**new_npcs[key], "in_scene": False}}
 
         updates = {
             "messages": [AIMessage(content=narrative_text)],
@@ -470,4 +511,10 @@ def storyteller_node(state: GameState):
 
     except Exception as e:
         print(f"[STORYTELLER ERROR] {e}")
-        return {"messages": [AIMessage(content="O destino é incerto... (Erro AI).")]}
+        fallback = {"messages": [AIMessage(content="O destino é incerto... (Erro AI).")]}
+        if dest:
+            # viagem mecânica sobrevive ao LLM flaky: mundo anda e a cena esvazia
+            from services import npc_layers
+            fallback["world"] = world
+            fallback["npcs"] = npc_layers.reset_scene(state.get("npcs", {}))
+        return fallback

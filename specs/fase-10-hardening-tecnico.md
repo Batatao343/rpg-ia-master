@@ -1,6 +1,6 @@
 # SPEC — Fase 10 — Hardening técnico (single-player local)
 
-> **Status:** `draft`
+> **Status:** `done` (2026-07-06)
 > **Criada:** 2026-07-05 · **Atualizada:** 2026-07-05
 > **Depende de:** nada bloqueante (motor estável; Fases 2.5–7 `done`)
 > **Desbloqueia:** Fase 10b (multiusuário: Postgres/pgvector/auth), releases externos
@@ -134,14 +134,19 @@ def validated_game_id(game_id: Optional[str] = None) -> Optional[str]:
 
 ## 5. Critérios de aceite
 
-- [ ] `game_id` malicioso (`../.env`) → 400; nenhum arquivo fora de `saves/` é lido/escrito
-- [ ] Save antigo (v0) carrega migrado; save novo tem `schema_version: 1`
-- [ ] CORS default restrito a localhost; configurável por env
-- [ ] Rate limit devolve 429 e é desligável por env (suíte passa)
-- [ ] 1 linha JSON de log por turno no stderr
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM — N/A (zero LLM nesta spec)
-- [ ] Saves antigos continuam carregando (é O PONTO da spec)
+- [x] `game_id` malicioso (`../.env`) → 400; nenhum arquivo fora de `saves/` é lido/escrito
+- [x] Save antigo (v0) carrega migrado; save novo tem `schema_version` atual
+- [x] CORS default restrito a localhost; configurável por env
+- [x] Rate limit devolve 429 e é desligável por env (suíte passa)
+- [x] 1 linha JSON de log por turno no stderr
+- [x] `uv run pytest` verde (629 testes offline)
+- [x] Guard de FallbackLLM — N/A (zero LLM nesta spec)
+- [x] Saves antigos continuam carregando (é O PONTO da spec)
+
+**Desvios:** `SCHEMA_VERSION` já nasceu 2 (a spec npcs-3-camadas entrou na mesma
+sessão como migration 1→2); smoke §6 coberto pelos testes de API (TestClient
+exercita 400/429/log — mesmos asserts do checklist manual); 2 testes da 3.2
+ajustados ao contrato novo (game_id de teste virou UUID).
 
 ## 6. Smoke test com LLM real
 

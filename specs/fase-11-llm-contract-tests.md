@@ -1,6 +1,6 @@
 # SPEC — Fase 11 — LLM contract tests (provider real respeita contratos)
 
-> **Status:** `draft`
+> **Status:** `done` (2026-07-06)
 > **Criada:** 2026-07-05 · **Atualizada:** 2026-07-05
 > **Depende de:** Fases 2.6/2.8/4.x `done` (contratos que serão testados)
 > **Desbloqueia:** releases com troca de provider/modelo sem regressão silenciosa
@@ -138,14 +138,24 @@ que o marker excluir por default).
 
 ## 5. Critérios de aceite
 
-- [ ] `uv run pytest` offline não coleta/roda nenhum contrato (zero rede)
-- [ ] `uv run pytest -m llm_contract -v -s` com chave: 7 contratos, ≤15 requests, contador impresso
-- [ ] Contrato falha LEGÍVEL quando provider cai no fallback (não AttributeError)
-- [ ] Contrato 7 (fallback) roda sem chave e passa
-- [ ] `test_real_llm.py` migrado (arquivo antigo removido)
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM nos testes (isinstance — R4)
-- [ ] Saves antigos continuam carregando (nada de runtime muda)
+- [x] `uv run pytest` offline não coleta/roda nenhum contrato (addopts `-m "not llm_contract"`)
+- [x] `uv run pytest -m llm_contract`: 9 contratos verdes com Gemini real (2026-07-06)
+- [x] Contrato falha LEGÍVEL quando provider cai no fallback (isinstance + msg "quota?")
+- [x] Contrato de fallback roda sem chave e passa (RPG_NO_MOCK=1)
+- [x] `test_real_llm.py` migrado (4 testes viraram contratos; arquivo removido;
+      `--ignore` saiu do /qa, /wrap-up e validate.yml)
+- [x] `uv run pytest` verde (629 testes offline)
+- [x] Guard de FallbackLLM nos testes (isinstance — R4)
+- [x] Saves antigos continuam carregando (nada de runtime muda)
+
+**Desvios:** 9 contratos (7 casos da spec + combate e loot migrados como
+contratos próprios); opt-out do RPG_FORCE_MOCK via fixture autouse do PRÓPRIO
+arquivo (não no conftest — mais local, mesmo efeito); contador de requests é
+PROXY (rebind de `llm_setup.get_llm` não intercepta `from llm_setup import
+get_llm` já resolvido nos agentes — subconta; documentado). **Achado do
+primeiro run real:** fixture com inventário legado (strings) quebrava o
+caminho TREASURE do loot (`add_item`) — estado de teste, não bug de motor
+(save real chega migrado pela Fase 10); fixture corrigida p/ `{id, qty}`.
 
 ## 6. Smoke test com LLM real
 

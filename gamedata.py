@@ -117,6 +117,14 @@ def get_connections(loc_id: str) -> list:
     return [_LOCATIONS_BY_ID[c] for c in loc.get("connections", []) if c in _LOCATIONS_BY_ID]
 
 
+def interiors_of(loc_id: str) -> list:
+    """Interiores (masmorras/prédios, kind='interior') filhos do local (spec mapa-sublocais)."""
+    return [
+        loc for loc in _LOCATIONS_BY_ID.values()
+        if loc.get("kind") == "interior" and loc.get("parent_id") == loc_id
+    ]
+
+
 def find_location_by_name(name: str) -> dict:
     """Resolve um local pelo nome de exibição (case-insensitive)."""
     if not name:

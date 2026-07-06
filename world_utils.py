@@ -79,9 +79,36 @@ def find_travel_destination(world: dict, text: str) -> Optional[dict]:
     return None
 
 
+def travel_cost(world: dict, dest: dict) -> int:
+    """Custo em períodos da conexão atual->dest (spec mapa-sublocais).
+
+    `travel_times` do nó atual decide; fallback simétrico (destino define p/
+    o atual); sem entrada = 1. Interior sempre 0 (entrar num prédio/masmorra
+    não vira o relógio).
+    """
+    if dest.get("kind") == "interior":
+        return 0
+    cur_id = world.get("current_location_id")
+    cur = gamedata.get_location(cur_id) or {}
+    if cur.get("kind") == "interior" and dest.get("id") == cur.get("parent_id"):
+        return 0  # sair do interior para o pai também é grátis
+    times = cur.get("travel_times") or {}
+    if dest.get("id") in times:
+        return max(0, int(times[dest["id"]]))
+    times_dest = dest.get("travel_times") or {}
+    if cur_id in times_dest:
+        return max(0, int(times_dest[cur_id]))
+    return 1
+
+
 def apply_travel(world: dict, dest: dict) -> dict:
-    """Move o jogador para um destino: revela, sincroniza nome/perigo, gasta tempo."""
+    """Move o jogador para um destino: revela, sincroniza nome/perigo, gasta tempo.
+
+    Custo 0 (intra-cidade/interior) NÃO vira relógio nem transiciona clima —
+    mecânica da spec mapa-sublocais (R2).
+    """
     world = dict(world)
+    cost = travel_cost(world, dest)
     world["current_location_id"] = dest["id"]
     world["current_location"] = dest["name"]
     visited = list(world.get("visited", []))
@@ -89,12 +116,13 @@ def apply_travel(world: dict, dest: dict) -> dict:
         visited.append(dest["id"])
     world["visited"] = visited
     world["danger_level"] = dest.get("danger", world.get("danger_level", 1))
-    advance_clock(world, 1)
-    # Fase 6.5: período mudou -> clima transiciona; clima bravo encarece a viagem
-    advance_weather(world)
-    extra = weather_effects(world, dest).get("travel_cost_extra", 0)
-    if extra:
-        advance_clock(world, extra)
+    if cost > 0:
+        advance_clock(world, cost)
+        # Fase 6.5: período mudou -> clima transiciona; clima bravo encarece a viagem
+        advance_weather(world)
+        extra = weather_effects(world, dest).get("travel_cost_extra", 0)
+        if extra:
+            advance_clock(world, extra)
     return world
 
 

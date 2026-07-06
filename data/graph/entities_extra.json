@@ -962,5 +962,71 @@
     ],
     "visibility": "public",
     "components": {}
+  },
+  "na_taverna_javali": {
+    "id": "na_taverna_javali",
+    "type": "location",
+    "name": "Taverna do Javali Dourado",
+    "aliases": [
+      "Javali Dourado"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "taverna",
+      "abrigo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "pm_cripta_afogada": {
+    "id": "pm_cripta_afogada",
+    "type": "location",
+    "name": "Cripta dos Afogados",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "masmorra"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "sk_salao_do_jarl": {
+    "id": "sk_salao_do_jarl",
+    "type": "location",
+    "name": "Salão do Jarl",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "salao"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "ae_camara_seca": {
+    "id": "ae_camara_seca",
+    "type": "location",
+    "name": "Câmara Seca de Aethelgard",
+    "aliases": [
+      "Entrada Seca"
+    ],
+    "tags": [
+      "aethelgard",
+      "masmorra"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "ma_forja_profunda": {
+    "id": "ma_forja_profunda",
+    "type": "location",
+    "name": "Forja Profunda",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "masmorra",
+      "forja"
+    ],
+    "visibility": "public",
+    "components": {}
   }
 }

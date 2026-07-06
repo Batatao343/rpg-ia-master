@@ -79,7 +79,12 @@ def can_recruit(state: Dict, npc_name: str) -> Tuple[bool, str]:
     relationship >= 7 ∧ party ativa < 3 ∧ NPC não é de fação hostil ao jogador."""
     npc = (state.get("npcs") or {}).get(npc_name) or {}
     rel = int(npc.get("relationship", 5) or 5)
-    if rel < RECRUIT_MIN_REL:
+    # spec npcs-3-camadas (R6): trait de persuasão do NPC ajusta o limiar —
+    # desconfiado exige mais confiança, sentimental exige menos. Traits OCULTOS
+    # também contam (o mundo é real antes de ser conhecido).
+    from services.npc_layers import trait_dc_modifier
+    limiar = max(3, min(10, RECRUIT_MIN_REL + trait_dc_modifier(npc, "persuasao")))
+    if rel < limiar:
         return False, f"{npc_name} não confia o bastante em você (relação {rel}/10)."
     if len(active_allies(state)) >= MAX_ACTIVE:
         return False, f"Seu grupo já está cheio ({MAX_ACTIVE} companheiros)."

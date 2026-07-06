@@ -2,12 +2,53 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-05 (sessão 9: FASE 7 INTEIRA — 7.1 validadores+CI,
-> 7.2 autoria/curadoria, 7.3 segredos de NPC)
+> Última atualização: 2026-07-06 (sessão 10: fase 10 local, fase 11 contratos,
+> mapa interiores/viagem variável, NPCs 3 camadas — 4 specs `done`)
 
 ---
 
 ## TL;DR — Em que pé está
+
+**Sessão 2026-07-06 (10): 4 specs implementadas — fase 10 (hardening local),
+fase 11 (LLM contract tests), mapa (interiores + viagem variável) e NPCs 3
+camadas + traits.** 581 → **629 testes offline verdes** + **9 contratos verdes
+contra Gemini REAL** + build web + smoke real de interior.
+**Fase 10 (local):** `persistence.save_path()` valida UUID (fecha path
+traversal de `game_id=../.env` — endpoints devolvem 400); saves com
+`schema_version` + pipeline `_MIGRATIONS` (v0→v1 consolida backfills
+3.1/4.1/4.3/4.5 que viviam espalhados no load; v1→v2 = campos de NPC); CORS
+por env (`RPG_CORS_ORIGINS`, default localhost); rate limit por IP em memória
+(`RPG_RATE_LIMIT`, 0 desliga — conftest desliga na suíte); log JSON por turno
+no stderr (logger `rpg.turn`). Postgres/auth = Fase 10b (sem demanda ainda).
+**Fase 11:** `uv run pytest -m llm_contract -v -s` = 9 contratos contra o
+provider real (router×2, StoryUpdate banal não alucina evento, combate, NPC
+não-onisciente com fato sintético, TradeIntent qty=2, e2e+archivist, loot,
+fallback RPG_NO_MOCK offline); fora da suíte default via addopts; substitui
+`tests/test_real_llm.py` (removido; `--ignore` saiu de /qa, /wrap-up e CI).
+Achado do 1º run: fixture legada de inventário (strings) quebrava loot — era
+estado de teste (save real chega migrado), corrigido.
+**Mapa:** `travel_times` por conexão (anéis de Nova Arcádia custo 0 — relógio
+PARADO; Skallgard↔Montanhas 2; Brekmar↔Ophidia 3; default 1) + 5 nós
+`kind: interior` (Taverna do Javali Dourado/Grum, Cripta dos Afogados, Salão
+do Jarl, Câmara Seca de Aethelgard/Aelwin, Forja Profunda) — custo 0, sem
+clima (tag abrigo), sem encontro de viagem, fora do mapa-múndi (aparecem como
+chips "Locais daqui" no PlayScreen + "Sair para <pai>"); registrados em
+`entities_extra.json`; fações avançam pelo CUSTO real da viagem.
+**NPCs 3 camadas:** `services/npc_layers.py` + `data/traits.json` (40 traits,
+lote 1) — sorteio seeded por npc_id+game_id (replay estável), revelação por
+`interaction_count >= reveal_after` (nota *(Você percebe...)* na resposta),
+`trait_dc_modifier` já usado no gate de recrutamento 4.5 (desconfiado exige
+mais, sentimental menos — ocultos CONTAM); gate camada 3: NPC `in_scene=False`
+→ "X não está aqui" + onde foi visto, SEM request de LLM (fecha o bug "NPC
+errado responde"); viagem zera a cena (exceto party); entrada/saída de cena
+via `introduced_npcs` (reuso)/`npcs_left_scene` (novo) no StoryUpdate;
+`hidden_traits` nunca sai por API/prompt/frontend (testado); aba Personagens
+mostra traits revelados + "ouviu falar". Smoke real: entrar na taverna com
+Gemini vivo = relógio parado + narração de chegada; Gemini re-introduziu NPC
+conhecida na cena nova (canal ok; vigiar em playtest).
+**Próximo:** Fase 5 — agentic playtest + telemetria (specs a escrever).
+Pendências menores: Action `validate.yml` verde no primeiro push; playtest de
+balanceamento da Fase 4; lote 2 de traits (40→80).
 
 **Sessão 2026-07-05 (9): FASE 7 (Pipeline de autoria + validação) INTEIRA — 3 specs `done`.**
 520 → **581 testes offline verdes** + lint do repo 0 ERROs + reindex FAISS feito +
@@ -40,9 +81,7 @@ contava o pacto com Valerius no parágrafo "Natureza:" — corrigido na FONTE
 cresceu 8→15 na auditoria ("identidade real", "a verdade", "o que nao diz"...).
 Pendência de curadoria: NPCs públicos do norte citam a Rede Carmesim enquanto a
 timeline era-7 é `hidden` — ver ROADMAP § Fase 7.
-**Próximo:** Fase 5 — agentic playtest + telemetria (specs a escrever; spec-driven).
-Pendências menores: conferir Action `validate.yml` verde no primeiro push;
-playtest de balanceamento da Fase 4.
+**Próximo (na época):** Fase 5 — agentic playtest + telemetria.
 
 **Sessão 2026-07-05 (8): FASE 6 (Conteúdo sistêmico) INTEIRA implementada — 5 fatias.**
 461 → **520 testes offline verdes** + build web + smoke_api + **smoke com LLM REAL
@@ -239,7 +278,8 @@ existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arquivar
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 581 testes offline verdes (test_real_llm precisa de chave)
+uv run pytest                        # 629 testes offline verdes (contratos de LLM ficam fora)
+uv run pytest -m llm_contract -v -s  # 9 contratos contra o Gemini REAL (~13 req; requer chave)
 uv run python game_engine.py         # CLI
 uv run uvicorn api:app --port 8000   # API + frontend web (http://localhost:8000)
 uv run python rag.py                 # reindexar lore (data/codex/) + regras (data/rules.txt)

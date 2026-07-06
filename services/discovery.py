@@ -178,14 +178,20 @@ def _characters_block(state: Dict) -> List[Dict]:
     by_name = {ent.get("name", "").strip().lower(): eid for eid, ent in entities.items()
                if ent.get("type") == "npc"}
     out = []
+    from services.npc_layers import trait_names
     for npc_name, npc in (state.get("npcs") or {}).items():
         if not isinstance(npc, dict):
+            continue
+        # spec npcs-3-camadas (R8): só camada 2 (conhecidos); traits só revelados
+        if not npc.get("known_by_player", True):
             continue
         entity_id = by_name.get(str(npc.get("name", npc_name)).strip().lower())
         out.append({
             "name": npc.get("name", npc_name),
             "role": npc.get("role", ""),
             "location": npc.get("location", ""),
+            "knowledge_source": npc.get("knowledge_source", "met"),
+            "revealed_traits": trait_names(npc.get("revealed_traits") or []),
             "body": codex_body(entity_id) if entity_id else "",
         })
     return out

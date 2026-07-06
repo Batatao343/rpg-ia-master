@@ -188,9 +188,22 @@ def npc_actor_node(state: GameState):
     if not npc_name: return {"messages": [AIMessage(content="Ninguém responde.")]}
     
     # Busca dados (Prioridade: Estado -> DB -> Fallback)
+    from services import npc_layers
+
     npcs_db = state.get("npcs", {})
     npc_data = npcs_db.get(npc_name)
-    
+    from_state = npc_data is not None
+
+    # --- Camada 3 (spec npcs-3-camadas, R4): NPC conhecido mas FORA de cena não
+    # conversa — resposta determinística, ZERO chamada de LLM. Membro de party
+    # está sempre com o jogador (estado próprio, 4.5). ---
+    in_party = any(isinstance(c, dict) and c.get("name") == npc_name
+                   for c in state.get("party") or [])
+    if from_state and not in_party and not npc_layers.is_in_scene(npc_data):
+        home = npc_data.get("home_location_id") or npc_data.get("location", "")
+        hint = f" Foi visto pela última vez em {home}." if home else ""
+        return {"messages": [AIMessage(content=f"🗣️ {npc_name} não está aqui.{hint}")]}
+
     if not npc_data:
         db = load_npc_db()
         npc_data = db.get(npc_name)
@@ -201,6 +214,13 @@ def npc_actor_node(state: GameState):
         npc_data.setdefault("location", loc)
         npc_data.setdefault("relationship", 5)
         npc_data.setdefault("memory", [])
+    # Campos de camada + traits seeded (R1/R3); quem chegou aqui está na cena.
+    home_id = state.get("world", {}).get("current_location_id", "")
+    npc_data = npc_layers.ensure_npc_fields(
+        npc_data, str(state.get("game_id", "")),
+        home_location_id=npc_data.get("home_location_id") or home_id,
+        in_scene=True if not from_state else None)
+    npc_data["known_by_player"] = True
 
     # O NPC NÃO é uma wikipédia: age por persona + memória própria (sem dump de lore global).
     last_msg = messages[-1].content if messages else ""
@@ -265,6 +285,9 @@ def npc_actor_node(state: GameState):
     Ocupação: {npc_data.get('role')}.
     Persona: {npc_data.get('persona')}.
     Local: {npc_data.get('location')}.
+    Traços que o jogador JÁ percebeu em você (aja de acordo): {
+        ", ".join(t["name"] + " — " + t["description"]
+                  for t in npc_layers.trait_names(npc_data.get("revealed_traits") or [])) or "—"}
     </ROLE>
 
     <MEMORIA>
@@ -310,6 +333,14 @@ def npc_actor_node(state: GameState):
         fato = f"Turno {turn}: {res.memory_update}"
         npc_data['memory'].append(fato)
 
+        # spec npcs-3-camadas (R7): interação conta; trait maduro é revelado (Python).
+        npc_data, trait_revelados = npc_layers.tick_interaction(npc_data)
+        reveal_note = ""
+        if trait_revelados:
+            nomes = [t["name"] for t in npc_layers.trait_names(trait_revelados)]
+            reveal_note = "\n" + "\n".join(
+                f"*(Você percebe que {npc_data.get('name', npc_name)} é {n}.)*" for n in nomes)
+
         # Memória de longo prazo: vetoriza o fato no índice deste npc (inerte sem chave).
         if RAG_AVAILABLE and game_id and res.memory_update:
             try:
@@ -329,7 +360,7 @@ def npc_actor_node(state: GameState):
             )
 
         updates = {
-            "messages": [AIMessage(content=f"**{npc_data['name']}:** \"{res.dialogue}\"\n*({res.action_description})*")],
+            "messages": [AIMessage(content=f"**{npc_data['name']}:** \"{res.dialogue}\"\n*({res.action_description})*{reveal_note}")],
             "npcs": new_npcs,
             "faction_intel": intel,
             "archive_due": True,  # conversa com NPC = evento relevante p/ o arquivista
