@@ -93,7 +93,7 @@ def simulate_world(state: dict, world: dict, factions, intel, periods: int = 1) 
     - 'danger_shift': -1, 0 ou +1 conforme o mundo ficou mais/menos perigoso AQUI.
     """)
 
-    llm = get_llm(temperature=0.8, tier=ModelTier.SMART)
+    llm = get_llm(temperature=0.8, tier=ModelTier.FAST)
     try:
         pulse = llm.with_structured_output(WorldPulse).invoke([sys])
     except Exception:

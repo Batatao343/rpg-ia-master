@@ -176,10 +176,16 @@ def parse_categoria_blocks(path: str) -> List[Block]:
             i += 1
         title = lines[i].strip() if i < len(lines) else ""
         i += 1
-        # corpo até o próximo [CATEGORIA: — rastreando cabeçalhos ####/==== de
-        # seção no meio do arquivo (valem para os blocos SEGUINTES)
+        # corpo até o próximo marcador de entrada — rastreando cabeçalhos
+        # ####/==== de seção no meio do arquivo (valem para os blocos SEGUINTES).
+        # BUG histórico (achado no playtest da Fase 5): parar SÓ em [CATEGORIA:
+        # fazia o último bloco [CATEGORIA:] de creatures.txt (OS GIGANTES) engolir
+        # TODOS os [CRIATURA:] seguintes até o EOF — o bestiário inteiro (incl. o
+        # Verme-Primordial, segredo) vazava para um único doc público de 1600
+        # linhas. Também parar em [CRIATURA:/MATERIAL:/ITEM: fecha o bloco no lugar
+        # certo (esses marcadores nunca aparecem no CORPO de um [CATEGORIA:]).
         body_lines: List[str] = []
-        while i < len(lines) and not lines[i].startswith("[CATEGORIA:"):
+        while i < len(lines) and not re.match(r"^\[(CATEGORIA|CRIATURA|MATERIAL|ITEM):", lines[i]):
             stripped = lines[i].strip()
             if re.match(r"^(#{4,}|={4,})$", stripped) and i + 1 < len(lines):
                 nxt = lines[i + 1].strip()

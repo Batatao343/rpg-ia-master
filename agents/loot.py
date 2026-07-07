@@ -37,7 +37,7 @@ def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeI
     default_mode = "craft" if loot_source == "CRAFT" else "buy"
     fallback = TradeIntent(mode=default_mode, item_ref=text[:60] or "item", qty=1)
     try:
-        llm = get_llm(temperature=0.0, tier=ModelTier.FAST)
+        llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
         sys = SystemMessage(content=(
             "Você identifica transações de RPG. Classifique a fala do jogador em "
             "buy (comprar do mercador), sell (vender item próprio) ou craft "
@@ -55,7 +55,7 @@ def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeI
 def _narrate(context: str, fallback_text: str) -> str:
     """1 chamada SMART para prosa curta; qualquer falha cai no texto mecânico."""
     try:
-        llm = get_llm(temperature=0.6, tier=ModelTier.SMART)
+        llm = get_llm(temperature=0.6, tier=ModelTier.FAST)
         if getattr(llm, "is_fallback", False):
             raise RuntimeError("fallback")
         # Gemini exige >=1 mensagem não-system (achado do smoke real 2026-07-05)

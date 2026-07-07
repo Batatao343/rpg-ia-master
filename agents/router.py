@@ -50,7 +50,7 @@ def dm_router_node(state: GameState):
     - STORY: Movimentação, exploração, observar cenário.
     """
 
-    llm = get_llm(temperature=0.0, tier=ModelTier.FAST)
+    llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
 
     try:
         router_llm = llm.with_structured_output(RouterDecision)
@@ -63,6 +63,16 @@ def dm_router_node(state: GameState):
     # RouterDecision. Nesse caso seguimos para o storyteller (modo degradado).
     if not isinstance(decision, RouterDecision):
         return {"next": RouteType.STORY.value}
+
+    # RouteType.NONE ("nenhuma intenção clara": input sem ação, lixo ou injeção)
+    # NÃO é um nó do grafo — o mapping condicional de main.py só conhece
+    # storyteller/combat/npc/loot/END. O LLM real ESCOLHE NONE para a entrada do
+    # troll (emoji, SQL, "ignore as instruções") e o router devolvia next="none"
+    # → KeyError('none') no grafo. O MockLLM nunca escolhe NONE, então o bug só
+    # aparecia no LLM real (achado do playtest da Fase 5). Normaliza para STORY:
+    # o narrador descreve o ambiente em vez de derrubar o turno.
+    if decision.route == RouteType.NONE:
+        decision.route = RouteType.STORY
 
     print(f"🚦 [ROUTER] {decision.route.value} -> Alvo: {decision.target}")
 

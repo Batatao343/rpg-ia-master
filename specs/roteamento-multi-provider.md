@@ -1,6 +1,7 @@
+
 # SPEC — Roteamento multi-provider com fallback (produto)
 
-> **Status:** `draft`
+> **Status:** `done`
 > **Criada:** 2026-07-06 · **Atualizada:** 2026-07-06
 > **Depende de:** motor estável (Fases 0–7, 10, 11 `done`); `llm_setup.py`,
 > Fase 11 (contratos `-m llm_contract` — reusados/estendidos por provider)
@@ -268,20 +269,48 @@ só o tier.
 
 ## 5. Critérios de aceite
 
-- [ ] `ModelTier.CLASSIFY` existe; `get_llm` devolve `RoutedLLM` com fallback
-- [ ] Fallback pula candidato que levanta e usa o próximo (teste com fakes)
-- [ ] Todos os candidatos falharem ⇒ `AIMessage` (nunca exceção) — guard segue
+- [x] `ModelTier.CLASSIFY` existe; `get_llm` devolve `RoutedLLM` com fallback
+- [x] Fallback pula candidato que levanta e usa o próximo (teste com fakes)
+- [x] Todos os candidatos falharem ⇒ `AIMessage` (nunca exceção) — guard segue
       obrigatório e testado
-- [ ] `RPG_FORCE_MOCK`, `LLM_PROVIDER` legado e `RPG_ROUTES` todos funcionam
-- [ ] Cada nó no tier certo (tabela Etapa 2) — teste de tier por nó
-- [ ] Build de candidato cacheado por `(provider, model, temp)`
-- [ ] Hook de telemetria dispara com `(provider, model, tier, latency_ms,
+- [x] `RPG_FORCE_MOCK`, `LLM_PROVIDER` legado e `RPG_ROUTES` todos funcionam
+- [x] Cada nó no tier certo (tabela Etapa 2) — teste de tier por nó
+      (`tests/test_routing_tiers.py`)
+- [x] Build de candidato cacheado por `(provider, model, temp)`
+- [x] Hook de telemetria dispara com `(provider, model, tier, latency_ms,
       fell_back)` — consumido pela 5.3
-- [ ] `.env.example` + `.env` listam as keys por provider
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` (inalterado; RoutedLLM
-      não mascara)
-- [ ] Saves antigos continuam carregando (nada de schema de save muda)
+- [x] `.env.example` lista as keys por provider (pré-existente)
+- [x] `uv run pytest` verde (suíte completa offline — 656)
+- [x] Guard de FallbackLLM em todo `with_structured_output` (inalterado; RoutedLLM
+      não mascara — `is_fallback=False`, retorno de erro é `AIMessage`)
+- [x] Saves antigos continuam carregando (nada de schema de save muda)
+- [x] **Smoke real (§6)** — R10 por-provider + 1 turno vivo na stack ROUTES:
+      turno completo com narração real + campanha, fallback e telemetria vivos
+
+> **Impl 2026-07-06:** Etapas 1–3 codadas; offline 655 verdes (+1 skip: anthropic
+> dep instalada). `_build_anthropic` na Etapa 1 (extra `--extra anthropic`).
+> Desvios de escopo: (1) `get_llm` ganhou gate de zero-config (sem key nenhuma →
+> MockLLM) p/ preservar o "roda sem configurar"; (2) os 9 contratos da Fase 11
+> forçam `LLM_PROVIDER=gemini` (ROUTES default não tem Gemini em FAST/SMART).
+>
+> **Achados do smoke real (mudaram o `ROUTES` default):**
+> - **Groq strict json_schema** rejeitava schema com dict aberto
+>   (`StoryUpdate.proposed_events[].payload`). **FIX:** `RoutedLLM._apply` injeta
+>   `method="function_calling"` p/ todo provider OpenAI-compat
+>   (`_OPENAI_COMPAT_PROVIDERS`) quando o call site não escolheu método → Groq
+>   parseia QUALQUER schema. Assim cada tier tem um **candidato Groq grátis** e o
+>   jogo roda 100% no free tier do Groq (2º smoke: turno inteiro em
+>   `gpt-oss-20b`/`llama-3.3-70b`/`gpt-oss-120b`, sem provider pago).
+> - **Anthropic (claude-sonnet-5):** rejeita `temperature` (omitido no builder) e
+>   **prefill** (falha se o prompt termina em `AIMessage`, ex.: archivist → cai no
+>   fallback). Passa em nós que terminam com humano (router, campaign).
+> - Groq `moonshotai/kimi-k2*` = 404 (sem acesso na conta de teste).
+> - **ROUTES final:** CLASSIFY `groq gpt-oss-20b → gemini flash-lite`; FAST
+>   `minimax → qwen → groq llama-3.3-70b → gemini-flash`; SMART `deepseek →
+>   groq gpt-oss-120b → anthropic → gemini-pro`.
+> - **Contas (não é código; opcional):** groq/gemini/anthropic OK; minimax+deepseek
+>   = 402 saldo zero; qwen = 401 key/região (endpoint Internacional). Groq grátis
+>   cobre tudo; os pagos só assumem quando têm saldo/key.
 
 ## 6. Smoke test com LLM real
 

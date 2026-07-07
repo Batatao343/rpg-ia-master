@@ -1086,10 +1086,10 @@
         "id": "npc_velho_caxias"
     },
     "npc_viciado_do_beco": {
-        "name": "Garrick \"O Desdentado\"",
+        "name": "Tarnick \"O Desdentado\"",
         "role": "Viciado em Pó de Sonho e Informante Desesperado",
         "location": "O Beco dos Desdentados, O Anel de Lama (A Fossa), Nova Arcádia",
-        "persona": "Garrick vive em um estado constante de paranoia e euforia induzida pelo Pó de Sonho. Ele fala cuspindo, com uma pronúncia sibilante devido à falta de dentes. Ele é extremamente covarde, mas sua necessidade química o torna imprevisível; ele implorará, chorará ou tentará furtar qualquer um para conseguir uma pitada de pó. Ele frequentemente conversa com \"as sombras nas paredes\", que ele jura que são os espíritos dos dentes que ele vendeu para os necromantes da Fossa. Se receber uma dose de Pó de Sonho, ele se torna temporariamente lúcido e pode revelar segredos úteis sobre os becos.",
+        "persona": "Tarnick vive em um estado constante de paranoia e euforia induzida pelo Pó de Sonho. Ele fala cuspindo, com uma pronúncia sibilante devido à falta de dentes. Ele é extremamente covarde, mas sua necessidade química o torna imprevisível; ele implorará, chorará ou tentará furtar qualquer um para conseguir uma pitada de pó. Ele frequentemente conversa com \"as sombras nas paredes\", que ele jura que são os espíritos dos dentes que ele vendeu para os necromantes da Fossa. Se receber uma dose de Pó de Sonho, ele se torna temporariamente lúcido e pode revelar segredos úteis sobre os becos.",
         "appearance": "Extremamente magro, com a pele pálida e coberta por uma camada de sujeira e esporos cinzentos. Seus olhos estão sempre arregalados, com as pupilas dilatadas pela droga. A característica mais marcante é a sua boca: ele não possui um único dente, exibindo apenas gengivas cicatrizadas e ocasionalmente sangrentas. Veste trapos úmidos que cheiram a mofo e esgoto. Suas mãos tremem constantemente, os dedos calejados de tanto escavar a lama em busca de cogumelos caídos.",
         "initial_relationship": 30,
         "attributes": {
@@ -1134,5 +1134,656 @@
             "hp": 9.0
         },
         "id": "npc_garm"
+    },
+    "npc_silas,_o_rato": {
+        "name": "Silas, o Rato",
+        "role": "Contrabandista de Relíquias e Informante do Submundo",
+        "location": "Beco do Sussurro, Nova Arcádia",
+        "persona": "Extremamente paranoico, astuto e puramente oportunista. Silas sobrevive vendendo o que o Código proíbe: relíquias contrabandeadas, substâncias ilícitas e segredos perigosos. Ele não possui lealdade a facções, apenas à sua própria sobrevivência e ao tilintar de moedas de ouro. Fala rápido, em sussurros nervosos, sempre olhando por cima dos ombros como se esperasse uma adaga nas costas ou a guarda da cidade a qualquer momento. Se acuado, prefere fugir e barganhar a lutar.",
+        "appearance": "Uma figura esguia e magra, quase esquelética, que se move com uma agilidade furtiva e apressada. Usa uma capa cinzenta gasta e puída, cujo capuz profundo esconde feições afiadas, dentes ligeiramente salientes e olhos escuros e irrequietos que lembram os de um roedor. Suas mãos são ágeis, com dedos longos e calejados, frequentemente sujas de fuligem ou graxa. Atualmente, carrega um pacote volumoso amarrado com cordas de couro que emite uma sutil luminescência azulada.",
+        "initial_relationship": 35,
+        "attributes": {
+            "charisma": 10,
+            "wisdom": 14,
+            "intelligence": 12,
+            "dexterity": 16,
+            "strength": 8,
+            "constitution": 10
+        },
+        "combat_stats": {
+            "HP": 22.0,
+            "attacks": "Adaga Envenenada (+5 para atingir, dano 1d4+3 perfurante mais 1d6 de dano de veneno) ou Besta de Mão (+5 para atingir, dano 1d6+3 perfurante)",
+            "special_abilities": "Fuga Ágil (pode usar a ação de Disparar ou Desengajar como ação bônus), Sentido de Perigo (vantagem em testes de Destreza contra armadilhas e efeitos que possa ver)",
+            "AC": 14.0
+        },
+        "id": "npc_silas,_o_rato"
+    },
+    "npc_nico": {
+        "name": "Nico",
+        "role": "Batedor de carteiras da Quadrilha dos Telhados",
+        "location": "Mercado de Nova Arcádia",
+        "persona": "Nico é um órfão sobrevivente que aprendeu cedo que em Nova Arcádia ou você rouba, ou você morre de fome. Como membro de baixo escalão da Quadrilha dos Telhados, ele vive sob constante pressão de entregar resultados para seus superiores e evitar as patrulhas impiedosas da Legião de Ferro. Ele é extremamente rápido e esperto para a sua idade, mas sua coragem desaparece rapidamente quando é confrontado diretamente ou dominado fisicamente. Ele usa uma fachada de inocência e vulnerabilidade infantil para tentar escapar quando é pego no flagra.",
+        "appearance": "Um garoto esguio e desnutrido, aparentando ter cerca de 13 anos, com o rosto manchado de fuligem e poeira do carvão. Ele veste trapos cinzentos e desgastados que o ajudam a se camuflar na névoa e fumaça de Nova Arcádia. Seus olhos escuros são extremamente ágeis e expressam um misto de medo constante e astúcia desesperada. Suas mãos são calejadas, mas os dedos são surpreendentemente longos e ágeis.",
+        "initial_relationship": -20,
+        "attributes": {
+            "int": 10,
+            "str": 8,
+            "dex": 16,
+            "cha": 13,
+            "wis": 12,
+            "con": 11
+        },
+        "combat_stats": {
+            "attacks": "Adaga Improvisada (+5 para acertar, dano 1d4+3 perfurante)",
+            "ac": 13.0,
+            "hp": 9.0
+        },
+        "id": "npc_nico"
+    },
+    "npc_operario_caido": {
+        "name": "Valdir \"O Quebrado\" (Operário Caído)",
+        "role": "Ex-Operário de Forja e Informante Embriagado",
+        "location": "Fosso dos Cães, Nova Arcádia (Centro-Sul)",
+        "persona": "Amargurado, cínico e profundamente traumatizado pelo período em que serviu nas forjas da Legião de Ferro. Valdir fala arrastado devido ao álcool barato, mas guarda um rancor afiado contra os barões industriais de Nova Arcádia. Ele alterna entre momentos de autopiedade chorosa e explosões de raiva contra a \"máquina que consome homens\". É fácil conseguir informações dele se você lhe pagar uma dose de \"Suor de Caldeira\" (a bebida local), mas ele desconfia imediatamente de qualquer um que pareça limpo ou aristocrático.",
+        "appearance": "Um homem de meia-idade com a pele permanentemente manchada de fuligem e carvão. Seu braço esquerdo foi amputado abaixo do cotovelo, ostentando uma prótese rudimentar e enferrujada de bronze que ele usa mais para apoiar copos do que para trabalhar. Veste um avental de couro rasgado e seboso sobre trapos cinzentos. Seus olhos são caídos, injetados de sangue, e ele cheira a óleo de máquina misturado com o pior destilado barato do Fosso dos Cães.",
+        "initial_relationship": -5,
+        "attributes": {
+            "int": 10,
+            "cha": 7,
+            "wis": 9,
+            "dex": 8,
+            "str": 12,
+            "con": 14
+        },
+        "combat_stats": {
+            "attacks": [
+                {
+                    "name": "Garrafa Quebrada",
+                    "to_hit": 3.0,
+                    "damage": "1d4+1 perfurante"
+                },
+                {
+                    "damage": "1d3+1 concussivo",
+                    "to_hit": 3.0,
+                    "name": "Soco de Direita"
+                }
+            ],
+            "ac": 11.0,
+            "hp": 15.0
+        },
+        "id": "npc_operario_caido"
+    },
+    "npc_cabo_vane": {
+        "name": "Cabo Vane",
+        "role": "Cabo da Legião de Ferro (Líder de Patrulha)",
+        "location": "Nova Arcádia, Distrito Industrial (Beco próximo ao Portão Oeste)",
+        "persona": "Autoritário, cruel e implacável. Vane vê o mundo através do Código de Ferro: ou você é a bigorna, ou é o martelo. Ele se delicia em exercer o pouco poder que tem sobre os operários e cidadãos comuns, usando a desculpa de manter a ordem e caçar 'subversivos' para extorquir, humilhar e brutalizar os mais fracos. É leal à estrutura da Legião, mas extremamente covarde e calculista quando confrontado por alguém visivelmente mais forte ou de classe social superior.",
+        "appearance": "Um homem de trinta e poucos anos com feições duras e marcadas pela fuligem. Veste a armadura de placas escuras e desgastadas da Legião de Ferro, com o símbolo do anel de ferro gravado no peito. Tem uma cicatriz fina que corta sua bochecha esquerda até o queixo. Seus olhos são cinzentos e frios, e ele frequentemente apoia a mão direita no punho de sua espada larga. Cheira a tabaco barato e suor.",
+        "initial_relationship": 20,
+        "attributes": {
+            "int": 10,
+            "str": 14,
+            "dex": 11,
+            "cha": 8,
+            "wis": 9,
+            "con": 13
+        },
+        "combat_stats": {
+            "attacks": "Espada Larga (+4 para acertar, 1d8+2 de dano cortante) ou Alabarda (+4 para acertar, 1d10+2 de dano cortante, alcance 3m)",
+            "ac": 16.0,
+            "hp": 22.0
+        },
+        "id": "npc_cabo_vane"
+    },
+    "npc_brann": {
+        "name": "Brann",
+        "role": "Operário Fundidor e Simpatizante da Resistência",
+        "location": "Nova Arcádia - Beco do Setor Industrial (próximo ao Portão Oeste)",
+        "persona": "Resiliente, exausto e silenciosamente rebelde. Brann passou a vida inteira sob o calor das fornalhas e o peso das botas da Legião de Ferro. Ele não é um guerreiro, mas possui a teimosia do metal que molda. Embora sinta um pavor profundo dos guardas, ele se recusa a implorar ou a entregar seus contatos na resistência local. Ele prefere suportar a dor a trair seus princípios, mas sabe que está no limite de suas forças. Sente gratidão instantânea e profunda por qualquer um que se oponha aos seus opressores.",
+        "appearance": "Um homem de meia-idade com a pele permanentemente manchada de fuligem e cicatrizes de pequenas queimaduras de faíscas. Veste um avental de couro grosso, rígido e chamuscado pelo trabalho nas fornalhas, sobre roupas de tecido rústico e desgastado. Seus cabelos são escuros, salpicados de cinza nas têmporas, e ele segura o flanco esquerdo com uma das mãos calejadas, arqueado de dor devido a uma costela machucada. Seus olhos, embora cansados e aterrorizados, carregam uma teimosia silenciosa.",
+        "initial_relationship": 50,
+        "attributes": {
+            "int": 10,
+            "wis": 11,
+            "cha": 10,
+            "dex": 9,
+            "str": 12,
+            "con": 13
+        },
+        "combat_stats": {
+            "HP": "15 (Atualmente com 6 HP devido aos espancamentos recentes)",
+            "Attacks": "Martelo de Forja Improvisado (+3 para acertar, dano 1d6+1 concussivo)",
+            "AC": 10.0
+        },
+        "id": "npc_brann"
+    },
+    "npc_soldados_da_legião_de_ferro": {
+        "name": "Cabo Kaelen Vane (Legião de Ferro)",
+        "role": "Cabo de Patrulha Urbanístico da Legião de Ferro",
+        "location": "Nova Arcádia (Distritos Comerciais e de Fronteira)",
+        "persona": "Inflexível, metódico e profundamente institucionalizado. Kaelen não busca justiça moral ou heroísmo, mas sim o cumprimento estrito do Código de Ferro e o preenchimento de suas cotas diárias de patrulha. Ele vê a desordem como uma falha matemática que precisa ser corrigida, seja por multas, detenções ou força física. Trata os cidadãos com uma cortesia fria e puramente burocrática, mas não hesita em aplicar violência implacável se o protocolo assim exigir ou se a autoridade da Legião for questionada.",
+        "appearance": "Um homem de meia-idade com cabelos cortados rente ao couro cabeludo e uma cicatriz linear que cruza sua bochecha esquerda até o queixo. Veste a imponente armadura de placas de ferro escurecido da Legião, marcada pelo símbolo da balança e da engrenagem do Código de Ferro. Carrega uma alabarda pesada, um porrete de ferro na cintura e uma besta pesada nas costas. Seus olhos são cinzentos, frios e vigilantes.",
+        "initial_relationship": 0,
+        "attributes": {
+            "forca": 14,
+            "constituicao": 14,
+            "destreza": 11,
+            "sabedoria": 12,
+            "inteligencia": 10,
+            "carisma": 9
+        },
+        "combat_stats": {
+            "hp": 32.0,
+            "ca": 17.0,
+            "ataques": "Alabarda (+4 para acertar, alcance 3m, 1d10+2 de dano cortante), Porrete de Ferro (+4 para acertar, 1d6+2 de dano de concussão), Besta Pesada (+2 para acertar, 1d10 de dano perfurante)"
+        },
+        "id": "npc_soldados_da_legião_de_ferro"
+    },
+    "npc_velha_maren": {
+        "name": "Corvo",
+        "role": "mercador",
+        "location": "Terras Cinzentas",
+        "persona": "Desconfiado, cansado, fala pouco e cobra caro.",
+        "appearance": "Figura encapuzada de olhos atentos.",
+        "initial_relationship": 1,
+        "attributes": {
+            "str": 10,
+            "dex": 11,
+            "con": 10,
+            "int": 12,
+            "wis": 13,
+            "cha": 11
+        },
+        "combat_stats": {
+            "hp": 12,
+            "ac": 11,
+            "attacks": []
+        },
+        "id": "npc_velha_maren"
+    },
+    "npc_corvo": {
+        "name": "Corvo",
+        "role": "vidente",
+        "location": "Terras Cinzentas",
+        "persona": "Desconfiado, cansado, fala pouco e cobra caro.",
+        "appearance": "Figura encapuzada de olhos atentos.",
+        "initial_relationship": 1,
+        "attributes": {
+            "str": 10,
+            "dex": 11,
+            "con": 10,
+            "int": 12,
+            "wis": 13,
+            "cha": 11
+        },
+        "combat_stats": {
+            "hp": 12,
+            "ac": 11,
+            "attacks": []
+        },
+        "id": "npc_corvo"
+    },
+    "npc_arauto": {
+        "name": "Arauto",
+        "role": "Mensageiro",
+        "location": "Nova Arcádia",
+        "persona": "Arauto é um mensageiro rápido e confiável, conhecido por sua habilidade em entregar mensagens de forma discreta e eficaz. Ele é um homem de poucas palavras, mas sempre cumpre sua palavra.",
+        "appearance": "Arauto é um homem magro e ágil, com cabelos castanhos e olhos azuis. Ele usa uma capa preta e carrega uma bolsa de couro contendo suas mensagens.",
+        "initial_relationship": 5,
+        "attributes": {
+            "cha": 14,
+            "con": 14,
+            "dex": 16,
+            "int": 10,
+            "str": 12,
+            "wis": 12
+        },
+        "combat_stats": {
+            "ac": 12,
+            "attacks": [
+                "faca"
+            ],
+            "hp": 12
+        },
+        "id": "npc_arauto"
+    },
+    "npc_tobias_cinza": {
+        "name": "A Encapuzada",
+        "role": "andarilho",
+        "location": "Terras Cinzentas",
+        "persona": "Desconfiado, cansado, fala pouco e cobra caro.",
+        "appearance": "Figura encapuzada de olhos atentos.",
+        "initial_relationship": 1,
+        "attributes": {
+            "str": 10,
+            "dex": 11,
+            "con": 10,
+            "int": 12,
+            "wis": 13,
+            "cha": 11
+        },
+        "combat_stats": {
+            "hp": 12,
+            "ac": 11,
+            "attacks": []
+        },
+        "id": "npc_tobias_cinza"
+    },
+    "npc_local": {
+        "name": "Guardião da Cidade",
+        "role": "Protetor",
+        "location": "Nova Arcádia",
+        "persona": "Um guardião corajoso e leal, sempre pronto para defender a cidade de qualquer ameaça. É respeitado por todos e tem um forte senso de justiça.",
+        "appearance": "Armado e armadura brilhante, com um escudo com o símbolo da cidade",
+        "initial_relationship": 5,
+        "attributes": {
+            "cha": 15,
+            "con": 14,
+            "dex": 12,
+            "int": 10,
+            "str": 16,
+            "wis": 13
+        },
+        "combat_stats": {
+            "ac": 18,
+            "attacks": [
+                "Espada longa +5"
+            ],
+            "hp": 25
+        },
+        "id": "npc_local"
+    },
+    "npc_sargento_varen": {
+        "name": "Sargento Varen",
+        "role": "Guarda da Legião de Ferro",
+        "location": "Anel Dourado",
+        "persona": "Um homem cruel e corrupto que se deleita com o poder e a riqueza do Anel Dourado, humilhando publicamente aqueles que ele considera inferiores, especialmente os do Anel de Lama",
+        "appearance": "Um homem alto e musculoso, com uma armadura polida e um capacete com um penacho dourado, carregando um escudo e uma espada",
+        "initial_relationship": 2,
+        "attributes": {
+            "cha": 14,
+            "con": 14,
+            "dex": 12,
+            "int": 10,
+            "str": 16,
+            "wis": 8
+        },
+        "combat_stats": {
+            "ac": 18,
+            "attacks": [
+                "espada"
+            ],
+            "hp": 15
+        },
+        "id": "npc_sargento_varen"
+    },
+    "npc_mensageiro_da_guilda_dos_corvos": {
+        "name": "Mensageiro da Guilda dos Corvos",
+        "role": "Mensageiro e Espião da Guilda dos Corvos",
+        "location": "Nova Arcádia (Distrito dos Becos e Telhados)",
+        "persona": "Extremamente profissional, silencioso e pragmático. Ele não busca glória ou conversa; comunica-se apenas através de sussurros roucos e gestos precisos. Possui uma lealdade cega à Guilda dos Corvos e encara sua função de entrega como um dever quase religioso. Evita confrontos diretos, preferindo a fuga rápida pelas sombras e tubulações de vapor.",
+        "appearance": "Uma silhueta esguia e extremamente ágil. Veste um manto escuro e desgastado, cujas bordas são adornadas com penas negras de corvo que parecem absorver a pouca luz do ambiente. O rosto é completamente oculto por uma máscara de couro tratado que imita as feições de uma ave de rapina. Sob o manto, usa armadura de couro flexível enegrecido e bandoleiras com adagas arremessáveis. Cheira levemente a fuligem e névoa fria.",
+        "initial_relationship": 0,
+        "attributes": {
+            "intelligence": 12,
+            "wisdom": 14,
+            "dexterity": 17,
+            "charisma": 10,
+            "strength": 10,
+            "constitution": 12
+        },
+        "combat_stats": {
+            "HP": 26.0,
+            "attacks": [
+                {
+                    "damage": "1d4 + 3 perfurante",
+                    "type": "Distância (6/18m)",
+                    "name": "Adaga de Arremesso"
+                },
+                {
+                    "damage": "1d4 + 3 perfurante + 2d6 (Ataque Furtivo)",
+                    "type": "Corpo a Corpo",
+                    "name": "Adaga Curva"
+                }
+            ],
+            "AC": 15.0
+        },
+        "id": "npc_mensageiro_da_guilda_dos_corvos"
+    },
+    "npc_mercador": {
+        "name": "Mercador",
+        "role": "Mercador",
+        "location": "Nova Arcádia",
+        "persona": "Um mercador ambicioso e astuto, sempre em busca de oportunidades de negócios lucrativas. Ele é conhecido por sua habilidade de persuasão e capacidade de fechar negócios difíceis.",
+        "appearance": "Um homem de meia-idade, com cabelos castanhos e bigode bem cuidado. Ele veste roupas elegantes e caras, e sempre carries um relógio de bolso e uma carteira cheia de moedas.",
+        "initial_relationship": 5,
+        "attributes": {
+            "cha": 16,
+            "con": 10,
+            "dex": 14,
+            "int": 12,
+            "str": 12,
+            "wis": 10
+        },
+        "combat_stats": {
+            "ac": 12,
+            "attacks": [
+                "ataque com adaga"
+            ],
+            "hp": 12
+        },
+        "id": "npc_mercador"
+    },
+    "npc_sargento_durnik": {
+        "name": "Sargento Durnik",
+        "role": "Sargento da Guarda do Portão Leste e Batedor Veterano",
+        "location": "Guarita do Portão Leste, Nova Arcádia",
+        "persona": "Veterano calejado, pragmático e cansado da burocracia do Conselho de Nova Arcádia. Ele é direto, rústico e tem um profundo respeito (e temor prático) pelos perigos do Pântano da Melancolia. Apesar de sua atitude ríspida, resmungona e de pouca paciência para salamaleques, ele se importa genuinamente com a vida de seus batedores e odeia enviar recrutas para a morte.",
+        "appearance": "Um homem de meia-idade com cicatrizes profundas no rosto, cabelos grisalhos cortados rente e um olhar cansado, mas extremamente atento. Veste uma armadura de couro batido reforçada com placas de ferro da Legião, gasta pelo uso e manchada pela umidade do pântano. Suas mãos são calejadas e ele frequentemente cospe no chão para enfatizar seu desgosto.",
+        "initial_relationship": 55,
+        "attributes": {
+            "int": 10,
+            "wis": 14,
+            "dex": 12,
+            "cha": 9,
+            "str": 13,
+            "con": 14
+        },
+        "combat_stats": {
+            "attacks": [
+                "Espada Curta (+4 para acertar, 1d6+2 de dano cortante)",
+                "Besta Leve (+3 para acertar, 1d8+1 de dano perfurante)"
+            ],
+            "ac": 15.0,
+            "hp": 45.0
+        },
+        "id": "npc_sargento_durnik"
+    },
+    "npc_sargento_thorne": {
+        "name": "Sargento Thorne",
+        "role": "Sargento aposentado da Legião de Ferro",
+        "location": "Nova Arcádia",
+        "persona": "Um homem disciplinado e leal, com um passado marcado por serviço e sacrifício. Sargento Thorne é um líder nato, com uma presença autoritária e uma mente estratégica. Ele é um homem de poucas palavras, mas quando fala, sua voz é como um trovão, ecoando autoridade e experiência.",
+        "appearance": "Um homem alto e imponente, com cabelos grisalhos cortados rente à cabeça e olhos azuis penetrantes. Ele veste um uniforme da Legião de Ferro, com medalhas e condecorações que testemunham seu serviço e bravura.",
+        "initial_relationship": 5,
+        "attributes": {
+            "cha": 15,
+            "con": 14,
+            "dex": 12,
+            "int": 10,
+            "str": 16,
+            "wis": 13
+        },
+        "combat_stats": {
+            "ac": 18,
+            "attacks": [
+                "Espada longa +5"
+            ],
+            "hp": 150
+        },
+        "id": "npc_sargento_thorne"
+    },
+    "npc_trabalhadores_dos_martelos_partidos": {
+        "name": "Trabalhadores dos Martelos Partidos",
+        "role": "Membros da Resistência Operária / Célula de Fuga",
+        "location": "Rua das Chaminés, Anel de Lama",
+        "persona": "Desesperados, tensos e movidos por uma urgência febril. Eles são intensamente leais a Bors Martelo-Partido e odeiam a Legião de Ferro com um rancor profundo acumulado por anos de abuso. Embora desconfiados por natureza devido à constante ameaça de traição, a necessidade extrema os faz agarrar-se a qualquer fio de esperança — o que os torna propensos a erros de julgamento sob pressão, como confundir um estranho com o contato esperado.",
+        "appearance": "Três figuras de fisionomia abatida e cansada, vestindo roupas rústicas impregnadas de fuligem, cinzas e lama. Suas mãos são calejadas, com unhas enegrecidas pelo trabalho bruto nas fundições. Sob os punhos dos casacos surrados, escondem fitas vermelhas amarradas. O líder do trio tem olhos febris, pele pálida sob a sujeira e uma tosse seca e persistente (sintoma da Tosse de Ferro).",
+        "initial_relationship": 50,
+        "attributes": {
+            "int": 9,
+            "wis": 10,
+            "cha": 11,
+            "dex": 11,
+            "str": 12,
+            "con": 13
+        },
+        "combat_stats": {
+            "HP": 15.0,
+            "Attacks": "Ferramentas Improvisadas (Picaretas/Martelos): +3 para acertar, alcance 1.5m, dano 1d6+1 perfurante/concussão.",
+            "AC": 11.0
+        },
+        "id": "npc_trabalhadores_dos_martelos_partidos"
+    },
+    "npc_batedor_da_legião_de_ferro": {
+        "name": "Batedor da Legião de Ferro",
+        "role": "Guarda",
+        "location": "Nova Arcádia, Anel de Ferro",
+        "persona": "Desconfiado e vigilante, sempre pronto a anotar detalhes sobre os transeuntes e observar qualquer comportamento suspeito.",
+        "appearance": "Armado e vestido com armadura escura, com um pergaminho e uma caneta para anotar informações.",
+        "initial_relationship": 3,
+        "attributes": {
+            "cha": 8,
+            "con": 16,
+            "dex": 12,
+            "int": 10,
+            "str": 14,
+            "wis": 13
+        },
+        "combat_stats": {
+            "ac": 18,
+            "attacks": [
+                "Espada curta"
+            ],
+            "hp": 15
+        },
+        "id": "npc_batedor_da_legião_de_ferro"
+    },
+    "npc_comerciantes_osshari_de_brekmar": {
+        "name": "Vaelen, Líder dos Osshari",
+        "role": "Líder de Caravana e Mercador de Brekmar",
+        "location": "Borda do Mar de Vidro, Deserto de Zhur",
+        "persona": "Pragmático, desconfiado mas aberto a negócios, sobrevivente astuto. Ele valoriza a água, informações sobre as Tempestades de Navalha e moedas de troca úteis. Odeia desperdício e imprudência, sabendo que um único erro no Mar de Vidro significa a morte.",
+        "appearance": "Vestido com mantos pesados de couro curtido e tecidos grossos para se proteger dos estilhaços de vidro trazidos pelo vento. Usa óculos de proteção com lentes de obsidiana escura e tem a pele castigada pelo sol e pelo vento seco do deserto. Suas mãos são calejadas e cheias de cicatrizes finas de cortes de vidro.",
+        "initial_relationship": 50,
+        "attributes": {
+            "int": 12,
+            "cha": 12,
+            "str": 12,
+            "dex": 11,
+            "wis": 13,
+            "con": 14
+        },
+        "combat_stats": {
+            "attacks": "Cimitarra de Vidro (+4 para atingir, 1d6+2 de dano cortante), Besta Leve (+3 para atingir, 1d8 de dano perfurante)",
+            "ac": 13.0,
+            "hp": 22.0
+        },
+        "id": "npc_comerciantes_osshari_de_brekmar"
+    },
+    "npc_druida-renegado": {
+        "name": "Garrick, o Sussurro da Turfa",
+        "role": "Druida-renegado e devoto da expansão do pântano",
+        "location": "Pântano da Melancolia",
+        "persona": "Garrick é melancólico, errático e profundamente perturbado pela comunhão constante com o pântano. Ele fala em sussurros rápidos, interrompidos por risadas nervosas ou tosses secas. Ele vê o Pântano da Melancolia não como uma praga a ser contida, mas como um deus dormente que merece crescer e consumir o mundo de pedra e metal. Ele odeia o Ciclo Cinzento com todas as suas forças por tentarem 'queimar o luto' da terra, acreditando que a dor do pântano deve ser sentida por todos. Embora pareça estar alertando o grupo por benevolência, seu verdadeiro desejo é semear o pânico e ver a devastação acontecer.",
+        "appearance": "Vestes outrora cinzentas do Ciclo Cinzento, agora rasgadas, apodrecidas e cobertas por uma camada espessa de lodo e turfa preta. Ramos de salgueiro-chorão e pequenos ossos de aves do pântano estão trançados em seus cabelos longos e desgrenhados. Seus olhos são opacos, mas brilham com uma luminescência febril quando a névoa se agita. Ele carrega um cajado feito de uma raiz retorcida de árvore-do-tumor, que verte uma seiva escura e viscosa.",
+        "initial_relationship": -2,
+        "attributes": {
+            "intelligence": 11,
+            "dexterity": 12,
+            "wisdom": 16,
+            "charisma": 8,
+            "strength": 10,
+            "constitution": 14
+        },
+        "combat_stats": {
+            "HP": 45.0,
+            "attacks": "Cajado de Turfa (+4 para acertar, dano 1d6+1 concussão mais 1d4 necrótico), Esporos de Melancolia (Alvo a até 9m deve passar num salvamento de Sabedoria CD 13 ou ficará Envenenado e sob efeito de torpor por 1 minuto)",
+            "AC": 13.0
+        },
+        "id": "npc_druida-renegado"
+    },
+    "npc_vehkr_punho-de-gelo": {
+        "name": "Vehkr Punho-de-gelo",
+        "role": "Jarl de Skallgard e Líder dos Clãs de Combate",
+        "location": "Salão do Jarl, Skallgard",
+        "persona": "Implacável, tradicionalista e pragmático. Vehkr valoriza a força física, a honra em combate e a sobrevivência nas terras gélidas acima de tudo. Ele vê a tecnologia de Astrin como um mal necessário para a sobrevivência de Skallgard, mas desconfia de suas intenções e teme que as máquinas deixem seu povo fraco. Ele é direto, impaciente com rodeios políticos, mas possui um profundo senso de dever e proteção para com seu povo.",
+        "appearance": "Um guerreiro Nascido do Gelo de porte titânico, largo como uma porta, com mãos imensas capazes de envolver o crânio de um homem. Seu rosto exibe cicatrizes profundas de garras e ele veste uma pele de Urso-Titã que ele mesmo abateu em seu rito de passagem. Seu olhar é frio e penetrante como o inverno de Skallgard.",
+        "initial_relationship": 0,
+        "attributes": {
+            "int": 10,
+            "dex": 12,
+            "str": 18,
+            "cha": 15,
+            "wis": 14,
+            "con": 17
+        },
+        "combat_stats": {
+            "attacks": "Machado de Batalha Titânico (+8 para acertar, dano 2d12+5 cortante) ou Punho de Gelo (+8 para acertar, dano 1d8+5 de concussão + 1d6 de frio)",
+            "ac": 16.0,
+            "hp": 115.0
+        },
+        "id": "npc_vehkr_punho-de-gelo"
+    },
+    "npc_astrin_veia-fina": {
+        "name": "Astrin Veia-fina",
+        "role": "Líder dos Clãs Tecnológicos, Mestra da Fornalha de Vorr e Conselheira de Skallgard",
+        "location": "Salão do Jarl, Skallgard",
+        "persona": "Extremamente inteligente, fria e pragmática. Astrin calcula tudo à sua volta, tratando pessoas e situações como equações de tolerância e eficiência. Ela carrega o fardo das descobertas sombrias da Câmara do Sinal e protege ferozmente o conhecimento de seu clã, usando a informação como seu recurso mais valioso. Não se move por emoções ou honra vazia, apenas por lógica, sobrevivência e a manutenção do poder tecnológico de Skallgard.",
+        "appearance": "Uma Nascida do Gelo de constituição menor e cabeça ligeiramente desproporcional. Seus dedos são longos, finos e marcados por cicatrizes de queimaduras de ligas metálicas e graxa. Usa óculos de lentes múltiplas ajustados na testa e veste um avental de couro reforçado com ferramentas presas ao cinto. Seus olhos são afiados e calculistas, avaliando constantemente tudo ao redor como se estivesse medindo engrenagens e tolerâncias.",
+        "initial_relationship": 50,
+        "attributes": {
+            "intelligence": 18,
+            "dexterity": 14,
+            "charisma": 10,
+            "wisdom": 14,
+            "strength": 8,
+            "constitution": 10
+        },
+        "combat_stats": {
+            "HP": 42.0,
+            "attacks": "Pistola Pneumática de Precisão (+5 para acertar, alcance 18m, dano 1d8+2 perfurante), Punhal de Liga Superaquecida (+4 para acertar, dano 1d4+2 cortante + 1d4 de fogo)",
+            "AC": 13.0
+        },
+        "id": "npc_astrin_veia-fina"
+    },
+    "npc_afogado-antes": {
+        "name": "Afogado-Antes",
+        "role": "Predador Primordial / Abominação Ancestral",
+        "location": "Profundezas do Pântano",
+        "persona": "Uma força da natureza primordial, desprovida de razão ou moralidade humana. O Afogado-Antes existe em um estado de fome eterna e confusão temporal. Ele não compreende o presente, enxergando qualquer criatura viva apenas como energia vital a ser consumida para saciar o vazio de eras de aprisionamento no fundo do lodo. É implacável, territorial e age puramente por instinto predatório.",
+        "appearance": "Uma silhueta colossal e alongada que defy a anatomia humana. Sua pele é como couro petrificado, negra e coberta por uma espessa camada de lodo milenar e algas fósseis. Não possui um rosto reconhecível: em seu lugar, há uma bocarra circular repleta de fileiras de dentes de pedra e múltiplos olhos leitosos que brilham com uma pálida luz azulada do Éter. Membros vestigiais e garras disformes projetam-se de seu corpo serpentino, agitando a água lamacenta.",
+        "initial_relationship": -100,
+        "attributes": {
+            "charisma": 4,
+            "dexterity": 12,
+            "intelligence": 5,
+            "wisdom": 14,
+            "strength": 18,
+            "constitution": 20
+        },
+        "combat_stats": {
+            "attacks": [
+                {
+                    "damage": "2d8 + 4 perfurante + 1d6 necrótico",
+                    "description": "Mordida Abissal: A criatura projeta sua bocarra circular contra o alvo.",
+                    "name": "Mordida Abissal"
+                },
+                {
+                    "name": "Cauda Esmagadora",
+                    "description": "Cauda Esmagadora: Um golpe violento com sua cauda colossal sob a água, tentando derrubar o oponente.",
+                    "damage": "1d12 + 4 esmagamento"
+                }
+            ],
+            "defense": "CA 16 (Couro petrificado e lodo denso)",
+            "hp": 115.0
+        },
+        "id": "npc_afogado-antes"
+    },
+    "npc_durgrim": {
+        "name": "Durgrim",
+        "role": "Ex-mineiro e fonte de lore",
+        "location": "Nova Arcádia, uma taverna",
+        "persona": "Um anão velho e rude, com feições rústicas e mãos calejadas, que claramente já viu dias melhores. Ele é desconfiado e sombrio, com uma voz que parece cascalho sendo triturado.",
+        "appearance": "Um anão velho com barba grisalha e olhos cansados, vestindo roupas simples e gastas, com um chapéu de couro sobre a cabeça. Ele usa um cinto de couro com uma faca presa ao lado.",
+        "initial_relationship": 3,
+        "attributes": {
+            "cha": 6,
+            "con": 12,
+            "dex": 10,
+            "int": 8,
+            "str": 14,
+            "wis": 16
+        },
+        "combat_stats": {
+            "ac": 12,
+            "attacks": [
+                "Facada"
+            ],
+            "hp": 15
+        },
+        "id": "npc_durgrim"
+    },
+    "npc_mensageiro_goblin": {
+        "name": "Snik, o Mensageiro Goblin",
+        "role": "Mensageiro e Sobrevivente das Profundezas",
+        "location": "Nova Arcádia, nos limites da área patrulhada pela Legião de Ferro",
+        "persona": "Snik é movido pelo puro instinto de sobrevivência e pelo pavor absoluto do que testemunhou nas profundezas das Montanhas Afiadas. Ele é frenético, paranoico e está traumatizado pela possessão que presenciou e pelas garras que quase o mataram. Ele não confia em humanos ou anões por instinto, mas o medo de \"o que está embaixo\" o forçou a entregar a mensagem desesperadamente a qualquer um que possa impedir o cataclismo iminente. Ele se comunica mais por gestos desesperados e sussurros roucos do que por frases completas.",
+        "appearance": "Um goblin pequeno e esguio, de pele verde-oliva obscurecida por uma espessa camada de fuligem e carvão. Ele veste trapos rasgados e úmidos que mal o protegem do frio cortante de Nova Arcádia. O que mais chama a atenção são as terríveis marcas de garras profundas e ainda sangrentas que rasgam suas costas de cima a baixo. Seus olhos amarelos estão arregalados de puro terror e exaustão, e ele treme incontrolavelmente, mal conseguindo se manter de pé antes de desabar.",
+        "initial_relationship": 10,
+        "attributes": {
+            "intelligence": 10,
+            "wisdom": 12,
+            "charisma": 7,
+            "dexterity": 14,
+            "strength": 8,
+            "constitution": 11
+        },
+        "combat_stats": {
+            "attacks": "Adaga Enferrujada (+4 para atingir, dano 1d4+2 perfurante - atualmente incapaz de lutar devido à exaustão grave)",
+            "ac": 12.0,
+            "hp": 3.0
+        },
+        "id": "npc_mensageiro_goblin"
+    },
+    "npc_mensageiro_da_resistência": {
+        "name": "Kaelen",
+        "role": "Mensageiro da Resistência",
+        "location": "Distritos Operários, Nova Arcádia",
+        "persona": "Kaelen é um jovem operário consumido pelo medo, mas guiado por uma lealdade feroz a Bors Martelo-partido. Ele é paranoico, fala em sussurros rápidos e está constantemente atento a qualquer som de botas de ferro se aproximando. Ele acredita piamente na causa da Resistência, mas o terror de ser capturado pela Legião de Ferro o deixa à beira de um colapso nervoso.",
+        "appearance": "Um jovem magro de dezenove anos, com o rosto sujo de fuligem e cinzas das chaminés dos distritos operários. Seus olhos estão arregalados de pânico, e ele veste roupas de trabalho surradas e remendadas que oferecem pouca proteção contra o frio cortante da manhã. Suas mãos tremem visivelmente, tanto pelo frio quanto pelo terror.",
+        "initial_relationship": 60,
+        "attributes": {
+            "charisma": 12,
+            "dexterity": 14,
+            "intelligence": 10,
+            "wisdom": 13,
+            "strength": 10,
+            "constitution": 11
+        },
+        "combat_stats": {
+            "HP": 9.0,
+            "attacks": [
+                {
+                    "damage": "1d4+2 perfurante",
+                    "bonus": "+4",
+                    "name": "Adaga de Trabalho"
+                }
+            ],
+            "AC": 12.0
+        },
+        "id": "npc_mensageiro_da_resistência"
+    },
+    "npc_a_encapuzada": {
+        "name": "Tobias Cinza",
+        "role": "guarda",
+        "location": "Terras Cinzentas",
+        "persona": "Desconfiado, cansado, fala pouco e cobra caro.",
+        "appearance": "Figura encapuzada de olhos atentos.",
+        "initial_relationship": 1,
+        "attributes": {
+            "str": 10,
+            "dex": 11,
+            "con": 10,
+            "int": 12,
+            "wis": 13,
+            "cha": 11
+        },
+        "combat_stats": {
+            "hp": 12,
+            "ac": 11,
+            "attacks": []
+        },
+        "id": "npc_a_encapuzada"
     }
 }

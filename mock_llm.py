@@ -10,6 +10,7 @@ fabrica valores por tipo; "overrides" por modelo injetam conteúdo temático
 (narrativa, roteamento, fichas) onde a qualidade importa.
 """
 import random
+import re
 import typing
 from enum import Enum
 
@@ -192,9 +193,20 @@ def _story_update(model, messages):
                    "description": "Um estranho pediu ajuda para achar uma relíquia.",
                    "origin_name": "Um estranho encapuzado", "origin_entity_id": "",
                    "location_id": "", "reward_hint": "algumas moedas"}]
+    # Fase 5: se o prompt lista quests ATIVAS (bloco "- id=<id> · ..."), ~50% das
+    # vezes propõe a CONCLUSÃO de uma delas. Sem isto o harness offline nunca
+    # fecha quest (mock só criava, nunca completava — achado do playtest).
+    proposed_events = []
+    todo_texto = " ".join(str(getattr(m, "content", "") or "") for m in messages)
+    quest_ids = re.findall(r"- id=(\S+) ·", todo_texto)
+    if quest_ids and random.random() < 0.5:
+        qid = random.choice(quest_ids)
+        proposed_events = [{"type": "quest_completed", "target_id": qid,
+                            "actor_id": "player", "payload": {"quest_id": qid}}]
     # Avança o beat ~30% das vezes para a UI de objetivos progredir no modo simulado.
     return _fill(model, {"narrative": narrative, "introduced_npcs": [],
                          "faction_impacts": impacts, "proposed_quests": quests,
+                         "proposed_events": proposed_events,
                          "beat_completed": random.random() < 0.30})
 
 

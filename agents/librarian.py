@@ -45,7 +45,7 @@ def find_existing_entity(user_query: str, entity_type: str, existing_ids: List[s
     # 4. Match Semântico com IA — só entre os candidatos próximos (prompt enxuto).
     print(f"🔍 [LIBRARIAN] Verificando duplicatas para: '{user_query}' em {entity_type}...")
 
-    llm = get_llm(temperature=0.0, tier=ModelTier.FAST)
+    llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
 
     ids_str = ", ".join(candidates)
 

@@ -3505,7 +3505,7 @@
       "montanhas_afiadas",
       "primordial_anteriores_ao_reino_anao"
     ],
-    "visibility": "public",
+    "visibility": "hidden",
     "components": {}
   },
   "mon_espelho_de_pedra": {

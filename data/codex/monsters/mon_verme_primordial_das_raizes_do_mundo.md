@@ -6,7 +6,7 @@ aliases: []
 tags:
 - montanhas_afiadas
 - primordial_anteriores_ao_reino_anao
-visibility: public
+visibility: hidden
 related_entities:
 - montanhas_afiadas
 ---

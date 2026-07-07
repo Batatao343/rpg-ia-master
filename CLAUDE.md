@@ -22,7 +22,21 @@ uv run uvicorn api:app --port 8000        # API REST + frontend web (http://loca
 uv run python rag.py                      # re-indexar lore (data/codex/) + regras (data/rules.txt)
 uv run pytest                             # suíte offline (força MockLLM, não precisa de chave)
 bash scripts/smoke_api.sh [porta]         # smoke da API (health, /data/map, /game/new, /game/action)
+uv run python -m playtest run --all --turns 50   # Fase 5: harness — 10 perfis (MockLLM, offline)
+uv run python -m playtest report <run_id>        # relatório agregado (per-perfil/violações/custo)
 ```
+
+**Playtest agêntico (Fase 5):** `playtest/` roda campanhas longas sobre o MESMO
+grafo (`app.invoke`) com 10 perfis determinísticos (`runner.py`/`profiles.py`);
+invariantes de estado por turno (`invariants.py` — HP/ouro/unique/NPC morto/
+fação/relógio/segredo); telemetria JSONL+summary por campanha (`telemetry.py`) +
+relatório Markdown (`report.py`). Saves isolados em `saves_playtest/`, runs em
+`playtest_runs/` (ambos gitignored). `--real` (opt-in, consciente de custo) mede
+provider/modelo/custo via `set_llm_telemetry_hook`, com tetos `--max-requests`/
+`--max-cost`. **Suíte de playtest REAL:** `uv run pytest -m llm_playtest -v -s`
+— cada um dos 10 perfis joga uma campanha curta no LLM de verdade (ROUTES; Groq
+free basta) e asserta zero erro + zero violação `error` + `mock=False`. FORA do
+`pytest` default (`addopts -m "not llm_playtest"`), como os contratos da Fase 11.
 
 **Skills do projeto:** `/qa` = pytest token-lean durante iteração (só falhas);
 `/wrap-up` = ritual de fim de tarefa (suíte completa + docs + commit).
@@ -67,23 +81,44 @@ loot_agent            → archivist → END
 
 ---
 
-## LLM — dois tiers
+## LLM — três tiers + roteamento multi-provider
 
-`llm_setup.py` expõe `get_llm(temperature, tier)`. Sempre usar essa função — nunca instanciar Gemini direto.
+`llm_setup.py` expõe `get_llm(temperature, tier)`. Sempre usar essa função — nunca instanciar provider direto.
+Cada tier é uma **lista ordenada de candidatos `(provider, modelo)`** (`ROUTES`): o `get_llm`
+devolve um `RoutedLLM` que tenta o preferido e cai pro próximo em qualquer falha
+(429/500/timeout/dep faltando/sem key). Esgotou todos → `AIMessage` de erro (NUNCA levanta) —
+o guard de `FallbackLLM` (`isinstance`/`try`) segue **obrigatório**.
 
-| Tier | Modelo | Uso |
+| Tier | Uso | Candidatos default `ROUTES` (ordem = preferência → fallback) |
 |---|---|---|
-| `ModelTier.FAST` | `gemini-flash-latest` | router, storyteller, combat (parse/spawn), ruler, librarian |
-| `ModelTier.SMART` | `gemini-pro-latest` | archivist, campaign_manager, loot, npc_actor, character_creator, narração de combate |
+| `ModelTier.CLASSIFY` | router, combat (parse/spawn), loot (TradeIntent), librarian — classificação/parse temp 0 | Groq `openai/gpt-oss-20b` → Gemini flash-lite |
+| `ModelTier.FAST` | storyteller, combat (narração), npc_actor, loot (narração), world_simulator, bestiary | MiniMax → Qwen → **Groq llama-3.3-70b** → Gemini flash |
+| `ModelTier.SMART` | archivist, campaign_manager, character_creator | DeepSeek → **Groq gpt-oss-120b** → Anthropic → Gemini pro |
 
-Troca de modelo = só mudar `llm_setup.py`. Sem tocar nos agentes.
+> **Structured output entre providers (achados do smoke real 2026-07-06):**
+> - **Groq usa strict json_schema** e rejeita schema com dict aberto
+>   (`StoryUpdate.payload`). Solução: `RoutedLLM._apply` injeta
+>   **`method="function_calling"`** (tool calling) p/ todo provider OpenAI-compat
+>   (`_OPENAI_COMPAT_PROVIDERS`) — com isso o Groq parseia QUALQUER schema. Logo há
+>   um candidato **Groq grátis em todos os tiers**: o jogo roda 100% no free tier
+>   do Groq (`llama-3.3-70b`/`gpt-oss-20b`/`gpt-oss-120b`) sem provider pago.
+> - **Anthropic (Claude 5):** não aceita `temperature` (omitido no
+>   `_build_anthropic`) nem **prefill** (falha se o prompt termina em `AIMessage`,
+>   ex.: archivist → cai no fallback). OK em nós que terminam com humano.
 
-`get_llm()` nunca levanta: sem chave → `MockLLM`; falha do provider → `FallbackLLM`.
-`max_retries=0` (fail-fast): o erro comum é `429` de quota (não transitório) e o retry com
-backoff travava o turno por minutos. Cada nó trata a exceção e cai no fallback.
+Trocar modelo/provider = só mudar `ROUTES` (ou `RPG_ROUTES=<json>` sem deploy). Sem tocar nos agentes.
 
-Chave em `.env` (`GOOGLE_API_KEY`, free tier = **20 req/dia por modelo** — ver `ESTADO_ATUAL.md`).
-Sem ela o jogo roda no MockLLM.
+**Overrides (`llm_setup.get_llm`):** `RPG_FORCE_MOCK=1` → MockLLM (suíte); `LLM_PROVIDER=gemini|
+ollama|openai` força TODOS os tiers a um provider único (ignora `ROUTES` — use p/ jogo só-Gemini
+ou 100% local); sem key nenhuma → MockLLM (zero-config) ou `FallbackLLM` (`RPG_NO_MOCK`);
+default → `ROUTES`. Telemetria: `set_llm_telemetry_hook(fn)` recebe `(provider, model, tier,
+latency_ms, fell_back)` por invoke (consumido pela Fase 5.3). Cada provider lê sua env key
+(`GROQ_API_KEY`/`QWEN_API_KEY`/`MINIMAX_API_KEY`/`DEEPSEEK_API_KEY`/`ANTHROPIC_API_KEY`/
+`GOOGLE_API_KEY`; GLM/Kimi seguem no registro p/ uso via `RPG_ROUTES` — ver `.env.example`).
+
+`max_retries=0` (fail-fast) por candidato: `429` de quota não é transitório; o fallback é trocar
+de PROVIDER, não fazer retry no mesmo. Anthropic exige `uv sync --extra anthropic` (ausência da
+dep = candidato pulado). Gemini free tier = **20 req/dia por modelo** — ver `ESTADO_ATUAL.md`.
 
 ---
 
@@ -236,7 +271,9 @@ Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `in-progress`; 2.6 (structure
 2026-07-06: fase 10 fatia local (hardening: `save_path` UUID, `schema_version`+
 migrations, CORS/rate-limit/log) · fase 11 (contratos `-m llm_contract`, 9 verdes
 no Gemini real) · mapa (interiores + `travel_times`) · NPCs 3 camadas
-(`services/npc_layers.py` + `data/traits.json`) — todas `done`. Próxima: Fase 5.
+(`services/npc_layers.py` + `data/traits.json`) — todas `done`. Roteamento
+multi-provider `done`. **Fase 5 (5.1 harness + 5.2 invariantes + 5.3 telemetria)
+`done`** — `playtest/` (699 testes offline + smoke real). Próxima: Fases 8+.
 
 ---
 

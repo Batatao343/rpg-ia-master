@@ -30,4 +30,4 @@ Rachaduras atuais: Korvus, um legionário que desertou ao receber ordem de execu
 
 O que a Legião sabe sobre Valerius: Quase nada. A maioria nunca o viu. Obedece ao Código porque funciona — e porque desobedecer tem consequências que o Código especifica.
 
-Ponto fraco: A Legião é leal ao Código, não a Valerius. Provar que Valerius viola o próprio Código (ele faz — o pacto com Daruun, as visitas a Malagor) torna a lealdade questão aberta. O Testamento Real no barril de Grum e o Diário de Nehla-equivalentes podem ser a alavanca.
+Ponto fraco: A Legião é leal ao Código, não a Valerius. Provar que Valerius viola o próprio Código tornaria a lealdade questão aberta — mas essa prova está enterrada fundo, e ele cuida para que continue assim. O Testamento Real no barril de Grum e o Diário de Nehla-equivalentes podem ser a alavanca.

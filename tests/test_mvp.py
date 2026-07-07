@@ -105,6 +105,28 @@ def test_router_ends_on_ai_last_message():
     assert "next" in res
 
 
+def test_router_none_normaliza_para_storyteller(monkeypatch):
+    """O LLM real classifica input sem intenção (lixo/injeção do troll) como
+    RouteType.NONE; o router NÃO pode devolver next='none' — não é nó do grafo
+    (KeyError('none') no mapping condicional). Achado do playtest real (Fase 5).
+    MockLLM nunca escolhe NONE, então só o LLM real expunha o bug."""
+    import agents.router as router_mod
+    from agents.router import RouterDecision, RouteType
+
+    class _FakeRouterLLM:
+        def with_structured_output(self, *_a, **_k):
+            return self
+
+        def invoke(self, _msgs):
+            return RouterDecision(route=RouteType.NONE, loot_context=None,
+                                  target=None, reasoning="sem intenção", confidence=0.1)
+
+    monkeypatch.setattr(router_mod, "get_llm", lambda *a, **k: _FakeRouterLLM())
+    res = dm_router_node(_base_state([HumanMessage(content="'; DROP TABLE players; --")]))
+    assert res["next"] == "storyteller"
+    assert res["next"] != "none"
+
+
 # --------------------------------------------------------------------------
 # Motor / Fallback
 # --------------------------------------------------------------------------

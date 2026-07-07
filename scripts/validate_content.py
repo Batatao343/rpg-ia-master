@@ -21,7 +21,12 @@ _ORDEM = ("frontmatter", "ids", "references", "aliases", "visibility", "override
 
 
 def main(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> int:
-    findings = validate_all(codex_dir, graph_dir)
+    # Overrides ficam AO LADO do codex (`<pai>/codex_overrides.yaml`) — assim
+    # validar um codex arbitrário (ex.: fixture de teste) não pega o overrides
+    # real do repo (id de override viraria "órfão" falso).
+    overrides_path = os.path.join(os.path.dirname(os.path.abspath(codex_dir)),
+                                  "codex_overrides.yaml")
+    findings = validate_all(codex_dir, graph_dir, overrides_path=overrides_path)
     por_validador: dict[str, list] = {}
     for f in findings:
         por_validador.setdefault(f.validator, []).append(f)

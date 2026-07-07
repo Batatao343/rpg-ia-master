@@ -9,6 +9,10 @@ __pycache__/
 saves/
 data/saves_memory/
 
+# Fase 5: harness de playtest — saves isolados + telemetria/relatórios de run
+saves_playtest/
+playtest_runs/
+
 # Caches gerados em runtime
 data/custom_artifacts.json
 

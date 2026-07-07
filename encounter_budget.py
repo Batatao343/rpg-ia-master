@@ -20,7 +20,19 @@ def tier_cost(enemy: Dict) -> int:
 
 def encounter_budget(player_level: int, danger: int, allies_count: int = 0) -> int:
     d = max(1, min(4, int(danger or 1)))
-    return BASE_BY_DANGER[d] + max(1, int(player_level or 1)) + 2 * max(0, int(allies_count or 0))
+    lvl = max(1, int(player_level or 1))
+    allies = 2 * max(0, int(allies_count or 0))
+    raw = BASE_BY_DANGER[d] + lvl + allies
+    # Teto de sobrevivência (achado do playtest da Fase 5): a base de perigo era
+    # um piso duro que IGNORAVA o sub-nível — nível-1 em danger-4 pegava budget 11
+    # (≈2 elites) = sentença de morte por burst, contra 1 minion no perigo
+    # apropriado. Viajar sub-nivelado ficava mais letal que atacar tudo no seu
+    # nível. O teto amarra a dificuldade MÁXIMA de um encontro aleatório/forçado
+    # ao nível do herói: perigo alto continua o mais duro que ele enfrenta, mas
+    # deixa de ser one-shot. Bosses IGNORAM o budget (clamp_encounter nunca corta
+    # boss), então chefes de história/encontros roteirizados não são afetados.
+    cap = 5 + 3 * lvl + allies
+    return min(raw, cap)
 
 
 def clamp_encounter(enemies: List[Dict], budget: int) -> Tuple[List[Dict], List[str]]:

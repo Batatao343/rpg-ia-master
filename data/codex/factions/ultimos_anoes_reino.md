@@ -24,4 +24,4 @@ Figura central: Durgrim Último-Martelo, testemunha viva da queda, obcecado em e
 
 O que querem: Recuperar a documentação Anã do que foi escavado e despertado — não tesouro, mas verdade. Precisam de aventureiros que desçam onde eles não podem mais.
 
-Conhecimento: A verdade sobre o Rei Subterrâneo, o que os Anões despertaram, e por que o Rei teme o que está abaixo (possivelmente o Verme-Primordial das Raízes do Mundo). Os Anões-Eco (mortos que não partiram) ainda "trabalham" no Reino.
+Conhecimento: A verdade sobre o Rei Subterrâneo e o que os Anões despertaram. Durgrim suspeita que o próprio Rei teme algo que dorme mais fundo — abaixo até dele — mas o que exatamente há lá embaixo nem os Registros Perdidos dizem. Os Anões-Eco (mortos que não partiram) ainda "trabalham" no Reino.

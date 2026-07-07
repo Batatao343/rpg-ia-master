@@ -97,7 +97,7 @@ def _instance_from_template(template: Dict, i: int) -> Dict:
 # --- SPAWN (mantém integração com bestiário/cache) ---
 def _spawn_enemies_integrated(messages: List, target_hint: str, state: Optional[Dict] = None):
     print(f"⚡ [COMBAT] Escaneando cena por inimigos. Dica: '{target_hint}'...")
-    llm = get_llm(temperature=0.0, tier=ModelTier.FAST)
+    llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
     sys_prompt = f"""
     Analise a narrativa recente. O combate começou.
     Identifique QUAIS inimigos estão presentes e QUANTOS.
@@ -231,7 +231,7 @@ def _parse_combat_action(player: Dict, enemies: List[Dict], intent: str) -> Dict
     - target = nome de um inimigo presente (ou vazio para o primeiro).
     """)
     try:
-        llm = get_llm(temperature=0.0, tier=ModelTier.FAST)
+        llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
         res = llm.with_structured_output(CombatAction).invoke([sys, HumanMessage(content=intent)])
         if isinstance(res, CombatAction):
             # Fase 4.3: uso de item tem prioridade (gate real fica no use_item_in_combat)
@@ -289,7 +289,7 @@ def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
     {"O HERÓI MORREU NESTE ROUND — narre a queda como o FECHO de uma saga: solene, definitivo, digno da crônica (3 a 4 frases). Sem deixa para próxima ação." if player_dead else ("O combate foi VENCIDO — encerre com o respiro da vitória." if victory else "Termine com tensão e uma deixa para a próxima ação do jogador.")}
     """)
     try:
-        llm = get_llm(temperature=0.6, tier=ModelTier.SMART)
+        llm = get_llm(temperature=0.6, tier=ModelTier.FAST)
         if getattr(llm, "is_fallback", False):
             raise RuntimeError("fallback")
         res = llm.invoke([sys] + [HumanMessage(content=intent or "Continue o combate.")])

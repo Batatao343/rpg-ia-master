@@ -15,3 +15,11 @@
 # npc_valerius:
 #   aliases: ["Lorde Protetor", "O Imortal de Arcádia"]
 #   tags_extra: ["governante_supremo"]
+
+# Verme-Primordial das Raízes do Mundo: criatura-SEGREDO (o que dorme abaixo do
+# Rei Subterrâneo — ver secret_que_rei_subterraneo_teme_...). Fica FORA do RAG
+# público p/ o narrador não vazar quando o jogador só pergunta (achado do
+# playtest da Fase 5, turno 13 do secret_rusher). A criatura segue existindo —
+# revelável só na descida/contexto de narrador (include_hidden).
+mon_verme_primordial_das_raizes_do_mundo:
+  visibility: hidden

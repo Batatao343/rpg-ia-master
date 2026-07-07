@@ -44,9 +44,18 @@ def player(**over):
 # ---------------------------------------------------------------------------
 
 def test_budget_formula():
-    assert eb.encounter_budget(1, 1, 0) == 3      # 2 + 1
-    assert eb.encounter_budget(5, 4, 3) == 21     # 10 + 5 + 6
-    assert eb.encounter_budget(1, 99, 0) == 11    # danger clampa em 4
+    assert eb.encounter_budget(1, 1, 0) == 3      # 2 + 1 (< teto 8)
+    assert eb.encounter_budget(5, 4, 3) == 21     # 10 + 5 + 6 (< teto 26)
+    # Fase 5 — teto de sobrevivência: nível-1 em danger-4 seria 11 (base 10 + 1),
+    # mas o teto 5+3×1=8 corta p/ o encontro não ser one-shot no sub-nível.
+    assert eb.encounter_budget(1, 99, 0) == 8     # min(11, 5+3*1)
+
+
+def test_budget_teto_sobrevivencia_so_afeta_subnivel():
+    # nível alto no perigo máximo NÃO é afetado (raw < teto)
+    assert eb.encounter_budget(10, 4, 0) == 20    # 10 + 10 (teto 35)
+    # sub-nível no perigo alto é limitado, mas ainda ESCALA com o perigo
+    assert eb.encounter_budget(1, 1, 0) < eb.encounter_budget(1, 3, 0) <= eb.encounter_budget(1, 4, 0)
 
 
 def test_clamp_corta_excedente_e_mantem_1():

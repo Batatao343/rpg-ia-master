@@ -1,6 +1,6 @@
 # SPEC — Fase 5.1 — Harness de playtest agêntico + 10 perfis de jogador
 
-> **Status:** `draft`
+> **Status:** `done` (2026-07-06)
 > **Criada:** 2026-07-06 · **Atualizada:** 2026-07-06
 > **Depende de:** motor estável (Fases 0–7, 10, 11 `done`); MockLLM da suíte;
 > **roteamento-multi-provider `done`** (playtest roda sobre as rotas novas; o
@@ -156,13 +156,15 @@ Exceção do hook conta como erro da campanha (é violação, não crash).
 
 ## 5. Critérios de aceite
 
-- [ ] 10 perfis rodam 50 turnos com MockLLM sem exceção não-capturada
-- [ ] Mesma seed → mesma campanha (determinismo)
-- [ ] Teste permanente na suíte (10 turnos explorador) verde
-- [ ] Saves de playtest não tocam `saves/`
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM — N/A (perfis não usam LLM)
-- [ ] Saves antigos continuam carregando (nada de schema muda)
+- [x] 10 perfis rodam 50 turnos com MockLLM sem exceção não-capturada
+      (`run --all --turns 50 --seed 42`: 10/10 com `erros=0`)
+- [x] Mesma seed → mesma campanha (determinismo) — `test_determinismo_mesma_seed`
+- [x] Teste permanente na suíte (10 turnos explorador) verde — `test_campanha_10_turnos_sem_erros`
+- [x] Saves de playtest não tocam `saves/` — `test_saves_em_diretorio_isolado`
+      (monkeypatch de `persistence.SAVES_DIR` → `saves_playtest/`)
+- [x] `uv run pytest` verde (699 testes, 0 falhas, 1 skip)
+- [x] Guard de FallbackLLM — N/A (perfis não usam LLM)
+- [x] Saves antigos continuam carregando (nada de schema muda)
 
 ## 6. Smoke test com LLM real
 
@@ -171,6 +173,13 @@ Exceção do hook conta como erro da campanha (é violação, não crash).
 1. `uv run python -m playtest run --profile diplomatico --turns 4 --real` →
    campanha completa, resumo coerente, zero erro; conferir que respostas são
    do Gemini (não MockLLM) no save.
+
+**EXECUTADO (2026-07-06):** `run --profile secret_rusher --turns 4 --real` —
+campanha completou 4 turnos, `erros=0`. `mock: false` no summary; telemetria real
+capturou providers `deepseek=5`/`groq=9`, custo por tier, `fell_back_turns=4`,
+latência p50≈15s (SLA real). Fallback vivo comprovado: `minimax` (402 saldo) e
+`qwen` (401 key) caíram no próximo candidato e o turno completou no Groq/DeepSeek
+— falhas de conta, não de código (ver `ESTADO_ATUAL.md`).
 
 ## 7. Riscos & compatibilidade
 

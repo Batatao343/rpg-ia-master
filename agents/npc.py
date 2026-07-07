@@ -277,7 +277,7 @@ def npc_actor_node(state: GameState):
         for f in factions if not f.get("defeated")
     ) or "Nenhuma facção conhecida no mundo."
 
-    llm = get_llm(temperature=0.8, tier=ModelTier.SMART)
+    llm = get_llm(temperature=0.8, tier=ModelTier.FAST)
 
     system_msg = SystemMessage(content=f"""
     <ROLE>

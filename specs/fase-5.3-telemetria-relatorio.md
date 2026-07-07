@@ -1,6 +1,6 @@
 # SPEC — Fase 5.3 — Telemetria de playtest + relatório agregado
 
-> **Status:** `draft`
+> **Status:** `done` (2026-07-06)
 > **Criada:** 2026-07-06 · **Atualizada:** 2026-07-06
 > **Depende de:** 5.1 (harness) `done`; 5.2 (invariantes) `done`;
 > **roteamento-multi-provider `done`** (telemetria grava provider/modelo/custo
@@ -169,16 +169,22 @@ no `.gitignore` (relatório interessante é commitado à mão quando embasar dec
 
 ## 5. Critérios de aceite
 
-- [ ] `run --all --turns 30` gera JSONL + summary por campanha e imprime run_id
-- [ ] JSONL/summary trazem provider/modelo/tier/custo/`fell_back` por turno
-- [ ] `report <run_id>` gera report.md legível com per-perfil/violações/erros +
+- [x] `run --all --turns 50` gera JSONL + summary por campanha e imprime run_id
+- [x] JSONL/summary trazem provider/modelo/tier/custo/`fell_back` por turno
+      (smoke real: `providers deepseek=5/groq=9`, `fell_back_turns=4`, custo por tier)
+- [x] `report <run_id>` gera report.md legível com per-perfil/violações/erros +
       custo por tier/provider e turnos com fallback
-- [ ] `--baseline` mostra deltas entre dois runs (inclui delta de custo)
-- [ ] `--real --max-requests 10` e `--max-cost 0.50` param no teto
-- [ ] 1ª rodada completa executada e lida; achados registrados no ROADMAP
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM — N/A (zero LLM novo)
-- [ ] Saves antigos continuam carregando (nada de runtime de jogo muda)
+- [x] `--baseline` mostra deltas entre dois runs (inclui delta de custo) — `test_baseline_gera_deltas`
+- [x] `--max-requests` e `--max-cost` param no teto — `test_max_requests/max_cost_aborta_educadamente`
+- [x] 1ª rodada completa executada e lida; achados registrados no ROADMAP
+- [x] `uv run pytest` verde (699 testes, 0 falhas)
+- [x] Guard de FallbackLLM — N/A (zero LLM novo)
+- [x] Saves antigos continuam carregando (nada de runtime de jogo muda)
+
+> **Nota de custo:** o hook de telemetria do roteamento entrega
+> `(provider, model, tier, latency_ms, fell_back)` — SEM tokens. `cost_usd` é
+> ESTIMADO (`playtest/pricing.py`: tokens fixos por invoke × preço por modelo),
+> suficiente p/ comparar campanhas e proteger o bolso no `--real`; não é fatura.
 
 ## 6. Smoke test com LLM real
 

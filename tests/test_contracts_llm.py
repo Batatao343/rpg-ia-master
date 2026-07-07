@@ -12,7 +12,7 @@ import os
 
 import pytest
 from dotenv import load_dotenv
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 load_dotenv(override=True)  # chave vive no .env, não no ambiente do SO
 
@@ -78,8 +78,13 @@ def _base_state(**overrides) -> dict:
 
 @pytest.fixture(autouse=True)
 def use_real_llm(monkeypatch):
-    """Opt-out do RPG_FORCE_MOCK que tests/conftest.py força na suíte offline."""
+    """Opt-out do RPG_FORCE_MOCK que tests/conftest.py força na suíte offline.
+
+    Força `LLM_PROVIDER=gemini`: os 9 contratos herdados da Fase 11 assumem Gemini
+    em TODOS os tiers (a stack ROUTES default não tem Gemini em FAST/SMART). O
+    contrato por-provider (R10) constrói o client direto, sem depender disto."""
     monkeypatch.delenv("RPG_FORCE_MOCK", raising=False)
+    monkeypatch.setenv("LLM_PROVIDER", "gemini")
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -291,3 +296,48 @@ def test_fallback_turno_sobrevive(monkeypatch):
     assert isinstance(content, str) and content.strip()
     # estado não corrompido: nada de exceção, dict parcial válido
     assert isinstance(out, dict)
+
+
+# ---------------------------------------------------------------------------
+# Contrato 10 (R10) — structured output por provider habilitado (multi-provider)
+# ---------------------------------------------------------------------------
+# Allowlist via env: RPG_CONTRACT_PROVIDERS=groq,gemini uv run pytest -m llm_contract -v -s
+import llm_setup  # noqa: E402
+from agents.router import RouterDecision  # noqa: E402
+
+_CONTRACT_PROVIDERS = [p.strip().lower() for p in
+                       os.getenv("RPG_CONTRACT_PROVIDERS", "").split(",") if p.strip()]
+
+
+def _model_for(provider: str):
+    """1º modelo do provider no ROUTES (prefere CLASSIFY)."""
+    for tier in (llm_setup.ModelTier.CLASSIFY, llm_setup.ModelTier.FAST, llm_setup.ModelTier.SMART):
+        for prov, model in llm_setup.ROUTES.get(tier, []):
+            if prov == provider:
+                return model
+    return None
+
+
+@pytest.mark.skipif(not _CONTRACT_PROVIDERS,
+                    reason="RPG_CONTRACT_PROVIDERS não definida (ex.: groq,gemini)")
+@pytest.mark.parametrize("provider", _CONTRACT_PROVIDERS or ["_none_"])
+def test_provider_respeita_structured_output(provider):
+    """Cada provider da allowlist devolve instância Pydantic válida no parse do
+    router (CLASSIFY). MockLLM esconde mapeamento — só o modelo vivo prova. Um
+    provider que falha aqui NÃO deve entrar num tier com structured output."""
+    key_env = llm_setup.PROVIDER_KEY_ENV.get(provider)
+    if not key_env or not os.getenv(key_env):
+        pytest.skip(f"{provider}: {key_env or 'sem key env'} ausente")
+    model = _model_for(provider)
+    if not model:
+        pytest.skip(f"{provider}: sem candidato no ROUTES")
+
+    llm_setup._CLIENT_CACHE.clear()
+    routed = llm_setup.RoutedLLM(llm_setup.ModelTier.CLASSIFY, 0.0, [(provider, model)])
+    engine = routed.with_structured_output(RouterDecision)
+    res = engine.invoke([
+        SystemMessage(content="Classifique a intenção do jogador em STORY, COMBAT, NPC ou LOOT."),
+        HumanMessage(content="Desembainho a espada e ataco o goblin à minha frente!"),
+    ])
+    assert isinstance(res, RouterDecision), \
+        f"{provider}/{model} não respeitou with_structured_output (caiu no fallback?)"

@@ -1,6 +1,6 @@
 # SPEC — Fase 5.2 — Invariantes de estado (checks pós-turno)
 
-> **Status:** `draft`
+> **Status:** `done` (2026-07-06)
 > **Criada:** 2026-07-06 · **Atualizada:** 2026-07-06
 > **Depende de:** 5.1 (harness — hook `on_turn_end`) `done`
 > **Desbloqueia:** 5.3 (telemetria agrega violações); critério de aceite da Fase 5
@@ -135,19 +135,29 @@ desarma a assinatura correspondente.
 
 ## 5. Critérios de aceite
 
-- [ ] Estado corrompido de propósito (7 fixtures) → violação certa, id certo
-- [ ] Campanhas de 30 turnos dos 10 perfis: zero violação `error` (ou bug real
-      achado e corrigido — achado é ENTREGA, registrar na spec)
-- [ ] `assert_invariants` utilizável em teste avulso (mensagem legível)
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM — N/A (zero LLM)
-- [ ] Saves antigos continuam carregando
+- [x] Estado corrompido de propósito (fixtures) → violação certa, id certo
+      (hp<0, hp=0 sem game_over, ouro<0, unique dupe, npc morto em cena, fação
+      derrotada no controle, local inexistente, relógio regressivo, segredo vazado)
+- [x] Campanhas de 50 turnos dos 10 perfis: zero violação `error`
+      (`run --all --turns 50`: `violações(err/warn)=0/0` em 10/10)
+- [x] `assert_invariants` utilizável em teste avulso (mensagem legível)
+- [x] `uv run pytest` verde (699 testes, 0 falhas)
+- [x] Guard de FallbackLLM — N/A (zero LLM)
+- [x] Saves antigos continuam carregando (roundtrip idempotente — `check_roundtrip`)
+
+**Achado (entrega):** os 10 perfis passaram limpos em 50 turnos — nenhum bug de
+estado novo. `knowledge.secret_leak` fica em severidade `warning` no 1º ciclo
+(§7); zero ocorrências no mock e no smoke real (`secret_rusher --real`).
 
 ## 6. Smoke test com LLM real
 
 (1 campanha curta) `python -m playtest run --profile secret_rusher --turns 4
 --real` → R5 vigia o narrador de verdade: zero assinatura de segredo nas
 respostas do Gemini.
+
+**EXECUTADO (2026-07-06):** `secret_rusher --turns 4 --real` — perguntou direto
+pelo pacto de Valerius / Rede Carmesim / Arauto / Rei Subterrâneo; narrador real
+respondeu sem vazar: `violações(err/warn)=0/0`. R5 vigiou o LLM de verdade.
 
 ## 7. Riscos & compatibilidade
 

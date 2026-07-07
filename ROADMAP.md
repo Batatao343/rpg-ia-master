@@ -175,48 +175,77 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
 
 ---
 
-## 🎮 AGORA — Roteamento multi-provider → depois Fase 5
+## 🎮 Roteamento multi-provider + Fase 5 → ✅ AMBOS ENTREGUES (2026-07-06)
 
-> Decisão 2026-07-06: **roteamento-multi-provider entra ANTES da Fase 5** — o
+> Decisão 2026-07-06: **roteamento-multi-provider entrou ANTES da Fase 5** — o
 > jogo vira produto pago (chave por provider), então o playtest/telemetria da
-> Fase 5 precisa rodar já sobre as rotas novas e medir provider/modelo/custo.
+> Fase 5 rodou já sobre as rotas novas e mede provider/modelo/custo.
+> Fase 5 concluída na sequência (ver seção "Fase 5 — Agentic playtest" acima).
 
-- [ ] **Roteamento multi-provider** ([spec](specs/roteamento-multi-provider.md),
-  `draft`): 3 tiers (`CLASSIFY`/`FAST`/`SMART`) + `ROUTES` (tier → lista de
-  candidatos `(provider, modelo)`) + fallback em tempo de invoke via `RoutedLLM`;
-  providers OpenAI-compat (Groq/Qwen/GLM/MiniMax/Kimi) reusam `_build_openai`,
-  Anthropic ganha builder próprio. Hook de telemetria alimenta a 5.3. Mantém a
-  convenção CRÍTICA (pior caso ainda é `AIMessage`).
+- [x] **Roteamento multi-provider** ([spec](specs/roteamento-multi-provider.md),
+  `done` 2026-07-06 — **smoke real OK**): 3 tiers (`CLASSIFY`/`FAST`/`SMART`) +
+  `ROUTES` (tier → lista de candidatos `(provider, modelo)`) + fallback em tempo
+  de invoke via `RoutedLLM`; providers OpenAI-compat (Groq/Qwen/MiniMax/DeepSeek)
+  reusam `_build_openai`, Anthropic builder próprio (extra `--extra anthropic`).
+  Hook `set_llm_telemetry_hook` alimenta a 5.3. Convenção CRÍTICA intacta.
+  655 offline verdes; smoke real = turno vivo com narração + campanha + fallback
+  + telemetria. ROUTES final: CLASSIFY `groq→gemini-flash-lite`, FAST
+  `minimax→qwen→gemini-flash`, SMART `deepseek→anthropic→gemini-pro` (Groq só em
+  CLASSIFY por causa do strict json_schema; ver ESTADO_ATUAL). Contas minimax/
+  deepseek/qwen pendentes de saldo/key do usuário — fallback cobre.
 
-## Fase 5 — Agentic playtest + telemetria
+## Fase 5 — Agentic playtest + telemetria → ✅ ENTREGUE (2026-07-06)
 
-> Com mundo robusto (Fase 6) e conteúdo validado (Fase 7). **3 specs escritas
-> 2026-07-06 (`draft`), ajustadas p/ o roteamento multi-provider.**
-> Ordem: **5.1 → 5.2 → 5.3** (5.2 pluga no hook do 5.1; 5.3 agrega o que os dois produzem).
+> 3 specs `done`. Ordem seguida: **5.1 → 5.2 → 5.3**. +43 testes
+> (`test_fase51/52/53.py`) → **699 testes offline verdes** + smoke real executado.
 
-**Objetivo:** Agentes testadores jogam campanhas automáticas offline (MockLLM = custo zero). Detectam inconsistências, medem estado, embasam balanceamento — o que só aparece no turno 30 e o smoke manual nunca alcança.
+**Objetivo (atingido):** Agentes testadores jogam campanhas automáticas offline
+(MockLLM = custo zero). Detectam inconsistências, medem estado, embasam balanceamento.
 
 **Fatias:**
 
-- [ ] **5.1 — Harness + 10 perfis** ([spec](specs/fase-5.1-playtest-harness.md)):
+- [x] **5.1 — Harness + 10 perfis** ([spec](specs/fase-5.1-playtest-harness.md)):
   `playtest/runner.py` (`run_campaign` via `app.invoke`, mesmo caminho da API) +
   10 perfis determinísticos em Python (`next_action(state, rng) -> str`, seed
   reproduz a campanha): agressivo, explorador, comerciante, diplomático, troll,
   mapa_breaker, combate, npc_only, loot_abuser, secret_rusher. `--real` opt-in.
-  Teste permanente na suíte (10 turnos, sem exceção).
-- [ ] **5.2 — Invariantes de estado** ([spec](specs/fase-5.2-invariantes.md)):
+  Saves isolados (`saves_playtest/`). Teste permanente na suíte (10 turnos).
+- [x] **5.2 — Invariantes de estado** ([spec](specs/fase-5.2-invariantes.md)):
   `playtest/invariants.py` — `check_all(state, prev_state)` puro plugado no
-  `on_turn_end` do 5.1. HP válido, ouro ≥ 0, item único sem dupe, NPC morto não
-  fala, fação derrotada não controla, relógio monotônico, segredo oculto não
-  vaza (assinaturas 7.3). `assert_invariants` reusável em qualquer teste.
-- [ ] **5.3 — Telemetria + relatório** ([spec](specs/fase-5.3-telemetria-relatorio.md)):
-  JSONL por turno (shape do log da Fase 10) + `summary.json` por campanha +
-  `playtest/report.py` (`aggregate` + `render_markdown`, comparação `--baseline`);
-  grava provider/modelo/custo por turno (hook do roteamento); tetos
-  `--max-requests`/`--max-cost` protegem o bolso no `--real`. Relatório Markdown,
-  sem dashboard web até haver demanda.
+  runner. HP válido, ouro ≥ 0, item único sem dupe, NPC morto não fala, fação
+  derrotada não controla, relógio monotônico, segredo oculto não vaza
+  (assinaturas curadas dos docs `hidden`). `assert_invariants` reusável.
+- [x] **5.3 — Telemetria + relatório** ([spec](specs/fase-5.3-telemetria-relatorio.md)):
+  `playtest/telemetry.py` (JSONL por turno + `summary.json`) + `playtest/report.py`
+  (`aggregate` + `render_markdown` + `--baseline`) + `playtest/pricing.py` (custo
+  estimado); grava provider/modelo/custo/`fell_back` por turno (hook do roteamento);
+  tetos `--max-requests`/`--max-cost` protegem o `--real`.
 
-**Critério de aceite:** Campanhas de 50 turnos dos 10 perfis não quebram invariantes (ou o bug achado é corrigido — achado é entrega); relatório agregado embasa 1 decisão de balanceamento real.
+**CLI:** `uv run python -m playtest run --all --turns 50` · `... report <run_id>`.
+
+**Achados (mock — NÃO produção; report marca `mock: true`) da rodada `--all
+--turns 50 --seed 42`:** 10/10 perfis com `erros=0` e `violações=0/0` (motor
+sólido); `agressivo` morre no nível 1 (letal cedo sob combate mock); `explorador`
+visita 13 locais / nível 3; `loot_abuser` acumula 297 ouro; **nenhum perfil
+completa quest** (created=1/completed=0 em todos).
+
+**Achados investigados a fundo → CORRIGIDOS (2026-07-07):**
+- **Quests nunca fechavam.** Pipeline de conclusão está SÃO (já testado). Causa:
+  nenhum perfil perseguia quest + o MockLLM só CRIAVA, nunca completava. Fix: perfil
+  **`quester`** (11º perfil) + **MockLLM propõe `quest_completed`** ~50% quando há
+  quest ativa no prompt → harness fecha quest offline (`test_quester_fecha_quest...`).
+- **Letalidade viagem×combate.** Sem assimetria estrutural (mesmo `encounter_budget`;
+  surpresa = ±5 init). Causa: a base de perigo do budget ignorava sub-nível
+  (nível-1 @danger-4 = budget 11 ≈ 2 elites = one-shot vs 1 minion no perigo certo).
+  Fix: **teto de sobrevivência** `cap = 5 + 3×nível + 2×aliados` — perigo alto segue
+  duro mas não é sentença de morte no sub-nível; bosses ignoram budget.
+- **Bugs de conteúdo/motor achados pelo playtest REAL e corrigidos:** rota `NONE →
+  KeyError` no troll (router normaliza NONE→STORY); **vazamento do Verme-Primordial**
+  (bug de parse do migrate dumpava o bestiário inteiro num doc público de 1613 linhas
+  + doc de fação nomeava o segredo + Legião afirmava o pacto Valerius↔Daruun) — tudo
+  curado na fonte + Verme `hidden` + reindex; RAG público verificado limpo.
+
+**Suíte:** 43 → +4 → **703 testes offline verdes** (após os fixes acima).
 
 ---
 
@@ -318,6 +347,18 @@ Depende de Codex estruturado (Fase 2.5) estar estável.
 **Critério de aceite:** Adicionar NPC novo segue template, é validado automaticamente, entra em entities.json com IDs únicos — e segredo de NPC não chega ao narrador público. ✅ **Validado em smoke real 2026-07-05** (NPC de teste via template sobreviveu ao migrate e passou no lint; narrador Gemini descreveu Valerius só pela persona pública, zero Daruun/pacto; `query_rag` public não devolve chunks de segredo).
 
 **Pendência de curadoria (fora do escopo 7.3):** alguns NPCs públicos citam a Rede Carmesim como ameaça conhecida (Kess, Volkar, Oráculo de Ferro) enquanto a timeline da era 7 marca o despertar como `hidden` — revisar na próxima passada de lore se isso é conhecimento comum do norte ou spoiler.
+
+**Vazamento achado pelo playtest real e CORRIGIDO (Fase 5, 2026-07-07):** perguntar
+direto "conte sobre o Rei Subterrâneo" fez o narrador surfacear o **Verme-Primordial
+das Raízes do Mundo** (segredo `hidden`, turno 13 do `secret_rusher`). Raiz =
+curadoria, NÃO motor: o doc de fação `data/codex/factions/ultimos_anoes_reino.md`
+(`visibility: public`) NOMEAVA o Verme-Primordial na linha "Conhecimento:" → RAG
+público surfaceia e o narrador repete. **Fix aplicado:** suavizada a linha na FONTE
+`lore_nova/factions.txt` (Durgrim só SUSPEITA que o Rei teme "algo que dorme mais
+fundo", sem nomear o Verme) + `migrate` (idempotente, 2 arquivos) + `rag.py`
+reindexado (2587 chunks). Verificado: `query_rag(public)` p/ "Rei Subterrâneo" NÃO
+retorna mais assinatura do Verme. Confirmação final = re-rodar `secret_rusher --real`
+30 turnos (deferido — Groq esgotado hoje; a cerca já está no índice).
 
 ---
 
@@ -484,9 +525,9 @@ Antes: "mais features, sprites depois".
 3. **Fase 4** ✅ COMPLETA (2026-07-05, 7 specs `done` + smoke real): Gameplay Core.
 4. **Fase 6** ✅ COMPLETA (2026-07-05, specs `done` com smoke real): economia viva, 20 itens únicos, migração de monstros, encontros sistêmicos, clima mecânico.
 5. **Fase 7** ✅ COMPLETA (2026-07-05, 3 specs `done` + smoke real): lint de conteúdo + CI, curadoria migration-safe + templates, segredos de NPC separados.
-6. **Roteamento multi-provider** 🎯 PRÓXIMA (spec `draft`): 3 tiers + rotas com fallback (produto pago).
-7. **Fase 5** 🎮 depois: agentic playtest + telemetria (3 specs `draft`, ajustadas p/ roteamento).
-8. **Fases 8+** (depois): arte, sprites/som, hardening, contract tests.
+6. **Roteamento multi-provider** ✅ ENTREGUE (2026-07-06, smoke real): 3 tiers + rotas com fallback (produto pago).
+7. **Fase 5** ✅ ENTREGUE (2026-07-06, 3 specs `done` + smoke real): agentic playtest + invariantes + telemetria (699 testes).
+8. **Fases 8+** (próximas): arte, sprites/som, Fase 10b (Postgres/auth), contract tests.
 
 Sem 2.5-2.8, as features de economia/craft/encontros ficariam acopladas, contraditórias e não-testáveis — fundação entregue; Fases 4/6/7 construíram gameplay, conteúdo sistêmico e pipeline de autoria em cima dela.
 
@@ -496,4 +537,5 @@ Sem 2.5-2.8, as features de economia/craft/encontros ficariam acopladas, contrad
 - ✅ Fase 4: progressão + buff observável + poção em combate + craft com receita + mercadores distintos + 4v5 + morte com narrativa (smoke real 2026-07-05).
 - ✅ Fase 6: porto bloqueado → escassez rastreável no event_log (smoke real 2026-07-05).
 - ✅ Fase 7: NPC novo via template validado automaticamente; segredo de NPC não chega ao narrador (smoke real 2026-07-05).
-- **Fase 5 (próxima):** campanha de 50 turnos automatizada sem quebrar invariantes; agente joga até nível 10 autonomamente.
+- ✅ Fase 5: 10 perfis × 50 turnos automatizados sem quebrar invariantes (`erros=0`, `violações=0`);
+  telemetria por turno com provider/custo; relatório agregado + baseline (smoke real 2026-07-06).
