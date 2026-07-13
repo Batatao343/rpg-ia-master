@@ -1,4 +1,4 @@
-# ROADMAP — RPG IA (Revisado 2026-07-06)
+# ROADMAP — RPG IA (Revisado 2026-07-13)
 
 > **Objetivo central:** Mundo vivo persistente com estado consultável, antes de features novas.
 > 
@@ -188,11 +188,13 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
   de invoke via `RoutedLLM`; providers OpenAI-compat (Groq/Qwen/MiniMax/DeepSeek)
   reusam `_build_openai`, Anthropic builder próprio (extra `--extra anthropic`).
   Hook `set_llm_telemetry_hook` alimenta a 5.3. Convenção CRÍTICA intacta.
-  655 offline verdes; smoke real = turno vivo com narração + campanha + fallback
-  + telemetria. ROUTES final: CLASSIFY `groq→gemini-flash-lite`, FAST
-  `minimax→qwen→gemini-flash`, SMART `deepseek→anthropic→gemini-pro` (Groq só em
-  CLASSIFY por causa do strict json_schema; ver ESTADO_ATUAL). Contas minimax/
-  deepseek/qwen pendentes de saldo/key do usuário — fallback cobre.
+  656 offline verdes; smoke real = turno vivo com narração + campanha + fallback
+  + telemetria. ROUTES final: CLASSIFY `groq gpt-oss-20b→gemini-flash-lite`, FAST
+  `minimax→qwen→groq llama-3.3-70b→gemini-flash`, SMART `deepseek→groq
+  gpt-oss-120b→anthropic→gemini-pro` — **Groq grátis em TODOS os tiers** (o fix
+  `method="function_calling"` p/ providers OpenAI-compat venceu o strict
+  json_schema; ver ESTADO_ATUAL). Contas minimax/qwen pendentes de saldo/key do
+  usuário — fallback cobre (deepseek respondeu vivo no playtest real de 2026-07-07).
 
 ## Fase 5 — Agentic playtest + telemetria → ✅ ENTREGUE (2026-07-06)
 
@@ -259,6 +261,37 @@ testes offline verdes.**
 
 ---
 
+## 🎯 Próximo ciclo (2026-07-13) — 3 specs `approved` (refinadas com o usuário)
+
+> Decisão da sessão 14 (pós-auditoria): antes de Fase 8 (arte) ou 10b (público),
+> atacar **retenção e experiência** com o que o motor já dá. Ordem: **1 → 2 → 3**
+> (1 e 3 podem paralelizar; 2 é isolada no transporte).
+
+1. **Balanceamento do early game + pacing** → [spec](specs/balanceamento-early-game.md) —
+   `combate`/`agressivo` morrem no nível 1 no playtest REAL (churn); medir baseline →
+   tuning mínimo de spawn/budget → **derrota narrada "O Saque"** (1x por campanha,
+   QUALQUER nível fora de apex/boss: acorda 1 dia depois, mundo andou, perde TUDO
+   menos 1 arma básica; únicos voltam ao pool; 2ª queda = memorial) → replan só
+   quando o ARCO muda (hoje TODA viagem replaneja — raiz do "plot twist demais").
+2. **Streaming do turno (SSE) + custo em produção** → [spec](specs/streaming-turno-sse.md) —
+   p50 15s/p95 46s de spinner; streaming honesto de FASES do grafo
+   (`app.stream`) + narrativa em chunks + fallback pro POST clássico; carona:
+   hook de telemetria da 5.3 plugado no log de turno da API (custo/providers
+   reais de produção, dev-only). Zero chamada LLM extra.
+3. **Polish de sessão** → [spec](specs/polish-sessao.md) — tela "Continuar
+   jornada" (listar/excluir saves), **chips de COMBATE 100% mecânicos** (derivam
+   da ficha em Python — zero LLM), export .txt + busca local da crônica (itens
+   do backlog 3.1), onboarding do 1º turno (painel dismissible), passe mobile (390px).
+
+**Decisões de refinamento (2026-07-13, com o usuário):**
+- **Pós-ciclo (arte Fase 8 vs público 10b): DECIDIR DEPOIS**, com dados do
+  playtest do ciclo — nenhum compromisso agora.
+- **Backlog v2 enxugado (YAGNI):** sobrevive só **Crônica avançada** (compressão
+  de capítulo + busca RAG — ver Backlog § Melhorias da Crônica). DESCARTADOS de
+  vez: chips de exploração via LLM, prólogo guiado, dificuldade configurável.
+
+---
+
 ## Backlog — Features após Fase 5
 
 ### Bugs críticos (sessão 2026-06-26)
@@ -273,7 +306,8 @@ testes offline verdes.**
 > **Spec `done`:** [specs/npcs-3-camadas-traits.md](specs/npcs-3-camadas-traits.md)
 > — 3 camadas (sessão → conhecidos → em cena), gate determinístico do
 > npc_actor ("X não está aqui" sem LLM — fecha o bug "NPC errado responde"),
-> `data/traits.json` (80 traits, sorteio seeded, DC modifiers em 6.4/4.4),
+> `data/traits.json` (40 traits — lote 1; lote 2 até 80 pendente; sorteio
+> seeded, DC modifiers em 6.4/4.4),
 > revelação progressiva por interações, aba Personagens. Detalhe SÓ na spec.
 
 Depende de Fase 2.5+ estar estável (world_projection, revealed_facts).
@@ -433,6 +467,13 @@ Antes de abrir para usuários externos.
 - [x] Adicionar `schema_version` em saves (migrations para antigas) — 2026-07-06
 - [x] Adicionar rate limiting (mínimo, por IP em memória) — 2026-07-06
 - [x] Logs estruturados (JSON por turno, base da observabilidade) — 2026-07-06
+- [x] **Auditoria 2026-07-13 (achados A1–A8) — TODOS corrigidos na mesma data**
+  (+14 testes `tests/test_audit_fixes.py`; detalhe em ESTADO_ATUAL § Bugs conhecidos):
+  `level` validado no `/game/new` (fechava ouro negativo); gate `game_over` + rate
+  limit em `/game/equip`+`/game/levelup`; `save_game_state` via `save_path()`/
+  sanitização; flag `simulated` = `llm_setup.is_simulated()` (todas as keys);
+  bind default `127.0.0.1` (`RPG_HOST` p/ expor); 500 sem `str(e)`; teto em
+  `input_text`; poda do dict do rate limit
 - [ ] (10b) Migrar para Postgres (quando multiusuário)
 - [ ] (10b) Migrar FAISS para pgvector/Qdrant
 - [ ] (10b) Adicionar autenticação
@@ -474,10 +515,14 @@ Antes de abrir para usuários externos.
 
 ### Melhorias da Crônica
 
+> Refinamento 2026-07-13: único item de backlog v2 MANTIDO (os demais foram
+> descartados — ver § Próximo ciclo). Search local + download .txt saem na
+> spec polish-sessao; ficam aqui os avançados:
+
 - [x] ~~**Arcos:** arc_title + chapters~~ → ✅ entregue na **Fase 3.1**
 - [ ] **Compressão:** capítulo antigo > 20 entradas → archivist comprime
-- [ ] **Busca:** endpoint `POST /game/chronicle/search` via RAG
-- [ ] **Frontend restante:** search + download .txt (separadores por capítulo já existem, 3.1)
+- [ ] **Busca semântica:** endpoint `POST /game/chronicle/search` via RAG
+- [x] ~~**Frontend restante:** search + download .txt~~ → na spec **polish-sessao** (busca local + export)
 
 ### ~~Lore Multi-Índice~~ → OBSOLETO
 
@@ -537,7 +582,10 @@ Antes: "mais features, sprites depois".
 5. **Fase 7** ✅ COMPLETA (2026-07-05, 3 specs `done` + smoke real): lint de conteúdo + CI, curadoria migration-safe + templates, segredos de NPC separados.
 6. **Roteamento multi-provider** ✅ ENTREGUE (2026-07-06, smoke real): 3 tiers + rotas com fallback (produto pago).
 7. **Fase 5** ✅ ENTREGUE (2026-07-06, 3 specs `done` + smoke real): agentic playtest + invariantes + telemetria (699 testes).
-8. **Fases 8+** (próximas): arte, sprites/som, Fase 10b (Postgres/auth), contract tests.
+8. **Fase 11** ✅ ENTREGUE (2026-07-06): 9 contratos LLM verdes contra Gemini real (`-m llm_contract`).
+9. **Ciclo fix-playtest-achados** ✅ ENTREGUE (2026-07-13): 6 defeitos do transcrito real + fuga do jogador (715 testes).
+10. **Auditoria de segurança** ✅ ENTREGUE (2026-07-13): 8 achados A1–A8 corrigidos + regressão (729 testes).
+11. **Fases 8+** (próximas): arte, sprites/som, Fase 10b (Postgres/auth).
 
 Sem 2.5-2.8, as features de economia/craft/encontros ficariam acopladas, contraditórias e não-testáveis — fundação entregue; Fases 4/6/7 construíram gameplay, conteúdo sistêmico e pipeline de autoria em cima dela.
 

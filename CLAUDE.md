@@ -22,21 +22,24 @@ uv run uvicorn api:app --port 8000        # API REST + frontend web (http://loca
 uv run python rag.py                      # re-indexar lore (data/codex/) + regras (data/rules.txt)
 uv run pytest                             # suíte offline (força MockLLM, não precisa de chave)
 bash scripts/smoke_api.sh [porta]         # smoke da API (health, /data/map, /game/new, /game/action)
-uv run python -m playtest run --all --turns 50   # Fase 5: harness — 10 perfis (MockLLM, offline)
+uv run python -m playtest run --all --turns 50   # Fase 5: harness — 12 perfis (MockLLM, offline)
 uv run python -m playtest report <run_id>        # relatório agregado (per-perfil/violações/custo)
+uv run python -m playtest transcript <run_id>    # transcrito ação→narração por turno (julgar prompt)
 ```
 
 **Playtest agêntico (Fase 5):** `playtest/` roda campanhas longas sobre o MESMO
-grafo (`app.invoke`) com 10 perfis determinísticos (`runner.py`/`profiles.py`);
+grafo (`app.invoke`) com 12 perfis determinísticos (`runner.py`/`profiles.py`);
 invariantes de estado por turno (`invariants.py` — HP/ouro/unique/NPC morto/
-fação/relógio/segredo); telemetria JSONL+summary por campanha (`telemetry.py`) +
-relatório Markdown (`report.py`). Saves isolados em `saves_playtest/`, runs em
-`playtest_runs/` (ambos gitignored). `--real` (opt-in, consciente de custo) mede
-provider/modelo/custo via `set_llm_telemetry_hook`, com tetos `--max-requests`/
-`--max-cost`. **Suíte de playtest REAL:** `uv run pytest -m llm_playtest -v -s`
-— cada um dos 10 perfis joga uma campanha curta no LLM de verdade (ROUTES; Groq
-free basta) e asserta zero erro + zero violação `error` + `mock=False`. FORA do
-`pytest` default (`addopts -m "not llm_playtest"`), como os contratos da Fase 11.
+fação/relógio/segredo/game_over); telemetria JSONL+summary por campanha
+(`telemetry.py`) + relatório Markdown (`report.py`) + transcrito por turno.
+Saves isolados em `saves_playtest/`, runs em `playtest_runs/` (ambos gitignored).
+`--real` (opt-in, consciente de custo) mede provider/modelo/custo via
+`set_llm_telemetry_hook`, com tetos `--max-requests`/`--max-cost`. **Suíte de
+playtest REAL:** `uv run pytest -m llm_playtest -v -s` — os 4 perfis VITAIS
+(explorador/combate/diplomatico/secret_rusher) jogam 30 turnos no LLM de verdade
+(ROUTES; `RPG_PLAYTEST_TURNS` encurta) e assertam zero erro + zero violação
+`error` + `mock=False`. FORA do `pytest` default (`addopts -m "not
+llm_playtest"`), como os contratos da Fase 11.
 
 **Skills do projeto:** `/qa` = pytest token-lean durante iteração (só falhas);
 `/wrap-up` = ritual de fim de tarefa (suíte completa + docs + commit).

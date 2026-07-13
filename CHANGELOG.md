@@ -5,6 +5,162 @@
 
 ---
 
+## 2026-07-13 (14) — Auditoria de segurança (A1–A8) + sync de docs + ciclo de produto (3 specs)
+
+**Sync de docs com o estado real:** ESTADO_ATUAL/ROADMAP/CLAUDE.md tinham 8+
+divergências (contagem 703/712 vs 715 real; header dizia "smoke pendente" com spec
+`done`; ROADMAP afirmava "Groq só em CLASSIFY" — falso desde o fix
+`function_calling`; "80 traits" vs 40 reais; tabela de bugs 2026-06-26 com 4 bugs
+JÁ fechados; Fase 11 listada como futura). Tudo corrigido; suíte verificada de
+verdade (junitxml — a linha de resumo do pytest não imprime neste terminal).
+
+**Auditoria de bugs/vulnerabilidades — 8 achados, TODOS corrigidos na sessão**
+(+14 testes `tests/test_audit_fixes.py`; 715 → **729 verdes**):
+
+| # | Achado (estado ANTES do fix) | Local | Severidade |
+|---|---|---|---|
+| A1 | `/game/new` não validava `level`: negativo → ouro NEGATIVO (`50×level`); DTO agora `Field(ge=1, le=20)` + tetos de tamanho em name/race/class/region/backstory | `api.py` | média |
+| A2 | `/game/equip`/`/game/levelup` sem gate de `game_over` (memorial editável) e fora do rate limit → helper `_reject_memorial` (409) + ambos na janela | `api.py` | baixa-média |
+| A3 | `save_game_state` montava caminho com `game_id` CRU → UUID via `save_path()`; legado sanitizado (alnum/-/_) — nunca escreve fora de `saves/` | `persistence.py` | baixa-média |
+| A4 | flag `simulated` só olhava GOOGLE_API_KEY (jogo real no Groq aparecia simulado) → novo `llm_setup.is_simulated()` espelha o get_llm | `api.py`/`llm_setup.py` | baixa |
+| A5 | bind default `0.0.0.0` (LAN sem auth) → `127.0.0.1`; expor = opt-in `RPG_HOST` (.env.example) | `api.py` | média |
+| A6 | 500 devolvia `str(e)` → genérico; detalhe só no log do servidor | `api.py` | baixa |
+| A7 | `input_text` sem teto → `max_length=2000` | `api.py` | baixa |
+| A8 | dict do rate limit sem teto por IP → poda de janelas vencidas ao passar de 1000 | `api.py` | baixa |
+
+Verificado LIMPO: XSS (mdLite escapa `&<>` antes de formatar, nos 2 frontends);
+path traversal (borda `save_path` UUID); guards 12/12 nos `with_structured_output`;
+zero `eval`/`exec`/`pickle`/`yaml.load` inseguro; `.env`/saves fora do git;
+`hidden_traits`/segredos não saem pela API. `allow_dangerous_deserialization=True`
+no FAISS é necessário e documentado.
+
+**Ciclo de produto (3 specs `approved`, refinadas com o usuário via brainstorming):**
+balanceamento-early-game (baseline → tuning de spawn → derrota narrada "O Saque"
+1x/campanha: acorda 1 dia depois, mundo andou, perde TUDO menos 1 arma básica,
+únicos voltam ao pool, 2ª queda = memorial → replan só por REGIÃO nova + intervalo
+15 — achado: `campaign_manager._should_replan` replanejava em TODA viagem);
+streaming-turno-sse (SSE de FASES do grafo via `app.stream`, zero LLM extra;
+token-a-token descartado; carona: telemetria da 5.3 no log `rpg.turn` de produção,
+dev-only); polish-sessao (GET/DELETE de saves + tela "Continuar jornada", chips de
+COMBATE 100% mecânicos — zero schema LLM novo —, export .txt + busca local da
+crônica, onboarding painel dismissible, passe mobile 390px). Decisões estratégicas:
+pós-ciclo (arte vs público) DECIDE-SE com dados do playtest; backlog v2 enxuto
+(só Crônica avançada; descartados chips de exploração LLM, prólogo guiado,
+dificuldade configurável).
+
+## 2026-07-13 (13) — fix-playtest-achados: 6 defeitos do transcrito real + fuga do jogador
+
+Novo `playtest transcript <run_id>` (ação→narração por turno) expôs defeitos que o
+mock escondia. 703 → **715 verdes** (+12 `tests/test_fixes_playtest.py`); smoke real
+executado; spec `done`.
+- **R1 beats em pt-BR:** schema/prompt do campaign_manager em inglês → beats em
+  inglês. `Field(description)` pt-BR + regra IDIOMA + exemplo traduzido.
+- **R2 NPC não repete:** `npc.py` injeta `<SUA_ULTIMA_FALA>` + regra anti-repetição.
+- **R3 perfil `quester` objetivo curto:** `_objetivo_curto` (1ª frase ≤80; ação ≤160).
+- **R4 gate de `game_over` no grafo:** morto continuava jogando fora da API →
+  `main.py` gate condicional START→END; invariante `lifecycle.acts_after_game_over`.
+- **R5 letalidade viagem (B+apex+fuga):** `world_utils.forced_encounter_danger`
+  escala a FORÇA do encontro forçado (`eff = min(danger, (nível+3)//2)`); 5 zonas
+  `apex` não escalam (sub-nível morre); combate deliberado/boss = perigo cheio.
+  **Fuga do jogador era VESTIGIAL** → implementada (`hero_fled` encerra combate,
+  golpe de despedida de quem age antes; perfis `fujao`/`quester` = 11º/12º).
+  Smoke real: beats pt-BR ✓; NPC variou ✓; morto congelou ✓; nível-1 pegou minions ✓;
+  fujao fugiu e sobreviveu ✓.
+
+## 2026-07-06/07 (12) — Fase 5 INTEIRA: playtest agêntico (5.1 harness · 5.2 invariantes · 5.3 telemetria)
+
+656 → **699 verdes** (+43 `tests/test_fase51/52/53.py`); 3 specs `done`; pacote novo
+`playtest/`.
+- **5.1 harness:** `runner.py` (`run_campaign` via `app.invoke` — MESMO caminho da
+  API; saves isolados `saves_playtest/` por monkeypatch; RNG semeado; exceção de
+  turno não derruba campanha) + `profiles.py` (10 perfis determinísticos:
+  agressivo/explorador/comerciante/diplomatico/troll/mapa_breaker/combate/npc_only/
+  loot_abuser/secret_rusher). CLI `python -m playtest run/report`.
+- **5.2 invariantes:** `invariants.py` puro — vitals/economia/entidades/mundo/
+  conhecimento (assinaturas dos 4 segredos canônicos)/roundtrip save→load; plugado
+  no runner (`--invariants` ON; `error` conta no exit code).
+- **5.3 telemetria:** JSONL 1 linha/turno (provider/modelo/tier/`fell_back`/
+  `cost_usd`) + `summary.json` + `report.py` (agregado + `--baseline`) +
+  `pricing.py` (custo estimado). Tetos `--max-requests`/`--max-cost` no `--real`.
+- **Smoke real:** secret_rusher 4t real — 0 erros, 0 violações, R5 vigiou o narrador;
+  fallback vivo (minimax 402/qwen 401 → próximo). Rodada mock 50t seed 42: 10/10
+  perfis limpos.
+- **Suíte `-m llm_playtest`:** 10 perfis no LLM real (~US$0.10) → **bug real:**
+  rota `NONE` → `KeyError('none')` no troll (invisível offline — MockLLM nunca
+  escolhe NONE). Fix: router normaliza NONE→STORY + regressão offline.
+- **Switch 4 VITAIS × 30 turnos real (2026-07-07):** explorador/combate/diplomatico/
+  secret_rusher, todos completaram, 0 erros. Achados: vazamento do Verme-Primordial
+  (curadoria: doc público de fação nomeava o segredo + bug de parse do migrate
+  dumpava 337 criaturas num doc público + Legião afirmava o pacto — fontes curadas,
+  Verme `hidden` via overrides, reindex verificado); quests não fechavam (perfil
+  `quester` + MockLLM propõe `quest_completed`); letalidade (teto de sobrevivência
+  `cap = 5 + 3×nível + 2×aliados` no `encounter_budget`); Groq 100k TPD esgota em
+  sessão longa (lição: playtest real grande = tier pago ou espalhar por dias).
+  703 verdes ao fim.
+
+## 2026-07-06 (11) — Roteamento multi-provider (spec `done`, smoke real)
+
+629 → **656 verdes** (+26). `llm_setup.py` reescrito: `ModelTier` ganhou CLASSIFY;
+`get_llm(tier)` devolve `RoutedLLM` (lista ordenada de candidatos `ROUTES`, cai pro
+próximo em QUALQUER falha; esgotou → `AIMessage` vazio, NUNCA levanta — convenção
+crítica intacta). `_build_openai` parametrizado (Groq/Qwen/GLM/MiniMax/Kimi/DeepSeek);
+`_build_anthropic` novo (extra opt-in). Overrides: `RPG_FORCE_MOCK`/`LLM_PROVIDER`/
+`RPG_ROUTES`. Telemetria: `set_llm_telemetry_hook`. Migração de tiers por nó
+(`test_routing_tiers.py`). Achados do smoke: **Groq strict json_schema** →
+`RoutedLLM._apply` injeta `method="function_calling"` p/ OpenAI-compat → Groq
+GRÁTIS em todos os tiers (jogo roda 100% free); Anthropic rejeita `temperature` e
+prefill; kimi 404. ROUTES final: CLASSIFY groq→gemini-lite; FAST minimax→qwen→groq→
+gemini-flash; SMART deepseek→groq→anthropic→gemini-pro. Contas: minimax/deepseek 402,
+qwen 401 (opcional; Groq cobre). `LLM_PROVIDER=gemini` força só-Gemini.
+
+## 2026-07-06 (10) — Fase 10 local + Fase 11 contratos + mapa interiores + NPCs 3 camadas
+
+581 → **629 verdes** + 9 contratos verdes no Gemini real.
+- **Fase 10 (local):** `save_path()` UUID anti-traversal; `schema_version` +
+  `_MIGRATIONS` (v0→v1 consolida backfills; v1→v2 campos de NPC); CORS por env;
+  rate limit por IP; log JSON por turno (`rpg.turn`). Postgres/auth = 10b.
+- **Fase 11:** `pytest -m llm_contract` = 9 contratos reais (router×2, StoryUpdate
+  banal, combate, NPC não-onisciente, TradeIntent, e2e+archivist, loot, fallback);
+  substitui `tests/test_real_llm.py`.
+- **Mapa:** `travel_times` por conexão (anéis custo 0 — relógio parado) + 5 nós
+  `kind: interior` (abrigo, sem encontro, fora do mapa-múndi; chips "Locais daqui").
+- **NPCs 3 camadas:** `services/npc_layers.py` + `data/traits.json` (40, lote 1) —
+  traits seeded, revelação por interação, `trait_dc_modifier` no recrutamento;
+  gate camada 3 (`in_scene=False` → "X não está aqui" SEM LLM — fecha o bug "NPC
+  errado responde"); `hidden_traits` nunca sai pela API.
+
+## 2026-07-05 (9) — Fase 7 INTEIRA: pipeline de autoria + validação
+
+520 → **581 verdes**; lint do repo 0 erros; smoke real de não-vazamento.
+7.1 lint (`services/content_validator.py` + CLI + gate + CI validate.yml);
+7.2 curadoria migration-safe (`codex_overrides.yaml`, `curated: true`, 6 templates,
+`docs/AUTORIA.md`, `reindex_global()` com gate de lint); 7.3 segredos de NPC
+(migrate divide por rótulo → doc `hidden` paralelo; 141 NPCs, 14 c/ segredo;
+auditoria fechou vazamento real do pacto Valerius↔Daruun na fonte).
+
+## 2026-07-05 (8) — Fase 6 INTEIRA: conteúdo sistêmico
+
+461 → **520 verdes**; smoke real executado; 3 fixes de robustez achados
+(StoryUpdate.narrative default; _narrate normaliza parts; fold de acentos na viagem).
+6.1 economia viva (rotas bloqueadas, escassez por BFS); 6.2 itens únicos (20, claim
+engine, gates nos 4 caminhos); 6.3 migração de monstros (pressão de caça com decay);
+6.4 encontros sistêmicos (detection_check, armadilha/social/rastro em Python);
+6.5 clima mecânico (Markov por região; miasma nega descanso; efeito é leitura).
+
+## 2026-07-04/05 (7) — Fase 4 INTEIRA: Gameplay Core
+
+313 → **461 verdes**; 7 specs `done`; smoke real com 4 bugs de integração achados
+e corrigidos (equipment descartado no /game/new; XP de beat no prólogo; _narrate
+sem HumanMessage; `game_over` fora do GameState → update descartado pelo grafo).
+4.1 progressão (XP kill/beat/quest, level up, ids canônicos, gate anti-LLM);
+4.1b árvores de Valoria (10 classes × 2 ramos, 111 habilidades); 4.2 buffs
+mecânicos (condition_modifiers nos 2 lados, 9/10 passivas data-driven);
+4.3 inventário `{id, qty}` + slots + poção em combate (3 bugs históricos fechados);
+4.4 economia determinística (`services/economy.py`, TradeIntent, mercadores com
+restock); 4.5 party (gate determinístico, N vs N, alvo tático); 4.6 dificuldade/IA/
+morte (encounter_budget, habilidades de elite/boss com fases, morte = fecho de
+saga + memorial 409).
+
 ## 2026-07-03 (6) — Fase 3.4: Visualização de estado (`done`) — Fase 3 completa
 
 - **`services/state_views.py`** (novo, puro): `reputation_history` (últimos 20 eventos
