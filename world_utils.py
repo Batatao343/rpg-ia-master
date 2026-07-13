@@ -529,8 +529,26 @@ def pick_encounter_enemy(loc: dict, danger: int, turn: int = 0, faction_id: str 
     return eco3.weighted_pick(pool, weights, rng)
 
 
+_APEX_TAG = "apex"
+
+
+def forced_encounter_danger(loc: dict, danger_real: int, player_level: int) -> int:
+    """R5 (fix-playtest-achados): a FORÇA de um encontro FORÇADO escala com o nível
+    — mesmo knob `danger` que `pick_encounter_enemy`/`encounter_budget` consomem —,
+    pra viajar sub-nivelado não ser sentença de morte pior que atacar tudo de frente.
+    RESSALVA: zona `apex` (proibida/endgame) NÃO escala — perigo CHEIO, sub-nível
+    morre (você não pertence aqui). O TRIGGER do encontro segue no danger real
+    (zona perigosa ainda embosca); só a força do que aparece é limitada."""
+    danger_real = max(1, int(danger_real or 1))
+    if _APEX_TAG in (loc.get("tags") or []):
+        return danger_real
+    lvl = max(1, int(player_level or 1))
+    return max(1, min(danger_real, (lvl + 3) // 2))
+
+
 def check_encounter(world: dict, factions, intel, turn: int = 0,
-                    bestiary_knowledge: dict = None, projection: dict = None):
+                    bestiary_knowledge: dict = None, projection: dict = None,
+                    player_level: int = 1):
     """
     Gatilho DETERMINÍSTICO de encontro ao entrar/descansar num local perigoso.
     Dispara se: alerta de fuga ativo na região (reforços — R10); OU looming_threat
@@ -554,6 +572,12 @@ def check_encounter(world: dict, factions, intel, turn: int = 0,
     loc = gamedata.get_location(loc_id) or {}
     region = loc.get("region", world.get("current_location", "a região"))
 
+    # R5: o TRIGGER usa danger real (acima); a FORÇA (criatura + budget) usa `eff`
+    # escalado pelo nível — salvo zona apex. Carimba p/ o combat spawn consumir
+    # (one-shot, como encounter_surprise). Deliberado/scripted não passa por aqui.
+    eff = forced_encounter_danger(loc, danger, player_level)
+    world["encounter_eff_danger"] = eff
+
     # R10: reforços — o fugitivo voltou, e não veio sozinho.
     alert = _pop_active_alert(world, loc, turn)
     if alert:
@@ -565,7 +589,7 @@ def check_encounter(world: dict, factions, intel, turn: int = 0,
 
     if ruler:
         fid = ruler.get("id")
-        entry = pick_encounter_enemy(loc, danger, turn, faction_id=fid,
+        entry = pick_encounter_enemy(loc, eff, turn, faction_id=fid,
                                      bestiary_knowledge=bestiary_knowledge,
                                      projection=projection)
         if intel.get(fid, {}).get("known"):
@@ -583,7 +607,7 @@ def check_encounter(world: dict, factions, intel, turn: int = 0,
                 "reason": "looming_threat", "enemy_id": ""}
 
     if danger >= 4:
-        entry = pick_encounter_enemy(loc, danger, turn,
+        entry = pick_encounter_enemy(loc, eff, turn,
                                      bestiary_knowledge=bestiary_knowledge,
                                      projection=projection)
         hint = entry.get("name") if entry else f"feras/perigos de {region}"

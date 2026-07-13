@@ -93,6 +93,40 @@ def aggregate(run_dir: str, baseline_dir: Optional[str] = None) -> RunReport:
     )
 
 
+def render_transcript(run_dir: str) -> str:
+    """Transcrito QUALITATIVO por turno (ação do jogador → rota → narração do
+    LLM) de todas as campanhas do run. Serve p/ julgar o PROMPT: coerência,
+    repetição, se o narrador ignora estado, se falta algo. Legível no editor."""
+    L: List[str] = [f"# Transcrito de playtest — `{os.path.basename(os.path.normpath(run_dir))}`", ""]
+    for path in sorted(glob.glob(os.path.join(run_dir, "*.jsonl"))):
+        stem = os.path.basename(path)[:-6]  # tira .jsonl
+        L.append(f"## Campanha `{stem}`")
+        L.append("")
+        try:
+            with open(path, encoding="utf-8") as f:
+                rows = [json.loads(l) for l in f if l.strip()]
+        except Exception as e:
+            L.append(f"_erro ao ler: {e}_")
+            continue
+        for r in rows:
+            prov = r.get("provider")
+            tag = f" · {prov}/{r.get('model','')}" if prov else " · mock"
+            L.append(f"### Turno {r.get('turn')} — rota `{r.get('route','')}`{tag}")
+            L.append(f"**Ação:** {r.get('action','')}")
+            err = r.get("error")
+            if err:
+                L.append(f"**ERRO:** `{err}`")
+            narr = (r.get("narrative") or "").strip()
+            L.append("")
+            L.append(narr if narr else "_(sem narração capturada)_")
+            viol = r.get("violations") or []
+            if viol:
+                L.append("")
+                L.append(f"⚠️ violações: {', '.join(viol)}")
+            L.append("")
+    return "\n".join(L)
+
+
 def _fmt(n) -> str:
     return f"{n:+d}" if isinstance(n, int) else f"{n:+.4f}"
 

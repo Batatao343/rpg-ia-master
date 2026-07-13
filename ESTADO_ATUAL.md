@@ -2,12 +2,40 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-06 (sessão 12: FASE 5 completa —
-> harness de playtest + invariantes + telemetria; 3 specs `done`, smoke real OK)
+> Última atualização: 2026-07-09 (sessão 13: fix-playtest-achados — 5 correções
+> achadas no transcrito real; 712 verdes, smoke real das 5 pendente)
 
 ---
 
 ## TL;DR — Em que pé está
+
+**Sessão 2026-07-09 (13): SPEC `fix-playtest-achados` — 5 correções achadas no
+TRANSCRITO real do playtest** (novo `playtest transcript <run_id>`: ação→narração
+por turno). 703 → **715 testes offline verdes** (+12 `tests/test_fixes_playtest.py`).
+**Spec `done` — smoke real das 5+fuga executado.** As 5 (spec `done`):
+- **R1 — beats em pt-BR:** `campaign_manager` gerava beats em INGLÊS ("Explore the
+  mysteries of Nova Arcádia") — schema/prompt em inglês. Forçado pt-BR no
+  `Field(description)` + regra IDIOMA no prompt + exemplo traduzido.
+- **R2 — NPC não repete:** Eryndor repetia a fala VERBATIM com a mesma pergunta.
+  `npc.py` injeta `<SUA_ULTIMA_FALA>` + regra "NÃO REPITA; traga ângulo novo".
+- **R3 — perfil `quester` objetivo curto:** colava a prosa INTEIRA do beat na ação
+  (turno gigante). `_objetivo_curto` (1ª frase, ≤80 chars); ação ≤160.
+- **R4 — gate de `game_over` no grafo:** morto CONTINUAVA jogando (só a API barrava
+  via 409; runner/`app.invoke` direto não). `main.py` gate condicional em `START`
+  → `END` se `game_over`. Invariante nova `lifecycle.acts_after_game_over`.
+- **R5 — letalidade viagem (B + apex + fuga):** 1 elite matava nível-1 em encontro
+  FORÇADO. `world_utils.forced_encounter_danger(loc, danger, nível)` escala a FORÇA
+  (`eff = min(danger, (nível+3)//2)`; mesmo knob que `pick_encounter_enemy`/budget
+  já usam) — o TRIGGER segue no danger real (zona perigosa ainda embosca). **Ressalva:
+  5 zonas `apex`** (tag no mapa: `cn_o_trono`/`ma_boca`/`dz_borda_do_vazio`/
+  `sx_profundezas`/`sk_fortaleza_vorr`) NÃO escalam — perigo cheio, sub-nível MORRE.
+  Só encontro forçado (deliberado/scripted = cheio, via `world.pop("encounter_eff_danger")`
+  no combat spawn). **FUGA do jogador estava VESTIGIAL** (só bloqueava ENREDADO; texto
+  virava ataque) — IMPLEMENTADA de verdade (`hero_fled` encerra combate, golpe de
+  despedida de quem age antes; perfis `fujao`/`quester` = 11º/12º). **Smoke real
+  executado:** beats em pt-BR ✓; Eryndor não repetiu ✓; morto congelou (0 invoke) ✓;
+  nível-1 no pântano pegou 2 Sapo-Boi minions (não Necromante elite) ✓; **fujao FUGIU
+  e sobreviveu** (14 HP) enquanto `combate` morreu ✓. Novo `playtest transcript <run_id>`.
 
 **Sessão 2026-07-06 (12): FASE 5 (Agentic playtest + telemetria) INTEIRA — 3
 specs `done`.** 656 → **699 testes offline verdes** (+43:

@@ -279,6 +279,16 @@ def npc_actor_node(state: GameState):
 
     llm = get_llm(temperature=0.8, tier=ModelTier.FAST)
 
+    # R2 (fix-playtest-achados): última fala DESTE npc — p/ não repetir verbatim
+    # quando o jogador insiste no mesmo assunto (achado do playtest real).
+    _nome = npc_data.get("name", npc_name)
+    ultima_fala = "—"
+    for _m in reversed(messages):
+        _c = str(getattr(_m, "content", "") or "").strip()
+        if getattr(_m, "type", "") == "ai" and _c.startswith(f"**{_nome}"):
+            ultima_fala = _c
+            break
+
     system_msg = SystemMessage(content=f"""
     <ROLE>
     Você é {npc_data.get('name')}.
@@ -293,6 +303,10 @@ def npc_actor_node(state: GameState):
     <MEMORIA>
     {npc_data.get('memory', [])[-3:]}
     </MEMORIA>
+
+    <SUA_ULTIMA_FALA>
+    {ultima_fala}
+    </SUA_ULTIMA_FALA>
 
     <MEMORIA_RELEVANTE>
     {relevant_memory or "—"}
@@ -320,6 +334,9 @@ def npc_actor_node(state: GameState):
     2. FILTRO DE CONHECIMENTO: Ignore fatos do Contexto Externo que seu personagem não saberia (ex: um soldado não sabe magia antiga). Se não souber, invente rumores ou seja cínico.
     3. Mantenha a persona (gírias, erros, arrogância) o tempo todo.
     4. Resposta curta e direta.
+    5. NÃO REPITA: veja <SUA_ULTIMA_FALA>. Se o jogador insistir no mesmo assunto,
+       NUNCA repita sua fala anterior literalmente — traga um detalhe NOVO, mude o
+       ângulo, demonstre impaciência ("já te disse..."), ou avance a conversa.
     """)
 
     try:

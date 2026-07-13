@@ -38,6 +38,7 @@ def turn_to_record(rec: TurnRecord) -> dict:
     return {
         "turn": rec.turn,
         "action": rec.action,
+        "narrative": rec.narrative,
         "route": rec.route,
         "latency_ms": rec.latency_ms,
         "events_applied": rec.events_applied,

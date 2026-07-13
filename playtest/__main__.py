@@ -76,6 +76,18 @@ def _cmd_report(args) -> int:
     return 0
 
 
+def _cmd_transcript(args) -> int:
+    import os
+    from playtest import report, telemetry
+    run_dir = telemetry.run_dir(args.run_id)
+    md = report.render_transcript(run_dir)
+    out = os.path.join(run_dir, "transcript.md")
+    with open(out, "w", encoding="utf-8") as f:
+        f.write(md)
+    print(f"Transcrito escrito em {out}")
+    return 0
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="playtest", description="Harness de playtest agêntico")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -95,6 +107,10 @@ def main(argv=None) -> int:
     prp.add_argument("run_id")
     prp.add_argument("--baseline", default=None, help="run_id anterior p/ deltas")
     prp.set_defaults(func=_cmd_report)
+
+    prt = sub.add_parser("transcript", help="transcrito ação→narração por turno (julgar o prompt)")
+    prt.add_argument("run_id")
+    prt.set_defaults(func=_cmd_transcript)
 
     args = parser.parse_args(argv)
     return args.func(args)

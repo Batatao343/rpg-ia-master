@@ -247,6 +247,16 @@ completa quest** (created=1/completed=0 em todos).
 
 **Suíte:** 43 → +4 → **703 testes offline verdes** (após os fixes acima).
 
+**Ciclo `fix-playtest-achados` ([spec](specs/fix-playtest-achados.md) `done`, 2026-07-13):**
+o novo `playtest transcript <run_id>` (ação→narração por turno) expôs 6 defeitos que o
+mock escondia, todos corrigidos + smoke real: R1 beats em INGLÊS → força pt-BR; R2 NPC
+repetia fala verbatim → `<SUA_ULTIMA_FALA>`+anti-repetição; R3 perfil `quester` colava
+prosa do beat → objetivo curto; R4 morto continuava jogando (só a API barrava) → gate de
+`game_over` no grafo + invariante; R5 nível-1 one-shot por elite em viagem → perigo
+efetivo por nível (`forced_encounter_danger`, 5 zonas `apex` não escalam) + **fuga do
+jogador (estava vestigial) implementada de verdade** (perfis `fujao`/`quester`). **715
+testes offline verdes.**
+
 ---
 
 ## Backlog — Features após Fase 5

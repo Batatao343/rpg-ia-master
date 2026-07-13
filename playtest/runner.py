@@ -52,6 +52,8 @@ class TurnRecord:
     player_level: int = 1
     gold: int = 0
     violations: List[str] = field(default_factory=list)
+    # Narração que o jogador leria no turno (p/ transcript qualitativo do prompt).
+    narrative: str = ""
 
 
 @dataclass
@@ -278,6 +280,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     rec.route = new_state.get("next", "") or ""
                     rec.events_applied = len(new_state.get("event_log", []) or []) - events_before
                     rec.events_rejected = len(new_state.get("pending_world_events", []) or [])
+                    rec.narrative = _last_ai_text(new_state)
                     _fill_state_metrics(rec, new_state)
                     _attach_telemetry(rec, list(turn_events))
                     _bump_llm_budget(llm_calls, rec)

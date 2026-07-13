@@ -225,7 +225,8 @@
       "tags": [
         "deserto",
         "vazio",
-        "fim_do_mundo"
+        "fim_do_mundo",
+        "apex"
       ],
       "connections": [
         "deserto_zhur"
@@ -354,7 +355,8 @@
       "tags": [
         "selva",
         "dragão",
-        "contágio"
+        "contágio",
+        "apex"
       ],
       "connections": [
         "selva_xylos"
@@ -410,7 +412,8 @@
       "tags": [
         "ruína",
         "gigantes",
-        "gelo"
+        "gelo",
+        "apex"
       ],
       "connections": [
         "skallgard"
@@ -559,7 +562,8 @@
       "tags": [
         "ossadas",
         "leviatã",
-        "proibido"
+        "proibido",
+        "apex"
       ],
       "connections": [
         "costa_negra"
@@ -637,7 +641,8 @@
       "tags": [
         "caverna",
         "reino_subterrâneo",
-        "rei"
+        "rei",
+        "apex"
       ],
       "connections": [
         "montanhas_afiadas",

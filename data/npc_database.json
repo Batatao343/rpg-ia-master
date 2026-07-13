@@ -1280,8 +1280,8 @@
         "id": "npc_soldados_da_legião_de_ferro"
     },
     "npc_velha_maren": {
-        "name": "Corvo",
-        "role": "mercador",
+        "name": "A Encapuzada",
+        "role": "guarda",
         "location": "Terras Cinzentas",
         "persona": "Desconfiado, cansado, fala pouco e cobra caro.",
         "appearance": "Figura encapuzada de olhos atentos.",
@@ -1370,26 +1370,26 @@
         "id": "npc_tobias_cinza"
     },
     "npc_local": {
-        "name": "Guardião da Cidade",
-        "role": "Protetor",
+        "name": "Eryndor Thorne",
+        "role": "Local",
         "location": "Nova Arcádia",
-        "persona": "Um guardião corajoso e leal, sempre pronto para defender a cidade de qualquer ameaça. É respeitado por todos e tem um forte senso de justiça.",
-        "appearance": "Armado e armadura brilhante, com um escudo com o símbolo da cidade",
+        "persona": "Eryndor is a charismatic and resourceful individual who has lived in Nova Arcádia all his life. He is well-versed in the city's history and is known for his ability to navigate its complex social hierarchy. Despite his humble beginnings, Eryndor has managed to build a reputation as a reliable and trustworthy figure, often serving as a mediator in local disputes. He is fiercely loyal to those he cares about and will go to great lengths to protect them.",
+        "appearance": "Eryndor stands at about 5'9\" with a lean yet athletic build. He has short, dark hair and piercing green eyes that seem to gleam with a hint of mischief. He often wears a charming smile and has a distinctive scar above his left eyebrow, which he obtained during a childhood accident.",
         "initial_relationship": 5,
         "attributes": {
-            "cha": 15,
+            "cha": 18,
             "con": 14,
-            "dex": 12,
+            "dex": 16,
             "int": 10,
-            "str": 16,
-            "wis": 13
+            "str": 12,
+            "wis": 12
         },
         "combat_stats": {
-            "ac": 18,
+            "ac": 16,
             "attacks": [
-                "Espada longa +5"
+                "Dagger +3"
             ],
-            "hp": 25
+            "hp": 12
         },
         "id": "npc_local"
     },
@@ -1785,5 +1785,97 @@
             "attacks": []
         },
         "id": "npc_a_encapuzada"
+    },
+    "npc_npcs": {
+        "name": "FEHK",
+        "role": "Servo do Anel Dourado",
+        "location": "Nova Arcádia",
+        "persona": "FEHK é um servo do Anel Dourado que se encontra em Nova Arcádia. Ele é conhecido por beber no Dragão Bêbado às sextas. Sua personalidade é marcada pela covardia, o que o torna cauteloso em situações de perigo. No entanto, ele é leal ao Anel Dourado e cumprirá suas ordens, mesmo que com hesitação.",
+        "appearance": "FEHK tem uma aparência mediana, com altura e peso normais. Ele veste roupas simples, mas limpas, e carrega um símbolo do Anel Dourado em seu pescoço.",
+        "initial_relationship": 5,
+        "attributes": {
+            "cha": 18,
+            "con": 10,
+            "dex": 12,
+            "int": 14,
+            "str": 10,
+            "wis": 16
+        },
+        "combat_stats": {
+            "ac": 10,
+            "attacks": [],
+            "hp": 10
+        },
+        "id": "npc_npcs"
+    },
+    "npc_fehk": {
+        "name": "FEHK",
+        "role": "Informant",
+        "location": "Nova Arcádia",
+        "persona": "FEHK is a cowardly informant who is hesitant to take risks and values his own safety above all else. He is likely to be overly cautious and will only act if he feels it is absolutely necessary. Despite this, he seems to have a strong sense of loyalty to the Anel Dourado and will not report incomplete information.",
+        "appearance": "FEHK appears to be a nervous and fidgety individual, often trembling and apologetic. He has a tendency to avoid eye contact and will often try to downplay his own involvement in any given situation.",
+        "initial_relationship": 3,
+        "attributes": {
+            "cha": 16,
+            "con": 10,
+            "dex": 14,
+            "int": 12,
+            "str": 8,
+            "wis": 10
+        },
+        "combat_stats": {
+            "ac": 12,
+            "attacks": [],
+            "hp": 8
+        },
+        "id": "npc_fehk"
+    },
+    "npc_arcante_gresh": {
+        "name": "Arcante Gresh",
+        "role": "Líder dos Druidas do Ciclo Cinzento",
+        "location": "Pântano da Melancolia",
+        "persona": "Um líder severo e profundo, com uma mistura de desconfiança e curiosidade solene, que busca entender a intenção dos que entram no pântano",
+        "appearance": "Humano de idade avançada, pele acinzentada, vestes de musgo e couro tratado, olhos que carregam a tristeza do pântano",
+        "initial_relationship": 3,
+        "attributes": {
+            "cha": 12,
+            "con": 16,
+            "dex": 14,
+            "int": 10,
+            "str": 12,
+            "wis": 18
+        },
+        "combat_stats": {
+            "ac": 16,
+            "attacks": [
+                "magia druídica"
+            ],
+            "hp": 120
+        },
+        "id": "npc_arcante_gresh"
+    },
+    "npc_druidas_do_ciclo_cinzento": {
+        "name": "Arcante Gresh",
+        "role": "Líder dos Druidas do Ciclo Cinzento",
+        "location": "Pântano da Melancolia",
+        "persona": "Um homem de olhar severo e profundo, com rugas esculpidas pela intempérie do ermo, carregando uma aura de autoridade e sabedoria",
+        "appearance": "Humano de idade avançada, pele acinzentada, vestes de musgo e couro tratado, olhos que carregam a tristeza do pântano",
+        "initial_relationship": 5,
+        "attributes": {
+            "cha": 16,
+            "con": 16,
+            "dex": 14,
+            "int": 10,
+            "str": 12,
+            "wis": 18
+        },
+        "combat_stats": {
+            "ac": 16,
+            "attacks": [
+                "Ataque mágico"
+            ],
+            "hp": 120
+        },
+        "id": "npc_druidas_do_ciclo_cinzento"
     }
 }

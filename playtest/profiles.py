@@ -247,12 +247,20 @@ class Quester(_Base):
     os outros perfis nunca fecham (achado do playtest da Fase 5)."""
     name = "quester"
 
+    @staticmethod
+    def _objetivo_curto(texto: str) -> str:
+        """1ª frase do objetivo, sem quebra de linha, ≤ ~80 chars — o beat no jogo
+        real é prosa longa; a ação não pode virar um parágrafo (R3)."""
+        t = " ".join(str(texto or "").split())
+        frase = t.split(". ")[0].split("! ")[0].split("? ")[0]
+        return (frase[:80].rstrip() + "…") if len(frase) > 80 else frase
+
     def next_action(self, state, rng):
         ativas = [q for q in (state.get("quests") or [])
                   if isinstance(q, dict) and q.get("status") == "active"]
         if ativas:
             q = ativas[rng.randrange(len(ativas))]
-            titulo = q.get("title", "a missão")
+            titulo = self._objetivo_curto(q.get("title", "a missão"))
             origem = q.get("origin_name") or "quem me deu a missão"
             return rng.choice([
                 f"Procuro {origem} e concluo a missão: {titulo}.",
@@ -262,8 +270,9 @@ class Quester(_Base):
         plan = state.get("campaign_plan") or {}
         beats = plan.get("beats") or []
         step = plan.get("current_step", 0)
-        objetivo = (beats[step].get("description") if 0 <= step < len(beats)
-                    else plan.get("climax", "o objetivo da cena"))
+        bruto = (beats[step].get("description") if 0 <= step < len(beats)
+                 else plan.get("climax", "o objetivo da cena"))
+        objetivo = self._objetivo_curto(bruto)
         return rng.choice([
             f"Ajo para cumprir o objetivo atual: {objetivo}.",
             f"Persigo a próxima etapa da história e a concluo: {objetivo}.",
@@ -271,10 +280,32 @@ class Quester(_Base):
         ])
 
 
+# --- 12. fujao --------------------------------------------------------------
+
+class Fujao(_Base):
+    """Entra no perigo e FOGE do combate — exercita a mecânica de fuga do jogador
+    (spec fix-playtest-achados R5). Viaja buscando encontro; ao entrar em combate,
+    rompe o cerco e escapa."""
+    name = "fujao"
+
+    def next_action(self, state, rng):
+        if _in_combat(state):
+            return rng.choice([
+                "Fujo dessa luta — dou meia-volta e corro para longe o mais rápido que posso.",
+                "Recuo! Escapo do combate e me retiro para um lugar seguro.",
+            ])
+        cur = _current_id(state)
+        conns = _connections(cur)
+        if conns and rng.random() < 0.7:
+            perigoso = max(conns, key=lambda c: (c.get("danger", 0), c["id"]))
+            return f"Viajo para {perigoso['name']} em busca de perigo."
+        return "Descanso aqui no ermo, atraindo o que espreita nas sombras."
+
+
 PROFILES: Dict[str, Profile] = {
     p.name: p for p in [
         Agressivo(), Explorador(), Comerciante(), Diplomatico(), Troll(),
         MapaBreaker(), Combate(), NpcOnly(), LootAbuser(), SecretRusher(),
-        Quester(),
+        Quester(), Fujao(),
     ]
 }

@@ -134,7 +134,10 @@ def _spawn_enemies_integrated(messages: List, target_hint: str, state: Optional[
             import party as party_mod
             from gamedata import get_location
             world = state.get("world") or {}
-            danger = int(world.get("danger_level", 1) or 1)
+            # R5 (fix-playtest-achados): encontro FORÇADO carimba `encounter_eff_danger`
+            # (perigo escalado pelo nível; apex = cheio). Combate DELIBERADO não carimba
+            # → usa danger_level cheio (o jogador escolheu a briga). One-shot: consome.
+            danger = int(world.pop("encounter_eff_danger", None) or world.get("danger_level", 1) or 1)
             level = int((state.get("player") or {}).get("level", 1) or 1)
             n_allies = len(party_mod.active_allies(state))
             budget = eb.encounter_budget(level, danger, n_allies)
@@ -391,15 +394,22 @@ def combat_node(state: GameState):
     intent = _last_human_text(messages)
     action = _parse_combat_action(player, active, intent)
 
-    # Fase 4.2: enredado não foge — gate determinístico ANTES de resolver.
-    if (cm.has_control(player, "root")
-            and re.search(r"\bfuj|fugir|escap|retir|corr[oe]\b", intent.lower())):
-        action = {"ability_id": "ataque_basico", "target": "", "is_allowed": False,
-                  "reason": f"{player.get('name','O herói')} está ENREDADO — impossível fugir."}
+    # spec fix-playtest-achados (R5): FUGA do jogador — determinística, ANTES de
+    # resolver. Não-enredado escapa (rompe o cerco e sai do combate); enredado NÃO
+    # foge (gate 4.2). Antes o regex só bloqueava o rooted — a fuga em si nunca era
+    # resolvida (o texto virava um ataque). Agora `flee` encerra o combate.
+    if re.search(r"\bfuj|fugir|escap|retir|recu|corr[oe]\b", intent.lower()):
+        if cm.has_control(player, "root"):
+            action = {"ability_id": "ataque_basico", "target": "", "is_allowed": False,
+                      "reason": f"{player.get('name','O herói')} está ENREDADO — impossível fugir."}
+        else:
+            action = {"flee": True, "ability_id": "ataque_basico", "target": "",
+                      "is_allowed": True, "reason": ""}
 
     # Resolução determinística em ordem de iniciativa.
     logs: List[str] = []
     hero_resolved = False
+    hero_fled = False  # R5: jogador fugiu → encerra o combate após esta rodada
     rnd = int(combat_meta.get("round", 1))
 
     # Fase 6.5: miasma/tempestade mordem TODOS em campo aberto (1x por round)
@@ -417,6 +427,10 @@ def combat_node(state: GameState):
             cm.tick_cooldowns(player)
             if stunned:
                 logs.append(f"{player.get('name','Herói')} está ATORDOADO e perde o turno.")
+            elif action.get("flee") and int(player.get("hp", 0)) > 0:
+                # R5: fuga bem-sucedida — o herói rompe o cerco e sai do combate.
+                logs.append(f"{player.get('name','O herói')} rompe o cerco e FOGE do combate.")
+                hero_fled = True
             elif int(player.get("hp", 0)) > 0:
                 if action.get("item_id"):
                     # Fase 4.3: usar item consome o turno; resolução 100% Python
@@ -452,8 +466,10 @@ def combat_node(state: GameState):
     active_after = [e for e in enemies if e.get("status") == "ativo"]
     fled = [e for e in enemies if e.get("status") == "fugiu"]
     dead = [e for e in enemies if e.get("status") == "morto"]
-    combat_over = not active_after
-    victory = combat_over and bool(dead)  # vitória "com espólio" só se alguém caiu
+    # R5: herói que fugiu ENCERRA o combate (mesmo com inimigos vivos) — sem vitória,
+    # sem espólio, sem XP dos que ficaram para trás.
+    combat_over = (not active_after) or hero_fled
+    victory = combat_over and bool(dead) and not hero_fled  # espólio só se alguém caiu
 
     # Fase 3.2 (R2): morte de instância vira `defeated` no bestiário do jogador.
     if dead:

@@ -215,10 +215,13 @@ def storyteller_node(state: GameState):
     # spec mapa-sublocais (R2): custo 0 (intra-cidade/interior) não rola encontro
     if (dest and travel_periods >= 1) or rested_player is not None:
         turn = int(world.get("turn_count", 0))
+        # R5 (fix-playtest-achados): a FORÇA do encontro escala pelo nível (apex não).
+        _plevel = int((state.get("player") or {}).get("level", 1) or 1)
         # Fase 6.3: sorteio ponderado — pressão de caça/fação/migração
         enc = check_encounter(world, factions, intel, turn,
                               bestiary_knowledge=state.get("bestiary_knowledge"),
-                              projection=state.get("world_projection"))
+                              projection=state.get("world_projection"),
+                              player_level=_plevel)
         if enc:
             world["last_encounter_turn"] = turn
             danger = int(world.get("danger_level", 1) or 1)
@@ -237,9 +240,12 @@ def storyteller_node(state: GameState):
             if kind == "combat":
                 # surpresa: percebeu -> herói embosca; falhou -> inimigo age antes
                 world["encounter_surprise"] = "player" if det["perceived"] else "enemy"
-                sur_txt = ("Você os percebe ANTES — a primeira lâmina é sua."
+                # R5: percebeu = tem AGÊNCIA — pode golpear OU recuar (a fuga já é
+                # mecânica no combate: "fujo/corro/recuo"). Surpreendido = sem saída.
+                sur_txt = ("Você os percebe ANTES — há tempo de golpear primeiro OU RECUAR "
+                           "(diga que foge/corre/recua para escapar)."
                            if det["perceived"] else
-                           "Eles saem do nada — você é pego de surpresa.")
+                           "Eles saem do nada — você é pego de surpresa, sem chance de recuar.")
                 updates = {
                     "messages": [SystemMessage(content=f"COMBAT START. {enc['flavor']} {sur_txt}")],
                     "world": world,

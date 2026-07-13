@@ -2379,8 +2379,8 @@
         "name": "Carniçal",
         "description": "Criatura hostil das ruínas.",
         "type": "Minion",
-        "hp": 23,
-        "max_hp": 23,
+        "hp": 24,
+        "max_hp": 24,
         "ac": 12,
         "attacks": [
             {
@@ -2413,8 +2413,8 @@
         "name": "Esqueleto",
         "description": "Criatura hostil das ruínas.",
         "type": "Minion",
-        "hp": 13,
-        "max_hp": 13,
+        "hp": 18,
+        "max_hp": 18,
         "ac": 12,
         "attacks": [
             {

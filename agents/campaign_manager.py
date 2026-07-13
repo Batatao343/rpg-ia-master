@@ -19,9 +19,10 @@ class CampaignPlanModel(BaseModel):
 
     location: str = Field(description="Scene location the plan is for")
     beats: List[str] = Field(
-        min_length=3, max_length=5, description="Ordered story beats leading to the climax"
+        min_length=3, max_length=5,
+        description="Ordered story beats leading to the climax — SEMPRE em português do Brasil (pt-BR), NUNCA em inglês",
     )
-    climax: str = Field(description="The intended climactic moment")
+    climax: str = Field(description="The intended climactic moment — SEMPRE em português do Brasil (pt-BR)")
     arc_title: str = Field(
         default="",
         description=(
@@ -104,17 +105,20 @@ def _build_plan(state: GameState) -> CampaignPlan:
 
             "<INSTRUCTIONS>\n"
             "Design a concise plot roadmap (3-5 beats) for the current scene.\n"
+            "0. IDIOMA (OBRIGATÓRIO): escreva os beats, o climax e o arc_title SEMPRE "
+            "em PORTUGUÊS DO BRASIL (pt-BR). NUNCA em inglês, mesmo que estas instruções "
+            "estejam em inglês.\n"
             "1. USE THE LORE: If the lore mentions specific dangers, factions, or secrets, weave them into the beats.\n"
             "2. PACING: Start with atmosphere/hook, rise tension, and lead to a climax.\n"
-            "3. ACTIONABLE: Beats must be clear instructions for the Storyteller AI (e.g., 'Reveal the ancient inscription on the wall').\n"
+            "3. ACTIONABLE: Beats must be clear instructions for the Storyteller AI (em pt-BR, ex.: 'Revele a inscrição antiga na parede').\n"
             "4. ARC TITLE: current arc title is "
             f"'{current_arc or '(none yet)'}'. KEEP it if the story arc continues; "
-            "change it ONLY when a truly new arc begins (3-6 words, PT-BR).\n"
+            "change it ONLY when a truly new arc begins (3-6 words, pt-BR).\n"
 
-            "<EXAMPLE>\n"
-            "Lore: 'The Whispering Caves are haunted by echoes of the past.'\n"
-            "Beats: ['Describe the unsettling echoes mimicking the party', 'Player finds a skeleton with a warning note', 'The echoes coalesce into a spectral guardian']\n"
-            "Climax: 'Confrontation with the Specter or solving its riddle.'"
+            "<EXEMPLO>\n"
+            "Lore: 'As Cavernas Sussurrantes são assombradas por ecos do passado.'\n"
+            "Beats: ['Descreva os ecos perturbadores imitando o grupo', 'O jogador acha um esqueleto com um bilhete de aviso', 'Os ecos se fundem num guardião espectral']\n"
+            "Climax: 'Confronto com o Espectro ou a solução de seu enigma.'"
         )
     )
 

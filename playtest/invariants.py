@@ -277,10 +277,26 @@ def check_roundtrip(state: dict, prev: Optional[dict] = None, turn: int = 0) -> 
 
 # --- orquestração -----------------------------------------------------------
 
+def check_lifecycle(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    """R4 (fix-playtest-achados): save morto é terminal. Se o turno ANTERIOR já
+    estava com game_over e mesmo assim o relógio avançou, um morto agiu — o gate
+    do grafo (main.py) deveria ter barrado."""
+    if not prev or not prev.get("game_over"):
+        return []
+    prev_turn = (prev.get("world") or {}).get("turn_count")
+    cur_turn = (state.get("world") or {}).get("turn_count")
+    if isinstance(prev_turn, int) and isinstance(cur_turn, int) and cur_turn > prev_turn:
+        return [_V("lifecycle.acts_after_game_over", "error", turn,
+                   f"turno processado após game_over (turn {prev_turn} → {cur_turn})",
+                   prev_turn=prev_turn, turn_count=cur_turn)]
+    return []
+
+
 Check = Callable[[dict, Optional[dict], int], List[Violation]]
 
 CHECKS: List[Check] = [
     check_vitals, check_economy, check_entities, check_world, check_knowledge,
+    check_lifecycle,
 ]
 
 

@@ -47,7 +47,15 @@ def build_game_graph():
     workflow.add_node("archivist", archive_node) # <--- NOVO
 
     # 2. Definir o Fluxo Inicial
-    workflow.add_edge(START, "campaign_manager")
+    # R4 (fix-playtest-achados): save morto (game_over) é MEMORIAL — o grafo NÃO
+    # processa turno novo. Antes só a API barrava (409); runner/CLI e qualquer
+    # chamador direto de app.invoke seguiam o jogo com um personagem morto
+    # (achado do playtest real). O gate protege TODO chamador.
+    workflow.add_conditional_edges(
+        START,
+        lambda s: "__end__" if s.get("game_over") else "campaign_manager",
+        {"__end__": END, "campaign_manager": "campaign_manager"},
+    )
     workflow.add_edge("campaign_manager", "dm_router")
 
     # 3. Roteamento Central
