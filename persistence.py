@@ -160,9 +160,17 @@ def save_game_state(state: Dict[str, Any]) -> bool:
         if not os.path.exists(SAVES_DIR):
             os.makedirs(SAVES_DIR)
 
-        # Define nome do arquivo baseado no ID
+        # Define nome do arquivo baseado no ID.
+        # Auditoria A3: game_id UUID passa pelo save_path (validação canônica);
+        # legado não-UUID ("autosave", ids de teste) é SANITIZADO — nunca chega
+        # cru ao filesystem (um save adulterado não escreve fora de saves/).
         game_id = state.get("game_id", DEFAULT_SAVE_NAME)
-        file_path = os.path.join(SAVES_DIR, f"{game_id}.json")
+        try:
+            file_path = save_path(game_id)
+        except ValueError:
+            safe = "".join(c for c in str(game_id)
+                           if c.isalnum() or c in "-_") or DEFAULT_SAVE_NAME
+            file_path = os.path.join(SAVES_DIR, f"{safe}.json")
 
         # Prepara os dados serializáveis
         save_data = {

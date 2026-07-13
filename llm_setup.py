@@ -437,3 +437,18 @@ def get_llm(temperature: float = 0.1, tier: ModelTier = ModelTier.FAST):
         return MockLLM(temperature=temperature)
 
     return RoutedLLM(tier, temperature, _load_routes().get(tier, []))
+
+
+def is_simulated() -> bool:
+    """True quando `get_llm()` devolveria MockLLM (modo simulado, sem provider real).
+
+    Espelha a ordem de resolução do get_llm — auditoria A4: a flag `simulated`
+    da API olhava só GOOGLE_API_KEY e mentia com o jogo 100% real no Groq."""
+    if os.getenv("RPG_FORCE_MOCK"):
+        return True
+    if os.getenv("RPG_NO_MOCK"):
+        return False
+    provider = os.getenv("LLM_PROVIDER", "").strip().lower()
+    if provider:
+        return provider == "gemini" and not os.getenv("GOOGLE_API_KEY")
+    return not _any_key_available()

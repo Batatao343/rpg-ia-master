@@ -16,7 +16,7 @@ from collections import defaultdict, deque
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 from langchain_core.messages import HumanMessage, SystemMessage
 
@@ -28,6 +28,7 @@ from main import app as game_graph
 from persistence import save_game_state, load_game_state, save_path, _serialize_messages
 from character_creator import create_player_character
 from gamedata import ABILITIES, CLASSES, load_json_data, seed_factions
+from llm_setup import is_simulated
 import progression
 from services import quest_log
 from services import state_views as sv
@@ -82,6 +83,14 @@ def _resolve_save_file(game_id: Optional[str]) -> Optional[str]:
         raise HTTPException(status_code=400, detail="game_id inválido (esperado UUID).")
 
 
+def _reject_memorial(state: dict) -> None:
+    """Fase 4.6 (R7) + auditoria A2: save morto é MEMORIAL — nenhum endpoint
+    de mutação (action/equip/levelup) toca nele."""
+    if state.get("game_over"):
+        raise HTTPException(status_code=409,
+                            detail="Esta saga terminou. A crônica permanece como memorial — comece uma nova jornada.")
+
+
 # Fase 10 (R6): rate limit mínimo por IP (janela deslizante em memória).
 # RPG_RATE_LIMIT = req/min em /game/action e /game/new; 0 desliga (suíte/smoke).
 _RATE_WINDOW_S = 60.0
@@ -98,9 +107,17 @@ def _rate_limit_max() -> int:
 @app.middleware("http")
 async def _rate_limit(request: Request, call_next):
     limit = _rate_limit_max()
-    if limit > 0 and request.url.path in ("/game/action", "/game/new"):
+    # Auditoria A2: equip/levelup também mutam o save — entram na janela.
+    if limit > 0 and request.url.path in ("/game/action", "/game/new",
+                                          "/game/equip", "/game/levelup"):
         ip = request.client.host if request.client else "?"
         now = time.monotonic()
+        # Auditoria A8: teto no dict — descarta IPs com janela inteira vencida.
+        if len(_rate_hits) > 1000:
+            stale = [k for k, dq in _rate_hits.items()
+                     if not dq or now - dq[-1] > _RATE_WINDOW_S]
+            for k in stale:
+                del _rate_hits[k]
         hits = _rate_hits[ip]
         while hits and now - hits[0] > _RATE_WINDOW_S:
             hits.popleft()
@@ -113,15 +130,18 @@ async def _rate_limit(request: Request, call_next):
 
 # --- MODELOS DE DADOS (DTOs) ---
 class CreateCharacterRequest(BaseModel):
-    name: str
-    race: str
-    class_name: str
-    region: str
-    level: int = 1
-    backstory: Optional[str] = ""
+    # Auditoria A1: level sem bound permitia ouro NEGATIVO (50×level) e ficha
+    # absurda; A7: campos livres viram prompt de LLM — tamanho limitado na borda.
+    name: str = Field(min_length=1, max_length=80)
+    race: str = Field(max_length=40)
+    class_name: str = Field(max_length=40)
+    region: str = Field(max_length=60)
+    level: int = Field(1, ge=1, le=20)
+    backstory: Optional[str] = Field("", max_length=2000)
 
 class ActionRequest(BaseModel):
-    input_text: str
+    # Auditoria A7: ação vira prompt — sem teto, request gigante = custo/latência.
+    input_text: str = Field(max_length=2000)
     game_id: Optional[str] = None # Opcional: permite especificar qual save carregar
 
 class EquipRequest(BaseModel):
@@ -206,7 +226,8 @@ def format_response(state: dict) -> GameResponse:
         current_location=state["world"]["current_location"],
         narrative_summary=state.get("narrative_summary", ""),
         last_turn_log=_serialize_messages(state["messages"][-5:]),
-        simulated=(not os.getenv("GOOGLE_API_KEY")) and (not os.getenv("RPG_NO_MOCK")),
+        # Auditoria A4: espelha a decisão real do get_llm (qualquer provider conta)
+        simulated=is_simulated(),
         world=_world_block(state.get("world", {}) or {}, state.get("world_projection", {}) or {},
                           state.get("event_log", []) or []),
         quest=_quest_block(state.get("campaign_plan") or {}, state.get("quests", []) or []),
@@ -593,8 +614,9 @@ def new_game(req: CreateCharacterRequest):
         save_game_state(final_state)
         return format_response(final_state)
     except Exception as e:
-        print(e)
-        raise HTTPException(status_code=500, detail=str(e))
+        # Auditoria A6: detalhe interno só no log do servidor, nunca na resposta.
+        print(f"Erro ao criar jogo: {e}")
+        raise HTTPException(status_code=500, detail="Erro interno ao criar o jogo.")
 
 @app.post("/game/action", response_model=GameResponse)
 def game_action(req: ActionRequest):
@@ -609,9 +631,7 @@ def game_action(req: ActionRequest):
         raise HTTPException(status_code=404, detail="Jogo não encontrado.")
 
     # Fase 4.6 (R7): save morto é MEMORIAL — a crônica fica, ações não.
-    if state.get("game_over"):
-        raise HTTPException(status_code=409,
-                            detail="Esta saga terminou. A crônica permanece como memorial — comece uma nova jornada.")
+    _reject_memorial(state)
 
     # Adiciona Input
     user_msg = HumanMessage(content=req.input_text)
@@ -647,7 +667,8 @@ def game_action(req: ActionRequest):
             "events_applied": 0, "events_rejected": 0, "error": str(e)[:200],
         }, ensure_ascii=False))
         print(f"Erro na API: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        # Auditoria A6: str(e) fica no log JSON acima; cliente recebe genérico.
+        raise HTTPException(status_code=500, detail="Erro interno ao processar o turno.")
 
 @app.post("/game/equip")
 def game_equip(req: EquipRequest):
@@ -657,6 +678,7 @@ def game_equip(req: EquipRequest):
     state = load_game_state(file_to_load)
     if not state:
         raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+    _reject_memorial(state)
 
     if req.item_id:
         player, err = inv_mod.equip(state["player"], req.item_id)
@@ -687,6 +709,7 @@ def game_levelup(req: LevelUpRequest):
     state = load_game_state(file_to_load)
     if not state:
         raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+    _reject_memorial(state)
 
     player, err = progression.apply_choice(
         state["player"], req.choice_id,
@@ -724,4 +747,6 @@ if os.path.isdir(_FRONTEND_DIR):
     app.mount("/", StaticFiles(directory=_FRONTEND_DIR, html=True), name="frontend")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Auditoria A5: default local-only (API não tem auth até a Fase 10b).
+    # Exponha na LAN conscientemente via RPG_HOST=0.0.0.0 no .env.
+    uvicorn.run(app, host=os.getenv("RPG_HOST", "127.0.0.1"), port=8000)
