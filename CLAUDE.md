@@ -265,7 +265,7 @@ Toda feature/fase nova segue o fluxo de `specs/`:
    smoke test real da spec executado → status `done` + atualizar ROADMAP/ESTADO_ATUAL.
 5. **ROADMAP.md é resumo + link;** o detalhe técnico mora SÓ na spec (fonte única).
 
-Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `in-progress`; 2.6 (structured events) `done`;
+Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `done` (smoke real 2026-07-14); 2.6 (structured events) `done`;
 2.7 (rules engine) `done`; 2.8 (context builder) `done`; 3.1–3.4 `done` — **Fase 3 completa**;
 4.1–4.6 + 4.1b `done` — **Fase 4 completa**; 6.1–6.5 `done` — **Fase 6 completa**;
 7.1 (validadores+CI) · 7.2 (autoria/curadoria) · 7.3 (segredos de NPC) `done` —

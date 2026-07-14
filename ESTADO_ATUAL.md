@@ -169,7 +169,9 @@ segurança → sessão 14, tabela completa no `CHANGELOG.md`).
 
 Fechadas na sessão 15: confirmação real do Verme ✔ · mortes nível 1 do
 `combate`/`agressivo` ✔ (spec balanceamento; nota: 2ª queda DELIBERADA sem cura
-segue matando — por design) · replan em toda viagem ✔.
+segue matando — por design) · replan em toda viagem ✔ · **spec 2.5b virou
+`done`** (2026-07-14: smoke real §6 3/3 — raça Cinzéu com traits, viagem com
+lore de Skallgard, tático foge com HP baixo + alerta; era a última spec não-done).
 
 ## Limitações conhecidas
 

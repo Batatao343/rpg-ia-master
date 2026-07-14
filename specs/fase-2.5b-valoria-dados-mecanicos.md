@@ -1,8 +1,11 @@
 # SPEC — Fase 2.5b: Valoria nos dados mecânicos (mapa, fações, raças, bestiário) + combate com comportamento
 
-> **Status:** `in-progress` — implementação COMPLETA + 146 testes offline verdes;
-> falta apenas o smoke test com Gemini real (§6) para virar `done`
-> **Criada:** 2026-07-01 · **Atualizada:** 2026-07-02
+> **Status:** `done` (2026-07-14 — smoke real §6 executado, 3/3: ① `/game/new`
+> com raça Cinzéu → ficha com traits `Corpo Silencioso`/`Contemplação`;
+> ② viagem Skallgard → Fortaleza de Vorr com narrativa usando o lore da região;
+> ③ tático `Lobo das Geleiras` a 2/18 HP FUGIU no turno dele — combate encerrou,
+> `threat_alerts` registrou `enemy_lobo_invernal` na região, narração real ok)
+> **Criada:** 2026-07-01 · **Atualizada:** 2026-07-14
 > **Depende de:** [fase-2.5-codex-world-state.md](fase-2.5-codex-world-state.md)
 > **Desbloqueia:** [fase-2.6-structured-events.md](fase-2.6-structured-events.md) (jogável de verdade), 2.7, 2.8
 
