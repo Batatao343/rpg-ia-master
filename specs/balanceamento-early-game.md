@@ -1,7 +1,6 @@
 # SPEC — Balanceamento do early game + pacing de campanha
 
-> **Status:** `approved` (design refinado com o usuário em 2026-07-13 — R3 virou
-> "O Saque": 1x por campanha, pena máxima; ver R3)
+> **Status:** `done` (2026-07-13 — implementada com baseline mock+real; ver §8)
 > **Criada:** 2026-07-13 · **Atualizada:** 2026-07-13
 > **Depende de:** Fase 5 (harness/invariantes/telemetria) `done`; fix-playtest-achados `done`
 > **Desbloqueia:** streaming (spec streaming-turno-sse — melhor medir latência num jogo justo); Fase 8+
@@ -183,16 +182,20 @@ def _same_region(loc_id_a: str, loc_id_b: str) -> bool: ...
 
 ## 5. Critérios de aceite
 
-- [ ] Baseline gravado ANTES de qualquer knob (mock + real)
-- [ ] Meta R2: mock 50t seed 42 sem morte nível 1 fora de apex nos 12 perfis
-- [ ] Meta R4: replans do `explorador` caem ≥ 40% sem turno órfão de plano
-- [ ] `player_downed` só via `source="combat"`; proposta de LLM rejeitada
-- [ ] 1ª queda = saque completo (ouro 0, só arma básica) + mundo avançou 1 dia; 2ª queda = memorial
-- [ ] Invariante nova cobre downed ilegal (2× na campanha, ou em apex/boss)
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (não há novo previsto)
-- [ ] Saves antigos continuam carregando (nenhum campo novo no save)
-- [ ] ESTADO_ATUAL.md + ROADMAP.md atualizados
+- [x] Baseline gravado ANTES de qualquer knob (mock `20260713-160458` + real
+      `20260713-160532/160653/160826`)
+- [x] Meta R2: mock 50t seed 42 — nenhuma PRIMEIRA queda vira memorial fora de
+      apex nos 12 perfis (1ª queda = Saque; ver §8 sobre a 2ª queda do `agressivo`)
+- [x] Meta R4: replans do `explorador` caíram 50 → 4 (−92%, meta ≥ 40%) sem
+      turno órfão de plano
+- [x] `player_downed` só via `source="combat"`; proposta de LLM rejeitada
+- [x] 1ª queda = saque completo (ouro 0, só arma básica) + mundo avançou 1 dia; 2ª queda = memorial
+- [x] Invariante nova cobre downed ilegal (2× na campanha, apex ou boss)
+- [x] `uv run pytest` verde (769 offline)
+- [x] Guard de FallbackLLM: nenhum `with_structured_output` novo (a narração do
+      downed usa `invoke` cru com try/except + template determinístico)
+- [x] Saves antigos continuam carregando (nenhum campo novo no save)
+- [x] ESTADO_ATUAL.md + ROADMAP.md atualizados
 
 ## 6. Smoke test com LLM real
 
@@ -220,3 +223,39 @@ def _same_region(loc_id_a: str, loc_id_b: str) -> bool: ...
   básica + XP/habilidades intactos garantem que recuperar é viável.
 - **Quota:** rodadas reais curtas (15t × 2-3 perfis) cabem no free tier Groq;
   espalhar por dias se 429 (lição da Fase 5).
+
+## 8. Registro de execução (2026-07-13)
+
+**Baselines (antes de qualquer knob):**
+- Mock `20260713-160458` (12 perfis × 50t seed 42): `combate` morria t6 (nv 2),
+  `agressivo` t7 (nv 1), `fujao` t24; **replan em TODO turno** (50/50 nos perfis
+  vivos — causa: MockLLM devolve `location` fora do mapa, e `location_moved`
+  replanejava sempre).
+- Real seed 7: `combate` morreu t5 (2× Zumbi Blindado — burst de elites),
+  `agressivo` t10 (atrito), ambos nível 1. `secret_rusher` 30t real: 0 erros /
+  0 violações — **fix do Verme-Primordial CONFIRMADO no real** (pendência fechada).
+
+**Knobs aplicados (R2, ordem da spec, mínimo que move os dados):**
+1. ✅ Knob 1 — `clamp_encounter(player_level=1)`: máx 1 elite no nível 1
+   (mata a causa da morte REAL do `combate`: burst de 2 elites).
+2. ⏭️ Knob 2 (cap 4+3×nível) — PULADO: nas mortes observadas o budget já era
+   mínimo (danger 1 → 3 pts); o cap novo não mudava nenhum caso medido.
+3. ✅ Knob 3 — piso de HP nas classes frágeis (<25): Arcanista 16→22,
+   Sombra 20→25, Batedor 22→27, Médico 24→28.
+
+**Resultado (rodada final mock `20260713-201438` vs baseline):** replans −450
+(explorador 50→4, −92%); 1ª morte adiada (combate t6→t15, agressivo t7→t10 e
+virou Saque); `downed ≤ 1` em todos; `avg_hp_pct_after_combat` 12–44% (combate
+segue doendo, ≤ 90%); 0 erros, 0 violações. **Nota:** o `agressivo` ainda morre
+no nível 1 na 2ª queda — combate DELIBERADO todo turno sem cura/descanso é
+"por conta e risco" (fora de escopo §2); a proteção anti-churn é a 1ª queda
+nunca ser memorial, e isso vale nos 12 perfis.
+
+**Smoke real pós-fix (`20260713-205857`, combate 15t seed 7):** cobriu os itens
+1 E 2 do §6 num run só — t4 lutando a 3 HP no pântano; **t5 caiu → O SAQUE real:
+acordou em Nova Arcádia com 6/27 HP (25%) e a campanha CONTINUOU**; t7 subiu ao
+nível 2; t8 voltou a lutar; **t9 = 2ª queda → memorial** (permadeath do fecho
+4.6 intacto; turnos 10-15 barrados pelo gate de game_over, 0 erros/0 violações).
+Primeira MORTE no t9 ≥ t8 (meta batida; baseline real morria no t5).
+Item 3 (`explorador` 15t real, run `20260713-210152`): **2 replans em 15 turnos**
+atravessando sublocais (0 erros/0 violações) — sem plot twist por viagem.

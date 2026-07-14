@@ -148,6 +148,55 @@ def get_latest_save_file() -> Optional[str]:
     # Retorna o mais recente
     return max(list_of_files, key=os.path.getctime)
 
+# --- spec polish-sessao (R1/R2): listar e excluir saves ----------------------
+
+SESSION_MEMORY_DIR = os.path.join("data", "saves_memory")
+
+
+def list_saves() -> List[Dict[str, Any]]:
+    """Resumo de todos os saves de `saves/*.json`, ordenado por mtime desc.
+    Leitura TOLERANTE: arquivo corrompido/ilegível é pulado, nunca derruba a
+    lista (R1)."""
+    if not os.path.isdir(SAVES_DIR):
+        return []
+    out: List[Dict[str, Any]] = []
+    for path in glob.glob(os.path.join(SAVES_DIR, "*.json")):
+        try:
+            with open(path, encoding="utf-8") as f:
+                raw = json.load(f)
+            player = raw.get("player") or {}
+            world = raw.get("world") or {}
+            clock = world.get("world_clock") or {}
+            out.append({
+                "game_id": str(raw.get("game_id", "")),
+                "name": str(player.get("name", "?")),
+                "class_name": str(player.get("class_name", "")),
+                "level": int(player.get("level", 1) or 1),
+                "location": str(world.get("current_location", "")),
+                "day": int(clock.get("day", 1) or 1),
+                "game_over": bool(raw.get("game_over", False)),
+                "updated_at": os.path.getmtime(path),
+            })
+        except Exception:
+            continue
+    out.sort(key=lambda s: s["updated_at"], reverse=True)
+    return out
+
+
+def delete_save(game_id: str) -> bool:
+    """Remove o save E o índice de memória da sessão (senão vira lixo órfão).
+    ValueError se game_id não é UUID (mesmo padrão do save_path — Fase 10);
+    False se o save não existe."""
+    import shutil
+    path = save_path(game_id)  # levanta ValueError se inválido
+    if not os.path.exists(path):
+        return False
+    os.remove(path)
+    shutil.rmtree(os.path.join(SESSION_MEMORY_DIR, str(game_id)),
+                  ignore_errors=True)
+    return True
+
+
 def save_game_state(state: Dict[str, Any]) -> bool:
     """
     Salva o estado completo do jogo em JSON na pasta 'saves/'.

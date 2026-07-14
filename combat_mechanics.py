@@ -1117,3 +1117,165 @@ def resolve_enemy_turn(enemy: Dict, player: Dict,
         target["active"] = False
         logs.append(f"{target.get('name','O aliado')} CAI em combate.")
     return logs
+
+
+# --------------------------------------------------------------------------
+# Derrota narrada — "O Saque" (spec balanceamento-early-game R3)
+# --------------------------------------------------------------------------
+def death_outcome(world: Dict, enemies: List[Dict], event_log: List[Dict]) -> str:
+    """Decide o destino da queda (HP=0): "downed" ou "died".
+
+    A PRIMEIRA queda da campanha fora de zona `apex` e fora de boss vira
+    `downed` (O Saque). Elegibilidade derivada do event_log — zero campo novo
+    no save: já houve `player_downed` ⇒ a próxima queda é memorial.
+    """
+    for ev in event_log or []:
+        if isinstance(ev, dict) and ev.get("type") == "player_downed":
+            return "died"
+    import gamedata as gd
+    loc = gd.get_location((world or {}).get("current_location_id", "")) or {}
+    if "apex" in (loc.get("tags") or []):
+        return "died"
+    for e in enemies or []:
+        if str(e.get("type", "")).strip().lower() == "boss":
+            return "died"
+    return "downed"
+
+
+def apply_downed(player: Dict, world: Dict) -> Tuple[Dict, Dict, List[Dict], str]:
+    """O Saque: o herói acorda 1 dia depois no último local seguro, com 25% do
+    HP, SEM ouro e SEM itens — sobra só a arma básica da classe, equipada.
+    Itens `unique` saqueados voltam ao pool do mundo (`unique_item_lost`,
+    holder="world"). XP/nível/habilidades intactos.
+
+    Retorna (player, world, eventos_gerados, nota_mecanica). Puro: não muta
+    os argumentos. O avanço de fações (mundo andou sem ele) fica a cargo do
+    chamador (mesmos hooks da viagem)."""
+    import gamedata
+    import world_utils as wu
+
+    player = dict(player)
+    world = wu.ensure_world(dict(world or {}))
+    fell_at = world.get("current_location_id", "")
+
+    # --- saque total -------------------------------------------------------
+    gold_lost = int(player.get("gold", 0) or 0)
+    player["gold"] = 0
+
+    inventory = [i for i in (player.get("inventory") or []) if isinstance(i, dict)]
+    equipment = dict(player.get("equipment") or {})
+    lost_ids: List[str] = [i.get("id") for i in inventory if i.get("id")]
+    lost_ids += [v for v in equipment.values() if v]
+    items_lost = sum(int(i.get("qty", 1) or 1) for i in inventory) + \
+        len([v for v in equipment.values() if v])
+    uniques_lost = sorted({iid for iid in lost_ids
+                           if (ARTIFACTS_DB.get(iid) or {}).get("unique")})
+
+    basic_weapon = None
+    starting = (CLASSES.get(player.get("class_name", "")) or {}).get(
+        "starting_equipment") or []
+    if starting:
+        basic_weapon = starting[0]
+    player["inventory"] = [{"id": basic_weapon, "qty": 1}] if basic_weapon else []
+    player["equipment"] = {"weapon": basic_weapon, "armor": None, "accessory": None}
+    if basic_weapon and basic_weapon in uniques_lost:
+        uniques_lost.remove(basic_weapon)
+    player["active_conditions"] = []
+    player["hp"] = max(1, int(player.get("max_hp", 1) or 1) // 4)
+
+    # --- o mundo andou sem ele (1 dia) --------------------------------------
+    wu.advance_clock(world, len(wu.PERIODS))
+    wu.advance_weather(world)
+    safe_id = wu.last_safe_location(world)
+    safe = gamedata.get_location(safe_id) or {}
+    if safe:
+        world["current_location_id"] = safe_id
+        world["current_location"] = safe.get("name", safe_id)
+        world["danger_level"] = safe.get("danger", 1)
+        visited = list(world.get("visited") or [])
+        if safe_id not in visited:
+            world["visited"] = visited + [safe_id]
+
+    # --- eventos (pipeline 2.6; gate anti-LLM via source) -------------------
+    events: List[Dict] = [{
+        "type": "player_downed", "actor_id": "player", "target_id": "player",
+        "detail": f"{player.get('name', 'O herói')} caiu, foi saqueado — "
+                  "e ainda assim levantou",
+        "payload": {"location_id": fell_at, "rescued_to": safe_id,
+                    "gold_lost": gold_lost, "items_lost": items_lost,
+                    "uniques_lost": uniques_lost},
+        "source": "combat",
+    }]
+    for uid in uniques_lost:
+        events.append({
+            "type": "unique_item_lost", "actor_id": "player", "target_id": uid,
+            "detail": f"{uid} foi saqueado do herói caído",
+            "payload": {"holder": "world"}, "source": "engine",
+        })
+
+    weapon_name = (ARTIFACTS_DB.get(basic_weapon) or {}).get("name", basic_weapon or "nada")
+    nota = (f"Você acorda um dia depois em {world.get('current_location', safe_id)}, "
+            f"vivo por pouco. Levaram tudo — {gold_lost} de ouro e {items_lost} item(ns). "
+            f"Sobrou apenas {weapon_name}.")
+    return player, world, events, nota
+
+
+# --------------------------------------------------------------------------
+# Chips de combate (spec polish-sessao R4) — 100% mecânicos, zero LLM
+# --------------------------------------------------------------------------
+def combat_suggestions(player: Dict, enemies: List[Dict],
+                       combat: Optional[Dict]) -> List[str]:
+    """Chips do turno de combate, derivados da FICHA (função pura):
+    habilidades conhecidas FORA de cooldown e com recurso suficiente (por nome
+    exibível, tier desc), "Beber <poção>" se houver consumível de cura,
+    "Fugir" se não enredado. Máx 5. Fora de combate → []."""
+    from gamedata import ABILITIES
+
+    active = [e for e in (enemies or []) if isinstance(e, dict)
+              and e.get("status") == "ativo"]
+    if not (combat or {}).get("active") or not active:
+        return []
+
+    chips: List[str] = []
+
+    ready = []
+    for aid in player.get("known_abilities") or []:
+        ab = ABILITIES.get(aid)
+        if not ab or is_on_cooldown(player, aid):
+            continue
+        cost = int(ab.get("cost", 0) or 0)
+        field = _resource_field(ab.get("resource_type", "")) if cost > 0 else None
+        if field and int(player.get(field, 0) or 0) < cost:
+            continue
+        ready.append((int(ab.get("tier", 1) or 1), ab.get("name", aid)))
+    ready.sort(key=lambda t: (-t[0], t[1]))
+    chips += [name for _, name in ready]
+
+    potion = _healing_consumable(player)
+    if potion:
+        chips.append(f"Beber {potion}")
+
+    if not has_control(player, "root"):
+        chips.append("Fugir")
+
+    if len(chips) <= 5:
+        return chips
+    # teto de 5 preservando poção/fugir (corta habilidades de sobra)
+    tail = ([f"Beber {potion}"] if potion else []) + \
+        (["Fugir"] if chips[-1] == "Fugir" else [])
+    keep = 5 - len(tail)
+    return [name for _, name in ready][:keep] + tail
+
+
+def _healing_consumable(player: Dict) -> Optional[str]:
+    """Nome do primeiro consumível de CURA no inventário (ou None)."""
+    import re as _re
+    for entry in player.get("inventory") or []:
+        if not isinstance(entry, dict) or int(entry.get("qty", 1) or 0) < 1:
+            continue
+        item = ARTIFACTS_DB.get(entry.get("id", "")) or {}
+        mech = item.get("mechanics") or {}
+        legacy = ((mech.get("active_ability") or {}).get("effect")) or ""
+        if mech.get("heal") or _re.search(r"Recupera\s+\d+d\d+", str(legacy), _re.I):
+            return item.get("name", entry.get("id"))
+    return None

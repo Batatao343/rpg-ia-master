@@ -46,8 +46,11 @@ def turn_to_record(rec: TurnRecord) -> dict:
         "error": rec.error,
         "location_id": rec.location_id,
         "player_hp": rec.player_hp,
+        "player_max_hp": rec.player_max_hp,
         "player_level": rec.player_level,
         "gold": rec.gold,
+        "combat_active": rec.combat_active,
+        "replanned": rec.replanned,
         "violations": list(rec.violations),
         "provider": rec.provider,
         "model": rec.model,
@@ -103,6 +106,27 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
     player = final.get("player", {}) or {}
     quests = [q for q in (final.get("quests") or []) if isinstance(q, dict)]
 
+    # spec balanceamento-early-game (R5): métricas de balanço da campanha.
+    first_death_turn = next(
+        (r["turn"] for r in turn_records
+         if int(r.get("player_max_hp", 0) or 0) > 0 and int(r.get("player_hp", 1) or 0) <= 0),
+        None)
+    downed_count = len([ev for ev in (final.get("event_log") or [])
+                        if isinstance(ev, dict) and ev.get("type") == "player_downed"])
+    replan_count = len([r for r in turn_records if r.get("replanned")])
+    combat_end_hp_pcts: List[float] = []
+    prev_combat = False
+    for r in turn_records:
+        now_combat = bool(r.get("combat_active"))
+        ended = (not now_combat) and (prev_combat or r.get("route") == "combat_agent")
+        mx = int(r.get("player_max_hp", 0) or 0)
+        if ended and mx > 0:
+            combat_end_hp_pcts.append(100.0 * int(r.get("player_hp", 0) or 0) / mx)
+        prev_combat = now_combat
+    avg_hp_pct_after_combat = (
+        round(sum(combat_end_hp_pcts) / len(combat_end_hp_pcts), 1)
+        if combat_end_hp_pcts else None)
+
     return {
         "profile": result.profile,
         "seed": result.seed,
@@ -112,6 +136,10 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         "routes": routes,
         "latency_ms": {"p50": _percentile(latencies, 50), "p95": _percentile(latencies, 95)},
         "deaths": 1 if final.get("game_over") else 0,
+        "first_death_turn": first_death_turn,
+        "downed_count": downed_count,
+        "avg_hp_pct_after_combat": avg_hp_pct_after_combat,
+        "replan_count": replan_count,
         "final_level": int(player.get("level", 1) or 1),
         "final_gold": int(player.get("gold", 0) or 0),
         "locations_visited": len(world.get("visited", []) or []),

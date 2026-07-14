@@ -35,14 +35,21 @@ def encounter_budget(player_level: int, danger: int, allies_count: int = 0) -> i
     return min(raw, cap)
 
 
-def clamp_encounter(enemies: List[Dict], budget: int) -> Tuple[List[Dict], List[str]]:
+def clamp_encounter(enemies: List[Dict], budget: int,
+                    player_level: int = 0) -> Tuple[List[Dict], List[str]]:
     """Corta o excedente do orçamento. Regras: boss NUNCA é cortado; prioriza
     VARIEDADE (1 de cada template antes de repetições); mantém >= 1 inimigo.
+    Nível 1 (spec balanceamento-early-game R2.1): no máximo 1 elite — burst de
+    2+ elites é sentença de morte pro herói recém-criado. Bosses seguem intactos.
     Retorna (mantidos, logs de corte p/ o narrador)."""
     if not enemies:
         return [], []
     bosses = [e for e in enemies if tier_cost(e) == TIER_COST["boss"]]
     rest = [e for e in enemies if tier_cost(e) != TIER_COST["boss"]]
+    if int(player_level or 0) == 1:
+        elites = [e for e in rest if tier_cost(e) == TIER_COST["elite"]]
+        for extra in elites[1:]:
+            rest.remove(extra)
 
     def _template(e: Dict) -> str:
         import re

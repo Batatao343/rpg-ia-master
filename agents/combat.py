@@ -141,7 +141,8 @@ def _spawn_enemies_integrated(messages: List, target_hint: str, state: Optional[
             level = int((state.get("player") or {}).get("level", 1) or 1)
             n_allies = len(party_mod.active_allies(state))
             budget = eb.encounter_budget(level, danger, n_allies)
-            final_enemies_list, cut_logs = eb.clamp_encounter(final_enemies_list, budget)
+            final_enemies_list, cut_logs = eb.clamp_encounter(final_enemies_list, budget,
+                                                              player_level=level)
             loc = get_location(world.get("current_location_id", "")) or {}
             final_enemies_list, fill_logs = eb.fill_encounter(
                 final_enemies_list, budget, loc, danger,
@@ -264,6 +265,38 @@ def _death_template(player: Dict, enemies: List[Dict], world: Dict) -> str:
     return (f"{player.get('name', 'O herói')}, {player.get('class_name', 'andarilho')}, "
             f"caiu em {loc} no dia {day}, diante de {killer}. "
             f"A crônica guarda o que a estrada levou.")
+
+
+def _narrate_downed(player: Dict, logs: List[str], nota: str, intent: str) -> str:
+    """R3 (O Saque): narração digna da queda-sem-morte — template determinístico
+    + 1 chamada FAST opcional (fallback = o próprio template)."""
+    fallback = "⚔️ " + "\n".join(f"• {l}" for l in logs[-4:]) + f"\n\n☠️ {nota}"
+    sys = SystemMessage(content=f"""
+    <role>Narrador — Dark Fantasy</role>
+    O herói {player.get('name', '?')} CAIU em combate, mas NÃO morreu: acordou
+    um dia depois, saqueado, no lugar descrito abaixo. Narre em 2-3 frases a
+    queda, o apagão e o despertar — solene, sem heroísmo barato. NÃO invente
+    itens nem números fora do texto.
+
+    <fatos>
+    {nota}
+    Últimos golpes: {'; '.join(logs[-3:])}
+    </fatos>
+    """)
+    try:
+        llm = get_llm(temperature=0.6, tier=ModelTier.FAST)
+        if getattr(llm, "is_fallback", False):
+            raise RuntimeError("fallback")
+        res = llm.invoke([sys, HumanMessage(content=intent or "...")])
+        text = getattr(res, "content", "") or ""
+        if isinstance(text, list):
+            text = " ".join(p.get("text", "") if isinstance(p, dict) else str(p)
+                            for p in text)
+        if text.strip():
+            return f"{text.strip()}\n\n☠️ {nota}"
+    except Exception as e:
+        print(f"⚠️ [COMBAT DOWNED NARRATE] {e}")
+    return fallback
 
 
 def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
@@ -476,10 +509,17 @@ def combat_node(state: GameState):
         bestiary_knowledge = disc.record_kills(bestiary_knowledge, dead, turn)
         bk_changed = True
 
+    # spec balanceamento-early-game (R3): a PRIMEIRA queda da campanha fora de
+    # apex/boss vira "O Saque" (downed), não memorial. Decisão 100% Python.
+    player_dead = int(player.get("hp", 0)) <= 0
+    downed = player_dead and cm.death_outcome(
+        state.get("world") or {}, enemies, state.get("event_log") or []) == "downed"
+
     # Fase 4.1: XP determinístico por kill (tier do bestiário; fugitivo não conta).
     # grant_xp devolve cópia — reatribui ANTES de montar o result.
+    # R3: queda com Saque encerra SEM espólio/XP.
     level_up_events: List[Dict] = []
-    if dead:
+    if dead and not downed:
         import progression as pg
         xp = pg.xp_for_kills(dead)
         if xp:
@@ -488,16 +528,34 @@ def combat_node(state: GameState):
 
     # Fase 4.6 (R6): morte do player — fecho de saga (1 SMART com guard; sem LLM
     # cai no template determinístico digno).
-    player_dead = int(player.get("hp", 0)) <= 0
+
+    # R3: O Saque — aplica ANTES da narração (o narrador precisa do desfecho).
+    downed_events: List[Dict] = []
+    downed_world = None
+    if downed:
+        factions_now = state.get("factions") or []
+        player, downed_world, downed_events, downed_nota = cm.apply_downed(
+            player, state.get("world") or {})
+        downed_world.pop("encounter_surprise", None)
+        # rastro p/ a invariante 5.2 (downed vs boss é ilegal — death_outcome barra;
+        # se um bug furar o gate, o payload denuncia)
+        downed_events[0]["payload"]["boss_present"] = any(
+            str(e.get("type", "")).strip().lower() == "boss" for e in enemies)
+        # o mundo andou 1 dia sem ele — fações progridem como numa viagem longa
+        import world_utils as wu_f
+        factions_new, _ = wu_f.advance_factions(factions_now, len(wu_f.PERIODS))
 
     # Fase 2.8: pack enxuto (só ambientação; mecânica segue 100% Python).
     loc = state.get("world", {}).get("current_location", "")
-    world_pack = build_context_pack(state, query=f"{loc} {intent}",
-                                    purpose="combat_narration", token_budget=1200)
-    narrative = _narrate(player, enemies, logs, spawned_flavor, intent, combat_over,
-                         world_pack.world_state_block, player_dead=player_dead)
-    if player_dead:
-        narrative = f"{narrative}\n\n☠️ {_death_template(player, enemies, state.get('world') or {})}"
+    if downed:
+        narrative = _narrate_downed(player, logs, downed_nota, intent)
+    else:
+        world_pack = build_context_pack(state, query=f"{loc} {intent}",
+                                        purpose="combat_narration", token_budget=1200)
+        narrative = _narrate(player, enemies, logs, spawned_flavor, intent, combat_over,
+                             world_pack.world_state_block, player_dead=player_dead)
+        if player_dead:
+            narrative = f"{narrative}\n\n☠️ {_death_template(player, enemies, state.get('world') or {})}"
 
     result = {
         "messages": [AIMessage(content=narrative)],
@@ -528,6 +586,22 @@ def combat_node(state: GameState):
                     "detail": f"{a.get('name','aliado')} caiu lutando ao lado do herói",
                     "payload": {}, "source": "combat",
                 })
+
+    # R3 (O Saque): a campanha CONTINUA — sem game_over, sem espólio, combate
+    # encerrado; o herói acorda no local seguro com o mundo 1 dia à frente.
+    if downed:
+        result["player"] = player
+        result["world"] = downed_world
+        result["factions"] = factions_new
+        result["enemies"] = []
+        result["combat"] = {**combat_meta, "active": False}
+        result["combat_target"] = None
+        result["next"] = None
+        result["archive_due"] = True
+        result["pending_world_events"] = (
+            (state.get("pending_world_events", []) or [])
+            + _kill_events(dead) + fallen_events + downed_events)
+        return result
 
     # Fase 4.6 (R6/R7): morte do player fecha a campanha — save vira MEMORIAL.
     death_events = []

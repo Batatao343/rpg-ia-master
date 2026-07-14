@@ -176,6 +176,20 @@ export interface CombatBlock {
   enemies: EnemyView[];
   player_conditions: Condition[];
   cooldowns: Record<string, number>;
+  // spec polish-sessao (R4): chips mecânicos derivados da ficha
+  suggestions?: string[];
+}
+
+// spec polish-sessao (R1): resumo de campanha salva (GET /game/saves)
+export interface SaveSummary {
+  game_id: string;
+  name: string;
+  class_name: string;
+  level: number;
+  location: string;
+  day: number;
+  game_over: boolean;
+  updated_at: number;
 }
 
 export interface ReputationPoint {

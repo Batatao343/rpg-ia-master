@@ -674,3 +674,58 @@ select {
 .codex-entry__hint { font-size: 0.75rem; color: var(--ink-soft, #9a958a); font-style: italic; }
 .codex-entry__traits { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0.3rem 0; }
 .traitchip { font-size: 0.72rem; padding: 0.1rem 0.5rem; border: 1px solid var(--line-soft); border-radius: 999px; color: var(--accent, #b3852f); cursor: help; }
+
+/* ============================================================
+   spec polish-sessao — saves, chips de combate, crônica, onboarding, mobile
+   ============================================================ */
+
+/* R3 — tela "Continuar jornada" */
+.savelist { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; max-height: 46vh; overflow-y: auto; }
+.savecard { display: flex; gap: 0.5rem; align-items: stretch; }
+.savecard__main { flex: 1 1 auto; display: grid; gap: 0.15rem; text-align: left; padding: 0.7rem 0.9rem; border: 1px solid var(--line-soft); border-radius: var(--r-md); background: var(--surface-2); color: var(--ink); cursor: pointer; font: inherit; transition: border-color 0.15s, box-shadow 0.15s; }
+.savecard__main:hover { border-color: var(--accent); box-shadow: 0 0 16px var(--accent-glow); }
+.savecard__name { font-family: var(--display); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem; }
+.savecard__badge { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.1rem 0.5rem; border: 1px solid var(--line); border-radius: var(--r-pill); color: var(--muted); }
+.savecard.is-memorial .savecard__main { opacity: 0.75; }
+.savecard__meta { font-size: 0.82rem; color: var(--muted); }
+.savecard__del { align-self: center; }
+.savecard__confirm { display: flex; gap: 0.6rem; justify-content: center; margin-top: 0.6rem; }
+.btn--danger { background: linear-gradient(180deg, var(--danger-bright), var(--danger)); border-color: oklch(0.66 0.2 26 / 0.6); color: oklch(0.98 0.02 30); }
+
+/* R4 — chips de combate */
+.actionchips { display: flex; gap: 0.45rem; flex-wrap: wrap; padding: 0.5rem clamp(0.9rem, 3vw, 2.9rem) 0; background: oklch(0.13 0.012 250 / 0.92); }
+.actionchip { padding: 0.35rem 0.8rem; border: 1px solid var(--danger-dim, var(--line)); border-radius: var(--r-pill); background: var(--surface-2); color: var(--ink); font: inherit; font-size: 0.88rem; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; }
+.actionchip:hover:not(:disabled) { border-color: var(--danger-bright); box-shadow: 0 0 12px var(--danger-glow); }
+.actionchip:disabled { opacity: 0.5; cursor: default; }
+
+/* R5 — crônica: busca + download */
+.chron-tools { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+.chron-tools .iconbtn { text-decoration: none; }
+.chron-search { width: 100%; margin: 0.4rem 0 0.7rem; padding: 0.45rem 0.7rem; border: 1px solid var(--line-soft); border-radius: var(--r-md); background: var(--surface-2); color: var(--ink); font: inherit; font-size: 0.9rem; }
+
+/* R6 — onboarding do 1º turno */
+.onboard { margin: 0 clamp(0.9rem, 3vw, 2.9rem) 0.5rem; padding: 0.7rem 0.9rem; border: 1px solid var(--line-soft); border-left: 3px solid var(--accent); border-radius: var(--r-md); background: var(--surface); font-size: 0.88rem; }
+.onboard__head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+.onboard__title { margin: 0; font-family: var(--display); color: var(--accent); }
+.onboard__list { margin: 0.4rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.15rem; color: var(--muted); }
+.onboard__tip { margin: 0.45rem 0 0; color: var(--faint); font-size: 0.82rem; }
+
+/* R7 — passe mobile (390px): 1 coluna, input fixo embaixo, zero overflow-x */
+@media (max-width: 480px) {
+  html, body { overflow-x: hidden; }
+  .topbar { flex-wrap: wrap; gap: 0.3rem; padding: 0.5rem 0.7rem; }
+  .topbar__loc { min-width: 0; }
+  .topbar__place { font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 55vw; display: inline-block; }
+  .stage { grid-template-columns: 1fr; }
+  .hud { width: 100vw; top: 0; }
+  .story { padding: 0.7rem 0.7rem 1rem; }
+  .msg--player { max-width: 100%; }
+  .actionbar { padding: 0.6rem 0.7rem calc(0.6rem + env(safe-area-inset-bottom)); position: sticky; bottom: 0; }
+  .actionbar input { min-width: 0; font-size: 16px; } /* 16px evita zoom do iOS */
+  .actionchips { padding: 0.4rem 0.7rem 0; }
+  .actionchip { font-size: 0.95rem; padding: 0.5rem 0.9rem; } /* alvo de toque */
+  .placesbar { overflow-x: auto; flex-wrap: nowrap; }
+  .onboard { margin: 0 0.7rem 0.4rem; }
+  .create__frame, .lvlup { width: min(96vw, 680px); padding: 1rem; }
+  .savelist { max-height: 52vh; }
+}

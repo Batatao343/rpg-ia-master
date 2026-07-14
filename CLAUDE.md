@@ -276,7 +276,12 @@ migrations, CORS/rate-limit/log) · fase 11 (contratos `-m llm_contract`, 9 verd
 no Gemini real) · mapa (interiores + `travel_times`) · NPCs 3 camadas
 (`services/npc_layers.py` + `data/traits.json`) — todas `done`. Roteamento
 multi-provider `done`. **Fase 5 (5.1 harness + 5.2 invariantes + 5.3 telemetria)
-`done`** — `playtest/` (699 testes offline + smoke real). Próxima: Fases 8+.
+`done`** — `playtest/`. 2026-07-13: **ciclo de produto `done`** —
+balanceamento-early-game ("O Saque" + tuning nível 1 + replan por região) ·
+streaming-turno-sse (`POST /game/action/stream` + custo real no log `rpg.turn`) ·
+polish-sessao (`GET /game/saves` + DELETE + chips mecânicos de combate +
+export/busca da crônica + onboarding + mobile 390px). **769 testes offline.**
+Próxima: Fase 8 (arte) vs 10b (público) — decidir com o usuário.
 
 ---
 

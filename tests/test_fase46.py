@@ -218,11 +218,15 @@ def test_morte_gera_evento_e_memorial(monkeypatch):
                              "bonus": 50, "damage": "10d10+50"}],
                    behavior={"profile": "implacavel"})
     p = player(hp=5)
+    # spec balanceamento-early-game (R3): a 1ª queda vira "O Saque" — memorial
+    # só na 2ª. Seed com player_downed prévio = esta queda é a definitiva.
     state = {"messages": [HumanMessage(content="luto")], "player": p,
              "enemies": [killer], "combat": {"round": 1, "active": True},
              "combat_target": "Capitão", "world": {"turn_count": 3,
                                                    "current_location": "Skallgard",
                                                    "world_clock": {"day": 2}},
+             "event_log": [{"type": "player_downed", "target_id": "player",
+                            "turn": 1, "payload": {}}],
              "bestiary_knowledge": {}, "pending_world_events": [], "party": []}
     out = cbt.combat_node(state)
     assert out.get("game_over") is True

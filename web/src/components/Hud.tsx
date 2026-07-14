@@ -97,7 +97,9 @@ export function Hud({ data, open, onEquip, busy }: {
         )}
         {tab === "faccoes" && <FactionsTab factions={data?.factions ?? []} />}
         {tab === "missoes" && <QuestsTab quest={data?.quest} />}
-        {tab === "cronica" && <ChronicleTab chapters={data?.chronicle ?? []} />}
+        {tab === "cronica" && (
+          <ChronicleTab chapters={data?.chronicle ?? []} gameId={data?.game_id} />
+        )}
         {tab === "codex" && (
           <CodexTab gameId={data?.game_id} turnCount={data?.world.turn_count} open={tab === "codex"} />
         )}
@@ -302,7 +304,9 @@ function FactionsTab({ factions }: { factions: FactionView[] }) {
   );
 }
 
-function ChronicleTab({ chapters }: { chapters: ChronicleChapter[] }) {
+function ChronicleTab({ chapters, gameId }: { chapters: ChronicleChapter[]; gameId?: string }) {
+  // spec polish-sessao (R5): busca CLIENT-SIDE (filtro local) + download .txt
+  const [query, setQuery] = useState("");
   if (!chapters.length) {
     return (
       <div>
@@ -311,11 +315,37 @@ function ChronicleTab({ chapters }: { chapters: ChronicleChapter[] }) {
       </div>
     );
   }
+  const q = query.trim().toLowerCase();
+  const filtered = !q
+    ? chapters
+    : chapters
+        .map((cap) => ({
+          ...cap,
+          entries: cap.entries.filter((e) => e.text.toLowerCase().includes(q)),
+        }))
+        .filter((cap) => cap.entries.length > 0 || cap.title.toLowerCase().includes(q));
   // capítulo mais recente primeiro; dentro do capítulo, entrada mais recente primeiro
-  const ordered = chapters.slice().reverse();
+  const ordered = filtered.slice().reverse();
   return (
     <div>
-      <p className="hud__label">Crônica da jornada</p>
+      <div className="chron-tools">
+        <p className="hud__label">Crônica da jornada</p>
+        {gameId && (
+          <a className="iconbtn" href={"/game/chronicle/export?game_id=" + encodeURIComponent(gameId)}
+             download title="Baixar a crônica como .txt">
+            ⤓ .txt
+          </a>
+        )}
+      </div>
+      <input
+        className="chron-search"
+        type="search"
+        placeholder="Buscar na crônica…"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        aria-label="Buscar na crônica"
+      />
+      {ordered.length === 0 && <p className="combat-empty">Nada encontrado.</p>}
       {ordered.map((cap, ci) => (
         <section key={ci} className="chron-chapter">
           <header className="chron-chapter__head">

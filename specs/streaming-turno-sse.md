@@ -1,7 +1,7 @@
 # SPEC — Streaming do turno via SSE + custo por turno em produção
 
-> **Status:** `approved` (refinamento 2026-07-13: abordagem de FASES confirmada
-> pelo usuário — token-a-token descartado por custar +1 chamada LLM/turno)
+> **Status:** `done` (2026-07-13 — smoke real: `accepted` 0.09s, `route` 0.66s,
+> `state` 20.2s num turno real de 20s; ver §8)
 > **Criada:** 2026-07-13 · **Atualizada:** 2026-07-13
 > **Depende de:** Fase 10 fatia local `done` (rate limit/log de turno); roteamento multi-provider `done`
 > **Desbloqueia:** UX mobile (spec polish-sessao); qualquer demo pública
@@ -176,16 +176,16 @@ com o grafo real (MockLLM).
 
 ## 5. Critérios de aceite
 
-- [ ] Evento `accepted` chega < 1s após o request (medido no smoke real)
-- [ ] Ordem de eventos garantida e testada; `state` final idêntico ao POST clássico
-- [ ] `/game/action` clássico intocado (fallback vivo)
-- [ ] Rate limit + memorial + sanitização A6 valem no endpoint novo
-- [ ] Log `rpg.turn` com `llm_calls`/`providers`/`fell_back`/`cost_usd_est`; zero exposição ao jogador
-- [ ] Frontend: fase visível durante a espera; typewriter consome chunks; fallback automático
-- [ ] `uv run pytest` verde + `npm run build` ok
-- [ ] Guard de FallbackLLM: nenhum `with_structured_output` novo (só reuso)
-- [ ] Saves antigos continuam carregando (nenhuma mudança de schema)
-- [ ] ESTADO_ATUAL.md + ROADMAP.md atualizados
+- [x] Evento `accepted` chega < 1s após o request (real: 0.09s; MockLLM: 0.03s)
+- [x] Ordem de eventos garantida e testada; `state` final idêntico ao POST clássico
+- [x] `/game/action` clássico intocado (fallback vivo — testado)
+- [x] Rate limit + memorial + sanitização A6 valem no endpoint novo
+- [x] Log `rpg.turn` com `llm_calls`/`providers`/`fell_back`/`cost_usd_est`; zero exposição ao jogador
+- [x] Frontend: fase visível durante a espera; typewriter consome chunks; fallback automático
+- [x] `uv run pytest` verde (769) + `npm run build` ok
+- [x] Guard de FallbackLLM: nenhum `with_structured_output` novo (só reuso)
+- [x] Saves antigos continuam carregando (nenhuma mudança de schema)
+- [x] ESTADO_ATUAL.md + ROADMAP.md atualizados
 
 ## 6. Smoke test com LLM real
 
@@ -209,3 +209,21 @@ com o grafo real (MockLLM).
 - **Custo:** zero chamada LLM extra por design (só reorganiza o transporte).
 - **Compatibilidade de API:** endpoint novo aditivo; clientes antigos (CLI,
   scripts, smoke_api.sh) intocados.
+
+## 8. Registro de execução (2026-07-13)
+
+- **Etapa 1 (caracterização):** `app.stream(state, stream_mode=["updates","values"])`
+  emite `(mode, payload)`; nós na ordem campaign_manager → dm_router → rota →
+  archivist; estado final == `invoke` com mesmo seed (2 testes).
+- **Implementação:** `_run_turn` compartilhado; `_stream_turn` roda o grafo em
+  thread própria com `queue.Queue` (keepalive `: ping` a cada 10s entre nós);
+  memorial vira evento `error` com `code: 409`; telemetria por
+  `contextvars.ContextVar` (hook global registrado no import do api.py).
+- **Smoke real (Groq/Gemini vivos):** turno de 20.2s → `accepted` 0.09s,
+  primeiro `phase` 0.11s, `route` 0.66s ("npc_actor"). Log `rpg.turn` real:
+  `llm_calls=5, llm_providers={groq:3, gemini:2}, cost_usd_est=0.0036,
+  fell_back=true` (minimax 402/qwen 401 — contas sem saldo, fallback ok).
+- **Frontend:** parser SSE manual (fetch+ReadableStream), fases com textos
+  curados, chunks alimentam `useTypewriter` (que agora CONTINUA quando o texto
+  cresce), fallback silencioso pro POST em qualquer erro antes de `state`
+  (entrada parcial órfã é removida do log). 9 testes em `tests/test_streaming.py`.

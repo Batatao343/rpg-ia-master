@@ -49,8 +49,12 @@ class TurnRecord:
     error: Optional[str] = None
     location_id: str = ""
     player_hp: int = 0
+    player_max_hp: int = 0
     player_level: int = 1
     gold: int = 0
+    # spec balanceamento-early-game (R5): campos crus das métricas de balanço.
+    combat_active: bool = False
+    replanned: bool = False
     violations: List[str] = field(default_factory=list)
     # Narração que o jogador leria no turno (p/ transcript qualitativo do prompt).
     narrative: str = ""
@@ -272,12 +276,15 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 turn_events.clear()
                 t0 = time.monotonic()
                 events_before = len(state.get("event_log", []) or [])
+                plan_before = (state.get("campaign_plan") or {}).get("last_planned_turn")
                 rec = TurnRecord(turn=turn, action=action, route="", latency_ms=0)
                 try:
                     new_state = game_graph.invoke(state)
                     save_game_state(new_state)
                     rec.latency_ms = int((time.monotonic() - t0) * 1000)
                     rec.route = new_state.get("next", "") or ""
+                    rec.replanned = ((new_state.get("campaign_plan") or {})
+                                     .get("last_planned_turn") != plan_before)
                     rec.events_applied = len(new_state.get("event_log", []) or []) - events_before
                     rec.events_rejected = len(new_state.get("pending_world_events", []) or [])
                     rec.narrative = _last_ai_text(new_state)
@@ -334,8 +341,10 @@ def _fill_state_metrics(rec: TurnRecord, state: dict) -> None:
     world = state.get("world", {}) or {}
     rec.location_id = world.get("current_location_id", "") or ""
     rec.player_hp = int(player.get("hp", 0) or 0)
+    rec.player_max_hp = int(player.get("max_hp", 0) or 0)
     rec.player_level = int(player.get("level", 1) or 1)
     rec.gold = int(player.get("gold", 0) or 0)
+    rec.combat_active = bool((state.get("combat") or {}).get("active"))
 
 
 def _attach_telemetry(rec: TurnRecord, events: List[dict]) -> None:

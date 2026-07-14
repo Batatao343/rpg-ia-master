@@ -4,7 +4,11 @@ import { mdLite, roleLabel } from "../lib";
 import { useTypewriter } from "../hooks/useTypewriter";
 import type { LogEntry } from "../types";
 
-export function StoryLog({ entries, thinking }: { entries: LogEntry[]; thinking: boolean }) {
+export function StoryLog({ entries, thinking, thinkingLabel }: {
+  entries: LogEntry[];
+  thinking: boolean;
+  thinkingLabel?: string | null;
+}) {
   const storyRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -24,7 +28,7 @@ export function StoryLog({ entries, thinking }: { entries: LogEntry[]; thinking:
           <span className="thinking__dot" />
           <span className="thinking__dot" />
           <span className="thinking__dot" />
-          <span className="thinking__label">o narrador tece o destino…</span>
+          <span className="thinking__label">{thinkingLabel || "o narrador tece o destino…"}</span>
         </div>
       )}
     </section>

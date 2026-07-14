@@ -5,19 +5,23 @@ Atualizado para suportar Memória Híbrida (Game ID e Resumo).
 Fase 10: game_id validado (UUID) na borda, CORS por env, rate limit mínimo,
 log JSON por turno.
 """
+import contextvars
 import json
 import logging
+import queue
 import sys
 import os
+import threading
 import time
 import uvicorn
 import uuid # <--- Necessário para gerar IDs de sessão
-from collections import defaultdict, deque
+from collections import Counter, defaultdict, deque
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, Iterator, List, Optional
 from langchain_core.messages import HumanMessage, SystemMessage
 
 # Adiciona raiz ao path
@@ -28,7 +32,8 @@ from main import app as game_graph
 from persistence import save_game_state, load_game_state, save_path, _serialize_messages
 from character_creator import create_player_character
 from gamedata import ABILITIES, CLASSES, load_json_data, seed_factions
-from llm_setup import is_simulated
+from llm_setup import is_simulated, set_llm_telemetry_hook
+from playtest import pricing as llm_pricing
 import progression
 from services import quest_log
 from services import state_views as sv
@@ -67,6 +72,36 @@ if not _turn_logger.handlers:
     _turn_logger.addHandler(_handler)
     _turn_logger.setLevel(logging.INFO)
     _turn_logger.propagate = False
+
+
+# spec streaming-turno-sse (R5): telemetria de LLM em PRODUÇÃO — o hook do
+# roteamento acumula os invokes do turno corrente num ContextVar (cada request
+# síncrono roda numa thread com contexto próprio; zero vazamento entre turnos).
+# Dev-only: os campos vão no log `rpg.turn`, NUNCA no GameResponse.
+_llm_turn_events: contextvars.ContextVar = contextvars.ContextVar(
+    "rpg_llm_turn_events", default=None)
+
+
+def _telemetry_hook(provider: str, model: str, tier, latency_ms: int,
+                    fell_back: bool) -> None:
+    acc = _llm_turn_events.get()
+    if acc is not None:
+        acc.append({"provider": provider, "model": model,
+                    "tier": getattr(tier, "value", str(tier)),
+                    "latency_ms": int(latency_ms), "fell_back": bool(fell_back)})
+
+
+set_llm_telemetry_hook(_telemetry_hook)
+
+
+def _llm_log_fields(events: Optional[List[dict]]) -> Dict[str, Any]:
+    events = events or []
+    return {
+        "llm_calls": len(events),
+        "llm_providers": dict(Counter(e.get("provider") or "?" for e in events)),
+        "fell_back": any(e.get("fell_back") for e in events),
+        "cost_usd_est": round(llm_pricing.turn_cost(events), 6),
+    }
 
 
 def _resolve_save_file(game_id: Optional[str]) -> Optional[str]:
@@ -108,8 +143,11 @@ def _rate_limit_max() -> int:
 async def _rate_limit(request: Request, call_next):
     limit = _rate_limit_max()
     # Auditoria A2: equip/levelup também mutam o save — entram na janela.
-    if limit > 0 and request.url.path in ("/game/action", "/game/new",
-                                          "/game/equip", "/game/levelup"):
+    if limit > 0 and (request.url.path in ("/game/action", "/game/action/stream",
+                                           "/game/new", "/game/equip", "/game/levelup")
+                      # spec polish-sessao (R2): DELETE de save também é mutação
+                      or (request.method == "DELETE"
+                          and request.url.path.startswith("/game/save/"))):
         ip = request.client.host if request.client else "?"
         now = time.monotonic()
         # Auditoria A8: teto no dict — descarta IPs com janela inteira vencida.
@@ -374,6 +412,7 @@ def _combat_block(state: dict) -> Dict[str, Any]:
         return [{"name": c.get("name", ""), "dot": c.get("dot", 0), "duration": c.get("duration", 0)}
                 for c in (entity.get("active_conditions") or []) if isinstance(c, dict)]
 
+    import combat_mechanics as cm_mod
     return {
         "active": bool(meta.get("active")) and bool(alive),
         "round": meta.get("round", 0),
@@ -386,6 +425,8 @@ def _combat_block(state: dict) -> Dict[str, Any]:
         ],
         "player_conditions": _conds(player),
         "cooldowns": dict(player.get("ability_cooldowns", {}) or {}),
+        # spec polish-sessao (R4): chips 100% mecânicos derivados da ficha
+        "suggestions": cm_mod.combat_suggestions(player, enemies, meta),
     }
 
 
@@ -618,10 +659,54 @@ def new_game(req: CreateCharacterRequest):
         print(f"Erro ao criar jogo: {e}")
         raise HTTPException(status_code=500, detail="Erro interno ao criar o jogo.")
 
+def _append_player_input(state: dict, input_text: str) -> None:
+    """Anexa a ação do jogador ao histórico (mesma regra dos dois endpoints)."""
+    state["messages"].append(HumanMessage(content=input_text))
+    if len(state["messages"]) > 20:
+        state["messages"] = state["messages"][-20:]
+
+
+def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
+              llm_events: Optional[List[dict]] = None) -> None:
+    _turn_logger.info(json.dumps({
+        "evt": "turn",
+        "game_id": state.get("game_id", "?"),
+        "turn": (state.get("world") or {}).get("turn_count", 0),
+        "route": state.get("next", ""),
+        "latency_ms": int((time.monotonic() - t0) * 1000),
+        "events_applied": (len(state.get("event_log", [])) - eventos_antes) if not error else 0,
+        "events_rejected": len(state.get("pending_world_events", []) or []) if not error else 0,
+        "error": error,
+        **_llm_log_fields(llm_events),
+    }, ensure_ascii=False))
+
+
+def _run_turn(state: dict, input_text: str) -> GameResponse:
+    """Miolo do turno (spec streaming-turno-sse R2): grafo + save + log.
+    Compartilhado pelo POST clássico e pelo stream — carga/validações ficam
+    nos endpoints. Levanta HTTPException(500) genérica em falha (A6)."""
+    _append_player_input(state, input_text)
+    t0 = time.monotonic()
+    eventos_antes = len(state.get("event_log", []))
+    acc_token = _llm_turn_events.set([])
+    try:
+        new_state = game_graph.invoke(state)
+        save_game_state(new_state)
+        _log_turn(new_state, t0, eventos_antes, None, _llm_turn_events.get())
+        return format_response(new_state)
+    except Exception as e:
+        _log_turn(state, t0, eventos_antes, str(e)[:200], _llm_turn_events.get())
+        print(f"Erro na API: {e}")
+        # Auditoria A6: str(e) fica no log JSON acima; cliente recebe genérico.
+        raise HTTPException(status_code=500, detail="Erro interno ao processar o turno.")
+    finally:
+        _llm_turn_events.reset(acc_token)
+
+
 @app.post("/game/action", response_model=GameResponse)
 def game_action(req: ActionRequest):
     """Envia uma ação do jogador."""
-    
+
     # Tenta carregar pelo ID se fornecido, ou o ultimo
     file_to_load = _resolve_save_file(req.game_id)
 
@@ -633,42 +718,100 @@ def game_action(req: ActionRequest):
     # Fase 4.6 (R7): save morto é MEMORIAL — a crônica fica, ações não.
     _reject_memorial(state)
 
-    # Adiciona Input
-    user_msg = HumanMessage(content=req.input_text)
-    state["messages"].append(user_msg)
-    
-    if len(state["messages"]) > 20:
-        state["messages"] = state["messages"][-20:]
+    return _run_turn(state, req.input_text)
 
-    # Executa Engine
+
+# --- STREAMING DO TURNO (spec streaming-turno-sse) ---------------------------
+
+_MEMORIAL_DETAIL = ("Esta saga terminou. A crônica permanece como memorial — "
+                    "comece uma nova jornada.")
+_SSE_PING_S = 10.0
+_NARRATIVE_CHUNK = 80
+
+
+def _sse(event: str, data: dict) -> str:
+    return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
+
+
+def _stream_turn(state: dict, input_text: str) -> Iterator[str]:
+    """Gerador SSE do turno (R1): accepted → phase/route → narrative → state.
+    Mesmo estado/save/log do POST clássico (R2/R3). Roda o grafo numa thread
+    própria para intercalar keepalive `: ping` a cada 10s."""
+    yield _sse("accepted", {"game_id": state.get("game_id", "?")})
+    if state.get("game_over"):
+        # R3: memorial — evento `error` com 409 semântico e fecha o stream.
+        yield _sse("error", {"detail": _MEMORIAL_DETAIL, "code": 409})
+        return
+
+    _append_player_input(state, input_text)
     t0 = time.monotonic()
     eventos_antes = len(state.get("event_log", []))
-    try:
-        new_state = game_graph.invoke(state)
-        save_game_state(new_state)
-        _turn_logger.info(json.dumps({
-            "evt": "turn",
-            "game_id": new_state.get("game_id", "?"),
-            "turn": (new_state.get("world") or {}).get("turn_count", 0),
-            "route": new_state.get("next", ""),
-            "latency_ms": int((time.monotonic() - t0) * 1000),
-            "events_applied": len(new_state.get("event_log", [])) - eventos_antes,
-            "events_rejected": len(new_state.get("pending_world_events", []) or []),
-            "error": None,
-        }, ensure_ascii=False))
-        return format_response(new_state)
+    q: "queue.Queue" = queue.Queue()
+    llm_acc: List[dict] = []
 
-    except Exception as e:
-        _turn_logger.info(json.dumps({
-            "evt": "turn", "game_id": state.get("game_id", "?"),
-            "turn": (state.get("world") or {}).get("turn_count", 0),
-            "route": state.get("next", ""),
-            "latency_ms": int((time.monotonic() - t0) * 1000),
-            "events_applied": 0, "events_rejected": 0, "error": str(e)[:200],
-        }, ensure_ascii=False))
-        print(f"Erro na API: {e}")
-        # Auditoria A6: str(e) fica no log JSON acima; cliente recebe genérico.
-        raise HTTPException(status_code=500, detail="Erro interno ao processar o turno.")
+    def _worker():
+        _llm_turn_events.set(llm_acc)  # contexto próprio da thread do grafo
+        try:
+            for chunk in game_graph.stream(state, stream_mode=["updates", "values"]):
+                q.put(("chunk", chunk))
+            q.put(("done", None))
+        except Exception as e:  # noqa: BLE001
+            q.put(("exc", e))
+
+    threading.Thread(target=_worker, daemon=True).start()
+
+    final_state: Optional[dict] = None
+    try:
+        while True:
+            try:
+                kind, payload = q.get(timeout=_SSE_PING_S)
+            except queue.Empty:
+                yield ": ping\n\n"
+                continue
+            if kind == "exc":
+                raise payload
+            if kind == "done":
+                break
+            mode, data = payload
+            if mode == "updates":
+                for node, upd in (data or {}).items():
+                    yield _sse("phase", {"node": node, "status": "done"})
+                    if node == "dm_router":
+                        yield _sse("route", {"route": (upd or {}).get("next", "") or ""})
+            elif mode == "values":
+                final_state = data
+
+        if final_state is None:
+            raise RuntimeError("stream não produziu estado final")
+        save_game_state(final_state)
+        _log_turn(final_state, t0, eventos_antes, None, llm_acc)
+        resp = format_response(final_state)
+        narrative = resp.message or ""
+        for i in range(0, len(narrative), _NARRATIVE_CHUNK):
+            yield _sse("narrative", {"chunk": narrative[i:i + _NARRATIVE_CHUNK],
+                                     "done": False})
+        yield _sse("narrative", {"chunk": "", "done": True})
+        yield _sse("state", json.loads(resp.model_dump_json()))
+    except Exception as e:  # noqa: BLE001
+        _log_turn(state, t0, eventos_antes, str(e)[:200], llm_acc)
+        print(f"Erro no stream: {e}")
+        # A6: detalhe fica no log; o cliente recebe genérico e cai no POST clássico.
+        yield _sse("error", {"detail": "Erro interno ao processar o turno."})
+
+
+@app.post("/game/action/stream")
+def game_action_stream(req: ActionRequest):
+    """R1: mesmo corpo do /game/action, resposta text/event-stream com fases
+    reais do grafo. Guard-rails (rate limit via middleware, game_id, memorial,
+    teto de input) valem aqui também (R3)."""
+    file_to_load = _resolve_save_file(req.game_id)
+    state = load_game_state(file_to_load)
+    if not state:
+        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+    return StreamingResponse(_stream_turn(state, req.input_text),
+                             media_type="text/event-stream",
+                             headers={"Cache-Control": "no-cache",
+                                      "X-Accel-Buffering": "no"})
 
 @app.post("/game/equip")
 def game_equip(req: EquipRequest):
@@ -735,6 +878,70 @@ def game_levelup(req: LevelUpRequest):
             "level_up": _levelup_block(player),
         },
     }
+
+
+# --- SAVES E CRÔNICA (spec polish-sessao) ------------------------------------
+
+class SaveSummary(BaseModel):
+    game_id: str
+    name: str
+    class_name: str
+    level: int
+    location: str
+    day: int
+    game_over: bool
+    updated_at: float  # epoch (mtime)
+
+
+@app.get("/game/saves", response_model=List[SaveSummary])
+def get_saves():
+    """R1: lista as campanhas salvas (mtime desc; corrompido é pulado)."""
+    import persistence as persistence_mod
+    return persistence_mod.list_saves()
+
+
+@app.delete("/game/save/{game_id}")
+def delete_save_endpoint(game_id: str):
+    """R2: exclui save + memória da sessão. Confirmação é da UI (uso local)."""
+    import persistence as persistence_mod
+    try:
+        removed = persistence_mod.delete_save(game_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="game_id inválido (esperado UUID).")
+    if not removed:
+        raise HTTPException(status_code=404, detail="Save não encontrado.")
+    return {"ok": True}
+
+
+@app.get("/game/chronicle/export")
+def export_chronicle(game_id: Optional[str] = None):
+    """R5: crônica como .txt (download) com separadores por capítulo."""
+    from fastapi.responses import PlainTextResponse
+    file_to_load = _resolve_save_file(game_id)
+    state = load_game_state(file_to_load)
+    if not state:
+        raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
+
+    player = state.get("player") or {}
+    lines: List[str] = [f"CRÔNICA DE {player.get('name', 'HERÓI').upper()}",
+                        f"{player.get('class_name', '')} — {state.get('world', {}).get('current_location', '')}",
+                        ""]
+    for cap in state.get("chronicle") or []:
+        if not isinstance(cap, dict):
+            continue
+        lines.append("=" * 60)
+        lines.append(f"{cap.get('title', '')}  (turno {cap.get('started_turn', 0)}"
+                     f" — {cap.get('location', '')})")
+        lines.append("=" * 60)
+        for e in cap.get("entries") or []:
+            if isinstance(e, dict) and str(e.get("text", "")).strip():
+                marker = "•" if e.get("kind") == "milestone" else "—"
+                lines.append(f"{marker} [t{e.get('turn', 0)}] {e['text']}")
+        lines.append("")
+    hero = "".join(c for c in player.get("name", "cronica") if c.isalnum()) or "cronica"
+    return PlainTextResponse(
+        "\n".join(lines),
+        headers={"Content-Disposition": f'attachment; filename="cronica_{hero}.txt"'})
 
 
 # --- FRONTEND ESTÁTICO ---

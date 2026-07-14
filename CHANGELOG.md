@@ -5,6 +5,76 @@
 
 ---
 
+## 2026-07-13 (15) — Ciclo de produto EXECUTADO: 3 specs `done` (729 → 769 verdes)
+
+As 3 specs `approved` da sessão 14 foram implementadas de ponta a ponta na ordem
+1 → 2 → 3 (registro de execução detalhado no §8 de cada spec):
+
+**1. balanceamento-early-game `done`** — Etapa 1: métricas de balanço na
+telemetria do harness (`first_death_turn`/`downed_count`/`avg_hp_pct_after_combat`/
+`replan_count` + campos crus no JSONL + colunas e deltas no report); baseline
+gravado ANTES do tuning: mock `20260713-160458` (combate morria t6, agressivo t7
+nível 1; **replan em TODO turno** — MockLLM devolve location fora do mapa) e real
+seed 7 (`combate` t5 por 2× Zumbi Blindado — burst de elites; `agressivo` t10;
+`secret_rusher` 30t real **confirmou o fix do Verme**: 0 vazamentos). Etapa 2
+(knobs data-driven): máx 1 elite no nível 1 (`clamp_encounter(player_level=1)`) +
+piso de HP das classes frágeis (Arcanista 16→22, Sombra 20→25, Batedor 22→27,
+Médico 24→28); cap `4+3×nível` PULADO (nas mortes medidas o budget já era
+mínimo). Etapa 3 (**"O Saque"**): `death_outcome`/`apply_downed` em
+combat_mechanics (1ª queda fora de apex/boss = downed: acorda 1 dia depois em
+`last_safe_location`, HP 25%, ouro 0, inventário/slots zerados menos
+`starting_equipment[0]` equipada; únicos → `unique_item_lost` holder="world" e
+voltam ao pool via `is_unique_available`; relógio +1 dia + fações avançam +
+clima re-rola; narração FAST com fallback determinístico; milestone na crônica);
+evento `player_downed` no pipeline 2.6 com gate `source="combat"` e 1x por
+campanha (validator + invariante 5.2 `downed.repeated`/`downed.in_apex`/
+`downed.vs_boss`). Etapa 4: `_should_replan` só replaneja em viagem quando a
+REGIÃO muda E (≥1 beat done OU arco sem beats); intervalo 10→15; local
+irresolvível não conta. Rodada final `20260713-201438`: replans −450 (explorador
+50→4, −92%), downed ≤1 em todos, hp% pós-combate 12–44% (dói), 0 erros/violações.
+Nota: `agressivo` ainda morre nível 1 na **2ª** queda (combate deliberado sem
+cura — "por conta e risco", fora de escopo por decisão da spec).
+`test_morte_gera_evento_e_memorial` (4.6) atualizado: memorial agora exige
+`player_downed` prévio.
+
+**2. streaming-turno-sse `done`** — Etapa 1: caracterização do
+`app.stream(stream_mode=["updates","values"])` (ordem dos nós; estado final ==
+invoke). Etapa 2: miolo do turno extraído em `_run_turn` (compartilhado). Etapa
+3: `POST /game/action/stream` — generator síncrono com o grafo numa thread +
+`queue.Queue` (keepalive `: ping` a cada 10s), eventos accepted → phase/route →
+narrative (chunks de 80 chars) → state; memorial = evento `error` com `code:
+409`; rate limit/game_id/teto de input/sanitização A6 valem. Etapa 4: telemetria
+de produção — hook `set_llm_telemetry_hook` global do api.py acumulando em
+`ContextVar`; log `rpg.turn` ganhou `llm_calls/llm_providers/fell_back/
+cost_usd_est` (dev-only; MockLLM = 0). Etapa 5: frontend — `sendActionStream`
+(parser SSE manual sobre fetch+ReadableStream), textos curados por fase,
+chunks alimentam `useTypewriter` (agora continua quando o texto cresce),
+fallback automático e silencioso pro POST (remove entrada parcial órfã).
+**Smoke real:** turno de 20.2s → `accepted` 0.09s, `phase` 0.11s, `route` 0.66s;
+log real: 5 calls, groq×3/gemini×2, ~$0.0036. 9 testes novos (`test_streaming.py`).
+
+**3. polish-sessao `done`** — `persistence.list_saves()` (tolerante a corrompido)
+e `delete_save()` (remove `data/saves_memory/{id}` junto); endpoints `GET
+/game/saves`, `DELETE /game/save/{id}` (400/404; no rate limit), `GET
+/game/chronicle/export` (.txt attachment com separadores);
+`combat_mechanics.combat_suggestions()` pura (habilidades fora de cooldown/com
+recurso por tier desc, "Beber <poção>", "Fugir" se não enredado; máx 5) exposta
+em `combat.suggestions`. Frontend: `SaveScreen.tsx` (lista/continua/exclui com
+confirmação pelo nome; badge ⚰; memorial abre em leitura — overlay ganhou "Ler a
+crônica" e input desabilitado), chips de combate no PlayScreen (click → onAction),
+`OnboardingHint.tsx` (5 comandos + dica dos chips; localStorage por game_id),
+busca local + download na aba Crônica, passe mobile @480px (1 coluna, actionbar
+sticky c/ safe-area, HUD gaveta 100vw, sem overflow-x). **Smokes:** Playwright
+14/14 (desktop + 390×844, overflow 0px) + real: parser mapeou o chip
+"Estocada Renal" → `estocada_renal` (o mapeamento que o MockLLM esconde).
+14 testes novos (`test_polish_sessao.py`).
+
+**Observação operacional:** suíte/smokes gravam cache runtime em
+`data/bestiary.json`/`npc_database.json` (entradas mock, HP regredido) —
+revertido via `git checkout` antes do commit; anotado como pendência.
+
+---
+
 ## 2026-07-13 (14) — Auditoria de segurança (A1–A8) + sync de docs + ciclo de produto (3 specs)
 
 **Sync de docs com o estado real:** ESTADO_ATUAL/ROADMAP/CLAUDE.md tinham 8+

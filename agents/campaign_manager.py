@@ -39,8 +39,36 @@ class CampaignPlanModel(BaseModel):
         return [b.strip() for b in beats if b.strip()]
 
 
+# spec balanceamento-early-game (R4): replan periódico espaçado (era 10 — plot
+# twists demais; needs_replan explícito continua imediato).
+REPLAN_INTERVAL = 15
+
+
+def _region_of(loc_ref: str):
+    """Região de um local por id OU nome exibível; None se não está no mapa
+    (ex.: local inventado pelo LLM)."""
+    from gamedata import find_location_by_name, get_location
+    loc = get_location(loc_ref) or find_location_by_name(loc_ref)
+    return (loc or {}).get("region")
+
+
+def _same_region(loc_id_a: str, loc_id_b: str) -> bool:
+    """True se os dois locais RESOLVEM no mapa e são da mesma região.
+    Irresolvível → True (não dá pra provar que a região mudou — não replaneja
+    por viagem; o intervalo/beats cuidam do resto). Spec balanceamento R4."""
+    ra, rb = _region_of(loc_id_a), _region_of(loc_id_b)
+    if ra is None or rb is None:
+        return True
+    return ra == rb
+
+
 def _should_replan(state: GameState) -> bool:
-    """Determine if the campaign plan needs to be regenerated."""
+    """Determine if the campaign plan needs to be regenerated.
+
+    R4 (spec balanceamento-early-game): viagem SÓ replaneja quando o ARCO muda
+    de fato — região nova E (≥ 1 beat concluído OU arco sem beats). Mover-se
+    entre sublocais/interiores do mesmo hub não joga fora o arco (era a causa
+    dos "plot twists por viagem")."""
 
     world = state.get("world", {})
     plan = state.get("campaign_plan")
@@ -52,15 +80,18 @@ def _should_replan(state: GameState) -> bool:
     if not plan:
         return True
 
-    location_moved = plan.get("location") and plan["location"] != world.get("current_location")
-    if location_moved:
-        return True
-
-    last_turn = plan.get("last_planned_turn", -10)
-    if turn_count - last_turn >= 10:
-        return True
-
     beats = plan.get("beats") or []
+    location_moved = plan.get("location") and plan["location"] != world.get("current_location")
+    if location_moved and not _same_region(plan["location"], world.get("current_location", "")):
+        beat_done = any(b.get("status") != "pending" for b in beats if isinstance(b, dict))
+        orphan = not beats  # arco órfão de contexto: plano sem beat nenhum
+        if beat_done or orphan:
+            return True
+
+    last_turn = plan.get("last_planned_turn", -REPLAN_INTERVAL)
+    if turn_count - last_turn >= REPLAN_INTERVAL:
+        return True
+
     current_step = plan.get("current_step", 0)
     finished = current_step >= len(beats)
     return finished

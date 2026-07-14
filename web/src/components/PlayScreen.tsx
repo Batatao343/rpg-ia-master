@@ -3,11 +3,13 @@ import type { GameResponse, LogEntry } from "../types";
 import { StoryLog } from "./StoryLog";
 import { Hud } from "./Hud";
 import { LevelUpModal } from "./LevelUpModal";
+import { OnboardingHint, onboardingDismissed } from "./OnboardingHint";
 
 interface Props {
   data: GameResponse | null;
   log: LogEntry[];
   thinking: boolean;
+  thinkingLabel?: string | null;
   busy: boolean;
   onAction: (text: string) => void;
   onNew: () => void;
@@ -15,10 +17,11 @@ interface Props {
   onEquip: (pick: { item_id?: string; unequip_slot?: string }) => void;
 }
 
-export function PlayScreen({ data, log, thinking, busy, onAction, onNew, onLevelUp, onEquip }: Props) {
+export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction, onNew, onLevelUp, onEquip }: Props) {
   const [input, setInput] = useState("");
   const [hudOpen, setHudOpen] = useState(false);
   const [luDismissed, setLuDismissed] = useState(false);
+  const [reading, setReading] = useState(false); // memorial: ler a crônica
 
   const w = data?.world;
   const clock = (w?.period ? `Dia ${w.day} · ${w.period}` : "Dia 1 · Amanhecer")
@@ -28,6 +31,11 @@ export function PlayScreen({ data, log, thinking, busy, onAction, onNew, onLevel
   const exitTo = w?.interiors?.exit_to ?? null;
   const dead = (data?.player_stats.hp ?? 1) <= 0;
   const fighting = !!data?.combat?.active;
+  // spec polish-sessao (R4): chips 100% mecânicos — SÓ em combate
+  const suggestions = fighting && !dead ? data?.combat?.suggestions ?? [] : [];
+  // spec polish-sessao (R6): onboarding no 1º turno (dismissible por jogo)
+  const showOnboard =
+    !dead && (data?.world?.turn_count ?? 99) <= 1 && !onboardingDismissed(data?.game_id ?? null);
 
   // Fase 4.1: escolha pendente reabre o modal quando MUDA (novo level up).
   const pending = data?.player_stats?.pending_choices ?? [];
@@ -87,23 +95,39 @@ export function PlayScreen({ data, log, thinking, busy, onAction, onNew, onLevel
       )}
 
       <div className="stage">
-        <StoryLog entries={log} thinking={thinking} />
+        <StoryLog entries={log} thinking={thinking} thinkingLabel={thinkingLabel} />
         <Hud data={data} open={hudOpen} onEquip={onEquip} busy={busy} />
       </div>
+
+      {showOnboard && data?.game_id && <OnboardingHint gameId={data.game_id} />}
+
+      {suggestions.length > 0 && (
+        <div className="actionchips" role="group" aria-label="Ações sugeridas">
+          {suggestions.map((s) => (
+            <button key={s} className="actionchip" type="button" disabled={busy}
+                    onClick={() => onAction(s)}>
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
 
       <form className="actionbar" onSubmit={submit}>
         <input
           type="text"
           autoComplete="off"
+          disabled={dead}
           placeholder={
-            fighting
-              ? "O inimigo avança — o que você faz?"
-              : "O que você faz?  (ex.: examino a porta, ataco o vulto, pergunto sobre o rei)"
+            dead
+              ? "Memorial — a crônica permanece."
+              : fighting
+                ? "O inimigo avança — o que você faz?"
+                : "O que você faz?  (ex.: examino a porta, ataco o vulto, pergunto sobre o rei)"
           }
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
-        <button className="btn btn--primary" type="submit" disabled={busy} aria-label="Agir">
+        <button className="btn btn--primary" type="submit" disabled={busy || dead} aria-label="Agir">
           {busy ? "…" : fighting ? "Lutar" : "Agir"}
         </button>
       </form>
@@ -117,13 +141,18 @@ export function PlayScreen({ data, log, thinking, busy, onAction, onNew, onLevel
         />
       )}
 
-      {dead && (
+      {dead && !reading && (
         <div className="overlay">
           <div className="overlay__inner">
             <p className="overlay__big">VOCÊ MORREU</p>
             <p className="muted">O fio do destino se rompeu.</p>
             <button className="btn btn--primary" type="button" onClick={onNew}>
               Começar de novo
+            </button>
+            {/* spec polish-sessao (R3): memorial abre em modo leitura */}
+            <button className="btn" type="button"
+                    onClick={() => { setReading(true); setHudOpen(true); }}>
+              Ler a crônica
             </button>
           </div>
         </div>

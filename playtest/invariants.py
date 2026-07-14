@@ -277,6 +277,30 @@ def check_roundtrip(state: dict, prev: Optional[dict] = None, turn: int = 0) -> 
 
 # --- orquestração -----------------------------------------------------------
 
+def check_downed(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    """spec balanceamento-early-game (R5): O Saque é 1x por campanha e NUNCA em
+    zona apex nem contra boss — 2º `player_downed`, ou downed ilegal, é `error`."""
+    out: List[Violation] = []
+    downs = [ev for ev in (state.get("event_log") or [])
+             if isinstance(ev, dict) and ev.get("type") == "player_downed"]
+    if len(downs) > 1:
+        out.append(_V("downed.repeated", "error", turn,
+                      f"player_downed {len(downs)}x na mesma campanha (máx 1)",
+                      count=len(downs)))
+    from gamedata import get_location
+    for ev in downs:
+        payload = ev.get("payload", {}) or {}
+        loc = get_location(payload.get("location_id", "")) or {}
+        if "apex" in (loc.get("tags") or []):
+            out.append(_V("downed.in_apex", "error", turn,
+                          f"player_downed em zona apex '{payload.get('location_id')}'",
+                          loc=payload.get("location_id")))
+        if payload.get("boss_present"):
+            out.append(_V("downed.vs_boss", "error", turn,
+                          "player_downed em luta com boss presente"))
+    return out
+
+
 def check_lifecycle(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
     """R4 (fix-playtest-achados): save morto é terminal. Se o turno ANTERIOR já
     estava com game_over e mesmo assim o relógio avançou, um morto agiu — o gate
@@ -296,7 +320,7 @@ Check = Callable[[dict, Optional[dict], int], List[Violation]]
 
 CHECKS: List[Check] = [
     check_vitals, check_economy, check_entities, check_world, check_knowledge,
-    check_lifecycle,
+    check_lifecycle, check_downed,
 ]
 
 

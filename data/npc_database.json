@@ -1877,5 +1877,113 @@
             "hp": 120
         },
         "id": "npc_druidas_do_ciclo_cinzento"
+    },
+    "npc_pardal": {
+        "name": "Pardal",
+        "role": "Lider da Quadrilha dos Telhados",
+        "location": "Nova Arcádia",
+        "persona": "Jovem astuta e desconfiada, ferozmente leal aos seus, com um sorriso cínico e habilidades de batedor e ladrão",
+        "appearance": "Adolescente ágil, com capuz e enluvada",
+        "initial_relationship": 6,
+        "attributes": {
+            "cha": 16,
+            "con": 14,
+            "dex": 18,
+            "int": 10,
+            "str": 12,
+            "wis": 12
+        },
+        "combat_stats": {
+            "ac": 16,
+            "attacks": [
+                "faca",
+                "bomba de fumaça"
+            ],
+            "hp": 14
+        },
+        "id": "npc_pardal"
+    },
+    "npc_rei_subterrâneo": {
+        "name": "Rei Subterrâneo",
+        "role": "Governante",
+        "location": "Profundezas das Montanhas Afiadas",
+        "persona": "Entidade primordial, paciente e temerosa, que governa seu reino subterrâneo com sabedoria e poder",
+        "appearance": "Uma figura imponente, com uma aura de poder e sabedoria, vestida com uma armadura antiga e um manto de sombras",
+        "initial_relationship": 3,
+        "attributes": {
+            "cha": 10,
+            "con": 18,
+            "dex": 14,
+            "int": 10,
+            "str": 16,
+            "wis": 12
+        },
+        "combat_stats": {
+            "ac": 18,
+            "attacks": [
+                "magia arcana",
+                "ataque com arma"
+            ],
+            "hp": 150
+        },
+        "id": "npc_rei_subterrâneo"
+    },
+    "npc_guard": {
+        "name": "Guard",
+        "role": "City Guard",
+        "location": "Nova Arcádia",
+        "persona": "A loyal and dedicated guard who takes his job very seriously, with a strong sense of justice and a willingness to protect the citizens of Nova Arcádia at all costs. He is stern and authoritative, but has a soft spot for children and the elderly.",
+        "appearance": "Wears a suit of plate armor with the emblem of Nova Arcádia on his chest, and carries a large shield and a longsword.",
+        "initial_relationship": 5,
+        "attributes": {
+            "cha": 8,
+            "con": 14,
+            "dex": 12,
+            "int": 10,
+            "str": 16,
+            "wis": 13
+        },
+        "combat_stats": {
+            "ac": 18,
+            "attacks": [
+                "Longsword +5 (1d8+2)",
+                "Shield Bash +5 (1d4+2)"
+            ],
+            "hp": 25
+        },
+        "id": "npc_guard"
+    },
+    "npc_batedor_veterano": {
+        "name": "Garret \"Sombra\" Thorne",
+        "role": "Batedor Veterano e Informante das Sombras",
+        "location": "Fosso dos Cães, Nova Arcádia",
+        "persona": "Cínico, pragmático e extremamente observador. Garret sobreviveu tempo demais nos becos e esgotos de Nova Arcádia para confiar em sorrisos ou discursos oficiais. Ele tem um desprezo profundo pela Legião de Ferro, a quem considera tiranos incompetentes ou corruptos. Apesar de sua casca grossa e tom ríspido, ele possui um código de honra profissional: nunca deixa um colega de ofício (outros batedores ou ladinos) caminhar às cegas para a morte se puder evitar com um aviso rápido.",
+        "appearance": "Uma figura esguia envolta em uma capa de viagem surrada e manchada de fuligem. Sua armadura de couro batido está gasta e remendada com tiras de metal nas juntas. O capuz esconde a maior parte do rosto, exceto por uma cicatriz esbranquiçada e profunda que corta verticalmente do olho esquerdo até o maxilar. Seus olhos são cinzentos, extremamente alertas e brilhantes como metal polido sob a penumbra. Cheira a tabaco barato e terra úmida.",
+        "initial_relationship": 55,
+        "attributes": {
+            "charisma": 9,
+            "wisdom": 15,
+            "dexterity": 16,
+            "intelligence": 12,
+            "strength": 11,
+            "constitution": 14
+        },
+        "combat_stats": {
+            "attacks": [
+                {
+                    "damage": "1d4 + 3 perfurante (mais 2d6 de Ataque Furtivo se tiver vantagem)",
+                    "to_hit": "+5",
+                    "name": "Adaga de Trincheira"
+                },
+                {
+                    "damage": "1d8 + 3 perfurante",
+                    "to_hit": "+5",
+                    "name": "Besta Leve"
+                }
+            ],
+            "ac": 15.0,
+            "hp": 38.0
+        },
+        "id": "npc_batedor_veterano"
     }
 }

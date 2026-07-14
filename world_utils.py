@@ -531,6 +531,33 @@ def pick_encounter_enemy(loc: dict, danger: int, turn: int = 0, faction_id: str 
 
 _APEX_TAG = "apex"
 
+_SAFE_LOC_TAGS = {"cidade", "urbano", "abrigo", "seguro"}
+
+
+def last_safe_location(world: dict) -> str:
+    """spec balanceamento-early-game (R3): onde o herói SAQUEADO acorda.
+    Último local VISITADO com danger <= 1; fallback: o próprio local se for
+    cidade/interior; senão o nó mais seguro da região atual (hub)."""
+    visited = list(world.get("visited") or [])
+    for loc_id in reversed(visited):
+        loc = gamedata.get_location(loc_id) or {}
+        if loc and int(loc.get("danger", 9) or 9) <= 1:
+            return loc_id
+
+    cur_id = world.get("current_location_id") or ""
+    cur = gamedata.get_location(cur_id) or {}
+    if cur.get("kind") == "interior" or _SAFE_LOC_TAGS & set(cur.get("tags") or []):
+        return cur_id
+
+    region = cur.get("region")
+    candidates = [l for l in gamedata.WORLD_MAP.get("locations", [])
+                  if l.get("region") == region and l.get("kind") != "interior"]
+    if candidates:
+        best = min(candidates,
+                   key=lambda l: (int(l.get("danger", 9) or 9), not l.get("start")))
+        return best["id"]
+    return cur_id or gamedata.START_LOCATION_ID
+
 
 def forced_encounter_danger(loc: dict, danger_real: int, player_level: int) -> int:
     """R5 (fix-playtest-achados): a FORÇA de um encontro FORÇADO escala com o nível

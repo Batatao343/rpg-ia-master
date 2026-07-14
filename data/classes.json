@@ -59,7 +59,7 @@
     "description": "Explorador ágil especializado em sobreviver fora das muralhas.",
     "passive": "Oportunista: Ataques contra inimigos distraídos causam +1d6 de dano.",
     "base_stats": {
-      "hp": 22,
+      "hp": 27,
       "mana": 5,
       "stamina": 20,
       "defense": 14,
@@ -115,7 +115,7 @@
     "description": "Estudioso que usa magia filtrada por tecnologia.",
     "passive": "Mente Analítica: Pode usar Inteligência em vez de Destreza para iniciativa.",
     "base_stats": {
-      "hp": 16,
+      "hp": 22,
       "mana": 30,
       "stamina": 8,
       "defense": 11,
@@ -338,7 +338,7 @@
     "description": "Assassino social especializado em venenos.",
     "passive": "Toque da Víbora: Todas as armas aplicam veneno fraco automaticamente.",
     "base_stats": {
-      "hp": 20,
+      "hp": 25,
       "mana": 10,
       "stamina": 15,
       "defense": 13,
@@ -448,7 +448,7 @@
     "description": "Curandeiro sem magia que usa alquimia e serras.",
     "passive": "Triagem: Cura +5 HP extra se o alvo tiver < 25% vida.",
     "base_stats": {
-      "hp": 24,
+      "hp": 28,
       "mana": 5,
       "stamina": 20,
       "defense": 14,

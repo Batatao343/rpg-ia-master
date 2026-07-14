@@ -261,27 +261,30 @@ testes offline verdes.**
 
 ---
 
-## 🎯 Próximo ciclo (2026-07-13) — 3 specs `approved` (refinadas com o usuário)
+## ✅ ENTREGUE — Ciclo de produto (2026-07-13) — 3 specs `done`
 
 > Decisão da sessão 14 (pós-auditoria): antes de Fase 8 (arte) ou 10b (público),
-> atacar **retenção e experiência** com o que o motor já dá. Ordem: **1 → 2 → 3**
-> (1 e 3 podem paralelizar; 2 é isolada no transporte).
+> atacar **retenção e experiência**. **Executado na sessão 15 — as 3 specs
+> viraram `done` (769 testes offline verdes; registro de execução no §8 de cada spec).**
 
-1. **Balanceamento do early game + pacing** → [spec](specs/balanceamento-early-game.md) —
-   `combate`/`agressivo` morrem no nível 1 no playtest REAL (churn); medir baseline →
-   tuning mínimo de spawn/budget → **derrota narrada "O Saque"** (1x por campanha,
-   QUALQUER nível fora de apex/boss: acorda 1 dia depois, mundo andou, perde TUDO
-   menos 1 arma básica; únicos voltam ao pool; 2ª queda = memorial) → replan só
-   quando o ARCO muda (hoje TODA viagem replaneja — raiz do "plot twist demais").
-2. **Streaming do turno (SSE) + custo em produção** → [spec](specs/streaming-turno-sse.md) —
-   p50 15s/p95 46s de spinner; streaming honesto de FASES do grafo
-   (`app.stream`) + narrativa em chunks + fallback pro POST clássico; carona:
-   hook de telemetria da 5.3 plugado no log de turno da API (custo/providers
-   reais de produção, dev-only). Zero chamada LLM extra.
-3. **Polish de sessão** → [spec](specs/polish-sessao.md) — tela "Continuar
-   jornada" (listar/excluir saves), **chips de COMBATE 100% mecânicos** (derivam
-   da ficha em Python — zero LLM), export .txt + busca local da crônica (itens
-   do backlog 3.1), onboarding do 1º turno (painel dismissible), passe mobile (390px).
+1. ✅ **Balanceamento do early game + pacing** → [spec](specs/balanceamento-early-game.md) —
+   baseline mock+real gravado ANTES do tuning; knobs: máx 1 elite no nível 1 +
+   piso de HP nas classes frágeis (cap novo de budget pulado — dados não pediam);
+   **derrota narrada "O Saque"** entregue (1ª queda fora de apex/boss = acorda
+   1 dia depois saqueado, únicos voltam ao pool, 2ª queda = memorial; invariante
+   5.2 nova vigia downed ilegal); **replan só quando o ARCO muda** (região nova
+   + beat concluído; intervalo 10→15): replans do explorador **50 → 4 (−92%)**.
+   Bônus: `secret_rusher` 30t REAL confirmou o fix do Verme (0 vazamentos).
+2. ✅ **Streaming do turno (SSE) + custo em produção** → [spec](specs/streaming-turno-sse.md) —
+   `POST /game/action/stream` (fases reais do grafo + narrativa em chunks +
+   keepalive); smoke real: **`accepted` 0.09s / `route` 0.66s num turno de 20s**;
+   frontend com indicador de fase + typewriter dirigido pelo servidor + fallback
+   automático pro POST; log `rpg.turn` agora tem custo/providers reais (dev-only).
+3. ✅ **Polish de sessão** → [spec](specs/polish-sessao.md) — tela "Continuar
+   jornada" (lista/continua/exclui com confirmação; memorial em modo leitura),
+   **chips de COMBATE 100% mecânicos** (`combat_suggestions` pura; smoke real
+   confirmou name→id), export .txt + busca local da crônica, onboarding do 1º
+   turno, passe mobile 390px (smoke Playwright 14/14, overflow-x 0).
 
 **Decisões de refinamento (2026-07-13, com o usuário):**
 - **Pós-ciclo (arte Fase 8 vs público 10b): DECIDIR DEPOIS**, com dados do

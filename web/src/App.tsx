@@ -2,35 +2,64 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import * as api from "./api";
 import { looksDegraded } from "./lib";
-import type { GameResponse, CreatePayload, LogEntry } from "./types";
+import type { GameResponse, CreatePayload, LogEntry, SaveSummary } from "./types";
 import { Banner, type BannerState } from "./components/Banner";
 import { CreateScreen } from "./components/CreateScreen";
 import { PlayScreen } from "./components/PlayScreen";
+import { SaveScreen } from "./components/SaveScreen";
 import { EmberField } from "./components/EmberField";
 
 const LS_KEY = "cronicas_game_id";
 
+// spec streaming-turno-sse (R4): textos curados por nó/rota do grafo.
+const PHASE_TEXTS: Record<string, string> = {
+  campaign_manager: "O mestre consulta os arcanos…",
+  dm_router: "O mestre decide o rumo…",
+  storyteller: "O narrador tece o destino…",
+  combat_agent: "⚔️ O aço encontra o aço…",
+  npc_actor: "🗣️ Vozes se erguem…",
+  loot_agent: "💰 Algo reluz entre os despojos…",
+  archivist: "O escriba registra a jornada…",
+};
+const ROUTE_TEXTS: Record<string, string> = {
+  combat_agent: "⚔️ O aço encontra o aço…",
+  npc_actor: "🗣️ Vozes se erguem…",
+  loot: "💰 Algo reluz entre os despojos…",
+  storyteller: "O narrador tece o destino…",
+};
+
 export function App() {
-  const [screen, setScreen] = useState<"create" | "play">("create");
+  const [screen, setScreen] = useState<"saves" | "create" | "play">("create");
   const [data, setData] = useState<GameResponse | null>(null);
   const [log, setLog] = useState<LogEntry[]>([]);
   const [busy, setBusy] = useState(false);
   const [thinking, setThinking] = useState(false);
+  const [phaseLabel, setPhaseLabel] = useState<string | null>(null);
   const [banner, setBanner] = useState<BannerState | null>(null);
   const [continueData, setContinueData] = useState<GameResponse | null>(null);
+  const [saves, setSaves] = useState<SaveSummary[]>([]);
 
   const gameId = useRef<string | null>(localStorage.getItem(LS_KEY));
   const logSeq = useRef(0);
   const simNoticed = useRef(false);
 
-  // Oferece retomar a última jornada salva, se houver.
+  // spec polish-sessao (R3): havendo campanhas salvas, a tela inicial as lista.
   useEffect(() => {
-    const saved = localStorage.getItem(LS_KEY);
-    if (!saved) return;
     api
-      .getState(saved)
-      .then((r) => setContinueData(r))
-      .catch(() => localStorage.removeItem(LS_KEY)); // save sumiu
+      .getSaves()
+      .then((list) => {
+        setSaves(list);
+        if (list.length > 0) setScreen("saves");
+      })
+      .catch(() => {
+        // API antiga/sem saves — mantém o fluxo clássico de "continuar última"
+        const saved = localStorage.getItem(LS_KEY);
+        if (!saved) return;
+        api
+          .getState(saved)
+          .then((r) => setContinueData(r))
+          .catch(() => localStorage.removeItem(LS_KEY));
+      });
   }, []);
 
   function pushLog(text: string, role: "player" | "narrator", type: LogEntry["type"]) {
@@ -89,18 +118,78 @@ export function App() {
     }
   }
 
+  // spec streaming-turno-sse (R4): chunks do servidor alimentam UMA entrada
+  // "streaming" do log; o typewriter revela o texto conforme ele cresce.
+  const streamEntryId = useRef<number | null>(null);
+
+  function appendChunk(chunk: string, done: boolean) {
+    if (done) return;
+    setLog((prev) => {
+      const id = streamEntryId.current;
+      const idx = id === null ? -1 : prev.findIndex((e) => e.id === id);
+      if (idx < 0) {
+        const nid = logSeq.current++;
+        streamEntryId.current = nid;
+        return [...prev, { id: nid, text: chunk, role: "narrator" as const, type: "STORY" as const, streaming: true }];
+      }
+      const entry = prev[idx];
+      return [...prev.slice(0, idx), { ...entry, text: entry.text + chunk }, ...prev.slice(idx + 1)];
+    });
+  }
+
+  function finishStreamEntry(r: GameResponse) {
+    const id = streamEntryId.current;
+    streamEntryId.current = null;
+    setLog((prev) => {
+      const idx = id === null ? -1 : prev.findIndex((e) => e.id === id);
+      if (idx < 0) return prev; // nenhum chunk chegou — onTurn cuida
+      const entry = prev[idx];
+      return [
+        ...prev.slice(0, idx),
+        { ...entry, text: r.message, type: r.message_type || "STORY", streaming: false },
+        ...prev.slice(idx + 1),
+      ];
+    });
+  }
+
   async function handleAction(text: string) {
     if (busy || !text.trim()) return;
     pushLog(text, "player", "STORY");
     setBusy(true);
     setThinking(true);
+    setPhaseLabel(PHASE_TEXTS.campaign_manager);
     try {
-      const r = await api.sendAction(text, gameId.current);
-      onTurn(r);
+      let hadChunks = false;
+      try {
+        const r = await api.sendActionStream(text, gameId.current, {
+          onPhase: (node) => setPhaseLabel(PHASE_TEXTS[node] ?? null),
+          onRoute: (route) => setPhaseLabel(ROUTE_TEXTS[route] ?? PHASE_TEXTS.storyteller),
+          onChunk: (chunk, done) => {
+            hadChunks = true;
+            appendChunk(chunk, done);
+          },
+        });
+        gameId.current = r.game_id || gameId.current;
+        if (gameId.current) localStorage.setItem(LS_KEY, gameId.current);
+        if (hadChunks) {
+          finishStreamEntry(r);
+          setData(r);
+        } else {
+          onTurn(r);
+        }
+      } catch {
+        // R4: fallback AUTOMÁTICO e silencioso pro POST clássico
+        const orphan = streamEntryId.current;
+        streamEntryId.current = null;
+        if (orphan !== null) setLog((prev) => prev.filter((e) => e.id !== orphan));
+        const r = await api.sendAction(text, gameId.current);
+        onTurn(r);
+      }
     } catch (err) {
       setBanner({ msg: "O destino tropeçou: " + errMsg(err), kind: "error" });
     } finally {
       setThinking(false);
+      setPhaseLabel(null);
       setBusy(false);
     }
   }
@@ -112,6 +201,44 @@ export function App() {
     setLog([]);
     pushLog(continueData.message || "Você retoma sua jornada.", "narrator", continueData.message_type || "STORY");
     setData(continueData);
+  }
+
+  // spec polish-sessao (R3): continuar/excluir campanhas pela tela de saves.
+  async function handleContinueSave(gid: string) {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const r = await api.getState(gid);
+      gameId.current = gid;
+      localStorage.setItem(LS_KEY, gid);
+      setScreen("play");
+      setLog([]);
+      pushLog(r.message || "Você retoma sua jornada.", "narrator", r.message_type || "STORY");
+      setData(r);
+    } catch (err) {
+      setBanner({ msg: "Não consegui abrir a campanha: " + errMsg(err), kind: "error" });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleDeleteSave(gid: string) {
+    if (busy) return;
+    setBusy(true);
+    try {
+      await api.deleteSave(gid);
+      if (gameId.current === gid) {
+        gameId.current = null;
+        localStorage.removeItem(LS_KEY);
+      }
+      const list = await api.getSaves();
+      setSaves(list);
+      if (list.length === 0) setScreen("create");
+    } catch (err) {
+      setBanner({ msg: "Não consegui excluir: " + errMsg(err), kind: "error" });
+    } finally {
+      setBusy(false);
+    }
   }
 
   function handleNew() {
@@ -156,7 +283,23 @@ export function App() {
       <EmberField />
       <Banner state={banner} onDone={() => setBanner(null)} />
       <AnimatePresence mode="wait">
-        {screen === "create" ? (
+        {screen === "saves" ? (
+          <motion.div
+            key="saves"
+            initial={{ opacity: 0, scale: 0.985 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.01 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <SaveScreen
+              saves={saves}
+              busy={busy}
+              onContinue={handleContinueSave}
+              onDelete={handleDeleteSave}
+              onNew={handleNew}
+            />
+          </motion.div>
+        ) : screen === "create" ? (
           <motion.div
             key="create"
             initial={{ opacity: 0, scale: 0.985 }}
@@ -184,6 +327,7 @@ export function App() {
               data={data}
               log={log}
               thinking={thinking}
+              thinkingLabel={phaseLabel}
               busy={busy}
               onAction={handleAction}
               onNew={handleNew}

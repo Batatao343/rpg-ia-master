@@ -62,6 +62,9 @@ def _totais(summaries: List[dict]) -> dict:
         "cost_usd": round(sum(float(s.get("cost_usd_total", 0.0)) for s in summaries), 6),
         "deaths": sum(int(s.get("deaths", 0)) for s in summaries),
         "latency_p95_max": max((int(s.get("latency_ms", {}).get("p95", 0)) for s in summaries), default=0),
+        # spec balanceamento-early-game (R5)
+        "replans": sum(int(s.get("replan_count", 0) or 0) for s in summaries),
+        "downed": sum(int(s.get("downed_count", 0) or 0) for s in summaries),
     }
 
 
@@ -81,7 +84,8 @@ def aggregate(run_dir: str, baseline_dir: Optional[str] = None) -> RunReport:
         base = _load_summaries(baseline_dir)
         cur_t, base_t = _totais(summaries), _totais(base)
         deltas = {k: cur_t.get(k, 0) - base_t.get(k, 0)
-                  for k in ("errors", "violations", "cost_usd", "deaths", "latency_p95_max")}
+                  for k in ("errors", "violations", "cost_usd", "deaths",
+                            "latency_p95_max", "replans", "downed")}
         deltas["baseline_id"] = os.path.basename(os.path.normpath(baseline_dir))
 
     return RunReport(
@@ -142,14 +146,20 @@ def render_markdown(report: RunReport) -> str:
 
     L.append("## Por perfil")
     L.append("")
-    L.append("| perfil | seed | turnos | erros | mortes | nível | ouro | locais | "
+    L.append("| perfil | seed | turnos | erros | mortes | 1ª morte | downed | "
+             "hp% pós-comb | replans | nível | ouro | locais | "
              "p50 | p95 | custo USD | fallback | mock |")
-    L.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
+    L.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     for s in report.campaigns:
         lat = s.get("latency_ms", {})
+        hp_pct = s.get("avg_hp_pct_after_combat")
         L.append(
             f"| {s.get('profile','?')} | {s.get('seed',0)} | {s.get('turns_completed',0)} "
-            f"| {s.get('errors',0)} | {s.get('deaths',0)} | {s.get('final_level',1)} "
+            f"| {s.get('errors',0)} | {s.get('deaths',0)} "
+            f"| {s.get('first_death_turn') if s.get('first_death_turn') is not None else '—'} "
+            f"| {s.get('downed_count',0)} "
+            f"| {f'{hp_pct:.0f}%' if hp_pct is not None else '—'} "
+            f"| {s.get('replan_count',0)} | {s.get('final_level',1)} "
             f"| {s.get('final_gold',0)} | {s.get('locations_visited',0)} "
             f"| {lat.get('p50',0)} | {lat.get('p95',0)} | {s.get('cost_usd_total',0.0):.4f} "
             f"| {s.get('fell_back_turns',0)} | {'sim' if s.get('mock') else 'não'} |")
@@ -200,7 +210,8 @@ def render_markdown(report: RunReport) -> str:
         L.append("")
         L.append("| métrica | delta |")
         L.append("|---|---|")
-        for k in ("errors", "violations", "deaths", "latency_p95_max", "cost_usd"):
+        for k in ("errors", "violations", "deaths", "downed", "replans",
+                  "latency_p95_max", "cost_usd"):
             if k in report.deltas:
                 L.append(f"| {k} | {_fmt(report.deltas[k])} |")
         L.append("")

@@ -27,6 +27,9 @@ EventType = Literal[
     "level_up",
     # Fase 4.6: idem — gerado só pelo combate (source="combat" exigido no validator).
     "player_died",
+    # spec balanceamento-early-game (R3): "O Saque" — 1ª queda da campanha vira
+    # downed em vez de morte. Só o combate emite (source="combat" no validator).
+    "player_downed",
     # Fase 6.1: rotas comerciais — PROPONÍVEL pelo LLM (desabamento, bloqueio
     # militar) e gerável pelo motor/regras; validator exige conexão direta real.
     "route_blocked",

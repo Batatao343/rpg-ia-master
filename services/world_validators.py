@@ -170,6 +170,16 @@ def _v_player_died(ev: ProposedWorldEvent, state: dict, proj: dict) -> Validatio
     return ValidationResult(True)
 
 
+def _v_player_downed(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    """spec balanceamento-early-game (R3): O Saque é 1x por campanha e só do motor."""
+    if ev.target_id != "player":
+        return ValidationResult(False, "player_downed é sempre do player")
+    for e in state.get("event_log") or []:
+        if isinstance(e, dict) and e.get("type") == "player_downed":
+            return ValidationResult(False, "player_downed já ocorreu nesta campanha (1x)")
+    return ValidationResult(True)
+
+
 _VALIDATORS = {
     "npc_killed": _v_npc_killed,
     "secret_revealed": _v_secret_revealed,
@@ -179,6 +189,7 @@ _VALIDATORS = {
     "reputation_changed": _v_reputation_changed,
     "level_up": _v_level_up,
     "player_died": _v_player_died,
+    "player_downed": _v_player_downed,
     "route_blocked": _v_route_blocked,
     "route_cleared": _v_route_cleared,
     "unique_item_claimed": _v_unique_item,
@@ -201,6 +212,9 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
     # Fase 4.6: player_died idem — só o combate emite.
     if ev.type == "player_died" and proposal.get("source") != "combat":
         return ValidationResult(False, "player_died é gerado pelo motor, não proposto")
+    # spec balanceamento-early-game (R3): player_downed idem — só o combate emite.
+    if ev.type == "player_downed" and proposal.get("source") != "combat":
+        return ValidationResult(False, "player_downed é gerado pelo motor, não proposto")
     # Fase 6.2: posse de item único é observada pelo motor, nunca proposta.
     if ev.type in ("unique_item_claimed", "unique_item_lost") and \
             proposal.get("source") != "engine":

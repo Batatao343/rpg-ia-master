@@ -146,11 +146,14 @@ def price(item_id: str, *, mode: str, state: dict,
 # Fase 6.2 — itens únicos: um por mundo
 # ---------------------------------------------------------------------------
 def is_unique_available(item_id: str, projection: Optional[dict]) -> bool:
-    """True se o item único ainda NÃO foi reclamado (ou não é único)."""
+    """True se o item único ainda NÃO foi reclamado (ou não é único).
+    holder="world" = voltou ao pool (saqueado no downed — spec balanceamento R3):
+    pode reaparecer em loot/loja/inimigo como se nunca tivesse sido reclamado."""
     from inventory import is_unique
     if not is_unique(item_id):
         return True
-    return item_id not in ((projection or {}).get("unique_items") or {})
+    entry = ((projection or {}).get("unique_items") or {}).get(item_id)
+    return entry is None or entry.get("holder") == "world"
 
 
 def unique_holder(item_id: str, projection: Optional[dict]) -> Optional[str]:

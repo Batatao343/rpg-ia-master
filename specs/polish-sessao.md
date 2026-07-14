@@ -1,7 +1,7 @@
 # SPEC — Polish de sessão: saves, chips de combate, crônica, onboarding, mobile
 
-> **Status:** `approved` (design refinado com o usuário em 2026-07-13 — chips
-> viraram 100% mecânicos de COMBATE; sugestões de exploração via LLM adiadas p/ v2)
+> **Status:** `done` (2026-07-13 — smoke Playwright 14/14 @390px + chip real
+> name→id confirmado no LLM; ver §8)
 > **Criada:** 2026-07-13 · **Atualizada:** 2026-07-13
 > **Depende de:** Fase 10 fatia local `done` (save_path/UUID); Fase 3.1 `done` (crônica)
 > **Desbloqueia:** demo apresentável; base de UX p/ Fase 8 (arte) e 10b (público)
@@ -165,17 +165,21 @@ def combat_suggestions(player: dict, enemies: list[dict],
 
 ## 5. Critérios de aceite
 
-- [ ] Duas campanhas criadas → tela inicial lista as duas; excluir pede confirmação e some da lista (e `data/saves_memory/` da excluída sumiu)
-- [ ] Save memorial abre como leitura (crônica visível, input bloqueado)
-- [ ] Chips aparecem SÓ em combate, derivados da ficha (cooldown/recurso respeitados); click executa a ação certa; fora de combate não há chips
-- [ ] Download da crônica gera .txt legível com capítulos
-- [ ] Busca local da crônica filtra entries em tempo real
-- [ ] Painel de onboarding aparece no 1º turno e não volta depois de dispensado
-- [ ] Nenhuma aba com overflow horizontal em 390px; input utilizável no touch
-- [ ] `uv run pytest` verde + `npm run build` ok
-- [ ] Guard de FallbackLLM: nenhum `with_structured_output` novo (spec não toca em LLM)
-- [ ] Saves antigos continuam carregando (nenhuma mudança de schema de save)
-- [ ] ESTADO_ATUAL.md + ROADMAP.md atualizados
+- [x] Campanhas listadas na tela inicial; excluir pede confirmação (nome do
+      herói) e some da lista; `data/saves_memory/` da excluída removido (teste)
+- [x] Save memorial abre como leitura (input bloqueado; overlay ganhou "Ler a
+      crônica" que abre o HUD)
+- [x] Chips aparecem SÓ em combate, derivados da ficha (cooldown/recurso
+      respeitados); click executa a ação certa; fora de combate não há chips
+- [x] Download da crônica gera .txt legível com capítulos
+- [x] Busca local da crônica filtra entries em tempo real
+- [x] Painel de onboarding aparece no 1º turno e não volta depois de dispensado
+- [x] Nenhuma aba com overflow horizontal em 390px (Playwright: delta 0px);
+      chips/inputs com alvo de toque
+- [x] `uv run pytest` verde (769) + `npm run build` ok
+- [x] Guard de FallbackLLM: nenhum `with_structured_output` novo
+- [x] Saves antigos continuam carregando (nenhuma mudança de schema de save)
+- [x] ESTADO_ATUAL.md + ROADMAP.md atualizados
 
 ## 6. Smoke test com LLM real
 
@@ -197,3 +201,21 @@ def combat_suggestions(player: dict, enemies: list[dict],
 - **Saves antigos:** intocados (nenhuma mudança de schema).
 - **MockLLM/FallbackLLM:** chips independem de LLM (função pura) — suíte e
   harness seguem determinísticos; modo degradado mostra chips normalmente.
+
+## 8. Registro de execução (2026-07-13)
+
+- **Backend:** `persistence.list_saves`/`delete_save`; `GET /game/saves`,
+  `DELETE /game/save/{id}` (rate limit incluso), `GET /game/chronicle/export`;
+  `combat_mechanics.combat_suggestions` (pura) exposta em `combat.suggestions`.
+  14 testes em `tests/test_polish_sessao.py`.
+- **Frontend:** `SaveScreen.tsx` (lista + confirmação de exclusão + badge
+  memorial), `ActionChips` embutido no `PlayScreen` (chips só em combate),
+  `OnboardingHint.tsx` (localStorage por game_id), busca + download na aba
+  Crônica do HUD, passe mobile @480px (input sticky, HUD 100vw, sem overflow-x).
+- **Smoke Playwright (MockLLM, desktop + 390×844):** 14/14 PASS — tela de saves,
+  confirmação de exclusão, onboarding aparece/dispensa, chips em combate
+  (`['Ataque Básico', 'Investida do Touro', 'Pele de Ferro', 'Beber Poção de
+  Cura Menor', 'Fugir']`, máx 5), overflow-x 0px nas duas telas, HUD gaveta,
+  busca + download da crônica.
+- **Smoke real (mapeamento que o MockLLM esconde):** parser de combate REAL
+  mapeou o texto do chip "Estocada Renal" → `estocada_renal` (`is_allowed=True`).

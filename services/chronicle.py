@@ -23,7 +23,8 @@ from services.context_builder import _name
 # (ruído — mudanças de relação são frequentes e já aparecem via reputação/2.7).
 CHRONICLE_EVENT_TYPES = {
     "npc_killed", "location_control_changed", "quest_completed", "quest_failed",
-    "secret_revealed", "level_up", "player_died", "unique_item_claimed",
+    "secret_revealed", "level_up", "player_died", "player_downed",
+    "unique_item_claimed",
 }
 
 # Templates voltados ao JOGADOR (prosa curta), diferentes dos EVENT_TEMPLATES
@@ -36,6 +37,7 @@ CHRONICLE_TEMPLATES: Dict[str, str] = {
     "secret_revealed": "Um segredo veio à luz: {fact}",
     "level_up": "O herói alcançou o nível {new_level}.",
     "player_died": "Aqui termina a saga: {detail}.",
+    "player_downed": "O herói caiu e foi saqueado — e ainda assim levantou. {detail}.",
     "unique_item_claimed": "{item} agora pertence ao herói — não há outro no mundo.",
 }
 
@@ -58,6 +60,10 @@ def render_milestone(event: Dict, projection: Dict) -> str:
 
     if etype == "player_died":
         detail = payload.get("detail", "") or "o herói caiu"
+        return tmpl.format(detail=detail)
+
+    if etype == "player_downed":
+        detail = payload.get("detail", "") or "Um dia se perdeu na escuridão"
         return tmpl.format(detail=detail)
 
     if etype == "unique_item_claimed":
