@@ -272,6 +272,51 @@ export interface CreateOptions {
   races: string[];
   classes: string[];
   regions: string[];
+  // Fase 2.5b: raças completas (desc + traits) p/ os cards do wizard
+  races_full?: RaceFull[];
+}
+
+// spec onboarding-valoria: raça canônica de origins.json (via /data/options)
+export interface RaceTrait {
+  id: string;
+  name: string;
+  desc: string;
+  effects: Record<string, unknown>;
+}
+
+export interface RaceFull {
+  id: string;
+  name: string;
+  desc: string;
+  traits: RaceTrait[];
+}
+
+// spec onboarding-valoria: lore curado do wizard (GET /data/onboarding)
+export interface RegionCard {
+  name: string;
+  tagline: string;
+  description: string;
+  hook: string;
+  bonus: string;
+}
+
+export interface ClassCard {
+  tagline: string;
+  description: string;
+  playstyle: string;
+}
+
+export interface RaceCard {
+  name: string;
+  tagline: string;
+  description: string;
+}
+
+export interface OnboardingData {
+  world_intro: { title: string; paragraphs: string[] };
+  regions: Record<string, RegionCard>;
+  classes: Record<string, ClassCard>;
+  races: Record<string, RaceCard>;
 }
 
 export interface CreatePayload {
@@ -281,6 +326,30 @@ export interface CreatePayload {
   region: string;
   level: number;
   backstory: string;
+  // spec inicio-personalizado: cenário aprovado no passo de prólogo (opcional)
+  scenario?: StartScenario | null;
+}
+
+// spec inicio-personalizado: cenário de abertura (POST /game/prologue)
+export interface SeedNPC {
+  name: string;
+  role: string;
+  attitude: string; // "hostil" | "neutro" | "aliado"
+  persona: string;
+}
+
+export interface StartScenario {
+  prologue: string;
+  opening_scene_brief: string;
+  arc_title: string;
+  beats: string[];
+  climax: string;
+  seed_npcs: SeedNPC[];
+}
+
+export interface PrologueResponse {
+  scenario: StartScenario;
+  mock: boolean;
 }
 
 // Grafo do mundo (GET /data/map) — data/world_map.json

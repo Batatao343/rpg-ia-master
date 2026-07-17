@@ -330,22 +330,24 @@ testes offline verdes.**
 - ⚠️ Embeddings Google sem créditos (429) — RAG mudo nos runs; recarregar antes
   de qualquer teste real de memória longa.
 
-## Criação de personagem imersiva (2026-07-16) — 2 specs `approved`
+## Criação de personagem imersiva — ✅ ENTREGUE 2026-07-17 (2 specs `done`)
 
 > Pedido do usuário: jogador precisa de **afinidade com o personagem**. Hoje a
 > criação é form seco; a backstory não influencia nada além de atributos. Meta:
 > overview curado de Valoria + descrição livre → início de campanha sob medida
 > (cena, missão pessoal e NPCs da história). Detalhe técnico SÓ nas specs.
 
-1. [onboarding-valoria](specs/onboarding-valoria.md) — wizard rico de 5 passos
-   com lore curado (`data/onboarding.json`: intro do mundo + 12 regiões + 10
-   classes + 6 raças) + `GET /data/onboarding`. Zero LLM, cobertura testada.
-2. [inicio-personalizado](specs/inicio-personalizado.md) — `POST /game/prologue`
-   (1 chamada SMART + guard) gera prólogo confirmável; `/game/new` com
-   `scenario` semeia `campaign_plan` pessoal + crônica + NPCs `in_scene` +
-   cena de abertura. Sem scenario = fluxo atual intacto (CLI incluso).
-
-Ordem: 1 → 2 (2 assume o wizard no frontend; backend do 2 é independente).
+1. [onboarding-valoria](specs/onboarding-valoria.md) `done` — wizard rico de 5
+   passos com lore curado (`data/onboarding.json`: intro do mundo + 12 regiões
+   + 10 classes + 6 raças) + `GET /data/onboarding`. Zero LLM, cobertura
+   testada; smoke de UI 15/15 (Playwright, incl. 390px).
+2. [inicio-personalizado](specs/inicio-personalizado.md) `done` —
+   `POST /game/prologue` (1 chamada SMART + guard) gera prólogo confirmável;
+   `/game/new` com `scenario` semeia `campaign_plan` pessoal + crônica + NPCs
+   `in_scene` + cena de abertura. Sem scenario = fluxo atual intacto (CLI
+   incluso). Smoke real §6 no DeepSeek executado — achado importante na spec:
+   limites duros no schema do LLM derrubavam todos os providers (fix:
+   truncagem em Python + `StartScenarioIn` estrito só na borda).
 
 ## Backlog — Features após Fase 5
 

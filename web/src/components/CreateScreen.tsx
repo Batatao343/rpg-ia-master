@@ -1,6 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as api from "../api";
-import type { CreateOptions, CreatePayload, GameResponse } from "../types";
+import type {
+  CreateOptions,
+  CreatePayload,
+  GameResponse,
+  OnboardingData,
+  RaceTrait,
+  StartScenario,
+} from "../types";
 import { Frame, Divider, Medallion } from "./ornaments";
 
 const LEVELS = [
@@ -10,6 +17,33 @@ const LEVELS = [
   { v: 10, label: "Herói · 10" },
   { v: 20, label: "Lenda · 20" },
 ];
+
+// spec onboarding-valoria (R5): wizard de 5 passos com navegação livre
+const STEPS = ["O Mundo", "Origem", "Vocação", "Região", "Identidade"];
+
+const ATTR_LABELS: Record<string, string> = {
+  str: "FOR", dex: "DES", con: "CON", int: "INT", wis: "SAB", cha: "CAR",
+};
+
+// Resume os efeitos mecânicos de um trait em chips curtos ("+1 CON", "+5 HP"...)
+function traitEffectChips(t: RaceTrait): string[] {
+  const chips: string[] = [];
+  const eff = t.effects || {};
+  const attrs = eff["attr_bonus"] as Record<string, number> | undefined;
+  if (attrs) for (const [k, v] of Object.entries(attrs)) chips.push(`+${v} ${ATTR_LABELS[k] || k.toUpperCase()}`);
+  const saves = eff["save_bonus"] as Record<string, number> | undefined;
+  if (saves) for (const [k, v] of Object.entries(saves)) chips.push(`+${v} save ${ATTR_LABELS[k] || k.toUpperCase()}`);
+  if (typeof eff["hp_bonus"] === "number") chips.push(`+${eff["hp_bonus"]} HP`);
+  if (typeof eff["mana_bonus"] === "number") chips.push(`+${eff["mana_bonus"]} Mana`);
+  if (typeof eff["stamina_bonus"] === "number") chips.push(`+${eff["stamina_bonus"]} Vigor`);
+  if (typeof eff["defense_bonus"] === "number") chips.push(`+${eff["defense_bonus"]} Defesa`);
+  if (typeof eff["gold_bonus"] === "number") chips.push(`+${eff["gold_bonus"]} ouro`);
+  const resists = eff["condition_resist"] as string[] | undefined;
+  if (resists?.length) chips.push(`resiste: ${[...new Set(resists.map((r) => r.normalize("NFC")))].slice(0, 3).join(", ")}`);
+  const items = eff["start_items"] as string[] | undefined;
+  if (items?.length) chips.push(...items);
+  return chips;
+}
 
 interface Props {
   busy: boolean;
@@ -21,18 +55,23 @@ interface Props {
 
 export function CreateScreen({ busy, continueData, onCreate, onContinue, onError }: Props) {
   const [opts, setOpts] = useState<CreateOptions>({ races: [], classes: [], regions: [] });
+  const [lore, setLore] = useState<OnboardingData | null>(null);
+  const [step, setStep] = useState(0);
   const [name, setName] = useState("");
   const [race, setRace] = useState("");
   const [className, setClassName] = useState("");
   const [region, setRegion] = useState("");
   const [level, setLevel] = useState(1);
   const [backstory, setBackstory] = useState("");
+  // spec inicio-personalizado (R9): passo 6 — prólogo confirmável
+  const [scenario, setScenario] = useState<StartScenario | null>(null);
+  const [prologueBusy, setPrologueBusy] = useState(false);
 
   useEffect(() => {
-    api
-      .getOptions()
-      .then((o) => {
+    Promise.all([api.getOptions(), api.getOnboarding().catch(() => null)])
+      .then(([o, ob]) => {
         setOpts(o);
+        setLore(ob);
         setRace((r) => r || o.races[0] || "");
         setClassName((c) => c || o.classes[0] || "");
         setRegion((rg) => rg || o.regions[0] || "");
@@ -42,115 +81,364 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onError
       );
   }, [onError]);
 
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
-    onCreate({
+  // Cards de raça na ordem canônica de origins.json (chaveados por id no lore)
+  const raceCards = useMemo(() => {
+    if (!lore) return [];
+    return (opts.races_full || []).map((r) => ({ full: r, card: lore.races[r.id] }));
+  }, [lore, opts]);
+
+  const regionCards = useMemo(() => (lore ? Object.entries(lore.regions) : []), [lore]);
+
+  function payload(): CreatePayload {
+    return {
       name: name.trim() || "Herói",
       race,
       class_name: className,
       region,
       level,
       backstory: backstory.trim(),
-    });
+    };
   }
+
+  // Fallback: sem lore (arquivo/endpoint indisponível), mantém o formulário clássico
+  const wizard = !!lore;
+
+  // Passo 5 → 6: gera o prólogo (1 chamada SMART no servidor) e mostra a
+  // tela de confirmação. Falha → volta ao passo 5 com aviso (nunca trava).
+  async function requestPrologue() {
+    setStep(5);
+    setPrologueBusy(true);
+    setScenario(null);
+    try {
+      const r = await api.postPrologue(payload());
+      setScenario(r.scenario);
+    } catch (e) {
+      onError("O prólogo falhou: " + ((e as Error)?.message || e));
+      setStep(4);
+    } finally {
+      setPrologueBusy(false);
+    }
+  }
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (wizard) {
+      void requestPrologue();
+    } else {
+      onCreate(payload());
+    }
+  }
+
+  const canNext = step === 1 ? !!race : step === 2 ? !!className : step === 3 ? !!region : true;
 
   return (
     <main className="create">
-      <Frame className="create__frame">
+      <Frame className={"create__frame" + (wizard && step >= 1 && step <= 3 ? " create__frame--wide" : "")}>
         <div className="create__seal"><Medallion size={48} /></div>
         <header className="create__head">
           <p className="kicker">Dark Fantasy · Narração por IA</p>
           <h1 className="create__title">Forje sua lenda</h1>
-          <p className="create__sub">
-            Um mundo sombrio aguarda. Defina quem caminha nele — o resto, a história escreve.
-          </p>
+          {(!wizard || step === 0) && (
+            <p className="create__sub">
+              Um mundo sombrio aguarda. Defina quem caminha nele — o resto, a história escreve.
+            </p>
+          )}
         </header>
+
+        {wizard && step < 5 && (
+          <nav className="wizard__steps" aria-label="Passos da criação">
+            {STEPS.map((label, i) => (
+              <button
+                key={label}
+                type="button"
+                className="wizard__step"
+                aria-current={step === i ? "step" : undefined}
+                onClick={() => setStep(i)}
+              >
+                <span className="wizard__stepnum">{i + 1}</span>
+                <span className="wizard__steplabel">{label}</span>
+              </button>
+            ))}
+          </nav>
+        )}
 
         <Divider />
 
-        <form className="form" autoComplete="off" onSubmit={submit}>
-          <div className="field">
-            <label htmlFor="f-name">Nome do herói</label>
-            <input
-              id="f-name"
-              type="text"
-              placeholder="Ex.: Valerius"
-              maxLength={40}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-
-          <div className="form__row">
-            <div className="field">
-              <label htmlFor="f-race">Origem (raça)</label>
-              <select id="f-race" value={race} onChange={(e) => setRace(e.target.value)}>
-                {opts.races.map((v) => (
-                  <option key={v} value={v}>{v}</option>
-                ))}
-              </select>
+        {wizard && step === 0 && (
+          <section className="wizard__intro">
+            <h2 className="wizard__title">{lore.world_intro.title}</h2>
+            {lore.world_intro.paragraphs.map((p, i) => (
+              <p key={i} className="wizard__para">{p}</p>
+            ))}
+            <div className="form__actions">
+              <button type="button" className="btn btn--primary" onClick={() => setStep(1)}>
+                Continuar
+              </button>
+              <button type="button" className="btn btn--ghost" onClick={() => setStep(1)}>
+                Pular introdução
+              </button>
+              {continueData && (
+                <button type="button" className="btn btn--ghost" onClick={onContinue}>
+                  Continuar jornada anterior
+                </button>
+              )}
             </div>
-            <div className="field">
-              <label htmlFor="f-class">Vocação (classe)</label>
-              <select id="f-class" value={className} onChange={(e) => setClassName(e.target.value)}>
-                {opts.classes.map((v) => (
-                  <option key={v} value={v}>{v}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+          </section>
+        )}
 
-          <div className="field">
-            <label htmlFor="f-region">Região inicial</label>
-            <select id="f-region" value={region} onChange={(e) => setRegion(e.target.value)}>
-              {opts.regions.map((v) => (
-                <option key={v} value={v}>{v}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="field">
-            <label>Nível inicial</label>
-            <div className="segmented" role="radiogroup" aria-label="Nível inicial">
-              {LEVELS.map((l) => (
+        {wizard && step === 1 && (
+          <section>
+            <h2 className="wizard__title">Quem você é?</h2>
+            <div className="cards" role="radiogroup" aria-label="Origem (raça)">
+              {raceCards.map(({ full, card }) => (
                 <button
+                  key={full.id}
                   type="button"
-                  key={l.v}
-                  className="seg"
-                  aria-pressed={level === l.v}
-                  onClick={() => setLevel(l.v)}
+                  className="card"
+                  aria-pressed={race === full.name}
+                  onClick={() => setRace(full.name)}
                 >
-                  {l.label}
+                  <span className="card__name">{card?.name || full.name}</span>
+                  <span className="card__tagline">{card?.tagline || full.desc}</span>
+                  {card && <span className="card__desc">{card.description}</span>}
+                  <span className="card__chips">
+                    {(full.traits || []).map((t) => (
+                      <span key={t.id} className="chip" title={t.desc}>{t.name}</span>
+                    ))}
+                    {(full.traits || []).flatMap(traitEffectChips).map((c, i) => (
+                      <span key={"e" + i} className="chip chip--mech">{c}</span>
+                    ))}
+                  </span>
                 </button>
               ))}
             </div>
-          </div>
+          </section>
+        )}
 
-          <div className="field">
-            <label htmlFor="f-back">
-              Passado <span className="muted">(opcional)</span>
-            </label>
-            <textarea
-              id="f-back"
-              rows={2}
-              maxLength={280}
-              placeholder="Uma linha sobre de onde você veio e o que carrega."
-              value={backstory}
-              onChange={(e) => setBackstory(e.target.value)}
-            />
-          </div>
+        {wizard && step === 2 && (
+          <section>
+            <h2 className="wizard__title">Como você sobrevive?</h2>
+            <div className="cards" role="radiogroup" aria-label="Vocação (classe)">
+              {opts.classes.map((cls) => {
+                const card = lore.classes[cls];
+                return (
+                  <button
+                    key={cls}
+                    type="button"
+                    className="card"
+                    aria-pressed={className === cls}
+                    onClick={() => setClassName(cls)}
+                  >
+                    <span className="card__name">{cls}</span>
+                    {card && (
+                      <>
+                        <span className="card__tagline">{card.tagline}</span>
+                        <span className="card__desc">{card.description}</span>
+                        <span className="card__hook">{card.playstyle}</span>
+                      </>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
-          <div className="form__actions">
+        {wizard && step === 3 && (
+          <section>
+            <h2 className="wizard__title">De onde você vem?</h2>
+            <div className="cards" role="radiogroup" aria-label="Região inicial">
+              {regionCards.map(([rid, card]) => (
+                <button
+                  key={rid}
+                  type="button"
+                  className="card"
+                  aria-pressed={region === card.name}
+                  onClick={() => setRegion(card.name)}
+                >
+                  <span className="card__name">{card.name}</span>
+                  <span className="card__tagline">{card.tagline}</span>
+                  <span className="card__desc">{card.description}</span>
+                  <span className="card__hook">{card.hook}</span>
+                  <span className="card__chips"><span className="chip chip--mech">{card.bonus}</span></span>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {(!wizard || step === 4) && (
+          <form className="form" autoComplete="off" onSubmit={submit}>
+            <div className="field">
+              <label htmlFor="f-name">Nome do herói</label>
+              <input
+                id="f-name"
+                type="text"
+                placeholder="Ex.: Valerius"
+                maxLength={40}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            {!wizard && (
+              <>
+                <div className="form__row">
+                  <div className="field">
+                    <label htmlFor="f-race">Origem (raça)</label>
+                    <select id="f-race" value={race} onChange={(e) => setRace(e.target.value)}>
+                      {opts.races.map((v) => (
+                        <option key={v} value={v}>{v}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label htmlFor="f-class">Vocação (classe)</label>
+                    <select id="f-class" value={className} onChange={(e) => setClassName(e.target.value)}>
+                      {opts.classes.map((v) => (
+                        <option key={v} value={v}>{v}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className="field">
+                  <label htmlFor="f-region">Região inicial</label>
+                  <select id="f-region" value={region} onChange={(e) => setRegion(e.target.value)}>
+                    {opts.regions.map((v) => (
+                      <option key={v} value={v}>{v}</option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
+
+            {wizard && (
+              <p className="wizard__summary">
+                {race} · {className} · {region}
+              </p>
+            )}
+
+            <div className="field">
+              <label>Nível inicial</label>
+              <div className="segmented" role="radiogroup" aria-label="Nível inicial">
+                {LEVELS.map((l) => (
+                  <button
+                    type="button"
+                    key={l.v}
+                    className="seg"
+                    aria-pressed={level === l.v}
+                    onClick={() => setLevel(l.v)}
+                  >
+                    {l.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="field">
+              <label htmlFor="f-back">
+                Quem é você? <span className="muted">(opcional)</span>
+              </label>
+              <textarea
+                id="f-back"
+                rows={3}
+                maxLength={2000}
+                placeholder="De onde veio, o que busca, o que deixou para trás? Sua descrição molda o início da história."
+                value={backstory}
+                onChange={(e) => setBackstory(e.target.value)}
+              />
+            </div>
+
+            <div className="form__actions">
+              {continueData && (
+                <button type="button" className="btn btn--ghost" onClick={onContinue}>
+                  Continuar jornada anterior
+                </button>
+              )}
+              {wizard && (
+                <button type="button" className="btn btn--ghost" onClick={() => setStep(3)}>
+                  Voltar
+                </button>
+              )}
+              <button type="submit" className="btn btn--primary" disabled={busy || prologueBusy}>
+                {wizard
+                  ? prologueBusy ? "Tecendo…" : "Tecer o prólogo"
+                  : busy ? "Forjando…" : "Começar a jornada"}
+              </button>
+            </div>
+          </form>
+        )}
+
+        {wizard && step === 5 && (
+          <section className="prologue">
+            {prologueBusy || !scenario ? (
+              <div className="prologue__loading" role="status">
+                <p className="wizard__title">O destino tece seu prólogo…</p>
+                <p className="wizard__para prologue__pulse">
+                  {name.trim() || "Herói"} · {race} · {className} · {region}
+                </p>
+              </div>
+            ) : (
+              <>
+                <h2 className="wizard__title">{scenario.arc_title}</h2>
+                <p className="wizard__summary">
+                  {name.trim() || "Herói"} · {race} · {className} · nível {level} · {region}
+                </p>
+                {scenario.prologue.split(/\n+/).map((p, i) => (
+                  <p key={i} className="wizard__para prologue__text">{p}</p>
+                ))}
+                {scenario.seed_npcs.length > 0 && (
+                  <div className="prologue__npcs">
+                    {scenario.seed_npcs.map((n) => (
+                      <span key={n.name} className="chip" title={n.persona}>
+                        {n.name} — {n.role}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className="form__actions">
+                  <button
+                    type="button"
+                    className="btn btn--primary"
+                    disabled={busy}
+                    onClick={() => onCreate({ ...payload(), scenario })}
+                  >
+                    {busy ? "Forjando…" : "Começar a jornada"}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn--ghost"
+                    disabled={busy}
+                    onClick={() => setStep(4)}
+                  >
+                    Refinar história
+                  </button>
+                </div>
+              </>
+            )}
+          </section>
+        )}
+
+        {wizard && step > 0 && step < 4 && (
+          <div className="form__actions wizard__nav">
             {continueData && (
               <button type="button" className="btn btn--ghost" onClick={onContinue}>
                 Continuar jornada anterior
               </button>
             )}
-            <button type="submit" className="btn btn--primary" disabled={busy}>
-              {busy ? "Forjando…" : "Começar a jornada"}
+            <button type="button" className="btn btn--ghost" onClick={() => setStep(step - 1)}>
+              Voltar
+            </button>
+            <button
+              type="button"
+              className="btn btn--primary"
+              disabled={!canNext}
+              onClick={() => setStep(step + 1)}
+            >
+              Continuar
             </button>
           </div>
-        </form>
+        )}
       </Frame>
     </main>
   );

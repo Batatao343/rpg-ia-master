@@ -1,0 +1,180 @@
+{
+  "world_intro": {
+    "title": "Valoria",
+    "paragraphs": [
+      "Valoria é um mundo que sobreviveu a si mesmo. Seis raças acordaram nele, uma por era, sem manual e sem boas-vindas — e cada uma pagou seu preço ao Éter, a energia que alimenta a magia e cobra em corpo e memória. As guerras que travaram deixaram cicatrizes que ainda são geografia: um deserto de vidro, um pântano nascido de um campo de batalha, uma cidade inteira afundada num lago.",
+      "O momento atual é o da Inundação humana: a raça mais nova dominou o continente por número e fundou Nova Arcádia, a maior cidade viva, governada sob o Código de Ferro. Fora das muralhas, a Praga de Ferro avança sem cura, fações disputam o que sobrou das eras anteriores e criaturas antigas se movem em lugares onde não deviam.",
+      "Um aventureiro em Valoria não salva o mundo — negocia com ele. Há espólio afundado em lama de guerra, rotas que ninguém patrulha, segredos que valem mais que ouro e gente demais disposta a pagar por uma lâmina discreta. O que você busca, e o que está disposto a pagar por isso, é a única ficha que importa."
+    ]
+  },
+  "regions": {
+    "nova_arcadia": {
+      "name": "Nova Arcádia",
+      "tagline": "A capital que sobrou — ouro, intriga e muros altos.",
+      "description": "A maior cidade de Valoria, erguida numa confluência de rios e segregada em anéis: o Dourado bebe água limpa, o de Ferro obedece ao Código, o de Lama vive fora das muralhas. Valerius governa sem ser visto; a Legião vê por ele. Magia sem licença é sedição — e a fogueira tem plateia.",
+      "hook": "Quem começa aqui costuma se enredar em dívidas, cortes, contrabando e conspirações — a cidade cobra entrada de todo mundo, só varia a moeda.",
+      "bonus": "Começa com 30 de ouro extra — moeda com o rosto de Valerius"
+    },
+    "pantano_melancolia": {
+      "name": "Pântano da Melancolia",
+      "tagline": "O campo de batalha que afundou — e ainda chama.",
+      "description": "Onde a coalizão derrotou Malagor, os mortos foram tantos que a terra cedeu. Hoje é água oleosa, névoa baixa e uma tristeza que pesa antes do cheiro chegar. Druidas do Ciclo Cinzento medem seu avanço e colhem as plantas do chá que atenua a Praga de Ferro. Nas profundezas, o espólio da guerra espera.",
+      "hook": "Riqueza real dorme sob a lama, guardada por mortos que o Éter não deixou descansar. Os Druidas não vão buscar. Você pode.",
+      "bonus": "Começa com Chá dos Druidas x2 (atenua a Praga de Ferro)"
+    },
+    "deserto_zhur": {
+      "name": "Deserto de Zhur",
+      "tagline": "O Mar de Vidro, onde os Elfos derrubaram uma lua.",
+      "description": "O extremo sul foi vitrificado pelo impacto que selou um demônio sob a areia. Tempestades de Navalha esfolam carne, o calor cozinha armadura e miragens de parentes mortos acenam no horizonte. Os Devoradores de Sol caçam forasteiros pela água do corpo — não negociam.",
+      "hook": "Cristais que pulsam sob o vidro valem fortunas para quem sobreviver à travessia. Quase ninguém sobrevive à travessia.",
+      "bonus": "Começa com Odre de Água x2 e Lentes de Obsidiana"
+    },
+    "floresta_sussurros": {
+      "name": "Floresta dos Sussurros",
+      "tagline": "O escuro que escolheu o silêncio.",
+      "description": "Árvores antigas bloqueiam a luz com precisão intencional. O silêncio não é ausência de som — é presença. Vozes chamam visitantes pelo nome, na voz de mortos conhecidos. No chão cresce o Pó de Sonho, fungo que revela o que está escondido e vicia quem o usa.",
+      "hook": "Tudo que a floresta esconde tem preço lá fora — e a floresta sabe o seu nome antes de você entrar.",
+      "bonus": "Começa com Antídoto x2"
+    },
+    "selva_xylos": {
+      "name": "Selva de Xylos",
+      "tagline": "Vida e morte na mesma planta, no mesmo segundo.",
+      "description": "Uma selva de ciclo acelerado: frutas apodrecem em uma hora, o ar corrói metal aos poucos e parar tempo demais significa criar raízes — literalmente. Cores impossíveis, calor de coisa viva e fauna que não distingue animal de vegetal. Para os Hospedeiros é lar; para o resto, um sistema que mata sem intenção.",
+      "hook": "O que cresce aqui não cresce em mais lugar nenhum — alquimistas pagam caro por quem entra e, detalhe importante, sai.",
+      "bonus": "Começa com Capa de Couro Tratado (resiste ao ar ácido)"
+    },
+    "skallgard": {
+      "name": "Skallgard",
+      "tagline": "O Ermo Branco: frio que não é clima, é condição.",
+      "description": "No norte além das Montanhas Afiadas, a noite dura seis meses e a aurora verde-tóxica marca a magia residual. Skallgard divide-se em clãs: os tecnológicos nunca pegam em arma, os de combate exportam os mercenários mais duros de Valoria. Forasteiros são 'vidas quentes' — fáceis demais.",
+      "hook": "Quem prova valor no gelo carrega o respeito dos clãs para o resto da vida. Quem não prova vira estátua na neve.",
+      "bonus": "Começa com Casaco de Peles Pesado"
+    },
+    "aethelgard": {
+      "name": "Aethelgard",
+      "tagline": "A cidade mais poderosa de Valoria — hoje, um lago.",
+      "description": "Aethelgard implodiu numa noite e a cratera virou lago. Nas partes rasas, a água cristalina mostra arcos e pedra trabalhada; nas fundas, a luz simplesmente não entra. Os Afogados patrulham rotas que ninguém mapeou e o Éter concentrado imprime nas paredes as memórias de quem morreu lá embaixo.",
+      "hook": "O maior tesouro arcano do continente está intacto debaixo d'água — junto com tudo aquilo que o afundou.",
+      "bonus": "Começa com Lamparina de Óleo e Corda de 15m"
+    },
+    "ophidia": {
+      "name": "Ophidia",
+      "tagline": "As ilhas que fumegam em cores erradas.",
+      "description": "Um arquipélago vulcânico visível da costa oeste, com vulcões que soltam fumaça de cores sem nome e ilhas que nunca estão exatamente onde o mapa diz. Barcos que se aproximam não voltam — sem destroços, sem corpos, sem explicação. Ninguém sabe o que Ophidia é. Ela está lá toda manhã mesmo assim.",
+      "hook": "Ninguém 'vem' de Ophidia — mas quem jura que veio carrega histórias que valem bebida, ouro e inimigos em qualquer porto.",
+      "bonus": "Ninguém 'vem' de Ophidia — mas quem jura que veio começa com um Mapa Contraditório"
+    },
+    "costa_negra": {
+      "name": "Costa Negra",
+      "tagline": "O Cemitério de Leviatãs — ossos do tamanho de colinas.",
+      "description": "Gerações de leviatãs caçados pelos Osshari apodrecem na costa oeste: costelas como árvores, crânios que abrigariam casas, gases que explodem à tocha errada. O Éter das carcaças criou fauna que não existe em mais lugar nenhum — e atraiu coisas que habitam os ossos maiores.",
+      "hook": "Âmbar cinza e óleo de leviatã valem fortunas por peso. Os Caranguejeiros conhecem cada carcaça. Você, ainda não.",
+      "bonus": "Começa com Fragmento de Âmbar Cinza (vale bom ouro)"
+    },
+    "montanhas_afiadas": {
+      "name": "Montanhas Afiadas",
+      "tagline": "A rota mais mortal de Valoria — e a mais usada.",
+      "description": "Picos que rasgaram o chão num terremoto e nunca se suavizaram. As passagens são labirínticas, o clima mata sem equipamento e Orcs e Goblins saem do Reino Subterrâneo pelas bocas baixas. Ninguém controla as rotas: o custo é maior que o benefício. Guias Cinzéus atravessam — dor não os detém.",
+      "hook": "Embaixo das passagens ainda existe o Reino que os Anões perderam — câmaras polidas, rotas comerciais e algo imenso que não ataca, mas está sempre lá.",
+      "bonus": "Começa com Picareta e Corda de Escalada"
+    },
+    "pradaria_ruinas": {
+      "name": "Pradaria das Ruínas",
+      "tagline": "Grama alta sobre as civilizações que caíram.",
+      "description": "O centro do continente, onde Elfos e Cinzéus floresceram até a Guerra do Céu Vermelho. Fundações afloram entre a grama; Vaelorn preserva a memória élfica, Solvhen guarda séculos de silêncio Cinzéu em paredes escritas. Nômades circulam entre vilas — comércio ou ataque, depende do dia.",
+      "hook": "Cada ruína pisada esconde três não descobertas. Aqui o perigo não é ancestral — é gente, e gente se negocia.",
+      "bonus": "Começa com Ração de Viagem x3 e um fragmento de ruína élfica"
+    },
+    "brekmar": {
+      "name": "Brekmar",
+      "tagline": "O porto sem lei — reputação vale mais que moeda.",
+      "description": "Ninguém fundou Brekmar: piratas pararam numa baía boa e nunca mais partiram. Não há lei escrita — há reputação, força e o árbitro final: Kahen, sangromante que decide de um navio ancorado e nunca dorme em terra. Tudo se compra, tudo se vende, inclusive informação sobre o que ninguém entende.",
+      "hook": "Aqui qualquer passado se apaga e qualquer contrato se assina — o difícil é sobreviver às cláusulas.",
+      "bonus": "Começa com Adaga Escondida e 15 de ouro de origem duvidosa"
+    }
+  },
+  "classes": {
+    "Cavaleiro da Vigília": {
+      "tagline": "A muralha entre os fracos e o resto de Valoria.",
+      "description": "Guardião de armadura pesada que jurou proteger quem não pode se proteger. Onde a Legião cobra e as fações negociam, o Cavaleiro simplesmente fica — e enquanto ele fica, ninguém passa. Passiva: Muralha Humana, +2 de Defesa com aliados adjacentes.",
+      "playstyle": "Tanque clássico: absorve dano na linha de frente, protege aliados e vence pelo atrito. Direto, resistente, difícil de derrubar."
+    },
+    "Batedor das Fronteiras": {
+      "tagline": "Sobreviver fora das muralhas é profissão.",
+      "description": "Explorador ágil que conhece as rotas que os mapas erram: onde acampar, o que comer, quando NÃO acender fogueira. Nas estradas de Valoria, quem chega vivo geralmente pagou um Batedor. Passiva: Oportunista, +1d6 de dano contra inimigos distraídos.",
+      "playstyle": "Mobilidade e precisão: flanqueia, explora terreno e pune inimigos distraídos. Recompensa quem pensa antes de atacar."
+    },
+    "Arcanista Cinzento": {
+      "tagline": "Magia filtrada por tecnologia — poder sem fé.",
+      "description": "Estudioso que trata o Éter como problema de engenharia: condutores, lentes e cálculo no lugar de pactos e devoção. Em Nova Arcádia sua licença é cara; fora dela, ninguém pergunta. Passiva: Mente Analítica, usa Inteligência na iniciativa.",
+      "playstyle": "Conjurador de dano e controle: frágil de perto, devastador à distância. Mana é seu recurso, posicionamento é sua armadura."
+    },
+    "Sangromante": {
+      "tagline": "O corpo é a fonte. O preço é o próprio sangue.",
+      "description": "Praticante da magia proibida que corre nas veias — cada feitiço pode ser pago em vitalidade quando a mana acaba. Temido nas cidades, queimado em praça pública quando pego, indispensável quando tudo deu errado. Passiva: Sacrifício de Sangue, 2 HP valem 1 de Mana.",
+      "playstyle": "Alto risco, alto poder: converte vida em magia e aposta a própria pele em cada luta. Para quem gosta de decisões com custo real."
+    },
+    "Inquisidor da Cinza": {
+      "tagline": "Fogo, medo e certeza absoluta.",
+      "description": "Fanático que purifica pelo fogo o que considera corrompido — e em Valoria sempre há algo corrompido por perto. Onde outros hesitam, o Inquisidor já acendeu a tocha. Passiva: Fervor, imune a Medo e +2 de dano de fogo.",
+      "playstyle": "Tanque ofensivo: pressiona sem recuar, imune ao pânico que quebra os outros. Agressivo, implacável, sempre na frente."
+    },
+    "Pastor de Pragas": {
+      "tagline": "O enxame obedece a quem o hospeda.",
+      "description": "Druida simbiótico que cultiva insetos e fungos no próprio corpo e nos inimigos alheios. O que o resto de Valoria chama de praga, ele chama de rebanho. Passiva: Hospedeiro, atacantes corpo-a-corpo recebem 1d4 de veneno.",
+      "playstyle": "Dano ao longo do tempo e controle de área: envenena, enfraquece e deixa a natureza terminar o serviço. Vence pela paciência."
+    },
+    "Sombra da Corte": {
+      "tagline": "Lâmina invisível da política.",
+      "description": "Assassino social treinado nos salões e nos becos: veneno no cálice, sorriso no rosto, nome limpo no registro. Nas cortes de Nova Arcádia, é a profissão mais negada e mais contratada. Passiva: Toque da Víbora, toda arma aplica veneno fraco.",
+      "playstyle": "Furtividade, manipulação e golpes precisos — evita o confronto aberto e resolve a luta antes de ela começar."
+    },
+    "Sapador da Fuligem": {
+      "tagline": "Todo problema é uma estrutura mal demolida.",
+      "description": "Engenheiro anão das Landships: explosivos calculados, armadilhas conferidas duas vezes e a convicção de que não existe porta trancada, existe parede temporária. Passiva: Demolidor, dano dobrado contra estruturas.",
+      "playstyle": "Preparação e terreno: minas, engenhocas e demolição transformam o campo de batalha na sua arma. Pensa dois turnos à frente."
+    },
+    "Médico de Campo": {
+      "tagline": "Sem magia, sem milagre — serra, agulha e sangue frio.",
+      "description": "Curandeiro que aprendeu o ofício onde ele é mais necessário: no barro, entre gritos. Alquimia prática, torniquetes e a calma de quem já viu pior. Num mundo com Praga de Ferro e sem cura, vale mais que ouro. Passiva: Triagem, +5 de cura em alvos abaixo de 25% de vida.",
+      "playstyle": "Suporte de linha de frente: mantém o grupo vivo, estabiliza o caos e ainda segura uma lâmina quando preciso."
+    },
+    "Guardião Selvagem": {
+      "tagline": "A natureza brutal de Valoria, em forma de gente.",
+      "description": "Bárbaro tribal que não domou o ermo — fez as pazes com ele. Pele curtida por clima que mata forasteiros, força que dispensa cerimônia e desconfiança saudável de muralhas. Passiva: Pele Grossa, sem armadura a Defesa vem de Destreza + Constituição.",
+      "playstyle": "Força bruta e resiliência: bate forte, aguenta mais e luta melhor longe da civilização. Simples de jogar, difícil de parar."
+    }
+  },
+  "races": {
+    "race_humanos": {
+      "name": "Humano",
+      "tagline": "A maré que dominou Valoria por número e novidade.",
+      "description": "A raça mais nova surgiu em todos os ambientes ao mesmo tempo — e sobreviveu em todos. Curiosos, adaptáveis, moralmente maleáveis: onde outras raças precisam de milênios de tradição, o humano se vira com o que tem no bolso. Fundaram Nova Arcádia e não pedem desculpa por isso."
+    },
+    "race_elfos": {
+      "name": "Elfo",
+      "tagline": "A primeira raça — e a que tem menos tempo.",
+      "description": "Acordaram num mundo vazio e hostil e pagaram caro por cada era desde então. Hoje a pele racha como porcelana e a vida acaba entre os 60 e 70 anos, sem aviso. Sentem dor e prazer como ninguém — e é exatamente por isso que o Éter responde tão bem a eles. Vivem com urgência porque não há alternativa."
+    },
+    "race_anoes_fuligem": {
+      "name": "Anão da Fuligem",
+      "tagline": "Lógica, protocolo e 12 Landships que nunca param.",
+      "description": "Surgiram organizando a pedra do terremoto que os criou e nunca mais foram pegos de surpresa. Perderam o Reino Subterrâneo, mas não o sistema: hoje vivem em Landships nômades, respirando fuligem que mataria outros pulmões. Emoção não é dado relevante; a ferramenta conferida duas vezes, sim."
+    },
+    "race_vrel": {
+      "name": "Vrel",
+      "tagline": "Memórias de todo o continente, embaralhadas numa cabeça só.",
+      "description": "Placas de quitina iridescente, olhos de obsidiana e uma proto-mente que carrega lembranças de Vrel que nunca conheceram. O ruído de fundo às vezes vira clareza acidental — o nome certo, a rota certa, no momento certo. Todo mundo quer comprar o que um Vrel sabe. Poucos entendem o custo de saber."
+    },
+    "race_cinzeus": {
+      "name": "Cinzéu",
+      "tagline": "O corpo é silêncio. As emoções, um abismo.",
+      "description": "Nasceram de estátuas de gelo no norte que odiaram à primeira vista. Não sentem dor nem prazer físico — um Cinzéu com três ossos quebrados luta igual a um intacto. O que sentem são emoções, em profundidade que assusta as outras raças. Ficam muito parados. Quando agem, já entenderam tudo."
+    },
+    "race_osshari": {
+      "name": "Osshari",
+      "tagline": "Caçadores de leviatãs em busca de sentir alguma coisa.",
+      "description": "Anfíbios da costa oeste, escamas de padrão único e couro que dispensa armadura. O Abismo embotou seus sentidos: medo, prazer e desespero chegam amortecidos. Caçam criaturas colossais porque é o mais perto que chegam de sentir de verdade — e construíram uma cultura inteira sobre essa fome."
+    }
+  }
+}

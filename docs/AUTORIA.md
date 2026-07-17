@@ -80,3 +80,24 @@ Rodar 2× seguidas produz o mesmo resultado (idempotente).
 - `type: secret` ⇒ `visibility: secret`; doc `public` não referencia entidade
   `secret`; doc de NPC público não contém rótulo de parágrafo secreto (7.3).
 - Tudo UTF-8 estrito (mojibake vira AVISO).
+
+---
+
+## Fluxo D — Editar cards do onboarding (wizard de criação)
+
+O wizard de criação de personagem (spec onboarding-valoria) lê `data/onboarding.json`:
+`world_intro` (3 parágrafos) + 1 card por região/classe/raça dos JSONs canônicos.
+
+1. Editar `data/onboarding.json` direto (conteúdo curado à mão, zero LLM).
+2. Limites de campo (testados em `tests/test_onboarding.py`): `tagline` ≤ 90,
+   `description` ≤ 400, `hook` (região) ≤ 200, `playstyle` (classe) ≤ 160.
+3. Chaves: `regions.*`/`races.*` usam os **ids** de `origins.json`;
+   `classes.*` usa os **nomes** exatos de `classes.json`.
+4. `name`/`bonus` dos cards de região e `name` dos de raça devem espelhar
+   `origins.json` (teste anti-drift falha se divergirem).
+5. **Regra de visibilidade (R9):** os cards NÃO podem citar entidade cujo doc
+   do Codex seja `visibility: hidden|secret` (ex.: reveals da timeline era-7).
+   Testado por `test_onboarding_no_hidden_entities`; na dúvida, escrever
+   conteúdo novo em vez de extrair do lore.
+6. Região/classe/raça nova nos JSONs canônicos SEM card correspondente quebra
+   a suíte (cobertura é bidirecional — drift ruidoso por construção).

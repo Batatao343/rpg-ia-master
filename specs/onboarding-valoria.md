@@ -1,7 +1,7 @@
 # SPEC — Onboarding de Valoria (wizard rico de criação)
 
-> **Status:** `approved`
-> **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
+> **Status:** `done`
+> **Criada:** 2026-07-16 · **Atualizada:** 2026-07-17 (implementada; smoke de UI §6 executado — 15/15 checks via Playwright, incl. 390px)
 > **Depende de:** nenhuma
 > **Desbloqueia:** inicio-personalizado (frontend do passo de prólogo assume este wizard)
 
@@ -160,14 +160,20 @@ Chaves: `regions.*` e `races.*` usam os **ids** de `origins.json`
 
 ## 5. Critérios de aceite
 
-- [ ] `data/onboarding.json` com 12 regiões + 10 classes + 6 raças + intro (R1-R2)
-- [ ] Testes de cobertura falham ao remover um card (R3)
-- [ ] `GET /data/onboarding` → 200 com shape completo (R4)
-- [ ] Wizard 5 passos navegável, estado preservado, mobile 390px (R5, R8)
-- [ ] Criar personagem pelo wizard produz o mesmo payload/fluxo atual (R7)
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] `npm run build` verde
-- [ ] Saves antigos continuam carregando (nada de estado tocado)
+- [x] `data/onboarding.json` com 12 regiões + 10 classes + 6 raças + intro (R1-R2)
+- [x] Testes de cobertura falham ao remover um card (R3)
+- [x] `GET /data/onboarding` → 200 com shape completo (R4)
+- [x] Wizard 5 passos navegável, estado preservado, mobile 390px (R5, R8)
+- [x] Criar personagem pelo wizard produz o mesmo payload/fluxo atual (R7)
+- [x] `uv run pytest` verde (suíte completa offline)
+- [x] `npm run build` verde
+- [x] Saves antigos continuam carregando (nada de estado tocado)
+
+> **Nota de implementação (2026-07-17):** cards de região ganharam `name` e
+> `bonus` (espelhos de `origins.json`, teste anti-drift) e os de raça `name` —
+> o frontend precisa mapear id → nome sem tocar no `/data/options`. Cobertura
+> de campos e R9 testados em `tests/test_onboarding.py` (10 testes). Regra de
+> autoria registrada em `docs/AUTORIA.md` § Fluxo D.
 
 ## 6. Smoke test com LLM real
 

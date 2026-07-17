@@ -39,6 +39,7 @@ from services import quest_log
 from services import state_views as sv
 from services.chronicle import default_chapter_title
 from services.discovery import player_codex
+from services.prologue import StartScenarioIn, build_start_scenario, scenario_to_state_seed
 from world_utils import starting_world
 
 # --- CONFIGURAÇÃO DA API ---
@@ -144,7 +145,9 @@ async def _rate_limit(request: Request, call_next):
     limit = _rate_limit_max()
     # Auditoria A2: equip/levelup também mutam o save — entram na janela.
     if limit > 0 and (request.url.path in ("/game/action", "/game/action/stream",
-                                           "/game/new", "/game/equip", "/game/levelup")
+                                           "/game/new", "/game/equip", "/game/levelup",
+                                           # spec inicio-personalizado (R11): 1 SMART por chamada
+                                           "/game/prologue")
                       # spec polish-sessao (R2): DELETE de save também é mutação
                       or (request.method == "DELETE"
                           and request.url.path.startswith("/game/save/"))):
@@ -176,6 +179,10 @@ class CreateCharacterRequest(BaseModel):
     region: str = Field(max_length=60)
     level: int = Field(1, ge=1, le=20)
     backstory: Optional[str] = Field("", max_length=2000)
+    # spec inicio-personalizado (R4): cenário aprovado no passo de prólogo.
+    # StartScenarioIn re-valida na borda (limites de campo, beats ≤ 5, npcs ≤ 2
+    # → excedente = 422). None = fluxo clássico, byte a byte o atual (R6).
+    scenario: Optional[StartScenarioIn] = None
 
 class ActionRequest(BaseModel):
     # Auditoria A7: ação vira prompt — sem teto, request gigante = custo/latência.
@@ -523,6 +530,18 @@ def get_creation_options():
         "regions": [r["name"] for r in origins.get("regions", [])]
     }
 
+@app.get("/data/onboarding")
+def get_onboarding():
+    """Spec onboarding-valoria (R4): lore curado do wizard de criação.
+
+    Conteúdo estático de data/onboarding.json — zero LLM, zero RAG.
+    """
+    data = load_json_data("onboarding.json")
+    if not data:
+        raise HTTPException(status_code=404,
+                            detail="Conteúdo de onboarding indisponível.")
+    return data
+
 @app.get("/data/map")
 def get_world_map():
     """Grafo de locais (Fase 0) para o mapa com fog of war no frontend.
@@ -567,11 +586,29 @@ def get_player_codex(game_id: Optional[str] = None):
         raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
     return player_codex(state)
 
+@app.post("/game/prologue")
+def game_prologue(req: CreateCharacterRequest):
+    """spec inicio-personalizado (R1): gera o cenário de abertura a partir da
+    ficha + descrição livre. 1 chamada SMART; guard de FallbackLLM devolve
+    template determinístico — nunca 500. Stateless: o cenário vive no client
+    entre preview e confirm."""
+    char_input = {
+        "name": req.name,
+        "class_name": req.class_name,
+        "race": req.race,
+        "region": req.region,
+        "backstory": req.backstory,
+        "level": req.level,
+    }
+    scenario, mock = build_start_scenario(char_input)
+    return {"scenario": scenario.model_dump(), "mock": mock}
+
+
 @app.post("/game/new", response_model=GameResponse)
 def new_game(req: CreateCharacterRequest):
     """Cria um novo personagem e inicia a campanha com ID único."""
     print(f"Criando personagem: {req.name}")
-    
+
     char_input = {
         "name": req.name,
         "class_name": req.class_name,
@@ -581,7 +618,7 @@ def new_game(req: CreateCharacterRequest):
         "level": req.level
     }
     final_char = create_player_character(char_input)
-    
+
     # Gera ID único
     new_game_id = str(uuid.uuid4())
 
@@ -648,6 +685,21 @@ def new_game(req: CreateCharacterRequest):
         "world_projection": {},
         "pending_world_events": []
     }
+
+    # spec inicio-personalizado (R5): cenário aprovado semeia plano pessoal,
+    # capítulo 1, NPCs da história e a cena de abertura. Sem scenario, o
+    # estado acima fica intocado (R6 — fluxo clássico byte a byte).
+    if req.scenario is not None:
+        seed = scenario_to_state_seed(
+            req.scenario,
+            {**char_input, "game_id": new_game_id},
+            start_loc_id=initial_state["world"].get("current_location_id", ""),
+        )
+        initial_state["campaign_plan"] = seed["campaign_plan"]
+        initial_state["chronicle"][0]["title"] = seed["chronicle_title"]
+        initial_state["npcs"] = seed["npcs"]
+        initial_state["messages"][-1] = HumanMessage(content=seed["opening_message"])
+        initial_state["narrative_summary"] += seed["summary_extra"]
 
     # 3. Roda o Grafo
     try:

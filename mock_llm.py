@@ -384,6 +384,38 @@ def _combat_action(model, messages):
                          "is_allowed": True, "reason": "[simulado]"})
 
 
+def _start_scenario(model, messages):
+    """spec inicio-personalizado (R10): fixture fixa válida em pt-BR com 1 NPC
+    semeado — a suíte offline exercita endpoint e seed de ponta a ponta."""
+    npc_cls = _list_item_cls(model, "seed_npcs")
+    npcs = []
+    if npc_cls:
+        npcs = [_fill(npc_cls, {
+            "name": "Mestre Aldric",
+            "role": "mentor endividado",
+            "attitude": "aliado",
+            "persona": "Velho mercenário que deve um favor antigo à família do herói; "
+                       "direto, protetor, fala pouco e cobra menos ainda.",
+        })]
+    return _fill(model, {
+        "prologue": "Você chega com pouco mais que o nome que carrega e uma dívida "
+                    "que não é sua. A estrada ficou para trás; a cidade à frente não "
+                    "promete nada — e é exatamente por isso que você veio. Alguém aqui "
+                    "sabe de onde você veio. Resta descobrir quem, e quanto isso custa.",
+        "opening_scene_brief": "O herói chega ao local inicial no fim da tarde; um "
+                               "conhecido do passado o aguarda com um aviso e uma "
+                               "proposta. Tensão: alguém o seguiu até aqui.",
+        "arc_title": "Dívidas de Sangue",
+        "beats": [
+            "Apresente Mestre Aldric e o aviso que ele carrega.",
+            "O jogador descobre quem o seguiu até a região.",
+            "Uma escolha: pagar a dívida antiga ou enfrentá-la.",
+        ],
+        "climax": "O confronto com o credor do passado — em aço ou em palavras.",
+        "seed_npcs": npcs,
+    })
+
+
 _DISPATCH = {
     "RouterDecision": _route_decision,
     "StoryUpdate": _story_update,
@@ -402,6 +434,7 @@ _DISPATCH = {
     "EntityMatch": _entity_match,
     "CombatAction": _combat_action,
     "TradeIntent": _trade_intent,
+    "StartScenario": _start_scenario,
 }
 
 

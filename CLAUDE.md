@@ -283,13 +283,18 @@ multi-provider `done`. **Fase 5 (5.1 harness + 5.2 invariantes + 5.3 telemetria)
 balanceamento-early-game ("O Saque" + tuning nível 1 + replan por região) ·
 streaming-turno-sse (`POST /game/action/stream` + custo real no log `rpg.turn`) ·
 polish-sessao (`GET /game/saves` + DELETE + chips mecânicos de combate +
-export/busca da crônica + onboarding + mobile 390px). **769 testes offline.**
+export/busca da crônica + onboarding + mobile 390px).
 2026-07-16: **8 specs `draft`** do playtest longo real (3×100 turnos, análise em
 `docs/playtest-longrun-2026-07-14.md`): playtest-stop-gameover ·
 combate-lifecycle · pos-saque-recuperacao · npc-fallback-sem-alvo ·
 beats-visibilidade-ptbr · encontros-dedupe · polish-prosa · embeddings-provider
-— aguardando aprovação. Próxima: aprovar/implementar as specs; Fase 8 (arte) vs
-10b (público) segue adiada.
+— aguardando aprovação. 2026-07-17: **criação imersiva `done`** —
+onboarding-valoria (wizard 5 passos + `data/onboarding.json` +
+`GET /data/onboarding`) · inicio-personalizado (`POST /game/prologue` + seed de
+arco pessoal/NPCs/cena no `/game/new`; limites de schema viraram truncagem em
+Python + `StartScenarioIn` estrito na borda). **792 testes offline.** Próxima:
+aprovar/implementar as 8 specs do playtest; Fase 8 (arte) vs 10b (público)
+segue adiada.
 
 ---
 

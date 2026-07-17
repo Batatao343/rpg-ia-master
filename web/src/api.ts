@@ -3,7 +3,9 @@ import type {
   CreateOptions,
   CreatePayload,
   GameResponse,
+  OnboardingData,
   PlayerCodex,
+  PrologueResponse,
   SaveSummary,
   WorldMapData,
 } from "./types";
@@ -26,6 +28,16 @@ async function req<T>(path: string, opts: RequestInit = {}): Promise<T> {
 }
 
 export const getOptions = () => req<CreateOptions>("/data/options");
+
+// spec onboarding-valoria: lore curado do wizard de criação (estático)
+export const getOnboarding = () => req<OnboardingData>("/data/onboarding");
+
+// spec inicio-personalizado: prólogo confirmável (1 chamada SMART no servidor)
+export const postPrologue = (payload: CreatePayload) =>
+  req<PrologueResponse>("/game/prologue", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 
 export const getMap = () => req<WorldMapData>("/data/map");
 

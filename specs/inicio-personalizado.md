@@ -1,7 +1,7 @@
 # SPEC — Início de campanha personalizado (prólogo + seed de arco)
 
-> **Status:** `approved`
-> **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
+> **Status:** `done`
+> **Criada:** 2026-07-16 · **Atualizada:** 2026-07-17 (implementada; smoke real §6 executado no DeepSeek — ver nota)
 > **Depende de:** onboarding-valoria (apenas o frontend do passo 6; o backend
 > funciona sozinho — usa `data/onboarding.json` se existir, senão `origins.json`)
 > **Desbloqueia:** —
@@ -210,17 +210,27 @@ Human: nome, raça, classe, nível, região + descrição livre do jogador.
 
 ## 5. Critérios de aceite
 
-- [ ] `POST /game/prologue` → 200 com `StartScenario` no mock e no real (R1)
-- [ ] Fallback determinístico sem key/erro — nunca 500 (R3)
-- [ ] Seed completo: plano + crônica + NPCs + mensagem de abertura (R5)
-- [ ] Fluxo sem scenario idêntico ao atual (R6) — testes antigos intocados
-- [ ] Plano semeado sobrevive ao 1º invoke (R7)
-- [ ] NPC semeado responde em persona no turno 1 (R8)
-- [ ] Validação de borda: 6 beats / 3 npcs → 422 (R4)
-- [ ] Passo 6 funcional: loading, refinar, começar (R9)
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (try/except ou isinstance)
-- [ ] Saves antigos continuam carregando
+- [x] `POST /game/prologue` → 200 com `StartScenario` no mock e no real (R1)
+- [x] Fallback determinístico sem key/erro — nunca 500 (R3)
+- [x] Seed completo: plano + crônica + NPCs + mensagem de abertura (R5)
+- [x] Fluxo sem scenario idêntico ao atual (R6) — testes antigos intocados
+- [x] Plano semeado sobrevive ao 1º invoke (R7)
+- [x] NPC semeado responde em persona no turno 1 (R8)
+- [x] Validação de borda: 6 beats / 3 npcs → 422 (R4)
+- [x] Passo 6 funcional: loading, refinar, começar (R9)
+- [x] `uv run pytest` verde (suíte completa offline)
+- [x] Guard de FallbackLLM em todo `with_structured_output` novo (try/except ou isinstance)
+- [x] Saves antigos continuam carregando
+
+> **Achado do smoke real (2026-07-17) — mudança de design:** os `max_length`
+> duros do `StartScenario` derrubavam TODOS os candidatos reais por validação
+> (DeepSeek: `climax` > 300; Groq: 400 `tool_use_failed`; Anthropic:
+> `attitude` "ambígua e transacional" > 20) e o endpoint devolvia sempre o
+> template. Fix: o schema voltado ao LLM tem tamanhos só como *descrição*;
+> `_normalize` trunca em Python para os tetos; os limites ESTRITOS moram em
+> `StartScenarioIn` (borda do `/game/new`, R4 — 422 preservado). MockLLM não
+> pegava isso (fixture sempre válida) — exatamente o aviso do CLAUDE.md.
+> Coberto por `test_normalize_truncates_llm_overflow`.
 
 ## 6. Smoke test com LLM real
 
@@ -234,6 +244,16 @@ Human: nome, raça, classe, nível, região + descrição livre do jogador.
    brief (não "você está numa estrada..." genérico).
 4. Turno 1: falar com o NPC semeado → responde em persona; `GET /game/state`
    mostra `arc_title` pessoal no plano.
+
+**Executado 2026-07-17 (DeepSeek real):** (1) arco "O Nome Manchado", 2 NPCs
+(Lyra contato do submundo / Aldric irmão herdeiro), prólogo rico em pt-BR ✓;
+(2) descrição vazia → "O Preço do Silêncio Dourado", coerente com a região ✓;
+(3) abertura NA taverna do brief (O Alfinete Enferrujado), capítulo 1 =
+"O Nome Manchado" ✓; (4) rota NPC respondeu EM CENA (sem "Ninguém responde.")
+e `arc_title` pessoal no estado ✓ — obs.: a fala veio dos capangas da cena em
+vez da Lyra (comportamento do npc_actor com cena quente; território da spec
+`npc-fallback-sem-alvo`, não regressão desta). Latência do prólogo ≈ 17-40s;
+falha transitória de provider cai no template pelo guard (por design).
 
 ## 7. Riscos & compatibilidade
 
