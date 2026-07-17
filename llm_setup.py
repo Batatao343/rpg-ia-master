@@ -77,12 +77,17 @@ _OPENAI_COMPAT_PROVIDERS = {"groq", "qwen", "glm", "minimax", "kimi", "deepseek"
 # Cada tier tem um candidato **Groq GRÁTIS** que funciona (via function_calling) —
 # assim o jogo roda 100% no free tier do Groq mesmo sem os providers pagos. Os
 # pagos (minimax/qwen/deepseek) ficam na frente e assumem quando têm saldo/key.
+# 2026-07-16: DeepSeek é o provider PRIMÁRIO em todos os tiers (decisão do
+# usuário pós-playtest longo — prosa melhor e custo ~$0.001/turno). Groq free
+# segue como fallback vivo em todos os tiers.
 ROUTES = {
     ModelTier.CLASSIFY: [
+        ("deepseek", "deepseek-chat"),
         ("groq", "openai/gpt-oss-20b"),
         ("gemini", "gemini-flash-lite-latest"),
     ],
     ModelTier.FAST: [
+        ("deepseek", "deepseek-chat"),
         ("minimax", "MiniMax-M2.5"),
         ("qwen", "qwen-plus"),
         ("groq", "llama-3.3-70b-versatile"),   # free, narração; function_calling

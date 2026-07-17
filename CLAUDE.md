@@ -94,9 +94,12 @@ o guard de `FallbackLLM` (`isinstance`/`try`) segue **obrigatório**.
 
 | Tier | Uso | Candidatos default `ROUTES` (ordem = preferência → fallback) |
 |---|---|---|
-| `ModelTier.CLASSIFY` | router, combat (parse/spawn), loot (TradeIntent), librarian — classificação/parse temp 0 | Groq `openai/gpt-oss-20b` → Gemini flash-lite |
-| `ModelTier.FAST` | storyteller, combat (narração), npc_actor, loot (narração), world_simulator, bestiary | MiniMax → Qwen → **Groq llama-3.3-70b** → Gemini flash |
-| `ModelTier.SMART` | archivist, campaign_manager, character_creator | DeepSeek → **Groq gpt-oss-120b** → Anthropic → Gemini pro |
+| `ModelTier.CLASSIFY` | router, combat (parse/spawn), loot (TradeIntent), librarian — classificação/parse temp 0 | **DeepSeek** → Groq `openai/gpt-oss-20b` → Gemini flash-lite |
+| `ModelTier.FAST` | storyteller, combat (narração), npc_actor, loot (narração), world_simulator, bestiary | **DeepSeek** → MiniMax → Qwen → Groq llama-3.3-70b → Gemini flash |
+| `ModelTier.SMART` | archivist, campaign_manager, character_creator | **DeepSeek** → Groq gpt-oss-120b → Anthropic → Gemini pro |
+
+> **DeepSeek é o primário em TODOS os tiers** (2026-07-16, pós-playtest longo).
+> Groq free segue de fallback vivo; sem key da DeepSeek o jogo continua rodando.
 
 > **Structured output entre providers (achados do smoke real 2026-07-06):**
 > - **Groq usa strict json_schema** e rejeita schema com dict aberto
@@ -281,7 +284,12 @@ balanceamento-early-game ("O Saque" + tuning nível 1 + replan por região) ·
 streaming-turno-sse (`POST /game/action/stream` + custo real no log `rpg.turn`) ·
 polish-sessao (`GET /game/saves` + DELETE + chips mecânicos de combate +
 export/busca da crônica + onboarding + mobile 390px). **769 testes offline.**
-Próxima: Fase 8 (arte) vs 10b (público) — decidir com o usuário.
+2026-07-16: **8 specs `draft`** do playtest longo real (3×100 turnos, análise em
+`docs/playtest-longrun-2026-07-14.md`): playtest-stop-gameover ·
+combate-lifecycle · pos-saque-recuperacao · npc-fallback-sem-alvo ·
+beats-visibilidade-ptbr · encontros-dedupe · polish-prosa · embeddings-provider
+— aguardando aprovação. Próxima: aprovar/implementar as specs; Fase 8 (arte) vs
+10b (público) segue adiada.
 
 ---
 

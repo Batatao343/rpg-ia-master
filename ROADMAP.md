@@ -295,6 +295,38 @@ testes offline verdes.**
 
 ---
 
+## Achados do playtest longo REAL (2026-07-14) — insumo pra decisão pós-ciclo
+
+> 3 perfis × 100 turnos no DeepSeek (agora principal no SMART + 1º fallback do
+> FAST). ~$0.25, zero erro de turno. Análise completa + recomendações
+> priorizadas: **[docs/playtest-longrun-2026-07-14.md](docs/playtest-longrun-2026-07-14.md)**.
+
+- **Prosa/imersão do DeepSeek: salto claro** (arco da Thrace no quester = ponto
+  alto; 7/7 quests, level 5). Custo ~$0.001/turno.
+- Defeitos priorizados — **todos viraram specs `draft` em 2026-07-16**
+  (aguardando aprovação; ordem sugerida: 1 e 8 primeiro):
+  1. [playtest-stop-gameover](specs/playtest-stop-gameover.md) — harness para
+     na morte + telemetria de rota fiel (achados A+I)
+  2. [combate-lifecycle](specs/combate-lifecycle.md) — viagem=fuga, combate
+     órfão expira (achado C)
+  3. [pos-saque-recuperacao](specs/pos-saque-recuperacao.md) — poção + carência
+     + beat de recuperação (achado B)
+  4. [npc-fallback-sem-alvo](specs/npc-fallback-sem-alvo.md) — fim do "Ninguém
+     responde."; party em cena (achado E)
+  5. [beats-visibilidade-ptbr](specs/beats-visibilidade-ptbr.md) — sanitizador
+     de segredo + PT-BR nos beats (achados D+F)
+  6. [encontros-dedupe](specs/encontros-dedupe.md) — NPC gerado com vínculo de
+     local + cooldown (achado G)
+  7. [polish-prosa](specs/polish-prosa.md) — anti-repetição, 2ª pessoa na
+     morte, menu de opções (achado H)
+  8. [embeddings-provider](specs/embeddings-provider.md) — Jina v3 primário
+     (10M grátis) / Ollama local; provider fixado por índice
+- Faltas de gameplay sentidas: quests não puxam pro mundo (quester: 1 local em
+  100 turnos), exploração sem recompensa mecânica (23 locais, 0 quests, 0 ouro),
+  economia invisível, aliados sem presença mecânica.
+- ⚠️ Embeddings Google sem créditos (429) — RAG mudo nos runs; recarregar antes
+  de qualquer teste real de memória longa.
+
 ## Backlog — Features após Fase 5
 
 ### Bugs críticos (sessão 2026-06-26)

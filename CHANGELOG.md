@@ -5,6 +5,46 @@
 
 ---
 
+## 2026-07-14→16 (16) — DeepSeek primário em tudo + playtest longo 3×100t + 8 specs `draft`
+
+**Roteamento:** DeepSeek promovido a candidato Nº 1 em TODOS os tiers
+(`llm_setup.ROUTES`) em dois passos: 2026-07-14 (principal no SMART — já era —
++ 1º fallback do FAST) e 2026-07-16 (primário também em CLASSIFY e FAST, decisão
+do usuário). Groq free segue fallback vivo; sanity real: 3 tiers respondendo
+via `deepseek-chat` sem fallback. CLAUDE.md (tabela de tiers) atualizado.
+
+**Playtest longo REAL** — 3 perfis × 100 turnos (runs `20260714-044513`
+explorador, `20260714-050009` combate, `20260714-050339` quester; ~$0.25 total,
+zero erro de turno, CLASSIFY com override `RPG_ROUTES` runtime p/ não estourar
+o free do Groq). Análise completa: `docs/playtest-longrun-2026-07-14.md`.
+- **Bom:** prosa DeepSeek muito acima dos free anteriores; arco da Thrace
+  (quester t51–58) com fracasso de quest tratado narrativamente; 7/7 quests,
+  level 5; "O Saque" disparou como projetado; custo ~$0.001/turno vivo.
+- **Defeitos:** (A) harness não para no game_over — 140/300 turnos repetindo
+  memorial; (B) espiral pós-Saque: 2ª queda fatal em 2–4 turnos nos 2 perfis
+  que caíram; (C) combate zumbi — `combat.active` 59 turnos no quester,
+  explorador viajou 2× durante combate; (D) beat do campaign_manager vazou
+  segredo (pacto Valerius+Daruun) — canal fora do `max_visibility`;
+  (E) "Ninguém responde." 7+ turnos, até com Gorim (party) em cena; (F) beat
+  em inglês; (G) NPC "Sobrevivente moribundo" reciclado 3× em 6 turnos;
+  (I) telemetria de rota vazia em combate/pós-morte.
+- **Faltas:** quester ficou 100 turnos num único local (quests não puxam pro
+  mundo); exploração sem recompensa mecânica (23 locais → 0 quests, 0 ouro);
+  economia invisível; aliados sem presença mecânica.
+
+**Embeddings:** Google 429 "prepayment credits depleted" durante os runs — RAG
+global + memória de sessão mortos. Pesquisa 2026-07-16: DeepSeek NÃO oferece
+embeddings (doc oficial); recomendação **Jina v3** ($0.02/M, 10M tokens grátis,
+89 línguas) > OpenAI 3-small ($0.02/M) > Ollama `bge-m3` local grátis.
+
+**8 specs `draft` criadas** (todos os achados + embeddings):
+playtest-stop-gameover (A+I) · combate-lifecycle (C) · pos-saque-recuperacao
+(B) · npc-fallback-sem-alvo (E) · beats-visibilidade-ptbr (D+F) ·
+encontros-dedupe (G) · polish-prosa (H) · embeddings-provider. Aguardando
+aprovação do usuário; suíte 769 offline verde intacta (cache
+`bestiary.json`/`npc_database.json` sujado pelos runs reais/suíte — restaurado
+via `git checkout`, pendência de isolamento segue aberta).
+
 ## 2026-07-13 (15) — Ciclo de produto EXECUTADO: 3 specs `done` (729 → 769 verdes)
 
 As 3 specs `approved` da sessão 14 foram implementadas de ponta a ponta na ordem

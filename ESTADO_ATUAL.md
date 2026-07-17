@@ -2,47 +2,46 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-13 (sessão 15: ciclo de produto executado —
-> 3 specs `done`, **769 offline verdes**)
+> Última atualização: 2026-07-16 (sessão 16: DeepSeek primário em TUDO +
+> playtest longo 3×100t real + 8 specs `draft` — 769 offline verdes)
 
 ---
 
 ## TL;DR — Em que pé está
 
-**Sessão 2026-07-13 (15): CICLO DE PRODUTO INTEIRO ENTREGUE** — as 3 specs
-`approved` da sessão 14 viraram `done` (+40 testes → **769 offline verdes**;
-registro de execução no §8 de cada spec):
-1. **[balanceamento-early-game](specs/balanceamento-early-game.md) `done`** —
-   métricas novas no harness (`first_death_turn`/`downed_count`/
-   `avg_hp_pct_after_combat`/`replan_count` + deltas no report); baseline ANTES
-   do tuning (mock `20260713-160458` + real); knobs data-driven: **máx 1 elite
-   no nível 1** (mata o burst que matou o `combate` real) + **piso de HP das
-   frágeis** (Batedor 22→27 etc.; cap novo de budget PULADO — dados não pediam);
-   **"O Saque"** (`death_outcome`/`apply_downed`: 1ª queda fora de apex/boss =
-   acorda 1 dia depois no último local seguro, HP 25%, ouro 0, só a arma
-   básica, únicos voltam ao pool via `holder="world"`; `player_downed` com gate
-   `source="combat"`; invariante `downed.*`); **replan por REGIÃO + intervalo
-   10→15** — explorador: 50 → 4 replans (−92%). **Verme confirmado no REAL**
-   (`secret_rusher` 30t, 0 vazamentos) — pendência fechada.
-2. **[streaming-turno-sse](specs/streaming-turno-sse.md) `done`** —
-   `POST /game/action/stream` (accepted → phase/route → narrative em chunks →
-   state; keepalive; memorial = `error` 409 semântico); frontend com indicador
-   de fase + typewriter dirigido pelo servidor + **fallback automático** pro
-   POST clássico; **smoke real: `accepted` 0.09s, `route` 0.66s num turno de
-   20.2s**; log `rpg.turn` ganhou `llm_calls/llm_providers/fell_back/
-   cost_usd_est` (turno real: 5 calls ≈ $0.0036; ContextVar, sem vazamento).
-3. **[polish-sessao](specs/polish-sessao.md) `done`** — `GET /game/saves` +
-   `DELETE /game/save/{id}` (remove memória da sessão junto); tela "Continuar
-   jornada" (⚰ memorial em modo leitura, exclusão com confirmação); **chips de
-   combate 100% mecânicos** (`combat_suggestions` pura, máx 5; smoke real:
-   "Estocada Renal" → `estocada_renal`); export .txt + busca local da crônica;
-   onboarding do 1º turno; passe mobile 390px (**Playwright 14/14**, overflow 0).
+**Sessão 2026-07-14→16 (16): DEEPSEEK PRIMÁRIO + PLAYTEST LONGO + 8 SPECS** —
+1. **Roteamento:** DeepSeek agora é o candidato Nº 1 em **TODOS os tiers**
+   (`llm_setup.ROUTES`; decisão do usuário pós-playtest — prosa muito melhor,
+   ~$0.001/turno). Groq free segue de fallback vivo em todos.
+2. **Playtest longo REAL** (explorador/combate/quester × 100 turnos, ~$0.25,
+   zero erro de turno): análise completa em
+   **[docs/playtest-longrun-2026-07-14.md](docs/playtest-longrun-2026-07-14.md)**.
+   Destaque: quester 7/7 quests, level 5, arco da Thrace excelente — mas 1
+   local em 100 turnos. 7 defeitos priorizados (harness sem stop no game_over,
+   espiral pós-Saque, combate zumbi 59 turnos, segredo vazando via beat,
+   "Ninguém responde." com aliado em cena, beat em inglês, NPC reciclado).
+3. **Todos os achados viraram specs `draft` (aguardando aprovação):**
+   [playtest-stop-gameover](specs/playtest-stop-gameover.md) ·
+   [combate-lifecycle](specs/combate-lifecycle.md) ·
+   [pos-saque-recuperacao](specs/pos-saque-recuperacao.md) ·
+   [npc-fallback-sem-alvo](specs/npc-fallback-sem-alvo.md) ·
+   [beats-visibilidade-ptbr](specs/beats-visibilidade-ptbr.md) ·
+   [encontros-dedupe](specs/encontros-dedupe.md) ·
+   [polish-prosa](specs/polish-prosa.md) ·
+   [embeddings-provider](specs/embeddings-provider.md).
+4. **Embeddings:** Google 429 "prepayment credits depleted" desde 2026-07-14 —
+   RAG global + memória de sessão MORTOS. Pesquisa feita (DeepSeek NÃO tem
+   embeddings): recomendação = **Jina v3** ($0.02/M + 10M tokens grátis,
+   PT-BR forte) com opção local Ollama `bge-m3` — spec embeddings-provider.
 
-**Próximo:** decidir pós-ciclo com o usuário — **Fase 8 (arte) vs 10b
-(público)** (decisão adiada de propósito, com dados do ciclo em mãos).
-Backlog v2: só Crônica avançada sobrevive.
+**Próximo:** usuário aprovar as 8 specs (ordem sugerida: embeddings-provider +
+playtest-stop-gameover primeiro — desbloqueiam RAG e métricas confiáveis) →
+implementar. Decisão Fase 8 (arte) vs 10b (público) segue adiada.
 
 **Histórico recente** (detalhe SÓ no `CHANGELOG.md`):
+- 2026-07-13 (15): ciclo de produto EXECUTADO — balanceamento-early-game
+  ("O Saque" + tuning nível 1 + replan por região) · streaming-turno-sse ·
+  polish-sessao, todas `done`; 729 → 769 offline verdes
 - 2026-07-13 (14): sync de docs + auditoria A1–A8 corrigida (729 verdes) +
   3 specs do ciclo refinadas com o usuário e `approved`
 - 2026-07-13 (13): fix-playtest-achados `done` — 6 defeitos do transcrito real +
@@ -88,10 +87,12 @@ bash scripts/smoke_api.sh [porta]    # smoke da API (health, map, /game/new, /ga
 **Frontend:** `cd web && npm install && npm run build` → gera `web/dist` (servido na
 raiz). Dev: `npm run dev` (:5173 com proxy para :8000).
 
-**LLM providers:** default = `ROUTES` multi-provider com fallback (Groq free cobre
-tudo). `LLM_PROVIDER=gemini` força só-Gemini; sem chave nenhuma → MockLLM (jogável
-sem rede). Contas: minimax/deepseek 402, qwen 401 — OPCIONAL resolver (assumem
-quando tiverem saldo/key; não é bug). Ver `.env.example`.
+**LLM providers:** default = `ROUTES` multi-provider com fallback — **DeepSeek
+é o primário em TODOS os tiers** (2026-07-16; tem saldo e roda o jogo inteiro a
+~$0.001/turno); Groq free é o fallback vivo. `LLM_PROVIDER=gemini` força
+só-Gemini; sem chave nenhuma → MockLLM (jogável sem rede). Contas: minimax 402,
+qwen 401 — OPCIONAL resolver (assumem quando tiverem saldo/key; não é bug).
+Ver `.env.example`.
 
 **Quota:** Gemini free = 20 req/dia por modelo; Groq free = 100k tokens/dia (esgota
 numa sessão real longa — espalhar por dias ou tier pago). `get_llm()` é fail-fast
@@ -165,7 +166,17 @@ segurança → sessão 14, tabela completa no `CHANGELOG.md`).
   `hidden`) — ver ROADMAP § Fase 7
 - Cache runtime (`data/bestiary.json`/`npc_database.json`) é gravado por suíte/
   smokes com entradas mock (ex.: HP regredido, "Unknown") — hoje é `git checkout`
-  manual antes do commit; considerar isolar cache de teste (observado na sessão 15)
+  manual antes do commit; considerar isolar cache de teste (observado na sessão 15;
+  re-confirmado na 16: run real gravou "Afogado" com região fora do grafo →
+  2 testes de `test_fase25b` vermelhos até o checkout)
+- **Achados do playtest longo (sessão 16)** — 7 defeitos/melhorias priorizados
+  em [docs/playtest-longrun-2026-07-14.md](docs/playtest-longrun-2026-07-14.md):
+  harness sem stop no game_over · espiral pós-Saque · combate zumbi (59 turnos
+  ativo) / viagem durante combate · vazamento de segredo via beat do
+  campaign_manager · "Ninguém responde." com aliado em cena · beat em inglês ·
+  encontro reciclado. **Todos viraram specs `draft` em 2026-07-16** (ver TL;DR).
+- **Embeddings Google sem créditos (429 prepay)** — RAG global + memória de
+  sessão mortos; recarregar em ai.studio/projects ou migrar embeddings
 
 Fechadas na sessão 15: confirmação real do Verme ✔ · mortes nível 1 do
 `combate`/`agressivo` ✔ (spec balanceamento; nota: 2ª queda DELIBERADA sem cura
