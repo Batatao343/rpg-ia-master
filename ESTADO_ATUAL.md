@@ -3,7 +3,8 @@
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
 > Última atualização: 2026-07-16 (sessão 16: DeepSeek primário em TUDO +
-> playtest longo 3×100t real + 8 specs `draft` — 769 offline verdes)
+> playtest longo 3×100t real + 8 specs `draft` + 2 specs `approved` de criação
+> imersiva — 769 offline verdes)
 
 ---
 
@@ -34,9 +35,17 @@
    embeddings): recomendação = **Jina v3** ($0.02/M + 10M tokens grátis,
    PT-BR forte) com opção local Ollama `bge-m3` — spec embeddings-provider.
 
-**Próximo:** usuário aprovar as 8 specs (ordem sugerida: embeddings-provider +
-playtest-stop-gameover primeiro — desbloqueiam RAG e métricas confiáveis) →
-implementar. Decisão Fase 8 (arte) vs 10b (público) segue adiada.
+5. **Criação de personagem imersiva (2026-07-16): 2 specs `approved`** —
+   [onboarding-valoria](specs/onboarding-valoria.md) (wizard rico 5 passos,
+   lore curado em `data/onboarding.json`, zero LLM) +
+   [inicio-personalizado](specs/inicio-personalizado.md) (`POST /game/prologue`
+   confirmável + seed de arco pessoal/NPCs/cena no `/game/new`). Ordem: 1 → 2.
+   Reverte o "prólogo guiado DESCARTADO" do backlog (decisão do usuário).
+
+**Próximo:** implementar onboarding-valoria → inicio-personalizado (já
+`approved`); usuário aprovar as 8 specs do playtest (ordem sugerida:
+embeddings-provider + playtest-stop-gameover primeiro — desbloqueiam RAG e
+métricas confiáveis). Decisão Fase 8 (arte) vs 10b (público) segue adiada.
 
 **Histórico recente** (detalhe SÓ no `CHANGELOG.md`):
 - 2026-07-13 (15): ciclo de produto EXECUTADO — balanceamento-early-game

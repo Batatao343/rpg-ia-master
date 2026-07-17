@@ -291,7 +291,9 @@ testes offline verdes.**
   playtest do ciclo — nenhum compromisso agora.
 - **Backlog v2 enxugado (YAGNI):** sobrevive só **Crônica avançada** (compressão
   de capítulo + busca RAG — ver Backlog § Melhorias da Crônica). DESCARTADOS de
-  vez: chips de exploração via LLM, prólogo guiado, dificuldade configurável.
+  vez: chips de exploração via LLM, dificuldade configurável. (O "prólogo
+  guiado" foi REVIVIDO em 2026-07-16 por decisão do usuário — virou a spec
+  `inicio-personalizado`, ver seção abaixo.)
 
 ---
 
@@ -327,6 +329,23 @@ testes offline verdes.**
   economia invisível, aliados sem presença mecânica.
 - ⚠️ Embeddings Google sem créditos (429) — RAG mudo nos runs; recarregar antes
   de qualquer teste real de memória longa.
+
+## Criação de personagem imersiva (2026-07-16) — 2 specs `approved`
+
+> Pedido do usuário: jogador precisa de **afinidade com o personagem**. Hoje a
+> criação é form seco; a backstory não influencia nada além de atributos. Meta:
+> overview curado de Valoria + descrição livre → início de campanha sob medida
+> (cena, missão pessoal e NPCs da história). Detalhe técnico SÓ nas specs.
+
+1. [onboarding-valoria](specs/onboarding-valoria.md) — wizard rico de 5 passos
+   com lore curado (`data/onboarding.json`: intro do mundo + 12 regiões + 10
+   classes + 6 raças) + `GET /data/onboarding`. Zero LLM, cobertura testada.
+2. [inicio-personalizado](specs/inicio-personalizado.md) — `POST /game/prologue`
+   (1 chamada SMART + guard) gera prólogo confirmável; `/game/new` com
+   `scenario` semeia `campaign_plan` pessoal + crônica + NPCs `in_scene` +
+   cena de abertura. Sem scenario = fluxo atual intacto (CLI incluso).
+
+Ordem: 1 → 2 (2 assume o wizard no frontend; backend do 2 é independente).
 
 ## Backlog — Features após Fase 5
 
