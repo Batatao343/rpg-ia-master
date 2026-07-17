@@ -319,8 +319,9 @@ testes offline verdes.**
      local + cooldown (achado G)
   7. [polish-prosa](specs/polish-prosa.md) — anti-repetição, 2ª pessoa na
      morte, menu de opções (achado H)
-  8. [embeddings-provider](specs/embeddings-provider.md) — Jina v3 primário
-     (10M grátis) / Ollama local; provider fixado por índice
+  8. [embeddings-provider](specs/embeddings-provider.md) — cadeia
+     jina → openai → ollama → **gemini (último fallback; caro demais p/
+     primário)**; provider fixado por índice via meta
 - Faltas de gameplay sentidas: quests não puxam pro mundo (quester: 1 local em
   100 turnos), exploração sem recompensa mecânica (23 locais, 0 quests, 0 ouro),
   economia invisível, aliados sem presença mecânica.

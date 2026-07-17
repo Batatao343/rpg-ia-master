@@ -1,7 +1,9 @@
-# SPEC — Embeddings multi-provider (sair da dependência do Google)
+# SPEC — Embeddings multi-provider (Gemini rebaixado a último fallback)
 
 > **Status:** `draft`
-> **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
+> **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16 (decisão do usuário:
+> outro provider como primário; Gemini é caro/sem créditos — fica SÓ como
+> último fallback da cadeia)
 > **Depende de:** —
 > **Desbloqueia:** RAG/memória de longo prazo de volta (mortos desde 2026-07-14)
 
@@ -26,29 +28,43 @@ só chat, confirmado na doc oficial):
 | **Ollama local (`bge-m3`)** | **$0** | excelente | offline, alinhado ao modo simulado; dep pesada |
 
 Volume do projeto é minúsculo (re-index completo ≈ centenas de k tokens;
-queries por turno são frases) — 10M grátis da Jina cobrem MESES. Decisão
-proposta: **Jina primário**, Ollama como opção 100% local, Google mantido como
-legado (se créditos voltarem).
+queries por turno são frases) — 10M grátis da Jina cobrem MESES. **Decisão
+(usuário, 2026-07-16): Gemini é caro demais para ser primário — vira o ÚLTIMO
+candidato da cadeia**, usado apenas quando nenhum outro provider tem key/dep.
+Espelha a filosofia do `ROUTES` de LLM: primário barato/bom, fallback vivo.
 
-**Regra dura:** embeddings NÃO têm fallback em runtime como o `RoutedLLM` —
-vetores de providers diferentes no mesmo índice FAISS são lixo (dimensão e
-espaço incompatíveis). Provider é **fixado por índice**; trocar = re-indexar.
+**Regra dura (diferença vs `RoutedLLM`):** embeddings NÃO têm fallback
+POR REQUEST — vetores de providers diferentes no mesmo índice FAISS são lixo
+(dimensão e espaço incompatíveis). O fallback aqui é **na RESOLUÇÃO** (qual
+provider está disponível ao construir/abrir índice); uma vez construído, o
+índice fica **fixado** ao provider que o gerou; trocar = re-indexar. Se o
+provider de um índice existente perder a key, aquele índice fica DESATIVADO
+com aviso claro (nunca consultado com vetor de outro provider).
 
 ## 2. Requisitos
 
-- **R1** — `rag.get_embeddings()` resolve por env `RPG_EMBEDDINGS`
-  (`jina` | `google` | `openai` | `ollama`; default `jina` se `JINA_API_KEY`
-  existir, senão `google` — comportamento atual preservado).
+- **R1** — Cadeia ordenada de candidatos
+  `EMBEDDING_ROUTES = ["jina", "openai", "ollama", "gemini"]` em `rag.py`:
+  `get_embeddings()` resolve na inicialização o PRIMEIRO candidato com
+  key/dep disponível (`JINA_API_KEY` → `OPENAI_API_KEY` → Ollama alcançável →
+  `GOOGLE_API_KEY`). **Gemini é sempre o último** — só assume sem nenhum
+  outro configurado (preserva zero-config de quem só tem key Google).
+- **R1b** — Override por env `RPG_EMBEDDINGS=<provider>` força um candidato
+  específico (pula a cadeia; análogo ao `LLM_PROVIDER`).
 - **R2** — Todo índice FAISS gerado grava `embeddings_meta.json` ao lado
-  (`{provider, model, dims}`). No load, mismatch com o provider ativo →
-  erro claro instruindo `uv run python rag.py` (global) — nunca busca com
-  vetor incompatível.
+  (`{provider, model, dims}`). No load, o índice é consultado com o provider
+  DA META (mesmo que não seja o primário da cadeia — pin por índice). Meta
+  presente mas provider indisponível (key/dep sumiu) → índice DESATIVADO com
+  warning claro instruindo re-index (`uv run python rag.py`) ou repor a key —
+  nunca busca com vetor incompatível. Índice legado SEM meta → assume
+  `gemini` (comportamento histórico).
 - **R3** — Memória de sessão (`data/saves_memory/{game_id}/`): mesmo esquema
-  de meta por diretório. Sessão antiga com provider diferente → memória
-  vetorial daquela sessão é IGNORADA com log warning (jogo segue; resumo do
-  archivist cobre) — sem crash, sem mistura.
-- **R4** — Sem key do provider ativo: comportamento atual preservado
-  (embeddings desativados com aviso; jogo funciona sem RAG).
+  de meta por diretório. Sessão antiga cujo provider está indisponível →
+  memória vetorial daquela sessão é IGNORADA com log warning (jogo segue;
+  resumo do archivist cobre) — sem crash, sem mistura. Memória NOVA é criada
+  com o provider primário resolvido.
+- **R4** — Nenhum candidato da cadeia disponível: comportamento atual
+  preservado (embeddings desativados com aviso; jogo funciona sem RAG).
 - **R5** — `reindex_global()` re-gera lore+regras com o provider ativo;
   `scripts/`/docs atualizados (`.env.example` ganha `JINA_API_KEY` e
   `RPG_EMBEDDINGS`).
@@ -61,16 +77,21 @@ espaço incompatíveis). Provider é **fixado por índice**; trocar = re-indexar
 
 ## 3. Design técnico
 
-- **`rag.py`** — registro `_EMBEDDING_BUILDERS: dict[str, Callable]`:
-  - `google`: `GoogleGenerativeAIEmbeddings("models/gemini-embedding-001")` (atual)
+- **`rag.py`** — `EMBEDDING_ROUTES: list[str]` (ordem = R1) + registro
+  `_EMBEDDING_BUILDERS: dict[str, Callable]`:
   - `jina`: `langchain_community.embeddings.JinaEmbeddings(model_name="jina-embeddings-v3")`
-    (`JINA_API_KEY`)
+    (`JINA_API_KEY`) — **primário**
   - `openai`: `langchain_openai.OpenAIEmbeddings(model="text-embedding-3-small")`
   - `ollama`: `langchain_ollama.OllamaEmbeddings(model="bge-m3")` (extra `ollama`)
-  `get_embeddings()` mantém assinatura/singleton; escolhe builder por R1.
-- **Meta:** `_write_meta(path)` / `_check_meta(path) -> bool` chamados em
-  `ingest_file`, `add_memory_to_session`, `add_npc_memory` e nos loads
-  (`query_rag`, `query_npc_memory`).
+  - `gemini`: `GoogleGenerativeAIEmbeddings("models/gemini-embedding-001")`
+    (atual) — **último fallback, nunca primário**
+  `get_embeddings()` mantém assinatura/singleton; resolve pela cadeia (R1/R1b)
+  e loga o vencedor (`rpg.rag`: "embeddings ativos: jina"). Builder levanta em
+  falha → próximo candidato (só na RESOLUÇÃO; nunca por request).
+  `get_embeddings_for(provider)` novo p/ abrir índice pinado (R2/R3).
+- **Meta:** `_write_meta(path)` / `_read_meta(path) -> Optional[dict]`
+  chamados em `ingest_file`, `add_memory_to_session`, `add_npc_memory` e nos
+  loads (`query_rag`, `query_npc_memory`).
 - **Deps:** `langchain-community` (já presente via langchain) p/ Jina — conferir;
   senão chamada httpx direta (API é um POST simples).
 - Índices `faiss_lore_index/`/`faiss_rules_index/` são gerados — trocar
@@ -79,12 +100,17 @@ espaço incompatíveis). Provider é **fixado por índice**; trocar = re-indexar
 
 ## 4. Plano passo a passo
 
-### Etapa 1 — registro + meta (offline, com fake embeddings)
+### Etapa 1 — cadeia + registro + meta (offline, com fake embeddings)
 1. **Testes** (`tests/test_embeddings_provider.py`) — usar embedding fake
    determinístico (classe local) p/ não precisar de rede:
-   `test_env_seleciona_provider` (monkeypatch env + builders);
-   `test_meta_e_gravada_no_ingest`; `test_load_com_meta_divergente_falha_claro`;
-   `test_sessao_antiga_sem_meta_e_ignorada_com_warning`.
+   `test_cadeia_resolve_primeiro_com_key` (JINA+GOOGLE setadas → jina vence);
+   `test_gemini_so_assume_sem_nenhum_outro` (só GOOGLE_API_KEY → gemini);
+   `test_override_rpg_embeddings_forca_provider`;
+   `test_meta_e_gravada_no_ingest`;
+   `test_indice_pinado_usa_provider_da_meta` (primário=jina, índice gemini com
+   key → consulta via gemini);
+   `test_meta_indisponivel_desativa_indice_com_warning`;
+   `test_indice_legado_sem_meta_assume_gemini`.
 2. **Implementação:** registro, meta, checks.
 3. `uv run pytest` verde.
 
