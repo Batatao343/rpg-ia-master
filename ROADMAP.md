@@ -338,7 +338,12 @@ testes offline verdes.**
      **✅ `done` (2026-07-18): 862 verdes; contexto filtrado por local; smoke real
      (NPC gerado não vaza p/ outro local).**
   8. [polish-prosa](specs/polish-prosa.md) — anti-repetição, 2ª pessoa na
-     morte, menu de opções (achado H)
+     morte, menu de opções (achado H).
+     **✅ `done` (2026-07-18): 870 verdes; smoke real (aberturas distintas + menu;
+     downed em 2ª pessoa).**
+
+> **🏁 As 8 specs do playtest longo estão `done` (2026-07-18).** Todos os 7
+> defeitos do playtest 2026-07-14 fechados, cada um com smoke LLM real.
 - Faltas de gameplay sentidas: quests não puxam pro mundo (quester: 1 local em
   100 turnos), exploração sem recompensa mecânica (23 locais, 0 quests, 0 ouro),
   economia invisível, aliados sem presença mecânica.

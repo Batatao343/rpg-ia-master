@@ -385,6 +385,13 @@ def storyteller_node(state: GameState):
     recovery_clause = _recovery_clause(state)
     # spec npc-fallback-sem-alvo (R2): rota NPC sem interlocutor delegou aqui.
     npc_fallback_clause = _npc_fallback_clause(state)
+    # spec polish-prosa: R1 (varie a abertura) + R3 (menu de opções concretas).
+    from services import prose_guard
+    _aberturas = prose_guard.ultimas_aberturas(messages)
+    varie_clause = prose_guard.openings_clause(_aberturas)
+    opcoes_clause = ("\n    - FECHE com 2 a 3 OPÇÕES concretas de ação, cada uma numa "
+                     "linha iniciada por '— ', e termine com '— Ou outra ação.' "
+                     "(dê rumo ao jogador; as opções mecânicas de combate vêm à parte).")
 
     sys = SystemMessage(content=f"""
     <PERSONA>
@@ -441,7 +448,7 @@ def storyteller_node(state: GameState):
       ou impossível no contexto, faça-a FALHAR de forma crível na narração (não conceda o impossível).
     - Termine com opções ou pergunta para ação.
     - Se um personagem ENTRAR na cena (novo ou conhecido que reapareceu), adicione o nome em 'introduced_npcs'.
-    - Se um personagem conhecido SAIR da cena (foi embora, sumiu), adicione o nome em 'npcs_left_scene'.{recovery_clause}{npc_fallback_clause}
+    - Se um personagem conhecido SAIR da cena (foi embora, sumiu), adicione o nome em 'npcs_left_scene'.{recovery_clause}{npc_fallback_clause}{varie_clause}{opcoes_clause}
     """)
 
     try:
@@ -455,6 +462,10 @@ def storyteller_node(state: GameState):
             partes = [n for n in (travel_note, rest_note, world_note, faction_note) if n]
             narrative_text = ("\n".join(partes)
                               or "O momento passa em silêncio; o mundo aguarda seu próximo passo.")
+
+        # spec polish-prosa (R4): telemetria de abertura repetida (não re-tenta).
+        prose_guard.log_if_repeats(str(narrative_text),
+                                   _aberturas[0] if _aberturas else "", where="storyteller")
 
         # --- Fase 2: a ação do jogador altera a reputação das fações (Python resolve) ---
         # A IA só identifica fação + direção; apply_reputation valida o id e fixa o delta.

@@ -2,13 +2,11 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-17 (sessão 18: 10 specs `approved` + ordem;
-> **embeddings-provider `done`** (Jina) + **playtest-stop-gameover `done`**
-> (smoke real 3/3) + **combate-lifecycle `done`** + **pos-saque-recuperacao
-> `done`** (poção+carência+beat) + **npc-fallback-sem-alvo `done`** (fim do
-> "Ninguém responde.") + **beats-visibilidade-ptbr `done`** (segredo não vaza
-> por beat) + **encontros-dedupe `done`** (NPC gerado preso ao local); 862
-> offline verdes)
+> Última atualização: 2026-07-18 (sessão 18: **as 8 specs do playtest longo
+> viraram `done`** — embeddings-provider · playtest-stop-gameover ·
+> combate-lifecycle · pos-saque-recuperacao · npc-fallback-sem-alvo ·
+> beats-visibilidade-ptbr · encontros-dedupe · polish-prosa. Cada uma com smoke
+> LLM real. 870 offline verdes)
 
 ---
 
@@ -112,10 +110,23 @@
    de encontro 2× no mesmo local (`world.last_encounter_id`). Invariante
    `narrative.recycled_npc` (R4). **+7 `test_encontros_dedupe`.** Smoke real: NPC
    gerado preso ao local (não vaza p/ outro).
-9. **Suíte:** 855 → **862 offline verdes** + 1 skip.
+9. **[polish-prosa](specs/polish-prosa.md) `done`:** três tiques de prosa do
+   playtest resolvidos. Novo `services/prose_guard.py` (aberturas, repeats,
+   openings_clause, log). Storyteller e combat recebem as 2 últimas aberturas e
+   pedem variação (R1); morte/downed exigem 2ª pessoa, proibindo "o herói/
+   viajante/aventureiro" (R2); storyteller fecha com 2-3 opções "— …" + "Ou
+   outra ação" fora de combate (R3); telemetria `rpg.prose` de repetição (R4);
+   invariante `narrative.repeated_opening` (R5, filtrada em mock no runner).
+   **+8 `test_prose_guard`.** Smoke real: 4 aberturas distintas + menu; downed
+   em 2ª pessoa.
+10. **Suíte:** 862 → **870 offline verdes** + 1 skip.
 
-**Próximo:** ordem de dev #8 (última) —
-[polish-prosa](specs/polish-prosa.md) (anti-repetição, 2ª pessoa, menu de opções).
+**🏁 AS 8 SPECS DO PLAYTEST LONGO ESTÃO `done`.** Fila concluída:
+embeddings-provider · playtest-stop-gameover · combate-lifecycle ·
+pos-saque-recuperacao · npc-fallback-sem-alvo · beats-visibilidade-ptbr ·
+encontros-dedupe · polish-prosa. **Próximo:** sistema de classes (2 specs
+`approved`: refatoracao-sistema-classes → arvores-habilidade-classes) OU o
+achado do archivist (`important_facts` como dict → fallback, perde memória).
 
 ---
 

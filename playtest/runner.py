@@ -350,6 +350,11 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
 
                     # Invariantes (5.2) — não param a campanha.
                     turn_viol = _run_invariants(new_state, prev_state, turn) if invariants else []
+                    # spec polish-prosa (§7): MockLLM tem narração FIXA → o check de
+                    # abertura repetida dispararia sempre; irrelevante em mock.
+                    if not use_real_llm:
+                        turn_viol = [v for v in turn_viol
+                                     if v.get("check_id") != "narrative.repeated_opening"]
                     rec.violations = [v["check_id"] for v in turn_viol]
                     violations.extend(turn_viol)
 

@@ -273,10 +273,11 @@ def _narrate_downed(player: Dict, logs: List[str], nota: str, intent: str) -> st
     fallback = "⚔️ " + "\n".join(f"• {l}" for l in logs[-4:]) + f"\n\n☠️ {nota}"
     sys = SystemMessage(content=f"""
     <role>Narrador — Dark Fantasy</role>
-    O herói {player.get('name', '?')} CAIU em combate, mas NÃO morreu: acordou
+    Você ({player.get('name', '?')}) CAIU em combate, mas NÃO morreu: acordou
     um dia depois, saqueado, no lugar descrito abaixo. Narre em 2-3 frases a
     queda, o apagão e o despertar — solene, sem heroísmo barato. NÃO invente
-    itens nem números fora do texto.
+    itens nem números fora do texto. SEMPRE em 2ª pessoa ("você"), NUNCA em 3ª
+    ("o herói", "o viajante", "o aventureiro").
 
     <fatos>
     {nota}
@@ -301,9 +302,22 @@ def _narrate_downed(player: Dict, logs: List[str], nota: str, intent: str) -> st
 
 def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
              spawned_flavor: Optional[str], intent: str, victory: bool,
-             world_ctx: str = "", player_dead: bool = False) -> str:
+             world_ctx: str = "", player_dead: bool = False,
+             aberturas: Optional[List[str]] = None) -> str:
+    from services import prose_guard
     log_str = "\n".join(logs) if logs else "Nada acontece."
     alive = [f"{e['name']} (HP {e['hp']}/{e['max_hp']})" for e in enemies if e.get("status") == "ativo"]
+    # spec polish-prosa: R1 (varie a abertura) + R2 (morte em 2ª pessoa).
+    varie = prose_guard.openings_clause(aberturas or [])
+    if player_dead:
+        fecho = ("O HERÓI MORREU NESTE ROUND — narre a queda como o FECHO de uma saga: "
+                 "solene, definitivo, digno da crônica (3 a 4 frases). Sem deixa para "
+                 "próxima ação. SEMPRE em 2ª pessoa ('você'), NUNCA em 3ª ('o herói', "
+                 "'o viajante', 'o aventureiro').")
+    elif victory:
+        fecho = "O combate foi VENCIDO — encerre com o respiro da vitória."
+    else:
+        fecho = "Termine com tensão e uma deixa para a próxima ação do jogador."
     sys = SystemMessage(content=f"""
     <role>Narrador de Combate — Dark Fantasy</role>
     Descreva o round de combate em 1 a 2 parágrafos, com base APENAS no log mecânico.
@@ -322,7 +336,7 @@ def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
     Herói: {player.get('name')} HP {player.get('hp')}/{player.get('max_hp')}
     Inimigos vivos: {', '.join(alive) if alive else 'nenhum'}
 
-    {"O HERÓI MORREU NESTE ROUND — narre a queda como o FECHO de uma saga: solene, definitivo, digno da crônica (3 a 4 frases). Sem deixa para próxima ação." if player_dead else ("O combate foi VENCIDO — encerre com o respiro da vitória." if victory else "Termine com tensão e uma deixa para a próxima ação do jogador.")}
+    {fecho}{varie}
     """)
     try:
         llm = get_llm(temperature=0.6, tier=ModelTier.FAST)
@@ -557,6 +571,9 @@ def combat_node(state: GameState):
         factions_new, _ = wu_f.advance_factions(factions_now, len(wu_f.PERIODS))
 
     # Fase 2.8: pack enxuto (só ambientação; mecânica segue 100% Python).
+    # spec polish-prosa (R1): aberturas recentes p/ o narrador variar.
+    from services import prose_guard
+    aberturas = prose_guard.ultimas_aberturas(messages)
     loc = state.get("world", {}).get("current_location", "")
     if downed:
         narrative = _narrate_downed(player, logs, downed_nota, intent)
@@ -564,9 +581,12 @@ def combat_node(state: GameState):
         world_pack = build_context_pack(state, query=f"{loc} {intent}",
                                         purpose="combat_narration", token_budget=1200)
         narrative = _narrate(player, enemies, logs, spawned_flavor, intent, combat_over,
-                             world_pack.world_state_block, player_dead=player_dead)
+                             world_pack.world_state_block, player_dead=player_dead,
+                             aberturas=aberturas)
         if player_dead:
             narrative = f"{narrative}\n\n☠️ {_death_template(player, enemies, state.get('world') or {})}"
+    # R4: telemetria de repetição (não re-tenta) — compara com a abertura anterior.
+    prose_guard.log_if_repeats(narrative, aberturas[0] if aberturas else "", where="combate")
 
     result = {
         "messages": [AIMessage(content=narrative)],

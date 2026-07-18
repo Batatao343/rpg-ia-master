@@ -1,6 +1,7 @@
 # SPEC — Polish de prosa: anti-repetição, voz e menu de opções
 
-> **Status:** `approved` (2026-07-17 — ordem de dev: **8/8**; puro prompt, menor risco, por último)
+> **Status:** `done` (2026-07-18 — 870 offline verdes; smoke real: 4 aberturas
+> distintas + menu de opções; downed em 2ª pessoa. Ordem de dev: **8/8**)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
 > **Depende de:** —
 > **Desbloqueia:** —
@@ -83,10 +84,13 @@ Tudo é prompt/pós-processamento — zero mecânica nova.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R5 com testes
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Smoke real (abaixo) sem regressão de qualidade percebida
-- [ ] Saves antigos continuam carregando (nada de estado novo)
+- [x] R1–R5 com testes (`tests/test_prose_guard.py`, 8 casos)
+- [x] `uv run pytest` verde (suíte completa offline) — **870 passed**
+- [x] Smoke real (abaixo) sem regressão de qualidade percebida
+- [x] Saves antigos continuam carregando (nada de estado novo)
+- [x] Smoke §6 real — exploração: 4 aberturas distintas, 4/4 turnos com menu de
+  opções ("— …"); downed narrado em 2ª pessoa ("Você sentiu o chão sumir"), sem
+  "o herói/viajante/aventureiro"
 
 ## 6. Smoke test com LLM real
 

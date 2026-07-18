@@ -353,12 +353,33 @@ def check_recycled_npc(state: dict, prev: Optional[dict], turn: int) -> List[Vio
     return out
 
 
+def check_repeated_opening(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    """spec polish-prosa (R5): 3 narrações consecutivas com a MESMA abertura de 6
+    palavras = prosa engessada. Warning (telemetria — não reprova). Sob MockLLM a
+    narração é fixa, então o runner filtra este check em modo mock (§7 da spec)."""
+    from services.prose_guard import opening
+    narrs: List[str] = []
+    for m in reversed(state.get("messages", []) or []):
+        content = getattr(m, "content", "")
+        if content and getattr(m, "type", "") != "human":
+            narrs.append(str(content))
+            if len(narrs) >= 3:
+                break
+    if len(narrs) < 3:
+        return []
+    ops = [opening(n) for n in narrs]
+    if ops[0] and ops[0] == ops[1] == ops[2]:
+        return [_V("narrative.repeated_opening", "warning", turn,
+                   f"3 narrações seguidas abrindo com “{ops[0]}…”", abertura=ops[0])]
+    return []
+
+
 Check = Callable[[dict, Optional[dict], int], List[Violation]]
 
 CHECKS: List[Check] = [
     check_vitals, check_economy, check_entities, check_world, check_knowledge,
     check_lifecycle, check_downed, check_combat_zombie, check_downed_recovery,
-    check_recycled_npc,
+    check_recycled_npc, check_repeated_opening,
 ]
 
 
