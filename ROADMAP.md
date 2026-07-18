@@ -321,7 +321,9 @@ testes offline verdes.**
      **✅ `done` (2026-07-18): 822 verdes; 492 turnos mock 0 combat.zombie
      (combate ativo ≤4t vs 59); smoke real (viagem=fuga narrada, nunca teleporte).**
   4. [pos-saque-recuperacao](specs/pos-saque-recuperacao.md) — poção + carência
-     + beat de recuperação (achado B)
+     + beat de recuperação (achado B).
+     **✅ `done` (2026-07-18): 835 verdes; 3 seeds 0 violações de recuperação;
+     smoke real (poção+beat+narração).**
   5. [npc-fallback-sem-alvo](specs/npc-fallback-sem-alvo.md) — fim do "Ninguém
      responde."; party em cena (achado E)
   6. [beats-visibilidade-ptbr](specs/beats-visibilidade-ptbr.md) — sanitizador

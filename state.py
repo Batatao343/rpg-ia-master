@@ -118,6 +118,7 @@ class WorldState(TypedDict, total=False):
     looming_threat: str              # ameaça invocada (entidade) pairando sobre o mundo
     last_encounter_turn: int         # turno do último encontro automático (cooldown)
     threat_alerts: List[Dict]        # Fase 2.5b: fugas viram alerta regional (ver world_utils.register_flee_alert)
+    downed_grace_until_day: int      # spec pos-saque-recuperacao (R2): dia-limite da carência pós-Saque (encontro suprimido em local seguro; ausente = sem carência)
 
 
 class Faction(TypedDict, total=False):

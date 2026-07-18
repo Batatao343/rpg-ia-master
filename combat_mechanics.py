@@ -1176,16 +1176,27 @@ def apply_downed(player: Dict, world: Dict) -> Tuple[Dict, Dict, List[Dict], str
         "starting_equipment") or []
     if starting:
         basic_weapon = starting[0]
+    # spec pos-saque-recuperacao (R1): quem te saqueou não se importou com uma
+    # poção rachada — o herói acorda com 1 consumível de cura básico. Dá um
+    # caminho REAL de recuperação sem amaciar o Saque (ouro/itens/únicos seguem).
     player["inventory"] = [{"id": basic_weapon, "qty": 1}] if basic_weapon else []
+    player["inventory"].append({"id": "pocao_cura", "qty": 1})
     player["equipment"] = {"weapon": basic_weapon, "armor": None, "accessory": None}
     if basic_weapon and basic_weapon in uniques_lost:
         uniques_lost.remove(basic_weapon)
-    player["active_conditions"] = []
+    # R4: condição-marca do despertar (narração/beat de recuperação leem isto;
+    # removida no 1º descanso ou quando a carência expira). duration alta p/ não
+    # sumir num tick de combate acidental — o gatilho de remoção é o descanso.
+    player["active_conditions"] = [{"name": "downed_recente", "duration": 99}]
     player["hp"] = max(1, int(player.get("max_hp", 1) or 1) // 4)
 
     # --- o mundo andou sem ele (1 dia) --------------------------------------
     wu.advance_clock(world, len(wu.PERIODS))
     wu.advance_weather(world)
+    # R2: janela de carência de 1 dia de jogo no local seguro — o storyteller
+    # não sorteia encontro aleatório enquanto durar (viajar para zona de perigo
+    # cancela). day+1 = ativa hoje, inativa amanhã (downed_grace_active usa <).
+    world["downed_grace_until_day"] = int((world.get("world_clock") or {}).get("day", 1) or 1) + 1
     safe_id = wu.last_safe_location(world)
     safe = gamedata.get_location(safe_id) or {}
     if safe:

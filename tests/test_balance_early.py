@@ -147,8 +147,10 @@ def test_apply_downed_saqueia_tudo_menos_arma_basica():
     assert player["hp"] == max(1, 40 // 4)
     assert player["equipment"]["weapon"] == "arco_de_caca"  # starting_equipment[0]
     assert player["equipment"]["armor"] is None and player["equipment"]["accessory"] is None
-    assert player["inventory"] == [{"id": "arco_de_caca", "qty": 1}]
-    assert player["active_conditions"] == []
+    # spec pos-saque-recuperacao (R1/R4): arma básica + 1 poção de cura ("rachada");
+    # marca downed_recente no despertar (antes: inventário só a arma, sem condição).
+    assert player["inventory"] == [{"id": "arco_de_caca", "qty": 1}, {"id": "pocao_cura", "qty": 1}]
+    assert [c.get("name") for c in player["active_conditions"]] == ["downed_recente"]
     assert player["level"] == 3 and player["xp"] == 500  # XP/nível intactos
     ev = events[0]
     assert ev["type"] == "player_downed" and ev["source"] == "combat"

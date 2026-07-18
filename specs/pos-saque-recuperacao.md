@@ -1,6 +1,8 @@
 # SPEC — Janela de recuperação pós-Saque
 
-> **Status:** `approved` (2026-07-17 — ordem de dev: **4/8**; após combate-lifecycle)
+> **Status:** `done` (2026-07-18 — 835 offline verdes; harness mock 3 seeds 0
+> violações de recuperação, sobrevivência muito além do baseline 1-4t; smoke §6
+> real: poção + beat + narração de recuperação. Ordem de dev: **4/8**)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
 > **Depende de:** balanceamento-early-game (`done`), combate-lifecycle (ideal)
 > **Desbloqueia:** —
@@ -86,11 +88,14 @@ chance REAL e mecânica de se reerguer — sem LLM decidindo números.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R5 com testes
-- [ ] Perfil `combate` mock 50 turnos × 3 seeds: pelo menos 1 seed sobrevive à
-  1ª queda por 5+ turnos (baseline atual: 1–4)
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Saves antigos continuam carregando (campos novos com default ausente)
+- [x] R1–R5 com testes (`tests/test_pos_saque.py`, 13 casos)
+- [x] Perfil `combate` mock 50 turnos × 3 seeds: sobrevivência bem além do
+  baseline (seed1 morreu no t26, seed2 no t46 após 1 downed; 0 violações
+  `downed.no_recovery_path`)
+- [x] `uv run pytest` verde (suíte completa offline) — **835 passed**
+- [x] Saves antigos continuam carregando (campos novos com default ausente)
+- [x] Smoke §6 real — despertar pós-Saque: poção `pocao_cura` no inventário,
+  beat `Recupere forças em {local}` no plano, narração cita descansar/poção
 
 ## 6. Smoke test com LLM real
 

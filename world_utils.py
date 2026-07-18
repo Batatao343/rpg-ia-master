@@ -126,6 +126,16 @@ def apply_travel(world: dict, dest: dict) -> dict:
     return world
 
 
+def downed_grace_active(world: dict) -> bool:
+    """spec pos-saque-recuperacao (R2): True enquanto a carência pós-Saque vale
+    (dia de jogo atual < dia-limite). Sem o campo = sem carência (saves antigos)."""
+    until = (world or {}).get("downed_grace_until_day")
+    if not until:
+        return False
+    day = int((world.get("world_clock") or {}).get("day", 1) or 1)
+    return day < int(until)
+
+
 def apply_rest(player: dict, world: dict) -> Tuple[dict, dict]:
     """Descanso: recupera ~metade dos recursos e avança 2 períodos.
     Fase 6.5: clima com `rest_block` (miasma etc.) NEGA o descanso ao relento —
@@ -137,6 +147,9 @@ def apply_rest(player: dict, world: dict) -> Tuple[dict, dict]:
         advance_weather(world)
         return dict(player), world
     player = dict(player)
+    # spec pos-saque-recuperacao (R4): o descanso encerra a marca do Saque.
+    player["active_conditions"] = [c for c in (player.get("active_conditions") or [])
+                                   if c.get("name") != "downed_recente"]
     for res, mx in (("hp", "max_hp"), ("mana", "max_mana"), ("stamina", "max_stamina")):
         if mx in player:
             ceiling = player.get(mx, 0)

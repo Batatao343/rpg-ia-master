@@ -336,11 +336,28 @@ def check_combat_zombie(state: dict, prev: Optional[dict], turn: int) -> List[Vi
     return []
 
 
+def check_downed_recovery(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    """spec pos-saque-recuperacao (R5): logo após o Saque (condição
+    `downed_recente`) o herói precisa de UM caminho de recuperação — poção de
+    cura no inventário OU carência ativa. Nenhum dos dois = espiral de morte."""
+    player = state.get("player") or {}
+    conds = player.get("active_conditions") or []
+    if not any(c.get("name") == "downed_recente" for c in conds):
+        return []
+    has_potion = any(str(i.get("id", "")).startswith("pocao_cura")
+                     for i in (player.get("inventory") or []) if isinstance(i, dict))
+    from world_utils import downed_grace_active
+    if has_potion or downed_grace_active(state.get("world") or {}):
+        return []
+    return [_V("downed.no_recovery_path", "warning", turn,
+               "pós-Saque sem caminho de recuperação (nem poção nem carência)")]
+
+
 Check = Callable[[dict, Optional[dict], int], List[Violation]]
 
 CHECKS: List[Check] = [
     check_vitals, check_economy, check_entities, check_world, check_knowledge,
-    check_lifecycle, check_downed, check_combat_zombie,
+    check_lifecycle, check_downed, check_combat_zombie, check_downed_recovery,
 ]
 
 

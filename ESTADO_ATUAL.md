@@ -4,8 +4,8 @@
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
 > Última atualização: 2026-07-17 (sessão 18: 10 specs `approved` + ordem;
 > **embeddings-provider `done`** (Jina) + **playtest-stop-gameover `done`**
-> (smoke real 3/3) + **combate-lifecycle `done`** (viagem=fuga, combate órfão
-> expira; smoke real ✓); 822 offline verdes)
+> (smoke real 3/3) + **combate-lifecycle `done`** + **pos-saque-recuperacao
+> `done`** (poção+carência+beat de recuperação; smoke real ✓); 835 offline verdes)
 
 ---
 
@@ -72,11 +72,20 @@
    maior sequência de combate ativo = 4t (era 59)**. Smoke §6 real: "Viajo para
    X" em combate → narrou FUGA e viajou só após escapar (nunca teleporte),
    combate limpo.
-5. **Suíte:** 812 → **822 offline verdes** + 1 skip.
+5. **[pos-saque-recuperacao](specs/pos-saque-recuperacao.md) `done`:** o Saque
+   deixa de ser espiral de morte. `apply_downed` agora deixa **1 poção de cura**
+   (R1) + marca `downed_recente` (R4) + **carência de 1 dia** no local seguro
+   (`downed_grace_until_day`, R2: storyteller não sorteia encontro em zona segura
+   durante a carência; ir pro perigo cancela). `campaign_manager` prefixa um
+   **beat de recuperação determinístico** ("Recupere forças em {local}", R3);
+   `apply_rest` remove a marca; storyteller ganha cláusula de prompt de
+   recuperação (R4). Invariante `downed.no_recovery_path` (R5, warning).
+   **+13 `test_pos_saque`.** Harness 3 seeds: 0 violações, sobrevivência muito
+   além do baseline 1-4t. Smoke real: poção+beat+narração ✓.
+6. **Suíte:** 822 → **835 offline verdes** + 1 skip.
 
-**Próximo:** ordem de dev #4 —
-[pos-saque-recuperacao](specs/pos-saque-recuperacao.md) (depende do estado de
-combate confiável do #3).
+**Próximo:** ordem de dev #5 —
+[npc-fallback-sem-alvo](specs/npc-fallback-sem-alvo.md) (fim do "Ninguém responde.").
 
 ---
 
