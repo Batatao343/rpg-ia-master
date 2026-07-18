@@ -307,6 +307,9 @@ def roll_initiative(player: Dict, enemies: List[Dict],
 # --------------------------------------------------------------------------
 def _resource_field(resource_type: str) -> Optional[str]:
     rt = str(resource_type or "").lower()
+    # spec refatoracao-sistema-classes: Entropia é o recurso das 5 classes novas.
+    if "entropia" in rt or "entropy" in rt:
+        return "entropy"
     if "estamina" in rt or "stamina" in rt or "vigor" in rt:
         return "stamina"
     if "mana" in rt:

@@ -36,6 +36,13 @@ class PlayerStats(TypedDict, total=False):
     max_mana: int
     stamina: int
     max_stamina: int
+    # spec refatoracao-sistema-classes: Entropia = pool ÚNICO das 5 classes novas
+    # (substitui mana+stamina do jogador; inimigos seguem em mana/stamina).
+    # Recompõe integral no descanso. Carga do Abismo = recurso de longo prazo
+    # (não cai no descanso; consequência por patamar/classe).
+    entropy: int
+    max_entropy: int
+    abyss_charge: int
     gold: int
     level: int
     xp: int

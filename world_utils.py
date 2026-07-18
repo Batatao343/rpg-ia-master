@@ -155,6 +155,10 @@ def apply_rest(player: dict, world: dict) -> Tuple[dict, dict]:
             ceiling = player.get(mx, 0)
             healed = player.get(res, 0) + max(1, ceiling // 2)
             player[res] = min(ceiling, healed)
+    # spec refatoracao-sistema-classes (R2): Entropia recompõe INTEGRAL no
+    # descanso (diferente do HP, que fica em ~metade). Carga do Abismo NÃO cai.
+    if "max_entropy" in player:
+        player["entropy"] = player.get("max_entropy", 0)
     advance_clock(world, 2)
     advance_weather(world)
     # Fações avançam no tempo off-screen: o storyteller chama advance_factions(2)
