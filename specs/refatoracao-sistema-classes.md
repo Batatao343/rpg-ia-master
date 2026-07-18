@@ -19,6 +19,8 @@
 > **Fonte de design:** `VALORIA_spec_sistema_classes.md` (documento do usuário). Onde o
 > documento marca `[A BALANCEAR]`, esta spec **propõe** um número inicial e o marca
 > `[BALANCEAR]` — placeholder consciente, não valor final canonizado.
+> **▶ RETOMAR:** o handoff operacional (comandos, inventário das 41 falhas, plano
+> etapa a etapa) está em [docs/HANDOFF-sistema-classes.md](../docs/HANDOFF-sistema-classes.md).
 
 ---
 

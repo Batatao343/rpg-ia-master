@@ -2,11 +2,10 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-18 (sessão 18: **as 8 specs do playtest longo
-> viraram `done`** — embeddings-provider · playtest-stop-gameover ·
-> combate-lifecycle · pos-saque-recuperacao · npc-fallback-sem-alvo ·
-> beats-visibilidade-ptbr · encontros-dedupe · polish-prosa. Cada uma com smoke
-> LLM real. 870 offline verdes)
+> Última atualização: 2026-07-18 (sessão 18: **8 specs do playtest longo `done`**
+> (cada uma com smoke real) + archivist fix + NPC relocável + **sistema de
+> classes Etapa 1/8**. 881 offline verdes. **Épico de classes: retomar por
+> [docs/HANDOFF-sistema-classes.md](docs/HANDOFF-sistema-classes.md).**)
 
 ---
 
@@ -119,14 +118,22 @@
    invariante `narrative.repeated_opening` (R5, filtrada em mock no runner).
    **+8 `test_prose_guard`.** Smoke real: 4 aberturas distintas + menu; downed
    em 2ª pessoa.
-10. **Suíte:** 862 → **870 offline verdes** + 1 skip.
+10. **Pós-review (2026-07-18):** (a) **archivist fix** — `important_facts` como
+    dict não perde mais memória (`field_validator`; +5 `test_archivist_facts`;
+    smoke real 3 turnos ok); (b) **NPC relocável** — re-introdução em outro local
+    relocaliza o `home_location_id` (viajar junto/mandado em missão); seguro pois
+    R1 já bloqueia reuso passivo; (c) **sistema de classes Etapa 1/8 `done`** —
+    recurso Entropia (+5 `test_classes_refactor`).
+11. **Suíte:** 862 → **881 offline verdes** + 1 skip.
 
-**🏁 AS 8 SPECS DO PLAYTEST LONGO ESTÃO `done`.** Fila concluída:
-embeddings-provider · playtest-stop-gameover · combate-lifecycle ·
-pos-saque-recuperacao · npc-fallback-sem-alvo · beats-visibilidade-ptbr ·
-encontros-dedupe · polish-prosa. **Próximo:** sistema de classes (2 specs
-`approved`: refatoracao-sistema-classes → arvores-habilidade-classes) OU o
-achado do archivist (`important_facts` como dict → fallback, perde memória).
+**🏁 AS 8 SPECS DO PLAYTEST LONGO ESTÃO `done`** + archivist fix + NPC relocável.
+
+**Próximo — ÉPICO DO SISTEMA DE CLASSES (retomar em sessão limpa):** leia
+**[docs/HANDOFF-sistema-classes.md](docs/HANDOFF-sistema-classes.md)** — Etapa
+1/8 done; Etapa 2 pronta em `scripts/gen_classes_v2.py` (aplicar derruba 41
+testes em 10 arquivos, inventariados no handoff); faltam etapas 2-8. Depois:
+[arvores-habilidade-classes](specs/arvores-habilidade-classes.md) (árvore rica,
+autoria em Fable).
 
 ---
 
