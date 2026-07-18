@@ -162,12 +162,20 @@ def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text
 
     existing_lower = {name.lower(): name for name in npcs.keys()}
     if new_name.lower() in existing_lower:
-        # já conhecido: a cena o trouxe de volta (camada 3)
+        # já conhecido: a cena o trouxe de volta (camada 3).
+        # spec encontros-dedupe (exceção narrativa): re-introduzir um NPC conhecido
+        # é uma decisão DELIBERADA do narrador/player (com o filtro R1 ele nem
+        # aparece no contexto fora do seu local, então não há reuso passivo). Logo,
+        # se ele foi trazido para OUTRO local (viajou junto, mandado em missão),
+        # RELOCALIZA — o home_location_id passa a ser o local atual.
         canonical = existing_lower[new_name.lower()]
         new_npcs = dict(npcs)
         if isinstance(new_npcs.get(canonical), dict):
-            new_npcs[canonical] = {**new_npcs[canonical], "in_scene": True,
-                                   "last_seen_turn": turn}
+            atual = new_npcs[canonical]
+            new_npcs[canonical] = {
+                **atual, "in_scene": True, "last_seen_turn": turn,
+                "home_location_id": home_id or atual.get("home_location_id", ""),
+            }
         return new_npcs
     tpl = generate_new_npc(new_name, context=f"Local: {loc}. Cena: {narrative_text}")
     if not tpl: return npcs

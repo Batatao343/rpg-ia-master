@@ -4,7 +4,7 @@ Gerencia a Memória de Curto (Resumo) e Longo Prazo (RAG) da sessão.
 """
 from typing import List
 from langchain_core.messages import SystemMessage
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from llm_setup import get_llm, ModelTier
 from rag import add_memory_to_session
 from services.chronicle import append_entry
@@ -19,6 +19,30 @@ class MemoryUpdate(BaseModel):
         default="",
         description="Feito digno de canção: 1-3 frases em prosa de menestrel (3ª pessoa, épico-sombrio). Vazio se turno banal.",
     )
+
+    @field_validator("important_facts", mode="before")
+    @classmethod
+    def _coerce_facts(cls, v):
+        """Resiliência (achado dos smokes reais): o LLM às vezes devolve
+        `important_facts` como lista de DICTS ({fato,type} / {role,content}) em
+        vez de strings — isso derrubava o schema inteiro por validação e o turno
+        perdia fatos/crônica no fallback de texto. Coage cada item para string
+        ANTES da validação de tipo, preservando a memória do turno."""
+        if not isinstance(v, list):
+            return v
+        out: List[str] = []
+        for item in v:
+            if isinstance(item, str):
+                s = item.strip()
+            elif isinstance(item, dict):
+                s = str(item.get("content") or item.get("fato") or item.get("fact")
+                        or item.get("desc") or item.get("text")
+                        or "; ".join(f"{k}: {val}" for k, val in item.items())).strip()
+            else:
+                s = str(item).strip()
+            if s:
+                out.append(s)
+        return out
 
 
 def _extract_summary_plain(llm, context_msgs: list, current_summary: str) -> str:

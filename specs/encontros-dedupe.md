@@ -95,6 +95,15 @@ reusa porque estão "à mão".
 > `ENCOUNTER_COOLDOWN_TURNS` ficam gravados para uso futuro; a invariante R4
 > cobre o caso residual. R3 evita repetir o mesmo template de encontro 2× no
 > mesmo local (`world.last_encounter_id`/`last_encounter_loc`).
+>
+> **Exceção narrativa (refino pós-review do usuário):** o vínculo de local NÃO
+> engaiola o NPC quando faz sentido ele SAIR — viajar junto com o player ou ser
+> mandado a outro lugar pelas ações do player. Dois caminhos legítimos: (a)
+> recrutar → vira party (nunca presa a local); (b) re-introdução deliberada do
+> NPC em outro local (`_with_new_npc` no ramo "já conhecido") **relocaliza** o
+> `home_location_id` para o local atual. Isso é seguro justamente porque o R1
+> impede o reuso PASSIVO (o LLM não é alimentado com o NPC fora do local dele);
+> uma re-introdução, portanto, é sempre uma escolha narrativa/do player.
 
 ## 6. Smoke test com LLM real
 

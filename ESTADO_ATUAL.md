@@ -313,12 +313,16 @@ Bugs históricos: TODOS fechados (4 da sessão 2026-06-26 → Fases 4.3/4.6 e sp
 npcs-3-camadas; 6 do transcrito real → fix-playtest-achados; 8 da auditoria de
 segurança → sessão 14, tabela completa no `CHANGELOG.md`).
 
-**Achado (pré-existente, agora visível com RAG vivo):** o archivist às vezes
-recebe do LLM `MemoryUpdate.important_facts` como lista de **dicts**
-(`{role,content}`) em vez de strings → 4 validation errors do Pydantic, cai no
-**fallback de texto** (fatos/crônica do turno perdidos). Não derruba o turno
-(guard OK), mas perde memória. Candidato a fix num passe do archivist (coagir
-para string no schema/normalização). Visto nos smokes reais do #2 e #3.
+**Corrigido (2026-07-18):** o archivist recebia `MemoryUpdate.important_facts`
+como lista de **dicts** (`{fato,type}`/`{role,content}`) e caía no fallback de
+texto, PERDENDO os fatos do turno. Fix: `field_validator(mode="before")` coage
+dict→string antes da validação (`+5 test_archivist_facts`). Smoke real: 3 turnos,
+fatos salvos limpos, zero erro.
+
+**Refino (2026-07-18) — NPC preso ao local (spec encontros-dedupe):** o vínculo
+NÃO engaiola o NPC quando faz sentido sair — viajar junto (recrutar→party) ou
+ser re-introduzido em outro local pela narrativa/player (relocaliza o
+`home_location_id`). Seguro porque o R1 já bloqueia o reuso PASSIVO.
 
 **Pendências abertas (não são bugs de código):**
 

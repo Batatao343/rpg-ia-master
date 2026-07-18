@@ -61,3 +61,20 @@ def test_invariante_curado_nao_dispara():
     # NPC curado (sem created_turn) pode estar onde a curadoria mandar.
     npcs = {"Rainha": {"in_scene": True, "home_location_id": "trono"}}
     assert inv.check_recycled_npc(_state(npcs, loc="jardim"), None, 6) == []
+
+
+# --- exceção narrativa: NPC pode SAIR se re-introduzido em outro local -------
+
+def test_reintroducao_relocaliza_npc():
+    # NPC gerado no pântano; a narrativa o traz para o Anel Dourado (re-introduz)
+    # → home_location_id atualiza (viajou junto / mandado em missão).
+    from agents.storyteller import _with_new_npc
+    npcs = {"Gorim": {"name": "Gorim", "in_scene": False,
+                      "home_location_id": "pantano_melancolia", "created_turn": 2}}
+    out = _with_new_npc(npcs, "Gorim", "Anel Dourado", "Gorim chega com o herói.",
+                        game_id="g", home_id="na_anel_dourado", turn=9)
+    assert out["Gorim"]["home_location_id"] == "na_anel_dourado"
+    assert out["Gorim"]["in_scene"] is True
+    # e agora aparece no contexto do novo local (não é mais "preso" ao pântano)
+    st = _state(out, loc="na_anel_dourado")
+    assert "Gorim" in npcs_for_context(st)
