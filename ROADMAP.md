@@ -305,30 +305,32 @@ testes offline verdes.**
 
 - **Prosa/imersão do DeepSeek: salto claro** (arco da Thrace no quester = ponto
   alto; 7/7 quests, level 5). Custo ~$0.001/turno.
-- Defeitos priorizados — **todos viraram specs `draft` em 2026-07-16**
-  (aguardando aprovação; ordem sugerida: 1 e 8 primeiro):
-  1. [playtest-stop-gameover](specs/playtest-stop-gameover.md) — harness para
-     na morte + telemetria de rota fiel (achados A+I)
-  2. [combate-lifecycle](specs/combate-lifecycle.md) — viagem=fuga, combate
-     órfão expira (achado C)
-  3. [pos-saque-recuperacao](specs/pos-saque-recuperacao.md) — poção + carência
-     + beat de recuperação (achado B)
-  4. [npc-fallback-sem-alvo](specs/npc-fallback-sem-alvo.md) — fim do "Ninguém
-     responde."; party em cena (achado E)
-  5. [beats-visibilidade-ptbr](specs/beats-visibilidade-ptbr.md) — sanitizador
-     de segredo + PT-BR nos beats (achados D+F)
-  6. [encontros-dedupe](specs/encontros-dedupe.md) — NPC gerado com vínculo de
-     local + cooldown (achado G)
-  7. [polish-prosa](specs/polish-prosa.md) — anti-repetição, 2ª pessoa na
-     morte, menu de opções (achado H)
-  8. [embeddings-provider](specs/embeddings-provider.md) — cadeia
+- Defeitos priorizados — **8 specs `approved` (2026-07-17) com ordem de dev
+  cravada** (embeddings + métricas primeiro):
+  1. [embeddings-provider](specs/embeddings-provider.md) — cadeia
      jina → openai → ollama → **gemini (último fallback; caro demais p/
-     primário)**; provider fixado por índice via meta
+     primário)**; provider fixado por índice via meta.
+     **✅ `done` (2026-07-17): 804 verdes; re-index real com Jina + smoke §6
+     3/3; RAG vivo.**
+  2. [playtest-stop-gameover](specs/playtest-stop-gameover.md) — harness para
+     na morte + telemetria de rota fiel (achados A+I)
+  3. [combate-lifecycle](specs/combate-lifecycle.md) — viagem=fuga, combate
+     órfão expira (achado C)
+  4. [pos-saque-recuperacao](specs/pos-saque-recuperacao.md) — poção + carência
+     + beat de recuperação (achado B)
+  5. [npc-fallback-sem-alvo](specs/npc-fallback-sem-alvo.md) — fim do "Ninguém
+     responde."; party em cena (achado E)
+  6. [beats-visibilidade-ptbr](specs/beats-visibilidade-ptbr.md) — sanitizador
+     de segredo + PT-BR nos beats (achados D+F)
+  7. [encontros-dedupe](specs/encontros-dedupe.md) — NPC gerado com vínculo de
+     local + cooldown (achado G)
+  8. [polish-prosa](specs/polish-prosa.md) — anti-repetição, 2ª pessoa na
+     morte, menu de opções (achado H)
 - Faltas de gameplay sentidas: quests não puxam pro mundo (quester: 1 local em
   100 turnos), exploração sem recompensa mecânica (23 locais, 0 quests, 0 ouro),
   economia invisível, aliados sem presença mecânica.
-- ⚠️ Embeddings Google sem créditos (429) — RAG mudo nos runs; recarregar antes
-  de qualquer teste real de memória longa.
+- ✅ Embeddings: resolvido pela spec embeddings-provider (Jina primário; RAG
+  vivo). Google (429) virou último fallback.
 
 ## Criação de personagem imersiva — ✅ ENTREGUE 2026-07-17 (2 specs `done`)
 

@@ -1,6 +1,6 @@
 # SPEC — Janela de recuperação pós-Saque
 
-> **Status:** `draft`
+> **Status:** `approved` (2026-07-17 — ordem de dev: **4/8**; após combate-lifecycle)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
 > **Depende de:** balanceamento-early-game (`done`), combate-lifecycle (ideal)
 > **Desbloqueia:** —

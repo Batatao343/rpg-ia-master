@@ -1,6 +1,6 @@
 # SPEC — Dedupe/cooldown de encontros e NPCs reciclados
 
-> **Status:** `draft`
+> **Status:** `approved` (2026-07-17 — ordem de dev: **7/8**; melhor após embeddings-provider — toca context_builder)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
 > **Depende de:** npcs-3-camadas (`done`), Fase 2.8 context builder (`done`)
 > **Desbloqueia:** —

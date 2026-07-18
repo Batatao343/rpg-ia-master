@@ -1,6 +1,6 @@
 # SPEC — Beats sem spoiler e sempre em PT-BR (campaign_manager)
 
-> **Status:** `draft`
+> **Status:** `approved` (2026-07-17 — ordem de dev: **6/8**; melhor após embeddings-provider — RAG vivo p/ smoke)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
 > **Depende de:** Fase 7.3 segredos (`done`), Fase 2.8 context builder (`done`)
 > **Desbloqueia:** —

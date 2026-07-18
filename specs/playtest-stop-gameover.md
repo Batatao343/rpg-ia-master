@@ -1,6 +1,6 @@
 # SPEC — Harness para no game_over + telemetria de rota fiel
 
-> **Status:** `draft`
+> **Status:** `approved` (2026-07-17 — ordem de dev: **2/8**)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
 > **Depende de:** Fase 5 (`done`)
 > **Desbloqueia:** métricas confiáveis p/ qualquer tuning futuro

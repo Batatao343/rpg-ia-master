@@ -2,13 +2,51 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-17 (sessão 17: criação de personagem imersiva
-> ENTREGUE — onboarding-valoria + inicio-personalizado `done`; 792 offline
-> verdes + 1 skip)
+> Última atualização: 2026-07-17 (sessão 18: 10 specs `approved` + ordem
+> definida; **embeddings-provider `done`** — cadeia multi-provider + re-index
+> real com Jina; RAG VIVO de novo; 804 offline verdes)
 
 ---
 
 ## TL;DR — Em que pé está
+
+**Sessão 2026-07-17 (18): 10 SPECS APROVADAS + ORDEM + EMBEDDINGS MULTI-PROVIDER** —
+1. **Todas as specs pendentes viraram `approved` com ordem de dev cravada no
+   header de cada uma.** Duas fases:
+   - **Sistema de classes (2 specs, ordem #1→#2):**
+     [refatoracao-sistema-classes](specs/refatoracao-sistema-classes.md) →
+     [arvores-habilidade-classes](specs/arvores-habilidade-classes.md)
+     (a 2ª depende do motor de Entropia/Carga da 1ª).
+   - **Playtest longo (8 specs, ordem #1→#8):**
+     [embeddings-provider](specs/embeddings-provider.md) →
+     [playtest-stop-gameover](specs/playtest-stop-gameover.md) →
+     [combate-lifecycle](specs/combate-lifecycle.md) →
+     [pos-saque-recuperacao](specs/pos-saque-recuperacao.md) →
+     [npc-fallback-sem-alvo](specs/npc-fallback-sem-alvo.md) →
+     [beats-visibilidade-ptbr](specs/beats-visibilidade-ptbr.md) →
+     [encontros-dedupe](specs/encontros-dedupe.md) →
+     [polish-prosa](specs/polish-prosa.md).
+2. **[embeddings-provider](specs/embeddings-provider.md) `done`:** `rag.py`
+   ganhou cadeia multi-provider
+   `EMBEDDING_ROUTES = [jina, openai, ollama, gemini]` (Gemini é o ÚLTIMO
+   fallback). Cada índice FAISS grava `embeddings_meta.json` e fica **PINADO**
+   ao provider que o gerou (nunca mistura vetores); provider indisponível →
+   índice DESATIVADO com warning (nunca crash). `RPG_EMBEDDINGS=<p>` força.
+   `get_embeddings_for(p)` abre índice pinado; write deriva provider de
+   `_resolve_provider()` (puro, sem global vazável). `codex_loader.ingest_codex`
+   grava meta também. **+12 `test_embeddings_provider`**; seam de
+   `test_npc_memory` migrado p/ `_EMBEDDING_BUILDERS` (pin não passa mais por
+   `get_embeddings`). `.env.example` ganhou `JINA_API_KEY`/`RPG_EMBEDDINGS`.
+   **RAG VIVO:** re-index real com Jina executado (lore 2203 chunks + regras,
+   meta jina); smoke §6 3/3 (queries PT-BR sem 429 + memória de sessão).
+   ⚠️ Free tier Jina = **100k tokens/min**: re-index do Codex esgota o minuto,
+   regras precisaram de ~70s de espera (não é erro).
+3. **Suíte:** 792 → **804 offline verdes** + 1 skip.
+
+**Próximo:** ordem de dev #2 — [playtest-stop-gameover](specs/playtest-stop-gameover.md)
+(não depende de embeddings).
+
+---
 
 **Sessão 2026-07-17 (17): CRIAÇÃO DE PERSONAGEM IMERSIVA ENTREGUE** —
 1. **[onboarding-valoria](specs/onboarding-valoria.md) `done`:** criação virou
@@ -41,10 +79,6 @@
    `test_prologue`; 1 skip pré-existente). `npm run build` verde. Smoke real
    §6 no DeepSeek executado (~$0.02): arco "O Nome Manchado" com 2 NPCs,
    abertura NA cena do brief, NPC semeado responde no turno 1.
-
-**Próximo:** usuário aprovar as 8 specs do playtest (ordem sugerida:
-embeddings-provider + playtest-stop-gameover primeiro — desbloqueiam RAG e
-métricas confiáveis). Decisão Fase 8 (arte) vs 10b (público) segue adiada.
 
 **Sessão 2026-07-14→16 (16): DEEPSEEK PRIMÁRIO + PLAYTEST LONGO + 8 SPECS** —
 1. **Roteamento:** DeepSeek agora é o candidato Nº 1 em **TODOS os tiers**
@@ -215,8 +249,10 @@ segurança → sessão 14, tabela completa no `CHANGELOG.md`).
   ativo) / viagem durante combate · vazamento de segredo via beat do
   campaign_manager · "Ninguém responde." com aliado em cena · beat em inglês ·
   encontro reciclado. **Todos viraram specs `draft` em 2026-07-16** (ver TL;DR).
-- **Embeddings Google sem créditos (429 prepay)** — RAG global + memória de
-  sessão mortos; recarregar em ai.studio/projects ou migrar embeddings
+- **Embeddings:** ✅ RESOLVIDO (spec embeddings-provider `done`). Jina é o
+  primário; índices lore/regras re-indexados com meta jina, RAG vivo. Free tier
+  Jina = 100k tokens/min (re-index do Codex esgota o minuto — espaçar). Trocar
+  provider = re-rodar `uv run python rag.py`.
 
 Fechadas na sessão 15: confirmação real do Verme ✔ · mortes nível 1 do
 `combate`/`agressivo` ✔ (spec balanceamento; nota: 2ª queda DELIBERADA sem cura

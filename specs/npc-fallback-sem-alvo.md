@@ -1,6 +1,6 @@
 # SPEC — Rota NPC sem alvo: fallback útil + party em cena
 
-> **Status:** `draft`
+> **Status:** `approved` (2026-07-17 — ordem de dev: **5/8**)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
 > **Depende de:** npcs-3-camadas (`done`), Fase 4.5 party (`done`)
 > **Desbloqueia:** —

@@ -1,6 +1,6 @@
 # SPEC — Polish de prosa: anti-repetição, voz e menu de opções
 
-> **Status:** `draft`
+> **Status:** `approved` (2026-07-17 — ordem de dev: **8/8**; puro prompt, menor risco, por último)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
 > **Depende de:** —
 > **Desbloqueia:** —

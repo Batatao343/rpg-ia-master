@@ -119,7 +119,7 @@ def ingest_codex(codex_dir: str = CODEX_DIR) -> None:
     """Gera faiss_lore_index/ a partir do Codex (substitui ingest_file p/ lore)."""
     from langchain_community.vectorstores import FAISS
 
-    from rag import get_embeddings, get_global_db_path
+    from rag import _resolve_provider, _save_index, get_embeddings, get_global_db_path
 
     embeddings = get_embeddings()
     if embeddings is None:
@@ -131,7 +131,9 @@ def ingest_codex(codex_dir: str = CODEX_DIR) -> None:
         print(f"[CODEX] Nenhum documento em {codex_dir}.")
         return
 
-    print(f"--- INGESTÃO DO CODEX: {codex_dir} ({len(docs)} chunks) → índice 'lore' ---")
+    provider = _resolve_provider()
+    print(f"--- INGESTÃO DO CODEX: {codex_dir} ({len(docs)} chunks) → índice 'lore' "
+          f"(provider: {provider}) ---")
     db = FAISS.from_documents(docs, embeddings)
-    db.save_local(get_global_db_path("lore"))
+    _save_index(db, get_global_db_path("lore"), provider)
     print("✅ Codex indexado em 'faiss_lore_index'.")

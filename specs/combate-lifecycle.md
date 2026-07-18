@@ -1,6 +1,6 @@
 # SPEC — Ciclo de vida do combate (viagem = fuga; combate órfão expira)
 
-> **Status:** `draft`
+> **Status:** `approved` (2026-07-17 — ordem de dev: **3/8**; após playtest-stop-gameover — invariante R4 usa rota fiel)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
 > **Depende de:** fix-playtest-achados (fuga do jogador, `done`)
 > **Desbloqueia:** pos-saque-recuperacao (estado de combate confiável)

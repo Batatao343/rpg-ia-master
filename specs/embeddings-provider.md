@@ -1,6 +1,8 @@
 # SPEC — Embeddings multi-provider (Gemini rebaixado a último fallback)
 
-> **Status:** `draft`
+> **Status:** `done` (2026-07-17 — 804 offline verdes; re-index real com Jina
+> executado, smoke §6 3/3: lore + regras pinados em jina, 3 queries PT-BR sem
+> 429, memória de sessão round-trip. Ordem de dev: **1/8**)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16 (decisão do usuário:
 > outro provider como primário; Gemini é caro/sem créditos — fica SÓ como
 > último fallback da cadeia)
@@ -126,13 +128,18 @@ com aviso claro (nunca consultado com vetor de outro provider).
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R5 com testes
-- [ ] `uv run pytest` verde (suíte completa offline, sem rede)
-- [ ] Re-index global real com Jina + 3 queries de lore relevantes
-- [ ] Partida nova completa (CLI, 3+ turnos reais) com archivist persistindo
-  memória de sessão sem erro de embedding
-- [ ] Saves antigos carregam; sessão antiga com memória Google é ignorada com
-  warning (sem crash)
+- [x] R1–R5 com testes (`tests/test_embeddings_provider.py`, 12 casos)
+- [x] `uv run pytest` verde (suíte completa offline, sem rede) — 804 passed, 1 skip
+- [x] Re-index global real com Jina + 3 queries de lore relevantes — lore
+  (2203 chunks) + regras pinados em jina; queries "Legião de Ferro" / "Abismo e
+  entropia" retornam chunks PT-BR, zero 429
+- [x] Archivist persistindo memória de sessão sem erro de embedding —
+  `add_memory_to_session` + `query_rag(game_id=...)` round-trip recupera o fato
+  (meta sessão = jina). *(Rate limit free = 100k tokens/min: re-index do Codex
+  esgota o minuto; regras precisaram de ~70s de espera — não é erro.)*
+- [x] Saves antigos carregam; sessão antiga com memória Google é ignorada com
+  warning (sem crash) — coberto por `test_meta_indisponivel_desativa_indice_com_warning`
+  + `test_indice_legado_sem_meta_assume_gemini`
 
 ## 6. Smoke test com LLM real
 

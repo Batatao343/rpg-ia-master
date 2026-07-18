@@ -6,9 +6,18 @@ degradação sem embeddings e derivação de id.
 import hashlib
 import os
 
+import pytest
 from langchain_core.embeddings import Embeddings
 
 import rag
+
+
+@pytest.fixture(autouse=True)
+def _clean_embeddings_cache():
+    """Impede vazamento de builders/cache fake para outros módulos de teste."""
+    yield
+    rag._embeddings_cache.clear()
+    rag._active_provider_name = None
 
 
 class FakeEmbeddings(Embeddings):
@@ -27,9 +36,22 @@ class FakeEmbeddings(Embeddings):
         return self._vec(text)
 
 
+def _use_fake_embeddings(monkeypatch):
+    """Seam determinístico pós spec embeddings-provider: força o provider 'jina'
+    (via env) e faz TODO builder devolver FakeEmbeddings — write e read passam
+    pelo mesmo fake, independente de key ambiente (`_EMBEDDING_BUILDERS`/pin)."""
+    monkeypatch.setenv("JINA_API_KEY", "x")
+    for k in ("OPENAI_API_KEY", "GOOGLE_API_KEY", "RPG_EMBEDDINGS"):
+        monkeypatch.delenv(k, raising=False)
+    rag._embeddings_cache.clear()
+    rag._active_provider_name = None
+    monkeypatch.setattr(rag, "_EMBEDDING_BUILDERS",
+                        {p: (lambda p=p: FakeEmbeddings()) for p in rag.EMBEDDING_ROUTES})
+
+
 def test_npc_memory_namespaced_per_npc(tmp_path, monkeypatch):
     monkeypatch.setattr(rag, "SAVES_DIR", str(tmp_path))
-    monkeypatch.setattr(rag, "get_embeddings", lambda: FakeEmbeddings())
+    _use_fake_embeddings(monkeypatch)
 
     rag.add_npc_memory("g1", "npc_aldric", ["O jogador salvou a filha de Aldric em Nova Arcádia."])
 
