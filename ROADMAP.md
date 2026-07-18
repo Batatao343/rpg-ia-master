@@ -329,7 +329,10 @@ testes offline verdes.**
      **✅ `done` (2026-07-18): 844 verdes; quester/npc_only mock 0 "Ninguém
      responde"; smoke real (aliado cita objetivo, sozinho → gancho).**
   6. [beats-visibilidade-ptbr](specs/beats-visibilidade-ptbr.md) — sanitizador
-     de segredo + PT-BR nos beats (achados D+F)
+     de segredo + PT-BR nos beats (achados D+F).
+     **✅ `done` (2026-07-18): 855 verdes; módulo secret_signatures compartilhado;
+     achado F era o fallback template em inglês (traduzido); smoke real 3 planos
+     pt-BR sem segredo.**
   7. [encontros-dedupe](specs/encontros-dedupe.md) — NPC gerado com vínculo de
      local + cooldown (achado G)
   8. [polish-prosa](specs/polish-prosa.md) — anti-repetição, 2ª pessoa na

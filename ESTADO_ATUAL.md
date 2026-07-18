@@ -6,7 +6,8 @@
 > **embeddings-provider `done`** (Jina) + **playtest-stop-gameover `done`**
 > (smoke real 3/3) + **combate-lifecycle `done`** + **pos-saque-recuperacao
 > `done`** (poção+carência+beat) + **npc-fallback-sem-alvo `done`** (fim do
-> "Ninguém responde."; smoke real ✓); 844 offline verdes)
+> "Ninguém responde.") + **beats-visibilidade-ptbr `done`** (segredo não vaza
+> por beat; beats sempre pt-BR); 855 offline verdes)
 
 ---
 
@@ -91,11 +92,21 @@
    o beat atual no contexto do NPC (R4, `_mission_hint_block`). **+9
    `test_npc_fallback`.** Mock quester/npc_only 50t: **0 "Ninguém responde"**.
    Smoke real: aliado cita objetivo; sozinho → gancho rico.
-7. **Suíte:** 835 → **844 offline verdes** + 1 skip.
+7. **[beats-visibilidade-ptbr](specs/beats-visibilidade-ptbr.md) `done`:**
+   segredo não vaza mais pelo BEAT + beats sempre pt-BR. Novo módulo
+   `services/secret_signatures.py` (R1: assinaturas + rumor público + heurística
+   de idioma) consumido pelo invariante E pelo planner. `campaign_manager`
+   sanitiza beat/climax/arc_title (R2), re-tenta 1x se detectar inglês e mantém
+   plano anterior na 2ª falha (R4), com instrução anti-segredo no prompt (R3).
+   Invariante `knowledge.secret_leak` agora checa o texto dos BEATS (R5).
+   **Achado F resolvido:** o "beat em inglês" era o **fallback template** (estava
+   em inglês) — traduzido. **+11 `test_beats_visibilidade`.** Smoke real: 3
+   planos pt-BR sem segredo.
+8. **Suíte:** 844 → **855 offline verdes** + 1 skip.
 
-**Próximo:** ordem de dev #6 —
-[beats-visibilidade-ptbr](specs/beats-visibilidade-ptbr.md) (sanitizar segredo
-+ PT-BR nos beats).
+**Próximo:** ordem de dev #7 —
+[encontros-dedupe](specs/encontros-dedupe.md) (NPC gerado com vínculo de local
++ cooldown).
 
 ---
 

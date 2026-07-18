@@ -189,54 +189,33 @@ def check_world(state: dict, prev: Optional[dict], turn: int) -> List[Violation]
 
 # --- R5 conhecimento --------------------------------------------------------
 
-# Frases-assinatura da VERDADE oculta de cada segredo canônico (não do rumor
-# público — 7.3 separou os dois). Curadas a partir dos docs `visibility: hidden`.
-_SECRET_SIGNATURES = {
-    "pacto_valerius": [
-        "pacto com valerius", "pacto com daruun", "consumiu a família",
-        "cedeu a família", "em troca de imortalidade",
-    ],
-    "rede_carmesim": [
-        "rede carmesim pode despertar", "despertar dentro de uma geração",
-    ],
-    "arauto_identidade": [
-        "aprendiz élfico que destruiu aethelgard", "fundido com a energia liberada",
-        "almas das vítimas das câmaras",
-    ],
-    "rei_subterraneo": [
-        "verme-primordial das raízes do mundo", "medo do verme",
-        "rei se aquietou por medo",
-    ],
-}
+# spec beats-visibilidade-ptbr (R1): as assinaturas migraram para o módulo
+# compartilhado (consumido também pelo campaign_manager). Alias p/ compat.
+from services.secret_signatures import SECRET_SIGNATURES, revealed_corpus
 
-
-def _revealed_corpus(state: dict) -> str:
-    """Texto do que JÁ foi revelado (event_log secret_revealed + facts da
-    projection) — desarma a assinatura correspondente."""
-    parts: List[str] = []
-    for ev in state.get("event_log", []) or []:
-        if isinstance(ev, dict) and ev.get("type") == "secret_revealed":
-            parts.append(str(ev.get("payload", {})))
-            parts.append(str(ev.get("target_id", "")))
-    facts = (state.get("world_projection", {}) or {}).get("facts", {}) or {}
-    for f in facts.values():
-        parts.append(str(f))
-    return " ".join(parts).lower()
+_SECRET_SIGNATURES = SECRET_SIGNATURES  # compat com quem importava daqui
+_revealed_corpus = revealed_corpus
 
 
 def check_knowledge(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
     out: List[Violation] = []
-    text = _last_narration(state).lower()
-    if not text:
-        return out
-    revealed = _revealed_corpus(state)
-    for secret_id, phrases in _SECRET_SIGNATURES.items():
-        for ph in phrases:
-            if ph in text and ph not in revealed:
-                out.append(_V("knowledge.secret_leak", "warning", turn,
-                              f"narração vazou segredo '{secret_id}': “{ph}”",
-                              secret=secret_id, phrase=ph))
-                break
+    revealed = revealed_corpus(state)
+    # spec beats-visibilidade-ptbr (R5): checa a narração E o texto dos beats do
+    # plano (antes só narração — o vazamento do playtest veio de um BEAT).
+    fontes = [("narração", _last_narration(state).lower())]
+    for b in ((state.get("campaign_plan") or {}).get("beats") or []):
+        if isinstance(b, dict) and b.get("description"):
+            fontes.append(("beat", str(b["description"]).lower()))
+    for origem, text in fontes:
+        if not text:
+            continue
+        for secret_id, phrases in SECRET_SIGNATURES.items():
+            for ph in phrases:
+                if ph in text and ph not in revealed:
+                    out.append(_V("knowledge.secret_leak", "warning", turn,
+                                  f"{origem} vazou segredo '{secret_id}': “{ph}”",
+                                  secret=secret_id, phrase=ph, origem=origem))
+                    break
     return out
 
 

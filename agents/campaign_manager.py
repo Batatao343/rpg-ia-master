@@ -140,6 +140,9 @@ def _build_plan(state: GameState) -> CampaignPlan:
             "em PORTUGUÊS DO BRASIL (pt-BR). NUNCA em inglês, mesmo que estas instruções "
             "estejam em inglês.\n"
             "1. USE THE LORE: If the lore mentions specific dangers, factions, or secrets, weave them into the beats.\n"
+            "1b. SEGREDOS (OBRIGATÓRIO): você PODE planejar arcos EM VOLTA de verdades ocultas, "
+            "mas NUNCA escreva a verdade oculta no TEXTO de um beat/climax/arc_title (o jogador "
+            "lê isso). Refira-se a segredos só como RUMOR público ('investigue os boatos sobre X').\n"
             "2. PACING: Start with atmosphere/hook, rise tension, and lead to a climax.\n"
             "3. ACTIONABLE: Beats must be clear instructions for the Storyteller AI (em pt-BR, ex.: 'Revele a inscrição antiga na parede').\n"
             "4. ARC TITLE: current arc title is "
@@ -158,33 +161,57 @@ def _build_plan(state: GameState) -> CampaignPlan:
         content=prefix + (last_intent if last_intent else "Start the scene with strong hooks.")
     )
 
-    try:
+    # spec beats-visibilidade-ptbr (R2/R4): sanitização de segredo + idioma.
+    from services.secret_signatures import looks_english, sanitize_beat
+
+    def _invoke(reforco: str = ""):
         structured = planner_llm.with_structured_output(CampaignPlanModel)
-        # Passamos o histórico recente para ele entender o fluxo imediato
-        plan = structured.invoke([system_msg, human_msg])
-        
+        msgs = [system_msg, human_msg]
+        if reforco:
+            msgs.append(SystemMessage(content=reforco))
+        return structured.invoke(msgs)  # histórico recente já embutido no human_msg
+
+    try:
+        plan = _invoke()
+        if not isinstance(plan, CampaignPlanModel):
+            raise ValueError("structured output inválido (FallbackLLM)")
+
+        # R4: idioma — beat em inglês re-tenta 1x reforçando pt-BR; 2ª falha
+        # mantém o plano anterior (retorna None → needs_replan fica).
+        if any(looks_english(b) for b in plan.beats) or looks_english(plan.climax):
+            plan = _invoke("ATENÇÃO: os beats, o climax e o arc_title DEVEM estar 100% "
+                           "em PORTUGUÊS DO BRASIL (pt-BR). Reescreva TUDO em pt-BR agora.")
+            if (not isinstance(plan, CampaignPlanModel)
+                    or any(looks_english(b) for b in plan.beats)):
+                print("[CAMPAIGN] beats em inglês após retry — mantendo plano anterior.")
+                return None
+
+        # R2: sanitiza a verdade oculta no TEXTO (beats/climax/arc_title).
         beats: List[CampaignBeat] = [
-            {"description": beat, "status": "pending"} for beat in plan.beats
+            {"description": sanitize_beat(beat, state), "status": "pending"}
+            for beat in plan.beats
         ]
         return {
             "location": plan.location,
             "beats": beats,
-            "climax": plan.climax,
+            "climax": sanitize_beat(plan.climax, state),
             "current_step": 0,
             "last_planned_turn": world.get("turn_count", 0),
-            "arc_title": (plan.arc_title or "").strip() or current_arc,
+            "arc_title": sanitize_beat((plan.arc_title or "").strip() or current_arc, state),
         }
     except Exception as exc:  # noqa: BLE001
         print(f"[CAMPAIGN MANAGER ERROR] {exc}")
+        # spec beats-visibilidade-ptbr (achado F): o fallback ERA em inglês —
+        # fonte real do "beat em inglês" quando o LLM falha. Agora em pt-BR.
         fallback_beats: List[CampaignBeat] = [
-            {"description": f"Explore the mysteries of {current_loc}.", "status": "pending"},
-            {"description": "Encounter a challenge related to the local environment.", "status": "pending"},
-            {"description": "Make a significant discovery or face a threat.", "status": "pending"},
+            {"description": f"Explore os mistérios de {current_loc}.", "status": "pending"},
+            {"description": "Enfrente um desafio ligado ao ambiente local.", "status": "pending"},
+            {"description": "Faça uma descoberta importante ou encare uma ameaça.", "status": "pending"},
         ]
         return {
             "location": current_loc,
             "beats": fallback_beats,
-            "climax": "Resolve the immediate conflict.",
+            "climax": "Resolva o conflito imediato.",
             "current_step": 0,
             "last_planned_turn": world.get("turn_count", 0),
             # Fallback: mantém o arco atual (não fragmenta a crônica por erro de LLM)
@@ -237,6 +264,15 @@ def campaign_manager_node(state: GameState):
 
     print(f"🗺️ [CAMPAIGN] Generating new plot for: {world.get('current_location')}")
     new_plan = _build_plan(state)
+    # spec beats-visibilidade-ptbr (R4): não conseguiu um plano em pt-BR → mantém
+    # o anterior e deixa needs_replan ligado para tentar de novo no próximo turno.
+    if new_plan is None:
+        return {
+            "next": "dm_router",
+            "world": world,
+            "campaign_plan": state.get("campaign_plan"),
+            "needs_replan": True,
+        }
     if _downed_recente(state):
         new_plan = _prefix_recovery_beat(new_plan, world)  # R3 (com replan)
 

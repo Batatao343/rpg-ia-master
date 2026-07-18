@@ -1,6 +1,8 @@
 # SPEC — Beats sem spoiler e sempre em PT-BR (campaign_manager)
 
-> **Status:** `approved` (2026-07-17 — ordem de dev: **6/8**; melhor após embeddings-provider — RAG vivo p/ smoke)
+> **Status:** `done` (2026-07-18 — 855 offline verdes; smoke real: 3 planos
+> pt-BR sem segredo; achado F (beat em inglês) era o fallback template, agora
+> pt-BR. Ordem de dev: **6/8**)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
 > **Depende de:** Fase 7.3 segredos (`done`), Fase 2.8 context builder (`done`)
 > **Desbloqueia:** —
@@ -94,13 +96,16 @@ beat**, não cegar o planner.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R5 com testes
-- [ ] Replay do beat do turno 14 (texto real do transcrito `20260714-050339`)
-  → beat sanitizado, zero violação
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM preservado no campaign_manager
-- [ ] Saves antigos continuam carregando (plano antigo não é re-sanitizado — só
+- [x] R1–R5 com testes (`tests/test_beats_visibilidade.py`, 11 casos)
+- [x] Replay do beat do turno 14 (texto do pacto Valerius) → beat sanitizado
+  ("Investigue os boatos..."), zero violação (`test_sanitize_beat_neutraliza_segredo`)
+- [x] `uv run pytest` verde (suíte completa offline) — **855 passed**
+- [x] Guard de FallbackLLM preservado no campaign_manager (isinstance +
+  try/except; fallback template agora em pt-BR — era a fonte do "beat em inglês")
+- [x] Saves antigos continuam carregando (plano antigo não é re-sanitizado — só
   beats novos)
+- [x] Smoke §6 real — 3 planos reais: todos pt-BR, nenhum com assinatura de
+  segredo; fallback do planner em pt-BR
 
 ## 6. Smoke test com LLM real
 
