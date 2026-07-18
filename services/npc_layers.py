@@ -93,6 +93,23 @@ def is_in_scene(npc: dict) -> bool:
     return bool(npc.get("in_scene", True))
 
 
+def npcs_in_scene(state: Dict) -> List[str]:
+    """spec npc-fallback-sem-alvo (R1): interlocutores DISPONÍVEIS agora —
+    NPCs `in_scene` no dict `npcs` + membros de party PRESENTES (ativos, não
+    `waiting`). Ordem: NPCs da cena primeiro, depois aliados. Usado para
+    resolver alvo quando o router não nomeou ninguém."""
+    out: List[str] = []
+    for name, npc in (state.get("npcs") or {}).items():
+        if isinstance(npc, dict) and is_in_scene(npc) and name not in out:
+            out.append(name)
+    for c in state.get("party") or []:
+        if (isinstance(c, dict) and c.get("active")
+                and c.get("status", "ativo") == "ativo"
+                and c.get("name") and c.get("name") not in out):
+            out.append(c["name"])
+    return out
+
+
 def reset_scene(npcs: Dict[str, dict]) -> Dict[str, dict]:
     """Viagem: ninguém teleporta junto — in_scene=False para todos (R5).
     (Companions de party têm estado próprio e não vivem neste dict.)"""

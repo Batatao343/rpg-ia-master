@@ -143,6 +143,19 @@ def _recovery_clause(state: GameState) -> str:
             "POÇÃO de cura que ainda lhe resta, antes de voltar ao perigo.")
 
 
+def _npc_fallback_clause(state: GameState) -> str:
+    """spec npc-fallback-sem-alvo (R2): quando a rota NPC não achou interlocutor,
+    o storyteller narra a AUSÊNCIA (sem inventar NPC em cena) e dá um gancho útil
+    (onde há gente / o objetivo atual). Pura — testável sem LLM."""
+    hint = state.get("npc_fallback_hint")
+    if not hint:
+        return ""
+    return (f"\n    - SEM INTERLOCUTOR: o jogador tentou falar com alguém "
+            f'("{str(hint)[:120]}"), mas NÃO há ninguém por perto para responder. '
+            "Narre a solidão/silêncio SEM inventar um NPC novo em cena, e ofereça "
+            "um gancho ÚTIL (onde poderia haver gente, ou o próximo passo do objetivo).")
+
+
 def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text: str,
                   game_id: str = "", home_id: str = "") -> Dict[str, Dict]:
     from services import npc_layers
@@ -357,6 +370,8 @@ def storyteller_node(state: GameState):
     # spec pos-saque-recuperacao (R4): no turno de despertar pós-Saque, o narrador
     # aponta o caminho de recuperação (descansar / poção). Condicional à marca.
     recovery_clause = _recovery_clause(state)
+    # spec npc-fallback-sem-alvo (R2): rota NPC sem interlocutor delegou aqui.
+    npc_fallback_clause = _npc_fallback_clause(state)
 
     sys = SystemMessage(content=f"""
     <PERSONA>
@@ -413,7 +428,7 @@ def storyteller_node(state: GameState):
       ou impossível no contexto, faça-a FALHAR de forma crível na narração (não conceda o impossível).
     - Termine com opções ou pergunta para ação.
     - Se um personagem ENTRAR na cena (novo ou conhecido que reapareceu), adicione o nome em 'introduced_npcs'.
-    - Se um personagem conhecido SAIR da cena (foi embora, sumiu), adicione o nome em 'npcs_left_scene'.{recovery_clause}
+    - Se um personagem conhecido SAIR da cena (foi embora, sumiu), adicione o nome em 'npcs_left_scene'.{recovery_clause}{npc_fallback_clause}
     """)
 
     try:

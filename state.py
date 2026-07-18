@@ -268,6 +268,7 @@ class GameState(TypedDict):
     quests: List[Quest]  # Fase 3.3: side quests persistentes (main quest deriva de campaign_plan)
     npcs: Dict[str, Dict]
     active_npc_name: Optional[str]
+    npc_fallback_hint: Optional[str]   # spec npc-fallback-sem-alvo (R2): rota NPC sem alvo → storyteller narra a ausência
     active_plan_step: Optional[str]
     router_confidence: Optional[float]
     last_routed_intent: Optional[str]

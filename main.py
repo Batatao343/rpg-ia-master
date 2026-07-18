@@ -73,8 +73,16 @@ def build_game_graph():
 
     # 4. Encerramento com Arquivamento
     # Todo fim de turno passa pelo arquivista para atualizar memórias
-    workflow.add_edge("npc_actor", "archivist")
     workflow.add_edge("loot_agent", "archivist")
+
+    # spec npc-fallback-sem-alvo (R2): sem interlocutor, o npc_actor delega ao
+    # storyteller (narra a ausência + gancho) em vez de "Ninguém responde.".
+    # Caso normal (conversou) segue direto para o arquivista.
+    workflow.add_conditional_edges(
+        "npc_actor",
+        lambda s: "storyteller" if s.get("next") == "storyteller" else "archivist",
+        {"storyteller": "storyteller", "archivist": "archivist"},
+    )
 
     # Storyteller pode disparar um ENCONTRO (mundo perigoso/dominado/ameaçado) → combate.
     # Caso contrário, segue para o arquivista normalmente.

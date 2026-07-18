@@ -1,6 +1,8 @@
 # SPEC — Rota NPC sem alvo: fallback útil + party em cena
 
-> **Status:** `approved` (2026-07-17 — ordem de dev: **5/8**)
+> **Status:** `done` (2026-07-18 — 844 offline verdes; quester+npc_only mock 50t
+> 0 "Ninguém responde"; smoke real: aliado cita objetivo, sozinho → gancho.
+> Ordem de dev: **5/8**)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
 > **Depende de:** npcs-3-camadas (`done`), Fase 4.5 party (`done`)
 > **Desbloqueia:** —
@@ -83,12 +85,17 @@ conteúdo é o pior resultado possível de um turno.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R4 com testes
-- [ ] Perfil `quester` mock 50 turnos: ZERO ocorrências de "Ninguém responde."
-- [ ] Perfil `npc_only` continua verde (gate de NPC fora de cena intacto)
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo
-- [ ] Saves antigos continuam carregando
+- [x] R1–R4 com testes (`tests/test_npc_fallback.py`, 9 casos)
+- [x] Perfil `quester` mock 50 turnos: ZERO ocorrências de "Ninguém responde."
+  (validado; `npc_only` idem)
+- [x] Perfil `npc_only` continua verde (gate de NPC fora de cena intacto)
+- [x] `uv run pytest` verde (suíte completa offline) — **844 passed**
+- [x] Guard de FallbackLLM em todo `with_structured_output` novo (nenhum novo;
+  cascata e helpers são determinísticos)
+- [x] Saves antigos continuam carregando
+- [x] Smoke §6 real — Parte 1: aliado (Gorim) respondeu citando o objetivo
+  (Aldo/mercador/Docas); Parte 2: sozinho → storyteller narrou gancho rico (não
+  o `AIMessage` seco de turno morto)
 
 ## 6. Smoke test com LLM real
 

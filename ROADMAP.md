@@ -325,7 +325,9 @@ testes offline verdes.**
      **✅ `done` (2026-07-18): 835 verdes; 3 seeds 0 violações de recuperação;
      smoke real (poção+beat+narração).**
   5. [npc-fallback-sem-alvo](specs/npc-fallback-sem-alvo.md) — fim do "Ninguém
-     responde."; party em cena (achado E)
+     responde."; party em cena (achado E).
+     **✅ `done` (2026-07-18): 844 verdes; quester/npc_only mock 0 "Ninguém
+     responde"; smoke real (aliado cita objetivo, sozinho → gancho).**
   6. [beats-visibilidade-ptbr](specs/beats-visibilidade-ptbr.md) — sanitizador
      de segredo + PT-BR nos beats (achados D+F)
   7. [encontros-dedupe](specs/encontros-dedupe.md) — NPC gerado com vínculo de

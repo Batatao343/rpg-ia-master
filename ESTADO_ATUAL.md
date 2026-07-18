@@ -5,7 +5,8 @@
 > Última atualização: 2026-07-17 (sessão 18: 10 specs `approved` + ordem;
 > **embeddings-provider `done`** (Jina) + **playtest-stop-gameover `done`**
 > (smoke real 3/3) + **combate-lifecycle `done`** + **pos-saque-recuperacao
-> `done`** (poção+carência+beat de recuperação; smoke real ✓); 835 offline verdes)
+> `done`** (poção+carência+beat) + **npc-fallback-sem-alvo `done`** (fim do
+> "Ninguém responde."; smoke real ✓); 844 offline verdes)
 
 ---
 
@@ -82,10 +83,19 @@
    recuperação (R4). Invariante `downed.no_recovery_path` (R5, warning).
    **+13 `test_pos_saque`.** Harness 3 seeds: 0 violações, sobrevivência muito
    além do baseline 1-4t. Smoke real: poção+beat+narração ✓.
-6. **Suíte:** 822 → **835 offline verdes** + 1 skip.
+6. **[npc-fallback-sem-alvo](specs/npc-fallback-sem-alvo.md) `done`:** rota NPC
+   sem alvo não devolve mais "Ninguém responde." (o quester perdia 7+ turnos).
+   `npc_layers.npcs_in_scene` resolve alvo (NPC em cena → aliado presente, R1);
+   sem candidato → `npc_actor` delega ao `storyteller` (nova aresta condicional
+   em main.py) que narra a ausência + gancho (R2); pergunta sobre missão injeta
+   o beat atual no contexto do NPC (R4, `_mission_hint_block`). **+9
+   `test_npc_fallback`.** Mock quester/npc_only 50t: **0 "Ninguém responde"**.
+   Smoke real: aliado cita objetivo; sozinho → gancho rico.
+7. **Suíte:** 835 → **844 offline verdes** + 1 skip.
 
-**Próximo:** ordem de dev #5 —
-[npc-fallback-sem-alvo](specs/npc-fallback-sem-alvo.md) (fim do "Ninguém responde.").
+**Próximo:** ordem de dev #6 —
+[beats-visibilidade-ptbr](specs/beats-visibilidade-ptbr.md) (sanitizar segredo
++ PT-BR nos beats).
 
 ---
 

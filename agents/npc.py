@@ -5,6 +5,7 @@ Contém tanto a fábrica de NPCs (generate_new_npc) quanto o ator (npc_actor_nod
 """
 import json
 import os
+import re
 from typing import Dict, Any, List, Optional
 from pydantic import BaseModel, Field
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
@@ -180,15 +181,48 @@ def generate_new_npc(name, context=""):
             "combat_stats": {"hp": 10, "ac": 10, "attacks": []}
         }
 
+_MISSION_RE = re.compile(
+    r"miss|objetiv|quest|o que.*(faç|faz|devo)|para onde|pr[óo]ximo passo|tarefa|rumo")
+
+
+def _mission_hint_block(state: GameState, last_msg: str) -> str:
+    """spec npc-fallback-sem-alvo (R4): se a fala do jogador pergunta sobre a
+    missão/objetivo, devolve um bloco com o beat atual do plano para o NPC
+    orientar. Pura — testável sem invocar o LLM. Vazio se não é pergunta de
+    missão ou não há beat."""
+    if not _MISSION_RE.search((last_msg or "").lower()):
+        return ""
+    plan = state.get("campaign_plan") or {}
+    beats = plan.get("beats") or []
+    step = int(plan.get("current_step", 0) or 0)
+    cur = beats[step] if 0 <= step < len(beats) else (beats[0] if beats else None)
+    desc = cur.get("description") if isinstance(cur, dict) else None
+    if not desc:
+        return ""
+    return (f"\n    <OBJETIVO_ATUAL>\n    O rumo agora: {desc}\n"
+            "    Se o jogador perguntar o que fazer/aonde ir, oriente com isto "
+            "(do seu jeito, pela sua persona).\n    </OBJETIVO_ATUAL>\n")
+
+
 # --- NÓ DE ATUAÇÃO (COM FILTRO DE IGNORÂNCIA) ---
 def npc_actor_node(state: GameState):
     messages = state.get("messages", [])
     npc_name = state.get("active_npc_name")
-    
-    if not npc_name: return {"messages": [AIMessage(content="Ninguém responde.")]}
-    
+
     # Busca dados (Prioridade: Estado -> DB -> Fallback)
     from services import npc_layers
+
+    # spec npc-fallback-sem-alvo: rota NPC sem alvo NÃO desiste com "Ninguém
+    # responde" (o quester perdia 7+ turnos assim, com Gorim na cena).
+    if not npc_name:
+        candidatos = npc_layers.npcs_in_scene(state)  # R1: NPC em cena / aliado presente
+        if candidatos:
+            npc_name = candidatos[0]
+        else:
+            # R2: ninguém para responder → o storyteller narra a solidão + gancho
+            # útil (nunca a string seca). Aresta condicional npc_actor→storyteller.
+            action = str(getattr(messages[-1], "content", "")) if messages else ""
+            return {"next": "storyteller", "npc_fallback_hint": action}
 
     npcs_db = state.get("npcs", {})
     npc_data = npcs_db.get(npc_name)
@@ -289,6 +323,11 @@ def npc_actor_node(state: GameState):
             ultima_fala = _c
             break
 
+    # spec npc-fallback-sem-alvo (R4): pergunta sobre missão/objetivo → o NPC
+    # orienta com o beat atual do plano (antes: silêncio quando o quester
+    # perguntava "o que a missão exige agora?").
+    objetivo_block = _mission_hint_block(state, str(last_msg))
+
     system_msg = SystemMessage(content=f"""
     <ROLE>
     Você é {npc_data.get('name')}.
@@ -311,7 +350,7 @@ def npc_actor_node(state: GameState):
     <MEMORIA_RELEVANTE>
     {relevant_memory or "—"}
     </MEMORIA_RELEVANTE>
-
+    {objetivo_block}
     {pack.world_state_block}
     (O mundo mudou desde que você o conheceu? O estado atual acima é a verdade de AGORA.)
 
