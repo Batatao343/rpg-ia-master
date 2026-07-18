@@ -16,8 +16,49 @@ class RouteType(str, Enum):
     STORY = "storyteller"
     COMBAT = "combat_agent"
     NPC = "npc_actor"
-    LOOT = "loot" 
+    LOOT = "loot"
     NONE = "none"
+
+# spec combate-lifecycle (R3): combate ATIVO que não recebe rota de combate por
+# N turnos seguidos é "órfão" — expira sozinho (rede de segurança; com R1+R2 quase
+# nunca dispara).
+COMBAT_IDLE_EXPIRE = 3
+
+
+def _last_human_text(messages) -> str:
+    """Texto da última fala do jogador (para detectar viagem no gate de combate)."""
+    for m in reversed(messages or []):
+        if getattr(m, "type", "") == "human":
+            return str(getattr(m, "content", "") or "")
+    return ""
+
+
+def _combat_gate(state: GameState, world: dict, combat: dict):
+    """Gate determinístico quando `combat.active` (spec combate-lifecycle):
+    - R2: força `combat_agent` (bloqueia npc/loot; conversa segue pro combate que narra).
+    - R1: ação de VIAGEM não teleporta — vira tentativa de fuga (flag + destino).
+    - R3: combate órfão (idle_turns >= N) expira, limpando TUDO (R5)."""
+    from world_utils import find_travel_destination
+
+    idle = int(combat.get("idle_turns", 0)) + 1
+    if idle >= COMBAT_IDLE_EXPIRE:
+        print("🧟 [COMBAT] Combate órfão expirou (idle) — encerrando.")
+        cleared = {"active": False, "round": combat.get("round", 1),
+                   "order": combat.get("order", []), "idle_turns": 0}
+        return {"next": RouteType.STORY.value, "combat": cleared,
+                "enemies": [], "combat_target": None,
+                "messages": [SystemMessage(content="SYSTEM: COMBAT EXPIRED — "
+                             "os inimigos perdem seu rastro e o combate termina.")]}
+
+    combat["idle_turns"] = idle
+    payload = {"next": RouteType.COMBAT.value, "world": world, "combat": combat}
+    intent = _last_human_text(state.get("messages", []))
+    dest = find_travel_destination(world, intent) if intent else None
+    if dest is not None:
+        payload["combat_flee_attempt"] = True
+        payload["combat_flee_destination"] = dest["id"]
+        print(f"🏃 [COMBAT] Viagem em combate → tentativa de FUGA para {dest['name']}.")
+    return payload
 
 class RouterDecision(BaseModel):
     route: RouteType
@@ -37,7 +78,13 @@ def dm_router_node(state: GameState):
 
     world = state.get("world", {})
     loc = world.get("current_location", "Desconhecido")
-    
+
+    # spec combate-lifecycle: com combate ATIVO, o router não decide livremente —
+    # gate determinístico (força combate, converte viagem em fuga, expira órfão).
+    combat = dict(state.get("combat") or {})
+    if combat.get("active"):
+        return _combat_gate(state, world, combat)
+
     system_instruction = f"""
     Roteador de RPG. Classifique a intenção da ÚLTIMA mensagem do jogador.
     

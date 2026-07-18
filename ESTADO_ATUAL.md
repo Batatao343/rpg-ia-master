@@ -3,8 +3,9 @@
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
 > Última atualização: 2026-07-17 (sessão 18: 10 specs `approved` + ordem;
-> **embeddings-provider `done`** (Jina, RAG vivo) + **playtest-stop-gameover
-> `done`** (rota fiel + stop na morte; smoke real 3/3); 812 offline verdes)
+> **embeddings-provider `done`** (Jina) + **playtest-stop-gameover `done`**
+> (smoke real 3/3) + **combate-lifecycle `done`** (viagem=fuga, combate órfão
+> expira; smoke real ✓); 822 offline verdes)
 
 ---
 
@@ -57,11 +58,25 @@
    cada turno (rede/rate limit → timeout). **Smoke §6 real 3/3:** combate morreu
    no t14, run PAROU (aborted player_death), routes com combat_agent=6, p50=14s
    sem turnos de 1ms, $0.04 (deepseek 49 + groq 5).
-4. **Suíte:** 804 → **812 offline verdes** + 1 skip.
+4. **[combate-lifecycle](specs/combate-lifecycle.md) `done`:**
+   o router ganhou **gate determinístico de combate**
+   (`_combat_gate`): com `combat.active`, viagem NÃO teleporta — vira tentativa
+   de fuga (R1: flag `combat_flee_attempt`+destino; sucesso aplica
+   `apply_travel` no mesmo turno, enredado falha e inimigos agem); npc/loot são
+   bloqueados → `combat_agent` (R2); combate órfão (idle_turns) expira em 3
+   turnos (R3). `combat_node` zera `idle_turns` e SEMPRE zera `active` no fim
+   (R5 — antes fuga com inimigo vivo deixava flag zumbi). Nova invariante
+   `combat.zombie` (R4, `error`, idle≥5). `state.py` documenta `combat.idle_turns`
+   + `combat_flee_attempt`/`combat_flee_destination`. **+10
+   `test_combat_lifecycle`.** Harness mock 12×50t: **492 turnos, 0 combat.zombie,
+   maior sequência de combate ativo = 4t (era 59)**. Smoke §6 real: "Viajo para
+   X" em combate → narrou FUGA e viajou só após escapar (nunca teleporte),
+   combate limpo.
+5. **Suíte:** 812 → **822 offline verdes** + 1 skip.
 
-**Próximo:** ordem de dev #3 —
-[combate-lifecycle](specs/combate-lifecycle.md) (usa a rota fiel do #2 na
-invariante `combat.zombie`).
+**Próximo:** ordem de dev #4 —
+[pos-saque-recuperacao](specs/pos-saque-recuperacao.md) (depende do estado de
+combate confiável do #3).
 
 ---
 
@@ -247,6 +262,13 @@ Auditoria 2026-07-13: **12/12 sites de produção blindados** (verificado).
 Bugs históricos: TODOS fechados (4 da sessão 2026-06-26 → Fases 4.3/4.6 e spec
 npcs-3-camadas; 6 do transcrito real → fix-playtest-achados; 8 da auditoria de
 segurança → sessão 14, tabela completa no `CHANGELOG.md`).
+
+**Achado (pré-existente, agora visível com RAG vivo):** o archivist às vezes
+recebe do LLM `MemoryUpdate.important_facts` como lista de **dicts**
+(`{role,content}`) em vez de strings → 4 validation errors do Pydantic, cai no
+**fallback de texto** (fatos/crônica do turno perdidos). Não derruba o turno
+(guard OK), mas perde memória. Candidato a fix num passe do archivist (coagir
+para string no schema/normalização). Visto nos smokes reais do #2 e #3.
 
 **Pendências abertas (não são bugs de código):**
 

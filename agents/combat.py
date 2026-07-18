@@ -422,19 +422,30 @@ def combat_node(state: GameState):
     else:
         combat_meta["round"] = combat_meta.get("round", 1) + 1
         combat_meta["active"] = True
+    # combate-lifecycle (R3): combat_node RECEBEU rota de combate → zera o
+    # contador de ociosidade (só cresce quando o combate fica órfão do router).
+    combat_meta["idle_turns"] = 0
 
     # A IA identifica a ação do jogador.
     intent = _last_human_text(messages)
     action = _parse_combat_action(player, active, intent)
 
-    # spec fix-playtest-achados (R5): FUGA do jogador — determinística, ANTES de
-    # resolver. Não-enredado escapa (rompe o cerco e sai do combate); enredado NÃO
-    # foge (gate 4.2). Antes o regex só bloqueava o rooted — a fuga em si nunca era
-    # resolvida (o texto virava um ataque). Agora `flee` encerra o combate.
-    if re.search(r"\bfuj|fugir|escap|retir|recu|corr[oe]\b", intent.lower()):
+    # FUGA do jogador — determinística, ANTES de resolver. Não-enredado escapa
+    # (rompe o cerco e sai do combate); enredado NÃO foge (gate 4.2).
+    #  - fix-playtest-achados (R5): fuga por TEXTO ("fujo", "corro").
+    #  - combate-lifecycle (R1): VIAGEM durante combate — o router marca
+    #    `combat_flee_attempt` + `combat_flee_destination`; a fuga bem-sucedida
+    #    aplica a viagem no mesmo turno (não teleporta sem passar pela fuga).
+    flee_dest_id = None
+    flee_requested = bool(re.search(r"\bfuj|fugir|escap|retir|recu|corr[oe]\b", intent.lower()))
+    if state.get("combat_flee_attempt"):
+        flee_requested = True
+        flee_dest_id = state.get("combat_flee_destination")
+    if flee_requested:
         if cm.has_control(player, "root"):
             action = {"ability_id": "ataque_basico", "target": "", "is_allowed": False,
                       "reason": f"{player.get('name','O herói')} está ENREDADO — impossível fugir."}
+            flee_dest_id = None  # fuga falhou → sem viagem; inimigos agem
         else:
             action = {"flee": True, "ability_id": "ataque_basico", "target": "",
                       "is_allowed": True, "reason": ""}
@@ -569,7 +580,10 @@ def combat_node(state: GameState):
     }
     if bk_changed:
         result["bestiary_knowledge"] = bestiary_knowledge
-    combat_meta["active"] = bool(active_after)
+    # combate-lifecycle (R5): fim de combate (vitória/fuga/expiração) SEMPRE zera
+    # o `active`. Antes, herói que fugia com inimigos vivos deixava active=True
+    # (combat_over mas bool(active_after) verdadeiro) — flag zumbi.
+    combat_meta["active"] = not combat_over
 
     # Fase 4.5: party atualizada volta ao estado; aliado canônico morto vira
     # npc_killed (actor=enemy) — crônica/quests órfãs/cascata 2.7 reagem de graça.
@@ -644,5 +658,20 @@ def combat_node(state: GameState):
             result["world"].pop("encounter_surprise", None)
         else:
             result["world"] = surprise_world_update
+
+    # combate-lifecycle (R1): fuga bem-sucedida com destino → aplica a viagem no
+    # MESMO turno (o herói rompe o cerco E se move). Sem destino (fuga por texto),
+    # só sai do combate. Limpa a flag de tentativa (one-shot).
+    if hero_fled and flee_dest_id:
+        import world_utils as wu
+        from gamedata import get_location
+        dest = get_location(flee_dest_id)
+        if dest:
+            base_world = result.get("world") or wu.ensure_world(dict(state.get("world") or {}))
+            result["world"] = wu.apply_travel(base_world, dest)
+            logs.append(f"{player.get('name','O herói')} escapa rumo a {dest['name']}.")
+    if state.get("combat_flee_attempt"):
+        result["combat_flee_attempt"] = False
+        result["combat_flee_destination"] = None
 
     return result

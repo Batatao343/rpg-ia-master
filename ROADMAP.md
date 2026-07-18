@@ -317,7 +317,9 @@ testes offline verdes.**
      **✅ `done` (2026-07-18): 812 verdes; 552 turnos mock 0 rota vazia; smoke
      real 3/3 (combate parou no t14, combat_agent contado, p50=14s).**
   3. [combate-lifecycle](specs/combate-lifecycle.md) — viagem=fuga, combate
-     órfão expira (achado C)
+     órfão expira (achado C).
+     **✅ `done` (2026-07-18): 822 verdes; 492 turnos mock 0 combat.zombie
+     (combate ativo ≤4t vs 59); smoke real (viagem=fuga narrada, nunca teleporte).**
   4. [pos-saque-recuperacao](specs/pos-saque-recuperacao.md) — poção + carência
      + beat de recuperação (achado B)
   5. [npc-fallback-sem-alvo](specs/npc-fallback-sem-alvo.md) — fim do "Ninguém

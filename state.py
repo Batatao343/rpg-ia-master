@@ -276,8 +276,16 @@ class GameState(TypedDict):
     loot_source: Optional[str]
 
     # --- Combate determinístico ---
-    # {"round": int, "active": bool, "order": [{"id","name","side","init"}]}
+    # {"round": int, "active": bool, "order": [{"id","name","side","init"}],
+    #  "idle_turns": int}  — idle_turns (spec combate-lifecycle R3): turnos com
+    #  combate ativo SEM rota de combate; o router incrementa, o combat_node zera,
+    #  em >=3 o combate órfão expira. Sem migration (dict aberto, default 0).
     combat: Optional[Dict]
+
+    # spec combate-lifecycle (R1): o router marca que a ação de VIAGEM durante o
+    # combate deve virar tentativa de fuga rumo a este destino (não teleporta).
+    combat_flee_attempt: Optional[bool]
+    combat_flee_destination: Optional[str]
 
     # --- Fase 2.5: mundo estruturado (LLM propõe, motor aplica) ---
     event_log: List[GameEvent]            # append-only; auditoria do que mudou

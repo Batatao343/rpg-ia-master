@@ -1,6 +1,9 @@
 # SPEC — Ciclo de vida do combate (viagem = fuga; combate órfão expira)
 
-> **Status:** `approved` (2026-07-17 — ordem de dev: **3/8**; após playtest-stop-gameover — invariante R4 usa rota fiel)
+> **Status:** `done` (2026-07-18 — 822 offline verdes; harness mock 492 turnos
+> 0 combat.zombie (maior sequência 4t vs 59 antes); smoke §6 real: viagem em
+> combate narrou FUGA e viajou só após escapar (nunca teleporte), combate limpo
+> active=False. Ordem de dev: **3/8**)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
 > **Depende de:** fix-playtest-achados (fuga do jogador, `done`)
 > **Desbloqueia:** pos-saque-recuperacao (estado de combate confiável)
@@ -88,12 +91,19 @@ determinísticas de entrada/saída.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R5 com testes
-- [ ] Replay do cenário do quester (mock, combate + 10 turnos de story) termina
-  sem `combat.active`
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo
-- [ ] Saves antigos continuam carregando (combat dict sem `idle_turns` → default 0)
+- [x] R1–R5 com testes (`tests/test_combat_lifecycle.py`, 10 casos)
+- [x] Replay do cenário do quester (mock, combate + story) termina sem
+  `combat.active` — harness 12 perfis × 50t: **492 turnos, 0 `combat.zombie`,
+  maior sequência de combate ativo = 4 turnos** (antes: 59)
+- [x] `uv run pytest` verde (suíte completa offline) — **822 passed**
+- [x] Guard de FallbackLLM em todo `with_structured_output` novo — o gate de
+  combate é 100% determinístico (nenhum structured output novo)
+- [x] Saves antigos continuam carregando (combat dict sem `idle_turns` → default 0)
+- [x] Smoke §6 com LLM real — "Viajo para X" em combate: router logou tentativa
+  de FUGA, narração de fuga (correu, o lobo hesitou e recuou), viajou p/
+  pm_profundezas SÓ após escapar (nunca teleporte), combate `active=False`,
+  enemies=[]. Item 2 (vitória→inativo) é o mesmo caminho R5 (`active = not
+  combat_over`), provado em real
 
 ## 6. Smoke test com LLM real
 

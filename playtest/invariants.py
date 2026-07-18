@@ -316,11 +316,31 @@ def check_lifecycle(state: dict, prev: Optional[dict], turn: int) -> List[Violat
     return []
 
 
+# spec combate-lifecycle (R4): combate ativo por muitos turnos sem receber rota
+# de combate = "zumbi" (o bug do playtest longo: combat.active True por 59 turnos).
+# `idle_turns` (mantido pelo router/combat_node) é o contador; R3 deveria expirar
+# em 3, então idle >= 5 só sobra se R3 falhou — daí severidade `error`.
+COMBAT_ZOMBIE_IDLE = 5
+
+
+def check_combat_zombie(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    combat = state.get("combat") or {}
+    if not combat.get("active"):
+        return []
+    idle = int(combat.get("idle_turns", 0) or 0)
+    if idle >= COMBAT_ZOMBIE_IDLE:
+        return [_V("combat.zombie", "error", turn,
+                   f"combate ativo há {idle} turnos sem rota de combate "
+                   f"(R3 deveria ter expirado em {COMBAT_ZOMBIE_IDLE})",
+                   idle_turns=idle)]
+    return []
+
+
 Check = Callable[[dict, Optional[dict], int], List[Violation]]
 
 CHECKS: List[Check] = [
     check_vitals, check_economy, check_entities, check_world, check_knowledge,
-    check_lifecycle, check_downed,
+    check_lifecycle, check_downed, check_combat_zombie,
 ]
 
 
