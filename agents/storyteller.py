@@ -157,7 +157,7 @@ def _npc_fallback_clause(state: GameState) -> str:
 
 
 def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text: str,
-                  game_id: str = "", home_id: str = "") -> Dict[str, Dict]:
+                  game_id: str = "", home_id: str = "", turn: int = 0) -> Dict[str, Dict]:
     from services import npc_layers
 
     existing_lower = {name.lower(): name for name in npcs.keys()}
@@ -166,7 +166,8 @@ def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text
         canonical = existing_lower[new_name.lower()]
         new_npcs = dict(npcs)
         if isinstance(new_npcs.get(canonical), dict):
-            new_npcs[canonical] = {**new_npcs[canonical], "in_scene": True}
+            new_npcs[canonical] = {**new_npcs[canonical], "in_scene": True,
+                                   "last_seen_turn": turn}
         return new_npcs
     tpl = generate_new_npc(new_name, context=f"Local: {loc}. Cena: {narrative_text}")
     if not tpl: return npcs
@@ -175,7 +176,9 @@ def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text
         "name": tpl["name"], "role": tpl["role"], "persona": tpl["persona"],
         "location": loc, "relationship": tpl.get("initial_relationship", 5),
         "memory": [], "last_interaction": "",
-        "attributes": tpl.get("attributes", {}), "combat_stats": tpl.get("combat_stats", {})
+        "attributes": tpl.get("attributes", {}), "combat_stats": tpl.get("combat_stats", {}),
+        # spec encontros-dedupe (R1/R2): vínculo de local + turnos p/ cooldown/invariante.
+        "created_turn": turn, "last_seen_turn": turn,
     }
     # spec npcs-3-camadas: quem a cena introduziu está EM cena e é conhecido.
     novo = npc_layers.ensure_npc_fields(novo, game_id, home_location_id=home_id,
@@ -263,8 +266,15 @@ def storyteller_node(state: GameState):
                                   bestiary_knowledge=state.get("bestiary_knowledge"),
                                   projection=state.get("world_projection"),
                                   player_level=_plevel)
+        # spec encontros-dedupe (R3): não repete o MESMO template de encontro 2x
+        # seguidas no mesmo local (o mundo não é um carrossel).
+        if enc and enc.get("hint") and enc.get("hint") == world.get("last_encounter_id") \
+                and world.get("last_encounter_loc") == world.get("current_location_id"):
+            enc = None
         if enc:
             world["last_encounter_turn"] = turn
+            world["last_encounter_id"] = enc.get("hint")
+            world["last_encounter_loc"] = world.get("current_location_id")
             danger = int(world.get("danger_level", 1) or 1)
             base_p = rested_player if rested_player is not None else dict(state.get("player") or {})
 
@@ -332,7 +342,10 @@ def storyteller_node(state: GameState):
             world_note = ""
 
     loc = world.get("current_location", "")
-    existing_npcs = list(state.get("npcs", {}).keys())
+    # spec encontros-dedupe (R1): só NPCs vinculados ao local/em cena/party —
+    # NPC gerado em outro lugar não é reciclado nesta cena.
+    from services.npc_layers import npcs_for_context
+    existing_npcs = npcs_for_context(state)
     
     # --- Contexto Híbrido ---
     game_id = state.get("game_id")
@@ -491,9 +504,11 @@ def storyteller_node(state: GameState):
             npcs = npc_layers.reset_scene(npcs)
         new_npcs = npcs
         home_id = world.get("current_location_id", "")
+        _turn = int(world.get("turn_count", 0) or 0)
         for new_name in update.introduced_npcs:
             new_npcs = _with_new_npc(new_npcs, new_name, loc, narrative_text,
-                                     game_id=str(game_id or ""), home_id=home_id)
+                                     game_id=str(game_id or ""), home_id=home_id,
+                                     turn=_turn)
         for gone_name in getattr(update, "npcs_left_scene", []) or []:
             key = next((k for k in new_npcs if k.lower() == str(gone_name).lower()), None)
             if key and isinstance(new_npcs.get(key), dict):

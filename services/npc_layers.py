@@ -110,6 +110,34 @@ def npcs_in_scene(state: Dict) -> List[str]:
     return out
 
 
+# spec encontros-dedupe (R2): NPC gerado descartável não reaparece por N turnos.
+ENCOUNTER_COOLDOWN_TURNS = 20
+
+
+def npcs_for_context(state: Dict) -> List[str]:
+    """spec encontros-dedupe (R1/R2): NPCs elegíveis para o CONTEXTO do narrador.
+    Entram: quem está `in_scene`, membros de party, e NPCs VINCULADOS ao local
+    atual (`home_location_id`). Um NPC gerado por encontro fica preso ao local
+    onde surgiu — não vaza para outras cenas (era o carrossel de templates:
+    'Sobrevivente moribundo' em 3 locais em 6 turnos). NPC sem vínculo
+    (`home_location_id` vazio) só aparece se `in_scene`/party."""
+    world = state.get("world") or {}
+    loc = world.get("current_location_id", "") or ""
+    party_names = {c.get("name") for c in (state.get("party") or [])
+                   if isinstance(c, dict)}
+    out: List[str] = []
+    for name, npc in (state.get("npcs") or {}).items():
+        if not isinstance(npc, dict):
+            continue
+        if is_in_scene(npc) or name in party_names:
+            out.append(name)
+            continue
+        home = npc.get("home_location_id") or ""
+        if home and loc and home == loc:
+            out.append(name)
+    return out
+
+
 def reset_scene(npcs: Dict[str, dict]) -> Dict[str, dict]:
     """Viagem: ninguém teleporta junto — in_scene=False para todos (R5).
     (Companions de party têm estado próprio e não vivem neste dict.)"""

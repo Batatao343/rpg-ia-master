@@ -315,7 +315,10 @@ def build_context_pack(state: Dict, query: str, purpose: str,
 
     world = state.get("world", {}) or {}
     current_loc = world.get("current_location", "") or ""
-    scene_entities = list((state.get("npcs", {}) or {}).keys())
+    # spec encontros-dedupe (R1): NPCs vinculados ao local/em cena/party — não
+    # arrasta NPC gerado de outra cena para os fatos deste contexto.
+    from services.npc_layers import npcs_for_context
+    scene_entities = npcs_for_context(state)
     if current_loc:
         scene_entities.append(current_loc)
 

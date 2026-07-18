@@ -7,7 +7,8 @@
 > (smoke real 3/3) + **combate-lifecycle `done`** + **pos-saque-recuperacao
 > `done`** (poção+carência+beat) + **npc-fallback-sem-alvo `done`** (fim do
 > "Ninguém responde.") + **beats-visibilidade-ptbr `done`** (segredo não vaza
-> por beat; beats sempre pt-BR); 855 offline verdes)
+> por beat) + **encontros-dedupe `done`** (NPC gerado preso ao local); 862
+> offline verdes)
 
 ---
 
@@ -102,11 +103,19 @@
    **Achado F resolvido:** o "beat em inglês" era o **fallback template** (estava
    em inglês) — traduzido. **+11 `test_beats_visibilidade`.** Smoke real: 3
    planos pt-BR sem segredo.
-8. **Suíte:** 844 → **855 offline verdes** + 1 skip.
+8. **[encontros-dedupe](specs/encontros-dedupe.md) `done`:** NPC gerado não
+   vira mais carrossel de template ('Sobrevivente moribundo' em 3 locais em 6
+   turnos). `npc_layers.npcs_for_context` filtra o contexto do narrador por
+   vínculo de local (`home_location_id`) + in_scene/party (R1) — usado pelo
+   storyteller e pelo `context_builder`; `_with_new_npc` carimba
+   `created_turn`/`last_seen_turn`. R3: storyteller não repete o mesmo template
+   de encontro 2× no mesmo local (`world.last_encounter_id`). Invariante
+   `narrative.recycled_npc` (R4). **+7 `test_encontros_dedupe`.** Smoke real: NPC
+   gerado preso ao local (não vaza p/ outro).
+9. **Suíte:** 855 → **862 offline verdes** + 1 skip.
 
-**Próximo:** ordem de dev #7 —
-[encontros-dedupe](specs/encontros-dedupe.md) (NPC gerado com vínculo de local
-+ cooldown).
+**Próximo:** ordem de dev #8 (última) —
+[polish-prosa](specs/polish-prosa.md) (anti-repetição, 2ª pessoa, menu de opções).
 
 ---
 

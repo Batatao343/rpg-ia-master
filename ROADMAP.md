@@ -334,7 +334,9 @@ testes offline verdes.**
      achado F era o fallback template em inglês (traduzido); smoke real 3 planos
      pt-BR sem segredo.**
   7. [encontros-dedupe](specs/encontros-dedupe.md) — NPC gerado com vínculo de
-     local + cooldown (achado G)
+     local + cooldown (achado G).
+     **✅ `done` (2026-07-18): 862 verdes; contexto filtrado por local; smoke real
+     (NPC gerado não vaza p/ outro local).**
   8. [polish-prosa](specs/polish-prosa.md) — anti-repetição, 2ª pessoa na
      morte, menu de opções (achado H)
 - Faltas de gameplay sentidas: quests não puxam pro mundo (quester: 1 local em

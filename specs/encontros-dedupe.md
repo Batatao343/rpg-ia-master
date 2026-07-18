@@ -1,6 +1,7 @@
 # SPEC — Dedupe/cooldown de encontros e NPCs reciclados
 
-> **Status:** `approved` (2026-07-17 — ordem de dev: **7/8**; melhor após embeddings-provider — toca context_builder)
+> **Status:** `done` (2026-07-18 — 862 offline verdes; smoke real: NPC gerado
+> fica preso ao local de origem (não vaza p/ outro local). Ordem de dev: **7/8**)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
 > **Depende de:** npcs-3-camadas (`done`), Fase 2.8 context builder (`done`)
 > **Desbloqueia:** —
@@ -79,10 +80,21 @@ reusa porque estão "à mão".
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R4 com testes
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Saves antigos continuam carregando (campos novos opcionais)
-- [ ] Cache `npc_database.json` antigo continua legível (campos ausentes ok)
+- [x] R1–R4 com testes (`tests/test_encontros_dedupe.py`, 7 casos)
+- [x] `uv run pytest` verde (suíte completa offline) — **862 passed**
+- [x] Saves antigos continuam carregando (campos novos opcionais; `npcs_for_context`
+  trata `home_location_id` ausente como sem-vínculo)
+- [x] Cache `npc_database.json` antigo continua legível (campos ausentes ok)
+- [x] Smoke §6 real — NPC gerado (LLM real) fica preso ao local de origem:
+  aparece no contexto do pântano, NÃO vaza para o Anel Dourado; run explorador
+  real (3 locais) com 0 violações `narrative.recycled_npc`
+
+> Nota de escopo: R2 (cooldown de 20 turnos) — a anti-reciclagem entre locais é
+> garantida ESTRUTURALMENTE pelo vínculo de local (R1): NPC gerado fora do local
+> atual não entra no prompt, logo o LLM não pode reusá-lo. `last_seen_turn`/
+> `ENCOUNTER_COOLDOWN_TURNS` ficam gravados para uso futuro; a invariante R4
+> cobre o caso residual. R3 evita repetir o mesmo template de encontro 2× no
+> mesmo local (`world.last_encounter_id`/`last_encounter_loc`).
 
 ## 6. Smoke test com LLM real
 

@@ -332,11 +332,33 @@ def check_downed_recovery(state: dict, prev: Optional[dict], turn: int) -> List[
                "pós-Saque sem caminho de recuperação (nem poção nem carência)")]
 
 
+def check_recycled_npc(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    """spec encontros-dedupe (R4): NPC GERADO (tem `created_turn`) aparecendo
+    EM CENA fora do local onde nasceu = sintoma de reciclagem (o 'Sobrevivente
+    moribundo' em 3 locais). Com o vínculo de local (R1) isto não deve ocorrer;
+    o invariante denuncia se um bug furar o gate."""
+    out: List[Violation] = []
+    loc = (state.get("world") or {}).get("current_location_id", "") or ""
+    if not loc:
+        return out
+    for name, npc in (state.get("npcs") or {}).items():
+        if not isinstance(npc, dict):
+            continue
+        home = npc.get("home_location_id") or ""
+        if (npc.get("created_turn") is not None and npc.get("in_scene")
+                and home and home != loc):
+            out.append(_V("narrative.recycled_npc", "warning", turn,
+                          f"NPC gerado '{name}' em cena fora do local de origem "
+                          f"(origem={home}, atual={loc})", npc=name, home=home, loc=loc))
+    return out
+
+
 Check = Callable[[dict, Optional[dict], int], List[Violation]]
 
 CHECKS: List[Check] = [
     check_vitals, check_economy, check_entities, check_world, check_knowledge,
     check_lifecycle, check_downed, check_combat_zombie, check_downed_recovery,
+    check_recycled_npc,
 ]
 
 
