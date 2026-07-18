@@ -106,6 +106,14 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
     player = final.get("player", {}) or {}
     quests = [q for q in (final.get("quests") or []) if isinstance(q, dict)]
 
+    # spec playtest-stop-gameover (R4): local/causa da morte, do event_log.
+    death_ev = next(
+        (ev for ev in reversed(final.get("event_log") or [])
+         if isinstance(ev, dict) and ev.get("type") == "player_died"), None)
+    death_payload = (death_ev or {}).get("payload", {}) or {}
+    death_location = death_payload.get("location") or None
+    death_cause = death_payload.get("killer") or None
+
     # spec balanceamento-early-game (R5): métricas de balanço da campanha.
     first_death_turn = next(
         (r["turn"] for r in turn_records
@@ -137,6 +145,8 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         "latency_ms": {"p50": _percentile(latencies, 50), "p95": _percentile(latencies, 95)},
         "deaths": 1 if final.get("game_over") else 0,
         "first_death_turn": first_death_turn,
+        "death_location": death_location,
+        "death_cause": death_cause,
         "downed_count": downed_count,
         "avg_hp_pct_after_combat": avg_hp_pct_after_combat,
         "replan_count": replan_count,

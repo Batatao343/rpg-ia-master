@@ -165,6 +165,20 @@ def render_markdown(report: RunReport) -> str:
             f"| {s.get('fell_back_turns',0)} | {'sim' if s.get('mock') else 'não'} |")
     L.append("")
 
+    # spec playtest-stop-gameover (R4): morte como linha própria (turno/local/causa).
+    deaths = [s for s in report.campaigns if int(s.get("deaths", 0))]
+    if deaths:
+        L.append("## Mortes")
+        L.append("")
+        L.append("| perfil | seed | turno | local | causa |")
+        L.append("|---|---|---|---|---|")
+        for s in deaths:
+            L.append(
+                f"| {s.get('profile','?')} | {s.get('seed',0)} "
+                f"| {s.get('first_death_turn') if s.get('first_death_turn') is not None else '—'} "
+                f"| {s.get('death_location') or '—'} | {s.get('death_cause') or '—'} |")
+        L.append("")
+
     L.append("## Violações")
     L.append("")
     if report.top_violations:

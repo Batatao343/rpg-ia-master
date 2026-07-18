@@ -313,7 +313,9 @@ testes offline verdes.**
      **✅ `done` (2026-07-17): 804 verdes; re-index real com Jina + smoke §6
      3/3; RAG vivo.**
   2. [playtest-stop-gameover](specs/playtest-stop-gameover.md) — harness para
-     na morte + telemetria de rota fiel (achados A+I)
+     na morte + telemetria de rota fiel (achados A+I).
+     **✅ `done` (2026-07-18): 812 verdes; 552 turnos mock 0 rota vazia; smoke
+     real 3/3 (combate parou no t14, combat_agent contado, p50=14s).**
   3. [combate-lifecycle](specs/combate-lifecycle.md) — viagem=fuga, combate
      órfão expira (achado C)
   4. [pos-saque-recuperacao](specs/pos-saque-recuperacao.md) — poção + carência

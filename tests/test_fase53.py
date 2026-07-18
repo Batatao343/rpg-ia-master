@@ -16,7 +16,9 @@ def test_jsonl_uma_linha_por_turno(tmp_path, monkeypatch):
     jsonl = os.path.join(str(tmp_path), "run1", f"{res.profile}_{res.seed}.jsonl")
     with open(jsonl, encoding="utf-8") as f:
         linhas = [json.loads(l) for l in f if l.strip()]
-    assert len(linhas) == 5
+    # 1 linha por turno REALMENTE jogado (spec playtest-stop-gameover R2: a
+    # campanha para no game_over — esse perfil/seed morre no turno 4).
+    assert len(linhas) == res.turns_completed
     assert all("turn" in r and "route" in r and "cost_usd" in r for r in linhas)
 
 

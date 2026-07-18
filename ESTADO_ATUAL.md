@@ -2,9 +2,9 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-17 (sessão 18: 10 specs `approved` + ordem
-> definida; **embeddings-provider `done`** — cadeia multi-provider + re-index
-> real com Jina; RAG VIVO de novo; 804 offline verdes)
+> Última atualização: 2026-07-17 (sessão 18: 10 specs `approved` + ordem;
+> **embeddings-provider `done`** (Jina, RAG vivo) + **playtest-stop-gameover
+> `done`** (rota fiel + stop na morte; smoke real 3/3); 812 offline verdes)
 
 ---
 
@@ -41,10 +41,27 @@
    meta jina); smoke §6 3/3 (queries PT-BR sem 429 + memória de sessão).
    ⚠️ Free tier Jina = **100k tokens/min**: re-index do Codex esgota o minuto,
    regras precisaram de ~70s de espera (não é erro).
-3. **Suíte:** 792 → **804 offline verdes** + 1 skip.
+3. **[playtest-stop-gameover](specs/playtest-stop-gameover.md) `done`:**
+   harness agora PARA no `game_over` (turno da morte é o
+   último; `aborted_reason="player_death (turno N)"`) — antes rodava 140/300
+   turnos mortos poluindo p50/rotas/custo. **Rota fiel:** `_run_turn` captura a
+   decisão do `dm_router` via streaming multi-modo (`updates`+`values`), não o
+   `next` final (combate/loot sobrescreviam); combate ativo na entrada = rota
+   `combat_agent`. Fallback pro `invoke` quando o grafo não tem `.stream`
+   (wrappers de teste). `telemetry` ganhou `death_location`/`death_cause`;
+   `report` ganhou seção **Mortes** (turno/local/causa). **+8
+   `test_playtest_harness`.** Validação mock: 12 perfis × 50t = **552 turnos
+   vivos, 0 rota vazia** (antes o perfil `combate` registrava só storyteller).
+   ⚠️ Fix colateral: run mock agora desliga embeddings reais
+   (`_offline_embeddings`) — com Jina viva no `.env`, o archivist batia na API a
+   cada turno (rede/rate limit → timeout). **Smoke §6 real 3/3:** combate morreu
+   no t14, run PAROU (aborted player_death), routes com combat_agent=6, p50=14s
+   sem turnos de 1ms, $0.04 (deepseek 49 + groq 5).
+4. **Suíte:** 804 → **812 offline verdes** + 1 skip.
 
-**Próximo:** ordem de dev #2 — [playtest-stop-gameover](specs/playtest-stop-gameover.md)
-(não depende de embeddings).
+**Próximo:** ordem de dev #3 —
+[combate-lifecycle](specs/combate-lifecycle.md) (usa a rota fiel do #2 na
+invariante `combat.zombie`).
 
 ---
 

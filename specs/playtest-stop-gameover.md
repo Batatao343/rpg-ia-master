@@ -1,6 +1,9 @@
 # SPEC — Harness para no game_over + telemetria de rota fiel
 
-> **Status:** `approved` (2026-07-17 — ordem de dev: **2/8**)
+> **Status:** `done` (2026-07-18 — 812 offline verdes; harness mock 552 turnos
+> 0 rota vazia; smoke §6 real 3/3: combate morreu no t14, run PAROU
+> (aborted player_death), routes com combat_agent=6, p50=14s sem turnos de 1ms,
+> $0.04. Ordem de dev: **2/8**)
 > **Criada:** 2026-07-16 · **Atualizada:** 2026-07-16
 > **Depende de:** Fase 5 (`done`)
 > **Desbloqueia:** métricas confiáveis p/ qualquer tuning futuro
@@ -72,10 +75,15 @@ de 100 turnos de perfil de combate).
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R5 com testes
-- [ ] Rodar os 12 perfis mock 50 turnos: nenhum summary com rota vazia em turno vivo
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Saves antigos continuam carregando (não toca persistência)
+- [x] R1–R5 com testes (`tests/test_playtest_harness.py`, 8 casos)
+- [x] Rodar os 12 perfis mock 50 turnos: nenhum summary com rota vazia em turno
+  vivo — **552 turnos vivos, 0 rota vazia** (combat_agent 115 / storyteller 216
+  / loot 100 / npc_actor 121)
+- [x] `uv run pytest` verde (suíte completa offline) — **812 passed**
+- [x] Saves antigos continuam carregando (não toca persistência)
+- [x] Smoke §6 com LLM real — combate morreu no t14, run PAROU
+  (`aborted_reason=player_death (turno 14)`), `routes` com `combat_agent`=6,
+  p50=14s (0 turnos ≤5ms), morte em Pântano da Melancolia/Sapo-Boi Ácido, $0.04
 
 ## 6. Smoke test com LLM real
 

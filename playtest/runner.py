@@ -192,6 +192,27 @@ def _force_mock(active: bool):
             os.environ["RPG_FORCE_MOCK"] = prev
 
 
+@contextlib.contextmanager
+def _offline_embeddings(active: bool):
+    """Em modo MOCK, desliga embeddings REAIS (RAG). Desde a spec
+    embeddings-provider há provider vivo (Jina) no `.env`: sem isto, o archivist
+    de cada turno bateria na API real durante um playtest offline — rede, custo,
+    rate limit (100k tokens/min → lentidão/timeout) e não-determinismo. Em
+    `--real` os embeddings reais seguem ativos (fazem parte do teste)."""
+    if not active:
+        yield
+        return
+    import rag
+    orig_get, orig_for = rag.get_embeddings, rag._embeddings_for_index
+    rag.get_embeddings = lambda: None
+    rag._embeddings_for_index = lambda _p: None
+    try:
+        yield
+    finally:
+        rag.get_embeddings = orig_get
+        rag._embeddings_for_index = orig_for
+
+
 def _clear_caches() -> None:
     """Zera caches globais de dados/grafo entre campanhas (spec §7). npc_database
     é cache legítimo de dedupe global — não é limpo aqui."""
@@ -210,6 +231,40 @@ def _last_ai_text(state: dict) -> str:
         if content and getattr(msg, "type", "") != "human":
             return str(content)
     return ""
+
+
+# Rotas válidas do router (a DECISÃO em `next`); "loot" é a chave da aresta.
+_ROUTER_ROUTES = {"storyteller", "combat_agent", "npc_actor", "loot"}
+
+
+def _run_turn(game_graph, state: dict) -> tuple[dict, str]:
+    """Invoca o grafo capturando a DECISÃO do `dm_router` (spec R3): a rota fiel
+    é o `next` que o router escolheu, não o `next` do estado final (combate/loot
+    sobrescrevem). Se o combate está ATIVO na entrada do turno, a rota é
+    `combat_agent` (lock de combate). Devolve (estado_final, rota).
+
+    Usa streaming multi-modo: `updates` expõe o dict parcial de cada nó (lê o
+    `next` do dm_router na primeira aparição); `values` dá o estado completo
+    (o último = resultado equivalente ao `.invoke`)."""
+    combat_on_entry = bool((state.get("combat") or {}).get("active"))
+    stream = getattr(game_graph, "stream", None)
+    if stream is None:
+        # Grafo sem streaming (ex.: wrapper de teste que só implementa invoke):
+        # cai pro invoke; rota vem do estado final (best-effort, como antes).
+        new_state = game_graph.invoke(state)
+        route = "combat_agent" if combat_on_entry else (new_state.get("next") or "")
+        return new_state, route
+    router_next = ""
+    final = state
+    for mode, chunk in stream(state, stream_mode=["updates", "values"]):
+        if mode == "updates" and isinstance(chunk, dict):
+            upd = chunk.get("dm_router")
+            if isinstance(upd, dict) and not router_next:
+                router_next = upd.get("next") or ""
+        elif mode == "values":
+            final = chunk
+    route = "combat_agent" if combat_on_entry else router_next
+    return final, route
 
 
 # --- runner -----------------------------------------------------------------
@@ -251,7 +306,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
             "latency_ms": int(latency_ms), "fell_back": bool(fell_back),
         })
 
-    with _force_mock(active=not use_real_llm), _isolated_saves():
+    with _force_mock(active=not use_real_llm), \
+            _offline_embeddings(active=not use_real_llm), _isolated_saves():
         _clear_caches()
         random.seed(seed)  # reproduz MockLLM + combate da campanha inteira
         from main import app as game_graph
@@ -277,12 +333,12 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 t0 = time.monotonic()
                 events_before = len(state.get("event_log", []) or [])
                 plan_before = (state.get("campaign_plan") or {}).get("last_planned_turn")
+                combat_on_entry = bool((state.get("combat") or {}).get("active"))
                 rec = TurnRecord(turn=turn, action=action, route="", latency_ms=0)
                 try:
-                    new_state = game_graph.invoke(state)
+                    new_state, rec.route = _run_turn(game_graph, state)
                     save_game_state(new_state)
                     rec.latency_ms = int((time.monotonic() - t0) * 1000)
-                    rec.route = new_state.get("next", "") or ""
                     rec.replanned = ((new_state.get("campaign_plan") or {})
                                      .get("last_planned_turn") != plan_before)
                     rec.events_applied = len(new_state.get("event_log", []) or []) - events_before
@@ -309,13 +365,21 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 except Exception as e:
                     rec.latency_ms = int((time.monotonic() - t0) * 1000)
                     rec.error = repr(e)
-                    rec.route = state.get("next", "") or ""
+                    # rota fiel mesmo no erro: combate na entrada = combat_agent
+                    rec.route = "combat_agent" if combat_on_entry else (state.get("next", "") or "")
                     _fill_state_metrics(rec, state)
                     _attach_telemetry(rec, list(turn_events))
                     errors.append({"turn": turn, "action": action, "exc": repr(e)})
                     # mantém o estado anterior; próximo turno continua
 
                 history.append(rec)
+
+                # spec playtest-stop-gameover (R1/R2/R5): morte encerra a campanha
+                # no MESMO turno — o grafo vira memorial (main.py:54), turnos
+                # seguintes só repetiriam o memorial e poluiriam as métricas.
+                if state.get("game_over"):
+                    aborted_reason = f"player_death (turno {turn})"
+                    break
 
                 # Teto de orçamento (5.3 R6) — checado após contabilizar o turno.
                 if max_requests and llm_calls["count"] >= max_requests:
