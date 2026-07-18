@@ -1,7 +1,18 @@
 # SPEC — Refatoração do Sistema de Classes (Cinco Posturas diante do Abismo)
 
-> **Status:** `approved`
-> **Criada:** 2026-07-17 · **Atualizada:** 2026-07-17
+> **Status:** `in-progress` (2026-07-18 — **Etapa 1/8 DONE** e commitada:
+> recurso Entropia (`entropy`/`max_entropy`/`abyss_charge` no `PlayerStats`,
+> `_resource_field`→entropy, `apply_rest` recompõe integral; +5
+> `test_classes_refactor`, 881 verdes). Etapa 2 (dados das 5 classes) PRONTA em
+> `scripts/gen_classes_v2.py` (gera `classes.json`+`player_abilities.json`: 5
+> classes × 3 branches, 41 habilidades, todos os blocos tipados; validado). **NÃO
+> aplicada ainda** — o rollout troca as 10 classes antigas pelas 5 e derruba **41
+> testes em 10 arquivos** (test_fase42 buffs=14, fase41/41b árvore=13,
+> combat_heal=5, polish_sessao=3, onboarding=2, +4). Muitos testam PASSIVAS/
+> habilidades das classes antigas (hp_as_mana, party_active AC) que o novo sistema
+> SUBSTITUI por gatilhos de Entropia (etapas 3/4) — precisam ser reescritos, não
+> só ajustados. Plano abaixo (§4) segue válido; falta 2–8 num passe focado.)
+> **Criada:** 2026-07-17 · **Atualizada:** 2026-07-18
 > **Depende de:** Fase 4.1 (`progression.py` — árvore/ramos) · 4.1b (árvores de Valoria) ·
 > 4.2 (buffs/passivas tipadas) · 2.5b (traits raciais) — todas `done`
 > **Desbloqueia:** rebalanceamento de combate · reautoria de conteúdo (onboarding, bestiário de aliados)
