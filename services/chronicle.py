@@ -97,13 +97,6 @@ def _new_chapter(title: str, turn: int, location: str) -> Dict:
     return {"title": title, "started_turn": turn, "location": location, "entries": []}
 
 
-def current_chapter(chronicle: List[Dict]) -> Dict:
-    """Último capítulo; lista vazia → capítulo default (NÃO muta a lista recebida)."""
-    if not chronicle:
-        return _new_chapter(_DEFAULT_TITLE, 0, "")
-    return chronicle[-1]
-
-
 def append_entry(chronicle: List[Dict], *, text: str, turn: int,
                  kind: str, event_id: str = "") -> List[Dict]:
     """PURO: retorna cópia com a entrada no capítulo atual (cria capítulo se vazio)."""

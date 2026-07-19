@@ -33,11 +33,6 @@ def traits_catalog() -> Dict[str, dict]:
     return _traits_cache
 
 
-def clear_traits_cache() -> None:
-    global _traits_cache
-    _traits_cache = None
-
-
 def roll_hidden_traits(npc_id: str, game_id: str,
                        k_range: Tuple[int, int] = (1, 3),
                        region_tag: str = "") -> List[str]:

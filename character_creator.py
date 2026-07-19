@@ -45,10 +45,6 @@ class PlayerStatsSchema(BaseModel):
     inventory: List[str] = Field(description="Itens baseados na Região e Lore.")
     flavor_abilities: List[str] = Field(description="2 ou 3 magias/truques extras (Flavor) além da passiva.")
 
-class BackstoryAnalysis(BaseModel):
-    archetype_summary: str
-    key_traits: List[str]
-
 # --- LÓGICA AUXILIAR ---
 
 def _get_mod(score: int) -> int:

@@ -100,9 +100,6 @@ ARTIFACTS_DB = {**BASE_ARTIFACTS, **CUSTOM_ARTIFACTS}
 # Lista rápida de IDs
 ALL_ARTIFACT_IDS = list(ARTIFACTS_DB.keys())
 
-# Alias para compatibilidade
-ITEMS_DB = ARTIFACTS_DB
-
 # 3. Mundo (grafo de locais) e Temas de Classe (Fase 0)
 WORLD_MAP = load_json_data("world_map.json")
 CLASS_THEMES = load_json_data("class_themes.json")

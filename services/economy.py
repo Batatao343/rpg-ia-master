@@ -61,14 +61,6 @@ def _controller_disposition(state: dict, location_id: str) -> str:
     return "neutro"
 
 
-def regional_modifier(item_id: str, location_id: str) -> float:
-    """Item abundante na região (economy_tags do local ∩ do item) fica mais barato."""
-    loc = get_location(location_id) or {}
-    loc_tags = set(loc.get("economy_tags") or [])
-    item_tags = set((ARTIFACTS_DB.get(item_id) or {}).get("economy_tags") or [])
-    return ABUNDANT_MULT if loc_tags & item_tags else 1.0
-
-
 # ---------------------------------------------------------------------------
 # Fase 6.1 — rotas comerciais: alcançabilidade e escassez
 # ---------------------------------------------------------------------------
