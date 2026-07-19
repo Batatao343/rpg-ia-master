@@ -180,6 +180,245 @@ add("protese", "Prótese", "Médico de Campo", "cirurgiao_ferro", 2, 3,
 add("aco_no_lugar", "Aço no Lugar", "Médico de Campo", "cirurgiao_ferro", 3, 5,
     cost=3, cat="Suporte", requires=["protese"], effects=[buff("ac", 2, 3)])
 
+# --- passivas + utilitárias (spec arvores-habilidade-classes) ---------------
+# Passiva: efeito permanente ao aprender (passive_effects tipado — vocabulário
+# lido por combat_mechanics.player_passives). Utilitária: capacidade fora de
+# combate (out_of_combat: label/scope/prompt_hint — gate determinístico, LLM narra).
+
+def addp(aid, name, classe, branch_id, tier, level_req, desc, passive_effects,
+         requires=None):
+    AB[aid] = {
+        "name": name, "category": "Passiva",
+        "description": desc,
+        "cost": 0, "resource_type": "Nenhum",
+        "damage_formula": "0", "damage_type": "Físico",
+        "conditions": [], "save_stat": None, "scaling_formula": "0",
+        "classes": [classe], "branch": branch_id, "tier": tier,
+        "level_req": level_req, "requires": requires or [], "effects": [],
+        "ability_kind": "passive", "passive_effects": passive_effects,
+    }
+
+
+def addu(aid, name, classe, branch_id, tier, level_req, desc, scope, hint):
+    AB[aid] = {
+        "name": name, "category": "Utilitária",
+        "description": desc,
+        "cost": 0, "resource_type": "Nenhum",
+        "damage_formula": "0", "damage_type": "Físico",
+        "conditions": [], "save_stat": None, "scaling_formula": "0",
+        "classes": [classe], "branch": branch_id, "tier": tier,
+        "level_req": level_req, "requires": [], "effects": [],
+        "ability_kind": "utility",
+        "out_of_combat": {"label": name, "scope": scope, "prompt_hint": hint},
+    }
+
+
+# ===== DEVOTO DO ABISMO — tronco =====
+addu("convite_do_abismo", "O Convite", "Devoto do Abismo", None, 1, 1,
+     "Você sente quem, numa sala cheia, o Abismo já começou a escolher — o cansaço além do sono, o olhar que ficou tempo demais no escuro.",
+     "detection", "sente quem numa cena está tocado/marcado pelo Abismo, antes de qualquer sinal visível")
+addu("pararraios_social", "Para-raios", "Devoto do Abismo", None, 1, 1,
+     "Quando o medo de um grupo procura um alvo, você se oferece. O pânico, o motim, a acusação — tudo desce por você e se aterra.",
+     "social", "atrai para si o medo ou a raiva coletiva de uma cena, evitando pânico ou motim")
+addp("postura_do_convite", "Postura do Convite", "Devoto do Abismo", None, 1, 2,
+     "O corpo que deseja o golpe aprende exatamente onde ele cai.",
+     [{"trigger": "always", "stat": "ac", "delta": 1}])
+# — Consagrado
+addp("disciplina_do_rito", "Disciplina do Rito", "Devoto do Abismo", "consagrado", 2, 3,
+     "O rito organiza o amor: o Abismo cobra menos de quem se oferece na forma correta.",
+     [{"trigger": "charge_discount", "delta": 1}])
+addp("fervor_silencioso", "Fervor Silencioso", "Devoto do Abismo", "consagrado", 2, 4,
+     "A oração não pede nada; afia.",
+     [{"trigger": "always", "stat": "attack", "delta": 1}])
+addu("leitura_de_pressagio", "Leitura de Presságio", "Devoto do Abismo", "consagrado", 2, 3,
+     "Cinza, sangue seco, vento errado: o dia sempre avisa quem sabe ler.",
+     "investigation", "lê presságios em sinais mundanos e extrai um aviso concreto sobre o que vem")
+# — Zeloso
+addp("ciume_do_abismo", "Ciúme do Abismo", "Devoto do Abismo", "zeloso", 2, 3,
+     "Quem encosta no que é seu — no aliado, na linha, no fim que você reivindicou — sangra por isso.",
+     [{"trigger": "melee_retaliate", "name": "Ciúme do Abismo", "formula": "1d4"}])
+addp("possessao_zelosa", "Possessão Zelosa", "Devoto do Abismo", "zeloso", 2, 4,
+     "Quanto mais fundo o Abismo mora em você, mais certeiro o golpe de quem defende o que ama.",
+     [{"trigger": "carga_embrace", "stat": "attack", "per_tier": 1}])
+addu("farejar_rival", "Farejar Rival", "Devoto do Abismo", "zeloso", 2, 3,
+     "Você reconhece de longe quem mais corteja o seu amado.",
+     "detection", "identifica na cena quem também corteja o Abismo — cultista, tocado, condenado")
+# — Enlutado
+addp("luto_que_pesa", "Luto que Pesa", "Devoto do Abismo", "enlutado", 2, 3,
+     "A perda vira lastro; o lastro vira força de queda.",
+     [{"trigger": "carga_embrace", "stat": "damage", "per_tier": 1}])
+addp("vigilia_do_luto", "Vigília do Luto", "Devoto do Abismo", "enlutado", 2, 4,
+     "Quem já perdeu o que mais temia perder não tem mais para onde temer.",
+     [{"trigger": "resist", "name": "medo"}])
+addu("vozes_dos_levados", "Vozes dos Levados", "Devoto do Abismo", "enlutado", 2, 3,
+     "Diante do que sobrou, você ouve o que os levados ainda tentam contar.",
+     "investigation", "diante de restos e lugares onde o Abismo levou alguém, recompõe o que aconteceu")
+
+# ===== SANGROMANTE — tronco =====
+addu("avaliacao_de_preco", "Avaliação de Preço", "Sangromante", None, 1, 1,
+     "Tudo tem preço. Você sabe qual é — mesmo quando escondem.",
+     "social", "sabe o custo/valor real de qualquer coisa — mercadoria, favor, silêncio — mesmo quando escondido")
+addu("leitura_forense", "Leitura Forense", "Sangromante", None, 1, 1,
+     "Sangue seco conta a história inteira para quem paga na mesma moeda.",
+     "investigation", "lê feridas, sangue e corpos: o que feriu, quando, e se a dívida foi paga")
+addp("contrato_de_sangue", "Contrato de Sangue", "Sangromante", None, 1, 2,
+     "O corpo que negocia todo dia aprende a guardar mais moeda.",
+     [{"trigger": "entropy_max_bonus", "delta": 2}])
+# — Exposto
+addp("cicatriz_credencial", "Cicatriz Credencial", "Sangromante", "exposto", 2, 3,
+     "Cada cicatriz é um recibo; quem lê seu corpo sabe que você paga.",
+     [{"trigger": "carga_embrace", "stat": "attack", "per_tier": 1}])
+addp("pele_de_palco", "Pele de Palco", "Sangromante", "exposto", 2, 4,
+     "Você sangra quando decide, não quando mandam.",
+     [{"trigger": "resist", "name": "sangramento"}])
+addu("presenca_que_cala", "Presença que Cala", "Sangromante", "exposto", 2, 3,
+     "Você entra, e o preço de mexer com você fica visível.",
+     "social", "impõe presença numa cena hostil: a conversa esfria, a ameaça reconsiderada")
+# — Avaro
+addp("cofre_de_sangue", "Cofre de Sangue", "Sangromante", "avaro", 2, 3,
+     "Nada vaza, nada se perde; o cofre cresce.",
+     [{"trigger": "entropy_max_bonus", "delta": 3}])
+addp("juros_do_corpo", "Juros do Corpo", "Sangromante", "avaro", 2, 4,
+     "Todo golpe seu cobra o principal — mais juros.",
+     [{"trigger": "always", "stat": "damage", "delta": 1}])
+addu("farejar_divida", "Farejar Dívida", "Sangromante", "avaro", 2, 3,
+     "Segredos têm preço, e você sente o cheiro dos caros.",
+     "investigation", "sente o que numa cena vale caro e quem deve a quem — dívidas, chantagens, segredos com preço")
+# — Silencioso
+addp("economia_de_dor", "Economia de Dor", "Sangromante", "silencioso", 2, 3,
+     "Corte exato não desperdiça sangue — nem o seu.",
+     [{"trigger": "entropy_cost_reduction", "category": "Marcial", "delta": 1}])
+addp("corte_sem_eco", "Corte sem Eco", "Sangromante", "silencioso", 2, 4,
+     "A lâmina que não anuncia chega antes.",
+     [{"trigger": "always", "stat": "attack", "delta": 1}])
+addu("ferida_invisivel", "Ferida Invisível", "Sangromante", "silencioso", 2, 3,
+     "Nenhum médico achará a marca — nem a sua, nem a que você deixou.",
+     "medical", "fere ou trata sem deixar marca que outro exame encontre depois")
+
+# ===== CORRUPTOR — tronco =====
+addu("olho_da_ruina", "Olho da Ruína", "Corruptor", None, 1, 1,
+     "Você vê o que já está cedendo: a viga rachada, o pulmão doente, a fé quebrando.",
+     "detection", "identifica o que numa cena já está cedendo — estrutura, corpo ou vontade prestes a falhar")
+addu("rede_de_pragas", "Rede de Pragas", "Corruptor", None, 1, 1,
+     "Os pequenos decompositores contam onde estiveram e o que roeram.",
+     "investigation", "consulta ratos, vermes e insetos como informantes: o que passou por aqui, o que apodrece onde")
+addp("parceria_com_o_fim", "Parceria com o Fim", "Corruptor", None, 1, 2,
+     "Toda morte por perto é um pagamento adiantado.",
+     [{"trigger": "entropy_on_kill", "amount": 1}])
+# — Biologia
+addp("carne_receptiva", "Carne Receptiva", "Corruptor", "biologia", 2, 3,
+     "A colônia não envenena o próprio jardim.",
+     [{"trigger": "resist", "name": "veneno"}])
+addp("florescer_da_podridao", "Florescer da Podridão", "Corruptor", "biologia", 2, 4,
+     "Onde sua mão passa, o apodrecer acelera com gosto.",
+     [{"trigger": "damage_type", "damage_type": "Necrótico", "delta": 2}])
+addu("ler_doenca", "Ler Doença", "Corruptor", "biologia", 2, 3,
+     "Um olhar, e você sabe o nome da doença — e quanto tempo resta.",
+     "medical", "diagnostica doença, praga e veneno num olhar, incluindo prognóstico")
+# — Alma
+addp("eco_persistente", "Eco Persistente", "Corruptor", "alma", 2, 3,
+     "O desespero que você semeia ecoa mais fundo.",
+     [{"trigger": "damage_type", "damage_type": "Psíquico", "delta": 2}])
+addp("vontade_ja_ruida", "Vontade já Ruída", "Corruptor", "alma", 2, 4,
+     "Não se assusta quem já fez as pazes com a ruína.",
+     [{"trigger": "resist", "name": "medo"}])
+addu("cheiro_de_mentira", "Cheiro de Mentira", "Corruptor", "alma", 2, 3,
+     "Toda história mal contada apodrece por dentro; você sente onde.",
+     "social", "sente a mentira apodrecendo numa história — o ponto exato onde a versão cede")
+# — Inorgânica
+addp("toque_corrosivo", "Toque Corrosivo", "Corruptor", "inorganica", 2, 3,
+     "Tudo que você toca começa a ceder — inclusive o que o inimigo veste.",
+     [{"trigger": "basic_attack_dot", "name": "Corrosão", "dot": 1, "duration": 2}])
+addp("pele_de_oxido", "Pele de Óxido", "Corruptor", "inorganica", 2, 4,
+     "A ferrugem que você veste amortece o que a lâmina queria.",
+     [{"trigger": "always", "stat": "ac", "delta": 1}])
+addu("ponto_fraco", "Ponto Fraco", "Corruptor", "inorganica", 2, 3,
+     "Toda estrutura tem o parafuso que, cedendo, entrega o resto.",
+     "engineering", "acha o ponto exato que, cedendo, derruba uma estrutura ou trava um mecanismo")
+
+# ===== ARCANISTA CINZENTO — tronco =====
+addu("deteccao_tecnica", "Detecção Técnica", "Arcanista Cinzento", None, 1, 1,
+     "Éter ativo e residual, lidos como um instrumento lê: o quê, quando, com que vazão.",
+     "detection", "lê éter ativo/residual numa cena: o que foi conjurado, quando e com que intensidade")
+addu("engenharia_de_campo", "Engenharia de Campo", "Arcanista Cinzento", None, 1, 1,
+     "Não há mecanismo quebrado; há mecanismo mal explicado.",
+     "engineering", "conserta, desarma e reconfigura mecanismos com o que a cena oferece")
+addp("disciplina_da_caldeira", "Disciplina da Caldeira", "Arcanista Cinzento", None, 1, 2,
+     "Vazão certa, pressão certa: o Abismo passa pelo instrumento sem morar em você.",
+     [{"trigger": "charge_discount", "delta": 1}])
+# — Calibrado
+addp("valvula_extra", "Válvula Extra", "Arcanista Cinzento", "calibrado", 2, 3,
+     "Nada de desperdício: cada descarga sai pelo preço mínimo.",
+     [{"trigger": "entropy_cost_reduction", "category": "Arcano", "delta": 1}])
+addp("medidor_fino", "Medidor Fino", "Arcanista Cinzento", "calibrado", 2, 4,
+     "Quem mede duas vezes dispara uma.",
+     [{"trigger": "always", "stat": "attack", "delta": 1}])
+addu("calibrar_aparelho", "Calibrar Aparelho", "Arcanista Cinzento", "calibrado", 2, 3,
+     "Todo aparelho rende mais na mão de quem entende a válvula.",
+     "engineering", "ajusta instrumento alheio (arcano ou mecânico) para render mais — ou falhar na hora certa")
+# — Descoberto
+addp("pele_marcada", "Pele Marcada", "Arcanista Cinzento", "descoberto", 2, 3,
+     "As marcas que o éter deixou respondem quando a Carga sobe.",
+     [{"trigger": "carga_embrace", "stat": "damage", "per_tier": 1}])
+addp("veias_condutoras", "Veias Condutoras", "Arcanista Cinzento", "descoberto", 2, 4,
+     "O corpo virou condutor; conduz mais do que devia.",
+     [{"trigger": "entropy_max_bonus", "delta": 3}])
+addu("sentir_eter", "Sentir Éter", "Arcanista Cinzento", "descoberto", 2, 3,
+     "Sem instrumento, sem filtro: a pele sabe primeiro.",
+     "detection", "sente éter pela pele nua — direção, densidade e perigo, sem instrumento")
+# — Improvisador
+addp("engenhoca_pronta", "Engenhoca Pronta", "Arcanista Cinzento", "improvisador", 2, 3,
+     "Sempre há algo na sua mão antes de haver um plano.",
+     [{"trigger": "initiative_attr", "attr": "int"}])
+addp("pecas_no_bolso", "Peças no Bolso", "Arcanista Cinzento", "improvisador", 2, 4,
+     "Entre você e o golpe, sempre existe uma sucata sacrificável.",
+     [{"trigger": "always", "stat": "ac", "delta": 1}])
+addu("ferramenta_de_sucata", "Ferramenta de Sucata", "Arcanista Cinzento", "improvisador", 2, 3,
+     "Funciona uma vez, talvez duas. Quase sempre basta.",
+     "engineering", "monta na hora, de sucata, a ferramenta que a cena pede — de vida curta")
+
+# ===== MÉDICO DE CAMPO — tronco =====
+addu("diagnostico_social", "Diagnóstico Social", "Médico de Campo", None, 1, 1,
+     "A conversa também é um paciente: estresse, mentira e doença aparecem no corpo de quem fala.",
+     "social", "lê estresse, mentira e doença no corpo e na voz de quem fala")
+addu("aritmetica_de_desastre", "Aritmética de Desastre", "Médico de Campo", None, 1, 1,
+     "Quantos, quão grave, quem primeiro. Em segundos.",
+     "investigation", "numa cena de desastre, calcula rápido: quantos feridos, gravidade, ordem de atendimento")
+addp("triagem", "Triagem", "Médico de Campo", None, 1, 2,
+     "Quem está mais perto do fim recebe mais de você — sempre foi assim.",
+     [{"trigger": "heal_bonus_low", "threshold": 0.25, "delta": 5}])
+# — Cirurgião de Trincheira
+addp("sangue_frio", "Sangue Frio", "Médico de Campo", "cirurgiao_trincheira", 2, 3,
+     "O medo espera a cirurgia acabar; depois, se quiser, volta.",
+     [{"trigger": "resist", "name": "medo"}])
+addp("instinto_de_trincheira", "Instinto de Trincheira", "Médico de Campo", "cirurgiao_trincheira", 2, 4,
+     "Você lê a cena como lê um ferimento: primeiro o que mata, depois o resto.",
+     [{"trigger": "initiative_attr", "attr": "int"}])
+addu("milagre_improvisado", "Milagre Improvisado", "Médico de Campo", "cirurgiao_trincheira", 2, 3,
+     "Barro, pano e teimosia fazem o que um hospital faria.",
+     "medical", "improvisa com material precário um procedimento digno de hospital — uma vez por paciente")
+# — Boticário
+addp("composto_estavel", "Composto Estável", "Médico de Campo", "boticario", 2, 3,
+     "Fórmula estável desperdiça menos — do frasco e de você.",
+     [{"trigger": "entropy_cost_reduction", "category": "Suporte", "delta": 1}])
+addp("reservas_preparadas", "Reservas Preparadas", "Médico de Campo", "boticario", 2, 4,
+     "Quem prepara antes carrega mais.",
+     [{"trigger": "entropy_max_bonus", "delta": 2}])
+addu("destilar_remedio", "Destilar Remédio", "Médico de Campo", "boticario", 2, 3,
+     "A fauna que mata é a farmácia que sobra.",
+     "medical", "destila remédio do veneno e da flora local — cura a partir do que fere")
+# — Cirurgião de Ferro
+addp("proteses_proprias", "Próteses Próprias", "Médico de Campo", "cirurgiao_ferro", 2, 3,
+     "Carne reforçada com aço não sangra fácil.",
+     [{"trigger": "resist", "name": "sangramento"}])
+addp("armadura_de_oficio", "Armadura de Ofício", "Médico de Campo", "cirurgiao_ferro", 2, 4,
+     "O avental tem placas; o ofício ensinou onde.",
+     [{"trigger": "always", "stat": "ac", "delta": 1}])
+addu("forjar_membro", "Forjar Membro", "Médico de Campo", "cirurgiao_ferro", 2, 3,
+     "O corpo acaba; o ofício continua de onde ele parou.",
+     "engineering", "forja, ajusta e conserta membros mecânicos e próteses — inclusive em campo")
+
+
 # --- classes ----------------------------------------------------------------
 def branch(name, identity):
     return {"name": name, "identity": identity}

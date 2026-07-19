@@ -1,12 +1,13 @@
 # Sistema de Classes — Valoria (Cinco Posturas diante do Abismo)
 
-> Retrato do sistema em 2026-07-18. Fontes da verdade: `data/classes.json` (fichas +
+> Retrato do sistema em 2026-07-19. Fontes da verdade: `data/classes.json` (fichas +
 > config tipada de Entropia), `data/class_themes.json` (gating narrativo),
-> `data/player_abilities.json` (árvore, 41 habilidades), `combat_mechanics.py`
-> (Entropia/Carga/gatilhos), `progression.py` (XP/level up/subclasse).
-> Spec de origem: `specs/refatoracao-sistema-classes.md`. A árvore RICA (passivas/
-> utilitárias, ~100 habilidades) é a spec #2 `specs/arvores-habilidade-classes.md`
-> (autoria em Fable) — hoje a árvore é MÍNIMA jogável (tiers 1–3).
+> `data/player_abilities.json` (árvore RICA, **101 habilidades**: 41 ativas +
+> 35 passivas + 25 utilitárias), `combat_mechanics.py` (Entropia/Carga/gatilhos/
+> passivas), `progression.py` (XP/level up/subclasse),
+> `services/context_builder.utility_context_block` (utilitárias no narrador).
+> Specs de origem: `specs/refatoracao-sistema-classes.md` (motor) e
+> `specs/arvores-habilidade-classes.md` (árvore rica — autoria em Fable), ambas `done`.
 
 ---
 
@@ -97,11 +98,36 @@ ramo rival tranca para sempre (`eligible_abilities`). Zero campo de estado novo.
 ## 5. Habilidades (schema alinhado ao motor)
 
 `data/player_abilities.json` — cada habilidade: `resource_type: "Entropia"`,
-`classes: ["<Classe>"]`, `branch`, `tier` (1–3), `level_req`, `requires`.
+`classes: ["<Classe>"]`, `branch`, `tier` (1–3), `level_req`, `requires` e
+**`ability_kind`** ∈ `{active, passive, utility}` (ausente = active).
 **Cura** = `damage_type: "Cura"` + fórmula positiva (`_is_healing`); efeitos usam
 `effects: [{"kind": buff|debuff|dot|control, ...}]` (nunca `type`). Marcadores lidos
 pela mecânica: `self_harm: <int>` (Sangromante), `peak: true` (Cicatriz),
 `cools: true` (caldeira do Arcanista), `taunt: true`, `decay_kind`.
+
+### Passivas na árvore (`ability_kind: "passive"`)
+Efeito permanente ao aprender: `passive_effects` tipado, MESMO vocabulário de
+`classes.json` + 5 triggers de Entropia/Carga. `combat_mechanics.player_passives`
+= passivas da classe **+** aprendidas — lida em TODOS os callsites do jogador
+(dano, AC, iniciativa, resist, retaliação, cura, custo). Inimigo segue em
+`class_passives` (sem árvore). Cada subclasse tem ≥2; cada tronco ≥1.
+
+| Trigger novo | Efeito | Aplicado em |
+|---|---|---|
+| `entropy_max_bonus` +delta | +max_entropy permanente | `progression.apply_choice` (aprendizado) |
+| `entropy_on_kill` +amount | Entropia ao matar (sem Carga) | `combat_node` (`apply_entropy_on_kill`) |
+| `entropy_cost_reduction` category/delta | −custo de Entropia da categoria (piso 1) | `spend_resources` |
+| `charge_discount` delta | −Carga por ativação do gatilho (piso 0) | `apply_entropy_trigger` |
+| `carga_embrace` stat/per_tier | patamar de Carga vira bônus (abraço do Abismo) | `damage_bonus` / `compute_player_combat_stats` |
+
+### Utilitárias (`ability_kind: "utility"`)
+Capacidade FORA de combate: `out_of_combat: {label, scope, prompt_hint}`
+(`scope` ∈ social/investigation/detection/engineering/medical). O gate é
+determinístico (conhece/não conhece); o storyteller recebe o bloco
+`<CAPACIDADES_DO_HEROI>` (`utility_context_block`) e NARRA o uso — nunca concede
+capacidade fora da lista. Cada tronco tem 2 (do doc-fonte); cada subclasse ≥1.
+Passiva/utilitária ficam FORA dos chips de combate e do catálogo do parser
+(`_allowed_ability_ids`); no HUD levam selo ✦ (passiva) / ⚒ (utilitária).
 
 > ⚠️ **Regerar a árvore:** `uv run python scripts/gen_classes_v2.py`
 > (gera `classes.json` **e** `player_abilities.json` juntos — `starting_abilities`

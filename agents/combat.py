@@ -175,9 +175,13 @@ _UNIVERSAL_ABILITIES = ("ataque_basico", "improvisado")
 
 
 def _allowed_ability_ids(player: Dict) -> set:
-    """Ids que ESTA ficha pode usar: conhecidas (ids canônicos, Fase 4.1) + universais."""
+    """Ids que ESTA ficha pode usar EM COMBATE: conhecidas ATIVAS + universais.
+    Passiva/utilitária (spec arvores-habilidade-classes) não é ação de combate."""
     known = {str(k) for k in (player.get("known_abilities") or [])}
-    return {aid for aid in known if aid in ABILITIES} | set(_UNIVERSAL_ABILITIES)
+    return {aid for aid in known
+            if aid in ABILITIES
+            and ABILITIES[aid].get("ability_kind", "active") == "active"} \
+        | set(_UNIVERSAL_ABILITIES)
 
 
 def _ability_catalog_for(player: Dict) -> str:
@@ -534,6 +538,8 @@ def combat_node(state: GameState):
     # desfaz (morte) é decadência ao redor que o alimenta de Entropia.
     for _d in dead:
         cm.apply_entropy_trigger(player, {"kind": "on_decay_nearby", "decay_kind": "any"}, logs)
+    # spec arvores-habilidade-classes: passiva entropy_on_kill (colheita da morte).
+    cm.apply_entropy_on_kill(player, len(dead), logs)
     # Médico — Recidiva: Carga oculta que cruza 'severo' estoura num colapso (1x).
     _recidiva_logs, recidiva_event = cm.check_recidiva(player)
     logs += _recidiva_logs

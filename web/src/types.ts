@@ -1,10 +1,15 @@
 // Espelha os DTOs da API (api.py :: GameResponse / blocos auxiliares).
 
 // Fase 4.1: habilidade conhecida (id canônico + nome exibível)
+// spec arvores-habilidade-classes (R10): tipo da habilidade — passiva/utilitária
+// não é ação de combate clicável; ganham selo na ficha.
+export type AbilityKind = "active" | "passive" | "utility";
+
 export interface AbilityRef {
   id: string;
   name: string;
   branch: string | null;
+  kind?: AbilityKind;
 }
 
 export interface PendingChoice {
@@ -22,6 +27,7 @@ export interface EligibleAbility {
   tier: number;
   cost: number;
   resource_type: string;
+  kind?: AbilityKind;
 }
 
 export interface BranchInfo {

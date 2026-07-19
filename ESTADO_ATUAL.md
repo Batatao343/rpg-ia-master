@@ -3,9 +3,9 @@
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
 > Última atualização: 2026-07-19 (sessão 19: **ÉPICO DO SISTEMA DE CLASSES
-> `done` (etapas 1–8)** — 10 classes → 5 Posturas diante do Abismo × 3 subclasses,
-> recurso Entropia + Carga do Abismo, gatilhos/regras/consequências por classe,
-> migração v3, HUD, docs reescritos. 898 offline verdes + smoke real 4/4.)
+> 100% `done`** — as DUAS specs: refatoração (5 Posturas + Entropia/Carga) E
+> árvore rica (101 habilidades com passivas/utilitárias, autoria em Fable).
+> **918 offline verdes** + 2 smokes reais 4/4.)
 
 ---
 
@@ -45,9 +45,32 @@ ABISMO** ([spec `done`](specs/refatoracao-sistema-classes.md); mecânica em
    mapeada (16/16) + mana/stamina 0; auto-dano somou Entropia+Carga; descanso
    recompôs Entropia sem baixar Carga; Devoto apanhou → on_damage_taken.
 
-**🏁 O ÉPICO DO SISTEMA DE CLASSES ESTÁ `done`.** Próximo natural: árvore RICA
-([arvores-habilidade-classes](specs/arvores-habilidade-classes.md), autoria em
-Fable) + balanceamento dos números `[BALANCEAR]` após playtest.
+**Segunda spec do épico — [arvores-habilidade-classes](specs/arvores-habilidade-classes.md)
+`done` (mesma sessão, autoria em Fable):**
+9. **Árvore RICA: 101 habilidades** (41 ativas + **35 passivas + 25 utilitárias**),
+   geradas por `scripts/gen_classes_v2.py`. Cada tronco: 2 ativas + 2 utilitárias
+   do doc-fonte + 1 passiva; cada uma das 15 subclasses: 2 ativas encadeadas +
+   2 passivas + 1 utilitária.
+10. **Passiva na árvore funciona:** `ability_kind` no schema;
+    `combat_mechanics.player_passives` (classe + aprendidas) em TODOS os callsites
+    do jogador; 5 triggers novos: `entropy_max_bonus` (no `apply_choice`) ·
+    `entropy_on_kill` · `entropy_cost_reduction` (piso 1) · `charge_discount`
+    (piso 0) · `carga_embrace` (patamar de Carga vira bônus). Inimigo NÃO ganha
+    passiva de árvore (teste dedicado).
+11. **Utilitária = capacidade fora de combate:** `out_of_combat`
+    {label/scope/prompt_hint}; gate determinístico + bloco `<CAPACIDADES_DO_HEROI>`
+    no prompt do storyteller (`utility_context_block`). Passiva/utilitária FORA
+    dos chips e do catálogo do parser de combate; HUD com selo ✦/⚒ (ficha +
+    LevelUpModal).
+12. **Suíte:** 898 → **918 offline verdes** (+20 `test_arvores_classes`).
+    **Smoke real 4/4:** elegibilidade lvl2 com utilitárias/passivas; `juros_do_corpo`
+    somou "+1 passiva" no dano; `cofre_de_sangue` subiu max_entropy 16→19; o
+    storyteller REAL narrou "Avaliação de Preço" citando a capacidade injetada;
+    `reduce_ally_abyss` purgou Carga de aliado.
+
+**🏁 O ÉPICO DO SISTEMA DE CLASSES ESTÁ 100% `done` (as 2 specs).** Próximo
+natural: balanceamento dos números `[BALANCEAR]` após playtest; tiers 5+
+(nível 9–20) de fast-follow.
 
 ---
 
@@ -272,7 +295,7 @@ não existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arq
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 898 testes offline verdes (contratos de LLM ficam fora)
+uv run pytest                        # 918 testes offline verdes (contratos de LLM ficam fora)
 uv run pytest -m llm_contract -v -s  # 9 contratos contra o Gemini REAL (~13 req; requer chave)
 uv run pytest -m llm_playtest -v -s  # Fase 5: 4 perfis VITAIS × 30 turnos no LLM REAL (RPG_PLAYTEST_TURNS encurta)
 uv run python game_engine.py         # CLI

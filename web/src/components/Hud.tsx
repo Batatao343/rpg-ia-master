@@ -154,6 +154,13 @@ function FichaTab({ data, hpHitKey, onEquip, busy }: {
             abilities.map((a, i) => (
               <li key={typeof a === "string" ? i : a.id}>
                 {typeof a === "string" ? a : a.name}
+                {/* spec arvores-habilidade-classes (R10): selo de tipo — passiva ✦ / utilitária ⚒ */}
+                {typeof a !== "string" && a.kind === "passive" ? (
+                  <span className="ability__kind" title="Passiva — efeito permanente"> ✦</span>
+                ) : null}
+                {typeof a !== "string" && a.kind === "utility" ? (
+                  <span className="ability__kind" title="Utilitária — capacidade fora de combate"> ⚒</span>
+                ) : null}
                 {typeof a !== "string" && a.branch ? <span className="ability__branch"> ◆</span> : null}
               </li>
             ))

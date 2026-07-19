@@ -369,6 +369,10 @@ def storyteller_node(state: GameState):
                               purpose="story", game_id=game_id)
     lore_context = pack.lore_block or "Dark Fantasy Genérica."
     memoria_recente = pack.memory_block or narrative_summary
+    # spec arvores-habilidade-classes (§3.3): utilitárias conhecidas — gate
+    # determinístico; a LLM só narra o que a ficha PERMITE.
+    from services.context_builder import utility_context_block
+    capacidades_block = utility_context_block(state.get("player", {}) or {})
 
     campaign_plan = state.get("campaign_plan") or {}
     beats = [dict(beat) for beat in campaign_plan.get("beats", [])]
@@ -442,6 +446,8 @@ def storyteller_node(state: GameState):
     target_id=quest_id e payload={{"quest_id": quest_id}} usando o id EXATO. Na
     dúvida, deixe vazio. NUNCA invente ids.
     </QUESTS_ATIVAS>
+
+    {capacidades_block}
 
     {pack.world_state_block}
     (Se o ESTADO ATUAL DO MUNDO acima contradisser o lore/fatos passados abaixo, o ESTADO ATUAL VENCE.)

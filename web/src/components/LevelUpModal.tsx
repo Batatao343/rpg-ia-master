@@ -132,13 +132,18 @@ export function LevelUpModal({ player, busy, onChoose, onLater }: Props) {
 }
 
 function AbilityCard({ a, picked, onPick }: { a: EligibleAbility; picked: boolean; onPick: () => void }) {
-  const cost = a.cost > 0 ? `${a.cost} ${a.resource_type}` : "sem custo";
+  // spec arvores-habilidade-classes (R10): passiva/utilitária mostram o tipo,
+  // não o custo (não são ação de combate).
+  const kindLabel =
+    a.kind === "passive" ? "✦ passiva" :
+    a.kind === "utility" ? "⚒ utilitária" :
+    a.cost > 0 ? `${a.cost} ${a.resource_type}` : "sem custo";
   return (
     <li>
       <button type="button" className={"lvlup__card" + (picked ? " is-picked" : "")} onClick={onPick}>
         <span className="lvlup__card-top">
           <b>{a.name}</b>
-          <span className="lvlup__tier">tier {a.tier} · {cost}</span>
+          <span className="lvlup__tier">tier {a.tier} · {kindLabel}</span>
         </span>
         <span className="lvlup__desc">{a.description}</span>
       </button>

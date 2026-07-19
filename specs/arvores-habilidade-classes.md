@@ -1,7 +1,22 @@
 # SPEC — Árvores de Habilidade das 5 Classes (ativas + passivas + fora de combate)
 
-> **Status:** `approved`
-> **Criada:** 2026-07-17 · **Atualizada:** 2026-07-17
+> **Status:** `done` (2026-07-19 — autoria executada em **Fable**. Árvore de
+> **101 habilidades** (41 ativas + 35 passivas + 25 utilitárias) gerada por
+> `scripts/gen_classes_v2.py`. Motor: `ability_kind` no schema;
+> `combat_mechanics.player_passives` funde passivas aprendidas às da classe em
+> TODOS os callsites do jogador (inimigo segue em `class_passives`); 5 triggers
+> novos vivos (`entropy_max_bonus` no `apply_choice` · `entropy_on_kill` no
+> combat_node · `entropy_cost_reduction` e `charge_discount` com piso ·
+> `carga_embrace` em dano/AC/ataque); utilitárias entram no prompt do storyteller
+> via `services/context_builder.utility_context_block` (gate determinístico, LLM
+> narra). HUD: selo ✦ passiva / ⚒ utilitária na ficha e no LevelUpModal;
+> passiva/utilitária fora dos chips e do catálogo de combate. **918 offline
+> verdes** (+20 `test_arvores_classes`) + smoke real 4/4 (storyteller REAL narrou
+> "Avaliação de Preço" injetada no contexto). **Desvio consciente:** passivas
+> autoradas SÓ com o vocabulário tipado da tabela §3.2 — sugestões do blueprint
+> fora do vocabulário (ex.: "DoT dura +1 turno") foram trocadas por efeito
+> tipado tematicamente equivalente, sem trigger ad-hoc novo.)
+> **Criada:** 2026-07-17 · **Atualizada:** 2026-07-19
 > **Depende de:** [refatoracao-sistema-classes](refatoracao-sistema-classes.md) `approved`
 > (define as 5 classes, Entropia/Carga, subclasses = branch derivada) · Fase 4.1
 > (motor de árvore/ramo/elegibilidade) · 4.2 (passivas/`effects` tipados) — `done`
@@ -288,16 +303,16 @@ encadeadas + ≥2 passivas + ≥1 utilitária). Commit por classe. Seguir o blue
 
 ## 5. Critérios de aceite
 
-- [ ] `ability_kind` suportado; `player_passives` funde passivas aprendidas (motor).
-- [ ] Passiva aprendida muda o combate resolvido (teste).
-- [ ] Utilitária conhecida entra no contexto do storyteller (teste).
-- [ ] Cada subclasse: ≥2 passivas + ≥1 utilitária + ≥2 ativas (R3/R4/R6).
-- [ ] Tronco de cada classe traz as 2 utilitárias "fora de combate" do doc (R5).
-- [ ] Zero habilidade de jogador em mana/stamina; zero só-texto (R7/R8).
-- [ ] Lock de ramo rival vale para passiva/utilitária (R9).
-- [ ] HUD marca passiva/utilitária (R10); `npm run build` verde.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Passe anti-spoiler registrado; executado em Fable (autoria).
+- [x] `ability_kind` suportado; `player_passives` funde passivas aprendidas (motor).
+- [x] Passiva aprendida muda o combate resolvido (teste + smoke: `juros_do_corpo` → "+1 passiva" no dano).
+- [x] Utilitária conhecida entra no contexto do storyteller (teste + smoke real: narrador citou a capacidade).
+- [x] Cada subclasse: ≥2 passivas + ≥1 utilitária + ≥2 ativas (R3/R4/R6 — asserts em `test_arvores_classes`).
+- [x] Tronco de cada classe traz as 2 utilitárias "fora de combate" do doc (R5).
+- [x] Zero habilidade de jogador em mana/stamina; zero só-texto (R7/R8 — por kind).
+- [x] Lock de ramo rival vale para passiva/utilitária (R9 — `test_lock_de_ramo_vale_para_passiva`).
+- [x] HUD marca passiva/utilitária (R10 — selo ✦/⚒ na ficha + LevelUpModal); `npm run build` verde.
+- [x] `uv run pytest` verde (918 passed, 1 skipped).
+- [x] Passe anti-spoiler registrado (grep: zero menção a segredos do Codex); autoria executada em Fable (claude-fable-5).
 
 ## 6. Smoke test com LLM real
 

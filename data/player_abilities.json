@@ -1018,5 +1018,1621 @@
         "duration": 3
       }
     ]
+  },
+  "convite_do_abismo": {
+    "name": "O Convite",
+    "category": "Utilitária",
+    "description": "Você sente quem, numa sala cheia, o Abismo já começou a escolher — o cansaço além do sono, o olhar que ficou tempo demais no escuro.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Devoto do Abismo"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 1,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "O Convite",
+      "scope": "detection",
+      "prompt_hint": "sente quem numa cena está tocado/marcado pelo Abismo, antes de qualquer sinal visível"
+    }
+  },
+  "pararraios_social": {
+    "name": "Para-raios",
+    "category": "Utilitária",
+    "description": "Quando o medo de um grupo procura um alvo, você se oferece. O pânico, o motim, a acusação — tudo desce por você e se aterra.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Devoto do Abismo"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 1,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Para-raios",
+      "scope": "social",
+      "prompt_hint": "atrai para si o medo ou a raiva coletiva de uma cena, evitando pânico ou motim"
+    }
+  },
+  "postura_do_convite": {
+    "name": "Postura do Convite",
+    "category": "Passiva",
+    "description": "O corpo que deseja o golpe aprende exatamente onde ele cai.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Devoto do Abismo"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 2,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "always",
+        "stat": "ac",
+        "delta": 1
+      }
+    ]
+  },
+  "disciplina_do_rito": {
+    "name": "Disciplina do Rito",
+    "category": "Passiva",
+    "description": "O rito organiza o amor: o Abismo cobra menos de quem se oferece na forma correta.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Devoto do Abismo"
+    ],
+    "branch": "consagrado",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "charge_discount",
+        "delta": 1
+      }
+    ]
+  },
+  "fervor_silencioso": {
+    "name": "Fervor Silencioso",
+    "category": "Passiva",
+    "description": "A oração não pede nada; afia.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Devoto do Abismo"
+    ],
+    "branch": "consagrado",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "always",
+        "stat": "attack",
+        "delta": 1
+      }
+    ]
+  },
+  "leitura_de_pressagio": {
+    "name": "Leitura de Presságio",
+    "category": "Utilitária",
+    "description": "Cinza, sangue seco, vento errado: o dia sempre avisa quem sabe ler.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Devoto do Abismo"
+    ],
+    "branch": "consagrado",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Leitura de Presságio",
+      "scope": "investigation",
+      "prompt_hint": "lê presságios em sinais mundanos e extrai um aviso concreto sobre o que vem"
+    }
+  },
+  "ciume_do_abismo": {
+    "name": "Ciúme do Abismo",
+    "category": "Passiva",
+    "description": "Quem encosta no que é seu — no aliado, na linha, no fim que você reivindicou — sangra por isso.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Devoto do Abismo"
+    ],
+    "branch": "zeloso",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "melee_retaliate",
+        "name": "Ciúme do Abismo",
+        "formula": "1d4"
+      }
+    ]
+  },
+  "possessao_zelosa": {
+    "name": "Possessão Zelosa",
+    "category": "Passiva",
+    "description": "Quanto mais fundo o Abismo mora em você, mais certeiro o golpe de quem defende o que ama.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Devoto do Abismo"
+    ],
+    "branch": "zeloso",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "carga_embrace",
+        "stat": "attack",
+        "per_tier": 1
+      }
+    ]
+  },
+  "farejar_rival": {
+    "name": "Farejar Rival",
+    "category": "Utilitária",
+    "description": "Você reconhece de longe quem mais corteja o seu amado.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Devoto do Abismo"
+    ],
+    "branch": "zeloso",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Farejar Rival",
+      "scope": "detection",
+      "prompt_hint": "identifica na cena quem também corteja o Abismo — cultista, tocado, condenado"
+    }
+  },
+  "luto_que_pesa": {
+    "name": "Luto que Pesa",
+    "category": "Passiva",
+    "description": "A perda vira lastro; o lastro vira força de queda.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Devoto do Abismo"
+    ],
+    "branch": "enlutado",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "carga_embrace",
+        "stat": "damage",
+        "per_tier": 1
+      }
+    ]
+  },
+  "vigilia_do_luto": {
+    "name": "Vigília do Luto",
+    "category": "Passiva",
+    "description": "Quem já perdeu o que mais temia perder não tem mais para onde temer.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Devoto do Abismo"
+    ],
+    "branch": "enlutado",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "resist",
+        "name": "medo"
+      }
+    ]
+  },
+  "vozes_dos_levados": {
+    "name": "Vozes dos Levados",
+    "category": "Utilitária",
+    "description": "Diante do que sobrou, você ouve o que os levados ainda tentam contar.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Devoto do Abismo"
+    ],
+    "branch": "enlutado",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Vozes dos Levados",
+      "scope": "investigation",
+      "prompt_hint": "diante de restos e lugares onde o Abismo levou alguém, recompõe o que aconteceu"
+    }
+  },
+  "avaliacao_de_preco": {
+    "name": "Avaliação de Preço",
+    "category": "Utilitária",
+    "description": "Tudo tem preço. Você sabe qual é — mesmo quando escondem.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 1,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Avaliação de Preço",
+      "scope": "social",
+      "prompt_hint": "sabe o custo/valor real de qualquer coisa — mercadoria, favor, silêncio — mesmo quando escondido"
+    }
+  },
+  "leitura_forense": {
+    "name": "Leitura Forense",
+    "category": "Utilitária",
+    "description": "Sangue seco conta a história inteira para quem paga na mesma moeda.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 1,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Leitura Forense",
+      "scope": "investigation",
+      "prompt_hint": "lê feridas, sangue e corpos: o que feriu, quando, e se a dívida foi paga"
+    }
+  },
+  "contrato_de_sangue": {
+    "name": "Contrato de Sangue",
+    "category": "Passiva",
+    "description": "O corpo que negocia todo dia aprende a guardar mais moeda.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 2,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "entropy_max_bonus",
+        "delta": 2
+      }
+    ]
+  },
+  "cicatriz_credencial": {
+    "name": "Cicatriz Credencial",
+    "category": "Passiva",
+    "description": "Cada cicatriz é um recibo; quem lê seu corpo sabe que você paga.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "exposto",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "carga_embrace",
+        "stat": "attack",
+        "per_tier": 1
+      }
+    ]
+  },
+  "pele_de_palco": {
+    "name": "Pele de Palco",
+    "category": "Passiva",
+    "description": "Você sangra quando decide, não quando mandam.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "exposto",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "resist",
+        "name": "sangramento"
+      }
+    ]
+  },
+  "presenca_que_cala": {
+    "name": "Presença que Cala",
+    "category": "Utilitária",
+    "description": "Você entra, e o preço de mexer com você fica visível.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "exposto",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Presença que Cala",
+      "scope": "social",
+      "prompt_hint": "impõe presença numa cena hostil: a conversa esfria, a ameaça reconsiderada"
+    }
+  },
+  "cofre_de_sangue": {
+    "name": "Cofre de Sangue",
+    "category": "Passiva",
+    "description": "Nada vaza, nada se perde; o cofre cresce.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "avaro",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "entropy_max_bonus",
+        "delta": 3
+      }
+    ]
+  },
+  "juros_do_corpo": {
+    "name": "Juros do Corpo",
+    "category": "Passiva",
+    "description": "Todo golpe seu cobra o principal — mais juros.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "avaro",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "always",
+        "stat": "damage",
+        "delta": 1
+      }
+    ]
+  },
+  "farejar_divida": {
+    "name": "Farejar Dívida",
+    "category": "Utilitária",
+    "description": "Segredos têm preço, e você sente o cheiro dos caros.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "avaro",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Farejar Dívida",
+      "scope": "investigation",
+      "prompt_hint": "sente o que numa cena vale caro e quem deve a quem — dívidas, chantagens, segredos com preço"
+    }
+  },
+  "economia_de_dor": {
+    "name": "Economia de Dor",
+    "category": "Passiva",
+    "description": "Corte exato não desperdiça sangue — nem o seu.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "silencioso",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "entropy_cost_reduction",
+        "category": "Marcial",
+        "delta": 1
+      }
+    ]
+  },
+  "corte_sem_eco": {
+    "name": "Corte sem Eco",
+    "category": "Passiva",
+    "description": "A lâmina que não anuncia chega antes.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "silencioso",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "always",
+        "stat": "attack",
+        "delta": 1
+      }
+    ]
+  },
+  "ferida_invisivel": {
+    "name": "Ferida Invisível",
+    "category": "Utilitária",
+    "description": "Nenhum médico achará a marca — nem a sua, nem a que você deixou.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Sangromante"
+    ],
+    "branch": "silencioso",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Ferida Invisível",
+      "scope": "medical",
+      "prompt_hint": "fere ou trata sem deixar marca que outro exame encontre depois"
+    }
+  },
+  "olho_da_ruina": {
+    "name": "Olho da Ruína",
+    "category": "Utilitária",
+    "description": "Você vê o que já está cedendo: a viga rachada, o pulmão doente, a fé quebrando.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Corruptor"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 1,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Olho da Ruína",
+      "scope": "detection",
+      "prompt_hint": "identifica o que numa cena já está cedendo — estrutura, corpo ou vontade prestes a falhar"
+    }
+  },
+  "rede_de_pragas": {
+    "name": "Rede de Pragas",
+    "category": "Utilitária",
+    "description": "Os pequenos decompositores contam onde estiveram e o que roeram.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Corruptor"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 1,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Rede de Pragas",
+      "scope": "investigation",
+      "prompt_hint": "consulta ratos, vermes e insetos como informantes: o que passou por aqui, o que apodrece onde"
+    }
+  },
+  "parceria_com_o_fim": {
+    "name": "Parceria com o Fim",
+    "category": "Passiva",
+    "description": "Toda morte por perto é um pagamento adiantado.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Corruptor"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 2,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "entropy_on_kill",
+        "amount": 1
+      }
+    ]
+  },
+  "carne_receptiva": {
+    "name": "Carne Receptiva",
+    "category": "Passiva",
+    "description": "A colônia não envenena o próprio jardim.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Corruptor"
+    ],
+    "branch": "biologia",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "resist",
+        "name": "veneno"
+      }
+    ]
+  },
+  "florescer_da_podridao": {
+    "name": "Florescer da Podridão",
+    "category": "Passiva",
+    "description": "Onde sua mão passa, o apodrecer acelera com gosto.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Corruptor"
+    ],
+    "branch": "biologia",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "damage_type",
+        "damage_type": "Necrótico",
+        "delta": 2
+      }
+    ]
+  },
+  "ler_doenca": {
+    "name": "Ler Doença",
+    "category": "Utilitária",
+    "description": "Um olhar, e você sabe o nome da doença — e quanto tempo resta.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Corruptor"
+    ],
+    "branch": "biologia",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Ler Doença",
+      "scope": "medical",
+      "prompt_hint": "diagnostica doença, praga e veneno num olhar, incluindo prognóstico"
+    }
+  },
+  "eco_persistente": {
+    "name": "Eco Persistente",
+    "category": "Passiva",
+    "description": "O desespero que você semeia ecoa mais fundo.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Corruptor"
+    ],
+    "branch": "alma",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "damage_type",
+        "damage_type": "Psíquico",
+        "delta": 2
+      }
+    ]
+  },
+  "vontade_ja_ruida": {
+    "name": "Vontade já Ruída",
+    "category": "Passiva",
+    "description": "Não se assusta quem já fez as pazes com a ruína.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Corruptor"
+    ],
+    "branch": "alma",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "resist",
+        "name": "medo"
+      }
+    ]
+  },
+  "cheiro_de_mentira": {
+    "name": "Cheiro de Mentira",
+    "category": "Utilitária",
+    "description": "Toda história mal contada apodrece por dentro; você sente onde.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Corruptor"
+    ],
+    "branch": "alma",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Cheiro de Mentira",
+      "scope": "social",
+      "prompt_hint": "sente a mentira apodrecendo numa história — o ponto exato onde a versão cede"
+    }
+  },
+  "toque_corrosivo": {
+    "name": "Toque Corrosivo",
+    "category": "Passiva",
+    "description": "Tudo que você toca começa a ceder — inclusive o que o inimigo veste.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Corruptor"
+    ],
+    "branch": "inorganica",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "basic_attack_dot",
+        "name": "Corrosão",
+        "dot": 1,
+        "duration": 2
+      }
+    ]
+  },
+  "pele_de_oxido": {
+    "name": "Pele de Óxido",
+    "category": "Passiva",
+    "description": "A ferrugem que você veste amortece o que a lâmina queria.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Corruptor"
+    ],
+    "branch": "inorganica",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "always",
+        "stat": "ac",
+        "delta": 1
+      }
+    ]
+  },
+  "ponto_fraco": {
+    "name": "Ponto Fraco",
+    "category": "Utilitária",
+    "description": "Toda estrutura tem o parafuso que, cedendo, entrega o resto.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Corruptor"
+    ],
+    "branch": "inorganica",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Ponto Fraco",
+      "scope": "engineering",
+      "prompt_hint": "acha o ponto exato que, cedendo, derruba uma estrutura ou trava um mecanismo"
+    }
+  },
+  "deteccao_tecnica": {
+    "name": "Detecção Técnica",
+    "category": "Utilitária",
+    "description": "Éter ativo e residual, lidos como um instrumento lê: o quê, quando, com que vazão.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 1,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Detecção Técnica",
+      "scope": "detection",
+      "prompt_hint": "lê éter ativo/residual numa cena: o que foi conjurado, quando e com que intensidade"
+    }
+  },
+  "engenharia_de_campo": {
+    "name": "Engenharia de Campo",
+    "category": "Utilitária",
+    "description": "Não há mecanismo quebrado; há mecanismo mal explicado.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 1,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Engenharia de Campo",
+      "scope": "engineering",
+      "prompt_hint": "conserta, desarma e reconfigura mecanismos com o que a cena oferece"
+    }
+  },
+  "disciplina_da_caldeira": {
+    "name": "Disciplina da Caldeira",
+    "category": "Passiva",
+    "description": "Vazão certa, pressão certa: o Abismo passa pelo instrumento sem morar em você.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 2,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "charge_discount",
+        "delta": 1
+      }
+    ]
+  },
+  "valvula_extra": {
+    "name": "Válvula Extra",
+    "category": "Passiva",
+    "description": "Nada de desperdício: cada descarga sai pelo preço mínimo.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": "calibrado",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "entropy_cost_reduction",
+        "category": "Arcano",
+        "delta": 1
+      }
+    ]
+  },
+  "medidor_fino": {
+    "name": "Medidor Fino",
+    "category": "Passiva",
+    "description": "Quem mede duas vezes dispara uma.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": "calibrado",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "always",
+        "stat": "attack",
+        "delta": 1
+      }
+    ]
+  },
+  "calibrar_aparelho": {
+    "name": "Calibrar Aparelho",
+    "category": "Utilitária",
+    "description": "Todo aparelho rende mais na mão de quem entende a válvula.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": "calibrado",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Calibrar Aparelho",
+      "scope": "engineering",
+      "prompt_hint": "ajusta instrumento alheio (arcano ou mecânico) para render mais — ou falhar na hora certa"
+    }
+  },
+  "pele_marcada": {
+    "name": "Pele Marcada",
+    "category": "Passiva",
+    "description": "As marcas que o éter deixou respondem quando a Carga sobe.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": "descoberto",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "carga_embrace",
+        "stat": "damage",
+        "per_tier": 1
+      }
+    ]
+  },
+  "veias_condutoras": {
+    "name": "Veias Condutoras",
+    "category": "Passiva",
+    "description": "O corpo virou condutor; conduz mais do que devia.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": "descoberto",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "entropy_max_bonus",
+        "delta": 3
+      }
+    ]
+  },
+  "sentir_eter": {
+    "name": "Sentir Éter",
+    "category": "Utilitária",
+    "description": "Sem instrumento, sem filtro: a pele sabe primeiro.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": "descoberto",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Sentir Éter",
+      "scope": "detection",
+      "prompt_hint": "sente éter pela pele nua — direção, densidade e perigo, sem instrumento"
+    }
+  },
+  "engenhoca_pronta": {
+    "name": "Engenhoca Pronta",
+    "category": "Passiva",
+    "description": "Sempre há algo na sua mão antes de haver um plano.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": "improvisador",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "initiative_attr",
+        "attr": "int"
+      }
+    ]
+  },
+  "pecas_no_bolso": {
+    "name": "Peças no Bolso",
+    "category": "Passiva",
+    "description": "Entre você e o golpe, sempre existe uma sucata sacrificável.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": "improvisador",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "always",
+        "stat": "ac",
+        "delta": 1
+      }
+    ]
+  },
+  "ferramenta_de_sucata": {
+    "name": "Ferramenta de Sucata",
+    "category": "Utilitária",
+    "description": "Funciona uma vez, talvez duas. Quase sempre basta.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Arcanista Cinzento"
+    ],
+    "branch": "improvisador",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Ferramenta de Sucata",
+      "scope": "engineering",
+      "prompt_hint": "monta na hora, de sucata, a ferramenta que a cena pede — de vida curta"
+    }
+  },
+  "diagnostico_social": {
+    "name": "Diagnóstico Social",
+    "category": "Utilitária",
+    "description": "A conversa também é um paciente: estresse, mentira e doença aparecem no corpo de quem fala.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 1,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Diagnóstico Social",
+      "scope": "social",
+      "prompt_hint": "lê estresse, mentira e doença no corpo e na voz de quem fala"
+    }
+  },
+  "aritmetica_de_desastre": {
+    "name": "Aritmética de Desastre",
+    "category": "Utilitária",
+    "description": "Quantos, quão grave, quem primeiro. Em segundos.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 1,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Aritmética de Desastre",
+      "scope": "investigation",
+      "prompt_hint": "numa cena de desastre, calcula rápido: quantos feridos, gravidade, ordem de atendimento"
+    }
+  },
+  "triagem": {
+    "name": "Triagem",
+    "category": "Passiva",
+    "description": "Quem está mais perto do fim recebe mais de você — sempre foi assim.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": null,
+    "tier": 1,
+    "level_req": 2,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "heal_bonus_low",
+        "threshold": 0.25,
+        "delta": 5
+      }
+    ]
+  },
+  "sangue_frio": {
+    "name": "Sangue Frio",
+    "category": "Passiva",
+    "description": "O medo espera a cirurgia acabar; depois, se quiser, volta.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "cirurgiao_trincheira",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "resist",
+        "name": "medo"
+      }
+    ]
+  },
+  "instinto_de_trincheira": {
+    "name": "Instinto de Trincheira",
+    "category": "Passiva",
+    "description": "Você lê a cena como lê um ferimento: primeiro o que mata, depois o resto.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "cirurgiao_trincheira",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "initiative_attr",
+        "attr": "int"
+      }
+    ]
+  },
+  "milagre_improvisado": {
+    "name": "Milagre Improvisado",
+    "category": "Utilitária",
+    "description": "Barro, pano e teimosia fazem o que um hospital faria.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "cirurgiao_trincheira",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Milagre Improvisado",
+      "scope": "medical",
+      "prompt_hint": "improvisa com material precário um procedimento digno de hospital — uma vez por paciente"
+    }
+  },
+  "composto_estavel": {
+    "name": "Composto Estável",
+    "category": "Passiva",
+    "description": "Fórmula estável desperdiça menos — do frasco e de você.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "boticario",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "entropy_cost_reduction",
+        "category": "Suporte",
+        "delta": 1
+      }
+    ]
+  },
+  "reservas_preparadas": {
+    "name": "Reservas Preparadas",
+    "category": "Passiva",
+    "description": "Quem prepara antes carrega mais.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "boticario",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "entropy_max_bonus",
+        "delta": 2
+      }
+    ]
+  },
+  "destilar_remedio": {
+    "name": "Destilar Remédio",
+    "category": "Utilitária",
+    "description": "A fauna que mata é a farmácia que sobra.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "boticario",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Destilar Remédio",
+      "scope": "medical",
+      "prompt_hint": "destila remédio do veneno e da flora local — cura a partir do que fere"
+    }
+  },
+  "proteses_proprias": {
+    "name": "Próteses Próprias",
+    "category": "Passiva",
+    "description": "Carne reforçada com aço não sangra fácil.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "cirurgiao_ferro",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "resist",
+        "name": "sangramento"
+      }
+    ]
+  },
+  "armadura_de_oficio": {
+    "name": "Armadura de Ofício",
+    "category": "Passiva",
+    "description": "O avental tem placas; o ofício ensinou onde.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "cirurgiao_ferro",
+    "tier": 2,
+    "level_req": 4,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "passive",
+    "passive_effects": [
+      {
+        "trigger": "always",
+        "stat": "ac",
+        "delta": 1
+      }
+    ]
+  },
+  "forjar_membro": {
+    "name": "Forjar Membro",
+    "category": "Utilitária",
+    "description": "O corpo acaba; o ofício continua de onde ele parou.",
+    "cost": 0,
+    "resource_type": "Nenhum",
+    "damage_formula": "0",
+    "damage_type": "Físico",
+    "conditions": [],
+    "save_stat": null,
+    "scaling_formula": "0",
+    "classes": [
+      "Médico de Campo"
+    ],
+    "branch": "cirurgiao_ferro",
+    "tier": 2,
+    "level_req": 3,
+    "requires": [],
+    "effects": [],
+    "ability_kind": "utility",
+    "out_of_combat": {
+      "label": "Forjar Membro",
+      "scope": "engineering",
+      "prompt_hint": "forja, ajusta e conserta membros mecânicos e próteses — inclusive em campo"
+    }
   }
 }

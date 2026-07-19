@@ -200,6 +200,28 @@ def class_passives(entity: Dict) -> List[Dict]:
     return (CLASSES.get(cname) or {}).get("passive_effects") or []
 
 
+def learned_passives(entity: Dict, *, abilities_db=None) -> List[Dict]:
+    """spec arvores-habilidade-classes (R2): passive_effects de toda habilidade
+    `ability_kind == "passive"` em known_abilities. Inimigo não tem known_abilities
+    de jogador → []."""
+    db = abilities_db
+    if db is None:
+        from gamedata import ABILITIES as db
+    out: List[Dict] = []
+    for aid in entity.get("known_abilities") or []:
+        a = db.get(aid) or {}
+        if a.get("ability_kind") == "passive":
+            out.extend(a.get("passive_effects") or [])
+    return out
+
+
+def player_passives(entity: Dict, *, abilities_db=None) -> List[Dict]:
+    """Passivas efetivas do JOGADOR: classe + aprendidas na árvore (R2).
+    Callsites de combate do jogador leem daqui; inimigos seguem em class_passives
+    (na prática dá no mesmo: inimigo não tem passiva de árvore)."""
+    return class_passives(entity) + learned_passives(entity, abilities_db=abilities_db)
+
+
 def condition_modifiers(entity: Dict) -> Dict[str, int]:
     """Fase 4.2: soma dos deltas das condições ativas por stat.
 
@@ -229,7 +251,7 @@ def is_condition_resisted(entity: Dict, cond_name: str) -> bool:
     (racial 2.5b em `condition_resists` OU passiva de classe 4.2 trigger=resist)."""
     name = str(cond_name or "").lower()
     resists = [str(r).lower() for r in entity.get("condition_resists", []) or []]
-    resists += [str(pe.get("name", "")).lower() for pe in class_passives(entity)
+    resists += [str(pe.get("name", "")).lower() for pe in player_passives(entity)
                 if pe.get("trigger") == "resist"]
     return any(r and r in name for r in resists)
 
@@ -285,7 +307,7 @@ def roll_initiative(player: Dict, enemies: List[Dict],
     order: List[Dict] = []
     p_mods = attr_mods(player.get("attributes", {}))
     p_init = p_mods["dex"]
-    for pe in class_passives(player):
+    for pe in player_passives(player):
         if pe.get("trigger") == "initiative_attr":
             p_init = max(p_init, p_mods.get(normalize_attr(pe.get("attr", "dex")), 0))
     order.append({"id": "player", "name": player.get("name", "Herói"),
@@ -329,13 +351,22 @@ def spend_resources(player: Dict, ability_id: str, ability: Dict) -> Tuple[bool,
 
     cost = int(ability.get("cost", 0) or 0)
     field = _resource_field(ability.get("resource_type", "")) if cost > 0 else None
-    # Arcanista — Dependência: sem instrumento + Carga alta encarece a Entropia.
     if field == "entropy":
+        # spec arvores-habilidade-classes: passiva entropy_cost_reduction desconta
+        # o custo de uma categoria (piso 1 — habilidade paga nunca vira grátis).
+        cat = str(ability.get("category", "")).lower()
+        for pe in player_passives(player):
+            if pe.get("trigger") != "entropy_cost_reduction":
+                continue
+            pe_cat = str(pe.get("category", "") or "").lower()
+            if not pe_cat or pe_cat == cat:
+                cost = max(1, cost - int(pe.get("delta", 1) or 1))
+        # Arcanista — Dependência: sem instrumento + Carga alta encarece a Entropia.
         cost = dependencia_cost(player, cost)
     if field and int(player.get(field, 0)) < cost:
         # Fase 4.2: Sangromante (hp_as_mana) paga a mana que falta com HP (rate HP = 1 mana)
         if field == "mana":
-            pe = next((p for p in class_passives(player)
+            pe = next((p for p in player_passives(player)
                        if p.get("trigger") == "hp_as_mana"), None)
             if pe:
                 rate = int(pe.get("rate", 2) or 2)
@@ -475,6 +506,11 @@ def apply_entropy_trigger(player: Dict, event: Dict, logs: Optional[List[str]] =
     player["entropy"] = min(mx, before + gain) if mx > 0 else before + gain
     gained = player["entropy"] - before
     charge_per = int(trig.get("charge_per", 0) or 0)
+    # spec arvores-habilidade-classes: passiva charge_discount reduz a Carga ganha
+    # por ativação do gatilho (piso 0 — o Abismo pode ser adiado, não enganado de graça).
+    for pe in player_passives(player, abilities_db=abilities_db):
+        if pe.get("trigger") == "charge_discount":
+            charge_per = max(0, charge_per - int(pe.get("delta", 1) or 1))
     if charge_per:
         player["abyss_charge"] = int(player.get("abyss_charge", 0) or 0) + charge_per
     player["_entropy_trigger_turn"] = used + 1
@@ -620,6 +656,36 @@ def apply_transformacao(player: Dict, logs: Optional[List[str]] = None,
     return logs
 
 
+def apply_entropy_on_kill(player: Dict, dead_count: int,
+                          logs: Optional[List[str]] = None) -> List[str]:
+    """spec arvores-habilidade-classes: passiva entropy_on_kill — matar inimigo
+    devolve Entropia (amount × mortos, clamp em max_entropy). Sem Carga (não é
+    gatilho de classe — é colheita)."""
+    logs = logs if logs is not None else []
+    if dead_count <= 0:
+        return logs
+    amount = sum(int(pe.get("amount", 1) or 1) for pe in player_passives(player)
+                 if pe.get("trigger") == "entropy_on_kill")
+    if amount <= 0:
+        return logs
+    mx = int(player.get("max_entropy", 0) or 0)
+    before = int(player.get("entropy", 0) or 0)
+    player["entropy"] = min(mx, before + amount * dead_count) if mx > 0 else before
+    gained = player["entropy"] - before
+    if gained:
+        logs.append(f"{player.get('name', 'Herói')}: +{gained} Entropia (colheita da morte)")
+    return logs
+
+
+def entropy_max_bonus_of(ability: Dict) -> int:
+    """Soma dos deltas entropy_max_bonus de uma habilidade passiva (0 se nenhuma)."""
+    if ability.get("ability_kind") != "passive":
+        return 0
+    return sum(int(pe.get("delta", 0) or 0)
+               for pe in (ability.get("passive_effects") or [])
+               if pe.get("trigger") == "entropy_max_bonus")
+
+
 def _entropy_on_ability_use(player: Dict, ability: Dict, logs: List[str]) -> None:
     """Hooks de Entropia disparados por USAR uma habilidade (chamado em
     resolve_player_action após pagar o custo). Player sem classe das 5 → no-op."""
@@ -700,8 +766,8 @@ def compute_player_combat_stats(player: Dict) -> Dict:
     ac = 10 + mods["dex"] + ac_bonus
     attack = mods.get(attack_attr, 0) + best_atk_bonus + int(player.get("attack_bonus", 0) or 0)
 
-    # Fase 4.2: passivas data-driven da classe
-    for pe in class_passives(player):
+    # Fase 4.2: passivas data-driven (classe + aprendidas na árvore — R2)
+    for pe in player_passives(player):
         trig = pe.get("trigger")
         if trig == "always" and pe.get("stat") == "ac":
             ac += int(pe.get("delta", 0) or 0)
@@ -713,6 +779,13 @@ def compute_player_combat_stats(player: Dict) -> Dict:
         elif trig == "unarmored_ac_con" and ac_bonus == 0:
             # Guardião: sem armadura, AC = 10 + Dex + Con
             ac = max(ac, 10 + mods["dex"] + mods["con"])
+        elif trig == "carga_embrace" and pe.get("stat") in ("ac", "attack"):
+            # abraçar o Abismo: patamar de Carga vira bônus (per_tier × tier)
+            bonus = int(pe.get("per_tier", 1) or 1) * _tier_index(abyss_tier(player))
+            if pe.get("stat") == "ac":
+                ac += bonus
+            else:
+                attack += bonus
 
     # Fase 4.2: buffs/debuffs ativos (condições tipadas) — fear inclui -2 attack
     cmods = condition_modifiers(player)
@@ -789,7 +862,7 @@ def damage_bonus(player: Dict, ability: Dict) -> Tuple[int, List[str]]:
     if bonus:
         notes.append(f"{'+' if bonus >= 0 else ''}{bonus} de condições")
     dtype = str(ability.get("damage_type", "")).lower()
-    for pe in class_passives(player):
+    for pe in player_passives(player):
         trig = pe.get("trigger")
         if trig == "always" and pe.get("stat") == "damage":
             d = int(pe.get("delta", 0) or 0)
@@ -799,6 +872,11 @@ def damage_bonus(player: Dict, ability: Dict) -> Tuple[int, List[str]]:
             d = int(pe.get("delta", 0) or 0)
             bonus += d
             notes.append(f"+{d} {pe.get('damage_type')}")
+        elif trig == "carga_embrace" and pe.get("stat") == "damage":
+            d = int(pe.get("per_tier", 1) or 1) * _tier_index(abyss_tier(player))
+            if d:
+                bonus += d
+                notes.append(f"+{d} abraço do Abismo")
     return bonus, notes
 
 
@@ -844,7 +922,7 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
             if mt:
                 heal += int(mt.group(1))
         # Fase 4.2: Médico (heal_bonus_low) — alvo abaixo do limiar cura mais.
-        for pe in class_passives(player):
+        for pe in player_passives(player):
             if pe.get("trigger") == "heal_bonus_low":
                 thr = float(pe.get("threshold", 0.25) or 0.25)
                 if int(player.get("hp", 0)) < thr * max(1, int(player.get("max_hp", 1))):
@@ -999,9 +1077,9 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
                 if re.search(r"sofre\s+\d+\s*dano|custa\s+\d+|cura.*(dano|conjurador)|drena.*vida|lifesteal", c, re.IGNORECASE):
                     continue  # auto-dano / custo / lifesteal não viram condição do inimigo
                 logs.append(apply_condition(target, parse_condition(c, source=name)))
-        # Fase 4.2: Sombra da Corte (basic_attack_dot) — toda arma aplica veneno fraco.
+        # Fase 4.2: passiva basic_attack_dot — toda arma aplica veneno fraco.
         if ability_id == "ataque_basico":
-            for pe in class_passives(player):
+            for pe in player_passives(player):
                 if pe.get("trigger") == "basic_attack_dot":
                     cond = {"name": pe.get("name", "Veneno fraco"),
                             "dot": int(pe.get("dot", 1) or 1),
@@ -1415,11 +1493,12 @@ def resolve_enemy_turn(enemy: Dict, player: Dict,
             apply_entropy_trigger(player, {"kind": "on_ally_suffer"}, logs)
     if int(target.get("hp", 0)) > 0:
         logs += _apply_attack_conditions(atk, target)
-        # Fase 4.2: Pastor de Pragas (melee_retaliate) — quem morde, prova o veneno.
-        # (class_passives só devolve algo para o PLAYER — aliado não tem class_name.)
+        # Fase 4.2: passiva melee_retaliate — quem morde, prova o veneno.
+        # (player_passives só devolve algo para o PLAYER — aliado não tem class_name
+        # nem known_abilities de jogador.)
         atype = str(atk.get("type", "melee")).lower()
         if "melee" in atype or atype == "":
-            for pe in class_passives(target):
+            for pe in player_passives(target):
                 if pe.get("trigger") == "melee_retaliate":
                     ret, rdet = roll_dice_numeric(str(pe.get("formula", "1d4")))
                     if ret > 0:
@@ -1571,6 +1650,9 @@ def combat_suggestions(player: Dict, enemies: List[Dict],
     for aid in player.get("known_abilities") or []:
         ab = ABILITIES.get(aid)
         if not ab or is_on_cooldown(player, aid):
+            continue
+        # spec arvores-habilidade-classes (R10): passiva/utilitária não é chip de ação
+        if ab.get("ability_kind", "active") != "active":
             continue
         cost = int(ab.get("cost", 0) or 0)
         field = _resource_field(ab.get("resource_type", "")) if cost > 0 else None

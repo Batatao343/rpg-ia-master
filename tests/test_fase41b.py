@@ -45,8 +45,17 @@ def test_tronco_tem_ao_menos_2_habilidades():
 
 
 def test_sem_habilidade_so_texto():
-    """Toda habilidade tem efeito que o motor resolve OU effects tipado."""
+    """Toda habilidade tem efeito que o motor resolve (por ability_kind):
+    ativa = dano/condição/effects/cura; passiva = passive_effects; utilitária =
+    out_of_combat (spec arvores-habilidade-classes R8)."""
     for aid, a in ABILITIES.items():
+        kind = a.get("ability_kind", "active")
+        if kind == "passive":
+            assert a.get("passive_effects"), f"{aid}: passiva sem passive_effects"
+            continue
+        if kind == "utility":
+            assert a.get("out_of_combat"), f"{aid}: utility sem out_of_combat"
+            continue
         formula = str(a.get("damage_formula", "0")).strip()
         has_damage = formula not in ("", "0")
         has_cond = bool(a.get("conditions"))

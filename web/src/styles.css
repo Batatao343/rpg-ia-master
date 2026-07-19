@@ -737,6 +737,8 @@ select {
 @keyframes lvl-pulse { 0%, 100% { box-shadow: 0 0 0 0 transparent; } 50% { box-shadow: 0 0 14px 2px var(--accent-glow); } }
 .lvlup-hint { margin: 0.2rem 0 0; font-size: 0.8rem; color: var(--accent); }
 .ability__branch { color: var(--accent); }
+/* spec arvores-habilidade-classes (R10): selo de passiva (✦) / utilitária (⚒) */
+.ability__kind { color: #a15be0; font-size: 0.85em; cursor: help; }
 
 /* ---------- Fase 4.3: inventário com equipar ---------- */
 .inv__item { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }

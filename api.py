@@ -264,9 +264,11 @@ def format_response(state: dict) -> GameResponse:
             "level": state["player"].get("level", 1),
             "xp": state["player"].get("xp", 0),
             # Fase 4.1: ids canônicos + nome exibível (frontend não mostra id cru)
+            # spec arvores-habilidade-classes (R10): kind distingue passiva/utilitária
             "abilities": [
                 {"id": aid, "name": ABILITIES.get(aid, {}).get("name", aid),
-                 "branch": ABILITIES.get(aid, {}).get("branch")}
+                 "branch": ABILITIES.get(aid, {}).get("branch"),
+                 "kind": ABILITIES.get(aid, {}).get("ability_kind", "active")}
                 for aid in (state["player"].get("known_abilities", []) or [])
             ],
             "xp_next_level": progression.xp_to_next(int(state["player"].get("level", 1) or 1)),
@@ -347,6 +349,9 @@ def _levelup_block(player: dict) -> Dict[str, Any]:
             "branch_name": (branches.get(br) or {}).get("name") if br else None,
             "tier": a.get("tier", 1), "cost": a.get("cost", 0),
             "resource_type": a.get("resource_type", ""),
+            # spec arvores-habilidade-classes (R10): o wizard de level up mostra
+            # o tipo (ativa/passiva/utilitária) antes da escolha
+            "kind": a.get("ability_kind", "active"),
         })
     return {
         "pending": pending,

@@ -302,10 +302,13 @@ npc-fallback-sem-alvo · beats-visibilidade-ptbr · encontros-dedupe · polish-p
 + archivist fix + NPC relocável. 2026-07-19: **refatoracao-sistema-classes `done`**
 — 10 classes → **5 Posturas diante do Abismo** × 3 subclasses; recurso **Entropia**
 (pool único, recompõe integral no descanso) + **Carga do Abismo** (longo prazo);
-gatilhos/regras/consequências por classe 100% Python (`combat_mechanics`); árvore
-mínima jogável (41 hab, `scripts/gen_classes_v2.py`); migração v3; HUD Entropia/Carga
-(ver [docs/CLASSES.md](docs/CLASSES.md)). **898 testes offline.** Próxima: árvore RICA
-(`arvores-habilidade-classes`, Fable) + balanceamento; Fase 8 (arte) vs 10b (público)
+gatilhos/regras/consequências por classe 100% Python (`combat_mechanics`); migração
+v3; HUD Entropia/Carga. **Árvore RICA `done` (arvores-habilidade-classes, autoria
+Fable):** 101 habilidades (41 ativas + 35 passivas + 25 utilitárias) via
+`scripts/gen_classes_v2.py`; `ability_kind` + `player_passives` + 5 triggers de
+Entropia/Carga; utilitárias no contexto do storyteller (gate determinístico);
+selo ✦/⚒ no HUD (ver [docs/CLASSES.md](docs/CLASSES.md)). **918 testes offline.**
+Próxima: balanceamento pós-playtest + tiers 5+; Fase 8 (arte) vs 10b (público)
 segue adiada.
 
 ---

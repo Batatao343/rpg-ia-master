@@ -303,6 +303,37 @@ def assemble_pack(facts: List[ScoredFact], budget: ContextBudget,
 
 
 # --------------------------------------------------------------------------- #
+# spec arvores-habilidade-classes (§3.3): utilitárias no contexto do narrador
+# --------------------------------------------------------------------------- #
+def utility_context_block(player: Dict, *, abilities_db=None) -> str:
+    """Capacidades FORA de combate que o herói conhece (ability_kind='utility').
+
+    O gate é determinístico (conhece/não conhece); a LLM só narra. Devolve ""
+    se o herói não tem nenhuma — o storyteller omite o bloco."""
+    db = abilities_db
+    if db is None:
+        try:
+            from gamedata import ABILITIES as db
+        except Exception:  # pragma: no cover - defensivo
+            return ""
+    lines = []
+    for aid in player.get("known_abilities") or []:
+        a = db.get(aid) or {}
+        if a.get("ability_kind") != "utility":
+            continue
+        ooc = a.get("out_of_combat") or {}
+        label = ooc.get("label") or a.get("name", aid)
+        hint = ooc.get("prompt_hint", "")
+        lines.append(f"- {label}: {hint}" if hint else f"- {label}")
+    if not lines:
+        return ""
+    return ("<CAPACIDADES_DO_HEROI>\n"
+            "O herói POSSUI estas capacidades fora de combate (narre o uso quando a "
+            "ação do jogador as invocar; NÃO conceda capacidades fora desta lista):\n"
+            + "\n".join(lines) + "\n</CAPACIDADES_DO_HEROI>")
+
+
+# --------------------------------------------------------------------------- #
 # Entrada pública
 # --------------------------------------------------------------------------- #
 def build_context_pack(state: Dict, query: str, purpose: str,

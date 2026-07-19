@@ -384,9 +384,15 @@ testes offline verdes.**
    consequência por classe, 100% Python (`combat_mechanics`). Árvore MÍNIMA jogável
    (41 hab, `scripts/gen_classes_v2.py`); migração `_migrate_v2_to_v3`; HUD com barra
    Entropia + chip Carga. 898 offline verdes + smoke real 4/4.
-2. [arvores-habilidade-classes](specs/arvores-habilidade-classes.md) `approved`
-   (fast-follow) — árvore RICA por subclasse (~100 hab com passivas/utilitárias,
-   tiers 4+), autoria em **Fable**. Depende do motor de Entropia da spec #1 (pronto).
+2. [arvores-habilidade-classes](specs/arvores-habilidade-classes.md) `done`
+   (2026-07-19, autoria em **Fable**) — árvore RICA: **101 habilidades** (41
+   ativas + 35 passivas + 25 utilitárias). `ability_kind` no schema;
+   `player_passives` funde passivas aprendidas em todos os callsites do jogador;
+   5 triggers novos (entropy_max_bonus/on_kill/cost_reduction, charge_discount,
+   carga_embrace); utilitárias no contexto do storyteller
+   (`utility_context_block` — gate determinístico, LLM narra); HUD com selo ✦/⚒.
+   918 offline verdes + smoke real 4/4 (narrador citou a capacidade injetada).
+   Fast-follow: tiers 5+ (nível 9–20) e balanceamento pós-playtest.
 
 ## Backlog — Features após Fase 5
 

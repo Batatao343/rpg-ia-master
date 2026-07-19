@@ -161,6 +161,14 @@ def apply_choice(player: Dict, choice_id: str, *,
         if ability_id not in eligible_abilities(player, abilities_db=abilities_db):
             return player, f"Habilidade '{ability_id}' não é elegível para esta ficha."
         p["known_abilities"] = list(p.get("known_abilities") or []) + [ability_id]
+        # spec arvores-habilidade-classes: passiva entropy_max_bonus aplica no
+        # APRENDIZADO (permanente) — max_entropy e entropy sobem juntos.
+        from combat_mechanics import entropy_max_bonus_of
+        db = abilities_db if abilities_db is not None else ABILITIES
+        bonus = entropy_max_bonus_of(db.get(ability_id) or {})
+        if bonus:
+            p["max_entropy"] = int(p.get("max_entropy", 0) or 0) + bonus
+            p["entropy"] = int(p.get("entropy", 0) or 0) + bonus
     elif choice.get("kind") == "attribute":
         key = normalize_attr(attr or "")
         if key not in ATTR_KEYS:
