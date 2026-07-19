@@ -230,6 +230,16 @@ def _get_session_path(game_id: str) -> str:
     """Retorna o caminho da pasta de memória da SESSÃO específica."""
     return os.path.join(SAVES_DIR, game_id)
 
+
+def _has_faiss_index(path: str) -> bool:
+    """True só se há um índice FAISS gravado em `path` (arquivo index.faiss).
+
+    O diretório existir NÃO basta: `saves_memory/{game_id}/` é criado como pai
+    das subpastas de memória de NPC (`.../{npc_id}/`) mesmo sem índice de sessão.
+    Checar o dir levaria `add_memory_to_session` ao ramo de load e a um
+    FileIOReader ('could not open .../index.faiss for reading')."""
+    return os.path.isfile(os.path.join(path, "index.faiss"))
+
 # --- Visibilidade do Codex (Fase 2.5): public < hidden < secret ---
 _VIS_ORDER = {"public": 0, "hidden": 1, "secret": 2}
 
@@ -278,7 +288,7 @@ def query_rag(query: str, index_name: str = "lore", game_id: Optional[str] = Non
     # A memória da sessão é agnóstica ao index_name (é tudo "memória do jogo")
     if game_id:
         session_path = _get_session_path(game_id)
-        if os.path.exists(session_path):
+        if _has_faiss_index(session_path):
             embeddings = _embeddings_for_index(session_path)
             if embeddings:
                 try:
@@ -312,7 +322,7 @@ def add_memory_to_session(game_id: str, texts: List[str]):
     session_path = _get_session_path(game_id)
 
     try:
-        if os.path.exists(session_path):
+        if _has_faiss_index(session_path):
             # Índice existente: precisa do provider PINADO (não pode misturar).
             embeddings = _embeddings_for_index(session_path)
             if not embeddings: return
@@ -350,7 +360,7 @@ def add_npc_memory(game_id: str, npc_id: str, texts: List[str]):
 
     npc_path = _get_npc_path(game_id, npc_id)
     try:
-        if os.path.exists(npc_path):
+        if _has_faiss_index(npc_path):
             embeddings = _embeddings_for_index(npc_path)
             if not embeddings:
                 return
@@ -378,7 +388,7 @@ def query_npc_memory(game_id: str, npc_id: str, query: str, k: int = 3) -> str:
         return ""
 
     npc_path = _get_npc_path(game_id, npc_id)
-    if not os.path.exists(npc_path):
+    if not _has_faiss_index(npc_path):
         return ""
 
     embeddings = _embeddings_for_index(npc_path)

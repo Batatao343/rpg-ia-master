@@ -89,3 +89,25 @@ def test_npc_id_stable():
     assert _npc_id({}, "Guarda Bran") == "npc_guarda_bran"
     assert _npc_id({"id": "npc_custom"}, "Qualquer Nome") == "npc_custom"
     assert _npc_id({}, "") == "npc_desconhecido"
+
+
+def test_session_memory_survives_npc_dir(tmp_path, monkeypatch):
+    """Regressão do bug faiss::FileIOReader do playtest longo (2026-07-19):
+    `add_npc_memory` cria `saves_memory/{game_id}/` (pai da subpasta do NPC)
+    SEM índice de sessão. `add_memory_to_session` NÃO pode confundir o dir com
+    um índice existente e cair em FileIOReader — deve criar/gravar o índice."""
+    monkeypatch.setattr(rag, "SAVES_DIR", str(tmp_path))
+    _use_fake_embeddings(monkeypatch)
+
+    # NPC memory primeiro → cria tmp/g_sess/ (pai) + tmp/g_sess/npc_x/, mas o
+    # índice de SESSÃO (g_sess/index.faiss) ainda não existe.
+    rag.add_npc_memory("g_sess", "npc_x", ["Fato do NPC."])
+    assert os.path.isdir(os.path.join(str(tmp_path), "g_sess"))
+    assert not rag._has_faiss_index(os.path.join(str(tmp_path), "g_sess"))
+
+    # Antes do fix: entrava no ramo de load → FileIOReader → memória perdida.
+    rag.add_memory_to_session("g_sess", ["O portão de ferro range ao vento."])
+    assert rag._has_faiss_index(os.path.join(str(tmp_path), "g_sess")), \
+        "índice de sessão deve ser gravado apesar do dir criado pela memória de NPC"
+    # E a subpasta do NPC segue intacta e consultável.
+    assert "Fato" in rag.query_npc_memory("g_sess", "npc_x", "fato do npc")
