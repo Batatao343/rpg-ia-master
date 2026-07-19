@@ -10,6 +10,16 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 
+
+def runtime_cache_path(name: str) -> str:
+    """spec isolar-cache-runtime: caches gerados em RUNTIME (bestiário gerado,
+    NPC db, artefatos custom) moram FORA dos dados curados. O diretório é
+    resolvido em tempo de CHAMADA (env `RPG_RUNTIME_CACHE_DIR`; default
+    `data/runtime/`, gitignored) — suíte e playtest redirecionam sem depender
+    de ordem de import."""
+    base = os.getenv("RPG_RUNTIME_CACHE_DIR") or os.path.join(DATA_DIR, "runtime")
+    return os.path.join(base, name)
+
 def load_json_data(filename: str) -> dict:
     """Carrega um arquivo JSON da pasta data. Retorna dict vazio se falhar."""
     file_path = os.path.join(DATA_DIR, filename)
@@ -29,31 +39,39 @@ def load_json_data(filename: str) -> dict:
         print(f"❌ Erro ao ler '{filename}': {e}")
         return {}
 
+def _read_json_file(file_path: str) -> dict:
+    if not os.path.exists(file_path):
+        return {}
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+            return json.loads(content) if content else {}
+    except Exception:
+        return {}
+
+
 def save_custom_artifact(item_id: str, item_data: dict):
     """
-    Salva um item criado pela IA no arquivo de cache persistente.
+    Salva um item criado pela IA no cache persistente (overlay runtime — spec
+    isolar-cache-runtime: nunca grava em data/; o legado data/custom_artifacts.json
+    segue sendo LIDO no startup).
     Atualiza tanto o arquivo físico quanto a memória RAM.
     """
-    file_path = os.path.join(DATA_DIR, "custom_artifacts.json")
-    
-    # 1. Carrega dados atuais do disco
-    current_data = {}
-    if os.path.exists(file_path):
-        try:
-            with open(file_path, "r", encoding="utf-8") as f:
-                content = f.read().strip()
-                if content: current_data = json.loads(content)
-        except:
-            current_data = {}
-    
+    file_path = runtime_cache_path("custom_artifacts.json")
+
+    # 1. Carrega dados atuais do disco (legado + overlay, overlay vence)
+    current_data = {**_read_json_file(os.path.join(DATA_DIR, "custom_artifacts.json")),
+                    **_read_json_file(file_path)}
+
     # 2. Adiciona/Atualiza o novo item
     current_data[item_id] = item_data
-    
+
     # 3. Salva no disco
     try:
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(current_data, f, indent=2, ensure_ascii=False)
-        print(f"💾 [SYSTEM] Item '{item_id}' salvo em custom_artifacts.json")
+        print(f"💾 [SYSTEM] Item '{item_id}' salvo em custom_artifacts.json (runtime)")
     except Exception as e:
         print(f"❌ Erro ao salvar artifact: {e}")
 
@@ -71,8 +89,10 @@ ABILITIES = load_json_data("player_abilities.json")
 BESTIARY = load_json_data("bestiary.json")
 
 # 2. Sistema de Artefatos (Híbrido)
-BASE_ARTIFACTS = load_json_data("artifacts.json")         
-CUSTOM_ARTIFACTS = load_json_data("custom_artifacts.json") 
+BASE_ARTIFACTS = load_json_data("artifacts.json")
+# custom = legado (data/, pré-spec) + overlay runtime (overlay vence)
+CUSTOM_ARTIFACTS = {**load_json_data("custom_artifacts.json"),
+                    **_read_json_file(runtime_cache_path("custom_artifacts.json"))}
 
 # Fusão: Une os dois dicionários.
 ARTIFACTS_DB = {**BASE_ARTIFACTS, **CUSTOM_ARTIFACTS}

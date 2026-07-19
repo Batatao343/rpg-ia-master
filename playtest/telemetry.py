@@ -51,6 +51,11 @@ def turn_to_record(rec: TurnRecord) -> dict:
         "gold": rec.gold,
         "combat_active": rec.combat_active,
         "replanned": rec.replanned,
+        # spec balanceamento-classes-pos-playtest (R2)
+        "entropy": rec.entropy,
+        "max_entropy": rec.max_entropy,
+        "abyss_charge": rec.abyss_charge,
+        "abyss_tier": rec.abyss_tier,
         "violations": list(rec.violations),
         "provider": rec.provider,
         "model": rec.model,
@@ -135,9 +140,39 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         round(sum(combat_end_hp_pcts) / len(combat_end_hp_pcts), 1)
         if combat_end_hp_pcts else None)
 
+    # spec balanceamento-classes-pos-playtest (R2): economia de Entropia/Carga.
+    combat_rows = [r for r in turn_records if r.get("combat_active")]
+
+    def _pct(n: int, d: int):
+        return round(100.0 * n / d, 1) if d else None
+
+    starvation = _pct(
+        len([r for r in combat_rows
+             if int(r.get("max_entropy", 0) or 0) > 0 and int(r.get("entropy", 0) or 0) == 0]),
+        len(combat_rows))
+    flooding = _pct(
+        len([r for r in combat_rows
+             if int(r.get("max_entropy", 0) or 0) > 0
+             and int(r.get("entropy", 0) or 0) == int(r.get("max_entropy", 0) or 0)]),
+        len(combat_rows))
+    peak_charge = max((int(r.get("abyss_charge", 0) or 0) for r in turn_records), default=0)
+    try:
+        from combat_mechanics import abyss_tier
+        final_tier = abyss_tier(player)
+    except Exception:
+        final_tier = ""
+
     return {
         "profile": result.profile,
         "seed": result.seed,
+        "class_name": player.get("class_name") or None,
+        "entropy": {
+            "starvation_pct_combat": starvation,
+            "flooding_pct_combat": flooding,
+            "peak_abyss_charge": peak_charge,
+            "final_abyss_charge": int(player.get("abyss_charge", 0) or 0),
+            "final_abyss_tier": final_tier,
+        },
         "turns_completed": result.turns_completed,
         "errors": len(result.errors),
         "violations": violations,
@@ -166,12 +201,14 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
     }
 
 
-def persist_campaign(run_id: str, result: CampaignResult) -> dict:
-    """Escreve `{profile}_{seed}.jsonl` + `{profile}_{seed}.summary.json` no run.
-    Devolve o summary."""
+def persist_campaign(run_id: str, result: CampaignResult,
+                     stem: str | None = None) -> dict:
+    """Escreve `{stem}.jsonl` + `{stem}.summary.json` no run (default
+    `{profile}_{seed}`; runs por CLASSE passam stem próprio p/ não colidir —
+    spec balanceamento-classes-pos-playtest). Devolve o summary."""
     d = run_dir(run_id)
     os.makedirs(d, exist_ok=True)
-    stem = f"{result.profile}_{result.seed}"
+    stem = stem or f"{result.profile}_{result.seed}"
     turn_records = [turn_to_record(r) for r in result.history]
 
     with open(os.path.join(d, f"{stem}.jsonl"), "w", encoding="utf-8") as f:

@@ -224,7 +224,7 @@ def test_combate_registra_encounter(monkeypatch):
 def test_morte_registra_defeated(monkeypatch):
     import agents.combat as combat
 
-    def fake_kill(player, enemies, action, abilities):
+    def fake_kill(player, enemies, action, abilities, **kwargs):
         enemies[0]["status"] = "morto"
         enemies[0]["hp"] = 0
         return ["Golpe fatal derruba o inimigo."]

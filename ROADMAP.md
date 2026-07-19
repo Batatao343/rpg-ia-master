@@ -394,6 +394,31 @@ testes offline verdes.**
    918 offline verdes + smoke real 4/4 (narrador citou a capacidade injetada).
    Fast-follow: tiers 5+ (nível 9–20) e balanceamento pós-playtest.
 
+## Revisão pós-épico — ✅ 2026-07-19 (sessão 20)
+
+> Auditoria de código do épico de classes (sessão 19) + varredura de pendências
+> de ROADMAP/backlog. 3 specs novas; 2 `done`, 1 instrumentada. 918 → **945
+> offline verdes**.
+
+1. [fiacao-regras-orfas-classes](specs/fiacao-regras-orfas-classes.md) `done` —
+   **3 mecânicas de classe estavam mortas** (função testada em unidade, nunca
+   chamada pelo jogo): taunt do Devoto (`pick_target` ignorava `control:"taunt"`),
+   Transformação do Corruptor (`apply_transformacao` sem callsite), Purga da Carga
+   do Médico (`reduce_ally_abyss` descartado por `_split_typed_effects`). Fix +
+   **`HANDLED_KINDS`** (teste anti-órfão dado↔motor que teria pego os 3). +11 testes.
+2. [isolar-cache-runtime](specs/isolar-cache-runtime.md) `done` — cache runtime
+   (`bestiary`/`npc_database`/`custom_artifacts`) sai dos arquivos versionados p/
+   overlay gitignored `data/runtime/` (curadoria READ-ONLY, vence no merge). Fecha
+   a pendência do `git checkout` manual (sessões 15/16). +8 testes.
+3. [balanceamento-classes-pos-playtest](specs/balanceamento-classes-pos-playtest.md)
+   `in-progress` — instrumentação `done` (`--class`, telemetria Entropia/Carga,
+   seção Classes no report); baseline mock (40 campanhas) + real capturados. Os 8
+   knobs `[BALANCEAR]` seguem marcados — mock não mede economia de Entropia, real
+   ficou fino; **tuning exige rodada real dedicada** (fast-follow). +8 testes.
+4. **Backlog fechado:** traits lote 2 (40→**80**); curadoria da Rede Carmesim
+   (pendência Fase 7 — nome/monitoramento = comum do norte, iminência = `hidden`;
+   over-share em `factions.txt` suavizado + reindex do lore, 2203 chunks).
+
 ## Backlog — Features após Fase 5
 
 ### Bugs críticos (sessão 2026-06-26)

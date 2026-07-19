@@ -522,6 +522,529 @@
         "comum",
         "taverna"
       ]
+    },
+    {
+      "id": "luto_recente",
+      "name": "Luto Recente",
+      "description": "Perdeu alguém há pouco; gentileza abre mais portas que moeda.",
+      "dc_modifiers": {
+        "persuasao": -2,
+        "intimidacao": 1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "desertor_envergonhado",
+      "name": "Desertor Envergonhado",
+      "description": "Fugiu de uma batalha que ainda o persegue; uniformes o fazem suar.",
+      "dc_modifiers": {
+        "insight": -2,
+        "intimidacao": -2
+      },
+      "reveal_after": 5,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "falso_alegre",
+      "name": "Falso Alegre",
+      "description": "Ri alto para não responder; a risada é muro, não porta.",
+      "dc_modifiers": {
+        "insight": 2,
+        "persuasao": 1
+      },
+      "reveal_after": 5,
+      "tags": [
+        "comum",
+        "taverna"
+      ]
+    },
+    {
+      "id": "peregrino_da_borda",
+      "name": "Peregrino da Borda",
+      "description": "Já olhou o Abismo de perto; pouco resta no mundo que o assuste.",
+      "dc_modifiers": {
+        "intimidacao": 3
+      },
+      "reveal_after": 6,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "orfao_da_legiao",
+      "name": "Órfão da Legião",
+      "description": "Criado nos acampamentos; obedece voz de comando antes de pensar.",
+      "dc_modifiers": {
+        "intimidacao": -2,
+        "persuasao": 1
+      },
+      "reveal_after": 4,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "pregador_da_chama",
+      "name": "Pregador da Chama",
+      "description": "Cita a Chama Azul com brilho nos olhos; discussão vira sermão.",
+      "dc_modifiers": {
+        "persuasao": 2,
+        "intimidacao": -1
+      },
+      "reveal_after": 4,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "testemunha_calada",
+      "name": "Testemunha Calada",
+      "description": "Viu algo que não conta; muda de assunto com prática de anos.",
+      "dc_modifiers": {
+        "insight": 3,
+        "persuasao": 1
+      },
+      "reveal_after": 8,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "divida_de_sangue",
+      "name": "Dívida de Sangue",
+      "description": "Deve uma vida a alguém; paga em silêncio e favores que não explica.",
+      "dc_modifiers": {
+        "insight": 1,
+        "persuasao": 1
+      },
+      "reveal_after": 7,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "riso_de_feira",
+      "name": "Riso de Feira",
+      "description": "Barganha como teatro: grita, chora e fecha no aperto de mão.",
+      "dc_modifiers": {
+        "comercio": -1,
+        "persuasao": -1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "comum",
+        "taverna"
+      ]
+    },
+    {
+      "id": "colete_de_recibos",
+      "name": "Colete de Recibos",
+      "description": "Guarda cada papel que já assinou; mostra a conta do ano passado.",
+      "dc_modifiers": {
+        "comercio": 1,
+        "insight": -1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "comum",
+        "cidade"
+      ]
+    },
+    {
+      "id": "guia_aposentado",
+      "name": "Guia Aposentado",
+      "description": "Já cruzou todas as estradas; hoje só aponta o caminho por respeito.",
+      "dc_modifiers": {
+        "persuasao": -1,
+        "comercio": -1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "supersticao_de_estrada",
+      "name": "Superstição de Estrada",
+      "description": "Não viaja em dia de névoa; conta três moedas antes de qualquer trato.",
+      "dc_modifiers": {
+        "comercio": 1,
+        "insight": -1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "comum"
+      ]
+    },
+    {
+      "id": "usurario_paciente",
+      "name": "Usurário Paciente",
+      "description": "Empresta com sorriso e cobra com escritura.",
+      "dc_modifiers": {
+        "comercio": 2,
+        "insight": 1
+      },
+      "reveal_after": 4,
+      "tags": [
+        "cidade",
+        "nova_arcadia"
+      ]
+    },
+    {
+      "id": "guarda_subornavel",
+      "name": "Guarda Subornável",
+      "description": "O preço da lei muda conforme o peso da bolsa.",
+      "dc_modifiers": {
+        "comercio": -2,
+        "intimidacao": 1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "cidade"
+      ]
+    },
+    {
+      "id": "escriba_curioso",
+      "name": "Escriba Curioso",
+      "description": "Troca favores por histórias que ainda não copiou.",
+      "dc_modifiers": {
+        "persuasao": -2,
+        "comercio": 1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "nova_arcadia",
+        "aethelgard"
+      ]
+    },
+    {
+      "id": "cobrador_do_codigo",
+      "name": "Cobrador do Código",
+      "description": "Contrato é escritura sagrada; quebra se paga, sempre.",
+      "dc_modifiers": {
+        "comercio": 2,
+        "persuasao": 1
+      },
+      "reveal_after": 4,
+      "tags": [
+        "cidade",
+        "nova_arcadia"
+      ]
+    },
+    {
+      "id": "lingua_dupla",
+      "name": "Língua Dupla",
+      "description": "Traduz caravanas no deserto; escolhe o que cada lado ouve.",
+      "dc_modifiers": {
+        "comercio": -1,
+        "insight": 2
+      },
+      "reveal_after": 5,
+      "tags": [
+        "deserto_zhur"
+      ]
+    },
+    {
+      "id": "sede_antiga",
+      "name": "Sede Antiga",
+      "description": "Guarda água como outros guardam ouro; jura que o poço secou por maldição.",
+      "dc_modifiers": {
+        "comercio": 2
+      },
+      "reveal_after": 4,
+      "tags": [
+        "deserto_zhur"
+      ]
+    },
+    {
+      "id": "leitor_de_dunas",
+      "name": "Leitor de Dunas",
+      "description": "Sabe onde a areia esconde ossos e estradas; cobra pelos dois.",
+      "dc_modifiers": {
+        "comercio": -2,
+        "persuasao": -1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "deserto_zhur"
+      ]
+    },
+    {
+      "id": "ouvinte_das_arvores",
+      "name": "Ouvinte das Árvores",
+      "description": "Diz que a Floresta responde a quem pergunta baixo; às vezes, a resposta chega.",
+      "dc_modifiers": {
+        "intimidacao": -2,
+        "persuasao": -1
+      },
+      "reveal_after": 5,
+      "tags": [
+        "floresta_sussurros"
+      ]
+    },
+    {
+      "id": "nunca_dorme_na_mata",
+      "name": "Nunca Dorme na Mata",
+      "description": "Acorda ao primeiro estalo; viu o que acontece com os desavisados.",
+      "dc_modifiers": {
+        "insight": 1,
+        "intimidacao": -1
+      },
+      "reveal_after": 4,
+      "tags": [
+        "floresta_sussurros"
+      ]
+    },
+    {
+      "id": "luz_no_lodo",
+      "name": "Luz no Lodo",
+      "description": "Vende gordura de fogo-fátuo; nega saber onde colhe.",
+      "dc_modifiers": {
+        "comercio": -2,
+        "insight": -1
+      },
+      "reveal_after": 4,
+      "tags": [
+        "pantano_melancolia"
+      ]
+    },
+    {
+      "id": "pele_de_febre",
+      "name": "Pele de Febre",
+      "description": "Sobreviveu à febre do Pântano; deve um favor eterno a quem o curou.",
+      "dc_modifiers": {
+        "persuasao": -3
+      },
+      "reveal_after": 4,
+      "tags": [
+        "pantano_melancolia"
+      ]
+    },
+    {
+      "id": "cacador_de_couro",
+      "name": "Caçador de Couro-Verde",
+      "description": "Conhece cada trilha da Selva e o preço de cada presa.",
+      "dc_modifiers": {
+        "comercio": -1,
+        "intimidacao": -1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "selva_xylos"
+      ]
+    },
+    {
+      "id": "tatuagem_de_espinho",
+      "name": "Tatuagem de Espinho",
+      "description": "As marcas na pele contam suas caçadas; ler as marcas errado é insulto.",
+      "dc_modifiers": {
+        "intimidacao": 2
+      },
+      "reveal_after": 5,
+      "tags": [
+        "selva_xylos"
+      ]
+    },
+    {
+      "id": "exilado_das_torres",
+      "name": "Exilado das Torres",
+      "description": "Fala de Aethelgard como quem fala de um amor morto.",
+      "dc_modifiers": {
+        "persuasao": -2,
+        "insight": -1
+      },
+      "reveal_after": 4,
+      "tags": [
+        "aethelgard",
+        "comum"
+      ]
+    },
+    {
+      "id": "mede_palavras",
+      "name": "Mede Palavras",
+      "description": "Cada frase sai pesada em balança; o silêncio também é resposta.",
+      "dc_modifiers": {
+        "insight": 3
+      },
+      "reveal_after": 6,
+      "tags": [
+        "aethelgard",
+        "ophidia"
+      ]
+    },
+    {
+      "id": "anel_discreto",
+      "name": "Anel Discreto",
+      "description": "Gira um anel no dedo quando mente; poucos notam o gesto.",
+      "dc_modifiers": {
+        "insight": -2
+      },
+      "reveal_after": 6,
+      "tags": [
+        "ophidia"
+      ]
+    },
+    {
+      "id": "cortesao_de_ophidia",
+      "name": "Cortesão de Ophídia",
+      "description": "Sorri para os dois lados da faca e chama isso de diplomacia.",
+      "dc_modifiers": {
+        "persuasao": 2,
+        "insight": 2
+      },
+      "reveal_after": 6,
+      "tags": [
+        "ophidia"
+      ]
+    },
+    {
+      "id": "sangue_da_montanha",
+      "name": "Sangue da Montanha",
+      "description": "Clã antes de tudo; estranho prova o valor no gelo, não na conversa.",
+      "dc_modifiers": {
+        "persuasao": 2,
+        "intimidacao": -1
+      },
+      "reveal_after": 4,
+      "tags": [
+        "montanhas_afiadas",
+        "skallgard"
+      ]
+    },
+    {
+      "id": "eco_das_minas",
+      "name": "Eco das Minas",
+      "description": "Desceu fundo demais uma vez; bate três vezes antes de toda porta.",
+      "dc_modifiers": {
+        "intimidacao": -2
+      },
+      "reveal_after": 4,
+      "tags": [
+        "montanhas_afiadas",
+        "brekmar"
+      ]
+    },
+    {
+      "id": "ferreiro_de_runas_falsas",
+      "name": "Ferreiro de Runas Falsas",
+      "description": "Grava 'runas' que não protegem de nada; acredita nelas mesmo assim.",
+      "dc_modifiers": {
+        "comercio": -1,
+        "insight": -2
+      },
+      "reveal_after": 3,
+      "tags": [
+        "skallgard"
+      ]
+    },
+    {
+      "id": "hidromel_e_verdade",
+      "name": "Hidromel e Verdade",
+      "description": "Sóbrio é muralha; três canecas depois, portão aberto.",
+      "dc_modifiers": {
+        "persuasao": -2
+      },
+      "reveal_after": 3,
+      "tags": [
+        "skallgard",
+        "taverna"
+      ]
+    },
+    {
+      "id": "medo_do_subsolo",
+      "name": "Medo do Subsolo",
+      "description": "Não desce escada cujo fim não vê; Brekmar inteira o assombra.",
+      "dc_modifiers": {
+        "intimidacao": -3
+      },
+      "reveal_after": 3,
+      "tags": [
+        "brekmar"
+      ]
+    },
+    {
+      "id": "lampiao_apagado",
+      "name": "Lampião Apagado",
+      "description": "Anda no escuro por escolha; quem precisa de luz, diz ele, ainda não viu o bastante.",
+      "dc_modifiers": {
+        "insight": 2,
+        "intimidacao": 1
+      },
+      "reveal_after": 7,
+      "tags": [
+        "brekmar"
+      ]
+    },
+    {
+      "id": "viuva_do_mar",
+      "name": "Viúva do Mar",
+      "description": "O mar levou os seus; navio novo é promessa velha.",
+      "dc_modifiers": {
+        "comercio": 1,
+        "persuasao": -1
+      },
+      "reveal_after": 4,
+      "tags": [
+        "costa_negra"
+      ]
+    },
+    {
+      "id": "no_de_forca",
+      "name": "Nó de Forca",
+      "description": "Escapou da corda uma vez; a cicatriz no pescoço cobra juros.",
+      "dc_modifiers": {
+        "intimidacao": 2,
+        "insight": 1
+      },
+      "reveal_after": 6,
+      "tags": [
+        "costa_negra",
+        "brekmar"
+      ]
+    },
+    {
+      "id": "mapa_na_memoria",
+      "name": "Mapa na Memória",
+      "description": "Decorou rotas que não constam em carta alguma; vende por trecho.",
+      "dc_modifiers": {
+        "comercio": -2
+      },
+      "reveal_after": 5,
+      "tags": [
+        "costa_negra",
+        "deserto_zhur"
+      ]
+    },
+    {
+      "id": "conta_os_mortos",
+      "name": "Conta os Mortos",
+      "description": "Recita nomes de caídos como oração; respeito compra a atenção dele.",
+      "dc_modifiers": {
+        "persuasao": -1,
+        "intimidacao": 2
+      },
+      "reveal_after": 5,
+      "tags": [
+        "pradaria_ruinas"
+      ]
+    },
+    {
+      "id": "escavador_de_vesperas",
+      "name": "Escavador de Vésperas",
+      "description": "Vende 'relíquias' da Pradaria; uma em dez é verdadeira.",
+      "dc_modifiers": {
+        "comercio": -2,
+        "insight": -1
+      },
+      "reveal_after": 3,
+      "tags": [
+        "pradaria_ruinas"
+      ]
     }
   ]
 }

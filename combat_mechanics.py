@@ -405,6 +405,33 @@ def tick_cooldowns(player: Dict) -> None:
 # --------------------------------------------------------------------------
 _ABYSS_TIERS = ("nenhum", "leve", "moderado", "severo")
 
+# spec fiacao-regras-orfas-classes (R1): chance BASE de o provocado atacar o
+# provocador (escala com taunt_aggro_multiplier; teto 0.9). [BALANCEAR]
+_TAUNT_BASE_CHANCE = 0.5
+
+# spec fiacao-regras-orfas-classes (R4): registro dado↔motor. TODO kind/trigger
+# declarado nos JSONs gerados (classes.json / player_abilities.json) precisa
+# constar aqui — o teste anti-órfão compara e fica vermelho se um kind novo
+# aparecer nos dados sem handler no motor. Manter JUNTO dos handlers.
+_DOC_ONLY_SPECIAL_RULES = {
+    # kinds informativos: a mecânica vive em outro lugar —
+    # heal_abyss = efeito reduce_ally_abyss da purga_da_carga;
+    # domain_decay = overrides de entropy_trigger por branch do Corruptor.
+    "heal_abyss", "domain_decay",
+}
+HANDLED_KINDS: Dict[str, set] = {
+    "entropy_trigger": {"on_damage_taken", "on_self_harm", "on_decay_nearby",
+                        "on_channel", "on_ally_suffer"},
+    "special_rule": {"taunt_scales_with_entropy", "blood_leak", "boiler"}
+                    | _DOC_ONLY_SPECIAL_RULES,
+    "consequence": {"insonia", "cicatriz", "transformacao", "dependencia", "recidiva"},
+    "effect": {"buff", "debuff", "dot", "control", "heal", "reduce_ally_abyss"},
+    "passive_trigger": {"always", "damage_type", "resist", "initiative_attr",
+                        "heal_bonus_low", "melee_retaliate", "basic_attack_dot",
+                        "hp_as_mana", "entropy_max_bonus", "entropy_on_kill",
+                        "entropy_cost_reduction", "charge_discount", "carga_embrace"},
+}
+
 
 def _abilities_db(explicit=None) -> Dict:
     if explicit is not None:
@@ -651,8 +678,12 @@ def apply_transformacao(player: Dict, logs: Optional[List[str]] = None,
     else:  # defense_penalty
         cond = {"name": "Transformação (Def)", "dot": 0, "duration": 2,
                 "stat": "ac", "delta": -mag}
-    apply_condition(player, cond)
-    logs.append(f"{player.get('name', 'Herói')}: Transformação ({kind}) do domínio {branch} [{tier}].")
+    msg = apply_condition(player, cond)
+    # spec fiacao (R2): chamada a cada round do Corruptor — renovação silenciosa
+    # (loga só quando a condição ENTRA, senão o log repete todo round).
+    if "renovada" not in msg:
+        logs.append(f"{player.get('name', 'Herói')}: Transformação ({kind}) "
+                    f"do domínio {branch} [{tier}].")
     return logs
 
 
@@ -880,12 +911,37 @@ def damage_bonus(player: Dict, ability: Dict) -> Tuple[int, List[str]]:
     return bonus, notes
 
 
+def _resolve_ally_purge(player: Dict, ability_id: str, ability: Dict,
+                        allies: List[Dict], amount: int) -> List[str]:
+    """spec fiacao-regras-orfas-classes (R3): efeito `reduce_ally_abyss` resolve
+    num ALIADO (o de maior Carga), fora do fluxo alvo-inimigo. Sem aliado
+    elegível, a ação falha ANTES de pagar Entropia."""
+    name = ability.get("name", ability_id)
+    if player.get("class_name") != "Médico de Campo":
+        return [f"Ação falha: só o Médico de Campo purga a Carga alheia."]
+    elig = [a for a in allies or []
+            if a.get("status", "ativo") == "ativo" and a.get("active", True)
+            and int(a.get("hp", 1)) > 0 and int(a.get("abyss_charge", 0) or 0) > 0]
+    if not elig:
+        return [f"{name}: nenhum aliado marcado pelo Abismo — nada a purgar "
+                f"(Entropia preservada)."]
+    ally = max(elig, key=lambda a: int(a.get("abyss_charge", 0) or 0))
+    ok, msg = spend_resources(player, ability_id, ability)
+    logs = [msg] if msg else []
+    if not ok:
+        return logs
+    _ok, plog = reduce_ally_abyss(player, ally, amount, cost=0)
+    logs.append(plog)
+    return logs
+
+
 def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
-                          abilities_db: Dict) -> List[str]:
+                          abilities_db: Dict,
+                          allies: Optional[List[Dict]] = None) -> List[str]:
     """
     action = {"ability_id", "target", "is_allowed", "reason"}.
     Gating -> recursos/cooldown -> ataque (d20 vs AC) -> dano (com save real) -> condições.
-    Mutação in-place de player/enemies. Retorna logs mecânicos.
+    Mutação in-place de player/enemies (e allies, na Purga). Retorna logs mecânicos.
     """
     logs: List[str] = []
 
@@ -898,6 +954,13 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
         "name": "Ataque Improvisado", "cost": 0, "resource_type": "Nenhum",
         "damage_formula": "1d4+str_mod", "conditions": [], "save_stat": None,
     }
+
+    # Efeito de aliado (Purga do Médico) tem fluxo próprio — antes de pagar.
+    purge_amount = sum(int(e.get("amount", 1) or 1)
+                       for e in (ability.get("effects") or [])
+                       if isinstance(e, dict) and e.get("kind") == "reduce_ally_abyss")
+    if purge_amount > 0:
+        return _resolve_ally_purge(player, ability_id, ability, allies or [], purge_amount)
 
     ok, msg = spend_resources(player, ability_id, ability)
     if msg:
@@ -1218,17 +1281,28 @@ def _apply_attack_conditions(atk: Dict, player: Dict) -> List[str]:
     return logs
 
 
-def pick_target(enemy: Dict, targets: List[Dict]) -> Optional[Dict]:
+def pick_target(enemy: Dict, targets: List[Dict],
+                player: Optional[Dict] = None) -> Optional[Dict]:
     """Fase 4.5 (R4): escolha TÁTICA de alvo entre player + aliados, por perfil.
 
     tatico -> menor HP%; covarde -> menor defense; implacavel -> o player;
-    feroz -> aleatório (sem memória de dano por round na v1)."""
+    feroz -> aleatório (sem memória de dano por round na v1).
+
+    spec fiacao-regras-orfas-classes (R1): inimigo com condição `taunt` ativa
+    prioriza o provocador (player) com chance base × taunt_aggro_multiplier
+    (Devoto: aggro escala com Entropia), teto 0.9; fora da chance, cai no perfil."""
     alive = [t for t in targets or []
              if int(t.get("hp", 0)) > 0 and t.get("status", "ativo") == "ativo"]
     if not alive:
         return None
     if len(alive) == 1:
         return alive[0]
+    if player is not None and has_control(enemy, "taunt"):
+        prov = next((t for t in alive if t is player), None)
+        if prov is not None:
+            chance = min(0.9, _TAUNT_BASE_CHANCE * taunt_aggro_multiplier(prov))
+            if random.random() < chance:
+                return prov
     profile = get_behavior(enemy)["profile"]
     if profile == "implacavel":
         for t in alive:
@@ -1439,7 +1513,7 @@ def resolve_enemy_turn(enemy: Dict, player: Dict,
 
     # Fase 4.5 (R4): alvo tático entre player + aliados ativos (perfil decide).
     targets = [t for t in (hero_side or [player]) if t is not None]
-    target = pick_target(enemy, targets) or player
+    target = pick_target(enemy, targets, player=player) or player
     is_player = (target is player) or ("class_name" in target)
 
     # Fase 4.6 (R3): perfil decide se usa HABILIDADE em vez de ataque básico.

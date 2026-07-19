@@ -165,6 +165,29 @@ def render_markdown(report: RunReport) -> str:
             f"| {s.get('fell_back_turns',0)} | {'sim' if s.get('mock') else 'não'} |")
     L.append("")
 
+    # spec balanceamento-classes-pos-playtest (R3): matriz por classe.
+    with_class = [s for s in report.campaigns if s.get("class_name")]
+    if with_class:
+        L.append("## Classes")
+        L.append("")
+        L.append("| perfil | classe | turnos | mortes | nível | "
+                 "starvation | flooding | Carga pico | Carga final | patamar |")
+        L.append("|---|---|---|---|---|---|---|---|---|---|")
+        for s in with_class:
+            ent = s.get("entropy") or {}
+
+            def _p(v):
+                return f"{v:.0f}%" if isinstance(v, (int, float)) else "—"
+            L.append(
+                f"| {s.get('profile','?')} | {s.get('class_name','?')} "
+                f"| {s.get('turns_completed',0)} | {s.get('deaths',0)} "
+                f"| {s.get('final_level',1)} "
+                f"| {_p(ent.get('starvation_pct_combat'))} "
+                f"| {_p(ent.get('flooding_pct_combat'))} "
+                f"| {ent.get('peak_abyss_charge',0)} | {ent.get('final_abyss_charge',0)} "
+                f"| {ent.get('final_abyss_tier') or '—'} |")
+        L.append("")
+
     # spec playtest-stop-gameover (R4): morte como linha própria (turno/local/causa).
     deaths = [s for s in report.campaigns if int(s.get("deaths", 0))]
     if deaths:

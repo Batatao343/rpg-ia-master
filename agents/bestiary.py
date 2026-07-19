@@ -48,24 +48,41 @@ class EnemySchema(BaseModel):
     behavior: Optional[EnemyBehavior] = Field(None, description="Como a criatura luta: bestas = 'feroz'; soldados/bandidos = 'tatico'; presas = 'covarde'; mortos-vivos/constructos/bosses = 'implacavel'")
     regions: List[str] = Field(default_factory=list, description="Ids das regiões onde a criatura ocorre (ex.: 'skallgard')")
 
-# --- PERSISTÊNCIA ---
-def load_bestiary() -> Dict:
-    if not os.path.exists(BESTIARY_FILE): return {}
+# --- PERSISTÊNCIA (spec isolar-cache-runtime) -------------------------------
+# data/bestiary.json = base CURADA (2.5b), READ-ONLY em runtime. Criatura gerada
+# pelo LLM vai pro OVERLAY gitignored (RPG_RUNTIME_CACHE_DIR/bestiary_runtime.json).
+
+def _overlay_path() -> str:
+    from gamedata import runtime_cache_path
+    return runtime_cache_path("bestiary_runtime.json")
+
+
+def _read_json(path: str) -> Dict:
+    if not os.path.exists(path): return {}
     try:
-        with open(BESTIARY_FILE, 'r', encoding='utf-8') as f: return json.load(f)
+        with open(path, 'r', encoding='utf-8') as f: return json.load(f)
     except Exception as e:
-        print(f"⚠️ [BESTIARY] Falha ao ler {BESTIARY_FILE}: {e}")
+        print(f"⚠️ [BESTIARY] Falha ao ler {path}: {e}")
         return {}
 
+
+def load_bestiary() -> Dict:
+    """View unificada: curadoria ∪ overlay runtime (curadoria VENCE conflito de
+    id — gerado nunca sombreia entrada curada)."""
+    return {**_read_json(_overlay_path()), **_read_json(BESTIARY_FILE)}
+
+
 def save_enemy(data: Dict):
-    db = load_bestiary()
+    """Grava SÓ no overlay runtime — nunca em data/bestiary.json."""
+    db = _read_json(_overlay_path())
     # Usa ID se existir, senão gera slug
     key = data.get("id", data["name"].lower().replace(" ", "_"))
     if "id" not in data: data["id"] = key
-    
+
     db[key] = data
-    if not os.path.exists("data"): os.makedirs("data")
-    with open(BESTIARY_FILE, 'w', encoding='utf-8') as f: json.dump(db, f, indent=4, ensure_ascii=False)
+    path = _overlay_path()
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as f: json.dump(db, f, indent=4, ensure_ascii=False)
 
 def _infer_tier_from_name(name: str) -> ModelTier:
     if any(x in name.lower() for x in ["dragon", "lich", "boss", "god", "lord"]): return ModelTier.SMART

@@ -103,27 +103,40 @@ class NPCResponse(BaseModel):
         ),
     )
 
-# --- PERSISTÊNCIA ---
+# --- PERSISTÊNCIA (spec isolar-cache-runtime) -------------------------------
+# O cache de NPCs gerados mora no overlay runtime gitignored; o arquivo antigo
+# data/npc_database.json vira LEGADO (fallback de leitura até o 1º save, que
+# migra o conteúdo inteiro pro overlay).
+
+def _npc_db_path() -> str:
+    from gamedata import runtime_cache_path
+    return runtime_cache_path("npc_database.json")
+
+
 def load_npc_db():
-    if not os.path.exists(NPC_DB_FILE): return {}
+    path = _npc_db_path()
+    if not os.path.exists(path):
+        path = NPC_DB_FILE               # fallback legado (migração transparente)
+    if not os.path.exists(path): return {}
     try:
-        with open(NPC_DB_FILE, 'r', encoding='utf-8') as f: return json.load(f)
+        with open(path, 'r', encoding='utf-8') as f: return json.load(f)
     except Exception as e:
-        print(f"⚠️ [NPC DB] Falha ao ler {NPC_DB_FILE}: {e}")
+        print(f"⚠️ [NPC DB] Falha ao ler {path}: {e}")
         return {}
 
 def save_npc_template(data):
-    db = load_npc_db()
+    db = load_npc_db()                   # 1º save carrega o legado → migra tudo
     key = data.get("id", f"npc_{data['name'].lower().replace(' ', '_')}")
     if "id" not in data: data["id"] = key
-    
+
     # Garante atributos mínimos
     if "attributes" not in data:
         data["attributes"] = {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10}
-    
+
     db[key] = data
-    if not os.path.exists("data"): os.makedirs("data")
-    with open(NPC_DB_FILE, 'w', encoding='utf-8') as f: json.dump(db, f, indent=4, ensure_ascii=False)
+    path = _npc_db_path()
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as f: json.dump(db, f, indent=4, ensure_ascii=False)
 
 def _infer_tier_from_name(name: str) -> ModelTier:
     lowered = name.lower()

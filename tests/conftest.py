@@ -12,6 +12,14 @@ os.environ.setdefault("RPG_RATE_LIMIT", "0")
 
 
 @pytest.fixture(autouse=True)
+def _isolated_runtime_cache(monkeypatch, tmp_path):
+    """spec isolar-cache-runtime (R5): caches gerados em runtime (bestiário
+    gerado, NPC db, artefatos custom) vão p/ tmp — a suíte NUNCA suja data/
+    (antes: entradas mock em bestiary/npc_database exigiam git checkout)."""
+    monkeypatch.setenv("RPG_RUNTIME_CACHE_DIR", str(tmp_path / "runtime"))
+
+
+@pytest.fixture(autouse=True)
 def _no_real_embeddings(monkeypatch, request):
     """Desliga embeddings REAIS na suíte offline. Com uma key viva no `.env`
     (ex.: Jina desde a spec embeddings-provider), `query_rag`/archivist

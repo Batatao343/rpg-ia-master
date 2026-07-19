@@ -13,8 +13,11 @@ data/saves_memory/
 saves_playtest/
 playtest_runs/
 
-# Caches gerados em runtime
+# Caches gerados em runtime (spec isolar-cache-runtime: overlay em data/runtime/;
+# npc_database.json legado deixou de ser versionado — fallback de leitura local)
 data/custom_artifacts.json
+data/runtime/
+data/npc_database.json
 
 # Backups de compressão
 *.original.md

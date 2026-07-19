@@ -55,6 +55,11 @@ class TurnRecord:
     # spec balanceamento-early-game (R5): campos crus das métricas de balanço.
     combat_active: bool = False
     replanned: bool = False
+    # spec balanceamento-classes-pos-playtest (R2): recurso das 5 Posturas por turno.
+    entropy: int = 0
+    max_entropy: int = 0
+    abyss_charge: int = 0
+    abyss_tier: str = ""
     violations: List[str] = field(default_factory=list)
     # Narração que o jogador leria no turno (p/ transcript qualitativo do prompt).
     narrative: str = ""
@@ -89,7 +94,25 @@ _DEFAULT_CHAR = {
 }
 
 
-def _build_initial_state(profile: str, seed: int) -> dict:
+def resolve_class_name(raw: str) -> str:
+    """spec balanceamento-classes-pos-playtest (R1): aceita o nome exato OU o
+    slug (`devoto_do_abismo`, sem acento, case-insensitive) e devolve a chave
+    canônica de CLASSES. Inválido → KeyError com as opções."""
+    import unicodedata
+    from gamedata import CLASSES
+
+    def _norm(s: str) -> str:
+        s = unicodedata.normalize("NFD", str(s).lower().replace("_", " "))
+        return "".join(ch for ch in s if not unicodedata.combining(ch)).strip()
+
+    for cname in CLASSES:
+        if _norm(cname) == _norm(raw):
+            return cname
+    raise KeyError(f"classe desconhecida: {raw!r} (conhecidas: {sorted(CLASSES)})")
+
+
+def _build_initial_state(profile: str, seed: int,
+                         class_name: Optional[str] = None) -> dict:
     """Monta o estado inicial da campanha — MESMO shape de api.new_game."""
     from langchain_core.messages import HumanMessage, SystemMessage
     from character_creator import create_player_character
@@ -98,6 +121,8 @@ def _build_initial_state(profile: str, seed: int) -> dict:
     from world_utils import starting_world
 
     char_input = dict(_DEFAULT_CHAR)
+    if class_name:
+        char_input["class_name"] = resolve_class_name(class_name)
     char_input["name"] = f"Playtest-{profile}"
     final_char = create_player_character(char_input)
     level = int(char_input["level"])
@@ -178,6 +203,21 @@ def _isolated_saves():
         yield
     finally:
         persistence.SAVES_DIR = original
+
+
+@contextlib.contextmanager
+def _isolated_runtime_cache():
+    """spec isolar-cache-runtime (R6): caches gerados (bestiário/NPC/artefatos)
+    vão p/ dentro do diretório de playtest — run mock ou --real nunca suja data/."""
+    prev = os.environ.get("RPG_RUNTIME_CACHE_DIR")
+    os.environ["RPG_RUNTIME_CACHE_DIR"] = os.path.join(PLAYTEST_SAVES_DIR, "runtime")
+    try:
+        yield
+    finally:
+        if prev is None:
+            os.environ.pop("RPG_RUNTIME_CACHE_DIR", None)
+        else:
+            os.environ["RPG_RUNTIME_CACHE_DIR"] = prev
 
 
 @contextlib.contextmanager
@@ -279,7 +319,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                  on_turn_end: Optional[Callable[[dict, int], None]] = None,
                  invariants: bool = True,
                  max_requests: int = 0,
-                 max_cost: float = 0.0) -> CampaignResult:
+                 max_cost: float = 0.0,
+                 class_name: Optional[str] = None) -> CampaignResult:
     """Joga `turns` turnos com o perfil `profile` e devolve o CampaignResult.
 
     - `on_turn_end(state, turn)` roda após cada turno; exceção conta como erro.
@@ -312,7 +353,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
         })
 
     with _force_mock(active=not use_real_llm), \
-            _offline_embeddings(active=not use_real_llm), _isolated_saves():
+            _offline_embeddings(active=not use_real_llm), _isolated_saves(), \
+            _isolated_runtime_cache():
         _clear_caches()
         random.seed(seed)  # reproduz MockLLM + combate da campanha inteira
         from main import app as game_graph
@@ -321,7 +363,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
 
         set_llm_telemetry_hook(_hook)
         try:
-            state = _build_initial_state(profile, seed)
+            state = _build_initial_state(profile, seed, class_name=class_name)
             game_id = state["game_id"]
             turn_events.clear()
             state = game_graph.invoke(state)
@@ -419,6 +461,15 @@ def _fill_state_metrics(rec: TurnRecord, state: dict) -> None:
     rec.player_level = int(player.get("level", 1) or 1)
     rec.gold = int(player.get("gold", 0) or 0)
     rec.combat_active = bool((state.get("combat") or {}).get("active"))
+    # spec balanceamento-classes-pos-playtest (R2): Entropia/Carga por turno.
+    rec.entropy = int(player.get("entropy", 0) or 0)
+    rec.max_entropy = int(player.get("max_entropy", 0) or 0)
+    rec.abyss_charge = int(player.get("abyss_charge", 0) or 0)
+    try:
+        from combat_mechanics import abyss_tier
+        rec.abyss_tier = abyss_tier(player)
+    except Exception:
+        rec.abyss_tier = ""
 
 
 def _attach_telemetry(rec: TurnRecord, events: List[dict]) -> None:

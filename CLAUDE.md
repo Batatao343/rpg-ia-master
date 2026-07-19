@@ -307,9 +307,15 @@ v3; HUD Entropia/Carga. **Árvore RICA `done` (arvores-habilidade-classes, autor
 Fable):** 101 habilidades (41 ativas + 35 passivas + 25 utilitárias) via
 `scripts/gen_classes_v2.py`; `ability_kind` + `player_passives` + 5 triggers de
 Entropia/Carga; utilitárias no contexto do storyteller (gate determinístico);
-selo ✦/⚒ no HUD (ver [docs/CLASSES.md](docs/CLASSES.md)). **918 testes offline.**
-Próxima: balanceamento pós-playtest + tiers 5+; Fase 8 (arte) vs 10b (público)
-segue adiada.
+selo ✦/⚒ no HUD (ver [docs/CLASSES.md](docs/CLASSES.md)).
+2026-07-19 (sessão 20): **revisão pós-épico** — 3 bugs de fiação de classe
+corrigidos (taunt/Transformação/Purga estavam mortos; `HANDLED_KINDS` +
+teste anti-órfão) · cache runtime isolado em `data/runtime/` (fim do `git
+checkout` manual) · harness com `--class` + telemetria de Entropia/Carga
+(baseline capturado; tuning dos 8 knobs `[BALANCEAR]` adiado por dado
+insuficiente) · traits 40→80 · curadoria da Rede Carmesim (over-share suavizado +
+reindex). **945 testes offline.** Próxima: tuning real dedicado + tiers 5+;
+Fase 8 (arte) vs 10b (público) segue adiada.
 
 ---
 

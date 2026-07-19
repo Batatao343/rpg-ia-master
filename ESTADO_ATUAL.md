@@ -2,14 +2,55 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-19 (sessão 19: **ÉPICO DO SISTEMA DE CLASSES
-> 100% `done`** — as DUAS specs: refatoração (5 Posturas + Entropia/Carga) E
-> árvore rica (101 habilidades com passivas/utilitárias, autoria em Fable).
-> **918 offline verdes** + 2 smokes reais 4/4.)
+> Última atualização: 2026-07-19 (sessão 20: **REVISÃO PÓS-ÉPICO — 3 bugs de
+> fiação de classe corrigidos + 2 débitos técnicos pagos**. **945 offline
+> verdes**.)
 
 ---
 
 ## TL;DR — Em que pé está
+
+**Sessão 2026-07-19 (20): REVISÃO DE CÓDIGO/ROADMAP — 3 specs novas, 2 `done` +
+1 instrumentada.** Auditoria do épico de classes (sessão 19) achou bugs que o
+mock/testes de unidade escondiam:
+
+1. **[fiacao-regras-orfas-classes](specs/fiacao-regras-orfas-classes.md) `done`
+   — 3 mecânicas de classe estavam MORTAS** (função pronta + testada em unidade,
+   NUNCA chamada pelo fluxo de jogo): (a) **taunt do Devoto** — `pick_target`
+   ignorava a condição `control:"taunt"`; o tank não tankava. (b)
+   **Transformação do Corruptor** — `apply_transformacao` sem callsite; única
+   consequência de Carga que não rodava. (c) **Purga da Carga do Médico** —
+   efeito `reduce_ally_abyss` descartado em silêncio por `_split_typed_effects`.
+   Fix + **R4 anti-órfão**: `combat_mechanics.HANDLED_KINDS` + teste que varre
+   os JSONs gerados e exige handler p/ todo kind/trigger (teria pego os 3).
+   **+11 testes.**
+2. **[isolar-cache-runtime](specs/isolar-cache-runtime.md) `done` — bug
+   recorrente das sessões 15/16.** `bestiary.json`/`npc_database.json`/
+   `custom_artifacts.json` eram gravados em runtime nos arquivos versionados
+   (exigia `git checkout` manual; run real gravou "Afogado" e derrubou testes).
+   Agora: overlay gitignored `data/runtime/` (`gamedata.runtime_cache_path`,
+   env resolvida no call), curadoria READ-ONLY (vence no merge); suíte→tmp,
+   playtest→`saves_playtest/runtime/`. `git rm --cached data/npc_database.json`.
+   **+8 testes; suíte e playtest deixam `data/` limpo.**
+3. **[balanceamento-classes-pos-playtest](specs/balanceamento-classes-pos-playtest.md)
+   `in-progress` — instrumentação `done`, tuning adiado.** Harness ganhou
+   `--class`, telemetria de Entropia/Carga por turno e seção **Classes** no
+   report. Baseline mock (40 campanhas, 0 erro) + real parcial capturados. Os 8
+   knobs `[BALANCEAR]` PERMANECEM marcados: mock não mede economia de Entropia
+   (só ataque básico → flooding 100% é artefato) e o real ficou fino (combate
+   morre nível 1). Tuning exige rodada real dedicada e mais longa. **+8 testes.**
+4. **Tarefas menores do backlog:** **traits lote 2** (40→**80** em
+   `data/traits.json`, regiões subrepresentadas reforçadas); **curadoria da Rede
+   Carmesim** (pendência da Fase 7) — decisão: nome/monitoramento = conhecimento
+   comum do norte, iminência/natureza = `hidden`; suavizado o over-share real em
+   `factions.txt` ("O segredo:" num doc `public`), migrate + **reindex do lore**
+   (2203 chunks, vazamento sumiu) + assinatura de iminência em
+   `secret_signatures`. `validate.yml` verde no último push (confirmado via `gh`).
+5. **Suíte: 918 → 945 offline verdes** (+27) + 1 skip.
+
+---
+
+## TL;DR — sessão 19 (épico de classes)
 
 **Sessão 2026-07-19 (19): SISTEMA DE CLASSES REFATORADO — 5 POSTURAS DIANTE DO
 ABISMO** ([spec `done`](specs/refatoracao-sistema-classes.md); mecânica em
@@ -295,7 +336,7 @@ não existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arq
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 918 testes offline verdes (contratos de LLM ficam fora)
+uv run pytest                        # 945 testes offline verdes (contratos de LLM ficam fora)
 uv run pytest -m llm_contract -v -s  # 9 contratos contra o Gemini REAL (~13 req; requer chave)
 uv run pytest -m llm_playtest -v -s  # Fase 5: 4 perfis VITAIS × 30 turnos no LLM REAL (RPG_PLAYTEST_TURNS encurta)
 uv run python game_engine.py         # CLI
@@ -398,16 +439,18 @@ ser re-introduzido em outro local pela narrativa/player (relocaliza o
 
 **Pendências abertas (não são bugs de código):**
 
-- Action `validate.yml` verde no primeiro push (conferir no GitHub)
-- Lote 2 de traits (40 → 80 em `data/traits.json`)
+- **Tuning dos 8 knobs `[BALANCEAR]` das classes** — instrumentação pronta
+  (harness `--class` + telemetria de Entropia/Carga); falta uma rodada real
+  DEDICADA e longa em nível sobrevivível p/ decidir os números (ver
+  [spec §8](specs/balanceamento-classes-pos-playtest.md)).
+- Tiers 5+ das classes (nível 9–20) — fast-follow do épico.
 - 1 flaky isolado na suíte (sessão 8; 3 runs verdes depois — observar)
-- Curadoria: NPCs públicos do norte citam a Rede Carmesim (timeline era-7 é
-  `hidden`) — ver ROADMAP § Fase 7
-- Cache runtime (`data/bestiary.json`/`npc_database.json`) é gravado por suíte/
-  smokes com entradas mock (ex.: HP regredido, "Unknown") — hoje é `git checkout`
-  manual antes do commit; considerar isolar cache de teste (observado na sessão 15;
-  re-confirmado na 16: run real gravou "Afogado" com região fora do grafo →
-  2 testes de `test_fase25b` vermelhos até o checkout)
+- ~~Action `validate.yml`~~ ✅ verde (confirmado via `gh run list`).
+- ~~Lote 2 de traits~~ ✅ 80 traits (sessão 20).
+- ~~Curadoria Rede Carmesim~~ ✅ resolvida (sessão 20): over-share em
+  `factions.txt` suavizado + reindex; nome=público, iminência=`hidden`.
+- ~~Cache runtime gravado em `data/`~~ ✅ isolado em `data/runtime/` (sessão 20,
+  spec isolar-cache-runtime).
 - **Achados do playtest longo (sessão 16)** — 7 defeitos/melhorias priorizados
   em [docs/playtest-longrun-2026-07-14.md](docs/playtest-longrun-2026-07-14.md):
   harness sem stop no game_over · espiral pós-Saque · combate zumbi (59 turnos

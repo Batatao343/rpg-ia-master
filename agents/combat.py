@@ -479,6 +479,9 @@ def combat_node(state: GameState):
     cm.reset_entropy_turn(player)
     # Arcanista — a caldeira conta o tempo: sem vazão no prazo, estoura (auto-dano).
     logs += cm.tick_boiler(player)
+    # Corruptor — Transformação: Carga ≥ leve mantém o debuff do domínio enquanto
+    # o combate durar (spec fiacao-regras-orfas-classes R2; renova sem stack).
+    logs += cm.apply_transformacao(player)
 
     # Fase 6.5: miasma/tempestade mordem TODOS em campo aberto (1x por round)
     if env_dot:
@@ -508,7 +511,8 @@ def combat_node(state: GameState):
                     player.update(player_new)
                     logs += item_logs
                 else:
-                    logs += cm.resolve_player_action(player, enemies, action, ABILITIES)
+                    logs += cm.resolve_player_action(player, enemies, action, ABILITIES,
+                                                     allies=party)
             hero_resolved = True
         elif slot["side"] == "ally":
             a = next((x for x in party if x.get("id") == slot["id"]), None)
@@ -528,7 +532,8 @@ def combat_node(state: GameState):
                 logs += cm.resolve_enemy_turn(e, player, allies=enemies, rnd=rnd,
                                               hero_side=hero_side)
     if not hero_resolved and int(player.get("hp", 0)) > 0:
-        logs += cm.resolve_player_action(player, enemies, action, ABILITIES)
+        logs += cm.resolve_player_action(player, enemies, action, ABILITIES,
+                                         allies=party)
 
     # Fase 2.5b: fugido sai do combate — não conta como ativo, não vira loot.
     active_after = [e for e in enemies if e.get("status") == "ativo"]

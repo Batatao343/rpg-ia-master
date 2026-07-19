@@ -46,15 +46,23 @@ def _cmd_run(args) -> int:
         return 2
 
     print(f"== playtest run {run_id} ==  perfis={profiles} turnos={args.turns} "
-          f"seed={args.seed} real={args.real}")
+          f"seed={args.seed} real={args.real}"
+          + (f" classe={args.class_name}" if args.class_name else ""))
     exit_code = 0
     for profile in profiles:
         res = run_campaign(
             profile, turns=args.turns, seed=args.seed,
             use_real_llm=args.real, invariants=not args.no_invariants,
             max_requests=args.max_requests, max_cost=args.max_cost,
+            class_name=args.class_name,
         )
-        telemetry.persist_campaign(run_id, res)
+        stem = None
+        if args.class_name:
+            import re as _re
+            cls = ((res.final_state or {}).get("player") or {}).get("class_name") or args.class_name
+            slug = _re.sub(r"\W+", "_", cls.lower()).strip("_")
+            stem = f"{profile}_{slug}_{res.seed}"
+        telemetry.persist_campaign(run_id, res, stem=stem)
         _print_resumo(res)
         if any(v.get("severity") == "error" for v in res.violations):
             exit_code = 1
@@ -97,6 +105,8 @@ def main(argv=None) -> int:
     pr.add_argument("--all", action="store_true", help="roda os 10 perfis em série")
     pr.add_argument("--turns", type=int, default=50)
     pr.add_argument("--seed", type=int, default=0)
+    pr.add_argument("--class", dest="class_name", default=None,
+                    help="classe do personagem (nome ou slug, ex.: sangromante); default Devoto do Abismo")
     pr.add_argument("--real", action="store_true", help="usa LLM real (opt-in, consciente de quota/custo)")
     pr.add_argument("--no-invariants", action="store_true", help="desliga os checks de invariante 5.2")
     pr.add_argument("--max-requests", type=int, default=15, help="teto de invokes de LLM (--real); 0 desliga")

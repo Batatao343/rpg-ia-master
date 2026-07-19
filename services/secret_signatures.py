@@ -20,6 +20,8 @@ SECRET_SIGNATURES: Dict[str, List[str]] = {
     ],
     "rede_carmesim": [
         "rede carmesim pode despertar", "despertar dentro de uma geração",
+        # a iminência calculada (Nehla/Astrin) — só vive nos docs `hidden`.
+        "décadas para meses", "acelerando mais rápido do que admitem",
     ],
     "arauto_identidade": [
         "aprendiz élfico que destruiu aethelgard", "fundido com a energia liberada",

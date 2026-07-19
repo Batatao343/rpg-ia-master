@@ -24,6 +24,17 @@ def test_invariants_usa_o_modulo():
     assert inv._SECRET_SIGNATURES is ss.SECRET_SIGNATURES
 
 
+def test_rede_carmesim_iminencia_detectada():
+    # curadoria 2026-07-19: a iminência calculada (décadas→meses) é a VERDADE
+    # oculta da Rede Carmesim; nome/monitoramento é público no norte.
+    hit = ss.find_unrevealed(
+        "O plano acelera o despertar de décadas para meses.", {})
+    assert hit and hit[0] == "rede_carmesim"
+    out = ss.sanitize_beat(
+        "Revele que a Câmara mede a Rede acelerando mais rápido do que admitem.", {})
+    assert "Investigue" in out and "acelerando" not in out.lower()
+
+
 # --- R2: sanitizador --------------------------------------------------------
 
 def test_sanitize_beat_neutraliza_segredo():

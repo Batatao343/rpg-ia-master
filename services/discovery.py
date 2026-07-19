@@ -17,6 +17,14 @@ import gamedata
 from services import graph_resolver as gr
 from services.codex_loader import codex_body
 
+def _bestiary_db() -> Dict:
+    """spec isolar-cache-runtime (R2): view unificada curadoria ∪ overlay —
+    criatura GERADA em jogo também entra no codex do jogador (lazy import p/
+    não puxar o módulo de geração no import do serviço)."""
+    from agents.bestiary import load_bestiary
+    return load_bestiary() or {}
+
+
 # grau -> (nome, contador, limiar)
 BESTIARY_TIERS = {
     1: ("Rumores", "seen", 1),
@@ -33,7 +41,7 @@ def normalize_bestiary_id(enemy: Dict) -> str:
     agents/combat.py). Tenta o id cru, depois sem sufixo numérico, depois slug
     do nome. Não achou no bestiário -> "" (criatura ad-hoc não entra no codex).
     """
-    db = gamedata.BESTIARY or {}
+    db = _bestiary_db()
     raw = str(enemy.get("id") or "").strip()
     if raw and raw in db:
         return raw
@@ -101,10 +109,10 @@ def knowledge_tier(entry: Dict) -> int:
 
 
 def bestiary_view(bk: Dict, turn: int = 0) -> List[Dict]:
-    """Junta contadores + data/bestiary.json, revelando campos por grau.
+    """Junta contadores + bestiário (curadoria ∪ overlay), revelando por grau.
     Fase 6.3: entrada ganha rótulo de raridade regional (pressão de caça)."""
     from services.ecology import regional_rarity_label
-    db = gamedata.BESTIARY or {}
+    db = _bestiary_db()
     out: List[Dict] = []
     for creature_id, entry in (bk or {}).items():
         tier = knowledge_tier(entry)
