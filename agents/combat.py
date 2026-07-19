@@ -406,6 +406,10 @@ def combat_node(state: GameState):
     wfx = wu_mod.weather_effects(state.get("world") or {})
     env_atk = int(wfx.get("combat_attack_mod", 0) or 0)
     env_dot = int(wfx.get("dot_outdoor", 0) or 0)
+    # spec itens-vivos-e-luz (R4): lutar no escuro sem luz penaliza o acerto de
+    # todos (simétrico); uma fonte de luz do herói ilumina a cena e zera isso.
+    light = wu_mod.light_level(state.get("world") or {}, player)
+    env_atk += int(light.get("combat_mod", 0) or 0)
     if env_atk:
         player["_env_attack_mod"] = env_atk
         for e in enemies:
@@ -504,9 +508,14 @@ def combat_node(state: GameState):
                 hero_fled = True
             elif int(player.get("hp", 0)) > 0:
                 if action.get("item_id"):
-                    # Fase 4.3: usar item consome o turno; resolução 100% Python
+                    # Fase 4.3: usar item consome o turno; resolução 100% Python.
+                    # spec itens-vivos-e-luz (R5): item ofensivo mira o alvo atual
+                    # (efeito hostil vai no inimigo; buff/cura seguem no herói).
                     import inventory as inv_mod
-                    player_new, item_logs = inv_mod.use_item_in_combat(player, action["item_id"])
+                    tgt = (cm._find_target(enemies, action.get("target", ""))
+                           or next((e for e in enemies if e.get("status") == "ativo"), None))
+                    player_new, item_logs = inv_mod.use_item_in_combat(
+                        player, action["item_id"], target=tgt)
                     player.clear()
                     player.update(player_new)
                     logs += item_logs

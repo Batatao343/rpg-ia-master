@@ -317,8 +317,11 @@ reindex). **945 testes offline.** Próxima: tuning real dedicado + tiers 5+;
 Auditoria de mecânica-morta: gating narrativo por classe APOSENTADO
 (morto desde a deleção do Ruler; mecânica é Python) · weather GLOBAL fiado
 (trigger determinístico em `advance_weather` — Tempestade de Éter/Noite Sem
-Estrelas varrem e impactam o jogo). **950 testes offline.** Fase 8 (arte) vs
-10b (público) segue adiada.
+Estrelas varrem e impactam o jogo). itens-vivos-e-luz: passiva de item fiada
+(`item_passives` em `player_passives`), item ativo ofensivo
+(`use_item_in_combat` com alvo), **sistema de LUZ** (`light_level` — escuro
+penaliza percepção/acerto, tocha anula) + **+22 itens** ancorados na lore.
+**970 testes offline.** Fase 8 (arte) vs 10b (público) segue adiada.
 
 ---
 

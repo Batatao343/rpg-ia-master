@@ -657,9 +657,16 @@
       "ac_bonus": 1
     },
     "mechanics": {
-      "passive_effects": [],
+      "passive_effects": [
+        {
+          "trigger": "light"
+        }
+      ],
       "active_ability": null
-    }
+    },
+    "economy_tags": [
+      "luz"
+    ]
   },
   "art_ampulheta_vaelorn": {
     "name": "A Ampulheta de Vaelorn",
@@ -830,6 +837,623 @@
     "mechanics": {
       "passive_effects": [],
       "active_ability": null
+    }
+  },
+  "tocha_resina": {
+    "name": "Tocha de Resina",
+    "type": "consumable",
+    "rarity": "common",
+    "value_gold": 5,
+    "description": "Um toco de pinho embebido em resina. Queima por algumas horas e afasta o breu.",
+    "stackable": true,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        {
+          "trigger": "light"
+        }
+      ],
+      "active_ability": null
+    },
+    "economy_tags": [
+      "luz"
+    ]
+  },
+  "lanterna_forja_vorr": {
+    "name": "Lanterna da Forja de Vorr",
+    "type": "accessory",
+    "rarity": "incomum",
+    "value_gold": 180,
+    "description": "Ferro de Skallgard e uma brasa que os ferreiros de Vorr juram nunca apagar. A chama constante deixa o portador ver o que o gelo esconde.",
+    "stackable": false,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        {
+          "trigger": "light"
+        },
+        {
+          "trigger": "perception",
+          "delta": 1
+        }
+      ],
+      "active_ability": null
+    },
+    "economy_tags": [
+      "luz"
+    ]
+  },
+  "cristal_eter_palido": {
+    "name": "Cristal de Éter Pálido",
+    "type": "accessory",
+    "rarity": "raro",
+    "value_gold": 320,
+    "description": "Um fragmento de Aethelgard que guarda uma luz fria e sem fonte. Brilha mais perto do que não deveria existir.",
+    "stackable": false,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        {
+          "trigger": "light"
+        },
+        {
+          "trigger": "perception",
+          "delta": 2
+        }
+      ],
+      "active_ability": null
+    },
+    "economy_tags": [
+      "luz"
+    ]
+  },
+  "fungo_luminoso_pantano": {
+    "name": "Fungo Luminoso do Pântano",
+    "type": "consumable",
+    "rarity": "common",
+    "value_gold": 8,
+    "description": "Um chapéu de cogumelo que pulsa em verde doentio. Os coveiros do Pântano da Melancolia os prendem no cinto para não se perder no lodo.",
+    "stackable": true,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        {
+          "trigger": "light"
+        }
+      ],
+      "active_ability": null
+    },
+    "economy_tags": [
+      "luz"
+    ]
+  },
+  "oculos_batedor_zhur": {
+    "name": "Óculos do Batedor de Zhur",
+    "type": "accessory",
+    "rarity": "incomum",
+    "value_gold": 150,
+    "description": "Lentes fumê que cortam a reverberação do sol no deserto. Quem os usa enxerga a emboscada antes da poeira.",
+    "stackable": false,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        {
+          "trigger": "perception",
+          "delta": 2
+        }
+      ],
+      "active_ability": null
+    }
+  },
+  "talisma_chama_azul": {
+    "name": "Talismã da Chama Azul",
+    "type": "accessory",
+    "rarity": "incomum",
+    "value_gold": 160,
+    "description": "Uma lasca de âmbar azul dos Filhos da Chama. Aquece a mão de quem sente o medo subir e o empurra de volta.",
+    "stackable": false,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        {
+          "trigger": "resist",
+          "name": "medo"
+        }
+      ],
+      "active_ability": null
+    }
+  },
+  "manto_la_gelo": {
+    "name": "Manto de Lã dos Nascidos do Gelo",
+    "type": "armor",
+    "rarity": "incomum",
+    "value_gold": 140,
+    "description": "Lã grossa e gordura de foca, tecida contra o Ermo Branco. O frio que mata estranhos escorrega dele.",
+    "stackable": false,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [
+        {
+          "trigger": "resist",
+          "name": "frio"
+        },
+        {
+          "trigger": "resist",
+          "name": "gelo"
+        }
+      ],
+      "active_ability": null
+    }
+  },
+  "anel_ferro_negro": {
+    "name": "Anel de Ferro Negro",
+    "type": "accessory",
+    "rarity": "incomum",
+    "value_gold": 130,
+    "description": "Forjado nas minas fundas de Brekmar com o ferro que range. Pesado, frio, e teimoso como a pedra que o pariu.",
+    "stackable": false,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        {
+          "trigger": "always",
+          "stat": "ac",
+          "delta": 1
+        }
+      ],
+      "active_ability": null
+    }
+  },
+  "bracadeira_cacador_xylos": {
+    "name": "Braçadeira do Caçador de Xylos",
+    "type": "accessory",
+    "rarity": "incomum",
+    "value_gold": 135,
+    "description": "Couro-verde curtido e presas costuradas. Firma a mão de quem precisa acertar de primeira na Selva.",
+    "stackable": false,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        {
+          "trigger": "always",
+          "stat": "attack",
+          "delta": 1
+        }
+      ],
+      "active_ability": null
+    }
+  },
+  "pingente_ofidia": {
+    "name": "Pingente de Ophídia",
+    "type": "accessory",
+    "rarity": "incomum",
+    "value_gold": 170,
+    "description": "Uma serpente de prata que morde a própria cauda. Na corte de Ophídia, veneno é conversa — e este pingente sabe recusá-la.",
+    "stackable": false,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        {
+          "trigger": "resist",
+          "name": "veneno"
+        }
+      ],
+      "active_ability": null
+    }
+  },
+  "broche_arauto": {
+    "name": "Broche do Arauto",
+    "type": "accessory",
+    "rarity": "raro",
+    "value_gold": 360,
+    "description": "Metal que não existe no mundo, torcido em espiral. Vibra baixo perto de quem pensa alto; afia o que o portador projeta.",
+    "stackable": false,
+    "unique": true,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 1
+    },
+    "mechanics": {
+      "passive_effects": [
+        {
+          "trigger": "damage_type",
+          "damage_type": "Psíquico",
+          "delta": 2
+        }
+      ],
+      "active_ability": null
+    }
+  },
+  "amuleto_abissal_menor": {
+    "name": "Amuleto Abissal Menor",
+    "type": "accessory",
+    "rarity": "raro",
+    "value_gold": 300,
+    "description": "Uma conta de obsidiana que fica mais pesada quanto mais perto do Abismo se está. Quem já carrega o breu dentro de si sente a mão firmar no golpe.",
+    "stackable": false,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        {
+          "trigger": "carga_embrace",
+          "stat": "damage",
+          "per_tier": 1
+        }
+      ],
+      "active_ability": null
+    }
+  },
+  "luneta_marinheiro": {
+    "name": "Luneta do Marinheiro da Costa Negra",
+    "type": "accessory",
+    "rarity": "common",
+    "value_gold": 60,
+    "description": "Latão riscado e uma lente arranhada. Ainda alcança o vulto no nevoeiro antes que ele alcance você.",
+    "stackable": false,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [
+        {
+          "trigger": "perception",
+          "delta": 1
+        }
+      ],
+      "active_ability": null
+    }
+  },
+  "bomba_de_trovao": {
+    "name": "Bomba de Trovão de Vorr",
+    "type": "consumable",
+    "rarity": "incomum",
+    "value_gold": 90,
+    "description": "Um bulbo de ferro cheio de pó cinza da Forja de Vorr. Estoura num clarão que faz os ossos zumbirem — quem está perto perde o rumo.",
+    "stackable": true,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "effects": [
+        {
+          "kind": "control",
+          "control": "stun",
+          "duration": 1
+        }
+      ],
+      "save_stat": "con",
+      "save_dc": 13,
+      "active_ability": {
+        "name": "Estourar a Bomba",
+        "cost": "Ação",
+        "effect": "Atordoa o alvo por 1 turno (save Con CD 13)."
+      }
+    }
+  },
+  "po_do_sono_druida": {
+    "name": "Pó do Sono dos Druidas Cinzentos",
+    "type": "consumable",
+    "rarity": "incomum",
+    "value_gold": 100,
+    "description": "Esporos moídos que os Druidas do Ciclo Cinzento sopram sobre os febris. As pálpebras pesam antes que a vontade perceba.",
+    "stackable": true,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "effects": [
+        {
+          "kind": "control",
+          "control": "stun",
+          "duration": 2
+        }
+      ],
+      "save_stat": "con",
+      "save_dc": 13,
+      "active_ability": {
+        "name": "Soprar o Pó",
+        "cost": "Ação",
+        "effect": "O alvo adormece (perde 2 turnos) — save Con CD 13."
+      }
+    }
+  },
+  "oleo_incendiario": {
+    "name": "Óleo Incendiário",
+    "type": "consumable",
+    "rarity": "common",
+    "value_gold": 40,
+    "description": "Piche fino e um trapo. Barato, sujo e eficaz: gruda na pele e não solta.",
+    "stackable": true,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "effects": [
+        {
+          "kind": "dot",
+          "delta": 3,
+          "duration": 3
+        }
+      ],
+      "active_ability": {
+        "name": "Atear o Óleo",
+        "cost": "Ação",
+        "effect": "Incendeia o alvo: 3 de dano por 3 turnos."
+      }
+    }
+  },
+  "acido_de_xylos": {
+    "name": "Frasco de Ácido de Xylos",
+    "type": "consumable",
+    "rarity": "incomum",
+    "value_gold": 85,
+    "description": "Bile destilada de uma flor carnívora da Selva. Come metal, couro e paciência na mesma pressa.",
+    "stackable": true,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "effects": [
+        {
+          "kind": "dot",
+          "delta": 4,
+          "duration": 2
+        }
+      ],
+      "active_ability": {
+        "name": "Arremessar o Ácido",
+        "cost": "Ação",
+        "effect": "Corrói o alvo: 4 de dano por 2 turnos."
+      }
+    }
+  },
+  "frasco_de_medo": {
+    "name": "Frasco de Medo do Pântano",
+    "type": "consumable",
+    "rarity": "incomum",
+    "value_gold": 95,
+    "description": "Um vapor colhido onde a voz das águas convida ao descanso eterno. Aberto perto do inimigo, faz a coragem dele escorrer.",
+    "stackable": true,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "effects": [
+        {
+          "kind": "control",
+          "control": "fear",
+          "duration": 2
+        }
+      ],
+      "save_stat": "wis",
+      "save_dc": 13,
+      "active_ability": {
+        "name": "Quebrar o Frasco",
+        "cost": "Ação",
+        "effect": "O alvo é tomado de pavor (−acerto) por 2 turnos — save Sab CD 13."
+      }
+    }
+  },
+  "bomba_de_fumaca": {
+    "name": "Bomba de Fumaça",
+    "type": "consumable",
+    "rarity": "common",
+    "value_gold": 45,
+    "description": "Um novelo de fuligem que vira cortina preta. Quem depende dos olhos passa a errar no escuro que você criou.",
+    "stackable": true,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "effects": [
+        {
+          "kind": "debuff",
+          "stat": "attack",
+          "delta": -2,
+          "duration": 2
+        }
+      ],
+      "active_ability": {
+        "name": "Lançar a Fumaça",
+        "cost": "Ação",
+        "effect": "Cega o alvo na fumaça: −2 de acerto por 2 turnos."
+      }
+    }
+  },
+  "elixir_forca_bruta": {
+    "name": "Elixir de Força Bruta",
+    "type": "consumable",
+    "rarity": "incomum",
+    "value_gold": 110,
+    "description": "Um caldo escuro que ferve na garganta e endurece o braço. O gosto é castigo; o golpe seguinte, recompensa.",
+    "stackable": true,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "effects": [
+        {
+          "kind": "buff",
+          "stat": "attack",
+          "delta": 2,
+          "duration": 3
+        }
+      ],
+      "active_ability": {
+        "name": "Beber o Elixir",
+        "cost": "Ação",
+        "effect": "+2 de acerto por 3 turnos."
+      }
+    }
+  },
+  "tonico_pele_ferro": {
+    "name": "Tônico Pele de Ferro",
+    "type": "consumable",
+    "rarity": "incomum",
+    "value_gold": 120,
+    "description": "Receita anã: limalha, cerveja preta e teimosia. A pele fica dura como a porta de um cofre de Brekmar.",
+    "stackable": true,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "effects": [
+        {
+          "kind": "buff",
+          "stat": "ac",
+          "delta": 3,
+          "duration": 3
+        }
+      ],
+      "active_ability": {
+        "name": "Virar o Tônico",
+        "cost": "Ação",
+        "effect": "+3 de Defesa por 3 turnos."
+      }
+    }
+  },
+  "essencia_chama_azul": {
+    "name": "Essência da Chama Azul",
+    "type": "consumable",
+    "rarity": "raro",
+    "value_gold": 220,
+    "description": "Uma gota da luz que os Filhos guardam. Fecha a carne e acende a coragem no mesmo instante.",
+    "stackable": true,
+    "unique": false,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "effects": [
+        {
+          "kind": "buff",
+          "stat": "attack",
+          "delta": 1,
+          "duration": 3
+        }
+      ],
+      "heal": "3d4+3",
+      "active_ability": {
+        "name": "Consumir a Essência",
+        "cost": "Ação",
+        "effect": "Recupera 3d4+3 HP e +1 de acerto por 3 turnos."
+      }
     }
   }
 }

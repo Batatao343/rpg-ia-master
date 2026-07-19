@@ -175,13 +175,15 @@ def unequip(player: Dict, slot: str) -> Tuple[Dict, Optional[str]]:
 # ---------------------------------------------------------------------------
 # Uso em combate (Fase 4.3 R4) — resolução 100% Python
 # ---------------------------------------------------------------------------
-def use_item_in_combat(player: Dict, item_ref: str) -> Tuple[Dict, List[str]]:
+def use_item_in_combat(player: Dict, item_ref: str,
+                       target: Optional[Dict] = None) -> Tuple[Dict, List[str]]:
     """Consome 1 unidade e aplica o efeito mecânico. Retorna (player, logs).
 
     Efeitos suportados: `mechanics.heal` ("2d4+2"), `mechanics.effects` (lista
-    tipada 4.2 — buffs no próprio usuário) e o legado `active_ability.effect`
-    com "Recupera XdY+Z HP". Item fora do inventário/efeito nenhum -> log de
-    falha, turno NÃO consumido pelo chamador (ok=False implícito no log)."""
+    tipada 4.2 — buffs no PRÓPRIO usuário; spec itens-vivos-e-luz R5: debuff/dot/
+    control vão no `target` inimigo, com save se `mechanics.save_stat`/`save_dc`)
+    e o legado `active_ability.effect` com "Recupera XdY+Z HP". Item fora do
+    inventário/efeito nenhum -> log de falha, turno NÃO consumido pelo chamador."""
     import combat_mechanics as cm
 
     inv = player.get("inventory") or []
@@ -218,11 +220,34 @@ def use_item_in_combat(player: Dict, item_ref: str) -> Tuple[Dict, List[str]]:
         p["hp"] = min(ceiling, cur + amount)
         logs.append(f"{p.get('name','Herói')} usa {item.get('name', iid)}: "
                     f"recupera {p['hp'] - cur} de HP (HP {p['hp']}) [{detail}]")
+    name = item.get("name", iid)
     for eff in effects:
-        if eff.get("kind") == "buff":
-            cond = cm._condition_from_effect(eff, item.get("name", iid))
+        kind = eff.get("kind")
+        if kind == "buff":
+            cond = cm._condition_from_effect(eff, name)
             if cond:
                 logs.append(cm.apply_condition(p, cond))
+        elif kind in ("debuff", "dot", "control"):
+            # spec itens-vivos-e-luz (R5): efeito HOSTIL vai no inimigo (com save).
+            if not target or target.get("status", "ativo") != "ativo":
+                logs.append(f"{name}: sem alvo válido para o efeito.")
+                continue
+            cond = cm._condition_from_effect(eff, name)
+            if not cond:
+                continue
+            save_stat = mech.get("save_stat")
+            if save_stat:
+                dc = int(mech.get("save_dc", 12) or 12)
+                stat = cm.normalize_attr(save_stat)
+                save_mod = cm.attr_mods(target.get("attributes", {})).get(stat, 0)
+                save_mod += int((target.get("racial_save_bonus") or {}).get(stat, 0) or 0)
+                save_mod += cm.condition_modifiers(target)["save"]
+                roll = cm.random.randint(1, 20) + save_mod
+                if roll >= dc:
+                    logs.append(f"{target.get('name','Alvo')} resiste a {name} "
+                                f"(save {roll} vs CD {dc}).")
+                    continue
+            logs.append(cm.apply_condition(target, cond))
     return p, logs
 
 

@@ -67,6 +67,16 @@ auditoria de mecânica-morta + 2 decisões do usuário:**
    (`maybe_start_global_weather`: chance base 6% + 3%/perigo, sem canal LLM);
    Tempestade de Éter / Noite Sem Estrelas agora varrem Valoria e impactam
    combate/percepção/descanso/viagem. **+7 testes.** Suíte **945 → 950**.
+9. **[itens-vivos-e-luz](specs/itens-vivos-e-luz.md) `in-progress`** (3 perguntas
+   do usuário: itens aplicam habilidades? passivas? tem luz? — **as 3 eram
+   NÃO**). Fiado: **passiva de item** entra em `player_passives` (era ignorada);
+   **item ativo ofensivo** (`use_item_in_combat` com alvo — stun/sono/dot/medo no
+   inimigo com save); **sistema de LUZ** (`light_level`: noite/masmorra sem luz
+   penaliza percepção −3 e acerto −1; tocha/lanterna anula; cidade iluminada).
+   **+22 itens** ancorados na lore (4 luz, 9 passivas, 6 ativos, 3 suportes);
+   bloco `<AMBIENTE_DE_LUZ>` no narrador + chip de luz no HUD. Bug colateral:
+   `corda` tinha passiva-string (filtrado). **+20 testes. Suíte 950 → 970.**
+   Falta só o smoke real (adiado — Jina em uso pelo playtest).
 
 ---
 
@@ -356,7 +366,7 @@ não existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arq
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 950 testes offline verdes (contratos de LLM ficam fora)
+uv run pytest                        # 970 testes offline verdes (contratos de LLM ficam fora)
 uv run pytest -m llm_contract -v -s  # 9 contratos contra o Gemini REAL (~13 req; requer chave)
 uv run pytest -m llm_playtest -v -s  # Fase 5: 4 perfis VITAIS × 30 turnos no LLM REAL (RPG_PLAYTEST_TURNS encurta)
 uv run python game_engine.py         # CLI

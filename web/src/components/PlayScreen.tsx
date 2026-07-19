@@ -24,8 +24,15 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
   const [reading, setReading] = useState(false); // memorial: ler a crônica
 
   const w = data?.world;
+  // spec itens-vivos-e-luz: chip de luz no relógio (escuro sem fonte / iluminado).
+  const lightChip = w?.light?.dark
+    ? " · 🌑 Escuridão"
+    : w?.light?.label === "iluminado pela sua luz"
+    ? " · 🔦 Iluminado"
+    : "";
   const clock = (w?.period ? `Dia ${w.day} · ${w.period}` : "Dia 1 · Amanhecer")
-    + (w?.weather ? ` · ${w.weather}` : "");
+    + (w?.weather ? ` · ${w.weather}` : "")
+    + lightChip;
   // spec mapa-sublocais: interiores do local atual + saída quando dentro de um
   const interiorsHere = w?.interiors?.here ?? [];
   const exitTo = w?.interiors?.exit_to ?? null;

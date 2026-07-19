@@ -282,7 +282,7 @@ def format_response(state: dict) -> GameResponse:
         # Auditoria A4: espelha a decisão real do get_llm (qualquer provider conta)
         simulated=is_simulated(),
         world=_world_block(state.get("world", {}) or {}, state.get("world_projection", {}) or {},
-                          state.get("event_log", []) or []),
+                          state.get("event_log", []) or [], state.get("player", {}) or {}),
         quest=_quest_block(state.get("campaign_plan") or {}, state.get("quests", []) or []),
         combat=_combat_block(state),
         npcs=_npcs_block(state.get("npcs", {}) or {}),
@@ -487,9 +487,14 @@ def _quest_block(plan: dict, quests: list) -> Dict[str, Any]:
     return {"main": main, "side": active + resolved, "markers": quest_log.quest_markers(quests)}
 
 
-def _world_block(w: dict, projection: Optional[dict] = None, event_log: Optional[list] = None) -> Dict[str, Any]:
+def _world_block(w: dict, projection: Optional[dict] = None, event_log: Optional[list] = None,
+                 player: Optional[dict] = None) -> Dict[str, Any]:
     clock = w.get("world_clock") or {}
     turn = w.get("turn_count", 0)
+    # spec itens-vivos-e-luz (R7): estado de luz p/ o HUD (precisa do player p/
+    # saber se ele carrega uma fonte de luz).
+    from world_utils import light_level
+    light = light_level(w, player or {})
     return {
         "location": w.get("current_location", ""),
         "location_id": w.get("current_location_id", ""),
@@ -498,6 +503,7 @@ def _world_block(w: dict, projection: Optional[dict] = None, event_log: Optional
         "visited": w.get("visited", []),
         "danger": w.get("danger_level", 1),
         "weather": w.get("weather", ""),  # Fase 6.5: rótulo do clima atual
+        "light": {"dark": light["dark"], "lit": light["lit"], "label": light["label"]},
         "turn_count": turn,  # Fase 3.2: refetch do Codex quando o turno muda
         # Fase 3.4: controlador por local visitado (verdade 2.5+/projection vence o
         # legado da Fase 2; NOME, não id — ver services/state_views.visible_controllers).

@@ -419,6 +419,23 @@ testes offline verdes.**
    (pendência Fase 7 — nome/monitoramento = comum do norte, iminência = `hidden`;
    over-share em `factions.txt` suavizado + reindex do lore, 2203 chunks).
 
+**Trabalho concorrente (enquanto rodava o playtest longo de balanceamento):**
+5. **Auditoria de mecânica-morta** além das classes (scan de funções sem
+   callsite). Achado real: **gating narrativo por classe** morto desde a deleção
+   do Ruler → **APOSENTADO** (decisão do usuário: mecânica é Python) + docs
+   corrigidos + stub `archive_narrative` removido.
+6. [weather-global-vivo](specs/weather-global-vivo.md) `in-progress` — a máquina
+   de clima GLOBAL estava sem trigger; novo gatilho determinístico em
+   `advance_weather` (Tempestade de Éter/Noite Sem Estrelas varrem e impactam).
+   +7 testes.
+7. [itens-vivos-e-luz](specs/itens-vivos-e-luz.md) `in-progress` — 3 lacunas
+   confirmadas (itens não aplicavam passivas; sem item ofensivo ativo; sem luz):
+   passiva de item fiada em `player_passives`, `use_item_in_combat` com alvo
+   (stun/sono/dot/medo com save), **sistema de LUZ** (`light_level`), **+22
+   itens** ancorados na lore + bloco de narração + chip no HUD. +20 testes.
+   Suíte **918 → 970 verdes** na sessão. Smoke real dessas 3 specs adiado
+   (Jina em uso pelo playtest).
+
 ## Backlog — Features após Fase 5
 
 ### Bugs críticos (sessão 2026-06-26)

@@ -748,6 +748,56 @@ def advance_weather(world: dict, rng=None) -> dict:
     return world
 
 
+# spec itens-vivos-e-luz: sistema de LUZ determinístico.
+DARK_PERIODS = {"Anoitecer", "Noite"}
+DARK_PERCEPTION_PENALTY = -3   # [BALANCEAR] escuro sem luz: percepção
+DARK_COMBAT_PENALTY = -1       # [BALANCEAR] escuro sem luz: acerto (simétrico)
+
+
+def _has_light_source(player: dict) -> bool:
+    """True se o herói carrega/veste uma fonte de luz: item com passiva
+    `{trigger:"light"}` OU tag `luz` (tocha/lanterna) no equipamento OU inventário
+    (diferente das passivas de combate, que só contam equipadas — luz você carrega)."""
+    import combat_mechanics as _cm
+    db = _cm.ARTIFACTS_DB
+    ids = []
+    eq = player.get("equipment")
+    if isinstance(eq, dict):
+        ids += [v for v in eq.values() if v]
+    ids += [e.get("id") if isinstance(e, dict) else e
+            for e in (player.get("inventory") or [])]
+    for iid in ids:
+        item = db.get(iid) or {}
+        if "luz" in (item.get("tags") or []) or "luz" in (item.get("economy_tags") or []):
+            return True
+        if any(isinstance(pe, dict) and pe.get("trigger") == "light"
+               for pe in (item.get("mechanics") or {}).get("passive_effects") or []):
+            return True
+    return False
+
+
+def light_level(world: dict, player: dict) -> dict:
+    """R3: estado de LUZ do herói agora. Escuro = período noturno OU local com tag
+    `dark`, E não abrigado/urbano (cidade tem tochas). Fonte de luz anula o escuro.
+    Retorna {dark, lit, perception_mod, combat_mod, label}. Puro (sem RNG)."""
+    from gamedata import get_location
+    loc = get_location(world.get("current_location_id", "")) or {}
+    tags = set(loc.get("tags") or [])
+    sheltered = bool(_SHELTER_TAGS & tags)
+    period = world.get("time_of_day") or (world.get("world_clock") or {}).get("period") or ""
+    naturally_dark = (period in DARK_PERIODS) or ("dark" in tags)
+    dark = naturally_dark and not sheltered
+    if dark and _has_light_source(player):
+        return {"dark": False, "lit": True, "perception_mod": 0, "combat_mod": 0,
+                "label": "iluminado pela sua luz"}
+    if dark:
+        return {"dark": True, "lit": False,
+                "perception_mod": DARK_PERCEPTION_PENALTY,
+                "combat_mod": DARK_COMBAT_PENALTY, "label": "escuridão"}
+    return {"dark": False, "lit": True, "perception_mod": 0, "combat_mod": 0,
+            "label": "claro"}
+
+
 def weather_effects(world: dict, loc: dict = None) -> dict:
     """Efeitos mecânicos do clima ATUAL (leitura pontual, Fase 6.5).
     Local com tag de abrigo/urbano anula dot_outdoor e rest_block."""
@@ -801,10 +851,13 @@ def detection_check(player: dict, danger: int, rng=None,
     Fase 6.5: `perception_mod` do clima (neblina -3 etc.) soma na rolagem."""
     import random as _random
     rng = rng or _random
-    from combat_mechanics import attr_mods
+    from combat_mechanics import attr_mods, player_passives
     wis = attr_mods(player.get("attributes", {})).get("wis", 0)
     wis += int((player.get("racial_save_bonus") or {}).get("wis", 0) or 0)
-    roll = rng.randint(1, 20) + wis + int(perception_mod or 0)
+    # spec itens-vivos-e-luz (R2): passiva `perception` de classe/habilidade/item
+    perc = sum(int(pe.get("delta", 0) or 0) for pe in player_passives(player)
+               if pe.get("trigger") == "perception")
+    roll = rng.randint(1, 20) + wis + perc + int(perception_mod or 0)
     dc = 8 + 2 * max(1, min(4, int(danger or 1)))
     return {"perceived": roll >= dc, "roll": roll, "dc": dc}
 

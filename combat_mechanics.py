@@ -215,11 +215,34 @@ def learned_passives(entity: Dict, *, abilities_db=None) -> List[Dict]:
     return out
 
 
+def item_passives(entity: Dict, *, artifacts_db=None) -> List[Dict]:
+    """spec itens-vivos-e-luz (R1): passive_effects dos itens EQUIPADOS (slots).
+    Mesmo vocabulário das passivas de classe/habilidade. Sem `equipment` (fichas
+    antigas), cai no scan legado do inventário — igual a compute_player_combat_stats.
+    Inimigo não tem equipment de jogador → [] na prática."""
+    db = artifacts_db if artifacts_db is not None else ARTIFACTS_DB
+    equipment = entity.get("equipment")
+    if isinstance(equipment, dict):
+        ids = [v for v in equipment.values() if v]
+    else:
+        ids = [e.get("id") if isinstance(e, dict) else e
+               for e in (entity.get("inventory") or [])]
+    out: List[Dict] = []
+    for iid in ids:
+        item = db.get(iid) or {}
+        # só passivas TIPADAS (dict); legado tem strings de flavor (ex.: 'corda')
+        out.extend(pe for pe in (item.get("mechanics") or {}).get("passive_effects") or []
+                   if isinstance(pe, dict))
+    return out
+
+
 def player_passives(entity: Dict, *, abilities_db=None) -> List[Dict]:
-    """Passivas efetivas do JOGADOR: classe + aprendidas na árvore (R2).
-    Callsites de combate do jogador leem daqui; inimigos seguem em class_passives
-    (na prática dá no mesmo: inimigo não tem passiva de árvore)."""
-    return class_passives(entity) + learned_passives(entity, abilities_db=abilities_db)
+    """Passivas efetivas do JOGADOR: classe + aprendidas na árvore (R2) + itens
+    equipados (spec itens-vivos-e-luz R1). Callsites de combate do jogador leem
+    daqui; inimigos seguem em class_passives (inimigo não tem árvore nem slots)."""
+    return (class_passives(entity)
+            + learned_passives(entity, abilities_db=abilities_db)
+            + item_passives(entity))
 
 
 def condition_modifiers(entity: Dict) -> Dict[str, int]:
@@ -429,7 +452,9 @@ HANDLED_KINDS: Dict[str, set] = {
     "passive_trigger": {"always", "damage_type", "resist", "initiative_attr",
                         "heal_bonus_low", "melee_retaliate", "basic_attack_dot",
                         "hp_as_mana", "entropy_max_bonus", "entropy_on_kill",
-                        "entropy_cost_reduction", "charge_discount", "carga_embrace"},
+                        "entropy_cost_reduction", "charge_discount", "carga_embrace",
+                        # spec itens-vivos-e-luz: passivas de item
+                        "perception", "light"},
 }
 
 

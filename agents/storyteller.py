@@ -293,10 +293,12 @@ def storyteller_node(state: GameState):
             # Fase 6.4 (R1): percepção decide surpresa; (R2): nem todo perigo é combate.
             # Reforço/fação dominante SEMPRE é combate (eles vieram POR você).
             from world_utils import (detection_check, resolve_trap, resolve_track,
-                                     roll_encounter_type, weather_effects)
-            # Fase 6.5: neblina/vendaval atrapalham a percepção
-            det = detection_check(base_p, danger,
-                                  perception_mod=weather_effects(world).get("perception_mod", 0))
+                                     roll_encounter_type, weather_effects, light_level)
+            # Fase 6.5: neblina/vendaval atrapalham a percepção.
+            # spec itens-vivos-e-luz (R3): escuridão sem luz também penaliza.
+            _perc_mod = (weather_effects(world).get("perception_mod", 0)
+                         + light_level(world, base_p).get("perception_mod", 0))
+            det = detection_check(base_p, danger, perception_mod=_perc_mod)
             kind = ("combat" if enc.get("reason") in ("reinforcements", "controlled")
                     else roll_encounter_type(danger))
 
@@ -374,6 +376,19 @@ def storyteller_node(state: GameState):
     from services.context_builder import utility_context_block
     capacidades_block = utility_context_block(state.get("player", {}) or {})
 
+    # spec itens-vivos-e-luz (R7): ambiente de luz na narração.
+    from world_utils import light_level as _light_level
+    _ll = _light_level(world, state.get("player", {}) or {})
+    if _ll.get("dark"):
+        luz_block = ("<AMBIENTE_DE_LUZ>\n    Está ESCURO e o herói NÃO tem fonte de luz. "
+                     "Descreva a visão limitada — sombras, sons e cheiros antes de formas; "
+                     "o perigo pode surgir de perto. (Percepção e mira sofrem.)\n    </AMBIENTE_DE_LUZ>")
+    elif _ll.get("label") == "iluminado pela sua luz":
+        luz_block = ("<AMBIENTE_DE_LUZ>\n    A luz que o herói carrega empurra a escuridão "
+                     "num círculo trêmulo; além dele, o breu. Mencione a luz.\n    </AMBIENTE_DE_LUZ>")
+    else:
+        luz_block = ""
+
     campaign_plan = state.get("campaign_plan") or {}
     beats = [dict(beat) for beat in campaign_plan.get("beats", [])]
     current_step = campaign_plan.get("current_step", 0)
@@ -421,6 +436,7 @@ def storyteller_node(state: GameState):
     <EVENTOS_DESTE_TURNO>
     {eventos_turno}
     </EVENTOS_DESTE_TURNO>
+    {luz_block}
 
     <FACÇÕES_CONHECIDAS>
     {faccoes_conhecidas}
