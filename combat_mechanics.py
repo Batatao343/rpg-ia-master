@@ -329,6 +329,9 @@ def spend_resources(player: Dict, ability_id: str, ability: Dict) -> Tuple[bool,
 
     cost = int(ability.get("cost", 0) or 0)
     field = _resource_field(ability.get("resource_type", "")) if cost > 0 else None
+    # Arcanista — Dependência: sem instrumento + Carga alta encarece a Entropia.
+    if field == "entropy":
+        cost = dependencia_cost(player, cost)
     if field and int(player.get(field, 0)) < cost:
         # Fase 4.2: Sangromante (hp_as_mana) paga a mana que falta com HP (rate HP = 1 mana)
         if field == "mana":
@@ -360,6 +363,305 @@ def tick_cooldowns(player: Dict) -> None:
         cds[k] -= 1
         if cds[k] <= 0:
             del cds[k]
+
+
+# --------------------------------------------------------------------------
+# Entropia + Carga do Abismo (spec refatoracao-sistema-classes, etapas 3/4)
+#
+# Config TIPADA por classe (entropy_trigger/special_rule/abyss) lida SÓ aqui —
+# a IA nunca escolhe número nem decide se um gatilho disparou. Campos transitórios
+# (prefixo "_") não persistem no save. Player sem classe das 5 → tudo no-op.
+# --------------------------------------------------------------------------
+_ABYSS_TIERS = ("nenhum", "leve", "moderado", "severo")
+
+
+def _abilities_db(explicit=None) -> Dict:
+    if explicit is not None:
+        return explicit
+    from gamedata import ABILITIES as _A
+    return _A
+
+
+def _classes_db(explicit=None) -> Dict:
+    return explicit if explicit is not None else CLASSES
+
+
+def _branch_of(player: Dict, adb: Dict) -> Optional[str]:
+    """Subclasse = branch da 1ª habilidade conhecida com branch (espelha progression)."""
+    for aid in player.get("known_abilities") or []:
+        br = (adb.get(aid) or {}).get("branch")
+        if br:
+            return str(br)
+    return None
+
+
+def entropy_config(player: Dict, *, classes_db=None, abilities_db=None) -> Dict:
+    """Merge da entropy_trigger/special_rule/abyss da classe com overrides do branch.
+    Fonte ÚNICA de números — nunca hardcode em callsite."""
+    cdb = _classes_db(classes_db)
+    adb = _abilities_db(abilities_db)
+    cd = cdb.get(player.get("class_name", "")) or {}
+    cfg = {
+        "entropy_trigger": dict(cd.get("entropy_trigger") or {}),
+        "special_rule": dict(cd.get("special_rule") or {}),
+        "abyss": dict(cd.get("abyss") or {}),
+    }
+    branch = _branch_of(player, adb)
+    if branch:
+        overrides = ((cd.get("branches") or {}).get(branch) or {}).get("overrides") or {}
+        for block, ov in overrides.items():
+            if block in cfg and isinstance(ov, dict):
+                cfg[block] = {**cfg[block], **ov}
+    return cfg
+
+
+def abyss_tier(player: Dict, *, classes_db=None) -> str:
+    """'nenhum'|'leve'|'moderado'|'severo' a partir de abyss_charge + thresholds."""
+    charge = int(player.get("abyss_charge", 0) or 0)
+    thr = (entropy_config(player, classes_db=classes_db).get("abyss") or {}).get(
+        "thresholds") or {"leve": 1, "moderado": 4, "severo": 7}
+    tier = "nenhum"
+    for name in ("leve", "moderado", "severo"):
+        if charge >= int(thr.get(name, 10 ** 9)):
+            tier = name
+    return tier
+
+
+def _tier_index(tier: str) -> int:
+    return _ABYSS_TIERS.index(tier) if tier in _ABYSS_TIERS else 0
+
+
+def reset_entropy_turn(player: Dict) -> None:
+    """Zera o contador de ativações do gatilho no turno (chamar no início do round)."""
+    player["_entropy_trigger_turn"] = 0
+
+
+def apply_entropy_trigger(player: Dict, event: Dict, logs: Optional[List[str]] = None,
+                          *, classes_db=None, abilities_db=None) -> List[str]:
+    """Aciona o gatilho da classe se `event["kind"]` casa. Soma Entropia (clamp em
+    max_entropy) e Carga (charge_per, respeitando per_turn_cap por turno). Muta player.
+    `event` = {"kind": ..., "amount"?: int, "decay_kind"?: str}."""
+    logs = logs if logs is not None else []
+    cfg = entropy_config(player, classes_db=classes_db, abilities_db=abilities_db)
+    trig = cfg.get("entropy_trigger") or {}
+    kind = trig.get("kind")
+    if not kind or event.get("kind") != kind:
+        return logs
+    cap = int(trig.get("per_turn_cap", 10 ** 9) or 10 ** 9)
+    used = int(player.get("_entropy_trigger_turn", 0) or 0)
+    if used >= cap:
+        return logs
+
+    gain = 0
+    if kind == "on_damage_taken":
+        amount = int(event.get("amount", 0) or 0)
+        div = max(1, int(trig.get("damage_divisor", 4) or 4))
+        gain = max(int(trig.get("min_gain", 0) or 0), amount // div) if amount > 0 else 0
+    elif kind == "on_self_harm":
+        gain = int(event.get("amount", 0) or 0) * int(trig.get("gain_per_hp", 1) or 1)
+    elif kind == "on_decay_nearby":
+        want = str(trig.get("decay_kind", "any") or "any")
+        got = str(event.get("decay_kind", "any") or "any")
+        if want != "any" and got != "any" and want != got:
+            return logs
+        gain = int(trig.get("gain", 1) or 1)
+    elif kind in ("on_channel", "on_ally_suffer"):
+        gain = int(trig.get("gain", 1) or 1)
+    if gain <= 0:
+        return logs
+
+    mx = int(player.get("max_entropy", 0) or 0)
+    before = int(player.get("entropy", 0) or 0)
+    player["entropy"] = min(mx, before + gain) if mx > 0 else before + gain
+    gained = player["entropy"] - before
+    charge_per = int(trig.get("charge_per", 0) or 0)
+    if charge_per:
+        player["abyss_charge"] = int(player.get("abyss_charge", 0) or 0) + charge_per
+    player["_entropy_trigger_turn"] = used + 1
+    if kind == "on_self_harm" and gained:
+        player["_blood_entropy"] = int(player.get("_blood_entropy", 0) or 0) + gained
+    logs.append(f"{player.get('name', 'Herói')}: +{gained} Entropia ({kind}); "
+                f"Carga do Abismo {player.get('abyss_charge', 0)}")
+    return logs
+
+
+# --- Regras especiais (§3.5) -----------------------------------------------
+def taunt_aggro_multiplier(player: Dict, *, classes_db=None) -> float:
+    """Devoto: eficácia da provocação = 1 + min(cap, per_entropy*Entropia)."""
+    sr = entropy_config(player, classes_db=classes_db).get("special_rule") or {}
+    if sr.get("kind") != "taunt_scales_with_entropy":
+        return 1.0
+    per = float(sr.get("per_entropy", 0) or 0)
+    cap = float(sr.get("cap", 0) or 0)
+    return 1.0 + min(cap, per * int(player.get("entropy", 0) or 0))
+
+
+def apply_blood_leak(player: Dict, logs: Optional[List[str]] = None,
+                     *, classes_db=None) -> List[str]:
+    """Sangromante: ao ser acertado, vaza leak_frac da Entropia de sangue não gasta."""
+    logs = logs if logs is not None else []
+    sr = entropy_config(player, classes_db=classes_db).get("special_rule") or {}
+    if sr.get("kind") != "blood_leak":
+        return logs
+    blood = int(player.get("_blood_entropy", 0) or 0)
+    frac = float(sr.get("leak_frac", 0) or 0)
+    lost = int(round(blood * frac))
+    if lost <= 0:
+        return logs
+    player["entropy"] = max(0, int(player.get("entropy", 0) or 0) - lost)
+    player["_blood_entropy"] = blood - lost
+    logs.append(f"{player.get('name', 'Herói')}: {lost} de Entropia de sangue vaza no golpe.")
+    return logs
+
+
+def arm_boiler(player: Dict, ability: Dict, *, classes_db=None) -> None:
+    """Arcanista: ability marcada `cools` VAZA (desarma); qualquer outra ARMA a caldeira."""
+    sr = entropy_config(player, classes_db=classes_db).get("special_rule") or {}
+    if sr.get("kind") != "boiler":
+        return
+    if ability.get("cools"):
+        player.pop("_cool_deadline", None)
+    else:
+        player["_cool_deadline"] = int(sr.get("cool_deadline", 3) or 3)
+
+
+def tick_boiler(player: Dict, logs: Optional[List[str]] = None,
+                *, classes_db=None) -> List[str]:
+    """Arcanista: decrementa o prazo da caldeira; estoura (auto-dano) se vencer
+    sem vazão. Chamar 1x por round do Arcanista."""
+    logs = logs if logs is not None else []
+    sr = entropy_config(player, classes_db=classes_db).get("special_rule") or {}
+    if sr.get("kind") != "boiler" or player.get("_cool_deadline") is None:
+        return logs
+    deadline = int(player.get("_cool_deadline", 0)) - 1
+    if deadline <= 0:
+        dmg, _det = roll_dice_numeric(str(sr.get("overload_damage", "2d6")))
+        player["hp"] = max(0, int(player.get("hp", 0) or 0) - dmg)
+        player.pop("_cool_deadline", None)
+        logs.append(f"{player.get('name', 'Herói')}: a caldeira ESTOURA — "
+                    f"{dmg} de auto-dano (HP {player['hp']}).")
+        if int(player.get("hp", 1)) <= 0:
+            player.setdefault("status", "morto")
+    else:
+        player["_cool_deadline"] = deadline
+    return logs
+
+
+def reduce_ally_abyss(medic: Dict, ally: Dict, amount: int,
+                      *, cost: int = 2) -> Tuple[bool, str]:
+    """R9 — Médico gasta Entropia p/ reduzir a Carga do Abismo de um ALIADO.
+    Único da classe. Determinístico. Retorna (ok, log)."""
+    if medic.get("class_name") != "Médico de Campo":
+        return False, "Só o Médico de Campo purga a Carga alheia."
+    if int(medic.get("entropy", 0) or 0) < cost:
+        return False, "Sem Entropia para purgar a Carga."
+    medic["entropy"] = int(medic.get("entropy", 0)) - cost
+    before = int(ally.get("abyss_charge", 0) or 0)
+    ally["abyss_charge"] = max(0, before - int(amount))
+    return True, (f"{medic.get('name', 'Médico')} purga {before - ally['abyss_charge']} "
+                  f"de Carga de {ally.get('name', 'aliado')}.")
+
+
+# --- Consequências de Carga (§3.6) -----------------------------------------
+def apply_scar(player: Dict, ability: Dict, logs: Optional[List[str]] = None,
+               *, classes_db=None) -> List[str]:
+    """Sangromante — Cicatriz: habilidade `peak` reduz max_hp PERMANENTE + soma Carga."""
+    logs = logs if logs is not None else []
+    ab = entropy_config(player, classes_db=classes_db).get("abyss") or {}
+    if ab.get("consequence") != "cicatriz" or not ability.get("peak"):
+        return logs
+    loss = int((ab.get("params") or {}).get("scar_hp_loss", 3) or 3)
+    player["max_hp"] = max(1, int(player.get("max_hp", 1) or 1) - loss)
+    player["hp"] = min(int(player.get("hp", 0) or 0), player["max_hp"])
+    player["abyss_charge"] = int(player.get("abyss_charge", 0) or 0) + 1
+    logs.append(f"{player.get('name', 'Herói')}: o golpe de pico deixa CICATRIZ "
+                f"(−{loss} HP máx, Carga {player['abyss_charge']}).")
+    return logs
+
+
+def dependencia_cost(player: Dict, cost: int, *, classes_db=None) -> int:
+    """Arcanista — Dependência: sem instrumento (weapon) + Carga >= moderado,
+    o custo de Entropia sobe por no_instrument_cost_mult."""
+    if cost <= 0:
+        return cost
+    ab = entropy_config(player, classes_db=classes_db).get("abyss") or {}
+    if ab.get("consequence") != "dependencia":
+        return cost
+    has_weapon = bool((player.get("equipment") or {}).get("weapon"))
+    if not has_weapon and _tier_index(abyss_tier(player, classes_db=classes_db)) >= _tier_index("moderado"):
+        mult = float((ab.get("params") or {}).get("no_instrument_cost_mult", 1.0) or 1.0)
+        return int(round(cost * mult))
+    return cost
+
+
+def apply_transformacao(player: Dict, logs: Optional[List[str]] = None,
+                        *, classes_db=None, abilities_db=None) -> List[str]:
+    """Corruptor — Transformação: por patamar, um debuff conforme o domínio (branch)."""
+    logs = logs if logs is not None else []
+    ab = entropy_config(player, classes_db=classes_db, abilities_db=abilities_db).get("abyss") or {}
+    if ab.get("consequence") != "transformacao":
+        return logs
+    tier = abyss_tier(player, classes_db=classes_db)
+    if tier == "nenhum":
+        return logs
+    branch = _branch_of(player, _abilities_db(abilities_db)) or "biologia"
+    kind = ((ab.get("params") or {}).get("debuff") or {}).get(branch, "defense_penalty")
+    mag = {"leve": 1, "moderado": 2, "severo": 3}.get(tier, 1)
+    if kind == "save_penalty":
+        cond = {"name": "Transformação (Vontade)", "dot": 0, "duration": 2,
+                "stat": "save", "delta": -mag}
+    elif kind == "extra_dot":
+        cond = {"name": "Transformação (Podridão)", "dot": mag, "duration": 2}
+    else:  # defense_penalty
+        cond = {"name": "Transformação (Def)", "dot": 0, "duration": 2,
+                "stat": "ac", "delta": -mag}
+    apply_condition(player, cond)
+    logs.append(f"{player.get('name', 'Herói')}: Transformação ({kind}) do domínio {branch} [{tier}].")
+    return logs
+
+
+def _entropy_on_ability_use(player: Dict, ability: Dict, logs: List[str]) -> None:
+    """Hooks de Entropia disparados por USAR uma habilidade (chamado em
+    resolve_player_action após pagar o custo). Player sem classe das 5 → no-op."""
+    cfg = entropy_config(player)
+    trig_kind = (cfg.get("entropy_trigger") or {}).get("kind")
+    sr_kind = (cfg.get("special_rule") or {}).get("kind")
+    # gastar Entropia numa habilidade consome a Entropia "de sangue" não usada
+    if int(ability.get("cost", 0) or 0) > 0:
+        player.pop("_blood_entropy", None)
+    # Sangromante: auto-dano marcado alimenta on_self_harm (aplica o HP e o gatilho)
+    self_harm = int(ability.get("self_harm", 0) or 0)
+    if self_harm > 0:
+        player["hp"] = max(0, int(player.get("hp", 0) or 0) - self_harm)
+        logs.append(f"{player.get('name', 'Herói')} paga {self_harm} de HP (HP {player['hp']})")
+        apply_entropy_trigger(player, {"kind": "on_self_harm", "amount": self_harm}, logs)
+    # Arcanista: canalizar gera Entropia p/ a próxima; a caldeira arma ou vaza
+    if trig_kind == "on_channel" or sr_kind == "boiler":
+        apply_entropy_trigger(player, {"kind": "on_channel"}, logs)
+        arm_boiler(player, ability)
+    # Sangromante: golpe de pico deixa Cicatriz (−max_hp permanente)
+    apply_scar(player, ability, logs)
+
+
+def check_recidiva(player: Dict, logs: Optional[List[str]] = None,
+                   *, classes_db=None) -> Tuple[List[str], Optional[Dict]]:
+    """Médico — Recidiva: oculta até cruzar 'severo'; então UM colapso (condição
+    forte + evento de crônica). Flag _recidiva_fired impede repetir."""
+    logs = logs if logs is not None else []
+    ab = entropy_config(player, classes_db=classes_db).get("abyss") or {}
+    if ab.get("consequence") != "recidiva" or player.get("_recidiva_fired"):
+        return logs, None
+    collapse_at = (ab.get("params") or {}).get("collapse_at", "severo")
+    if _tier_index(abyss_tier(player, classes_db=classes_db)) < _tier_index(collapse_at):
+        return logs, None
+    player["_recidiva_fired"] = True
+    apply_condition(player, {"name": "Colapso", "dot": 0, "duration": 3,
+                             "stat": "attack", "delta": -4})
+    logs.append(f"{player.get('name', 'Médico')}: a Recidiva oculta ESTOURA — colapso.")
+    event = {"type": "abyss_collapse", "actor_id": "player", "target_id": "player",
+             "detail": f"A Carga oculta de {player.get('name', 'o Médico')} estourou em colapso",
+             "payload": {}, "source": "combat"}
+    return logs, event
 
 
 # --------------------------------------------------------------------------
@@ -524,6 +826,10 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
         logs.append(msg)
     if not ok:
         return logs
+
+    # spec refatoracao-sistema-classes (etapas 3/4): consequências do PRÓPRIO uso —
+    # auto-dano (on_self_harm), canalizar (on_channel + caldeira), cicatriz de pico.
+    _entropy_on_ability_use(player, ability, logs)
 
     name = ability.get("name", ability_id)
     formula = ability.get("damage_formula", "0")
@@ -1098,6 +1404,15 @@ def resolve_enemy_turn(enemy: Dict, player: Dict,
     hit = "CRÍTICO!" if crit else "acerta"
     logs.append(f"{enemy['name']} {hit} {target.get('name','o alvo')} com "
                 f"{atk.get('name','ataque')}: {dmg} de dano (HP {target['hp']}) [{detail}]")
+    # spec refatoracao-sistema-classes (etapa 3): dano ao herói/aliado alimenta
+    # os gatilhos de Entropia — Devoto (on_damage_taken), Sangromante (blood_leak),
+    # Médico (on_ally_suffer quando um aliado é ferido).
+    if dmg > 0:
+        if is_player:
+            apply_entropy_trigger(target, {"kind": "on_damage_taken", "amount": dmg}, logs)
+            apply_blood_leak(target, logs)
+        else:
+            apply_entropy_trigger(player, {"kind": "on_ally_suffer"}, logs)
     if int(target.get("hp", 0)) > 0:
         logs += _apply_attack_conditions(atk, target)
         # Fase 4.2: Pastor de Pragas (melee_retaliate) — quem morde, prova o veneno.

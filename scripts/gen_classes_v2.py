@@ -1,6 +1,16 @@
 """Gera data/classes.json e data/player_abilities.json — 5 Posturas diante do
 Abismo (spec refatoracao-sistema-classes, etapas 2+5). Números = proposta
-[BALANCEAR]. Encoding UTF-8. Roda uma vez; a saída é curada depois se preciso."""
+[BALANCEAR]. Encoding UTF-8. Roda uma vez; a saída é curada depois se preciso.
+
+IMPORTANTE — schema alinhado ao MOTOR (combat_mechanics):
+- efeitos usam `effects: [{"kind": buff|debuff|dot|control, ...}]` (Fase 4.2),
+  nunca `type` — o `_split_typed_effects`/`_condition_from_effect` só leem `kind`.
+- CURA é `damage_type: "Cura"` + `damage_formula` POSITIVA (o `_is_healing` decide),
+  não um effect; "Remove X"/"Recupera N" ficam em `conditions` (strings) no caminho de cura.
+- gatilhos/consequências de Entropia são config TIPADA por classe (entropy_trigger/
+  special_rule/abyss), lidos por Python — a habilidade só carrega marcadores
+  (self_harm/peak/cools/taunt/decay_kind).
+"""
 import json
 import os
 
@@ -9,9 +19,14 @@ ROOT = os.environ.get("RPG_ROOT", ".")
 # --- habilidades -------------------------------------------------------------
 AB = {}
 
+
 def add(aid, name, classe, branch, tier, level_req, *, cost=0, cat="Marcial",
-        dmg="0", dtype="Físico", conditions=None, save=None, scaling="0",
-        requires=None, effects=None, extra=None):
+        dmg="0", dtype="Físico", effects=None, conditions=None, save=None,
+        scaling="0", requires=None, extra=None):
+    """Registra habilidade no schema que o motor consome.
+
+    `effects` = lista tipada (kind buff/debuff/dot/control). `conditions` só p/
+    cura (strings "Remove X"/"Recupera N"). `extra` = marcadores mecânicos."""
     AB[aid] = {
         "name": name, "category": cat,
         "description": name + ".",
@@ -23,6 +38,23 @@ def add(aid, name, classe, branch, tier, level_req, *, cost=0, cat="Marcial",
     }
     if extra:
         AB[aid].update(extra)
+
+
+def dot(delta, dur=3):
+    return {"kind": "dot", "delta": delta, "duration": dur}
+
+
+def control(kind, dur=2):
+    return {"kind": "control", "control": kind, "duration": dur}
+
+
+def debuff(stat, delta, dur=3):
+    return {"kind": "debuff", "stat": stat, "delta": delta, "duration": dur}
+
+
+def buff(stat, delta, dur=3):
+    return {"kind": "buff", "stat": stat, "delta": delta, "duration": dur}
+
 
 # ataque básico compartilhado (mantido)
 AB["ataque_basico"] = {
@@ -36,61 +68,70 @@ AB["ataque_basico"] = {
 
 # --- DEVOTO DO ABISMO (tank/str) ---
 add("provocacao_do_abismo", "Provocação do Abismo", "Devoto do Abismo", None, 1, 1,
-    cost=2, dmg="1d6+str_mod", conditions=[{"name": "Provocado", "control": "taunt", "duration": 2}],
-    save="cha", extra={"taunt": True})
+    cost=2, dmg="1d6+str_mod", save="cha",
+    effects=[control("taunt", 2)], extra={"taunt": True})
 add("encaixe_do_golpe", "Encaixe do Golpe", "Devoto do Abismo", None, 1, 1,
-    cost=2, cat="Defesa", dmg="0", effects=[{"type": "damage_reduction", "amount": 3, "duration": 2}])
+    cost=2, cat="Defesa", effects=[buff("ac", 3, 2)])
 # branches
 add("marca_consagrada", "Marca Consagrada", "Devoto do Abismo", "consagrado", 2, 3,
-    cost=3, cat="Defesa", effects=[{"type": "damage_reduction", "amount": 4, "duration": 3}])
+    cost=3, cat="Defesa", effects=[buff("ac", 4, 3)])
 add("fervor_ritual", "Fervor Ritual", "Devoto do Abismo", "consagrado", 3, 5,
-    cost=4, dmg="2d6+str_mod")
+    cost=4, dmg="2d6+str_mod", scaling="str", requires=["marca_consagrada"])
 add("taunt_ciumento", "Provocação Ciumenta", "Devoto do Abismo", "zeloso", 2, 3,
-    cost=3, dmg="1d8+str_mod", conditions=[{"name": "Provocado", "control": "taunt", "duration": 2}],
-    save="cha", extra={"taunt": True, "aoe": True})
+    cost=3, dmg="1d8+str_mod", save="cha",
+    effects=[control("taunt", 2)], extra={"taunt": True, "aoe": True})
 add("retaliacao_do_ciume", "Retaliação do Ciúme", "Devoto do Abismo", "zeloso", 3, 5,
-    cost=4, dmg="2d8+str_mod")
+    cost=4, dmg="2d8+str_mod", scaling="str", requires=["taunt_ciumento"])
 add("golpe_melancolico", "Golpe Melancólico", "Devoto do Abismo", "enlutado", 2, 3,
-    cost=3, dmg="2d6+str_mod", conditions=[{"name": "Desânimo", "attack_penalty": 2, "duration": 2}], save="wis")
+    cost=3, dmg="2d6+str_mod", save="wis", effects=[debuff("attack", -2, 2)])
 add("intimidade_com_o_fim", "Intimidade com o Fim", "Devoto do Abismo", "enlutado", 3, 5,
-    cost=4, dmg="2d8+str_mod")
+    cost=4, dmg="2d8+str_mod", scaling="str", requires=["golpe_melancolico"])
 
 # --- SANGROMANTE (dano cac/dex) ---
 add("corte_de_troca", "Corte de Troca", "Sangromante", None, 1, 1,
     cost=0, dmg="2d6+dex_mod", extra={"self_harm": 3})
 add("esquiva_calculada", "Esquiva Calculada", "Sangromante", None, 1, 1,
-    cost=2, cat="Defesa", effects=[{"type": "dodge", "amount": 3, "duration": 1}])
+    cost=2, cat="Defesa", effects=[buff("ac", 3, 1)])
 add("golpe_espetaculo", "Golpe Espetáculo", "Sangromante", "exposto", 2, 3,
-    cost=4, dmg="4d6+dex_mod", extra={"peak": True, "self_harm": 4})
+    cost=4, dmg="4d6+dex_mod", scaling="dex", extra={"peak": True, "self_harm": 4})
 add("pele_de_anuncio", "Pele de Anúncio", "Sangromante", "exposto", 3, 5,
-    cost=3, dmg="2d8+dex_mod", conditions=[{"name": "Amedrontado", "control": "fear", "duration": 1}], save="cha")
+    cost=3, dmg="2d8+dex_mod", save="cha", requires=["golpe_espetaculo"],
+    effects=[control("fear", 1)])
 add("acumulo_de_sangue", "Acúmulo de Sangue", "Sangromante", "avaro", 2, 3,
     cost=0, dmg="1d6+dex_mod", extra={"self_harm": 2})
 add("explosao_avara", "Explosão Avara", "Sangromante", "avaro", 3, 5,
-    cost=6, dmg="5d6+dex_mod", extra={"peak": True})
+    cost=6, dmg="5d6+dex_mod", scaling="dex", requires=["acumulo_de_sangue"],
+    extra={"peak": True})
 add("corte_exato", "Corte Exato", "Sangromante", "silencioso", 2, 3,
     cost=3, dmg="3d6+dex_mod")
 add("mao_firme", "Mão Firme", "Sangromante", "silencioso", 3, 5,
-    cost=3, dmg="2d8+dex_mod", extra={"self_harm": 1})
+    cost=3, dmg="2d8+dex_mod", scaling="dex", requires=["corte_exato"],
+    extra={"self_harm": 1})
 
 # --- CORRUPTOR (DoT/wis) ---
 add("toque_da_decadencia", "Toque da Decadência", "Corruptor", None, 1, 1,
-    cost=3, cat="Arcano", dmg="1d6+wis_mod", dtype="Necrótico",
-    conditions=[{"name": "Decadência", "dot": 3, "duration": 3}], save="con")
+    cost=3, cat="Arcano", dmg="1d6+wis_mod", dtype="Necrótico", save="con",
+    effects=[dot(3, 3)])
 add("semear_praga", "Semear Praga", "Corruptor", None, 1, 1,
-    cost=3, cat="Arcano", conditions=[{"name": "Praga", "dot": 2, "duration": 3}], save="con", extra={"aoe": True})
+    cost=3, cat="Arcano", save="con", effects=[dot(2, 3)], extra={"aoe": True})
 add("praga_de_esporos", "Praga de Esporos", "Corruptor", "biologia", 2, 3,
-    cost=4, cat="Arcano", dtype="Necrótico", conditions=[{"name": "Esporos", "dot": 4, "duration": 3}], save="con", extra={"aoe": True})
+    cost=4, cat="Arcano", dtype="Necrótico", save="con",
+    effects=[dot(4, 3)], extra={"aoe": True})
 add("contagio", "Contágio", "Corruptor", "biologia", 3, 5,
-    cost=4, cat="Arcano", dmg="2d6+wis_mod", dtype="Necrótico", conditions=[{"name": "Contágio", "dot": 3, "duration": 3}], save="con")
+    cost=4, cat="Arcano", dmg="2d6+wis_mod", dtype="Necrótico", save="con",
+    scaling="wis", requires=["praga_de_esporos"], effects=[dot(3, 3)])
 add("corroer_vontade", "Corroer Vontade", "Corruptor", "alma", 2, 3,
-    cost=4, cat="Arcano", conditions=[{"name": "Desespero", "control": "fear", "duration": 2}], save="wis", extra={"decay_kind": "morale"})
+    cost=4, cat="Arcano", save="wis", effects=[control("fear", 2)],
+    extra={"decay_kind": "morale"})
 add("eco_do_vazio", "Eco do Vazio", "Corruptor", "alma", 3, 5,
-    cost=4, cat="Arcano", dmg="2d8+wis_mod", dtype="Psíquico", save="wis")
+    cost=4, cat="Arcano", dmg="2d8+wis_mod", dtype="Psíquico", save="wis",
+    scaling="wis", requires=["corroer_vontade"], effects=[debuff("save", -2, 2)])
 add("enferrujar", "Enferrujar", "Corruptor", "inorganica", 2, 3,
-    cost=4, cat="Arcano", dmg="2d6+wis_mod", dtype="Ácido", conditions=[{"name": "Corrosão", "attack_penalty": 2, "duration": 3}], extra={"decay_kind": "gear"})
+    cost=4, cat="Arcano", dmg="2d6+wis_mod", dtype="Ácido",
+    effects=[debuff("attack", -2, 3)], extra={"decay_kind": "gear"})
 add("po_e_ferrugem", "Pó e Ferrugem", "Corruptor", "inorganica", 3, 5,
-    cost=4, cat="Arcano", dmg="3d6+wis_mod", dtype="Ácido")
+    cost=4, cat="Arcano", dmg="3d6+wis_mod", dtype="Ácido", scaling="wis",
+    requires=["enferrujar"], effects=[debuff("ac", -2, 2)])
 
 # --- ARCANISTA CINZENTO (dist/int) ---
 add("descarga_do_instrumento", "Descarga do Instrumento", "Arcanista Cinzento", None, 1, 1,
@@ -98,35 +139,46 @@ add("descarga_do_instrumento", "Descarga do Instrumento", "Arcanista Cinzento", 
 add("vazao_controlada", "Vazão Controlada", "Arcanista Cinzento", None, 1, 1,
     cost=2, cat="Arcano", dmg="1d8+int_mod", dtype="Arcano", extra={"cools": True})
 add("dano_calibrado", "Dano Calibrado", "Arcanista Cinzento", "calibrado", 2, 3,
-    cost=4, cat="Arcano", dmg="3d6+int_mod", dtype="Arcano", extra={"cools": True})
+    cost=4, cat="Arcano", dmg="3d6+int_mod", dtype="Arcano", scaling="int",
+    extra={"cools": True})
 add("condensador", "Condensador", "Arcanista Cinzento", "calibrado", 3, 5,
-    cost=3, cat="Arcano", dmg="2d8+int_mod", dtype="Arcano", extra={"cools": True})
+    cost=3, cat="Arcano", dmg="2d8+int_mod", dtype="Arcano", scaling="int",
+    requires=["dano_calibrado"], save="dex", effects=[debuff("attack", -2, 2)],
+    extra={"cools": True})
 add("toque_cru", "Toque Cru", "Arcanista Cinzento", "descoberto", 2, 3,
     cost=2, cat="Arcano", dmg="4d6+int_mod", dtype="Arcano", extra={"self_harm": 4})
 add("veias_de_eter", "Veias de Éter", "Arcanista Cinzento", "descoberto", 3, 5,
-    cost=3, cat="Arcano", dmg="3d6+int_mod", dtype="Arcano", extra={"self_harm": 2})
+    cost=3, cat="Arcano", dmg="3d6+int_mod", dtype="Arcano", scaling="int",
+    requires=["toque_cru"], extra={"self_harm": 2})
 add("rig_improvisado", "Rig Improvisado", "Arcanista Cinzento", "improvisador", 2, 3,
-    cost=3, cat="Arcano", dmg="2d6+int_mod", dtype="Arcano", conditions=[{"name": "Marcado", "attack_penalty": 2, "duration": 2}])
+    cost=3, cat="Arcano", dmg="2d6+int_mod", dtype="Arcano",
+    effects=[debuff("attack", -2, 2)])
 add("pecas_de_reposicao", "Peças de Reposição", "Arcanista Cinzento", "improvisador", 3, 5,
-    cost=3, cat="Arcano", dmg="2d8+int_mod", dtype="Arcano")
+    cost=3, cat="Arcano", dmg="2d8+int_mod", dtype="Arcano", scaling="int",
+    requires=["rig_improvisado"], save="dex", effects=[debuff("ac", -2, 2)])
 
 # --- MÉDICO DE CAMPO (suporte/int) ---
+# CURA: damage_type "Cura" + fórmula positiva (o motor cura o próprio herói).
 add("sutura_de_campo", "Sutura de Campo", "Médico de Campo", None, 1, 1,
-    cost=3, cat="Suporte", effects=[{"type": "heal", "formula": "2d4+int_mod"}])
+    cost=3, cat="Suporte", dtype="Cura", dmg="2d4+int_mod",
+    conditions=["Remove Sangramento"])
 add("estabilizar", "Estabilizar", "Médico de Campo", None, 1, 1,
-    cost=2, cat="Suporte", effects=[{"type": "cleanse", "duration": 1}])
+    cost=2, cat="Suporte", dtype="Cura", dmg="1d4+int_mod",
+    conditions=["Remove Veneno"])
 add("intervencao_imediata", "Intervenção Imediata", "Médico de Campo", "cirurgiao_trincheira", 2, 3,
-    cost=4, cat="Suporte", effects=[{"type": "heal", "formula": "3d4+int_mod"}])
+    cost=4, cat="Suporte", dtype="Cura", dmg="3d4+int_mod")
 add("maos_rapidas", "Mãos Rápidas", "Médico de Campo", "cirurgiao_trincheira", 3, 5,
-    cost=3, cat="Suporte", effects=[{"type": "heal", "formula": "2d6+int_mod"}])
+    cost=3, cat="Suporte", dtype="Cura", dmg="2d6+int_mod",
+    requires=["intervencao_imediata"], conditions=["Remove Sangramento"])
 add("dose_preparada", "Dose Preparada", "Médico de Campo", "boticario", 2, 3,
-    cost=3, cat="Suporte", effects=[{"type": "buff", "stat": "attack", "amount": 2, "duration": 3}])
+    cost=3, cat="Suporte", effects=[buff("attack", 2, 3)])
 add("purga_da_carga", "Purga da Carga", "Médico de Campo", "boticario", 3, 5,
-    cost=5, cat="Suporte", effects=[{"type": "reduce_ally_abyss", "amount": 2}], extra={"heal_abyss": True})
+    cost=5, cat="Suporte", requires=["dose_preparada"],
+    effects=[{"kind": "reduce_ally_abyss", "amount": 2}], extra={"heal_abyss": True})
 add("protese", "Prótese", "Médico de Campo", "cirurgiao_ferro", 2, 3,
-    cost=4, cat="Suporte", effects=[{"type": "buff", "stat": "defense", "amount": 3, "duration": 4}])
+    cost=4, cat="Suporte", effects=[buff("ac", 3, 4)])
 add("aco_no_lugar", "Aço no Lugar", "Médico de Campo", "cirurgiao_ferro", 3, 5,
-    cost=3, cat="Suporte", effects=[{"type": "buff", "stat": "defense", "amount": 2, "duration": 3}])
+    cost=3, cat="Suporte", requires=["protese"], effects=[buff("ac", 2, 3)])
 
 # --- classes ----------------------------------------------------------------
 def branch(name, identity):
@@ -272,4 +324,9 @@ for cn, cd in CLASSES.items():
     brs = set(cd["branches"].keys())
     ab_brs = {a["branch"] for a in AB.values() if a["branch"] and cn in a["classes"]}
     assert ab_brs == brs, f"{cn}: branches {brs} vs abilities {ab_brs}"
+# validação: requires apontam para ids existentes, sem ramo cruzado
+for aid, a in AB.items():
+    for r in a.get("requires", []):
+        assert r in AB, f"{aid}: requires {r} inexistente"
+        assert AB[r].get("branch") in (None, a.get("branch")), f"{aid}: requires ramo cruzado"
 print("validação OK")

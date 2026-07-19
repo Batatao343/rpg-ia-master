@@ -229,7 +229,11 @@ def storyteller_node(state: GameState):
     elif last_user_input and is_rest(last_user_input):
         from world_utils import weather_effects
         rest_blocked = weather_effects(world).get("rest_block", False)  # Fase 6.5
-        rested_player, world = apply_rest(dict(state.get("player", {})), world)
+        # spec refatoracao-sistema-classes (R6): aliado ativo mitiga a Insônia do Devoto.
+        import party as _party_mod
+        _rest_allies = _party_mod.active_allies(state)
+        rested_player, world = apply_rest(dict(state.get("player", {})), world,
+                                          allies=_rest_allies)
         factions, faction_events = advance_factions(factions, 2)  # descanso = 2 períodos
         factions, world, faction_note = resolve_faction_completions(factions, world, faction_events, intel)
         if rest_blocked:

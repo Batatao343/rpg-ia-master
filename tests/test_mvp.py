@@ -312,12 +312,15 @@ def test_cooldown_tick_decrements_and_removes():
 def test_resolve_player_action_damages_and_applies_condition():
     random.seed(5)
     from gamedata import ABILITIES
+    # Sangromante: corte_exato custa Entropia; dá dano com escala em dex.
     p = _combat_player()
+    p.update({"class_name": "Sangromante", "entropy": 10, "max_entropy": 16,
+              "abyss_charge": 0, "known_abilities": ["ataque_basico", "corte_exato"]})
     enemies = [_enemy(hp=20)]
-    action = {"ability_id": "estocada_renal", "target": "Goblin 1",
+    action = {"ability_id": "corte_exato", "target": "Goblin 1",
               "is_allowed": True, "reason": ""}
     logs = cm.resolve_player_action(p, enemies, action, ABILITIES)
-    assert p["stamina"] < 12  # gastou recurso
+    assert p["entropy"] < 10  # gastou recurso (Entropia)
     # acertou e causou dano OU errou; se houve dano, condição entra em alvo vivo
     assert enemies[0]["hp"] <= 20
     assert isinstance(logs, list) and logs

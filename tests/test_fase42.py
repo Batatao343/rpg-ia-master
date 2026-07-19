@@ -98,11 +98,14 @@ def test_ac_do_player_soma_buff():
 
 def test_save_do_alvo_soma_condicao(monkeypatch):
     monkeypatch.setattr(cm.random, "randint", lambda a, b: 10)
-    p = make_player(known_abilities=["ataque_basico", "estocada_renal"])
+    db = {"golpe_com_save": {"name": "Golpe", "cost": 0, "resource_type": "Nenhum",
+                             "damage_formula": "2d6", "damage_type": "Físico",
+                             "conditions": [], "save_stat": "con", "effects": []}}
+    p = make_player()
     # save buff +10 garante resistir (dc = 10+attack; roll 10+0+10 >= dc)
     e = make_enemy(active_conditions=[buff_cond("save", 10)])
-    act = {"ability_id": "estocada_renal", "target": "Capanga", "is_allowed": True}
-    logs = cm.resolve_player_action(p, [e], act, ABILITIES)
+    act = {"ability_id": "golpe_com_save", "target": "Capanga", "is_allowed": True}
+    logs = cm.resolve_player_action(p, [e], act, db)
     assert any("resiste" in l for l in logs)
 
 
@@ -111,10 +114,15 @@ def test_save_do_alvo_soma_condicao(monkeypatch):
 # ---------------------------------------------------------------------------
 
 def test_effects_buff_vira_condicao():
-    p = make_player(known_abilities=["ataque_basico", "pacto_medido"], hp=30)
+    db = {"pacto": {"name": "Pacto", "cost": 0, "resource_type": "Nenhum",
+                    "damage_formula": "0", "damage_type": "Físico",
+                    "conditions": ["Custa 5 HP"], "save_stat": None,
+                    "effects": [{"kind": "buff", "stat": "damage", "delta": 3, "duration": 3},
+                                {"kind": "buff", "stat": "attack", "delta": 2, "duration": 3}]}}
+    p = make_player(hp=30)
     e = make_enemy()
-    act = {"ability_id": "pacto_medido", "target": "Capanga", "is_allowed": True}
-    cm.resolve_player_action(p, [e], act, ABILITIES)
+    act = {"ability_id": "pacto", "target": "Capanga", "is_allowed": True}
+    cm.resolve_player_action(p, [e], act, db)
     stats = [c.get("stat") for c in p["active_conditions"]]
     assert "damage" in stats and "attack" in stats
     assert p["hp"] == 25  # "Custa 5 HP"
@@ -124,20 +132,28 @@ def test_effects_buff_vira_condicao():
 
 def test_effects_control_vira_condicao(monkeypatch):
     monkeypatch.setattr(cm.random, "randint", lambda a, b: 1)  # save falha
-    p = make_player(known_abilities=["ataque_basico", "chantagem"], stamina=20)
+    db = {"chantagem": {"name": "Chantagem", "cost": 0, "resource_type": "Nenhum",
+                        "damage_formula": "0", "damage_type": "Físico",
+                        "conditions": [], "save_stat": "wis",
+                        "effects": [{"kind": "debuff", "stat": "attack", "delta": -3, "duration": 2}]}}
+    p = make_player()
     e = make_enemy()
     act = {"ability_id": "chantagem", "target": "Capanga", "is_allowed": True}
-    logs = cm.resolve_player_action(p, [e], act, ABILITIES)
+    logs = cm.resolve_player_action(p, [e], act, db)
     assert any(c.get("stat") == "attack" and c.get("delta") == -3
                for c in e["active_conditions"]), (logs, e["active_conditions"])
 
 
 def test_effects_dot_sem_duplicar_texto(monkeypatch):
     monkeypatch.setattr(cm.random, "randint", lambda a, b: b if b == 20 else 1)
-    p = make_player(known_abilities=["ataque_basico", "flecha_farpada"], stamina=20)
+    db = {"flecha": {"name": "Flecha", "cost": 0, "resource_type": "Nenhum",
+                     "damage_formula": "1d6", "damage_type": "Físico",
+                     "conditions": ["Sangramento (2 dano/turno)"], "save_stat": None,
+                     "effects": [{"kind": "dot", "delta": 2, "duration": 3}]}}
+    p = make_player()
     e = make_enemy(hp=100, max_hp=100)
-    act = {"ability_id": "flecha_farpada", "target": "Capanga", "is_allowed": True}
-    cm.resolve_player_action(p, [e], act, ABILITIES)
+    act = {"ability_id": "flecha", "target": "Capanga", "is_allowed": True}
+    cm.resolve_player_action(p, [e], act, db)
     dots = [c for c in e["active_conditions"] if c.get("dot")]
     assert len(dots) == 1  # effects aplicou; string não duplicou
 
@@ -192,107 +208,12 @@ def test_resist_racial_anula_controle():
 
 
 # ---------------------------------------------------------------------------
-# Etapa 4 — passivas data-driven
+# Etapa 4 — passivas data-driven: as passivas por-classe da Fase 4.2 (Muralha
+# Humana, hp_as_mana, Triagem, etc.) foram SUBSTITUÍDAS pelos gatilhos de
+# Entropia + consequências de Carga das 5 Posturas (spec refatoracao-sistema-
+# classes; cobertura em tests/test_classes_refactor.py). A máquina genérica de
+# passive_effects segue no motor (inerte: classes novas têm passive_effects []).
 # ---------------------------------------------------------------------------
-
-def test_muralha_humana_ac():
-    # Fase 4.5: passiva virou condicional a party ativa (flag setada no combate)
-    p = make_player(class_name="Cavaleiro da Vigília", _party_active=True)
-    base = make_player()
-    assert cm.compute_player_combat_stats(p)["ac"] == \
-        cm.compute_player_combat_stats(base)["ac"] + 2
-    solo = make_player(class_name="Cavaleiro da Vigília")
-    assert cm.compute_player_combat_stats(solo)["ac"] == \
-        cm.compute_player_combat_stats(base)["ac"]
-
-
-def test_batedor_dano_passivo():
-    p = make_player(class_name="Batedor das Fronteiras")
-    bonus, _ = cm.damage_bonus(p, ABILITIES["ataque_basico"])
-    assert bonus == 2
-
-
-def test_arcanista_iniciativa_int(monkeypatch):
-    monkeypatch.setattr(cm.random, "randint", lambda a, b: 10)
-    p = make_player(class_name="Arcanista Cinzento",
-                    attributes={"str": 8, "dex": 10, "con": 10, "int": 18,
-                                "wis": 10, "cha": 10})
-    order = cm.roll_initiative(p, [])
-    assert order[0]["init"] == 10 + 4  # usa INT (+4), não DEX (+0)
-
-
-def test_sangromante_hp_por_mana():
-    p = make_player(class_name="Sangromante", mana=2, hp=30)
-    ability = {"name": "X", "cost": 6, "resource_type": "Mana"}
-    ok, msg = cm.spend_resources(p, "x_test", ability)
-    assert ok
-    assert p["mana"] == 0
-    assert p["hp"] == 30 - (6 - 2) * 2  # 4 de mana faltando -> 8 HP
-    assert "Sacrifício" in msg
-
-
-def test_inquisidor_imune_medo_e_dano_fogo():
-    p = make_player(class_name="Inquisidor da Cinza")
-    log = cm.apply_condition(p, {"name": "Medo", "dot": 0, "duration": 2,
-                                 "source": "x", "control": "fear"})
-    assert "resiste" in log and not p["active_conditions"]
-    bonus, _ = cm.damage_bonus(p, {"damage_type": "Fogo"})
-    assert bonus == 2
-    bonus2, _ = cm.damage_bonus(p, {"damage_type": "Cortante"})
-    assert bonus2 == 0
-
-
-def test_pastor_retaliacao_melee(monkeypatch):
-    monkeypatch.setattr(cm.random, "randint", lambda a, b: b if b == 4 else 15)
-    p = make_player(class_name="Pastor de Pragas")
-    e = make_enemy(hp=10)
-    logs = cm.resolve_enemy_turn(e, p)
-    assert any("veneno do Hospedeiro" in l for l in logs)
-    assert e["hp"] < 10
-
-
-def test_sombra_veneno_no_ataque_basico(monkeypatch):
-    monkeypatch.setattr(cm.random, "randint", lambda a, b: 10)
-    p = make_player(class_name="Sombra da Corte")
-    e = make_enemy(hp=100, max_hp=100, defense=1)
-    act = {"ability_id": "ataque_basico", "target": "Capanga", "is_allowed": True}
-    cm.resolve_player_action(p, [e], act, ABILITIES)
-    assert any(c.get("dot") for c in e["active_conditions"])
-
-
-def test_medico_cura_bonus_25(monkeypatch):
-    monkeypatch.setattr(cm.random, "randint", lambda a, b: 1)
-    p = make_player(class_name="Médico de Campo", hp=5, max_hp=30, stamina=20,
-                    known_abilities=["ataque_basico", "sutura_de_campo"])
-    act = {"ability_id": "sutura_de_campo", "target": "", "is_allowed": True}
-    logs = cm.resolve_player_action(p, [make_enemy()], act, ABILITIES)
-    assert any("triagem" in l for l in logs)
-
-
-def test_guardiao_ac_sem_armadura():
-    p = make_player(class_name="Guardião Selvagem",
-                    attributes={"str": 10, "dex": 14, "con": 16, "int": 10,
-                                "wis": 14, "cha": 10})
-    stats = cm.compute_player_combat_stats(p)
-    assert stats["ac"] == 10 + 2 + 3  # dex +2, con +3
-
-
-def test_passive_effects_schema():
-    from gamedata import CLASSES
-    ok_triggers = {"always", "initiative_attr", "hp_as_mana", "resist",
-                   "damage_type", "melee_retaliate", "basic_attack_dot",
-                   "declarative", "heal_bonus_low", "unarmored_ac_con",
-                   "party_active"}
-    for cname, c in CLASSES.items():
-        pes = c.get("passive_effects")
-        assert isinstance(pes, list) and pes, f"{cname}: passive_effects ausente"
-        for pe in pes:
-            assert pe.get("trigger") in ok_triggers, f"{cname}: trigger {pe.get('trigger')!r}"
-    # única declarativa permitida: Sapador (spec 4.2 R5)
-    declarativas = [cn for cn, c in CLASSES.items()
-                    if any(p.get("trigger") == "declarative"
-                           for p in c.get("passive_effects", []))]
-    assert declarativas == ["Sapador da Fuligem"]
 
 
 # ---------------------------------------------------------------------------

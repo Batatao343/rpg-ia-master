@@ -2,14 +2,56 @@
 
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-18 (sessão 18: **8 specs do playtest longo `done`**
-> (cada uma com smoke real) + archivist fix + NPC relocável + **sistema de
-> classes Etapa 1/8**. 881 offline verdes. **Épico de classes: retomar por
-> [docs/HANDOFF-sistema-classes.md](docs/HANDOFF-sistema-classes.md).**)
+> Última atualização: 2026-07-19 (sessão 19: **ÉPICO DO SISTEMA DE CLASSES
+> `done` (etapas 1–8)** — 10 classes → 5 Posturas diante do Abismo × 3 subclasses,
+> recurso Entropia + Carga do Abismo, gatilhos/regras/consequências por classe,
+> migração v3, HUD, docs reescritos. 898 offline verdes + smoke real 4/4.)
 
 ---
 
 ## TL;DR — Em que pé está
+
+**Sessão 2026-07-19 (19): SISTEMA DE CLASSES REFATORADO — 5 POSTURAS DIANTE DO
+ABISMO** ([spec `done`](specs/refatoracao-sistema-classes.md); mecânica em
+[docs/CLASSES.md](docs/CLASSES.md), narrativa em
+[docs/CLASSES_NARRATIVA.md](docs/CLASSES_NARRATIVA.md)):
+1. **10 classes → 5 classes × 3 subclasses.** Devoto do Abismo (tank/ama) ·
+   Sangromante (dano/negocia) · Corruptor (DoT/trabalha junto) · Arcanista
+   Cinzento (dist/manipula) · Médico de Campo (suporte/nega). Cada classe é uma
+   postura filosófica diante do Abismo.
+2. **Dois recursos novos.** **Entropia** = pool único (substitui mana+stamina do
+   jogador; recompõe INTEGRAL no descanso). **Carga do Abismo** = longo prazo (não
+   cai no descanso; patamares leve/moderado/severo). `state.py`/creator/api/runner
+   backfillam `entropy`/`max_entropy`/`abyss_charge`.
+3. **Gatilhos + regras + consequências por classe (100% Python, `combat_mechanics`).**
+   Gatilhos: on_damage_taken/on_self_harm/on_decay_nearby/on_channel/on_ally_suffer
+   (`apply_entropy_trigger`, respeita `per_turn_cap`/round). Regras especiais:
+   taunt-escala-com-Entropia / blood_leak / boiler (caldeira estoura) / reduce_ally_abyss
+   (só Médico). Consequências: Insônia (descanso rende menos) / Cicatriz (−max_hp
+   permanente) / Transformação (debuff por domínio) / Dependência (custo dobra) /
+   Recidiva (oculta até colapso). Fiados no loop de combate + `apply_rest`.
+4. **Árvore MÍNIMA jogável (41 habilidades).** `scripts/gen_classes_v2.py` gera
+   `classes.json`+`player_abilities.json` **alinhados ao schema do motor** (effects
+   `kind`, cura via `damage_type:"Cura"`). A árvore RICA (~100 hab, passivas) é a
+   spec #2 `arvores-habilidade-classes` (Fable).
+5. **Migração `_migrate_v2_to_v3` (schema v3):** classe antiga → nova + backfill de
+   Entropia + descarte de habilidades mortas. Saves antigos ficam órfãos (arquivar).
+6. **HUD:** barra Entropia (roxo-abissal) + chip Carga do Abismo por patamar; Médico
+   oculta o número (Recidiva). `npm run build` verde.
+7. **Testes:** 881 → **898 offline verdes** (+34 `test_classes_refactor`; ~40 testes
+   de classes antigas migrados/reescritos: passivas extintas viraram gatilhos de
+   Entropia). Playtest runner default = Devoto do Abismo (sobrevive no mock).
+8. **Smoke real 4/4** (DeepSeek): Sangromante criado no LLM real com Entropia
+   mapeada (16/16) + mana/stamina 0; auto-dano somou Entropia+Carga; descanso
+   recompôs Entropia sem baixar Carga; Devoto apanhou → on_damage_taken.
+
+**🏁 O ÉPICO DO SISTEMA DE CLASSES ESTÁ `done`.** Próximo natural: árvore RICA
+([arvores-habilidade-classes](specs/arvores-habilidade-classes.md), autoria em
+Fable) + balanceamento dos números `[BALANCEAR]` após playtest.
+
+---
+
+## TL;DR — sessões anteriores
 
 **Sessão 2026-07-17 (18): 10 SPECS APROVADAS + ORDEM + EMBEDDINGS MULTI-PROVIDER** —
 1. **Todas as specs pendentes viraram `approved` com ordem de dev cravada no
@@ -230,7 +272,7 @@ não existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arq
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 792 testes offline verdes (contratos de LLM ficam fora)
+uv run pytest                        # 898 testes offline verdes (contratos de LLM ficam fora)
 uv run pytest -m llm_contract -v -s  # 9 contratos contra o Gemini REAL (~13 req; requer chave)
 uv run pytest -m llm_playtest -v -s  # Fase 5: 4 perfis VITAIS × 30 turnos no LLM REAL (RPG_PLAYTEST_TURNS encurta)
 uv run python game_engine.py         # CLI

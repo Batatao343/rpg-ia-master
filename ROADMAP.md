@@ -369,6 +369,25 @@ testes offline verdes.**
    limites duros no schema do LLM derrubavam todos os providers (fix:
    truncagem em Python + `StartScenarioIn` estrito só na borda).
 
+## Sistema de Classes — ✅ ENTREGUE 2026-07-19 (Cinco Posturas diante do Abismo)
+
+> Decisão do usuário: substituir as **10 classes** por **5 classes × 3 subclasses**,
+> cada uma uma **postura filosófica diante do Abismo** (não uma profissão). Detalhe
+> técnico só na spec; referência viva em [docs/CLASSES.md](docs/CLASSES.md) (mecânica)
+> e [docs/CLASSES_NARRATIVA.md](docs/CLASSES_NARRATIVA.md) (história).
+
+1. [refatoracao-sistema-classes](specs/refatoracao-sistema-classes.md) `done` —
+   Devoto do Abismo · Sangromante · Corruptor · Arcanista Cinzento · Médico de
+   Campo. Recursos novos: **Entropia** (pool único, substitui mana+stamina do
+   jogador; recompõe integral no descanso) + **Carga do Abismo** (longo prazo, não
+   cai no descanso, patamares leve/moderado/severo). Gatilho + regra especial +
+   consequência por classe, 100% Python (`combat_mechanics`). Árvore MÍNIMA jogável
+   (41 hab, `scripts/gen_classes_v2.py`); migração `_migrate_v2_to_v3`; HUD com barra
+   Entropia + chip Carga. 898 offline verdes + smoke real 4/4.
+2. [arvores-habilidade-classes](specs/arvores-habilidade-classes.md) `approved`
+   (fast-follow) — árvore RICA por subclasse (~100 hab com passivas/utilitárias,
+   tiers 4+), autoria em **Fable**. Depende do motor de Entropia da spec #1 (pronto).
+
 ## Backlog — Features após Fase 5
 
 ### Bugs críticos (sessão 2026-06-26)

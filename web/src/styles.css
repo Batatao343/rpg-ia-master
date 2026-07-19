@@ -424,7 +424,19 @@ select {
 .bar[data-kind="hp"].is-low .bar__fill { animation: throb 1.3s var(--ease) infinite; }
 .bar[data-kind="mana"] .bar__fill { background: var(--mana); box-shadow: 0 0 12px -3px var(--mana); }
 .bar[data-kind="stamina"] .bar__fill { background: var(--stamina); box-shadow: 0 0 12px -3px var(--stamina); }
+/* spec refatoracao-sistema-classes: Entropia — roxo-abissal (pool das 5 Posturas) */
+.bar[data-kind="entropy"] .bar__fill { background: linear-gradient(90deg, #6d3b9e, #a15be0); box-shadow: 0 0 12px -2px #8a4fd0; }
 .bar.is-hit { animation: barhit 0.5s var(--ease); }
+
+/* Carga do Abismo — chip por patamar (leve → severo esquenta o tom) */
+.abyss-chip { display: inline-flex; align-items: center; gap: 0.4rem; margin: 0.15rem 0 0.4rem;
+  padding: 0.2rem 0.6rem; border-radius: var(--r-pill); font-size: 0.78rem; letter-spacing: 0.02em;
+  border: 1px solid #45305e; background: rgba(60, 40, 85, 0.35); color: #c9b4e6; }
+.abyss-chip__dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: #8a4fd0; box-shadow: 0 0 8px -1px #8a4fd0; }
+.abyss-chip[data-tier="moderado"] { border-color: #6e4b2f; background: rgba(90, 60, 35, 0.35); color: #e6c9a0; }
+.abyss-chip[data-tier="moderado"] .abyss-chip__dot { background: #d08a4f; box-shadow: 0 0 8px -1px #d08a4f; }
+.abyss-chip[data-tier="severo"] { border-color: #6e2f2f; background: rgba(90, 35, 35, 0.4); color: #e6a0a0; }
+.abyss-chip[data-tier="severo"] .abyss-chip__dot { background: #d04f4f; box-shadow: 0 0 10px -1px #d04f4f; animation: throb 1.3s var(--ease) infinite; }
 
 .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.1rem; }
 .stat { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 0.45rem; border-bottom: 1px solid var(--line-soft); font-size: 0.95rem; }

@@ -1,7 +1,15 @@
 # HANDOFF — Épico do Sistema de Classes (Cinco Posturas diante do Abismo)
 
-> Documento auto-contido para **retomar em sessão limpa**. Fonte da verdade do
-> design: [specs/refatoracao-sistema-classes.md](../specs/refatoracao-sistema-classes.md)
+> ✅ **CONCLUÍDO em 2026-07-19 — etapas 1–8 `done`** (spec
+> [refatoracao-sistema-classes](../specs/refatoracao-sistema-classes.md) `done`;
+> 898 offline verdes + smoke real 4/4). Referência viva: [CLASSES.md](CLASSES.md)
+> (mecânica) e [CLASSES_NARRATIVA.md](CLASSES_NARRATIVA.md). O texto abaixo é o
+> plano original de retomada — mantido como registro histórico. **Próximo:** a
+> árvore RICA em [arvores-habilidade-classes](../specs/arvores-habilidade-classes.md)
+> (spec #2, autoria em Fable).
+>
+> Documento auto-contido (histórico) para retomar. Fonte da verdade do design:
+> [specs/refatoracao-sistema-classes.md](../specs/refatoracao-sistema-classes.md)
 > (motor/dados) e [specs/arvores-habilidade-classes.md](../specs/arvores-habilidade-classes.md)
 > (árvore rica — passivas/utilitárias, autoria em **Fable**).
 > Criado: 2026-07-18. Suíte no ponto de partida: **881 offline verdes**.

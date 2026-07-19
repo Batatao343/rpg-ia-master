@@ -94,55 +94,30 @@
     }
   },
   "classes": {
-    "Cavaleiro da Vigília": {
-      "tagline": "A muralha entre os fracos e o resto de Valoria.",
-      "description": "Guardião de armadura pesada que jurou proteger quem não pode se proteger. Onde a Legião cobra e as fações negociam, o Cavaleiro simplesmente fica — e enquanto ele fica, ninguém passa. Passiva: Muralha Humana, +2 de Defesa com aliados adjacentes.",
-      "playstyle": "Tanque clássico: absorve dano na linha de frente, protege aliados e vence pelo atrito. Direto, resistente, difícil de derrubar."
-    },
-    "Batedor das Fronteiras": {
-      "tagline": "Sobreviver fora das muralhas é profissão.",
-      "description": "Explorador ágil que conhece as rotas que os mapas erram: onde acampar, o que comer, quando NÃO acender fogueira. Nas estradas de Valoria, quem chega vivo geralmente pagou um Batedor. Passiva: Oportunista, +1d6 de dano contra inimigos distraídos.",
-      "playstyle": "Mobilidade e precisão: flanqueia, explora terreno e pune inimigos distraídos. Recompensa quem pensa antes de atacar."
-    },
-    "Arcanista Cinzento": {
-      "tagline": "Magia filtrada por tecnologia — poder sem fé.",
-      "description": "Estudioso que trata o Éter como problema de engenharia: condutores, lentes e cálculo no lugar de pactos e devoção. Em Nova Arcádia sua licença é cara; fora dela, ninguém pergunta. Passiva: Mente Analítica, usa Inteligência na iniciativa.",
-      "playstyle": "Conjurador de dano e controle: frágil de perto, devastador à distância. Mana é seu recurso, posicionamento é sua armadura."
+    "Devoto do Abismo": {
+      "tagline": "Ama o Abismo — e avança porque quer ser escolhido primeiro.",
+      "description": "Tanque que não segura a linha por medo, mas por desejo: encara a entropia que consome Valoria como uma amante. Quanto mais dano recebe, mais Entropia acumula e mais irresistível fica sua provocação. Recurso: Entropia. Gatilho: apanhar alimenta o poder. Carga do Abismo: Insônia — o descanso rende menos.",
+      "playstyle": "Tanque de provocação: puxa aggro que escala com a Entropia acumulada, protege o grupo e vence pelo atrito. Aguenta o fim de frente."
     },
     "Sangromante": {
-      "tagline": "O corpo é a fonte. O preço é o próprio sangue.",
-      "description": "Praticante da magia proibida que corre nas veias — cada feitiço pode ser pago em vitalidade quando a mana acaba. Temido nas cidades, queimado em praça pública quando pego, indispensável quando tudo deu errado. Passiva: Sacrifício de Sangue, 2 HP valem 1 de Mana.",
-      "playstyle": "Alto risco, alto poder: converte vida em magia e aposta a própria pele em cada luta. Para quem gosta de decisões com custo real."
+      "tagline": "Negocia com o Abismo — e paga à vista, no próprio sangue.",
+      "description": "Dano corpo-a-corpo que converte auto-dano deliberado em Entropia de sangue. Golpes de pico devastam, mas cada explosão cobra em carne. Recurso: Entropia (auto-dano vira poder). Gatilho: ferir a si mesmo. Carga do Abismo: Cicatriz — habilidades de pico reduzem o HP máximo para sempre.",
+      "playstyle": "Alto risco, alto dano: sangra por poder e aposta a própria pele. Cada pico deixa marca permanente. Para quem gosta de custo real."
     },
-    "Inquisidor da Cinza": {
-      "tagline": "Fogo, medo e certeza absoluta.",
-      "description": "Fanático que purifica pelo fogo o que considera corrompido — e em Valoria sempre há algo corrompido por perto. Onde outros hesitam, o Inquisidor já acendeu a tocha. Passiva: Fervor, imune a Medo e +2 de dano de fogo.",
-      "playstyle": "Tanque ofensivo: pressiona sem recuar, imune ao pânico que quebra os outros. Agressivo, implacável, sempre na frente."
+    "Corruptor": {
+      "tagline": "Trabalha JUNTO com o Abismo — só chega mais cedo à ruína.",
+      "description": "Controle e DoT: acelera a decadência que já existe. Toda coisa que apodrece por perto o alimenta de Entropia. O domínio (subclasse) define o que conta como decadência: carne, alma ou metal. Recurso: Entropia. Gatilho: decadência ao redor. Carga do Abismo: Transformação — um debuff cresce conforme o domínio.",
+      "playstyle": "Dano ao longo do tempo e controle de área: envenena, corrói e deixa a entropia terminar o serviço. Vence pela paciência."
     },
-    "Pastor de Pragas": {
-      "tagline": "O enxame obedece a quem o hospeda.",
-      "description": "Druida simbiótico que cultiva insetos e fungos no próprio corpo e nos inimigos alheios. O que o resto de Valoria chama de praga, ele chama de rebanho. Passiva: Hospedeiro, atacantes corpo-a-corpo recebem 1d4 de veneno.",
-      "playstyle": "Dano ao longo do tempo e controle de área: envenena, enfraquece e deixa a natureza terminar o serviço. Vence pela paciência."
-    },
-    "Sombra da Corte": {
-      "tagline": "Lâmina invisível da política.",
-      "description": "Assassino social treinado nos salões e nos becos: veneno no cálice, sorriso no rosto, nome limpo no registro. Nas cortes de Nova Arcádia, é a profissão mais negada e mais contratada. Passiva: Toque da Víbora, toda arma aplica veneno fraco.",
-      "playstyle": "Furtividade, manipulação e golpes precisos — evita o confronto aberto e resolve a luta antes de ela começar."
-    },
-    "Sapador da Fuligem": {
-      "tagline": "Todo problema é uma estrutura mal demolida.",
-      "description": "Engenheiro anão das Landships: explosivos calculados, armadilhas conferidas duas vezes e a convicção de que não existe porta trancada, existe parede temporária. Passiva: Demolidor, dano dobrado contra estruturas.",
-      "playstyle": "Preparação e terreno: minas, engenhocas e demolição transformam o campo de batalha na sua arma. Pensa dois turnos à frente."
+    "Arcanista Cinzento": {
+      "tagline": "Manipula o Abismo por um instrumento — a ferramenta segura o que a mão não deve tocar.",
+      "description": "Dano e controle à distância: canaliza a entropia num instrumento e a descarrega calibrada. Cada canalização gera Entropia para a próxima — mas segurar demais sem vazão faz o instrumento estourar. Recurso: Entropia. Gatilho: canalizar. Carga do Abismo: Dependência — sem instrumento e com Carga alta, o custo dispara.",
+      "playstyle": "Conjurador de dano e controle: frágil de perto, devastador à distância. Gerencie a vazão da caldeira ou pague em auto-dano."
     },
     "Médico de Campo": {
-      "tagline": "Sem magia, sem milagre — serra, agulha e sangue frio.",
-      "description": "Curandeiro que aprendeu o ofício onde ele é mais necessário: no barro, entre gritos. Alquimia prática, torniquetes e a calma de quem já viu pior. Num mundo com Praga de Ferro e sem cura, vale mais que ouro. Passiva: Triagem, +5 de cura em alvos abaixo de 25% de vida.",
-      "playstyle": "Suporte de linha de frente: mantém o grupo vivo, estabiliza o caos e ainda segura uma lâmina quando preciso."
-    },
-    "Guardião Selvagem": {
-      "tagline": "A natureza brutal de Valoria, em forma de gente.",
-      "description": "Bárbaro tribal que não domou o ermo — fez as pazes com ele. Pele curtida por clima que mata forasteiros, força que dispensa cerimônia e desconfiança saudável de muralhas. Passiva: Pele Grossa, sem armadura a Defesa vem de Destreza + Constituição.",
-      "playstyle": "Força bruta e resiliência: bate forte, aguenta mais e luta melhor longe da civilização. Simples de jogar, difícil de parar."
+      "tagline": "Nega o Abismo — mantém vivo o que ele quer levar.",
+      "description": "Suporte e cura: acumula Entropia quando um aliado sofre e a gasta para mantê-lo de pé. Única classe que pode purgar a Carga do Abismo de um companheiro. Recurso: Entropia. Gatilho: aliado ferido. Carga do Abismo: Recidiva — invisível até estourar num colapso.",
+      "playstyle": "Suporte de linha de frente: mantém o grupo vivo, purga a Carga alheia e estabiliza o caos. Recompensa quem protege a party."
     }
   },
   "races": {

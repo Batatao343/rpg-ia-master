@@ -1,52 +1,27 @@
 {
-  "Cavaleiro da Vigília": {
-    "allowed": ["combate corpo-a-corpo", "proteger aliados", "intimidar", "resistir a dano", "comandar tropas", "etiqueta marcial"],
-    "forbidden": ["lançar magias arcanas", "furtividade pesada de armadura", "cura mágica", "venenos sofisticados"],
-    "style": "Disciplinado, direto, fala de honra e dever; resolve com aço e escudo."
-  },
-  "Batedor das Fronteiras": {
-    "allowed": ["rastrear", "emboscar", "arco e flecha", "sobreviver na natureza", "escalar", "esconder-se"],
-    "forbidden": ["magia poderosa", "carregar armadura pesada", "engenharia complexa", "rituais de sangue"],
-    "style": "Prático e cauteloso; lê o terreno antes de agir."
-  },
-  "Arcanista Cinzento": {
-    "allowed": ["magia arcana filtrada por tecnologia", "decifrar runas", "conhecimento acadêmico", "manipular energia", "identificar magia"],
-    "forbidden": ["combate corpo-a-corpo prolongado", "carregar peso", "façanhas de força bruta", "rastreamento selvagem"],
-    "style": "Analítico e frio; explica o mundo em termos de leis e energia."
+  "Devoto do Abismo": {
+    "allowed": ["combate corpo-a-corpo", "proteger aliados", "provocar inimigos", "resistir a dano", "avançar sobre o perigo", "fé no Abismo"],
+    "forbidden": ["fugir da linha de frente", "furtividade covarde", "abandonar quem protege", "negar o Abismo"],
+    "style": "Sereno diante do fim; provoca e segura porque QUER que o Abismo o escolha primeiro. Fala de amor onde outros falam de medo."
   },
   "Sangromante": {
-    "allowed": ["magia de sangue", "gastar HP por poder", "maldições", "resistência sobrenatural", "rituais proibidos"],
-    "forbidden": ["magia sagrada de cura", "etiqueta de corte", "combate honrado aberto"],
-    "style": "Sombrio e sacrificial; o poder sempre cobra um preço em carne."
+    "allowed": ["auto-dano deliberado", "gastar sangue por poder", "golpes de pico", "negociar em carne", "espetáculo da dor", "resistência sacrificial"],
+    "forbidden": ["cura sagrada gratuita", "recuar sem cobrar preço", "combate sem custo em sangue"],
+    "style": "Transacional e frio; tudo tem preço e ele paga à vista, na própria pele. O sangue é moeda, a cicatriz é recibo."
   },
-  "Inquisidor da Cinza": {
-    "allowed": ["fogo", "intimidar pelo medo", "interrogar", "tanque ofensivo", "fervor religioso", "caçar hereges"],
-    "forbidden": ["furtividade sutil", "magia arcana neutra", "diplomacia gentil", "venenos"],
-    "style": "Fanático e implacável; vê pecado e purificação em tudo."
+  "Corruptor": {
+    "allowed": ["acelerar decadência", "espalhar praga e apodrecimento", "DoT e controle", "trabalhar com a ruína", "simbiose com o fim"],
+    "forbidden": ["preservar o que já morre", "tecnologia limpa", "cura que interrompe a decomposição"],
+    "style": "Paciente e perturbador; não traz a ruína, apenas chega mais cedo. Fala da decomposição como parceria."
   },
-  "Pastor de Pragas": {
-    "allowed": ["controlar insetos e fungos", "venenos naturais", "magia da natureza corrompida", "sobreviver", "simbiose"],
-    "forbidden": ["tecnologia avançada", "armadura pesada", "etiqueta urbana", "magia arcana pura"],
-    "style": "Orgânico e perturbador; fala da decomposição como renascimento."
-  },
-  "Sombra da Corte": {
-    "allowed": ["furtividade", "venenos", "manipulação social", "ataques precisos", "disfarce", "abrir fechaduras"],
-    "forbidden": ["combate frontal pesado", "magia bruta", "carregar armadura pesada", "força bruta"],
-    "style": "Elegante e dissimulado; sorri enquanto calcula a próxima lâmina."
-  },
-  "Sapador da Fuligem": {
-    "allowed": ["explosivos", "armadilhas", "engenharia", "demolir estruturas", "mecânica", "minerar"],
-    "forbidden": ["magia", "diplomacia refinada", "furtividade silenciosa", "rastreamento místico"],
-    "style": "Pragmático e barulhento; todo problema tem uma solução com pólvora."
+  "Arcanista Cinzento": {
+    "allowed": ["canalizar o Abismo por instrumento", "dano e controle à distância", "calibrar energia", "manipular entropia", "cálculo frio"],
+    "forbidden": ["tocar o éter sem instrumento sem consequência", "combate corpo-a-corpo prolongado", "confiar em fé no lugar da ferramenta"],
+    "style": "Analítico e cauteloso; a ferramenta segura o que a mão não deveria tocar. Explica o mundo em leis, condutores e vazão."
   },
   "Médico de Campo": {
-    "allowed": ["alquimia", "curar feridos", "cirurgia", "diagnosticar", "criar tônicos", "anatomia"],
-    "forbidden": ["magia arcana", "façanhas de força bruta", "combate pesado prolongado"],
-    "style": "Metódico e calmo sob pressão; prioriza quem ainda pode ser salvo."
-  },
-  "Guardião Selvagem": {
-    "allowed": ["força bruta", "fúria em combate", "resistência extrema", "instinto animal", "intimidar", "sobreviver"],
-    "forbidden": ["magia complexa", "engenharia", "etiqueta de corte", "estratégia letrada", "venenos sutis"],
-    "style": "Visceral e direto; confia no instinto e na força, desconfia de palavras."
+    "allowed": ["curar aliados", "estabilizar o caos", "purgar a Carga alheia", "alquimia prática", "negar o Abismo mantendo vivos"],
+    "forbidden": ["abandonar um ferido", "magia arcana bruta", "deixar o Abismo levar quem pode ser salvo"],
+    "style": "Calmo sob pressão e teimoso; enquanto ele respira, você respira. Nega o fim com serra, agulha e sangue frio."
   }
 }

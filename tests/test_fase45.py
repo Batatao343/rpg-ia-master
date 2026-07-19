@@ -241,9 +241,6 @@ def test_backfill_party_antiga():
     assert c["status"] == "ativo"
 
 
-def test_muralha_humana_condicional_a_party():
-    p = make_player(class_name="Cavaleiro da Vigília")
-    sem = cm.compute_player_combat_stats(p)["ac"]
-    p["_party_active"] = True
-    com = cm.compute_player_combat_stats(p)["ac"]
-    assert com == sem + 2
+# test_muralha_humana_condicional_a_party removido: a passiva Muralha Humana
+# (Cavaleiro da Vigília) foi substituída pelos gatilhos de Entropia das 5 Posturas
+# (spec refatoracao-sistema-classes; cobertura em tests/test_classes_refactor.py).

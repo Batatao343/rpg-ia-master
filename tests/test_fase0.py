@@ -91,7 +91,7 @@ def test_is_rest_detection():
 # Temas de classe (gating)
 # --------------------------------------------------------------------------
 def test_class_theme_known():
-    t = get_class_theme("Cavaleiro da Vigília")
+    t = get_class_theme("Médico de Campo")
     assert "allowed" in t and "forbidden" in t
     assert any("magia" in f.lower() for f in t["forbidden"])
 

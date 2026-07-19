@@ -253,6 +253,12 @@ def format_response(state: dict) -> GameResponse:
             "max_mana": state["player"].get("max_mana", 0),
             "stamina": state["player"].get("stamina", 0),
             "max_stamina": state["player"].get("max_stamina", 0),
+            # spec refatoracao-sistema-classes (R11): Entropia (barra) + Carga do
+            # Abismo (chip por patamar). Médico é oculto (abyss.hidden) → label vago.
+            "entropy": state["player"].get("entropy", 0),
+            "max_entropy": state["player"].get("max_entropy", 0),
+            "abyss_charge": state["player"].get("abyss_charge", 0),
+            "abyss_tier": _abyss_tier_view(state["player"]),
             "defense": state["player"].get("defense", 0),
             "gold": state["player"].get("gold", 0),
             "level": state["player"].get("level", 1),
@@ -311,6 +317,16 @@ def _inventory_block(player: dict) -> List[Dict[str, Any]]:
             "unique": bool(item.get("unique")),  # Fase 6.2: ◆ um por mundo
         })
     return out
+
+
+def _abyss_tier_view(player: dict) -> str:
+    """spec refatoracao-sistema-classes (R11): patamar da Carga do Abismo p/ o HUD.
+    Classe com `abyss.hidden` (Médico — Recidiva) NÃO expõe o valor: label enigmático."""
+    import combat_mechanics as _cm
+    cfg = _cm.entropy_config(player)
+    if (cfg.get("abyss") or {}).get("hidden"):
+        return "?"
+    return _cm.abyss_tier(player)
 
 
 def _levelup_block(player: dict) -> Dict[str, Any]:
@@ -647,6 +663,10 @@ def new_game(req: CreateCharacterRequest):
             "max_mana": final_char["max_mana"],
             "stamina": final_char["stamina"],
             "max_stamina": final_char["max_stamina"],
+            # spec refatoracao-sistema-classes: Entropia é o pool das 5 classes.
+            "entropy": final_char.get("entropy", 0),
+            "max_entropy": final_char.get("max_entropy", 0),
+            "abyss_charge": final_char.get("abyss_charge", 0),
             "gold": 50 * req.level,
             "alignment": "Neutro",
             "attributes": final_char["attributes"],

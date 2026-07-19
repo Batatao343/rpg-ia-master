@@ -1,553 +1,408 @@
 {
-  "Cavaleiro da Vigília": {
-    "description": "Um guardião de armadura pesada que jurou proteger os fracos.",
-    "passive": "Muralha Humana: +2 de Defesa se houver aliados adjacentes.",
+  "Devoto do Abismo": {
+    "description": "Ama o Abismo: avança na direção da incerteza porque a deseja.",
+    "role": "tank",
+    "posture": "ama",
+    "guide_quote": "Vocês seguram a linha com medo. Eu seguro porque quero que ele me escolha primeiro.",
+    "passive": "Convite: provocações escalam com a Entropia acumulada no combate.",
     "base_stats": {
-      "hp": 35,
+      "hp": 38,
+      "entropy": 14,
       "mana": 0,
-      "stamina": 25,
-      "defense": 17,
+      "stamina": 0,
+      "defense": 16,
       "attributes": {
         "str": 16,
         "dex": 10,
         "con": 16,
         "int": 8,
         "wis": 12,
-        "cha": 12
+        "cha": 14
       }
     },
     "level_gains": {
       "hp": 7,
+      "entropy": 2,
       "mana": 0,
-      "stamina": 3
+      "stamina": 0
     },
     "starting_abilities": [
-      "investida_do_touro",
-      "pele_de_ferro"
+      "provocacao_do_abismo",
+      "encaixe_do_golpe"
     ],
-    "branches": {
-      "muralha": {
-        "name": "Juramento da Muralha",
-        "theme": "mundo vazio — resistir: o corpo como última parede entre o que restou e o que vem",
-        "lore_ref": "cidades_estado_sobreviventes_vaelorn_solvhen",
-        "identity": "Tanque: redução de dano, provocação, punição a quem ataca a linha",
-        "description": "Nas cidades-estado que sobraram, ainda se faz o velho juramento: enquanto um escudo estiver de pé, a muralha não caiu."
+    "entropy_trigger": {
+      "kind": "on_damage_taken",
+      "damage_divisor": 4,
+      "min_gain": 1,
+      "charge_per": 1,
+      "per_turn_cap": 1,
+      "note": "[BALANCEAR] +1 Entropia por 4 de dano recebido; +1 Carga/turno"
+    },
+    "special_rule": {
+      "kind": "taunt_scales_with_entropy",
+      "per_entropy": 0.05,
+      "cap": 0.6,
+      "note": "[BALANCEAR] aggro sobe 5%/ponto de Entropia, teto 60%"
+    },
+    "abyss": {
+      "consequence": "insonia",
+      "thresholds": {
+        "leve": 1,
+        "moderado": 4,
+        "severo": 7
       },
-      "lanca": {
-        "name": "Lança da Vigília",
-        "theme": "mundo vazio — eliminar: a ameaça se mata na estrada, antes que chegue ao portão",
-        "lore_ref": "legiao_ferro",
-        "identity": "Dano focado: cargas, execução, quebra de formação inimiga",
-        "description": "A Legião ensina que muralha nenhuma segura o que já entrou. A lança sai na frente e volta suja."
+      "hidden": false,
+      "mitigable_by_ally": true,
+      "params": {
+        "rest_penalty": {
+          "leve": 0.1,
+          "moderado": 0.25,
+          "severo": 0.5
+        }
       }
     },
-    "passive_effects": [
-      {
-        "trigger": "party_active",
-        "stat": "ac",
-        "delta": 2,
-        "note": "Muralha Humana: +2 AC com aliado da party ativo em combate (4.5)"
+    "branches": {
+      "consagrado": {
+        "name": "O Consagrado",
+        "identity": "Ritualiza o amor ao Abismo; marca o corpo antes da luta."
+      },
+      "zeloso": {
+        "name": "O Zeloso",
+        "identity": "Amor possessivo; puxa aggro por ciúme."
+      },
+      "enlutado": {
+        "name": "O Enlutado",
+        "identity": "Amou quem o Abismo levou; tom melancólico."
       }
-    ],
+    },
+    "passive_effects": [],
     "starting_equipment": [
       "espada_gasta",
       "escudo_amassado",
       "pocao_cura"
     ]
   },
-  "Batedor das Fronteiras": {
-    "description": "Explorador ágil especializado em sobreviver fora das muralhas.",
-    "passive": "Oportunista: Ataques contra inimigos distraídos causam +1d6 de dano.",
+  "Sangromante": {
+    "description": "Negocia com o Abismo: paga em sangue pelo que precisa.",
+    "role": "dano corpo-a-corpo",
+    "posture": "negocia",
+    "guide_quote": "Tudo tem preço. Eu só pago à vista.",
+    "passive": "Contrato de Sangue: auto-dano vira Entropia de sangue.",
     "base_stats": {
-      "hp": 27,
-      "mana": 5,
-      "stamina": 20,
-      "defense": 14,
+      "hp": 26,
+      "entropy": 16,
+      "mana": 0,
+      "stamina": 0,
+      "defense": 12,
+      "attributes": {
+        "str": 12,
+        "dex": 16,
+        "con": 14,
+        "int": 10,
+        "wis": 10,
+        "cha": 12
+      }
+    },
+    "level_gains": {
+      "hp": 5,
+      "entropy": 3,
+      "mana": 0,
+      "stamina": 0
+    },
+    "starting_abilities": [
+      "corte_de_troca",
+      "esquiva_calculada"
+    ],
+    "entropy_trigger": {
+      "kind": "on_self_harm",
+      "gain_per_hp": 1,
+      "charge_per": 1,
+      "per_turn_cap": 2,
+      "note": "[BALANCEAR] auto-dano vira Entropia (1:1); +1 Carga por ativação"
+    },
+    "special_rule": {
+      "kind": "blood_leak",
+      "leak_frac": 0.25,
+      "note": "[BALANCEAR] acerto do inimigo vaza 25% da Entropia de sangue não gasta"
+    },
+    "abyss": {
+      "consequence": "cicatriz",
+      "thresholds": {
+        "leve": 1,
+        "moderado": 4,
+        "severo": 7
+      },
+      "hidden": false,
+      "mitigable_by_ally": false,
+      "params": {
+        "scar_hp_loss": 3
+      }
+    },
+    "branches": {
+      "exposto": {
+        "name": "O Exposto",
+        "identity": "Faz espetáculo da dor; a cicatriz é credencial."
+      },
+      "avaro": {
+        "name": "O Avaro",
+        "identity": "Acumula Entropia de sangue para um golpe único."
+      },
+      "silencioso": {
+        "name": "O Silencioso",
+        "identity": "Corte exato, economia de dor."
+      }
+    },
+    "passive_effects": [],
+    "starting_equipment": [
+      "adaga_ferro",
+      "pocao_cura"
+    ]
+  },
+  "Corruptor": {
+    "description": "Trabalha JUNTO com o Abismo: acelera a decadência que já existe.",
+    "role": "controle / DoT",
+    "posture": "trabalha junto",
+    "guide_quote": "Eu não trago a ruína. Só chego mais cedo.",
+    "passive": "Parceria: a decadência ao seu redor te alimenta.",
+    "base_stats": {
+      "hp": 28,
+      "entropy": 18,
+      "mana": 0,
+      "stamina": 0,
+      "defense": 13,
       "attributes": {
         "str": 10,
-        "dex": 18,
+        "dex": 12,
         "con": 12,
         "int": 12,
-        "wis": 14,
+        "wis": 16,
         "cha": 10
       }
     },
     "level_gains": {
       "hp": 5,
-      "mana": 1,
-      "stamina": 3
+      "entropy": 4,
+      "mana": 0,
+      "stamina": 0
     },
     "starting_abilities": [
-      "estocada_renal",
-      "bomba_de_fumaca"
+      "toque_da_decadencia",
+      "semear_praga"
     ],
-    "branches": {
-      "rastreador": {
-        "name": "Leitor do Ermo",
-        "theme": "mundo vazio — ler o que restou: rastro, vento e fome dizem tudo antes da flecha",
-        "lore_ref": "bandos_nomades",
-        "identity": "Atrito à distância: sangramento, marcas, tiros precisos",
-        "description": "Os bandos da Pradaria não sobrevivem por força — sobrevivem porque leem o chão como os antigos liam livros."
+    "entropy_trigger": {
+      "kind": "on_decay_nearby",
+      "gain": 1,
+      "charge_per": 1,
+      "per_turn_cap": 2,
+      "decay_kind": "any",
+      "note": "[BALANCEAR] algo perto se desfaz (DoT/morte) → +1 Entropia; +1 Carga"
+    },
+    "special_rule": {
+      "kind": "domain_decay",
+      "note": "o domínio (subclasse) define o que conta como decadência"
+    },
+    "abyss": {
+      "consequence": "transformacao",
+      "thresholds": {
+        "leve": 1,
+        "moderado": 4,
+        "severo": 7
       },
-      "fantasma": {
-        "name": "Fantasma da Fronteira",
-        "theme": "mundo vazio — tornar-se parte dele: quem o ermo engoliu não é mais visto, é sofrido",
-        "lore_ref": "renegados_ermo",
-        "identity": "Emboscada: burst de abertura, evasão, silêncio que atordoa",
-        "description": "Dos Renegados se diz que a fronteira os comeu. Mentira: eles viraram a fronteira."
+      "hidden": false,
+      "mitigable_by_ally": true,
+      "params": {
+        "debuff": {
+          "biologia": "extra_dot",
+          "alma": "save_penalty",
+          "inorganica": "defense_penalty"
+        }
       }
     },
-    "passive_effects": [
-      {
-        "trigger": "always",
-        "stat": "damage",
-        "delta": 2,
-        "note": "aprox media de +1d6 vs distraidos — vira condicional real na 4.6"
+    "branches": {
+      "biologia": {
+        "name": "Biologia",
+        "identity": "Carne que apodrece.",
+        "overrides": {
+          "entropy_trigger": {
+            "decay_kind": "flesh"
+          }
+        }
+      },
+      "alma": {
+        "name": "Alma",
+        "identity": "Vontade que rui.",
+        "overrides": {
+          "entropy_trigger": {
+            "decay_kind": "morale"
+          }
+        }
+      },
+      "inorganica": {
+        "name": "Inorgânica",
+        "identity": "Metal e pedra que cedem.",
+        "overrides": {
+          "entropy_trigger": {
+            "decay_kind": "gear"
+          }
+        }
       }
-    ],
+    },
+    "passive_effects": [],
     "starting_equipment": [
-      "arco_de_caca",
-      "adaga_ferro",
+      "cajado_de_galhos",
       "pocao_cura"
     ]
   },
   "Arcanista Cinzento": {
-    "description": "Estudioso que usa magia filtrada por tecnologia.",
-    "passive": "Mente Analítica: Pode usar Inteligência em vez de Destreza para iniciativa.",
+    "description": "Manipula o Abismo por um instrumento: canaliza a entropia e a descarrega.",
+    "role": "dano/controle à distância",
+    "posture": "manipula",
+    "guide_quote": "A ferramenta segura o que a mão não deveria tocar.",
+    "passive": "Caldeira: canalizar gera Entropia para a próxima descarga.",
     "base_stats": {
       "hp": 22,
-      "mana": 30,
-      "stamina": 8,
+      "entropy": 20,
+      "mana": 0,
+      "stamina": 0,
       "defense": 11,
       "attributes": {
         "str": 8,
         "dex": 12,
         "con": 10,
-        "int": 18,
+        "int": 16,
+        "wis": 12,
+        "cha": 12
+      }
+    },
+    "level_gains": {
+      "hp": 4,
+      "entropy": 6,
+      "mana": 0,
+      "stamina": 0
+    },
+    "starting_abilities": [
+      "descarga_do_instrumento",
+      "vazao_controlada"
+    ],
+    "entropy_trigger": {
+      "kind": "on_channel",
+      "gain": 2,
+      "charge_per": 1,
+      "per_turn_cap": 1,
+      "note": "[BALANCEAR] usar habilidade gera Entropia p/ a próxima; +1 Carga"
+    },
+    "special_rule": {
+      "kind": "boiler",
+      "cool_deadline": 3,
+      "overload_damage": "2d6",
+      "note": "[BALANCEAR] Entropia não vazada em 3 turnos → instrumento estoura (auto-dano)"
+    },
+    "abyss": {
+      "consequence": "dependencia",
+      "thresholds": {
+        "leve": 1,
+        "moderado": 4,
+        "severo": 7
+      },
+      "hidden": false,
+      "mitigable_by_ally": true,
+      "params": {
+        "no_instrument_cost_mult": 2.0
+      }
+    },
+    "branches": {
+      "calibrado": {
+        "name": "O Calibrado",
+        "identity": "Segurança acima de potência; menos risco de estouro."
+      },
+      "descoberto": {
+        "name": "O Descoberto",
+        "identity": "Toca o éter sem instrumento; alto dano, alto risco."
+      },
+      "improvisador": {
+        "name": "O Improvisador",
+        "identity": "Monta ferramenta na hora a partir de sucata."
+      }
+    },
+    "passive_effects": [],
+    "starting_equipment": [
+      "cajado_rachado",
+      "pocao_cura"
+    ]
+  },
+  "Médico de Campo": {
+    "description": "Nega o Abismo: mantém vivo o que ele quer levar.",
+    "role": "suporte / cura",
+    "posture": "nega",
+    "guide_quote": "Enquanto eu respirar, você respira.",
+    "passive": "Triagem: cura mais quem está mais perto do fim.",
+    "base_stats": {
+      "hp": 28,
+      "entropy": 16,
+      "mana": 0,
+      "stamina": 0,
+      "defense": 14,
+      "attributes": {
+        "str": 10,
+        "dex": 12,
+        "con": 12,
+        "int": 16,
         "wis": 14,
         "cha": 10
       }
     },
     "level_gains": {
-      "hp": 3,
-      "mana": 6,
-      "stamina": 1
-    },
-    "starting_abilities": [
-      "dardos_de_forca",
-      "espelho_ilusorio"
-    ],
-    "branches": {
-      "instrumento": {
-        "name": "Mão Instrumentada",
-        "theme": "controle pela tecnologia prévia — a magia só passa filtrada pelo aparelho, nunca pela veia",
-        "lore_ref": "clas_tecnologicos",
-        "identity": "Controle de recurso: dreno de mana, dano calibrado, campo de força",
-        "description": "Os Clãs de Skallgard não confiam no Éter cru. Condensadores, válvulas e cobre: o preço da magia paga-se em manutenção, não em carne."
-      },
-      "exposicao": {
-        "name": "Toque Descoberto",
-        "theme": "magia corrompe — exposição calculada: tocar a fonte crua e pagar aos poucos, com juros",
-        "lore_ref": "cultos_despertar_dispersos",
-        "identity": "Risco/retorno: dano alto com custo de corpo, controle mental, deslocamento instável",
-        "description": "Há quem dispense o filtro. As veias escurecem um dedo por ano — e um dedo, dizem eles, é um preço honesto pelo que se sente."
-      }
-    },
-    "passive_effects": [
-      {
-        "trigger": "initiative_attr",
-        "attr": "int"
-      }
-    ],
-    "starting_equipment": [
-      "cajado_rachado",
-      "gibao_de_couro",
-      "pocao_cura"
-    ]
-  },
-  "Sangromante": {
-    "description": "Mago proibido que usa a própria vitalidade.",
-    "passive": "Sacrifício de Sangue: Pode gastar HP em vez de Mana (2 HP = 1 Mana).",
-    "base_stats": {
-      "hp": 25,
-      "mana": 20,
-      "stamina": 10,
-      "defense": 10,
-      "attributes": {
-        "str": 8,
-        "dex": 10,
-        "con": 18,
-        "int": 16,
-        "wis": 10,
-        "cha": 8
-      }
-    },
-    "level_gains": {
       "hp": 5,
-      "mana": 4,
-      "stamina": 1
-    },
-    "starting_abilities": [
-      "combustao_sanguinea",
-      "toque_necrotico"
-    ],
-    "branches": {
-      "destilacao": {
-        "name": "Dívida Medida",
-        "theme": "controle pelo sacrifício — o custo é real, então que seja contabilizado gota a gota",
-        "lore_ref": "cultistas_destilacao",
-        "identity": "Sustain: drenar vida, pactos com prazo, converter dor em poder controlado",
-        "description": "A velha Destilação provou que o custo da magia pode ser medido, movido, cobrado. O sangromante prudente é um contador do próprio sangue."
-      },
-      "hemorragia": {
-        "name": "Hemorragia Total",
-        "theme": "controle pelo sacrifício — tudo de uma vez: o corpo é munição, não cofre",
-        "lore_ref": null,
-        "identity": "Burst all-in: dano máximo pago em HP, apoteoses curtas",
-        "description": "Medir é para quem planeja envelhecer. Abrir a veia inteira de uma vez é a única aposta que o Abismo respeita."
-      }
-    },
-    "passive_effects": [
-      {
-        "trigger": "hp_as_mana",
-        "rate": 2
-      }
-    ],
-    "starting_equipment": [
-      "adaga_ritual",
-      "gibao_de_couro",
-      "pocao_cura"
-    ]
-  },
-  "Inquisidor da Cinza": {
-    "description": "Fanático que usa fogo e medo. Tanque ofensivo.",
-    "passive": "Fervor: Imune a efeitos de Medo. Causa +2 de dano de fogo.",
-    "base_stats": {
-      "hp": 30,
-      "mana": 10,
-      "stamina": 20,
-      "defense": 16,
-      "attributes": {
-        "str": 16,
-        "dex": 8,
-        "con": 14,
-        "int": 10,
-        "wis": 10,
-        "cha": 16
-      }
-    },
-    "level_gains": {
-      "hp": 6,
-      "mana": 2,
-      "stamina": 2
-    },
-    "starting_abilities": [
-      "juramento_de_sangue",
-      "pisao_sismico"
-    ],
-    "branches": {
-      "chama_azul": {
-        "name": "Chama que Purga",
-        "theme": "o Abismo domina — queimar a corrupção antes que se espalhe; o medo é ferramenta de purga",
-        "lore_ref": "filhos_chama_azul",
-        "identity": "Controle por medo: fogo punitivo, interrogatório, pira ritual",
-        "description": "O Batismo de Fogo marca os lábios de quem aguenta. A chama azul não aquece — separa o que fica do que arde."
-      },
-      "fornalha": {
-        "name": "Discípulo da Fornalha",
-        "theme": "controle pela tecnologia prévia — o fogo industrial não se teme: vira-se ele",
-        "lore_ref": "encapuzados_fornalha",
-        "identity": "Fogo sustentado: queimaduras, ligas proibidas, autodano controlado",
-        "description": "Nas Fundições aprende-se cedo: o metal só obedece quem já se queimou. Os Encapuzados fazem do incêndio um ofício."
-      }
-    },
-    "passive_effects": [
-      {
-        "trigger": "resist",
-        "name": "medo"
-      },
-      {
-        "trigger": "damage_type",
-        "damage_type": "fogo",
-        "stat": "damage",
-        "delta": 2
-      }
-    ],
-    "starting_equipment": [
-      "maca_de_ferro",
-      "gibao_de_couro",
-      "pocao_cura"
-    ]
-  },
-  "Pastor de Pragas": {
-    "description": "Druida simbiótico que controla insetos e fungos.",
-    "passive": "Hospedeiro: Inimigos que atacam corpo-a-corpo recebem 1d4 veneno.",
-    "base_stats": {
-      "hp": 28,
-      "mana": 25,
-      "stamina": 12,
-      "defense": 13,
-      "attributes": {
-        "str": 10,
-        "dex": 10,
-        "con": 16,
-        "int": 8,
-        "wis": 18,
-        "cha": 8
-      }
-    },
-    "level_gains": {
-      "hp": 5,
-      "mana": 5,
-      "stamina": 1
-    },
-    "starting_abilities": [
-      "enxame_de_insetos",
-      "nuvem_toxica"
-    ],
-    "branches": {
-      "ciclo": {
-        "name": "Guardião do Ciclo",
-        "theme": "o Abismo domina — conter: a podridão medida é o que impede a podridão total",
-        "lore_ref": "druidas_ciclo_cinzento",
-        "identity": "Atrito de área: esporos, raízes, dreno lento que devolve equilíbrio",
-        "description": "Os Druidas do Ciclo não curam o Pântano — retardam-no. Todo apodrecimento que eles regem é um que não rege sozinho."
-      },
-      "colmeia": {
-        "name": "Voz da Colmeia",
-        "theme": "magia corrompe — simbiose extrema: entregar o corpo ao enxame e falar com bocas demais",
-        "lore_ref": "colmeia_hospedeiros",
-        "identity": "Transformação: enxames hospedados, quitina, percepção partilhada — pago em carne",
-        "description": "Em Xylos, os Hospedeiros provaram que dividir o corpo é multiplicá-lo. O enxame cuida de quem o abriga. Quase sempre."
-      }
-    },
-    "passive_effects": [
-      {
-        "trigger": "melee_retaliate",
-        "formula": "1d4",
-        "name": "veneno do Hospedeiro"
-      }
-    ],
-    "starting_equipment": [
-      "cajado_de_galhos",
-      "gibao_de_couro",
-      "pocao_cura"
-    ]
-  },
-  "Sombra da Corte": {
-    "description": "Assassino social especializado em venenos.",
-    "passive": "Toque da Víbora: Todas as armas aplicam veneno fraco automaticamente.",
-    "base_stats": {
-      "hp": 25,
-      "mana": 10,
-      "stamina": 15,
-      "defense": 13,
-      "attributes": {
-        "str": 8,
-        "dex": 16,
-        "con": 10,
-        "int": 14,
-        "wis": 10,
-        "cha": 16
-      }
-    },
-    "level_gains": {
-      "hp": 4,
-      "mana": 2,
-      "stamina": 3
-    },
-    "starting_abilities": [
-      "lamina_envenenada",
-      "cegar"
-    ],
-    "branches": {
-      "lamina": {
-        "name": "Lâmina Contratada",
-        "theme": "mundo vazio — a morte limpa é serviço, e serviço se cumpre no prazo",
-        "lore_ref": "mao_sombria",
-        "identity": "Execução single-target: venenos de contrato, garrote, golpe final",
-        "description": "A Mão Sombria não odeia ninguém. Ódio é ruído. Existe o contrato, o alvo e a entrega — de preferência sem terceira testemunha."
-      },
-      "corvo": {
-        "name": "Olho do Corvo",
-        "theme": "mundo vazio — informação vale mais que sangue: quem sabe, manda em quem mata",
-        "lore_ref": "guilda_corvos",
-        "identity": "Manipulação: chantagem que paralisa, redes de informantes, lâmina no momento exato",
-        "description": "Os Corvos cobram em segredos. Um nome sussurrado na hora certa derruba mais gente que dez adagas."
-      }
-    },
-    "passive_effects": [
-      {
-        "trigger": "basic_attack_dot",
-        "dot": 1,
-        "duration": 2,
-        "name": "Veneno fraco"
-      }
-    ],
-    "starting_equipment": [
-      "adaga_ferro",
-      "gibao_de_couro",
-      "pocao_cura"
-    ]
-  },
-  "Sapador da Fuligem": {
-    "description": "Engenheiro anão com explosivos e armadilhas.",
-    "passive": "Demolidor: Causa dano dobrado contra estruturas.",
-    "base_stats": {
-      "hp": 26,
+      "entropy": 3,
       "mana": 0,
-      "stamina": 25,
-      "defense": 15,
-      "attributes": {
-        "str": 14,
-        "dex": 14,
-        "con": 14,
-        "int": 16,
-        "wis": 10,
-        "cha": 8
-      }
-    },
-    "level_gains": {
-      "hp": 5,
-      "mana": 0,
-      "stamina": 4
-    },
-    "starting_abilities": [
-      "tiro_de_bacamarte",
-      "armadilha_de_urso"
-    ],
-    "branches": {
-      "engenharia": {
-        "name": "Engenheiro de Cerco",
-        "theme": "tecnologia prévia — o que a era anterior construiu ainda segura o mundo; aprende-se o manual",
-        "lore_ref": "ultimos_anoes_reino",
-        "identity": "Preparo e área: demolições planejadas, torretas, escudos de campo",
-        "description": "Os últimos anões guardam esquemas de máquinas que ninguém mais sabe fundir. Copiar é heresia; aprender, dever."
-      },
-      "sucata": {
-        "name": "Alquimista da Sucata",
-        "theme": "mundo vazio — improviso volátil: o lixo das eras ainda explode, se souber onde bater",
-        "lore_ref": "goblins_mineiros",
-        "identity": "Gambiarras: dano alto e instável, misturas que cobram do próprio corpo",
-        "description": "Os goblins-mineiros não leem esquema nenhum e continuam vivos. Estatisticamente. A sucata recompensa os rápidos."
-      }
-    },
-    "passive_effects": [
-      {
-        "trigger": "declarative",
-        "note": "dano dobrado vs estruturas — motor nao tem estruturas (unico caso declarativo, spec 4.2 R5)"
-      }
-    ],
-    "starting_equipment": [
-      "bacamarte_remendado",
-      "gibao_de_couro",
-      "pocao_cura"
-    ]
-  },
-  "Médico de Campo": {
-    "description": "Curandeiro sem magia que usa alquimia e serras.",
-    "passive": "Triagem: Cura +5 HP extra se o alvo tiver < 25% vida.",
-    "base_stats": {
-      "hp": 28,
-      "mana": 5,
-      "stamina": 20,
-      "defense": 14,
-      "attributes": {
-        "str": 12,
-        "dex": 14,
-        "con": 12,
-        "int": 16,
-        "wis": 12,
-        "cha": 10
-      }
-    },
-    "level_gains": {
-      "hp": 5,
-      "mana": 1,
-      "stamina": 3
+      "stamina": 0
     },
     "starting_abilities": [
       "sutura_de_campo",
-      "estimulante_alquimico"
+      "estabilizar"
     ],
-    "branches": {
-      "triagem": {
-        "name": "Cirurgião de Trincheira",
-        "theme": "mundo vazio — manter vivo a qualquer custo, com serra, agulha e pressa",
-        "lore_ref": "resistencia_operaria_martelos_partidos",
-        "identity": "Cura pesada: triagem, anestesia bruta, milagres de campo sem magia",
-        "description": "Nas greves e nos desabamentos, os Martelos Partidos aprenderam: quem espera cura limpa morre esperando."
+    "entropy_trigger": {
+      "kind": "on_ally_suffer",
+      "gain": 1,
+      "charge_per": 1,
+      "per_turn_cap": 2,
+      "note": "[BALANCEAR] aliado toma dano/condição → +1 Entropia; +1 Carga"
+    },
+    "special_rule": {
+      "kind": "heal_abyss",
+      "note": "única classe que gasta Entropia p/ reduzir Carga de aliado (purga_da_carga)"
+    },
+    "abyss": {
+      "consequence": "recidiva",
+      "thresholds": {
+        "leve": 1,
+        "moderado": 4,
+        "severo": 7
       },
-      "alquimia": {
-        "name": "Boticário do Limiar",
-        "theme": "magia corrompe — o remédio destila-se do próprio veneno do mundo, em dose exata",
-        "lore_ref": "mercadores_curiosidades",
-        "identity": "Química dual: corrosivos, vapores debilitantes, panaceias com preço",
-        "description": "Todo frasco tem duas doses: a que salva e a que sobra. Os Mercadores de Curiosidades vendem as duas pelo mesmo preço."
+      "hidden": true,
+      "mitigable_by_ally": false,
+      "params": {
+        "collapse_at": "severo"
       }
     },
-    "passive_effects": [
-      {
-        "trigger": "heal_bonus_low",
-        "delta": 5,
-        "threshold": 0.25
+    "branches": {
+      "cirurgiao_trincheira": {
+        "name": "Cirurgião de Trincheira",
+        "identity": "Intervenção imediata sob fogo."
+      },
+      "boticario": {
+        "name": "Boticário",
+        "identity": "Compostos, buffs e purga da Carga alheia."
+      },
+      "cirurgiao_ferro": {
+        "name": "Cirurgião de Ferro",
+        "identity": "Próteses e reforço físico de aliados."
       }
-    ],
+    },
+    "passive_effects": [],
     "starting_equipment": [
       "serra_cirurgica",
-      "kit_medico",
-      "pocao_cura"
-    ]
-  },
-  "Guardião Selvagem": {
-    "description": "Bárbaro tribal conectado à natureza brutal.",
-    "passive": "Pele Grossa: Se sem armadura, AC = 10 + Dex + Con.",
-    "base_stats": {
-      "hp": 40,
-      "mana": 5,
-      "stamina": 30,
-      "defense": 14,
-      "attributes": {
-        "str": 18,
-        "dex": 14,
-        "con": 16,
-        "int": 6,
-        "wis": 12,
-        "cha": 8
-      }
-    },
-    "level_gains": {
-      "hp": 6,
-      "mana": 3,
-      "stamina": 2
-    },
-    "starting_abilities": [
-      "invocar_vinhas",
-      "quebra_joelhos"
-    ],
-    "branches": {
-      "guardiao": {
-        "name": "Raiz que Resta",
-        "theme": "mundo vazio — guardar os últimos lugares verdes com o corpo e o terreno",
-        "lore_ref": "floresta_sussurros",
-        "identity": "Proteção territorial: casca, raízes que prendem, espinhos que respondem",
-        "description": "A Floresta dos Sussurros ainda fala com quem ficou. O guardião não defende árvores — defende a última conversa do mundo antigo."
-      },
-      "feral": {
-        "name": "O Que Ela Virou",
-        "theme": "magia corrompe — a natureza tocada pelo Abismo morde de volta; canaliza-se o corrompido sem virar ele",
-        "lore_ref": "druidas_renegados",
-        "identity": "Feral: garras, instinto que cobra em sangue, uivo que apavora",
-        "description": "Os renegados pararam de perguntar o que a natureza era. Perguntam o que ela virou — e imitam a resposta."
-      }
-    },
-    "passive_effects": [
-      {
-        "trigger": "unarmored_ac_con"
-      }
-    ],
-    "starting_equipment": [
-      "bordao_de_carvalho",
+      "pocao_cura",
       "pocao_cura"
     ]
   }

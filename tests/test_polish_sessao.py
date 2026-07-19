@@ -111,13 +111,14 @@ def test_endpoints_saves_delete(client, tmp_path, monkeypatch):
 
 def _fighter(**over):
     p = {
-        "name": "Chip", "class_name": "Batedor das Fronteiras", "level": 2,
-        "hp": 20, "max_hp": 27, "mana": 5, "max_mana": 5,
-        "stamina": 20, "max_stamina": 20,
-        "known_abilities": ["estocada_renal", "bomba_de_fumaca"],
+        "name": "Chip", "class_name": "Sangromante", "level": 2,
+        "hp": 20, "max_hp": 27, "mana": 0, "max_mana": 0,
+        "stamina": 0, "max_stamina": 0,
+        "entropy": 16, "max_entropy": 16, "abyss_charge": 0,
+        "known_abilities": ["esquiva_calculada", "corte_exato"],
         "ability_cooldowns": {}, "active_conditions": [],
         "inventory": [{"id": "pocao_cura", "qty": 2}],
-        "equipment": {"weapon": "arco_de_caca", "armor": None, "accessory": None},
+        "equipment": {"weapon": "adaga_ferro", "armor": None, "accessory": None},
     }
     p.update(over)
     return p
@@ -131,7 +132,7 @@ def test_combat_suggestions_habilidade_pronta_vira_chip():
     import combat_mechanics as cm
     from gamedata import ABILITIES
     chips = cm.combat_suggestions(_fighter(), _ENEMY, _COMBAT)
-    nomes = {ABILITIES["estocada_renal"]["name"], ABILITIES["bomba_de_fumaca"]["name"]}
+    nomes = {ABILITIES["esquiva_calculada"]["name"], ABILITIES["corte_exato"]["name"]}
     assert nomes & set(chips)
     assert "Fugir" in chips
     assert any(c.startswith("Beber ") for c in chips)
@@ -141,13 +142,13 @@ def test_combat_suggestions_habilidade_pronta_vira_chip():
 def test_habilidade_em_cooldown_ou_sem_recurso_nao_vira_chip():
     import combat_mechanics as cm
     from gamedata import ABILITIES
-    nome_estocada = ABILITIES["estocada_renal"]["name"]
+    nome_corte = ABILITIES["corte_exato"]["name"]
     chips = cm.combat_suggestions(
-        _fighter(ability_cooldowns={"estocada_renal": 2}), _ENEMY, _COMBAT)
-    assert nome_estocada not in chips
-    # sem recurso: zera mana E stamina — nenhuma habilidade com custo entra
-    chips2 = cm.combat_suggestions(_fighter(mana=0, stamina=0), _ENEMY, _COMBAT)
-    com_custo = [aid for aid in ("estocada_renal", "bomba_de_fumaca")
+        _fighter(ability_cooldowns={"corte_exato": 2}), _ENEMY, _COMBAT)
+    assert nome_corte not in chips
+    # sem recurso: zera Entropia — nenhuma habilidade com custo entra
+    chips2 = cm.combat_suggestions(_fighter(entropy=0), _ENEMY, _COMBAT)
+    com_custo = [aid for aid in ("esquiva_calculada", "corte_exato")
                  if int(ABILITIES[aid].get("cost", 0) or 0) > 0]
     for aid in com_custo:
         assert ABILITIES[aid]["name"] not in chips2
@@ -193,7 +194,7 @@ def test_chip_clicado_resolve_no_parser():
     from agents.combat import _parse_combat_action
     from gamedata import ABILITIES
     player = _fighter()
-    nome = ABILITIES["estocada_renal"]["name"]
+    nome = ABILITIES["corte_exato"]["name"]
     action = _parse_combat_action(player, list(_ENEMY), f"uso {nome}")
     # MockLLM devolve ação válida; o gate determinístico só deixa passar
     # habilidade da ficha — nunca um id alucinado.

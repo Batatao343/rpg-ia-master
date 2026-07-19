@@ -136,10 +136,12 @@ def downed_grace_active(world: dict) -> bool:
     return day < int(until)
 
 
-def apply_rest(player: dict, world: dict) -> Tuple[dict, dict]:
+def apply_rest(player: dict, world: dict, allies: list = None) -> Tuple[dict, dict]:
     """Descanso: recupera ~metade dos recursos e avança 2 períodos.
     Fase 6.5: clima com `rest_block` (miasma etc.) NEGA o descanso ao relento —
-    o tempo passa (1 período de tentativa), mas nada recupera."""
+    o tempo passa (1 período de tentativa), mas nada recupera.
+    spec refatoracao-sistema-classes (R6): Devoto — Insônia faz o descanso render
+    MENOS HP conforme a Carga do Abismo; aliado ativo mitiga (−1 de Carga)."""
     world = dict(world)
     blocked = weather_effects(world).get("rest_block", False)
     if blocked:
@@ -150,11 +152,23 @@ def apply_rest(player: dict, world: dict) -> Tuple[dict, dict]:
     # spec pos-saque-recuperacao (R4): o descanso encerra a marca do Saque.
     player["active_conditions"] = [c for c in (player.get("active_conditions") or [])
                                    if c.get("name") != "downed_recente"]
+    # Insônia (Devoto): fração de cura de HP no descanso cai por patamar de Carga.
+    import combat_mechanics as cm
+    hp_factor = 1.0
+    _ab = cm.entropy_config(player).get("abyss") or {}
+    if _ab.get("consequence") == "insonia":
+        _tier = cm.abyss_tier(player)
+        _pen = float((_ab.get("params", {}).get("rest_penalty") or {}).get(_tier, 0) or 0)
+        hp_factor = max(0.0, 1.0 - _pen)
+        if _ab.get("mitigable_by_ally") and allies:
+            player["abyss_charge"] = max(0, int(player.get("abyss_charge", 0) or 0) - 1)
     for res, mx in (("hp", "max_hp"), ("mana", "max_mana"), ("stamina", "max_stamina")):
         if mx in player:
             ceiling = player.get(mx, 0)
-            healed = player.get(res, 0) + max(1, ceiling // 2)
-            player[res] = min(ceiling, healed)
+            recover = max(1, ceiling // 2)
+            if res == "hp":
+                recover = max(1, int(recover * hp_factor)) if hp_factor > 0 else 0
+            player[res] = min(ceiling, player.get(res, 0) + recover)
     # spec refatoracao-sistema-classes (R2): Entropia recompõe INTEGRAL no
     # descanso (diferente do HP, que fica em ~metade). Carga do Abismo NÃO cai.
     if "max_entropy" in player:

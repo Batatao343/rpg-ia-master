@@ -162,7 +162,8 @@ game_id             str          — UUID da sessão, isola memória RAG
 narrative_summary   str          — resumo comprimido (short-term memory)
 archivist_last_run  int          — turno da última execução do arquivista
 chronicle           List[ChronicleChapter] — capítulos (arc_title): milestones do event_log + prosa (persistido)
-player              PlayerStats  — name, class_name, race, hp/max_hp, mana/max_mana, stamina/max_stamina,
+player              PlayerStats  — name, class_name, race, hp/max_hp, entropy/max_entropy, abyss_charge,
+                                   mana/max_mana+stamina/max_stamina (=0 p/ as 5 Posturas; inimigos usam),
                                    gold, level, xp, attributes (chaves curtas str/dex/...), inventory,
                                    known_abilities, defense, attack_bonus, active_conditions, ability_cooldowns
 world               WorldState   — current_location(+_id), visited[] (fog of war), world_clock{day,period},
@@ -195,6 +196,8 @@ rag.py                # query_rag / add_memory_to_session / ingest_file (FAISS +
 persistence.py        # save_game_state / load_game_state (serializa mensagens)
 gamedata.py           # carrega data/*.json; ARTIFACTS_DB, CLASSES, ABILITIES, XP_TABLE, helpers de world_map
 combat_mechanics.py   # NÚCLEO DETERMINÍSTICO do combate (iniciativa, DoT, custos, cooldowns, normalize_attr)
+                      #   + Entropia/Carga do Abismo das 5 classes (entropy_config/apply_entropy_trigger/
+                      #     abyss_tier/regras/consequências — ver docs/CLASSES.md)
 world_utils.py        # Fase 0: relógio, viagem (fog of war), descanso — determinístico, sem LLM
 character_creator.py  # cria ficha do player (IA + JSON oficial); guard de fallback
 game_engine.py        # CLI interativo (wizard + loop)
@@ -232,7 +235,7 @@ data/
   rules.txt           # regras indexadas para FAISS
   world_map.json      # grafo de locais — mapa de Valoria, 30 nós (Fase 2.5b)
   bestiary.json       # criaturas
-  classes.json        # classes jogáveis (base_stats, passive)
+  classes.json        # 5 Posturas diante do Abismo (base_stats+entropy, entropy_trigger/special_rule/abyss, 3 branches)
   class_themes.json   # allowed/forbidden por classe (gating)
   origins.json        # raças e regiões
   artifacts.json      # artefatos
@@ -292,8 +295,17 @@ beats-visibilidade-ptbr · encontros-dedupe · polish-prosa · embeddings-provid
 onboarding-valoria (wizard 5 passos + `data/onboarding.json` +
 `GET /data/onboarding`) · inicio-personalizado (`POST /game/prologue` + seed de
 arco pessoal/NPCs/cena no `/game/new`; limites de schema viraram truncagem em
-Python + `StartScenarioIn` estrito na borda). **792 testes offline.** Próxima:
-aprovar/implementar as 8 specs do playtest; Fase 8 (arte) vs 10b (público)
+Python + `StartScenarioIn` estrito na borda). **792 testes offline.**
+2026-07-18: **8 specs do playtest longo `done`** (embeddings-provider Jina ·
+playtest-stop-gameover · combate-lifecycle · pos-saque-recuperacao ·
+npc-fallback-sem-alvo · beats-visibilidade-ptbr · encontros-dedupe · polish-prosa)
++ archivist fix + NPC relocável. 2026-07-19: **refatoracao-sistema-classes `done`**
+— 10 classes → **5 Posturas diante do Abismo** × 3 subclasses; recurso **Entropia**
+(pool único, recompõe integral no descanso) + **Carga do Abismo** (longo prazo);
+gatilhos/regras/consequências por classe 100% Python (`combat_mechanics`); árvore
+mínima jogável (41 hab, `scripts/gen_classes_v2.py`); migração v3; HUD Entropia/Carga
+(ver [docs/CLASSES.md](docs/CLASSES.md)). **898 testes offline.** Próxima: árvore RICA
+(`arvores-habilidade-classes`, Fable) + balanceamento; Fase 8 (arte) vs 10b (público)
 segue adiada.
 
 ---

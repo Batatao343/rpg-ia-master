@@ -1,26 +1,26 @@
 # SPEC — Refatoração do Sistema de Classes (Cinco Posturas diante do Abismo)
 
-> **Status:** `in-progress` (2026-07-18 — **Etapa 1/8 DONE** e commitada:
-> recurso Entropia (`entropy`/`max_entropy`/`abyss_charge` no `PlayerStats`,
-> `_resource_field`→entropy, `apply_rest` recompõe integral; +5
-> `test_classes_refactor`, 881 verdes). Etapa 2 (dados das 5 classes) PRONTA em
-> `scripts/gen_classes_v2.py` (gera `classes.json`+`player_abilities.json`: 5
-> classes × 3 branches, 41 habilidades, todos os blocos tipados; validado). **NÃO
-> aplicada ainda** — o rollout troca as 10 classes antigas pelas 5 e derruba **41
-> testes em 10 arquivos** (test_fase42 buffs=14, fase41/41b árvore=13,
-> combat_heal=5, polish_sessao=3, onboarding=2, +4). Muitos testam PASSIVAS/
-> habilidades das classes antigas (hp_as_mana, party_active AC) que o novo sistema
-> SUBSTITUI por gatilhos de Entropia (etapas 3/4) — precisam ser reescritos, não
-> só ajustados. Plano abaixo (§4) segue válido; falta 2–8 num passe focado.)
-> **Criada:** 2026-07-17 · **Atualizada:** 2026-07-18
+> **Status:** `done` (2026-07-19 — **Etapas 1–8 concluídas**. As 10 classes
+> antigas viraram 5 Posturas × 3 subclasses; recurso **Entropia** (pool único,
+> recompõe integral no descanso) + **Carga do Abismo** (longo prazo, não cai no
+> descanso). Gatilhos por classe (on_damage_taken/on_self_harm/on_decay_nearby/
+> on_channel/on_ally_suffer), regras especiais (taunt-escala/blood_leak/boiler/
+> heal_abyss) e consequências (Insônia/Cicatriz/Transformação/Dependência/
+> Recidiva) resolvidas 100% em `combat_mechanics.py`. Árvore MÍNIMA jogável
+> (41 habilidades, gerada por `scripts/gen_classes_v2.py` alinhada ao schema do
+> motor); migração `_migrate_v2_to_v3` (schema v3); HUD com barra Entropia + chip
+> Carga. **898 offline verdes** + smoke real 4/4 (Sangromante criado no LLM real
+> com Entropia mapeada, mana/stamina 0). A árvore RICA (~100 hab, passivas/
+> utilitárias) segue como spec #2 `arvores-habilidade-classes` — autoria em Fable.)
+> **Criada:** 2026-07-17 · **Atualizada:** 2026-07-19
 > **Depende de:** Fase 4.1 (`progression.py` — árvore/ramos) · 4.1b (árvores de Valoria) ·
 > 4.2 (buffs/passivas tipadas) · 2.5b (traits raciais) — todas `done`
 > **Desbloqueia:** rebalanceamento de combate · reautoria de conteúdo (onboarding, bestiário de aliados)
 > **Fonte de design:** `VALORIA_spec_sistema_classes.md` (documento do usuário). Onde o
 > documento marca `[A BALANCEAR]`, esta spec **propõe** um número inicial e o marca
 > `[BALANCEAR]` — placeholder consciente, não valor final canonizado.
-> **▶ RETOMAR:** o handoff operacional (comandos, inventário das 41 falhas, plano
-> etapa a etapa) está em [docs/HANDOFF-sistema-classes.md](../docs/HANDOFF-sistema-classes.md).
+> **▶ REFERÊNCIA:** mecânica em [docs/CLASSES.md](../docs/CLASSES.md); narrativa em
+> [docs/CLASSES_NARRATIVA.md](../docs/CLASSES_NARRATIVA.md).
 
 ---
 
@@ -410,19 +410,25 @@ Saves ficam narrativamente órfãos (aceito, como pré-2.5b) — arquivar recome
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R12 implementados e cobertos por teste.
-- [ ] `data/classes.json` tem exatamente as 5 classes, 3 branches cada, com
+- [x] R1–R12 implementados e cobertos por teste (`tests/test_classes_refactor.py`, 34 testes).
+- [x] `data/classes.json` tem exatamente as 5 classes, 3 branches cada, com
   `entropy_trigger`/`special_rule`/`abyss` tipados.
-- [ ] Nenhuma habilidade do jogador usa mana/stamina (todas Entropia).
-- [ ] Gatilho gera Entropia **e** Carga; descanso recompõe Entropia integral e
+- [x] Nenhuma habilidade do jogador usa mana/stamina (todas Entropia).
+- [x] Gatilho gera Entropia **e** Carga; descanso recompõe Entropia integral e
   **nunca** gera Carga.
-- [ ] Cada consequência de Carga tem efeito mecânico verificável por patamar.
-- [ ] Médico é a única classe que reduz Carga alheia.
-- [ ] Saves com classe antiga carregam (migração) — teste verde.
-- [ ] Nenhuma das 10 classes antigas nos dados ativos.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] `cd web && npm run build` verde.
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo.
+- [x] Cada consequência de Carga tem efeito mecânico verificável por patamar.
+- [x] Médico é a única classe que reduz Carga alheia (`reduce_ally_abyss`).
+- [x] Saves com classe antiga carregam (migração `_migrate_v2_to_v3`) — teste verde.
+- [x] Nenhuma das 10 classes antigas nos dados ativos (`test_no_old_class_in_active_data`).
+- [x] `uv run pytest` verde (898 passed, 1 skipped).
+- [x] `cd web && npm run build` verde.
+- [x] Guard de FallbackLLM em todo `with_structured_output` novo (nenhum nó novo com
+  structured output — o creator já era blindado; motor de Entropia é 100% Python).
+
+> **Nota (fora de escopo, fast-follow):** a árvore RICA por subclasse (~100
+> habilidades com passivas/utilitárias, tiers 4+) é a spec #2
+> `arvores-habilidade-classes` — autoria em Fable. A árvore atual (41 hab, tiers
+> 1–3) é o MÍNIMO jogável até ~nível 8.
 
 ## 6. Smoke test com LLM real
 

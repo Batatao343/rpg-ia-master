@@ -470,6 +470,12 @@ def combat_node(state: GameState):
     hero_fled = False  # R5: jogador fugiu → encerra o combate após esta rodada
     rnd = int(combat_meta.get("round", 1))
 
+    # spec refatoracao-sistema-classes (etapa 3): zera o contador de ativações do
+    # gatilho de Entropia no início do round (per_turn_cap conta por round).
+    cm.reset_entropy_turn(player)
+    # Arcanista — a caldeira conta o tempo: sem vazão no prazo, estoura (auto-dano).
+    logs += cm.tick_boiler(player)
+
     # Fase 6.5: miasma/tempestade mordem TODOS em campo aberto (1x por round)
     if env_dot:
         for ent in [player] + [e for e in enemies if e.get("status") == "ativo"]:
@@ -524,6 +530,13 @@ def combat_node(state: GameState):
     active_after = [e for e in enemies if e.get("status") == "ativo"]
     fled = [e for e in enemies if e.get("status") == "fugiu"]
     dead = [e for e in enemies if e.get("status") == "morto"]
+    # spec refatoracao-sistema-classes (etapa 3): Corruptor — cada inimigo que se
+    # desfaz (morte) é decadência ao redor que o alimenta de Entropia.
+    for _d in dead:
+        cm.apply_entropy_trigger(player, {"kind": "on_decay_nearby", "decay_kind": "any"}, logs)
+    # Médico — Recidiva: Carga oculta que cruza 'severo' estoura num colapso (1x).
+    _recidiva_logs, recidiva_event = cm.check_recidiva(player)
+    logs += _recidiva_logs
     # R5: herói que fugiu ENCERRA o combate (mesmo com inimigos vivos) — sem vitória,
     # sem espólio, sem XP dos que ficaram para trás.
     combat_over = (not active_after) or hero_fled
@@ -655,6 +668,8 @@ def combat_node(state: GameState):
     # O motor já sabe quem caiu; ids genéricos de bestiário não geram evento.
     # Fase 4.1: level_up (source=progression) entra na mesma fila.
     engine_events = _kill_events(dead) + level_up_events + fallen_events + death_events
+    if recidiva_event:
+        engine_events.append(recidiva_event)
     if engine_events:
         result["pending_world_events"] = (state.get("pending_world_events", []) or []) + engine_events
 

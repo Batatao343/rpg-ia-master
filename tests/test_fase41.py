@@ -237,7 +237,7 @@ def test_level_up_event_shape():
 
 from gamedata import ABILITIES, CLASSES  # noqa: E402
 
-VALID_EFFECT_KINDS = {"buff", "debuff", "dot", "control", "heal"}
+VALID_EFFECT_KINDS = {"buff", "debuff", "dot", "control", "heal", "reduce_ally_abyss"}
 VALID_EFFECT_STATS = {"damage", "ac", "attack", "save", None}
 
 
@@ -310,24 +310,24 @@ def test_starting_abilities_validas():
 def test_creator_ids_canonicos():
     from character_creator import create_player_character
     sheet = create_player_character({
-        "name": "Teste", "class_name": "Cavaleiro da Vigília", "race": "Humano",
+        "name": "Teste", "class_name": "Devoto do Abismo", "race": "Humano",
         "region": "Nova Arcádia", "backstory": "x", "level": "1"})
     known = sheet["known_abilities"]
     assert known and all(k in ABILITIES for k in known), known
     assert "ataque_basico" in known
     assert not any(str(k).startswith("[Passiva]") for k in known)
-    for aid in CLASSES["Cavaleiro da Vigília"]["starting_abilities"]:
+    for aid in CLASSES["Devoto do Abismo"]["starting_abilities"]:
         assert aid in known
     assert sheet["pending_choices"] == []
 
 
 def test_catalogo_por_id_exato():
     from agents.combat import _ability_catalog_for
-    p = make_player(known_abilities=["ataque_basico", "investida_do_touro"])
+    p = make_player(known_abilities=["ataque_basico", "provocacao_do_abismo"])
     cat = _ability_catalog_for(p)
-    assert "investida_do_touro" in cat
-    # habilidade de outra classe com nome parecido NÃO entra por substring
-    assert "dardos_de_forca" not in cat
+    assert "provocacao_do_abismo" in cat
+    # habilidade de outra classe NÃO entra (só conhecidas + universais)
+    assert "corte_de_troca" not in cat
     # texto livre antigo não casa mais nada além das universais
     p2 = make_player(known_abilities=["Golpe Fantasma da Lua"])
     cat2 = _ability_catalog_for(p2)
@@ -341,7 +341,8 @@ def test_gate_uso_deterministico(monkeypatch):
 
     class _FakeStructured:
         def invoke(self, msgs):
-            return cbt.CombatAction(ability_id="decapitar", target="Orc",
+            # corte_exato é id REAL (Sangromante) que o Devoto não conhece.
+            return cbt.CombatAction(ability_id="corte_exato", target="Orc",
                                     is_allowed=True, reason="")
 
     class _FakeLLM:
@@ -349,8 +350,8 @@ def test_gate_uso_deterministico(monkeypatch):
             return _FakeStructured()
 
     monkeypatch.setattr(cbt, "get_llm", lambda **kw: _FakeLLM())
-    p = make_player(known_abilities=["ataque_basico"])
-    out = cbt._parse_combat_action(p, [{"name": "Orc", "status": "ativo"}], "decapito ele")
+    p = make_player(class_name="Devoto do Abismo", known_abilities=["ataque_basico"])
+    out = cbt._parse_combat_action(p, [{"name": "Orc", "status": "ativo"}], "uso o corte")
     assert out["is_allowed"] is False
     assert "não conhece" in out["reason"]
 
@@ -481,9 +482,9 @@ def test_levelup_endpoint_aplica_e_invalida(tmp_path, monkeypatch):
     from fastapi.testclient import TestClient
     import api as api_mod
 
-    player = make_player(level=2, pending_choices=[
-        {"id": "lvl2-ability", "level": 2, "kind": "ability"},
-        {"id": "lvl2-attr", "level": 2, "kind": "attribute"}])
+    player = make_player(class_name="Devoto do Abismo", level=3, pending_choices=[
+        {"id": "lvl3-ability", "level": 3, "kind": "ability"},
+        {"id": "lvl3-attr", "level": 3, "kind": "attribute"}])
     fake_state = _pipeline_state(player=player,
                                  messages=[], narrative_summary="")
 
@@ -492,50 +493,50 @@ def test_levelup_endpoint_aplica_e_invalida(tmp_path, monkeypatch):
     monkeypatch.setattr(api_mod, "save_game_state", lambda s: saved.update(s))
     client = TestClient(api_mod.app)
 
-    # habilidade elegível (tronco do Cavaleiro, lv2)
-    r = client.post("/game/levelup", json={"choice_id": "lvl2-ability",
-                                           "ability_id": "postura_vigilante"})
+    # habilidade elegível (ramo do Devoto, tier 2, level_req 3)
+    r = client.post("/game/levelup", json={"choice_id": "lvl3-ability",
+                                           "ability_id": "marca_consagrada"})
     assert r.status_code == 200, r.text
     body = r.json()
-    assert any(a["id"] == "postura_vigilante" for a in body["player_stats"]["abilities"])
-    assert saved["player"]["known_abilities"][-1] == "postura_vigilante"
+    assert any(a["id"] == "marca_consagrada" for a in body["player_stats"]["abilities"])
+    assert saved["player"]["known_abilities"][-1] == "marca_consagrada"
 
-    # inelegível (ramo sem nível) -> 400, save intocado
+    # inelegível (tier 3, level_req 5 > nível) -> 400, save intocado
     saved.clear()
-    r2 = client.post("/game/levelup", json={"choice_id": "lvl2-ability",
-                                            "ability_id": "ultimo_bastiao"})
+    r2 = client.post("/game/levelup", json={"choice_id": "lvl3-ability",
+                                            "ability_id": "fervor_ritual"})
     assert r2.status_code == 400
     assert not saved
 
     # atributo
-    r3 = client.post("/game/levelup", json={"choice_id": "lvl2-attr", "attr": "força"})
+    r3 = client.post("/game/levelup", json={"choice_id": "lvl3-attr", "attr": "força"})
     assert r3.status_code == 200
     assert saved["player"]["attributes"]["str"] == 17
 
 
 def test_levelup_block_no_state():
     import api as api_mod
-    p = make_player(level=2, pending_choices=[
-        {"id": "lvl2-ability", "level": 2, "kind": "ability"}])
+    p = make_player(class_name="Devoto do Abismo", level=3, pending_choices=[
+        {"id": "lvl3-ability", "level": 3, "kind": "ability"}])
     block = api_mod._levelup_block(p)
     assert block["pending"]
     ids = [e["id"] for e in block["eligible"]]
-    assert "postura_vigilante" in ids
+    assert "marca_consagrada" in ids
     assert block["current_branch"] is None
-    assert "muralha" in block["branches"]
+    assert "consagrado" in block["branches"]
     # sem pendência -> bloco vazio (payload enxuto)
-    assert api_mod._levelup_block(make_player()) == {}
+    assert api_mod._levelup_block(make_player(class_name="Devoto do Abismo")) == {}
 
 
 def test_backfill_save_antigo():
     p = make_player(known_abilities=[
         "[Passiva] Muralha Humana: +2 Defesa",
-        "Investida do Touro",        # nome livre -> id
-        "pele_de_ferro",             # já canônico
+        "Corte Exato",               # nome livre -> id (corte_exato)
+        "esquiva_calculada",         # já canônico
         "Golpe do Dragão Celestial", # flavor não-mapeável -> descarta
     ])
     p.pop("pending_choices")
     out = pg.canonicalize_known_abilities(p)
-    assert out["known_abilities"] == ["ataque_basico", "investida_do_touro", "pele_de_ferro"]
+    assert out["known_abilities"] == ["ataque_basico", "corte_exato", "esquiva_calculada"]
     assert out["pending_choices"] == []
     assert out["level"] == 1 and out["xp"] == 0

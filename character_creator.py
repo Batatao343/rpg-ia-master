@@ -26,11 +26,15 @@ except ImportError:
     def load_json_data(_): return {}
 
 # --- MAPA DE ATRIBUTOS (Fallback se o JSON falhar) ---
+# spec refatoracao-sistema-classes: as 5 Posturas diante do Abismo.
+# Atributo primário: Devoto str · Sangromante dex · Corruptor wis ·
+# Arcanista int · Médico int.
 CLASS_ATTR_MAP = {
-    "Guerreiro": "str", "Cavaleiro da Vigília": "str", "Inquisidor da Cinza": "str", "Guardião Selvagem": "str",
-    "Ladino": "dex", "Batedor das Fronteiras": "dex", "Sombra da Corte": "dex",
-    "Mago": "int", "Arcanista Cinzento": "int", "Sapador da Fuligem": "int", "Médico de Campo": "int",
-    "Sangromante": "con", "Pastor de Pragas": "wis"
+    "Devoto do Abismo": "str",
+    "Sangromante": "dex",
+    "Corruptor": "wis",
+    "Arcanista Cinzento": "int",
+    "Médico de Campo": "int",
 }
 
 # --- SCHEMAS DA IA ---
@@ -151,9 +155,14 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
     # Fórmula simples: Base + (6 por nível extra)
     final_hp = base_hp_class + (6 * (level - 1))
 
-    # Recursos secundários (stamina/mana) escalam levemente com o nível
-    final_stamina = base_stats.get("stamina", 10) + (2 * (level - 1))
-    final_mana = base_stats.get("mana", 10) + (2 * (level - 1))
+    # spec refatoracao-sistema-classes (R1/§3.8): Entropia é o pool ÚNICO das 5
+    # classes; escala com o nível pela curva da classe (como o HP). mana/stamina
+    # do jogador viram 0 (recurso morto — inimigos seguem em mana/stamina).
+    level_gains = class_data.get("level_gains", {}) or {}
+    base_entropy = base_stats.get("entropy", 0)
+    final_entropy = base_entropy + int(level_gains.get("entropy", 0) or 0) * (level - 1)
+    final_stamina = 0
+    final_mana = 0
 
     # 2. BUSCA O LORE (O "Sabor")
     region_lore = _get_region_lore(region)
@@ -223,6 +232,9 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
         "max_stamina": final_stamina,
         "mana": final_mana,
         "max_mana": final_mana,
+        "entropy": final_entropy,
+        "max_entropy": final_entropy,
+        "abyss_charge": 0,
         "attributes": stats_data["attributes"],
         "inventory": [],  # Fase 4.3: preenchido abaixo (ids canônicos + flavor)
         "known_abilities": final_abilities,

@@ -50,6 +50,11 @@ export interface PlayerStats {
   max_mana: number;
   stamina: number;
   max_stamina: number;
+  // spec refatoracao-sistema-classes: Entropia (pool das 5 Posturas) + Carga do Abismo.
+  entropy?: number;
+  max_entropy?: number;
+  abyss_charge?: number;
+  abyss_tier?: string; // "nenhum"|"leve"|"moderado"|"severo" | "?" (Médico, oculto)
   defense: number;
   gold: number;
   level: number;

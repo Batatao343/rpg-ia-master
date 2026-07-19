@@ -77,10 +77,11 @@ class CampaignResult:
 
 # --- criação de personagem (espelha /game/new) -----------------------------
 
-# Personagem default determinístico do playtest. Batedor cobre exploração e
-# combate; região-hub (Nova Arcádia) tem muitas conexões p/ o explorador.
+# Personagem default determinístico do playtest. Devoto do Abismo (tank, HP alto)
+# cobre exploração e combate sem morrer cedo no mock; região-hub (Nova Arcádia)
+# tem muitas conexões p/ o explorador. (spec refatoracao-sistema-classes)
 _DEFAULT_CHAR = {
-    "class_name": "Batedor das Fronteiras",
+    "class_name": "Devoto do Abismo",
     "race": "Humano",
     "region": "Nova Arcádia",
     "level": 1,
@@ -123,6 +124,10 @@ def _build_initial_state(profile: str, seed: int) -> dict:
             "max_mana": final_char["max_mana"],
             "stamina": final_char["stamina"],
             "max_stamina": final_char["max_stamina"],
+            # spec refatoracao-sistema-classes: Entropia é o pool das 5 classes.
+            "entropy": final_char.get("entropy", 0),
+            "max_entropy": final_char.get("max_entropy", 0),
+            "abyss_charge": final_char.get("abyss_charge", 0),
             "gold": 50 * level,
             "alignment": "Neutro",
             "attributes": final_char["attributes"],

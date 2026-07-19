@@ -20,7 +20,20 @@ DEFAULT_SAVE_NAME = "autosave"
 
 # Versão atual do schema de save (Fase 10). Save sem o campo = versão 0.
 # v2 = campos de camada dos NPCs (spec npcs-3-camadas-traits).
-SCHEMA_VERSION = 2
+# v3 = 10 classes antigas → 5 Posturas + Entropia (spec refatoracao-sistema-classes).
+SCHEMA_VERSION = 3
+
+# spec refatoracao-sistema-classes (R10/§3.10): mapa determinístico antigo→nova classe.
+_OLD_TO_NEW_CLASS = {
+    "Cavaleiro da Vigília": "Devoto do Abismo",
+    "Inquisidor da Cinza": "Devoto do Abismo",
+    "Sombra da Corte": "Sangromante",
+    "Pastor de Pragas": "Corruptor",
+    "Guardião Selvagem": "Corruptor",
+    "Batedor das Fronteiras": "Arcanista Cinzento",
+    "Sapador da Fuligem": "Médico de Campo",
+    # (Sangromante / Arcanista Cinzento / Médico de Campo mantêm o nome)
+}
 
 
 def save_path(game_id: str) -> str:
@@ -90,9 +103,48 @@ def _migrate_v1_to_v2(raw: Dict[str, Any]) -> Dict[str, Any]:
     return raw
 
 
+def _migrate_v2_to_v3(raw: Dict[str, Any]) -> Dict[str, Any]:
+    """spec refatoracao-sistema-classes (R10): 10 classes antigas → 5 Posturas.
+    Mapeia class_name, backfilla entropy/max_entropy/abyss_charge da nova classe
+    (Entropia escala como o HP), zera mana/stamina do jogador e descarta
+    known_abilities que não existem mais (canonicalize) — somando as iniciais da
+    nova classe. Save fica narrativamente órfão (mesma política do corte 2.5b)."""
+    raw = dict(raw)
+    player = dict(raw.get("player") or {})
+    if not player:
+        return raw
+    from gamedata import CLASSES
+    old = player.get("class_name", "")
+    new = _OLD_TO_NEW_CLASS.get(old, old)
+    player["class_name"] = new
+    cd = CLASSES.get(new) or {}
+    if "max_entropy" not in player or "entropy" not in player:
+        base = cd.get("base_stats", {})
+        gains = cd.get("level_gains", {})
+        level = int(player.get("level", 1) or 1)
+        max_ent = int(base.get("entropy", 0) or 0) + int(gains.get("entropy", 0) or 0) * (level - 1)
+        player["max_entropy"] = max_ent
+        player["entropy"] = max_ent
+    player.setdefault("abyss_charge", 0)
+    player["mana"] = 0
+    player["max_mana"] = 0
+    player["stamina"] = 0
+    player["max_stamina"] = 0
+    from progression import canonicalize_known_abilities
+    player = canonicalize_known_abilities(player)
+    known = list(player.get("known_abilities") or [])
+    for aid in cd.get("starting_abilities") or []:
+        if aid not in known:
+            known.append(aid)
+    player["known_abilities"] = known
+    raw["player"] = player
+    return raw
+
+
 _MIGRATIONS: Dict[int, Callable[[Dict[str, Any]], Dict[str, Any]]] = {
     0: _migrate_v0_to_v1,
     1: _migrate_v1_to_v2,
+    2: _migrate_v2_to_v3,
 }
 
 

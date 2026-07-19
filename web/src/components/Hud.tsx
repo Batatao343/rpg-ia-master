@@ -118,9 +118,18 @@ function FichaTab({ data, hpHitKey, onEquip, busy }: {
     <>
       <div className="bars">
         <Bar kind="hp" label="Vida" cur={p?.hp ?? 0} max={p?.max_hp ?? 0} low={hpLow} hitKey={hpHitKey} />
-        <Bar kind="mana" label="Mana" cur={p?.mana ?? 0} max={p?.max_mana ?? 0} />
-        <Bar kind="stamina" label="Vigor" cur={p?.stamina ?? 0} max={p?.max_stamina ?? 0} />
+        {/* spec refatoracao-sistema-classes: Entropia é o pool das 5 Posturas.
+            Saves antigos sem Entropia (mana/stamina) mantêm as barras legadas. */}
+        {(p?.max_entropy ?? 0) > 0 ? (
+          <Bar kind="entropy" label="Entropia" cur={p?.entropy ?? 0} max={p?.max_entropy ?? 0} />
+        ) : (
+          <>
+            <Bar kind="mana" label="Mana" cur={p?.mana ?? 0} max={p?.max_mana ?? 0} />
+            <Bar kind="stamina" label="Vigor" cur={p?.stamina ?? 0} max={p?.max_stamina ?? 0} />
+          </>
+        )}
       </div>
+      {(p?.max_entropy ?? 0) > 0 && <AbyssChip tier={p?.abyss_tier} charge={p?.abyss_charge ?? 0} />}
 
       <div className="stats">
         <div className="stat"><span>Nível</span><b>{p?.level ?? 1}</b></div>
@@ -483,7 +492,7 @@ function Combat({ c, hitKey, cds }: { c: CombatBlock; hitKey: number; cds: [stri
 function Bar({
   kind, label, cur, max, low, hitKey,
 }: {
-  kind: "hp" | "mana" | "stamina"; label: string; cur: number; max: number; low?: boolean; hitKey?: number;
+  kind: "hp" | "mana" | "stamina" | "entropy"; label: string; cur: number; max: number; low?: boolean; hitKey?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const first = useRef(true);
@@ -503,6 +512,22 @@ function Bar({
       <div className="bar__track">
         <div className="bar__fill" style={{ width: pct(cur, max) + "%" }} />
       </div>
+    </div>
+  );
+}
+
+// spec refatoracao-sistema-classes (R11): Carga do Abismo como chip por patamar.
+// Médico (abyss.hidden) manda tier "?" — selo enigmático, sem número/patamar.
+function AbyssChip({ tier, charge }: { tier?: string; charge: number }) {
+  const t = tier ?? "nenhum";
+  if (t === "nenhum") return null;
+  const hidden = t === "?";
+  const label = hidden
+    ? "Carga do Abismo: algo se acumula…"
+    : `Carga do Abismo: ${t}${charge ? ` (${charge})` : ""}`;
+  return (
+    <div className="abyss-chip" data-tier={t} title="Recurso de longo prazo: não cai no descanso.">
+      <span className="abyss-chip__dot" /> {label}
     </div>
   );
 }
