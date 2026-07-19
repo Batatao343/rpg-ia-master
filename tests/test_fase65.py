@@ -21,6 +21,14 @@ class _FixedRng:
         best = max(zip(seq, weights or [1] * len(seq)), key=lambda p: p[1])
         return [best[0]]
 
+    def random(self):
+        # spec weather-global-vivo: roll alto → NÃO dispara clima global espúrio
+        # nos testes de clima local/tick (que usam _FixedRng(1)).
+        return min(1.0, float(self.roll))
+
+    def choice(self, seq):
+        return seq[0]
+
 
 def _world(region_loc="pantano_melancolia", **over):
     w = {"current_location_id": region_loc, "current_location": region_loc,

@@ -163,8 +163,3 @@ def archive_node(state: GameState):
     except Exception as e:
         print(f"⚠️ Erro no Arquivista: {e}")
         return dict(event_updates)
-
-
-# Helper para compatibilidade
-def archive_narrative(text: str):
-    pass

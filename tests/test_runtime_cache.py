@@ -80,10 +80,14 @@ def test_npc_db_fallback_legado_e_migracao(monkeypatch, tmp_path):
 
 
 def test_npc_db_repo_nao_e_gravado(monkeypatch, tmp_path):
+    # O legado data/npc_database.json foi destrackeado (git rm --cached) — o save
+    # vai p/ o overlay e NUNCA (re)cria o arquivo no repo.
     monkeypatch.setenv("RPG_RUNTIME_CACHE_DIR", str(tmp_path))
-    before = _read("data/npc_database.json")
+    repo_file = os.path.join(gamedata.DATA_DIR, "npc_database.json")
+    existed = os.path.exists(repo_file)
     npc.save_npc_template({"name": "Fantasma do Teste"})
-    assert _read("data/npc_database.json") == before  # arquivo do repo intocado
+    assert "npc_fantasma_do_teste" in _read(tmp_path / "npc_database.json")  # overlay
+    assert os.path.exists(repo_file) == existed        # não criou/alterou o repo
 
 
 # --- Etapa 3: custom_artifacts + isolamento do playtest ---------------------

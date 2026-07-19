@@ -214,7 +214,6 @@ agents/
   archivist.py        # archive_node — memória curto (resumo) / longo prazo (RAG)
   campaign_manager.py # campaign_manager_node — planejamento de arcos + incrementa turn_count
   bestiary.py         # generate_new_enemy + cache de bestiário
-  class_themes.py     # temas/gating narrativo por classe (allowed/forbidden)
   librarian.py        # find_existing_entity — dedupe semântico de entidades
 services/             # serviços determinísticos (Fases 2.5–3.1)
   graph_resolver.py   # consultas ao grafo de mundo (base − disabled + dynamic, visibility)
@@ -236,7 +235,7 @@ data/
   world_map.json      # grafo de locais — mapa de Valoria, 30 nós (Fase 2.5b)
   bestiary.json       # criaturas
   classes.json        # 5 Posturas diante do Abismo (base_stats+entropy, entropy_trigger/special_rule/abyss, 3 branches)
-  class_themes.json   # allowed/forbidden por classe (gating)
+  class_themes.json   # allowed/forbidden/style por classe (só flavor do prólogo; gating por LLM aposentado — mecânica é Python)
   origins.json        # raças e regiões
   artifacts.json      # artefatos
   player_abilities.json
@@ -315,7 +314,11 @@ checkout` manual) · harness com `--class` + telemetria de Entropia/Carga
 (baseline capturado; tuning dos 8 knobs `[BALANCEAR]` adiado por dado
 insuficiente) · traits 40→80 · curadoria da Rede Carmesim (over-share suavizado +
 reindex). **945 testes offline.** Próxima: tuning real dedicado + tiers 5+;
-Fase 8 (arte) vs 10b (público) segue adiada.
+Auditoria de mecânica-morta: gating narrativo por classe APOSENTADO
+(morto desde a deleção do Ruler; mecânica é Python) · weather GLOBAL fiado
+(trigger determinístico em `advance_weather` — Tempestade de Éter/Noite Sem
+Estrelas varrem e impactam o jogo). **950 testes offline.** Fase 8 (arte) vs
+10b (público) segue adiada.
 
 ---
 

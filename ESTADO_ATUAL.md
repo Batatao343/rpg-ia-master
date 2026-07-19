@@ -3,8 +3,8 @@
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
 > Última atualização: 2026-07-19 (sessão 20: **REVISÃO PÓS-ÉPICO — 3 bugs de
-> fiação de classe corrigidos + 2 débitos técnicos pagos**. **945 offline
-> verdes**.)
+> fiação de classe + 2 débitos técnicos + auditoria de mecânica-morta
+> (gating aposentado, weather global vivo)**. **950 offline verdes**.)
 
 ---
 
@@ -47,6 +47,26 @@ mock/testes de unidade escondiam:
    (2203 chunks, vazamento sumiu) + assinatura de iminência em
    `secret_signatures`. `validate.yml` verde no último push (confirmado via `gh`).
 5. **Suíte: 918 → 945 offline verdes** (+27) + 1 skip.
+
+**Trabalho concorrente (enquanto rodava o playtest longo de balanceamento) —
+auditoria de mecânica-morta + 2 decisões do usuário:**
+6. **Auditoria "dado declara capacidade, motor não fia" além das classes** (o
+   padrão dos 3 bugs). Scan estático de funções públicas sem callsite de
+   produção: 9 candidatas → maioria falso-positivo (Pydantic validator, cache-
+   clearers do runner) ou stub trivial. **1 achado real:** o **gating narrativo
+   por classe** (`agents/class_themes.py`) estava MORTO desde a deleção do Ruler
+   (faxina 2026-07-03), mas CLAUDE.md ainda o anunciava.
+7. **Gating de classe APOSENTADO** (decisão do usuário: "mecânica é toda Python
+   agora, gate por LLM não faz falta"). Removido `agents/class_themes.py` + 2
+   testes + stub `archive_narrative`; `class_themes.json` fica só p/ flavor do
+   prólogo; CLAUDE.md corrigido.
+8. **[weather-global-vivo](specs/weather-global-vivo.md) `in-progress`** (o
+   usuário QUIS: "acho bem legal ter e que impactasse no jogo"). A máquina de
+   clima GLOBAL estava 90% pronta (tick+efeitos fiados) mas nada iniciava
+   eventos. Novo trigger **determinístico** em `advance_weather`
+   (`maybe_start_global_weather`: chance base 6% + 3%/perigo, sem canal LLM);
+   Tempestade de Éter / Noite Sem Estrelas agora varrem Valoria e impactam
+   combate/percepção/descanso/viagem. **+7 testes.** Suíte **945 → 950**.
 
 ---
 
@@ -336,7 +356,7 @@ não existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arq
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 945 testes offline verdes (contratos de LLM ficam fora)
+uv run pytest                        # 950 testes offline verdes (contratos de LLM ficam fora)
 uv run pytest -m llm_contract -v -s  # 9 contratos contra o Gemini REAL (~13 req; requer chave)
 uv run pytest -m llm_playtest -v -s  # Fase 5: 4 perfis VITAIS × 30 turnos no LLM REAL (RPG_PLAYTEST_TURNS encurta)
 uv run python game_engine.py         # CLI

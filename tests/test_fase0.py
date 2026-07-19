@@ -6,7 +6,6 @@ from langchain_core.messages import HumanMessage, SystemMessage
 
 import gamedata
 import world_utils as wu
-from agents.class_themes import get_class_theme
 
 
 # --------------------------------------------------------------------------
@@ -90,17 +89,6 @@ def test_is_rest_detection():
 # --------------------------------------------------------------------------
 # Temas de classe (gating)
 # --------------------------------------------------------------------------
-def test_class_theme_known():
-    t = get_class_theme("Médico de Campo")
-    assert "allowed" in t and "forbidden" in t
-    assert any("magia" in f.lower() for f in t["forbidden"])
-
-
-def test_class_theme_unknown_defaults():
-    t = get_class_theme("Classe Inexistente")
-    assert t["allowed"] and t["forbidden"]
-
-
 # --------------------------------------------------------------------------
 # starting_world
 # --------------------------------------------------------------------------

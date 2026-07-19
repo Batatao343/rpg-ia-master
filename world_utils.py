@@ -689,15 +689,52 @@ def _weather_table(region_id: str) -> dict:
     return db.get(region_id) or db.get("default") or {}
 
 
+# spec weather-global-vivo: chance sistêmica de iniciar um fenômeno GLOBAL por
+# período sem evento ativo (determinístico via rng; escala com danger_level).
+GLOBAL_WEATHER_BASE_CHANCE = 0.06   # [BALANCEAR] por período sem evento ativo
+GLOBAL_WEATHER_DANGER_STEP = 0.03   # [BALANCEAR] +chance por nível de perigo >1
+
+
+def maybe_start_global_weather(world: dict, rng=None) -> Optional[str]:
+    """R1/R2: SEM evento global ativo, rola p/ iniciar um da lista curada
+    (weather.json:global_events). Chance = base + step×(danger−1). Determinístico
+    via `rng`. Reusa trigger_global_weather. Retorna a desc do evento ou None."""
+    import random as _random
+    rng = rng or _random
+    if world.get("weather_global"):
+        return None
+    from gamedata import load_json_data
+    events = list(((load_json_data("weather.json") or {}).get("global_events") or {}).keys())
+    if not events:
+        return None
+    danger = max(1, min(4, int(world.get("danger_level", 1) or 1)))
+    chance = GLOBAL_WEATHER_BASE_CHANCE + GLOBAL_WEATHER_DANGER_STEP * (danger - 1)
+    if rng.random() >= chance:
+        return None
+    _world, desc = trigger_global_weather(world, rng.choice(events))
+    return desc
+
+
 def advance_weather(world: dict, rng=None) -> dict:
     """Transição de clima (cadeia de Markov por região) — chamar quando o
-    PERÍODO do relógio muda (viagem/descanso). Muta e retorna world."""
+    PERÍODO do relógio muda (viagem/descanso). Muta e retorna world.
+
+    spec weather-global-vivo: também tica/expira o fenômeno GLOBAL e, sem evento
+    ativo, rola p/ iniciar um novo (determinístico)."""
     import random as _random
     rng = rng or _random
     from gamedata import get_location
     loc = get_location(world.get("current_location_id", "")) or {}
     table = _weather_table(loc.get("region_id", "default"))
     states = table.get("states") or {}
+    # fenômeno global expira por períodos restantes (independe do clima local)
+    g = world.get("weather_global")
+    if g:
+        g = dict(g)
+        g["periods_left"] = int(g.get("periods_left", 0)) - 1
+        world["weather_global"] = g if g["periods_left"] > 0 else None
+    # sem evento global ativo → chance sistêmica de iniciar um (R1/R2)
+    maybe_start_global_weather(world, rng)
     if not states:
         return world
     cur = world.get("weather_state")
@@ -708,12 +745,6 @@ def advance_weather(world: dict, rng=None) -> dict:
                       weights=[max(0, int(w)) for w in trans.values()], k=1)[0]
     world["weather_state"] = nxt if nxt in states else cur
     world["weather"] = states[world["weather_state"]].get("label", world["weather_state"])
-    # fenômeno global expira por períodos restantes
-    g = world.get("weather_global")
-    if g:
-        g = dict(g)
-        g["periods_left"] = int(g.get("periods_left", 0)) - 1
-        world["weather_global"] = g if g["periods_left"] > 0 else None
     return world
 
 
