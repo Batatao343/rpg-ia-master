@@ -322,6 +322,12 @@ Estrelas varrem e impactam o jogo). itens-vivos-e-luz: passiva de item fiada
 (`use_item_in_combat` com alvo), **sistema de LUZ** (`light_level` — escuro
 penaliza percepção/acerto, tocha anula) + **+22 itens** ancorados na lore.
 **970 testes offline.** Fase 8 (arte) vs 10b (público) segue adiada.
+2026-07-20 (sessão 22): **5 specs do playtest longo** — agente-curioso-entropia
+(perfil de teste usa habilidade + telemetria de GASTO de Entropia; destrava
+balanceamento) · npc-in-scene-viagem (fuga reseta cena) · aliados-em-combate
+(amigo em cena vira aliado transitório + perfil `recrutador`) · loot-exploracao
+(explorar recompensa via escada de raridade + baús curados) — 4 code `done`;
+letalidade-early-game-v2 `approved` (medir→decidir). **1001 testes offline.**
 
 ---
 

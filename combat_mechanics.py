@@ -970,6 +970,14 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
     """
     logs: List[str] = []
 
+    # spec playtest-agente-curioso-entropia (R3): telemetria de GASTO de Entropia
+    # deste turno. Transitório (prefixo "_", não persiste). Reset no topo — se a
+    # ação falhar/for básica, fica 0. Capturado em volta de spend_resources
+    # (o snapshot pós-turno é inútil: o gatilho reenche a Entropia ao teto).
+    player["_last_entropy_spent"] = 0
+    player["_last_ability_id"] = None
+    player["_last_used_active"] = False
+
     if not action.get("is_allowed", True):
         logs.append(f"Ação falha: {action.get('reason', 'não é possível para esta classe.')}")
         return logs
@@ -985,9 +993,21 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
                        for e in (ability.get("effects") or [])
                        if isinstance(e, dict) and e.get("kind") == "reduce_ally_abyss")
     if purge_amount > 0:
-        return _resolve_ally_purge(player, ability_id, ability, allies or [], purge_amount)
+        entropy_before = int(player.get("entropy", 0) or 0)
+        out = _resolve_ally_purge(player, ability_id, ability, allies or [], purge_amount)
+        player["_last_entropy_spent"] = max(0, entropy_before - int(player.get("entropy", 0) or 0))
+        player["_last_ability_id"] = ability_id
+        player["_last_used_active"] = True
+        return out
 
+    entropy_before = int(player.get("entropy", 0) or 0)
     ok, msg = spend_resources(player, ability_id, ability)
+    if ok:
+        # Gasto REAL de Entropia paga por esta habilidade (0 no ataque básico).
+        player["_last_entropy_spent"] = max(0, entropy_before - int(player.get("entropy", 0) or 0))
+        is_universal = ability_id in ("ataque_basico", "improvisado")
+        player["_last_ability_id"] = None if is_universal else ability_id
+        player["_last_used_active"] = not is_universal
     if msg:
         logs.append(msg)
     if not ok:

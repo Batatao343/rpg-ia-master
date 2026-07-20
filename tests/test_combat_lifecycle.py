@@ -141,3 +141,21 @@ def test_invariante_combat_zombie_dispara():
 def test_invariante_combat_zombie_nao_dispara_normal():
     assert inv.check_combat_zombie({"combat": {"active": True, "idle_turns": 1}}, None, 1) == []
     assert inv.check_combat_zombie({"combat": {"active": False, "idle_turns": 9}}, None, 1) == []
+
+
+# --- spec npc-in-scene-viagem (R1): fuga zera a cena ------------------------
+
+def test_fuga_reseta_in_scene():
+    # NPC gerado in_scene no local de origem; herói foge para outro local →
+    # o NPC não teleporta junto (in_scene=False no destino).
+    random.seed(3)
+    npcs = {"Sobrevivente": {"created_turn": 2, "in_scene": True,
+                             "home_location_id": _LOC}}
+    state = {"game_id": "flee_scene",
+             "messages": [HumanMessage(content=f"Viajo para {_DEST_NAME}")],
+             "player": _player(), "enemies": [_enemy()], "combat": {"active": True},
+             "world": _world(), "party": [], "npcs": npcs,
+             "combat_flee_attempt": True, "combat_flee_destination": _DEST_ID}
+    out = combat.combat_node(state)
+    assert out["world"]["current_location_id"] == _DEST_ID
+    assert out["npcs"]["Sobrevivente"]["in_scene"] is False

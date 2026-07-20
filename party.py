@@ -17,6 +17,13 @@ COMPANION_TEMPLATES: Dict[str, dict] = load_json_data("companions.json") or {}
 RECRUIT_MIN_REL = 7   # relationship 0..10 (escala da Fase 2)
 MAX_ACTIVE = 3
 
+# spec aliados-em-combate: um NPC amigo EM CENA luta ao seu lado neste combate
+# SEM precisar do compromisso de recrutamento (rel>=7). Limiar acima do neutro
+# (default 5) p/ um estranho qualquer não virar combatente — só quem você já
+# cativou um pouco (rel>=6). Teto p/ o combate não trivializar com muitos amigos.
+SCENE_ALLY_MIN_REL = 6
+MAX_SCENE_ALLIES = 2
+
 _ARCHETYPE_WORDS = {
     "guerreiro": ("guerreir", "soldado", "guarda", "legion", "mercenari", "lutador",
                   "veteran", "capit"),
@@ -72,6 +79,39 @@ def active_allies(state: Dict) -> List[Dict]:
     return [c for c in (state.get("party") or [])
             if c.get("active") and c.get("status", "ativo") == "ativo"
             and int(c.get("hp", 0)) > 0]
+
+
+def scene_allies(state: Dict) -> List[Dict]:
+    """spec aliados-em-combate (R2): NPCs amigos EM CENA (in_scene) que não são
+    party formal → companheiros TRANSITÓRIOS (`transient=True`) p/ este combate.
+    Gate determinístico: in_scene ∧ relationship>=SCENE_ALLY_MIN_REL ∧ fação
+    não-hostil ∧ ainda não é companheiro. Teto MAX_SCENE_ALLIES. Não persiste
+    em party (R3); some ao fim do combate. O LLM não decide nada aqui."""
+    from services.npc_layers import is_in_scene
+    hostile = {f.get("id") for f in (state.get("factions") or [])
+               if isinstance(f, dict) and f.get("disposition") == "hostil"}
+    already = set()
+    for c in (state.get("party") or []):
+        if isinstance(c, dict):
+            already.add(c.get("origin_npc") or "")
+            already.add(c.get("name") or "")
+    out: List[Dict] = []
+    for name, npc in (state.get("npcs") or {}).items():
+        if not isinstance(npc, dict) or not is_in_scene(npc):
+            continue
+        if int(npc.get("relationship", 5) or 5) < SCENE_ALLY_MIN_REL:
+            continue
+        if (npc.get("faction") or "") in hostile:
+            continue
+        if (npc.get("id") in already) or (name in already):
+            continue
+        comp = make_companion_from_npc(npc, npc.get("name", name))
+        comp["transient"] = True
+        comp["active"] = True
+        out.append(comp)
+        if len(out) >= MAX_SCENE_ALLIES:
+            break
+    return out
 
 
 def can_recruit(state: Dict, npc_name: str) -> Tuple[bool, str]:

@@ -1,4 +1,5 @@
 """Narration agent that advances the story and campaign plan."""
+import random
 from typing import Dict, List
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
@@ -209,12 +210,28 @@ def storyteller_node(state: GameState):
     intel = ensure_faction_intel(state.get("faction_intel"))
     dest = find_travel_destination(world, last_user_input) if last_user_input else None
     travel_periods = 0
+    discovery_events: list = []
     if dest:
         from world_utils import travel_cost
         travel_periods = travel_cost(world, dest)  # custo ANTES de mover (usa origem)
+        # spec loot-exploracao (R1): fog of war checado ANTES de apply_travel (que
+        # carimba `visited`). Baú curado (R3) pode reconceder-se? Não — one-shot.
+        first_visit = dest["id"] not in (world.get("visited") or [])
         world = apply_travel(world, dest)
         factions, faction_events = advance_factions(factions, travel_periods)
         factions, world, faction_note = resolve_faction_completions(factions, world, faction_events, intel)
+        # spec loot-exploracao: achado ambiental (1ª visita) OU baú curado (sempre
+        # que houver e não saqueado). Muta player.inventory/gold + world in-place
+        # (propaga: viagem sem descanso não substitui o player no updates parcial).
+        _pl = state.get("player")
+        if isinstance(_pl, dict) and (first_visit or (dest.get("treasure"))):
+            from services import exploration
+            _rng = random.Random(hash((state.get("game_id", ""), dest["id"],
+                                       int(world.get("turn_count", 0) or 0))) & 0xFFFFFFFF)
+            disc_note, discovery_events = exploration.discover_on_arrival(
+                _pl, world, dest, int(_pl.get("level", 1) or 1), _rng)
+            if disc_note:
+                faction_note = (faction_note + " " + disc_note).strip()
         if travel_periods == 0:
             travel_note = (
                 f"O jogador ENTROU em {dest['name']} (mesma cidade — o tempo não passou). "
@@ -321,6 +338,11 @@ def storyteller_node(state: GameState):
                 }
                 if rested_player is not None:
                     updates["player"] = rested_player  # já curou no descanso antes da emboscada
+                # spec loot-exploracao: claim de único do baú curado não se perde
+                # se um encontro disparar na mesma chegada.
+                if discovery_events:
+                    updates["pending_world_events"] = (
+                        state.get("pending_world_events", []) or []) + discovery_events
                 # Fase 3.2 (R3): criatura nomeada no hint ANTES do combate = rumor.
                 enemy_id = enc.get("enemy_id")
                 if enemy_id:
@@ -607,7 +629,7 @@ def storyteller_node(state: GameState):
         # Fase 3.4: reputation_changed (Python) entra na mesma fila. 4.1: level_up idem.
         # Fase 6.4: XP de esquiva de armadilha pode ter gerado level_up.
         pending = ([e.model_dump() for e in getattr(update, "proposed_events", []) or []]
-                   + rep_events + level_up_events + extra_engine_events)
+                   + rep_events + level_up_events + extra_engine_events + discovery_events)
         if pending:
             updates["pending_world_events"] = (state.get("pending_world_events", []) or []) + pending
             updates["archive_due"] = True  # mudança de mundo é evento relevante

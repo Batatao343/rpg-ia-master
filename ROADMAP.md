@@ -225,6 +225,14 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
 
 **CLI:** `uv run python -m playtest run --all --turns 50` · `... report <run_id>`.
 
+**Refinamentos do harness (sessão 22, 2026-07-20):** perfil **`recrutador`** (13º —
+faz o máx. de amigos, exercita party+aliados-em-combate); perfis de combate agora
+USAM habilidade de Entropia + curam com HP baixo (agente curioso — antes só "Ataco
+X" e a economia de Entropia nunca era exercitada); **telemetria de GASTO de
+Entropia** por turno (spent/turno, %ativa, starvation/flooding redefinidos por
+gasto e não snapshot) → **tuning dos 8 knobs `[BALANCEAR]` agora é decidível**.
+Ver [spec](specs/playtest-agente-curioso-entropia.md).
+
 **Achados (mock — NÃO produção; report marca `mock: true`) da rodada `--all
 --turns 50 --seed 42`:** 10/10 perfis com `erros=0` e `violações=0/0` (motor
 sólido); `agressivo` morre no nível 1 (letal cedo sob combate mock); `explorador`

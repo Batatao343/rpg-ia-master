@@ -65,33 +65,103 @@ def _result(profile="combate", turns=3, player=None):
         save_path="", violations=[], mock=True)
 
 
-def test_summary_agrega_starvation_flooding_carga():
-    player = {"class_name": "Sangromante", "level": 2, "gold": 0,
+def test_summary_mede_gasto_de_entropia():
+    # spec playtest-agente-curioso-entropia (R4): economia medida por GASTO, não
+    # snapshot. Turno de combate = rota combat_agent.
+    player = {"class_name": "Devoto do Abismo", "level": 2, "gold": 0,
+              "known_abilities": ["ataque_basico", "provocacao_do_abismo"],
               "entropy": 0, "max_entropy": 16, "abyss_charge": 5}
     rows = [
-        {"turn": 1, "combat_active": True, "entropy": 0, "max_entropy": 16,
-         "abyss_charge": 1, "latency_ms": 1},
-        {"turn": 2, "combat_active": True, "entropy": 16, "max_entropy": 16,
-         "abyss_charge": 3, "latency_ms": 1},
-        {"turn": 3, "combat_active": False, "entropy": 2, "max_entropy": 16,
-         "abyss_charge": 5, "latency_ms": 1},
+        # combate: usou ativa, gastou 5
+        {"turn": 1, "route": "combat_agent", "combat_active": True,
+         "used_active_ability": True, "entropy_spent": 5, "ability_id": "x",
+         "entropy": 11, "max_entropy": 16, "abyss_charge": 1, "latency_ms": 1},
+        # combate: ataque básico com Entropia cheia → flooding
+        {"turn": 2, "route": "combat_agent", "combat_active": True,
+         "used_active_ability": False, "entropy_spent": 0,
+         "entropy": 16, "max_entropy": 16, "abyss_charge": 3, "latency_ms": 1},
+        # fora de combate: ignorado no cálculo de economia
+        {"turn": 3, "route": "storyteller", "combat_active": False,
+         "entropy": 2, "max_entropy": 16, "abyss_charge": 5, "latency_ms": 1},
     ]
     s = tm.build_summary(_result(player=player), rows)
-    assert s["class_name"] == "Sangromante"
+    assert s["class_name"] == "Devoto do Abismo"
     ent = s["entropy"]
-    assert ent["starvation_pct_combat"] == 50.0   # 1 de 2 turnos de combate
-    assert ent["flooding_pct_combat"] == 50.0     # 1 de 2 turnos de combate
+    assert ent["spent_total"] == 5
+    assert ent["spent_per_combat_turn"] == 2.5           # 5 gasto / 2 turnos combate
+    assert ent["pct_combat_turns_ability_used"] == 50.0  # 1 de 2
+    assert ent["pct_combat_turns_basic_only"] == 50.0
+    assert ent["flooding_pct_combat"] == 50.0            # turno 2: básico + cheio
     assert ent["peak_abyss_charge"] == 5
-    assert ent["final_abyss_charge"] == 5
-    assert ent["final_abyss_tier"] == "moderado"  # Sangromante: moderado=4
+    assert ent["final_abyss_tier"] == "moderado"         # Devoto: moderado=4
+
+
+def test_summary_starvation_quando_recurso_falta():
+    # básico com Entropia < menor custo de ativa conhecida → starvation.
+    player = {"class_name": "Devoto do Abismo", "level": 2,
+              "known_abilities": ["ataque_basico", "provocacao_do_abismo"],
+              "entropy": 0, "max_entropy": 16, "abyss_charge": 0}
+    rows = [
+        {"turn": 1, "route": "combat_agent", "combat_active": True,
+         "used_active_ability": False, "entropy_spent": 0,
+         "entropy": 0, "max_entropy": 16, "abyss_charge": 0, "latency_ms": 1},
+    ]
+    s = tm.build_summary(_result(player=player), rows)
+    # provocacao_do_abismo custa 2; Entropia 0 < 2 → starvation 100%
+    assert s["entropy"]["starvation_pct_combat"] == 100.0
 
 
 def test_summary_sem_combate_nao_divide_por_zero():
     s = tm.build_summary(_result(player={"class_name": "Corruptor"}),
-                         [{"turn": 1, "combat_active": False, "entropy": 1,
-                           "max_entropy": 10, "abyss_charge": 0, "latency_ms": 1}])
-    assert s["entropy"]["starvation_pct_combat"] is None
+                         [{"turn": 1, "route": "storyteller", "combat_active": False,
+                           "entropy": 1, "max_entropy": 10, "abyss_charge": 0,
+                           "latency_ms": 1}])
     assert s["entropy"]["flooding_pct_combat"] is None
+    assert s["entropy"]["spent_per_combat_turn"] is None
+
+
+def test_min_active_entropy_cost():
+    devoto = {"known_abilities": ["ataque_basico", "provocacao_do_abismo"]}
+    assert tm._min_active_entropy_cost(devoto) == 2   # provocacao custa 2
+    # só universais → 0 (starvation não se aplica)
+    assert tm._min_active_entropy_cost({"known_abilities": ["ataque_basico"]}) == 0
+
+
+# --- spec playtest-agente-curioso-entropia: gasto carimbado no combate --------
+
+def test_resolve_player_action_carimba_gasto():
+    import combat_mechanics as cm
+    from gamedata import ABILITIES
+    player = {"name": "K", "class_name": "Devoto do Abismo", "hp": 30, "max_hp": 30,
+              "entropy": 16, "max_entropy": 16, "abyss_charge": 0,
+              "attributes": {"str": 14, "dex": 12, "con": 12},
+              "known_abilities": ["ataque_basico", "provocacao_do_abismo"],
+              "ability_cooldowns": {}, "active_conditions": []}
+    enemies = [{"id": "g1", "name": "Goblin", "hp": 14, "max_hp": 14, "defense": 11,
+                "status": "ativo", "attributes": {"dex": 10}, "active_conditions": []}]
+    action = {"ability_id": "provocacao_do_abismo", "target": "Goblin",
+              "is_allowed": True, "reason": ""}
+    cm.resolve_player_action(player, enemies, action, ABILITIES)
+    assert player["_last_entropy_spent"] == 2       # provocacao custa 2
+    assert player["_last_used_active"] is True
+    assert player["_last_ability_id"] == "provocacao_do_abismo"
+
+
+def test_ataque_basico_gasta_zero():
+    import combat_mechanics as cm
+    from gamedata import ABILITIES
+    player = {"name": "K", "class_name": "Devoto do Abismo", "hp": 30, "max_hp": 30,
+              "entropy": 16, "max_entropy": 16, "abyss_charge": 0,
+              "attributes": {"str": 14, "dex": 12, "con": 12},
+              "known_abilities": ["ataque_basico"], "ability_cooldowns": {},
+              "active_conditions": []}
+    enemies = [{"id": "g1", "name": "Goblin", "hp": 14, "max_hp": 14, "defense": 11,
+                "status": "ativo", "attributes": {"dex": 10}, "active_conditions": []}]
+    action = {"ability_id": "ataque_basico", "target": "Goblin", "is_allowed": True}
+    cm.resolve_player_action(player, enemies, action, ABILITIES)
+    assert player["_last_entropy_spent"] == 0
+    assert player["_last_used_active"] is False
+    assert player["_last_ability_id"] is None
 
 
 # --- R3: seção Classes no relatório -----------------------------------------

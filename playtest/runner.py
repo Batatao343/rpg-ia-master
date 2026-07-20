@@ -60,6 +60,11 @@ class TurnRecord:
     max_entropy: int = 0
     abyss_charge: int = 0
     abyss_tier: str = ""
+    # spec playtest-agente-curioso-entropia (R3): GASTO de Entropia no turno de
+    # combate (não o snapshot) — quanto foi pago + se usou habilidade ativa.
+    entropy_spent: int = 0
+    used_active_ability: bool = False
+    ability_id: Optional[str] = None
     violations: List[str] = field(default_factory=list)
     # Narração que o jogador leria no turno (p/ transcript qualitativo do prompt).
     narrative: str = ""
@@ -470,6 +475,17 @@ def _fill_state_metrics(rec: TurnRecord, state: dict) -> None:
         rec.abyss_tier = abyss_tier(player)
     except Exception:
         rec.abyss_tier = ""
+    # spec playtest-agente-curioso-entropia (R3): só turno de combate carrega
+    # gasto fiel. Fora de combate o transitório de player é resíduo do último
+    # combate — ignorado (gate por rota).
+    if rec.route == "combat_agent":
+        rec.entropy_spent = int(player.get("_last_entropy_spent", 0) or 0)
+        rec.used_active_ability = bool(player.get("_last_used_active"))
+        rec.ability_id = player.get("_last_ability_id")
+    else:
+        rec.entropy_spent = 0
+        rec.used_active_ability = False
+        rec.ability_id = None
 
 
 def _attach_telemetry(rec: TurnRecord, events: List[dict]) -> None:

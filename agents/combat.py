@@ -139,7 +139,9 @@ def _spawn_enemies_integrated(messages: List, target_hint: str, state: Optional[
             # → usa danger_level cheio (o jogador escolheu a briga). One-shot: consome.
             danger = int(world.pop("encounter_eff_danger", None) or world.get("danger_level", 1) or 1)
             level = int((state.get("player") or {}).get("level", 1) or 1)
-            n_allies = len(party_mod.active_allies(state))
+            # spec aliados-em-combate (R6): aliados transitórios (amigos em cena)
+            # também contam p/ o orçamento — mais aliados, inimigos escalam junto.
+            n_allies = len(party_mod.active_allies(state)) + len(party_mod.scene_allies(state))
             budget = eb.encounter_budget(level, danger, n_allies)
             final_enemies_list, cut_logs = eb.clamp_encounter(final_enemies_list, budget,
                                                               player_level=level)
@@ -418,7 +420,16 @@ def combat_node(state: GameState):
     # Fase 4.5: aliados ativos entram no combate (mesmo motor, lado 'ally').
     import party as party_mod
     party = party_mod.backfill_party(state.get("party") or [])
-    allies_active = [a for a in party if a.get("active")
+    # spec aliados-em-combate (R2/R4): amigos EM CENA viram aliados TRANSITÓRIOS.
+    # Nascem no início do combate e persistem em combat_meta p/ acumular dano
+    # entre rounds; nunca entram na party permanente (R3). combat_party = os dois
+    # lados do herói só p/ ESTE combate (iniciativa/resolução/alvo de inimigo).
+    if is_combat_start or not combat_meta.get("order"):
+        scene_tr = party_mod.scene_allies(state)
+    else:
+        scene_tr = combat_meta.get("scene_allies") or []
+    combat_party = party + scene_tr
+    allies_active = [a for a in combat_party if a.get("active")
                      and a.get("status", "ativo") == "ativo" and int(a.get("hp", 0)) > 0]
     # passiva do Cavaleiro (Muralha Humana) agora é condicional a party ativa
     player["_party_active"] = bool(allies_active)
@@ -440,10 +451,12 @@ def combat_node(state: GameState):
                     slot["init"] += 5
             order.sort(key=lambda x: x["init"], reverse=True)
             surprise_world_update = wstate
-        combat_meta = {"round": 1, "active": True, "order": order}
+        combat_meta = {"round": 1, "active": True, "order": order,
+                       "scene_allies": scene_tr}
     else:
         combat_meta["round"] = combat_meta.get("round", 1) + 1
         combat_meta["active"] = True
+        combat_meta["scene_allies"] = scene_tr
     # combate-lifecycle (R3): combat_node RECEBEU rota de combate → zera o
     # contador de ociosidade (só cresce quando o combate fica órfão do router).
     combat_meta["idle_turns"] = 0
@@ -521,10 +534,10 @@ def combat_node(state: GameState):
                     logs += item_logs
                 else:
                     logs += cm.resolve_player_action(player, enemies, action, ABILITIES,
-                                                     allies=party)
+                                                     allies=combat_party)
             hero_resolved = True
         elif slot["side"] == "ally":
-            a = next((x for x in party if x.get("id") == slot["id"]), None)
+            a = next((x for x in combat_party if x.get("id") == slot["id"]), None)
             if not a or a.get("status", "ativo") != "ativo" or not a.get("active"):
                 continue
             logs += cm.tick_conditions(a)
@@ -535,14 +548,14 @@ def combat_node(state: GameState):
                 continue
             logs += cm.tick_conditions(e)
             if e.get("status") == "ativo" and int(player.get("hp", 0)) > 0:
-                hero_side = [player] + [a for a in party if a.get("active")
+                hero_side = [player] + [a for a in combat_party if a.get("active")
                                         and a.get("status", "ativo") == "ativo"
                                         and int(a.get("hp", 0)) > 0]
                 logs += cm.resolve_enemy_turn(e, player, allies=enemies, rnd=rnd,
                                               hero_side=hero_side)
     if not hero_resolved and int(player.get("hp", 0)) > 0:
         logs += cm.resolve_player_action(player, enemies, action, ABILITIES,
-                                         allies=party)
+                                         allies=combat_party)
 
     # Fase 2.5b: fugido sai do combate — não conta como ativo, não vira loot.
     active_after = [e for e in enemies if e.get("status") == "ativo"]
@@ -654,6 +667,29 @@ def combat_node(state: GameState):
                     "payload": {}, "source": "combat",
                 })
 
+    # spec aliados-em-combate (R3/R4): aliados TRANSITÓRIOS NÃO viram party
+    # permanente; seu dano/morte reflete no NPC de origem (sem 'aliado imortal'
+    # que morre no combate e volta são na conversa seguinte). Combate acabou →
+    # a cena transitória se encerra.
+    if scene_tr:
+        npcs_out = {**(state.get("npcs") or {})}
+        for a in scene_tr:
+            name = a.get("name") or ""
+            key = next((k for k in npcs_out if k == name
+                        or (isinstance(npcs_out[k], dict)
+                            and npcs_out[k].get("name") == name)), None)
+            if key is None or not isinstance(npcs_out.get(key), dict):
+                continue
+            npc = {**npcs_out[key]}
+            npc["hp"] = int(a.get("hp", 0) or 0)
+            if a.get("status") == "morto":
+                npc["status"] = "morto"
+                npc["in_scene"] = False
+            npcs_out[key] = npc
+        result["npcs"] = npcs_out
+        if combat_over:
+            combat_meta.pop("scene_allies", None)
+
     # R3 (O Saque): a campanha CONTINUA — sem game_over, sem espólio, combate
     # encerrado; o herói acorda no local seguro com o mundo 1 dia à frente.
     if downed:
@@ -724,6 +760,16 @@ def combat_node(state: GameState):
         if dest:
             base_world = result.get("world") or wu.ensure_world(dict(state.get("world") or {}))
             result["world"] = wu.apply_travel(base_world, dest)
+            # spec npc-in-scene-viagem (R1): fugir muda de local → zera a cena
+            # (ninguém teleporta junto). Sem isto, um NPC gerado ficava
+            # in_scene=True no destino e disparava narrative.recycled_npc a cada
+            # turno seguinte (43 warnings no playtest longo). Party vive em lista
+            # própria — não é afetada.
+            from services import npc_layers
+            base_npcs = result.get("npcs")
+            if base_npcs is None:
+                base_npcs = state.get("npcs", {})
+            result["npcs"] = npc_layers.reset_scene(base_npcs)
             logs.append(f"{player.get('name','O herói')} escapa rumo a {dest['name']}.")
     if state.get("combat_flee_attempt"):
         result["combat_flee_attempt"] = False

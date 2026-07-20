@@ -333,22 +333,38 @@ def check_downed_recovery(state: dict, prev: Optional[dict], turn: int) -> List[
 
 
 def check_recycled_npc(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
-    """spec encontros-dedupe (R4): NPC GERADO (tem `created_turn`) aparecendo
-    EM CENA fora do local onde nasceu = sintoma de reciclagem (o 'Sobrevivente
-    moribundo' em 3 locais). Com o vínculo de local (R1) isto não deve ocorrer;
-    o invariante denuncia se um bug furar o gate."""
+    """spec encontros-dedupe (R4) + npc-in-scene-viagem (R3): NPC GERADO (tem
+    `created_turn`) que VAZA para o contexto do narrador fora do local onde nasceu
+    = reciclagem/flag zumbi (o 'Sobrevivente moribundo' em 3 locais; a flag
+    in_scene que sobrevivia à viagem).
+
+    Mede o VAZAMENTO REAL, não a flag crua: a fonte de verdade é
+    `npc_layers.npcs_for_context` (o mesmo conjunto que o narrador vê). Só reporta
+    se o NPC gerado entra nesse conjunto E seu `home_location_id` é outro local —
+    i.e., está vazando pela via `in_scene` apesar de pertencer a outro lugar.
+    Depois do reset de cena na viagem (R1), a flag some e o invariante cala
+    sozinho."""
     out: List[Violation] = []
     loc = (state.get("world") or {}).get("current_location_id", "") or ""
     if not loc:
         return out
+    try:
+        from services.npc_layers import npcs_for_context
+        in_context = set(npcs_for_context(state))
+    except Exception:
+        in_context = {n for n, npc in (state.get("npcs") or {}).items()
+                      if isinstance(npc, dict) and npc.get("in_scene")}
+    party_names = {c.get("name") for c in (state.get("party") or [])
+                   if isinstance(c, dict)}
     for name, npc in (state.get("npcs") or {}).items():
         if not isinstance(npc, dict):
             continue
         home = npc.get("home_location_id") or ""
-        if (npc.get("created_turn") is not None and npc.get("in_scene")
-                and home and home != loc):
+        # Vínculo legítimo (home == loc) ou membro de party NÃO é vazamento.
+        if (npc.get("created_turn") is not None and name in in_context
+                and name not in party_names and home and home != loc):
             out.append(_V("narrative.recycled_npc", "warning", turn,
-                          f"NPC gerado '{name}' em cena fora do local de origem "
+                          f"NPC gerado '{name}' no contexto fora do local de origem "
                           f"(origem={home}, atual={loc})", npc=name, home=home, loc=loc))
     return out
 
@@ -374,12 +390,53 @@ def check_repeated_opening(state: dict, prev: Optional[dict], turn: int) -> List
     return []
 
 
+def check_phantom_ally(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    """spec aliados-em-combate (R5): nome de aliado CITADO na narração de combate
+    sem combatente correspondente do lado herói = aliado fantasma (a lacuna que
+    originou o achado — o narrador inventava aliado sem lastro de estado). Só
+    checa nomes de aliados CONHECIDOS (party + amigo em cena), não palavra
+    qualquer → baixo falso-positivo. Warning."""
+    if not (state.get("combat") or {}).get("active"):
+        return []
+    narr = ""
+    for m in reversed(state.get("messages", []) or []):
+        c = getattr(m, "content", "")
+        if c and getattr(m, "type", "") != "human":
+            narr = str(c)
+            break
+    if not narr:
+        return []
+    low = narr.lower()
+    try:
+        import party as party_mod
+        present = {str(a.get("name", "")).lower()
+                   for a in party_mod.active_allies(state) + party_mod.scene_allies(state)}
+    except Exception:
+        present = set()
+    # candidatos = companheiros de party + amigos em cena (nomes conhecidos)
+    candidatos = set()
+    for c in (state.get("party") or []):
+        if isinstance(c, dict) and c.get("name"):
+            candidatos.add(str(c["name"]))
+    for name, npc in (state.get("npcs") or {}).items():
+        if isinstance(npc, dict) and npc.get("in_scene") \
+                and int(npc.get("relationship", 5) or 5) >= 6:
+            candidatos.add(str(npc.get("name", name)))
+    out: List[Violation] = []
+    for nome in candidatos:
+        if len(nome) >= 3 and nome.lower() in low and nome.lower() not in present:
+            out.append(_V("combat.phantom_ally", "warning", turn,
+                          f"aliado '{nome}' citado na narração de combate sem "
+                          f"combatente do lado herói", ally=nome))
+    return out
+
+
 Check = Callable[[dict, Optional[dict], int], List[Violation]]
 
 CHECKS: List[Check] = [
     check_vitals, check_economy, check_entities, check_world, check_knowledge,
     check_lifecycle, check_downed, check_combat_zombie, check_downed_recovery,
-    check_recycled_npc, check_repeated_opening,
+    check_recycled_npc, check_repeated_opening, check_phantom_ally,
 ]
 
 

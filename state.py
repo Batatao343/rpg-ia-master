@@ -103,6 +103,7 @@ class WorldState(TypedDict, total=False):
     current_location: str
     current_location_id: str        # id no grafo data/world_map.json
     visited: List[str]              # ids de locais já revelados (fog of war)
+    looted_locations: List[str]     # ids de locais cujo baú CURADO já foi saqueado (spec loot-exploracao, one-shot)
     world_clock: WorldClock         # dia + período (relógio do mundo)
     time_of_day: str
     turn_count: int

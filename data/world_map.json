@@ -183,7 +183,14 @@
       "lore_seed": "Camadas de lama sobre décadas de equipamento de guerra da coalizão — riqueza real guardada por mortos-vivos ancorados no Éter, resíduo sem inteligência mas com número.",
       "region_id": "pantano_melancolia",
       "craft_tags": [],
-      "economy_tags": []
+      "economy_tags": [],
+      "treasure": {
+        "gold": 40,
+        "items": [
+          "espada_curta",
+          "pocao_cura_maior"
+        ]
+      }
     },
     {
       "id": "deserto_zhur",
@@ -492,7 +499,13 @@
       "lore_seed": "Corredores élficos onde o Éter guarda as últimas memórias das vítimas da Destilação. Os Afogados patrulham em rotas coordenadas, Morvath observa e comenta, e Thessrak — selado — ainda fala.",
       "region_id": "aethelgard",
       "craft_tags": [],
-      "economy_tags": []
+      "economy_tags": [],
+      "treasure": {
+        "gold": 55,
+        "items": [
+          "arco_de_caca"
+        ]
+      }
     },
     {
       "id": "ophidia",

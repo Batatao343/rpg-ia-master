@@ -56,6 +56,10 @@ def turn_to_record(rec: TurnRecord) -> dict:
         "max_entropy": rec.max_entropy,
         "abyss_charge": rec.abyss_charge,
         "abyss_tier": rec.abyss_tier,
+        # spec playtest-agente-curioso-entropia (R3): gasto real de Entropia
+        "entropy_spent": rec.entropy_spent,
+        "used_active_ability": rec.used_active_ability,
+        "ability_id": rec.ability_id,
         "violations": list(rec.violations),
         "provider": rec.provider,
         "model": rec.model,
@@ -75,6 +79,28 @@ def _percentile(values: List[int], pct: float) -> int:
     s = sorted(values)
     idx = min(len(s) - 1, int(round((pct / 100.0) * (len(s) - 1))))
     return int(s[idx])
+
+
+def _min_active_entropy_cost(player: dict) -> int:
+    """Menor custo de Entropia entre as habilidades ATIVAS conhecidas do jogador
+    (spec playtest-agente-curioso-entropia R4). 0 se a classe não tem ativa de
+    Entropia (starvation não se aplica)."""
+    try:
+        from gamedata import ABILITIES
+        from combat_mechanics import _resource_field
+    except Exception:
+        return 0
+    costs: List[int] = []
+    for aid in (player.get("known_abilities") or []):
+        ab = ABILITIES.get(str(aid))
+        if not isinstance(ab, dict):
+            continue
+        if ab.get("ability_kind", "active") != "active":
+            continue
+        cost = int(ab.get("cost", 0) or 0)
+        if cost > 0 and _resource_field(ab.get("resource_type", "")) == "entropy":
+            costs.append(cost)
+    return min(costs) if costs else 0
 
 
 def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
@@ -140,21 +166,37 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         round(sum(combat_end_hp_pcts) / len(combat_end_hp_pcts), 1)
         if combat_end_hp_pcts else None)
 
-    # spec balanceamento-classes-pos-playtest (R2): economia de Entropia/Carga.
-    combat_rows = [r for r in turn_records if r.get("combat_active")]
+    # spec playtest-agente-curioso-entropia (R4): economia de Entropia medida por
+    # GASTO, não por snapshot. Turno de combate = rota combat_agent (o gasto só é
+    # fiel aí; ver runner._fill_state_metrics). O snapshot antigo era degenerado
+    # (o gatilho reenche ao teto → flooding 100% / starvation 0% sempre).
+    combat_rows = [r for r in turn_records if r.get("route") == "combat_agent"]
 
     def _pct(n: int, d: int):
         return round(100.0 * n / d, 1) if d else None
 
+    n_combat = len(combat_rows)
+    ability_turns = [r for r in combat_rows if r.get("used_active_ability")]
+    basic_turns = [r for r in combat_rows if not r.get("used_active_ability")]
+    spent_total = sum(int(r.get("entropy_spent", 0) or 0) for r in combat_rows)
+    spent_per_combat_turn = round(spent_total / n_combat, 2) if n_combat else None
+    pct_ability_used = _pct(len(ability_turns), n_combat)
+    pct_basic_only = _pct(len(basic_turns), n_combat)
+    # starvation REDEFINIDO: turno de combate que NÃO usou ativa E tinha Entropia
+    # abaixo do menor custo de ativa conhecida (recurso faltou p/ agir).
+    min_active_cost = _min_active_entropy_cost(player)
     starvation = _pct(
-        len([r for r in combat_rows
-             if int(r.get("max_entropy", 0) or 0) > 0 and int(r.get("entropy", 0) or 0) == 0]),
-        len(combat_rows))
+        len([r for r in basic_turns
+             if int(r.get("max_entropy", 0) or 0) > 0
+             and int(r.get("entropy", 0) or 0) < min_active_cost]),
+        n_combat) if min_active_cost > 0 else None
+    # flooding REDEFINIDO: turno que terminou com ataque básico E Entropia cheia
+    # (recurso sobrou e não foi usado — gatilho/pool irrelevante).
     flooding = _pct(
-        len([r for r in combat_rows
+        len([r for r in basic_turns
              if int(r.get("max_entropy", 0) or 0) > 0
              and int(r.get("entropy", 0) or 0) == int(r.get("max_entropy", 0) or 0)]),
-        len(combat_rows))
+        n_combat)
     peak_charge = max((int(r.get("abyss_charge", 0) or 0) for r in turn_records), default=0)
     try:
         from combat_mechanics import abyss_tier
@@ -167,6 +209,10 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         "seed": result.seed,
         "class_name": player.get("class_name") or None,
         "entropy": {
+            "spent_total": spent_total,
+            "spent_per_combat_turn": spent_per_combat_turn,
+            "pct_combat_turns_ability_used": pct_ability_used,
+            "pct_combat_turns_basic_only": pct_basic_only,
             "starvation_pct_combat": starvation,
             "flooding_pct_combat": flooding,
             "peak_abyss_charge": peak_charge,

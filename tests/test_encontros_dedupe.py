@@ -63,6 +63,33 @@ def test_invariante_curado_nao_dispara():
     assert inv.check_recycled_npc(_state(npcs, loc="jardim"), None, 6) == []
 
 
+# --- spec npc-in-scene-viagem (R3): invariante mede vazamento REAL ----------
+
+def test_recycled_npc_nao_dispara_fora_de_contexto():
+    # NPC gerado FORA de cena e de outro local → npcs_for_context o exclui →
+    # não é vazamento, invariante cala.
+    npcs = {"Andarilho": {"created_turn": 4, "in_scene": False,
+                          "home_location_id": "caverna_morrakh"}}
+    assert inv.check_recycled_npc(_state(npcs, loc="anel_dourado"), None, 9) == []
+
+
+def test_recycled_npc_dispara_no_vazamento_real():
+    # NPC gerado in_scene (vaza pro contexto) de outro local → dispara.
+    npcs = {"Andarilho": {"created_turn": 4, "in_scene": True,
+                          "home_location_id": "caverna_morrakh"}}
+    viol = inv.check_recycled_npc(_state(npcs, loc="anel_dourado"), None, 9)
+    assert viol and viol[0].check_id == "narrative.recycled_npc"
+
+
+def test_recycled_npc_party_gerado_nao_dispara():
+    # Membro de party (mesmo gerado) não é reciclagem — anda com o herói.
+    npcs = {"Aliado": {"created_turn": 3, "in_scene": True,
+                       "home_location_id": "longe"}}
+    st = _state(npcs, loc="anel_dourado",
+                party=[{"name": "Aliado", "active": True, "status": "ativo"}])
+    assert inv.check_recycled_npc(st, None, 9) == []
+
+
 # --- exceção narrativa: NPC pode SAIR se re-introduzido em outro local -------
 
 def test_reintroducao_relocaliza_npc():

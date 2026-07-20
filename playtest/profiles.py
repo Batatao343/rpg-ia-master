@@ -47,6 +47,68 @@ def _connections(loc_id: str) -> List[dict]:
     return get_connections(loc_id)
 
 
+# --- spec playtest-agente-curioso-entropia: combate CURIOSO -----------------
+# O agente lê a ficha (known_abilities) e nomeia habilidades de Entropia — sem
+# isto, todo perfil só mandava "Ataco X" e a economia de Entropia nunca era
+# exercitada (Entropia travada em max/max, 101 habilidades mortas no harness).
+
+_HEAL_HINTS = ("cura", "pocao", "poção")
+
+
+def _entropy_cost(aid: str) -> int:
+    from gamedata import ABILITIES
+    from combat_mechanics import _resource_field
+    ab = ABILITIES.get(str(aid))
+    if not isinstance(ab, dict):
+        return 0
+    cost = int(ab.get("cost", 0) or 0)
+    if cost > 0 and _resource_field(ab.get("resource_type", "")) == "entropy":
+        return cost
+    return 0
+
+
+def _combat_ability_action(state: dict, rng: random.Random) -> Optional[str]:
+    """R1: habilidade ATIVA de Entropia que o jogador PODE pagar → ação nomeando-a
+    + alvo. None se nada elegível (cai no ataque básico)."""
+    from gamedata import ABILITIES
+    player = state.get("player") or {}
+    entropy = int(player.get("entropy", 0) or 0)
+    nomes: List[str] = []
+    for aid in (player.get("known_abilities") or []):
+        ab = ABILITIES.get(str(aid))
+        if not isinstance(ab, dict) or ab.get("ability_kind", "active") != "active":
+            continue
+        cost = _entropy_cost(aid)
+        if 0 < cost <= entropy:
+            nomes.append(ab.get("name") or str(aid))
+    if not nomes:
+        return None
+    enemies = [e for e in (state.get("enemies") or []) if e.get("status") == "ativo"]
+    alvo = rng.choice(enemies).get("name", "inimigo") if enemies else "o inimigo"
+    nome = nomes[rng.randrange(len(nomes))]
+    return f"Uso {nome} em {alvo}."
+
+
+def _low_hp(state: dict, frac: float = 0.3) -> bool:
+    p = state.get("player") or {}
+    mx = int(p.get("max_hp", 0) or 0)
+    return mx > 0 and int(p.get("hp", 0) or 0) <= frac * mx
+
+
+def _dangerous_here(state: dict) -> bool:
+    world = state.get("world") or {}
+    return int(world.get("danger_level", 1) or 1) >= 3
+
+
+def _heal_action(state: dict) -> Optional[str]:
+    """R2: consumível de cura no inventário → ação de beber. None se não tem."""
+    for item in (state.get("player") or {}).get("inventory") or []:
+        iid = str(item.get("id", "") if isinstance(item, dict) else item).lower()
+        if any(h in iid for h in _HEAL_HINTS):
+            return "Bebo a poção de cura."
+    return None
+
+
 class Profile(Protocol):
     name: str
     def next_action(self, state: dict, rng: random.Random) -> str: ...
@@ -67,6 +129,15 @@ class Agressivo(_Base):
 
     def next_action(self, state, rng):
         if _in_combat(state):
+            # R2: cura antes de morrer trivialmente; R1: usa habilidade de Entropia.
+            if _low_hp(state):
+                heal = _heal_action(state)
+                if heal:
+                    return heal
+            if rng.random() < 0.6:
+                ab = _combat_ability_action(state, rng)
+                if ab:
+                    return ab
             enemies = [e for e in (state.get("enemies") or []) if e.get("status") == "ativo"]
             alvo = rng.choice(enemies).get("name", "inimigo") if enemies else "inimigo"
             return f"Ataco {alvo} com toda a força."
@@ -181,7 +252,18 @@ class Combate(_Base):
 
     def next_action(self, state, rng):
         if _in_combat(state):
+            if _low_hp(state):
+                heal = _heal_action(state)
+                if heal:
+                    return heal
+            if rng.random() < 0.6:
+                ab = _combat_ability_action(state, rng)
+                if ab:
+                    return ab
             return "Ataco o inimigo mais próximo."
+        # R2: HP baixo em local seguro → descansa em vez de buscar perigo.
+        if _low_hp(state) and not _dangerous_here(state):
+            return "Descanso aqui para recuperar forças antes de seguir."
         cur = _current_id(state)
         conns = _connections(cur)
         if conns and rng.random() < 0.6:
@@ -302,10 +384,47 @@ class Fujao(_Base):
         return "Descanso aqui no ermo, atraindo o que espreita nas sombras."
 
 
+# --- 13. recrutador ---------------------------------------------------------
+
+class Recrutador(_Base):
+    """Faz o MÁXIMO de amigos: conversa p/ criar vínculo e pede pra juntar-se ao
+    grupo (exercita recrutamento + aliados-em-combate — party sempre vazia nos
+    perfis antigos). Em combate, luta ao lado dos aliados."""
+    name = "recrutador"
+
+    def next_action(self, state, rng):
+        if _in_combat(state):
+            if _low_hp(state):
+                heal = _heal_action(state)
+                if heal:
+                    return heal
+            if rng.random() < 0.5:
+                ab = _combat_ability_action(state, rng)
+                if ab:
+                    return ab
+            enemies = [e for e in (state.get("enemies") or []) if e.get("status") == "ativo"]
+            alvo = rng.choice(enemies).get("name", "inimigo") if enemies else "inimigo"
+            return f"Ataco {alvo} ao lado dos meus aliados."
+        in_scene = _npcs_in_scene(state)
+        if in_scene:
+            alvo = in_scene[rng.randrange(len(in_scene))]
+            # metade conversa (cria vínculo p/ o gate rel>=7), metade recruta.
+            if rng.random() < 0.5:
+                return rng.choice([
+                    f"Peço para {alvo} se juntar a mim na jornada.",
+                    f"Ofereço amizade a {alvo} e peço que venha comigo, siga-me.",
+                ])
+            return f"Converso com {alvo}, elogio sua coragem e pergunto sobre a região."
+        return rng.choice([
+            "Procuro alguém de confiança para recrutar e puxo conversa.",
+            "Cumprimento um local amistoso e ofereço parceria na jornada.",
+        ])
+
+
 PROFILES: Dict[str, Profile] = {
     p.name: p for p in [
         Agressivo(), Explorador(), Comerciante(), Diplomatico(), Troll(),
         MapaBreaker(), Combate(), NpcOnly(), LootAbuser(), SecretRusher(),
-        Quester(), Fujao(),
+        Quester(), Fujao(), Recrutador(),
     ]
 }

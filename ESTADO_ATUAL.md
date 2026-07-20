@@ -1,17 +1,54 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
-> **⚠️ RETOMANDO DA SESSÃO 21?** Leia **[docs/HANDOFF-sessao-21.md](docs/HANDOFF-sessao-21.md)**
-> PRIMEIRO — **polish de frontend `done`** + o **playtest longo de balanceamento
-> TERMINOU** (run_id `20260719-160014`, 15 campanhas, 0 erro; **Jina agora livre**).
-> Achado-chave: a telemetria de Entropia (`flooding=100%`/`starvation=0%`
-> uniforme) NÃO dá sinal de tuning — os 8 knobs `[BALANCEAR]` seguem indecidíveis.
->
-> Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
-> Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-20 (sessão 21: **POLISH DE FRONTEND (leitura
-> iluminada + distribuição de telas, spec `polish-frontend-imersao` `done`) +
-> PLAYTEST LONGO CONCLUÍDO**. Frontend gate = `npm run build` verde; suíte offline
-> inalterada em **970**.)
+> **⚠️ RETOMANDO DA SESSÃO 22?** 5 specs do playtest longo IMPLEMENTADAS (4 code
+> `done` + 1 medir→decidir); **rodando o playtest real de validação** (17
+> campanhas: 15 balanceamento + comerciante + recrutador). Achados do run novo
+> viram a próxima decisão ("depois do playtest decidimos o que atacar").
+> Complementa `CLAUDE.md` (arquitetura). Decisões estruturais: `REFERENCE.md`.
+> Histórico: `CHANGELOG.md`. Última atualização: 2026-07-20 (sessão 22).
+
+---
+
+## TL;DR — sessão 22 (2026-07-20): 5 specs do playtest longo IMPLEMENTADAS
+
+Análise do run `20260719-160014` + decisões do usuário → 5 specs `approved` e
+implementadas (TDD, suíte **970 → 1001 offline verdes**, +31; 1 skip):
+
+1. **[playtest-agente-curioso-entropia](specs/playtest-agente-curioso-entropia.md)
+   `done` — o BLOQUEADOR do balanceamento.** Raiz achada: os perfis de combate
+   só mandavam "Ataco X" → as 101 habilidades NUNCA rodavam → Entropia travava em
+   16/16 (flooding=100%/starvation=0% era artefato disso + do snapshot). Fix em 2
+   frentes: (a) **agente curioso** — `Agressivo`/`Combate`/`Recrutador` leem
+   `known_abilities` e nomeiam habilidade de Entropia ("Uso {nome} em {alvo}"),
+   curam com HP baixo, descansam em zona segura; (b) **telemetria de GASTO** —
+   `combat_mechanics.resolve_player_action` carimba `_last_entropy_spent`/
+   `_last_ability_id`/`_last_used_active` (transitório); runner lê gated por rota;
+   `summary.entropy` reescrito (spent_total, %ativa, starvation/flooding
+   redefinidos por gasto, não snapshot); report ganhou `%ativa`/`gasto/turno`.
+2. **[npc-in-scene-viagem](specs/npc-in-scene-viagem.md) `done`** — os 43
+   `recycled_npc`: fuga de combate aplicava viagem SEM `reset_scene` → flag zumbi.
+   Fix: [combat.py:726](agents/combat.py) reseta cena na fuga; invariante mede
+   vazamento real (`npcs_for_context`), não flag crua; party excluída.
+3. **[aliados-em-combate](specs/aliados-em-combate.md) `done`** — motor de combate
+   já incluía party ativa; faltava ponte NPC-amigo-em-cena → combatente. Novo
+   `party.scene_allies` (in_scene + rel≥6 + fação não-hostil → aliado TRANSITÓRIO,
+   não vira party permanente, dano reflete no NPC); `combat_party` na iniciativa/
+   resolução; `encounter_budget` conta transitórios; invariante `combat.phantom_ally`.
+   **Perfil `recrutador` novo** (faz o máx. de amigos).
+4. **[loot-exploracao](specs/loot-exploracao.md) `done`** — explorar recompensa
+   (escada de raridade): novo `services/exploration.py` reusa `economy.roll_loot`
+   (raridade por perigo, claim de único); achado na 1ª visita (fog of war) NUNCA
+   único; **baú curado** (`treasure` no world_map: `pm_profundezas`,
+   `ae_ruinas_submersas`) one-shot via `world.looted_locations`, pode ter único.
+   Fiado no storyteller (nota no prompt + claim no pending).
+5. **[letalidade-early-game-v2](specs/letalidade-early-game-v2.md) `approved`
+   (medir→decidir)** — sem código novo: instrumentação já existe; a Etapa 1
+   (baseline com agente corrigido) É o playtest desta sessão; tuning decidido
+   DEPOIS com o usuário.
+
+**Em curso:** playtest real de 17 campanhas (15 balanceamento das 5 classes ×
+{combate,explorador,quester} + 1 comerciante + 1 recrutador) p/ validar as
+mudanças e gerar os novos achados. **Backlog `comerciante`** endereçado no run.
 
 ---
 
@@ -373,7 +410,7 @@ não existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arq
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 970 testes offline verdes (contratos de LLM ficam fora)
+uv run pytest                        # 1001 testes offline verdes (contratos de LLM ficam fora)
 uv run pytest -m llm_contract -v -s  # 9 contratos contra o Gemini REAL (~13 req; requer chave)
 uv run pytest -m llm_playtest -v -s  # Fase 5: 4 perfis VITAIS × 30 turnos no LLM REAL (RPG_PLAYTEST_TURNS encurta)
 uv run python game_engine.py         # CLI
@@ -481,6 +518,19 @@ ser re-introduzido em outro local pela narrativa/player (relocaliza o
   DEDICADA e longa em nível sobrevivível p/ decidir os números (ver
   [spec §8](specs/balanceamento-classes-pos-playtest.md)).
 - Tiers 5+ das classes (nível 9–20) — fast-follow do épico.
+- **Backlog — playtest do `comerciante`:** rodar uma campanha longa com o perfil
+  `comerciante` (fica tentando comprar/vender/craftar p/ fazer dinheiro). O run
+  longo 2026-07-14/19 só cobriu combate/explorador/quester → a economia (compra/
+  venda espontânea) NUNCA foi exercitada; ouro final 0/0/50 é viés de perfil, não
+  economia quebrada. Medir se dá pra fazer dinheiro de fato.
+- **5 specs do playtest longo (sessão 22): 4 code `done` + 1 medir→decidir.**
+  [playtest-agente-curioso-entropia](specs/playtest-agente-curioso-entropia.md) `done` (destrava balanceamento) ·
+  [npc-in-scene-viagem](specs/npc-in-scene-viagem.md) `done` (43 `recycled_npc`) ·
+  [aliados-em-combate](specs/aliados-em-combate.md) `done` (aliado presente luta) ·
+  [loot-exploracao](specs/loot-exploracao.md) `done` (explorar recompensa) ·
+  [letalidade-early-game-v2](specs/letalidade-early-game-v2.md) `approved` (tuning pós-playtest).
+  **Tuning dos knobs de Entropia agora é decidível** (telemetria de gasto pronta)
+  — depende do run real de validação em curso.
 - 1 flaky isolado na suíte (sessão 8; 3 runs verdes depois — observar)
 - ~~Action `validate.yml`~~ ✅ verde (confirmado via `gh run list`).
 - ~~Lote 2 de traits~~ ✅ 80 traits (sessão 20).

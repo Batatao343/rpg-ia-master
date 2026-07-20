@@ -170,18 +170,25 @@ def render_markdown(report: RunReport) -> str:
     if with_class:
         L.append("## Classes")
         L.append("")
-        L.append("| perfil | classe | turnos | mortes | nível | "
-                 "starvation | flooding | Carga pico | Carga final | patamar |")
-        L.append("|---|---|---|---|---|---|---|---|---|---|")
+        # spec playtest-agente-curioso-entropia (R5): colunas de GASTO real
+        # (%ativa, gasto/turno) no lugar do snapshot degenerado.
+        L.append("| perfil | classe | turnos | mortes | nível | %ativa | "
+                 "gasto/turno | starvation | flooding | Carga pico | Carga final | patamar |")
+        L.append("|---|---|---|---|---|---|---|---|---|---|---|---|")
         for s in with_class:
             ent = s.get("entropy") or {}
 
             def _p(v):
                 return f"{v:.0f}%" if isinstance(v, (int, float)) else "—"
+
+            def _n(v):
+                return f"{v:.2f}" if isinstance(v, (int, float)) else "—"
             L.append(
                 f"| {s.get('profile','?')} | {s.get('class_name','?')} "
                 f"| {s.get('turns_completed',0)} | {s.get('deaths',0)} "
                 f"| {s.get('final_level',1)} "
+                f"| {_p(ent.get('pct_combat_turns_ability_used'))} "
+                f"| {_n(ent.get('spent_per_combat_turn'))} "
                 f"| {_p(ent.get('starvation_pct_combat'))} "
                 f"| {_p(ent.get('flooding_pct_combat'))} "
                 f"| {ent.get('peak_abyss_charge',0)} | {ent.get('final_abyss_charge',0)} "
