@@ -65,9 +65,11 @@ html, body, #root {
   -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
 }
 
-/* atmosfera: luz de tocha vinda de cima + frio nas bordas */
+/* atmosfera: luz de tocha vinda de cima + frio nas bordas.
+   z-index:-1 mantém o fundo ATRÁS de todo conteúdo mesmo quando o motion
+   zera o transform das telas (senão a vinheta pintava por cima da criação). */
 .atmosphere {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
 }
 .atmosphere::before {
   content: ""; position: absolute; inset: 0;
@@ -81,7 +83,7 @@ html, body, #root {
   content: ""; position: absolute; inset: 0; opacity: 0.045;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-.ember-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.ember-canvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
 
 button, input, select, textarea { font: inherit; color: inherit; }
 .muted { color: var(--muted); }
@@ -149,10 +151,15 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .create { min-height: 100dvh; display: grid; place-items: center; padding: 2.5rem 1.25rem; }
 .create__frame {
   width: 100%; max-width: 600px;
-  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  /* página de pergaminho iluminada por tocha: lift real + glow quente no topo +
+     borda bronze, p/ LER como superfície lida à luz, não bloco escuro chapado */
+  background:
+    radial-gradient(130% 82% at 50% -12%, oklch(0.44 0.05 76 / 0.55), transparent 60%),
+    linear-gradient(180deg, oklch(0.30 0.038 78), oklch(0.235 0.032 74));
+  border: 1px solid var(--line);
   border-radius: var(--r-md);
   padding: clamp(1.8rem, 4vw, 3rem);
-  box-shadow: var(--shadow-deep);
+  box-shadow: var(--shadow-deep), inset 0 1px 0 oklch(0.55 0.06 76 / 0.3);
 }
 .create__seal { display: grid; place-items: center; margin-bottom: 1rem; color: var(--accent); }
 .create__head { text-align: center; margin-bottom: 1.4rem; }
@@ -240,7 +247,7 @@ select {
   text-transform: uppercase; margin: 1.1rem 0 1rem; color: var(--ink);
 }
 .wizard__intro { max-width: 62ch; margin: 0 auto; }
-.wizard__para { color: var(--muted); line-height: 1.65; margin: 0 0 0.9rem; text-wrap: pretty; }
+.wizard__para { color: oklch(0.85 0.022 82); line-height: 1.65; margin: 0 0 0.9rem; text-wrap: pretty; }
 .wizard__summary {
   text-align: center; color: var(--accent); font-family: var(--display);
   font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; margin: 0;
@@ -319,7 +326,13 @@ select {
 .stage { flex: 1 1 auto; display: grid; grid-template-columns: minmax(0, 1fr) 360px; min-height: 0; }
 
 /* --- narrativa --- */
-.story { min-height: 0; overflow-y: auto; padding: clamp(1.5rem, 4vw, 2.9rem); }
+.story {
+  min-height: 0; overflow-y: auto; padding: clamp(1.5rem, 4vw, 2.9rem);
+  position: relative;
+  /* luz de tocha caindo sobre a página — aquece a superfície mais lida
+     (combate sobrescreve com o brilho de sangue) */
+  background: radial-gradient(92% 56% at 50% -6%, oklch(0.42 0.06 72 / 0.07), transparent 62%);
+}
 .log { max-width: var(--read); margin: 0 auto; display: flex; flex-direction: column; gap: 1.7rem; }
 
 .msg__role {
@@ -333,10 +346,28 @@ select {
 .msg__body strong { color: var(--accent); font-weight: 600; }
 .msg__body em { color: var(--ink); }
 
-.msg--story:first-child .msg__body::first-letter {
-  font-family: var(--decorative); font-size: 3.4rem; line-height: 0.8; float: left;
-  padding: 0.12rem 0.5rem 0 0; color: var(--accent); font-weight: 700;
+/* Capitular iluminada: cada beat de narração abre como uma entrada de diário
+   (ref: bestiário do Witcher / livros de BG3). A 1ª cena recebe a maior. */
+.msg--story .msg__body::first-letter {
+  font-family: var(--decorative); font-size: 2.7rem; line-height: 0.82; float: left;
+  padding: 0.1rem 0.42rem 0 0; color: var(--accent); font-weight: 700;
 }
+.msg--story:first-child .msg__body::first-letter {
+  font-size: 3.6rem; padding: 0.12rem 0.5rem 0 0;
+  text-shadow: 0 0 22px var(--accent-glow);
+}
+
+/* Fleuron entre turnos de narração — separa beats sem rótulo repetido */
+.scene-break {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.7rem; margin: -0.5rem 0; color: var(--line-soft);
+}
+.scene-break::before, .scene-break::after {
+  content: ""; width: clamp(28px, 12%, 64px); height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-soft));
+}
+.scene-break::after { background: linear-gradient(90deg, var(--line-soft), transparent); }
+.scene-break span { color: var(--accent); opacity: 0.72; font-size: 0.95rem; }
 
 /* fala do jogador — cartão de pergaminho recuado (sem side-stripe) */
 .msg--player {
@@ -380,10 +411,11 @@ select {
 .hud__name { font-family: var(--display); font-size: 1.1rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hud__sub { margin: 0; font-size: 0.88rem; color: var(--muted); }
 
-/* abas */
-.tabs { display: flex; gap: 2px; padding: 0.4rem 0.7rem 0; }
+/* abas — 8 abas quebram em 2 linhas de 4 (não cortam "Codex" em 360px) */
+.tabs { display: flex; flex-wrap: wrap; gap: 3px; padding: 0.4rem 0.7rem 0; }
 .tab {
-  flex: 1 1 0; font-family: var(--display); font-size: 0.66rem; letter-spacing: 0.08em;
+  flex: 1 1 calc(25% - 3px); min-width: 0;
+  font-family: var(--display); font-size: 0.66rem; letter-spacing: 0.08em;
   text-transform: uppercase; padding: 0.5rem 0.2rem; cursor: pointer; color: var(--faint);
   background: transparent; border: 1px solid transparent; border-bottom: none;
   border-radius: var(--r-sm) var(--r-sm) 0 0; transition: all 0.16s var(--ease); position: relative;
@@ -661,8 +693,8 @@ select {
 .codex-beast--tier1 .codex-beast__seal { border-color: var(--line-soft); color: var(--faint); }
 .codex-beast--tier4 { border-color: var(--accent); }
 
-/* 6 abas: aperta a tipografia p/ caber em 360px */
-.tab { font-size: 0.56rem; letter-spacing: 0.02em; padding: 0.5rem 0.05rem; }
+/* 8 abas em 2 linhas de 4: fonte legível, cada aba ~84px em 360px */
+.tab { font-size: 0.62rem; letter-spacing: 0.03em; padding: 0.5rem 0.15rem; }
 
 /* ============================================================
    MODO COMBATE — chat fica agressivo e urgente
@@ -822,6 +854,11 @@ select {
   .actionchip { font-size: 0.95rem; padding: 0.5rem 0.9rem; } /* alvo de toque */
   .placesbar { overflow-x: auto; flex-wrap: nowrap; }
   .onboard { margin: 0 0.7rem 0.4rem; }
-  .create__frame, .lvlup { width: min(96vw, 680px); padding: 1rem; }
+  /* width:100% (não 96vw) p/ o frame RESPEITAR o padding lateral do .create —
+     senão 96vw estoura o container acolchoado e corta o texto à direita */
+  .create__frame, .lvlup { width: 100%; padding: 1.15rem 1rem; }
+  /* frame mais alto que a tela: ancora no topo p/ o título/stepper aparecerem
+     (centralizar vertical clipava o topo e não dava scroll até ele) */
+  .create { place-items: start center; padding: 1.4rem 0.8rem; }
   .savelist { max-height: 52vh; }
 }
