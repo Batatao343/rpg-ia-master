@@ -436,6 +436,26 @@ testes offline verdes.**
    Suíte **918 → 970 verdes** na sessão. Smoke real dessas 3 specs adiado
    (Jina em uso pelo playtest).
 
+## ✅ ENTREGUE — Polish de frontend + fim do playtest longo (2026-07-20, sessão 21)
+
+Handoff detalhado: **[docs/HANDOFF-sessao-21.md](docs/HANDOFF-sessao-21.md)**.
+
+1. **[polish-frontend-imersao](specs/polish-frontend-imersao.md) `done`** —
+   auditoria visual (Edge headless) das telas-herói. Leitura como diário iluminado
+   (sem eyebrow "Narrador" repetido; capitular por cena + fleuron `❧` + glow de
+   tocha); bug de camada corrigido (`atmosphere`/`ember-canvas` → `z-index:-1`, a
+   criação escurecia); `.create__frame` lê como pergaminho iluminado; 8 abas em 2
+   linhas (não corta "Codex"); criação mobile top-align + `width:100%`. Puro
+   apresentação (0 mudança de estado); gate = `npm run build` verde. Mobile a
+   reverificar em device real.
+2. **Playtest longo `run_id 20260719-160014` TERMINOU** — 15 campanhas (5 classes
+   × combate/explorador/quester), ~8,4h, 0 erro de turno, ~$1.28 (deepseek). ⚠️
+   **Achado:** telemetria de Entropia degenerada (`flooding=100%`/`starvation=0%`
+   uniforme) → **os 8 knobs `[BALANCEAR]` seguem indecidíveis**; próximo passo é
+   redefinir a métrica (`playtest/telemetry.py`) ou minerar o jsonl. Combate morre
+   cedo (7–30t); quester sobrevive (até 70t sem morte). `recycled_npc=43` warnings
+   (investigar `encontros-dedupe` em run longo). Jina agora livre.
+
 ## Backlog — Features após Fase 5
 
 ### Bugs críticos (sessão 2026-06-26)

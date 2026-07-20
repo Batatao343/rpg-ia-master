@@ -1,15 +1,17 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
-> **⚠️ RETOMANDO DA SESSÃO 20?** Leia **[docs/HANDOFF-sessao-20.md](docs/HANDOFF-sessao-20.md)**
-> PRIMEIRO — tem um **playtest longo de balanceamento rodando em background**
-> (run_id `20260719-160014`; NÃO rode nada no Jina concorrente) + 2 commits
-> locais não-pushados + smokes reais adiados.
+> **⚠️ RETOMANDO DA SESSÃO 21?** Leia **[docs/HANDOFF-sessao-21.md](docs/HANDOFF-sessao-21.md)**
+> PRIMEIRO — **polish de frontend `done`** + o **playtest longo de balanceamento
+> TERMINOU** (run_id `20260719-160014`, 15 campanhas, 0 erro; **Jina agora livre**).
+> Achado-chave: a telemetria de Entropia (`flooding=100%`/`starvation=0%`
+> uniforme) NÃO dá sinal de tuning — os 8 knobs `[BALANCEAR]` seguem indecidíveis.
 >
 > Leia isto **primeiro** ao retomar o trabalho. Complementa `CLAUDE.md` (arquitetura).
 > Decisões estruturais: `REFERENCE.md` (sob demanda). Histórico de sessões: `CHANGELOG.md`.
-> Última atualização: 2026-07-19 (sessão 20: **REVISÃO PÓS-ÉPICO — 3 bugs de
-> fiação de classe + 2 débitos técnicos + auditoria de mecânica-morta
-> (gating aposentado, weather global vivo)**. **950 offline verdes**.)
+> Última atualização: 2026-07-20 (sessão 21: **POLISH DE FRONTEND (leitura
+> iluminada + distribuição de telas, spec `polish-frontend-imersao` `done`) +
+> PLAYTEST LONGO CONCLUÍDO**. Frontend gate = `npm run build` verde; suíte offline
+> inalterada em **970**.)
 
 ---
 
