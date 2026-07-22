@@ -221,6 +221,7 @@ class GameResponse(BaseModel):
     chronicle: List[Dict[str, Any]] = [] # capítulos: {title, started_turn, location, entries[{text,turn,kind,event_id?}]}
     factions: List[Dict[str, Any]] = [] # fações vivas: objetivo, progresso, postura, reputação
     party: List[Dict[str, Any]] = [] # Fase 4.5: companheiros {name, hp, max_hp, active, archetype, status}
+    death_pending: bool = False # spec checkpoints-morte: queda letal — abre a tela de morte no cliente
 
 # --- HELPER: FORMATA RESPOSTA ---
 def format_response(state: dict) -> GameResponse:
@@ -296,6 +297,7 @@ def format_response(state: dict) -> GameResponse:
                                  (state.get("world", {}) or {}).get("turn_count", 0),
                                  state.get("event_log", []) or [],
                                  state.get("world_projection", {}) or {}),
+        death_pending=bool(state.get("death_pending", False)),
     )
 
 
@@ -736,6 +738,10 @@ def new_game(req: CreateCharacterRequest):
     try:
         final_state = game_graph.invoke(initial_state)
         save_game_state(final_state)
+        # spec checkpoints-morte (D7): checkpoint INICIAL = início da sessão. Garante
+        # que a morte sempre tem para onde restaurar, mesmo antes do 1º checkpoint de cadência.
+        from persistence import save_checkpoint
+        save_checkpoint(final_state)
         return format_response(final_state)
     except Exception as e:
         # Auditoria A6: detalhe interno só no log do servidor, nunca na resposta.
@@ -775,6 +781,10 @@ def _run_turn(state: dict, input_text: str) -> GameResponse:
     try:
         new_state = game_graph.invoke(state)
         save_game_state(new_state)
+        # spec checkpoints-morte (D1): grava checkpoint na cadência (10 turnos /
+        # zona segura). `state` = estado ANTES do turno → detecta entrada em zona segura.
+        from services import checkpoints as _cp
+        _cp.maybe_write(new_state, prev=state)
         _log_turn(new_state, t0, eventos_antes, None, _llm_turn_events.get())
         return format_response(new_state)
     except Exception as e:
@@ -800,8 +810,35 @@ def game_action(req: ActionRequest):
 
     # Fase 4.6 (R7): save morto é MEMORIAL — a crônica fica, ações não.
     _reject_memorial(state)
+    # spec checkpoints-morte: queda letal pendente — o jogador precisa resolver a
+    # TELA DE MORTE (POST /game/death) antes de agir de novo.
+    if state.get("death_pending"):
+        raise HTTPException(status_code=409,
+                            detail="Você tombou. Escolha continuar do checkpoint ou aceitar o fim.")
 
     return _run_turn(state, req.input_text)
+
+
+class DeathChoiceRequest(BaseModel):
+    game_id: Optional[str] = None
+    choice: str = Field(pattern="^(continue|accept)$")  # Continuar do checkpoint / Aceitar o fim
+
+
+@app.post("/game/death", response_model=GameResponse)
+def game_death(req: DeathChoiceRequest):
+    """spec checkpoints-morte (D2): resolve a tela de morte.
+    - `continue` → restaura do checkpoint (ou do início da sessão, D7); a saga segue.
+    - `accept`   → memorial (game_over): a crônica encerra por escolha do jogador."""
+    file_to_load = _resolve_save_file(req.game_id)
+    state = load_game_state(file_to_load)
+    if not state:
+        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+    if not state.get("death_pending"):
+        raise HTTPException(status_code=409, detail="Nenhuma queda pendente para resolver.")
+    from services import checkpoints as _cp
+    new_state = _cp.resolve_death_choice(state, req.choice)
+    save_game_state(new_state)
+    return format_response(new_state)
 
 
 # --- STREAMING DO TURNO (spec streaming-turno-sse) ---------------------------
@@ -824,6 +861,10 @@ def _stream_turn(state: dict, input_text: str) -> Iterator[str]:
     if state.get("game_over"):
         # R3: memorial — evento `error` com 409 semântico e fecha o stream.
         yield _sse("error", {"detail": _MEMORIAL_DETAIL, "code": 409})
+        return
+    # spec checkpoints-morte: queda pendente — cliente deve chamar /game/death.
+    if state.get("death_pending"):
+        yield _sse("error", {"detail": "Você tombou. Resolva a tela de morte.", "code": 409})
         return
 
     _append_player_input(state, input_text)
@@ -867,6 +908,8 @@ def _stream_turn(state: dict, input_text: str) -> Iterator[str]:
         if final_state is None:
             raise RuntimeError("stream não produziu estado final")
         save_game_state(final_state)
+        from services import checkpoints as _cp
+        _cp.maybe_write(final_state, prev=state)  # spec checkpoints-morte (D1)
         _log_turn(final_state, t0, eventos_antes, None, llm_acc)
         resp = format_response(final_state)
         narrative = resp.message or ""

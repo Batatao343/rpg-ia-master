@@ -126,16 +126,6 @@ def apply_travel(world: dict, dest: dict) -> dict:
     return world
 
 
-def downed_grace_active(world: dict) -> bool:
-    """spec pos-saque-recuperacao (R2): True enquanto a carência pós-Saque vale
-    (dia de jogo atual < dia-limite). Sem o campo = sem carência (saves antigos)."""
-    until = (world or {}).get("downed_grace_until_day")
-    if not until:
-        return False
-    day = int((world.get("world_clock") or {}).get("day", 1) or 1)
-    return day < int(until)
-
-
 def apply_rest(player: dict, world: dict, allies: list = None) -> Tuple[dict, dict]:
     """Descanso: recupera ~metade dos recursos e avança 2 períodos.
     Fase 6.5: clima com `rest_block` (miasma etc.) NEGA o descanso ao relento —
@@ -149,9 +139,6 @@ def apply_rest(player: dict, world: dict, allies: list = None) -> Tuple[dict, di
         advance_weather(world)
         return dict(player), world
     player = dict(player)
-    # spec pos-saque-recuperacao (R4): o descanso encerra a marca do Saque.
-    player["active_conditions"] = [c for c in (player.get("active_conditions") or [])
-                                   if c.get("name") != "downed_recente"]
     # Insônia (Devoto): fração de cura de HP no descanso cai por patamar de Carga.
     import combat_mechanics as cm
     hp_factor = 1.0
@@ -422,6 +409,26 @@ def apply_reputation(factions, faction_id: str, direction: str,
 
 _ENCOUNTER_COOLDOWN = 2  # turnos mínimos entre encontros automáticos (anti-spam)
 
+# spec letalidade-early-game-v2 (alavanca 1): o early-game morria por falta de
+# laço de recuperação (HP travado, descanso interrompido por encontro). Nível
+# baixo ganha: descanso CONFIÁVEL em zona não-apex de perigo baixo + cadência de
+# encontro mais espaçada (espaço pra viajar/curar entre lutas). Determinístico.
+EARLY_GAME_LEVEL = 3          # até este nível (inclusive) valem as regras de recuperação
+RECOVERY_SAFE_DANGER = 3      # descanso NÃO sorteia encontro se danger <= isto (e não-apex)
+_EARLY_COOLDOWN_BONUS = 2     # +turnos no cooldown de encontro quando nível <= EARLY_GAME_LEVEL
+
+
+def recovery_rest_safe(player_level: int, danger_now: int, loc: dict) -> bool:
+    """True se um DESCANSO de early-game deve recuperar sem sortear encontro:
+    nível <= EARLY_GAME_LEVEL, zona NÃO-apex e perigo <= RECOVERY_SAFE_DANGER.
+    Zona apex ou perigo 4+ segue rolando — descansar na boca do lobo é risco
+    escolhido."""
+    if int(player_level or 1) > EARLY_GAME_LEVEL:
+        return False
+    if _APEX_TAG in ((loc or {}).get("tags") or []):
+        return False
+    return int(danger_now or 1) <= RECOVERY_SAFE_DANGER
+
 
 def _effective_danger(world: dict, loc_id: str) -> int:
     """Perigo atual do local: override de ascensão (se houver) senão o base do mapa."""
@@ -620,7 +627,11 @@ def check_encounter(world: dict, factions, intel, turn: int = 0,
     """
     world = world or {}
     intel = ensure_faction_intel(intel)
-    if turn - int(world.get("last_encounter_turn", -99)) < _ENCOUNTER_COOLDOWN:
+    # spec letalidade-early-game-v2 (alavanca 1): cooldown maior no early-game —
+    # menos combate forçado de volta-a-volta, espaço pra recuperar entre lutas.
+    cooldown = _ENCOUNTER_COOLDOWN + (_EARLY_COOLDOWN_BONUS
+                                      if int(player_level or 1) <= EARLY_GAME_LEVEL else 0)
+    if turn - int(world.get("last_encounter_turn", -99)) < cooldown:
         return None
 
     loc_id = world.get("current_location_id", "")

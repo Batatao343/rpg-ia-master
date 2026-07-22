@@ -106,7 +106,7 @@
     "description": "Fervor Ritual.",
     "cost": 4,
     "resource_type": "Entropia",
-    "damage_formula": "2d6+str_mod",
+    "damage_formula": "2d8+str_mod",
     "damage_type": "Físico",
     "conditions": [],
     "save_stat": null,

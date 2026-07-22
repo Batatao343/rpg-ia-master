@@ -120,6 +120,12 @@ class _Base:
     def next_action(self, state: dict, rng: random.Random) -> str:
         raise NotImplementedError
 
+    def reset(self) -> None:
+        """Zera memória interna do perfil no início de cada campanha (os perfis
+        são instâncias singleton reusadas entre campanhas). No-op por default;
+        perfis com estado (ex.: Explorador._recent) sobrescrevem."""
+        pass
+
 
 # --- 1. agressivo -----------------------------------------------------------
 
@@ -151,9 +157,13 @@ class Agressivo(_Base):
 # --- 2. explorador ----------------------------------------------------------
 
 class Explorador(_Base):
-    """Viaja sistematicamente: prioriza conexões NÃO visitadas; entra em
-    interiores de vez em quando."""
+    """Viaja por FRONTEIRA: prioriza nós/interiores não visitados e NÃO faz
+    backtrack imediato (memória curta anti-oscilação — spec fix-explorador-loop).
+    Antes, com tudo visitado, oscilava cidade↔interior (interior tem 1 saída)."""
     name = "explorador"
+
+    def reset(self) -> None:
+        self._recent = []
 
     def next_action(self, state, rng):
         from gamedata import interiors_of
@@ -161,19 +171,35 @@ class Explorador(_Base):
         cur = _current_id(state)
         visited = set(world.get("visited") or [])
 
-        interiors = interiors_of(cur)
-        if interiors and rng.random() < 0.25:
-            alvo = rng.choice(interiors)
+        # memória curta das últimas localizações (maxlen 4) p/ evitar backtrack
+        recent = getattr(self, "_recent", None)
+        if recent is None:
+            recent = self._recent = []
+        if cur and (not recent or recent[-1] != cur):
+            recent.append(cur)
+            del recent[:-4]
+        prev = recent[-2] if len(recent) >= 2 else None
+
+        # 1. interior AINDA NÃO visitado -> entrar (fronteira interior)
+        novos_int = [i for i in interiors_of(cur) if i["id"] not in visited]
+        if novos_int:
+            alvo = sorted(novos_int, key=lambda c: c["id"])[rng.randrange(len(novos_int))]
             return f"Entro em {alvo['name']}."
 
         conns = _connections(cur)
         if not conns:
             return "Observo os arredores com atenção."
-        nao_visitados = [c for c in conns if c["id"] not in visited]
-        pool = nao_visitados or conns
-        pool = sorted(pool, key=lambda c: c["id"])  # estável
-        dest = pool[rng.randrange(len(pool))]
-        return f"Viajo para {dest['name']}."
+
+        # 2. fronteira: conexão não visitada, nunca o nó de onde acabou de vir
+        frontier = [c for c in conns if c["id"] not in visited and c["id"] != prev]
+        if frontier:
+            pool = sorted(frontier, key=lambda c: c["id"])
+            return f"Viajo para {pool[rng.randrange(len(pool))]['name']}."
+
+        # 3. mapa local exaurido: conexão menos-recente, evita backtrack imediato
+        cand = [c for c in conns if c["id"] != prev] or conns
+        pool = sorted(cand, key=lambda c: (c["id"] in recent, c["id"]))
+        return f"Viajo para {pool[0]['name']}."
 
 
 # --- 3. comerciante ---------------------------------------------------------

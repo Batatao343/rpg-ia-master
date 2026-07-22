@@ -131,19 +131,6 @@ def _quests_ativas_block(quests: List[Dict]) -> str:
                      for q in ativas)
 
 
-def _recovery_clause(state: GameState) -> str:
-    """spec pos-saque-recuperacao (R4): cláusula de prompt (só quando o herói
-    carrega a marca `downed_recente`) instruindo o narrador a apontar descanso/
-    poção no turno de despertar. Pura — testável sem invocar o LLM."""
-    conds = (state.get("player") or {}).get("active_conditions", []) or []
-    if not any(c.get("name") == "downed_recente" for c in conds):
-        return ""
-    return ("\n    - RECUPERAÇÃO (OBRIGATÓRIO — o herói acabou de ser saqueado e mal "
-            "escapou): TERMINE a narração oferecendo EXPLICITAMENTE, com estas "
-            "palavras, as opções de DESCANSAR para recobrar forças e de beber a "
-            "POÇÃO de cura que ainda lhe resta, antes de voltar ao perigo.")
-
-
 def _npc_fallback_clause(state: GameState) -> str:
     """spec npc-fallback-sem-alvo (R2): quando a rota NPC não achou interlocutor,
     o storyteller narra a AUSÊNCIA (sem inventar NPC em cena) e dá um gancho útil
@@ -275,20 +262,18 @@ def storyteller_node(state: GameState):
         turn = int(world.get("turn_count", 0))
         # R5 (fix-playtest-achados): a FORÇA do encontro escala pelo nível (apex não).
         _plevel = int((state.get("player") or {}).get("level", 1) or 1)
-        # spec pos-saque-recuperacao (R2): janela de recuperação. No local seguro
-        # (danger<=1) a carência SUPRIME encontros; numa zona de perigo o jogador
-        # ESCOLHEU o risco → cancela a carência e o encontro rola normalmente.
-        from world_utils import downed_grace_active
+        from world_utils import recovery_rest_safe
+        from gamedata import get_location as _get_location
         danger_now = int(world.get("danger_level", 1) or 1)
-        if downed_grace_active(world):
-            if danger_now <= 1:
-                enc = None  # local seguro na carência: sem sorteio
-            else:
-                world.pop("downed_grace_until_day", None)  # foi pro perigo: cancela
-                enc = check_encounter(world, factions, intel, turn,
-                                      bestiary_knowledge=state.get("bestiary_knowledge"),
-                                      projection=state.get("world_projection"),
-                                      player_level=_plevel)
+        # spec letalidade-early-game-v2 (alavanca 1): um DESCANSO de early-game em
+        # zona não-apex de perigo baixo recupera SEM sortear encontro — o laço de
+        # recuperação que faltava (viagem não cura; descanso interrompido = morte).
+        # Só vale pra REST (rested_player is not None), nunca pra viagem.
+        _rest_recovers = (rested_player is not None
+                          and recovery_rest_safe(_plevel, danger_now,
+                                                 _get_location(world.get("current_location_id", "")) or {}))
+        if _rest_recovers:
+            enc = None
         else:
             # Fase 6.3: sorteio ponderado — pressão de caça/fação/migração
             enc = check_encounter(world, factions, intel, turn,
@@ -433,9 +418,6 @@ def storyteller_node(state: GameState):
     # Fase 3.3: quests ativas que o LLM pode concluir via proposed_events(quest_completed).
     quests_ativas = _quests_ativas_block(state.get("quests", []))
 
-    # spec pos-saque-recuperacao (R4): no turno de despertar pós-Saque, o narrador
-    # aponta o caminho de recuperação (descansar / poção). Condicional à marca.
-    recovery_clause = _recovery_clause(state)
     # spec npc-fallback-sem-alvo (R2): rota NPC sem interlocutor delegou aqui.
     npc_fallback_clause = _npc_fallback_clause(state)
     # spec polish-prosa: R1 (varie a abertura) + R3 (menu de opções concretas).
@@ -504,7 +486,7 @@ def storyteller_node(state: GameState):
       ou impossível no contexto, faça-a FALHAR de forma crível na narração (não conceda o impossível).
     - Termine com opções ou pergunta para ação.
     - Se um personagem ENTRAR na cena (novo ou conhecido que reapareceu), adicione o nome em 'introduced_npcs'.
-    - Se um personagem conhecido SAIR da cena (foi embora, sumiu), adicione o nome em 'npcs_left_scene'.{recovery_clause}{npc_fallback_clause}{varie_clause}{opcoes_clause}
+    - Se um personagem conhecido SAIR da cena (foi embora, sumiu), adicione o nome em 'npcs_left_scene'.{npc_fallback_clause}{varie_clause}{opcoes_clause}
     """)
 
     try:

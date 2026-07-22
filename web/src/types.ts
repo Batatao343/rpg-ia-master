@@ -278,6 +278,8 @@ export interface GameResponse {
   chronicle: ChronicleChapter[];
   factions: FactionView[];
   party: PartyMember[];
+  // spec checkpoints-morte: queda letal — o cliente abre a tela de morte.
+  death_pending?: boolean;
 }
 
 export interface CreateOptions {

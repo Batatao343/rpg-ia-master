@@ -83,6 +83,8 @@ class CampaignResult:
     violations: List[dict] = field(default_factory=list)
     mock: bool = True
     aborted_reason: Optional[str] = None  # Fase 5.3: teto de requests/custo
+    # spec checkpoints-morte (D6): mortes que dispararam auto-restore (turno/local/causa).
+    deaths_log: List[dict] = field(default_factory=list)
 
 
 # --- criação de personagem (espelha /game/new) -----------------------------
@@ -338,6 +340,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
     if profile not in PROFILES:
         raise KeyError(f"perfil desconhecido: {profile!r} (conhecidos: {sorted(PROFILES)})")
     prof = PROFILES[profile]
+    prof.reset()  # spec fix-explorador-loop: perfis são singleton — zera memória por campanha
     prof_rng = random.Random(seed)
 
     errors: List[dict] = []
@@ -345,6 +348,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
     violations: List[dict] = []
     aborted_reason: Optional[str] = None
     llm_calls = {"count": 0, "cost": 0.0}
+    deaths_log: List[dict] = []  # spec checkpoints-morte (D6)
+    from services import checkpoints as _cp
 
     # Telemetria do roteamento: hook coleta os invokes do turno corrente.
     from llm_setup import set_llm_telemetry_hook
@@ -374,6 +379,9 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
             state = game_graph.invoke(state)
             save_game_state(state)
             prev_state = state
+            # spec checkpoints-morte (D6): snapshots in-memory p/ auto-restore.
+            initial_snap = _cp.snapshot(state)
+            checkpoint_snap = None
 
             for turn in range(1, turns + 1):
                 action = prof.next_action(state, prof_rng)
@@ -431,9 +439,26 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
 
                 history.append(rec)
 
-                # spec playtest-stop-gameover (R1/R2/R5): morte encerra a campanha
-                # no MESMO turno — o grafo vira memorial (main.py:54), turnos
-                # seguintes só repetiriam o memorial e poluiriam as métricas.
+                # spec checkpoints-morte (D1/D6): grava snapshot na cadência; a
+                # morte (death_pending) NÃO encerra — o runner sempre "Continua"
+                # (auto-restore do checkpoint, ou do início se ainda não houver) e
+                # conta a morte. game_over só viria da via voluntária "Aceitar",
+                # que o harness nunca escolhe.
+                if _cp.should_checkpoint(state, prev_state):
+                    checkpoint_snap = _cp.snapshot(state)
+                if state.get("death_pending"):
+                    _dev = next((e for e in reversed(state.get("event_log") or [])
+                                 if isinstance(e, dict) and e.get("type") == "player_downed"), {})
+                    _pay = (_dev or {}).get("payload", {}) or {}
+                    deaths_log.append({"turn": turn, "location": _pay.get("location"),
+                                       "cause": _pay.get("killer")})
+                    state = _cp.resolve_death_choice(
+                        state, "continue", checkpoint=checkpoint_snap, initial_state=initial_snap)
+                    save_game_state(state)
+                    prev_state = state
+
+                # spec playtest-stop-gameover: game_over (memorial voluntário) ainda
+                # encerra — no harness nunca ocorre, mas o gate segue defensivo.
                 if state.get("game_over"):
                     aborted_reason = f"player_death (turno {turn})"
                     break
@@ -454,6 +479,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
         profile=profile, seed=seed, turns_completed=len(history),
         errors=errors, history=history, final_state=state, save_path=final_path,
         violations=violations, mock=not use_real_llm, aborted_reason=aborted_reason,
+        deaths_log=deaths_log,
     )
 
 

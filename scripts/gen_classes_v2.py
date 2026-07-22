@@ -75,8 +75,10 @@ add("encaixe_do_golpe", "Encaixe do Golpe", "Devoto do Abismo", None, 1, 1,
 # branches
 add("marca_consagrada", "Marca Consagrada", "Devoto do Abismo", "consagrado", 2, 3,
     cost=3, cat="Defesa", effects=[buff("ac", 4, 3)])
+# spec balanceamento-classes-pos-playtest (parity): 2d6→2d8 — era o ÚNICO outlier
+# de dano puro (1.75/custo vs 2.25 dos irmãos Retaliação/Intimidade, mesmo custo).
 add("fervor_ritual", "Fervor Ritual", "Devoto do Abismo", "consagrado", 3, 5,
-    cost=4, dmg="2d6+str_mod", scaling="str", requires=["marca_consagrada"])
+    cost=4, dmg="2d8+str_mod", scaling="str", requires=["marca_consagrada"])
 add("taunt_ciumento", "Provocação Ciumenta", "Devoto do Abismo", "zeloso", 2, 3,
     cost=3, dmg="1d8+str_mod", save="cha",
     effects=[control("taunt", 2)], extra={"taunt": True, "aoe": True})
@@ -429,7 +431,9 @@ CLASSES = {
         "role": "tank", "posture": "ama",
         "guide_quote": "Vocês seguram a linha com medo. Eu seguro porque quero que ele me escolha primeiro.",
         "passive": "Convite: provocações escalam com a Entropia acumulada no combate.",
-        "base_stats": {"hp": 38, "entropy": 14, "mana": 0, "stamina": 0, "defense": 16,
+        # spec letalidade-early-game-v2 (alavanca 3): HP base subido (baseline 38 → 40)
+        # p/ dar piso de sobrevivência ao early-game; afinado por cima pela spec de balanceamento.
+        "base_stats": {"hp": 40, "entropy": 14, "mana": 0, "stamina": 0, "defense": 16,
                        "attributes": {"str": 16, "dex": 10, "con": 16, "int": 8, "wis": 12, "cha": 14}},
         "level_gains": {"hp": 7, "entropy": 2, "mana": 0, "stamina": 0},
         "starting_abilities": ["provocacao_do_abismo", "encaixe_do_golpe"],
@@ -447,14 +451,16 @@ CLASSES = {
             "enlutado": branch("O Enlutado", "Amou quem o Abismo levou; tom melancólico."),
         },
         "passive_effects": [],
-        "starting_equipment": ["espada_gasta", "escudo_amassado", "pocao_cura"],
+        # spec letalidade-early-game-v2 (alavanca 2): +1 poção inicial (recovery cedo).
+        "starting_equipment": ["espada_gasta", "escudo_amassado", "pocao_cura", "pocao_cura"],
     },
     "Sangromante": {
         "description": "Negocia com o Abismo: paga em sangue pelo que precisa.",
         "role": "dano corpo-a-corpo", "posture": "negocia",
         "guide_quote": "Tudo tem preço. Eu só pago à vista.",
         "passive": "Contrato de Sangue: auto-dano vira Entropia de sangue.",
-        "base_stats": {"hp": 26, "entropy": 16, "mana": 0, "stamina": 0, "defense": 12,
+        # spec letalidade-early-game-v2 (alavanca 3): HP base 26 → 30 (frágil demais nível 1).
+        "base_stats": {"hp": 30, "entropy": 16, "mana": 0, "stamina": 0, "defense": 12,
                        "attributes": {"str": 12, "dex": 16, "con": 14, "int": 10, "wis": 10, "cha": 12}},
         "level_gains": {"hp": 5, "entropy": 3, "mana": 0, "stamina": 0},
         "starting_abilities": ["corte_de_troca", "esquiva_calculada"],
@@ -471,14 +477,16 @@ CLASSES = {
             "silencioso": branch("O Silencioso", "Corte exato, economia de dor."),
         },
         "passive_effects": [],
-        "starting_equipment": ["adaga_ferro", "pocao_cura"],
+        # spec letalidade-early-game-v2 (alavanca 2): +1 poção inicial.
+        "starting_equipment": ["adaga_ferro", "pocao_cura", "pocao_cura"],
     },
     "Corruptor": {
         "description": "Trabalha JUNTO com o Abismo: acelera a decadência que já existe.",
         "role": "controle / DoT", "posture": "trabalha junto",
         "guide_quote": "Eu não trago a ruína. Só chego mais cedo.",
         "passive": "Parceria: a decadência ao seu redor te alimenta.",
-        "base_stats": {"hp": 28, "entropy": 18, "mana": 0, "stamina": 0, "defense": 13,
+        # spec letalidade-early-game-v2 (alavanca 3): HP base 28 → 30.
+        "base_stats": {"hp": 30, "entropy": 18, "mana": 0, "stamina": 0, "defense": 13,
                        "attributes": {"str": 10, "dex": 12, "con": 12, "int": 12, "wis": 16, "cha": 10}},
         "level_gains": {"hp": 5, "entropy": 4, "mana": 0, "stamina": 0},
         "starting_abilities": ["toque_da_decadencia", "semear_praga"],
@@ -498,14 +506,17 @@ CLASSES = {
                            "overrides": {"entropy_trigger": {"decay_kind": "gear"}}},
         },
         "passive_effects": [],
-        "starting_equipment": ["cajado_de_galhos", "pocao_cura"],
+        # spec letalidade-early-game-v2 (alavanca 2): +1 poção inicial.
+        "starting_equipment": ["cajado_de_galhos", "pocao_cura", "pocao_cura"],
     },
     "Arcanista Cinzento": {
         "description": "Manipula o Abismo por um instrumento: canaliza a entropia e a descarrega.",
         "role": "dano/controle à distância", "posture": "manipula",
         "guide_quote": "A ferramenta segura o que a mão não deveria tocar.",
         "passive": "Caldeira: canalizar gera Entropia para a próxima descarga.",
-        "base_stats": {"hp": 22, "entropy": 20, "mana": 0, "stamina": 0, "defense": 11,
+        # spec letalidade-early-game-v2 (alavanca 3): HP base 22 → 26 (a classe que
+        # mais morria nível 1 no run 20260720-093014).
+        "base_stats": {"hp": 26, "entropy": 20, "mana": 0, "stamina": 0, "defense": 11,
                        "attributes": {"str": 8, "dex": 12, "con": 10, "int": 16, "wis": 12, "cha": 12}},
         "level_gains": {"hp": 4, "entropy": 6, "mana": 0, "stamina": 0},
         "starting_abilities": ["descarga_do_instrumento", "vazao_controlada"],
@@ -522,14 +533,16 @@ CLASSES = {
             "improvisador": branch("O Improvisador", "Monta ferramenta na hora a partir de sucata."),
         },
         "passive_effects": [],
-        "starting_equipment": ["cajado_rachado", "pocao_cura"],
+        # spec letalidade-early-game-v2 (alavanca 2): +1 poção inicial.
+        "starting_equipment": ["cajado_rachado", "pocao_cura", "pocao_cura"],
     },
     "Médico de Campo": {
         "description": "Nega o Abismo: mantém vivo o que ele quer levar.",
         "role": "suporte / cura", "posture": "nega",
         "guide_quote": "Enquanto eu respirar, você respira.",
         "passive": "Triagem: cura mais quem está mais perto do fim.",
-        "base_stats": {"hp": 28, "entropy": 16, "mana": 0, "stamina": 0, "defense": 14,
+        # spec letalidade-early-game-v2 (alavanca 3): HP base 28 → 30.
+        "base_stats": {"hp": 30, "entropy": 16, "mana": 0, "stamina": 0, "defense": 14,
                        "attributes": {"str": 10, "dex": 12, "con": 12, "int": 16, "wis": 14, "cha": 10}},
         "level_gains": {"hp": 5, "entropy": 3, "mana": 0, "stamina": 0},
         "starting_abilities": ["sutura_de_campo", "estabilizar"],
@@ -546,7 +559,8 @@ CLASSES = {
             "cirurgiao_ferro": branch("Cirurgião de Ferro", "Próteses e reforço físico de aliados."),
         },
         "passive_effects": [],
-        "starting_equipment": ["serra_cirurgica", "pocao_cura", "pocao_cura"],
+        # spec letalidade-early-game-v2 (alavanca 2): Médico começa com 3 poções.
+        "starting_equipment": ["serra_cirurgica", "pocao_cura", "pocao_cura", "pocao_cura"],
     },
 }
 

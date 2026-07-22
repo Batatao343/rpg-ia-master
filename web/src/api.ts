@@ -53,6 +53,14 @@ export const sendAction = (input_text: string, game_id: string | null) =>
     body: JSON.stringify({ input_text, game_id }),
   });
 
+// spec checkpoints-morte (D2): resolve a tela de morte —
+// "continue" restaura do checkpoint, "accept" encerra em memorial.
+export const resolveDeath = (game_id: string | null, choice: "continue" | "accept") =>
+  req<GameResponse>("/game/death", {
+    method: "POST",
+    body: JSON.stringify({ game_id, choice }),
+  });
+
 // spec streaming-turno-sse (R4): turno via SSE — fases reais do grafo enquanto
 // o LLM pensa. POST não funciona com EventSource nativo, então o parser de
 // `event:`/`data:` é manual sobre fetch + ReadableStream. Qualquer falha antes

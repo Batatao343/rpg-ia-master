@@ -218,30 +218,23 @@ def test_morte_gera_evento_e_memorial(monkeypatch):
                              "bonus": 50, "damage": "10d10+50"}],
                    behavior={"profile": "implacavel"})
     p = player(hp=5)
-    # spec balanceamento-early-game (R3): a 1ª queda vira "O Saque" — memorial
-    # só na 2ª. Seed com player_downed prévio = esta queda é a definitiva.
+    # spec checkpoints-morte (D4): a queda letal NÃO é mais memorial imposto —
+    # abre a TELA DE MORTE (death_pending) + evento player_downed; sem game_over.
     state = {"messages": [HumanMessage(content="luto")], "player": p,
              "enemies": [killer], "combat": {"round": 1, "active": True},
              "combat_target": "Capitão", "world": {"turn_count": 3,
                                                    "current_location": "Skallgard",
                                                    "world_clock": {"day": 2}},
-             "event_log": [{"type": "player_downed", "target_id": "player",
-                            "turn": 1, "payload": {}}],
+             "event_log": [],
              "bestiary_knowledge": {}, "pending_world_events": [], "party": []}
     out = cbt.combat_node(state)
-    assert out.get("game_over") is True
-    deaths = [e for e in out["pending_world_events"] if e["type"] == "player_died"]
-    assert deaths and deaths[0]["source"] == "combat"
-    # narrativa de fecho presente (template determinístico no mock/fallback)
-    assert "crônica" in out["messages"][0].content.lower() or "☠" in out["messages"][0].content
-
-
-def test_template_morte_digno():
-    from agents.combat import _death_template
-    txt = _death_template(player(name="Kael", class_name="Sangromante"),
-                          [elite(status="ativo")],
-                          {"current_location": "Brekmar", "world_clock": {"day": 7}})
-    assert "Kael" in txt and "Brekmar" in txt and "7" in txt
+    assert out.get("death_pending") is True
+    assert not out.get("game_over")  # memorial só pela via voluntária "Aceitar"
+    downed = [e for e in out["pending_world_events"] if e["type"] == "player_downed"]
+    assert downed and downed[0]["source"] == "combat"
+    assert downed[0]["payload"].get("location") == "Skallgard"
+    # narrativa da queda em 2ª pessoa, sem finalidade imposta (☠ + a escolha da Roda)
+    assert "☠" in out["messages"][0].content
 
 
 def test_llm_nao_propoe_player_died():

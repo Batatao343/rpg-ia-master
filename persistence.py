@@ -249,6 +249,65 @@ def delete_save(game_id: str) -> bool:
     return True
 
 
+def _safe_save_path(game_id: str, suffix: str = "") -> str:
+    """Resolve o caminho do save (UUID canônico) ou sanitiza o legado. `suffix`
+    (ex.: '.checkpoint') distingue o slot de checkpoint do save vivo."""
+    try:
+        base = save_path(game_id)
+        if suffix:
+            base = base[:-5] + f"{suffix}.json"  # troca '.json' final
+        return base
+    except ValueError:
+        safe = "".join(c for c in str(game_id)
+                       if c.isalnum() or c in "-_") or DEFAULT_SAVE_NAME
+        return os.path.join(SAVES_DIR, f"{safe}{suffix}.json")
+
+
+def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
+    """Monta o dict serializável a partir do GameState (fonte única — save vivo
+    E checkpoint reusam, pra nunca divergirem de campo)."""
+    return {
+        # --- Fase 10: versão do schema (migrations no load) ---
+        "schema_version": SCHEMA_VERSION,
+        # --- Identificação e Memória (Novos Campos) ---
+        "game_id": game_id,
+        "narrative_summary": state.get("narrative_summary", ""),
+        "archivist_last_run": state.get("archivist_last_run", 0),
+        "chronicle": state.get("chronicle", []),
+
+        # --- Dados Transicionais ---
+        "combat_target": state.get("combat_target"),
+        "loot_source": state.get("loot_source"),
+        "combat": state.get("combat", {}),
+
+        # --- Dados Core ---
+        "player": state.get("player", {}),
+        "world": state.get("world", {}),
+        "party": state.get("party", []),
+        "enemies": state.get("enemies", []),
+        "factions": state.get("factions", []),
+        "faction_intel": state.get("faction_intel", {}),
+        "bestiary_knowledge": state.get("bestiary_knowledge", {}),
+        "npcs": state.get("npcs", {}),
+        "inventory": state.get("inventory", []),
+        "quests": state.get("quests", []),
+        "campaign_plan": state.get("campaign_plan", {}),
+
+        # --- Fase 2.5: eventos estruturados + projeção do mundo ---
+        "event_log": state.get("event_log", []),
+        "world_projection": state.get("world_projection", {}),
+        "pending_world_events": state.get("pending_world_events", []),
+
+        # --- Fase 4.6: save morto vira memorial (não aceita ações) ---
+        "game_over": bool(state.get("game_over", False)),
+        # --- spec checkpoints-morte: tela de morte pendente (persiste entre requests) ---
+        "death_pending": bool(state.get("death_pending", False)),
+
+        # --- Histórico ---
+        "message_history": _serialize_messages(state.get("messages", [])),
+    }
+
+
 def save_game_state(state: Dict[str, Any]) -> bool:
     """
     Salva o estado completo do jogo em JSON na pasta 'saves/'.
@@ -266,57 +325,13 @@ def save_game_state(state: Dict[str, Any]) -> bool:
         # legado não-UUID ("autosave", ids de teste) é SANITIZADO — nunca chega
         # cru ao filesystem (um save adulterado não escreve fora de saves/).
         game_id = state.get("game_id", DEFAULT_SAVE_NAME)
-        try:
-            file_path = save_path(game_id)
-        except ValueError:
-            safe = "".join(c for c in str(game_id)
-                           if c.isalnum() or c in "-_") or DEFAULT_SAVE_NAME
-            file_path = os.path.join(SAVES_DIR, f"{safe}.json")
-
-        # Prepara os dados serializáveis
-        save_data = {
-            # --- Fase 10: versão do schema (migrations no load) ---
-            "schema_version": SCHEMA_VERSION,
-            # --- Identificação e Memória (Novos Campos) ---
-            "game_id": game_id,
-            "narrative_summary": state.get("narrative_summary", ""),
-            "archivist_last_run": state.get("archivist_last_run", 0),
-            "chronicle": state.get("chronicle", []),
-            
-            # --- Dados Transicionais ---
-            "combat_target": state.get("combat_target"),
-            "loot_source": state.get("loot_source"),
-            "combat": state.get("combat", {}),
-
-            # --- Dados Core ---
-            "player": state.get("player", {}),
-            "world": state.get("world", {}),
-            "party": state.get("party", []),
-            "enemies": state.get("enemies", []),
-            "factions": state.get("factions", []),
-            "faction_intel": state.get("faction_intel", {}),
-            "bestiary_knowledge": state.get("bestiary_knowledge", {}),
-            "npcs": state.get("npcs", {}),
-            "inventory": state.get("inventory", []),
-            "quests": state.get("quests", []),
-            "campaign_plan": state.get("campaign_plan", {}),
-
-            # --- Fase 2.5: eventos estruturados + projeção do mundo ---
-            "event_log": state.get("event_log", []),
-            "world_projection": state.get("world_projection", {}),
-            "pending_world_events": state.get("pending_world_events", []),
-
-            # --- Fase 4.6: save morto vira memorial (não aceita ações) ---
-            "game_over": bool(state.get("game_over", False)),
-
-            # --- Histórico ---
-            "message_history": _serialize_messages(state.get("messages", []))
-        }
+        file_path = _safe_save_path(game_id)
+        save_data = _state_to_save_data(state, game_id)
 
         # Escreve no disco
         with open(file_path, 'w', encoding='utf-8') as f:
             json.dump(save_data, f, indent=4, ensure_ascii=False)
-        
+
         return True
 
     except Exception as e:
@@ -338,54 +353,95 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
     try:
         with open(target_file, 'r', encoding='utf-8') as f:
             raw_data = json.load(f)
-
-        # Fase 10: pipeline de migrations (consolida os backfills 3.1/4.1/4.3/4.5)
-        raw_data = migrate_state(raw_data)
-
-        # Reconstrói o Estado compatível com GameState
-        state = {
-            # --- Recupera Memória ---
-            "game_id": raw_data.get("game_id", "recovered_session"),
-            "narrative_summary": raw_data.get("narrative_summary", ""),
-            "archivist_last_run": raw_data.get("archivist_last_run", 0),
-            "chronicle": raw_data.get("chronicle", []),
-
-            # --- Recupera Core ---
-            "player": raw_data.get("player", {}),
-            "world": raw_data.get("world", {}),
-            "party": raw_data.get("party", []),
-            "enemies": raw_data.get("enemies", []),
-            "factions": raw_data.get("factions", []),
-            "faction_intel": raw_data.get("faction_intel", {}),
-            "bestiary_knowledge": raw_data.get("bestiary_knowledge", {}),
-            "npcs": raw_data.get("npcs", {}),
-            "inventory": raw_data.get("inventory", []),
-            "quests": raw_data.get("quests", []),
-            "campaign_plan": raw_data.get("campaign_plan", {}),
-
-            # --- Fase 2.5: eventos estruturados + projeção do mundo ---
-            "event_log": raw_data.get("event_log", []),
-            "world_projection": raw_data.get("world_projection", {}),
-            "pending_world_events": raw_data.get("pending_world_events", []),
-
-            # --- Recupera Transicionais ---
-            "combat_target": raw_data.get("combat_target"),
-            "loot_source": raw_data.get("loot_source"),
-            "combat": raw_data.get("combat", {}),
-
-            # --- Recupera Mensagens ---
-            "messages": _deserialize_messages(raw_data.get("message_history", [])),
-            
-            # Fase 4.6: memorial
-            "game_over": bool(raw_data.get("game_over", False)),
-
-            # Garante campos técnicos de fluxo
-            "next": "storyteller",
-            "needs_replan": False
-        }
-
-        return state
+        return _raw_to_state(raw_data)
 
     except Exception as e:
         print(f"⚠️ Erro ao carregar save '{target_file}': {e}")
+        return None
+
+
+def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Reconstrói o GameState a partir do dict salvo (fonte única — save vivo E
+    checkpoint reusam). Aplica o pipeline de migrations."""
+    # Fase 10: pipeline de migrations (consolida os backfills 3.1/4.1/4.3/4.5)
+    raw_data = migrate_state(raw_data)
+    return {
+        # --- Recupera Memória ---
+        "game_id": raw_data.get("game_id", "recovered_session"),
+        "narrative_summary": raw_data.get("narrative_summary", ""),
+        "archivist_last_run": raw_data.get("archivist_last_run", 0),
+        "chronicle": raw_data.get("chronicle", []),
+
+        # --- Recupera Core ---
+        "player": raw_data.get("player", {}),
+        "world": raw_data.get("world", {}),
+        "party": raw_data.get("party", []),
+        "enemies": raw_data.get("enemies", []),
+        "factions": raw_data.get("factions", []),
+        "faction_intel": raw_data.get("faction_intel", {}),
+        "bestiary_knowledge": raw_data.get("bestiary_knowledge", {}),
+        "npcs": raw_data.get("npcs", {}),
+        "inventory": raw_data.get("inventory", []),
+        "quests": raw_data.get("quests", []),
+        "campaign_plan": raw_data.get("campaign_plan", {}),
+
+        # --- Fase 2.5: eventos estruturados + projeção do mundo ---
+        "event_log": raw_data.get("event_log", []),
+        "world_projection": raw_data.get("world_projection", {}),
+        "pending_world_events": raw_data.get("pending_world_events", []),
+
+        # --- Recupera Transicionais ---
+        "combat_target": raw_data.get("combat_target"),
+        "loot_source": raw_data.get("loot_source"),
+        "combat": raw_data.get("combat", {}),
+
+        # --- Recupera Mensagens ---
+        "messages": _deserialize_messages(raw_data.get("message_history", [])),
+
+        # Fase 4.6: memorial
+        "game_over": bool(raw_data.get("game_over", False)),
+        # spec checkpoints-morte: tela de morte pendente
+        "death_pending": bool(raw_data.get("death_pending", False)),
+
+        # Garante campos técnicos de fluxo
+        "next": "storyteller",
+        "needs_replan": False,
+    }
+
+
+# --- spec checkpoints-morte: slot de checkpoint (1 por save, sobrescreve) -----
+
+def save_checkpoint(state: Dict[str, Any]) -> bool:
+    """Grava o snapshot restaurável em `saves/{game_id}.checkpoint.json` (D5: 1
+    slot, sobrescreve). Mesmo formato do save vivo — reusa `_state_to_save_data`."""
+    if not state:
+        return False
+    try:
+        if not os.path.exists(SAVES_DIR):
+            os.makedirs(SAVES_DIR)
+        game_id = state.get("game_id", DEFAULT_SAVE_NAME)
+        path = _safe_save_path(game_id, suffix=".checkpoint")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(_state_to_save_data(state, game_id), f, indent=4, ensure_ascii=False)
+        return True
+    except Exception as e:
+        print(f"❌ Erro ao gravar checkpoint: {e}")
+        return False
+
+
+def has_checkpoint(game_id: str) -> bool:
+    return os.path.exists(_safe_save_path(game_id, suffix=".checkpoint"))
+
+
+def load_checkpoint(game_id: str) -> Optional[Dict[str, Any]]:
+    """Carrega o checkpoint do `game_id` (None se não houver). Reconstrói via
+    `_raw_to_state` (mesmo pipeline de migrations do save vivo)."""
+    path = _safe_save_path(game_id, suffix=".checkpoint")
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return _raw_to_state(json.load(f))
+    except Exception as e:
+        print(f"⚠️ Erro ao carregar checkpoint '{path}': {e}")
         return None

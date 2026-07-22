@@ -219,26 +219,6 @@ def _build_plan(state: GameState) -> CampaignPlan:
         }
 
 
-def _downed_recente(state: GameState) -> bool:
-    return any(c.get("name") == "downed_recente"
-               for c in (state.get("player") or {}).get("active_conditions", []) or [])
-
-
-def _prefix_recovery_beat(plan, world) -> dict:
-    """spec pos-saque-recuperacao (R3): injeta um beat de recuperação
-    DETERMINÍSTICO no topo do plano após o Saque (o LLM não escreve este beat).
-    Idempotente — não duplica se já está no topo."""
-    plan = dict(plan or {})
-    beats = list(plan.get("beats") or [])
-    if beats and beats[0].get("recovery"):
-        return plan
-    local = world.get("current_location", "um lugar seguro")
-    beats.insert(0, {"description": f"Recupere forças em {local} antes de voltar à estrada.",
-                     "status": "pending", "recovery": True})
-    plan["beats"] = beats
-    return plan
-
-
 def campaign_manager_node(state: GameState):
     """Ensure a coherent multi-step campaign plan exists and is refreshed periodically."""
 
@@ -252,13 +232,10 @@ def campaign_manager_node(state: GameState):
     world["turn_count"] = world.get("turn_count", 0) + 1
 
     if not _should_replan(state):
-        plan = state.get("campaign_plan")
-        if _downed_recente(state) and plan:
-            plan = _prefix_recovery_beat(plan, world)  # R3 (sem replan)
         return {
             "next": "dm_router",
             "world": world,
-            "campaign_plan": plan,
+            "campaign_plan": state.get("campaign_plan"),
             "needs_replan": False,
         }
 
@@ -273,9 +250,6 @@ def campaign_manager_node(state: GameState):
             "campaign_plan": state.get("campaign_plan"),
             "needs_replan": True,
         }
-    if _downed_recente(state):
-        new_plan = _prefix_recovery_beat(new_plan, world)  # R3 (com replan)
-
     updated_state = {
         "campaign_plan": new_plan,
         "needs_replan": False,

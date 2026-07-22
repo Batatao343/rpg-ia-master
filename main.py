@@ -51,9 +51,12 @@ def build_game_graph():
     # processa turno novo. Antes só a API barrava (409); runner/CLI e qualquer
     # chamador direto de app.invoke seguiam o jogo com um personagem morto
     # (achado do playtest real). O gate protege TODO chamador.
+    # spec checkpoints-morte: death_pending (queda letal aguardando a tela de morte)
+    # também barra o turno novo — o grafo NÃO processa com o herói caído até o
+    # jogador escolher Continuar (restaura) ou Aceitar (memorial).
     workflow.add_conditional_edges(
         START,
-        lambda s: "__end__" if s.get("game_over") else "campaign_manager",
+        lambda s: "__end__" if (s.get("game_over") or s.get("death_pending")) else "campaign_manager",
         {"__end__": END, "campaign_manager": "campaign_manager"},
     )
     workflow.add_edge("campaign_manager", "dm_router")

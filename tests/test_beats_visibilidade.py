@@ -82,6 +82,47 @@ def test_invariante_beat_limpo_nao_dispara():
     assert inv.check_knowledge(state, None, 14) == []
 
 
+# --- spec D (2026-07-20): segredo já conhecido pelo jogador não é vazamento ---
+
+class _Msg:
+    """Mensagem mínima que _last_narration entende (content + type)."""
+    def __init__(self, content, type="ai"):
+        self.content = content
+        self.type = type
+
+
+def test_revealed_corpus_inclui_resumo_narrativo():
+    # a Velha Magda contou o pacto ao jogador -> registrado no resumo diegético
+    state = {"narrative_summary": "A Velha Magda revelou o pacto com Daruun ao herói."}
+    assert ss.find_unrevealed("o pacto com daruun ainda queima na memória", state) is None
+
+
+def test_known_secrets_explicito_desarma_assinatura():
+    state = {"player": {"known_secrets": ["pacto com daruun"]}}
+    assert ss.find_unrevealed("Onde Valerius esconde o pacto com Daruun.", state) is None
+
+
+def test_invariante_secret_leak_ignora_conhecido_pelo_player():
+    # narração REPETE o segredo, mas o jogador já sabe (resumo) -> sem violação
+    state = {
+        "messages": [_Msg("O coração da besta bate no Poço dos Ossos, onde Valerius "
+                           "esconde o pacto com Daruun.")],
+        "narrative_summary": "A Velha Magda já te disse: o pacto com Daruun.",
+    }
+    viol = inv.check_knowledge(state, None, turn=40)
+    assert not any(v.check_id == "knowledge.secret_leak" for v in viol)
+
+
+def test_invariante_secret_leak_ainda_dispara_quando_nao_conhecido():
+    # sem o jogador saber, a narração vazando o segredo AINDA é violação
+    state = {
+        "messages": [_Msg("Valerius esconde o pacto com Daruun em troca de imortalidade.")],
+        "narrative_summary": "O herói chega a Nova Arcádia.",
+    }
+    viol = inv.check_knowledge(state, None, turn=5)
+    assert any(v.check_id == "knowledge.secret_leak" for v in viol)
+
+
 # --- achado F: fallback do planner em pt-BR (era inglês) ---------------------
 
 def test_fallback_do_planner_e_pt_br(monkeypatch):

@@ -233,6 +233,22 @@ Entropia** por turno (spent/turno, %ativa, starvation/flooding redefinidos por
 gasto e não snapshot) → **tuning dos 8 knobs `[BALANCEAR]` agora é decidível**.
 Ver [spec](specs/playtest-agente-curioso-entropia.md).
 
+**Sessão 23 (2026-07-20) — letalidade v2 + parity de habilidades:** run de
+validação `20260720-093014` (17 campanhas reais, 0 erro, $1.74) fechou o baseline;
+achado = letalidade é **falta de recovery**, não dano. Entregue:
+[letalidade-early-game-v2](specs/letalidade-early-game-v2.md) Etapa 2 (descanso/
+viagem recuperam no early-game + cooldown de encontro +2 + poção inicial + HP base
++ dano low-level); fix `secret_leak` (segredo conhecido pelo player ≠ vazamento);
+**parity ESTÁTICA das habilidades** ([balanceamento §10](specs/balanceamento-classes-pos-playtest.md)
+— roster balanceado por papel; só `fervor_ritual` era outlier → `2d6→2d8` + teste-
+guarda). [fix-explorador-loop-navegacao](specs/fix-explorador-loop-navegacao.md)
+`done` (perfil não oscila mais). [checkpoints-morte](specs/checkpoints-morte.md) **`done`**:
+combat→`death_pending` (sem Saque), `POST /game/death` (Continuar do checkpoint /
+Aceitar→memorial), harness auto-restore, `DeathModal` no frontend; memorial vira
+escolha voluntária, sem permadeath. **"O Saque"/`pos-saque` INTEGRALMENTE
+aposentados** (higiene: funções órfãs + invariantes + `test_pos_saque` removidos).
+**1019 testes offline; `npm run build` verde.**
+
 **Achados (mock — NÃO produção; report marca `mock: true`) da rodada `--all
 --turns 50 --seed 42`:** 10/10 perfis com `erros=0` e `violações=0/0` (motor
 sólido); `agressivo` morre no nível 1 (letal cedo sob combate mock); `explorador`

@@ -237,6 +237,9 @@ def run_game_loop():
             print(f"{Colors.CYAN}... Gerando cena inicial ...{Colors.ENDC}", end="\r")
             initial_res = app.invoke(state)
             state = initial_res
+            # spec checkpoints-morte (D7): checkpoint inicial = início da sessão.
+            from persistence import save_checkpoint
+            save_checkpoint(state)
             if state["messages"]:
                 print(f"\n{Colors.BLUE}📜 {state['messages'][-1].content}{Colors.ENDC}")
         else:
@@ -311,9 +314,22 @@ def run_game_loop():
             # ENTER pula e a escolha continua pendente para depois).
             state["player"] = _resolve_pending_choices(state["player"])
 
-            if state["player"]["hp"] <= 0:
-                print(f"\n{Colors.FAIL}💀 VOCÊ MORREU.{Colors.ENDC}")
-                break
+            # spec checkpoints-morte (D2): queda letal → tela de morte no terminal.
+            if state.get("death_pending"):
+                from services import checkpoints as _cp
+                print(f"\n{Colors.FAIL}☠️  Você tombou.{Colors.ENDC}")
+                esc = input("  [1] Continuar do checkpoint   [2] Aceitar o fim\n  Escolha [1]: ").strip()
+                choice = "accept" if esc == "2" else "continue"
+                state = _cp.resolve_death_choice(state, choice)
+                save_game_state(state)
+                if state.get("game_over"):
+                    print(f"\n{Colors.FAIL}💀 A saga termina. A crônica permanece como memorial.{Colors.ENDC}")
+                    break
+                print(f"\n{Colors.GREEN}A Roda do Abismo te devolve ao último respiro seguro.{Colors.ENDC}")
+                continue
+            # checkpoint na cadência (10 turnos) — o restore acima o consome.
+            from services import checkpoints as _cp
+            _cp.maybe_write(state)
 
         except KeyboardInterrupt:
             print("\nEncerrando...")

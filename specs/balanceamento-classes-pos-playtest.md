@@ -1,7 +1,7 @@
 # SPEC — Balanceamento das 5 Posturas pós-playtest (knobs `[BALANCEAR]`)
 
-> **Status:** `in-progress` (instrumentação R1–R3 + baseline R4 `done` 2026-07-19; tuning R5–R7 adiado — dado insuficiente, ver §8)
-> **Criada:** 2026-07-19 · **Atualizada:** 2026-07-19
+> **Status:** `in-progress` (instrumentação R1–R3 + baseline R4 `done`; **parity ESTÁTICA de habilidades `done` 2026-07-20** §10; tuning dos 8 knobs de Entropia/Carga ainda pendente — precisa de rodada real dedicada pós-A)
+> **Criada:** 2026-07-19 · **Atualizada:** 2026-07-20 (parity de habilidades — pedido do usuário)
 > **Depende de:** [refatoracao-sistema-classes](refatoracao-sistema-classes.md) `done` ·
 > [arvores-habilidade-classes](arvores-habilidade-classes.md) `done` ·
 > (recomendado) [isolar-cache-runtime](isolar-cache-runtime.md) — playtest sem poluir `data/`
@@ -205,3 +205,43 @@ uv run python -m playtest report <run_id> --baseline <run_id_anterior>
   exige uma rodada real DEDICADA, mais longa e em nível sobrevivível (sem
   concorrência de Jina), que gere economia de combate real por classe. A
   ferramenta p/ medir isso agora existe (é a entrega desta sessão).
+
+---
+
+## 10. Parity ESTÁTICA das habilidades — `done` (2026-07-20)
+
+Pedido do usuário: "garantir que todas as habilidades sejam mecanicamente
+parecidas (nenhuma muito mais forte que a outra)". **Insight:** parity MECÂNICA é
+número determinístico → mensurável direto do catálogo (`data/player_abilities.json`),
+sem rodar playtest. Métrica: **dano-esperado-por-custo-real**, onde
+`custo_real = Entropia + self_harm/2` (2 HP ≈ 1 Entropia) e `dano_efetivo =
+dado + DoT(delta×duração) + ~4 por controle/debuff/buff`.
+
+**Achados (role-aware — NÃO se achata papel):**
+- O roster está, no geral, **bem balanceado por papel** (dano/custo das 4 classes
+  ofensivas em ~2.5–3.5). O tank (Devoto) fica mais baixo POR DESIGN (troca dano
+  por taunt + tem o maior HP); DoT do Corruptor tem dado baixo compensado pelo DoT.
+- **Falso-alarme corrigido:** "Toque Cru" (Arcanista, `4d6` a custo 2) parecia
+  quebrado (7.0/E dado cru), mas tem **`self_harm: 4`** — glass-cannon da
+  subclasse "Descoberto"; contando o auto-dano vira 3.5/custo (normal do tier).
+- **Médico e habilidades de suporte** pontuam baixo no dano só porque
+  cura/buff/controle não entram na métrica de dano — é lacuna de MEDIÇÃO, não
+  desbalanço. Buffar o dano deles seria errado (quebra o papel de suporte).
+- **Único outlier de dano PURO real:** `fervor_ritual` (Devoto tier-3) fazia
+  `2d6` (1.75/custo) contra `2d8` (2.25) dos irmãos diretos Retaliação/Intimidade,
+  mesmo custo, todos puros → **estritamente pior**. **Fix aplicado:** `2d6→2d8`
+  no gerador (racional inline). Regenerado; diff isolado a 1 fórmula.
+
+**Guarda de regressão (`tests/test_arvores_classes.py`):**
+- `test_parity_dano_puro_dentro_da_banda` — toda ativa de dano PURO (Entropia>0,
+  sem self_harm, sem efeito) fica em **1.5–4.0 dano/Entropia**; pega mis-escala
+  futura (ex.: `4d6` a custo 2 sem contrapartida = 7.0/E quebraria o teste).
+- `test_parity_devoto_tier3_puro_alinhado` — trava o fix (os 3 tier-3 puros do
+  Devoto com o MESMO dano/Entropia).
+
+**Fora desta passada (parity EMERGENTE, não estática):** se cada classe consegue
+de fato USAR o kit — economia de Entropia (starvation/flooding) e acúmulo de
+Carga — é o tuning dos 8 knobs, que depende de rodada real DEDICADA. O run
+`20260720-093014` (agente curioso) já deu o 1º sinal limpo de gasto por classe
+(Devoto floda p/ `severo`; Corruptor gasta pouco), mas a baseline mudou com a
+spec letalidade-v2 (HP/dano/recovery) → re-medir pós-A antes de mexer nos knobs.

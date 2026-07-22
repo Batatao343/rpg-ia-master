@@ -8,6 +8,7 @@ import { CreateScreen } from "./components/CreateScreen";
 import { PlayScreen } from "./components/PlayScreen";
 import { SaveScreen } from "./components/SaveScreen";
 import { EmberField } from "./components/EmberField";
+import { DeathModal } from "./components/DeathModal";
 
 const LS_KEY = "cronicas_game_id";
 
@@ -277,11 +278,39 @@ export function App() {
     }
   }
 
+  // spec checkpoints-morte (D2): resolve a tela de morte (continuar / aceitar).
+  async function handleDeathChoice(choice: "continue" | "accept") {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const r = await api.resolveDeath(gameId.current, choice);
+      if (choice === "continue") {
+        setLog((prev) => [
+          ...prev,
+          { id: logSeq.current++, text: "A Roda do Abismo te devolve ao último respiro seguro.",
+            role: "narrator", type: "STORY", streaming: false },
+        ]);
+      }
+      onTurn(r);
+    } catch (err) {
+      setBanner({ msg: "A Roda hesitou: " + errMsg(err), kind: "error" });
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <MotionConfig reducedMotion="user">
       <div className="atmosphere" aria-hidden />
       <EmberField />
       <Banner state={banner} onDone={() => setBanner(null)} />
+      {data?.death_pending && (
+        <DeathModal
+          busy={busy}
+          onContinue={() => handleDeathChoice("continue")}
+          onAccept={() => handleDeathChoice("accept")}
+        />
+      )}
       <AnimatePresence mode="wait">
         {screen === "saves" ? (
           <motion.div

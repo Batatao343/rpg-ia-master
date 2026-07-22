@@ -43,8 +43,15 @@ PUBLIC_RUMOR: Dict[str, str] = {
 
 
 def revealed_corpus(state: dict) -> str:
-    """Texto do que JÁ foi revelado (event_log secret_revealed + facts da
-    projection) — desarma a assinatura correspondente."""
+    """Texto do que JÁ foi revelado / o jogador JÁ sabe — desarma a assinatura.
+
+    Fontes: (1) event_log `secret_revealed` + (2) facts da projection +
+    (3) `narrative_summary` e (4) `player.known_secrets` — spec D
+    (letalidade/playtest 2026-07-20): quando um NPC conta o segredo AO JOGADOR
+    (ex.: a Velha Magda revela "o pacto com Daruun"), a narração seguinte
+    repetindo isso NÃO é vazamento — o jogador já sabe. O resumo do arquivista é
+    o registro diegético desse conhecimento; `known_secrets` é o registro
+    explícito (quando o fluxo de reveal o preenche)."""
     parts: List[str] = []
     for ev in state.get("event_log", []) or []:
         if isinstance(ev, dict) and ev.get("type") == "secret_revealed":
@@ -53,6 +60,11 @@ def revealed_corpus(state: dict) -> str:
     facts = (state.get("world_projection", {}) or {}).get("facts", {}) or {}
     for f in facts.values():
         parts.append(str(f))
+    # (3) conhecimento diegético já adquirido pelo jogador
+    parts.append(str(state.get("narrative_summary", "") or ""))
+    known = ((state.get("player") or {}).get("known_secrets") or [])
+    if isinstance(known, (list, tuple)):
+        parts.extend(str(k) for k in known)
     return " ".join(parts).lower()
 
 

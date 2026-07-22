@@ -137,13 +137,20 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
     player = final.get("player", {}) or {}
     quests = [q for q in (final.get("quests") or []) if isinstance(q, dict)]
 
-    # spec playtest-stop-gameover (R4): local/causa da morte, do event_log.
-    death_ev = next(
-        (ev for ev in reversed(final.get("event_log") or [])
-         if isinstance(ev, dict) and ev.get("type") == "player_died"), None)
-    death_payload = (death_ev or {}).get("payload", {}) or {}
-    death_location = death_payload.get("location") or None
-    death_cause = death_payload.get("killer") or None
+    # spec checkpoints-morte (D6): a morte dispara auto-restore (não game_over), e
+    # o restore LIMPA o event_log — então local/causa vêm do `deaths_log` do runner
+    # (fallback: event_log p/ campanhas antigas sem restore).
+    deaths_log = list(getattr(result, "deaths_log", []) or [])
+    if deaths_log:
+        death_location = deaths_log[-1].get("location") or None
+        death_cause = deaths_log[-1].get("cause") or None
+    else:
+        death_ev = next(
+            (ev for ev in reversed(final.get("event_log") or [])
+             if isinstance(ev, dict) and ev.get("type") in ("player_died", "player_downed")), None)
+        death_payload = (death_ev or {}).get("payload", {}) or {}
+        death_location = death_payload.get("location") or None
+        death_cause = death_payload.get("killer") or None
 
     # spec balanceamento-early-game (R5): métricas de balanço da campanha.
     first_death_turn = next(
@@ -224,7 +231,9 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         "violations": violations,
         "routes": routes,
         "latency_ms": {"p50": _percentile(latencies, 50), "p95": _percentile(latencies, 95)},
-        "deaths": 1 if final.get("game_over") else 0,
+        # spec checkpoints-morte: conta TODAS as mortes (cada uma dispara restore);
+        # game_over só existe pela via voluntária "Aceitar".
+        "deaths": len(deaths_log) if deaths_log else (1 if final.get("game_over") else 0),
         "first_death_turn": first_death_turn,
         "death_location": death_location,
         "death_cause": death_cause,

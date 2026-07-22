@@ -107,83 +107,10 @@ def _world(loc_id="pm_profundezas", visited=None):
     return w
 
 
-def _downed_player(gold=87, uniques=()):
-    inv = [{"id": "pocao_cura", "qty": 3}]
-    for u in uniques:
-        inv.append({"id": u, "qty": 1})
-    return {
-        "name": "Testudo", "class_name": "Sangromante",
-        "level": 3, "xp": 500, "hp": 0, "max_hp": 40, "mana": 0, "max_mana": 0,
-        "stamina": 0, "max_stamina": 0, "entropy": 16, "max_entropy": 16,
-        "abyss_charge": 0, "gold": gold,
-        "inventory": inv,
-        "equipment": {"weapon": "adaga_ferro", "armor": None, "accessory": None},
-        "known_abilities": ["corte_exato"], "active_conditions": [{"name": "Sangramento", "dot": 2, "duration": 2, "source": "x"}],
-    }
 
 
-def test_primeira_queda_e_downed_segunda_e_died():
-    import combat_mechanics as cm
-    w = _world()
-    assert cm.death_outcome(w, [], []) == "downed"
-    log = [{"type": "player_downed", "target_id": "player"}]
-    assert cm.death_outcome(w, [], log) == "died"
-
-
-def test_death_outcome_apex_ou_boss_e_died_mesmo_na_primeira():
-    import combat_mechanics as cm
-    from gamedata import WORLD_MAP
-    apex = next((l["id"] for l in WORLD_MAP.get("locations", [])
-                 if "apex" in (l.get("tags") or [])), None)
-    if apex:
-        assert cm.death_outcome(_world(apex), [], []) == "died"
-    boss = [{"id": "b1", "name": "Rei", "type": "boss", "status": "ativo"}]
-    assert cm.death_outcome(_world(), boss, []) == "died"
-
-
-def test_apply_downed_saqueia_tudo_menos_arma_basica():
-    import combat_mechanics as cm
-    player, world, events, nota = cm.apply_downed(_downed_player(), _world())
-    assert player["gold"] == 0
-    assert player["hp"] == max(1, 40 // 4)
-    assert player["equipment"]["weapon"] == "adaga_ferro"  # starting_equipment[0]
-    assert player["equipment"]["armor"] is None and player["equipment"]["accessory"] is None
-    # spec pos-saque-recuperacao (R1/R4): arma básica + 1 poção de cura ("rachada");
-    # marca downed_recente no despertar (antes: inventário só a arma, sem condição).
-    assert player["inventory"] == [{"id": "adaga_ferro", "qty": 1}, {"id": "pocao_cura", "qty": 1}]
-    assert [c.get("name") for c in player["active_conditions"]] == ["downed_recente"]
-    assert player["level"] == 3 and player["xp"] == 500  # XP/nível intactos
-    ev = events[0]
-    assert ev["type"] == "player_downed" and ev["source"] == "combat"
-    assert ev["payload"]["gold_lost"] == 87
-    assert nota
-
-
-def test_apply_downed_avanca_relogio_facoes_e_teleporta_pro_seguro():
-    import combat_mechanics as cm
-    w = _world()
-    day_before = w["world_clock"]["day"]
-    player, world, events, _ = cm.apply_downed(_downed_player(), w)
-    assert world["world_clock"]["day"] == day_before + 1
-    assert world["current_location_id"] == "nova_arcadia"  # último seguro visitado
-    assert events[0]["payload"]["rescued_to"] == "nova_arcadia"
-
-
-def test_unique_saqueado_gera_unique_item_lost_e_volta_ao_pool():
-    import combat_mechanics as cm
-    from gamedata import ARTIFACTS_DB
-    from services.economy import is_unique_available
-    from services.event_processor import apply_event
-    uid = next((i for i, a in ARTIFACTS_DB.items()
-                if isinstance(a, dict) and a.get("unique")), None)
-    assert uid, "precisa de ao menos 1 item único no ARTIFACTS_DB"
-    player, world, events, _ = cm.apply_downed(_downed_player(uniques=[uid]), _world())
-    lost = [e for e in events if e["type"] == "unique_item_lost"]
-    assert lost and lost[0]["target_id"] == uid and lost[0]["source"] == "engine"
-    # aplicado na projection com holder="world" → volta a estar disponível
-    proj = apply_event({**lost[0], "event_id": "x" * 16, "turn": 1}, {})
-    assert proj["unique_items"][uid]["holder"] == "world"
-    assert is_unique_available(uid, proj)
+# (spec checkpoints-morte: os testes de death_outcome/apply_downed/O Saque foram
+# removidos — a mecânica do Saque saiu; a queda letal vira death_pending/restore.)
 
 
 def test_validator_rejeita_player_downed_proposto_por_llm():
@@ -198,22 +125,6 @@ def test_validator_rejeita_player_downed_proposto_por_llm():
     log_com_downed = [{"type": "player_downed", "target_id": "player"}]
     assert not validate_proposal(
         prop_engine, {"world": {"turn_count": 2}, "event_log": log_com_downed}).ok
-
-
-def test_invariante_downed_duplo_ou_apex_e_error():
-    from playtest import invariants as inv
-    state = {"event_log": [
-        {"type": "player_downed", "target_id": "player", "payload": {"location_id": "nova_arcadia"}},
-        {"type": "player_downed", "target_id": "player", "payload": {"location_id": "nova_arcadia"}},
-    ]}
-    viols = inv.check_downed(state, None, 5)
-    assert any(v.check_id == "downed.repeated" and v.severity == "error" for v in viols)
-    state_boss = {"event_log": [
-        {"type": "player_downed", "target_id": "player",
-         "payload": {"location_id": "nova_arcadia", "boss_present": True}},
-    ]}
-    viols2 = inv.check_downed(state_boss, None, 5)
-    assert any(v.check_id == "downed.vs_boss" for v in viols2)
 
 
 # --- Etapa 4 — pacing de replan (R4) -----------------------------------------

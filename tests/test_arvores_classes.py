@@ -303,3 +303,55 @@ def test_out_of_combat_schema():
 def test_volume_total():
     """R12: ≈20 habilidades/classe → ≈100 no total (+ataque_basico)."""
     assert len(ABILITIES) >= 95, f"árvore com só {len(ABILITIES)} habilidades"
+
+
+# --- spec balanceamento-classes-pos-playtest: guarda de PARITY mecânica -------
+# Análise estática (2026-07-20): habilidades de DANO PURO comparáveis (custo em
+# Entropia > 0, SEM self_harm e SEM efeito) devem cair numa banda de dano-por-
+# Entropia — nenhuma "muito mais forte que a outra". Pega mis-escala futura (ex.:
+# 4d6 a custo 2 sem contrapartida = 7.0/E). Habilidades com self_harm/DoT/efeito/
+# cura são financiadas por HP ou carregam payload → fora deste conjunto limpo.
+
+def _avg_dice(formula: str) -> float:
+    import re
+    t = 0.0
+    for m in re.finditer(r"(\d+)d(\d+)", str(formula or "")):
+        t += int(m.group(1)) * (int(m.group(2)) + 1) / 2
+    return t
+
+
+def _pure_damage_dpe():
+    """{aid: dano_dado/Entropia} das ativas de DANO PURO comparáveis."""
+    out = {}
+    for aid, a in ABILITIES.items():
+        cost = int(a.get("cost", 0) or 0)
+        if cost <= 0 or int(a.get("self_harm", 0) or 0) > 0:
+            continue
+        if a.get("effects"):
+            continue
+        if str(a.get("damage_type", "")).lower() in ("cura", "heal"):
+            continue
+        dmg = _avg_dice(a.get("damage_formula"))
+        if dmg <= 0:
+            continue
+        out[aid] = dmg / cost
+    return out
+
+
+def test_parity_dano_puro_dentro_da_banda():
+    dpe = _pure_damage_dpe()
+    assert dpe, "nenhuma habilidade de dano puro detectada — schema mudou?"
+    for aid, v in dpe.items():
+        assert 1.5 <= v <= 4.0, (
+            f"{aid} fora da banda de parity de dano puro: {v:.2f} dano/Entropia "
+            f"(esperado 1.5–4.0). Rebalancear a fórmula/custo no gerador.")
+
+
+def test_parity_devoto_tier3_puro_alinhado():
+    """Regressão do fix Fervor Ritual: os 3 tier-3 de dano puro do Devoto
+    (Fervor/Retaliação/Intimidade) têm o MESMO dano-por-Entropia (2d8, custo 4)."""
+    alvo = ["fervor_ritual", "retaliacao_do_ciume", "intimidade_com_o_fim"]
+    vals = {a: _avg_dice(ABILITIES[a]["damage_formula"]) / int(ABILITIES[a]["cost"])
+            for a in alvo}
+    assert len(set(round(v, 2) for v in vals.values())) == 1, \
+        f"tier-3 puro do Devoto desalinhado: {vals}"

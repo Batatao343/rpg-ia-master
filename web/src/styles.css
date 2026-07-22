@@ -745,6 +745,20 @@ select {
 
 /* ---------- Fase 4.1: level up (modal + acentos) ---------- */
 .overlay--levelup { background: radial-gradient(circle at 50% 38%, oklch(0.16 0.03 76 / 0.84), oklch(0.08 0.015 250 / 0.96)); overflow-y: auto; }
+
+/* spec checkpoints-morte: tela de morte (Continuar do checkpoint / Aceitar o fim) */
+.overlay--death { background: radial-gradient(circle at 50% 40%, oklch(0.12 0.06 26 / 0.9), oklch(0.05 0.02 26 / 0.98)); backdrop-filter: blur(7px); }
+.death-card { width: min(520px, 92vw); padding: 2rem 1.8rem; border: 1px solid var(--danger-glow, oklch(0.4 0.12 26)); border-radius: 12px; background: var(--surface); box-shadow: 0 0 70px oklch(0.3 0.14 26 / 0.5); display: grid; gap: 1rem; text-align: center; justify-items: center; }
+.death-card__sigil { font-size: 3rem; color: var(--danger-bright); text-shadow: 0 0 40px var(--danger-glow); line-height: 1; }
+.death-card__title { font-family: var(--decorative); font-size: clamp(1.8rem, 6vw, 2.6rem); margin: 0; color: var(--danger-bright); letter-spacing: 0.03em; }
+.death-card__body { margin: 0; color: var(--ink-soft, #cbb8a8); max-width: 42ch; line-height: 1.55; }
+.death-card__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; margin-top: 0.4rem; }
+.death-btn { padding: 0.7rem 1.3rem; border-radius: 8px; border: 1px solid var(--line); font-weight: 600; cursor: pointer; transition: transform 0.12s ease, box-shadow 0.2s ease; }
+.death-btn:disabled { opacity: 0.5; cursor: default; }
+.death-btn--continue { background: var(--accent, oklch(0.55 0.14 76)); color: oklch(0.12 0.02 76); box-shadow: 0 0 24px var(--accent-glow); }
+.death-btn--accept { background: transparent; color: var(--danger-bright); border-color: var(--danger-glow, oklch(0.4 0.12 26)); }
+.death-btn:not(:disabled):hover { transform: translateY(-1px); }
+.death-card__note { margin: 0; font-size: 0.78rem; color: var(--ink-faint, #8a7a6c); letter-spacing: 0.02em; }
 .lvlup { width: min(680px, 92vw); max-height: 88vh; overflow-y: auto; padding: 1.6rem 1.8rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: 0 0 60px var(--accent-glow); display: grid; gap: 0.9rem; text-align: left; }
 .lvlup__kicker { margin: 0; font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); }
 .lvlup__title { margin: 0; font-family: var(--decorative); font-size: 1.6rem; color: var(--ink); }

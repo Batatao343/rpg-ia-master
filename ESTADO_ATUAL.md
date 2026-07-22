@@ -1,11 +1,80 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
-> **⚠️ RETOMANDO DA SESSÃO 22?** 5 specs do playtest longo IMPLEMENTADAS (4 code
-> `done` + 1 medir→decidir); **rodando o playtest real de validação** (17
-> campanhas: 15 balanceamento + comerciante + recrutador). Achados do run novo
-> viram a próxima decisão ("depois do playtest decidimos o que atacar").
-> Complementa `CLAUDE.md` (arquitetura). Decisões estruturais: `REFERENCE.md`.
-> Histórico: `CHANGELOG.md`. Última atualização: 2026-07-20 (sessão 22).
+> **⚠️ RETOMANDO DA SESSÃO 23?** Baseline de letalidade FECHADO (run
+> `20260720-093014`, 17 campanhas). Diagnóstico: letalidade = **falta de laço de
+> recuperação**, não dano alto. 4 decisões do usuário → letalidade-early-game-v2
+> Etapa 2 IMPLEMENTADA + 2 specs novas em draft (B loop-explorador, C
+> checkpoints-morte) + fix D (secret_leak). **EM ANDAMENTO:** balanceamento de
+> PARITY das habilidades das classes via playtest (pedido do usuário). Última
+> atualização: 2026-07-20 (sessão 23). Histórico: `CHANGELOG.md`.
+
+---
+
+## TL;DR — sessão 23 (2026-07-20): letalidade v2 + specs do run + parity de classes
+
+Run de validação `20260720-093014` fechado (17 campanhas reais, 0 erro, $1.74).
+Achado dominante nos logs: **combate/explorador morrem por AUSÊNCIA de recovery**
+(HP travado ~40% por 5–7 turnos; viagem não cura; descanso em zona de perigo vira
+combate) — não por dano alto. Quester sobrevive só evitando luta.
+
+**Decisões do usuário → entregas:**
+1. **[letalidade-early-game-v2](specs/letalidade-early-game-v2.md) Etapa 2
+   IMPLEMENTADA** (`approved`) — 4 alavancas determinísticas: (1) **descanso/viagem
+   recuperam** — descanso de early-game (nível ≤3) em zona não-apex de perigo ≤3
+   NÃO sorteia encontro (`world_utils.recovery_rest_safe` + fio no storyteller) +
+   cooldown de encontro +2 turnos no early-game; (2) **+1 poção inicial** por classe
+   (Médico=3), via gerador; (3) **+HP base** nas frágeis (Arcanista 22→26,
+   Sangromante/Corruptor/Médico →30, Devoto →40), via gerador; (4) **+dano de
+   early-game** runtime (`combat_mechanics.early_game_damage_bonus`: +2 nível 1–2,
+   +1 nível 3, 0 do 4+, só o herói). **+9 testes.**
+2. **[fix-explorador-loop-navegacao](specs/fix-explorador-loop-navegacao.md)
+   `done`** (B) — perfil Explorador oscilava cidade↔interior quando tudo já foi
+   visitado (interior tem 1 saída) → bounce + `loot-exploracao` nunca dispara. Fix
+   = memória anti-backtrack + fronteira primeiro (`_recent`, reset por campanha no
+   runner). **+6 testes.**
+3. **[checkpoints-morte](specs/checkpoints-morte.md) `in-progress`** (C) — 8
+   decisões RESOLVIDAS (§2.1; memorial = escolha voluntária na tela de morte,
+   nunca imposto; sem permadeath; restore do início se sem checkpoint). **FUNDAÇÃO
+   + VERTICAL DE MORTE `done`:** `services/checkpoints.py` + `persistence`
+   refatorado (fonte única + `save/load/has_checkpoint`); combat→`death_pending`
+   (sem Saque; `_narrate_fall` + evento `player_downed`); `main.py` gate;
+   `runner` auto-restore + `deaths_log`; `api` (`maybe_write` + checkpoint inicial
+   + `POST /game/death` + 409 com queda pendente + `GameResponse.death_pending`);
+   `DeathModal` no frontend (`npm run build` verde) + prompt CLI. **HIGIENE `done`:**
+   "O Saque" + `pos-saque` INTEGRALMENTE aposentados (`apply_downed`/`death_outcome`/
+   `_death_template`/`_narrate_downed`/beat de recuperação/`downed_grace`/invariantes
+   `check_downed`+`check_downed_recovery`/campo `downed_grace_until_day` removidos;
+   `test_pos_saque` deletado). **Spec C `done`.** **Smoke real** (run
+   `20260721-042146`, combate 25t, DeepSeek $0.051, 0 erro): morreu 4× (1ª t13),
+   **auto-restaurou e seguiu até t25** (antes abortava no t13) — vertical validado
+   no LLM real. Bug pego pelo smoke: `vitals.dead_no_game_over` falso-disparava na
+   morte (hp=0 vem com `death_pending`) → corrigido + teste.
+4. **Fix D — `secret_leak` ignora segredo já conhecido pelo jogador**
+   (`services/secret_signatures.revealed_corpus` inclui `narrative_summary` +
+   `player.known_secrets`): a Velha Magda revelara o pacto ao player; a narração
+   repetindo virava falso-positivo. **+4 testes.**
+
+5. **Parity ESTÁTICA das habilidades `done`** (pedido do usuário: "nenhuma muito
+   mais forte que a outra") —
+   [balanceamento-classes-pos-playtest §10](specs/balanceamento-classes-pos-playtest.md).
+   Insight: parity MECÂNICA é número → medida direto do catálogo
+   (`player_abilities.json`), **sem playtest**. Métrica = dano-efetivo/custo-real
+   (`custo = Entropia + self_harm/2`; conta DoT/efeito). Achado: roster **bem
+   balanceado por papel** (tank Devoto baixo por design; DoT do Corruptor
+   compensa dado com DoT; Médico baixo é lacuna de medição — cura não pontua, NÃO
+   buffar). Falso-alarme corrigido: "Toque Cru" parecia 7.0/E mas tem
+   `self_harm:4` (glass-cannon). **Único outlier real: `fervor_ritual`** (2d6 vs
+   2d8 dos irmãos) → fix `2d6→2d8` no gerador. **+2 testes-guarda de parity**
+   (`test_arvores_classes`: banda 1.5–4.0 dano/E p/ dano puro; trava do fix).
+
+**Suíte: 1001 → 1039 → 1019 → 1020 offline verdes** (+38 do trabalho novo, −20 da
+higiene do Saque, +1 do fix do smoke; 1 skip). `npm run build` verde. Baseline de letalidade mudou (A) → run
+`20260720-093014` STALE p/ decidir NÚMEROS de Entropia/Carga; tuning dos 8 knobs
+pede rodada real DEDICADA pós-A (parity de dano já resolvida).
+
+**Próximos passos:** (1) rodada real pós-A p/ o tuning dos knobs de Entropia/Carga
+(o baseline mudou); (2) medir se as 4 alavancas de A reduziram a letalidade de
+fato (comparar `first_death_turn` com `20260720-093014`).
 
 ---
 

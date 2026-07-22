@@ -56,9 +56,13 @@ def check_vitals(state: dict, prev: Optional[dict], turn: int) -> List[Violation
         if isinstance(e, dict) and e.get("status") == "ativo":
             bounds(e, "enemy", e.get("name", "inimigo"))
 
-    if int(p.get("hp", 1) or 0) == 0 and not state.get("game_over"):
+    # spec checkpoints-morte: hp=0 é legítimo enquanto a queda está pendente
+    # (death_pending) — o herói caiu e aguarda a tela de morte / restore. Só é
+    # violação se hp=0 sem game_over E sem death_pending (morto e o jogo seguiu).
+    if int(p.get("hp", 1) or 0) == 0 and not state.get("game_over") \
+            and not state.get("death_pending"):
         out.append(_V("vitals.dead_no_game_over", "error", turn,
-                      "player com hp=0 mas game_over não está setado", hp=0))
+                      "player com hp=0 mas nem game_over nem death_pending setado", hp=0))
     return out
 
 
@@ -256,30 +260,6 @@ def check_roundtrip(state: dict, prev: Optional[dict] = None, turn: int = 0) -> 
 
 # --- orquestração -----------------------------------------------------------
 
-def check_downed(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
-    """spec balanceamento-early-game (R5): O Saque é 1x por campanha e NUNCA em
-    zona apex nem contra boss — 2º `player_downed`, ou downed ilegal, é `error`."""
-    out: List[Violation] = []
-    downs = [ev for ev in (state.get("event_log") or [])
-             if isinstance(ev, dict) and ev.get("type") == "player_downed"]
-    if len(downs) > 1:
-        out.append(_V("downed.repeated", "error", turn,
-                      f"player_downed {len(downs)}x na mesma campanha (máx 1)",
-                      count=len(downs)))
-    from gamedata import get_location
-    for ev in downs:
-        payload = ev.get("payload", {}) or {}
-        loc = get_location(payload.get("location_id", "")) or {}
-        if "apex" in (loc.get("tags") or []):
-            out.append(_V("downed.in_apex", "error", turn,
-                          f"player_downed em zona apex '{payload.get('location_id')}'",
-                          loc=payload.get("location_id")))
-        if payload.get("boss_present"):
-            out.append(_V("downed.vs_boss", "error", turn,
-                          "player_downed em luta com boss presente"))
-    return out
-
-
 def check_lifecycle(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
     """R4 (fix-playtest-achados): save morto é terminal. Se o turno ANTERIOR já
     estava com game_over e mesmo assim o relógio avançou, um morto agiu — o gate
@@ -314,22 +294,6 @@ def check_combat_zombie(state: dict, prev: Optional[dict], turn: int) -> List[Vi
                    idle_turns=idle)]
     return []
 
-
-def check_downed_recovery(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
-    """spec pos-saque-recuperacao (R5): logo após o Saque (condição
-    `downed_recente`) o herói precisa de UM caminho de recuperação — poção de
-    cura no inventário OU carência ativa. Nenhum dos dois = espiral de morte."""
-    player = state.get("player") or {}
-    conds = player.get("active_conditions") or []
-    if not any(c.get("name") == "downed_recente" for c in conds):
-        return []
-    has_potion = any(str(i.get("id", "")).startswith("pocao_cura")
-                     for i in (player.get("inventory") or []) if isinstance(i, dict))
-    from world_utils import downed_grace_active
-    if has_potion or downed_grace_active(state.get("world") or {}):
-        return []
-    return [_V("downed.no_recovery_path", "warning", turn,
-               "pós-Saque sem caminho de recuperação (nem poção nem carência)")]
 
 
 def check_recycled_npc(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
@@ -435,7 +399,7 @@ Check = Callable[[dict, Optional[dict], int], List[Violation]]
 
 CHECKS: List[Check] = [
     check_vitals, check_economy, check_entities, check_world, check_knowledge,
-    check_lifecycle, check_downed, check_combat_zombie, check_downed_recovery,
+    check_lifecycle, check_combat_zombie,
     check_recycled_npc, check_repeated_opening, check_phantom_ally,
 ]
 

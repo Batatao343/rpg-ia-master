@@ -6,7 +6,7 @@
     "guide_quote": "Vocês seguram a linha com medo. Eu seguro porque quero que ele me escolha primeiro.",
     "passive": "Convite: provocações escalam com a Entropia acumulada no combate.",
     "base_stats": {
-      "hp": 38,
+      "hp": 40,
       "entropy": 14,
       "mana": 0,
       "stamina": 0,
@@ -79,6 +79,7 @@
     "starting_equipment": [
       "espada_gasta",
       "escudo_amassado",
+      "pocao_cura",
       "pocao_cura"
     ]
   },
@@ -89,7 +90,7 @@
     "guide_quote": "Tudo tem preço. Eu só pago à vista.",
     "passive": "Contrato de Sangue: auto-dano vira Entropia de sangue.",
     "base_stats": {
-      "hp": 26,
+      "hp": 30,
       "entropy": 16,
       "mana": 0,
       "stamina": 0,
@@ -155,6 +156,7 @@
     "passive_effects": [],
     "starting_equipment": [
       "adaga_ferro",
+      "pocao_cura",
       "pocao_cura"
     ]
   },
@@ -165,7 +167,7 @@
     "guide_quote": "Eu não trago a ruína. Só chego mais cedo.",
     "passive": "Parceria: a decadência ao seu redor te alimenta.",
     "base_stats": {
-      "hp": 28,
+      "hp": 30,
       "entropy": 18,
       "mana": 0,
       "stamina": 0,
@@ -250,6 +252,7 @@
     "passive_effects": [],
     "starting_equipment": [
       "cajado_de_galhos",
+      "pocao_cura",
       "pocao_cura"
     ]
   },
@@ -260,7 +263,7 @@
     "guide_quote": "A ferramenta segura o que a mão não deveria tocar.",
     "passive": "Caldeira: canalizar gera Entropia para a próxima descarga.",
     "base_stats": {
-      "hp": 22,
+      "hp": 26,
       "entropy": 20,
       "mana": 0,
       "stamina": 0,
@@ -327,6 +330,7 @@
     "passive_effects": [],
     "starting_equipment": [
       "cajado_rachado",
+      "pocao_cura",
       "pocao_cura"
     ]
   },
@@ -337,7 +341,7 @@
     "guide_quote": "Enquanto eu respirar, você respira.",
     "passive": "Triagem: cura mais quem está mais perto do fim.",
     "base_stats": {
-      "hp": 28,
+      "hp": 30,
       "entropy": 16,
       "mana": 0,
       "stamina": 0,
@@ -402,6 +406,7 @@
     "passive_effects": [],
     "starting_equipment": [
       "serra_cirurgica",
+      "pocao_cura",
       "pocao_cura",
       "pocao_cura"
     ]

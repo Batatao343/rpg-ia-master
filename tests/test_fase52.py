@@ -38,6 +38,16 @@ def test_hp_zero_sem_game_over_acusa():
     assert "vitals.hp_bounds" not in ids  # 0 está dentro de [0, max]
 
 
+def test_hp_zero_com_death_pending_nao_acusa():
+    # spec checkpoints-morte: hp=0 aguardando a tela de morte (death_pending) é
+    # estado legítimo — não é "morto e o jogo seguiu".
+    st = _base()
+    st["player"]["hp"] = 0
+    st["game_over"] = False
+    st["death_pending"] = True
+    assert "vitals.dead_no_game_over" not in _ids(inv.check_all(st))
+
+
 def test_ouro_negativo_acusa():
     st = _base()
     st["player"]["gold"] = -50

@@ -1,17 +1,19 @@
 # SPEC — Letalidade de early-game, 2ª passada (combate/explorador morrem nível 1–3)
 
-> **Status:** `approved` (Etapa 1 = a rodada de playtest com o agente corrigido, EM CURSO; tuning pós-dado)
-> **Criada:** 2026-07-20 · **Atualizada:** 2026-07-20
+> **Status:** `approved` (Etapa 1 BASELINE `done` — run `20260720-093014`; Etapa 2 tuning EM IMPLEMENTAÇÃO)
+> **Criada:** 2026-07-20 · **Atualizada:** 2026-07-20 (pós-run, decisões do usuário)
 > **Depende de:** [balanceamento-early-game](balanceamento-early-game.md) `done` (1ª passada — "O Saque" + tuning spawn nível 1) ·
 > [playtest-agente-curioso-entropia](playtest-agente-curioso-entropia.md) `done` (dado LIMPO de letalidade — sem o viés do agente que nunca cura/usa habilidade)
 > **Desbloqueia:** confiança pra avançar tiers 5+ das classes (números base sãos)
+> **Interage com:** [checkpoints-morte](checkpoints-morte.md) (C — modelo de morte/restore substitui a "2ª chance com poção" do Saque)
 >
-> **Nota (2026-07-20):** sem código novo até o dado existir — a instrumentação já
-> está pronta (summary tem `first_death_turn`/`death_location`/`death_cause`/
-> `avg_hp_pct_after_combat` da spec balanceamento-early-game; o agente curioso da
-> spec A remove o viés suicida). A **Etapa 1 (baseline)** é a rodada de playtest
-> real desta sessão. O **tuning (Etapa 2)** só acontece DEPOIS, decidido com o
-> usuário à luz dos achados ("depois do playtest decidimos o que atacar").
+> **Nota (2026-07-20):** Etapa 1 (baseline) FECHADA com o run `20260720-093014`
+> (17 campanhas reais, agente curioso ativo). Achado dominante: **letalidade NÃO
+> é dano alto — é AUSÊNCIA de recovery.** Combate/explorador perambulam a ~40% HP
+> por 5–7 turnos sem curar nada (viagem não cura; descanso em zona de perigo é
+> interrompido por encontro), entram em luta a 10–12 HP e morrem. Quester
+> sobrevive só porque EVITA combate. Ver Etapa 1 abaixo. O usuário decidiu 4
+> alavancas (Etapa 2), todas determinísticas.
 
 ---
 
@@ -123,30 +125,77 @@ adiciona.
 
 ## 4. Plano passo a passo
 
-### Etapa 1 — Baseline com agente corrigido (sem tocar em número)
+### Etapa 1 — Baseline com agente corrigido — `done` (run `20260720-093014`)
 
-1. **Pré-requisito:** [playtest-agente-curioso-entropia](playtest-agente-curioso-entropia.md)
-   `done` (o agente cura/usa habilidade).
-2. Rodar harness (R1); tabular `first_death_turn` × classe × perfil ×
-   `death_cause`/`death_location`.
-3. **Decisão de gate:** se a sobrevivência já for aceitável (R2), fechar a spec
-   como "era viés do harness" — documentar e parar. Senão, fixar os pisos de R2 a
-   partir dessa baseline e seguir.
+17 campanhas reais (5 classes × {combate,explorador,quester} + comerciante +
+recrutador), agente curioso ativo, **0 erro de motor, $1.74**.
 
-### Etapa 2 — Tuning cirúrgico (só o que o dado condenar)
+| perfil | sobrevivência | nível na morte | causa dominante |
+|---|---|---|---|
+| combate (5 classes) | **todas morreram** t19–47 | 2–3 | luta a HP baixo, sem recovery |
+| explorador (5 classes) | **todas morreram** t16–31 | 1–3 | one-shot em zona high-danger + sem recovery |
+| quester/recrutador/comerciante | vivos t60 | 3–4 (com.=1) | evitam combate |
 
-1. **Testes** (`tests/test_fase0.py` / `test_mvp.py` / novo
-   `tests/test_letalidade_early.py`): fixar o comportamento esperado do knob
-   ajustado — ex.: `test_encontro_forcado_nivel1_nao_e_letal_2_rodadas`
-   (encontro força 2 vs personagem HP cheio nível 1 → não morre em 2 rodadas);
-   `test_apex_ainda_letal_subnivel` (regressão: apex não suavizado).
-2. **Implementação:** ajustar SÓ os knobs condenados (R3); racional em comentário.
-3. **Verificação:** `uv run pytest` verde.
+**Diagnóstico (dos logs `*.jsonl`):** HP fica TRAVADO (ex.: `combate_sangromante`
+12/31 do t11→t16; `explorador_arcanista` 12/26 do t8→t14). Viagem não cura;
+descanso em zona de perigo dispara `check_encounter` (danger≥4) e vira combate
+antes de curar. O jogo hoje só é sobrevivível NÃO lutando → o combate cedo não
+tem laço de recuperação. **Gate: é tuning real, não viés do harness.**
+
+### Etapa 2 — Tuning (4 alavancas decididas pelo usuário) — EM IMPLEMENTAÇÃO
+
+Todas determinísticas ("mecânica é Python"). Constantes novas ganham racional
+`baseline → alvo` no comentário.
+
+**Alavanca 1 — Descanso/viagem recuperam (o laço que falta).**
+- `world_utils`: novas constantes `EARLY_GAME_LEVEL = 3`, `RECOVERY_SAFE_DANGER = 3`.
+- **Descanso confiável no early-game:** no path de REST do storyteller, se
+  `player.level ≤ EARLY_GAME_LEVEL` e zona **não-apex** e `danger_now ≤
+  RECOVERY_SAFE_DANGER` → encontro SUPRIMIDO (`enc = None`), o descanso cura.
+  (Zona apex ou danger 4+ segue rolando — quem descansa na boca do lobo aceita o
+  risco.) Reusa a mesma lógica do `downed_grace` já existente.
+- **Cadência de encontro na viagem escala com nível:** `check_encounter` passa a
+  respeitar cooldown **maior** no early-game (`_early_cooldown(player_level)`:
+  nível ≤3 → cooldown +2 turnos) → menos combate forçado de volta-a-volta,
+  espaço pra viajar/curar entre lutas. Não zera perigo — só espaça.
+
+**Alavanca 2 — Mais poções iniciais** (gerador `scripts/gen_classes_v2.py`,
+`starting_equipment`): cada classe +1 `pocao_cura` (Devoto/Sangromante/Corruptor/
+Arcanista → 2; Médico → 3). Regenera `data/classes.json`.
+
+**Alavanca 3 — Mais HP em nível baixo** (gerador, `base_stats.hp`): sobe o piso
+das classes frágeis que morriam nível 1 — baseline → alvo: Arcanista 22→**26**,
+Sangromante 26→**30**, Corruptor 28→**30**, Médico 28→**30**, Devoto 38→**40**.
+(HP de classe é knob compartilhado com `balanceamento-classes-pos-playtest` — esta
+é a coordenação: o humano decidiu subir o piso de sobrevivência; a spec de
+balanceamento afina Entropia por cima, sem reverter.)
+
+**Alavanca 4 — Mais dano em nível baixo** (runtime, `combat_mechanics`): novo
+`early_game_damage_bonus(level)` — +2 no dano do golpe do jogador em nível 1–2,
++1 no nível 3, **0 do nível 4+** (some ao crescer). Aplicado só ao ataque do
+JOGADOR (inimigo não ganha), no cálculo de dano de `resolve_player_action`.
+
+> **Fora desta spec, vai pra C:** a "2ª chance com poção" do Saque
+> (`apply_downed` deixa 1 poção) é substituída pelo modelo de **checkpoint +
+> restore** da spec [checkpoints-morte](checkpoints-morte.md). Aqui só o
+> early-game survivability; a mecânica de morte/continue é C.
+
+**Testes** (`tests/test_letalidade_early.py` novo + `test_fase0`/`test_mvp`
+ajustados):
+- `test_descanso_early_game_zona_segura_nao_dispara_encontro` (nível ≤3, danger ≤3, não-apex → `enc None`).
+- `test_descanso_apex_ainda_dispara` (regressão R4).
+- `test_early_damage_bonus_soma_no_golpe_do_jogador` + `test_early_damage_bonus_zera_nivel_4`.
+- `test_early_damage_bonus_nao_afeta_inimigo`.
+- `test_cooldown_encontro_maior_no_early_game`.
+- classes: `test_hp_base_pisos_novos`, `test_starting_equipment_pocoes` (contra `classes.json` regenerado).
 
 ### Etapa 3 — Regressão comparativa
 
-1. Rodada mock pós-tuning, mesmas seeds, `report --baseline`.
-2. Critérios R2 verdes; anexar diff de sobrevivência aqui.
+1. Rodada mock pós-tuning, mesmas seeds; suíte offline verde.
+2. **Smoke real:** `combate --class sangromante --real --turns 30` — sobrevive
+   além de t19 (baseline), com descanso curando e poção sobrando.
+3. Re-run real curto de validação (combate × 2–3 classes) e comparar
+   `first_death_turn` com o baseline `20260720-093014`.
 
 ## 5. Critérios de aceite
 
