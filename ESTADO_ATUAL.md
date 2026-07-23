@@ -23,9 +23,15 @@
 > crítico → res/vuln/imunidade → Proteção → Integridade → Vitalidade/Gravidade →
 > Ferimentos; 3 físicos + 6 sobrenaturais; armadura/escudo/Comprometida; Ferimento
 > localizado agrava/escala; sacrifício Sangromante; recuperação). Aditivo (+26).
-> **Suíte 1128 verde.** **Próxima: `conflito-06` (Reações/movimento/AoO).**
-> Ordem completa no ROADMAP § Migração. Última atualização: 2026-07-22
-> (sessão 24). Histórico das sessões anteriores: abaixo e em `CHANGELOG.md`.
+> **06:** Reações/movimento tático (`services/reactions.py` — janela sobre ação
+> declarada, cadeia com limite de 1 reação COMUM por personagem, reação-responde-
+> reação, ordem alvo→aliados→Agilidade, Ataque de Oportunidade UNIVERSAL fora do
+> limite; `conflict_scene.py` ganhou orçamento por turno Pré/Ação/Pós + manobras
+> Engajar/Desengajar/Guardar/Esconder-se/Procurar/alertar + ocultação RELATIVA por
+> observador `hidden_from`/`approx_from`). Aditivo — fiação no cutover 13 (+18).
+> **Suíte 1146 verde.** **Próxima: `conflito-07` (morte/rendição/captura).**
+> Ordem completa no ROADMAP § Migração. Última atualização: 2026-07-23
+> (sessão 25). Histórico das sessões anteriores: abaixo e em `CHANGELOG.md`.
 
 ---
 

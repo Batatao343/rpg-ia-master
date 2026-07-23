@@ -1,7 +1,9 @@
 # SPEC — Conflito v2 #06: Reações, Ataques de Oportunidade e Movimento Tático
 
-> **Status:** `draft`
-> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
+> **Status:** `done` (2026-07-23) — motor puro aditivo; a fiação no nó de combate
+> (consulta da janela de reação antes de resolver o ataque + orçamento por turno)
+> vai no cutover `conflito-13`
+> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-23
 > **Depende de:** `conflito-02-cartas-acervo-preparacao`, `conflito-03-zonas-cena-objetos`,
 > `conflito-04-turnos-iniciativa-ataques` (todas `done` antes de iniciar)
 > **Desbloqueia:** `conflito-08` (perfil tático decide quando reagir/Engajar),
@@ -120,11 +122,11 @@ class ReactionChain(TypedDict):
 
 ## 5. Critérios de aceite
 
-- [ ] Cadeia de reação respeita 1 comum por personagem; AoO é ilimitado à parte.
-- [ ] Engajar/Desengajar/Guardar/Esconder-se/Procurar funcionam com o custo certo
-  de Pré/Ação/Pós-Ação.
-- [ ] Ocultação é por observador, não global.
-- [ ] `uv run pytest` verde.
+- [x] Cadeia de reação respeita 1 comum por personagem; AoO é ilimitado à parte.
+- [x] Engajar/Desengajar/Guardar/Esconder-se/Procurar funcionam com o custo certo
+  de Pré/Ação/Pós-Ação (orçamento `budget` por participante em `conflict_scene`).
+- [x] Ocultação é por observador, não global (`hidden_from`/`approx_from`).
+- [x] `uv run pytest` verde — **1146 passed** (+18 `test_conflito_reacoes`).
 
 ## 6. Smoke test com LLM real
 

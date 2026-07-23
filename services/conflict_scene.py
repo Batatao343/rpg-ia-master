@@ -25,6 +25,39 @@ EFFECT_KINDS = frozenset({
 
 _COST_STATES = ("pre_acao", "pos_acao", "acao")
 
+# --- Orçamento de ação por turno (conflito-06) -------------------------------
+# Cada participante tem 1 Pré-Ação + 1 Ação + 1 Pós-Ação por turno. Manobras
+# (Engajar/Desengajar/Guardar/Esconder-se/Procurar/alertar) debitam conforme R6-R10.
+TURN_BUDGET = {"pre_acao": 1, "acao": 1, "pos_acao": 1}
+_PRE_OU_POS = "pre_ou_pos"
+
+
+def _pos(scene: dict, participant_id: str) -> Optional[dict]:
+    return (scene.get("positions") or {}).get(participant_id)
+
+
+def _spend_budget(pos: dict, cost: str) -> Optional[str]:
+    """Debita 1 do orçamento; devolve o estado gasto ou None se indisponível.
+    `pre_ou_pos` tenta Pré-Ação e cai pra Pós-Ação (R6)."""
+    b = pos.setdefault("budget", dict(TURN_BUDGET))
+    if cost == _PRE_OU_POS:
+        for state in ("pre_acao", "pos_acao"):
+            if int(b.get(state, 0) or 0) > 0:
+                b[state] = int(b[state]) - 1
+                return state
+        return None
+    if int(b.get(cost, 0) or 0) > 0:
+        b[cost] = int(b[cost]) - 1
+        return cost
+    return None
+
+
+def reset_turn_budget(scene: dict, participant_id: str) -> None:
+    """Restaura Pré-Ação/Ação/Pós-Ação no começo do turno do participante."""
+    pos = _pos(scene, participant_id)
+    if pos is not None:
+        pos["budget"] = dict(TURN_BUDGET)
+
 
 def validate_effect_kind(effect: dict) -> bool:
     """True se `effect.kind` está no catálogo fechado (R6). Efeito inventado pela
@@ -57,6 +90,10 @@ def place(scene: dict, participant_id: str, *, zone_id: str = "z0",
                     "mode": "sustentado", "cause": None},
         "ocultacao": ocultacao if ocultacao in OCULTACOES else "visivel",
         "engaged_with": [],
+        "budget": dict(TURN_BUDGET),
+        "guarding": False,
+        "hidden_from": [],   # observadores que perderam a posição (Escondido relativo, R9)
+        "approx_from": [],   # observadores com posição APROXIMADA (atacam com Desvantagem, R10)
     }
     return {"ok": True, "error": None, "log": f"{participant_id} posicionado."}
 
@@ -78,29 +115,48 @@ def move_distance(scene: dict, participant_id: str, direction: str,
     else:
         return {"ok": False, "error": "Direção inválida (aproximar|afastar).", "log": ""}
     pos["distance_state"] = DISTANCES[idx]
+    # R11: mudar de estágio de Distância encerra o Escondido (não é ajuste pequeno).
+    _reveal(pos)
     return {"ok": True, "error": None, "distance_state": DISTANCES[idx],
             "via": via, "log": f"{participant_id} -> {DISTANCES[idx]} ({via})"}
 
 
-# --- Engajamento (relação separada da distância, R2) -------------------------
-def engage(scene: dict, a: str, b: str) -> dict:
-    pa = (scene.get("positions") or {}).get(a)
-    pb = (scene.get("positions") or {}).get(b)
+# --- Engajamento (relação separada da distância, R2/R6/R7) -------------------
+def engage(scene: dict, a: str, b: str, *, via: str = _PRE_OU_POS, spend: bool = True) -> dict:
+    """R6: `a` Engaja `b` gastando Pré-Ação OU Pós-Ação. Um personagem pode estar
+    Engajado com vários inimigos ao mesmo tempo. `spend=False` só relaciona (uso
+    interno/preparação)."""
+    pa = _pos(scene, a)
+    pb = _pos(scene, b)
     if not pa or not pb:
         return {"ok": False, "error": "Participante ausente da cena.", "log": ""}
+    used = None
+    if spend:
+        used = _spend_budget(pa, via)
+        if not used:
+            return {"ok": False, "error": f"{a} sem Pré/Pós-Ação para Engajar.", "log": ""}
     if b not in pa["engaged_with"]:
         pa["engaged_with"].append(b)
     if a not in pb["engaged_with"]:
         pb["engaged_with"].append(a)
-    return {"ok": True, "error": None, "log": f"{a} e {b} engajados."}
+    return {"ok": True, "error": None, "via": used, "log": f"{a} e {b} engajados."}
 
 
-def disengage(scene: dict, a: str, b: str) -> dict:
-    for x, y in ((a, b), (b, a)):
-        p = (scene.get("positions") or {}).get(x)
-        if p and y in p.get("engaged_with", []):
-            p["engaged_with"].remove(y)
-    return {"ok": True, "error": None, "log": f"{a} e {b} desengajados."}
+def disengage(scene: dict, a: str, b: Optional[str] = None, *, spend: bool = True) -> dict:
+    """R7: Desengajar custa a Ação e encerra COM SEGURANÇA os Engajamentos (sem AoO).
+    `b=None` desengaja de todos. `spend=False` só desfaz a relação."""
+    pa = _pos(scene, a)
+    if not pa:
+        return {"ok": False, "error": f"{a} não está na cena.", "log": ""}
+    if spend and not _spend_budget(pa, "acao"):
+        return {"ok": False, "error": f"{a} sem Ação para Desengajar.", "log": ""}
+    alvos = [b] if b is not None else list(pa.get("engaged_with", []))
+    for target in alvos:
+        for x, y in ((a, target), (target, a)):
+            p = _pos(scene, x)
+            if p and y in p.get("engaged_with", []):
+                p["engaged_with"].remove(y)
+    return {"ok": True, "error": None, "safe": True, "log": f"{a} desengaja com segurança."}
 
 
 def is_engaged(scene: dict, a: str, b: str) -> bool:
@@ -254,3 +310,150 @@ def fire_reinforcement(scene: dict, trigger_id: str) -> dict:
         scene.setdefault("positions", {})[pid] = ppos
     return {"ok": True, "error": None, "log": f"Reforço '{trigger_id}' disparado.",
             "effect": {"kind": "spawn_reinforcement", "params": {"trigger": trigger_id}}}
+
+
+# --- Guardar (R8) ------------------------------------------------------------
+def guard(scene: dict, participant_id: str, *, spend: bool = True) -> dict:
+    """R8: Guardar custa a Ação. Postura universal (não depende de escudo). Enquanto
+    Guardando, ataques Defensáveis CONTRA o personagem sofrem Desvantagem — e os
+    ataques DO próprio personagem também."""
+    pos = _pos(scene, participant_id)
+    if not pos:
+        return {"ok": False, "error": f"{participant_id} não está na cena.", "log": ""}
+    if spend and not _spend_budget(pos, "acao"):
+        return {"ok": False, "error": f"{participant_id} sem Ação para Guardar.", "log": ""}
+    pos["guarding"] = True
+    return {"ok": True, "error": None, "log": f"{participant_id} assume a Guarda."}
+
+
+def stop_guard(scene: dict, participant_id: str) -> dict:
+    """Abandona a Guarda livremente antes de agir (perde a proteção). Não devolve Ação."""
+    pos = _pos(scene, participant_id)
+    if pos is not None:
+        pos["guarding"] = False
+    return {"ok": True, "error": None, "log": f"{participant_id} abandona a Guarda."}
+
+
+def is_guarding(scene: dict, participant_id: str) -> bool:
+    return bool((_pos(scene, participant_id) or {}).get("guarding"))
+
+
+def guard_defense_modifier(scene: dict, defender_id: str) -> int:
+    """R8: -1 (Desvantagem) para quem ataca um alvo que está Guardando; 0 senão."""
+    return -1 if is_guarding(scene, defender_id) else 0
+
+
+def guard_offense_modifier(scene: dict, attacker_id: str) -> int:
+    """R8: -1 (Desvantagem) nos ataques FEITOS por quem está Guardando; 0 senão."""
+    return -1 if is_guarding(scene, attacker_id) else 0
+
+
+# --- Ocultação relativa por observador (R9/R10/R11) --------------------------
+def _reveal(pos: dict) -> None:
+    """Encerra o Escondido: fica Visível para todos (usado em movimento/pós-ataque)."""
+    pos["ocultacao"] = "visivel"
+    pos["hidden_from"] = []
+    pos["approx_from"] = []
+    pos.pop("hide_source", None)
+
+
+def hide(scene: dict, participant_id: str, *, source: Optional[str] = None,
+         observers: Optional[List[str]] = None, spend: bool = True) -> dict:
+    """R9: Esconder-se custa a Ação e EXIGE fonte plausível (escuridão, fumaça,
+    vegetação, multidão, cobertura, obstáculo). Ocultação é RELATIVA — fica
+    Escondido de `observers` (default: todos os outros da cena)."""
+    pos = _pos(scene, participant_id)
+    if not pos:
+        return {"ok": False, "error": f"{participant_id} não está na cena.", "log": ""}
+    if not source or not str(source).strip():
+        return {"ok": False,
+                "error": "Esconder-se exige fonte plausível (escuridão, fumaça, cobertura...).",
+                "log": ""}
+    if spend and not _spend_budget(pos, "acao"):
+        return {"ok": False, "error": f"{participant_id} sem Ação para Esconder-se.", "log": ""}
+    obs = list(observers) if observers is not None else [
+        o for o in (scene.get("positions") or {}) if o != participant_id]
+    pos["ocultacao"] = "escondido"
+    pos["hidden_from"] = list(obs)
+    pos["approx_from"] = []
+    pos["hide_source"] = source
+    return {"ok": True, "error": None, "log": f"{participant_id} se esconde ({source})."}
+
+
+def is_hidden_from(scene: dict, participant_id: str, observer_id: str) -> bool:
+    """R9: True se `participant_id` está Escondido do olhar de `observer_id`."""
+    return observer_id in ((_pos(scene, participant_id) or {}).get("hidden_from") or [])
+
+
+def has_approx_position(scene: dict, participant_id: str, observer_id: str) -> bool:
+    """R10: True se `observer_id` só conhece a posição APROXIMADA do escondido."""
+    return observer_id in ((_pos(scene, participant_id) or {}).get("approx_from") or [])
+
+
+def search(scene: dict, searcher_id: str, target_id: str, *,
+           found: bool = True, spend: bool = True) -> dict:
+    """R10: Procurar custa a Ação. Encontrar deixa o alvo Visível SÓ para quem
+    procurou (remove-o do Escondido/aproximado daquele observador)."""
+    sp = _pos(scene, searcher_id)
+    tp = _pos(scene, target_id)
+    if not sp or not tp:
+        return {"ok": False, "error": "Participante ausente da cena.", "found": False, "log": ""}
+    if spend and not _spend_budget(sp, "acao"):
+        return {"ok": False, "error": f"{searcher_id} sem Ação para Procurar.", "found": False, "log": ""}
+    if not found:
+        return {"ok": True, "error": None, "found": False,
+                "log": f"{searcher_id} procura, mas não encontra."}
+    for key in ("hidden_from", "approx_from"):
+        lst = tp.get(key) or []
+        if searcher_id in lst:
+            lst.remove(searcher_id)
+        tp[key] = lst
+    if not tp["hidden_from"]:
+        tp["ocultacao"] = "visivel"
+    return {"ok": True, "error": None, "found": True,
+            "log": f"{searcher_id} encontra {target_id}."}
+
+
+def alert_party(scene: dict, alerter_id: str, target_id: str, party_ids: List[str], *,
+                spend: bool = True) -> dict:
+    """R10: alertar a party custa Pré/Pós-Ação e PROPAGA a posição APROXIMADA do
+    escondido para todos os aliados (podem atacar com Desvantagem — não o revela)."""
+    ap = _pos(scene, alerter_id)
+    tp = _pos(scene, target_id)
+    if not ap or not tp:
+        return {"ok": False, "error": "Participante ausente da cena.", "log": ""}
+    if spend and not _spend_budget(ap, _PRE_OU_POS):
+        return {"ok": False, "error": f"{alerter_id} sem Pré/Pós-Ação para alertar.", "log": ""}
+    hidden = set(tp.get("hidden_from") or [])
+    approx = set(tp.get("approx_from") or [])
+    for pid in party_ids:
+        if pid in hidden:            # ainda não o VÊ, mas agora tem a posição aproximada
+            approx.add(pid)
+    tp["approx_from"] = sorted(approx)
+    return {"ok": True, "error": None, "log": f"{alerter_id} alerta a party sobre {target_id}."}
+
+
+def occlusion_attack_modifier(scene: dict, attacker_id: str, target_id: str) -> dict:
+    """R10/R11: combina ocultação num veredito de ataque.
+      - atacante Escondido do alvo → ataca OCULTO: Vantagem (+1);
+      - alvo Escondido do atacante SEM posição aproximada → não pode mirar direto;
+      - alvo Escondido COM posição aproximada → Desvantagem (-1).
+    Retorna {"can_target": bool, "advantage": -1|0|1}."""
+    adv = 0
+    can = True
+    if is_hidden_from(scene, attacker_id, target_id):
+        adv += 1
+    if is_hidden_from(scene, target_id, attacker_id):
+        if has_approx_position(scene, target_id, attacker_id):
+            adv -= 1
+        else:
+            can = False
+    return {"can_target": can, "advantage": (1 if adv > 0 else (-1 if adv < 0 else 0))}
+
+
+def reveal_after_attack(scene: dict, participant_id: str) -> None:
+    """R11: quem atacou oculto permanece Escondido durante a resolução e vira
+    Visível DEPOIS (mesmo errando), salvo Carta específica."""
+    pos = _pos(scene, participant_id)
+    if pos is not None:
+        _reveal(pos)

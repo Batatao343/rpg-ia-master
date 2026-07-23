@@ -37,7 +37,7 @@
     {
       "id": "reflexo_lamina", "name": "Reflexo da Lâmina", "tipo": "reacao",
       "classe": "Sangromante", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 1, "frequencia": "turno",
+      "custo_entropia": 1, "frequencia": "turno", "gatilho": "ao_ser_atacado",
       "virtude_permitida": ["agilidade"], "efeito": {"kind": "contra_ataque", "formula": "1d8"}
     },
 

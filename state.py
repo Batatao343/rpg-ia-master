@@ -91,7 +91,9 @@ class ConflictScene(TypedDict, total=False):
     # Vive em GameState.combat["scene"]; convive com round/active/order/idle_turns
     # até o cutover (conflito-13) consolidar. `frozen` trava acréscimos por LLM.
     zones: List[Dict]              # {id, name, connections: List[zone_id]}
-    positions: Dict[str, Dict]     # participant_id -> {zone_id, distance_state, postura, ocultacao, engaged_with}
+    positions: Dict[str, Dict]     # participant_id -> {zone_id, distance_state, postura, ocultacao,
+                                   #   engaged_with, budget{pre_acao,acao,pos_acao}, guarding,
+                                   #   hidden_from[obs], approx_from[obs]} (conflito-06)
     objects: List[SceneObject]
     frozen: bool
     reinforcement_triggers: List[Dict]  # gatilhos de reforço declarados ANTES do início
