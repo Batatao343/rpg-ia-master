@@ -15,6 +15,45 @@ from typing import Dict, List, Optional
 
 import gamedata
 
+# --------------------------------------------------------------------------
+# Catálogo FECHADO de efeitos de Carta (conflito-14 R3).
+# --------------------------------------------------------------------------
+# A conflito-03 R6 fecha os efeitos de CENA (objetos/ambiente). Cartas de
+# classe têm um vocabulário próprio de efeito, resolvido em combate pela
+# conflito-04/05 — mas também precisa ser FECHADO: nenhuma Carta autora um
+# `efeito.kind` sem correspondência mecânica (mesmo princípio do catálogo de
+# cena). Este é o catálogo canônico consumido pela autoria (conflito-14) e pelo
+# lint de conteúdo (`scripts/validate_content.py`).
+CARD_EFFECT_KINDS = frozenset({
+    # ataque / dano ao longo do tempo / cura
+    "dano", "dot", "cura", "estabilizar",
+    # defesa / posição / controle
+    "protecao", "taunt", "empurrao", "reposicionar", "esconder", "marca",
+    "aplicar_condicao", "purga_condicao", "contra_ataque", "vantagem",
+    # buffs (passivas e ativas de suporte)
+    "buff_defesa", "buff_acerto", "buff_dano", "buff_cura", "buff_dot",
+    "buff_iniciativa", "buff_esquiva", "perception",
+    # utilitária fora de combate
+    "utilitaria",
+    # exclusivo do Médico (purga a Carga do Abismo de aliado)
+    "reduzir_carga_aliado",
+    # Cartas de Virtude: bônus que escala com o Estágio da Virtude
+    "bonus_dano_por_estagio", "bonus_percepcao_por_estagio",
+    "bonus_vitalidade_por_estagio", "bonus_iniciativa_por_estagio",
+    "bonus_social_por_estagio", "bonus_esquiva_por_estagio",
+    "bonus_cura_por_estagio",
+})
+
+# Dano-base por categoria de arma (doc 01 §19; conflito-05 R1). Escala NOVA —
+# valores FLAT, não dados. A autoria (conflito-14 R2) ancora todo `dano` aqui.
+DANO_BASE_ARMA = {"leve": 3, "marcial": 4, "versatil": 6, "pesada": 8}
+
+
+def valid_effect_kind(effect: dict) -> bool:
+    """True se `efeito.kind` está no catálogo fechado de Cartas (R3)."""
+    return bool(effect) and str(effect.get("kind")) in CARD_EFFECT_KINDS
+
+
 # Escopo de reset por frequência -> contador em card_usage.
 FREQ_COUNTER = {
     "turno": "used_this_turn",
@@ -56,8 +95,9 @@ def _load_cards() -> Dict[str, dict]:
 
 def reload_cards() -> None:
     """Descarta o cache (usado por testes que injetam data/cards temporário)."""
-    global _CARDS
+    global _CARDS, _VIRTUE_SUGGESTIONS
     _CARDS = None
+    _VIRTUE_SUGGESTIONS = None
 
 
 def all_cards() -> Dict[str, dict]:
@@ -82,6 +122,41 @@ def cards_for_class(class_name: str, subclass: str = "") -> List[dict]:
 
 def virtue_cards_pool() -> List[dict]:
     return [c for c in _load_cards().values() if c.get("tipo") == "virtude"]
+
+
+def cards_at_patamar(class_name: str, subclass: str, patamar: str) -> List[dict]:
+    """Cartas de uma classe (tronco + subclasse) de um patamar específico."""
+    out = []
+    for c in cards_for_class(class_name, subclass):
+        if c.get("patamar") == patamar:
+            out.append(c)
+    return out
+
+
+_VIRTUE_SUGGESTIONS: Optional[Dict[str, List[str]]] = None
+
+
+def _load_virtue_suggestions() -> Dict[str, List[str]]:
+    global _VIRTUE_SUGGESTIONS
+    if _VIRTUE_SUGGESTIONS is not None:
+        return _VIRTUE_SUGGESTIONS
+    path = os.path.join(gamedata.DATA_DIR, "cards", "virtude_sugeridas.json")
+    data: Dict[str, List[str]] = {}
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = (json.load(f) or {}).get("sugestoes", {})
+    except Exception:
+        data = {}
+    _VIRTUE_SUGGESTIONS = data
+    return data
+
+
+def suggested_virtue_cards(class_name: str, subclass: str = "") -> List[str]:
+    """R6: 2 Cartas de Virtude sugeridas por combinação classe/subclasse (só
+    recomendação — o jogador escolhe livremente na criação, conflito-02)."""
+    key = f"{class_name}/{subclass}" if subclass else class_name
+    sug = _load_virtue_suggestions()
+    return list(sug.get(key) or sug.get(class_name) or [])
 
 
 # --------------------------------------------------------------------------

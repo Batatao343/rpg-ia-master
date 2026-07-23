@@ -1,7 +1,7 @@
 # SPEC — Conflito v2 #15: Autoria Completa do Bestiário e Perfis Táticos
 
-> **Status:** `draft`
-> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
+> **Status:** `done` (2026-07-23, sessão 25)
+> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-23
 > **Depende de:** `conflito-05-armadura-dano-ferimentos`, `conflito-08-comportamento-tatico-companheiros`
 > (`done` — schema de perfil tático + armadura/resistência precisa existir antes
 > de autorar conteúdo real)
@@ -56,7 +56,7 @@ dedicada após o motor validado).
   `"Minion"` vira `"lacaio"` (Vitalidade simplificada, sem Última Ação); tipo
   `"Elite"`/`"BOSS"` vira `"elite_chefe"` (sistema completo); NPCs nomeados
   existentes viram `"nomeado"`.
-  - **R8** - — As habilidades devem ser variadas entre si e devem seguir a identidade de Valoria, tendo relação com o mundo que foi construido. Não reaproveitar habilidades apenas alterando a quantidade de dano. 
+  - **R8** - — O bestiario deve ser variadas entre si e deve seguir a identidade de Valoria, tendo relação com o mundo que foi construido. Não reaproveite criaturas apenas mudando o padrão de ataques
 
 ### Fora de escopo
 
@@ -109,12 +109,42 @@ sobrevivência básica (nenhuma criatura sem regra de fuga/rendição definida).
 
 ## 5. Critérios de aceite
 
-- [ ] 100% das criaturas curadas migradas pro schema novo, sem placeholder
-  `TODO_REVISAO_MANUAL` remanescente.
-- [ ] Todo perfil tático tem prioridade de fuga/rendição definida (nenhuma
-  criatura "burra até a morte" sem ser intencional, ex. Lacaio fanático).
-- [ ] Lint (`scripts/validate_content.py`) valida os campos novos.
-- [ ] `uv run pytest` verde.
+- [x] 100% das 84 criaturas curadas migradas pro schema novo, sem placeholder
+  `TODO_REVISAO_MANUAL` remanescente (`scripts/migrate_bestiary_v4.py`).
+- [x] Todo perfil tático tem prioridade de fuga/rendição definida — ou não-fuga
+  **intencional** (morto-vivo/fanático = resistência `absoluta`). Nenhuma criatura
+  "burra até a morte" por acidente.
+- [x] Lint (`scripts/validate_content.py` → `content_validator.validate_bestiary`)
+  valida os campos novos (categoria, Virtudes 0-5, Vitalidade×Corpo, resistências
+  tipadas, perfil, Carta oculta).
+- [x] `uv run pytest` verde (1273; +17 desta spec).
+
+### Notas de implementação (desvios da spec, R do CLAUDE.md)
+
+- **R7 (categorias):** mapeado pras categorias CANÔNICAS do motor
+  (`death_flow`: lacaio/padrao/elite/chefe/nomeado), não "elite_chefe" (que não
+  existe). Minion→**lacaio**, Elite→**elite**, BOSS→**chefe**,
+  Monstrosidade(Gigante)→**chefe**, Humanoid(Human)→**nomeado**.
+- **R2/R3 (perfil rico por arquétipo):** biblioteca de **10 arquétipos táticos**
+  (predador/emboscador/bruto/tatico/covarde_oportunista/lider_matilha/conjurador/
+  guardiao/morto_vivo_implacavel/predador_apice) com prioridades ORDENADAS
+  cobrindo alvo/recuo/fuga/rendição — não mais 4 perfis fixos. Inferência
+  automática por `behavior.profile` + `type` + palavra-chave do nome. Guardião
+  não abandona o posto; predador persegue; morto-vivo não foge (intencional).
+- **ADITIVO até o cutover:** os campos antigos (`hp/ac/attacks/behavior`) ficam
+  intactos (combate atual segue rodando); a migração só ACRESCENTA os novos.
+  A remoção do motor antigo + fiação de `tactical_profile`/`cartas` no combate é
+  o **cutover conflito-13**.
+- **R4 (Cartas ocultas):** biblioteca de **18 Cartas de inimigo**
+  (`data/cards/bestiario.json`, `origem: conflito-15`) — 1 assinatura OCULTA por
+  arquétipo + temáticas por palavra-chave. Toda criatura recebe ≥1 Carta oculta;
+  revelação via `bestiary_knowledge.reveal_card` (conflito-08).
+- **Só o arquivo CURADO:** migração atua em `data/bestiary.json`, nunca no overlay
+  `data/runtime/` (isolar-cache-runtime).
+- **Arquivos:** `scripts/migrate_bestiary_v4.py` · `data/bestiary.json` (migrado)
+  · `data/cards/bestiario.json` (Cartas de inimigo) ·
+  `services/content_validator.py::validate_bestiary` ·
+  `tests/test_conflito_autoria_bestiario.py` (17).
 
 ## 6. Smoke test com LLM real
 

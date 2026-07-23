@@ -1,0 +1,343 @@
+{
+  "_meta": "spec conflito-15: Cartas de inimigo (assinaturas de arquétipo + temáticas). Gerado por scripts/migrate_bestiary_v4.py.",
+  "cards": [
+    {
+      "id": "bst_bote_certeiro",
+      "name": "Bote Certeiro",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 8
+      },
+      "descricao": "O predador encontra a jugular exposta.",
+      "oculta": true
+    },
+    {
+      "id": "bst_golpe_sombras",
+      "name": "Golpe das Sombras",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 6
+      },
+      "descricao": "Ataque vindo do escuro, antes de qualquer reação.",
+      "oculta": true
+    },
+    {
+      "id": "bst_pancada_esmagadora",
+      "name": "Pancada Esmagadora",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 10
+      },
+      "descricao": "Um golpe que rebenta a guarda.",
+      "oculta": true
+    },
+    {
+      "id": "bst_ordem_foco",
+      "name": "Ordem de Foco",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 2
+      },
+      "descricao": "Aponta o alvo a abater; o bando converge.",
+      "oculta": true
+    },
+    {
+      "id": "bst_fuga_suja",
+      "name": "Fuga Suja",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "esconder",
+        "valor": 1
+      },
+      "descricao": "Joga terra nos olhos e some na confusão.",
+      "oculta": true
+    },
+    {
+      "id": "bst_furia_final",
+      "name": "Fúria Final",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 4
+      },
+      "descricao": "Sem recuo possível, entrega tudo num último acesso.",
+      "oculta": true
+    },
+    {
+      "id": "bst_uivo_comando",
+      "name": "Uivo de Comando",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "taunt",
+        "valor": 3
+      },
+      "descricao": "Um brado que reorganiza a matilha em torno da presa.",
+      "oculta": true
+    },
+    {
+      "id": "bst_descarga_arcana",
+      "name": "Descarga Arcana",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 8
+      },
+      "descricao": "Libera de uma vez a energia contida.",
+      "oculta": true
+    },
+    {
+      "id": "bst_postura_muralha",
+      "name": "Postura de Muralha",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 6
+      },
+      "descricao": "Fecha a passagem com o próprio corpo.",
+      "oculta": true
+    },
+    {
+      "id": "bst_toque_gelido",
+      "name": "Toque Gélido da Morte",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 5,
+        "duracao": 3
+      },
+      "descricao": "O frio do outro lado drena a vida devagar.",
+      "oculta": true
+    },
+    {
+      "id": "bst_golpe_mestre",
+      "name": "Golpe de Mestre",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 3,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 14
+      },
+      "descricao": "O ápice de um predador que já matou muitos.",
+      "oculta": true
+    },
+    {
+      "id": "bst_sopro_gelido",
+      "name": "Sopro Gélido",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 4,
+        "duracao": 3,
+        "dano_tipo": "gelido"
+      },
+      "descricao": "Uma lufada que congela os pulmões.",
+      "oculta": true
+    },
+    {
+      "id": "bst_baforada_ignea",
+      "name": "Baforada Ígnea",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 8,
+        "dano_tipo": "igneo"
+      },
+      "descricao": "Fogo cuspido em arco.",
+      "oculta": true
+    },
+    {
+      "id": "bst_mordida_infecciosa",
+      "name": "Mordida Infecciosa",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 3,
+        "duracao": 4,
+        "dano_tipo": "corrosivo"
+      },
+      "descricao": "A ferida apodrece antes de fechar."
+    },
+    {
+      "id": "bst_teia",
+      "name": "Teia Prendedora",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 2
+      },
+      "descricao": "Prende a presa no lugar."
+    },
+    {
+      "id": "bst_bafo_acido",
+      "name": "Bafo Ácido",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 6,
+        "dano_tipo": "corrosivo"
+      },
+      "descricao": "Cospe uma gosma que corrói metal e carne."
+    },
+    {
+      "id": "bst_petrificar",
+      "name": "Olhar que Endurece",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "atordoado",
+        "duracao": 1
+      },
+      "descricao": "Por um instante o corpo vira pedra.",
+      "oculta": true
+    },
+    {
+      "id": "bst_grito_terror",
+      "name": "Grito de Terror",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "amedrontado",
+        "duracao": 2
+      },
+      "descricao": "Um som que não deveria existir.",
+      "oculta": true
+    }
+  ]
+}

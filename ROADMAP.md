@@ -52,9 +52,10 @@ incluído, menos prioritário** (última spec).
 | 11 ✅ | [conflito-11-preparacao-encontro-llm](specs/conflito-11-preparacao-encontro-llm.md) | LLM prepara cena jogável; Nível do Encontro absoluto (Python, sem party), potência por categoria (`data/potency_by_level.json`), validação de catálogo/base/região, cena de segurança, ficha de combate completa do NPC — **`done`** (motor+geração; fiação de grafo → cutover 13) |
 | 12 ✅ | [conflito-12-loot-resumo-narrativo](specs/conflito-12-loot-resumo-narrativo.md) | `ConflictSummary` canônico (18 campos), `loot_context` (Nível do Encontro→danger, `roll_loot` intacta), contrato de não-reversão da narrativa, fatos p/ archivist — **`done`** (motor; fiação → cutover 13) |
 | 13 | [conflito-13-cutover-migracao-playtest](specs/conflito-13-cutover-migracao-playtest.md) | **Cutover** — religa roteamento, remove motor antigo, reescreve playtest |
-| 14 | [conflito-14-autoria-cartas-classes](specs/conflito-14-autoria-cartas-classes.md) | Autoria completa das Cartas (5 classes × 3 subclasses) |
-| 15 | [conflito-15-autoria-bestiario-perfis](specs/conflito-15-autoria-bestiario-perfis.md) | Autoria do bestiário no schema novo + perfis táticos |
+| 14 ✅ | [conflito-14-autoria-cartas-classes](specs/conflito-14-autoria-cartas-classes.md) | 80 Cartas autorais (escala nova 2d10+Virtude, 16/classe), catálogo fechado, Ruptura+Evolução A/B nas 15 centrais, parity, `docs/CARTAS.md` — **`done`** (entra em produção no cutover 13) |
+| 15 ✅ | [conflito-15-autoria-bestiario-perfis](specs/conflito-15-autoria-bestiario-perfis.md) | 84 criaturas migradas pro schema v4 (categoria/Virtudes/Vitalidade/resistências), 10 arquétipos táticos ricos, 18 Cartas de inimigo com assinatura oculta — **`done`** (ADITIVO; fiação → cutover 13) |
 | 16 | [conflito-16-frontend-combate-cartas](specs/conflito-16-frontend-combate-cartas.md) | Interface tática de cartas (menos prioritária) |
+| 17 | [conflito-17-volume-conteudo-mundo-vivo](specs/conflito-17-volume-conteudo-mundo-vivo.md) | **`draft`** — VOLUME: ≥150 Cartas jogador + ≥40 inimigo, ≥120 criaturas (tabela/região), ≥30 NPCs nomeados; guardas anti-reskin + relatório de cobertura (fast-follow de conteúdo, pós-14/15) |
 
 **Ordem:** 01 → 02/03 (paralelizáveis após 01) → 04 → 05 → 06 → 07 → 08 → 09/10 →
 11 → 12 → **13 (cutover)** → 16. Autoria (14/15) pode correr em paralelo às specs

@@ -90,8 +90,17 @@
 > **DECISÃO DO USUÁRIO (2026-07-23):** o "big bang" do cutover fica ADIADO. Antes
 > dele, fazer **conflito-14 (autoria de Cartas)** e **conflito-15 (autoria de
 > bestiário/perfis)** — rodam em paralelo, NÃO quebram nada, mantêm o repo verde.
-> O cutover 13 é o passo dedicado DEPOIS que 14/15 fecharem. **PRÓXIMA: `conflito-14`.**
-> **Suíte 1240 verde.** Última atualização: 2026-07-23 (sessão 25).
+> **14 `done`** (80 Cartas autorais na escala nova, 16/classe: 7 tronco + 3×3
+> subclasse; catálogo fechado `CARD_EFFECT_KINDS`; Ruptura+Evolução A/B nas 15
+> centrais; parity `dano_base/custo ∈ [1.5,4.0]`; `docs/CARTAS.md`;
+> `scripts/gen_cards_v4.py`; +16 testes). **15 `done`** (84 criaturas migradas pro
+> schema v4 via `scripts/migrate_bestiary_v4.py` — categoria canônica, Virtudes
+> 0-5, Vitalidade×Corpo, resistências tipadas, 10 arquétipos táticos ricos com
+> regra de fuga/rendição, 18 Cartas de inimigo com assinatura OCULTA por criatura;
+> ADITIVO — motor antigo intacto; +17 testes). Lint da Fase 7 estendido
+> (`validate_cards`/`validate_bestiary`). **PRÓXIMA: o cutover `conflito-13`**
+> (big bang) agora que 14/15 fecharam. **Suíte 1273 verde.** Última atualização:
+> 2026-07-23 (sessão 25).
 > Ordem completa no ROADMAP § Migração. Histórico anterior: abaixo e `CHANGELOG.md`.
 
 ---

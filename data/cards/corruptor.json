@@ -1,0 +1,428 @@
+{
+  "_meta": "spec conflito-14: Acervo autoral de Corruptor (escala nova 2d10+Virtude). Gerado por scripts/gen_cards_v4.py.",
+  "cards": [
+    {
+      "id": "cor_toque",
+      "name": "Toque da Decadência",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 2,
+        "duracao": 2
+      },
+      "descricao": "O que ele encosta começa a apodrecer no tempo devido."
+    },
+    {
+      "id": "cor_esporos",
+      "name": "Esporos",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 2,
+        "duracao": 3
+      },
+      "descricao": "Solta uma nuvem fina que se aloja nos pulmões."
+    },
+    {
+      "id": "cor_carne_docil",
+      "name": "Carne Dócil",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dot",
+        "valor": 1
+      },
+      "descricao": "A matéria já quer ceder; ele só precisa pedir com jeito."
+    },
+    {
+      "id": "cor_farejar",
+      "name": "Farejar Praga",
+      "tipo": "utilitaria",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "rastrear doença/decomposição/podridão"
+      },
+      "descricao": "Segue o cheiro do que já está morrendo."
+    },
+    {
+      "id": "cor_semear",
+      "name": "Semear Praga",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 3,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 4,
+        "duracao": 4
+      },
+      "descricao": "Planta a ruína e deixa que ela faça o trabalho lento."
+    },
+    {
+      "id": "cor_simbiose",
+      "name": "Simbiose",
+      "tipo": "utilitaria",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "aproveitar decomposição próxima a seu favor"
+      },
+      "descricao": "Faz da podridão alheia um aliado silencioso."
+    },
+    {
+      "id": "cor_colapso",
+      "name": "Colapso",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "superior",
+      "custo_entropia": 4,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 8,
+        "duracao": 3
+      },
+      "descricao": "Adianta anos de deterioração em três respirações."
+    },
+    {
+      "id": "cor_bio_gangrena",
+      "name": "Gangrena",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 3,
+        "duracao": 3
+      },
+      "descricao": "A carne escurece e o cheiro chega antes da dor."
+    },
+    {
+      "id": "cor_bio_metastase",
+      "name": "Metástase",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 5,
+        "duracao": 3,
+        "principal": true
+      },
+      "descricao": "A doença não fica onde nasceu — busca o próximo corpo em cena.",
+      "ruptura": {
+        "caminho_a": {
+          "kind": "dot",
+          "dano_base": 10,
+          "duracao": 3
+        },
+        "caminho_b": {
+          "kind": "aplicar_condicao",
+          "condicao": "enfraquecido",
+          "duracao": 3
+        }
+      },
+      "evolucao": {
+        "caminho_a": {
+          "efeito": {
+            "kind": "dot",
+            "dano_base": 7,
+            "duracao": 3
+          },
+          "ruptura": {
+            "kind": "dot",
+            "dano_base": 12,
+            "duracao": 4
+          }
+        },
+        "caminho_b": {
+          "efeito": {
+            "kind": "dot",
+            "dano_base": 5,
+            "duracao": 4
+          },
+          "ruptura": {
+            "kind": "aplicar_condicao",
+            "condicao": "enfraquecido",
+            "duracao": 5
+          }
+        }
+      },
+      "central": true
+    },
+    {
+      "id": "cor_bio_necrose",
+      "name": "Necrose Útil",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dot",
+        "valor": 1
+      },
+      "descricao": "Cada tecido morto vira adubo para o próximo."
+    },
+    {
+      "id": "cor_alm_duvida",
+      "name": "Semente da Dúvida",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "carisma"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "desmoralizado",
+        "duracao": 2
+      },
+      "descricao": "Sussurra a pergunta que apodrece qualquer coragem por dentro."
+    },
+    {
+      "id": "cor_alm_desespero",
+      "name": "Desespero",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "avancado",
+      "custo_entropia": 3,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "amedrontado",
+        "duracao": 2,
+        "principal": true
+      },
+      "descricao": "Deixa o inimigo ver, por um instante, exatamente como tudo termina.",
+      "ruptura": {
+        "caminho_a": {
+          "kind": "aplicar_condicao",
+          "condicao": "amedrontado",
+          "duracao": 4
+        },
+        "caminho_b": {
+          "kind": "aplicar_condicao",
+          "condicao": "dominado",
+          "duracao": 1
+        }
+      },
+      "evolucao": {
+        "caminho_a": {
+          "efeito": {
+            "kind": "aplicar_condicao",
+            "condicao": "amedrontado",
+            "duracao": 3
+          },
+          "ruptura": {
+            "kind": "aplicar_condicao",
+            "condicao": "amedrontado",
+            "duracao": 6
+          }
+        },
+        "caminho_b": {
+          "efeito": {
+            "kind": "aplicar_condicao",
+            "condicao": "desmoralizado",
+            "duracao": 3
+          },
+          "ruptura": {
+            "kind": "aplicar_condicao",
+            "condicao": "dominado",
+            "duracao": 2
+          }
+        }
+      },
+      "central": true
+    },
+    {
+      "id": "cor_alm_erosao",
+      "name": "Erosão de Vontade",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dot",
+        "valor": 1
+      },
+      "descricao": "Onde a moral já range, ele empurra o alicerce."
+    },
+    {
+      "id": "cor_ino_ferrugem",
+      "name": "Ferrugem",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "desarmado_risco",
+        "duracao": 2
+      },
+      "descricao": "A arma e a armadura do inimigo envelhecem décadas num toque."
+    },
+    {
+      "id": "cor_ino_fadiga",
+      "name": "Fadiga do Material",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 6,
+        "principal": true
+      },
+      "descricao": "Encontra a microfratura no escudo e faz a cena inteira ceder ali.",
+      "ruptura": {
+        "caminho_a": {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 12
+        },
+        "caminho_b": {
+          "kind": "aplicar_condicao",
+          "condicao": "armadura_comprometida",
+          "duracao": 3
+        }
+      },
+      "evolucao": {
+        "caminho_a": {
+          "efeito": {
+            "kind": "dano",
+            "categoria_arma": "marcial",
+            "dano_base": 8
+          },
+          "ruptura": {
+            "kind": "dano",
+            "categoria_arma": "marcial",
+            "dano_base": 16
+          }
+        },
+        "caminho_b": {
+          "efeito": {
+            "kind": "dano",
+            "categoria_arma": "marcial",
+            "dano_base": 6
+          },
+          "ruptura": {
+            "kind": "aplicar_condicao",
+            "condicao": "armadura_comprometida",
+            "duracao": 5
+          }
+        }
+      },
+      "central": true
+    },
+    {
+      "id": "cor_ino_corrosao",
+      "name": "Corrosão Paciente",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 1
+      },
+      "descricao": "Cada arranhão no metal alheio vira uma alavanca para o próximo."
+    }
+  ]
+}

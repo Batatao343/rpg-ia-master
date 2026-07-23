@@ -457,6 +457,165 @@ def validate_overrides(codex_dir: str = CODEX_DIR,
     return findings
 
 
+def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Finding]:
+    """conflito-14 Etapa 5: lint das Cartas autorais (`origem == conflito-14`).
+
+    Campos obrigatórios, efeito no catálogo fechado, dano ancorado na categoria de
+    arma, patamar/frequência/tipo válidos, e Ruptura/Evolução completas nas
+    Cartas centrais. Só valida as autorais — os exemplos do motor (conflito-02)
+    usam schema opaco de propósito."""
+    from services.cards import CARD_EFFECT_KINDS, DANO_BASE_ARMA
+    findings: List[Finding] = []
+    if not os.path.isdir(cards_dir):
+        return findings
+    PATAMAR = {"inicial", "avancado", "superior"}
+    FREQ = {"livre", "turno", "cena", "descanso_curto", "descanso_longo"}
+    TIPO = {"ativa", "passiva", "utilitaria", "reacao"}
+
+    def _kind_ok(eff, path, cid, where):
+        if not (isinstance(eff, dict) and str(eff.get("kind")) in CARD_EFFECT_KINDS):
+            findings.append(Finding("cards", "error", path, cid,
+                f"{where}: efeito.kind {eff.get('kind') if isinstance(eff, dict) else eff!r} "
+                "fora do catálogo fechado"))
+            return
+        if eff.get("kind") == "dano":
+            cat = eff.get("categoria_arma")
+            if cat not in DANO_BASE_ARMA:
+                findings.append(Finding("cards", "error", path, cid,
+                    f"{where}: categoria_arma {cat!r} inválida"))
+            elif int(eff.get("dano_base", 0) or 0) < DANO_BASE_ARMA[cat]:
+                findings.append(Finding("cards", "error", path, cid,
+                    f"{where}: dano_base {eff.get('dano_base')} < base da arma "
+                    f"{DANO_BASE_ARMA[cat]}"))
+
+    for fn in sorted(os.listdir(cards_dir)):
+        if not fn.endswith(".json"):
+            continue
+        path = os.path.join(cards_dir, fn)
+        try:
+            with open(path, encoding="utf-8") as f:
+                data = json.load(f)
+        except Exception as exc:
+            findings.append(Finding("cards", "error", path, "", str(exc)))
+            continue
+        for c in (data.get("cards") or []):
+            if c.get("origem") not in ("conflito-14", "conflito-15"):
+                continue
+            cid = c.get("id", "")
+            if c.get("patamar") not in PATAMAR:
+                findings.append(Finding("cards", "error", path, cid,
+                    f"patamar inválido: {c.get('patamar')!r}"))
+            if c.get("frequencia") not in FREQ:
+                findings.append(Finding("cards", "error", path, cid,
+                    f"frequência inválida: {c.get('frequencia')!r}"))
+            if c.get("tipo") not in TIPO:
+                findings.append(Finding("cards", "error", path, cid,
+                    f"tipo inválido: {c.get('tipo')!r}"))
+            _kind_ok(c.get("efeito") or {}, path, cid, "efeito")
+            if c.get("central"):
+                rup = c.get("ruptura") or {}
+                evo = c.get("evolucao") or {}
+                if not (rup.get("caminho_a") and rup.get("caminho_b")):
+                    findings.append(Finding("cards", "error", path, cid,
+                        "central sem Ruptura A/B"))
+                if not (evo.get("caminho_a") and evo.get("caminho_b")):
+                    findings.append(Finding("cards", "error", path, cid,
+                        "central sem Evolução A/B"))
+    return findings
+
+
+def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json"),
+                      cards_dir: str = os.path.join("data", "cards")) -> List[Finding]:
+    """conflito-15 Etapa 5: lint do bestiário migrado (schema v4).
+
+    categoria válida, Virtudes 0-5, Vitalidade coerente com Corpo, resistências
+    com tipos/fontes válidos, perfil tático com ≥1 prioridade E regra de fuga/
+    rendição (ou não-fuga INTENCIONAL via resistência 'absoluta'), e ≥1 Carta
+    assinatura OCULTA existente por criatura."""
+    import gamedata
+    findings: List[Finding] = []
+    if not os.path.isfile(bestiary_path):
+        return findings
+    try:
+        with open(bestiary_path, encoding="utf-8") as f:
+            best = json.load(f)
+    except Exception as exc:
+        return [Finding("bestiary", "error", bestiary_path, "", str(exc))]
+
+    CATS = {"lacaio", "padrao", "elite", "chefe", "nomeado"}
+    DANO_VALIDO = set(gamedata.DANO_FISICO + gamedata.DANO_SOBRENATURAL)
+    RESIST_SRC = set(gamedata.RESIST_MODIFIER)
+    FLEE = ("foge", "fug", "recua", "rende", "reagrupa", "recuar", "abandona", "some")
+
+    # ids de Carta ocultas conhecidas (varre data/cards)
+    hidden_cards, all_card_ids = set(), set()
+    if os.path.isdir(cards_dir):
+        for fn in sorted(os.listdir(cards_dir)):
+            if not fn.endswith(".json"):
+                continue
+            try:
+                with open(os.path.join(cards_dir, fn), encoding="utf-8") as f:
+                    for c in (json.load(f).get("cards") or []):
+                        all_card_ids.add(c.get("id"))
+                        if c.get("oculta"):
+                            hidden_cards.add(c.get("id"))
+            except Exception:
+                continue
+
+    for cid, cre in best.items():
+        p = bestiary_path
+        cat = cre.get("categoria")
+        if cat not in CATS:
+            findings.append(Finding("bestiary", "error", p, cid,
+                f"categoria inválida: {cat!r}"))
+        virt = cre.get("virtudes") or {}
+        for vk in ("mente", "agilidade", "forca", "carisma", "corpo"):
+            v = virt.get(vk)
+            if not isinstance(v, int) or not (0 <= v <= 5):
+                findings.append(Finding("bestiary", "error", p, cid,
+                    f"Virtude {vk} inválida: {v!r} (esperado 0-5)"))
+        corpo = int(virt.get("corpo", 0) or 0)
+        esperado = gamedata.vitalidade_para_corpo(corpo)
+        if int(cre.get("max_vitalidade", 0) or 0) != esperado:
+            findings.append(Finding("bestiary", "error", p, cid,
+                f"max_vitalidade {cre.get('max_vitalidade')} != tabela de Corpo {esperado}"))
+        for t, src in (cre.get("resistances") or {}).items():
+            if t not in DANO_VALIDO:
+                findings.append(Finding("bestiary", "error", p, cid,
+                    f"resistência com tipo inválido: {t!r}"))
+            srcs = src if isinstance(src, list) else [src]
+            for s in srcs:
+                if s not in RESIST_SRC:
+                    findings.append(Finding("bestiary", "error", p, cid,
+                        f"resistência com fonte inválida: {s!r}"))
+        for t in (cre.get("immunities") or []):
+            if t not in DANO_VALIDO:
+                findings.append(Finding("bestiary", "error", p, cid,
+                    f"imunidade com tipo inválido: {t!r}"))
+        prof = (cre.get("tactical_profile") or {}).get("priorities") or []
+        if not prof:
+            findings.append(Finding("bestiary", "error", p, cid,
+                "tactical_profile sem prioridades"))
+        else:
+            tem_fuga = any(any(k in str(pr.get("action_hint", "")).lower() for k in FLEE)
+                           for pr in prof)
+            intencional = any(str(pr.get("resistance")) == "absoluta" for pr in prof)
+            if not (tem_fuga or intencional):
+                findings.append(Finding("bestiary", "error", p, cid,
+                    "perfil sem regra de fuga/rendição (nem não-fuga intencional)"))
+        cartas = cre.get("cartas") or []
+        if not cartas:
+            findings.append(Finding("bestiary", "error", p, cid, "sem Cartas"))
+        for card_id in cartas:
+            if all_card_ids and card_id not in all_card_ids:
+                findings.append(Finding("bestiary", "error", p, cid,
+                    f"Carta '{card_id}' inexistente"))
+        if hidden_cards and not (set(cartas) & hidden_cards):
+            findings.append(Finding("bestiary", "error", p, cid,
+                "sem Carta assinatura OCULTA (conflito-08 R7-R9)"))
+    return findings
+
+
 def validate_all(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR,
                  overrides_path: str = OVERRIDES_PATH) -> List[Finding]:
     """Roda todos os validadores; aplica whitelist; ordena por
@@ -470,6 +629,8 @@ def validate_all(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR,
     findings.extend(validate_overrides(codex_dir, overrides_path, graph_dir))
     if codex_dir == CODEX_DIR and graph_dir == GRAPH_DIR:
         findings.extend(validate_encoding())
+        findings.extend(validate_cards())
+        findings.extend(validate_bestiary())
     else:
         paths = _codex_md_paths(codex_dir)
         if os.path.isdir(graph_dir):

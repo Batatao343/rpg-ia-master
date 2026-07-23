@@ -1,0 +1,65 @@
+{
+  "_meta": "spec conflito-14 R6: 2 Cartas de Virtude sugeridas por combinação classe/subclasse.",
+  "sugestoes": {
+    "Devoto do Abismo/consagrado": [
+      "vc_corpo_rijo",
+      "vc_lingua_afiada"
+    ],
+    "Devoto do Abismo/zeloso": [
+      "vc_lingua_afiada",
+      "vc_forca_bruta"
+    ],
+    "Devoto do Abismo/enlutado": [
+      "vc_forca_bruta",
+      "vc_lingua_afiada"
+    ],
+    "Sangromante/exposto": [
+      "vc_agil_reflexo",
+      "vc_lingua_afiada"
+    ],
+    "Sangromante/avaro": [
+      "vc_forca_bruta",
+      "vc_corpo_rijo"
+    ],
+    "Sangromante/silencioso": [
+      "vc_agil_reflexo",
+      "vc_corpo_rijo"
+    ],
+    "Corruptor/biologia": [
+      "vc_mente_lucida",
+      "vc_corpo_rijo"
+    ],
+    "Corruptor/alma": [
+      "vc_mente_lucida",
+      "vc_lingua_afiada"
+    ],
+    "Corruptor/inorganica": [
+      "vc_mente_lucida",
+      "vc_agil_reflexo"
+    ],
+    "Arcanista Cinzento/calibrado": [
+      "vc_mente_lucida",
+      "vc_corpo_rijo"
+    ],
+    "Arcanista Cinzento/descoberto": [
+      "vc_mente_lucida",
+      "vc_agil_reflexo"
+    ],
+    "Arcanista Cinzento/improvisador": [
+      "vc_mente_lucida",
+      "vc_agil_reflexo"
+    ],
+    "Médico de Campo/cirurgiao_trincheira": [
+      "vc_mente_lucida",
+      "vc_agil_reflexo"
+    ],
+    "Médico de Campo/boticario": [
+      "vc_mente_lucida",
+      "vc_lingua_afiada"
+    ],
+    "Médico de Campo/cirurgiao_ferro": [
+      "vc_mente_lucida",
+      "vc_corpo_rijo"
+    ]
+  }
+}

@@ -1,0 +1,426 @@
+{
+  "_meta": "spec conflito-14: Acervo autoral de Sangromante (escala nova 2d10+Virtude). Gerado por scripts/gen_cards_v4.py.",
+  "cards": [
+    {
+      "id": "san_corte_troca",
+      "name": "Corte de Troca",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "agilidade",
+        "forca"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3
+      },
+      "descricao": "Um talho rápido; o preço do sangue já está embutido."
+    },
+    {
+      "id": "san_finta",
+      "name": "Finta de Sangue",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "buff_acerto",
+        "valor": 2
+      },
+      "descricao": "Oferece o pulso, retira a garganta — engana lendo o próprio corte."
+    },
+    {
+      "id": "san_esquiva",
+      "name": "Esquiva Calculada",
+      "tipo": "reacao",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "buff_esquiva",
+        "valor": 2
+      },
+      "descricao": "Cede o couro que pode perder para salvar o que não pode.",
+      "gatilho": "ao_ser_atacado"
+    },
+    {
+      "id": "san_pacto",
+      "name": "Pacto Rápido",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 1
+      },
+      "descricao": "A dor recente afia o gesto seguinte — cada gota cobrada rende juros."
+    },
+    {
+      "id": "san_passo",
+      "name": "Passo Leve",
+      "tipo": "utilitaria",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "mover-se em silêncio/passar despercebido"
+      },
+      "descricao": "Anda como quem não quer dever passagem."
+    },
+    {
+      "id": "san_hemorragia",
+      "name": "Hemorragia",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 3,
+        "duracao": 3
+      },
+      "descricao": "Abre a veia certa; o inimigo se esvai sozinho."
+    },
+    {
+      "id": "san_ultimo_lance",
+      "name": "Último Lance",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "superior",
+      "custo_entropia": 4,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 12
+      },
+      "descricao": "Aposta tudo num só golpe pago com o próprio fôlego."
+    },
+    {
+      "id": "san_exp_espetaculo",
+      "name": "Espetáculo",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeito": {
+        "kind": "taunt",
+        "valor": 2
+      },
+      "descricao": "Sangra em público de propósito — todos os olhos, todas as lâminas."
+    },
+    {
+      "id": "san_exp_credencial",
+      "name": "Credencial de Dor",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "avancado",
+      "custo_entropia": 3,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 8,
+        "principal": true
+      },
+      "descricao": "Reabre a pior cicatriz para pagar um golpe que ninguém esquece.",
+      "ruptura": {
+        "caminho_a": {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 14
+        },
+        "caminho_b": {
+          "kind": "aplicar_condicao",
+          "condicao": "sangrando",
+          "duracao": 3
+        }
+      },
+      "evolucao": {
+        "caminho_a": {
+          "efeito": {
+            "kind": "dano",
+            "categoria_arma": "leve",
+            "dano_base": 11
+          },
+          "ruptura": {
+            "kind": "dano",
+            "categoria_arma": "leve",
+            "dano_base": 18
+          }
+        },
+        "caminho_b": {
+          "efeito": {
+            "kind": "dano",
+            "categoria_arma": "leve",
+            "dano_base": 8
+          },
+          "ruptura": {
+            "kind": "aplicar_condicao",
+            "condicao": "sangrando",
+            "duracao": 5
+          }
+        }
+      },
+      "central": true
+    },
+    {
+      "id": "san_exp_plateia",
+      "name": "Plateia",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 1
+      },
+      "descricao": "Quanto mais gente olha, mais fundo ele corta — a dor exibida vira força."
+    },
+    {
+      "id": "san_ava_reserva",
+      "name": "Reserva de Sangue",
+      "tipo": "utilitaria",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "guardar/estancar recursos p/ mais tarde"
+      },
+      "descricao": "Não gasta uma gota que não renda em dobro."
+    },
+    {
+      "id": "san_ava_juros",
+      "name": "Cobrança com Juros",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "principal": true
+      },
+      "descricao": "Desconta de uma vez tudo o que o inimigo deve — o golpe cobra a dívida inteira.",
+      "ruptura": {
+        "caminho_a": {
+          "kind": "dano",
+          "categoria_arma": "versatil",
+          "dano_base": 16
+        },
+        "caminho_b": {
+          "kind": "aplicar_condicao",
+          "condicao": "atordoado",
+          "duracao": 1
+        }
+      },
+      "evolucao": {
+        "caminho_a": {
+          "efeito": {
+            "kind": "dano",
+            "categoria_arma": "versatil",
+            "dano_base": 10
+          },
+          "ruptura": {
+            "kind": "dano",
+            "categoria_arma": "versatil",
+            "dano_base": 22
+          }
+        },
+        "caminho_b": {
+          "efeito": {
+            "kind": "dano",
+            "categoria_arma": "versatil",
+            "dano_base": 6
+          },
+          "ruptura": {
+            "kind": "aplicar_condicao",
+            "condicao": "atordoado",
+            "duracao": 2
+          }
+        }
+      },
+      "central": true
+    },
+    {
+      "id": "san_ava_sovinice",
+      "name": "Sovinice",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 1
+      },
+      "descricao": "Cada Entropia poupada torna o golpe guardado mais pesado."
+    },
+    {
+      "id": "san_sil_exato",
+      "name": "Corte Exato",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 4
+      },
+      "descricao": "Nem uma gota a mais do que o necessário — cirurgia com adaga."
+    },
+    {
+      "id": "san_sil_veia",
+      "name": "Veia Justa",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 4,
+        "duracao": 3,
+        "principal": true
+      },
+      "descricao": "Encontra o vaso que sangra devagar e não estanca.",
+      "ruptura": {
+        "caminho_a": {
+          "kind": "dot",
+          "dano_base": 8,
+          "duracao": 3
+        },
+        "caminho_b": {
+          "kind": "dot",
+          "dano_base": 4,
+          "duracao": 6
+        }
+      },
+      "evolucao": {
+        "caminho_a": {
+          "efeito": {
+            "kind": "dot",
+            "dano_base": 6,
+            "duracao": 3
+          },
+          "ruptura": {
+            "kind": "dot",
+            "dano_base": 10,
+            "duracao": 3
+          }
+        },
+        "caminho_b": {
+          "efeito": {
+            "kind": "dot",
+            "dano_base": 4,
+            "duracao": 4
+          },
+          "ruptura": {
+            "kind": "dot",
+            "dano_base": 4,
+            "duracao": 8
+          }
+        }
+      },
+      "central": true
+    },
+    {
+      "id": "san_sil_frieza",
+      "name": "Frieza",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_esquiva",
+        "valor": 1
+      },
+      "descricao": "Sem espetáculo, sem susto: economiza o próprio sangue tanto quanto o do outro."
+    }
+  ]
+}

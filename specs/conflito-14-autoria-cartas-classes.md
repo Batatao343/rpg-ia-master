@@ -1,7 +1,7 @@
 # SPEC — Conflito v2 #14: Autoria Completa das Cartas de Classe e Subclasse
 
-> **Status:** `draft`
-> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
+> **Status:** `done` (2026-07-23, sessão 25)
+> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-23
 > **Depende de:** `conflito-02-cartas-acervo-preparacao` (`done` — schema de Carta
 > precisa existir antes de autorar conteúdo real)
 > **Desbloqueia:** `conflito-13` (cutover só remove `player_abilities.json` antigo
@@ -58,6 +58,7 @@ primeiro, depois autoria dedicada".
   design é aceitável, outlier não).
 - **R9** — `data/classes.json` atualizado: `starting_abilities`→cartas iniciais no
   formato novo; `branches` (subclasses) referenciam as cartas próprias.
+- **R10** — As habilidades devem ser variadas entre si e devem seguir a identidade de Valoria, tendo relação com o mundo que foi construido. Não reaproveitar habilidades apenas alterando a quantidade de dano. 
 
 ### Fora de escopo
 
@@ -110,12 +111,39 @@ Motor de Cartas em si (`conflito-02`); bestiário/perfis táticos de inimigos
 
 ## 5. Critérios de aceite
 
-- [ ] Todas as 5 classes × 3 subclasses têm Acervo completo até nível 10.
-- [ ] Nenhuma carta usa efeito fora do catálogo fechado.
-- [ ] Guarda de parity passa (nenhum outlier sem justificativa de papel).
-- [ ] `data/player_abilities.json` antigo pode ser removido com segurança
-  (conteúdo novo cobre tudo que o antigo cobria em intenção de design).
-- [ ] `uv run pytest` verde.
+- [x] Todas as 5 classes × 3 subclasses têm Acervo completo até nível 10
+  (80 Cartas autorais, 16/classe = 7 tronco + 3×3 subclasse; patamares
+  inicial/avançado/superior).
+- [x] Nenhuma carta usa efeito fora do catálogo fechado
+  (`services.cards.CARD_EFFECT_KINDS`; lint + teste).
+- [x] Guarda de parity passa (`dano_base/custo ∈ [1.5, 4.0]` p/ dano puro custeado).
+- [x] `data/player_abilities.json` antigo **pode** ser removido com segurança —
+  a remoção em si + `classes.json.starting_abilities → Cartas` (R9) ficam pro
+  **cutover conflito-13** (trocar agora quebraria o caminho antigo
+  `known_abilities`; Cartas iniciais recomendadas em `STARTING_RECOMENDADO`).
+- [x] `uv run pytest` verde (1254 → +16 desta spec).
+
+### Notas de implementação (desvios da spec, R do CLAUDE.md)
+
+- **R3 (catálogo fechado):** a spec referencia a conflito-03 R6
+  (`conflict_scene.EFFECT_KINDS`), que é o catálogo de **cena/objeto**. Cartas
+  têm vocabulário próprio de efeito (resolvido pela conflito-04/05), então foi
+  criado o catálogo canônico **`services.cards.CARD_EFFECT_KINDS`** (mesmo
+  princípio: fechado, lintado). É esse que a autoria e o lint usam.
+- **R2 (escala):** dano é **flat** por categoria de arma (doc 01 §19: Leve 3 /
+  Marcial 4 / Versátil 6 / Pesada 8), não dado. `efeito.kind=="dano"` carrega
+  `categoria_arma` + `dano_base` (≥ base). Fórmulas `2d6` antigas eliminadas.
+- **R7 (potência):** `data/potency_by_level.json` já vinha preenchido (conflito-11);
+  teste garante cobertura 1-10 × 4 categorias + escada monotônica.
+- **Convivência:** as Cartas de EXEMPLO do motor (conflito-02,
+  `data/cards/exemplos*.json`) permanecem — os testes do motor dependem delas.
+  As autorais são marcadas `origem: "conflito-14"` e ficam em
+  `data/cards/{devoto,sangromante,corruptor,arcanista,medico}.json`.
+- **Arquivos:** `scripts/gen_cards_v4.py` (fonte autoral + gerador) ·
+  `data/cards/*.json` (gerado) · `data/cards/virtude_sugeridas.json` (R6) ·
+  `services/cards.py` (catálogo + helpers `cards_at_patamar`/
+  `suggested_virtue_cards`) · `services/content_validator.py::validate_cards`
+  (Etapa 5) · `docs/CARTAS.md` · `tests/test_conflito_autoria_cartas.py` (16).
 
 ## 6. Smoke test com LLM real
 

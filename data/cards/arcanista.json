@@ -1,0 +1,432 @@
+{
+  "_meta": "spec conflito-14: Acervo autoral de Arcanista Cinzento (escala nova 2d10+Virtude). Gerado por scripts/gen_cards_v4.py.",
+  "cards": [
+    {
+      "id": "arc_descarga",
+      "name": "Descarga do Instrumento",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4
+      },
+      "descricao": "Libera a Entropia canalizada num raio cinza pelo cajado."
+    },
+    {
+      "id": "arc_faisca",
+      "name": "Faísca Cinzenta",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3
+      },
+      "descricao": "Um estalo menor, de graça, para manter a caldeira aquecida."
+    },
+    {
+      "id": "arc_vazao",
+      "name": "Vazão Controlada",
+      "tipo": "utilitaria",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "descarregar Entropia com segurança/ler éter"
+      },
+      "descricao": "Sangra a pressão antes que o instrumento estoure."
+    },
+    {
+      "id": "arc_olho",
+      "name": "Olho Arcano",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "perception",
+        "valor": 1
+      },
+      "descricao": "Enxerga a corrente de éter que os outros só sentem como arrepio."
+    },
+    {
+      "id": "arc_empuxo",
+      "name": "Empuxo Arcano",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 2
+      },
+      "descricao": "Uma onda muda de pressão joga o inimigo para longe."
+    },
+    {
+      "id": "arc_manto",
+      "name": "Manto de Bruma",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "esconder",
+        "valor": 1
+      },
+      "descricao": "Condensa éter cinzento em névoa e some dentro dela."
+    },
+    {
+      "id": "arc_torrente",
+      "name": "Torrente Cinzenta",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "superior",
+      "custo_entropia": 4,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 12
+      },
+      "descricao": "Esvazia a caldeira inteira num só jato."
+    },
+    {
+      "id": "arc_cal_valvula",
+      "name": "Válvula de Segurança",
+      "tipo": "reacao",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "buff_esquiva",
+        "valor": 2
+      },
+      "descricao": "Redireciona a descarga para se proteger sem risco de estouro.",
+      "gatilho": "ao_ser_atacado"
+    },
+    {
+      "id": "arc_cal_feixe",
+      "name": "Feixe Calibrado",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 6,
+        "principal": true
+      },
+      "descricao": "Dano medido ao grama — nunca estoura, nunca desperdiça.",
+      "ruptura": {
+        "caminho_a": {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 12
+        },
+        "caminho_b": {
+          "kind": "protecao",
+          "valor": 5
+        }
+      },
+      "evolucao": {
+        "caminho_a": {
+          "efeito": {
+            "kind": "dano",
+            "categoria_arma": "marcial",
+            "dano_base": 8
+          },
+          "ruptura": {
+            "kind": "dano",
+            "categoria_arma": "marcial",
+            "dano_base": 16
+          }
+        },
+        "caminho_b": {
+          "efeito": {
+            "kind": "dano",
+            "categoria_arma": "marcial",
+            "dano_base": 6
+          },
+          "ruptura": {
+            "kind": "protecao",
+            "valor": 8
+          }
+        }
+      },
+      "central": true
+    },
+    {
+      "id": "arc_cal_regulagem",
+      "name": "Regulagem",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 1
+      },
+      "descricao": "Margem de segurança em tudo — sobra fôlego para aparar o imprevisto."
+    },
+    {
+      "id": "arc_des_mao_nua",
+      "name": "Mão Nua no Éter",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "inicial",
+      "custo_entropia": 2,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6
+      },
+      "descricao": "Sem cajado entre a carne e o Abismo — dói, mas queima o dobro."
+    },
+    {
+      "id": "arc_des_sobrecarga",
+      "name": "Sobrecarga",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "avancado",
+      "custo_entropia": 3,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 8,
+        "principal": true
+      },
+      "descricao": "Deixa a Entropia passar direto pela pele — relâmpago sem para-raios.",
+      "ruptura": {
+        "caminho_a": {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 18
+        },
+        "caminho_b": {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 8,
+          "alvo": "area"
+        }
+      },
+      "evolucao": {
+        "caminho_a": {
+          "efeito": {
+            "kind": "dano",
+            "categoria_arma": "pesada",
+            "dano_base": 11
+          },
+          "ruptura": {
+            "kind": "dano",
+            "categoria_arma": "pesada",
+            "dano_base": 24
+          }
+        },
+        "caminho_b": {
+          "efeito": {
+            "kind": "dano",
+            "categoria_arma": "pesada",
+            "dano_base": 8
+          },
+          "ruptura": {
+            "kind": "dano",
+            "categoria_arma": "pesada",
+            "dano_base": 12,
+            "alvo": "area"
+          }
+        }
+      },
+      "central": true
+    },
+    {
+      "id": "arc_des_nervo",
+      "name": "Nervo Exposto",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 2
+      },
+      "descricao": "Sentir o éter na pele afia cada descarga — ao custo da própria segurança."
+    },
+    {
+      "id": "arc_imp_geringonca",
+      "name": "Geringonça",
+      "tipo": "utilitaria",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "montar/consertar instrumento a partir de sucata"
+      },
+      "descricao": "Um cano velho e um prego viram condutor de éter."
+    },
+    {
+      "id": "arc_imp_bomba",
+      "name": "Bomba de Sucata",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 6,
+        "principal": true,
+        "alvo": "area"
+      },
+      "descricao": "Improviso instável que espalha faíscas por toda a zona.",
+      "ruptura": {
+        "caminho_a": {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 12,
+          "alvo": "area"
+        },
+        "caminho_b": {
+          "kind": "aplicar_condicao",
+          "condicao": "cego",
+          "duracao": 1,
+          "alvo": "area"
+        }
+      },
+      "evolucao": {
+        "caminho_a": {
+          "efeito": {
+            "kind": "dano",
+            "categoria_arma": "marcial",
+            "dano_base": 8,
+            "alvo": "area"
+          },
+          "ruptura": {
+            "kind": "dano",
+            "categoria_arma": "marcial",
+            "dano_base": 16,
+            "alvo": "area"
+          }
+        },
+        "caminho_b": {
+          "efeito": {
+            "kind": "dano",
+            "categoria_arma": "marcial",
+            "dano_base": 6,
+            "alvo": "area"
+          },
+          "ruptura": {
+            "kind": "aplicar_condicao",
+            "condicao": "cego",
+            "duracao": 2,
+            "alvo": "area"
+          }
+        }
+      },
+      "central": true
+    },
+    {
+      "id": "arc_imp_remendo",
+      "name": "Remendo Esperto",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_iniciativa",
+        "valor": 1
+      },
+      "descricao": "Sempre tem uma peça sobrando para a próxima virada."
+    }
+  ]
+}

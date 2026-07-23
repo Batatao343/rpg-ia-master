@@ -1,0 +1,401 @@
+{
+  "_meta": "spec conflito-14: Acervo autoral de Médico de Campo (escala nova 2d10+Virtude). Gerado por scripts/gen_cards_v4.py.",
+  "cards": [
+    {
+      "id": "med_sutura",
+      "name": "Sutura de Campo",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "cura",
+        "valor": 4
+      },
+      "descricao": "Fecha o corte sob fogo — mãos firmes onde as balas passam."
+    },
+    {
+      "id": "med_torniquete",
+      "name": "Torniquete",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "cura",
+        "valor": 3
+      },
+      "descricao": "Corta a hemorragia antes que o corpo perceba a perda."
+    },
+    {
+      "id": "med_estabilizar",
+      "name": "Estabilizar",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "estabilizar",
+        "valor": 1
+      },
+      "descricao": "Traz de volta do umbral quem o Abismo já reclamava."
+    },
+    {
+      "id": "med_mao_firme",
+      "name": "Mão Firme",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_cura",
+        "valor": 1
+      },
+      "descricao": "Não treme nem quando o mundo treme — cada ponto rende mais."
+    },
+    {
+      "id": "med_triagem",
+      "name": "Triagem",
+      "tipo": "utilitaria",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "avaliar ferimentos/prioridade de socorro"
+      },
+      "descricao": "Num olhar, sabe quem espera e quem não pode."
+    },
+    {
+      "id": "med_antitoxina",
+      "name": "Antitoxina",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "purga_condicao"
+      },
+      "descricao": "Neutraliza veneno, praga ou maldição com o composto certo."
+    },
+    {
+      "id": "med_ultima_hora",
+      "name": "Última Hora",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "superior",
+      "custo_entropia": 4,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "cura",
+        "valor": 10
+      },
+      "descricao": "Gasta tudo para arrancar um aliado das mãos do fim."
+    },
+    {
+      "id": "med_tri_reflexo",
+      "name": "Reflexo de Trincheira",
+      "tipo": "reacao",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "cura",
+        "valor": 3
+      },
+      "descricao": "Chega ao caído antes do segundo tiro.",
+      "gatilho": "aliado_cai"
+    },
+    {
+      "id": "med_tri_intervencao",
+      "name": "Intervenção Imediata",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "cura",
+        "valor": 6,
+        "principal": true
+      },
+      "descricao": "Opera no meio do fogo cruzado, sem hesitar um segundo.",
+      "ruptura": {
+        "caminho_a": {
+          "kind": "cura",
+          "valor": 12
+        },
+        "caminho_b": {
+          "kind": "estabilizar",
+          "valor": 2
+        }
+      },
+      "evolucao": {
+        "caminho_a": {
+          "efeito": {
+            "kind": "cura",
+            "valor": 8
+          },
+          "ruptura": {
+            "kind": "cura",
+            "valor": 16
+          }
+        },
+        "caminho_b": {
+          "efeito": {
+            "kind": "cura",
+            "valor": 6
+          },
+          "ruptura": {
+            "kind": "estabilizar",
+            "valor": 3
+          }
+        }
+      },
+      "central": true
+    },
+    {
+      "id": "med_tri_sangue_frio",
+      "name": "Sangue Frio",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_cura",
+        "valor": 1
+      },
+      "descricao": "O caos ao redor não entra nas mãos — cura mais quem está pior."
+    },
+    {
+      "id": "med_bot_composto",
+      "name": "Composto Estimulante",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 2
+      },
+      "descricao": "Uma dose que faz o aliado bater mais forte por um tempo."
+    },
+    {
+      "id": "med_bot_purga",
+      "name": "Purga da Carga",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "avancado",
+      "custo_entropia": 3,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "reduzir_carga_aliado",
+        "valor": 1,
+        "principal": true
+      },
+      "descricao": "Extrai do aliado um pouco do Abismo que ele carrega — só o Médico sabe.",
+      "ruptura": {
+        "caminho_a": {
+          "kind": "reduzir_carga_aliado",
+          "valor": 2
+        },
+        "caminho_b": {
+          "kind": "cura",
+          "valor": 8
+        }
+      },
+      "evolucao": {
+        "caminho_a": {
+          "efeito": {
+            "kind": "reduzir_carga_aliado",
+            "valor": 2
+          },
+          "ruptura": {
+            "kind": "reduzir_carga_aliado",
+            "valor": 3
+          }
+        },
+        "caminho_b": {
+          "efeito": {
+            "kind": "reduzir_carga_aliado",
+            "valor": 1
+          },
+          "ruptura": {
+            "kind": "cura",
+            "valor": 12
+          }
+        }
+      },
+      "central": true
+    },
+    {
+      "id": "med_bot_reagente",
+      "name": "Reagente Certo",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_cura",
+        "valor": 1
+      },
+      "descricao": "Conhece o antídoto de cada veneno de Valoria de cor."
+    },
+    {
+      "id": "med_fer_talas",
+      "name": "Talas de Ferro",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 3
+      },
+      "descricao": "Amarra ferro à carne para que o aliado aguente mais um round."
+    },
+    {
+      "id": "med_fer_protese",
+      "name": "Prótese de Batalha",
+      "tipo": "ativa",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 3,
+        "principal": true
+      },
+      "descricao": "Encaixa uma peça de guerra no aliado ferido — dor vira arma.",
+      "ruptura": {
+        "caminho_a": {
+          "kind": "buff_dano",
+          "valor": 6
+        },
+        "caminho_b": {
+          "kind": "protecao",
+          "valor": 8
+        }
+      },
+      "evolucao": {
+        "caminho_a": {
+          "efeito": {
+            "kind": "buff_dano",
+            "valor": 4
+          },
+          "ruptura": {
+            "kind": "buff_dano",
+            "valor": 8
+          }
+        },
+        "caminho_b": {
+          "efeito": {
+            "kind": "buff_dano",
+            "valor": 3
+          },
+          "ruptura": {
+            "kind": "protecao",
+            "valor": 12
+          }
+        }
+      },
+      "central": true
+    },
+    {
+      "id": "med_fer_solda",
+      "name": "Solda Viva",
+      "tipo": "passiva",
+      "origem": "conflito-14",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 1
+      },
+      "descricao": "O metal que enxerta protege tanto quanto sustenta."
+    }
+  ]
+}
