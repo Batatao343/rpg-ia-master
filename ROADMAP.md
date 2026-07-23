@@ -42,7 +42,7 @@ incluído, menos prioritário** (última spec).
 | 01 ✅ | [conflito-01-virtudes-vitalidade](specs/conflito-01-virtudes-vitalidade.md) | Virtudes, Vitalidade/Ferimentos, migração v4 (fundação de dados) — **`done`** |
 | 02 ✅ | [conflito-02-cartas-acervo-preparacao](specs/conflito-02-cartas-acervo-preparacao.md) | Cartas, Acervo, Preparação, Ruptura, Cartas de Virtude — **`done`** |
 | 03 ✅ | [conflito-03-zonas-cena-objetos](specs/conflito-03-zonas-cena-objetos.md) | Zonas, cena congelada, objetos, catálogo fechado de efeitos — **`done`** |
-| 04 | [conflito-04-turnos-iniciativa-ataques](specs/conflito-04-turnos-iniciativa-ataques.md) | Pré/Ação/Pós, iniciativa por lado, 2d10+Virtude, Crítico por dupla |
+| 04 ✅ | [conflito-04-turnos-iniciativa-ataques](specs/conflito-04-turnos-iniciativa-ataques.md) | Pré/Ação/Pós, iniciativa por lado, 2d10+Virtude, Crítico por dupla — **`done`** (motor; fiação no nó → cutover 13) |
 | 05 | [conflito-05-armadura-dano-ferimentos](specs/conflito-05-armadura-dano-ferimentos.md) | Tipos de dano, armadura/Integridade, Ferimentos localizados |
 | 06 | [conflito-06-reacoes-movimento](specs/conflito-06-reacoes-movimento.md) | Reações, AoO, Engajar/Desengajar/Guardar/Esconder-se/Procurar |
 | 07 | [conflito-07-morte-rendicao-captura](specs/conflito-07-morte-rendicao-captura.md) | Última Ação, Estado Terminal, Cicatrizes, rendição, encerramento |
@@ -77,8 +77,14 @@ depois do cutover 13.
   reforço). Aditivo puro: `combat["scene"]` convive com o dict antigo. +13
   `test_conflito_zonas`.
 
-Suíte **1083 verde**. Próxima: **04 (Turnos/iniciativa/2d10+Virtude/Crítico)** —
-primeira spec que CONSOME Virtudes+Cartas+Zonas na resolução. As demais em `draft`.
+- **04** — motor de resolução: `services/conflict_resolution.py` (iniciativa por
+  lado, ataque 2d10+Virtude vs Esquiva, Crítico/Supercrítico por DUPLA nos dados
+  mantidos, Vantagem/Desvantagem 3d10-keep-2, testes gerais Ímpeto+Presságio+
+  Virtude, Ruptura=Vantagem). ADITIVO (motor antigo intacto); a fiação no nó
+  (Pré/Ação/Pós) + remoção do antigo vão no cutover 13. +19 `test_conflito_iniciativa`.
+
+Suíte **1102 verde**. Próxima: **05 (Armadura/dano/Ferimentos localizados)** —
+consome o resultado do ataque da 04. As demais em `draft`.
 
 ---
 

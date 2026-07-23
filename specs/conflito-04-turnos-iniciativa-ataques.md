@@ -1,6 +1,6 @@
 # SPEC — Conflito v2 #04: Turnos, Iniciativa e Ataques
 
-> **Status:** `draft`
+> **Status:** `done` (2026-07-22) — motor de resolução; fiação no nó (Etapa 6) no cutover conflito-13
 > **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
 > **Depende de:** `conflito-01-virtudes-vitalidade`, `conflito-02-cartas-acervo-preparacao`
 > (ambas `done` antes de iniciar)
@@ -141,15 +141,31 @@ class AttackResolution(TypedDict):
 
 ## 5. Critérios de aceite
 
-- [ ] Iniciativa por lado funciona (automática quando claro, disputada 2d10+Agilidade
-  quando não).
-- [ ] Ataque = 2d10+Virtude vs Esquiva; Crítico/Supercrítico por dupla, não mais
-  "natural 20".
-- [ ] Vantagem/Desvantagem = 3d10 mantendo 2, cancelam-se mutuamente.
-- [ ] Testes gerais usam Ímpeto+Presságio+Virtude vs dificuldade, com consequência
-  por dado maior.
-- [ ] Resolução mostra matemática completa e transparente.
-- [ ] `uv run pytest` verde.
+- [x] Iniciativa por lado funciona (automática quando claro, disputada 2d10+Agilidade
+  quando não) — `roll_initiative_by_side`.
+- [x] Ataque = 2d10+Virtude vs Esquiva; Crítico/Supercrítico por dupla, não mais
+  "natural 20" — `resolve_attack`/`_crit_from_kept`.
+- [x] Vantagem/Desvantagem = 3d10 mantendo 2, cancelam-se mutuamente (`roll_kept`/`net_advantage`).
+- [x] Testes gerais usam Ímpeto+Presságio+Virtude vs dificuldade, com consequência
+  por dado maior (`general_test`).
+- [x] Resolução mostra matemática completa e transparente (payload de `resolve_attack`).
+- [x] `uv run pytest` verde — **1102 passed, 1 skipped** (+19 `test_conflito_iniciativa`).
+
+## 5.1 Desvios de implementação
+
+- **Motor ADITIVO, não reescrita in-place**: as funções novas vivem em
+  `services/conflict_resolution.py` (`roll_initiative_by_side`, `resolve_attack`,
+  `roll_kept`, `general_test`, `net_advantage`, `multiply_principal`,
+  `virtude_para_tipo`, `compute_esquiva`). `combat_mechanics.resolve_player_action`/
+  `roll_initiative`/`compute_player_combat_stats` do motor ANTIGO ficam intactas —
+  reescrevê-las in-place quebraria centenas de testes do motor vivo até o cutover.
+- **Etapa 6 (estrutura Pré/Ação/Pós em `agents/combat.py`) DIFERIDA para o cutover
+  `conflito-13`**: é ali que o nó troca de "1 round = 1 chamada" para o pipeline
+  novo e o motor antigo é removido. Aqui entregamos o núcleo puro + testes
+  exaustivos (a peça de maior risco), pronto para o nó consumir no cutover.
+- **Esquiva** = 10 + Agilidade; penalidade de armadura pesada entra na `conflito-05`.
+- **Virtude do inimigo legado**: `virtude_value` deriva de `attributes` (clampado
+  0-5) enquanto o bestiário não é reautorado (`conflito-15`).
 
 ## 6. Smoke test com LLM real
 

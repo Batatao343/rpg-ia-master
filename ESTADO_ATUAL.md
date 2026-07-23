@@ -15,8 +15,11 @@
 > **03:** cena posicional (`services/conflict_scene.py` — zonas não-grid, eixos
 > Distância/Postura/Ocultação, Engajamento separado, objetos com catálogo FECHADO
 > de efeitos, cena congelada + reforços), aditivo puro em `combat["scene"]` (+13).
-> **Suíte 1083 verde.** **Próxima: `conflito-04` (Turnos/iniciativa/2d10+Virtude/
-> Crítico) — 1ª spec que CONSOME Virtudes+Cartas+Zonas na resolução.**
+> **04:** motor de resolução (`services/conflict_resolution.py` — iniciativa por
+> lado, ataque 2d10+Virtude vs Esquiva, Crítico/Super por dupla, Vantagem 3d10,
+> testes gerais Ímpeto+Presságio, Ruptura=Vantagem). ADITIVO — fiação no nó
+> (Pré/Ação/Pós) + remoção do motor antigo vão no **cutover conflito-13** (+19).
+> **Suíte 1102 verde.** **Próxima: `conflito-05` (Armadura/dano/Ferimentos).**
 > Ordem completa no ROADMAP § Migração. Última atualização: 2026-07-22
 > (sessão 24). Histórico das sessões anteriores: abaixo e em `CHANGELOG.md`.
 
