@@ -1,7 +1,9 @@
 # SPEC — Conflito v2 #07: Última Ação, Estado Terminal, Cicatrizes e Rendição
 
-> **Status:** `draft`
-> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
+> **Status:** `done` (2026-07-23) — motor puro aditivo em `services/death_flow.py`;
+> reconciliação com `services/checkpoints.py`/`death_pending`/UI e hook ao vivo no
+> pipeline de dano vão no cutover `conflito-13` (pontos marcados)
+> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-23
 > **Depende de:** `conflito-01-virtudes-vitalidade`, `conflito-04-turnos-iniciativa-ataques`,
 > `conflito-05-armadura-dano-ferimentos` (todas `done` antes de iniciar)
 > **Desbloqueia:** `conflito-08` (rendição é gatilho de perfil tático),
@@ -152,13 +154,14 @@ class Scar(TypedDict):
 
 ## 5. Critérios de aceite
 
-- [ ] Último Crítico dispara Última Ação → Estado Terminal corretamente.
-- [ ] Estabilização segue as regras de recurso (kit/Médico/poção) e limite de 2
-  tentativas.
-- [ ] Cicatriz é gerada (guardada por `isinstance`/`try-except`) sempre que o fluxo
-  completo é sobrevivido, nunca recusável.
-- [ ] Rendição é 100% determinística pelo perfil, sem decisão de LLM.
-- [ ] `uv run pytest` verde.
+- [x] Último Crítico dispara Última Ação → Estado Terminal corretamente
+  (`critical_spaces_full`/`should_trigger_last_stand`/`trigger_last_stand`).
+- [x] Estabilização segue as regras de recurso (kit/Médico/poção) e limite de 2
+  tentativas (`attempt_stabilization`).
+- [x] Cicatriz é gerada (guardada por `isinstance`/`try-except`) sempre que o fluxo
+  completo é sobrevivido, nunca recusável (`generate_scar` + guard testado com `FallbackLLM`).
+- [x] Rendição é 100% determinística pelo perfil, sem decisão de LLM (`resolve_surrender`).
+- [x] `uv run pytest` verde — **1166 passed** (+20 `test_conflito_morte`).
 
 ## 6. Smoke test com LLM real
 

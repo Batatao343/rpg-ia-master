@@ -45,7 +45,7 @@ incluído, menos prioritário** (última spec).
 | 04 ✅ | [conflito-04-turnos-iniciativa-ataques](specs/conflito-04-turnos-iniciativa-ataques.md) | Pré/Ação/Pós, iniciativa por lado, 2d10+Virtude, Crítico por dupla — **`done`** (motor; fiação no nó → cutover 13) |
 | 05 ✅ | [conflito-05-armadura-dano-ferimentos](specs/conflito-05-armadura-dano-ferimentos.md) | Tipos de dano, armadura/Integridade, Ferimentos localizados — **`done`** |
 | 06 ✅ | [conflito-06-reacoes-movimento](specs/conflito-06-reacoes-movimento.md) | Reações (janela/cadeia/1 comum), AoO universal, Engajar/Desengajar/Guardar/Esconder-se/Procurar + ocultação por observador — **`done`** (motor; fiação → cutover 13) |
-| 07 | [conflito-07-morte-rendicao-captura](specs/conflito-07-morte-rendicao-captura.md) | Última Ação, Estado Terminal, Cicatrizes, rendição, encerramento |
+| 07 ✅ | [conflito-07-morte-rendicao-captura](specs/conflito-07-morte-rendicao-captura.md) | Última Ação, Estado Terminal, estabilização, Cicatriz (LLM+guard), categorias de inimigo, golpe não-letal, rendição determinística, encerramento — **`done`** (motor; fiação → cutover 13) |
 | 08 | [conflito-08-comportamento-tatico-companheiros](specs/conflito-08-comportamento-tatico-companheiros.md) | Perfil tático persistido, ordens de companheiro, info revelada |
 | 09 | [conflito-09-fuga-perseguicao](specs/conflito-09-fuga-perseguicao.md) | Trilha de perseguição, Teste de Sorte, abandono simulado |
 | 10 | [conflito-10-abismo-em-conflito](specs/conflito-10-abismo-em-conflito.md) | Eventos do Abismo preparados, carregamento determinístico |

@@ -29,7 +29,15 @@
 > limite; `conflict_scene.py` ganhou orçamento por turno Pré/Ação/Pós + manobras
 > Engajar/Desengajar/Guardar/Esconder-se/Procurar/alertar + ocultação RELATIVA por
 > observador `hidden_from`/`approx_from`). Aditivo — fiação no cutover 13 (+18).
-> **Suíte 1146 verde.** **Próxima: `conflito-07` (morte/rendição/captura).**
+> **07:** morte rica (`services/death_flow.py` — último Crítico dispara Última
+> Ação com Vantagem extrema/ignora recursos ausentes/pode Ruptura → Estado
+> Terminal → morte imediata sem aliado ou até 2 estabilizações (kit/Médico/poção
+> = auto metade Vitalidade); Cicatriz OBRIGATÓRIA via LLM+guard `FallbackLLM`;
+> consciência pós-conflito por Ferimento; categorias de inimigo Lacaio/Padrão/
+> Elite/Chefe/Nomeado; golpe não-letal; rendição 100% determinística por perfil;
+> encerramento sem interpretação livre). Aditivo — cutover 13 reconcilia com
+> `checkpoints.py`/`death_pending` (+20).
+> **Suíte 1166 verde.** **Próxima: `conflito-08` (perfil tático/companheiros).**
 > Ordem completa no ROADMAP § Migração. Última atualização: 2026-07-23
 > (sessão 25). Histórico das sessões anteriores: abaixo e em `CHANGELOG.md`.
 
