@@ -36,6 +36,33 @@ class Condition(TypedDict, total=False):
     control: Optional[str]  # "stun" (perde turno) | "root" (não foge) | "fear" (-2 acerto)
 
 
+class Armor(TypedDict, total=False):
+    # spec conflito-05: armadura com Proteção + Integridade (fica Comprometida em 0).
+    categoria: str          # "leve" | "media" | "pesada"
+    protecao: int
+    integridade_max: int
+    integridade_atual: int
+    penalidade_esquiva: int
+    reducoes_max: int
+    comprometida: bool
+
+
+class Shield(TypedDict, total=False):
+    categoria: str          # "broquel" | "comum" | "pesado"
+    protecao: int
+    integridade_max: int
+    integridade_atual: int
+    requisito_forca: int
+    comprometida: bool
+
+
+class Wound(TypedDict, total=False):
+    # spec conflito-05: Ferimento localizado (vive em PlayerStats.ferimentos[cat]).
+    categoria: str          # "leve" | "grave" | "critico"
+    regiao: str
+    suprimida: bool         # tratada, aguardando remoção no descanso longo
+
+
 class EffectSpec(TypedDict, total=False):
     # spec conflito-03: catálogo FECHADO de efeitos mecânicos (services/conflict_scene
     # .EFFECT_KINDS). Compartilhado com conflito-10/11 — definido aqui, só referenciado lá.
@@ -114,7 +141,11 @@ class PlayerStats(TypedDict, total=False):
     vitalidade: int                    # pool atual (substitui hp no motor novo)
     max_vitalidade: int                # derivado de Corpo (gamedata.VITALIDADE_POR_CORPO)
     ferimento_espacos: Dict[str, int]  # capacidade {leve,grave,critico} derivada de Corpo (recalc no bump)
-    ferimentos: Dict[str, List]        # Ferimentos ATIVOS por categoria — preenchidos na conflito-05
+    ferimentos: Dict[str, List]        # Ferimentos ATIVOS por categoria (Wound) — conflito-05
+    armor: Optional[Armor]             # spec conflito-05: armadura equipada (ou None)
+    shield: Optional[Shield]           # spec conflito-05: escudo equipado (ou None)
+    resistances: Dict[str, str]        # tipo_dano -> "resistencia|resistencia_maior|vulnerabilidade|..."
+    immunities: List[str]              # tipos de dano imunes
     # Fase 4.3: inventário estruturado — {"id": str, "qty": int, "display_name"?: str}
     # (id resolve no ARTIFACTS_DB; item_desconhecido preserva nome de save antigo)
     inventory: List[Dict]

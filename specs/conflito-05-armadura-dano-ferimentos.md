@@ -1,6 +1,6 @@
 # SPEC — Conflito v2 #05: Armadura, Tipos de Dano e Ferimentos
 
-> **Status:** `draft`
+> **Status:** `done` (2026-07-22) — pipeline aditivo; remoção do `hp -= dano` antigo no cutover 13
 > **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
 > **Depende de:** `conflito-01-virtudes-vitalidade`, `conflito-04-turnos-iniciativa-ataques`
 > (ambas `done` antes de iniciar)
@@ -154,11 +154,24 @@ class Wound(TypedDict):
 
 ## 5. Critérios de aceite
 
-- [ ] Pipeline de dano segue a ordem fixa R8, transparente no log.
-- [ ] Cada tipo de dano (6 sobrenaturais + 3 físicos) tem efeito correto e testado.
-- [ ] Armadura/escudo não somam; Integridade zerada = Comprometida.
-- [ ] Ferimento localizado agrava corretamente na mesma região.
-- [ ] `uv run pytest` verde.
+- [x] Pipeline de dano segue a ordem fixa R8, transparente no log (`resolve_damage_and_wounds`).
+- [x] Cada tipo de dano (6 sobrenaturais + 3 físicos) tem efeito correto e testado.
+- [x] Armadura/escudo não somam; Integridade zerada = Comprometida.
+- [x] Ferimento localizado agrava corretamente na mesma região (`apply_wound`/`combine_category`).
+- [x] `uv run pytest` verde — **1128 passed, 1 skipped** (+26 `test_conflito_dano`).
+
+## 5.1 Desvios de implementação
+
+- **Módulo novo `services/conflict_damage.py`, ADITIVO**: o `hp -= dano` do motor
+  antigo fica intacto até o cutover (conflito-13). Opera sobre `vitalidade`/
+  `ferimentos` (schema conflito-01). Sangramento reusa `Condition` (sem DoT paralelo).
+- **Sobrenatural só é reduzido por armadura COMPATÍVEL** (`resist_tipos` no dict de
+  armadura) — fiel ao doc §21.4; armadura comum protege só físico.
+- **Só armadura com `reducoes_max` explícito gasta Integridade extra**; escudo não
+  (a tabela do doc não lista reduções por ataque para escudos).
+- **`resistances`/`immunities`** entram como placeholder no schema (conversão
+  completa do bestiário = conflito-15). Requisito de Força de escudo/arma pesada e
+  Guardar/`defensavel` completo ficam para conflito-06/08.
 
 ## 6. Smoke test com LLM real
 

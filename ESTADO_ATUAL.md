@@ -19,7 +19,11 @@
 > lado, ataque 2d10+Virtude vs Esquiva, Crítico/Super por dupla, Vantagem 3d10,
 > testes gerais Ímpeto+Presságio, Ruptura=Vantagem). ADITIVO — fiação no nó
 > (Pré/Ação/Pós) + remoção do motor antigo vão no **cutover conflito-13** (+19).
-> **Suíte 1102 verde.** **Próxima: `conflito-05` (Armadura/dano/Ferimentos).**
+> **05:** dano→Ferimentos (`services/conflict_damage.py` — ordem fixa R8: dano×
+> crítico → res/vuln/imunidade → Proteção → Integridade → Vitalidade/Gravidade →
+> Ferimentos; 3 físicos + 6 sobrenaturais; armadura/escudo/Comprometida; Ferimento
+> localizado agrava/escala; sacrifício Sangromante; recuperação). Aditivo (+26).
+> **Suíte 1128 verde.** **Próxima: `conflito-06` (Reações/movimento/AoO).**
 > Ordem completa no ROADMAP § Migração. Última atualização: 2026-07-22
 > (sessão 24). Histórico das sessões anteriores: abaixo e em `CHANGELOG.md`.
 

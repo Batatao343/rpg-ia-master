@@ -43,7 +43,7 @@ incluído, menos prioritário** (última spec).
 | 02 ✅ | [conflito-02-cartas-acervo-preparacao](specs/conflito-02-cartas-acervo-preparacao.md) | Cartas, Acervo, Preparação, Ruptura, Cartas de Virtude — **`done`** |
 | 03 ✅ | [conflito-03-zonas-cena-objetos](specs/conflito-03-zonas-cena-objetos.md) | Zonas, cena congelada, objetos, catálogo fechado de efeitos — **`done`** |
 | 04 ✅ | [conflito-04-turnos-iniciativa-ataques](specs/conflito-04-turnos-iniciativa-ataques.md) | Pré/Ação/Pós, iniciativa por lado, 2d10+Virtude, Crítico por dupla — **`done`** (motor; fiação no nó → cutover 13) |
-| 05 | [conflito-05-armadura-dano-ferimentos](specs/conflito-05-armadura-dano-ferimentos.md) | Tipos de dano, armadura/Integridade, Ferimentos localizados |
+| 05 ✅ | [conflito-05-armadura-dano-ferimentos](specs/conflito-05-armadura-dano-ferimentos.md) | Tipos de dano, armadura/Integridade, Ferimentos localizados — **`done`** |
 | 06 | [conflito-06-reacoes-movimento](specs/conflito-06-reacoes-movimento.md) | Reações, AoO, Engajar/Desengajar/Guardar/Esconder-se/Procurar |
 | 07 | [conflito-07-morte-rendicao-captura](specs/conflito-07-morte-rendicao-captura.md) | Última Ação, Estado Terminal, Cicatrizes, rendição, encerramento |
 | 08 | [conflito-08-comportamento-tatico-companheiros](specs/conflito-08-comportamento-tatico-companheiros.md) | Perfil tático persistido, ordens de companheiro, info revelada |
@@ -83,8 +83,13 @@ depois do cutover 13.
   Virtude, Ruptura=Vantagem). ADITIVO (motor antigo intacto); a fiação no nó
   (Pré/Ação/Pós) + remoção do antigo vão no cutover 13. +19 `test_conflito_iniciativa`.
 
-Suíte **1102 verde**. Próxima: **05 (Armadura/dano/Ferimentos localizados)** —
-consome o resultado do ataque da 04. As demais em `draft`.
+- **05** — dano→Ferimentos: `services/conflict_damage.py` (ordem fixa R8: dano×
+  crítico → res/vuln/imunidade → Proteção → Integridade → Vitalidade/Gravidade →
+  Ferimentos+secundários; 3 físicos + 6 sobrenaturais; armadura/escudo com
+  Integridade/Comprometida; Ferimento localizado agrava/escala; sacrifício de
+  Vitalidade do Sangromante; recuperação). Aditivo. +26 `test_conflito_dano`.
+
+Suíte **1128 verde**. Próxima: **06 (Reações/movimento/AoO)**. As demais em `draft`.
 
 ---
 

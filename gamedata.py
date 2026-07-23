@@ -183,6 +183,52 @@ NIVEL_MAX = 10           # conflito-01 R3: nível máximo passa de 20 para 10
 # Níveis em que o jogador escolhe +1 numa Virtude (R3).
 NIVEIS_GANHO_VIRTUDE = (2, 4, 6, 8, 10)
 
+# --- CONFLITO v2 (spec conflito-05): armadura / escudo / dano-base ---
+# Dano-base por categoria de arma (R1).
+DANO_BASE_ARMA = {"leve": 3, "marcial": 4, "versatil": 6, "pesada": 8}
+
+# Armaduras (R5): protecao / integridade_max / penalidade_esquiva / reducoes_max_por_ataque.
+ARMADURAS = {
+    "leve":   {"protecao": 1, "integridade_max": 4, "penalidade_esquiva": 0, "reducoes_max": 1},
+    "media":  {"protecao": 2, "integridade_max": 6, "penalidade_esquiva": 1, "reducoes_max": 2},
+    "pesada": {"protecao": 3, "integridade_max": 8, "penalidade_esquiva": 2, "reducoes_max": 3},
+}
+
+# Escudos (R6): protecao / integridade_max / requisito_forca.
+ESCUDOS = {
+    "broquel": {"protecao": 1, "integridade_max": 3, "requisito_forca": 0},
+    "comum":   {"protecao": 2, "integridade_max": 5, "requisito_forca": 2},
+    "pesado":  {"protecao": 3, "integridade_max": 7, "requisito_forca": 3},
+}
+
+# Ajuste de dano por Resistência/Vulnerabilidade (R4).
+RESIST_MODIFIER = {
+    "resistencia": -2, "resistencia_maior": -4,
+    "vulnerabilidade": 2, "vulnerabilidade_maior": 4,
+}
+
+DANO_FISICO = ("cortante", "perfurante", "impactante")
+DANO_SOBRENATURAL = ("igneo", "gelido", "eletrico", "arcano", "corrosivo", "abissal")
+
+
+def make_armor(categoria: str) -> dict:
+    """Instancia uma armadura pela categoria (R5), Integridade cheia."""
+    base = ARMADURAS.get(categoria, ARMADURAS["leve"])
+    return {"categoria": categoria, "protecao": base["protecao"],
+            "integridade_max": base["integridade_max"],
+            "integridade_atual": base["integridade_max"],
+            "penalidade_esquiva": base["penalidade_esquiva"],
+            "reducoes_max": base["reducoes_max"], "comprometida": False}
+
+
+def make_shield(categoria: str) -> dict:
+    base = ESCUDOS.get(categoria, ESCUDOS["broquel"])
+    return {"categoria": categoria, "protecao": base["protecao"],
+            "integridade_max": base["integridade_max"],
+            "integridade_atual": base["integridade_max"],
+            "requisito_forca": base["requisito_forca"], "comprometida": False}
+
+
 # Cartas preparadas por faixa de nível (spec conflito-02 R2).
 def prepared_slots_for_level(level) -> int:
     try:
