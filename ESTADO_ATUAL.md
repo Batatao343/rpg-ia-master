@@ -77,10 +77,18 @@
 > INTACTA; `validate_narrative_consistency` proíbe reverter morte→fuga/soltar
 > capturado/restaurar cenário sem novo acontecimento; `summary_facts` p/ archivist).
 > Aditivo — consumo em loot/archivist no cutover 13 (+7).
-> **Suíte 1230 verde.** **Próxima: `conflito-13` (CUTOVER — religa roteamento,
-> remove motor antigo, reescreve playtest). Specs 01-12 do épico todas `done`.**
-> Ordem completa no ROADMAP § Migração. Última atualização: 2026-07-23
-> (sessão 25). Histórico das sessões anteriores: abaixo e em `CHANGELOG.md`.
+> **13 (CUTOVER, `in-progress`):** decisão R6 fechada = **Opção A** (death_flow
+> resolve Última Ação/Estado Terminal/estabilização no conflito; só a morte REAL
+> aciona `death_pending`/tela Continuar-Aceitar da sessão 23; sobreviver aplica
+> Cicatriz e o combate segue). **Etapa 1 (auditoria MORRE/SOBREVIVE de
+> `combat_mechanics.py` + `tests/test_cutover_audit.py`) `done`.** **Etapa 2
+> (`services/conflict_turn.py` — `TurnDeclaration` + orquestrador de turno Pré/Ação/
+> Pós compondo os motores 01-12, 100% determinístico) `done` (+7).** FALTA o "big
+> bang": reescrever `combat_node`+`main.py` pro motor novo, remover as funções
+> d20+AC, reescrever o playtest (declaração estruturada) e auditar ~199 testes de
+> combate — leva a suíte ao vermelho, exige passo dedicado (não iniciado).
+> **Suíte 1240 verde.** Última atualização: 2026-07-23 (sessão 25).
+> Ordem completa no ROADMAP § Migração. Histórico anterior: abaixo e `CHANGELOG.md`.
 
 ---
 
