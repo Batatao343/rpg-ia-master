@@ -1,7 +1,8 @@
 # SPEC — Conflito v2 #10: Cargas e Eventos do Abismo em Conflito
 
-> **Status:** `draft`
-> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
+> **Status:** `done` (2026-07-23) — motor puro aditivo (`services/abyss_events.py`);
+> o consumidor de `abyss_charge` e a fiação no loop de combate vão no cutover `conflito-13`
+> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-23
 > **Depende de:** `conflito-01-virtudes-vitalidade` (Cargas), `conflito-03-zonas-cena-objetos`
 > (catálogo fechado de efeitos), `conflito-04-turnos-iniciativa-ataques`
 > (todas `done` antes de iniciar)
@@ -106,10 +107,12 @@ class PreparedAbyssEvent(TypedDict):
 
 ## 5. Critérios de aceite
 
-- [ ] Evento do Abismo só carrega com base preparada na cena — nunca "do nada".
-- [ ] Carregamento em combate é 100% determinístico/seedado, zero chamada de LLM.
-- [ ] Nenhuma das proibições de R4 é violável pelo motor.
-- [ ] `uv run pytest` verde.
+- [x] Evento do Abismo só carrega com base preparada na cena — nunca "do nada"
+  (`validate_event_has_scene_basis`).
+- [x] Carregamento em combate é 100% determinístico/seedado, zero chamada de LLM
+  (`can_trigger`/`select_event`).
+- [x] Nenhuma das proibições de R4 é violável pelo motor (`validate_abyss_effect`).
+- [x] `uv run pytest` verde — **1212 passed** (+13 `test_conflito_abismo`).
 
 ## 6. Smoke test com LLM real
 

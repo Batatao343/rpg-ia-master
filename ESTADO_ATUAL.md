@@ -54,7 +54,14 @@
 > rendição/esconderijo/combate/morte/reencontro}; sacrifício voluntário só com
 > traço; ataques em perseguição). Aditivo — substitui `combat_flee_*` no cutover
 > 13 (+17).
-> **Suíte 1199 verde.** **Próxima: `conflito-10` (Abismo em conflito).**
+> **10:** Abismo em conflito (`services/abyss_events.py` — eventos preparados pela
+> LLM ANTES do combate com `base_na_cena` OBRIGATÓRIA; carregamento 100%
+> determinístico/seed em combate por Cargas+gatilho+prioridade+usos, ZERO LLM;
+> proibições rígidas R4/R6 — não desfaz sucesso, não controla mente, não cria/
+> agrava Ferimento direto, catálogo fechado da conflito-03; assinatura visual fixa
+> + gasto de Carga reportado). Camada COMPLEMENTAR aos gatilhos de classe (não
+> substitui). Aditivo — consumidor de `abyss_charge` no cutover 13 (+13).
+> **Suíte 1212 verde.** **Próxima: `conflito-11` (preparação de encontro LLM).**
 > Ordem completa no ROADMAP § Migração. Última atualização: 2026-07-23
 > (sessão 25). Histórico das sessões anteriores: abaixo e em `CHANGELOG.md`.
 
