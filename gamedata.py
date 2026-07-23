@@ -183,6 +183,35 @@ NIVEL_MAX = 10           # conflito-01 R3: nível máximo passa de 20 para 10
 # Níveis em que o jogador escolhe +1 numa Virtude (R3).
 NIVEIS_GANHO_VIRTUDE = (2, 4, 6, 8, 10)
 
+# Cartas preparadas por faixa de nível (spec conflito-02 R2).
+def prepared_slots_for_level(level) -> int:
+    try:
+        lv = int(level)
+    except (TypeError, ValueError):
+        lv = 1
+    lv = max(1, min(NIVEL_MAX, lv))
+    if lv <= 3:
+        return 4
+    if lv <= 6:
+        return 5
+    if lv <= 9:
+        return 6
+    return 7
+
+
+# Estágio de evolução das Cartas de Virtude pela Virtude relacionada (R7).
+def virtue_card_stage(virtude_value) -> int:
+    try:
+        v = int(virtude_value)
+    except (TypeError, ValueError):
+        v = 0
+    if v <= 2:
+        return 1
+    if v <= 4:
+        return 2
+    return 3
+
+
 # Vitalidade máxima derivada de Corpo (R4).
 VITALIDADE_POR_CORPO = {0: 6, 1: 8, 2: 10, 3: 12, 4: 14, 5: 16}
 

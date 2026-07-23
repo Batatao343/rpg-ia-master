@@ -5,13 +5,16 @@
 > funcional em `docs/valoria_conflict_migration_v2/`). Substitui o combate atual
 > por um jogo tático de cartas 100% determinístico; **cutover atômico** só na
 > `conflito-13` (jogo fica injogável no meio, por design). **`conflito-01`
-> (fundação de dados) `done`**: 5 Virtudes (0-5), Vitalidade/Ferimentos por
-> Corpo, nível máx 10, migração v3→v4 (saves antigos ARQUIVADOS — corte
-> deliberado), `attributes`/mana/stamina fora do jogador via ponte `actor_mods`.
-> **Suíte 1045 verde** (+30 `test_conflito_virtudes`). **Próxima: `conflito-02`
-> (Cartas/Acervo) e `conflito-03` (Zonas), paralelizáveis.** Ordem completa no
-> ROADMAP § Migração. Última atualização: 2026-07-22 (sessão 24). Histórico das
-> sessões anteriores: abaixo e em `CHANGELOG.md`.
+> (fundação de dados) `done`** + **`conflito-02` (Cartas) `done`**.
+> **01:** 5 Virtudes (0-5), Vitalidade/Ferimentos por Corpo, nível máx 10,
+> migração v3→v4 (saves antigos ARQUIVADOS — corte deliberado), `attributes`/
+> mana/stamina fora do jogador via ponte `actor_mods` (+30 testes).
+> **02:** sistema de Cartas (`services/cards.py` — Acervo/Preparação/frequência/
+> Ruptura/evolução A-B; `data/cards/` exemplos; criação 6+4+2; level-up escolhe
+> Carta), convive com `known_abilities` até o cutover (+25 testes).
+> **Suíte 1070 verde.** **Próxima: `conflito-03` (Zonas/cena/objetos) → 04.**
+> Ordem completa no ROADMAP § Migração. Última atualização: 2026-07-22
+> (sessão 24). Histórico das sessões anteriores: abaixo e em `CHANGELOG.md`.
 
 ---
 

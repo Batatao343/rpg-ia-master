@@ -191,6 +191,56 @@ def apply_racial_traits(sheet: Dict[str, Any], race: str) -> Dict[str, Any]:
     return sheet
 
 
+def _resolve_starting_cards(user_input: Dict[str, Any], class_name: str,
+                            virtudes: Dict[str, int]) -> Dict[str, Any]:
+    """spec conflito-02: monta Acervo (6) + Preparadas (4) + 2 Cartas de Virtude.
+
+    Vem do JOGADOR (wizard) quando fornecido; senão auto-seleciona do pool da
+    classe (determinístico) — fluxo clássico/CLI segue funcionando."""
+    from services import cards as cards_svc
+
+    pool = [c["id"] for c in cards_svc.cards_for_class(class_name)]
+    known = list(dict.fromkeys(user_input.get("known_cards") or []))
+    if not known:
+        known = pool[:6]
+    else:
+        known = [c for c in known if c in pool][:6]
+    if len(known) < 6:  # completa com o pool se o jogador escolheu de menos
+        known += [c for c in pool if c not in known][: 6 - len(known)]
+
+    slots = gamedata.prepared_slots_for_level(user_input.get("level", 1))
+    prepared = list(dict.fromkeys(user_input.get("prepared_cards") or []))
+    prepared = [c for c in prepared if c in known][:slots]
+    if not prepared:
+        prepared = known[:slots]
+
+    # 2 Cartas de Virtude (permanentes, fora dos slots), estágio pela Virtude relacionada
+    vpool = cards_svc.virtue_cards_pool()
+    chosen_ids = list(dict.fromkeys(user_input.get("virtue_cards") or []))
+    valid_ids = {c["id"] for c in vpool}
+    chosen_ids = [cid for cid in chosen_ids if cid in valid_ids][:2]
+    if len(chosen_ids) < 2:
+        for c in vpool:
+            if c["id"] not in chosen_ids:
+                chosen_ids.append(c["id"])
+            if len(chosen_ids) == 2:
+                break
+    virtue_cards = []
+    for cid in chosen_ids[:2]:
+        card = cards_svc.get_card(cid) or {}
+        vkey = gamedata.normalize_virtude(card.get("virtude_relacionada", ""))
+        estagio = gamedata.virtue_card_stage(virtudes.get(vkey, 0))
+        virtue_cards.append({"card_id": cid, "virtude": vkey, "estagio": estagio})
+
+    return {
+        "known_cards": known,
+        "prepared_cards": prepared,
+        "virtue_cards": virtue_cards,
+        "card_usage": {},
+        "evolved_cards": {},
+    }
+
+
 def _get_class_data(class_name: str) -> Dict:
     """Retorna os dados oficiais da classe ou um padrão genérico."""
     if class_name in CLASSES:
@@ -280,11 +330,14 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
         "abyss_charge": 0,
         "virtudes": virtudes,
         "inventory": [],  # preenchido abaixo
-        "known_abilities": final_abilities,
+        "known_abilities": final_abilities,  # LEGADO (motor antigo até cutover conflito-13)
         "level": level,
         "xp": 0,
         "pending_choices": [],
     }
+
+    # spec conflito-02: Cartas (Acervo/Preparadas/Virtude) — convivem com known_abilities
+    sheet.update(_resolve_starting_cards(user_input, p_class, virtudes))
 
     # Vitalidade/Ferimentos: cheia na criação (R4)
     gamedata.sync_player_vitals(sheet, heal_to_full=True)

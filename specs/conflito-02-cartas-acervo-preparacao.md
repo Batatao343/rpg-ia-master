@@ -1,6 +1,6 @@
 # SPEC — Conflito v2 #02: Cartas, Acervo e Preparação
 
-> **Status:** `draft`
+> **Status:** `done` (2026-07-22)
 > **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
 > **Depende de:** `conflito-01-virtudes-vitalidade` (`done` antes de iniciar)
 > **Desbloqueia:** `conflito-04` (ataques usam Carta+Virtude), `conflito-06`
@@ -129,14 +129,27 @@ conteúdo (`conflito-14`); Reações em cadeia (`conflito-06` — aqui só o `ti
 
 ## 5. Critérios de aceite
 
-- [ ] Personagem nível 1 tem 6 cartas no Acervo, 4 preparadas, 2 Cartas de Virtude
+- [x] Personagem nível 1 tem 6 cartas no Acervo, 4 preparadas, 2 Cartas de Virtude
   permanentes.
-- [ ] Preparar/trocar carta fora de combate funciona; em combate/perigo é
-  bloqueado.
-- [ ] Frequência por carta é respeitada (turno/cena/descanso curto/longo).
-- [ ] Ruptura gera Carga mesmo em falha, carga nova não afeta a própria Ruptura.
-- [ ] Evolução Caminho A/B é permanente e única a partir do nível 4.
-- [ ] `uv run pytest` verde.
+- [x] Preparar/trocar carta fora de combate funciona; em combate/perigo é
+  bloqueado (`can_reorganize`/`set_prepared`).
+- [x] Frequência por carta é respeitada (turno/cena/descanso curto/longo, cascata).
+- [x] Ruptura gera Carga mesmo em falha, carga nova não afeta a própria Ruptura.
+- [x] Evolução Caminho A/B é permanente e única a partir do nível 4.
+- [x] `uv run pytest` verde — **1070 passed, 1 skipped** (+25 `test_conflito_cartas`).
+
+## 5.1 Desvios de implementação
+
+- **6 cartas de exemplo por classe** (não 3-5): R3 exige 6 no Acervo do nível 1, e
+  o auto-preenchimento do creator precisa desse pool. Ficam em
+  `data/cards/exemplos.json` + `exemplos_extra.json` (loader mescla o diretório).
+- **`known_abilities`/`ability_cooldowns` PERMANECEM** (motor antigo até o cutover
+  `conflito-13`). A escolha de Carta no level-up (`kind:"carta"`) foi ADICIONADA
+  ao lado da escolha de habilidade legada (`kind:"ability"`) — as duas coexistem
+  na transição; o motor novo (conflito-04) passa a consumir as Cartas.
+- **`set_prepared`/`can_reorganize`** reusam a noção de zona segura (perigo ≤ 3,
+  não-apex, sem combate ativo) sem a trava de early-game do `recovery_rest_safe`
+  (reorganizar vale em qualquer nível).
 
 ## 6. Smoke test com LLM real
 

@@ -36,6 +36,23 @@ class Condition(TypedDict, total=False):
     control: Optional[str]  # "stun" (perde turno) | "root" (não foge) | "fear" (-2 acerto)
 
 
+class Carta(TypedDict, total=False):
+    # spec conflito-02: Carta substitui o formato de player_abilities.json.
+    # efeito.kind usa o MESMO catálogo fechado da preparação de cena (conflito-03);
+    # a RESOLUÇÃO em combate é escopo da conflito-04.
+    id: str
+    name: str
+    tipo: str            # "ativa" | "passiva" | "utilitaria" | "reacao"
+    classe: str
+    subclasse: str
+    patamar: str         # "inicial" | "avancado" | "superior"
+    custo_entropia: int
+    frequencia: str      # "livre"|"turno"|"cena"|"descanso_curto"|"descanso_longo"
+    virtude_permitida: List[str]
+    efeito: Dict
+    ruptura: Optional[Dict]   # {"caminho_a": {...}, "caminho_b": {...}} (nível 4+)
+
+
 class PlayerStats(TypedDict, total=False):
     name: str
     class_name: str
@@ -70,8 +87,16 @@ class PlayerStats(TypedDict, total=False):
     # Fase 4.3: slots de equipamento — {"weapon"|"armor"|"accessory": item_id|None}
     # combate lê SÓ os slots (inventory.equip/unequip; backfill auto-equipa 1x)
     equipment: Dict[str, Optional[str]]
-    known_abilities: List[str]  # Fase 4.1: ids canônicos de player_abilities.json
-    # Fase 4.1: escolhas de level up pendentes — {"id", "level", "kind": ability|attribute}
+    known_abilities: List[str]  # Fase 4.1: ids canônicos de player_abilities.json (LEGADO até cutover conflito-13)
+    # --- spec conflito-02: Cartas (Acervo/Preparação/Ruptura/Virtude) ---
+    # Convivem com known_abilities/ability_cooldowns até o cutover (conflito-13);
+    # o motor de combate NOVO (conflito-04) passa a consumir estes campos.
+    known_cards: List[str]             # Acervo: ids de Cartas conhecidas
+    prepared_cards: List[str]          # subconjunto preparado (tamanho por nível)
+    card_usage: Dict[str, Dict]        # id -> {used_this_turn, used_this_scene, used_since_short_rest, used_since_long_rest}
+    virtue_cards: List[Dict]           # 2 permanentes: {card_id, virtude, estagio}
+    evolved_cards: Dict[str, str]      # id -> caminho ("A"|"B") já evoluído (permanente, único)
+    # Fase 4.1: escolhas de level up pendentes — {"id", "level", "kind": ability|virtude|carta}
     pending_choices: List[Dict]
     defense: int
     attack_bonus: int

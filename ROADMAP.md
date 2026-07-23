@@ -40,7 +40,7 @@ incluído, menos prioritário** (última spec).
 | # | Spec | Bloco funcional |
 |---|---|---|
 | 01 ✅ | [conflito-01-virtudes-vitalidade](specs/conflito-01-virtudes-vitalidade.md) | Virtudes, Vitalidade/Ferimentos, migração v4 (fundação de dados) — **`done`** |
-| 02 | [conflito-02-cartas-acervo-preparacao](specs/conflito-02-cartas-acervo-preparacao.md) | Cartas, Acervo, Preparação, Ruptura, Cartas de Virtude |
+| 02 ✅ | [conflito-02-cartas-acervo-preparacao](specs/conflito-02-cartas-acervo-preparacao.md) | Cartas, Acervo, Preparação, Ruptura, Cartas de Virtude — **`done`** |
 | 03 | [conflito-03-zonas-cena-objetos](specs/conflito-03-zonas-cena-objetos.md) | Zonas, cena congelada, objetos, catálogo fechado de efeitos |
 | 04 | [conflito-04-turnos-iniciativa-ataques](specs/conflito-04-turnos-iniciativa-ataques.md) | Pré/Ação/Pós, iniciativa por lado, 2d10+Virtude, Crítico por dupla |
 | 05 | [conflito-05-armadura-dano-ferimentos](specs/conflito-05-armadura-dano-ferimentos.md) | Tipos de dano, armadura/Integridade, Ferimentos localizados |
@@ -61,12 +61,18 @@ incluído, menos prioritário** (última spec).
 de motor (dependem só do schema respectivo — 02 e 05/08), mas só entra em produção
 depois do cutover 13.
 
-**Progresso:** **01 `done`** (2026-07-22) — fundação de dados entregue: 5 Virtudes
-(0-5, distribuição 4/3/2/1/1), Vitalidade + espaços de Ferimento derivados de
-Corpo, nível máx 10 com +1 Virtude nos pares, migração v3→v4 (hard cutover,
-saves antigos arquivados), `attributes`/mana/stamina fora do jogador (ponte
-`actor_mods`). +30 testes (`test_conflito_virtudes`), suíte 1045 verde. Próxima:
-02/03. As demais seguem em `draft`.
+**Progresso:** **01 + 02 `done`** (2026-07-22).
+- **01** — fundação de dados: 5 Virtudes (0-5, distribuição 4/3/2/1/1), Vitalidade
+  + espaços de Ferimento por Corpo, nível máx 10 com +1 Virtude nos pares,
+  migração v3→v4 (hard cutover, saves antigos arquivados), `attributes`/mana/
+  stamina fora do jogador (ponte `actor_mods`). +30 `test_conflito_virtudes`.
+- **02** — sistema de Cartas: `services/cards.py` (Acervo/Preparação/frequência
+  por carta/Ruptura/evolução A-B), `data/cards/` exemplos (6/classe + Cartas de
+  Virtude), criação com 6+4+2, level-up com escolha de Carta. Convive com o motor
+  antigo (`known_abilities`) até o cutover. +25 `test_conflito_cartas`.
+
+Suíte **1070 verde**. Próxima: **03 (Zonas/cena/objetos)** → depois 04. As demais
+seguem em `draft`.
 
 ---
 

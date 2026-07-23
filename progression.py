@@ -85,6 +85,9 @@ def grant_xp(player: Dict, amount: int, *,
                 p[res] = min(p[field], int(p.get(res, 0) or 0) + delta)
         p["pending_choices"].append(
             {"id": f"lvl{new_level}-ability", "level": new_level, "kind": "ability"})
+        # spec conflito-02 R4: a cada nível, nova Carta OU evolução (mut. exclusivo)
+        p["pending_choices"].append(
+            {"id": f"lvl{new_level}-carta", "level": new_level, "kind": "carta"})
         # R3: níveis 2/4/6/8/10 dão +1 numa Virtude (escolha do jogador)
         if new_level in gamedata.NIVEIS_GANHO_VIRTUDE:
             p["pending_choices"].append(
@@ -146,6 +149,9 @@ def apply_choice(player: Dict, choice_id: str, *,
                  ability_id: Optional[str] = None,
                  attr: Optional[str] = None,
                  virtude: Optional[str] = None,
+                 card_id: Optional[str] = None,
+                 evolve_card_id: Optional[str] = None,
+                 caminho: Optional[str] = None,
                  abilities_db: Optional[Dict] = None) -> Tuple[Dict, Optional[str]]:
     """Valida e consome UMA pending_choice. Retorna (player, erro|None).
 
@@ -184,6 +190,27 @@ def apply_choice(player: Dict, choice_id: str, *,
         p["virtudes"] = virts
         if key == "corpo":
             gamedata.sync_player_vitals(p)  # sobe teto de Vitalidade/espaços na hora
+    elif choice.get("kind") == "carta":
+        # spec conflito-02 R4: UMA escolha por nível — nova Carta XOR evolução
+        from services import cards as cards_svc
+        if card_id and (evolve_card_id or caminho):
+            return player, "Escolha nova Carta OU evolução, não ambas."
+        if card_id:
+            pool = {c["id"] for c in cards_svc.cards_for_class(str(p.get("class_name", "")))}
+            if card_id not in pool:
+                return player, f"Carta '{card_id}' não é da classe."
+            known = list(p.get("known_cards") or [])
+            if card_id in known:
+                return player, f"Carta '{card_id}' já está no Acervo."
+            p["known_cards"] = known + [card_id]
+        elif evolve_card_id:
+            fake = {"player": p}
+            res = cards_svc.evolve_card(fake, evolve_card_id, caminho or "")
+            if not res["ok"]:
+                return player, res["error"]
+            p["known_cards"] = list(p.get("known_cards") or [])  # garante presença de campos
+        else:
+            return player, "Escolha de Carta exige card_id (nova) ou evolve_card_id+caminho."
     else:
         return player, f"Tipo de escolha desconhecido: {choice.get('kind')!r}."
 
