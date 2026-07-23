@@ -87,6 +87,10 @@
 > bang": reescrever `combat_node`+`main.py` pro motor novo, remover as funções
 > d20+AC, reescrever o playtest (declaração estruturada) e auditar ~199 testes de
 > combate — leva a suíte ao vermelho, exige passo dedicado (não iniciado).
+> **DECISÃO DO USUÁRIO (2026-07-23):** o "big bang" do cutover fica ADIADO. Antes
+> dele, fazer **conflito-14 (autoria de Cartas)** e **conflito-15 (autoria de
+> bestiário/perfis)** — rodam em paralelo, NÃO quebram nada, mantêm o repo verde.
+> O cutover 13 é o passo dedicado DEPOIS que 14/15 fecharem. **PRÓXIMA: `conflito-14`.**
 > **Suíte 1240 verde.** Última atualização: 2026-07-23 (sessão 25).
 > Ordem completa no ROADMAP § Migração. Histórico anterior: abaixo e `CHANGELOG.md`.
 
