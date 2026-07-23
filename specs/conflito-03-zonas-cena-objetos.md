@@ -1,6 +1,6 @@
 # SPEC — Conflito v2 #03: Zonas, Cena Congelada e Objetos Interativos
 
-> **Status:** `draft`
+> **Status:** `done` (2026-07-22)
 > **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
 > **Depende de:** `conflito-01-virtudes-vitalidade` (`done` antes de iniciar)
 > **Desbloqueia:** `conflito-04` (movimento por zona), `conflito-06` (Engajar/
@@ -118,11 +118,23 @@ class EffectSpec(TypedDict):
 
 ## 5. Critérios de aceite
 
-- [ ] Zonas, distância, postura e ocultação funcionam como eixos independentes.
-- [ ] Objeto interativo mostra só interação+custo ao jogador, efeito oculto até uso.
-- [ ] Efeito mecânico fora do catálogo fechado é rejeitado na validação.
-- [ ] Cena congelada impede acréscimo de elementos fora dos gatilhos preparados.
-- [ ] `uv run pytest` verde.
+- [x] Zonas, distância, postura e ocultação funcionam como eixos independentes.
+- [x] Objeto interativo mostra só interação+custo ao jogador, efeito oculto até uso.
+- [x] Efeito mecânico fora do catálogo fechado é rejeitado na validação.
+- [x] Cena congelada impede acréscimo de elementos fora dos gatilhos preparados.
+- [x] `uv run pytest` verde — **1083 passed, 1 skipped** (+13 `test_conflito_zonas`).
+
+## 5.1 Desvios de implementação
+
+- **Dict-based, não Pydantic**: `ConflictScene`/`SceneObject`/`EffectSpec` são
+  dicts + TypedDicts (state.py), não modelos Pydantic — a cena vive em
+  `combat["scene"]` e precisa ser JSON-serializável no save sem custo de
+  (de)serialização. O catálogo fechado (`EFFECT_KINDS`) é a fonte de verdade da
+  validação.
+- **Aditivo puro**: nenhum callsite do motor antigo tocado; `combat` dict
+  (`round/active/order/idle_turns`) e `ConflictScene` coexistem até o cutover
+  (conflito-13). O consumo real da cena (movimento em ataque, Reações por objeto)
+  é conflito-04/06.
 
 ## 6. Smoke test com LLM real
 

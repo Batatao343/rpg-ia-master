@@ -41,7 +41,7 @@ incluído, menos prioritário** (última spec).
 |---|---|---|
 | 01 ✅ | [conflito-01-virtudes-vitalidade](specs/conflito-01-virtudes-vitalidade.md) | Virtudes, Vitalidade/Ferimentos, migração v4 (fundação de dados) — **`done`** |
 | 02 ✅ | [conflito-02-cartas-acervo-preparacao](specs/conflito-02-cartas-acervo-preparacao.md) | Cartas, Acervo, Preparação, Ruptura, Cartas de Virtude — **`done`** |
-| 03 | [conflito-03-zonas-cena-objetos](specs/conflito-03-zonas-cena-objetos.md) | Zonas, cena congelada, objetos, catálogo fechado de efeitos |
+| 03 ✅ | [conflito-03-zonas-cena-objetos](specs/conflito-03-zonas-cena-objetos.md) | Zonas, cena congelada, objetos, catálogo fechado de efeitos — **`done`** |
 | 04 | [conflito-04-turnos-iniciativa-ataques](specs/conflito-04-turnos-iniciativa-ataques.md) | Pré/Ação/Pós, iniciativa por lado, 2d10+Virtude, Crítico por dupla |
 | 05 | [conflito-05-armadura-dano-ferimentos](specs/conflito-05-armadura-dano-ferimentos.md) | Tipos de dano, armadura/Integridade, Ferimentos localizados |
 | 06 | [conflito-06-reacoes-movimento](specs/conflito-06-reacoes-movimento.md) | Reações, AoO, Engajar/Desengajar/Guardar/Esconder-se/Procurar |
@@ -71,8 +71,14 @@ depois do cutover 13.
   Virtude), criação com 6+4+2, level-up com escolha de Carta. Convive com o motor
   antigo (`known_abilities`) até o cutover. +25 `test_conflito_cartas`.
 
-Suíte **1070 verde**. Próxima: **03 (Zonas/cena/objetos)** → depois 04. As demais
-seguem em `draft`.
+- **03** — cena posicional: `services/conflict_scene.py` (zonas não-grid, 3 eixos
+  Distância/Postura/Ocultação, Engajamento separado, objetos interativos com
+  catálogo FECHADO de efeitos `EFFECT_KINDS`, cena congelada + gatilhos de
+  reforço). Aditivo puro: `combat["scene"]` convive com o dict antigo. +13
+  `test_conflito_zonas`.
+
+Suíte **1083 verde**. Próxima: **04 (Turnos/iniciativa/2d10+Virtude/Crítico)** —
+primeira spec que CONSOME Virtudes+Cartas+Zonas na resolução. As demais em `draft`.
 
 ---
 

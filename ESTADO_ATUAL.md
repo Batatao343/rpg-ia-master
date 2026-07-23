@@ -12,7 +12,11 @@
 > **02:** sistema de Cartas (`services/cards.py` — Acervo/Preparação/frequência/
 > Ruptura/evolução A-B; `data/cards/` exemplos; criação 6+4+2; level-up escolhe
 > Carta), convive com `known_abilities` até o cutover (+25 testes).
-> **Suíte 1070 verde.** **Próxima: `conflito-03` (Zonas/cena/objetos) → 04.**
+> **03:** cena posicional (`services/conflict_scene.py` — zonas não-grid, eixos
+> Distância/Postura/Ocultação, Engajamento separado, objetos com catálogo FECHADO
+> de efeitos, cena congelada + reforços), aditivo puro em `combat["scene"]` (+13).
+> **Suíte 1083 verde.** **Próxima: `conflito-04` (Turnos/iniciativa/2d10+Virtude/
+> Crítico) — 1ª spec que CONSOME Virtudes+Cartas+Zonas na resolução.**
 > Ordem completa no ROADMAP § Migração. Última atualização: 2026-07-22
 > (sessão 24). Histórico das sessões anteriores: abaixo e em `CHANGELOG.md`.
 

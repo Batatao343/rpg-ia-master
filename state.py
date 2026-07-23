@@ -36,6 +36,40 @@ class Condition(TypedDict, total=False):
     control: Optional[str]  # "stun" (perde turno) | "root" (não foge) | "fear" (-2 acerto)
 
 
+class EffectSpec(TypedDict, total=False):
+    # spec conflito-03: catálogo FECHADO de efeitos mecânicos (services/conflict_scene
+    # .EFFECT_KINDS). Compartilhado com conflito-10/11 — definido aqui, só referenciado lá.
+    kind: str      # alter_terrain|block_route|unblock_route|damage|request_reaction|
+                   # apply_condition|reposition|spawn_reinforcement|destroy_object|
+                   # change_environment_condition
+    params: Dict
+
+
+class SceneObject(TypedDict, total=False):
+    # spec conflito-03: objeto interativo da cena. O jogador vê label+cost das
+    # interações, NUNCA o effect (oculto até uso, salvo investigação prévia).
+    id: str
+    name: str
+    distance_state: str     # "proximo" | "distante" | "separado"
+    zone_id: str
+    interactions: List[Dict]  # {label, cost: "pre_acao"|"pos_acao"|"acao", effect: EffectSpec}
+    secret: bool
+    discovered: bool
+    uses_remaining: Optional[int]
+    destroyed: bool
+
+
+class ConflictScene(TypedDict, total=False):
+    # spec conflito-03: cena de conflito com posicionamento por zonas (não-grid).
+    # Vive em GameState.combat["scene"]; convive com round/active/order/idle_turns
+    # até o cutover (conflito-13) consolidar. `frozen` trava acréscimos por LLM.
+    zones: List[Dict]              # {id, name, connections: List[zone_id]}
+    positions: Dict[str, Dict]     # participant_id -> {zone_id, distance_state, postura, ocultacao, engaged_with}
+    objects: List[SceneObject]
+    frozen: bool
+    reinforcement_triggers: List[Dict]  # gatilhos de reforço declarados ANTES do início
+
+
 class Carta(TypedDict, total=False):
     # spec conflito-02: Carta substitui o formato de player_abilities.json.
     # efeito.kind usa o MESMO catálogo fechado da preparação de cena (conflito-03);
