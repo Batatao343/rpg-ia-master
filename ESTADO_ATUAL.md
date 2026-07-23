@@ -69,7 +69,16 @@
 > via LLM+guard → `fallback_safe_scene` determinística quando a cadeia falha;
 > `build_npc_combat_sheet` dá ficha de combate completa ao NPC). Aditivo — mudança
 > de GRAFO no cutover 13 (+11).
-> **Suíte 1223 verde.** **Próxima: `conflito-12` (loot + resumo narrativo).**
+> **12:** loot + resumo canônico (`services/conflict_summary.py` —
+> `ConflictSummary` de 18 campos montado do estado FINAL já resolvido SEM LLM
+> [mortos/rendidos/fugitivos/capturados/inconscientes/Ferimentos/Cicatrizes/
+> Cartas+resistências reveladas/objetos usados/fatos de relação/loot/party];
+> `loot_context` passa o Nível do Encontro como `danger` com `economy.roll_loot`
+> INTACTA; `validate_narrative_consistency` proíbe reverter morte→fuga/soltar
+> capturado/restaurar cenário sem novo acontecimento; `summary_facts` p/ archivist).
+> Aditivo — consumo em loot/archivist no cutover 13 (+7).
+> **Suíte 1230 verde.** **Próxima: `conflito-13` (CUTOVER — religa roteamento,
+> remove motor antigo, reescreve playtest). Specs 01-12 do épico todas `done`.**
 > Ordem completa no ROADMAP § Migração. Última atualização: 2026-07-23
 > (sessão 25). Histórico das sessões anteriores: abaixo e em `CHANGELOG.md`.
 

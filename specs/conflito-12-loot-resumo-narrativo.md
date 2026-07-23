@@ -1,7 +1,9 @@
 # SPEC — Conflito v2 #12: Integração de Loot e Resumo Canônico Pós-Conflito
 
-> **Status:** `draft`
-> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
+> **Status:** `done` (2026-07-23) — motor puro aditivo (`services/conflict_summary.py`);
+> `economy.roll_loot` intacta; o consumo em `agents/loot.py`/`agents/archivist.py` é
+> o cutover `conflito-13`
+> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-23
 > **Depende de:** `conflito-07-morte-rendicao-captura`, `conflito-08-comportamento-tatico-companheiros`,
 > `conflito-09-fuga-perseguicao` (todas `done` antes de iniciar — precisa de
 > todos os desfechos possíveis de conflito)
@@ -108,10 +110,13 @@ class ConflictSummary(TypedDict):
 
 ## 5. Critérios de aceite
 
-- [ ] Combate/perseguição/loot resolvem 100% sem LLM antes do resumo existir.
-- [ ] Resumo canônico cobre todos os campos de R2.
-- [ ] `economy.py`/`roll_loot` continuam funcionando sem reescrita desnecessária.
-- [ ] `uv run pytest` verde.
+- [x] Combate/perseguição/loot resolvem 100% sem LLM antes do resumo existir
+  (`build_summary` recebe estado FINAL já resolvido; nenhuma chamada de LLM).
+- [x] Resumo canônico cobre todos os campos de R2 (18 campos de `ConflictSummary`;
+  teste varre `model_fields`).
+- [x] `economy.py`/`roll_loot` continuam funcionando sem reescrita desnecessária
+  (teste de assinatura; `loot_context` só escolhe o `danger`).
+- [x] `uv run pytest` verde — **1230 passed** (+7 `test_conflito_resumo`).
 
 ## 6. Smoke test com LLM real
 
