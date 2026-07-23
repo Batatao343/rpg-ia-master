@@ -1,7 +1,9 @@
 # SPEC — Conflito v2 #09: Fuga e Perseguição
 
-> **Status:** `draft`
-> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
+> **Status:** `done` (2026-07-23) — motor puro aditivo (`services/chase.py`);
+> substituir o fluxo `combat_flee_attempt`/`combat_flee_destination` e ajustar os
+> perfis `fujao`/`quester` do playtest vão no cutover `conflito-13`
+> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-23
 > **Depende de:** `conflito-03-zonas-cena-objetos`, `conflito-04-turnos-iniciativa-ataques`,
 > `conflito-06-reacoes-movimento`, `conflito-07-morte-rendicao-captura`
 > (todas `done` antes de iniciar)
@@ -112,11 +114,13 @@ class AbandonOutcome(TypedDict):
 
 ## 5. Critérios de aceite
 
-- [ ] Trilha de perseguição avança/recua corretamente conforme testes/ações.
-- [ ] Teste de Sorte dos companheiros aplica Vantagem/Desvantagem corretamente.
-- [ ] Abandono simula destino automaticamente e de forma reproduzível (mesma
-  seed = mesmo resultado).
-- [ ] `uv run pytest` verde.
+- [x] Trilha de perseguição avança/recua corretamente conforme testes/ações
+  (`resolve_chase_round`; abaixo de Pressionado = alcançado).
+- [x] Teste de Sorte dos companheiros aplica Vantagem/Desvantagem corretamente
+  (`luck_roll`/`luck_to_advantage`, cap ±1).
+- [x] Abandono simula destino automaticamente e de forma reproduzível (mesma
+  seed = mesmo resultado) — `simulate_abandoned_companion` com `random.Random(seed)`.
+- [x] `uv run pytest` verde — **1199 passed** (+17 `test_conflito_fuga`).
 
 ## 6. Smoke test com LLM real
 

@@ -46,7 +46,15 @@
 > R7, revelação de Cartas/Resistências que PERSISTE no bestiário via overlay
 > `data/runtime/`, exclusiva de variante fica oculta). Aditivo — remoção de
 > `get_behavior` e fiação no cutover 13 (+16).
-> **Suíte 1182 verde.** **Próxima: `conflito-09` (fuga/perseguição).**
+> **09:** fuga/perseguição (`services/chase.py` — trilha Pressionado→Afastado→
+> Quase Livre→Escapou derivada da distância; perseguidor só segue se o
+> `TacticalProfile` mandar; condutor sempre o protagonista + Virtude por
+> abordagem; Teste de Sorte 1d10 por companheiro com cap ±1; abandono separa o
+> NPC e resolve o destino por SIMULAÇÃO determinística por seed ∈ {fuga/captura/
+> rendição/esconderijo/combate/morte/reencontro}; sacrifício voluntário só com
+> traço; ataques em perseguição). Aditivo — substitui `combat_flee_*` no cutover
+> 13 (+17).
+> **Suíte 1199 verde.** **Próxima: `conflito-10` (Abismo em conflito).**
 > Ordem completa no ROADMAP § Migração. Última atualização: 2026-07-23
 > (sessão 25). Histórico das sessões anteriores: abaixo e em `CHANGELOG.md`.
 
