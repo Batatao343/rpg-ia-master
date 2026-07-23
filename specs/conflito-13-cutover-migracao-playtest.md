@@ -1,7 +1,9 @@
 # SPEC — Conflito v2 #13: Cutover, Remoção do Motor Antigo e Playtest Estruturado
 
-> **Status:** `draft`
-> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
+> **Status:** `in-progress` (2026-07-23) — Etapa 1 (auditoria) `done`; R6 decidido.
+> Cutover executado em ESTÁGIOS commitados verdes na branch
+> `refactor/reestruturacao-combate` (só o merge final pra `main` é atômico).
+> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-23
 > **Depende de:** `conflito-01` a `conflito-12` (TODAS `done` antes de iniciar)
 > **Desbloqueia:** fecha tecnicamente o motor do épico; `conflito-16` (frontend)
 > pode consumir a API estabilizada por esta spec
@@ -67,6 +69,50 @@ então os perfis precisam falar a API estruturada do motor novo diretamente.
 Autoria de conteúdo (`conflito-14`/`15`, podem rodar em paralelo às specs
 01-12, mas só entram em produção depois deste cutover); frontend
 (`conflito-16`).
+
+## 2.1. Decisão do R6 — reconciliação com checkpoints (FECHADA 2026-07-23: Opção A)
+
+Decidido com o usuário: **death_flow resolve o fluxo terminal INTEIRO dentro do
+conflito; só a morte REAL aciona `death_pending`/tela de escolha.**
+
+- último Ferimento Crítico → **Última Ação** → **Estado Terminal** → estabilização
+  rodam 100% determinístico, SEM pausa e SEM tocar checkpoint.
+- `death_flow.attempt_stabilization` devolve `dead=True` (sem aliado capaz ou 2
+  falhas) → só aí o nó de combate seta `death_pending=True` e cai no fluxo
+  existente `checkpoints.resolve_death_choice` (**Continuar**=restaura checkpoint /
+  **Aceitar**=memorial, sessão 23 preservada — sem permadeath, memorial voluntário).
+- sobreviver ao Estado Terminal (`revived=True`) → aplica a **Cicatriz** obrigatória
+  (`death_flow.generate_scar`) e o combate CONTINUA; nunca aciona checkpoint.
+- `should_checkpoint` já ignora `death_pending`/`game_over` — nada muda ali.
+
+## 2.2. Auditoria de código morto (Etapa 1 `done`, 2026-07-23)
+
+Fronteira de remoção verificada por `tests/test_cutover_audit.py`. Fora de
+`agents/combat.py`, a ÚNICA chamada de produção de função "que morre" é
+`combat_suggestions` em `api.py` (adaptada na Etapa 2). Todo o resto das
+referências externas é comentário de docstring.
+
+**MORRE (motor d20+AC do turno — substituído por `services/*` novos):**
+`resolve_player_action`, `resolve_enemy_turn`, `resolve_ally_turn`, `roll_initiative`
+(→ `conflict_resolution.roll_initiative_by_side`), `get_behavior`/`choose_enemy_attack`/
+`pick_target`/`check_morale`/`_avg_damage`/`_attack_applies_condition`/`_target_ac`/
+`_apply_attack_conditions` (→ `tactical_profile`/`death_flow`), `usable_enemy_abilities`/
+`_pick_enemy_ability`/`_resolve_enemy_ability`/`apply_boss_phase`, `combat_suggestions`,
+`_find_target`, `_healing_consumable`.
+
+**SOBREVIVE (helpers genéricos + sistema de classes Entropia/Carga da v4 + condições
++ passivas — reusados pelo motor novo e por api/progression/inventory/world_utils):**
+`get_mod`/`normalize_attr`/`attr_mods`/`virtude_mods`/`actor_mods`, dados
+(`roll_dice_numeric`/`resolve_damage_formula`/`roll_magnitude`/`_heal`), condições
+(`parse_condition`/`condition_modifiers`/`has_control`/`is_condition_resisted`/
+`apply_condition`/`tick_conditions`), passivas (`class_passives`/`learned_passives`/
+`item_passives`/`player_passives`), Entropia/Carga (`entropy_config`/`abyss_tier`/
+`reset_entropy_turn`/`apply_entropy_trigger`/`taunt_aggro_multiplier`/`apply_blood_leak`/
+`arm_boiler`/`tick_boiler`/`reduce_ally_abyss`/`apply_scar`/`dependencia_cost`/
+`apply_transformacao`/`apply_entropy_on_kill`/`entropy_max_bonus_of`/`check_recidiva`/
+`HANDLED_KINDS`), recursos (`is_on_cooldown`/`spend_resources`/`tick_cooldowns`),
+dano (`damage_bonus`/`early_game_damage_bonus`/`_split_typed_effects`), e
+`compute_player_combat_stats`.
 
 ## 3. Design técnico
 

@@ -56,6 +56,7 @@ dedicada após o motor validado).
   `"Minion"` vira `"lacaio"` (Vitalidade simplificada, sem Última Ação); tipo
   `"Elite"`/`"BOSS"` vira `"elite_chefe"` (sistema completo); NPCs nomeados
   existentes viram `"nomeado"`.
+  - **R8** - — As habilidades devem ser variadas entre si e devem seguir a identidade de Valoria, tendo relação com o mundo que foi construido. Não reaproveitar habilidades apenas alterando a quantidade de dano. 
 
 ### Fora de escopo
 
