@@ -37,7 +37,16 @@
 > Elite/Chefe/Nomeado; golpe não-letal; rendição 100% determinística por perfil;
 > encerramento sem interpretação livre). Aditivo — cutover 13 reconcilia com
 > `checkpoints.py`/`death_pending` (+20).
-> **Suíte 1166 verde.** **Próxima: `conflito-08` (perfil tático/companheiros).**
+> **08:** perfil tático (`services/tactical_profile.py` — `TacticalProfile` de
+> prioridades ORDENADAS; `pick_action` decide IA de inimigo por precedência sem
+> LLM em combate; `validate_companion_order` valida ordem contra Restrição/
+> resistência Flexível/Resistente/Absoluta/Autônoma sem crashar; controle de party
+> por perda-de-comando explícita; `generate_tactical_profile` 1× via LLM+guard,
+> cacheado) + info revelada (`services/bestiary_knowledge.py` — painel só-público
+> R7, revelação de Cartas/Resistências que PERSISTE no bestiário via overlay
+> `data/runtime/`, exclusiva de variante fica oculta). Aditivo — remoção de
+> `get_behavior` e fiação no cutover 13 (+16).
+> **Suíte 1182 verde.** **Próxima: `conflito-09` (fuga/perseguição).**
 > Ordem completa no ROADMAP § Migração. Última atualização: 2026-07-23
 > (sessão 25). Histórico das sessões anteriores: abaixo e em `CHANGELOG.md`.
 

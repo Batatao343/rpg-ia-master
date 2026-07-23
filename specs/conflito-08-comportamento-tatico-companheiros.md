@@ -1,7 +1,9 @@
 # SPEC — Conflito v2 #08: Perfil Tático, Companheiros e Informação Revelada
 
-> **Status:** `draft`
-> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
+> **Status:** `done` (2026-07-23) — motor puro aditivo (`services/tactical_profile.py`
+> + `services/bestiary_knowledge.py`); a remoção de `get_behavior`/perfis fixos de
+> `combat_mechanics.py` e a fiação em `agents/bestiary.py` vão no cutover `conflito-13`
+> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-23
 > **Depende de:** `conflito-02-cartas-acervo-preparacao`, `conflito-04-turnos-iniciativa-ataques`,
 > `conflito-05-armadura-dano-ferimentos`, `conflito-07-morte-rendicao-captura`
 > (todas `done` antes de iniciar)
@@ -137,13 +139,14 @@ class TacticalProfile(TypedDict):
 
 ## 5. Critérios de aceite
 
-- [ ] Perfil tático decide ação/alvo/reação/fuga/rendição por prioridade ordenada,
-  sem LLM em tempo real de combate.
-- [ ] Ordem de companheiro é validada contra o perfil; recusa nunca crasha, sempre
-  devolve escolha ao jogador.
-- [ ] Cartas/resistências reveladas persistem no bestiário entre encontros.
-- [ ] Painel inicial do inimigo mostra só os campos públicos definidos em R7.
-- [ ] `uv run pytest` verde.
+- [x] Perfil tático decide ação/alvo/reação/fuga/rendição por prioridade ordenada,
+  sem LLM em tempo real de combate (`pick_action`).
+- [x] Ordem de companheiro é validada contra o perfil; recusa nunca crasha, sempre
+  devolve escolha ao jogador (`validate_companion_order`).
+- [x] Cartas/resistências reveladas persistem no bestiário entre encontros
+  (`bestiary_knowledge` + overlay `data/runtime/`).
+- [x] Painel inicial do inimigo mostra só os campos públicos definidos em R7 (`public_panel`).
+- [x] `uv run pytest` verde — **1182 passed** (+16 `test_conflito_tatica`).
 
 ## 6. Smoke test com LLM real
 
