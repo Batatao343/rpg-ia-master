@@ -103,8 +103,11 @@ def test_onboarding_matches_classes():
 
 
 def test_class_attr_map_covers_five():
-    from character_creator import CLASS_ATTR_MAP
-    assert set(CLASS_ATTR_MAP.keys()) == FIVE_CLASSES
+    # spec conflito-01: CLASS_ATTR_MAP (atributo D&D) virou CLASS_PRIMARY_VIRTUE.
+    from character_creator import CLASS_PRIMARY_VIRTUE
+    import gamedata
+    assert set(CLASS_PRIMARY_VIRTUE.keys()) == FIVE_CLASSES
+    assert all(v in gamedata.VIRTUDES for v in CLASS_PRIMARY_VIRTUE.values())
 
 
 def test_starting_abilities_exist():
@@ -134,7 +137,8 @@ def test_creator_fills_entropy():
     })
     assert sheet["max_entropy"] > 0
     assert sheet["entropy"] == sheet["max_entropy"]
-    assert sheet["mana"] == 0 and sheet["stamina"] == 0
+    # spec conflito-01: mana/stamina saíram do schema do jogador
+    assert "mana" not in sheet and "stamina" not in sheet
     assert sheet["abyss_charge"] == 0
 
 

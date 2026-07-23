@@ -18,10 +18,10 @@ def make_player(**over):
     p = {
         "name": "Testo", "class_name": "Cavaleiro da Vigília", "race": "Humano",
         "level": 1, "xp": 0,
-        "hp": 30, "max_hp": 30, "mana": 5, "max_mana": 5,
-        "stamina": 20, "max_stamina": 20,
-        "gold": 0, "attributes": {"str": 16, "dex": 10, "con": 16,
-                                  "int": 8, "wis": 12, "cha": 12},
+        "hp": 30, "max_hp": 30, "entropy": 14, "max_entropy": 14,
+        "abyss_charge": 0,
+        "gold": 0, "virtudes": {"forca": 4, "corpo": 3, "carisma": 2,
+                                "mente": 1, "agilidade": 1},
         "inventory": [], "known_abilities": ["ataque_basico"],
         "defense": 17, "attack_bonus": 0,
         "active_conditions": [], "ability_cooldowns": {},
@@ -54,7 +54,8 @@ FAKE_ABILITIES = {
 
 FAKE_CLASSES = {
     "Cavaleiro da Vigília": {
-        "level_gains": {"hp": 7, "mana": 0, "stamina": 3},
+        # spec conflito-01: jogador ganha hp + Entropia por nível (mana/stamina saíram)
+        "level_gains": {"hp": 7, "entropy": 2},
     },
 }
 
@@ -72,9 +73,10 @@ def test_xp_for_kills_por_tier():
 
 
 def test_xp_to_next():
+    # spec conflito-01: nível máximo 10 (era 20)
     assert pg.xp_to_next(1) == XP_TABLE[2] == 300
-    assert pg.xp_to_next(19) == XP_TABLE[20]
-    assert pg.xp_to_next(20) is None
+    assert pg.xp_to_next(9) == XP_TABLE[10]
+    assert pg.xp_to_next(10) is None
 
 
 def test_grant_xp_sem_level():
@@ -92,11 +94,10 @@ def test_grant_xp_level_up():
     assert out["level"] == 2
     assert out["max_hp"] == 37          # 30 + 7
     assert out["hp"] == 27              # 20 + 7 (delta, não full heal)
-    assert out["max_stamina"] == 23
-    assert out["max_mana"] == 5
+    assert out["max_entropy"] == 16     # 14 + 2 (Entropia sobe pela curva)
     kinds = [(c["level"], c["kind"]) for c in out["pending_choices"]]
     assert (2, "ability") in kinds
-    assert (2, "attribute") in kinds    # nível par
+    assert (2, "virtude") in kinds      # nível par -> escolha de Virtude
     assert len(events) == 1
     assert events[0]["type"] == "level_up"
     assert events[0]["payload"]["new_level"] == 2
@@ -108,7 +109,7 @@ def test_grant_xp_nivel_impar_sem_attr():
     assert out["level"] == 3
     kinds = [(c["level"], c["kind"]) for c in out["pending_choices"]]
     assert (3, "ability") in kinds
-    assert (3, "attribute") not in kinds
+    assert (3, "virtude") not in kinds
 
 
 def test_grant_xp_multi_level():
@@ -120,7 +121,7 @@ def test_grant_xp_multi_level():
     # 2 escolhas de habilidade + 1 de atributo (só o nível 2 é par)
     kinds = [c["kind"] for c in out["pending_choices"]]
     assert kinds.count("ability") == 2
-    assert kinds.count("attribute") == 1
+    assert kinds.count("virtude") == 1
 
 
 def test_grant_xp_nivel_20_cap():
@@ -187,12 +188,15 @@ def test_apply_choice_ability():
 
 
 def test_apply_choice_attr():
+    # spec conflito-01: escolha de nível par vira +1 numa Virtude (teto 5)
     p = make_player(pending_choices=[
-        {"id": "lvl2-attr", "level": 2, "kind": "attribute"}])
-    out, err = pg.apply_choice(p, "lvl2-attr", attr="Força",
+        {"id": "lvl2-virtude", "level": 2, "kind": "virtude"}])
+    forca0 = p["virtudes"]["forca"]  # 4
+    out, err = pg.apply_choice(p, "lvl2-virtude", virtude="mente",
                                abilities_db=FAKE_ABILITIES)
     assert err is None
-    assert out["attributes"]["str"] == 17   # normalize_attr + 1
+    assert out["virtudes"]["mente"] == 2   # 1 + 1
+    assert out["virtudes"]["forca"] == forca0
     assert out["pending_choices"] == []
 
 
@@ -484,7 +488,7 @@ def test_levelup_endpoint_aplica_e_invalida(tmp_path, monkeypatch):
 
     player = make_player(class_name="Devoto do Abismo", level=3, pending_choices=[
         {"id": "lvl3-ability", "level": 3, "kind": "ability"},
-        {"id": "lvl3-attr", "level": 3, "kind": "attribute"}])
+        {"id": "lvl4-virtude", "level": 4, "kind": "virtude"}])
     fake_state = _pipeline_state(player=player,
                                  messages=[], narrative_summary="")
 
@@ -508,10 +512,11 @@ def test_levelup_endpoint_aplica_e_invalida(tmp_path, monkeypatch):
     assert r2.status_code == 400
     assert not saved
 
-    # atributo
-    r3 = client.post("/game/levelup", json={"choice_id": "lvl3-attr", "attr": "força"})
-    assert r3.status_code == 200
-    assert saved["player"]["attributes"]["str"] == 17
+    # Virtude (nível par) — aceita nome PT/acento via normalize_virtude
+    forca0 = player["virtudes"]["forca"]
+    r3 = client.post("/game/levelup", json={"choice_id": "lvl4-virtude", "virtude": "força"})
+    assert r3.status_code == 200, r3.text
+    assert saved["player"]["virtudes"]["forca"] == forca0 + 1
 
 
 def test_levelup_block_no_state():

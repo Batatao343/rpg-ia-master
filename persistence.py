@@ -21,7 +21,7 @@ DEFAULT_SAVE_NAME = "autosave"
 # Versão atual do schema de save (Fase 10). Save sem o campo = versão 0.
 # v2 = campos de camada dos NPCs (spec npcs-3-camadas-traits).
 # v3 = 10 classes antigas → 5 Posturas + Entropia (spec refatoracao-sistema-classes).
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 # spec refatoracao-sistema-classes (R10/§3.10): mapa determinístico antigo→nova classe.
 _OLD_TO_NEW_CLASS = {
@@ -141,10 +141,26 @@ def _migrate_v2_to_v3(raw: Dict[str, Any]) -> Dict[str, Any]:
     return raw
 
 
+def _migrate_v3_to_v4(raw: Dict[str, Any]) -> Dict[str, Any]:
+    """spec conflito-01 R9/R10 (HARD CUTOVER): 6 atributos → 5 Virtudes +
+    Vitalidade/Ferimentos. NÃO há conversão automática dos atributos antigos —
+    a migração apenas MARCA o save como órfão/arquivado (mesma política dos saves
+    pré-2.5b). O load devolve o estado somente-leitura; a API/CLI recusam ação com
+    mensagem clara em vez de crashar."""
+    raw = dict(raw)
+    raw["archived"] = True
+    raw["archived_reason"] = (
+        "Personagem anterior à migração do Sistema de Conflitos (Virtudes/"
+        "Vitalidade). Fichas antigas foram arquivadas — comece uma nova jornada."
+    )
+    return raw
+
+
 _MIGRATIONS: Dict[int, Callable[[Dict[str, Any]], Dict[str, Any]]] = {
     0: _migrate_v0_to_v1,
     1: _migrate_v1_to_v2,
     2: _migrate_v2_to_v3,
+    3: _migrate_v3_to_v4,
 }
 
 
@@ -402,6 +418,9 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         "game_over": bool(raw_data.get("game_over", False)),
         # spec checkpoints-morte: tela de morte pendente
         "death_pending": bool(raw_data.get("death_pending", False)),
+        # spec conflito-01 R10: save pré-Virtudes marcado pela migração v3→v4
+        "archived": bool(raw_data.get("archived", False)),
+        "archived_reason": raw_data.get("archived_reason", ""),
 
         # Garante campos técnicos de fluxo
         "next": "storyteller",

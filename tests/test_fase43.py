@@ -117,7 +117,7 @@ def test_arma_inicial_da_bonus():
     """Bug histórico fechado: criador entrega arma canônica equipada com bônus."""
     from character_creator import create_player_character
     sheet = create_player_character({
-        "name": "T", "class_name": "Cavaleiro da Vigília", "race": "Humano",
+        "name": "T", "class_name": "Devoto do Abismo", "race": "Humano",
         "region": "Nova Arcádia", "backstory": "", "level": "1"})
     assert sheet["equipment"]["weapon"] == "espada_gasta"
     stats = cm.compute_player_combat_stats(sheet)

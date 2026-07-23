@@ -10,6 +10,66 @@
 
 ---
 
+## 🔨 EM CURSO — Migração do Sistema de Conflitos (Valoria v2) — 16 specs `draft`
+
+> **Épico grande (2026-07-22).** Fonte funcional do usuário:
+> `docs/valoria_conflict_migration_v2/` (4 docs: regras consolidadas, escopo,
+> cenários de aceite, decisões fechadas). Substitui o combate atual (LLM narra
+> turno a turno, HP/d20-vs-AC, habilidades JSON) por um **jogo tático de cartas
+> 100% determinístico**: durante o conflito **não há chamada de LLM** — a LLM só
+> **prepara** a cena antes (zonas, objetos, inimigos do bestiário, eventos do
+> Abismo) e **narra** o resumo canônico depois, sem poder reverter fatos.
+
+**Mudanças de núcleo:** 6 atributos → **5 Virtudes** (Mente/Agilidade/Força/
+Carisma/Corpo 0-5); HP → **Vitalidade + Ferimentos localizados** (Leve/Grave/
+Crítico); d20 vs AC → **2d10 + Virtude vs Esquiva** (Crítico/Supercrítico por
+duplas); habilidades → **Cartas** (Acervo + preparadas 4/5/6/7, Ruptura, Cartas
+de Virtude); zonas abstratas (Próximo/Distante/Separado + Protegido/Neutro/
+Exposto + Visível/Escondido); reações/AoO; perfis táticos pré-gerados;
+Última Ação/Estado Terminal/Cicatrizes; fuga/perseguição com trilha.
+
+**Decisões de escopo (usuário, 2026-07-22):** (1) **cutover atômico** no fim (motor
+novo isolado, troca de roteamento única na `conflito-13` — jogo fica injogável no
+meio da migração, por design); (2) **corte de saves** — schema v3→v4 arquiva
+personagens antigos, sem conversão de atributos→Virtudes; (3) **autoria de
+conteúdo incluída** (cartas + bestiário viram specs próprias); (4) **frontend
+incluído, menos prioritário** (última spec).
+
+**16 specs ordenadas por dependência** (detalhe técnico SÓ nas specs):
+
+| # | Spec | Bloco funcional |
+|---|---|---|
+| 01 ✅ | [conflito-01-virtudes-vitalidade](specs/conflito-01-virtudes-vitalidade.md) | Virtudes, Vitalidade/Ferimentos, migração v4 (fundação de dados) — **`done`** |
+| 02 | [conflito-02-cartas-acervo-preparacao](specs/conflito-02-cartas-acervo-preparacao.md) | Cartas, Acervo, Preparação, Ruptura, Cartas de Virtude |
+| 03 | [conflito-03-zonas-cena-objetos](specs/conflito-03-zonas-cena-objetos.md) | Zonas, cena congelada, objetos, catálogo fechado de efeitos |
+| 04 | [conflito-04-turnos-iniciativa-ataques](specs/conflito-04-turnos-iniciativa-ataques.md) | Pré/Ação/Pós, iniciativa por lado, 2d10+Virtude, Crítico por dupla |
+| 05 | [conflito-05-armadura-dano-ferimentos](specs/conflito-05-armadura-dano-ferimentos.md) | Tipos de dano, armadura/Integridade, Ferimentos localizados |
+| 06 | [conflito-06-reacoes-movimento](specs/conflito-06-reacoes-movimento.md) | Reações, AoO, Engajar/Desengajar/Guardar/Esconder-se/Procurar |
+| 07 | [conflito-07-morte-rendicao-captura](specs/conflito-07-morte-rendicao-captura.md) | Última Ação, Estado Terminal, Cicatrizes, rendição, encerramento |
+| 08 | [conflito-08-comportamento-tatico-companheiros](specs/conflito-08-comportamento-tatico-companheiros.md) | Perfil tático persistido, ordens de companheiro, info revelada |
+| 09 | [conflito-09-fuga-perseguicao](specs/conflito-09-fuga-perseguicao.md) | Trilha de perseguição, Teste de Sorte, abandono simulado |
+| 10 | [conflito-10-abismo-em-conflito](specs/conflito-10-abismo-em-conflito.md) | Eventos do Abismo preparados, carregamento determinístico |
+| 11 | [conflito-11-preparacao-encontro-llm](specs/conflito-11-preparacao-encontro-llm.md) | LLM prepara cena jogável (potência por categoria, Nível do Encontro) |
+| 12 | [conflito-12-loot-resumo-narrativo](specs/conflito-12-loot-resumo-narrativo.md) | Integração de loot + resumo canônico pós-conflito |
+| 13 | [conflito-13-cutover-migracao-playtest](specs/conflito-13-cutover-migracao-playtest.md) | **Cutover** — religa roteamento, remove motor antigo, reescreve playtest |
+| 14 | [conflito-14-autoria-cartas-classes](specs/conflito-14-autoria-cartas-classes.md) | Autoria completa das Cartas (5 classes × 3 subclasses) |
+| 15 | [conflito-15-autoria-bestiario-perfis](specs/conflito-15-autoria-bestiario-perfis.md) | Autoria do bestiário no schema novo + perfis táticos |
+| 16 | [conflito-16-frontend-combate-cartas](specs/conflito-16-frontend-combate-cartas.md) | Interface tática de cartas (menos prioritária) |
+
+**Ordem:** 01 → 02/03 (paralelizáveis após 01) → 04 → 05 → 06 → 07 → 08 → 09/10 →
+11 → 12 → **13 (cutover)** → 16. Autoria (14/15) pode correr em paralelo às specs
+de motor (dependem só do schema respectivo — 02 e 05/08), mas só entra em produção
+depois do cutover 13.
+
+**Progresso:** **01 `done`** (2026-07-22) — fundação de dados entregue: 5 Virtudes
+(0-5, distribuição 4/3/2/1/1), Vitalidade + espaços de Ferimento derivados de
+Corpo, nível máx 10 com +1 Virtude nos pares, migração v3→v4 (hard cutover,
+saves antigos arquivados), `attributes`/mana/stamina fora do jogador (ponte
+`actor_mods`). +30 testes (`test_conflito_virtudes`), suíte 1045 verde. Próxima:
+02/03. As demais seguem em `draft`.
+
+---
+
 ## O que já foi entregue
 
 | Fase | Status |

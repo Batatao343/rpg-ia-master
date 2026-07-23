@@ -18,18 +18,18 @@ Convenções:
 import unicodedata
 from typing import Dict, List, Optional, Tuple
 
+import gamedata
 from gamedata import ABILITIES, CLASSES, XP_TABLE
-from combat_mechanics import normalize_attr
 
 XP_BY_TIER = {"minion": 50, "elite": 200, "boss": 1000}
 XP_PER_BEAT = 150
 XP_PER_QUEST = 200
-MAX_LEVEL = max(XP_TABLE)  # 20
+# spec conflito-01 R3: nível máximo passa de 20 para 10.
+MAX_LEVEL = gamedata.NIVEL_MAX  # 10
 
-# Curva usada se a classe não tiver level_gains (classe custom/save antigo)
-DEFAULT_LEVEL_GAINS = {"hp": 5, "mana": 2, "stamina": 2}
-
-ATTR_KEYS = ("str", "dex", "con", "int", "wis", "cha")
+# Curva usada se a classe não tiver level_gains (classe custom/save antigo).
+# spec conflito-01: jogador ganha hp + Entropia por nível (mana/stamina saíram).
+DEFAULT_LEVEL_GAINS = {"hp": 5, "entropy": 2}
 
 
 # ---------------------------------------------------------------------------
@@ -53,7 +53,7 @@ def xp_to_next(level: int) -> Optional[int]:
 def _level_gains_for(class_name: str, classes_db: Optional[Dict]) -> Dict[str, int]:
     db = classes_db if classes_db is not None else CLASSES
     gains = (db.get(class_name) or {}).get("level_gains") or DEFAULT_LEVEL_GAINS
-    return {k: int(gains.get(k, 0) or 0) for k in ("hp", "mana", "stamina")}
+    return {k: int(gains.get(k, 0) or 0) for k in ("hp", "entropy")}
 
 
 def grant_xp(player: Dict, amount: int, *,
@@ -66,7 +66,6 @@ def grant_xp(player: Dict, amount: int, *,
     pending_choices (o jogo segue jogável com escolha pendente).
     """
     p = dict(player)
-    p["attributes"] = dict(p.get("attributes") or {})
     p["pending_choices"] = list(p.get("pending_choices") or [])
     p["xp"] = int(p.get("xp", 0) or 0) + int(amount or 0)
     events: List[Dict] = []
@@ -78,17 +77,18 @@ def grant_xp(player: Dict, amount: int, *,
             break
         new_level = int(p.get("level", 1) or 1) + 1
         p["level"] = new_level
-        for res, field in (("hp", "max_hp"), ("mana", "max_mana"),
-                           ("stamina", "max_stamina")):
-            delta = gains[res]
+        # spec conflito-01: jogador sobe hp + Entropia (mana/stamina saíram do schema)
+        for res, field in (("hp", "max_hp"), ("entropy", "max_entropy")):
+            delta = gains.get(res, 0)
             if delta:
                 p[field] = int(p.get(field, 0) or 0) + delta
                 p[res] = min(p[field], int(p.get(res, 0) or 0) + delta)
         p["pending_choices"].append(
             {"id": f"lvl{new_level}-ability", "level": new_level, "kind": "ability"})
-        if new_level % 2 == 0:
+        # R3: níveis 2/4/6/8/10 dão +1 numa Virtude (escolha do jogador)
+        if new_level in gamedata.NIVEIS_GANHO_VIRTUDE:
             p["pending_choices"].append(
-                {"id": f"lvl{new_level}-attr", "level": new_level, "kind": "attribute"})
+                {"id": f"lvl{new_level}-virtude", "level": new_level, "kind": "virtude"})
         events.append({
             "type": "level_up", "actor_id": "player", "target_id": "player",
             "detail": f"{p.get('name', 'O herói')} alcançou o nível {new_level}",
@@ -145,6 +145,7 @@ def eligible_abilities(player: Dict, *,
 def apply_choice(player: Dict, choice_id: str, *,
                  ability_id: Optional[str] = None,
                  attr: Optional[str] = None,
+                 virtude: Optional[str] = None,
                  abilities_db: Optional[Dict] = None) -> Tuple[Dict, Optional[str]]:
     """Valida e consome UMA pending_choice. Retorna (player, erro|None).
 
@@ -169,13 +170,20 @@ def apply_choice(player: Dict, choice_id: str, *,
         if bonus:
             p["max_entropy"] = int(p.get("max_entropy", 0) or 0) + bonus
             p["entropy"] = int(p.get("entropy", 0) or 0) + bonus
-    elif choice.get("kind") == "attribute":
-        key = normalize_attr(attr or "")
-        if key not in ATTR_KEYS:
-            return player, f"Atributo '{attr}' inválido (use str/dex/con/int/wis/cha)."
-        attrs = dict(p.get("attributes") or {})
-        attrs[key] = int(attrs.get(key, 10) or 10) + 1
-        p["attributes"] = attrs
+    elif choice.get("kind") == "virtude":
+        # spec conflito-01 R3: +1 numa Virtude, teto 5, recalcula Vitalidade na hora
+        key = gamedata.normalize_virtude(virtude or attr or "")
+        if key not in gamedata.VIRTUDES:
+            return player, (f"Virtude '{virtude or attr}' inválida "
+                            f"(use {'/'.join(gamedata.VIRTUDES)}).")
+        virts = dict(p.get("virtudes") or {})
+        atual = int(virts.get(key, 0) or 0)
+        if atual >= gamedata.VIRTUDE_MAX:
+            return player, f"Virtude '{key}' já está no máximo ({gamedata.VIRTUDE_MAX})."
+        virts[key] = atual + 1
+        p["virtudes"] = virts
+        if key == "corpo":
+            gamedata.sync_player_vitals(p)  # sobe teto de Vitalidade/espaços na hora
     else:
         return player, f"Tipo de escolha desconhecido: {choice.get('kind')!r}."
 

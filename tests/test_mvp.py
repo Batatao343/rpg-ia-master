@@ -155,11 +155,14 @@ def test_character_creation_fallback(monkeypatch):
         "name": "Aria", "class_name": "Mago", "race": "Elfo",
         "region": "Nova Arcádia", "backstory": "curiosa", "level": 3,
     })
-    for key in ("name", "class_name", "hp", "max_hp", "mana", "stamina",
-                "attributes", "inventory", "known_abilities", "defense"):
+    # spec conflito-01: mana/stamina/attributes saíram; entram Virtudes + Vitalidade
+    for key in ("name", "class_name", "hp", "max_hp", "virtudes", "max_vitalidade",
+                "inventory", "known_abilities", "defense"):
         assert key in char, f"campo ausente: {key}"
     assert char["level"] == 3
-    assert isinstance(char["attributes"], dict)
+    assert isinstance(char["virtudes"], dict)
+    assert sorted(char["virtudes"].values()) == [1, 1, 2, 3, 4]
+    assert "attributes" not in char and "mana" not in char
 
 
 # --------------------------------------------------------------------------

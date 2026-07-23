@@ -45,7 +45,8 @@ def normalize_attr(attr: str) -> str:
 
 
 def attr_mods(attributes: Dict) -> Dict[str, int]:
-    """Mods normalizados (str/dex/con/int/wis/cha). Ausente -> 0."""
+    """Mods normalizados (str/dex/con/int/wis/cha). Ausente -> 0.
+    LEGADO — usado só pelo INIMIGO (attributes D&D). O jogador usa Virtudes."""
     out = {k: 0 for k in ("str", "dex", "con", "int", "wis", "cha")}
     for k, v in (attributes or {}).items():
         nk = normalize_attr(k)
@@ -55,6 +56,30 @@ def attr_mods(attributes: Dict) -> Dict[str, int]:
             except (TypeError, ValueError):
                 pass
     return out
+
+
+def virtude_mods(virtudes: Dict) -> Dict[str, int]:
+    """spec conflito-01: mapeia as 5 Virtudes (0-5) para os mods legados que o
+    motor antigo espera (str/dex/con/int/wis/cha). Ponte transicional até a
+    fórmula 2d10+Virtude da conflito-04. mente cobre int E wis (sem Virtude
+    dedicada de percepção)."""
+    v = virtudes or {}
+    return {
+        "str": int(v.get("forca", 0) or 0),
+        "dex": int(v.get("agilidade", 0) or 0),
+        "con": int(v.get("corpo", 0) or 0),
+        "int": int(v.get("mente", 0) or 0),
+        "wis": int(v.get("mente", 0) or 0),
+        "cha": int(v.get("carisma", 0) or 0),
+    }
+
+
+def actor_mods(actor: Dict) -> Dict[str, int]:
+    """Mods de combate do ator. Jogador tem `virtudes` (Virtude->mod); inimigo/
+    aliado legado tem `attributes` (D&D). NUNCA lê `attributes` do jogador (R8)."""
+    if actor.get("virtudes"):
+        return virtude_mods(actor["virtudes"])
+    return attr_mods(actor.get("attributes", {}))
 
 
 def roll_dice_numeric(formula: str) -> Tuple[int, str]:
@@ -76,7 +101,7 @@ def roll_dice_numeric(formula: str) -> Tuple[int, str]:
 
 def resolve_damage_formula(formula: str, actor: Dict) -> Tuple[int, str]:
     """Substitui placeholders `str_mod`/`dex_mod`/... pelos mods reais e rola."""
-    mods = attr_mods(actor.get("attributes", {}))
+    mods = actor_mods(actor)
     text = str(formula or "0")
     for key, val in mods.items():
         text = re.sub(rf"\b{key}_mod\b", str(val), text)
@@ -101,7 +126,7 @@ def _is_healing(ability: Dict) -> bool:
 
 def roll_magnitude(formula: str, actor: Dict) -> Tuple[int, str]:
     """Igual a resolve_damage_formula, mas pelo VALOR ABSOLUTO (cura usa fórmula negativa)."""
-    mods = attr_mods(actor.get("attributes", {}))
+    mods = actor_mods(actor)
     text = str(formula or "0")
     for key, val in mods.items():
         text = re.sub(rf"\b{key}_mod\b", str(val), text)
@@ -328,7 +353,7 @@ def roll_initiative(player: Dict, enemies: List[Dict],
     Fase 4.2: passiva `initiative_attr` (Arcanista) usa o melhor entre dex e o
     atributo declarado. Fase 4.5: aliados entram no lado 'ally'."""
     order: List[Dict] = []
-    p_mods = attr_mods(player.get("attributes", {}))
+    p_mods = actor_mods(player)
     p_init = p_mods["dex"]
     for pe in player_passives(player):
         if pe.get("trigger") == "initiative_attr":
@@ -336,11 +361,11 @@ def roll_initiative(player: Dict, enemies: List[Dict],
     order.append({"id": "player", "name": player.get("name", "Herói"),
                   "side": "hero", "init": random.randint(1, 20) + p_init})
     for a in allies or []:
-        a_dex = attr_mods(a.get("attributes", {}))["dex"]
+        a_dex = actor_mods(a)["dex"]
         order.append({"id": a.get("id", a.get("name", "?")), "name": a.get("name", "Aliado"),
                       "side": "ally", "init": random.randint(1, 20) + a_dex})
     for e in enemies:
-        e_dex = attr_mods(e.get("attributes", {}))["dex"]
+        e_dex = actor_mods(e)["dex"]
         order.append({"id": e.get("id", e.get("name", "?")), "name": e.get("name", "Inimigo"),
                       "side": "enemy", "init": random.randint(1, 20) + e_dex})
     order.sort(key=lambda x: x["init"], reverse=True)
@@ -793,7 +818,7 @@ def compute_player_combat_stats(player: Dict) -> Dict:
     """AC, bônus de ataque e atributo de ataque a partir do EQUIPAMENTO (Fase 4.3:
     só os slots contam — fim do auto-scan do inventário inteiro). Sem `equipment`
     (fichas antigas em memória/testes), cai no scan legado por compatibilidade."""
-    mods = attr_mods(player.get("attributes", {}))
+    mods = actor_mods(player)
     best_atk_bonus = 0
     ac_bonus = 0
     attack_attr = "str"
@@ -1101,7 +1126,7 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
                 if save_stat:
                     dc = 10 + max(pstats["attack"], 0)
                     stat = normalize_attr(save_stat)
-                    save_mod = attr_mods(target.get("attributes", {})).get(stat, 0)
+                    save_mod = actor_mods(target).get(stat, 0)
                     save_mod += int((target.get("racial_save_bonus") or {}).get(stat, 0))
                     save_mod += condition_modifiers(target)["save"]
                     roll = random.randint(1, 20) + save_mod
@@ -1152,7 +1177,7 @@ def resolve_player_action(player: Dict, enemies: List[Dict], action: Dict,
     if save_stat:
         dc = 10 + max(pstats["attack"], 0)
         stat = normalize_attr(save_stat)
-        save_mod = attr_mods(target.get("attributes", {})).get(stat, 0)
+        save_mod = actor_mods(target).get(stat, 0)
         save_mod += int((target.get("racial_save_bonus") or {}).get(stat, 0))
         save_mod += condition_modifiers(target)["save"]
         save_roll = random.randint(1, 20) + save_mod
@@ -1496,7 +1521,7 @@ def _resolve_enemy_ability(enemy: Dict, ability: Dict, target: Dict,
     if save_stat:
         dc = 10 + max(int(enemy.get("attack_mod", 0) or 0), 0)
         stat = normalize_attr(save_stat)
-        save_mod = attr_mods(target.get("attributes", {})).get(stat, 0)
+        save_mod = actor_mods(target).get(stat, 0)
         save_mod += int((target.get("racial_save_bonus") or {}).get(stat, 0))
         save_mod += condition_modifiers(target)["save"]
         roll = random.randint(1, 20) + save_mod

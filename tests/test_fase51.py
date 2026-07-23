@@ -81,8 +81,10 @@ def test_mapa_breaker_nao_teleporta():
 
 def test_quester_fecha_quest_no_harness():
     """Fase 5: o perfil quester + o MockLLM propondo quest_completed fazem o
-    harness FECHAR quest offline (antes, o mock só criava, nunca completava)."""
-    res = run_campaign("quester", turns=25, seed=1)
+    harness FECHAR quest offline (antes, o mock só criava, nunca completava).
+    spec conflito-01: a fundação de Virtudes desviou a trajetória do seed 1
+    (nenhuma quest criada nesse caminho) — seed 3 exercita o fluxo criar→fechar."""
+    res = run_campaign("quester", turns=25, seed=3)
     assert res.errors == [], res.errors
     completadas = [q for q in res.final_state.get("quests", [])
                    if isinstance(q, dict) and q.get("status") == "completed"]

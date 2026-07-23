@@ -1,14 +1,16 @@
 """
 agents/character_creator.py
 Gera a ficha do personagem baseada em História, Nível e Região.
-Versão V6.0: Híbrida (IA para Criatividade + JSON para Regras Oficiais).
+Versão V7.0 (spec conflito-01): 5 Virtudes (0-5) substituem os 6 atributos D&D;
+Vitalidade/Ferimentos derivam de Corpo. A distribuição das Virtudes vem do JOGADOR
+(wizard) — a classe apenas RECOMENDA. O LLM só sugere inventário/flavor textual.
 """
 from typing import Dict, Any, List
 from langchain_core.messages import SystemMessage, HumanMessage
 from pydantic import BaseModel, Field
 
 from llm_setup import get_llm, ModelTier
-from combat_mechanics import normalize_attr
+import gamedata
 
 # --- IMPORTAÇÕES ESSENCIAIS ---
 try:
@@ -25,44 +27,111 @@ except ImportError:
     CLASSES = {}
     def load_json_data(_): return {}
 
-# --- MAPA DE ATRIBUTOS (Fallback se o JSON falhar) ---
-# spec refatoracao-sistema-classes: as 5 Posturas diante do Abismo.
-# Atributo primário: Devoto str · Sangromante dex · Corruptor wis ·
-# Arcanista int · Médico int.
-CLASS_ATTR_MAP = {
-    "Devoto do Abismo": "str",
-    "Sangromante": "dex",
-    "Corruptor": "wis",
-    "Arcanista Cinzento": "int",
-    "Médico de Campo": "int",
+# --- VIRTUDE PRIMÁRIA POR CLASSE (recomendação de distribuição / attack_bonus) ---
+# spec conflito-01: 5 Posturas diante do Abismo mapeadas às 5 Virtudes.
+CLASS_PRIMARY_VIRTUE = {
+    "Devoto do Abismo": "forca",
+    "Sangromante": "agilidade",
+    "Corruptor": "mente",
+    "Arcanista Cinzento": "mente",
+    "Médico de Campo": "mente",
 }
+
+# Bridge dos dados LEGADO (traits raciais em origins.json ainda usam chaves D&D):
+# mapeia atributo curto -> Virtude. wis/int caem em "mente" (não há Virtude dedicada).
+_ATTR_TO_VIRTUDE = {
+    "str": "forca", "dex": "agilidade", "con": "corpo",
+    "int": "mente", "wis": "mente", "cha": "carisma",
+    # tolera nomes longos/PT eventuais
+    "strength": "forca", "forca": "forca", "força": "forca",
+    "dexterity": "agilidade", "agilidade": "agilidade",
+    "constitution": "corpo", "corpo": "corpo",
+    "intelligence": "mente", "mente": "mente",
+    "wisdom": "mente", "charisma": "carisma", "carisma": "carisma",
+}
+
+# Distribuição default quando a classe não recomenda nada (permutação de 4/3/2/1/1).
+_DEFAULT_VIRTUDES = {"forca": 4, "agilidade": 3, "corpo": 2, "mente": 1, "carisma": 1}
+
+
+def to_virtude_key(key: str) -> str:
+    """Normaliza uma chave de atributo/Virtude para a chave curta de Virtude."""
+    return _ATTR_TO_VIRTUDE.get(str(key or "").strip().lower(), str(key or "").strip().lower())
+
+
+def validate_virtude_distribution(virtudes: Dict[str, int]) -> None:
+    """Rejeita distribuição de Virtudes fora do multiset 4/3/2/1/1 (R2).
+
+    Levanta ValueError com mensagem clara. Aceita SÓ as 5 chaves canônicas,
+    cada uma inteira, e o multiset ordenado precisa ser exatamente [1,1,2,3,4].
+    """
+    if not isinstance(virtudes, dict):
+        raise ValueError("Virtudes precisa ser um dicionário {virtude: valor}.")
+    faltando = [k for k in gamedata.VIRTUDES if k not in virtudes]
+    extra = [k for k in virtudes if k not in gamedata.VIRTUDES]
+    if faltando or extra:
+        raise ValueError(
+            f"Virtudes deve conter exatamente {list(gamedata.VIRTUDES)} — "
+            f"faltando={faltando}, inesperadas={extra}."
+        )
+    try:
+        valores = sorted(int(virtudes[k]) for k in gamedata.VIRTUDES)
+    except (TypeError, ValueError):
+        raise ValueError("Valores de Virtude precisam ser inteiros.")
+    if valores != sorted(gamedata.DISTRIBUICAO_VIRTUDES_INICIAL):
+        raise ValueError(
+            "Distribuição de Virtudes inválida: use exatamente os valores "
+            f"{list(gamedata.DISTRIBUICAO_VIRTUDES_INICIAL)} (um por Virtude). "
+            f"Recebido (ordenado): {valores}."
+        )
+
+
+def recommended_virtudes(class_name: str) -> Dict[str, int]:
+    """Distribuição RECOMENDADA da classe (base_stats.virtudes) — nunca vinculante."""
+    data = CLASSES.get(class_name, {}) if isinstance(CLASSES, dict) else {}
+    rec = (data.get("base_stats", {}) or {}).get("virtudes")
+    if isinstance(rec, dict) and set(rec) == set(gamedata.VIRTUDES):
+        try:
+            validate_virtude_distribution(rec)
+            return {k: int(rec[k]) for k in gamedata.VIRTUDES}
+        except ValueError:
+            pass
+    return dict(_DEFAULT_VIRTUDES)
+
+
+def _resolve_virtudes(user_input: Dict[str, Any], class_name: str) -> Dict[str, int]:
+    """Virtudes escolhidas pelo jogador (validadas) ou recomendação da classe."""
+    escolhidas = user_input.get("virtudes")
+    if escolhidas:
+        norm = {to_virtude_key(k): int(v) for k, v in dict(escolhidas).items()}
+        validate_virtude_distribution(norm)  # levanta se inválida
+        return {k: norm[k] for k in gamedata.VIRTUDES}
+    return recommended_virtudes(class_name)
+
 
 # --- SCHEMAS DA IA ---
 
-class PlayerStatsSchema(BaseModel):
-    """A IA sugere a distribuição, mas respeitamos limites."""
-    attributes: Dict[str, int] = Field(description="Atributos: str, dex, con, int, wis, cha.")
+class PlayerFlavorSchema(BaseModel):
+    """A IA só sugere sabor textual — Virtudes vêm do jogador, não do LLM."""
     inventory: List[str] = Field(description="Itens baseados na Região e Lore.")
     flavor_abilities: List[str] = Field(description="2 ou 3 magias/truques extras (Flavor) além da passiva.")
 
 # --- LÓGICA AUXILIAR ---
 
-def _get_mod(score: int) -> int:
-    return (score - 10) // 2
+def _prof_bonus(level: int) -> int:
+    return 2 + ((int(level) - 1) // 4)
 
-def _calculate_attack_bonus(class_name: str, attributes: Dict[str, int], level: int) -> int:
-    # Tenta pegar atributo principal do JSON oficial, se não tiver, usa o mapa
-    if class_name in CLASSES and "base_stats" in CLASSES[class_name]:
-        # Tenta deduzir o maior atributo base da classe
-        base = CLASSES[class_name]["base_stats"]["attributes"]
-        primary_attr = max(base, key=base.get)
-    else:
-        primary_attr = CLASS_ATTR_MAP.get(class_name, "str")
 
-    score = attributes.get(primary_attr, 10)
-    mod = _get_mod(score)
-    prof_bonus = 2 + ((level - 1) // 4)
-    return mod + prof_bonus
+def _calculate_attack_bonus(class_name: str, virtudes: Dict[str, int], level: int) -> int:
+    """attack_bonus = Virtude primária da classe + bônus de proficiência.
+
+    Ponte transicional: o motor antigo ainda soma um attack_bonus; a fórmula real
+    (2d10 + Virtude vs Esquiva) chega na conflito-04."""
+    primary = CLASS_PRIMARY_VIRTUE.get(class_name)
+    if not primary:
+        primary = max(virtudes, key=virtudes.get) if virtudes else "forca"
+    return int(virtudes.get(primary, 0)) + _prof_bonus(level)
+
 
 def find_race(race: str) -> Dict:
     """Resolve a raça de data/origins.json por id ou nome (case-insensitive)."""
@@ -78,6 +147,9 @@ def apply_racial_traits(sheet: Dict[str, Any], race: str) -> Dict[str, Any]:
     """
     Aplica os traits mecânicos da raça (Fase 2.5b) sobre a ficha, em Python
     determinístico — pós-LLM, nunca confiando na IA para números.
+
+    spec conflito-01: attr_bonus/save_bonus dos dados LEGADO (chaves D&D) são
+    mapeados para Virtudes (`_ATTR_TO_VIRTUDE`); bônus em Virtude respeita o teto 5.
     Muta e retorna a própria `sheet`.
     """
     race_data = find_race(race)
@@ -89,21 +161,20 @@ def apply_racial_traits(sheet: Dict[str, Any], race: str) -> Dict[str, Any]:
     for t in traits:
         names.append(t.get("name", t.get("id", "?")))
         fx = t.get("effects", {}) or {}
-        for attr, inc in (fx.get("attr_bonus") or {}).items():
-            k = normalize_attr(attr)
-            attrs = sheet.setdefault("attributes", {})
-            attrs[k] = int(attrs.get(k, 10)) + int(inc)
-        for field, key in (("hp_bonus", "hp"), ("mana_bonus", "mana"), ("stamina_bonus", "stamina")):
-            inc = int(fx.get(field, 0) or 0)
-            if inc:
-                sheet[key] = int(sheet.get(key, 0)) + inc
-                sheet[f"max_{key}"] = int(sheet.get(f"max_{key}", 0)) + inc
+        # spec conflito-01: attr_bonus racial (dados D&D LEGADO) NÃO altera Virtudes.
+        # Num Virtude 0-5 um +1/+2 é um salto grande demais; a distribuição
+        # 4/3/2/1/1 é escolha do jogador. Bônus racial de Virtude fica adiado para
+        # um rework de raças dedicado — aqui a raça pesa em hp/defesa/resist/save/itens.
+        # hp/mana/stamina raciais: só hp sobrevive no jogador (mana/stamina saíram)
+        inc_hp = int(fx.get("hp_bonus", 0) or 0)
+        if inc_hp:
+            sheet["hp"] = int(sheet.get("hp", 0)) + inc_hp
+            sheet["max_hp"] = int(sheet.get("max_hp", 0)) + inc_hp
         if fx.get("defense_bonus"):
             sheet["defense"] = int(sheet.get("defense", 10)) + int(fx["defense_bonus"])
         if fx.get("gold_bonus"):
             sheet["gold"] = int(sheet.get("gold", 0)) + int(fx["gold_bonus"])
         for item in fx.get("start_items") or []:
-            # Fase 4.3: inventário estruturado ({id, qty}); nome vira id se resolver
             from inventory import add_item, item_display
             inv = sheet.setdefault("inventory", [])
             if not any(item_display(e) == item or e.get("id") == item
@@ -111,7 +182,7 @@ def apply_racial_traits(sheet: Dict[str, Any], race: str) -> Dict[str, Any]:
                 sheet["inventory"] = add_item(inv, item, 1)
         resists.extend(str(c).lower() for c in fx.get("condition_resist") or [])
         for attr, inc in (fx.get("save_bonus") or {}).items():
-            k = normalize_attr(attr)
+            k = to_virtude_key(attr)
             save_bonus[k] = save_bonus.get(k, 0) + int(inc)
 
     sheet["racial_traits"] = names
@@ -126,7 +197,7 @@ def _get_class_data(class_name: str) -> Dict:
         return CLASSES[class_name]
     return {
         "passive": "Determinação: +1 em testes de Vontade.",
-        "base_stats": {"hp": 10, "stamina": 10, "mana": 10}
+        "base_stats": {"hp": 10, "virtudes": dict(_DEFAULT_VIRTUDES)},
     }
 
 # --- FUNÇÃO PRINCIPAL ---
@@ -137,78 +208,58 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
     race = user_input.get("race", "Humano")
     region = user_input.get("region", "Nova Arcádia")
     backstory = user_input.get("backstory", "")
-    
+
     raw_level = str(user_input.get("level", "1"))
     clean_level = "".join(filter(str.isdigit, raw_level))
     level = int(clean_level) if clean_level else 1
 
     # 1. BUSCA DADOS OFICIAIS (A "Regra")
     class_data = _get_class_data(p_class)
-    
-    # Cálculo de HP Base Oficial (Base da Classe + Nível)
     base_stats = class_data.get("base_stats", {})
+
+    # 2. VIRTUDES — escolha do jogador (validada) ou recomendação da classe (R2)
+    virtudes = _resolve_virtudes(user_input, p_class)
+
+    # 3. Vitalidade/Ferimentos derivados de Corpo (R4) — motor NOVO
+    #    hp/max_hp legado seguem espelhando a Vitalidade até a conflito-05 aposentá-los.
     base_hp_class = base_stats.get("hp", 12)
-    # Fórmula simples: Base + (6 por nível extra)
     final_hp = base_hp_class + (6 * (level - 1))
 
-    # spec refatoracao-sistema-classes (R1/§3.8): Entropia é o pool ÚNICO das 5
-    # classes; escala com o nível pela curva da classe (como o HP). mana/stamina
-    # do jogador viram 0 (recurso morto — inimigos seguem em mana/stamina).
+    # spec refatoracao-sistema-classes: Entropia é o pool ÚNICO das 5 classes.
     level_gains = class_data.get("level_gains", {}) or {}
     base_entropy = base_stats.get("entropy", 0)
     final_entropy = base_entropy + int(level_gains.get("entropy", 0) or 0) * (level - 1)
-    final_stamina = 0
-    final_mana = 0
 
-    # 2. BUSCA O LORE (O "Sabor")
+    # 4. LORE + geração de sabor via IA (só inventário/flavor — Virtudes NÃO vêm do LLM)
     region_lore = _get_region_lore(region)
-
-    # 3. Geração de Stats via IA
     llm = get_llm(temperature=0.6, tier=ModelTier.SMART)
-    
     system_msg = SystemMessage(content=f"""
-    Você é um Motor de Regras para RPG.
-    
-    CONTEXTO DO MUNDO: {region_lore}
-    CLASSE: {p_class} (Atributo Principal Sugerido: Consulte o arquétipo).
-    
-    TAREFA:
-    1. Gere atributos (str, dex...) coerentes com a classe e nível {level}.
-    2. Gere um inventário temático da região {region}.
-    3. Sugira 2 habilidades extras (flavor) que combinem com a classe.
-    """)
+    Você é um Motor de Regras para RPG do mundo de Valoria.
 
+    CONTEXTO DO MUNDO: {region_lore}
+    CLASSE: {p_class}.
+
+    TAREFA:
+    1. Gere um inventário temático da região {region}.
+    2. Sugira 2 habilidades extras (flavor) que combinem com a classe.
+    """)
     human_msg = HumanMessage(content=f"Personagem: {name}, {race} {p_class}. Conceito: {backstory}")
 
-    stats_data = {}
+    flavor_data: Dict[str, Any] = {}
     try:
-        stats = llm.with_structured_output(PlayerStatsSchema).invoke([system_msg, human_msg])
+        stats = llm.with_structured_output(PlayerFlavorSchema).invoke([system_msg, human_msg])
         if stats:
             dumped = stats.model_dump()
-            # Só aceita se vier no formato esperado (sem API key, o FallbackLLM
-            # devolve um AIMessage cujo dump não tem 'attributes').
-            if isinstance(dumped, dict) and "attributes" in dumped:
-                # Normaliza chaves de atributo (Gemini pode devolver nomes longos/PT:
-                # "dexterity"/"destreza" -> "dex"). Sem isso, mods/attack_bonus saem
-                # errados pois a leitura abaixo usa as chaves curtas.
-                raw_attrs = dumped.get("attributes") or {}
-                dumped["attributes"] = {normalize_attr(k): v for k, v in raw_attrs.items()}
-                stats_data = dumped
+            # Sem chave, o FallbackLLM devolve AIMessage cujo dump não tem 'inventory'.
+            if isinstance(dumped, dict) and "inventory" in dumped:
+                flavor_data = dumped
     except Exception as e:
         print(f"⚠️ Erro IA: {e}")
 
-    # Fallback
-    if not stats_data:
-        stats_data = {
-            "attributes": {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10},
-            "inventory": ["Kit Básico"],
-            "flavor_abilities": []
-        }
+    if not flavor_data:
+        flavor_data = {"inventory": ["Kit Básico"], "flavor_abilities": []}
 
-    # 4. MONTAGEM FINAL (MERGE)
-    # Fase 4.1 (R6): known_abilities guarda SÓ ids canônicos da árvore.
-    # A passiva vive em CLASSES[classe]["passive"] (exibição busca lá);
-    # flavor do LLM é descartado (nunca teve efeito mecânico).
+    # 5. MONTAGEM FINAL (MERGE)
     final_abilities = ["ataque_basico"] + [
         aid for aid in class_data.get("starting_abilities", [])
         if aid not in ("ataque_basico",)
@@ -221,50 +272,43 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
         "region": region,
         "backstory": backstory,
         "concept": f"{race} {p_class} de {region}",
-        "traits": [], # Simplificado para focar no resto
+        "traits": [],
         "hp": final_hp,
         "max_hp": final_hp,
-        "stamina": final_stamina,
-        "max_stamina": final_stamina,
-        "mana": final_mana,
-        "max_mana": final_mana,
         "entropy": final_entropy,
         "max_entropy": final_entropy,
         "abyss_charge": 0,
-        "attributes": stats_data["attributes"],
-        "inventory": [],  # Fase 4.3: preenchido abaixo (ids canônicos + flavor)
+        "virtudes": virtudes,
+        "inventory": [],  # preenchido abaixo
         "known_abilities": final_abilities,
         "level": level,
         "xp": 0,
-        "pending_choices": []
+        "pending_choices": [],
     }
 
-    # Fase 4.3: inventário estruturado — starting_equipment CANÔNICO da classe
-    # (arma inicial COM stats — fecha o bug da "Espada Gasta") + flavor do LLM
-    # (resolve para id quando der; senão vira item_desconhecido com display_name).
+    # Vitalidade/Ferimentos: cheia na criação (R4)
+    gamedata.sync_player_vitals(sheet, heal_to_full=True)
+
+    # 6. Inventário estruturado — starting_equipment canônico + flavor do LLM
     from inventory import add_item, backfill_inventory
-    inv = []
+    inv: List[Dict] = []
     for iid in class_data.get("starting_equipment", []) or []:
         inv = add_item(inv, iid, 1)
-    for free_name in stats_data.get("inventory", []) or []:
+    for free_name in flavor_data.get("inventory", []) or []:
         inv = add_item(inv, str(free_name), 1)
     sheet["inventory"] = inv
 
-    # 5. TRAITS RACIAIS (Fase 2.5b) — determinístico, ANTES de defesa/ataque
-    #    (bônus racial de atributo deve refletir nos mods derivados).
+    # 7. TRAITS RACIAIS (Fase 2.5b) — ANTES de defesa/ataque (bônus de Virtude reflete)
     apply_racial_traits(sheet, race)
 
-    # Fase 4.3: slots de equipamento (auto-equipa melhor arma/armadura UMA vez)
+    # 8. Equipamento (auto-equipa melhor arma/armadura UMA vez)
     sheet.update(backfill_inventory(sheet))
 
-    # Cálculo de Defesa (Simples: 10 + Dex Mod, ou valor base da classe se for maior)
-    dex_mod = _get_mod(sheet["attributes"].get("dex", 10))
-    base_def = class_data.get("base_stats", {}).get("defense", 10)
-    # Se a classe usa armadura pesada (def alta no JSON), mantemos. Se for leve, usa Dex.
-    # defense_bonus racial (se houver) já foi somado em sheet["defense"] — preserva.
+    # 9. Defesa/Ataque derivados de Virtude (ponte transicional até a conflito-04/05)
+    base_def = base_stats.get("defense", 10)
     racial_def_bonus = int(sheet.get("defense", 0) or 0) - 10 if "defense" in sheet else 0
-    sheet["defense"] = max(base_def, 10 + dex_mod) + max(0, racial_def_bonus)
-    sheet["attack_bonus"] = _calculate_attack_bonus(p_class, sheet["attributes"], level)
+    sheet["defense"] = max(base_def, 10 + int(virtudes.get("agilidade", 0))) + max(0, racial_def_bonus)
+    sheet["attack_bonus"] = _calculate_attack_bonus(p_class, sheet["virtudes"], level)
     return sheet
 
 def _get_region_lore(region_name: str) -> str:

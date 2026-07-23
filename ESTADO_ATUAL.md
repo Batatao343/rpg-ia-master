@@ -1,12 +1,17 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
-> **⚠️ RETOMANDO DA SESSÃO 23?** Baseline de letalidade FECHADO (run
-> `20260720-093014`, 17 campanhas). Diagnóstico: letalidade = **falta de laço de
-> recuperação**, não dano alto. 4 decisões do usuário → letalidade-early-game-v2
-> Etapa 2 IMPLEMENTADA + 2 specs novas em draft (B loop-explorador, C
-> checkpoints-morte) + fix D (secret_leak). **EM ANDAMENTO:** balanceamento de
-> PARITY das habilidades das classes via playtest (pedido do usuário). Última
-> atualização: 2026-07-20 (sessão 23). Histórico: `CHANGELOG.md`.
+> **⚠️ RETOMANDO DA SESSÃO 24?** EM CURSO o **épico Migração do Sistema de
+> Conflitos (Valoria v2)** — 16 specs `conflito-01..16` em `specs/` (fonte
+> funcional em `docs/valoria_conflict_migration_v2/`). Substitui o combate atual
+> por um jogo tático de cartas 100% determinístico; **cutover atômico** só na
+> `conflito-13` (jogo fica injogável no meio, por design). **`conflito-01`
+> (fundação de dados) `done`**: 5 Virtudes (0-5), Vitalidade/Ferimentos por
+> Corpo, nível máx 10, migração v3→v4 (saves antigos ARQUIVADOS — corte
+> deliberado), `attributes`/mana/stamina fora do jogador via ponte `actor_mods`.
+> **Suíte 1045 verde** (+30 `test_conflito_virtudes`). **Próxima: `conflito-02`
+> (Cartas/Acervo) e `conflito-03` (Zonas), paralelizáveis.** Ordem completa no
+> ROADMAP § Migração. Última atualização: 2026-07-22 (sessão 24). Histórico das
+> sessões anteriores: abaixo e em `CHANGELOG.md`.
 
 ---
 

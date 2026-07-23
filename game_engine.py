@@ -172,13 +172,18 @@ def create_character_wizard():
             "xp": 0,
             "hp": final_char["hp"],
             "max_hp": final_char["max_hp"],
-            "mana": final_char["mana"],
-            "max_mana": final_char["max_mana"],
-            "stamina": final_char["stamina"],
-            "max_stamina": final_char["max_stamina"],
+            # spec refatoracao-sistema-classes: Entropia = pool das 5 classes.
+            "entropy": final_char.get("entropy", 0),
+            "max_entropy": final_char.get("max_entropy", 0),
+            "abyss_charge": final_char.get("abyss_charge", 0),
             "gold": 50 * level,
             "alignment": "Neutro",
-            "attributes": final_char["attributes"],
+            # spec conflito-01: Virtudes + Vitalidade/Ferimentos (mana/stamina/attributes saíram)
+            "virtudes": final_char["virtudes"],
+            "vitalidade": final_char.get("vitalidade", final_char.get("max_vitalidade", final_char["max_hp"])),
+            "max_vitalidade": final_char.get("max_vitalidade", final_char["max_hp"]),
+            "ferimento_espacos": final_char.get("ferimento_espacos", {}),
+            "ferimentos": final_char.get("ferimentos", {"leve": [], "grave": [], "critico": []}),
             "inventory": final_char["inventory"],
             # Fase 4.3: slots do creator (auto-equip)
             "equipment": final_char.get("equipment",

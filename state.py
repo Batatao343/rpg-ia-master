@@ -15,6 +15,16 @@ class Attributes(TypedDict):
     charisma: int
 
 
+class Virtudes(TypedDict):
+    # spec conflito-01: 5 Virtudes (0-5) substituem os 6 atributos D&D.
+    # Chaves curtas canônicas — sem aliases/normalização (attributes saiu do player).
+    mente: int
+    agilidade: int
+    forca: int
+    carisma: int
+    corpo: int
+
+
 class Condition(TypedDict, total=False):
     name: str
     dot: int        # dano por turno (0 = buff/debuff sem dano direto)
@@ -47,7 +57,13 @@ class PlayerStats(TypedDict, total=False):
     level: int
     xp: int
     alignment: str
-    attributes: Attributes
+    attributes: Attributes  # LEGADO — removido do jogador na Fase B da conflito-01
+    # --- spec conflito-01: Virtudes + Vitalidade/Ferimentos (fundação de dados) ---
+    virtudes: Virtudes                 # mente/agilidade/forca/carisma/corpo (0-5)
+    vitalidade: int                    # pool atual (substitui hp no motor novo)
+    max_vitalidade: int                # derivado de Corpo (gamedata.VITALIDADE_POR_CORPO)
+    ferimento_espacos: Dict[str, int]  # capacidade {leve,grave,critico} derivada de Corpo (recalc no bump)
+    ferimentos: Dict[str, List]        # Ferimentos ATIVOS por categoria — preenchidos na conflito-05
     # Fase 4.3: inventário estruturado — {"id": str, "qty": int, "display_name"?: str}
     # (id resolve no ARTIFACTS_DB; item_desconhecido preserva nome de save antigo)
     inventory: List[Dict]
@@ -77,6 +93,10 @@ class EnemyStats(TypedDict):
     defense: int
     attack_mod: int
     attributes: Attributes
+    # spec conflito-01 R7: campo existe no schema; preenchimento por criatura
+    # (Vitalidade/Ferimentos) é escopo da conflito-05/15. attributes RESIDUAL no
+    # inimigo até conflito-04/05 decidirem o destino (R8).
+    virtudes: Optional[Dict[str, int]]
     abilities: List[str]
     status: str  # "ativo", "morto", "fugiu"
     active_conditions: List["Condition"]

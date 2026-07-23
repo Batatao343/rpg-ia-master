@@ -169,3 +169,126 @@ XP_TABLE = {
     11: 85000, 12: 100000, 13: 120000, 14: 140000, 15: 165000,
     16: 195000, 17: 225000, 18: 265000, 19: 305000, 20: 355000
 }
+
+# --- CONFLITO v2 (spec conflito-01): Virtudes / Vitalidade / Ferimentos ---
+# Doc: docs/valoria_conflict_migration_v2/01_..._CONFLITOS.md §8.1
+# 5 Virtudes (chaves curtas): mente/agilidade/forca/carisma/corpo (0-5).
+VIRTUDES = ("mente", "agilidade", "forca", "carisma", "corpo")
+
+# Distribuição fixa oferecida na criação (multiset livre entre as 5 Virtudes).
+DISTRIBUICAO_VIRTUDES_INICIAL = (4, 3, 2, 1, 1)
+
+VIRTUDE_MAX = 5          # teto por Virtude
+NIVEL_MAX = 10           # conflito-01 R3: nível máximo passa de 20 para 10
+# Níveis em que o jogador escolhe +1 numa Virtude (R3).
+NIVEIS_GANHO_VIRTUDE = (2, 4, 6, 8, 10)
+
+# Vitalidade máxima derivada de Corpo (R4).
+VITALIDADE_POR_CORPO = {0: 6, 1: 8, 2: 10, 3: 12, 4: 14, 5: 16}
+
+# Espaços de Ferimento por categoria derivados de Corpo (R4).
+ESPACOS_FERIMENTO_POR_CORPO = {
+    0: {"leve": 2, "grave": 1, "critico": 1},
+    1: {"leve": 3, "grave": 1, "critico": 1},
+    2: {"leve": 3, "grave": 2, "critico": 1},
+    3: {"leve": 4, "grave": 2, "critico": 2},
+    4: {"leve": 4, "grave": 3, "critico": 2},
+    5: {"leve": 5, "grave": 3, "critico": 3},
+}
+
+# Limites de Gravidade: faixa de EXCEDENTE de dano -> categoria de Ferimento (R5).
+# Tuplas (min, max); crítico é aberto (max=None).
+LIMITES_GRAVIDADE_POR_CORPO = {
+    0: {"leve": (1, 3), "grave": (4, 6), "critico": (7, None)},
+    1: {"leve": (1, 4), "grave": (5, 8), "critico": (9, None)},
+    2: {"leve": (1, 5), "grave": (6, 10), "critico": (11, None)},
+    3: {"leve": (1, 6), "grave": (7, 12), "critico": (13, None)},
+    4: {"leve": (1, 7), "grave": (8, 14), "critico": (15, None)},
+    5: {"leve": (1, 8), "grave": (9, 16), "critico": (17, None)},
+}
+
+
+# Aliases legados (chaves D&D / nomes longos / PT) -> chave curta de Virtude.
+# wis/int caem em "mente" (sem Virtude dedicada de percepção).
+_VIRTUDE_ALIASES = {
+    "str": "forca", "strength": "forca", "forca": "forca", "força": "forca",
+    "dex": "agilidade", "dexterity": "agilidade", "agilidade": "agilidade", "destreza": "agilidade",
+    "con": "corpo", "constitution": "corpo", "corpo": "corpo", "constituicao": "corpo",
+    "int": "mente", "intelligence": "mente", "mente": "mente", "inteligencia": "mente",
+    "wis": "mente", "wisdom": "mente", "sabedoria": "mente",
+    "cha": "carisma", "charisma": "carisma", "carisma": "carisma",
+}
+
+
+def _fold_key(key: str) -> str:
+    import unicodedata
+    nfkd = unicodedata.normalize("NFKD", str(key or "").strip().lower())
+    return "".join(c for c in nfkd if not unicodedata.combining(c))
+
+
+def normalize_virtude(key: str) -> str:
+    """Normaliza uma chave de atributo/Virtude (D&D longo/PT/acento) para a chave
+    curta canônica de Virtude. Fonte única — usada por creator/progressão/API."""
+    raw = str(key or "").strip().lower()
+    if raw in _VIRTUDE_ALIASES:
+        return _VIRTUDE_ALIASES[raw]
+    return _VIRTUDE_ALIASES.get(_fold_key(raw), _fold_key(raw))
+
+
+def _clamp_corpo(corpo) -> int:
+    try:
+        c = int(corpo)
+    except (TypeError, ValueError):
+        c = 0
+    return max(0, min(VIRTUDE_MAX, c))
+
+
+def vitalidade_para_corpo(corpo) -> int:
+    """Vitalidade máxima para um valor de Corpo (0-5, clampado)."""
+    return VITALIDADE_POR_CORPO[_clamp_corpo(corpo)]
+
+
+def espacos_ferimento_para_corpo(corpo) -> dict:
+    """Espaços {leve,grave,critico} para um valor de Corpo (cópia nova)."""
+    return dict(ESPACOS_FERIMENTO_POR_CORPO[_clamp_corpo(corpo)])
+
+
+def categoria_ferimento(corpo, excedente) -> "str | None":
+    """Mapeia o EXCEDENTE de dano (dano - absorção) para a categoria de Ferimento
+    conforme os Limites de Gravidade do Corpo. Excedente <= 0 -> nenhum Ferimento."""
+    try:
+        exc = int(excedente)
+    except (TypeError, ValueError):
+        return None
+    if exc <= 0:
+        return None
+    faixas = LIMITES_GRAVIDADE_POR_CORPO[_clamp_corpo(corpo)]
+    for cat in ("leve", "grave", "critico"):
+        lo, hi = faixas[cat]
+        if exc >= lo and (hi is None or exc <= hi):
+            return cat
+    return "critico"
+
+
+def sync_player_vitals(player: dict, *, heal_to_full: bool = False) -> dict:
+    """Recalcula Vitalidade/espaços de Ferimento a partir de Corpo (R4).
+
+    Chamado na criação, no bump de Corpo (level-up) e na migração. NUNCA lazy —
+    `max_vitalidade`/`ferimento_espacos` ficam sempre coerentes com Corpo. A
+    Vitalidade atual sobe junto com o teto (ganho de Corpo cura o delta) e é
+    clampada ao novo máximo; `heal_to_full` força cheia (criação)."""
+    virtudes = player.get("virtudes") or {}
+    corpo = virtudes.get("corpo", 0)
+    novo_max = vitalidade_para_corpo(corpo)
+    antigo_max = int(player.get("max_vitalidade", 0) or 0)
+    atual = int(player.get("vitalidade", novo_max) or 0)
+    player["max_vitalidade"] = novo_max
+    player["ferimento_espacos"] = espacos_ferimento_para_corpo(corpo)
+    player.setdefault("ferimentos", {"leve": [], "grave": [], "critico": []})
+    if heal_to_full or "vitalidade" not in player:
+        player["vitalidade"] = novo_max
+    else:
+        # ganho de teto (Corpo subiu) soma no atual; clampa ao novo máximo
+        atual += max(0, novo_max - antigo_max)
+        player["vitalidade"] = max(0, min(novo_max, atual))
+    return player

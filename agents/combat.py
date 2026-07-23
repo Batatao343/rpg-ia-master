@@ -224,7 +224,7 @@ def _parse_combat_action(player: Dict, enemies: List[Dict], intent: str) -> Dict
     Traduza a fala do jogador para uma ação canônica.
 
     Classe: {player.get('class_name', '')}
-    Atributos: {player.get('attributes', {})}
+    Virtudes: {player.get('virtudes', {})}
 
     CATÁLOGO DE HABILIDADES (use a CHAVE exata em ability_id):
     {_ability_catalog_for(player)}

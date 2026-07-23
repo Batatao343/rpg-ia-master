@@ -11,13 +11,12 @@
       "mana": 0,
       "stamina": 0,
       "defense": 16,
-      "attributes": {
-        "str": 16,
-        "dex": 10,
-        "con": 16,
-        "int": 8,
-        "wis": 12,
-        "cha": 14
+      "virtudes": {
+        "forca": 4,
+        "corpo": 3,
+        "carisma": 2,
+        "mente": 1,
+        "agilidade": 1
       }
     },
     "level_gains": {
@@ -95,13 +94,12 @@
       "mana": 0,
       "stamina": 0,
       "defense": 12,
-      "attributes": {
-        "str": 12,
-        "dex": 16,
-        "con": 14,
-        "int": 10,
-        "wis": 10,
-        "cha": 12
+      "virtudes": {
+        "agilidade": 4,
+        "corpo": 3,
+        "carisma": 2,
+        "forca": 1,
+        "mente": 1
       }
     },
     "level_gains": {
@@ -172,13 +170,12 @@
       "mana": 0,
       "stamina": 0,
       "defense": 13,
-      "attributes": {
-        "str": 10,
-        "dex": 12,
-        "con": 12,
-        "int": 12,
-        "wis": 16,
-        "cha": 10
+      "virtudes": {
+        "mente": 4,
+        "corpo": 3,
+        "agilidade": 2,
+        "carisma": 1,
+        "forca": 1
       }
     },
     "level_gains": {
@@ -268,13 +265,12 @@
       "mana": 0,
       "stamina": 0,
       "defense": 11,
-      "attributes": {
-        "str": 8,
-        "dex": 12,
-        "con": 10,
-        "int": 16,
-        "wis": 12,
-        "cha": 12
+      "virtudes": {
+        "mente": 4,
+        "agilidade": 3,
+        "carisma": 2,
+        "corpo": 1,
+        "forca": 1
       }
     },
     "level_gains": {
@@ -346,13 +342,12 @@
       "mana": 0,
       "stamina": 0,
       "defense": 14,
-      "attributes": {
-        "str": 10,
-        "dex": 12,
-        "con": 12,
-        "int": 16,
-        "wis": 14,
-        "cha": 10
+      "virtudes": {
+        "mente": 4,
+        "carisma": 3,
+        "corpo": 2,
+        "agilidade": 1,
+        "forca": 1
       }
     },
     "level_gains": {

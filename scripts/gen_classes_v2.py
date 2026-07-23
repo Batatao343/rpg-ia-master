@@ -434,7 +434,7 @@ CLASSES = {
         # spec letalidade-early-game-v2 (alavanca 3): HP base subido (baseline 38 → 40)
         # p/ dar piso de sobrevivência ao early-game; afinado por cima pela spec de balanceamento.
         "base_stats": {"hp": 40, "entropy": 14, "mana": 0, "stamina": 0, "defense": 16,
-                       "attributes": {"str": 16, "dex": 10, "con": 16, "int": 8, "wis": 12, "cha": 14}},
+                       "virtudes": {"forca": 4, "corpo": 3, "carisma": 2, "mente": 1, "agilidade": 1}},
         "level_gains": {"hp": 7, "entropy": 2, "mana": 0, "stamina": 0},
         "starting_abilities": ["provocacao_do_abismo", "encaixe_do_golpe"],
         "entropy_trigger": {"kind": "on_damage_taken", "damage_divisor": 4, "min_gain": 1,
@@ -461,7 +461,7 @@ CLASSES = {
         "passive": "Contrato de Sangue: auto-dano vira Entropia de sangue.",
         # spec letalidade-early-game-v2 (alavanca 3): HP base 26 → 30 (frágil demais nível 1).
         "base_stats": {"hp": 30, "entropy": 16, "mana": 0, "stamina": 0, "defense": 12,
-                       "attributes": {"str": 12, "dex": 16, "con": 14, "int": 10, "wis": 10, "cha": 12}},
+                       "virtudes": {"agilidade": 4, "corpo": 3, "carisma": 2, "forca": 1, "mente": 1}},
         "level_gains": {"hp": 5, "entropy": 3, "mana": 0, "stamina": 0},
         "starting_abilities": ["corte_de_troca", "esquiva_calculada"],
         "entropy_trigger": {"kind": "on_self_harm", "gain_per_hp": 1, "charge_per": 1, "per_turn_cap": 2,
@@ -487,7 +487,7 @@ CLASSES = {
         "passive": "Parceria: a decadência ao seu redor te alimenta.",
         # spec letalidade-early-game-v2 (alavanca 3): HP base 28 → 30.
         "base_stats": {"hp": 30, "entropy": 18, "mana": 0, "stamina": 0, "defense": 13,
-                       "attributes": {"str": 10, "dex": 12, "con": 12, "int": 12, "wis": 16, "cha": 10}},
+                       "virtudes": {"mente": 4, "corpo": 3, "agilidade": 2, "carisma": 1, "forca": 1}},
         "level_gains": {"hp": 5, "entropy": 4, "mana": 0, "stamina": 0},
         "starting_abilities": ["toque_da_decadencia", "semear_praga"],
         "entropy_trigger": {"kind": "on_decay_nearby", "gain": 1, "charge_per": 1, "per_turn_cap": 2,
@@ -517,7 +517,7 @@ CLASSES = {
         # spec letalidade-early-game-v2 (alavanca 3): HP base 22 → 26 (a classe que
         # mais morria nível 1 no run 20260720-093014).
         "base_stats": {"hp": 26, "entropy": 20, "mana": 0, "stamina": 0, "defense": 11,
-                       "attributes": {"str": 8, "dex": 12, "con": 10, "int": 16, "wis": 12, "cha": 12}},
+                       "virtudes": {"mente": 4, "agilidade": 3, "carisma": 2, "corpo": 1, "forca": 1}},
         "level_gains": {"hp": 4, "entropy": 6, "mana": 0, "stamina": 0},
         "starting_abilities": ["descarga_do_instrumento", "vazao_controlada"],
         "entropy_trigger": {"kind": "on_channel", "gain": 2, "charge_per": 1, "per_turn_cap": 1,
@@ -543,7 +543,7 @@ CLASSES = {
         "passive": "Triagem: cura mais quem está mais perto do fim.",
         # spec letalidade-early-game-v2 (alavanca 3): HP base 28 → 30.
         "base_stats": {"hp": 30, "entropy": 16, "mana": 0, "stamina": 0, "defense": 14,
-                       "attributes": {"str": 10, "dex": 12, "con": 12, "int": 16, "wis": 14, "cha": 10}},
+                       "virtudes": {"mente": 4, "carisma": 3, "corpo": 2, "agilidade": 1, "forca": 1}},
         "level_gains": {"hp": 5, "entropy": 3, "mana": 0, "stamina": 0},
         "starting_abilities": ["sutura_de_campo", "estabilizar"],
         "entropy_trigger": {"kind": "on_ally_suffer", "gain": 1, "charge_per": 1, "per_turn_cap": 2,

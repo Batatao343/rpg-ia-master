@@ -140,14 +140,15 @@ def test_every_region_has_start_node():
 # --------------------------------------------------------------------------
 def test_apply_racial_traits_anao():
     from character_creator import apply_racial_traits
-    sheet = {"attributes": {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10},
+    # spec conflito-01: raça NÃO altera Virtudes; hp/resist/save/itens seguem
+    sheet = {"virtudes": {"mente": 1, "agilidade": 1, "forca": 4, "carisma": 1, "corpo": 3},
              "hp": 30, "max_hp": 30, "inventory": []}
     apply_racial_traits(sheet, "Anão da Fuligem")
-    assert sheet["attributes"]["con"] == 12          # Protocolo: +2 con
+    assert sheet["virtudes"]["corpo"] == 3           # inalterado pela raça
     assert sheet["hp"] == 35 and sheet["max_hp"] == 35
     assert "veneno" in sheet["condition_resists"]
-    assert sheet["racial_save_bonus"].get("con") == 2
-    # Fase 4.3: inventário estruturado — item racial entra com display_name preservado
+    # save_bonus agora chaveado por Virtude (con -> corpo)
+    assert sheet["racial_save_bonus"].get("corpo") == 2
     from inventory import item_display
     assert any(item_display(e) == "Respirador de Couro" for e in sheet["inventory"])
     assert len(sheet["racial_traits"]) == 2
@@ -155,12 +156,13 @@ def test_apply_racial_traits_anao():
 
 def test_apply_racial_traits_by_id_and_unknown():
     from character_creator import apply_racial_traits
-    sheet = {"attributes": {"wis": 10}, "hp": 20, "max_hp": 20}
+    # spec conflito-01: raça não mexe em Virtude; resist continua valendo
+    sheet = {"virtudes": {"mente": 1}, "hp": 20, "max_hp": 20}
     apply_racial_traits(sheet, "race_cinzeus")
-    assert sheet["attributes"]["wis"] == 12          # Contemplação
+    assert sheet["virtudes"]["mente"] == 1           # inalterado pela raça
     assert any("atordoa" in r for r in sheet["condition_resists"])
     # raça desconhecida: no-op seguro
-    sheet2 = {"attributes": {}}
+    sheet2 = {"virtudes": {}}
     apply_racial_traits(sheet2, "Marciano")
     assert sheet2["racial_traits"] == []
 

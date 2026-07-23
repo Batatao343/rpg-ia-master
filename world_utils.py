@@ -862,9 +862,11 @@ def detection_check(player: dict, danger: int, rng=None,
     Fase 6.5: `perception_mod` do clima (neblina -3 etc.) soma na rolagem."""
     import random as _random
     rng = rng or _random
-    from combat_mechanics import attr_mods, player_passives
-    wis = attr_mods(player.get("attributes", {})).get("wis", 0)
-    wis += int((player.get("racial_save_bonus") or {}).get("wis", 0) or 0)
+    from combat_mechanics import actor_mods, player_passives
+    # spec conflito-01: percepção usa Mente (Virtude) via ponte actor_mods -> "wis".
+    wis = actor_mods(player).get("wis", 0)
+    save_b = player.get("racial_save_bonus") or {}
+    wis += int(save_b.get("mente", save_b.get("wis", 0)) or 0)
     # spec itens-vivos-e-luz (R2): passiva `perception` de classe/habilidade/item
     perc = sum(int(pe.get("delta", 0) or 0) for pe in player_passives(player)
                if pe.get("trigger") == "perception")

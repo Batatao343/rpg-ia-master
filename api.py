@@ -127,6 +127,16 @@ def _reject_memorial(state: dict) -> None:
                             detail="Esta saga terminou. A crônica permanece como memorial — comece uma nova jornada.")
 
 
+def _reject_archived(state: dict) -> None:
+    """spec conflito-01 R10: save anterior à migração de Virtudes/Vitalidade é
+    ÓRFÃO. Somente-leitura — nenhuma ação o toca (409, nunca 500)."""
+    if state.get("archived"):
+        raise HTTPException(
+            status_code=409,
+            detail=state.get("archived_reason")
+            or "Personagem arquivado por migração de sistema — comece uma nova jornada.")
+
+
 # Fase 10 (R6): rate limit mínimo por IP (janela deslizante em memória).
 # RPG_RATE_LIMIT = req/min em /game/action e /game/new; 0 desliga (suíte/smoke).
 _RATE_WINDOW_S = 60.0
@@ -196,10 +206,12 @@ class EquipRequest(BaseModel):
     game_id: Optional[str] = None
 
 class LevelUpRequest(BaseModel):
-    """Fase 4.1: consome UMA pending_choice. kind=ability -> ability_id;
-    kind=attribute -> attr (str/dex/con/int/wis/cha ou nome longo/PT)."""
+    """Fase 4.1 + spec conflito-01: consome UMA pending_choice. kind=ability ->
+    ability_id; kind=virtude -> virtude (mente/agilidade/forca/carisma/corpo;
+    `attr` segue aceito como alias legado)."""
     choice_id: str
     ability_id: Optional[str] = None
+    virtude: Optional[str] = None
     attr: Optional[str] = None
     game_id: Optional[str] = None
 
@@ -672,17 +684,18 @@ def new_game(req: CreateCharacterRequest):
             "xp": 0,
             "hp": final_char["hp"],
             "max_hp": final_char["max_hp"],
-            "mana": final_char["mana"],
-            "max_mana": final_char["max_mana"],
-            "stamina": final_char["stamina"],
-            "max_stamina": final_char["max_stamina"],
             # spec refatoracao-sistema-classes: Entropia é o pool das 5 classes.
             "entropy": final_char.get("entropy", 0),
             "max_entropy": final_char.get("max_entropy", 0),
             "abyss_charge": final_char.get("abyss_charge", 0),
             "gold": 50 * req.level,
             "alignment": "Neutro",
-            "attributes": final_char["attributes"],
+            # spec conflito-01: 5 Virtudes + Vitalidade/Ferimentos (mana/stamina/attributes saíram)
+            "virtudes": final_char["virtudes"],
+            "vitalidade": final_char.get("vitalidade", final_char.get("max_vitalidade", final_char["max_hp"])),
+            "max_vitalidade": final_char.get("max_vitalidade", final_char["max_hp"]),
+            "ferimento_espacos": final_char.get("ferimento_espacos", {}),
+            "ferimentos": final_char.get("ferimentos", {"leve": [], "grave": [], "critico": []}),
             "inventory": final_char["inventory"],
             # Fase 4.3: slots do creator (auto-equip) — sem isto o HUD nasce sem arma
             "equipment": final_char.get("equipment",
@@ -810,6 +823,8 @@ def game_action(req: ActionRequest):
 
     # Fase 4.6 (R7): save morto é MEMORIAL — a crônica fica, ações não.
     _reject_memorial(state)
+    # spec conflito-01: save pré-Virtudes é órfão — só leitura.
+    _reject_archived(state)
     # spec checkpoints-morte: queda letal pendente — o jogador precisa resolver a
     # TELA DE MORTE (POST /game/death) antes de agir de novo.
     if state.get("death_pending"):
@@ -861,6 +876,10 @@ def _stream_turn(state: dict, input_text: str) -> Iterator[str]:
     if state.get("game_over"):
         # R3: memorial — evento `error` com 409 semântico e fecha o stream.
         yield _sse("error", {"detail": _MEMORIAL_DETAIL, "code": 409})
+        return
+    if state.get("archived"):
+        # spec conflito-01: save pré-Virtudes é órfão — só leitura.
+        yield _sse("error", {"detail": state.get("archived_reason") or _MEMORIAL_DETAIL, "code": 409})
         return
     # spec checkpoints-morte: queda pendente — cliente deve chamar /game/death.
     if state.get("death_pending"):
@@ -982,7 +1001,7 @@ def game_levelup(req: LevelUpRequest):
 
     player, err = progression.apply_choice(
         state["player"], req.choice_id,
-        ability_id=req.ability_id, attr=req.attr)
+        ability_id=req.ability_id, virtude=req.virtude, attr=req.attr)
     if err:
         raise HTTPException(status_code=400, detail=err)
 
@@ -994,7 +1013,7 @@ def game_levelup(req: LevelUpRequest):
             "level": player.get("level", 1),
             "xp": player.get("xp", 0),
             "xp_next_level": progression.xp_to_next(int(player.get("level", 1) or 1)),
-            "attributes": player.get("attributes", {}),
+            "virtudes": player.get("virtudes", {}),
             "abilities": [
                 {"id": aid, "name": ABILITIES.get(aid, {}).get("name", aid),
                  "branch": ABILITIES.get(aid, {}).get("branch")}
