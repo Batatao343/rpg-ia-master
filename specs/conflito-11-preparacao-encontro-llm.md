@@ -1,7 +1,10 @@
 # SPEC — Conflito v2 #11: Preparação de Encontro pela LLM
 
-> **Status:** `draft`
-> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
+> **Status:** `done` (2026-07-23) — motor puro + geração LLM com guard
+> (`services/encounter_preparation.py` + `data/potency_by_level.json`); a mudança
+> de GRAFO (mover `_spawn_enemies_integrated` pra fora do `combat_node`; NPC nascer
+> com ficha completa em `agents/npc.py`) é o cutover `conflito-13`
+> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-23
 > **Depende de:** `conflito-02-cartas-acervo-preparacao`, `conflito-03-zonas-cena-objetos`,
 > `conflito-08-comportamento-tatico-companheiros`, `conflito-10-abismo-em-conflito`
 > (todas `done` antes de iniciar)
@@ -121,13 +124,13 @@ arquétipo/NPC (`conflito-08`, aqui só consome); conteúdo real do bestiário
 
 ## 5. Critérios de aceite
 
-- [ ] Encontro é preparado inteiramente antes do combate começar; cena congela
-  depois.
-- [ ] Nível do Encontro não considera nível/força da party.
-- [ ] Falha de preparação sempre resolve (fallback de provider → cena
-  simplificada), nunca trava o jogo.
-- [ ] NPC gerado no roleplay já nasce pronto pra combate.
-- [ ] `uv run pytest` verde.
+- [x] Encontro é preparado inteiramente antes do combate começar; cena congela
+  depois (`prepare_encounter` → `validate_preparation`; congelamento é a fiação do cutover 13).
+- [x] Nível do Encontro não considera nível/força da party (`compute_encounter_level` sem param de party).
+- [x] Falha de preparação sempre resolve (fallback de provider via `RoutedLLM`/`ROUTES`
+  → cena simplificada `fallback_safe_scene`), nunca trava o jogo.
+- [x] NPC gerado no roleplay já nasce pronto pra combate (`build_npc_combat_sheet`).
+- [x] `uv run pytest` verde — **1223 passed** (+11 `test_conflito_preparacao`).
 
 ## 6. Smoke test com LLM real
 

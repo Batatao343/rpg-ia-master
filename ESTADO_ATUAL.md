@@ -61,7 +61,15 @@
 > agrava Ferimento direto, catálogo fechado da conflito-03; assinatura visual fixa
 > + gasto de Carga reportado). Camada COMPLEMENTAR aos gatilhos de classe (não
 > substitui). Aditivo — consumidor de `abyss_charge` no cutover 13 (+13).
-> **Suíte 1212 verde.** **Próxima: `conflito-11` (preparação de encontro LLM).**
+> **11:** preparação de encontro (`services/encounter_preparation.py` +
+> `data/potency_by_level.json` — Nível do Encontro ABSOLUTO em Python puro, sem
+> nível de party; potência por categoria Fraco/Moderado/Forte/Devastador × nível;
+> `validate_preparation` exige catálogo fechado + base narrativa por objeto + base
+> na cena por evento do Abismo; seleção de criatura por região; `prepare_encounter`
+> via LLM+guard → `fallback_safe_scene` determinística quando a cadeia falha;
+> `build_npc_combat_sheet` dá ficha de combate completa ao NPC). Aditivo — mudança
+> de GRAFO no cutover 13 (+11).
+> **Suíte 1223 verde.** **Próxima: `conflito-12` (loot + resumo narrativo).**
 > Ordem completa no ROADMAP § Migração. Última atualização: 2026-07-23
 > (sessão 25). Histórico das sessões anteriores: abaixo e em `CHANGELOG.md`.
 

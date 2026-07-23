@@ -1,0 +1,10 @@
+{
+  "_meta": "spec conflito-11 R5: categoria de potência (Fraco/Moderado/Forte/Devastador) -> valor real por Nível do Encontro. A LLM escolhe SÓ a categoria; o número sai daqui (determinístico). Cada entrada é [base, incremento_por_nivel]; valor = base + incremento*(nivel-1). Dimensões: dano, dificuldade, duracao, reforcos.",
+  "categorias": ["fraco", "moderado", "forte", "devastador"],
+  "dimensoes": {
+    "dano":        {"fraco": [2, 1], "moderado": [4, 2], "forte": [6, 3], "devastador": [9, 4]},
+    "dificuldade": {"fraco": [9, 0], "moderado": [12, 1], "forte": [15, 1], "devastador": [18, 1]},
+    "duracao":     {"fraco": [1, 0], "moderado": [2, 0], "forte": [2, 1], "devastador": [3, 1]},
+    "reforcos":    {"fraco": [0, 0], "moderado": [1, 0], "forte": [1, 1], "devastador": [2, 1]}
+  }
+}
