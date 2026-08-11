@@ -24,7 +24,39 @@ from services import graph_resolver as gr
 from services import quest_log
 from services import rule_engine
 from services.chronicle import append_entry, render_milestone
-from services.world_validators import validate_proposal
+from services.world_validators import ValidationResult, validate_proposal
+
+_MAX_EVENT_REJECTIONS = 100
+
+
+def _safe_int(value, default: int = 0) -> int:
+    """Coage inteiros de saves legados sem violar o contrato ``Nunca levanta``."""
+    try:
+        return int(value or default)
+    except (TypeError, ValueError, OverflowError):
+        return default
+
+
+def _bounded_rejections(rows: list[Dict]) -> list[Dict]:
+    """Mantém auditoria útil sem deixar o save crescer indefinidamente."""
+    unique: dict[tuple, Dict] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        sanitized = {
+            "turn": _safe_int(row.get("turn", 0)),
+            "type": str(row.get("type") or ""),
+            "target_id": str(row.get("target_id") or ""),
+            "reason": str(row.get("reason") or "")[:240],
+        }
+        key = (
+            sanitized["turn"],
+            sanitized["type"],
+            sanitized["target_id"],
+            sanitized["reason"],
+        )
+        unique[key] = sanitized
+    return list(unique.values())[-_MAX_EVENT_REJECTIONS:]
 
 
 def apply_event(event: Dict, projection: Dict) -> Dict:
@@ -124,6 +156,55 @@ def _build_event(proposal: Dict, turn: int) -> Dict:
     }
 
 
+def prevalidate_event_batch(
+    proposals: list[Dict],
+    state: Dict,
+) -> list[ValidationResult]:
+    """Pré-valida um lote na mesma ordem em que o processor o aplicaria.
+
+    O preview trabalha sobre cópias de ``event_log``/``world_projection`` e roda
+    também a cascata de regras. Assim, a proposta N+1 enxerga os efeitos válidos
+    de N sem escrever no estado real. A função é deliberadamente read-only e
+    devolve um resultado por entrada, inclusive para payload malformado.
+    """
+    working = copy.deepcopy(state or {})
+    event_log = list(working.get("event_log") or [])
+    projection = copy.deepcopy(working.get("world_projection") or {})
+    quests = list(working.get("quests") or [])
+    turn = _safe_int((working.get("world") or {}).get("turn_count", 0))
+    results: list[ValidationResult] = []
+
+    for raw_proposal in proposals or []:
+        proposal = raw_proposal if isinstance(raw_proposal, dict) else {}
+        working["event_log"] = event_log
+        working["world_projection"] = projection
+        working["quests"] = quests
+        try:
+            result = validate_proposal(raw_proposal, working)
+        except Exception as exc:
+            result = ValidationResult(False, f"proposta malformada: {exc}")
+        results.append(result)
+        if not result.ok:
+            continue
+
+        event = _build_event(proposal, turn)
+        event_log.append(event)
+        projection = apply_event(event, projection)
+
+        if event["type"] == "quest_completed":
+            quest_id = event["payload"].get("quest_id")
+            if quest_id:
+                quests = quest_log.complete_quest(quests, quest_id, turn)
+
+        working["event_log"] = event_log
+        working["world_projection"] = projection
+        for derived in rule_engine.run_rules(event, working, depth=0):
+            event_log.append(derived)
+        projection = working["world_projection"]
+
+    return results
+
+
 def process_pending_events(state: Dict) -> Dict:
     """Valida/aplica a fila `pending_world_events`. Retorna updates parciais do GameState.
 
@@ -135,7 +216,7 @@ def process_pending_events(state: Dict) -> Dict:
     if not pending:
         return {}
 
-    turn = (state.get("world") or {}).get("turn_count", 0)
+    turn = _safe_int((state.get("world") or {}).get("turn_count", 0))
     event_log = list(state.get("event_log") or [])
     projection = copy.deepcopy(state.get("world_projection") or {})
     chronicle = state.get("chronicle") or []
@@ -143,6 +224,9 @@ def process_pending_events(state: Dict) -> Dict:
     quests = list(state.get("quests") or [])
     quests_changed = False
     quests_completed = 0  # Fase 4.1: cada conclusão vale XP_PER_QUEST
+    original_rejections = list(state.get("event_rejections") or [])
+    event_rejections = _bounded_rejections(original_rejections)
+    rejection_count_before = len(event_rejections)
 
     def _chronicle_milestone(ev: Dict, proj: Dict) -> None:
         nonlocal chronicle, chronicle_changed
@@ -156,13 +240,32 @@ def process_pending_events(state: Dict) -> Dict:
     # (pega duplicatas dentro do mesmo lote).
     working = dict(state)
 
-    for proposal in pending:
+    for raw_proposal in pending:
+        proposal = raw_proposal if isinstance(raw_proposal, dict) else {}
         working["event_log"] = event_log
         working["world_projection"] = projection
-        result = validate_proposal(proposal, working)
+        if proposal.get("_prevalidation_rejected") is True:
+            # Envelope de auditoria do storyteller: o payload livre já foi
+            # descartado na fronteira narrativa; nunca tente promovê-lo de novo.
+            result = ValidationResult(
+                False,
+                str(proposal.get("_prevalidation_reason")
+                    or "rejeitada na pré-validação narrativa")[:240],
+            )
+        else:
+            try:
+                result = validate_proposal(raw_proposal, working)
+            except Exception as exc:
+                result = ValidationResult(False, f"proposta malformada: {exc}")
         if not result.ok:
             print(f"🚫 [EVENT] proposta rejeitada ({proposal.get('type')}/"
                   f"{proposal.get('target_id')}): {result.reason}")
+            event_rejections = _bounded_rejections([*event_rejections, {
+                "turn": turn,
+                "type": str(proposal.get("type") or ""),
+                "target_id": str(proposal.get("target_id") or ""),
+                "reason": str(result.reason or "")[:240],
+            }])
             continue
         event = _build_event(proposal, turn)
         event_log.append(event)
@@ -227,4 +330,9 @@ def process_pending_events(state: Dict) -> Dict:
         updates["chronicle"] = chronicle
     if quests_changed:
         updates["quests"] = quests
+    if (
+        len(event_rejections) != rejection_count_before
+        or event_rejections != original_rejections
+    ):
+        updates["event_rejections"] = event_rejections
     return updates

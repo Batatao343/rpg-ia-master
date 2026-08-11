@@ -192,7 +192,7 @@ def test_storyteller_usa_pack(monkeypatch):
     prompt = llm.captured
     assert "<ESTADO_ATUAL_DO_MUNDO>" in prompt
     # ESTADO ATUAL entra ANTES da lore base (precedência da verdade viva)
-    assert prompt.index("<ESTADO_ATUAL_DO_MUNDO>") < prompt.index("<LORE_E_FATOS_PASSADOS>")
+    assert prompt.index("<ESTADO_ATUAL_DO_MUNDO>") < prompt.index("<LORE_PUBLICO_CANONICO>")
     assert "ESTADO ATUAL VENCE" in prompt
     assert "narrative" not in out or "messages" in out
 

@@ -1,7 +1,7 @@
 # SPEC — Letalidade de early-game, 2ª passada (combate/explorador morrem nível 1–3)
 
-> **Status:** `approved` (Etapa 1 BASELINE `done` — run `20260720-093014`; Etapa 2 tuning EM IMPLEMENTAÇÃO)
-> **Criada:** 2026-07-20 · **Atualizada:** 2026-07-20 (pós-run, decisões do usuário)
+> **Status:** `done`
+> **Criada:** 2026-07-20 · **Atualizada:** 2026-08-02 (rebase v4 + regressão mock/real concluída)
 > **Depende de:** [balanceamento-early-game](balanceamento-early-game.md) `done` (1ª passada — "O Saque" + tuning spawn nível 1) ·
 > [playtest-agente-curioso-entropia](playtest-agente-curioso-entropia.md) `done` (dado LIMPO de letalidade — sem o viés do agente que nunca cura/usa habilidade)
 > **Desbloqueia:** confiança pra avançar tiers 5+ das classes (números base sãos)
@@ -142,7 +142,7 @@ descanso em zona de perigo dispara `check_encounter` (danger≥4) e vira combate
 antes de curar. O jogo hoje só é sobrevivível NÃO lutando → o combate cedo não
 tem laço de recuperação. **Gate: é tuning real, não viés do harness.**
 
-### Etapa 2 — Tuning (4 alavancas decididas pelo usuário) — EM IMPLEMENTAÇÃO
+### Etapa 2 — Tuning (4 alavancas decididas pelo usuário) — `done`
 
 Todas determinísticas ("mecânica é Python"). Constantes novas ganham racional
 `baseline → alvo` no comentário.
@@ -163,12 +163,12 @@ Todas determinísticas ("mecânica é Python"). Constantes novas ganham racional
 `starting_equipment`): cada classe +1 `pocao_cura` (Devoto/Sangromante/Corruptor/
 Arcanista → 2; Médico → 3). Regenera `data/classes.json`.
 
-**Alavanca 3 — Mais HP em nível baixo** (gerador, `base_stats.hp`): sobe o piso
-das classes frágeis que morriam nível 1 — baseline → alvo: Arcanista 22→**26**,
-Sangromante 26→**30**, Corruptor 28→**30**, Médico 28→**30**, Devoto 38→**40**.
-(HP de classe é knob compartilhado com `balanceamento-classes-pos-playtest` — esta
-é a coordenação: o humano decidiu subir o piso de sobrevivência; a spec de
-balanceamento afina Entropia por cima, sem reverter.)
+**Alavanca 3 — Mais Vitalidade em nível baixo** (rebase v4): `base_stats.hp`
+deixou de ser fonte de verdade no cutover de Cartas. O gerador agora grava
+`base_stats.vitalidade_bonus = 6`; `gamedata.sync_vitality` soma esse bônus à
+tabela de Corpo somente para as cinco classes canônicas. Pisos finais: Devoto,
+Sangromante e Corruptor **18**; Médico **16**; Arcanista **14**. Saves v5 recebem
+o novo teto preservando o dano já sofrido.
 
 **Alavanca 4 — Mais dano em nível baixo** (runtime, `combat_mechanics`): novo
 `early_game_damage_bonus(level)` — +2 no dano do golpe do jogador em nível 1–2,
@@ -199,13 +199,13 @@ ajustados):
 
 ## 5. Critérios de aceite
 
-- [ ] Baseline com agente corrigido registrada (run_id + tabela morte×zona×causa)
-- [ ] Decisão de gate documentada (era viés do harness? ou tuning real?)
-- [ ] Se tuning: critérios R2 (a–c) verdes na rodada pós-ajuste, mesmas seeds
-- [ ] Zonas apex inalteradas (teste de regressão)
-- [ ] Cada knob mexido tem racional (constante → valor, baseline → alvo)
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Saves antigos continuam carregando (stats de inimigo/mapa mudam runtime;
+- [x] Baseline com agente corrigido registrada (run_id + tabela morte×zona×causa)
+- [x] Decisão de gate documentada (era viés do harness? ou tuning real?)
+- [x] Se tuning: critérios R2 (a–c) verdes na rodada pós-ajuste, mesmas seeds
+- [x] Zonas apex inalteradas (teste de regressão)
+- [x] Cada knob mexido tem racional (constante → valor, baseline → alvo)
+- [x] `uv run pytest` verde (suíte completa offline)
+- [x] Saves antigos continuam carregando (stats de inimigo/mapa mudam runtime;
       sem migração de schema)
 
 ## 6. Smoke test com LLM real
@@ -233,3 +233,32 @@ ajustados):
   `balanceamento-classes-pos-playtest` em vez de editar `gen_classes_v2.py` em
   paralelo (conflito de gerador).
 - **Quota/custo:** rodadas reais com teto (~$0.05 DeepSeek).
+
+## 8. Registro de execução final — 2026-08-02
+
+**Rebase e correções.** Além das quatro alavancas, o gate revelou três defeitos
+do harness/integração que distorciam a métrica: o perfil só descansava depois de
+ficar inconsciente, não evacuava interiores cujo primeiro passo tinha o mesmo
+perigo e só curava em combate abaixo de 30%. O perfil razoável agora busca
+recuperação abaixo de 50%, aceita o primeiro passo de evacuação e cura abaixo de
+50% também durante conflito. Fuga estruturada passou a ter precedência sobre o
+parser textual do router (interior não é mais reduzido ao nó-pai). Personagem
+nível 1–2, cheio e fora de apex recebe a primeira janela de ação; ferido, nível
+3+ e apex preservam a iniciativa normal.
+
+**Regressão mock final.** Matriz de 30 campanhas (5 classes × combate/
+explorador/fujão × seeds 42/43 × 50 turnos): **1.500 turnos, 0 erros, 0
+violações `error`**; mediana da primeira queda do perfil combate = **23** (piso
+R2a = 20). Replays focados corrigiram o antigo falso positivo
+`action.declaration_matches` de fuga para interiores. Testes determinísticos
+cobrem descanso seguro/apex, cooldown, dano inicial, Vitalidade/poções, migração,
+primeira reação e memorial após queda (R2b–c/R4).
+
+**Smoke real aceito.** `20260802-175310-716794`, Sangromante/combate/seed 42:
+30/30 turnos, primeira queda **t29** (baseline t19), 0 erros, 0 violações,
+`mock=false`, 78 tentativas/77 sucessos reais, custo **US$ 0,02198**, gasto de
+Entropia 4, habilidade ativa em 42,1% dos turnos de combate e Carga pico 4. Uma
+falha de conexão isolada foi absorvida pelo roteamento. Runs diagnósticos
+`20260802-173822-641785` (queda t18: descanso em perigo 4) e
+`20260802-174601-475598` (queda t14: cura tardia) foram rejeitados e originaram
+as correções acima.

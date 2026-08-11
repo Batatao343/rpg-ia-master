@@ -20,6 +20,24 @@ def _isolated_runtime_cache(monkeypatch, tmp_path):
 
 
 @pytest.fixture(autouse=True)
+def _isolated_saves_and_memory(monkeypatch, tmp_path):
+    """Todo teste usa saves/checkpoints/memória descartáveis.
+
+    Rotas TestClient anteriormente escreviam centenas de campanhas ``Streamer``
+    nos diretórios reais ignorados pelo git. O sandbox é global porque salvar é
+    efeito colateral transversal do grafo, não responsabilidade de cada teste.
+    """
+    import persistence
+    import rag
+
+    saves_dir = tmp_path / "saves"
+    memory_dir = tmp_path / "saves_memory"
+    monkeypatch.setattr(persistence, "SAVES_DIR", str(saves_dir))
+    monkeypatch.setattr(persistence, "SESSION_MEMORY_DIR", str(memory_dir))
+    monkeypatch.setattr(rag, "SAVES_DIR", str(memory_dir))
+
+
+@pytest.fixture(autouse=True)
 def _no_real_embeddings(monkeypatch, request):
     """Desliga embeddings REAIS na suíte offline. Com uma key viva no `.env`
     (ex.: Jina desde a spec embeddings-provider), `query_rag`/archivist

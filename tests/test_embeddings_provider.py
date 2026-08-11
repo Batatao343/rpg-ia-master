@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 
+import httpx
 import pytest
 from langchain_core.embeddings import Embeddings
 
@@ -86,6 +87,70 @@ def test_override_rpg_embeddings_forca_provider(monkeypatch):
     emb = rag.get_embeddings()
     assert isinstance(emb, FakeEmbeddings) and emb.tag == "openai"
     assert rag.active_provider() == "openai"
+
+
+# --- Hardening de rede Jina (smoke real 2026-08-02) ------------------------
+
+def test_jina_repete_timeout_uma_vez_e_retorna_vetor():
+    calls = 0
+
+    def handler(request):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise httpx.ReadTimeout("timeout transitório", request=request)
+        return httpx.Response(
+            200,
+            request=request,
+            json={"data": [{"index": 0, "embedding": [0.1, 0.2]}]},
+        )
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    emb = rag._JinaEmbeddingsHTTPX(
+        api_key="segredo", model_name="jina-test", client=client,
+        max_attempts=2,
+    )
+
+    assert emb.embed_query("Valoria") == [0.1, 0.2]
+    assert calls == 2
+
+
+def test_jina_timeout_final_e_finito():
+    calls = 0
+
+    def handler(request):
+        nonlocal calls
+        calls += 1
+        raise httpx.ReadTimeout("continua indisponível", request=request)
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    emb = rag._JinaEmbeddingsHTTPX(
+        api_key="segredo", model_name="jina-test", client=client,
+        max_attempts=2,
+    )
+
+    with pytest.raises(httpx.ReadTimeout):
+        emb.embed_query("Valoria")
+    assert calls == 2
+
+
+def test_jina_erro_nao_transitorio_nao_repete():
+    calls = 0
+
+    def handler(request):
+        nonlocal calls
+        calls += 1
+        return httpx.Response(400, request=request, json={"detail": "inválido"})
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    emb = rag._JinaEmbeddingsHTTPX(
+        api_key="segredo", model_name="jina-test", client=client,
+        max_attempts=2,
+    )
+
+    with pytest.raises(httpx.HTTPStatusError):
+        emb.embed_query("Valoria")
+    assert calls == 1
 
 
 # --- Etapa 1: meta por índice + pin -----------------------------------------

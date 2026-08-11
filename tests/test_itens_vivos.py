@@ -2,6 +2,8 @@
 
 Offline/determinístico. Ver specs/itens-vivos-e-luz.md.
 """
+import random
+
 import combat_mechanics as cm
 import world_utils as wu
 
@@ -106,6 +108,7 @@ def test_luz_anula_escuro(monkeypatch):
     p = _player(inventory=[{"id": "tocha", "qty": 1}])  # carrega tocha (light)
     ll = wu.light_level(w, p)
     assert not ll["dark"] and ll["lit"] and ll["perception_mod"] == 0
+    assert ll["natural_dark"] is True
 
 
 def test_cidade_iluminada_a_noite(monkeypatch):
@@ -196,6 +199,69 @@ def test_consumivel_gasta_qty(monkeypatch):
     p = _player(inventory=[{"id": "bomba_atordoante", "qty": 2}], equipment=None)
     p2, _ = inv.use_item_in_combat(p, "bomba_atordoante", target=_enemy())
     assert p2["inventory"][0]["qty"] == 1
+
+
+def test_bomba_duration_um_faz_inimigo_perder_turno_completo(monkeypatch):
+    """Regressão do smoke real: aplicar a condição não basta; ela precisa agir."""
+    import inventory as inv
+    from services import conflict_orchestrator as orch
+    from services import conflict_scene as cs
+    from services import conflict_turn as ct
+    monkeypatch.setattr(inv, "ARTIFACTS_DB", _ITEM_DB)
+    player = orch.ensure_combat_sheet({
+        **_player(inventory=[{"id": "bomba_atordoante", "qty": 1}]),
+        "id": "player", "is_player": True,
+        "virtudes": {"forca": 3, "agilidade": 3, "corpo": 3, "mente": 2, "carisma": 1},
+    }, is_player=True)
+    enemy = orch.ensure_combat_sheet({
+        **_enemy(), "virtudes": {"forca": 5, "agilidade": 1, "corpo": 4, "mente": 1, "carisma": 1},
+        "vitalidade": 30, "max_vitalidade": 30,
+    })
+    scene = cs.new_scene()
+    cs.place(scene, "player")
+    cs.place(scene, "e1")
+    cs.freeze(scene)
+    declaration = ct.TurnDeclaration(
+        actor_id="player",
+        acao=ct.TurnStep(kind="item", item_id="bomba_atordoante", target_id="e1"),
+    )
+
+    out = orch.run_round(
+        scene, {"player": player, "e1": enemy},
+        {"hero": ["player"], "enemy": ["e1"]}, {"player": player},
+        declarations={"player": declaration}, initiator="heroes",
+        rng=random.Random(1),
+    )
+
+    assert "e1" not in out["resolved_turns"]
+    assert not any(attack.get("actor_id") == "e1" for attack in out["attacks"])
+    assert not player.get("inventory")
+
+
+def test_penalidade_ambiental_entra_no_ataque_v4():
+    from services import conflict_scene as cs
+    from services import conflict_turn as ct
+    actor = {"id": "a", "name": "A", "virtudes": {"forca": 3},
+             "_env_attack_mod": -1}
+    target = {"id": "b", "name": "B", "virtudes": {"agilidade": 2},
+              "vitalidade": 20, "max_vitalidade": 20,
+              "ferimentos": {"leve": [], "grave": [], "critico": []}}
+    scene = cs.new_scene()
+    cs.place(scene, "a")
+    cs.place(scene, "b")
+    cs.freeze(scene)
+    declaration = ct.TurnDeclaration(
+        actor_id="a", acao=ct.TurnStep(kind="attack", target_id="b"))
+
+    penalized = ct.resolve_turn(
+        scene, {"a": actor, "b": target}, declaration, rng=random.Random(9))
+    actor["_env_attack_mod"] = 0
+    target["vitalidade"] = 20
+    target["ferimentos"] = {"leve": [], "grave": [], "critico": []}
+    normal = ct.resolve_turn(
+        scene, {"a": actor, "b": target}, declaration, rng=random.Random(9))
+
+    assert penalized["attacks"][0]["total"] == normal["attacks"][0]["total"] - 1
 
 
 # --- Etapa 4/5: dados reais (anti-órfão + variedade) ------------------------

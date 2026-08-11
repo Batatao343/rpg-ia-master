@@ -1,10 +1,4 @@
-"""Auditoria de código morto do cutover (spec conflito-13, Etapa 1).
-
-Pina a fronteira de remoção nos moldes de `HANDLED_KINDS`: as funções do motor
-d20+AC antigo que MORREM não podem ser dependência de nenhum módulo `services/*`
-NOVO (o motor novo não pode encostar no antigo) e devem existir ENQUANTO o cutover
-não conclui. Quando a Etapa 3 remover o motor antigo, este teste é reescrito para
-afirmar a ausência das funções (R8: nenhum teste órfão)."""
+"""Auditoria final do cutover conflito-13: o motor d20/AC não existe mais."""
 
 import os
 import re
@@ -25,7 +19,7 @@ SURVIVING_FUNCTIONS = [
     "parse_condition", "tick_conditions", "player_passives",
     "entropy_config", "abyss_tier", "apply_entropy_trigger", "apply_scar",
     "apply_transformacao", "reduce_ally_abyss", "check_recidiva",
-    "spend_resources", "damage_bonus", "compute_player_combat_stats",
+    "compute_player_combat_stats",
 ]
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -39,10 +33,9 @@ def _strip_comments(src: str) -> str:
     return "\n".join(line.split("#", 1)[0] for line in src.splitlines())
 
 
-def test_funcoes_que_morrem_ainda_existem_ate_a_remocao():
-    # a lista de auditoria tem de estar correta ANTES de remover (Etapa 3).
+def test_funcoes_d20_foram_removidas():
     for fn in DYING_FUNCTIONS:
-        assert hasattr(combat_mechanics, fn), f"{fn} sumiu antes da hora"
+        assert not hasattr(combat_mechanics, fn), f"{fn} ainda existe após o cutover"
 
 
 def test_funcoes_que_sobrevivem_continuam_no_modulo():
@@ -63,3 +56,7 @@ def test_nenhum_service_novo_depende_do_motor_antigo():
             if re.search(rf"\b{fn}\s*\(", code):
                 offenders.append(f"{name}:{fn}")
     assert not offenders, f"service novo depende de função morredoura: {offenders}"
+
+
+def test_catalogo_antigo_foi_removido():
+    assert not os.path.exists(os.path.join(_ROOT, "data", "player_abilities.json"))

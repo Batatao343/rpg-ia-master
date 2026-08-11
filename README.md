@@ -1,6 +1,8 @@
 # RPG IA Engine
 
-RPG de texto **dark fantasy** com narração gerada por IA. Motor multi-agente em **LangGraph** com RAG híbrido (lore global + memória por sessão) e dois tiers de LLM (Google Gemini).
+RPG de texto **dark fantasy** com narração gerada por IA. Motor multi-agente em
+**LangGraph**, RAG híbrido (lore global + memória por sessão) e conflito tático
+determinístico por Cartas, Virtudes, Vitalidade e Ferimentos.
 
 O jogador digita ações em linguagem natural; o motor classifica a intenção, executa o agente certo (história, combate, NPC ou loot) e devolve narrativa coerente com o mundo e a sessão.
 
@@ -10,7 +12,11 @@ O jogador digita ações em linguagem natural; o motor classifica a intenção, 
 
 ## Stack
 
-Python 3.13 · FastAPI · LangGraph · FAISS · Google Gemini (`gemini-flash-latest` / `gemini-pro-latest`) · uv
+Python 3.13 · FastAPI · LangGraph · FAISS/Jina · React/Vite/TypeScript · uv.
+
+LLM em três tiers (`CLASSIFY`, `FAST`, `SMART`) com fallback entre DeepSeek,
+Groq, MiniMax, Qwen, Anthropic e Gemini. A configuração efetiva vive em
+`llm_setup.ROUTES`; agentes nunca instanciam provider diretamente.
 
 ---
 
@@ -18,11 +24,10 @@ Python 3.13 · FastAPI · LangGraph · FAISS · Google Gemini (`gemini-flash-lat
 
 ```bash
 uv sync                        # cria o venv (Python 3.13) e instala deps
-cp .env.example .env           # cole sua GOOGLE_API_KEY
+cp .env.example .env           # configure uma ou mais chaves de provider
 ```
 
-`GOOGLE_API_KEY`: gere em https://aistudio.google.com/app/apikey
-Sem a chave o jogo roda em **modo degradado** (não quebra, mas o narrador fica indisponível).
+Sem nenhuma chave o jogo usa `MockLLM`: continua jogável, determinístico e sem rede.
 
 ---
 
@@ -38,8 +43,21 @@ uv run uvicorn api:app --reload --port 8000
 # Testes (offline, não exigem API key)
 uv run pytest
 
+# Lint Python + conteúdo
+uv run ruff check .
+uv run python scripts/validate_content.py
+
 # Reindexar lore/regras após editar data/codex/ ou data/rules.txt
 uv run python rag.py
+```
+
+Frontend principal:
+
+```bash
+cd web
+npm install
+npm run build                  # web/dist passa a ser servido pela API
+npm run dev                    # :5173 com proxy para :8000
 ```
 
 ---
@@ -55,6 +73,10 @@ START
   → END → save
 ```
 
+Durante um conflito, a LLM só interpreta a intenção/prepara a cena e narra o
+resultado canônico. Cartas, rolagens 2d10, dano, Ferimentos, Reações, fuga e IA
+tática são resolvidos em Python.
+
 ---
 
 ## Estrutura
@@ -65,7 +87,9 @@ gamedata.py / combat_mechanics.py / world_utils.py / character_creator.py
 game_engine.py (CLI)   api.py (REST)
 agents/   # router, campaign_manager, storyteller, combat, npc, loot, archivist, ...
 data/     # codex/, rules.txt, bestiary.json, classes.json, artifacts.json, ...
-tests/    # suíte offline (test_mvp.py)
+services/conflict_orchestrator.py  # motor tático determinístico
+web/     # frontend React/Vite
+tests/   # suíte offline completa; contratos LLM reais ficam em markers opt-in
 ```
 
 Detalhes de cada módulo e convenções em `CLAUDE.md` e `ESTADO_ATUAL.md`.

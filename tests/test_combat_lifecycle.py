@@ -48,6 +48,38 @@ def test_viagem_em_combate_vira_fuga():
     assert out.get("combat_flee_destination") == _DEST_ID
 
 
+def test_fuga_estruturada_preserva_destino_interior_exato():
+    state = {
+        "combat": {"active": True},
+        "world": {
+            "current_location": "Ruínas Submersas de Aethelgard",
+            "current_location_id": "ae_ruinas_submersas",
+        },
+        "messages": [HumanMessage(content="Fujo rumo a Câmara Seca de Aethelgard")],
+        "combat_flee_attempt": True,
+        "combat_flee_destination": "ae_camara_seca",
+    }
+    out = dm_router_node(state)
+    assert out["combat_flee_attempt"] is True
+    assert out["combat_flee_destination"] == "ae_camara_seca"
+
+
+def test_ataque_estruturado_em_inimigo_com_nome_de_local_nao_vira_fuga():
+    state = {
+        "combat": {"active": True},
+        "world": _world(),
+        "messages": [HumanMessage(content="Ataco Rato da Peste (Anel de Lama).")],
+        "combat_declaration": {
+            "actor_id": "player",
+            "acao": {"kind": "attack", "target_id": "enemy_rato_anel_lama"},
+        },
+    }
+    out = dm_router_node(state)
+    assert out["next"] == "combat_agent"
+    assert not out.get("combat_flee_attempt")
+    assert not out.get("combat_flee_destination")
+
+
 def test_npc_em_combate_e_bloqueado():
     state = {"combat": {"active": True}, "world": _world(), "npcs": {"Guarda": {}},
              "messages": [HumanMessage(content="Converso com o guarda sobre o clima")]}

@@ -396,6 +396,287 @@
         "valor": 1
       },
       "descricao": "O metal que enxerta protege tanto quanto sustenta."
+    },
+    {
+      "id": "med_tri_corredor",
+      "name": "Corredor de Triagem",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "avancado",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 2
+      },
+      "descricao": "Abre com ordens curtas um corredor humano até a zona protegida.",
+      "papel": "retirar ferido sob fogo"
+    },
+    {
+      "id": "med_tri_segundo",
+      "name": "Segundo Coração",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "superior",
+      "custo_entropia": 4,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "estabilizar",
+        "valor": 2
+      },
+      "descricao": "Alterna compressões e comandos até dois ritmos perdidos voltarem a responder.",
+      "papel": "estabilizar múltiplos terminais"
+    },
+    {
+      "id": "med_bot_nevoa",
+      "name": "Névoa Antisséptica",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "purga_condicao",
+        "valor": 2
+      },
+      "descricao": "Quebra um frasco cuja névoa limpa veneno, esporo e pânico da mesma área.",
+      "papel": "purga em zona"
+    },
+    {
+      "id": "med_bot_panacea",
+      "name": "Panaceia Improvável",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "superior",
+      "custo_entropia": 4,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "cura",
+        "valor": 14
+      },
+      "descricao": "Combina três substâncias que deveriam se anular e as obriga a salvar uma vida.",
+      "papel": "cura superior com reagentes raros"
+    },
+    {
+      "id": "med_fer_ancora",
+      "name": "Âncora Protética",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "descricao": "Crava a prótese ao chão e transforma recuo em escolha, nunca consequência.",
+      "papel": "fixar aliado contra deslocamento"
+    },
+    {
+      "id": "med_fer_colosso",
+      "name": "Prótese de Colosso",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "superior",
+      "custo_entropia": 4,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 7
+      },
+      "descricao": "Acopla pistões de campo que dão a um braço humano a memória de um gigante.",
+      "papel": "amplificar força de aliado"
+    },
+    {
+      "id": "med_placa_reflexa",
+      "name": "Placa Reflexa",
+      "tipo": "reacao",
+      "origem": "conflito-17",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 3
+      },
+      "descricao": "Arranca uma placa do estojo e a encaixa entre golpe e órgão vital.",
+      "gatilho": "ao_aliado_ser_atacado",
+      "papel": "interpor tala contra crítico"
+    },
+    {
+      "id": "med_dose_choque",
+      "name": "Dose de Choque",
+      "tipo": "reacao",
+      "origem": "conflito-17",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "buff_iniciativa",
+        "valor": 4
+      },
+      "descricao": "Uma agulha no ponto certo devolve o próximo segundo a quem o perderia.",
+      "gatilho": "ao_aliado_perder_acao",
+      "papel": "reativar aliado que hesita"
+    },
+    {
+      "id": "med_autopsia_campo",
+      "name": "Autópsia de Campo",
+      "tipo": "utilitaria",
+      "origem": "conflito-17",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "perception",
+        "valor": 4
+      },
+      "descricao": "Um minuto de exame revela como algo morreu — e como o semelhante pode morrer.",
+      "papel": "diagnosticar causa e fraqueza"
+    },
+    {
+      "id": "med_hospital_improviso",
+      "name": "Hospital de Improviso",
+      "tipo": "utilitaria",
+      "origem": "conflito-17",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 0,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "montar enfermaria segura com sucata, tecido e água limpa"
+      },
+      "descricao": "Transforma qualquer ruína com teto em um lugar onde a morte precisa esperar.",
+      "papel": "criar refúgio médico"
+    },
+    {
+      "id": "med_corte_descompressao",
+      "name": "Corte de Descompressão",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "purga_condicao",
+        "valor": 1
+      },
+      "descricao": "Abre espaço onde pressão, veneno ou Éter ameaçam esmagar por dentro.",
+      "papel": "remover condição física aguda"
+    },
+    {
+      "id": "med_marca_triagem",
+      "name": "Marca de Triagem",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeito": {
+        "kind": "marca",
+        "valor": 5
+      },
+      "descricao": "Um traço de giz vermelho faz o grupo inteiro reconhecer quem não pode cair.",
+      "papel": "priorizar cura e proteção"
+    },
+    {
+      "id": "med_serra_ossea",
+      "name": "Serra Óssea",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "superior",
+      "custo_entropia": 3,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 8
+      },
+      "descricao": "A ferramenta de amputação encontra juntas que espadas ignoram.",
+      "papel": "dano preciso contra armadura orgânica"
+    },
+    {
+      "id": "med_protocolo_retornar",
+      "name": "Protocolo: Retornar",
+      "tipo": "passiva",
+      "origem": "conflito-17",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "bonus_cura_por_estagio",
+        "valor": 2
+      },
+      "descricao": "Cada vida estabilizada melhora o protocolo aplicado à próxima.",
+      "papel": "cura crescente após estabilizar"
     }
   ]
 }

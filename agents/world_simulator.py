@@ -13,6 +13,7 @@ from langchain_core.messages import SystemMessage
 from pydantic import BaseModel, Field
 
 from llm_setup import ModelTier, get_llm
+from services.prose_guard import sanitize_meta_preamble
 from world_utils import clock_label, ensure_faction_intel, ensure_factions
 
 try:
@@ -28,8 +29,10 @@ import gamedata
 class WorldPulse(BaseModel):
     rumor: str = Field(description="1-2 frases que o JOGADOR percebe (rumor de taverna, sinal na estrada, "
                                    "eco distante). NÃO nomeie fações/poderes que ele não conhece.")
-    fact: str = Field(description="Fato objetivo e curto do que aconteceu nos bastidores, para a memória "
-                                  "do mundo (pode citar nomes; é registro interno, não mostrado cru ao jogador).")
+    fact: str = Field(
+        default="",
+        description="Justificativa narrativa opcional. Não vira memória por si só; "
+                    "somente a consequência aplicada pelo motor é persistida.")
     danger_shift: int = Field(default=0, description="-1, 0 ou +1: o mundo ficou mais ou menos perigoso aqui?")
 
 
@@ -102,14 +105,20 @@ def simulate_world(state: dict, world: dict, factions, intel, periods: int = 1) 
     if not isinstance(pulse, WorldPulse):  # FallbackLLM devolve AIMessage
         return world, ""
 
+    before_danger = _effective_danger(world, loc_id)
     world = _apply_danger_shift(world, loc_id, getattr(pulse, "danger_shift", 0))
+    after_danger = _effective_danger(world, loc_id)
 
-    fact = (pulse.fact or "").strip()
-    if RAG_AVAILABLE and state.get("game_id") and fact:
+    # Apenas a consequência que Python realmente aplicou vira memória. `pulse.fact`
+    # é prosa não verificada e não pode promover cânone novo.
+    applied_fact = (
+        f"[mundo] O perigo de {loc_name} mudou de {before_danger} para {after_danger}."
+        if after_danger != before_danger else "")
+    if RAG_AVAILABLE and state.get("game_id") and applied_fact:
         try:
-            add_memory_to_session(state["game_id"], [f"[mundo] {fact}"])
+            add_memory_to_session(state["game_id"], [applied_fact])
         except Exception:
             pass
 
-    rumor = (pulse.rumor or "").strip()
+    rumor = sanitize_meta_preamble(pulse.rumor or "")
     return world, (f"[ECOS DO MUNDO] {rumor}" if rumor else "")

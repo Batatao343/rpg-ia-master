@@ -5,6 +5,8 @@ import { CodexTab } from "./CodexTab";
 import { QuestsTab } from "./QuestsTab";
 import { WorldMap } from "./WorldMap";
 import { Medallion } from "./ornaments";
+import { SceneZones } from "./SceneZones";
+import { WoundTrack } from "./WoundTrack";
 
 type Tab = "ficha" | "combate" | "personagens" | "mapa" | "faccoes" | "missoes" | "cronica" | "codex";
 
@@ -27,15 +29,17 @@ export function Hud({ data, open, onEquip, busy }: {
     wasFighting.current = fighting;
   }, [fighting]);
 
-  // ênfase de dano: queda de HP do herói entre turnos.
-  const prevHp = useRef<number | null>(null);
-  const [hpHit, setHpHit] = useState(0);
+  // ênfase de dano: queda de Vitalidade do herói entre turnos.
+  const prevVitality = useRef<number | null>(null);
+  const [vitalityHit, setVitalityHit] = useState(0);
   useEffect(() => {
-    const hp = p?.hp;
-    if (hp == null) return;
-    if (prevHp.current != null && hp < prevHp.current) setHpHit((n) => n + 1);
-    prevHp.current = hp;
-  }, [p?.hp]);
+    const vitality = p?.vitalidade;
+    if (vitality == null) return;
+    if (prevVitality.current != null && vitality < prevVitality.current) {
+      setVitalityHit((n) => n + 1);
+    }
+    prevVitality.current = vitality;
+  }, [p?.vitalidade]);
 
   const tabs: Array<[Tab, string]> = [
     ["ficha", "Ficha"],
@@ -77,8 +81,8 @@ export function Hud({ data, open, onEquip, busy }: {
       </nav>
 
       <div className="tabpanel" role="tabpanel">
-        {tab === "ficha" && <FichaTab data={data} hpHitKey={hpHit} onEquip={onEquip} busy={busy} />}
-        {tab === "combate" && <CombatTab c={data?.combat} hitKey={hpHit} party={data?.party ?? []} />}
+        {tab === "ficha" && <FichaTab data={data} hpHitKey={vitalityHit} onEquip={onEquip} busy={busy} />}
+        {tab === "combate" && <CombatTab c={data?.combat} hitKey={vitalityHit} party={data?.party ?? []} />}
         {tab === "personagens" && <PeopleTab npcs={data?.npcs ?? []} />}
         {tab === "mapa" && (
           <div>
@@ -112,12 +116,13 @@ function FichaTab({ data, hpHitKey, onEquip, busy }: {
   data: GameResponse | null; hpHitKey: number; onEquip?: EquipFn; busy?: boolean;
 }) {
   const p = data?.player_stats;
-  const hpLow = p ? pct(p.hp, p.max_hp) <= 30 : false;
-  const abilities = p?.abilities ?? [];
+  const vitalityLow = p ? pct(p.vitalidade, p.max_vitalidade) <= 30 : false;
+  const cards = p?.cards ?? [];
   return (
     <>
       <div className="bars">
-        <Bar kind="hp" label="Vida" cur={p?.hp ?? 0} max={p?.max_hp ?? 0} low={hpLow} hitKey={hpHitKey} />
+        <Bar kind="hp" label="Vitalidade" cur={p?.vitalidade ?? 0} max={p?.max_vitalidade ?? 0}
+             low={vitalityLow} hitKey={hpHitKey} />
         {/* spec refatoracao-sistema-classes: Entropia é o pool das 5 Posturas.
             Saves antigos sem Entropia (mana/stamina) mantêm as barras legadas. */}
         {(p?.max_entropy ?? 0) > 0 ? (
@@ -139,6 +144,11 @@ function FichaTab({ data, hpHitKey, onEquip, busy }: {
         </div>
         <div className="stat"><span>Ouro</span><b>{p?.gold ?? 0}</b></div>
         <div className="stat"><span>Defesa</span><b>{p?.defense ?? 0}</b></div>
+        {Object.entries(p?.virtudes ?? {}).map(([virtue, value]) => (
+          <div className="stat" key={virtue}>
+            <span>{prettyItem(virtue)}</span><b>{value}</b>
+          </div>
+        ))}
       </div>
 
       {(p?.pending_choices?.length ?? 0) > 0 && (
@@ -146,22 +156,16 @@ function FichaTab({ data, hpHitKey, onEquip, busy }: {
       )}
 
       <div>
-        <p className="hud__label">Habilidades</p>
+        <p className="hud__label">Acervo de Cartas</p>
         <ul className="abilities">
-          {abilities.length === 0 ? (
-            <li className="empty">Nenhuma habilidade conhecida</li>
+          {cards.length === 0 ? (
+            <li className="empty">Nenhuma Carta conhecida</li>
           ) : (
-            abilities.map((a, i) => (
-              <li key={typeof a === "string" ? i : a.id}>
-                {typeof a === "string" ? a : a.name}
-                {/* spec arvores-habilidade-classes (R10): selo de tipo — passiva ✦ / utilitária ⚒ */}
-                {typeof a !== "string" && a.kind === "passive" ? (
-                  <span className="ability__kind" title="Passiva — efeito permanente"> ✦</span>
-                ) : null}
-                {typeof a !== "string" && a.kind === "utility" ? (
-                  <span className="ability__kind" title="Utilitária — capacidade fora de combate"> ⚒</span>
-                ) : null}
-                {typeof a !== "string" && a.branch ? <span className="ability__branch"> ◆</span> : null}
+            cards.map((card) => (
+              <li key={card.id}>
+                {card.name}
+                {card.prepared ? <span className="ability__branch"> ◆ preparada</span> : null}
+                <span className="ability__kind"> · {card.type}</span>
               </li>
             ))
           )}
@@ -387,20 +391,21 @@ function ChronicleTab({ chapters, gameId }: { chapters: ChronicleChapter[]; game
 }
 
 function PartyBars({ party }: { party: import("../types").PartyMember[] }) {
-  const shown = party.filter((m) => m.status !== "morto" || m.hp > 0 ? true : true);
+  const shown = party;
   if (!shown.length) return null;
   return (
     <div className="partyblock">
       <p className="hud__label hud__label--sub">Companheiros</p>
       <ul className="party">
         {shown.map((m, i) => (
-          <li key={i} className={"party__member" + (m.status === "morto" ? " is-dead" : "") + (!m.active ? " is-waiting" : "")}>
+          <li key={`${m.name}-${i}`} className={"party__member" + (m.status === "morto" ? " is-dead" : "") + (!m.active ? " is-waiting" : "")}>
             <div className="party__top">
               <span>{m.name}{!m.active && m.status !== "morto" ? " (esperando)" : ""}{m.status === "morto" ? " †" : ""}</span>
-              <span>{`${m.hp}/${m.max_hp}`}</span>
+              <span>{`${m.vitalidade}/${m.max_vitalidade}`}</span>
             </div>
             <div className="party__track">
-              <div className="party__fill" style={{ width: pct(m.hp, m.max_hp) + "%" }} />
+              <div className="party__fill"
+                   style={{ width: pct(m.vitalidade, m.max_vitalidade) + "%" }} />
             </div>
           </li>
         ))}
@@ -447,16 +452,30 @@ function Combat({ c, hitKey, cds }: { c: CombatBlock; hitKey: number; cds: [stri
         Combate {c.round ? <span className="muted">· Round {c.round}</span> : null}
       </p>
 
+      <WoundTrack wounds={c.wounds} />
+      <SceneZones scene={c.scene} chase={c.chase} />
+
       <ul className="enemies">
         {c.enemies.map((e, i) => (
-          <li key={i} className="enemy">
+          <li key={`${e.name}-${i}`} className="enemy">
             <div className="enemy__top">
               <span>{e.name}</span>
-              <span>{`${e.hp}/${e.max_hp}`}</span>
+              <span>{`${e.vitalidade}/${e.max_vitalidade}`}</span>
             </div>
             <div className="enemy__track">
-              <div className="enemy__fill" style={{ width: pct(e.hp, e.max_hp) + "%" }} />
+              <div className="enemy__fill"
+                   style={{ width: pct(e.vitalidade, e.max_vitalidade) + "%" }} />
             </div>
+            <p className="enemy__public">
+              {e.esquiva != null ? `Esquiva ${e.esquiva}` : "Esquiva desconhecida"}
+              {e.protecao != null ? ` · Proteção ${e.protecao}` : ""}
+            </p>
+            {e.revealed_cards.length > 0 && (
+              <p className="enemy__intel">Cartas vistas: {e.revealed_cards.map((card) => card.name).join(", ")}</p>
+            )}
+            {e.revealed_resistances.length > 0 && (
+              <p className="enemy__intel">Resistências vistas: {e.revealed_resistances.join(", ")}</p>
+            )}
             {e.conditions.length > 0 && <CondChips conds={e.conditions} />}
           </li>
         ))}

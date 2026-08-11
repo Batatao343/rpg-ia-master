@@ -1,7 +1,7 @@
 # SPEC — Conflito v2 #16: Frontend — Interface Tática de Cartas
 
-> **Status:** `draft`
-> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-22
+> **Status:** `done`
+> **Criada:** 2026-07-22 · **Atualizada:** 2026-08-02
 > **Depende de:** `conflito-13-cutover-migracao-playtest` (`done` — motor precisa
 > estar estável e validado antes de construir a UI em cima)
 > **Desbloqueia:** nada (última spec do épico)
@@ -13,6 +13,14 @@
 ---
 
 ## 1. Contexto & Objetivo
+
+> **Aprovação para execução:** 2026-08-02 — o usuário pediu a execução das
+> specs abertas em ordem. A auditoria inicial encontrou que o DTO público ainda
+> não transportava cena, disponibilidade das Cartas, Ferimentos detalhados nem
+> conhecimento progressivo, e que o motor reservava explicitamente a escolha de
+> Reação do protagonista para esta spec. Portanto, a implementação inclui a
+> ponte mínima de API e a fiação da Carta de Reação já resolvida pelo motor;
+> nenhuma regra mecânica nova é introduzida.
 
 O frontend atual (`web/src/`) representa combate como HP bar + chips de sugestão +
 lista de condições (`Hud.tsx` `CombatTab`, `PlayScreen.tsx` chips de
@@ -101,10 +109,10 @@ aba "Ficha" do `Hud.tsx` mostrando Virtudes em vez de atributos).
 
 ## 5. Critérios de aceite
 
-- [ ] `npm run build` verde.
-- [ ] Combate jogável ponta a ponta na UI nova (Cartas, zonas, reações,
+- [x] `npm run build` verde.
+- [x] Combate jogável ponta a ponta na UI nova (Cartas, zonas, reações,
   Ferimentos, morte, fuga) sem regressão de fluxo fora de combate.
-- [ ] Smoke Playwright (skill `webapp-testing`) cobrindo os fluxos novos,
+- [x] Smoke de browser automatizado cobrindo os fluxos novos,
   incluindo mobile 390px (padrão já estabelecido no projeto).
 
 ## 6. Smoke test com LLM real
@@ -120,3 +128,29 @@ aba "Ficha" do `Hud.tsx` mostrando Virtudes em vez de atributos).
   outras fases do projeto (ex. Fase 3/4/6).
 - Depende inteiramente da API estabilizada pelo `conflito-13` — qualquer mudança
   de contrato depois desta spec começar gera retrabalho.
+
+## 8. Evidências de execução (2026-08-02)
+
+- Contrato público estendido em `api.py`: Cartas preparadas, custo efetivo,
+  frequência/gasto, Ruptura, cena/posições, Ferimentos, perseguição, conhecimento
+  progressivo e contexto de morte. `ActionRequest` transporta Carta, alvo,
+  Ruptura e Reação escolhida sem entregar decisão mecânica à LLM.
+- UI React entregue com `CardHand`, `ReactionPrompt`, `WoundTrack` e
+  `SceneZones`; HUD atualizado para Virtudes/Cartas, painel inimigo progressivo,
+  perseguição e morte rica. O modal de level-up também foi alinhado ao schema v4
+  (`card_id`/`evolve_card_id`/`caminho`/`virtude`).
+- `npm run build`: verde, 453 módulos. Smoke automatizado em Chrome: desktop e
+  mobile 390 px sem overflow horizontal; Carta/Reação/Ruptura, Ferimentos,
+  estado de morte e fuga exercitados; console sem erros. Auditoria axe WCAG 2 A/
+  AA: **0 violações** (1 verificação de contraste ficou inconclusiva por
+  gradientes/pseudo-elementos).
+- Smoke com LLM real, campanha
+  `1d9ba1e6-1483-49d5-af01-890c21dea5a1`: `simulated=false`; criação → combate
+  → Carta `dev_golpe_convite` + Reação `dev_encaixe` → Ferimentos → morte do
+  Troll das Fornalhas → loot → narrativa, seguido de encontro com fuga e trilha
+  `escapou`. O save descartável teve somente a preparação da Reação e a
+  proximidade do terminal ajustadas para reduzir custo; ações e resolução
+  passaram pela UI/API/motor reais. Telemetria: DeepSeek primário, fallback Groq
+  funcional em falha de conexão; zero erro de turno.
+- Regressão: `tests/test_conflito16_frontend.py` + famílias de conflito/progressão
+  = 87 verdes; suíte completa = **1353 passed, 1 skipped, 14 deselected**.

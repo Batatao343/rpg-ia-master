@@ -11,6 +11,7 @@ de segurança, não fonte de novo crash. Severidade `error` reprova o estado;
 """
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
 from typing import Callable, List, Literal, Optional
 
@@ -38,7 +39,14 @@ def check_vitals(state: dict, prev: Optional[dict], turn: int) -> List[Violation
     p = state.get("player", {}) or {}
 
     def bounds(entity, kind, name):
-        for res, cap in (("hp", "max_hp"), ("mana", "max_mana"), ("stamina", "max_stamina")):
+        # Vitalidade é o recurso canônico do conflito v4. HP permanece apenas
+        # como alias de compatibilidade e é auditado, separadamente, por
+        # check_vitality_consistency.
+        for res, cap in (
+            ("vitalidade", "max_vitalidade"),
+            ("mana", "max_mana"),
+            ("stamina", "max_stamina"),
+        ):
             cur = entity.get(res)
             mx = entity.get(cap)
             if cur is None or mx is None:
@@ -56,13 +64,99 @@ def check_vitals(state: dict, prev: Optional[dict], turn: int) -> List[Violation
         if isinstance(e, dict) and e.get("status") == "ativo":
             bounds(e, "enemy", e.get("name", "inimigo"))
 
-    # spec checkpoints-morte: hp=0 é legítimo enquanto a queda está pendente
-    # (death_pending) — o herói caiu e aguarda a tela de morte / restore. Só é
-    # violação se hp=0 sem game_over E sem death_pending (morto e o jogo seguiu).
-    if int(p.get("hp", 1) or 0) == 0 and not state.get("game_over") \
-            and not state.get("death_pending"):
+    # conflito-13 (cutover v4): Vitalidade 0 NÃO é morte — no motor novo a queda vem
+    # de Ferimentos (05/07); Vitalidade 0 é só "muito ferido, ainda de pé". A morte
+    # REAL é a flag `dead` (o combat_node abre death_pending nesse caso). Só é
+    # violação se o player está `dead` sem game_over E sem death_pending (morto e o
+    # jogo seguiu). hp espelha Vitalidade — por isso hp=0 deixou de ser sinal de morte.
+    if p.get("dead") and not state.get("game_over") and not state.get("death_pending"):
         out.append(_V("vitals.dead_no_game_over", "error", turn,
-                      "player com hp=0 mas nem game_over nem death_pending setado", hp=0))
+                      "player morto (dead) mas nem game_over nem death_pending setado", dead=True))
+
+    # Ferimentos não podem exceder os espaços derivados de Corpo (integridade v4).
+    fer = p.get("ferimentos") or {}
+    espacos = p.get("ferimento_espacos") or {}
+    for cat in ("leve", "grave", "critico"):
+        cap = int(espacos.get(cat, 0) or 0)
+        n = len(fer.get(cat, []) or [])
+        if cap and n > cap:
+            out.append(_V("vitals.ferimentos_overflow", "error", turn,
+                          f"Ferimentos {cat}={n} excedem os espaços ({cap})",
+                          categoria=cat, n=n, cap=cap))
+    return out
+
+
+def check_vitality_consistency(
+    state: dict, prev: Optional[dict], turn: int,
+) -> List[Violation]:
+    """Enquanto aliases HP existirem, eles devem espelhar a Vitalidade v4."""
+    out: List[Violation] = []
+    entities = [("player", state.get("player") or {})]
+    entities += [
+        (str(e.get("id") or e.get("name") or "enemy"), e)
+        for e in (state.get("enemies") or [])
+        if isinstance(e, dict)
+    ]
+    entities += [
+        (str(a.get("id") or a.get("name") or "ally"), a)
+        for a in (state.get("party") or [])
+        if isinstance(a, dict)
+    ]
+    for entity_id, entity in entities:
+        if "vitalidade" not in entity or "hp" not in entity:
+            continue
+        vitality = int(entity.get("vitalidade", 0) or 0)
+        hp = int(entity.get("hp", 0) or 0)
+        max_vitality = int(entity.get("max_vitalidade", vitality) or vitality)
+        max_hp = int(entity.get("max_hp", hp) or hp)
+        if hp != vitality or max_hp != max_vitality:
+            out.append(_V(
+                "vitality.consistency",
+                "error",
+                turn,
+                f"{entity_id}: aliases HP {hp}/{max_hp} divergem de "
+                f"Vitalidade {vitality}/{max_vitality}",
+                entity=entity_id,
+                hp=hp,
+                max_hp=max_hp,
+                vitalidade=vitality,
+                max_vitalidade=max_vitality,
+            ))
+    return out
+
+
+def check_wound_capacity(
+    state: dict, prev: Optional[dict], turn: int,
+) -> List[Violation]:
+    """Último Crítico cheio precisa estar ligado ao fluxo terminal/morte."""
+    from services import death_flow
+
+    entities = [("player", state.get("player") or {})]
+    entities += [
+        (str(actor.get("id") or actor.get("name") or "enemy"), actor)
+        for actor in (state.get("enemies") or [])
+        if isinstance(actor, dict)
+    ]
+    entities += [
+        (str(actor.get("id") or actor.get("name") or "ally"), actor)
+        for actor in (state.get("party") or [])
+        if isinstance(actor, dict)
+    ]
+    out: List[Violation] = []
+    for actor_id, actor in entities:
+        if not death_flow.critical_spaces_full(actor):
+            continue
+        linked = bool(
+            actor.get("dead") or actor.get("estado_terminal")
+            or actor.get("last_stand_pending") or actor.get("last_stand_resolved")
+            or actor.get("scar_pending")
+        )
+        if not linked:
+            out.append(_V(
+                "wound.capacity", "error", turn,
+                f"{actor_id}: último Crítico cheio sem fluxo terminal ou morte",
+                entity=actor_id,
+            ))
     return out
 
 
@@ -295,6 +389,334 @@ def check_combat_zombie(state: dict, prev: Optional[dict], turn: int) -> List[Vi
     return []
 
 
+_INVALID_SENTINELS = {"null", "none", "nil", "undefined", "n/a", "nan"}
+
+
+def check_invalid_sentinels(
+    state: dict, prev: Optional[dict], turn: int,
+) -> List[Violation]:
+    """Strings-sentinela de structured output não podem virar entidades/IDs."""
+    out: List[Violation] = []
+    for key in (state.get("npcs") or {}):
+        if str(key).strip().casefold() in _INVALID_SENTINELS:
+            out.append(_V(
+                "npc.invalid_sentinel",
+                "error",
+                turn,
+                f"NPC inválido persistido com chave-sentinela {key!r}",
+                field="npcs",
+                value=key,
+            ))
+    for field_name in ("active_npc_name", "combat_target"):
+        value = state.get(field_name)
+        if isinstance(value, str) and value.strip().casefold() in _INVALID_SENTINELS:
+            out.append(_V(
+                "npc.invalid_sentinel",
+                "error",
+                turn,
+                f"{field_name} contém sentinela textual {value!r}",
+                field=field_name,
+                value=value,
+            ))
+    return out
+
+
+def check_rag_persistence(
+    state: dict, prev: Optional[dict], turn: int,
+) -> List[Violation]:
+    """O archivist expõe falha persistente; o harness não pode silenciá-la."""
+    error = state.get("rag_persistence_error")
+    if not error:
+        return []
+    return [_V(
+        "rag.persistence_error",
+        "error",
+        turn,
+        f"persistência RAG falhou: {str(error)[:240]}",
+        error=str(error)[:240],
+    )]
+
+
+def check_memory_provenance(
+    state: dict, prev: Optional[dict], turn: int,
+) -> List[Violation]:
+    """Memória confirmada precisa apontar para fonte que o motor consegue provar."""
+    from services.memory_provenance import (
+        normalize_memory_facts,
+        source_is_applicable,
+    )
+
+    out: List[Violation] = []
+    for record in normalize_memory_facts(state.get("memory_facts")):
+        if record.get("confidence") != "confirmed":
+            continue
+        source_id = record.get("source_id")
+        if source_is_applicable(source_id, state):
+            continue
+        out.append(_V(
+            "memory.confirmed_without_source",
+            "error",
+            turn,
+            f"memória confirmada {record.get('memory_id')!r} não tem fonte aplicável",
+            memory_id=record.get("memory_id"),
+            source_id=source_id,
+            provenance=record.get("provenance"),
+        ))
+    return out
+
+
+def check_summary_lifecycle(
+    state: dict, prev: Optional[dict], turn: int,
+) -> List[Violation]:
+    """Um resumo não consumido não pode atravessar silenciosamente outro turno."""
+    if not prev:
+        return []
+    previous = prev.get("conflict_summary")
+    current = state.get("conflict_summary")
+    if not previous or not current or previous != current:
+        return []
+    prev_turn = int((prev.get("world") or {}).get("turn_count", 0) or 0)
+    current_turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
+    if current_turn <= prev_turn or (state.get("combat") or {}).get("active"):
+        return []
+    return [_V(
+        "summary.lifecycle",
+        "error",
+        turn,
+        f"ConflictSummary atravessou o turno {prev_turn}→{current_turn} sem consumo",
+        previous_turn=prev_turn,
+        current_turn=current_turn,
+    )]
+
+
+def check_duplicate_consumed_summary(
+    state: dict, prev: Optional[dict], turn: int,
+) -> List[Violation]:
+    """Um ID confirmado no ledger não pode reaparecer como summary pendente."""
+    summary = state.get("conflict_summary")
+    if not isinstance(summary, dict) or not summary:
+        return []
+    from services import conflict_summary as summary_service
+    conflict_id = summary_service.ensure_conflict_id(
+        summary,
+        turn=summary.get("conflict_turn"),
+    )
+    consumed = set(summary_service.normalize_consumed_conflict_ids(
+        state.get("consumed_conflict_ids")
+    ))
+    if conflict_id not in consumed:
+        return []
+    return [_V(
+        "summary.duplicate_consumption",
+        "error",
+        turn,
+        f"ConflictSummary {conflict_id!r} reapareceu após consumo confirmado",
+        conflict_id=conflict_id,
+    )]
+
+
+def _wounds_fingerprint(entity: dict) -> tuple:
+    wounds = entity.get("ferimentos") or {}
+    return tuple(
+        (
+            category,
+            json.dumps(wounds.get(category, []) or [], sort_keys=True,
+                       ensure_ascii=False, default=str),
+        )
+        for category in ("leve", "grave", "critico")
+    )
+
+
+def combat_progress_fingerprint(state: dict) -> Optional[tuple]:
+    """Assinatura apenas de progresso mecânico; exclui round, texto e recursos."""
+    combat = state.get("combat") or {}
+    if not combat.get("active"):
+        return None
+    entities = [("player", state.get("player") or {})]
+    entities += [
+        (str(e.get("id") or e.get("name") or "?"), e)
+        for e in (state.get("enemies") or [])
+        if isinstance(e, dict)
+    ]
+    actor_bits = []
+    for actor_id, entity in sorted(entities, key=lambda pair: pair[0]):
+        actor_bits.append((
+            actor_id,
+            int(entity.get("vitalidade", entity.get("hp", 0)) or 0),
+            str(entity.get("status") or ""),
+            bool(entity.get("dead")),
+            bool(entity.get("conscious", True)),
+            _wounds_fingerprint(entity),
+            json.dumps(entity.get("active_conditions", []) or [],
+                       sort_keys=True, ensure_ascii=False, default=str),
+        ))
+    scene = combat.get("scene") or {}
+    scene_bits = (
+        json.dumps(scene.get("positions", {}) or {}, sort_keys=True,
+                   ensure_ascii=False, default=str),
+        json.dumps(scene.get("engagements", []) or [], sort_keys=True,
+                   ensure_ascii=False, default=str),
+        json.dumps(
+            [
+                {
+                    "id": obj.get("id"),
+                    "integrity": obj.get("integrity"),
+                    "destroyed": obj.get("destroyed"),
+                }
+                for obj in (scene.get("objects") or [])
+                if isinstance(obj, dict)
+            ],
+            sort_keys=True,
+            ensure_ascii=False,
+            default=str,
+        ),
+    )
+    return tuple(actor_bits), scene_bits
+
+
+COMBAT_NO_PROGRESS_LIMIT = 5
+
+
+def check_combat_no_progress(context: Optional[dict], turn: int) -> List[Violation]:
+    streak = int((context or {}).get("combat_no_progress_streak", 0) or 0)
+    if streak < COMBAT_NO_PROGRESS_LIMIT:
+        return []
+    return [_V(
+        "combat.no_progress",
+        "error",
+        turn,
+        f"conflito avançou {streak} rodadas sem mudança mecânica observável",
+        streak=streak,
+        threshold=COMBAT_NO_PROGRESS_LIMIT,
+    )]
+
+
+def check_action_declaration(
+    decision: Optional[dict],
+    resolved: Optional[dict],
+    *,
+    turn: int,
+    combat_executed: bool,
+) -> List[Violation]:
+    """Compara a escolha única do perfil ao resultado canônico do combat_node."""
+    decision = decision or {}
+    if not combat_executed or decision.get("mode") not in ("declaration", "flee"):
+        return []
+    if not resolved:
+        return [_V(
+            "action.declaration_matches",
+            "error",
+            turn,
+            f"decisão {decision.get('kind')!r} executou combate sem resultado canônico",
+            expected_kind=str(decision.get("kind") or ""),
+            resolved_kind="",
+            mismatches={"resolved_action": ["present", "missing"]},
+            decision=decision,
+            resolved={},
+        )]
+    expected_kind = str(decision.get("kind") or "")
+    resolved_kind = str(resolved.get("kind") or "")
+    mismatches = {}
+    if expected_kind != resolved_kind:
+        mismatches["kind"] = [expected_kind, resolved_kind]
+    for field_name in ("card_id", "item_id", "target_id"):
+        expected = decision.get(field_name)
+        actual = resolved.get(field_name)
+        if expected is not None and expected != actual:
+            mismatches[field_name] = [expected, actual]
+    if expected_kind == "flee":
+        attempted = resolved.get("attempted", True)
+        if not attempted:
+            mismatches["attempted"] = [True, attempted]
+        expected_destination = decision.get("flee_destination_id")
+        actual_destination = (
+            resolved.get("flee_destination_id")
+            or resolved.get("destination_id")
+        )
+        if expected_destination is not None and actual_destination is not None \
+                and expected_destination != actual_destination:
+            mismatches["flee_destination_id"] = [
+                expected_destination, actual_destination,
+            ]
+    result = str(resolved.get("result") or "")
+    if result == "invalid":
+        mismatches["result"] = ["valid", "invalid"]
+    elif result == "interrupted" and resolved.get("attempted", True):
+        mismatches["attempted"] = [False, True]
+    if not mismatches:
+        return []
+    return [_V(
+        "action.declaration_matches",
+        "error",
+        turn,
+        f"decisão {expected_kind!r} divergiu do efeito {resolved_kind!r}",
+        expected_kind=expected_kind,
+        resolved_kind=resolved_kind,
+        mismatches=mismatches,
+        decision=decision,
+        resolved=resolved,
+    )]
+
+
+def check_contextual(
+    state: dict, prev: Optional[dict], turn: int, context: Optional[dict],
+) -> List[Violation]:
+    context = context or {}
+    out = check_combat_no_progress(context, turn)
+    out += check_action_declaration(
+        context.get("decision"),
+        context.get("resolved_action"),
+        turn=turn,
+        combat_executed=bool(context.get("combat_executed")),
+    )
+    rag_errors = [
+        event for event in (context.get("rag_events") or [])
+        if not bool(event.get("success", True))
+    ]
+    for event in rag_errors:
+        out.append(_V(
+            "rag.persistence_error",
+            "error",
+            turn,
+            f"operação RAG {event.get('operation', '?')} falhou: "
+            f"{str(event.get('error') or '')[:200]}",
+            operation=event.get("operation"),
+            error=str(event.get("error") or "")[:200],
+        ))
+    if context.get("combat_ended"):
+        summary_present = bool(state.get("conflict_summary"))
+        rag_error = state.get("rag_persistence_error")
+        current_turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
+        archived = any(
+            isinstance(entry, dict)
+            and entry.get("kind") == "conflict"
+            and int(entry.get("turn", -1) or -1) == current_turn
+            for chapter in (state.get("chronicle") or [])
+            if isinstance(chapter, dict)
+            for entry in (chapter.get("entries") or [])
+        )
+        if summary_present and not rag_error:
+            out.append(_V(
+                "summary.lifecycle",
+                "error",
+                turn,
+                "conflito encerrou, mas o ConflictSummary ficou pendente após o archivist",
+                world_turn=current_turn,
+                conflict_id=str(
+                    (state.get("conflict_summary") or {}).get("conflict_id") or ""
+                ),
+            ))
+        elif not summary_present and not archived:
+            out.append(_V(
+                "summary.lifecycle",
+                "error",
+                turn,
+                "conflito encerrou sem ConflictSummary presente ou arquivado",
+                world_turn=current_turn,
+            ))
+    return out
+
+
 
 def check_recycled_npc(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
     """spec encontros-dedupe (R4) + npc-in-scene-viagem (R3): NPC GERADO (tem
@@ -354,6 +776,25 @@ def check_repeated_opening(state: dict, prev: Optional[dict], turn: int) -> List
     return []
 
 
+def check_meta_leak(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    """spec polish-prosa-v2: marcador do motor na última narração é regressão."""
+    from services.prose_guard import contains_engine_marker
+    for message in reversed(state.get("messages", []) or []):
+        content = getattr(message, "content", "")
+        if not content or getattr(message, "type", "") == "human":
+            continue
+        if contains_engine_marker(str(content)):
+            return [_V(
+                "narrative.meta_leak",
+                "error",
+                turn,
+                "Narração visível contém marcador interno do motor.",
+                sample=str(content)[:180],
+            )]
+        break
+    return []
+
+
 def check_phantom_ally(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
     """spec aliados-em-combate (R5): nome de aliado CITADO na narração de combate
     sem combatente correspondente do lado herói = aliado fantasma (a lacuna que
@@ -395,24 +836,114 @@ def check_phantom_ally(state: dict, prev: Optional[dict], turn: int) -> List[Vio
     return out
 
 
+def check_effect_catalog(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    """spec conflito-13 (R5): nenhum efeito FORA do catálogo fechado (03/10) escapa
+    para produção. Varre a cena de combate ativa (objetos + eventos do Abismo); um
+    `effect.kind` inventado pela LLM que passou os validadores é um vazamento grave."""
+    from services.conflict_scene import EFFECT_KINDS
+    out: List[Violation] = []
+    scene = (state.get("combat") or {}).get("scene") or {}
+    for o in scene.get("objects", []) or []:
+        for it in (o.get("interactions") or []):
+            eff = it.get("effect") or {}
+            if eff and str(eff.get("kind")) not in EFFECT_KINDS:
+                out.append(_V("combat.effect_catalog", "error", turn,
+                              f"efeito fora do catálogo em objeto '{o.get('id')}': "
+                              f"{eff.get('kind')!r}", kind=eff.get("kind")))
+    for ev in (scene.get("abyss_events") or []):
+        eff = ev.get("effect") or {}
+        if eff and str(eff.get("kind")) not in EFFECT_KINDS:
+            out.append(_V("combat.effect_catalog", "error", turn,
+                          f"evento do Abismo '{ev.get('id')}' fora do catálogo: "
+                          f"{eff.get('kind')!r}", kind=eff.get("kind")))
+    return out
+
+
+def check_reproducibility(seed: int = 7, rounds: int = 6) -> bool:
+    """spec conflito-13 (R5) / doc 03 Cenário 53: mesma seed + mesmo estado inicial →
+    MESMO resultado NO CONFLITO. Verifica a reprodutibilidade do MOTOR (não da
+    campanha inteira, que é confundida por caches globais legítimos de conteúdo
+    gerado): roda a MESMA sequência de rodadas 2× e compara os logs. True se igual.
+
+    Determinismo do motor = seed do RNG local + `random` global (o dano usa
+    `combat_mechanics.roll_dice_numeric`, que lê o `random` global)."""
+    import random as _random
+    from services import conflict_orchestrator as orch
+    from services import conflict_scene as cs
+    from services.conflict_turn import TurnDeclaration, TurnStep
+
+    def _one_run() -> list:
+        _random.seed(seed)
+        player = orch.ensure_combat_sheet(
+            {"id": "player", "name": "Herói", "is_player": True, "class_name": "Sangromante",
+             "virtudes": {"forca": 4, "agilidade": 3, "corpo": 3, "mente": 1, "carisma": 1},
+             "attack_formula": "2d6"}, is_player=True)
+        enemy = orch.ensure_combat_sheet(
+            {"id": "e1", "name": "Bandido", "type": "padrao",
+             "virtudes": {"forca": 2, "agilidade": 2, "corpo": 2, "mente": 1, "carisma": 1}})
+        scene = cs.new_scene()
+        cs.place(scene, "player")
+        cs.place(scene, "e1")
+        cs.freeze(scene)
+        actors = {"player": player, "e1": enemy}
+        sides = {"hero": ["player"], "enemy": ["e1"]}
+        decl = TurnDeclaration(actor_id="player", acao=TurnStep(kind="attack", target_id="e1"))
+        logs: list = []
+        rng = _random.Random(seed)
+        for _ in range(rounds):
+            out = orch.run_round(scene, actors, sides, {"player": player},
+                                 declarations={"player": decl}, rng=rng)
+            logs += out["logs"]
+            if out["ended"]:
+                break
+        return logs
+
+    return _one_run() == _one_run()
+
+
 Check = Callable[[dict, Optional[dict], int], List[Violation]]
 
 CHECKS: List[Check] = [
-    check_vitals, check_economy, check_entities, check_world, check_knowledge,
-    check_lifecycle, check_combat_zombie,
-    check_recycled_npc, check_repeated_opening, check_phantom_ally,
+    check_vitals, check_vitality_consistency, check_wound_capacity,
+    check_economy, check_entities, check_world, check_knowledge,
+    check_lifecycle, check_combat_zombie, check_effect_catalog,
+    check_invalid_sentinels, check_rag_persistence, check_summary_lifecycle,
+    check_memory_provenance,
+    check_duplicate_consumed_summary,
+    check_recycled_npc, check_repeated_opening, check_meta_leak,
+    check_phantom_ally,
 ]
 
 
 def check_all(state: dict, prev_state: Optional[dict] = None,
-              turn: int = 0) -> List[Violation]:
+              turn: int = 0, context: Optional[dict] = None) -> List[Violation]:
     out: List[Violation] = []
     for fn in CHECKS:
         try:
             out.extend(fn(state, prev_state, turn) or [])
-        except Exception:
-            # um invariante quebrado não pode derrubar a auditoria da campanha
-            continue
+        except Exception as exc:
+            # O check não derruba a campanha, mas também não pode produzir verde.
+            out.append(_V(
+                "invariant.crash",
+                "error",
+                turn,
+                f"{fn.__name__} falhou com {type(exc).__name__}: {str(exc)[:180]}",
+                check=fn.__name__,
+                exception_type=type(exc).__name__,
+                error=str(exc)[:180],
+            ))
+    try:
+        out.extend(check_contextual(state, prev_state, turn, context) or [])
+    except Exception as exc:
+        out.append(_V(
+            "invariant.crash",
+            "error",
+            turn,
+            f"check_contextual falhou com {type(exc).__name__}: {str(exc)[:180]}",
+            check="check_contextual",
+            exception_type=type(exc).__name__,
+            error=str(exc)[:180],
+        ))
     return out
 
 

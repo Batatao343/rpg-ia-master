@@ -1,7 +1,7 @@
 # SPEC — Explorar recompensa: achados, baús e itens pelo mundo
 
-> **Status:** `approved`
-> **Criada:** 2026-07-20 · **Atualizada:** 2026-07-20
+> **Status:** `done`
+> **Criada:** 2026-07-20 · **Atualizada:** 2026-08-02
 > **Depende de:** Fase 0 (viagem/fog of war, `world_utils`) · Fase 4 (economia/inventário) ·
 > Fase 6 (itens únicos + claim engine) — todas `done`
 > **Desbloqueia:** sensação de mundo rico (achado do playtest longo 2026-07-14)
@@ -163,19 +163,19 @@ def resolve_treasure(world: dict, loc: dict) -> Optional[dict]: ...  # baú cura
 
 ## 5. Critérios de aceite
 
-- [ ] Primeira visita a local novo pode render achado (comum na maioria; teste)
-- [ ] Escada de raridade funciona: `raro` escala com perigo, improvável (não
+- [x] Primeira visita a local novo pode render achado (comum na maioria; teste)
+- [x] Escada de raridade funciona: `raro` escala com perigo, improvável (não
       impossível) em zona segura nível 1 (testes)
-- [ ] Único escondido (R2b) concede via claim engine 1×, não duplica (teste)
-- [ ] Revisita não farma; baú curado concede 1× (testes de idempotência)
-- [ ] Item/ouro entram pelo caminho canônico de inventário, aparecem no HUD
-- [ ] Narrador descreve o achado que a mecânica concedeu (sem item fantasma)
-- [ ] Harness `explorador`: ouro/itens finais > 0 (era 0 no baseline); nenhum
+- [x] Único escondido (R2b) concede via claim engine 1×, não duplica (teste)
+- [x] Revisita não farma; baú curado concede 1× (testes de idempotência)
+- [x] Item/ouro entram pelo caminho canônico de inventário, aparecem no HUD
+- [x] Narrador descreve o achado que a mecânica concedeu (sem item fantasma)
+- [x] Harness `explorador`: ouro/itens finais > 0 (era 0 no baseline); nenhum
       achado lendário por sorte trivial (só via R2b curado)
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM: N/A (descoberta é determinística, sem structured
+- [x] `uv run pytest` verde (suíte completa offline)
+- [x] Guard de FallbackLLM protegido: fallback converte notas em texto diegético
       output novo — narrador só recebe nota de texto)
-- [ ] Saves antigos continuam carregando (`looted_locations` default `[]`)
+- [x] Saves antigos continuam carregando (`looted_locations` default `[]`)
 
 ## 6. Smoke test com LLM real
 
@@ -201,3 +201,19 @@ def resolve_treasure(world: dict, loc: dict) -> Optional[dict]: ...  # baú cura
 - **Anti-farm:** fog of war (R1) + `looted_locations` (R3) garantem que revisitar
   não rende; o único de R2b respeita o claim (não duplica). O perfil
   `loot_abuser` é o teste de estresse.
+
+## 8. Registro de execução (2026-08-02)
+
+- O RNG de chegada deixou de usar `hash()` aleatório por processo e agora usa
+  SHA-256 estável. Baús consultam `world_projection.unique_items` antes de
+  conceder um único; Oghma foi curado nas Ruínas Submersas de Aethelgard.
+- Run Explorador `20260802-170653-638274`: 50 turnos, 6 locais, ouro final 80,
+  inventário ampliado, 0 erros/violações. Run `loot_abuser`
+  `20260802-170657-829159`: 50 turnos, 0 violações de duplicação.
+- Smoke real: chegada a `ae_ruinas_submersas` concedeu **55 ouro**, Arco de
+  Caça e **Oghma**, marcou `looted_locations`, emitiu `unique_item_claimed` e
+  produziu prosa real da exploração. Sugestões livres de itens do LLM foram
+  rejeitadas; apenas os ids canônicos entraram no estado.
+- O smoke revelou e corrigiu vazamento de instruções do fallback (`Descreva o
+  achado`); a mensagem segura agora é diegética e tem teste de regressão.
+- Lint: 0 erros/avisos. Suíte integral: **1.320 passed, 1 skipped, 14 deselected**.

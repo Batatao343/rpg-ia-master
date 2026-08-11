@@ -13,9 +13,10 @@ def _combat_state(entropy=16, hp=30, inventory=None):
     return {
         "player": {"name": "K", "class_name": "Devoto do Abismo",
                    "hp": hp, "max_hp": 30, "entropy": entropy, "max_entropy": 16,
-                   "known_abilities": ["ataque_basico", "provocacao_do_abismo"],
+                   "known_cards": ["dev_provocacao"],
+                   "prepared_cards": ["dev_provocacao"],
                    "inventory": inventory or []},
-        "enemies": [{"name": "Goblin", "status": "ativo"}],
+        "enemies": [{"id": "g1", "name": "Goblin", "status": "ativo"}],
         "combat": {"active": True},
         "world": {"current_location_id": "pantano_melancolia", "danger_level": 2},
         "npcs": {}, "messages": [],
@@ -65,3 +66,43 @@ def test_determinismo_preservado():
     a = run_campaign("agressivo", turns=6, seed=5)
     b = run_campaign("agressivo", turns=6, seed=5)
     assert [r.action for r in a.history] == [r.action for r in b.history]
+
+
+def test_medico_mira_cura_no_jogador_e_nao_no_inimigo():
+    prof = PROFILES["combate"]
+    st = _combat_state(entropy=16, hp=10)
+    st["player"].update({
+        "class_name": "Médico de Campo",
+        "vitalidade": 3,
+        "max_vitalidade": 12,
+        "prepared_cards": ["med_sutura"],
+        "known_cards": ["med_sutura"],
+    })
+
+    decisions = [prof.decide(st, random.Random(seed)) for seed in range(20)]
+    card_decisions = [
+        d for d in decisions
+        if ((d.declaration or {}).get("acao") or {}).get("kind") == "card"
+    ]
+
+    assert card_decisions
+    assert all(
+        d.declaration["acao"]["target_id"] == "player"
+        for d in card_decisions
+    )
+
+
+def test_medico_nao_desperdica_cura_com_vitalidade_cheia():
+    prof = PROFILES["combate"]
+    st = _combat_state(entropy=16, hp=30)
+    st["player"].update({
+        "class_name": "Médico de Campo",
+        "vitalidade": 12,
+        "max_vitalidade": 12,
+        "prepared_cards": ["med_sutura"],
+        "known_cards": ["med_sutura"],
+    })
+
+    for seed in range(10):
+        decision = prof.decide(st, random.Random(seed))
+        assert decision.declaration["acao"]["kind"] == "attack"

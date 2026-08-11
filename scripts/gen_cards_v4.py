@@ -1,9 +1,9 @@
 """Gera o Acervo completo de Cartas de Valoria (spec conflito-14).
 
-Substitui o conteúdo de `data/player_abilities.json` (motor antigo) pelo schema
-de Carta da conflito-02, na ESCALA NOVA (2d10+Virtude, dano-base flat 3/4/6/8 —
-doc 01 §19). Saída: um arquivo por classe em `data/cards/` + o mapa de Cartas de
-Virtude sugeridas + `data/classes.json.starting_abilities` reescrito p/ Cartas.
+É a fonte autoral vigente que substituiu `data/player_abilities.json` (motor
+removido) pelo schema de Carta da conflito-02, na ESCALA NOVA (2d10+Virtude,
+dano-base flat 3/4/6/8 — doc 01 §19). Saída: um arquivo por classe em
+`data/cards/` + o mapa de Cartas de Virtude sugeridas.
 
 Roda uma vez; a saída é curada depois se preciso. Encoding UTF-8.
 
@@ -41,7 +41,7 @@ CARDS: dict = {}
 
 def add(cid, name, classe, sub, patamar, tipo, efeito, *, custo=0,
         freq="livre", virt=None, ruptura=None, evolucao=None, gatilho=None,
-        descricao="", central=False):
+        descricao="", central=False, mecanica=None, papel=None):
     c = {
         "id": cid, "name": name, "tipo": tipo, "origem": "conflito-14",
         "classe": classe, "subclasse": sub, "patamar": patamar,
@@ -57,6 +57,10 @@ def add(cid, name, classe, sub, patamar, tipo, efeito, *, custo=0,
         c["gatilho"] = gatilho
     if central:
         c["central"] = True
+    if mecanica:
+        c["mecanica_classe"] = mecanica
+    if papel:
+        c["papel"] = papel
     CARDS[cid] = c
 
 
@@ -150,7 +154,8 @@ add("dev_enl_memoria", "Memória Viva", D, "enlutado", "inicial", "utilitaria",
 S = "Sangromante"
 add("san_corte_troca", "Corte de Troca", S, "", "inicial", "ativa",
     dano("leve"), virt=["agilidade", "forca"],
-    descricao="Um talho rápido; o preço do sangue já está embutido.")
+    descricao="Um talho rápido; o preço do sangue já está embutido.",
+    mecanica={"auto_dano": 3})
 add("san_finta", "Finta de Sangue", S, "", "inicial", "ativa",
     {"kind": "buff_acerto", "valor": 2}, custo=1, freq="turno", virt=["agilidade"],
     descricao="Oferece o pulso, retira a garganta — engana lendo o próprio corte.")
@@ -169,16 +174,19 @@ add("san_hemorragia", "Hemorragia", S, "", "avancado", "ativa",
     virt=["agilidade"], descricao="Abre a veia certa; o inimigo se esvai sozinho.")
 add("san_ultimo_lance", "Último Lance", S, "", "superior", "ativa",
     dano("leve", bonus=9), custo=4, freq="cena", virt=["agilidade"],
-    descricao="Aposta tudo num só golpe pago com o próprio fôlego.")
+    descricao="Aposta tudo num só golpe pago com o próprio fôlego.",
+    mecanica={"auto_dano": 4, "pico": True})
 
 # -- O Exposto: faz espetáculo da dor; a cicatriz é credencial --
 add("san_exp_espetaculo", "Espetáculo", S, "exposto", "inicial", "ativa",
     {"kind": "taunt", "valor": 2}, custo=1, freq="turno", virt=["carisma"],
-    descricao="Sangra em público de propósito — todos os olhos, todas as lâminas.")
+    descricao="Sangra em público de propósito — todos os olhos, todas as lâminas.",
+    mecanica={"auto_dano": 2})
 add("san_exp_credencial", "Credencial de Dor", S, "exposto", "avancado", "ativa",
     {"kind": "dano", "categoria_arma": "leve", "dano_base": 8, "principal": True},
     custo=3, freq="cena", virt=["agilidade"], central=True,
     descricao="Reabre a pior cicatriz para pagar um golpe que ninguém esquece.",
+    mecanica={"auto_dano": 4, "pico": True},
     ruptura={"caminho_a": {"kind": "dano", "categoria_arma": "leve", "dano_base": 14},
              "caminho_b": {"kind": "aplicar_condicao", "condicao": "sangrando", "duracao": 3}},
     evolucao={"caminho_a": {"efeito": {"kind": "dano", "categoria_arma": "leve", "dano_base": 11},
@@ -197,6 +205,7 @@ add("san_ava_juros", "Cobrança com Juros", S, "avaro", "avancado", "ativa",
     {"kind": "dano", "categoria_arma": "versatil", "dano_base": 6, "principal": True},
     custo=2, freq="cena", virt=["forca"], central=True,
     descricao="Desconta de uma vez tudo o que o inimigo deve — o golpe cobra a dívida inteira.",
+    mecanica={"pico": True},
     ruptura={"caminho_a": {"kind": "dano", "categoria_arma": "versatil", "dano_base": 16},
              "caminho_b": {"kind": "aplicar_condicao", "condicao": "atordoado", "duracao": 1}},
     evolucao={"caminho_a": {"efeito": {"kind": "dano", "categoria_arma": "versatil", "dano_base": 10},
@@ -210,7 +219,8 @@ add("san_ava_sovinice", "Sovinice", S, "avaro", "inicial", "passiva",
 # -- O Silencioso: corte exato, economia de dor --
 add("san_sil_exato", "Corte Exato", S, "silencioso", "inicial", "ativa",
     dano("leve", bonus=1), custo=1, freq="turno", virt=["agilidade"],
-    descricao="Nem uma gota a mais do que o necessário — cirurgia com adaga.")
+    descricao="Nem uma gota a mais do que o necessário — cirurgia com adaga.",
+    mecanica={"auto_dano": 1})
 add("san_sil_veia", "Veia Justa", S, "silencioso", "avancado", "ativa",
     {"kind": "dot", "dano_base": 4, "duracao": 3, "principal": True}, custo=2,
     freq="turno", virt=["agilidade"], central=True,
@@ -232,10 +242,12 @@ add("san_sil_frieza", "Frieza", S, "silencioso", "inicial", "passiva",
 C = "Corruptor"
 add("cor_toque", "Toque da Decadência", C, "", "inicial", "ativa",
     {"kind": "dot", "dano_base": 2, "duracao": 2}, virt=["mente"],
-    descricao="O que ele encosta começa a apodrecer no tempo devido.")
+    descricao="O que ele encosta começa a apodrecer no tempo devido.",
+    mecanica={"decadencia": "any"})
 add("cor_esporos", "Esporos", C, "", "inicial", "ativa",
     {"kind": "dot", "dano_base": 2, "duracao": 3}, custo=1, freq="turno",
-    virt=["mente"], descricao="Solta uma nuvem fina que se aloja nos pulmões.")
+    virt=["mente"], descricao="Solta uma nuvem fina que se aloja nos pulmões.",
+    mecanica={"decadencia": "any"})
 add("cor_carne_docil", "Carne Dócil", C, "", "inicial", "passiva",
     {"kind": "buff_dot", "valor": 1}, descricao="A matéria já quer ceder; ele "
     "só precisa pedir com jeito.")
@@ -244,22 +256,26 @@ add("cor_farejar", "Farejar Praga", C, "", "inicial", "utilitaria",
     freq="descanso_curto", descricao="Segue o cheiro do que já está morrendo.")
 add("cor_semear", "Semear Praga", C, "", "avancado", "ativa",
     {"kind": "dot", "dano_base": 4, "duracao": 4}, custo=3, freq="cena",
-    virt=["mente"], descricao="Planta a ruína e deixa que ela faça o trabalho lento.")
+    virt=["mente"], descricao="Planta a ruína e deixa que ela faça o trabalho lento.",
+    mecanica={"decadencia": "any"})
 add("cor_simbiose", "Simbiose", C, "", "avancado", "utilitaria",
     {"kind": "utilitaria", "prompt_hint": "aproveitar decomposição próxima a seu favor"},
     freq="descanso_curto", descricao="Faz da podridão alheia um aliado silencioso.")
 add("cor_colapso", "Colapso", C, "", "superior", "ativa",
     {"kind": "dot", "dano_base": 8, "duracao": 3}, custo=4, freq="cena",
-    virt=["mente"], descricao="Adianta anos de deterioração em três respirações.")
+    virt=["mente"], descricao="Adianta anos de deterioração em três respirações.",
+    mecanica={"decadencia": "any"})
 
 # -- Biologia: carne que apodrece --
 add("cor_bio_gangrena", "Gangrena", C, "biologia", "inicial", "ativa",
     {"kind": "dot", "dano_base": 3, "duracao": 3}, custo=1, freq="turno",
-    virt=["mente"], descricao="A carne escurece e o cheiro chega antes da dor.")
+    virt=["mente"], descricao="A carne escurece e o cheiro chega antes da dor.",
+    mecanica={"decadencia": "flesh"})
 add("cor_bio_metastase", "Metástase", C, "biologia", "avancado", "ativa",
     {"kind": "dot", "dano_base": 5, "duracao": 3, "principal": True}, custo=2,
     freq="cena", virt=["mente"], central=True,
     descricao="A doença não fica onde nasceu — busca o próximo corpo em cena.",
+    mecanica={"decadencia": "flesh"},
     ruptura={"caminho_a": {"kind": "dot", "dano_base": 10, "duracao": 3},
              "caminho_b": {"kind": "aplicar_condicao", "condicao": "enfraquecido", "duracao": 3}},
     evolucao={"caminho_a": {"efeito": {"kind": "dot", "dano_base": 7, "duracao": 3},
@@ -274,11 +290,13 @@ add("cor_bio_necrose", "Necrose Útil", C, "biologia", "inicial", "passiva",
 add("cor_alm_duvida", "Semente da Dúvida", C, "alma", "inicial", "ativa",
     {"kind": "aplicar_condicao", "condicao": "desmoralizado", "duracao": 2},
     custo=1, freq="turno", virt=["mente", "carisma"],
-    descricao="Sussurra a pergunta que apodrece qualquer coragem por dentro.")
+    descricao="Sussurra a pergunta que apodrece qualquer coragem por dentro.",
+    mecanica={"decadencia": "morale"})
 add("cor_alm_desespero", "Desespero", C, "alma", "avancado", "ativa",
     {"kind": "aplicar_condicao", "condicao": "amedrontado", "duracao": 2, "principal": True},
     custo=3, freq="cena", virt=["carisma"], central=True,
     descricao="Deixa o inimigo ver, por um instante, exatamente como tudo termina.",
+    mecanica={"decadencia": "morale"},
     ruptura={"caminho_a": {"kind": "aplicar_condicao", "condicao": "amedrontado", "duracao": 4},
              "caminho_b": {"kind": "aplicar_condicao", "condicao": "dominado", "duracao": 1}},
     evolucao={"caminho_a": {"efeito": {"kind": "aplicar_condicao", "condicao": "amedrontado", "duracao": 3},
@@ -293,11 +311,13 @@ add("cor_alm_erosao", "Erosão de Vontade", C, "alma", "inicial", "passiva",
 add("cor_ino_ferrugem", "Ferrugem", C, "inorganica", "inicial", "ativa",
     {"kind": "aplicar_condicao", "condicao": "desarmado_risco", "duracao": 2},
     custo=1, freq="turno", virt=["mente"],
-    descricao="A arma e a armadura do inimigo envelhecem décadas num toque.")
+    descricao="A arma e a armadura do inimigo envelhecem décadas num toque.",
+    mecanica={"decadencia": "gear"})
 add("cor_ino_fadiga", "Fadiga do Material", C, "inorganica", "avancado", "ativa",
     {"kind": "dano", "categoria_arma": "marcial", "dano_base": 6, "principal": True},
     custo=2, freq="cena", virt=["mente"], central=True,
     descricao="Encontra a microfratura no escudo e faz a cena inteira ceder ali.",
+    mecanica={"decadencia": "gear"},
     ruptura={"caminho_a": {"kind": "dano", "categoria_arma": "marcial", "dano_base": 12},
              "caminho_b": {"kind": "aplicar_condicao", "condicao": "armadura_comprometida", "duracao": 3}},
     evolucao={"caminho_a": {"efeito": {"kind": "dano", "categoria_arma": "marcial", "dano_base": 8},
@@ -316,7 +336,8 @@ A = "Arcanista Cinzento"
 add("arc_descarga", "Descarga do Instrumento", A, "", "inicial", "ativa",
     {"kind": "dano", "categoria_arma": "marcial", "dano_base": 4}, custo=1,
     freq="livre", virt=["mente"],
-    descricao="Libera a Entropia canalizada num raio cinza pelo cajado.")
+    descricao="Libera a Entropia canalizada num raio cinza pelo cajado.",
+    mecanica={"resfria_caldeira": True})
 add("arc_faisca", "Faísca Cinzenta", A, "", "inicial", "ativa",
     {"kind": "dano", "categoria_arma": "leve", "dano_base": 3}, virt=["mente"],
     descricao="Um estalo menor, de graça, para manter a caldeira aquecida.")
@@ -334,7 +355,8 @@ add("arc_manto", "Manto de Bruma", A, "", "avancado", "ativa",
     descricao="Condensa éter cinzento em névoa e some dentro dela.")
 add("arc_torrente", "Torrente Cinzenta", A, "", "superior", "ativa",
     {"kind": "dano", "categoria_arma": "pesada", "dano_base": 12}, custo=4,
-    freq="cena", virt=["mente"], descricao="Esvazia a caldeira inteira num só jato.")
+    freq="cena", virt=["mente"], descricao="Esvazia a caldeira inteira num só jato.",
+    mecanica={"resfria_caldeira": True})
 
 # -- O Calibrado: segurança acima de potência --
 add("arc_cal_valvula", "Válvula de Segurança", A, "calibrado", "inicial", "reacao",
@@ -345,6 +367,7 @@ add("arc_cal_feixe", "Feixe Calibrado", A, "calibrado", "avancado", "ativa",
     {"kind": "dano", "categoria_arma": "marcial", "dano_base": 6, "principal": True},
     custo=2, freq="cena", virt=["mente"], central=True,
     descricao="Dano medido ao grama — nunca estoura, nunca desperdiça.",
+    mecanica={"resfria_caldeira": True},
     ruptura={"caminho_a": {"kind": "dano", "categoria_arma": "marcial", "dano_base": 12},
              "caminho_b": {"kind": "protecao", "valor": 5}},
     evolucao={"caminho_a": {"efeito": {"kind": "dano", "categoria_arma": "marcial", "dano_base": 8},
@@ -359,11 +382,13 @@ add("arc_cal_regulagem", "Regulagem", A, "calibrado", "inicial", "passiva",
 add("arc_des_mao_nua", "Mão Nua no Éter", A, "descoberto", "inicial", "ativa",
     {"kind": "dano", "categoria_arma": "versatil", "dano_base": 6}, custo=2,
     freq="turno", virt=["mente"],
-    descricao="Sem cajado entre a carne e o Abismo — dói, mas queima o dobro.")
+    descricao="Sem cajado entre a carne e o Abismo — dói, mas queima o dobro.",
+    mecanica={"auto_dano": 4})
 add("arc_des_sobrecarga", "Sobrecarga", A, "descoberto", "avancado", "ativa",
     {"kind": "dano", "categoria_arma": "pesada", "dano_base": 8, "principal": True},
     custo=3, freq="cena", virt=["mente"], central=True,
     descricao="Deixa a Entropia passar direto pela pele — relâmpago sem para-raios.",
+    mecanica={"auto_dano": 2},
     ruptura={"caminho_a": {"kind": "dano", "categoria_arma": "pesada", "dano_base": 18},
              "caminho_b": {"kind": "dano", "categoria_arma": "pesada", "dano_base": 8, "alvo": "area"}},
     evolucao={"caminho_a": {"efeito": {"kind": "dano", "categoria_arma": "pesada", "dano_base": 11},
@@ -472,6 +497,253 @@ add("med_fer_protese", "Prótese de Batalha", M, "cirurgiao_ferro", "avancado", 
 add("med_fer_solda", "Solda Viva", M, "cirurgiao_ferro", "inicial", "passiva",
     {"kind": "buff_defesa", "valor": 1}, descricao="O metal que enxerta protege "
     "tanto quanto sustenta.")
+
+
+# ==========================================================================
+# conflito-17 — expansão autoral de volume. São 14 Cartas por classe:
+# 2 por subclasse (incluindo uma Superior) + 8 de tronco. `papel` explicita a
+# diferença tática para a guarda anti-reskin e para o relatório de curadoria.
+# ==========================================================================
+def v(cid, name, classe, sub, patamar, tipo, efeito, papel, descricao, *,
+      custo=0, freq="livre", virt=None, gatilho=None):
+    if cid in CARDS:
+        raise ValueError(f"ID de Carta de volume colide com o acervo: {cid}")
+    add(cid, name, classe, sub, patamar, tipo, efeito, custo=custo, freq=freq,
+        virt=virt, gatilho=gatilho, descricao=descricao, papel=papel)
+    CARDS[cid]["origem"] = "conflito-17"
+
+
+# Devoto — novas liturgias, vigílias e técnicas de luto.
+v("dev_cons_relicario", "Corpo-Relicário", D, "consagrado", "avancado", "ativa",
+  {"kind": "protecao", "valor": 5}, "proteger aliado marcado",
+  "Consagra uma cicatriz e recebe no próprio corpo o impacto destinado a outro.", custo=2, freq="turno", virt=["corpo"])
+v("dev_cons_comunhao", "Comunhão do Último Fôlego", D, "consagrado", "superior", "ativa",
+  {"kind": "estabilizar", "valor": 1}, "estabilização ritual à distância",
+  "Pronuncia o nome verdadeiro de um aliado terminal e ancora sua alma à carne.", custo=3, freq="descanso_longo", virt=["carisma"])
+v("dev_zel_interdito", "Interdito Ciumento", D, "zeloso", "avancado", "ativa",
+  {"kind": "marca", "valor": 3}, "impedir troca de alvo",
+  "O olhar do Devoto transforma qualquer desvio do inimigo em afronta pessoal.", custo=2, freq="turno", virt=["carisma"])
+v("dev_zel_retorno", "Todo Golpe Retorna", D, "zeloso", "superior", "ativa",
+  {"kind": "contra_ataque", "dano_base": 10}, "retaliação contra agressor marcado",
+  "A violência que buscava um aliado volta inteira ao agressor.", custo=4, freq="cena", virt=["forca"])
+v("dev_enl_cortejo", "Cortejo dos Ausentes", D, "enlutado", "avancado", "ativa",
+  {"kind": "dot", "dano_base": 4, "duracao": 2, "dano_tipo": "abissal"}, "pressão abissal por luto",
+  "Sombras com nomes esquecidos atravessam o alvo em procissão silenciosa.", custo=2, freq="turno", virt=["carisma"])
+v("dev_enl_testemunho", "Testemunho dos Mortos", D, "enlutado", "superior", "ativa",
+  {"kind": "vantagem", "valor": 2}, "vantagem coletiva contra assassino",
+  "Os mortos testemunham através do Devoto e guiam o grupo contra quem os levou.", custo=3, freq="cena", virt=["mente"])
+v("dev_reflexo_bastiao", "Reflexo de Bastião", D, "", "avancado", "reacao",
+  {"kind": "buff_defesa", "valor": 3}, "fechar brecha ao ser flanqueado",
+  "Gira o escudo no instante exato em que a linha ameaça romper.", custo=1, freq="turno", gatilho="ao_ser_flanqueado", virt=["corpo"])
+v("dev_ombro_porta", "Ombro na Porta", D, "", "inicial", "reacao",
+  {"kind": "empurrao", "valor": 1}, "interromper avanço inimigo",
+  "Recebe a investida de lado e devolve o invasor para a zona anterior.", custo=1, freq="cena", gatilho="ao_inimigo_engajar", virt=["forca"])
+v("dev_vigiar_ruina", "Vigiar a Ruína", D, "", "inicial", "utilitaria",
+  {"kind": "perception", "valor": 2}, "detectar ameaça em vigília",
+  "Lê nas paredes os sinais de que algo tentou entrar durante a noite.", freq="descanso_curto", virt=["mente"])
+v("dev_carregar_caido", "Carregar o Caído", D, "", "avancado", "utilitaria",
+  {"kind": "utilitaria", "prompt_hint": "transportar ferido ou peso extremo sem abandonar a guarda"}, "resgate sob carga",
+  "Faz do próprio dorso uma muralha móvel para retirar alguém do perigo.", freq="descanso_curto", virt=["corpo"])
+v("dev_passo_interposto", "Passo Interposto", D, "", "inicial", "ativa",
+  {"kind": "reposicionar", "valor": 1}, "trocar posição com aliado exposto",
+  "Um passo basta para colocar a própria carne entre o perigo e o companheiro.", custo=1, freq="turno", virt=["agilidade"])
+v("dev_nome_proibido", "Nome Proibido", D, "", "avancado", "ativa",
+  {"kind": "aplicar_condicao", "condicao": "amedrontado", "duracao": 1}, "quebrar coragem pelo nome",
+  "Sussurra ao inimigo o nome que o Abismo usa quando sonha com ele.", custo=2, freq="cena", virt=["carisma"])
+v("dev_martelo_penitente", "Martelo Penitente", D, "", "superior", "ativa",
+  dano("pesada", 1), "golpe pesado contra alvo que feriu aliado",
+  "Cada ferida do grupo acrescenta peso à descida do martelo.", custo=3, freq="cena", virt=["forca"])
+v("dev_promessa_imovel", "Promessa Imóvel", D, "", "avancado", "passiva",
+  {"kind": "bonus_vitalidade_por_estagio", "valor": 1}, "vitalidade por juramento mantido",
+  "Enquanto sustenta a palavra dada, o corpo se recusa a ceder.")
+
+# Sangromante — dívida, espetáculo e precisão cirúrgica do sangue.
+v("san_exp_aplausos", "Aplausos da Cicatriz", S, "exposto", "avancado", "ativa",
+  {"kind": "taunt", "valor": 5}, "atrair plateia hostil",
+  "Exibe a ferida como desafio e faz cada inimigo disputar o próximo golpe.", custo=2, freq="cena", virt=["carisma"])
+v("san_exp_bis", "Bis Sangrento", S, "exposto", "superior", "ativa",
+  {"kind": "contra_ataque", "dano_base": 9}, "retaliação depois de sobreviver crítico",
+  "Quando todos esperam a queda, retorna ao palco com a lâmina já em movimento.", custo=3, freq="cena", virt=["agilidade"])
+v("san_ava_juros_carne", "Juros de Carne", S, "avaro", "avancado", "ativa",
+  {"kind": "buff_dano", "valor": 5}, "capitalizar auto-dano acumulado",
+  "Cada gota paga antes volta como força emprestada ao golpe seguinte.", custo=2, freq="turno", virt=["corpo"])
+v("san_ava_falencia", "Falência Rubra", S, "avaro", "superior", "ativa",
+  dano("pesada", 4), "liquidar reserva de sangue",
+  "Fecha todas as contas numa pancada que cobra corpo, aço e testemunhas.", custo=4, freq="descanso_longo", virt=["forca"])
+v("san_sil_fio", "Fio sem Testemunha", S, "silencioso", "avancado", "ativa",
+  {"kind": "marca", "valor": 2}, "marcar artéria sem revelar ataque",
+  "Um risco quase invisível indica exatamente onde a próxima lâmina deve entrar.", custo=1, freq="turno", virt=["mente"])
+v("san_sil_pulso", "Silêncio do Pulso", S, "silencioso", "superior", "ativa",
+  {"kind": "aplicar_condicao", "condicao": "silenciado", "duracao": 2}, "interromper conjuração pelo pulso",
+  "Corta a cadência do sangue e, com ela, qualquer palavra de poder.", custo=3, freq="cena", virt=["agilidade"])
+v("san_desvio_arterial", "Desvio Arterial", S, "", "inicial", "reacao",
+  {"kind": "buff_esquiva", "valor": 3}, "esquiva após prever fluxo",
+  "Prevê a trajetória do golpe pelo pulso do agressor e sai por um fio.", custo=1, freq="turno", gatilho="ao_ser_atacado", virt=["agilidade"])
+v("san_troco_carmesim", "Troco Carmesim", S, "", "avancado", "reacao",
+  {"kind": "contra_ataque", "dano_base": 5}, "contra-ataque após auto-dano",
+  "A ferida recém-aberta paga imediatamente um corte no cobrador.", custo=2, freq="cena", gatilho="apos_auto_dano", virt=["forca"])
+v("san_ouvir_veias", "Ouvir as Veias", S, "", "inicial", "utilitaria",
+  {"kind": "perception", "valor": 3}, "rastrear vida por pulsação",
+  "No silêncio, distingue medo, febre e mentira pela música sob a pele.", freq="descanso_curto", virt=["mente"])
+v("san_assinar_sangue", "Assinar em Sangue", S, "", "avancado", "utilitaria",
+  {"kind": "utilitaria", "prompt_hint": "selar pacto verificável ou autenticar identidade pelo sangue"}, "pacto e autenticação",
+  "Uma gota torna contratos e identidades impossíveis de falsificar sem deixar cicatriz.", freq="descanso_longo", virt=["carisma"])
+v("san_sangria_lenta", "Sangria Lenta", S, "", "inicial", "ativa",
+  {"kind": "dot", "dano_base": 2, "duracao": 4}, "dano prolongado econômico",
+  "Um corte pequeno continua cobrando muito depois de a lâmina partir.", custo=1, freq="turno", virt=["agilidade"])
+v("san_transfusao_hostil", "Transfusão Hostil", S, "", "avancado", "ativa",
+  {"kind": "cura", "valor": 4}, "converter ferida causada em cura",
+  "Rouba do impacto a força suficiente para fechar a própria lesão.", custo=2, freq="cena", virt=["corpo"])
+v("san_passo_capilar", "Passo Capilar", S, "", "superior", "ativa",
+  {"kind": "reposicionar", "valor": 2}, "atravessar linha pelo menor espaço",
+  "Escorre pela formação inimiga como sangue entre dedos cerrados.", custo=3, freq="cena", virt=["agilidade"])
+v("san_conta_memorizada", "Conta Memorizada", S, "", "avancado", "passiva",
+  {"kind": "buff_iniciativa", "valor": 2}, "iniciativa contra quem já feriu",
+  "Nunca esquece quem deve sangue e sempre age antes do segundo pagamento.")
+
+# Corruptor — anatomia, alma e matéria tratadas como falhas editáveis.
+v("cor_bio_micelio", "Micélio de Guerra", C, "biologia", "avancado", "ativa",
+  {"kind": "dot", "dano_base": 4, "duracao": 3, "dano_tipo": "corrosivo"}, "contágio entre corpos próximos",
+  "Esporos aprendem a distância entre os corpos e atravessam a formação.", custo=2, freq="cena", virt=["mente"])
+v("cor_bio_raiz", "Raiz sob a Pele", C, "biologia", "superior", "ativa",
+  {"kind": "aplicar_condicao", "condicao": "enraizado", "duracao": 3}, "imobilização orgânica duradoura",
+  "Fibras novas confundem carne com solo e recusam qualquer passo.", custo=4, freq="cena", virt=["corpo"])
+v("cor_alm_eco", "Eco da Culpa", C, "alma", "avancado", "ativa",
+  {"kind": "marca", "valor": 4}, "marcar culpa para ataques mentais",
+  "A pior lembrança do alvo ganha voz e denuncia cada hesitação.", custo=2, freq="turno", virt=["carisma"])
+v("cor_alm_vazio", "Sala sem Voz", C, "alma", "superior", "ativa",
+  {"kind": "aplicar_condicao", "condicao": "amedrontado", "duracao": 3}, "isolamento psíquico",
+  "Fecha a alma do alvo numa sala onde só o Abismo responde.", custo=4, freq="descanso_longo", virt=["mente"])
+v("cor_ino_geometria_ferrugem", "Geometria da Ferrugem", C, "inorganica", "avancado", "ativa",
+  {"kind": "protecao", "valor": 2}, "converter armadura corroída em cobertura",
+  "Dobra metal cansado até formar um abrigo de arestas famintas.", custo=1, freq="turno", virt=["mente"])
+v("cor_ino_colapso", "Colapso de Estrutura", C, "inorganica", "superior", "ativa",
+  {"kind": "empurrao", "valor": 3}, "derrubar formação e cenário",
+  "Encontra a única linha que mantém tudo de pé e a apaga.", custo=4, freq="cena", virt=["forca"])
+v("cor_membrana", "Membrana Reflexa", C, "", "inicial", "reacao",
+  {"kind": "protecao", "valor": 2}, "absorver projétil em tecido mutado",
+  "Uma película translúcida cresce antes que o projétil alcance a carne.", custo=1, freq="turno", gatilho="ao_ser_alvo_distancia", virt=["corpo"])
+v("cor_chao_morde", "O Chão Morde", C, "", "avancado", "reacao",
+  {"kind": "empurrao", "valor": 2}, "repelir quem invade zona",
+  "Pedra e raiz fecham a mandíbula sob quem se aproxima demais.", custo=2, freq="cena", gatilho="ao_inimigo_engajar", virt=["mente"])
+v("cor_ler_cicatriz", "Ler Cicatriz", C, "", "inicial", "utilitaria",
+  {"kind": "perception", "valor": 4}, "deduzir história biológica",
+  "Cada marca no corpo revela idade, hábito, medo e sobrevivências.", freq="descanso_curto", virt=["mente"])
+v("cor_modelar_chave", "Modelar Chave", C, "", "avancado", "utilitaria",
+  {"kind": "utilitaria", "prompt_hint": "remodelar matéria pequena para abrir, reparar ou sabotar mecanismo"}, "engenharia orgânica improvisada",
+  "Convence osso, metal ou madeira a lembrar uma forma que nunca tiveram.", freq="descanso_curto", virt=["mente"])
+v("cor_acido_memoria", "Ácido de Memória", C, "", "inicial", "ativa",
+  {"kind": "dot", "dano_base": 3, "duracao": 2, "dano_tipo": "corrosivo"}, "corrosão que apaga técnica",
+  "A substância corrói primeiro o gesto treinado e só depois a matéria.", custo=1, freq="turno", virt=["mente"])
+v("cor_fratura_util", "Fratura Útil", C, "", "avancado", "ativa",
+  dano("marcial", 3), "dano que cria objeto de cobertura",
+  "Quebra a parte certa do cenário e usa os estilhaços como nova anatomia.", custo=2, freq="cena", virt=["forca"])
+v("cor_nome_invertido", "Nome Invertido", C, "", "superior", "ativa",
+  {"kind": "aplicar_condicao", "condicao": "desmoralizado", "duracao": 3}, "desfazer identidade social",
+  "Pronuncia o nome do alvo ao contrário até suas certezas perderem forma.", custo=3, freq="cena", virt=["carisma"])
+v("cor_adaptacao_residual", "Adaptação Residual", C, "", "avancado", "passiva",
+  {"kind": "buff_defesa", "valor": 2}, "defesa após sofrer novo dano",
+  "O corpo registra cada agressão e não oferece duas vezes a mesma fraqueza.")
+
+# Arcanista — medição, improviso e exposição consciente ao Éter.
+v("arc_cal_malha", "Malha de Calibração", A, "calibrado", "avancado", "ativa",
+  {"kind": "buff_acerto", "valor": 3}, "calibrar disparos do grupo",
+  "Projeta uma malha cinzenta que corrige ângulo e distância para todos.", custo=2, freq="cena", virt=["mente"])
+v("arc_cal_zero", "Zero Absoluto do Cálculo", A, "calibrado", "superior", "ativa",
+  {"kind": "aplicar_condicao", "condicao": "atordoado", "duracao": 2}, "paralisar ao fechar todas as variáveis",
+  "Por um instante não sobra possibilidade estatística de movimento.", custo=4, freq="descanso_longo", virt=["mente"])
+v("arc_des_nervo_exposto", "Nervo Descoberto", A, "descoberto", "avancado", "ativa",
+  {"kind": "vantagem", "valor": 3}, "vantagem em canalização sem foco",
+  "Encosta o próprio sistema nervoso no Éter e aceita cada resposta.", custo=2, freq="turno", virt=["corpo"])
+v("arc_des_horizonte", "Horizonte sem Isolante", A, "descoberto", "superior", "ativa",
+  dano("pesada", 5), "descarga máxima com risco corporal",
+  "Abre no peito uma janela pela qual a tempestade inteira atravessa.", custo=5, freq="descanso_longo", virt=["mente"])
+v("arc_imp_grampo", "Grampo de Éter", A, "improvisador", "avancado", "ativa",
+  {"kind": "marca", "valor": 3}, "fixar fenômeno instável em objeto",
+  "Prende o impossível a um pedaço de sucata até que alguém possa usá-lo.", custo=1, freq="turno", virt=["agilidade"])
+v("arc_imp_maquina", "Máquina que Só Funciona Uma Vez", A, "improvisador", "superior", "ativa",
+  {"kind": "empurrao", "valor": 4}, "explosão direcional descartável",
+  "Monta um artefato absurdo, aponta a saída certa e não guarda as peças.", custo=4, freq="cena", virt=["mente"])
+v("arc_aterramento", "Aterramento de Emergência", A, "", "inicial", "reacao",
+  {"kind": "buff_defesa", "valor": 2}, "dissipar descarga recebida",
+  "Desvia energia hostil pelo metal mais próximo antes que ela encontre os ossos.", custo=1, freq="turno", gatilho="ao_sofrer_dano_sobrenatural", virt=["mente"])
+v("arc_refracao", "Refração Cinzenta", A, "", "avancado", "reacao",
+  {"kind": "buff_esquiva", "valor": 4}, "deslocar imagem sob mira",
+  "Quebra a própria silhueta em três futuros e deixa o ataque escolher errado.", custo=2, freq="cena", gatilho="ao_ser_alvo_distancia", virt=["agilidade"])
+v("arc_auscultar_eter", "Auscultar o Éter", A, "", "inicial", "utilitaria",
+  {"kind": "perception", "valor": 5}, "detectar magia residual",
+  "Escuta o ruído que toda alteração arcana deixa preso na matéria.", freq="descanso_curto", virt=["mente"])
+v("arc_ponte_curta", "Ponte de Um Minuto", A, "", "avancado", "utilitaria",
+  {"kind": "utilitaria", "prompt_hint": "alimentar ou contornar mecanismo arcano por poucos instantes"}, "bypass arcano temporário",
+  "Mantém uma máquina impossível viva pelo tempo exato de atravessar.", freq="descanso_longo", virt=["mente"])
+v("arc_vetor_quebrado", "Vetor Quebrado", A, "", "inicial", "ativa",
+  {"kind": "reposicionar", "valor": 2}, "teleporte curto desalinhado",
+  "Corta o caminho em dois e reaparece onde a geometria não esperava.", custo=1, freq="turno", virt=["agilidade"])
+v("arc_pulso_inverso", "Pulso Inverso", A, "", "avancado", "ativa",
+  {"kind": "purga_condicao", "valor": 1}, "remover condição por inversão",
+  "Reproduz o padrão nocivo ao contrário até que ele se desfaça.", custo=2, freq="cena", virt=["mente"])
+v("arc_raio_cinza", "Raio Cinza Longitudinal", A, "", "superior", "ativa",
+  dano("versatil", 5), "dano arcano em linha",
+  "Comprime o Éter numa linha tão fina que a distância deixa de protegê-la.", custo=4, freq="cena", virt=["mente"])
+v("arc_equacao_persistente", "Equação Persistente", A, "", "avancado", "passiva",
+  {"kind": "buff_iniciativa", "valor": 3}, "iniciativa após estudar cena",
+  "A primeira observação continua resolvendo possibilidades enquanto a luta muda.")
+
+# Médico — triagem, química de campo e engenharia protética.
+v("med_tri_corredor", "Corredor de Triagem", M, "cirurgiao_trincheira", "avancado", "ativa",
+  {"kind": "reposicionar", "valor": 2}, "retirar ferido sob fogo",
+  "Abre com ordens curtas um corredor humano até a zona protegida.", custo=1, freq="turno", virt=["carisma"])
+v("med_tri_segundo", "Segundo Coração", M, "cirurgiao_trincheira", "superior", "ativa",
+  {"kind": "estabilizar", "valor": 2}, "estabilizar múltiplos terminais",
+  "Alterna compressões e comandos até dois ritmos perdidos voltarem a responder.", custo=4, freq="descanso_longo", virt=["mente"])
+v("med_bot_nevoa", "Névoa Antisséptica", M, "boticario", "avancado", "ativa",
+  {"kind": "purga_condicao", "valor": 2}, "purga em zona",
+  "Quebra um frasco cuja névoa limpa veneno, esporo e pânico da mesma área.", custo=2, freq="cena", virt=["mente"])
+v("med_bot_panacea", "Panaceia Improvável", M, "boticario", "superior", "ativa",
+  {"kind": "cura", "valor": 14}, "cura superior com reagentes raros",
+  "Combina três substâncias que deveriam se anular e as obriga a salvar uma vida.", custo=4, freq="descanso_longo", virt=["mente"])
+v("med_fer_ancora", "Âncora Protética", M, "cirurgiao_ferro", "avancado", "ativa",
+  {"kind": "protecao", "valor": 5}, "fixar aliado contra deslocamento",
+  "Crava a prótese ao chão e transforma recuo em escolha, nunca consequência.", custo=2, freq="turno", virt=["corpo"])
+v("med_fer_colosso", "Prótese de Colosso", M, "cirurgiao_ferro", "superior", "ativa",
+  {"kind": "buff_dano", "valor": 7}, "amplificar força de aliado",
+  "Acopla pistões de campo que dão a um braço humano a memória de um gigante.", custo=4, freq="cena", virt=["mente"])
+v("med_placa_reflexa", "Placa Reflexa", M, "", "inicial", "reacao",
+  {"kind": "protecao", "valor": 3}, "interpor tala contra crítico",
+  "Arranca uma placa do estojo e a encaixa entre golpe e órgão vital.", custo=1, freq="turno", gatilho="ao_aliado_ser_atacado", virt=["agilidade"])
+v("med_dose_choque", "Dose de Choque", M, "", "avancado", "reacao",
+  {"kind": "buff_iniciativa", "valor": 4}, "reativar aliado que hesita",
+  "Uma agulha no ponto certo devolve o próximo segundo a quem o perderia.", custo=2, freq="cena", gatilho="ao_aliado_perder_acao", virt=["mente"])
+v("med_autopsia_campo", "Autópsia de Campo", M, "", "inicial", "utilitaria",
+  {"kind": "perception", "valor": 4}, "diagnosticar causa e fraqueza",
+  "Um minuto de exame revela como algo morreu — e como o semelhante pode morrer.", freq="descanso_curto", virt=["mente"])
+v("med_hospital_improviso", "Hospital de Improviso", M, "", "avancado", "utilitaria",
+  {"kind": "utilitaria", "prompt_hint": "montar enfermaria segura com sucata, tecido e água limpa"}, "criar refúgio médico",
+  "Transforma qualquer ruína com teto em um lugar onde a morte precisa esperar.", freq="descanso_longo", virt=["mente"])
+v("med_corte_descompressao", "Corte de Descompressão", M, "", "inicial", "ativa",
+  {"kind": "purga_condicao", "valor": 1}, "remover condição física aguda",
+  "Abre espaço onde pressão, veneno ou Éter ameaçam esmagar por dentro.", custo=1, freq="turno", virt=["agilidade"])
+v("med_marca_triagem", "Marca de Triagem", M, "", "avancado", "ativa",
+  {"kind": "marca", "valor": 5}, "priorizar cura e proteção",
+  "Um traço de giz vermelho faz o grupo inteiro reconhecer quem não pode cair.", custo=2, freq="cena", virt=["carisma"])
+v("med_serra_ossea", "Serra Óssea", M, "", "superior", "ativa",
+  dano("marcial", 4), "dano preciso contra armadura orgânica",
+  "A ferramenta de amputação encontra juntas que espadas ignoram.", custo=3, freq="cena", virt=["agilidade"])
+v("med_protocolo_retornar", "Protocolo: Retornar", M, "", "avancado", "passiva",
+  {"kind": "bonus_cura_por_estagio", "valor": 2}, "cura crescente após estabilizar",
+  "Cada vida estabilizada melhora o protocolo aplicado à próxima.")
+
+# Três Cartas de fecho repõem curadorias que existiam apenas no JSON gerado e
+# garantem o alvo simétrico de 30 Cartas por classe.
+v("san_pulso_reserva", "Pulso de Reserva", S, "avaro", "superior", "passiva",
+  {"kind": "bonus_esquiva_por_estagio", "valor": 1}, "esquiva alimentada por sangue poupado",
+  "O sangue que não foi gasto mantém o corpo meio passo à frente da lâmina.")
+v("cor_matriz_rejeicao", "Matriz de Rejeição", C, "inorganica", "superior", "passiva",
+  {"kind": "bonus_vitalidade_por_estagio", "valor": 1},
+  "vitalidade de formas assimiladas", "Cada transformação descartada deixa uma camada útil sob a pele.")
+v("arc_constante_cinza", "Constante Cinza", A, "descoberto", "superior", "passiva",
+  {"kind": "bonus_percepcao_por_estagio", "valor": 2}, "percepção crescente de anomalias",
+  "Depois de medir o impossível tantas vezes, o olho passa a esperá-lo.")
 
 
 # ==========================================================================

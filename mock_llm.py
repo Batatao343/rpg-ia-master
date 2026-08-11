@@ -166,7 +166,10 @@ def _route_decision(model, messages):
                              "reasoning": "[simulado] intenção de saque/comércio", "confidence": 0.85,
                              "target": None})
     if any(k in txt for k in npc):
-        return _fill(model, {"route": route("npc_actor"), "target": random.choice(_NPC_NAMES),
+        explicit_target = next(
+            (name for name in _NPC_NAMES if name.lower() in txt), None)
+        return _fill(model, {"route": route("npc_actor"),
+                             "target": explicit_target or random.choice(_NPC_NAMES),
                              "reasoning": "[simulado] intenção social", "confidence": 0.8,
                              "loot_context": None})
     return _fill(model, {"route": route("storyteller"), "reasoning": "[simulado] exploração",
@@ -198,7 +201,15 @@ def _story_update(model, messages):
     # fecha quest (mock só criava, nunca completava — achado do playtest).
     proposed_events = []
     todo_texto = " ".join(str(getattr(m, "content", "") or "") for m in messages)
-    quest_ids = re.findall(r"- id=(\S+) ·", todo_texto)
+    quests_match = re.search(
+        r"<QUESTS_ATIVAS>(.*?)</QUESTS_ATIVAS>",
+        todo_texto,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    quest_ids = (
+        re.findall(r"- id=(\S+) ·", quests_match.group(1))
+        if quests_match else []
+    )
     if quest_ids and random.random() < 0.5:
         qid = random.choice(quest_ids)
         proposed_events = [{"type": "quest_completed", "target_id": qid,
@@ -272,26 +283,21 @@ def _npc_response(model, messages):
     reveals = []
     if any(k in txt for k in ("facç", "faccao", "facc", "rumor", "quem manda", "legi", "ordem")):
         reveals = [{"faction_id": "legiao_ferro", "reveal_level": "objetivo"}]
+    friendly = any(k in txt for k in ("elogio", "amizade", "confian", "parceria"))
     return _fill(model, {"dialogue": random.choice(_NPC_LINES),
                          "action_description": random.choice(_NPC_ACTIONS),
                          "memory_update": "Conversou com o herói.",
-                         "relationship_change": random.choice([-1, 0, 0, 1]),
+                         "relationship_change": 1 if friendly else random.choice([-1, 0, 0, 1]),
                          "faction_reveals": reveals})
 
 
 def _enemy_schema(model, messages):
     name = random.choice(_ENEMY_NAMES)
-    hp = random.randint(12, 26)
-    atk_cls = _list_item_cls(model, "attacks")
-    attacks = []
-    if atk_cls:
-        attacks = [_fill(atk_cls, {"name": "Ataque", "type": "melee", "bonus": 3,
-                                   "damage": "1d6+1", "range": "1.5m", "save_dc": None})]
     return _fill(model, {"name": name, "description": "Criatura hostil das ruínas.",
-                         "type": "Minion", "hp": hp, "max_hp": hp, "ac": 12,
-                         "attacks": attacks,
-                         "attributes": {"str": 12, "dex": 11, "con": 11, "int": 6, "wis": 8, "cha": 6},
-                         "abilities": [], "loot": []})
+                         "categoria": "lacaio", "arquetipo": "agil",
+                         "estilo_ataque": "corpo_a_corpo",
+                         "nome_ataque": "Ataque",
+                         "abilities": [], "loot": [], "regions": []})
 
 
 def _encounter_scanner(model, messages):
@@ -370,18 +376,18 @@ def _trade_intent(model, messages):
 def _combat_action(model, messages):
     """Identifica a ação de combate por palavra-chave (offline, determinístico)."""
     txt = _last_human(messages).lower()
-    ability_id = "ataque_basico"
+    card_id = ""
     try:
-        from gamedata import ABILITIES
-        for aid, a in ABILITIES.items():
+        from services.cards import all_cards
+        for aid, a in all_cards().items():
             nm = str(a.get("name", "")).lower()
             if (aid.replace("_", " ") in txt) or (nm and nm in txt):
-                ability_id = aid
+                card_id = aid
                 break
     except Exception:
         pass
-    return _fill(model, {"ability_id": ability_id, "target": "",
-                         "is_allowed": True, "reason": "[simulado]"})
+    return _fill(model, {"kind": "card" if card_id else "attack",
+                         "card_id": card_id, "target_id": ""})
 
 
 def _start_scenario(model, messages):

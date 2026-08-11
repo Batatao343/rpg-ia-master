@@ -1,7 +1,7 @@
 # SPEC — Limpar `in_scene` de NPC em toda troca de local (fecha `recycled_npc`)
 
-> **Status:** `approved`
-> **Criada:** 2026-07-20 · **Atualizada:** 2026-07-20
+> **Status:** `done`
+> **Criada:** 2026-07-20 · **Atualizada:** 2026-08-02
 > **Depende de:** [encontros-dedupe](encontros-dedupe.md) `done` (vínculo de local + invariante) ·
 > [combate-lifecycle](combate-lifecycle.md) `done` (fuga aplica viagem no mesmo turno)
 > **Desbloqueia:** telemetria de playtest limpa (menos ruído de warning nos runs longos)
@@ -122,13 +122,13 @@ Nenhum schema muda. `in_scene` já é campo existente; o reset só o zera mais c
 
 ## 5. Critérios de aceite
 
-- [ ] Fuga de combate com viagem zera `in_scene` dos NPCs (teste)
-- [ ] `check_recycled_npc` só dispara em vazamento real de contexto (2 testes)
-- [ ] Harness mock longo: `narrative.recycled_npc` cai de dezenas para ~0 (número
+- [x] Fuga de combate com viagem zera `in_scene` dos NPCs (teste)
+- [x] `check_recycled_npc` só dispara em vazamento real de contexto (2 testes)
+- [x] Harness mock longo: `narrative.recycled_npc` cai de dezenas para ~0 (número
       registrado)
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM: N/A (spec determinística, sem structured output novo)
-- [ ] Saves antigos continuam carregando (nenhuma mudança de schema; `in_scene`
+- [x] `uv run pytest` verde (suíte completa offline)
+- [x] Guard de FallbackLLM: N/A (spec determinística, sem structured output novo)
+- [x] Saves antigos continuam carregando (nenhuma mudança de schema; `in_scene`
       já existe)
 
 ## 6. Smoke test com LLM real
@@ -151,3 +151,13 @@ Nenhum schema muda. `in_scene` já é campo existente; o reset só o zera mais c
   quiser preservar um NPC específico ao viajar, ele já usa a via de
   re-home/party — fora do escopo.
 - **Impacto em quota/latência:** nenhum (operação em memória, sem LLM).
+
+## 8. Registro de execução (2026-08-02)
+
+- Testes focados de lifecycle, dedupe e contexto verdes.
+- Runs mock de 50 turnos `fujao` (`20260802-170648-640213`), `combate`
+  (`20260802-170651-103630`) e `explorador` (`20260802-170653-638274`):
+  **0 `narrative.recycled_npc`**, 0 erros e 0 warnings em 150 turnos.
+- Smoke controlado de fuga: Pântano → Nova Arcádia deixou Bors com
+  `in_scene=false` e preservou Gorim na party.
+- Suíte integral: **1.320 passed, 1 skipped, 14 deselected**.

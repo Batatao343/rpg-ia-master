@@ -11,8 +11,8 @@ import glob
 import json
 import os
 from collections import Counter
-from dataclasses import dataclass
-from typing import List, Optional, Tuple
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Tuple
 
 
 @dataclass
@@ -23,6 +23,10 @@ class RunReport:
     top_errors: List[Tuple[str, int]]     # por rota do grafo
     deltas: Optional[dict]                # vs baseline (None sem baseline)
     mock_any: bool = False
+    status: str = "legacy"
+    complete: bool = True
+    completeness: dict = field(default_factory=dict)
+    violation_samples: Dict[str, dict] = field(default_factory=dict)
 
 
 def _load_summaries(run_dir: str) -> List[dict]:
@@ -73,9 +77,13 @@ def aggregate(run_dir: str, baseline_dir: Optional[str] = None) -> RunReport:
     run_id = os.path.basename(os.path.normpath(run_dir))
 
     viol: Counter = Counter()
+    violation_samples: Dict[str, dict] = {}
     for s in summaries:
         for cid, n in (s.get("violations") or {}).items():
             viol[cid] += int(n)
+        for cid, sample in (s.get("violation_samples") or {}).items():
+            if cid not in violation_samples and isinstance(sample, dict):
+                violation_samples[cid] = sample
 
     errs = _errors_by_route(run_dir)
 
@@ -88,12 +96,18 @@ def aggregate(run_dir: str, baseline_dir: Optional[str] = None) -> RunReport:
                             "latency_p95_max", "replans", "downed")}
         deltas["baseline_id"] = os.path.basename(os.path.normpath(baseline_dir))
 
+    from playtest import telemetry
+    completeness = telemetry.inspect_run(run_dir)
     return RunReport(
         run_id=run_id, campaigns=summaries,
         top_violations=viol.most_common(10),
         top_errors=errs.most_common(10),
         deltas=deltas,
         mock_any=any(s.get("mock") for s in summaries),
+        status=str(completeness.get("status") or "unknown"),
+        complete=bool(completeness.get("complete")),
+        completeness=completeness,
+        violation_samples=violation_samples,
     )
 
 
@@ -139,9 +153,62 @@ def render_markdown(report: RunReport) -> str:
     L: List[str] = []
     L.append(f"# Relatório de playtest — `{report.run_id}`")
     L.append("")
+    if not report.complete:
+        details = report.completeness or {}
+        L.append(
+            f"> ⛔ **RUN INCOMPLETA** — status `{report.status}`; "
+            f"campanhas {details.get('persisted_campaigns', '?')}/"
+            f"{details.get('expected_campaigns', '?')}."
+        )
+        missing = details.get("missing_profiles") or []
+        if missing:
+            L.append(f"> Perfis ausentes: {', '.join(map(str, missing))}.")
+        incomplete = details.get("incomplete_campaigns") or []
+        if incomplete:
+            rendered = ", ".join(
+                f"{item.get('profile')} "
+                f"({item.get('turns_completed')}/{item.get('turns_expected')})"
+                for item in incomplete
+            )
+            L.append(f"> Campanhas incompletas: {rendered}.")
+        missing_summaries = details.get("missing_summaries") or []
+        if missing_summaries:
+            L.append(
+                "> Summaries ausentes: "
+                + ", ".join(map(str, missing_summaries))
+                + "."
+            )
+        for label, key in (
+            ("Summaries inválidos", "invalid_summaries"),
+            ("JSONLs ausentes", "missing_jsonls"),
+            ("JSONLs inválidos", "invalid_jsonls"),
+            ("Saves ausentes", "missing_saves"),
+            ("Saves inválidos", "invalid_saves"),
+            ("Divergências de artefato", "artifact_mismatches"),
+            ("Erros de configuração", "configuration_errors"),
+        ):
+            values = details.get(key) or []
+            if values:
+                rendered_values = ", ".join(
+                    str(value.get("file") or value.get("field") or value)
+                    if isinstance(value, dict) else str(value)
+                    for value in values[:10]
+                )
+                L.append(f"> {label}: {rendered_values}.")
+        L.append("")
     if report.mock_any:
         L.append("> ⚠️ **Contém campanhas em MockLLM** (`mock: true`) — latência/rotas/custo "
                  "NÃO representam produção. Não compare mock × real.")
+        L.append("")
+    warning_total = sum(
+        int(summary.get("warning_violations", 0) or 0)
+        for summary in report.campaigns
+    )
+    if warning_total:
+        L.append(
+            f"> ⚠️ **{warning_total} warning(s) não bloqueante(s)** — "
+            "revise a seção de violações antes do aceite funcional."
+        )
         L.append("")
 
     L.append("## Por perfil")
@@ -163,6 +230,22 @@ def render_markdown(report: RunReport) -> str:
             f"| {s.get('final_gold',0)} | {s.get('locations_visited',0)} "
             f"| {lat.get('p50',0)} | {lat.get('p95',0)} | {s.get('cost_usd_total',0.0):.4f} "
             f"| {s.get('fell_back_turns',0)} | {'sim' if s.get('mock') else 'não'} |")
+    L.append("")
+
+    L.append("## Cobertura mecânica")
+    L.append("")
+    L.append("| perfil | turnos combat | conflitos iniciados | encerrados | reações | táticas |")
+    L.append("|---|---:|---:|---:|---:|---:|")
+    for summary in report.campaigns:
+        coverage = summary.get("combat_coverage") or {}
+        L.append(
+            f"| {summary.get('profile','?')} "
+            f"| {coverage.get('executed_turns', 0)} "
+            f"| {coverage.get('started', 0)} "
+            f"| {coverage.get('ended', 0)} "
+            f"| {coverage.get('reactions', 0)} "
+            f"| {coverage.get('tactics', 0)} |"
+        )
     L.append("")
 
     # spec balanceamento-classes-pos-playtest (R3): matriz por classe.
@@ -212,10 +295,13 @@ def render_markdown(report: RunReport) -> str:
     L.append("## Violações")
     L.append("")
     if report.top_violations:
-        L.append("| check_id | ocorrências |")
-        L.append("|---|---|")
+        L.append("| check_id | ocorrências | severidade | amostra |")
+        L.append("|---|---|---|---|")
         for cid, n in report.top_violations:
-            L.append(f"| {cid} | {n} |")
+            sample = report.violation_samples.get(cid) or {}
+            severity = sample.get("severity") or "—"
+            message = str(sample.get("message") or "—").replace("|", "\\|")
+            L.append(f"| {cid} | {n} | {severity} | {message} |")
     else:
         L.append("_Nenhuma violação registrada._")
     L.append("")

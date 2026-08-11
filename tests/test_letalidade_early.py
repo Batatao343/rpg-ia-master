@@ -1,113 +1,165 @@
-"""Suíte da spec letalidade-early-game-v2 (Etapa 2) — 4 alavancas determinísticas.
+"""Contratos da spec letalidade-early-game-v2 após o cutover v4."""
+import random
 
-Offline/mock. Ver specs/letalidade-early-game-v2.md. Baseline: run 20260720-093014
-(combate/explorador morriam nível 1–3 por falta de laço de recuperação).
-"""
 import combat_mechanics as cm
-import world_utils as wu
+import agents.combat as combat
 from gamedata import CLASSES
+from playtest.profiles import PROFILES
+from services import conflict_orchestrator as orch
+from services import conflict_scene as cs
+from services import conflict_turn as ct
+import world_utils as wu
 
 
-# --- helpers ----------------------------------------------------------------
-
-def _player(level):
-    return {
-        "name": "Herói", "class_name": "Errante", "level": level,
-        "hp": 30, "max_hp": 30, "attack_bonus": 0, "defense": 12,
-        "attributes": {"str": 12, "dex": 12, "con": 12, "int": 10, "wis": 10, "cha": 10},
-        "known_abilities": [], "active_conditions": [],
-    }
-
-
-def _enemy(hp=100, level=1):
-    return {"name": "Alvo", "hp": hp, "max_hp": hp, "defense": 1, "status": "ativo",
-            "level": level, "attributes": {}, "active_conditions": []}
-
-
-_ABILITY = {"golpe": {"name": "Golpe", "cost": 0, "resource_type": "Nenhum",
-                      "damage_formula": "1d6", "conditions": [], "save_stat": None,
-                      "damage_type": "Físico"}}
-_ACTION = {"ability_id": "golpe", "target": "Alvo", "is_allowed": True}
-
-
-# --- Alavanca 4: dano de early-game (runtime, só o herói) --------------------
-
-def test_early_game_damage_bonus_por_nivel():
-    assert cm.early_game_damage_bonus({"level": 1}) == 2
-    assert cm.early_game_damage_bonus({"level": 2}) == 2
-    assert cm.early_game_damage_bonus({"level": 3}) == 1
-    assert cm.early_game_damage_bonus({"level": 4}) == 0
-    assert cm.early_game_damage_bonus({"level": 7}) == 0
-    assert cm.early_game_damage_bonus({}) == 2  # sem nível => trata como 1
-
-
-def test_early_damage_bonus_soma_no_golpe_do_jogador(monkeypatch):
-    monkeypatch.setattr(cm.random, "randint", lambda a, b: 18)  # acerta, sem crit
-    monkeypatch.setattr(cm, "resolve_damage_formula", lambda f, a: (5, "5"))
-    e1 = _enemy(); cm.resolve_player_action(_player(1), [e1], _ACTION, _ABILITY)
-    e4 = _enemy(); cm.resolve_player_action(_player(4), [e4], _ACTION, _ABILITY)
-    assert (100 - e1["hp"]) - (100 - e4["hp"]) == 2  # +2 vigor inicial no nível 1
-
-
-def test_early_damage_bonus_zera_nivel_4(monkeypatch):
-    monkeypatch.setattr(cm.random, "randint", lambda a, b: 18)
-    monkeypatch.setattr(cm, "resolve_damage_formula", lambda f, a: (5, "5"))
-    e = _enemy(); cm.resolve_player_action(_player(4), [e], _ACTION, _ABILITY)
-    assert 100 - e["hp"] == 5  # sem bônus algum a partir do nível 4
-
-
-def test_early_damage_bonus_nao_afeta_inimigo(monkeypatch):
-    # o inimigo NUNCA passa por resolve_player_action; seu dano não escala com "level"
-    monkeypatch.setattr(cm.random, "randint", lambda a, b: 18)
-    p1 = _player(5); p1["hp"] = 100
-    p2 = _player(5); p2["hp"] = 100
-    en = {"name": "Ogro", "attack_mod": 0, "status": "ativo", "hp": 10, "attributes": {},
-          "active_conditions": [], "attacks": [{"name": "Soco", "bonus": 0, "damage": "5"}]}
-    en1 = dict(en, level=1)
-    en9 = dict(en, level=9)
-    cm.resolve_enemy_turn(en1, p1)
-    cm.resolve_enemy_turn(en9, p2)
-    assert p1["hp"] == p2["hp"]  # dano do inimigo independe do nível dele
-
-
-# --- Alavanca 1: recuperação no descanso/viagem -----------------------------
-
-def test_recovery_rest_safe_early_game_zona_segura():
-    assert wu.recovery_rest_safe(1, 3, {"tags": []}) is True
-    assert wu.recovery_rest_safe(wu.EARLY_GAME_LEVEL, wu.RECOVERY_SAFE_DANGER, {}) is True
-
-
-def test_recovery_rest_safe_nega_apex_perigo_ou_nivel_alto():
-    assert wu.recovery_rest_safe(1, 3, {"tags": ["apex"]}) is False   # apex nunca suaviza
-    assert wu.recovery_rest_safe(1, 4, {}) is False                    # perigo alto
-    assert wu.recovery_rest_safe(wu.EARLY_GAME_LEVEL + 1, 1, {}) is False  # já cresceu
+def test_descanso_early_game_seguro_e_apex_preservado():
+    assert wu.recovery_rest_safe(3, 3, {"tags": ["cidade"]})
+    assert not wu.recovery_rest_safe(3, 3, {"tags": ["apex"]})
+    assert not wu.recovery_rest_safe(3, 4, {"tags": []})
+    assert not wu.recovery_rest_safe(4, 2, {"tags": []})
 
 
 def test_cooldown_encontro_maior_no_early_game(monkeypatch):
-    monkeypatch.setattr(wu, "_effective_danger", lambda w, l: 5)
-    monkeypatch.setattr(wu, "pick_encounter_enemy", lambda *a, **k: {"name": "Fera", "id": "fera"})
-    base = {"current_location_id": "zona", "current_location": "Zona",
-            "last_encounter_turn": 0, "danger_level": 5}
-    # early-game (nível 1): cooldown = 2 + 2 = 4. Turno 3 (< 4) => bloqueado.
-    assert wu.check_encounter(dict(base), [], {}, turn=3, player_level=1) is None
-    # turno 4 (>= 4) => não bloqueado => encontro dispara.
-    assert wu.check_encounter(dict(base), [], {}, turn=4, player_level=1) is not None
-    # nível alto: cooldown = 2. Turno 3 (>= 2) => dispara (sem bônus de early-game).
-    assert wu.check_encounter(dict(base), [], {}, turn=3, player_level=9) is not None
+    monkeypatch.setattr(wu, "_effective_danger", lambda *_: 4)
+    monkeypatch.setattr(wu.gamedata, "get_location", lambda *_: {
+        "id": "ermo", "name": "Ermo", "region": "Ermo", "tags": []})
+    world = {"current_location_id": "ermo", "current_location": "Ermo",
+             "danger_level": 4, "last_encounter_turn": 7}
+    assert wu.check_encounter(dict(world), [], {}, turn=10, player_level=2) is None
+    assert wu.check_encounter(dict(world), [], {}, turn=10, player_level=4) is not None
 
 
-# --- Alavancas 2/3: +poções e +HP base (gerador regenerado) -----------------
-
-def test_hp_base_pisos_novos():
-    assert CLASSES["Arcanista Cinzento"]["base_stats"]["hp"] == 26
-    assert CLASSES["Sangromante"]["base_stats"]["hp"] == 30
-    assert CLASSES["Corruptor"]["base_stats"]["hp"] == 30
-    assert CLASSES["Médico de Campo"]["base_stats"]["hp"] == 30
-    assert CLASSES["Devoto do Abismo"]["base_stats"]["hp"] == 40
+def test_early_damage_bonus_faixas():
+    assert [cm.early_game_damage_bonus(level) for level in range(1, 6)] == [2, 2, 1, 0, 0]
 
 
-def test_starting_equipment_pocoes():
-    for name, cls in CLASSES.items():
-        n = list(cls.get("starting_equipment", [])).count("pocao_cura")
-        assert n >= 2, f"{name} deveria começar com >=2 poções, tem {n}"
-    assert list(CLASSES["Médico de Campo"]["starting_equipment"]).count("pocao_cura") == 3
+def _actor(actor_id: str, *, player=False, level=1):
+    return orch.ensure_combat_sheet({
+        "id": actor_id, "name": actor_id, "is_player": player, "level": level,
+        "vitalidade": 30, "max_vitalidade": 30,
+        "virtudes": {"forca": 5, "agilidade": 3, "corpo": 3, "mente": 1, "carisma": 1},
+        "dano_base_arma": 3, "active_conditions": [],
+    }, is_player=player)
+
+
+def test_bonus_entra_no_dano_v4_so_para_jogador(monkeypatch):
+    monkeypatch.setattr(ct, "resolve_attack", lambda *a, **k: {
+        "acerto": True, "resultado": "acerto", "total": 20,
+        "esquiva_alvo": 10, "efeito_principal_multiplicador": 1})
+    scene = cs.new_scene()
+    cs.place(scene, "player")
+    cs.place(scene, "enemy")
+    player, enemy = _actor("player", player=True), _actor("enemy")
+    player_out = ct.resolve_turn(
+        scene, {"player": player, "enemy": enemy},
+        ct.TurnDeclaration(actor_id="player", acao=ct.TurnStep(
+            kind="attack", target_id="enemy")), rng=random.Random(1))
+    assert player_out["attacks"][0]["dano_final"] == 5
+
+    player2, enemy2 = _actor("player", player=True), _actor("enemy")
+    enemy_out = ct.resolve_turn(
+        scene, {"player": player2, "enemy": enemy2},
+        ct.TurnDeclaration(actor_id="enemy", acao=ct.TurnStep(
+            kind="attack", target_id="player")), rng=random.Random(1))
+    assert enemy_out["attacks"][0]["dano_final"] == 3
+
+
+def test_pisos_de_hp_e_pocoes_iniciais():
+    expected = {"Devoto do Abismo": (18, 2), "Sangromante": (18, 2),
+                "Corruptor": (18, 2), "Arcanista Cinzento": (14, 2),
+                "Médico de Campo": (16, 3)}
+    for name, (vitality, potions) in expected.items():
+        data = CLASSES[name]
+        assert data["base_stats"]["vitalidade_bonus"] == 6
+        assert data["starting_equipment"].count("pocao_cura") >= potions
+        actor = {"class_name": name, "virtudes": data["base_stats"]["virtudes"]}
+        wu.gamedata.sync_vitality(actor, heal_to_full=True)
+        assert actor["max_vitalidade"] == vitality
+
+
+def test_perfil_razoavel_descansa_abaixo_de_metade():
+    state = {"player": {"vitalidade": 10, "max_vitalidade": 30,
+                        "conscious": True}, "combat": None, "enemies": []}
+    decision = PROFILES["combate"].decide(state, random.Random(1))
+    assert "descanso" in decision.text.casefold()
+
+
+def test_perfil_razoavel_sai_do_perigo_para_descansar(monkeypatch):
+    monkeypatch.setattr("playtest.profiles._connections", lambda _loc: [
+        {"id": "seguro", "name": "Refúgio", "danger": 2},
+        {"id": "pior", "name": "Abismo", "danger": 5},
+    ])
+    state = {"player": {"vitalidade": 4, "max_vitalidade": 16,
+                        "conscious": True}, "combat": None, "enemies": [],
+             "world": {"current_location_id": "perigo", "danger_level": 4}}
+    decision = PROFILES["combate"].decide(state, random.Random(1))
+    assert "Viajo para Refúgio" in decision.text
+
+
+def test_perfil_razoavel_evacuacao_aceita_primeiro_passo_de_mesmo_perigo(monkeypatch):
+    monkeypatch.setattr("playtest.profiles._connections", lambda _loc: [
+        {"id": "saida", "name": "Galeria de Saída", "danger": 4},
+    ])
+    state = {"player": {"vitalidade": 3, "max_vitalidade": 18,
+                        "conscious": True}, "combat": None, "enemies": [],
+             "world": {"current_location_id": "cripta", "danger_level": 4}}
+    decision = PROFILES["combate"].decide(state, random.Random(1))
+    assert "Viajo para Galeria de Saída" in decision.text
+
+
+def test_perfil_razoavel_cura_em_combate_abaixo_de_metade():
+    state = {
+        "player": {
+            "name": "Sangromante", "vitalidade": 8, "max_vitalidade": 18,
+            "conscious": True,
+            "inventory": [{"id": "pocao_cura", "qty": 1}],
+            "prepared_cards": [],
+        },
+        "combat": {"active": True},
+        "enemies": [{"id": "inimigo", "name": "Inimigo", "status": "ativo"}],
+    }
+    decision = PROFILES["combate"].decide(state, random.Random(1))
+    assert decision.mode == "declaration"
+    assert decision.declaration["acao"]["kind"] == "item"
+    assert decision.declaration["acao"]["item_id"] == "pocao_cura"
+
+
+def test_save_v5_recebe_bonus_sem_apagar_dano():
+    from persistence import _normalize_vitality_actor
+    old = {"class_name": "Devoto do Abismo", "virtudes": {"corpo": 3},
+           "vitalidade": 6, "max_vitalidade": 12}
+    migrated = _normalize_vitality_actor(old)
+    assert migrated["max_vitalidade"] == 18
+    assert migrated["vitalidade"] == 12
+    assert migrated["hp"] == 12 and migrated["max_hp"] == 18
+
+
+def test_heroi_cheio_early_game_reage_antes_da_emboscada(monkeypatch):
+    monkeypatch.setattr(combat.gamedata, "get_location", lambda *_: {
+        "id": "ermo", "tags": ["ermo"]})
+    state = {"combat": {"round": 1}, "world": {"current_location_id": "ermo"}}
+    player = {"level": 2, "vitalidade": 14, "max_vitalidade": 14}
+    assert combat._early_game_reaction_initiator(state, player, "enemy") == "heroes"
+
+
+def test_protecao_de_reacao_nao_altera_apex_ferido_ou_nivel_alto(monkeypatch):
+    state = {"combat": {"round": 1}, "world": {"current_location_id": "zona"}}
+    monkeypatch.setattr(combat.gamedata, "get_location", lambda *_: {
+        "id": "zona", "tags": ["apex"]})
+    full = {"level": 2, "vitalidade": 14, "max_vitalidade": 14}
+    assert combat._early_game_reaction_initiator(state, full, "enemy") == "enemy"
+
+    monkeypatch.setattr(combat.gamedata, "get_location", lambda *_: {
+        "id": "zona", "tags": []})
+    assert combat._early_game_reaction_initiator(
+        state, {**full, "vitalidade": 13}, "enemy") == "enemy"
+    assert combat._early_game_reaction_initiator(
+        state, {**full, "level": 3}, "enemy") == "enemy"
+
+
+def test_queda_deliberada_ainda_pode_virar_memorial():
+    from services import checkpoints
+    dead = {"death_pending": True, "game_over": False, "player": {
+        "vitalidade": 0, "max_vitalidade": 18}}
+    memorial = checkpoints.resolve_death_choice(dead, "accept")
+    assert memorial["game_over"] is True
+    assert memorial["death_pending"] is False

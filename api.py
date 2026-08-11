@@ -16,23 +16,30 @@ import time
 import uvicorn
 import uuid # <--- Necessário para gerar IDs de sessão
 from collections import Counter, defaultdict, deque
+from copy import deepcopy
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
-from typing import Any, Dict, Iterator, List, Optional
-from langchain_core.messages import HumanMessage, SystemMessage
+from pydantic import BaseModel, Field, field_validator
+from typing import Any, Dict, Iterator, List, Literal, Optional
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 # Adiciona raiz ao path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Imports do seu motor
 from main import app as game_graph
+import gamedata
 from persistence import save_game_state, load_game_state, save_path, _serialize_messages
 from character_creator import create_player_character
-from gamedata import ABILITIES, CLASSES, load_json_data, seed_factions
-from llm_setup import is_simulated, set_llm_telemetry_hook
+from gamedata import CLASSES, load_json_data, seed_factions
+from llm_setup import (
+    LLMAttemptEvent,
+    is_simulated,
+    set_llm_attempt_telemetry_hook,
+    set_llm_telemetry_hook,
+)
 from playtest import pricing as llm_pricing
 import progression
 from services import quest_log
@@ -81,6 +88,19 @@ if not _turn_logger.handlers:
 # Dev-only: os campos vão no log `rpg.turn`, NUNCA no GameResponse.
 _llm_turn_events: contextvars.ContextVar = contextvars.ContextVar(
     "rpg_llm_turn_events", default=None)
+_llm_attempt_events: contextvars.ContextVar = contextvars.ContextVar(
+    "rpg_llm_attempt_events", default=None)
+
+# Hardening 2026-08-11: mutações do mesmo save são serializadas no processo.
+# A Fase 10b substituirá isto por transação/lock distribuído no storage.
+_game_locks: Dict[str, threading.RLock] = {}
+_game_locks_guard = threading.Lock()
+
+
+def _game_lock(game_id: Optional[str]) -> threading.RLock:
+    key = str(game_id or "__latest__")
+    with _game_locks_guard:
+        return _game_locks.setdefault(key, threading.RLock())
 
 
 def _telemetry_hook(provider: str, model: str, tier, latency_ms: int,
@@ -95,13 +115,49 @@ def _telemetry_hook(provider: str, model: str, tier, latency_ms: int,
 set_llm_telemetry_hook(_telemetry_hook)
 
 
-def _llm_log_fields(events: Optional[List[dict]]) -> Dict[str, Any]:
+def _attempt_telemetry_hook(event: LLMAttemptEvent) -> None:
+    acc = _llm_attempt_events.get()
+    if acc is not None:
+        network_attempted = event.outcome not in {"build_error", "circuit_open"}
+        acc.append({
+            "provider": event.provider,
+            "model": event.model,
+            "tier": getattr(event.tier, "value", str(event.tier)),
+            "attempt_index": int(event.attempt_index),
+            "latency_ms": int(event.latency_ms),
+            "fell_back": bool(event.fell_back),
+            "outcome": event.outcome,
+            "error": event.error,
+            "structured": bool(event.structured),
+            "network_attempted": network_attempted,
+        })
+
+
+set_llm_attempt_telemetry_hook(_attempt_telemetry_hook)
+
+
+def _llm_log_fields(events: Optional[List[dict]],
+                    attempts: Optional[List[dict]] = None) -> Dict[str, Any]:
     events = events or []
+    attempts = attempts or []
+    network_attempts = [
+        event for event in attempts
+        if event.get("network_attempted",
+                     event.get("outcome") not in {"build_error", "circuit_open"})]
+    skipped = [event for event in attempts if event not in network_attempts]
+    cost_events = network_attempts or events
     return {
         "llm_calls": len(events),
+        "llm_requests": len(network_attempts) if attempts else len(events),
+        "llm_attempts": len(attempts),
+        "llm_failures": sum(
+            1 for event in network_attempts if event.get("outcome") != "success"),
+        "llm_skipped": len(skipped),
+        "llm_attempt_outcomes": dict(Counter(
+            event.get("outcome") or "?" for event in attempts)),
         "llm_providers": dict(Counter(e.get("provider") or "?" for e in events)),
         "fell_back": any(e.get("fell_back") for e in events),
-        "cost_usd_est": round(llm_pricing.turn_cost(events), 6),
+        "cost_usd_est": round(llm_pricing.turn_cost(cost_events), 6),
     }
 
 
@@ -155,7 +211,8 @@ async def _rate_limit(request: Request, call_next):
     limit = _rate_limit_max()
     # Auditoria A2: equip/levelup também mutam o save — entram na janela.
     if limit > 0 and (request.url.path in ("/game/action", "/game/action/stream",
-                                           "/game/new", "/game/equip", "/game/levelup",
+                                           "/game/new", "/game/combat-simulator",
+                                           "/game/equip", "/game/levelup",
                                            # spec inicio-personalizado (R11): 1 SMART por chamada
                                            "/game/prologue")
                       # spec polish-sessao (R2): DELETE de save também é mutação
@@ -194,10 +251,77 @@ class CreateCharacterRequest(BaseModel):
     # → excedente = 422). None = fluxo clássico, byte a byte o atual (R6).
     scenario: Optional[StartScenarioIn] = None
 
+    @field_validator("class_name")
+    @classmethod
+    def _canonical_class(cls, value: str) -> str:
+        if value not in gamedata.CLASSES:
+            raise ValueError("classe desconhecida")
+        return value
+
+    @field_validator("race")
+    @classmethod
+    def _canonical_race(cls, value: str) -> str:
+        names = {str(row.get("name")) for row in
+                 (load_json_data("origins.json") or {}).get("races", [])}
+        if value not in names:
+            raise ValueError("raça desconhecida")
+        return value
+
+    @field_validator("region")
+    @classmethod
+    def _canonical_region(cls, value: str) -> str:
+        names = {str(row.get("name")) for row in
+                 (load_json_data("origins.json") or {}).get("regions", [])}
+        if value not in names:
+            raise ValueError("região desconhecida")
+        return value
+
 class ActionRequest(BaseModel):
     # Auditoria A7: ação vira prompt — sem teto, request gigante = custo/latência.
     input_text: str = Field(max_length=2000)
     game_id: Optional[str] = None # Opcional: permite especificar qual save carregar
+    action_id: Optional[str] = Field(default=None, max_length=36)
+    # conflito-16: seleção tática canônica da UI; o motor revalida tudo.
+    card_id: Optional[str] = Field(default=None, max_length=128)
+    target_id: Optional[str] = Field(default=None, max_length=128)
+    ruptura: bool = False
+    reaction_card_id: Optional[str] = Field(default=None, max_length=128)
+    # Laboratório/UI tática: ações fechadas evitam parse LLM de chips mecânicos.
+    action_kind: Optional[Literal["attack", "maneuver", "pass", "flee"]] = None
+    maneuver: Optional[Literal[
+        "engajar", "desengajar", "guardar", "esconder", "procurar"
+    ]] = None
+
+    @field_validator("action_id")
+    @classmethod
+    def _canonical_action_id(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        try:
+            return str(uuid.UUID(value))
+        except (ValueError, TypeError):
+            raise ValueError("action_id inválido (esperado UUID)")
+
+
+class CombatSimulatorRequest(BaseModel):
+    class_name: str = Field(min_length=1, max_length=40)
+    level: Literal[1, 3, 5, 10] = 1
+    enemy_id: str = Field(min_length=1, max_length=128)
+    quantity: int = Field(default=1, ge=1, le=3)
+
+    @field_validator("class_name")
+    @classmethod
+    def _known_class(cls, value: str) -> str:
+        if value not in gamedata.CLASSES:
+            raise ValueError("classe desconhecida")
+        return value
+
+    @field_validator("enemy_id")
+    @classmethod
+    def _known_enemy(cls, value: str) -> str:
+        if value not in gamedata.BESTIARY:
+            raise ValueError("inimigo desconhecido")
+        return value
 
 class EquipRequest(BaseModel):
     """Fase 4.3: equipa item do inventário (slot deduzido do tipo) ou desequipa slot."""
@@ -206,11 +330,11 @@ class EquipRequest(BaseModel):
     game_id: Optional[str] = None
 
 class LevelUpRequest(BaseModel):
-    """Fase 4.1 + spec conflito-01: consome UMA pending_choice. kind=ability ->
-    ability_id; kind=virtude -> virtude (mente/agilidade/forca/carisma/corpo;
-    `attr` segue aceito como alias legado)."""
+    """Conflito v2: consome escolha de Carta/evolução ou de Virtude."""
     choice_id: str
-    ability_id: Optional[str] = None
+    card_id: Optional[str] = None
+    evolve_card_id: Optional[str] = None
+    caminho: Optional[str] = None
     virtude: Optional[str] = None
     attr: Optional[str] = None
     game_id: Optional[str] = None
@@ -234,6 +358,9 @@ class GameResponse(BaseModel):
     factions: List[Dict[str, Any]] = [] # fações vivas: objetivo, progresso, postura, reputação
     party: List[Dict[str, Any]] = [] # Fase 4.5: companheiros {name, hp, max_hp, active, archetype, status}
     death_pending: bool = False # spec checkpoints-morte: queda letal — abre a tela de morte no cliente
+    game_over: bool = False     # memorial/bloqueio definitivo; Vitalidade 0 não basta
+    death: Dict[str, Any] = {}  # conflito-16: Última Ação/Terminal/estabilização
+    combat_simulation: Dict[str, Any] = {}
 
 # --- HELPER: FORMATA RESPOSTA ---
 def format_response(state: dict) -> GameResponse:
@@ -252,41 +379,52 @@ def format_response(state: dict) -> GameResponse:
     elif "🗣️" in last_content or '"' in last_content:
         msg_type = "NPC"
 
+    player = state["player"]
+    vitality = int(player.get("vitalidade", 0) or 0)
+    max_vitality = int(player.get("max_vitalidade", vitality) or vitality)
+    simulation = dict(state.get("combat_simulation") or {})
+    if simulation.get("enabled"):
+        active = bool((state.get("combat") or {}).get("active"))
+        simulation["finished"] = not active
+        simulation["outcome"] = (
+            "defeat" if state.get("death_pending") else
+            "victory" if not active else None
+        )
     return GameResponse(
         game_id=state.get("game_id", "unknown"),
         message=last_content,
         message_type=msg_type,
         player_stats={
-            "name": state["player"].get("name", "Herói"),
-            "class_name": state["player"].get("class_name") or state["player"].get("class", ""),
-            "race": state["player"].get("race", ""),
-            "hp": state["player"].get("hp", 0),
-            "max_hp": state["player"].get("max_hp", 0),
-            "mana": state["player"].get("mana", 0),
-            "max_mana": state["player"].get("max_mana", 0),
-            "stamina": state["player"].get("stamina", 0),
-            "max_stamina": state["player"].get("max_stamina", 0),
+            "name": player.get("name", "Herói"),
+            "class_name": player.get("class_name") or player.get("class", ""),
+            "race": player.get("race", ""),
+            "vitalidade": vitality,
+            "max_vitalidade": max_vitality,
+            "ferimentos": player.get("ferimentos", {}),
+            "dead": bool(player.get("dead")),
+            "estado_terminal": bool(player.get("estado_terminal")),
+            # aliases públicos derivados — nunca lidos de volta como mecânica
+            "hp": vitality,
+            "max_hp": max_vitality,
+            "mana": player.get("mana", 0),
+            "max_mana": player.get("max_mana", 0),
+            "stamina": player.get("stamina", 0),
+            "max_stamina": player.get("max_stamina", 0),
             # spec refatoracao-sistema-classes (R11): Entropia (barra) + Carga do
             # Abismo (chip por patamar). Médico é oculto (abyss.hidden) → label vago.
-            "entropy": state["player"].get("entropy", 0),
-            "max_entropy": state["player"].get("max_entropy", 0),
-            "abyss_charge": state["player"].get("abyss_charge", 0),
-            "abyss_tier": _abyss_tier_view(state["player"]),
-            "defense": state["player"].get("defense", 0),
-            "gold": state["player"].get("gold", 0),
-            "level": state["player"].get("level", 1),
-            "xp": state["player"].get("xp", 0),
-            # Fase 4.1: ids canônicos + nome exibível (frontend não mostra id cru)
-            # spec arvores-habilidade-classes (R10): kind distingue passiva/utilitária
-            "abilities": [
-                {"id": aid, "name": ABILITIES.get(aid, {}).get("name", aid),
-                 "branch": ABILITIES.get(aid, {}).get("branch"),
-                 "kind": ABILITIES.get(aid, {}).get("ability_kind", "active")}
-                for aid in (state["player"].get("known_abilities", []) or [])
-            ],
-            "xp_next_level": progression.xp_to_next(int(state["player"].get("level", 1) or 1)),
-            "pending_choices": state["player"].get("pending_choices", []) or [],
-            "level_up": _levelup_block(state["player"]),
+            "entropy": player.get("entropy", 0),
+            "max_entropy": player.get("max_entropy", 0),
+            "abyss_charge": player.get("abyss_charge", 0),
+            "abyss_tier": _abyss_tier_view(player),
+            "defense": player.get("defense", 0),
+            "gold": player.get("gold", 0),
+            "level": player.get("level", 1),
+            "xp": player.get("xp", 0),
+            "cards": _cards_block(player),
+            "virtudes": dict(player.get("virtudes") or {}),
+            "xp_next_level": progression.xp_to_next(int(player.get("level", 1) or 1)),
+            "pending_choices": player.get("pending_choices", []) or [],
+            "level_up": _levelup_block(player),
         },
         inventory=_inventory_block(state["player"]),
         current_location=state["world"]["current_location"],
@@ -300,8 +438,12 @@ def format_response(state: dict) -> GameResponse:
         combat=_combat_block(state),
         npcs=_npcs_block(state.get("npcs", {}) or {}),
         chronicle=_chronicle_block(state.get("chronicle", []) or []),
-        party=[{"name": c.get("name", "?"), "hp": c.get("hp", 0),
-                "max_hp": c.get("max_hp", 1), "active": bool(c.get("active")),
+        party=[{"name": c.get("name", "?"),
+                "vitalidade": int(c.get("vitalidade", 0) or 0),
+                "max_vitalidade": int(c.get("max_vitalidade", 1) or 1),
+                "hp": int(c.get("vitalidade", 0) or 0),
+                "max_hp": int(c.get("max_vitalidade", 1) or 1),
+                "active": bool(c.get("active")),
                 "archetype": c.get("archetype", ""), "status": c.get("status", "ativo")}
                for c in (state.get("party") or []) if isinstance(c, dict)],
         factions=_factions_block(state.get("factions", []) or [],
@@ -310,6 +452,9 @@ def format_response(state: dict) -> GameResponse:
                                  state.get("event_log", []) or [],
                                  state.get("world_projection", {}) or {}),
         death_pending=bool(state.get("death_pending", False)),
+        game_over=bool(state.get("game_over", False)),
+        death=_death_block(state),
+        combat_simulation=simulation,
     )
 
 
@@ -345,33 +490,114 @@ def _abyss_tier_view(player: dict) -> str:
     return _cm.abyss_tier(player)
 
 
+def _cards_block(player: dict, *, prepared_only: bool = False) -> List[Dict[str, Any]]:
+    """View autoral + disponibilidade mecânica das Cartas.
+
+    O frontend nunca tenta reproduzir frequência/custo por conta própria: recebe
+    o contador já interpretado, mas o motor ainda revalida no uso.
+    """
+    from services import cards
+    import combat_mechanics as cm
+    prepared = set(player.get("prepared_cards") or [])
+    evolved = player.get("evolved_cards") or {}
+    entropy = int(player.get("entropy", 0) or 0)
+    out = []
+    for cid in player.get("known_cards") or []:
+        card = cards.get_card(cid) or {}
+        is_prepared = cid in prepared
+        if prepared_only and not is_prepared:
+            continue
+        frequency = str(card.get("frequencia", "livre"))
+        counter = cards.FREQ_COUNTER.get(frequency)
+        usage = ((player.get("card_usage") or {}).get(cid) or {})
+        spent = bool(counter and int(usage.get(counter, 0) or 0) >= 1)
+        base_cost = int(card.get("custo_entropia", 0) or 0)
+        cost = cm.dependencia_cost(player, base_cost)
+        kind = str(card.get("tipo", ""))
+        effect_kind = str((card.get("efeito") or {}).get("kind") or "")
+        friendly = effect_kind in {
+            "cura", "estabilizar", "protecao", "reposicionar", "esconder",
+            "purga_condicao", "vantagem", "buff_defesa", "buff_acerto",
+            "buff_dano", "reduzir_carga_aliado",
+        }
+        ready = bool(
+            is_prepared and kind in ("ativa", "reacao") and not spent
+            and cost <= entropy
+        )
+        out.append({
+            "id": cid, "name": card.get("name", cid), "type": kind,
+            "description": card.get("descricao", ""),
+            "effect_kind": effect_kind,
+            "target_kind": "self" if friendly else "enemy",
+            "subclass": card.get("subclasse", ""), "prepared": is_prepared,
+            "cost": cost,
+            "base_cost": base_cost,
+            "frequency": frequency,
+            "spent": spent,
+            "ready": ready,
+            "has_rupture": bool(card.get("ruptura")),
+            "rupture_ready": bool(ready and kind == "ativa" and card.get("ruptura")),
+            "trigger": card.get("gatilho", ""),
+            "evolved": evolved.get(cid),
+        })
+    return out
+
+
+def _death_block(state: dict) -> Dict[str, Any]:
+    player = state.get("player") or {}
+    combat = state.get("combat") or {}
+    context = combat.get("death_context") or {}
+    last_action = context.get("last_action") or combat.get("last_player_action")
+    last_action_label = ""
+    if isinstance(last_action, dict) and last_action.get("kind") == "card":
+        from services import cards
+        card = cards.get_card(str(last_action.get("card_id") or "")) or {}
+        last_action_label = str(card.get("name") or last_action.get("card_id") or "")
+    return {
+        "pending": bool(state.get("death_pending")),
+        "last_action": last_action,
+        "last_action_label": last_action_label,
+        "entered_terminal": bool(
+            context.get("entered_terminal") or player.get("estado_terminal")
+        ),
+        "stabilization": context.get("stabilization", ""),
+        "stabilization_attempts": int(
+            context.get("stabilization_attempts",
+                        player.get("stabilization_attempts", 0)) or 0
+        ),
+        "killer": context.get("killer", ""),
+    }
+
+
 def _levelup_block(player: dict) -> Dict[str, Any]:
-    """Fase 4.1: escolhas pendentes + elegíveis da árvore (vazio se nada pendente)."""
+    """Escolhas pendentes + Cartas elegíveis/evoluções."""
     pending = player.get("pending_choices", []) or []
     if not pending:
         return {}
-    class_name = str(player.get("class_name", ""))
-    branches = (CLASSES.get(class_name) or {}).get("branches") or {}
+    from services import cards
     eligible = []
-    for aid in progression.eligible_abilities(player):
-        a = ABILITIES.get(aid, {})
-        br = a.get("branch")
+    for cid in progression.eligible_cards(player):
+        card = cards.get_card(cid) or {}
         eligible.append({
-            "id": aid, "name": a.get("name", aid),
-            "description": a.get("description", ""),
-            "branch": br,
-            "branch_name": (branches.get(br) or {}).get("name") if br else None,
-            "tier": a.get("tier", 1), "cost": a.get("cost", 0),
-            "resource_type": a.get("resource_type", ""),
-            # spec arvores-habilidade-classes (R10): o wizard de level up mostra
-            # o tipo (ativa/passiva/utilitária) antes da escolha
-            "kind": a.get("ability_kind", "active"),
+            "id": cid, "name": card.get("name", cid),
+            "description": card.get("descricao", ""),
+            "subclass": card.get("subclasse", ""), "tier": card.get("patamar", ""),
+            "cost": int(card.get("custo_entropia", 0) or 0),
+            "frequency": card.get("frequencia", "livre"),
+            "kind": card.get("tipo", "ativa"),
         })
+    evolvable = [
+        {"id": cid, "name": (cards.get_card(cid) or {}).get("name", cid)}
+        for cid in player.get("known_cards") or []
+        if (cards.get_card(cid) or {}).get("evolucao")
+        and cid not in (player.get("evolved_cards") or {})
+        and int(player.get("level", 1) or 1) >= 4
+    ]
     return {
         "pending": pending,
         "eligible": eligible,
+        "evolvable": evolvable,
         "current_branch": progression.player_branch(player),
-        "branches": branches,
     }
 
 
@@ -444,31 +670,108 @@ def _npcs_block(npcs: dict) -> List[Dict[str, Any]]:
 
 
 def _combat_block(state: dict) -> Dict[str, Any]:
-    """Expõe o estado de combate para o HUD (inimigos vivos, condições, iniciativa)."""
+    """View tática pública do conflito, sem vazar ficha secreta de inimigo."""
     meta = state.get("combat") or {}
     enemies = state.get("enemies") or []
     player = state.get("player") or {}
-    alive = [e for e in enemies if e.get("status") == "ativo"]
+    alive = [e for e in enemies if not e.get("dead")
+             and e.get("status", "ativo") not in ("morto", "fugiu", "rendido")]
 
     def _conds(entity):
         return [{"name": c.get("name", ""), "dot": c.get("dot", 0), "duration": c.get("duration", 0)}
                 for c in (entity.get("active_conditions") or []) if isinstance(c, dict)]
 
-    import combat_mechanics as cm_mod
+    from services import bestiary_knowledge as knowledge
+    from services import cards
+    initiative = list(meta.get("initiative") or [])
+    scene = meta.get("scene") or {}
+    participant_names = {"player": player.get("name", "Protagonista")}
+    for entity in list(enemies) + list(state.get("party") or []) + list(meta.get("scene_allies") or []):
+        if isinstance(entity, dict):
+            participant_names[str(entity.get("id") or entity.get("name"))] = entity.get("name", "?")
+
+    scene_view = {"zones": [], "positions": []}
+    scene_view["zones"] = [
+        {"id": z.get("id", ""), "name": z.get("name", ""),
+         "connections": list(z.get("connections") or [])}
+        for z in (scene.get("zones") or []) if isinstance(z, dict)
+    ]
+    for participant_id, pos in (scene.get("positions") or {}).items():
+        if not isinstance(pos, dict):
+            continue
+        posture = pos.get("postura") or {}
+        engaged = [str(value) for value in (pos.get("engaged_with") or [])]
+        scene_view["positions"].append({
+            "participant_id": str(participant_id),
+            "participant_name": participant_names.get(str(participant_id), str(participant_id)),
+            "zone_id": pos.get("zone_id", ""),
+            "distance": pos.get("distance_state", "proximo"),
+            "posture": posture.get("state", "neutro") if isinstance(posture, dict) else str(posture),
+            "concealment": pos.get("ocultacao", "visivel"),
+            "engaged_with": engaged,
+            "engaged_names": [participant_names.get(value, value) for value in engaged],
+        })
+
+    enemy_views = []
+    for enemy in alive:
+        public = knowledge.public_panel(enemy)
+        revealed_cards = []
+        for card_id in enemy.get("revealed_cards") or []:
+            card = cards.get_card(str(card_id)) or {}
+            if card:
+                revealed_cards.append({"id": str(card_id), "name": card.get("name", card_id)})
+        vitality = int(public.get("vitalidade", enemy.get("vitalidade", 0)) or 0)
+        max_vitality = int(public.get("max_vitalidade", enemy.get("max_vitalidade", 0)) or 0)
+        enemy_views.append({
+            "id": str(enemy.get("id") or enemy.get("name", "")),
+            "name": enemy.get("name", ""),
+            "vitalidade": vitality, "max_vitalidade": max_vitality,
+            "hp": vitality, "max_hp": max_vitality,
+            "esquiva": public.get("esquiva"), "protecao": public.get("protecao"),
+            "integridade_atual": public.get("integridade_atual"),
+            "integridade_max": public.get("integridade_max"),
+            "recursos_visiveis": public.get("recursos_visiveis") or {},
+            "conditions": _conds(enemy),
+            "revealed_cards": revealed_cards,
+            "revealed_resistances": list(enemy.get("revealed_resistances") or []),
+        })
+
+    chase = meta.get("chase") or {}
+    chase_view = ({
+        "track": chase.get("trilha", "pressionado"),
+        "steps": ["pressionado", "afastado", "quase_livre", "escapou"],
+        "escaped": bool(chase.get("escapou")), "caught": bool(chase.get("alcancado")),
+        "pursuers": list(chase.get("perseguidores") or []),
+        "last_roll": dict(chase.get("_last") or {}),
+    } if chase else {})
+    wounds = player.get("ferimentos") or {}
     return {
         "active": bool(meta.get("active")) and bool(alive),
         "round": meta.get("round", 0),
-        "order": [{"name": o.get("name", ""), "side": o.get("side", ""), "init": o.get("init", 0)}
-                  for o in (meta.get("order") or [])],
-        "enemies": [
-            {"name": e.get("name", ""), "hp": e.get("hp", 0), "max_hp": e.get("max_hp", 0),
-             "defense": e.get("defense", 0), "conditions": _conds(e)}
-            for e in alive
-        ],
+        # Compat temporária do HUD atual: iniciativa agora é POR LADO.
+        "order": [{"name": "Heróis" if side == "heroes" else "Inimigos",
+                   "side": "hero" if side == "heroes" else "enemy", "init": 0}
+                  for side in initiative],
+        "initiative": initiative,
+        "enemies": enemy_views,
+        "cards": _cards_block(player, prepared_only=True),
+        "scene": scene_view,
+        "wounds": {
+            "vitality": int(player.get("vitalidade", 0) or 0),
+            "max_vitality": int(player.get("max_vitalidade", 0) or 0),
+            "slots": dict(player.get("ferimento_espacos") or {}),
+            "by_severity": {
+                severity: list(wounds.get(severity) or [])
+                for severity in ("leve", "grave", "critico")
+            },
+        },
+        "chase": chase_view,
         "player_conditions": _conds(player),
-        "cooldowns": dict(player.get("ability_cooldowns", {}) or {}),
-        # spec polish-sessao (R4): chips 100% mecânicos derivados da ficha
-        "suggestions": cm_mod.combat_suggestions(player, enemies, meta),
+        "cooldowns": {},
+        # Ponte até conflito-16: chips agora vêm das Cartas, não de habilidades d20.
+        "suggestions": cards.combat_card_suggestions(player, enemies, meta),
+        "last_player_action": meta.get("last_player_action"),
+        "reactions": meta.get("last_reactions", []),
     }
 
 
@@ -507,8 +810,9 @@ def _world_block(w: dict, projection: Optional[dict] = None, event_log: Optional
     turn = w.get("turn_count", 0)
     # spec itens-vivos-e-luz (R7): estado de luz p/ o HUD (precisa do player p/
     # saber se ele carrega uma fonte de luz).
-    from world_utils import light_level
+    from world_utils import light_level, weather_effects
     light = light_level(w, player or {})
+    effective_weather = weather_effects(w)
     return {
         "location": w.get("current_location", ""),
         "location_id": w.get("current_location_id", ""),
@@ -516,7 +820,8 @@ def _world_block(w: dict, projection: Optional[dict] = None, event_log: Optional
         "period": clock.get("period", "Amanhecer"),
         "visited": w.get("visited", []),
         "danger": w.get("danger_level", 1),
-        "weather": w.get("weather", ""),  # Fase 6.5: rótulo do clima atual
+        "weather": effective_weather.get("label") or w.get("weather", ""),
+        "weather_global": dict(w.get("weather_global") or {}),
         "light": {"dark": light["dark"], "lit": light["lit"], "label": light["label"]},
         "turn_count": turn,  # Fase 3.2: refetch do Codex quando o turno muda
         # Fase 3.4: controlador por local visitado (verdade 2.5+/projection vence o
@@ -559,6 +864,168 @@ def _interiors_block(loc_id: str) -> Dict[str, Any]:
 @app.get("/health")
 def health_check():
     return {"status": "online", "engine": "RPG IA v9.0 Hybrid Memory"}
+
+
+def combat_simulator_options() -> Dict[str, Any]:
+    """Catálogo público mínimo do laboratório, derivado dos dados canônicos."""
+    allowed = {"lacaio", "padrao", "elite", "chefe", "nomeado"}
+    enemies = []
+    for enemy_id, raw in gamedata.BESTIARY.items():
+        if not isinstance(raw, dict):
+            continue
+        category = str(raw.get("categoria") or "padrao").strip().lower()
+        if category not in allowed:
+            continue
+        enemies.append({
+            "id": str(enemy_id),
+            "name": str(raw.get("name") or enemy_id),
+            "category": category,
+            "regions": [str(region) for region in (raw.get("regions") or [])],
+        })
+    enemies.sort(key=lambda enemy: (
+        {"lacaio": 0, "padrao": 1, "elite": 2, "nomeado": 3, "chefe": 4}[
+            enemy["category"]
+        ],
+        enemy["name"].casefold(),
+    ))
+    return {
+        "classes": list(gamedata.CLASSES),
+        "levels": [1, 3, 5, 10],
+        "quantities": [1, 2, 3],
+        "enemies": enemies,
+    }
+
+
+def _build_combat_simulator_state(req: CombatSimulatorRequest) -> dict:
+    """Cria arena isolada com fichas de produção e zero acesso a LLM/RAG."""
+    from services import conflict_orchestrator as orchestrator
+    from services import conflict_scene
+
+    player = create_player_character({
+        "name": "Combatente de Teste",
+        "class_name": req.class_name,
+        "race": "Humano",
+        "region": "Nova Arcádia",
+        "backstory": "Laboratório mecânico de combate.",
+        "level": req.level,
+    }, use_llm_flavor=False)
+    player.update({
+        "gold": 0,
+        "alignment": "Neutro",
+        "active_conditions": [],
+        "dead": False,
+        "estado_terminal": False,
+        "last_stand_pending": False,
+        "last_stand_resolved": False,
+    })
+    orchestrator.ensure_combat_sheet(player, is_player=True)
+
+    template = gamedata.BESTIARY[req.enemy_id]
+    enemies = []
+    for index in range(1, req.quantity + 1):
+        enemy = deepcopy(template)
+        enemy["archetype_id"] = req.enemy_id
+        enemy["id"] = f"{req.enemy_id}__sim_{index}"
+        if req.quantity > 1:
+            enemy["name"] = f"{template.get('name', req.enemy_id)} {index}"
+        enemy.update({
+            "status": "ativo", "dead": False, "fled": False,
+            "surrendered": False, "conscious": True,
+            "active_conditions": [],
+            "ferimentos": {"leve": [], "grave": [], "critico": []},
+        })
+        enemy["vitalidade"] = int(enemy.get("max_vitalidade") or enemy.get("vitalidade") or 1)
+        enemies.append(orchestrator.ensure_combat_sheet(enemy))
+
+    scene = conflict_scene.new_scene([
+        {"id": "arena", "name": "Arena do Véu", "connections": []},
+    ])
+    conflict_scene.place(scene, "player", zone_id="arena", distance_state="proximo")
+    for enemy in enemies:
+        conflict_scene.place(
+            scene, enemy["id"], zone_id="arena", distance_state="proximo"
+        )
+    conflict_scene.freeze(scene)
+
+    world = starting_world("Nova Arcádia", req.level)
+    world["current_location"] = "Arena do Véu"
+    category = str(template.get("categoria") or "padrao").lower()
+    world["danger_level"] = {
+        "lacaio": 1, "padrao": 2, "elite": 4, "nomeado": 5, "chefe": 6,
+    }.get(category, 2)
+    game_id = str(uuid.uuid4())
+    enemy_label = str(template.get("name") or req.enemy_id)
+    return {
+        "game_id": game_id,
+        "processed_action_ids": [],
+        "narrative_summary": "Laboratório isolado de combate.",
+        "archivist_last_run": 0,
+        "archive_due": False,
+        "chronicle": [],
+        "combat_simulation": {
+            "enabled": True,
+            "enemy_id": req.enemy_id,
+            "quantity": req.quantity,
+        },
+        "player": player,
+        "world": world,
+        "messages": [AIMessage(content=(
+            f"⚔️ Laboratório iniciado: {req.class_name} nível {req.level} contra "
+            f"{req.quantity}× {enemy_label}. Escolha uma Carta ou manobra."
+        ))],
+        "party": [],
+        "enemies": enemies,
+        "factions": [],
+        "faction_intel": {},
+        "bestiary_knowledge": {},
+        "quests": [],
+        "npcs": {},
+        "campaign_plan": {
+            "location": "Arena do Véu",
+            "beats": [{"description": "Concluir o teste de combate.", "status": "pending"}],
+            "climax": "Resultado do laboratório",
+            "current_step": 0,
+            "last_planned_turn": 0,
+            "arc_title": "Laboratório de Combate",
+        },
+        "needs_replan": False,
+        "next": "combat_agent",
+        "combat_target": enemy_label,
+        "loot_source": None,
+        "combat": {
+            "round": 0,
+            "active": True,
+            "scene": scene,
+            "idle_turns": 0,
+            "encounter_level": world["danger_level"],
+        },
+        "event_log": [],
+        "world_projection": {},
+        "pending_world_events": [],
+        "event_rejections": [],
+        "consumed_conflict_ids": [],
+        "memory_facts": [],
+        "pending_memory_facts": [],
+        "memory_rejections": [],
+        "memory_promotions": [],
+        "pending_npc_memory": [],
+        "narrative_rejections": [],
+        "game_over": False,
+        "death_pending": False,
+    }
+
+
+@app.get("/data/combat-simulator")
+def get_combat_simulator_options():
+    return combat_simulator_options()
+
+
+@app.post("/game/combat-simulator", response_model=GameResponse)
+def new_combat_simulator(req: CombatSimulatorRequest):
+    state = _build_combat_simulator_state(req)
+    if not save_game_state(state):
+        raise HTTPException(status_code=500, detail="Não foi possível criar o laboratório.")
+    return format_response(state)
 
 @app.get("/data/options")
 def get_creation_options():
@@ -659,6 +1126,8 @@ def new_game(req: CreateCharacterRequest):
         "level": req.level
     }
     final_char = create_player_character(char_input)
+    import gamedata
+    gamedata.sync_vitality(final_char)
 
     # Gera ID único
     new_game_id = str(uuid.uuid4())
@@ -667,6 +1136,7 @@ def new_game(req: CreateCharacterRequest):
     initial_state = {
         # --- Campos Novos ---
         "game_id": new_game_id,
+        "processed_action_ids": [],
         "narrative_summary": f"A jornada de {req.name} começa em {final_char['region']}. {req.backstory}",
         "archivist_last_run": 0,
         # Fase 3.1: capítulo 1 existe desde o turno 0 (determinístico, sem LLM)
@@ -694,13 +1164,18 @@ def new_game(req: CreateCharacterRequest):
             "virtudes": final_char["virtudes"],
             "vitalidade": final_char.get("vitalidade", final_char.get("max_vitalidade", final_char["max_hp"])),
             "max_vitalidade": final_char.get("max_vitalidade", final_char["max_hp"]),
+            "vitalidade_max_penalty": final_char.get("vitalidade_max_penalty", 0),
             "ferimento_espacos": final_char.get("ferimento_espacos", {}),
             "ferimentos": final_char.get("ferimentos", {"leve": [], "grave": [], "critico": []}),
             "inventory": final_char["inventory"],
             # Fase 4.3: slots do creator (auto-equip) — sem isto o HUD nasce sem arma
             "equipment": final_char.get("equipment",
                                         {"weapon": None, "armor": None, "accessory": None}),
-            "known_abilities": final_char["known_abilities"],
+            "known_cards": final_char.get("known_cards", []),
+            "prepared_cards": final_char.get("prepared_cards", []),
+            "card_usage": final_char.get("card_usage", {}),
+            "virtue_cards": final_char.get("virtue_cards", []),
+            "evolved_cards": final_char.get("evolved_cards", {}),
             "pending_choices": final_char.get("pending_choices", []),
             "defense": final_char["defense"],
             "attack_bonus": final_char.get("attack_bonus", 0),
@@ -722,6 +1197,8 @@ def new_game(req: CreateCharacterRequest):
         "bestiary_knowledge": {},
         "quests": [],
         "archive_due": False,
+        "game_over": False,
+        "death_pending": False,
         "npcs": {},
         "campaign_plan": {},
         "needs_replan": False,
@@ -729,7 +1206,8 @@ def new_game(req: CreateCharacterRequest):
         # --- Fase 2.5: mundo estruturado ---
         "event_log": [],
         "world_projection": {},
-        "pending_world_events": []
+        "pending_world_events": [],
+        "event_rejections": [],
     }
 
     # spec inicio-personalizado (R5): cenário aprovado semeia plano pessoal,
@@ -750,11 +1228,15 @@ def new_game(req: CreateCharacterRequest):
     # 3. Roda o Grafo
     try:
         final_state = game_graph.invoke(initial_state)
-        save_game_state(final_state)
+        if not save_game_state(final_state):
+            raise RuntimeError("falha ao persistir jogo novo")
         # spec checkpoints-morte (D7): checkpoint INICIAL = início da sessão. Garante
         # que a morte sempre tem para onde restaurar, mesmo antes do 1º checkpoint de cadência.
         from persistence import save_checkpoint
-        save_checkpoint(final_state)
+        if not save_checkpoint(final_state):
+            import persistence as persistence_mod
+            persistence_mod.delete_save(new_game_id)
+            raise RuntimeError("falha ao persistir checkpoint inicial")
         return format_response(final_state)
     except Exception as e:
         # Auditoria A6: detalhe interno só no log do servidor, nunca na resposta.
@@ -768,8 +1250,77 @@ def _append_player_input(state: dict, input_text: str) -> None:
         state["messages"] = state["messages"][-20:]
 
 
+_ACTION_LEDGER_LIMIT = 64
+
+
+def _action_already_processed(state: dict, action_id: Optional[str]) -> bool:
+    return bool(action_id and action_id in (state.get("processed_action_ids") or []))
+
+
+def _mark_action_processed(state: dict, action_id: Optional[str]) -> None:
+    if not action_id:
+        return
+    ledger = [str(value) for value in (state.get("processed_action_ids") or [])
+              if value and str(value) != action_id]
+    ledger.append(action_id)
+    state["processed_action_ids"] = ledger[-_ACTION_LEDGER_LIMIT:]
+
+
+def _require_saved(state: dict, *, detail: str = "estado") -> None:
+    if not save_game_state(state):
+        raise RuntimeError(f"falha ao persistir {detail}")
+
+
+def _write_checkpoint_if_due(state: dict, prev: dict) -> None:
+    if (state.get("combat_simulation") or {}).get("enabled"):
+        return
+    from services import checkpoints as _cp
+    if _cp.should_checkpoint(state, prev) and not _cp.maybe_write(state, prev=prev):
+        raise RuntimeError("falha ao persistir checkpoint")
+
+
+def _apply_action_options(state: dict, req: ActionRequest) -> None:
+    """Traduz seleções da UI para a declaração que o motor já consome."""
+    if not (state.get("combat") or {}).get("active"):
+        return
+    state["player_reaction_card_id"] = req.reaction_card_id
+    active_enemies = [
+        enemy for enemy in (state.get("enemies") or [])
+        if not enemy.get("dead")
+        and enemy.get("status", "ativo") not in ("morto", "fugiu", "rendido")
+    ]
+    target_id = req.target_id or (
+        str(active_enemies[0].get("id")) if active_enemies else None
+    )
+    action = None
+    if req.card_id:
+        action = {
+            "kind": "card", "card_id": req.card_id,
+            "target_id": target_id,
+            "params": {"ruptura": bool(req.ruptura)},
+        }
+    elif req.action_kind == "maneuver" and req.maneuver:
+        action = {
+            "kind": "maneuver", "maneuver": req.maneuver,
+            "target_id": target_id,
+        }
+    elif req.action_kind in ("attack", "pass", "flee"):
+        action = {"kind": req.action_kind, "target_id": target_id}
+    elif (state.get("combat_simulation") or {}).get("enabled"):
+        # Texto livre no laboratório nunca abre um provider: fallback fechado.
+        action = {"kind": "attack", "target_id": target_id}
+    if action is not None:
+        state["combat_declaration"] = {
+            "actor_id": "player",
+            "acao": action,
+            "reaction_card_id": req.reaction_card_id,
+        }
+
+
 def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
-              llm_events: Optional[List[dict]] = None) -> None:
+              llm_events: Optional[List[dict]] = None, *,
+              rejections_antes: int = 0,
+              llm_attempts: Optional[List[dict]] = None) -> None:
     _turn_logger.info(json.dumps({
         "evt": "turn",
         "game_id": state.get("game_id", "?"),
@@ -777,61 +1328,70 @@ def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
         "route": state.get("next", ""),
         "latency_ms": int((time.monotonic() - t0) * 1000),
         "events_applied": (len(state.get("event_log", [])) - eventos_antes) if not error else 0,
-        "events_rejected": len(state.get("pending_world_events", []) or []) if not error else 0,
+        "events_rejected": (
+            max(0, len(state.get("event_rejections", []) or []) - rejections_antes)
+            if not error else 0),
         "error": error,
-        **_llm_log_fields(llm_events),
+        **_llm_log_fields(llm_events, llm_attempts),
     }, ensure_ascii=False))
 
 
-def _run_turn(state: dict, input_text: str) -> GameResponse:
+def _run_turn(state: dict, input_text: str,
+              action_id: Optional[str] = None) -> GameResponse:
     """Miolo do turno (spec streaming-turno-sse R2): grafo + save + log.
     Compartilhado pelo POST clássico e pelo stream — carga/validações ficam
     nos endpoints. Levanta HTTPException(500) genérica em falha (A6)."""
     _append_player_input(state, input_text)
     t0 = time.monotonic()
     eventos_antes = len(state.get("event_log", []))
+    rejections_antes = len(state.get("event_rejections", []) or [])
     acc_token = _llm_turn_events.set([])
+    attempt_token = _llm_attempt_events.set([])
     try:
         new_state = game_graph.invoke(state)
-        save_game_state(new_state)
+        _mark_action_processed(new_state, action_id)
+        _require_saved(new_state, detail="turno")
         # spec checkpoints-morte (D1): grava checkpoint na cadência (10 turnos /
         # zona segura). `state` = estado ANTES do turno → detecta entrada em zona segura.
-        from services import checkpoints as _cp
-        _cp.maybe_write(new_state, prev=state)
-        _log_turn(new_state, t0, eventos_antes, None, _llm_turn_events.get())
+        _write_checkpoint_if_due(new_state, state)
+        _log_turn(
+            new_state, t0, eventos_antes, None, _llm_turn_events.get(),
+            rejections_antes=rejections_antes,
+            llm_attempts=_llm_attempt_events.get())
         return format_response(new_state)
     except Exception as e:
-        _log_turn(state, t0, eventos_antes, str(e)[:200], _llm_turn_events.get())
+        _log_turn(
+            state, t0, eventos_antes, str(e)[:200], _llm_turn_events.get(),
+            rejections_antes=rejections_antes,
+            llm_attempts=_llm_attempt_events.get())
         print(f"Erro na API: {e}")
         # Auditoria A6: str(e) fica no log JSON acima; cliente recebe genérico.
         raise HTTPException(status_code=500, detail="Erro interno ao processar o turno.")
     finally:
         _llm_turn_events.reset(acc_token)
+        _llm_attempt_events.reset(attempt_token)
 
 
 @app.post("/game/action", response_model=GameResponse)
 def game_action(req: ActionRequest):
     """Envia uma ação do jogador."""
 
-    # Tenta carregar pelo ID se fornecido, ou o ultimo
-    file_to_load = _resolve_save_file(req.game_id)
+    with _game_lock(req.game_id):
+        file_to_load = _resolve_save_file(req.game_id)
+        state = load_game_state(file_to_load)
+        if not state:
+            raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+        if _action_already_processed(state, req.action_id):
+            return format_response(state)
 
-    state = load_game_state(file_to_load)
+        _reject_memorial(state)
+        _reject_archived(state)
+        if state.get("death_pending"):
+            raise HTTPException(status_code=409,
+                                detail="Você tombou. Escolha continuar do checkpoint ou aceitar o fim.")
 
-    if not state:
-        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
-
-    # Fase 4.6 (R7): save morto é MEMORIAL — a crônica fica, ações não.
-    _reject_memorial(state)
-    # spec conflito-01: save pré-Virtudes é órfão — só leitura.
-    _reject_archived(state)
-    # spec checkpoints-morte: queda letal pendente — o jogador precisa resolver a
-    # TELA DE MORTE (POST /game/death) antes de agir de novo.
-    if state.get("death_pending"):
-        raise HTTPException(status_code=409,
-                            detail="Você tombou. Escolha continuar do checkpoint ou aceitar o fim.")
-
-    return _run_turn(state, req.input_text)
+        _apply_action_options(state, req)
+        return _run_turn(state, req.input_text, req.action_id)
 
 
 class DeathChoiceRequest(BaseModel):
@@ -844,16 +1404,18 @@ def game_death(req: DeathChoiceRequest):
     """spec checkpoints-morte (D2): resolve a tela de morte.
     - `continue` → restaura do checkpoint (ou do início da sessão, D7); a saga segue.
     - `accept`   → memorial (game_over): a crônica encerra por escolha do jogador."""
-    file_to_load = _resolve_save_file(req.game_id)
-    state = load_game_state(file_to_load)
-    if not state:
-        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
-    if not state.get("death_pending"):
-        raise HTTPException(status_code=409, detail="Nenhuma queda pendente para resolver.")
-    from services import checkpoints as _cp
-    new_state = _cp.resolve_death_choice(state, req.choice)
-    save_game_state(new_state)
-    return format_response(new_state)
+    with _game_lock(req.game_id):
+        file_to_load = _resolve_save_file(req.game_id)
+        state = load_game_state(file_to_load)
+        if not state:
+            raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+        if not state.get("death_pending"):
+            raise HTTPException(status_code=409, detail="Nenhuma queda pendente para resolver.")
+        from services import checkpoints as _cp
+        new_state = _cp.resolve_death_choice(state, req.choice)
+        if not save_game_state(new_state):
+            raise HTTPException(status_code=500, detail="Não foi possível salvar a escolha.")
+        return format_response(new_state)
 
 
 # --- STREAMING DO TURNO (spec streaming-turno-sse) ---------------------------
@@ -868,80 +1430,107 @@ def _sse(event: str, data: dict) -> str:
     return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
 
 
-def _stream_turn(state: dict, input_text: str) -> Iterator[str]:
-    """Gerador SSE do turno (R1): accepted → phase/route → narrative → state.
-    Mesmo estado/save/log do POST clássico (R2/R3). Roda o grafo numa thread
-    própria para intercalar keepalive `: ping` a cada 10s."""
-    yield _sse("accepted", {"game_id": state.get("game_id", "?")})
-    if state.get("game_over"):
-        # R3: memorial — evento `error` com 409 semântico e fecha o stream.
-        yield _sse("error", {"detail": _MEMORIAL_DETAIL, "code": 409})
-        return
-    if state.get("archived"):
-        # spec conflito-01: save pré-Virtudes é órfão — só leitura.
-        yield _sse("error", {"detail": state.get("archived_reason") or _MEMORIAL_DETAIL, "code": 409})
-        return
-    # spec checkpoints-morte: queda pendente — cliente deve chamar /game/death.
-    if state.get("death_pending"):
-        yield _sse("error", {"detail": "Você tombou. Resolva a tela de morte.", "code": 409})
-        return
+def _stream_turn(req: ActionRequest, accepted_game_id: str) -> Iterator[str]:
+    """SSE cujo worker possui lock, execução e persistência do turno.
 
-    _append_player_input(state, input_text)
-    t0 = time.monotonic()
-    eventos_antes = len(state.get("event_log", []))
+    Se o consumidor desconectar, a thread termina o save e o ``action_id`` torna
+    seguro o fallback POST. O gerador apenas apresenta eventos já produzidos.
+    """
+    yield _sse("accepted", {"game_id": accepted_game_id})
     q: "queue.Queue" = queue.Queue()
     llm_acc: List[dict] = []
+    llm_attempt_acc: List[dict] = []
 
     def _worker():
-        _llm_turn_events.set(llm_acc)  # contexto próprio da thread do grafo
+        acc_token = _llm_turn_events.set(llm_acc)
+        attempt_token = _llm_attempt_events.set(llm_attempt_acc)
+        state: Optional[dict] = None
+        t0 = time.monotonic()
+        eventos_antes = 0
+        rejections_antes = 0
         try:
-            for chunk in game_graph.stream(state, stream_mode=["updates", "values"]):
-                q.put(("chunk", chunk))
-            q.put(("done", None))
+            with _game_lock(req.game_id):
+                state = load_game_state(_resolve_save_file(req.game_id))
+                if not state:
+                    raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+                if _action_already_processed(state, req.action_id):
+                    q.put(("final", state))
+                    return
+                _reject_memorial(state)
+                _reject_archived(state)
+                if state.get("death_pending"):
+                    raise HTTPException(
+                        status_code=409,
+                        detail="Você tombou. Resolva a tela de morte.",
+                    )
+                _apply_action_options(state, req)
+                _append_player_input(state, req.input_text)
+                eventos_antes = len(state.get("event_log", []))
+                rejections_antes = len(state.get("event_rejections", []) or [])
+                final_state: Optional[dict] = None
+                for chunk in game_graph.stream(state, stream_mode=["updates", "values"]):
+                    q.put(("chunk", chunk))
+                    mode, data = chunk
+                    if mode == "values":
+                        final_state = data
+                if final_state is None:
+                    raise RuntimeError("stream não produziu estado final")
+                _mark_action_processed(final_state, req.action_id)
+                _require_saved(final_state, detail="turno SSE")
+                _write_checkpoint_if_due(final_state, state)
+                _log_turn(
+                    final_state, t0, eventos_antes, None, llm_acc,
+                    rejections_antes=rejections_antes,
+                    llm_attempts=llm_attempt_acc,
+                )
+                q.put(("final", final_state))
+        except HTTPException as exc:
+            q.put(("http_error", {"detail": exc.detail, "code": exc.status_code}))
         except Exception as e:  # noqa: BLE001
+            if state is not None:
+                _log_turn(
+                    state, t0, eventos_antes, str(e)[:200], llm_acc,
+                    rejections_antes=rejections_antes,
+                    llm_attempts=llm_attempt_acc,
+                )
+            print(f"Erro no stream: {e}")
             q.put(("exc", e))
+        finally:
+            _llm_turn_events.reset(acc_token)
+            _llm_attempt_events.reset(attempt_token)
 
     threading.Thread(target=_worker, daemon=True).start()
 
-    final_state: Optional[dict] = None
-    try:
-        while True:
-            try:
-                kind, payload = q.get(timeout=_SSE_PING_S)
-            except queue.Empty:
-                yield ": ping\n\n"
-                continue
-            if kind == "exc":
-                raise payload
-            if kind == "done":
-                break
+    while True:
+        try:
+            kind, payload = q.get(timeout=_SSE_PING_S)
+        except queue.Empty:
+            yield ": ping\n\n"
+            continue
+        if kind == "http_error":
+            yield _sse("error", payload)
+            return
+        if kind == "exc":
+            yield _sse("error", {"detail": "Erro interno ao processar o turno."})
+            return
+        if kind == "chunk":
             mode, data = payload
             if mode == "updates":
                 for node, upd in (data or {}).items():
                     yield _sse("phase", {"node": node, "status": "done"})
                     if node == "dm_router":
                         yield _sse("route", {"route": (upd or {}).get("next", "") or ""})
-            elif mode == "values":
-                final_state = data
-
-        if final_state is None:
-            raise RuntimeError("stream não produziu estado final")
-        save_game_state(final_state)
-        from services import checkpoints as _cp
-        _cp.maybe_write(final_state, prev=state)  # spec checkpoints-morte (D1)
-        _log_turn(final_state, t0, eventos_antes, None, llm_acc)
-        resp = format_response(final_state)
-        narrative = resp.message or ""
-        for i in range(0, len(narrative), _NARRATIVE_CHUNK):
-            yield _sse("narrative", {"chunk": narrative[i:i + _NARRATIVE_CHUNK],
-                                     "done": False})
-        yield _sse("narrative", {"chunk": "", "done": True})
-        yield _sse("state", json.loads(resp.model_dump_json()))
-    except Exception as e:  # noqa: BLE001
-        _log_turn(state, t0, eventos_antes, str(e)[:200], llm_acc)
-        print(f"Erro no stream: {e}")
-        # A6: detalhe fica no log; o cliente recebe genérico e cai no POST clássico.
-        yield _sse("error", {"detail": "Erro interno ao processar o turno."})
+            continue
+        if kind == "final":
+            resp = format_response(payload)
+            narrative = resp.message or ""
+            for i in range(0, len(narrative), _NARRATIVE_CHUNK):
+                yield _sse("narrative", {
+                    "chunk": narrative[i:i + _NARRATIVE_CHUNK], "done": False,
+                })
+            yield _sse("narrative", {"chunk": "", "done": True})
+            yield _sse("state", json.loads(resp.model_dump_json()))
+            return
 
 
 @app.post("/game/action/stream")
@@ -953,7 +1542,7 @@ def game_action_stream(req: ActionRequest):
     state = load_game_state(file_to_load)
     if not state:
         raise HTTPException(status_code=404, detail="Jogo não encontrado.")
-    return StreamingResponse(_stream_turn(state, req.input_text),
+    return StreamingResponse(_stream_turn(req, str(state.get("game_id", "?"))),
                              media_type="text/event-stream",
                              headers={"Cache-Control": "no-cache",
                                       "X-Accel-Buffering": "no"})
@@ -962,28 +1551,30 @@ def game_action_stream(req: ActionRequest):
 def game_equip(req: EquipRequest):
     """Fase 4.3: equipar/desequipar — validação 100% Python (inventory.equip)."""
     import inventory as inv_mod
-    file_to_load = _resolve_save_file(req.game_id)
-    state = load_game_state(file_to_load)
-    if not state:
-        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
-    _reject_memorial(state)
+    with _game_lock(req.game_id):
+        file_to_load = _resolve_save_file(req.game_id)
+        state = load_game_state(file_to_load)
+        if not state:
+            raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+        _reject_memorial(state)
 
-    if req.item_id:
-        player, err = inv_mod.equip(state["player"], req.item_id)
-    elif req.unequip_slot:
-        player, err = inv_mod.unequip(state["player"], req.unequip_slot)
-    else:
-        raise HTTPException(status_code=400, detail="Informe item_id ou unequip_slot.")
-    if err:
-        raise HTTPException(status_code=400, detail=err)
+        if req.item_id:
+            player, err = inv_mod.equip(state["player"], req.item_id)
+        elif req.unequip_slot:
+            player, err = inv_mod.unequip(state["player"], req.unequip_slot)
+        else:
+            raise HTTPException(status_code=400, detail="Informe item_id ou unequip_slot.")
+        if err:
+            raise HTTPException(status_code=400, detail=err)
 
-    state["player"] = player
-    save_game_state(state)
-    import combat_mechanics as cm_mod
-    stats = cm_mod.compute_player_combat_stats(player)
-    return {"ok": True, "equipment": player.get("equipment"),
-            "inventory": _inventory_block(player),
-            "derived": {"ac": stats["ac"], "attack": stats["attack"]}}
+        state["player"] = player
+        if not save_game_state(state):
+            raise HTTPException(status_code=500, detail="Não foi possível salvar o equipamento.")
+        import combat_mechanics as cm_mod
+        stats = cm_mod.compute_player_combat_stats(player)
+        return {"ok": True, "equipment": player.get("equipment"),
+                "inventory": _inventory_block(player),
+                "derived": {"ac": stats["ac"], "attack": stats["attack"]}}
 
 
 @app.post("/game/levelup")
@@ -993,36 +1584,39 @@ def game_levelup(req: LevelUpRequest):
     Validação 100% server-side (progression.apply_choice): escolha inexistente,
     habilidade inelegível (classe/nível/pré-requisito/ramo rival) ou atributo
     inválido → 400 e o save fica intocado."""
-    file_to_load = _resolve_save_file(req.game_id)
-    state = load_game_state(file_to_load)
-    if not state:
-        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
-    _reject_memorial(state)
+    with _game_lock(req.game_id):
+        file_to_load = _resolve_save_file(req.game_id)
+        state = load_game_state(file_to_load)
+        if not state:
+            raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+        _reject_memorial(state)
 
-    player, err = progression.apply_choice(
-        state["player"], req.choice_id,
-        ability_id=req.ability_id, virtude=req.virtude, attr=req.attr)
-    if err:
-        raise HTTPException(status_code=400, detail=err)
+        player, err = progression.apply_choice(
+            state["player"], req.choice_id,
+            card_id=req.card_id, evolve_card_id=req.evolve_card_id,
+            caminho=req.caminho, virtude=req.virtude, attr=req.attr)
+        if err:
+            raise HTTPException(status_code=400, detail=err)
 
-    state["player"] = player
-    save_game_state(state)
-    return {
+        state["player"] = player
+        if not save_game_state(state):
+            raise HTTPException(status_code=500, detail="Não foi possível salvar a progressão.")
+        return {
         "ok": True,
         "player_stats": {
             "level": player.get("level", 1),
             "xp": player.get("xp", 0),
+            "vitalidade": int(player.get("vitalidade", 0) or 0),
+            "max_vitalidade": int(player.get("max_vitalidade", 0) or 0),
+            "hp": int(player.get("vitalidade", 0) or 0),
+            "max_hp": int(player.get("max_vitalidade", 0) or 0),
             "xp_next_level": progression.xp_to_next(int(player.get("level", 1) or 1)),
             "virtudes": player.get("virtudes", {}),
-            "abilities": [
-                {"id": aid, "name": ABILITIES.get(aid, {}).get("name", aid),
-                 "branch": ABILITIES.get(aid, {}).get("branch")}
-                for aid in (player.get("known_abilities", []) or [])
-            ],
+            "cards": _cards_block(player),
             "pending_choices": player.get("pending_choices", []) or [],
             "level_up": _levelup_block(player),
         },
-    }
+        }
 
 
 # --- SAVES E CRÔNICA (spec polish-sessao) ------------------------------------
@@ -1035,6 +1629,7 @@ class SaveSummary(BaseModel):
     location: str
     day: int
     game_over: bool
+    combat_simulation: bool = False
     updated_at: float  # epoch (mtime)
 
 
@@ -1050,7 +1645,8 @@ def delete_save_endpoint(game_id: str):
     """R2: exclui save + memória da sessão. Confirmação é da UI (uso local)."""
     import persistence as persistence_mod
     try:
-        removed = persistence_mod.delete_save(game_id)
+        with _game_lock(game_id):
+            removed = persistence_mod.delete_save(game_id)
     except ValueError:
         raise HTTPException(status_code=400, detail="game_id inválido (esperado UUID).")
     if not removed:

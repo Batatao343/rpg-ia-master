@@ -17,6 +17,14 @@ from collections import Counter
 from playtest.profiles import PROFILES
 from playtest.runner import run_campaign, CampaignResult
 
+# O harness também é executado diretamente no console Windows. Sem este ajuste,
+# símbolos usados no help/relatório (por exemplo, ação→narração) quebram em cp1252.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 
 def _route_mais_usada(res: CampaignResult) -> str:
     c = Counter(r.route for r in res.history if r.route)
@@ -39,32 +47,93 @@ def _print_resumo(res: CampaignResult) -> None:
 
 def _cmd_run(args) -> int:
     from playtest import telemetry
+    from playtest import scenarios
     run_id = telemetry.new_run_id()
-    profiles = sorted(PROFILES) if args.all else [args.profile]
-    if not profiles or profiles == [None]:
-        print("erro: informe --profile <nome> ou --all", file=sys.stderr)
+    selectors = int(bool(args.profile)) + int(bool(args.all)) + int(bool(args.scenario))
+    if selectors != 1:
+        print(
+            "erro: informe exatamente um de --profile, --all ou --scenario",
+            file=sys.stderr,
+        )
         return 2
-
+    profiles = (
+        [scenarios.profile_for(args.scenario)]
+        if args.scenario else (sorted(PROFILES) if args.all else [args.profile])
+    )
     print(f"== playtest run {run_id} ==  perfis={profiles} turnos={args.turns} "
           f"seed={args.seed} real={args.real}"
+          + (f" cenário={args.scenario}" if args.scenario else "")
           + (f" classe={args.class_name}" if args.class_name else ""))
     exit_code = 0
-    for profile in profiles:
-        res = run_campaign(
-            profile, turns=args.turns, seed=args.seed,
-            use_real_llm=args.real, invariants=not args.no_invariants,
-            max_requests=args.max_requests, max_cost=args.max_cost,
-            class_name=args.class_name,
+    final_status = "complete"
+    final_reason = None
+    telemetry.begin_run(
+        run_id,
+        profiles=profiles,
+        turns=args.turns,
+        seed=args.seed,
+        real=args.real,
+        class_name=args.class_name,
+        invariants_enabled=not args.no_invariants,
+        scenario=args.scenario,
+    )
+    try:
+        for profile in profiles:
+            try:
+                res = run_campaign(
+                    profile, turns=args.turns, seed=args.seed,
+                    use_real_llm=args.real, invariants=not args.no_invariants,
+                    max_requests=args.max_requests, max_cost=args.max_cost,
+                    class_name=args.class_name,
+                    turn_timeout_seconds=args.turn_timeout,
+                    scenario=args.scenario,
+                    on_turn_end=lambda _state, _turn: telemetry.touch_run(run_id),
+                )
+            except Exception as exc:
+                print(
+                    f"  {profile:<14} FALHA antes de persistir: {exc!r}",
+                    file=sys.stderr,
+                )
+                exit_code = 1
+                continue
+            stem = None
+            if args.class_name:
+                import re as _re
+                cls = ((res.final_state or {}).get("player") or {}).get("class_name") or args.class_name
+                slug = _re.sub(r"\W+", "_", cls.lower()).strip("_")
+                stem = f"{profile}_{slug}_{res.seed}"
+            summary = telemetry.persist_campaign(run_id, res, stem=stem)
+            _print_resumo(res)
+            if (
+                res.errors
+                or res.aborted_reason
+                or res.turns_completed != args.turns
+                or int(summary.get("observability_errors", 0) or 0) > 0
+                or any(
+                    violation.get("severity") == "error"
+                    for violation in res.violations
+                )
+            ):
+                exit_code = 1
+            if res.aborted_reason and res.aborted_reason.startswith("timeout:"):
+                final_status = "aborted"
+                final_reason = res.aborted_reason
+                break
+    except KeyboardInterrupt:
+        exit_code = 130
+        final_status = "aborted"
+        final_reason = "keyboard_interrupt"
+        print("\nplaytest interrompido; manifesto marcado como aborted.", file=sys.stderr)
+    finally:
+        completeness = telemetry.finish_run(
+            run_id,
+            status=(
+                final_status if final_status == "aborted"
+                else ("failed" if exit_code else "complete")
+            ),
+            reason=final_reason,
         )
-        stem = None
-        if args.class_name:
-            import re as _re
-            cls = ((res.final_state or {}).get("player") or {}).get("class_name") or args.class_name
-            slug = _re.sub(r"\W+", "_", cls.lower()).strip("_")
-            stem = f"{profile}_{slug}_{res.seed}"
-        telemetry.persist_campaign(run_id, res, stem=stem)
-        _print_resumo(res)
-        if any(v.get("severity") == "error" for v in res.violations):
+        if not completeness.get("complete"):
             exit_code = 1
     run_dir = telemetry.run_dir(run_id)
     print(f"\nTelemetria: {run_dir}\n  relatório: uv run python -m playtest report {run_id}")
@@ -81,7 +150,7 @@ def _cmd_report(args) -> int:
     with open(out, "w", encoding="utf-8") as f:
         f.write(md)
     print(f"Relatório escrito em {out}")
-    return 0
+    return 0 if rep.complete else 1
 
 
 def _cmd_transcript(args) -> int:
@@ -102,7 +171,17 @@ def main(argv=None) -> int:
 
     pr = sub.add_parser("run", help="roda campanha(s) de playtest")
     pr.add_argument("--profile", choices=sorted(PROFILES), default=None)
-    pr.add_argument("--all", action="store_true", help="roda os 10 perfis em série")
+    pr.add_argument(
+        "--scenario",
+        choices=("recrutamento", "comercio"),
+        default=None,
+        help="smoke dirigido com pré-condição e oráculo mecânico",
+    )
+    pr.add_argument(
+        "--all",
+        action="store_true",
+        help=f"roda os {len(PROFILES)} perfis em série",
+    )
     pr.add_argument("--turns", type=int, default=50)
     pr.add_argument("--seed", type=int, default=0)
     pr.add_argument("--class", dest="class_name", default=None,
@@ -111,6 +190,13 @@ def main(argv=None) -> int:
     pr.add_argument("--no-invariants", action="store_true", help="desliga os checks de invariante 5.2")
     pr.add_argument("--max-requests", type=int, default=15, help="teto de invokes de LLM (--real); 0 desliga")
     pr.add_argument("--max-cost", type=float, default=0.0, help="teto de custo USD estimado (--real); 0 desliga")
+    pr.add_argument(
+        "--turn-timeout",
+        type=float,
+        default=None,
+        help=("teto de wall-clock para startup e cada turno; default 120s em "
+              "--real e desligado no mock"),
+    )
     pr.set_defaults(func=_cmd_run)
 
     prp = sub.add_parser("report", help="agrega um run em Markdown")

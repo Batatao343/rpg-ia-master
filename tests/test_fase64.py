@@ -94,6 +94,34 @@ def test_armadilha_regiao_sem_tabela_usa_default():
     assert info and logs
 
 
+def test_armadilha_que_preenche_ultimo_critico_dispara_fluxo_terminal(monkeypatch):
+    from services import conflict_damage
+
+    def lethal_damage(target, **_kwargs):
+        target["vitalidade"] = 0
+        target["ferimentos"]["critico"].append({"regiao": "torso"})
+        return {"log": ["Ferimento crítico em torso"]}
+
+    monkeypatch.setattr(conflict_damage, "resolve_damage_and_wounds", lethal_damage)
+    loc = {"id": "x", "region_id": "regiao_fantasma"}
+    player = make_player(
+        is_player=True,
+        virtudes={"forca": 0, "agilidade": 0, "corpo": 0, "mente": 0, "carisma": 0},
+        vitalidade=0,
+        max_vitalidade=6,
+        hp=0,
+        max_hp=6,
+        ferimento_espacos={"leve": 1, "grave": 1, "critico": 1},
+        ferimentos={"leve": [], "grave": [], "critico": []},
+    )
+
+    out, _logs, info = wu.resolve_trap(player, loc, 4, _FixedRng(1))
+
+    assert info["terminal_triggered"] is True
+    assert info["dead"] is True
+    assert out["dead"] is True
+
+
 # ---------------------------------------------------------------------------
 # Etapa 3 — rastro
 # ---------------------------------------------------------------------------
@@ -137,30 +165,28 @@ def _combat_state(surprise):
 
 def test_surpresa_ajusta_iniciativa_e_consome_flag(monkeypatch):
     from agents import combat as cbt
-    monkeypatch.setattr(cbt, "_parse_combat_action",
-                        lambda p, e, i: {"ability_id": "ataque_basico", "target": "",
-                                         "is_allowed": True, "reason": ""})
     monkeypatch.setattr(cbt, "_narrate", lambda *a, **k: "ok")
-    monkeypatch.setattr(cbt.cm.random, "randint", lambda a, b: 10)
-
-    out = cbt.combat_node(_combat_state("enemy"))
-    order = out["combat"]["order"]
-    # inimigo surpreendeu: init dele = 10+0+5=15 > herói 10+1=11
-    assert order[0]["side"] == "enemy"
+    st = _combat_state("enemy")
+    st["combat_declaration"] = {
+        "actor_id": "player", "acao": {"kind": "attack", "target_id": "e1"}}
+    out = cbt.combat_node(st)
+    assert out["combat"]["initiative"][0] == "enemy"
     # flag consumida
     assert "encounter_surprise" not in (out.get("world") or {})
 
-    out2 = cbt.combat_node(_combat_state("player"))
-    assert out2["combat"]["order"][0]["side"] == "hero"
+    st2 = _combat_state("player")
+    st2["combat_declaration"] = {
+        "actor_id": "player", "acao": {"kind": "attack", "target_id": "e1"}}
+    out2 = cbt.combat_node(st2)
+    assert out2["combat"]["initiative"][0] == "heroes"
 
 
 def test_sem_flag_comportamento_normal(monkeypatch):
     from agents import combat as cbt
-    monkeypatch.setattr(cbt, "_parse_combat_action",
-                        lambda p, e, i: {"ability_id": "ataque_basico", "target": "",
-                                         "is_allowed": True, "reason": ""})
     monkeypatch.setattr(cbt, "_narrate", lambda *a, **k: "ok")
     st = _combat_state(None)
     del st["world"]["encounter_surprise"]
+    st["combat_declaration"] = {
+        "actor_id": "player", "acao": {"kind": "attack", "target_id": "e1"}}
     out = cbt.combat_node(st)
-    assert out["combat"]["order"]
+    assert out["combat"]["initiative"]

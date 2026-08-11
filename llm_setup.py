@@ -17,11 +17,13 @@ import json
 import logging
 import os
 import time
+from dataclasses import dataclass
 from enum import Enum
-from typing import TYPE_CHECKING, Callable, Optional
+from typing import TYPE_CHECKING, Callable, Literal, Optional
 
 from dotenv import load_dotenv
 from langchain_core.messages import AIMessage
+from pydantic import BaseModel
 
 if TYPE_CHECKING:
     from langchain_core.language_models import BaseLanguageModel
@@ -40,6 +42,31 @@ class ModelTier(Enum):
 
 
 # ---------------------------------------------------------------------------
+LLMAttemptOutcome = Literal[
+    "build_error",
+    "circuit_open",
+    "invoke_error",
+    "stream_error",
+    "invalid_structured",
+    "success",
+]
+
+
+@dataclass(frozen=True)
+class LLMAttemptEvent:
+    """Uma tentativa concreta de candidato, inclusive antes do sucesso final."""
+
+    provider: str
+    model: str
+    tier: ModelTier
+    attempt_index: int
+    latency_ms: int
+    fell_back: bool
+    outcome: LLMAttemptOutcome
+    error: Optional[str]
+    structured: bool
+
+
 # Registro de providers
 # ---------------------------------------------------------------------------
 # base_url OpenAI-compat por provider. IDs de endpoint confirmados na doc de cada
@@ -82,19 +109,19 @@ _OPENAI_COMPAT_PROVIDERS = {"groq", "qwen", "glm", "minimax", "kimi", "deepseek"
 # segue como fallback vivo em todos os tiers.
 ROUTES = {
     ModelTier.CLASSIFY: [
-        ("deepseek", "deepseek-chat"),
+        ("deepseek", "deepseek-v4-flash"),
         ("groq", "openai/gpt-oss-20b"),
         ("gemini", "gemini-flash-lite-latest"),
     ],
     ModelTier.FAST: [
-        ("deepseek", "deepseek-chat"),
+        ("deepseek", "deepseek-v4-flash"),
         ("minimax", "MiniMax-M2.5"),
         ("qwen", "qwen-plus"),
         ("groq", "llama-3.3-70b-versatile"),   # free, narração; function_calling
         ("gemini", "gemini-flash-latest"),
     ],
     ModelTier.SMART: [
-        ("deepseek", "deepseek-chat"),
+        ("deepseek", "deepseek-v4-flash"),
         ("groq", "openai/gpt-oss-120b"),       # free, coerência; function_calling
         ("anthropic", "claude-sonnet-5"),
         ("gemini", "gemini-pro-latest"),
@@ -138,10 +165,12 @@ def _build_gemini(temperature: float, model: str) -> "BaseLanguageModel":
 
     if not os.getenv("GOOGLE_API_KEY"):
         raise ValueError("GOOGLE_API_KEY não configurada")
+    timeout_seconds = float(os.getenv("LLM_TIMEOUT_SECONDS", "90"))
     return ChatGoogleGenerativeAI(
         model=model,
         temperature=temperature,
         max_retries=0,  # Fail-fast: 429 de quota não é transitório
+        request_timeout=timeout_seconds,
         safety_settings={
             HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
             HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
@@ -179,12 +208,22 @@ def _build_openai(provider: str, temperature: float, model: str) -> "BaseLanguag
         if not base_url:
             raise ValueError(f"endpoint desconhecido para provider {provider!r}")
 
+    kwargs = {}
+    if provider == "deepseek" and model.startswith("deepseek-v4-"):
+        # `deepseek-chat` era o alias não-pensante do Flash. O alias foi retirado
+        # em 2026-07-24; preservar o modo evita raciocínio oculto/latência extra e
+        # mantém function calling previsível nos schemas Pydantic.
+        kwargs["extra_body"] = {"thinking": {"type": "disabled"}}
+
+    timeout_seconds = float(os.getenv("LLM_TIMEOUT_SECONDS", "90"))
     return ChatOpenAI(
         model=model,
         api_key=api_key,
         base_url=base_url,
         temperature=temperature,
         max_retries=0,
+        timeout=timeout_seconds,
+        **kwargs,
     )
 
 
@@ -200,7 +239,13 @@ def _build_anthropic(temperature: float, model: str) -> "BaseLanguageModel":
         raise ValueError("ANTHROPIC_API_KEY não configurada")
     # Modelos Claude 5+ (ex.: claude-sonnet-5) REJEITAM `temperature` (400
     # "temperature is deprecated for this model"). Omitir = usa o default do modelo.
-    return ChatAnthropic(model=model, api_key=api_key, max_retries=0)
+    timeout_seconds = float(os.getenv("LLM_TIMEOUT_SECONDS", "90"))
+    return ChatAnthropic(
+        model=model,
+        api_key=api_key,
+        max_retries=0,
+        timeout=timeout_seconds,
+    )
 
 
 def _build_client(provider: str, model: str, temperature: float) -> "BaseLanguageModel":
@@ -217,6 +262,39 @@ def _build_client(provider: str, model: str, temperature: float) -> "BaseLanguag
 
 # Cache por (provider, model, temperature) — evita reconstruir client a cada turno (R7).
 _CLIENT_CACHE: dict = {}
+_OPEN_CIRCUITS: dict[tuple[str, str], str] = {}
+
+
+def reset_llm_circuit_breakers() -> None:
+    """Reabre todos os candidatos; chamado no início de cada campanha."""
+    _OPEN_CIRCUITS.clear()
+
+
+def _permanent_provider_error(exc: BaseException) -> bool:
+    """Classificação fechada das falhas que não melhoram no próximo invoke."""
+    value = str(exc or "").casefold()
+    markers = (
+        "401 unauthorized",
+        "402 payment",
+        "403 forbidden",
+        "404 not found",
+        "payment required",
+        "insufficient balance",
+        "invalid api key",
+        "authentication failed",
+        "não configurada",
+        "nao configurada",
+        "key ausente",
+        "não instalado",
+        "nao instalado",
+    )
+    return any(marker in value for marker in markers)
+
+
+def _open_circuit_if_permanent(provider: str, model: str,
+                               exc: BaseException) -> None:
+    if _permanent_provider_error(exc):
+        _OPEN_CIRCUITS[(provider, model)] = str(exc)[:500]
 
 
 def _get_cached_client(provider: str, model: str, temperature: float) -> "BaseLanguageModel":
@@ -232,6 +310,7 @@ def _get_cached_client(provider: str, model: str, temperature: float) -> "BaseLa
 # Telemetria (R9) — hook opcional consumido pela Fase 5.3
 # ---------------------------------------------------------------------------
 _TELEMETRY_HOOK: Optional[Callable[[str, str, ModelTier, int, bool], None]] = None
+_ATTEMPT_TELEMETRY_HOOK: Optional[Callable[[LLMAttemptEvent], None]] = None
 
 
 def set_llm_telemetry_hook(fn: Optional[Callable[[str, str, ModelTier, int, bool], None]]) -> None:
@@ -239,6 +318,17 @@ def set_llm_telemetry_hook(fn: Optional[Callable[[str, str, ModelTier, int, bool
     após cada invoke bem-sucedido. `None` desliga. Custo zero se não registrado."""
     global _TELEMETRY_HOOK
     _TELEMETRY_HOOK = fn
+
+
+def set_llm_attempt_telemetry_hook(
+        fn: Optional[Callable[[LLMAttemptEvent], None]]) -> None:
+    """Registra callback estruturado para CADA candidato tentado.
+
+    Diferente do hook legado success-only, este recebe também build/invoke
+    errors e retornos estruturados inválidos. ``None`` desliga.
+    """
+    global _ATTEMPT_TELEMETRY_HOOK
+    _ATTEMPT_TELEMETRY_HOOK = fn
 
 
 def _emit_telemetry(provider: str, model: str, tier: ModelTier, latency_ms: int, fell_back: bool) -> None:
@@ -249,6 +339,16 @@ def _emit_telemetry(provider: str, model: str, tier: ModelTier, latency_ms: int,
         hook(provider, model, tier, latency_ms, fell_back)
     except Exception as e:  # telemetria NUNCA derruba o turno
         _LOG.warning("telemetry hook falhou: %s", e)
+
+
+def _emit_attempt_telemetry(event: LLMAttemptEvent) -> None:
+    hook = _ATTEMPT_TELEMETRY_HOOK
+    if hook is None:
+        return
+    try:
+        hook(event)
+    except Exception as e:  # telemetria NUNCA derruba o turno
+        _LOG.warning("attempt telemetry hook falhou: %s", e)
 
 
 # ---------------------------------------------------------------------------
@@ -296,26 +396,169 @@ class RoutedLLM:
             client = getattr(client, name)(*a, **k)
         return client
 
+    def _pydantic_structured_contract(self):
+        """Retorna ``(schema, include_raw)`` para o último schema Pydantic."""
+        for name, args, kwargs in reversed(self._transforms):
+            if name != "with_structured_output" or not args:
+                continue
+            schema = args[0]
+            try:
+                is_pydantic = isinstance(schema, type) and issubclass(schema, BaseModel)
+            except TypeError:
+                is_pydantic = False
+            if is_pydantic:
+                return schema, bool(kwargs.get("include_raw", False))
+            return None
+        return None
+
+    def _validate_structured_result(self, result) -> tuple[bool, Optional[str], bool]:
+        """Valida a pós-condição que providers nem sempre cumprem.
+
+        Schemas não-Pydantic e invocações plain mantêm a compatibilidade
+        histórica: qualquer retorno do client é aceito.
+        """
+        contract = self._pydantic_structured_contract()
+        if contract is None:
+            return True, None, False
+        schema, include_raw = contract
+        expected = schema.__name__
+        if include_raw:
+            if not isinstance(result, dict):
+                return False, f"include_raw retornou {type(result).__name__}, esperado dict", True
+            parsing_error = result.get("parsing_error")
+            if parsing_error is not None:
+                return False, f"parsing_error: {parsing_error}", True
+            parsed = result.get("parsed")
+            if not isinstance(parsed, schema):
+                return (
+                    False,
+                    f"parsed retornou {type(parsed).__name__}, esperado {expected}",
+                    True,
+                )
+            return True, None, True
+        if not isinstance(result, schema):
+            return (
+                False,
+                f"structured retornou {type(result).__name__}, esperado {expected}",
+                True,
+            )
+        return True, None, True
+
     def invoke(self, input):
         errors = []
         for idx, (provider, model) in enumerate(self.candidates):
+            fell_back = idx > 0
+            circuit_reason = _OPEN_CIRCUITS.get((provider, model))
+            if circuit_reason:
+                errors.append(f"{provider}:{model} circuit:{circuit_reason}")
+                _emit_attempt_telemetry(LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=0,
+                    fell_back=fell_back,
+                    outcome="circuit_open",
+                    error=circuit_reason,
+                    structured=self._pydantic_structured_contract() is not None,
+                ))
+                continue
+            build_t0 = time.perf_counter()
             try:
                 client = _get_cached_client(provider, model, self.temperature)
             except Exception as e:
+                latency_ms = int((time.perf_counter() - build_t0) * 1000)
                 errors.append(f"{provider}:{model} build:{e}")
                 _LOG.warning("build falhou %s:%s (%s)", provider, model, e)
+                _emit_attempt_telemetry(LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="build_error",
+                    error=str(e),
+                    structured=self._pydantic_structured_contract() is not None,
+                ))
+                _open_circuit_if_permanent(provider, model, e)
                 continue
             try:
                 client = self._apply(client, provider)
-                t0 = time.perf_counter()
+            except Exception as e:
+                latency_ms = int((time.perf_counter() - build_t0) * 1000)
+                errors.append(f"{provider}:{model} apply:{e}")
+                _LOG.warning("apply falhou %s:%s (%s)", provider, model, e)
+                _emit_attempt_telemetry(LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="build_error",
+                    error=f"apply: {e}",
+                    structured=self._pydantic_structured_contract() is not None,
+                ))
+                _open_circuit_if_permanent(provider, model, e)
+                continue
+            t0 = time.perf_counter()
+            try:
                 result = client.invoke(input)
                 latency_ms = int((time.perf_counter() - t0) * 1000)
-                _emit_telemetry(provider, model, self.tier, latency_ms, idx > 0)
-                return result
             except Exception as e:
+                latency_ms = int((time.perf_counter() - t0) * 1000)
                 errors.append(f"{provider}:{model} invoke:{e}")
                 _LOG.warning("invoke falhou %s:%s (%s)", provider, model, e)
+                _emit_attempt_telemetry(LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="invoke_error",
+                    error=str(e),
+                    structured=self._pydantic_structured_contract() is not None,
+                ))
+                _open_circuit_if_permanent(provider, model, e)
                 continue
+            valid, validation_error, structured = self._validate_structured_result(result)
+            if not valid:
+                errors.append(
+                    f"{provider}:{model} structured:{validation_error}"
+                )
+                _LOG.warning(
+                    "structured inválido %s:%s (%s)",
+                    provider,
+                    model,
+                    validation_error,
+                )
+                _emit_attempt_telemetry(LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="invalid_structured",
+                    error=validation_error,
+                    structured=structured,
+                ))
+                continue
+            _emit_attempt_telemetry(LLMAttemptEvent(
+                provider=provider,
+                model=model,
+                tier=self.tier,
+                attempt_index=idx,
+                latency_ms=latency_ms,
+                fell_back=fell_back,
+                outcome="success",
+                error=None,
+                structured=structured,
+            ))
+            _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
+            return result
         _LOG.warning("tier %s: todos os candidatos falharam: %s",
                      self.tier.value, "; ".join(errors))
         # conteúdo vazio: sites de narração plain-invoke caem no fallback determinístico;
@@ -325,29 +568,112 @@ class RoutedLLM:
     def stream(self, input):
         errors = []
         for idx, (provider, model) in enumerate(self.candidates):
+            fell_back = idx > 0
+            structured = self._pydantic_structured_contract() is not None
+            circuit_reason = _OPEN_CIRCUITS.get((provider, model))
+            if circuit_reason:
+                errors.append(f"{provider}:{model} circuit:{circuit_reason}")
+                _emit_attempt_telemetry(LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=0,
+                    fell_back=fell_back,
+                    outcome="circuit_open",
+                    error=circuit_reason,
+                    structured=structured,
+                ))
+                continue
+            build_t0 = time.perf_counter()
             try:
                 client = _get_cached_client(provider, model, self.temperature)
                 client = self._apply(client, provider)
             except Exception as e:
+                latency_ms = int((time.perf_counter() - build_t0) * 1000)
                 errors.append(f"{provider}:{model} build:{e}")
+                _emit_attempt_telemetry(LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="build_error",
+                    error=str(e),
+                    structured=structured,
+                ))
+                _open_circuit_if_permanent(provider, model, e)
                 continue
+            t0 = time.perf_counter()
             try:
                 it = iter(client.stream(input))
                 first = next(it)
             except StopIteration:
-                _emit_telemetry(provider, model, self.tier, 0, idx > 0)
+                latency_ms = int((time.perf_counter() - t0) * 1000)
+                _emit_attempt_telemetry(LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="success",
+                    error=None,
+                    structured=structured,
+                ))
+                _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
                 return
             except Exception as e:
+                latency_ms = int((time.perf_counter() - t0) * 1000)
                 errors.append(f"{provider}:{model} stream:{e}")
                 _LOG.warning("stream falhou %s:%s (%s)", provider, model, e)
+                _emit_attempt_telemetry(LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="stream_error",
+                    error=str(e),
+                    structured=structured,
+                ))
+                _open_circuit_if_permanent(provider, model, e)
                 continue
-            _emit_telemetry(provider, model, self.tier, 0, idx > 0)
             yield first
             try:
                 for chunk in it:
                     yield chunk
             except Exception as e:  # falha no meio do stream: encerra o que veio
                 _LOG.warning("stream interrompido %s:%s (%s)", provider, model, e)
+                latency_ms = int((time.perf_counter() - t0) * 1000)
+                _emit_attempt_telemetry(LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="stream_error",
+                    error=str(e),
+                    structured=structured,
+                ))
+                _open_circuit_if_permanent(provider, model, e)
+                return
+            latency_ms = int((time.perf_counter() - t0) * 1000)
+            _emit_attempt_telemetry(LLMAttemptEvent(
+                provider=provider,
+                model=model,
+                tier=self.tier,
+                attempt_index=idx,
+                latency_ms=latency_ms,
+                fell_back=fell_back,
+                outcome="success",
+                error=None,
+                structured=structured,
+            ))
+            _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
             return
         _LOG.warning("tier %s (stream): todos falharam: %s", self.tier.value, "; ".join(errors))
         yield AIMessage(content="")

@@ -29,7 +29,7 @@ from persistence import (
 def test_save_path_uuid_valido():
     gid = str(uuid.uuid4())
     path = save_path(gid)
-    assert path == os.path.join("saves", f"{gid}.json")
+    assert path == os.path.join(persistence.SAVES_DIR, f"{gid}.json")
 
 
 @pytest.mark.parametrize("malicioso", [
@@ -81,7 +81,7 @@ def test_save_novo_tem_schema_version(tmp_path, monkeypatch):
     assert raw["schema_version"] == SCHEMA_VERSION
 
 
-def test_save_v0_migra_para_v1():
+def test_save_v0_fica_arquivado_no_cutover_v4():
     raw_v0 = {
         "game_id": str(uuid.uuid4()),
         "chronicle": ["Era uma vez.", "Fim do turno 3."],  # formato pré-3.1
@@ -92,14 +92,8 @@ def test_save_v0_migra_para_v1():
     }
     migrado = migrate_state(raw_v0)
     assert migrado["schema_version"] == SCHEMA_VERSION
-    # crônica virou capítulos
-    assert isinstance(migrado["chronicle"][0], dict)
-    assert migrado["chronicle"][0]["entries"]
-    # inventário virou {id, qty}
-    assert all(isinstance(i, dict) and "id" in i for i in migrado["player"]["inventory"])
-    # habilidades canônicas garantem ataque_basico
-    assert "ataque_basico" in migrado["player"]["known_abilities"]
-    assert migrado["game_over"] is False
+    assert migrado["archived"] is True
+    assert "Sistema de Conflitos" in migrado["archived_reason"]
 
 
 def test_migration_idempotente():
@@ -112,22 +106,15 @@ def test_migration_idempotente():
     assert uma == duas
 
 
-def test_save_versao_atual_nao_migra(monkeypatch):
-    chamado = {"v0": False}
-
-    def _explode(raw):
-        chamado["v0"] = True
-        raise AssertionError("migration não deveria rodar")
-
-    monkeypatch.setitem(persistence._MIGRATIONS, 0, _explode)
+def test_save_versao_atual_nao_migra():
     raw = {"schema_version": SCHEMA_VERSION, "game_id": str(uuid.uuid4())}
     out = migrate_state(raw)
-    assert chamado["v0"] is False
+    assert out is raw
+    assert "archived" not in out
     assert out["schema_version"] == SCHEMA_VERSION
 
 
-def test_roundtrip_save_load_migrado(tmp_path, monkeypatch):
-    """Save v0 gravado no disco carrega migrado via load_game_state."""
+def test_roundtrip_save_load_antigo_arquivado(tmp_path, monkeypatch):
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     gid = str(uuid.uuid4())
     v0 = {"game_id": gid, "chronicle": ["Primeira linha."],
@@ -139,8 +126,7 @@ def test_roundtrip_save_load_migrado(tmp_path, monkeypatch):
 
     state = load_game_state(str(caminho))
     assert state is not None
-    assert isinstance(state["chronicle"][0], dict)
-    assert "ataque_basico" in state["player"]["known_abilities"]
+    assert state["archived"] is True
 
 
 # ---------------------------------------------------------------------------

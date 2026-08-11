@@ -14,13 +14,22 @@ provider que o gerou; abrir com outro provider é proibido (índice desativado
 com aviso; re-index para trocar). Ver specs/embeddings-provider.md.
 """
 import json
+import hashlib
 import logging
 import os
-from typing import Callable, Dict, List, Optional
+import re
+import unicodedata
+from collections import Counter
+from dataclasses import dataclass, field
+from typing import Callable, Dict, List, Literal, Optional
+import httpx
 from langchain_community.vectorstores import FAISS
 from langchain_community.document_loaders import TextLoader
+from langchain_core.embeddings import Embeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv
+
+from services.memory_provenance import format_memory_fact, make_memory_fact
 
 load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
 
@@ -48,11 +57,223 @@ _embeddings_cache: Dict[str, object] = {}   # provider -> objeto de embeddings
 _active_provider_name: Optional[str] = None  # provider resolvido para ESCRITA
 
 
+RAGOperation = Literal["add_session_memory", "add_npc_memory"]
+
+
+@dataclass(frozen=True)
+class RAGOperationEvent:
+    """Resultado observável de uma tentativa de escrita de memória vetorial."""
+
+    operation: RAGOperation
+    success: bool
+    game_id: str
+    npc_id: Optional[str]
+    path: str
+    facts_count: int
+    provider: Optional[str]
+    error: Optional[str]
+    provenance_counts: Dict[str, int] = field(default_factory=dict)
+
+
+_RAG_OPERATION_HOOK: Optional[Callable[[RAGOperationEvent], None]] = None
+
+
+def set_rag_operation_hook(
+        fn: Optional[Callable[[RAGOperationEvent], None]]) -> None:
+    """Registra callback para cada ``add_*``; ``None`` desliga o hook."""
+    global _RAG_OPERATION_HOOK
+    _RAG_OPERATION_HOOK = fn
+
+
+def _emit_rag_operation(event: RAGOperationEvent) -> None:
+    hook = _RAG_OPERATION_HOOK
+    if hook is None:
+        return
+    try:
+        hook(event)
+    except Exception as exc:  # observabilidade nunca derruba o turno
+        _LOG.warning("RAG operation hook falhou: %s", exc)
+
+
+def _rag_operation_result(
+        operation: RAGOperation,
+        success: bool,
+        *,
+        game_id: str,
+        npc_id: Optional[str],
+        path: str,
+        facts_count: int,
+        provider: Optional[str],
+        error: Optional[str],
+        metadatas: Optional[List[Dict]] = None,
+) -> bool:
+    provenance_counts = dict(Counter(
+        str(metadata.get("memory_provenance") or "legacy_unverified")
+        for metadata in (metadatas or [])
+        if isinstance(metadata, dict)
+    ))
+    _emit_rag_operation(RAGOperationEvent(
+        operation=operation,
+        success=success,
+        game_id=game_id,
+        npc_id=npc_id,
+        path=path,
+        facts_count=facts_count,
+        provider=provider,
+        error=error,
+        provenance_counts=provenance_counts,
+    ))
+    return success
+
+
+_SAFE_COMPONENT_RE = re.compile(r"^[A-Za-z0-9_-]{1,96}$")
+_WINDOWS_RESERVED_NAMES = frozenset({
+    "con",
+    "prn",
+    "aux",
+    "nul",
+    "clock$",
+    *(f"com{i}" for i in range(1, 10)),
+    *(f"lpt{i}" for i in range(1, 10)),
+})
+
+
+def _is_windows_reserved(value: str) -> bool:
+    return value.casefold().split(".", 1)[0] in _WINDOWS_RESERVED_NAMES
+
+
+def _safe_storage_component(value: object, prefix: str) -> str:
+    """Mapeia um ID lógico para um único componente de path portátil.
+
+    IDs ASCII já seguros mantêm exatamente o nome físico legado. Qualquer valor
+    inseguro recebe slug ASCII legível mais hash do ID lógico, evitando colisões
+    entre Unicode distintos que transliteram para o mesmo texto.
+    """
+    raw = str(value)
+    if (
+        _SAFE_COMPONENT_RE.fullmatch(raw)
+        and raw not in {".", ".."}
+        and not raw.endswith((".", " "))
+        and not _is_windows_reserved(raw)
+    ):
+        return raw
+
+    ascii_value = (
+        unicodedata.normalize("NFKD", raw)
+        .encode("ascii", "ignore")
+        .decode("ascii")
+    )
+    slug = re.sub(r"[^A-Za-z0-9_-]+", "_", ascii_value)
+    slug = re.sub(r"_+", "_", slug).strip("._-")
+    safe_prefix = re.sub(r"[^A-Za-z0-9_-]+", "_", prefix).strip("_-") or "id"
+    if not slug or _is_windows_reserved(slug):
+        slug = safe_prefix
+    slug = slug[:64].rstrip("._-") or safe_prefix
+    digest = hashlib.sha256(raw.encode("utf-8")).hexdigest()[:12]
+    return f"{slug}--{digest}"
+
+
+def _contained_storage_path(*components: str) -> str:
+    """Monta path sob ``SAVES_DIR`` e verifica containment sem absolutizar o retorno.
+
+    O retorno relativo é intencional: no Windows evita entregar ao FAISS o
+    prefixo Unicode do workspace quando ``SAVES_DIR`` também é relativo.
+    """
+    path = os.path.join(SAVES_DIR, *components)
+    root_abs = os.path.abspath(SAVES_DIR)
+    path_abs = os.path.abspath(path)
+    try:
+        contained = os.path.normcase(os.path.commonpath([root_abs, path_abs]))
+    except ValueError as exc:
+        raise ValueError("path de memória fora da raiz") from exc
+    if contained != os.path.normcase(root_abs):
+        raise ValueError("path de memória fora da raiz")
+    return path
+
+
 # --- Builders por provider (cada um levanta se faltar key/dep) ---------------
 
+_JINA_API_URL = "https://api.jina.ai/v1/embeddings"
+_TRANSIENT_EMBEDDING_STATUS = {408, 429, 500, 502, 503, 504}
+
+
+class _JinaEmbeddingsHTTPX(Embeddings):
+    """Cliente Jina pequeno, síncrono e com limite de rede explícito.
+
+    O adapter da comunidade usa ``requests.Session.post`` sem timeout. Em um
+    playtest real isso deixou um turno pendurado por mais de 15 minutos. Aqui o
+    retry permanece no MESMO provider/modelo, portanto nunca mistura espaços
+    vetoriais em um índice FAISS pinado.
+    """
+
+    def __init__(self, *, api_key: str, model_name: str,
+                 timeout_seconds: float = 30.0, max_attempts: int = 2,
+                 client: Optional[httpx.Client] = None) -> None:
+        self.model_name = model_name
+        self.max_attempts = max(1, int(max_attempts))
+        self._client = client or httpx.Client(
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Accept-Encoding": "identity",
+                "Content-Type": "application/json",
+            },
+            timeout=httpx.Timeout(max(0.1, float(timeout_seconds))),
+        )
+
+    def _embed(self, values: List[str]) -> List[List[float]]:
+        last_error: Optional[Exception] = None
+        for attempt in range(self.max_attempts):
+            try:
+                response = self._client.post(
+                    _JINA_API_URL,
+                    json={"input": values, "model": self.model_name},
+                )
+                if (response.status_code in _TRANSIENT_EMBEDDING_STATUS
+                        and attempt + 1 < self.max_attempts):
+                    last_error = httpx.HTTPStatusError(
+                        f"Jina transitório: HTTP {response.status_code}",
+                        request=response.request,
+                        response=response,
+                    )
+                    continue
+                response.raise_for_status()
+                payload = response.json()
+                rows = payload.get("data") if isinstance(payload, dict) else None
+                if not isinstance(rows, list):
+                    raise ValueError("resposta Jina sem lista 'data'")
+                ordered = sorted(rows, key=lambda row: int(row["index"]))
+                vectors = [row.get("embedding") for row in ordered]
+                if (len(vectors) != len(values)
+                        or any(not isinstance(vector, list) for vector in vectors)):
+                    raise ValueError("resposta Jina com embeddings inválidos")
+                return vectors
+            except httpx.TransportError as exc:
+                last_error = exc
+                if attempt + 1 >= self.max_attempts:
+                    raise
+        if last_error is not None:
+            raise last_error
+        raise RuntimeError("Jina não executou nenhuma tentativa")
+
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        return self._embed(list(texts))
+
+    def embed_query(self, text: str) -> List[float]:
+        return self._embed([text])[0]
+
+
 def _build_jina():
-    from langchain_community.embeddings import JinaEmbeddings
-    return JinaEmbeddings(model_name="jina-embeddings-v3")
+    api_key = os.getenv("JINA_API_KEY") or os.getenv("JINA_AUTH_TOKEN")
+    if not api_key:
+        raise ValueError("JINA_API_KEY não configurada")
+    timeout_seconds = float(os.getenv("EMBEDDING_TIMEOUT_SECONDS", "30"))
+    max_attempts = int(os.getenv("EMBEDDING_MAX_ATTEMPTS", "2"))
+    return _JinaEmbeddingsHTTPX(
+        api_key=api_key,
+        model_name="jina-embeddings-v3",
+        timeout_seconds=timeout_seconds,
+        max_attempts=max_attempts,
+    )
 
 
 def _build_openai():
@@ -173,16 +394,20 @@ def _meta_path(dir_path: str) -> str:
     return os.path.join(dir_path, _META_FILE)
 
 
-def _write_meta(dir_path: str, provider: str) -> None:
+def _write_meta(dir_path: str, provider: str) -> bool:
     """Grava embeddings_meta.json ao lado do índice (pin do provider)."""
     try:
+        if not provider:
+            raise ValueError("provider de embeddings ausente")
         os.makedirs(dir_path, exist_ok=True)
         with open(_meta_path(dir_path), "w", encoding="utf-8") as fh:
             json.dump({"provider": provider,
                        "model": _PROVIDER_MODELS.get(provider, "?")},
                       fh, ensure_ascii=False)
+        return True
     except Exception as exc:
         _LOG.warning("Embeddings: falha ao gravar meta em %s: %s", dir_path, exc)
+        return False
 
 
 def _read_meta(dir_path: str) -> Optional[dict]:
@@ -220,7 +445,8 @@ def _embeddings_for_index(dir_path: str) -> Optional[object]:
 def _save_index(db, path: str, provider: str) -> None:
     """save_local + grava a meta do provider (pin)."""
     db.save_local(path)
-    _write_meta(path, provider)
+    if not _write_meta(path, provider):
+        raise OSError(f"falha ao gravar metadata do índice em {path}")
 
 def get_global_db_path(index_name: str) -> str:
     """Retorna o nome da pasta do índice GLOBAL (lore ou rules)."""
@@ -228,7 +454,8 @@ def get_global_db_path(index_name: str) -> str:
 
 def _get_session_path(game_id: str) -> str:
     """Retorna o caminho da pasta de memória da SESSÃO específica."""
-    return os.path.join(SAVES_DIR, game_id)
+    component = _safe_storage_component(game_id, "session")
+    return _contained_storage_path(component)
 
 
 def _has_faiss_index(path: str) -> bool:
@@ -252,6 +479,90 @@ def vis_rank(visibility: Optional[str]) -> int:
     return _VIS_ORDER.get(visibility, _VIS_ORDER["secret"])
 
 
+def _query_session_documents(query: str, game_id: str, *, k: int = 2) -> list:
+    if not query or not game_id:
+        return []
+    session_path = _get_session_path(game_id)
+    if not _has_faiss_index(session_path):
+        return []
+    embeddings = _embeddings_for_index(session_path)
+    if not embeddings:
+        return []
+    try:
+        session_db = FAISS.load_local(
+            session_path,
+            embeddings,
+            allow_dangerous_deserialization=True,
+        )
+        return list(session_db.similarity_search(query, k=k))
+    except Exception as exc:
+        _LOG.warning(
+            "RAG: falha ao consultar memória da sessão '%s': %s",
+            game_id,
+            exc,
+        )
+        return []
+
+
+def _format_documents(documents: list) -> str:
+    seen = set()
+    final_text = []
+    for doc in documents:
+        content = str(getattr(doc, "page_content", "") or "").strip()
+        if content and content not in seen:
+            seen.add(content)
+            final_text.append(content)
+    return "\n---\n".join(final_text)
+
+
+def _format_memory_documents(documents: list) -> str:
+    """Renderiza vetores de sessão com autoridade explícita.
+
+    Documento anterior à spec não possui metadata e, por definição, é legado
+    não verificado. Duplicatas com o mesmo texto preferem maior confiança.
+    """
+    rank = {"speculative": 0, "reported": 1, "confirmed": 2}
+    by_text: dict[str, tuple[int, str]] = {}
+    order: list[str] = []
+    for doc in documents:
+        content = str(getattr(doc, "page_content", "") or "").strip()
+        if not content:
+            continue
+        metadata = dict(getattr(doc, "metadata", {}) or {})
+        provenance = metadata.get("memory_provenance") or "legacy_unverified"
+        source_turn = metadata.get("memory_source_turn")
+        if source_turn in (-1, "-1", ""):
+            source_turn = None
+        entity_ids = str(metadata.get("memory_entity_ids") or "").split(",")
+        try:
+            record = make_memory_fact(
+                content,
+                provenance=provenance,
+                confidence=metadata.get("memory_confidence") or "speculative",
+                source_id=metadata.get("memory_source_id") or None,
+                source_turn=source_turn,
+                canonical_entity_ids=[item for item in entity_ids if item],
+            )
+        except Exception:
+            record = make_memory_fact(
+                content, provenance="legacy_unverified",
+            )
+        rendered = format_memory_fact(record)
+        key = content.casefold()
+        item_rank = rank[record["confidence"]]
+        if key not in by_text:
+            order.append(key)
+            by_text[key] = (item_rank, rendered)
+        elif item_rank > by_text[key][0]:
+            by_text[key] = (item_rank, rendered)
+    return "\n---\n".join(by_text[key][1] for key in order[:2])
+
+
+def query_session_memory(query: str, game_id: str) -> str:
+    """Busca somente fatos da sessão, sem consultar lore/regras globais."""
+    return _format_memory_documents(_query_session_documents(query, game_id, k=6))
+
+
 def query_rag(query: str, index_name: str = "lore", game_id: Optional[str] = None,
               max_visibility: str = "public") -> str:
     """
@@ -263,7 +574,8 @@ def query_rag(query: str, index_name: str = "lore", game_id: Optional[str] = Non
     (public < hidden < secret). Default preserva o comportamento antigo:
     o jogador/narrador só vê `public`; chunks sem metadado contam como public.
     """
-    results = []
+    global_results = []
+    session_results = []
     max_rank = vis_rank(max_visibility)
 
     # 1. Busca Global (Baseado no index_name: 'lore' ou 'rules')
@@ -280,104 +592,234 @@ def query_rag(query: str, index_name: str = "lore", game_id: Optional[str] = Non
                     d for d in candidatos
                     if vis_rank(d.metadata.get("visibility")) <= max_rank
                 ]
-                results.extend(visiveis[:2])
+                global_results.extend(visiveis[:2])
             except Exception as e:
                 print(f"⚠️ [RAG] Erro ao ler Global '{index_name}': {e}")
 
     # 2. Busca na Sessão (Se houver game_id)
     # A memória da sessão é agnóstica ao index_name (é tudo "memória do jogo")
     if game_id:
+        session_results.extend(_query_session_documents(query, game_id, k=6))
+
+    parts = [
+        part for part in (
+            _format_documents(global_results),
+            _format_memory_documents(session_results),
+        ) if part
+    ]
+    return "\n---\n".join(parts)
+
+def add_memory_to_session(
+    game_id: str,
+    texts: List[str],
+    *,
+    metadatas: Optional[List[Dict]] = None,
+) -> bool:
+    """Adiciona fatos à sessão e informa se a gravação física terminou."""
+    facts_count = len(texts) if isinstance(texts, list) else 0
+    if not game_id or not texts:
+        return _rag_operation_result(
+            "add_session_memory",
+            False,
+            game_id=str(game_id or ""),
+            npc_id=None,
+            path="",
+            facts_count=facts_count,
+            provider=None,
+            error="invalid_input",
+            metadatas=metadatas,
+        )
+
+    session_path = ""
+    provider: Optional[str] = None
+    try:
         session_path = _get_session_path(game_id)
         if _has_faiss_index(session_path):
+            # Índice existente: usa somente o provider pinado.
+            provider = (_read_meta(session_path) or {}).get(
+                "provider", _LEGACY_PROVIDER
+            )
             embeddings = _embeddings_for_index(session_path)
-            if embeddings:
-                try:
-                    session_db = FAISS.load_local(session_path, embeddings, allow_dangerous_deserialization=True)
-                    # Busca +2 chunks pessoais
-                    results.extend(session_db.similarity_search(query, k=2))
-                except Exception:
-                    pass
-
-    if not results: return ""
-    
-    # Formata e desduplica
-    seen = set()
-    final_text = []
-    for doc in results:
-        content = doc.page_content.strip()
-        if content not in seen:
-            seen.add(content)
-            # Adiciona prefixo para ajudar a IA a saber a fonte
-            # (Opcional, mas ajuda a distinguir Regra de Memória)
-            final_text.append(content)
-            
-    return "\n---\n".join(final_text)
-
-def add_memory_to_session(game_id: str, texts: List[str]):
-    """
-    Adiciona novas memórias ao índice específico deste save (game_id).
-    """
-    if not game_id or not texts: return
-
-    session_path = _get_session_path(game_id)
-
-    try:
-        if _has_faiss_index(session_path):
-            # Índice existente: precisa do provider PINADO (não pode misturar).
-            embeddings = _embeddings_for_index(session_path)
-            if not embeddings: return
-            provider = (_read_meta(session_path) or {}).get("provider", _LEGACY_PROVIDER)
-            db = FAISS.load_local(session_path, embeddings, allow_dangerous_deserialization=True)
-            db.add_texts(texts)
+            if not embeddings:
+                return _rag_operation_result(
+                    "add_session_memory",
+                    False,
+                    game_id=game_id,
+                    npc_id=None,
+                    path=session_path,
+                    facts_count=facts_count,
+                    provider=provider,
+                    error="embeddings_unavailable",
+                    metadatas=metadatas,
+                )
+            db = FAISS.load_local(
+                session_path,
+                embeddings,
+                allow_dangerous_deserialization=True,
+            )
+            if metadatas is None:
+                db.add_texts(texts)
+            else:
+                db.add_texts(texts, metadatas=metadatas)
         else:
-            # Índice novo: provider ATIVO da cadeia + grava meta (pin).
             embeddings = get_embeddings()
-            if not embeddings: return
-            provider = _resolve_provider()  # puro (lê env); casa com get_embeddings
-            if not os.path.exists(SAVES_DIR): os.makedirs(SAVES_DIR)
-            db = FAISS.from_texts(texts, embeddings)
+            provider = active_provider() or _resolve_provider()
+            if not embeddings or not provider:
+                return _rag_operation_result(
+                    "add_session_memory",
+                    False,
+                    game_id=game_id,
+                    npc_id=None,
+                    path=session_path,
+                    facts_count=facts_count,
+                    provider=provider,
+                    error="embeddings_unavailable",
+                    metadatas=metadatas,
+                )
+            os.makedirs(SAVES_DIR, exist_ok=True)
+            if metadatas is None:
+                db = FAISS.from_texts(texts, embeddings)
+            else:
+                db = FAISS.from_texts(texts, embeddings, metadatas=metadatas)
 
         _save_index(db, session_path, provider)
-        print(f"💾 [RAG] Memória salva para sessão '{game_id}': +{len(texts)} fatos.")
-
-    except Exception as e:
-        print(f"❌ [RAG ERROR] Falha ao salvar memória: {e}")
+        print(f"💾 [RAG] Memória salva para sessão '{game_id}': +{facts_count} fatos.")
+        return _rag_operation_result(
+            "add_session_memory",
+            True,
+            game_id=game_id,
+            npc_id=None,
+            path=session_path,
+            facts_count=facts_count,
+            provider=provider,
+            error=None,
+            metadatas=metadatas,
+        )
+    except Exception as exc:
+        print(f"❌ [RAG ERROR] Falha ao salvar memória: {exc}")
+        return _rag_operation_result(
+            "add_session_memory",
+            False,
+            game_id=game_id,
+            npc_id=None,
+            path=session_path,
+            facts_count=facts_count,
+            provider=provider,
+            error=str(exc),
+            metadatas=metadatas,
+        )
 
 # --- MEMÓRIA DE NPC VETORIZADA (namespace por game_id + npc_id) ---
 
 def _get_npc_path(game_id: str, npc_id: str) -> str:
     """Pasta do índice FAISS de UM npc dentro da sessão."""
-    return os.path.join(SAVES_DIR, game_id, npc_id)
+    session_component = _safe_storage_component(game_id, "session")
+    npc_component = _safe_storage_component(npc_id, "npc")
+    return _contained_storage_path(session_component, npc_component)
 
 
-def add_npc_memory(game_id: str, npc_id: str, texts: List[str]):
-    """
-    Adiciona fatos ao índice do NPC (isolado por game_id+npc_id).
-    No-op se faltar game_id/npc_id/texts ou se não houver embeddings (sem chave).
-    """
+def add_npc_memory(
+    game_id: str,
+    npc_id: str,
+    texts: List[str],
+    *,
+    metadatas: Optional[List[Dict]] = None,
+) -> bool:
+    """Adiciona fatos ao namespace do NPC e retorna sucesso físico."""
+    facts_count = len(texts) if isinstance(texts, list) else 0
     if not game_id or not npc_id or not texts:
-        return
+        return _rag_operation_result(
+            "add_npc_memory",
+            False,
+            game_id=str(game_id or ""),
+            npc_id=str(npc_id) if npc_id else None,
+            path="",
+            facts_count=facts_count,
+            provider=None,
+            error="invalid_input",
+            metadatas=metadatas,
+        )
 
-    npc_path = _get_npc_path(game_id, npc_id)
+    npc_path = ""
+    provider: Optional[str] = None
     try:
+        npc_path = _get_npc_path(game_id, npc_id)
         if _has_faiss_index(npc_path):
+            provider = (_read_meta(npc_path) or {}).get(
+                "provider", _LEGACY_PROVIDER
+            )
             embeddings = _embeddings_for_index(npc_path)
             if not embeddings:
-                return
-            provider = (_read_meta(npc_path) or {}).get("provider", _LEGACY_PROVIDER)
-            db = FAISS.load_local(npc_path, embeddings, allow_dangerous_deserialization=True)
-            db.add_texts(texts)
+                return _rag_operation_result(
+                    "add_npc_memory",
+                    False,
+                    game_id=game_id,
+                    npc_id=npc_id,
+                    path=npc_path,
+                    facts_count=facts_count,
+                    provider=provider,
+                    error="embeddings_unavailable",
+                    metadatas=metadatas,
+                )
+            db = FAISS.load_local(
+                npc_path,
+                embeddings,
+                allow_dangerous_deserialization=True,
+            )
+            if metadatas is None:
+                db.add_texts(texts)
+            else:
+                db.add_texts(texts, metadatas=metadatas)
         else:
             embeddings = get_embeddings()
-            if not embeddings:
-                return
-            provider = _resolve_provider()  # puro (lê env); casa com get_embeddings
+            provider = active_provider() or _resolve_provider()
+            if not embeddings or not provider:
+                return _rag_operation_result(
+                    "add_npc_memory",
+                    False,
+                    game_id=game_id,
+                    npc_id=npc_id,
+                    path=npc_path,
+                    facts_count=facts_count,
+                    provider=provider,
+                    error="embeddings_unavailable",
+                    metadatas=metadatas,
+                )
             os.makedirs(os.path.dirname(npc_path), exist_ok=True)
-            db = FAISS.from_texts(texts, embeddings)
+            if metadatas is None:
+                db = FAISS.from_texts(texts, embeddings)
+            else:
+                db = FAISS.from_texts(texts, embeddings, metadatas=metadatas)
+
         _save_index(db, npc_path, provider)
-        print(f"🧠 [RAG] Memória de NPC '{npc_id}' (sessão '{game_id}'): +{len(texts)} fatos.")
-    except Exception as e:
-        print(f"❌ [RAG ERROR] Falha ao salvar memória do NPC '{npc_id}': {e}")
+        print(
+            f"🧠 [RAG] Memória de NPC '{npc_id}' "
+            f"(sessão '{game_id}'): +{facts_count} fatos."
+        )
+        return _rag_operation_result(
+            "add_npc_memory",
+            True,
+            game_id=game_id,
+            npc_id=npc_id,
+            path=npc_path,
+            facts_count=facts_count,
+            provider=provider,
+            error=None,
+            metadatas=metadatas,
+        )
+    except Exception as exc:
+        print(f"❌ [RAG ERROR] Falha ao salvar memória do NPC '{npc_id}': {exc}")
+        return _rag_operation_result(
+            "add_npc_memory",
+            False,
+            game_id=game_id,
+            npc_id=npc_id,
+            path=npc_path,
+            facts_count=facts_count,
+            provider=provider,
+            error=str(exc),
+            metadatas=metadatas,
+        )
 
 
 def query_npc_memory(game_id: str, npc_id: str, query: str, k: int = 3) -> str:
@@ -401,13 +843,7 @@ def query_npc_memory(game_id: str, npc_id: str, query: str, k: int = 3) -> str:
     except Exception:
         return ""
 
-    seen, out = set(), []
-    for doc in docs:
-        content = doc.page_content.strip()
-        if content and content not in seen:
-            seen.add(content)
-            out.append(content)
-    return "\n---\n".join(out)
+    return _format_memory_documents(docs)
 
 
 # --- FUNÇÕES DE UTILIDADE (Setup Inicial) ---

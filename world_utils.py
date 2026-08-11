@@ -66,6 +66,56 @@ def _fold_txt(s: str) -> str:
     return "".join(c for c in nfkd if not unicodedata.combining(c)).lower()
 
 
+def is_travel_intent(text: str) -> bool:
+    """True somente para uma ordem explícita de deslocamento.
+
+    Nome de local, sozinho, não basta: "o que sabe sobre Skallgard?" é consulta
+    de lore. O verbo pode trazer modificadores curtos ("viajo agora para..."),
+    mas precisa apontar para um destino por preposição.
+    """
+    import re
+    folded = re.sub(r"[^\w\s]", " ", _fold_txt(text))
+    folded = " ".join(folded.split())
+    if not folded:
+        return False
+
+    # Perguntas sobre rota/local não executam movimento por acidente.
+    if re.match(
+        r"^(?:o\s+que|quem|qual|quais|como|onde|conte|fale|explique|"
+        r"voce\s+sabe|sabe\s+algo|posso|poderia)\b",
+        folded,
+    ):
+        return False
+
+    return bool(re.search(
+        r"\b(?:vou|vamos|ir|viaj(?:o|ar|amos)|sigo|seguir|"
+        r"caminho|caminhar|parto|partir|me\s+dirijo|atravesso|"
+        r"atravessar|volto|voltar|retorno|retornar|fujo|fugir|"
+        r"entro|entrar|saio|sair)\b"
+        r"(?:\s+\w+){0,5}\s+"
+        r"(?:para|ate|a|rumo\s+a|em|n[oa]s?)\s+\S+",
+        folded,
+    ))
+
+
+def invalid_travel_message(world: dict, text: str) -> str:
+    """Recusa determinística para destino explícito que não é uma saída válida."""
+    if not is_travel_intent(text) or find_travel_destination(world, text) is not None:
+        return ""
+    current = (
+        gamedata.get_location(world.get("current_location_id", ""))
+        or {"name": world.get("current_location", "local atual")}
+    )
+    exits = gamedata.get_connections(world.get("current_location_id"))
+    labels = ", ".join(str(loc.get("name", loc.get("id", "?"))) for loc in exits)
+    if not labels:
+        labels = "nenhuma saída conhecida"
+    return (
+        f"Não há rota direta a partir de {current.get('name', 'seu local atual')}. "
+        f"Saídas conectadas: {labels}."
+    )
+
+
 def find_travel_destination(world: dict, text: str) -> Optional[dict]:
     """
     Se o texto cita um local CONECTADO ao atual (com ou sem verbo de movimento),
@@ -137,9 +187,12 @@ def apply_rest(player: dict, world: dict, allies: list = None) -> Tuple[dict, di
     if blocked:
         advance_clock(world, 1)
         advance_weather(world)
-        return dict(player), world
+        blocked_player = dict(player)
+        if blocked_player.get("vitalidade") is not None:
+            gamedata.sync_legacy_hp_aliases(blocked_player)
+        return blocked_player, world
     player = dict(player)
-    # Insônia (Devoto): fração de cura de HP no descanso cai por patamar de Carga.
+    # Insônia (Devoto): fração de cura da Vitalidade cai por patamar de Carga.
     import combat_mechanics as cm
     hp_factor = 1.0
     _ab = cm.entropy_config(player).get("abyss") or {}
@@ -149,13 +202,57 @@ def apply_rest(player: dict, world: dict, allies: list = None) -> Tuple[dict, di
         hp_factor = max(0.0, 1.0 - _pen)
         if _ab.get("mitigable_by_ally") and allies:
             player["abyss_charge"] = max(0, int(player.get("abyss_charge", 0) or 0) - 1)
-    for res, mx in (("hp", "max_hp"), ("mana", "max_mana"), ("stamina", "max_stamina")):
+    is_v4 = player.get("vitalidade") is not None or isinstance(player.get("virtudes"), dict)
+    if is_v4:
+        gamedata.sync_vitality(player)
+        ceiling = int(player.get("max_vitalidade", 0) or 0)
+        recover = max(1, ceiling // 2)
+        recover = max(1, int(recover * hp_factor)) if hp_factor > 0 else 0
+        player["vitalidade"] = min(
+            ceiling, int(player.get("vitalidade", 0) or 0) + recover)
+        from services import conflict_damage
+        conflict_damage.rest_treat_wounds(
+            player,
+            rest="longo",
+            has_kit=any(
+                (entry.get("id") if isinstance(entry, dict) else entry) == "kit_medico"
+                for entry in (player.get("inventory") or [])
+            ),
+            is_medic="medico" in _fold_txt(player.get("class_name", "")),
+        )
+        for defense in (player.get("armor"), player.get("shield")):
+            if defense:
+                conflict_damage.recover_integrity(defense, "longo")
+        from services import cards
+        cards.reset_card_usage({"player": player}, "descanso_longo")
+        from services import death_flow
+        recovery_state = death_flow.post_combat_consciousness(player)
+        # Um Crítico continua exigindo tratamento especializado para ser removido,
+        # mas o descanso longo em segurança que devolveu Vitalidade é uma
+        # intervenção suficiente para o sobrevivente recobrar a consciência. Sem
+        # esta transição, personagens solo ficavam presos para sempre entre
+        # conflitos: inconscientes, vivos e sem uma ação possível de tratamento.
+        if (recovery_state == "inconsciente"
+                and int(player.get("vitalidade", 0) or 0) > 0):
+            recovery_state = "tratavel"
+        player["post_combat_state"] = recovery_state
+        if recovery_state in ("acordado", "tratavel"):
+            player["conscious"] = True
+        elif recovery_state == "inconsciente":
+            player["conscious"] = False
+        gamedata.sync_legacy_hp_aliases(player)
+
+    for res, mx in (("mana", "max_mana"), ("stamina", "max_stamina")):
         if mx in player:
             ceiling = player.get(mx, 0)
             recover = max(1, ceiling // 2)
-            if res == "hp":
-                recover = max(1, int(recover * hp_factor)) if hp_factor > 0 else 0
             player[res] = min(ceiling, player.get(res, 0) + recover)
+    if not is_v4 and "max_hp" in player:
+        # Compatibilidade isolada com fichas arquivadas.
+        ceiling = int(player.get("max_hp", 0) or 0)
+        recover = max(1, ceiling // 2)
+        recover = max(1, int(recover * hp_factor)) if hp_factor > 0 else 0
+        player["hp"] = min(ceiling, int(player.get("hp", 0) or 0) + recover)
     # spec refatoracao-sistema-classes (R2): Entropia recompõe INTEGRAL no
     # descanso (diferente do HP, que fica em ~metade). Carga do Abismo NÃO cai.
     if "max_entropy" in player:
@@ -799,13 +896,15 @@ def light_level(world: dict, player: dict) -> dict:
     naturally_dark = (period in DARK_PERIODS) or ("dark" in tags)
     dark = naturally_dark and not sheltered
     if dark and _has_light_source(player):
-        return {"dark": False, "lit": True, "perception_mod": 0, "combat_mod": 0,
+        return {"dark": False, "natural_dark": True, "lit": True,
+                "perception_mod": 0, "combat_mod": 0,
                 "label": "iluminado pela sua luz"}
     if dark:
-        return {"dark": True, "lit": False,
+        return {"dark": True, "natural_dark": True, "lit": False,
                 "perception_mod": DARK_PERCEPTION_PENALTY,
                 "combat_mod": DARK_COMBAT_PENALTY, "label": "escuridão"}
-    return {"dark": False, "lit": True, "perception_mod": 0, "combat_mod": 0,
+    return {"dark": False, "natural_dark": False, "lit": True,
+            "perception_mod": 0, "combat_mod": 0,
             "label": "claro"}
 
 
@@ -884,7 +983,8 @@ def roll_encounter_type(danger: int, rng=None) -> str:
     return rng.choices(list(kinds), weights=list(weights), k=1)[0]
 
 
-def resolve_trap(player: dict, loc: dict, danger: int, rng=None) -> tuple:
+def resolve_trap(player: dict, loc: dict, danger: int, rng=None, *,
+                 helper: Optional[dict] = None) -> tuple:
     """Fase 6.4 (R3): armadilha 100%% Python — save vs DC 10+2×danger; falha =
     {danger}d6 + condição temática da região (data/traps.json); sucesso = XP de
     esquiva. Retorna (player_atualizado, logs, trap_dict)."""
@@ -904,7 +1004,20 @@ def resolve_trap(player: dict, loc: dict, danger: int, rng=None) -> tuple:
     danger = max(1, min(4, int(danger or 1)))
     dc = 10 + 2 * danger
     stat = cm.normalize_attr(trap.get("save_stat", "dex"))
-    mod = cm.attr_mods(p.get("attributes", {})).get(stat, 0)
+    is_v4 = p.get("vitalidade") is not None or isinstance(p.get("virtudes"), dict)
+    if is_v4:
+        from services.conflict_resolution import virtude_value
+        virtue = {
+            "str": "forca",
+            "dex": "agilidade",
+            "con": "corpo",
+            "int": "mente",
+            "wis": "mente",
+            "cha": "carisma",
+        }.get(stat, stat)
+        mod = virtude_value(p, virtue)
+    else:
+        mod = cm.attr_mods(p.get("attributes", {})).get(stat, 0)
     mod += int((p.get("racial_save_bonus") or {}).get(stat, 0) or 0)
     roll = rng.randint(1, 20) + mod
     logs = [f"⚠ {trap['name']}! {trap.get('desc', '')}"]
@@ -913,14 +1026,65 @@ def resolve_trap(player: dict, loc: dict, danger: int, rng=None) -> tuple:
         p, lvl_events = grant_xp(p, TRAP_DODGE_XP)
         logs.append(f"{p.get('name', 'O herói')} ESQUIVA (save {roll} vs CD {dc}) — +{TRAP_DODGE_XP} XP.")
         return p, logs, {"trap": trap, "dodged": True, "level_up_events": lvl_events}
-    dmg, detail = cm.roll_dice_numeric(f"{danger}d6")
-    p["hp"] = max(0, int(p.get("hp", 0)) - dmg)
-    logs.append(f"{p.get('name', 'O herói')} falha (save {roll} vs CD {dc}): "
-                f"{dmg} de dano (HP {p['hp']}) [{detail}]")
+    if is_v4:
+        gamedata.sync_vitality(p)
+        from services.conflict_damage import resolve_damage_and_wounds
+        # Conversão categórica da escala d6 antiga para a escala Vitalidade 6–16.
+        dmg = {1: 2, 2: 3, 3: 4, 4: 5}[danger]
+        dres = resolve_damage_and_wounds(
+            p,
+            damage_base=dmg,
+            damage_type=str(trap.get("damage_type") or "perfurante"),
+            directed_region=None,
+            rng=rng,
+        )
+        logs.append(
+            f"{p.get('name', 'O herói')} falha (save {roll} vs CD {dc}): "
+            f"{dmg} de dano (Vitalidade {p['vitalidade']}); "
+            + "; ".join(dres["log"])
+        )
+        from services import death_flow
+        terminal_triggered = False
+        stabilization = None
+        if death_flow.should_trigger_last_stand(p):
+            terminal_triggered = True
+            death_flow.trigger_last_stand(p)
+            death_flow.enter_terminal_state(p)
+            stabilization = death_flow.attempt_stabilization(
+                p, helper, rng=rng,
+                has_kit=bool((helper or {}).get("has_kit")),
+                is_medico="medic" in str((helper or {}).get("class_name", "")).lower(),
+            )
+            if p.get("estado_terminal") and not stabilization.get("dead"):
+                stabilization = death_flow.attempt_stabilization(
+                    p, helper, rng=rng,
+                    has_kit=bool((helper or {}).get("has_kit")),
+                    is_medico="medic" in str((helper or {}).get("class_name", "")).lower(),
+                )
+            logs.append(
+                stabilization.get("log")
+                or stabilization.get("cause")
+                or "A armadilha dispara o fluxo terminal."
+            )
+        trap_result = {
+            "trap": trap,
+            "dodged": False,
+            "level_up_events": [],
+            "terminal_triggered": terminal_triggered,
+            "dead": bool(p.get("dead")),
+            "stabilization": stabilization,
+        }
+    else:
+        dmg, detail = cm.roll_dice_numeric(f"{danger}d6")
+        p["hp"] = max(0, int(p.get("hp", 0)) - dmg)
+        logs.append(f"{p.get('name', 'O herói')} falha (save {roll} vs CD {dc}): "
+                    f"{dmg} de dano (HP {p['hp']}) [{detail}]")
     cond = trap.get("condition")
-    if cond and p["hp"] > 0:
+    if cond and not p.get("dead"):
         p.setdefault("active_conditions", [])
         logs.append(cm.apply_condition(p, dict(cond)))
+    if is_v4:
+        return p, logs, trap_result
     return p, logs, {"trap": trap, "dodged": False, "level_up_events": []}
 
 

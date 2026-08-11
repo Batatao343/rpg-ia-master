@@ -2,6 +2,9 @@
 import type {
   CreateOptions,
   CreatePayload,
+  CombatSimulatorOptions,
+  CombatSimulatorPayload,
+  ActionOptions,
   GameResponse,
   OnboardingData,
   PlayerCodex,
@@ -29,6 +32,15 @@ async function req<T>(path: string, opts: RequestInit = {}): Promise<T> {
 
 export const getOptions = () => req<CreateOptions>("/data/options");
 
+export const getCombatSimulatorOptions = () =>
+  req<CombatSimulatorOptions>("/data/combat-simulator");
+
+export const newCombatSimulator = (payload: CombatSimulatorPayload) =>
+  req<GameResponse>("/game/combat-simulator", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
 // spec onboarding-valoria: lore curado do wizard de criação (estático)
 export const getOnboarding = () => req<OnboardingData>("/data/onboarding");
 
@@ -47,10 +59,10 @@ export const newGame = (payload: CreatePayload) =>
     body: JSON.stringify(payload),
   });
 
-export const sendAction = (input_text: string, game_id: string | null) =>
+export const sendAction = (input_text: string, game_id: string | null, options: ActionOptions = {}) =>
   req<GameResponse>("/game/action", {
     method: "POST",
-    body: JSON.stringify({ input_text, game_id }),
+    body: JSON.stringify({ input_text, game_id, ...options }),
   });
 
 // spec checkpoints-morte (D2): resolve a tela de morte —
@@ -75,11 +87,12 @@ export async function sendActionStream(
   input_text: string,
   game_id: string | null,
   handlers: StreamHandlers = {},
+  options: ActionOptions = {},
 ): Promise<GameResponse> {
   const res = await fetch("/game/action/stream", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ input_text, game_id }),
+    body: JSON.stringify({ input_text, game_id, ...options }),
   });
   if (!res.ok || !res.body) throw new Error("stream indisponível: " + res.status);
 
@@ -157,8 +170,10 @@ export const postEquip = (payload: {
 
 export const postLevelUp = (payload: {
   choice_id: string;
-  ability_id?: string;
-  attr?: string;
+  card_id?: string;
+  evolve_card_id?: string;
+  caminho?: "A" | "B";
+  virtude?: string;
   game_id?: string | null;
 }) =>
   req<LevelUpResult>("/game/levelup", {

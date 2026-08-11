@@ -120,8 +120,8 @@ class PlayerStats(TypedDict, total=False):
     name: str
     class_name: str
     race: str
-    hp: int
-    max_hp: int
+    hp: int                         # alias legado derivado de vitalidade
+    max_hp: int                     # alias legado derivado de max_vitalidade
     mana: int
     max_mana: int
     stamina: int
@@ -142,6 +142,8 @@ class PlayerStats(TypedDict, total=False):
     virtudes: Virtudes                 # mente/agilidade/forca/carisma/corpo (0-5)
     vitalidade: int                    # pool atual (substitui hp no motor novo)
     max_vitalidade: int                # derivado de Corpo (gamedata.VITALIDADE_POR_CORPO)
+    vitalidade_base_bonus: int         # bônus da Postura; zero para inimigos/NPCs
+    vitalidade_max_penalty: int        # perda permanente acumulada por Cicatrizes
     ferimento_espacos: Dict[str, int]  # capacidade {leve,grave,critico} derivada de Corpo (recalc no bump)
     ferimentos: Dict[str, List]        # Ferimentos ATIVOS por categoria (Wound) — conflito-05
     armor: Optional[Armor]             # spec conflito-05: armadura equipada (ou None)
@@ -154,32 +156,36 @@ class PlayerStats(TypedDict, total=False):
     # Fase 4.3: slots de equipamento — {"weapon"|"armor"|"accessory": item_id|None}
     # combate lê SÓ os slots (inventory.equip/unequip; backfill auto-equipa 1x)
     equipment: Dict[str, Optional[str]]
-    known_abilities: List[str]  # Fase 4.1: ids canônicos de player_abilities.json (LEGADO até cutover conflito-13)
-    # --- spec conflito-02: Cartas (Acervo/Preparação/Ruptura/Virtude) ---
-    # Convivem com known_abilities/ability_cooldowns até o cutover (conflito-13);
-    # o motor de combate NOVO (conflito-04) passa a consumir estes campos.
+    # --- specs conflito-02/13: Cartas (Acervo/Preparação/Ruptura/Virtude) ---
     known_cards: List[str]             # Acervo: ids de Cartas conhecidas
     prepared_cards: List[str]          # subconjunto preparado (tamanho por nível)
     card_usage: Dict[str, Dict]        # id -> {used_this_turn, used_this_scene, used_since_short_rest, used_since_long_rest}
     virtue_cards: List[Dict]           # 2 permanentes: {card_id, virtude, estagio}
     evolved_cards: Dict[str, str]      # id -> caminho ("A"|"B") já evoluído (permanente, único)
-    # Fase 4.1: escolhas de level up pendentes — {"id", "level", "kind": ability|virtude|carta}
+    # escolhas de level up pendentes — {"id", "level", "kind": virtude|carta}
     pending_choices: List[Dict]
     defense: int
     attack_bonus: int
     active_conditions: List[Condition]
-    ability_cooldowns: Dict[str, int]  # ability_id -> turnos restantes
     # --- Fase 2.5b: traits raciais (aplicados na criação; ver data/origins.json) ---
     racial_traits: List[str]           # nomes dos traits (narração/HUD)
     condition_resists: List[str]       # substrings de condições que a raça ignora
     racial_save_bonus: Dict[str, int]  # attr curto -> bônus em saving throws
+    dead: bool
+    estado_terminal: bool
+    last_stand_pending: bool
+    last_stand_resolved: bool
 
 
-class EnemyStats(TypedDict):
+class EnemyStats(TypedDict, total=False):
     id: str
     name: str
-    hp: int
+    hp: int                         # alias legado derivado
     max_hp: int
+    vitalidade: int
+    max_vitalidade: int
+    ferimento_espacos: Dict[str, int]
+    ferimentos: Dict[str, List]
     stamina: int
     mana: int
     defense: int
@@ -198,10 +204,14 @@ class EnemyStats(TypedDict):
     behavior: Optional[Dict]
 
 
-class CompanionState(TypedDict):
+class CompanionState(TypedDict, total=False):
     name: str
-    hp: int
+    hp: int                         # alias legado derivado
     max_hp: int
+    vitalidade: int
+    max_vitalidade: int
+    ferimento_espacos: Dict[str, int]
+    ferimentos: Dict[str, List]
     active: bool
     stats: Dict
 
@@ -355,6 +365,20 @@ class RevealedFact(TypedDict, total=False):
     revealed_by_event: str
 
 
+class MemoryFact(TypedDict, total=False):
+    """Fato/relato persistido com autoridade derivada pelo motor."""
+    memory_id: str
+    text: str
+    provenance: Literal[
+        "canonical_event", "player_observation", "npc_claim", "inference",
+        "legacy_unverified",
+    ]
+    confidence: Literal["confirmed", "reported", "speculative"]
+    source_id: Optional[str]
+    source_turn: Optional[int]
+    canonical_entity_ids: List[str]
+
+
 class WorldProjection(TypedDict, total=False):
     entities: Dict[str, EntityState]
     dynamic_edges: List[DynamicEdge]
@@ -366,6 +390,7 @@ class WorldProjection(TypedDict, total=False):
 class GameState(TypedDict):
     # --- Identificação e Memória (NOVO) ---
     game_id: str  # ID único da sessão para isolar o RAG
+    processed_action_ids: List[str]  # ledger limitado de idempotência SSE/POST
     narrative_summary: str # Resumo de curto prazo (contexto comprimido)
     archivist_last_run: int # Controle de frequência do arquivista
     archive_due: bool       # flag transitória: evento relevante pede arquivamento (cadência)
@@ -373,6 +398,9 @@ class GameState(TypedDict):
                             # GameState o LangGraph DESCARTA o update; achado do smoke real)
     death_pending: bool     # spec checkpoints-morte: queda letal — aguardando a TELA DE
                             # MORTE (Continuar do checkpoint / Aceitar o fim). Transitório.
+    # Laboratório isolado: {enabled, enemy_id, quantity}. Quando presente,
+    # campanha, LLM/RAG, loot e archivist ficam fora do turno de combate.
+    combat_simulation: Optional[Dict]
     chronicle: List[ChronicleChapter]  # Crônica por capítulos: milestones (event_log) + prosa de menestrel
 
     messages: Annotated[List[BaseMessage], operator.add]
@@ -409,6 +437,26 @@ class GameState(TypedDict):
     # combate deve virar tentativa de fuga rumo a este destino (não teleporta).
     combat_flee_attempt: Optional[bool]
     combat_flee_destination: Optional[str]
+
+    # spec conflito-13 (cutover): declaração estruturada de turno do jogador/harness
+    # (services/conflict_turn.TurnDeclaration serializada). Quando presente, o
+    # combat_node NÃO faz o parse CLASSIFY — usada pelo playtest e pela UI (conflito-16).
+    combat_declaration: Optional[Dict]
+    player_reaction_card_id: Optional[str]  # conflito-16: escolha transitória da UI
+    # spec conflito-12: resumo canônico do conflito resolvido — consumido por
+    # loot/archivist para retomar a narrativa sem reverter fatos.
+    conflict_summary: Optional[Dict]
+    consumed_conflict_ids: List[str]  # ledger bounded de summaries já persistidos
+    memory_fact_policy: Optional[str]  # política transitória ("canonical_only")
+    memory_canonical_facts: List[str]  # allowlist persistida até commit RAG
+    memory_facts: List[MemoryFact]      # ledger auditável já confirmado no RAG
+    pending_memory_facts: List[MemoryFact]  # retry idempotente da sessão
+    memory_rejections: List[Dict]       # recusas de proveniência/segredo (bounded)
+    memory_promotions: List[Dict]       # promoções com fonte canônica (bounded)
+    pending_npc_memory: List[Dict]      # fila bounded de retries add_npc_memory
+    narrative_rejections: List[str]     # guardrails narrativos transitórios
+    rag_persistence_error: Optional[str]  # falha sanitizada de memória da sessão
+    event_rejections: List[Dict]         # propostas recusadas + metadados sanitizados
 
     # --- Fase 2.5: mundo estruturado (LLM propõe, motor aplica) ---
     event_log: List[GameEvent]            # append-only; auditoria do que mudou

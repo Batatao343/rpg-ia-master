@@ -14,7 +14,13 @@ from langchain_core.messages import AIMessage, HumanMessage
 from pydantic import BaseModel
 
 import llm_setup
-from llm_setup import ModelTier, RoutedLLM, get_llm, set_llm_telemetry_hook
+from llm_setup import (
+    ModelTier,
+    RoutedLLM,
+    get_llm,
+    set_llm_attempt_telemetry_hook,
+    set_llm_telemetry_hook,
+)
 
 
 class _Tiny(BaseModel):
@@ -28,9 +34,11 @@ class _FakeClient:
         self.tag = tag
         self.behavior = behavior
         self._schema = None
+        self._include_raw = False
 
     def with_structured_output(self, schema, *_a, **_k):
         self._schema = schema
+        self._include_raw = bool(_k.get("include_raw"))
         return self
 
     def bind_tools(self, *_a, **_k):
@@ -42,13 +50,40 @@ class _FakeClient:
     def invoke(self, _input):
         if self.behavior == "raise":
             raise RuntimeError(f"{self.tag} boom")
+        if self.behavior == "payment":
+            raise RuntimeError("402 Payment Required: insufficient balance")
+        if self.behavior == "none":
+            return None
+        if self.behavior == "wrong":
+            return AIMessage(content=f"structured invalido de {self.tag}")
         if self._schema is not None:
+            if self._include_raw:
+                if self.behavior == "raw_error":
+                    return {
+                        "raw": AIMessage(content="raw"),
+                        "parsed": self._schema(),
+                        "parsing_error": ValueError("parse falhou"),
+                    }
+                if self.behavior == "raw_wrong":
+                    return {
+                        "raw": AIMessage(content="raw"),
+                        "parsed": AIMessage(content="tipo errado"),
+                        "parsing_error": None,
+                    }
+                return {
+                    "raw": AIMessage(content="raw"),
+                    "parsed": self._schema(),
+                    "parsing_error": None,
+                }
             return self._schema()
         return AIMessage(content=f"resposta de {self.tag}")
 
     def stream(self, _input):
         if self.behavior == "raise":
             raise RuntimeError(f"{self.tag} boom-stream")
+        if self.behavior == "yield_raise":
+            yield AIMessage(content=f"parcial de {self.tag}")
+            raise RuntimeError(f"{self.tag} boom-midstream")
         yield self.invoke(_input)
 
 
@@ -62,10 +97,14 @@ def _routing_env(monkeypatch):
     monkeypatch.delenv("RPG_NO_MOCK", raising=False)
     monkeypatch.setenv("GROQ_API_KEY", "test-key")
     llm_setup._CLIENT_CACHE.clear()
+    llm_setup.reset_llm_circuit_breakers()
     set_llm_telemetry_hook(None)
+    set_llm_attempt_telemetry_hook(None)
     yield
     set_llm_telemetry_hook(None)
+    set_llm_attempt_telemetry_hook(None)
     llm_setup._CLIENT_CACHE.clear()
+    llm_setup.reset_llm_circuit_breakers()
 
 
 def _install_fakes(monkeypatch, mapping: dict):
@@ -77,7 +116,7 @@ def _install_fakes(monkeypatch, mapping: dict):
         beh = mapping.get(provider, "ok")
         if beh == "nokey":
             raise ValueError(f"{provider} key ausente")
-        return _FakeClient(provider, "raise" if beh == "raise" else "ok")
+        return _FakeClient(provider, beh)
 
     monkeypatch.setattr(llm_setup, "_build_client", fake_build)
     return calls
@@ -91,6 +130,58 @@ def test_classify_tier_existe():
     assert llm_setup.ROUTES.get(ModelTier.CLASSIFY), "ROUTES[CLASSIFY] não pode ser vazio"
     for tier in (ModelTier.CLASSIFY, ModelTier.FAST, ModelTier.SMART):
         assert llm_setup.ROUTES.get(tier), f"ROUTES[{tier}] vazio"
+
+
+def test_deepseek_usa_identificador_v4_nao_alias_descontinuado():
+    for tier in (ModelTier.CLASSIFY, ModelTier.FAST, ModelTier.SMART):
+        deepseek = [model for provider, model in llm_setup.ROUTES[tier]
+                    if provider == "deepseek"]
+        assert deepseek == ["deepseek-v4-flash"]
+        assert "deepseek-chat" not in deepseek
+
+
+def test_deepseek_v4_desliga_thinking_e_aplica_timeout(monkeypatch):
+    import langchain_openai
+
+    captured = {}
+
+    def fake_chat_openai(**kwargs):
+        captured.update(kwargs)
+        return object()
+
+    monkeypatch.setattr(langchain_openai, "ChatOpenAI", fake_chat_openai)
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "test-key")
+    monkeypatch.setenv("LLM_TIMEOUT_SECONDS", "12.5")
+
+    llm_setup._build_openai("deepseek", 0.0, "deepseek-v4-flash")
+
+    assert captured["timeout"] == 12.5
+    assert captured["extra_body"] == {"thinking": {"type": "disabled"}}
+
+
+def test_timeout_global_tambem_alcanca_anthropic_e_gemini(monkeypatch):
+    import langchain_anthropic
+    import langchain_google_genai
+
+    anthropic_kwargs = {}
+    gemini_kwargs = {}
+    monkeypatch.setattr(
+        langchain_anthropic, "ChatAnthropic",
+        lambda **kwargs: anthropic_kwargs.update(kwargs) or object(),
+    )
+    monkeypatch.setattr(
+        langchain_google_genai, "ChatGoogleGenerativeAI",
+        lambda **kwargs: gemini_kwargs.update(kwargs) or object(),
+    )
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+    monkeypatch.setenv("GOOGLE_API_KEY", "test-key")
+    monkeypatch.setenv("LLM_TIMEOUT_SECONDS", "7.5")
+
+    llm_setup._build_anthropic(0.0, "claude-sonnet-5")
+    llm_setup._build_gemini(0.0, "gemini-flash-latest")
+
+    assert anthropic_kwargs["timeout"] == 7.5
+    assert gemini_kwargs["request_timeout"] == 7.5
 
 
 def test_get_llm_devolve_routed():
@@ -117,6 +208,26 @@ def test_fallback_pula_candidato_que_levanta(monkeypatch):
     assert tier == ModelTier.FAST
     assert isinstance(latency_ms, int) and latency_ms >= 0
     assert fell_back is True, "fell_back deveria ser True (2º candidato)"
+
+
+def test_falha_permanente_abre_circuito_ate_reset(monkeypatch):
+    _install_fakes(monkeypatch, {"p1": "payment", "p2": "ok"})
+    attempts = []
+    set_llm_attempt_telemetry_hook(attempts.append)
+    routed = RoutedLLM(ModelTier.FAST, 0.1, [("p1", "m1"), ("p2", "m2")])
+
+    assert routed.invoke([HumanMessage(content="primeira")]).content == "resposta de p2"
+    assert [event.outcome for event in attempts] == ["invoke_error", "success"]
+
+    attempts.clear()
+    assert routed.invoke([HumanMessage(content="segunda")]).content == "resposta de p2"
+    assert [event.outcome for event in attempts] == ["circuit_open", "success"]
+    assert "402" in (attempts[0].error or "")
+
+    llm_setup.reset_llm_circuit_breakers()
+    attempts.clear()
+    routed.invoke([HumanMessage(content="terceira")])
+    assert attempts[0].outcome == "invoke_error"
 
 
 def test_primeiro_candidato_ok_nao_e_fallback(monkeypatch):
@@ -159,6 +270,84 @@ def test_structured_output_sucesso_devolve_instancia(monkeypatch):
     assert res.value == "ok"
 
 
+@pytest.mark.parametrize("invalid_behavior", ["none", "wrong"])
+def test_structured_output_invalido_tenta_proximo_provider(
+        monkeypatch, invalid_behavior):
+    _install_fakes(monkeypatch, {"p1": invalid_behavior, "p2": "ok"})
+    tentativas = []
+    sucessos_legados = []
+    set_llm_attempt_telemetry_hook(tentativas.append)
+    set_llm_telemetry_hook(lambda *args: sucessos_legados.append(args))
+
+    engine = RoutedLLM(
+        ModelTier.CLASSIFY, 0.0, [("p1", "m1"), ("p2", "m2")]
+    ).with_structured_output(_Tiny)
+    res = engine.invoke([HumanMessage(content="classifique")])
+
+    assert isinstance(res, _Tiny)
+    assert [event.outcome for event in tentativas] == [
+        "invalid_structured", "success",
+    ]
+    assert tentativas[0].structured is True
+    assert tentativas[1].fell_back is True
+    assert [args[0] for args in sucessos_legados] == ["p2"], (
+        "hook legado continua representando apenas sucesso validado"
+    )
+
+
+def test_structured_include_raw_exige_parsed_tipado_e_sem_erro(monkeypatch):
+    _install_fakes(monkeypatch, {"p1": "raw_error", "p2": "ok"})
+    tentativas = []
+    set_llm_attempt_telemetry_hook(tentativas.append)
+
+    engine = RoutedLLM(
+        ModelTier.CLASSIFY, 0.0, [("p1", "m1"), ("p2", "m2")]
+    ).with_structured_output(_Tiny, include_raw=True)
+    res = engine.invoke([HumanMessage(content="classifique")])
+
+    assert isinstance(res, dict)
+    assert isinstance(res["parsed"], _Tiny)
+    assert res["parsing_error"] is None
+    assert [event.outcome for event in tentativas] == [
+        "invalid_structured", "success",
+    ]
+
+
+def test_plain_invoke_nao_rejeita_none(monkeypatch):
+    _install_fakes(monkeypatch, {"p1": "none", "p2": "ok"})
+    tentativas = []
+    set_llm_attempt_telemetry_hook(tentativas.append)
+
+    res = RoutedLLM(
+        ModelTier.FAST, 0.1, [("p1", "m1"), ("p2", "m2")]
+    ).invoke([HumanMessage(content="oi")])
+
+    assert res is None, "pos-condicao vale somente para structured output Pydantic"
+    assert [event.outcome for event in tentativas] == ["success"]
+    assert tentativas[0].structured is False
+
+
+def test_hook_de_tentativas_observa_build_e_invoke_falhos(monkeypatch):
+    _install_fakes(monkeypatch, {"p1": "nokey", "p2": "raise", "p3": "ok"})
+    tentativas = []
+    set_llm_attempt_telemetry_hook(tentativas.append)
+
+    res = RoutedLLM(
+        ModelTier.FAST, 0.1,
+        [("p1", "m1"), ("p2", "m2"), ("p3", "m3")],
+    ).invoke([HumanMessage(content="oi")])
+
+    assert res.content == "resposta de p3"
+    assert [event.outcome for event in tentativas] == [
+        "build_error", "invoke_error", "success",
+    ]
+    assert tentativas[0].provider == "p1"
+    assert tentativas[0].attempt_index == 0
+    assert tentativas[0].error
+    assert tentativas[-1].attempt_index == 2
+    assert tentativas[-1].fell_back is True
+
+
 def test_key_ausente_pula_provider(monkeypatch):
     calls = _install_fakes(monkeypatch, {"p1": "nokey", "p2": "ok"})
     routed = RoutedLLM(ModelTier.FAST, 0.1, [("p1", "m1"), ("p2", "m2")])
@@ -178,9 +367,49 @@ def test_build_cacheado(monkeypatch):
 
 def test_stream_fallback(monkeypatch):
     _install_fakes(monkeypatch, {"p1": "raise", "p2": "ok"})
+    tentativas = []
+    set_llm_attempt_telemetry_hook(tentativas.append)
     routed = RoutedLLM(ModelTier.FAST, 0.1, [("p1", "m1"), ("p2", "m2")])
     chunks = list(routed.stream([HumanMessage(content="oi")]))
     assert chunks and chunks[-1].content == "resposta de p2"
+    assert [event.outcome for event in tentativas] == ["stream_error", "success"]
+    assert tentativas[-1].fell_back is True
+
+
+def test_stream_so_emite_sucesso_depois_de_esgotar_iterador(monkeypatch):
+    _install_fakes(monkeypatch, {"p1": "ok"})
+    tentativas = []
+    sucessos_legados = []
+    set_llm_attempt_telemetry_hook(tentativas.append)
+    set_llm_telemetry_hook(lambda *args: sucessos_legados.append(args))
+    routed = RoutedLLM(ModelTier.FAST, 0.1, [("p1", "m1")])
+
+    stream = routed.stream([HumanMessage(content="oi")])
+    first = next(stream)
+
+    assert first.content == "resposta de p1"
+    assert tentativas == []
+    assert sucessos_legados == []
+
+    assert list(stream) == []
+    assert [event.outcome for event in tentativas] == ["success"]
+    assert len(sucessos_legados) == 1
+
+
+def test_stream_yield_depois_erro_nao_emite_falso_sucesso(monkeypatch):
+    _install_fakes(monkeypatch, {"p1": "yield_raise", "p2": "ok"})
+    tentativas = []
+    sucessos_legados = []
+    set_llm_attempt_telemetry_hook(tentativas.append)
+    set_llm_telemetry_hook(lambda *args: sucessos_legados.append(args))
+    routed = RoutedLLM(ModelTier.FAST, 0.1, [("p1", "m1"), ("p2", "m2")])
+
+    chunks = list(routed.stream([HumanMessage(content="oi")]))
+
+    assert [chunk.content for chunk in chunks] == ["parcial de p1"]
+    assert [event.outcome for event in tentativas] == ["stream_error"]
+    assert tentativas[0].error == "p1 boom-midstream"
+    assert sucessos_legados == []
 
 
 def test_import_error_pula_candidato(monkeypatch):

@@ -17,14 +17,14 @@ class _Rng:
 
 
 def _predador():
-    return {"id": "predador", "tactical_profile": {"priorities": [
+    return {"id": "predador", "pursuit_policy": "persegue", "tactical_profile": {"priorities": [
         {"trigger": "alvo_fugindo", "tipo": "obrigatorio", "action_hint": "persegue a presa"},
         {"trigger": "sempre", "tipo": "obrigatorio", "action_hint": "ataca"},
     ]}}
 
 
 def _guardiao():
-    return {"id": "guardiao", "tactical_profile": {"priorities": [
+    return {"id": "guardiao", "pursuit_policy": "nao_persegue", "tactical_profile": {"priorities": [
         {"trigger": "sempre", "tipo": "obrigatorio", "action_hint": "não abandona o posto"},
     ]}}
 
@@ -57,6 +57,13 @@ def test_sem_perseguidor_disposto_escapa():
     cs.place(s, "player", distance_state="proximo")
     ch = chase.start_chase(s, "player", [_guardiao()])
     assert ch["trilha"] == "escapou" and ch["escapou"] is True
+
+
+def test_prosa_nao_autoriza_perseguicao_sem_politica_fechada():
+    fake = {"id": "fake", "tactical_profile": {"priorities": [
+        {"trigger": "alvo_fugindo", "action_hint": "persegue para sempre"},
+    ]}}
+    assert chase.will_pursue(fake) is False
 
 
 # ==========================================================================

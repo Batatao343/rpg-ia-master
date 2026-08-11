@@ -503,7 +503,8 @@
       "treasure": {
         "gold": 55,
         "items": [
-          "arco_de_caca"
+          "arco_de_caca",
+          "art_oghma_coracao_aethelgard"
         ]
       }
     },

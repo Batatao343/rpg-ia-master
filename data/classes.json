@@ -7,6 +7,7 @@
     "passive": "Convite: provocações escalam com a Entropia acumulada no combate.",
     "base_stats": {
       "hp": 40,
+      "vitalidade_bonus": 6,
       "entropy": 14,
       "mana": 0,
       "stamina": 0,
@@ -34,14 +35,15 @@
       "damage_divisor": 4,
       "min_gain": 1,
       "charge_per": 1,
+      "charge_cap": 6,
       "per_turn_cap": 1,
-      "note": "[BALANCEAR] +1 Entropia por 4 de dano recebido; +1 Carga/turno"
+      "note": "+1 Entropia por 4 de dano; +1 Carga/turno até 6 — baseline 16→6 evita severo passivo"
     },
     "special_rule": {
       "kind": "taunt_scales_with_entropy",
       "per_entropy": 0.05,
       "cap": 0.6,
-      "note": "[BALANCEAR] aggro sobe 5%/ponto de Entropia, teto 60%"
+      "note": "aggro +5%/Entropia, teto 60% — retido: bounded e sem dominância na grade"
     },
     "abyss": {
       "consequence": "insonia",
@@ -90,6 +92,7 @@
     "passive": "Contrato de Sangue: auto-dano vira Entropia de sangue.",
     "base_stats": {
       "hp": 30,
+      "vitalidade_bonus": 6,
       "entropy": 16,
       "mana": 0,
       "stamina": 0,
@@ -117,12 +120,12 @@
       "gain_per_hp": 1,
       "charge_per": 1,
       "per_turn_cap": 2,
-      "note": "[BALANCEAR] auto-dano vira Entropia (1:1); +1 Carga por ativação"
+      "note": "auto-dano vira Entropia 1:1; +1 Carga — starvation 0%, pico 5"
     },
     "special_rule": {
       "kind": "blood_leak",
       "leak_frac": 0.25,
-      "note": "[BALANCEAR] acerto do inimigo vaza 25% da Entropia de sangue não gasta"
+      "note": "acerto vaza 25% da Entropia de sangue — conservador; sem overdrain na grade"
     },
     "abyss": {
       "consequence": "cicatriz",
@@ -166,6 +169,7 @@
     "passive": "Parceria: a decadência ao seu redor te alimenta.",
     "base_stats": {
       "hp": 30,
+      "vitalidade_bonus": 6,
       "entropy": 18,
       "mana": 0,
       "stamina": 0,
@@ -194,7 +198,7 @@
       "charge_per": 1,
       "per_turn_cap": 2,
       "decay_kind": "any",
-      "note": "[BALANCEAR] algo perto se desfaz (DoT/morte) → +1 Entropia; +1 Carga"
+      "note": "decadência próxima → +1 Entropia/+1 Carga — starvation 0%, flooding 38–43%"
     },
     "special_rule": {
       "kind": "domain_decay",
@@ -261,6 +265,7 @@
     "passive": "Caldeira: canalizar gera Entropia para a próxima descarga.",
     "base_stats": {
       "hp": 26,
+      "vitalidade_bonus": 6,
       "entropy": 20,
       "mana": 0,
       "stamina": 0,
@@ -288,13 +293,13 @@
       "gain": 2,
       "charge_per": 1,
       "per_turn_cap": 1,
-      "note": "[BALANCEAR] usar habilidade gera Entropia p/ a próxima; +1 Carga"
+      "note": "canalizar → +2 Entropia/+1 Carga — starvation 0%, flooding 30%"
     },
     "special_rule": {
       "kind": "boiler",
       "cool_deadline": 3,
       "overload_damage": "2d6",
-      "note": "[BALANCEAR] Entropia não vazada em 3 turnos → instrumento estoura (auto-dano)"
+      "note": "3 turnos sem vazão → 2d6 auto-dano — 2 estouros/100t, não dominante"
     },
     "abyss": {
       "consequence": "dependencia",
@@ -338,6 +343,7 @@
     "passive": "Triagem: cura mais quem está mais perto do fim.",
     "base_stats": {
       "hp": 30,
+      "vitalidade_bonus": 6,
       "entropy": 16,
       "mana": 0,
       "stamina": 0,
@@ -364,8 +370,9 @@
       "kind": "on_ally_suffer",
       "gain": 1,
       "charge_per": 1,
+      "charge_cap": 6,
       "per_turn_cap": 2,
-      "note": "[BALANCEAR] aliado toma dano/condição → +1 Entropia; +1 Carga"
+      "note": "aliado sofre → +1 Entropia/+1 Carga até 6 — recrutador 15→6 evita Recidiva passiva"
     },
     "special_rule": {
       "kind": "heal_abyss",

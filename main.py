@@ -99,10 +99,15 @@ def build_game_graph():
     # Nos demais casos segue direto para o arquivista.
     workflow.add_conditional_edges(
         "combat_agent",
-        lambda state: "loot_agent" if state.get("next") == "loot" else "archivist",
+        lambda state: (
+            "__end__"
+            if (state.get("combat_simulation") or {}).get("enabled")
+            else "loot_agent" if state.get("next") == "loot" else "archivist"
+        ),
         {
             "loot_agent": "loot_agent",
             "archivist": "archivist",
+            "__end__": END,
         },
     )
     

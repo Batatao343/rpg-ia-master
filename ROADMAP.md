@@ -1,4 +1,4 @@
-# ROADMAP — RPG IA (Revisado 2026-07-13)
+# ROADMAP — RPG IA (Revisado 2026-08-11)
 
 > **Objetivo central:** Mundo vivo persistente com estado consultável, antes de features novas.
 > 
@@ -10,7 +10,65 @@
 
 ---
 
-## 🔨 EM CURSO — Migração do Sistema de Conflitos (Valoria v2) — 16 specs `draft`
+## ✅ ENTREGUE — Hardening de persistência e SSE (2026-08-11)
+
+[hardening-persistencia-sse-idempotencia](specs/hardening-persistencia-sse-idempotencia.md)
+separou saves vivos de checkpoints, tornou a escrita JSON atômica e a exclusão
+composta (save + checkpoint + memória). Falha de disco agora é explícita.
+
+Turnos são serializados por `game_id` no processo e deduplicados por `action_id`
+persistido; stream e fallback POST compartilham o mesmo ID, e o worker conclui o
+save mesmo após desconexão do consumidor. Testes usam diretórios temporários e
+não poluem mais o runtime real. Telemetria de skips, DTOs de criação, CLI e CI
+também foram endurecidos.
+
+Gate: **1398 passed, 1 skipped, 14 deselected**; Ruff e conteúdo verdes; build
+Vite com 454 módulos. Lock distribuído/autenticação continuam na Fase 10b.
+
+---
+
+## ✅ ENTREGUE — Laboratório de combate isolado (2026-08-03)
+
+[modo-simulacao-combate](specs/modo-simulacao-combate.md) adiciona uma entrada
+direta no frontend para escolher classe, nível, qualquer inimigo canônico e
+quantidade. A arena reutiliza Cartas, Reações, Ruptura, Ferimentos, posições e
+IA tática de produção, mas pula LLM/RAG, campanha, archivist, loot, XP e
+checkpoints. O save recebe marcador próprio e a UI mostra “Laboratório”.
+
+Smoke browser desktop/mobile 390 px: round de Carta+Reação e manobra Guardar,
+console limpo e 0 violações WCAG A/AA. Gate: **1388 passed, 1 skipped,
+14 deselected**; Vite/TypeScript com 454 módulos.
+
+---
+
+## ✅ ENTREGUE — Remediações dos relatos de gameplay (2026-08-03)
+
+Quatro resíduos da matriz real foram formalizados e fechados:
+
+1. [polish-prosa-v2](specs/polish-prosa-v2.md) — fronteira de saída remove
+   marcadores internos/imperativos ecoados, varia abertura literalmente repetida
+   sem request extra e elimina parágrafo de aquisição monetária rejeitada.
+2. [hardening-playtest-watchdog](specs/hardening-playtest-watchdog.md) — teto de
+   wall-clock no startup/turno real, manifesto `aborted`, recuperação de run
+   stale e circuit breaker process-local para falha permanente de provider.
+3. [smoke-dirigido-recrutamento-comercio](specs/smoke-dirigido-recrutamento-comercio.md)
+   — cenários opt-in com pré-condições canônicas e oráculos fail-loud; Brunna
+   entrou na party e a compra alterou ouro/inventário no LLM real.
+
+4. [fix-playtest-liveness-telemetria-circuito](specs/fix-playtest-liveness-telemetria-circuito.md)
+   — revisão pós-entrega corrigiu falso-aborto de runs legítimas >6 h com
+   owner+heartbeat e retirou `circuit_open` de requests/custo/falhas, mantendo
+   skips auditáveis em `llm_skipped`.
+
+Evidência: runs reais `20260803-114646-799077`, `20260803-114339-651827` e
+`20260803-114423-833666`, todas `mock=false`, completas e sem erro/violação;
+smoke offline da correção `20260803-130102-999691`, completo e sem violações.
+
+Gate atual do repositório: **1388 passed, 1 skipped, 14 deselected**.
+
+---
+
+## ✅ ENTREGUE — Migração do Sistema de Conflitos (Valoria v2)
 
 > **Épico grande (2026-07-22).** Fonte funcional do usuário:
 > `docs/valoria_conflict_migration_v2/` (4 docs: regras consolidadas, escopo,
@@ -51,18 +109,20 @@ incluído, menos prioritário** (última spec).
 | 10 ✅ | [conflito-10-abismo-em-conflito](specs/conflito-10-abismo-em-conflito.md) | Eventos do Abismo preparados (base na cena obrigatória), carregamento determinístico/seed por Cargas+gatilho+prioridade, proibições rígidas (R4/R6), assinatura visual fixa — **`done`** (motor; fiação → cutover 13) |
 | 11 ✅ | [conflito-11-preparacao-encontro-llm](specs/conflito-11-preparacao-encontro-llm.md) | LLM prepara cena jogável; Nível do Encontro absoluto (Python, sem party), potência por categoria (`data/potency_by_level.json`), validação de catálogo/base/região, cena de segurança, ficha de combate completa do NPC — **`done`** (motor+geração; fiação de grafo → cutover 13) |
 | 12 ✅ | [conflito-12-loot-resumo-narrativo](specs/conflito-12-loot-resumo-narrativo.md) | `ConflictSummary` canônico (18 campos), `loot_context` (Nível do Encontro→danger, `roll_loot` intacta), contrato de não-reversão da narrativa, fatos p/ archivist — **`done`** (motor; fiação → cutover 13) |
-| 13 | [conflito-13-cutover-migracao-playtest](specs/conflito-13-cutover-migracao-playtest.md) | **Cutover** — religa roteamento, remove motor antigo, reescreve playtest |
+| 13 ✅ | [conflito-13-cutover-migracao-playtest](specs/conflito-13-cutover-migracao-playtest.md) | **`done` (2026-08-02)** — sete specs de remediação entregues; matriz real pós-fix composta, 13×30, 390/390 turnos, `mock=false`, 0 erro/violação `error`, 1.119 sucessos de rede, US$ 0,328488, 4 reações e 28 táticas. [Relatório final](docs/smoke-correcoes-conflito-v4-2026-08-02.md). |
 | 14 ✅ | [conflito-14-autoria-cartas-classes](specs/conflito-14-autoria-cartas-classes.md) | 80 Cartas autorais (escala nova 2d10+Virtude, 16/classe), catálogo fechado, Ruptura+Evolução A/B nas 15 centrais, parity, `docs/CARTAS.md` — **`done`** (entra em produção no cutover 13) |
 | 15 ✅ | [conflito-15-autoria-bestiario-perfis](specs/conflito-15-autoria-bestiario-perfis.md) | 84 criaturas migradas pro schema v4 (categoria/Virtudes/Vitalidade/resistências), 10 arquétipos táticos ricos, 18 Cartas de inimigo com assinatura oculta — **`done`** (ADITIVO; fiação → cutover 13) |
-| 16 | [conflito-16-frontend-combate-cartas](specs/conflito-16-frontend-combate-cartas.md) | Interface tática de cartas (menos prioritária) |
-| 17 | [conflito-17-volume-conteudo-mundo-vivo](specs/conflito-17-volume-conteudo-mundo-vivo.md) | **`draft`** — VOLUME: ≥150 Cartas jogador + ≥40 inimigo, ≥120 criaturas (tabela/região), ≥30 NPCs nomeados; guardas anti-reskin + relatório de cobertura (fast-follow de conteúdo, pós-14/15) |
+| 16 ✅ | [conflito-16-frontend-combate-cartas](specs/conflito-16-frontend-combate-cartas.md) | **`done` (2026-08-02)** — mão de Cartas/Reação/Ruptura, zonas, Ferimentos, conhecimento progressivo, perseguição e morte rica; build + browser desktop/mobile + smoke LLM real verdes. |
+| 17 ✅ | [conflito-17-volume-conteudo-mundo-vivo](specs/conflito-17-volume-conteudo-mundo-vivo.md) | **`done` (2026-08-02)** — 153 Cartas jogador + 40 inimigo, 124 criaturas (40 novas), 36 NPCs (3×12 hubs), guardas anti-reskin e [relatório de cobertura](docs/content-coverage-2026-08-02.md). |
+| Q ✅ | [hardening-memoria-proveniencia](specs/hardening-memoria-proveniencia.md) | **`done` (2026-08-02)** — ledger com proveniência/confiança/fonte, metadata FAISS, segredo fail-closed, retry idempotente, invariante e telemetria. Smoke real 3×30: 90/90, 0 erro/violação `error`, 15 writes `npc_claim`, nenhuma promoção indevida. |
 
 **Ordem:** 01 → 02/03 (paralelizáveis após 01) → 04 → 05 → 06 → 07 → 08 → 09/10 →
 11 → 12 → **13 (cutover)** → 16. Autoria (14/15) pode correr em paralelo às specs
 de motor (dependem só do schema respectivo — 02 e 05/08), mas só entra em produção
 depois do cutover 13.
 
-**Progresso:** **01 + 02 `done`** (2026-07-22).
+**Progresso atual:** 01–17 e hardening de proveniência `done`; épico de Conflitos
+v2 integralmente entregue. Gate atual: **1388 passed, 1 skipped, 14 deselected**.
 - **01** — fundação de dados: 5 Virtudes (0-5, distribuição 4/3/2/1/1), Vitalidade
   + espaços de Ferimento por Corpo, nível máx 10 com +1 Virtude nos pares,
   migração v3→v4 (hard cutover, saves antigos arquivados), `attributes`/mana/
@@ -730,7 +790,7 @@ Antes de abrir para usuários externos.
 - Saves locais em JSON (sem versionamento, sem migrations)
 - Sem autenticação
 - Sem isolamento por usuário
-- Sem controle de concorrência
+- Concorrência serializada apenas dentro de um processo (distribuída = 10b)
 - CORS aberto
 
 **Entregas:**

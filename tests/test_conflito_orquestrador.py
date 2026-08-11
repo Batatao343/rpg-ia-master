@@ -219,3 +219,21 @@ def test_abismo_carrega_com_cargas_suficientes():
                          prepared_abyss=prepared, rng=random.Random(5))
     assert any("ABISMO" in l for l in out["logs"])
     assert player["abyss_charge"] == 1         # 3 - 2 Cargas gastas
+
+
+# ------------------------------------------------- invariantes novas (R5, cutover)
+def test_invariante_effect_catalog_detecta_fora_do_catalogo():
+    from playtest import invariants as inv
+    state = {"combat": {"scene": {"objects": [
+        {"id": "alavanca", "interactions": [{"label": "puxar",
+                                             "effect": {"kind": "kind_inventado"}}]}]}}}
+    ids = {v.check_id for v in inv.check_effect_catalog(state, None, 0)}
+    assert "combat.effect_catalog" in ids
+    # efeito válido não acusa
+    state["combat"]["scene"]["objects"][0]["interactions"][0]["effect"]["kind"] = "damage"
+    assert not inv.check_effect_catalog(state, None, 0)
+
+
+def test_invariante_reproducibilidade_mesma_seed():
+    from playtest import invariants as inv
+    assert inv.check_reproducibility(seed=99, rounds=6) is True

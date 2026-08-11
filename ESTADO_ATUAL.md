@@ -1,5 +1,188 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **✅ SESSÃO 35 (2026-08-11): hardening de persistência/SSE `done`.** A spec
+> [hardening-persistencia-sse-idempotencia](specs/hardening-persistencia-sse-idempotencia.md)
+> corrigiu o vazamento de `*.checkpoint.json` na listagem/latest, exclusão agora
+> remove save+checkpoint+memória e JSON usa temp+`fsync`+`os.replace`. Falha de
+> escrita deixou de responder sucesso falso na API/CLI.
+>
+> Turnos do mesmo `game_id` são serializados no processo e `action_id` UUID fica
+> num ledger limitado no save. Stream e fallback POST compartilham o ID; o worker
+> SSE é dono do lock/save e conclui mesmo se o consumidor desconectar. Telemetria
+> da API não cobra mais `build_error`/`circuit_open`; criação rejeita classe/raça/
+> região fora dos catálogos. O lint Ruff encontrou e corrigiu `CLASSES` sem import
+> no wizard CLI.
+>
+> A suíte inteira agora isola `saves/` e `data/saves_memory/` em `tmp_path`.
+> Os **1.390 arquivos históricos** (431 checkpoints; majoritariamente fixtures
+> `Streamer`) foram preservados porque podem estar misturados a campanhas reais;
+> não houve limpeza destrutiva. CI ganhou Ruff, lint de conteúdo e build web.
+>
+> **Gate:** `uv run pytest` = **1398 passed, 1 skipped, 14 deselected**; Ruff
+> verde; conteúdo **0 erros/0 avisos**; Vite **454 módulos**; `git diff --check`
+> verde. Specs funcionais: **92 `done`**, nenhuma aprovada pendente.
+
+> **✅ SESSÃO 34 (2026-08-03): laboratório de combate no frontend `done`.** A
+> spec [modo-simulacao-combate](specs/modo-simulacao-combate.md) criou entrada
+> “Simular combate” nas telas iniciais, configuração de classe/nível/inimigo/
+> quantidade e arena direta usando a UI tática e o motor determinístico reais.
+>
+> O modo `combat_simulation` persiste por UUID, mas pula campaign planning,
+> preparação/narração LLM, RAG, archivist, loot, XP e checkpoints. Cartas,
+> Reações, Ruptura, manobras, Vitalidade, Ferimentos, zonas e IA inimiga seguem
+> os mesmos serviços de produção; texto livre degrada para ataque básico sem
+> provider. Saves de laboratório recebem selo próprio e podem ser reiniciados.
+>
+> **Smoke browser:** `9f3193bd-2f42-4ad9-a24d-a76661846960`; desktop confirmou
+> Sangromante nível 3 × 2 Cães de Rebite com Carta+Reação e estado mecânico;
+> mobile 390×844 confirmou carrossel, topbar e Guardar. Console/page errors = 0;
+> axe WCAG A/AA = 0 violações. **Gate:** `uv run pytest` = **1388 passed,
+> 1 skipped, 14 deselected**; build Vite = 454 módulos; lint = 0/0.
+
+> **✅ SESSÃO 33 (2026-08-03): revisão geral encontrou e corrigiu 2 bugs do
+> hardening de playtest.** A spec
+> [fix-playtest-liveness-telemetria-circuito](specs/fix-playtest-liveness-telemetria-circuito.md)
+> foi criada `approved`, executada testes-first e fechada `done`.
+>
+> **Bug 1 — falso stale:** recovery usava apenas `created_at`; uma matriz real
+> legítima de 8,4 h podia virar `aborted` quando outra run começasse após 6 h.
+> Manifesto v3 agora grava owner (`pid`, `host`) + `heartbeat_at`; CLI toca o
+> heartbeat por turno. PID vivo no host atual sempre vence idade; host remoto
+> com heartbeat recente também. PID morto/heartbeat antigo e v2 legado ainda
+> são recuperados como `aborted/stale_running_manifest`.
+>
+> **Bug 2 — telemetria falsa:** `circuit_open` era contado como request/custo e
+> falha embora pulasse a rede. Agora normaliza `network_attempted=false`, não
+> entra em provider/custo/network/failure e fica auditável em `llm_skipped`
+> (inclusive startup).
+>
+> **Smoke:** `20260803-130102-999691` = 2/2 offline, manifesto schema v3 com
+> owner/heartbeat e `complete`. **Gate:** `uv run pytest` = **1382 passed,
+> 1 skipped, 14 deselected**; compileall e `git diff --check` verdes.
+> Nenhuma spec funcional aprovada ficou pendente.
+
+> **✅ SESSÃO 32 (2026-08-03): remediações dos relatos de gameplay `done`.**
+> Três specs novas foram aprovadas e executadas em ordem:
+> [polish-prosa-v2](specs/polish-prosa-v2.md),
+> [hardening-playtest-watchdog](specs/hardening-playtest-watchdog.md) e
+> [smoke-dirigido-recrutamento-comercio](specs/smoke-dirigido-recrutamento-comercio.md).
+>
+> **Prosa:** a fronteira Python remove `Contexto do local`, `[ECOS DO MUNDO]`
+> e imperativos ecoados; repetição literal recebe transição neutra determinística
+> sem nova request. O smoke também encontrou ouro fantasma: o parágrafo monetário
+> rejeitado agora é removido mesmo com `15` no schema e “quinze” na prosa, e a
+> correção visível deixou de usar `[SISTEMA]` (a auditoria permanece em
+> `narrative_rejections`). Invariante nova: `narrative.meta_leak` (`error`).
+>
+> **Harness real:** `--turn-timeout` cobre startup e turno; timeout aborta a
+> campanha e fecha manifesto `aborted`. Runs `running` antigas viram `aborted`
+> após 6 h; a órfã `20260803-014405-602783` foi recuperada com
+> `stale_running_manifest`. Falha permanente de provider abre circuit breaker
+> até a próxima campanha e registra outcome `circuit_open`.
+>
+> **Smokes reais:** prosa `20260803-114646-799077` = 3/3, zero marcador/erro/
+> violação, p95 16,4 s, US$ 0,0039; recrutamento `20260803-114339-651827` =
+> Brunna Ponte-Alta na party; comércio `20260803-114423-833666` = Poção de Cura
+> Menor e ouro 200→140. Os dois cenários têm oráculos `error` e rodam via
+> `--scenario recrutamento|comercio`, sem aumentar `--all`.
+>
+> **Gate:** `uv run pytest` = **1377 passed, 1 skipped, 14 deselected**.
+> Nenhuma spec funcional aprovada ficou pendente.
+
+> **✅ SESSÃO 31 (2026-08-02): volume do Mundo Vivo `done`; épico v2 fechado.**
+> A spec
+> [conflito-17-volume-conteudo-mundo-vivo](specs/conflito-17-volume-conteudo-mundo-vivo.md)
+> elevou o acervo para **153 Cartas de jogador + 40 inimigas**, o bestiário para
+> **124 criaturas** (40 novas) e o elenco para **36 NPCs novos** (3 por cada um
+> dos 12 hubs). As 15 subclasses têm 5–6 Cartas próprias e Superior; toda região
+> tem ≥6 criaturas com Lacaio + Elite/Chefe. Guardas anti-reskin e relatório de
+> cobertura agora fazem parte do lint.
+>
+> **Dados/RAG:** 36 documentos curados com papel/facção/gancho, entidades e
+> arestas `located_in`; Codex Jina reindexado (2.239 chunks), consulta de NPC novo
+> confirmada. Lint = **0 erros/0 avisos**. Relatório:
+> [`docs/content-coverage-2026-08-02.md`](docs/content-coverage-2026-08-02.md).
+>
+> **Smoke real:** run `20260803-025211-710980` = 3/3 turnos, 4 locais/3 regiões,
+> `mock=false`, 0 erro/violação, 18 requests Groq (16 sucessos), US$ 0,010528.
+> Smoke dirigido confirmou `mon_guardiao_basalto` com Cartas regionais e Brunna
+> Ponte-Alta na rota NPC. **Gate:** `uv run pytest` = **1358 passed, 1 skipped,
+> 14 deselected**.
+>
+> **Próxima:** nenhuma spec funcional aprovada ficou pendente; escolher o próximo
+> item de produto/ROADMAP antes de abrir uma nova spec.
+
+> **✅ SESSÃO 30 (2026-08-02): frontend tático de Cartas `done`.** A spec
+> [conflito-16-frontend-combate-cartas](specs/conflito-16-frontend-combate-cartas.md)
+> entregou contrato API e UI React para mão preparada, custo/frequência/Ruptura,
+> escolha de Reação, zonas, Vitalidade/Ferimentos, conhecimento progressivo do
+> inimigo, perseguição e morte rica. O level-up legado também foi alinhado às
+> escolhas v4 de Carta/evolução/Virtude.
+>
+> **Smoke browser + real:** build Vite (453 módulos), desktop e mobile 390 px,
+> console limpo e axe WCAG 2 A/AA com 0 violações. Campanha real
+> `1d9ba1e6-1483-49d5-af01-890c21dea5a1`, `simulated=false`: criação → Carta +
+> Reação → Ferimentos → morte/loot → narrativa e, em novo encontro, fuga com
+> trilha `escapou`. DeepSeek primário e fallback Groq funcionaram sem erro de
+> turno. **Gate:** `uv run pytest` = **1353 passed, 1 skipped, 14 deselected**.
+>
+> **Próxima spec por ordem:**
+> [conflito-17-volume-conteudo-mundo-vivo](specs/conflito-17-volume-conteudo-mundo-vivo.md).
+
+> **✅ SESSÃO 29 (2026-08-02): proveniência de memória `done`.** A spec
+> [hardening-memoria-proveniencia](specs/hardening-memoria-proveniencia.md)
+> fechou o ledger narrativo: `canonical_event | player_observation | npc_claim |
+> inference | legacy_unverified`, confiança derivada pelo motor, fonte/turno,
+> metadata no FAISS, retry idempotente e contexto rotulado. Inferência da LLM é
+> sempre `speculative`; fala de NPC é `reported`; apenas fonte mecânica aplicável
+> pode ser `confirmed`. Assinatura `hidden/secret` sem `secret_revealed` aceito
+> para o mesmo ID não entra no contexto.
+>
+> **Smoke real aceito (3×30):** `secret_rusher`
+> `20260802-184026-492723`, `diplomatico` `20260802-234057-869414` e `npc_only`
+> `20260802-235207-031964` = 90/90 turnos, `mock=false`, zero erro/violação
+> `error`, 226/227 invokes, US$ 0,06370 e 0 falhas RAG. O `npc_only` provou 15
+> writes `npc_claim`; nenhum rumor/inferência virou `confirmed`.
+>
+> **Achado operacional:** uma run real ficou presa no fallback SMART porque
+> Anthropic/Gemini não recebiam `LLM_TIMEOUT_SECONDS`. Os builders agora usam
+> `timeout`/`request_timeout`, com regressão dedicada; a repetição fechou 30/30.
+> **Gate:** `uv run pytest` = **1349 passed, 1 skipped, 14 deselected**.
+>
+> **Próxima spec por ordem:**
+> [conflito-16-frontend-combate-cartas](specs/conflito-16-frontend-combate-cartas.md),
+> seguida de `conflito-17-volume-conteudo-mundo-vivo`.
+
+> **✅ SESSÃO 28 (2026-08-02): `conflito-13` E REMEDIAÇÕES `done`.** Os achados
+> do smoke real `20260725-101933` viraram sete specs, foram corrigidos e aceitos
+> numa nova matriz real de 13 perfis × 30 turnos. Relatório completo:
+> [`docs/smoke-correcoes-conflito-v4-2026-08-02.md`](docs/smoke-correcoes-conflito-v4-2026-08-02.md).
+>
+> **Evidência aceita:** matriz offline `20260802-154317-705789` = 390/390,
+> zero erro/violação. Matriz real composta = 390/390, `mock=false`, 0 erro, 0
+> violação `error`, 1.119 sucessos de rede, 13 falhas LLM observáveis,
+> US$ 0,328488, 148 operações RAG/0 falha, 10 inícios/13 finais de conflito,
+> 4 reações, 28 táticas, 7 mortes e zero divergência HP↔Vitalidade. Sanity
+> pós-fix de telemetria `20260802-154332-961894` = 5/5 e 24/24 sucessos de rede.
+>
+> **Correções centrais:** Vitalidade/terminal canônicos; decisão atômica no
+> playtest; manifesto e telemetria fail-loud; structured output/sentinelas/path
+> Unicode endurecidos; entradas mecânicas fechadas em Python; lifecycle do
+> `ConflictSummary`; reações inimigas efetivas. Durante a validação também foram
+> corrigidos o deadlock de sobrevivente inconsciente, o cliente Jina sem timeout
+> e o vazamento de `resolved_action` antiga no JSONL.
+>
+> **Pendências naquele fechamento:** a proveniência de memória (fechada na
+> sessão 29), smoke dirigido de recrutamento/transação comercial e 44 warnings
+> de abertura repetida. `conflito-16` e `conflito-17` ainda eram `draft`.
+>
+> **Verificação final desta sessão:** `uv run pytest` = **1296 passed, 1 skipped,
+> 14 deselected**; lint de conteúdo = **0 erro/0 aviso**; build TypeScript/Vite
+> verde (449 módulos). Revisão React também confirmou Vitalidade/estado terminal
+> canônicos e eliminou colisão de keys nas listas de party/inimigos.
+
+## Histórico — handoff da sessão 25 (antes do cutover)
+
 > **⚠️ RETOMANDO DA SESSÃO 24?** EM CURSO o **épico Migração do Sistema de
 > Conflitos (Valoria v2)** — 16 specs `conflito-01..16` em `specs/` (fonte
 > funcional em `docs/valoria_conflict_migration_v2/`). Substitui o combate atual
@@ -574,12 +757,12 @@ não existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arq
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 1001 testes offline verdes (contratos de LLM ficam fora)
+uv run pytest                        # 1398 passed, 1 skipped, 14 deselected (LLM real opt-in)
 uv run pytest -m llm_contract -v -s  # 9 contratos contra o Gemini REAL (~13 req; requer chave)
 uv run pytest -m llm_playtest -v -s  # Fase 5: 4 perfis VITAIS × 30 turnos no LLM REAL (RPG_PLAYTEST_TURNS encurta)
 uv run python game_engine.py         # CLI
 uv run uvicorn api:app --port 8000   # API + frontend web (http://localhost:8000)
-uv run python -m playtest run --all --turns 50   # Fase 5: harness offline (MockLLM, 12 perfis)
+uv run python -m playtest run --all --turns 50   # Fase 5: harness offline (MockLLM, 13 perfis)
 uv run python -m playtest report <run_id>        # Fase 5: relatório agregado
 uv run python -m playtest transcript <run_id>    # transcrito ação→narração (julgar prompt)
 uv run python rag.py                 # reindexar lore (data/codex/) + regras (data/rules.txt)
@@ -590,9 +773,12 @@ bash scripts/smoke_api.sh [porta]    # smoke da API (health, map, /game/new, /ga
 **Frontend:** `cd web && npm install && npm run build` → gera `web/dist` (servido na
 raiz). Dev: `npm run dev` (:5173 com proxy para :8000).
 
-**LLM providers:** default = `ROUTES` multi-provider com fallback — **DeepSeek
-é o primário em TODOS os tiers** (2026-07-16; tem saldo e roda o jogo inteiro a
-~$0.001/turno); Groq free é o fallback vivo. `LLM_PROVIDER=gemini` força
+**LLM providers:** default = `ROUTES` multi-provider com fallback —
+**DeepSeek `deepseek-v4-flash` é o primário em TODOS os tiers**. O alias
+`deepseek-chat` foi substituído após HTTP 400 no smoke de 2026-07-24; V4 roda
+com thinking desabilitado e timeout OpenAI-compat configurável por
+`LLM_TIMEOUT_SECONDS` (default 90s). No run 13×30: ~$0,00080/turno estimado;
+Groq free é o fallback vivo. `LLM_PROVIDER=gemini` força
 só-Gemini; sem chave nenhuma → MockLLM (jogável sem rede). Contas: minimax 402,
 qwen 401 — OPCIONAL resolver (assumem quando tiverem saldo/key; não é bug).
 Ver `.env.example`.
@@ -625,7 +811,7 @@ chave real.
   engine), migração de monstros, encontros sistêmicos, clima com efeito
 - **Fase 7 (completa):** lint de conteúdo + CI, curadoria migration-safe
   (`codex_overrides.yaml`), segredos de NPC em docs `hidden`
-- **Fase 5 (completa):** playtest agêntico (`playtest/`, 12 perfis), invariantes
+- **Fase 5 (completa):** playtest agêntico (`playtest/`, 13 perfis), invariantes
   por turno, telemetria JSONL + relatório com custo, `--real` com tetos,
   `transcript` por turno
 - **Fase 10 local + Fase 11:** UUID/migrations/CORS/rate-limit/log JSON; 9 contratos
@@ -677,24 +863,12 @@ ser re-introduzido em outro local pela narrativa/player (relocaliza o
 
 **Pendências abertas (não são bugs de código):**
 
-- **Tuning dos 8 knobs `[BALANCEAR]` das classes** — instrumentação pronta
-  (harness `--class` + telemetria de Entropia/Carga); falta uma rodada real
-  DEDICADA e longa em nível sobrevivível p/ decidir os números (ver
-  [spec §8](specs/balanceamento-classes-pos-playtest.md)).
 - Tiers 5+ das classes (nível 9–20) — fast-follow do épico.
-- **Backlog — playtest do `comerciante`:** rodar uma campanha longa com o perfil
-  `comerciante` (fica tentando comprar/vender/craftar p/ fazer dinheiro). O run
-  longo 2026-07-14/19 só cobriu combate/explorador/quester → a economia (compra/
-  venda espontânea) NUNCA foi exercitada; ouro final 0/0/50 é viés de perfil, não
-  economia quebrada. Medir se dá pra fazer dinheiro de fato.
-- **5 specs do playtest longo (sessão 22): 4 code `done` + 1 medir→decidir.**
-  [playtest-agente-curioso-entropia](specs/playtest-agente-curioso-entropia.md) `done` (destrava balanceamento) ·
-  [npc-in-scene-viagem](specs/npc-in-scene-viagem.md) `done` (43 `recycled_npc`) ·
-  [aliados-em-combate](specs/aliados-em-combate.md) `done` (aliado presente luta) ·
-  [loot-exploracao](specs/loot-exploracao.md) `done` (explorar recompensa) ·
-  [letalidade-early-game-v2](specs/letalidade-early-game-v2.md) `approved` (tuning pós-playtest).
-  **Tuning dos knobs de Entropia agora é decidível** (telemetria de gasto pronta)
-  — depende do run real de validação em curso.
+- Playtest longo do perfil `comerciante`; o smoke dirigido validou uma compra,
+  mas ainda não mediu economia emergente em campanha longa.
+- Fases 8/9 (arte e audiovisual), crônica avançada e Fase 10b (Postgres/auth/
+  isolamento por usuário/locks distribuídos). O tuning dos oito knobs e a
+  letalidade v2 já estão `done`; referências antigas a `approved` são histórico.
 - 1 flaky isolado na suíte (sessão 8; 3 runs verdes depois — observar)
 - ~~Action `validate.yml`~~ ✅ verde (confirmado via `gh run list`).
 - ~~Lote 2 de traits~~ ✅ 80 traits (sessão 20).
@@ -721,7 +895,12 @@ lore de Skallgard, tático foge com HP baixo + alerta; era a última spec não-d
 
 ## Limitações conhecidas
 
-- **API stateless por save** — sem sessão concorrente; Postgres+auth = Fase 10b
+- **Concorrência:** serializada por `game_id` dentro de um processo; múltiplos
+  workers/hosts ainda exigem transação/lock distribuído na Fase 10b.
+- **Sem autenticação/isolamento por usuário** — manter bind local; Postgres+auth = Fase 10b.
+- **Runtime legado local:** `saves/` ainda contém fixtures históricas misturadas a
+  campanhas reais; a suíte não cria novas desde a sessão 35, mas limpeza requer
+  seleção humana ou ferramenta de migração com preview.
 - **Saves antigos** carregam via `schema_version` + `_MIGRATIONS` (v0→v2);
   pré-2.5b ficam narrativamente órfãos — arquivar
 - **Free tier não sustenta playtest real longo** — Groq 100k tokens/dia; espalhar

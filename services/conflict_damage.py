@@ -5,16 +5,94 @@ localizado aplicado", na ORDEM FIXA da defesa (R8): dano×crítico → Imunidade
 Resistência/Vulnerabilidade → Proteção → Integridade → Vitalidade e Gravidade →
 Ferimentos e efeitos secundários.
 
-ADITIVO: NÃO substitui o `hp -= dano` do motor antigo (vivo até o cutover
-conflito-13). Opera sobre `target["vitalidade"]` e `target["ferimentos"]`
-(schema da conflito-01). Reusa `Condition` para Sangramento (evita DoT paralelo).
+Opera sobre `target["vitalidade"]` e `target["ferimentos"]` (schema da
+conflito-01). Reusa `Condition` para Sangramento (evita DoT paralelo).
 """
+import random
+import unicodedata
 from typing import Dict, List, Optional
 
 import gamedata
 
 _ORD = {"leve": 1, "grave": 2, "critico": 3}
 _ORD_INV = {1: "leve", 2: "grave", 3: "critico"}
+DEFAULT_HIT_REGIONS = ("cabeca", "torso", "braco", "perna")
+_KNOWN_REGION_ALIASES = {
+    "cabeca": "cabeca",
+    "craneo": "cabeca",
+    "rosto": "cabeca",
+    "torso": "torso",
+    "peito": "torso",
+    "abdomen": "torso",
+    "braco": "braco",
+    "braco esquerdo": "braco_esquerdo",
+    "braco direito": "braco_direito",
+    "mao": "mao",
+    "perna": "perna",
+    "perna esquerda": "perna_esquerda",
+    "perna direita": "perna_direita",
+    "pe": "pe",
+}
+
+
+def _fold_region(value: object) -> str:
+    normalized = unicodedata.normalize("NFKD", str(value or "").strip().lower())
+    return " ".join(
+        "".join(c for c in normalized if not unicodedata.combining(c))
+        .replace("-", " ")
+        .replace("_", " ")
+        .split()
+    )
+
+
+def anatomical_regions(target: dict) -> List[str]:
+    """Regiões válidas da anatomia da ficha, com fallback humanoide fechado."""
+    raw = (
+        target.get("regioes_anatomicas")
+        or target.get("hit_regions")
+        or target.get("anatomia")
+    )
+    if isinstance(raw, dict):
+        raw = raw.get("regioes") or raw.get("regions") or list(raw)
+    if not isinstance(raw, (list, tuple)) or not raw:
+        return list(DEFAULT_HIT_REGIONS)
+    regions: List[str] = []
+    for value in raw:
+        folded = _fold_region(value)
+        canonical = _KNOWN_REGION_ALIASES.get(folded, folded.replace(" ", "_"))
+        if canonical and canonical not in regions:
+            regions.append(canonical)
+    return regions or list(DEFAULT_HIT_REGIONS)
+
+
+def canonical_hit_region(target: dict, region: object) -> Optional[str]:
+    folded = _fold_region(region)
+    if not folded:
+        return None
+    candidate = _KNOWN_REGION_ALIASES.get(folded, folded.replace(" ", "_"))
+    valid = set(anatomical_regions(target))
+    # Fichas humanoides aceitam também as formas localizadas históricas.
+    if tuple(anatomical_regions(target)) == DEFAULT_HIT_REGIONS:
+        valid.update(_KNOWN_REGION_ALIASES.values())
+    return candidate if candidate in valid else None
+
+
+def is_valid_hit_region(target: dict, region: object) -> bool:
+    return canonical_hit_region(target, region) is not None
+
+
+def select_hit_region(target: dict, directed_region: object = None, *,
+                      rng=None) -> str:
+    """Seleciona região canônica. Direcionamento inválido cai no sorteio seguro."""
+    directed = canonical_hit_region(target, directed_region)
+    if directed is not None:
+        return directed
+    regions = anatomical_regions(target)
+    rng = rng or random.Random()
+    # Dublês de RNG antigos nem sempre respeitam os bounds recebidos; clamp
+    # defensivo mantém a seleção total sem sacrificar a reprodutibilidade.
+    index = max(0, min(len(regions) - 1, int(rng.randint(0, len(regions) - 1))))
+    return regions[index]
 
 
 # --------------------------------------------------------------------------
@@ -48,15 +126,37 @@ def apply_wound(target: dict, categoria: str, regiao: str) -> dict:
                 break
         if existing_cat:
             break
-    if existing_cat:
+    removed = None
+    # Trauma adicional sobre um Crítico não "combina" removendo o anterior:
+    # preserva a sequela e ocupa o próximo espaço crítico.
+    if existing_cat == "critico":
+        categoria = "critico"
+    elif existing_cat:
         fer[existing_cat].remove(existing_obj)
+        removed = (existing_cat, existing_obj)
         categoria = combine_category(existing_cat, categoria)
 
     espacos = _wound_spaces(target)
     while _ORD[categoria] < 3 and len(fer[categoria]) >= int(espacos.get(categoria, 99)):
         categoria = _ORD_INV[_ORD[categoria] + 1]
 
-    wound = {"categoria": categoria, "regiao": regiao, "suprimida": False}
+    capacity = max(0, int(espacos.get(categoria, 0) or 0))
+    if len(fer[categoria]) >= capacity:
+        if removed is not None:
+            fer[removed[0]].append(removed[1])
+        return {
+            "categoria": categoria,
+            "regiao": regiao,
+            "suprimida": False,
+            "aplicado": False,
+        }
+
+    wound = {
+        "categoria": categoria,
+        "regiao": regiao,
+        "suprimida": False,
+        "aplicado": True,
+    }
     fer[categoria].append(wound)
     return wound
 
@@ -103,15 +203,17 @@ def _active_defense(target: dict, use_shield: bool) -> Optional[dict]:
 
 def resolve_damage_and_wounds(target: dict, *, damage_base: int,
                               damage_type: str = "cortante", crit_mult: int = 1,
-                              directed_region: str = "torso",
+                              directed_region: Optional[str] = None,
                               ignore_resistance: bool = False,
                               use_shield: bool = False,
-                              defensavel: bool = True) -> dict:
+                              defensavel: bool = True,
+                              rng=None) -> dict:
     """Resolve o dano na ORDEM FIXA (R8). Retorna a matemática completa (R9)."""
     log: List[str] = []
     secondary: List[dict] = []
     dtype = str(damage_type or "").lower()
     is_fisico = dtype in gamedata.DANO_FISICO
+    region = select_hit_region(target, directed_region, rng=rng)
 
     # (1) dano + multiplicador de Crítico
     dano = int(damage_base) * int(crit_mult)
@@ -119,10 +221,12 @@ def resolve_damage_and_wounds(target: dict, *, damage_base: int,
 
     # (2) Imunidade / Resistência / Vulnerabilidade
     if not ignore_resistance and dtype in (target.get("immunities") or []):
+        gamedata.sync_legacy_hp_aliases(target)
         return {"dano_final": 0, "excedente": 0, "imune": True, "wound": None,
                 "protegido": False, "resultado": "imune", "secondary": [],
                 "log": log + ["Imunidade: dano 0"],
-                "vitalidade": int(target.get("vitalidade", 0))}
+                "vitalidade": int(target.get("vitalidade", 0)),
+                "regiao": region}
     mod = _resist_modifier(target, dtype, ignore_resistance)
     if mod:
         dano = max(0, dano + mod)
@@ -181,8 +285,9 @@ def resolve_damage_and_wounds(target: dict, *, damage_base: int,
         corpo = (target.get("virtudes") or {}).get("corpo", 0)
         categoria = gamedata.categoria_ferimento(corpo, excedente)
         if categoria:
-            wound = apply_wound(target, categoria, directed_region)
-            log.append(f"Ferimento {wound['categoria']} em {directed_region}")
+            wound = apply_wound(target, categoria, region)
+            suffix = "" if wound.get("aplicado", True) else " (capacidade cheia)"
+            log.append(f"Ferimento {wound['categoria']} em {region}{suffix}")
             if dtype == "cortante":               # R2: Sangramento ao ferir
                 _apply_sangramento(target, secondary)
 
@@ -203,9 +308,11 @@ def resolve_damage_and_wounds(target: dict, *, damage_base: int,
 
     resultado = "imune" if False else ("sem_efeito" if dano == 0 and excedente == 0 and not protegido
                                        else "dano")
+    gamedata.sync_legacy_hp_aliases(target)
     return {"dano_final": dano, "excedente": excedente, "imune": False,
             "wound": wound, "protegido": protegido, "resultado": resultado,
-            "secondary": secondary, "vitalidade": target["vitalidade"], "log": log}
+            "secondary": secondary, "vitalidade": target["vitalidade"],
+            "regiao": region, "log": log}
 
 
 def _apply_sangramento(target: dict, secondary: List[dict]) -> None:
@@ -234,6 +341,7 @@ def sacrifice_vitality(target: dict, amount: int, *, region: str = "torso") -> d
         categoria = gamedata.categoria_ferimento(corpo, deficit)
         if categoria:
             wound = apply_wound(target, categoria, region)
+    gamedata.sync_legacy_hp_aliases(target)
     return {"vitalidade": target["vitalidade"], "deficit": deficit, "wound": wound}
 
 

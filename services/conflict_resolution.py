@@ -5,10 +5,8 @@ Núcleo determinístico da mecânica nova: iniciativa por lado, ataque
 Vantagem/Desvantagem (3d10 mantendo 2), testes gerais `Ímpeto + Presságio +
 Virtude vs dificuldade`, e integração de Ruptura.
 
-ADITIVO: NÃO substitui `combat_mechanics.resolve_player_action`/`roll_initiative`
-(motor antigo, vivo até o cutover conflito-13). A fiação no nó de combate
-(estrutura Pré/Ação/Pós de `agents/combat.py`, Etapa 6) e a REMOÇÃO do motor
-antigo acontecem no cutover — aqui entregamos o motor puro + testes exaustivos.
+Este é o núcleo em produção desde o cutover conflito-13; o antigo pipeline
+d20+AC foi removido.
 """
 import random
 from typing import Dict, List, Optional

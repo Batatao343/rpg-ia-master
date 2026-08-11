@@ -9,28 +9,27 @@ import world_utils as wu
 
 # --- Etapa 1: recurso Entropia ----------------------------------------------
 
-def test_entropy_resource_field():
-    assert cm._resource_field("Entropia") == "entropy"
-    assert cm._resource_field("entropy") == "entropy"
-    # os antigos seguem funcionando (compat)
-    assert cm._resource_field("Mana") == "mana"
-    assert cm._resource_field("Estamina") == "stamina"
+def test_cards_tem_custo_de_entropia():
+    from services import cards
+    assert int(cards.get_card("dev_provocacao")["custo_entropia"]) == 2
 
 
 def test_pay_from_entropy():
-    player = {"entropy": 10, "max_entropy": 14, "ability_cooldowns": {}}
-    ability = {"name": "Provocação do Abismo", "cost": 4, "resource_type": "Entropia"}
-    ok, _msg = cm.spend_resources(player, "provocacao_do_abismo", ability)
-    assert ok is True
-    assert player["entropy"] == 6
+    from services import cards
+    player = {"entropy": 10, "prepared_cards": ["dev_provocacao"],
+              "virtue_cards": [], "card_usage": {}}
+    result = cards.use_card({"player": player}, "dev_provocacao")
+    assert result["ok"] is True
+    assert player["entropy"] == 8
 
 
 def test_pay_from_entropy_insuficiente():
-    player = {"entropy": 2, "max_entropy": 14, "ability_cooldowns": {}}
-    ability = {"name": "Golpe Caro", "cost": 8, "resource_type": "Entropia"}
-    ok, _msg = cm.spend_resources(player, "golpe_caro", ability)
-    assert ok is False
-    assert player["entropy"] == 2  # não deduz se não pode pagar
+    from services import cards
+    player = {"entropy": 1, "prepared_cards": ["dev_provocacao"],
+              "virtue_cards": [], "card_usage": {}}
+    result = cards.use_card({"player": player}, "dev_provocacao")
+    assert result["ok"] is False
+    assert player["entropy"] == 1
 
 
 def test_rest_refills_entropy_full():
@@ -110,20 +109,16 @@ def test_class_attr_map_covers_five():
     assert all(v in gamedata.VIRTUDES for v in CLASS_PRIMARY_VIRTUE.values())
 
 
-def test_starting_abilities_exist():
-    from gamedata import ABILITIES, CLASSES
+def test_class_cards_exist():
+    from services import cards
     for cn in FIVE_CLASSES:
-        for aid in CLASSES[cn].get("starting_abilities") or []:
-            assert aid in ABILITIES, f"{cn}: starting {aid} ausente em ABILITIES"
+        assert len(cards.cards_for_class(cn)) >= 16
 
 
-def test_all_player_abilities_use_entropy():
-    """Nenhuma habilidade de jogador com custo usa mana/stamina (só Entropia)."""
-    from gamedata import ABILITIES
-    for aid, ab in ABILITIES.items():
-        if int(ab.get("cost", 0) or 0) > 0:
-            assert ab.get("resource_type") == "Entropia", \
-                f"{aid} custa mas não é Entropia: {ab.get('resource_type')}"
+def test_all_player_cards_use_entropy():
+    from services import cards
+    assert all(int(card.get("custo_entropia", 0) or 0) >= 0
+               for card in cards.all_cards().values())
 
 
 def test_creator_fills_entropy():
@@ -152,8 +147,9 @@ def _p(cls, **over):
         "name": "Ava", "class_name": cls,
         "hp": 30, "max_hp": 30, "entropy": 0, "max_entropy": 16, "abyss_charge": 0,
         "attributes": {"str": 12, "dex": 14, "con": 12, "int": 14, "wis": 14, "cha": 10},
-        "known_abilities": ["ataque_basico"], "active_conditions": [],
-        "ability_cooldowns": {}, "equipment": {"weapon": None},
+        "known_cards": [], "prepared_cards": [], "card_usage": {},
+        "virtue_cards": [], "evolved_cards": {},
+        "active_conditions": [], "equipment": {"weapon": None},
     }
     p.update(over)
     return p
@@ -186,21 +182,16 @@ def test_trigger_per_turn_cap():
 
 
 def test_sangromante_entropy_on_self_harm():
-    from gamedata import ABILITIES
-    p = _p("Sangromante", entropy=0, max_entropy=16, hp=26, max_hp=26,
-           known_abilities=["ataque_basico", "corte_de_troca"])
-    cm.resolve_player_action(p, [_alvo()],
-                             {"ability_id": "corte_de_troca", "target": "Alvo", "is_allowed": True},
-                             ABILITIES)
-    assert p["hp"] == 26 - 3          # auto-dano aplicado
-    assert p["entropy"] >= 3          # 1:1 auto-dano → Entropia
+    p = _p("Sangromante", entropy=0, max_entropy=16)
+    cm.apply_entropy_trigger(p, {"kind": "on_self_harm", "amount": 3})
+    assert p["entropy"] >= 3
     assert p["abyss_charge"] == 1
     assert p.get("_blood_entropy", 0) >= 3
 
 
 def test_corruptor_entropy_on_decay_filtra_por_dominio():
     p = _p("Corruptor", entropy=0, max_entropy=18,
-           known_abilities=["ataque_basico", "praga_de_esporos"])  # domínio biologia (flesh)
+           known_cards=["cor_bio_gangrena"])  # domínio biologia (flesh)
     cm.apply_entropy_trigger(p, {"kind": "on_decay_nearby", "decay_kind": "gear"})
     assert p["entropy"] == 0          # metal não é o domínio dele
     cm.apply_entropy_trigger(p, {"kind": "on_decay_nearby", "decay_kind": "flesh"})
@@ -208,14 +199,11 @@ def test_corruptor_entropy_on_decay_filtra_por_dominio():
 
 
 def test_arcanista_entropy_on_channel_e_caldeira():
-    from gamedata import ABILITIES
-    p = _p("Arcanista Cinzento", entropy=10, max_entropy=20,
-           known_abilities=["ataque_basico", "toque_cru"])
-    cm.resolve_player_action(p, [_alvo()],
-                             {"ability_id": "toque_cru", "target": "Alvo", "is_allowed": True},
-                             ABILITIES)
+    p = _p("Arcanista Cinzento", entropy=10, max_entropy=20)
+    cm.apply_entropy_trigger(p, {"kind": "on_channel"})
+    cm.arm_boiler(p, {"cools": False})
     assert p["abyss_charge"] == 1
-    assert p.get("_cool_deadline") == 3   # ability sem `cools` ARMA a caldeira
+    assert p.get("_cool_deadline") == 3
 
 
 def test_boiler_overload():
@@ -230,6 +218,19 @@ def test_medico_entropy_on_ally_suffer():
     p = _p("Médico de Campo", entropy=0, max_entropy=16)
     cm.apply_entropy_trigger(p, {"kind": "on_ally_suffer"})
     assert p["entropy"] == 1 and p["abyss_charge"] == 1
+
+
+def test_gatilhos_passivos_nao_alcancam_severo_sem_escolha_deliberada():
+    for class_name, event in (
+        (DEVOTO, {"kind": "on_damage_taken", "amount": 8}),
+        ("Médico de Campo", {"kind": "on_ally_suffer"}),
+    ):
+        p = _p(class_name, entropy=0, abyss_charge=0)
+        for _ in range(12):
+            cm.reset_entropy_turn(p)
+            cm.apply_entropy_trigger(p, event)
+        assert p["abyss_charge"] == 6
+        assert cm.abyss_tier(p) == "moderado"
 
 
 # abyss_tier + regras especiais (§3.5)
@@ -283,12 +284,9 @@ def test_insonia_reduces_rest_and_ally_mitigates():
 
 
 def test_cicatriz_reduces_max_hp():
-    from gamedata import ABILITIES
     p = _p("Sangromante", hp=26, max_hp=26, entropy=10,
-           known_abilities=["ataque_basico", "golpe_espetaculo"])
-    cm.resolve_player_action(p, [_alvo()],
-                             {"ability_id": "golpe_espetaculo", "target": "Alvo", "is_allowed": True},
-                             ABILITIES)
+           known_cards=["san_exp_credencial"])
+    cm.apply_scar(p, {"peak": True})
     assert p["max_hp"] == 23          # peak → -3 max_hp permanente
     assert p["abyss_charge"] >= 1
 
@@ -304,7 +302,7 @@ def test_dependencia_raises_cost():
 
 def test_transformacao_debuff_by_domain():
     p = _p("Corruptor", abyss_charge=4,
-           known_abilities=["ataque_basico", "corroer_vontade"])  # domínio alma → save_penalty
+           known_cards=["cor_alm_duvida"])  # domínio alma → save_penalty
     cm.apply_transformacao(p)
     assert any(c.get("stat") == "save" for c in p["active_conditions"])
 
@@ -330,7 +328,7 @@ def test_rest_entropy_full_never_adds_charge():
 
 # --- Etapa 6: migração + limpeza --------------------------------------------
 
-def test_old_class_maps_to_new_and_backfills_entropy():
+def test_old_class_save_is_archived_without_conversion():
     import persistence as ps
     raw = {"schema_version": 2, "player": {
         "class_name": "Cavaleiro da Vigília", "level": 2,
@@ -338,17 +336,11 @@ def test_old_class_maps_to_new_and_backfills_entropy():
         "known_abilities": ["estocada_renal"],  # id morto → descartado
     }}
     out = ps.migrate_state(dict(raw))
-    p = out["player"]
-    assert p["class_name"] == "Devoto do Abismo"
-    assert p["max_entropy"] > 0 and p["entropy"] == p["max_entropy"]
-    assert p["abyss_charge"] == 0
-    assert p["mana"] == 0 and p["stamina"] == 0
-    # id inexistente sumiu; iniciais da nova classe entraram
-    assert "estocada_renal" not in p["known_abilities"]
-    assert "provocacao_do_abismo" in p["known_abilities"]
+    assert out["archived"] is True
+    assert out["player"]["class_name"] == "Cavaleiro da Vigília"
 
 
-def test_old_save_loads_sem_crash(tmp_path, monkeypatch):
+def test_old_save_loads_archived_sem_crash(tmp_path, monkeypatch):
     import json
     import persistence as ps
     monkeypatch.setattr(ps, "SAVES_DIR", str(tmp_path))
@@ -361,8 +353,8 @@ def test_old_save_loads_sem_crash(tmp_path, monkeypatch):
         json.dump(raw, f)
     state = ps.load_game_state(f"{tmp_path}/{gid}.json")
     assert state is not None
-    assert state["player"]["class_name"] == "Arcanista Cinzento"
-    assert state["player"]["max_entropy"] > 0
+    assert state["archived"] is True
+    assert state["player"]["class_name"] == "Batedor das Fronteiras"
 
 
 def test_no_old_class_in_active_data():

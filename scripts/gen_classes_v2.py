@@ -1,6 +1,6 @@
 """Gera data/classes.json e data/player_abilities.json — 5 Posturas diante do
-Abismo (spec refatoracao-sistema-classes, etapas 2+5). Números = proposta
-[BALANCEAR]. Encoding UTF-8. Roda uma vez; a saída é curada depois se preciso.
+Abismo (spec refatoracao-sistema-classes, etapas 2+5). Números calibrados pelo
+playtest de 2026-08-02. Encoding UTF-8. Roda uma vez; a saída é curada depois se preciso.
 
 IMPORTANTE — schema alinhado ao MOTOR (combat_mechanics):
 - efeitos usam `effects: [{"kind": buff|debuff|dot|control, ...}]` (Fase 4.2),
@@ -433,15 +433,15 @@ CLASSES = {
         "passive": "Convite: provocações escalam com a Entropia acumulada no combate.",
         # spec letalidade-early-game-v2 (alavanca 3): HP base subido (baseline 38 → 40)
         # p/ dar piso de sobrevivência ao early-game; afinado por cima pela spec de balanceamento.
-        "base_stats": {"hp": 40, "entropy": 14, "mana": 0, "stamina": 0, "defense": 16,
+        "base_stats": {"hp": 40, "vitalidade_bonus": 6, "entropy": 14, "mana": 0, "stamina": 0, "defense": 16,
                        "virtudes": {"forca": 4, "corpo": 3, "carisma": 2, "mente": 1, "agilidade": 1}},
         "level_gains": {"hp": 7, "entropy": 2, "mana": 0, "stamina": 0},
         "starting_abilities": ["provocacao_do_abismo", "encaixe_do_golpe"],
         "entropy_trigger": {"kind": "on_damage_taken", "damage_divisor": 4, "min_gain": 1,
-                            "charge_per": 1, "per_turn_cap": 1,
-                            "note": "[BALANCEAR] +1 Entropia por 4 de dano recebido; +1 Carga/turno"},
+                            "charge_per": 1, "charge_cap": 6, "per_turn_cap": 1,
+                            "note": "+1 Entropia por 4 de dano; +1 Carga/turno até 6 — baseline 16→6 evita severo passivo"},
         "special_rule": {"kind": "taunt_scales_with_entropy", "per_entropy": 0.05, "cap": 0.6,
-                         "note": "[BALANCEAR] aggro sobe 5%/ponto de Entropia, teto 60%"},
+                         "note": "aggro +5%/Entropia, teto 60% — retido: bounded e sem dominância na grade"},
         "abyss": {"consequence": "insonia", "thresholds": {"leve": 1, "moderado": 4, "severo": 7},
                   "hidden": False, "mitigable_by_ally": True,
                   "params": {"rest_penalty": {"leve": 0.1, "moderado": 0.25, "severo": 0.5}}},
@@ -460,14 +460,14 @@ CLASSES = {
         "guide_quote": "Tudo tem preço. Eu só pago à vista.",
         "passive": "Contrato de Sangue: auto-dano vira Entropia de sangue.",
         # spec letalidade-early-game-v2 (alavanca 3): HP base 26 → 30 (frágil demais nível 1).
-        "base_stats": {"hp": 30, "entropy": 16, "mana": 0, "stamina": 0, "defense": 12,
+        "base_stats": {"hp": 30, "vitalidade_bonus": 6, "entropy": 16, "mana": 0, "stamina": 0, "defense": 12,
                        "virtudes": {"agilidade": 4, "corpo": 3, "carisma": 2, "forca": 1, "mente": 1}},
         "level_gains": {"hp": 5, "entropy": 3, "mana": 0, "stamina": 0},
         "starting_abilities": ["corte_de_troca", "esquiva_calculada"],
         "entropy_trigger": {"kind": "on_self_harm", "gain_per_hp": 1, "charge_per": 1, "per_turn_cap": 2,
-                            "note": "[BALANCEAR] auto-dano vira Entropia (1:1); +1 Carga por ativação"},
+                            "note": "auto-dano vira Entropia 1:1; +1 Carga — starvation 0%, pico 5"},
         "special_rule": {"kind": "blood_leak", "leak_frac": 0.25,
-                         "note": "[BALANCEAR] acerto do inimigo vaza 25% da Entropia de sangue não gasta"},
+                         "note": "acerto vaza 25% da Entropia de sangue — conservador; sem overdrain na grade"},
         "abyss": {"consequence": "cicatriz", "thresholds": {"leve": 1, "moderado": 4, "severo": 7},
                   "hidden": False, "mitigable_by_ally": False,
                   "params": {"scar_hp_loss": 3}},
@@ -486,13 +486,13 @@ CLASSES = {
         "guide_quote": "Eu não trago a ruína. Só chego mais cedo.",
         "passive": "Parceria: a decadência ao seu redor te alimenta.",
         # spec letalidade-early-game-v2 (alavanca 3): HP base 28 → 30.
-        "base_stats": {"hp": 30, "entropy": 18, "mana": 0, "stamina": 0, "defense": 13,
+        "base_stats": {"hp": 30, "vitalidade_bonus": 6, "entropy": 18, "mana": 0, "stamina": 0, "defense": 13,
                        "virtudes": {"mente": 4, "corpo": 3, "agilidade": 2, "carisma": 1, "forca": 1}},
         "level_gains": {"hp": 5, "entropy": 4, "mana": 0, "stamina": 0},
         "starting_abilities": ["toque_da_decadencia", "semear_praga"],
         "entropy_trigger": {"kind": "on_decay_nearby", "gain": 1, "charge_per": 1, "per_turn_cap": 2,
                             "decay_kind": "any",
-                            "note": "[BALANCEAR] algo perto se desfaz (DoT/morte) → +1 Entropia; +1 Carga"},
+                            "note": "decadência próxima → +1 Entropia/+1 Carga — starvation 0%, flooding 38–43%"},
         "special_rule": {"kind": "domain_decay", "note": "o domínio (subclasse) define o que conta como decadência"},
         "abyss": {"consequence": "transformacao", "thresholds": {"leve": 1, "moderado": 4, "severo": 7},
                   "hidden": False, "mitigable_by_ally": True,
@@ -516,14 +516,14 @@ CLASSES = {
         "passive": "Caldeira: canalizar gera Entropia para a próxima descarga.",
         # spec letalidade-early-game-v2 (alavanca 3): HP base 22 → 26 (a classe que
         # mais morria nível 1 no run 20260720-093014).
-        "base_stats": {"hp": 26, "entropy": 20, "mana": 0, "stamina": 0, "defense": 11,
+        "base_stats": {"hp": 26, "vitalidade_bonus": 6, "entropy": 20, "mana": 0, "stamina": 0, "defense": 11,
                        "virtudes": {"mente": 4, "agilidade": 3, "carisma": 2, "corpo": 1, "forca": 1}},
         "level_gains": {"hp": 4, "entropy": 6, "mana": 0, "stamina": 0},
         "starting_abilities": ["descarga_do_instrumento", "vazao_controlada"],
         "entropy_trigger": {"kind": "on_channel", "gain": 2, "charge_per": 1, "per_turn_cap": 1,
-                            "note": "[BALANCEAR] usar habilidade gera Entropia p/ a próxima; +1 Carga"},
+                            "note": "canalizar → +2 Entropia/+1 Carga — starvation 0%, flooding 30%"},
         "special_rule": {"kind": "boiler", "cool_deadline": 3, "overload_damage": "2d6",
-                         "note": "[BALANCEAR] Entropia não vazada em 3 turnos → instrumento estoura (auto-dano)"},
+                         "note": "3 turnos sem vazão → 2d6 auto-dano — 2 estouros/100t, não dominante"},
         "abyss": {"consequence": "dependencia", "thresholds": {"leve": 1, "moderado": 4, "severo": 7},
                   "hidden": False, "mitigable_by_ally": True,
                   "params": {"no_instrument_cost_mult": 2.0}},
@@ -542,12 +542,13 @@ CLASSES = {
         "guide_quote": "Enquanto eu respirar, você respira.",
         "passive": "Triagem: cura mais quem está mais perto do fim.",
         # spec letalidade-early-game-v2 (alavanca 3): HP base 28 → 30.
-        "base_stats": {"hp": 30, "entropy": 16, "mana": 0, "stamina": 0, "defense": 14,
+        "base_stats": {"hp": 30, "vitalidade_bonus": 6, "entropy": 16, "mana": 0, "stamina": 0, "defense": 14,
                        "virtudes": {"mente": 4, "carisma": 3, "corpo": 2, "agilidade": 1, "forca": 1}},
         "level_gains": {"hp": 5, "entropy": 3, "mana": 0, "stamina": 0},
         "starting_abilities": ["sutura_de_campo", "estabilizar"],
-        "entropy_trigger": {"kind": "on_ally_suffer", "gain": 1, "charge_per": 1, "per_turn_cap": 2,
-                            "note": "[BALANCEAR] aliado toma dano/condição → +1 Entropia; +1 Carga"},
+        "entropy_trigger": {"kind": "on_ally_suffer", "gain": 1, "charge_per": 1,
+                            "charge_cap": 6, "per_turn_cap": 2,
+                            "note": "aliado sofre → +1 Entropia/+1 Carga até 6 — recrutador 15→6 evita Recidiva passiva"},
         "special_rule": {"kind": "heal_abyss",
                          "note": "única classe que gasta Entropia p/ reduzir Carga de aliado (purga_da_carga)"},
         "abyss": {"consequence": "recidiva", "thresholds": {"leve": 1, "moderado": 4, "severo": 7},

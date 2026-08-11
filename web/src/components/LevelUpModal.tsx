@@ -1,128 +1,99 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { motion } from "motion/react";
 import type { EligibleAbility, PlayerStats } from "../types";
 
-const ATTRS: Array<[string, string]> = [
-  ["str", "Força"], ["dex", "Destreza"], ["con", "Constituição"],
-  ["int", "Inteligência"], ["wis", "Sabedoria"], ["cha", "Carisma"],
+const VIRTUES: Array<[string, string]> = [
+  ["forca", "Força"], ["agilidade", "Agilidade"], ["corpo", "Corpo"],
+  ["mente", "Mente"], ["carisma", "Carisma"],
 ];
+
+export interface LevelUpPick {
+  card_id?: string;
+  evolve_card_id?: string;
+  caminho?: "A" | "B";
+  virtude?: string;
+}
 
 interface Props {
   player: PlayerStats;
   busy: boolean;
-  onChoose: (choiceId: string, pick: { ability_id?: string; attr?: string }) => void;
+  onChoose: (choiceId: string, pick: LevelUpPick) => void;
   onLater: () => void;
 }
 
-/** Fase 4.1: modal de level up — a escolha de ramo é a escolha de SUBCLASSE
- *  (irreversível: aprender de um ramo tranca o rival), então o modal apresenta
- *  os ramos com nome/tema, não uma lista chapada. */
+/** conflito-16: o modal antigo ainda falava em habilidade/atributo d20.
+ *  Esta borda agora espelha o contrato v4: nova Carta OU evolução A/B, e Virtude. */
 export function LevelUpModal({ player, busy, onChoose, onLater }: Props) {
   const choice = player.pending_choices[0];
   const lu = player.level_up ?? {};
-  const [picked, setPicked] = useState<string | null>(null);
-
-  const groups = useMemo(() => {
-    const eligible = lu.eligible ?? [];
-    const trunk = eligible.filter((a) => !a.branch);
-    const byBranch = new Map<string, EligibleAbility[]>();
-    for (const a of eligible) {
-      if (!a.branch) continue;
-      const arr = byBranch.get(a.branch) ?? [];
-      arr.push(a);
-      byBranch.set(a.branch, arr);
-    }
-    return { trunk, byBranch };
-  }, [lu.eligible]);
-
+  const [picked, setPicked] = useState<LevelUpPick | null>(null);
   if (!choice) return null;
-  const isAbility = choice.kind === "ability";
-  const branches = lu.branches ?? {};
-  const lockedIn = lu.current_branch ?? null;
+
+  const isCard = choice.kind === "carta" || choice.kind === "ability";
+  const pickedKey = picked?.card_id
+    ?? (picked?.evolve_card_id ? `${picked.evolve_card_id}-${picked.caminho}` : picked?.virtude);
 
   return (
     <div className="overlay overlay--levelup" role="dialog" aria-modal="true">
-      <motion.div
-        className="lvlup"
-        initial={{ opacity: 0, y: 14, scale: 0.98 }}
+      <motion.div className="lvlup" initial={{ opacity: 0, y: 14, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      >
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}>
         <p className="lvlup__kicker">Nível {choice.level} alcançado</p>
-        <h2 className="lvlup__title">
-          {isAbility ? "Escolha uma habilidade" : "Fortaleça um atributo"}
-        </h2>
+        <h2 className="lvlup__title">{isCard ? "Expanda seu Acervo" : "Fortaleça uma Virtude"}</h2>
 
-        {isAbility ? (
+        {isCard ? (
           <div className="lvlup__groups">
-            {groups.trunk.length > 0 && (
+            {(lu.eligible ?? []).length > 0 && (
               <section className="lvlup__group">
-                <h3 className="lvlup__branch">Caminho comum</h3>
+                <h3 className="lvlup__branch">Aprender uma Carta</h3>
                 <ul className="lvlup__list">
-                  {groups.trunk.map((a) => (
-                    <AbilityCard key={a.id} a={a} picked={picked === a.id}
-                                 onPick={() => setPicked(a.id)} />
+                  {(lu.eligible ?? []).map((card) => (
+                    <CardChoice key={card.id} card={card} picked={pickedKey === card.id}
+                      onPick={() => setPicked({ card_id: card.id })} />
                   ))}
                 </ul>
               </section>
             )}
-            {[...groups.byBranch.entries()].map(([bid, list]) => {
-              const info = branches[bid];
-              return (
-                <section key={bid} className="lvlup__group lvlup__group--branch">
-                  <h3 className="lvlup__branch">
-                    {info?.name ?? bid}
-                    {lockedIn === bid && <span className="lvlup__locked">seu caminho</span>}
-                  </h3>
-                  {info?.theme && !lockedIn && (
-                    <p className="lvlup__theme">
-                      {info.theme} — <em>escolher este caminho fecha o outro para sempre.</em>
-                    </p>
-                  )}
-                  {info?.theme && lockedIn === bid && (
-                    <p className="lvlup__theme">{info.theme}</p>
-                  )}
-                  <ul className="lvlup__list">
-                    {list.map((a) => (
-                      <AbilityCard key={a.id} a={a} picked={picked === a.id}
-                                   onPick={() => setPicked(a.id)} />
-                    ))}
-                  </ul>
-                </section>
-              );
-            })}
-            {(lu.eligible ?? []).length === 0 && (
-              <p className="muted">Nenhuma habilidade elegível agora — volte após subir mais um nível.</p>
+            {(lu.evolvable ?? []).length > 0 && (
+              <section className="lvlup__group lvlup__group--branch">
+                <h3 className="lvlup__branch">Evoluir uma Carta</h3>
+                <ul className="lvlup__list">
+                  {(lu.evolvable ?? []).map((card) => (
+                    <li key={card.id} className="lvlup__evolve">
+                      <b>{card.name}</b>
+                      <div>
+                        {(["A", "B"] as const).map((path) => (
+                          <button key={path} type="button"
+                            className={pickedKey === `${card.id}-${path}` ? "is-picked" : ""}
+                            onClick={() => setPicked({ evolve_card_id: card.id, caminho: path })}>
+                            Caminho {path}
+                          </button>
+                        ))}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </section>
             )}
           </div>
         ) : (
           <div className="lvlup__attrs">
-            {ATTRS.map(([key, label]) => (
-              <button
-                key={key}
-                type="button"
-                className={"lvlup__attr" + (picked === key ? " is-picked" : "")}
-                onClick={() => setPicked(key)}
-              >
+            {VIRTUES.map(([key, label]) => (
+              <button key={key} type="button"
+                className={`lvlup__attr${pickedKey === key ? " is-picked" : ""}`}
+                disabled={(player.virtudes?.[key as keyof PlayerStats["virtudes"]] ?? 0) >= 5}
+                onClick={() => setPicked({ virtude: key })}>
                 <b>{label}</b>
-                <span>+1</span>
+                <span>{player.virtudes?.[key as keyof PlayerStats["virtudes"]] ?? 0} → +1</span>
               </button>
             ))}
           </div>
         )}
 
         <div className="lvlup__actions">
-          <button className="btn" type="button" onClick={onLater} disabled={busy}>
-            Deixar para depois
-          </button>
-          <button
-            className="btn btn--primary"
-            type="button"
-            disabled={busy || !picked || (isAbility && (lu.eligible ?? []).length === 0)}
-            onClick={() =>
-              picked && onChoose(choice.id, isAbility ? { ability_id: picked } : { attr: picked })
-            }
-          >
+          <button className="btn" type="button" onClick={onLater} disabled={busy}>Depois</button>
+          <button className="btn btn--primary" type="button" disabled={busy || !picked}
+            onClick={() => picked && onChoose(choice.id, picked)}>
             {busy ? "…" : "Confirmar"}
           </button>
         </div>
@@ -131,21 +102,17 @@ export function LevelUpModal({ player, busy, onChoose, onLater }: Props) {
   );
 }
 
-function AbilityCard({ a, picked, onPick }: { a: EligibleAbility; picked: boolean; onPick: () => void }) {
-  // spec arvores-habilidade-classes (R10): passiva/utilitária mostram o tipo,
-  // não o custo (não são ação de combate).
-  const kindLabel =
-    a.kind === "passive" ? "✦ passiva" :
-    a.kind === "utility" ? "⚒ utilitária" :
-    a.cost > 0 ? `${a.cost} ${a.resource_type}` : "sem custo";
+function CardChoice({ card, picked, onPick }: {
+  card: EligibleAbility; picked: boolean; onPick: () => void;
+}) {
   return (
     <li>
-      <button type="button" className={"lvlup__card" + (picked ? " is-picked" : "")} onClick={onPick}>
+      <button type="button" className={`lvlup__card${picked ? " is-picked" : ""}`} onClick={onPick}>
         <span className="lvlup__card-top">
-          <b>{a.name}</b>
-          <span className="lvlup__tier">tier {a.tier} · {kindLabel}</span>
+          <b>{card.name}</b>
+          <span className="lvlup__tier">{card.tier} · {card.cost}E · {card.frequency ?? "livre"}</span>
         </span>
-        <span className="lvlup__desc">{a.description}</span>
+        <span className="lvlup__desc">{card.description}</span>
       </button>
     </li>
   );

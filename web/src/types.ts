@@ -15,18 +15,20 @@ export interface AbilityRef {
 export interface PendingChoice {
   id: string;
   level: number;
-  kind: "ability" | "attribute";
+  kind: "carta" | "virtude" | "ability" | "attribute";
 }
 
 export interface EligibleAbility {
   id: string;
   name: string;
   description: string;
-  branch: string | null;
-  branch_name: string | null;
-  tier: number;
+  branch?: string | null;
+  branch_name?: string | null;
+  subclass?: string;
+  tier: number | string;
   cost: number;
-  resource_type: string;
+  resource_type?: string;
+  frequency?: string;
   kind?: AbilityKind;
 }
 
@@ -42,6 +44,7 @@ export interface BranchInfo {
 export interface LevelUpBlock {
   pending?: PendingChoice[];
   eligible?: EligibleAbility[];
+  evolvable?: Array<{ id: string; name: string }>;
   current_branch?: string | null;
   branches?: Record<string, BranchInfo>;
 }
@@ -52,6 +55,11 @@ export interface PlayerStats {
   race: string;
   hp: number;
   max_hp: number;
+  vitalidade: number;
+  max_vitalidade: number;
+  ferimentos: Record<string, Array<Record<string, unknown>>>;
+  dead: boolean;
+  estado_terminal: boolean;
   mana: number;
   max_mana: number;
   stamina: number;
@@ -65,7 +73,8 @@ export interface PlayerStats {
   gold: number;
   level: number;
   xp: number;
-  abilities: AbilityRef[];
+  cards: CardView[];
+  virtudes: Record<"forca" | "agilidade" | "corpo" | "mente" | "carisma", number>;
   xp_next_level: number | null; // null = nível máximo
   pending_choices: PendingChoice[];
   level_up: LevelUpBlock;
@@ -168,11 +177,78 @@ export interface Condition {
 }
 
 export interface EnemyView {
+  id: string;
   name: string;
   hp: number;
   max_hp: number;
-  defense: number;
+  vitalidade: number;
+  max_vitalidade: number;
+  esquiva: number | null;
+  protecao: number | null;
+  integridade_atual: number | null;
+  integridade_max: number | null;
+  recursos_visiveis: Record<string, number>;
   conditions: Condition[];
+  revealed_cards: Array<{ id: string; name: string }>;
+  revealed_resistances: string[];
+}
+
+export interface CardView {
+  id: string;
+  name: string;
+  type: "ativa" | "reacao" | "passiva" | "virtude" | string;
+  description: string;
+  effect_kind: string;
+  target_kind: "self" | "enemy";
+  subclass: string;
+  prepared: boolean;
+  cost: number;
+  frequency: string;
+  spent: boolean;
+  ready: boolean;
+  has_rupture: boolean;
+  rupture_ready: boolean;
+  trigger: string;
+  evolved: string | null;
+}
+
+export interface WoundView {
+  regiao?: string;
+  region?: string;
+  detail?: string;
+  [key: string]: unknown;
+}
+
+export interface WoundTrackView {
+  vitality: number;
+  max_vitality: number;
+  slots: Partial<Record<"leve" | "grave" | "critico", number>>;
+  by_severity: Record<"leve" | "grave" | "critico", WoundView[]>;
+}
+
+export interface ScenePosition {
+  participant_id: string;
+  participant_name: string;
+  zone_id: string;
+  distance: "proximo" | "distante" | "separado" | string;
+  posture: "protegido" | "neutro" | "exposto" | string;
+  concealment: "visivel" | "escondido" | string;
+  engaged_with: string[];
+  engaged_names: string[];
+}
+
+export interface ConflictSceneView {
+  zones: Array<{ id: string; name: string; connections: string[] }>;
+  positions: ScenePosition[];
+}
+
+export interface ChaseView {
+  track?: "pressionado" | "afastado" | "quase_livre" | "escapou" | "alcancado";
+  steps?: string[];
+  escaped?: boolean;
+  caught?: boolean;
+  pursuers?: string[];
+  last_roll?: { total?: number; difficulty?: number; sucesso?: boolean };
 }
 
 export interface InitiativeSlot {
@@ -186,10 +262,76 @@ export interface CombatBlock {
   round: number;
   order: InitiativeSlot[];
   enemies: EnemyView[];
+  cards: CardView[];
+  scene: ConflictSceneView;
+  wounds: WoundTrackView;
+  chase: ChaseView;
   player_conditions: Condition[];
   cooldowns: Record<string, number>;
   // spec polish-sessao (R4): chips mecânicos derivados da ficha
   suggestions?: string[];
+  last_player_action?: {
+    kind: "attack" | "card" | "item" | "maneuver" | "move" | "pass" | "flee";
+    card_id: string | null;
+    item_id: string | null;
+    target_id: string | null;
+    maneuver: string | null;
+    direction: string | null;
+    region: string | null;
+    result: "ok" | "miss" | "hit" | "invalid" | "fled" | "flee_failed" | "pass";
+    attempted: boolean;
+    flee_destination_id: string | null;
+  } | null;
+  reactions?: Array<{ participant: string; card_id: string; custo: number }>;
+}
+
+export interface ActionOptions {
+  action_id?: string;
+  card_id?: string;
+  target_id?: string;
+  ruptura?: boolean;
+  reaction_card_id?: string;
+  action_kind?: "attack" | "maneuver" | "pass" | "flee";
+  maneuver?: "engajar" | "desengajar" | "guardar" | "esconder" | "procurar";
+}
+
+export interface CombatSimulatorEnemy {
+  id: string;
+  name: string;
+  category: "lacaio" | "padrao" | "elite" | "chefe" | "nomeado";
+  regions: string[];
+}
+
+export interface CombatSimulatorOptions {
+  classes: string[];
+  levels: Array<1 | 3 | 5 | 10>;
+  quantities: Array<1 | 2 | 3>;
+  enemies: CombatSimulatorEnemy[];
+}
+
+export interface CombatSimulatorPayload {
+  class_name: string;
+  level: 1 | 3 | 5 | 10;
+  enemy_id: string;
+  quantity: 1 | 2 | 3;
+}
+
+export interface CombatSimulationMeta {
+  enabled?: boolean;
+  enemy_id?: string;
+  quantity?: number;
+  finished?: boolean;
+  outcome?: "victory" | "defeat" | null;
+}
+
+export interface DeathView {
+  pending: boolean;
+  last_action: CombatBlock["last_player_action"];
+  last_action_label: string;
+  entered_terminal: boolean;
+  stabilization: string;
+  stabilization_attempts: number;
+  killer: string;
 }
 
 // spec polish-sessao (R1): resumo de campanha salva (GET /game/saves)
@@ -201,6 +343,7 @@ export interface SaveSummary {
   location: string;
   day: number;
   game_over: boolean;
+  combat_simulation: boolean;
   updated_at: number;
 }
 
@@ -257,6 +400,8 @@ export interface PartyMember {
   name: string;
   hp: number;
   max_hp: number;
+  vitalidade: number;
+  max_vitalidade: number;
   active: boolean;
   archetype: string;
   status: string; // "ativo" | "morto"
@@ -280,6 +425,9 @@ export interface GameResponse {
   party: PartyMember[];
   // spec checkpoints-morte: queda letal — o cliente abre a tela de morte.
   death_pending?: boolean;
+  game_over?: boolean;
+  death?: DeathView;
+  combat_simulation: CombatSimulationMeta;
 }
 
 export interface CreateOptions {

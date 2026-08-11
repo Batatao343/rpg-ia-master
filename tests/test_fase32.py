@@ -203,7 +203,7 @@ def test_combate_registra_encounter(monkeypatch):
         enemy["status"] = "ativo"
         return [enemy], "Ratos surgem das sombras!"
 
-    monkeypatch.setattr(combat, "_spawn_enemies_integrated", fake_spawn)
+    monkeypatch.setattr(combat, "_spawn_v4_enemies", fake_spawn)
     random.seed(1)
     state = _base_state(messages=[
         HumanMessage(content="viajo para o beco"),
@@ -224,12 +224,17 @@ def test_combate_registra_encounter(monkeypatch):
 def test_morte_registra_defeated(monkeypatch):
     import agents.combat as combat
 
-    def fake_kill(player, enemies, action, abilities, **kwargs):
-        enemies[0]["status"] = "morto"
-        enemies[0]["hp"] = 0
-        return ["Golpe fatal derruba o inimigo."]
+    def fake_round(scene, actors, sides, state, **kwargs):
+        target = actors[sides["enemy"][0]]
+        target["dead"] = True
+        target["status"] = "morto"
+        target["vitalidade"] = 0
+        return {"logs": ["Golpe fatal derruba o inimigo."],
+                "deaths": [target["id"]], "ended": True, "player_dead": False,
+                "scars_pending": [], "reason": "vitoria",
+                "recidiva_event": None, "initiative": ["heroes", "enemy"]}
 
-    monkeypatch.setattr(combat.cm, "resolve_player_action", fake_kill)
+    monkeypatch.setattr(combat.orch, "run_round", fake_round)
     random.seed(2)
     enemy = dict(gamedata.BESTIARY[RATO])
     enemy["id"] = f"{RATO}_1"

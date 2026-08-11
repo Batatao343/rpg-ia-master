@@ -14,10 +14,18 @@ Regras da spec:
 """
 from __future__ import annotations
 
+import hashlib
 import random
 from typing import List, Optional, Tuple
 
 from services import economy
+
+
+def arrival_rng(game_id: str, location_id: str, turn: int) -> random.Random:
+    """RNG estável entre processos para a descoberta de uma chegada."""
+    raw = f"{game_id}|{location_id}|{int(turn)}".encode("utf-8")
+    seed = int.from_bytes(hashlib.sha256(raw).digest()[:8], "big")
+    return random.Random(seed)
 
 
 def discovery_chance(danger: int) -> float:
@@ -68,12 +76,15 @@ def resolve_treasure(world: dict, loc: dict) -> Optional[dict]:
     return {"items": items, "gold": gold, "loc_id": loc_id}
 
 
-def _grant_items(player: dict, item_ids: List[str]) -> Tuple[List[str], list]:
+def _grant_items(player: dict, item_ids: List[str],
+                 projection: Optional[dict] = None) -> Tuple[List[str], list]:
     """Adiciona itens ao inventário; devolve (labels, eventos de claim de único)."""
     from inventory import add_item, is_unique, item_display, make_entry
     labels: List[str] = []
     unique_events: list = []
     for iid in item_ids:
+        if not economy.is_unique_available(iid, projection):
+            continue
         player["inventory"] = add_item(player.get("inventory", []), iid, 1)
         labels.append(item_display(make_entry(iid)))
         if is_unique(iid):
@@ -82,7 +93,8 @@ def _grant_items(player: dict, item_ids: List[str]) -> Tuple[List[str], list]:
 
 
 def discover_on_arrival(player: dict, world: dict, loc: dict, player_level: int,
-                        rng: Optional[random.Random] = None
+                        rng: Optional[random.Random] = None,
+                        projection: Optional[dict] = None,
                         ) -> Tuple[str, list]:
     """Entrypoint do storyteller ao CHEGAR num local novo. Resolve baú curado
     (prioridade) OU achado ambiental, MUTA player.inventory/gold + world (marca
@@ -91,7 +103,7 @@ def discover_on_arrival(player: dict, world: dict, loc: dict, player_level: int,
     # 1) baú curado tem prioridade (recompensa BOA que o design escolheu).
     tre = resolve_treasure(world, loc)
     if tre:
-        labels, unique_events = _grant_items(player, tre["items"])
+        labels, unique_events = _grant_items(player, tre["items"], projection)
         if tre["gold"]:
             player["gold"] = int(player.get("gold", 0) or 0) + int(tre["gold"])
         world["looted_locations"] = list(world.get("looted_locations") or []) + [tre["loc_id"]]
@@ -105,7 +117,7 @@ def discover_on_arrival(player: dict, world: dict, loc: dict, player_level: int,
         return ("", [])
     labels, unique_events = ([], [])
     if disc["item_id"]:
-        labels, unique_events = _grant_items(player, [disc["item_id"]])
+        labels, unique_events = _grant_items(player, [disc["item_id"]], projection)
     if disc["gold"]:
         player["gold"] = int(player.get("gold", 0) or 0) + int(disc["gold"])
     partes = ([", ".join(labels)] if labels else []) \

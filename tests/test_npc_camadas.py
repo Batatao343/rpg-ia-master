@@ -98,16 +98,14 @@ def test_ensure_npc_fields_backfill():
     assert "in_scene" not in npc  # backfill NÃO força cena (gate trata ausente=presente)
 
 
-def test_backfill_save_antigo_ganha_campos():
+def test_save_antigo_npc_fica_arquivado_sem_conversao():
     from persistence import migrate_state
     raw = {"game_id": str(uuid.uuid4()), "schema_version": 1,
            "world": {"current_location_id": "brekmar"},
            "npcs": {"Grum": _npc()}, "party": []}
     out = migrate_state(raw)
-    grum = out["npcs"]["Grum"]
-    assert grum["home_location_id"] == "brekmar"
-    assert grum["hidden_traits"]
-    assert out["schema_version"] >= 2
+    assert out["archived"] is True
+    assert out["npcs"]["Grum"] == raw["npcs"]["Grum"]
 
 
 def test_gate_ausente_e_presente():

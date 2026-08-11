@@ -1,7 +1,7 @@
 # SPEC — Itens vivos (passivas + ativas) + sistema de Luz/Visibilidade
 
-> **Status:** `in-progress` (2026-07-19 — mecânica+dados+HUD `done` e testados (20 testes); falta só o smoke real da prosa, adiado p/ não colidir com o playtest longo no Jina)
-> **Criada:** 2026-07-19 · **Atualizada:** 2026-07-19
+> **Status:** `done`
+> **Criada:** 2026-07-19 · **Atualizada:** 2026-08-02
 > **Depende de:** Fase 4.2 (buffs mecânicos) · 4.3 (inventário/slots) · 6.4 (detection_check) · 6.5 (clima) — todas `done`
 > **Desbloqueia:** conteúdo de itens com identidade mecânica; ambientação de masmorra
 
@@ -188,17 +188,17 @@ def use_item_in_combat(player: Dict, item_ref: str, target: Optional[Dict] = Non
 
 ## 5. Critérios de aceite
 
-- [ ] Passiva de item equipado afeta AC/acerto/resist/percepção (Etapa 1)
-- [ ] Noite/masmorra sem luz dificulta perceber; tocha/lanterna anula; cidade à noite fica iluminada
-- [ ] Escuro sem luz penaliza o acerto (simétrico; luz do herói protege o lado dele)
-- [ ] Bomba de atordoamento aplica stun no inimigo (com save); buff/cura seguem no self
-- [ ] ≥5 itens de exemplo populados (luz, percepção, resist, bomba, pó do sono)
-- [ ] **+20 itens** novos ancorados na lore, com variedade de efeitos (R8), lint verde
-- [ ] Storyteller descreve claro/escuro; HUD mostra chip de luz + passivas de item
-- [ ] Teste anti-órfão (`HANDLED_KINDS`) cobre `perception`/`light`
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM: N/A (mecânica pura; nenhum structured output novo)
-- [ ] Saves antigos continuam carregando (campos novos são opcionais)
+- [x] Passiva de item equipado afeta AC/acerto/resist/percepção (Etapa 1)
+- [x] Noite/masmorra sem luz dificulta perceber; tocha/lanterna anula; cidade à noite fica iluminada
+- [x] Escuro sem luz penaliza o acerto (simétrico; luz do herói protege o lado dele)
+- [x] Bomba de atordoamento aplica stun no inimigo (com save); buff/cura seguem no self
+- [x] ≥5 itens de exemplo populados (luz, percepção, resist, bomba, pó do sono)
+- [x] **+20 itens** novos ancorados na lore, com variedade de efeitos (R8), lint verde
+- [x] Storyteller descreve claro/escuro; HUD mostra chip de luz + passivas de item
+- [x] Teste anti-órfão (`HANDLED_KINDS`) cobre `perception`/`light`
+- [x] `uv run pytest` verde (suíte completa offline)
+- [x] Guard de FallbackLLM protegido no storyteller após achado do smoke
+- [x] Saves antigos continuam carregando (campos novos são opcionais)
 
 ## 6. Smoke test com LLM real
 
@@ -251,5 +251,16 @@ suíte **950 → 970 verdes**. Autoria em Fable.
   motor).
 - **Achado colateral corrigido:** `corda` (legado) tinha passiva como STRING —
   `item_passives`/`_has_light_source` agora filtram não-dicts (robustez).
-- **Pendente p/ `done`:** smoke real §6 (prosa de escuridão + item ofensivo em
-  combate real) — adiado para não colidir com o playtest longo no Jina.
+- **Smoke real concluído em 2026-08-02:** o run Devoto
+  `20260802-163942-749371` descreveu a limitação visual sem fonte de luz nos
+  turnos 10 e 17. Um smoke controlado com a Lanterna dos Suspiros produziu luz
+  mecânica e prosa coerente; outro com a Bomba Atordoante consumiu o item e fez
+  o alvo perder integralmente sua ação.
+- **Achados do smoke corrigidos:** guard explícito de `StoryUpdate` evita
+  `AIMessage` virar “Erro AI”; stun de duração 1 agora é observado antes do tick
+  e nega exatamente uma ação; clima/luz entram no total de ataque do conflito
+  v4. O campo `natural_dark` preserva a penalidade dos inimigos quando a luz do
+  herói ilumina apenas o seu lado.
+- **Verificação final:** testes focados de itens/luz/clima/storyteller/conflito
+  verdes; suíte integral **1.313 passed, 1 skipped, 14 deselected** e lint de
+  conteúdo sem erros/avisos.

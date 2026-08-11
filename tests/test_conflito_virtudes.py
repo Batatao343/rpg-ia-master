@@ -141,9 +141,9 @@ def test_criacao_usa_virtudes_do_jogador():
     })
     assert sheet["virtudes"]["forca"] == 4
     assert sheet["virtudes"]["corpo"] == 3
-    # Corpo 3 -> Vitalidade 12, espaços {4,2,2}
-    assert sheet["max_vitalidade"] == 12
-    assert sheet["vitalidade"] == 12
+    # Corpo 3 -> 12 + bônus de Postura 6; espaços continuam derivados só de Corpo.
+    assert sheet["max_vitalidade"] == 18
+    assert sheet["vitalidade"] == 18
     assert sheet["ferimento_espacos"] == {"leve": 4, "grave": 2, "critico": 2}
     # attributes NÃO existe mais no jogador
     assert "attributes" not in sheet
@@ -187,7 +187,7 @@ def test_nivel_par_oferece_escolha_de_virtude():
     p, events = grant_xp(p, XP_TABLE[4])  # sobe para nível 4
     assert p["level"] == 4
     kinds = [c["kind"] for c in p["pending_choices"]]
-    assert "virtude" in kinds and "ability" in kinds
+    assert "virtude" in kinds and "carta" in kinds
 
 
 def test_nivel_impar_nao_oferece_virtude():
@@ -201,13 +201,13 @@ def test_nivel_impar_nao_oferece_virtude():
 
 def test_subir_corpo_aumenta_vitalidade_na_hora():
     from progression import apply_choice
-    p = _player_lvl(level=4, corpo=2)  # Vitalidade 10
+    p = _player_lvl(level=4, corpo=2)  # Vitalidade 10 + bônus de Postura 6
     p["pending_choices"] = [{"id": "lvl4-virtude", "level": 4, "kind": "virtude"}]
-    assert p["max_vitalidade"] == 10
+    assert p["max_vitalidade"] == 16
     p2, err = apply_choice(p, "lvl4-virtude", virtude="corpo")
     assert err is None
     assert p2["virtudes"]["corpo"] == 3
-    assert p2["max_vitalidade"] == 12  # recalculou na hora
+    assert p2["max_vitalidade"] == 18  # recalculou na hora
 
 
 def test_virtude_acima_do_teto_rejeitada():
@@ -237,7 +237,7 @@ def test_migracao_v3_marca_arquivado_sem_converter():
                    "hp": 20, "max_hp": 20},
     }
     out = persistence.migrate_state(raw)
-    assert out["schema_version"] == 4
+    assert out["schema_version"] == 5
     assert out["archived"] is True
     assert out.get("archived_reason")
     # NÃO inventou Virtudes a partir dos atributos
@@ -305,4 +305,3 @@ def test_nenhum_read_de_attributes_do_jogador_em_producao():
                 if any(rx.search(line) for rx in proibidos):
                     ofensores.append(f"{os.path.relpath(path, root)}:{n}: {line.strip()}")
     assert not ofensores, "leitura de attributes do jogador em produção:\n" + "\n".join(ofensores)
-

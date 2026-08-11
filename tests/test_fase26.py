@@ -306,6 +306,49 @@ def test_storyteller_fallback_nao_quebra(monkeypatch):
     monkeypatch.setattr(stt, "get_llm", lambda *a, **k: FallbackLLM("quota"))
     out = stt.storyteller_node(_story_state())
     assert "messages" in out            # não estourou; devolveu narração de fallback
+    assert "Erro AI" not in out["messages"][-1].content
+
+
+def test_storyteller_fallback_preserva_superficie_de_luz(monkeypatch):
+    """Mesmo sem provider, a consequência mecânica de carregar luz fica visível."""
+    import agents.storyteller as stt
+    from llm_setup import FallbackLLM
+    monkeypatch.setattr(stt, "get_llm", lambda *a, **k: FallbackLLM("quota"))
+    state = _story_state()
+    state["world"]["time_of_day"] = "Noite"
+    state["world"]["current_location_id"] = "pm_profundezas"
+    state["world"]["current_location"] = "Profundezas do Pântano"
+    state["player"]["inventory"] = [{"id": "art_lanterna_suspiros", "qty": 1}]
+
+    out = stt.storyteller_node(state)
+
+    text = out["messages"][-1].content.casefold()
+    assert "luz" in text and "breu" in text
+
+
+def test_storyteller_fallback_expoe_clima_global(monkeypatch):
+    import agents.storyteller as stt
+    from llm_setup import FallbackLLM
+    monkeypatch.setattr(stt, "get_llm", lambda *a, **k: FallbackLLM("quota"))
+    state = _story_state()
+    state["world"]["weather_global"] = {
+        "id": "tempestade_de_eter", "periods_left": 3,
+    }
+
+    out = stt.storyteller_node(state)
+
+    assert "Tempestade de Éter" in out["messages"][-1].content
+
+
+def test_storyteller_fallback_nao_vaza_instrucao_de_loot():
+    from agents.storyteller import _deterministic_story_fallback
+    text = _deterministic_story_fallback((
+        "O jogador VIAJOU para Ruínas Submersas. Contexto do local: água negra. Descreva a chegada.",
+        "O jogador ENCONTROU um baú/esconderijo em Ruínas Submersas: Oghma e 55 de ouro. Descreva o achado.",
+    ), {"dark": False, "label": "claro"})
+    assert "Após a viagem, você chega" in text
+    assert "você encontra um baú" in text
+    assert "Descreva" not in text
 
 
 # ---------------------------------------------------------------------------

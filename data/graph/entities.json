@@ -7071,5 +7071,617 @@
     ],
     "visibility": "public",
     "components": {}
+  },
+  "npc_mv_irena_prego_frio": {
+    "id": "npc_mv_irena_prego_frio",
+    "type": "npc",
+    "name": "Irena Prego-Frio",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "mundo_vivo",
+      "legiao_ferro"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "nova_arcadia",
+      "role": "fiscal de rebites do Anel de Ferro",
+      "faction": "legiao_ferro"
+    }
+  },
+  "npc_mv_teo_chamine": {
+    "id": "npc_mv_teo_chamine",
+    "type": "npc",
+    "name": "Téo Chaminé",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "mundo_vivo",
+      "resistencia_operaria_martelos_partidos"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "nova_arcadia",
+      "role": "mensageiro pelos telhados fabris",
+      "faction": "resistencia_operaria_martelos_partidos"
+    }
+  },
+  "npc_mv_mara_do_setimo_sino": {
+    "id": "npc_mv_mara_do_setimo_sino",
+    "type": "npc",
+    "name": "Mara do Sétimo Sino",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "mundo_vivo",
+      "guilda_corvos"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "nova_arcadia",
+      "role": "relojoeira e informante de turnos",
+      "faction": "guilda_corvos"
+    }
+  },
+  "npc_mv_ume_lodo_claro": {
+    "id": "npc_mv_ume_lodo_claro",
+    "type": "npc",
+    "name": "Ume Lodo-Claro",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "mundo_vivo",
+      "druidas_ciclo_cinzento"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "pantano_melancolia",
+      "role": "barqueira dos canais rasos",
+      "faction": "druidas_ciclo_cinzento"
+    }
+  },
+  "npc_mv_padre_junco": {
+    "id": "npc_mv_padre_junco",
+    "type": "npc",
+    "name": "Padre Junco",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "mundo_vivo",
+      "druidas_ciclo_cinzento"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "pantano_melancolia",
+      "role": "guardião de túmulos flutuantes",
+      "faction": "druidas_ciclo_cinzento"
+    }
+  },
+  "npc_mv_sira_candeia": {
+    "id": "npc_mv_sira_candeia",
+    "type": "npc",
+    "name": "Sira Candeia",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "mundo_vivo",
+      "independente"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "pantano_melancolia",
+      "role": "caçadora de luzes-fátuas",
+      "faction": "independente"
+    }
+  },
+  "npc_mv_nahir_vidro_manso": {
+    "id": "npc_mv_nahir_vidro_manso",
+    "type": "npc",
+    "name": "Nahir Vidro-Manso",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "mundo_vivo",
+      "tribos_devoradores_sol"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "deserto_zhur",
+      "role": "lapidador de vidro solar",
+      "faction": "tribos_devoradores_sol"
+    }
+  },
+  "npc_mv_kessa_tres_sombras": {
+    "id": "npc_mv_kessa_tres_sombras",
+    "type": "npc",
+    "name": "Kessa Três-Sombras",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "mundo_vivo",
+      "tribos_devoradores_sol"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "deserto_zhur",
+      "role": "batedora de caravanas",
+      "faction": "tribos_devoradores_sol"
+    }
+  },
+  "npc_mv_orun_sal_negro": {
+    "id": "npc_mv_orun_sal_negro",
+    "type": "npc",
+    "name": "Orun Sal-Negro",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "mundo_vivo",
+      "independente"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "deserto_zhur",
+      "role": "negociador de poços",
+      "faction": "independente"
+    }
+  },
+  "npc_mv_eilin_folha_oca": {
+    "id": "npc_mv_eilin_folha_oca",
+    "type": "npc",
+    "name": "Eilin Folha-Oca",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "mundo_vivo",
+      "independente"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "floresta_sussurros",
+      "role": "intérprete dos sussurros de trilha",
+      "faction": "independente"
+    }
+  },
+  "npc_mv_tomir_musgo": {
+    "id": "npc_mv_tomir_musgo",
+    "type": "npc",
+    "name": "Tomir Musgo",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "mundo_vivo",
+      "guardiões_de_thessavar"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "floresta_sussurros",
+      "role": "curador de cascas feridas",
+      "faction": "guardiões_de_thessavar"
+    }
+  },
+  "npc_mv_vaela_do_ninho": {
+    "id": "npc_mv_vaela_do_ninho",
+    "type": "npc",
+    "name": "Vaela do Ninho",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "mundo_vivo",
+      "independente"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "floresta_sussurros",
+      "role": "guia de copas baixas",
+      "faction": "independente"
+    }
+  },
+  "npc_mv_jori_sete_esporos": {
+    "id": "npc_mv_jori_sete_esporos",
+    "type": "npc",
+    "name": "Jori Sete-Esporos",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "mundo_vivo",
+      "colmeia_hospedeiros"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "selva_xylos",
+      "role": "mediador entre hospedeiros",
+      "faction": "colmeia_hospedeiros"
+    }
+  },
+  "npc_mv_mae_aru": {
+    "id": "npc_mv_mae_aru",
+    "type": "npc",
+    "name": "Mãe Aru",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "mundo_vivo",
+      "colmeia_hospedeiros"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "selva_xylos",
+      "role": "parteira das cidades de copa",
+      "faction": "colmeia_hospedeiros"
+    }
+  },
+  "npc_mv_pel_sem_rosto": {
+    "id": "npc_mv_pel_sem_rosto",
+    "type": "npc",
+    "name": "Pel Sem-Rosto",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "mundo_vivo",
+      "independente"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "selva_xylos",
+      "role": "cartógrafo de trilhas migratórias",
+      "faction": "independente"
+    }
+  },
+  "npc_mv_runa_brasa_branca": {
+    "id": "npc_mv_runa_brasa_branca",
+    "type": "npc",
+    "name": "Runa Brasa-Branca",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "mundo_vivo",
+      "clas_tecnologicos"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "skallgard",
+      "role": "mecânica de aquecedores de clã",
+      "faction": "clas_tecnologicos"
+    }
+  },
+  "npc_mv_eirik_sem_pegadas": {
+    "id": "npc_mv_eirik_sem_pegadas",
+    "type": "npc",
+    "name": "Eirik Sem-Pegadas",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "mundo_vivo",
+      "clas_combate"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "skallgard",
+      "role": "caçador da borda noturna",
+      "faction": "clas_combate"
+    }
+  },
+  "npc_mv_solvi_cabo_cobre": {
+    "id": "npc_mv_solvi_cabo_cobre",
+    "type": "npc",
+    "name": "Solvi Cabo-Cobre",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "mundo_vivo",
+      "independente"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "skallgard",
+      "role": "operadora de rádio antigo",
+      "faction": "independente"
+    }
+  },
+  "npc_mv_maeril_caco_azul": {
+    "id": "npc_mv_maeril_caco_azul",
+    "type": "npc",
+    "name": "Maeril Caco-Azul",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "mundo_vivo",
+      "independente"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "aethelgard",
+      "role": "zelador de cristal de contenção",
+      "faction": "independente"
+    }
+  },
+  "npc_mv_oren_ultimo_mapa": {
+    "id": "npc_mv_oren_ultimo_mapa",
+    "type": "npc",
+    "name": "Oren Último-Mapa",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "mundo_vivo",
+      "independente"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "aethelgard",
+      "role": "copista das galerias élficas",
+      "faction": "independente"
+    }
+  },
+  "npc_mv_tessa_ampola": {
+    "id": "npc_mv_tessa_ampola",
+    "type": "npc",
+    "name": "Tessa Ampola",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "mundo_vivo",
+      "cultistas_destilacao"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "aethelgard",
+      "role": "alquimista arrependida",
+      "faction": "cultistas_destilacao"
+    }
+  },
+  "npc_mv_nami_cinza_sal": {
+    "id": "npc_mv_nami_cinza_sal",
+    "type": "npc",
+    "name": "Nami Cinza-Sal",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "mundo_vivo",
+      "navegadores_ophidia"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "ophidia",
+      "role": "pilota de canais vulcânicos",
+      "faction": "navegadores_ophidia"
+    }
+  },
+  "npc_mv_koro_remo_curto": {
+    "id": "npc_mv_koro_remo_curto",
+    "type": "npc",
+    "name": "Koro Remo-Curto",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "mundo_vivo",
+      "independente"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "ophidia",
+      "role": "pescador de tubos de lava",
+      "faction": "independente"
+    }
+  },
+  "npc_mv_iria_coral_cego": {
+    "id": "npc_mv_iria_coral_cego",
+    "type": "npc",
+    "name": "Iria Coral-Cego",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "mundo_vivo",
+      "guardiões_do_recife"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "ophidia",
+      "role": "oraculista de recife",
+      "faction": "guardiões_do_recife"
+    }
+  },
+  "npc_mv_daro_osso_cantante": {
+    "id": "npc_mv_daro_osso_cantante",
+    "type": "npc",
+    "name": "Daro Osso-Cantante",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "mundo_vivo",
+      "mercadores_curiosidades"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "costa_negra",
+      "role": "afinador de ossadas titânicas",
+      "faction": "mercadores_curiosidades"
+    }
+  },
+  "npc_mv_mae_neris": {
+    "id": "npc_mv_mae_neris",
+    "type": "npc",
+    "name": "Mãe Neris",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "mundo_vivo",
+      "osshari"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "costa_negra",
+      "role": "capitã de coleta de marfim",
+      "faction": "osshari"
+    }
+  },
+  "npc_mv_ulk_marfim": {
+    "id": "npc_mv_ulk_marfim",
+    "type": "npc",
+    "name": "Ulk Marfim",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "mundo_vivo",
+      "independente"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "costa_negra",
+      "role": "avaliador de relíquias costeiras",
+      "faction": "independente"
+    }
+  },
+  "npc_mv_brunna_ponte_alta": {
+    "id": "npc_mv_brunna_ponte_alta",
+    "type": "npc",
+    "name": "Brunna Ponte-Alta",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "mundo_vivo",
+      "ultimos_anoes_reino"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "montanhas_afiadas",
+      "role": "engenheira das passagens anãs",
+      "faction": "ultimos_anoes_reino"
+    }
+  },
+  "npc_mv_skek_eco_curto": {
+    "id": "npc_mv_skek_eco_curto",
+    "type": "npc",
+    "name": "Skek Eco-Curto",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "mundo_vivo",
+      "goblins_mineiros"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "montanhas_afiadas",
+      "role": "prospector goblin",
+      "faction": "goblins_mineiros"
+    }
+  },
+  "npc_mv_odrin_calcario": {
+    "id": "npc_mv_odrin_calcario",
+    "type": "npc",
+    "name": "Odrin Calcário",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "mundo_vivo",
+      "bandos_orc_saidas_baixas"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "montanhas_afiadas",
+      "role": "mediador das saídas baixas",
+      "faction": "bandos_orc_saidas_baixas"
+    }
+  },
+  "npc_mv_lio_bandeira_vazia": {
+    "id": "npc_mv_lio_bandeira_vazia",
+    "type": "npc",
+    "name": "Lio Bandeira-Vazia",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "mundo_vivo",
+      "cidades_estado_sobreviventes_vaelorn_solvhen"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "pradaria_ruinas",
+      "role": "arqueólogo de brasões apagados",
+      "faction": "cidades_estado_sobreviventes_vaelorn_solvhen"
+    }
+  },
+  "npc_mv_hana_estribo": {
+    "id": "npc_mv_hana_estribo",
+    "type": "npc",
+    "name": "Hana Estribo",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "mundo_vivo",
+      "bandos_nomades"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "pradaria_ruinas",
+      "role": "correio dos bandos nômades",
+      "faction": "bandos_nomades"
+    }
+  },
+  "npc_mv_korso_pedra_movel": {
+    "id": "npc_mv_korso_pedra_movel",
+    "type": "npc",
+    "name": "Korso Pedra-Móvel",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "mundo_vivo",
+      "independente"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "pradaria_ruinas",
+      "role": "pastor de auroques",
+      "faction": "independente"
+    }
+  },
+  "npc_mv_mina_sete_taxas": {
+    "id": "npc_mv_mina_sete_taxas",
+    "type": "npc",
+    "name": "Mina Sete-Taxas",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "mundo_vivo",
+      "tres_sindicatos_comercio"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "brekmar",
+      "role": "escrivã dos sindicatos",
+      "faction": "tres_sindicatos_comercio"
+    }
+  },
+  "npc_mv_jax_corda_seca": {
+    "id": "npc_mv_jax_corda_seca",
+    "type": "npc",
+    "name": "Jax Corda-Seca",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "mundo_vivo",
+      "grupos_piratas_rivais"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "brekmar",
+      "role": "salvador de tripulações",
+      "faction": "grupos_piratas_rivais"
+    }
+  },
+  "npc_mv_varo_dois_portos": {
+    "id": "npc_mv_varo_dois_portos",
+    "type": "npc",
+    "name": "Varo Dois-Portos",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "mundo_vivo",
+      "poder_kahen"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "brekmar",
+      "role": "corretor de rotas clandestinas",
+      "faction": "poder_kahen"
+    }
   }
 }

@@ -406,6 +406,290 @@
         "prompt_hint": "reconhecer um morto/relíquia/local de perda"
       },
       "descricao": "O luto é um mapa dos que já se foram."
+    },
+    {
+      "id": "dev_cons_relicario",
+      "name": "Corpo-Relicário",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "descricao": "Consagra uma cicatriz e recebe no próprio corpo o impacto destinado a outro.",
+      "papel": "proteger aliado marcado"
+    },
+    {
+      "id": "dev_cons_comunhao",
+      "name": "Comunhão do Último Fôlego",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "superior",
+      "custo_entropia": 3,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeito": {
+        "kind": "estabilizar",
+        "valor": 1
+      },
+      "descricao": "Pronuncia o nome verdadeiro de um aliado terminal e ancora sua alma à carne.",
+      "papel": "estabilização ritual à distância"
+    },
+    {
+      "id": "dev_zel_interdito",
+      "name": "Interdito Ciumento",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeito": {
+        "kind": "marca",
+        "valor": 3
+      },
+      "descricao": "O olhar do Devoto transforma qualquer desvio do inimigo em afronta pessoal.",
+      "papel": "impedir troca de alvo"
+    },
+    {
+      "id": "dev_zel_retorno",
+      "name": "Todo Golpe Retorna",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "superior",
+      "custo_entropia": 4,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "dano_base": 10
+      },
+      "descricao": "A violência que buscava um aliado volta inteira ao agressor.",
+      "papel": "retaliação contra agressor marcado"
+    },
+    {
+      "id": "dev_enl_cortejo",
+      "name": "Cortejo dos Ausentes",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Devoto do Abismo",
+      "subclasse": "enlutado",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 4,
+        "duracao": 2,
+        "dano_tipo": "abissal"
+      },
+      "descricao": "Sombras com nomes esquecidos atravessam o alvo em procissão silenciosa.",
+      "papel": "pressão abissal por luto"
+    },
+    {
+      "id": "dev_enl_testemunho",
+      "name": "Testemunho dos Mortos",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Devoto do Abismo",
+      "subclasse": "enlutado",
+      "patamar": "superior",
+      "custo_entropia": 3,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "vantagem",
+        "valor": 2
+      },
+      "descricao": "Os mortos testemunham através do Devoto e guiam o grupo contra quem os levou.",
+      "papel": "vantagem coletiva contra assassino"
+    },
+    {
+      "id": "dev_reflexo_bastiao",
+      "name": "Reflexo de Bastião",
+      "tipo": "reacao",
+      "origem": "conflito-17",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 3
+      },
+      "descricao": "Gira o escudo no instante exato em que a linha ameaça romper.",
+      "gatilho": "ao_ser_flanqueado",
+      "papel": "fechar brecha ao ser flanqueado"
+    },
+    {
+      "id": "dev_ombro_porta",
+      "name": "Ombro na Porta",
+      "tipo": "reacao",
+      "origem": "conflito-17",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 1
+      },
+      "descricao": "Recebe a investida de lado e devolve o invasor para a zona anterior.",
+      "gatilho": "ao_inimigo_engajar",
+      "papel": "interromper avanço inimigo"
+    },
+    {
+      "id": "dev_vigiar_ruina",
+      "name": "Vigiar a Ruína",
+      "tipo": "utilitaria",
+      "origem": "conflito-17",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "perception",
+        "valor": 2
+      },
+      "descricao": "Lê nas paredes os sinais de que algo tentou entrar durante a noite.",
+      "papel": "detectar ameaça em vigília"
+    },
+    {
+      "id": "dev_carregar_caido",
+      "name": "Carregar o Caído",
+      "tipo": "utilitaria",
+      "origem": "conflito-17",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "transportar ferido ou peso extremo sem abandonar a guarda"
+      },
+      "descricao": "Faz do próprio dorso uma muralha móvel para retirar alguém do perigo.",
+      "papel": "resgate sob carga"
+    },
+    {
+      "id": "dev_passo_interposto",
+      "name": "Passo Interposto",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 1
+      },
+      "descricao": "Um passo basta para colocar a própria carne entre o perigo e o companheiro.",
+      "papel": "trocar posição com aliado exposto"
+    },
+    {
+      "id": "dev_nome_proibido",
+      "name": "Nome Proibido",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "amedrontado",
+        "duracao": 1
+      },
+      "descricao": "Sussurra ao inimigo o nome que o Abismo usa quando sonha com ele.",
+      "papel": "quebrar coragem pelo nome"
+    },
+    {
+      "id": "dev_martelo_penitente",
+      "name": "Martelo Penitente",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "superior",
+      "custo_entropia": 3,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 9
+      },
+      "descricao": "Cada ferida do grupo acrescenta peso à descida do martelo.",
+      "papel": "golpe pesado contra alvo que feriu aliado"
+    },
+    {
+      "id": "dev_promessa_imovel",
+      "name": "Promessa Imóvel",
+      "tipo": "passiva",
+      "origem": "conflito-17",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "bonus_vitalidade_por_estagio",
+        "valor": 1
+      },
+      "descricao": "Enquanto sustenta a palavra dada, o corpo se recusa a ceder.",
+      "papel": "vitalidade por juramento mantido"
     }
   ]
 }

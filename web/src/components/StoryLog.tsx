@@ -17,7 +17,7 @@ export function StoryLog({ entries, thinking, thinkingLabel }: {
   }, [entries, thinking]);
 
   return (
-    <section className="story" aria-label="Narrativa" ref={storyRef}>
+    <section className="story" aria-label="Narrativa" ref={storyRef} tabIndex={0}>
       <div className="log">
         {entries.map((e, i) => {
           const prev = entries[i - 1];

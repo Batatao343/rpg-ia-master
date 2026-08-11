@@ -19,7 +19,10 @@
         "categoria_arma": "marcial",
         "dano_base": 4
       },
-      "descricao": "Libera a Entropia canalizada num raio cinza pelo cajado."
+      "descricao": "Libera a Entropia canalizada num raio cinza pelo cajado.",
+      "mecanica_classe": {
+        "resfria_caldeira": true
+      }
     },
     {
       "id": "arc_faisca",
@@ -131,7 +134,10 @@
         "categoria_arma": "pesada",
         "dano_base": 12
       },
-      "descricao": "Esvazia a caldeira inteira num só jato."
+      "descricao": "Esvazia a caldeira inteira num só jato.",
+      "mecanica_classe": {
+        "resfria_caldeira": true
+      }
     },
     {
       "id": "arc_cal_valvula",
@@ -209,7 +215,10 @@
           }
         }
       },
-      "central": true
+      "central": true,
+      "mecanica_classe": {
+        "resfria_caldeira": true
+      }
     },
     {
       "id": "arc_cal_regulagem",
@@ -246,7 +255,10 @@
         "categoria_arma": "versatil",
         "dano_base": 6
       },
-      "descricao": "Sem cajado entre a carne e o Abismo — dói, mas queima o dobro."
+      "descricao": "Sem cajado entre a carne e o Abismo — dói, mas queima o dobro.",
+      "mecanica_classe": {
+        "auto_dano": 4
+      }
     },
     {
       "id": "arc_des_sobrecarga",
@@ -308,7 +320,10 @@
           }
         }
       },
-      "central": true
+      "central": true,
+      "mecanica_classe": {
+        "auto_dano": 2
+      }
     },
     {
       "id": "arc_des_nervo",
@@ -427,6 +442,307 @@
         "valor": 1
       },
       "descricao": "Sempre tem uma peça sobrando para a próxima virada."
+    },
+    {
+      "id": "arc_cal_malha",
+      "name": "Malha de Calibração",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "buff_acerto",
+        "valor": 3
+      },
+      "descricao": "Projeta uma malha cinzenta que corrige ângulo e distância para todos.",
+      "papel": "calibrar disparos do grupo"
+    },
+    {
+      "id": "arc_cal_zero",
+      "name": "Zero Absoluto do Cálculo",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "superior",
+      "custo_entropia": 4,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "atordoado",
+        "duracao": 2
+      },
+      "descricao": "Por um instante não sobra possibilidade estatística de movimento.",
+      "papel": "paralisar ao fechar todas as variáveis"
+    },
+    {
+      "id": "arc_des_nervo_exposto",
+      "name": "Nervo Descoberto",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "vantagem",
+        "valor": 3
+      },
+      "descricao": "Encosta o próprio sistema nervoso no Éter e aceita cada resposta.",
+      "papel": "vantagem em canalização sem foco"
+    },
+    {
+      "id": "arc_des_horizonte",
+      "name": "Horizonte sem Isolante",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "superior",
+      "custo_entropia": 5,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 13
+      },
+      "descricao": "Abre no peito uma janela pela qual a tempestade inteira atravessa.",
+      "papel": "descarga máxima com risco corporal"
+    },
+    {
+      "id": "arc_imp_grampo",
+      "name": "Grampo de Éter",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "avancado",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "marca",
+        "valor": 3
+      },
+      "descricao": "Prende o impossível a um pedaço de sucata até que alguém possa usá-lo.",
+      "papel": "fixar fenômeno instável em objeto"
+    },
+    {
+      "id": "arc_imp_maquina",
+      "name": "Máquina que Só Funciona Uma Vez",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "superior",
+      "custo_entropia": 4,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 4
+      },
+      "descricao": "Monta um artefato absurdo, aponta a saída certa e não guarda as peças.",
+      "papel": "explosão direcional descartável"
+    },
+    {
+      "id": "arc_aterramento",
+      "name": "Aterramento de Emergência",
+      "tipo": "reacao",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 2
+      },
+      "descricao": "Desvia energia hostil pelo metal mais próximo antes que ela encontre os ossos.",
+      "gatilho": "ao_sofrer_dano_sobrenatural",
+      "papel": "dissipar descarga recebida"
+    },
+    {
+      "id": "arc_refracao",
+      "name": "Refração Cinzenta",
+      "tipo": "reacao",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "buff_esquiva",
+        "valor": 4
+      },
+      "descricao": "Quebra a própria silhueta em três futuros e deixa o ataque escolher errado.",
+      "gatilho": "ao_ser_alvo_distancia",
+      "papel": "deslocar imagem sob mira"
+    },
+    {
+      "id": "arc_auscultar_eter",
+      "name": "Auscultar o Éter",
+      "tipo": "utilitaria",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "perception",
+        "valor": 5
+      },
+      "descricao": "Escuta o ruído que toda alteração arcana deixa preso na matéria.",
+      "papel": "detectar magia residual"
+    },
+    {
+      "id": "arc_ponte_curta",
+      "name": "Ponte de Um Minuto",
+      "tipo": "utilitaria",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 0,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "alimentar ou contornar mecanismo arcano por poucos instantes"
+      },
+      "descricao": "Mantém uma máquina impossível viva pelo tempo exato de atravessar.",
+      "papel": "bypass arcano temporário"
+    },
+    {
+      "id": "arc_vetor_quebrado",
+      "name": "Vetor Quebrado",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 2
+      },
+      "descricao": "Corta o caminho em dois e reaparece onde a geometria não esperava.",
+      "papel": "teleporte curto desalinhado"
+    },
+    {
+      "id": "arc_pulso_inverso",
+      "name": "Pulso Inverso",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "purga_condicao",
+        "valor": 1
+      },
+      "descricao": "Reproduz o padrão nocivo ao contrário até que ele se desfaça.",
+      "papel": "remover condição por inversão"
+    },
+    {
+      "id": "arc_raio_cinza",
+      "name": "Raio Cinza Longitudinal",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "superior",
+      "custo_entropia": 4,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 11
+      },
+      "descricao": "Comprime o Éter numa linha tão fina que a distância deixa de protegê-la.",
+      "papel": "dano arcano em linha"
+    },
+    {
+      "id": "arc_equacao_persistente",
+      "name": "Equação Persistente",
+      "tipo": "passiva",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_iniciativa",
+        "valor": 3
+      },
+      "descricao": "A primeira observação continua resolvendo possibilidades enquanto a luta muda.",
+      "papel": "iniciativa após estudar cena"
+    },
+    {
+      "id": "arc_constante_cinza",
+      "name": "Constante Cinza",
+      "tipo": "passiva",
+      "origem": "conflito-17",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "superior",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "bonus_percepcao_por_estagio",
+        "valor": 2
+      },
+      "descricao": "Depois de medir o impossível tantas vezes, o olho passa a esperá-lo.",
+      "papel": "percepção crescente de anomalias"
     }
   ]
 }

@@ -1,13 +1,11 @@
 # Sistema de Classes — Valoria (Cinco Posturas diante do Abismo)
 
-> Retrato do sistema em 2026-07-19. Fontes da verdade: `data/classes.json` (fichas +
-> config tipada de Entropia), `data/class_themes.json` (gating narrativo),
-> `data/player_abilities.json` (árvore RICA, **101 habilidades**: 41 ativas +
-> 35 passivas + 25 utilitárias), `combat_mechanics.py` (Entropia/Carga/gatilhos/
-> passivas), `progression.py` (XP/level up/subclasse),
-> `services/context_builder.utility_context_block` (utilitárias no narrador).
-> Specs de origem: `specs/refatoracao-sistema-classes.md` (motor) e
-> `specs/arvores-habilidade-classes.md` (árvore rica — autoria em Fable), ambas `done`.
+> **Documento histórico do sistema pré-Cartas.** Desde o cutover de Conflitos v2,
+> `data/player_abilities.json` e `known_abilities` foram removidos. As fontes da
+> verdade atuais são `data/classes.json`, `data/cards/*.json`,
+> `services/cards.py`, `services/conflict_orchestrator.py` e `progression.py`.
+> Autoria e regras atuais: [CARTAS.md](CARTAS.md). As seções abaixo permanecem
+> apenas como registro da evolução de Entropia/Carga e não devem orientar código novo.
 
 ---
 
@@ -58,7 +56,9 @@ discretos — `leve` (1–3) · `moderado` (4–6) · `severo` (7+) — e cada c
 | **Médico de Campo** | suporte/cura · nega | 28 / 16 / 14 | int | `on_ally_suffer` (aliado sofre) | pode gastar Entropia p/ purgar Carga de aliado | **Recidiva** — oculta até estourar num colapso |
 
 `level_gains.entropy`: Devoto 2 · Sangromante 3 · Corruptor 4 · Arcanista 6 · Médico 3.
-Números são **proposta jogável `[BALANCEAR]`**, não finais.
+Números calibrados na grade pós-playtest de 2026-08-02. Gatilhos passivos de
+Devoto e Médico geram Carga só até 6 (`moderado`); `severo` exige outra escolha
+abissal, em vez de surgir apenas por apanhar ou proteger um aliado.
 
 ### Subclasses (branches derivados de `known_abilities`)
 - **Devoto:** Consagrado · Zeloso · Enlutado
@@ -95,7 +95,7 @@ ramo rival tranca para sempre (`eligible_abilities`). Zero campo de estado novo.
 
 ---
 
-## 5. Habilidades (schema alinhado ao motor)
+## 5. Habilidades antigas (schema aposentado no cutover)
 
 `data/player_abilities.json` — cada habilidade: `resource_type: "Entropia"`,
 `classes: ["<Classe>"]`, `branch`, `tier` (1–3), `level_req`, `requires` e
@@ -129,9 +129,8 @@ capacidade fora da lista. Cada tronco tem 2 (do doc-fonte); cada subclasse ≥1.
 Passiva/utilitária ficam FORA dos chips de combate e do catálogo do parser
 (`_allowed_ability_ids`); no HUD levam selo ✦ (passiva) / ⚒ (utilitária).
 
-> ⚠️ **Regerar a árvore:** `uv run python scripts/gen_classes_v2.py`
-> (gera `classes.json` **e** `player_abilities.json` juntos — `starting_abilities`
-> PRECISAM existir nos dois; nunca editar um sem o outro).
+> ⚠️ Não execute `scripts/gen_classes_v2.py` como fluxo de autoria atual: o
+> catálogo jogável é o de Cartas e segue `docs/CARTAS.md`.
 
 ---
 

@@ -26,7 +26,9 @@ PRICE_PER_MTOK = {
     # Pagos (assumem quando têm saldo)
     "MiniMax-M2.5": (0.30, 1.20),
     "qwen-max": (1.60, 6.40),
-    "deepseek-chat": (0.27, 1.10),
+    # DeepSeek V4 (cache miss; tabela oficial em 2026-07-24).
+    "deepseek-v4-flash": (0.14, 0.28),
+    "deepseek-v4-pro": (0.435, 0.87),
     "claude-sonnet-5": (3.00, 15.0),
 }
 _DEFAULT_PRICE = (1.00, 3.00)

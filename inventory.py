@@ -215,11 +215,22 @@ def use_item_in_combat(player: Dict, item_ref: str,
 
     if heal_formula:
         amount, detail = cm.roll_dice_numeric(str(heal_formula))
-        cur = int(p.get("hp", 0))
-        ceiling = int(p.get("max_hp", cur + amount))
-        p["hp"] = min(ceiling, cur + amount)
-        logs.append(f"{p.get('name','Herói')} usa {item.get('name', iid)}: "
-                    f"recupera {p['hp'] - cur} de HP (HP {p['hp']}) [{detail}]")
+        if p.get("vitalidade") is not None or isinstance(p.get("virtudes"), dict):
+            import gamedata
+            gamedata.sync_vitality(p)
+            cur = int(p.get("vitalidade", 0) or 0)
+            ceiling = int(p.get("max_vitalidade", cur + amount) or cur + amount)
+            p["vitalidade"] = min(ceiling, cur + amount)
+            gamedata.sync_legacy_hp_aliases(p)
+            logs.append(f"{p.get('name','Herói')} usa {item.get('name', iid)}: "
+                        f"recupera {p['vitalidade'] - cur} de Vitalidade "
+                        f"(Vitalidade {p['vitalidade']}) [{detail}]")
+        else:
+            cur = int(p.get("hp", 0))
+            ceiling = int(p.get("max_hp", cur + amount))
+            p["hp"] = min(ceiling, cur + amount)
+            logs.append(f"{p.get('name','Herói')} usa {item.get('name', iid)}: "
+                        f"recupera {p['hp'] - cur} de HP (HP {p['hp']}) [{detail}]")
     name = item.get("name", iid)
     for eff in effects:
         kind = eff.get("kind")

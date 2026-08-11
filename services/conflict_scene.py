@@ -6,8 +6,8 @@ Ocultação), Engajamento como relação separada, objetos interativos com catá
 FECHADO de efeitos, e a regra de CENA CONGELADA (nada entra por interpretação
 livre depois do início). NÃO resolve dano/efeito — isso é conflito-04/05.
 
-Convivência: `round/active/order/idle_turns` do dict `combat` seguem existindo em
-paralelo até o cutover (conflito-13). A ConflictScene mora em `combat["scene"]`.
+A ConflictScene serializável mora em `combat["scene"]`; o envelope mantém apenas
+metadados de rodada/lifecycle necessários à API.
 """
 from typing import Dict, List, Optional
 
@@ -24,6 +24,8 @@ EFFECT_KINDS = frozenset({
 })
 
 _COST_STATES = ("pre_acao", "pos_acao", "acao")
+_TACTICAL_MODIFIERS = frozenset({"protected", "attack_advantage"})
+_TACTICAL_MAX_COOLDOWN = 2
 
 # --- Orçamento de ação por turno (conflito-06) -------------------------------
 # Cada participante tem 1 Pré-Ação + 1 Ação + 1 Pós-Ação por turno. Manobras
@@ -57,6 +59,97 @@ def reset_turn_budget(scene: dict, participant_id: str) -> None:
     pos = _pos(scene, participant_id)
     if pos is not None:
         pos["budget"] = dict(TURN_BUDGET)
+
+
+def _tactical_state(scene: dict) -> dict:
+    state = scene.setdefault("tactical_state", {})
+    state.setdefault("round", 0)
+    modifiers = state.setdefault("modifiers", {})
+    for key in _TACTICAL_MODIFIERS:
+        modifiers.setdefault(key, {})
+    state.setdefault("cooldowns", {})
+    return state
+
+
+def tactical_round(scene: dict) -> int:
+    return int(_tactical_state(scene).get("round", 0) or 0)
+
+
+def advance_tactical_state(scene: dict) -> int:
+    """Avança efeitos táticos bounded uma vez por rodada.
+
+    Modificadores duram no máximo até a rodada seguinte e nunca empilham por
+    participante. Cooldowns são inteiros pequenos, também fechados.
+    """
+    state = _tactical_state(scene)
+    current = int(state.get("round", 0) or 0) + 1
+    state["round"] = current
+    for entries in state["modifiers"].values():
+        for participant_id, effect in list(entries.items()):
+            if int(effect.get("expires_round", 0) or 0) < current:
+                entries.pop(participant_id, None)
+    for participant_id, cooldowns in list(state["cooldowns"].items()):
+        for action_key, remaining in list(cooldowns.items()):
+            left = max(0, int(remaining or 0) - 1)
+            if left:
+                cooldowns[action_key] = left
+            else:
+                cooldowns.pop(action_key, None)
+        if not cooldowns:
+            state["cooldowns"].pop(participant_id, None)
+    return current
+
+
+def grant_tactical_modifier(scene: dict, kind: str, participant_id: str,
+                            source_id: str) -> bool:
+    """Concede um único modificador fechado, substituindo o anterior sem stack."""
+    if kind not in _TACTICAL_MODIFIERS:
+        return False
+    positions = scene.get("positions") or {}
+    if participant_id not in positions or source_id not in positions:
+        return False
+    state = _tactical_state(scene)
+    current = int(state.get("round", 0) or 0)
+    state["modifiers"][kind][participant_id] = {
+        "source_id": source_id,
+        "expires_round": current + 1,
+    }
+    return True
+
+
+def has_tactical_modifier(scene: dict, kind: str, participant_id: str) -> bool:
+    if kind not in _TACTICAL_MODIFIERS:
+        return False
+    return participant_id in _tactical_state(scene)["modifiers"][kind]
+
+
+def consume_tactical_attack_modifier(scene: dict, attacker_id: str,
+                                     target_id: str) -> int:
+    """Consome Vantagem de apoio e proteção do alvo no próximo ataque aplicável."""
+    state = _tactical_state(scene)
+    modifier = 0
+    if state["modifiers"]["attack_advantage"].pop(attacker_id, None):
+        modifier += 1
+    if state["modifiers"]["protected"].pop(target_id, None):
+        modifier -= 1
+    return 1 if modifier > 0 else (-1 if modifier < 0 else 0)
+
+
+def set_tactical_cooldown(scene: dict, participant_id: str,
+                          action_key: str, turns: int) -> None:
+    if participant_id not in (scene.get("positions") or {}):
+        return
+    bounded = max(1, min(_TACTICAL_MAX_COOLDOWN, int(turns or 1)))
+    _tactical_state(scene)["cooldowns"].setdefault(participant_id, {})[
+        str(action_key)] = bounded
+
+
+def tactical_cooldown(scene: dict, participant_id: str, action_key: str) -> int:
+    return int(
+        (_tactical_state(scene)["cooldowns"].get(participant_id) or {}).get(
+            str(action_key), 0)
+        or 0
+    )
 
 
 def validate_effect_kind(effect: dict) -> bool:

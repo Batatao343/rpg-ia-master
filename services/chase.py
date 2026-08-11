@@ -45,12 +45,12 @@ def initial_track(distance_state: str) -> str:
 
 
 def will_pursue(pursuer: dict, scene_state: Optional[dict] = None) -> bool:
-    """R3: o perseguidor só segue se o `TacticalProfile` mandar — a primeira
-    prioridade válida com o alvo fugindo tem de ser de perseguição."""
-    scene = dict(scene_state or {})
-    scene["alvo_fugindo"] = True
-    d = pick_action(pursuer.get("tactical_profile") or {}, scene)
-    return bool(d.get("matched")) and str(d.get("trigger", "")).lower() in _PURSUE_TRIGGERS
+    """R3: política fechada; prosa livre nunca autoriza perseguição."""
+    profile = pursuer.get("tactical_profile") or {}
+    policy = str(
+        pursuer.get("pursuit_policy") or profile.get("pursuit_policy") or ""
+    ).strip().lower()
+    return policy == "persegue"
 
 
 def start_chase(scene: dict, fugitive_id: str, pursuers: List[dict], *,

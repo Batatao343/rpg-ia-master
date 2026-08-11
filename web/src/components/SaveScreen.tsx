@@ -10,9 +10,10 @@ interface Props {
   onContinue: (gameId: string) => void;
   onDelete: (gameId: string) => void;
   onNew: () => void;
+  onSimulate: () => void;
 }
 
-export function SaveScreen({ saves, busy, onContinue, onDelete, onNew }: Props) {
+export function SaveScreen({ saves, busy, onContinue, onDelete, onNew, onSimulate }: Props) {
   const [confirming, setConfirming] = useState<SaveSummary | null>(null);
 
   return (
@@ -33,6 +34,7 @@ export function SaveScreen({ saves, busy, onContinue, onDelete, onNew }: Props) 
                 <span className="savecard__name">
                   {s.name}
                   {s.game_over && <span className="savecard__badge">⚰ memorial</span>}
+                  {s.combat_simulation && <span className="savecard__badge savecard__badge--lab">⚔ laboratório</span>}
                 </span>
                 <span className="savecard__meta">
                   {s.class_name} · nível {s.level}
@@ -56,6 +58,9 @@ export function SaveScreen({ saves, busy, onContinue, onDelete, onNew }: Props) 
         <Divider />
         <button className="btn btn--primary" type="button" disabled={busy} onClick={onNew}>
           Nova jornada
+        </button>
+        <button className="btn btn--ghost" type="button" disabled={busy} onClick={onSimulate}>
+          Simular combate
         </button>
       </Frame>
 

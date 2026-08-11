@@ -50,6 +50,12 @@ def test_roll_discovery_passivo_nunca_unico():
             assert not is_unique(d["item_id"]), d["item_id"]
 
 
+def test_rng_de_chegada_e_estavel():
+    a = ex.arrival_rng("game", "loc", 7).random()
+    b = ex.arrival_rng("game", "loc", 7).random()
+    assert a == b
+
+
 # --- R3/R4: baú curado one-shot ---------------------------------------------
 
 def test_bau_curado_concede_uma_vez():
@@ -73,6 +79,29 @@ def test_resolve_treasure_ja_saqueado_none():
     world = _world(looted=["pm_profundezas"])
     loc = _loc(treasure={"gold": 40, "items": []})
     assert ex.resolve_treasure(world, loc) is None
+
+
+def test_unico_escondido_respeita_claim():
+    unique = "art_adaga_vidro_dragao"
+    projection = {"unique_items": {unique: {"holder": "player"}}}
+    player = {"inventory": [], "gold": 0}
+    world = _world()
+    loc = _loc(treasure={"gold": 0, "items": [unique]})
+    _, events = ex.discover_on_arrival(
+        player, world, loc, 2, random.Random(0), projection=projection)
+    assert player["inventory"] == []
+    assert events == []
+    assert "pm_profundezas" in world["looted_locations"]
+
+
+def test_unico_escondido_livre_gera_claim():
+    unique = "art_adaga_vidro_dragao"
+    player = {"inventory": [], "gold": 0}
+    world = _world()
+    loc = _loc(treasure={"gold": 0, "items": [unique]})
+    _, events = ex.discover_on_arrival(player, world, loc, 2, random.Random(0))
+    assert any(item.get("id") == unique for item in player["inventory"])
+    assert events and events[0]["type"] == "unique_item_claimed"
 
 
 def test_sem_treasure_none():

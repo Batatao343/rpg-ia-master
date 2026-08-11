@@ -1,15 +1,40 @@
 # SPEC — Conflito v2 #13: Cutover, Remoção do Motor Antigo e Playtest Estruturado
 
-> **Status:** `in-progress` (2026-07-23) — Etapa 1 (auditoria) `done`; R6 decidido.
+> **Status:** `done` (2026-08-02) — cutover, remediações e rerun real aceitos.
+> Evidência final:
+> [`docs/smoke-correcoes-conflito-v4-2026-08-02.md`](../docs/smoke-correcoes-conflito-v4-2026-08-02.md).
 > Cutover executado em ESTÁGIOS commitados verdes na branch
 > `refactor/reestruturacao-combate` (só o merge final pra `main` é atômico).
-> **Criada:** 2026-07-22 · **Atualizada:** 2026-07-23
+> **Criada:** 2026-07-22 · **Atualizada:** 2026-08-02
 > **Depende de:** `conflito-01` a `conflito-12` (TODAS `done` antes de iniciar)
 > **Desbloqueia:** fecha tecnicamente o motor do épico; `conflito-16` (frontend)
 > pode consumir a API estabilizada por esta spec
 > **Épico:** Migração do Sistema de Conflitos de Valoria
 
 ---
+
+## 0. Plano de remediação pós-smoke (aprovado em 2026-07-25)
+
+O pedido do usuário de transformar os achados em specs e executá-los aprova o
+plano abaixo. A ordem é deliberada: primeiro corrige o domínio; depois torna o
+harness fiel e fail-loud; por fim fecha as fronteiras LLM/RAG e o lifecycle
+narrativo. As specs só viram `done` após a suíte completa e o novo smoke real.
+
+1. [`fix-vitalidade-ferimentos-terminal.md`](fix-vitalidade-ferimentos-terminal.md)
+   — B1/B2 e defeitos adjacentes de Última Ação/recuperação.
+2. [`fix-playtest-decisoes-atomicas.md`](fix-playtest-decisoes-atomicas.md)
+   — B3, texto e ação mecânica vindos de uma decisão.
+3. [`hardening-playtest-observabilidade.md`](hardening-playtest-observabilidade.md)
+   — M1, tentativas/startup/falhas/completude/invariantes.
+4. [`hardening-structured-sentinelas-rag.md`](hardening-structured-sentinelas-rag.md)
+   — A2/A3/A4, fallback estruturado, sentinelas e paths portáveis.
+5. [`hardening-entradas-mecanicas-llm.md`](hardening-entradas-mecanicas-llm.md)
+   — A5, nenhuma entrada numérica livre no resolver.
+6. [`fix-resumo-conflito-grounding.md`](fix-resumo-conflito-grounding.md)
+   — A1/M2, resumo→loot→memória e prosa grounded.
+7. [`fix-reacoes-runtime-observaveis.md`](fix-reacoes-runtime-observaveis.md)
+   — a telemetria corrigida revelou que a reação existia apenas como motor puro:
+   IDs do bestiário não alcançavam a janela e cache miss não recebia Carta.
 
 ## 1. Contexto & Objetivo
 
@@ -100,19 +125,18 @@ referências externas é comentário de docstring.
 `_pick_enemy_ability`/`_resolve_enemy_ability`/`apply_boss_phase`, `combat_suggestions`,
 `_find_target`, `_healing_consumable`.
 
-**SOBREVIVE (helpers genéricos + sistema de classes Entropia/Carga da v4 + condições
-+ passivas — reusados pelo motor novo e por api/progression/inventory/world_utils):**
+**SOBREVIVE (helpers genéricos + sistema de classes Entropia/Carga da v4 +
+condições/passivas de classe/item — reusados pelo motor novo e por
+api/inventory/world_utils):**
 `get_mod`/`normalize_attr`/`attr_mods`/`virtude_mods`/`actor_mods`, dados
-(`roll_dice_numeric`/`resolve_damage_formula`/`roll_magnitude`/`_heal`), condições
+(`roll_dice_numeric`/`resolve_damage_formula`), condições
 (`parse_condition`/`condition_modifiers`/`has_control`/`is_condition_resisted`/
 `apply_condition`/`tick_conditions`), passivas (`class_passives`/`learned_passives`/
 `item_passives`/`player_passives`), Entropia/Carga (`entropy_config`/`abyss_tier`/
 `reset_entropy_turn`/`apply_entropy_trigger`/`taunt_aggro_multiplier`/`apply_blood_leak`/
 `arm_boiler`/`tick_boiler`/`reduce_ally_abyss`/`apply_scar`/`dependencia_cost`/
-`apply_transformacao`/`apply_entropy_on_kill`/`entropy_max_bonus_of`/`check_recidiva`/
-`HANDLED_KINDS`), recursos (`is_on_cooldown`/`spend_resources`/`tick_cooldowns`),
-dano (`damage_bonus`/`early_game_damage_bonus`/`_split_typed_effects`), e
-`compute_player_combat_stats`.
+`apply_transformacao`/`apply_entropy_on_kill`/`check_recidiva`/`HANDLED_KINDS`) e
+`compute_player_combat_stats` (equipamento legado fora do turno de conflito).
 
 ## 3. Design técnico
 
@@ -130,64 +154,111 @@ de corte:
 ## 4. Plano passo a passo
 
 ### Etapa 1 — Auditoria de código morto (pré-remoção)
-1. **Testes:** script/teste de auditoria (nos moldes de `HANDLED_KINDS`) que lista
+1. **Testes (`done`):** script/teste de auditoria (nos moldes de `HANDLED_KINDS`) que lista
    funções de `combat_mechanics.py` sem callsite novo.
-2. **Implementação:** relatório antes de deletar nada.
+2. **Implementação (`done`):** relatório antes de deletar nada.
 
 ### Etapa 2 — Religar o roteamento
-1. **Testes:** e2e mínimo — `dm_router` → combate → resolução → loot → resumo →
+1. **Testes (`done`):** e2e mínimo — `dm_router` → combate → resolução → loot → resumo →
    narrativa, tudo com o motor novo, no mock.
-2. **Implementação:** `main.py`/`agents/combat.py`.
+2. **Implementação (`done`):** `main.py`/`agents/combat.py`.
 
 ### Etapa 3 — Remoção do motor antigo
-1. **Testes:** suíte roda verde sem os arquivos/funções antigos.
-2. **Implementação:** deletar `combat_mechanics.py` antigo (ou reduzir a helpers
+1. **Testes (`done`):** suíte roda verde sem os arquivos/funções antigos.
+2. **Implementação (`done`):** deletar `combat_mechanics.py` antigo (ou reduzir a helpers
    puros), `data/player_abilities.json` antigo.
 
 ### Etapa 4 — Migração v3→v4 em vigor
-1. **Testes:** `test_save_v3_fica_orfao_sem_crash` (já coberto em `conflito-01`,
+1. **Testes (`done`):** `test_save_v3_fica_orfao_sem_crash` (já coberto em `conflito-01`,
    reconfirmar em integração).
-2. **Implementação:** `persistence.py`.
+2. **Implementação (`done`):** `persistence.py`.
 
 ### Etapa 5 — Reescrita do playtest harness
-1. **Testes:** 12+ perfis rodam N turnos no motor novo com `TurnDeclaration`
+1. **Testes (`done`):** 12+ perfis rodam N turnos no motor novo com `TurnDeclaration`
    estruturado, 0 erro.
-2. **Implementação:** `playtest/runner.py`/`profiles.py`.
+2. **Implementação (`done`):** `playtest/runner.py`/`profiles.py`.
 
 ### Etapa 6 — Invariantes novas
-1. **Testes:** cada invariante nova (R5) testada isoladamente.
-2. **Implementação:** `playtest/invariants.py`.
+1. **Testes (`done`):** cada invariante nova (R5) testada isoladamente.
+2. **Implementação (`done`):** `playtest/invariants.py`.
 
 ### Etapa 7 — Reconciliação de checkpoints/morte
-1. **Testes:** fluxo completo morte→Última Ação→Estado Terminal→checkpoint
+1. **Testes (`done`):** fluxo completo morte→Última Ação→Estado Terminal→checkpoint
    funciona sem regressão do comportamento de `checkpoints-morte` (sessão 23).
-2. **Implementação:** `services/checkpoints.py`.
+2. **Implementação (`done`):** integração no orquestrador/nó; o serviço de
+   checkpoint existente permanece a fonte do restore após a morte real.
 
 ### Etapa 8 — Auditoria final de testes órfãos
-1. **Testes:** suíte completa, zero teste testando código removido.
-2. **Implementação:** remoção/reescrita coordenada dos ~199+ testes antigos de
+1. **Testes (`done`):** suíte completa, zero teste testando código removido.
+2. **Implementação (`done`):** remoção/reescrita coordenada dos ~199+ testes antigos de
    combate.
 
 ## 5. Critérios de aceite
 
-- [ ] Grafo principal usa só o motor novo — nenhum caminho de produção chama
+- [x] Grafo principal usa só o motor novo — nenhum caminho de produção chama
   `combat_mechanics.py` antigo.
-- [ ] Playtest harness roda 12+ perfis no motor novo, 0 erro, `erros=0/violações=0`
+- [x] Playtest harness roda 12+ perfis no motor novo, 0 erro, `erros=0/violações=0`
   nas novas invariantes.
-- [ ] Saves pré-v4 ficam órfãos sem crash, comunicados claramente.
-- [ ] `npm run build` verde (frontend ainda não migrado, mas não pode quebrar
+- [x] Saves pré-v4 ficam órfãos sem crash, comunicados claramente.
+- [x] `npm run build` verde (frontend ainda não migrado, mas não pode quebrar
   build — `conflito-16` decide se adapta types.ts nesta etapa ou na própria 16).
-- [ ] `uv run pytest` verde (suíte completa offline, pós-remoção).
+- [x] `uv run pytest` verde (suíte completa offline, pós-remoção).
+
+### Evidência offline (2026-07-23)
+
+- `uv run pytest -q`: **1121 passed, 1 skipped** (1122 coletados).
+- `uv run python -m playtest run --all --turns 30`: run
+  `20260723-215011`, **13 perfis × 30 = 390 turnos**, 0 erro e 0 violação.
+- `npm.cmd run build`: TypeScript + Vite verdes (449 módulos).
+- `uv run python scripts/validate_content.py`: 0 erro, 0 aviso.
+- A resolução de Cartas ativas passou a separar dano, DoT e suporte: cura/buff
+  não atravessam mais o ataque básico; passiva/reação/utilitária não pode ser
+  jogada como Ação.
 
 ## 6. Smoke test com LLM real
 
-1. Campanha completa real (DeepSeek): criação → exploração → preparação de
+- [x] Campanha completa real (DeepSeek): criação → exploração → preparação de
    encontro → combate completo (turnos/reações/dano/Ferimento) → morte OU vitória
    → loot → resumo → retomada narrativa, sem nenhum erro.
-2. Confirmar zero chamada de LLM durante a resolução do conflito em si (só
+- [x] Confirmar zero chamada de LLM durante a resolução do conflito em si (só
    preparação antes + narração depois).
-3. Rodar `playtest run --all --turns 30 --real` com teto de custo e confirmar 0
+- [x] Rodar `playtest run --all --turns 30 --real` com teto de custo e confirmar 0
    erro nas 12+ campanhas.
+
+### Evidência real (2026-07-25)
+
+- Sanity `20260725-101604`: 5/5 turnos, `mock=false`, 19 requests DeepSeek
+  registradas (≥20 reais contando a criação), 0 erro/violação,
+  US$ 0,00532 registrado; não chegou a combate.
+- Run `20260725-101933`: **13 perfis × 30 = 390 turnos**, 13 summaries + 13
+  JSONLs, nenhum aborto, `mock=false`, 1.105 requests DeepSeek + 5 Groq
+  registradas; mínimo real de 1.128 chamadas ao incluir 13 criações e cinco
+  tentativas DeepSeek omitidas; US$ 0,31060 registrado, p50/p95 global
+  11,38s/26,01s.
+- O harness registrou `errors=0` e só 4 warnings narrativos, mas a auditoria do
+  transcrito/save encontrou: conflito sem progresso por Ferimento sempre no torso;
+  HP e Vitalidade divergentes; ação textual diferente da `TurnDeclaration`;
+  `ConflictSummary` sem consumidor/persistência; `npc_null`; e erro FAISS em path
+  Unicode não propagado. Portanto o terceiro item segue aberto: o comando foi
+  executado, mas **zero erro funcional não foi confirmado**.
+- A vertical mais completa (`combate`, turnos 15–30) chegou a vitória, loot e
+  retomada. Reação não é observável e o resumo canônico desaparece, então o
+  primeiro item também segue aberto.
+- Auditoria estática confirmou ausência de `get_llm`/`invoke` em
+  `run_round` e módulos de resolução. Ressalva: fichas numéricas de cache miss e
+  parâmetros abertos de eventos do Abismo ainda podem vir da preparação LLM.
+
+### Evidência real de aceite (2026-08-02)
+
+- Matriz aceita composta por 13 campanhas completas de 30 turnos, pois a
+  primeira execução foi interrompida para corrigir timeout ausente no cliente
+  Jina. Total: 390/390 turnos, 0 erro, 0 violação `error`, `mock=false`, 1.119
+  sucessos de rede e US$ 0,328488.
+- Foram observados 10 inícios e 13 finais de conflito, 4 reações, 28 ações
+  táticas e 7 mortes canônicas, sem divergência HP↔Vitalidade.
+- As sete specs de remediação estão `done`; o achado residual de proveniência da
+  memória narrativa virou spec separada `draft`, sem invalidar o lifecycle
+  canônico do resumo de conflito.
 
 ## 7. Riscos & compatibilidade
 

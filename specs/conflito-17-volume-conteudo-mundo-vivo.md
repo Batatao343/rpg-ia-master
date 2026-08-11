@@ -1,7 +1,7 @@
 # SPEC — Conflito v2 #17: Volume de Conteúdo — Mundo Vivo (Cartas, Bestas, NPCs)
 
-> **Status:** `draft`
-> **Criada:** 2026-07-23 · **Atualizada:** 2026-07-23
+> **Status:** `done`
+> **Criada:** 2026-07-23 · **Atualizada:** 2026-08-02
 > **Depende de:** `conflito-14` (`done` — Cartas + gerador), `conflito-15`
 > (`done` — bestiário v4 + migração), `npcs-3-camadas` (`done` — traits/gate/
 > layers). Idealmente DEPOIS do `conflito-13` (cutover), pra autorar contra o
@@ -17,6 +17,9 @@
 ---
 
 ## 1. Contexto & Objetivo
+
+> **Aprovação para execução:** 2026-08-02 — o usuário pediu a execução das
+> specs abertas em ordem; esta é a próxima após o fechamento da `conflito-16`.
 
 `conflito-14`/`15` entregaram a **fundação jogável**: 80 Cartas (16/classe), 84
 criaturas migradas + 18 Cartas de inimigo, 10 arquétipos táticos. É suficiente pra
@@ -160,16 +163,16 @@ Três frentes independentes; podem correr em lotes/sessões separadas. Cada fren
 
 ## 5. Critérios de aceite
 
-- [ ] Cartas: ≥5 próprias/combo (15 combos), ≥2 reações + ≥2 utilitárias/classe,
+- [x] Cartas: ≥5 próprias/combo (15 combos), ≥2 reações + ≥2 utilitárias/classe,
   total ≥150 jogador + ≥40 inimigo; guarda de variedade passa (R1-R4).
-- [ ] Bestas: toda região de encontro com ≥6 criaturas (lacaio+elite/chefe),
+- [x] Bestas: toda região de encontro com ≥6 criaturas (lacaio+elite/chefe),
   total ≥120, novas ancoradas na lore; guarda de variedade passa (R5-R7).
-- [ ] NPCs: ≥3 nomeados/região maior, total ≥30 novos, todos no lint sem vazar
+- [x] NPCs: ≥3 nomeados/região maior, total ≥30 novos, todos no lint sem vazar
   segredo (R8-R10).
-- [ ] `scripts/content_report.py` imprime a matriz de cobertura (R11).
-- [ ] `uv run pytest` verde (suíte completa offline) + `scripts/validate_content.py`
+- [x] `scripts/content_report.py` imprime a matriz de cobertura (R11).
+- [x] `uv run pytest` verde (suíte completa offline) + `scripts/validate_content.py`
   0 erros.
-- [ ] Nenhum motor tocado (só `data/` + geradores + validador/relatório).
+- [x] Nenhum motor tocado (só `data/` + geradores + validador/relatório).
 
 ## 6. Smoke test com LLM real
 
@@ -194,3 +197,20 @@ Julgar pelo `transcript`.
 - **Escopo grande:** as 3 frentes são independentes — entregar em lotes (ex.: uma
   região por vez) é aceitável; a spec só vira `done` quando os alvos numéricos
   batem, mas o progresso é incremental e sempre verde.
+
+## 8. Evidências de execução (2026-08-02)
+
+- Resultado: **153** Cartas de jogador, **40** de inimigo, **124** criaturas
+  (40 novas) e **36** NPCs novos — três em cada um dos 12 hubs.
+- As 15 subclasses têm 5–6 Cartas próprias e ao menos uma Superior; cada classe
+  ganhou ≥2 Reações e ≥2 Utilitárias. O gerador agora falha em colisão de ID.
+- `effect_signature` e `creature_signature` foram incorporadas ao lint; cobertura
+  regional também é gate. Ophidia passou de 3 para 7 criaturas e ganhou toda a
+  escada Lacaio/Padrão/Elite/Chefe.
+- NPCs vivem em `data/codex/npcs/mundo_vivo`, com entidade canônica e aresta
+  `located_in`. Reindex Jina: 2.239 chunks; busca pelo lote novo confirmada.
+- Lint: **0 erros/0 avisos**. Suíte: **1358 passed, 1 skipped, 14 deselected**.
+- Smoke real aceito: `20260803-025211-710980`, 3/3 turnos, 4 locais/3 regiões,
+  `mock=false`, zero erro/violação, custo US$ 0,010528; smoke direcionado carregou
+  `mon_guardiao_basalto` com Cartas regionais e `Brunna Ponte-Alta` pela rota NPC.
+- Relatório detalhado: [`docs/content-coverage-2026-08-02.md`](../docs/content-coverage-2026-08-02.md).

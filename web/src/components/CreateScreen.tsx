@@ -25,7 +25,7 @@ const ATTR_LABELS: Record<string, string> = {
   str: "FOR", dex: "DES", con: "CON", int: "INT", wis: "SAB", cha: "CAR",
 };
 
-// Resume os efeitos mecânicos de um trait em chips curtos ("+1 CON", "+5 HP"...)
+// Resume os efeitos mecânicos ativos de um trait em chips curtos.
 function traitEffectChips(t: RaceTrait): string[] {
   const chips: string[] = [];
   const eff = t.effects || {};
@@ -33,7 +33,6 @@ function traitEffectChips(t: RaceTrait): string[] {
   if (attrs) for (const [k, v] of Object.entries(attrs)) chips.push(`+${v} ${ATTR_LABELS[k] || k.toUpperCase()}`);
   const saves = eff["save_bonus"] as Record<string, number> | undefined;
   if (saves) for (const [k, v] of Object.entries(saves)) chips.push(`+${v} save ${ATTR_LABELS[k] || k.toUpperCase()}`);
-  if (typeof eff["hp_bonus"] === "number") chips.push(`+${eff["hp_bonus"]} HP`);
   if (typeof eff["mana_bonus"] === "number") chips.push(`+${eff["mana_bonus"]} Mana`);
   if (typeof eff["stamina_bonus"] === "number") chips.push(`+${eff["stamina_bonus"]} Vigor`);
   if (typeof eff["defense_bonus"] === "number") chips.push(`+${eff["defense_bonus"]} Defesa`);
@@ -50,10 +49,11 @@ interface Props {
   continueData: GameResponse | null;
   onCreate: (payload: CreatePayload) => void;
   onContinue: () => void;
+  onSimulate: () => void;
   onError: (msg: string) => void;
 }
 
-export function CreateScreen({ busy, continueData, onCreate, onContinue, onError }: Props) {
+export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimulate, onError }: Props) {
   const [opts, setOpts] = useState<CreateOptions>({ races: [], classes: [], regions: [] });
   const [lore, setLore] = useState<OnboardingData | null>(null);
   const [step, setStep] = useState(0);
@@ -144,6 +144,16 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onError
             </p>
           )}
         </header>
+
+        <button
+          type="button"
+          className="simulator-shortcut"
+          disabled={busy}
+          onClick={onSimulate}
+        >
+          <span aria-hidden>⚔</span>
+          <span><strong>Simular combate</strong><small>Entrar direto na arena · zero LLM</small></span>
+        </button>
 
         {wizard && step < 5 && (
           <nav className="wizard__steps" aria-label="Passos da criação">

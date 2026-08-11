@@ -6,6 +6,7 @@ Contém tanto a fábrica de NPCs (generate_new_npc) quanto o ator (npc_actor_nod
 import json
 import os
 import re
+import inspect
 from typing import Dict, Any, List, Optional
 from pydantic import BaseModel, Field
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
@@ -15,6 +16,13 @@ from world_utils import apply_faction_reveal, ensure_factions, ensure_faction_in
 from services import graph_resolver as gr
 from services import quest_log
 from services.context_builder import build_context_pack
+from services.memory_retry import (
+    enqueue_npc_memory,
+    normalize_pending_npc_memory,
+)
+from services.memory_provenance import make_memory_fact, memory_metadata
+from services.prose_guard import sanitize_meta_preamble
+from services.input_normalization import optional_entity_ref
 from services.structured_outputs import ProposedQuest
 
 # Fallback para RAG
@@ -138,6 +146,44 @@ def save_npc_template(data):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, 'w', encoding='utf-8') as f: json.dump(db, f, indent=4, ensure_ascii=False)
 
+
+_NPC_V4_FIELDS = (
+    "virtudes",
+    "vitalidade",
+    "max_vitalidade",
+    "ferimento_espacos",
+    "ferimentos",
+    "esquiva",
+    "tactical_profile",
+)
+
+
+def _has_complete_npc_combat_sheet(data: dict) -> bool:
+    if not all(field in data and data[field] is not None for field in _NPC_V4_FIELDS):
+        return False
+    profile = data.get("tactical_profile")
+    return isinstance(profile, dict) and bool(profile.get("priorities"))
+
+
+def _materialize_npc_combat_sheet(data: dict) -> dict:
+    """Normaliza cache legado/geração nova sem resetar uma ficha v4 viva."""
+    if _has_complete_npc_combat_sheet(data):
+        return data
+
+    from services.encounter_preparation import build_npc_combat_sheet
+
+    sheet = build_npc_combat_sheet(data)
+    normalized = {**data, **sheet}
+    # Compatibilidade com consumidores legados: os números vêm da ficha v4
+    # determinística; `combat_stats` proposto pela LLM nunca atravessa a borda.
+    normalized["combat_stats"] = {
+        "hp": normalized["max_vitalidade"],
+        "ac": normalized["esquiva"],
+        "attacks": [],
+    }
+    return normalized
+
+
 def _infer_tier_from_name(name: str) -> ModelTier:
     lowered = name.lower()
     if any(m in lowered for m in ["king", "queen", "boss", "lord", "archmage"]): return ModelTier.SMART
@@ -157,10 +203,14 @@ def generate_new_npc(name, context=""):
     if found_id:
         print(f"♻️ [NPC] Cache Hit: {found_id}")
         data = db[found_id]
-        if "attributes" not in data: # Auto-fix
+        changed = False
+        if "attributes" not in data:  # Auto-fix legado
             data["attributes"] = {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10}
-            save_npc_template(data)
-        return data
+            changed = True
+        normalized = _materialize_npc_combat_sheet(data)
+        if normalized is not data or changed:
+            save_npc_template(normalized)
+        return normalized
 
     # 2. GERAÇÃO
     print(f"🎭 [NPC] Criando: {name}...")
@@ -180,19 +230,27 @@ def generate_new_npc(name, context=""):
         ])
         
         data = res.model_dump()
+        # Identidade pedida pelo router é canônica. Providers (e especialmente o
+        # MockLLM) podem devolver outro nome apesar do schema estar válido.
+        data["name"] = name
         data["id"] = f"npc_{name.lower().replace(' ', '_')}"
-        save_npc_template(data)
-        return data
         
     except Exception as e: 
         print(f"❌ Erro NPC AI: {e}")
         # Fallback de segurança
-        return {
+        data = {
             "name": name, "role": "Desconhecido", "id": "fallback", "persona": "Genérico",
             "initial_relationship": 5,
             "attributes": {"str":10, "dex":10, "con":10, "int":10, "wis":10, "cha":10},
             "combat_stats": {"hp": 10, "ac": 10, "attacks": []}
         }
+
+    data = _materialize_npc_combat_sheet(data)
+    try:
+        save_npc_template(data)
+    except Exception as exc:
+        print(f"⚠️ [NPC DB] Falha ao persistir ficha v4 de '{name}': {exc}")
+    return data
 
 _MISSION_RE = re.compile(
     r"miss|objetiv|quest|o que.*(faç|faz|devo)|para onde|pr[óo]ximo passo|tarefa|rumo")
@@ -220,7 +278,7 @@ def _mission_hint_block(state: GameState, last_msg: str) -> str:
 # --- NÓ DE ATUAÇÃO (COM FILTRO DE IGNORÂNCIA) ---
 def npc_actor_node(state: GameState):
     messages = state.get("messages", [])
-    npc_name = state.get("active_npc_name")
+    npc_name = optional_entity_ref(state.get("active_npc_name"))
 
     # Busca dados (Prioridade: Estado -> DB -> Fallback)
     from services import npc_layers
@@ -228,7 +286,11 @@ def npc_actor_node(state: GameState):
     # spec npc-fallback-sem-alvo: rota NPC sem alvo NÃO desiste com "Ninguém
     # responde" (o quester perdia 7+ turnos assim, com Gorim na cena).
     if not npc_name:
-        candidatos = npc_layers.npcs_in_scene(state)  # R1: NPC em cena / aliado presente
+        candidatos = [
+            normalized
+            for candidate in npc_layers.npcs_in_scene(state)
+            if (normalized := optional_entity_ref(candidate)) is not None
+        ]  # R1: NPC em cena / aliado presente
         if candidatos:
             npc_name = candidatos[0]
         else:
@@ -312,9 +374,16 @@ def npc_actor_node(state: GameState):
     npc_id = _npc_id(npc_data, npc_name)
     # Fase 2.8: pack centraliza memória do NPC + estado atual do mundo (NPC ciente de
     # mudanças: líder morto, controle trocado). purpose="npc".
-    pack = build_context_pack(state, query=(last_msg or npc_data.get("location", "")),
+    npc_location = str(
+        npc_data.get("location")
+        or state.get("world", {}).get("current_location", "")
+        or "")
+    pack = build_context_pack(
+        state,
+        query=f"{npc_data.get('name', npc_name)} {npc_location} {last_msg}".strip(),
                               purpose="npc", game_id=game_id, npc_id=npc_id)
     relevant_memory = pack.memory_block
+    public_lore = pack.lore_block
 
     # Fações do mundo: o NPC PODE saber delas (e revelar ao jogador). O conhecimento do
     # jogador (faction_intel) só avança por aqui — fora daqui ele não é onisciente.
@@ -363,6 +432,10 @@ def npc_actor_node(state: GameState):
     <MEMORIA_RELEVANTE>
     {relevant_memory or "—"}
     </MEMORIA_RELEVANTE>
+
+    <LORE_PUBLICO_CANONICO>
+    {public_lore or "—"}
+    </LORE_PUBLICO_CANONICO>
     {objetivo_block}
     {pack.world_state_block}
     (O mundo mudou desde que você o conheceu? O estado atual acima é a verdade de AGORA.)
@@ -383,7 +456,10 @@ def npc_actor_node(state: GameState):
 
     <REGRAS DE ATUAÇÃO - CRÍTICO>
     1. NÃO SEJA UMA WIKIPÉDIA. Você é uma pessoa limitada pela sua ocupação e local.
-    2. FILTRO DE CONHECIMENTO: Ignore fatos do Contexto Externo que seu personagem não saberia (ex: um soldado não sabe magia antiga). Se não souber, invente rumores ou seja cínico.
+    2. FILTRO DE CONHECIMENTO: Ignore fatos que seu personagem não saberia.
+       Você só pode repetir um rumor factual se ele estiver no LORE PÚBLICO ou
+       na MEMÓRIA acima. Se não houver base, admita que não sabe, demonstre
+       desconfiança ou mude de assunto — NUNCA invente um fato/rumor canônico.
     3. Mantenha a persona (gírias, erros, arrogância) o tempo todo.
     4. Resposta curta e direta.
     5. NÃO REPITA: veja <SUA_ULTIMA_FALA>. Se o jogador insistir no mesmo assunto,
@@ -394,12 +470,21 @@ def npc_actor_node(state: GameState):
     try:
         actor = llm.with_structured_output(NPCResponse)
         res = actor.invoke([system_msg] + messages[-3:])
+        if not isinstance(res, NPCResponse):
+            raise TypeError(f"structured output inválido: {type(res).__name__}")
+        dialogue = sanitize_meta_preamble(res.dialogue)
+        action_description = sanitize_meta_preamble(res.action_description)
         
         # Atualiza memória e relação (com guardas contra chaves ausentes)
         turn = state.get('world', {}).get('turn_count', 0)
         npc_data['relationship'] = max(0, min(10, npc_data.get('relationship', 5) + res.relationship_change))
         npc_data.setdefault('memory', [])
-        fato = f"Turno {turn}: {res.memory_update}"
+        # Memória registra a EXPERIÊNCIA observável (fala/resposta), não promove
+        # `memory_update` livre da IA a verdade canônica.
+        player_said = str(last_msg).strip().replace("\n", " ")[:180]
+        npc_said = str(dialogue).strip().replace("\n", " ")[:240]
+        fato = (f'Turno {turn}: o jogador disse "{player_said}"; '
+                f'{npc_data.get("name", npc_name)} respondeu "{npc_said}".')
         npc_data['memory'].append(fato)
 
         # spec npcs-3-camadas (R7): interação conta; trait maduro é revelado (Python).
@@ -411,11 +496,47 @@ def npc_actor_node(state: GameState):
                 f"*(Você percebe que {npc_data.get('name', npc_name)} é {n}.)*" for n in nomes)
 
         # Memória de longo prazo: vetoriza o fato no índice deste npc (inerte sem chave).
-        if RAG_AVAILABLE and game_id and res.memory_update:
+        rag_ok = True
+        if RAG_AVAILABLE and game_id and npc_said:
             try:
-                add_npc_memory(game_id, npc_id, [fato])
+                record = make_memory_fact(
+                    fato,
+                    provenance="npc_claim",
+                    source_id=f"npc:{npc_id}",
+                    source_turn=int(turn),
+                    canonical_entity_ids=[npc_id],
+                )
+                parameters = inspect.signature(add_npc_memory).parameters.values()
+                accepts_metadata = any(
+                    parameter.name == "metadatas"
+                    or parameter.kind == inspect.Parameter.VAR_KEYWORD
+                    for parameter in parameters
+                )
+                if accepts_metadata:
+                    rag_ok = add_npc_memory(
+                        game_id, npc_id, [fato],
+                        metadatas=[memory_metadata(record)],
+                    ) is not False
+                else:
+                    rag_ok = add_npc_memory(game_id, npc_id, [fato]) is not False
             except Exception:
-                pass
+                rag_ok = False
+        pending_npc_memory = normalize_pending_npc_memory(
+            state.get("pending_npc_memory")
+        )
+        if not rag_ok:
+            pending_npc_memory = enqueue_npc_memory(
+                pending_npc_memory, npc_id, fato,
+            )
+        memory_error = state.get("rag_persistence_error")
+        if not rag_ok:
+            memory_error = f"Falha ao persistir memória de {npc_id}."
+        elif not pending_npc_memory:
+            # Só uma interação bem-sucedida sem backlog pode limpar diretamente.
+            # Backlog antigo precisa do retry operation-scoped no archivist.
+            memory_error = None
+        elif not memory_error:
+            memory_error = "Há memórias de NPC aguardando persistência."
 
         # Atualiza o estado global
         new_npcs = npcs_db.copy()
@@ -429,10 +550,15 @@ def npc_actor_node(state: GameState):
             )
 
         updates = {
-            "messages": [AIMessage(content=f"**{npc_data['name']}:** \"{res.dialogue}\"\n*({res.action_description})*{reveal_note}")],
+            "messages": [AIMessage(content=f"**{npc_data['name']}:** \"{dialogue}\"\n*({action_description})*{reveal_note}")],
             "npcs": new_npcs,
             "faction_intel": intel,
             "archive_due": True,  # conversa com NPC = evento relevante p/ o arquivista
+            # O diálogo continua útil como memória relacional do NPC, mas rumor
+            # ou improviso livre não é promovido a fato global canônico.
+            "memory_fact_policy": "canonical_only",
+            "pending_npc_memory": pending_npc_memory,
+            "rag_persistence_error": memory_error,
         }
 
         # Fase 3.3: quem originou a missão é o NPC em cena — resolvido em Python

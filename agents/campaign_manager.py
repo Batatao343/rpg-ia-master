@@ -231,6 +231,16 @@ def campaign_manager_node(state: GameState):
     # arquivista e memórias de NPC tenham noção real de tempo.
     world["turn_count"] = world.get("turn_count", 0) + 1
 
+    # Laboratório de combate: mantém apenas o relógio de rounds/turnos. O arco
+    # fixo já foi criado pela API e nenhuma preparação de campanha/RAG é útil.
+    if (state.get("combat_simulation") or {}).get("enabled"):
+        return {
+            "next": "dm_router",
+            "world": world,
+            "campaign_plan": state.get("campaign_plan"),
+            "needs_replan": False,
+        }
+
     if not _should_replan(state):
         return {
             "next": "dm_router",

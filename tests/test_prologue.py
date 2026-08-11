@@ -23,7 +23,7 @@ from services.prologue import (
 CHAR_INPUT = {
     "name": "Kaelen",
     "race": "Humano",
-    "class_name": "Sombra da Corte",
+    "class_name": "Sangromante",
     "region": "Nova Arcádia",
     "level": 1,
     "backstory": "renegado de uma família nobre que busca recuperar seu nome",
@@ -122,7 +122,7 @@ def test_normalize_truncates_llm_overflow():
 # ---------------------------------------------------------------------------
 
 _NEW_PAYLOAD = {
-    "name": "Kaelen", "class_name": "Sombra da Corte", "race": "Humano",
+    "name": "Kaelen", "class_name": "Sangromante", "race": "Humano",
     "region": "Nova Arcádia", "backstory": "renegado de família nobre", "level": 1,
 }
 

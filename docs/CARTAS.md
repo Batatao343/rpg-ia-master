@@ -109,5 +109,5 @@ Talas de Ferro, *Prótese de Batalha*✦, Solda Viva.
 
 **Pendências de cutover (conflito-13):** trocar `classes.json.starting_abilities`
 para as Cartas iniciais (`STARTING_RECOMENDADO` no gerador, R9) e remover
-`data/player_abilities.json` — feito no cutover para não quebrar o caminho antigo
-`known_abilities` antes da hora.
+`data/player_abilities.json` e o caminho `known_abilities` foram removidos no
+cutover; não devem ser recriados.

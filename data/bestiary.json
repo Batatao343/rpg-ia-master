@@ -8234,5 +8234,3552 @@
         }
       ]
     }
+  },
+  "mon_rato_caldeira": {
+    "id": "mon_rato_caldeira",
+    "name": "Rato de Caldeira",
+    "description": "Nidifica sob as caldeiras do Anel de Ferro e mastiga rebites ainda quentes.",
+    "type": "Minion",
+    "categoria": "lacaio",
+    "arquetipo": "emboscador",
+    "attributes": {
+      "str": 7,
+      "dex": 11,
+      "con": 14,
+      "int": 16,
+      "wis": 8,
+      "cha": 12
+    },
+    "attacks": [
+      {
+        "name": "Mordida de Rebite",
+        "type": "melee",
+        "damage": "1d4"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Nidifica sob as caldeiras do Anel de Ferro e mastiga rebites ainda quentes."
+    ],
+    "loot": [
+      "Vestígio de Rato de Caldeira"
+    ],
+    "regions": [
+      "nova_arcadia"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_fuligem_arcadia",
+      "bst_sangrar_alcateia"
+    ],
+    "virtudes": {
+      "forca": 1,
+      "agilidade": 2,
+      "corpo": 3,
+      "mente": 3,
+      "carisma": 3
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_golpe_sombras",
+      "bst_mordida_infecciosa",
+      "bst_fuligem_arcadia",
+      "bst_sangrar_alcateia"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "descoberto",
+          "tipo": "obrigatorio",
+          "action_hint": "Descoberto, recua para a ocultação antes de atacar de novo.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Foge pelas sombras se ferido demais.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca da ocultação o alvo desprevenido e some.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_cao_rebite": {
+    "id": "mon_cao_rebite",
+    "name": "Cão de Rebite",
+    "description": "Fareja óleo e sangue nas vielas fabris patrulhadas pela Legião de Ferro.",
+    "type": "Standard",
+    "categoria": "padrao",
+    "arquetipo": "predador",
+    "attributes": {
+      "str": 10,
+      "dex": 14,
+      "con": 17,
+      "int": 7,
+      "wis": 11,
+      "cha": 15
+    },
+    "attacks": [
+      {
+        "name": "Mandíbula de Aço",
+        "type": "melee",
+        "damage": "1d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Fareja óleo e sangue nas vielas fabris patrulhadas pela Legião de Ferro."
+    ],
+    "loot": [
+      "Vestígio de Cão de Rebite"
+    ],
+    "regions": [
+      "nova_arcadia"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_fuligem_arcadia",
+      "bst_casca_reativa"
+    ],
+    "virtudes": {
+      "forca": 2,
+      "agilidade": 3,
+      "corpo": 4,
+      "mente": 2,
+      "carisma": 4
+    },
+    "max_vitalidade": 14,
+    "vitalidade": 14,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 3,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_bote_certeiro",
+      "bst_fuligem_arcadia",
+      "bst_casca_reativa"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Persegue e abate o alvo mais ferido ou isolado.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "A caçada virou risco de morte: recua e foge.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Avança sobre o inimigo mais próximo com fúria animal.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_automato_fundicao": {
+    "id": "mon_automato_fundicao",
+    "name": "Autômato de Fundição",
+    "description": "Um molde de guerra abandonado pelos Encapuzados da Fornalha ainda guarda seu forno.",
+    "type": "Elite",
+    "categoria": "elite",
+    "arquetipo": "guardiao",
+    "attributes": {
+      "str": 13,
+      "dex": 17,
+      "con": 8,
+      "int": 10,
+      "wis": 14,
+      "cha": 6
+    },
+    "attacks": [
+      {
+        "name": "Malho Hidráulico",
+        "type": "melee",
+        "damage": "2d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Um molde de guerra abandonado pelos Encapuzados da Fornalha ainda guarda seu forno."
+    ],
+    "loot": [
+      "Vestígio de Autômato de Fundição"
+    ],
+    "regions": [
+      "nova_arcadia"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_fuligem_arcadia",
+      "bst_saliva_paralisante"
+    ],
+    "virtudes": {
+      "forca": 3,
+      "agilidade": 4,
+      "corpo": 3,
+      "mente": 3,
+      "carisma": 1
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_postura_muralha",
+      "bst_fuligem_arcadia",
+      "bst_saliva_paralisante"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Defende o posto até cair; recua um passo, nunca o abandona.",
+          "resistance": "resistente",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca quem se aproxima do que guarda; não persegue além do posto.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_mosquito_eter": {
+    "id": "mon_mosquito_eter",
+    "name": "Mosquito de Éter",
+    "description": "Enxames bebem o Éter que aflora entre raízes e cadáveres do Pântano da Melancolia.",
+    "type": "Minion",
+    "categoria": "lacaio",
+    "arquetipo": "covarde_oportunista",
+    "attributes": {
+      "str": 16,
+      "dex": 8,
+      "con": 11,
+      "int": 13,
+      "wis": 8,
+      "cha": 9
+    },
+    "attacks": [
+      {
+        "name": "Ferrão Translúcido",
+        "type": "melee",
+        "damage": "1d4"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Enxames bebem o Éter que aflora entre raízes e cadáveres do Pântano da Melancolia."
+    ],
+    "loot": [
+      "Vestígio de Mosquito de Éter"
+    ],
+    "regions": [
+      "pantano_melancolia"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_lodo_melancolia",
+      "bst_coro_colmeia"
+    ],
+    "virtudes": {
+      "forca": 4,
+      "agilidade": 1,
+      "corpo": 2,
+      "mente": 2,
+      "carisma": 2
+    },
+    "max_vitalidade": 10,
+    "vitalidade": 10,
+    "ferimento_espacos": {
+      "leve": 3,
+      "grave": 2,
+      "critico": 1
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_fuga_suja",
+      "bst_lodo_melancolia",
+      "bst_coro_colmeia"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "sozinho",
+          "tipo": "obrigatorio",
+          "action_hint": "Sem aliados, rende-se ou implora pela vida.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Foge assim que ferido — não morre por ninguém.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca só com vantagem numérica ou pelas costas.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Hesita e mantém distância, buscando a saída.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_viuva_lodo": {
+    "id": "mon_viuva_lodo",
+    "name": "Viúva do Lodo",
+    "description": "Tece ninhos nos marcos afundados dos druidas do Ciclo Cinzento.",
+    "type": "Standard",
+    "categoria": "padrao",
+    "arquetipo": "emboscador",
+    "attributes": {
+      "str": 7,
+      "dex": 11,
+      "con": 14,
+      "int": 16,
+      "wis": 11,
+      "cha": 12
+    },
+    "attacks": [
+      {
+        "name": "Quelíceras de Turfa",
+        "type": "melee",
+        "damage": "1d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Tece ninhos nos marcos afundados dos druidas do Ciclo Cinzento."
+    ],
+    "loot": [
+      "Vestígio de Viúva do Lodo"
+    ],
+    "regions": [
+      "pantano_melancolia"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_lodo_melancolia",
+      "bst_carregar_ruina"
+    ],
+    "virtudes": {
+      "forca": 1,
+      "agilidade": 2,
+      "corpo": 3,
+      "mente": 3,
+      "carisma": 3
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {
+      "corrosivo": "resistencia"
+    },
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_golpe_sombras",
+      "bst_lodo_melancolia",
+      "bst_carregar_ruina"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "descoberto",
+          "tipo": "obrigatorio",
+          "action_hint": "Descoberto, recua para a ocultação antes de atacar de novo.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Foge pelas sombras se ferido demais.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca da ocultação o alvo desprevenido e some.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_cervo_afogado": {
+    "id": "mon_cervo_afogado",
+    "name": "Cervo Afogado",
+    "description": "Carrega nos chifres oferendas de peregrinos que nunca voltaram da água negra.",
+    "type": "Elite",
+    "categoria": "elite",
+    "arquetipo": "morto_vivo_implacavel",
+    "attributes": {
+      "str": 10,
+      "dex": 14,
+      "con": 17,
+      "int": 7,
+      "wis": 14,
+      "cha": 15
+    },
+    "attacks": [
+      {
+        "name": "Galhada Encharcada",
+        "type": "melee",
+        "damage": "2d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Carrega nos chifres oferendas de peregrinos que nunca voltaram da água negra."
+    ],
+    "loot": [
+      "Vestígio de Cervo Afogado"
+    ],
+    "regions": [
+      "pantano_melancolia"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_lodo_melancolia",
+      "bst_mimetismo_morto"
+    ],
+    "virtudes": {
+      "forca": 2,
+      "agilidade": 3,
+      "corpo": 4,
+      "mente": 2,
+      "carisma": 4
+    },
+    "max_vitalidade": 14,
+    "vitalidade": 14,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 3,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {
+      "perfurante": "resistencia"
+    },
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_toque_gelido",
+      "bst_lodo_melancolia",
+      "bst_mimetismo_morto"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Avança sem medo nem hesitação; não foge, não se rende.",
+          "resistance": "absoluta",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_escaravelho_vidro": {
+    "id": "mon_escaravelho_vidro",
+    "name": "Escaravelho de Vidro",
+    "description": "Seu casco nasce dos cacos que as tempestades de Zhur vitrificam nas dunas.",
+    "type": "Minion",
+    "categoria": "lacaio",
+    "arquetipo": "guardiao",
+    "attributes": {
+      "str": 13,
+      "dex": 17,
+      "con": 8,
+      "int": 10,
+      "wis": 8,
+      "cha": 6
+    },
+    "attacks": [
+      {
+        "name": "Pinça Solar",
+        "type": "melee",
+        "damage": "1d4"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Seu casco nasce dos cacos que as tempestades de Zhur vitrificam nas dunas."
+    ],
+    "loot": [
+      "Vestígio de Escaravelho de Vidro"
+    ],
+    "regions": [
+      "deserto_zhur"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_vidro_zhur",
+      "bst_fenda_sonica"
+    ],
+    "virtudes": {
+      "forca": 3,
+      "agilidade": 4,
+      "corpo": 1,
+      "mente": 2,
+      "carisma": 1
+    },
+    "max_vitalidade": 8,
+    "vitalidade": 8,
+    "ferimento_espacos": {
+      "leve": 3,
+      "grave": 1,
+      "critico": 1
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [
+      "gelido"
+    ],
+    "cartas": [
+      "bst_postura_muralha",
+      "bst_vidro_zhur",
+      "bst_fenda_sonica"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Defende o posto até cair; recua um passo, nunca o abandona.",
+          "resistance": "resistente",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca quem se aproxima do que guarda; não persegue além do posto.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_hiena_sol": {
+    "id": "mon_hiena_sol",
+    "name": "Hiena do Sol Partido",
+    "description": "Segue as caravanas dos Devoradores de Sol esperando a última sombra desaparecer.",
+    "type": "Standard",
+    "categoria": "padrao",
+    "arquetipo": "lider_matilha",
+    "attributes": {
+      "str": 16,
+      "dex": 8,
+      "con": 11,
+      "int": 13,
+      "wis": 11,
+      "cha": 9
+    },
+    "attacks": [
+      {
+        "name": "Riso Mordente",
+        "type": "melee",
+        "damage": "1d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Segue as caravanas dos Devoradores de Sol esperando a última sombra desaparecer."
+    ],
+    "loot": [
+      "Vestígio de Hiena do Sol Partido"
+    ],
+    "regions": [
+      "deserto_zhur"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_vidro_zhur",
+      "bst_roubar_calor"
+    ],
+    "virtudes": {
+      "forca": 4,
+      "agilidade": 1,
+      "corpo": 2,
+      "mente": 3,
+      "carisma": 2
+    },
+    "max_vitalidade": 10,
+    "vitalidade": 10,
+    "ferimento_espacos": {
+      "leve": 3,
+      "grave": 2,
+      "critico": 1
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_uivo_comando",
+      "bst_vidro_zhur",
+      "bst_roubar_calor"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "matilha_quebrada",
+          "tipo": "obrigatorio",
+          "action_hint": "Se a matilha quebra, recua e reagrupa ou foge.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Aponta e concentra o bando no alvo mais frágil.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Coordena os aliados e chama reforço quando pode.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_colosso_duna": {
+    "id": "mon_colosso_duna",
+    "name": "Colosso de Duna Oca",
+    "description": "Uma armadura vazia movida pelo vento que sopra da Borda do Vazio.",
+    "type": "Elite",
+    "categoria": "elite",
+    "arquetipo": "bruto",
+    "attributes": {
+      "str": 7,
+      "dex": 11,
+      "con": 14,
+      "int": 16,
+      "wis": 14,
+      "cha": 12
+    },
+    "attacks": [
+      {
+        "name": "Punho de Areia",
+        "type": "melee",
+        "damage": "2d10"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Uma armadura vazia movida pelo vento que sopra da Borda do Vazio."
+    ],
+    "loot": [
+      "Vestígio de Colosso de Duna Oca"
+    ],
+    "regions": [
+      "deserto_zhur"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_vidro_zhur",
+      "bst_ordem_quebrar"
+    ],
+    "virtudes": {
+      "forca": 1,
+      "agilidade": 2,
+      "corpo": 3,
+      "mente": 4,
+      "carisma": 3
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_pancada_esmagadora",
+      "bst_vidro_zhur",
+      "bst_ordem_quebrar"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Só recua à beira da morte; caso contrário avança.",
+          "resistance": "resistente",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Investe no inimigo mais próximo e o esmaga corpo a corpo.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_mariposa_sussurro": {
+    "id": "mon_mariposa_sussurro",
+    "name": "Mariposa do Sussurro",
+    "description": "Repete em suas asas palavras que Thessavar ainda não pronunciou.",
+    "type": "Minion",
+    "categoria": "lacaio",
+    "arquetipo": "covarde_oportunista",
+    "attributes": {
+      "str": 10,
+      "dex": 14,
+      "con": 17,
+      "int": 7,
+      "wis": 8,
+      "cha": 15
+    },
+    "attacks": [
+      {
+        "name": "Pó de Sono",
+        "type": "melee",
+        "damage": "1d4"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Repete em suas asas palavras que Thessavar ainda não pronunciou."
+    ],
+    "loot": [
+      "Vestígio de Mariposa do Sussurro"
+    ],
+    "regions": [
+      "floresta_sussurros"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_sussurro_thessavar",
+      "bst_sangrar_alcateia"
+    ],
+    "virtudes": {
+      "forca": 2,
+      "agilidade": 3,
+      "corpo": 4,
+      "mente": 1,
+      "carisma": 4
+    },
+    "max_vitalidade": 14,
+    "vitalidade": 14,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 3,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_fuga_suja",
+      "bst_sussurro_thessavar",
+      "bst_sangrar_alcateia"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "sozinho",
+          "tipo": "obrigatorio",
+          "action_hint": "Sem aliados, rende-se ou implora pela vida.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Foge assim que ferido — não morre por ninguém.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca só com vantagem numérica ou pelas costas.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Hesita e mantém distância, buscando a saída.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_cacador_casca": {
+    "id": "mon_cacador_casca",
+    "name": "Caçador de Casca",
+    "description": "Fica imóvel entre troncos até a floresta decidir quem atravessou sem permissão.",
+    "type": "Standard",
+    "categoria": "padrao",
+    "arquetipo": "emboscador",
+    "attributes": {
+      "str": 13,
+      "dex": 17,
+      "con": 8,
+      "int": 10,
+      "wis": 11,
+      "cha": 6
+    },
+    "attacks": [
+      {
+        "name": "Lança-Raiz",
+        "type": "melee",
+        "damage": "1d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Fica imóvel entre troncos até a floresta decidir quem atravessou sem permissão."
+    ],
+    "loot": [
+      "Vestígio de Caçador de Casca"
+    ],
+    "regions": [
+      "floresta_sussurros"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_sussurro_thessavar",
+      "bst_casca_reativa"
+    ],
+    "virtudes": {
+      "forca": 3,
+      "agilidade": 4,
+      "corpo": 2,
+      "mente": 2,
+      "carisma": 1
+    },
+    "max_vitalidade": 10,
+    "vitalidade": 10,
+    "ferimento_espacos": {
+      "leve": 3,
+      "grave": 2,
+      "critico": 1
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_golpe_sombras",
+      "bst_sussurro_thessavar",
+      "bst_casca_reativa"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "descoberto",
+          "tipo": "obrigatorio",
+          "action_hint": "Descoberto, recua para a ocultação antes de atacar de novo.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Foge pelas sombras se ferido demais.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca da ocultação o alvo desprevenido e some.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_ent_dormindo": {
+    "id": "mon_ent_dormindo",
+    "name": "Ent que Sonha Acordado",
+    "description": "Suas raízes guardam um sonho anterior à escuridão que cobriu a floresta.",
+    "type": "Elite",
+    "categoria": "elite",
+    "arquetipo": "guardiao",
+    "attributes": {
+      "str": 16,
+      "dex": 8,
+      "con": 11,
+      "int": 13,
+      "wis": 14,
+      "cha": 9
+    },
+    "attacks": [
+      {
+        "name": "Braço de Carvalho",
+        "type": "melee",
+        "damage": "2d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Suas raízes guardam um sonho anterior à escuridão que cobriu a floresta."
+    ],
+    "loot": [
+      "Vestígio de Ent que Sonha Acordado"
+    ],
+    "regions": [
+      "floresta_sussurros"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_sussurro_thessavar",
+      "bst_saliva_paralisante"
+    ],
+    "virtudes": {
+      "forca": 4,
+      "agilidade": 1,
+      "corpo": 3,
+      "mente": 3,
+      "carisma": 2
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_postura_muralha",
+      "bst_sussurro_thessavar",
+      "bst_saliva_paralisante"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Defende o posto até cair; recua um passo, nunca o abandona.",
+          "resistance": "resistente",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca quem se aproxima do que guarda; não persegue além do posto.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_larva_hospedeira": {
+    "id": "mon_larva_hospedeira",
+    "name": "Larva Hospedeira",
+    "description": "Procura um corpo para levar até as cidades suspensas da Colmeia.",
+    "type": "Minion",
+    "categoria": "lacaio",
+    "arquetipo": "predador",
+    "attributes": {
+      "str": 7,
+      "dex": 11,
+      "con": 14,
+      "int": 16,
+      "wis": 8,
+      "cha": 12
+    },
+    "attacks": [
+      {
+        "name": "Incisão de Esporo",
+        "type": "melee",
+        "damage": "1d4"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Procura um corpo para levar até as cidades suspensas da Colmeia."
+    ],
+    "loot": [
+      "Vestígio de Larva Hospedeira"
+    ],
+    "regions": [
+      "selva_xylos"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_esporo_xylos",
+      "bst_coro_colmeia"
+    ],
+    "virtudes": {
+      "forca": 1,
+      "agilidade": 2,
+      "corpo": 3,
+      "mente": 3,
+      "carisma": 3
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_bote_certeiro",
+      "bst_esporo_xylos",
+      "bst_coro_colmeia"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Persegue e abate o alvo mais ferido ou isolado.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "A caçada virou risco de morte: recua e foge.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Avança sobre o inimigo mais próximo com fúria animal.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_macaco_esporo": {
+    "id": "mon_macaco_esporo",
+    "name": "Macaco de Esporo",
+    "description": "Aprendeu a imitar os sinais manuais dos Hospedeiros e arma emboscadas nas copas.",
+    "type": "Standard",
+    "categoria": "padrao",
+    "arquetipo": "tatico",
+    "attributes": {
+      "str": 10,
+      "dex": 14,
+      "con": 17,
+      "int": 7,
+      "wis": 11,
+      "cha": 15
+    },
+    "attacks": [
+      {
+        "name": "Pedra Micelial",
+        "type": "melee",
+        "damage": "1d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Aprendeu a imitar os sinais manuais dos Hospedeiros e arma emboscadas nas copas."
+    ],
+    "loot": [
+      "Vestígio de Macaco de Esporo"
+    ],
+    "regions": [
+      "selva_xylos"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_esporo_xylos",
+      "bst_carregar_ruina"
+    ],
+    "virtudes": {
+      "forca": 2,
+      "agilidade": 3,
+      "corpo": 4,
+      "mente": 2,
+      "carisma": 4
+    },
+    "max_vitalidade": 14,
+    "vitalidade": 14,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 3,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_ordem_foco",
+      "bst_esporo_xylos",
+      "bst_carregar_ruina"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "cercado",
+          "tipo": "obrigatorio",
+          "action_hint": "Cercado e ferido, recua em ordem ou tenta render-se.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Concentra fogo no alvo mais perigoso ou já ferido.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Recua para posição defensável e reagrupa.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Usa o terreno e ataca o alvo mais ameaçador.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_rainha_cipo": {
+    "id": "mon_rainha_cipo",
+    "name": "Rainha-Cipó",
+    "description": "Uma planta consciente que negocia corpos com a Colmeia em troca de luz.",
+    "type": "Elite",
+    "categoria": "elite",
+    "arquetipo": "conjurador",
+    "attributes": {
+      "str": 13,
+      "dex": 17,
+      "con": 8,
+      "int": 10,
+      "wis": 14,
+      "cha": 6
+    },
+    "attacks": [
+      {
+        "name": "Chicote de Seiva",
+        "type": "melee",
+        "damage": "2d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Uma planta consciente que negocia corpos com a Colmeia em troca de luz."
+    ],
+    "loot": [
+      "Vestígio de Rainha-Cipó"
+    ],
+    "regions": [
+      "selva_xylos"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_esporo_xylos",
+      "bst_mimetismo_morto"
+    ],
+    "virtudes": {
+      "forca": 3,
+      "agilidade": 4,
+      "corpo": 3,
+      "mente": 3,
+      "carisma": 1
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_descarga_arcana",
+      "bst_esporo_xylos",
+      "bst_mimetismo_morto"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "cercado",
+          "tipo": "obrigatorio",
+          "action_hint": "Engajado corpo a corpo, recua para retomar a distância.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Foge se a linha de frente cair e ficar exposto.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Mantém distância e controla o campo à distância.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_corvo_gelo": {
+    "id": "mon_corvo_gelo",
+    "name": "Corvo de Gelo Negro",
+    "description": "Rouba lascas de memória dos mortos deixados na noite eterna de Skallgard.",
+    "type": "Minion",
+    "categoria": "lacaio",
+    "arquetipo": "covarde_oportunista",
+    "attributes": {
+      "str": 16,
+      "dex": 8,
+      "con": 11,
+      "int": 13,
+      "wis": 8,
+      "cha": 9
+    },
+    "attacks": [
+      {
+        "name": "Bico de Geada",
+        "type": "melee",
+        "damage": "1d4"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Rouba lascas de memória dos mortos deixados na noite eterna de Skallgard."
+    ],
+    "loot": [
+      "Vestígio de Corvo de Gelo Negro"
+    ],
+    "regions": [
+      "skallgard"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_noite_skallgard",
+      "bst_fenda_sonica"
+    ],
+    "virtudes": {
+      "forca": 4,
+      "agilidade": 1,
+      "corpo": 2,
+      "mente": 2,
+      "carisma": 2
+    },
+    "max_vitalidade": 10,
+    "vitalidade": 10,
+    "ferimento_espacos": {
+      "leve": 3,
+      "grave": 2,
+      "critico": 1
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [
+      "gelido"
+    ],
+    "cartas": [
+      "bst_fuga_suja",
+      "bst_sopro_gelido",
+      "bst_noite_skallgard",
+      "bst_fenda_sonica"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "sozinho",
+          "tipo": "obrigatorio",
+          "action_hint": "Sem aliados, rende-se ou implora pela vida.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Foge assim que ferido — não morre por ninguém.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca só com vantagem numérica ou pelas costas.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Hesita e mantém distância, buscando a saída.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_lobo_aurora": {
+    "id": "mon_lobo_aurora",
+    "name": "Lobo da Aurora Morta",
+    "description": "Caça sob uma aurora que os clãs tecnológicos juram ter desligado décadas atrás.",
+    "type": "Standard",
+    "categoria": "padrao",
+    "arquetipo": "predador",
+    "attributes": {
+      "str": 7,
+      "dex": 11,
+      "con": 14,
+      "int": 16,
+      "wis": 11,
+      "cha": 12
+    },
+    "attacks": [
+      {
+        "name": "Mordida Boreal",
+        "type": "melee",
+        "damage": "1d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Caça sob uma aurora que os clãs tecnológicos juram ter desligado décadas atrás."
+    ],
+    "loot": [
+      "Vestígio de Lobo da Aurora Morta"
+    ],
+    "regions": [
+      "skallgard"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_noite_skallgard",
+      "bst_roubar_calor"
+    ],
+    "virtudes": {
+      "forca": 1,
+      "agilidade": 2,
+      "corpo": 3,
+      "mente": 3,
+      "carisma": 3
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_bote_certeiro",
+      "bst_noite_skallgard",
+      "bst_roubar_calor"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Persegue e abate o alvo mais ferido ou isolado.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "A caçada virou risco de morte: recua e foge.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Avança sobre o inimigo mais próximo com fúria animal.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_jotun_cinza": {
+    "id": "mon_jotun_cinza",
+    "name": "Jötunn de Cinza",
+    "description": "Um gigante coberto pela cinza das máquinas térmicas soterradas no gelo.",
+    "type": "Elite",
+    "categoria": "elite",
+    "arquetipo": "bruto",
+    "attributes": {
+      "str": 10,
+      "dex": 14,
+      "con": 17,
+      "int": 7,
+      "wis": 14,
+      "cha": 15
+    },
+    "attacks": [
+      {
+        "name": "Machado de Gelo",
+        "type": "melee",
+        "damage": "2d10"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Um gigante coberto pela cinza das máquinas térmicas soterradas no gelo."
+    ],
+    "loot": [
+      "Vestígio de Jötunn de Cinza"
+    ],
+    "regions": [
+      "skallgard"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_noite_skallgard",
+      "bst_ordem_quebrar"
+    ],
+    "virtudes": {
+      "forca": 2,
+      "agilidade": 3,
+      "corpo": 4,
+      "mente": 2,
+      "carisma": 4
+    },
+    "max_vitalidade": 14,
+    "vitalidade": 14,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 3,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_pancada_esmagadora",
+      "bst_noite_skallgard",
+      "bst_ordem_quebrar"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Só recua à beira da morte; caso contrário avança.",
+          "resistance": "resistente",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Investe no inimigo mais próximo e o esmaga corpo a corpo.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_faisca_destilacao": {
+    "id": "mon_faisca_destilacao",
+    "name": "Faísca da Destilação",
+    "description": "Fragmento vivo do experimento que derrubou Aethelgard e ainda procura um recipiente.",
+    "type": "Minion",
+    "categoria": "lacaio",
+    "arquetipo": "conjurador",
+    "attributes": {
+      "str": 13,
+      "dex": 17,
+      "con": 8,
+      "int": 10,
+      "wis": 8,
+      "cha": 6
+    },
+    "attacks": [
+      {
+        "name": "Arco Instável",
+        "type": "melee",
+        "damage": "1d4"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Fragmento vivo do experimento que derrubou Aethelgard e ainda procura um recipiente."
+    ],
+    "loot": [
+      "Vestígio de Faísca da Destilação"
+    ],
+    "regions": [
+      "aethelgard"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_eter_aethelgard",
+      "bst_sangrar_alcateia"
+    ],
+    "virtudes": {
+      "forca": 3,
+      "agilidade": 4,
+      "corpo": 1,
+      "mente": 2,
+      "carisma": 1
+    },
+    "max_vitalidade": 8,
+    "vitalidade": 8,
+    "ferimento_espacos": {
+      "leve": 3,
+      "grave": 1,
+      "critico": 1
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_descarga_arcana",
+      "bst_eter_aethelgard",
+      "bst_sangrar_alcateia"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "cercado",
+          "tipo": "obrigatorio",
+          "action_hint": "Engajado corpo a corpo, recua para retomar a distância.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Foge se a linha de frente cair e ficar exposto.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Mantém distância e controla o campo à distância.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_vigia_caco": {
+    "id": "mon_vigia_caco",
+    "name": "Vigia de Caco",
+    "description": "Patrulha corredores élficos quebrados repetindo a última ordem do Conselho.",
+    "type": "Standard",
+    "categoria": "padrao",
+    "arquetipo": "guardiao",
+    "attributes": {
+      "str": 16,
+      "dex": 8,
+      "con": 11,
+      "int": 13,
+      "wis": 11,
+      "cha": 9
+    },
+    "attacks": [
+      {
+        "name": "Lâmina Prismática",
+        "type": "melee",
+        "damage": "1d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Patrulha corredores élficos quebrados repetindo a última ordem do Conselho."
+    ],
+    "loot": [
+      "Vestígio de Vigia de Caco"
+    ],
+    "regions": [
+      "aethelgard"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_eter_aethelgard",
+      "bst_casca_reativa"
+    ],
+    "virtudes": {
+      "forca": 4,
+      "agilidade": 1,
+      "corpo": 2,
+      "mente": 3,
+      "carisma": 2
+    },
+    "max_vitalidade": 10,
+    "vitalidade": 10,
+    "ferimento_espacos": {
+      "leve": 3,
+      "grave": 2,
+      "critico": 1
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_postura_muralha",
+      "bst_eter_aethelgard",
+      "bst_casca_reativa"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Defende o posto até cair; recua um passo, nunca o abandona.",
+          "resistance": "resistente",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca quem se aproxima do que guarda; não persegue além do posto.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_quimera_cristal": {
+    "id": "mon_quimera_cristal",
+    "name": "Quimera de Cristal Destilado",
+    "description": "Três animais fundidos pelo Éter de Aethelgard disputam o mesmo esqueleto transparente.",
+    "type": "Elite",
+    "categoria": "elite",
+    "arquetipo": "predador_apice",
+    "attributes": {
+      "str": 7,
+      "dex": 11,
+      "con": 14,
+      "int": 16,
+      "wis": 14,
+      "cha": 12
+    },
+    "attacks": [
+      {
+        "name": "Três Gargantas",
+        "type": "melee",
+        "damage": "2d10"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Três animais fundidos pelo Éter de Aethelgard disputam o mesmo esqueleto transparente."
+    ],
+    "loot": [
+      "Vestígio de Quimera de Cristal Destilado"
+    ],
+    "regions": [
+      "aethelgard"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_eter_aethelgard",
+      "bst_saliva_paralisante"
+    ],
+    "virtudes": {
+      "forca": 1,
+      "agilidade": 2,
+      "corpo": 3,
+      "mente": 4,
+      "carisma": 3
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {
+      "cortante": "resistencia"
+    },
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_golpe_mestre",
+      "bst_eter_aethelgard",
+      "bst_saliva_paralisante"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "plano_falhou",
+          "tipo": "obrigatorio",
+          "action_hint": "Se o plano ruir e estiver à beira da morte, recua para lutar outro dia.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Abate primeiro quem sustenta o grupo (curador/conjurador).",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Comanda a cena e guarda a Carta assinatura para o momento decisivo.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_caranguejo_cinza": {
+    "id": "mon_caranguejo_cinza",
+    "name": "Caranguejo de Cinza",
+    "description": "Reveste a carapaça com cinza das ilhas vulcânicas de Ophidia.",
+    "type": "Minion",
+    "categoria": "lacaio",
+    "arquetipo": "guardiao",
+    "attributes": {
+      "str": 10,
+      "dex": 14,
+      "con": 17,
+      "int": 7,
+      "wis": 8,
+      "cha": 15
+    },
+    "attacks": [
+      {
+        "name": "Pinça Vulcânica",
+        "type": "melee",
+        "damage": "1d4"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Reveste a carapaça com cinza das ilhas vulcânicas de Ophidia."
+    ],
+    "loot": [
+      "Vestígio de Caranguejo de Cinza"
+    ],
+    "regions": [
+      "ophidia"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_mare_ophidia",
+      "bst_coro_colmeia"
+    ],
+    "virtudes": {
+      "forca": 2,
+      "agilidade": 3,
+      "corpo": 4,
+      "mente": 1,
+      "carisma": 4
+    },
+    "max_vitalidade": 14,
+    "vitalidade": 14,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 3,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_postura_muralha",
+      "bst_mare_ophidia",
+      "bst_coro_colmeia"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Defende o posto até cair; recua um passo, nunca o abandona.",
+          "resistance": "resistente",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca quem se aproxima do que guarda; não persegue além do posto.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_moreia_vulcanica": {
+    "id": "mon_moreia_vulcanica",
+    "name": "Moreia Vulcânica",
+    "description": "Vive em tubos de lava inundados e ataca barcos pelo calor dos remos.",
+    "type": "Standard",
+    "categoria": "padrao",
+    "arquetipo": "emboscador",
+    "attributes": {
+      "str": 13,
+      "dex": 17,
+      "con": 8,
+      "int": 10,
+      "wis": 11,
+      "cha": 6
+    },
+    "attacks": [
+      {
+        "name": "Bote de Enxofre",
+        "type": "melee",
+        "damage": "1d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Vive em tubos de lava inundados e ataca barcos pelo calor dos remos."
+    ],
+    "loot": [
+      "Vestígio de Moreia Vulcânica"
+    ],
+    "regions": [
+      "ophidia"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_mare_ophidia",
+      "bst_carregar_ruina"
+    ],
+    "virtudes": {
+      "forca": 3,
+      "agilidade": 4,
+      "corpo": 2,
+      "mente": 2,
+      "carisma": 1
+    },
+    "max_vitalidade": 10,
+    "vitalidade": 10,
+    "ferimento_espacos": {
+      "leve": 3,
+      "grave": 2,
+      "critico": 1
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_golpe_sombras",
+      "bst_mare_ophidia",
+      "bst_carregar_ruina"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "descoberto",
+          "tipo": "obrigatorio",
+          "action_hint": "Descoberto, recua para a ocultação antes de atacar de novo.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Foge pelas sombras se ferido demais.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca da ocultação o alvo desprevenido e some.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_oraculo_coral": {
+    "id": "mon_oraculo_coral",
+    "name": "Oráculo de Coral",
+    "description": "Uma colônia que responde perguntas com correntes capazes de afogar o consulente.",
+    "type": "Elite",
+    "categoria": "elite",
+    "arquetipo": "conjurador",
+    "attributes": {
+      "str": 16,
+      "dex": 8,
+      "con": 11,
+      "int": 13,
+      "wis": 14,
+      "cha": 9
+    },
+    "attacks": [
+      {
+        "name": "Canto de Maré",
+        "type": "melee",
+        "damage": "2d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Uma colônia que responde perguntas com correntes capazes de afogar o consulente."
+    ],
+    "loot": [
+      "Vestígio de Oráculo de Coral"
+    ],
+    "regions": [
+      "ophidia"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_mare_ophidia",
+      "bst_mimetismo_morto"
+    ],
+    "virtudes": {
+      "forca": 4,
+      "agilidade": 1,
+      "corpo": 3,
+      "mente": 3,
+      "carisma": 2
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_descarga_arcana",
+      "bst_mare_ophidia",
+      "bst_mimetismo_morto"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "cercado",
+          "tipo": "obrigatorio",
+          "action_hint": "Engajado corpo a corpo, recua para retomar a distância.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Foge se a linha de frente cair e ficar exposto.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Mantém distância e controla o campo à distância.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_carrapato_osso": {
+    "id": "mon_carrapato_osso",
+    "name": "Carrapato de Osso",
+    "description": "Escava as ossadas titânicas da Costa Negra e veste fragmentos dos antigos donos.",
+    "type": "Minion",
+    "categoria": "lacaio",
+    "arquetipo": "predador",
+    "attributes": {
+      "str": 7,
+      "dex": 11,
+      "con": 14,
+      "int": 16,
+      "wis": 8,
+      "cha": 12
+    },
+    "attacks": [
+      {
+        "name": "Broca Calcária",
+        "type": "melee",
+        "damage": "1d4"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Escava as ossadas titânicas da Costa Negra e veste fragmentos dos antigos donos."
+    ],
+    "loot": [
+      "Vestígio de Carrapato de Osso"
+    ],
+    "regions": [
+      "costa_negra"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_osso_costa",
+      "bst_fenda_sonica"
+    ],
+    "virtudes": {
+      "forca": 1,
+      "agilidade": 2,
+      "corpo": 3,
+      "mente": 3,
+      "carisma": 3
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_bote_certeiro",
+      "bst_osso_costa",
+      "bst_fenda_sonica"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Persegue e abate o alvo mais ferido ou isolado.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "A caçada virou risco de morte: recua e foge.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Avança sobre o inimigo mais próximo com fúria animal.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_saqueador_marfim": {
+    "id": "mon_saqueador_marfim",
+    "name": "Saqueador de Marfim",
+    "description": "Segue mapas Osshari gravados em presas que ninguém admite ter vendido.",
+    "type": "Standard",
+    "categoria": "padrao",
+    "arquetipo": "tatico",
+    "attributes": {
+      "str": 10,
+      "dex": 14,
+      "con": 17,
+      "int": 7,
+      "wis": 11,
+      "cha": 15
+    },
+    "attacks": [
+      {
+        "name": "Arpão Serrilhado",
+        "type": "melee",
+        "damage": "1d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Segue mapas Osshari gravados em presas que ninguém admite ter vendido."
+    ],
+    "loot": [
+      "Vestígio de Saqueador de Marfim"
+    ],
+    "regions": [
+      "costa_negra"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_osso_costa",
+      "bst_roubar_calor"
+    ],
+    "virtudes": {
+      "forca": 2,
+      "agilidade": 3,
+      "corpo": 4,
+      "mente": 2,
+      "carisma": 4
+    },
+    "max_vitalidade": 14,
+    "vitalidade": 14,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 3,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_ordem_foco",
+      "bst_osso_costa",
+      "bst_roubar_calor"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "cercado",
+          "tipo": "obrigatorio",
+          "action_hint": "Cercado e ferido, recua em ordem ou tenta render-se.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Concentra fogo no alvo mais perigoso ou já ferido.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Recua para posição defensável e reagrupa.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Usa o terreno e ataca o alvo mais ameaçador.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_baleia_ossario": {
+    "id": "mon_baleia_ossario",
+    "name": "Filhote de Baleia-Ossário",
+    "description": "Nada sob areia e ossos, emergindo quando o Éter faz a maré recuar.",
+    "type": "Elite",
+    "categoria": "elite",
+    "arquetipo": "bruto",
+    "attributes": {
+      "str": 13,
+      "dex": 17,
+      "con": 8,
+      "int": 10,
+      "wis": 14,
+      "cha": 6
+    },
+    "attacks": [
+      {
+        "name": "Cauda de Costela",
+        "type": "melee",
+        "damage": "2d10"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Nada sob areia e ossos, emergindo quando o Éter faz a maré recuar."
+    ],
+    "loot": [
+      "Vestígio de Filhote de Baleia-Ossário"
+    ],
+    "regions": [
+      "costa_negra"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_osso_costa",
+      "bst_ordem_quebrar"
+    ],
+    "virtudes": {
+      "forca": 3,
+      "agilidade": 4,
+      "corpo": 3,
+      "mente": 3,
+      "carisma": 1
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_pancada_esmagadora",
+      "bst_osso_costa",
+      "bst_ordem_quebrar"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Só recua à beira da morte; caso contrário avança.",
+          "resistance": "resistente",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Investe no inimigo mais próximo e o esmaga corpo a corpo.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_goblin_eco": {
+    "id": "mon_goblin_eco",
+    "name": "Goblin de Eco",
+    "description": "Mineradores goblins o criaram para encontrar túneis; ele aprendeu a fechá-los.",
+    "type": "Minion",
+    "categoria": "lacaio",
+    "arquetipo": "covarde_oportunista",
+    "attributes": {
+      "str": 16,
+      "dex": 8,
+      "con": 11,
+      "int": 13,
+      "wis": 8,
+      "cha": 9
+    },
+    "attacks": [
+      {
+        "name": "Picareta Ressonante",
+        "type": "melee",
+        "damage": "1d4"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Mineradores goblins o criaram para encontrar túneis; ele aprendeu a fechá-los."
+    ],
+    "loot": [
+      "Vestígio de Goblin de Eco"
+    ],
+    "regions": [
+      "montanhas_afiadas"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_eco_montanhas",
+      "bst_sangrar_alcateia"
+    ],
+    "virtudes": {
+      "forca": 4,
+      "agilidade": 1,
+      "corpo": 2,
+      "mente": 2,
+      "carisma": 2
+    },
+    "max_vitalidade": 10,
+    "vitalidade": 10,
+    "ferimento_espacos": {
+      "leve": 3,
+      "grave": 2,
+      "critico": 1
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {
+      "perfurante": "resistencia"
+    },
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_fuga_suja",
+      "bst_eco_montanhas",
+      "bst_sangrar_alcateia"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "sozinho",
+          "tipo": "obrigatorio",
+          "action_hint": "Sem aliados, rende-se ou implora pela vida.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Foge assim que ferido — não morre por ninguém.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca só com vantagem numérica ou pelas costas.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Hesita e mantém distância, buscando a saída.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_cabra_labirinto": {
+    "id": "mon_cabra_labirinto",
+    "name": "Cabra do Labirinto",
+    "description": "Conhece passagens nas Montanhas Afiadas que não existem no mesmo lugar duas vezes.",
+    "type": "Standard",
+    "categoria": "padrao",
+    "arquetipo": "predador",
+    "attributes": {
+      "str": 7,
+      "dex": 11,
+      "con": 14,
+      "int": 16,
+      "wis": 11,
+      "cha": 12
+    },
+    "attacks": [
+      {
+        "name": "Chifrada Angular",
+        "type": "melee",
+        "damage": "1d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Conhece passagens nas Montanhas Afiadas que não existem no mesmo lugar duas vezes."
+    ],
+    "loot": [
+      "Vestígio de Cabra do Labirinto"
+    ],
+    "regions": [
+      "montanhas_afiadas"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_eco_montanhas",
+      "bst_casca_reativa"
+    ],
+    "virtudes": {
+      "forca": 1,
+      "agilidade": 2,
+      "corpo": 3,
+      "mente": 3,
+      "carisma": 3
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_bote_certeiro",
+      "bst_eco_montanhas",
+      "bst_casca_reativa"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Persegue e abate o alvo mais ferido ou isolado.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "A caçada virou risco de morte: recua e foge.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Avança sobre o inimigo mais próximo com fúria animal.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_guardiao_basalto": {
+    "id": "mon_guardiao_basalto",
+    "name": "Guardião de Basalto",
+    "description": "Uma sentinela anã sem mestre protege a estrada para o reino subterrâneo perdido.",
+    "type": "Elite",
+    "categoria": "elite",
+    "arquetipo": "guardiao",
+    "attributes": {
+      "str": 10,
+      "dex": 14,
+      "con": 17,
+      "int": 7,
+      "wis": 14,
+      "cha": 15
+    },
+    "attacks": [
+      {
+        "name": "Punho Sísmico",
+        "type": "melee",
+        "damage": "2d10"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Uma sentinela anã sem mestre protege a estrada para o reino subterrâneo perdido."
+    ],
+    "loot": [
+      "Vestígio de Guardião de Basalto"
+    ],
+    "regions": [
+      "montanhas_afiadas"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_eco_montanhas",
+      "bst_saliva_paralisante"
+    ],
+    "virtudes": {
+      "forca": 2,
+      "agilidade": 3,
+      "corpo": 4,
+      "mente": 2,
+      "carisma": 4
+    },
+    "max_vitalidade": 14,
+    "vitalidade": 14,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 3,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_postura_muralha",
+      "bst_eco_montanhas",
+      "bst_saliva_paralisante"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Defende o posto até cair; recua um passo, nunca o abandona.",
+          "resistance": "resistente",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca quem se aproxima do que guarda; não persegue além do posto.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_gafanhoto_runa": {
+    "id": "mon_gafanhoto_runa",
+    "name": "Gafanhoto de Runa",
+    "description": "Devora inscrições das cidades caídas e carrega fragmentos de magia no casco.",
+    "type": "Minion",
+    "categoria": "lacaio",
+    "arquetipo": "tatico",
+    "attributes": {
+      "str": 13,
+      "dex": 17,
+      "con": 8,
+      "int": 10,
+      "wis": 8,
+      "cha": 6
+    },
+    "attacks": [
+      {
+        "name": "Mandíbula Inscrita",
+        "type": "melee",
+        "damage": "1d4"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Devora inscrições das cidades caídas e carrega fragmentos de magia no casco."
+    ],
+    "loot": [
+      "Vestígio de Gafanhoto de Runa"
+    ],
+    "regions": [
+      "pradaria_ruinas"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_poeira_pradaria",
+      "bst_coro_colmeia"
+    ],
+    "virtudes": {
+      "forca": 3,
+      "agilidade": 4,
+      "corpo": 1,
+      "mente": 2,
+      "carisma": 1
+    },
+    "max_vitalidade": 8,
+    "vitalidade": 8,
+    "ferimento_espacos": {
+      "leve": 3,
+      "grave": 1,
+      "critico": 1
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_ordem_foco",
+      "bst_poeira_pradaria",
+      "bst_coro_colmeia"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "cercado",
+          "tipo": "obrigatorio",
+          "action_hint": "Cercado e ferido, recua em ordem ou tenta render-se.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Concentra fogo no alvo mais perigoso ou já ferido.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Recua para posição defensável e reagrupa.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Usa o terreno e ataca o alvo mais ameaçador.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_cavaleiro_sem_rosto": {
+    "id": "mon_cavaleiro_sem_rosto",
+    "name": "Cavaleiro sem Rosto",
+    "description": "Ainda patrulha a fronteira de uma cidade-estado cujo nome foi apagado.",
+    "type": "Standard",
+    "categoria": "padrao",
+    "arquetipo": "morto_vivo_implacavel",
+    "attributes": {
+      "str": 16,
+      "dex": 8,
+      "con": 11,
+      "int": 13,
+      "wis": 11,
+      "cha": 9
+    },
+    "attacks": [
+      {
+        "name": "Lança sem Brasão",
+        "type": "melee",
+        "damage": "1d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Ainda patrulha a fronteira de uma cidade-estado cujo nome foi apagado."
+    ],
+    "loot": [
+      "Vestígio de Cavaleiro sem Rosto"
+    ],
+    "regions": [
+      "pradaria_ruinas"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_poeira_pradaria",
+      "bst_carregar_ruina"
+    ],
+    "virtudes": {
+      "forca": 4,
+      "agilidade": 1,
+      "corpo": 2,
+      "mente": 3,
+      "carisma": 2
+    },
+    "max_vitalidade": 10,
+    "vitalidade": 10,
+    "ferimento_espacos": {
+      "leve": 3,
+      "grave": 2,
+      "critico": 1
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_toque_gelido",
+      "bst_poeira_pradaria",
+      "bst_carregar_ruina"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Avança sem medo nem hesitação; não foge, não se rende.",
+          "resistance": "absoluta",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_auroque_ruinas": {
+    "id": "mon_auroque_ruinas",
+    "name": "Auroque das Ruínas",
+    "description": "Seu rebanho derruba colunas antigas para lamber o sal das fundações.",
+    "type": "Elite",
+    "categoria": "elite",
+    "arquetipo": "lider_matilha",
+    "attributes": {
+      "str": 7,
+      "dex": 11,
+      "con": 14,
+      "int": 16,
+      "wis": 14,
+      "cha": 12
+    },
+    "attacks": [
+      {
+        "name": "Investida de Coluna",
+        "type": "melee",
+        "damage": "2d10"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Seu rebanho derruba colunas antigas para lamber o sal das fundações."
+    ],
+    "loot": [
+      "Vestígio de Auroque das Ruínas"
+    ],
+    "regions": [
+      "pradaria_ruinas"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_poeira_pradaria",
+      "bst_mimetismo_morto"
+    ],
+    "virtudes": {
+      "forca": 1,
+      "agilidade": 2,
+      "corpo": 3,
+      "mente": 4,
+      "carisma": 3
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_uivo_comando",
+      "bst_poeira_pradaria",
+      "bst_mimetismo_morto"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "matilha_quebrada",
+          "tipo": "obrigatorio",
+          "action_hint": "Se a matilha quebra, recua e reagrupa ou foge.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Aponta e concentra o bando no alvo mais frágil.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Coordena os aliados e chama reforço quando pode.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_rato_cais_brekmar": {
+    "id": "mon_rato_cais_brekmar",
+    "name": "Rato de Cais de Brekmar",
+    "description": "Reconhece moedas falsas pelo gosto e morde primeiro quem as carrega.",
+    "type": "Minion",
+    "categoria": "lacaio",
+    "arquetipo": "covarde_oportunista",
+    "attributes": {
+      "str": 10,
+      "dex": 14,
+      "con": 17,
+      "int": 7,
+      "wis": 8,
+      "cha": 15
+    },
+    "attacks": [
+      {
+        "name": "Dente de Moeda",
+        "type": "melee",
+        "damage": "1d4"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Reconhece moedas falsas pelo gosto e morde primeiro quem as carrega."
+    ],
+    "loot": [
+      "Vestígio de Rato de Cais de Brekmar"
+    ],
+    "regions": [
+      "brekmar"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_sino_brekmar",
+      "bst_fenda_sonica"
+    ],
+    "virtudes": {
+      "forca": 2,
+      "agilidade": 3,
+      "corpo": 4,
+      "mente": 1,
+      "carisma": 4
+    },
+    "max_vitalidade": 14,
+    "vitalidade": 14,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 3,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_fuga_suja",
+      "bst_mordida_infecciosa",
+      "bst_sino_brekmar",
+      "bst_fenda_sonica"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "sozinho",
+          "tipo": "obrigatorio",
+          "action_hint": "Sem aliados, rende-se ou implora pela vida.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Foge assim que ferido — não morre por ninguém.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Ataca só com vantagem numérica ou pelas costas.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Hesita e mantém distância, buscando a saída.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_cobrador_gancho": {
+    "id": "mon_cobrador_gancho",
+    "name": "Cobrador do Gancho",
+    "description": "Uma criatura treinada pelos sindicatos para trazer devedores vivos ao Porto Sem Lei.",
+    "type": "Standard",
+    "categoria": "padrao",
+    "arquetipo": "tatico",
+    "attributes": {
+      "str": 13,
+      "dex": 17,
+      "con": 8,
+      "int": 10,
+      "wis": 11,
+      "cha": 6
+    },
+    "attacks": [
+      {
+        "name": "Gancho de Cobrança",
+        "type": "melee",
+        "damage": "1d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Uma criatura treinada pelos sindicatos para trazer devedores vivos ao Porto Sem Lei."
+    ],
+    "loot": [
+      "Vestígio de Cobrador do Gancho"
+    ],
+    "regions": [
+      "brekmar"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_sino_brekmar",
+      "bst_roubar_calor"
+    ],
+    "virtudes": {
+      "forca": 3,
+      "agilidade": 4,
+      "corpo": 2,
+      "mente": 2,
+      "carisma": 1
+    },
+    "max_vitalidade": 10,
+    "vitalidade": 10,
+    "ferimento_espacos": {
+      "leve": 3,
+      "grave": 2,
+      "critico": 1
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_ordem_foco",
+      "bst_sino_brekmar",
+      "bst_roubar_calor"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "cercado",
+          "tipo": "obrigatorio",
+          "action_hint": "Cercado e ferido, recua em ordem ou tenta render-se.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Concentra fogo no alvo mais perigoso ou já ferido.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Recua para posição defensável e reagrupa.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Usa o terreno e ataca o alvo mais ameaçador.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_capita_corda": {
+    "id": "mon_capita_corda",
+    "name": "Capitã da Corda Molhada",
+    "description": "Pirata afogada que ainda comanda uma tripulação presa às próprias amarras.",
+    "type": "Elite",
+    "categoria": "elite",
+    "arquetipo": "lider_matilha",
+    "attributes": {
+      "str": 16,
+      "dex": 8,
+      "con": 11,
+      "int": 13,
+      "wis": 14,
+      "cha": 9
+    },
+    "attacks": [
+      {
+        "name": "Sabre de Convés",
+        "type": "melee",
+        "damage": "2d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Pirata afogada que ainda comanda uma tripulação presa às próprias amarras."
+    ],
+    "loot": [
+      "Vestígio de Capitã da Corda Molhada"
+    ],
+    "regions": [
+      "brekmar"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_sino_brekmar",
+      "bst_ordem_quebrar"
+    ],
+    "virtudes": {
+      "forca": 4,
+      "agilidade": 1,
+      "corpo": 3,
+      "mente": 3,
+      "carisma": 2
+    },
+    "max_vitalidade": 12,
+    "vitalidade": 12,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 2,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_uivo_comando",
+      "bst_sino_brekmar",
+      "bst_ordem_quebrar"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "matilha_quebrada",
+          "tipo": "obrigatorio",
+          "action_hint": "Se a matilha quebra, recua e reagrupa ou foge.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Aponta e concentra o bando no alvo mais frágil.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Coordena os aliados e chama reforço quando pode.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_locomotiva_penitente": {
+    "id": "mon_locomotiva_penitente",
+    "name": "Locomotiva Penitente",
+    "description": "Uma máquina da Legião de Ferro que ganhou fome ao transportar minério abissal.",
+    "type": "BOSS",
+    "categoria": "chefe",
+    "arquetipo": "predador_apice",
+    "attributes": {
+      "str": 7,
+      "dex": 11,
+      "con": 14,
+      "int": 16,
+      "wis": 8,
+      "cha": 12
+    },
+    "attacks": [
+      {
+        "name": "Ariete de Fornalha",
+        "type": "melee",
+        "damage": "3d10"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Uma máquina da Legião de Ferro que ganhou fome ao transportar minério abissal."
+    ],
+    "loot": [
+      "Vestígio de Locomotiva Penitente"
+    ],
+    "regions": [
+      "nova_arcadia"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_fuligem_arcadia",
+      "bst_sangrar_alcateia"
+    ],
+    "virtudes": {
+      "forca": 1,
+      "agilidade": 2,
+      "corpo": 4,
+      "mente": 3,
+      "carisma": 3
+    },
+    "max_vitalidade": 14,
+    "vitalidade": 14,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 3,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_golpe_mestre",
+      "bst_fuligem_arcadia",
+      "bst_sangrar_alcateia"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "plano_falhou",
+          "tipo": "obrigatorio",
+          "action_hint": "Se o plano ruir e estiver à beira da morte, recua para lutar outro dia.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Abate primeiro quem sustenta o grupo (curador/conjurador).",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Comanda a cena e guarda a Carta assinatura para o momento decisivo.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_mae_micelio": {
+    "id": "mon_mae_micelio",
+    "name": "Mãe do Micélio Errante",
+    "description": "A memória coletiva da Colmeia rejeitou esta matriz, que agora cria hospedeiros próprios.",
+    "type": "BOSS",
+    "categoria": "chefe",
+    "arquetipo": "conjurador",
+    "attributes": {
+      "str": 10,
+      "dex": 14,
+      "con": 17,
+      "int": 7,
+      "wis": 11,
+      "cha": 15
+    },
+    "attacks": [
+      {
+        "name": "Parto de Esporos",
+        "type": "melee",
+        "damage": "3d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: A memória coletiva da Colmeia rejeitou esta matriz, que agora cria hospedeiros próprios."
+    ],
+    "loot": [
+      "Vestígio de Mãe do Micélio Errante"
+    ],
+    "regions": [
+      "selva_xylos"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_esporo_xylos",
+      "bst_casca_reativa"
+    ],
+    "virtudes": {
+      "forca": 2,
+      "agilidade": 3,
+      "corpo": 4,
+      "mente": 2,
+      "carisma": 4
+    },
+    "max_vitalidade": 14,
+    "vitalidade": 14,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 3,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_descarga_arcana",
+      "bst_esporo_xylos",
+      "bst_casca_reativa"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "cercado",
+          "tipo": "obrigatorio",
+          "action_hint": "Engajado corpo a corpo, recua para retomar a distância.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Foge se a linha de frente cair e ficar exposto.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Mantém distância e controla o campo à distância.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_leviata_caldeira": {
+    "id": "mon_leviata_caldeira",
+    "name": "Leviatã da Caldeira Azul",
+    "description": "Dorme sob uma caldeira vulcânica de Ophidia e desperta quando a chama fica azul.",
+    "type": "BOSS",
+    "categoria": "chefe",
+    "arquetipo": "predador_apice",
+    "attributes": {
+      "str": 13,
+      "dex": 17,
+      "con": 8,
+      "int": 10,
+      "wis": 14,
+      "cha": 6
+    },
+    "attacks": [
+      {
+        "name": "Mandíbula de Maré",
+        "type": "melee",
+        "damage": "3d10"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Dorme sob uma caldeira vulcânica de Ophidia e desperta quando a chama fica azul."
+    ],
+    "loot": [
+      "Vestígio de Leviatã da Caldeira Azul"
+    ],
+    "regions": [
+      "ophidia"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_mare_ophidia",
+      "bst_saliva_paralisante"
+    ],
+    "virtudes": {
+      "forca": 3,
+      "agilidade": 4,
+      "corpo": 4,
+      "mente": 3,
+      "carisma": 1
+    },
+    "max_vitalidade": 14,
+    "vitalidade": 14,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 3,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_golpe_mestre",
+      "bst_mare_ophidia",
+      "bst_saliva_paralisante"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "plano_falhou",
+          "tipo": "obrigatorio",
+          "action_hint": "Se o plano ruir e estiver à beira da morte, recua para lutar outro dia.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "alvo_vulneravel",
+          "tipo": "obrigatorio",
+          "action_hint": "Abate primeiro quem sustenta o grupo (curador/conjurador).",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Comanda a cena e guarda a Carta assinatura para o momento decisivo.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
+  },
+  "mon_eclipse_caminhante": {
+    "id": "mon_eclipse_caminhante",
+    "name": "Eclipse Caminhante",
+    "description": "Os Devoradores do Sol o chamam de profecia; as caravanas chamam de fim da rota.",
+    "type": "BOSS",
+    "categoria": "chefe",
+    "arquetipo": "conjurador",
+    "attributes": {
+      "str": 16,
+      "dex": 8,
+      "con": 11,
+      "int": 13,
+      "wis": 8,
+      "cha": 9
+    },
+    "attacks": [
+      {
+        "name": "Sombra Solar",
+        "type": "melee",
+        "damage": "3d8"
+      }
+    ],
+    "abilities": [
+      "Assinatura regional: Os Devoradores do Sol o chamam de profecia; as caravanas chamam de fim da rota."
+    ],
+    "loot": [
+      "Vestígio de Eclipse Caminhante"
+    ],
+    "regions": [
+      "deserto_zhur"
+    ],
+    "origem": "conflito-17",
+    "cartas_autorais": [
+      "bst_vidro_zhur",
+      "bst_coro_colmeia"
+    ],
+    "virtudes": {
+      "forca": 4,
+      "agilidade": 1,
+      "corpo": 4,
+      "mente": 2,
+      "carisma": 2
+    },
+    "max_vitalidade": 14,
+    "vitalidade": 14,
+    "ferimento_espacos": {
+      "leve": 4,
+      "grave": 3,
+      "critico": 2
+    },
+    "ferimentos": {
+      "leve": [],
+      "grave": [],
+      "critico": []
+    },
+    "resistances": {},
+    "vulnerabilities": [],
+    "immunities": [],
+    "cartas": [
+      "bst_descarga_arcana",
+      "bst_vidro_zhur",
+      "bst_coro_colmeia"
+    ],
+    "tactical_profile": {
+      "priorities": [
+        {
+          "trigger": "cercado",
+          "tipo": "obrigatorio",
+          "action_hint": "Engajado corpo a corpo, recua para retomar a distância.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "muito_ferido",
+          "tipo": "obrigatorio",
+          "action_hint": "Foge se a linha de frente cair e ficar exposto.",
+          "resistance": "flexivel",
+          "blocks": []
+        },
+        {
+          "trigger": "sempre",
+          "tipo": "obrigatorio",
+          "action_hint": "Mantém distância e controla o campo à distância.",
+          "resistance": "flexivel",
+          "blocks": []
+        }
+      ]
+    }
   }
 }

@@ -9,6 +9,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 import agents.combat as combat
 import party as party_mod
 from playtest import invariants as inv
+from playtest.profiles import Recrutador
 
 
 _LOC = "pantano_melancolia"
@@ -69,6 +70,13 @@ def test_npc_fora_de_cena_nao_entra():
     assert party_mod.scene_allies({"npcs": npcs, "party": [], "factions": []}) == []
 
 
+def test_npc_alvo_do_encontro_nao_vira_aliado():
+    npcs = {"Bors": {"name": "Bors", "id": "npc_bors", "in_scene": True,
+                     "relationship": 9, "role": "guerreiro"}}
+    state = {"npcs": npcs, "party": [], "factions": []}
+    assert party_mod.scene_allies(state, excluded=["Bors", "npc_bors"]) == []
+
+
 def test_teto_aliados_transitorios():
     npcs = {f"Amigo{i}": {"name": f"Amigo{i}", "in_scene": True, "relationship": 8,
                           "role": "guerreiro"} for i in range(4)}
@@ -94,10 +102,26 @@ def test_aliado_transitorio_entra_no_combate_e_nao_persiste():
              "player": _player(), "enemies": [_enemy(hp=40)], "combat": {"active": True},
              "world": _world(), "party": [], "npcs": npcs}
     out = combat.combat_node(state)
-    order = (out.get("combat") or {}).get("order") or []
-    assert any(s.get("side") == "ally" for s in order)     # Bors na iniciativa
+    # Iniciativa v4 é por LADO; Bors fica registrado entre os aliados da cena e
+    # age no lado "heroes".
+    meta = out.get("combat") or {}
+    assert "heroes" in (meta.get("initiative") or [])
+    assert any(a.get("name") == "Bors" for a in (meta.get("scene_allies") or []))
     # transitório NÃO virou party permanente
     assert out.get("party") == []
+
+
+def test_dano_e_morte_transitorios_refletem_no_npc():
+    npc = {"name": "Bors", "in_scene": True, "relationship": 8,
+           "role": "guerreiro", "hp": 12, "max_hp": 12}
+    state = {"npcs": {"Bors": npc}}
+    transient = {"name": "Bors", "origin_npc": "Bors", "transient": True}
+    live = {**transient, "vitalidade": 0, "max_vitalidade": 12,
+            "dead": True, "status": "morto"}
+    reflected = combat._reflect_scene_allies(state, [transient], [live], True)
+    assert reflected["Bors"]["status"] == "morto"
+    assert reflected["Bors"]["hp"] == 0
+    assert reflected["Bors"]["in_scene"] is False
 
 
 # --- R5: invariante de aliado fantasma --------------------------------------
@@ -124,3 +148,23 @@ def test_phantom_ally_silencia_com_aliado_presente():
     st = _combat_state_with_narr("Bors crava a lâmina no inimigo ao seu lado.",
                                  npcs=npcs)
     assert inv.check_phantom_ally(st, None, 5) == []
+
+
+def test_perfil_recrutador_exercita_transitorio_e_party():
+    profile = Recrutador()
+    rng = random.Random(1)
+    scene = {"npcs": {"Bors": {"name": "Bors", "in_scene": True,
+                                "relationship": party_mod.SCENE_ALLY_MIN_REL}},
+             "party": []}
+    assert "combate" in profile._next_action(scene, rng)
+    assert "Converso" in profile._next_action(scene, rng)
+    scene["npcs"]["Bors"]["relationship"] = party_mod.RECRUIT_MIN_REL
+    recruit_action = profile._next_action(scene, rng)
+    assert party_mod.detect_party_command(recruit_action) == "recruit"
+    scene["party"] = [party_mod.make_companion_from_npc(
+        scene["npcs"]["Bors"], "Bors")]
+    assert "combate" in profile._next_action(scene, rng)
+    profile.reset()
+    scene["party"] = []
+    scene["npcs"]["Bors"]["relationship"] = party_mod.SCENE_ALLY_MIN_REL
+    assert "combate" in profile._next_action(scene, rng)

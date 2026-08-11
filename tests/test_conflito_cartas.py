@@ -199,6 +199,24 @@ def test_criacao_monta_acervo_e_preparadas():
     assert sheet["card_usage"] == {} and sheet["evolved_cards"] == {}
 
 
+def test_criacao_medico_prioriza_cartas_autorais_v4():
+    import os
+    os.environ["RPG_FORCE_MOCK"] = "1"
+    from character_creator import create_player_character
+
+    sheet = create_player_character({
+        "name": "Iria", "class_name": "Médico de Campo", "race": "Humano",
+        "region": "Nova Arcádia", "level": 1,
+        "virtudes": {
+            "mente": 4, "carisma": 3, "corpo": 2,
+            "agilidade": 1, "forca": 1,
+        },
+    })
+
+    assert sheet["prepared_cards"][:2] == ["med_sutura", "med_torniquete"]
+    assert "sutura_rapida" not in sheet["prepared_cards"]
+
+
 def test_criacao_carta_de_virtude_estagio_pela_virtude():
     import os
     os.environ["RPG_FORCE_MOCK"] = "1"

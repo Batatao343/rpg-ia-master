@@ -23,9 +23,9 @@ def test_facts_dict_fato_type_vira_string():
                                  "Há um barril de óleo suspeito."]
 
 
-def test_facts_dict_desconhecido_serializa_kv():
+def test_facts_dict_desconhecido_e_descartado():
     m = MemoryUpdate(new_summary="x", important_facts=[{"a": 1, "b": "dois"}])
-    assert m.important_facts == ["a: 1; b: dois"]
+    assert m.important_facts == []
 
 
 def test_facts_strings_intactas():

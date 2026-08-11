@@ -98,3 +98,84 @@ def test_invariante_repeated_opening_nao_dispara_variado():
             AIMessage(content="A luz do amanhecer corta o céu."),
             AIMessage(content="Um grito ecoa entre as árvores.")]
     assert inv.check_repeated_opening({"messages": msgs}, None, 11) == []
+
+
+# --- v2: fronteira diegética + correção determinística ---------------------
+
+def test_sanitize_player_facing_remove_marcadores_e_preserva_conteudo():
+    raw = (
+        "Após a viagem, você chega às Montanhas. Contexto do local: "
+        "As passagens mudam com os deslizamentos.\n"
+        "[ECOS DO MUNDO] Viajantes viram luzes ao norte."
+    )
+    clean = pg.sanitize_player_facing(raw)
+
+    assert "Contexto do local" not in clean
+    assert "ECOS DO MUNDO" not in clean
+    assert "As passagens mudam" in clean
+    assert "Viajantes viram luzes" in clean
+
+
+def test_sanitize_player_facing_remove_imperativo_ecoado():
+    raw = "Você entra no salão. Descreva o que ele vê ao entrar. O teto range."
+    clean = pg.sanitize_player_facing(raw)
+
+    assert "Descreva" not in clean
+    assert clean == "Você entra no salão. O teto range."
+
+
+def test_vary_repeated_opening_so_muda_repeticao_e_e_deterministico():
+    text = "O silêncio da praça engole seu chamado mais uma vez."
+    recent = ["o silêncio da praça engole seu pedido anterior"]
+
+    first = pg.vary_repeated_opening(text, recent, salt="game:7")
+    second = pg.vary_repeated_opening(text, recent, salt="game:7")
+
+    assert first == second
+    assert first.endswith(text)
+    assert pg.opening(first) != pg.opening(text)
+    assert pg.vary_repeated_opening("Uma porta se abre ao norte.", recent,
+                                   salt="game:8") == "Uma porta se abre ao norte."
+
+
+def test_player_facing_note_do_storyteller_nao_vaza_motor():
+    from agents.storyteller import _player_facing_note
+
+    note = (
+        "O jogador VIAJOU para A Boca. Contexto do local: pedra e fuligem. "
+        "Descreva a chegada e o que ele vê agora. [ECOS DO MUNDO] Sinos ecoam."
+    )
+    visible = _player_facing_note(note)
+
+    assert visible.startswith("Após a viagem, você chega a A Boca")
+    assert "Contexto do local" not in visible
+    assert "Descreva" not in visible
+    assert "ECOS DO MUNDO" not in visible
+    assert "Sinos ecoam" in visible
+
+
+def test_invariante_meta_leak_dispara_para_marcador_interno():
+    state = {"messages": [AIMessage(content=(
+        "Você chega ao vale. [ECOS DO MUNDO] Há luzes nas colinas."
+    ))]}
+
+    violations = inv.check_meta_leak(state, None, 4)
+
+    assert len(violations) == 1
+    assert violations[0].check_id == "narrative.meta_leak"
+    assert violations[0].severity == "error"
+
+
+def test_remove_rejected_claims_elimina_paragrafo_monetario_por_categoria():
+    raw = (
+        "Você atravessa a praça sob chuva fina.\n\n"
+        "Dentro da bolsa há quinze moedas de ouro. Você a guarda no cinto.\n\n"
+        "Um sino toca ao longe e os portões começam a fechar."
+    )
+
+    clean = pg.remove_rejected_claims(raw, ["15 moedas de ouro"])
+
+    assert "moedas de ouro" not in clean
+    assert "guarda no cinto" not in clean
+    assert "atravessa a praça" in clean
+    assert "Um sino toca" in clean

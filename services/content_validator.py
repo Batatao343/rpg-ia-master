@@ -457,6 +457,48 @@ def validate_overrides(codex_dir: str = CODEX_DIR,
     return findings
 
 
+def effect_signature(card: dict) -> tuple:
+    """Assinatura mecânica + papel autoral para detectar reskin puro de Carta.
+
+    O núcleo segue a spec (kind, magnitude, frequência, custo e alvo). Campos que
+    realmente mudam o papel — condição, duração, tipo de dano e `papel` autoral —
+    completam a chave; a descrição normalizada é o último discriminador para o
+    acervo legado, que ainda não possuía `papel` explícito.
+    """
+    effect = card.get("efeito") or {}
+    magnitude = effect.get("dano_base", effect.get("valor", 0))
+    role = card.get("papel") or " ".join(
+        re.findall(r"[a-z0-9]+", _norm(card.get("descricao", "")))[:8]
+    )
+    return (
+        str(effect.get("kind", "")),
+        magnitude,
+        str(card.get("frequencia", "")),
+        int(card.get("custo_entropia", 0) or 0),
+        str(card.get("alvo", effect.get("alvo", ""))),
+        str(effect.get("condicao", "")),
+        int(effect.get("duracao", 0) or 0),
+        str(effect.get("dano_tipo", "")),
+        str(role),
+    )
+
+
+def creature_signature(creature: dict) -> tuple:
+    """Assinatura tática de criatura usada pela guarda anti-clone da spec 17."""
+    resistances = creature.get("resistances") or {}
+    resist = tuple(sorted(
+        (str(kind), tuple(value) if isinstance(value, list) else str(value))
+        for kind, value in resistances.items()
+    ))
+    virtues = tuple(sorted((creature.get("virtudes") or {}).items()))
+    return (
+        str(creature.get("arquetipo", "")),
+        tuple(sorted(creature.get("cartas") or [])),
+        resist,
+        virtues,
+    )
+
+
 def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Finding]:
     """conflito-14 Etapa 5: lint das Cartas autorais (`origem == conflito-14`).
 
@@ -464,7 +506,7 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Findi
     arma, patamar/frequência/tipo válidos, e Ruptura/Evolução completas nas
     Cartas centrais. Só valida as autorais — os exemplos do motor (conflito-02)
     usam schema opaco de propósito."""
-    from services.cards import CARD_EFFECT_KINDS, DANO_BASE_ARMA
+    from services.cards import CARD_EFFECT_KINDS, DANO_BASE_ARMA, valid_class_mechanics
     findings: List[Finding] = []
     if not os.path.isdir(cards_dir):
         return findings
@@ -488,6 +530,7 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Findi
                     f"{where}: dano_base {eff.get('dano_base')} < base da arma "
                     f"{DANO_BASE_ARMA[cat]}"))
 
+    active_signatures: Dict[tuple, tuple[str, str]] = {}
     for fn in sorted(os.listdir(cards_dir)):
         if not fn.endswith(".json"):
             continue
@@ -512,6 +555,11 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Findi
                 findings.append(Finding("cards", "error", path, cid,
                     f"tipo inválido: {c.get('tipo')!r}"))
             _kind_ok(c.get("efeito") or {}, path, cid, "efeito")
+            if not valid_class_mechanics(c.get("mecanica_classe")):
+                findings.append(Finding(
+                    "cards", "error", path, cid,
+                    "mecanica_classe fora do vocabulário fechado",
+                ))
             if c.get("central"):
                 rup = c.get("ruptura") or {}
                 evo = c.get("evolucao") or {}
@@ -521,6 +569,16 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Findi
                 if not (evo.get("caminho_a") and evo.get("caminho_b")):
                     findings.append(Finding("cards", "error", path, cid,
                         "central sem Evolução A/B"))
+            if c.get("tipo") == "ativa":
+                signature = (str(c.get("classe", "")), effect_signature(c))
+                previous = active_signatures.get(signature)
+                if previous and c.get("origem") == "conflito-17":
+                    findings.append(Finding(
+                        "cards", "error", path, cid,
+                        f"duplicata pura da Carta '{previous[1]}'",
+                    ))
+                else:
+                    active_signatures[signature] = (path, cid)
     return findings
 
 
@@ -562,6 +620,7 @@ def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json")
             except Exception:
                 continue
 
+    volume_signatures: Dict[tuple, str] = {}
     for cid, cre in best.items():
         p = bestiary_path
         cat = cre.get("categoria")
@@ -613,6 +672,43 @@ def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json")
         if hidden_cards and not (set(cartas) & hidden_cards):
             findings.append(Finding("bestiary", "error", p, cid,
                 "sem Carta assinatura OCULTA (conflito-08 R7-R9)"))
+        if cre.get("origem") == "conflito-17":
+            signature = creature_signature(cre)
+            previous = volume_signatures.get(signature)
+            if previous:
+                findings.append(Finding(
+                    "bestiary", "error", p, cid,
+                    f"clone tático da criatura '{previous}'",
+                ))
+            else:
+                volume_signatures[signature] = cid
+
+    default_best = os.path.normcase(os.path.normpath(os.path.join("data", "bestiary.json")))
+    if volume_signatures and os.path.normcase(os.path.normpath(bestiary_path)) == default_best:
+        world_path = os.path.join("data", "world_map.json")
+        with open(world_path, encoding="utf-8") as f:
+            locations = (json.load(f).get("locations") or [])
+        encounter_regions = {
+            str(loc.get("region_id")) for loc in locations
+            if loc.get("start") and loc.get("region_id")
+        }
+        by_region: Dict[str, list] = {region: [] for region in encounter_regions}
+        for creature in best.values():
+            for region in creature.get("regions") or []:
+                if region in by_region:
+                    by_region[region].append(creature)
+        for region, creatures in sorted(by_region.items()):
+            categories = {creature.get("categoria") for creature in creatures}
+            if len(creatures) < 6:
+                findings.append(Finding(
+                    "bestiary", "error", bestiary_path, region,
+                    f"cobertura insuficiente: {len(creatures)} criaturas (mínimo 6)",
+                ))
+            if "lacaio" not in categories or not (categories & {"elite", "chefe"}):
+                findings.append(Finding(
+                    "bestiary", "error", bestiary_path, region,
+                    "tabela precisa de ao menos 1 lacaio e 1 elite/chefe",
+                ))
     return findings
 
 

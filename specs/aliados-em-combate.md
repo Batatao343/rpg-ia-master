@@ -1,7 +1,7 @@
 # SPEC — Aliado presente entra no combate se está junto quando ele começa
 
-> **Status:** `approved`
-> **Criada:** 2026-07-20 · **Atualizada:** 2026-07-20
+> **Status:** `done`
+> **Criada:** 2026-07-20 · **Atualizada:** 2026-08-02
 > **Depende de:** Fase 4.5 (party + combate com aliados) `done` ·
 > [npcs-3-camadas](npcs-3-camadas.md) `done` (gate `in_scene`) ·
 > [npc-fallback-sem-alvo](npc-fallback-sem-alvo.md) `done` (party in_scene)
@@ -165,15 +165,15 @@ in_scene(npc) ∧ relationship(npc) >= SCENE_ALLY_MIN_REL
 
 ## 5. Critérios de aceite
 
-- [ ] Companheiro ativo presente entra na iniciativa (regressão travada)
-- [ ] NPC amigo `in_scene` vira aliado transitório no combate (teste)
-- [ ] NPC frio/hostil NÃO entra (teste de gate)
-- [ ] Transitório não vira party permanente; dano/morte reflete no NPC (testes)
-- [ ] Teto de aliados transitórios respeitado; `encounter_budget` conta os aliados
-- [ ] Invariante `combat.phantom_ally` detecta aliado citado sem combatente
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM: N/A (ponte é determinística; sem structured output novo)
-- [ ] Saves antigos continuam carregando (`transient` é efêmero; party intacta)
+- [x] Companheiro ativo presente entra na iniciativa (regressão travada)
+- [x] NPC amigo `in_scene` vira aliado transitório no combate (teste)
+- [x] NPC frio/hostil NÃO entra (teste de gate)
+- [x] Transitório não vira party permanente; dano/morte reflete no NPC (testes)
+- [x] Teto de aliados transitórios respeitado; `encounter_budget` conta os aliados
+- [x] Invariante `combat.phantom_ally` detecta aliado citado sem combatente
+- [x] `uv run pytest` verde (suíte completa offline)
+- [x] Guard de FallbackLLM: N/A (ponte é determinística; sem structured output novo)
+- [x] Saves antigos continuam carregando (`transient` é efêmero; party intacta)
 
 ## 6. Smoke test com LLM real
 
@@ -199,3 +199,19 @@ in_scene(npc) ∧ relationship(npc) >= SCENE_ALLY_MIN_REL
 - **Coerência:** R4 (morte reflete no NPC) evita o "aliado imortal" que morre no
   combate e reaparece são na conversa seguinte.
 - **Quota/latência:** nenhuma chamada de LLM nova; a ponte é pré-combate em Python.
+
+## 8. Registro de execução (2026-08-02)
+
+- A auditoria acrescentou o gate que impede o próprio NPC-alvo do encontro de
+  virar aliado e travou por teste o reflexo de dano/morte no NPC de origem.
+- O perfil `recrutador` foi corrigido para concentrar vínculo em um NPC, exercer
+  o aliado transitório e depois o recrutamento formal. Run
+  `20260802-171448-021987`: 30 turnos, 7 combates, 0 erros/violações; Tobias
+  lutou como transitório no turno 2, entrou na party no turno 5 e continuou
+  agindo/recebendo ferimentos nos conflitos seguintes.
+- O MockLLM agora preserva alvo social explícito e `generate_new_npc` fixa o
+  nome canônico pedido pelo router, eliminando troca de identidade válida no
+  schema, mas errada no estado.
+- Smoke real: Bors apareceu em `scene_allies`, iniciativa `heroes → enemy`,
+  acertou o Bandido do Cais e foi citado pela narração real.
+- Suíte integral: **1.320 passed, 1 skipped, 14 deselected**.

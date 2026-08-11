@@ -85,7 +85,6 @@ def save_custom_artifact(item_id: str, item_data: dict):
 
 # 1. Dados Estáticos de Regras
 CLASSES = load_json_data("classes.json")
-ABILITIES = load_json_data("player_abilities.json")
 BESTIARY = load_json_data("bestiary.json")
 
 # 2. Sistema de Artefatos (Híbrido)
@@ -345,25 +344,60 @@ def categoria_ferimento(corpo, excedente) -> "str | None":
     return "critico"
 
 
-def sync_player_vitals(player: dict, *, heal_to_full: bool = False) -> dict:
-    """Recalcula Vitalidade/espaços de Ferimento a partir de Corpo (R4).
+def sync_legacy_hp_aliases(actor: dict) -> dict:
+    """Espelha os aliases públicos legados a partir da Vitalidade canônica.
 
-    Chamado na criação, no bump de Corpo (level-up) e na migração. NUNCA lazy —
-    `max_vitalidade`/`ferimento_espacos` ficam sempre coerentes com Corpo. A
-    Vitalidade atual sobe junto com o teto (ganho de Corpo cura o delta) e é
-    clampada ao novo máximo; `heal_to_full` força cheia (criação)."""
-    virtudes = player.get("virtudes") or {}
+    ``hp``/``max_hp`` continuam no contrato durante a transição, mas nunca são
+    autoridade mecânica. Toda escrita nesses aliases passa por este helper para
+    impedir que API, saves antigos e HUD observem duas vidas diferentes.
+    """
+    if actor.get("max_vitalidade") is not None:
+        actor["max_hp"] = int(actor.get("max_vitalidade", 0) or 0)
+    if actor.get("vitalidade") is not None:
+        actor["hp"] = int(actor.get("vitalidade", 0) or 0)
+    return actor
+
+
+def sync_vitality(actor: dict, *, heal_to_full: bool = False) -> dict:
+    """Recalcula Vitalidade/Ferimentos a partir de Corpo e sincroniza aliases.
+
+    ``vitalidade_max_penalty`` representa perdas permanentes (Cicatrizes) e é
+    reaplicada em todo recálculo. Quando Corpo eleva o teto, a Vitalidade atual
+    recebe somente o delta positivo; reduzir o teto apenas clampa o valor atual.
+    """
+    virtudes = actor.get("virtudes") or {}
     corpo = virtudes.get("corpo", 0)
-    novo_max = vitalidade_para_corpo(corpo)
-    antigo_max = int(player.get("max_vitalidade", 0) or 0)
-    atual = int(player.get("vitalidade", novo_max) or 0)
-    player["max_vitalidade"] = novo_max
-    player["ferimento_espacos"] = espacos_ferimento_para_corpo(corpo)
-    player.setdefault("ferimentos", {"leve": [], "grave": [], "critico": []})
-    if heal_to_full or "vitalidade" not in player:
-        player["vitalidade"] = novo_max
+    penalty = max(0, int(actor.get("vitalidade_max_penalty", 0) or 0))
+    # [BALANCEAR] +6 nas Posturas: matriz v4 pré-tuning tinha mediana de primeira
+    # morte t15; +6 compra ~2 golpes comuns e mira t>=20 sem fortalecer inimigos.
+    configured_bonus = actor.get("vitalidade_base_bonus")
+    if configured_bonus is None and actor.get("class_name") in CLASSES:
+        configured_bonus = (
+            (CLASSES[actor["class_name"]].get("base_stats") or {})
+            .get("vitalidade_bonus", 0)
+        )
+    vitality_bonus = max(0, int(configured_bonus or 0))
+    if actor.get("class_name") in CLASSES:
+        actor["vitalidade_base_bonus"] = vitality_bonus
+    novo_max = max(1, vitalidade_para_corpo(corpo) + vitality_bonus - penalty)
+    antigo_max = int(actor.get("max_vitalidade", 0) or 0)
+    atual = int(actor.get("vitalidade", novo_max) or 0)
+    actor["vitalidade_max_penalty"] = penalty
+    actor["max_vitalidade"] = novo_max
+    actor["ferimento_espacos"] = espacos_ferimento_para_corpo(corpo)
+    ferimentos = actor.setdefault(
+        "ferimentos", {"leve": [], "grave": [], "critico": []})
+    for categoria in ("leve", "grave", "critico"):
+        ferimentos.setdefault(categoria, [])
+    if heal_to_full or "vitalidade" not in actor:
+        actor["vitalidade"] = novo_max
     else:
         # ganho de teto (Corpo subiu) soma no atual; clampa ao novo máximo
         atual += max(0, novo_max - antigo_max)
-        player["vitalidade"] = max(0, min(novo_max, atual))
-    return player
+        actor["vitalidade"] = max(0, min(novo_max, atual))
+    return sync_legacy_hp_aliases(actor)
+
+
+def sync_player_vitals(player: dict, *, heal_to_full: bool = False) -> dict:
+    """Alias compatível do helper canônico de Vitalidade."""
+    return sync_vitality(player, heal_to_full=heal_to_full)

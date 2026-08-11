@@ -126,7 +126,9 @@ def test_ultimo_critico_marca_estado_terminal():
     decl = {"actor_id": "heroi",
             "acao": {"kind": "attack", "target_id": "orc", "params": {"formula": "6d6"}}}
     out = ct.resolve_turn(scene, {"heroi": heroi, "orc": orc}, decl, rng=_hit())
-    assert "orc" in out["terminal"] and orc["estado_terminal"] is True
+    assert "orc" in out["terminal"]
+    assert orc["last_stand_pending"] is True
+    assert not orc.get("estado_terminal", False)
 
 
 # ==========================================================================
@@ -144,3 +146,62 @@ def test_ataque_com_carta_debita_entropia():
     out = ct.resolve_turn(scene, {"heroi": heroi, "orc": orc}, decl, state=state, rng=_hit())
     assert heroi["entropy"] == 4                          # raio_cinza custa 1 Entropia
     assert out["attacks"]
+
+
+def test_carta_de_cura_nao_ataca_nem_causa_dano_ao_alvo():
+    heroi = _combatant("heroi", vitalidade=2)
+    heroi.update({"entropy": 5, "prepared_cards": ["sutura_rapida"],
+                  "known_cards": ["sutura_rapida"], "card_usage": {}, "level": 1})
+    orc = _combatant("orc")
+    vital_orc = orc["vitalidade"]
+    scene = _scene_with("heroi", "orc")
+    state = {"player": heroi, "combat": {"scene": scene}}
+    decl = {"actor_id": "heroi",
+            "acao": {"kind": "card", "card_id": "sutura_rapida",
+                     "target_id": "heroi"}}
+
+    out = ct.resolve_turn(scene, {"heroi": heroi, "orc": orc}, decl,
+                          state=state, rng=_hit())
+
+    assert out["attacks"] == []
+    assert heroi["vitalidade"] > 2
+    assert orc["vitalidade"] == vital_orc
+
+
+def test_carta_dot_aplica_condicao_sem_dano_basico_imediato():
+    heroi = _combatant("heroi")
+    heroi.update({"entropy": 5, "prepared_cards": ["toque_corrosivo"],
+                  "known_cards": ["toque_corrosivo"], "card_usage": {}, "level": 1})
+    orc = _combatant("orc")
+    vital_antes = orc["vitalidade"]
+    scene = _scene_with("heroi", "orc")
+    state = {"player": heroi, "combat": {"scene": scene}}
+    decl = {"actor_id": "heroi",
+            "acao": {"kind": "card", "card_id": "toque_corrosivo",
+                     "target_id": "orc"}}
+
+    out = ct.resolve_turn(scene, {"heroi": heroi, "orc": orc}, decl,
+                          state=state, rng=_hit())
+
+    assert out["attacks"] and out["attacks"][0]["acerto"]
+    assert orc["vitalidade"] == vital_antes
+    assert any(c.get("dot", 0) > 0 for c in orc["active_conditions"])
+
+
+def test_carta_passiva_nao_pode_ser_jogada_como_acao():
+    heroi = _combatant("heroi")
+    heroi.update({"entropy": 5, "prepared_cards": ["conviccao_passiva"],
+                  "known_cards": ["conviccao_passiva"], "card_usage": {}, "level": 1})
+    orc = _combatant("orc")
+    scene = _scene_with("heroi", "orc")
+    state = {"player": heroi, "combat": {"scene": scene}}
+    decl = {"actor_id": "heroi",
+            "acao": {"kind": "card", "card_id": "conviccao_passiva",
+                     "target_id": "orc"}}
+
+    out = ct.resolve_turn(scene, {"heroi": heroi, "orc": orc}, decl,
+                          state=state, rng=_hit())
+
+    assert not out["attacks"]
+    assert heroi["entropy"] == 5
+    assert any("não é uma Carta ativa" in log for log in out["logs"])

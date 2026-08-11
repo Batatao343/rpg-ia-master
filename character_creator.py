@@ -165,11 +165,8 @@ def apply_racial_traits(sheet: Dict[str, Any], race: str) -> Dict[str, Any]:
         # Num Virtude 0-5 um +1/+2 é um salto grande demais; a distribuição
         # 4/3/2/1/1 é escolha do jogador. Bônus racial de Virtude fica adiado para
         # um rework de raças dedicado — aqui a raça pesa em hp/defesa/resist/save/itens.
-        # hp/mana/stamina raciais: só hp sobrevive no jogador (mana/stamina saíram)
-        inc_hp = int(fx.get("hp_bonus", 0) or 0)
-        if inc_hp:
-            sheet["hp"] = int(sheet.get("hp", 0)) + inc_hp
-            sheet["max_hp"] = int(sheet.get("max_hp", 0)) + inc_hp
+        # ``hp_bonus`` é metadado legado de origem e não altera a Vitalidade:
+        # o teto canônico deriva exclusivamente de Corpo e Cicatrizes.
         if fx.get("defense_bonus"):
             sheet["defense"] = int(sheet.get("defense", 10)) + int(fx["defense_bonus"])
         if fx.get("gold_bonus"):
@@ -199,7 +196,16 @@ def _resolve_starting_cards(user_input: Dict[str, Any], class_name: str,
     classe (determinístico) — fluxo clássico/CLI segue funcionando."""
     from services import cards as cards_svc
 
-    pool = [c["id"] for c in cards_svc.cards_for_class(class_name)]
+    available = cards_svc.cards_for_class(class_name)
+    # conflito-13/14: `data/cards/exemplos.json` permanece como fixture e contém
+    # IDs legados da mesma classe. A ordem alfabética dos arquivos fazia algumas
+    # classes começarem com esses exemplos em vez do acervo autoral v4.
+    canonical = [
+        c for c in available
+        if c.get("classe") == class_name and c.get("origem") == "conflito-14"
+    ]
+    remaining = [c for c in available if c not in canonical]
+    pool = [c["id"] for c in canonical + remaining]
     known = list(dict.fromkeys(user_input.get("known_cards") or []))
     if not known:
         known = pool[:6]
@@ -252,7 +258,8 @@ def _get_class_data(class_name: str) -> Dict:
 
 # --- FUNÇÃO PRINCIPAL ---
 
-def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
+def create_player_character(user_input: Dict[str, Any], *,
+                            use_llm_flavor: bool = True) -> Dict[str, Any]:
     name = user_input.get("name", "Herói")
     p_class = user_input.get("class_name", "Aventureiro")
     race = user_input.get("race", "Humano")
@@ -270,10 +277,8 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
     # 2. VIRTUDES — escolha do jogador (validada) ou recomendação da classe (R2)
     virtudes = _resolve_virtudes(user_input, p_class)
 
-    # 3. Vitalidade/Ferimentos derivados de Corpo (R4) — motor NOVO
-    #    hp/max_hp legado seguem espelhando a Vitalidade até a conflito-05 aposentá-los.
-    base_hp_class = base_stats.get("hp", 12)
-    final_hp = base_hp_class + (6 * (level - 1))
+    # 3. Vitalidade/Ferimentos derivados de Corpo (R4). Nível e origem não
+    # escrevem HP: os campos legados serão aliases criados pelo helper canônico.
 
     # spec refatoracao-sistema-classes: Entropia é o pool ÚNICO das 5 classes.
     level_gains = class_data.get("level_gains", {}) or {}
@@ -281,40 +286,39 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
     final_entropy = base_entropy + int(level_gains.get("entropy", 0) or 0) * (level - 1)
 
     # 4. LORE + geração de sabor via IA (só inventário/flavor — Virtudes NÃO vêm do LLM)
-    region_lore = _get_region_lore(region)
-    llm = get_llm(temperature=0.6, tier=ModelTier.SMART)
-    system_msg = SystemMessage(content=f"""
-    Você é um Motor de Regras para RPG do mundo de Valoria.
-
-    CONTEXTO DO MUNDO: {region_lore}
-    CLASSE: {p_class}.
-
-    TAREFA:
-    1. Gere um inventário temático da região {region}.
-    2. Sugira 2 habilidades extras (flavor) que combinem com a classe.
-    """)
-    human_msg = HumanMessage(content=f"Personagem: {name}, {race} {p_class}. Conceito: {backstory}")
-
     flavor_data: Dict[str, Any] = {}
-    try:
-        stats = llm.with_structured_output(PlayerFlavorSchema).invoke([system_msg, human_msg])
-        if stats:
-            dumped = stats.model_dump()
-            # Sem chave, o FallbackLLM devolve AIMessage cujo dump não tem 'inventory'.
-            if isinstance(dumped, dict) and "inventory" in dumped:
-                flavor_data = dumped
-    except Exception as e:
-        print(f"⚠️ Erro IA: {e}")
+    if use_llm_flavor:
+        region_lore = _get_region_lore(region)
+        llm = get_llm(temperature=0.6, tier=ModelTier.SMART)
+        system_msg = SystemMessage(content=f"""
+        Você é um Motor de Regras para RPG do mundo de Valoria.
+
+        CONTEXTO DO MUNDO: {region_lore}
+        CLASSE: {p_class}.
+
+        TAREFA:
+        1. Gere um inventário temático da região {region}.
+        2. Sugira 2 habilidades extras (flavor) que combinem com a classe.
+        """)
+        human_msg = HumanMessage(content=f"Personagem: {name}, {race} {p_class}. Conceito: {backstory}")
+
+        try:
+            stats = llm.with_structured_output(PlayerFlavorSchema).invoke([system_msg, human_msg])
+            if stats:
+                dumped = stats.model_dump()
+                # Sem chave, o FallbackLLM devolve AIMessage cujo dump não tem 'inventory'.
+                if isinstance(dumped, dict) and "inventory" in dumped:
+                    flavor_data = dumped
+        except Exception as e:
+            print(f"⚠️ Erro IA: {e}")
 
     if not flavor_data:
-        flavor_data = {"inventory": ["Kit Básico"], "flavor_abilities": []}
+        flavor_data = {
+            "inventory": ["Kit Básico"] if use_llm_flavor else [],
+            "flavor_abilities": [],
+        }
 
     # 5. MONTAGEM FINAL (MERGE)
-    final_abilities = ["ataque_basico"] + [
-        aid for aid in class_data.get("starting_abilities", [])
-        if aid not in ("ataque_basico",)
-    ]
-
     sheet = {
         "name": name,
         "class_name": p_class,
@@ -323,20 +327,17 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
         "backstory": backstory,
         "concept": f"{race} {p_class} de {region}",
         "traits": [],
-        "hp": final_hp,
-        "max_hp": final_hp,
         "entropy": final_entropy,
         "max_entropy": final_entropy,
         "abyss_charge": 0,
         "virtudes": virtudes,
         "inventory": [],  # preenchido abaixo
-        "known_abilities": final_abilities,  # LEGADO (motor antigo até cutover conflito-13)
         "level": level,
         "xp": 0,
         "pending_choices": [],
     }
 
-    # spec conflito-02: Cartas (Acervo/Preparadas/Virtude) — convivem com known_abilities
+    # spec conflito-02/13: Cartas substituem integralmente known_abilities.
     sheet.update(_resolve_starting_cards(user_input, p_class, virtudes))
 
     # Vitalidade/Ferimentos: cheia na criação (R4)
@@ -353,6 +354,7 @@ def create_player_character(user_input: Dict[str, Any]) -> Dict[str, Any]:
 
     # 7. TRAITS RACIAIS (Fase 2.5b) — ANTES de defesa/ataque (bônus de Virtude reflete)
     apply_racial_traits(sheet, race)
+    gamedata.sync_legacy_hp_aliases(sheet)
 
     # 8. Equipamento (auto-equipa melhor arma/armadura UMA vez)
     sheet.update(backfill_inventory(sheet))

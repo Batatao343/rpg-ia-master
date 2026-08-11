@@ -1,9 +1,7 @@
-"""services/cards.py — motor DETERMINÍSTICO de Cartas (spec conflito-02).
+"""services/cards.py — motor DETERMINÍSTICO de Cartas (specs conflito-02/13).
 
-Gestão de Acervo/Preparação/Frequência/Ruptura/Evolução. NÃO resolve ataque em
-combate (isso é conflito-04) — aqui só o schema, a economia de uso e as regras de
-preparo. Convive com o motor antigo (known_abilities/ability_cooldowns) até o
-cutover (conflito-13).
+Gestão de Acervo/Preparação/Frequência/Ruptura/Evolução. A resolução de ataque
+vive em conflito-04/`conflict_turn`; o catálogo d20 antigo foi removido no cutover.
 
 Convenções: funções que consomem recurso MUTAM `state`/`player` e retornam um
 Result dict {"ok": bool, "error": Optional[str], "log": str}.
@@ -11,6 +9,7 @@ Result dict {"ok": bool, "error": Optional[str], "log": str}.
 import glob
 import json
 import os
+import copy
 from typing import Dict, List, Optional
 
 import gamedata
@@ -48,10 +47,43 @@ CARD_EFFECT_KINDS = frozenset({
 # valores FLAT, não dados. A autoria (conflito-14 R2) ancora todo `dano` aqui.
 DANO_BASE_ARMA = {"leve": 3, "marcial": 4, "versatil": 6, "pesada": 8}
 
+# Marcadores determinísticos que conectam uma Carta ao motor das 5 Posturas.
+# O campo é autoral (nunca vem do LLM) e fechado para evitar regra livre em JSON.
+CLASS_MECHANIC_FIELDS = frozenset({
+    "auto_dano", "pico", "decadencia", "resfria_caldeira",
+})
+_DECAY_KINDS = frozenset({"any", "flesh", "morale", "gear"})
+
 
 def valid_effect_kind(effect: dict) -> bool:
     """True se `efeito.kind` está no catálogo fechado de Cartas (R3)."""
     return bool(effect) and str(effect.get("kind")) in CARD_EFFECT_KINDS
+
+
+def valid_class_mechanics(mechanics) -> bool:
+    """Valida o vocabulário fechado de ``mecanica_classe`` das Cartas v4."""
+    if mechanics is None:
+        return True
+    if not isinstance(mechanics, dict) or set(mechanics) - CLASS_MECHANIC_FIELDS:
+        return False
+    auto_dano = mechanics.get("auto_dano")
+    if auto_dano is not None and (isinstance(auto_dano, bool)
+                                  or not isinstance(auto_dano, int)
+                                  or auto_dano <= 0):
+        return False
+    for field in ("pico", "resfria_caldeira"):
+        if field in mechanics and not isinstance(mechanics[field], bool):
+            return False
+    if "decadencia" in mechanics and mechanics["decadencia"] not in _DECAY_KINDS:
+        return False
+    return True
+
+
+def _entropy_cost(player: dict, card: dict) -> int:
+    """Custo efetivo, incluindo a consequência determinística Dependência."""
+    import combat_mechanics as cm
+    base = int(card.get("custo_entropia", 0) or 0)
+    return cm.dependencia_cost(player, base)
 
 
 # Escopo de reset por frequência -> contador em card_usage.
@@ -106,6 +138,31 @@ def all_cards() -> Dict[str, dict]:
 
 def get_card(card_id: str) -> Optional[dict]:
     return _load_cards().get(card_id)
+
+
+def effective_card(player: dict, card_id: str, *, ruptura: bool = False) -> Optional[dict]:
+    """Carta efetiva após evolução A/B e, opcionalmente, Ruptura. Retorna cópia;
+    nunca altera o catálogo autoral."""
+    base = get_card(card_id)
+    if not base:
+        return None
+    card = copy.deepcopy(base)
+    caminho = str((player.get("evolved_cards") or {}).get(card_id, "")).upper()
+    if caminho in ("A", "B"):
+        evo = (card.get("evolucao") or {}).get(f"caminho_{caminho.lower()}") or {}
+        if evo.get("efeito"):
+            card["efeito"] = copy.deepcopy(evo["efeito"])
+        if evo.get("ruptura"):
+            card["_ruptura_evoluida"] = copy.deepcopy(evo["ruptura"])
+    if ruptura:
+        effect = card.pop("_ruptura_evoluida", None)
+        if effect is None:
+            raw = card.get("ruptura") or {}
+            # Catálogo autoral usa caminho_a/caminho_b antes de uma evolução.
+            effect = raw.get("caminho_a") if isinstance(raw, dict) else None
+        if effect:
+            card["efeito"] = copy.deepcopy(effect)
+    return card
 
 
 def cards_for_class(class_name: str, subclass: str = "") -> List[dict]:
@@ -230,7 +287,8 @@ def use_card(state: dict, card_id: str) -> dict:
     if counter and int(entry.get(counter, 0)) >= 1:
         return {"ok": False, "error": f"'{card.get('name', card_id)}' já foi usada (1×{freq}).", "log": ""}
 
-    custo = int(card.get("custo_entropia", 0) or 0)
+    custo_base = int(card.get("custo_entropia", 0) or 0)
+    custo = _entropy_cost(player, card)
     if custo > int(player.get("entropy", 0) or 0):
         return {"ok": False,
                 "error": f"Entropia insuficiente ({player.get('entropy', 0)}/{custo}).", "log": ""}
@@ -239,8 +297,116 @@ def use_card(state: dict, card_id: str) -> dict:
         player["entropy"] = int(player.get("entropy", 0)) - custo
     for k in _ALL_COUNTERS:
         entry[k] = int(entry.get(k, 0)) + 1
-    return {"ok": True, "error": None,
-            "log": f"Usa {card.get('name', card_id)}" + (f" (-{custo} Entropia)" if custo else "")}
+    return {
+        "ok": True,
+        "error": None,
+        "log": f"Usa {card.get('name', card_id)}" + (f" (-{custo} Entropia)" if custo else ""),
+        "cost": custo,
+        "base_cost": custo_base,
+        "dependencia_applied": custo > custo_base,
+    }
+
+
+def can_use_card(player: dict, card_id: str) -> bool:
+    """Consulta pura da mesma economia de `use_card`, para HUD/harness."""
+    card = get_card(card_id)
+    # Só Cartas ativas ocupam a Ação. Passivas, utilitárias, reações e Cartas de
+    # Virtude entram pelos respectivos gatilhos, nunca como um ataque disfarçado.
+    if not card or card.get("tipo") != "ativa":
+        return False
+    prepared = set(player.get("prepared_cards") or [])
+    virtude_ids = {vc.get("card_id") for vc in (player.get("virtue_cards") or [])}
+    if card_id not in prepared and card_id not in virtude_ids:
+        return False
+    counter = FREQ_COUNTER.get(str(card.get("frequencia", "livre")))
+    if counter and int(((player.get("card_usage") or {}).get(card_id) or {}).get(counter, 0)) >= 1:
+        return False
+    return _entropy_cost(player, card) <= int(player.get("entropy", 0) or 0)
+
+
+def enemy_card_ids(actor: dict) -> List[str]:
+    """IDs autorais fechados da ficha inimiga; payload inline nunca vira regra."""
+    out: List[str] = []
+    for entry in (actor.get("cartas") or actor.get("enemy_cards") or []):
+        card_id = entry.get("id") if isinstance(entry, dict) else entry
+        card_id = str(card_id or "").strip()
+        if card_id and card_id not in out and get_card(card_id):
+            out.append(card_id)
+    return out
+
+
+def can_use_enemy_card(actor: dict, card_id: str, *,
+                       expected_type: Optional[str] = None) -> bool:
+    """Economia própria do inimigo, independente do deck preparado do player."""
+    if card_id not in set(enemy_card_ids(actor)):
+        return False
+    card = get_card(card_id)
+    if not card or (expected_type and card.get("tipo") != expected_type):
+        return False
+    counter = FREQ_COUNTER.get(str(card.get("frequencia", "livre")))
+    usage = (actor.get("enemy_card_usage") or {}).get(card_id) or {}
+    if counter and int(usage.get(counter, 0) or 0) >= 1:
+        return False
+    return int(card.get("custo_entropia", 0) or 0) <= int(
+        actor.get("entropy", 0) or 0
+    )
+
+
+def use_enemy_card(actor: dict, card_id: str) -> dict:
+    """Consome Carta do bestiário sem consultar ou alterar o player."""
+    card = get_card(card_id)
+    if not card or card_id not in set(enemy_card_ids(actor)):
+        return {"ok": False, "error": f"Carta inimiga '{card_id}' indisponível.", "log": ""}
+    if not can_use_enemy_card(actor, card_id):
+        return {"ok": False, "error": f"'{card.get('name', card_id)}' já usada ou sem Entropia.", "log": ""}
+    cost = int(card.get("custo_entropia", 0) or 0)
+    actor["entropy"] = max(0, int(actor.get("entropy", 0) or 0) - cost)
+    usage = actor.setdefault("enemy_card_usage", {})
+    entry = usage.setdefault(card_id, {key: 0 for key in _ALL_COUNTERS})
+    for key in _ALL_COUNTERS:
+        entry[key] = int(entry.get(key, 0) or 0) + 1
+    return {
+        "ok": True,
+        "error": None,
+        "log": f"Usa {card.get('name', card_id)}" + (
+            f" (-{cost} Entropia)" if cost else ""
+        ),
+    }
+
+
+def reset_enemy_card_usage(actor: dict, scope: str) -> None:
+    for entry in (actor.get("enemy_card_usage") or {}).values():
+        for key in _RESET_CASCADE.get(scope, ()):
+            entry[key] = 0
+
+
+def combat_card_suggestions(player: dict, enemies: List[dict],
+                            combat: Optional[dict]) -> List[str]:
+    """Chips transitórios até a UI de Cartas (conflito-16): Cartas preparadas
+    utilizáveis + poção + fuga. Zero dependência do catálogo d20 antigo."""
+    active = [e for e in (enemies or []) if isinstance(e, dict)
+              and e.get("status") == "ativo" and not e.get("dead")]
+    if not (combat or {}).get("active") or not active:
+        return []
+    ready = [get_card(cid) for cid in (player.get("prepared_cards") or [])
+             if can_use_card(player, cid)]
+    ready = [c for c in ready if c]
+    ready.sort(key=lambda c: (str(c.get("patamar", "")), str(c.get("name", ""))))
+    chips = [str(c.get("name", c.get("id"))) for c in ready[:3]]
+    from gamedata import ARTIFACTS_DB
+    from inventory import item_display
+    potion = next((
+        item_display(e) for e in (player.get("inventory") or [])
+        if isinstance(e, dict)
+        and str((ARTIFACTS_DB.get(e.get("id", "")) or {}).get("type", "")).lower()
+        in ("consumable", "potion")
+    ), None)
+    if potion and len(chips) < 4:
+        chips.append(f"Beber {potion}")
+    import combat_mechanics as cm
+    if not cm.has_control(player, "root") and len(chips) < 5:
+        chips.append("Fugir")
+    return chips
 
 
 def reset_card_usage(state: dict, scope: str) -> None:

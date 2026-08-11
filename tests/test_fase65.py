@@ -124,9 +124,6 @@ def test_env_attack_mod_simetrico():
 def test_dot_outdoor_no_combate(monkeypatch):
     from agents import combat as cbt
     from langchain_core.messages import HumanMessage, SystemMessage
-    monkeypatch.setattr(cbt, "_parse_combat_action",
-                        lambda p, e, i: {"ability_id": "ataque_basico", "target": "",
-                                         "is_allowed": True, "reason": ""})
     monkeypatch.setattr(cbt, "_narrate", lambda *a, **k: "ok")
     enemy = {"id": "e1", "name": "Orc", "type": "Minion", "hp": 30, "max_hp": 30,
              "defense": 30, "status": "ativo", "attributes": {"dex": 10},
@@ -147,7 +144,10 @@ def test_dot_outdoor_no_combate(monkeypatch):
              "world": {"turn_count": 3, "current_location": "Pântano",
                        "current_location_id": "pantano_melancolia",
                        "weather_state": "miasma", "world_clock": {"day": 1}},
-             "bestiary_knowledge": {}, "pending_world_events": [], "party": []}
+             "bestiary_knowledge": {}, "pending_world_events": [], "party": [],
+             "combat_declaration": {
+                 "actor_id": "player",
+                 "acao": {"kind": "attack", "target_id": "e1"}}}
     out = cbt.combat_node(state)
     assert out["player"]["hp"] < 30  # miasma mordeu (defense 30 impede hit normal)
 

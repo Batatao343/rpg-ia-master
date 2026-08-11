@@ -75,7 +75,7 @@ def client(monkeypatch):
 def _new_game(client) -> str:
     r = client.post("/game/new", json={
         "name": "Streamer", "race": "Humano",
-        "class_name": "Batedor das Fronteiras", "region": "Nova Arcádia",
+        "class_name": "Sangromante", "region": "Nova Arcádia",
         "level": 1, "backstory": ""})
     assert r.status_code == 200, r.text
     return r.json()["game_id"]

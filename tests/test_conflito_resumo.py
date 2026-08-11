@@ -26,6 +26,33 @@ def test_build_summary_cobre_todos_os_campos():
         assert campo in resumo                       # todos os 18 campos de R2 presentes
 
 
+def test_conflict_id_explicito_ou_fallback_deterministico_por_turno():
+    participants = [_p("herói"), _p("orc", dead=True)]
+    explicit = sm.build_summary(
+        participants,
+        extras={"conflict_id": "conflict-combat-42", "turn": 42},
+    )
+    assert explicit["conflict_id"] == "conflict-combat-42"
+
+    first = sm.build_summary(participants, extras={"turn": 42})
+    repeated = sm.build_summary(participants, extras={"turn": 42})
+    next_turn = sm.build_summary(participants, extras={"turn": 43})
+    assert first["conflict_id"] == repeated["conflict_id"]
+    assert first["conflict_id"]
+    assert first["conflict_id"] != next_turn["conflict_id"]
+    assert sm.ConflictSummary().conflict_id.startswith("conflict-")
+
+
+def test_ledger_de_conflictos_consumidos_e_bounded():
+    old = [f"conflict-{index}" for index in range(sm.CONSUMED_CONFLICT_IDS_LIMIT)]
+    ledger = sm.append_consumed_conflict_id(old, "conflict-new")
+    assert len(ledger) == sm.CONSUMED_CONFLICT_IDS_LIMIT
+    assert ledger[-1] == "conflict-new"
+    assert "conflict-0" not in ledger
+    # Repetir o mesmo id não duplica nem muda a ordem relativa.
+    assert sm.append_consumed_conflict_id(ledger, "conflict-new") == ledger
+
+
 def test_summary_reflete_mortos_rendidos_fugitivos_corretamente():
     participantes = [
         _p("herói"),

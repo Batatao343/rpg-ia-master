@@ -2,6 +2,23 @@
   "_meta": "spec conflito-15: Cartas de inimigo (assinaturas de arquétipo + temáticas). Gerado por scripts/migrate_bestiary_v4.py.",
   "cards": [
     {
+      "id": "bst_defesa_instintiva",
+      "name": "Defesa Instintiva",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "reacao",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 1
+      },
+      "descricao": "Um reflexo curto desvia o golpe que chegaria limpo."
+    },
+    {
       "id": "bst_bote_certeiro",
       "name": "Bote Certeiro",
       "origem": "conflito-15",
@@ -337,6 +354,397 @@
         "duracao": 2
       },
       "descricao": "Um som que não deveria existir.",
+      "oculta": true
+    },
+    {
+      "id": "bst_fuligem_arcadia",
+      "name": "Pulmão de Fuligem",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "cego",
+        "duracao": 1
+      },
+      "descricao": "A fuligem de Nova Arcádia apaga olhos e lampiões.",
+      "oculta": true
+    },
+    {
+      "id": "bst_lodo_melancolia",
+      "name": "Lodo da Melancolia",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 2,
+        "duracao": 4,
+        "dano_tipo": "corrosivo"
+      },
+      "descricao": "O pântano continua corroendo mesmo depois do contato.",
+      "oculta": true
+    },
+    {
+      "id": "bst_vidro_zhur",
+      "name": "Estilhaço de Zhur",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 9,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Vidro solar atravessa juntas antes de se partir.",
+      "oculta": true
+    },
+    {
+      "id": "bst_sussurro_thessavar",
+      "name": "Sussurro de Thessavar",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "A floresta escolhe uma presa e passa seu nome de folha em folha.",
+      "oculta": true
+    },
+    {
+      "id": "bst_esporo_xylos",
+      "name": "Nuvem Hospedeira",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 2
+      },
+      "descricao": "Esporos de Xylos costuram pés, solo e vontade.",
+      "oculta": true
+    },
+    {
+      "id": "bst_noite_skallgard",
+      "name": "Noite no Sangue",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 5
+      },
+      "descricao": "A noite de Skallgard endurece a fome e o golpe.",
+      "oculta": true
+    },
+    {
+      "id": "bst_eter_aethelgard",
+      "name": "Vazamento de Aethelgard",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 5,
+        "duracao": 2,
+        "dano_tipo": "arcano"
+      },
+      "descricao": "Éter destilado escapa por uma fissura que não estava ali.",
+      "oculta": true
+    },
+    {
+      "id": "bst_mare_ophidia",
+      "name": "Maré de Ophidia",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 3
+      },
+      "descricao": "Uma onda curta arrasta a formação para onde o recife quer.",
+      "oculta": true
+    },
+    {
+      "id": "bst_osso_costa",
+      "name": "Rosário de Ossos",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "descricao": "Ossos da Costa Negra se fecham como uma segunda caixa torácica.",
+      "oculta": true
+    },
+    {
+      "id": "bst_eco_montanhas",
+      "name": "Eco Cortante",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 7,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "A montanha devolve o golpe por um ângulo impossível.",
+      "oculta": true
+    },
+    {
+      "id": "bst_poeira_pradaria",
+      "name": "Passo na Poeira Antiga",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 2
+      },
+      "descricao": "Ruínas e capim escondem uma rota que só a criatura reconhece.",
+      "oculta": true
+    },
+    {
+      "id": "bst_sino_brekmar",
+      "name": "Sino de Dívida",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "taunt",
+        "valor": 5
+      },
+      "descricao": "O som de Brekmar faz cada credor olhar para o mesmo devedor.",
+      "oculta": true
+    },
+    {
+      "id": "bst_sangrar_alcateia",
+      "name": "Sangrar para a Alcateia",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 3
+      },
+      "descricao": "O primeiro corte vira cheiro e o cheiro vira ordem de caça.",
+      "oculta": true
+    },
+    {
+      "id": "bst_casca_reativa",
+      "name": "Casca Reativa",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "reacao",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "contra_ataque",
+        "dano_base": 3
+      },
+      "descricao": "A carapaça estilhaça contra quem golpeia de perto.",
+      "oculta": true
+    },
+    {
+      "id": "bst_saliva_paralisante",
+      "name": "Saliva Paralisante",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "atordoado",
+        "duracao": 1
+      },
+      "descricao": "A mordida entrega um segundo de paralisia absoluta.",
+      "oculta": true
+    },
+    {
+      "id": "bst_coro_colmeia",
+      "name": "Coro da Colmeia",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_acerto",
+        "valor": 4
+      },
+      "descricao": "Muitas vozes ajustam o ataque como se fossem uma mente.",
+      "oculta": true
+    },
+    {
+      "id": "bst_carregar_ruina",
+      "name": "Carregar pela Ruína",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 3
+      },
+      "descricao": "A criatura atravessa cobertura e leva a presa junto.",
+      "oculta": true
+    },
+    {
+      "id": "bst_mimetismo_morto",
+      "name": "Mimetismo Morto",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "esconder",
+        "valor": 3
+      },
+      "descricao": "Imita matéria sem vida até o instante da emboscada.",
+      "oculta": true
+    },
+    {
+      "id": "bst_fenda_sonica",
+      "name": "Fenda Sônica",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 5,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "Um estalo abre dor por dentro da armadura.",
+      "oculta": true
+    },
+    {
+      "id": "bst_roubar_calor",
+      "name": "Roubar Calor",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 4
+      },
+      "descricao": "O calor drenado endurece a criatura e deixa o alvo tremendo.",
+      "oculta": true
+    },
+    {
+      "id": "bst_ordem_quebrar",
+      "name": "Ordem: Quebrar a Linha",
+      "origem": "conflito-15",
+      "classe": "Inimigo",
+      "subclasse": "",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 4
+      },
+      "descricao": "Um comando curto transforma o bando numa cunha viva.",
       "oculta": true
     }
   ]

@@ -75,7 +75,8 @@ def test_persistence_roundtrip():
         AIMessage(content="resposta"),
     ])
     state["game_id"] = "pytest_roundtrip"
-    save_path = os.path.join("saves", "pytest_roundtrip.json")
+    import persistence
+    save_path = os.path.join(persistence.SAVES_DIR, "pytest_roundtrip.json")
     try:
         assert save_game_state(state) is True
         loaded = load_game_state(save_path)
@@ -157,7 +158,7 @@ def test_character_creation_fallback(monkeypatch):
     })
     # spec conflito-01: mana/stamina/attributes saíram; entram Virtudes + Vitalidade
     for key in ("name", "class_name", "hp", "max_hp", "virtudes", "max_vitalidade",
-                "inventory", "known_abilities", "defense"):
+                "inventory", "known_cards", "prepared_cards", "defense"):
         assert key in char, f"campo ausente: {key}"
     assert char["level"] == 3
     assert isinstance(char["virtudes"], dict)
@@ -262,15 +263,6 @@ def _combat_player():
             "active_conditions": [], "ability_cooldowns": {}}
 
 
-def test_initiative_order_sorted_desc():
-    random.seed(1)
-    order = cm.roll_initiative(_combat_player(), [_enemy(), _enemy(name="Goblin 2", eid="goblin_2")])
-    assert len(order) == 3
-    inits = [o["init"] for o in order]
-    assert inits == sorted(inits, reverse=True)
-    assert any(o["side"] == "hero" for o in order)
-
-
 def test_parse_condition_dot_and_duration():
     c = cm.parse_condition("Sangramento (3 dano/turno)")
     assert c["name"] == "Sangramento" and c["dot"] == 3 and c["duration"] == 3
@@ -287,58 +279,6 @@ def test_condition_tick_applies_dot_and_expires():
     assert any("Veneno" in l for l in logs)
 
 
-def test_spend_resources_blocks_without_stamina():
-    p = _combat_player()
-    p["stamina"] = 2
-    ability = {"name": "Estocada", "cost": 4, "resource_type": "Estamina"}
-    ok, msg = cm.spend_resources(p, "estocada_renal", ability)
-    assert ok is False and "stamina" in msg.lower()
-    assert "estocada_renal" not in p["ability_cooldowns"]
-
-
-def test_spend_resources_deducts_and_sets_cooldown():
-    p = _combat_player()
-    ability = {"name": "Estocada", "cost": 4, "resource_type": "Estamina"}
-    ok, _ = cm.spend_resources(p, "estocada_renal", ability)
-    assert ok is True
-    assert p["stamina"] == 8
-    assert p["ability_cooldowns"]["estocada_renal"] == cm.COOLDOWN_DEFAULT
-
-
-def test_cooldown_tick_decrements_and_removes():
-    p = _combat_player()
-    p["ability_cooldowns"] = {"a": 2, "b": 1}
-    cm.tick_cooldowns(p)
-    assert p["ability_cooldowns"] == {"a": 1}
-
-
-def test_resolve_player_action_damages_and_applies_condition():
-    random.seed(5)
-    from gamedata import ABILITIES
-    # Sangromante: corte_exato custa Entropia; dá dano com escala em dex.
-    p = _combat_player()
-    p.update({"class_name": "Sangromante", "entropy": 10, "max_entropy": 16,
-              "abyss_charge": 0, "known_abilities": ["ataque_basico", "corte_exato"]})
-    enemies = [_enemy(hp=20)]
-    action = {"ability_id": "corte_exato", "target": "Goblin 1",
-              "is_allowed": True, "reason": ""}
-    logs = cm.resolve_player_action(p, enemies, action, ABILITIES)
-    assert p["entropy"] < 10  # gastou recurso (Entropia)
-    # acertou e causou dano OU errou; se houve dano, condição entra em alvo vivo
-    assert enemies[0]["hp"] <= 20
-    assert isinstance(logs, list) and logs
-
-
-def test_resolve_player_action_blocked_when_not_allowed():
-    p = _combat_player()
-    enemies = [_enemy()]
-    action = {"ability_id": "ataque_basico", "target": "Goblin 1",
-              "is_allowed": False, "reason": "Guerreiro não lança magia arcana"}
-    logs = cm.resolve_player_action(p, enemies, action, {})
-    assert enemies[0]["hp"] == enemies[0]["max_hp"]  # nada aconteceu
-    assert any("magia arcana" in l for l in logs)
-
-
 def test_combat_node_round_runs_and_returns_state():
     import agents.combat as combat
     random.seed(9)
@@ -348,6 +288,6 @@ def test_combat_node_round_runs_and_returns_state():
     state["combat"] = {}
     out = combat.combat_node(state)
     assert "enemies" in out and "combat" in out
-    assert out["combat"]["order"]  # iniciativa rolada
+    assert out["combat"]["initiative"]  # iniciativa v4 por lado
     assert out["messages"] and out["messages"][0].content
     assert out.get("next") in (None, "loot")

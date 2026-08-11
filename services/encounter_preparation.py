@@ -16,9 +16,10 @@ ADITIVO: a mudança de GRAFO (mover `_spawn_enemies_integrated` pra fora do
 """
 import json
 import os
+from copy import deepcopy
 from typing import Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 import gamedata
 from services import conflict_scene as cs
@@ -73,6 +74,135 @@ def potency_value(categoria: str, encounter_level: int, dimension: str = "dano")
     return base + slope * max(0, int(encounter_level) - 1)
 
 
+_NUMERIC_EFFECT_PARAMS = frozenset({
+    "amount", "damage", "duration", "duracao", "dc", "difficulty",
+    "count", "quantity", "cost", "custo",
+})
+_TARGETED_EFFECTS = frozenset({"damage", "apply_condition", "reposition"})
+_POTENCY_DIMENSION = {
+    "damage": ("amount", "dano"),
+    "apply_condition": ("duration", "duracao"),
+    "spawn_reinforcement": ("count", "reforcos"),
+}
+
+
+def materialize_effect(effect: dict, encounter_level: int, *,
+                       valid_targets: Optional[set[str]] = None) -> Optional[dict]:
+    """Materializa um EffectSpec categórico. Números recebidos são sempre
+    descartados e recalculados; assim nem um dict aberto vindo de provider
+    consegue dirigir a mecânica."""
+    if not cs.validate_effect_kind(effect):
+        return None
+    kind = str(effect.get("kind"))
+    raw_params = effect.get("params") if isinstance(effect.get("params"), dict) else {}
+    category = str(
+        effect.get("potency")
+        or raw_params.get("potency")
+        or raw_params.get("potencia")
+        or "moderado"
+    ).strip().lower()
+    categories = set(_load_potency().get("categorias") or [])
+    if category not in categories:
+        return None
+
+    params = {
+        str(key): value for key, value in raw_params.items()
+        if str(key) not in _NUMERIC_EFFECT_PARAMS
+        and str(key) not in {"potency", "potencia"}
+    }
+    target = params.get("target")
+    if kind in _TARGETED_EFFECTS:
+        if not isinstance(target, str) or not target.strip():
+            return None
+        if valid_targets is not None and target not in valid_targets:
+            return None
+
+    numeric = _POTENCY_DIMENSION.get(kind)
+    if numeric:
+        field, dimension = numeric
+        params[field] = potency_value(category, encounter_level, dimension)
+
+    return {
+        "kind": kind,
+        "potency": category,
+        "params": params,
+        "_mechanical_origin": "potency_by_level",
+    }
+
+
+def _scene_target_ids(scene: dict) -> set[str]:
+    """IDs mecânicos de entidades declaradas, nunca da geometria proposta.
+
+    ``positions`` pertence à saída livre da LLM e, portanto, não prova que um
+    participante existe. Identidade canônica vem apenas das coleções de atores
+    que atravessaram a borda de preparação.
+    """
+    ids = {"player"}
+    for collection in ("enemies", "npcs"):
+        for actor in scene.get(collection) or []:
+            if isinstance(actor, dict) and (actor.get("id") or actor.get("name")):
+                ids.add(str(actor.get("id") or actor.get("name")))
+    return ids
+
+
+def normalize_prepared_scene(scene: dict, encounter_level: int) -> dict:
+    """Normaliza toda saída da LLM antes da validação/congelamento.
+
+    Efeitos inválidos tornam a cena inválida (fallback seguro) em vez de serem
+    aplicados parcialmente. Custos/quantidades livres de evento e objeto também
+    são substituídos por valores derivados/constantes do contrato.
+    """
+    out = deepcopy(scene or {})
+    errors: List[str] = []
+    targets = _scene_target_ids(out)
+
+    def normalize_holder(holder: dict, label: str) -> None:
+        effect = holder.get("effect")
+        if not isinstance(effect, dict):
+            return
+        normalized = materialize_effect(effect, encounter_level, valid_targets=targets)
+        if normalized is None:
+            errors.append(f"Efeito inválido em {label}.")
+        else:
+            holder["effect"] = normalized
+
+    for obj in out.get("objects") or []:
+        if not isinstance(obj, dict):
+            errors.append("Objeto preparado não é um objeto JSON.")
+            continue
+        # Objetos preparados são consumíveis por contrato. A ausência da chave
+        # significava uso infinito em conflict_scene.apply_object_interaction.
+        obj["uses_remaining"] = 1
+        for interaction in obj.get("interactions") or []:
+            if isinstance(interaction, dict):
+                normalize_holder(interaction, f"objeto {obj.get('id', '?')}")
+            else:
+                errors.append(f"Interação inválida em objeto {obj.get('id', '?')}.")
+
+    potency_rank = {"fraco": 0, "moderado": 1, "forte": 2, "devastador": 3}
+    for index, event in enumerate(out.get("abyss_events") or []):
+        if not isinstance(event, dict):
+            errors.append("Evento do Abismo preparado não é um objeto JSON.")
+            continue
+        normalize_holder(event, f"evento {event.get('id', index)}")
+        effect = event.get("effect") if isinstance(event.get("effect"), dict) else {}
+        category = str(effect.get("potency") or "moderado")
+        event["prioridade"] = max(1, len(out.get("abyss_events") or []) - index)
+        event["cargas_necessarias"] = potency_rank.get(category, 1)
+        event["usos_permitidos"] = 1
+
+    for index, trigger in enumerate(out.get("reinforcement_triggers") or []):
+        if isinstance(trigger, dict):
+            trigger["order"] = index
+            normalize_holder(trigger, f"reforço {trigger.get('id', index)}")
+        else:
+            errors.append("Gatilho de reforço preparado não é um objeto JSON.")
+
+    out["_normalization_errors"] = errors
+    out["encounter_level"] = max(1, min(ENCOUNTER_LEVEL_MAX, int(encounter_level or 1)))
+    return out
+
+
 # ==========================================================================
 # Etapa 3 — seleção de criatura por região (R7)
 # ==========================================================================
@@ -95,7 +225,7 @@ def validate_creature_selection(creature: dict, region: str, *,
 def validate_preparation(scene: dict) -> dict:
     """R4/R8: efeitos só do catálogo fechado; objeto interativo só com base
     narrativa; evento do Abismo só com base na cena. Retorna {ok, errors}."""
-    errors: List[str] = []
+    errors: List[str] = list(scene.get("_normalization_errors") or [])
     objetos = scene.get("objects") or []
     obj_tokens = objetos  # abyss valida contra os próprios objetos da cena
 
@@ -103,12 +233,30 @@ def validate_preparation(scene: dict) -> dict:
         if not str(o.get("base_narrativa") or "").strip():
             errors.append(f"Objeto '{o.get('id', o.get('name'))}' sem base narrativa (R8).")
         for it in (o.get("interactions") or []):
-            if not cs.validate_effect_kind(it.get("effect") or {}):
+            effect = it.get("effect") or {}
+            if not cs.validate_effect_kind(effect):
                 errors.append(f"Efeito fora do catálogo em '{o.get('id')}' (R4).")
+            elif (str(effect.get("kind")) in _POTENCY_DIMENSION
+                  and effect.get("_mechanical_origin") != "potency_by_level"):
+                errors.append(f"Efeito numérico não materializado em '{o.get('id')}'.")
+            elif effect.get("_mechanical_origin") == "potency_by_level":
+                expected = materialize_effect(
+                    effect,
+                    int(scene.get("encounter_level", 1) or 1),
+                    valid_targets=_scene_target_ids(scene),
+                )
+                if expected != effect:
+                    errors.append(f"Efeito mecânico inconsistente em '{o.get('id')}'.")
 
     for ev in (scene.get("abyss_events") or []):
         if not abyss_events.validate_event_has_scene_basis(ev, obj_tokens):
             errors.append(f"Evento do Abismo '{ev.get('id')}' sem base na cena (R5).")
+        effect = ev.get("effect") or {}
+        if effect and not cs.validate_effect_kind(effect):
+            errors.append(f"Evento do Abismo '{ev.get('id')}' tem efeito fora do catálogo.")
+        elif (str(effect.get("kind")) in _POTENCY_DIMENSION
+              and effect.get("_mechanical_origin") != "potency_by_level"):
+            errors.append(f"Evento do Abismo '{ev.get('id')}' não foi materializado.")
 
     return {"ok": not errors, "errors": errors}
 
@@ -117,6 +265,8 @@ def validate_preparation(scene: dict) -> dict:
 # Etapa 5 — geração pela LLM (guard) + cena simplificada de segurança (R9)
 # ==========================================================================
 class PreparedScene(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     zones: List[Dict] = Field(default_factory=list)
     positions: Dict[str, Dict] = Field(default_factory=dict)
     enemies: List[Dict] = Field(default_factory=list)
@@ -155,8 +305,13 @@ def prepare_encounter(narrative_context: dict, llm) -> dict:
         result = llm.with_structured_output(PreparedScene).invoke(_prep_prompt(narrative_context))
         if isinstance(result, PreparedScene):
             scene = result.model_dump()
-            scene["encounter_level"] = int(narrative_context.get("encounter_level", 1) or 1)
+            # IDs mecânicos já conhecidos entram no conjunto de alvos válidos.
+            scene["enemies"] = list(narrative_context.get("enemies") or scene.get("enemies") or [])
+            scene["npcs"] = list(narrative_context.get("npcs") or scene.get("npcs") or [])
+            scene = normalize_prepared_scene(
+                scene, int(narrative_context.get("encounter_level", 1) or 1))
             if validate_preparation(scene)["ok"]:
+                scene.pop("_normalization_errors", None)
                 return scene
     except Exception:
         pass
@@ -180,14 +335,18 @@ def _prep_prompt(ctx: dict) -> str:
 def build_npc_combat_sheet(npc: dict) -> dict:
     """R10: dá a um NPC gerado no roleplay a ficha de combate COMPLETA desde a
     criação (não o `combat_stats` rudimentar) — Virtudes, Vitalidade/espaços de
-    Ferimento (conflito-01), Esquiva, categoria e um `tactical_profile` default
-    (o real vem da conflito-08)."""
+    Ferimento (conflito-01), Esquiva, categoria e perfil específico materializado
+    por um arquétipo tático fechado."""
     from services.conflict_resolution import compute_esquiva
-    from services.tactical_profile import _default_profile
+    from services.tactical_profile import (
+        infer_npc_tactical_archetype,
+        npc_profile_for_archetype,
+    )
 
     virtudes = dict(npc.get("virtudes") or {"forca": 1, "agilidade": 1, "corpo": 1,
                                             "mente": 1, "carisma": 1})
     corpo = int(virtudes.get("corpo", 1) or 1)
+    tactical_archetype = infer_npc_tactical_archetype(npc)
     sheet = {
         "id": npc.get("id") or gamedata_slug(npc.get("name", "npc")),
         "name": npc.get("name", "NPC"),
@@ -199,7 +358,8 @@ def build_npc_combat_sheet(npc: dict) -> dict:
         "esquiva": compute_esquiva({"virtudes": virtudes}),
         "categoria": npc.get("categoria", "padrao"),
         "active_conditions": [],
-        "tactical_profile": npc.get("tactical_profile") or _default_profile(),
+        "tactical_archetype": tactical_archetype,
+        "tactical_profile": npc_profile_for_archetype(tactical_archetype),
         "status": "ativo",
     }
     return sheet

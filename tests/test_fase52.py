@@ -23,19 +23,41 @@ def test_estado_saudavel_zero_violacoes():
     assert inv.check_all(_base()) == []
 
 
-def test_hp_negativo_acusa():
+def test_alias_hp_divergente_acusa_na_consistencia():
     st = _base()
     st["player"]["hp"] = -3
-    assert "vitals.hp_bounds" in _ids(inv.check_all(st))
+    ids = _ids(inv.check_all(st))
+    assert "vitality.consistency" in ids
+    assert "vitals.vitalidade_bounds" not in ids
 
 
-def test_hp_zero_sem_game_over_acusa():
+def test_vitalidade_negativa_acusa_no_limite_canonico():
+    st = _base()
+    st["player"]["vitalidade"] = -3
+    st["player"]["hp"] = -3
+    ids = _ids(inv.check_all(st))
+    assert "vitals.vitalidade_bounds" in ids
+    assert "vitality.consistency" not in ids
+
+
+def test_morto_sem_game_over_acusa():
+    # conflito-13 (cutover v4): morte é a flag `dead` (Ferimentos), NÃO hp/Vitalidade 0.
+    # Vitalidade 0 com o herói de pé é legítimo; só `dead` sem game_over/death_pending acusa.
+    st = _base()
+    st["player"]["dead"] = True
+    st["game_over"] = False
+    ids = _ids(inv.check_all(st))
+    assert "vitals.dead_no_game_over" in ids
+
+
+def test_vitalidade_zero_vivo_nao_acusa():
+    # Vitalidade 0 (hp espelhado 0) sem `dead` = muito ferido, ainda lutando: OK.
     st = _base()
     st["player"]["hp"] = 0
     st["game_over"] = False
     ids = _ids(inv.check_all(st))
-    assert "vitals.dead_no_game_over" in ids
-    assert "vitals.hp_bounds" not in ids  # 0 está dentro de [0, max]
+    assert "vitals.dead_no_game_over" not in ids
+    assert "vitals.vitalidade_bounds" not in ids  # Vitalidade 0 está dentro de [0, max]
 
 
 def test_hp_zero_com_death_pending_nao_acusa():

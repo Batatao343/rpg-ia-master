@@ -84,3 +84,14 @@ def test_maybe_start_isolada():
     assert desc and w.get("weather_global")
     # com evento já ativo, retorna None (R2)
     assert wu.maybe_start_global_weather(w, _Rng(0.0)) is None
+
+
+def test_api_expoe_rotulo_global_efetivo():
+    from api import _world_block
+    w = _world()
+    wu.trigger_global_weather(w, "tempestade_de_eter")
+
+    block = _world_block(w)
+
+    assert "ter" in block["weather"]
+    assert block["weather_global"]["id"] == "tempestade_de_eter"

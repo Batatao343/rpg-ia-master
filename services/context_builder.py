@@ -17,9 +17,18 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
 from services import graph_resolver as gr
+from services.memory_provenance import (
+    find_strict_unrevealed,
+    format_memory_fact,
+    normalize_memory_facts,
+)
 
 try:  # RAG é opcional (offline / sem embeddings a busca falha graciosamente)
-    from rag import query_npc_memory, query_rag
+    import rag as _rag
+    query_npc_memory = _rag.query_npc_memory
+    query_rag = _rag.query_rag
+    query_session_memory = getattr(
+        _rag, "query_session_memory", lambda *_a, **_k: "")
     RAG_AVAILABLE = True
 except Exception:  # pragma: no cover - defensivo
     RAG_AVAILABLE = False
@@ -28,6 +37,9 @@ except Exception:  # pragma: no cover - defensivo
         return ""
 
     def query_npc_memory(*_a, **_k) -> str:  # type: ignore
+        return ""
+
+    def query_session_memory(*_a, **_k) -> str:  # type: ignore
         return ""
 
 
@@ -303,27 +315,28 @@ def assemble_pack(facts: List[ScoredFact], budget: ContextBudget,
 
 
 # --------------------------------------------------------------------------- #
-# spec arvores-habilidade-classes (§3.3): utilitárias no contexto do narrador
+# Cartas utilitárias no contexto do narrador (cutover conflito-13)
 # --------------------------------------------------------------------------- #
 def utility_context_block(player: Dict, *, abilities_db=None) -> str:
-    """Capacidades FORA de combate que o herói conhece (ability_kind='utility').
+    """Capacidades FORA de combate que o herói conhece (`tipo=utilitaria`).
 
     O gate é determinístico (conhece/não conhece); a LLM só narra. Devolve ""
     se o herói não tem nenhuma — o storyteller omite o bloco."""
-    db = abilities_db
-    if db is None:
-        try:
-            from gamedata import ABILITIES as db
-        except Exception:  # pragma: no cover - defensivo
-            return ""
+    if abilities_db is None:
+        from services.cards import all_cards
+        db = all_cards()
+    else:
+        # Nome do argumento preservado por compatibilidade de testes/callers; no
+        # schema v4 ele representa um catálogo de Cartas.
+        db = abilities_db
     lines = []
-    for aid in player.get("known_abilities") or []:
-        a = db.get(aid) or {}
-        if a.get("ability_kind") != "utility":
+    for cid in player.get("known_cards") or []:
+        card = db.get(cid) or {}
+        if card.get("tipo") != "utilitaria":
             continue
-        ooc = a.get("out_of_combat") or {}
-        label = ooc.get("label") or a.get("name", aid)
-        hint = ooc.get("prompt_hint", "")
+        effect = card.get("efeito") or {}
+        label = card.get("name", cid)
+        hint = effect.get("prompt_hint", "")
         lines.append(f"- {label}: {hint}" if hint else f"- {label}")
     if not lines:
         return ""
@@ -339,8 +352,8 @@ def utility_context_block(player: Dict, *, abilities_db=None) -> str:
 def build_context_pack(state: Dict, query: str, purpose: str,
                        token_budget: int = 3500, game_id: Optional[str] = None,
                        npc_id: Optional[str] = None) -> ContextPack:
-    """Monta o ContextPack para um agente. `game_id` → busca híbrida lore+sessão
-    (só o storyteller passa). `npc_id` → inclui memória vetorizada do NPC."""
+    """Monta o ContextPack. Lore canônico e memória de sessão são buscados e
+    rotulados separadamente; `npc_id` inclui ainda a memória privada do NPC."""
     if purpose not in PURPOSES:
         raise ValueError(f"purpose inválido: {purpose!r} (use um de {PURPOSES})")
 
@@ -359,21 +372,51 @@ def build_context_pack(state: Dict, query: str, purpose: str,
     # Lore global (respeita visibility; segredo não vaza). Falha de rede → "".
     lore_text = ""
     try:
-        lore_text = query_rag(query, index_name="lore", game_id=game_id,
+        lore_text = query_rag(query, index_name="lore",
                               max_visibility="public") or ""
     except Exception:
         lore_text = ""
 
-    # Memória de sessão: resumo + (npc) memória vetorizada do NPC.
+    # Memória de sessão nunca entra no bloco de lore canônico.
     memory_parts = []
+    seen_memory_text: set[str] = set()
+
+    def add_memory_part(text: str, *, legacy_if_unlabeled: bool = False) -> None:
+        clean = str(text or "").strip()
+        if (
+            not clean
+            or clean in seen_memory_text
+            or find_strict_unrevealed(clean, state)
+        ):
+            return
+        # O índice pré-spec devolve texto cru; jamais lhe atribuímos autoridade.
+        if legacy_if_unlabeled and not clean.startswith("["):
+            clean = f"[NÃO VERIFICADO | legacy_unverified] {clean}"
+        seen_memory_text.add(clean)
+        memory_parts.append(clean)
+
+    # O ledger auditável dá continuidade mesmo se o índice estiver temporariamente
+    # indisponível. Conteúdo com assinatura secreta não revelada falha fechado.
+    for record in normalize_memory_facts(state.get("memory_facts"))[-20:]:
+        if find_strict_unrevealed(record["text"], state):
+            continue
+        add_memory_part(format_memory_fact(record))
+
     summary = state.get("narrative_summary", "")
-    if summary:
-        memory_parts.append(summary)
+    if summary and not find_strict_unrevealed(summary, state):
+        add_memory_part(f"[RESUMO NARRATIVO | speculative] {summary}")
+    if game_id:
+        try:
+            session_memory = query_session_memory(query, game_id)
+            if session_memory:
+                add_memory_part(session_memory, legacy_if_unlabeled=True)
+        except Exception:
+            pass
     if npc_id and game_id:
         try:
             npc_mem = query_npc_memory(game_id, npc_id, query)
             if npc_mem:
-                memory_parts.append(npc_mem)
+                add_memory_part(npc_mem, legacy_if_unlabeled=True)
         except Exception:
             pass
     memory_text = "\n".join(memory_parts)

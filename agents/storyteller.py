@@ -1,5 +1,6 @@
 """Narration agent that advances the story and campaign plan."""
 import random
+import re
 from typing import Dict, List
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
@@ -26,6 +27,7 @@ from world_utils import (
     ensure_world,
     find_travel_destination,
     is_rest,
+    is_travel_intent,
     resolve_faction_completions,
 )
 
@@ -144,6 +146,42 @@ def _npc_fallback_clause(state: GameState) -> str:
             "um gancho ÚTIL (onde poderia haver gente, ou o próximo passo do objetivo).")
 
 
+def _player_facing_note(note: str) -> str:
+    """Converte notas de prompt em texto diegético; não vaza imperativos internos."""
+    text = str(note or "").strip()
+    if not text:
+        return ""
+    text = re.sub(r"^O jogador VIAJOU para ", "Após a viagem, você chega a ", text)
+    text = re.sub(r"^O jogador ENTROU em ", "Você entra em ", text)
+    text = re.sub(
+        r"^O jogador ENCONTROU um baú/esconderijo em ([^:]+):\s*",
+        r"Entre os vestígios de \1, você encontra um baú/esconderijo: ", text)
+    text = re.sub(
+        r"^Ao explorar ([^,]+), o jogador ENCONTROU:\s*",
+        r"Ao explorar \1, você encontra ", text)
+    text = re.sub(r"\s*Descreva\b[^.]*\.?", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"\s*Narre\b[^.]*\.?", "", text, flags=re.IGNORECASE)
+    from services import prose_guard
+    return prose_guard.sanitize_player_facing(text)
+
+
+def _deterministic_story_fallback(notes, light: dict) -> str:
+    """Fallback visível e contextual; nunca expõe erro de provider ao jogador."""
+    parts = [_player_facing_note(note) for note in notes if str(note or "").strip()]
+    parts = [part for part in parts if part]
+    if light.get("dark"):
+        parts.append(
+            "Sem fonte de luz, a escuridão limita sua visão; sons e cheiros "
+            "chegam antes das formas."
+        )
+    elif light.get("label") == "iluminado pela sua luz":
+        parts.append(
+            "A luz que você carrega abre um círculo trêmulo no breu e revela "
+            "o espaço imediato."
+        )
+    return "\n".join(parts) or (
+        "O momento passa em silêncio; o mundo aguarda seu próximo passo."
+    )
 def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text: str,
                   game_id: str = "", home_id: str = "", turn: int = 0) -> Dict[str, Dict]:
     from services import npc_layers
@@ -168,14 +206,22 @@ def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text
     tpl = generate_new_npc(new_name, context=f"Local: {loc}. Cena: {narrative_text}")
     if not tpl: return npcs
     new_npcs = dict(npcs)
-    novo = {
-        "name": tpl["name"], "role": tpl["role"], "persona": tpl["persona"],
-        "location": loc, "relationship": tpl.get("initial_relationship", 5),
-        "memory": [], "last_interaction": "",
-        "attributes": tpl.get("attributes", {}), "combat_stats": tpl.get("combat_stats", {}),
-        # spec encontros-dedupe (R1/R2): vínculo de local + turnos p/ cooldown/invariante.
-        "created_turn": turn, "last_seen_turn": turn,
-    }
+    # A fábrica já devolve a ficha v4 materializada. Ela é a fonte da verdade:
+    # recompor aqui apenas os campos antigos apagava Virtudes, Vitalidade,
+    # Ferimentos e o perfil tático persistido.
+    novo = dict(tpl)
+    novo.setdefault("name", new_name)
+    novo.setdefault("role", "Desconhecido")
+    novo.setdefault("persona", "")
+    novo["location"] = loc
+    novo.setdefault("relationship", tpl.get("initial_relationship", 5))
+    novo.setdefault("memory", [])
+    novo.setdefault("last_interaction", "")
+    novo.setdefault("attributes", {})
+    novo.setdefault("combat_stats", {})
+    # spec encontros-dedupe (R1/R2): vínculo de local + turnos p/ cooldown/invariante.
+    novo.setdefault("created_turn", turn)
+    novo["last_seen_turn"] = turn
     # spec npcs-3-camadas: quem a cena introduziu está EM cena e é conhecido.
     novo = npc_layers.ensure_npc_fields(novo, game_id, home_location_id=home_id,
                                         in_scene=True)
@@ -195,7 +241,27 @@ def storyteller_node(state: GameState):
     rested_player = None
     factions = ensure_factions(state.get("factions"))
     intel = ensure_faction_intel(state.get("faction_intel"))
-    dest = find_travel_destination(world, last_user_input) if last_user_input else None
+    travel_intent = bool(
+        last_user_input and is_travel_intent(str(last_user_input))
+    )
+    dest = (
+        find_travel_destination(world, last_user_input)
+        if travel_intent else None
+    )
+    if travel_intent and not dest:
+        try:
+            from world_utils import invalid_travel_message
+            refusal = invalid_travel_message(world, str(last_user_input))
+        except (ImportError, AttributeError):
+            refusal = ""
+        if refusal:
+            # Recusa canônica antes da LLM: destino impossível nunca aparece como
+            # chegada na mensagem, no resumo nem na memória.
+            return {
+                "messages": [AIMessage(content=refusal)],
+                "world": world,
+                "archive_due": False,
+            }
     travel_periods = 0
     discovery_events: list = []
     if dest:
@@ -213,10 +279,12 @@ def storyteller_node(state: GameState):
         _pl = state.get("player")
         if isinstance(_pl, dict) and (first_visit or (dest.get("treasure"))):
             from services import exploration
-            _rng = random.Random(hash((state.get("game_id", ""), dest["id"],
-                                       int(world.get("turn_count", 0) or 0))) & 0xFFFFFFFF)
+            _rng = exploration.arrival_rng(
+                str(state.get("game_id", "")), dest["id"],
+                int(world.get("turn_count", 0) or 0))
             disc_note, discovery_events = exploration.discover_on_arrival(
-                _pl, world, dest, int(_pl.get("level", 1) or 1), _rng)
+                _pl, world, dest, int(_pl.get("level", 1) or 1), _rng,
+                projection=state.get("world_projection"))
             if disc_note:
                 faction_note = (faction_note + " " + disc_note).strip()
         if travel_periods == 0:
@@ -338,7 +406,11 @@ def storyteller_node(state: GameState):
             from gamedata import get_location
             loc_node = get_location(world.get("current_location_id", "")) or {}
             if kind == "trap":
-                new_p, trap_logs, info = resolve_trap(base_p, loc_node, danger)
+                from party import active_allies
+                helper = next(iter(active_allies(state)), None)
+                new_p, trap_logs, info = resolve_trap(
+                    base_p, loc_node, danger, helper=helper,
+                )
                 rested_player = new_p  # reusa o encanamento de player existente
                 world_note = "ENCONTRO NA ESTRADA (armadilha — números JÁ resolvidos, narre-os):\n" \
                     + "\n".join(trap_logs)
@@ -395,6 +467,19 @@ def storyteller_node(state: GameState):
                      "num círculo trêmulo; além dele, o breu. Mencione a luz.\n    </AMBIENTE_DE_LUZ>")
     else:
         luz_block = ""
+    from world_utils import weather_effects as _weather_effects
+    _weather = _weather_effects(world)
+    weather_note = ""
+    clima_block = ""
+    if world.get("weather_global"):
+        weather_note = (
+            f"Fenômeno global ativo: {_weather.get('label', 'clima anômalo')}. "
+            "Ele domina o céu e afeta toda a cena."
+        )
+        clima_block = (
+            "<CLIMA_GLOBAL>\n    " + weather_note
+            + " Mencione sua presença e consequências sensoriais.\n    </CLIMA_GLOBAL>"
+        )
 
     campaign_plan = state.get("campaign_plan") or {}
     beats = [dict(beat) for beat in campaign_plan.get("beats", [])]
@@ -441,6 +526,7 @@ def storyteller_node(state: GameState):
     {eventos_turno}
     </EVENTOS_DESTE_TURNO>
     {luz_block}
+    {clima_block}
 
     <FACÇÕES_CONHECIDAS>
     {faccoes_conhecidas}
@@ -476,14 +562,17 @@ def storyteller_node(state: GameState):
     Resumo dos fatos anteriores: {memoria_recente}
     </MEMORIA_RECENTE>
 
-    <LORE_E_FATOS_PASSADOS>
+    <LORE_PUBLICO_CANONICO>
     {lore_context}
-    </LORE_E_FATOS_PASSADOS>
+    </LORE_PUBLICO_CANONICO>
 
     <INSTRUÇÕES>
     - Responda em 2 a 3 parágrafos.
     - JULGUE a ação: se for implausível para a classe/ficha do personagem ({state.get('player', {}).get('class_name', '')})
       ou impossível no contexto, faça-a FALHAR de forma crível na narração (não conceda o impossível).
+    - Não afirme como cânone nome, item, facção, local ou evento ausente do ESTADO,
+      da MEMÓRIA ou do LORE PÚBLICO acima. Quando faltar base, descreva incerteza
+      ou admita que o personagem não sabe; não preencha a lacuna com fato novo.
     - Termine com opções ou pergunta para ação.
     - Se um personagem ENTRAR na cena (novo ou conhecido que reapareceu), adicione o nome em 'introduced_npcs'.
     - Se um personagem conhecido SAIR da cena (foi embora, sumiu), adicione o nome em 'npcs_left_scene'.{npc_fallback_clause}{varie_clause}{opcoes_clause}
@@ -493,13 +582,85 @@ def storyteller_node(state: GameState):
         story_engine = llm.with_structured_output(StoryUpdate)
         update = story_engine.invoke([sys] + messages[-3:]) # Contexto reduzido
 
+        # Guard crítico: FallbackLLM devolve AIMessage, não o schema solicitado.
+        if not isinstance(update, StoryUpdate):
+            update = StoryUpdate(narrative=_deterministic_story_fallback(
+                (travel_note, rest_note, world_note, faction_note, weather_note), _ll,
+            ))
+
         narrative_text = update.narrative
+        # Pré-validação read-only das propostas da própria LLM. O processor no
+        # archivist continua sendo o único escritor, mas a mensagem visível não
+        # pode afirmar como fato uma mudança que ele rejeitará logo depois.
+        from services.event_processor import prevalidate_event_batch
+        llm_event_proposals = [
+            event.model_dump() if hasattr(event, "model_dump") else dict(event)
+            for event in (getattr(update, "proposed_events", []) or [])
+        ]
+        invalid_story_events = []
+        preview_state = {
+            **state,
+            "world": world,
+            "event_log": list(state.get("event_log") or []),
+        }
+        validations = prevalidate_event_batch(llm_event_proposals, preview_state)
+        for proposal, validation in zip(llm_event_proposals, validations):
+            if not validation.ok:
+                invalid_story_events.append({
+                    "type": str(proposal.get("type") or ""),
+                    "target_id": str(proposal.get("target_id") or ""),
+                    "reason": str(validation.reason or "")[:240],
+                })
+        # Política atômica/conservadora: uma proposta inválida põe em quarentena
+        # TODO o payload livre da mesma resposta. Mantemos apenas as propostas
+        # inválidas na fila para auditoria; propostas irmãs aparentemente válidas
+        # não podem virar mudanças silenciosas depois que a narrativa foi descartada.
+        quarantine_llm_payload = bool(invalid_story_events)
+        pending_llm_events = (
+            [
+                {
+                    "type": rejected["type"],
+                    "target_id": rejected["target_id"],
+                    "actor_id": "player",
+                    "payload": {},
+                    "source": "storyteller_prevalidation",
+                    "_prevalidation_rejected": True,
+                    "_prevalidation_reason": rejected["reason"],
+                }
+                for rejected in invalid_story_events
+            ]
+            if quarantine_llm_payload
+            else llm_event_proposals
+        )
         if not str(narrative_text).strip():
             # Fallback digno: o TURNO MECÂNICO sobrevive mesmo com LLM flaky —
             # as notas determinísticas (viagem/descanso/encontro) viram a narração.
-            partes = [n for n in (travel_note, rest_note, world_note, faction_note) if n]
-            narrative_text = ("\n".join(partes)
-                              or "O momento passa em silêncio; o mundo aguarda seu próximo passo.")
+            narrative_text = _deterministic_story_fallback(
+                (travel_note, rest_note, world_note, faction_note, weather_note), _ll,
+            )
+        narrative_text = prose_guard.sanitize_player_facing(str(narrative_text))
+        if invalid_story_events:
+            # Não há fact-check semântico confiável frase a frase. Em vez de
+            # deixar a alegação rejeitada sobreviver, usa somente consequências
+            # determinísticas já aplicadas neste turno.
+            safe_parts = [note for note in (travel_note, rest_note, faction_note) if note]
+            narrative_text = _deterministic_story_fallback(safe_parts, _ll) if safe_parts else (
+                "A tentativa altera apenas o momento imediato; nenhuma mudança "
+                "permanente no mundo foi confirmada."
+            )
+            narrative_text += (
+                "\n\n[SISTEMA] Uma mudança permanente proposta pela narração "
+                "foi rejeitada pelo estado canônico."
+            )
+
+        narrative_text = prose_guard.vary_repeated_opening(
+            str(narrative_text),
+            _aberturas,
+            salt=(
+                f"{state.get('game_id', '')}:"
+                f"{(world or {}).get('turn_count', 0)}:storyteller"
+            ),
+        )
 
         # spec polish-prosa (R4): telemetria de abertura repetida (não re-tenta).
         prose_guard.log_if_repeats(str(narrative_text),
@@ -510,7 +671,11 @@ def storyteller_node(state: GameState):
         # Fase 3.4: cada mudança vira proposta reputation_changed (Python, não LLM) —
         # entra no event_log auditável pelo mesmo pipeline 2.6, alimenta a timeline.
         rep_events = []
-        for imp in getattr(update, "faction_impacts", []) or []:
+        faction_impacts = (
+            [] if quarantine_llm_payload
+            else (getattr(update, "faction_impacts", []) or [])
+        )
+        for imp in faction_impacts:
             fid = getattr(imp, "faction_id", "")
             direction = getattr(imp, "direction", "")
             factions, rep_ev = apply_reputation(factions, fid, direction)
@@ -525,7 +690,10 @@ def storyteller_node(state: GameState):
         # --- Avanço de beat: o narrador sinaliza quando o objetivo da cena foi cumprido ---
         needs_replan = state.get("needs_replan", False)
         updated_plan = campaign_plan
-        beat_done = bool(getattr(update, "beat_completed", False))
+        beat_done = (
+            bool(getattr(update, "beat_completed", False))
+            and not quarantine_llm_payload
+        )
         # Fase 4.1: beat concluído = XP determinístico (o LLM só sinaliza o beat;
         # valor/level up são do motor). Level ups viram eventos source="progression".
         leveled_player = None
@@ -554,11 +722,18 @@ def storyteller_node(state: GameState):
         new_npcs = npcs
         home_id = world.get("current_location_id", "")
         _turn = int(world.get("turn_count", 0) or 0)
-        for new_name in update.introduced_npcs:
+        introduced_npcs = (
+            [] if quarantine_llm_payload else (update.introduced_npcs or [])
+        )
+        npcs_left_scene = (
+            [] if quarantine_llm_payload
+            else (getattr(update, "npcs_left_scene", []) or [])
+        )
+        for new_name in introduced_npcs:
             new_npcs = _with_new_npc(new_npcs, new_name, loc, narrative_text,
                                      game_id=str(game_id or ""), home_id=home_id,
                                      turn=_turn)
-        for gone_name in getattr(update, "npcs_left_scene", []) or []:
+        for gone_name in npcs_left_scene:
             key = next((k for k in new_npcs if k.lower() == str(gone_name).lower()), None)
             if key and isinstance(new_npcs.get(key), dict):
                 new_npcs = {**new_npcs, key: {**new_npcs[key], "in_scene": False}}
@@ -571,6 +746,11 @@ def storyteller_node(state: GameState):
             "campaign_plan": updated_plan,
             "needs_replan": needs_replan,
         }
+        # Rumores/cores do simulador são percepção narrativa, não fatos globais.
+        # A consequência mecânica aplicada já é persistida diretamente pelo
+        # world_simulator; o archivist deve ignorar inferências livres deste texto.
+        if world_note:
+            updates["memory_fact_policy"] = "canonical_only"
         if rested_player is not None:
             updates["player"] = rested_player
         if leveled_player is not None:  # Fase 4.1: XP do beat (inclui o descanso, se houve)
@@ -578,7 +758,15 @@ def storyteller_node(state: GameState):
 
         # Fase 4.3 (R5): item narrado ENTRA no inventário — só se resolver no
         # ARTIFACTS_DB (storyteller não cria item; isso é papel do loot_node).
-        gained = [g for g in (getattr(update, "items_gained", []) or []) if str(g).strip()]
+        gained = [
+            g
+            for g in (
+                [] if quarantine_llm_payload
+                else (getattr(update, "items_gained", []) or [])
+            )
+            if str(g).strip()
+        ]
+        rejected_claims: List[str] = []
         if gained:
             from inventory import add_item, is_unique, resolve_item_name
             from services.economy import claim_event, is_unique_available
@@ -590,10 +778,12 @@ def storyteller_node(state: GameState):
                 iid = resolve_item_name(str(g))
                 if not iid:
                     print(f"⚠️ [STORYTELLER] item narrado desconhecido ignorado: {g!r}")
+                    rejected_claims.append(str(g))
                     continue
                 # Fase 6.2: único já reclamado NUNCA re-entra pela narrativa
                 if is_unique(iid) and not is_unique_available(iid, proj):
                     print(f"⚠️ [STORYTELLER] item ÚNICO já reclamado ignorado: {iid}")
+                    rejected_claims.append(str(g))
                     continue
                 inv = add_item(inv, iid, 1)
                 changed = True
@@ -602,6 +792,28 @@ def storyteller_node(state: GameState):
             if changed:
                 cur_p["inventory"] = inv
                 updates["player"] = cur_p
+        if rejected_claims:
+            clean = prose_guard.remove_rejected_claims(narrative_text, rejected_claims)
+            clean = clean or "A busca não produz nenhum objeto utilizável."
+            rejection_note = (
+                "Nenhum outro objeto foi acrescentado aos seus pertences."
+                if changed else
+                "Ao conferir seus pertences, você percebe que nada novo foi obtido."
+            )
+            clean = (
+                f"{clean}\n\n{rejection_note}"
+            )
+            updates["messages"] = [AIMessage(content=clean)]
+            updates["narrative_rejections"] = [
+                f"item_rejected:{name}" for name in dict.fromkeys(rejected_claims)]
+        if invalid_story_events:
+            updates["narrative_rejections"] = [
+                *list(updates.get("narrative_rejections") or []),
+                *[
+                    f"event_rejected:{entry['type']}:{entry['target_id']}"
+                    for entry in invalid_story_events
+                ],
+            ]
         # Viagem/descanso/beat concluído = evento relevante → pede arquivamento.
         if dest or rested_player is not None or beat_done:
             updates["archive_due"] = True
@@ -610,16 +822,42 @@ def storyteller_node(state: GameState):
         # Fase 2.6: enfileira propostas de evento estruturado (motor valida no archivist).
         # Fase 3.4: reputation_changed (Python) entra na mesma fila. 4.1: level_up idem.
         # Fase 6.4: XP de esquiva de armadilha pode ter gerado level_up.
-        pending = ([e.model_dump() for e in getattr(update, "proposed_events", []) or []]
-                   + rep_events + level_up_events + extra_engine_events + discovery_events)
+        pending = (
+            pending_llm_events
+            + rep_events
+            + level_up_events
+            + extra_engine_events
+            + discovery_events
+        )
         if pending:
             updates["pending_world_events"] = (state.get("pending_world_events", []) or []) + pending
             updates["archive_due"] = True  # mudança de mundo é evento relevante
+        if rested_player is not None and rested_player.get("dead"):
+            updates["death_pending"] = True
+            updates["archive_due"] = True
+            updates["pending_world_events"] = list(
+                updates.get("pending_world_events")
+                or state.get("pending_world_events", []) or []
+            ) + [{
+                "type": "player_downed",
+                "actor_id": "player",
+                "target_id": "player",
+                "detail": "O herói tombou numa armadilha durante a viagem.",
+                "payload": {
+                    "location": world.get("current_location", ""),
+                    "cause": "armadilha",
+                },
+                "source": "trap",
+            }]
 
         # Fase 3.3: side quests propostas nesta cena (validadas/criadas em Python).
         turn = int(world.get("turn_count", 0))
+        proposed_quests = (
+            [] if quarantine_llm_payload
+            else (getattr(update, "proposed_quests", []) or [])
+        )
         new_quests, created = quest_log.register_proposed_quests(
-            state.get("quests", []), getattr(update, "proposed_quests", []) or [], turn=turn
+            state.get("quests", []), proposed_quests, turn=turn
         )
         if created:
             updates["quests"] = new_quests
@@ -628,7 +866,9 @@ def storyteller_node(state: GameState):
 
     except Exception as e:
         print(f"[STORYTELLER ERROR] {e}")
-        fallback = {"messages": [AIMessage(content="O destino é incerto... (Erro AI).")]}
+        fallback = {"messages": [AIMessage(content=_deterministic_story_fallback(
+            (travel_note, rest_note, world_note, faction_note, weather_note), _ll,
+        ))]}
         if dest:
             # viagem mecânica sobrevive ao LLM flaky: mundo anda e a cena esvazia
             from services import npc_layers

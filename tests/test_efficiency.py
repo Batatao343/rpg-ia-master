@@ -29,11 +29,11 @@ def test_archive_node_skips_llm_when_not_due(monkeypatch):
 
 
 # --- Combate: catálogo só do necessário ---
-def test_ability_catalog_for_filters_to_player():
-    # sem habilidades conhecidas → só as universais (catálogo enxuto)
-    cat = combat._ability_catalog_for({"known_abilities": []})
-    assert "ataque_basico" in cat
-    assert cat.count("\n") <= 1  # ~2 linhas (universais), não o dict inteiro
+def test_card_catalog_for_filters_to_prepared():
+    cat = combat._prepared_cards_catalog(
+        {"prepared_cards": ["dev_golpe_convite"]})
+    assert "dev_golpe_convite" in cat
+    assert "san_corte_troca" not in cat
 
 
 # --- Librarian: dedup sem gastar LLM quando claramente novo ---

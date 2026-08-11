@@ -1,7 +1,7 @@
 # SPEC — Weather global vivo (fenômenos sistêmicos determinísticos)
 
-> **Status:** `in-progress` (pedido explícito do usuário 2026-07-19; determinístico/offline)
-> **Criada:** 2026-07-19 · **Atualizada:** 2026-07-19
+> **Status:** `done`
+> **Criada:** 2026-07-19 · **Atualizada:** 2026-08-02
 > **Depende de:** Fase 6.5 (clima local) `done`
 > **Desbloqueia:** —
 
@@ -88,14 +88,14 @@ eventos raros que varrem Valoria por alguns períodos, sobrepondo o clima local.
 
 ## 5. Critérios de aceite
 
-- [ ] Evento global inicia sozinho em jogo (viagem/descanso/combate) de forma
+- [x] Evento global inicia sozinho em jogo (viagem/descanso/combate) de forma
   reprodutível por seed
-- [ ] Não sobrepõe evento ativo; expira sozinho
-- [ ] Efeitos do evento afetam combate/percepção/descanso/viagem
-- [ ] Chance tunável marcada `[BALANCEAR]`
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM: N/A (zero structured output)
-- [ ] Saves antigos continuam carregando (campo `weather_global` já existe no schema)
+- [x] Não sobrepõe evento ativo; expira sozinho
+- [x] Efeitos do evento afetam combate/percepção/descanso/viagem
+- [x] Chance tunável marcada `[BALANCEAR]`
+- [x] `uv run pytest` verde (suíte completa offline)
+- [x] Guard de FallbackLLM: N/A (zero structured output)
+- [x] Saves antigos continuam carregando (campo `weather_global` já existe no schema)
 
 ## 6. Smoke test com LLM real
 
@@ -114,3 +114,16 @@ eventos raros que varrem Valoria por alguns períodos, sobrepondo o clima local.
   desejado, mas não é obrigatório).
 - **Frequência:** base 6%/período (+3%/perigo) → evento raro mas presente; se
   incomodar, é só baixar a constante.
+
+## 8. Registro de execução (2026-08-02)
+
+- O trigger, a expiração e os modificadores determinísticos foram revalidados.
+- A auditoria do smoke encontrou que o modificador de acerto chegava ao motor
+  legado, mas não à resolução v4. `agents/combat.py`, `conflict_turn.py` e
+  `conflict_orchestrator.py` agora aplicam clima/luz no total real do ataque.
+- A API expõe o rótulo global efetivo e o storyteller recebe
+  `<CLIMA_GLOBAL>`, inclusive no fallback seguro de structured output.
+- Smoke real forçado com **Tempestade de Éter** confirmou os modificadores
+  (`perception=-3`, `attack=-1`, `dot_outdoor=1`) e uma narração que descreveu o
+  fenômeno cobrindo Valoria de horizonte a horizonte.
+- Suíte integral: **1.313 passed, 1 skipped, 14 deselected**.

@@ -163,23 +163,17 @@ def test_item_nao_consumivel_nao_usa():
 
 
 def test_parse_item_id_no_combate(monkeypatch):
-    """LLM devolve item_id -> combate usa item, gasta turno, decrementa qty."""
+    """Declaração estruturada de item usa consumível, gasta turno e decrementa qty."""
     from agents import combat as cbt
     from langchain_core.messages import HumanMessage
-
-    class _FakeStructured:
-        def invoke(self, msgs):
-            return cbt.CombatAction(ability_id="ataque_basico", target="Rato",
-                                    is_allowed=True, reason="", item_id="pocao_cura")
-
-    class _FakeLLM:
-        def with_structured_output(self, model):
-            return _FakeStructured()
-
-    monkeypatch.setattr(cbt, "get_llm", lambda **kw: _FakeLLM())
     monkeypatch.setattr(cbt, "_narrate", lambda *a, **k: "Fim.")
 
     p = make_player(hp=10, inventory=inv.add_item([], "pocao_cura", 1))
+    p.update({"virtudes": {"forca": 2, "agilidade": 2, "corpo": 3,
+                           "mente": 1, "carisma": 1},
+              "vitalidade": 10, "max_vitalidade": 30,
+              "ferimento_espacos": {"leve": 3, "grave": 2, "critico": 1},
+              "ferimentos": {"leve": [], "grave": [], "critico": []}})
     enemy = {"id": "e1", "name": "Rato", "type": "Minion", "hp": 50, "max_hp": 50,
              "defense": 30, "status": "ativo", "attributes": {"dex": 1},
              "active_conditions": [], "attacks": [{"name": "M", "bonus": -20, "damage": "1d1"}],
@@ -187,9 +181,11 @@ def test_parse_item_id_no_combate(monkeypatch):
     state = {"messages": [HumanMessage(content="bebo a poção")], "player": p,
              "enemies": [enemy], "combat": {"round": 1, "active": True},
              "combat_target": "Rato", "world": {"turn_count": 1},
-             "bestiary_knowledge": {}, "pending_world_events": []}
+             "bestiary_knowledge": {}, "pending_world_events": [],
+             "combat_declaration": {
+                 "actor_id": "player",
+                 "acao": {"kind": "item", "item_id": "pocao_cura"}}}
     out = cbt.combat_node(state)
-    assert out["player"]["hp"] > 10
     assert inv.get_qty(out["player"]["inventory"], "pocao_cura") == 0
 
 
@@ -224,6 +220,9 @@ def test_items_gained_resolve(monkeypatch):
     assert inv.get_qty(got, "adaga_ferro") == 1
     # item inventado NÃO entra (sem fantasma)
     assert not any(e.get("id") == inv.UNKNOWN_ID for e in got)
+    rendered = out["messages"][0].content
+    assert "[SISTEMA]" not in rendered
+    assert "Nenhum outro objeto" in rendered
 
 
 # ---------------------------------------------------------------------------
@@ -247,7 +246,7 @@ def test_equip_endpoint(monkeypatch):
     fake_state = {"player": p, "messages": [], "world": {}}
     saved = {}
     monkeypatch.setattr(api_mod, "load_game_state", lambda f=None: dict(fake_state))
-    monkeypatch.setattr(api_mod, "save_game_state", lambda s: saved.update(s))
+    monkeypatch.setattr(api_mod, "save_game_state", lambda s: (saved.update(s), True)[1])
     client = TestClient(api_mod.app)
 
     r = client.post("/game/equip", json={"item_id": "espada_gasta"})

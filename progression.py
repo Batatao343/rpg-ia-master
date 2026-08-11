@@ -6,20 +6,18 @@ XP entra por kill/beat/quest (valores fixos abaixo), level up aplica curvas por
 classe (`classes.json` -> level_gains) e gera escolhas pendentes que o jogador
 resolve quando quiser (pending_choices não bloqueia o loop).
 
-Árvore de habilidades: `player_abilities.json` ganha classes/branch/tier/
-level_req/requires (conteúdo autorado na spec 4.1b). Ramo = subclasse mutuamente
-exclusiva, DERIVADA de known_abilities (player_branch) — zero campo novo de estado.
+Progressão de combate usa Cartas: cada nível concede uma escolha de Carta nova
+ou evolução A/B; níveis pares concedem Virtude conforme a curva v4.
 
 Convenções:
 - Funções NÃO mutam o player recebido: devolvem cópia atualizada.
 - Evento level_up segue o shape de proposta do pipeline 2.6 (gerado 100% em
   Python, padrão reputation_changed da 3.4 — o validator rejeita se o LLM propuser).
 """
-import unicodedata
 from typing import Dict, List, Optional, Tuple
 
 import gamedata
-from gamedata import ABILITIES, CLASSES, XP_TABLE
+from gamedata import CLASSES, XP_TABLE
 
 XP_BY_TIER = {"minion": 50, "elite": 200, "boss": 1000}
 XP_PER_BEAT = 150
@@ -28,7 +26,8 @@ XP_PER_QUEST = 200
 MAX_LEVEL = gamedata.NIVEL_MAX  # 10
 
 # Curva usada se a classe não tiver level_gains (classe custom/save antigo).
-# spec conflito-01: jogador ganha hp + Entropia por nível (mana/stamina saíram).
+# Vitalidade máxima deriva exclusivamente de Corpo; nível recompõe só recursos
+# explicitamente escaláveis.
 DEFAULT_LEVEL_GAINS = {"hp": 5, "entropy": 2}
 
 
@@ -53,7 +52,10 @@ def xp_to_next(level: int) -> Optional[int]:
 def _level_gains_for(class_name: str, classes_db: Optional[Dict]) -> Dict[str, int]:
     db = classes_db if classes_db is not None else CLASSES
     gains = (db.get(class_name) or {}).get("level_gains") or DEFAULT_LEVEL_GAINS
-    return {k: int(gains.get(k, 0) or 0) for k in ("hp", "entropy")}
+    return {
+        "hp": int(gains.get("hp", 0) or 0),
+        "entropy": int(gains.get("entropy", 0) or 0),
+    }
 
 
 def grant_xp(player: Dict, amount: int, *,
@@ -68,6 +70,9 @@ def grant_xp(player: Dict, amount: int, *,
     p = dict(player)
     p["pending_choices"] = list(p.get("pending_choices") or [])
     p["xp"] = int(p.get("xp", 0) or 0) + int(amount or 0)
+    is_v4 = p.get("vitalidade") is not None or isinstance(p.get("virtudes"), dict)
+    if is_v4:
+        gamedata.sync_vitality(p)
     events: List[Dict] = []
 
     gains = _level_gains_for(str(p.get("class_name", "")), classes_db)
@@ -77,15 +82,24 @@ def grant_xp(player: Dict, amount: int, *,
             break
         new_level = int(p.get("level", 1) or 1) + 1
         p["level"] = new_level
-        # spec conflito-01: jogador sobe hp + Entropia (mana/stamina saíram do schema)
-        for res, field in (("hp", "max_hp"), ("entropy", "max_entropy")):
-            delta = gains.get(res, 0)
-            if delta:
-                p[field] = int(p.get(field, 0) or 0) + delta
-                p[res] = min(p[field], int(p.get(res, 0) or 0) + delta)
-        p["pending_choices"].append(
-            {"id": f"lvl{new_level}-ability", "level": new_level, "kind": "ability"})
-        # spec conflito-02 R4: a cada nível, nova Carta OU evolução (mut. exclusivo)
+        # Vitalidade não escala com nível: somente Corpo (escolha separada)
+        # altera seu teto. Entropia mantém a curva por classe.
+        entropy_delta = gains.get("entropy", 0)
+        if entropy_delta:
+            p["max_entropy"] = int(p.get("max_entropy", 0) or 0) + entropy_delta
+            p["entropy"] = min(
+                p["max_entropy"],
+                int(p.get("entropy", 0) or 0) + entropy_delta,
+            )
+        if not is_v4:
+            # Compatibilidade de funções puras que ainda exercitam fichas
+            # arquivadas; estados jogáveis pré-v4 são recusados na borda.
+            hp_delta = gains.get("hp", 0)
+            if hp_delta:
+                p["max_hp"] = int(p.get("max_hp", 0) or 0) + hp_delta
+                p["hp"] = min(
+                    p["max_hp"], int(p.get("hp", 0) or 0) + hp_delta)
+        # spec conflito-02/13: a cada nível, nova Carta OU evolução.
         p["pending_choices"].append(
             {"id": f"lvl{new_level}-carta", "level": new_level, "kind": "carta"})
         # R3: níveis 2/4/6/8/10 dão +1 numa Virtude (escolha do jogador)
@@ -97,52 +111,39 @@ def grant_xp(player: Dict, amount: int, *,
             "detail": f"{p.get('name', 'O herói')} alcançou o nível {new_level}",
             "payload": {"new_level": new_level}, "source": "progression",
         })
+    if is_v4:
+        gamedata.sync_legacy_hp_aliases(p)
     return p, events
 
 
 # ---------------------------------------------------------------------------
-# Árvore / subclasse (ramo)
+# Acervo / subclasse
 # ---------------------------------------------------------------------------
 def player_branch(player: Dict, *, abilities_db: Optional[Dict] = None) -> Optional[str]:
-    """Subclasse derivada: branch da primeira habilidade conhecida que tem branch.
-    None = ainda no tronco comum. Sem campo novo de estado (à prova de save antigo)."""
-    db = abilities_db if abilities_db is not None else ABILITIES
-    for aid in player.get("known_abilities") or []:
-        br = (db.get(aid) or {}).get("branch")
-        if br:
-            return str(br)
+    """Subclasse derivada da primeira Carta conhecida que declara subclasse."""
+    if player.get("subclass"):
+        return str(player["subclass"])
+    if abilities_db is None:
+        from services.cards import all_cards
+        db = all_cards()
+    else:
+        db = abilities_db
+    for cid in player.get("known_cards") or []:
+        branch = (db.get(cid) or {}).get("subclasse")
+        if branch:
+            return str(branch)
     return None
 
 
-def eligible_abilities(player: Dict, *,
-                       abilities_db: Optional[Dict] = None) -> List[str]:
-    """Ids elegíveis na árvore (R5 + R5b da spec 4.1).
-
-    Elegível = da classe (ou "all") ∧ nível >= level_req ∧ requires ⊆ conhecidas
-    ∧ não conhecida ∧ não pertence a ramo rival (lock de subclasse).
-    """
-    db = abilities_db if abilities_db is not None else ABILITIES
-    known = set(player.get("known_abilities") or [])
-    class_name = str(player.get("class_name", ""))
-    level = int(player.get("level", 1) or 1)
-    branch = player_branch(player, abilities_db=db)
-
-    out: List[str] = []
-    for aid, a in db.items():
-        if aid in known:
-            continue
-        classes = a.get("classes") or []
-        if "all" not in classes and class_name not in classes:
-            continue
-        if level < int(a.get("level_req", 1) or 1):
-            continue
-        if not set(a.get("requires") or []) <= known:
-            continue
-        a_branch = a.get("branch")
-        if a_branch and branch and a_branch != branch:
-            continue  # ramo rival trancado para sempre nesta ficha
-        out.append(aid)
-    return out
+def eligible_cards(player: Dict) -> List[str]:
+    """Cartas ainda não conhecidas da classe e da subclasse já escolhida."""
+    from services import cards
+    known = set(player.get("known_cards") or [])
+    branch = player_branch(player)
+    return [
+        c["id"] for c in cards.cards_for_class(str(player.get("class_name", "")), branch or "")
+        if c["id"] not in known and (not branch or c.get("subclasse") in ("", branch))
+    ]
 
 
 def apply_choice(player: Dict, choice_id: str, *,
@@ -162,21 +163,7 @@ def apply_choice(player: Dict, choice_id: str, *,
         return player, f"Escolha '{choice_id}' não está pendente."
 
     p = dict(player)
-    if choice.get("kind") == "ability":
-        if not ability_id:
-            return player, "Escolha de habilidade exige ability_id."
-        if ability_id not in eligible_abilities(player, abilities_db=abilities_db):
-            return player, f"Habilidade '{ability_id}' não é elegível para esta ficha."
-        p["known_abilities"] = list(p.get("known_abilities") or []) + [ability_id]
-        # spec arvores-habilidade-classes: passiva entropy_max_bonus aplica no
-        # APRENDIZADO (permanente) — max_entropy e entropy sobem juntos.
-        from combat_mechanics import entropy_max_bonus_of
-        db = abilities_db if abilities_db is not None else ABILITIES
-        bonus = entropy_max_bonus_of(db.get(ability_id) or {})
-        if bonus:
-            p["max_entropy"] = int(p.get("max_entropy", 0) or 0) + bonus
-            p["entropy"] = int(p.get("entropy", 0) or 0) + bonus
-    elif choice.get("kind") == "virtude":
+    if choice.get("kind") == "virtude":
         # spec conflito-01 R3: +1 numa Virtude, teto 5, recalcula Vitalidade na hora
         key = gamedata.normalize_virtude(virtude or attr or "")
         if key not in gamedata.VIRTUDES:
@@ -196,9 +183,8 @@ def apply_choice(player: Dict, choice_id: str, *,
         if card_id and (evolve_card_id or caminho):
             return player, "Escolha nova Carta OU evolução, não ambas."
         if card_id:
-            pool = {c["id"] for c in cards_svc.cards_for_class(str(p.get("class_name", "")))}
-            if card_id not in pool:
-                return player, f"Carta '{card_id}' não é da classe."
+            if card_id not in set(eligible_cards(player)):
+                return player, f"Carta '{card_id}' não é elegível para esta ficha."
             known = list(p.get("known_cards") or [])
             if card_id in known:
                 return player, f"Carta '{card_id}' já está no Acervo."
@@ -216,47 +202,3 @@ def apply_choice(player: Dict, choice_id: str, *,
 
     p["pending_choices"] = [c for c in pending if c.get("id") != choice_id]
     return p, None
-
-
-# ---------------------------------------------------------------------------
-# Backfill de saves antigos (R8): known_abilities texto-livre -> ids canônicos
-# ---------------------------------------------------------------------------
-def _fold(s: str) -> str:
-    """lower + sem acento, p/ casar nome livre com nome canônico."""
-    nfkd = unicodedata.normalize("NFKD", str(s or ""))
-    return "".join(c for c in nfkd if not unicodedata.combining(c)).strip().lower()
-
-
-def canonicalize_known_abilities(player: Dict, *,
-                                 abilities_db: Optional[Dict] = None) -> Dict:
-    """Converte known_abilities texto-livre em ids canônicos (in-place-safe: cópia).
-
-    - id já canônico: mantém
-    - "[Passiva] ..." : descarta (passiva vive em CLASSES[class]["passive"])
-    - nome que casa (case/acento-insensitive) com name de habilidade: vira o id
-    - não-mapeável: descartado (nunca funcionou mecanicamente antes)
-    - garante 'ataque_basico' e defaults de pending_choices/xp/level
-    """
-    db = abilities_db if abilities_db is not None else ABILITIES
-    by_name = {_fold(a.get("name", "")): aid for aid, a in db.items()}
-
-    p = dict(player)
-    out: List[str] = []
-    for entry in p.get("known_abilities") or []:
-        e = str(entry)
-        if e.startswith("[Passiva]"):
-            continue
-        if e in db:
-            if e not in out:
-                out.append(e)
-            continue
-        mapped = by_name.get(_fold(e))
-        if mapped and mapped not in out:
-            out.append(mapped)
-    if "ataque_basico" not in out:
-        out.insert(0, "ataque_basico")
-    p["known_abilities"] = out
-    p.setdefault("pending_choices", [])
-    p.setdefault("xp", 0)
-    p.setdefault("level", 1)
-    return p

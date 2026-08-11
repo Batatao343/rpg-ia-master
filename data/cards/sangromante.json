@@ -20,7 +20,10 @@
         "categoria_arma": "leve",
         "dano_base": 3
       },
-      "descricao": "Um talho rápido; o preço do sangue já está embutido."
+      "descricao": "Um talho rápido; o preço do sangue já está embutido.",
+      "mecanica_classe": {
+        "auto_dano": 3
+      }
     },
     {
       "id": "san_finta",
@@ -133,7 +136,11 @@
         "categoria_arma": "leve",
         "dano_base": 12
       },
-      "descricao": "Aposta tudo num só golpe pago com o próprio fôlego."
+      "descricao": "Aposta tudo num só golpe pago com o próprio fôlego.",
+      "mecanica_classe": {
+        "auto_dano": 4,
+        "pico": true
+      }
     },
     {
       "id": "san_exp_espetaculo",
@@ -152,7 +159,10 @@
         "kind": "taunt",
         "valor": 2
       },
-      "descricao": "Sangra em público de propósito — todos os olhos, todas as lâminas."
+      "descricao": "Sangra em público de propósito — todos os olhos, todas as lâminas.",
+      "mecanica_classe": {
+        "auto_dano": 2
+      }
     },
     {
       "id": "san_exp_credencial",
@@ -212,7 +222,11 @@
           }
         }
       },
-      "central": true
+      "central": true,
+      "mecanica_classe": {
+        "auto_dano": 4,
+        "pico": true
+      }
     },
     {
       "id": "san_exp_plateia",
@@ -306,7 +320,10 @@
           }
         }
       },
-      "central": true
+      "central": true,
+      "mecanica_classe": {
+        "pico": true
+      }
     },
     {
       "id": "san_ava_sovinice",
@@ -343,7 +360,10 @@
         "categoria_arma": "leve",
         "dano_base": 4
       },
-      "descricao": "Nem uma gota a mais do que o necessário — cirurgia com adaga."
+      "descricao": "Nem uma gota a mais do que o necessário — cirurgia com adaga.",
+      "mecanica_classe": {
+        "auto_dano": 1
+      }
     },
     {
       "id": "san_sil_veia",
@@ -421,6 +441,307 @@
         "valor": 1
       },
       "descricao": "Sem espetáculo, sem susto: economiza o próprio sangue tanto quanto o do outro."
+    },
+    {
+      "id": "san_exp_aplausos",
+      "name": "Aplausos da Cicatriz",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeito": {
+        "kind": "taunt",
+        "valor": 5
+      },
+      "descricao": "Exibe a ferida como desafio e faz cada inimigo disputar o próximo golpe.",
+      "papel": "atrair plateia hostil"
+    },
+    {
+      "id": "san_exp_bis",
+      "name": "Bis Sangrento",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "superior",
+      "custo_entropia": 3,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "dano_base": 9
+      },
+      "descricao": "Quando todos esperam a queda, retorna ao palco com a lâmina já em movimento.",
+      "papel": "retaliação depois de sobreviver crítico"
+    },
+    {
+      "id": "san_ava_juros_carne",
+      "name": "Juros de Carne",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 5
+      },
+      "descricao": "Cada gota paga antes volta como força emprestada ao golpe seguinte.",
+      "papel": "capitalizar auto-dano acumulado"
+    },
+    {
+      "id": "san_ava_falencia",
+      "name": "Falência Rubra",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "superior",
+      "custo_entropia": 4,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 12
+      },
+      "descricao": "Fecha todas as contas numa pancada que cobra corpo, aço e testemunhas.",
+      "papel": "liquidar reserva de sangue"
+    },
+    {
+      "id": "san_sil_fio",
+      "name": "Fio sem Testemunha",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "avancado",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "marca",
+        "valor": 2
+      },
+      "descricao": "Um risco quase invisível indica exatamente onde a próxima lâmina deve entrar.",
+      "papel": "marcar artéria sem revelar ataque"
+    },
+    {
+      "id": "san_sil_pulso",
+      "name": "Silêncio do Pulso",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "superior",
+      "custo_entropia": 3,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "silenciado",
+        "duracao": 2
+      },
+      "descricao": "Corta a cadência do sangue e, com ela, qualquer palavra de poder.",
+      "papel": "interromper conjuração pelo pulso"
+    },
+    {
+      "id": "san_desvio_arterial",
+      "name": "Desvio Arterial",
+      "tipo": "reacao",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "buff_esquiva",
+        "valor": 3
+      },
+      "descricao": "Prevê a trajetória do golpe pelo pulso do agressor e sai por um fio.",
+      "gatilho": "ao_ser_atacado",
+      "papel": "esquiva após prever fluxo"
+    },
+    {
+      "id": "san_troco_carmesim",
+      "name": "Troco Carmesim",
+      "tipo": "reacao",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "dano_base": 5
+      },
+      "descricao": "A ferida recém-aberta paga imediatamente um corte no cobrador.",
+      "gatilho": "apos_auto_dano",
+      "papel": "contra-ataque após auto-dano"
+    },
+    {
+      "id": "san_ouvir_veias",
+      "name": "Ouvir as Veias",
+      "tipo": "utilitaria",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "perception",
+        "valor": 3
+      },
+      "descricao": "No silêncio, distingue medo, febre e mentira pela música sob a pele.",
+      "papel": "rastrear vida por pulsação"
+    },
+    {
+      "id": "san_assinar_sangue",
+      "name": "Assinar em Sangue",
+      "tipo": "utilitaria",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 0,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "selar pacto verificável ou autenticar identidade pelo sangue"
+      },
+      "descricao": "Uma gota torna contratos e identidades impossíveis de falsificar sem deixar cicatriz.",
+      "papel": "pacto e autenticação"
+    },
+    {
+      "id": "san_sangria_lenta",
+      "name": "Sangria Lenta",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 2,
+        "duracao": 4
+      },
+      "descricao": "Um corte pequeno continua cobrando muito depois de a lâmina partir.",
+      "papel": "dano prolongado econômico"
+    },
+    {
+      "id": "san_transfusao_hostil",
+      "name": "Transfusão Hostil",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "cura",
+        "valor": 4
+      },
+      "descricao": "Rouba do impacto a força suficiente para fechar a própria lesão.",
+      "papel": "converter ferida causada em cura"
+    },
+    {
+      "id": "san_passo_capilar",
+      "name": "Passo Capilar",
+      "tipo": "ativa",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "superior",
+      "custo_entropia": 3,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 2
+      },
+      "descricao": "Escorre pela formação inimiga como sangue entre dedos cerrados.",
+      "papel": "atravessar linha pelo menor espaço"
+    },
+    {
+      "id": "san_conta_memorizada",
+      "name": "Conta Memorizada",
+      "tipo": "passiva",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_iniciativa",
+        "valor": 2
+      },
+      "descricao": "Nunca esquece quem deve sangue e sempre age antes do segundo pagamento.",
+      "papel": "iniciativa contra quem já feriu"
+    },
+    {
+      "id": "san_pulso_reserva",
+      "name": "Pulso de Reserva",
+      "tipo": "passiva",
+      "origem": "conflito-17",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "superior",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "bonus_esquiva_por_estagio",
+        "valor": 1
+      },
+      "descricao": "O sangue que não foi gasto mantém o corpo meio passo à frente da lâmina.",
+      "papel": "esquiva alimentada por sangue poupado"
     }
   ]
 }

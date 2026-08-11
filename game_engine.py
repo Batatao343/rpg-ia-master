@@ -12,11 +12,17 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from main import app
 from persistence import save_game_state, load_game_state
-from gamedata import ABILITIES, CLASSES, load_json_data, seed_factions
+from gamedata import CLASSES, load_json_data, seed_factions
 import progression
 from character_creator import create_player_character
 from services.chronicle import default_chapter_title
 from world_utils import starting_world
+
+
+def _save_or_raise(state: dict) -> None:
+    if not save_game_state(state):
+        raise RuntimeError("não foi possível persistir o jogo")
+
 
 ORIGINS_DATA = load_json_data("origins.json")
 RACES = ORIGINS_DATA.get("races", [])
@@ -42,34 +48,34 @@ def _resolve_pending_choices(player: dict) -> dict:
         choice = player["pending_choices"][0]
         kind = choice.get("kind")
         print(f"\n{Colors.HEADER}⬆ NÍVEL {choice.get('level')} — "
-              f"{'nova habilidade' if kind == 'ability' else 'ponto de atributo'}!{Colors.ENDC}")
+              f"{'nova Carta/evolução' if kind == 'carta' else 'ponto de Virtude'}!{Colors.ENDC}")
 
-        if kind == "ability":
-            elig = progression.eligible_abilities(player)
+        if kind == "carta":
+            from services import cards
+            elig = progression.eligible_cards(player)
             if not elig:
-                print(f"{Colors.WARNING}Nenhuma habilidade elegível agora — escolha fica pendente.{Colors.ENDC}")
+                print(f"{Colors.WARNING}Nenhuma Carta elegível agora — escolha fica pendente.{Colors.ENDC}")
                 return player
-            branches = (CLASSES.get(player.get("class_name", "")) or {}).get("branches") or {}
-            for i, aid in enumerate(elig, 1):
-                a = ABILITIES.get(aid, {})
-                br = a.get("branch")
-                tag = f" [{(branches.get(br) or {}).get('name', br)}]" if br else ""
-                print(f"  {i}. {a.get('name', aid)}{tag} — {a.get('description', '')[:70]}")
+            for i, cid in enumerate(elig, 1):
+                card = cards.get_card(cid) or {}
+                tag = f" [{card.get('subclasse')}]" if card.get("subclasse") else ""
+                print(f"  {i}. {card.get('name', cid)}{tag} — "
+                      f"{card.get('descricao', '')[:70]}")
             raw = input(f"{Colors.BOLD}Escolha (número, ENTER = depois): {Colors.ENDC}").strip()
             if not raw:
                 return player
             try:
-                aid = elig[int(raw) - 1]
+                cid = elig[int(raw) - 1]
             except (ValueError, IndexError):
                 print(f"{Colors.WARNING}Opção inválida — escolha fica pendente.{Colors.ENDC}")
                 return player
-            player, err = progression.apply_choice(player, choice["id"], ability_id=aid)
+            player, err = progression.apply_choice(player, choice["id"], card_id=cid)
         else:
-            raw = input(f"{Colors.BOLD}+1 em qual atributo (str/dex/con/int/wis/cha, "
+            raw = input(f"{Colors.BOLD}+1 em qual Virtude (forca/agilidade/corpo/mente/carisma, "
                         f"ENTER = depois)? {Colors.ENDC}").strip()
             if not raw:
                 return player
-            player, err = progression.apply_choice(player, choice["id"], attr=raw)
+            player, err = progression.apply_choice(player, choice["id"], virtude=raw)
 
         if err:
             print(f"{Colors.WARNING}{err}{Colors.ENDC}")
@@ -152,9 +158,13 @@ def create_character_wizard():
     }
     
     final_char = create_player_character(char_input)
+    import gamedata
+    gamedata.sync_vitality(final_char)
 
     print(f"\n{Colors.GREEN}✨ Personagem Gerado com Sucesso! ✨{Colors.ENDC}")
-    print(f"HP: {final_char['hp']} | Defesa: {final_char['defense']}")
+    print(
+        f"Vitalidade: {final_char['vitalidade']}/{final_char['max_vitalidade']} "
+        f"| Defesa: {final_char['defense']}")
     time.sleep(2)
 
     return {
@@ -182,13 +192,18 @@ def create_character_wizard():
             "virtudes": final_char["virtudes"],
             "vitalidade": final_char.get("vitalidade", final_char.get("max_vitalidade", final_char["max_hp"])),
             "max_vitalidade": final_char.get("max_vitalidade", final_char["max_hp"]),
+            "vitalidade_max_penalty": final_char.get("vitalidade_max_penalty", 0),
             "ferimento_espacos": final_char.get("ferimento_espacos", {}),
             "ferimentos": final_char.get("ferimentos", {"leve": [], "grave": [], "critico": []}),
             "inventory": final_char["inventory"],
             # Fase 4.3: slots do creator (auto-equip)
             "equipment": final_char.get("equipment",
                                         {"weapon": None, "armor": None, "accessory": None}),
-            "known_abilities": final_char["known_abilities"],
+            "known_cards": final_char.get("known_cards", []),
+            "prepared_cards": final_char.get("prepared_cards", []),
+            "card_usage": final_char.get("card_usage", {}),
+            "virtue_cards": final_char.get("virtue_cards", []),
+            "evolved_cards": final_char.get("evolved_cards", {}),
             "pending_choices": final_char.get("pending_choices", []),
             "defense": final_char["defense"],
             "attack_bonus": final_char.get("attack_bonus", 0),
@@ -209,6 +224,8 @@ def create_character_wizard():
         "bestiary_knowledge": {},
         "quests": [],
         "archive_due": False,
+        "game_over": False,
+        "death_pending": False,
         "npcs": {},
         "campaign_plan": {},
         "needs_replan": False,
@@ -218,7 +235,8 @@ def create_character_wizard():
         # --- Fase 2.5: mundo estruturado ---
         "event_log": [],
         "world_projection": {},
-        "pending_world_events": []
+        "pending_world_events": [],
+        "event_rejections": [],
     }
 
 def run_game_loop():
@@ -229,7 +247,7 @@ def run_game_loop():
     state = load_game_state()
     if not state:
         state = create_character_wizard()
-        save_game_state(state)
+        _save_or_raise(state)
 
     print("\n--- INÍCIO DA SESSÃO ---")
     print(f"ID Sessão: {state.get('game_id')}")
@@ -259,14 +277,17 @@ def run_game_loop():
             p = state["player"]
             pend = len(p.get("pending_choices", []) or [])
             badge = f" | ⬆ {pend} escolha(s) de nível" if pend else ""
-            status_line = f"[{p['name']} (Lv {p['level']}) | HP: {p['hp']}/{p['max_hp']} | Ouro: {p['gold']}{badge}]"
+            status_line = (
+                f"[{p['name']} (Lv {p['level']}) | Vitalidade: "
+                f"{p.get('vitalidade', 0)}/{p.get('max_vitalidade', 0)} "
+                f"| Ouro: {p['gold']}{badge}]")
             
             user_input = input(f"\n{Colors.BOLD}{status_line}\n> Você: {Colors.ENDC}").strip()
             
             if not user_input: continue
             
             if user_input.lower() in ["sair", "exit", "quit", "salvar"]:
-                save_game_state(state)
+                _save_or_raise(state)
                 print(f"{Colors.CYAN}Até a próxima aventura!{Colors.ENDC}")
                 break
             
@@ -318,6 +339,7 @@ def run_game_loop():
             # Fase 4.1: level up pendente? Resolve no fim do turno (não bloqueia o jogo:
             # ENTER pula e a escolha continua pendente para depois).
             state["player"] = _resolve_pending_choices(state["player"])
+            _save_or_raise(state)
 
             # spec checkpoints-morte (D2): queda letal → tela de morte no terminal.
             if state.get("death_pending"):
@@ -326,7 +348,7 @@ def run_game_loop():
                 esc = input("  [1] Continuar do checkpoint   [2] Aceitar o fim\n  Escolha [1]: ").strip()
                 choice = "accept" if esc == "2" else "continue"
                 state = _cp.resolve_death_choice(state, choice)
-                save_game_state(state)
+                _save_or_raise(state)
                 if state.get("game_over"):
                     print(f"\n{Colors.FAIL}💀 A saga termina. A crônica permanece como memorial.{Colors.ENDC}")
                     break
@@ -334,11 +356,12 @@ def run_game_loop():
                 continue
             # checkpoint na cadência (10 turnos) — o restore acima o consome.
             from services import checkpoints as _cp
-            _cp.maybe_write(state)
+            if _cp.should_checkpoint(state) and not _cp.maybe_write(state):
+                raise RuntimeError("não foi possível persistir o checkpoint")
 
         except KeyboardInterrupt:
             print("\nEncerrando...")
-            save_game_state(state)
+            _save_or_raise(state)
             break
         except Exception as e:
             print(f"\n{Colors.FAIL}❌ Erro Crítico: {e}{Colors.ENDC}")

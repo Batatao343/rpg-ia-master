@@ -69,7 +69,9 @@ def critical_spaces_full(actor: dict) -> bool:
 def should_trigger_last_stand(actor: dict) -> bool:
     """Gate do fluxo completo: último Crítico cheio E o ator usa Última Ação (R1/R7).
     Um ator que já morreu/estabilizou não redispara."""
-    if actor.get("dead") or actor.get("estado_terminal"):
+    if (actor.get("dead") or actor.get("estado_terminal")
+            or actor.get("last_stand_pending")
+            or actor.get("last_stand_resolved")):
         return False
     return uses_full_death_flow(actor) and critical_spaces_full(actor)
 
@@ -90,8 +92,16 @@ def trigger_last_stand(participant: dict, *, acao: Optional[dict] = None,
     """R1: dispara a Última Ação imediatamente (mesmo fora da ordem). Vantagem
     extrema, ignora limitações dos Ferimentos e recursos ausentes; pode declarar
     Ruptura (gera Carga normalmente). Marca o Estado Terminal a seguir (R2)."""
-    if ruptura:
+    if participant.get("last_stand_resolved"):
+        return LastStandResult(
+            acao_declarada=dict(acao or {}),
+            ruptura_declarada=False,
+        ).model_dump()
+    if ruptura and not participant.get("last_stand_pending"):
         participant["abyss_charge"] = int(participant.get("abyss_charge", 0) or 0) + 1
+    if not participant.get("last_stand_pending"):
+        participant["_last_stand_count"] = int(
+            participant.get("_last_stand_count", 0) or 0) + 1
     participant["last_stand_pending"] = True
     return LastStandResult(
         acao_declarada=dict(acao or {}),
@@ -112,6 +122,8 @@ def last_stand_pay(participant: dict, *, entropy: int = 0, vitality: int = 0) ->
     participant["entropy"] = max(0, ent - int(entropy))
     vit = int(participant.get("vitalidade", 0) or 0)
     participant["vitalidade"] = max(0, vit - int(vitality))
+    import gamedata
+    gamedata.sync_legacy_hp_aliases(participant)
     return {"entropy": participant["entropy"], "vitalidade": participant["vitalidade"],
             "wound_criado": False}
 
@@ -124,6 +136,7 @@ def enter_terminal_state(participant: dict) -> dict:
     (só uma Ruptura de sobrevivência específica)."""
     participant["estado_terminal"] = True
     participant["last_stand_pending"] = False
+    participant["last_stand_resolved"] = True
     participant.setdefault("stabilization_attempts", 0)
     return {"estado_terminal": True}
 
@@ -138,6 +151,8 @@ def _revive(target: dict, *, fraction: Optional[float] = None, minimum_one: bool
     target["estado_terminal"] = False
     target["dead"] = False
     target["scar_pending"] = True   # sobreviveu ao fluxo completo → Cicatriz (R6)
+    import gamedata
+    gamedata.sync_legacy_hp_aliases(target)
     return {"revived": True, "dead": False, "auto": auto, "kit_cargas": kit_cargas,
             "vitalidade": target["vitalidade"],
             "attempts": int(target.get("stabilization_attempts", 0)), "log": log}
@@ -147,6 +162,8 @@ def _die(target: dict, cause: str) -> dict:
     target["estado_terminal"] = False
     target["dead"] = True
     target["vitalidade"] = 0
+    import gamedata
+    gamedata.sync_legacy_hp_aliases(target)
     return {"revived": False, "dead": True, "cause": cause, "vitalidade": 0,
             "attempts": int(target.get("stabilization_attempts", 0))}
 

@@ -1,14 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import * as api from "./api";
 import { looksDegraded } from "./lib";
-import type { GameResponse, CreatePayload, LogEntry, SaveSummary } from "./types";
+import type { ActionOptions, CombatSimulatorPayload, GameResponse, CreatePayload, LogEntry, SaveSummary } from "./types";
 import { Banner, type BannerState } from "./components/Banner";
 import { CreateScreen } from "./components/CreateScreen";
 import { PlayScreen } from "./components/PlayScreen";
 import { SaveScreen } from "./components/SaveScreen";
 import { EmberField } from "./components/EmberField";
 import { DeathModal } from "./components/DeathModal";
+import type { LevelUpPick } from "./components/LevelUpModal";
+import { CombatSimulatorScreen } from "./components/CombatSimulatorScreen";
 
 const LS_KEY = "cronicas_game_id";
 
@@ -30,7 +32,7 @@ const ROUTE_TEXTS: Record<string, string> = {
 };
 
 export function App() {
-  const [screen, setScreen] = useState<"saves" | "create" | "play">("create");
+  const [screen, setScreen] = useState<"saves" | "create" | "simulator" | "play">("create");
   const [data, setData] = useState<GameResponse | null>(null);
   const [log, setLog] = useState<LogEntry[]>([]);
   const [busy, setBusy] = useState(false);
@@ -87,7 +89,7 @@ export function App() {
     }, 300);
 
     setData(r);
-    if (r.simulated && !simNoticed.current) {
+    if (!r.combat_simulation?.enabled && r.simulated && !simNoticed.current) {
       simNoticed.current = true;
       setBanner({
         msg: "Modo simulado: história fictícia para testar a interface. Adicione GOOGLE_API_KEY no .env para a IA real.",
@@ -113,6 +115,24 @@ export function App() {
     } catch (err) {
       setScreen("create");
       setBanner({ msg: "Falha ao criar personagem: " + errMsg(err), kind: "error" });
+    } finally {
+      setThinking(false);
+      setBusy(false);
+    }
+  }
+
+  async function handleCreateSimulation(payload: CombatSimulatorPayload) {
+    if (busy) return;
+    setBusy(true);
+    setThinking(true);
+    setScreen("play");
+    setLog([]);
+    try {
+      const response = await api.newCombatSimulator(payload);
+      onTurn(response);
+    } catch (err) {
+      setScreen("simulator");
+      setBanner({ msg: "Falha ao abrir a arena: " + errMsg(err), kind: "error" });
     } finally {
       setThinking(false);
       setBusy(false);
@@ -153,12 +173,14 @@ export function App() {
     });
   }
 
-  async function handleAction(text: string) {
+  async function handleAction(text: string, options: ActionOptions = {}) {
     if (busy || !text.trim()) return;
     pushLog(text, "player", "STORY");
     setBusy(true);
     setThinking(true);
     setPhaseLabel(PHASE_TEXTS.campaign_manager);
+    // O mesmo ID atravessa stream e fallback POST: retry nunca aplica 2 turnos.
+    const requestOptions: ActionOptions = { ...options, action_id: crypto.randomUUID() };
     try {
       let hadChunks = false;
       try {
@@ -169,7 +191,7 @@ export function App() {
             hadChunks = true;
             appendChunk(chunk, done);
           },
-        });
+        }, requestOptions);
         gameId.current = r.game_id || gameId.current;
         if (gameId.current) localStorage.setItem(LS_KEY, gameId.current);
         if (hadChunks) {
@@ -183,7 +205,7 @@ export function App() {
         const orphan = streamEntryId.current;
         streamEntryId.current = null;
         if (orphan !== null) setLog((prev) => prev.filter((e) => e.id !== orphan));
-        const r = await api.sendAction(text, gameId.current);
+        const r = await api.sendAction(text, gameId.current, requestOptions);
         onTurn(r);
       }
     } catch (err) {
@@ -243,9 +265,13 @@ export function App() {
   }
 
   function handleNew() {
-    setScreen("create");
+    setScreen(data?.combat_simulation?.enabled ? "simulator" : "create");
     setData(null);
   }
+
+  const handleUiError = useCallback((message: string) => {
+    setBanner({ msg: message, kind: "error" });
+  }, []);
 
   // Fase 4.3: equipar/desequipar e recarregar o estado completo (AC/ataque derivam).
   async function handleEquip(pick: { item_id?: string; unequip_slot?: string }) {
@@ -263,7 +289,7 @@ export function App() {
   }
 
   // Fase 4.1: aplica escolha de level up e mescla o player atualizado no estado.
-  async function handleLevelUp(choiceId: string, pick: { ability_id?: string; attr?: string }) {
+  async function handleLevelUp(choiceId: string, pick: LevelUpPick) {
     if (busy) return;
     setBusy(true);
     try {
@@ -304,9 +330,10 @@ export function App() {
       <div className="atmosphere" aria-hidden />
       <EmberField />
       <Banner state={banner} onDone={() => setBanner(null)} />
-      {data?.death_pending && (
+      {data?.death_pending && !data?.game_over && !data?.combat_simulation?.enabled && (
         <DeathModal
           busy={busy}
+          death={data.death}
           onContinue={() => handleDeathChoice("continue")}
           onAccept={() => handleDeathChoice("accept")}
         />
@@ -326,6 +353,7 @@ export function App() {
               onContinue={handleContinueSave}
               onDelete={handleDeleteSave}
               onNew={handleNew}
+              onSimulate={() => setScreen("simulator")}
             />
           </motion.div>
         ) : screen === "create" ? (
@@ -341,7 +369,23 @@ export function App() {
               continueData={continueData}
               onCreate={handleCreate}
               onContinue={handleContinue}
-              onError={(m) => setBanner({ msg: m, kind: "error" })}
+              onSimulate={() => setScreen("simulator")}
+              onError={handleUiError}
+            />
+          </motion.div>
+        ) : screen === "simulator" ? (
+          <motion.div
+            key="simulator"
+            initial={{ opacity: 0, scale: 0.985 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.01 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <CombatSimulatorScreen
+              busy={busy}
+              onStart={handleCreateSimulation}
+              onBack={() => setScreen(saves.length > 0 ? "saves" : "create")}
+              onError={handleUiError}
             />
           </motion.div>
         ) : (

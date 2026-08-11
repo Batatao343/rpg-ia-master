@@ -1,7 +1,7 @@
 # SPEC — Playtest mede a economia de Entropia (agente curioso + telemetria de gasto)
 
-> **Status:** `approved`
-> **Criada:** 2026-07-20 · **Atualizada:** 2026-07-20
+> **Status:** `done` (2026-08-02)
+> **Criada:** 2026-07-20 · **Atualizada:** 2026-08-02
 > **Depende de:** [refatoracao-sistema-classes](refatoracao-sistema-classes.md) `done` ·
 > [arvores-habilidade-classes](arvores-habilidade-classes.md) `done` ·
 > [balanceamento-classes-pos-playtest](balanceamento-classes-pos-playtest.md) `in-progress` (instrumentação)
@@ -90,6 +90,10 @@ com `rng` próprio), como todo perfil existente.
   Entropia efetivamente drena mid-combate (snapshot varia, não fica travado em
   max); (c) as novas flooding/starvation deixam de ser 100/0 uniforme. Run_id
   registrado na spec de balanceamento como o baseline que destrava o tuning.
+- **R7 — Alvo útil e acervo v4.** O perfil escolhe alvo compatível com o efeito:
+  cura/suporte nunca mira inimigo e não é gasto sem alvo útil. Personagem novo
+  prioriza as Cartas autorais `conflito-14` da própria classe, não os exemplos
+  legados carregados antes por ordem de arquivo.
 
 ### Fora de escopo
 
@@ -176,9 +180,11 @@ com `rng` próprio), como todo perfil existente.
 }
 ```
 
-**Ponto de verdade do custo:** o custo de Entropia de cada habilidade vive no
-catálogo GERADO (`data/player_abilities.json` via `scripts/gen_classes_v2.py`).
-`entropy_cost(aid)` lê de lá — nunca hardcode no perfil.
+**Ponto de verdade do custo após o cutover v4:** o custo de Entropia vive nas
+Cartas de `data/cards/` e é consultado por `services.cards.get_card`. O catálogo
+legado `data/player_abilities.json` foi removido pelo `conflito-13`; o runner
+emite uma declaração atômica `kind="card"`, e o mesmo `card_id` resolvido é
+registrado no campo de compatibilidade `ability_id` da telemetria.
 
 ## 4. Plano passo a passo
 
@@ -219,18 +225,19 @@ catálogo GERADO (`data/player_abilities.json` via `scripts/gen_classes_v2.py`).
 
 ## 5. Critérios de aceite
 
-- [ ] Perfil de combate emite ação de habilidade quando há ativa elegível (teste)
-- [ ] Perfil cura/recua com HP baixo em vez de morrer trivialmente (teste)
-- [ ] Determinismo `(profile, seed)` preservado (teste de regressão)
-- [ ] JSONL por turno tem `entropy_spent`/`used_active_ability`/`ability_id`
-- [ ] `summary.entropy` traz spent/pct_ability_used + flooding/starvation NOVOS
-- [ ] `playtest report` mostra as colunas de gasto na seção Classes
-- [ ] Rodada REAL: `pct_combat_turns_ability_used > 0` e Entropia drena
+- [x] Perfil de combate emite ação de habilidade quando há ativa elegível (teste)
+- [x] Perfil cura/recua com HP baixo em vez de morrer trivialmente (teste)
+- [x] Determinismo `(profile, seed)` preservado (teste de regressão)
+- [x] JSONL por turno tem `entropy_spent`/`used_active_ability`/`ability_id`
+- [x] `summary.entropy` traz spent/pct_ability_used + flooding/starvation NOVOS
+- [x] `playtest report` mostra as colunas de gasto na seção Classes
+- [x] Rodada REAL: `pct_combat_turns_ability_used > 0` e Entropia drena
       mid-combate (não travada em max); run_id registrado
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (nenhum esperado —
+- [x] Médico usa Carta de suporte em alvo aliado útil; acervo inicial usa IDs v4
+- [x] `uv run pytest` verde (suíte completa offline)
+- [x] Guard de FallbackLLM em todo `with_structured_output` novo (nenhum esperado —
       spec é determinística/telemetria)
-- [ ] Saves antigos continuam carregando (nenhuma mudança de schema persistido;
+- [x] Saves antigos continuam carregando (nenhuma mudança de schema persistido;
       `_last_combat_spend` é efêmero)
 
 ## 6. Smoke test com LLM real
@@ -244,15 +251,26 @@ catálogo GERADO (`data/player_abilities.json` via `scripts/gen_classes_v2.py`).
 3. Um Médico de Campo (`--class medico_de_campo`) usa uma ativa de suporte e o
    gasto é contabilizado; confirma que não é só classe de dano que registra.
 
+**Evidência real de aceite (2026-08-02):**
+
+- `20260802-161001-110214`, Médico de Campo, 20/20, `mock=false`, zero
+  erro/violação, 60 sucessos de rede, US$ 0,0168. O save nasceu com
+  `med_sutura`/`med_torniquete`; no turno 13, Sutura de Campo mirou o próprio
+  jogador, gastou 1 Entropia e a Vitalidade pós-rodada passou de 6 para 7.
+- `20260802-161653-555279`, Sangromante, 30/30, `mock=false`, zero
+  erro/violação, 69 sucessos de rede, US$ 0,01932. Cartas `san_*`, 30% dos
+  turnos de combate com ativa, 2 de Entropia gastos, flooding 35% e starvation
+  0%; a Entropia variou 19→17.
+- Regressão completa após os fixes: **1299 passed, 1 skipped, 14 deselected**.
+
 ## 7. Riscos & compatibilidade
 
 - **Saves antigos:** nenhum campo persistido muda; `_last_combat_spend` é
   runtime-only. Carregam intactos.
-- **MockLLM:** não parseia nome de habilidade → em mock o gasto segue ~0 e
-  `%ativa` ~0. Esperado e documentado (mock = regressão relativa; real = juiz).
-  Os testes de perfil validam a EMISSÃO da ação (string correta), não o parse do
-  LLM. Os testes de telemetria injetam um resultado de combate com custo (não
-  dependem do LLM).
+- **MockLLM após o cutover v4:** o runner entrega `TurnDeclaration` atômica ao
+  motor, portanto Carta/custo também são exercitados offline sem depender do
+  parser de texto. O LLM real continua necessário para validar o grafo completo,
+  narração e telemetria de provider.
 - **Determinismo:** o ramo novo consome do `rng` do perfil — mudar a política
   muda as sequências gravadas de baselines antigos; aceitável (baselines
   pré-mudança ficam obsoletos, como já previsto na spec de balanceamento). Fixar

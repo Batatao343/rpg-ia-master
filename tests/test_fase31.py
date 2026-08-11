@@ -82,8 +82,7 @@ def test_append_e_puro():
 # Etapa 2 — schema + backfill de saves antigos
 # ---------------------------------------------------------------------------
 
-def test_save_antigo_chronicle_flat(tmp_path, monkeypatch):
-    """Save pré-3.1 (chronicle como List[str]) vira capítulo único no load."""
+def test_save_antigo_chronicle_flat_fica_arquivado(tmp_path, monkeypatch):
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     save_antigo = {
         "game_id": "legacy",
@@ -98,12 +97,8 @@ def test_save_antigo_chronicle_flat(tmp_path, monkeypatch):
     state = load_game_state(str(file_path))
 
     assert state is not None
-    assert len(state["chronicle"]) == 1
-    cap = state["chronicle"][0]
-    assert cap["title"] == "Crônica da jornada"
-    assert cap["started_turn"] == 0
-    assert [e["text"] for e in cap["entries"]] == save_antigo["chronicle"]
-    assert all(e["kind"] == "prose" for e in cap["entries"])
+    assert state["archived"] is True
+    assert state["chronicle"] == save_antigo["chronicle"]
 
 
 def test_save_novo_roundtrip(tmp_path, monkeypatch):
@@ -315,7 +310,7 @@ def test_game_new_capitulo_inicial(tmp_path, monkeypatch):
 
     client = TestClient(api.app)
     resp = client.post("/game/new", json={
-        "name": "Testa", "class_name": "Guerreiro", "race": "Humano",
+        "name": "Testa", "class_name": "Sangromante", "race": "Humano",
         "region": "Nova Arcádia", "backstory": "Um teste.", "level": 1,
     })
     assert resp.status_code == 200

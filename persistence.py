@@ -5,14 +5,28 @@ Salva em pasta dedicada 'saves/' e serializa novos campos de memória.
 
 Fase 10: `save_path()` é o ÚNICO lugar que monta caminho de save a partir de
 game_id vindo do cliente (valida UUID — anti path-traversal); saves carregam
-`schema_version` e passam pelo pipeline `_MIGRATIONS` no load.
+`schema_version` e passam pelo hard cut de compatibilidade no load.
 """
 import os
 import json
 import glob
+import tempfile
 import uuid
-from typing import Any, Callable, Dict, List, Optional
+from copy import deepcopy
+from typing import Any, Dict, List, Optional
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, BaseMessage
+import gamedata
+from services.conflict_summary import (
+    ensure_conflict_id,
+    normalize_consumed_conflict_ids,
+)
+from services.memory_retry import normalize_pending_npc_memory
+from services.memory_provenance import (
+    MAX_MEMORY_PROMOTIONS,
+    MAX_MEMORY_REJECTIONS,
+    bounded_audit_rows,
+    normalize_memory_facts,
+)
 
 # Configuração de Pastas
 SAVES_DIR = "saves"
@@ -21,20 +35,8 @@ DEFAULT_SAVE_NAME = "autosave"
 # Versão atual do schema de save (Fase 10). Save sem o campo = versão 0.
 # v2 = campos de camada dos NPCs (spec npcs-3-camadas-traits).
 # v3 = 10 classes antigas → 5 Posturas + Entropia (spec refatoracao-sistema-classes).
-SCHEMA_VERSION = 4
-
-# spec refatoracao-sistema-classes (R10/§3.10): mapa determinístico antigo→nova classe.
-_OLD_TO_NEW_CLASS = {
-    "Cavaleiro da Vigília": "Devoto do Abismo",
-    "Inquisidor da Cinza": "Devoto do Abismo",
-    "Sombra da Corte": "Sangromante",
-    "Pastor de Pragas": "Corruptor",
-    "Guardião Selvagem": "Corruptor",
-    "Batedor das Fronteiras": "Arcanista Cinzento",
-    "Sapador da Fuligem": "Médico de Campo",
-    # (Sangromante / Arcanista Cinzento / Médico de Campo mantêm o nome)
-}
-
+# v4 = Virtudes/Vitalidade/Ferimentos; v5 = Vitalidade canônica + aliases HP derivados.
+SCHEMA_VERSION = 5
 
 def save_path(game_id: str) -> str:
     """Caminho canônico do save de `game_id`.
@@ -53,94 +55,7 @@ def save_path(game_id: str) -> str:
     return path
 
 
-# --- Migrations de save (Fase 10) ------------------------------------------
-
-def _migrate_v0_to_v1(raw: Dict[str, Any]) -> Dict[str, Any]:
-    """Consolida os backfills heurísticos pré-Fase 10 num passo único:
-    chronicle List[str] -> capítulos (3.1); known_abilities -> ids canônicos
-    (4.1); inventário strings -> {id, qty} + slots (4.3); party sem ficha ->
-    ficha default (4.5); game_over default (4.6). Idempotente."""
-    raw = dict(raw)
-
-    chron = raw.get("chronicle", [])
-    if chron and isinstance(chron[0], str):
-        raw["chronicle"] = [{
-            "title": "Crônica da jornada", "started_turn": 0, "location": "",
-            "entries": [{"text": t, "turn": 0, "kind": "prose"} for t in chron],
-        }]
-
-    player = raw.get("player", {})
-    if player:
-        from progression import canonicalize_known_abilities
-        from inventory import backfill_inventory
-        player = canonicalize_known_abilities(player)
-        player = backfill_inventory(player)
-        raw["player"] = player
-
-    from party import backfill_party
-    raw["party"] = backfill_party(raw.get("party", []))
-
-    raw["game_over"] = bool(raw.get("game_over", False))
-    return raw
-
-
-def _migrate_v1_to_v2(raw: Dict[str, Any]) -> Dict[str, Any]:
-    """spec npcs-3-camadas (R1): NPCs antigos ganham campos de camada + traits
-    sorteados (seed npc_id+game_id — determinístico). `in_scene` fica AUSENTE
-    de propósito (gate trata ausente como presente — save no meio de cena não
-    fica órfão; a primeira viagem normaliza). Idempotente."""
-    raw = dict(raw)
-    npcs = raw.get("npcs") or {}
-    if npcs:
-        from services.npc_layers import ensure_npc_fields
-        game_id = str(raw.get("game_id", ""))
-        home = str((raw.get("world") or {}).get("current_location_id", ""))
-        raw["npcs"] = {
-            nome: ensure_npc_fields(npc, game_id, home_location_id=home)
-            if isinstance(npc, dict) else npc
-            for nome, npc in npcs.items()
-        }
-    return raw
-
-
-def _migrate_v2_to_v3(raw: Dict[str, Any]) -> Dict[str, Any]:
-    """spec refatoracao-sistema-classes (R10): 10 classes antigas → 5 Posturas.
-    Mapeia class_name, backfilla entropy/max_entropy/abyss_charge da nova classe
-    (Entropia escala como o HP), zera mana/stamina do jogador e descarta
-    known_abilities que não existem mais (canonicalize) — somando as iniciais da
-    nova classe. Save fica narrativamente órfão (mesma política do corte 2.5b)."""
-    raw = dict(raw)
-    player = dict(raw.get("player") or {})
-    if not player:
-        return raw
-    from gamedata import CLASSES
-    old = player.get("class_name", "")
-    new = _OLD_TO_NEW_CLASS.get(old, old)
-    player["class_name"] = new
-    cd = CLASSES.get(new) or {}
-    if "max_entropy" not in player or "entropy" not in player:
-        base = cd.get("base_stats", {})
-        gains = cd.get("level_gains", {})
-        level = int(player.get("level", 1) or 1)
-        max_ent = int(base.get("entropy", 0) or 0) + int(gains.get("entropy", 0) or 0) * (level - 1)
-        player["max_entropy"] = max_ent
-        player["entropy"] = max_ent
-    player.setdefault("abyss_charge", 0)
-    player["mana"] = 0
-    player["max_mana"] = 0
-    player["stamina"] = 0
-    player["max_stamina"] = 0
-    from progression import canonicalize_known_abilities
-    player = canonicalize_known_abilities(player)
-    known = list(player.get("known_abilities") or [])
-    for aid in cd.get("starting_abilities") or []:
-        if aid not in known:
-            known.append(aid)
-    player["known_abilities"] = known
-    raw["player"] = player
-    return raw
-
-
+# --- Compatibilidade de save (hard cut v4) ----------------------------------
 def _migrate_v3_to_v4(raw: Dict[str, Any]) -> Dict[str, Any]:
     """spec conflito-01 R9/R10 (HARD CUTOVER): 6 atributos → 5 Virtudes +
     Vitalidade/Ferimentos. NÃO há conversão automática dos atributos antigos —
@@ -156,25 +71,106 @@ def _migrate_v3_to_v4(raw: Dict[str, Any]) -> Dict[str, Any]:
     return raw
 
 
-_MIGRATIONS: Dict[int, Callable[[Dict[str, Any]], Dict[str, Any]]] = {
-    0: _migrate_v0_to_v1,
-    1: _migrate_v1_to_v2,
-    2: _migrate_v2_to_v3,
-    3: _migrate_v3_to_v4,
-}
+def _normalize_vitality_actor(actor: Any) -> Any:
+    """Normaliza uma ficha v4 sem permitir que HP vença a Vitalidade.
+
+    Alguns companheiros/inimigos v4 ainda só possuíam HP. Para eles a migração
+    cria a representação canônica sem alterar a quantidade observada; o
+    adaptador de combate pode recalcular a escala anatômica quando houver
+    Virtudes suficientes.
+    """
+    if not isinstance(actor, dict):
+        return actor
+    if not actor:
+        return actor
+    normalized = deepcopy(actor)
+    has_vitality = normalized.get("vitalidade") is not None
+    has_max_vitality = normalized.get("max_vitalidade") is not None
+    if has_vitality or has_max_vitality:
+        if not has_max_vitality:
+            normalized["max_vitalidade"] = max(
+                1, int(normalized.get("vitalidade", 0) or 0))
+        if not has_vitality:
+            normalized["vitalidade"] = int(normalized["max_vitalidade"])
+        normalized["vitalidade"] = max(
+            0,
+            min(
+                int(normalized["max_vitalidade"]),
+                int(normalized.get("vitalidade", 0) or 0),
+            ),
+        )
+        # Specs letalidade-v2/conflito-v4: saves de jogador anteriores ao bônus
+        # de Postura ganham o novo teto preservando o dano já sofrido.
+        # Só recalcula a escala anatômica quando o save realmente possui Corpo.
+        # Fichas legadas/checkpoints sintéticos com apenas HP não podem inferir
+        # Corpo=0: isso reduziria silenciosamente, por exemplo, 30 HP para 12.
+        if (normalized.get("class_name") in gamedata.CLASSES
+                and isinstance(normalized.get("virtudes"), dict)
+                and normalized["virtudes"].get("corpo") is not None):
+            gamedata.sync_vitality(normalized)
+        else:
+            gamedata.sync_legacy_hp_aliases(normalized)
+        return normalized
+
+    # Compatibilidade de atores auxiliares v4 que ainda não tinham os campos
+    # novos. A partir daqui HP deixa de ser lido pelo motor.
+    legacy_max = max(1, int(normalized.get("max_hp", normalized.get("hp", 1)) or 1))
+    legacy_current = max(0, min(legacy_max, int(normalized.get("hp", legacy_max) or 0)))
+    normalized["max_vitalidade"] = legacy_max
+    normalized["vitalidade"] = legacy_current
+    gamedata.sync_legacy_hp_aliases(normalized)
+    return normalized
+
+
+def _migrate_v4_to_v5(raw: Dict[str, Any]) -> Dict[str, Any]:
+    migrated = deepcopy(raw)
+    if "player" in migrated:
+        migrated["player"] = _normalize_vitality_actor(migrated.get("player"))
+    if "party" in migrated:
+        migrated["party"] = [
+            _normalize_vitality_actor(actor)
+            for actor in (migrated.get("party") or [])
+        ]
+    if "enemies" in migrated:
+        migrated["enemies"] = [
+            _normalize_vitality_actor(actor)
+            for actor in (migrated.get("enemies") or [])
+        ]
+    if "consumed_conflict_ids" in migrated:
+        migrated["consumed_conflict_ids"] = normalize_consumed_conflict_ids(
+            migrated.get("consumed_conflict_ids")
+        )
+    pending = migrated.get("conflict_summary")
+    if isinstance(pending, dict):
+        pending = deepcopy(pending)
+        world_turn = (migrated.get("world") or {}).get("turn_count")
+        if (
+            not pending.get("conflict_id")
+            and pending.get("conflict_turn") is None
+            and world_turn is not None
+        ):
+            pending["conflict_turn"] = int(world_turn)
+        pending["conflict_id"] = ensure_conflict_id(
+            pending, turn=pending.get("conflict_turn"),
+        )
+        migrated["conflict_summary"] = pending
+    migrated["schema_version"] = SCHEMA_VERSION
+    return migrated
 
 
 def migrate_state(raw: Dict[str, Any]) -> Dict[str, Any]:
-    """Aplica migrations de raw['schema_version'] (default 0) até SCHEMA_VERSION.
-
-    Puro e idempotente: save já na versão atual não passa por migration nenhuma.
-    """
+    """Arquiva saves pré-v4 e normaliza v4→v5. Puro e idempotente."""
     version = int(raw.get("schema_version", 0) or 0)
-    while version < SCHEMA_VERSION:
-        raw = _MIGRATIONS[version](raw)
-        version += 1
-        raw["schema_version"] = version
-    return raw
+    if version < 4:
+        archived = _migrate_v3_to_v4(deepcopy(raw))
+        archived["schema_version"] = SCHEMA_VERSION
+        return archived
+    if version >= SCHEMA_VERSION:
+        if raw.get("archived"):
+            return raw
+        normalized = _migrate_v4_to_v5(raw)
+        return raw if normalized == raw else normalized
+    return _migrate_v4_to_v5(raw)
 
 def _serialize_messages(messages: List[BaseMessage]) -> List[Dict[str, str]]:
     """Converte objetos Message do LangChain para dicionários simples (JSON)."""
@@ -208,8 +204,7 @@ def get_latest_save_file() -> Optional[str]:
     if not os.path.exists(SAVES_DIR):
         return None
     
-    # Lista todos os .json na pasta saves
-    list_of_files = glob.glob(os.path.join(SAVES_DIR, "*.json"))
+    list_of_files = _iter_live_save_files()
     if not list_of_files:
         return None
         
@@ -221,6 +216,14 @@ def get_latest_save_file() -> Optional[str]:
 SESSION_MEMORY_DIR = os.path.join("data", "saves_memory")
 
 
+def _iter_live_save_files() -> List[str]:
+    """Arquivos de campanha, nunca slots internos de checkpoint."""
+    return [
+        path for path in glob.glob(os.path.join(SAVES_DIR, "*.json"))
+        if not path.casefold().endswith(".checkpoint.json")
+    ]
+
+
 def list_saves() -> List[Dict[str, Any]]:
     """Resumo de todos os saves de `saves/*.json`, ordenado por mtime desc.
     Leitura TOLERANTE: arquivo corrompido/ilegível é pulado, nunca derruba a
@@ -228,7 +231,7 @@ def list_saves() -> List[Dict[str, Any]]:
     if not os.path.isdir(SAVES_DIR):
         return []
     out: List[Dict[str, Any]] = []
-    for path in glob.glob(os.path.join(SAVES_DIR, "*.json")):
+    for path in _iter_live_save_files():
         try:
             with open(path, encoding="utf-8") as f:
                 raw = json.load(f)
@@ -243,6 +246,9 @@ def list_saves() -> List[Dict[str, Any]]:
                 "location": str(world.get("current_location", "")),
                 "day": int(clock.get("day", 1) or 1),
                 "game_over": bool(raw.get("game_over", False)),
+                "combat_simulation": bool(
+                    (raw.get("combat_simulation") or {}).get("enabled")
+                ),
                 "updated_at": os.path.getmtime(path),
             })
         except Exception:
@@ -257,12 +263,15 @@ def delete_save(game_id: str) -> bool:
     False se o save não existe."""
     import shutil
     path = save_path(game_id)  # levanta ValueError se inválido
-    if not os.path.exists(path):
-        return False
-    os.remove(path)
+    checkpoint = _safe_save_path(game_id, suffix=".checkpoint")
+    removed = False
+    for candidate in (path, checkpoint):
+        if os.path.exists(candidate):
+            os.remove(candidate)
+            removed = True
     shutil.rmtree(os.path.join(SESSION_MEMORY_DIR, str(game_id)),
                   ignore_errors=True)
-    return True
+    return removed
 
 
 def _safe_save_path(game_id: str, suffix: str = "") -> str:
@@ -279,28 +288,86 @@ def _safe_save_path(game_id: str, suffix: str = "") -> str:
         return os.path.join(SAVES_DIR, f"{safe}{suffix}.json")
 
 
+def _atomic_write_json(file_path: str, data: Dict[str, Any]) -> None:
+    """Grava JSON completo e troca o destino atomicamente no mesmo volume."""
+    directory = os.path.dirname(os.path.abspath(file_path))
+    os.makedirs(directory, exist_ok=True)
+    fd, tmp_path = tempfile.mkstemp(
+        prefix=f".{os.path.basename(file_path)}.", suffix=".tmp", dir=directory
+    )
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            json.dump(data, fh, indent=4, ensure_ascii=False)
+            fh.flush()
+            os.fsync(fh.fileno())
+        os.replace(tmp_path, file_path)
+    except BaseException:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
+
+
 def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
     """Monta o dict serializável a partir do GameState (fonte única — save vivo
     E checkpoint reusam, pra nunca divergirem de campo)."""
+    player = _normalize_vitality_actor(state.get("player") or {})
+    party = [_normalize_vitality_actor(a) for a in (state.get("party") or [])]
+    enemies = [_normalize_vitality_actor(a) for a in (state.get("enemies") or [])]
+    pending_conflict = deepcopy(state.get("conflict_summary"))
+    if isinstance(pending_conflict, dict):
+        world_turn = (state.get("world") or {}).get("turn_count")
+        if (
+            not pending_conflict.get("conflict_id")
+            and pending_conflict.get("conflict_turn") is None
+            and world_turn is not None
+        ):
+            pending_conflict["conflict_turn"] = int(world_turn)
+        pending_conflict["conflict_id"] = ensure_conflict_id(
+            pending_conflict, turn=pending_conflict.get("conflict_turn"),
+        )
     return {
         # --- Fase 10: versão do schema (migrations no load) ---
         "schema_version": SCHEMA_VERSION,
         # --- Identificação e Memória (Novos Campos) ---
         "game_id": game_id,
+        "processed_action_ids": list(state.get("processed_action_ids", []) or [])[-64:],
         "narrative_summary": state.get("narrative_summary", ""),
         "archivist_last_run": state.get("archivist_last_run", 0),
+        "archive_due": bool(state.get("archive_due", False)),
         "chronicle": state.get("chronicle", []),
+        "consumed_conflict_ids": normalize_consumed_conflict_ids(
+            state.get("consumed_conflict_ids")
+        ),
+        "memory_fact_policy": state.get("memory_fact_policy"),
+        "memory_canonical_facts": state.get("memory_canonical_facts", []),
+        "memory_facts": normalize_memory_facts(state.get("memory_facts")),
+        "pending_memory_facts": normalize_memory_facts(
+            state.get("pending_memory_facts"), pending=True,
+        ),
+        "memory_rejections": bounded_audit_rows(
+            state.get("memory_rejections"), limit=MAX_MEMORY_REJECTIONS,
+        ),
+        "memory_promotions": bounded_audit_rows(
+            state.get("memory_promotions"), limit=MAX_MEMORY_PROMOTIONS,
+        ),
+        "pending_npc_memory": normalize_pending_npc_memory(
+            state.get("pending_npc_memory")
+        ),
+        "rag_persistence_error": state.get("rag_persistence_error"),
 
         # --- Dados Transicionais ---
         "combat_target": state.get("combat_target"),
         "loot_source": state.get("loot_source"),
         "combat": state.get("combat", {}),
+        "conflict_summary": pending_conflict,
 
         # --- Dados Core ---
-        "player": state.get("player", {}),
+        "player": player,
         "world": state.get("world", {}),
-        "party": state.get("party", []),
-        "enemies": state.get("enemies", []),
+        "party": party,
+        "enemies": enemies,
         "factions": state.get("factions", []),
         "faction_intel": state.get("faction_intel", {}),
         "bestiary_knowledge": state.get("bestiary_knowledge", {}),
@@ -313,11 +380,13 @@ def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
         "event_log": state.get("event_log", []),
         "world_projection": state.get("world_projection", {}),
         "pending_world_events": state.get("pending_world_events", []),
+        "event_rejections": state.get("event_rejections", []),
 
         # --- Fase 4.6: save morto vira memorial (não aceita ações) ---
         "game_over": bool(state.get("game_over", False)),
         # --- spec checkpoints-morte: tela de morte pendente (persiste entre requests) ---
         "death_pending": bool(state.get("death_pending", False)),
+        "combat_simulation": deepcopy(state.get("combat_simulation")),
 
         # --- Histórico ---
         "message_history": _serialize_messages(state.get("messages", [])),
@@ -344,9 +413,7 @@ def save_game_state(state: Dict[str, Any]) -> bool:
         file_path = _safe_save_path(game_id)
         save_data = _state_to_save_data(state, game_id)
 
-        # Escreve no disco
-        with open(file_path, 'w', encoding='utf-8') as f:
-            json.dump(save_data, f, indent=4, ensure_ascii=False)
+        _atomic_write_json(file_path, save_data)
 
         return True
 
@@ -384,9 +451,30 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
     return {
         # --- Recupera Memória ---
         "game_id": raw_data.get("game_id", "recovered_session"),
+        "processed_action_ids": list(raw_data.get("processed_action_ids", []) or [])[-64:],
         "narrative_summary": raw_data.get("narrative_summary", ""),
         "archivist_last_run": raw_data.get("archivist_last_run", 0),
+        "archive_due": bool(raw_data.get("archive_due", False)),
         "chronicle": raw_data.get("chronicle", []),
+        "consumed_conflict_ids": normalize_consumed_conflict_ids(
+            raw_data.get("consumed_conflict_ids")
+        ),
+        "memory_fact_policy": raw_data.get("memory_fact_policy"),
+        "memory_canonical_facts": raw_data.get("memory_canonical_facts", []),
+        "memory_facts": normalize_memory_facts(raw_data.get("memory_facts")),
+        "pending_memory_facts": normalize_memory_facts(
+            raw_data.get("pending_memory_facts"), pending=True,
+        ),
+        "memory_rejections": bounded_audit_rows(
+            raw_data.get("memory_rejections"), limit=MAX_MEMORY_REJECTIONS,
+        ),
+        "memory_promotions": bounded_audit_rows(
+            raw_data.get("memory_promotions"), limit=MAX_MEMORY_PROMOTIONS,
+        ),
+        "pending_npc_memory": normalize_pending_npc_memory(
+            raw_data.get("pending_npc_memory")
+        ),
+        "rag_persistence_error": raw_data.get("rag_persistence_error"),
 
         # --- Recupera Core ---
         "player": raw_data.get("player", {}),
@@ -405,11 +493,13 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         "event_log": raw_data.get("event_log", []),
         "world_projection": raw_data.get("world_projection", {}),
         "pending_world_events": raw_data.get("pending_world_events", []),
+        "event_rejections": raw_data.get("event_rejections", []),
 
         # --- Recupera Transicionais ---
         "combat_target": raw_data.get("combat_target"),
         "loot_source": raw_data.get("loot_source"),
         "combat": raw_data.get("combat", {}),
+        "conflict_summary": raw_data.get("conflict_summary"),
 
         # --- Recupera Mensagens ---
         "messages": _deserialize_messages(raw_data.get("message_history", [])),
@@ -418,6 +508,7 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         "game_over": bool(raw_data.get("game_over", False)),
         # spec checkpoints-morte: tela de morte pendente
         "death_pending": bool(raw_data.get("death_pending", False)),
+        "combat_simulation": deepcopy(raw_data.get("combat_simulation")),
         # spec conflito-01 R10: save pré-Virtudes marcado pela migração v3→v4
         "archived": bool(raw_data.get("archived", False)),
         "archived_reason": raw_data.get("archived_reason", ""),
@@ -440,8 +531,7 @@ def save_checkpoint(state: Dict[str, Any]) -> bool:
             os.makedirs(SAVES_DIR)
         game_id = state.get("game_id", DEFAULT_SAVE_NAME)
         path = _safe_save_path(game_id, suffix=".checkpoint")
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(_state_to_save_data(state, game_id), f, indent=4, ensure_ascii=False)
+        _atomic_write_json(path, _state_to_save_data(state, game_id))
         return True
     except Exception as e:
         print(f"❌ Erro ao gravar checkpoint: {e}")
