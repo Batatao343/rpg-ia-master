@@ -251,4 +251,3 @@ def test_orchestrator_rematerializa_amount_antes_de_aplicar(monkeypatch):
 
     assert seen["damage_base"] == prep.potency_value("forte", 3, "dano")
     assert seen["damage_base"] != 9999
-

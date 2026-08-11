@@ -1,6 +1,6 @@
 # Smoke real pós-correções — Conflito v4
 
-**Data:** 2026-08-02  
+**Data:** 2026-08-02
 **Veredito:** correções do smoke de 2026-07-25 aceitas; `conflito-13` pode ser
 marcada `done`. Há três débitos qualitativos não bloqueantes, sendo o principal
 já convertido na spec `hardening-memoria-proveniencia` (`draft`).

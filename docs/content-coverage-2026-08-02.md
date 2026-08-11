@@ -1,6 +1,6 @@
 # Relatório de cobertura — Mundo Vivo (`conflito-17`)
 
-Data: 2026-08-02  
+Data: 2026-08-02
 Status: aceito
 
 ## Resultado executivo
