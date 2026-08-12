@@ -47,6 +47,11 @@ from services import state_views as sv
 from services.chronicle import default_chapter_title
 from services.discovery import player_codex
 from services.prologue import StartScenarioIn, build_start_scenario, scenario_to_state_seed
+from services.visual_catalog import (
+    creation_visuals,
+    resolve_turn_visual_state,
+    visual_response,
+)
 from world_utils import starting_world
 
 # --- CONFIGURAÇÃO DA API ---
@@ -339,6 +344,50 @@ class LevelUpRequest(BaseModel):
     attr: Optional[str] = None
     game_id: Optional[str] = None
 
+
+class VisualVariantResponse(BaseModel):
+    url: str
+    width: int
+    height: int
+    bytes: int
+    sha256: str
+
+
+class VisualVariantsResponse(BaseModel):
+    thumbnail: VisualVariantResponse
+    display: VisualVariantResponse
+
+
+class VisualAssetResponse(BaseModel):
+    asset_id: str
+    subject_type: Literal["race", "class", "location", "npc"]
+    subject_id: str
+    title: str
+    alt: str
+    placeholder_color: str
+    variants: VisualVariantsResponse
+
+
+class SceneVisualResponse(BaseModel):
+    location_id: str
+    location_name: str
+    scope: Literal["exact", "regional", "placeholder"]
+    asset: Optional[VisualAssetResponse] = None
+
+
+class VisualCueResponse(BaseModel):
+    kind: Literal["npc_first_appearance"]
+    subject_id: str
+    subject_name: str
+    caption: str
+    asset: Optional[VisualAssetResponse] = None
+    fallback: bool
+
+
+class VisualResponse(BaseModel):
+    scene: SceneVisualResponse
+    cue: Optional[VisualCueResponse] = None
+
 class GameResponse(BaseModel):
     game_id: str # <--- Novo: Frontend precisa saber o ID
     message: str
@@ -361,9 +410,10 @@ class GameResponse(BaseModel):
     game_over: bool = False     # memorial/bloqueio definitivo; Vitalidade 0 não basta
     death: Dict[str, Any] = {}  # conflito-16: Última Ação/Terminal/estabilização
     combat_simulation: Dict[str, Any] = {}
+    visual: VisualResponse
 
 # --- HELPER: FORMATA RESPOSTA ---
-def format_response(state: dict) -> GameResponse:
+def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> GameResponse:
     # Pega a última mensagem
     last_msg_obj = state["messages"][-1]
     last_content = last_msg_obj.content
@@ -455,6 +505,7 @@ def format_response(state: dict) -> GameResponse:
         game_over=bool(state.get("game_over", False)),
         death=_death_block(state),
         combat_simulation=simulation,
+        visual=visual_response(state, cue_action_key=cue_action_key),
     )
 
 
@@ -958,6 +1009,8 @@ def _build_combat_simulator_state(req: CombatSimulatorRequest) -> dict:
     return {
         "game_id": game_id,
         "processed_action_ids": [],
+        "visual_seen_entity_ids": [],
+        "visual_cue_ledger": [],
         "narrative_summary": "Laboratório isolado de combate.",
         "archivist_last_run": 0,
         "archive_due": False,
@@ -1035,7 +1088,8 @@ def get_creation_options():
         # Fase 2.5b: raças completas (desc + traits) p/ o frontend exibir na criação
         "races_full": origins.get("races", []),
         "classes": list(CLASSES.keys()),
-        "regions": [r["name"] for r in origins.get("regions", [])]
+        "regions": [r["name"] for r in origins.get("regions", [])],
+        "visuals": creation_visuals(),
     }
 
 @app.get("/data/onboarding")
@@ -1137,6 +1191,8 @@ def new_game(req: CreateCharacterRequest):
         # --- Campos Novos ---
         "game_id": new_game_id,
         "processed_action_ids": [],
+        "visual_seen_entity_ids": [],
+        "visual_cue_ledger": [],
         "narrative_summary": f"A jornada de {req.name} começa em {final_char['region']}. {req.backstory}",
         "archivist_last_run": 0,
         # Fase 3.1: capítulo 1 existe desde o turno 0 (determinístico, sem LLM)
@@ -1228,6 +1284,9 @@ def new_game(req: CreateCharacterRequest):
     # 3. Roda o Grafo
     try:
         final_state = game_graph.invoke(initial_state)
+        visual_key = f"new:{new_game_id}"
+        final_state.update(resolve_turn_visual_state(initial_state, final_state,
+                                                     action_key=visual_key))
         if not save_game_state(final_state):
             raise RuntimeError("falha ao persistir jogo novo")
         # spec checkpoints-morte (D7): checkpoint INICIAL = início da sessão. Garante
@@ -1237,7 +1296,7 @@ def new_game(req: CreateCharacterRequest):
             import persistence as persistence_mod
             persistence_mod.delete_save(new_game_id)
             raise RuntimeError("falha ao persistir checkpoint inicial")
-        return format_response(final_state)
+        return format_response(final_state, cue_action_key=visual_key)
     except Exception as e:
         # Auditoria A6: detalhe interno só no log do servidor, nunca na resposta.
         print(f"Erro ao criar jogo: {e}")
@@ -1348,7 +1407,11 @@ def _run_turn(state: dict, input_text: str,
     acc_token = _llm_turn_events.set([])
     attempt_token = _llm_attempt_events.set([])
     try:
+        previous_state = deepcopy(state)
         new_state = game_graph.invoke(state)
+        visual_key = action_id or f"turn:{(new_state.get('world') or {}).get('turn_count', 0)}"
+        new_state.update(resolve_turn_visual_state(previous_state, new_state,
+                                                   action_key=visual_key))
         _mark_action_processed(new_state, action_id)
         _require_saved(new_state, detail="turno")
         # spec checkpoints-morte (D1): grava checkpoint na cadência (10 turnos /
@@ -1358,7 +1421,7 @@ def _run_turn(state: dict, input_text: str,
             new_state, t0, eventos_antes, None, _llm_turn_events.get(),
             rejections_antes=rejections_antes,
             llm_attempts=_llm_attempt_events.get())
-        return format_response(new_state)
+        return format_response(new_state, cue_action_key=visual_key)
     except Exception as e:
         _log_turn(
             state, t0, eventos_antes, str(e)[:200], _llm_turn_events.get(),
@@ -1382,7 +1445,7 @@ def game_action(req: ActionRequest):
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
         if _action_already_processed(state, req.action_id):
-            return format_response(state)
+            return format_response(state, cue_action_key=req.action_id)
 
         _reject_memorial(state)
         _reject_archived(state)
@@ -1454,7 +1517,7 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str) -> Iterator[str]:
                 if not state:
                     raise HTTPException(status_code=404, detail="Jogo não encontrado.")
                 if _action_already_processed(state, req.action_id):
-                    q.put(("final", state))
+                    q.put(("final", (state, req.action_id)))
                     return
                 _reject_memorial(state)
                 _reject_archived(state)
@@ -1467,6 +1530,7 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str) -> Iterator[str]:
                 _append_player_input(state, req.input_text)
                 eventos_antes = len(state.get("event_log", []))
                 rejections_antes = len(state.get("event_rejections", []) or [])
+                visual_previous = deepcopy(state)
                 final_state: Optional[dict] = None
                 for chunk in game_graph.stream(state, stream_mode=["updates", "values"]):
                     q.put(("chunk", chunk))
@@ -1475,6 +1539,10 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str) -> Iterator[str]:
                         final_state = data
                 if final_state is None:
                     raise RuntimeError("stream não produziu estado final")
+                visual_key = req.action_id or f"turn:{(final_state.get('world') or {}).get('turn_count', 0)}"
+                final_state.update(resolve_turn_visual_state(
+                    visual_previous, final_state, action_key=visual_key,
+                ))
                 _mark_action_processed(final_state, req.action_id)
                 _require_saved(final_state, detail="turno SSE")
                 _write_checkpoint_if_due(final_state, state)
@@ -1483,7 +1551,7 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str) -> Iterator[str]:
                     rejections_antes=rejections_antes,
                     llm_attempts=llm_attempt_acc,
                 )
-                q.put(("final", final_state))
+                q.put(("final", (final_state, visual_key)))
         except HTTPException as exc:
             q.put(("http_error", {"detail": exc.detail, "code": exc.status_code}))
         except Exception as e:  # noqa: BLE001
@@ -1522,7 +1590,9 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str) -> Iterator[str]:
                         yield _sse("route", {"route": (upd or {}).get("next", "") or ""})
             continue
         if kind == "final":
-            resp = format_response(payload)
+            final_state, visual_key = payload
+            resp = format_response(final_state, cue_action_key=visual_key)
+            yield _sse("visual", resp.visual.model_dump(mode="json"))
             narrative = resp.message or ""
             for i in range(0, len(narrative), _NARRATIVE_CHUNK):
                 yield _sse("narrative", {

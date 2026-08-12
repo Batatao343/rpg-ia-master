@@ -106,7 +106,11 @@ def test_stream_ordem_de_eventos(client):
     assert names[0] == "accepted"
     assert events[0][1]["game_id"] == gid
     assert "phase" in names and "route" in names
-    assert names.index("phase") < names.index("route") < names.index("state")
+    assert names.index("phase") < names.index("route") < names.index("visual")
+    assert names.index("visual") < names.index("narrative") < names.index("state")
+    visual = next(d for e, d in events if e == "visual")
+    state = next(d for e, d in events if e == "state")
+    assert visual == state["visual"]
     # narrativa chega em chunks e fecha com done=True antes do state
     narr = [d for e, d in events if e == "narrative"]
     assert narr and narr[-1]["done"] is True
@@ -122,6 +126,8 @@ def test_stream_state_igual_ao_post(client):
                        json={"input_text": "sigo em frente", "game_id": gid}) as r:
         events = _read_sse(r)
     state_evt = next(d for e, d in events if e == "state")
+    visual_evt = next(d for e, d in events if e == "visual")
+    assert visual_evt == state_evt["visual"]
     # o save persistiu o MESMO estado que o GameResponse do stream reporta
     r2 = client.get("/game/state", params={"game_id": gid})
     assert r2.status_code == 200

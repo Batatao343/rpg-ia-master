@@ -438,12 +438,18 @@ def _canonical_player_action(declaration: Optional[TurnDeclaration], out: dict, 
                              attempted: bool = True,
                              flee_requested: bool = False,
                              hero_fled: bool = False,
-                             flee_destination_id: Optional[str] = None) -> dict:
+                             flee_destination_id: Optional[str] = None,
+                             chase_state: Optional[dict] = None) -> dict:
     """Contrato mecânico consumido pelo harness; não depende da prosa do LLM."""
     step = declaration.acao if declaration is not None else None
     if flee_requested:
         kind = "flee"
-        result = "fled" if hero_fled else "flee_failed"
+        if hero_fled:
+            result = "fled"
+        elif chase_state and not chase_state.get("alcancado"):
+            result = "flee_progress"
+        else:
+            result = "flee_failed"
     else:
         raw_kind = str((step.kind if step else "pass") or "pass").lower()
         kind = raw_kind if raw_kind in {
@@ -483,6 +489,7 @@ def _canonical_player_action(declaration: Optional[TurnDeclaration], out: dict, 
         "result": result,
         "attempted": bool(attempted),
         "flee_destination_id": flee_destination_id,
+        "chase_track": (chase_state or {}).get("trilha") if flee_requested else None,
     }
 
 
@@ -712,7 +719,8 @@ def combat_node(state: GameState):
     resolved_decl: Optional[TurnDeclaration] = declaration
     if flee_requested:
         hero_fled, flee_logs, chase_state = _attempt_flee(
-            scene, player, active, sides, rng)
+            scene, player, active, sides, rng,
+            existing_chase=combat_meta.get("chase"))
         combat_meta["chase"] = chase_state
         logs += weather_logs + flee_logs
     if not hero_fled:
@@ -788,6 +796,7 @@ def combat_node(state: GameState):
         flee_requested=flee_requested,
         hero_fled=hero_fled,
         flee_destination_id=flee_dest_id,
+        chase_state=chase_state if flee_requested else None,
     )
 
     # ---- Espelho de vitais + Cicatrizes obrigatórias ----
@@ -944,7 +953,8 @@ def combat_node(state: GameState):
 # ==========================================================================
 # Fuga (chase, conflito-09) + reflexos auxiliares
 # ==========================================================================
-def _attempt_flee(scene: dict, player: Dict, active: List[Dict], sides: dict, rng) -> tuple:
+def _attempt_flee(scene: dict, player: Dict, active: List[Dict], sides: dict, rng,
+                  *, existing_chase: Optional[dict] = None) -> tuple:
     """Tenta escapar via motor de perseguição (09). Enredado (root) não foge.
     Sucesso na trilha (Escapou) encerra o combate; senão o herói segue preso."""
     import combat_mechanics as cm
@@ -958,13 +968,26 @@ def _attempt_flee(scene: dict, player: Dict, active: List[Dict], sides: dict, rn
         ], {}
     if cm.has_control(player, "root"):
         return False, [f"{player.get('name', 'O herói')} está ENREDADO — impossível fugir."], {}
-    chase_state = chase.start_chase(scene, _PLAYER_ID, active)
+    chase_state = (
+        dict(existing_chase)
+        if chase.can_resume(existing_chase, _PLAYER_ID, active)
+        else chase.start_chase(scene, _PLAYER_ID, active)
+    )
+    previous_track = chase_state.get("trilha")
     difficulty = chase.chase_difficulty(active[0]) if active else 12
     chase.resolve_chase_round(chase_state, condutor_virtude=virtude_value(player, "agilidade"),
                               difficulty=difficulty, rng=rng)
     if chase_state.get("escapou"):
         return True, [f"{player.get('name', 'O herói')} rompe o cerco e FOGE do combate."], chase_state
-    return False, [f"{player.get('name', 'O herói')} tenta fugir, mas os inimigos o alcançam."], chase_state
+    if chase_state.get("alcancado"):
+        log = f"{player.get('name', 'O herói')} tenta fugir, mas os inimigos o alcançam."
+    elif (chase_state.get("_last") or {}).get("sucesso"):
+        log = (f"{player.get('name', 'O herói')} avança na fuga: "
+               f"{previous_track} → {chase_state.get('trilha')}.")
+    else:
+        log = (f"{player.get('name', 'O herói')} perde terreno na fuga: "
+               f"{previous_track} → {chase_state.get('trilha')}.")
+    return False, [log], chase_state
 
 
 def _apply_weather_hazard(player: Dict, world: Dict, *, rng=None) -> List[str]:

@@ -12,6 +12,7 @@ import json
 import glob
 import tempfile
 import uuid
+import shutil
 from copy import deepcopy
 from typing import Any, Dict, List, Optional
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, BaseMessage
@@ -27,6 +28,7 @@ from services.memory_provenance import (
     bounded_audit_rows,
     normalize_memory_facts,
 )
+from services.memory_summary import compact_summary
 
 # Configuração de Pastas
 SAVES_DIR = "saves"
@@ -36,7 +38,8 @@ DEFAULT_SAVE_NAME = "autosave"
 # v2 = campos de camada dos NPCs (spec npcs-3-camadas-traits).
 # v3 = 10 classes antigas → 5 Posturas + Entropia (spec refatoracao-sistema-classes).
 # v4 = Virtudes/Vitalidade/Ferimentos; v5 = Vitalidade canônica + aliases HP derivados.
-SCHEMA_VERSION = 5
+# v6 = ledger visual idempotente (Fase 8A).
+SCHEMA_VERSION = 6
 
 def save_path(game_id: str) -> str:
     """Caminho canônico do save de `game_id`.
@@ -154,23 +157,34 @@ def _migrate_v4_to_v5(raw: Dict[str, Any]) -> Dict[str, Any]:
             pending, turn=pending.get("conflict_turn"),
         )
         migrated["conflict_summary"] = pending
+    migrated["schema_version"] = 5
+    return migrated
+
+
+def _migrate_v5_to_v6(raw: Dict[str, Any]) -> Dict[str, Any]:
+    migrated = deepcopy(raw)
+    migrated["visual_seen_entity_ids"] = list(dict.fromkeys(
+        str(value) for value in (migrated.get("visual_seen_entity_ids") or []) if value
+    ))[-64:]
+    migrated["visual_cue_ledger"] = [
+        row for row in (migrated.get("visual_cue_ledger") or [])
+        if isinstance(row, dict) and row.get("action_key")
+    ][-64:]
     migrated["schema_version"] = SCHEMA_VERSION
     return migrated
 
 
 def migrate_state(raw: Dict[str, Any]) -> Dict[str, Any]:
-    """Arquiva saves pré-v4 e normaliza v4→v5. Puro e idempotente."""
+    """Arquiva saves pré-v4 e normaliza v4→v6. Puro e idempotente."""
     version = int(raw.get("schema_version", 0) or 0)
     if version < 4:
         archived = _migrate_v3_to_v4(deepcopy(raw))
-        archived["schema_version"] = SCHEMA_VERSION
-        return archived
+        archived["schema_version"] = 5
+        return _migrate_v5_to_v6(archived)
     if version >= SCHEMA_VERSION:
-        if raw.get("archived"):
-            return raw
-        normalized = _migrate_v4_to_v5(raw)
-        return raw if normalized == raw else normalized
-    return _migrate_v4_to_v5(raw)
+        return raw
+    migrated = _migrate_v4_to_v5(raw) if version < 5 else deepcopy(raw)
+    return _migrate_v5_to_v6(migrated)
 
 def _serialize_messages(messages: List[BaseMessage]) -> List[Dict[str, str]]:
     """Converte objetos Message do LangChain para dicionários simples (JSON)."""
@@ -261,17 +275,136 @@ def delete_save(game_id: str) -> bool:
     """Remove o save E o índice de memória da sessão (senão vira lixo órfão).
     ValueError se game_id não é UUID (mesmo padrão do save_path — Fase 10);
     False se o save não existe."""
-    import shutil
     path = save_path(game_id)  # levanta ValueError se inválido
     checkpoint = _safe_save_path(game_id, suffix=".checkpoint")
+    checkpoint_memory = checkpoint_memory_path(game_id)
     removed = False
     for candidate in (path, checkpoint):
         if os.path.exists(candidate):
             os.remove(candidate)
             removed = True
+    if os.path.isdir(checkpoint_memory):
+        removed = True
     shutil.rmtree(os.path.join(SESSION_MEMORY_DIR, str(game_id)),
                   ignore_errors=True)
+    shutil.rmtree(checkpoint_memory, ignore_errors=True)
     return removed
+
+
+def _safe_session_memory_path(game_id: str) -> str:
+    """Diretório de memória de uma sessão, fechado dentro da raiz configurada."""
+    safe = "".join(c for c in str(game_id) if c.isalnum() or c in "-_")
+    if not safe or safe != str(game_id):
+        raise ValueError(f"game_id inválido para memória: {game_id!r}")
+    root = os.path.abspath(SESSION_MEMORY_DIR)
+    path = os.path.abspath(os.path.join(root, safe))
+    if not path.startswith(root + os.sep):
+        raise ValueError(f"memória fora de {SESSION_MEMORY_DIR}/: {game_id!r}")
+    return path
+
+
+def checkpoint_memory_path(game_id: str) -> str:
+    checkpoint = _safe_save_path(game_id, suffix=".checkpoint")
+    return checkpoint[:-5] + ".memory"
+
+
+_EMPTY_MEMORY_MARKER = ".checkpoint-empty"
+
+
+def _atomic_replace_directory(staged: str, destination: str) -> None:
+    """Troca diretório com rollback local caso o rename novo falhe."""
+    backup = destination + ".previous"
+    shutil.rmtree(backup, ignore_errors=True)
+    had_destination = os.path.exists(destination)
+    if had_destination:
+        os.replace(destination, backup)
+    try:
+        os.replace(staged, destination)
+    except BaseException:
+        if had_destination and os.path.exists(backup):
+            os.replace(backup, destination)
+        raise
+    shutil.rmtree(backup, ignore_errors=True)
+
+
+def save_checkpoint_memory(game_id: str) -> bool:
+    """Snapshot atômico de toda a árvore FAISS da sessão (raiz + NPCs)."""
+    source = _safe_session_memory_path(game_id)
+    destination = checkpoint_memory_path(game_id)
+    os.makedirs(os.path.dirname(os.path.abspath(destination)), exist_ok=True)
+    staged = tempfile.mkdtemp(prefix=f".{game_id}.checkpoint-memory.",
+                              dir=os.path.dirname(os.path.abspath(destination)))
+    try:
+        if os.path.isdir(source):
+            shutil.copytree(source, staged, dirs_exist_ok=True)
+        else:
+            with open(os.path.join(staged, _EMPTY_MEMORY_MARKER), "wb"):
+                pass
+        _atomic_replace_directory(staged, destination)
+        return True
+    except BaseException:
+        shutil.rmtree(staged, ignore_errors=True)
+        raise
+
+
+def restore_checkpoint_memory(game_id: str) -> bool:
+    """Restaura exatamente a árvore externa ligada ao checkpoint em disco."""
+    snapshot_dir = checkpoint_memory_path(game_id)
+    if not os.path.isdir(snapshot_dir):
+        return False
+    destination = _safe_session_memory_path(game_id)
+    os.makedirs(os.path.dirname(destination), exist_ok=True)
+    empty = os.path.exists(os.path.join(snapshot_dir, _EMPTY_MEMORY_MARKER))
+    staged = tempfile.mkdtemp(prefix=f".{game_id}.restore-memory.",
+                              dir=os.path.dirname(destination))
+    try:
+        if not empty:
+            shutil.copytree(snapshot_dir, staged, dirs_exist_ok=True,
+                            ignore=shutil.ignore_patterns(_EMPTY_MEMORY_MARKER))
+        if empty:
+            shutil.rmtree(staged)
+            backup = destination + ".previous"
+            shutil.rmtree(backup, ignore_errors=True)
+            if os.path.exists(destination):
+                os.replace(destination, backup)
+            shutil.rmtree(backup, ignore_errors=True)
+        else:
+            _atomic_replace_directory(staged, destination)
+        return True
+    except BaseException:
+        shutil.rmtree(staged, ignore_errors=True)
+        raise
+
+
+def capture_session_memory(game_id: str) -> Optional[Dict[str, bytes]]:
+    """Representação portátil usada somente pelos snapshots in-memory do harness."""
+    source = _safe_session_memory_path(game_id)
+    if not os.path.isdir(source):
+        return None
+    captured: Dict[str, bytes] = {}
+    for root, _dirs, files in os.walk(source):
+        for name in files:
+            path = os.path.join(root, name)
+            rel = os.path.relpath(path, source).replace("\\", "/")
+            with open(path, "rb") as fh:
+                captured[rel] = fh.read()
+    return captured
+
+
+def restore_captured_session_memory(game_id: str,
+                                    captured: Optional[Dict[str, bytes]]) -> None:
+    destination = _safe_session_memory_path(game_id)
+    shutil.rmtree(destination, ignore_errors=True)
+    if captured is None:
+        return
+    for rel, payload in captured.items():
+        parts = rel.replace("\\", "/").split("/")
+        if any(part in ("", ".", "..") for part in parts):
+            raise ValueError(f"caminho inválido no snapshot de memória: {rel!r}")
+        path = os.path.join(destination, *parts)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "wb") as fh:
+            fh.write(payload)
 
 
 def _safe_save_path(game_id: str, suffix: str = "") -> str:
@@ -333,7 +466,9 @@ def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
         # --- Identificação e Memória (Novos Campos) ---
         "game_id": game_id,
         "processed_action_ids": list(state.get("processed_action_ids", []) or [])[-64:],
-        "narrative_summary": state.get("narrative_summary", ""),
+        "visual_seen_entity_ids": list(state.get("visual_seen_entity_ids", []) or [])[-64:],
+        "visual_cue_ledger": deepcopy(list(state.get("visual_cue_ledger", []) or [])[-64:]),
+        "narrative_summary": compact_summary(state.get("narrative_summary", "")),
         "archivist_last_run": state.get("archivist_last_run", 0),
         "archive_due": bool(state.get("archive_due", False)),
         "chronicle": state.get("chronicle", []),
@@ -452,7 +587,9 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         # --- Recupera Memória ---
         "game_id": raw_data.get("game_id", "recovered_session"),
         "processed_action_ids": list(raw_data.get("processed_action_ids", []) or [])[-64:],
-        "narrative_summary": raw_data.get("narrative_summary", ""),
+        "visual_seen_entity_ids": list(raw_data.get("visual_seen_entity_ids", []) or [])[-64:],
+        "visual_cue_ledger": deepcopy(list(raw_data.get("visual_cue_ledger", []) or [])[-64:]),
+        "narrative_summary": compact_summary(raw_data.get("narrative_summary", "")),
         "archivist_last_run": raw_data.get("archivist_last_run", 0),
         "archive_due": bool(raw_data.get("archive_due", False)),
         "chronicle": raw_data.get("chronicle", []),
@@ -526,14 +663,34 @@ def save_checkpoint(state: Dict[str, Any]) -> bool:
     slot, sobrescreve). Mesmo formato do save vivo — reusa `_state_to_save_data`."""
     if not state:
         return False
+    memory_backup: Optional[str] = None
+    memory_destination: Optional[str] = None
+    memory_existed = False
     try:
         if not os.path.exists(SAVES_DIR):
             os.makedirs(SAVES_DIR)
         game_id = state.get("game_id", DEFAULT_SAVE_NAME)
         path = _safe_save_path(game_id, suffix=".checkpoint")
+        memory_destination = checkpoint_memory_path(game_id)
+        memory_existed = os.path.isdir(memory_destination)
+        if memory_existed:
+            memory_backup = tempfile.mkdtemp(
+                prefix=f".{game_id}.checkpoint-memory-rollback.",
+                dir=os.path.dirname(os.path.abspath(memory_destination)),
+            )
+            shutil.copytree(memory_destination, memory_backup, dirs_exist_ok=True)
+        save_checkpoint_memory(game_id)
         _atomic_write_json(path, _state_to_save_data(state, game_id))
+        if memory_backup:
+            shutil.rmtree(memory_backup, ignore_errors=True)
         return True
     except Exception as e:
+        if memory_destination:
+            shutil.rmtree(memory_destination, ignore_errors=True)
+            if memory_existed and memory_backup and os.path.isdir(memory_backup):
+                os.replace(memory_backup, memory_destination)
+        if memory_backup:
+            shutil.rmtree(memory_backup, ignore_errors=True)
         print(f"❌ Erro ao gravar checkpoint: {e}")
         return False
 

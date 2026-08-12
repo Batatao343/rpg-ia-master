@@ -722,6 +722,7 @@ def turn_to_record(rec: TurnRecord) -> dict:
         "save_path": rec.save_path,
         "action": rec.action,
         "narrative": rec.narrative,
+        "progression_choices": list(rec.progression_choices),
         "route": rec.route,
         "nodes_executed": list(rec.nodes_executed),
         "combat_executed": rec.combat_executed,
@@ -824,6 +825,7 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
     cost_by_tier: dict = {}
     latencies: List[int] = []
     fell_back_turns = 0
+    action_kinds: Counter = Counter()
 
     for r in turn_records:
         if r.get("route"):
@@ -837,6 +839,7 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
             if cid and cid not in violation_samples:
                 violation_samples[cid] = detail
         latencies.append(int(r.get("latency_ms", 0)))
+        action_kinds[str((r.get("decision") or {}).get("kind") or "unknown")] += 1
         if r.get("fell_back"):
             fell_back_turns += 1
 
@@ -1079,6 +1082,20 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         ]),
         "routes": routes,
         "latency_ms": {"p50": _percentile(latencies, 50), "p95": _percentile(latencies, 95)},
+        "latency_slo": {
+            "warning_ms": 45_000,
+            "error_ms": 90_000,
+            "over_warning_45s": len([value for value in latencies if value > 45_000]),
+            "over_error_90s": len([value for value in latencies if value > 90_000]),
+        },
+        "diversity": {
+            "unique_routes": len(routes),
+            "unique_action_kinds": len(action_kinds),
+            "action_kinds": dict(sorted(action_kinds.items())),
+        },
+        "progression_choices": sum(
+            len(record.get("progression_choices") or []) for record in turn_records
+        ),
         # spec checkpoints-morte: conta TODAS as mortes (cada uma dispara restore);
         # game_over só existe pela via voluntária "Aceitar".
         "deaths": len(deaths_log),

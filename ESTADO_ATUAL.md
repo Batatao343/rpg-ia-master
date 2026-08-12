@@ -1,5 +1,102 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **✅ SESSÃO 39 (2026-08-12): seis remediações do playtest normal `done`.** Os
+> achados da sessão 38 viraram specs e código: fuga retoma `combat.chase` e mede
+> `flee_progress`; checkpoint restaura JSON + árvore FAISS inteira (raiz/NPC,
+> disco e harness); troca regional sempre replana e o planner grava localização
+> canônica; `narrative_summary` tem teto de **1.200 chars**, memória é fracionada
+> e não há bypass do budget; recompensas são confirmadas pelo delta Python e
+> moeda livre não passa como item.
+>
+> O harness ganhou o 14º perfil, `normal`: mistura viagem, exploração, NPC,
+> missão, loot/comércio, descanso e combate prudente, além de resolver escolhas
+> pendentes via `progression.apply_choice`. Novos invariantes cobrem resumo,
+> grounding, feedback, fuga; latência real gera warning >45 s e error >90 s.
+> Telemetria agrega diversidade, escolhas e SLO.
+>
+> Aceite mock `20260812-172231-913670`: **50/50**, quatro rotas, três escolhas,
+> zero erro/violação. Smoke DeepSeek `20260812-172526-505951`: **5/5**, quatro
+> rotas, zero erro/violação, p50 19,6 s/p95 37,3 s, 24 requests, US$ 0,00686;
+> fallback Groq absorveu 1 structured inválido do planner. Ruff verde. Gate:
+> `uv run pytest` = **1436 passed, 1 skipped, 14 deselected**. Specs funcionais:
+> **99 `done`**. Relatório atualizado em
+> [playtest-jogador-normal-2026-08-12](docs/playtest-jogador-normal-2026-08-12.md).
+>
+> **Próxima:** nenhuma spec funcional aprovada ficou pendente; escolher o
+> próximo item de produto/ROADMAP.
+
+> **🧪 SESSÃO 38 (2026-08-12): playtest longo de jogador normal — diagnóstico.**
+> Foram simulados **440 turnos** (2×200 MockLLM + 40 DeepSeek real) com políticas
+> mistas de exploração, conversa, missão, viagem, loot, descanso, combate e fuga.
+> Os três runs terminaram com **0 exceções e 0 violações formais**. Run real
+> `20260812-162429-546407`: 9 locais, 1 quest ativa, 1 queda, 114 requests
+> DeepSeek, US$ 0,03192, p50 15,3 s e p95 38,7 s.
+>
+> A estabilidade escondeu **3 defeitos prioritários**: (P0) fuga contra
+> perseguidor reinicia a trilha a cada turno e pode ser impossível; (P0)
+> continuar do checkpoint restaura o save, mas deixa no FAISS a morte descartada
+> como fato `CONFIRMADO`; (P1) plano de Nova Arcádia sobreviveu à viagem para
+> Brekmar e transplantou “Anel de Lama”/“Sino Rachado”, contaminando resumo e
+> memória. Também foram confirmados resumo sem teto (11.029 caracteres em 40
+> turnos, com bypass do budget), feedback que nega ouro já concedido e cauda de
+> latência de até 94 s.
+>
+> Relatório e reproduções: [playtest-jogador-normal-2026-08-12](docs/playtest-jogador-normal-2026-08-12.md).
+> **Naquele momento nenhuma regra foi alterada:** os achados aguardavam specs na ordem
+> fuga → checkpoint/memória → grounding regional → resumo/budget → feedback →
+> perfil misto/invariantes. Gate final: `uv run pytest` = **1409 passed,
+> 1 skipped, 14 deselected** (4 warnings de dependências).
+
+> **✅ SESSÃO 37 (2026-08-12): Fase 8A `done` — arte dentro do jogo.** O
+> handoff correto `VALORIA_GAME_ART_HANDOFF` foi validado (68/68 PNGs e SHA do
+> ZIP `8f1574b...09bd1`). `scripts/import_visual_assets.py` gerou um catálogo de
+> **45 assets** e **90 WebPs** (16,6 MB): 6 raças, 5 classes, 22 locais exatos e
+> 12 NPCs. Os 35 locais do mapa ficam cobertos por 22 exatos + 13 fallbacks
+> regionais explícitos; Vrethis foi preservado como fonte não mapeada, e NPCs
+> secretos nunca entram no catálogo público.
+>
+> Backend: `services/visual_catalog.py` e `entity_identity.py` resolvem cena,
+> aliases e primeira aparição somente por estado/ID; save schema **v6** persiste
+> vistos + ledger visual de 64 ações. POST e SSE têm paridade e retry UUID devolve
+> a mesma cue. Frontend: capas em raça/classe, cena do local e retrato no mesmo
+> bloco narrativo, com alt/dimensões, fallback, reduced motion e passe a 390 px.
+> O lint de conteúdo agora verifica identidade, visibilidade, hash, bytes, teto e
+> cobertura visual. Operação/proveniência: `docs/ARTE_VISUAL.md`.
+>
+> Smoke real/browser: game `8afdb0d3-427b-442d-a2b1-2a514f2a3267`
+> (`simulated=false`, removido após o teste), Nova Arcádia e Grum renderizados;
+> retry `59b1ee90-1ded-4135-a257-d515aff3877c` manteve turno 2, mensagem e cue.
+> Desktop/390 px sem erro de página. Gates: lint **0 erros/0 avisos**, Ruff verde,
+> build Vite verde; `uv run pytest` = **1409 passed, 1 skipped, 14 deselected**
+> (4 warnings de dependências). Specs funcionais: **93 `done`**.
+
+> **✅ SESSÃO 36 (2026-08-12): Fase 8A especificada e `approved`.** A
+> spec [fase-8-ancoras-visuais-contextuais](specs/fase-8-ancoras-visuais-contextuais.md)
+> mapeia a integração das imagens no onboarding (raça/classe), na cena do local e
+> na primeira aparição de NPC. A decisão visual é determinística por ID canônico,
+> visibilidade e estado persistido; não haverá escolha de arquivo pela LLM nem
+> parsing de nomes dentro da prosa.
+>
+> O desenho inclui catálogo público, importador Python/Pillow com SHA-256 e WebP,
+> save v6 com ledger visual idempotente, paridade POST/SSE, fallback honesto,
+> acessibilidade e orçamento de bytes. A Fase 8 anterior foi dividida: 8A usa
+> arte curada já existente; geração runtime de item/monstro/NPC vira 8B futura.
+>
+> **Auditoria do pacote:** 5/5 capas de classe, 33 locais e 8/15 NPCs aprovados
+> têm PNG recuperável com hash exato. Das seis raças jogáveis, só Humano e Cinzéu
+> têm ao menos uma variante recuperável com SHA aprovado; Elfo, Anão da Fuligem,
+> Vrel e Osshari usarão um PNG compartilhado `AGUARDANDO ARTE`, com composição no
+> tom artístico do projeto e texto aplicado por Python/Pillow. A spec proíbe
+> associação automática por nome/semelhança; uma arte real verificada substitui
+> o placeholder apenas pelo catálogo.
+> A fonte do placeholder foi gerada e preservada em
+> `assets/visual/system/aguardando-arte-source.png` (1024×1536; SHA-256
+> `6e22252aa9b9610cee908358e6978028e84ff7401ecf79d55c79f1605132e51f`).
+>
+> **Estado:** somente documentação/spec; implementação ainda não iniciada. Gate desta
+> sessão: `uv run pytest` = **1398 passed, 1 skipped, 14 deselected** (4 warnings
+> de dependências). Specs funcionais: **92 `done` + 1 `approved`**.
+
 > **✅ SESSÃO 35 (2026-08-11): hardening de persistência/SSE `done`.** A spec
 > [hardening-persistencia-sse-idempotencia](specs/hardening-persistencia-sse-idempotencia.md)
 > corrigiu o vazamento de `*.checkpoint.json` na listagem/latest, exclusão agora
@@ -762,7 +859,7 @@ uv run pytest -m llm_contract -v -s  # 9 contratos contra o Gemini REAL (~13 req
 uv run pytest -m llm_playtest -v -s  # Fase 5: 4 perfis VITAIS × 30 turnos no LLM REAL (RPG_PLAYTEST_TURNS encurta)
 uv run python game_engine.py         # CLI
 uv run uvicorn api:app --port 8000   # API + frontend web (http://localhost:8000)
-uv run python -m playtest run --all --turns 50   # Fase 5: harness offline (MockLLM, 13 perfis)
+uv run python -m playtest run --all --turns 50   # Fase 5: harness offline (MockLLM, 14 perfis)
 uv run python -m playtest report <run_id>        # Fase 5: relatório agregado
 uv run python -m playtest transcript <run_id>    # transcrito ação→narração (julgar prompt)
 uv run python rag.py                 # reindexar lore (data/codex/) + regras (data/rules.txt)
@@ -811,7 +908,7 @@ chave real.
   engine), migração de monstros, encontros sistêmicos, clima com efeito
 - **Fase 7 (completa):** lint de conteúdo + CI, curadoria migration-safe
   (`codex_overrides.yaml`), segredos de NPC em docs `hidden`
-- **Fase 5 (completa):** playtest agêntico (`playtest/`, 13 perfis), invariantes
+- **Fase 5 (completa):** playtest agêntico (`playtest/`, 14 perfis), invariantes
   por turno, telemetria JSONL + relatório com custo, `--real` com tetos,
   `transcript` por turno
 - **Fase 10 local + Fase 11:** UUID/migrations/CORS/rate-limit/log JSON; 9 contratos
@@ -866,8 +963,9 @@ ser re-introduzido em outro local pela narrativa/player (relocaliza o
 - Tiers 5+ das classes (nível 9–20) — fast-follow do épico.
 - Playtest longo do perfil `comerciante`; o smoke dirigido validou uma compra,
   mas ainda não mediu economia emergente em campanha longa.
-- Fases 8/9 (arte e audiovisual), crônica avançada e Fase 10b (Postgres/auth/
-  isolamento por usuário/locks distribuídos). O tuning dos oito knobs e a
+- ~~Fase 8A (arte contextual)~~ ✅ `done`; Fase 8B (geração
+  dinâmica), Fase 9 (audiovisual), crônica avançada e Fase 10b (Postgres/auth/
+  isolamento por usuário/locks distribuídos) seguem abertas. O tuning dos oito knobs e a
   letalidade v2 já estão `done`; referências antigas a `approved` são histórico.
 - 1 flaky isolado na suíte (sessão 8; 3 runs verdes depois — observar)
 - ~~Action `validate.yml`~~ ✅ verde (confirmado via `gh run list`).

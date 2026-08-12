@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { mdLite, roleLabel } from "../lib";
 import { useTypewriter } from "../hooks/useTypewriter";
 import type { LogEntry } from "../types";
+import { VisualArtwork } from "./VisualArtwork";
 
 export function StoryLog({ entries, thinking, thinkingLabel }: {
   entries: LogEntry[];
@@ -63,6 +64,9 @@ function LogEntryItem({ entry }: { entry: LogEntry }) {
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
     >
+      {entry.visual && <VisualArtwork asset={entry.visual.asset}
+        name={entry.visual.subject_name} caption={entry.visual.caption}
+        className="msg__visual" />}
       {showRole && <p className="msg__role">{roleLabel(entry.role, entry.type)}</p>}
       <div
         className="msg__body"

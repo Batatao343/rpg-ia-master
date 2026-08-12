@@ -53,8 +53,14 @@ def should_checkpoint(state: dict, prev: Optional[dict] = None) -> bool:
 
 
 def snapshot(state: dict) -> dict:
-    """Cópia profunda restaurável (usada in-memory pelo harness)."""
-    return copy.deepcopy(state)
+    """Cópia profunda do estado e da memória externa usada pelo harness."""
+    snap = copy.deepcopy(state)
+    game_id = snap.get("game_id")
+    if game_id:
+        snap["_checkpoint_memory_snapshot"] = (
+            persistence.capture_session_memory(str(game_id))
+        )
+    return snap
 
 
 def maybe_write(state: dict, prev: Optional[dict] = None) -> bool:
@@ -84,8 +90,21 @@ def resolve_death_choice(state: dict, choice: str, *,
     restored: Optional[dict] = None
     if checkpoint is not None:
         restored = copy.deepcopy(checkpoint)
+        captured = restored.pop("_checkpoint_memory_snapshot", None)
+        if state.get("game_id") and "_checkpoint_memory_snapshot" in checkpoint:
+            persistence.restore_captured_session_memory(
+                str(state["game_id"]), captured)
     elif state.get("game_id"):
         restored = persistence.load_checkpoint(state["game_id"])
+        if restored is not None:
+            restored_external = persistence.restore_checkpoint_memory(
+                str(state["game_id"]))
+            if not restored_external:
+                # Slot anterior à spec: não há como distinguir fatos pré/pós
+                # checkpoint. Falha fechado limpando o índice derivado; o ledger
+                # `memory_facts` restaurado ainda sustenta a continuidade global.
+                persistence.restore_captured_session_memory(
+                    str(state["game_id"]), None)
     if restored is None:  # D7: sem checkpoint → início da sessão
         restored = copy.deepcopy(initial_state) if initial_state is not None else copy.deepcopy(state)
     restored["death_pending"] = False

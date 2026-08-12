@@ -76,7 +76,7 @@ export function App() {
     // Cria entrada com streaming=true, que ativa efeito typewriter
     setLog((prev) => [
       ...prev,
-      { id: logSeq.current++, text: r.message, role: "narrator", type: r.message_type || "STORY", streaming: true }
+      { id: logSeq.current++, text: r.message, role: "narrator", type: r.message_type || "STORY", streaming: true, visual: r.visual?.cue }
     ]);
 
     // Após animação estar completa (300ms), finaliza a entrada
@@ -142,6 +142,24 @@ export function App() {
   // spec streaming-turno-sse (R4): chunks do servidor alimentam UMA entrada
   // "streaming" do log; o typewriter revela o texto conforme ele cresce.
   const streamEntryId = useRef<number | null>(null);
+  const pendingVisual = useRef<GameResponse["visual"] | null>(null);
+
+  function attachStreamVisual(visual: GameResponse["visual"]) {
+    pendingVisual.current = visual;
+    if (!visual.cue) return;
+    setLog((prev) => {
+      const id = streamEntryId.current;
+      const idx = id === null ? -1 : prev.findIndex((e) => e.id === id);
+      if (idx >= 0) {
+        const entry = prev[idx];
+        return [...prev.slice(0, idx), { ...entry, visual: visual.cue }, ...prev.slice(idx + 1)];
+      }
+      const nid = logSeq.current++;
+      streamEntryId.current = nid;
+      return [...prev, { id: nid, text: "", role: "narrator" as const,
+        type: "STORY" as const, streaming: true, visual: visual.cue }];
+    });
+  }
 
   function appendChunk(chunk: string, done: boolean) {
     if (done) return;
@@ -151,7 +169,8 @@ export function App() {
       if (idx < 0) {
         const nid = logSeq.current++;
         streamEntryId.current = nid;
-        return [...prev, { id: nid, text: chunk, role: "narrator" as const, type: "STORY" as const, streaming: true }];
+        return [...prev, { id: nid, text: chunk, role: "narrator" as const,
+          type: "STORY" as const, streaming: true, visual: pendingVisual.current?.cue }];
       }
       const entry = prev[idx];
       return [...prev.slice(0, idx), { ...entry, text: entry.text + chunk }, ...prev.slice(idx + 1)];
@@ -167,14 +186,17 @@ export function App() {
       const entry = prev[idx];
       return [
         ...prev.slice(0, idx),
-        { ...entry, text: r.message, type: r.message_type || "STORY", streaming: false },
+        { ...entry, text: r.message, type: r.message_type || "STORY", streaming: false,
+          visual: entry.visual ?? r.visual?.cue },
         ...prev.slice(idx + 1),
       ];
     });
+    pendingVisual.current = null;
   }
 
   async function handleAction(text: string, options: ActionOptions = {}) {
     if (busy || !text.trim()) return;
+    pendingVisual.current = null;
     pushLog(text, "player", "STORY");
     setBusy(true);
     setThinking(true);
@@ -187,6 +209,7 @@ export function App() {
         const r = await api.sendActionStream(text, gameId.current, {
           onPhase: (node) => setPhaseLabel(PHASE_TEXTS[node] ?? null),
           onRoute: (route) => setPhaseLabel(ROUTE_TEXTS[route] ?? PHASE_TEXTS.storyteller),
+          onVisual: attachStreamVisual,
           onChunk: (chunk, done) => {
             hadChunks = true;
             appendChunk(chunk, done);
@@ -204,6 +227,7 @@ export function App() {
         // R4: fallback AUTOMÁTICO e silencioso pro POST clássico
         const orphan = streamEntryId.current;
         streamEntryId.current = null;
+        pendingVisual.current = null;
         if (orphan !== null) setLog((prev) => prev.filter((e) => e.id !== orphan));
         const r = await api.sendAction(text, gameId.current, requestOptions);
         onTurn(r);

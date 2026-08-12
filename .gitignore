@@ -35,3 +35,6 @@ web/*.tsbuildinfo
 web/vite.config.js
 web/vite.config.d.ts
 
+# Handoffs de arte são fontes locais grandes; apenas os WebP derivados entram.
+VALORIA_GAME_ART_HANDOFF.zip
+

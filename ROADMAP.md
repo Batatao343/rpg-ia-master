@@ -1,4 +1,4 @@
-# ROADMAP — RPG IA (Revisado 2026-08-11)
+# ROADMAP — RPG IA (Revisado 2026-08-12)
 
 > **Objetivo central:** Mundo vivo persistente com estado consultável, antes de features novas.
 > 
@@ -7,6 +7,32 @@
 >
 > Complementa `CLAUDE.md` (arquitetura) e `ESTADO_ATUAL.md` (status).
 > **Desenvolvimento é spec-driven:** o detalhe técnico de cada fase vive em `specs/` — este arquivo só resume e aponta.
+
+---
+
+## ✅ ENTREGUE — Correções do playtest longo de jogador normal (2026-08-12)
+
+O diagnóstico [playtest-jogador-normal-2026-08-12](docs/playtest-jogador-normal-2026-08-12.md)
+executou 440 turnos mistos (400 MockLLM + 40 DeepSeek real) e originou seis
+specs, todas `done`:
+
+1. [fuga-progressiva-persistente](specs/fuga-progressiva-persistente.md) —
+   `combat.chase` persiste, chega a `escapou` e telemetria separa progresso/falha.
+2. [checkpoint-transacional-memoria](specs/checkpoint-transacional-memoria.md) —
+   estado e árvore FAISS inteira (inclusive NPC) fazem checkpoint/rollback juntos.
+3. [replan-grounding-troca-regiao](specs/replan-grounding-troca-regiao.md) — troca
+   regional sempre replana e o local do plano vem do estado canônico.
+4. [resumo-curto-budget-rigido](specs/resumo-curto-budget-rigido.md) — teto de
+   1.200 caracteres, memórias fracionadas e nenhum bypass do `ContextPack`.
+5. [feedback-ledger-recompensas](specs/feedback-ledger-recompensas.md) — ouro não
+   é item livre; confirmação visível deriva apenas do delta mecânico.
+6. [perfil-jogador-normal-invariantes](specs/perfil-jogador-normal-invariantes.md)
+   — 14º perfil permanente, level-up, quatro rotas, invariantes e SLO 45/90 s.
+
+Aceite: mock `20260812-172231-913670` = 50/50, quatro rotas, três escolhas de
+progressão, zero erro/violação; real `20260812-172526-505951` = 5/5, quatro rotas,
+zero erro/violação, p95 37,3 s, US$ 0,00686. Gate: **1436 passed, 1 skipped,
+14 deselected**; Ruff verde.
 
 ---
 
@@ -738,23 +764,28 @@ retorna mais assinatura do Verme. Confirmação final = re-rodar `secret_rusher 
 
 ---
 
-## Fase 8 — Arte de itens, monstros e personagens
+## Fase 8 — Arte contextual
 
-Depende de: entidades estáveis, Codex revelável funcional.
+### 8A — Âncoras visuais curadas → [spec](specs/fase-8-ancoras-visuais-contextuais.md) `done` (2026-08-12)
 
-**Objetivo:** Gerar e cachear arte apenas para entidades já confirmadas.
+Integra o pacote visual já produzido por catálogo canônico: capa nos seis cards de
+raça e nas cinco classes, cena derivada de `current_location_id` e retrato na
+primeira aparição estruturada de NPC. Identidade, visibilidade, fallback,
+persistência e idempotência ficam em Python; React só apresenta o DTO.
 
-**Entregas:**
+Entregue: import fail-closed dos 68 PNGs do handoff; catálogo público com 45
+assets (6 raças, 5 classes, 22 locais e 12 NPCs), 90 WebPs responsivos sem
+metadata e cobertura de 35/35 locais por arte exata ou fallback regional. Save
+v6 guarda primeira aparição/idempotência; API, POST/SSE e React exibem cena e
+retrato no mesmo turno. O placeholder `AGUARDANDO ARTE` fica pronto como reserva,
+mas não é usado: o pacote correto trouxe as seis raças aprovadas.
 
-- [ ] Gerador de arte por item_id (cache por ID)
-- [ ] Gerador de arte por monster_id
-- [ ] Gerador de arte por NPC importante
-- [ ] Estilo visual travado (prompt consistente)
-- [ ] Lazy generation: só gerar quando jogador descobre
-- [ ] Fallback: sem arte = silhueta + cor
-- [ ] Não gerar arte de segredo não revelado
+### 8B — Arte dinâmica de entidades (futura; spec ainda não criada)
 
-**Critério de aceite:** Jogador encontra novo monstro → arte gerada em 2s, cacheada, reutilizada.
+Depende da 8A e de contrato próprio para armazenamento, moderação, custo e
+latência. Abrangerá itens, monstros e NPCs sem âncora, com cache por ID e bloqueio
+de segredos não revelados. A antiga meta de “gerar em 2s dentro do turno” deixa
+de ser critério até ser medida contra um provider e infraestrutura reais.
 
 ---
 

@@ -159,11 +159,11 @@ def test_viagem_para_regiao_nova_replaneja():
     st = _cm_state(_plan("Nova Arcádia", beats_status=("done", "pending")),
                    pantano["name"], turn=5)
     assert _should_replan(st) is True
-    # região nova mas arco recém-começado (0 beats done, tem beats) → NÃO replaneja
+    # Região nova invalida o grounding mesmo em arco recém-começado.
     st2 = _cm_state(_plan("Nova Arcádia", beats_status=("pending", "pending")),
                     pantano["name"], turn=5)
     st2["campaign_plan"]["current_step"] = 0
-    assert _should_replan(st2) is False
+    assert _should_replan(st2) is True
 
 
 def test_local_de_plano_irresoluvel_nao_replaneja_por_viagem():

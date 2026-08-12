@@ -13,6 +13,7 @@ O gate sobre os dados reais do repo é `tests/test_fase71.py::test_repo_content_
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import re
 import unicodedata
@@ -26,6 +27,7 @@ from services.codex_loader import CODEX_DIR, parse_codex_file
 GRAPH_DIR = os.path.join("data", "graph")
 LORE_DIR = "lore_nova"
 OVERRIDES_PATH = os.path.join("data", "codex_overrides.yaml")
+VISUAL_CATALOG_PATH = os.path.join("data", "visual_assets.json")
 
 Severity = Literal["error", "warning"]
 
@@ -712,6 +714,89 @@ def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json")
     return findings
 
 
+def validate_visual_assets(catalog_path: str = VISUAL_CATALOG_PATH,
+                           public_root: str = os.path.join("web", "public")) -> List[Finding]:
+    """Fase 8A: identidade, cobertura, segurança e integridade dos WebP públicos."""
+    findings: List[Finding] = []
+    if not os.path.isfile(catalog_path):
+        return [Finding("visual_assets", "error", catalog_path, "", "catálogo ausente")]
+    try:
+        with open(catalog_path, encoding="utf-8") as handle:
+            catalog = json.load(handle)
+    except Exception as exc:
+        return [Finding("visual_assets", "error", catalog_path, "", str(exc))]
+
+    with open(os.path.join("data", "origins.json"), encoding="utf-8") as handle:
+        origins = json.load(handle)
+    with open(os.path.join("data", "classes.json"), encoding="utf-8") as handle:
+        classes = json.load(handle)
+    with open(os.path.join("data", "world_map.json"), encoding="utf-8") as handle:
+        locations = {row["id"] for row in json.load(handle).get("locations", [])}
+    entities = _merged_entities(GRAPH_DIR)
+    npc_ids = {eid for eid, row in entities.items() if row.get("type") == "npc"}
+    race_ids = {row["id"] for row in origins.get("races", [])}
+    class_ids = set(classes)
+    canonical = {"race": race_ids, "class": class_ids, "location": locations,
+                 "npc": npc_ids}
+
+    asset_ids: set[str] = set()
+    subjects: set[tuple[str, str]] = set()
+    public_abs = os.path.abspath(public_root)
+    for asset in catalog.get("assets", []):
+        aid = str(asset.get("asset_id") or "")
+        kind = str(asset.get("subject_type") or "")
+        sid = str(asset.get("subject_id") or "")
+        if not aid or aid in asset_ids:
+            findings.append(Finding("visual_assets", "error", catalog_path, aid,
+                                    "asset_id vazio ou duplicado"))
+        asset_ids.add(aid)
+        if kind not in canonical or sid not in canonical.get(kind, set()):
+            findings.append(Finding("visual_assets", "error", catalog_path, aid,
+                                    f"subject canônico inexistente: {kind}:{sid}"))
+        if (kind, sid) in subjects:
+            findings.append(Finding("visual_assets", "error", catalog_path, aid,
+                                    f"subject duplicado: {kind}:{sid}"))
+        subjects.add((kind, sid))
+        if asset.get("visibility") != "public":
+            findings.append(Finding("visual_assets", "error", catalog_path, aid,
+                                    "catálogo público contém asset não-público"))
+        for role, variant in (asset.get("variants") or {}).items():
+            url = str(variant.get("url") or "")
+            path = os.path.abspath(os.path.join(public_root, url.removeprefix("/").replace("/", os.sep)))
+            if not url.startswith("/art/v1/") or os.path.commonpath((public_abs, path)) != public_abs:
+                findings.append(Finding("visual_assets", "error", catalog_path, aid,
+                                        f"URL fora de /art/v1/: {url}"))
+                continue
+            if not os.path.isfile(path):
+                findings.append(Finding("visual_assets", "error", path, aid, "derivado ausente"))
+                continue
+            with open(path, "rb") as handle:
+                digest = hashlib.sha256(handle.read()).hexdigest()
+            actual_bytes = os.path.getsize(path)
+            ceiling = 120_000 if role == "thumbnail" else (400_000 if kind == "location" else 300_000)
+            if digest != variant.get("sha256") or actual_bytes != variant.get("bytes"):
+                findings.append(Finding("visual_assets", "error", path, aid,
+                                        "hash/bytes divergem do catálogo"))
+            if actual_bytes > ceiling:
+                findings.append(Finding("visual_assets", "error", path, aid,
+                                        f"{role} excede teto de {ceiling} bytes"))
+
+    creation = catalog.get("creation") or {}
+    if set((creation.get("races") or {}).keys()) != race_ids:
+        findings.append(Finding("visual_assets", "error", catalog_path, "races",
+                                "cobertura de raças do onboarding está incompleta"))
+    if set((creation.get("classes") or {}).keys()) != class_ids:
+        findings.append(Finding("visual_assets", "error", catalog_path, "classes",
+                                "cobertura de classes do onboarding está incompleta"))
+    mapped_locations = {sid for kind, sid in subjects if kind == "location"}
+    fallbacks = catalog.get("location_fallbacks") or {}
+    for location_id in locations - mapped_locations:
+        if fallbacks.get(location_id) not in mapped_locations:
+            findings.append(Finding("visual_assets", "error", catalog_path, location_id,
+                                    "local sem arte exata ou fallback regional válido"))
+    return findings
+
+
 def validate_all(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR,
                  overrides_path: str = OVERRIDES_PATH) -> List[Finding]:
     """Roda todos os validadores; aplica whitelist; ordena por
@@ -727,6 +812,7 @@ def validate_all(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR,
         findings.extend(validate_encoding())
         findings.extend(validate_cards())
         findings.extend(validate_bestiary())
+        findings.extend(validate_visual_assets())
     else:
         paths = _codex_md_paths(codex_dir)
         if os.path.isdir(graph_dir):

@@ -286,6 +286,12 @@ select {
   transition: border-color 0.16s var(--ease), box-shadow 0.16s var(--ease),
               transform 0.16s var(--ease);
 }
+.card__art {
+  width: calc(100% + 2rem); margin: -0.9rem -1rem 0.35rem;
+  border-radius: var(--r-sm) var(--r-sm) 0 0;
+}
+.card__art img, .card__art .visual-art__monogram { aspect-ratio: 4 / 3; }
+.card__art figcaption { display: none; }
 .card:hover { border-color: var(--accent); transform: translateY(-1px); }
 .card[aria-pressed="true"] {
   border-color: var(--accent);
@@ -344,10 +350,36 @@ select {
 .iconbtn:hover { border-color: var(--accent); color: var(--accent); }
 
 .stage { flex: 1 1 auto; display: grid; grid-template-columns: minmax(0, 1fr) 360px; min-height: 0; }
+.narrative-stage { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+
+/* Fase 8A: imagens responsivas do catálogo visual. O fundo de cor evita
+   layout shift enquanto o WebP carrega; erro de rede cai no monograma. */
+.visual-art { margin: 0; overflow: hidden; position: relative; background: var(--steel); }
+.visual-art img, .visual-art__monogram {
+  display: block; width: 100%; object-fit: cover; object-position: center;
+}
+.visual-art img { height: auto; }
+.visual-art__monogram {
+  min-height: 150px; display: grid; place-items: center; color: var(--accent);
+  background: radial-gradient(circle at 50% 30%, var(--surface-2), var(--bg-deep));
+  font: 700 clamp(2.8rem, 10vw, 5rem) var(--decorative);
+}
+.visual-art figcaption {
+  display: grid; gap: 0.1rem; position: absolute; inset: auto 0 0; padding: 1.8rem 0.8rem 0.6rem;
+  background: linear-gradient(transparent, oklch(0.08 0.01 250 / 0.94)); color: var(--ink);
+}
+.visual-art figcaption strong { font: 0.78rem var(--display); letter-spacing: 0.08em; text-transform: uppercase; }
+.visual-art figcaption span { color: var(--muted); font-size: 0.78rem; }
+.scene-art { flex: 0 0 clamp(145px, 26vh, 270px); position: relative; overflow: hidden; border-bottom: 1px solid var(--line-soft); background: var(--bg-deep); }
+.scene-art img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center 48%; }
+.scene-art__veil { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, transparent 45%, var(--bg) 108%); }
+.scene-art p { position: absolute; left: clamp(0.9rem, 3vw, 2.9rem); bottom: 0.55rem; margin: 0; color: var(--ink); font: 0.7rem var(--display); letter-spacing: 0.12em; text-transform: uppercase; text-shadow: 0 2px 8px #000; }
+.msg__visual { width: min(100%, 600px); margin: 0 0 1rem; border: 1px solid var(--line-soft); border-radius: var(--r-md); box-shadow: var(--shadow-deep); }
+.msg__visual img { max-height: min(58vh, 700px); object-fit: cover; }
 
 /* --- narrativa --- */
 .story {
-  min-height: 0; overflow-y: auto; padding: clamp(1.5rem, 4vw, 2.9rem);
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: clamp(1.5rem, 4vw, 2.9rem);
   position: relative;
   /* luz de tocha caindo sobre a página — aquece a superfície mais lida
      (combate sobrescreve com o brilho de sangue) */
@@ -956,6 +988,9 @@ select {
   .stage { grid-template-columns: 1fr; }
   .hud { width: 100vw; top: 0; }
   .story { padding: 0.7rem 0.7rem 1rem; }
+  .scene-art { flex-basis: 132px; }
+  .scene-art p { left: 0.7rem; bottom: 0.35rem; font-size: 0.6rem; }
+  .card__art { width: calc(100% + 2rem); }
   .msg--player { max-width: 100%; }
   .actionbar { padding: 0.6rem 0.7rem calc(0.6rem + env(safe-area-inset-bottom)); position: sticky; bottom: 0; }
   .actionbar input { min-width: 0; font-size: 16px; } /* 16px evita zoom do iOS */

@@ -8,6 +8,7 @@ import { CardHand } from "./CardHand";
 import { ReactionPrompt } from "./ReactionPrompt";
 import { SceneZones } from "./SceneZones";
 import { WoundTrack } from "./WoundTrack";
+import { SceneArtwork } from "./SceneArtwork";
 
 const TACTICAL_MANEUVERS = [
   { label: "Engajar", kind: "maneuver" as const, maneuver: "engajar" as const },
@@ -129,7 +130,10 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
       )}
 
       <div className="stage">
-        <StoryLog entries={log} thinking={thinking} thinkingLabel={thinkingLabel} />
+        <div className="narrative-stage">
+          <SceneArtwork scene={data?.visual?.scene} />
+          <StoryLog entries={log} thinking={thinking} thinkingLabel={thinkingLabel} />
+        </div>
         <Hud data={data} open={hudOpen} onEquip={onEquip} busy={busy} />
       </div>
 

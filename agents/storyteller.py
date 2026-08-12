@@ -1,6 +1,8 @@
 """Narration agent that advances the story and campaign plan."""
 import random
 import re
+from collections import Counter
+from copy import deepcopy
 from typing import Dict, List
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
@@ -88,6 +90,38 @@ class StoryUpdate(BaseModel):
             "novos (criação de item é papel do baú/loja). Vazio na dúvida."
         ),
     )
+
+
+_MONEY_CLAIM_RE = re.compile(r"\b(?:ouro|moedas?)\b", re.IGNORECASE)
+
+
+def _is_monetary_claim(value: object) -> bool:
+    """Dinheiro é economia, nunca um item a resolver pelo nome livre do LLM."""
+    return bool(_MONEY_CLAIM_RE.search(str(value or "")))
+
+
+def _inventory_counts(player: dict) -> Counter:
+    counts: Counter = Counter()
+    for entry in player.get("inventory") or []:
+        if isinstance(entry, dict) and entry.get("id"):
+            counts[str(entry["id"])] += int(entry.get("qty", 1) or 1)
+    return counts
+
+
+def _reward_confirmation(before: dict, after: dict) -> str:
+    """Linha canônica derivada somente do delta mecânico confirmado."""
+    rewards: List[str] = []
+    gold_delta = int(after.get("gold", 0) or 0) - int(before.get("gold", 0) or 0)
+    if gold_delta > 0:
+        rewards.append(f"+{gold_delta} de ouro")
+    before_items = _inventory_counts(before)
+    after_items = _inventory_counts(after)
+    if after_items:
+        from inventory import item_display, make_entry
+        for item_id, qty in (after_items - before_items).items():
+            label = item_display(make_entry(item_id))
+            rewards.append(f"{label}" + (f" ×{qty}" if qty > 1 else ""))
+    return "Recompensa confirmada: " + ", ".join(rewards) + "." if rewards else ""
 
 
 def _scene_canonical_entities(state: GameState, factions: list, intel: dict, loc: str) -> str:
@@ -264,6 +298,8 @@ def storyteller_node(state: GameState):
             }
     travel_periods = 0
     discovery_events: list = []
+    reward_player_before = deepcopy(state.get("player") or {})
+    discovery_player = None
     if dest:
         from world_utils import travel_cost
         travel_periods = travel_cost(world, dest)  # custo ANTES de mover (usa origem)
@@ -276,7 +312,7 @@ def storyteller_node(state: GameState):
         # spec loot-exploracao: achado ambiental (1ª visita) OU baú curado (sempre
         # que houver e não saqueado). Muta player.inventory/gold + world in-place
         # (propaga: viagem sem descanso não substitui o player no updates parcial).
-        _pl = state.get("player")
+        _pl = deepcopy(state.get("player"))
         if isinstance(_pl, dict) and (first_visit or (dest.get("treasure"))):
             from services import exploration
             _rng = exploration.arrival_rng(
@@ -287,6 +323,7 @@ def storyteller_node(state: GameState):
                 projection=state.get("world_projection"))
             if disc_note:
                 faction_note = (faction_note + " " + disc_note).strip()
+            discovery_player = _pl
         if travel_periods == 0:
             travel_note = (
                 f"O jogador ENTROU em {dest['name']} (mesma cidade — o tempo não passou). "
@@ -358,7 +395,10 @@ def storyteller_node(state: GameState):
             world["last_encounter_id"] = enc.get("hint")
             world["last_encounter_loc"] = world.get("current_location_id")
             danger = int(world.get("danger_level", 1) or 1)
-            base_p = rested_player if rested_player is not None else dict(state.get("player") or {})
+            base_p = (
+                rested_player if rested_player is not None
+                else dict(discovery_player or state.get("player") or {})
+            )
 
             # Fase 6.4 (R1): percepção decide surpresa; (R2): nem todo perigo é combate.
             # Reforço/fação dominante SEMPRE é combate (eles vieram POR você).
@@ -391,6 +431,8 @@ def storyteller_node(state: GameState):
                 }
                 if rested_player is not None:
                     updates["player"] = rested_player  # já curou no descanso antes da emboscada
+                elif discovery_player is not None:
+                    updates["player"] = discovery_player
                 # spec loot-exploracao: claim de único do baú curado não se perde
                 # se um encontro disparar na mesma chegada.
                 if discovery_events:
@@ -442,14 +484,12 @@ def storyteller_node(state: GameState):
     
     # --- Contexto Híbrido ---
     game_id = state.get("game_id")
-    narrative_summary = state.get("narrative_summary", "")
-    
     # --- Fase 2.8: contexto centralizado (estado dinâmico + lore + memória, com budget) ---
     # ESTADO ATUAL entra ANTES da lore base: a verdade viva vence o canônico.
     pack = build_context_pack(state, query=f"{loc} {last_user_input}",
                               purpose="story", game_id=game_id)
     lore_context = pack.lore_block or "Dark Fantasy Genérica."
-    memoria_recente = pack.memory_block or narrative_summary
+    memoria_recente = pack.memory_block or "Sem memória recente dentro do budget deste turno."
     # spec arvores-habilidade-classes (§3.3): utilitárias conhecidas — gate
     # determinístico; a LLM só narra o que a ficha PERMITE.
     from services.context_builder import utility_context_block
@@ -753,6 +793,8 @@ def storyteller_node(state: GameState):
             updates["memory_fact_policy"] = "canonical_only"
         if rested_player is not None:
             updates["player"] = rested_player
+        elif discovery_player is not None:
+            updates["player"] = discovery_player
         if leveled_player is not None:  # Fase 4.1: XP do beat (inclui o descanso, se houve)
             updates["player"] = leveled_player
 
@@ -775,6 +817,10 @@ def storyteller_node(state: GameState):
             inv = list(cur_p.get("inventory") or [])
             changed = False
             for g in gained:
+                if _is_monetary_claim(g):
+                    # O valor válido já foi aplicado pela exploração/economia.
+                    # Texto do provider nunca concede nem rejeita moeda.
+                    continue
                 iid = resolve_item_name(str(g))
                 if not iid:
                     print(f"⚠️ [STORYTELLER] item narrado desconhecido ignorado: {g!r}")
@@ -806,6 +852,13 @@ def storyteller_node(state: GameState):
             updates["messages"] = [AIMessage(content=clean)]
             updates["narrative_rejections"] = [
                 f"item_rejected:{name}" for name in dict.fromkeys(rejected_claims)]
+        reward_note = _reward_confirmation(
+            reward_player_before,
+            updates.get("player") or state.get("player") or {},
+        )
+        if reward_note:
+            current_text = str(updates["messages"][0].content or "").rstrip()
+            updates["messages"] = [AIMessage(content=f"{current_text}\n\n{reward_note}")]
         if invalid_story_events:
             updates["narrative_rejections"] = [
                 *list(updates.get("narrative_rejections") or []),

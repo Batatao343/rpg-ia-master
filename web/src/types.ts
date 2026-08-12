@@ -428,6 +428,46 @@ export interface GameResponse {
   game_over?: boolean;
   death?: DeathView;
   combat_simulation: CombatSimulationMeta;
+  visual: VisualResponse;
+}
+
+export interface VisualVariant {
+  url: string;
+  width: number;
+  height: number;
+  bytes: number;
+  sha256: string;
+}
+
+export interface VisualAsset {
+  asset_id: string;
+  subject_type: "race" | "class" | "location" | "npc";
+  subject_id: string;
+  title: string;
+  alt: string;
+  placeholder_color: string;
+  variants: { thumbnail: VisualVariant; display: VisualVariant };
+}
+
+export interface SceneVisual {
+  location_id: string;
+  location_name: string;
+  scope: "exact" | "regional" | "placeholder";
+  asset: VisualAsset | null;
+}
+
+export interface VisualCue {
+  kind: "npc_first_appearance";
+  subject_id: string;
+  subject_name: string;
+  caption: string;
+  asset: VisualAsset | null;
+  fallback: boolean;
+}
+
+export interface VisualResponse {
+  scene: SceneVisual;
+  cue: VisualCue | null;
 }
 
 export interface CreateOptions {
@@ -436,6 +476,10 @@ export interface CreateOptions {
   regions: string[];
   // Fase 2.5b: raças completas (desc + traits) p/ os cards do wizard
   races_full?: RaceFull[];
+  visuals?: {
+    races: Record<string, VisualAsset | null>;
+    classes: Record<string, VisualAsset | null>;
+  };
 }
 
 // spec onboarding-valoria: raça canônica de origins.json (via /data/options)
@@ -594,4 +638,5 @@ export interface LogEntry {
   role: "player" | "narrator";
   type: MessageType;
   streaming?: boolean;  // true enquanto texto está sendo revelado (typewriter)
+  visual?: VisualCue | null;
 }

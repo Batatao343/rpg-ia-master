@@ -6,7 +6,7 @@ sem LLM decidindo ação). Custo zero de quota com MockLLM; LLM real é opt-in.
 
 Submódulos:
   - runner    : run_campaign / CampaignResult / TurnRecord
-  - profiles  : PROFILES (10 perfis) — cada um next_action(state, rng) -> str
+  - profiles  : PROFILES (14 perfis) — cada um decide(state, rng) -> ProfileDecision
   - invariants: check_all / assert_invariants (Fase 5.2)
   - telemetry : JSONL por turno + summary (Fase 5.3)
   - report    : aggregate / render_markdown (Fase 5.3)

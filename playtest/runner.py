@@ -150,6 +150,7 @@ class TurnRecord:
     game_over: bool = False
     # Narração que o jogador leria no turno (p/ transcript qualitativo do prompt).
     narrative: str = ""
+    progression_choices: List[dict] = field(default_factory=list)
 
 
 @dataclass
@@ -172,6 +173,58 @@ class CampaignResult:
     startup_rag_events: List[dict] = field(default_factory=list)
     invariants_enabled: bool = True
     scenario: Optional[str] = None
+
+
+def _resolve_profile_progression(state: dict, profile: object) -> List[dict]:
+    """Simula o modal de level-up apenas para perfis que optam por isso."""
+    if not getattr(profile, "resolve_progression", False):
+        return []
+    import gamedata
+    import progression
+    from services import cards
+
+    player = dict(state.get("player") or {})
+    applied: List[dict] = []
+    # Uma subida pode enfileirar carta + virtude; consome ambas como a UI faria.
+    for choice in list(player.get("pending_choices") or []):
+        choice_id = str(choice.get("id") or "")
+        kind = str(choice.get("kind") or "")
+        kwargs: Dict[str, str] = {}
+        selected = ""
+        if kind == "virtude":
+            virtues = player.get("virtudes") or {}
+            eligible = [key for key in gamedata.VIRTUDES
+                        if int(virtues.get(key, 0) or 0) < gamedata.VIRTUDE_MAX]
+            if eligible:
+                selected = min(eligible, key=lambda key: (int(virtues.get(key, 0) or 0), key))
+                kwargs["virtude"] = selected
+        elif kind == "carta":
+            eligible_cards = sorted(progression.eligible_cards(player))
+            if eligible_cards:
+                selected = eligible_cards[0]
+                kwargs["card_id"] = selected
+            else:
+                evolved = player.get("evolved_cards") or {}
+                evolvable = [
+                    cid for cid in (player.get("known_cards") or [])
+                    if cid not in evolved and (cards.get_card(cid) or {}).get("evolucao")
+                ]
+                if evolvable:
+                    selected = sorted(evolvable)[0]
+                    kwargs.update(evolve_card_id=selected, caminho="A")
+        if not selected:
+            continue
+        updated, error = progression.apply_choice(player, choice_id, **kwargs)
+        if error:
+            continue
+        player = updated
+        applied.append({
+            "choice_id": choice_id, "kind": kind, "selection": selected,
+            **({"path": "A"} if kwargs.get("caminho") else {}),
+        })
+    if applied:
+        state["player"] = player
+    return applied
 
 
 # --- criação de personagem (espelha /game/new) -----------------------------
@@ -355,12 +408,42 @@ def _offline_embeddings(active: bool):
         yield
         return
     import rag
+    import persistence
     from agents import archivist as archivist_module
     from agents import npc as npc_module
     from agents import world_simulator as world_module
 
     session_store: Dict[str, List[str]] = {}
     npc_store: Dict[tuple[str, str], List[str]] = {}
+
+    def _capture_offline_memory(game_id: str) -> Optional[Dict[str, bytes]]:
+        payload = {
+            "session": list(session_store.get(str(game_id), [])),
+            "npcs": {
+                npc_id: list(values)
+                for (gid, npc_id), values in npc_store.items()
+                if gid == str(game_id)
+            },
+        }
+        if not payload["session"] and not payload["npcs"]:
+            return None
+        return {"__offline_store__.json": json.dumps(
+            payload, ensure_ascii=False, sort_keys=True).encode("utf-8")}
+
+    def _restore_offline_memory(game_id: str,
+                                captured: Optional[Dict[str, bytes]]) -> None:
+        gid = str(game_id)
+        session_store.pop(gid, None)
+        for key in [key for key in npc_store if key[0] == gid]:
+            npc_store.pop(key, None)
+        raw = (captured or {}).get("__offline_store__.json")
+        if not raw:
+            return
+        payload = json.loads(raw.decode("utf-8"))
+        if payload.get("session"):
+            session_store[gid] = list(payload["session"])
+        for npc_id, values in (payload.get("npcs") or {}).items():
+            npc_store[(gid, str(npc_id))] = list(values)
 
     def _offline_path(game_id: str, npc_id: Optional[str] = None) -> str:
         session = rag._safe_storage_component(game_id, "session")
@@ -427,6 +510,8 @@ def _offline_embeddings(active: bool):
         (archivist_module, "add_npc_memory", _write_npc),
         (npc_module, "add_npc_memory", _write_npc),
         (world_module, "add_memory_to_session", _write_session),
+        (persistence, "capture_session_memory", _capture_offline_memory),
+        (persistence, "restore_captured_session_memory", _restore_offline_memory),
     ]
     originals = [
         (module, attribute, getattr(module, attribute))
@@ -758,6 +843,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 aborted_reason = startup_abort
 
             for turn in range(1, turns + 1) if not aborted_reason else []:
+                progression_choices = _resolve_profile_progression(state, prof)
                 directed = (
                     scenario_module.decision_for(str(scenario), turn, state)
                     if scenario_module is not None else None
@@ -805,6 +891,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     decision=decision_record,
                     combat_active_before=combat_on_entry,
                     combat_round_before=combat_round_before,
+                    progression_choices=progression_choices,
                 )
                 turn_input_state = state
                 try:
@@ -876,6 +963,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                         "combat_ended": rec.combat_ended,
                         "combat_no_progress_streak": no_progress_streak,
                         "rag_events": rec.rag_events,
+                        "latency_ms": rec.latency_ms,
+                        "real_llm": bool(use_real_llm),
                     }
                     turn_viol = (
                         _run_invariants(

@@ -1,4 +1,4 @@
-"""playtest/profiles.py — 10 perfis de jogador determinísticos.
+"""playtest/profiles.py — perfis de jogador determinísticos.
 
 Cada perfil é uma política PURA: `next_action(state, rng) -> str`. Lê o estado
 como um jogador leria a tela (última narração, HUD: player/combat/world/npcs) e
@@ -712,10 +712,86 @@ class Recrutador(_Base):
         ])
 
 
+# --- 14. normal ------------------------------------------------------------
+
+class Normal(_Base):
+    """Jogador curioso e prudente: mistura os sistemas em vez de maximizar um.
+
+    O ciclo dá cobertura reprodutível; NPCs/risco/recuperação interrompem o
+    roteiro como fariam para uma pessoa atenta ao estado da sessão.
+    """
+    name = "normal"
+    resolve_progression = True
+
+    def reset(self) -> None:
+        self._step = 0
+        self._talked: set[str] = set()
+
+    def combat_decision(self, state, rng):
+        combat = state.get("combat") or {}
+        if ((_low_vitality(state, 0.35) and not _healing_item(state))
+                or int(combat.get("round", 0) or 0) >= 7):
+            connections = sorted(_connections(_current_id(state)), key=lambda c: c["id"])
+            destination = connections[0] if connections else None
+            return ProfileDecision(
+                text="A luta ficou perigosa demais; recuo e tento fugir.",
+                mode="flee",
+                flee_destination_id=destination["id"] if destination else None,
+            )
+        return _combat_decision(state, rng)
+
+    def _next_action(self, state, rng):
+        in_scene = [name for name in _npcs_in_scene(state) if name not in self._talked]
+        if in_scene:
+            target = sorted(in_scene)[0]
+            self._talked.add(target)
+            return f"Converso com {target} e pergunto o que está acontecendo por aqui."
+
+        step = self._step
+        self._step += 1
+        phase = step % 8
+        if phase == 0:
+            from gamedata import interiors_of
+            world = state.get("world") or {}
+            visited = set(world.get("visited") or [])
+            candidates = [
+                *[loc for loc in interiors_of(_current_id(state))
+                  if loc["id"] not in visited],
+                *[loc for loc in _connections(_current_id(state))
+                  if loc["id"] not in visited],
+            ]
+            if candidates:
+                dest = sorted(candidates, key=lambda loc: loc["id"])[0]
+                return f"Viajo para {dest['name']} e observo o caminho com curiosidade."
+            return "Exploro os arredores procurando detalhes e caminhos que ainda não notei."
+        if phase == 1:
+            active = [q for q in (state.get("quests") or [])
+                      if isinstance(q, dict) and q.get("status") == "active"]
+            title = active[0].get("title") if active else "o objetivo atual"
+            return f"Investigo pistas e avanço com cuidado em {title}."
+        if phase == 2:
+            return "Vasculho o local em busca de algo útil, sem pegar o que pertence a alguém."
+        if phase == 3:
+            return "Procuro alguém por perto e pergunto sobre rumores e problemas locais."
+        if phase == 4:
+            return ("Investigo uma ameaça próxima com cautela e, se ela avançar, "
+                    "ataco para me defender.")
+        if phase == 5:
+            return "Procuro um mercador, comparo preços e compro suprimentos se precisar."
+        if phase == 6:
+            plan = state.get("campaign_plan") or {}
+            beats = plan.get("beats") or []
+            index = int(plan.get("current_step", 0) or 0)
+            objective = (beats[index].get("description")
+                         if index < len(beats) else plan.get("climax", "a história"))
+            return f"Tento cumprir o objetivo principal: {str(objective)[:100]}."
+        return "Descanso num lugar razoavelmente seguro e organizo meus pertences."
+
+
 PROFILES: Dict[str, Profile] = {
     p.name: p for p in [
         Agressivo(), Explorador(), Comerciante(), Diplomatico(), Troll(),
         MapaBreaker(), Combate(), NpcOnly(), LootAbuser(), SecretRusher(),
-        Quester(), Fujao(), Recrutador(),
+        Quester(), Fujao(), Recrutador(), Normal(),
     ]
 }

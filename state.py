@@ -391,6 +391,8 @@ class GameState(TypedDict):
     # --- Identificação e Memória (NOVO) ---
     game_id: str  # ID único da sessão para isolar o RAG
     processed_action_ids: List[str]  # ledger limitado de idempotência SSE/POST
+    visual_seen_entity_ids: List[str]  # Fase 8A: NPCs já apresentados
+    visual_cue_ledger: List[Dict]  # Fase 8A: action_key -> cue|null (64)
     narrative_summary: str # Resumo de curto prazo (contexto comprimido)
     archivist_last_run: int # Controle de frequência do arquivista
     archive_due: bool       # flag transitória: evento relevante pede arquivamento (cadência)

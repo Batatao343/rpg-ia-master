@@ -9,6 +9,7 @@ import type {
   StartScenario,
 } from "../types";
 import { Frame, Divider, Medallion } from "./ornaments";
+import { VisualArtwork } from "./VisualArtwork";
 
 const LEVELS = [
   { v: 1, label: "Iniciante · 1" },
@@ -208,6 +209,8 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                   aria-pressed={race === full.name}
                   onClick={() => setRace(full.name)}
                 >
+                  <VisualArtwork asset={opts.visuals?.races?.[full.id] ?? null}
+                    name={card?.name || full.name} className="card__art" />
                   <span className="card__name">{card?.name || full.name}</span>
                   <span className="card__tagline">{card?.tagline || full.desc}</span>
                   {card && <span className="card__desc">{card.description}</span>}
@@ -239,6 +242,8 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                     aria-pressed={className === cls}
                     onClick={() => setClassName(cls)}
                   >
+                    <VisualArtwork asset={opts.visuals?.classes?.[cls] ?? null}
+                      name={cls} className="card__art" />
                     <span className="card__name">{cls}</span>
                     {card && (
                       <>

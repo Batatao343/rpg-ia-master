@@ -11,6 +11,7 @@ import type {
   PrologueResponse,
   SaveSummary,
   WorldMapData,
+  VisualResponse,
 } from "./types";
 
 async function req<T>(path: string, opts: RequestInit = {}): Promise<T> {
@@ -81,6 +82,7 @@ export interface StreamHandlers {
   onPhase?: (node: string) => void;
   onRoute?: (route: string) => void;
   onChunk?: (chunk: string, done: boolean) => void;
+  onVisual?: (visual: VisualResponse) => void;
 }
 
 export async function sendActionStream(
@@ -108,6 +110,7 @@ export async function sendActionStream(
     if (name === "phase") handlers.onPhase?.(payload.node);
     else if (name === "route") handlers.onRoute?.(payload.route);
     else if (name === "narrative") handlers.onChunk?.(payload.chunk, payload.done);
+    else if (name === "visual") handlers.onVisual?.(payload as VisualResponse);
     else if (name === "state") finalState = payload as GameResponse;
   };
 

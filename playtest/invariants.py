@@ -285,6 +285,75 @@ def check_world(state: dict, prev: Optional[dict], turn: int) -> List[Violation]
     return out
 
 
+def check_summary_bounds(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    from services.memory_summary import NARRATIVE_SUMMARY_MAX_CHARS
+    summary = str(state.get("narrative_summary") or "")
+    if len(summary) <= NARRATIVE_SUMMARY_MAX_CHARS:
+        return []
+    return [_V(
+        "memory.summary_bounds", "error", turn,
+        f"narrative_summary tem {len(summary)} caracteres; teto é "
+        f"{NARRATIVE_SUMMARY_MAX_CHARS}",
+        chars=len(summary), max_chars=NARRATIVE_SUMMARY_MAX_CHARS,
+    )]
+
+
+def check_campaign_grounding(state: dict, prev: Optional[dict],
+                             turn: int) -> List[Violation]:
+    """Tolera o próprio turno de viagem; no turno seguinte o plano deve ancorar."""
+    world = state.get("world") or {}
+    plan = state.get("campaign_plan") or {}
+    current = str(world.get("current_location") or "")
+    planned = str(plan.get("location") or "")
+    if not current or not planned or current == planned:
+        return []
+    previous_location = str(((prev or {}).get("world") or {}).get("current_location") or "")
+    if previous_location and previous_location != current:
+        return []
+    try:
+        from agents.campaign_manager import _same_region
+        stale = not _same_region(planned, current)
+    except Exception:
+        stale = False
+    if not stale:
+        return []
+    return [_V(
+        "campaign.region_grounding", "error", turn,
+        f"plano ancorado em {planned!r} enquanto a cena permanece em {current!r}",
+        planned_location=planned, current_location=current,
+    )]
+
+
+def check_reward_feedback(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    if not prev:
+        return []
+    player = state.get("player") or {}
+    previous = prev.get("player") or {}
+    gold_gained = int(player.get("gold", 0) or 0) > int(previous.get("gold", 0) or 0)
+
+    def inventory_total(actor: dict) -> int:
+        return sum(int(entry.get("qty", 1) or 1)
+                   for entry in (actor.get("inventory") or [])
+                   if isinstance(entry, dict))
+
+    item_gained = inventory_total(player) > inventory_total(previous)
+    if not (gold_gained or item_gained):
+        return []
+    narrative = _last_narration(state)
+    import re
+    if not re.search(
+        r"\b(?:nada novo (?:foi )?obtido|nenhum(?:a)? (?:recompensa|objeto|item).{0,30}(?:obtido|acrescentado))\b",
+        narrative, re.IGNORECASE,
+    ):
+        return []
+    return [_V(
+        "narrative.reward_contradiction", "error", turn,
+        "a narração negou uma recompensa confirmada pelo delta mecânico",
+        gold_before=previous.get("gold"), gold_after=player.get("gold"),
+        item_gained=item_gained,
+    )]
+
+
 # --- R5 conhecimento --------------------------------------------------------
 
 # spec beats-visibilidade-ptbr (R1): as assinaturas migraram para o módulo
@@ -669,6 +738,26 @@ def check_contextual(
         turn=turn,
         combat_executed=bool(context.get("combat_executed")),
     )
+    decision = context.get("decision") or {}
+    resolved = context.get("resolved_action") or {}
+    chase_state = (state.get("combat") or {}).get("chase") or {}
+    if (decision.get("kind") == "flee"
+            and resolved.get("result") == "flee_failed"
+            and chase_state.get("trilha") in ("afastado", "quase_livre")
+            and not chase_state.get("alcancado")):
+        out.append(_V(
+            "combat.flee_progress_mislabeled", "error", turn,
+            "progresso válido de perseguição foi classificado como falha",
+            chase_track=chase_state.get("trilha"), result=resolved.get("result"),
+        ))
+    latency_ms = int(context.get("latency_ms", 0) or 0)
+    if context.get("real_llm") and latency_ms > 45_000:
+        severity: Severity = "error" if latency_ms > 90_000 else "warning"
+        out.append(_V(
+            "performance.turn_latency", severity, turn,
+            f"turno real levou {latency_ms / 1000:.1f}s",
+            latency_ms=latency_ms, warning_ms=45_000, error_ms=90_000,
+        ))
     rag_errors = [
         event for event in (context.get("rag_events") or [])
         if not bool(event.get("success", True))
@@ -905,7 +994,8 @@ Check = Callable[[dict, Optional[dict], int], List[Violation]]
 
 CHECKS: List[Check] = [
     check_vitals, check_vitality_consistency, check_wound_capacity,
-    check_economy, check_entities, check_world, check_knowledge,
+    check_economy, check_entities, check_world, check_summary_bounds,
+    check_campaign_grounding, check_reward_feedback, check_knowledge,
     check_lifecycle, check_combat_zombie, check_effect_catalog,
     check_invalid_sentinels, check_rag_persistence, check_summary_lifecycle,
     check_memory_provenance,

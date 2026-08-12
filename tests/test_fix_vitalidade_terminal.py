@@ -133,20 +133,20 @@ def test_migracao_v4_para_v5_escolhe_vitalidade_e_normaliza_party() -> None:
 
     migrated = persistence.migrate_state(raw)
 
-    assert migrated["schema_version"] == 5
+    assert migrated["schema_version"] == 6
     assert migrated["player"]["hp"] == 4
     assert migrated["player"]["max_hp"] == 10
     assert migrated["party"][0]["hp"] == 3
     assert migrated["party"][0]["max_hp"] == 8
 
 
-def test_save_pre_v4_permanece_arquivado_no_schema_v5() -> None:
+def test_save_pre_v4_permanece_arquivado_no_schema_atual() -> None:
     migrated = persistence.migrate_state({
         "schema_version": 3,
         "player": {"hp": 20, "max_hp": 20},
     })
 
-    assert migrated["schema_version"] == 5
+    assert migrated["schema_version"] == persistence.SCHEMA_VERSION
     assert migrated["archived"] is True
     assert "virtudes" not in migrated["player"]
 

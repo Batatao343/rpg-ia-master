@@ -67,6 +67,29 @@ def start_chase(scene: dict, fugitive_id: str, pursuers: List[dict], *,
             "fugitive_id": fugitive_id, "alcancado": False, "escapou": trilha == "escapou"}
 
 
+def can_resume(chase: Optional[dict], fugitive_id: str,
+               pursuers: List[dict]) -> bool:
+    """Confirma que um snapshot pertence à perseguição ativa atual.
+
+    Estados terminais nunca são retomados. A comparação fechada dos IDs evita
+    transportar progresso para outro encontro depois de morte/spawn de inimigo.
+    """
+    if not isinstance(chase, dict):
+        return False
+    if chase.get("alcancado") or chase.get("escapou"):
+        return False
+    if chase.get("trilha") not in TRACK[:-1]:
+        return False
+    if chase.get("fugitive_id") != fugitive_id:
+        return False
+    current = {
+        str(p.get("id") or p.get("name"))
+        for p in pursuers or [] if will_pursue(p)
+    }
+    stored = {str(pid) for pid in (chase.get("perseguidores") or [])}
+    return bool(current) and current == stored
+
+
 # ==========================================================================
 # Etapa 2 — condutor + dificuldade (R4)
 # ==========================================================================

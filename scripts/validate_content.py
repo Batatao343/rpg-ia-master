@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from services.content_validator import CODEX_DIR, GRAPH_DIR, validate_all
 
 _ORDEM = ("frontmatter", "ids", "references", "aliases", "visibility", "overrides",
-          "encoding", "cards", "bestiary")
+          "encoding", "cards", "bestiary", "visual_assets")
 
 
 def main(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> int:

@@ -374,7 +374,9 @@ def archive_node(state: GameState):
         npc_retry_committed = True
         event_updates["rag_persistence_error"] = None
 
-    current_summary = state.get("narrative_summary", "A aventura segue.")
+    from services.memory_summary import compact_summary
+    current_summary = compact_summary(
+        state.get("narrative_summary", "A aventura segue."))
     context_msgs = messages[-6:] if len(messages) > 6 else messages
     pending_conflict_summary = dict(state.get("conflict_summary") or {})
     consumed_conflict_ids = (
@@ -495,8 +497,8 @@ def archive_node(state: GameState):
                 conflict_summary, base,
             )
         if canonical_text and canonical_text.casefold() not in base.casefold():
-            return f"{base.rstrip()} {canonical_text}".strip()
-        return base
+            base = f"{base.rstrip()} {canonical_text}".strip()
+        return compact_summary(base)
 
     def memory_state_updates() -> dict:
         return {

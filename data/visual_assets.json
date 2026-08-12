@@ -1,0 +1,1393 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "asset_id": "VAL-P4-CLS-ARCANISTA_CINZENTO-001",
+      "subject_type": "class",
+      "subject_id": "Arcanista Cinzento",
+      "title": "Arcanista Cinzento",
+      "alt": "Arte de Arcanista Cinzento",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "classes/VAL-P4-CLS-ARCANISTA_CINZENTO-001.png",
+        "sha256": "2cf04dd78d10d9c4ddc15be27f9b47ac45021b9eea63cfb185a4c812a92bb265"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/class/arcanista-cinzento.2cf04dd78d10.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 68966,
+          "sha256": "6efa6b3ebb34916a05b652d5992557815fdd5f5223c7a53a2f7c2e2db2ae323c"
+        },
+        "display": {
+          "url": "/art/v1/class/arcanista-cinzento.2cf04dd78d10.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 298474,
+          "sha256": "20e1b8e05cdc8381cd604157b60a654558e0d4dfe5ff852c4491f9c39ee9ca40"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P4-CLS-CORRUPTOR-001",
+      "subject_type": "class",
+      "subject_id": "Corruptor",
+      "title": "Corruptor",
+      "alt": "Arte de Corruptor",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "classes/VAL-P4-CLS-CORRUPTOR-001.png",
+        "sha256": "5412f45384df4dec5194973ec0295f42a14eb76ae115dcd797a046efe662c093"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/class/corruptor.5412f45384df.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 87098,
+          "sha256": "bda6d6d923d42e78420a9b2b2a8579b7889e76286acf84216445e676ea0f7753"
+        },
+        "display": {
+          "url": "/art/v1/class/corruptor.5412f45384df.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 289396,
+          "sha256": "75485c4679a3a792b872d155a24fe5465a01c318b266958fd18655c21ded023c"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P4-CLS-DEVOTO_ABISMO-001",
+      "subject_type": "class",
+      "subject_id": "Devoto do Abismo",
+      "title": "Devoto do Abismo",
+      "alt": "Arte de Devoto do Abismo",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "classes/VAL-P4-CLS-DEVOTO_ABISMO-001.png",
+        "sha256": "6c4803a964bd11512d632cb093ced29bbe0c55df3da27cd849454e24157d43a5"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/class/devoto-do-abismo.6c4803a964bd.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 64836,
+          "sha256": "dc31620e8c615a9f2745309f6caf7d722809c2b003dba3dabdaaed75a25ef48e"
+        },
+        "display": {
+          "url": "/art/v1/class/devoto-do-abismo.6c4803a964bd.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 285512,
+          "sha256": "72c9fbabb9e02299b9e4e04aa1c22b4b5c3257a4e4f7b36e332ba0281619079a"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P4-CLS-MEDICO_CAMPO-001",
+      "subject_type": "class",
+      "subject_id": "Médico de Campo",
+      "title": "Médico de Campo",
+      "alt": "Arte de Médico de Campo",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "classes/VAL-P4-CLS-MEDICO_CAMPO-001.png",
+        "sha256": "442b6f12d7c54db850b6973520b39685615948ba97a64ac3104a1d47faa1a39a"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/class/medico-de-campo.442b6f12d7c5.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 62866,
+          "sha256": "16f725a861d97ca5201db4fbbc5f5cb5d11e25c376d5f9e9329284ca4f1e896a"
+        },
+        "display": {
+          "url": "/art/v1/class/medico-de-campo.442b6f12d7c5.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 281102,
+          "sha256": "ae97be7bf679967bb50773fa62f2a44ba19c1a5a4979a10bbd5610fd4cdb4a19"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P4-CLS-SANGROMANTE-001",
+      "subject_type": "class",
+      "subject_id": "Sangromante",
+      "title": "Sangromante",
+      "alt": "Arte de Sangromante",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "classes/VAL-P4-CLS-SANGROMANTE-001.png",
+        "sha256": "26f22dad6031e4eb78bc5fd12edfac21628bd66c22473f386adf4b2977d01db2"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/class/sangromante.26f22dad6031.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 55342,
+          "sha256": "3587b1c9478eac7f04df7bc6f8aef22a5565e9e4329fa411fcb2e6cc326f478f"
+        },
+        "display": {
+          "url": "/art/v1/class/sangromante.26f22dad6031.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 237234,
+          "sha256": "d7bbaa0441fc0c66927846b47d6c9fb96b3a7053a532349932100c1215f4e22a"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-LOC-AETHELGARD_ENTRADA_SECA-001",
+      "subject_type": "location",
+      "subject_id": "ae_camara_seca",
+      "title": "Aethelgard",
+      "alt": "Arte de Aethelgard",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-P2-LOC-AETHELGARD_ENTRADA_SECA-001.png",
+        "sha256": "a4e7951c75d1fbe868fe9c88bce1bc0a9c6ee5a29c7bc2a7cfac4365e1511493"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/ae-camara-seca.a4e7951c75d1.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 74466,
+          "sha256": "8937bece026419f182a953f1318c5699a5279c23984c32dcabd56feeb0f58fc1"
+        },
+        "display": {
+          "url": "/art/v1/location/ae-camara-seca.a4e7951c75d1.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 306540,
+          "sha256": "5a8b8fdaedf30f3682338b72b326a3daed92ee8505ee590b73410a1c29034ae4"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-LOC-CATEDRAL_AFUNDADA-001",
+      "subject_type": "location",
+      "subject_id": "ae_ruinas_submersas",
+      "title": "Catedral Afundada",
+      "alt": "Arte de Catedral Afundada",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-P2-LOC-CATEDRAL_AFUNDADA-001.png",
+        "sha256": "4733812bf447f9b7a6e93acdd2b09467d982f4274000431e977a639a8a7d925a"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/ae-ruinas-submersas.4733812bf447.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 68384,
+          "sha256": "82295b94dc527a01c0fd2959e27d147b693adf84356d64bdc10bbf824c1d5b68"
+        },
+        "display": {
+          "url": "/art/v1/location/ae-ruinas-submersas.4733812bf447.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 287164,
+          "sha256": "4c6e653e98dde4509957fb4d549334781708604ed6afe045db8d84a4ad4ee7fb"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-LOC-AETHELGARD-001",
+      "subject_type": "location",
+      "subject_id": "aethelgard",
+      "title": "Aethelgard Submersa",
+      "alt": "Arte de Aethelgard Submersa",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-ANCHOR-LOC-AETHELGARD-001.png",
+        "sha256": "10af27b7814da92a0b32d734af7930b36c73322867160f992869c18d2deb0e49"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/aethelgard.10af27b7814d.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 75762,
+          "sha256": "6187ecf12049e30b8d6b643a6ca985202939165672df4aae00cb194edc3c8b7e"
+        },
+        "display": {
+          "url": "/art/v1/location/aethelgard.10af27b7814d.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 298740,
+          "sha256": "3dd9e45a712aeb01d4d925f7360cfb7544919e83c15053a13e40932804772758"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-LOC-BREKMAR-001",
+      "subject_type": "location",
+      "subject_id": "brekmar",
+      "title": "Brekmar",
+      "alt": "Arte de Brekmar",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-ANCHOR-LOC-BREKMAR-001.png",
+        "sha256": "0e164daf01234c9246a24f22ff816077334e537e5e6065fec6df209f801932e1"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/brekmar.0e164daf0123.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 63016,
+          "sha256": "3dc2783e76a8c3a3af9357d1c4e9ba93943decba89c1237563ae326dc5a55d7c"
+        },
+        "display": {
+          "url": "/art/v1/location/brekmar.0e164daf0123.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 278442,
+          "sha256": "cd06a3746381ba52aa9a39f79c9cfc8da01a100dc06f2bc9942762a8ce64b2cd"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-LOC-TRONO_RESPIRA-001",
+      "subject_type": "location",
+      "subject_id": "cn_o_trono",
+      "title": "O Trono que Ainda Respira",
+      "alt": "Arte de O Trono que Ainda Respira",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-P2-LOC-TRONO_RESPIRA-001.png",
+        "sha256": "e88907fe581bf5a0596b4cfa24cc9b2a745006a67ad2467b09227b890a481b2b"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/cn-o-trono.e88907fe581b.thumb.webp",
+          "width": 640,
+          "height": 800,
+          "bytes": 114696,
+          "sha256": "20e9aab2d7934f03a70766de8475822a37701391e3ff27035c3fd921b9706159"
+        },
+        "display": {
+          "url": "/art/v1/location/cn-o-trono.e88907fe581b.webp",
+          "width": 1122,
+          "height": 1402,
+          "bytes": 391650,
+          "sha256": "bd55ec5f69a1f6bd178fe48272882eb0bfcaac82eed92110e6804fbc422834bd"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-LOC-CEMITERIO_LEVIATAS-001",
+      "subject_type": "location",
+      "subject_id": "costa_negra",
+      "title": "Cemitério de Leviatãs",
+      "alt": "Arte de Cemitério de Leviatãs",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-P2-LOC-CEMITERIO_LEVIATAS-001.png",
+        "sha256": "5e4bd8003ff844379622067de38ce3a34a9a2518a92c364a0d11ea15399768f3"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/costa-negra.5e4bd8003ff8.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 87642,
+          "sha256": "9d7aee79e8e518ad8d0ab97d0931d6f6d17f47aef936642154254527e239cd1b"
+        },
+        "display": {
+          "url": "/art/v1/location/costa-negra.5e4bd8003ff8.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 368498,
+          "sha256": "d42a81ddd1b4bfb45fc7770d765a1f53e4af0f1fa2029aefed6832417eae88fc"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-LOC-ZHUR-001",
+      "subject_type": "location",
+      "subject_id": "deserto_zhur",
+      "title": "Deserto de Zhur",
+      "alt": "Arte de Deserto de Zhur",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-ANCHOR-LOC-ZHUR-001.png",
+        "sha256": "f1e278349fb0df3bd21bf064c0aff2128b68a280c20b05f5f402918a72a56599"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/deserto-zhur.f1e278349fb0.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 80682,
+          "sha256": "3559f4dbc16cf2668352f6ce5c59d4843c74b408c0e9ab68b9dd39412cf9e247"
+        },
+        "display": {
+          "url": "/art/v1/location/deserto-zhur.f1e278349fb0.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 349520,
+          "sha256": "99b4075739f23e4888c2f8ba717e92907727addd61a5bf9b4a7a6ebbf108d462"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-LOC-FLORESTA_CORACAO-001",
+      "subject_type": "location",
+      "subject_id": "floresta_sussurros",
+      "title": "Coração da Floresta dos Sussurros",
+      "alt": "Arte de Coração da Floresta dos Sussurros",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-P2-LOC-FLORESTA_CORACAO-001.png",
+        "sha256": "f87c3012b5d100e7776f9bf97156ae6aaca0746a19f3a8b29a7db95bb414f040"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/floresta-sussurros.f87c3012b5d1.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 65820,
+          "sha256": "1360bc3b4384f3e1008745b7ce1e16dc3c0828f465c55402b5c9679a63500b3a"
+        },
+        "display": {
+          "url": "/art/v1/location/floresta-sussurros.f87c3012b5d1.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 266278,
+          "sha256": "ade33cfcfa86295ba1fb87222ff2898abe9e65eafdaf0110048d28e0102278b7"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-LOC-MONTANHAS_AFIADAS-001",
+      "subject_type": "location",
+      "subject_id": "montanhas_afiadas",
+      "title": "Montanhas Afiadas",
+      "alt": "Arte de Montanhas Afiadas",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-ANCHOR-LOC-MONTANHAS_AFIADAS-001.png",
+        "sha256": "f5b5ca251e6169c30c00dc28e7041a8934454f7a7c3c512827ac4076ea23f2c7"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/montanhas-afiadas.f5b5ca251e61.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 59814,
+          "sha256": "e40bafc31859a3909a2a3b02905b546bd83cf81992492b559fbc8e3870959114"
+        },
+        "display": {
+          "url": "/art/v1/location/montanhas-afiadas.f5b5ca251e61.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 257738,
+          "sha256": "020362ea03318ed4f3cfb80ba09f0d3a64bbb0d663da69683ea3d47742da9bb9"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-LOC-ANEL_DOURADO-001",
+      "subject_type": "location",
+      "subject_id": "na_anel_dourado",
+      "title": "Anel Dourado",
+      "alt": "Arte de Anel Dourado",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-ANCHOR-LOC-ANEL_DOURADO-001.png",
+        "sha256": "65e9dcec06f6fea430c4d01bd72d7b1264299563cb69429a8f685745f4274c51"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/na-anel-dourado.65e9dcec06f6.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 73990,
+          "sha256": "1c6115da2fad3a19ef5e348d6d06a4167a9345a1cbfb45154806ab13e4ffab4d"
+        },
+        "display": {
+          "url": "/art/v1/location/na-anel-dourado.65e9dcec06f6.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 317866,
+          "sha256": "8979e5f53fccb682b122105d1f648fc7a26f59c71cd81fb693d4c99b490049e9"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-LOC-ANEL_DE_FERRO-001",
+      "subject_type": "location",
+      "subject_id": "na_anel_ferro",
+      "title": "Anel de Ferro",
+      "alt": "Arte de Anel de Ferro",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-ANCHOR-LOC-ANEL_DE_FERRO-001.png",
+        "sha256": "375189695bac21e42b083afb835aabb7a2f3497ff9d76a4698ea4d3da5dec0a9"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/na-anel-ferro.375189695bac.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 80294,
+          "sha256": "13580deb15ef5caf2faa2d2c423a9e9bf49dc69af98801f9c9aa9f668fdb69ea"
+        },
+        "display": {
+          "url": "/art/v1/location/na-anel-ferro.375189695bac.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 330222,
+          "sha256": "a45e4b189cfe471408409b19487f95c5f575234cbbac9217bf7dbaf5553e0cb5"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-LOC-ANEL_DE_LAMA-001",
+      "subject_type": "location",
+      "subject_id": "na_anel_lama",
+      "title": "Anel de Lama",
+      "alt": "Arte de Anel de Lama",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-ANCHOR-LOC-ANEL_DE_LAMA-001.png",
+        "sha256": "f8238393e4bdc00d1f4acad4c74d4973cbb485ba91aebb1f15b7c89d2722fd30"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/na-anel-lama.f8238393e4bd.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 74580,
+          "sha256": "87385dbe4ebfd8401cff16a08a51b5a14dfbccf81567be0b79dfca8394373012"
+        },
+        "display": {
+          "url": "/art/v1/location/na-anel-lama.f8238393e4bd.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 319916,
+          "sha256": "c5673855e96bedefb4d60bf83273d22c58cb7509d36af3c3edcaf8ff0a96c89c"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-LOC-NOVA_ARCADIA-001",
+      "subject_type": "location",
+      "subject_id": "nova_arcadia",
+      "title": "Nova Arcádia",
+      "alt": "Arte de Nova Arcádia",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-ANCHOR-LOC-NOVA_ARCADIA-001.png",
+        "sha256": "2384513e2ad51a6daf8872b2d4c0c5f774280bcc2b7c9f2bd0bd61b9e7ec54b0"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/nova-arcadia.2384513e2ad5.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 80850,
+          "sha256": "4abc3963e7633f0a17cc421ab979e262d71302d4295ec8e0b3b53000084804d9"
+        },
+        "display": {
+          "url": "/art/v1/location/nova-arcadia.2384513e2ad5.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 356704,
+          "sha256": "29f5e4da09675bea55d2665944368bdcd4609f2216e6d20e656b1d9e5f255896"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-LOC-OPHIDIA_HORIZONTE-001",
+      "subject_type": "location",
+      "subject_id": "ophidia",
+      "title": "Ophidia no Horizonte",
+      "alt": "Arte de Ophidia no Horizonte",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-P2-LOC-OPHIDIA_HORIZONTE-001.png",
+        "sha256": "386bde3dd4a46a31068f6f6cb69505519cffcdb2f6d73699d2d9220edd481512"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/ophidia.386bde3dd4a4.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 61952,
+          "sha256": "743dafd6c2df885369e0aaab79ee4931a2cc808c107d22e76351fd4dacc14063"
+        },
+        "display": {
+          "url": "/art/v1/location/ophidia.386bde3dd4a4.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 266632,
+          "sha256": "e9516353ab018863d58b363eacb47311fb884c13334540eca8d0b49d63437dcb"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-LOC-PANTANO_MELANCOLIA-001",
+      "subject_type": "location",
+      "subject_id": "pantano_melancolia",
+      "title": "Pântano da Melancolia",
+      "alt": "Arte de Pântano da Melancolia",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-ANCHOR-LOC-PANTANO_MELANCOLIA-001.png",
+        "sha256": "b42497a38a74e248d466e7965c78aeaabc49356d89e15d350494637cb99e3c8a"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/pantano-melancolia.b42497a38a74.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 67166,
+          "sha256": "5488e2b968af8da378e0a5ec09779fd2441cff27bd3f8d9d4a8e988a58b9c8ff"
+        },
+        "display": {
+          "url": "/art/v1/location/pantano-melancolia.b42497a38a74.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 279578,
+          "sha256": "f9da777109eeddf3075ae107130a2a02e92d095547f5613cc7129cb71edca07f"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-LOC-SOLVHEN-001",
+      "subject_type": "location",
+      "subject_id": "pr_solvhen",
+      "title": "Solvhen",
+      "alt": "Arte de Solvhen",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-P2-LOC-SOLVHEN-001.png",
+        "sha256": "8f0413e99dc2c29e34c113dd2883c5be6ee8f9ac539ff4cd363855d54ce2bd15"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/pr-solvhen.8f0413e99dc2.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 70468,
+          "sha256": "5577675b4f315b4a9b8ba945f843b8a9aa418a4e1d4c2f98d6e0a6ff8cc04f42"
+        },
+        "display": {
+          "url": "/art/v1/location/pr-solvhen.8f0413e99dc2.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 318862,
+          "sha256": "21bd3aaf6fede0d0ce9fed8970d637e123a805b95e2de9bb23372c3ab64f556f"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-LOC-VAELORN-001",
+      "subject_type": "location",
+      "subject_id": "pr_vaelorn",
+      "title": "Vaelorn",
+      "alt": "Arte de Vaelorn",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-P2-LOC-VAELORN-001.png",
+        "sha256": "8346049988d2d03493b4c26c476561a60e580f39f203508d9fbfd63899cf33ab"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/pr-vaelorn.8346049988d2.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 76606,
+          "sha256": "c5184958cdcb783b021b8597ee31a97c81f55849d4619c32d47af3d26a836923"
+        },
+        "display": {
+          "url": "/art/v1/location/pr-vaelorn.8346049988d2.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 331814,
+          "sha256": "5abb3f22262c2b7b0de70b288d57d312b71a20ec9e2426a8cf73b21cf4bf31a2"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-LOC-PRADARIA_RUINAS-001",
+      "subject_type": "location",
+      "subject_id": "pradaria_ruinas",
+      "title": "Pradaria das Ruínas",
+      "alt": "Arte de Pradaria das Ruínas",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-ANCHOR-LOC-PRADARIA_RUINAS-001.png",
+        "sha256": "ed92ece5fee115d8d7a8eee8eb4655fdfd159040721c46317efdfefd3900c97b"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/pradaria-ruinas.ed92ece5fee1.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 78518,
+          "sha256": "75b9745c2409c122c30e200d563c088e3d46b0b9aaf376453f1bab6b30023efb"
+        },
+        "display": {
+          "url": "/art/v1/location/pradaria-ruinas.ed92ece5fee1.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 332794,
+          "sha256": "fb50066069d25a9bd66e05812717e2516045e4eca9638c1aba60e101650a646e"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-LOC-XYLOS-001",
+      "subject_type": "location",
+      "subject_id": "selva_xylos",
+      "title": "Xylos",
+      "alt": "Arte de Xylos",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-ANCHOR-LOC-XYLOS-001.png",
+        "sha256": "b15f9fc636fd16888afb0bededea2903166a9ec6c1189e9e0a8b04369294d864"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/selva-xylos.b15f9fc636fd.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 86666,
+          "sha256": "edf8d2ffba2473a89a0990d21e896dcc93cf9d58d9c0affe52bb80dafffb5592"
+        },
+        "display": {
+          "url": "/art/v1/location/selva-xylos.b15f9fc636fd.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 362520,
+          "sha256": "365bbdd22051761010e513c6ce46462b6af261d31bfd650f077790f480f66690"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-LOC-FAROL_CHAMA_NEGRA-001",
+      "subject_type": "location",
+      "subject_id": "sk_farol_chama_negra",
+      "title": "Farol da Chama Negra",
+      "alt": "Arte de Farol da Chama Negra",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-P2-LOC-FAROL_CHAMA_NEGRA-001.png",
+        "sha256": "27646f6d4a995df36aa42c31a0c66ce803b78cc10e4ff87f31d197b295ca098d"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/sk-farol-chama-negra.27646f6d4a99.thumb.webp",
+          "width": 640,
+          "height": 800,
+          "bytes": 119640,
+          "sha256": "ab55998ab96c2433925fbcbb123ad7de4f96d7db252222e999d325d413532011"
+        },
+        "display": {
+          "url": "/art/v1/location/sk-farol-chama-negra.27646f6d4a99.webp",
+          "width": 1122,
+          "height": 1402,
+          "bytes": 370324,
+          "sha256": "1a7c83dd25d59861bc6f263b49a44570414197e9e3e12badc8cfec212f022193"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P3-LOC-FORTALEZA_VORR_INTERIOR-001",
+      "subject_type": "location",
+      "subject_id": "sk_fortaleza_vorr",
+      "title": "Fortaleza de Vorr",
+      "alt": "Arte de Fortaleza de Vorr",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-P3-LOC-FORTALEZA_VORR_INTERIOR-001.png",
+        "sha256": "3c1cd24420ae2dc2abd3b45913c5f16140b9d01ed2131de9d91f079916eda510"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/sk-fortaleza-vorr.3c1cd24420ae.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 64658,
+          "sha256": "44201d2ba5da847d64e80f4ccb6785a00063b19e115eca256217403fecefa5e2"
+        },
+        "display": {
+          "url": "/art/v1/location/sk-fortaleza-vorr.3c1cd24420ae.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 270514,
+          "sha256": "7bec0c56201c6bfaf52dca0600efa0db64605aebd01cfb394084bea04231fff6"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-LOC-SKALLGARD-001",
+      "subject_type": "location",
+      "subject_id": "skallgard",
+      "title": "Skallgard e o Ermo Branco",
+      "alt": "Arte de Skallgard e o Ermo Branco",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "locations/VAL-ANCHOR-LOC-SKALLGARD-001.png",
+        "sha256": "bffc044c03f38d9105598f3ab8a87dcf5d7a7f5bfcd7e61a39abcdbf6ce6961f"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/location/skallgard.bffc044c03f3.thumb.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 75284,
+          "sha256": "e2aa5710948f8dbfec0b39ebd7b21671ac92f33bf2318471e50d6895c00e59cf"
+        },
+        "display": {
+          "url": "/art/v1/location/skallgard.bffc044c03f3.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 314710,
+          "sha256": "c55d6c93b339dfec6ca64f98e4300b8470e522ba04acf3e21516d5abf7001c57"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-NPC-AELWIN-001",
+      "subject_type": "npc",
+      "subject_id": "npc_aelwin_o_ultimo_conselheiro",
+      "title": "Aelwin",
+      "alt": "Arte de Aelwin",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "npcs/VAL-P2-NPC-AELWIN-001.png",
+        "sha256": "042a5cb38f986210f268c75d449bc6907678a15287c6d60c8f5a01fa96639960"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/npc/npc-aelwin-o-ultimo-conselheiro.042a5cb38f98.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 66024,
+          "sha256": "529b5bd3e245e4751c6c4f958994ee8d14864827eaf91816889a95554af6eefe"
+        },
+        "display": {
+          "url": "/art/v1/npc/npc-aelwin-o-ultimo-conselheiro.042a5cb38f98.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 275844,
+          "sha256": "3eb20de23e9d07b133460f97303ce10e0930bdd827c739befe99986eb0010665"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-NPC-ARCANTE_GRESH-001",
+      "subject_type": "npc",
+      "subject_id": "npc_arcante_gresh",
+      "title": "Arcante Gresh",
+      "alt": "Arte de Arcante Gresh",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "npcs/VAL-P2-NPC-ARCANTE_GRESH-001.png",
+        "sha256": "56427da00f6de3b25a0007d12061bdbc976e0e1ea9577d3d63b7128c3d34c24a"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/npc/npc-arcante-gresh.56427da00f6d.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 69148,
+          "sha256": "0ba31c787f6b6fe7dfb8b180c21105e5b28652dfeafd3dc454b108709eac7390"
+        },
+        "display": {
+          "url": "/art/v1/npc/npc-arcante-gresh.56427da00f6d.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 297504,
+          "sha256": "9a5536834c7aed13535b0a96c81f4aee410a9093025ffb3a34c6c9bbcee9242a"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-NPC-ASTRIN-001",
+      "subject_type": "npc",
+      "subject_id": "npc_astrin_veia_fina",
+      "title": "Astrin Veia-Fina",
+      "alt": "Arte de Astrin Veia-Fina",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "npcs/VAL-P2-NPC-ASTRIN-001.png",
+        "sha256": "55cfce07e2a3e6177d53a27852dde1ca08a61544083da20478d2bad41e16d114"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/npc/npc-astrin-veia-fina.55cfce07e2a3.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 67808,
+          "sha256": "3867e9f8ea9aa46efe25bca762830b25cf93fa2159176fe9dd9a934d2da468e4"
+        },
+        "display": {
+          "url": "/art/v1/npc/npc-astrin-veia-fina.55cfce07e2a3.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 295694,
+          "sha256": "0ae8c1994a124055f9a4b565418f33c8464870099c2682705645ce9047108595"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-NPC-SILAS_VANE-001",
+      "subject_type": "npc",
+      "subject_id": "npc_doutor_silas_vane",
+      "title": "Doutor Silas Vane",
+      "alt": "Arte de Doutor Silas Vane",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "npcs/VAL-P2-NPC-SILAS_VANE-001.png",
+        "sha256": "fc7471529a591b314a296230ee3043570fb853e1e66a2ce62c8e1d52208984ef"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/npc/npc-doutor-silas-vane.fc7471529a59.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 67610,
+          "sha256": "d0f718b94e52f10402c9417bb2887b8c3624f9b88b3784b8d29da49f8b0db6be"
+        },
+        "display": {
+          "url": "/art/v1/npc/npc-doutor-silas-vane.fc7471529a59.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 275266,
+          "sha256": "4727aa30412c8dd1e667c89aad5687f6c06f4ef18bc771fd072bc016679eb162"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-NPC-GRUM-001",
+      "subject_type": "npc",
+      "subject_id": "npc_grum",
+      "title": "Grum",
+      "alt": "Arte de Grum",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "npcs/VAL-P2-NPC-GRUM-001.png",
+        "sha256": "7e139c3c8abfbdaf9fabbb3d918ae876f6aad2a3b0db6846eca10c2ffebd55b7"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/npc/npc-grum.7e139c3c8abf.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 57084,
+          "sha256": "3063023435e80a0606c645b6aee44749dfed1e8a78d5519125a4f8a332e17010"
+        },
+        "display": {
+          "url": "/art/v1/npc/npc-grum.7e139c3c8abf.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 250180,
+          "sha256": "6e1d385b398d24f010a80b8b172eefbb63461dfe33020a5acfd6a8d98c94b4fa"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-NPC-KAHEN-001",
+      "subject_type": "npc",
+      "subject_id": "npc_kahen",
+      "title": "Kahen",
+      "alt": "Arte de Kahen",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "npcs/VAL-P2-NPC-KAHEN-001.png",
+        "sha256": "05458d6c35f307d53b16d96cc124d2a7e83722bbabb8a0a76667f1b05f4c2225"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/npc/npc-kahen.05458d6c35f3.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 57786,
+          "sha256": "0e64a332f165d400f6c36a23fa4107b4d8411e48106a0ec3adcbd2d6036c3e9f"
+        },
+        "display": {
+          "url": "/art/v1/npc/npc-kahen.05458d6c35f3.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 242322,
+          "sha256": "108fbb64a69801ff1824c43d4627f6ccc1dc1ae3bfea095a01325d27200fea2d"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-NPC-KHATARN-001",
+      "subject_type": "npc",
+      "subject_id": "npc_khatarn_olhos_de_obsidiana",
+      "title": "Khatarn Olhos-de-Obsidiana",
+      "alt": "Arte de Khatarn Olhos-de-Obsidiana",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "npcs/VAL-P2-NPC-KHATARN-001.png",
+        "sha256": "687e14fabc97738e1457c4c831cf4a74a2e4078171d69e266488a81621f88d48"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/npc/npc-khatarn-olhos-de-obsidiana.687e14fabc97.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 74180,
+          "sha256": "db993d0ff210231a3c996d5384d4a9905d718915925bce53831d2f4cdec0df92"
+        },
+        "display": {
+          "url": "/art/v1/npc/npc-khatarn-olhos-de-obsidiana.687e14fabc97.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 281836,
+          "sha256": "5d3d03fb048467f13f3ad532e804ffed74c285c45bd7e49aca3ff4c4d1f4f7a2"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-NPC-LADY_AERWEN-001",
+      "subject_type": "npc",
+      "subject_id": "npc_lady_aerwen",
+      "title": "Lady Aerwen",
+      "alt": "Arte de Lady Aerwen",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "npcs/VAL-P2-NPC-LADY_AERWEN-001.png",
+        "sha256": "4f0c1c540029a666835db90b43996ac2f846a7dfefba28e6dd27d66a2e47c990"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/npc/npc-lady-aerwen.4f0c1c540029.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 69880,
+          "sha256": "25bae6f7889e589fe42301432d4fa69f1b34cd30c7a1cee6bd325a17528dac2c"
+        },
+        "display": {
+          "url": "/art/v1/npc/npc-lady-aerwen.4f0c1c540029.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 271460,
+          "sha256": "238e3d92280cbda8c993028bc35dbe5b773ae996cbeb3ef55c6d6246103a6262"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-NPC-ONDA_PROFUNDA-001",
+      "subject_type": "npc",
+      "subject_id": "npc_onda_profunda",
+      "title": "Onda-Profunda",
+      "alt": "Arte de Onda-Profunda",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "npcs/VAL-P2-NPC-ONDA_PROFUNDA-001.png",
+        "sha256": "ed82367e37b3d4a5aae612e4a81d76fb9b7a2eb6c6b97d2089490a6c37b2f855"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/npc/npc-onda-profunda.ed82367e37b3.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 75126,
+          "sha256": "fb780988bd0c5dbda147da638afeb27ab7e3a68b53fb14135fbe0f7ba942a2ce"
+        },
+        "display": {
+          "url": "/art/v1/npc/npc-onda-profunda.ed82367e37b3.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 282832,
+          "sha256": "2629c0f9cc685584786cec7a9e20e17c95fd1b7d70d32b9b9b6efb123560e155"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-NPC-VALERIUS-001",
+      "subject_type": "npc",
+      "subject_id": "npc_valerius",
+      "title": "Lorde Protetor Valerius",
+      "alt": "Arte de Lorde Protetor Valerius",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "npcs/VAL-P2-NPC-VALERIUS-001.png",
+        "sha256": "f514457d68a37499abef8acc1ae21372bdc96784c0544a6246355ad6385ca2d1"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/npc/npc-valerius.f514457d68a3.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 58890,
+          "sha256": "4ae21f298461281cb8951bcfa765316c7196b9e64d8c15f506e3e4bf30fb5f30"
+        },
+        "display": {
+          "url": "/art/v1/npc/npc-valerius.f514457d68a3.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 263160,
+          "sha256": "8815a8ee5c4f832cf02c89153fa7add9a703dec950c3965e4bc555fbf3b0e512"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-NPC-VEHKR-001",
+      "subject_type": "npc",
+      "subject_id": "npc_vehkr_punho_de_gelo",
+      "title": "Vehkr Punho-de-Gelo",
+      "alt": "Arte de Vehkr Punho-de-Gelo",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "npcs/VAL-P2-NPC-VEHKR-001.png",
+        "sha256": "34ac10d3e70184bd99bd71426468e094feecf6012b170dc95487100d3eceb90f"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/npc/npc-vehkr-punho-de-gelo.34ac10d3e701.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 69712,
+          "sha256": "abb844085eaa34d003ad3aa81aa6c7fd19ea14f94f6b6c61233f18e5e13a81f9"
+        },
+        "display": {
+          "url": "/art/v1/npc/npc-vehkr-punho-de-gelo.34ac10d3e701.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 290926,
+          "sha256": "cd1976d74aea518988b97db3703182d0fbd850e2920430ee2c0c82ac16b5286f"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-P2-NPC-MAGDA_PUBLICA-001",
+      "subject_type": "npc",
+      "subject_id": "npc_velha_magda",
+      "title": "Velha Magda",
+      "alt": "Arte de Velha Magda",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "npcs/VAL-P2-NPC-MAGDA_PUBLICA-001.png",
+        "sha256": "23d0932729ff92682233af4c0783f2bc0d5f5382760c9aad535f22e425c584eb"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/npc/npc-velha-magda.23d0932729ff.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 70124,
+          "sha256": "afe6de27c997a1e0766fa87e107d2dffefafd6c41214c9d8876e0bc56049569e"
+        },
+        "display": {
+          "url": "/art/v1/npc/npc-velha-magda.23d0932729ff.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 262628,
+          "sha256": "7a2141d069aa4b3cda8f7d28b6544d60e3a4f965e51e8e7e26380e73bbe2fce5"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-RACE-ANAO_FULIGEM-001",
+      "subject_type": "race",
+      "subject_id": "race_anoes_fuligem",
+      "title": "Anão da Fuligem",
+      "alt": "Arte de Anão da Fuligem",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "races/VAL-ANCHOR-RACE-ANAO_FULIGEM-001__female.png",
+        "sha256": "ab185dc566643638fd8d9b929aa648fff3e2fff7b331f27721ed500fa17b26bc"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/race/race-anoes-fuligem.ab185dc56664.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 65514,
+          "sha256": "13c56bf9d2fd811910c9b41aca5e44ed90b79afdbd6bb0e6e5d7fbbff9546b4c"
+        },
+        "display": {
+          "url": "/art/v1/race/race-anoes-fuligem.ab185dc56664.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 278066,
+          "sha256": "861e1405aa8f80afd6a97aa681a9a1df7f7478409ad88a716ef257573c0e290f"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-RACE-CINZEU-001",
+      "subject_type": "race",
+      "subject_id": "race_cinzeus",
+      "title": "Cinzéu",
+      "alt": "Arte de Cinzéu",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "races/VAL-ANCHOR-RACE-CINZEU-001__female.png",
+        "sha256": "2104897941d32a7042de626886bb1c3f3adfd124bb85b3aa376ea321e4f07126"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/race/race-cinzeus.2104897941d3.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 67918,
+          "sha256": "a7543b615523ab83e0fee72d2e65f760c1a8b1ede0b6fe18bc61ae3e785a23a1"
+        },
+        "display": {
+          "url": "/art/v1/race/race-cinzeus.2104897941d3.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 295678,
+          "sha256": "bd8206b0c4a99f2e74cb228073d1d30185b39f27afd868cbaf8660a82ec4036e"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-RACE-ELFO-001",
+      "subject_type": "race",
+      "subject_id": "race_elfos",
+      "title": "Elfo",
+      "alt": "Arte de Elfo",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "races/VAL-ANCHOR-RACE-ELFO-001__female.png",
+        "sha256": "0641af670e531f66ec85862499a0f470616a6a27f3ed370260c75028cf8593f7"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/race/race-elfos.0641af670e53.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 64720,
+          "sha256": "bb0234fe4cb4d3259f70a3c5f77f7274158b29a79b4aa02cf781c6437a2726c6"
+        },
+        "display": {
+          "url": "/art/v1/race/race-elfos.0641af670e53.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 279916,
+          "sha256": "aa30b8ebfc9145a2ac982617747c536ffa08db44e92c69be6be4255d5f564cc5"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-CULT-HUMANO_URBANO-001",
+      "subject_type": "race",
+      "subject_id": "race_humanos",
+      "title": "Humano",
+      "alt": "Arte de Humano",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "races/VAL-ANCHOR-CULT-HUMANO_URBANO-001__female.png",
+        "sha256": "19d8393640d3ee29222e25fcf0c3606d0fe046a0221c8a09be74df81746b189b"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/race/race-humanos.19d8393640d3.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 62754,
+          "sha256": "1c0eecba6ed10832c201b811aaa7b921f9f2ca10b481d2ead81fb18a6c7c6509"
+        },
+        "display": {
+          "url": "/art/v1/race/race-humanos.19d8393640d3.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 272336,
+          "sha256": "1eb244997898ee1b02e6e953002a1cb0b47753fa7c1742168712c040b766abc7"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-CULT-OSSHARI_MAR-001",
+      "subject_type": "race",
+      "subject_id": "race_osshari",
+      "title": "Osshari",
+      "alt": "Arte de Osshari",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "races/VAL-ANCHOR-CULT-OSSHARI_MAR-001__female.png",
+        "sha256": "b13e6f1cd0245749406a819d98d4e19cfa698de8e85142f9c8e20f65ed06b7b7"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/race/race-osshari.b13e6f1cd024.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 91506,
+          "sha256": "fd4628153666c8a7c0e947867aa2f7117205c9cf00c71858e6c83e56d3514810"
+        },
+        "display": {
+          "url": "/art/v1/race/race-osshari.b13e6f1cd024.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 298622,
+          "sha256": "265fe9b950b2520ea6ad3293522141696c21bf0ea12d3ba2925d24c70e88afbb"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    },
+    {
+      "asset_id": "VAL-ANCHOR-RACE-VREL-001",
+      "subject_type": "race",
+      "subject_id": "race_vrel",
+      "title": "Vrel",
+      "alt": "Arte de Vrel",
+      "visibility": "public",
+      "source": {
+        "bundle": "VALORIA_GAME_ART_HANDOFF",
+        "relative_path": "races/VAL-ANCHOR-RACE-VREL-001__female.png",
+        "sha256": "d213e3ac5fa89ad4829ee43aa942bc2495da0737a321a0e8095ebcb5adbb4dbf"
+      },
+      "variants": {
+        "thumbnail": {
+          "url": "/art/v1/race/race-vrel.d213e3ac5fa8.thumb.webp",
+          "width": 384,
+          "height": 576,
+          "bytes": 78358,
+          "sha256": "a98b1b30ee890d32ec57d6963b5648a1af03faba0a2a4623b51461f0f9d2fd5d"
+        },
+        "display": {
+          "url": "/art/v1/race/race-vrel.d213e3ac5fa8.webp",
+          "width": 768,
+          "height": 1152,
+          "bytes": 276312,
+          "sha256": "50b9ea66edae80e02f2b34db4976270449b6e297abfabbf1656975ac91290a27"
+        }
+      },
+      "placeholder_color": "#241d1a"
+    }
+  ],
+  "creation": {
+    "races": {
+      "race_humanos": "VAL-ANCHOR-CULT-HUMANO_URBANO-001",
+      "race_elfos": "VAL-ANCHOR-RACE-ELFO-001",
+      "race_anoes_fuligem": "VAL-ANCHOR-RACE-ANAO_FULIGEM-001",
+      "race_vrel": "VAL-ANCHOR-RACE-VREL-001",
+      "race_cinzeus": "VAL-ANCHOR-RACE-CINZEU-001",
+      "race_osshari": "VAL-ANCHOR-CULT-OSSHARI_MAR-001"
+    },
+    "classes": {
+      "Devoto do Abismo": "VAL-P4-CLS-DEVOTO_ABISMO-001",
+      "Sangromante": "VAL-P4-CLS-SANGROMANTE-001",
+      "Corruptor": "VAL-P4-CLS-CORRUPTOR-001",
+      "Arcanista Cinzento": "VAL-P4-CLS-ARCANISTA_CINZENTO-001",
+      "Médico de Campo": "VAL-P4-CLS-MEDICO_CAMPO-001"
+    }
+  },
+  "location_fallbacks": {
+    "pm_profundezas": "pantano_melancolia",
+    "dz_borda_do_vazio": "deserto_zhur",
+    "fs_fronteira_xylos": "floresta_sussurros",
+    "sx_cidades_hospedeiros": "selva_xylos",
+    "sx_profundezas": "selva_xylos",
+    "ma_saidas_baixas": "montanhas_afiadas",
+    "ma_boca": "montanhas_afiadas",
+    "pr_ruinas_assombradas": "pradaria_ruinas",
+    "bk_docas_velhas": "brekmar",
+    "na_taverna_javali": "na_anel_lama",
+    "pm_cripta_afogada": "pantano_melancolia",
+    "sk_salao_do_jarl": "skallgard",
+    "ma_forja_profunda": "montanhas_afiadas"
+  },
+  "unmapped_source_assets": [
+    {
+      "asset_id": "VAL-P2-NPC-VRETHIS-001",
+      "reason": "NPC ausente do grafo canônico"
+    }
+  ]
+}

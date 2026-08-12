@@ -237,7 +237,7 @@ def test_migracao_v3_marca_arquivado_sem_converter():
                    "hp": 20, "max_hp": 20},
     }
     out = persistence.migrate_state(raw)
-    assert out["schema_version"] == 5
+    assert out["schema_version"] == persistence.SCHEMA_VERSION
     assert out["archived"] is True
     assert out.get("archived_reason")
     # NÃO inventou Virtudes a partir dos atributos

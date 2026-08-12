@@ -287,14 +287,31 @@ def assemble_pack(facts: List[ScoredFact], budget: ContextBudget,
                   lore_text: str = "", memory_text: str = "") -> ContextPack:
     """Ranqueia + orça + renderiza os três blocos do ContextPack.
 
-    `lore_text`/`memory_text` são blobs de RAG/resumo; entram como fatos únicos nas
-    seções `lore`/`session_memory` (concorrem só com a própria cota)."""
+    Lore entra como bloco canônico. Memória é particionada para que um resumo ou
+    resultado RAG grande não torne a seção inteira indivisível e descartável."""
     facts = list(facts)
     if lore_text:
         facts.append(ScoredFact(text=lore_text, score=1.0, section="lore", source_id="lore"))
     if memory_text:
-        facts.append(ScoredFact(text=memory_text, score=1.0, section="session_memory",
-                                source_id="memory"))
+        chunks: List[str] = []
+        for line in (part.strip() for part in memory_text.splitlines()):
+            if not line:
+                continue
+            while len(line) > 600:
+                cut = line.rfind(" ", 0, 601)
+                if cut < 300:
+                    cut = 600
+                chunks.append(line[:cut].rstrip())
+                line = line[cut:].lstrip()
+            if line:
+                chunks.append(line)
+        for index, chunk in enumerate(chunks):
+            facts.append(ScoredFact(
+                text=chunk,
+                score=1.0 - min(index, 1000) * 0.0001,
+                section="session_memory",
+                source_id=f"memory:{index}",
+            ))
 
     chosen, used_total, dropped = _assemble(facts, budget)
 
@@ -395,6 +412,13 @@ def build_context_pack(state: Dict, query: str, purpose: str,
         seen_memory_text.add(clean)
         memory_parts.append(clean)
 
+    # O resumo curto é o primeiro candidato da quota; fatos duráveis ainda
+    # concorrem individualmente em seguida.
+    from services.memory_summary import compact_summary
+    summary = compact_summary(state.get("narrative_summary", ""))
+    if summary and not find_strict_unrevealed(summary, state):
+        add_memory_part(f"[RESUMO NARRATIVO | speculative] {summary}")
+
     # O ledger auditável dá continuidade mesmo se o índice estiver temporariamente
     # indisponível. Conteúdo com assinatura secreta não revelada falha fechado.
     for record in normalize_memory_facts(state.get("memory_facts"))[-20:]:
@@ -402,9 +426,6 @@ def build_context_pack(state: Dict, query: str, purpose: str,
             continue
         add_memory_part(format_memory_fact(record))
 
-    summary = state.get("narrative_summary", "")
-    if summary and not find_strict_unrevealed(summary, state):
-        add_memory_part(f"[RESUMO NARRATIVO | speculative] {summary}")
     if game_id:
         try:
             session_memory = query_session_memory(query, game_id)

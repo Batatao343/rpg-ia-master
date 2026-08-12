@@ -12,6 +12,10 @@ Validação em toda ponta: `uv run python scripts/validate_content.py` (lint 7.1
 roda também como teste (`tests/test_fase71.py::test_repo_content_sem_erros`) e
 como gate do reindex — `uv run python rag.py` **aborta** se o lint achar ERRO.
 
+Arte curada segue um pipeline separado, também coberto pelo mesmo lint. Consulte
+`docs/ARTE_VISUAL.md`: PNG/ZIP nunca é publicado diretamente; o importador
+Python valida manifesto, visibilidade e SHA antes de gerar WebP versionado.
+
 ---
 
 ## Fluxo A — Adicionar entidade manual (ex.: NPC novo)
@@ -80,6 +84,8 @@ Rodar 2× seguidas produz o mesmo resultado (idempotente).
 - `type: secret` ⇒ `visibility: secret`; doc `public` não referencia entidade
   `secret`; doc de NPC público não contém rótulo de parágrafo secreto (7.3).
 - Tudo UTF-8 estrito (mojibake vira AVISO).
+- O catálogo visual aponta apenas para IDs canônicos/públicos; os derivados
+  existem, batem hash/bytes e respeitam cobertura do onboarding/mapa e tetos.
 
 ---
 

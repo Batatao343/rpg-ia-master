@@ -65,10 +65,9 @@ def _same_region(loc_id_a: str, loc_id_b: str) -> bool:
 def _should_replan(state: GameState) -> bool:
     """Determine if the campaign plan needs to be regenerated.
 
-    R4 (spec balanceamento-early-game): viagem SÓ replaneja quando o ARCO muda
-    de fato — região nova E (≥ 1 beat concluído OU arco sem beats). Mover-se
-    entre sublocais/interiores do mesmo hub não joga fora o arco (era a causa
-    dos "plot twists por viagem")."""
+    Viagem entre regiões sempre invalida o grounding do arco. Mover-se entre
+    sublocais/interiores da mesma região não joga fora o plano (evita os antigos
+    "plot twists por viagem")."""
 
     world = state.get("world", {})
     plan = state.get("campaign_plan")
@@ -83,10 +82,7 @@ def _should_replan(state: GameState) -> bool:
     beats = plan.get("beats") or []
     location_moved = plan.get("location") and plan["location"] != world.get("current_location")
     if location_moved and not _same_region(plan["location"], world.get("current_location", "")):
-        beat_done = any(b.get("status") != "pending" for b in beats if isinstance(b, dict))
-        orphan = not beats  # arco órfão de contexto: plano sem beat nenhum
-        if beat_done or orphan:
-            return True
+        return True
 
     last_turn = plan.get("last_planned_turn", -REPLAN_INTERVAL)
     if turn_count - last_turn >= REPLAN_INTERVAL:
@@ -192,7 +188,8 @@ def _build_plan(state: GameState) -> CampaignPlan:
             for beat in plan.beats
         ]
         return {
-            "location": plan.location,
+            # Grounding é mecânico: o modelo propõe conteúdo, não geografia ativa.
+            "location": current_loc,
             "beats": beats,
             "climax": sanitize_beat(plan.climax, state),
             "current_step": 0,

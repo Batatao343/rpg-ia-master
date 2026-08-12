@@ -48,15 +48,8 @@ def _canonical_npc_id(name: str) -> str:
     grafo canônico — NPC gerado em runtime não tem id aqui (mesma restrição de
     `_v_npc_killed`, que só aceita npc_killed contra ids canônicos).
     """
-    try:
-        entities = gr.load_entities()
-    except Exception:
-        return ""
-    name_l = (name or "").strip().lower()
-    for eid, ent in entities.items():
-        if ent.get("type") == "npc" and ent.get("name", "").strip().lower() == name_l:
-            return eid
-    return ""
+    from services.entity_identity import resolve_npc_entity_id
+    return resolve_npc_entity_id({}, name) or ""
 
 # Importa Librarian para verificar duplicatas
 try:
