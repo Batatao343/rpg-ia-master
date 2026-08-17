@@ -9,6 +9,10 @@
 > 1 skipped, 14 deselected**; Ruff **verde**; `npm.cmd run build` **verde**.
 > “Publicar na main” aqui significa versionar e enviar o código-fonte ao GitHub;
 > nenhum projeto Railway/Render/Supabase nem recurso pago foi provisionado.
+> O primeiro CI Linux do push expôs ambiente incompleto: `uv sync` não instalava
+> os extras que três testes de roteamento exercitam. `validate.yml` passou a usar
+> `uv sync --extra openai --extra anthropic`, cobrindo tanto os providers
+> OpenAI-compat primários quanto o fallback Anthropic num ambiente limpo.
 
 > **📝 SESSÃO 48 (2026-08-16): alvo de hospedagem escolhido, sem deploy.**
 > A [certificação cloud](specs/fase-10b-certificacao-cloud-portavel.md) agora

@@ -996,7 +996,9 @@ orçamento; Vercel permanece benchmark opcional, não dependência.
 **Publicação (2026-08-17):** o lote funcional das sessões 39–46 e estas nove
 specs foram sincronizados na `main` após 1480 testes offline, Ruff e build Vite
 verdes. Isso publica somente o repositório; a infraestrutura externa continua
-sem provisionamento e depende de aprovação específica da última spec.
+sem provisionamento e depende de aprovação específica da última spec. O CI de
+checkout limpo instala explicitamente os extras `openai` e `anthropic` cujos
+builders são cobertos pela suíte de roteamento.
 
 **Critério de aceite 10b:** cada campanha pertence a exatamente um usuário (que
 pode ter várias campanhas); zero acesso cruzado; commit de turno exatamente uma

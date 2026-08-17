@@ -8,7 +8,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
-      - run: uv sync
+      # A suíte cobre os builders opcionais usados pelas rotas reais:
+      # DeepSeek/Groq/Qwen/MiniMax via OpenAI-compat e Anthropic no tier SMART.
+      - run: uv sync --extra openai --extra anthropic
       - run: uv run ruff check .
       - run: uv run python scripts/validate_content.py
       - run: uv run pytest -q
