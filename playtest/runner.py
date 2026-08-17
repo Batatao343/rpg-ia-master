@@ -36,11 +36,17 @@ PLAYTEST_SAVES_DIR = os.getenv("RPG_PLAYTEST_SAVES_DIR", "saves_playtest")
 class PlaytestTimeoutError(TimeoutError):
     """Watchdog do harness; a operação vencida permanece apenas em thread daemon."""
 
-    def __init__(self, phase: str, timeout_seconds: float):
+    def __init__(self, phase: str, timeout_seconds: float, *,
+                 elapsed_seconds: Optional[float] = None):
         self.phase = str(phase)
         self.timeout_seconds = float(timeout_seconds)
+        self.elapsed_seconds = float(
+            elapsed_seconds
+            if elapsed_seconds is not None else timeout_seconds
+        )
         super().__init__(
-            f"{self.phase} excedeu {self.timeout_seconds:g}s de wall-clock"
+            f"{self.phase} excedeu {self.timeout_seconds:g}s de wall-clock "
+            f"(observado {self.elapsed_seconds:g}s)"
         )
 
 
@@ -55,6 +61,8 @@ def _run_with_watchdog(call: Callable[[], Any], *, timeout_seconds: float,
     timeout = float(timeout_seconds or 0)
     if timeout <= 0:
         return call()
+    started_monotonic = time.monotonic()
+    started_wall = time.time()
     result_queue: queue.Queue = queue.Queue(maxsize=1)
 
     def _worker() -> None:
@@ -72,7 +80,24 @@ def _run_with_watchdog(call: Callable[[], Any], *, timeout_seconds: float,
     try:
         ok, payload = result_queue.get(timeout=timeout)
     except queue.Empty as exc:
-        raise PlaytestTimeoutError(phase, timeout) from exc
+        elapsed = max(
+            time.monotonic() - started_monotonic,
+            time.time() - started_wall,
+        )
+        raise PlaytestTimeoutError(
+            phase, timeout, elapsed_seconds=elapsed,
+        ) from exc
+    elapsed = max(
+        time.monotonic() - started_monotonic,
+        time.time() - started_wall,
+    )
+    # Um notebook pode suspender enquanto worker e supervisor aguardam. Nesse
+    # caso ambos retomam juntos e o resultado pode já estar na fila antes que o
+    # timeout da Queue seja processado. O deadline absoluto continua soberano.
+    if elapsed > timeout:
+        raise PlaytestTimeoutError(
+            phase, timeout, elapsed_seconds=elapsed,
+        )
     if ok:
         return payload
     raise payload
@@ -98,6 +123,7 @@ class TurnRecord:
     llm_events: List[dict] = field(default_factory=list)
     rag_events: List[dict] = field(default_factory=list)
     nodes_executed: List[str] = field(default_factory=list)
+    node_latency_ms: Dict[str, int] = field(default_factory=dict)
     combat_executed: bool = False
     combat_active_before: bool = False
     combat_round_before: int = 0
@@ -151,6 +177,17 @@ class TurnRecord:
     # Narração que o jogador leria no turno (p/ transcript qualitativo do prompt).
     narrative: str = ""
     progression_choices: List[dict] = field(default_factory=list)
+    # Remediação playtest real 100t: pedido social e conversão no mesmo turno.
+    quest_requested: bool = False
+    quests_before: int = 0
+    quests_after: int = 0
+    combat_origin: str = "unknown"
+    conflict_instance_id: str = ""
+    session_action_count: int = 0
+    canonical_turn: int = 0
+    timeline_epoch: int = 0
+    memory_by_confidence: Dict[str, int] = field(default_factory=dict)
+    stale_speculative_memories: int = 0
 
 
 @dataclass
@@ -339,6 +376,8 @@ def _build_initial_state(profile: str, seed: int,
         "event_log": [],
         "world_projection": {},
         "pending_world_events": [],
+        "continuity": {"session_action_count": 0, "timeline_epoch": 0,
+                       "last_checkpoint_turn": 0, "death_history": []},
     }
 
 
@@ -646,7 +685,8 @@ def _count_new_rejections(before: List[dict], after: List[dict]) -> int:
 
 def _run_turn(game_graph, state: dict, *,
               nodes_executed: Optional[List[str]] = None,
-              node_observations: Optional[dict] = None) -> tuple[dict, str]:
+              node_observations: Optional[dict] = None,
+              node_latency_ms: Optional[dict] = None) -> tuple[dict, str]:
     """Invoca o grafo capturando a DECISÃO do `dm_router` (spec R3): a rota fiel
     é o `next` que o router escolheu, não o `next` do estado final (combate/loot
     sobrescrevem). Se o combate está ATIVO na entrada do turno, a rota é
@@ -657,6 +697,8 @@ def _run_turn(game_graph, state: dict, *,
     (o último = resultado equivalente ao `.invoke`)."""
     combat_on_entry = bool((state.get("combat") or {}).get("active"))
     nodes = nodes_executed if nodes_executed is not None else []
+    timings = node_latency_ms if node_latency_ms is not None else {}
+    node_started = time.perf_counter()
     stream = getattr(game_graph, "stream", None)
     if stream is None:
         # Grafo sem streaming (ex.: wrapper de teste que só implementa invoke):
@@ -665,14 +707,21 @@ def _run_turn(game_graph, state: dict, *,
         route = "combat_agent" if combat_on_entry else (new_state.get("next") or "")
         if route:
             nodes.append(route)
+            timings[route] = timings.get(route, 0) + int(
+                (time.perf_counter() - node_started) * 1000
+            )
         return new_state, route
     router_next = ""
     final = state
     for mode, chunk in stream(state, stream_mode=["updates", "values"]):
         if mode == "updates" and isinstance(chunk, dict):
-            for node_name in chunk:
+            names = list(chunk)
+            elapsed = int((time.perf_counter() - node_started) * 1000)
+            for index, node_name in enumerate(names):
                 if node_name not in nodes:
                     nodes.append(node_name)
+                timings[node_name] = timings.get(node_name, 0) + (elapsed if index == 0 else 0)
+            node_started = time.perf_counter()
             upd = chunk.get("dm_router")
             if isinstance(upd, dict) and not router_next:
                 router_next = upd.get("next") or ""
@@ -708,6 +757,62 @@ def _observed_resolved_action(node_observations: Optional[dict]) -> dict:
     combat_update = (node_observations or {}).get("combat_agent") or {}
     observed_combat = combat_update.get("combat") or {}
     return dict(observed_combat.get("last_player_action") or {})
+
+
+def _is_explicit_quest_request(action: str) -> bool:
+    """Pedido diegético de tarefa; usado somente como métrica do harness."""
+    import re
+    return bool(re.search(
+        r"\b(?:tarefa|miss[aã]o|trabalho|favor)\s+concret[oa]\b",
+        str(action or ""),
+        flags=re.IGNORECASE,
+    ))
+
+
+def _campaign_experience_violations(
+    profile: str,
+    history: List[TurnRecord],
+    final_state: dict,
+) -> List[dict]:
+    """Oráculos agregados: alertam validade/viés sem fingir bug por turno."""
+    if profile != "normal" or not history:
+        return []
+    out: List[dict] = []
+    total = len(history)
+    combat_turns = len([
+        record for record in history
+        if record.combat_executed or record.route == "combat_agent"
+    ])
+    combat_pct = round(100.0 * combat_turns / total, 1)
+    if total >= 50 and combat_pct > 35.0:
+        out.append({
+            "check_id": "profile.combat_share",
+            "severity": "warning",
+            "turn": history[-1].turn,
+            "message": f"perfil normal passou {combat_pct:.1f}% dos turnos em combate",
+            "details": {
+                "combat_turns": combat_turns,
+                "turns": total,
+                "combat_turn_pct": combat_pct,
+                "warning_pct": 35.0,
+            },
+        })
+    from playtest.metrics import quest_request_conversion_count
+    requests = len([record for record in history if record.quest_requested])
+    conversions = quest_request_conversion_count(history, window=3)
+    if total >= 50 and requests >= 2 and conversions == 0:
+        out.append({
+            "check_id": "profile.quest_conversion_empty",
+            "severity": "warning",
+            "turn": history[-1].turn,
+            "message": f"{requests} pedidos concretos não criaram nenhuma quest",
+            "details": {
+                "quest_requests": requests,
+                "quest_request_conversions": conversions,
+                "final_quests": len(final_state.get("quests", []) or []),
+            },
+        })
+    return out
 
 
 # --- runner -----------------------------------------------------------------
@@ -824,6 +929,12 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 timeout_seconds=turn_timeout_seconds,
                 phase="startup",
             )
+            # Startup é prólogo, não decisão do perfil.
+            from services.continuity import mark_checkpoint
+            state["continuity"] = mark_checkpoint(
+                {**(state.get("continuity") or {}), "session_action_count": 0},
+                canonical_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
+            )
             if scenario_module is not None:
                 state = scenario_module.prepare(str(scenario), state)
             save_game_state(state)
@@ -867,6 +978,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 rag_sink = turn_rag_events
                 t0 = time.monotonic()
                 events_before = len(state.get("event_log", []) or [])
+                quests_before = len(state.get("quests", []) or [])
                 rejected_before = list(state.get("event_rejections", []) or [])
                 plan_before = (state.get("campaign_plan") or {}).get("last_planned_turn")
                 combat_before = state.get("combat") or {}
@@ -879,6 +991,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     _inv = None
                     progress_before = None
                 nodes: List[str] = []
+                node_timings: Dict[str, int] = {}
                 node_observations: dict = {}
                 decision_record = decision.to_record()
                 rec = TurnRecord(
@@ -892,6 +1005,9 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     combat_active_before=combat_on_entry,
                     combat_round_before=combat_round_before,
                     progression_choices=progression_choices,
+                    quest_requested=_is_explicit_quest_request(action),
+                    quests_before=quests_before,
+                    quests_after=quests_before,
                 )
                 turn_input_state = state
                 try:
@@ -901,6 +1017,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                             state,
                             nodes_executed=nodes,
                             node_observations=node_observations,
+                            node_latency_ms=node_timings,
                         ),
                         timeout_seconds=turn_timeout_seconds,
                         phase=f"turno {turn}",
@@ -908,6 +1025,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     save_game_state(new_state)
                     rec.latency_ms = int((time.monotonic() - t0) * 1000)
                     rec.nodes_executed = nodes
+                    rec.node_latency_ms = node_timings
                     rec.combat_executed = "combat_agent" in nodes
                     combat_after = new_state.get("combat") or {}
                     rec.combat_round_after = int(
@@ -928,6 +1046,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                         rejected_before,
                         list(new_state.get("event_rejections", []) or []),
                     )
+                    rec.quests_after = len(new_state.get("quests", []) or [])
                     rec.narrative = _last_ai_text(new_state)
                     _fill_state_metrics(
                         rec,
@@ -957,6 +1076,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
 
                     # Invariantes (5.2) — não param a campanha.
                     audit_context = {
+                        "profile": profile,
+                        "action": action,
                         "decision": decision_record,
                         "resolved_action": rec.resolved_action,
                         "combat_executed": rec.combat_executed,
@@ -994,9 +1115,15 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 except Exception as e:
                     rec.latency_ms = int((time.monotonic() - t0) * 1000)
                     rec.error = repr(e)
-                    # rota fiel mesmo no erro: combate na entrada = combat_agent
-                    rec.route = "combat_agent" if combat_on_entry else (state.get("next", "") or "")
-                    rec.nodes_executed = nodes
+                    # Timeout é uma saída própria; os nós já observados continuam
+                    # auditáveis sem atribuir o custo a uma rota inconclusa.
+                    rec.route = (
+                        "timeout" if isinstance(e, PlaytestTimeoutError)
+                        else ("combat_agent" if combat_on_entry
+                              else (state.get("next", "") or ""))
+                    )
+                    rec.nodes_executed = list(nodes)
+                    rec.node_latency_ms = dict(node_timings)
                     rec.combat_executed = "combat_agent" in nodes or combat_on_entry
                     _fill_state_metrics(rec, state)
                     _attach_telemetry(rec, list(turn_events))
@@ -1031,8 +1158,21 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     _dev = next((e for e in reversed(state.get("event_log") or [])
                                  if isinstance(e, dict) and e.get("type") == "player_downed"), {})
                     _pay = (_dev or {}).get("payload", {}) or {}
-                    death = {"turn": turn, "location": _pay.get("location"),
-                             "cause": _pay.get("killer")}
+                    _continuity = state.get("continuity") or {}
+                    death = {
+                        "turn": turn,
+                        "session_action": int(
+                            _continuity.get("session_action_count", turn) or turn
+                        ),
+                        "canonical_turn": int(
+                            (state.get("world") or {}).get("turn_count", 0) or 0
+                        ),
+                        "timeline_epoch": int(
+                            _continuity.get("timeline_epoch", 0) or 0
+                        ),
+                        "location": _pay.get("location"),
+                        "cause": _pay.get("killer"),
+                    }
                     deaths_log.append(death)
                     rec.death = death
                     state = _cp.resolve_death_choice(
@@ -1090,6 +1230,16 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
         invariants_enabled=invariants,
         scenario=scenario,
     )
+    campaign_violations = _campaign_experience_violations(
+        profile, history, state,
+    )
+    if campaign_violations:
+        violations.extend(campaign_violations)
+        if history:
+            history[-1].violations.extend(
+                item["check_id"] for item in campaign_violations
+            )
+            history[-1].violation_details.extend(campaign_violations)
     if scenario_module is not None and not (
         aborted_reason and aborted_reason.startswith("timeout:")
     ):
@@ -1189,6 +1339,24 @@ def _fill_state_metrics(
         str(record.get("provenance") or "legacy_unverified")
         for record in memory_records
     ))
+    rec.memory_by_confidence = dict(Counter(
+        str(record.get("confidence") or "speculative") for record in memory_records
+    ))
+    canonical_turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
+    rec.stale_speculative_memories = len([
+        record for record in memory_records
+        if record.get("confidence") == "speculative"
+        and record.get("source_turn") is not None
+        and canonical_turn - int(record.get("source_turn") or 0) >= 20
+    ])
+    rec.combat_origin = str((state.get("combat") or {}).get("origin") or "unknown")
+    rec.conflict_instance_id = str(
+        (state.get("combat") or {}).get("instance_id") or ""
+    )
+    continuity = state.get("continuity") or {}
+    rec.session_action_count = int(continuity.get("session_action_count", canonical_turn) or 0)
+    rec.canonical_turn = canonical_turn
+    rec.timeline_epoch = int(continuity.get("timeline_epoch", 0) or 0)
     rec.memory_rejections = len([
         row for row in (state.get("memory_rejections") or [])
         if isinstance(row, dict)

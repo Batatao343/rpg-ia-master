@@ -29,11 +29,19 @@ def _state(game_id: str, *, gold: int = 10) -> dict:
     return state
 
 
+def _checkpoint_state(game_id: str, *, gold: int = 10) -> dict:
+    state = _state(game_id, gold=gold)
+    state["combat"] = {"active": False, "round": 0, "scene": None}
+    state["enemies"] = []
+    state["combat_target"] = None
+    return state
+
+
 def test_checkpoint_nao_entra_em_latest_nem_listagem(tmp_path, monkeypatch):
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     gid = str(uuid.uuid4())
     assert persistence.save_game_state(_state(gid, gold=11))
-    assert persistence.save_checkpoint(_state(gid, gold=99))
+    assert persistence.save_checkpoint(_checkpoint_state(gid, gold=99))
     checkpoint = tmp_path / f"{gid}.checkpoint.json"
     os.utime(checkpoint, (checkpoint.stat().st_atime, checkpoint.stat().st_mtime + 10))
 
@@ -50,7 +58,7 @@ def test_delete_remove_save_checkpoint_e_memoria_inclusive_orfao(tmp_path, monke
     monkeypatch.setattr(persistence, "SESSION_MEMORY_DIR", str(memory))
     gid = str(uuid.uuid4())
     assert persistence.save_game_state(_state(gid))
-    assert persistence.save_checkpoint(_state(gid))
+    assert persistence.save_checkpoint(_checkpoint_state(gid))
     session_dir = memory / gid
     session_dir.mkdir(parents=True)
     (session_dir / "index.bin").write_bytes(b"x")
@@ -61,7 +69,7 @@ def test_delete_remove_save_checkpoint_e_memoria_inclusive_orfao(tmp_path, monke
     assert not session_dir.exists()
 
     # Um checkpoint órfão ainda deve ser limpável pelo endpoint normal.
-    assert persistence.save_checkpoint(_state(gid))
+    assert persistence.save_checkpoint(_checkpoint_state(gid))
     assert persistence.delete_save(gid) is True
     assert not (saves / f"{gid}.checkpoint.json").exists()
 

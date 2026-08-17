@@ -224,6 +224,7 @@ def process_pending_events(state: Dict) -> Dict:
     quests = list(state.get("quests") or [])
     quests_changed = False
     quests_completed = 0  # Fase 4.1: cada conclusão vale XP_PER_QUEST
+    quest_reward_gold = 0
     original_rejections = list(state.get("event_rejections") or [])
     event_rejections = _bounded_rejections(original_rejections)
     rejection_count_before = len(event_rejections)
@@ -279,7 +280,8 @@ def process_pending_events(state: Dict) -> Dict:
                 origem = next((q for q in quests if q.get("id") == qid), None)
                 if origem:
                     event["payload"]["quest_title"] = origem.get("title", "")
-                quests = quest_log.complete_quest(quests, qid, turn)
+                quests, delivered = quest_log.complete_quest_with_reward(quests, qid, turn)
+                quest_reward_gold += delivered
                 quests_changed = True
                 quests_completed += 1
 
@@ -319,6 +321,7 @@ def process_pending_events(state: Dict) -> Dict:
         from progression import XP_PER_QUEST, grant_xp
         player, lvl_props = grant_xp(dict(state.get("player") or {}),
                                      XP_PER_QUEST * quests_completed)
+        player["gold"] = int(player.get("gold", 0) or 0) + quest_reward_gold
         updates["player"] = player
         for prop in lvl_props:
             ev = _build_event(prop, turn)

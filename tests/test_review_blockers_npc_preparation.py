@@ -271,6 +271,65 @@ def test_npc_dialogue_marks_memory_as_canonical_only(monkeypatch):
     assert result["memory_fact_policy"] == "canonical_only"
     assert result["pending_npc_memory"] == []
     assert result["rag_persistence_error"] is None
+    assert len(result["memory_facts"]) == 1
+    assert result["memory_facts"][0]["provenance"] == "npc_claim"
+    assert result["memory_facts"][0]["confidence"] == "reported"
+    assert result["memory_facts"][0]["source_id"] == "npc:npc_grum"
+
+
+def test_npc_dialogue_success_is_idempotent_in_global_ledger(monkeypatch):
+    monkeypatch.setattr(npc_mod, "get_llm", lambda *_args, **_kwargs: _DialogueLLM())
+    monkeypatch.setattr(
+        npc_mod,
+        "build_context_pack",
+        lambda *_args, **_kwargs: SimpleNamespace(
+            memory_block="", lore_block="", world_state_block=""),
+    )
+    writes = []
+    monkeypatch.setattr(
+        npc_mod,
+        "add_npc_memory",
+        lambda *_args, **_kwargs: writes.append(1) or True,
+    )
+    state = _dialogue_state()
+
+    first = npc_mod.npc_actor_node(state)
+    state.update(first)
+    # Reproduz a mesma fala observável no mesmo turno: o vetor pode receber a
+    # chamada normal, mas o ledger global continua com um único registro.
+    state["messages"] = [HumanMessage(content="Que rumores correm pela cidade?")]
+    second = npc_mod.npc_actor_node(state)
+
+    assert len(writes) == 2
+    assert len(second["memory_facts"]) == 1
+
+
+def test_npc_dialogue_promotes_same_text_from_inference_to_reported(monkeypatch):
+    from services.memory_provenance import make_memory_fact
+
+    monkeypatch.setattr(npc_mod, "get_llm", lambda *_args, **_kwargs: _DialogueLLM())
+    monkeypatch.setattr(
+        npc_mod,
+        "build_context_pack",
+        lambda *_args, **_kwargs: SimpleNamespace(
+            memory_block="", lore_block="", world_state_block=""),
+    )
+    monkeypatch.setattr(npc_mod, "add_npc_memory", lambda *_args, **_kwargs: True)
+    baseline = npc_mod.npc_actor_node(_dialogue_state())
+    state = _dialogue_state()
+    state["memory_facts"] = [make_memory_fact(
+        baseline["memory_facts"][0]["text"],
+        provenance="inference",
+        source_id="archivist:summary",
+        source_turn=3,
+    )]
+
+    result = npc_mod.npc_actor_node(state)
+
+    assert result["memory_facts"][0]["confidence"] == "reported"
+    assert result["memory_promotions"][-1] == {
+        "turn": 3, "count": 1, "reason": "npc_claim_direct_write",
+    }
 
 
 def test_npc_dialogue_failure_enqueues_operation_scoped_retry(monkeypatch):

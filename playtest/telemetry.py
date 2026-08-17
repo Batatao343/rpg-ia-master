@@ -322,6 +322,7 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
             campaign_observability_errors = int(
                 campaign.get("observability_errors", 0) or 0
             )
+            campaign_aborted = bool(campaign.get("aborted_reason"))
 
             if completed != requested or (
                 expected_turns and completed != expected_turns
@@ -343,7 +344,9 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
                     "profile": profile,
                     "seed": expected_seed,
                     "turns_requested": expected_turns,
-                    "turns_completed": expected_turns,
+                    "turns_completed": (
+                        completed if campaign_aborted else expected_turns
+                    ),
                     "errors": campaign_errors,
                     "error_violations": campaign_error_violations,
                     "observability_errors": campaign_observability_errors,
@@ -374,19 +377,20 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
                         )
                         reasons.append("startup sem sucesso de rede LLM")
 
-                if len(rows) != expected_turns:
+                expected_jsonl_rows = completed if campaign_aborted else expected_turns
+                if len(rows) != expected_jsonl_rows:
                     invalid_jsonls.append({
                         "profile": profile,
                         "file": jsonl_name,
                         "error": (
                             f"{len(rows)} linhas/turnos, "
-                            f"esperado {expected_turns}"
+                            f"esperado {expected_jsonl_rows}"
                         ),
                     })
                     reasons.append("contagem de linhas do JSONL diverge")
                 if rows:
                     turns_seen = [row.get("turn") for row in rows]
-                    expected_sequence = list(range(1, expected_turns + 1))
+                    expected_sequence = list(range(1, len(rows) + 1))
                     if turns_seen != expected_sequence:
                         invalid_jsonls.append({
                             "profile": profile,
@@ -422,16 +426,19 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
                         row_contract_errors: List[str] = []
                         if row.get("route") not in {
                             "storyteller", "combat_agent", "npc_actor", "loot",
+                            "timeout",
                         }:
                             row_contract_errors.append(
                                 f"route inválida {row.get('route')!r}"
                             )
                         nodes = row.get("nodes_executed")
-                        if not isinstance(nodes, list) or not nodes:
+                        if not isinstance(nodes, list):
                             row_contract_errors.append(
-                                "nodes_executed vazio ou inválido"
+                                "nodes_executed inválido"
                             )
-                        elif "archivist" not in nodes:
+                        elif row.get("route") != "timeout" and not nodes:
+                            row_contract_errors.append("nodes_executed vazio")
+                        elif row.get("route") != "timeout" and "archivist" not in nodes:
                             row_contract_errors.append(
                                 "archivist ausente de nodes_executed"
                             )
@@ -723,8 +730,17 @@ def turn_to_record(rec: TurnRecord) -> dict:
         "action": rec.action,
         "narrative": rec.narrative,
         "progression_choices": list(rec.progression_choices),
+        "quest_requested": rec.quest_requested,
+        "quests_before": rec.quests_before,
+        "quests_after": rec.quests_after,
+        "combat_origin": rec.combat_origin,
+        "conflict_instance_id": rec.conflict_instance_id,
+        "session_action_count": rec.session_action_count,
+        "canonical_turn": rec.canonical_turn,
+        "timeline_epoch": rec.timeline_epoch,
         "route": rec.route,
         "nodes_executed": list(rec.nodes_executed),
+        "node_latency_ms": dict(rec.node_latency_ms),
         "combat_executed": rec.combat_executed,
         "combat_active_before": rec.combat_active_before,
         "combat_round_before": rec.combat_round_before,
@@ -762,6 +778,8 @@ def turn_to_record(rec: TurnRecord) -> dict:
         "enemy_wounds": dict(rec.enemy_wounds),
         "conflict_wounds": dict(rec.conflict_wounds),
         "memory_by_provenance": dict(rec.memory_by_provenance),
+        "memory_by_confidence": dict(rec.memory_by_confidence),
+        "stale_speculative_memories": rec.stale_speculative_memories,
         "memory_writes_by_provenance": dict(rec.memory_writes_by_provenance),
         "memory_rejections": rec.memory_rejections,
         "memory_promotions": rec.memory_promotions,
@@ -924,6 +942,9 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
     final_memory_by_provenance = dict(
         turn_records[-1].get("memory_by_provenance") or {}
     ) if turn_records else {}
+    final_memory_by_confidence = dict(
+        turn_records[-1].get("memory_by_confidence") or {}
+    ) if turn_records else {}
     final_memory_rejections = int(
         turn_records[-1].get("memory_rejections", 0) or 0
     ) if turn_records else 0
@@ -940,7 +961,20 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
 
     # Morte canônica: log do runner; para saves antigos, somente marcadores
     # terminais explícitos permitem inferência. HP/Vitalidade zero isolados não.
+    continuity_deaths = [
+        row for row in ((final.get("continuity") or {}).get("death_history") or [])
+        if isinstance(row, dict)
+    ]
     deaths_log = list(getattr(result, "deaths_log", []) or [])
+    if not deaths_log and continuity_deaths:
+        deaths_log = [{
+            "turn": row.get("session_action"),
+            "session_action": row.get("session_action"),
+            "canonical_turn": row.get("death_turn"),
+            "timeline_epoch": row.get("epoch"),
+            "location": row.get("location"),
+            "cause": row.get("cause"),
+        } for row in continuity_deaths]
     if not deaths_log and (final.get("death_pending") or final.get("game_over")):
         death_ev = next(
             (ev for ev in reversed(final.get("event_log") or [])
@@ -961,9 +995,64 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
     first_death_turn = first_death.get("turn")
     death_location = first_death.get("location") or None
     death_cause = first_death.get("cause") or None
-    downed_count = len([ev for ev in (final.get("event_log") or [])
-                        if isinstance(ev, dict) and ev.get("type") == "player_downed"])
+    downed_count = (
+        len(continuity_deaths) if continuity_deaths else len(deaths_log)
+    )
     replan_count = len([r for r in turn_records if r.get("replanned")])
+    combat_turns = len([
+        r for r in turn_records
+        if r.get("combat_executed") or r.get("route") == "combat_agent"
+    ])
+    quest_requests = len([r for r in turn_records if r.get("quest_requested")])
+    from playtest.metrics import quest_request_conversion_count
+    quest_request_conversions = quest_request_conversion_count(
+        turn_records, window=3,
+    )
+    experience_balance = {
+        "combat_turns": combat_turns,
+        "combat_turn_pct": (
+            round(100.0 * combat_turns / len(turn_records), 1)
+            if turn_records else None
+        ),
+        "quest_requests": quest_requests,
+        "quest_request_conversions": quest_request_conversions,
+        "quest_conversion_pct": (
+            round(100.0 * quest_request_conversions / quest_requests, 1)
+            if quest_requests else None
+        ),
+    }
+    node_samples: Dict[str, List[int]] = {}
+    for row in turn_records:
+        for node, value in dict(row.get("node_latency_ms") or {}).items():
+            node_samples.setdefault(str(node), []).append(int(value or 0))
+    node_latency = {
+        node: {
+            "count": len(values),
+            "mean": round(sum(values) / len(values), 1) if values else 0,
+            "p50": _percentile(values, 50),
+            "p95": _percentile(values, 95),
+            "max": max(values, default=0),
+        }
+        for node, values in sorted(node_samples.items())
+    }
+    combat_origins = Counter(
+        str(row.get("combat_origin") or "unknown") for row in turn_records
+        if row.get("combat_started")
+    )
+    started_conflicts = [
+        (
+            str(row.get("conflict_instance_id") or f"legacy:{row.get('turn')}"),
+            int(row.get("timeline_epoch", 0) or 0),
+        )
+        for row in turn_records if row.get("combat_started")
+    ]
+    ended_conflicts = [
+        (
+            str(row.get("conflict_instance_id") or f"legacy:{row.get('turn')}"),
+            int(row.get("timeline_epoch", 0) or 0),
+        )
+        for row in turn_records if row.get("combat_ended")
+    ]
     combat_end_hp_pcts: List[float] = []
     prev_combat = False
     for r in turn_records:
@@ -1082,6 +1171,7 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         ]),
         "routes": routes,
         "latency_ms": {"p50": _percentile(latencies, 50), "p95": _percentile(latencies, 95)},
+        "node_latency_ms": node_latency,
         "latency_slo": {
             "warning_ms": 45_000,
             "error_ms": 90_000,
@@ -1096,6 +1186,14 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         "progression_choices": sum(
             len(record.get("progression_choices") or []) for record in turn_records
         ),
+        "experience_balance": experience_balance,
+        "combat_origins": dict(sorted(combat_origins.items())),
+        "continuity": {
+            "session_action_count": int((final.get("continuity") or {}).get(
+                "session_action_count", len(turn_records)) or 0),
+            "canonical_turn": int(world.get("turn_count", 0) or 0),
+            "timeline_epoch": int((final.get("continuity") or {}).get("timeline_epoch", 0) or 0),
+        },
         # spec checkpoints-morte: conta TODAS as mortes (cada uma dispara restore);
         # game_over só existe pela via voluntária "Aceitar".
         "deaths": len(deaths_log),
@@ -1114,10 +1212,24 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         "locations_visited": len(world.get("visited", []) or []),
         "quests": {
             "created": len(quests),
-            "completed": len([q for q in quests if q.get("status") != "active"]),
+            "progressed": len([q for q in quests if len(q.get("progress_log") or []) > 1]),
+            "completed": len([q for q in quests if q.get("status") == "completed"]),
+            "rewarded": len([q for q in quests if q.get("reward_delivered")]),
+            "reward_gold": sum(int(q.get("reward_gold", 0) or 0) for q in quests),
         },
         "memory": {
             "by_provenance": final_memory_by_provenance,
+            "by_confidence": final_memory_by_confidence,
+            "authority_pct": (
+                round(100.0 * (
+                    int(final_memory_by_confidence.get("confirmed", 0) or 0)
+                    + int(final_memory_by_confidence.get("reported", 0) or 0)
+                ) / sum(int(v or 0) for v in final_memory_by_confidence.values()), 1)
+                if sum(int(v or 0) for v in final_memory_by_confidence.values()) else None
+            ),
+            "stale_speculative": int(
+                turn_records[-1].get("stale_speculative_memories", 0) or 0
+            ) if turn_records else 0,
             "writes_by_provenance": dict(memory_writes_by_provenance),
             "rejections": final_memory_rejections,
             "promotions": final_memory_promotions,
@@ -1155,14 +1267,10 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
                 record for record in turn_records
                 if record.get("combat_executed")
             ]),
-            "started": len([
-                record for record in turn_records
-                if record.get("combat_started")
-            ]),
-            "ended": len([
-                record for record in turn_records
-                if record.get("combat_ended")
-            ]),
+            "started": len(set(started_conflicts)),
+            "ended": len(set(ended_conflicts)),
+            "replayed_starts": len(started_conflicts) - len(set(started_conflicts)),
+            "timeline_epochs": len({epoch for _identity, epoch in started_conflicts}),
             "reactions": sum(
                 len(record.get("reactions") or [])
                 for record in turn_records

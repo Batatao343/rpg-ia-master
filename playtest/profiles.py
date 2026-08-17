@@ -48,6 +48,26 @@ def _connections(loc_id: str) -> List[dict]:
     return get_connections(loc_id)
 
 
+def _next_hop_toward(current_id: str, target_id: str) -> Optional[dict]:
+    """BFS pequeno no mapa público; devolve somente o próximo passo adjacente."""
+    if not current_id or not target_id or current_id == target_id:
+        return None
+    queue: List[tuple[str, Optional[dict]]] = [(current_id, None)]
+    seen = {current_id}
+    while queue:
+        location_id, first_hop = queue.pop(0)
+        for neighbor in sorted(_connections(location_id), key=lambda loc: loc.get("id", "")):
+            neighbor_id = str(neighbor.get("id") or "")
+            if not neighbor_id or neighbor_id in seen:
+                continue
+            next_first = first_hop or neighbor
+            if neighbor_id == target_id:
+                return next_first
+            seen.add(neighbor_id)
+            queue.append((neighbor_id, next_first))
+    return None
+
+
 # --- decisão atômica do perfil ---------------------------------------------
 
 DecisionMode = Literal["free_text", "declaration", "flee"]
@@ -726,11 +746,15 @@ class Normal(_Base):
     def reset(self) -> None:
         self._step = 0
         self._talked: set[str] = set()
+        self._combat_cooldown = 0
 
     def combat_decision(self, state, rng):
+        # Conta ações NÃO-combate depois do conflito. Cada rodada renova o marco;
+        # a contagem só começa quando o combate efetivamente termina.
+        self._combat_cooldown = 20
         combat = state.get("combat") or {}
-        if ((_low_vitality(state, 0.35) and not _healing_item(state))
-                or int(combat.get("round", 0) or 0) >= 7):
+        if ((_low_vitality(state, 0.50) and not _healing_item(state))
+                or int(combat.get("round", 0) or 0) >= 3):
             connections = sorted(_connections(_current_id(state)), key=lambda c: c["id"])
             destination = connections[0] if connections else None
             return ProfileDecision(
@@ -741,14 +765,55 @@ class Normal(_Base):
         return _combat_decision(state, rng)
 
     def _next_action(self, state, rng):
+        active_quests = [
+            quest for quest in (state.get("quests") or [])
+            if isinstance(quest, dict) and quest.get("status") == "active"
+        ]
+        if active_quests:
+            quest = sorted(
+                active_quests,
+                key=lambda item: (int(item.get("created_turn", 0) or 0),
+                                  str(item.get("id") or "")),
+            )[0]
+            title = str(quest.get("title") or "objetivo atual")
+            target_id = str(quest.get("location_id") or "")
+            current_id = _current_id(state)
+            if target_id and current_id != target_id:
+                hop = _next_hop_toward(current_id, target_id)
+                if hop:
+                    return (
+                        f"Viajo para {hop['name']} para retomar a missão "
+                        f"{title} pelo caminho seguro."
+                    )
+            if target_id and current_id == target_id:
+                investigations = [
+                    row for row in (quest.get("progress_log") or [])
+                    if isinstance(row, dict) and row.get("kind") == "investigation"
+                ]
+                if not investigations:
+                    return (
+                        f"Investigo pistas da missão {title} e registro os vestígios "
+                        "que encontro neste local."
+                    )
+                return (
+                    f"Examino novos vestígios da missão {title} por outro ângulo "
+                    "e confronto o que descubro com a primeira pista."
+                )
+
         in_scene = [name for name in _npcs_in_scene(state) if name not in self._talked]
         if in_scene:
             target = sorted(in_scene)[0]
             self._talked.add(target)
-            return f"Converso com {target} e pergunto o que está acontecendo por aqui."
+            return (
+                f"Converso com {target}, pergunto o que está acontecendo e se há "
+                "uma tarefa concreta ou um favor em que eu possa ajudar."
+            )
 
         step = self._step
         self._step += 1
+        cooldown = int(getattr(self, "_combat_cooldown", 0) or 0)
+        if cooldown > 0:
+            self._combat_cooldown = cooldown - 1
         phase = step % 8
         if phase == 0:
             from gamedata import interiors_of
@@ -765,26 +830,45 @@ class Normal(_Base):
                 return f"Viajo para {dest['name']} e observo o caminho com curiosidade."
             return "Exploro os arredores procurando detalhes e caminhos que ainda não notei."
         if phase == 1:
-            active = [q for q in (state.get("quests") or [])
-                      if isinstance(q, dict) and q.get("status") == "active"]
-            title = active[0].get("title") if active else "o objetivo atual"
-            return f"Investigo pistas e avanço com cuidado em {title}."
+            return "Investigo pistas e avanço com cuidado no objetivo atual."
         if phase == 2:
             return "Vasculho o local em busca de algo útil, sem pegar o que pertence a alguém."
         if phase == 3:
             return "Procuro alguém por perto e pergunto sobre rumores e problemas locais."
         if phase == 4:
+            if cooldown > 0:
+                return (
+                    "Observo os arredores à distância e escolho uma rota "
+                    "tranquila, evitando qualquer provocação."
+                )
             return ("Investigo uma ameaça próxima com cautela e, se ela avançar, "
                     "ataco para me defender.")
         if phase == 5:
             return "Procuro um mercador, comparo preços e compro suprimentos se precisar."
         if phase == 6:
-            plan = state.get("campaign_plan") or {}
-            beats = plan.get("beats") or []
-            index = int(plan.get("current_step", 0) or 0)
-            objective = (beats[index].get("description")
-                         if index < len(beats) else plan.get("climax", "a história"))
-            return f"Tento cumprir o objetivo principal: {str(objective)[:100]}."
+            return (
+                "Retomo uma pista que ouvi durante a jornada e procuro um "
+                "próximo passo concreto."
+            )
+        world = state.get("world") or {}
+        current_danger = int(world.get("danger_level", 1) or 1)
+        if current_danger > 1:
+            safer = sorted(
+                [
+                    location for location in _connections(_current_id(state))
+                    if int(location.get("danger", current_danger) or current_danger)
+                    < current_danger
+                ],
+                key=lambda location: (
+                    int(location.get("danger", current_danger) or current_danger),
+                    str(location.get("id") or ""),
+                ),
+            )
+            if safer:
+                return (
+                    f"Viajo para {safer[0]['name']} em busca de abrigo antes "
+                    "de descansar e organizar meus pertences."
+                )
         return "Descanso num lugar razoavelmente seguro e organizo meus pertences."
 
 

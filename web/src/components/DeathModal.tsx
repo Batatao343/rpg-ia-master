@@ -35,7 +35,13 @@ export function DeathModal({ busy, onContinue, onAccept, death }: Props) {
           <div><dt>Estado Terminal</dt><dd>{death?.entered_terminal ? "atravessado" : "não registrado"}</dd></div>
           <div><dt>Estabilização</dt><dd>{death?.stabilization || `${death?.stabilization_attempts ?? 0} tentativa(s)`}</dd></div>
           {death?.killer && <div><dt>Queda diante de</dt><dd>{death.killer}</dd></div>}
+          <div><dt>Retorno</dt><dd>turno {death?.will_restore_turn ?? 0}</dd></div>
+          <div><dt>Progresso revertido</dt><dd>{death?.will_lose_turns ?? 0} turno(s)</dd></div>
         </dl>
+        <p className="death-card__note">
+          Mantém: {(death?.retained || []).join(", ") || "registro da sessão"}.<br />
+          Reverte: {(death?.reverted || []).join(", ") || "progresso após o checkpoint"}.
+        </p>
         <div className="death-card__actions">
           <button
             type="button"
@@ -54,9 +60,6 @@ export function DeathModal({ busy, onContinue, onAccept, death }: Props) {
             Aceitar a morte
           </button>
         </div>
-        <p className="death-card__note">
-          Continuar reverte ao último ponto seguro — o progresso desde ali se perde.
-        </p>
       </motion.div>
     </div>
   );

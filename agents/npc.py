@@ -20,7 +20,14 @@ from services.memory_retry import (
     enqueue_npc_memory,
     normalize_pending_npc_memory,
 )
-from services.memory_provenance import make_memory_fact, memory_metadata
+from services.memory_provenance import (
+    MAX_MEMORY_PROMOTIONS,
+    bounded_audit_rows,
+    commit_memory_facts,
+    make_memory_fact,
+    memory_metadata,
+    normalize_memory_facts,
+)
 from services.prose_guard import sanitize_meta_preamble
 from services.input_normalization import optional_entity_ref
 from services.structured_outputs import ProposedQuest
@@ -256,14 +263,11 @@ def _mission_hint_block(state: GameState, last_msg: str) -> str:
     missão ou não há beat."""
     if not _MISSION_RE.search((last_msg or "").lower()):
         return ""
-    plan = state.get("campaign_plan") or {}
-    beats = plan.get("beats") or []
-    step = int(plan.get("current_step", 0) or 0)
-    cur = beats[step] if 0 <= step < len(beats) else (beats[0] if beats else None)
-    desc = cur.get("description") if isinstance(cur, dict) else None
-    if not desc:
-        return ""
-    return (f"\n    <OBJETIVO_ATUAL>\n    O rumo agora: {desc}\n"
+    from services.objectives import public_objective
+    desc = public_objective(
+        state.get("campaign_plan"), state.get("quests"), state.get("world"),
+    )["objective"]
+    return (f"\n    <OBJETIVO_ATUAL>\n    O rumo público agora: {desc}\n"
             "    Se o jogador perguntar o que fazer/aonde ir, oriente com isto "
             "(do seu jeito, pela sua persona).\n    </OBJETIVO_ATUAL>\n")
 
@@ -490,6 +494,7 @@ def npc_actor_node(state: GameState):
 
         # Memória de longo prazo: vetoriza o fato no índice deste npc (inerte sem chave).
         rag_ok = True
+        record = None
         if RAG_AVAILABLE and game_id and npc_said:
             try:
                 record = make_memory_fact(
@@ -531,6 +536,25 @@ def npc_actor_node(state: GameState):
         elif not memory_error:
             memory_error = "Há memórias de NPC aguardando persistência."
 
+        # A escrita vetorial direta e o ledger do save representam o MESMO fato.
+        # O merge ocorre somente depois do sucesso físico; falhas continuam
+        # exclusivamente na fila operation-scoped para o archivist tentar depois.
+        memory_facts = normalize_memory_facts(state.get("memory_facts"))
+        memory_promotions = bounded_audit_rows(
+            state.get("memory_promotions"), limit=MAX_MEMORY_PROMOTIONS,
+        )
+        if rag_ok and record is not None:
+            memory_facts, promoted = commit_memory_facts(memory_facts, [record])
+            if promoted:
+                memory_promotions = bounded_audit_rows([
+                    *memory_promotions,
+                    {
+                        "turn": int(turn),
+                        "count": promoted,
+                        "reason": "npc_claim_direct_write",
+                    },
+                ], limit=MAX_MEMORY_PROMOTIONS)
+
         # Atualiza o estado global
         new_npcs = npcs_db.copy()
         new_npcs[npc_name] = npc_data
@@ -552,6 +576,8 @@ def npc_actor_node(state: GameState):
             "memory_fact_policy": "canonical_only",
             "pending_npc_memory": pending_npc_memory,
             "rag_persistence_error": memory_error,
+            "memory_facts": memory_facts,
+            "memory_promotions": memory_promotions,
         }
 
         # Fase 3.3: quem originou a missão é o NPC em cena — resolvido em Python

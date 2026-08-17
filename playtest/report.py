@@ -306,6 +306,25 @@ def render_markdown(report: RunReport) -> str:
         L.append("_Nenhuma violação registrada._")
     L.append("")
 
+    L.append("## Latência por nó")
+    L.append("")
+    node_rows = {}
+    for campaign in report.campaigns:
+        for node, metrics in (campaign.get("node_latency_ms") or {}).items():
+            node_rows.setdefault(node, []).append(metrics)
+    if node_rows:
+        L.append("| nó | amostras | p50 máx. | p95 máx. |")
+        L.append("|---|---:|---:|---:|")
+        for node, rows in sorted(node_rows.items()):
+            L.append(
+                f"| {node} | {sum(int(r.get('count', 0)) for r in rows)} | "
+                f"{max(int(r.get('p50', 0)) for r in rows)} ms | "
+                f"{max(int(r.get('p95', 0)) for r in rows)} ms |"
+            )
+    else:
+        L.append("_Sem amostras por nó._")
+    L.append("")
+
     L.append("## Erros")
     L.append("")
     if report.top_errors:

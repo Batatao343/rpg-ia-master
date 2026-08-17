@@ -183,7 +183,8 @@ def test_new_game_with_scenario_seeds_plan(tmp_path, monkeypatch):
     assert body["quest"]["main"]["arc_title"] == sc["arc_title"]
     assert body["chronicle"][0]["title"] == sc["arc_title"]
     beats = body["quest"]["main"]["beats"]
-    assert [b["description"] for b in beats] == sc["beats"]
+    # Beats são direção privada do narrador; a API expõe somente marcadores seguros.
+    assert [b["description"] for b in beats] == ["Etapa 1", "Etapa 2", "Etapa 3"]
 
 
 def test_seeded_plan_survives_first_invoke(tmp_path, monkeypatch):

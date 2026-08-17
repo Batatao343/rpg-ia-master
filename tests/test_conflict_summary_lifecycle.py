@@ -496,6 +496,8 @@ def test_archivist_retry_npc_falha_depois_confirma_e_limpa(monkeypatch):
     assert retried["rag_persistence_error"] is None
     assert retried["archive_due"] is False
     assert retried["memory_fact_policy"] is None
+    assert retried["memory_facts"][0]["provenance"] == "npc_claim"
+    assert retried["memory_facts"][0]["confidence"] == "reported"
     assert len(attempts) == 2
 
     # Confirmado: uma chamada trivial posterior não repete a escrita.

@@ -382,7 +382,9 @@ def test_quest_block_main_side_markers():
         {"id": "q2", "title": "Concluída", "status": "completed", "resolved_turn": 3},
     ]
     block = api._quest_block(plan, quests)
-    assert block["main"]["objective"] == "Encontre o mapa"
+    # Objetivo público prioriza a side quest ativa e nunca expõe o beat privado.
+    assert block["main"]["objective"] == "Ativa"
+    assert block["main"]["objective_source"] == "side_quest"
     assert block["main"]["arc_title"] == "Arco Teste"
     assert [q["id"] for q in block["side"]] == ["q1", "q2"]
     assert block["markers"] == [{"quest_id": "q1", "location_id": NOVA_ARCADIA}]

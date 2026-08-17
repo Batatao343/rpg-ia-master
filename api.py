@@ -409,6 +409,7 @@ class GameResponse(BaseModel):
     death_pending: bool = False # spec checkpoints-morte: queda letal — abre a tela de morte no cliente
     game_over: bool = False     # memorial/bloqueio definitivo; Vitalidade 0 não basta
     death: Dict[str, Any] = {}  # conflito-16: Última Ação/Terminal/estabilização
+    continuity: Dict[str, Any] = {}
     combat_simulation: Dict[str, Any] = {}
     visual: VisualResponse
 
@@ -484,7 +485,8 @@ def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> Gam
         simulated=is_simulated(),
         world=_world_block(state.get("world", {}) or {}, state.get("world_projection", {}) or {},
                           state.get("event_log", []) or [], state.get("player", {}) or {}),
-        quest=_quest_block(state.get("campaign_plan") or {}, state.get("quests", []) or []),
+        quest=_quest_block(state.get("campaign_plan") or {}, state.get("quests", []) or [],
+                           state.get("world") or {}),
         combat=_combat_block(state),
         npcs=_npcs_block(state.get("npcs", {}) or {}),
         chronicle=_chronicle_block(state.get("chronicle", []) or []),
@@ -504,6 +506,7 @@ def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> Gam
         death_pending=bool(state.get("death_pending", False)),
         game_over=bool(state.get("game_over", False)),
         death=_death_block(state),
+        continuity=_continuity_block(state),
         combat_simulation=simulation,
         visual=visual_response(state, cue_action_key=cue_action_key),
     )
@@ -604,6 +607,9 @@ def _death_block(state: dict) -> Dict[str, Any]:
         from services import cards
         card = cards.get_card(str(last_action.get("card_id") or "")) or {}
         last_action_label = str(card.get("name") or last_action.get("card_id") or "")
+    continuity = _continuity_block(state)
+    canonical = int(continuity.get("canonical_turn", 0) or 0)
+    checkpoint = int(continuity.get("last_checkpoint_turn", 0) or 0)
     return {
         "pending": bool(state.get("death_pending")),
         "last_action": last_action,
@@ -617,7 +623,18 @@ def _death_block(state: dict) -> Dict[str, Any]:
                         player.get("stabilization_attempts", 0)) or 0
         ),
         "killer": context.get("killer", ""),
+        "will_restore_turn": checkpoint,
+        "will_lose_turns": max(0, canonical - checkpoint),
+        "retained": ["histórico de mortes", "contagem de ações da sessão"],
+        "reverted": ["mundo", "inventário", "posição e memória após o checkpoint"],
     }
+
+
+def _continuity_block(state: dict) -> Dict[str, Any]:
+    from services.continuity import normalize
+    canonical = int((state.get("world") or {}).get("turn_count", 0) or 0)
+    meta = normalize(state.get("continuity"), canonical_turn=canonical)
+    return {**meta, "canonical_turn": canonical}
 
 
 def _levelup_block(player: dict) -> Dict[str, Any]:
@@ -826,26 +843,25 @@ def _combat_block(state: dict) -> Dict[str, Any]:
     }
 
 
-def _quest_block(plan: dict, quests: list) -> Dict[str, Any]:
+def _quest_block(plan: dict, quests: list, world: Optional[dict] = None) -> Dict[str, Any]:
     """Fase 3.3: main (view do campaign_plan) + side quests + markers pro mapa."""
     plan = plan or {}
     beats = plan.get("beats", []) or []
     step = plan.get("current_step", 0)
     climax = plan.get("climax", "")
-    if 0 <= step < len(beats):
-        objective = beats[step].get("description", "")
-    else:
-        # Todos os beats concluídos → o clímax é o objetivo final da cena.
-        objective = climax
+    from services.objectives import public_objective
+    public = public_objective(plan, quests, world or {})
     main = {
-        "objective": objective,
-        "climax": climax,
+        "objective": public["objective"],
+        "objective_source": public["source"],
+        "objective_quest_id": public["quest_id"],
+        "climax": "",
         "current_step": step,
         "total": len(beats),
         "arc_title": plan.get("arc_title", ""),
         "beats": [
-            {"description": b.get("description", ""), "status": b.get("status", "pending")}
-            for b in beats
+            {"description": f"Etapa {index + 1}", "status": b.get("status", "pending")}
+            for index, b in enumerate(beats)
         ],
     }
     quests = [q for q in (quests or []) if isinstance(q, dict)]
@@ -1065,6 +1081,8 @@ def _build_combat_simulator_state(req: CombatSimulatorRequest) -> dict:
         "narrative_rejections": [],
         "game_over": False,
         "death_pending": False,
+        "continuity": {"session_action_count": 0, "timeline_epoch": 0,
+                       "last_checkpoint_turn": 0, "death_history": []},
     }
 
 
@@ -1255,6 +1273,8 @@ def new_game(req: CreateCharacterRequest):
         "archive_due": False,
         "game_over": False,
         "death_pending": False,
+        "continuity": {"session_action_count": 0, "timeline_epoch": 0,
+                       "last_checkpoint_turn": 0, "death_history": []},
         "npcs": {},
         "campaign_plan": {},
         "needs_replan": False,
@@ -1284,6 +1304,12 @@ def new_game(req: CreateCharacterRequest):
     # 3. Roda o Grafo
     try:
         final_state = game_graph.invoke(initial_state)
+        # A abertura posiciona a linha do tempo, mas não é ação do jogador.
+        from services.continuity import mark_checkpoint
+        final_state["continuity"] = mark_checkpoint(
+            {**(final_state.get("continuity") or {}), "session_action_count": 0},
+            canonical_turn=int((final_state.get("world") or {}).get("turn_count", 0) or 0),
+        )
         visual_key = f"new:{new_game_id}"
         final_state.update(resolve_turn_visual_state(initial_state, final_state,
                                                      action_key=visual_key))
@@ -1334,8 +1360,15 @@ def _write_checkpoint_if_due(state: dict, prev: dict) -> None:
     if (state.get("combat_simulation") or {}).get("enabled"):
         return
     from services import checkpoints as _cp
-    if _cp.should_checkpoint(state, prev) and not _cp.maybe_write(state, prev=prev):
-        raise RuntimeError("falha ao persistir checkpoint")
+    if _cp.should_checkpoint(state, prev):
+        from services.continuity import mark_checkpoint
+        state["continuity"] = mark_checkpoint(
+            state.get("continuity"),
+            canonical_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
+        )
+        if not _cp.maybe_write(state, prev=prev):
+            raise RuntimeError("falha ao persistir checkpoint")
+        _require_saved(state, detail="marcador de checkpoint")
 
 
 def _apply_action_options(state: dict, req: ActionRequest) -> None:

@@ -74,12 +74,13 @@ def test_grafo_npc_actor_liga_no_storyteller():
 
 # --- R4: pergunta de missão usa o beat --------------------------------------
 
-def test_pergunta_de_missao_usa_beat_no_contexto():
+def test_pergunta_de_missao_usa_objetivo_publico_sem_vazar_beat():
     state = {"campaign_plan": {"beats": [
         {"description": "Encontre o mercador desaparecido nas docas", "status": "pending"}],
         "current_step": 0}}
     block = _mission_hint_block(state, "o que a missão exige agora?")
-    assert "mercador desaparecido" in block
+    assert "Investigue os acontecimentos" in block
+    assert "mercador desaparecido" not in block
     assert "OBJETIVO_ATUAL" in block
 
 

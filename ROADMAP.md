@@ -1,4 +1,4 @@
-# ROADMAP — RPG IA (Revisado 2026-08-12)
+# ROADMAP — RPG IA (Revisado 2026-08-16)
 
 > **Objetivo central:** Mundo vivo persistente com estado consultável, antes de features novas.
 > 
@@ -7,6 +7,133 @@
 >
 > Complementa `CLAUDE.md` (arquitetura) e `ESTADO_ATUAL.md` (status).
 > **Desenvolvimento é spec-driven:** o detalhe técnico de cada fase vive em `specs/` — este arquivo só resume e aponta.
+
+---
+
+## ✅ ENTREGUE — remediação do longrun real de 200 turnos (2026-08-16)
+
+As cinco pendências do diagnóstico abaixo foram especificadas e executadas:
+
+1. [memoria-npc-sucesso-ledger](specs/memoria-npc-sucesso-ledger.md) — sucesso
+   privado entra no ledger como relato, sem write duplicado;
+2. [chase-progresso-e-fuga](specs/chase-progresso-e-fuga.md) — fingerprint do
+   chase e teto determinístico de seis tentativas;
+3. [quests-retomada-conversao](specs/quests-retomada-conversao.md) — BFS até o
+   alvo, duas investigações e funil D+0..D+3 compartilhado;
+4. [pos-fuga-roteamento-origem](specs/pos-fuga-roteamento-origem.md) — limpeza
+   integral de cena e causa fechada por intenção atual;
+5. [ritmo-combate-normal-v2](specs/ritmo-combate-normal-v2.md) — prudência no
+   agente de teste, sem alterar dano ou encontros do produto.
+
+Aceite `20260816-113051-596798`: 200/200 MockLLM, zero erro/violação, quatro
+rotas, combate 20,5% (antes 45%), quatro conversões em quatro pedidos, 15 quests
+concluídas/recompensadas e 9/9 claims NPC espelhados. Smoke real dirigido
+confirmou router e write Jina/ledger. Gate: **1480 passed, 1 skipped, 14
+deselected**; Ruff verde.
+
+---
+
+## 🧪 DIAGNÓSTICO — longrun real pós-remediação (2026-08-16)
+
+O run `20260816-100206-334105` completou 200/200 ações reais, sem exceção ou
+timeout, por US$ 0,137760. Confirmou checkpoint seguro (duas mortes, dois epochs,
+zero replay), origens variadas e queda do p95 35,3→20,1 s. Detalhe em
+[playtest-longrun-real-2026-08-16](docs/playtest-longrun-real-2026-08-16.md).
+
+Achados observados naquele run, posteriormente resolvidos na entrega acima:
+
+1. **P1:** sucesso direto de `npc_claim` fica no índice privado e não chega ao
+   ledger global;
+2. **P1:** fingerprint de `combat.no_progress` ignora progresso do chase; fuga
+   real exigiu onze tentativas;
+3. **P1:** perfil não retorna à segunda investigação da quest e funil perde
+   conversão ocorrida no turno seguinte;
+4. **P1:** descanso imediatamente após fuga reabriu combate como provocação;
+5. **P2:** perfil normal terminou com 45% de turnos em combate.
+
+---
+
+## ✅ ENTREGUE — remediação do longrun de observabilidade (2026-08-13)
+
+O relatório [playtest-longrun-observabilidade-2026-08-13](docs/playtest-longrun-observabilidade-2026-08-13.md)
+combinou 114 ações úteis com LLM real em duas tentativas e uma matriz 200/200
+MockLLM. Os achados foram convertidos e executados em cinco specs `done`:
+
+1. [checkpoint-seguro-fora-combate](specs/checkpoint-seguro-fora-combate.md) —
+   impede snapshot ativo e saneia slot legado;
+2. [origem-combate-por-cena](specs/origem-combate-por-cena.md) — causa atual
+   vence rótulo antigo e distingue descanso/viagem/provocação;
+3. [memoria-autoridade-quests-verificaveis](specs/memoria-autoridade-quests-verificaveis.md)
+   — relatos auditáveis, expiração contextual e conclusão mecânica de objetivo;
+4. [telemetria-rollback-abort](specs/telemetria-rollback-abort.md) — três relógios,
+   conflitos únicos, rota timeout e prefixo abortado válido;
+5. [latencia-inicio-combate](specs/latencia-inicio-combate.md) — remove invoke
+   FAST exclusivo da geometria inicial.
+
+Aceite mock `20260813-085903-974550`: 200/200, zero erro/error, seis mortes em
+seis epochs, zero replay de conflito, 14 starts/14 ends, oito quests concluídas e
+memória final com 100% de autoridade. Smoke real `20260813-090120-046611`: 2/2,
+11 sucessos DeepSeek no jogo + quatro no startup e zero erro/violação. Gate:
+**1466 passed, 1 skipped, 14 deselected**.
+
+---
+
+## ✅ ENTREGUE — Qualidade de campanha pós-longrun (2026-08-13)
+
+Quatro specs transformaram as melhorias qualitativas do playtest longo em
+contratos auditáveis:
+
+1. [objetivo-publico-ciclo-quests](specs/objetivo-publico-ciclo-quests.md) —
+   separa direção privada e UI; registra progresso e recompensa real da missão;
+2. [ritmo-social-origem-combates](specs/ritmo-social-origem-combates.md) —
+   direção social canônica sem NPC e causa persistente de cada conflito;
+3. [observabilidade-latencia-nos](specs/observabilidade-latencia-nos.md) —
+   latência por nó em JSONL, summary e relatório;
+4. [continuidade-memoria-morte](specs/continuidade-memoria-morte.md) — schema v7,
+   três relógios, histórico de restore e métricas de autoridade da memória.
+
+Aceite: smoke MockLLM `20260813-001000-370465` 12/12 sem erro/violação, build
+Vite verde e **1455 passed, 1 skipped, 14 deselected**. Nenhuma chamada LLM foi
+adicionada e fallbacks permaneceram fora do escopo.
+
+---
+
+## ✅ ENTREGUE — Remediação do playtest real de 100 turnos (2026-08-12)
+
+A spec [remediacao-playtest-real-100t](specs/remediacao-playtest-real-100t.md)
+fechou os achados P0/P1/P2 autorizados:
+
+1. deadline absoluto rejeita resultados tardios mesmo após suspensão;
+2. perfil `normal` não lê beats privados e pede tarefas concretas;
+3. telemetria mede pedido→quest e participação de combate, com warnings long-run;
+4. perfil recua antes e respeita cooldown sem mudar dificuldade/encontros;
+5. loot mantém segunda pessoa por normalização determinística.
+
+Aceite mock `20260812-232004-255178` = 50/50, quatro rotas e quatro quests;
+aceite real `20260812-232052-855221` = 16/16, `mock=false`, zero erro/violação,
+uma quest e 31,2% combate. Gate: **1446 passed, 1 skipped, 14 deselected**;
+Ruff verde. Configuração/saldo/chaves dos fallbacks reais não pertencem à spec.
+
+---
+
+## 🧪 DIAGNÓSTICO — campanha real de 100 turnos (2026-08-12)
+
+O run pós-remediações `20260812-215427-501557` concluiu 100/100 turnos com
+`mock=false`, zero exceções e 273 sucessos LLM de rede por US$ 0,085208. As seis
+correções do ciclo anterior permaneceram válidas. O relatório
+[playtest-longrun-real-2026-08-12-v2](docs/playtest-longrun-real-2026-08-12-v2.md)
+registrou cinco frentes, posteriormente tratadas pela spec consolidada acima:
+
+1. watchdog com prazo forte diante de suspensão/lacuna de heartbeat — um turno
+   atravessou o teto de 120 s e terminou em 2.256 s;
+2. perfil `normal` restrito à visão pública — hoje copia `Descreva...` do beat;
+3. observabilidade/conversão de ganchos em quests — 0 quests em 100 turnos;
+4. voz do loot em segunda pessoa;
+5. matriz multi-seed antes de balancear os 45% de turnos em combate.
+
+Operação: MiniMax respondeu 402 por saldo insuficiente e Qwen 401 por chave
+inválida; Groq absorveu os fallbacks reais. Essa configuração permaneceu fora
+do escopo por decisão do usuário.
 
 ---
 
@@ -816,13 +943,16 @@ Depende de: arte de itens pronta, Fase 6+ estável.
 
 Antes de abrir para usuários externos.
 
-**Problemas atuais:**
+**Problemas atuais após a fatia local:**
 
-- Saves locais em JSON (sem versionamento, sem migrations)
-- Sem autenticação
-- Sem isolamento por usuário
-- Concorrência serializada apenas dentro de um processo (distribuída = 10b)
-- CORS aberto
+- Saves/checkpoints ainda são JSON locais, embora já tenham schema v7,
+  migrations e escrita atômica
+- Memória de sessão/NPC ainda é FAISS mutável no disco
+- Quatro overlays de runtime ainda escrevem JSON local (NPC, bestiário,
+  artefatos e conhecimento revelado)
+- Sem autenticação ou isolamento por usuário
+- Concorrência serializada apenas dentro de um processo
+- Sem object storage/fila durável e sem restore/caos multiworker comprovados
 
 **Entregas:**
 
@@ -837,14 +967,41 @@ Antes de abrir para usuários externos.
   sanitização; flag `simulated` = `llm_setup.is_simulated()` (todas as keys);
   bind default `127.0.0.1` (`RPG_HOST` p/ expor); 500 sem `str(e)`; teto em
   `input_text`; poda do dict do rate limit
-- [ ] (10b) Migrar para Postgres (quando multiusuário)
-- [ ] (10b) Migrar FAISS para pgvector/Qdrant
-- [ ] (10b) Adicionar autenticação
-- [ ] (10b) Storage para imagens geradas
-- [ ] (10b) Fila para geração de assets
-- [ ] (10b) Observabilidade completa (latência, custo)
+### Fase 10b — local-first, sem deploy — 9 specs `draft` (2026-08-16)
 
-**Critério de aceite:** Máximo 1 game_id per usuário. Migração entre providers transparente. Zero path traversal risks.
+O mapa completo está na
+[spec-mãe](specs/fase-10b-plano-mestre-local-first.md). Supabase Local é o alvo
+primário de ensaio, mas todos os serviços ficam atrás de portas Python e têm
+perfil portátil Postgres+pgvector/OIDC/S3. Para a futura certificação externa,
+**Railway foi escolhida como alvo primário e Render como contingência**: o
+primeiro corte mantém `web/dist` + FastAPI no mesmo serviço público e roda o
+worker numa segunda instância da mesma imagem. JSON+FAISS permanecem para CLI e
+suíte; nenhum diretório histórico será apagado automaticamente.
+
+1. [Fundação local + portas/adapters](specs/fase-10b-fundacao-local-portas-adapters.md)
+2. [Postgres híbrido + migração verificável](specs/fase-10b-postgres-persistencia-transacional.md)
+3. [Turnos duráveis + idempotência multiworker + fila](specs/fase-10b-turnos-duraveis-concorrencia-fila.md)
+4. [Auth local + RLS + isolamento](specs/fase-10b-auth-rls-isolamento.md)
+5. [Memória transacional em pgvector](specs/fase-10b-pgvector-memoria-transacional.md)
+6. [Storage portátil para assets dinâmicos](specs/fase-10b-storage-assets-portavel.md)
+7. [Observabilidade + backup/restore + carga/caos](specs/fase-10b-observabilidade-backup-caos.md)
+8. [Certificação cloud portátil — futura](specs/fase-10b-certificacao-cloud-portavel.md)
+
+**Decisões:** não manter dual-write permanente; não segurar transação durante
+LLM; Postgres é a primeira fila/coordenação (Redis só com evidência); arte curada
+continua estática; fato de memória confirma com o turno e embedding pode ser job;
+Railway/Render/Supabase remotos só entram na última spec, após aprovação e
+orçamento; Vercel permanece benchmark opcional, não dependência.
+
+**Publicação (2026-08-17):** o lote funcional das sessões 39–46 e estas nove
+specs foram sincronizados na `main` após 1480 testes offline, Ruff e build Vite
+verdes. Isso publica somente o repositório; a infraestrutura externa continua
+sem provisionamento e depende de aprovação específica da última spec.
+
+**Critério de aceite 10b:** cada campanha pertence a exatamente um usuário (que
+pode ter várias campanhas); zero acesso cruzado; commit de turno exatamente uma
+vez; restore comprovado; perfil hosted sem filesystem persistente; migração e
+export entre providers verificáveis.
 
 ---
 

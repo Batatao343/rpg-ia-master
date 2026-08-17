@@ -79,6 +79,17 @@ def sanitize_player_facing(text: str) -> str:
     return cleaned.strip()
 
 
+_PROTAGONIST_THIRD_PERSON = re.compile(
+    r"\b(?:O jogador|O personagem|O herói)\b",
+    flags=re.IGNORECASE,
+)
+
+
+def normalize_protagonist_voice(text: str) -> str:
+    """Converte somente o sujeito fechado do protagonista para segunda pessoa."""
+    return _PROTAGONIST_THIRD_PERSON.sub("Você", str(text or ""))
+
+
 def contains_engine_marker(text: str) -> bool:
     """True quando uma narração visível ainda contém marcador interno."""
     return bool(_ENGINE_MARKERS.search(str(text or "")))

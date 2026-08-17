@@ -227,6 +227,10 @@ def campaign_manager_node(state: GameState):
     # Incrementamos aqui (primeiro nó do fluxo) para que replanejamento,
     # arquivista e memórias de NPC tenham noção real de tempo.
     world["turn_count"] = world.get("turn_count", 0) + 1
+    from services.continuity import advance_action
+    continuity = advance_action(
+        state.get("continuity"), canonical_turn=int(world["turn_count"]),
+    )
 
     # Laboratório de combate: mantém apenas o relógio de rounds/turnos. O arco
     # fixo já foi criado pela API e nenhuma preparação de campanha/RAG é útil.
@@ -236,6 +240,7 @@ def campaign_manager_node(state: GameState):
             "world": world,
             "campaign_plan": state.get("campaign_plan"),
             "needs_replan": False,
+            "continuity": continuity,
         }
 
     if not _should_replan(state):
@@ -244,6 +249,7 @@ def campaign_manager_node(state: GameState):
             "world": world,
             "campaign_plan": state.get("campaign_plan"),
             "needs_replan": False,
+            "continuity": continuity,
         }
 
     print(f"🗺️ [CAMPAIGN] Generating new plot for: {world.get('current_location')}")
@@ -256,6 +262,7 @@ def campaign_manager_node(state: GameState):
             "world": world,
             "campaign_plan": state.get("campaign_plan"),
             "needs_replan": True,
+            "continuity": continuity,
         }
     updated_state = {
         "campaign_plan": new_plan,
@@ -263,6 +270,7 @@ def campaign_manager_node(state: GameState):
         "world": world,
         # Importante: Não sobrescrevemos 'messages' aqui para não perder histórico
         "next": "dm_router",
+        "continuity": continuity,
     }
 
     # Fase 3.1: arco novo → capítulo novo na crônica (mesmo título → no-op).

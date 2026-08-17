@@ -27,6 +27,24 @@ def test_watchdog_interrompe_espera_no_teto_sem_bloquear_saida():
     assert caught.value.phase == "turno 3"
 
 
+def test_watchdog_rejeita_resultado_que_chegou_apos_salto_do_relogio(
+    monkeypatch,
+):
+    wall = iter((100.0, 260.0))
+    monkeypatch.setattr(runner.time, "time", lambda: next(wall))
+
+    with pytest.raises(runner.PlaytestTimeoutError) as caught:
+        runner._run_with_watchdog(
+            lambda: "resultado tardio",
+            timeout_seconds=120,
+            phase="turno 64",
+        )
+
+    assert caught.value.phase == "turno 64"
+    assert caught.value.elapsed_seconds >= 160
+    assert "160" in str(caught.value)
+
+
 def test_runner_timeout_de_startup_aborta_sem_falso_turno(
     tmp_path, monkeypatch,
 ):

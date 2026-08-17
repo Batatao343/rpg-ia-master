@@ -421,7 +421,9 @@ def build_context_pack(state: Dict, query: str, purpose: str,
 
     # O ledger auditável dá continuidade mesmo se o índice estiver temporariamente
     # indisponível. Conteúdo com assinatura secreta não revelada falha fechado.
-    for record in normalize_memory_facts(state.get("memory_facts"))[-20:]:
+    for record in active_memory_facts(
+        state.get("memory_facts"), current_turn=int((state.get("world") or {}).get("turn_count", 0) or 0)
+    )[-20:]:
         if find_strict_unrevealed(record["text"], state):
             continue
         add_memory_part(format_memory_fact(record))
@@ -444,3 +446,16 @@ def build_context_pack(state: Dict, query: str, purpose: str,
 
     budget = ContextBudget(max_tokens=token_budget)
     return assemble_pack(facts, budget, lore_text=lore_text, memory_text=memory_text)
+
+
+def active_memory_facts(rows, *, current_turn: int) -> list[dict]:
+    """Contexto ativo: especulação não confirmada expira após 20 turnos."""
+    records = normalize_memory_facts(rows)
+    return [
+        record for record in records
+        if not (
+            record.get("confidence") == "speculative"
+            and record.get("source_turn") is not None
+            and int(current_turn) - int(record.get("source_turn") or 0) >= 20
+        )
+    ]

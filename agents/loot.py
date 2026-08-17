@@ -108,6 +108,12 @@ def _narrate(context: str, fallback_text: str,
             if canonical_summary else fallback)
 
 
+def _player_facing_message(prose: str, system: str) -> str:
+    """Monta a mensagem sem tocar no ledger mecânico de sistema."""
+    visible = prose_guard.normalize_protagonist_voice(str(prose or "").strip())
+    return f"{visible}\n\n{system}"
+
+
 def loot_node(state: GameState):
     player = dict(state["player"])
     player["inventory"] = list(player.get("inventory", []))
@@ -134,7 +140,8 @@ def loot_node(state: GameState):
         if not outcome.get("ok"):
             msg = _narrate(f"TRANSAÇÃO RECUSADA: {outcome.get('reason')}",
                            f"🚫 {outcome.get('reason')}")
-            return {"messages": [AIMessage(content=f"{msg}\n\n[SISTEMA] {outcome.get('reason')}")],
+            return {"messages": [AIMessage(content=_player_facing_message(
+                        msg, f"[SISTEMA] {outcome.get('reason')}"))],
                     "world": world, "loot_source": None, "archive_due": True}
 
         delta = int(outcome.get("gold_delta", 0))
@@ -148,7 +155,7 @@ def loot_node(state: GameState):
         result = {
             "player": outcome["player"],
             "world": outcome.get("world", world),
-            "messages": [AIMessage(content=f"{msg}\n\n{sistema}")],
+            "messages": [AIMessage(content=_player_facing_message(msg, sistema))],
             "loot_source": None,
             "archive_due": True,
         }
@@ -214,7 +221,7 @@ def loot_node(state: GameState):
     result = {
         "player": player,
         "world": world,
-        "messages": [AIMessage(content=f"{msg}\n\n{sistema}")],
+        "messages": [AIMessage(content=_player_facing_message(msg, sistema))],
         "loot_source": None,
         "archive_due": True,
     }

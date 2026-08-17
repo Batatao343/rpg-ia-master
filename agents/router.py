@@ -4,6 +4,7 @@ Roteador de Intenções.
 Agora com detecção explícita de início de combate para acionar o Spawner.
 """
 from enum import Enum
+import re
 from typing import Literal, Optional
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
 from langgraph.graph import END
@@ -25,6 +26,16 @@ class RouteType(str, Enum):
 # nunca dispara).
 COMBAT_IDLE_EXPIRE = 3
 
+_EXPLICIT_STORY_RE = re.compile(
+    r"\b(?:descans\w*|durm\w*|acamp\w*|viaj\w*|vou\s+para|sigo\s+para)\b",
+    re.IGNORECASE,
+)
+_EXPLICIT_HOSTILITY_RE = re.compile(
+    r"\b(?:atac\w*|golpe\w*|apunhal\w*|dispar\w*|saco\s+(?:a|minha|o|meu)?\s*"
+    r"(?:arma|espada|arco)|inicio\s+(?:um\s+)?combate|enfrent\w*)\b",
+    re.IGNORECASE,
+)
+
 
 def _last_human_text(messages) -> str:
     """Texto da última fala do jogador (para detectar viagem no gate de combate)."""
@@ -32,6 +43,18 @@ def _last_human_text(messages) -> str:
         if getattr(m, "type", "") == "human":
             return str(getattr(m, "content", "") or "")
     return ""
+
+
+def _base_route_payload(route: RouteType, world: dict) -> dict:
+    """Resposta completa: reducer não pode preservar transitórios antigos."""
+    return {
+        "next": route.value,
+        "world": world,
+        "combat_target": None,
+        "active_npc_name": None,
+        "loot_source": None,
+        "combat_origin_hint": None,
+    }
 
 
 def _combat_gate(state: GameState, world: dict, combat: dict):
@@ -111,6 +134,13 @@ def dm_router_node(state: GameState):
     if combat.get("active"):
         return _combat_gate(state, world, combat)
 
+    # Descanso e viagem explícitos fora de combate são mecânicas de STORY.
+    # Fechar essa borda evita que contexto hostil antigo reabra um conflito no
+    # turno imediatamente posterior a uma fuga.
+    last_human = _last_human_text(messages)
+    if _EXPLICIT_STORY_RE.search(last_human):
+        return _base_route_payload(RouteType.STORY, world)
+
     system_instruction = f"""
     Roteador de RPG. Classifique a intenção da ÚLTIMA mensagem do jogador.
     
@@ -149,15 +179,7 @@ def dm_router_node(state: GameState):
 
     print(f"🚦 [ROUTER] {decision.route.value} -> Alvo: {decision.target}")
 
-    response_payload = {
-        "next": decision.route.value,
-        "world": world,
-        # LangGraph preserva o valor anterior quando a chave falta. Limpar os
-        # campos não aplicáveis impede um alvo antigo de vazar para outra rota.
-        "combat_target": None,
-        "active_npc_name": None,
-        "loot_source": None,
-    }
+    response_payload = _base_route_payload(decision.route, world)
 
     if decision.route == RouteType.LOOT:
         response_payload["loot_source"] = decision.loot_context or "TREASURE"
@@ -192,6 +214,11 @@ def dm_router_node(state: GameState):
     if decision.route == RouteType.COMBAT:
         target = decision.target or "Inimigos"
         response_payload["combat_target"] = target
+        response_payload["combat_origin_hint"] = (
+            "player_provoked"
+            if _EXPLICIT_HOSTILITY_RE.search(last_human)
+            else "regional_danger"
+        )
         if "messages" not in response_payload: response_payload["messages"] = []
         response_payload["messages"].append(
             SystemMessage(content=f"SYSTEM: COMBAT START. TARGET_HINT: {target}")

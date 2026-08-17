@@ -313,6 +313,7 @@ def archive_node(state: GameState):
     npc_retry_committed = False
     if pending_npc_memory:
         remaining_npc_memory = []
+        committed_npc_records = []
         for write in pending_npc_memory:
             try:
                 npc_records = [
@@ -349,9 +350,23 @@ def archive_node(state: GameState):
                 ok = False
             if not ok:
                 remaining_npc_memory.append(write)
+            else:
+                committed_npc_records.extend(npc_records)
+        if committed_npc_records:
+            memory_facts, promoted = commit_memory_facts(
+                memory_facts, committed_npc_records,
+            )
+            if promoted:
+                memory_promotions = bounded_audit_rows([
+                    *memory_promotions,
+                    {"turn": int(turn), "count": promoted,
+                     "reason": "canonical_source"},
+                ], limit=MAX_MEMORY_PROMOTIONS)
         event_updates = {
             **event_updates,
             "pending_npc_memory": remaining_npc_memory,
+            "memory_facts": memory_facts,
+            "memory_promotions": memory_promotions,
         }
         if remaining_npc_memory:
             waiting_ids = ", ".join(dict.fromkeys(

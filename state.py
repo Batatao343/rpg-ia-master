@@ -307,6 +307,17 @@ class Quest(TypedDict, total=False):
     created_turn: int
     resolved_turn: int
     reward_hint: str         # texto livre ("o ferreiro prometeu 50 moedas")
+    progress_log: List[Dict] # ledger: created | location_reached | investigation | completion_ready | completed
+    completion_ready: bool   # objetivo verificável atingido; evento Python conclui no archivist
+    reward_gold: int         # recompensa mecânica efetivamente entregue
+    reward_delivered: bool
+
+
+class ContinuityState(TypedDict, total=False):
+    session_action_count: int  # ações jogadas, nunca retrocede em restore
+    timeline_epoch: int        # incrementa a cada retorno de checkpoint
+    last_checkpoint_turn: int
+    death_history: List[Dict]
 
 
 # --- Fase 3.1: crônica por capítulos (milestones determinísticos + prosa) ---
@@ -400,6 +411,7 @@ class GameState(TypedDict):
                             # GameState o LangGraph DESCARTA o update; achado do smoke real)
     death_pending: bool     # spec checkpoints-morte: queda letal — aguardando a TELA DE
                             # MORTE (Continuar do checkpoint / Aceitar o fim). Transitório.
+    continuity: ContinuityState
     # Laboratório isolado: {enabled, enemy_id, quantity}. Quando presente,
     # campanha, LLM/RAG, loot e archivist ficam fora do turno de combate.
     combat_simulation: Optional[Dict]
@@ -426,6 +438,7 @@ class GameState(TypedDict):
     
     # --- Campos de Transição ---
     combat_target: Optional[str]
+    combat_origin_hint: Optional[str]  # causa transitória até combat.origin ser materializada
     loot_source: Optional[str]
 
     # --- Combate determinístico ---

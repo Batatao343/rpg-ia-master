@@ -38,8 +38,8 @@ DEFAULT_SAVE_NAME = "autosave"
 # v2 = campos de camada dos NPCs (spec npcs-3-camadas-traits).
 # v3 = 10 classes antigas → 5 Posturas + Entropia (spec refatoracao-sistema-classes).
 # v4 = Virtudes/Vitalidade/Ferimentos; v5 = Vitalidade canônica + aliases HP derivados.
-# v6 = ledger visual idempotente (Fase 8A).
-SCHEMA_VERSION = 6
+# v6 = ledger visual idempotente (Fase 8A); v7 = metatempo/continuidade.
+SCHEMA_VERSION = 7
 
 def save_path(game_id: str) -> str:
     """Caminho canônico do save de `game_id`.
@@ -170,6 +170,17 @@ def _migrate_v5_to_v6(raw: Dict[str, Any]) -> Dict[str, Any]:
         row for row in (migrated.get("visual_cue_ledger") or [])
         if isinstance(row, dict) and row.get("action_key")
     ][-64:]
+    migrated["schema_version"] = 6
+    return migrated
+
+
+def _migrate_v6_to_v7(raw: Dict[str, Any]) -> Dict[str, Any]:
+    migrated = deepcopy(raw)
+    from services.continuity import normalize
+    canonical_turn = int((migrated.get("world") or {}).get("turn_count", 0) or 0)
+    migrated["continuity"] = normalize(
+        migrated.get("continuity"), canonical_turn=canonical_turn,
+    )
     migrated["schema_version"] = SCHEMA_VERSION
     return migrated
 
@@ -180,11 +191,13 @@ def migrate_state(raw: Dict[str, Any]) -> Dict[str, Any]:
     if version < 4:
         archived = _migrate_v3_to_v4(deepcopy(raw))
         archived["schema_version"] = 5
-        return _migrate_v5_to_v6(archived)
+        return _migrate_v6_to_v7(_migrate_v5_to_v6(archived))
     if version >= SCHEMA_VERSION:
         return raw
     migrated = _migrate_v4_to_v5(raw) if version < 5 else deepcopy(raw)
-    return _migrate_v5_to_v6(migrated)
+    if version < 6:
+        migrated = _migrate_v5_to_v6(migrated)
+    return _migrate_v6_to_v7(migrated)
 
 def _serialize_messages(messages: List[BaseMessage]) -> List[Dict[str, str]]:
     """Converte objetos Message do LangChain para dicionários simples (JSON)."""
@@ -491,6 +504,7 @@ def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
             state.get("pending_npc_memory")
         ),
         "rag_persistence_error": state.get("rag_persistence_error"),
+        "continuity": deepcopy(state.get("continuity") or {}),
 
         # --- Dados Transicionais ---
         "combat_target": state.get("combat_target"),
@@ -612,6 +626,7 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
             raw_data.get("pending_npc_memory")
         ),
         "rag_persistence_error": raw_data.get("rag_persistence_error"),
+        "continuity": deepcopy(raw_data.get("continuity") or {}),
 
         # --- Recupera Core ---
         "player": raw_data.get("player", {}),
@@ -661,8 +676,14 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
 def save_checkpoint(state: Dict[str, Any]) -> bool:
     """Grava o snapshot restaurável em `saves/{game_id}.checkpoint.json` (D5: 1
     slot, sobrescreve). Mesmo formato do save vivo — reusa `_state_to_save_data`."""
-    if not state:
+    if not state or (state.get("combat") or {}).get("active"):
         return False
+    state = deepcopy(state)
+    from services.continuity import mark_checkpoint
+    state["continuity"] = mark_checkpoint(
+        state.get("continuity"),
+        canonical_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
+    )
     memory_backup: Optional[str] = None
     memory_destination: Optional[str] = None
     memory_existed = False

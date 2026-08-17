@@ -146,7 +146,7 @@ def test_save_v5_migrates_visual_fields_and_roundtrips(tmp_path, monkeypatch):
     raw = {"schema_version": 5, "game_id": "00000000-0000-0000-0000-000000000001",
            "player": {}, "party": [], "enemies": []}
     migrated = persistence.migrate_state(raw)
-    assert migrated["schema_version"] == 6
+    assert migrated["schema_version"] == persistence.SCHEMA_VERSION
     assert migrated["visual_seen_entity_ids"] == []
     assert migrated["visual_cue_ledger"] == []
 

@@ -174,10 +174,12 @@ def _npc_fallback_clause(state: GameState) -> str:
     hint = state.get("npc_fallback_hint")
     if not hint:
         return ""
+    from services.social_direction import build_social_direction
+    direction = build_social_direction(state)
     return (f"\n    - SEM INTERLOCUTOR: o jogador tentou falar com alguém "
             f'("{str(hint)[:120]}"), mas NÃO há ninguém por perto para responder. '
             "Narre a solidão/silêncio SEM inventar um NPC novo em cena, e ofereça "
-            "um gancho ÚTIL (onde poderia haver gente, ou o próximo passo do objetivo).")
+            f"esta direção ÚTIL e canônica: {direction}")
 
 
 def _player_facing_note(note: str) -> str:
@@ -413,6 +415,7 @@ def storyteller_node(state: GameState):
                     else roll_encounter_type(danger))
 
             if kind == "combat":
+                from services.combat_origin import from_encounter
                 # surpresa: percebeu -> herói embosca; falhou -> inimigo age antes
                 world["encounter_surprise"] = "player" if det["perceived"] else "enemy"
                 # R5: percebeu = tem AGÊNCIA — pode golpear OU recuar (a fuga já é
@@ -426,6 +429,9 @@ def storyteller_node(state: GameState):
                     "world": world,
                     "factions": factions,
                     "combat_target": enc["hint"],
+                    "combat_origin_hint": from_encounter(
+                        enc, world, trigger=("rest" if rested_player is not None else "travel"),
+                    ),
                     "next": "combat_agent",
                     "archive_due": True,  # emboscada = evento relevante
                 }
@@ -912,7 +918,30 @@ def storyteller_node(state: GameState):
         new_quests, created = quest_log.register_proposed_quests(
             state.get("quests", []), proposed_quests, turn=turn
         )
-        if created:
+        new_quests = quest_log.sync_location_progress(
+            new_quests, str(world.get("current_location_id") or ""), turn=turn,
+        )
+        new_quests, ready_quest_ids = quest_log.sync_action_progress(
+            new_quests,
+            str(world.get("current_location_id") or ""),
+            last_user_input,
+            turn=turn,
+        )
+        if ready_quest_ids:
+            quest_events = [{
+                "type": "quest_completed",
+                "actor_id": "player",
+                "target_id": quest_id,
+                "detail": "Objetivo concluído por investigação verificável.",
+                "payload": {"quest_id": quest_id},
+                "source": "system",
+            } for quest_id in ready_quest_ids]
+            updates["pending_world_events"] = list(
+                updates.get("pending_world_events")
+                or state.get("pending_world_events", [])
+                or []
+            ) + quest_events
+        if created or new_quests != list(state.get("quests", []) or []):
             updates["quests"] = new_quests
             updates["archive_due"] = True  # nova missão é evento relevante
         return updates

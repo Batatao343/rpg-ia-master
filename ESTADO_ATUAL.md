@@ -1,5 +1,202 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **🚀 SESSÃO 49 (2026-08-17): lote pronto publicado na `main`.**
+> A publicação reúne as remediações das campanhas longas das sessões 39–46,
+> seus serviços/testes/relatórios e as nove specs `draft` da Fase 10b, incluindo
+> Railway como alvo futuro e Render como contingência. O push também sincroniza
+> os 21 commits que a `main` local já mantinha à frente de `origin/main`.
+> Gates imediatamente anteriores ao commit: `uv run pytest` = **1480 passed,
+> 1 skipped, 14 deselected**; Ruff **verde**; `npm.cmd run build` **verde**.
+> “Publicar na main” aqui significa versionar e enviar o código-fonte ao GitHub;
+> nenhum projeto Railway/Render/Supabase nem recurso pago foi provisionado.
+
+> **📝 SESSÃO 48 (2026-08-16): alvo de hospedagem escolhido, sem deploy.**
+> A [certificação cloud](specs/fase-10b-certificacao-cloud-portavel.md) agora
+> registra **Railway como alvo primário e Render como contingência**. A decisão
+> aproveita a arquitetura existente: um serviço público `api-web` serve
+> `web/dist` + FastAPI na mesma origem e um serviço privado `worker` reutiliza a
+> mesma imagem com outro comando. Isso acomoda SSE/turnos LLM longos e polling
+> de jobs como processos Docker normais; Vercel fica como benchmark opcional
+> enquanto Services estiver em Private Beta. Supabase Local e as portas
+> Postgres/OIDC/S3 continuam inalterados. Nenhum serviço, conta ou recurso remoto
+> foi criado; a decisão ainda depende dos gates e orçamento da spec `draft`.
+> Links locais **235/235** e `git diff --check` verdes. `uv run pytest` final:
+> **1480 passed, 1 skipped, 14 deselected**; uma execução anterior oscilou por
+> `WinError 5` no rename temporário do teste SSE, que passou isolado e na
+> repetição integral sem qualquer alteração de código.
+
+> **📝 SESSÃO 47 (2026-08-16): Fase 10b local-first especificada, sem implementação.**
+> O projeto inteiro foi mapeado para a transição de laboratório local até
+> produção: além de JSON/FAISS e locks por processo, a auditoria incluiu os
+> overlays mutáveis de NPC, bestiário, artefatos e conhecimento revelado, o
+> cliente sem identidade, assets, jobs, backup e operação.
+>
+> Foram criadas **9 specs `draft`**: o
+> [plano mestre](specs/fase-10b-plano-mestre-local-first.md) + oito fatias em
+> ordem — [fundação/adapters](specs/fase-10b-fundacao-local-portas-adapters.md),
+> [Postgres](specs/fase-10b-postgres-persistencia-transacional.md),
+> [turnos/fila](specs/fase-10b-turnos-duraveis-concorrencia-fila.md),
+> [Auth/RLS](specs/fase-10b-auth-rls-isolamento.md),
+> [pgvector](specs/fase-10b-pgvector-memoria-transacional.md),
+> [storage](specs/fase-10b-storage-assets-portavel.md),
+> [operação/backup/caos](specs/fase-10b-observabilidade-backup-caos.md) e
+> [certificação cloud futura](specs/fase-10b-certificacao-cloud-portavel.md).
+>
+> Decisões: Supabase Local como ensaio zero-custo, mas domínio atrás de portas
+> Python e perfil Postgres+pgvector/OIDC/S3 portátil; JSON+FAISS permanecem para
+> CLI/testes; sem dual-write permanente; sem transação aberta durante LLM; fato
+> de memória confirma com o turno e embedding vira job recuperável; Postgres é a
+> primeira fila/coordenação; arte curada continua estática. **Railway é o alvo
+> primário da futura certificação externa e Render a contingência:** `api-web`
+> serve `web/dist`+FastAPI na mesma origem, enquanto `worker` reutiliza a mesma
+> imagem com outro comando. Vercel fica como benchmark opcional. Serviços
+> Railway/Render/Supabase remotos só entram na última spec após aprovação e
+> orçamento. **Nada foi
+> implementado/provisionado:** zero container iniciado, migration/dependência/
+> código funcional alterado ou deploy realizado. Links 9/9 e `git diff --check`
+> verdes; `uv run pytest` = **1480 passed, 1 skipped, 14 deselected**.
+
+> **✅ SESSÃO 46 (2026-08-16): cinco remediações do longrun real `done`.**
+> Os achados da sessão 45 viraram as specs
+> [memória NPC](specs/memoria-npc-sucesso-ledger.md),
+> [chase/fuga](specs/chase-progresso-e-fuga.md),
+> [retomada/conversão de quests](specs/quests-retomada-conversao.md),
+> [estado/origem pós-fuga](specs/pos-fuga-roteamento-origem.md) e
+> [ritmo normal v2](specs/ritmo-combate-normal-v2.md), todas `done`.
+>
+> Sucesso direto de memória privada agora espelha o mesmo `npc_claim/reported`
+> no ledger sem segundo write; chase entra no fingerprint e fuga tem teto local
+> de seis tentativas; fuga limpa toda a cena transitória sem apagar o recibo do
+> turno; descanso/viagem são STORY e só hostilidade explícita vira provocação.
+> O perfil normal navega por BFS até quests, faz duas investigações distintas,
+> mede conversão D+0..D+3, usa cooldown 20, foge desde round 3 e busca abrigo.
+>
+> Aceite MockLLM `20260816-113051-596798`: **200/200**, zero erro/violação,
+> quatro rotas, combate **20,5%** (antes 45%), 7/7 conflitos encerrados, quatro
+> pedidos→4 conversões e 15 quests concluídas/recompensadas; memória final com
+> 9 `npc_claim` no ledger para 9 writes. Smoke LLM real dirigido: ataque →
+> COMBAT/provocação, investigação/descanso → STORY; conversa NPC gravou Jina
+> e retornou `npc_claim/reported`, fila vazia. Gate: **1480 passed, 1 skipped,
+> 14 deselected**; Ruff verde nos arquivos tocados. Uma tentativa adicional de
+> campanha real 30t (`20260816-113124-829110`) ficou presa no startup após
+> structured SMART inválido e foi encerrada manualmente; não compôs o aceite.
+
+> **🧪 SESSÃO 45 (2026-08-16): longrun real pós-remediação.** Run
+> `20260816-100206-334105`, perfil `normal`, seed 46: **200/200**, `mock=false`,
+> zero exceções/timeout/erro de observabilidade, 489/491 sucessos LLM, dois
+> fallbacks DeepSeek→Groq, US$ 0,137760, p50 9,365 s/p95 20,109 s. O run formal
+> ficou `failed` por 1 `error` de invariante e teve 1 warning.
+>
+> Checkpoint/origem/relógios passaram: duas mortes em epochs distintos,
+> `replayed_starts=0`, restore sempre fora de combate, origens 7 provocação/5
+> perigo regional e final ação 200/turno canônico 163/epoch 2. Latência caiu
+> contra o baseline (p95 35,3→20,1 s); start de combate p95 19,858 s.
+>
+> Achados: sucesso direto de dois `npc_claim` Jina não entrou no ledger global
+> (final 117/117 inference/speculative); chase progrediu e escapou após onze
+> tentativas, mas `combat.no_progress` gerou falso positivo por ignorar o track;
+> quest criada em D+1 chegou a uma investigação e não foi retomada pelo perfil;
+> descanso pós-fuga reabriu combate como `player_provoked`; combate ocupou 45%.
+> Relatório: [playtest-longrun-real-2026-08-16](docs/playtest-longrun-real-2026-08-16.md).
+> Nenhuma correção de código foi aplicada nesta sessão de diagnóstico. Gate:
+> **1466 passed, 1 skipped, 14 deselected**.
+
+> **✅ SESSÃO 44 (2026-08-13): remediação do longrun de observabilidade `done`.**
+> Cinco specs fecharam P0/P1/P2: [checkpoint seguro](specs/checkpoint-seguro-fora-combate.md),
+> [origem por cena](specs/origem-combate-por-cena.md),
+> [memória/quests verificáveis](specs/memoria-autoridade-quests-verificaveis.md),
+> [telemetria de rollback/abort](specs/telemetria-rollback-abort.md) e
+> [latência do início de combate](specs/latencia-inicio-combate.md).
+>
+> Checkpoint ativo é recusado e slot legado é saneado; a causa da cena nova
+> vence rótulo histórico; alegações de NPC entram no ledger como `reported` e
+> especulação velha sai do prompt; missão no alvo conclui após duas investigações
+> distintas via evento Python. Morte expõe os três relógios, `death_history` não
+> retrocede, conflitos têm ID por instância/epoch e timeout preserva prefixo/nós.
+> A geometria base do combate passou a ser Python, removendo um invoke FAST.
+>
+> Aceite mock `20260813-085903-974550`: **200/200**, zero erro/error, seis mortes
+> em seis epochs, zero replay, 14 conflitos iniciados/14 encerrados, oito quests
+> criadas/concluídas, memória com 100% de autoridade e `combat_agent` p95 127 ms.
+> Smoke real `20260813-090120-046611`: 2/2, `mock=false`, 11 sucessos de rede
+> DeepSeek + quatro no startup, zero erro/violação/observabilidade, p95 19,9 s.
+> Gate: **1466 passed, 1 skipped, 14 deselected**. Avisos esporádicos WinError 5
+> no rename atômico do save sob OneDrive tiveram retry e não abortaram o run.
+
+> **🧪 SESSÃO 43 (2026-08-13): longrun das novas observabilidades.** Run real
+> `20260813-002535-998525`: 80 turnos úteis + timeout tardio na linha 81 após
+> suspensão do notebook, zero violações, 225/227 sucessos LLM, US$ 0,06384,
+> p50 9,1 s/p95 35,3 s e 33,3% combate. Run mecânico
+> `20260813-011902-138686`: 200/200, zero erros, mas warning de 68% combate.
+>
+> As métricas novas revelaram um **P0**: checkpoint pode ser gravado com combate
+> ativo e aprisionar o jogador em morte→restore (27 mortes; checkpoint 70→morte
+> 73 repetido dez vezes). P1: toda origem ficou `player_provoked`, inclusive
+> descanso/viagem; memória real terminou 27/27 especulativa apesar de writes
+> canônicos/relatos; uma quest progrediu mas não concluiu após retomadas. P2:
+> morte mistura relógios, `downed_count` some no rollback, encerramentos inflam e
+> linha abortada degrada o contrato JSONL. Diagnóstico completo em
+> [playtest-longrun-observabilidade-2026-08-13](docs/playtest-longrun-observabilidade-2026-08-13.md).
+> Nenhuma mecânica foi alterada nesta sessão; achados aguardam specs.
+> Segunda tentativa real `20260813-012402-094797`: 34 úteis + timeout após nova
+> suspensão, zero violações/mortes, p95 29,0 s, 106/109 sucessos e US$ 0,033944.
+> Total real observado: **114 ações úteis, 331/336 sucessos, US$ 0,097784**;
+> nenhuma campanha real chegou a 200 por suspensão recorrente desta máquina.
+
+> **✅ SESSÃO 42 (2026-08-13): melhorias pós-longrun `done`.** Quatro specs
+> fecharam os oito pontos da análise: [objetivo público + ciclo de quests](specs/objetivo-publico-ciclo-quests.md),
+> [direção social + origem de combates](specs/ritmo-social-origem-combates.md),
+> [latência por nó](specs/observabilidade-latencia-nos.md) e
+> [continuidade/memória/morte](specs/continuidade-memoria-morte.md).
+>
+> Beats e clímax privados não saem mais pela API nem orientam NPCs; a view pública
+> usa side quest ativa ou arco/local. Quests têm ledger `created →
+> location_reached → completed`, recompensa Python idempotente de 20 ouro além do
+> XP e funil no playtest. Combates preservam origem causal fechada e ausência de
+> NPC dá destino real adjacente, sem inventar interlocutor.
+>
+> Saves v7 separam `session_action_count`, `world.turn_count` canônico e
+> `timeline_epoch`; restore conserva histórico da morte e informa exatamente o
+> que mantém/reverte na API e no modal. Memória agora agrega confiança,
+> autoridade e inferências especulativas antigas, sem promover repetição por si.
+> JSONL/summary/report medem latência count/média/p50/p95/max por nó sem chamadas
+> extras. Smoke MockLLM `20260813-001000-370465`: 12/12, zero erro/violação;
+> build Vite verde. Gate: **1455 passed, 1 skipped, 14 deselected**.
+
+> **✅ SESSÃO 41 (2026-08-12): remediação P0/P1/P2 do playtest real `done`.** A
+> spec [remediacao-playtest-real-100t](specs/remediacao-playtest-real-100t.md)
+> entregou prazo absoluto no watchdog (resultado tardio após suspensão é
+> rejeitado), perfil `normal` restrito à visão pública, pedido diegético de tarefa
+> com funil observável até quest, cooldown/retirada prudente e voz de loot em
+> segunda pessoa. Summary/JSONL agora medem `% combate`, pedidos e conversões;
+> campanhas normais longas alertam combate >35% e ≥2 pedidos sem quest.
+>
+> Smoke mock `20260812-232004-255178`: 50/50, quatro rotas, quatro quests (três
+> concluídas), zero erro/error; warning útil de 46% combate por encontros
+> sistêmicos. Smoke real `20260812-232052-855221`: 16/16, `mock=false`, 54
+> sucessos de rede incluindo startup, zero falha/violação, uma quest, 31,2%
+> combate, loot sem terceira pessoa, US$ 0,014. Ruff verde; gate:
+> **1446 passed, 1 skipped, 14 deselected**. MiniMax/Qwen e demais fallbacks
+> operacionais ficaram fora do escopo por decisão do usuário.
+
+> **🧪 SESSÃO 40 (2026-08-12): campanha LLM real pós-remediações — diagnóstico.**
+> Run `20260812-215427-501557`: perfil `normal`, **100/100 turnos**, `mock=false`,
+> 282 tentativas LLM/281 de rede/273 sucessos, zero exceções, zero abortos e
+> US$ 0,085208. Cobriu as quatro rotas, sete locais, sete conflitos, duas escolhas
+> de progressão e três restores de morte. As seis correções anteriores se
+> mantiveram: fuga chegou a `escapou`, rollback não reteve mortes, grounding
+> regional correto, resumo 1.191/1.200 chars e feedback mecânico coerente.
+>
+> O run ficou `failed` por **1 SLO error**: turno 64 levou 2.256 s; a DeepSeek só
+> devolveu timeout após 2.230 s e o watchdog em thread não impôs os 120 s durante
+> uma lacuna de heartbeat/suspensão. Novos achados: MiniMax sem saldo (402), Qwen
+> com chave inválida (401), perfil copia instrução interna `Descreva...` do beat,
+> zero quests em 100 turnos apesar de muitos ganchos, combate ocupou 45% da sessão
+> e loot alterna para terceira pessoa. Diagnóstico completo:
+> [playtest-longrun-real-2026-08-12-v2](docs/playtest-longrun-real-2026-08-12-v2.md).
+> Nenhuma correção/spec nova foi criada nesta sessão; recomendações aguardam
+> priorização. Gate offline: **1436 passed, 1 skipped, 14 deselected**.
+
 > **✅ SESSÃO 39 (2026-08-12): seis remediações do playtest normal `done`.** Os
 > achados da sessão 38 viraram specs e código: fuga retoma `combat.chase` e mede
 > `flee_progress`; checkpoint restaura JSON + árvore FAISS inteira (raiz/NPC,

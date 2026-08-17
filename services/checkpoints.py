@@ -44,7 +44,8 @@ def entered_safe_zone(state: dict, prev: Optional[dict]) -> bool:
 def should_checkpoint(state: dict, prev: Optional[dict] = None) -> bool:
     """D1: grava a cada CHECKPOINT_EVERY turnos OU ao entrar em zona segura.
     Nunca grava com o jogo encerrado (memorial) ou morte pendente."""
-    if state.get("game_over") or state.get("death_pending"):
+    if (state.get("game_over") or state.get("death_pending")
+            or (state.get("combat") or {}).get("active")):
         return False
     t = _turn(state)
     if t > 0 and t % CHECKPOINT_EVERY == 0:
@@ -52,9 +53,15 @@ def should_checkpoint(state: dict, prev: Optional[dict] = None) -> bool:
     return entered_safe_zone(state, prev)
 
 
-def snapshot(state: dict) -> dict:
+def snapshot(state: dict) -> Optional[dict]:
     """Cópia profunda do estado e da memória externa usada pelo harness."""
+    if (state.get("combat") or {}).get("active"):
+        return None
     snap = copy.deepcopy(state)
+    from services.continuity import mark_checkpoint
+    snap["continuity"] = mark_checkpoint(
+        snap.get("continuity"), canonical_turn=_turn(snap),
+    )
     game_id = snap.get("game_id")
     if game_id:
         snap["_checkpoint_memory_snapshot"] = (
@@ -66,8 +73,35 @@ def snapshot(state: dict) -> dict:
 def maybe_write(state: dict, prev: Optional[dict] = None) -> bool:
     """Grava o checkpoint em disco se a cadência (D1) mandar. Retorna se gravou."""
     if should_checkpoint(state, prev):
-        return persistence.save_checkpoint(state)
+        marked = copy.deepcopy(state)
+        from services.continuity import mark_checkpoint
+        marked["continuity"] = mark_checkpoint(
+            marked.get("continuity"), canonical_turn=_turn(marked),
+        )
+        return persistence.save_checkpoint(marked)
     return False
+
+
+def _sanitize_legacy_combat_checkpoint(restored: dict) -> dict:
+    """Fecha uma cena ativa capturada por versões antigas antes de restaurá-la."""
+    if not (restored.get("combat") or {}).get("active"):
+        return restored
+    clean = copy.deepcopy(restored)
+    old = clean.get("combat") or {}
+    clean["combat"] = {
+        "active": False, "round": int(old.get("round", 0) or 0),
+        "idle_turns": 0, "origin": old.get("origin", "unknown"), "scene": None,
+    }
+    clean["enemies"] = []
+    clean["combat_target"] = None
+    player = dict(clean.get("player") or {})
+    player["vitalidade"] = max(1, int(player.get("vitalidade", 0) or 0))
+    player["hp"] = player["vitalidade"]
+    player["dead"] = False
+    player["conscious"] = True
+    player["estado_terminal"] = False
+    clean["player"] = player
+    return clean
 
 
 def resolve_death_choice(state: dict, choice: str, *,
@@ -107,6 +141,9 @@ def resolve_death_choice(state: dict, choice: str, *,
                     str(state["game_id"]), None)
     if restored is None:  # D7: sem checkpoint → início da sessão
         restored = copy.deepcopy(initial_state) if initial_state is not None else copy.deepcopy(state)
+    restored = _sanitize_legacy_combat_checkpoint(restored)
     restored["death_pending"] = False
     restored["game_over"] = False
+    from services.continuity import after_restore
+    restored["continuity"] = after_restore(state, restored)
     return restored

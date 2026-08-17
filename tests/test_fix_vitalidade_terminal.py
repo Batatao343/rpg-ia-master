@@ -133,7 +133,7 @@ def test_migracao_v4_para_v5_escolhe_vitalidade_e_normaliza_party() -> None:
 
     migrated = persistence.migrate_state(raw)
 
-    assert migrated["schema_version"] == 6
+    assert migrated["schema_version"] == persistence.SCHEMA_VERSION
     assert migrated["player"]["hp"] == 4
     assert migrated["player"]["max_hp"] == 10
     assert migrated["party"][0]["hp"] == 3

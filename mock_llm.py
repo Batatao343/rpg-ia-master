@@ -284,11 +284,22 @@ def _npc_response(model, messages):
     if any(k in txt for k in ("facç", "faccao", "facc", "rumor", "quem manda", "legi", "ordem")):
         reveals = [{"faction_id": "legiao_ferro", "reveal_level": "objetivo"}]
     friendly = any(k in txt for k in ("elogio", "amizade", "confian", "parceria"))
+    quests = []
+    if re.search(r"\b(?:tarefa|miss[aã]o|trabalho|favor)\s+concret[oa]\b", txt):
+        quests = [{
+            "title": "Investigar o silêncio das estradas",
+            "description": "Descobrir por que viajantes desapareceram perto da cidade.",
+            "origin_name": "",
+            "origin_entity_id": "",
+            "location_id": "",
+            "reward_hint": "informação e algumas moedas",
+        }]
     return _fill(model, {"dialogue": random.choice(_NPC_LINES),
                          "action_description": random.choice(_NPC_ACTIONS),
                          "memory_update": "Conversou com o herói.",
                          "relationship_change": 1 if friendly else random.choice([-1, 0, 0, 1]),
-                         "faction_reveals": reveals})
+                         "faction_reveals": reveals,
+                         "proposed_quests": quests})
 
 
 def _enemy_schema(model, messages):

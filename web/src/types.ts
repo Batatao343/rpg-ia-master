@@ -332,6 +332,18 @@ export interface DeathView {
   stabilization: string;
   stabilization_attempts: number;
   killer: string;
+  will_restore_turn: number;
+  will_lose_turns: number;
+  retained: string[];
+  reverted: string[];
+}
+
+export interface ContinuityView {
+  session_action_count: number;
+  canonical_turn: number;
+  timeline_epoch: number;
+  last_checkpoint_turn: number;
+  death_history: Array<Record<string, unknown>>;
 }
 
 // spec polish-sessao (R1): resumo de campanha salva (GET /game/saves)
@@ -427,6 +439,7 @@ export interface GameResponse {
   death_pending?: boolean;
   game_over?: boolean;
   death?: DeathView;
+  continuity?: ContinuityView;
   combat_simulation: CombatSimulationMeta;
   visual: VisualResponse;
 }

@@ -6,6 +6,7 @@ import progression
 from playtest import invariants
 from playtest.profiles import PROFILES
 from playtest.runner import CampaignResult, TurnRecord, _resolve_profile_progression
+from playtest.runner import _campaign_experience_violations
 from playtest.telemetry import build_summary, turn_to_record
 
 
@@ -44,7 +45,39 @@ def test_perfil_normal_conversa_com_npc_ainda_nao_ouvido():
     profile = PROFILES["normal"]
     profile.reset()
     state = _base_state(npcs={"Mara": {"name": "Mara", "in_scene": True}})
-    assert "Mara" in profile.decide(state, random.Random(1)).text
+    action = profile.decide(state, random.Random(1)).text
+    assert "Mara" in action
+    assert "tarefa concreta" in action.lower()
+
+
+def test_perfil_normal_nao_le_beat_privado_nem_ecoa_metalinguagem():
+    profile = PROFILES["normal"]
+    profile.reset()
+    state = _base_state(campaign_plan={
+        "beats": [{"description": "SENTINELA_PRIVADA Descreva o dragão."}],
+        "current_step": 0,
+        "climax": "SENTINELA_CLIMAX",
+    })
+
+    actions = [profile.decide(state, random.Random(3)).text for _ in range(7)]
+    corpus = " ".join(actions).casefold()
+    assert "sentinela" not in corpus
+    assert "descreva" not in corpus
+    assert "beat" not in corpus
+
+
+def test_perfil_normal_aplica_cooldown_pos_combate_antes_de_nova_ameaca():
+    profile = PROFILES["normal"]
+    profile.reset()
+    combat = _base_state(
+        combat={"active": True, "round": 1},
+        enemies=[{"id": "lobo", "name": "Lobo", "status": "ativo"}],
+    )
+    profile.decide(combat, random.Random(2))
+
+    safe = _base_state()
+    actions = [profile.decide(safe, random.Random(2)).text for _ in range(12)]
+    assert not any("ataco para me defender" in action.casefold() for action in actions)
 
 
 def test_perfil_normal_foge_quando_risco_extremo_sem_cura():
@@ -55,6 +88,16 @@ def test_perfil_normal_foge_quando_risco_extremo_sem_cura():
             "name": "Valen", "vitalidade": 3, "max_vitalidade": 20,
             "hp": 3, "max_hp": 20, "inventory": [],
         },
+        combat={"active": True, "round": 4},
+        enemies=[{"id": "lobo", "name": "Lobo", "status": "ativo"}],
+    )
+    assert profile.decide(state, random.Random(2)).mode == "flee"
+
+
+def test_perfil_normal_recuando_a_partir_da_quarta_rodada():
+    profile = PROFILES["normal"]
+    profile.reset()
+    state = _base_state(
         combat={"active": True, "round": 4},
         enemies=[{"id": "lobo", "name": "Lobo", "status": "ativo"}],
     )
@@ -116,3 +159,84 @@ def test_summary_agrega_diversidade_slo_e_escolhas():
     assert summary["latency_slo"]["over_warning_45s"] == 1
     assert summary["diversity"]["unique_routes"] == 1
     assert summary["progression_choices"] == 1
+
+
+def test_summary_agrega_conversao_de_quest_e_percentual_de_combate():
+    records = []
+    for turn in range(1, 11):
+        rec = TurnRecord(
+            turn=turn,
+            action="Peço uma tarefa concreta" if turn in (1, 3) else "Exploro",
+            route="combat_agent" if turn in (5, 6, 7) else "storyteller",
+            latency_ms=1,
+        )
+        rec.quest_requested = turn in (1, 3)
+        rec.quests_before = 0
+        rec.quests_after = 1 if turn == 3 else 0
+        records.append(rec)
+    result = CampaignResult(
+        profile="normal", seed=1, turns_completed=10, errors=[], history=records,
+        final_state=_base_state(quests=[{"id": "q1", "status": "active"}]),
+        save_path="save.json",
+    )
+
+    summary = build_summary(result, [turn_to_record(rec) for rec in records])
+
+    balance = summary["experience_balance"]
+    assert balance["quest_requests"] == 2
+    assert balance["quest_request_conversions"] == 1
+    assert balance["quest_conversion_pct"] == 50.0
+    assert balance["combat_turn_pct"] == 30.0
+
+
+def test_invariante_rejeita_metalinguagem_privada_do_perfil_normal():
+    violations = invariants.check_all(
+        _base_state(), _base_state(), 8,
+        context={
+            "profile": "normal",
+            "action": "Tento cumprir o beat: Descreva a praça.",
+        },
+    )
+    assert any(
+        violation.check_id == "profile.private_plan_leak"
+        and violation.severity == "error"
+        for violation in violations
+    )
+
+
+def test_oraculos_de_campanha_alertam_combate_e_zero_conversao():
+    history = []
+    for turn in range(1, 51):
+        rec = TurnRecord(
+            turn=turn,
+            action="Peço uma tarefa concreta" if turn in (2, 10) else "Exploro",
+            route="combat_agent" if turn <= 18 else "storyteller",
+            latency_ms=1,
+        )
+        rec.quest_requested = turn in (2, 10)
+        history.append(rec)
+
+    violations = _campaign_experience_violations(
+        "normal", history, _base_state(),
+    )
+
+    assert {item["check_id"] for item in violations} == {
+        "profile.combat_share", "profile.quest_conversion_empty",
+    }
+
+
+def test_mock_npc_propoe_quest_somente_apos_pedido_concreto():
+    from langchain_core.messages import HumanMessage
+    from agents.npc import NPCResponse
+    import mock_llm
+
+    ordinary = mock_llm._npc_response(
+        NPCResponse, [HumanMessage(content="Conte um rumor.")],
+    )
+    requested = mock_llm._npc_response(
+        NPCResponse,
+        [HumanMessage(content="Você tem uma tarefa concreta ou favor concreto?")],
+    )
+
+    assert ordinary.proposed_quests == []
+    assert len(requested.proposed_quests) == 1

@@ -245,8 +245,7 @@ def _early_game_reaction_initiator(state: Dict, player: Dict,
 
 
 def _prepare_scene(state: Dict, enemies: List[Dict], player: Dict, allies: List[Dict]) -> dict:
-    """Monta a cena JOGÁVEL (conflito-11): pede zonas/objetos/eventos do Abismo à LLM
-    (guard → `fallback_safe_scene`), posiciona todos e CONGELA (03 R8). O Nível do
+    """Monta a cena JOGÁVEL em Python com zonas mínimas e seguras. O Nível do
     Encontro é perigo ABSOLUTO (11 R6), nunca depende da party."""
     world = state.get("world") or {}
     loc = world.get("current_location", "Campo")
@@ -259,12 +258,9 @@ def _prepare_scene(state: Dict, enemies: List[Dict], player: Dict, allies: List[
            "encounter_level": encounter_level,
            "narrative": build_context_pack(state, query=str(loc),
                                            purpose="combat_narration", token_budget=600).world_state_block}
-    try:
-        llm = get_llm(temperature=0.4, tier=ModelTier.FAST)
-        scene = prep.prepare_encounter(ctx, llm)
-    except Exception as e:
-        print(f"⚠️ [COMBAT PREP] {e}")
-        scene = prep.fallback_safe_scene(ctx)
+    # Mecânica é Python: geometria mínima e válida não precisa de um segundo
+    # invoke FAST no primeiro turno. A LLM continua identificando e narrando.
+    scene = prep.fallback_safe_scene(ctx)
     if not scene.get("zones"):
         scene["zones"] = [{"id": "z0", "name": loc, "connections": []}]
     scene["positions"] = {}
@@ -493,6 +489,37 @@ def _canonical_player_action(declaration: Optional[TurnDeclaration], out: dict, 
     }
 
 
+MAX_CONSECUTIVE_FLEE_ATTEMPTS = 6
+
+
+def _enforce_flee_attempt_limit(chase_state: dict, *, attempts: int) -> tuple[bool, dict]:
+    """Fecha perseguições que oscilaram demais sem retirar letalidade do combate.
+
+    O limite é local à instância e só é aplicado pelo chamador quando existe
+    um destino de fuga válido. Até lá, cada rodada continua usando os testes
+    normais da trilha.
+    """
+    chase = dict(chase_state or {})
+    if int(attempts or 0) < MAX_CONSECUTIVE_FLEE_ATTEMPTS:
+        return bool(chase.get("escapou")), chase
+    chase.update({"trilha": "escapou", "escapou": True, "alcancado": False})
+    return True, chase
+
+
+def _is_valid_flee_destination(state: Dict, destination_id: Optional[str]) -> bool:
+    if not destination_id:
+        return False
+    current_id = str((state.get("world") or {}).get("current_location_id") or "")
+    try:
+        return any(
+            str(location.get("id") or "") == str(destination_id)
+            for location in gamedata.get_connections(current_id)
+            if isinstance(location, dict)
+        )
+    except Exception:
+        return False
+
+
 # ==========================================================================
 # Narração (depois da resolução — LLM FAST, guard)
 # ==========================================================================
@@ -605,7 +632,16 @@ def combat_node(state: GameState):
         scene = _prepare_scene(state, enemies, player, allies)
         bestiary_knowledge = disc.record_encounter(bestiary_knowledge, enemies, turn)
         bk_changed = True
+        from services.combat_origin import materialize
+        continuity = state.get("continuity") or {}
+        conflict_instance_id = ":".join((
+            str(state.get("game_id") or "game"),
+            str(int(continuity.get("timeline_epoch", 0) or 0)),
+            str(int(continuity.get("session_action_count", turn) or turn)),
+        ))
         combat_meta = {"round": 0, "active": True, "scene": scene, "idle_turns": 0,
+                       "origin": materialize(combat_meta, state.get("combat_origin_hint")),
+                       "instance_id": conflict_instance_id,
                        "encounter_level": scene.get("encounter_level", 1)}
         print(f"⚔️ Combate: {[e['name'] for e in enemies]}")
 
@@ -633,7 +669,7 @@ def combat_node(state: GameState):
         conflict_sum = summ.build_summary(
             [player] + enemies + allies,
             scene=scene,
-            extras={"turn": turn},
+            extras={"turn": turn, "conflict_id": combat_meta.get("instance_id")},
         )
         combat_meta["last_player_action"] = _canonical_player_action(
             None, {}, attempted=False)
@@ -684,6 +720,14 @@ def combat_node(state: GameState):
         flee_requested = True
         flee_dest_id = state.get("combat_flee_destination")
 
+    if flee_requested:
+        combat_meta["flee_attempts"] = int(
+            combat_meta.get("flee_attempts", 0) or 0
+        ) + 1
+    else:
+        # O teto mede tentativas consecutivas dentro deste conflito.
+        combat_meta.pop("flee_attempts", None)
+
     combat_meta["round"] = int(combat_meta.get("round", 0)) + 1
     combat_meta["active"] = True
     combat_meta["idle_turns"] = 0
@@ -721,6 +765,16 @@ def combat_node(state: GameState):
         hero_fled, flee_logs, chase_state = _attempt_flee(
             scene, player, active, sides, rng,
             existing_chase=combat_meta.get("chase"))
+        if (not hero_fled
+                and _is_valid_flee_destination(state, flee_dest_id)):
+            hero_fled, chase_state = _enforce_flee_attempt_limit(
+                chase_state,
+                attempts=int(combat_meta.get("flee_attempts", 0) or 0),
+            )
+            if hero_fled:
+                flee_logs.append(
+                    "Após uma perseguição prolongada, os inimigos perdem o rastro."
+                )
         combat_meta["chase"] = chase_state
         logs += weather_logs + flee_logs
     if not hero_fled:
@@ -858,7 +912,7 @@ def combat_node(state: GameState):
         conflict_sum = summ.build_summary(
             participants,
             scene=scene,
-            extras={"turn": turn},
+            extras={"turn": turn, "conflict_id": combat_meta.get("instance_id")},
         )
         narrative = summ.narrative_or_fallback(conflict_sum, narrative)
     narrative = prose_guard.sanitize_meta_preamble(narrative)
@@ -886,6 +940,7 @@ def combat_node(state: GameState):
         "archive_due": combat_over and not is_simulation,
         "party": _merge_formal_party(party, allies),
         "combat_declaration": None,   # consumida (não vaza para o próximo turno)
+        "combat_origin_hint": None,
     }
     if conflict_sum is not None:
         result["conflict_summary"] = conflict_sum
@@ -1031,6 +1086,23 @@ def _apply_flee_travel(state: Dict, result: Dict, flee_dest_id: str, player: Dic
     if base_npcs is None:
         base_npcs = state.get("npcs", {})
     result["npcs"] = npc_layers.reset_scene(base_npcs)
+    previous_combat = result.get("combat") or {}
+    result["combat"] = {
+        "active": False,
+        "round": int(previous_combat.get("round", 0) or 0),
+        "idle_turns": 0,
+        "scene": None,
+        "origin": "unknown",
+        # Recibo do turno atual: o harness o consome uma vez a partir do update
+        # do nó. Não é estado de perseguição e preserva a auditabilidade.
+        "last_player_action": dict(
+            previous_combat.get("last_player_action") or {}
+        ),
+    }
+    result["enemies"] = []
+    result["combat_target"] = None
+    result["next"] = None
+    result["combat_origin_hint"] = None
 
 
 def _reflect_scene_allies(state: Dict, scene_tr: List[Dict], allies: List[Dict],

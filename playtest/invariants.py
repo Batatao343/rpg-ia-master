@@ -12,6 +12,7 @@ de segurança, não fonte de novo crash. Severidade `error` reprova o estado;
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from typing import Callable, List, Literal, Optional
 
@@ -640,7 +641,15 @@ def combat_progress_fingerprint(state: dict) -> Optional[tuple]:
             default=str,
         ),
     )
-    return tuple(actor_bits), scene_bits
+    chase = combat.get("chase") or {}
+    chase_bits = (
+        str(chase.get("trilha") or ""),
+        bool(chase.get("alcancado")),
+        bool(chase.get("escapou")),
+        str(chase.get("fugitive_id") or ""),
+        tuple(sorted(str(value) for value in (chase.get("perseguidores") or []))),
+    )
+    return tuple(actor_bits), scene_bits, chase_bits
 
 
 COMBAT_NO_PROGRESS_LIMIT = 5
@@ -732,6 +741,17 @@ def check_contextual(
 ) -> List[Violation]:
     context = context or {}
     out = check_combat_no_progress(context, turn)
+    action = str(context.get("action") or "")
+    if context.get("profile") == "normal" and re.search(
+        r"\b(?:descreva|narre|beat|campaign_plan|objetivo principal:)\b",
+        action,
+        flags=re.IGNORECASE,
+    ):
+        out.append(_V(
+            "profile.private_plan_leak", "error", turn,
+            "perfil normal expôs metalinguagem/instrução privada na ação",
+            action=action[:240],
+        ))
     out += check_action_declaration(
         context.get("decision"),
         context.get("resolved_action"),
