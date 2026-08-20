@@ -5,7 +5,10 @@
 > com fail-closed, teto de US$ 0,25/800 requests por campanha e seeds pareadas.
 > A tentativa `20260820-180632-012432` revelou excesso recuperável de beats no
 > turno 2; a [normalização da borda](specs/campaign-beats-overflow-provider.md)
-> está implementada e coberta pelo gate de 1597 testes antes do reinício A1.
+> está implementada. O reinício `20260820-181149-643772` revelou um
+> `WorldPulse=None`; o [retry semântico](specs/structured-output-retry-provider.md)
+> limitado a uma regeneração no mesmo provider está coberto pelo gate de 1600
+> testes e preflight DeepSeek 3/3 antes do novo reinício A1.
 
 > **Objetivo central:** Mundo vivo persistente com estado consultável, antes de features novas.
 > 
@@ -575,7 +578,7 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
   [Mimetismo Morto](specs/combate-mimetismo-morto-loop.md),
   [fuga a Vitalidade zero](specs/fuga-vitalidade-zero.md) e
   [observabilidade](specs/observabilidade-npc-mortes-longrun.md). Preflight real
-  dos três tiers, suíte de 1597 testes e smoke offline 10×3 estão verdes;
+  dos três tiers, suíte de 1600 testes e smoke offline 10×3 estão verdes;
   pendem A1 real completa, specs/fixes dos achados e B pareada com stop em
   regressão nova.
 
@@ -588,7 +591,9 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
   Vitalidade 0, observabilidade); o gate tem 1594 testes e smoke 30/30. Retomada
   foi retomada com DeepSeek. A tentativa seguinte encontrou no turno 2 um
   payload de seis beats, agora normalizado em Python para os cinco primeiros
-  pela spec `campaign-beats-overflow-provider`; A1 reinicia desde o par 1.
+  pela spec `campaign-beats-overflow-provider`. O reinício seguinte achou um
+  structured output `None` isolado no simulador; uma regeneração semântica no
+  mesmo provider foi adicionada sem retry HTTP. A1 reinicia desde o par 1.
 - [x] **5.2 — Invariantes de estado** ([spec](specs/fase-5.2-invariantes.md)):
   `playtest/invariants.py` — `check_all(state, prev_state)` puro plugado no
   runner. HP válido, ouro ≥ 0, item único sem dupe, NPC morto não fala, fação

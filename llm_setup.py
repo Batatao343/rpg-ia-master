@@ -438,6 +438,21 @@ class RoutedLLM:
             ))]
         return input
 
+    def _input_for_structured_retry(self, input, provider: str):
+        """Prepare one semantic regeneration after a malformed tool response.
+
+        This is separate from HTTP retries: it only runs after the provider
+        answered but failed the Pydantic post-condition. The caller's message
+        list is never mutated.
+        """
+        prepared = self._input_for_provider(input, provider)
+        if not isinstance(prepared, (list, tuple)):
+            return prepared
+        return [*prepared, HumanMessage(content=(
+            "A resposta anterior não produziu a saída estruturada válida. "
+            "Tente novamente agora e responda somente pela ferramenta solicitada."
+        ))]
+
     def _validate_structured_result(self, result) -> tuple[bool, Optional[str], bool]:
         """Valida a pós-condição que providers nem sempre cumprem.
 
@@ -473,8 +488,10 @@ class RoutedLLM:
 
     def invoke(self, input):
         errors = []
-        for idx, (provider, model) in enumerate(self.candidates):
-            fell_back = idx > 0
+        attempt_index = 0
+        structured_contract = self._pydantic_structured_contract()
+        for provider_index, (provider, model) in enumerate(self.candidates):
+            fell_back = provider_index > 0
             circuit_reason = _OPEN_CIRCUITS.get((provider, model))
             if circuit_reason:
                 errors.append(f"{provider}:{model} circuit:{circuit_reason}")
@@ -482,13 +499,14 @@ class RoutedLLM:
                     provider=provider,
                     model=model,
                     tier=self.tier,
-                    attempt_index=idx,
+                    attempt_index=attempt_index,
                     latency_ms=0,
                     fell_back=fell_back,
                     outcome="circuit_open",
                     error=circuit_reason,
-                    structured=self._pydantic_structured_contract() is not None,
+                    structured=structured_contract is not None,
                 ))
+                attempt_index += 1
                 continue
             build_t0 = time.perf_counter()
             try:
@@ -501,13 +519,14 @@ class RoutedLLM:
                     provider=provider,
                     model=model,
                     tier=self.tier,
-                    attempt_index=idx,
+                    attempt_index=attempt_index,
                     latency_ms=latency_ms,
                     fell_back=fell_back,
                     outcome="build_error",
                     error=str(e),
-                    structured=self._pydantic_structured_contract() is not None,
+                    structured=structured_contract is not None,
                 ))
+                attempt_index += 1
                 _open_circuit_if_permanent(provider, model, e)
                 continue
             try:
@@ -520,72 +539,84 @@ class RoutedLLM:
                     provider=provider,
                     model=model,
                     tier=self.tier,
-                    attempt_index=idx,
+                    attempt_index=attempt_index,
                     latency_ms=latency_ms,
                     fell_back=fell_back,
                     outcome="build_error",
                     error=f"apply: {e}",
-                    structured=self._pydantic_structured_contract() is not None,
+                    structured=structured_contract is not None,
                 ))
+                attempt_index += 1
                 _open_circuit_if_permanent(provider, model, e)
                 continue
-            t0 = time.perf_counter()
-            try:
-                result = client.invoke(self._input_for_provider(input, provider))
-                latency_ms = int((time.perf_counter() - t0) * 1000)
-            except Exception as e:
-                latency_ms = int((time.perf_counter() - t0) * 1000)
-                errors.append(f"{provider}:{model} invoke:{e}")
-                _LOG.warning("invoke falhou %s:%s (%s)", provider, model, e)
+            # Uma resposta HTTP válida sem o tool call/schema pedido é um erro
+            # semântico recuperável. Regenera exatamente uma vez no MESMO
+            # provider; erros de rede/quota continuam fail-fast.
+            semantic_attempts = 2 if structured_contract is not None else 1
+            for semantic_attempt in range(semantic_attempts):
+                request_input = (
+                    self._input_for_structured_retry(input, provider)
+                    if semantic_attempt else self._input_for_provider(input, provider)
+                )
+                t0 = time.perf_counter()
+                try:
+                    result = client.invoke(request_input)
+                    latency_ms = int((time.perf_counter() - t0) * 1000)
+                except Exception as e:
+                    latency_ms = int((time.perf_counter() - t0) * 1000)
+                    errors.append(f"{provider}:{model} invoke:{e}")
+                    _LOG.warning("invoke falhou %s:%s (%s)", provider, model, e)
+                    _emit_attempt_telemetry(LLMAttemptEvent(
+                        provider=provider,
+                        model=model,
+                        tier=self.tier,
+                        attempt_index=attempt_index,
+                        latency_ms=latency_ms,
+                        fell_back=fell_back,
+                        outcome="invoke_error",
+                        error=str(e),
+                        structured=structured_contract is not None,
+                    ))
+                    attempt_index += 1
+                    _open_circuit_if_permanent(provider, model, e)
+                    break
+                valid, validation_error, structured = self._validate_structured_result(result)
+                if not valid:
+                    errors.append(
+                        f"{provider}:{model} structured:{validation_error}"
+                    )
+                    _LOG.warning(
+                        "structured inválido %s:%s (%s)",
+                        provider,
+                        model,
+                        validation_error,
+                    )
+                    _emit_attempt_telemetry(LLMAttemptEvent(
+                        provider=provider,
+                        model=model,
+                        tier=self.tier,
+                        attempt_index=attempt_index,
+                        latency_ms=latency_ms,
+                        fell_back=fell_back,
+                        outcome="invalid_structured",
+                        error=validation_error,
+                        structured=structured,
+                    ))
+                    attempt_index += 1
+                    continue
                 _emit_attempt_telemetry(LLMAttemptEvent(
                     provider=provider,
                     model=model,
                     tier=self.tier,
-                    attempt_index=idx,
+                    attempt_index=attempt_index,
                     latency_ms=latency_ms,
                     fell_back=fell_back,
-                    outcome="invoke_error",
-                    error=str(e),
-                    structured=self._pydantic_structured_contract() is not None,
-                ))
-                _open_circuit_if_permanent(provider, model, e)
-                continue
-            valid, validation_error, structured = self._validate_structured_result(result)
-            if not valid:
-                errors.append(
-                    f"{provider}:{model} structured:{validation_error}"
-                )
-                _LOG.warning(
-                    "structured inválido %s:%s (%s)",
-                    provider,
-                    model,
-                    validation_error,
-                )
-                _emit_attempt_telemetry(LLMAttemptEvent(
-                    provider=provider,
-                    model=model,
-                    tier=self.tier,
-                    attempt_index=idx,
-                    latency_ms=latency_ms,
-                    fell_back=fell_back,
-                    outcome="invalid_structured",
-                    error=validation_error,
+                    outcome="success",
+                    error=None,
                     structured=structured,
                 ))
-                continue
-            _emit_attempt_telemetry(LLMAttemptEvent(
-                provider=provider,
-                model=model,
-                tier=self.tier,
-                attempt_index=idx,
-                latency_ms=latency_ms,
-                fell_back=fell_back,
-                outcome="success",
-                error=None,
-                structured=structured,
-            ))
-            _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
-            return result
+                _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
+                return result
         _LOG.warning("tier %s: todos os candidatos falharam: %s",
                      self.tier.value, "; ".join(errors))
         # conteúdo vazio: sites de narração plain-invoke caem no fallback determinístico;

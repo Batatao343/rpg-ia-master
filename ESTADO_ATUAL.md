@@ -7,9 +7,13 @@
 > interrompida no turno 2: o DeepSeek devolveu 6 beats e o teto Pydantic de 5
 > rejeitou toda a resposta. A spec `campaign-beats-overflow-provider` agora
 > limpa vazios/espaços e retém os cinco primeiros em Python; menos de três segue
-> inválido. Gate pós-fix: **1597 passed, 16 skipped, 14 deselected**. Próximo
-> comando é reiniciar A1 10×200 desde o par 1; B deverá repetir exatamente os
-> mesmos pares, níveis, seeds, preset e tetos.
+> inválido. Gate pós-fix: **1597 passed, 16 skipped, 14 deselected**. O reinício
+> `20260820-181149-643772` encontrou no turno 1 um `WorldPulse=None` isolado
+> após seis sucessos reais. A spec `structured-output-retry-provider` agora
+> regenera structured output inválido exatamente uma vez no mesmo provider;
+> falha HTTP/quota continua fail-fast, sem fallback determinístico. Gate:
+> **1600 passed, 16 skipped, 14 deselected** e preflight DeepSeek 3/3. A1
+> reinicia do par 1; B repetirá exatamente pares, níveis, seeds e tetos.
 
 > **🚧 SESSÃO 55 (2026-08-20): ciclo pareado 10×200 em execução.** Os seis
 > achados do comerciante real ganharam a spec

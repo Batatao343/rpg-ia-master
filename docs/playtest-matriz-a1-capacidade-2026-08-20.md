@@ -79,6 +79,21 @@ a borda aceita excesso recuperável e trunca deterministicamente para os cinco
 primeiros beats não vazios, sem fabricar conteúdo ausente. A1 será reiniciada
 desde o par 1 depois da regressão e da suíte completa.
 
+A retomada seguinte, `20260820-181149-643772`, também encerrou antes de formar
+baseline: no turno 1, o `world_simulator` recebeu `None` em vez de `WorldPulse`.
+As outras seis invocações reais do turno/startup tiveram sucesso, confirmando
+que não era perda geral de capacidade. O comportamento resiliente do jogo fez
+no-op, mas o fail-closed corretamente recusou esse fallback determinístico e
+não iniciou os nove pares restantes.
+
+A spec [`structured-output-retry-provider`](../specs/structured-output-retry-provider.md)
+adiciona uma única regeneração semântica no mesmo provider/modelo quando houve
+resposta de rede, mas o payload Pydantic foi inválido. Erros HTTP, timeout, quota
+e saldo permanecem fail-fast (`max_retries=0`). A telemetria usa índices
+monotônicos na mesma invocação, portanto um `invalid_structured` recuperado por
+`success` não vira falso terminal. Gate: 1600 testes verdes; preflight real
+DeepSeek CLASSIFY/FAST/SMART 3/3.
+
 ## Dependência externa para retomar
 
 O ambiente não possui Ollama nem LM Studio. As outras rotas configuradas estavam

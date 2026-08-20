@@ -78,7 +78,7 @@ O `game_id` (UUID) é o link entre o JSON de save e o índice FAISS da sessão. 
 - **`MockLLM`** (sem chave ou `RPG_FORCE_MOCK=1`): devolve **dados fictícios válidos** (instâncias Pydantic por agente). O jogo fica jogável e a suíte determinística e offline. Trade-off: como nunca falha o acesso a campo, **esconde bugs de mapeamento** que só aparecem no Gemini real.
 - **`FallbackLLM`** (`RPG_NO_MOCK=1` sem chave, ou falha do provider): `with_structured_output(X).invoke()` devolve um `AIMessage`, **não** um `X`. Por isso todo nó precisa de guard (`try/except` ou `isinstance`). É o motivo da "convenção crítica" em `ESTADO_ATUAL.md`.
 
-`max_retries=0` (fail-fast): o erro dominante é `429` de quota (não transitório, limite diário). Retry com backoff travava o turno por minutos antes de cair no fallback — pior UX que falhar em ~3s.
+`max_retries=0` (fail-fast): o erro dominante é `429` de quota (não transitório, limite diário). Retry com backoff travava o turno por minutos antes de cair no fallback — pior UX que falhar em ~3s. A única repetição permitida no `RoutedLLM` é **semântica**: se a rede respondeu mas o structured output Pydantic veio inválido, regenera exatamente uma vez no mesmo provider/modelo. Erro HTTP/rede nunca usa essa repetição.
 
 ### Por que a mecânica é Python, não LLM (combate, dados, mundo)
 

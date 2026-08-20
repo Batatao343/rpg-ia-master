@@ -294,6 +294,83 @@ def test_structured_output_sucesso_devolve_instancia(monkeypatch):
     assert res.value == "ok"
 
 
+def test_structured_invalido_repete_uma_vez_no_mesmo_provider(monkeypatch):
+    seen_inputs = []
+
+    class SequentialClient(_FakeClient):
+        def __init__(self):
+            super().__init__("p1")
+            self.calls = 0
+
+        def invoke(self, input):
+            seen_inputs.append(input)
+            self.calls += 1
+            if self.calls == 1:
+                return None
+            return self._schema()
+
+    client = SequentialClient()
+    monkeypatch.setattr(llm_setup, "_build_client", lambda *_args: client)
+    events = []
+    set_llm_attempt_telemetry_hook(events.append)
+    original = [HumanMessage(content="classifique")]
+
+    result = RoutedLLM(
+        ModelTier.CLASSIFY, 0.0, [("p1", "m1")]
+    ).with_structured_output(_Tiny).invoke(original)
+
+    assert isinstance(result, _Tiny)
+    assert [event.outcome for event in events] == ["invalid_structured", "success"]
+    assert [event.attempt_index for event in events] == [0, 1]
+    assert [event.fell_back for event in events] == [False, False]
+    assert len(original) == 1
+    assert isinstance(seen_inputs[1][-1], HumanMessage)
+    assert "saída estruturada" in seen_inputs[1][-1].content
+
+
+def test_structured_retry_esgotado_avanca_proximo_provider(monkeypatch):
+    clients = {
+        "p1": _FakeClient("p1", "none"),
+        "p2": _FakeClient("p2", "ok"),
+    }
+    monkeypatch.setattr(
+        llm_setup, "_build_client", lambda provider, *_args: clients[provider]
+    )
+    events = []
+    set_llm_attempt_telemetry_hook(events.append)
+
+    result = RoutedLLM(
+        ModelTier.CLASSIFY, 0.0, [("p1", "m1"), ("p2", "m2")]
+    ).with_structured_output(_Tiny).invoke([HumanMessage(content="classifique")])
+
+    assert isinstance(result, _Tiny)
+    assert [event.outcome for event in events] == [
+        "invalid_structured", "invalid_structured", "success",
+    ]
+    assert [event.attempt_index for event in events] == [0, 1, 2]
+    assert [event.fell_back for event in events] == [False, False, True]
+
+
+def test_invoke_error_nao_repete_no_mesmo_provider(monkeypatch):
+    clients = {
+        "p1": _FakeClient("p1", "raise"),
+        "p2": _FakeClient("p2", "ok"),
+    }
+    monkeypatch.setattr(
+        llm_setup, "_build_client", lambda provider, *_args: clients[provider]
+    )
+    events = []
+    set_llm_attempt_telemetry_hook(events.append)
+
+    result = RoutedLLM(
+        ModelTier.CLASSIFY, 0.0, [("p1", "m1"), ("p2", "m2")]
+    ).with_structured_output(_Tiny).invoke([HumanMessage(content="classifique")])
+
+    assert isinstance(result, _Tiny)
+    assert [event.outcome for event in events] == ["invoke_error", "success"]
+    assert [event.attempt_index for event in events] == [0, 1]
+
+
 @pytest.mark.parametrize("invalid_behavior", ["none", "wrong"])
 def test_structured_output_invalido_tenta_proximo_provider(
         monkeypatch, invalid_behavior):
@@ -310,10 +387,11 @@ def test_structured_output_invalido_tenta_proximo_provider(
 
     assert isinstance(res, _Tiny)
     assert [event.outcome for event in tentativas] == [
-        "invalid_structured", "success",
+        "invalid_structured", "invalid_structured", "success",
     ]
     assert tentativas[0].structured is True
-    assert tentativas[1].fell_back is True
+    assert tentativas[1].fell_back is False
+    assert tentativas[2].fell_back is True
     assert [args[0] for args in sucessos_legados] == ["p2"], (
         "hook legado continua representando apenas sucesso validado"
     )
@@ -333,7 +411,7 @@ def test_structured_include_raw_exige_parsed_tipado_e_sem_erro(monkeypatch):
     assert isinstance(res["parsed"], _Tiny)
     assert res["parsing_error"] is None
     assert [event.outcome for event in tentativas] == [
-        "invalid_structured", "success",
+        "invalid_structured", "invalid_structured", "success",
     ]
 
 
