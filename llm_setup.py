@@ -117,7 +117,7 @@ ROUTES = {
         ("deepseek", "deepseek-v4-flash"),
         ("minimax", "MiniMax-M2.5"),
         ("qwen", "qwen-plus"),
-        ("groq", "llama-3.3-70b-versatile"),   # free, narração; function_calling
+        ("groq", "openai/gpt-oss-120b"),       # free, narração; function_calling
         ("gemini", "gemini-flash-latest"),
     ],
     ModelTier.SMART: [

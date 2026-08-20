@@ -1,5 +1,25 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **✅ SESSÃO 54 (2026-08-20): comerciante 1×200 real concluído.** O preflight
+> encontrou a rota FAST do Groq apontando para `llama-3.3-70b-versatile`, modelo
+> removido; ela agora usa `openai/gpt-oss-120b`, coberto por regressão offline e
+> contrato real de `NPCResponse`. O smoke corrigido fez 10/10 sem fallback
+> terminal.
+>
+> Run `20260820-112050-208317`: **200/200**, `data_complete=true`, `mock=false`,
+> zero erro/invariante `error`/erro de observabilidade e zero invocação terminal;
+> 548 sucessos reais, oito fallbacks entre providers e custo **US$ 0,162860** de
+> US$ 0,25. Mix: economia 38%, exploração 24,5%, quest 11%, social 11% e
+> sobrevivência 15,5%; 4 mercados, 3 regiões, 1 restock, 8/8 combates encerrados
+> e 2 restores seguros. A spec comerciante virou `done`.
+>
+> A auditoria de 21 turnos abriu evidência para três P1 (observação de mercado
+> parseada como compra, NPC remoto como aliado sem recrutamento e sinal visual
+> errado ao vender) e três P2 (contexto NPC residual, ouro divergente na prosa e
+> uma cauda de 47,1 s). Nenhum foi corrigido silenciosamente; aguardam specs.
+> Relatório: [playtest real comerciante](docs/playtest-comerciante-real-2026-08-20.md).
+> Gate final: `uv run pytest` = **1565 passed, 16 skipped, 14 deselected**.
+
 > **✅ SESSÃO 53 (2026-08-20): prontidão local G0–G7 certificada.** As sete
 > fatias locais da Fase 10b e o plano mestre viraram `done`; certificação cloud
 > continua isolada em `draft`, sem provisionamento. Supabase Local passou

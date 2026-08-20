@@ -1,15 +1,17 @@
 # SPEC — Playtest longo do perfil comerciante
 
-> **Status:** `approved`
-> **Criada:** 2026-08-17 · **Atualizada:** 2026-08-19
+> **Status:** `done`
+> **Criada:** 2026-08-17 · **Atualizada:** 2026-08-20
 > **Depende de:** `fase-5.1-harness`, `fase-5.2-invariantes`,
 > `fase-5.3-telemetria-relatorio`, `fase-6.1-economia-viva`,
 > `fase-6.2-itens-unicos` e
 > `conflito-17-volume-conteudo-mundo-vivo` (`done`)
 > **Desbloqueia:** validação de economia emergente, arbitragem regional e tuning
 > baseado em campanhas completas
-> **Aceite offline:** concluído no run `20260819-004210-869761`; permanece
-> `approved` apenas pela campanha `1×200 --real`, que exige `--max-cost` aprovado.
+> **Aceite:** offline concluído no run `20260819-004210-869761`; rodada real
+> concluída em `20260820-112050-208317` com 200/200, `mock=false`, zero erro/
+> invariante `error` e US$ 0,162860 de US$ 0,25 aprovados. Achados:
+> [relatório real](../docs/playtest-comerciante-real-2026-08-20.md).
 
 ---
 
@@ -297,7 +299,7 @@ como run completo.
 - [x] 5×200 offline completam com zero erro/invariante `error`.
 - [x] Agregado offline atinge compra+venda, ≥3 mercadores/regiões, ≥15 transações
   bem-sucedidas e ≥1 restock observado.
-- [ ] 1×200 real completa com `mock=false`, sem FallbackLLM terminal e dentro dos
+- [x] 1×200 real completa com `mock=false`, sem FallbackLLM terminal e dentro dos
   tetos aprovados.
 - [x] Achados P0/P1/P2 têm evidência; correções pontuais têm regressões
       curtas e qualquer mudança de produto nova continua exigindo spec própria.

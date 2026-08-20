@@ -31,19 +31,21 @@ atrás de portas Python, sem provisionar serviço remoto:
    perfil stateful e não onisciente, conservação, margem, net worth, restock e
    arbitragem regional auditáveis. Revalidação pós-upgrade: 5×200, zero erro/
    violação, 38 transações, três a cinco mercados e restock em todas as seeds
-   ([relatório](docs/playtest-comerciante-2026-08-20.md)).
+   ([relatório](docs/playtest-comerciante-2026-08-20.md)). Aceite real:
+   [1×200](docs/playtest-comerciante-real-2026-08-20.md), `mock=false`, zero erro,
+   US$ 0,162860; três P1 e três P2 ficaram evidenciados para specs próprias.
 
 Fase 10b local: Supabase local, Postgres/RLS/Auth/pgvector/storage, turnos e jobs
 duráveis, adapters, migração/export, backup/restore e observabilidade estão em
-código e cobertos por contratos. G0–G7 estão verdes: 1564 testes offline,
+código e cobertos por contratos. G0–G7 estão verdes: 1565 testes offline,
 `infra_local` 13, `security_local` 5, pgTAP 14/14, caos 5/5, commit DB p95
 32,257 ms, backup RPO 0/RTO 36,19 s, browser desktop/390 e stack
 Prometheus+Grafana+Collector+Tempo. Evidência versionada em
 [docs/readiness/readiness-local.md](docs/readiness/readiness-local.md).
 
-Pendências que exigem opt-in explícito continuam abertas: 1×200 comerciante com
-LLM real e certificação remota em Railway/Supabase. Tiers 5+, Fase 8B e Crônica
-avançada estão `done` no aceite local; seus smokes pagos continuam opcionais.
+Pendências que exigem opt-in explícito continuam abertas: certificação remota em
+Railway/Supabase. Tiers 5+, Fase 8B, Crônica avançada e comerciante estão
+`done`; chamadas pagas de imagem da 8B continuam opcionais.
 A certificação cloud permanece `draft`. Nenhuma chamada de imagem nem recurso
 remoto/pago foi criado neste ciclo.
 
@@ -548,10 +550,11 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
   reproduz a campanha): agressivo, explorador, comerciante, diplomático, troll,
   mapa_breaker, combate, npc_only, loot_abuser, secret_rusher. `--real` opt-in.
   Saves isolados (`saves_playtest/`). Teste permanente na suíte (10 turnos).
-- [x] **Playtest longo comerciante — aceite offline**
+- [x] **Playtest longo comerciante — aceite completo**
   ([spec](specs/playtest-longo-perfil-comerciante.md)): política stateful que
   observa só o mercado atual; 5×200 revalidados em 2026-08-20 com 1.000/1.000,
-  zero erro/violação e 38 transações. O 1×200 real segue opt-in com teto de custo.
+  zero erro/violação e 38 transações. O 1×200 real `20260820-112050-208317`
+  completou com `mock=false`, zero erro e US$ 0,162860.
 - [x] **5.2 — Invariantes de estado** ([spec](specs/fase-5.2-invariantes.md)):
   `playtest/invariants.py` — `check_all(state, prev_state)` puro plugado no
   runner. HP válido, ouro ≥ 0, item único sem dupe, NPC morto não fala, fação

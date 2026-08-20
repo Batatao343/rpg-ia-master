@@ -140,6 +140,13 @@ def test_deepseek_usa_identificador_v4_nao_alias_descontinuado():
         assert "deepseek-chat" not in deepseek
 
 
+def test_fast_usa_modelo_groq_disponivel():
+    groq = [model for provider, model in llm_setup.ROUTES[ModelTier.FAST]
+            if provider == "groq"]
+    assert groq == ["openai/gpt-oss-120b"]
+    assert "llama-3.3-70b-versatile" not in groq
+
+
 def test_deepseek_v4_desliga_thinking_e_aplica_timeout(monkeypatch):
     import langchain_openai
 
