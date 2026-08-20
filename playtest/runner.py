@@ -1320,6 +1320,9 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                             _continuity.get("timeline_epoch", 0) or 0
                         ),
                         "location": _pay.get("location"),
+                        "location_id": str(
+                            (state.get("world") or {}).get("current_location_id", "") or ""
+                        ),
                         "cause": _pay.get("killer"),
                     }
                     deaths_log.append(death)

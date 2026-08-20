@@ -48,6 +48,29 @@ def _connections(loc_id: str) -> List[dict]:
     return get_connections(loc_id)
 
 
+def _fatal_location_ids(state: dict) -> set[str]:
+    """Locais onde o perfil morreu, incluindo saves antigos que só têm nome."""
+    from gamedata import find_location_by_name
+
+    fatal: set[str] = set()
+    history = (state.get("continuity") or {}).get("death_history") or []
+    for record in history:
+        if not isinstance(record, dict):
+            continue
+        location_id = str(record.get("location_id") or "").strip()
+        if location_id:
+            fatal.add(location_id)
+            continue
+        location_name = str(record.get("location") or "").strip()
+        if not location_name:
+            continue
+        resolved = find_location_by_name(location_name) or {}
+        resolved_id = str(resolved.get("id") or "").strip()
+        if resolved_id:
+            fatal.add(resolved_id)
+    return fatal
+
+
 def _next_hop_toward(current_id: str, target_id: str) -> Optional[dict]:
     """BFS pequeno no mapa público; devolve somente o próximo passo adjacente."""
     if not current_id or not target_id or current_id == target_id:
@@ -439,6 +462,10 @@ class Explorador(_Base):
 
     def combat_decision(self, state, rng):
         connections = sorted(_connections(_current_id(state)), key=lambda c: c["id"])
+        safe = [c for c in connections if c["id"] not in _fatal_location_ids(state)]
+        # Fugir permanece prioritário; se toda saída tiver histórico fatal, usar
+        # uma delas ainda é mais prudente do que bloquear a evasão em combate.
+        connections = safe or connections
         destination = connections[rng.randrange(len(connections))] if connections else None
         suffix = f" rumo a {destination['name']}" if destination else ""
         return ProfileDecision(
@@ -452,6 +479,7 @@ class Explorador(_Base):
         world = state.get("world") or {}
         cur = _current_id(state)
         visited = set(world.get("visited") or [])
+        fatal = _fatal_location_ids(state)
 
         # memória curta das últimas localizações (maxlen 4) p/ evitar backtrack
         recent = getattr(self, "_recent", None)
@@ -463,12 +491,15 @@ class Explorador(_Base):
         prev = recent[-2] if len(recent) >= 2 else None
 
         # 1. interior AINDA NÃO visitado -> entrar (fronteira interior)
-        novos_int = [i for i in interiors_of(cur) if i["id"] not in visited]
+        novos_int = [
+            i for i in interiors_of(cur)
+            if i["id"] not in visited and i["id"] not in fatal
+        ]
         if novos_int:
             alvo = sorted(novos_int, key=lambda c: c["id"])[rng.randrange(len(novos_int))]
             return f"Entro em {alvo['name']}."
 
-        conns = _connections(cur)
+        conns = [c for c in _connections(cur) if c["id"] not in fatal]
         if not conns:
             return "Observo os arredores com atenção."
 

@@ -1015,6 +1015,7 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
             "canonical_turn": row.get("death_turn"),
             "timeline_epoch": row.get("epoch"),
             "location": row.get("location"),
+            "location_id": row.get("location_id"),
             "cause": row.get("cause"),
         } for row in continuity_deaths]
     if not deaths_log and (final.get("death_pending") or final.get("game_over")):
@@ -1028,6 +1029,7 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
                 or (turn_records[-1].get("turn") if turn_records else None)
             ),
             "location": death_payload.get("location"),
+            "location_id": (final.get("world") or {}).get("current_location_id"),
             "cause": death_payload.get("killer"),
         }]
 

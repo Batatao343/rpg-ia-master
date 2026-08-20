@@ -1,6 +1,19 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
-> **▶ RETOMADA DA SESSÃO 55 (2026-08-20): DeepSeek recarregado.** O preset
+> **▶ RETOMADA DA SESSÃO 55 (2026-08-20): DeepSeek recarregado.** A tentativa
+> `20260820-185627-750638` validou o par normal em **200/200**, com 542 sucessos
+> reais, custo US$ 0,15344, zero erro/invariante `error`/erro de observabilidade;
+> houve três warnings do mesmo NPC remoto, reservado à análise formal da A. O
+> explorador chegou a 71 turnos, mas três invocações independentes expiraram no
+> antigo timeout DeepSeek de 12 s no turno 71. Antes disso, nove mortes revelaram
+> reincidência em local fatal (cinco seguidas na Fortaleza de Vorr). As specs
+> `deepseek-paid-timeout-longrun`, `explorador-aprende-com-mortes` e
+> `playtest-matrix-single-flight` implementam, respectivamente: janela isolada
+> de 40 s sem mudar produção; `location_id` no histórico e filtro prudente do
+> perfil; lock atômico local que impede matrizes concorrentes. Gate offline:
+> **1608 passed, 16 skipped, 14 deselected**. A1 deve reiniciar do par 1.
+>
+> **Histórico da retomada:** O preset
 > `deepseek-paid` isola `deepseek-v4-flash` nos tiers CLASSIFY/FAST/SMART, sem
 > misturar provider ou MockLLM. Preflight real estruturado passou 3/3 após a
 > recarga. A primeira retomada A1 (`20260820-180632-012432`) foi corretamente
@@ -17,7 +30,7 @@
 > imediatamente; o teto agora é de três gerações totais. Falha HTTP/quota segue
 > fail-fast, sem fallback determinístico. Gate: **1600 passed, 16 skipped, 14
 > deselected** e preflight DeepSeek 3/3. Também foi encerrado um processo Groq
-> órfão; falta single-flight no harness, achado reservado às specs pós-A. A1
+> órfão; o single-flight correspondente agora está implementado. A1
 > reinicia do par 1; B repetirá exatamente pares, níveis, seeds e tetos.
 
 > **🚧 SESSÃO 55 (2026-08-20): ciclo pareado 10×200 em execução.** Os seis

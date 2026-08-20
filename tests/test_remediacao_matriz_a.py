@@ -1,12 +1,14 @@
 from __future__ import annotations
 
+import os
+
 from langchain_core.messages import AIMessage
 
 import llm_setup
 from agents import combat
 from playtest import invariants
 from playtest.provider_profiles import (
-    ProviderPacer, ProviderPreflightError, get_routes_profile,
+    ProviderPacer, ProviderPreflightError, activated_routes_profile, get_routes_profile,
     preflight_real_routes,
 )
 from playtest.runner import CampaignResult, terminal_llm_invocation_count
@@ -119,6 +121,22 @@ def test_preset_deepseek_pago_isola_v4_flash_nos_tres_tiers():
         candidates == [["deepseek", "deepseek-v4-flash"]]
         for candidates in routes.values()
     )
+
+
+def test_preset_deepseek_pago_aplica_e_restaura_timeout(monkeypatch):
+    monkeypatch.setenv("DEEPSEEK_TIMEOUT_SECONDS", "17")
+
+    with activated_routes_profile("deepseek-paid"):
+        assert os.environ["DEEPSEEK_TIMEOUT_SECONDS"] == "40"
+
+    assert os.environ["DEEPSEEK_TIMEOUT_SECONDS"] == "17"
+
+
+def test_preset_groq_nao_altera_timeout_deepseek(monkeypatch):
+    monkeypatch.setenv("DEEPSEEK_TIMEOUT_SECONDS", "17")
+
+    with activated_routes_profile("groq-free"):
+        assert os.environ["DEEPSEEK_TIMEOUT_SECONDS"] == "17"
 
 
 def test_pacer_espaca_apenas_sucesso_groq_120b():

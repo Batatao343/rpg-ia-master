@@ -116,6 +116,19 @@ def test_resolve_continue_restaura_checkpoint_em_memoria():
     assert out["death_pending"] is False and out["game_over"] is False
 
 
+def test_restore_registra_nome_e_id_do_local_da_morte():
+    snap = _state("g", turn=10, loc="cidade_segura")
+    dead = _state("g", turn=15, loc="fortaleza_vorr")
+    dead["world"]["current_location"] = "Fortaleza de Vorr"
+    dead["death_pending"] = True
+
+    out = cp.resolve_death_choice(dead, "continue", checkpoint=snap)
+
+    death = out["continuity"]["death_history"][-1]
+    assert death["location"] == "Fortaleza de Vorr"
+    assert death["location_id"] == "fortaleza_vorr"
+
+
 def test_resolve_continue_restaura_do_disco(saves_dir):
     gid = str(uuid.uuid4())
     persistence.save_checkpoint(_state(gid, turn=10, gold=150))

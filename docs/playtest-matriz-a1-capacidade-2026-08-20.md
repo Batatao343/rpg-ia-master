@@ -117,10 +117,42 @@ por PID sem tocar na árvore DeepSeek. O harness hoje não impede duas matrizes
 ativas ao mesmo tempo; isso fica registrado como achado operacional de
 single-flight para a rodada formal de specs pós-A.
 
-## Dependência externa para retomar
+## A1 de 200 + 71 turnos: timeout e memória de perigo
+
+A tentativa `20260820-185627-750638` completou o par normal em 200/200: 542
+sucessos reais em 548 tentativas, custo estimado de US$ 0,15344, 24 replans,
+zero erro, zero invariante `error` e zero erro de observabilidade. Três warnings
+foram instâncias de `narrative.recycled_npc` para Mara do Sétimo Sino fora do
+local de origem; a evidência será preservada para a análise formal da matriz A.
+
+O par explorador chegou ao turno 71, com 170 sucessos em 175 tentativas, dez de
+dez conflitos encerrados e zero invariante `error`. No turno terminal, quatro
+chamadas tiveram sucesso, porém três invocações lógicas independentes expiraram
+entre 12,0 e 12,5 s (FAST structured, SMART structured e SMART plain). O limite
+de produção de 12 s é deliberadamente fail-fast para permitir fallback, mas é
+curto para o preset isolado sem fallback e para o watchdog experimental de
+120 s. A spec [`deepseek-paid-timeout-longrun`](../specs/deepseek-paid-timeout-longrun.md)
+define 40 s somente dentro do contexto `deepseek-paid` e restaura a env ao sair.
+
+Antes da falha de capacidade, o explorador morreu nove vezes. As últimas cinco
+mortes ocorreram na Fortaleza de Vorr: o checkpoint retornava a Skallgard e o
+perfil voltava a classificar Vorr como fronteira desejável. A spec
+[`explorador-aprende-com-mortes`](../specs/explorador-aprende-com-mortes.md)
+adiciona `location_id` ao ledger de morte, resolve registros legados por nome e
+exclui destinos fatais das viagens do agente. Sem saída segura ele observa em
+vez de repetir uma viagem suicida; fuga de combate continua permitida.
+
+Por fim, o processo Groq órfão deixou de ser apenas um achado: a spec
+[`playtest-matrix-single-flight`](../specs/playtest-matrix-single-flight.md)
+adiciona lock atômico por PID/host/token antes do preflight. Locks mortos ou
+inválidos são recuperados, e somente o dono remove o arquivo. Gate combinado:
+**1608 passed, 16 skipped, 14 deselected**. Como o perfil e a política do agente
+mudaram, essa tentativa não é baseline; A1 reinicia integralmente pelo par 1.
+
+## Dependência externa histórica
 
 O ambiente não possui Ollama nem LM Studio. As outras rotas configuradas estavam
 sem saldo/crédito válido na descoberta A0; Claude Sonnet disponível é caro
-demais para o teto atual. Para produzir A1 e B válidas é necessário um provider
-com capacidade para milhares de invocações ou instalar/configurar um modelo
-local compatível com structured output.
+demais para o teto atual. Naquele momento era necessário um provider com
+capacidade para milhares de invocações. O saldo DeepSeek foi posteriormente
+recarregado; a dependência está resolvida para a retomada descrita acima.

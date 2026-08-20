@@ -303,6 +303,10 @@ def _run_matrix_suite(args) -> int:
 
 
 def _cmd_matrix_suite(args) -> int:
+    from playtest.matrix_lock import (
+        MatrixAlreadyRunningError,
+        matrix_single_flight,
+    )
     from playtest.provider_profiles import (
         ProviderPreflightError,
         activated_routes_profile,
@@ -315,23 +319,28 @@ def _cmd_matrix_suite(args) -> int:
             file=sys.stderr,
         )
         return 2
-    with activated_routes_profile(args.routes_profile):
-        if args.real:
-            try:
-                proof = preflight_real_routes(
-                    min_groq_interval_seconds=args.groq_min_interval,
-                )
-            except ProviderPreflightError as exc:
-                print(f"erro: preflight LLM falhou: {exc}", file=sys.stderr)
-                return 2
-            providers = sorted({
-                event.get("provider") for event in proof.get("events", [])
-                if event.get("status") == "success"
-            })
-            print(
-                f"preflight real verde: tiers={proof['tiers']} providers={providers}"
-            )
-        return _run_matrix_suite(args)
+    try:
+        with matrix_single_flight():
+            with activated_routes_profile(args.routes_profile):
+                if args.real:
+                    try:
+                        proof = preflight_real_routes(
+                            min_groq_interval_seconds=args.groq_min_interval,
+                        )
+                    except ProviderPreflightError as exc:
+                        print(f"erro: preflight LLM falhou: {exc}", file=sys.stderr)
+                        return 2
+                    providers = sorted({
+                        event.get("provider") for event in proof.get("events", [])
+                        if event.get("status") == "success"
+                    })
+                    print(
+                        f"preflight real verde: tiers={proof['tiers']} providers={providers}"
+                    )
+                return _run_matrix_suite(args)
+    except MatrixAlreadyRunningError as exc:
+        print(f"erro: {exc}", file=sys.stderr)
+        return 2
 
 
 def main(argv=None) -> int:

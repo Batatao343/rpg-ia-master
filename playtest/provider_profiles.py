@@ -40,11 +40,16 @@ def get_routes_profile(name: str) -> dict[str, list[list[str]]]:
 @contextmanager
 def activated_routes_profile(name: Optional[str]) -> Iterator[None]:
     previous = os.environ.get("RPG_ROUTES")
+    previous_deepseek_timeout = os.environ.get("DEEPSEEK_TIMEOUT_SECONDS")
     if name:
         path = _PROFILE_FILES.get(name)
         if path is None:
             raise KeyError(f"perfil de rotas desconhecido: {name!r}")
         os.environ["RPG_ROUTES"] = str(path.resolve())
+        if name == "deepseek-paid":
+            # Exclusivo do experimento: o produto conserva seu fail-fast de 12 s,
+            # enquanto a matriz isolada pode usar parte do watchdog de 120 s.
+            os.environ["DEEPSEEK_TIMEOUT_SECONDS"] = "40"
     try:
         yield
     finally:
@@ -52,6 +57,11 @@ def activated_routes_profile(name: Optional[str]) -> Iterator[None]:
             os.environ.pop("RPG_ROUTES", None)
         else:
             os.environ["RPG_ROUTES"] = previous
+        if name == "deepseek-paid":
+            if previous_deepseek_timeout is None:
+                os.environ.pop("DEEPSEEK_TIMEOUT_SECONDS", None)
+            else:
+                os.environ["DEEPSEEK_TIMEOUT_SECONDS"] = previous_deepseek_timeout
 
 
 class ProviderPacer:

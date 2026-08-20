@@ -95,3 +95,42 @@ def test_explorador_alterna_com_terceiro_no_hub(monkeypatch):
         trail.append(cur)
     osc = sum(1 for i in range(2, len(trail)) if trail[i] == trail[i-2] and trail[i] != trail[i-1])
     assert osc == 0, f"oscilou com alternativa disponível: {trail}"
+
+
+def test_explorador_nao_retorna_ao_local_que_o_matou_por_id(monkeypatch):
+    _mk(monkeypatch, {
+        "cidade": [
+            {"id": "fatal", "name": "Fortaleza Fatal"},
+            {"id": "seguro", "name": "Bosque Seguro"},
+        ],
+    }, interiors={"cidade": []})
+    prof = pf.Explorador(); prof.reset()
+    state = {
+        "world": {"current_location_id": "cidade", "visited": ["cidade"]},
+        "continuity": {"death_history": [{"location_id": "fatal"}]},
+    }
+
+    action = prof.next_action(state, random.Random(0))
+
+    assert "Bosque Seguro" in action
+    assert "Fortaleza Fatal" not in action
+
+
+def test_explorador_resolve_local_fatal_legado_por_nome(monkeypatch):
+    _mk(monkeypatch, {
+        "cidade": [{"id": "fatal", "name": "Fortaleza Fatal"}],
+    }, interiors={"cidade": []})
+    monkeypatch.setattr(
+        gamedata, "find_location_by_name",
+        lambda name: {"id": "fatal", "name": name} if name == "Fortaleza Fatal" else None,
+    )
+    prof = pf.Explorador(); prof.reset()
+    state = {
+        "world": {"current_location_id": "cidade", "visited": ["cidade"]},
+        "continuity": {"death_history": [{"location": "Fortaleza Fatal"}]},
+    }
+
+    action = prof.next_action(state, random.Random(0))
+
+    assert "Viajo" not in action
+    assert "Fortaleza Fatal" not in action

@@ -10,8 +10,14 @@
 > foi ampliado após `20260820-182003-393045` chegar a 150 turnos e encontrar dois
 > `CampaignPlanModel=None` consecutivos; replay imediato passou. O limite é de
 > três gerações totais no mesmo provider, coberto pelo gate de 1600 testes e
-> preflight DeepSeek 3/3 antes do novo reinício A1. Single-flight do harness é
-> um achado operacional já registrado para a etapa pós-A.
+> preflight DeepSeek 3/3. A tentativa `20260820-185627-750638` completou o par
+> normal 200/200, mas o explorador terminou no turno 71 por três timeouts
+> independentes no limite de 12 s e repetiu cinco mortes na Fortaleza de Vorr.
+> As specs [timeout isolado](specs/deepseek-paid-timeout-longrun.md),
+> [memória fatal do explorador](specs/explorador-aprende-com-mortes.md) e
+> [single-flight da matriz](specs/playtest-matrix-single-flight.md) estão
+> implementadas, com gate de 1608 testes. A1 reinicia do par 1; os três warnings
+> de NPC remoto do par normal ficam preservados para a análise formal pós-A.
 
 > **Objetivo central:** Mundo vivo persistente com estado consultável, antes de features novas.
 > 

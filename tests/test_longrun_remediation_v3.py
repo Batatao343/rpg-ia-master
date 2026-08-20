@@ -104,7 +104,7 @@ def test_summary_usa_historico_de_morte_que_nao_retrocede():
         "player": {}, "world": {}, "event_log": [],
         "continuity": {"death_history": [{
             "epoch": 2, "session_action": 31, "death_turn": 18,
-            "location": "Brekmar", "cause": "Lobo",
+            "location": "Brekmar", "location_id": "brekmar", "cause": "Lobo",
         }]},
     }
     result = CampaignResult(
@@ -115,7 +115,8 @@ def test_summary_usa_historico_de_morte_que_nao_retrocede():
     assert summary["downed_count"] == 1
     assert summary["deaths_log"][0] == {
         "turn": 31, "session_action": 31, "canonical_turn": 18,
-        "timeline_epoch": 2, "location": "Brekmar", "cause": "Lobo",
+        "timeline_epoch": 2, "location": "Brekmar", "location_id": "brekmar",
+        "cause": "Lobo",
     }
 
 

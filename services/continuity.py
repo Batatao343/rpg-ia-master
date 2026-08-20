@@ -43,7 +43,9 @@ def after_restore(dead_state: dict, restored_state: dict) -> Dict[str, Any]:
     meta = normalize(dead_state.get("continuity"), canonical_turn=dead_turn)
     combat = dead_state.get("combat") or {}
     death_context = combat.get("death_context") or {}
-    location = str((dead_state.get("world") or {}).get("current_location") or "")
+    dead_world = dead_state.get("world") or {}
+    location = str(dead_world.get("current_location") or "")
+    location_id = str(dead_world.get("current_location_id") or "")
     cause = str(death_context.get("killer") or death_context.get("cause") or "queda letal")
     record = {
         "epoch": meta["timeline_epoch"],
@@ -52,6 +54,7 @@ def after_restore(dead_state: dict, restored_state: dict) -> Dict[str, Any]:
         "restored_turn": restored_turn,
         "lost_canonical_turns": max(0, dead_turn - restored_turn),
         "location": location,
+        "location_id": location_id,
         "cause": cause,
         "retained": ["histórico de mortes", "contagem de ações da sessão"],
         "reverted": ["estado do mundo", "inventário", "posição", "memória após o checkpoint"],
