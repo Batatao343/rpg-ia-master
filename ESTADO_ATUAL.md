@@ -1,5 +1,22 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **🚧 SESSÃO 55 (2026-08-20): ciclo pareado 10×200 em execução.** Os seis
+> achados do comerciante real ganharam a spec
+> `remediacao-playtest-comerciante-real`: observação de mercado é read-only,
+> ledger de venda usa delta negativo de item, viagem limpa a cena antes de
+> encontros, contexto/aliados filtram NPC remoto, ouro narrado é reconciliado e
+> FAST tenta Groq logo após DeepSeek (timeout próprio default 12 s). O warning
+> `narrative.recycled_npc` agora exige uso observável, eliminando flag residual.
+>
+> A spec `matriz-longrun-multiperfil-niveis` adicionou `start_level=1..20` pelo
+> pipeline oficial de XP, resolução determinística de subclasse/escolhas, preparo
+> de Cartas e Ápice. `matrix-suite` fixa 10 perfis × 5 classes × níveis
+> 1/3/5/7/9/11/13/15/18/20 × seeds 6200–6209 e persiste a configuração no
+> manifesto. Smoke offline **10×3 = 30/30** (`20260820-134015-951254`) e suíte
+> completa **1578 passed, 16 skipped, 14 deselected** verdes. Próximo passo:
+> matriz A real 10×200; depois specs/fixes e matriz B exatamente pareada. Pela
+> condição do usuário, qualquer regressão nova em B interrompe o ciclo.
+
 > **✅ SESSÃO 54 (2026-08-20): comerciante 1×200 real concluído.** O preflight
 > encontrou a rota FAST do Groq apontando para `llama-3.3-70b-versatile`, modelo
 > removido; ela agora usa `openai/gpt-oss-120b`, coberto por regressão offline e
@@ -16,7 +33,7 @@
 > A auditoria de 21 turnos abriu evidência para três P1 (observação de mercado
 > parseada como compra, NPC remoto como aliado sem recrutamento e sinal visual
 > errado ao vender) e três P2 (contexto NPC residual, ouro divergente na prosa e
-> uma cauda de 47,1 s). Nenhum foi corrigido silenciosamente; aguardam specs.
+> uma cauda de 47,1 s). Foram especificados/corrigidos na sessão 55 acima.
 > Relatório: [playtest real comerciante](docs/playtest-comerciante-real-2026-08-20.md).
 > Gate final: `uv run pytest` = **1565 passed, 16 skipped, 14 deselected**.
 

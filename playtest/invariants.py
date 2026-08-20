@@ -885,22 +885,24 @@ def check_recycled_npc(state: dict, prev: Optional[dict], turn: int) -> List[Vio
     = reciclagem/flag zumbi (o 'Sobrevivente moribundo' em 3 locais; a flag
     in_scene que sobrevivia à viagem).
 
-    Mede o VAZAMENTO REAL, não a flag crua: a fonte de verdade é
-    `npc_layers.npcs_for_context` (o mesmo conjunto que o narrador vê). Só reporta
-    se o NPC gerado entra nesse conjunto E seu `home_location_id` é outro local —
-    i.e., está vazando pela via `in_scene` apesar de pertencer a outro lugar.
-    Depois do reset de cena na viagem (R1), a flag some e o invariante cala
-    sozinho."""
+    Mede USO OBSERVÁVEL, não a flag crua: só reporta quando o nome remoto aparece
+    na última narração ou entre aliados transitórios do combate. Uma flag residual
+    filtrada pelas views não produz falso positivo."""
     out: List[Violation] = []
     loc = (state.get("world") or {}).get("current_location_id", "") or ""
     if not loc:
         return out
-    try:
-        from services.npc_layers import npcs_for_context
-        in_context = set(npcs_for_context(state))
-    except Exception:
-        in_context = {n for n, npc in (state.get("npcs") or {}).items()
-                      if isinstance(npc, dict) and npc.get("in_scene")}
+    narrative = ""
+    for message in reversed(state.get("messages") or []):
+        content = getattr(message, "content", "")
+        if content and getattr(message, "type", "") != "human":
+            narrative = str(content).casefold()
+            break
+    combat_names = {
+        str(ally.get("name") or "").casefold()
+        for ally in ((state.get("combat") or {}).get("scene_allies") or [])
+        if isinstance(ally, dict)
+    }
     party_names = {c.get("name") for c in (state.get("party") or [])
                    if isinstance(c, dict)}
     for name, npc in (state.get("npcs") or {}).items():
@@ -908,7 +910,8 @@ def check_recycled_npc(state: dict, prev: Optional[dict], turn: int) -> List[Vio
             continue
         home = npc.get("home_location_id") or ""
         # Vínculo legítimo (home == loc) ou membro de party NÃO é vazamento.
-        if (npc.get("created_turn") is not None and name in in_context
+        actually_used = name.casefold() in narrative or name.casefold() in combat_names
+        if (npc.get("created_turn") is not None and actually_used
                 and name not in party_names and home and home != loc):
             out.append(_V("narrative.recycled_npc", "warning", turn,
                           f"NPC gerado '{name}' no contexto fora do local de origem "

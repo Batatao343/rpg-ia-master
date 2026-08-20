@@ -115,9 +115,9 @@ ROUTES = {
     ],
     ModelTier.FAST: [
         ("deepseek", "deepseek-v4-flash"),
+        ("groq", "openai/gpt-oss-120b"),
         ("minimax", "MiniMax-M2.5"),
         ("qwen", "qwen-plus"),
-        ("groq", "openai/gpt-oss-120b"),       # free, narração; function_calling
         ("gemini", "gemini-flash-latest"),
     ],
     ModelTier.SMART: [
@@ -215,7 +215,12 @@ def _build_openai(provider: str, temperature: float, model: str) -> "BaseLanguag
         # mantém function calling previsível nos schemas Pydantic.
         kwargs["extra_body"] = {"thinking": {"type": "disabled"}}
 
-    timeout_seconds = float(os.getenv("LLM_TIMEOUT_SECONDS", "90"))
+    global_timeout = os.getenv("LLM_TIMEOUT_SECONDS")
+    timeout_seconds = float(
+        global_timeout
+        if global_timeout is not None
+        else (os.getenv("DEEPSEEK_TIMEOUT_SECONDS", "12") if provider == "deepseek" else "90")
+    )
     return ChatOpenAI(
         model=model,
         api_key=api_key,

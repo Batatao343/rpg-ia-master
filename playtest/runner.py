@@ -230,11 +230,14 @@ class CampaignResult:
     startup_rag_events: List[dict] = field(default_factory=list)
     invariants_enabled: bool = True
     scenario: Optional[str] = None
+    start_level: int = 1
 
 
-def _resolve_profile_progression(state: dict, profile: object) -> List[dict]:
+def _resolve_profile_progression(
+    state: dict, profile: object, *, force: bool = False,
+) -> List[dict]:
     """Simula o modal de level-up apenas para perfis que optam por isso."""
-    if not getattr(profile, "resolve_progression", False):
+    if not force and not getattr(profile, "resolve_progression", False):
         return []
     import gamedata
     import progression
@@ -329,14 +332,18 @@ def resolve_class_name(raw: str) -> str:
 
 
 def _build_initial_state(profile: str, seed: int,
-                         class_name: Optional[str] = None) -> dict:
+                         class_name: Optional[str] = None,
+                         start_level: int = 1) -> dict:
     """Monta o estado inicial da campanha — MESMO shape de api.new_game."""
     from langchain_core.messages import HumanMessage, SystemMessage
     from character_creator import create_player_character
-    from gamedata import seed_factions
+    from gamedata import XP_TABLE, prepared_slots_for_level, seed_factions
     from services.chronicle import default_chapter_title
     from world_utils import starting_world
 
+    start_level = int(start_level)
+    if not 1 <= start_level <= 20:
+        raise ValueError("start_level deve estar entre 1 e 20")
     char_input = dict(_DEFAULT_CHAR)
     if class_name:
         char_input["class_name"] = resolve_class_name(class_name)
@@ -346,7 +353,7 @@ def _build_initial_state(profile: str, seed: int,
 
     game_id = str(uuid.uuid4())
     region = final_char["region"]
-    return {
+    initial = {
         "game_id": game_id,
         "narrative_summary": f"A jornada de {final_char['name']} começa em {region}.",
         "archivist_last_run": 0,
@@ -412,6 +419,41 @@ def _build_initial_state(profile: str, seed: int,
         "continuity": {"session_action_count": 0, "timeline_epoch": 0,
                        "last_checkpoint_turn": 0, "death_history": []},
     }
+    if start_level > 1:
+        import progression
+        from services import cards
+
+        player, _events = progression.grant_xp(
+            initial["player"], int(XP_TABLE[int(start_level)])
+        )
+        initial["player"] = player
+        # A subclasse é obrigatória antes das demais escolhas. Uma primeira
+        # passada pode consumi-la e deixar escolhas anteriores; repita até fixar.
+        for _ in range(25):
+            if not _resolve_profile_progression(initial, object(), force=True):
+                break
+        player = dict(initial["player"])
+        known = list(dict.fromkeys(player.get("known_cards") or []))
+        ranked = sorted(
+            known,
+            key=lambda card_id: (
+                int((cards.get_card(card_id) or {}).get("level_req", 1) or 1),
+                card_id,
+            ),
+            reverse=True,
+        )
+        player["prepared_cards"] = ranked[:prepared_slots_for_level(start_level)]
+        initial["player"] = player
+        initial["world"] = starting_world(region, start_level)
+        initial["messages"] = [
+            SystemMessage(content=f"A jornada de {final_char['name']} começa em {region}."),
+            HumanMessage(content=(
+                f"Descreva o cenário ao meu redor. Sou um "
+                f"{final_char['class_name']} de nível {start_level}."
+            )),
+        ]
+    initial["player"]["gold"] = 50 * int(start_level)
+    return initial
 
 
 # --- helpers de ambiente ----------------------------------------------------
@@ -858,7 +900,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                  max_cost: float = 0.0,
                  class_name: Optional[str] = None,
                  turn_timeout_seconds: Optional[float] = None,
-                 scenario: Optional[str] = None) -> CampaignResult:
+                 scenario: Optional[str] = None,
+                 start_level: int = 1) -> CampaignResult:
     """Joga `turns` turnos com o perfil `profile` e devolve o CampaignResult.
 
     - `on_turn_end(state, turn)` roda após cada turno; exceção conta como erro.
@@ -950,7 +993,9 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
         if rag_setter:
             rag_setter(_rag_hook)
         try:
-            state = _build_initial_state(profile, seed, class_name=class_name)
+            state = _build_initial_state(
+                profile, seed, class_name=class_name, start_level=start_level,
+            )
             if scenario_module is not None:
                 # O startup (campaign_manager/storyteller) já deve enxergar a
                 # cena dirigida; reaplicamos depois para garantir que a própria
@@ -1268,6 +1313,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
         startup_rag_events=startup_rag_events,
         invariants_enabled=invariants,
         scenario=scenario,
+        start_level=int(start_level),
     )
     campaign_violations = _campaign_experience_violations(
         profile, history, state,

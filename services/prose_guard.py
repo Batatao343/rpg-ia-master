@@ -90,6 +90,33 @@ def normalize_protagonist_voice(text: str) -> str:
     return _PROTAGONIST_THIRD_PERSON.sub("Você", str(text or ""))
 
 
+_PLAYER_GOLD_PATTERNS = (
+    re.compile(
+        r"(?i)(\b(?:voc[eê]\s+)?(?:possui|tem|carrega|restam|sobram)\s+)"
+        r"\d+(\s+moedas?\s+de\s+ouro\b)"
+    ),
+    re.compile(r"(?i)(\b(?:ouro\s+total|saldo)\s*:\s*)\d+\b"),
+    re.compile(
+        r"(?i)\b\d+(?=\s+moedas?\s+de\s+ouro\s+(?:pesando\s+)?"
+        r"(?:(?:na|em sua)\s+bolsa|no\s+fundo\s+da\s+bolsa|"
+        r"(?:no|em seu)\s+(?:cinto|bolso))\b)"
+    ),
+)
+
+
+def reconcile_player_gold_claims(text: str, gold: int) -> str:
+    """Corrige somente alegações inequívocas sobre o saldo do protagonista."""
+    value = str(text or "")
+    canonical = str(max(0, int(gold or 0)))
+    value = _PLAYER_GOLD_PATTERNS[0].sub(
+        lambda match: f"{match.group(1)}{canonical}{match.group(2)}", value
+    )
+    value = _PLAYER_GOLD_PATTERNS[1].sub(
+        lambda match: f"{match.group(1)}{canonical}", value
+    )
+    return _PLAYER_GOLD_PATTERNS[2].sub(canonical, value)
+
+
 def contains_engine_marker(text: str) -> bool:
     """True quando uma narração visível ainda contém marcador interno."""
     return bool(_ENGINE_MARKERS.search(str(text or "")))

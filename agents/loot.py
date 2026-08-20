@@ -7,6 +7,8 @@ resultado; preços, estoques, receitas e raridade de drop resolvem em Python
 e itens) morreu aqui.
 """
 import random
+import re
+import unicodedata
 from typing import List, Literal, Optional
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
@@ -21,7 +23,9 @@ from state import GameState
 
 class TradeIntent(BaseModel):
     """A IA traduz a fala livre em UMA transação canônica (Python resolve)."""
-    mode: Literal["buy", "sell", "craft"] = Field(description="buy=comprar, sell=vender, craft=forjar/criar.")
+    mode: Literal["buy", "sell", "craft", "observe"] = Field(
+        description="buy=comprar, sell=vender, craft=forjar/criar, observe=consultar sem transacionar."
+    )
     item_ref: str = Field(description="Nome do item/receita como o jogador disse. NÃO invente.")
     qty: int = Field(default=1, description="Quantidade (default 1).")
 
@@ -53,7 +57,24 @@ def _validated_narrative(canonical_summary: dict, proposed_text: str) -> str:
 
 def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeIntent:
     """FAST + guard de FallbackLLM (isinstance). Fallback: heurística por fonte."""
-    default_mode = "craft" if loot_source == "CRAFT" else "buy"
+    folded = "".join(
+        ch for ch in unicodedata.normalize("NFD", str(text or "").lower())
+        if not unicodedata.combining(ch)
+    )
+    # Uma intenção transacional explícita vence palavras como "preço"/"estoque".
+    explicit_mode = next((mode for mode, pattern in (
+        ("sell", r"\b(?:vendo|vender|venda)\b"),
+        ("craft", r"\b(?:forjo|forjar|fabrico|fabricar|crio|criar|melhoro|melhorar)\b"),
+        ("buy", r"\b(?:compro|comprar|compra|adquiro|adquirir)\b"),
+    ) if re.search(pattern, folded)), None)
+    if explicit_mode is None and loot_source == "SHOP" and re.search(
+        r"\b(?:examino|confiro|consulto|observo|reviso|anoto|comparo|"
+        r"estoque|precos?|margem|ofertas?|escassez|catalogo|cotacao)\b",
+        folded,
+    ):
+        return TradeIntent(mode="observe", item_ref="mercado", qty=1)
+
+    default_mode = explicit_mode or ("craft" if loot_source == "CRAFT" else "buy")
     fallback = TradeIntent(mode=default_mode, item_ref=text[:60] or "item", qty=1)
     try:
         llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
@@ -65,7 +86,7 @@ def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeI
         res = llm.with_structured_output(TradeIntent).invoke(
             [sys, HumanMessage(content=text or "negociar")])
         if isinstance(res, TradeIntent) and res.item_ref:
-            return res
+            return res.model_copy(update={"mode": explicit_mode}) if explicit_mode else res
     except Exception as e:
         print(f"⚠️ [TRADE PARSE] {e}")
     return fallback
@@ -132,6 +153,28 @@ def loot_node(state: GameState):
     if loot_source in ("CRAFT", "SHOP"):
         intent = _parse_trade_intent(state, loot_source, text)
         market_before = economy.public_market_snapshot(work_state)
+        if intent.mode == "observe":
+            if not market_before:
+                system = "[SISTEMA] Não há mercado disponível neste local."
+            else:
+                quotes = market_before.get("quotes") or []
+                rows = [
+                    f"- {q.get('item_name', q.get('item_id', 'item'))}: "
+                    f"compra {int(q.get('buy_price', 0) or 0)} / "
+                    f"venda {int(q.get('sell_price', 0) or 0)} moedas "
+                    f"(estoque {int(q.get('stock', 0) or 0)})"
+                    for q in quotes[:12]
+                ]
+                system = (
+                    f"[SISTEMA] Mercado de {market_before.get('merchant_name', 'mercador')} "
+                    "(consulta sem transação):\n" + ("\n".join(rows) or "- Sem ofertas.")
+                )
+            return {
+                "messages": [AIMessage(content=system)],
+                "world": world,
+                "loot_source": None,
+                "archive_due": False,
+            }
         gold_before = int(player.get("gold", 0) or 0)
         inventory_before = list(player.get("inventory") or [])
         if intent.mode == "craft":
@@ -180,8 +223,8 @@ def loot_node(state: GameState):
                     "last_economy_action": public_action}
 
         delta = int(outcome.get("gold_delta", 0))
-        sistema = (f"[SISTEMA] {'+' if outcome['mode'] == 'sell' else ''}"
-                   f"{outcome['qty']}x {outcome['item_name']}"
+        item_delta = -int(outcome["qty"]) if outcome["mode"] == "sell" else int(outcome["qty"])
+        sistema = (f"[SISTEMA] {item_delta:+d}x {outcome['item_name']}"
                    f" | Ouro {'+' if delta >= 0 else ''}{delta}"
                    f" (total {outcome['player'].get('gold', 0)})")
         resumo = (f"{outcome['mode'].upper()}: {outcome['qty']}x {outcome['item_name']}, "

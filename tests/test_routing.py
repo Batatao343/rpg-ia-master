@@ -166,6 +166,23 @@ def test_deepseek_v4_desliga_thinking_e_aplica_timeout(monkeypatch):
     assert captured["extra_body"] == {"thinking": {"type": "disabled"}}
 
 
+def test_deepseek_timeout_curto_por_padrao(monkeypatch):
+    import langchain_openai
+
+    captured = {}
+    monkeypatch.setattr(
+        langchain_openai, "ChatOpenAI",
+        lambda **kwargs: captured.update(kwargs) or object(),
+    )
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "test-key")
+    monkeypatch.delenv("LLM_TIMEOUT_SECONDS", raising=False)
+    monkeypatch.setenv("DEEPSEEK_TIMEOUT_SECONDS", "11")
+
+    llm_setup._build_openai("deepseek", 0.0, "deepseek-v4-flash")
+
+    assert captured["timeout"] == 11.0
+
+
 def test_timeout_global_tambem_alcanca_anthropic_e_gemini(monkeypatch):
     import langchain_anthropic
     import langchain_google_genai

@@ -105,6 +105,8 @@ def begin_run(
     invariants_enabled: bool = True,
     scenario: Optional[str] = None,
     seeds_by_profile: Optional[Dict[str, int]] = None,
+    start_level: int = 1,
+    campaign_matrix: Optional[List[dict]] = None,
 ) -> dict:
     """Cria o manifesto antes da primeira campanha.
 
@@ -134,6 +136,8 @@ def begin_run(
             "class_name": class_name,
             "invariants_enabled": bool(invariants_enabled),
             "scenario": scenario,
+            "start_level": int(start_level),
+            "campaign_matrix": list(campaign_matrix or []),
         },
         "campaigns": {},
     }
@@ -1248,6 +1252,7 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         "scenario": getattr(result, "scenario", None),
         "seed": result.seed,
         "class_name": player.get("class_name") or None,
+        "start_level": int(getattr(result, "start_level", 1) or 1),
         "entropy": {
             "spent_total": spent_total,
             "spent_per_combat_turn": spent_per_combat_turn,
@@ -1454,6 +1459,8 @@ def persist_campaign(run_id: str, result: CampaignResult,
         campaigns[stem] = {
             "profile": result.profile,
             "seed": result.seed,
+            "class_name": summary.get("class_name"),
+            "start_level": int(summary.get("start_level", 1) or 1),
             "game_id": summary.get("game_id") or "",
             "save_path": summary.get("save_path") or "",
             "turns_requested": requested,

@@ -555,6 +555,14 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
   observa só o mercado atual; 5×200 revalidados em 2026-08-20 com 1.000/1.000,
   zero erro/violação e 38 transações. O 1×200 real `20260820-112050-208317`
   completou com `mock=false`, zero erro e US$ 0,162860.
+- [x] **Remediação do comerciante real — implementação offline verde**
+  ([spec](specs/remediacao-playtest-comerciante-real.md)): consulta read-only,
+  ledger visual, isolamento de cena/NPC, saldo narrativo e fallback FAST.
+  Aceite real será absorvido pela matriz A abaixo.
+- [ ] **Matriz pareada multiperfil/multinível 10×200 A/B — em execução**
+  ([spec](specs/matriz-longrun-multiperfil-niveis.md)): `start_level` canônico,
+  10 pares fixos em cinco classes e níveis 1–20. Smoke offline 10×3 verde;
+  pendem A real, specs/fixes dos achados e B pareada com stop em regressão nova.
 - [x] **5.2 — Invariantes de estado** ([spec](specs/fase-5.2-invariantes.md)):
   `playtest/invariants.py` — `check_all(state, prev_state)` puro plugado no
   runner. HP válido, ouro ≥ 0, item único sem dupe, NPC morto não fala, fação

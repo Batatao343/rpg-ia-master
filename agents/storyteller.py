@@ -358,6 +358,15 @@ def storyteller_node(state: GameState):
                 f"O jogador DESCANSOU. O tempo avançou para {clock_label(world)} e ele recuperou parte das forças. "
                 "Narre a passagem do tempo e o estado do mundo ao acordar."
             )
+    # Viagem fecha a cena anterior antes de qualquer encontro ou contexto. Isso
+    # também protege retornos antecipados de combate contra NPCs teleportados.
+    from services import npc_layers
+    scene_npcs = (
+        npc_layers.reset_scene(state.get("npcs", {}))
+        if dest else state.get("npcs", {})
+    )
+    scene_state = {**state, "world": world, "npcs": scene_npcs}
+
     # (Ação livre: o gating é feito pelo PRÓPRIO narrador no prompt — sem chamada extra ao Ruler.)
 
     # --- O tempo passou (viagem/descanso): ou cai em encontro, ou o mundo "respira" ---
@@ -434,6 +443,7 @@ def storyteller_node(state: GameState):
                     ),
                     "next": "combat_agent",
                     "archive_due": True,  # emboscada = evento relevante
+                    "npcs": scene_npcs,
                 }
                 if rested_player is not None:
                     updates["player"] = rested_player  # já curou no descanso antes da emboscada
@@ -486,13 +496,14 @@ def storyteller_node(state: GameState):
     # spec encontros-dedupe (R1): só NPCs vinculados ao local/em cena/party —
     # NPC gerado em outro lugar não é reciclado nesta cena.
     from services.npc_layers import npcs_for_context
-    existing_npcs = npcs_for_context(state)
+    scene_state = {**scene_state, "world": world}
+    existing_npcs = npcs_for_context(scene_state)
     
     # --- Contexto Híbrido ---
     game_id = state.get("game_id")
     # --- Fase 2.8: contexto centralizado (estado dinâmico + lore + memória, com budget) ---
     # ESTADO ATUAL entra ANTES da lore base: a verdade viva vence o canônico.
-    pack = build_context_pack(state, query=f"{loc} {last_user_input}",
+    pack = build_context_pack(scene_state, query=f"{loc} {last_user_input}",
                               purpose="story", game_id=game_id)
     lore_context = pack.lore_block or "Dark Fantasy Genérica."
     memoria_recente = pack.memory_block or "Sem memória recente dentro do budget deste turno."
@@ -545,12 +556,12 @@ def storyteller_node(state: GameState):
     ) or "Nenhuma fação conhecida pelo jogador ainda."
 
     # Fase 2.6: ids canônicos que o LLM pode usar em proposed_events (defesa em profundidade).
-    entidades_canonicas = _scene_canonical_entities(state, factions, intel, loc)
+    entidades_canonicas = _scene_canonical_entities(scene_state, factions, intel, loc)
     # Fase 3.3: quests ativas que o LLM pode concluir via proposed_events(quest_completed).
     quests_ativas = _quests_ativas_block(state.get("quests", []))
 
     # spec npc-fallback-sem-alvo (R2): rota NPC sem interlocutor delegou aqui.
-    npc_fallback_clause = _npc_fallback_clause(state)
+    npc_fallback_clause = _npc_fallback_clause(scene_state)
     # spec polish-prosa: R1 (varie a abertura) + R3 (menu de opções concretas).
     from services import prose_guard
     _aberturas = prose_guard.ultimas_aberturas(messages)
@@ -558,6 +569,16 @@ def storyteller_node(state: GameState):
     opcoes_clause = ("\n    - FECHE com 2 a 3 OPÇÕES concretas de ação, cada uma numa "
                      "linha iniciada por '— ', e termine com '— Ou outra ação.' "
                      "(dê rumo ao jogador; as opções mecânicas de combate vêm à parte).")
+    _hero = state.get("player", {}) or {}
+    hero_state_block = (
+        "<ESTADO_DO_HEROI>\n"
+        f"Nível: {int(_hero.get('level', 1) or 1)} · "
+        f"Vitalidade: {int(_hero.get('vitalidade', _hero.get('hp', 0)) or 0)}/"
+        f"{int(_hero.get('max_vitalidade', _hero.get('max_hp', 0)) or 0)} · "
+        f"Ouro: {int(_hero.get('gold', 0) or 0)}\n"
+        "Se mencionar o saldo do herói, use EXATAMENTE esse Ouro.\n"
+        "</ESTADO_DO_HEROI>"
+    )
 
     sys = SystemMessage(content=f"""
     <PERSONA>
@@ -573,6 +594,7 @@ def storyteller_node(state: GameState):
     </EVENTOS_DESTE_TURNO>
     {luz_block}
     {clima_block}
+    {hero_state_block}
 
     <FACÇÕES_CONHECIDAS>
     {faccoes_conhecidas}
@@ -685,6 +707,9 @@ def storyteller_node(state: GameState):
                 (travel_note, rest_note, world_note, faction_note, weather_note), _ll,
             )
         narrative_text = prose_guard.sanitize_player_facing(str(narrative_text))
+        narrative_text = prose_guard.reconcile_player_gold_claims(
+            narrative_text, int((state.get("player") or {}).get("gold", 0) or 0)
+        )
         if invalid_story_events:
             # Não há fact-check semântico confiável frase a frase. Em vez de
             # deixar a alegação rejeitada sobreviver, usa somente consequências
@@ -761,11 +786,7 @@ def storyteller_node(state: GameState):
 
         # spec npcs-3-camadas (R5): viagem zera a cena (ninguém teleporta junto);
         # introduced_npcs entram em cena; npcs_left_scene saem.
-        from services import npc_layers
-        npcs = state.get("npcs", {})
-        if dest:
-            npcs = npc_layers.reset_scene(npcs)
-        new_npcs = npcs
+        new_npcs = scene_npcs
         home_id = world.get("current_location_id", "")
         _turn = int(world.get("turn_count", 0) or 0)
         introduced_npcs = (

@@ -277,9 +277,9 @@ def render_markdown(report: RunReport) -> str:
         L.append("")
         # spec playtest-agente-curioso-entropia (R5): colunas de GASTO real
         # (%ativa, gasto/turno) no lugar do snapshot degenerado.
-        L.append("| perfil | classe | turnos | mortes | nível | %ativa | "
+        L.append("| perfil | classe | início | turnos | mortes | nível final | %ativa | "
                  "gasto/turno | starvation | flooding | Carga pico | Carga final | patamar |")
-        L.append("|---|---|---|---|---|---|---|---|---|---|---|---|")
+        L.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
         for s in with_class:
             ent = s.get("entropy") or {}
 
@@ -290,7 +290,7 @@ def render_markdown(report: RunReport) -> str:
                 return f"{v:.2f}" if isinstance(v, (int, float)) else "—"
             L.append(
                 f"| {s.get('profile','?')} | {s.get('class_name','?')} "
-                f"| {s.get('turns_completed',0)} | {s.get('deaths',0)} "
+                f"| {s.get('start_level',1)} | {s.get('turns_completed',0)} | {s.get('deaths',0)} "
                 f"| {s.get('final_level',1)} "
                 f"| {_p(ent.get('pct_combat_turns_ability_used'))} "
                 f"| {_n(ent.get('spent_per_combat_turn'))} "

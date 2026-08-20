@@ -242,6 +242,7 @@ def scene_allies(state: Dict, *, excluded: Optional[List[str]] = None) -> List[D
     hostile = {f.get("id") for f in (state.get("factions") or [])
                if isinstance(f, dict) and f.get("disposition") == "hostil"}
     already = set()
+    loc = str((state.get("world") or {}).get("current_location_id") or "")
     for c in (state.get("party") or []):
         if isinstance(c, dict):
             already.add(c.get("origin_npc") or "")
@@ -249,6 +250,9 @@ def scene_allies(state: Dict, *, excluded: Optional[List[str]] = None) -> List[D
     out: List[Dict] = []
     for name, npc in (state.get("npcs") or {}).items():
         if not isinstance(npc, dict) or not is_in_scene(npc):
+            continue
+        home = str(npc.get("home_location_id") or "")
+        if home and loc and home != loc:
             continue
         identity = {name, npc.get("name", ""), npc.get("id", "")}
         if any(_fold(value) in excluded_folded for value in identity if value):

@@ -22,9 +22,9 @@ def test_context_exclui_npc_de_outro_local():
     assert "Bruxa Distante" not in got    # de outro local, fora de cena
 
 
-def test_in_scene_sempre_entra():
+def test_in_scene_remoto_nao_entra():
     npcs = {"Viajante": {"home_location_id": "outro_lugar", "in_scene": True}}
-    assert "Viajante" in npcs_for_context(_state(npcs))
+    assert "Viajante" not in npcs_for_context(_state(npcs))
 
 
 def test_party_sempre_entra():
@@ -43,12 +43,11 @@ def test_npc_sem_vinculo_fora_de_cena_nao_entra():
 
 # --- R4: invariante ---------------------------------------------------------
 
-def test_invariante_recycled_npc_dispara():
+def test_invariante_recycled_npc_flag_residual_nao_dispara():
     npcs = {"Sobrevivente moribundo": {"created_turn": 5, "in_scene": True,
                                        "home_location_id": "caverna_morrakh"}}
     viol = inv.check_recycled_npc(_state(npcs, loc="anel_dourado"), None, 11)
-    assert viol and viol[0].check_id == "narrative.recycled_npc"
-    assert viol[0].severity == "warning"
+    assert viol == []
 
 
 def test_invariante_recycled_npc_ok_no_proprio_local():
@@ -74,10 +73,13 @@ def test_recycled_npc_nao_dispara_fora_de_contexto():
 
 
 def test_recycled_npc_dispara_no_vazamento_real():
-    # NPC gerado in_scene (vaza pro contexto) de outro local → dispara.
+    # Só dispara quando a entidade remota foi materialmente usada na saída.
+    from langchain_core.messages import AIMessage
     npcs = {"Andarilho": {"created_turn": 4, "in_scene": True,
                           "home_location_id": "caverna_morrakh"}}
-    viol = inv.check_recycled_npc(_state(npcs, loc="anel_dourado"), None, 9)
+    state = _state(npcs, loc="anel_dourado")
+    state["messages"] = [AIMessage(content="Andarilho ergue a espada ao seu lado.")]
+    viol = inv.check_recycled_npc(state, None, 9)
     assert viol and viol[0].check_id == "narrative.recycled_npc"
 
 

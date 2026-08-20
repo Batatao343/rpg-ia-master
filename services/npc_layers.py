@@ -94,8 +94,11 @@ def npcs_in_scene(state: Dict) -> List[str]:
     `waiting`). Ordem: NPCs da cena primeiro, depois aliados. Usado para
     resolver alvo quando o router não nomeou ninguém."""
     out: List[str] = []
+    loc = str((state.get("world") or {}).get("current_location_id") or "")
     for name, npc in (state.get("npcs") or {}).items():
-        if isinstance(npc, dict) and is_in_scene(npc) and name not in out:
+        home = str(npc.get("home_location_id") or "") if isinstance(npc, dict) else ""
+        if (isinstance(npc, dict) and is_in_scene(npc)
+                and (not home or not loc or home == loc) and name not in out):
             out.append(name)
     for c in state.get("party") or []:
         if (isinstance(c, dict) and c.get("active")
@@ -124,10 +127,13 @@ def npcs_for_context(state: Dict) -> List[str]:
     for name, npc in (state.get("npcs") or {}).items():
         if not isinstance(npc, dict):
             continue
-        if is_in_scene(npc) or name in party_names:
+        home = npc.get("home_location_id") or ""
+        if name in party_names:
             out.append(name)
             continue
-        home = npc.get("home_location_id") or ""
+        if is_in_scene(npc) and (not home or not loc or home == loc):
+            out.append(name)
+            continue
         if home and loc and home == loc:
             out.append(name)
     return out
