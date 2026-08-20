@@ -394,7 +394,11 @@ def main(argv=None) -> int:
     px.add_argument("--max-requests", type=int, default=0)
     px.add_argument("--max-cost", type=float, default=0.0)
     px.add_argument("--turn-timeout", type=float, default=None)
-    px.add_argument("--routes-profile", choices=("groq-free",), default=None)
+    px.add_argument(
+        "--routes-profile",
+        choices=("deepseek-paid", "groq-free"),
+        default=None,
+    )
     px.add_argument(
         "--groq-min-interval", type=float, default=12.0,
         help="intervalo mínimo entre tentativas Groq 120b no playtest real",

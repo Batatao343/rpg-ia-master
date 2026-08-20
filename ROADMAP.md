@@ -1,5 +1,9 @@
 # ROADMAP — RPG IA (Revisado 2026-08-20)
 
+> **Matriz A1 retomada:** saldo DeepSeek renovado; preset `deepseek-paid`
+> exclusivo passou preflight real nos três tiers. A1/B usarão esse mesmo perfil
+> com fail-closed, teto de US$ 0,25/800 requests por campanha e seeds pareadas.
+
 > **Objetivo central:** Mundo vivo persistente com estado consultável, antes de features novas.
 > 
 > **Princípio:** Lore base (Codex) ≠ Eventos confirmados (event_log) ≠ Estado atual (world_projection).  

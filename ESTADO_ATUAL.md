@@ -1,5 +1,12 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **▶ RETOMADA DA SESSÃO 55 (2026-08-20): DeepSeek recarregado.** O preset
+> `deepseek-paid` isola `deepseek-v4-flash` nos tiers CLASSIFY/FAST/SMART, sem
+> misturar provider ou MockLLM. Preflight real estruturado passou 3/3 após a
+> recarga; suíte completa **1595 passed, 16 skipped, 14 deselected**. Próximo
+> comando é a A1 10×200 com fail-closed e os mesmos pares,
+> níveis, seeds e tetos; B deverá repetir exatamente o preset aprovado.
+
 > **🚧 SESSÃO 55 (2026-08-20): ciclo pareado 10×200 em execução.** Os seis
 > achados do comerciante real ganharam a spec
 > `remediacao-playtest-comerciante-real`: observação de mercado é read-only,

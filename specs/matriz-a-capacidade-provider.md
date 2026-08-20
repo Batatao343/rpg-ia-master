@@ -16,9 +16,10 @@ US$ 0,25 no turno final.
 
 - **R1:** `matrix-suite --real` executa preflight estruturado nos três tiers antes
   de criar o manifesto; falha não inicia campanha.
-- **R2:** preset explícito `groq-free` fixa CLASSIFY no 20b e FAST/SMART no 120b,
-  com fallback intra-provider para o 20b quando o 120b rejeitar um tool call;
-  não há candidato determinístico nem provider pago.
+- **R2:** presets explícitos isolam a capacidade usada pelo experimento:
+  `groq-free` fixa CLASSIFY no 20b e FAST/SMART no 120b, com fallback
+  intra-provider para o 20b; `deepseek-paid` fixa os três tiers em
+  `deepseek-v4-flash`. Nenhum preset inclui MockLLM ou mistura contas/providers.
 - **R3:** o harness pode espaçar sucessos Groq 120b por intervalo configurável,
   apenas em playtest real, para respeitar TPM sem alterar o motor de produção.
 - **R4:** manifesto registra preset e intervalo; A↔B repete ambos.
@@ -32,6 +33,8 @@ US$ 0,25 no turno final.
 - [x] Preflight fake cobre sucesso/falha nos três tiers.
 - [x] Regressão prova que prefill por `AIMessage` termina em tool call estruturado.
 - [x] Preset contém somente Groq e não usa MockLLM.
+- [x] Preset `deepseek-paid` contém somente DeepSeek V4 Flash nos três tiers;
+  preflight real CLASSIFY/FAST/SMART verde em 2026-08-20.
 - [x] Pacer não atua no mock nem em outro modelo e espaça 120b no real.
 - [x] Matrix curta offline e suíte completa verdes.
 - [ ] A1 real completa 10×200 sem invocação terminal.

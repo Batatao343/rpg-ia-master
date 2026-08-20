@@ -111,6 +111,16 @@ def test_preset_groq_free_nao_tem_outro_provider():
     assert routes["smart"][-1] == ["groq", "openai/gpt-oss-20b"]
 
 
+def test_preset_deepseek_pago_isola_v4_flash_nos_tres_tiers():
+    routes = get_routes_profile("deepseek-paid")
+
+    assert set(routes) == {"classify", "fast", "smart"}
+    assert all(
+        candidates == [["deepseek", "deepseek-v4-flash"]]
+        for candidates in routes.values()
+    )
+
+
 def test_pacer_espaca_apenas_sucesso_groq_120b():
     now = [100.0]
     sleeps = []

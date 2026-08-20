@@ -1,0 +1,5 @@
+{
+  "classify": [["deepseek", "deepseek-v4-flash"]],
+  "fast": [["deepseek", "deepseek-v4-flash"]],
+  "smart": [["deepseek", "deepseek-v4-flash"]]
+}

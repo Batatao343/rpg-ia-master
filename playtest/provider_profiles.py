@@ -15,7 +15,10 @@ from llm_setup import ModelTier
 
 
 _ROUTES_DIR = Path(__file__).with_name("routes")
-_PROFILE_FILES = {"groq-free": _ROUTES_DIR / "groq_free.json"}
+_PROFILE_FILES = {
+    "deepseek-paid": _ROUTES_DIR / "deepseek_paid.json",
+    "groq-free": _ROUTES_DIR / "groq_free.json",
+}
 
 
 class ProviderPreflightError(RuntimeError):
