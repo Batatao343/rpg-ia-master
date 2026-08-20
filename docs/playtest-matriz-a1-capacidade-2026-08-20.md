@@ -94,6 +94,29 @@ monotônicos na mesma invocação, portanto um `invalid_structured` recuperado p
 `success` não vira falso terminal. Gate: 1600 testes verdes; preflight real
 DeepSeek CLASSIFY/FAST/SMART 3/3.
 
+## A1 de 150 turnos e terceira geração semântica
+
+O run `20260820-182003-393045` avançou 150 turnos do par normal antes de
+encerrar. Foram 374 sucessos reais em 382 tentativas, custo estimado de
+US$ 0,10696, p95 de 21,8 s, zero invariante `error`, zero warning e zero erro de
+observabilidade. Sete combates encerraram corretamente; houve duas mortes com
+restore seguro. O erro terminal ocorreu em um replan: duas gerações SMART
+consecutivas retornaram `None` para `CampaignPlanModel`; CLASSIFY e FAST do
+mesmo turno tiveram sucesso.
+
+Um replay imediato de `_build_plan` sobre o save exato teve sucesso na primeira
+geração e retornou cinco beats. A falha era transitória, não incompatibilidade
+de schema. O limite passou a três gerações totais — no máximo duas
+regenerações — no mesmo provider/modelo. O client continua `max_retries=0` para
+HTTP/quota/timeout. A suíte permanece em 1600 testes verdes e o novo preflight
+DeepSeek passou 3/3.
+
+Durante o monitoramento também foi encontrado um processo Groq antigo ainda
+vivo, referente à matriz invalidada `20260820-155300-494278`. Ele foi encerrado
+por PID sem tocar na árvore DeepSeek. O harness hoje não impede duas matrizes
+ativas ao mesmo tempo; isso fica registrado como achado operacional de
+single-flight para a rodada formal de specs pós-A.
+
 ## Dependência externa para retomar
 
 O ambiente não possui Ollama nem LM Studio. As outras rotas configuradas estavam

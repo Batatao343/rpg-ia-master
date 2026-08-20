@@ -10,9 +10,14 @@
 > inválido. Gate pós-fix: **1597 passed, 16 skipped, 14 deselected**. O reinício
 > `20260820-181149-643772` encontrou no turno 1 um `WorldPulse=None` isolado
 > após seis sucessos reais. A spec `structured-output-retry-provider` agora
-> regenera structured output inválido exatamente uma vez no mesmo provider;
-> falha HTTP/quota continua fail-fast, sem fallback determinístico. Gate:
-> **1600 passed, 16 skipped, 14 deselected** e preflight DeepSeek 3/3. A1
+> regenera structured output inválido no mesmo provider. O run
+> `20260820-182003-393045` avançou 150 turnos limpos (374 sucessos, zero
+> violação/observabilidade, 7/7 combates encerrados), mas duas gerações SMART
+> consecutivas retornaram `CampaignPlanModel=None`. Replay do mesmo save passou
+> imediatamente; o teto agora é de três gerações totais. Falha HTTP/quota segue
+> fail-fast, sem fallback determinístico. Gate: **1600 passed, 16 skipped, 14
+> deselected** e preflight DeepSeek 3/3. Também foi encerrado um processo Groq
+> órfão; falta single-flight no harness, achado reservado às specs pós-A. A1
 > reinicia do par 1; B repetirá exatamente pares, níveis, seeds e tetos.
 
 > **🚧 SESSÃO 55 (2026-08-20): ciclo pareado 10×200 em execução.** Os seis

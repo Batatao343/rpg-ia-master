@@ -7,8 +7,11 @@
 > turno 2; a [normalização da borda](specs/campaign-beats-overflow-provider.md)
 > está implementada. O reinício `20260820-181149-643772` revelou um
 > `WorldPulse=None`; o [retry semântico](specs/structured-output-retry-provider.md)
-> limitado a uma regeneração no mesmo provider está coberto pelo gate de 1600
-> testes e preflight DeepSeek 3/3 antes do novo reinício A1.
+> foi ampliado após `20260820-182003-393045` chegar a 150 turnos e encontrar dois
+> `CampaignPlanModel=None` consecutivos; replay imediato passou. O limite é de
+> três gerações totais no mesmo provider, coberto pelo gate de 1600 testes e
+> preflight DeepSeek 3/3 antes do novo reinício A1. Single-flight do harness é
+> um achado operacional já registrado para a etapa pós-A.
 
 > **Objetivo central:** Mundo vivo persistente com estado consultável, antes de features novas.
 > 
@@ -588,12 +591,13 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
   ([diagnóstico](docs/playtest-matriz-a1-capacidade-2026-08-20.md)). A spec
   [LLM-only fail-closed](specs/playtest-real-llm-fail-closed.md) agora aborta no
   primeiro invoke terminal. Três correções A0 ficaram `done` (Mimetismo, fuga a
-  Vitalidade 0, observabilidade); o gate tem 1594 testes e smoke 30/30. Retomada
-  foi retomada com DeepSeek. A tentativa seguinte encontrou no turno 2 um
+  Vitalidade 0, observabilidade); o gate tem 1594 testes e smoke 30/30. A1 foi
+  retomada com DeepSeek. A tentativa seguinte encontrou no turno 2 um
   payload de seis beats, agora normalizado em Python para os cinco primeiros
   pela spec `campaign-beats-overflow-provider`. O reinício seguinte achou um
-  structured output `None` isolado no simulador; uma regeneração semântica no
-  mesmo provider foi adicionada sem retry HTTP. A1 reinicia desde o par 1.
+  structured output `None` isolado no simulador. Após duas falhas seguidas no
+  turno 150 do run posterior, o limite passou a três gerações totais no mesmo
+  provider, sem retry HTTP. A1 reinicia desde o par 1.
 - [x] **5.2 — Invariantes de estado** ([spec](specs/fase-5.2-invariantes.md)):
   `playtest/invariants.py` — `check_all(state, prev_state)` puro plugado no
   runner. HP válido, ouro ≥ 0, item único sem dupe, NPC morto não fala, fação

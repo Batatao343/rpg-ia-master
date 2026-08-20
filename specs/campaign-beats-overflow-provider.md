@@ -1,6 +1,6 @@
 # SPEC — Normalização de excesso de beats do provider
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada/Atualizada:** 2026-08-20
 > **Origem:** matriz A1 DeepSeek `20260820-180632-012432`
 > **Depende de:** `matriz-a-capacidade-provider`
@@ -51,12 +51,12 @@ três beats válidos continuam inválidas.
 
 ## 5. Critérios de aceite
 
-- [ ] Seis beats válidos resultam nos cinco primeiros, na mesma ordem.
-- [ ] Espaços e entradas vazias são removidos antes do teto.
-- [ ] Menos de três beats válidos continua inválido.
-- [ ] `_build_plan` recebe o modelo normalizado sem acionar fallback.
-- [ ] `uv run pytest` verde.
-- [ ] A1 não volta a falhar por `too_long` em `CampaignPlanModel.beats`.
+- [x] Seis beats válidos resultam nos cinco primeiros, na mesma ordem.
+- [x] Espaços e entradas vazias são removidos antes do teto.
+- [x] Menos de três beats válidos continua inválido.
+- [x] `_build_plan` recebe o modelo normalizado sem acionar fallback.
+- [x] `uv run pytest` verde.
+- [x] A1 não voltou a falhar por `too_long` em 150 turnos e 21 replans.
 
 ## 6. Smoke test com LLM real
 

@@ -99,6 +99,10 @@ PROVIDER_KEY_ENV = {
 _OPENAI_COMPAT_PROVIDERS = {"groq", "qwen", "glm", "minimax", "kimi", "deepseek",
                            "openai", "openai_compat"}
 
+# Total de gerações permitidas quando a rede respondeu, mas o parser Pydantic
+# não recebeu uma tool call válida. Não se aplica a HTTP/quota/timeout.
+STRUCTURED_SEMANTIC_MAX_ATTEMPTS = 3
+
 # Stack default (R11 + achados do smoke real 2026-07-06). 1º = preferido; resto =
 # fallback em ordem. Overridable por env sem editar código (RPG_ROUTES).
 # Cada tier tem um candidato **Groq GRÁTIS** que funciona (via function_calling) —
@@ -439,7 +443,7 @@ class RoutedLLM:
         return input
 
     def _input_for_structured_retry(self, input, provider: str):
-        """Prepare one semantic regeneration after a malformed tool response.
+        """Prepare a semantic regeneration after a malformed tool response.
 
         This is separate from HTTP retries: it only runs after the provider
         answered but failed the Pydantic post-condition. The caller's message
@@ -550,9 +554,12 @@ class RoutedLLM:
                 _open_circuit_if_permanent(provider, model, e)
                 continue
             # Uma resposta HTTP válida sem o tool call/schema pedido é um erro
-            # semântico recuperável. Regenera exatamente uma vez no MESMO
+            # semântico recuperável. Regenera no máximo duas vezes no MESMO
             # provider; erros de rede/quota continuam fail-fast.
-            semantic_attempts = 2 if structured_contract is not None else 1
+            semantic_attempts = (
+                STRUCTURED_SEMANTIC_MAX_ATTEMPTS
+                if structured_contract is not None else 1
+            )
             for semantic_attempt in range(semantic_attempts):
                 request_input = (
                     self._input_for_structured_retry(input, provider)

@@ -14,38 +14,43 @@ o contrato LLM-only também encerrou corretamente a matriz. O erro é recuperáv
 por uma nova geração, não por fallback determinístico.
 
 `max_retries=0` permanece obrigatório no client: erros de rede, quota e saldo não
-devem repetir. Esta spec acrescenta exatamente uma segunda tentativa apenas após
-uma resposta de rede bem-sucedida cujo structured output seja inválido. Ela usa
-o mesmo provider/modelo, acrescenta uma instrução humana curta e mantém a
-telemetria como uma única invocação lógica.
+devem repetir. Esta spec permite até três gerações totais apenas após respostas
+de rede bem-sucedidas cujo structured output seja inválido. Ela usa o mesmo
+provider/modelo, acrescenta uma instrução humana curta e mantém a telemetria
+como uma única invocação lógica.
+
+O primeiro limite de duas gerações foi insuficiente no turno 150 do run
+`20260820-182003-393045`: ambas retornaram `None`, enquanto um replay imediato
+do mesmo planner/save teve sucesso e produziu cinco beats. Isso caracteriza
+falha transitória e justifica a terceira geração sem relaxar o fail-closed.
 
 ## 2. Requisitos
 
-- **R1:** structured output Pydantic inválido recebe exatamente um retry no
+- **R1:** structured output Pydantic inválido recebe no máximo dois retries no
   mesmo provider/modelo antes de avançar para o próximo candidato.
 - **R2:** o retry acrescenta uma mensagem humana pedindo apenas a tool call
   estruturada e não muta o input original.
-- **R3:** sucesso no retry retorna a instância Pydantic e emite eventos
-  `invalid_structured` → `success` com índices 0 → 1.
-- **R4:** se o retry também for inválido, o próximo provider é tentado com índice
-  2; esgotar todos preserva o `AIMessage` e o guard existente.
+- **R3:** sucesso após duas falhas retorna a instância Pydantic e emite eventos
+  `invalid_structured` → `invalid_structured` → `success`, índices 0 → 1 → 2.
+- **R4:** se as três gerações forem inválidas, o próximo provider é tentado com
+  índice 3; esgotar todos preserva o `AIMessage` e o guard existente.
 - **R5:** `invoke_error`, rate limit, quota, build error e chamadas plain não
   recebem retry no mesmo provider.
-- **R6:** `fell_back` só é verdadeiro ao mudar de provider; a segunda tentativa
-  local não falseia a métrica de fallback.
+- **R6:** `fell_back` só é verdadeiro ao mudar de provider; retries locais não
+  falseiam a métrica de fallback.
 - **R7:** a política vale no roteador do produto e no playtest; não altera
   mecânica nem adiciona fallback determinístico.
 
 ### Fora de escopo
 
 - Retry de falhas HTTP/rede.
-- Mais de uma regeneração semântica.
+- Mais de duas regenerações semânticas.
 - Relaxar o fail-closed da matriz real.
 
 ## 3. Design técnico
 
 - **Alterado:** `llm_setup.py` — contador monotônico por invocação, loop local
-  de no máximo duas gerações structured e helper de input corretivo.
+  de no máximo três gerações structured e helper de input corretivo.
 - **Alterado:** `tests/test_routing.py` — sucesso no retry, esgotamento/fallback,
   input imutável e ausência de retry para plain/exception.
 - A API pública de `get_llm()` e `RoutedLLM` não muda.
@@ -59,8 +64,8 @@ telemetria como uma única invocação lógica.
 
 ## 5. Critérios de aceite
 
-- [x] `None` seguido de payload válido conclui sem fallback de provider.
-- [x] Dois payloads inválidos avançam uma única vez ao próximo candidato.
+- [x] Dois `None` seguidos de payload válido concluem sem fallback de provider.
+- [x] Três payloads inválidos avançam uma única vez ao próximo candidato.
 - [x] Input original permanece inalterado e retry termina em `HumanMessage`.
 - [x] Falha HTTP e plain invoke continuam fail-fast.
 - [x] Contagem de invocação terminal permanece correta.
@@ -76,8 +81,8 @@ telemetria como uma única invocação lógica.
 
 ## 7. Riscos & compatibilidade
 
-- Um retorno inválido pode custar uma chamada adicional; o teto do playtest já
-  contabiliza cada tentativa.
+- Um retorno inválido pode custar até duas chamadas adicionais; o teto do
+  playtest contabiliza cada tentativa.
 - O retry não se aplica a 429/5xx/timeout e preserva a decisão fail-fast do
   projeto.
 - Saves e schemas persistidos não mudam.

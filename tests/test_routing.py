@@ -294,7 +294,7 @@ def test_structured_output_sucesso_devolve_instancia(monkeypatch):
     assert res.value == "ok"
 
 
-def test_structured_invalido_repete_uma_vez_no_mesmo_provider(monkeypatch):
+def test_structured_invalido_repete_duas_vezes_no_mesmo_provider(monkeypatch):
     seen_inputs = []
 
     class SequentialClient(_FakeClient):
@@ -305,7 +305,7 @@ def test_structured_invalido_repete_uma_vez_no_mesmo_provider(monkeypatch):
         def invoke(self, input):
             seen_inputs.append(input)
             self.calls += 1
-            if self.calls == 1:
+            if self.calls < 3:
                 return None
             return self._schema()
 
@@ -320,12 +320,15 @@ def test_structured_invalido_repete_uma_vez_no_mesmo_provider(monkeypatch):
     ).with_structured_output(_Tiny).invoke(original)
 
     assert isinstance(result, _Tiny)
-    assert [event.outcome for event in events] == ["invalid_structured", "success"]
-    assert [event.attempt_index for event in events] == [0, 1]
-    assert [event.fell_back for event in events] == [False, False]
+    assert [event.outcome for event in events] == [
+        "invalid_structured", "invalid_structured", "success",
+    ]
+    assert [event.attempt_index for event in events] == [0, 1, 2]
+    assert [event.fell_back for event in events] == [False, False, False]
     assert len(original) == 1
     assert isinstance(seen_inputs[1][-1], HumanMessage)
-    assert "saída estruturada" in seen_inputs[1][-1].content
+    assert isinstance(seen_inputs[2][-1], HumanMessage)
+    assert "saída estruturada" in seen_inputs[2][-1].content
 
 
 def test_structured_retry_esgotado_avanca_proximo_provider(monkeypatch):
@@ -345,10 +348,10 @@ def test_structured_retry_esgotado_avanca_proximo_provider(monkeypatch):
 
     assert isinstance(result, _Tiny)
     assert [event.outcome for event in events] == [
-        "invalid_structured", "invalid_structured", "success",
+        "invalid_structured", "invalid_structured", "invalid_structured", "success",
     ]
-    assert [event.attempt_index for event in events] == [0, 1, 2]
-    assert [event.fell_back for event in events] == [False, False, True]
+    assert [event.attempt_index for event in events] == [0, 1, 2, 3]
+    assert [event.fell_back for event in events] == [False, False, False, True]
 
 
 def test_invoke_error_nao_repete_no_mesmo_provider(monkeypatch):
@@ -387,11 +390,12 @@ def test_structured_output_invalido_tenta_proximo_provider(
 
     assert isinstance(res, _Tiny)
     assert [event.outcome for event in tentativas] == [
-        "invalid_structured", "invalid_structured", "success",
+        "invalid_structured", "invalid_structured", "invalid_structured", "success",
     ]
     assert tentativas[0].structured is True
     assert tentativas[1].fell_back is False
-    assert tentativas[2].fell_back is True
+    assert tentativas[2].fell_back is False
+    assert tentativas[3].fell_back is True
     assert [args[0] for args in sucessos_legados] == ["p2"], (
         "hook legado continua representando apenas sucesso validado"
     )
@@ -411,7 +415,7 @@ def test_structured_include_raw_exige_parsed_tipado_e_sem_erro(monkeypatch):
     assert isinstance(res["parsed"], _Tiny)
     assert res["parsing_error"] is None
     assert [event.outcome for event in tentativas] == [
-        "invalid_structured", "invalid_structured", "success",
+        "invalid_structured", "invalid_structured", "invalid_structured", "success",
     ]
 
 
