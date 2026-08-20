@@ -3,9 +3,13 @@
 > **▶ RETOMADA DA SESSÃO 55 (2026-08-20): DeepSeek recarregado.** O preset
 > `deepseek-paid` isola `deepseek-v4-flash` nos tiers CLASSIFY/FAST/SMART, sem
 > misturar provider ou MockLLM. Preflight real estruturado passou 3/3 após a
-> recarga; suíte completa **1595 passed, 16 skipped, 14 deselected**. Próximo
-> comando é a A1 10×200 com fail-closed e os mesmos pares,
-> níveis, seeds e tetos; B deverá repetir exatamente o preset aprovado.
+> recarga. A primeira retomada A1 (`20260820-180632-012432`) foi corretamente
+> interrompida no turno 2: o DeepSeek devolveu 6 beats e o teto Pydantic de 5
+> rejeitou toda a resposta. A spec `campaign-beats-overflow-provider` agora
+> limpa vazios/espaços e retém os cinco primeiros em Python; menos de três segue
+> inválido. Gate pós-fix: **1597 passed, 16 skipped, 14 deselected**. Próximo
+> comando é reiniciar A1 10×200 desde o par 1; B deverá repetir exatamente os
+> mesmos pares, níveis, seeds, preset e tetos.
 
 > **🚧 SESSÃO 55 (2026-08-20): ciclo pareado 10×200 em execução.** Os seis
 > achados do comerciante real ganharam a spec

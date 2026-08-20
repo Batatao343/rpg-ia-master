@@ -19,7 +19,7 @@ class CampaignPlanModel(BaseModel):
 
     location: str = Field(description="Scene location the plan is for")
     beats: List[str] = Field(
-        min_length=3, max_length=5,
+        min_length=3,
         description="Ordered story beats leading to the climax — SEMPRE em português do Brasil (pt-BR), NUNCA em inglês",
     )
     climax: str = Field(description="The intended climactic moment — SEMPRE em português do Brasil (pt-BR)")
@@ -35,8 +35,16 @@ class CampaignPlanModel(BaseModel):
     @field_validator("beats")
     @classmethod
     def validate_beats(cls, beats: List[str]) -> List[str]:
-        """Trim whitespace and drop empty beats returned by the model."""
-        return [b.strip() for b in beats if b.strip()]
+        """Normalize provider output before enforcing the 3–5 beat contract.
+
+        An otherwise valid plan must not be discarded only because a provider
+        emitted a sixth beat. We keep the first five non-empty beats in their
+        original order; Pydantic's ``min_length`` still rejects fewer than three.
+        """
+        normalized = [beat.strip() for beat in beats if beat.strip()][:5]
+        if len(normalized) < 3:
+            raise ValueError("campaign plan requires at least 3 non-empty beats")
+        return normalized
 
 
 # spec balanceamento-early-game (R4): replan periódico espaçado (era 10 — plot

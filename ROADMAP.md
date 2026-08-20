@@ -3,6 +3,9 @@
 > **Matriz A1 retomada:** saldo DeepSeek renovado; preset `deepseek-paid`
 > exclusivo passou preflight real nos três tiers. A1/B usarão esse mesmo perfil
 > com fail-closed, teto de US$ 0,25/800 requests por campanha e seeds pareadas.
+> A tentativa `20260820-180632-012432` revelou excesso recuperável de beats no
+> turno 2; a [normalização da borda](specs/campaign-beats-overflow-provider.md)
+> está implementada e coberta pelo gate de 1597 testes antes do reinício A1.
 
 > **Objetivo central:** Mundo vivo persistente com estado consultável, antes de features novas.
 > 
@@ -572,7 +575,7 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
   [Mimetismo Morto](specs/combate-mimetismo-morto-loop.md),
   [fuga a Vitalidade zero](specs/fuga-vitalidade-zero.md) e
   [observabilidade](specs/observabilidade-npc-mortes-longrun.md). Preflight real
-  dos três tiers, suíte de 1591 testes e smoke offline 10×3 estão verdes;
+  dos três tiers, suíte de 1597 testes e smoke offline 10×3 estão verdes;
   pendem A1 real completa, specs/fixes dos achados e B pareada com stop em
   regressão nova.
 
@@ -583,7 +586,9 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
   [LLM-only fail-closed](specs/playtest-real-llm-fail-closed.md) agora aborta no
   primeiro invoke terminal. Três correções A0 ficaram `done` (Mimetismo, fuga a
   Vitalidade 0, observabilidade); o gate tem 1594 testes e smoke 30/30. Retomada
-  depende de capacidade LLM externa ou modelo local configurado.
+  foi retomada com DeepSeek. A tentativa seguinte encontrou no turno 2 um
+  payload de seis beats, agora normalizado em Python para os cinco primeiros
+  pela spec `campaign-beats-overflow-provider`; A1 reinicia desde o par 1.
 - [x] **5.2 — Invariantes de estado** ([spec](specs/fase-5.2-invariantes.md)):
   `playtest/invariants.py` — `check_all(state, prev_state)` puro plugado no
   runner. HP válido, ouro ≥ 0, item único sem dupe, NPC morto não fala, fação

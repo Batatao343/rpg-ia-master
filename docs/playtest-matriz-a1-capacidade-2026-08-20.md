@@ -65,6 +65,20 @@ O smoke dirigido `20260820-171220-525250` enfrentou três Cervos Afogados em
 dois conflitos ao longo de 30 turnos; ambos encerraram e não houve
 `combat.no_progress`.
 
+## Retomada com DeepSeek e achado de contrato
+
+Após a recarga do DeepSeek, o preflight real dos tiers CLASSIFY, FAST e SMART
+passou com `deepseek-v4-flash`. A tentativa `20260820-180632-012432` foi
+encerrada pelo fail-closed no turno 2 do primeiro par: o planner retornou seis
+beats válidos, enquanto `CampaignPlanModel` rejeitava qualquer lista acima de
+cinco. Nenhum outro par foi iniciado.
+
+Esse run também não é baseline. O achado é tratado pela spec
+[`campaign-beats-overflow-provider`](../specs/campaign-beats-overflow-provider.md):
+a borda aceita excesso recuperável e trunca deterministicamente para os cinco
+primeiros beats não vazios, sem fabricar conteúdo ausente. A1 será reiniciada
+desde o par 1 depois da regressão e da suíte completa.
+
 ## Dependência externa para retomar
 
 O ambiente não possui Ollama nem LM Studio. As outras rotas configuradas estavam

@@ -1,4 +1,6 @@
 from agents import campaign_manager as cm
+import pytest
+from pydantic import ValidationError
 
 
 def _plan(location: str, statuses=("pending", "pending")) -> dict:
@@ -55,3 +57,32 @@ def test_build_plan_ancora_local_atual_mesmo_se_llm_inventar_outro(monkeypatch):
         "campaign_plan": {},
     })
     assert plan["location"] == "Brekmar"
+
+
+def test_campaign_plan_normaliza_excesso_para_cinco_beats_em_ordem():
+    plan = cm.CampaignPlanModel(
+        location="Brekmar",
+        beats=[
+            "  Primeiro  ",
+            "Segundo",
+            "   ",
+            "Terceiro",
+            "Quarto",
+            "Quinto",
+            "Sexto",
+        ],
+        climax="Clímax",
+        arc_title="Arco",
+    )
+
+    assert plan.beats == ["Primeiro", "Segundo", "Terceiro", "Quarto", "Quinto"]
+
+
+def test_campaign_plan_continua_rejeitando_menos_de_tres_beats_validos():
+    with pytest.raises(ValidationError):
+        cm.CampaignPlanModel(
+            location="Brekmar",
+            beats=["Primeiro", "  ", "Segundo"],
+            climax="Clímax",
+            arc_title="Arco",
+        )
