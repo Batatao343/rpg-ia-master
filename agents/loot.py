@@ -131,18 +131,53 @@ def loot_node(state: GameState):
     # =========================================================
     if loot_source in ("CRAFT", "SHOP"):
         intent = _parse_trade_intent(state, loot_source, text)
+        market_before = economy.public_market_snapshot(work_state)
+        gold_before = int(player.get("gold", 0) or 0)
+        inventory_before = list(player.get("inventory") or [])
         if intent.mode == "craft":
             outcome = economy.execute_craft(work_state, intent.item_ref)
         else:
             outcome = economy.execute_trade(work_state, intent.mode,
                                             intent.item_ref, intent.qty)
 
+        public_action = {
+            "action_id": (
+                f"{int(world.get('turn_count', 0) or 0)}:"
+                f"{intent.mode}:{intent.item_ref}:{int(intent.qty or 1)}"
+            ),
+            "turn": int(world.get("turn_count", 0) or 0),
+            "mode": intent.mode,
+            "item_ref": intent.item_ref,
+            "item_id": outcome.get("item_id"),
+            "qty": int(outcome.get("qty", intent.qty) or 1),
+            "ok": bool(outcome.get("ok")),
+            "reason": str(outcome.get("reason") or ""),
+            "reason_code": (
+                "ok" if outcome.get("ok") else "rejected"
+            ),
+            "location_id": str(world.get("current_location_id") or ""),
+            "merchant_id": (
+                market_before.get("merchant_id") if market_before else None
+            ),
+            "gold_before": gold_before,
+            "gold_after": int(
+                (outcome.get("player") or player).get("gold", gold_before) or 0
+            ),
+            "gold_delta": int(outcome.get("gold_delta", 0) or 0),
+            "inventory_before": inventory_before,
+            "inventory_after": list(
+                (outcome.get("player") or player).get("inventory") or []
+            ),
+            "stock_before": market_before.get("quotes", []) if market_before else [],
+        }
+
         if not outcome.get("ok"):
             msg = _narrate(f"TRANSAÇÃO RECUSADA: {outcome.get('reason')}",
                            f"🚫 {outcome.get('reason')}")
             return {"messages": [AIMessage(content=_player_facing_message(
                         msg, f"[SISTEMA] {outcome.get('reason')}"))],
-                    "world": world, "loot_source": None, "archive_due": True}
+                    "world": world, "loot_source": None, "archive_due": True,
+                    "last_economy_action": public_action}
 
         delta = int(outcome.get("gold_delta", 0))
         sistema = (f"[SISTEMA] {'+' if outcome['mode'] == 'sell' else ''}"
@@ -158,6 +193,16 @@ def loot_node(state: GameState):
             "messages": [AIMessage(content=_player_facing_message(msg, sistema))],
             "loot_source": None,
             "archive_due": True,
+            "last_economy_action": {
+                **public_action,
+                "stock_after": (
+                    economy.public_market_snapshot({
+                        **work_state,
+                        "player": outcome["player"],
+                        "world": outcome.get("world", world),
+                    }) or {}
+                ).get("quotes", []),
+            },
         }
         # Fase 6.2: posse de item único muda de mãos → evento do motor na fila
         if outcome.get("pending_events"):

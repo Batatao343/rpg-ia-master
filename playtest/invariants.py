@@ -758,6 +758,58 @@ def check_contextual(
         turn=turn,
         combat_executed=bool(context.get("combat_executed")),
     )
+    economy_action = context.get("economy_action") or {}
+    if economy_action:
+        gold_before = int(economy_action.get("gold_before", 0) or 0)
+        gold_after = int(economy_action.get("gold_after", 0) or 0)
+        gold_delta = int(economy_action.get("gold_delta", 0) or 0)
+        if economy_action.get("ok") and gold_after - gold_before != gold_delta:
+            out.append(_V(
+                "economy.transaction_conservation", "error", turn,
+                "delta de ouro da transação diverge do ledger Python",
+                outcome=economy_action,
+            ))
+        for field_name in ("stock_before", "stock_after"):
+            for quote in economy_action.get(field_name) or []:
+                if int(quote.get("stock", 0) or 0) < 0:
+                    out.append(_V(
+                        "economy.stock_bounds", "error", turn,
+                        "estoque negativo no ledger de mercado",
+                        field=field_name, quote=quote,
+                    ))
+        before_qty: dict[str, int] = {}
+        after_qty: dict[str, int] = {}
+        for item in economy_action.get("inventory_before") or []:
+            if isinstance(item, dict):
+                item_id = str(item.get("id") or "")
+                before_qty[item_id] = before_qty.get(item_id, 0) + int(
+                    item.get("qty", 1) or 0
+                )
+        for item in economy_action.get("inventory_after") or []:
+            if isinstance(item, dict):
+                item_id = str(item.get("id") or "")
+                after_qty[item_id] = after_qty.get(item_id, 0) + int(
+                    item.get("qty", 1) or 0
+                )
+        if economy_action.get("ok") and economy_action.get("item_id"):
+            item_id = str(economy_action["item_id"])
+            qty = int(economy_action.get("qty", 1) or 1)
+            mode = str(economy_action.get("mode") or "")
+            delta_qty = after_qty.get(item_id, 0) - before_qty.get(item_id, 0)
+            expected = qty if mode in ("buy", "craft") else -qty
+            if delta_qty != expected:
+                out.append(_V(
+                    "economy.transaction_conservation", "error", turn,
+                    "delta de item da transação diverge do ledger Python",
+                    item_id=item_id, expected=expected, actual=delta_qty,
+                    outcome=economy_action,
+                ))
+    net_worth = context.get("net_worth_after")
+    if net_worth is not None and not isinstance(net_worth, int):
+        out.append(_V(
+            "economy.net_worth_finite", "error", turn,
+            "net worth não é inteiro finito", value=net_worth,
+        ))
     decision = context.get("decision") or {}
     resolved = context.get("resolved_action") or {}
     chase_state = (state.get("combat") or {}).get("chase") or {}

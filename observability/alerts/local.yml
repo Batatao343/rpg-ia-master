@@ -1,0 +1,17 @@
+groups:
+  - name: valoria-local
+    rules:
+      - alert: TurnErrorRate
+        expr: rate(rpg_turn_commits_total{outcome="error"}[5m]) > 0
+      - alert: TurnP95High
+        expr: rpg_turn_duration_seconds_p95{simulated="true"} > 2
+      - alert: OperationLeaseExpired
+        expr: rpg_operation_lease_age_seconds > 90
+      - alert: JobBacklogOld
+        expr: rpg_job_oldest_age_seconds > 60
+      - alert: RagFailure
+        expr: rate(rpg_rag_duration_seconds_count{outcome="error"}[5m]) > 0
+      - alert: DbPoolWaiting
+        expr: rpg_db_pool{state="waiting"} > 0
+      - alert: BackupStale
+        expr: rpg_backup_age_seconds{component="complete"} > 86400

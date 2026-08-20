@@ -11,8 +11,9 @@ LLM NUNCA decide preço; `gold_value` proposto pela IA para item novo é ignorad
 """
 from __future__ import annotations
 
+import copy
 import random
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Mapping, Optional, Tuple, TypedDict
 
 from gamedata import ARTIFACTS_DB, get_location, load_json_data
 from inventory import (add_item, find_in_inventory, get_qty, item_display,
@@ -22,6 +23,24 @@ from services import graph_resolver as gr
 RECIPES: Dict[str, dict] = load_json_data("recipes.json") or {}
 MERCHANTS: Dict[str, dict] = load_json_data("merchants.json") or {}
 LOOT_TABLES: Dict[str, dict] = load_json_data("loot_tables.json") or {}
+
+
+class MarketQuote(TypedDict):
+    item_id: str
+    item_name: str
+    stock: int
+    buy_price: int
+    sell_price: int
+
+
+class PublicMarketSnapshot(TypedDict):
+    location_id: str
+    merchant_id: str
+    merchant_name: str
+    day: int
+    turn: int
+    quotes: List[MarketQuote]
+    known_recipes: List[str]
 
 RARITY_BASE = {
     "common": 25, "comum": 25,
@@ -212,6 +231,66 @@ def merchant_stock(state: dict, location_id: str) -> Tuple[Optional[str], Dict[s
     stock = {iid: q for iid, q in stock.items()
              if is_unique_available(iid, proj) or unique_holder(iid, proj) == mid}
     return mid, {iid: q for iid, q in stock.items() if q > 0}
+
+
+def public_market_snapshot(
+    state: Mapping[str, Any],
+) -> Optional[PublicMarketSnapshot]:
+    """Visão pública e read-only do mercado no local atual.
+
+    `merchant_stock` inicializa estoque por compatibilidade com o motor. Para uma
+    observação não mutar o jogo, trabalhamos sobre uma cópia profunda e usamos
+    exatamente a mesma função/preço canônicos da transação real.
+    """
+    work = copy.deepcopy(dict(state))
+    world = work.get("world") or {}
+    location_id = str(world.get("current_location_id") or "")
+    mid, stock = merchant_stock(work, location_id)
+    if not mid:
+        return None
+    merchant = MERCHANTS.get(mid) or {}
+    quotes: List[MarketQuote] = []
+    for item_id, qty in sorted(stock.items()):
+        quotes.append({
+            "item_id": item_id,
+            "item_name": item_display(make_entry(item_id)),
+            "stock": int(qty or 0),
+            "buy_price": price(item_id, mode="buy", state=work, merchant=merchant),
+            "sell_price": price(item_id, mode="sell", state=work, merchant=merchant),
+        })
+    quoted_ids = {quote["item_id"] for quote in quotes}
+    # Um mercador visível também pode cotar publicamente os itens que o jogador
+    # carrega, ainda que não os tenha em estoque. ``stock=0`` impede compra, mas
+    # permite decidir a venda sem ler tabelas privadas.
+    inventory_ids = sorted({
+        str(entry.get("id") or "")
+        for entry in (work.get("player") or {}).get("inventory") or []
+        if isinstance(entry, dict) and int(entry.get("qty", 1) or 0) > 0
+    } - quoted_ids - {""})
+    for item_id in inventory_ids:
+        quotes.append({
+            "item_id": item_id,
+            "item_name": item_display(make_entry(item_id)),
+            "stock": 0,
+            "buy_price": price(item_id, mode="buy", state=work, merchant=merchant),
+            "sell_price": price(item_id, mode="sell", state=work, merchant=merchant),
+        })
+    location = get_location(location_id) or {}
+    craft_tags = set(location.get("craft_tags") or [])
+    known_recipes = sorted(
+        rid for rid, recipe in RECIPES.items()
+        if not recipe.get("craft_tag") or recipe.get("craft_tag") in craft_tags
+    )
+    clock = world.get("world_clock") or {}
+    return {
+        "location_id": location_id,
+        "merchant_id": mid,
+        "merchant_name": str(merchant.get("name") or mid),
+        "day": int(clock.get("day", 1) or 1),
+        "turn": int(world.get("turn_count", 0) or 0),
+        "quotes": quotes,
+        "known_recipes": known_recipes,
+    }
 
 
 # ---------------------------------------------------------------------------

@@ -248,9 +248,9 @@ def test_apply_choice_carta_nova():
     from progression import apply_choice
     p = {"class_name": "Devoto do Abismo", "level": 2, "known_cards": ["golpe_devoto"],
          "pending_choices": [{"id": "lvl2-carta", "level": 2, "kind": "carta"}]}
-    out, err = apply_choice(p, "lvl2-carta", card_id="muralha_viva")
+    out, err = apply_choice(p, "lvl2-carta", card_id="dev_muralha_viva")
     assert err is None
-    assert "muralha_viva" in out["known_cards"]
+    assert "dev_muralha_viva" in out["known_cards"]
     assert out["pending_choices"] == []
 
 

@@ -7,6 +7,7 @@ import random
 from langchain_core.messages import AIMessage
 
 import api
+from agents import combat
 import combat_mechanics as cm
 import gamedata
 import party
@@ -255,6 +256,35 @@ def test_ultima_acao_resolve_exatamente_uma_vez_antes_do_terminal() -> None:
         rng=_HighRng(),
     )
     assert boss["_last_stand_count"] == 1
+
+
+def test_dano_ambiental_antes_da_fuga_nao_deixa_critico_cheio_vivo() -> None:
+    hero = _actor("player", corpo=2, vitalidade=0, is_player=True)
+    hero["ferimentos"]["critico"] = [
+        {"categoria": "critico", "regiao": "torso", "aplicado": True},
+    ]
+    enemy = _actor("enemy", corpo=1, categoria="padrao")
+    scene = _scene("player", "enemy")
+
+    combat._register_environmental_damage_terminal(hero, ["dano pelo clima"])
+    assert hero["last_stand_pending"] is True
+
+    out = orch.run_round(
+        scene,
+        {"player": hero, "enemy": enemy},
+        {"hero": ["player"], "ally": [], "enemy": ["enemy"]},
+        declarations={},
+        initiator="heroes",
+        rng=_HighRng(),
+    )
+
+    assert out["last_stands"] == ["player"]
+    assert not (
+        orch.death_flow.critical_spaces_full(hero)
+        and not hero.get("dead")
+        and not hero.get("estado_terminal")
+        and not out.get("player_dead")
+    )
 
 
 def test_descanso_e_party_usam_vitalidade_nao_hp() -> None:

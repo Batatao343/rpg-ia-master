@@ -1,0 +1,89 @@
+rule_files:
+  - local.yml
+evaluation_interval: 1m
+tests:
+  - name: readiness-alerts-fire
+    interval: 1m
+    input_series:
+      - series: 'rpg_turn_commits_total{outcome="error"}'
+        values: '0 1 2'
+      - series: 'rpg_turn_duration_seconds_p95{route="/game/action",outcome="ok",simulated="true"}'
+        values: '3 3 3'
+      - series: 'rpg_operation_lease_age_seconds{kind="turn"}'
+        values: '100 100 100'
+      - series: 'rpg_job_oldest_age_seconds{kind="embed_memory"}'
+        values: '70 70 70'
+      - series: 'rpg_rag_duration_seconds_count{scope="lore",outcome="error"}'
+        values: '0 1 2'
+      - series: 'rpg_db_pool{state="waiting"}'
+        values: '1 1 1'
+      - series: 'rpg_backup_age_seconds{component="complete"}'
+        values: '90000 90000 90000'
+    alert_rule_test:
+      - eval_time: 2m
+        alertname: TurnErrorRate
+        exp_alerts:
+          - exp_labels: {outcome: error}
+      - eval_time: 2m
+        alertname: TurnP95High
+        exp_alerts:
+          - exp_labels: {route: /game/action, outcome: ok, simulated: "true"}
+      - eval_time: 2m
+        alertname: OperationLeaseExpired
+        exp_alerts:
+          - exp_labels: {kind: turn}
+      - eval_time: 2m
+        alertname: JobBacklogOld
+        exp_alerts:
+          - exp_labels: {kind: embed_memory}
+      - eval_time: 2m
+        alertname: RagFailure
+        exp_alerts:
+          - exp_labels: {scope: lore, outcome: error}
+      - eval_time: 2m
+        alertname: DbPoolWaiting
+        exp_alerts:
+          - exp_labels: {state: waiting}
+      - eval_time: 2m
+        alertname: BackupStale
+        exp_alerts:
+          - exp_labels: {component: complete}
+  - name: readiness-alerts-resolve
+    interval: 1m
+    input_series:
+      - series: 'rpg_turn_commits_total{outcome="error"}'
+        values: '0 0 0'
+      - series: 'rpg_turn_duration_seconds_p95{route="/game/action",outcome="ok",simulated="true"}'
+        values: '1 1 1'
+      - series: 'rpg_operation_lease_age_seconds{kind="turn"}'
+        values: '0 0 0'
+      - series: 'rpg_job_oldest_age_seconds{kind="embed_memory"}'
+        values: '0 0 0'
+      - series: 'rpg_rag_duration_seconds_count{scope="lore",outcome="error"}'
+        values: '0 0 0'
+      - series: 'rpg_db_pool{state="waiting"}'
+        values: '0 0 0'
+      - series: 'rpg_backup_age_seconds{component="complete"}'
+        values: '10 10 10'
+    alert_rule_test:
+      - eval_time: 2m
+        alertname: TurnErrorRate
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: TurnP95High
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: OperationLeaseExpired
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: JobBacklogOld
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: RagFailure
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: DbPoolWaiting
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: BackupStale
+        exp_alerts: []

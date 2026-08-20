@@ -1,0 +1,40 @@
+{
+  "annotations": {"list": []},
+  "editable": true,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "HTTP requests",
+      "targets": [{"expr": "sum by (status_class) (rate(rpg_http_requests_total[5m]))"}],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+    },
+    {
+      "type": "timeseries",
+      "title": "Turn commits",
+      "targets": [{"expr": "sum by (outcome) (rate(rpg_turn_commits_total[5m]))"}],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+    },
+    {
+      "type": "timeseries",
+      "title": "LLM attempts",
+      "targets": [{"expr": "sum by (provider,outcome) (rate(rpg_llm_attempts_total[5m]))"}],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+    },
+    {
+      "type": "timeseries",
+      "title": "Jobs and blobs",
+      "targets": [
+        {"expr": "sum by (kind,status) (rpg_jobs)"},
+        {"expr": "sum by (operation,outcome) (rate(rpg_blob_operations_total[5m]))"}
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["valoria", "local"],
+  "templating": {"list": []},
+  "time": {"from": "now-1h", "to": "now"},
+  "title": "Valoria local readiness",
+  "uid": "valoria-local",
+  "version": 1
+}

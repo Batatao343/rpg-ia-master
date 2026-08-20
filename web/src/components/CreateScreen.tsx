@@ -64,6 +64,11 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
   const [region, setRegion] = useState("");
   const [level, setLevel] = useState(1);
   const [backstory, setBackstory] = useState("");
+  const [appearance, setAppearance] = useState("");
+  const [visualExclusions, setVisualExclusions] = useState("");
+  const [artBrief, setArtBrief] = useState("");
+  const [artBriefBusy, setArtBriefBusy] = useState(false);
+  const [generatePortrait, setGeneratePortrait] = useState(false);
   // spec inicio-personalizado (R9): passo 6 — prólogo confirmável
   const [scenario, setScenario] = useState<StartScenario | null>(null);
   const [prologueBusy, setPrologueBusy] = useState(false);
@@ -98,6 +103,9 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
       region,
       level,
       backstory: backstory.trim(),
+      appearance: appearance.trim(),
+      visual_exclusions: visualExclusions.trim(),
+      generate_portrait: generatePortrait && !!artBrief,
     };
   }
 
@@ -127,6 +135,21 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
       void requestPrologue();
     } else {
       onCreate(payload());
+    }
+  }
+
+  async function reviewArtBrief() {
+    setArtBriefBusy(true);
+    try {
+      const result = await api.postArtBrief({
+        name: name.trim() || "Herói", race, class_name: className, region,
+        appearance, visual_exclusions: visualExclusions,
+      });
+      setArtBrief(result.rendered_prompt);
+    } catch (error) {
+      onError("Não consegui montar o brief visual: " + ((error as Error)?.message || error));
+    } finally {
+      setArtBriefBusy(false);
     }
   }
 
@@ -363,6 +386,44 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                 onChange={(e) => setBackstory(e.target.value)}
               />
             </div>
+
+            <div className="field">
+              <label htmlFor="f-appearance">
+                Aparência visual <span className="muted">(opcional, não altera mecânica)</span>
+              </label>
+              <textarea id="f-appearance" rows={3} maxLength={1000}
+                placeholder="Descreva idade adulta, pele, cabelo, corpo, roupas, cicatrizes e detalhes que devem ser preservados."
+                value={appearance} onChange={(e) => { setAppearance(e.target.value); setArtBrief(""); setGeneratePortrait(false); }} />
+            </div>
+            <div className="field">
+              <label htmlFor="f-visual-exclusions">O que não deve aparecer</label>
+              <input id="f-visual-exclusions" maxLength={500}
+                placeholder="Ex.: sem elmo, sem capa, sem pose acrobática"
+                value={visualExclusions}
+                onChange={(e) => { setVisualExclusions(e.target.value); setArtBrief(""); setGeneratePortrait(false); }} />
+            </div>
+            <button type="button" className="btn btn--ghost" disabled={artBriefBusy}
+              onClick={() => void reviewArtBrief()}>
+              {artBriefBusy ? "Adaptando…" : "Revisar brief visual (sem gerar/cobrar)"}
+            </button>
+            {artBrief && (
+              <>
+                <details className="field" open>
+                  <summary>Brief adaptado às âncoras de Valoria</summary>
+                  <pre className="wizard__para">{artBrief}</pre>
+                </details>
+                <label className="field">
+                  <span>
+                    <input type="checkbox" checked={generatePortrait}
+                      onChange={(event) => setGeneratePortrait(event.target.checked)} />{" "}
+                    Confirmo a geração do retrato com GPT Image
+                  </span>
+                  <small className="muted">
+                    Esta chamada pode ter custo no provedor. O jogo continua normalmente se estiver desativada ou falhar.
+                  </small>
+                </label>
+              </>
+            )}
 
             <div className="form__actions">
               {continueData && (

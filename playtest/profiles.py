@@ -486,17 +486,340 @@ class Explorador(_Base):
 
 # --- 3. comerciante ---------------------------------------------------------
 
+
+@dataclass(frozen=True)
+class ObservedQuote:
+    location_id: str
+    merchant_id: str
+    item_id: str
+    item_name: str
+    buy_price: int
+    sell_price: int
+    stock: int
+    day: int
+    turn: int
+
+
+@dataclass
+class TradeGoal:
+    phase: Literal["survey", "acquire", "travel", "liquidate", "reassess"]
+    item_id: Optional[str] = None
+    source_location_id: Optional[str] = None
+    destination_location_id: Optional[str] = None
+    expected_margin: Optional[int] = None
+
+
 class Comerciante(_Base):
-    """Compra, vende e crafta em ciclo — exercita a economia."""
+    """Jogador comerciante stateful, curioso e sem informação onisciente."""
     name = "comerciante"
+    resolve_progression = True
+
+    def reset(self) -> None:
+        self.quote_book: Dict[tuple[str, str], ObservedQuote] = {}
+        self.acquisition_cost: Dict[str, int] = {}
+        self.known_markets: Dict[str, str] = {}
+        self.goal = TradeGoal("survey")
+        self.action_counts: Dict[str, int] = {
+            "economy": 0, "exploration": 0, "social": 0,
+            "quest": 0, "survival": 0,
+        }
+        self._decision_count = 0
+        self._last_action_id = ""
+        self._recent_locations: List[str] = []
+        self._market_actions: Dict[tuple[str, int], int] = {}
+        self._position_markets: set[str] = set()
+        self._avoided_locations: set[str] = set()
+        self._last_epoch = 0
+        self._last_observed_location = ""
+        self._last_travel_destination_id = ""
+
+    def observe(self, state: dict) -> Optional[dict]:
+        from services.economy import public_market_snapshot
+
+        if not hasattr(self, "quote_book"):
+            self.reset()
+        outcome = state.get("last_economy_action") or {}
+        action_id = str(outcome.get("action_id") or "")
+        if action_id and action_id != self._last_action_id:
+            self._last_action_id = action_id
+            if outcome.get("ok") and outcome.get("item_id"):
+                item_id = str(outcome["item_id"])
+                if outcome.get("mode") == "buy":
+                    self.acquisition_cost[item_id] = abs(
+                        int(outcome.get("gold_delta", 0) or 0)
+                    ) // max(1, int(outcome.get("qty", 1) or 1))
+                    self.goal.phase = "travel"
+                    self.goal.item_id = item_id
+                    self.goal.source_location_id = str(outcome.get("location_id") or "")
+                    self._position_markets = {self.goal.source_location_id}
+                elif outcome.get("mode") == "sell":
+                    self.acquisition_cost.pop(item_id, None)
+                    self.goal = TradeGoal("reassess")
+                    self._position_markets.clear()
+            elif action_id:
+                self.goal = TradeGoal("reassess")
+
+        snapshot = public_market_snapshot(state)
+        if not snapshot:
+            return None
+        location_id = snapshot["location_id"]
+        if self.goal.item_id:
+            self._position_markets.add(location_id)
+        self.known_markets[location_id] = snapshot["merchant_id"]
+        for quote in snapshot["quotes"]:
+            self.quote_book[(location_id, quote["item_id"])] = ObservedQuote(
+                location_id=location_id,
+                merchant_id=snapshot["merchant_id"],
+                item_id=quote["item_id"],
+                item_name=quote["item_name"],
+                buy_price=int(quote["buy_price"]),
+                sell_price=int(quote["sell_price"]),
+                stock=int(quote["stock"]),
+                day=int(snapshot["day"]),
+                turn=int(snapshot["turn"]),
+            )
+        if self.goal.item_id and self.goal.source_location_id != location_id:
+            cost = self.acquisition_cost.get(self.goal.item_id)
+            quote = self.quote_book.get((location_id, self.goal.item_id))
+            if cost is not None and quote and quote.sell_price > cost:
+                self.goal.phase = "liquidate"
+                self.goal.destination_location_id = location_id
+                self.goal.expected_margin = quote.sell_price - cost
+            elif quote and len(self._position_markets) >= 3:
+                # Após três mercados observados, realiza também a perda para não
+                # congelar capital indefinidamente; segue sendo decisão baseada
+                # apenas em cotações vistas pelo jogador.
+                self.goal.phase = "liquidate"
+                self.goal.destination_location_id = location_id
+                self.goal.expected_margin = quote.sell_price - int(cost or 0)
+        return snapshot
+
+    def _record(self, family: str, text: str) -> str:
+        self.action_counts[family] = self.action_counts.get(family, 0) + 1
+        return text
+
+    def _record_travel(self, target: dict, text: str) -> str:
+        self._last_travel_destination_id = str(target.get("id") or "")
+        return self._record("exploration", text)
+
+    def _sell_candidate(self, state: dict) -> Optional[tuple[str, str]]:
+        from gamedata import ARTIFACTS_DB
+        from inventory import is_unique, item_display
+
+        player = state.get("player") or {}
+        equipment = player.get("equipment") or {}
+        equipped_ids = {
+            str(value.get("id") if isinstance(value, dict) else value)
+            for value in equipment.values() if value
+        }
+        for entry in player.get("inventory") or []:
+            if not isinstance(entry, dict):
+                continue
+            item_id = str(entry.get("id") or "")
+            qty = int(entry.get("qty", 1) or 0)
+            mechanics = (ARTIFACTS_DB.get(item_id) or {}).get("mechanics") or {}
+            healing = bool(mechanics.get("heal")) or "cura" in item_id
+            if (
+                item_id and item_id not in equipped_ids and not is_unique(item_id)
+                and (not healing or qty > 1)
+            ):
+                return item_id, item_display(entry)
+        return None
+
+    def _travel_action(self, state: dict, rng: random.Random) -> str:
+        cur = _current_id(state)
+        visited = set((state.get("world") or {}).get("visited") or [])
+        connections = sorted(_connections(cur), key=lambda row: row.get("id", ""))
+        if cur and (not self._recent_locations or self._recent_locations[-1] != cur):
+            self._recent_locations.append(cur)
+            del self._recent_locations[:-5]
+        previous = self._recent_locations[-2] if len(self._recent_locations) > 1 else None
+        if self.goal.item_id:
+            observed_destinations = [
+                location_id for location_id in self.known_markets
+                if location_id != cur and location_id != self.goal.source_location_id
+                and location_id not in self._avoided_locations
+                and (location_id, self.goal.item_id) in self.quote_book
+                and self.quote_book[(location_id, self.goal.item_id)].sell_price
+                > self.acquisition_cost.get(self.goal.item_id, 10**9)
+            ]
+            profitable = sorted(
+                observed_destinations,
+                key=lambda location_id: (
+                    -self.quote_book[(location_id, self.goal.item_id)].sell_price,
+                    location_id,
+                ),
+            )
+            if profitable:
+                hop = _next_hop_toward(cur, profitable[0])
+                if hop and hop.get("id") not in self._avoided_locations:
+                    return self._record_travel(
+                        hop, f"Viajo para {hop['name']} pela rota comercial conhecida.",
+                    )
+        total_actions = max(1, sum(self.action_counts.values()))
+        economy_share = self.action_counts.get("economy", 0) / total_actions
+        if not self.goal.item_id and len(self.known_markets) >= 3 and economy_share < 0.42:
+            destinations = sorted(
+                location_id for location_id in self.known_markets
+                if location_id != cur and location_id not in self._avoided_locations
+            )
+            if destinations:
+                hop = _next_hop_toward(cur, destinations[0])
+                if hop and hop.get("id") not in self._avoided_locations:
+                    return self._record_travel(
+                        hop, f"Viajo para {hop['name']} pela rota comercial conhecida.",
+                    )
+        safer_connections = [
+            row for row in connections if row.get("id") not in self._avoided_locations
+        ]
+        counted = max(1, sum(self.action_counts.values()))
+        if self.action_counts.get("survival", 0) / counted >= 0.17:
+            low_risk = [
+                row for row in safer_connections if int(row.get("danger", 9) or 9) <= 2
+            ]
+            if low_risk:
+                safer_connections = low_risk
+        frontier = [row for row in safer_connections if row.get("id") not in visited]
+        candidates = frontier or [
+            row for row in safer_connections if row.get("id") != previous
+        ] or safer_connections
+        if not candidates:
+            return self._record("exploration", "Investigo as rotas comerciais dos arredores.")
+        candidates = sorted(candidates, key=lambda row: (
+            0 if "cidade" in set(row.get("tags") or []) else 1,
+            int(row.get("danger", 9) or 9), str(row.get("id") or ""),
+        ))
+        best_rank = (
+            0 if "cidade" in set(candidates[0].get("tags") or []) else 1,
+            int(candidates[0].get("danger", 9) or 9),
+        )
+        best = [row for row in candidates if (
+            0 if "cidade" in set(row.get("tags") or []) else 1,
+            int(row.get("danger", 9) or 9),
+        ) == best_rank]
+        target = best[rng.randrange(len(best))]
+        return self._record_travel(
+            target, f"Viajo para {target['name']} procurando novos mercados.",
+        )
+
+    def decide(self, state: dict, rng: random.Random) -> ProfileDecision:
+        if not hasattr(self, "_last_epoch"):
+            self.reset()
+        continuity = state.get("continuity") or {}
+        epoch = int(continuity.get("timeline_epoch", 0) or 0)
+        if epoch > self._last_epoch:
+            fatal_destination = (
+                self._last_travel_destination_id or self._last_observed_location
+            )
+            if fatal_destination:
+                self._avoided_locations.add(fatal_destination)
+            self._last_travel_destination_id = ""
+        self._last_epoch = epoch
+        self._last_observed_location = _current_id(state)
+        if _in_combat(state) or _needs_recovery(state) or _low_vitality(state, 0.5):
+            self.action_counts["survival"] = self.action_counts.get("survival", 0) + 1
+            return super().decide(state, rng)
+        snapshot = self.observe(state)
+        return ProfileDecision(
+            text=self._next_market_action(state, rng, snapshot), mode="free_text",
+        )
+
+    def combat_decision(self, state: dict, rng: random.Random) -> ProfileDecision:
+        """Preserva capital e vida: um mercador normal rompe encontros perigosos."""
+        connections = sorted(
+            _connections(_current_id(state)),
+            key=lambda row: (int(row.get("danger", 9) or 9), str(row.get("id") or "")),
+        )
+        destination = connections[0] if connections else None
+        return ProfileDecision(
+            text="Recuo do combate para preservar a carga e procuro uma rota segura.",
+            mode="flee",
+            flee_destination_id=destination["id"] if destination else None,
+        )
+
+    def _next_market_action(
+        self, state: dict, rng: random.Random, snapshot: Optional[dict],
+    ) -> str:
+        self._decision_count += 1
+        n = self._decision_count
+        npcs = _npcs_in_scene(state)
+        if n % 8 == 0:
+            return self._record(
+                "quest", "Pergunto se há algum trabalho ou missão que eu possa aceitar.",
+            )
+        if n % 6 == 0:
+            target = npcs[0] if npcs else "alguém local"
+            return self._record(
+                "social", f"Converso com {target} sobre preços, rotas e escassez.",
+            )
+        counted = max(1, sum(self.action_counts.values()))
+        if n % 17 == 0 and self.action_counts.get("survival", 0) / counted < 0.07:
+            return self._record(
+                "survival", "Descanso em segurança e reorganizo a carga antes da próxima rota.",
+            )
+
+        if snapshot is not None:
+            location_id = str(snapshot["location_id"])
+            visit_key = (location_id, int(snapshot.get("day", 1) or 1))
+            market_actions = self._market_actions.get(visit_key, 0)
+            self._market_actions[visit_key] = market_actions + 1
+            if self.goal.phase == "liquidate" and self.goal.item_id:
+                quote = self.quote_book.get((location_id, self.goal.item_id))
+                if quote:
+                    return self._record("economy", f"Vendo 1 {quote.item_name} ao mercador.")
+            sell = self._sell_candidate(state)
+            if sell and market_actions == 0 and not self.acquisition_cost:
+                self.goal.phase = "liquidate"
+                return self._record("economy", f"Vendo 1 {sell[1]} ao mercador.")
+            quotes = list(snapshot.get("quotes") or [])
+            gold = int((state.get("player") or {}).get("gold", 0) or 0)
+            affordable = [
+                q for q in quotes
+                if int(q.get("stock", 0) or 0) > 0 and int(q["buy_price"]) <= gold
+            ]
+            if affordable and market_actions <= 1 and not self.acquisition_cost:
+                affordable.sort(key=lambda q: (int(q["buy_price"]), q["item_id"]))
+                quote = affordable[0]
+                self.goal = TradeGoal(
+                    "acquire", item_id=quote["item_id"],
+                    source_location_id=snapshot["location_id"],
+                )
+                return self._record(
+                    "economy", f"Compro 1 {quote['item_name']} do mercador.",
+                )
+            if market_actions < 9:
+                observations = [
+                    "Examino o estoque e comparo os preços do mercado.",
+                    "Registro no meu caderno os preços e a oferta atual.",
+                    "Confiro quais mercadorias estão escassas neste mercado.",
+                    "Anoto margens e preços antes de decidir meu próximo passo.",
+                    "Reviso o estoque e calculo o risco da próxima rota.",
+                    "Anoto no caderno as variações de preços do dia.",
+                    "Confiro novamente o estoque disponível e suas margens.",
+                    "Reavalio os preços locais diante do custo da viagem.",
+                    "Atualizo no caderno os preços e o estoque observados.",
+                ]
+                return self._record("economy", observations[market_actions])
+            return self._travel_action(state, rng)
+
+        total = max(1, sum(self.action_counts.values()))
+        exploration_share = self.action_counts.get("exploration", 0) / total
+        if total >= 10 and exploration_share > 0.25:
+            quest_share = self.action_counts.get("quest", 0) / total
+            social_share = self.action_counts.get("social", 0) / total
+            if quest_share <= social_share and quest_share < 0.20:
+                return self._record(
+                    "quest", "Pergunto aos moradores por um trabalho ou missão na rota.",
+                )
+            if social_share < 0.20:
+                target = npcs[0] if npcs else "um viajante local"
+                return self._record(
+                    "social", f"Converso com {target} sobre rotas seguras e mercados próximos.",
+                )
+        return self._travel_action(state, rng)
 
     def _next_action(self, state, rng):
-        return rng.choice([
-            "Procuro um mercador e compro suprimentos.",
-            "Vendo um item que não preciso mais.",
-            "Compro uma poção de cura no mercado.",
-            "Forjo um item com o que tenho.",
-        ])
+        return self._next_market_action(state, rng, self.observe(state))
 
 
 # --- 4. diplomatico ---------------------------------------------------------

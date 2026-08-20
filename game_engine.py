@@ -167,7 +167,7 @@ def create_character_wizard():
         f"| Defesa: {final_char['defense']}")
     time.sleep(2)
 
-    return {
+    initial_state = {
         "game_id": str(uuid.uuid4()),
         "narrative_summary": f"A jornada de {name} começa em {final_char['region']}. {backstory}",
         "archivist_last_run": 0,
@@ -238,6 +238,10 @@ def create_character_wizard():
         "pending_world_events": [],
         "event_rejections": [],
     }
+    import progression
+    initial_state["player"] = progression.normalize_player_progression(
+        initial_state["player"])
+    return initial_state
 
 def run_game_loop():
     clear_screen()

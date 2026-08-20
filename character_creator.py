@@ -196,7 +196,14 @@ def _resolve_starting_cards(user_input: Dict[str, Any], class_name: str,
     classe (determinístico) — fluxo clássico/CLI segue funcionando."""
     from services import cards as cards_svc
 
-    available = cards_svc.cards_for_class(class_name)
+    level = max(1, min(gamedata.NIVEL_MAX, int(user_input.get("level", 1) or 1)))
+    # A criação nunca usa uma Carta para inferir ramo: até a escolha explícita
+    # de subclasse, o Acervo nasce somente do tronco e respeita o gate numérico.
+    available = [
+        card for card in cards_svc.cards_for_class(class_name)
+        if not card.get("subclasse") and int(card.get("level_req", 1) or 1) <= level
+        and not card.get("apex")
+    ]
     # conflito-13/14: `data/cards/exemplos.json` permanece como fixture e contém
     # IDs legados da mesma classe. A ordem alfabética dos arquivos fazia algumas
     # classes começarem com esses exemplos em vez do acervo autoral v4.
@@ -236,7 +243,9 @@ def _resolve_starting_cards(user_input: Dict[str, Any], class_name: str,
         card = cards_svc.get_card(cid) or {}
         vkey = gamedata.normalize_virtude(card.get("virtude_relacionada", ""))
         estagio = gamedata.virtue_card_stage(virtudes.get(vkey, 0))
-        virtue_cards.append({"card_id": cid, "virtude": vkey, "estagio": estagio})
+        virtue_cards.append({
+            "card_id": cid, "virtude": vkey, "estagio": estagio, "mastery": 0,
+        })
 
     return {
         "known_cards": known,

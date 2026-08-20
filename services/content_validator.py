@@ -512,7 +512,8 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Findi
     findings: List[Finding] = []
     if not os.path.isdir(cards_dir):
         return findings
-    PATAMAR = {"inicial", "avancado", "superior"}
+    PATAMAR = {"inicial", "avancado", "superior", "epico_i", "epico_ii",
+               "lendario", "mitico", "apice"}
     FREQ = {"livre", "turno", "cena", "descanso_curto", "descanso_longo"}
     TIPO = {"ativa", "passiva", "utilitaria", "reacao"}
 
@@ -533,6 +534,8 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Findi
                     f"{DANO_BASE_ARMA[cat]}"))
 
     active_signatures: Dict[tuple, tuple[str, str]] = {}
+    seen_ids: Dict[str, str] = {}
+    late_cards: List[dict] = []
     for fn in sorted(os.listdir(cards_dir)):
         if not fn.endswith(".json"):
             continue
@@ -544,9 +547,13 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Findi
             findings.append(Finding("cards", "error", path, "", str(exc)))
             continue
         for c in (data.get("cards") or []):
-            if c.get("origem") not in ("conflito-14", "conflito-15"):
+            if c.get("origem") not in ("conflito-14", "conflito-15", "tiers-5-plus"):
                 continue
             cid = c.get("id", "")
+            if cid in seen_ids:
+                findings.append(Finding("cards", "error", path, cid,
+                    f"id duplicado (também em {seen_ids[cid]})"))
+            seen_ids[cid] = path
             if c.get("patamar") not in PATAMAR:
                 findings.append(Finding("cards", "error", path, cid,
                     f"patamar inválido: {c.get('patamar')!r}"))
@@ -581,6 +588,54 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Findi
                     ))
                 else:
                     active_signatures[signature] = (path, cid)
+            tier = c.get("tier")
+            level_req = c.get("level_req")
+            if c.get("classe") != "Inimigo":
+                if not isinstance(tier, int) or not 1 <= tier <= 9:
+                    findings.append(Finding("cards", "error", path, cid,
+                        f"tier inválido: {tier!r}"))
+                if not isinstance(level_req, int) or not 1 <= level_req <= 20:
+                    findings.append(Finding("cards", "error", path, cid,
+                        f"level_req inválido: {level_req!r}"))
+            if c.get("origem") == "tiers-5-plus":
+                late_cards.append(c)
+                expected = {5: 9, 6: 12, 7: 15, 8: 18, 9: 20}.get(tier)
+                if level_req != expected:
+                    findings.append(Finding("cards", "error", path, cid,
+                        f"tier {tier} exige level_req={expected}, recebeu {level_req}"))
+                if bool(c.get("apex")) != (tier == 9):
+                    findings.append(Finding("cards", "error", path, cid,
+                        "apex deve existir somente no tier 9"))
+                if c.get("apex") and (
+                    c.get("frequencia") not in {"cena", "descanso_curto", "descanso_longo"}
+                    or int(c.get("custo_entropia", 0) or 0) < 4
+                    or not c.get("contrapartida")
+                ):
+                    findings.append(Finding("cards", "error", path, cid,
+                        "Ápice sem freio mecânico explícito"))
+    if late_cards:
+        trunks = [card for card in late_cards if not card.get("subclasse")]
+        branch = [card for card in late_cards if card.get("subclasse") and not card.get("apex")]
+        apex = [card for card in late_cards if card.get("apex")]
+        if (len(late_cards), len(trunks), len(branch), len(apex)) != (80, 20, 45, 15):
+            findings.append(Finding(
+                "cards", "error", cards_dir, "tiers-5-plus",
+                f"distribuição tardia inválida: total/tronco/ramo/ápice="
+                f"{len(late_cards)}/{len(trunks)}/{len(branch)}/{len(apex)}",
+            ))
+        by_branch: Dict[tuple[str, str], List[dict]] = {}
+        for card in late_cards:
+            if card.get("subclasse"):
+                by_branch.setdefault((card.get("classe"), card.get("subclasse")), []).append(card)
+        for key, cards in by_branch.items():
+            non_apex = [card for card in cards if not card.get("apex")]
+            kinds = {card.get("tipo") for card in non_apex}
+            if len(cards) != 4 or len([card for card in cards if card.get("apex")]) != 1:
+                findings.append(Finding("cards", "error", cards_dir, "/".join(key),
+                    "subclasse precisa de 3 Cartas tardias + 1 Ápice"))
+            if "ativa" not in kinds or not (kinds - {"ativa"}):
+                findings.append(Finding("cards", "error", cards_dir, "/".join(key),
+                    "subclasse precisa de Carta ativa e não-ativa"))
     return findings
 
 

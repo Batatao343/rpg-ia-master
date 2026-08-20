@@ -1,6 +1,6 @@
 # SPEC — Fase 10b — Plano mestre local-first para prontidão de produção
 
-> **Status:** `draft`
+> **Status:** `done` (2026-08-20 — fatia local certificada; cloud segue em spec própria `draft`)
 > **Criada:** 2026-08-16 · **Atualizada:** 2026-08-16
 > **Depende de:** [Fase 10 — hardening técnico](fase-10-hardening-tecnico.md) `done` · [hardening de persistência/SSE](hardening-persistencia-sse-idempotencia.md) `done`
 > **Desbloqueia:** implementação ordenada da Fase 10b e, somente depois, certificação em infraestrutura externa
@@ -197,16 +197,17 @@ identidade e memória compartilham o mesmo contrato transacional.
 
 ## 5. Critérios de aceite
 
-- [ ] As oito specs filhas foram revisadas e aprovadas pelo usuário.
-- [ ] Todo write mutável do inventário §3.1 possui adapter e escopo de owner.
-- [ ] Perfis `legacy`, `local` e `portable` passam a mesma suíte de contratos.
-- [ ] API `hosted` inicia sem writes persistentes no filesystem.
-- [ ] Turno, memória e recibo têm commit atômico e retry idempotente multiworker.
-- [ ] Dois usuários locais não acessam nenhum estado, memória, asset ou job entre si.
-- [ ] Backup/restore e teste de caos atendem RPO/RTO definidos.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo.
-- [ ] Saves antigos continuam exportáveis/carregáveis; nenhum diretório histórico é limpo automaticamente.
+- [x] As sete specs filhas locais foram aprovadas e concluídas; certificação cloud
+      permanece isolada em spec `draft`, sem provisionamento implícito.
+- [x] Todo write mutável do inventário §3.1 possui adapter e escopo de owner.
+- [x] Perfis `legacy`, `local` e `portable` passam a mesma suíte de contratos.
+- [x] API `hosted` inicia sem writes persistentes no filesystem.
+- [x] Turno, memória e recibo têm commit atômico e retry idempotente multiworker.
+- [x] Dois usuários locais não acessam nenhum estado, memória, asset ou job entre si.
+- [x] Backup/restore e teste de caos atendem RPO/RTO definidos.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM em todo `with_structured_output` novo.
+- [x] Saves antigos continuam exportáveis/carregáveis; nenhum diretório histórico é limpo automaticamente.
 
 ## 6. Smoke test com LLM real
 

@@ -11,6 +11,7 @@ import { EmberField } from "./components/EmberField";
 import { DeathModal } from "./components/DeathModal";
 import type { LevelUpPick } from "./components/LevelUpModal";
 import { CombatSimulatorScreen } from "./components/CombatSimulatorScreen";
+import { AuthScreen } from "./components/AuthScreen";
 
 const LS_KEY = "cronicas_game_id";
 
@@ -32,7 +33,7 @@ const ROUTE_TEXTS: Record<string, string> = {
 };
 
 export function App() {
-  const [screen, setScreen] = useState<"saves" | "create" | "simulator" | "play">("create");
+  const [screen, setScreen] = useState<"auth" | "saves" | "create" | "simulator" | "play">("create");
   const [data, setData] = useState<GameResponse | null>(null);
   const [log, setLog] = useState<LogEntry[]>([]);
   const [busy, setBusy] = useState(false);
@@ -41,6 +42,8 @@ export function App() {
   const [banner, setBanner] = useState<BannerState | null>(null);
   const [continueData, setContinueData] = useState<GameResponse | null>(null);
   const [saves, setSaves] = useState<SaveSummary[]>([]);
+  const [authError, setAuthError] = useState("");
+  const [authRequired, setAuthRequired] = useState(false);
 
   const gameId = useRef<string | null>(localStorage.getItem(LS_KEY));
   const logSeq = useRef(0);
@@ -48,22 +51,71 @@ export function App() {
 
   // spec polish-sessao (R3): havendo campanhas salvas, a tela inicial as lista.
   useEffect(() => {
-    api
-      .getSaves()
-      .then((list) => {
+    let active = true;
+    async function bootstrapSession() {
+      try {
+        const config = await api.getAuthConfig();
+        if (!active) return;
+        setAuthRequired(config.required);
+        if (config.required && !config.authenticated) {
+          setScreen("auth");
+          return; // não chama rotas protegidas antes do login
+        }
+      } catch {
+        // Compatibilidade com API legacy anterior à rota /auth/config.
+      }
+      try {
+        const list = await api.getSaves();
+        if (!active) return;
         setSaves(list);
         if (list.length > 0) setScreen("saves");
-      })
-      .catch(() => {
-        // API antiga/sem saves — mantém o fluxo clássico de "continuar última"
+      } catch {
+        // API antiga/sem saves — mantém o fluxo clássico de "continuar última".
         const saved = localStorage.getItem(LS_KEY);
         if (!saved) return;
-        api
-          .getState(saved)
-          .then((r) => setContinueData(r))
-          .catch(() => localStorage.removeItem(LS_KEY));
-      });
+        try {
+          const response = await api.getState(saved);
+          if (active) setContinueData(response);
+        } catch {
+          localStorage.removeItem(LS_KEY);
+        }
+      }
+    }
+    void bootstrapSession();
+    return () => { active = false; };
   }, []);
+
+  async function handleLogin(email: string, password: string, create: boolean) {
+    setBusy(true);
+    setAuthError("");
+    try {
+      await (create ? api.signup(email, password) : api.login(email, password));
+      const list = await api.getSaves();
+      setSaves(list);
+      setScreen(list.length ? "saves" : "create");
+    } catch (error) {
+      setAuthError(errMsg(error));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleLogout() {
+    setBusy(true);
+    try {
+      await api.logout();
+      localStorage.removeItem(LS_KEY);
+      gameId.current = null;
+      setData(null);
+      setLog([]);
+      setSaves([]);
+      setScreen("auth");
+    } catch (error) {
+      setBanner({ msg: "Não foi possível encerrar a sessão: " + errMsg(error), kind: "error" });
+    } finally {
+      setBusy(false);
+    }
+  }
 
   function pushLog(text: string, role: "player" | "narrator", type: LogEntry["type"]) {
     setLog((prev) => [...prev, { id: logSeq.current++, text, role, type }]);
@@ -112,6 +164,18 @@ export function App() {
     try {
       const r = await api.newGame(payload);
       onTurn(r);
+      if (payload.generate_portrait && r.game_id) {
+        void api.confirmPlayerArt(r.game_id, crypto.randomUUID()).then((art) => {
+          setBanner({
+            msg: art.status === "disabled"
+              ? "Retrato dinâmico desativado; a arte-base permanece disponível."
+              : "Retrato encomendado. Ele aparecerá quando o processamento terminar.",
+            kind: "warn",
+          });
+        }).catch((error) => {
+          setBanner({ msg: "O retrato não foi encomendado: " + errMsg(error), kind: "warn" });
+        });
+      }
     } catch (err) {
       setScreen("create");
       setBanner({ msg: "Falha ao criar personagem: " + errMsg(err), kind: "error" });
@@ -354,6 +418,12 @@ export function App() {
       <div className="atmosphere" aria-hidden />
       <EmberField />
       <Banner state={banner} onDone={() => setBanner(null)} />
+      {authRequired && screen !== "auth" && (
+        <button className="session-logout btn btn--ghost" disabled={busy}
+          onClick={() => void handleLogout()}>
+          Encerrar sessão
+        </button>
+      )}
       {data?.death_pending && !data?.game_over && !data?.combat_simulation?.enabled && (
         <DeathModal
           busy={busy}
@@ -363,7 +433,11 @@ export function App() {
         />
       )}
       <AnimatePresence mode="wait">
-        {screen === "saves" ? (
+        {screen === "auth" ? (
+          <motion.div key="auth" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <AuthScreen busy={busy} onLogin={handleLogin} error={authError} />
+          </motion.div>
+        ) : screen === "saves" ? (
           <motion.div
             key="saves"
             initial={{ opacity: 0, scale: 0.985 }}

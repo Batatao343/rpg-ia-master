@@ -18,7 +18,10 @@
         "kind": "cura",
         "valor": 4
       },
-      "descricao": "Fecha o corte sob fogo — mãos firmes onde as balas passam."
+      "descricao": "Fecha o corte sob fogo — mãos firmes onde as balas passam.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "med_torniquete",
@@ -37,7 +40,10 @@
         "kind": "cura",
         "valor": 3
       },
-      "descricao": "Corta a hemorragia antes que o corpo perceba a perda."
+      "descricao": "Corta a hemorragia antes que o corpo perceba a perda.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "med_estabilizar",
@@ -56,7 +62,10 @@
         "kind": "estabilizar",
         "valor": 1
       },
-      "descricao": "Traz de volta do umbral quem o Abismo já reclamava."
+      "descricao": "Traz de volta do umbral quem o Abismo já reclamava.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "med_mao_firme",
@@ -73,7 +82,10 @@
         "kind": "buff_cura",
         "valor": 1
       },
-      "descricao": "Não treme nem quando o mundo treme — cada ponto rende mais."
+      "descricao": "Não treme nem quando o mundo treme — cada ponto rende mais.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "med_triagem",
@@ -90,7 +102,10 @@
         "kind": "utilitaria",
         "prompt_hint": "avaliar ferimentos/prioridade de socorro"
       },
-      "descricao": "Num olhar, sabe quem espera e quem não pode."
+      "descricao": "Num olhar, sabe quem espera e quem não pode.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "med_antitoxina",
@@ -108,7 +123,10 @@
       "efeito": {
         "kind": "purga_condicao"
       },
-      "descricao": "Neutraliza veneno, praga ou maldição com o composto certo."
+      "descricao": "Neutraliza veneno, praga ou maldição com o composto certo.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "med_ultima_hora",
@@ -127,7 +145,10 @@
         "kind": "cura",
         "valor": 10
       },
-      "descricao": "Gasta tudo para arrancar um aliado das mãos do fim."
+      "descricao": "Gasta tudo para arrancar um aliado das mãos do fim.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "med_tri_reflexo",
@@ -147,7 +168,10 @@
         "valor": 3
       },
       "descricao": "Chega ao caído antes do segundo tiro.",
-      "gatilho": "aliado_cai"
+      "gatilho": "aliado_cai",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "med_tri_intervencao",
@@ -200,7 +224,10 @@
           }
         }
       },
-      "central": true
+      "central": true,
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "med_tri_sangue_frio",
@@ -217,7 +244,10 @@
         "kind": "buff_cura",
         "valor": 1
       },
-      "descricao": "O caos ao redor não entra nas mãos — cura mais quem está pior."
+      "descricao": "O caos ao redor não entra nas mãos — cura mais quem está pior.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "med_bot_composto",
@@ -236,7 +266,10 @@
         "kind": "buff_dano",
         "valor": 2
       },
-      "descricao": "Uma dose que faz o aliado bater mais forte por um tempo."
+      "descricao": "Uma dose que faz o aliado bater mais forte por um tempo.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "med_bot_purga",
@@ -289,7 +322,10 @@
           }
         }
       },
-      "central": true
+      "central": true,
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "med_bot_reagente",
@@ -306,7 +342,10 @@
         "kind": "buff_cura",
         "valor": 1
       },
-      "descricao": "Conhece o antídoto de cada veneno de Valoria de cor."
+      "descricao": "Conhece o antídoto de cada veneno de Valoria de cor.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "med_fer_talas",
@@ -325,7 +364,10 @@
         "kind": "protecao",
         "valor": 3
       },
-      "descricao": "Amarra ferro à carne para que o aliado aguente mais um round."
+      "descricao": "Amarra ferro à carne para que o aliado aguente mais um round.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "med_fer_protese",
@@ -378,7 +420,10 @@
           }
         }
       },
-      "central": true
+      "central": true,
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "med_fer_solda",
@@ -395,7 +440,10 @@
         "kind": "buff_defesa",
         "valor": 1
       },
-      "descricao": "O metal que enxerta protege tanto quanto sustenta."
+      "descricao": "O metal que enxerta protege tanto quanto sustenta.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "med_tri_corredor",
@@ -415,7 +463,10 @@
         "valor": 2
       },
       "descricao": "Abre com ordens curtas um corredor humano até a zona protegida.",
-      "papel": "retirar ferido sob fogo"
+      "papel": "retirar ferido sob fogo",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "med_tri_segundo",
@@ -435,7 +486,10 @@
         "valor": 2
       },
       "descricao": "Alterna compressões e comandos até dois ritmos perdidos voltarem a responder.",
-      "papel": "estabilizar múltiplos terminais"
+      "papel": "estabilizar múltiplos terminais",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "med_bot_nevoa",
@@ -455,7 +509,10 @@
         "valor": 2
       },
       "descricao": "Quebra um frasco cuja névoa limpa veneno, esporo e pânico da mesma área.",
-      "papel": "purga em zona"
+      "papel": "purga em zona",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "med_bot_panacea",
@@ -475,7 +532,10 @@
         "valor": 14
       },
       "descricao": "Combina três substâncias que deveriam se anular e as obriga a salvar uma vida.",
-      "papel": "cura superior com reagentes raros"
+      "papel": "cura superior com reagentes raros",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "med_fer_ancora",
@@ -495,7 +555,10 @@
         "valor": 5
       },
       "descricao": "Crava a prótese ao chão e transforma recuo em escolha, nunca consequência.",
-      "papel": "fixar aliado contra deslocamento"
+      "papel": "fixar aliado contra deslocamento",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "med_fer_colosso",
@@ -515,7 +578,10 @@
         "valor": 7
       },
       "descricao": "Acopla pistões de campo que dão a um braço humano a memória de um gigante.",
-      "papel": "amplificar força de aliado"
+      "papel": "amplificar força de aliado",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "med_placa_reflexa",
@@ -536,7 +602,10 @@
       },
       "descricao": "Arranca uma placa do estojo e a encaixa entre golpe e órgão vital.",
       "gatilho": "ao_aliado_ser_atacado",
-      "papel": "interpor tala contra crítico"
+      "papel": "interpor tala contra crítico",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "med_dose_choque",
@@ -557,7 +626,10 @@
       },
       "descricao": "Uma agulha no ponto certo devolve o próximo segundo a quem o perderia.",
       "gatilho": "ao_aliado_perder_acao",
-      "papel": "reativar aliado que hesita"
+      "papel": "reativar aliado que hesita",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "med_autopsia_campo",
@@ -577,7 +649,10 @@
         "valor": 4
       },
       "descricao": "Um minuto de exame revela como algo morreu — e como o semelhante pode morrer.",
-      "papel": "diagnosticar causa e fraqueza"
+      "papel": "diagnosticar causa e fraqueza",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "med_hospital_improviso",
@@ -597,7 +672,10 @@
         "prompt_hint": "montar enfermaria segura com sucata, tecido e água limpa"
       },
       "descricao": "Transforma qualquer ruína com teto em um lugar onde a morte precisa esperar.",
-      "papel": "criar refúgio médico"
+      "papel": "criar refúgio médico",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "med_corte_descompressao",
@@ -617,7 +695,10 @@
         "valor": 1
       },
       "descricao": "Abre espaço onde pressão, veneno ou Éter ameaçam esmagar por dentro.",
-      "papel": "remover condição física aguda"
+      "papel": "remover condição física aguda",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "med_marca_triagem",
@@ -637,7 +718,10 @@
         "valor": 5
       },
       "descricao": "Um traço de giz vermelho faz o grupo inteiro reconhecer quem não pode cair.",
-      "papel": "priorizar cura e proteção"
+      "papel": "priorizar cura e proteção",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "med_serra_ossea",
@@ -658,7 +742,10 @@
         "dano_base": 8
       },
       "descricao": "A ferramenta de amputação encontra juntas que espadas ignoram.",
-      "papel": "dano preciso contra armadura orgânica"
+      "papel": "dano preciso contra armadura orgânica",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "med_protocolo_retornar",
@@ -676,7 +763,10 @@
         "valor": 2
       },
       "descricao": "Cada vida estabilizada melhora o protocolo aplicado à próxima.",
-      "papel": "cura crescente após estabilizar"
+      "papel": "cura crescente após estabilizar",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     }
   ]
 }

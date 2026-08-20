@@ -1,7 +1,7 @@
 """Typed structures describing the shared game state for the LangGraph workflow."""
 
 import operator
-from typing import Annotated, Dict, List, Literal, Optional, TypedDict
+from typing import Any, Annotated, Dict, List, Literal, Optional, TypedDict
 
 from langchain_core.messages import BaseMessage
 
@@ -108,7 +108,10 @@ class Carta(TypedDict, total=False):
     tipo: str            # "ativa" | "passiva" | "utilitaria" | "reacao"
     classe: str
     subclasse: str
-    patamar: str         # "inicial" | "avancado" | "superior"
+    patamar: str
+    tier: int
+    level_req: int
+    apex: bool
     custo_entropia: int
     frequencia: str      # "livre"|"turno"|"cena"|"descanso_curto"|"descanso_longo"
     virtude_permitida: List[str]
@@ -160,7 +163,9 @@ class PlayerStats(TypedDict, total=False):
     known_cards: List[str]             # Acervo: ids de Cartas conhecidas
     prepared_cards: List[str]          # subconjunto preparado (tamanho por nível)
     card_usage: Dict[str, Dict]        # id -> {used_this_turn, used_this_scene, used_since_short_rest, used_since_long_rest}
-    virtue_cards: List[Dict]           # 2 permanentes: {card_id, virtude, estagio}
+    virtue_cards: List[Dict]           # 2 permanentes: {card_id, virtude, estagio, mastery}
+    subclass: str
+    progression_grants: List[str]
     evolved_cards: Dict[str, str]      # id -> caminho ("A"|"B") já evoluído (permanente, único)
     # escolhas de level up pendentes — {"id", "level", "kind": virtude|carta}
     pending_choices: List[Dict]
@@ -323,6 +328,7 @@ class ContinuityState(TypedDict, total=False):
 # --- Fase 3.1: crônica por capítulos (milestones determinísticos + prosa) ---
 
 class ChronicleEntry(TypedDict, total=False):
+    entry_id: str
     text: str
     turn: int
     kind: str        # "milestone" (determinístico, do event_log) | "prose" (menestrel LLM)
@@ -330,10 +336,12 @@ class ChronicleEntry(TypedDict, total=False):
 
 
 class ChronicleChapter(TypedDict, total=False):
+    chapter_id: str
     title: str
     started_turn: int
     location: str            # current_location no momento da abertura
     entries: List[ChronicleEntry]
+    digest: Dict
 
 
 # --- Fase 2.5: eventos estruturados + estado projetado do mundo ---
@@ -440,6 +448,7 @@ class GameState(TypedDict):
     combat_target: Optional[str]
     combat_origin_hint: Optional[str]  # causa transitória até combat.origin ser materializada
     loot_source: Optional[str]
+    last_economy_action: Dict[str, Any]
 
     # --- Combate determinístico ---
     # {"round": int, "active": bool, "order": [{"id","name","side","init"}],

@@ -1,6 +1,6 @@
 # SPEC — Fase 10b.4 — Autenticação local, RLS e isolamento por usuário
 
-> **Status:** `draft`
+> **Status:** `done` (2026-08-20)
 > **Criada:** 2026-08-16 · **Atualizada:** 2026-08-16
 > **Depende de:** [Postgres transacional](fase-10b-postgres-persistencia-transacional.md) `done` · [turnos duráveis](fase-10b-turnos-duraveis-concorrencia-fila.md) `done`
 > **Desbloqueia:** testes multiusuário, assets privados e exposição futura da API
@@ -190,18 +190,18 @@ reset não confirmam se uma conta existe.
 
 ## 5. Critérios de aceite
 
-- [ ] Tokens nunca aparecem em local/sessionStorage, logs ou respostas de jogo.
-- [ ] Cookies/CSRF/Origin bloqueiam mutação cross-site.
-- [ ] JWT inválido/expirado/issuer ou audience errada é 401.
-- [ ] A/B têm isolamento integral em API, SQL/RLS, jobs e export.
-- [ ] Role da API não possui BYPASSRLS nem privilégios de migration/admin.
-- [ ] Todas as policies de update possuem `USING` e `WITH CHECK`.
-- [ ] `game_id=None` e `/game/saves` operam somente no owner atual.
-- [ ] Login/refresh/logout e e-mail local passam sem serviço externo.
-- [ ] `legacy` loopback continua jogável com principal local fixo.
-- [ ] `uv run pytest -m infra_local` + pgTAP + suíte offline verdes.
-- [ ] Guard de FallbackLLM — N/A; nenhum invoke novo.
-- [ ] Saves importados recebem owner explícito sem alterar conteúdo mecânico.
+- [x] Tokens nunca aparecem em local/sessionStorage, logs ou respostas de jogo.
+- [x] Cookies/CSRF/Origin bloqueiam mutação cross-site.
+- [x] JWT inválido/expirado/issuer ou audience errada é 401.
+- [x] A/B têm isolamento integral em API, SQL/RLS, jobs e export.
+- [x] Role da API não possui BYPASSRLS nem privilégios de migration/admin.
+- [x] Todas as policies de update possuem `USING` e `WITH CHECK`.
+- [x] `game_id=None` e `/game/saves` operam somente no owner atual.
+- [x] Login/refresh/logout e e-mail local passam sem serviço externo.
+- [x] `legacy` loopback continua jogável com principal local fixo.
+- [x] `uv run pytest -m infra_local` + pgTAP + suíte offline verdes.
+- [x] Guard de FallbackLLM — N/A; nenhum invoke novo.
+- [x] Saves importados recebem owner explícito sem alterar conteúdo mecânico.
 
 ## 6. Smoke test com LLM real
 

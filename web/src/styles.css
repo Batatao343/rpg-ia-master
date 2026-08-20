@@ -649,6 +649,14 @@ select {
 .person__mem { margin: 0.35rem 0 0; font-size: 0.92rem; font-style: italic; color: var(--muted); line-height: 1.45; }
 
 .chronicle { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.8rem; }
+.chron-search__mode { margin: .25rem 0; color: var(--muted); font-size: .72rem; }
+.chron-results { list-style: none; margin: .45rem 0; padding: 0; display: grid; gap: .35rem; }
+.chron-results button { width: 100%; text-align: left; display: grid; gap: .15rem; padding: .55rem; border: 1px solid rgba(190,150,90,.2); background: rgba(10,10,12,.55); color: inherit; }
+.chron-results span, .chron-results small { color: var(--muted); }
+.chron-digest { margin: .5rem 0; padding: .65rem; border-left: 2px solid var(--gold); background: rgba(190,150,90,.07); }
+.chron-digest p { margin: 0 0 .3rem; }
+.chron-digest small { color: var(--muted); }
+.chron-raw summary { cursor: pointer; color: var(--muted); margin: .4rem 0; }
 .chron {
   position: relative; padding: 0.7rem 0.8rem 0.7rem 2rem;
   background: var(--bg-deep); border: 1px solid var(--line-soft); border-radius: var(--r-sm);
@@ -1013,4 +1021,11 @@ select {
      (centralizar vertical clipava o topo e não dava scroll até ele) */
   .create { place-items: start center; padding: 1.4rem 0.8rem; }
   .savelist { max-height: 52vh; }
+}
+.session-logout {
+  position: fixed;
+  z-index: 50;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: auto;
 }

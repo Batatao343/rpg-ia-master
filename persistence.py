@@ -13,6 +13,7 @@ import glob
 import tempfile
 import uuid
 import shutil
+import time
 from copy import deepcopy
 from typing import Any, Dict, List, Optional
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, BaseMessage
@@ -34,12 +35,27 @@ from services.memory_summary import compact_summary
 SAVES_DIR = "saves"
 DEFAULT_SAVE_NAME = "autosave"
 
+
+def _replace_with_retry(source: str, destination: str, *, attempts: int = 6) -> None:
+    """Tolera locks efêmeros de antivírus/OneDrive sem perder atomicidade."""
+    last_error: PermissionError | None = None
+    for attempt in range(attempts):
+        try:
+            os.replace(source, destination)
+            return
+        except PermissionError as exc:
+            last_error = exc
+            if attempt + 1 < attempts:
+                time.sleep(0.01 * (2 ** attempt))
+    assert last_error is not None
+    raise last_error
+
 # Versão atual do schema de save (Fase 10). Save sem o campo = versão 0.
 # v2 = campos de camada dos NPCs (spec npcs-3-camadas-traits).
 # v3 = 10 classes antigas → 5 Posturas + Entropia (spec refatoracao-sistema-classes).
 # v4 = Virtudes/Vitalidade/Ferimentos; v5 = Vitalidade canônica + aliases HP derivados.
-# v6 = ledger visual idempotente (Fase 8A); v7 = metatempo/continuidade.
-SCHEMA_VERSION = 7
+# v6 = ledger visual; v7 = metatempo; v8 = crônica estável + progressão 1–20.
+SCHEMA_VERSION = 8
 
 def save_path(game_id: str) -> str:
     """Caminho canônico do save de `game_id`.
@@ -181,6 +197,23 @@ def _migrate_v6_to_v7(raw: Dict[str, Any]) -> Dict[str, Any]:
     migrated["continuity"] = normalize(
         migrated.get("continuity"), canonical_turn=canonical_turn,
     )
+    migrated["schema_version"] = 7
+    return migrated
+
+
+def _migrate_v7_to_v8(raw: Dict[str, Any]) -> Dict[str, Any]:
+    migrated = deepcopy(raw)
+    from progression import normalize_player_progression
+    from services.chronicle import ensure_chronicle_ids
+    if isinstance(migrated.get("player"), dict):
+        migrated["player"] = normalize_player_progression(migrated["player"])
+    # Saves anteriores ao hard cut v4 permanecem como memoriais somente-leitura.
+    # A crônica plana desses saves é parte do documento histórico e não deve ser
+    # reinterpretada como o schema jogável por capítulos.
+    chronicle = migrated.get("chronicle") or []
+    if not migrated.get("archived") or all(isinstance(row, dict) for row in chronicle):
+        migrated["chronicle"] = ensure_chronicle_ids(
+            chronicle, game_id=str(migrated.get("game_id", "legacy")))
     migrated["schema_version"] = SCHEMA_VERSION
     return migrated
 
@@ -191,13 +224,15 @@ def migrate_state(raw: Dict[str, Any]) -> Dict[str, Any]:
     if version < 4:
         archived = _migrate_v3_to_v4(deepcopy(raw))
         archived["schema_version"] = 5
-        return _migrate_v6_to_v7(_migrate_v5_to_v6(archived))
+        return _migrate_v7_to_v8(_migrate_v6_to_v7(_migrate_v5_to_v6(archived)))
     if version >= SCHEMA_VERSION:
         return raw
     migrated = _migrate_v4_to_v5(raw) if version < 5 else deepcopy(raw)
     if version < 6:
         migrated = _migrate_v5_to_v6(migrated)
-    return _migrate_v6_to_v7(migrated)
+    if version < 7:
+        migrated = _migrate_v6_to_v7(migrated)
+    return _migrate_v7_to_v8(migrated)
 
 def _serialize_messages(messages: List[BaseMessage]) -> List[Dict[str, str]]:
     """Converte objetos Message do LangChain para dicionários simples (JSON)."""
@@ -255,6 +290,29 @@ def list_saves() -> List[Dict[str, Any]]:
     """Resumo de todos os saves de `saves/*.json`, ordenado por mtime desc.
     Leitura TOLERANTE: arquivo corrompido/ilegível é pulado, nunca derruba a
     lista (R1)."""
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        from infrastructure.request_context import current_principal
+        from infrastructure.runtime import get_runtime
+
+        principal = current_principal()
+        out = []
+        for stored in get_runtime().game_store.list(principal):
+            raw = stored.state
+            player = raw.get("player") or {}
+            world = raw.get("world") or {}
+            clock = world.get("world_clock") or {}
+            out.append({
+                "game_id": str(stored.game_id),
+                "name": str(player.get("name", "?")),
+                "class_name": str(player.get("class_name", "")),
+                "level": int(player.get("level", 1) or 1),
+                "location": str(world.get("current_location", "")),
+                "day": int(clock.get("day", 1) or 1),
+                "game_over": bool(raw.get("game_over", False)),
+                "combat_simulation": bool((raw.get("combat_simulation") or {}).get("enabled")),
+                "updated_at": stored.updated_at.timestamp(),
+            })
+        return out
     if not os.path.isdir(SAVES_DIR):
         return []
     out: List[Dict[str, Any]] = []
@@ -288,6 +346,12 @@ def delete_save(game_id: str) -> bool:
     """Remove o save E o índice de memória da sessão (senão vira lixo órfão).
     ValueError se game_id não é UUID (mesmo padrão do save_path — Fase 10);
     False se o save não existe."""
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        from infrastructure.request_context import current_principal
+        from infrastructure.runtime import get_runtime
+
+        principal = current_principal()
+        return get_runtime().game_store.delete(principal, uuid.UUID(str(game_id)))
     path = save_path(game_id)  # levanta ValueError se inválido
     checkpoint = _safe_save_path(game_id, suffix=".checkpoint")
     checkpoint_memory = checkpoint_memory_path(game_id)
@@ -330,12 +394,12 @@ def _atomic_replace_directory(staged: str, destination: str) -> None:
     shutil.rmtree(backup, ignore_errors=True)
     had_destination = os.path.exists(destination)
     if had_destination:
-        os.replace(destination, backup)
+        _replace_with_retry(destination, backup)
     try:
-        os.replace(staged, destination)
+        _replace_with_retry(staged, destination)
     except BaseException:
         if had_destination and os.path.exists(backup):
-            os.replace(backup, destination)
+            _replace_with_retry(backup, destination)
         raise
     shutil.rmtree(backup, ignore_errors=True)
 
@@ -379,7 +443,7 @@ def restore_checkpoint_memory(game_id: str) -> bool:
             backup = destination + ".previous"
             shutil.rmtree(backup, ignore_errors=True)
             if os.path.exists(destination):
-                os.replace(destination, backup)
+                _replace_with_retry(destination, backup)
             shutil.rmtree(backup, ignore_errors=True)
         else:
             _atomic_replace_directory(staged, destination)
@@ -446,7 +510,7 @@ def _atomic_write_json(file_path: str, data: Dict[str, Any]) -> None:
             json.dump(data, fh, indent=4, ensure_ascii=False)
             fh.flush()
             os.fsync(fh.fileno())
-        os.replace(tmp_path, file_path)
+        _replace_with_retry(tmp_path, file_path)
     except BaseException:
         try:
             os.unlink(tmp_path)
@@ -549,6 +613,25 @@ def save_game_state(state: Dict[str, Any]) -> bool:
     """
     if not state: return False
 
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        try:
+            from infrastructure.request_context import current_principal
+            from infrastructure.runtime import get_runtime
+
+            principal = current_principal()
+            game_id = uuid.UUID(str(state["game_id"]))
+            store = get_runtime().game_store
+            current = store.get(principal, game_id)
+            if current is None:
+                stored = store.create(principal, state)
+            else:
+                stored = store.save(principal, game_id, current.version, state)
+            state["_storage_version"] = stored.version
+            return True
+        except Exception as e:
+            print(f"❌ Erro crítico ao salvar jogo no GameStore: {e}")
+            return False
+
     try:
         # Garante que a pasta existe
         if not os.path.exists(SAVES_DIR):
@@ -574,6 +657,38 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
     """
     Carrega o jogo. Se specific_file não for passado, carrega o mais recente.
     """
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        try:
+            from infrastructure.request_context import current_principal
+            from infrastructure.runtime import get_runtime
+
+            principal = current_principal()
+            store = get_runtime().game_store
+            stored = None
+            if specific_file:
+                raw_id = os.path.basename(str(specific_file)).removesuffix(".json")
+                stored = store.get(principal, uuid.UUID(raw_id))
+            else:
+                games = store.list(principal)
+                stored = games[0] if games else None
+            if stored is None:
+                return None
+            state = stored.state
+            state["_storage_version"] = stored.version
+            if get_runtime().resources:
+                from infrastructure.pgvector_memory import PgVectorMemoryStore
+                from services.chronicle_repository import ChronicleRepository
+                memory = get_runtime().memory_store
+                if isinstance(memory, PgVectorMemoryStore):
+                    state = ChronicleRepository(
+                        get_runtime().resources[0], memory,
+                    ).overlay(principal, state)
+                    state["_storage_version"] = stored.version
+            return state
+        except Exception as e:
+            print(f"⚠️ Erro ao carregar GameStore: {e}")
+            return None
+
     target_file = specific_file
     
     if not target_file:
@@ -684,6 +799,21 @@ def save_checkpoint(state: Dict[str, Any]) -> bool:
         state.get("continuity"),
         canonical_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
     )
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        try:
+            from infrastructure.request_context import current_principal
+            from infrastructure.runtime import get_runtime
+
+            principal = current_principal()
+            store = get_runtime().game_store
+            stored = store.get(principal, uuid.UUID(str(state["game_id"])))
+            if stored is None or not hasattr(store, "save_checkpoint"):
+                return False
+            store.save_checkpoint(principal, stored, state)
+            return True
+        except Exception as e:
+            print(f"❌ Erro ao gravar checkpoint no GameStore: {e}")
+            return False
     memory_backup: Optional[str] = None
     memory_destination: Optional[str] = None
     memory_existed = False
@@ -709,7 +839,7 @@ def save_checkpoint(state: Dict[str, Any]) -> bool:
         if memory_destination:
             shutil.rmtree(memory_destination, ignore_errors=True)
             if memory_existed and memory_backup and os.path.isdir(memory_backup):
-                os.replace(memory_backup, memory_destination)
+                _replace_with_retry(memory_backup, memory_destination)
         if memory_backup:
             shutil.rmtree(memory_backup, ignore_errors=True)
         print(f"❌ Erro ao gravar checkpoint: {e}")
@@ -717,12 +847,27 @@ def save_checkpoint(state: Dict[str, Any]) -> bool:
 
 
 def has_checkpoint(game_id: str) -> bool:
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        return load_checkpoint(game_id) is not None
     return os.path.exists(_safe_save_path(game_id, suffix=".checkpoint"))
 
 
 def load_checkpoint(game_id: str) -> Optional[Dict[str, Any]]:
     """Carrega o checkpoint do `game_id` (None se não houver). Reconstrói via
     `_raw_to_state` (mesmo pipeline de migrations do save vivo)."""
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        try:
+            from infrastructure.request_context import current_principal
+            from infrastructure.runtime import get_runtime
+
+            principal = current_principal()
+            store = get_runtime().game_store
+            if not hasattr(store, "get_checkpoint"):
+                return None
+            return store.get_checkpoint(principal, uuid.UUID(str(game_id)))
+        except Exception as e:
+            print(f"⚠️ Erro ao carregar checkpoint do GameStore: {e}")
+            return None
     path = _safe_save_path(game_id, suffix=".checkpoint")
     if not os.path.exists(path):
         return None

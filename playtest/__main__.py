@@ -165,6 +165,59 @@ def _cmd_transcript(args) -> int:
     return 0
 
 
+def _cmd_merchant_suite(args) -> int:
+    """Cinco campanhas/classes offline; uma Sangromante no modo real."""
+    from playtest import telemetry
+
+    if args.real and args.max_cost <= 0:
+        print("erro: merchant-suite --real exige --max-cost positivo aprovado", file=sys.stderr)
+        return 2
+    classes = [
+        "Devoto do Abismo", "Sangromante", "Corruptor",
+        "Arcanista Cinzento", "Médico de Campo",
+    ]
+    if args.real:
+        classes = ["Sangromante"]
+    labels = [f"comerciante:{index + 1}" for index in range(len(classes))]
+    run_id = telemetry.new_run_id()
+    telemetry.begin_run(
+        run_id, profiles=labels, turns=args.turns, seed=args.seed,
+        real=args.real, class_name=None, invariants_enabled=True,
+        seeds_by_profile={label: args.seed + index for index, label in enumerate(labels)},
+    )
+    exit_code = 0
+    try:
+        for index, class_name in enumerate(classes):
+            seed = args.seed + index
+            result = run_campaign(
+                "comerciante", turns=args.turns, seed=seed,
+                class_name=class_name, use_real_llm=args.real,
+                max_requests=args.max_requests, max_cost=args.max_cost,
+                turn_timeout_seconds=args.turn_timeout,
+                on_turn_end=lambda _state, _turn: telemetry.touch_run(run_id),
+            )
+            result.profile = labels[index]
+            summary = telemetry.persist_campaign(
+                run_id, result, stem=f"merchant_{index + 1}_{seed}",
+            )
+            _print_resumo(result)
+            if (
+                result.errors or result.aborted_reason
+                or result.turns_completed != args.turns
+                or int(summary.get("error_violations", 0) or 0)
+            ):
+                exit_code = 1
+    except KeyboardInterrupt:
+        exit_code = 130
+    finally:
+        telemetry.finish_run(
+            run_id, status="complete" if exit_code == 0 else "failed",
+            reason=None if exit_code == 0 else "campaign_failure",
+        )
+    print(f"\nMerchant suite: {telemetry.run_dir(run_id)}")
+    return exit_code
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="playtest", description="Harness de playtest agêntico")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -207,6 +260,15 @@ def main(argv=None) -> int:
     prt = sub.add_parser("transcript", help="transcrito ação→narração por turno (julgar o prompt)")
     prt.add_argument("run_id")
     prt.set_defaults(func=_cmd_transcript)
+
+    pm = sub.add_parser("merchant-suite", help="roda a matriz longa do comerciante")
+    pm.add_argument("--turns", type=int, default=200)
+    pm.add_argument("--seed", type=int, default=4100)
+    pm.add_argument("--real", action="store_true")
+    pm.add_argument("--max-requests", type=int, default=0)
+    pm.add_argument("--max-cost", type=float, default=0.0)
+    pm.add_argument("--turn-timeout", type=float, default=None)
+    pm.set_defaults(func=_cmd_merchant_suite)
 
     args = parser.parse_args(argv)
     return args.func(args)

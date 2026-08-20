@@ -22,7 +22,10 @@
       "descricao": "O que ele encosta começa a apodrecer no tempo devido.",
       "mecanica_classe": {
         "decadencia": "any"
-      }
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "cor_esporos",
@@ -45,7 +48,10 @@
       "descricao": "Solta uma nuvem fina que se aloja nos pulmões.",
       "mecanica_classe": {
         "decadencia": "any"
-      }
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "cor_carne_docil",
@@ -62,7 +68,10 @@
         "kind": "buff_dot",
         "valor": 1
       },
-      "descricao": "A matéria já quer ceder; ele só precisa pedir com jeito."
+      "descricao": "A matéria já quer ceder; ele só precisa pedir com jeito.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "cor_farejar",
@@ -79,7 +88,10 @@
         "kind": "utilitaria",
         "prompt_hint": "rastrear doença/decomposição/podridão"
       },
-      "descricao": "Segue o cheiro do que já está morrendo."
+      "descricao": "Segue o cheiro do que já está morrendo.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "cor_semear",
@@ -102,7 +114,10 @@
       "descricao": "Planta a ruína e deixa que ela faça o trabalho lento.",
       "mecanica_classe": {
         "decadencia": "any"
-      }
+      },
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "cor_simbiose",
@@ -119,7 +134,10 @@
         "kind": "utilitaria",
         "prompt_hint": "aproveitar decomposição próxima a seu favor"
       },
-      "descricao": "Faz da podridão alheia um aliado silencioso."
+      "descricao": "Faz da podridão alheia um aliado silencioso.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "cor_colapso",
@@ -142,7 +160,10 @@
       "descricao": "Adianta anos de deterioração em três respirações.",
       "mecanica_classe": {
         "decadencia": "any"
-      }
+      },
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "cor_bio_gangrena",
@@ -165,7 +186,10 @@
       "descricao": "A carne escurece e o cheiro chega antes da dor.",
       "mecanica_classe": {
         "decadencia": "flesh"
-      }
+      },
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "cor_bio_metastase",
@@ -228,7 +252,10 @@
       "central": true,
       "mecanica_classe": {
         "decadencia": "flesh"
-      }
+      },
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "cor_bio_necrose",
@@ -245,7 +272,10 @@
         "kind": "buff_dot",
         "valor": 1
       },
-      "descricao": "Cada tecido morto vira adubo para o próximo."
+      "descricao": "Cada tecido morto vira adubo para o próximo.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "cor_alm_duvida",
@@ -269,7 +299,10 @@
       "descricao": "Sussurra a pergunta que apodrece qualquer coragem por dentro.",
       "mecanica_classe": {
         "decadencia": "morale"
-      }
+      },
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "cor_alm_desespero",
@@ -332,7 +365,10 @@
       "central": true,
       "mecanica_classe": {
         "decadencia": "morale"
-      }
+      },
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "cor_alm_erosao",
@@ -349,7 +385,10 @@
         "kind": "buff_dot",
         "valor": 1
       },
-      "descricao": "Onde a moral já range, ele empurra o alicerce."
+      "descricao": "Onde a moral já range, ele empurra o alicerce.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "cor_ino_ferrugem",
@@ -372,7 +411,10 @@
       "descricao": "A arma e a armadura do inimigo envelhecem décadas num toque.",
       "mecanica_classe": {
         "decadencia": "gear"
-      }
+      },
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "cor_ino_fadiga",
@@ -435,7 +477,10 @@
       "central": true,
       "mecanica_classe": {
         "decadencia": "gear"
-      }
+      },
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "cor_ino_corrosao",
@@ -452,7 +497,10 @@
         "kind": "buff_dano",
         "valor": 1
       },
-      "descricao": "Cada arranhão no metal alheio vira uma alavanca para o próximo."
+      "descricao": "Cada arranhão no metal alheio vira uma alavanca para o próximo.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "cor_bio_micelio",
@@ -474,7 +522,10 @@
         "dano_tipo": "corrosivo"
       },
       "descricao": "Esporos aprendem a distância entre os corpos e atravessam a formação.",
-      "papel": "contágio entre corpos próximos"
+      "papel": "contágio entre corpos próximos",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "cor_bio_raiz",
@@ -495,7 +546,10 @@
         "duracao": 3
       },
       "descricao": "Fibras novas confundem carne com solo e recusam qualquer passo.",
-      "papel": "imobilização orgânica duradoura"
+      "papel": "imobilização orgânica duradoura",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "cor_alm_eco",
@@ -515,7 +569,10 @@
         "valor": 4
       },
       "descricao": "A pior lembrança do alvo ganha voz e denuncia cada hesitação.",
-      "papel": "marcar culpa para ataques mentais"
+      "papel": "marcar culpa para ataques mentais",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "cor_alm_vazio",
@@ -536,7 +593,10 @@
         "duracao": 3
       },
       "descricao": "Fecha a alma do alvo numa sala onde só o Abismo responde.",
-      "papel": "isolamento psíquico"
+      "papel": "isolamento psíquico",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "cor_ino_geometria_ferrugem",
@@ -556,7 +616,10 @@
         "valor": 2
       },
       "descricao": "Dobra metal cansado até formar um abrigo de arestas famintas.",
-      "papel": "converter armadura corroída em cobertura"
+      "papel": "converter armadura corroída em cobertura",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "cor_ino_colapso",
@@ -576,7 +639,10 @@
         "valor": 3
       },
       "descricao": "Encontra a única linha que mantém tudo de pé e a apaga.",
-      "papel": "derrubar formação e cenário"
+      "papel": "derrubar formação e cenário",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "cor_membrana",
@@ -597,7 +663,10 @@
       },
       "descricao": "Uma película translúcida cresce antes que o projétil alcance a carne.",
       "gatilho": "ao_ser_alvo_distancia",
-      "papel": "absorver projétil em tecido mutado"
+      "papel": "absorver projétil em tecido mutado",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "cor_chao_morde",
@@ -618,7 +687,10 @@
       },
       "descricao": "Pedra e raiz fecham a mandíbula sob quem se aproxima demais.",
       "gatilho": "ao_inimigo_engajar",
-      "papel": "repelir quem invade zona"
+      "papel": "repelir quem invade zona",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "cor_ler_cicatriz",
@@ -638,7 +710,10 @@
         "valor": 4
       },
       "descricao": "Cada marca no corpo revela idade, hábito, medo e sobrevivências.",
-      "papel": "deduzir história biológica"
+      "papel": "deduzir história biológica",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "cor_modelar_chave",
@@ -658,7 +733,10 @@
         "prompt_hint": "remodelar matéria pequena para abrir, reparar ou sabotar mecanismo"
       },
       "descricao": "Convence osso, metal ou madeira a lembrar uma forma que nunca tiveram.",
-      "papel": "engenharia orgânica improvisada"
+      "papel": "engenharia orgânica improvisada",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "cor_acido_memoria",
@@ -680,7 +758,10 @@
         "dano_tipo": "corrosivo"
       },
       "descricao": "A substância corrói primeiro o gesto treinado e só depois a matéria.",
-      "papel": "corrosão que apaga técnica"
+      "papel": "corrosão que apaga técnica",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "cor_fratura_util",
@@ -701,7 +782,10 @@
         "dano_base": 7
       },
       "descricao": "Quebra a parte certa do cenário e usa os estilhaços como nova anatomia.",
-      "papel": "dano que cria objeto de cobertura"
+      "papel": "dano que cria objeto de cobertura",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "cor_nome_invertido",
@@ -722,7 +806,10 @@
         "duracao": 3
       },
       "descricao": "Pronuncia o nome do alvo ao contrário até suas certezas perderem forma.",
-      "papel": "desfazer identidade social"
+      "papel": "desfazer identidade social",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "cor_adaptacao_residual",
@@ -740,7 +827,10 @@
         "valor": 2
       },
       "descricao": "O corpo registra cada agressão e não oferece duas vezes a mesma fraqueza.",
-      "papel": "defesa após sofrer novo dano"
+      "papel": "defesa após sofrer novo dano",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "cor_matriz_rejeicao",
@@ -758,7 +848,10 @@
         "valor": 1
       },
       "descricao": "Cada transformação descartada deixa uma camada útil sob a pele.",
-      "papel": "vitalidade de formas assimiladas"
+      "papel": "vitalidade de formas assimiladas",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     }
   ]
 }

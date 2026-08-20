@@ -1,5 +1,96 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **✅ SESSÃO 53 (2026-08-20): prontidão local G0–G7 certificada.** As sete
+> fatias locais da Fase 10b e o plano mestre viraram `done`; certificação cloud
+> continua isolada em `draft`, sem provisionamento. Supabase Local passou
+> `infra_local` **13/13**, `security_local` **5/5** e pgTAP **14/14**. Carga real
+> em dois processos confirmou 12 commits, dedupe exatamente uma vez, 12 jobs e
+> commit p95 **32,257 ms**; caos convergiu 5/5. Backup DB+Auth+Storage foi
+> restaurado após reset explícito com RPO 0 e RTO **36,19 s**.
+>
+> Observabilidade opcional agora é Prometheus+Grafana+OTel Collector+Tempo:
+> scrape `up`, dashboard provisionado, cinco traces consultáveis e sete alertas
+> validados com fixtures fire/resolve. Browser Python passou duas vezes em
+> desktop/390 px; foram corrigidos bootstrap auth com 401, `aria-label` inválido,
+> favicon 404 e medição flakey durante animação. O longrun pós-upgrade repetiu
+> **5×200 comerciante = 1.000/1.000**, zero erro/violação e 38 transações. Um
+> `WinError 5` real no catálogo de NPC ganhou retry exponencial + regressão.
+>
+> Supply chain: `uv lock --upgrade`, `pip-audit` e `npm audit` com **0
+> vulnerabilidades**, scanner de segredos com **0 findings**, Ruff/conteúdo/Vite
+> verdes. Gate final: `uv run pytest` = **1564 passed, 16 skipped, 14
+> deselected**. Relatório: [readiness-local](docs/readiness/readiness-local.md).
+> Produto: tiers 5+/níveis 9–20, Fase 8B e Crônica avançada estão `done` no
+> aceite local. Restam apenas dois opt-ins: comerciante 1×200 real (custo LLM) e
+> certificação cloud Railway/Supabase.
+
+> **✅ SESSÃO 52 (2026-08-19): implementação local-first + quatro specs de produto.**
+> A fatia local da Fase 10b agora possui perfis `legacy/local/hosted`, contratos
+> de GameStore/JobQueue/BlobStore/VectorMemory/RuntimeCatalog, Supabase local com
+> Postgres+RLS+Auth+pgvector+storage, turnos/receipts idempotentes, workers,
+> transferência preview-first, recovery de operações, backup/restore e telemetria
+> redigida. Smoke local real de infraestrutura confirmou Auth→novo jogo→SSE→retry
+> e isolamento A/B; `pytest -m infra_local` = **11 passed**.
+>
+> Produto: progressão vai ao nível 20, com **80 Cartas tardias**, Maestria,
+> Ápices e escolha explícita/irreversível de subclasse no nível 3; Fase 8B tem
+> briefs ancorados, budgets raros por arco, fila/assets idempotentes e snapshot
+> `gpt-image-2-2026-04-21`; Crônica avançada preserva raw, comprime em job e busca
+> híbrida por owner/campanha; o comerciante ganhou política stateful, livro de
+> cotações e telemetria econômica.
+>
+> Aceite comerciante `20260819-004210-869761`: **5×200 = 1.000/1.000 turnos**,
+> `data_complete=true`, zero erro/violação, 36 transações, 4–5 mercados,
+> 3–4 regiões e cinco restocks. Foram corrigidos dano climático pré-fuga sem
+> fluxo terminal e aprendizado do destino fatal após rollback. Relatório:
+> [playtest-comerciante-2026-08-19](docs/playtest-comerciante-2026-08-19.md).
+>
+> Gates finais: conteúdo e Ruff verdes; Vite (457 módulos) verde; browser em
+> 390 px sem overflow/console error; `uv run pytest` = **1548 passed, 12 skipped,
+> 14 deselected**. Specs de produto permanecem `approved` somente pelos smokes
+> pagos deliberadamente não executados (imagem/LLM real). Certificação Railway/
+> Supabase remoto continua `draft`: nenhum serviço externo foi provisionado.
+
+> **📝 SESSÃO 51 (2026-08-18): decisão explícita de subclasse adicionada às specs.**
+> O nível 3 agora é o momento formal proposto para escolher, antes da Carta do
+> nível, uma das três subclasses da Postura. Níveis 1–2 oferecem somente tronco;
+> depois da confirmação irreversível, apenas tronco + ramo escolhido ficam
+> elegíveis. `player.subclass` será autoridade em runtime; inferência pela
+> primeira Carta fica restrita à migration idempotente de saves legados, que
+> preserva inclusive Acervos antigos com ramos misturados sem permitir novas
+> aquisições rivais.
+>
+> A Fase 8B também fecha a interação visual: retrato inicial usa raça e
+> classe-base; `subclass_chosen` gera zero job e zero custo. A subclasse entra
+> apenas numa reformulação manual ainda disponível e nas futuras cenas épicas,
+> usando vocabulário visual público curado. Specs seguem `draft`; nenhum código,
+> migration, imagem ou chamada paga foi executado nesta sessão. Gate:
+> `git diff --check` verde e `uv run pytest` = **1480 passed, 1 skipped,
+> 14 deselected** (4 warnings de dependências).
+
+> **📝 SESSÃO 50 (2026-08-17): quatro specs de produto, sem implementação.**
+> Foram especificadas as quatro pendências priorizadas com o usuário:
+> [tiers 5+ / níveis 9–20](specs/tiers-5-plus-classes-niveis-9-20.md),
+> [Fase 8B — arte dinâmica rara](specs/fase-8b-geracao-dinamica-arte.md),
+> [Crônica avançada](specs/cronica-avancada-compressao-busca-semantica.md) e
+> [playtest longo comerciante](specs/playtest-longo-perfil-comerciante.md), todas
+> `draft`. Nenhuma mecânica, migration, dependência ou chamada paga foi executada.
+>
+> Decisões fechadas: cap real 20 + **80 Cartas** tardias (20 tronco/45 subclasse/
+> 15 Ápices); Virtudes seguem no teto 5 e ganham Maestria nos níveis 12/16/20;
+> GPT Image 2 usa snapshot pinado e geração apenas para jogador, NPC persistente
+> sem arte e um épico por arco; orçamento visual é **por arco** (4 NPC + 1 épica,
+> cooldown 15), sem teto de campanha; cenas com o herói reutilizam seu retrato e
+> prompts possuem envelope explícito de anatomia/pose natural. Crônica preserva
+> raw e busca só a campanha atual, sem resposta generativa. Comerciante vira
+> stateful/não onisciente e será validado em 5×200 offline + 1×200 real.
+>
+> Dependências deliberadas: 8B aguarda fundação/fila/storage 10b; Crônica
+> assíncrona aguarda fundação/fila e usa pgvector após a 10b.5. Classes e harness
+> comerciante podem avançar antes. Gates: links locais modificados válidos,
+> `git diff --check` verde e `uv run pytest` = **1480 passed, 1 skipped,
+> 14 deselected** (4 warnings de dependências).
+
 > **🚀 SESSÃO 49 (2026-08-17): lote pronto publicado na `main`.**
 > A publicação reúne as remediações das campanhas longas das sessões 39–46,
 > seus serviços/testes/relatórios e as nove specs `draft` da Fase 10b, incluindo
@@ -1055,7 +1146,7 @@ não existem mais no mapa — sessões antigas ficam narrativamente órfãs. Arq
 $env:Path = "$env:APPDATA\Python\Python314\Scripts;$env:Path"
 uv sync                              # cria .venv com Python 3.13
 copy .env.example .env               # cole GOOGLE_API_KEY no .env (NUNCA na .env.example)
-uv run pytest                        # 1398 passed, 1 skipped, 14 deselected (LLM real opt-in)
+uv run pytest                        # 1564 passed, 16 skipped, 14 deselected (LLM/infra real opt-in)
 uv run pytest -m llm_contract -v -s  # 9 contratos contra o Gemini REAL (~13 req; requer chave)
 uv run pytest -m llm_playtest -v -s  # Fase 5: 4 perfis VITAIS × 30 turnos no LLM REAL (RPG_PLAYTEST_TURNS encurta)
 uv run python game_engine.py         # CLI
@@ -1161,13 +1252,15 @@ ser re-introduzido em outro local pela narrativa/player (relocaliza o
 
 **Pendências abertas (não são bugs de código):**
 
-- Tiers 5+ das classes (nível 9–20) — fast-follow do épico.
-- Playtest longo do perfil `comerciante`; o smoke dirigido validou uma compra,
-  mas ainda não mediu economia emergente em campanha longa.
-- ~~Fase 8A (arte contextual)~~ ✅ `done`; Fase 8B (geração
-  dinâmica), Fase 9 (audiovisual), crônica avançada e Fase 10b (Postgres/auth/
-  isolamento por usuário/locks distribuídos) seguem abertas. O tuning dos oito knobs e a
-  letalidade v2 já estão `done`; referências antigas a `approved` são histórico.
+- [Playtest longo do perfil comerciante](specs/playtest-longo-perfil-comerciante.md)
+  — implementação e 5×200 offline concluídos; resta apenas 1×200 real com teto
+  de custo explícito.
+- [Certificação cloud portátil](specs/fase-10b-certificacao-cloud-portavel.md)
+  — `draft`; Railway/Supabase remoto exigem autorização, contas e orçamento.
+- Fase 9 (sprites/som) segue como backlog de produto, ainda sem spec aprovada.
+- `langchain-community` foi oficialmente descontinuado em 2026; o wrapper FAISS
+  ainda não possui substituto standalone oficial. Funciona e está testado, mas
+  deve ser removido/isolado antes de depender de manutenção futura.
 - 1 flaky isolado na suíte (sessão 8; 3 runs verdes depois — observar)
 - ~~Action `validate.yml`~~ ✅ verde (confirmado via `gh run list`).
 - ~~Lote 2 de traits~~ ✅ 80 traits (sessão 20).
@@ -1194,9 +1287,10 @@ lore de Skallgard, tático foge com HP baixo + alerta; era a última spec não-d
 
 ## Limitações conhecidas
 
-- **Concorrência:** serializada por `game_id` dentro de um processo; múltiplos
-  workers/hosts ainda exigem transação/lock distribuído na Fase 10b.
-- **Sem autenticação/isolamento por usuário** — manter bind local; Postgres+auth = Fase 10b.
+- **Perfil legacy:** continua serializado por processo e sem login por design.
+  Perfis `local/portable/hosted` usam operação/lease/fencing Postgres e owner.
+- **Cloud não certificada:** Auth/RLS/OIDC/S3 foram provados localmente, mas rede,
+  proxy, limites e restore em Railway/Supabase remoto ainda não foram medidos.
 - **Runtime legado local:** `saves/` ainda contém fixtures históricas misturadas a
   campanhas reais; a suíte não cria novas desde a sessão 35, mas limpeza requer
   seleção humana ou ferramenta de migração com preview.

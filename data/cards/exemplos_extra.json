@@ -1,69 +1,294 @@
 {
   "_meta": "spec conflito-02: +3 cartas por classe para o Acervo inicial de 6 (R3). Autoria real = conflito-14.",
   "cards": [
-    {"id": "empurrao_devoto", "name": "Empurrão do Abismo", "tipo": "ativa",
-     "classe": "Devoto do Abismo", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 1, "frequencia": "turno",
-     "virtude_permitida": ["forca"], "efeito": {"kind": "empurrao", "valor": 1}},
-    {"id": "grito_provocador", "name": "Grito Provocador", "tipo": "ativa",
-     "classe": "Devoto do Abismo", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 1, "frequencia": "cena",
-     "virtude_permitida": ["carisma"], "efeito": {"kind": "taunt", "valor": 2}},
-    {"id": "resistir_devoto", "name": "Resistir", "tipo": "utilitaria",
-     "classe": "Devoto do Abismo", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 0, "frequencia": "descanso_curto",
-     "virtude_permitida": [], "efeito": {"kind": "utilitaria", "prompt_hint": "aguentar esforço prolongado"}},
-
-    {"id": "finta_sangue", "name": "Finta de Sangue", "tipo": "ativa",
-     "classe": "Sangromante", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 1, "frequencia": "turno",
-     "virtude_permitida": ["agilidade"], "efeito": {"kind": "buff_acerto", "valor": 2}},
-    {"id": "lamina_gemea", "name": "Lâmina Gêmea", "tipo": "ativa",
-     "classe": "Sangromante", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 2, "frequencia": "cena",
-     "virtude_permitida": ["agilidade", "forca"], "efeito": {"kind": "dano", "formula": "1d6+1d6"}},
-    {"id": "passo_leve", "name": "Passo Leve", "tipo": "utilitaria",
-     "classe": "Sangromante", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 0, "frequencia": "descanso_curto",
-     "virtude_permitida": [], "efeito": {"kind": "utilitaria", "prompt_hint": "mover-se em silêncio"}},
-
-    {"id": "esporos", "name": "Esporos", "tipo": "ativa",
-     "classe": "Corruptor", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 1, "frequencia": "turno",
-     "virtude_permitida": ["mente"], "efeito": {"kind": "dot", "formula": "1d4", "duracao": 3}},
-    {"id": "carne_docil", "name": "Carne Dócil", "tipo": "passiva",
-     "classe": "Corruptor", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 0, "frequencia": "livre",
-     "virtude_permitida": [], "efeito": {"kind": "buff_dot", "valor": 1}},
-    {"id": "farejar_praga", "name": "Farejar Praga", "tipo": "utilitaria",
-     "classe": "Corruptor", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 0, "frequencia": "descanso_curto",
-     "virtude_permitida": [], "efeito": {"kind": "utilitaria", "prompt_hint": "rastrear doença"}},
-
-    {"id": "faisca_cinza", "name": "Faísca Cinzenta", "tipo": "ativa",
-     "classe": "Arcanista Cinzento", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 0, "frequencia": "livre",
-     "virtude_permitida": ["mente"], "efeito": {"kind": "dano", "formula": "1d6"}},
-    {"id": "empuxo_arcano", "name": "Empuxo Arcano", "tipo": "ativa",
-     "classe": "Arcanista Cinzento", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 1, "frequencia": "turno",
-     "virtude_permitida": ["mente"], "efeito": {"kind": "empurrao", "valor": 2}},
-    {"id": "olho_arcano", "name": "Olho Arcano", "tipo": "passiva",
-     "classe": "Arcanista Cinzento", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 0, "frequencia": "livre",
-     "virtude_permitida": [], "efeito": {"kind": "perception", "valor": 1}},
-
-    {"id": "torniquete", "name": "Torniquete", "tipo": "ativa",
-     "classe": "Médico de Campo", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 1, "frequencia": "turno",
-     "virtude_permitida": ["mente"], "efeito": {"kind": "cura", "formula": "1d6"}},
-    {"id": "antitoxina", "name": "Antitoxina", "tipo": "ativa",
-     "classe": "Médico de Campo", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 1, "frequencia": "cena",
-     "virtude_permitida": ["mente"], "efeito": {"kind": "purga_condicao"}},
-    {"id": "triagem", "name": "Triagem", "tipo": "utilitaria",
-     "classe": "Médico de Campo", "subclasse": "", "patamar": "inicial",
-     "custo_entropia": 0, "frequencia": "descanso_curto",
-     "virtude_permitida": [], "efeito": {"kind": "utilitaria", "prompt_hint": "avaliar ferimentos"}}
+    {
+      "id": "empurrao_devoto",
+      "name": "Empurrão do Abismo",
+      "tipo": "ativa",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 1
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "grito_provocador",
+      "name": "Grito Provocador",
+      "tipo": "ativa",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeito": {
+        "kind": "taunt",
+        "valor": 2
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "resistir_devoto",
+      "name": "Resistir",
+      "tipo": "utilitaria",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "aguentar esforço prolongado"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "finta_sangue",
+      "name": "Finta de Sangue",
+      "tipo": "ativa",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "buff_acerto",
+        "valor": 2
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "lamina_gemea",
+      "name": "Lâmina Gêmea",
+      "tipo": "ativa",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade",
+        "forca"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "formula": "1d6+1d6"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "passo_leve",
+      "name": "Passo Leve",
+      "tipo": "utilitaria",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "mover-se em silêncio"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "esporos",
+      "name": "Esporos",
+      "tipo": "ativa",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dot",
+        "formula": "1d4",
+        "duracao": 3
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "carne_docil",
+      "name": "Carne Dócil",
+      "tipo": "passiva",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dot",
+        "valor": 1
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "farejar_praga",
+      "name": "Farejar Praga",
+      "tipo": "utilitaria",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "rastrear doença"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "faisca_cinza",
+      "name": "Faísca Cinzenta",
+      "tipo": "ativa",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "formula": "1d6"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "empuxo_arcano",
+      "name": "Empuxo Arcano",
+      "tipo": "ativa",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 2
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "olho_arcano",
+      "name": "Olho Arcano",
+      "tipo": "passiva",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "perception",
+        "valor": 1
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "torniquete",
+      "name": "Torniquete",
+      "tipo": "ativa",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "cura",
+        "formula": "1d6"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "antitoxina",
+      "name": "Antitoxina",
+      "tipo": "ativa",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "purga_condicao"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "triagem",
+      "name": "Triagem",
+      "tipo": "utilitaria",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "avaliar ferimentos"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    }
   ]
 }

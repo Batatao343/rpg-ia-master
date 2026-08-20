@@ -15,9 +15,16 @@ import type {
 } from "./types";
 
 async function req<T>(path: string, opts: RequestInit = {}): Promise<T> {
+  const headers = new Headers(opts.headers);
+  if (!headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  if (opts.method && !["GET", "HEAD", "OPTIONS"].includes(opts.method.toUpperCase())) {
+    const csrf = document.cookie.split("; ").find((row) => row.startsWith("rpg_csrf="))?.split("=")[1];
+    if (csrf) headers.set("X-CSRF-Token", decodeURIComponent(csrf));
+  }
   const res = await fetch(path, {
-    headers: { "Content-Type": "application/json" },
     ...opts,
+    headers,
+    credentials: "include",
   });
   if (!res.ok) {
     let detail = res.statusText;
@@ -28,8 +35,22 @@ async function req<T>(path: string, opts: RequestInit = {}): Promise<T> {
     }
     throw new Error(detail);
   }
+  if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
 }
+
+export const getAuthConfig = () => req<{ required: boolean; authenticated: boolean }>("/auth/config");
+export const login = (email: string, password: string) =>
+  req<{ authenticated: boolean; csrf_token: string }>("/auth/login", {
+    method: "POST", body: JSON.stringify({ email, password }),
+  });
+
+export const signup = (email: string, password: string) =>
+  req<{ authenticated: boolean; csrf_token: string }>("/auth/signup", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+export const logout = () => req<void>("/auth/logout", { method: "POST" });
 
 export const getOptions = () => req<CreateOptions>("/data/options");
 
@@ -39,7 +60,7 @@ export const getCombatSimulatorOptions = () =>
 export const newCombatSimulator = (payload: CombatSimulatorPayload) =>
   req<GameResponse>("/game/combat-simulator", {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...payload, action_id: crypto.randomUUID() }),
   });
 
 // spec onboarding-valoria: lore curado do wizard de criação (estático)
@@ -57,7 +78,7 @@ export const getMap = () => req<WorldMapData>("/data/map");
 export const newGame = (payload: CreatePayload) =>
   req<GameResponse>("/game/new", {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...payload, action_id: crypto.randomUUID() }),
   });
 
 export const sendAction = (input_text: string, game_id: string | null, options: ActionOptions = {}) =>
@@ -71,7 +92,7 @@ export const sendAction = (input_text: string, game_id: string | null, options: 
 export const resolveDeath = (game_id: string | null, choice: "continue" | "accept") =>
   req<GameResponse>("/game/death", {
     method: "POST",
-    body: JSON.stringify({ game_id, choice }),
+    body: JSON.stringify({ game_id, choice, action_id: crypto.randomUUID() }),
   });
 
 // spec streaming-turno-sse (R4): turno via SSE — fases reais do grafo enquanto
@@ -146,11 +167,21 @@ export const getSaves = () => req<SaveSummary[]>("/game/saves");
 export const deleteSave = (game_id: string) =>
   req<{ ok: boolean }>("/game/save/" + encodeURIComponent(game_id), {
     method: "DELETE",
+    headers: { "Idempotency-Key": crypto.randomUUID() },
   });
 
 // spec polish-sessao (R5): URL de download da crônica (.txt).
 export const chronicleExportUrl = (game_id: string) =>
   "/game/chronicle/export?game_id=" + encodeURIComponent(game_id);
+
+export const searchChronicle = (
+  payload: { game_id: string; query: string; top_k?: number },
+  signal?: AbortSignal,
+) => req<import("./types").ChronicleSearchResponse>("/game/chronicle/search", {
+  method: "POST",
+  body: JSON.stringify(payload),
+  signal,
+});
 
 // Fase 4.1: aplica UMA escolha de level up (validação é server-side).
 export interface LevelUpResult {
@@ -168,7 +199,7 @@ export const postEquip = (payload: {
 }) =>
   req<{ ok: boolean }>("/game/equip", {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...payload, action_id: crypto.randomUUID() }),
   });
 
 export const postLevelUp = (payload: {
@@ -177,9 +208,26 @@ export const postLevelUp = (payload: {
   evolve_card_id?: string;
   caminho?: "A" | "B";
   virtude?: string;
+  subclass_id?: string;
+  virtue_card_id?: string;
   game_id?: string | null;
 }) =>
   req<LevelUpResult>("/game/levelup", {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...payload, action_id: crypto.randomUUID() }),
   });
+
+export const postArtBrief = (payload: {
+  name: string; race: string; class_name: string; region: string;
+  appearance: string; visual_exclusions: string;
+}) => req<{ brief: Record<string, unknown>; rendered_prompt: string; provider_called: false }>(
+  "/game/art/brief", { method: "POST", body: JSON.stringify(payload) },
+);
+
+export const confirmPlayerArt = (gameId: string, actionId: string, reformulation = false) =>
+  req<{ status: string; generation_id?: string; placeholder: boolean }>(
+    `/game/${encodeURIComponent(gameId)}/art/player/confirm`, {
+      method: "POST",
+      body: JSON.stringify({ action_id: actionId, reformulation }),
+    },
+  );

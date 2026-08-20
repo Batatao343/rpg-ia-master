@@ -261,7 +261,7 @@ def test_runner_chama_decide_uma_vez_e_injeta_o_mesmo_payload(monkeypatch):
     state.update({"game_id": "00000000-0000-0000-0000-000000000111",
                   "messages": [], "event_log": [], "campaign_plan": {}})
     monkeypatch.setattr(runner, "_build_initial_state", lambda *a, **k: state)
-    monkeypatch.setattr(persistence, "save_game_state", lambda _state: None)
+    monkeypatch.setattr(persistence, "save_game_state", lambda _state: True)
     monkeypatch.setattr(persistence, "save_path", lambda _gid: "fake-save.json")
 
     class Graph:

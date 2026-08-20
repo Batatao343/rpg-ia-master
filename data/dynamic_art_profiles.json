@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "profile_version": "valoria-gpt-image2-v1",
+  "model": "gpt-image-2-2026-04-21",
+  "formats": {
+    "portrait": {"size": "1024x1536"},
+    "epic_scene": {"size": "1536x1024"}
+  },
+  "global_style": [
+    "dark fantasy painterly realism grounded in the material culture of Valoria",
+    "weathered practical fabrics, iron, leather and restrained abyssal motifs",
+    "cinematic chiaroscuro, muted earth palette with controlled supernatural accents",
+    "adult character, dignified non-sexualized presentation"
+  ],
+  "pose_constraints": [
+    "anatomically plausible grounded pose with coherent center of gravity",
+    "natural spine, neck and joint alignment",
+    "exactly two coherent arms and two coherent legs when visible, without duplicated anatomy",
+    "hands proportionate to framing and weapon grips mechanically correct",
+    "spatially consistent interaction, no extreme contortion, impossible perspective, aggressive foreshortening or disconnected limbs"
+  ],
+  "epic_poses": {
+    "defensive_stance": "grounded defensive stance, balanced feet and guarded torso",
+    "grounded_advance": "measured forward advance with weight over the leading foot",
+    "ritual_focus": "stable ritual posture with relaxed shoulders and deliberate hands",
+    "aftermath_stillness": "quiet upright stillness after conflict, natural fatigue"
+  },
+  "race_anchors": {
+    "Humano": "human diversity, weathered and historically grounded",
+    "Elfo": "Valorian elven features, restrained otherworldliness, practical silhouette",
+    "Anão": "compact robust silhouette, crafted metal and stone traditions"
+  },
+  "class_anchors": {
+    "Devoto do Abismo": "protective silhouette, ritual scars and a deliberate relationship with danger",
+    "Sangromante": "precise blood-contract symbolism, controlled risk, never graphic gore",
+    "Corruptor": "decay as material process, organic or mineral motifs without body horror excess",
+    "Arcanista Cinzento": "improvised ether instrumentation, ash, copper and calibrated light",
+    "Médico de Campo": "field medicine, practical instruments, stained but non-graphic working layers"
+  },
+  "subclass_style_anchors": {}
+}

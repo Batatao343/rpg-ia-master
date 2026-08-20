@@ -15,7 +15,7 @@ export interface AbilityRef {
 export interface PendingChoice {
   id: string;
   level: number;
-  kind: "carta" | "virtude" | "ability" | "attribute";
+  kind: "carta" | "virtude" | "subclass" | "virtue_mastery" | "ability" | "attribute";
 }
 
 export interface EligibleAbility {
@@ -26,6 +26,9 @@ export interface EligibleAbility {
   branch_name?: string | null;
   subclass?: string;
   tier: number | string;
+  tier_label?: string;
+  level_req?: number;
+  apex?: boolean;
   cost: number;
   resource_type?: string;
   frequency?: string;
@@ -47,6 +50,15 @@ export interface LevelUpBlock {
   evolvable?: Array<{ id: string; name: string }>;
   current_branch?: string | null;
   branches?: Record<string, BranchInfo>;
+  subclasses?: Array<{
+    id: string; name: string; identity: string; playstyle: string;
+    tradeoff: string; preview_card_ids: string[];
+  }>;
+  virtue_cards?: Array<{
+    card_id: string; virtude: string; mastery: number; effective_stage: number;
+  }>;
+  unlocked_tier?: number;
+  prepared_slots?: number;
 }
 
 export interface PlayerStats {
@@ -381,6 +393,7 @@ export interface FactionView {
 }
 
 export interface ChronicleEntry {
+  entry_id?: string;
   text: string;
   turn: number;
   kind: "milestone" | "prose"; // milestone = determinístico (event_log); prose = menestrel LLM
@@ -388,10 +401,37 @@ export interface ChronicleEntry {
 }
 
 export interface ChronicleChapter {
+  chapter_id?: string;
   title: string;
   started_turn: number;
   location: string;
   entries: ChronicleEntry[];
+  digest?: {
+    status: string;
+    short_title?: string;
+    summary: string;
+    covered_entry_count: number;
+    from_turn?: number;
+    to_turn?: number;
+  };
+}
+
+export interface ChronicleSearchHit {
+  chapter_id: string;
+  chapter_title: string;
+  snippet: string;
+  source_kind: "entry" | "digest";
+  from_turn: number;
+  to_turn: number;
+  entry_ids: string[];
+  event_ids: string[];
+  match_kind: "semantic" | "lexical" | "hybrid";
+}
+
+export interface ChronicleSearchResponse {
+  mode: "hybrid" | "semantic" | "lexical_fallback";
+  index_current: boolean;
+  hits: ChronicleSearchHit[];
 }
 
 export type MessageType = "STORY" | "COMBAT" | "NPC" | "LOOT";
@@ -545,6 +585,9 @@ export interface CreatePayload {
   region: string;
   level: number;
   backstory: string;
+  appearance?: string;
+  visual_exclusions?: string;
+  generate_portrait?: boolean;
   // spec inicio-personalizado: cenário aprovado no passo de prólogo (opcional)
   scenario?: StartScenario | null;
 }

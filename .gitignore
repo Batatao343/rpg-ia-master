@@ -12,6 +12,7 @@ data/saves_memory/
 # Fase 5: harness de playtest — saves isolados + telemetria/relatórios de run
 saves_playtest/
 playtest_runs/
+readiness_artifacts/
 
 # Caches gerados em runtime (spec isolar-cache-runtime: overlay em data/runtime/;
 # npc_database.json legado deixou de ser versionado — fallback de leitura local)
@@ -24,6 +25,8 @@ data/npc_database.json
 
 # Pytest
 .pytest_cache/
+supabase/.temp/
+supabase/.branches/
 
 # Skills do Claude (locais, não versionar)
 .claude/skills/

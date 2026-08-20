@@ -1,0 +1,50 @@
+{
+  "chapters": [
+    {
+      "title": "As Docas",
+      "started_turn": 1,
+      "location": "Costa Negra",
+      "entries": [
+        {"turn": 2, "kind": "milestone", "event_id": "evt-porto", "text": "Salvamos a curandeira Ilyra dos saqueadores do cais."},
+        {"turn": 4, "kind": "prose", "text": "Recusamos entregar o medalhão antigo ao mercador Varko."}
+      ]
+    },
+    {
+      "title": "O Bosque Ferido",
+      "started_turn": 10,
+      "location": "Floresta dos Sussurros",
+      "entries": [
+        {"turn": 12, "kind": "milestone", "event_id": "evt-lobo", "text": "O lobo cinzento foi poupado e guiou o grupo até a nascente."},
+        {"turn": 15, "kind": "prose", "text": "Quebramos o selo de espinhos que aprisionava o espírito da mata."}
+      ]
+    },
+    {
+      "title": "Cinzas de Brekmar",
+      "started_turn": 20,
+      "location": "Brekmar",
+      "entries": [
+        {"turn": 22, "kind": "milestone", "event_id": "evt-ferreiro", "text": "Tobias Cinza reforjou a espada partida com ferro das ruínas."},
+        {"turn": 25, "kind": "prose", "text": "Descobrimos que a ponte norte estava intacta, apesar do rumor de queda."}
+      ]
+    },
+    {
+      "title": "Sob o Sol de Zhur",
+      "started_turn": 30,
+      "location": "Deserto de Zhur",
+      "entries": [
+        {"turn": 32, "kind": "milestone", "event_id": "evt-caravana", "text": "Escoltamos a caravana de especiarias através da tempestade de vidro."},
+        {"turn": 36, "kind": "prose", "text": "A sacerdotisa Neme revelou uma passagem sob o obelisco vermelho."}
+      ]
+    }
+  ],
+  "queries": [
+    {"query": "a médica foi resgatada perto dos navios", "chapter": 0, "entry": 0},
+    {"query": "não demos a joia para Varko", "chapter": 0, "entry": 1},
+    {"query": "qual fera nos conduziu até a água", "chapter": 1, "entry": 0},
+    {"query": "libertamos a alma da floresta de uma prisão vegetal", "chapter": 1, "entry": 1},
+    {"query": "quem consertou nossa lâmina quebrada", "chapter": 2, "entry": 0},
+    {"query": "a travessia setentrional não tinha desabado", "chapter": 2, "entry": 1},
+    {"query": "protegemos comerciantes durante a tormenta cristalina", "chapter": 3, "entry": 0},
+    {"query": "Neme mostrou um caminho subterrâneo junto ao monumento rubro", "chapter": 3, "entry": 1}
+  ]
+}

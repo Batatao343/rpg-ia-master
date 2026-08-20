@@ -122,17 +122,25 @@ def _npc_db_path() -> str:
 
 
 def load_npc_db():
-    path = _npc_db_path()
-    if not os.path.exists(path):
-        path = NPC_DB_FILE               # fallback legado (migração transparente)
-    if not os.path.exists(path): return {}
+    from infrastructure.runtime import get_runtime
+
+    values = get_runtime().runtime_catalog.list(
+        "npc_template", owner_id=None, game_id=None,
+    )
+    if values:
+        return values
+    if not os.path.exists(NPC_DB_FILE):
+        return {}
     try:
-        with open(path, 'r', encoding='utf-8') as f: return json.load(f)
+        with open(NPC_DB_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
     except Exception as e:
-        print(f"⚠️ [NPC DB] Falha ao ler {path}: {e}")
+        print(f"⚠️ [NPC DB] Falha ao ler {NPC_DB_FILE}: {e}")
         return {}
 
 def save_npc_template(data):
+    from infrastructure.runtime import get_runtime
+
     db = load_npc_db()                   # 1º save carrega o legado → migra tudo
     key = data.get("id", f"npc_{data['name'].lower().replace(' ', '_')}")
     if "id" not in data: data["id"] = key
@@ -142,9 +150,12 @@ def save_npc_template(data):
         data["attributes"] = {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10}
 
     db[key] = data
-    path = _npc_db_path()
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, 'w', encoding='utf-8') as f: json.dump(db, f, indent=4, ensure_ascii=False)
+    store = get_runtime().runtime_catalog
+    for item_id, item in db.items():
+        store.put(
+            "npc_template", item_id, item,
+            scope="global", owner_id=None, game_id=None,
+        )
 
 
 _NPC_V4_FIELDS = (

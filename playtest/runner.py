@@ -22,6 +22,7 @@ import json
 import os
 import queue
 import random
+import re
 import threading
 import time
 import uuid
@@ -31,6 +32,15 @@ from typing import Any, Callable, Dict, List, Optional
 
 # Diretório de saves isolado das campanhas de playtest (spec R7).
 PLAYTEST_SAVES_DIR = os.getenv("RPG_PLAYTEST_SAVES_DIR", "saves_playtest")
+
+
+class PlaytestPersistenceError(RuntimeError):
+    pass
+
+
+def _require_persisted(save_fn, state: dict, *, phase: str) -> None:
+    if not save_fn(state):
+        raise PlaytestPersistenceError(f"persistência falhou em {phase}")
 
 
 class PlaytestTimeoutError(TimeoutError):
@@ -188,6 +198,16 @@ class TurnRecord:
     timeline_epoch: int = 0
     memory_by_confidence: Dict[str, int] = field(default_factory=dict)
     stale_speculative_memories: int = 0
+    # Spec playtest comerciante: ledger mecânico, sem parsing da narração.
+    economy_action: dict = field(default_factory=dict)
+    action_family: str = ""
+    gold_before: int = 0
+    inventory_value_before: int = 0
+    inventory_value_after: int = 0
+    net_worth_after: int = 0
+    net_worth_formula: str = "market-liquidation-v1"
+    market_observed: bool = False
+    market_snapshot: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -235,6 +255,19 @@ def _resolve_profile_progression(state: dict, profile: object) -> List[dict]:
             if eligible:
                 selected = min(eligible, key=lambda key: (int(virtues.get(key, 0) or 0), key))
                 kwargs["virtude"] = selected
+        elif kind == "subclass":
+            subclasses = progression.eligible_subclasses(player)
+            if subclasses:
+                selected = str(subclasses[0]["id"])
+                kwargs["subclass_id"] = selected
+        elif kind == "virtue_mastery":
+            virtue_cards = [row for row in player.get("virtue_cards") or []
+                             if int(row.get("mastery", 0) or 0) < 2]
+            if virtue_cards:
+                chosen = min(virtue_cards, key=lambda row: (
+                    int(row.get("mastery", 0) or 0), str(row.get("card_id", ""))))
+                selected = str(chosen.get("card_id", ""))
+                kwargs["virtue_card_id"] = selected
         elif kind == "carta":
             eligible_cards = sorted(progression.eligible_cards(player))
             if eligible_cards:
@@ -937,7 +970,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
             )
             if scenario_module is not None:
                 state = scenario_module.prepare(str(scenario), state)
-            save_game_state(state)
+            _require_persisted(save_game_state, state, phase="startup")
             _bump_llm_events_budget(llm_calls, startup_llm_events)
             prev_state = state
             # spec checkpoints-morte (D6): snapshots in-memory p/ auto-restore.
@@ -1009,6 +1042,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     quests_before=quests_before,
                     quests_after=quests_before,
                 )
+                _fill_economy_metrics(rec, state, None)
                 turn_input_state = state
                 try:
                     new_state, rec.route = _run_with_watchdog(
@@ -1022,7 +1056,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                         timeout_seconds=turn_timeout_seconds,
                         phase=f"turno {turn}",
                     )
-                    save_game_state(new_state)
+                    _require_persisted(save_game_state, new_state, phase=f"turno {turn}")
                     rec.latency_ms = int((time.monotonic() - t0) * 1000)
                     rec.nodes_executed = nodes
                     rec.node_latency_ms = node_timings
@@ -1053,6 +1087,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                         new_state,
                         combat_observation=node_observations.get("combat_agent"),
                     )
+                    _fill_economy_metrics(rec, turn_input_state, new_state)
                     _attach_telemetry(rec, list(turn_events))
                     rec.rag_events = list(turn_rag_events)
                     rec.memory_writes_by_provenance = _rag_memory_counts(
@@ -1086,6 +1121,9 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                         "rag_events": rec.rag_events,
                         "latency_ms": rec.latency_ms,
                         "real_llm": bool(use_real_llm),
+                        "economy_action": rec.economy_action,
+                        "action_family": rec.action_family,
+                        "net_worth_after": rec.net_worth_after,
                     }
                     turn_viol = (
                         _run_invariants(
@@ -1126,6 +1164,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     rec.node_latency_ms = dict(node_timings)
                     rec.combat_executed = "combat_agent" in nodes or combat_on_entry
                     _fill_state_metrics(rec, state)
+                    _fill_economy_metrics(rec, turn_input_state, state)
                     _attach_telemetry(rec, list(turn_events))
                     rec.rag_events = list(turn_rag_events)
                     rec.memory_writes_by_provenance = _rag_memory_counts(
@@ -1177,7 +1216,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     rec.death = death
                     state = _cp.resolve_death_choice(
                         state, "continue", checkpoint=checkpoint_snap, initial_state=initial_snap)
-                    save_game_state(state)
+                    _require_persisted(save_game_state, state, phase=f"restore {turn}")
                     prev_state = state
 
                 # spec playtest-stop-gameover: game_over (memorial voluntário) ainda
@@ -1388,6 +1427,79 @@ def _fill_state_metrics(
         else:
             continue
         rec.enemy_wounds.setdefault(normalized_id, normalized_wounds)
+
+
+def _inventory_liquidation_value(state: dict) -> int:
+    """Valor conservador: cotação pública atual ou 50% do valor-base."""
+    from services import economy
+
+    snapshot = economy.public_market_snapshot(state)
+    sell_prices = {
+        str(quote["item_id"]): int(quote["sell_price"])
+        for quote in ((snapshot or {}).get("quotes") or [])
+    }
+    total = 0
+    for entry in (state.get("player") or {}).get("inventory") or []:
+        if not isinstance(entry, dict):
+            continue
+        item_id = str(entry.get("id") or "")
+        qty = max(0, int(entry.get("qty", 1) or 0))
+        unit = sell_prices.get(item_id, max(1, economy.base_price(item_id) // 2))
+        total += qty * unit
+    return total
+
+
+def _merchant_action_family(rec: TurnRecord) -> str:
+    if rec.economy_action:
+        return "economy"
+    text = rec.action.casefold()
+    if rec.combat_executed or re.search(r"\b(descanso|fujo|cura)\b", text):
+        return "survival"
+    if any(word in text for word in ("missão", "trabalho", "quest")):
+        return "quest"
+    if any(word in text for word in ("converso", "pergunto", "cumprimento")):
+        return "social"
+    if any(word in text for word in ("viajo", "entro", "exploro", "rotas")):
+        return "exploration"
+    if any(word in text for word in ("compro", "vendo", "forjo", "estoque", "preços")):
+        return "economy"
+    return "exploration"
+
+
+def _fill_economy_metrics(
+    rec: TurnRecord, before: dict, after: Optional[dict],
+) -> None:
+    from services.economy import public_market_snapshot
+
+    rec.gold_before = int((before.get("player") or {}).get("gold", 0) or 0)
+    rec.inventory_value_before = _inventory_liquidation_value(before)
+    snapshot = public_market_snapshot(before)
+    rec.market_observed = snapshot is not None
+    if snapshot is not None:
+        from gamedata import get_location
+        location = get_location(str(snapshot["location_id"])) or {}
+        rec.market_snapshot = {
+            "merchant_id": str(snapshot["merchant_id"]),
+            "location_id": str(snapshot["location_id"]),
+            "region_id": str(location.get("region_id") or snapshot["location_id"]),
+            "day": int(snapshot.get("day", 1) or 1),
+            "turn": int(snapshot.get("turn", 0) or 0),
+            "quotes": copy.deepcopy(list(snapshot.get("quotes") or [])),
+        }
+    if after is None:
+        rec.inventory_value_after = rec.inventory_value_before
+        rec.net_worth_after = rec.gold_before + rec.inventory_value_before
+        return
+    rec.inventory_value_after = _inventory_liquidation_value(after)
+    rec.net_worth_after = (
+        int((after.get("player") or {}).get("gold", 0) or 0)
+        + rec.inventory_value_after
+    )
+    previous_id = str((before.get("last_economy_action") or {}).get("action_id") or "")
+    outcome = after.get("last_economy_action") or {}
+    if str(outcome.get("action_id") or "") != previous_id:
+        rec.economy_action = copy.deepcopy(dict(outcome))
+    rec.action_family = _merchant_action_family(rec)
 
 
 def _attach_telemetry(rec: TurnRecord, events: List[dict]) -> None:

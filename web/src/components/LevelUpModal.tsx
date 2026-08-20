@@ -12,6 +12,8 @@ export interface LevelUpPick {
   evolve_card_id?: string;
   caminho?: "A" | "B";
   virtude?: string;
+  subclass_id?: string;
+  virtue_card_id?: string;
 }
 
 interface Props {
@@ -21,8 +23,6 @@ interface Props {
   onLater: () => void;
 }
 
-/** conflito-16: o modal antigo ainda falava em habilidade/atributo d20.
- *  Esta borda agora espelha o contrato v4: nova Carta OU evolução A/B, e Virtude. */
 export function LevelUpModal({ player, busy, onChoose, onLater }: Props) {
   const choice = player.pending_choices[0];
   const lu = player.level_up ?? {};
@@ -30,8 +30,14 @@ export function LevelUpModal({ player, busy, onChoose, onLater }: Props) {
   if (!choice) return null;
 
   const isCard = choice.kind === "carta" || choice.kind === "ability";
+  const isSubclass = choice.kind === "subclass";
+  const isMastery = choice.kind === "virtue_mastery";
   const pickedKey = picked?.card_id
-    ?? (picked?.evolve_card_id ? `${picked.evolve_card_id}-${picked.caminho}` : picked?.virtude);
+    ?? (picked?.evolve_card_id ? `${picked.evolve_card_id}-${picked.caminho}`
+      : picked?.virtude ?? picked?.subclass_id ?? picked?.virtue_card_id);
+  const title = isSubclass ? "Escolha sua subclasse"
+    : isMastery ? "Aprofunde uma Carta de Virtude"
+      : isCard ? "Expanda seu Acervo" : "Fortaleça uma Virtude";
 
   return (
     <div className="overlay overlay--levelup" role="dialog" aria-modal="true">
@@ -39,9 +45,39 @@ export function LevelUpModal({ player, busy, onChoose, onLater }: Props) {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}>
         <p className="lvlup__kicker">Nível {choice.level} alcançado</p>
-        <h2 className="lvlup__title">{isCard ? "Expanda seu Acervo" : "Fortaleça uma Virtude"}</h2>
+        <h2 className="lvlup__title">{title}</h2>
 
-        {isCard ? (
+        {isSubclass ? (
+          <div className="lvlup__groups">
+            <p>Esta escolha é permanente nesta linha do tempo e define suas Cartas de ramo.</p>
+            <ul className="lvlup__list">
+              {(lu.subclasses ?? []).map((subclass) => (
+                <li key={subclass.id}>
+                  <button type="button"
+                    className={`lvlup__card${pickedKey === subclass.id ? " is-picked" : ""}`}
+                    onClick={() => setPicked({ subclass_id: subclass.id })}>
+                    <span className="lvlup__card-top"><b>{subclass.name}</b></span>
+                    <span className="lvlup__desc">{subclass.identity}</span>
+                    <span className="lvlup__desc">{subclass.playstyle}</span>
+                    <span className="lvlup__desc">Contrapartida: {subclass.tradeoff}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : isMastery ? (
+          <div className="lvlup__attrs">
+            {(lu.virtue_cards ?? []).map((card) => (
+              <button key={card.card_id} type="button"
+                className={`lvlup__attr${pickedKey === card.card_id ? " is-picked" : ""}`}
+                disabled={card.mastery >= 2}
+                onClick={() => setPicked({ virtue_card_id: card.card_id })}>
+                <b>{card.card_id}</b>
+                <span>Maestria {card.mastery} → {Math.min(2, card.mastery + 1)}</span>
+              </button>
+            ))}
+          </div>
+        ) : isCard ? (
           <div className="lvlup__groups">
             {(lu.eligible ?? []).length > 0 && (
               <section className="lvlup__group">
@@ -91,7 +127,8 @@ export function LevelUpModal({ player, busy, onChoose, onLater }: Props) {
         )}
 
         <div className="lvlup__actions">
-          <button className="btn" type="button" onClick={onLater} disabled={busy}>Depois</button>
+          <button className="btn" type="button" onClick={onLater}
+            disabled={busy || isSubclass}>Depois</button>
           <button className="btn btn--primary" type="button" disabled={busy || !picked}
             onClick={() => picked && onChoose(choice.id, picked)}>
             {busy ? "…" : "Confirmar"}
@@ -110,7 +147,9 @@ function CardChoice({ card, picked, onPick }: {
       <button type="button" className={`lvlup__card${picked ? " is-picked" : ""}`} onClick={onPick}>
         <span className="lvlup__card-top">
           <b>{card.name}</b>
-          <span className="lvlup__tier">{card.tier} · {card.cost}E · {card.frequency ?? "livre"}</span>
+          <span className="lvlup__tier">
+            {card.tier_label ?? `Tier ${card.tier}`} · Nv. {card.level_req ?? 1} · {card.cost}E · {card.frequency ?? "livre"}
+          </span>
         </span>
         <span className="lvlup__desc">{card.description}</span>
       </button>

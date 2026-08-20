@@ -60,7 +60,10 @@ def test_append_cria_capitulo_default():
     assert len(out) == 1
     assert out[0]["title"] == "Crônica da jornada"
     assert out[0]["started_turn"] == 0
-    assert out[0]["entries"] == [{"text": "algo aconteceu", "turn": 3, "kind": "prose"}]
+    assert out[0]["entries"][0] | {"entry_id": ""} == {
+        "text": "algo aconteceu", "turn": 3, "kind": "prose", "entry_id": ""
+    }
+    assert out[0]["entries"][0]["entry_id"]
 
 
 def test_open_chapter_mesmo_titulo_noop():

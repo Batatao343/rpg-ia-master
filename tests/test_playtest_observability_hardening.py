@@ -482,6 +482,45 @@ def test_manifest_detecta_campanha_ou_turnos_ausentes(tmp_path, monkeypatch):
     assert "fujao" in markdown
 
 
+def test_manifest_accepts_declared_seed_matrix_per_profile(tmp_path, monkeypatch):
+    monkeypatch.setattr(telemetry, "PLAYTEST_RUNS_DIR", str(tmp_path / "runs"))
+    save = tmp_path / "merchant-save.json"
+    save.write_text(json.dumps({"game_id": "merchant-game"}), encoding="utf-8")
+    telemetry.begin_run(
+        "run-seed-matrix",
+        profiles=["comerciante:2"],
+        turns=1,
+        seed=9500,
+        seeds_by_profile={"comerciante:2": 9501},
+        real=False,
+    )
+    record = TurnRecord(
+        turn=1,
+        action="Observo o mercado.",
+        route="storyteller",
+        latency_ms=1,
+        nodes_executed=["storyteller", "archivist"],
+        decision={"text": "Observo o mercado.", "mode": "free_text", "kind": "free_text"},
+    )
+    telemetry.persist_campaign(
+        "run-seed-matrix",
+        _result(
+            profile="comerciante:2",
+            seed=9501,
+            history=[record],
+            final_state={
+                "game_id": "merchant-game", "player": {}, "world": {}, "event_log": [],
+            },
+            save_path=str(save),
+        ),
+    )
+
+    inspected = telemetry.finish_run("run-seed-matrix", status="complete")
+
+    assert inspected["complete"] is True
+    assert inspected["artifact_mismatches"] == []
+
+
 def test_manifest_valida_parse_e_presenca_de_summary_e_jsonl(tmp_path, monkeypatch):
     run_dir, _save = _persist_formal_campaign(tmp_path, monkeypatch)
     (run_dir / "explorador_1.summary.json").write_text("{quebrado", encoding="utf-8")

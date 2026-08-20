@@ -760,6 +760,7 @@ def combat_node(state: GameState):
         world_out = dict(world)
         world_out.pop("encounter_surprise", None)
     weather_logs = _apply_weather_hazard(player, world, rng=rng)
+    _register_environmental_damage_terminal(player, weather_logs)
     resolved_decl: Optional[TurnDeclaration] = declaration
     if flee_requested:
         hero_fled, flee_logs, chase_state = _attempt_flee(
@@ -1070,6 +1071,25 @@ def _apply_weather_hazard(player: Dict, world: Dict, *, rng=None) -> List[str]:
         f"(Vitalidade {player['vitalidade']}).",
         *result["log"],
     ]
+
+
+def _register_environmental_damage_terminal(player: Dict, damage_logs: List[str]) -> None:
+    """Fia dano pré-rodada ao mesmo fluxo terminal usado pelos ataques.
+
+    O clima é resolvido antes da perseguição. Sem este gate, um herói podia
+    preencher o último Crítico e ainda concluir a fuga, deixando um estado vivo
+    impossível fora do combate.
+    """
+    if not damage_logs or not death_flow.critical_spaces_full(player):
+        return
+    if player.get("last_stand_resolved"):
+        player["dead"] = True
+        player["status"] = "morto"
+        player["vitalidade"] = 0
+        gamedata.sync_legacy_hp_aliases(player)
+        return
+    if death_flow.should_trigger_last_stand(player):
+        death_flow.trigger_last_stand(player)
 
 
 def _apply_flee_travel(state: Dict, result: Dict, flee_dest_id: str, player: Dict,

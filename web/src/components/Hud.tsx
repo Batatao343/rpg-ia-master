@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { mdLite, pct, prettyItem } from "../lib";
-import type { ChronicleChapter, CombatBlock, Condition, FactionView, GameResponse, NpcView } from "../types";
+import { searchChronicle } from "../api";
+import type { ChronicleChapter, ChronicleSearchHit, CombatBlock, Condition, FactionView, GameResponse, NpcView } from "../types";
 import { CodexTab } from "./CodexTab";
 import { QuestsTab } from "./QuestsTab";
 import { WorldMap } from "./WorldMap";
@@ -137,7 +138,7 @@ function FichaTab({ data, hpHitKey, onEquip, busy }: {
       {(p?.max_entropy ?? 0) > 0 && <AbyssChip tier={p?.abyss_tier} charge={p?.abyss_charge ?? 0} />}
 
       <div className="stats">
-        <div className="stat"><span>Nível</span><b>{p?.level ?? 1}</b></div>
+        <div className="stat"><span>Nível</span><b>{p?.level ?? 1}/20</b></div>
         <div className="stat">
           <span>XP</span>
           <b>{p?.xp ?? 0}{p?.xp_next_level != null ? ` / ${p.xp_next_level}` : ""}</b>
@@ -325,8 +326,32 @@ function FactionsTab({ factions }: { factions: FactionView[] }) {
 }
 
 function ChronicleTab({ chapters, gameId }: { chapters: ChronicleChapter[]; gameId?: string }) {
-  // spec polish-sessao (R5): busca CLIENT-SIDE (filtro local) + download .txt
   const [query, setQuery] = useState("");
+  const [hits, setHits] = useState<ChronicleSearchHit[]>([]);
+  const [searchMode, setSearchMode] = useState<string>("");
+  useEffect(() => {
+    const normalized = query.trim();
+    if (!gameId || normalized.length < 2) {
+      setHits([]);
+      setSearchMode("");
+      return;
+    }
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => {
+      searchChronicle({ game_id: gameId, query: normalized, top_k: 5 }, controller.signal)
+        .then((result) => {
+          setHits(result.hits);
+          setSearchMode(result.mode === "lexical_fallback" ? "busca lexical" : "busca híbrida");
+        })
+        .catch((error) => {
+          if (error?.name !== "AbortError") setSearchMode("filtro local");
+        });
+    }, 250);
+    return () => {
+      window.clearTimeout(timer);
+      controller.abort();
+    };
+  }, [gameId, query]);
   if (!chapters.length) {
     return (
       <div>
@@ -365,24 +390,47 @@ function ChronicleTab({ chapters, gameId }: { chapters: ChronicleChapter[]; game
         onChange={(e) => setQuery(e.target.value)}
         aria-label="Buscar na crônica"
       />
+      {searchMode && <p className="chron-search__mode">{searchMode}</p>}
+      {hits.length > 0 && (
+        <ul className="chron-results" aria-label="Resultados da busca">
+          {hits.map((hit) => (
+            <li key={`${hit.chapter_id}-${hit.entry_ids.join("-")}`}>
+              <button onClick={() => document.getElementById(`chron-${hit.chapter_id}`)?.scrollIntoView({ behavior: "smooth" })}>
+                <b>{hit.chapter_title}</b>
+                <span>{hit.snippet}</span>
+                <small>turnos {hit.from_turn}–{hit.to_turn} · {hit.match_kind}</small>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
       {ordered.length === 0 && <p className="combat-empty">Nada encontrado.</p>}
       {ordered.map((cap, ci) => (
-        <section key={ci} className="chron-chapter">
+        <section key={cap.chapter_id ?? ci} id={`chron-${cap.chapter_id ?? ci}`} className="chron-chapter">
           <header className="chron-chapter__head">
             <h4 className="chron-chapter__title">{cap.title}</h4>
             <span className="chron-chapter__turn">desde o turno {cap.started_turn}</span>
           </header>
+          {cap.digest && (
+            <div className="chron-digest">
+              <p>{cap.digest.summary}</p>
+              <small>{cap.digest.covered_entry_count} entradas resumidas · turnos {cap.digest.from_turn ?? cap.started_turn}–{cap.digest.to_turn ?? cap.started_turn}</small>
+            </div>
+          )}
           {cap.entries.length === 0 ? (
             <p className="combat-empty">Nenhum feito digno de canção — ainda.</p>
           ) : (
-            <ol className="chronicle">
-              {cap.entries.slice().reverse().map((e, i) => (
-                <li key={e.event_id ?? i} className={e.kind === "milestone" ? "chron chron--milestone" : "chron"}>
-                  <span className="chron__mark" aria-hidden>{e.kind === "milestone" ? "⚔" : "❧"}</span>
-                  <p className="chron__text" dangerouslySetInnerHTML={{ __html: mdLite(e.text) }} />
-                </li>
-              ))}
-            </ol>
+            <details open={!cap.digest} className="chron-raw">
+              <summary>{cap.digest ? "Ver registros originais" : "Registros"}</summary>
+              <ol className="chronicle">
+                {cap.entries.slice().reverse().map((e, i) => (
+                  <li key={e.entry_id ?? e.event_id ?? i} className={e.kind === "milestone" ? "chron chron--milestone" : "chron"}>
+                    <span className="chron__mark" aria-hidden>{e.kind === "milestone" ? "⚔" : "❧"}</span>
+                    <p className="chron__text" dangerouslySetInnerHTML={{ __html: mdLite(e.text) }} />
+                  </li>
+                ))}
+              </ol>
+            </details>
           )}
         </section>
       ))}

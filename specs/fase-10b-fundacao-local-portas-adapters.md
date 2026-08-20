@@ -1,6 +1,6 @@
 # SPEC — Fase 10b.1 — Fundação local reproduzível e portas de infraestrutura
 
-> **Status:** `draft`
+> **Status:** `done` (2026-08-20)
 > **Criada:** 2026-08-16 · **Atualizada:** 2026-08-16
 > **Depende de:** [plano mestre local-first](fase-10b-plano-mestre-local-first.md) `approved`
 > **Desbloqueia:** Postgres, turnos distribuídos, Auth/RLS, pgvector, BlobStore e operação local
@@ -208,17 +208,17 @@ Supabase: a versão pinada é medida e o resultado fica no relatório de smoke.
 
 ## 5. Critérios de aceite
 
-- [ ] Stack local sobe/desce por comando Python e nunca toca alvo remoto.
-- [ ] `doctor` mede dependências/recursos e falha com instrução acionável.
-- [ ] Oito portas têm contratos e fakes; adapters legados passam todos.
-- [ ] Suíte padrão continua 100% offline e sem Docker.
-- [ ] Perfil `hosted` recusa qualquer persistência mutável em filesystem/auth desligada.
-- [ ] Os quatro overlays mutáveis usam `RuntimeCatalogStore` com escopo explícito.
-- [ ] `persistence.py`/`rag.py` preservam APIs públicas durante a transição.
-- [ ] Nenhum segredo Supabase aparece no bundle/frontend/log.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM — N/A; nenhum invoke novo.
-- [ ] Saves antigos continuam carregando pelo adapter legado.
+- [x] Stack local sobe/desce por comando Python e nunca toca alvo remoto.
+- [x] `doctor` mede dependências/recursos e falha com instrução acionável.
+- [x] Oito portas têm contratos e fakes; adapters legados passam todos.
+- [x] Suíte padrão continua 100% offline e sem Docker.
+- [x] Perfil `hosted` recusa qualquer persistência mutável em filesystem/auth desligada.
+- [x] Os quatro overlays mutáveis usam `RuntimeCatalogStore` com escopo explícito.
+- [x] `persistence.py`/`rag.py` preservam APIs públicas durante a transição.
+- [x] Nenhum segredo Supabase aparece no bundle/frontend/log.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM — N/A; nenhum invoke novo.
+- [x] Saves antigos continuam carregando pelo adapter legado.
 
 ## 6. Smoke test com LLM real
 

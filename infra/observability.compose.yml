@@ -1,0 +1,50 @@
+services:
+  tempo:
+    image: grafana/tempo:2.10.7
+    command: ["-config.file=/etc/tempo.yml"]
+    volumes:
+      - ../observability/tempo.yml:/etc/tempo.yml:ro
+      - valoria-tempo:/var/tempo
+    ports: ["127.0.0.1:53200:3200"]
+    mem_limit: 1g
+    cpus: 1.0
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.159.0
+    command: ["--config=/etc/otelcol.yml"]
+    volumes:
+      - ../observability/otel-collector.yml:/etc/otelcol.yml:ro
+    ports:
+      - "127.0.0.1:54317:4317"
+      - "127.0.0.1:54318:4318"
+    depends_on: [tempo]
+    mem_limit: 384m
+    cpus: 0.5
+  prometheus:
+    image: prom/prometheus:v3.13.2
+    command: ["--config.file=/etc/prometheus/prometheus.yml"]
+    volumes:
+      - ../observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ../observability/alerts:/etc/prometheus/alerts:ro
+      - valoria-prometheus:/prometheus
+    ports: ["127.0.0.1:59090:9090"]
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    mem_limit: 512m
+    cpus: 0.75
+  grafana:
+    image: grafana/grafana:13.0.2
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_SECURITY_ADMIN_PASSWORD: local-only-change-me
+    volumes:
+      - ../observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ../observability/dashboards:/var/lib/grafana/dashboards:ro
+      - valoria-grafana:/var/lib/grafana
+    ports: ["127.0.0.1:53000:3000"]
+    depends_on: [prometheus, tempo]
+    mem_limit: 512m
+    cpus: 0.75
+volumes:
+  valoria-prometheus:
+  valoria-grafana:
+  valoria-tempo:

@@ -31,6 +31,20 @@ openai = [
 anthropic = [
     "langchain-anthropic>=0.3",
 ]
+postgres = [
+    "psycopg[binary,pool]>=3.2,<4",
+]
+portable = [
+    "boto3>=1.40,<2",
+]
+browser = [
+    "playwright>=1.58,<2",
+]
+observability = [
+    "opentelemetry-api>=1.39,<2",
+    "opentelemetry-sdk>=1.39,<2",
+    "opentelemetry-exporter-otlp-proto-http>=1.39,<2",
+]
 
 [dependency-groups]
 dev = [
@@ -57,4 +71,8 @@ addopts = "-q -m \"not llm_contract and not llm_playtest\""
 markers = [
     "llm_contract: contrato contra provider LLM real (gasta quota; requer GOOGLE_API_KEY)",
     "llm_playtest: campanha curta de playtest por perfil no LLM real (gasta quota; requer GROQ ou GOOGLE key)",
+    "infra_local: integração opt-in com Postgres/Auth/Storage/pgvector locais",
+    "security_local: testes opt-in de RLS, CSRF, ownership e secrets locais",
+    "chaos_local: testes opt-in de kill/restart/timeouts na stack local",
+    "browser_local: browser real opt-in contra servidor local",
 ]

@@ -1,6 +1,6 @@
 # SPEC — Fase 10b.6 — Storage portátil para assets dinâmicos
 
-> **Status:** `draft`
+> **Status:** `done` (2026-08-20)
 > **Criada:** 2026-08-16 · **Atualizada:** 2026-08-16
 > **Depende de:** [turnos/fila](fase-10b-turnos-duraveis-concorrencia-fila.md) `done` · [Auth/RLS](fase-10b-auth-rls-isolamento.md) `done` · [pgvector](fase-10b-pgvector-memoria-transacional.md) `done`
 > **Desbloqueia:** Fase 8B (arte dinâmica), cleanup por usuário e certificação de object storage
@@ -184,18 +184,18 @@ Provider, bucket e key ficam fora do DTO público.
 
 ## 5. Critérios de aceite
 
-- [ ] 90 WebPs/45 entradas curadas permanecem estáticos e válidos.
-- [ ] File, Supabase local e S3 opcional obedecem o mesmo BlobStore contract.
-- [ ] Bucket dinâmico é privado; A nunca acessa metadata/blob de B.
-- [ ] MIME/pixels/bytes/metadata/hash são validados em Python.
-- [ ] Secret/hidden não gera nem serve antes do reveal.
-- [ ] Failpoints blob↔DB são reparáveis por reconcile idempotente.
-- [ ] Backup/restore de manifest+objetos valida todos hashes.
-- [ ] API não expõe provider, bucket, key ou service credential.
-- [ ] Perfil hosted não grava asset persistente no filesystem da API.
-- [ ] `uv run pytest -m infra_local`, build Vite e suíte offline verdes.
-- [ ] Guard de FallbackLLM — N/A; nenhum invoke novo.
-- [ ] Assets/saves antigos continuam funcionando sem migração.
+- [x] 90 WebPs/45 entradas curadas permanecem estáticos e válidos.
+- [x] File, Supabase local e S3 opcional obedecem o mesmo BlobStore contract.
+- [x] Bucket dinâmico é privado; A nunca acessa metadata/blob de B.
+- [x] MIME/pixels/bytes/metadata/hash são validados em Python.
+- [x] Secret/hidden não gera nem serve antes do reveal.
+- [x] Failpoints blob↔DB são reparáveis por reconcile idempotente.
+- [x] Backup/restore de manifest+objetos valida todos hashes.
+- [x] API não expõe provider, bucket, key ou service credential.
+- [x] Perfil hosted não grava asset persistente no filesystem da API.
+- [x] `uv run pytest -m infra_local`, build Vite e suíte offline verdes.
+- [x] Guard de FallbackLLM — N/A; nenhum invoke novo.
+- [x] Assets/saves antigos continuam funcionando sem migração.
 
 ## 6. Smoke test com LLM real
 

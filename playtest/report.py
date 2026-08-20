@@ -232,6 +232,28 @@ def render_markdown(report: RunReport) -> str:
             f"| {s.get('fell_back_turns',0)} | {'sim' if s.get('mock') else 'não'} |")
     L.append("")
 
+    merchant_campaigns = [
+        summary for summary in report.campaigns
+        if (summary.get("economy") or {}).get("successful_transactions")
+        or str(summary.get("profile") or "").startswith("comerciante")
+    ]
+    if merchant_campaigns:
+        L.append("## Economia — perfil comerciante")
+        L.append("")
+        L.append("| seed | compras | vendas | crafts | recusas | mercados | regiões | margem | giro | patrimônio | restocks |")
+        L.append("|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+        for summary in merchant_campaigns:
+            economy = summary.get("economy") or {}
+            L.append(
+                f"| {summary.get('seed', 0)} | {economy.get('purchases', 0)} "
+                f"| {economy.get('sales', 0)} | {economy.get('crafts', 0)} "
+                f"| {economy.get('rejections', 0)} | {economy.get('markets', 0)} "
+                f"| {economy.get('regions', 0)} | {economy.get('realized_margin', 0)} "
+                f"| {economy.get('turnover', 0)} | {economy.get('final_net_worth', 0)} "
+                f"| {economy.get('restocks_observed', 0)} |"
+            )
+        L.append("")
+
     L.append("## Cobertura mecânica")
     L.append("")
     L.append("| perfil | turnos combat | conflitos iniciados | encerrados | reações | táticas |")

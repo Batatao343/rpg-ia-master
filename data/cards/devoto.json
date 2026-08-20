@@ -19,7 +19,10 @@
         "categoria_arma": "marcial",
         "dano_base": 4
       },
-      "descricao": "Abre a guarda de propósito: o aço convida o inimigo a se aproximar do que ele deveria temer."
+      "descricao": "Abre a guarda de propósito: o aço convida o inimigo a se aproximar do que ele deveria temer.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "dev_muralha_viva",
@@ -38,7 +41,10 @@
         "kind": "protecao",
         "valor": 3
       },
-      "descricao": "Planta os pés e vira anteparo de carne para os que estão atrás."
+      "descricao": "Planta os pés e vira anteparo de carne para os que estão atrás.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "dev_conviccao",
@@ -55,7 +61,10 @@
         "kind": "buff_defesa",
         "valor": 1
       },
-      "descricao": "Quem não teme o Abismo não recua um passo — a guarda nunca abre por susto."
+      "descricao": "Quem não teme o Abismo não recua um passo — a guarda nunca abre por susto.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "dev_aguentar",
@@ -72,7 +81,10 @@
         "kind": "utilitaria",
         "prompt_hint": "suportar esforço/dor prolongada sem ceder"
       },
-      "descricao": "O corpo aprende a hospedar sofrimento."
+      "descricao": "O corpo aprende a hospedar sofrimento.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "dev_provocacao",
@@ -91,7 +103,10 @@
         "kind": "taunt",
         "valor": 2
       },
-      "descricao": "Chama o perigo pelo nome, e ele atende."
+      "descricao": "Chama o perigo pelo nome, e ele atende.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "dev_encaixe",
@@ -111,7 +126,10 @@
         "dano_base": 4
       },
       "descricao": "Recebe o golpe no ombro certo e devolve com o cotovelo.",
-      "gatilho": "ao_ser_atacado"
+      "gatilho": "ao_ser_atacado",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "dev_sentinela",
@@ -131,7 +149,10 @@
         "categoria_arma": "pesada",
         "dano_base": 12
       },
-      "descricao": "Um único mandobre que sela a brecha e quebra a linha inimiga."
+      "descricao": "Um único mandobre que sela a brecha e quebra a linha inimiga.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "dev_cons_marca",
@@ -150,7 +171,10 @@
         "kind": "marca",
         "valor": 1
       },
-      "descricao": "Risca no próprio antebraço o nome do inimigo — agora é pessoal."
+      "descricao": "Risca no próprio antebraço o nome do inimigo — agora é pessoal.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "dev_cons_liturgia",
@@ -203,7 +227,10 @@
           }
         }
       },
-      "central": true
+      "central": true,
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "dev_cons_estigma",
@@ -220,7 +247,10 @@
         "kind": "buff_defesa",
         "valor": 2
       },
-      "descricao": "As cicatrizes rituais distribuem o impacto — o corpo virou relicário."
+      "descricao": "As cicatrizes rituais distribuem o impacto — o corpo virou relicário.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "dev_zel_ciume",
@@ -239,7 +269,10 @@
         "kind": "taunt",
         "valor": 3
       },
-      "descricao": "Ninguém mais toca no que é dele — nem o inimigo, nem o aliado."
+      "descricao": "Ninguém mais toca no que é dele — nem o inimigo, nem o aliado.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "dev_zel_possessao",
@@ -292,7 +325,10 @@
           }
         }
       },
-      "central": true
+      "central": true,
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "dev_zel_vigilia",
@@ -309,7 +345,10 @@
         "kind": "buff_iniciativa",
         "valor": 1
       },
-      "descricao": "Dorme de olho aberto para que nada leve o que ama antes dele."
+      "descricao": "Dorme de olho aberto para que nada leve o que ama antes dele.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "dev_enl_lamento",
@@ -329,7 +368,10 @@
         "condicao": "desmoralizado",
         "duracao": 2
       },
-      "descricao": "Uma dor tão nua que o inimigo hesita em continuar de pé."
+      "descricao": "Uma dor tão nua que o inimigo hesita em continuar de pé.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "dev_enl_luto",
@@ -388,7 +430,10 @@
           }
         }
       },
-      "central": true
+      "central": true,
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "dev_enl_memoria",
@@ -405,7 +450,10 @@
         "kind": "utilitaria",
         "prompt_hint": "reconhecer um morto/relíquia/local de perda"
       },
-      "descricao": "O luto é um mapa dos que já se foram."
+      "descricao": "O luto é um mapa dos que já se foram.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "dev_cons_relicario",
@@ -425,7 +473,10 @@
         "valor": 5
       },
       "descricao": "Consagra uma cicatriz e recebe no próprio corpo o impacto destinado a outro.",
-      "papel": "proteger aliado marcado"
+      "papel": "proteger aliado marcado",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "dev_cons_comunhao",
@@ -445,7 +496,10 @@
         "valor": 1
       },
       "descricao": "Pronuncia o nome verdadeiro de um aliado terminal e ancora sua alma à carne.",
-      "papel": "estabilização ritual à distância"
+      "papel": "estabilização ritual à distância",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "dev_zel_interdito",
@@ -465,7 +519,10 @@
         "valor": 3
       },
       "descricao": "O olhar do Devoto transforma qualquer desvio do inimigo em afronta pessoal.",
-      "papel": "impedir troca de alvo"
+      "papel": "impedir troca de alvo",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "dev_zel_retorno",
@@ -485,7 +542,10 @@
         "dano_base": 10
       },
       "descricao": "A violência que buscava um aliado volta inteira ao agressor.",
-      "papel": "retaliação contra agressor marcado"
+      "papel": "retaliação contra agressor marcado",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "dev_enl_cortejo",
@@ -507,7 +567,10 @@
         "dano_tipo": "abissal"
       },
       "descricao": "Sombras com nomes esquecidos atravessam o alvo em procissão silenciosa.",
-      "papel": "pressão abissal por luto"
+      "papel": "pressão abissal por luto",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "dev_enl_testemunho",
@@ -527,7 +590,10 @@
         "valor": 2
       },
       "descricao": "Os mortos testemunham através do Devoto e guiam o grupo contra quem os levou.",
-      "papel": "vantagem coletiva contra assassino"
+      "papel": "vantagem coletiva contra assassino",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "dev_reflexo_bastiao",
@@ -548,7 +614,10 @@
       },
       "descricao": "Gira o escudo no instante exato em que a linha ameaça romper.",
       "gatilho": "ao_ser_flanqueado",
-      "papel": "fechar brecha ao ser flanqueado"
+      "papel": "fechar brecha ao ser flanqueado",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "dev_ombro_porta",
@@ -569,7 +638,10 @@
       },
       "descricao": "Recebe a investida de lado e devolve o invasor para a zona anterior.",
       "gatilho": "ao_inimigo_engajar",
-      "papel": "interromper avanço inimigo"
+      "papel": "interromper avanço inimigo",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "dev_vigiar_ruina",
@@ -589,7 +661,10 @@
         "valor": 2
       },
       "descricao": "Lê nas paredes os sinais de que algo tentou entrar durante a noite.",
-      "papel": "detectar ameaça em vigília"
+      "papel": "detectar ameaça em vigília",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "dev_carregar_caido",
@@ -609,7 +684,10 @@
         "prompt_hint": "transportar ferido ou peso extremo sem abandonar a guarda"
       },
       "descricao": "Faz do próprio dorso uma muralha móvel para retirar alguém do perigo.",
-      "papel": "resgate sob carga"
+      "papel": "resgate sob carga",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "dev_passo_interposto",
@@ -629,7 +707,10 @@
         "valor": 1
       },
       "descricao": "Um passo basta para colocar a própria carne entre o perigo e o companheiro.",
-      "papel": "trocar posição com aliado exposto"
+      "papel": "trocar posição com aliado exposto",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "dev_nome_proibido",
@@ -650,7 +731,10 @@
         "duracao": 1
       },
       "descricao": "Sussurra ao inimigo o nome que o Abismo usa quando sonha com ele.",
-      "papel": "quebrar coragem pelo nome"
+      "papel": "quebrar coragem pelo nome",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "dev_martelo_penitente",
@@ -671,7 +755,10 @@
         "dano_base": 9
       },
       "descricao": "Cada ferida do grupo acrescenta peso à descida do martelo.",
-      "papel": "golpe pesado contra alvo que feriu aliado"
+      "papel": "golpe pesado contra alvo que feriu aliado",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "dev_promessa_imovel",
@@ -689,7 +776,10 @@
         "valor": 1
       },
       "descricao": "Enquanto sustenta a palavra dada, o corpo se recusa a ceder.",
-      "papel": "vitalidade por juramento mantido"
+      "papel": "vitalidade por juramento mantido",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     }
   ]
 }

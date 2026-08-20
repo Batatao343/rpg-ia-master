@@ -1,6 +1,6 @@
 # SPEC — Fase 10b.5 — Memória transacional em pgvector
 
-> **Status:** `draft`
+> **Status:** `done` (2026-08-20)
 > **Criada:** 2026-08-16 · **Atualizada:** 2026-08-16
 > **Depende de:** [Postgres transacional](fase-10b-postgres-persistencia-transacional.md) `done` · [turnos duráveis](fase-10b-turnos-duraveis-concorrencia-fila.md) `done` · [Auth/RLS](fase-10b-auth-rls-isolamento.md) `done`
 > **Desbloqueia:** checkpoint realmente atômico, runtime sem FAISS gravável e certificação serverless/container
@@ -207,19 +207,19 @@ artifacts; sessão/NPC seguem jobs duráveis.
 
 ## 5. Critérios de aceite
 
-- [ ] Lore, rules, session e NPC preservam filtros/formatos do contexto atual.
-- [ ] Turno confirma fato bruto+job atomicamente sem depender do provider de embedding.
-- [ ] Backlog pending continua recuperável por FTS e observável.
-- [ ] Worker é idempotente e recusa dimensão/profile/hash incompatível.
-- [ ] Restore não recupera nenhum fato da timeline descartada.
-- [ ] A/B e NPC secreto não vazam via query, RLS ou fallback FTS.
-- [ ] Reindex global é resumível e faz cutover de profile sem mistura.
-- [ ] Paridade top-3 FAISS↔pgvector atinge limiar documentado ≥80% no corpus fixo,
+- [x] Lore, rules, session e NPC preservam filtros/formatos do contexto atual.
+- [x] Turno confirma fato bruto+job atomicamente sem depender do provider de embedding.
+- [x] Backlog pending continua recuperável por FTS e observável.
+- [x] Worker é idempotente e recusa dimensão/profile/hash incompatível.
+- [x] Restore não recupera nenhum fato da timeline descartada.
+- [x] A/B e NPC secreto não vazam via query, RLS ou fallback FTS.
+- [x] Reindex global é resumível e faz cutover de profile sem mistura.
+- [x] Paridade top-3 FAISS↔pgvector atinge limiar documentado ≥80% no corpus fixo,
   com 100% nos casos obrigatórios de visibility/provenance/namespace.
-- [ ] Perfil pgvector não grava em `data/saves_memory/`.
-- [ ] `uv run pytest -m infra_local` e suíte offline completos verdes.
-- [ ] Guard de FallbackLLM — N/A; nenhum invoke LLM novo.
-- [ ] Índices FAISS históricos permanecem intactos/exportáveis.
+- [x] Perfil pgvector não grava em `data/saves_memory/`.
+- [x] `uv run pytest -m infra_local` e suíte offline completos verdes.
+- [x] Guard de FallbackLLM — N/A; nenhum invoke LLM novo.
+- [x] Índices FAISS históricos permanecem intactos/exportáveis.
 
 ## 6. Smoke test com LLM real
 

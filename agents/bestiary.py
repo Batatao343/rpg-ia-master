@@ -159,20 +159,26 @@ def _read_json(path: str) -> Dict:
 def load_bestiary() -> Dict:
     """View unificada: curadoria ∪ overlay runtime (curadoria VENCE conflito de
     id — gerado nunca sombreia entrada curada)."""
-    return {**_read_json(_overlay_path()), **_read_json(BESTIARY_FILE)}
+    from infrastructure.runtime import get_runtime
+
+    overlay = get_runtime().runtime_catalog.list(
+        "bestiary_template", owner_id=None, game_id=None,
+    )
+    return {**overlay, **_read_json(BESTIARY_FILE)}
 
 
 def save_enemy(data: Dict):
     """Grava SÓ no overlay runtime — nunca em data/bestiary.json."""
-    db = _read_json(_overlay_path())
+    from infrastructure.runtime import get_runtime
+
     # Usa ID se existir, senão gera slug
     key = data.get("id", data["name"].lower().replace(" ", "_"))
     if "id" not in data: data["id"] = key
 
-    db[key] = data
-    path = _overlay_path()
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, 'w', encoding='utf-8') as f: json.dump(db, f, indent=4, ensure_ascii=False)
+    get_runtime().runtime_catalog.put(
+        "bestiary_template", key, data,
+        scope="global", owner_id=None, game_id=None,
+    )
 
 def _infer_tier_from_name(name: str) -> ModelTier:
     if any(x in name.lower() for x in ["dragon", "lich", "boss", "god", "lord"]): return ModelTier.SMART

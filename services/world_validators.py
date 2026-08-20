@@ -122,6 +122,13 @@ def _v_level_up(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationRe
     return ValidationResult(True)
 
 
+def _v_progression_choice(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    del state, proj
+    if ev.actor_id != "player":
+        return ValidationResult(False, "evento de progressão exige actor player")
+    return ValidationResult(bool(ev.target_id), "target de progressão ausente")
+
+
 def _route_pair_blocked(proj: dict, a: str, b: str) -> bool:
     pair = frozenset((a, b))
     return any(frozenset((r.get("a"), r.get("b"))) == pair
@@ -188,6 +195,8 @@ _VALIDATORS = {
     "faction_relation_changed": _v_faction_relation_changed,
     "reputation_changed": _v_reputation_changed,
     "level_up": _v_level_up,
+    "subclass_chosen": _v_progression_choice,
+    "class_apex_unlocked": _v_progression_choice,
     "player_died": _v_player_died,
     "player_downed": _v_player_downed,
     "route_blocked": _v_route_blocked,
@@ -207,7 +216,8 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
 
     # Fase 4.1: level_up só nasce no motor (grant_xp) — proposta do LLM chega sem
     # `source` (o schema ProposedWorldEvent não tem o campo) e é rejeitada aqui.
-    if ev.type == "level_up" and proposal.get("source") != "progression":
+    if ev.type in ("level_up", "subclass_chosen", "class_apex_unlocked") \
+            and proposal.get("source") != "progression":
         return ValidationResult(False, "level_up é gerado pelo motor, não proposto")
     # Fase 4.6: player_died idem — só o combate emite.
     if ev.type == "player_died" and proposal.get("source") != "combat":

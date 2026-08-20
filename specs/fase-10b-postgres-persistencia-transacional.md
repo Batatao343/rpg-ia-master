@@ -1,6 +1,6 @@
 # SPEC — Fase 10b.2 — Persistência Postgres híbrida e migração verificável
 
-> **Status:** `draft`
+> **Status:** `done` (2026-08-20)
 > **Criada:** 2026-08-16 · **Atualizada:** 2026-08-16
 > **Depende de:** [fundação local e portas](fase-10b-fundacao-local-portas-adapters.md) `done`
 > **Desbloqueia:** turnos multiworker, Auth/RLS, pgvector e backup transacional
@@ -120,7 +120,7 @@ create table app.game_checkpoints (
 create table app.game_events (
   game_id uuid not null,
   owner_id uuid not null,
-  event_id uuid not null,
+  event_id text not null,
   turn integer not null,
   event_type text not null,
   payload jsonb not null,
@@ -157,6 +157,11 @@ create unique index runtime_catalog_user_key
 create unique index runtime_catalog_game_key
   on app.runtime_catalog(namespace, item_key, owner_id, game_id) where scope='game';
 ```
+
+`event_id` permanece `text`, não `uuid`: o schema vivo garante strings estáveis
+e os saves/testes legados contêm IDs curtos (`e1`, `evt-1`) além de UUIDs hex.
+Forçar cast apagaria compatibilidade sem ganho; a constraint exige 1–128 caracteres
+e a deduplicação continua por `(game_id,event_id)` + hash do evento.
 
 Os índices parciais dão a semântica correta para chaves nulas: um único documento
 por namespace/key/escopo efetivo, sem tornar owner/game obrigatórios no escopo global.
@@ -227,17 +232,17 @@ reportados; nunca “ganham” silenciosamente pelo mtime.
 
 ## 5. Critérios de aceite
 
-- [ ] GameState v7 mantém round-trip semântico nos dois adapters.
-- [ ] Save concorrente com versão velha falha sem perder estado confirmado.
-- [ ] Owner B não lê/lista/altera/exclui dados de A pelo GameStore.
-- [ ] Checkpoint/eventos/runtime catalog participam da transação correta.
-- [ ] Conhecimento mutável tem escopo explícito e zero vazamento entre campanhas.
-- [ ] Importador é preview-first, resumível e não destrutivo.
-- [ ] Export→restore em Postgres limpo conserva hashes e estado jogável.
-- [ ] Perfil Postgres não escreve save/checkpoint/runtime JSON no disco.
-- [ ] `uv run pytest -m infra_local` verde além da suíte completa offline.
-- [ ] Guard de FallbackLLM — N/A; nenhum invoke novo.
-- [ ] Saves antigos continuam carregando/exportáveis pelo adapter legado.
+- [x] GameState v7 mantém round-trip semântico nos dois adapters.
+- [x] Save concorrente com versão velha falha sem perder estado confirmado.
+- [x] Owner B não lê/lista/altera/exclui dados de A pelo GameStore.
+- [x] Checkpoint/eventos/runtime catalog participam da transação correta.
+- [x] Conhecimento mutável tem escopo explícito e zero vazamento entre campanhas.
+- [x] Importador é preview-first, resumível e não destrutivo.
+- [x] Export→restore em Postgres limpo conserva hashes e estado jogável.
+- [x] Perfil Postgres não escreve save/checkpoint/runtime JSON no disco.
+- [x] `uv run pytest -m infra_local` verde além da suíte completa offline.
+- [x] Guard de FallbackLLM — N/A; nenhum invoke novo.
+- [x] Saves antigos continuam carregando/exportáveis pelo adapter legado.
 
 ## 6. Smoke test com LLM real
 

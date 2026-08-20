@@ -15,7 +15,9 @@ Spec: specs/fase-3.1-diario-cronica.md §3.
 
 from __future__ import annotations
 
+import hashlib
 from typing import Dict, List
+from uuid import NAMESPACE_URL, uuid5
 
 from services.context_builder import _name
 
@@ -24,7 +26,7 @@ from services.context_builder import _name
 CHRONICLE_EVENT_TYPES = {
     "npc_killed", "location_control_changed", "quest_completed", "quest_failed",
     "secret_revealed", "level_up", "player_died", "player_downed",
-    "unique_item_claimed",
+    "unique_item_claimed", "subclass_chosen", "class_apex_unlocked",
 }
 
 # Templates voltados ao JOGADOR (prosa curta), diferentes dos EVENT_TEMPLATES
@@ -39,6 +41,8 @@ CHRONICLE_TEMPLATES: Dict[str, str] = {
     "player_died": "Aqui termina a saga: {detail}.",
     "player_downed": "O herói caiu e foi saqueado — e ainda assim levantou. {detail}.",
     "unique_item_claimed": "{item} agora pertence ao herói — não há outro no mundo.",
+    "subclass_chosen": "A senda {detail} foi escolhida.",
+    "class_apex_unlocked": "O Ápice {detail} foi alcançado.",
 }
 
 _DEFAULT_TITLE = "Crônica da jornada"
@@ -75,6 +79,10 @@ def render_milestone(event: Dict, projection: Dict) -> str:
             "name", event.get("target_id", ""))
         return tmpl.format(item=item)
 
+    if etype in ("subclass_chosen", "class_apex_unlocked"):
+        detail = payload.get("name") or payload.get("card_id") or event.get("target_id", "")
+        return tmpl.format(detail=detail)
+
     if etype == "secret_revealed":
         facts = (projection or {}).get("revealed_facts", {}) or {}
         fact = (facts.get(event.get("event_id", ""), {}) or {}).get("fact", "")
@@ -94,7 +102,31 @@ def render_milestone(event: Dict, projection: Dict) -> str:
 
 
 def _new_chapter(title: str, turn: int, location: str) -> Dict:
-    return {"title": title, "started_turn": turn, "location": location, "entries": []}
+    seed = f"valoria:chronicle:{title}:{turn}:{location}"
+    return {"chapter_id": uuid5(NAMESPACE_URL, seed).hex, "title": title,
+            "started_turn": turn, "location": location, "entries": []}
+
+
+def ensure_chronicle_ids(chronicle: List[Dict], *, game_id: str = "legacy") -> List[Dict]:
+    """Backfill puro/idempotente de IDs sem usar título como identidade runtime."""
+    chapters: List[Dict] = []
+    for chapter_index, raw_chapter in enumerate(chronicle or []):
+        chapter = dict(raw_chapter)
+        chapter_seed = hashlib.sha256(
+            f"{game_id}:{chapter_index}:{chapter.get('started_turn', 0)}:{chapter.get('title', '')}".encode()
+        ).hexdigest()
+        chapter.setdefault("chapter_id", uuid5(NAMESPACE_URL, chapter_seed).hex)
+        entries = []
+        for entry_index, raw_entry in enumerate(chapter.get("entries") or []):
+            entry = dict(raw_entry)
+            entry_seed = hashlib.sha256(
+                f"{chapter['chapter_id']}:{entry_index}:{entry.get('turn', 0)}:{entry.get('kind', '')}:{entry.get('event_id', '')}:{entry.get('text', '')}".encode()
+            ).hexdigest()
+            entry.setdefault("entry_id", uuid5(NAMESPACE_URL, entry_seed).hex)
+            entries.append(entry)
+        chapter["entries"] = entries
+        chapters.append(chapter)
+    return chapters
 
 
 def append_entry(chronicle: List[Dict], *, text: str, turn: int,
@@ -108,6 +140,8 @@ def append_entry(chronicle: List[Dict], *, text: str, turn: int,
     entry: Dict = {"text": text, "turn": turn, "kind": kind}
     if event_id:
         entry["event_id"] = event_id
+    seed = f"{last.get('chapter_id', '')}:{len(entries)}:{turn}:{kind}:{event_id}:{text}"
+    entry["entry_id"] = uuid5(NAMESPACE_URL, seed).hex
     entries.append(entry)
     last["entries"] = entries
     chapters[-1] = last

@@ -1,0 +1,2371 @@
+{
+  "schema_version": 1,
+  "source": "tiers-5-plus",
+  "cards": [
+    {
+      "id": "dev_t5_tronco",
+      "name": "Juramento de Cinza",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 12,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-5-ativa-dano-0",
+      "descricao": "Juramento de Cinza converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "dev_t6_tronco",
+      "name": "Linha Inamovível",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "epico_ii",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 13,
+        "duracao": 3
+      },
+      "papel": "tier-6-reacao-buff_defesa-1",
+      "descricao": "Linha Inamovível converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "dev_t7_tronco",
+      "name": "Vigília do Convite",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "vantagem",
+        "valor": 14,
+        "duracao": 2
+      },
+      "papel": "tier-7-passiva-vantagem-2",
+      "descricao": "Vigília do Convite converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "dev_t8_tronco",
+      "name": "Coração da Muralha",
+      "tipo": "utilitaria",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "utilitaria",
+        "valor": 15,
+        "duracao": 3
+      },
+      "papel": "tier-8-utilitaria-utilitaria-3",
+      "descricao": "Coração da Muralha converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "dev_consagrado_t5",
+      "name": "Liturgia da Cicatriz",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 13,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-5-ativa-dano-0",
+      "descricao": "Liturgia da Cicatriz converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "dev_consagrado_t7",
+      "name": "Selo de Vigília",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 15,
+        "duracao": 3
+      },
+      "papel": "tier-7-reacao-contra_ataque-1",
+      "descricao": "Selo de Vigília converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "dev_consagrado_t8",
+      "name": "Altar Ambulante",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 16,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-8-passiva-aplicar_condicao-2",
+      "descricao": "Altar Ambulante converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "dev_consagrado_apice",
+      "name": "Consagração do Vazio",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 18,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-9-ativa-dano-0",
+      "descricao": "Consagração do Vazio converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    },
+    {
+      "id": "dev_zeloso_t5",
+      "name": "Ciúme da Escuridão",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 14,
+        "duracao": 2
+      },
+      "papel": "tier-5-ativa-contra_ataque-4",
+      "descricao": "Ciúme da Escuridão converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "dev_zeloso_t7",
+      "name": "Interposição Fervorosa",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 16,
+        "duracao": 3,
+        "condicao": "exposto"
+      },
+      "papel": "tier-7-reacao-aplicar_condicao-5",
+      "descricao": "Interposição Fervorosa converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "dev_zeloso_t8",
+      "name": "Ninguém Além de Mim",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 17,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-8-passiva-dano-6",
+      "descricao": "Ninguém Além de Mim converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "dev_zeloso_apice",
+      "name": "Amor que Devora",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 19,
+        "duracao": 3
+      },
+      "papel": "tier-9-ativa-contra_ataque-1",
+      "descricao": "Amor que Devora converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    },
+    {
+      "id": "dev_enlutado_t5",
+      "name": "Réquiem de Ferro",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "enlutado",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 15,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-5-ativa-aplicar_condicao-8",
+      "descricao": "Réquiem de Ferro converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "dev_enlutado_t7",
+      "name": "Luto Vigilante",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "enlutado",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 17,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-7-reacao-dano-9",
+      "descricao": "Luto Vigilante converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "dev_enlutado_t8",
+      "name": "Nome dos Perdidos",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "enlutado",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 18,
+        "duracao": 2
+      },
+      "papel": "tier-8-passiva-contra_ataque-10",
+      "descricao": "Nome dos Perdidos converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "dev_enlutado_apice",
+      "name": "Procissão sem Fim",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Devoto do Abismo",
+      "subclasse": "enlutado",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 20,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-9-ativa-aplicar_condicao-2",
+      "descricao": "Procissão sem Fim converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    },
+    {
+      "id": "san_t5_tronco",
+      "name": "Cláusula Rubra",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 12,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-5-ativa-dano-0",
+      "descricao": "Cláusula Rubra converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "san_t6_tronco",
+      "name": "Reserva de Dor",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "epico_ii",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 13,
+        "duracao": 3
+      },
+      "papel": "tier-6-reacao-buff_defesa-1",
+      "descricao": "Reserva de Dor converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "san_t7_tronco",
+      "name": "Preço Antecipado",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "vantagem",
+        "valor": 14,
+        "duracao": 2
+      },
+      "papel": "tier-7-passiva-vantagem-2",
+      "descricao": "Preço Antecipado converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "san_t8_tronco",
+      "name": "Última Moeda de Sangue",
+      "tipo": "utilitaria",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "utilitaria",
+        "valor": 15,
+        "duracao": 3
+      },
+      "papel": "tier-8-utilitaria-utilitaria-3",
+      "descricao": "Última Moeda de Sangue converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "san_exposto_t5",
+      "name": "Palco de Cicatrizes",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 13,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-5-ativa-dano-0",
+      "descricao": "Palco de Cicatrizes converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "san_exposto_t7",
+      "name": "Aplauso Cruel",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 15,
+        "duracao": 3
+      },
+      "papel": "tier-7-reacao-contra_ataque-1",
+      "descricao": "Aplauso Cruel converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "san_exposto_t8",
+      "name": "Dor em Evidência",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 16,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-8-passiva-aplicar_condicao-2",
+      "descricao": "Dor em Evidência converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "san_exposto_apice",
+      "name": "Testemunho Escarlate",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 18,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-9-ativa-dano-0",
+      "descricao": "Testemunho Escarlate converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    },
+    {
+      "id": "san_avaro_t5",
+      "name": "Cofre de Sangue",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 14,
+        "duracao": 2
+      },
+      "papel": "tier-5-ativa-contra_ataque-4",
+      "descricao": "Cofre de Sangue converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "san_avaro_t7",
+      "name": "Juro Composto",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 16,
+        "duracao": 3,
+        "condicao": "exposto"
+      },
+      "papel": "tier-7-reacao-aplicar_condicao-5",
+      "descricao": "Juro Composto converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "san_avaro_t8",
+      "name": "Cobrança Final",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 17,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-8-passiva-dano-6",
+      "descricao": "Cobrança Final converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "san_avaro_apice",
+      "name": "Fortuna Rubra",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 19,
+        "duracao": 3
+      },
+      "papel": "tier-9-ativa-contra_ataque-1",
+      "descricao": "Fortuna Rubra converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    },
+    {
+      "id": "san_silencioso_t5",
+      "name": "Corte sem Eco",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 15,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-5-ativa-aplicar_condicao-8",
+      "descricao": "Corte sem Eco converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "san_silencioso_t7",
+      "name": "Economia Perfeita",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 17,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-7-reacao-dano-9",
+      "descricao": "Economia Perfeita converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "san_silencioso_t8",
+      "name": "Dívida Invisível",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 18,
+        "duracao": 2
+      },
+      "papel": "tier-8-passiva-contra_ataque-10",
+      "descricao": "Dívida Invisível converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "san_silencioso_apice",
+      "name": "Última Assinatura",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 20,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-9-ativa-aplicar_condicao-2",
+      "descricao": "Última Assinatura converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    },
+    {
+      "id": "cor_t5_tronco",
+      "name": "Colheita da Ruína",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 12,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-5-ativa-dano-0",
+      "descricao": "Colheita da Ruína converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "cor_t6_tronco",
+      "name": "Pacto de Ferrugem",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "epico_ii",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 13,
+        "duracao": 3
+      },
+      "papel": "tier-6-reacao-buff_defesa-1",
+      "descricao": "Pacto de Ferrugem converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "cor_t7_tronco",
+      "name": "Jardim Decomposto",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "vantagem",
+        "valor": 14,
+        "duracao": 2
+      },
+      "papel": "tier-7-passiva-vantagem-2",
+      "descricao": "Jardim Decomposto converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "cor_t8_tronco",
+      "name": "Entropia Compartilhada",
+      "tipo": "utilitaria",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "utilitaria",
+        "valor": 15,
+        "duracao": 3
+      },
+      "papel": "tier-8-utilitaria-utilitaria-3",
+      "descricao": "Entropia Compartilhada converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "cor_biologia_t5",
+      "name": "Ecologia da Febre",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 13,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-5-ativa-dano-0",
+      "descricao": "Ecologia da Febre converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "cor_biologia_t7",
+      "name": "Anticorpo Traidor",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 15,
+        "duracao": 3
+      },
+      "papel": "tier-7-reacao-contra_ataque-1",
+      "descricao": "Anticorpo Traidor converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "cor_biologia_t8",
+      "name": "Carne em Estações",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 16,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-8-passiva-aplicar_condicao-2",
+      "descricao": "Carne em Estações converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "cor_biologia_apice",
+      "name": "Gênese da Podridão",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 18,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-9-ativa-dano-0",
+      "descricao": "Gênese da Podridão converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    },
+    {
+      "id": "cor_alma_t5",
+      "name": "Liturgia do Desalento",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 14,
+        "duracao": 2
+      },
+      "papel": "tier-5-ativa-contra_ataque-4",
+      "descricao": "Liturgia do Desalento converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "cor_alma_t7",
+      "name": "Vontade Oca",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 16,
+        "duracao": 3,
+        "condicao": "exposto"
+      },
+      "papel": "tier-7-reacao-aplicar_condicao-5",
+      "descricao": "Vontade Oca converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "cor_alma_t8",
+      "name": "Coro da Renúncia",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 17,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-8-passiva-dano-6",
+      "descricao": "Coro da Renúncia converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "cor_alma_apice",
+      "name": "Eclipse Interior",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 19,
+        "duracao": 3
+      },
+      "papel": "tier-9-ativa-contra_ataque-1",
+      "descricao": "Eclipse Interior converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    },
+    {
+      "id": "cor_inorganica_t5",
+      "name": "Catedral de Ferrugem",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 15,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-5-ativa-aplicar_condicao-8",
+      "descricao": "Catedral de Ferrugem converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "cor_inorganica_t7",
+      "name": "Fratura Mineral",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 17,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-7-reacao-dano-9",
+      "descricao": "Fratura Mineral converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "cor_inorganica_t8",
+      "name": "Pó dos Impérios",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 18,
+        "duracao": 2
+      },
+      "papel": "tier-8-passiva-contra_ataque-10",
+      "descricao": "Pó dos Impérios converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "cor_inorganica_apice",
+      "name": "Idade do Colapso",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 20,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-9-ativa-aplicar_condicao-2",
+      "descricao": "Idade do Colapso converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    },
+    {
+      "id": "arc_t5_tronco",
+      "name": "Válvula Mestra",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 12,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-5-ativa-dano-0",
+      "descricao": "Válvula Mestra converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "arc_t6_tronco",
+      "name": "Geometria da Fenda",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "epico_ii",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 13,
+        "duracao": 3
+      },
+      "papel": "tier-6-reacao-buff_defesa-1",
+      "descricao": "Geometria da Fenda converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "arc_t7_tronco",
+      "name": "Caldeira Fria",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "vantagem",
+        "valor": 14,
+        "duracao": 2
+      },
+      "papel": "tier-7-passiva-vantagem-2",
+      "descricao": "Caldeira Fria converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "arc_t8_tronco",
+      "name": "Teorema do Estouro",
+      "tipo": "utilitaria",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "utilitaria",
+        "valor": 15,
+        "duracao": 3
+      },
+      "papel": "tier-8-utilitaria-utilitaria-3",
+      "descricao": "Teorema do Estouro converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "arc_calibrado_t5",
+      "name": "Equação de Combate",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 13,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-5-ativa-dano-0",
+      "descricao": "Equação de Combate converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "arc_calibrado_t7",
+      "name": "Margem Exata",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 15,
+        "duracao": 3
+      },
+      "papel": "tier-7-reacao-contra_ataque-1",
+      "descricao": "Margem Exata converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "arc_calibrado_t8",
+      "name": "Pressão Nominal",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 16,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-8-passiva-aplicar_condicao-2",
+      "descricao": "Pressão Nominal converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "arc_calibrado_apice",
+      "name": "Constante Impossível",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 18,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-9-ativa-dano-0",
+      "descricao": "Constante Impossível converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    },
+    {
+      "id": "arc_descoberto_t5",
+      "name": "Falha Deliberada",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 14,
+        "duracao": 2
+      },
+      "papel": "tier-5-ativa-contra_ataque-4",
+      "descricao": "Falha Deliberada converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "arc_descoberto_t7",
+      "name": "Sobrecarga Errante",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 16,
+        "duracao": 3,
+        "condicao": "exposto"
+      },
+      "papel": "tier-7-reacao-aplicar_condicao-5",
+      "descricao": "Sobrecarga Errante converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "arc_descoberto_t8",
+      "name": "Raio sem Gaiola",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 17,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-8-passiva-dano-6",
+      "descricao": "Raio sem Gaiola converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "arc_descoberto_apice",
+      "name": "Acidente Perfeito",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 19,
+        "duracao": 3
+      },
+      "papel": "tier-9-ativa-contra_ataque-1",
+      "descricao": "Acidente Perfeito converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    },
+    {
+      "id": "arc_improvisador_t5",
+      "name": "Nota à Margem",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 15,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-5-ativa-aplicar_condicao-8",
+      "descricao": "Nota à Margem converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "arc_improvisador_t7",
+      "name": "Versão dos Vencedores",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 17,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-7-reacao-dano-9",
+      "descricao": "Versão dos Vencedores converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "arc_improvisador_t8",
+      "name": "Arquivo Vivo",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 18,
+        "duracao": 2
+      },
+      "papel": "tier-8-passiva-contra_ataque-10",
+      "descricao": "Arquivo Vivo converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "arc_improvisador_apice",
+      "name": "Última Página",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 20,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-9-ativa-aplicar_condicao-2",
+      "descricao": "Última Página converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    },
+    {
+      "id": "med_t5_tronco",
+      "name": "Triagem Impossível",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 12,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-5-ativa-dano-0",
+      "descricao": "Triagem Impossível converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "med_t6_tronco",
+      "name": "Pulso de Reserva",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "epico_ii",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 13,
+        "duracao": 3
+      },
+      "papel": "tier-6-reacao-buff_defesa-1",
+      "descricao": "Pulso de Reserva converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "med_t7_tronco",
+      "name": "Protocolo da Última Luz",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "vantagem",
+        "valor": 14,
+        "duracao": 2
+      },
+      "papel": "tier-7-passiva-vantagem-2",
+      "descricao": "Protocolo da Última Luz converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "med_t8_tronco",
+      "name": "Juramento de Retorno",
+      "tipo": "utilitaria",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "utilitaria",
+        "valor": 15,
+        "duracao": 3
+      },
+      "papel": "tier-8-utilitaria-utilitaria-3",
+      "descricao": "Juramento de Retorno converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "med_cirurgiao_trincheira_t5",
+      "name": "Triagem de Guerra",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 13,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-5-ativa-dano-0",
+      "descricao": "Triagem de Guerra converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "med_cirurgiao_trincheira_t7",
+      "name": "Dose Necessária",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 15,
+        "duracao": 3
+      },
+      "papel": "tier-7-reacao-contra_ataque-1",
+      "descricao": "Dose Necessária converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "med_cirurgiao_trincheira_t8",
+      "name": "Corte Limpo",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 16,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-8-passiva-aplicar_condicao-2",
+      "descricao": "Corte Limpo converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "med_cirurgiao_trincheira_apice",
+      "name": "Hospital de Uma Pessoa",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 18,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-9-ativa-dano-0",
+      "descricao": "Hospital de Uma Pessoa converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    },
+    {
+      "id": "med_boticario_t5",
+      "name": "Dor Compartilhada",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 14,
+        "duracao": 2
+      },
+      "papel": "tier-5-ativa-contra_ataque-4",
+      "descricao": "Dor Compartilhada converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "med_boticario_t7",
+      "name": "Pulso Solidário",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 16,
+        "duracao": 3,
+        "condicao": "exposto"
+      },
+      "papel": "tier-7-reacao-aplicar_condicao-5",
+      "descricao": "Pulso Solidário converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "med_boticario_t8",
+      "name": "Luto Clínico",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 17,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-8-passiva-dano-6",
+      "descricao": "Luto Clínico converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "med_boticario_apice",
+      "name": "Coração de Todos",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 19,
+        "duracao": 3
+      },
+      "papel": "tier-9-ativa-contra_ataque-1",
+      "descricao": "Coração de Todos converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    },
+    {
+      "id": "med_cirurgiao_ferro_t5",
+      "name": "Protocolo Absoluto",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "epico_i",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "custo_entropia": 4,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 15,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-5-ativa-aplicar_condicao-8",
+      "descricao": "Protocolo Absoluto converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "med_cirurgiao_ferro_t7",
+      "name": "Remédio ou Ruína",
+      "tipo": "reacao",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "lendario",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "custo_entropia": 5,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 17,
+        "dano_tipo": "abissal"
+      },
+      "papel": "tier-7-reacao-dano-9",
+      "descricao": "Remédio ou Ruína converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "med_cirurgiao_ferro_t8",
+      "name": "Cirurgia de Fé",
+      "tipo": "passiva",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "mitico",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "custo_entropia": 6,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "valor": 18,
+        "duracao": 2
+      },
+      "papel": "tier-8-passiva-contra_ataque-10",
+      "descricao": "Cirurgia de Fé converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Consome Entropia e respeita a frequência da Carta."
+    },
+    {
+      "id": "med_cirurgiao_ferro_apice",
+      "name": "Milagre Imperdoável",
+      "tipo": "ativa",
+      "origem": "tiers-5-plus",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "apice",
+      "tier": 9,
+      "level_req": 20,
+      "apex": true,
+      "custo_entropia": 7,
+      "frequencia": "descanso_longo",
+      "virtude_permitida": [
+        "mente",
+        "agilidade",
+        "forca",
+        "carisma",
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "valor": 20,
+        "duracao": 2,
+        "condicao": "exposto"
+      },
+      "papel": "tier-9-ativa-aplicar_condicao-2",
+      "descricao": "Milagre Imperdoável converte risco acumulado em uma decisão mecânica de fim de campanha.",
+      "contrapartida": "Exige Entropia alta e descanso longo; a Carga permanece."
+    }
+  ]
+}

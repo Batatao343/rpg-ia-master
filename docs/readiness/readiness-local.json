@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-20T13:19:43.819103+00:00",
+  "ready_local": true,
+  "git": {
+    "commit": "eccb65d115a13f143d37b26801236e5c23448253",
+    "branch": "main",
+    "dirty": true
+  },
+  "environment": {
+    "python": "3.13.14",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "gates": {
+    "G0": {
+      "gate": "G0",
+      "name": "suíte offline",
+      "status": "passed",
+      "command": "uv run pytest",
+      "evidence": "1564 passed, 16 skipped, 14 deselected",
+      "metrics": {},
+      "recorded_at": "2026-08-20T13:19:43.566028+00:00"
+    },
+    "G1": {
+      "gate": "G1",
+      "name": "integração local",
+      "status": "passed",
+      "command": "uv run pytest -m infra_local",
+      "evidence": "13 passed; pgTAP 14/14",
+      "metrics": {},
+      "recorded_at": "2026-08-20T13:12:46.484238+00:00"
+    },
+    "G2": {
+      "gate": "G2",
+      "name": "segurança local",
+      "status": "passed",
+      "command": "uv run pytest -m security_local",
+      "evidence": "5 passed; RLS Auth Storage A/B",
+      "metrics": {},
+      "recorded_at": "2026-08-20T13:12:46.692921+00:00"
+    },
+    "G3": {
+      "gate": "G3",
+      "name": "caos local",
+      "status": "passed",
+      "command": "uv run pytest -m chaos_local + chaos_test.py",
+      "evidence": "1 test; 5/5 cenários convergiram",
+      "metrics": {},
+      "recorded_at": "2026-08-20T13:12:46.949777+00:00"
+    },
+    "G4": {
+      "gate": "G4",
+      "name": "carga multiworker",
+      "status": "passed",
+      "command": "scripts/load_test.py --workers 2 --operations 12",
+      "evidence": "12 commits; dedupe 1 row; commit p95 32.257 ms; jobs 12",
+      "metrics": {},
+      "recorded_at": "2026-08-20T13:12:47.158295+00:00"
+    },
+    "G5": {
+      "gate": "G5",
+      "name": "soak de 1.000 turnos",
+      "status": "passed",
+      "command": "5x playtest comerciante --turns 200 seeds 2201..2205",
+      "evidence": "1000/1000; 0 erros; 0 violações; 38 transações; runs 20260820-100653-360446..100749-180819",
+      "metrics": {},
+      "recorded_at": "2026-08-20T13:12:47.367255+00:00"
+    },
+    "G6": {
+      "gate": "G6",
+      "name": "backup/restore",
+      "status": "passed",
+      "command": "backup_local + reset local + restore_local + verify_restore",
+      "evidence": "RPO 0; RTO 36.19 s; DB Auth Storage e login verificados",
+      "metrics": {},
+      "recorded_at": "2026-08-20T13:12:47.577923+00:00"
+    },
+    "G7": {
+      "gate": "G7",
+      "name": "browser/build/lint/audits",
+      "status": "passed",
+      "command": "build + browser + ruff + content + pip/npm audit + secret scan + observability",
+      "evidence": "Vite 457; browser desktop/390 2x; 0 vulnerabilidades; 0 secrets; Prometheus Grafana Collector Tempo e 7 alertas verdes",
+      "metrics": {},
+      "recorded_at": "2026-08-20T13:12:47.787865+00:00"
+    }
+  },
+  "pending": []
+}

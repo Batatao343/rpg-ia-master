@@ -57,20 +57,13 @@ def save_custom_artifact(item_id: str, item_data: dict):
     segue sendo LIDO no startup).
     Atualiza tanto o arquivo físico quanto a memória RAM.
     """
-    file_path = runtime_cache_path("custom_artifacts.json")
-
-    # 1. Carrega dados atuais do disco (legado + overlay, overlay vence)
-    current_data = {**_read_json_file(os.path.join(DATA_DIR, "custom_artifacts.json")),
-                    **_read_json_file(file_path)}
-
-    # 2. Adiciona/Atualiza o novo item
-    current_data[item_id] = item_data
-
-    # 3. Salva no disco
     try:
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        with open(file_path, "w", encoding="utf-8") as f:
-            json.dump(current_data, f, indent=2, ensure_ascii=False)
+        from infrastructure.runtime import get_runtime
+
+        get_runtime().runtime_catalog.put(
+            "custom_artifact", item_id, item_data,
+            scope="global", owner_id=None, game_id=None,
+        )
         print(f"💾 [SYSTEM] Item '{item_id}' salvo em custom_artifacts.json (runtime)")
     except Exception as e:
         print(f"❌ Erro ao salvar artifact: {e}")
@@ -90,8 +83,15 @@ BESTIARY = load_json_data("bestiary.json")
 # 2. Sistema de Artefatos (Híbrido)
 BASE_ARTIFACTS = load_json_data("artifacts.json")
 # custom = legado (data/, pré-spec) + overlay runtime (overlay vence)
-CUSTOM_ARTIFACTS = {**load_json_data("custom_artifacts.json"),
-                    **_read_json_file(runtime_cache_path("custom_artifacts.json"))}
+try:
+    from infrastructure.runtime import get_runtime
+
+    _runtime_artifacts = get_runtime().runtime_catalog.list(
+        "custom_artifact", owner_id=None, game_id=None,
+    )
+except Exception:
+    _runtime_artifacts = _read_json_file(runtime_cache_path("custom_artifacts.json"))
+CUSTOM_ARTIFACTS = {**load_json_data("custom_artifacts.json"), **_runtime_artifacts}
 
 # Fusão: Une os dois dicionários.
 ARTIFACTS_DB = {**BASE_ARTIFACTS, **CUSTOM_ARTIFACTS}
@@ -178,9 +178,20 @@ VIRTUDES = ("mente", "agilidade", "forca", "carisma", "corpo")
 DISTRIBUICAO_VIRTUDES_INICIAL = (4, 3, 2, 1, 1)
 
 VIRTUDE_MAX = 5          # teto por Virtude
-NIVEL_MAX = 10           # conflito-01 R3: nível máximo passa de 20 para 10
+NIVEL_MAX = 20
 # Níveis em que o jogador escolhe +1 numa Virtude (R3).
 NIVEIS_GANHO_VIRTUDE = (2, 4, 6, 8, 10)
+NIVEIS_MAESTRIA_VIRTUDE = (12, 16, 20)
+TIER_LEVELS = {1: 1, 2: 1, 3: 4, 4: 7, 5: 9, 6: 12, 7: 15, 8: 18, 9: 20}
+TIER_LABELS = {
+    1: "Inicial I", 2: "Inicial II", 3: "Avançado", 4: "Superior",
+    5: "Épico I", 6: "Épico II", 7: "Lendário", 8: "Mítico", 9: "Ápice",
+}
+
+
+def card_tier_for_level(level: int) -> int:
+    level = max(1, min(NIVEL_MAX, int(level)))
+    return max(tier for tier, minimum in TIER_LEVELS.items() if minimum <= level)
 
 # --- CONFLITO v2 (spec conflito-05): armadura / escudo / dano-base ---
 # Dano-base por categoria de arma (R1).
@@ -241,7 +252,13 @@ def prepared_slots_for_level(level) -> int:
         return 5
     if lv <= 9:
         return 6
-    return 7
+    if lv <= 12:
+        return 7
+    if lv <= 16:
+        return 8
+    if lv <= 19:
+        return 9
+    return 10
 
 
 # Estágio de evolução das Cartas de Virtude pela Virtude relacionada (R7).

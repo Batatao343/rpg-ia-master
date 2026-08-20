@@ -2,136 +2,396 @@
   "_meta": "spec conflito-02: cartas de EXEMPLO para os testes do motor. A autoria completa (~100 cartas) é a conflito-14. efeito.kind é opaco aqui — resolução em combate é conflito-04.",
   "cards": [
     {
-      "id": "golpe_devoto", "name": "Golpe do Convite", "tipo": "ativa",
-      "classe": "Devoto do Abismo", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 0, "frequencia": "livre",
-      "virtude_permitida": ["forca"], "efeito": {"kind": "dano", "formula": "2d6"}
+      "id": "golpe_devoto",
+      "name": "Golpe do Convite",
+      "tipo": "ativa",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "formula": "2d6"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
-      "id": "muralha_viva", "name": "Muralha Viva", "tipo": "ativa",
-      "classe": "Devoto do Abismo", "subclasse": "", "patamar": "avancado",
-      "custo_entropia": 3, "frequencia": "cena",
-      "virtude_permitida": ["corpo"], "efeito": {"kind": "protecao", "valor": 3},
-      "ruptura": {"caminho_a": {"kind": "protecao", "valor": 6},
-                  "caminho_b": {"kind": "taunt", "valor": 3}}
+      "id": "muralha_viva",
+      "name": "Muralha Viva",
+      "tipo": "ativa",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 3,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 3
+      },
+      "ruptura": {
+        "caminho_a": {
+          "kind": "protecao",
+          "valor": 6
+        },
+        "caminho_b": {
+          "kind": "taunt",
+          "valor": 3
+        }
+      },
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
-      "id": "conviccao_passiva", "name": "Convicção", "tipo": "passiva",
-      "classe": "Devoto do Abismo", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 0, "frequencia": "livre",
-      "virtude_permitida": [], "efeito": {"kind": "buff_defesa", "valor": 1}
-    },
-
-    {
-      "id": "corte_sangrento", "name": "Corte Sangrento", "tipo": "ativa",
-      "classe": "Sangromante", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 0, "frequencia": "livre",
-      "virtude_permitida": ["agilidade", "forca"], "efeito": {"kind": "dano", "formula": "2d6"}
-    },
-    {
-      "id": "hemorragia", "name": "Hemorragia", "tipo": "ativa",
-      "classe": "Sangromante", "subclasse": "", "patamar": "avancado",
-      "custo_entropia": 2, "frequencia": "turno",
-      "virtude_permitida": ["agilidade"], "efeito": {"kind": "dot", "formula": "1d6", "duracao": 3}
-    },
-    {
-      "id": "reflexo_lamina", "name": "Reflexo da Lâmina", "tipo": "reacao",
-      "classe": "Sangromante", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 1, "frequencia": "turno", "gatilho": "ao_ser_atacado",
-      "virtude_permitida": ["agilidade"], "efeito": {"kind": "contra_ataque", "formula": "1d8"}
-    },
-
-    {
-      "id": "toque_corrosivo", "name": "Toque Corrosivo", "tipo": "ativa",
-      "classe": "Corruptor", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 0, "frequencia": "livre",
-      "virtude_permitida": ["mente"], "efeito": {"kind": "dot", "formula": "1d6", "duracao": 2}
+      "id": "conviccao_passiva",
+      "name": "Convicção",
+      "tipo": "passiva",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 1
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
-      "id": "praga_lenta", "name": "Praga Lenta", "tipo": "ativa",
-      "classe": "Corruptor", "subclasse": "", "patamar": "avancado",
-      "custo_entropia": 3, "frequencia": "cena",
-      "virtude_permitida": ["mente"], "efeito": {"kind": "dot", "formula": "2d6", "duracao": 4}
+      "id": "corte_sangrento",
+      "name": "Corte Sangrento",
+      "tipo": "ativa",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "agilidade",
+        "forca"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "formula": "2d6"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
-      "id": "simbiose", "name": "Simbiose", "tipo": "utilitaria",
-      "classe": "Corruptor", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 0, "frequencia": "descanso_curto",
-      "virtude_permitida": [], "efeito": {"kind": "utilitaria", "prompt_hint": "farejar decomposição próxima"}
-    },
-
-    {
-      "id": "raio_cinza", "name": "Raio Cinzento", "tipo": "ativa",
-      "classe": "Arcanista Cinzento", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 1, "frequencia": "livre",
-      "virtude_permitida": ["mente"], "efeito": {"kind": "dano", "formula": "2d6"}
-    },
-    {
-      "id": "manto_bruma", "name": "Manto de Bruma", "tipo": "ativa",
-      "classe": "Arcanista Cinzento", "subclasse": "", "patamar": "avancado",
-      "custo_entropia": 2, "frequencia": "cena",
-      "virtude_permitida": ["mente"], "efeito": {"kind": "esconder", "valor": 1}
-    },
-    {
-      "id": "leitura_arcana", "name": "Leitura Arcana", "tipo": "utilitaria",
-      "classe": "Arcanista Cinzento", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 0, "frequencia": "descanso_curto",
-      "virtude_permitida": [], "efeito": {"kind": "utilitaria", "prompt_hint": "decifrar inscrição arcana"}
-    },
-
-    {
-      "id": "sutura_rapida", "name": "Sutura Rápida", "tipo": "ativa",
-      "classe": "Médico de Campo", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 1, "frequencia": "turno",
-      "virtude_permitida": ["mente"], "efeito": {"kind": "cura", "formula": "1d8"}
+      "id": "hemorragia",
+      "name": "Hemorragia",
+      "tipo": "ativa",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "dot",
+        "formula": "1d6",
+        "duracao": 3
+      },
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
-      "id": "estabilizar", "name": "Estabilizar", "tipo": "ativa",
-      "classe": "Médico de Campo", "subclasse": "", "patamar": "avancado",
-      "custo_entropia": 2, "frequencia": "cena",
-      "virtude_permitida": ["mente"], "efeito": {"kind": "cura", "formula": "2d8"}
+      "id": "reflexo_lamina",
+      "name": "Reflexo da Lâmina",
+      "tipo": "reacao",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "gatilho": "ao_ser_atacado",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "contra_ataque",
+        "formula": "1d8"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
-      "id": "mao_firme", "name": "Mão Firme", "tipo": "passiva",
-      "classe": "Médico de Campo", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 0, "frequencia": "livre",
-      "virtude_permitida": [], "efeito": {"kind": "buff_cura", "valor": 1}
-    },
-
-    {
-      "id": "vc_forca_bruta", "name": "Força Bruta", "tipo": "virtude",
-      "classe": "", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 0, "frequencia": "turno",
-      "virtude_relacionada": "forca", "virtude_permitida": ["forca"],
-      "efeito": {"kind": "bonus_dano_por_estagio"}
-    },
-    {
-      "id": "vc_mente_lucida", "name": "Mente Lúcida", "tipo": "virtude",
-      "classe": "", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 0, "frequencia": "cena",
-      "virtude_relacionada": "mente", "virtude_permitida": ["mente"],
-      "efeito": {"kind": "bonus_percepcao_por_estagio"}
-    },
-    {
-      "id": "vc_corpo_rijo", "name": "Corpo Rijo", "tipo": "virtude",
-      "classe": "", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 0, "frequencia": "descanso_longo",
-      "virtude_relacionada": "corpo", "virtude_permitida": ["corpo"],
-      "efeito": {"kind": "bonus_vitalidade_por_estagio"}
+      "id": "toque_corrosivo",
+      "name": "Toque Corrosivo",
+      "tipo": "ativa",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dot",
+        "formula": "1d6",
+        "duracao": 2
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
-      "id": "vc_agil_reflexo", "name": "Reflexo Ágil", "tipo": "virtude",
-      "classe": "", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 0, "frequencia": "turno",
-      "virtude_relacionada": "agilidade", "virtude_permitida": ["agilidade"],
-      "efeito": {"kind": "bonus_iniciativa_por_estagio"}
+      "id": "praga_lenta",
+      "name": "Praga Lenta",
+      "tipo": "ativa",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 3,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dot",
+        "formula": "2d6",
+        "duracao": 4
+      },
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
-      "id": "vc_lingua_afiada", "name": "Língua Afiada", "tipo": "virtude",
-      "classe": "", "subclasse": "", "patamar": "inicial",
-      "custo_entropia": 0, "frequencia": "cena",
-      "virtude_relacionada": "carisma", "virtude_permitida": ["carisma"],
-      "efeito": {"kind": "bonus_social_por_estagio"}
+      "id": "simbiose",
+      "name": "Simbiose",
+      "tipo": "utilitaria",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "farejar decomposição próxima"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "raio_cinza",
+      "name": "Raio Cinzento",
+      "tipo": "ativa",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "dano",
+        "formula": "2d6"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "manto_bruma",
+      "name": "Manto de Bruma",
+      "tipo": "ativa",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "esconder",
+        "valor": 1
+      },
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
+    },
+    {
+      "id": "leitura_arcana",
+      "name": "Leitura Arcana",
+      "tipo": "utilitaria",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_curto",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "utilitaria",
+        "prompt_hint": "decifrar inscrição arcana"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "sutura_rapida",
+      "name": "Sutura Rápida",
+      "tipo": "ativa",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "cura",
+        "formula": "1d8"
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "estabilizar",
+      "name": "Estabilizar",
+      "tipo": "ativa",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "cura",
+        "formula": "2d8"
+      },
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
+    },
+    {
+      "id": "mao_firme",
+      "name": "Mão Firme",
+      "tipo": "passiva",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_cura",
+        "valor": 1
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
+    },
+    {
+      "id": "vc_forca_bruta",
+      "name": "Força Bruta",
+      "tipo": "virtude",
+      "classe": "",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_relacionada": "forca",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeito": {
+        "kind": "bonus_dano_por_estagio"
+      }
+    },
+    {
+      "id": "vc_mente_lucida",
+      "name": "Mente Lúcida",
+      "tipo": "virtude",
+      "classe": "",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_relacionada": "mente",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeito": {
+        "kind": "bonus_percepcao_por_estagio"
+      }
+    },
+    {
+      "id": "vc_corpo_rijo",
+      "name": "Corpo Rijo",
+      "tipo": "virtude",
+      "classe": "",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "descanso_longo",
+      "virtude_relacionada": "corpo",
+      "virtude_permitida": [
+        "corpo"
+      ],
+      "efeito": {
+        "kind": "bonus_vitalidade_por_estagio"
+      }
+    },
+    {
+      "id": "vc_agil_reflexo",
+      "name": "Reflexo Ágil",
+      "tipo": "virtude",
+      "classe": "",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_relacionada": "agilidade",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeito": {
+        "kind": "bonus_iniciativa_por_estagio"
+      }
+    },
+    {
+      "id": "vc_lingua_afiada",
+      "name": "Língua Afiada",
+      "tipo": "virtude",
+      "classe": "",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_relacionada": "carisma",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeito": {
+        "kind": "bonus_social_por_estagio"
+      }
     }
   ]
 }

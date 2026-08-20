@@ -65,15 +65,33 @@
     "branches": {
       "consagrado": {
         "name": "O Consagrado",
-        "identity": "Ritualiza o amor ao Abismo; marca o corpo antes da luta."
+        "identity": "Ritualiza o amor ao Abismo; marca o corpo antes da luta.",
+        "playstyle": "Especialização ritualiza o amor ao abismo; marca o corpo antes da luta, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "dev_cons_marca",
+          "dev_cons_liturgia"
+        ]
       },
       "zeloso": {
         "name": "O Zeloso",
-        "identity": "Amor possessivo; puxa aggro por ciúme."
+        "identity": "Amor possessivo; puxa aggro por ciúme.",
+        "playstyle": "Especialização amor possessivo; puxa aggro por ciúme, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "dev_zel_ciume",
+          "dev_zel_possessao"
+        ]
       },
       "enlutado": {
         "name": "O Enlutado",
-        "identity": "Amou quem o Abismo levou; tom melancólico."
+        "identity": "Amou quem o Abismo levou; tom melancólico.",
+        "playstyle": "Especialização amou quem o abismo levou; tom melancólico, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "dev_enl_lamento",
+          "dev_enl_luto"
+        ]
       }
     },
     "passive_effects": [],
@@ -82,7 +100,22 @@
       "escudo_amassado",
       "pocao_cura",
       "pocao_cura"
-    ]
+    ],
+    "late_entropy_curve": {
+      "gains": {
+        "11": 0,
+        "12": 1,
+        "13": 0,
+        "14": 0,
+        "15": 1,
+        "16": 0,
+        "17": 0,
+        "18": 1,
+        "19": 0,
+        "20": 1
+      },
+      "cap": 36
+    }
   },
   "Sangromante": {
     "description": "Negocia com o Abismo: paga em sangue pelo que precisa.",
@@ -143,15 +176,33 @@
     "branches": {
       "exposto": {
         "name": "O Exposto",
-        "identity": "Faz espetáculo da dor; a cicatriz é credencial."
+        "identity": "Faz espetáculo da dor; a cicatriz é credencial.",
+        "playstyle": "Especialização faz espetáculo da dor; a cicatriz é credencial, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "san_exp_espetaculo",
+          "san_exp_credencial"
+        ]
       },
       "avaro": {
         "name": "O Avaro",
-        "identity": "Acumula Entropia de sangue para um golpe único."
+        "identity": "Acumula Entropia de sangue para um golpe único.",
+        "playstyle": "Especialização acumula entropia de sangue para um golpe único, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "san_ava_reserva",
+          "san_ava_juros"
+        ]
       },
       "silencioso": {
         "name": "O Silencioso",
-        "identity": "Corte exato, economia de dor."
+        "identity": "Corte exato, economia de dor.",
+        "playstyle": "Especialização corte exato, economia de dor, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "san_sil_exato",
+          "san_sil_veia"
+        ]
       }
     },
     "passive_effects": [],
@@ -159,7 +210,22 @@
       "adaga_ferro",
       "pocao_cura",
       "pocao_cura"
-    ]
+    ],
+    "late_entropy_curve": {
+      "gains": {
+        "11": 0,
+        "12": 1,
+        "13": 0,
+        "14": 0,
+        "15": 1,
+        "16": 0,
+        "17": 0,
+        "18": 1,
+        "19": 0,
+        "20": 1
+      },
+      "cap": 47
+    }
   },
   "Corruptor": {
     "description": "Trabalha JUNTO com o Abismo: acelera a decadência que já existe.",
@@ -229,7 +295,13 @@
           "entropy_trigger": {
             "decay_kind": "flesh"
           }
-        }
+        },
+        "playstyle": "Especialização carne que apodrece, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "cor_bio_gangrena",
+          "cor_bio_metastase"
+        ]
       },
       "alma": {
         "name": "Alma",
@@ -238,7 +310,13 @@
           "entropy_trigger": {
             "decay_kind": "morale"
           }
-        }
+        },
+        "playstyle": "Especialização vontade que rui, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "cor_alm_duvida",
+          "cor_alm_desespero"
+        ]
       },
       "inorganica": {
         "name": "Inorgânica",
@@ -247,7 +325,13 @@
           "entropy_trigger": {
             "decay_kind": "gear"
           }
-        }
+        },
+        "playstyle": "Especialização metal e pedra que cedem, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "cor_ino_ferrugem",
+          "cor_ino_fadiga"
+        ]
       }
     },
     "passive_effects": [],
@@ -255,7 +339,22 @@
       "cajado_de_galhos",
       "pocao_cura",
       "pocao_cura"
-    ]
+    ],
+    "late_entropy_curve": {
+      "gains": {
+        "11": 0,
+        "12": 1,
+        "13": 0,
+        "14": 0,
+        "15": 1,
+        "16": 0,
+        "17": 0,
+        "18": 1,
+        "19": 0,
+        "20": 1
+      },
+      "cap": 58
+    }
   },
   "Arcanista Cinzento": {
     "description": "Manipula o Abismo por um instrumento: canaliza a entropia e a descarrega.",
@@ -317,15 +416,33 @@
     "branches": {
       "calibrado": {
         "name": "O Calibrado",
-        "identity": "Segurança acima de potência; menos risco de estouro."
+        "identity": "Segurança acima de potência; menos risco de estouro.",
+        "playstyle": "Especialização segurança acima de potência; menos risco de estouro, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "arc_cal_valvula",
+          "arc_cal_feixe"
+        ]
       },
       "descoberto": {
         "name": "O Descoberto",
-        "identity": "Toca o éter sem instrumento; alto dano, alto risco."
+        "identity": "Toca o éter sem instrumento; alto dano, alto risco.",
+        "playstyle": "Especialização toca o éter sem instrumento; alto dano, alto risco, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "arc_des_mao_nua",
+          "arc_des_sobrecarga"
+        ]
       },
       "improvisador": {
         "name": "O Improvisador",
-        "identity": "Monta ferramenta na hora a partir de sucata."
+        "identity": "Monta ferramenta na hora a partir de sucata.",
+        "playstyle": "Especialização monta ferramenta na hora a partir de sucata, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "arc_imp_geringonca",
+          "arc_imp_bomba"
+        ]
       }
     },
     "passive_effects": [],
@@ -333,7 +450,22 @@
       "cajado_rachado",
       "pocao_cura",
       "pocao_cura"
-    ]
+    ],
+    "late_entropy_curve": {
+      "gains": {
+        "11": 0,
+        "12": 1,
+        "13": 0,
+        "14": 0,
+        "15": 1,
+        "16": 0,
+        "17": 0,
+        "18": 1,
+        "19": 0,
+        "20": 1
+      },
+      "cap": 78
+    }
   },
   "Médico de Campo": {
     "description": "Nega o Abismo: mantém vivo o que ele quer levar.",
@@ -394,15 +526,33 @@
     "branches": {
       "cirurgiao_trincheira": {
         "name": "Cirurgião de Trincheira",
-        "identity": "Intervenção imediata sob fogo."
+        "identity": "Intervenção imediata sob fogo.",
+        "playstyle": "Especialização intervenção imediata sob fogo, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "med_tri_reflexo",
+          "med_tri_intervencao"
+        ]
       },
       "boticario": {
         "name": "Boticário",
-        "identity": "Compostos, buffs e purga da Carga alheia."
+        "identity": "Compostos, buffs e purga da Carga alheia.",
+        "playstyle": "Especialização compostos, buffs e purga da carga alheia, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "med_bot_composto",
+          "med_bot_purga"
+        ]
       },
       "cirurgiao_ferro": {
         "name": "Cirurgião de Ferro",
-        "identity": "Próteses e reforço físico de aliados."
+        "identity": "Próteses e reforço físico de aliados.",
+        "playstyle": "Especialização próteses e reforço físico de aliados, com decisões de setup e frequência.",
+        "tradeoff": "Poder concentrado aumenta o custo de Entropia e não remove a Carga do Abismo.",
+        "preview_card_ids": [
+          "med_fer_talas",
+          "med_fer_protese"
+        ]
       }
     },
     "passive_effects": [],
@@ -411,6 +561,21 @@
       "pocao_cura",
       "pocao_cura",
       "pocao_cura"
-    ]
+    ],
+    "late_entropy_curve": {
+      "gains": {
+        "11": 0,
+        "12": 1,
+        "13": 0,
+        "14": 0,
+        "15": 1,
+        "16": 0,
+        "17": 0,
+        "18": 1,
+        "19": 0,
+        "20": 1
+      },
+      "cap": 47
+    }
   }
 }

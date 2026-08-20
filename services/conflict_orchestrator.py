@@ -1139,6 +1139,14 @@ def run_round(scene: dict, actors_by_id: Dict[str, dict], sides: Dict[str, List[
            "resolved_turns": [], "tactics": [], "cards_used": [],
            "class_mechanics": [],
            "ended": False, "reason": "", "player_dead": False}
+    # Dano externo resolvido imediatamente antes da rodada (por exemplo, clima
+    # durante uma tentativa de fuga) pode já ter armado a Última Ação.
+    # O orquestrador precisa adotar esse estado em vez de depender apenas de
+    # eventos de dano produzidos dentro de ``run_round``.
+    out["terminal"].extend(
+        actor_id for actor_id, actor in actors_by_id.items()
+        if actor.get("last_stand_pending")
+    )
     cs.advance_tactical_state(scene)
     player = _find_player(actors_by_id, sides)
     player_id = _player_id(sides)

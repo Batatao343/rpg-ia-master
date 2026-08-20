@@ -6,6 +6,7 @@ Fase 10: game_id validado (UUID) na borda, CORS por env, rate limit mínimo,
 log JSON por turno.
 """
 import contextvars
+import hashlib
 import json
 import logging
 import queue
@@ -15,11 +16,12 @@ import threading
 import time
 import uvicorn
 import uuid # <--- Necessário para gerar IDs de sessão
+from contextlib import nullcontext
 from collections import Counter, defaultdict, deque
 from copy import deepcopy
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, field_validator
 from typing import Any, Dict, Iterator, List, Literal, Optional
@@ -77,6 +79,201 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+def _database_profile() -> bool:
+    return os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy"
+
+
+@app.middleware("http")
+async def _session_boundary(request: Request, call_next):
+    """Auth/CSRF só nos perfis Postgres; legacy loopback permanece intacto."""
+    if not _database_profile() or not request.url.path.startswith("/game"):
+        return await call_next(request)
+    from infrastructure.contracts import Unauthorized
+    from infrastructure.request_context import reset_current_principal, set_current_principal
+    from infrastructure.runtime import get_runtime
+    from services.auth_sessions import (
+        ACCESS_COOKIE, CSRF_COOKIE, CsrfSigner, validate_mutation_request,
+    )
+
+    try:
+        principal = get_runtime().identity_verifier.verify(
+            request.cookies.get(ACCESS_COOKIE),
+        )
+        if request.method not in {"GET", "HEAD", "OPTIONS"}:
+            secret = os.getenv("RPG_SESSION_SECRET", "")
+            signer = CsrfSigner(secret)
+            validate_mutation_request(
+                cookie_token=request.cookies.get(CSRF_COOKIE),
+                header_token=request.headers.get("x-csrf-token"),
+                origin=request.headers.get("origin"),
+                allowed_origins=set(_CORS_ORIGINS), signer=signer,
+            )
+        token = set_current_principal(principal)
+        try:
+            from observability.telemetry import correlation_scope
+            with correlation_scope(owner_id=principal.user_id):
+                return await call_next(request)
+        finally:
+            reset_current_principal(token)
+    except (Unauthorized, ValueError) as exc:
+        return JSONResponse({"detail": str(exc)}, status_code=401)
+
+
+@app.middleware("http")
+async def _correlation_boundary(request: Request, call_next):
+    import re
+    import time
+    from observability.metrics import metrics
+    from observability.telemetry import correlation_scope, new_request_id, span
+
+    request_id = new_request_id(request.headers.get("x-request-id"))
+    started = time.perf_counter()
+    route = re.sub(
+        r"/[0-9a-fA-F]{8}-[0-9a-fA-F-]{27,36}(?=/|$)", "/{id}", request.url.path,
+    )
+    with correlation_scope(request_id=request_id), span(
+        "http.request", route=route, method=request.method,
+    ):
+        try:
+            response = await call_next(request)
+        except BaseException:
+            metrics.increment(
+                "rpg_http_requests_total",
+                {"route": route, "status_class": "5xx"},
+            )
+            raise
+        route_object = request.scope.get("route")
+        route = getattr(route_object, "path", route)
+        metrics.increment(
+            "rpg_http_requests_total",
+            {"route": route, "status_class": f"{response.status_code // 100}xx"},
+        )
+        metrics.observe(
+            "rpg_http_duration_seconds", {"route": route},
+            time.perf_counter() - started,
+        )
+        response.headers["X-Request-ID"] = request_id
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("Referrer-Policy", "same-origin")
+        response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+        return response
+
+
+class AuthRequest(BaseModel):
+    email: str = Field(min_length=3, max_length=320)
+    password: str = Field(min_length=8, max_length=256)
+
+
+@app.get("/auth/config")
+def auth_config(request: Request):
+    required = _database_profile()
+    authenticated = False
+    if required:
+        try:
+            from infrastructure.runtime import get_runtime
+            from services.auth_sessions import ACCESS_COOKIE
+            authenticated = bool(get_runtime().identity_verifier.verify(
+                request.cookies.get(ACCESS_COOKIE),
+            ))
+        except Exception:
+            authenticated = False
+    return {"required": required, "authenticated": authenticated}
+
+
+def _set_session_cookies(response: Response, tokens) -> str:
+    from services.auth_sessions import (
+        ACCESS_COOKIE, CSRF_COOKIE, REFRESH_COOKIE, CsrfSigner, cookie_settings,
+    )
+
+    secure = os.getenv("RPG_COOKIE_SECURE", "0") == "1"
+    csrf = CsrfSigner(os.getenv("RPG_SESSION_SECRET", "")).issue()
+    response.set_cookie(ACCESS_COOKIE, tokens.access_token, **cookie_settings(secure=secure))
+    response.set_cookie(
+        REFRESH_COOKIE, tokens.refresh_token,
+        **cookie_settings(secure=secure, refresh=True),
+    )
+    response.set_cookie(
+        CSRF_COOKIE, csrf, httponly=False, secure=secure,
+        samesite="strict", path="/",
+    )
+    return csrf
+
+
+@app.post("/auth/login")
+def auth_login(body: AuthRequest, response: Response):
+    if not _database_profile():
+        raise HTTPException(status_code=404, detail="auth desativada no perfil legacy")
+    from infrastructure.contracts import Unauthorized
+    from infrastructure.runtime import get_runtime
+
+    try:
+        provider = get_runtime().identity_verifier
+        tokens = provider.login(body.email, body.password)
+        csrf = _set_session_cookies(response, tokens)
+        return {"authenticated": True, "csrf_token": csrf}
+    except Unauthorized as exc:
+        raise HTTPException(status_code=401, detail=str(exc)) from exc
+
+
+@app.post("/auth/signup")
+def auth_signup(body: AuthRequest, response: Response):
+    if not _database_profile():
+        raise HTTPException(status_code=404, detail="auth desativada no perfil legacy")
+    from infrastructure.contracts import Unauthorized
+    from infrastructure.runtime import get_runtime
+
+    try:
+        tokens = get_runtime().identity_verifier.signup(body.email, body.password)
+        csrf = _set_session_cookies(response, tokens)
+        return {"authenticated": True, "csrf_token": csrf}
+    except Unauthorized as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+def _validate_auth_csrf(request: Request) -> None:
+    from services.auth_sessions import (
+        CSRF_COOKIE, CsrfSigner, validate_mutation_request,
+    )
+    validate_mutation_request(
+        cookie_token=request.cookies.get(CSRF_COOKIE),
+        header_token=request.headers.get("x-csrf-token"),
+        origin=request.headers.get("origin"), allowed_origins=set(_CORS_ORIGINS),
+        signer=CsrfSigner(os.getenv("RPG_SESSION_SECRET", "")),
+    )
+
+
+@app.post("/auth/refresh")
+def auth_refresh(request: Request, response: Response):
+    from infrastructure.contracts import Unauthorized
+    from infrastructure.runtime import get_runtime
+    from services.auth_sessions import REFRESH_COOKIE
+
+    try:
+        _validate_auth_csrf(request)
+        token = request.cookies.get(REFRESH_COOKIE)
+        if not token:
+            raise Unauthorized("sessão ausente")
+        tokens = get_runtime().identity_verifier.refresh(token)
+        csrf = _set_session_cookies(response, tokens)
+        return {"authenticated": True, "csrf_token": csrf}
+    except Unauthorized as exc:
+        raise HTTPException(status_code=401, detail=str(exc)) from exc
+
+
+@app.post("/auth/logout", status_code=204)
+def auth_logout(request: Request, response: Response):
+    from infrastructure.runtime import get_runtime
+    from services.auth_sessions import ACCESS_COOKIE, CSRF_COOKIE, REFRESH_COOKIE
+
+    _validate_auth_csrf(request)
+    access = request.cookies.get(ACCESS_COOKIE)
+    if access:
+        get_runtime().identity_verifier.logout(access)
+    response.delete_cookie(ACCESS_COOKIE, path="/")
+    response.delete_cookie(CSRF_COOKIE, path="/")
+    response.delete_cookie(REFRESH_COOKIE, path="/auth/refresh")
+
 # Fase 10 (R7): 1 linha JSON por turno no stderr (base de observabilidade).
 _turn_logger = logging.getLogger("rpg.turn")
 if not _turn_logger.handlers:
@@ -110,6 +307,18 @@ def _game_lock(game_id: Optional[str]) -> threading.RLock:
 
 def _telemetry_hook(provider: str, model: str, tier, latency_ms: int,
                     fell_back: bool) -> None:
+    from observability.metrics import metrics
+    from observability.telemetry import span
+    metrics.increment(
+        "rpg_llm_cost_usd_total",
+        {"provider": provider, "tier": getattr(tier, "value", str(tier))},
+        amount=llm_pricing.estimate_cost(model),
+    )
+    with span(
+        "llm.invoke", provider=provider, tier=getattr(tier, "value", str(tier)),
+        latency_ms=latency_ms, fell_back=fell_back,
+    ):
+        pass
     acc = _llm_turn_events.get()
     if acc is not None:
         acc.append({"provider": provider, "model": model,
@@ -121,13 +330,24 @@ set_llm_telemetry_hook(_telemetry_hook)
 
 
 def _attempt_telemetry_hook(event: LLMAttemptEvent) -> None:
+    from observability.metrics import metrics
+    tier = getattr(event.tier, "value", str(event.tier))
+    metrics.increment(
+        "rpg_llm_attempts_total",
+        {"provider": event.provider, "tier": tier, "outcome": event.outcome},
+    )
+    metrics.observe(
+        "rpg_llm_duration_seconds",
+        {"provider": event.provider, "tier": tier, "outcome": event.outcome},
+        max(0, int(event.latency_ms)) / 1000,
+    )
     acc = _llm_attempt_events.get()
     if acc is not None:
         network_attempted = event.outcome not in {"build_error", "circuit_open"}
         acc.append({
             "provider": event.provider,
             "model": event.model,
-            "tier": getattr(event.tier, "value", str(event.tier)),
+            "tier": tier,
             "attempt_index": int(event.attempt_index),
             "latency_ms": int(event.latency_ms),
             "fell_back": bool(event.fell_back),
@@ -224,6 +444,20 @@ async def _rate_limit(request: Request, call_next):
                       or (request.method == "DELETE"
                           and request.url.path.startswith("/game/save/"))):
         ip = request.client.host if request.client else "?"
+        if _database_profile():
+            from infrastructure.runtime import get_runtime
+            from observability.telemetry import pseudonym
+            decision = get_runtime().rate_limiter.consume(
+                f"ip:{pseudonym(ip)}", limit=limit,
+                window_seconds=int(_RATE_WINDOW_S),
+            )
+            if not decision.allowed:
+                return JSONResponse(
+                    status_code=429,
+                    content={"detail": "Muitas requisições — aguarde um instante."},
+                    headers={"Retry-After": str(decision.retry_after_seconds)},
+                )
+            return await call_next(request)
         now = time.monotonic()
         # Auditoria A8: teto no dict — descarta IPs com janela inteira vencida.
         if len(_rate_hits) > 1000:
@@ -235,7 +469,6 @@ async def _rate_limit(request: Request, call_next):
         while hits and now - hits[0] > _RATE_WINDOW_S:
             hits.popleft()
         if len(hits) >= limit:
-            from fastapi.responses import JSONResponse
             return JSONResponse(status_code=429,
                                 content={"detail": "Muitas requisições — aguarde um instante."})
         hits.append(now)
@@ -251,10 +484,13 @@ class CreateCharacterRequest(BaseModel):
     region: str = Field(max_length=60)
     level: int = Field(1, ge=1, le=20)
     backstory: Optional[str] = Field("", max_length=2000)
+    appearance: str = Field("", max_length=1000)
+    visual_exclusions: str = Field("", max_length=500)
     # spec inicio-personalizado (R4): cenário aprovado no passo de prólogo.
     # StartScenarioIn re-valida na borda (limites de campo, beats ≤ 5, npcs ≤ 2
     # → excedente = 422). None = fluxo clássico, byte a byte o atual (R6).
     scenario: Optional[StartScenarioIn] = None
+    action_id: Optional[str] = Field(default=None, max_length=36)
 
     @field_validator("class_name")
     @classmethod
@@ -308,11 +544,30 @@ class ActionRequest(BaseModel):
             raise ValueError("action_id inválido (esperado UUID)")
 
 
+class ArtBriefRequest(BaseModel):
+    name: str = Field(default="Herói", max_length=80)
+    race: str = Field(max_length=40)
+    class_name: str = Field(max_length=40)
+    region: str = Field(default="", max_length=60)
+    appearance: str = Field(default="", max_length=1000)
+    visual_exclusions: str = Field(default="", max_length=500)
+
+
+class ArtConfirmRequest(BaseModel):
+    action_id: str
+    reformulation: bool = False
+
+
+class ArtQualityRequest(BaseModel):
+    approved: bool
+
+
 class CombatSimulatorRequest(BaseModel):
     class_name: str = Field(min_length=1, max_length=40)
     level: Literal[1, 3, 5, 10] = 1
     enemy_id: str = Field(min_length=1, max_length=128)
     quantity: int = Field(default=1, ge=1, le=3)
+    action_id: Optional[str] = Field(default=None, max_length=36)
 
     @field_validator("class_name")
     @classmethod
@@ -333,6 +588,7 @@ class EquipRequest(BaseModel):
     item_id: Optional[str] = None   # equipar este item
     unequip_slot: Optional[str] = None  # OU esvaziar este slot
     game_id: Optional[str] = None
+    action_id: Optional[str] = Field(default=None, max_length=36)
 
 class LevelUpRequest(BaseModel):
     """Conflito v2: consome escolha de Carta/evolução ou de Virtude."""
@@ -342,7 +598,16 @@ class LevelUpRequest(BaseModel):
     caminho: Optional[str] = None
     virtude: Optional[str] = None
     attr: Optional[str] = None
+    subclass_id: Optional[str] = None
+    virtue_card_id: Optional[str] = None
     game_id: Optional[str] = None
+    action_id: Optional[str] = Field(default=None, max_length=36)
+
+
+class ChronicleSearchRequest(BaseModel):
+    game_id: str
+    query: str = Field(min_length=2, max_length=300)
+    top_k: int = Field(default=5, ge=1, le=10)
 
 
 class VisualVariantResponse(BaseModel):
@@ -649,7 +914,11 @@ def _levelup_block(player: dict) -> Dict[str, Any]:
         eligible.append({
             "id": cid, "name": card.get("name", cid),
             "description": card.get("descricao", ""),
-            "subclass": card.get("subclasse", ""), "tier": card.get("patamar", ""),
+            "subclass": card.get("subclasse", ""),
+            "tier": int(card.get("tier", 1) or 1),
+            "tier_label": gamedata.TIER_LABELS.get(int(card.get("tier", 1) or 1), ""),
+            "level_req": int(card.get("level_req", 1) or 1),
+            "apex": bool(card.get("apex")),
             "cost": int(card.get("custo_entropia", 0) or 0),
             "frequency": card.get("frequencia", "livre"),
             "kind": card.get("tipo", "ativa"),
@@ -666,6 +935,16 @@ def _levelup_block(player: dict) -> Dict[str, Any]:
         "eligible": eligible,
         "evolvable": evolvable,
         "current_branch": progression.player_branch(player),
+        "subclasses": progression.eligible_subclasses(player)
+        if any(row.get("kind") == "subclass" for row in pending) else [],
+        "virtue_cards": [
+            {"card_id": row.get("card_id"), "virtude": row.get("virtude"),
+             "mastery": int(row.get("mastery", 0) or 0),
+             "effective_stage": progression.effective_virtue_card_stage(row)}
+            for row in player.get("virtue_cards") or []
+        ],
+        "unlocked_tier": gamedata.card_tier_for_level(int(player.get("level", 1) or 1)),
+        "prepared_slots": gamedata.prepared_slots_for_level(player.get("level", 1)),
     }
 
 
@@ -678,10 +957,13 @@ def _chronicle_block(chronicle: list) -> List[Dict[str, Any]]:
         entries = [e for e in (cap.get("entries") or [])
                    if isinstance(e, dict) and str(e.get("text", "")).strip()]
         out.append({
+            "chapter_id": cap.get("chapter_id", ""),
             "title": cap.get("title", ""),
             "started_turn": cap.get("started_turn", 0),
             "location": cap.get("location", ""),
             "entries": entries,
+            "digest": cap.get("digest"),
+            "entry_count": len(entries),
         })
     return out
 
@@ -933,6 +1215,91 @@ def health_check():
     return {"status": "online", "engine": "RPG IA v9.0 Hybrid Memory"}
 
 
+@app.get("/metrics", include_in_schema=False)
+def prometheus_metrics():
+    from observability.metrics import metrics
+    if _database_profile():
+        try:
+            from infrastructure.runtime import get_runtime
+            runtime = get_runtime()
+            pool = getattr(runtime.job_queue, "pool", None)
+            if pool is not None:
+                with pool.connection() as connection:
+                    rows = connection.execute(
+                        """
+                        select kind,status,count(*)::int as count,
+                          coalesce(extract(epoch from now()-min(created_at)),0) as oldest
+                        from app.jobs group by kind,status
+                        """
+                    ).fetchall()
+                    operations = connection.execute(
+                        """
+                        select kind,coalesce(max(extract(epoch from now()-started_at)),0) as age
+                        from app.operations where status='running' group by kind
+                        """
+                    ).fetchall()
+                    embedding = connection.execute(
+                        """
+                        select embedding_status,count(*)::int as count
+                        from app.memory_documents where discarded_at is null
+                        group by embedding_status
+                        """
+                    ).fetchall()
+                kinds: set[str] = set()
+                for row in rows:
+                    kind, status = str(row["kind"]), str(row["status"])
+                    kinds.add(kind)
+                    metrics.set_gauge(
+                        "rpg_jobs", {"kind": kind, "status": status}, row["count"],
+                    )
+                for kind in kinds:
+                    ages = [
+                        float(row["oldest"] or 0) for row in rows
+                        if str(row["kind"]) == kind
+                        and str(row["status"]) in {"queued", "retry", "running"}
+                    ]
+                    metrics.set_gauge(
+                        "rpg_job_oldest_age_seconds", {"kind": kind},
+                        max(ages, default=0.0),
+                    )
+                for row in operations:
+                    metrics.set_gauge(
+                        "rpg_operation_lease_age_seconds", {"kind": str(row["kind"])},
+                        float(row["age"] or 0),
+                    )
+                for row in embedding:
+                    metrics.set_gauge(
+                        "rpg_memory_embedding_backlog",
+                        {"status": str(row["embedding_status"])}, row["count"],
+                    )
+                stats = getattr(getattr(pool, "_pool", None), "get_stats", lambda: {})()
+                for source, label in (
+                    ("pool_available", "available"),
+                    ("pool_size", "size"),
+                    ("requests_waiting", "waiting"),
+                ):
+                    metrics.set_gauge("rpg_db_pool", {"state": label}, stats.get(source, 0))
+        except Exception:
+            pass
+    try:
+        from pathlib import Path
+        manifests = list(Path(
+            os.getenv("RPG_BACKUP_ROOT", "readiness_artifacts")
+        ).glob("backup-*/manifest.json"))
+        if manifests:
+            newest = max(item.stat().st_mtime for item in manifests)
+            metrics.set_gauge(
+                "rpg_backup_age_seconds", {"component": "complete"},
+                max(0.0, time.time() - newest),
+            )
+    except OSError:
+        pass
+    return Response(
+        metrics.render_prometheus(),
+        media_type="text/plain; version=0.0.4; charset=utf-8",
+    )
+
+
 def combat_simulator_options() -> Dict[str, Any]:
     """Catálogo público mínimo do laboratório, derivado dos dados canônicos."""
     allowed = {"lacaio", "padrao", "elite", "chefe", "nomeado"}
@@ -1093,10 +1460,28 @@ def get_combat_simulator_options():
 
 @app.post("/game/combat-simulator", response_model=GameResponse)
 def new_combat_simulator(req: CombatSimulatorRequest):
-    state = _build_combat_simulator_state(req)
-    if not save_game_state(state):
-        raise HTTPException(status_code=500, detail="Não foi possível criar o laboratório.")
-    return format_response(state)
+    claim, _request_hash, prior = _begin_create_operation(req)
+    if prior is not None:
+        return prior
+    try:
+        state = _build_combat_simulator_state(req)
+        response = format_response(state)
+        if claim is not None:
+            from infrastructure.request_context import current_principal
+            from infrastructure.runtime import get_runtime
+            version, _receipt = get_runtime().turn_coordinator.commit_create(
+                current_principal(), claim, state,
+                receipt={"response": response.model_dump(mode="json")}, checkpoint=True,
+            )
+            state["_storage_version"] = version
+        elif not save_game_state(state):
+            raise RuntimeError("falha ao persistir laboratório")
+        return response
+    except Exception as exc:
+        _fail_operation(claim, type(exc).__name__)
+        raise HTTPException(
+            status_code=500, detail="Não foi possível criar o laboratório.",
+        ) from exc
 
 @app.get("/data/options")
 def get_creation_options():
@@ -1184,9 +1569,200 @@ def game_prologue(req: CreateCharacterRequest):
     return {"scenario": scenario.model_dump(), "mock": mock}
 
 
+@app.post("/game/art/brief")
+def preview_player_art_brief(req: ArtBriefRequest):
+    from services.art_brief import build_player_art_brief, render_image_prompt
+    brief = build_player_art_brief(req.model_dump())
+    return {"brief": brief, "rendered_prompt": render_image_prompt(brief),
+            "provider_called": False}
+
+
+def _enqueue_art_generation(state: dict, trigger, brief: dict) -> dict:
+    from infrastructure.contracts import JobRequest
+    from infrastructure.request_context import current_principal
+    from infrastructure.runtime import LOCAL_PRINCIPAL_ID, get_runtime
+    from services.art_triggers import reserve_request
+
+    reserved = reserve_request(state, trigger)
+    if not reserved:
+        return {"status": "deduplicated"}
+    state.update({key: reserved[key] for key in ("art_arc_budgets", "art_generation_ledger")})
+    runtime = get_runtime()
+    principal = current_principal(required=False)
+    owner_id = principal.user_id if principal else LOCAL_PRINCIPAL_ID
+    profile = load_json_data("dynamic_art_profiles.json") or {}
+    generation = {
+        "generation_id": reserved["generation_id"],
+        "trigger_kind": trigger.trigger_kind,
+        "subject_type": trigger.subject_type,
+        "subject_id": trigger.subject_id,
+        "model": str(profile.get("model") or "gpt-image-2-2026-04-21"),
+        "profile_version": str(profile.get("profile_version") or "valoria-dynamic-v1"),
+        "private_brief": brief,
+    }
+    if runtime.config.profile != "legacy" and principal and runtime.resources:
+        from services.dynamic_art import DynamicArtRepository
+        repository = DynamicArtRepository(
+            runtime.resources[0], model=generation["model"],
+            profile_version=generation["profile_version"],
+        )
+        repository.reserve(
+            principal, uuid.UUID(str(state["game_id"])),
+            timeline_epoch=int((state.get("continuity") or {}).get("timeline_epoch", 0) or 0),
+            generation_id=uuid.UUID(reserved["generation_id"]), request=trigger,
+            brief=brief,
+        )
+    job_id = runtime.job_queue.enqueue(JobRequest(
+        "generate_dynamic_art", f"art:{reserved['generation_id']}",
+        {"generation": generation, "asset_id": str(uuid.uuid4()),
+         "owner_id": str(owner_id), "game_id": str(state["game_id"])},
+        owner_id=owner_id, game_id=uuid.UUID(str(state["game_id"])), max_attempts=3,
+    ))
+    return {"status": "pending", "generation_id": reserved["generation_id"],
+            "job_id": str(job_id)}
+
+
+def _enqueue_turn_art(state_before: dict, state_after: dict, action_key: str) -> None:
+    if os.getenv("RPG_DYNAMIC_ART_ENABLED", "0").strip().lower() not in {"1", "true", "yes"}:
+        return
+    from services.art_brief import build_epic_art_brief, build_npc_art_brief
+    from services.art_triggers import resolve_art_triggers
+
+    for trigger in resolve_art_triggers(state_before, state_after, action_key=action_key):
+        brief = (
+            build_npc_art_brief(state_after, trigger.subject_id)
+            if trigger.subject_type == "npc"
+            else build_epic_art_brief(
+                state_after,
+                state_after.get("conflict_summary") or {"detail": "Confronto decisivo"},
+            )
+        )
+        _enqueue_art_generation(state_after, trigger, brief)
+
+
+@app.post("/game/{game_id}/art/player/confirm")
+def confirm_player_art(game_id: str, req: ArtConfirmRequest):
+    if os.getenv("RPG_DYNAMIC_ART_ENABLED", "0").strip() not in {"1", "true", "yes"}:
+        return {"status": "disabled", "placeholder": True}
+    state = load_game_state(_resolve_save_file(game_id))
+    if not state:
+        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+    ledger = list(state.get("art_generation_ledger") or [])
+    player_rows = [row for row in ledger if row.get("trigger_kind") == "player_portrait"]
+    if req.reformulation and len(player_rows) >= 2:
+        raise HTTPException(status_code=409, detail="A reformulação visual já foi usada.")
+    if not req.reformulation and player_rows:
+        return {"status": player_rows[-1].get("status"),
+                "generation_id": player_rows[-1].get("generation_id"), "placeholder": True}
+    from services.art_brief import build_player_art_brief
+    from services.art_triggers import ArtGenerationRequest
+    trigger = ArtGenerationRequest(
+        "player_portrait", req.action_id, "player", "player", None, req.action_id)
+    brief = build_player_art_brief(state.get("player") or {}, reformulation=req.reformulation)
+    result = _enqueue_art_generation(state, trigger, brief)
+    if result.get("status") == "deduplicated":
+        raise HTTPException(status_code=409, detail="Geração visual já reservada.")
+    if not save_game_state(state):
+        raise HTTPException(status_code=500, detail="Não foi possível reservar a arte.")
+    return {**result, "placeholder": True}
+
+
+@app.get("/game/{game_id}/art/{generation_id}")
+def dynamic_art_status(game_id: str, generation_id: str):
+    state = load_game_state(_resolve_save_file(game_id))
+    if not state:
+        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+    if _database_profile():
+        from infrastructure.request_context import current_principal
+        from infrastructure.runtime import get_runtime
+        from services.dynamic_art import DynamicArtRepository
+
+        runtime = get_runtime()
+        principal = current_principal()
+        try:
+            generation_uuid = uuid.UUID(generation_id)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail="generation_id inválido.") from exc
+        profile = load_json_data("dynamic_art_profiles.json") or {}
+        repository = DynamicArtRepository(
+            runtime.resources[0],
+            model=str(profile.get("model") or "gpt-image-2-2026-04-21"),
+            profile_version=str(profile.get("profile_version") or "valoria-dynamic-v1"),
+        )
+        generation = repository.get(principal, generation_uuid)
+        if not generation or str(generation["game_id"]) != str(state["game_id"]):
+            raise HTTPException(status_code=404, detail="Geração não encontrada.")
+        assets = []
+        if generation["status"] == "ready":
+            for asset in repository.assets(principal, generation_uuid):
+                assets.append({
+                    "asset_id": str(asset["id"]),
+                    "variant": asset["variant"],
+                    "url": runtime.blob_store.signed_url(asset["object_key"], 300),
+                    "mime_type": asset["mime_type"],
+                    "bytes": int(asset["bytes"]),
+                    "width": int(asset["width"]),
+                    "height": int(asset["height"]),
+                    "sha256": asset["sha256"],
+                })
+        public_error = None
+        if str(generation["status"]).startswith("failed"):
+            public_error = "A arte não pôde ser gerada; o jogo continua com placeholder."
+        return {
+            "generation_id": generation_id,
+            "status": generation["status"],
+            "placeholder": generation["status"] != "ready",
+            "assets": assets,
+            "error": public_error,
+        }
+    row = next((item for item in state.get("art_generation_ledger") or []
+                if item.get("generation_id") == generation_id), None)
+    if not row:
+        raise HTTPException(status_code=404, detail="Geração não encontrada.")
+    return {"generation_id": generation_id, "status": row.get("status", "pending"),
+            "placeholder": row.get("status") != "ready"}
+
+
+@app.post("/game/{game_id}/art/{generation_id}/quality")
+def dynamic_art_quality(game_id: str, generation_id: str, req: ArtQualityRequest):
+    state = load_game_state(_resolve_save_file(game_id))
+    if not state:
+        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+    if _database_profile():
+        from infrastructure.contracts import Conflict
+        from infrastructure.request_context import current_principal
+        from infrastructure.runtime import get_runtime
+        from services.dynamic_art import DynamicArtRepository
+
+        profile = load_json_data("dynamic_art_profiles.json") or {}
+        runtime = get_runtime()
+        repository = DynamicArtRepository(
+            runtime.resources[0], model=str(profile.get("model")),
+            profile_version=str(profile.get("profile_version")),
+        )
+        try:
+            repository.set_quality(
+                current_principal(), uuid.UUID(generation_id), approved=req.approved,
+            )
+        except (ValueError, Conflict) as exc:
+            raise HTTPException(status_code=409, detail="Arte não disponível para avaliação.") from exc
+        return {"ok": True, "status": "ready" if req.approved else "rejected_quality"}
+    ledger = list(state.get("art_generation_ledger") or [])
+    row = next((item for item in ledger if item.get("generation_id") == generation_id), None)
+    if not row or row.get("status") != "ready":
+        raise HTTPException(status_code=409, detail="Arte não disponível para avaliação.")
+    row["status"] = "ready" if req.approved else "rejected_quality"
+    if not save_game_state(state):
+        raise HTTPException(status_code=500, detail="Não foi possível salvar a avaliação.")
+    return {"ok": True, "status": row["status"]}
+
+
 @app.post("/game/new", response_model=GameResponse)
 def new_game(req: CreateCharacterRequest):
     """Cria um novo personagem e inicia a campanha com ID único."""
+    claim, request_hash, prior = _begin_create_operation(req)
+    if prior is not None:
+        return prior
     print(f"Criando personagem: {req.name}")
 
     char_input = {
@@ -1195,7 +1771,9 @@ def new_game(req: CreateCharacterRequest):
         "race": req.race,
         "region": req.region,
         "backstory": req.backstory,
-        "level": req.level
+        "level": req.level,
+        "appearance": req.appearance,
+        "visual_exclusions": req.visual_exclusions,
     }
     final_char = create_player_character(char_input)
     import gamedata
@@ -1258,6 +1836,8 @@ def new_game(req: CreateCharacterRequest):
             "racial_traits": final_char.get("racial_traits", []),
             "condition_resists": final_char.get("condition_resists", []),
             "racial_save_bonus": final_char.get("racial_save_bonus", {}),
+            "appearance": req.appearance,
+            "visual_exclusions": req.visual_exclusions,
         },
         "world": starting_world(final_char["region"], req.level),
         "messages": [
@@ -1284,7 +1864,11 @@ def new_game(req: CreateCharacterRequest):
         "world_projection": {},
         "pending_world_events": [],
         "event_rejections": [],
+        "art_arc_budgets": {},
+        "art_generation_ledger": [],
     }
+    initial_state["player"] = progression.normalize_player_progression(
+        initial_state["player"])
 
     # spec inicio-personalizado (R5): cenário aprovado semeia plano pessoal,
     # capítulo 1, NPCs da história e a cena de abertura. Sem scenario, o
@@ -1313,17 +1897,27 @@ def new_game(req: CreateCharacterRequest):
         visual_key = f"new:{new_game_id}"
         final_state.update(resolve_turn_visual_state(initial_state, final_state,
                                                      action_key=visual_key))
-        if not save_game_state(final_state):
-            raise RuntimeError("falha ao persistir jogo novo")
-        # spec checkpoints-morte (D7): checkpoint INICIAL = início da sessão. Garante
-        # que a morte sempre tem para onde restaurar, mesmo antes do 1º checkpoint de cadência.
-        from persistence import save_checkpoint
-        if not save_checkpoint(final_state):
-            import persistence as persistence_mod
-            persistence_mod.delete_save(new_game_id)
-            raise RuntimeError("falha ao persistir checkpoint inicial")
-        return format_response(final_state, cue_action_key=visual_key)
+        response = format_response(final_state, cue_action_key=visual_key)
+        if claim is not None:
+            from infrastructure.request_context import current_principal
+            from infrastructure.runtime import get_runtime
+            version, _receipt = get_runtime().turn_coordinator.commit_create(
+                current_principal(), claim, final_state,
+                receipt={"response": response.model_dump(mode="json")}, checkpoint=True,
+            )
+            final_state["_storage_version"] = version
+        else:
+            if not save_game_state(final_state):
+                raise RuntimeError("falha ao persistir jogo novo")
+            # checkpoint INICIAL: a morte sempre possui um ponto de retorno.
+            from persistence import save_checkpoint
+            if not save_checkpoint(final_state):
+                import persistence as persistence_mod
+                persistence_mod.delete_save(new_game_id)
+                raise RuntimeError("falha ao persistir checkpoint inicial")
+        return response
     except Exception as e:
+        _fail_operation(claim, type(e).__name__)
         # Auditoria A6: detalhe interno só no log do servidor, nunca na resposta.
         print(f"Erro ao criar jogo: {e}")
         raise HTTPException(status_code=500, detail="Erro interno ao criar o jogo.")
@@ -1354,6 +1948,262 @@ def _mark_action_processed(state: dict, action_id: Optional[str]) -> None:
 def _require_saved(state: dict, *, detail: str = "estado") -> None:
     if not save_game_state(state):
         raise RuntimeError(f"falha ao persistir {detail}")
+
+
+def _prepare_checkpoint(state: dict, previous: dict) -> bool:
+    """Marca o snapshot antes do commit; o adapter Postgres o grava na mesma tx."""
+    if (state.get("combat_simulation") or {}).get("enabled"):
+        return False
+    from services import checkpoints as _cp
+    if not _cp.should_checkpoint(state, previous):
+        return False
+    from services.continuity import mark_checkpoint
+    state["continuity"] = mark_checkpoint(
+        state.get("continuity"),
+        canonical_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
+    )
+    return True
+
+
+def _prepare_chronicle_derivatives(state: dict) -> None:
+    """Legacy recebe digest extrativo local; Postgres agenda worker após commit."""
+    if _database_profile():
+        return
+    from services.chronicle import ensure_chronicle_ids
+    from services.chronicle_compression import extractive_digest, should_compress
+
+    chapters = ensure_chronicle_ids(
+        state.get("chronicle") or [], game_id=str(state.get("game_id", "legacy")),
+    )
+    for index, chapter in enumerate(chapters):
+        if should_compress(chapter, closed=index < len(chapters) - 1):
+            chapter["digest"] = extractive_digest(chapter)
+    state["chronicle"] = chapters
+
+
+def _schedule_chronicle_jobs(state: dict) -> None:
+    if not _database_profile():
+        return
+    try:
+        from infrastructure.pgvector_memory import PgVectorMemoryStore
+        from infrastructure.request_context import current_principal
+        from infrastructure.runtime import get_runtime
+        from services.chronicle_repository import ChronicleRepository
+
+        runtime = get_runtime()
+        if runtime.resources and isinstance(runtime.memory_store, PgVectorMemoryStore):
+            ChronicleRepository(runtime.resources[0], runtime.memory_store).enqueue_due(
+                current_principal(), state,
+            )
+    except Exception as exc:
+        logging.getLogger("rpg.chronicle").warning(
+            "falha ao agendar derivado da crônica: %s", type(exc).__name__,
+        )
+
+
+def _operation_hash(req: ActionRequest) -> str:
+    payload = req.model_dump(mode="json", exclude={"action_id"})
+    encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True,
+                         separators=(",", ":")).encode()
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _begin_turn_operation(state: dict, req: ActionRequest):
+    """Retorna ``(claim, request_hash, receipt_response)`` no perfil durável."""
+    if not _database_profile():
+        return None, "", None
+    if not req.action_id:
+        raise HTTPException(status_code=400, detail="action_id é obrigatório neste perfil.")
+    from infrastructure.contracts import Conflict, LeaseHeld, StaleVersion
+    from infrastructure.request_context import current_principal
+    from infrastructure.runtime import get_runtime
+
+    runtime = get_runtime()
+    principal = current_principal()
+    operation_id = uuid.UUID(req.action_id)
+    request_hash = _operation_hash(req)
+    receipt_fn = getattr(runtime.turn_coordinator, "receipt", None)
+    receipt = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+    if receipt and isinstance(receipt.get("response"), dict):
+        return None, request_hash, GameResponse.model_validate(receipt["response"])
+    try:
+        claim = runtime.turn_coordinator.claim(
+            principal, operation_id, game_id=uuid.UUID(str(state["game_id"])),
+            kind="turn", request_hash=request_hash,
+            base_version=int(state.get("_storage_version", 0) or 0),
+        )
+    except Conflict as exc:
+        receipt = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+        if receipt and isinstance(receipt.get("response"), dict):
+            return None, request_hash, GameResponse.model_validate(receipt["response"])
+        code = "operation_in_progress" if isinstance(exc, LeaseHeld) else "operation_conflict"
+        if isinstance(exc, StaleVersion):
+            code = "stale_version"
+        raise HTTPException(status_code=409, detail=code) from exc
+    return claim, request_hash, None
+
+
+def _begin_state_mutation(state: dict, *, action_id: Optional[str], kind: str,
+                          payload: dict[str, Any]):
+    if not _database_profile():
+        return None, "", None
+    if not action_id:
+        raise HTTPException(status_code=400, detail="action_id é obrigatório neste perfil.")
+    try:
+        operation_id = uuid.UUID(action_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="action_id inválido.") from exc
+    from infrastructure.contracts import Conflict
+    from infrastructure.request_context import current_principal
+    from infrastructure.runtime import get_runtime
+
+    encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True,
+                         separators=(",", ":"), default=str).encode()
+    request_hash = hashlib.sha256(encoded).hexdigest()
+    runtime = get_runtime()
+    principal = current_principal()
+    receipt_fn = getattr(runtime.turn_coordinator, "receipt", None)
+    receipt = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+    if receipt and "response" in receipt:
+        return None, request_hash, receipt["response"]
+    try:
+        claim = runtime.turn_coordinator.claim(
+            principal, operation_id, game_id=uuid.UUID(str(state["game_id"])),
+            kind=kind, request_hash=request_hash,
+            base_version=int(state.get("_storage_version", 0) or 0),
+        )
+    except Conflict as exc:
+        receipt = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+        if receipt and "response" in receipt:
+            return None, request_hash, receipt["response"]
+        raise HTTPException(status_code=409, detail="operation_in_progress") from exc
+    return claim, request_hash, None
+
+
+def _begin_create_operation(req: CreateCharacterRequest):
+    if not _database_profile():
+        return None, "", None
+    if not req.action_id:
+        raise HTTPException(status_code=400, detail="action_id é obrigatório neste perfil.")
+    try:
+        operation_id = uuid.UUID(req.action_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="action_id inválido.") from exc
+    from infrastructure.contracts import Conflict
+    from infrastructure.request_context import current_principal
+    from infrastructure.runtime import get_runtime
+
+    payload = req.model_dump(mode="json", exclude={"action_id"})
+    request_hash = hashlib.sha256(json.dumps(
+        payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+    ).encode()).hexdigest()
+    runtime = get_runtime()
+    principal = current_principal()
+    receipt_fn = getattr(runtime.turn_coordinator, "receipt", None)
+    receipt = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+    if receipt and isinstance(receipt.get("response"), dict):
+        return None, request_hash, GameResponse.model_validate(receipt["response"])
+    try:
+        claim = runtime.turn_coordinator.claim(
+            principal, operation_id, game_id=None, kind="new_game",
+            request_hash=request_hash, base_version=None,
+        )
+    except Conflict as exc:
+        receipt = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+        if receipt and isinstance(receipt.get("response"), dict):
+            return None, request_hash, GameResponse.model_validate(receipt["response"])
+        raise HTTPException(status_code=409, detail="operation_in_progress") from exc
+    return claim, request_hash, None
+
+
+def _commit_state_mutation(state: dict, response: dict[str, Any], *, claim,
+                           request_hash: str) -> dict[str, Any]:
+    if claim is None:
+        _require_saved(state)
+        return response
+    from infrastructure.request_context import current_principal
+    from infrastructure.runtime import get_runtime
+
+    try:
+        version, receipt = get_runtime().turn_coordinator.commit_game(
+            current_principal(), claim, state, receipt={"response": response},
+            input_sha256=request_hash, latency_ms=0, llm_cost_usd=0.0,
+            checkpoint=False, record_turn=False,
+        )
+    except Exception as exc:
+        try:
+            get_runtime().turn_coordinator.fail(claim, type(exc).__name__)
+        except Exception:
+            pass
+        raise
+    state["_storage_version"] = version
+    return dict(receipt["response"])
+
+
+def _fail_operation(claim, code: str) -> None:
+    if claim is None:
+        return
+    try:
+        from infrastructure.runtime import get_runtime
+        get_runtime().turn_coordinator.fail(claim, code)
+    except Exception:
+        pass
+
+
+def _commit_turn(
+    state: dict,
+    response: GameResponse,
+    *,
+    claim,
+    request_hash: str,
+    checkpoint: bool,
+    latency_ms: int,
+    llm_events: list[dict],
+    llm_attempts: list[dict],
+) -> None:
+    if claim is None:
+        _require_saved(state, detail="turno")
+        if checkpoint:
+            from services import checkpoints as _cp
+            if not _cp.maybe_write(state):
+                raise RuntimeError("falha ao persistir checkpoint")
+        _schedule_chronicle_jobs(state)
+        return
+    from infrastructure.request_context import current_principal
+    from infrastructure.runtime import get_runtime
+
+    runtime = get_runtime()
+    commit = getattr(runtime.turn_coordinator, "commit_game", None)
+    if not callable(commit):
+        raise RuntimeError("coordinator durável sem commit transacional")
+    cost_events = llm_attempts or llm_events
+    from observability.metrics import metrics
+    db_started = time.monotonic()
+    from observability.telemetry import span
+    try:
+        with span("db.commit_turn", operation="commit_turn"):
+            version, _receipt = commit(
+                current_principal(), claim, state,
+                receipt={"response": response.model_dump(mode="json")},
+                input_sha256=request_hash,
+                latency_ms=latency_ms,
+                llm_cost_usd=llm_pricing.turn_cost(cost_events),
+                checkpoint=checkpoint,
+            )
+    except Exception:
+        metrics.increment("rpg_turn_commits_total", {"outcome": "error"})
+        metrics.observe(
+            "rpg_db_duration_seconds", {"operation": "commit_turn", "outcome": "error"},
+            time.monotonic() - db_started,
+        )
+        raise
+    metrics.increment("rpg_turn_commits_total", {"outcome": "ok"})
+    metrics.observe(
+        "rpg_db_duration_seconds", {"operation": "commit_turn", "outcome": "ok"},
+        time.monotonic() - db_started,
+    )
+    state["_storage_version"] = version
+    _schedule_chronicle_jobs(state)
 
 
 def _write_checkpoint_if_due(state: dict, prev: dict) -> None:
@@ -1413,9 +2263,11 @@ def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
               llm_events: Optional[List[dict]] = None, *,
               rejections_antes: int = 0,
               llm_attempts: Optional[List[dict]] = None) -> None:
-    _turn_logger.info(json.dumps({
+    from observability.telemetry import correlation, pseudonym, safe_json
+    _turn_logger.info(safe_json({
         "evt": "turn",
-        "game_id": state.get("game_id", "?"),
+        "game_id_ref": pseudonym(state.get("game_id", "?")),
+        **correlation(),
         "turn": (state.get("world") or {}).get("turn_count", 0),
         "route": state.get("next", ""),
         "latency_ms": int((time.monotonic() - t0) * 1000),
@@ -1425,11 +2277,12 @@ def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
             if not error else 0),
         "error": error,
         **_llm_log_fields(llm_events, llm_attempts),
-    }, ensure_ascii=False))
+    }))
 
 
 def _run_turn(state: dict, input_text: str,
-              action_id: Optional[str] = None) -> GameResponse:
+              action_id: Optional[str] = None, *, claim=None,
+              request_hash: str = "") -> GameResponse:
     """Miolo do turno (spec streaming-turno-sse R2): grafo + save + log.
     Compartilhado pelo POST clássico e pelo stream — carga/validações ficam
     nos endpoints. Levanta HTTPException(500) genérica em falha (A6)."""
@@ -1445,23 +2298,49 @@ def _run_turn(state: dict, input_text: str,
         visual_key = action_id or f"turn:{(new_state.get('world') or {}).get('turn_count', 0)}"
         new_state.update(resolve_turn_visual_state(previous_state, new_state,
                                                    action_key=visual_key))
+        _enqueue_turn_art(previous_state, new_state, visual_key)
         _mark_action_processed(new_state, action_id)
-        _require_saved(new_state, detail="turno")
-        # spec checkpoints-morte (D1): grava checkpoint na cadência (10 turnos /
-        # zona segura). `state` = estado ANTES do turno → detecta entrada em zona segura.
-        _write_checkpoint_if_due(new_state, state)
+        checkpoint = _prepare_checkpoint(new_state, state)
+        _prepare_chronicle_derivatives(new_state)
+        response = format_response(new_state, cue_action_key=visual_key)
+        llm_events = _llm_turn_events.get() or []
+        llm_attempts = _llm_attempt_events.get() or []
+        _commit_turn(
+            new_state, response, claim=claim, request_hash=request_hash,
+            checkpoint=checkpoint, latency_ms=int((time.monotonic() - t0) * 1000),
+            llm_events=llm_events, llm_attempts=llm_attempts,
+        )
         _log_turn(
-            new_state, t0, eventos_antes, None, _llm_turn_events.get(),
+            new_state, t0, eventos_antes, None, llm_events,
             rejections_antes=rejections_antes,
-            llm_attempts=_llm_attempt_events.get())
-        return format_response(new_state, cue_action_key=visual_key)
+            llm_attempts=llm_attempts)
+        from observability.metrics import metrics
+        metrics.observe(
+            "rpg_turn_duration_seconds",
+            {"route": "/game/action", "outcome": "ok",
+             "simulated": str(is_simulated()).lower()},
+            time.monotonic() - t0,
+        )
+        return response
     except Exception as e:
+        from observability.metrics import metrics
+        metrics.observe(
+            "rpg_turn_duration_seconds",
+            {"route": "/game/action", "outcome": "error",
+             "simulated": str(is_simulated()).lower()},
+            time.monotonic() - t0,
+        )
+        if claim is not None:
+            try:
+                from infrastructure.runtime import get_runtime
+                get_runtime().turn_coordinator.fail(claim, type(e).__name__)
+            except Exception:
+                pass
         _log_turn(
-            state, t0, eventos_antes, str(e)[:200], _llm_turn_events.get(),
+            state, t0, eventos_antes, type(e).__name__, _llm_turn_events.get(),
             rejections_antes=rejections_antes,
             llm_attempts=_llm_attempt_events.get())
-        print(f"Erro na API: {e}")
-        # Auditoria A6: str(e) fica no log JSON acima; cliente recebe genérico.
+        print(f"Erro na API: {type(e).__name__}")
         raise HTTPException(status_code=500, detail="Erro interno ao processar o turno.")
     finally:
         _llm_turn_events.reset(acc_token)
@@ -1472,11 +2351,15 @@ def _run_turn(state: dict, input_text: str,
 def game_action(req: ActionRequest):
     """Envia uma ação do jogador."""
 
-    with _game_lock(req.game_id):
+    lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
+    with lock:
         file_to_load = _resolve_save_file(req.game_id)
         state = load_game_state(file_to_load)
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+        claim, request_hash, receipt = _begin_turn_operation(state, req)
+        if receipt is not None:
+            return receipt
         if _action_already_processed(state, req.action_id):
             return format_response(state, cue_action_key=req.action_id)
 
@@ -1487,12 +2370,16 @@ def game_action(req: ActionRequest):
                                 detail="Você tombou. Escolha continuar do checkpoint ou aceitar o fim.")
 
         _apply_action_options(state, req)
-        return _run_turn(state, req.input_text, req.action_id)
+        return _run_turn(
+            state, req.input_text, req.action_id,
+            claim=claim, request_hash=request_hash,
+        )
 
 
 class DeathChoiceRequest(BaseModel):
     game_id: Optional[str] = None
     choice: str = Field(pattern="^(continue|accept)$")  # Continuar do checkpoint / Aceitar o fim
+    action_id: Optional[str] = Field(default=None, max_length=36)
 
 
 @app.post("/game/death", response_model=GameResponse)
@@ -1500,18 +2387,28 @@ def game_death(req: DeathChoiceRequest):
     """spec checkpoints-morte (D2): resolve a tela de morte.
     - `continue` → restaura do checkpoint (ou do início da sessão, D7); a saga segue.
     - `accept`   → memorial (game_over): a crônica encerra por escolha do jogador."""
-    with _game_lock(req.game_id):
+    lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
+    with lock:
         file_to_load = _resolve_save_file(req.game_id)
         state = load_game_state(file_to_load)
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
         if not state.get("death_pending"):
             raise HTTPException(status_code=409, detail="Nenhuma queda pendente para resolver.")
+        claim, request_hash, receipt = _begin_state_mutation(
+            state, action_id=req.action_id, kind="death",
+            payload=req.model_dump(mode="json", exclude={"action_id"}),
+        )
+        if receipt is not None:
+            return GameResponse.model_validate(receipt)
         from services import checkpoints as _cp
         new_state = _cp.resolve_death_choice(state, req.choice)
-        if not save_game_state(new_state):
-            raise HTTPException(status_code=500, detail="Não foi possível salvar a escolha.")
-        return format_response(new_state)
+        response = format_response(new_state)
+        _commit_state_mutation(
+            new_state, response.model_dump(mode="json"), claim=claim,
+            request_hash=request_hash,
+        )
+        return response
 
 
 # --- STREAMING DO TURNO (spec streaming-turno-sse) ---------------------------
@@ -1526,12 +2423,18 @@ def _sse(event: str, data: dict) -> str:
     return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
 
 
-def _stream_turn(req: ActionRequest, accepted_game_id: str) -> Iterator[str]:
+def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None) -> Iterator[str]:
     """SSE cujo worker possui lock, execução e persistência do turno.
 
     Se o consumidor desconectar, a thread termina o save e o ``action_id`` torna
     seguro o fallback POST. O gerador apenas apresenta eventos já produzidos.
     """
+    stream_started = time.monotonic()
+    from observability.metrics import metrics
+    metrics.observe(
+        "rpg_sse_first_event_seconds", {"route": "/game/action/stream"},
+        time.monotonic() - stream_started,
+    )
     yield _sse("accepted", {"game_id": accepted_game_id})
     q: "queue.Queue" = queue.Queue()
     llm_acc: List[dict] = []
@@ -1544,13 +2447,21 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str) -> Iterator[str]:
         t0 = time.monotonic()
         eventos_antes = 0
         rejections_antes = 0
+        claim = None
         try:
-            with _game_lock(req.game_id):
+            from infrastructure.request_context import principal_scope
+            principal_context = principal_scope(principal) if principal is not None else nullcontext()
+            lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
+            with principal_context, lock:
                 state = load_game_state(_resolve_save_file(req.game_id))
                 if not state:
                     raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+                claim, request_hash, receipt = _begin_turn_operation(state, req)
+                if receipt is not None:
+                    q.put(("response", receipt))
+                    return
                 if _action_already_processed(state, req.action_id):
-                    q.put(("final", (state, req.action_id)))
+                    q.put(("response", format_response(state, cue_action_key=req.action_id)))
                     return
                 _reject_memorial(state)
                 _reject_archived(state)
@@ -1576,21 +2487,47 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str) -> Iterator[str]:
                 final_state.update(resolve_turn_visual_state(
                     visual_previous, final_state, action_key=visual_key,
                 ))
+                _enqueue_turn_art(visual_previous, final_state, visual_key)
                 _mark_action_processed(final_state, req.action_id)
-                _require_saved(final_state, detail="turno SSE")
-                _write_checkpoint_if_due(final_state, state)
+                checkpoint = _prepare_checkpoint(final_state, state)
+                _prepare_chronicle_derivatives(final_state)
+                response = format_response(final_state, cue_action_key=visual_key)
+                _commit_turn(
+                    final_state, response, claim=claim, request_hash=request_hash,
+                    checkpoint=checkpoint,
+                    latency_ms=int((time.monotonic() - t0) * 1000),
+                    llm_events=llm_acc, llm_attempts=llm_attempt_acc,
+                )
                 _log_turn(
                     final_state, t0, eventos_antes, None, llm_acc,
                     rejections_antes=rejections_antes,
                     llm_attempts=llm_attempt_acc,
                 )
-                q.put(("final", (final_state, visual_key)))
+                metrics.observe(
+                    "rpg_turn_duration_seconds",
+                    {"route": "/game/action/stream", "outcome": "ok",
+                     "simulated": str(is_simulated()).lower()},
+                    time.monotonic() - t0,
+                )
+                q.put(("response", response))
         except HTTPException as exc:
             q.put(("http_error", {"detail": exc.detail, "code": exc.status_code}))
         except Exception as e:  # noqa: BLE001
+            metrics.observe(
+                "rpg_turn_duration_seconds",
+                {"route": "/game/action/stream", "outcome": "error",
+                 "simulated": str(is_simulated()).lower()},
+                time.monotonic() - t0,
+            )
+            if claim is not None:
+                try:
+                    from infrastructure.runtime import get_runtime
+                    get_runtime().turn_coordinator.fail(claim, type(e).__name__)
+                except Exception:
+                    pass
             if state is not None:
                 _log_turn(
-                    state, t0, eventos_antes, str(e)[:200], llm_acc,
+                    state, t0, eventos_antes, type(e).__name__, llm_acc,
                     rejections_antes=rejections_antes,
                     llm_attempts=llm_attempt_acc,
                 )
@@ -1622,9 +2559,8 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str) -> Iterator[str]:
                     if node == "dm_router":
                         yield _sse("route", {"route": (upd or {}).get("next", "") or ""})
             continue
-        if kind == "final":
-            final_state, visual_key = payload
-            resp = format_response(final_state, cue_action_key=visual_key)
+        if kind == "response":
+            resp = payload
             yield _sse("visual", resp.visual.model_dump(mode="json"))
             narrative = resp.message or ""
             for i in range(0, len(narrative), _NARRATIVE_CHUNK):
@@ -1645,7 +2581,13 @@ def game_action_stream(req: ActionRequest):
     state = load_game_state(file_to_load)
     if not state:
         raise HTTPException(status_code=404, detail="Jogo não encontrado.")
-    return StreamingResponse(_stream_turn(req, str(state.get("game_id", "?"))),
+    principal = None
+    if _database_profile():
+        from infrastructure.request_context import current_principal
+        principal = current_principal()
+    return StreamingResponse(_stream_turn(
+        req, str(state.get("game_id", "?")), principal,
+    ),
                              media_type="text/event-stream",
                              headers={"Cache-Control": "no-cache",
                                       "X-Accel-Buffering": "no"})
@@ -1654,30 +2596,40 @@ def game_action_stream(req: ActionRequest):
 def game_equip(req: EquipRequest):
     """Fase 4.3: equipar/desequipar — validação 100% Python (inventory.equip)."""
     import inventory as inv_mod
-    with _game_lock(req.game_id):
+    lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
+    with lock:
         file_to_load = _resolve_save_file(req.game_id)
         state = load_game_state(file_to_load)
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
         _reject_memorial(state)
+        claim, request_hash, receipt = _begin_state_mutation(
+            state, action_id=req.action_id, kind="equip",
+            payload=req.model_dump(mode="json", exclude={"action_id"}),
+        )
+        if receipt is not None:
+            return receipt
 
         if req.item_id:
             player, err = inv_mod.equip(state["player"], req.item_id)
         elif req.unequip_slot:
             player, err = inv_mod.unequip(state["player"], req.unequip_slot)
         else:
+            _fail_operation(claim, "invalid_equip_request")
             raise HTTPException(status_code=400, detail="Informe item_id ou unequip_slot.")
         if err:
+            _fail_operation(claim, "invalid_equip")
             raise HTTPException(status_code=400, detail=err)
 
         state["player"] = player
-        if not save_game_state(state):
-            raise HTTPException(status_code=500, detail="Não foi possível salvar o equipamento.")
         import combat_mechanics as cm_mod
         stats = cm_mod.compute_player_combat_stats(player)
-        return {"ok": True, "equipment": player.get("equipment"),
-                "inventory": _inventory_block(player),
-                "derived": {"ac": stats["ac"], "attack": stats["attack"]}}
+        response = {"ok": True, "equipment": player.get("equipment"),
+                    "inventory": _inventory_block(player),
+                    "derived": {"ac": stats["ac"], "attack": stats["attack"]}}
+        return _commit_state_mutation(
+            state, response, claim=claim, request_hash=request_hash,
+        )
 
 
 @app.post("/game/levelup")
@@ -1687,24 +2639,50 @@ def game_levelup(req: LevelUpRequest):
     Validação 100% server-side (progression.apply_choice): escolha inexistente,
     habilidade inelegível (classe/nível/pré-requisito/ramo rival) ou atributo
     inválido → 400 e o save fica intocado."""
-    with _game_lock(req.game_id):
+    lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
+    with lock:
         file_to_load = _resolve_save_file(req.game_id)
         state = load_game_state(file_to_load)
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
         _reject_memorial(state)
+        claim, request_hash, receipt = _begin_state_mutation(
+            state, action_id=req.action_id, kind="levelup",
+            payload=req.model_dump(mode="json", exclude={"action_id"}),
+        )
+        if receipt is not None:
+            return receipt
 
         player, err = progression.apply_choice(
             state["player"], req.choice_id,
             card_id=req.card_id, evolve_card_id=req.evolve_card_id,
-            caminho=req.caminho, virtude=req.virtude, attr=req.attr)
+            caminho=req.caminho, virtude=req.virtude, attr=req.attr,
+            subclass_id=req.subclass_id, virtue_card_id=req.virtue_card_id)
         if err:
+            _fail_operation(claim, "invalid_choice")
             raise HTTPException(status_code=400, detail=err)
 
+        progression_events = list(player.pop("progression_events", []) or [])
         state["player"] = player
-        if not save_game_state(state):
-            raise HTTPException(status_code=500, detail="Não foi possível salvar a progressão.")
-        return {
+        for progress_event in progression_events:
+            if progress_event.get("type") == "subclass_chosen":
+                from uuid import uuid4
+                from services.chronicle import append_entry
+                subclass_id = str(progress_event.get("subclass_id", ""))
+                option = next((row for row in progression.eligible_subclasses(player)
+                               if row["id"] == subclass_id), {"name": subclass_id})
+                turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
+                event_id = uuid4().hex
+                state["event_log"] = list(state.get("event_log") or []) + [{
+                    "event_id": event_id, "turn": turn, "type": "subclass_chosen",
+                    "actor_id": "player", "target_id": subclass_id,
+                    "payload": {"subclass_id": subclass_id, "name": option["name"]},
+                    "source": "progression",
+                }]
+                state["chronicle"] = append_entry(
+                    state.get("chronicle") or [], text=f"A subclasse {option['name']} foi escolhida.",
+                    turn=turn, kind="milestone", event_id=event_id)
+        response = {
         "ok": True,
         "player_stats": {
             "level": player.get("level", 1),
@@ -1720,6 +2698,9 @@ def game_levelup(req: LevelUpRequest):
             "level_up": _levelup_block(player),
         },
         }
+        return _commit_state_mutation(
+            state, response, claim=claim, request_hash=request_hash,
+        )
 
 
 # --- SAVES E CRÔNICA (spec polish-sessao) ------------------------------------
@@ -1744,9 +2725,44 @@ def get_saves():
 
 
 @app.delete("/game/save/{game_id}")
-def delete_save_endpoint(game_id: str):
+def delete_save_endpoint(game_id: str, request: Request):
     """R2: exclui save + memória da sessão. Confirmação é da UI (uso local)."""
     import persistence as persistence_mod
+    if _database_profile():
+        from infrastructure.contracts import Conflict, NotFound
+        from infrastructure.request_context import current_principal
+        from infrastructure.runtime import get_runtime
+
+        try:
+            game_uuid = uuid.UUID(game_id)
+            operation_id = uuid.UUID(request.headers.get("idempotency-key", ""))
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=400, detail="Idempotency-Key UUID é obrigatório.",
+            ) from exc
+        runtime = get_runtime()
+        principal = current_principal()
+        receipt_fn = getattr(runtime.turn_coordinator, "receipt", None)
+        prior = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+        if prior:
+            return prior
+        digest = hashlib.sha256(f"delete:{game_uuid}".encode()).hexdigest()
+        try:
+            claim = runtime.turn_coordinator.claim(
+                principal, operation_id, game_id=None, kind="delete",
+                request_hash=digest, base_version=None,
+            )
+            return runtime.turn_coordinator.commit_delete(
+                principal, claim, game_uuid, receipt={"ok": True},
+            )
+        except Conflict as exc:
+            prior = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+            if prior:
+                return prior
+            raise HTTPException(status_code=409, detail="operation_in_progress") from exc
+        except NotFound as exc:
+            _fail_operation(claim, "not_found")
+            raise HTTPException(status_code=404, detail="Save não encontrado.") from exc
     try:
         with _game_lock(game_id):
             removed = persistence_mod.delete_save(game_id)
@@ -1755,6 +2771,36 @@ def delete_save_endpoint(game_id: str):
     if not removed:
         raise HTTPException(status_code=404, detail="Save não encontrado.")
     return {"ok": True}
+
+
+@app.post("/game/chronicle/search")
+def search_chronicle_endpoint(req: ChronicleSearchRequest):
+    state = load_game_state(_resolve_save_file(req.game_id))
+    if not state:
+        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+    from services.chronicle_search import search_chronicle
+    try:
+        semantic = None
+        if _database_profile():
+            from infrastructure.pgvector_memory import PgVectorMemoryStore
+            from infrastructure.request_context import current_principal
+            from infrastructure.runtime import get_runtime
+            from services.chronicle_repository import ChronicleRepository
+
+            runtime = get_runtime()
+            if runtime.resources and isinstance(runtime.memory_store, PgVectorMemoryStore):
+                semantic = ChronicleRepository(
+                    runtime.resources[0], runtime.memory_store,
+                ).semantic_candidates(
+                    current_principal(), uuid.UUID(str(state["game_id"])),
+                    req.query, top_k=req.top_k,
+                )
+        return search_chronicle(
+            state.get("chronicle") or [], req.query, top_k=req.top_k,
+            semantic=semantic,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
 @app.get("/game/chronicle/export")

@@ -1,4 +1,4 @@
-# ROADMAP — RPG IA (Revisado 2026-08-16)
+# ROADMAP — RPG IA (Revisado 2026-08-20)
 
 > **Objetivo central:** Mundo vivo persistente com estado consultável, antes de features novas.
 > 
@@ -7,6 +7,45 @@
 >
 > Complementa `CLAUDE.md` (arquitetura) e `ESTADO_ATUAL.md` (status).
 > **Desenvolvimento é spec-driven:** o detalhe técnico de cada fase vive em `specs/` — este arquivo só resume e aponta.
+
+---
+
+## ✅ READY LOCAL — ciclo 10b + produto (2026-08-20)
+
+As sete fatias locais da Fase 10b e quatro specs de produto foram implementadas
+atrás de portas Python, sem provisionar serviço remoto:
+
+1. [Tiers 5+ e níveis 9–20](specs/tiers-5-plus-classes-niveis-9-20.md) — cap real
+   20, gates `tier/level_req`, 80 Cartas novas (20 tronco + 45 subclasse + 15
+   Ápices), escolha explícita e irreversível de subclasse no nível 3, Maestria de
+   Virtude e balanceamento tardio;
+2. [Fase 8B — arte dinâmica rara](specs/fase-8b-geracao-dinamica-arte.md) — GPT
+   Image 2 pinado, retrato personalizado, NPC persistente sem arte e uma cena
+   épica por arco; orçamento de 4 NPC + 1 épica **por arco**, sem teto de campanha;
+   escolher subclasse não gera arte/custo automaticamente, mas informa futura
+   reformulação manual e cenas épicas;
+3. [Crônica avançada](specs/cronica-avancada-compressao-busca-semantica.md) — raw
+   imutável, digest assíncrono após 20 entradas/fechamento e busca híbrida
+   semântica+lexical escopada à campanha;
+4. [Playtest longo comerciante](specs/playtest-longo-perfil-comerciante.md) —
+   perfil stateful e não onisciente, conservação, margem, net worth, restock e
+   arbitragem regional auditáveis. Revalidação pós-upgrade: 5×200, zero erro/
+   violação, 38 transações, três a cinco mercados e restock em todas as seeds
+   ([relatório](docs/playtest-comerciante-2026-08-20.md)).
+
+Fase 10b local: Supabase local, Postgres/RLS/Auth/pgvector/storage, turnos e jobs
+duráveis, adapters, migração/export, backup/restore e observabilidade estão em
+código e cobertos por contratos. G0–G7 estão verdes: 1564 testes offline,
+`infra_local` 13, `security_local` 5, pgTAP 14/14, caos 5/5, commit DB p95
+32,257 ms, backup RPO 0/RTO 36,19 s, browser desktop/390 e stack
+Prometheus+Grafana+Collector+Tempo. Evidência versionada em
+[docs/readiness/readiness-local.md](docs/readiness/readiness-local.md).
+
+Pendências que exigem opt-in explícito continuam abertas: 1×200 comerciante com
+LLM real e certificação remota em Railway/Supabase. Tiers 5+, Fase 8B e Crônica
+avançada estão `done` no aceite local; seus smokes pagos continuam opcionais.
+A certificação cloud permanece `draft`. Nenhuma chamada de imagem nem recurso
+remoto/pago foi criado neste ciclo.
 
 ---
 
@@ -509,6 +548,10 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
   reproduz a campanha): agressivo, explorador, comerciante, diplomático, troll,
   mapa_breaker, combate, npc_only, loot_abuser, secret_rusher. `--real` opt-in.
   Saves isolados (`saves_playtest/`). Teste permanente na suíte (10 turnos).
+- [x] **Playtest longo comerciante — aceite offline**
+  ([spec](specs/playtest-longo-perfil-comerciante.md)): política stateful que
+  observa só o mercado atual; 5×200 revalidados em 2026-08-20 com 1.000/1.000,
+  zero erro/violação e 38 transações. O 1×200 real segue opt-in com teto de custo.
 - [x] **5.2 — Invariantes de estado** ([spec](specs/fase-5.2-invariantes.md)):
   `playtest/invariants.py` — `check_all(state, prev_state)` puro plugado no
   runner. HP válido, ouro ≥ 0, item único sem dupe, NPC morto não fala, fação
@@ -713,7 +756,9 @@ testes offline verdes.**
    carga_embrace); utilitárias no contexto do storyteller
    (`utility_context_block` — gate determinístico, LLM narra); HUD com selo ✦/⚒.
    918 offline verdes + smoke real 4/4 (narrador citou a capacidade injetada).
-   Fast-follow: tiers 5+ (nível 9–20) e balanceamento pós-playtest.
+   Fast-follow [tiers 5+ e níveis 9–20
+   (`done`)](specs/tiers-5-plus-classes-niveis-9-20.md) — cap 20, gates reais,
+   escolha explícita de subclasse e 80 Cartas tardias entregues.
 
 ## Revisão pós-épico — ✅ 2026-07-19 (sessão 20)
 
@@ -907,12 +952,19 @@ v6 guarda primeira aparição/idempotência; API, POST/SSE e React exibem cena e
 retrato no mesmo turno. O placeholder `AGUARDANDO ARTE` fica pronto como reserva,
 mas não é usado: o pacote correto trouxe as seis raças aprovadas.
 
-### 8B — Arte dinâmica de entidades (futura; spec ainda não criada)
+### 8B — Arte dinâmica rara → ✅ [spec `done`](specs/fase-8b-geracao-dinamica-arte.md)
 
-Depende da 8A e de contrato próprio para armazenamento, moderação, custo e
-latência. Abrangerá itens, monstros e NPCs sem âncora, com cache por ID e bloqueio
-de segredos não revelados. A antiga meta de “gerar em 2s dentro do turno” deixa
-de ser critério até ser medida contra um provider e infraestrutura reais.
+Retrato personalizado na criação, NPC nomeado/persistente sem arte e uma cena
+épica por arco (boss significativo; sem boss, conclusão). GPT Image 2 usa snapshot
+pinado e âncoras aprovadas; Python decide brief, gatilho, orçamento, identidade e
+storage. Limites: 4 NPCs + 1 épica por arco, cooldown de 15 turnos, sem teto de
+campanha; jogador tem uma geração inicial + uma reformulação. Prompt de cena usa
+pose curada e constraints explícitas contra anatomia/pegada/membros antinaturais.
+O retrato inicial usa raça + classe-base; a escolha de subclasse no nível 3 não
+gera novo job, mas seu vocabulário visual curado entra em reformulação manual
+ainda disponível e em cenas épicas posteriores.
+Tudo é privado, assíncrono e idempotente; turno nunca espera. Fundação, fila,
+BlobStore, worker e testes fake/local foram entregues; geração paga é opt-in.
 
 ---
 
@@ -967,7 +1019,7 @@ Antes de abrir para usuários externos.
   sanitização; flag `simulated` = `llm_setup.is_simulated()` (todas as keys);
   bind default `127.0.0.1` (`RPG_HOST` p/ expor); 500 sem `str(e)`; teto em
   `input_text`; poda do dict do rate limit
-### Fase 10b — local-first, sem deploy — 9 specs `draft` (2026-08-16)
+### Fase 10b — local-first, sem deploy — ✅ fatia local `done` (2026-08-20)
 
 O mapa completo está na
 [spec-mãe](specs/fase-10b-plano-mestre-local-first.md). Supabase Local é o alvo
@@ -978,14 +1030,14 @@ primeiro corte mantém `web/dist` + FastAPI no mesmo serviço público e roda o
 worker numa segunda instância da mesma imagem. JSON+FAISS permanecem para CLI e
 suíte; nenhum diretório histórico será apagado automaticamente.
 
-1. [Fundação local + portas/adapters](specs/fase-10b-fundacao-local-portas-adapters.md)
-2. [Postgres híbrido + migração verificável](specs/fase-10b-postgres-persistencia-transacional.md)
-3. [Turnos duráveis + idempotência multiworker + fila](specs/fase-10b-turnos-duraveis-concorrencia-fila.md)
-4. [Auth local + RLS + isolamento](specs/fase-10b-auth-rls-isolamento.md)
-5. [Memória transacional em pgvector](specs/fase-10b-pgvector-memoria-transacional.md)
-6. [Storage portátil para assets dinâmicos](specs/fase-10b-storage-assets-portavel.md)
-7. [Observabilidade + backup/restore + carga/caos](specs/fase-10b-observabilidade-backup-caos.md)
-8. [Certificação cloud portátil — futura](specs/fase-10b-certificacao-cloud-portavel.md)
+1. [Fundação local + portas/adapters](specs/fase-10b-fundacao-local-portas-adapters.md) `done`
+2. [Postgres híbrido + migração verificável](specs/fase-10b-postgres-persistencia-transacional.md) `done`
+3. [Turnos duráveis + idempotência multiworker + fila](specs/fase-10b-turnos-duraveis-concorrencia-fila.md) `done`
+4. [Auth local + RLS + isolamento](specs/fase-10b-auth-rls-isolamento.md) `done`
+5. [Memória transacional em pgvector](specs/fase-10b-pgvector-memoria-transacional.md) `done`
+6. [Storage portátil para assets dinâmicos](specs/fase-10b-storage-assets-portavel.md) `done`
+7. [Observabilidade + backup/restore + carga/caos](specs/fase-10b-observabilidade-backup-caos.md) `done`
+8. [Certificação cloud portátil — futura](specs/fase-10b-certificacao-cloud-portavel.md) `draft`
 
 **Decisões:** não manter dual-write permanente; não segurar transação durante
 LLM; Postgres é a primeira fila/coordenação (Redis só com evidência); arte curada
@@ -1042,8 +1094,9 @@ export entre providers verificáveis.
 > spec polish-sessao; ficam aqui os avançados:
 
 - [x] ~~**Arcos:** arc_title + chapters~~ → ✅ entregue na **Fase 3.1**
-- [ ] **Compressão:** capítulo antigo > 20 entradas → archivist comprime
-- [ ] **Busca semântica:** endpoint `POST /game/chronicle/search` via RAG
+- [x] **Compressão + busca semântica:** [spec `done` de Crônica avançada](specs/cronica-avancada-compressao-busca-semantica.md)
+  — raw imutável; digest assíncrono ao fechar/>20 entradas; endpoint
+  `POST /game/chronicle/search` híbrido, sem LLM generativa por consulta.
 - [x] ~~**Frontend restante:** search + download .txt~~ → na spec **polish-sessao** (busca local + export)
 
 ### ~~Lore Multi-Índice~~ → OBSOLETO
@@ -1107,7 +1160,8 @@ Antes: "mais features, sprites depois".
 8. **Fase 11** ✅ ENTREGUE (2026-07-06): 9 contratos LLM verdes contra Gemini real (`-m llm_contract`).
 9. **Ciclo fix-playtest-achados** ✅ ENTREGUE (2026-07-13): 6 defeitos do transcrito real + fuga do jogador (715 testes).
 10. **Auditoria de segurança** ✅ ENTREGUE (2026-07-13): 8 achados A1–A8 corrigidos + regressão (729 testes).
-11. **Fases 8+** (próximas): arte, sprites/som, Fase 10b (Postgres/auth).
+11. **Fase 8A/8B + Fase 10b local** ✅ ENTREGUES; próxima infraestrutura é a
+    certificação cloud opt-in. Sprites/som da Fase 9 seguem no backlog.
 
 Sem 2.5-2.8, as features de economia/craft/encontros ficariam acopladas, contraditórias e não-testáveis — fundação entregue; Fases 4/6/7 construíram gameplay, conteúdo sistêmico e pipeline de autoria em cima dela.
 

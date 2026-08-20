@@ -220,9 +220,9 @@ def test_virtude_acima_do_teto_rejeitada():
     assert p2 is p or p2 == p  # player intocado no erro
 
 
-def test_nivel_maximo_e_dez():
+def test_nivel_maximo_e_vinte():
     import progression
-    assert progression.MAX_LEVEL == 10
+    assert progression.MAX_LEVEL == 20
 
 
 # --------------------------------------------------------------------------

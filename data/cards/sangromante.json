@@ -23,7 +23,10 @@
       "descricao": "Um talho rápido; o preço do sangue já está embutido.",
       "mecanica_classe": {
         "auto_dano": 3
-      }
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "san_finta",
@@ -42,7 +45,10 @@
         "kind": "buff_acerto",
         "valor": 2
       },
-      "descricao": "Oferece o pulso, retira a garganta — engana lendo o próprio corte."
+      "descricao": "Oferece o pulso, retira a garganta — engana lendo o próprio corte.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "san_esquiva",
@@ -62,7 +68,10 @@
         "valor": 2
       },
       "descricao": "Cede o couro que pode perder para salvar o que não pode.",
-      "gatilho": "ao_ser_atacado"
+      "gatilho": "ao_ser_atacado",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "san_pacto",
@@ -79,7 +88,10 @@
         "kind": "buff_dano",
         "valor": 1
       },
-      "descricao": "A dor recente afia o gesto seguinte — cada gota cobrada rende juros."
+      "descricao": "A dor recente afia o gesto seguinte — cada gota cobrada rende juros.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "san_passo",
@@ -96,7 +108,10 @@
         "kind": "utilitaria",
         "prompt_hint": "mover-se em silêncio/passar despercebido"
       },
-      "descricao": "Anda como quem não quer dever passagem."
+      "descricao": "Anda como quem não quer dever passagem.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "san_hemorragia",
@@ -116,7 +131,10 @@
         "dano_base": 3,
         "duracao": 3
       },
-      "descricao": "Abre a veia certa; o inimigo se esvai sozinho."
+      "descricao": "Abre a veia certa; o inimigo se esvai sozinho.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "san_ultimo_lance",
@@ -140,7 +158,10 @@
       "mecanica_classe": {
         "auto_dano": 4,
         "pico": true
-      }
+      },
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "san_exp_espetaculo",
@@ -162,7 +183,10 @@
       "descricao": "Sangra em público de propósito — todos os olhos, todas as lâminas.",
       "mecanica_classe": {
         "auto_dano": 2
-      }
+      },
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "san_exp_credencial",
@@ -226,7 +250,10 @@
       "mecanica_classe": {
         "auto_dano": 4,
         "pico": true
-      }
+      },
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "san_exp_plateia",
@@ -243,7 +270,10 @@
         "kind": "buff_dano",
         "valor": 1
       },
-      "descricao": "Quanto mais gente olha, mais fundo ele corta — a dor exibida vira força."
+      "descricao": "Quanto mais gente olha, mais fundo ele corta — a dor exibida vira força.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "san_ava_reserva",
@@ -260,7 +290,10 @@
         "kind": "utilitaria",
         "prompt_hint": "guardar/estancar recursos p/ mais tarde"
       },
-      "descricao": "Não gasta uma gota que não renda em dobro."
+      "descricao": "Não gasta uma gota que não renda em dobro.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "san_ava_juros",
@@ -323,7 +356,10 @@
       "central": true,
       "mecanica_classe": {
         "pico": true
-      }
+      },
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "san_ava_sovinice",
@@ -340,7 +376,10 @@
         "kind": "buff_dano",
         "valor": 1
       },
-      "descricao": "Cada Entropia poupada torna o golpe guardado mais pesado."
+      "descricao": "Cada Entropia poupada torna o golpe guardado mais pesado.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "san_sil_exato",
@@ -363,7 +402,10 @@
       "descricao": "Nem uma gota a mais do que o necessário — cirurgia com adaga.",
       "mecanica_classe": {
         "auto_dano": 1
-      }
+      },
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "san_sil_veia",
@@ -423,7 +465,10 @@
           }
         }
       },
-      "central": true
+      "central": true,
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "san_sil_frieza",
@@ -440,7 +485,10 @@
         "kind": "buff_esquiva",
         "valor": 1
       },
-      "descricao": "Sem espetáculo, sem susto: economiza o próprio sangue tanto quanto o do outro."
+      "descricao": "Sem espetáculo, sem susto: economiza o próprio sangue tanto quanto o do outro.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "san_exp_aplausos",
@@ -460,7 +508,10 @@
         "valor": 5
       },
       "descricao": "Exibe a ferida como desafio e faz cada inimigo disputar o próximo golpe.",
-      "papel": "atrair plateia hostil"
+      "papel": "atrair plateia hostil",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "san_exp_bis",
@@ -480,7 +531,10 @@
         "dano_base": 9
       },
       "descricao": "Quando todos esperam a queda, retorna ao palco com a lâmina já em movimento.",
-      "papel": "retaliação depois de sobreviver crítico"
+      "papel": "retaliação depois de sobreviver crítico",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "san_ava_juros_carne",
@@ -500,7 +554,10 @@
         "valor": 5
       },
       "descricao": "Cada gota paga antes volta como força emprestada ao golpe seguinte.",
-      "papel": "capitalizar auto-dano acumulado"
+      "papel": "capitalizar auto-dano acumulado",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "san_ava_falencia",
@@ -521,7 +578,10 @@
         "dano_base": 12
       },
       "descricao": "Fecha todas as contas numa pancada que cobra corpo, aço e testemunhas.",
-      "papel": "liquidar reserva de sangue"
+      "papel": "liquidar reserva de sangue",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "san_sil_fio",
@@ -541,7 +601,10 @@
         "valor": 2
       },
       "descricao": "Um risco quase invisível indica exatamente onde a próxima lâmina deve entrar.",
-      "papel": "marcar artéria sem revelar ataque"
+      "papel": "marcar artéria sem revelar ataque",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "san_sil_pulso",
@@ -562,7 +625,10 @@
         "duracao": 2
       },
       "descricao": "Corta a cadência do sangue e, com ela, qualquer palavra de poder.",
-      "papel": "interromper conjuração pelo pulso"
+      "papel": "interromper conjuração pelo pulso",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "san_desvio_arterial",
@@ -583,7 +649,10 @@
       },
       "descricao": "Prevê a trajetória do golpe pelo pulso do agressor e sai por um fio.",
       "gatilho": "ao_ser_atacado",
-      "papel": "esquiva após prever fluxo"
+      "papel": "esquiva após prever fluxo",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "san_troco_carmesim",
@@ -604,7 +673,10 @@
       },
       "descricao": "A ferida recém-aberta paga imediatamente um corte no cobrador.",
       "gatilho": "apos_auto_dano",
-      "papel": "contra-ataque após auto-dano"
+      "papel": "contra-ataque após auto-dano",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "san_ouvir_veias",
@@ -624,7 +696,10 @@
         "valor": 3
       },
       "descricao": "No silêncio, distingue medo, febre e mentira pela música sob a pele.",
-      "papel": "rastrear vida por pulsação"
+      "papel": "rastrear vida por pulsação",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "san_assinar_sangue",
@@ -644,7 +719,10 @@
         "prompt_hint": "selar pacto verificável ou autenticar identidade pelo sangue"
       },
       "descricao": "Uma gota torna contratos e identidades impossíveis de falsificar sem deixar cicatriz.",
-      "papel": "pacto e autenticação"
+      "papel": "pacto e autenticação",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "san_sangria_lenta",
@@ -665,7 +743,10 @@
         "duracao": 4
       },
       "descricao": "Um corte pequeno continua cobrando muito depois de a lâmina partir.",
-      "papel": "dano prolongado econômico"
+      "papel": "dano prolongado econômico",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "san_transfusao_hostil",
@@ -685,7 +766,10 @@
         "valor": 4
       },
       "descricao": "Rouba do impacto a força suficiente para fechar a própria lesão.",
-      "papel": "converter ferida causada em cura"
+      "papel": "converter ferida causada em cura",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "san_passo_capilar",
@@ -705,7 +789,10 @@
         "valor": 2
       },
       "descricao": "Escorre pela formação inimiga como sangue entre dedos cerrados.",
-      "papel": "atravessar linha pelo menor espaço"
+      "papel": "atravessar linha pelo menor espaço",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "san_conta_memorizada",
@@ -723,7 +810,10 @@
         "valor": 2
       },
       "descricao": "Nunca esquece quem deve sangue e sempre age antes do segundo pagamento.",
-      "papel": "iniciativa contra quem já feriu"
+      "papel": "iniciativa contra quem já feriu",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "san_pulso_reserva",
@@ -741,7 +831,10 @@
         "valor": 1
       },
       "descricao": "O sangue que não foi gasto mantém o corpo meio passo à frente da lâmina.",
-      "papel": "esquiva alimentada por sangue poupado"
+      "papel": "esquiva alimentada por sangue poupado",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     }
   ]
 }

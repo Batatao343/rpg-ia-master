@@ -17,6 +17,11 @@ def _isolated_runtime_cache(monkeypatch, tmp_path):
     gerado, NPC db, artefatos custom) vão p/ tmp — a suíte NUNCA suja data/
     (antes: entradas mock em bestiary/npc_database exigiam git checkout)."""
     monkeypatch.setenv("RPG_RUNTIME_CACHE_DIR", str(tmp_path / "runtime"))
+    from infrastructure.runtime import reset_runtime
+
+    reset_runtime()
+    yield
+    reset_runtime()
 
 
 @pytest.fixture(autouse=True)

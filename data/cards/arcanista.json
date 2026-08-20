@@ -22,7 +22,10 @@
       "descricao": "Libera a Entropia canalizada num raio cinza pelo cajado.",
       "mecanica_classe": {
         "resfria_caldeira": true
-      }
+      },
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "arc_faisca",
@@ -42,7 +45,10 @@
         "categoria_arma": "leve",
         "dano_base": 3
       },
-      "descricao": "Um estalo menor, de graça, para manter a caldeira aquecida."
+      "descricao": "Um estalo menor, de graça, para manter a caldeira aquecida.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "arc_vazao",
@@ -59,7 +65,10 @@
         "kind": "utilitaria",
         "prompt_hint": "descarregar Entropia com segurança/ler éter"
       },
-      "descricao": "Sangra a pressão antes que o instrumento estoure."
+      "descricao": "Sangra a pressão antes que o instrumento estoure.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "arc_olho",
@@ -76,7 +85,10 @@
         "kind": "perception",
         "valor": 1
       },
-      "descricao": "Enxerga a corrente de éter que os outros só sentem como arrepio."
+      "descricao": "Enxerga a corrente de éter que os outros só sentem como arrepio.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "arc_empuxo",
@@ -95,7 +107,10 @@
         "kind": "empurrao",
         "valor": 2
       },
-      "descricao": "Uma onda muda de pressão joga o inimigo para longe."
+      "descricao": "Uma onda muda de pressão joga o inimigo para longe.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "arc_manto",
@@ -114,7 +129,10 @@
         "kind": "esconder",
         "valor": 1
       },
-      "descricao": "Condensa éter cinzento em névoa e some dentro dela."
+      "descricao": "Condensa éter cinzento em névoa e some dentro dela.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "arc_torrente",
@@ -137,7 +155,10 @@
       "descricao": "Esvazia a caldeira inteira num só jato.",
       "mecanica_classe": {
         "resfria_caldeira": true
-      }
+      },
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "arc_cal_valvula",
@@ -157,7 +178,10 @@
         "valor": 2
       },
       "descricao": "Redireciona a descarga para se proteger sem risco de estouro.",
-      "gatilho": "ao_ser_atacado"
+      "gatilho": "ao_ser_atacado",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "arc_cal_feixe",
@@ -218,7 +242,10 @@
       "central": true,
       "mecanica_classe": {
         "resfria_caldeira": true
-      }
+      },
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "arc_cal_regulagem",
@@ -235,7 +262,10 @@
         "kind": "buff_defesa",
         "valor": 1
       },
-      "descricao": "Margem de segurança em tudo — sobra fôlego para aparar o imprevisto."
+      "descricao": "Margem de segurança em tudo — sobra fôlego para aparar o imprevisto.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "arc_des_mao_nua",
@@ -258,7 +288,10 @@
       "descricao": "Sem cajado entre a carne e o Abismo — dói, mas queima o dobro.",
       "mecanica_classe": {
         "auto_dano": 4
-      }
+      },
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "arc_des_sobrecarga",
@@ -323,7 +356,10 @@
       "central": true,
       "mecanica_classe": {
         "auto_dano": 2
-      }
+      },
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "arc_des_nervo",
@@ -340,7 +376,10 @@
         "kind": "buff_dano",
         "valor": 2
       },
-      "descricao": "Sentir o éter na pele afia cada descarga — ao custo da própria segurança."
+      "descricao": "Sentir o éter na pele afia cada descarga — ao custo da própria segurança.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "arc_imp_geringonca",
@@ -357,7 +396,10 @@
         "kind": "utilitaria",
         "prompt_hint": "montar/consertar instrumento a partir de sucata"
       },
-      "descricao": "Um cano velho e um prego viram condutor de éter."
+      "descricao": "Um cano velho e um prego viram condutor de éter.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "arc_imp_bomba",
@@ -424,7 +466,10 @@
           }
         }
       },
-      "central": true
+      "central": true,
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "arc_imp_remendo",
@@ -441,7 +486,10 @@
         "kind": "buff_iniciativa",
         "valor": 1
       },
-      "descricao": "Sempre tem uma peça sobrando para a próxima virada."
+      "descricao": "Sempre tem uma peça sobrando para a próxima virada.",
+      "tier": 2,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "arc_cal_malha",
@@ -461,7 +509,10 @@
         "valor": 3
       },
       "descricao": "Projeta uma malha cinzenta que corrige ângulo e distância para todos.",
-      "papel": "calibrar disparos do grupo"
+      "papel": "calibrar disparos do grupo",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "arc_cal_zero",
@@ -482,7 +533,10 @@
         "duracao": 2
       },
       "descricao": "Por um instante não sobra possibilidade estatística de movimento.",
-      "papel": "paralisar ao fechar todas as variáveis"
+      "papel": "paralisar ao fechar todas as variáveis",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "arc_des_nervo_exposto",
@@ -502,7 +556,10 @@
         "valor": 3
       },
       "descricao": "Encosta o próprio sistema nervoso no Éter e aceita cada resposta.",
-      "papel": "vantagem em canalização sem foco"
+      "papel": "vantagem em canalização sem foco",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "arc_des_horizonte",
@@ -523,7 +580,10 @@
         "dano_base": 13
       },
       "descricao": "Abre no peito uma janela pela qual a tempestade inteira atravessa.",
-      "papel": "descarga máxima com risco corporal"
+      "papel": "descarga máxima com risco corporal",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "arc_imp_grampo",
@@ -543,7 +603,10 @@
         "valor": 3
       },
       "descricao": "Prende o impossível a um pedaço de sucata até que alguém possa usá-lo.",
-      "papel": "fixar fenômeno instável em objeto"
+      "papel": "fixar fenômeno instável em objeto",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "arc_imp_maquina",
@@ -563,7 +626,10 @@
         "valor": 4
       },
       "descricao": "Monta um artefato absurdo, aponta a saída certa e não guarda as peças.",
-      "papel": "explosão direcional descartável"
+      "papel": "explosão direcional descartável",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "arc_aterramento",
@@ -584,7 +650,10 @@
       },
       "descricao": "Desvia energia hostil pelo metal mais próximo antes que ela encontre os ossos.",
       "gatilho": "ao_sofrer_dano_sobrenatural",
-      "papel": "dissipar descarga recebida"
+      "papel": "dissipar descarga recebida",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "arc_refracao",
@@ -605,7 +674,10 @@
       },
       "descricao": "Quebra a própria silhueta em três futuros e deixa o ataque escolher errado.",
       "gatilho": "ao_ser_alvo_distancia",
-      "papel": "deslocar imagem sob mira"
+      "papel": "deslocar imagem sob mira",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "arc_auscultar_eter",
@@ -625,7 +697,10 @@
         "valor": 5
       },
       "descricao": "Escuta o ruído que toda alteração arcana deixa preso na matéria.",
-      "papel": "detectar magia residual"
+      "papel": "detectar magia residual",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "arc_ponte_curta",
@@ -645,7 +720,10 @@
         "prompt_hint": "alimentar ou contornar mecanismo arcano por poucos instantes"
       },
       "descricao": "Mantém uma máquina impossível viva pelo tempo exato de atravessar.",
-      "papel": "bypass arcano temporário"
+      "papel": "bypass arcano temporário",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "arc_vetor_quebrado",
@@ -665,7 +743,10 @@
         "valor": 2
       },
       "descricao": "Corta o caminho em dois e reaparece onde a geometria não esperava.",
-      "papel": "teleporte curto desalinhado"
+      "papel": "teleporte curto desalinhado",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false
     },
     {
       "id": "arc_pulso_inverso",
@@ -685,7 +766,10 @@
         "valor": 1
       },
       "descricao": "Reproduz o padrão nocivo ao contrário até que ele se desfaça.",
-      "papel": "remover condição por inversão"
+      "papel": "remover condição por inversão",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "arc_raio_cinza",
@@ -706,7 +790,10 @@
         "dano_base": 11
       },
       "descricao": "Comprime o Éter numa linha tão fina que a distância deixa de protegê-la.",
-      "papel": "dano arcano em linha"
+      "papel": "dano arcano em linha",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     },
     {
       "id": "arc_equacao_persistente",
@@ -724,7 +811,10 @@
         "valor": 3
       },
       "descricao": "A primeira observação continua resolvendo possibilidades enquanto a luta muda.",
-      "papel": "iniciativa após estudar cena"
+      "papel": "iniciativa após estudar cena",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false
     },
     {
       "id": "arc_constante_cinza",
@@ -742,7 +832,10 @@
         "valor": 2
       },
       "descricao": "Depois de medir o impossível tantas vezes, o olho passa a esperá-lo.",
-      "papel": "percepção crescente de anomalias"
+      "papel": "percepção crescente de anomalias",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false
     }
   ]
 }

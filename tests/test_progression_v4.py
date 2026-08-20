@@ -24,14 +24,18 @@ def test_level_up_oferece_carta_e_virtude():
     assert events[0]["type"] == "level_up"
 
 
-def test_level_impar_oferece_apenas_carta():
+def test_nivel_tres_oferece_subclasse_explica_e_carta():
     player, _ = pg.grant_xp(
         _player(level=2, xp=pg.XP_TABLE[2]), pg.XP_TABLE[3] - pg.XP_TABLE[2])
-    assert [choice["kind"] for choice in player["pending_choices"]] == ["carta"]
+    assert [choice["kind"] for choice in player["pending_choices"]] == ["subclass", "carta"]
 
 
 def test_eligible_cards_respeita_classe_e_subclasse():
-    player = _player(known_cards=["dev_golpe_convite", "dev_cons_marca"])
+    player = _player(
+        level=4,
+        subclass="consagrado",
+        known_cards=["dev_golpe_convite", "dev_cons_marca"],
+    )
     eligible = pg.eligible_cards(player)
     assert "dev_golpe_convite" not in eligible
     assert "dev_cons_liturgia" in eligible

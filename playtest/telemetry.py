@@ -104,6 +104,7 @@ def begin_run(
     class_name: Optional[str] = None,
     invariants_enabled: bool = True,
     scenario: Optional[str] = None,
+    seeds_by_profile: Optional[Dict[str, int]] = None,
 ) -> dict:
     """Cria o manifesto antes da primeira campanha.
 
@@ -125,6 +126,10 @@ def begin_run(
             "profiles": list(profiles),
             "turns_per_campaign": int(turns),
             "seed": int(seed),
+            "seeds_by_profile": {
+                str(profile): int(value)
+                for profile, value in (seeds_by_profile or {}).items()
+            },
             "real": bool(real),
             "class_name": class_name,
             "invariants_enabled": bool(invariants_enabled),
@@ -193,6 +198,10 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
     expected_profiles = [str(p) for p in expected.get("profiles") or []]
     expected_turns = int(expected.get("turns_per_campaign", 0) or 0)
     expected_seed = int(expected.get("seed", 0) or 0)
+    expected_seeds = {
+        str(profile): int(value)
+        for profile, value in (expected.get("seeds_by_profile") or {}).items()
+    }
     expected_real = bool(expected.get("real"))
     expected_invariants = bool(expected.get("invariants_enabled", True))
     campaigns = [
@@ -342,7 +351,7 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
             if summary is not None:
                 scalar_contract = {
                     "profile": profile,
-                    "seed": expected_seed,
+                    "seed": expected_seeds.get(profile, expected_seed),
                     "turns_requested": expected_turns,
                     "turns_completed": (
                         completed if campaign_aborted else expected_turns
@@ -780,6 +789,15 @@ def turn_to_record(rec: TurnRecord) -> dict:
         "memory_by_provenance": dict(rec.memory_by_provenance),
         "memory_by_confidence": dict(rec.memory_by_confidence),
         "stale_speculative_memories": rec.stale_speculative_memories,
+        "economy_action": dict(rec.economy_action),
+        "action_family": rec.action_family,
+        "gold_before": rec.gold_before,
+        "inventory_value_before": rec.inventory_value_before,
+        "inventory_value_after": rec.inventory_value_after,
+        "net_worth_after": rec.net_worth_after,
+        "net_worth_formula": rec.net_worth_formula,
+        "market_observed": rec.market_observed,
+        "market_snapshot": dict(rec.market_snapshot),
         "memory_writes_by_provenance": dict(rec.memory_writes_by_provenance),
         "memory_rejections": rec.memory_rejections,
         "memory_promotions": rec.memory_promotions,
@@ -1132,6 +1150,94 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
     except Exception:
         final_tier = ""
 
+    economy_rows = [
+        dict(row.get("economy_action") or {}) for row in turn_records
+        if row.get("economy_action")
+    ]
+    successful_economy = [row for row in economy_rows if row.get("ok")]
+    modes = Counter(str(row.get("mode") or "unknown") for row in successful_economy)
+    refusal_reasons = Counter(
+        str(row.get("reason_code") or row.get("reason") or "unknown")
+        for row in economy_rows if not row.get("ok")
+    )
+    market_rows = [
+        dict(row.get("market_snapshot") or {}) for row in turn_records
+        if row.get("market_snapshot")
+    ]
+    market_ids = {
+        str(row.get("merchant_id")) for row in [*economy_rows, *market_rows]
+        if row.get("merchant_id")
+    }
+    location_ids = {
+        str(row.get("location_id")) for row in [*economy_rows, *market_rows]
+        if row.get("location_id")
+    }
+    try:
+        from gamedata import get_location
+        region_ids = {
+            str((get_location(location_id) or {}).get("region_id") or location_id)
+            for location_id in location_ids
+        } | {str(row["region_id"]) for row in market_rows if row.get("region_id")}
+    except Exception:
+        region_ids = set(location_ids)
+    acquisition: Dict[str, List[int]] = {}
+    realized_margin = 0
+    for row in successful_economy:
+        item_id = str(row.get("item_id") or "")
+        qty = max(1, int(row.get("qty", 1) or 1))
+        unit = abs(int(row.get("gold_delta", 0) or 0)) // qty
+        if row.get("mode") == "buy":
+            acquisition.setdefault(item_id, []).extend([unit] * qty)
+        elif row.get("mode") == "sell":
+            lots = acquisition.setdefault(item_id, [])
+            for _ in range(qty):
+                realized_margin += unit - (lots.pop(0) if lots else unit)
+    family_counts = Counter(
+        str(row.get("action_family") or "unknown") for row in turn_records
+    )
+    family_pct = {
+        family: round(100.0 * count / max(1, len(turn_records)), 1)
+        for family, count in sorted(family_counts.items())
+    }
+    stock_seen: Dict[tuple[str, str], int] = {}
+    restocks_observed = 0
+    stock_rows = market_rows or economy_rows
+    for row in stock_rows:
+        merchant = str(row.get("merchant_id") or "")
+        quotes = row.get("quotes") if market_rows else row.get("stock_before")
+        for quote in quotes or []:
+            key = (merchant, str(quote.get("item_id") or ""))
+            quantity = int(quote.get("stock", 0) or 0)
+            if key in stock_seen and quantity > stock_seen[key]:
+                restocks_observed += 1
+            stock_seen[key] = quantity
+        if not market_rows:
+            for quote in row.get("stock_after") or []:
+                stock_seen[(merchant, str(quote.get("item_id") or ""))] = int(
+                    quote.get("stock", 0) or 0
+                )
+    economy_summary = {
+        "formula_version": "market-liquidation-v1",
+        "purchases": int(modes.get("buy", 0)),
+        "sales": int(modes.get("sell", 0)),
+        "crafts": int(modes.get("craft", 0)),
+        "successful_transactions": len(successful_economy),
+        "rejections": len(economy_rows) - len(successful_economy),
+        "refusals_by_reason": dict(sorted(refusal_reasons.items())),
+        "markets": len(market_ids),
+        "locations": len(location_ids),
+        "regions": len(region_ids),
+        "items": len({str(row.get("item_id")) for row in economy_rows if row.get("item_id")}),
+        "purchase_cost": sum(-int(row.get("gold_delta", 0) or 0) for row in successful_economy if row.get("mode") == "buy"),
+        "sales_revenue": sum(int(row.get("gold_delta", 0) or 0) for row in successful_economy if row.get("mode") == "sell"),
+        "realized_margin": realized_margin,
+        "turnover": sum(abs(int(row.get("gold_delta", 0) or 0)) for row in successful_economy),
+        "final_net_worth": int(turn_records[-1].get("net_worth_after", 0) or 0) if turn_records else 0,
+        "restocks_observed": restocks_observed,
+        "action_families": dict(sorted(family_counts.items())),
+        "action_family_pct": family_pct,
+    }
+
     return {
         "game_id": str(final.get("game_id") or ""),
         "save_path": (
@@ -1178,6 +1284,7 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
             "over_warning_45s": len([value for value in latencies if value > 45_000]),
             "over_error_90s": len([value for value in latencies if value > 90_000]),
         },
+        "economy": economy_summary,
         "diversity": {
             "unique_routes": len(routes),
             "unique_action_kinds": len(action_kinds),

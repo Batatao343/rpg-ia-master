@@ -9,10 +9,13 @@ podem ter Cartas exclusivas ainda ocultas.
 import json
 import os
 from typing import Dict, List, Optional
+from uuid import UUID
 
 import gamedata
 
 _KNOWLEDGE_FILE = "bestiary_knowledge.json"
+_LEGACY_OWNER_ID = UUID("00000000-0000-0000-0000-000000000001")
+_LEGACY_GAME_ID = UUID("00000000-0000-0000-0000-000000000002")
 
 # Campos PÚBLICOS do painel inicial (R7). Tudo o mais fica oculto até descoberto.
 _PUBLIC_FIELDS = (
@@ -45,23 +48,25 @@ def public_panel(enemy: dict) -> dict:
 # ==========================================================================
 # Persistência no overlay runtime (R8/R9)
 # ==========================================================================
-def _load_all() -> dict:
-    path = gamedata.runtime_cache_path(_KNOWLEDGE_FILE)
-    if not os.path.exists(path):
-        return {}
-    try:
-        with open(path, encoding="utf-8") as f:
-            content = f.read().strip()
-        return json.loads(content) if content else {}
-    except Exception:
-        return {}
+def _load_all(*, owner_id: UUID = _LEGACY_OWNER_ID,
+              game_id: UUID = _LEGACY_GAME_ID) -> dict:
+    from infrastructure.runtime import get_runtime
+
+    return get_runtime().runtime_catalog.list(
+        "bestiary_knowledge", owner_id=owner_id, game_id=game_id,
+    )
 
 
-def _save_all(data: dict) -> None:
-    path = gamedata.runtime_cache_path(_KNOWLEDGE_FILE)
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+def _save_all(data: dict, *, owner_id: UUID = _LEGACY_OWNER_ID,
+              game_id: UUID = _LEGACY_GAME_ID) -> None:
+    from infrastructure.runtime import get_runtime
+
+    store = get_runtime().runtime_catalog
+    for key, value in data.items():
+        store.put(
+            "bestiary_knowledge", key, value,
+            scope="game", owner_id=owner_id, game_id=game_id,
+        )
 
 
 def _archetype_id(entry: dict) -> str:
@@ -70,20 +75,24 @@ def _archetype_id(entry: dict) -> str:
 
 
 def _persist(archetype: str, *, card: Optional[str] = None,
-             resistance: Optional[str] = None) -> None:
-    data = _load_all()
+             resistance: Optional[str] = None,
+             owner_id: UUID = _LEGACY_OWNER_ID,
+             game_id: UUID = _LEGACY_GAME_ID) -> None:
+    data = _load_all(owner_id=owner_id, game_id=game_id)
     rec = data.setdefault(archetype, {"revealed_cards": [], "revealed_resistances": []})
     if card and card not in rec["revealed_cards"]:
         rec["revealed_cards"].append(card)
     if resistance and resistance not in rec["revealed_resistances"]:
         rec["revealed_resistances"].append(resistance)
-    _save_all(data)
+    _save_all(data, owner_id=owner_id, game_id=game_id)
 
 
 # ==========================================================================
 # Revelação (R8/R9)
 # ==========================================================================
-def reveal_card(entry: dict, card_id: str) -> dict:
+def reveal_card(entry: dict, card_id: str, *,
+                owner_id: UUID = _LEGACY_OWNER_ID,
+                game_id: UUID = _LEGACY_GAME_ID) -> dict:
     """R8: a Carta usada pelo inimigo fica revelada pelo resto do combate E entra
     no bestiário — reaparece revelada em encontros futuros do mesmo arquétipo.
     Cartas marcadas `variant_exclusive` NÃO propagam pro arquétipo (variante)."""
@@ -91,17 +100,21 @@ def reveal_card(entry: dict, card_id: str) -> dict:
     if card_id not in revealed:
         revealed.append(card_id)
     if card_id not in _variant_exclusive(entry):
-        _persist(_archetype_id(entry), card=card_id)
+        _persist(_archetype_id(entry), card=card_id,
+                 owner_id=owner_id, game_id=game_id)
     return {"revealed": True, "card_id": card_id}
 
 
-def reveal_resistance(entry: dict, resistance_type: str) -> dict:
+def reveal_resistance(entry: dict, resistance_type: str, *,
+                      owner_id: UUID = _LEGACY_OWNER_ID,
+                      game_id: UUID = _LEGACY_GAME_ID) -> dict:
     """R9: Resistência/Vulnerabilidade/Imunidade revelada quando afeta uma
     resolução — permanece visível e entra no bestiário."""
     revealed = entry.setdefault("revealed_resistances", [])
     if resistance_type not in revealed:
         revealed.append(resistance_type)
-    _persist(_archetype_id(entry), resistance=resistance_type)
+    _persist(_archetype_id(entry), resistance=resistance_type,
+             owner_id=owner_id, game_id=game_id)
     return {"revealed": True, "resistance_type": resistance_type}
 
 
@@ -117,11 +130,13 @@ def is_resistance_revealed(entry: dict, resistance_type: str) -> bool:
     return resistance_type in (entry.get("revealed_resistances") or [])
 
 
-def apply_persisted_knowledge(entry: dict) -> dict:
+def apply_persisted_knowledge(entry: dict, *,
+                              owner_id: UUID = _LEGACY_OWNER_ID,
+                              game_id: UUID = _LEGACY_GAME_ID) -> dict:
     """R8/R9: no início de um encontro, carrega o que o bestiário já sabe do
     arquétipo — as Cartas/Resistências reveladas antes começam reveladas. Cartas
     exclusivas de variante desta ficha permanecem ocultas."""
-    data = _load_all().get(_archetype_id(entry), {})
+    data = _load_all(owner_id=owner_id, game_id=game_id).get(_archetype_id(entry), {})
     variant = _variant_exclusive(entry)
     cards = entry.setdefault("revealed_cards", [])
     for c in data.get("revealed_cards", []):

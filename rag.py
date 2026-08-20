@@ -18,7 +18,9 @@ import hashlib
 import logging
 import os
 import re
+import time
 import unicodedata
+import uuid
 from collections import Counter
 from dataclasses import dataclass, field
 from typing import Callable, Dict, List, Literal, Optional
@@ -278,7 +280,7 @@ def _build_jina():
 
 def _build_openai():
     from langchain_openai import OpenAIEmbeddings
-    return OpenAIEmbeddings(model="text-embedding-3-small")
+    return OpenAIEmbeddings(model="text-embedding-3-small", dimensions=1024)
 
 
 def _build_ollama():
@@ -326,7 +328,10 @@ def _provider_available(provider: str) -> bool:
     if provider == "openai":
         return bool(os.getenv("OPENAI_API_KEY")) and _dep_present("openai")
     if provider == "ollama":
-        return _dep_present("ollama")
+        # Pacote instalado não significa que o daemon local está disponível.
+        # A rota automática exige host explícito; RPG_EMBEDDINGS=ollama segue
+        # como opt-in e é tratado antes desta função.
+        return bool(os.getenv("OLLAMA_HOST")) and _dep_present("ollama")
     if provider == "gemini":
         return bool(os.getenv("GOOGLE_API_KEY")) and _dep_present("gemini")
     return False
@@ -560,11 +565,21 @@ def _format_memory_documents(documents: list) -> str:
 
 def query_session_memory(query: str, game_id: str) -> str:
     """Busca somente fatos da sessão, sem consultar lore/regras globais."""
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        from infrastructure.contracts import MemoryQuery
+        from infrastructure.request_context import current_principal
+        from infrastructure.runtime import get_runtime
+
+        documents = get_runtime().memory_store.query(MemoryQuery(
+            text=query, scope="session", principal=current_principal(),
+            game_id=uuid.UUID(str(game_id)), k=6,
+        ))
+        return "\n---\n".join(document.text for document in documents)
     return _format_memory_documents(_query_session_documents(query, game_id, k=6))
 
 
-def query_rag(query: str, index_name: str = "lore", game_id: Optional[str] = None,
-              max_visibility: str = "public") -> str:
+def _query_rag_impl(query: str, index_name: str = "lore", game_id: Optional[str] = None,
+                    max_visibility: str = "public") -> str:
     """
     Busca contexto de forma híbrida:
     1. Índice Global (Lore/Regras) - Imutável durante o jogo.
@@ -574,6 +589,28 @@ def query_rag(query: str, index_name: str = "lore", game_id: Optional[str] = Non
     (public < hidden < secret). Default preserva o comportamento antigo:
     o jogador/narrador só vê `public`; chunks sem metadado contam como public.
     """
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        from infrastructure.contracts import MemoryQuery
+        from infrastructure.request_context import current_principal
+        from infrastructure.runtime import get_runtime
+
+        store = get_runtime().memory_store
+        global_docs = store.query(MemoryQuery(
+            text=query, scope="rules" if index_name == "rules" else "lore",
+            max_visibility=max_visibility, k=2,
+        ))
+        session_docs = []
+        if game_id:
+            principal = current_principal()
+            session_docs = store.query(MemoryQuery(
+                text=query, scope="session", principal=principal,
+                game_id=uuid.UUID(str(game_id)), max_visibility=max_visibility, k=2,
+            ))
+        return "\n---\n".join(
+            document.text for document in [*global_docs, *session_docs]
+            if document.text
+        )
+
     global_results = []
     session_results = []
     max_rank = vis_rank(max_visibility)
@@ -609,6 +646,30 @@ def query_rag(query: str, index_name: str = "lore", game_id: Optional[str] = Non
     ]
     return "\n---\n".join(parts)
 
+
+def query_rag(query: str, index_name: str = "lore", game_id: Optional[str] = None,
+              max_visibility: str = "public") -> str:
+    """Boundary observável da busca híbrida, sem expor consulta nem IDs."""
+    started = time.perf_counter()
+    scope = "session" if game_id else ("rules" if index_name == "rules" else "lore")
+    outcome = "ok"
+    try:
+        from observability.telemetry import span
+        with span("rag.query", scope=scope):
+            return _query_rag_impl(query, index_name, game_id, max_visibility)
+    except Exception:
+        outcome = "error"
+        raise
+    finally:
+        try:
+            from observability.metrics import metrics
+            metrics.observe(
+                "rpg_rag_duration_seconds", {"scope": scope, "outcome": outcome},
+                time.perf_counter() - started,
+            )
+        except Exception:
+            pass
+
 def add_memory_to_session(
     game_id: str,
     texts: List[str],
@@ -629,6 +690,40 @@ def add_memory_to_session(
             error="invalid_input",
             metadatas=metadatas,
         )
+
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        try:
+            import hashlib
+            from infrastructure.contracts import MemoryDocument, MemoryWriteIntent
+            from infrastructure.request_context import current_principal
+            from infrastructure.runtime import get_runtime
+
+            principal = current_principal()
+            store = get_runtime().memory_store
+            for index, text in enumerate(texts):
+                metadata = dict((metadatas or [{}] * len(texts))[index] or {})
+                digest = hashlib.sha256(
+                    f"{game_id}:{text}:{metadata}".encode("utf-8")
+                ).hexdigest()
+                store.stage(MemoryWriteIntent(
+                    document=MemoryDocument(
+                        document_id=f"session:{digest}", text=str(text),
+                        scope="session", metadata=metadata,
+                    ),
+                    principal=principal, game_id=uuid.UUID(str(game_id)),
+                    timeline_epoch=int(metadata.get("timeline_epoch", 0) or 0),
+                ))
+            return _rag_operation_result(
+                "add_session_memory", True, game_id=game_id, npc_id=None,
+                path="postgres://app.memory_documents", facts_count=facts_count,
+                provider="pgvector", error=None, metadatas=metadatas,
+            )
+        except Exception as exc:
+            return _rag_operation_result(
+                "add_session_memory", False, game_id=game_id, npc_id=None,
+                path="postgres://app.memory_documents", facts_count=facts_count,
+                provider="pgvector", error=type(exc).__name__, metadatas=metadatas,
+            )
 
     session_path = ""
     provider: Optional[str] = None
@@ -740,6 +835,40 @@ def add_npc_memory(
             metadatas=metadatas,
         )
 
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        try:
+            from infrastructure.contracts import MemoryDocument, MemoryWriteIntent
+            from infrastructure.request_context import current_principal
+            from infrastructure.runtime import get_runtime
+
+            principal = current_principal()
+            store = get_runtime().memory_store
+            for index, text in enumerate(texts):
+                metadata = dict((metadatas or [{}] * len(texts))[index] or {})
+                digest = hashlib.sha256(
+                    f"{game_id}:{npc_id}:{text}:{metadata}".encode("utf-8")
+                ).hexdigest()
+                store.stage(MemoryWriteIntent(
+                    document=MemoryDocument(
+                        document_id=f"npc:{digest}", text=str(text),
+                        scope="npc", metadata=metadata,
+                    ),
+                    principal=principal, game_id=uuid.UUID(str(game_id)),
+                    npc_id=npc_id,
+                    timeline_epoch=int(metadata.get("timeline_epoch", 0) or 0),
+                ))
+            return _rag_operation_result(
+                "add_npc_memory", True, game_id=game_id, npc_id=npc_id,
+                path="postgres://app.memory_documents", facts_count=facts_count,
+                provider="pgvector", error=None, metadatas=metadatas,
+            )
+        except Exception as exc:
+            return _rag_operation_result(
+                "add_npc_memory", False, game_id=game_id, npc_id=npc_id,
+                path="postgres://app.memory_documents", facts_count=facts_count,
+                provider="pgvector", error=type(exc).__name__, metadatas=metadatas,
+            )
+
     npc_path = ""
     provider: Optional[str] = None
     try:
@@ -828,6 +957,17 @@ def query_npc_memory(game_id: str, npc_id: str, query: str, k: int = 3) -> str:
     """
     if not game_id or not npc_id or not query:
         return ""
+
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        from infrastructure.contracts import MemoryQuery
+        from infrastructure.request_context import current_principal
+        from infrastructure.runtime import get_runtime
+
+        documents = get_runtime().memory_store.query(MemoryQuery(
+            text=query, scope="npc", principal=current_principal(),
+            game_id=uuid.UUID(str(game_id)), npc_id=npc_id, k=k,
+        ))
+        return "\n---\n".join(document.text for document in documents)
 
     npc_path = _get_npc_path(game_id, npc_id)
     if not _has_faiss_index(npc_path):

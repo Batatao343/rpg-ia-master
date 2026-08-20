@@ -5,7 +5,7 @@ export function SceneArtwork({ scene }: { scene?: SceneVisual | null }) {
   if (!scene?.asset) return null;
   const image = scene.asset.variants.display;
   return (
-    <div className="scene-art" aria-label={`Cena: ${scene.location_name}`}>
+    <div className="scene-art">
       <AnimatePresence mode="wait">
         <motion.img
           key={`${scene.location_id}:${scene.asset.asset_id}`}

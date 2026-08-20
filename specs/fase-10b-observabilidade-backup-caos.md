@@ -1,6 +1,6 @@
 # SPEC — Fase 10b.7 — Observabilidade, backup e matriz local de produção
 
-> **Status:** `draft`
+> **Status:** `done` (2026-08-20)
 > **Criada:** 2026-08-16 · **Atualizada:** 2026-08-16
 > **Depende de:** specs Fase 10b.1–10b.6 `done`
 > **Desbloqueia:** declaração de prontidão local e certificação cloud
@@ -179,18 +179,18 @@ G7 browser Python + build/lint/content/audits
 
 ## 5. Critérios de aceite
 
-- [ ] Telemetria cobre request→turn→LLM/RAG→DB/job/blob com redaction validada.
-- [ ] Dashboards/alertas locais funcionam e ausência do stack não derruba jogo.
-- [ ] Backup completo restaura em stack limpa com RPO 0 e RTO ≤30 min no dataset.
-- [ ] Dois workers/carga não perdem nem duplicam commit.
-- [ ] Todos cenários de caos convergem ou falham fechados com runbook.
-- [ ] Soak ≥1.000 turnos: zero erro/invariante `error`/write persistente no disco da API.
-- [ ] Browser A/B desktop+390px conclui fluxo completo e isolamento.
-- [ ] Dependency/secret/security gates sem P0/P1.
-- [ ] G0–G7 verdes e relatório JSON+Markdown preservado.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM permanece; smoke real pequeno não substitui MockLLM soak.
-- [ ] Backups/saves antigos permanecem recuperáveis.
+- [x] Telemetria cobre request→turn→LLM/RAG→DB/job/blob com redaction validada.
+- [x] Dashboards/alertas locais funcionam e ausência do stack não derruba jogo.
+- [x] Backup completo restaura em stack limpa com RPO 0 e RTO ≤30 min no dataset.
+- [x] Dois workers/carga não perdem nem duplicam commit.
+- [x] Todos cenários de caos convergem ou falham fechados com runbook.
+- [x] Soak ≥1.000 turnos: zero erro/invariante `error`/write persistente no disco da API.
+- [x] Browser A/B desktop+390px conclui fluxo completo e isolamento.
+- [x] Dependency/secret/security gates sem P0/P1.
+- [x] G0–G7 verdes e relatório JSON+Markdown preservado.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM permanece; smoke real pequeno não substitui MockLLM soak.
+- [x] Backups/saves antigos permanecem recuperáveis.
 
 ## 6. Smoke test com LLM real
 

@@ -1,6 +1,6 @@
 # SPEC — Fase 10b.3 — Turnos duráveis, idempotência distribuída e fila Postgres
 
-> **Status:** `draft`
+> **Status:** `done` (2026-08-20)
 > **Criada:** 2026-08-16 · **Atualizada:** 2026-08-16
 > **Depende de:** [Postgres transacional](fase-10b-postgres-persistencia-transacional.md) `done`
 > **Desbloqueia:** execução multiworker, geração assíncrona de assets e testes de caos
@@ -211,18 +211,18 @@ sempre cria audit row; não existe endpoint público de “rodar qualquer payloa
 
 ## 5. Critérios de aceite
 
-- [ ] Toda rota mutável é idempotente fora do GameState.
-- [ ] Dois workers no mesmo jogo confirmam no máximo uma mutação.
-- [ ] Jogos distintos podem computar em paralelo.
-- [ ] Nenhum lock/conexão/transação fica aberto durante LLM/grafo.
-- [ ] Kill antes/depois do commit recupera sem estado parcial nem efeito duplo.
-- [ ] SSE desconectado conclui e retry retorna receipt persistido.
-- [ ] Estado/eventos/checkpoint/memória/visual/receipt confirmam atomicamente.
-- [ ] Fila Postgres passa leases/retry/dead-letter/dedupe multiworker.
-- [ ] Rate limit é consistente em dois workers.
-- [ ] `uv run pytest -m infra_local` e suíte offline completos verdes.
-- [ ] Guard de FallbackLLM permanece em todos os nós; nenhum schema LLM novo.
-- [ ] Cliente legado com `action_id` continua funcional no período documentado.
+- [x] Toda rota mutável é idempotente fora do GameState.
+- [x] Dois workers no mesmo jogo confirmam no máximo uma mutação.
+- [x] Jogos distintos podem computar em paralelo.
+- [x] Nenhum lock/conexão/transação fica aberto durante LLM/grafo.
+- [x] Kill antes/depois do commit recupera sem estado parcial nem efeito duplo.
+- [x] SSE desconectado conclui e retry retorna receipt persistido.
+- [x] Estado/eventos/checkpoint/memória/visual/receipt confirmam atomicamente.
+- [x] Fila Postgres passa leases/retry/dead-letter/dedupe multiworker.
+- [x] Rate limit é consistente em dois workers.
+- [x] `uv run pytest -m infra_local` e suíte offline completos verdes.
+- [x] Guard de FallbackLLM permanece em todos os nós; nenhum schema LLM novo.
+- [x] Cliente legado com `action_id` continua funcional no período documentado.
 
 ## 6. Smoke test com LLM real
 
