@@ -892,12 +892,7 @@ def check_recycled_npc(state: dict, prev: Optional[dict], turn: int) -> List[Vio
     loc = (state.get("world") or {}).get("current_location_id", "") or ""
     if not loc:
         return out
-    narrative = ""
-    for message in reversed(state.get("messages") or []):
-        content = getattr(message, "content", "")
-        if content and getattr(message, "type", "") != "human":
-            narrative = str(content).casefold()
-            break
+    active_npc = str(state.get("active_npc_name") or "").casefold()
     combat_names = {
         str(ally.get("name") or "").casefold()
         for ally in ((state.get("combat") or {}).get("scene_allies") or [])
@@ -910,13 +905,31 @@ def check_recycled_npc(state: dict, prev: Optional[dict], turn: int) -> List[Vio
             continue
         home = npc.get("home_location_id") or ""
         # Vínculo legítimo (home == loc) ou membro de party NÃO é vazamento.
-        actually_used = name.casefold() in narrative or name.casefold() in combat_names
+        actually_used = name.casefold() == active_npc or name.casefold() in combat_names
         if (npc.get("created_turn") is not None and actually_used
                 and name not in party_names and home and home != loc):
             out.append(_V("narrative.recycled_npc", "warning", turn,
                           f"NPC gerado '{name}' no contexto fora do local de origem "
                           f"(origem={home}, atual={loc})", npc=name, home=home, loc=loc))
     return out
+
+
+def check_zero_vitality_outside_terminal(
+    state: dict, prev: Optional[dict], turn: int,
+) -> List[Violation]:
+    """Vitalidade 0 só é jogável dentro do conflito ou do fluxo terminal."""
+    player = state.get("player") or {}
+    vitality = int(player.get("vitalidade", player.get("hp", 0)) or 0)
+    if vitality != 0:
+        return []
+    if (state.get("combat") or {}).get("active"):
+        return []
+    if state.get("death_pending") or state.get("game_over"):
+        return []
+    return [_V(
+        "player.zero_vitality_outside_terminal", "error", turn,
+        "protagonista com Vitalidade 0 saiu do combate sem fluxo terminal",
+    )]
 
 
 def check_repeated_opening(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
@@ -1075,7 +1088,8 @@ CHECKS: List[Check] = [
     check_invalid_sentinels, check_rag_persistence, check_summary_lifecycle,
     check_memory_provenance,
     check_duplicate_consumed_summary,
-    check_recycled_npc, check_repeated_opening, check_meta_leak,
+    check_recycled_npc, check_zero_vitality_outside_terminal,
+    check_repeated_opening, check_meta_leak,
     check_phantom_ally,
 ]
 

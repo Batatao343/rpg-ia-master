@@ -901,7 +901,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                  class_name: Optional[str] = None,
                  turn_timeout_seconds: Optional[float] = None,
                  scenario: Optional[str] = None,
-                 start_level: int = 1) -> CampaignResult:
+                 start_level: int = 1,
+                 provider_min_interval_seconds: float = 0.0) -> CampaignResult:
     """Joga `turns` turnos com o perfil `profile` e devolve o CampaignResult.
 
     - `on_turn_end(state, turn)` roda após cada turno; exceção conta como erro.
@@ -952,6 +953,10 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
     turn_timeout_seconds = max(0.0, float(turn_timeout_seconds or 0.0))
 
     import llm_setup
+    from playtest.provider_profiles import ProviderPacer
+    provider_pacer = ProviderPacer(
+        provider_min_interval_seconds if use_real_llm else 0.0
+    )
     reset_circuits = getattr(llm_setup, "reset_llm_circuit_breakers", None)
     if reset_circuits is not None:
         reset_circuits()
@@ -969,6 +974,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
         if event.get("attempt_index") is None:
             event["attempt_index"] = len(llm_sink)
         llm_sink.append(event)
+        provider_pacer.observe(event)
 
     rag_setter = None
     try:

@@ -22,7 +22,7 @@ from enum import Enum
 from typing import TYPE_CHECKING, Callable, Literal, Optional
 
 from dotenv import load_dotenv
-from langchain_core.messages import AIMessage
+from langchain_core.messages import AIMessage, HumanMessage
 from pydantic import BaseModel
 
 if TYPE_CHECKING:
@@ -416,6 +416,28 @@ class RoutedLLM:
             return None
         return None
 
+    def _input_for_provider(self, input, provider: str):
+        """Evita que OpenAI-compat trate uma última AIMessage como resposta final.
+
+        O arquivista legitimamente envia histórico que pode terminar na fala do
+        assistente. Alguns modelos Groq então continuam a fala em texto, apesar
+        do ``tool_choice`` obrigatório, e o endpoint rejeita a resposta. Uma
+        instrução humana neutra mantém o histórico e torna explícito que falta
+        produzir a saída estruturada.
+        """
+        if (
+            provider in _OPENAI_COMPAT_PROVIDERS
+            and self._pydantic_structured_contract() is not None
+            and isinstance(input, (list, tuple))
+            and input
+            and isinstance(input[-1], AIMessage)
+        ):
+            return [*input, HumanMessage(content=(
+                "Produza agora somente a saída estruturada solicitada pela "
+                "ferramenta; a mensagem anterior é contexto, não uma resposta final."
+            ))]
+        return input
+
     def _validate_structured_result(self, result) -> tuple[bool, Optional[str], bool]:
         """Valida a pós-condição que providers nem sempre cumprem.
 
@@ -509,7 +531,7 @@ class RoutedLLM:
                 continue
             t0 = time.perf_counter()
             try:
-                result = client.invoke(input)
+                result = client.invoke(self._input_for_provider(input, provider))
                 latency_ms = int((time.perf_counter() - t0) * 1000)
             except Exception as e:
                 latency_ms = int((time.perf_counter() - t0) * 1000)

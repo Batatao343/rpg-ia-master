@@ -762,7 +762,8 @@ def combat_node(state: GameState):
     weather_logs = _apply_weather_hazard(player, world, rng=rng)
     _register_environmental_damage_terminal(player, weather_logs)
     resolved_decl: Optional[TurnDeclaration] = declaration
-    if flee_requested:
+    flee_allowed = _can_attempt_flee(player)
+    if flee_requested and flee_allowed:
         hero_fled, flee_logs, chase_state = _attempt_flee(
             scene, player, active, sides, rng,
             existing_chase=combat_meta.get("chase"))
@@ -778,6 +779,12 @@ def combat_node(state: GameState):
                 )
         combat_meta["chase"] = chase_state
         logs += weather_logs + flee_logs
+    elif flee_requested:
+        chase_state = dict(combat_meta.get("chase") or {})
+        combat_meta["chase"] = chase_state
+        logs += weather_logs + [
+            "Com Vitalidade zero ou inconsciente, o herói não consegue iniciar a fuga."
+        ]
     if not hero_fled:
         if flee_requested:
             # A tentativa falhou, mas consumiu a Ação do protagonista. Inimigos
@@ -1006,9 +1013,16 @@ def combat_node(state: GameState):
     return result
 
 
-# ==========================================================================
+# ===========================================================================
 # Fuga (chase, conflito-09) + reflexos auxiliares
-# ==========================================================================
+# ===========================================================================
+def _can_attempt_flee(player: Dict) -> bool:
+    """Fuga exige protagonista consciente e com Vitalidade para se mover."""
+    vitality = int(player.get("vitalidade", player.get("hp", 0)) or 0)
+    return vitality > 0 and bool(player.get("conscious", True)) \
+        and not bool(player.get("dead")) and not bool(player.get("estado_terminal"))
+
+
 def _attempt_flee(scene: dict, player: Dict, active: List[Dict], sides: dict, rng,
                   *, existing_chase: Optional[dict] = None) -> tuple:
     """Tenta escapar via motor de perseguição (09). Enredado (root) não foge.

@@ -561,8 +561,16 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
   Aceite real será absorvido pela matriz A abaixo.
 - [ ] **Matriz pareada multiperfil/multinível 10×200 A/B — em execução**
   ([spec](specs/matriz-longrun-multiperfil-niveis.md)): `start_level` canônico,
-  10 pares fixos em cinco classes e níveis 1–20. Smoke offline 10×3 verde;
-  pendem A real, specs/fixes dos achados e B pareada com stop em regressão nova.
+  10 pares fixos em cinco classes e níveis 1–20. A0 foi um diagnóstico parcial
+  de 678 turnos, pois 8/10 pares bateram o cap por capacidade de provider
+  ([relatório](docs/playtest-matriz-a0-2026-08-20.md)). Quatro specs `approved`
+  corrigem [capacidade/preflight](specs/matriz-a-capacidade-provider.md),
+  [Mimetismo Morto](specs/combate-mimetismo-morto-loop.md),
+  [fuga a Vitalidade zero](specs/fuga-vitalidade-zero.md) e
+  [observabilidade](specs/observabilidade-npc-mortes-longrun.md). Preflight real
+  dos três tiers, suíte de 1591 testes e smoke offline 10×3 estão verdes;
+  pendem A1 real completa, specs/fixes dos achados e B pareada com stop em
+  regressão nova.
 - [x] **5.2 — Invariantes de estado** ([spec](specs/fase-5.2-invariantes.md)):
   `playtest/invariants.py` — `check_all(state, prev_state)` puro plugado no
   runner. HP válido, ouro ≥ 0, item único sem dupe, NPC morto não fala, fação

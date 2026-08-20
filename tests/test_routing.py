@@ -472,6 +472,33 @@ def test_openai_compat_injeta_function_calling(monkeypatch):
     assert sink["kwargs"].get("method") == "function_calling"
 
 
+def test_openai_compat_structured_adiciona_instrucao_apos_ai_message(monkeypatch):
+    seen = {}
+
+    class RecordingClient(_FakeClient):
+        def invoke(self, input):
+            seen["input"] = input
+            return super().invoke(input)
+
+    monkeypatch.setattr(
+        llm_setup, "_build_client",
+        lambda p, m, t: RecordingClient(p),
+    )
+    original = [
+        HumanMessage(content="pedido"),
+        AIMessage(content="contexto narrativo"),
+    ]
+
+    result = RoutedLLM(
+        ModelTier.SMART, 0.1, [("groq", "m")],
+    ).with_structured_output(_Tiny).invoke(original)
+
+    assert isinstance(result, _Tiny)
+    assert original[-1].content == "contexto narrativo"
+    assert isinstance(seen["input"][-1], HumanMessage)
+    assert "saída estruturada" in seen["input"][-1].content
+
+
 def test_gemini_nao_recebe_function_calling(monkeypatch):
     """Gemini/Anthropic NÃO são forçados (têm structured output nativo próprio)."""
     sink = {}

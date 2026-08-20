@@ -16,6 +16,20 @@
 > completa **1578 passed, 16 skipped, 14 deselected** verdes. Próximo passo:
 > matriz A real 10×200; depois specs/fixes e matriz B exatamente pareada. Pela
 > condição do usuário, qualquer regressão nova em B interrompe o ciclo.
+>
+> **A0 virou diagnóstico de capacidade:** run `20260820-134236-013629` completou
+> somente 2/10 campanhas (678 turnos); oito bateram o teto porque providers sem
+> saldo/quota empurraram o fallback, e o cap fechou apenas após o turno corrente.
+> O run revelou quatro correções agora implementadas: preflight real + preset
+> Groq-only com pacing; structured output OpenAI-compat seguro após `AIMessage`;
+> Mimetismo Morto não se repete quando o inimigo já está oculto; fuga a
+> Vitalidade 0 não evita o fluxo terminal; e relatório/NPC reciclado ganharam
+> precisão. Detalhe: [diagnóstico A0](docs/playtest-matriz-a0-2026-08-20.md).
+>
+> Preflight real passou nos tiers CLASSIFY/FAST/SMART; smoke offline pós-fix
+> `20260820-155100-829869` fez **30/30**, sem erro/violação. Suíte completa:
+> **1591 passed, 16 skipped, 14 deselected**. A0 não é baseline; falta executar
+> A1 completa e, depois dos achados/fixes, a B pareada.
 
 > **✅ SESSÃO 54 (2026-08-20): comerciante 1×200 real concluído.** O preflight
 > encontrou a rota FAST do Groq apontando para `llama-3.3-70b-versatile`, modelo

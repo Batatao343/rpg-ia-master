@@ -308,10 +308,18 @@ def render_markdown(report: RunReport) -> str:
         L.append("| perfil | seed | turno | local | causa |")
         L.append("|---|---|---|---|---|")
         for s in deaths:
-            L.append(
-                f"| {s.get('profile','?')} | {s.get('seed',0)} "
-                f"| {s.get('first_death_turn') if s.get('first_death_turn') is not None else '—'} "
-                f"| {s.get('death_location') or '—'} | {s.get('death_cause') or '—'} |")
+            history = list(s.get("deaths_log") or [])
+            if not history:
+                history = [{
+                    "turn": s.get("first_death_turn"),
+                    "location": s.get("death_location"),
+                    "cause": s.get("death_cause"),
+                }]
+            for death in history:
+                L.append(
+                    f"| {s.get('profile','?')} | {s.get('seed',0)} "
+                    f"| {death.get('turn') if death.get('turn') is not None else '—'} "
+                    f"| {death.get('location') or '—'} | {death.get('cause') or '—'} |")
         L.append("")
 
     L.append("## Violações")

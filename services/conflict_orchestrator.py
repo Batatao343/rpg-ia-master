@@ -470,17 +470,26 @@ def enemy_declaration(scene: dict, actor_id: str, actors_by_id: Dict[str, dict],
         action_key = "attack"
 
     # Carta de inimigo (conflito-15: `cartas`) quando houver Entropia; senão ataque básico.
-    card_id = _enemy_offensive_card(actor)
+    card_id = _enemy_offensive_card(actor, scene=scene, actor_id=actor_id)
     step = ct.TurnStep(kind="card" if card_id else "attack",
                        card_id=card_id, target_id=target)
     return ct.TurnDeclaration(actor_id=actor_id, acao=step)
 
 
-def _enemy_offensive_card(actor: dict) -> Optional[str]:
+def _enemy_offensive_card(
+    actor: dict, *, scene: Optional[dict] = None, actor_id: str = "",
+) -> Optional[str]:
     """Primeira Carta de inimigo ofensiva utilizável (assinatura oculta da 15) —
     só id embutido na ficha; inimigo NÃO usa o Acervo do jogador."""
     from services import cards
     for card_id in cards.enemy_card_ids(actor):
+        card = cards.get_card(card_id) or {}
+        effect_kind = str((card.get("efeito") or {}).get("kind") or "")
+        position = ((scene or {}).get("positions") or {}).get(actor_id) or {}
+        # Esconder-se de novo enquanto já oculto não cria mudança mecânica e
+        # pode bloquear o conflito para sempre (Mimetismo Morto da matriz A).
+        if effect_kind == "esconder" and position.get("ocultacao") == "escondido":
+            continue
         if cards.can_use_enemy_card(actor, card_id, expected_type="ativa"):
             return card_id
     return None

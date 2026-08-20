@@ -221,7 +221,7 @@ def _cmd_merchant_suite(args) -> int:
     return exit_code
 
 
-def _cmd_matrix_suite(args) -> int:
+def _run_matrix_suite(args) -> int:
     """Roda a matriz fixa A/B sequencialmente e preserva o pareamento."""
     from playtest import telemetry
     from playtest.matrix import LONGRUN_MATRIX, case_label
@@ -240,6 +240,8 @@ def _cmd_matrix_suite(args) -> int:
         real=args.real, class_name=None, invariants_enabled=True,
         seeds_by_profile={case_label(case): case["seed"] for case in LONGRUN_MATRIX},
         campaign_matrix=rows,
+        routes_profile=args.routes_profile,
+        provider_min_interval_seconds=args.groq_min_interval,
     )
     print(
         f"== matriz {args.label} {run_id} == campanhas=10 turnos={args.turns} "
@@ -262,6 +264,7 @@ def _cmd_matrix_suite(args) -> int:
                 use_real_llm=args.real, max_requests=args.max_requests,
                 max_cost=args.max_cost, turn_timeout_seconds=args.turn_timeout,
                 on_turn_end=lambda _state, _turn: telemetry.touch_run(run_id),
+                provider_min_interval_seconds=args.groq_min_interval,
             )
             result.profile = label
             summary = telemetry.persist_campaign(
@@ -286,6 +289,38 @@ def _cmd_matrix_suite(args) -> int:
         )
     print(f"\nMatriz {args.label}: {telemetry.run_dir(run_id)}")
     return exit_code
+
+
+def _cmd_matrix_suite(args) -> int:
+    from playtest.provider_profiles import (
+        ProviderPreflightError,
+        activated_routes_profile,
+        preflight_real_routes,
+    )
+
+    if args.real and not args.routes_profile:
+        print(
+            "erro: matrix-suite --real exige --routes-profile explícito",
+            file=sys.stderr,
+        )
+        return 2
+    with activated_routes_profile(args.routes_profile):
+        if args.real:
+            try:
+                proof = preflight_real_routes(
+                    min_groq_interval_seconds=args.groq_min_interval,
+                )
+            except ProviderPreflightError as exc:
+                print(f"erro: preflight LLM falhou: {exc}", file=sys.stderr)
+                return 2
+            providers = sorted({
+                event.get("provider") for event in proof.get("events", [])
+                if event.get("status") == "success"
+            })
+            print(
+                f"preflight real verde: tiers={proof['tiers']} providers={providers}"
+            )
+        return _run_matrix_suite(args)
 
 
 def main(argv=None) -> int:
@@ -348,6 +383,11 @@ def main(argv=None) -> int:
     px.add_argument("--max-requests", type=int, default=0)
     px.add_argument("--max-cost", type=float, default=0.0)
     px.add_argument("--turn-timeout", type=float, default=None)
+    px.add_argument("--routes-profile", choices=("groq-free",), default=None)
+    px.add_argument(
+        "--groq-min-interval", type=float, default=12.0,
+        help="intervalo mínimo entre tentativas Groq 120b no playtest real",
+    )
     px.set_defaults(func=_cmd_matrix_suite)
 
     args = parser.parse_args(argv)

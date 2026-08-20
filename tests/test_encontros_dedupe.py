@@ -79,6 +79,7 @@ def test_recycled_npc_dispara_no_vazamento_real():
                           "home_location_id": "caverna_morrakh"}}
     state = _state(npcs, loc="anel_dourado")
     state["messages"] = [AIMessage(content="Andarilho ergue a espada ao seu lado.")]
+    state["active_npc_name"] = "Andarilho"
     viol = inv.check_recycled_npc(state, None, 9)
     assert viol and viol[0].check_id == "narrative.recycled_npc"
 

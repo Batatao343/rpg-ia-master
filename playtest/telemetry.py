@@ -107,6 +107,8 @@ def begin_run(
     seeds_by_profile: Optional[Dict[str, int]] = None,
     start_level: int = 1,
     campaign_matrix: Optional[List[dict]] = None,
+    routes_profile: Optional[str] = None,
+    provider_min_interval_seconds: float = 0.0,
 ) -> dict:
     """Cria o manifesto antes da primeira campanha.
 
@@ -138,6 +140,8 @@ def begin_run(
             "scenario": scenario,
             "start_level": int(start_level),
             "campaign_matrix": list(campaign_matrix or []),
+            "routes_profile": routes_profile,
+            "provider_min_interval_seconds": float(provider_min_interval_seconds or 0.0),
         },
         "campaigns": {},
     }

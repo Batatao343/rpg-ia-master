@@ -54,6 +54,7 @@ def test_vitalidade_zero_vivo_nao_acusa():
     # Vitalidade 0 (hp espelhado 0) sem `dead` = muito ferido, ainda lutando: OK.
     st = _base()
     st["player"]["hp"] = 0
+    st["combat"] = {"active": True}
     st["game_over"] = False
     ids = _ids(inv.check_all(st))
     assert "vitals.dead_no_game_over" not in ids

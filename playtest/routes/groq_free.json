@@ -1,0 +1,11 @@
+{
+  "classify": [["groq", "openai/gpt-oss-20b"]],
+  "fast": [
+    ["groq", "openai/gpt-oss-120b"],
+    ["groq", "openai/gpt-oss-20b"]
+  ],
+  "smart": [
+    ["groq", "openai/gpt-oss-120b"],
+    ["groq", "openai/gpt-oss-20b"]
+  ]
+}
