@@ -30,6 +30,24 @@
 > `20260820-155100-829869` fez **30/30**, sem erro/violação. Suíte completa:
 > **1591 passed, 16 skipped, 14 deselected**. A0 não é baseline; falta executar
 > A1 completa e, depois dos achados/fixes, a B pareada.
+>
+> **A1 foi interrompida por perda de capacidade LLM:** run
+> `20260820-155300-494278` persistiu 1/10 pares. O normal chegou a 200 turnos,
+> mas teve somente 89 sucessos em 796 tentativas; 707 falharam por cota diária/
+> rate/tool call e 146 turnos ficaram sem sucesso de rede. Guards do produto
+> mantiveram a campanha viva, portanto o resultado NÃO é baseline LLM-only.
+> O processo foi abortado antes dos outros nove pares. Relatório:
+> [A1 capacidade](docs/playtest-matriz-a1-capacidade-2026-08-20.md).
+>
+> A spec `playtest-real-llm-fail-closed` agora agrupa tentativas por invoke e
+> aborta a matriz no primeiro grupo sem `success`, sem iniciar o par seguinte;
+> produto/offline mantêm resiliência. A1 confirmou as correções Python: combates
+> em 6/4 rodadas, dois casos de Vitalidade 0 resolvidos por restore, duas mortes
+> completas no relatório e zero warning de NPC reciclado. Gate: **1594 passed,
+> 16 skipped, 14 deselected**; smoke offline pós-fix 10×3 = 30/30
+> (`20260820-171103-075466`). Para retomar A1/B falta capacidade externa:
+> recarregar um provider barato ou instalar/configurar LLM local; Ollama/LM
+> Studio não estão instalados.
 
 > **✅ SESSÃO 54 (2026-08-20): comerciante 1×200 real concluído.** O preflight
 > encontrou a rota FAST do Groq apontando para `llama-3.3-70b-versatile`, modelo

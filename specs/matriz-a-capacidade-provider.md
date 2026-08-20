@@ -35,3 +35,8 @@ US$ 0,25 no turno final.
 - [x] Pacer não atua no mock nem em outro modelo e espaça 120b no real.
 - [x] Matrix curta offline e suíte completa verdes.
 - [ ] A1 real completa 10×200 sem invocação terminal.
+
+> **Evidência negativa A1:** `20260820-155300-494278` foi interrompida após o
+> primeiro par revelar 707 falhas/796 tentativas e 146 turnos sem sucesso de
+> rede. A proteção fail-closed agora impede repetição; capacidade externa segue
+> necessária para cumprir o último aceite.

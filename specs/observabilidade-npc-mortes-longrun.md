@@ -1,6 +1,6 @@
 # SPEC — Precisão de NPC reciclado e histórico completo de mortes
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Criada/Atualizada:** 2026-08-20
 > **Origem:** matriz A, pares 1–2
 

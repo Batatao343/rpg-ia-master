@@ -16,7 +16,11 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from playtest import pricing
-from playtest.runner import CampaignResult, TurnRecord
+from playtest.runner import (
+    CampaignResult,
+    TurnRecord,
+    terminal_llm_invocation_count,
+)
 
 PLAYTEST_RUNS_DIR = os.getenv("RPG_PLAYTEST_RUNS_DIR", "playtest_runs")
 RUN_META_FILENAME = "run.meta.json"
@@ -109,6 +113,7 @@ def begin_run(
     campaign_matrix: Optional[List[dict]] = None,
     routes_profile: Optional[str] = None,
     provider_min_interval_seconds: float = 0.0,
+    require_all_llm_invocations_successful: bool = False,
 ) -> dict:
     """Cria o manifesto antes da primeira campanha.
 
@@ -142,6 +147,9 @@ def begin_run(
             "campaign_matrix": list(campaign_matrix or []),
             "routes_profile": routes_profile,
             "provider_min_interval_seconds": float(provider_min_interval_seconds or 0.0),
+            "require_all_llm_invocations_successful": bool(
+                require_all_llm_invocations_successful
+            ),
         },
         "campaigns": {},
     }
@@ -393,6 +401,14 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
                             f"{profile}: startup real sem sucesso de rede LLM"
                         )
                         reasons.append("startup sem sucesso de rede LLM")
+                if (
+                    bool(expected.get("require_all_llm_invocations_successful"))
+                    and int(summary.get("terminal_llm_invocations", 0) or 0)
+                ):
+                    configuration_errors.append(
+                        f"{profile}: invocação LLM terminal em run LLM-only"
+                    )
+                    reasons.append("run LLM-only contém invocação terminal")
 
                 expected_jsonl_rows = completed if campaign_aborted else expected_turns
                 if len(rows) != expected_jsonl_rows:
@@ -1029,6 +1045,7 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         r for r in turn_records
         if r.get("combat_executed") or r.get("route") == "combat_agent"
     ])
+    terminal_llm_invocations = terminal_llm_invocation_count(all_llm_events)
     quest_requests = len([r for r in turn_records if r.get("quest_requested")])
     from playtest.metrics import quest_request_conversion_count
     quest_request_conversions = quest_request_conversion_count(
@@ -1357,6 +1374,7 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         "llm_skipped": llm_skipped,
         "llm_network_requests": len(network_llm_events),
         "llm_network_successes": llm_network_successes,
+        "terminal_llm_invocations": terminal_llm_invocations,
         "startup_llm_attempts": len(startup_llm_events),
         "startup_llm_skipped": len([
             event for event in startup_llm_events

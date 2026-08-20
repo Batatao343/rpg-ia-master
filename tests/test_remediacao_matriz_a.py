@@ -9,6 +9,7 @@ from playtest.provider_profiles import (
     ProviderPacer, ProviderPreflightError, get_routes_profile,
     preflight_real_routes,
 )
+from playtest.runner import CampaignResult, terminal_llm_invocation_count
 from playtest.report import RunReport, render_markdown
 from services import conflict_orchestrator as orchestrator
 from services import conflict_scene
@@ -186,3 +187,77 @@ def test_preflight_falha_sem_structured_output_real(monkeypatch):
         assert "classify" in str(exc)
     else:
         raise AssertionError("preflight deveria falhar")
+
+
+def test_fallback_com_sucesso_nao_e_invocacao_terminal():
+    events = [
+        {"attempt_index": 0, "status": "invoke_error"},
+        {"attempt_index": 1, "status": "success"},
+        {"attempt_index": 0, "status": "success"},
+    ]
+
+    assert terminal_llm_invocation_count(events) == 0
+
+
+def test_grupo_sem_sucesso_e_invocacao_terminal():
+    events = [
+        {"attempt_index": 0, "status": "circuit_open"},
+        {"attempt_index": 1, "status": "build_error"},
+        {"attempt_index": 0, "status": "invoke_error"},
+        {"attempt_index": 1, "status": "invalid_structured"},
+    ]
+
+    assert terminal_llm_invocation_count(events) == 2
+
+
+def test_matrix_real_para_apos_primeira_falha_llm_terminal(monkeypatch):
+    import importlib
+    from types import SimpleNamespace
+
+    cli = importlib.import_module("playtest.__main__")
+    from playtest import telemetry
+
+    calls = []
+    begin = {}
+    monkeypatch.setattr(telemetry, "new_run_id", lambda: "run-strict")
+    monkeypatch.setattr(
+        telemetry, "begin_run", lambda *args, **kwargs: begin.update(kwargs),
+    )
+    monkeypatch.setattr(telemetry, "touch_run", lambda *_args, **_kwargs: True)
+    monkeypatch.setattr(telemetry, "run_dir", lambda run_id: run_id)
+    monkeypatch.setattr(telemetry, "finish_run", lambda *_args, **_kwargs: {})
+    monkeypatch.setattr(
+        telemetry,
+        "persist_campaign",
+        lambda *_args, **_kwargs: {
+            "error_violations": 0,
+            "observability_errors": 0,
+        },
+    )
+
+    def fake_run(profile, **kwargs):
+        calls.append((profile, kwargs))
+        return CampaignResult(
+            profile=profile,
+            seed=kwargs["seed"],
+            turns_completed=1,
+            errors=[{"turn": 1, "exc": "llm_terminal_failure"}],
+            history=[],
+            final_state={},
+            save_path="",
+            mock=False,
+            aborted_reason="llm_terminal_failure (turno 1)",
+            turns_requested=kwargs["turns"],
+        )
+
+    monkeypatch.setattr(cli, "run_campaign", fake_run)
+    args = SimpleNamespace(
+        label="A", turns=200, real=True, max_cost=0.25,
+        max_requests=800, routes_profile="groq-free",
+        groq_min_interval=12.0, turn_timeout=120.0,
+    )
+
+    assert cli._run_matrix_suite(args) == 1
+    assert len(calls) == 1
+    assert calls[0][1]["require_all_llm_invocations_successful"] is True
+    assert begin["require_all_llm_invocations_successful"] is True

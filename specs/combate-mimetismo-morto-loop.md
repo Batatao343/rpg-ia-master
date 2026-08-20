@@ -1,6 +1,6 @@
 # SPEC — Encerrar loop de Mimetismo Morto
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Criada/Atualizada:** 2026-08-20
 > **Origem:** matriz A, par 4, turno 27
 
@@ -21,5 +21,6 @@ mudança. O combate chegou à rodada 30 e disparou `combat.no_progress`.
 ## 3. Aceite
 
 - [x] Unidade prova que oculto não seleciona esconder novamente.
-- [ ] Combate com Cervo progride e não acumula 28 usos.
+- [x] Smoke dirigido `20260820-171220-525250` encontrou três Cervos Afogados em
+  dois conflitos; 30/30 turnos, ambos terminaram, zero `no_progress`.
 - [x] Suíte completa verde.

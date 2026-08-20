@@ -1,6 +1,6 @@
 # SPEC — Bloquear fuga e exploração com Vitalidade zero
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Criada/Atualizada:** 2026-08-20
 > **Origem:** matriz A, explorador (17 mortes)
 
@@ -21,6 +21,7 @@ formalizar a morte. Houve ciclos repetidos nas Saídas Baixas.
 
 ## 3. Aceite
 
-- [ ] Regressão reproduz fuga a 0 e obtém `death_pending`, não viagem.
+- [x] A1 levou Vitalidade a 0 duas vezes em combate; ambas seguiram para
+  morte/restore, nunca viagem viva a 0.
 - [x] Estado vivo fora de combate a 0 gera invariante `error`.
 - [x] Suíte completa verde.

@@ -242,6 +242,7 @@ def _run_matrix_suite(args) -> int:
         campaign_matrix=rows,
         routes_profile=args.routes_profile,
         provider_min_interval_seconds=args.groq_min_interval,
+        require_all_llm_invocations_successful=bool(args.real),
     )
     print(
         f"== matriz {args.label} {run_id} == campanhas=10 turnos={args.turns} "
@@ -265,6 +266,7 @@ def _run_matrix_suite(args) -> int:
                 max_cost=args.max_cost, turn_timeout_seconds=args.turn_timeout,
                 on_turn_end=lambda _state, _turn: telemetry.touch_run(run_id),
                 provider_min_interval_seconds=args.groq_min_interval,
+                require_all_llm_invocations_successful=bool(args.real),
             )
             result.profile = label
             summary = telemetry.persist_campaign(
@@ -278,6 +280,15 @@ def _run_matrix_suite(args) -> int:
                 or int(summary.get("observability_errors", 0) or 0)
             ):
                 exit_code = 1
+            if str(result.aborted_reason or "").startswith(
+                "llm_terminal_failure"
+            ):
+                print(
+                    "  matriz interrompida: capacidade LLM-only perdida; "
+                    "os pares seguintes não serão iniciados",
+                    file=sys.stderr,
+                )
+                break
     except KeyboardInterrupt:
         interrupted = True
         exit_code = 130

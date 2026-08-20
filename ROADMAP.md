@@ -571,6 +571,15 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
   dos três tiers, suíte de 1591 testes e smoke offline 10×3 estão verdes;
   pendem A1 real completa, specs/fixes dos achados e B pareada com stop em
   regressão nova.
+
+  **A1 interrompida por capacidade:** `20260820-155300-494278` concluiu apenas o
+  par normal e revelou 707 falhas em 796 tentativas, com 146 turnos sem sucesso
+  LLM. O resultado foi invalidado e os nove pares seguintes não rodaram
+  ([diagnóstico](docs/playtest-matriz-a1-capacidade-2026-08-20.md)). A spec
+  [LLM-only fail-closed](specs/playtest-real-llm-fail-closed.md) agora aborta no
+  primeiro invoke terminal. Três correções A0 ficaram `done` (Mimetismo, fuga a
+  Vitalidade 0, observabilidade); o gate tem 1594 testes e smoke 30/30. Retomada
+  depende de capacidade LLM externa ou modelo local configurado.
 - [x] **5.2 — Invariantes de estado** ([spec](specs/fase-5.2-invariantes.md)):
   `playtest/invariants.py` — `check_all(state, prev_state)` puro plugado no
   runner. HP válido, ouro ≥ 0, item único sem dupe, NPC morto não fala, fação

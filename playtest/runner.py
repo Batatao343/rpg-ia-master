@@ -745,6 +745,34 @@ def _network_events(events: List[dict]) -> List[dict]:
     return [event for event in events if event.get("network_attempted", True)]
 
 
+def terminal_llm_invocation_count(events: List[dict]) -> int:
+    """Conta invokes roteados que esgotaram candidatos sem nenhum sucesso.
+
+    ``attempt_index == 0`` abre uma nova invocação; índices seguintes são
+    fallbacks da mesma chamada. Circuit/build skips também pertencem ao grupo e
+    um sucesso posterior torna a invocação válida.
+    """
+    groups: List[List[dict]] = []
+    current: List[dict] = []
+    for raw in events or []:
+        if not isinstance(raw, dict):
+            continue
+        try:
+            attempt_index = int(raw.get("attempt_index", 0) or 0)
+        except (TypeError, ValueError):
+            attempt_index = 0
+        if attempt_index == 0 and current:
+            groups.append(current)
+            current = []
+        current.append(raw)
+    if current:
+        groups.append(current)
+    return sum(
+        1 for group in groups
+        if not any(event.get("status", "success") == "success" for event in group)
+    )
+
+
 def _count_new_rejections(before: List[dict], after: List[dict]) -> int:
     """Conta conteúdo novo mesmo quando o buffer circular continua em 100 itens."""
     def identity(item: object) -> str:
@@ -902,7 +930,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                  turn_timeout_seconds: Optional[float] = None,
                  scenario: Optional[str] = None,
                  start_level: int = 1,
-                 provider_min_interval_seconds: float = 0.0) -> CampaignResult:
+                 provider_min_interval_seconds: float = 0.0,
+                 require_all_llm_invocations_successful: bool = False) -> CampaignResult:
     """Joga `turns` turnos com o perfil `profile` e devolve o CampaignResult.
 
     - `on_turn_end(state, turn)` roda após cada turno; exceção conta como erro.
@@ -1034,6 +1063,12 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 max_cost=max_cost,
                 phase="startup",
             )
+            startup_terminal = terminal_llm_invocation_count(startup_llm_events)
+            if require_all_llm_invocations_successful and startup_terminal:
+                startup_abort = (
+                    "llm_terminal_failure "
+                    f"({startup_terminal} invocação sem sucesso, startup)"
+                )
             if startup_abort:
                 aborted_reason = startup_abort
 
@@ -1145,6 +1180,26 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                         rec.rag_events
                     )
                     _bump_llm_events_budget(llm_calls, rec.llm_events)
+                    terminal_invocations = terminal_llm_invocation_count(
+                        rec.llm_events
+                    )
+                    if (
+                        require_all_llm_invocations_successful
+                        and terminal_invocations
+                    ):
+                        message = (
+                            "llm_terminal_failure "
+                            f"({terminal_invocations} invocação sem sucesso, "
+                            f"turno {turn})"
+                        )
+                        rec.error = message
+                        errors.append({
+                            "turn": turn,
+                            "action": action,
+                            "exc": message,
+                            "phase": "llm_only",
+                        })
+                        aborted_reason = message
 
                     try:
                         progress_after = (
@@ -1235,6 +1290,10 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 # Uma operação vencida pode continuar apenas no worker daemon.
                 # Não inicia outro turno nem toca checkpoints com estado parcial.
                 if aborted_reason and aborted_reason.startswith("timeout:"):
+                    break
+                if aborted_reason and aborted_reason.startswith(
+                    "llm_terminal_failure"
+                ):
                     break
 
                 # spec checkpoints-morte (D1/D6): grava snapshot na cadência; a
