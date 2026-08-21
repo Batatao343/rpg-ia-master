@@ -1,6 +1,6 @@
 # SPEC — Execução única da matriz de longrun
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada/Atualizada:** 2026-08-20
 > **Origem:** processo órfão da matriz Groq observado durante a matriz A1
 > **Depende de:** `matriz-longrun-multiperfil-niveis`

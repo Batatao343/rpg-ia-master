@@ -4,7 +4,7 @@ import pytest
 
 from gamedata import prepared_slots_for_level
 from playtest.runner import _build_initial_state
-from playtest.matrix import LONGRUN_MATRIX, case_label
+from playtest.matrix import LONGRUN_MATRIX, case_label, select_matrix_cases
 from services.cards import get_card
 
 
@@ -42,3 +42,14 @@ def test_matriz_tem_dez_casos_pareaveis_e_cobre_niveis_extremos():
     assert [case["seed"] for case in LONGRUN_MATRIX] == list(range(6200, 6210))
     assert {case["start_level"] for case in LONGRUN_MATRIX} >= {1, 9, 20}
     assert len({case["class_name"] for case in LONGRUN_MATRIX}) == 5
+
+
+def test_continuacao_da_matriz_preserva_cauda_canonica():
+    selected = select_matrix_cases(5)
+
+    assert [case["index"] for case in selected] == list(range(5, 11))
+    assert selected[0] == {
+        "index": 5, "profile": "comerciante", "class_name": "Corruptor",
+        "start_level": 9, "seed": 6204,
+    }
+    assert select_matrix_cases() == LONGRUN_MATRIX

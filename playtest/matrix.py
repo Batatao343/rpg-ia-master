@@ -29,3 +29,10 @@ LONGRUN_MATRIX: tuple[MatrixCase, ...] = (
 def case_label(case: MatrixCase) -> str:
     return f"{case['index']:02d}-{case['profile']}-lvl{case['start_level']}"
 
+
+def select_matrix_cases(start_index: int = 1) -> tuple[MatrixCase, ...]:
+    """Seleciona uma cauda canônica sem renumerar pares, seeds ou perfis."""
+    index = int(start_index)
+    if index < 1 or index > len(LONGRUN_MATRIX):
+        raise ValueError(f"start_index deve estar entre 1 e {len(LONGRUN_MATRIX)}")
+    return tuple(case for case in LONGRUN_MATRIX if case["index"] >= index)

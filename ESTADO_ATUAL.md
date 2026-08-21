@@ -1,5 +1,21 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **▶ SESSÃO 56 (2026-08-21): continuação da matriz A.** O run
+> `20260820-200416-642340` completou os pares 1–4 (800 turnos) e parou no turno
+> 81 do par 5 por um `Connection error` isolado do DeepSeek; o fail-closed impediu
+> os pares seguintes. A evidência já contém um achado real: 7 ocorrências de
+> `player.zero_vitality_outside_terminal` no perfil combate. O explorador
+> pós-fix completou 200/200, com três mortes em locais distintos e nenhuma
+> reincidência em Vorr; timeout isolado e single-flight também foram validados,
+> fechando suas três specs como `done`.
+>
+> A spec `playtest-matrix-continuacao` adiciona `--start-index 5`: cria outro
+> manifesto só para os pares 5–10, sem tocar nos quatro summaries válidos, e
+> reinicia o comerciante desde o turno 1 com Corruptor/nível 9/seed 6204. Não há
+> mudança de gameplay antes de completar a coleta A. Gate: **1610 passed, 16
+> skipped, 14 deselected**. Depois da continuação, os dois run IDs serão
+> agregados por índice/seed para análise, specs e correções antes da B integral.
+
 > **▶ RETOMADA DA SESSÃO 55 (2026-08-20): DeepSeek recarregado.** A tentativa
 > `20260820-185627-750638` validou o par normal em **200/200**, com 542 sucessos
 > reais, custo US$ 0,15344, zero erro/invariante `error`/erro de observabilidade;

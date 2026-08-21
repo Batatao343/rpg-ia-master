@@ -1,5 +1,16 @@
 # ROADMAP — RPG IA (Revisado 2026-08-20)
 
+> **Continuação A (2026-08-21):** `20260820-200416-642340` produziu quatro pares
+> completos e 81 turnos do quinto antes de um `Connection error` DeepSeek. A
+> coleta válida soma 800 turnos; o par combate revelou 7 violações de Vitalidade
+> 0 fora do fluxo terminal. A spec
+> [continuação segura](specs/playtest-matrix-continuacao.md) adiciona
+> `--start-index 5` para executar somente os seis pares restantes, mantendo
+> seeds/classes/níveis. As specs de timeout DeepSeek, memória fatal do explorador
+> e single-flight foram validadas no real e estão `done`. Gate: 1610 testes.
+> Gameplay permanece congelado até concluir e analisar toda a A; B ainda não
+> começou.
+
 > **Matriz A1 retomada:** saldo DeepSeek renovado; preset `deepseek-paid`
 > exclusivo passou preflight real nos três tiers. A1/B usarão esse mesmo perfil
 > com fail-closed, teto de US$ 0,25/800 requests por campanha e seeds pareadas.

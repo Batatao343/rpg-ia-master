@@ -224,7 +224,7 @@ def _cmd_merchant_suite(args) -> int:
 def _run_matrix_suite(args) -> int:
     """Roda a matriz fixa A/B sequencialmente e preserva o pareamento."""
     from playtest import telemetry
-    from playtest.matrix import LONGRUN_MATRIX, case_label
+    from playtest.matrix import case_label, select_matrix_cases
 
     if args.real and (args.max_cost <= 0 or args.max_requests <= 0):
         print(
@@ -232,28 +232,29 @@ def _run_matrix_suite(args) -> int:
             file=sys.stderr,
         )
         return 2
-    labels = [case_label(case) for case in LONGRUN_MATRIX]
-    rows = [{**case, "label": case_label(case)} for case in LONGRUN_MATRIX]
+    cases = select_matrix_cases(getattr(args, "start_index", 1))
+    labels = [case_label(case) for case in cases]
+    rows = [{**case, "label": case_label(case)} for case in cases]
     run_id = telemetry.new_run_id()
     telemetry.begin_run(
-        run_id, profiles=labels, turns=args.turns, seed=LONGRUN_MATRIX[0]["seed"],
+        run_id, profiles=labels, turns=args.turns, seed=cases[0]["seed"],
         real=args.real, class_name=None, invariants_enabled=True,
-        seeds_by_profile={case_label(case): case["seed"] for case in LONGRUN_MATRIX},
+        seeds_by_profile={case_label(case): case["seed"] for case in cases},
         campaign_matrix=rows,
         routes_profile=args.routes_profile,
         provider_min_interval_seconds=args.groq_min_interval,
         require_all_llm_invocations_successful=bool(args.real),
     )
     print(
-        f"== matriz {args.label} {run_id} == campanhas=10 turnos={args.turns} "
+        f"== matriz {args.label} {run_id} == campanhas={len(cases)} turnos={args.turns} "
         f"real={args.real} teto_por_campanha=${args.max_cost:.2f}/"
-        f"{args.max_requests} requests · teto_agregado=${args.max_cost * 10:.2f}/"
-        f"{args.max_requests * 10} requests"
+        f"{args.max_requests} requests · teto_agregado=${args.max_cost * len(cases):.2f}/"
+        f"{args.max_requests * len(cases)} requests"
     )
     exit_code = 0
     interrupted = False
     try:
-        for case in LONGRUN_MATRIX:
+        for case in cases:
             label = case_label(case)
             print(
                 f"\n[{case['index']:02d}/10] {case['profile']} · "
@@ -403,6 +404,10 @@ def main(argv=None) -> int:
     px.add_argument("--max-requests", type=int, default=0)
     px.add_argument("--max-cost", type=float, default=0.0)
     px.add_argument("--turn-timeout", type=float, default=None)
+    px.add_argument(
+        "--start-index", type=int, choices=range(1, 11), default=1,
+        help="continua a matriz a partir do índice canônico informado (1..10)",
+    )
     px.add_argument(
         "--routes-profile",
         choices=("deepseek-paid", "groq-free"),

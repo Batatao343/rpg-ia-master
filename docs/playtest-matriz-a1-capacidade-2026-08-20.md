@@ -156,3 +156,24 @@ sem saldo/crédito válido na descoberta A0; Claude Sonnet disponível é caro
 demais para o teto atual. Naquele momento era necessário um provider com
 capacidade para milhares de invocações. O saldo DeepSeek foi posteriormente
 recarregado; a dependência está resolvida para a retomada descrita acima.
+
+## Resultado da retomada integral e continuação
+
+O run `20260820-200416-642340` completou os pares 1–4 em 200/200 e chegou ao
+turno 81 do comerciante. O DeepSeek então devolveu um `Connection error` em uma
+invocação FAST; o fail-closed encerrou corretamente o run sem iniciar os pares
+6–10. Os 800 turnos completos permanecem evidência A válida. O par combate
+registrou sete violações `player.zero_vitality_outside_terminal`, achado de
+gameplay reservado à etapa de specs após completar a coleta.
+
+O explorador validou a remediação em 200/200: três mortes, todas em locais
+distintos (`pm_profundezas`, `ma_boca`, `pradaria_ruinas`), sem retorno fatal à
+Fortaleza de Vorr. Não houve timeout no antigo limiar de 12 s nas quatro
+campanhas completas mais 81 turnos; a falha final foi conexão, não latência. O
+single-flight também rejeitou uma segunda matriz antes do preflight.
+
+A spec [`playtest-matrix-continuacao`](../specs/playtest-matrix-continuacao.md)
+introduz `--start-index` sem alterar a matriz canônica. A continuação começa no
+par 5 e cria manifesto separado para os seis pares restantes. Os dois runs serão
+agregados por índice/seed na análise A. Gate pré-retomada: **1610 passed, 16
+skipped, 14 deselected**.

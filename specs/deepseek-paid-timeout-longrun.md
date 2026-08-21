@@ -1,6 +1,6 @@
 # SPEC — Janela de timeout do DeepSeek no longrun isolado
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada/Atualizada:** 2026-08-20
 > **Origem:** matriz A1 `20260820-185627-750638`, par 2, turno 71
 > **Depende de:** `matriz-a-capacidade-provider`
@@ -51,7 +51,8 @@ essa janela continua terminal e fail-closed.
 - [x] Env anterior é restaurada.
 - [x] Outros presets não são afetados.
 - [x] Suíte completa verde (1608 testes).
-- [ ] A1 não volta a terminar por timeout DeepSeek de 12 s.
+- [x] A1 completou quatro campanhas e 81 turnos sem timeout DeepSeek de 12 s;
+  a interrupção posterior foi `Connection error`, não timeout.
 
 ## 6. Smoke real
 

@@ -1,6 +1,6 @@
 # SPEC — Memória de perigo do perfil explorador após morte
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada/Atualizada:** 2026-08-20
 > **Origem:** matriz A1 `20260820-185627-750638`, par 2
 > **Depende de:** `continuidade-memoria-morte`
@@ -57,7 +57,8 @@ em vez de viajar deliberadamente para a morte.
 - [x] Sem alternativa segura, não há viagem suicida.
 - [x] Death log preserva nome e ID.
 - [x] Suíte completa verde (1608 testes).
-- [ ] A1 não repete o loop de mortes em Vorr.
+- [x] A1 completou 200/200; três mortes ocorreram em locais distintos e Vorr
+  não foi revisitada após morte.
 
 ## 6. Smoke real
 
