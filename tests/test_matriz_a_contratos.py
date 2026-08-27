@@ -123,3 +123,31 @@ def test_repeticao_de_interacao_vira_um_episodio_curto():
     assert len(got) == 1 and got[0].check_id == "interaction.no_progress"
     state["last_interaction_outcome"]["repeat_count"] = 5
     assert invariants.check_interaction_no_progress(state, None, 5) == []
+
+
+def test_resultado_e_progresso_de_interacao_sobrevivem_save_load():
+    from persistence import _raw_to_state, _state_to_save_data
+
+    state = {
+        "game_id": "persist-contract", "player": {}, "party": [], "enemies": [],
+        "world": {}, "messages": [], "continuity": {},
+        "last_turn_outcome": {
+            "turn": 39, "receipt_id": "receipt-q1",
+            "player_message": "Missão concluída.\n\n[RESULTADO] +20 ouro",
+        },
+        "last_interaction_outcome": {
+            "kind": "recruit", "subject_id": "kess",
+            "code": "relationship_too_low", "repeat_count": 3,
+            "progressed": False,
+        },
+    }
+    raw = _state_to_save_data(state, state["game_id"])
+    loaded = _raw_to_state(raw)
+
+    assert loaded["last_turn_outcome"] == state["last_turn_outcome"]
+    assert loaded["last_interaction_outcome"] == state["last_interaction_outcome"]
+    assert player_facing_message(loaded).endswith("+20 ouro")
+    legacy = _raw_to_state({**raw, "last_turn_outcome": None,
+                            "last_interaction_outcome": None})
+    assert legacy["last_turn_outcome"] == {}
+    assert legacy["last_interaction_outcome"] == {}

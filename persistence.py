@@ -569,6 +569,11 @@ def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
         ),
         "rag_persistence_error": state.get("rag_persistence_error"),
         "continuity": deepcopy(state.get("continuity") or {}),
+        # Canonical presentation receipts survive reload/idempotent retries.
+        "last_turn_outcome": deepcopy(state.get("last_turn_outcome") or {}),
+        "last_interaction_outcome": deepcopy(
+            state.get("last_interaction_outcome") or {}
+        ),
 
         # --- Dados Transicionais ---
         "combat_target": state.get("combat_target"),
@@ -742,6 +747,10 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         ),
         "rag_persistence_error": raw_data.get("rag_persistence_error"),
         "continuity": deepcopy(raw_data.get("continuity") or {}),
+        "last_turn_outcome": deepcopy(raw_data.get("last_turn_outcome") or {}),
+        "last_interaction_outcome": deepcopy(
+            raw_data.get("last_interaction_outcome") or {}
+        ),
 
         # --- Recupera Core ---
         "player": raw_data.get("player", {}),

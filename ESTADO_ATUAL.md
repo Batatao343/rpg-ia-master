@@ -15,13 +15,17 @@
 > O grafo agora barra ação incompatível pela fase do ator (Vitalidade 0 sozinha
 > não é morte), finaliza ledger antes da apresentação, compartilha elegibilidade
 > trait-aware com os perfis e recupera JSON raw válido sem nova request. As
-> sequências reincidentes viraram testes curtos; suite completa: **1620 passed,
+> sequências reincidentes viraram testes curtos; suite completa: **1621 passed,
 > 16 skipped, 14 deselected**. Ruff verde. Smoke offline pareado **30/30**:
 > `20260827-123929-428917`.
 >
 > Próximo comando formal: matriz B real 10×200, `deepseek-paid`, 800 requests e
 > US$ 0,25 por campanha. Qualquer regressão nova interrompe o ciclo para decisão
-> do usuário. A spec de latência permanece `draft` e não foi implementada.
+> do usuário. A primeira tentativa B (`20260827-135829-799539`) foi interrompida
+> deliberadamente no par 1: a inspeção do save mostrou que outcomes canônicos e
+> progresso de interação ainda não sobreviviam reload. `persistence.py` agora
+> persiste ambos, com regressão save→load e default `{}` legado; esse run é
+> inválido e não entra na comparação. A spec de latência permanece `draft`.
 
 > **📝 SESSÃO 57 (2026-08-27): spec de latência intraturno em `draft`.** A
 > [spec de caminho crítico concorrente](specs/latencia-turno-caminho-critico-concorrente.md)

@@ -6,7 +6,10 @@
 > [resultado canônico do turno](specs/resultado-canonico-turno-apresentacao.md),
 > [interações com progresso](specs/interacoes-progresso-elegibilidade.md) e
 > [structured output com evidência](specs/structured-output-evidencia-recuperacao.md).
-> Gate: 1620 passed, 16 skipped, 14 deselected; smoke offline 30/30. Próximo:
+> Gate: 1621 passed, 16 skipped, 14 deselected; smoke offline 30/30. Outcomes
+> canônicos e de interação agora também sobrevivem save/load. A tentativa B
+> `20260827-135829-799539` foi interrompida durante essa auditoria e é inválida.
+> Próximo:
 > B real 10×200 exatamente pareada; regressão nova exige interrupção.
 
 > **Nova spec em revisão:** [latência do turno — caminho crítico concorrente e
