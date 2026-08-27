@@ -48,6 +48,18 @@ def _npc_id(npc_data: dict, name: str) -> str:
     return npc_data.get("id") or f"npc_{(name or 'desconhecido').lower().replace(' ', '_')}"
 
 
+def _interaction_outcome(state: dict, *, kind: str, subject_id: str,
+                         code: str, progressed: bool) -> dict:
+    fingerprint = f"{kind}:{subject_id}:{code}"
+    previous = state.get("last_interaction_outcome") or {}
+    repeat = (int(previous.get("repeat_count", 0) or 0) + 1
+              if previous.get("fingerprint") == fingerprint and not progressed else 1)
+    return {"kind": kind, "subject_id": subject_id, "code": code,
+            "progressed": progressed, "fingerprint": fingerprint,
+            "repeat_count": repeat,
+            "turn": int((state.get("world") or {}).get("turn_count", 0) or 0)}
+
+
 def _canonical_npc_id(name: str) -> str:
     """Id canônico (entities.json, type npc) por match de nome — "" se não achar.
 
@@ -349,12 +361,20 @@ def npc_actor_node(state: GameState):
     if cmd:
         loc = state.get("world", {}).get("current_location", "")
         if cmd == "recruit":
+            decision = party_mod.recruitment_decision(
+                {**state, "npcs": {**npcs_db, npc_name: npc_data}}, npc_name)
             new_party, reason = party_mod.recruit(
                 {**state, "npcs": {**npcs_db, npc_name: npc_data}}, npc_name)
             if new_party is None:
                 return {"messages": [AIMessage(content=f'🗣️ {npc_name} recusa: "{reason}"')],
+                        "last_interaction_outcome": _interaction_outcome(
+                            state, kind="recruit", subject_id=_npc_id(npc_data, npc_name),
+                            code=decision["code"], progressed=False),
                         "archive_due": True}
             return {"party": new_party,
+                    "last_interaction_outcome": _interaction_outcome(
+                        state, kind="recruit", subject_id=_npc_id(npc_data, npc_name),
+                        code="ok", progressed=True),
                     "messages": [AIMessage(content=(
                         f"🗣️ {npc_name} ajeita o equipamento e assente. "
                         f'"Estou com você." ({npc_name} junta-se ao grupo.)'))],

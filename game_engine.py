@@ -328,8 +328,8 @@ def run_game_loop():
             result = app.invoke(state)
             state = result
             
-            last_msg = state["messages"][-1]
-            content = last_msg.content
+            from services.turn_outcome import player_facing_message
+            content = player_facing_message(state)
             
             if "⚔️" in content or "dano" in content.lower():
                 print(f"\n{Colors.FAIL}⚔️  {content}{Colors.ENDC}")

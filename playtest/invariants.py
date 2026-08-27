@@ -340,7 +340,8 @@ def check_reward_feedback(state: dict, prev: Optional[dict], turn: int) -> List[
     item_gained = inventory_total(player) > inventory_total(previous)
     if not (gold_gained or item_gained):
         return []
-    narrative = _last_narration(state)
+    from services.turn_outcome import player_facing_message
+    narrative = player_facing_message(state)
     import re
     if not re.search(
         r"\b(?:nada novo (?:foi )?obtido|nenhum(?:a)? (?:recompensa|objeto|item).{0,30}(?:obtido|acrescentado))\b",
@@ -932,25 +933,66 @@ def check_zero_vitality_outside_terminal(
     )]
 
 
+def check_actor_lifecycle(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    """Life phase coherence; zero Vitality by itself is explicitly valid."""
+    player = state.get("player") or {}
+    if player.get("dead") and player.get("conscious", True):
+        return [_V("player.lifecycle_incoherent", "error", turn,
+                   "protagonista morto permanece marcado como consciente")]
+    if player.get("incapacitated") and player.get("conscious", True):
+        return [_V("player.lifecycle_incoherent", "error", turn,
+                   "protagonista incapacitado permanece marcado como consciente")]
+    if not prev:
+        return []
+    previous = prev.get("player") or {}
+    was_blocked = not previous.get("conscious", True) or previous.get("incapacitated")
+    action = state.get("last_action_outcome") or {}
+    if was_blocked and action.get("allowed") is False:
+        prev_world, world = prev.get("world") or {}, state.get("world") or {}
+        if (world.get("turn_count") != prev_world.get("turn_count")
+                or world.get("current_location_id") != prev_world.get("current_location_id")):
+            return [_V("player.action_while_incapacitated", "error", turn,
+                       "ação bloqueada alterou turno ou localização")]
+    return []
+
+
 def check_repeated_opening(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
     """spec polish-prosa (R5): 3 narrações consecutivas com a MESMA abertura de 6
     palavras = prosa engessada. Warning (telemetria — não reprova). Sob MockLLM a
     narração é fixa, então o runner filtra este check em modo mock (§7 da spec)."""
-    from services.prose_guard import opening
+    from services.prose_guard import is_deterministic_interaction_message, semantic_opening
     narrs: List[str] = []
     for m in reversed(state.get("messages", []) or []):
         content = getattr(m, "content", "")
         if content and getattr(m, "type", "") != "human":
             narrs.append(str(content))
-            if len(narrs) >= 3:
+            if len(narrs) >= 4:
                 break
     if len(narrs) < 3:
         return []
-    ops = [opening(n) for n in narrs]
-    if ops[0] and ops[0] == ops[1] == ops[2]:
+    if any(is_deterministic_interaction_message(n) for n in narrs[:3]):
+        return []
+    ops = [semantic_opening(n) for n in narrs]
+    if (ops[0] and ops[0] == ops[1] == ops[2]
+            and (len(ops) < 4 or ops[3] != ops[0])):
         return [_V("narrative.repeated_opening", "warning", turn,
                    f"3 narrações seguidas abrindo com “{ops[0]}…”", abertura=ops[0])]
     return []
+
+
+def check_interaction_no_progress(
+    state: dict, prev: Optional[dict], turn: int,
+) -> List[Violation]:
+    outcome = state.get("last_interaction_outcome") or {}
+    repeat_count = int(outcome.get("repeat_count", 0) or 0)
+    if outcome.get("progressed") or repeat_count < 3:
+        return []
+    if repeat_count != 3 and repeat_count & (repeat_count - 1):
+        return []
+    return [_V("interaction.no_progress", "warning", turn,
+               f"interação repetida {repeat_count} vezes sem progresso",
+               code=outcome.get("code"), subject_id=outcome.get("subject_id"),
+               repeat_count=repeat_count)]
 
 
 def check_meta_leak(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
@@ -1088,8 +1130,8 @@ CHECKS: List[Check] = [
     check_invalid_sentinels, check_rag_persistence, check_summary_lifecycle,
     check_memory_provenance,
     check_duplicate_consumed_summary,
-    check_recycled_npc, check_zero_vitality_outside_terminal,
-    check_repeated_opening, check_meta_leak,
+    check_recycled_npc, check_actor_lifecycle,
+    check_repeated_opening, check_interaction_no_progress, check_meta_leak,
     check_phantom_ally,
 ]
 

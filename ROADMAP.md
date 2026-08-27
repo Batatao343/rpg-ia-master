@@ -1,4 +1,23 @@
-# ROADMAP — RPG IA (Revisado 2026-08-20)
+# ROADMAP — RPG IA (Revisado 2026-08-27)
+
+> **Matriz A concluída; remediação offline verde:** 2.000/2.000 turnos reais
+> analisados em [relatório A](docs/playtest-matriz-a-2026-08-27.md). Quatro specs
+> definitivas estão `in-progress` aguardando apenas a B: [ciclo de vida e ações](specs/contrato-canonico-ciclo-vida-acoes.md),
+> [resultado canônico do turno](specs/resultado-canonico-turno-apresentacao.md),
+> [interações com progresso](specs/interacoes-progresso-elegibilidade.md) e
+> [structured output com evidência](specs/structured-output-evidencia-recuperacao.md).
+> Gate: 1620 passed, 16 skipped, 14 deselected; smoke offline 30/30. Próximo:
+> B real 10×200 exatamente pareada; regressão nova exige interrupção.
+
+> **Nova spec em revisão:** [latência do turno — caminho crítico concorrente e
+> derivados assíncronos](specs/latencia-turno-caminho-critico-concorrente.md)
+> (`draft`). A proposta usa a observabilidade já entregue para reduzir o caminho
+> crítico sem request extra: plano+rota em fan-out/fan-in, um embedding por
+> contexto, leituras independentes em paralelo, pulso de mundo sem side effects
+> e memória derivada fora do request após commit canônico. Não é uma conversão
+> geral para async e não cobre campanhas paralelas; essa certificação E2E será
+> uma spec de go-live independente. Implementação só após aprovação e término da
+> análise A.
 
 > **Continuação A (2026-08-21):** `20260820-200416-642340` produziu quatro pares
 > completos e 81 turnos do quinto antes de um `Connection error` DeepSeek. A

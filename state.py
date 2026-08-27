@@ -420,6 +420,11 @@ class GameState(TypedDict):
     death_pending: bool     # spec checkpoints-morte: queda letal — aguardando a TELA DE
                             # MORTE (Continuar do checkpoint / Aceitar o fim). Transitório.
     continuity: ContinuityState
+    action_guard_blocked: bool
+    last_action_outcome: Dict[str, Any]
+    turn_baseline: Dict[str, Any]
+    last_turn_outcome: Dict[str, Any]
+    last_interaction_outcome: Dict[str, Any]
     # Laboratório isolado: {enabled, enemy_id, quantity}. Quando presente,
     # campanha, LLM/RAG, loot e archivist ficam fora do turno de combate.
     combat_simulation: Optional[Dict]

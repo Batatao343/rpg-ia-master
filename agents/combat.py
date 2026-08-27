@@ -1018,8 +1018,7 @@ def combat_node(state: GameState):
 # ===========================================================================
 def _can_attempt_flee(player: Dict) -> bool:
     """Fuga exige protagonista consciente e com Vitalidade para se mover."""
-    vitality = int(player.get("vitalidade", player.get("hp", 0)) or 0)
-    return vitality > 0 and bool(player.get("conscious", True)) \
+    return bool(player.get("conscious", True)) \
         and not bool(player.get("dead")) and not bool(player.get("estado_terminal"))
 
 

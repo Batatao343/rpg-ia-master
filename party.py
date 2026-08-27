@@ -8,7 +8,7 @@ juntar-se: gate determinístico (relationship + teto + fação hostil).
 from copy import deepcopy
 import re
 import unicodedata
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Literal, Optional, Tuple, TypedDict
 
 from gamedata import load_json_data
 from services import graph_resolver as gr
@@ -17,6 +17,14 @@ COMPANION_TEMPLATES: Dict[str, dict] = load_json_data("companions.json") or {}
 
 RECRUIT_MIN_REL = 7   # relationship 0..10 (escala da Fase 2)
 MAX_ACTIVE = 3
+
+
+class RecruitmentDecision(TypedDict):
+    ok: bool
+    code: Literal["ok", "relationship_too_low", "party_full", "already_member", "hostile"]
+    relationship: int
+    required_relationship: int
+    public_hint: str
 
 # spec aliados-em-combate: um NPC amigo EM CENA luta ao seu lado neste combate
 # SEM precisar do compromisso de recrutamento (rel>=7). Limiar acima do neutro
@@ -272,28 +280,36 @@ def scene_allies(state: Dict, *, excluded: Optional[List[str]] = None) -> List[D
     return out
 
 
+def recruitment_decision(state: Dict, npc_name: str) -> RecruitmentDecision:
+    """Single trait-aware authority used by product and playtest profiles."""
+    npc = (state.get("npcs") or {}).get(npc_name) or {}
+    rel = int(npc.get("relationship", 5) or 5)
+    from services.npc_layers import trait_dc_modifier
+    required = max(3, min(10, RECRUIT_MIN_REL + trait_dc_modifier(npc, "persuasao")))
+
+    def result(ok: bool, code: str, hint: str) -> RecruitmentDecision:
+        return {"ok": ok, "code": code, "relationship": rel,
+                "required_relationship": required, "public_hint": hint}  # type: ignore[typeddict-item]
+
+    if any(c.get("name") == npc_name for c in state.get("party") or []):
+        return result(False, "already_member", f"{npc_name} já anda com você.")
+    if len(active_allies(state)) >= MAX_ACTIVE:
+        return result(False, "party_full", f"Seu grupo já está cheio ({MAX_ACTIVE} companheiros).")
+    fac_id = npc.get("faction") or ""
+    if any(f.get("id") == fac_id and f.get("disposition") == "hostil"
+           for f in state.get("factions") or [] if fac_id):
+        return result(False, "hostile", f"{npc_name} serve a um poder hostil a você.")
+    if rel < required:
+        return result(False, "relationship_too_low",
+                      f"{npc_name} ainda não confia o bastante em você.")
+    return result(True, "ok", "")
+
+
 def can_recruit(state: Dict, npc_name: str) -> Tuple[bool, str]:
     """Gate DETERMINÍSTICO (o LLM só narra o sim/não):
     relationship >= 7 ∧ party ativa < 3 ∧ NPC não é de fação hostil ao jogador."""
-    npc = (state.get("npcs") or {}).get(npc_name) or {}
-    rel = int(npc.get("relationship", 5) or 5)
-    # spec npcs-3-camadas (R6): trait de persuasão do NPC ajusta o limiar —
-    # desconfiado exige mais confiança, sentimental exige menos. Traits OCULTOS
-    # também contam (o mundo é real antes de ser conhecido).
-    from services.npc_layers import trait_dc_modifier
-    limiar = max(3, min(10, RECRUIT_MIN_REL + trait_dc_modifier(npc, "persuasao")))
-    if rel < limiar:
-        return False, f"{npc_name} não confia o bastante em você (relação {rel}/10)."
-    if len(active_allies(state)) >= MAX_ACTIVE:
-        return False, f"Seu grupo já está cheio ({MAX_ACTIVE} companheiros)."
-    if any(c.get("name") == npc_name for c in state.get("party") or []):
-        return False, f"{npc_name} já anda com você."
-    fac_id = npc.get("faction") or ""
-    if fac_id:
-        for f in state.get("factions") or []:
-            if f.get("id") == fac_id and f.get("disposition") == "hostil":
-                return False, f"{npc_name} serve a um poder hostil a você."
-    return True, ""
+    decision = recruitment_decision(state, npc_name)
+    return decision["ok"], decision["public_hint"]
 
 
 def recruit(state: Dict, npc_name: str) -> Tuple[Optional[List[Dict]], str]:

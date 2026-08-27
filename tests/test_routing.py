@@ -58,6 +58,12 @@ class _FakeClient:
             return AIMessage(content=f"structured invalido de {self.tag}")
         if self._schema is not None:
             if self._include_raw:
+                if self.behavior == "raw_json":
+                    return {
+                        "raw": AIMessage(content='```json\n{"value":"recuperado"}\n```'),
+                        "parsed": None,
+                        "parsing_error": ValueError("tool call ausente"),
+                    }
                 if self.behavior == "raw_error":
                     return {
                         "raw": AIMessage(content="raw"),
@@ -417,6 +423,21 @@ def test_structured_include_raw_exige_parsed_tipado_e_sem_erro(monkeypatch):
     assert [event.outcome for event in tentativas] == [
         "invalid_structured", "invalid_structured", "invalid_structured", "success",
     ]
+
+
+def test_structured_recupera_json_raw_sem_nova_request(monkeypatch):
+    _install_fakes(monkeypatch, {"p1": "raw_json"})
+    tentativas = []
+    set_llm_attempt_telemetry_hook(tentativas.append)
+
+    result = RoutedLLM(
+        ModelTier.SMART, 0.0, [("p1", "m1")]
+    ).with_structured_output(_Tiny).invoke([HumanMessage(content="planeje")])
+
+    assert result == _Tiny(value="recuperado")
+    assert len(tentativas) == 1
+    assert tentativas[0].outcome == "success"
+    assert tentativas[0].recovery == "local_json"
 
 
 def test_plain_invoke_nao_rejeita_none(monkeypatch):

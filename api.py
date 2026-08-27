@@ -681,8 +681,8 @@ class GameResponse(BaseModel):
 # --- HELPER: FORMATA RESPOSTA ---
 def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> GameResponse:
     # Pega a última mensagem
-    last_msg_obj = state["messages"][-1]
-    last_content = last_msg_obj.content
+    from services.turn_outcome import player_facing_message
+    last_content = player_facing_message(state)
     
     # Define o tipo de mensagem
     msg_type = "STORY"
@@ -2555,7 +2555,8 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None) -> I
             mode, data = payload
             if mode == "updates":
                 for node, upd in (data or {}).items():
-                    yield _sse("phase", {"node": node, "status": "done"})
+                    if node not in {"action_guard", "turn_finalizer"}:
+                        yield _sse("phase", {"node": node, "status": "done"})
                     if node == "dm_router":
                         yield _sse("route", {"route": (upd or {}).get("next", "") or ""})
             continue

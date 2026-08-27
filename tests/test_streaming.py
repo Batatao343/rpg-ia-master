@@ -32,9 +32,10 @@ def test_graph_stream_emite_updates_por_no(tmp_path, monkeypatch):
             nodes.extend(data.keys())
         else:
             final = data
-    assert nodes[0] == "campaign_manager"
+    assert nodes[0] == "action_guard"
+    assert nodes[-1] == "turn_finalizer"
     assert "dm_router" in nodes
-    assert nodes[-1] == "archivist"
+    assert "archivist" in nodes
     # entre o router e o archivist roda exatamente a rota escolhida
     assert final is not None and final.get("world")
 

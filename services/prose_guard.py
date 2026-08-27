@@ -54,6 +54,24 @@ def opening(text: str, words: int = 6) -> str:
     return " ".join(toks[:words])
 
 
+_NPC_SCAFFOLD = re.compile(
+    r"^\s*(?:🗣️?\s*)?[^:\n]{1,80}:\s*", flags=re.IGNORECASE,
+)
+
+
+def semantic_opening(text: str, words: int = 6) -> str:
+    """Opening without the deterministic speaker label used by NPC messages."""
+    return opening(_NPC_SCAFFOLD.sub("", str(text or ""), count=1), words)
+
+
+def is_deterministic_interaction_message(text: str) -> bool:
+    value = str(text or "")
+    return bool(_NPC_SCAFFOLD.match(value) and re.search(
+        r"\b(?:recusa|não está aqui|já está no grupo|grupo já está cheio)\b",
+        value, re.IGNORECASE,
+    ))
+
+
 def sanitize_meta_preamble(text: str) -> str:
     """Remove moldura de assistente no início, preservando a prosa do jogo."""
     cleaned = str(text or "").strip()

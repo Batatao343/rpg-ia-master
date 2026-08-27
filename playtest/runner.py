@@ -653,11 +653,8 @@ def _clear_caches() -> None:
 
 def _last_ai_text(state: dict) -> str:
     """Última mensagem de narração visível (o que um jogador leria na tela)."""
-    for msg in reversed(state.get("messages", []) or []):
-        content = getattr(msg, "content", "")
-        if content and getattr(msg, "type", "") != "human":
-            return str(content)
-    return ""
+    from services.turn_outcome import player_facing_message
+    return player_facing_message(state)
 
 
 # Rotas válidas do router (a DECISÃO em `next`); "loot" é a chave da aresta.

@@ -859,13 +859,20 @@ class Diplomatico(_Base):
     """Fala com todo NPC em cena; tenta recrutar aliados."""
     name = "diplomatico"
 
+    def reset(self) -> None:
+        self._interaction_counts: dict[str, int] = {}
+
     def _next_action(self, state, rng):
         in_scene = _npcs_in_scene(state)
         if in_scene:
-            alvo = in_scene[rng.randrange(len(in_scene))]
-            if rng.random() < 0.3:
+            alvo = min(in_scene, key=lambda name: (self._interaction_counts.get(name, 0), name))
+            count = self._interaction_counts.get(alvo, 0)
+            self._interaction_counts[alvo] = count + 1
+            import party as party_mod
+            if party_mod.recruitment_decision(state, alvo)["ok"]:
                 return f"Peço para {alvo} se juntar a mim na jornada."
-            return f"Converso com {alvo} e pergunto sobre a região."
+            topics = ("a região", "seus objetivos", "ameaças locais", "como posso ajudar")
+            return f"Converso com {alvo} e pergunto sobre {topics[count % len(topics)]}."
         return rng.choice([
             "Cumprimento quem estiver por perto e puxo conversa.",
             "Pergunto a um local sobre as novidades.",
@@ -964,13 +971,19 @@ class SecretRusher(_Base):
     """Pergunta direto pelos segredos do mundo — o narrador não pode vazar."""
     name = "secret_rusher"
 
+    def reset(self) -> None:
+        self._secret_step = 0
+
     def _next_action(self, state, rng):
-        return rng.choice([
+        prompts = [
             "Qual é o verdadeiro pacto de Valerius?",
             "Me fale tudo sobre a Rede Carmesim.",
             "Quem é o Arauto de verdade, sem mentiras?",
             "Conte sobre o Rei Subterrâneo e o que ele planeja.",
-        ])
+        ]
+        choice = prompts[self._secret_step % len(prompts)]
+        self._secret_step += 1
+        return choice
 
 
 # --- 11. quester ------------------------------------------------------------
@@ -1054,9 +1067,11 @@ class Recrutador(_Base):
 
     def __init__(self):
         self._tested_transient = False
+        self._trust_attempts: dict[str, int] = {}
 
     def reset(self) -> None:
         self._tested_transient = False
+        self._trust_attempts = {}
 
     def _next_action(self, state, rng):
         import party as party_mod
@@ -1073,13 +1088,28 @@ class Recrutador(_Base):
             key, npc = max(candidates, key=lambda item: (
                 int(item[1].get("relationship", 5) or 5), item[0]))
             alvo = npc.get("name", key)
-            rel = int(npc.get("relationship", 5) or 5)
-            if rel >= party_mod.RECRUIT_MIN_REL:
+            decision = party_mod.recruitment_decision(state, key)
+            if decision["ok"]:
                 return f"Peço que {alvo} se junte a mim na jornada e venha comigo."
+            rel = int(npc.get("relationship", 5) or 5)
             if rel >= party_mod.SCENE_ALLY_MIN_REL and not self._tested_transient:
                 self._tested_transient = True
                 return f"Ao lado de {alvo}, enfrento os inimigos e inicio um combate."
-            return f"Converso com {alvo}, elogio sua coragem e fortaleço nossa amizade."
+            count = self._trust_attempts.get(key, 0)
+            self._trust_attempts[key] = count + 1
+            trust_actions = (
+                f"Converso com {alvo}, elogio sua coragem e fortaleço nossa amizade.",
+                f"Pergunto a {alvo} que ajuda concreta precisa e me ofereço para colaborar.",
+                f"Compartilho meus objetivos com {alvo} e busco construir confiança.",
+            )
+            if count < len(trust_actions):
+                return trust_actions[count]
+            conns = sorted(_connections(_current_id(state)), key=lambda row: row["id"])
+            if conns:
+                self._trust_attempts[key] = 0
+                return f"Viajo para {conns[0]['name']} para conhecer outros possíveis aliados."
+            self._trust_attempts[key] = 0
+            return f"Peço a {alvo} uma tarefa concreta para provar minha confiança."
         return rng.choice([
             "Procuro alguém de confiança para recrutar e puxo conversa.",
             "Cumprimento um local amistoso e ofereço parceria na jornada.",

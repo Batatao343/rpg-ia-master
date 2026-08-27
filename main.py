@@ -29,6 +29,8 @@ from agents.router import dm_router_node
 from agents.storyteller import storyteller_node
 from agents.loot import loot_node
 from agents.archivist import archive_node # <--- NOVO
+from agents.action_guard import action_guard_node
+from agents.turn_finalizer import turn_finalizer_node
 
 load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
 
@@ -45,6 +47,8 @@ def build_game_graph():
     workflow.add_node("npc_actor", npc_actor_node)
     workflow.add_node("loot_agent", loot_node)
     workflow.add_node("archivist", archive_node) # <--- NOVO
+    workflow.add_node("action_guard", action_guard_node)
+    workflow.add_node("turn_finalizer", turn_finalizer_node)
 
     # 2. Definir o Fluxo Inicial
     # R4 (fix-playtest-achados): save morto (game_over) é MEMORIAL — o grafo NÃO
@@ -56,7 +60,12 @@ def build_game_graph():
     # jogador escolher Continuar (restaura) ou Aceitar (memorial).
     workflow.add_conditional_edges(
         START,
-        lambda s: "__end__" if (s.get("game_over") or s.get("death_pending")) else "campaign_manager",
+        lambda s: "__end__" if (s.get("game_over") or s.get("death_pending")) else "action_guard",
+        {"__end__": END, "action_guard": "action_guard"},
+    )
+    workflow.add_conditional_edges(
+        "action_guard",
+        lambda s: "__end__" if s.get("action_guard_blocked") else "campaign_manager",
         {"__end__": END, "campaign_manager": "campaign_manager"},
     )
     workflow.add_edge("campaign_manager", "dm_router")
@@ -111,7 +120,8 @@ def build_game_graph():
         },
     )
     
-    workflow.add_edge("archivist", END) # O arquivista encerra o turno
+    workflow.add_edge("archivist", "turn_finalizer")
+    workflow.add_edge("turn_finalizer", END)
 
     # Compila o grafo
     return workflow.compile()

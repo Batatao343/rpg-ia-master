@@ -1,5 +1,44 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **🧪 SESSÃO 58 (2026-08-27): matriz A fechada, quatro contratos corrigidos,
+> matriz B real é o próximo gate.** A baseline válida reúne **10×200 = 2.000
+> turnos**, zero erro de turno, 12 violações `error`, 193 warnings, 5.205 sucessos
+> LLM em 5.224 tentativas e US$ 1,46272. Relatório e seleção exata dos runs:
+> [playtest-matriz-a-2026-08-27](docs/playtest-matriz-a-2026-08-27.md).
+>
+> A auditoria mostrou quatro recorrências de correções antigas incompletas. As
+> specs [ciclo de vida](specs/contrato-canonico-ciclo-vida-acoes.md),
+> [resultado canônico](specs/resultado-canonico-turno-apresentacao.md),
+> [interações/progresso](specs/interacoes-progresso-elegibilidade.md) e
+> [structured output com evidência](specs/structured-output-evidencia-recuperacao.md)
+> estão `in-progress`: implementação offline concluída, aguardando somente a B.
+> O grafo agora barra ação incompatível pela fase do ator (Vitalidade 0 sozinha
+> não é morte), finaliza ledger antes da apresentação, compartilha elegibilidade
+> trait-aware com os perfis e recupera JSON raw válido sem nova request. As
+> sequências reincidentes viraram testes curtos; suite completa: **1620 passed,
+> 16 skipped, 14 deselected**. Ruff verde. Smoke offline pareado **30/30**:
+> `20260827-123929-428917`.
+>
+> Próximo comando formal: matriz B real 10×200, `deepseek-paid`, 800 requests e
+> US$ 0,25 por campanha. Qualquer regressão nova interrompe o ciclo para decisão
+> do usuário. A spec de latência permanece `draft` e não foi implementada.
+
+> **📝 SESSÃO 57 (2026-08-27): spec de latência intraturno em `draft`.** A
+> [spec de caminho crítico concorrente](specs/latencia-turno-caminho-critico-concorrente.md)
+> separa latência de uma interação, throughput entre campanhas e latência
+> percebida pelo SSE. Com base em 2.000 turnos válidos da matriz A, especifica
+> fan-out/fan-in seguro de plano+rota, embedding único com buscas de contexto
+> paralelas, `WorldPulse` puro, paridade `RoutedLLM.invoke/ainvoke` e finalização
+> canônica antes de derivar memória em worker. Não foi implementada: aguarda
+> aprovação. A concorrência E2E entre jogos
+> distintos continua reservada a uma spec própria de go-live. Gate documental:
+> **1620 passed, 16 skipped, 14 deselected**.
+>
+> A décima campanha A foi reiniciada isoladamente como
+> `20260827-114435-548287` (loot_abuser, Sangromante nível 20, seed 6209), após a
+> tentativa anterior falhar no turno 75 por `CampaignPlanModel=None`. Ela estava
+> concluída em 200/200, zero erro e duas repetições de abertura.
+
 > **▶ SESSÃO 56 (2026-08-21): continuação da matriz A.** O run
 > `20260820-200416-642340` completou os pares 1–4 (800 turnos) e parou no turno
 > 81 do par 5 por um `Connection error` isolado do DeepSeek; o fail-closed impediu

@@ -43,20 +43,18 @@ def test_inimigo_visivel_pode_usar_carta_de_esconder():
     ) == "bst_mimetismo_morto"
 
 
-def test_vitalidade_zero_bloqueia_tentativa_de_fuga():
-    assert combat._can_attempt_flee({"vitalidade": 0, "conscious": True}) is False
+def test_fuga_usa_fase_de_vida_e_nao_vitalidade_como_morte():
+    assert combat._can_attempt_flee({"vitalidade": 0, "conscious": True}) is True
     assert combat._can_attempt_flee({"vitalidade": 1, "conscious": True}) is True
     assert combat._can_attempt_flee({"vitalidade": 8, "conscious": False}) is False
 
 
-def test_invariante_acusa_zero_fora_de_combate_sem_fluxo_terminal():
+def test_zero_fora_de_combate_nao_equivale_a_morte():
     state = {
         "player": {"vitalidade": 0, "max_vitalidade": 12},
         "combat": {"active": False}, "death_pending": False, "game_over": False,
     }
-    got = invariants.check_zero_vitality_outside_terminal(state, None, 7)
-    assert got and got[0].check_id == "player.zero_vitality_outside_terminal"
-    assert got[0].severity == "error"
+    assert invariants.check_actor_lifecycle(state, None, 7) == []
 
 
 def test_zero_em_combate_ou_fluxo_terminal_e_valido():

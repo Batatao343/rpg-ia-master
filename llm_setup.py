@@ -65,6 +65,8 @@ class LLMAttemptEvent:
     outcome: LLMAttemptOutcome
     error: Optional[str]
     structured: bool
+    structured_failure_code: Optional[str] = None
+    recovery: Optional[str] = None
 
 
 # Registro de providers
@@ -402,6 +404,11 @@ class RoutedLLM:
             if (name == "with_structured_output" and provider in _OPENAI_COMPAT_PROVIDERS
                     and "method" not in k):
                 k = {**k, "method": "function_calling"}
+            if (name == "with_structured_output" and a
+                    and isinstance(a[0], type) and issubclass(a[0], BaseModel)):
+                # Keep evidence internally. Public return shape is restored by
+                # _normalize_internal_structured_result.
+                k = {**k, "include_raw": True}
             client = getattr(client, name)(*a, **k)
         return client
 
@@ -442,7 +449,9 @@ class RoutedLLM:
             ))]
         return input
 
-    def _input_for_structured_retry(self, input, provider: str):
+    def _input_for_structured_retry(
+        self, input, provider: str, failure_code: Optional[str] = None,
+    ):
         """Prepare a semantic regeneration after a malformed tool response.
 
         This is separate from HTTP retries: it only runs after the provider
@@ -452,9 +461,12 @@ class RoutedLLM:
         prepared = self._input_for_provider(input, provider)
         if not isinstance(prepared, (list, tuple)):
             return prepared
+        schema = self._pydantic_structured_contract()
+        schema_name = schema[0].__name__ if schema else "solicitado"
         return [*prepared, HumanMessage(content=(
-            "A resposta anterior não produziu a saída estruturada válida. "
-            "Tente novamente agora e responda somente pela ferramenta solicitada."
+            f"A saída estruturada anterior falhou no contrato {schema_name} "
+            f"(causa: {failure_code or 'invalid_structured'}). Tente novamente "
+            "e responda somente pela ferramenta solicitada."
         ))]
 
     def _validate_structured_result(self, result) -> tuple[bool, Optional[str], bool]:
@@ -489,6 +501,71 @@ class RoutedLLM:
                 True,
             )
         return True, None, True
+
+    @staticmethod
+    def _json_object_from_text(content: object) -> Optional[dict]:
+        """Extract one bounded JSON object without eval or permissive coercion."""
+        if isinstance(content, list):
+            content = " ".join(
+                str(part.get("text", "")) if isinstance(part, dict) else str(part)
+                for part in content
+            )
+        text = str(content or "").strip()
+        if not text or len(text) > 65_536:
+            return None
+        if text.startswith("```"):
+            lines = text.splitlines()
+            if lines and lines[0].strip().lower() in {"```", "```json"}:
+                lines = lines[1:]
+            if lines and lines[-1].strip() == "```":
+                lines = lines[:-1]
+            text = "\n".join(lines).strip()
+        decoder = json.JSONDecoder()
+        starts = [0] if text.startswith("{") else []
+        starts.extend(index for index, char in enumerate(text) if char == "{" and index != 0)
+        for start in starts:
+            try:
+                value, _end = decoder.raw_decode(text[start:])
+            except (TypeError, ValueError, json.JSONDecodeError):
+                continue
+            if isinstance(value, dict):
+                return value
+        return None
+
+    def _normalize_internal_structured_result(
+        self, result,
+    ) -> tuple[object, Optional[str], Optional[str]]:
+        """Restore the caller's return shape and recover valid raw JSON locally."""
+        contract = self._pydantic_structured_contract()
+        if contract is None:
+            return result, None, None
+        schema, caller_include_raw = contract
+        if isinstance(result, schema):
+            if caller_include_raw:
+                return {"raw": None, "parsed": result, "parsing_error": None}, None, None
+            return result, None, None
+        if not isinstance(result, dict):
+            return result, "no_tool_call", None
+        parsed = result.get("parsed")
+        parsing_error = result.get("parsing_error")
+        if isinstance(parsed, schema) and parsing_error is None:
+            return (result if caller_include_raw else parsed), None, None
+        raw = result.get("raw")
+        payload = self._json_object_from_text(getattr(raw, "content", ""))
+        if payload is not None:
+            try:
+                recovered = schema.model_validate(payload)
+            except Exception:
+                recovered = None
+            if recovered is not None:
+                if caller_include_raw:
+                    return {"raw": raw, "parsed": recovered, "parsing_error": None}, None, "local_json"
+                return recovered, None, "local_json"
+        if parsing_error is not None:
+            return result, "parsing_error", None
+        if parsed is None:
+            return result, "no_tool_call", None
+        return result, "schema_validation", None
 
     def invoke(self, input):
         errors = []
@@ -560,9 +637,10 @@ class RoutedLLM:
                 STRUCTURED_SEMANTIC_MAX_ATTEMPTS
                 if structured_contract is not None else 1
             )
+            last_failure_code: Optional[str] = None
             for semantic_attempt in range(semantic_attempts):
                 request_input = (
-                    self._input_for_structured_retry(input, provider)
+                    self._input_for_structured_retry(input, provider, last_failure_code)
                     if semantic_attempt else self._input_for_provider(input, provider)
                 )
                 t0 = time.perf_counter()
@@ -587,8 +665,10 @@ class RoutedLLM:
                     attempt_index += 1
                     _open_circuit_if_permanent(provider, model, e)
                     break
+                result, failure_code, recovery = self._normalize_internal_structured_result(result)
                 valid, validation_error, structured = self._validate_structured_result(result)
                 if not valid:
+                    last_failure_code = failure_code or "schema_validation"
                     errors.append(
                         f"{provider}:{model} structured:{validation_error}"
                     )
@@ -608,6 +688,7 @@ class RoutedLLM:
                         outcome="invalid_structured",
                         error=validation_error,
                         structured=structured,
+                        structured_failure_code=failure_code,
                     ))
                     attempt_index += 1
                     continue
@@ -621,6 +702,7 @@ class RoutedLLM:
                     outcome="success",
                     error=None,
                     structured=structured,
+                    recovery=recovery,
                 ))
                 _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
                 return result
