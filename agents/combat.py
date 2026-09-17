@@ -15,7 +15,7 @@ Fluxo de 1 chamada = 1 RODADA:
 """
 import random
 import re
-from typing import Dict, List, Optional
+from typing import Dict, List, NamedTuple, Optional
 
 import gamedata
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
@@ -35,6 +35,29 @@ from agents.bestiary import generate_new_enemy
 from pydantic import BaseModel, ConfigDict, Field
 
 _PLAYER_ID = "player"
+
+
+class FleeDecision(NamedTuple):
+    """Resultado único de perseguição, compatível com o unpack legado."""
+
+    escaped: bool
+    logs: List[str]
+    chase: dict
+
+    @property
+    def eligible(self) -> bool:
+        return self.chase.get("eligible") is True and not self.chase.get("blocked_reason")
+
+
+def _downed_identity_tokens(player: dict) -> list[str]:
+    """All stable identities understood by ConflictSummary for the protagonist."""
+    return list(dict.fromkeys(
+        value for value in (
+            _PLAYER_ID,
+            str(player.get("id") or ""),
+            str(player.get("name") or ""),
+        ) if value
+    ))
 _MAX_SCANNER_TYPES = 8
 _MAX_SCANNER_PER_TYPE = 12
 _MAX_SCANNER_TOTAL = 24
@@ -442,6 +465,8 @@ def _canonical_player_action(declaration: Optional[TurnDeclaration], out: dict, 
         kind = "flee"
         if hero_fled:
             result = "fled"
+        elif (chase_state or {}).get("eligible") is False:
+            result = "flee_blocked"
         elif chase_state and not chase_state.get("alcancado"):
             result = "flee_progress"
         else:
@@ -500,6 +525,8 @@ def _enforce_flee_attempt_limit(chase_state: dict, *, attempts: int) -> tuple[bo
     normais da trilha.
     """
     chase = dict(chase_state or {})
+    if chase.get("eligible") is False or chase.get("blocked_reason"):
+        return False, chase
     if int(attempts or 0) < MAX_CONSECUTIVE_FLEE_ATTEMPTS:
         return bool(chase.get("escapou")), chase
     chase.update({"trilha": "escapou", "escapou": True, "alcancado": False})
@@ -780,10 +807,13 @@ def combat_node(state: GameState):
         combat_meta["chase"] = chase_state
         logs += weather_logs + flee_logs
     elif flee_requested:
-        chase_state = dict(combat_meta.get("chase") or {})
+        chase_state = {
+            **dict(combat_meta.get("chase") or {}),
+            "eligible": False, "blocked_reason": "lifecycle",
+        }
         combat_meta["chase"] = chase_state
         logs += weather_logs + [
-            "Com Vitalidade zero ou inconsciente, o herói não consegue iniciar a fuga."
+            "Sua condição atual impede iniciar a fuga; a rodada resolve sua recuperação."
         ]
     if not hero_fled:
         if flee_requested:
@@ -920,7 +950,17 @@ def combat_node(state: GameState):
         conflict_sum = summ.build_summary(
             participants,
             scene=scene,
-            extras={"turn": turn, "conflict_id": combat_meta.get("instance_id")},
+            extras={
+                "turn": turn,
+                "conflict_id": combat_meta.get("instance_id"),
+                # Player saves historically do not persist ``id``. Carry both
+                # the canonical role and the runtime display identity so the
+                # summary cannot downgrade a recoverable fall into death.
+                "downed_ids": (
+                    _downed_identity_tokens(player)
+                    if player_dead else []
+                ),
+            },
         )
         narrative = summ.narrative_or_fallback(conflict_sum, narrative)
     narrative = prose_guard.sanitize_meta_preamble(narrative)
@@ -1017,26 +1057,30 @@ def combat_node(state: GameState):
 # Fuga (chase, conflito-09) + reflexos auxiliares
 # ===========================================================================
 def _can_attempt_flee(player: Dict) -> bool:
-    """Fuga exige protagonista consciente e com Vitalidade para se mover."""
+    """Fuga exige protagonista em fase capaz de iniciar uma perseguição."""
     return bool(player.get("conscious", True)) \
-        and not bool(player.get("dead")) and not bool(player.get("estado_terminal"))
+        and not bool(player.get("dead")) \
+        and not bool(player.get("estado_terminal")) \
+        and not bool(player.get("last_stand_pending")) \
+        and not bool(player.get("incapacitated"))
 
 
 def _attempt_flee(scene: dict, player: Dict, active: List[Dict], sides: dict, rng,
-                  *, existing_chase: Optional[dict] = None) -> tuple:
+                  *, existing_chase: Optional[dict] = None) -> FleeDecision:
     """Tenta escapar via motor de perseguição (09). Enredado (root) não foge.
     Sucesso na trilha (Escapou) encerra o combate; senão o herói segue preso."""
     import combat_mechanics as cm
     from services import chase
     from services.conflict_resolution import virtude_value
-    if (player.get("dead") or player.get("estado_terminal")
-            or player.get("last_stand_pending")
-            or not player.get("conscious", True)):
-        return False, [
+    if not _can_attempt_flee(player):
+        return FleeDecision(False, [
             f"{player.get('name', 'O herói')} está em Estado Terminal e não pode fugir."
-        ], {}
+        ], {"eligible": False, "blocked_reason": "lifecycle"})
     if cm.has_control(player, "root"):
-        return False, [f"{player.get('name', 'O herói')} está ENREDADO — impossível fugir."], {}
+        return FleeDecision(False, [f"{player.get('name', 'O herói')} está ENREDADO — impossível fugir."], {
+            "eligible": False,
+            "blocked_reason": "rooted",
+        })
     chase_state = (
         dict(existing_chase)
         if chase.can_resume(existing_chase, _PLAYER_ID, active)
@@ -1046,8 +1090,9 @@ def _attempt_flee(scene: dict, player: Dict, active: List[Dict], sides: dict, rn
     difficulty = chase.chase_difficulty(active[0]) if active else 12
     chase.resolve_chase_round(chase_state, condutor_virtude=virtude_value(player, "agilidade"),
                               difficulty=difficulty, rng=rng)
+    chase_state["eligible"] = True
     if chase_state.get("escapou"):
-        return True, [f"{player.get('name', 'O herói')} rompe o cerco e FOGE do combate."], chase_state
+        return FleeDecision(True, [f"{player.get('name', 'O herói')} rompe o cerco e FOGE do combate."], chase_state)
     if chase_state.get("alcancado"):
         log = f"{player.get('name', 'O herói')} tenta fugir, mas os inimigos o alcançam."
     elif (chase_state.get("_last") or {}).get("sucesso"):
@@ -1056,7 +1101,7 @@ def _attempt_flee(scene: dict, player: Dict, active: List[Dict], sides: dict, rn
     else:
         log = (f"{player.get('name', 'O herói')} perde terreno na fuga: "
                f"{previous_track} → {chase_state.get('trilha')}.")
-    return False, [log], chase_state
+    return FleeDecision(False, [log], chase_state)
 
 
 def _apply_weather_hazard(player: Dict, world: Dict, *, rng=None) -> List[str]:
@@ -1135,6 +1180,7 @@ def _apply_flee_travel(state: Dict, result: Dict, flee_dest_id: str, player: Dic
     result["enemies"] = []
     result["combat_target"] = None
     result["next"] = None
+    result["needs_replan"] = True
     result["combat_origin_hint"] = None
 
 

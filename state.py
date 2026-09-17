@@ -421,6 +421,7 @@ class GameState(TypedDict):
                             # MORTE (Continuar do checkpoint / Aceitar o fim). Transitório.
     continuity: ContinuityState
     action_guard_blocked: bool
+    turn_prepared: bool
     last_action_outcome: Dict[str, Any]
     turn_baseline: Dict[str, Any]
     last_turn_outcome: Dict[str, Any]
@@ -484,6 +485,7 @@ class GameState(TypedDict):
     memory_promotions: List[Dict]       # promoções com fonte canônica (bounded)
     pending_npc_memory: List[Dict]      # fila bounded de retries add_npc_memory
     narrative_rejections: List[str]     # guardrails narrativos transitórios
+    rejected_item_claims: List[str]     # itens recusados pelo motor (bounded, durável)
     rag_persistence_error: Optional[str]  # falha sanitizada de memória da sessão
     event_rejections: List[Dict]         # propostas recusadas + metadados sanitizados
 

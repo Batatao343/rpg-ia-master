@@ -21,6 +21,9 @@ from services.memory_provenance import (
     make_memory_fact,
     memory_metadata,
     normalize_memory_facts,
+    sanitize_inventory_grounding,
+    sanitize_location_grounding,
+    sanitize_npc_identity_grounding,
     validate_memory_fact,
 )
 from services.prose_guard import sanitize_meta_preamble
@@ -392,6 +395,51 @@ def archive_node(state: GameState):
     from services.memory_summary import compact_summary
     current_summary = compact_summary(
         state.get("narrative_summary", "A aventura segue."))
+    current_summary, initial_location_rejections = sanitize_location_grounding(
+        current_summary,
+    )
+    current_summary, initial_inventory_rejections = sanitize_inventory_grounding(
+        current_summary, effective_state,
+    )
+    current_summary, initial_npc_rejections = sanitize_npc_identity_grounding(
+        current_summary, effective_state,
+    )
+    if (
+        initial_location_rejections
+        or initial_inventory_rejections
+        or initial_npc_rejections
+    ):
+        memory_rejections = bounded_audit_rows([
+            *memory_rejections,
+            *[
+                {
+                    "turn": int((state.get("world") or {}).get("turn_count", 0) or 0),
+                    "provenance": "narrative_summary",
+                    "reason": "location_region_contradiction",
+                    **row,
+                }
+                for row in initial_location_rejections
+            ],
+            *[
+                {
+                    "turn": int((state.get("world") or {}).get("turn_count", 0) or 0),
+                    "provenance": "narrative_summary",
+                    "reason": "inventory_possession_contradiction",
+                    **row,
+                }
+                for row in initial_inventory_rejections
+            ],
+            *[
+                {
+                    "turn": int((state.get("world") or {}).get("turn_count", 0) or 0),
+                    "provenance": "narrative_summary",
+                    "reason": "npc_identity_contradiction",
+                    **row,
+                }
+                for row in initial_npc_rejections
+            ],
+        ], limit=MAX_MEMORY_REJECTIONS)
+    current_summary = current_summary or "A aventura segue."
     context_msgs = messages[-6:] if len(messages) > 6 else messages
     pending_conflict_summary = dict(state.get("conflict_summary") or {})
     consumed_conflict_ids = (
@@ -553,6 +601,33 @@ def archive_node(state: GameState):
 
     llm = get_llm(temperature=0.3, tier=ModelTier.SMART)
 
+    from gamedata import get_location
+    from inventory import item_display
+    world = effective_state.get("world") or {}
+    canonical_location = get_location(world.get("current_location_id", "")) or {}
+    location_anchor = (
+        f"{canonical_location.get('name', world.get('current_location', 'desconhecido'))} "
+        f"pertence à região {canonical_location.get('region', 'desconhecida')}"
+    )
+    inventory_anchor = ", ".join(
+        item_display(row)
+        for row in ((effective_state.get("player") or {}).get("inventory") or [])
+        if isinstance(row, dict)
+    ) or "vazio"
+    from services.entity_identity import coalesce_runtime_npcs
+    npc_identity_lines = []
+    for key, npc in coalesce_runtime_npcs(effective_state.get("npcs") or {}).items():
+        if not isinstance(npc, dict) or not npc.get("in_scene", False):
+            continue
+        appearance = " ".join(str(npc.get("appearance") or "").split())[:240]
+        if appearance:
+            npc_identity_lines.append(
+                f"- {npc.get('name') or key}: {appearance}"
+            )
+        if len(npc_identity_lines) >= 8:
+            break
+    npc_identity_anchor = "\n".join(npc_identity_lines) or "nenhum NPC presente"
+
     sys_msg = SystemMessage(content=f"""
     <ROLE>Memory Manager do RPG</ROLE>
 
@@ -561,6 +636,17 @@ def archive_node(state: GameState):
     2. Histórico Recente: (Ver mensagens abaixo)
     3. Fatos canônicos do último conflito: "{canonical_text or 'nenhum'}"
     </INPUTS>
+
+    <CANONICAL_GROUNDING>
+    {location_anchor}. Esta relação vem do mapa e é autoridade. Nunca atribua um
+    local a outra cidade/região, mesmo que o histórico recente contenha prosa conflitante.
+    Inventário mecânico atual do jogador: {inventory_anchor}. Somente esta lista é
+    autoridade de posse; pistas mencionadas, itens desejados ou objetos recusados
+    não estão com o jogador.
+    Identidades visuais canônicas dos NPCs presentes:
+    {npc_identity_anchor}
+    Nunca troque espécie, porte ou aparência-base dessas fichas.
+    </CANONICAL_GROUNDING>
 
     <TAREFA>
     1. ATUALIZAR O RESUMO: Escreva um novo parágrafo que combine o resumo anterior com os novos eventos recentes. Mantenha foco no "Aqui e Agora".
@@ -584,7 +670,45 @@ def archive_node(state: GameState):
             summary = (current_summary if suppress_free_facts and not conflict_summary
                        else _extract_summary_plain(llm, context_msgs, current_summary))
             rag_ok = persist_records(authoritative_records)
-            summary = merged_summary(summary)
+            grounded_summary, summary_rejections = sanitize_location_grounding(summary)
+            grounded_summary, inventory_rejections = sanitize_inventory_grounding(
+                grounded_summary, effective_state,
+            )
+            grounded_summary, npc_rejections = sanitize_npc_identity_grounding(
+                grounded_summary, effective_state,
+            )
+            if summary_rejections or inventory_rejections or npc_rejections:
+                memory_rejections = bounded_audit_rows([
+                    *memory_rejections,
+                    *[
+                        {
+                            "turn": int(turn),
+                            "provenance": "narrative_summary",
+                            "reason": "location_region_contradiction",
+                            **row,
+                        }
+                        for row in summary_rejections
+                    ],
+                    *[
+                        {
+                            "turn": int(turn),
+                            "provenance": "narrative_summary",
+                            "reason": "inventory_possession_contradiction",
+                            **row,
+                        }
+                        for row in inventory_rejections
+                    ],
+                    *[
+                        {
+                            "turn": int(turn),
+                            "provenance": "narrative_summary",
+                            "reason": "npc_identity_contradiction",
+                            **row,
+                        }
+                        for row in npc_rejections
+                    ],
+                ], limit=MAX_MEMORY_REJECTIONS)
+            summary = merged_summary(grounded_summary or current_summary)
             if summary or canonical_text:
                 print("📝 [ARCHIVIST] narrative_summary salvo via fallback de texto.")
                 updates = {
@@ -655,9 +779,54 @@ def archive_node(state: GameState):
             None if rag_ok else "Falha ao persistir memória de sessão.")
 
         # 2. Resumo (curto prazo)
-        updates["narrative_summary"] = merged_summary(
+        summary_candidate = (
             current_summary if suppress_free_facts and not conflict_summary
-            else result.new_summary)
+            else result.new_summary
+        )
+        grounded_summary, summary_rejections = sanitize_location_grounding(
+            summary_candidate,
+        )
+        grounded_summary, inventory_rejections = sanitize_inventory_grounding(
+            grounded_summary, effective_state,
+        )
+        grounded_summary, npc_rejections = sanitize_npc_identity_grounding(
+            grounded_summary, effective_state,
+        )
+        if summary_rejections or inventory_rejections or npc_rejections:
+            memory_rejections = bounded_audit_rows([
+                *memory_rejections,
+                *[
+                    {
+                        "turn": int(turn),
+                        "provenance": "narrative_summary",
+                        "reason": "location_region_contradiction",
+                        **row,
+                    }
+                    for row in summary_rejections
+                ],
+                *[
+                    {
+                        "turn": int(turn),
+                        "provenance": "narrative_summary",
+                        "reason": "inventory_possession_contradiction",
+                        **row,
+                    }
+                    for row in inventory_rejections
+                ],
+                *[
+                    {
+                        "turn": int(turn),
+                        "provenance": "narrative_summary",
+                        "reason": "npc_identity_contradiction",
+                        **row,
+                    }
+                    for row in npc_rejections
+                ],
+            ], limit=MAX_MEMORY_REJECTIONS)
+            updates.update(memory_state_updates())
+        updates["narrative_summary"] = merged_summary(
+            grounded_summary or current_summary,
+        )
 
         if not rag_ok and (conflict_summary or canonical_only):
             # Não confirma o turno nem cria Crônica antes do commit durável.

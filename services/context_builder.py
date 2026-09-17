@@ -12,6 +12,7 @@ faziam, agora aqui dentro e com try/except). Spec: specs/fase-2.8-context-builde
 from __future__ import annotations
 
 import math
+import os
 import re
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
@@ -386,13 +387,42 @@ def build_context_pack(state: Dict, query: str, purpose: str,
     facts = collect_dynamic_facts(state, purpose=purpose, query=query,
                                   current_loc=current_loc, scene_entities=scene_entities)
 
-    # Lore global (respeita visibility; segredo não vaza). Falha de rede → "".
-    lore_text = ""
+    from services.context_sources import (
+        EmbeddedContextQuery,
+        acquire_context_sources,
+        embed_context_query,
+    )
+
+    custom_readers = None
+    if RAG_AVAILABLE and (
+        query_rag is not getattr(_rag, "query_rag", None)
+        or query_session_memory is not getattr(_rag, "query_session_memory", None)
+        or query_npc_memory is not getattr(_rag, "query_npc_memory", None)
+    ):
+        custom_readers = {"lore": lambda: query_rag(
+            query, index_name="lore", max_visibility="public",
+        )}
+        if game_id:
+            custom_readers["session"] = lambda: query_session_memory(query, game_id)
+        if game_id and npc_id:
+            custom_readers["npc"] = lambda: query_npc_memory(game_id, npc_id, query)
+    # Test doubles and compatibility adapters own their complete retrieval path.
+    # Do not perform a real embedding before invoking those custom readers.
+    embedded = (
+        EmbeddedContextQuery(query, None, None, None)
+        if custom_readers is not None
+        else embed_context_query(query, game_id=game_id, npc_id=npc_id)
+    )
     try:
-        lore_text = query_rag(query, index_name="lore",
-                              max_visibility="public") or ""
-    except Exception:
-        lore_text = ""
+        workers = max(1, min(3, int(os.getenv("RPG_CONTEXT_MAX_CONCURRENCY", "3"))))
+    except ValueError:
+        workers = 3
+    acquired = acquire_context_sources(
+        embedded, game_id=game_id, npc_id=npc_id, max_workers=workers,
+        readers=custom_readers,
+    )
+    source_text = {result.source: result.text for result in acquired}
+    lore_text = source_text.get("lore", "")
 
     # Memória de sessão nunca entra no bloco de lore canônico.
     memory_parts = []
@@ -400,10 +430,20 @@ def build_context_pack(state: Dict, query: str, purpose: str,
 
     def add_memory_part(text: str, *, legacy_if_unlabeled: bool = False) -> None:
         clean = str(text or "").strip()
+        from services.memory_provenance import (
+            canonical_location_contradiction,
+            false_player_death_claim,
+            inventory_possession_contradiction,
+            npc_identity_contradiction,
+        )
         if (
             not clean
             or clean in seen_memory_text
             or find_strict_unrevealed(clean, state)
+            or false_player_death_claim(clean, state)
+            or canonical_location_contradiction(clean)
+            or inventory_possession_contradiction(clean, state)
+            or npc_identity_contradiction(clean, state)
         ):
             return
         # O índice pré-spec devolve texto cru; jamais lhe atribuímos autoridade.
@@ -422,35 +462,38 @@ def build_context_pack(state: Dict, query: str, purpose: str,
     # O ledger auditável dá continuidade mesmo se o índice estiver temporariamente
     # indisponível. Conteúdo com assinatura secreta não revelada falha fechado.
     for record in active_memory_facts(
-        state.get("memory_facts"), current_turn=int((state.get("world") or {}).get("turn_count", 0) or 0)
+        state.get("memory_facts"),
+        current_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
+        state=state,
     )[-20:]:
         if find_strict_unrevealed(record["text"], state):
             continue
         add_memory_part(format_memory_fact(record))
 
     if game_id:
-        try:
-            session_memory = query_session_memory(query, game_id)
-            if session_memory:
-                add_memory_part(session_memory, legacy_if_unlabeled=True)
-        except Exception:
-            pass
+        session_memory = source_text.get("session", "")
+        if session_memory:
+            add_memory_part(session_memory, legacy_if_unlabeled=True)
     if npc_id and game_id:
-        try:
-            npc_mem = query_npc_memory(game_id, npc_id, query)
-            if npc_mem:
-                add_memory_part(npc_mem, legacy_if_unlabeled=True)
-        except Exception:
-            pass
+        npc_mem = source_text.get("npc", "")
+        if npc_mem:
+            add_memory_part(npc_mem, legacy_if_unlabeled=True)
     memory_text = "\n".join(memory_parts)
 
     budget = ContextBudget(max_tokens=token_budget)
     return assemble_pack(facts, budget, lore_text=lore_text, memory_text=memory_text)
 
 
-def active_memory_facts(rows, *, current_turn: int) -> list[dict]:
+def active_memory_facts(rows, *, current_turn: int,
+                        state: Optional[dict] = None) -> list[dict]:
     """Contexto ativo: especulação não confirmada expira após 20 turnos."""
     records = normalize_memory_facts(rows)
+    from services.memory_provenance import (
+        canonical_location_contradiction,
+        false_player_death_claim,
+        inventory_possession_contradiction,
+        npc_identity_contradiction,
+    )
     return [
         record for record in records
         if not (
@@ -458,4 +501,8 @@ def active_memory_facts(rows, *, current_turn: int) -> list[dict]:
             and record.get("source_turn") is not None
             and int(current_turn) - int(record.get("source_turn") or 0) >= 20
         )
+        and not (state and false_player_death_claim(record["text"], state))
+        and not canonical_location_contradiction(record["text"])
+        and not (state and inventory_possession_contradiction(record["text"], state))
+        and not (state and npc_identity_contradiction(record["text"], state))
     ]

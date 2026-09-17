@@ -1,6 +1,6 @@
 # SPEC — Continuação segura de matriz interrompida
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada/Atualizada:** 2026-08-21
 > **Origem:** matriz A `20260820-200416-642340`, interrompida no par 5
 > **Depende de:** `matriz-longrun-multiperfil-niveis`, `playtest-matrix-single-flight`

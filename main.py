@@ -25,12 +25,12 @@ from state import GameState
 from agents.campaign_manager import campaign_manager_node
 from agents.combat import combat_node
 from agents.npc import npc_actor_node
-from agents.router import dm_router_node
 from agents.storyteller import storyteller_node
 from agents.loot import loot_node
 from agents.archivist import archive_node # <--- NOVO
 from agents.action_guard import action_guard_node
 from agents.turn_finalizer import turn_finalizer_node
+from services.turn_pipeline import dispatch_node, route_intent_node, turn_prepare_node
 
 load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
 
@@ -41,7 +41,7 @@ def build_game_graph():
 
     # 1. Adicionar Nós
     workflow.add_node("campaign_manager", campaign_manager_node)
-    workflow.add_node("dm_router", dm_router_node)
+    workflow.add_node("dm_router", route_intent_node)
     workflow.add_node("storyteller", storyteller_node)
     workflow.add_node("combat_agent", combat_node)
     workflow.add_node("npc_actor", npc_actor_node)
@@ -49,6 +49,8 @@ def build_game_graph():
     workflow.add_node("archivist", archive_node) # <--- NOVO
     workflow.add_node("action_guard", action_guard_node)
     workflow.add_node("turn_finalizer", turn_finalizer_node)
+    workflow.add_node("turn_prepare", turn_prepare_node)
+    workflow.add_node("dispatch", dispatch_node)
 
     # 2. Definir o Fluxo Inicial
     # R4 (fix-playtest-achados): save morto (game_over) é MEMORIAL — o grafo NÃO
@@ -65,14 +67,25 @@ def build_game_graph():
     )
     workflow.add_conditional_edges(
         "action_guard",
-        lambda s: "__end__" if s.get("action_guard_blocked") else "campaign_manager",
-        {"__end__": END, "campaign_manager": "campaign_manager"},
+        lambda s: "__end__" if s.get("action_guard_blocked") else "turn_prepare",
+        {"__end__": END, "turn_prepare": "turn_prepare"},
     )
-    workflow.add_edge("campaign_manager", "dm_router")
+    # R29 (2026-08-28) found provider contention when SMART planning and
+    # CLASSIFY routing hit the same DeepSeek route at once. Keep the concurrent
+    # topology opt-in, but default to the production-safe sequential path.
+    execution_mode = os.getenv("RPG_TURN_EXECUTION", "sequential").strip().lower()
+    if execution_mode == "concurrent":
+        workflow.add_edge("turn_prepare", "campaign_manager")
+        workflow.add_edge("turn_prepare", "dm_router")
+        workflow.add_edge(["campaign_manager", "dm_router"], "dispatch")
+    else:
+        workflow.add_edge("turn_prepare", "campaign_manager")
+        workflow.add_edge("campaign_manager", "dm_router")
+        workflow.add_edge("dm_router", "dispatch")
 
     # 3. Roteamento Central
     workflow.add_conditional_edges(
-        "dm_router",
+        "dispatch",
         lambda state: state.get("next"),
         {
             "storyteller": "storyteller",

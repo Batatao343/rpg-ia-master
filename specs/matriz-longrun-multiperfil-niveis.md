@@ -1,7 +1,7 @@
 # SPEC — Matriz longrun multiperfil e multinível
 
-> **Status:** `approved`
-> **Criada:** 2026-08-20 · **Atualizada:** 2026-08-20
+> **Status:** `in-progress` — remediações locais concluídas; B integral bloqueada por saldo DeepSeek
+> **Criada:** 2026-08-20 · **Atualizada:** 2026-09-17
 > **Depende de:** `remediacao-playtest-comerciante-real`
 > **Desbloqueia:** ciclo pareado de remediação e regressão 10×200 + 10×200
 
@@ -94,14 +94,21 @@ matriz como um único experimento comparável.
 
 - [x] Níveis 1/3/9/20 têm builds coerentes e sem escolhas essenciais pendentes.
 - [x] Matriz curta offline 10×3 completa e manifesta os dez pares.
-- [ ] Matriz A real completa 10×200 e gera relatório curado.
-- [ ] Todos os achados A viram specs e são executados.
+- [x] Matriz A real completa 10×200 e gera relatório curado.
+- [x] Todos os achados A viraram specs e foram executados offline.
 - [ ] Matriz B real completa 10×200 e relatório pareado prova as correções.
 - [ ] Nenhum erro/regressão novo em B; se houver, execução para e usuário decide.
 - [x] `uv run pytest` verde (suíte completa offline).
 - [x] Saves normais e CLI sem `--start-level` preservam nível 1.
 
 ## 6. Smoke test com LLM real
+
+**Revisão 17/09:** o run B `20260831-172359-833976` parou em 751/2.000 turnos
+com HTTP 402 DeepSeek. A retomada de 16/09 falhou no preflight pelo mesmo motivo.
+Após os fixes adicionais, B deve reiniciar do par 1; campanhas parciais anteriores
+são histórico, não aceite do build atual. O smoke offline 10×3 de 17/09 passou
+sem erros/violações (`20260917-112524-245088`). Detalhes e comando em
+[fechamento local](../docs/fechamento-local-2026-09-17.md).
 
 A própria matriz A é o smoke de descoberta e a B é o smoke de regressão. Cada
 campanha deve registrar `mock=false`, pelo menos um sucesso de rede no startup e

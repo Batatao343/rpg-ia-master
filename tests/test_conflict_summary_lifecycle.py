@@ -203,17 +203,14 @@ def test_grafo_real_consume_combate_loot_e_summary_no_mesmo_invoke(monkeypatch):
             final = chunk
 
     node_names = [name for name, _update in node_updates]
-    assert node_names == [
-        "action_guard",
-        "campaign_manager",
-        "dm_router",
-        "combat_agent",
-        "loot_agent",
-        "archivist",
-        "turn_finalizer",
+    assert node_names[:2] == ["action_guard", "turn_prepare"]
+    assert set(node_names[2:4]) == {"campaign_manager", "dm_router"}
+    assert node_names[4:] == [
+        "dispatch", "combat_agent", "loot_agent", "archivist", "turn_finalizer",
     ]
-    combat_update = dict(node_updates[3][1])
-    loot_update = dict(node_updates[4][1])
+    updates_by_name = {name: update for name, update in node_updates}
+    combat_update = dict(updates_by_name["combat_agent"])
+    loot_update = dict(updates_by_name["loot_agent"])
     conflict_id = combat_update["conflict_summary"]["conflict_id"]
     assert loot_update["conflict_summary"]["loot_obtido"] == [
         {"kind": "gold", "amount": 7},

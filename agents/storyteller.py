@@ -221,16 +221,16 @@ def _deterministic_story_fallback(notes, light: dict) -> str:
 def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text: str,
                   game_id: str = "", home_id: str = "", turn: int = 0) -> Dict[str, Dict]:
     from services import npc_layers
+    from services.entity_identity import find_runtime_npc_key
 
-    existing_lower = {name.lower(): name for name in npcs.keys()}
-    if new_name.lower() in existing_lower:
+    canonical = find_runtime_npc_key(npcs, new_name)
+    if canonical is not None:
         # já conhecido: a cena o trouxe de volta (camada 3).
         # spec encontros-dedupe (exceção narrativa): re-introduzir um NPC conhecido
         # é uma decisão DELIBERADA do narrador/player (com o filtro R1 ele nem
         # aparece no contexto fora do seu local, então não há reuso passivo). Logo,
         # se ele foi trazido para OUTRO local (viajou junto, mandado em missão),
         # RELOCALIZA — o home_location_id passa a ser o local atual.
-        canonical = existing_lower[new_name.lower()]
         new_npcs = dict(npcs)
         if isinstance(new_npcs.get(canonical), dict):
             atual = new_npcs[canonical]
@@ -241,6 +241,20 @@ def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text
         return new_npcs
     tpl = generate_new_npc(new_name, context=f"Local: {loc}. Cena: {narrative_text}")
     if not tpl: return npcs
+    # O librarian/cache pode resolver uma referência técnica para uma ficha já
+    # presente (ex.: npc_skriit_mil_olhos -> Skriit Mil-olhos). Revalida APÓS
+    # a fábrica para não inserir o mesmo id sob uma segunda chave.
+    canonical = find_runtime_npc_key(npcs, new_name, tpl)
+    if canonical is not None:
+        new_npcs = dict(npcs)
+        atual = dict(new_npcs[canonical])
+        new_npcs[canonical] = {
+            **atual,
+            "in_scene": True,
+            "last_seen_turn": turn,
+            "home_location_id": home_id or atual.get("home_location_id", ""),
+        }
+        return new_npcs
     new_npcs = dict(npcs)
     # A fábrica já devolve a ficha v4 materializada. Ela é a fonte da verdade:
     # recompor aqui apenas os campos antigos apagava Virtudes, Vitalidade,
@@ -261,7 +275,7 @@ def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text
     # spec npcs-3-camadas: quem a cena introduziu está EM cena e é conhecido.
     novo = npc_layers.ensure_npc_fields(novo, game_id, home_location_id=home_id,
                                         in_scene=True)
-    new_npcs[new_name] = novo
+    new_npcs[str(novo.get("name") or new_name)] = novo
     return new_npcs
 
 def storyteller_node(state: GameState):
@@ -366,6 +380,14 @@ def storyteller_node(state: GameState):
         if dest else state.get("npcs", {})
     )
     scene_state = {**state, "world": world, "npcs": scene_npcs}
+    travel_needs_replan = bool(state.get("needs_replan"))
+    if dest:
+        from agents.campaign_manager import _same_region
+        planned_location = str((state.get("campaign_plan") or {}).get("location") or "")
+        if planned_location and not _same_region(
+            planned_location, str(world.get("current_location") or ""),
+        ):
+            travel_needs_replan = True
 
     # (Ação livre: o gating é feito pelo PRÓPRIO narrador no prompt — sem chamada extra ao Ruler.)
 
@@ -444,6 +466,7 @@ def storyteller_node(state: GameState):
                     "next": "combat_agent",
                     "archive_due": True,  # emboscada = evento relevante
                     "npcs": scene_npcs,
+                    "needs_replan": travel_needs_replan,
                 }
                 if rested_player is not None:
                     updates["player"] = rested_player  # já curou no descanso antes da emboscada
@@ -759,7 +782,7 @@ def storyteller_node(state: GameState):
                 })
 
         # --- Avanço de beat: o narrador sinaliza quando o objetivo da cena foi cumprido ---
-        needs_replan = state.get("needs_replan", False)
+        needs_replan = travel_needs_replan
         updated_plan = campaign_plan
         beat_done = (
             bool(getattr(update, "beat_completed", False))
@@ -879,6 +902,11 @@ def storyteller_node(state: GameState):
             updates["messages"] = [AIMessage(content=clean)]
             updates["narrative_rejections"] = [
                 f"item_rejected:{name}" for name in dict.fromkeys(rejected_claims)]
+            from persistence import normalize_rejected_item_claims
+            updates["rejected_item_claims"] = normalize_rejected_item_claims([
+                *list(state.get("rejected_item_claims") or []),
+                *rejected_claims,
+            ])
         reward_note = _reward_confirmation(
             reward_player_before,
             updates.get("player") or state.get("player") or {},
@@ -976,5 +1004,6 @@ def storyteller_node(state: GameState):
             # viagem mecânica sobrevive ao LLM flaky: mundo anda e a cena esvazia
             from services import npc_layers
             fallback["world"] = world
+            fallback["needs_replan"] = travel_needs_replan
             fallback["npcs"] = npc_layers.reset_scene(state.get("npcs", {}))
         return fallback

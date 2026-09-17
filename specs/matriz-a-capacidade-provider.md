@@ -1,6 +1,6 @@
 # SPEC — Capacidade de provider antes de longrun real
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Criada/Atualizada:** 2026-08-20
 > **Origem:** matriz A `20260820-134236-013629`
 
@@ -37,7 +37,7 @@ US$ 0,25 no turno final.
   preflight real CLASSIFY/FAST/SMART verde em 2026-08-20.
 - [x] Pacer não atua no mock nem em outro modelo e espaça 120b no real.
 - [x] Matrix curta offline e suíte completa verdes.
-- [ ] A1 real completa 10×200 sem invocação terminal.
+- [x] Matriz A real completou 10×200; falhas estruturadas foram recuperadas sem invocação terminal.
 
 > **Evidência negativa A1:** `20260820-155300-494278` foi interrompida após o
 > primeiro par revelar 707 falhas/796 tentativas e 146 turnos sem sucesso de

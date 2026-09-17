@@ -74,6 +74,10 @@ Toast visual novo, async do archivist e mudanças nos valores de recompensa.
 
 ## 6. Smoke real
 
+Atualização de 17/09: outcomes sobrevivem save/load e o recibo incorpora
+readiness da transição. B integral bloqueada por HTTP 402 DeepSeek; ver
+[fechamento local](../docs/fechamento-local-2026-09-17.md).
+
 Completar uma quest com ouro via evento proposto pelo LLM; comparar texto,
 `last_turn_outcome`, ledger e resposta SSE.
 

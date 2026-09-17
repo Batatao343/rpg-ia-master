@@ -15,6 +15,7 @@ Fundação determinística (sem LLM). O flip do fluxo de morte em `agents/combat
 from __future__ import annotations
 
 import copy
+import hashlib
 from typing import Any, Dict, Optional
 
 import persistence
@@ -44,8 +45,8 @@ def entered_safe_zone(state: dict, prev: Optional[dict]) -> bool:
 def should_checkpoint(state: dict, prev: Optional[dict] = None) -> bool:
     """D1: grava a cada CHECKPOINT_EVERY turnos OU ao entrar em zona segura.
     Nunca grava com o jogo encerrado (memorial) ou morte pendente."""
-    if (state.get("game_over") or state.get("death_pending")
-            or (state.get("combat") or {}).get("active")):
+    from services.actor_lifecycle import transition_readiness
+    if not transition_readiness(state)["ready"]:
         return False
     t = _turn(state)
     if t > 0 and t % CHECKPOINT_EVERY == 0:
@@ -55,7 +56,8 @@ def should_checkpoint(state: dict, prev: Optional[dict] = None) -> bool:
 
 def snapshot(state: dict) -> Optional[dict]:
     """Cópia profunda do estado e da memória externa usada pelo harness."""
-    if (state.get("combat") or {}).get("active"):
+    from services.actor_lifecycle import transition_readiness
+    if not transition_readiness(state)["ready"]:
         return None
     snap = copy.deepcopy(state)
     from services.continuity import mark_checkpoint
@@ -83,25 +85,21 @@ def maybe_write(state: dict, prev: Optional[dict] = None) -> bool:
 
 
 def _sanitize_legacy_combat_checkpoint(restored: dict) -> dict:
-    """Fecha uma cena ativa capturada por versões antigas antes de restaurá-la."""
-    if not (restored.get("combat") or {}).get("active"):
+    """Fecha cena/transições efêmeras capturadas por versões antigas."""
+    from services.actor_lifecycle import transition_readiness, sanitize_interturn_state
+    readiness = transition_readiness(restored)
+    if readiness["ready"]:
         return restored
     clean = copy.deepcopy(restored)
     old = clean.get("combat") or {}
-    clean["combat"] = {
-        "active": False, "round": int(old.get("round", 0) or 0),
-        "idle_turns": 0, "origin": old.get("origin", "unknown"), "scene": None,
-    }
-    clean["enemies"] = []
-    clean["combat_target"] = None
-    player = dict(clean.get("player") or {})
-    player["vitalidade"] = max(1, int(player.get("vitalidade", 0) or 0))
-    player["hp"] = player["vitalidade"]
-    player["dead"] = False
-    player["conscious"] = True
-    player["estado_terminal"] = False
-    clean["player"] = player
-    return clean
+    if old.get("active"):
+        clean["combat"] = {
+            "active": False, "round": int(old.get("round", 0) or 0),
+            "idle_turns": 0, "origin": old.get("origin", "unknown"), "scene": None,
+        }
+        clean["enemies"] = []
+        clean["combat_target"] = None
+    return sanitize_interturn_state(clean)
 
 
 def resolve_death_choice(state: dict, choice: str, *,
@@ -119,6 +117,34 @@ def resolve_death_choice(state: dict, choice: str, *,
         new = copy.deepcopy(state)
         new["death_pending"] = False
         new["game_over"] = True
+        events = list(new.get("event_log") or [])
+        if not any(
+            isinstance(event, dict) and event.get("type") == "player_died"
+            for event in events
+        ):
+            turn = _turn(new)
+            epoch = int((new.get("continuity") or {}).get("timeline_epoch", 0) or 0)
+            event_id = hashlib.sha256(
+                f"{new.get('game_id', '')}:{epoch}:{turn}:player_died".encode("utf-8")
+            ).hexdigest()[:32]
+            event = {
+                "event_id": event_id,
+                "turn": turn,
+                "type": "player_died",
+                "actor_id": "player",
+                "target_id": "player",
+                "payload": {"detail": "o fim foi aceito e a campanha tornou-se memorial"},
+                "source": "combat",
+            }
+            events.append(event)
+            new["event_log"] = events
+            from services.chronicle import append_entry, render_milestone
+            milestone = render_milestone(event, new.get("world_projection") or {})
+            if milestone:
+                new["chronicle"] = append_entry(
+                    new.get("chronicle") or [], text=milestone, turn=turn,
+                    kind="milestone", event_id=event_id,
+                )
         return new
 
     restored: Optional[dict] = None

@@ -4,7 +4,7 @@ import random
 from types import SimpleNamespace
 
 import gamedata
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage
 from agents import npc as npc_mod
 from agents import storyteller
 from services import conflict_scene as cs
@@ -226,6 +226,15 @@ class _DialogueLLM:
         )
 
 
+class _RepeatedOpeningDialogueLLM(_DialogueLLM):
+    def invoke(self, _messages):
+        return npc_mod.NPCResponse(
+            dialogue="Ela te encara por um longo momento antes de responder.",
+            action_description="mantém os braços cruzados",
+            memory_update="",
+        )
+
+
 def _dialogue_state():
     return {
         "game_id": "memory-policy",
@@ -275,6 +284,54 @@ def test_npc_dialogue_marks_memory_as_canonical_only(monkeypatch):
     assert result["memory_facts"][0]["provenance"] == "npc_claim"
     assert result["memory_facts"][0]["confidence"] == "reported"
     assert result["memory_facts"][0]["source_id"] == "npc:npc_grum"
+
+
+def test_npc_dialogue_varia_abertura_sem_nova_chamada(monkeypatch):
+    llm = _RepeatedOpeningDialogueLLM()
+    calls = []
+    original_invoke = llm.invoke
+
+    def _invoke(messages):
+        calls.append(messages)
+        return original_invoke(messages)
+
+    monkeypatch.setattr(llm, "invoke", _invoke)
+    monkeypatch.setattr(npc_mod, "get_llm", lambda *_args, **_kwargs: llm)
+    monkeypatch.setattr(
+        npc_mod,
+        "build_context_pack",
+        lambda *_args, **_kwargs: SimpleNamespace(
+            memory_block="", lore_block="", world_state_block=""),
+    )
+    monkeypatch.setattr(npc_mod, "add_npc_memory", lambda *_args, **_kwargs: True)
+    state = _dialogue_state()
+    state["messages"] = [
+        AIMessage(content=(
+            '**Grum:** "Ela te encara por um longo momento e aponta a saída."'
+        )),
+        HumanMessage(content="E agora?"),
+        AIMessage(content=(
+            '**Grum:** "Ela te encara por um longo momento sem dizer nada."'
+        )),
+        HumanMessage(content="Responda."),
+    ]
+
+    result = npc_mod.npc_actor_node(state)
+    visible = result["messages"][0].content
+
+    assert len(calls) == 1
+    assert "Ela te encara por um longo momento" in visible
+    assert not visible.startswith('**Grum:** "Ela te encara por um longo momento')
+    assert "VARIE A ABERTURA" in str(calls[0][0].content)
+    assert '""Ela' not in visible
+    assert (
+        'respondeu "Ela te encara por um longo momento antes de responder."'
+        in result["memory_facts"][0]["text"]
+    )
+
+    from playtest.invariants import check_repeated_opening
+    combined = {"messages": [*state["messages"], *result["messages"]]}
+    assert check_repeated_opening(combined, None, 3) == []
 
 
 def test_npc_dialogue_success_is_idempotent_in_global_ledger(monkeypatch):

@@ -23,6 +23,7 @@ class ConflictSummary(BaseModel):
     participantes: List[str] = Field(default_factory=list)
     sobreviventes: List[str] = Field(default_factory=list)
     mortos: List[str] = Field(default_factory=list)
+    caidos: List[str] = Field(default_factory=list)
     inconscientes: List[str] = Field(default_factory=list)
     rendidos: List[str] = Field(default_factory=list)
     fugitivos: List[str] = Field(default_factory=list)
@@ -138,7 +139,14 @@ def build_summary(participants: List[dict], *, scene: Optional[dict] = None,
         extras.get("conflict_id") or extras.get("id") or ""
     ).strip()
 
-    mortos = [_pid(p) for p in participants if p.get("dead")]
+    downed_ids = {
+        str(value) for value in extras.get("downed_ids") or [] if str(value)
+    }
+    caidos = [
+        _pid(p) for p in participants
+        if str(p.get("id") or "") in downed_ids or _pid(p) in downed_ids
+    ]
+    mortos = [_pid(p) for p in participants if p.get("dead") and _pid(p) not in caidos]
     fugitivos = [_pid(p) for p in participants if p.get("fled")]
     if chase_state and chase_state.get("escapou") and chase_state.get("fugitive_id"):
         fid = chase_state["fugitive_id"]
@@ -166,10 +174,16 @@ def build_summary(participants: List[dict], *, scene: Optional[dict] = None,
         conflict_id=explicit_id,
         conflict_turn=conflict_turn,
         participantes=[_pid(p) for p in participants],
-        sobreviventes=[_pid(p) for p in participants if not p.get("dead")],
+        sobreviventes=[
+            _pid(p) for p in participants
+            if not p.get("dead") or _pid(p) in caidos
+        ],
         mortos=mortos,
+        caidos=caidos,
         inconscientes=[_pid(p) for p in participants
-                       if not p.get("dead") and (not p.get("conscious", True) or p.get("incapacitated"))],
+                       if (_pid(p) in caidos or not p.get("dead"))
+                       and (not p.get("conscious", True)
+                            or p.get("incapacitated") or _pid(p) in caidos)],
         rendidos=[_pid(p) for p in participants if p.get("surrendered")],
         fugitivos=fugitivos,
         capturados=[_pid(p) for p in participants if p.get("captured")],
@@ -236,6 +250,8 @@ def summary_facts(summary: dict) -> List[str]:
     facts: List[str] = []
     for nome in summary.get("mortos") or []:
         facts.append(f"{nome} morreu no conflito.")
+    for nome in summary.get("caidos") or []:
+        facts.append(f"{nome} caiu no conflito e aguarda recuperação.")
     for nome in summary.get("rendidos") or []:
         facts.append(f"{nome} se rendeu.")
     for nome in summary.get("capturados") or []:
@@ -262,6 +278,7 @@ def canonical_summary_text(summary: dict) -> str:
     clauses: List[str] = []
     mapping = (
         ("mortos", "Mortos"),
+        ("caidos", "Caídos"),
         ("rendidos", "Rendidos"),
         ("capturados", "Capturados"),
         ("fugitivos", "Fugitivos"),

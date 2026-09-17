@@ -578,6 +578,145 @@ def query_session_memory(query: str, game_id: str) -> str:
     return _format_memory_documents(_query_session_documents(query, game_id, k=6))
 
 
+def prepare_shared_query_vector(query: str, paths: List[str]) -> tuple[Optional[List[float]], Optional[str], Optional[str]]:
+    """Embed once when every existing FAISS scope uses the same pinned profile."""
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        embeddings = get_embeddings()
+        provider = active_provider() or _resolve_provider()
+        if not query or embeddings is None or provider is None:
+            return None, provider, _PROVIDER_MODELS.get(provider or "")
+        try:
+            vector = list(embeddings.embed_query(query))
+        except Exception:
+            return None, provider, _PROVIDER_MODELS.get(provider)
+        if len(vector) != 1024:
+            _LOG.warning("Vetor compartilhado incompatível com PgVector: %s dimensões", len(vector))
+            return None, provider, _PROVIDER_MODELS.get(provider)
+        return vector, provider, _PROVIDER_MODELS.get(provider)
+    indexed = [path for path in paths if _has_faiss_index(path)]
+    if not query or not indexed:
+        return None, None, None
+    providers = set()
+    metadata = []
+    for path in indexed:
+        meta = _read_meta(path) or {}
+        metadata.append(meta)
+        providers.add(meta.get("provider") or _LEGACY_PROVIDER)
+    if len(providers) != 1:
+        return None, None, None
+    provider = providers.pop()
+    model = _PROVIDER_MODELS.get(provider)
+    if any(meta.get("model", model) != model for meta in metadata):
+        _LOG.warning("Modelo de embedding incompatível; contexto compartilhado recusado")
+        return None, provider, model
+    embeddings = get_embeddings_for(provider)
+    if embeddings is None:
+        return None, provider, _PROVIDER_MODELS.get(provider)
+    try:
+        vector = list(embeddings.embed_query(query))
+    except Exception:
+        return None, provider, _PROVIDER_MODELS.get(provider)
+    if any(
+        meta.get("dimensions") is not None and meta["dimensions"] != len(vector)
+        for meta in metadata
+    ):
+        _LOG.warning("Dimensão de embedding incompatível; contexto compartilhado recusado")
+        return None, provider, model
+    return vector, provider, _PROVIDER_MODELS.get(provider)
+
+
+def query_global_by_vector(vector: List[float], index_name: str = "lore",
+                           max_visibility: str = "public") -> str:
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        from infrastructure.contracts import MemoryQuery
+        from infrastructure.runtime import get_runtime
+
+        documents = get_runtime().memory_store.query(MemoryQuery(
+            text="", scope="rules" if index_name == "rules" else "lore",
+            max_visibility=max_visibility, k=2, vector=tuple(vector),
+            embedding_profile_id="local-1024",
+        ))
+        return "\n---\n".join(document.text for document in documents if document.text)
+    path = get_global_db_path(index_name)
+    if not vector or not _has_faiss_index(path):
+        return ""
+    embeddings = _embeddings_for_index(path)
+    if embeddings is None:
+        return ""
+    try:
+        db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
+        candidates = db.similarity_search_by_vector(vector, k=6)
+        maximum = vis_rank(max_visibility)
+        visible = [
+            doc for doc in candidates
+            if vis_rank(doc.metadata.get("visibility")) <= maximum
+        ]
+        return _format_documents(visible[:2])
+    except Exception:
+        return ""
+
+
+def query_session_by_vector(vector: List[float], game_id: str, *, k: int = 6) -> str:
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        from infrastructure.contracts import MemoryQuery
+        from infrastructure.request_context import current_principal
+        from infrastructure.runtime import get_runtime
+
+        documents = get_runtime().memory_store.query(MemoryQuery(
+            text="", scope="session", principal=current_principal(),
+            game_id=uuid.UUID(str(game_id)), k=k, vector=tuple(vector),
+            embedding_profile_id="local-1024",
+        ))
+        return "\n---\n".join(document.text for document in documents if document.text)
+    path = _get_session_path(game_id)
+    if not vector or not _has_faiss_index(path):
+        return ""
+    embeddings = _embeddings_for_index(path)
+    if embeddings is None:
+        return ""
+    try:
+        db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
+        return _format_memory_documents(db.similarity_search_by_vector(vector, k=k))
+    except Exception:
+        return ""
+
+
+def query_npc_by_vector(vector: List[float], game_id: str, npc_id: str, *, k: int = 3) -> str:
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        from infrastructure.contracts import MemoryQuery
+        from infrastructure.request_context import current_principal
+        from infrastructure.runtime import get_runtime
+
+        documents = get_runtime().memory_store.query(MemoryQuery(
+            text="", scope="npc", principal=current_principal(),
+            game_id=uuid.UUID(str(game_id)), npc_id=npc_id, k=k,
+            vector=tuple(vector), embedding_profile_id="local-1024",
+        ))
+        return "\n---\n".join(document.text for document in documents if document.text)
+    path = _get_npc_path(game_id, npc_id)
+    if not vector or not _has_faiss_index(path):
+        return ""
+    embeddings = _embeddings_for_index(path)
+    if embeddings is None:
+        return ""
+    try:
+        db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
+        return _format_memory_documents(db.similarity_search_by_vector(vector, k=k))
+    except Exception:
+        return ""
+
+
+def context_index_paths(*, game_id: Optional[str] = None,
+                        npc_id: Optional[str] = None,
+                        index_name: str = "lore") -> List[str]:
+    paths = [get_global_db_path(index_name)]
+    if game_id:
+        paths.append(_get_session_path(game_id))
+    if game_id and npc_id:
+        paths.append(_get_npc_path(game_id, npc_id))
+    return paths
+
+
 def _query_rag_impl(query: str, index_name: str = "lore", game_id: Optional[str] = None,
                     max_visibility: str = "public") -> str:
     """

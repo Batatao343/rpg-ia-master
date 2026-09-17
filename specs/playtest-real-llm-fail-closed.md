@@ -1,6 +1,6 @@
 # SPEC — Playtest real LLM-only deve falhar fechado
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Criada/Atualizada:** 2026-08-20
 > **Origem:** matriz A1 interrompida `20260820-155300-494278`
 
@@ -32,4 +32,4 @@ diária. Portanto o harness precisa falhar fechado durante a campanha.
 - [x] Unidade acusa grupo sem sucesso, inclusive circuit/build error.
 - [x] Matrix real passa a flag estrita e para antes do segundo par.
 - [x] Matrix offline curta e suíte completa verdes.
-- [ ] Nova execução real sem capacidade aborta no primeiro turno afetado.
+- [x] Execução real sem capacidade aborta no primeiro turno afetado e não inicia o par seguinte.

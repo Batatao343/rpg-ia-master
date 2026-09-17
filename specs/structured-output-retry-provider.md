@@ -1,6 +1,6 @@
 # SPEC — Retry semântico de structured output no mesmo provider
 
-> **Status:** `in-progress`
+> **Status:** `done` — supersedida e ampliada por `structured-output-evidencia-recuperacao`
 > **Criada/Atualizada:** 2026-08-20
 > **Origem:** matriz A1 DeepSeek `20260820-181149-643772`
 > **Depende de:** `playtest-real-llm-fail-closed`
@@ -70,7 +70,7 @@ falha transitória e justifica a terceira geração sem relaxar o fail-closed.
 - [x] Falha HTTP e plain invoke continuam fail-fast.
 - [x] Contagem de invocação terminal permanece correta.
 - [x] `uv run pytest` verde.
-- [ ] A1 não volta a encerrar por um primeiro `invalid_structured` recuperado.
+- [x] A1 não voltou a encerrar por um primeiro `invalid_structured` recuperado; 19 falhas foram recuperadas na matriz A.
 
 ## 6. Smoke test com LLM real
 

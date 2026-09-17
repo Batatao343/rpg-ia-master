@@ -1,4 +1,27 @@
-# ROADMAP — RPG IA (Revisado 2026-08-27)
+# ROADMAP — RPG IA (Revisado 2026-09-17)
+
+> **Estado atual — fechamento local, gate real pendente:** 152 specs auditadas,
+> 140 `done`, 11 `in-progress` (código local implementado, B integral pendente)
+> e uma `draft` (certificação cloud). B anterior: 751/2.000 turnos; interrupção
+> por saldo DeepSeek, HTTP 402, confirmado novamente no preflight de 16/09.
+> Nenhuma campanha real em execução. Após recarga, B reinicia do par 1 com os
+> fixes atuais. Lista, evidências e comando no
+> [fechamento local](docs/fechamento-local-2026-09-17.md).
+>
+> Revisão entregue no código: aliases de NPC em diálogo/recrutamento; proteção
+> de memória geográfica, posse e identidade; semântica de queda; checkpoints,
+> reparo de transições órfãs e recibo estável; replan de viagem; diversidade do
+> diplomático; proteção de prosa; compatibilidade de vetor compartilhado.
+> Smoke offline 10×3 sem erros/violações, conteúdo/Ruff/build frontend verdes.
+> Suíte final: **1681 passed, 16 skipped, 14 deselected**; testes opt-in
+> de rede/infra permanecem gates separados.
+>
+> [Experimento de latência](specs/latencia-turno-caminho-critico-concorrente.md)
+> encerrado com **no-go** real: default sequencial, fan-out experimental,
+> memória inline, sem promessa de async nativo/cancelamento HTTP. Cloud e
+> sprites/som continuam fora da entrega local; nenhum deploy foi feito.
+>
+> **Os blocos datados abaixo são histórico**; prevalecem este resumo e as specs.
 
 > **Matriz A concluída; remediação offline verde:** 2.000/2.000 turnos reais
 > analisados em [relatório A](docs/playtest-matriz-a-2026-08-27.md). Quatro specs
@@ -862,10 +885,10 @@ testes offline verdes.**
    overlay gitignored `data/runtime/` (curadoria READ-ONLY, vence no merge). Fecha
    a pendência do `git checkout` manual (sessões 15/16). +8 testes.
 3. [balanceamento-classes-pos-playtest](specs/balanceamento-classes-pos-playtest.md)
-   `in-progress` — instrumentação `done` (`--class`, telemetria Entropia/Carga,
+   `done` — instrumentação (`--class`, telemetria Entropia/Carga,
    seção Classes no report); baseline mock (40 campanhas) + real capturados. Os 8
-   knobs `[BALANCEAR]` seguem marcados — mock não mede economia de Entropia, real
-   ficou fino; **tuning exige rodada real dedicada** (fast-follow). +8 testes.
+   knobs foram avaliados no ciclo posterior documentado na spec; a nota de
+   tuning pendente deste histórico foi superada. +8 testes na instrumentação.
 4. **Backlog fechado:** traits lote 2 (40→**80**); curadoria da Rede Carmesim
    (pendência Fase 7 — nome/monitoramento = comum do norte, iminência = `hidden`;
    over-share em `factions.txt` suavizado + reindex do lore, 2203 chunks).
@@ -875,11 +898,11 @@ testes offline verdes.**
    callsite). Achado real: **gating narrativo por classe** morto desde a deleção
    do Ruler → **APOSENTADO** (decisão do usuário: mecânica é Python) + docs
    corrigidos + stub `archive_narrative` removido.
-6. [weather-global-vivo](specs/weather-global-vivo.md) `in-progress` — a máquina
+6. [weather-global-vivo](specs/weather-global-vivo.md) `done` — a máquina
    de clima GLOBAL estava sem trigger; novo gatilho determinístico em
    `advance_weather` (Tempestade de Éter/Noite Sem Estrelas varrem e impactam).
    +7 testes.
-7. [itens-vivos-e-luz](specs/itens-vivos-e-luz.md) `in-progress` — 3 lacunas
+7. [itens-vivos-e-luz](specs/itens-vivos-e-luz.md) `done` — 3 lacunas
    confirmadas (itens não aplicavam passivas; sem item ofensivo ativo; sem luz):
    passiva de item fiada em `player_passives`, `use_item_in_combat` com alvo
    (stun/sono/dot/medo com save), **sistema de LUZ** (`light_level`), **+22
@@ -921,7 +944,7 @@ Handoff detalhado: **[docs/HANDOFF-sessao-21.md](docs/HANDOFF-sessao-21.md)**.
 > **Spec `done`:** [specs/npcs-3-camadas-traits.md](specs/npcs-3-camadas-traits.md)
 > — 3 camadas (sessão → conhecidos → em cena), gate determinístico do
 > npc_actor ("X não está aqui" sem LLM — fecha o bug "NPC errado responde"),
-> `data/traits.json` (40 traits — lote 1; lote 2 até 80 pendente; sorteio
+> `data/traits.json` (80 traits — lotes 1 e 2 entregues; sorteio
 > seeded, DC modifiers em 6.4/4.4),
 > revelação progressiva por interações, aba Personagens. Detalhe SÓ na spec.
 
@@ -1005,7 +1028,7 @@ Depende de Codex estruturado (Fase 2.5) estar estável.
 
 **Critério de aceite:** Adicionar NPC novo segue template, é validado automaticamente, entra em entities.json com IDs únicos — e segredo de NPC não chega ao narrador público. ✅ **Validado em smoke real 2026-07-05** (NPC de teste via template sobreviveu ao migrate e passou no lint; narrador Gemini descreveu Valerius só pela persona pública, zero Daruun/pacto; `query_rag` public não devolve chunks de segredo).
 
-**Pendência de curadoria (fora do escopo 7.3):** alguns NPCs públicos citam a Rede Carmesim como ameaça conhecida (Kess, Volkar, Oráculo de Ferro) enquanto a timeline da era 7 marca o despertar como `hidden` — revisar na próxima passada de lore se isso é conhecimento comum do norte ou spoiler.
+**Curadoria entregue (sessão 20):** Rede Carmesim pode ser conhecida pelo nome e monitorada no norte; a iminência do despertar permanece `hidden`. O over-share foi suavizado e o lore reindexado; esta pendência histórica está encerrada.
 
 **Vazamento achado pelo playtest real e CORRIGIDO (Fase 5, 2026-07-07):** perguntar
 direto "conte sobre o Rei Subterrâneo" fez o narrador surfacear o **Verme-Primordial

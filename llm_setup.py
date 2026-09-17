@@ -16,7 +16,9 @@ RPG_ROUTES (JSON).
 import json
 import logging
 import os
+import threading
 import time
+from contextlib import contextmanager
 from dataclasses import dataclass
 from enum import Enum
 from typing import TYPE_CHECKING, Callable, Literal, Optional
@@ -31,6 +33,43 @@ if TYPE_CHECKING:
 load_dotenv(override=True)  # .env é a fonte canônica das keys (sobrepõe env var do SO)
 
 _LOG = logging.getLogger("rpg.llm")
+
+_PROVIDER_LIMITERS: dict[tuple[str, int], threading.BoundedSemaphore] = {}
+_PROVIDER_LIMITERS_LOCK = threading.Lock()
+
+
+def _provider_limit(provider: str) -> int:
+    key = f"RPG_LLM_MAX_CONCURRENCY_{provider.upper()}"
+    raw = os.getenv(key, os.getenv("RPG_LLM_MAX_CONCURRENCY", "2"))
+    try:
+        return max(1, min(32, int(raw or 2)))
+    except ValueError:
+        return 2
+
+
+@contextmanager
+def _provider_slot(provider: str):
+    """Bound in-flight calls without changing ordered fallback semantics."""
+    limit = _provider_limit(provider)
+    limiter_key = (provider, limit)
+    with _PROVIDER_LIMITERS_LOCK:
+        limiter = _PROVIDER_LIMITERS.setdefault(
+            limiter_key, threading.BoundedSemaphore(limit),
+        )
+    started = time.perf_counter()
+    limiter.acquire()
+    waited = time.perf_counter() - started
+    try:
+        try:
+            from observability.metrics import metrics
+            metrics.observe(
+                "rpg_llm_queue_wait_seconds", {"provider": provider}, waited,
+            )
+        except Exception:
+            pass
+        yield
+    finally:
+        limiter.release()
 
 Candidate = tuple  # (provider: str, model: str)
 
@@ -645,7 +684,8 @@ class RoutedLLM:
                 )
                 t0 = time.perf_counter()
                 try:
-                    result = client.invoke(request_input)
+                    with _provider_slot(provider):
+                        result = client.invoke(request_input)
                     latency_ms = int((time.perf_counter() - t0) * 1000)
                 except Exception as e:
                     latency_ms = int((time.perf_counter() - t0) * 1000)
@@ -711,6 +751,18 @@ class RoutedLLM:
         # conteúdo vazio: sites de narração plain-invoke caem no fallback determinístico;
         # sites structured batem no guard (isinstance/try) do nó.
         return AIMessage(content="")
+
+    async def ainvoke(self, input):
+        """Async-compatible boundary with exact sync routing semantics.
+
+        Provider fallback remains single-flight and ordered. The synchronous
+        clients run in the event loop's bounded executor, so callers can overlap
+        independent requests without copying or drifting the routing state
+        machine.
+        """
+        import asyncio
+
+        return await asyncio.to_thread(self.invoke, input)
 
     def stream(self, input):
         errors = []

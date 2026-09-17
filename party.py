@@ -282,7 +282,12 @@ def scene_allies(state: Dict, *, excluded: Optional[List[str]] = None) -> List[D
 
 def recruitment_decision(state: Dict, npc_name: str) -> RecruitmentDecision:
     """Single trait-aware authority used by product and playtest profiles."""
-    npc = (state.get("npcs") or {}).get(npc_name) or {}
+    from services.entity_identity import find_runtime_npc_key, runtime_npc_aliases
+
+    npcs = state.get("npcs") or {}
+    npc_key = find_runtime_npc_key(npcs, npc_name) or npc_name
+    npc = npcs.get(npc_key) or {}
+    display_name = str(npc.get("name") or npc_key)
     rel = int(npc.get("relationship", 5) or 5)
     from services.npc_layers import trait_dc_modifier
     required = max(3, min(10, RECRUIT_MIN_REL + trait_dc_modifier(npc, "persuasao")))
@@ -291,17 +296,22 @@ def recruitment_decision(state: Dict, npc_name: str) -> RecruitmentDecision:
         return {"ok": ok, "code": code, "relationship": rel,
                 "required_relationship": required, "public_hint": hint}  # type: ignore[typeddict-item]
 
-    if any(c.get("name") == npc_name for c in state.get("party") or []):
-        return result(False, "already_member", f"{npc_name} já anda com você.")
+    aliases = runtime_npc_aliases(str(npc_key), npc)
+    if any(
+        isinstance(c, dict)
+        and bool(aliases & runtime_npc_aliases(str(c.get("name") or ""), c))
+        for c in state.get("party") or []
+    ):
+        return result(False, "already_member", f"{display_name} já anda com você.")
     if len(active_allies(state)) >= MAX_ACTIVE:
         return result(False, "party_full", f"Seu grupo já está cheio ({MAX_ACTIVE} companheiros).")
     fac_id = npc.get("faction") or ""
     if any(f.get("id") == fac_id and f.get("disposition") == "hostil"
            for f in state.get("factions") or [] if fac_id):
-        return result(False, "hostile", f"{npc_name} serve a um poder hostil a você.")
+        return result(False, "hostile", f"{display_name} serve a um poder hostil a você.")
     if rel < required:
         return result(False, "relationship_too_low",
-                      f"{npc_name} ainda não confia o bastante em você.")
+                      f"{display_name} ainda não confia o bastante em você.")
     return result(True, "ok", "")
 
 
@@ -317,8 +327,12 @@ def recruit(state: Dict, npc_name: str) -> Tuple[Optional[List[Dict]], str]:
     ok, reason = can_recruit(state, npc_name)
     if not ok:
         return None, reason
-    npc = (state.get("npcs") or {}).get(npc_name) or {}
-    comp = make_companion_from_npc(npc, npc_name)
+    from services.entity_identity import find_runtime_npc_key
+
+    npcs = state.get("npcs") or {}
+    npc_key = find_runtime_npc_key(npcs, npc_name) or npc_name
+    npc = npcs.get(npc_key) or {}
+    comp = make_companion_from_npc(npc, str(npc.get("name") or npc_key))
     return list(state.get("party") or []) + [comp], ""
 
 

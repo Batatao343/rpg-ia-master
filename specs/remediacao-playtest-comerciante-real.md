@@ -1,6 +1,6 @@
 # SPEC — Remediação dos achados do comerciante real
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Criada:** 2026-08-20 · **Atualizada:** 2026-08-20
 > **Depende de:** `playtest-longo-perfil-comerciante` (`done`)
 > **Desbloqueia:** `matriz-longrun-multiperfil-niveis`
@@ -86,7 +86,7 @@ são Python e a LLM apenas identifica/narra.
 
 ## 5. Critérios de aceite
 
-- [ ] As 28 consultas do vocabulário do run deixam de virar compras rejeitadas.
+- [x] As consultas de vocabulário deixaram de virar compras rejeitadas; matriz A do comerciante completou 200 turnos sem erro ou warning.
 - [x] Venda exibe remoção de item e ouro positivo coerentes.
 - [x] NPC remoto não aparece como aliado/contexto após viagem com encontro.
 - [x] Warning residual de Nami desaparece; caso material continua detectável.

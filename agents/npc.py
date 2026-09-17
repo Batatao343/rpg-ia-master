@@ -28,7 +28,14 @@ from services.memory_provenance import (
     memory_metadata,
     normalize_memory_facts,
 )
-from services.prose_guard import sanitize_meta_preamble
+from services.prose_guard import (
+    log_if_repeats,
+    openings_clause,
+    sanitize_meta_preamble,
+    semantic_opening,
+    strip_outer_quotes,
+    vary_repeated_opening,
+)
 from services.input_normalization import optional_entity_ref
 from services.structured_outputs import ProposedQuest
 
@@ -319,23 +326,32 @@ def npc_actor_node(state: GameState):
             action = str(getattr(messages[-1], "content", "")) if messages else ""
             return {"next": "storyteller", "npc_fallback_hint": action}
 
+    from services.entity_identity import find_runtime_npc_key, runtime_npc_aliases
+
     npcs_db = state.get("npcs", {})
-    npc_data = npcs_db.get(npc_name)
+    npc_state_key = find_runtime_npc_key(npcs_db, npc_name)
+    npc_data = npcs_db.get(npc_state_key) if npc_state_key is not None else None
     from_state = npc_data is not None
 
     # --- Camada 3 (spec npcs-3-camadas, R4): NPC conhecido mas FORA de cena não
     # conversa — resposta determinística, ZERO chamada de LLM. Membro de party
     # está sempre com o jogador (estado próprio, 4.5). ---
-    in_party = any(isinstance(c, dict) and c.get("name") == npc_name
-                   for c in state.get("party") or [])
+    target_aliases = runtime_npc_aliases(npc_state_key or npc_name, npc_data)
+    in_party = any(
+        isinstance(c, dict)
+        and bool(target_aliases & runtime_npc_aliases(str(c.get("name") or ""), c))
+        for c in state.get("party") or []
+    )
     if from_state and not in_party and not npc_layers.is_in_scene(npc_data):
         home = npc_data.get("home_location_id") or npc_data.get("location", "")
         hint = f" Foi visto pela última vez em {home}." if home else ""
-        return {"messages": [AIMessage(content=f"🗣️ {npc_name} não está aqui.{hint}")]}
+        display_name = npc_data.get("name") or npc_state_key or npc_name
+        return {"messages": [AIMessage(content=f"🗣️ {display_name} não está aqui.{hint}")]}
 
     if not npc_data:
         db = load_npc_db()
-        npc_data = db.get(npc_name)
+        db_key = find_runtime_npc_key(db, npc_name)
+        npc_data = db.get(db_key) if db_key is not None else None
     if not npc_data:
         # NPC ainda não existe na cena: gera na hora (persona + ficha) em vez de falhar.
         loc = state.get("world", {}).get("current_location", "")
@@ -343,6 +359,9 @@ def npc_actor_node(state: GameState):
         npc_data.setdefault("location", loc)
         npc_data.setdefault("relationship", 5)
         npc_data.setdefault("memory", [])
+    npc_name = str(npc_data.get("name") or npc_state_key or npc_name)
+    if npc_state_key is None:
+        npc_state_key = find_runtime_npc_key(npcs_db, npc_name, npc_data) or npc_name
     # Campos de camada + traits seeded (R1/R3); quem chegou aqui está na cena.
     home_id = state.get("world", {}).get("current_location_id", "")
     npc_data = npc_layers.ensure_npc_fields(
@@ -427,11 +446,17 @@ def npc_actor_node(state: GameState):
     # quando o jogador insiste no mesmo assunto (achado do playtest real).
     _nome = npc_data.get("name", npc_name)
     ultima_fala = "—"
+    aberturas_recentes: List[str] = []
     for _m in reversed(messages):
         _c = str(getattr(_m, "content", "") or "").strip()
         if getattr(_m, "type", "") == "ai" and _c.startswith(f"**{_nome}"):
-            ultima_fala = _c
-            break
+            if ultima_fala == "—":
+                ultima_fala = _c
+            _abertura = semantic_opening(_c, words=12)
+            if _abertura:
+                aberturas_recentes.append(_abertura)
+            if len(aberturas_recentes) >= 2:
+                break
 
     # spec npc-fallback-sem-alvo (R4): pergunta sobre missão/objetivo → o NPC
     # orienta com o beat atual do plano (antes: silêncio quando o quester
@@ -493,6 +518,7 @@ def npc_actor_node(state: GameState):
     5. NÃO REPITA: veja <SUA_ULTIMA_FALA>. Se o jogador insistir no mesmo assunto,
        NUNCA repita sua fala anterior literalmente — traga um detalhe NOVO, mude o
        ângulo, demonstre impaciência ("já te disse..."), ou avance a conversa.
+    {openings_clause(aberturas_recentes)}
     """)
 
     try:
@@ -500,7 +526,22 @@ def npc_actor_node(state: GameState):
         res = actor.invoke([system_msg] + messages[-3:])
         if not isinstance(res, NPCResponse):
             raise TypeError(f"structured output inválido: {type(res).__name__}")
-        dialogue = sanitize_meta_preamble(res.dialogue)
+        dialogue = strip_outer_quotes(sanitize_meta_preamble(res.dialogue))
+        if aberturas_recentes:
+            log_if_repeats(dialogue, aberturas_recentes[0], where="npc")
+        varied_dialogue = vary_repeated_opening(
+            dialogue,
+            aberturas_recentes,
+            salt=(
+                f"{game_id}:{npc_id}:"
+                f"{int((state.get('world') or {}).get('turn_count', 0) or 0)}"
+            ),
+        )
+        dialogue_transition = (
+            varied_dialogue[:-len(dialogue)]
+            if dialogue and varied_dialogue.endswith(dialogue)
+            else ""
+        )
         action_description = sanitize_meta_preamble(res.action_description)
         
         # Atualiza memória e relação (com guardas contra chaves ausentes)
@@ -588,7 +629,7 @@ def npc_actor_node(state: GameState):
 
         # Atualiza o estado global
         new_npcs = npcs_db.copy()
-        new_npcs[npc_name] = npc_data
+        new_npcs[npc_state_key] = npc_data
 
         # Não-onisciência: o que o NPC contou vira conhecimento do jogador (Python grava).
         intel = ensure_faction_intel(state.get("faction_intel"))
@@ -598,7 +639,10 @@ def npc_actor_node(state: GameState):
             )
 
         updates = {
-            "messages": [AIMessage(content=f"**{npc_data['name']}:** \"{dialogue}\"\n*({action_description})*{reveal_note}")],
+            "messages": [AIMessage(content=(
+                f"**{npc_data['name']}:** {dialogue_transition}"
+                f"\"{dialogue}\"\n*({action_description})*{reveal_note}"
+            ))],
             "npcs": new_npcs,
             "faction_intel": intel,
             "archive_due": True,  # conversa com NPC = evento relevante p/ o arquivista

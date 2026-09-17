@@ -104,6 +104,13 @@ def test_resolve_accept_vira_memorial():
     st["death_pending"] = True
     out = cp.resolve_death_choice(st, "accept")
     assert out["game_over"] is True and out["death_pending"] is False
+    died = [event for event in out["event_log"] if event["type"] == "player_died"]
+    assert len(died) == 1
+    assert any(
+        entry.get("event_id") == died[0]["event_id"]
+        for chapter in out["chronicle"]
+        for entry in chapter["entries"]
+    )
 
 
 def test_resolve_continue_restaura_checkpoint_em_memoria():

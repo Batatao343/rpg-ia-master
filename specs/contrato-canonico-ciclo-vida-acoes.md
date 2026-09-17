@@ -79,6 +79,10 @@ Rebalancear dano, mudar capacidades de Ferimentos ou redesenhar checkpoints.
 
 ## 6. Smoke real
 
+Atualização de 17/09: validação local revisada com protocolo de reparo/recibo;
+B integral bloqueada por HTTP 402 DeepSeek. Evidência histórica não certifica
+o build atual; ver [fechamento local](../docs/fechamento-local-2026-09-17.md).
+
 Na matriz B, nenhum turno deve registrar ação mecânica incompatível com a fase;
 Vitalidade zero consciente pode existir sem falso positivo.
 

@@ -39,7 +39,7 @@ CHRONICLE_TEMPLATES: Dict[str, str] = {
     "secret_revealed": "Um segredo veio à luz: {fact}",
     "level_up": "O herói alcançou o nível {new_level}.",
     "player_died": "Aqui termina a saga: {detail}.",
-    "player_downed": "O herói caiu e foi saqueado — e ainda assim levantou. {detail}.",
+    "player_downed": "O herói caiu; seu destino ainda aguarda uma escolha. {detail}.",
     "unique_item_claimed": "{item} agora pertence ao herói — não há outro no mundo.",
     "subclass_chosen": "A senda {detail} foi escolhida.",
     "class_apex_unlocked": "O Ápice {detail} foi alcançado.",
@@ -67,7 +67,7 @@ def render_milestone(event: Dict, projection: Dict) -> str:
         return tmpl.format(detail=detail)
 
     if etype == "player_downed":
-        detail = payload.get("detail", "") or "Um dia se perdeu na escuridão"
+        detail = payload.get("detail", "") or "A jornada foi interrompida"
         return tmpl.format(detail=detail)
 
     if etype == "unique_item_claimed":

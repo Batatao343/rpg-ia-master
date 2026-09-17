@@ -2,7 +2,8 @@
 
 from types import SimpleNamespace
 
-from langchain_core.messages import HumanMessage, SystemMessage
+import pytest
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 from agents import archivist, storyteller
 from agents.archivist import MemoryUpdate
@@ -73,6 +74,47 @@ def _stub_context(monkeypatch):
             world_state_block="<ESTADO_ATUAL_DO_MUNDO />",
         ),
     )
+
+
+@pytest.mark.parametrize("path", ["narrative", "encounter", "fallback", "error"])
+def test_viagem_interregional_marca_replan_em_todas_as_saidas(monkeypatch, path):
+    import gamedata
+
+    _stub_context(monkeypatch)
+    state = _story_state("Viajo para Brekmar.")
+    state["campaign_plan"] = {
+        "location": "Nova Arcádia",
+        "beats": [{"description": "Investigar a cidade", "status": "pending"}],
+        "current_step": 0,
+    }
+    state["needs_replan"] = False
+    destination = gamedata.get_location("brekmar")
+    assert destination is not None
+    monkeypatch.setattr(storyteller, "find_travel_destination", lambda *_: destination)
+    monkeypatch.setattr(
+        storyteller, "simulate_world", lambda _state, world, *_: (world, ""),
+    )
+    encounter = {
+        "reason": "controlled", "hint": "Guarda da estrada", "flavor": "Uma patrulha surge.",
+    } if path == "encounter" else None
+    monkeypatch.setattr(storyteller, "check_encounter", lambda *a, **k: encounter)
+    fake = _StoryLLM(narrative="As muralhas de Brekmar surgem na estrada.")
+    if path == "fallback":
+        # Mesmo contrato degradado de structured output do FallbackLLM.
+        monkeypatch.setattr(fake, "invoke", lambda *_: AIMessage(content="indisponível"))
+    elif path == "error":
+        def unavailable(*_):
+            raise RuntimeError("provider unavailable")
+        monkeypatch.setattr(fake, "invoke", unavailable)
+    monkeypatch.setattr(storyteller, "get_llm", lambda **_: fake)
+
+    out = storyteller.storyteller_node(state)
+
+    assert out["world"]["current_location_id"] == "brekmar"
+    assert out["needs_replan"] is True
+    assert state["needs_replan"] is False
+    if path == "encounter":
+        assert out["next"] == "combat_agent"
 
 
 def test_evento_rejeitado_nao_sobrevive_na_mensagem(monkeypatch):

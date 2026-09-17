@@ -223,6 +223,28 @@ def _killed_ids(state: dict) -> set:
 
 def check_entities(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
     out: List[Violation] = []
+    from services.entity_identity import runtime_npc_aliases
+
+    seen_identities: dict[str, str] = {}
+    for key, data in (state.get("npcs") or {}).items():
+        if not isinstance(data, dict):
+            continue
+        aliases = runtime_npc_aliases(str(key), data)
+        duplicate_alias = next(
+            (alias for alias in sorted(aliases) if alias in seen_identities),
+            None,
+        )
+        if duplicate_alias is not None:
+            out.append(_V(
+                "entity.npc_duplicate_identity", "error", turn,
+                f"NPC {data.get('name') or key!r} existe sob duas chaves",
+                identity=duplicate_alias,
+                first_key=seen_identities[duplicate_alias],
+                duplicate_key=str(key),
+            ))
+        else:
+            for alias in aliases:
+                seen_identities[alias] = str(key)
     killed = _killed_ids(state)
     if not killed:
         return out
@@ -309,7 +331,11 @@ def check_campaign_grounding(state: dict, prev: Optional[dict],
     if not current or not planned or current == planned:
         return []
     previous_location = str(((prev or {}).get("world") or {}).get("current_location") or "")
-    if previous_location and previous_location != current:
+    if (
+        previous_location
+        and previous_location != current
+        and state.get("needs_replan")
+    ):
         return []
     try:
         from agents.campaign_manager import _same_region
@@ -318,6 +344,14 @@ def check_campaign_grounding(state: dict, prev: Optional[dict],
         stale = False
     if not stale:
         return []
+    if state.get("needs_replan"):
+        combat_active = bool((state.get("combat") or {}).get("active"))
+        previous_combat_active = bool(((prev or {}).get("combat") or {}).get("active"))
+        # campaign_manager intentionally defers SMART planning while combat owns
+        # the route. The exact turn that closes combat cannot replan retroactively;
+        # the next turn must consume needs_replan before normal narration.
+        if combat_active or previous_combat_active:
+            return []
     return [_V(
         "campaign.region_grounding", "error", turn,
         f"plano ancorado em {planned!r} enquanto a cena permanece em {current!r}",
@@ -513,12 +547,59 @@ def check_memory_provenance(
 ) -> List[Violation]:
     """Memória confirmada precisa apontar para fonte que o motor consegue provar."""
     from services.memory_provenance import (
+        canonical_location_contradiction,
+        inventory_possession_contradiction,
+        npc_identity_contradiction,
         normalize_memory_facts,
         source_is_applicable,
     )
 
     out: List[Violation] = []
+    previous_ids = {
+        record["memory_id"]
+        for record in normalize_memory_facts((prev or {}).get("memory_facts"))
+    }
     for record in normalize_memory_facts(state.get("memory_facts")):
+        contradiction = canonical_location_contradiction(record.get("text", ""))
+        if contradiction and record["memory_id"] not in previous_ids:
+            out.append(_V(
+                "memory.location_grounding",
+                "error",
+                turn,
+                f"memória atribui {contradiction['location_name']!r} à região "
+                f"{contradiction['claimed_region']!r}; esperado "
+                f"{contradiction['expected_region']!r}",
+                memory_id=record.get("memory_id"),
+                **contradiction,
+            ))
+        inventory_contradiction = inventory_possession_contradiction(
+            record.get("text", ""), state,
+        )
+        if inventory_contradiction and record["memory_id"] not in previous_ids:
+            out.append(_V(
+                "memory.inventory_grounding",
+                "error",
+                turn,
+                f"memória atribui ao jogador item ausente "
+                f"{inventory_contradiction['item_name']!r}",
+                memory_id=record.get("memory_id"),
+                **inventory_contradiction,
+            ))
+        npc_contradiction = npc_identity_contradiction(
+            record.get("text", ""), state,
+        )
+        if npc_contradiction and record["memory_id"] not in previous_ids:
+            out.append(_V(
+                "memory.npc_identity_grounding",
+                "error",
+                turn,
+                f"memória contradiz identidade de "
+                f"{npc_contradiction['npc_name']!r}: "
+                f"{npc_contradiction['claimed']!r} vs "
+                f"{npc_contradiction['expected']!r}",
+                memory_id=record.get("memory_id"),
+                **npc_contradiction,
+            ))
         if record.get("confidence") != "confirmed":
             continue
         source_id = record.get("source_id")
@@ -936,12 +1017,25 @@ def check_zero_vitality_outside_terminal(
 def check_actor_lifecycle(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
     """Life phase coherence; zero Vitality by itself is explicitly valid."""
     player = state.get("player") or {}
-    if player.get("dead") and player.get("conscious", True):
+    if (player.get("dead") and player.get("conscious", True)
+            and not state.get("death_pending")):
         return [_V("player.lifecycle_incoherent", "error", turn,
                    "protagonista morto permanece marcado como consciente")]
     if player.get("incapacitated") and player.get("conscious", True):
         return [_V("player.lifecycle_incoherent", "error", turn,
                    "protagonista incapacitado permanece marcado como consciente")]
+    from services.actor_lifecycle import transition_readiness
+    readiness = transition_readiness(state)
+    if (not readiness["ready"] and readiness["phase"] in {"last_stand", "terminal"}
+            and not (state.get("combat") or {}).get("active")):
+        previous_readiness = transition_readiness(prev or {})
+        if previous_readiness.get("code") != readiness["code"]:
+            return [_V(
+                "transition.unresolved_at_boundary", "error", turn,
+                "transição crítica saiu de seu produtor sem resolvedor",
+                phase=readiness["phase"], code=readiness["code"],
+            )]
+        return []
     if not prev:
         return []
     previous = prev.get("player") or {}
@@ -984,6 +1078,9 @@ def check_interaction_no_progress(
     state: dict, prev: Optional[dict], turn: int,
 ) -> List[Violation]:
     outcome = state.get("last_interaction_outcome") or {}
+    if (outcome.get("turn") is not None
+            and outcome["turn"] != (state.get("world") or {}).get("turn_count")):
+        return []
     repeat_count = int(outcome.get("repeat_count", 0) or 0)
     if outcome.get("progressed") or repeat_count < 3:
         return []
@@ -1078,6 +1175,55 @@ def check_effect_catalog(state: dict, prev: Optional[dict], turn: int) -> List[V
     return out
 
 
+def check_false_player_death(
+    state: dict, prev: Optional[dict], turn: int,
+) -> List[Violation]:
+    """A recoverable down may never be memorialized as a confirmed death."""
+    previous_ids = {
+        str(event.get("event_id") or "")
+        for event in ((prev or {}).get("event_log") or [])
+        if isinstance(event, dict)
+    }
+    new_events = [
+        event for event in (state.get("event_log") or [])
+        if isinstance(event, dict)
+        and str(event.get("event_id") or "") not in previous_ids
+    ]
+    types = {str(event.get("type") or "") for event in new_events}
+    if "player_downed" not in types or "player_died" in types or state.get("game_over"):
+        return []
+    player_name = str((state.get("player") or {}).get("name") or "").strip()
+    if not player_name:
+        return []
+    previous_facts = {
+        str(row.get("memory_id") or "")
+        for row in ((prev or {}).get("memory_facts") or [])
+        if isinstance(row, dict)
+    }
+    from services.turn_outcome import player_facing_message
+    texts = [player_facing_message(state), str(state.get("narrative_summary") or "")]
+    texts.extend(
+        str(row.get("text") or "")
+        for row in (state.get("memory_facts") or [])
+        if isinstance(row, dict)
+        and str(row.get("memory_id") or "") not in previous_facts
+    )
+    name = re.escape(player_name)
+    terminal_claim = re.compile(
+        rf"(?:{name}.{{0,32}}\b(?:morreu|est[aá]\s+mort[oa])\b|"
+        rf"\bmorte\s+(?:definitiva\s+)?de\s+{name}\b)",
+        re.IGNORECASE,
+    )
+    offending = next((text for text in texts if terminal_claim.search(text)), "")
+    if not offending:
+        return []
+    return [_V(
+        "narrative.false_player_death", "error", turn,
+        "queda recuperável foi registrada como morte confirmada",
+        source_excerpt=offending[:180], player=player_name,
+    )]
+
+
 def check_reproducibility(seed: int = 7, rounds: int = 6) -> bool:
     """spec conflito-13 (R5) / doc 03 Cenário 53: mesma seed + mesmo estado inicial →
     MESMO resultado NO CONFLITO. Verifica a reprodutibilidade do MOTOR (não da
@@ -1132,7 +1278,7 @@ CHECKS: List[Check] = [
     check_duplicate_consumed_summary,
     check_recycled_npc, check_actor_lifecycle,
     check_repeated_opening, check_interaction_no_progress, check_meta_leak,
-    check_phantom_ally,
+    check_phantom_ally, check_false_player_death,
 ]
 
 

@@ -863,7 +863,8 @@ class Diplomatico(_Base):
         self._interaction_counts: dict[str, int] = {}
 
     def _next_action(self, state, rng):
-        in_scene = _npcs_in_scene(state)
+        in_scene = [name for name in _npcs_in_scene(state)
+                    if self._interaction_counts.get(name, 0) < 4]
         if in_scene:
             alvo = min(in_scene, key=lambda name: (self._interaction_counts.get(name, 0), name))
             count = self._interaction_counts.get(alvo, 0)
@@ -873,6 +874,12 @@ class Diplomatico(_Base):
                 return f"Peço para {alvo} se juntar a mim na jornada."
             topics = ("a região", "seus objetivos", "ameaças locais", "como posso ajudar")
             return f"Converso com {alvo} e pergunto sobre {topics[count % len(topics)]}."
+        if self._interaction_counts:
+            connections = sorted(_connections(_current_id(state)), key=lambda row: row["id"])
+            if connections:
+                destination = connections[rng.randrange(len(connections))]
+                return f"Viajo para {destination['name']} para conhecer outras pessoas e seus problemas."
+            return "Investigo as pistas recebidas e procuro uma tarefa concreta nos arredores."
         return rng.choice([
             "Cumprimento quem estiver por perto e puxo conversa.",
             "Pergunto a um local sobre as novidades.",

@@ -81,6 +81,8 @@ class MemoryQuery:
     npc_id: str | None = None
     max_visibility: Literal["public", "hidden", "secret"] = "public"
     k: int = 3
+    vector: tuple[float, ...] | None = None
+    embedding_profile_id: str | None = None
 
 
 @dataclass(frozen=True)

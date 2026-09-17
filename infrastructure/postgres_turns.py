@@ -44,7 +44,7 @@ class PostgresTurnCoordinator:
                   (id,owner_id,game_id,kind,status,base_game_version,lease_token,
                    lease_until,heartbeat_at,request_sha256)
                 values (%s,%s,%s,%s,'running',%s,%s,now()+%s,now(),%s)
-                on conflict (id) do nothing
+                on conflict do nothing
                 returning id
                 """,
                 (

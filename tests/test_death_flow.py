@@ -71,6 +71,9 @@ def test_death_accept_vira_memorial(client, saves_dir):
     assert r.status_code == 200
     reloaded = persistence.load_game_state(persistence.save_path(gid))
     assert reloaded.get("game_over") is True and not reloaded.get("death_pending")
+    assert [event["type"] for event in reloaded.get("event_log", [])].count(
+        "player_died"
+    ) == 1
     # memorial: ação seguinte é barrada (409)
     assert client.post("/game/action", json={"input_text": "x", "game_id": gid}).status_code == 409
 

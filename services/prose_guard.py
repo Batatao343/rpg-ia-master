@@ -97,6 +97,31 @@ def sanitize_player_facing(text: str) -> str:
     return cleaned.strip()
 
 
+_OUTER_QUOTES = (("\"", "\""), ("“", "”"), ("‘", "’"))
+
+
+def strip_outer_quotes(text: str) -> str:
+    """Remove apenas aspas que envolvem a resposta inteira do provider.
+
+    O renderer de NPC já adiciona suas próprias aspas. Sem esta fronteira, uma
+    resposta estruturada que venha como ``"fala"`` aparece como ``""fala""``.
+    Aspas internas e apóstrofos permanecem intactos.
+    """
+    value = str(text or "").strip()
+    previous = None
+    while value and value != previous:
+        previous = value
+        for opening_quote, closing_quote in _OUTER_QUOTES:
+            if (
+                len(value) >= 2
+                and value.startswith(opening_quote)
+                and value.endswith(closing_quote)
+            ):
+                value = value[len(opening_quote):-len(closing_quote)].strip()
+                break
+    return value
+
+
 _PROTAGONIST_THIRD_PERSON = re.compile(
     r"\b(?:O jogador|O personagem|O herói)\b",
     flags=re.IGNORECASE,

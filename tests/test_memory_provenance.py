@@ -14,13 +14,244 @@ from playtest.telemetry import build_summary, turn_to_record
 from services.context_builder import build_context_pack
 from services.memory_provenance import (
     MemoryFactRecord,
+    canonical_location_contradiction,
     commit_memory_facts,
+    inventory_possession_contradiction,
     make_memory_fact,
     normalize_memory_facts,
+    sanitize_inventory_grounding,
     validate_memory_fact,
 )
 import persistence
 import rag
+
+
+def _inventory_grounding_state(*, has_diary: bool = False) -> dict:
+    inventory = [{"id": "pocao_cura", "qty": 1}]
+    if has_diary:
+        inventory.append({
+            "id": "item_desconhecido",
+            "qty": 1,
+            "display_name": "Diário da Casa Vesper",
+        })
+    return {
+        "player": {"name": "Ceslo", "inventory": inventory},
+        "world": {"turn_count": 104},
+        "npcs": {},
+        "rejected_item_claims": [
+            "Diário da Casa Vesper",
+            "Chave de latão com símbolo da serpente",
+        ],
+    }
+
+
+def test_posse_fantasma_da_matriz_b_falha_fechado() -> None:
+    state = _inventory_grounding_state()
+    bad = (
+        "O viajante carrega: Diário da Casa Vesper, Chave de latão com "
+        "símbolo da serpente e Poção de Cura Menor."
+    )
+    assert inventory_possession_contradiction(bad, state) == {
+        "item_name": "Diário da Casa Vesper",
+        "claim_kind": "rejected_item",
+    }
+    fact = make_memory_fact(
+        bad, provenance="inference", source_id="archivist:104", source_turn=104,
+    )
+    accepted, reason = validate_memory_fact(fact, state)
+    assert accepted is None
+    assert reason == (
+        "inventory_possession_contradiction:Diário da Casa Vesper"
+    )
+
+    clean, rejected = sanitize_inventory_grounding(
+        f"Ceslo segue atento. {bad} A busca continua.", state,
+    )
+    assert clean == "Ceslo segue atento. A busca continua."
+    assert rejected[0]["item_name"] == "Diário da Casa Vesper"
+
+
+def test_posse_real_prevalece_e_posse_de_npc_nao_e_confundida() -> None:
+    acquired = _inventory_grounding_state(has_diary=True)
+    assert inventory_possession_contradiction(
+        "Ceslo carrega o Diário da Casa Vesper.", acquired,
+    ) is None
+    assert inventory_possession_contradiction(
+        "Iris carrega o Diário da Casa Vesper.", _inventory_grounding_state(),
+    ) is None
+    assert inventory_possession_contradiction(
+        "O viajante carrega uma Poção de Cura Menor.", _inventory_grounding_state(),
+    ) is None
+
+
+def test_posse_fantasma_some_do_contexto_e_dispara_invariante(monkeypatch) -> None:
+    from services import context_builder
+
+    bad_text = "O viajante carrega o Diário da Casa Vesper."
+    bad = make_memory_fact(
+        bad_text, provenance="inference", source_id="archivist:104", source_turn=104,
+    )
+    state = {
+        **_inventory_grounding_state(),
+        "game_id": "inventory-grounding",
+        "narrative_summary": bad_text,
+        "memory_facts": [bad],
+    }
+    monkeypatch.setattr(context_builder, "query_rag", lambda *_a, **_k: "")
+    monkeypatch.setattr(
+        context_builder, "query_session_memory", lambda *_a, **_k: bad_text,
+    )
+    pack = build_context_pack(state, "diário", "story", game_id="game-1")
+    assert "Diário da Casa Vesper" not in pack.memory_block
+
+    violations = check_memory_provenance(state, {"memory_facts": []}, 104)
+    assert [row.check_id for row in violations] == ["memory.inventory_grounding"]
+
+
+def test_roundtrip_preserva_rejeicoes_de_item_e_save_antigo_inicia_vazio() -> None:
+    state = _inventory_grounding_state()
+    raw = persistence._state_to_save_data(
+        {"game_id": "save-memory", **state}, "save-memory",
+    )
+    assert persistence._raw_to_state(raw)["rejected_item_claims"] == [
+        "Diário da Casa Vesper",
+        "Chave de latão com símbolo da serpente",
+    ]
+    raw.pop("rejected_item_claims")
+    assert persistence._raw_to_state(raw)["rejected_item_claims"] == []
+
+
+def test_archivist_quarentena_posse_fantasma_em_fato_e_resumo(monkeypatch) -> None:
+    bad = "O viajante carrega o Diário da Casa Vesper."
+
+    class _Structured:
+        def invoke(self, _messages):
+            return MemoryUpdate(
+                new_summary=bad,
+                important_facts=[bad],
+                chronicle_entry="",
+            )
+
+    class _LLM:
+        def with_structured_output(self, _schema):
+            return _Structured()
+
+    writes: list[list[str]] = []
+    monkeypatch.setattr(archivist, "get_llm", lambda **_kw: _LLM())
+    monkeypatch.setattr(
+        archivist,
+        "add_memory_to_session",
+        lambda _game_id, facts, **_kwargs: writes.append(list(facts)) or True,
+    )
+    out = archivist.archive_node({
+        **_inventory_grounding_state(),
+        "game_id": "inventory-grounding",
+        "archive_due": True,
+        "messages": [],
+        "narrative_summary": "Ceslo investiga a Casa Vesper.",
+        "memory_facts": [],
+    })
+    assert writes == []
+    assert out["memory_facts"] == []
+    assert out["narrative_summary"] == "Ceslo investiga a Casa Vesper."
+    assert {row["reason"] for row in out["memory_rejections"]} == {
+        "inventory_possession_contradiction:Diário da Casa Vesper",
+        "inventory_possession_contradiction",
+    }
+
+
+def test_grounding_de_local_rejeita_b1_sem_bloquear_viagem_legitima() -> None:
+    bad = "O Anel Dourado é um bairro alto de Brekmar, fortaleza de privacidade."
+    contradiction = canonical_location_contradiction(bad)
+    assert contradiction == {
+        "location_id": "na_anel_dourado",
+        "location_name": "Anel Dourado",
+        "expected_region": "Nova Arcádia",
+        "claimed_region": "Brekmar",
+    }
+    assert canonical_location_contradiction(
+        "Ceslo viajou do Anel Dourado para Brekmar pela estrada antiga."
+    ) is None
+
+    fact = make_memory_fact(
+        bad, provenance="inference", source_id="archivist:49", source_turn=49,
+    )
+    accepted, reason = validate_memory_fact(fact, {"event_log": []})
+    assert accepted is None
+    assert reason == "location_region_contradiction:na_anel_dourado:Brekmar"
+
+
+def test_grounding_de_local_quarentena_ledger_e_dispara_invariante(monkeypatch) -> None:
+    from services import context_builder
+
+    text = "O Anel Dourado é um bairro alto de Brekmar."
+    bad = make_memory_fact(
+        text, provenance="inference", source_id="archivist:49", source_turn=49,
+    )
+    state = {
+        "world": {
+            "turn_count": 49,
+            "current_location_id": "na_anel_dourado",
+            "current_location": "Anel Dourado",
+        },
+        "npcs": {},
+        "memory_facts": [bad],
+        "narrative_summary": text,
+    }
+    monkeypatch.setattr(context_builder, "query_rag", lambda *_a, **_k: "")
+    monkeypatch.setattr(
+        context_builder, "query_session_memory", lambda *_a, **_k: text,
+    )
+    pack = build_context_pack(state, "Anel Dourado", "story", game_id="game-1")
+    assert text not in pack.memory_block
+    assert state["memory_facts"] == [bad]
+
+    violations = check_memory_provenance(state, {"memory_facts": []}, 49)
+    assert [row.check_id for row in violations] == ["memory.location_grounding"]
+
+
+def test_archivist_rejeita_fato_e_resumo_com_regiao_errada(monkeypatch) -> None:
+    wrong = "O Anel Dourado é um bairro alto de Brekmar."
+
+    class _Structured:
+        def invoke(self, _messages):
+            return MemoryUpdate(
+                new_summary=wrong,
+                important_facts=[wrong],
+                chronicle_entry="",
+            )
+
+    class _LLM:
+        def with_structured_output(self, _schema):
+            return _Structured()
+
+    writes: list[list[str]] = []
+    monkeypatch.setattr(archivist, "get_llm", lambda **_kw: _LLM())
+    monkeypatch.setattr(
+        archivist,
+        "add_memory_to_session",
+        lambda _game_id, facts, **_kwargs: writes.append(list(facts)) or True,
+    )
+    out = archivist.archive_node({
+        "game_id": "grounding-memory",
+        "world": {
+            "turn_count": 49,
+            "current_location_id": "na_anel_dourado",
+            "current_location": "Anel Dourado",
+        },
+        "archive_due": True,
+        "messages": [],
+        "narrative_summary": "Ceslo investiga o Anel Dourado.",
+        "memory_facts": [],
+    })
+    assert writes == []
+    assert out["memory_facts"] == []
+    assert out["narrative_summary"] == "Ceslo investiga o Anel Dourado."
+    assert len(out["memory_rejections"]) == 2
+    assert {row["reason"] for row in out["memory_rejections"]} == {
+        "location_region_contradiction:na_anel_dourado:Brekmar",
+        "location_region_contradiction",
+    }
 
 
 def _event(event_id: str = "evt-1", *, event_type: str = "npc_killed") -> dict:

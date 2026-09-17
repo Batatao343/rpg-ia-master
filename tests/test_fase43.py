@@ -223,6 +223,7 @@ def test_items_gained_resolve(monkeypatch):
     rendered = out["messages"][0].content
     assert "[SISTEMA]" not in rendered
     assert "Nenhum outro objeto" in rendered
+    assert out["rejected_item_claims"] == ["Espada Flamejante do Caos"]
 
 
 # ---------------------------------------------------------------------------

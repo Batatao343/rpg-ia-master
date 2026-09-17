@@ -1,7 +1,7 @@
 # SPEC — Interações com progresso, elegibilidade e repetição útil
 
 > **Status:** `in-progress` — implementação offline verde; aguarda matriz B real
-> **Criada/Atualizada:** 2026-08-27
+> **Criada:** 2026-08-27 · **Atualizada:** 2026-09-17
 > **Depende de:** `npcs-3-camadas`, `aliados-em-combate`, `polish-prosa-v2` (`done`)
 > **Supera:** smoke de recrutador que usava apenas `RECRUIT_MIN_REL`
 
@@ -71,6 +71,14 @@ extra por LLM.
 - [ ] Matriz B real confirma redução dos episódios repetidos sem vazamento.
 
 ## 6. Smoke real
+
+Revisão local de 17/09: o diplomático troca objetivo/local após esgotar quatro
+perguntas por NPC; outcomes de turnos anteriores não geram novos episódios de
+no-progress. O ator recebe aberturas anteriores no prompt, normaliza aspas
+externas e usa a variação de abertura existente sem request extra; a memória
+mantém o diálogo original. Regressões curtas cobrem os caminhos. O warning real
+do turno 90 da B anterior motivou essa revisão; não constitui validação do fix.
+O [gate B integral](../docs/fechamento-local-2026-09-17.md) aguarda saldo DeepSeek.
 
 Executar recrutador/diplomático/secret rusher por 30 turnos; confirmar adaptação,
 zero vazamento e redução drástica de episódios repetidos.

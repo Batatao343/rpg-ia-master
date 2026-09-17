@@ -1446,6 +1446,7 @@ def _build_combat_simulator_state(req: CombatSimulatorRequest) -> dict:
         "memory_promotions": [],
         "pending_npc_memory": [],
         "narrative_rejections": [],
+        "rejected_item_claims": [],
         "game_over": False,
         "death_pending": False,
         "continuity": {"session_action_count": 0, "timeline_epoch": 0,
@@ -2555,7 +2556,8 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None) -> I
             mode, data = payload
             if mode == "updates":
                 for node, upd in (data or {}).items():
-                    if node not in {"action_guard", "turn_finalizer"}:
+                    if node not in {"action_guard", "turn_prepare", "dispatch",
+                                    "turn_finalizer"}:
                         yield _sse("phase", {"node": node, "status": "done"})
                     if node == "dm_router":
                         yield _sse("route", {"route": (upd or {}).get("next", "") or ""})

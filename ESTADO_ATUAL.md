@@ -1,5 +1,38 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **RETOMADA 2026-09-17 — fechamento local; aceite real bloqueado por saldo.**
+> Inventário auditado: **152 specs — 140 `done`, 11 `in-progress`, uma `draft`**.
+> As onze têm implementação local e aguardam B real integral; não estão
+> certificadas pelo smoke offline. A B anterior parou em **751/2.000 turnos**
+> (três campanhas completas), HTTP 402 DeepSeek. O preflight de 16/09 confirmou
+> o mesmo bloqueio. **Nenhuma matriz real está rodando.** Após recarga, reiniciar
+> B do par 1, não reutilizar campanhas antigas como aceite do build alterado.
+> Relatório, lista exata de specs, evidências e comando:
+> [fechamento local de 17/09](docs/fechamento-local-2026-09-17.md).
+>
+> Correções: identidade NPC por aliases no ator/recrutamento e save/load;
+> grounding de local, inventário e identidade na memória; queda distinta de morte;
+> checkpoint estável, reparo único de transição órfã e readiness no recibo;
+> replan em todos os caminhos de viagem entre regiões; diplomático sem loop de
+> perguntas e diálogo com proteção de abertura/aspas; vetor compartilhado
+> validado por modelo/dimensão. Regressões curtas e smoke **10×3 offline** verdes
+> (`20260917-112524-245088`), zero erros/violações. Validador de conteúdo sem
+> erros/avisos, Ruff verde e build TypeScript/Vite verde (457 módulos).
+> **Suíte completa final: 1681 passed, 16 skipped, 14 deselected**, em 399,43 s;
+> um aviso de descontinuação do wrapper FAISS, sem falhas. Os testes opt-in
+> de rede/infra não são substituídos por essa execução offline.
+>
+> Latência: experimento concluído com **no-go** no R29 real; produção permanece
+> `RPG_TURN_EXECUTION=sequential`. Fan-out LLM é experimental; arquivista continua
+> inline. `ainvoke` usa `to_thread`, sem cancelamento nativo de HTTP.
+> [Spec corrigida](specs/latencia-turno-caminho-critico-concorrente.md).
+> Idempotência de claim Postgres foi corrigida e teve gate infra local 13/13 em
+> 28/08; não foi realizado deploy. Cloud permanece `draft`, dependente de
+> autorização/contas/orçamento. Fase 9 (sprites/som) não tem spec aprovada.
+>
+> **As sessões abaixo são histórico.** Datas, contagens e pendências antigas
+> não substituem este resumo nem os estados atuais dos arquivos em `specs/`.
+
 > **🧪 SESSÃO 58 (2026-08-27): matriz A fechada, quatro contratos corrigidos,
 > matriz B real é o próximo gate.** A baseline válida reúne **10×200 = 2.000
 > turnos**, zero erro de turno, 12 violações `error`, 193 warnings, 5.205 sucessos
@@ -1413,15 +1446,18 @@ ser re-introduzido em outro local pela narrativa/player (relocaliza o
 
 **Pendências abertas (não são bugs de código):**
 
+- Onze specs aguardam a matriz B integral com LLM real e relatório A/B;
+  bloqueio atual: saldo DeepSeek (HTTP 402). Lista e retomada no
+  [fechamento local](docs/fechamento-local-2026-09-17.md).
 - [Playtest longo do perfil comerciante](specs/playtest-longo-perfil-comerciante.md)
-  — implementação e 5×200 offline concluídos; resta apenas 1×200 real com teto
-  de custo explícito.
+  — **concluído**, inclusive 1×200 real em 20/08; não confundir esse aceite com
+  o par comerciante da nova matriz B, ainda pendente.
 - [Certificação cloud portátil](specs/fase-10b-certificacao-cloud-portavel.md)
   — `draft`; Railway/Supabase remoto exigem autorização, contas e orçamento.
 - Fase 9 (sprites/som) segue como backlog de produto, ainda sem spec aprovada.
-- `langchain-community` foi oficialmente descontinuado em 2026; o wrapper FAISS
-  ainda não possui substituto standalone oficial. Funciona e está testado, mas
-  deve ser removido/isolado antes de depender de manutenção futura.
+- O import de FAISS via `langchain-community` emite aviso de descontinuação na
+  suíte. Avaliar migração do adapter em spec própria; não alterar índices/saves
+  nem presumir compatibilidade de um substituto sem testes de recuperação.
 - 1 flaky isolado na suíte (sessão 8; 3 runs verdes depois — observar)
 - ~~Action `validate.yml`~~ ✅ verde (confirmado via `gh run list`).
 - ~~Lote 2 de traits~~ ✅ 80 traits (sessão 20).

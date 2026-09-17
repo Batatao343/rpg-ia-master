@@ -30,6 +30,7 @@ from services.memory_provenance import (
     normalize_memory_facts,
 )
 from services.memory_summary import compact_summary
+from services.entity_identity import coalesce_runtime_npcs
 
 # Configuração de Pastas
 SAVES_DIR = "saves"
@@ -56,6 +57,18 @@ def _replace_with_retry(source: str, destination: str, *, attempts: int = 6) -> 
 # v4 = Virtudes/Vitalidade/Ferimentos; v5 = Vitalidade canônica + aliases HP derivados.
 # v6 = ledger visual; v7 = metatempo; v8 = crônica estável + progressão 1–20.
 SCHEMA_VERSION = 8
+MAX_REJECTED_ITEM_CLAIMS = 100
+
+
+def normalize_rejected_item_claims(value) -> List[str]:
+    """Ledger compacto de itens que a prosa tentou conceder sem autoridade."""
+    if not isinstance(value, (list, tuple)):
+        return []
+    return list(dict.fromkeys(
+        cleaned
+        for item in value
+        if (cleaned := " ".join(str(item or "").split())[:160].strip())
+    ))[-MAX_REJECTED_ITEM_CLAIMS:]
 
 def save_path(game_id: str) -> str:
     """Caminho canônico do save de `game_id`.
@@ -564,6 +577,9 @@ def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
         "memory_promotions": bounded_audit_rows(
             state.get("memory_promotions"), limit=MAX_MEMORY_PROMOTIONS,
         ),
+        "rejected_item_claims": normalize_rejected_item_claims(
+            state.get("rejected_item_claims")
+        ),
         "pending_npc_memory": normalize_pending_npc_memory(
             state.get("pending_npc_memory")
         ),
@@ -589,7 +605,7 @@ def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
         "factions": state.get("factions", []),
         "faction_intel": state.get("faction_intel", {}),
         "bestiary_knowledge": state.get("bestiary_knowledge", {}),
-        "npcs": state.get("npcs", {}),
+        "npcs": coalesce_runtime_npcs(state.get("npcs", {})),
         "inventory": state.get("inventory", []),
         "quests": state.get("quests", []),
         "campaign_plan": state.get("campaign_plan", {}),
@@ -717,7 +733,7 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
     checkpoint reusam). Aplica o pipeline de migrations."""
     # Fase 10: pipeline de migrations (consolida os backfills 3.1/4.1/4.3/4.5)
     raw_data = migrate_state(raw_data)
-    return {
+    state = {
         # --- Recupera Memória ---
         "game_id": raw_data.get("game_id", "recovered_session"),
         "processed_action_ids": list(raw_data.get("processed_action_ids", []) or [])[-64:],
@@ -742,6 +758,9 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         "memory_promotions": bounded_audit_rows(
             raw_data.get("memory_promotions"), limit=MAX_MEMORY_PROMOTIONS,
         ),
+        "rejected_item_claims": normalize_rejected_item_claims(
+            raw_data.get("rejected_item_claims")
+        ),
         "pending_npc_memory": normalize_pending_npc_memory(
             raw_data.get("pending_npc_memory")
         ),
@@ -760,7 +779,7 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         "factions": raw_data.get("factions", []),
         "faction_intel": raw_data.get("faction_intel", {}),
         "bestiary_knowledge": raw_data.get("bestiary_knowledge", {}),
-        "npcs": raw_data.get("npcs", {}),
+        "npcs": coalesce_runtime_npcs(raw_data.get("npcs", {})),
         "inventory": raw_data.get("inventory", []),
         "quests": raw_data.get("quests", []),
         "campaign_plan": raw_data.get("campaign_plan", {}),
@@ -793,6 +812,19 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         "next": "storyteller",
         "needs_replan": False,
     }
+    # Saves produzidos antes do protocolo de transição podiam persistir uma
+    # Última Ação/Estado Terminal sem combate ou tela de morte capaz de
+    # resolvê-los. Repara somente essa combinação órfã; combate e death_pending
+    # vivos mantêm seu dono normal.
+    player = state.get("player") or {}
+    if (not (state.get("combat") or {}).get("active")
+            and not state.get("death_pending")
+            and not state.get("game_over")
+            and (player.get("last_stand_pending") or player.get("estado_terminal"))):
+        from services.actor_lifecycle import sanitize_interturn_state
+        state = sanitize_interturn_state(state)
+        state["needs_replan"] = True
+    return state
 
 
 # --- spec checkpoints-morte: slot de checkpoint (1 por save, sobrescreve) -----
@@ -800,7 +832,10 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
 def save_checkpoint(state: Dict[str, Any]) -> bool:
     """Grava o snapshot restaurável em `saves/{game_id}.checkpoint.json` (D5: 1
     slot, sobrescreve). Mesmo formato do save vivo — reusa `_state_to_save_data`."""
-    if not state or (state.get("combat") or {}).get("active"):
+    if not state:
+        return False
+    from services.actor_lifecycle import transition_readiness
+    if not transition_readiness(state)["ready"]:
         return False
     state = deepcopy(state)
     from services.continuity import mark_checkpoint

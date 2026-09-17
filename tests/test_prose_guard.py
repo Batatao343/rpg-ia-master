@@ -37,6 +37,12 @@ def test_openings_clause_vazio_sem_historico():
     assert "VARIE A ABERTURA" in pg.openings_clause(["o ar fétido do pântano"])
 
 
+def test_strip_outer_quotes_remove_so_wrapper_do_provider():
+    assert pg.strip_outer_quotes('"Ela diz: \'fique\'."') == "Ela diz: 'fique'."
+    assert pg.strip_outer_quotes('“\"Resposta\"”') == "Resposta"
+    assert pg.strip_outer_quotes("Sem wrapper") == "Sem wrapper"
+
+
 def test_log_if_repeats(caplog):
     with caplog.at_level("WARNING", logger="rpg.prose"):
         r = pg.log_if_repeats("O ar fétido do pântano queima aqui.",

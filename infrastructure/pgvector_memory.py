@@ -139,33 +139,40 @@ class PgVectorMemoryStore:
         where, params = self._filters(request)
         by_id: dict[str, MemoryDocument] = {}
         with self.pool.connection() as connection:
-            if self.embedder is not None:
+            if request.vector is not None and request.embedding_profile_id not in {None, self.profile_id}:
+                raise ValueError("embedding_profile_id incompatível com o adapter")
+            if request.vector is not None:
+                vector = vector_literal(request.vector)
+            elif self.embedder is not None:
                 try:
                     vector = vector_literal(self.embedder(request.text))
                 except Exception:
                     vector = None
-                if vector:
-                    rows = connection.execute(
-                        f"""select *,1-(embedding <=> %s::extensions.vector) as score
-                        from app.memory_documents where {where} and embedding_status='ready'
-                        order by embedding <=> %s::extensions.vector limit %s""",
-                        [vector, *params, vector, request.k],
-                    ).fetchall()
-                    for row in rows:
-                        document = self._document(row, float(row["score"]))
-                        document.metadata["retrieval"] = "semantic"
-                        by_id[row["id"]] = document
-            rows = connection.execute(
-                f"""select *,ts_rank(search_text,websearch_to_tsquery('simple',%s)) as score
-                from app.memory_documents where {where}
-                  and search_text @@ websearch_to_tsquery('simple',%s)
-                order by score desc,created_at desc limit %s""",
-                [request.text, *params, request.text, request.k],
-            ).fetchall()
-            for row in rows:
-                document = self._document(row, float(row["score"]))
-                document.metadata["retrieval"] = "lexical"
-                by_id.setdefault(row["id"], document)
+            else:
+                vector = None
+            if vector:
+                rows = connection.execute(
+                    f"""select *,1-(embedding <=> %s::extensions.vector) as score
+                    from app.memory_documents where {where} and embedding_status='ready'
+                    order by embedding <=> %s::extensions.vector limit %s""",
+                    [vector, *params, vector, request.k],
+                ).fetchall()
+                for row in rows:
+                    document = self._document(row, float(row["score"]))
+                    document.metadata["retrieval"] = "semantic"
+                    by_id[row["id"]] = document
+            if request.text.strip():
+                rows = connection.execute(
+                    f"""select *,ts_rank(search_text,websearch_to_tsquery('simple',%s)) as score
+                    from app.memory_documents where {where}
+                      and search_text @@ websearch_to_tsquery('simple',%s)
+                    order by score desc,created_at desc limit %s""",
+                    [request.text, *params, request.text, request.k],
+                ).fetchall()
+                for row in rows:
+                    document = self._document(row, float(row["score"]))
+                    document.metadata["retrieval"] = "lexical"
+                    by_id.setdefault(row["id"], document)
         return sorted(by_id.values(), key=lambda item: item.score or 0, reverse=True)[:request.k]
 
     def discard_after(self, *, game_id, timeline_epoch: int, commit_version: int) -> int:

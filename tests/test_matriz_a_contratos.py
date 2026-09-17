@@ -8,7 +8,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 import party
 from agents.action_guard import action_guard_node
 from playtest import invariants
-from playtest.profiles import Recrutador
+from playtest.profiles import Diplomatico, Recrutador
 from services.actor_lifecycle import ActorPhase, classify_actor, evaluate_action
 from services.prose_guard import semantic_opening
 from services.turn_outcome import capture_baseline, finalize_outcome, player_facing_message
@@ -123,6 +123,28 @@ def test_repeticao_de_interacao_vira_um_episodio_curto():
     assert len(got) == 1 and got[0].check_id == "interaction.no_progress"
     state["last_interaction_outcome"]["repeat_count"] = 5
     assert invariants.check_interaction_no_progress(state, None, 5) == []
+
+
+def test_diplomatico_esgota_perguntas_e_procura_outro_local():
+    profile = Diplomatico()
+    profile.reset()
+    state = {
+        "npcs": {"Magda": {"name": "Magda", "in_scene": True, "relationship": 1}},
+        "party": [], "world": {"current_location_id": "nova_arcadia"},
+    }
+    actions = [profile._next_action(state, random.Random(7)) for _ in range(5)]
+    assert len(set(actions[:4])) == 4
+    assert actions[4].startswith("Viajo para")
+    profile.reset()
+    assert profile._next_action(state, random.Random(7)) == actions[0]
+
+
+def test_outcome_antigo_nao_repete_warning_em_outro_turno():
+    state = {
+        "world": {"turn_count": 4},
+        "last_interaction_outcome": {"turn": 3, "progressed": False, "repeat_count": 3},
+    }
+    assert invariants.check_interaction_no_progress(state, None, 4) == []
 
 
 def test_resultado_e_progresso_de_interacao_sobrevivem_save_load():

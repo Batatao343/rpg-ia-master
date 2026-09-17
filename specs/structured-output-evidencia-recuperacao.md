@@ -79,6 +79,10 @@ de latência.
 
 ## 6. Smoke real
 
+Atualização de 17/09: B integral bloqueada por HTTP 402 DeepSeek. O último
+preflight falhou por saldo, não valida a recuperação do build atual; ver
+[fechamento local](../docs/fechamento-local-2026-09-17.md).
+
 Executar 10 gerações de CampaignPlan no DeepSeek com telemetria; toda falha deve
 ser classificada, recuperada ou cair para provider segundo a política, sem None
 opaco.

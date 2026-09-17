@@ -226,34 +226,54 @@ def _build_plan(state: GameState) -> CampaignPlan:
 
 def campaign_manager_node(state: GameState):
     """Ensure a coherent multi-step campaign plan exists and is refreshed periodically."""
+    from observability.telemetry import span
+
+    with span("turn.plan"):
+        return _campaign_manager_node(state)
+
+
+def _campaign_manager_node(state: GameState):
+    """Implementation kept separate so the complete branch owns one safe span."""
 
     world = dict(state.get("world", {}))
     if world.get("turn_count") is None:
         world["turn_count"] = 0
 
-    # Cada invocação do grafo equivale a um turno do jogador.
-    # Incrementamos aqui (primeiro nó do fluxo) para que replanejamento,
-    # arquivista e memórias de NPC tenham noção real de tempo.
-    world["turn_count"] = world.get("turn_count", 0) + 1
-    from services.continuity import advance_action
-    continuity = advance_action(
-        state.get("continuity"), canonical_turn=int(world["turn_count"]),
-    )
+    # O grafo novo prepara relógio/continuidade uma única vez antes das branches.
+    # A compatibilidade direta preserva callers que invocam este nó isoladamente.
+    if state.get("turn_prepared"):
+        continuity = state.get("continuity") or {}
+    else:
+        world["turn_count"] = world.get("turn_count", 0) + 1
+        from services.continuity import advance_action
+        continuity = advance_action(
+            state.get("continuity"), canonical_turn=int(world["turn_count"]),
+        )
+    effective_state = {**state, "world": world, "continuity": continuity}
 
     # Laboratório de combate: mantém apenas o relógio de rounds/turnos. O arco
     # fixo já foi criado pela API e nenhuma preparação de campanha/RAG é útil.
     if (state.get("combat_simulation") or {}).get("enabled"):
         return {
-            "next": "dm_router",
             "world": world,
             "campaign_plan": state.get("campaign_plan"),
             "needs_replan": False,
             "continuity": continuity,
         }
 
-    if not _should_replan(state):
+    # A plan refresh is independent from routing only at a safe inter-turn
+    # boundary. During a live conflict it would spend a SMART request on a plan
+    # the combat branch cannot consume and could describe a scene still in flux.
+    if (state.get("combat") or {}).get("active") and _should_replan(effective_state):
         return {
-            "next": "dm_router",
+            "world": world,
+            "campaign_plan": state.get("campaign_plan"),
+            "needs_replan": True,
+            "continuity": continuity,
+        }
+
+    if not _should_replan(effective_state):
+        return {
             "world": world,
             "campaign_plan": state.get("campaign_plan"),
             "needs_replan": False,
@@ -261,12 +281,11 @@ def campaign_manager_node(state: GameState):
         }
 
     print(f"🗺️ [CAMPAIGN] Generating new plot for: {world.get('current_location')}")
-    new_plan = _build_plan(state)
+    new_plan = _build_plan(effective_state)
     # spec beats-visibilidade-ptbr (R4): não conseguiu um plano em pt-BR → mantém
     # o anterior e deixa needs_replan ligado para tentar de novo no próximo turno.
     if new_plan is None:
         return {
-            "next": "dm_router",
             "world": world,
             "campaign_plan": state.get("campaign_plan"),
             "needs_replan": True,
@@ -277,7 +296,6 @@ def campaign_manager_node(state: GameState):
         "needs_replan": False,
         "world": world,
         # Importante: Não sobrescrevemos 'messages' aqui para não perder histórico
-        "next": "dm_router",
         "continuity": continuity,
     }
 

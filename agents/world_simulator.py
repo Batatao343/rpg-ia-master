@@ -8,6 +8,7 @@ Arquitetura: a IA NARRA/identifica (WorldPulse); Python resolve (clampa o perigo
 Não-onisciência: o prompt só lista fações que o jogador conhece (intel.known); forças desconhecidas
 aparecem como sinais sem nome. Guard de FallbackLLM (isinstance). Inerte sem chave.
 """
+from dataclasses import dataclass
 from typing import Tuple
 from langchain_core.messages import SystemMessage
 from pydantic import BaseModel, Field
@@ -34,6 +35,14 @@ class WorldPulse(BaseModel):
         description="Justificativa narrativa opcional. Não vira memória por si só; "
                     "somente a consequência aplicada pelo motor é persistida.")
     danger_shift: int = Field(default=0, description="-1, 0 ou +1: o mundo ficou mais ou menos perigoso aqui?")
+
+
+@dataclass(frozen=True)
+class WorldPulseProposal:
+    rumor: str = ""
+    danger_shift: int = 0
+    status: str = "ok"
+    error_code: str | None = None
 
 
 def _effective_danger(world: dict, loc_id: str) -> int:
@@ -69,11 +78,9 @@ def _apply_danger_shift(world: dict, loc_id: str, shift: int) -> dict:
     return world
 
 
-def simulate_world(state: dict, world: dict, factions, intel, periods: int = 1) -> Tuple[dict, str]:
-    """
-    Gera 1 evento off-screen narrado. Retorna (world, nota). Nota = "[ECOS DO MUNDO] ..." ou "".
-    Não levanta: qualquer falha → (world, "").
-    """
+def propose_world_pulse(state: dict, world: dict, factions, intel,
+                        periods: int = 1) -> WorldPulseProposal:
+    """Generate a pure proposal: no world mutation and no RAG write."""
     world = dict(world or {})
     loc_id = world.get("current_location_id", "")
     loc_name = world.get("current_location", "a região")
@@ -100,13 +107,24 @@ def simulate_world(state: dict, world: dict, factions, intel, periods: int = 1) 
     try:
         pulse = llm.with_structured_output(WorldPulse).invoke([sys])
     except Exception:
-        return world, ""
+        return WorldPulseProposal(status="degraded", error_code="invoke_error")
 
     if not isinstance(pulse, WorldPulse):  # FallbackLLM devolve AIMessage
-        return world, ""
+        return WorldPulseProposal(status="degraded", error_code="invalid_structured")
+    return WorldPulseProposal(
+        rumor=sanitize_meta_preamble(pulse.rumor or ""),
+        danger_shift=max(-1, min(1, int(pulse.danger_shift or 0))),
+    )
+
+
+def apply_world_pulse(world: dict, proposal: WorldPulseProposal) -> tuple[dict, str, list[str]]:
+    """Apply a proposal in Python and return durable memory intents."""
+    world = dict(world or {})
+    loc_id = world.get("current_location_id", "")
+    loc_name = world.get("current_location", "a região")
 
     before_danger = _effective_danger(world, loc_id)
-    world = _apply_danger_shift(world, loc_id, getattr(pulse, "danger_shift", 0))
+    world = _apply_danger_shift(world, loc_id, proposal.danger_shift)
     after_danger = _effective_danger(world, loc_id)
 
     # Apenas a consequência que Python realmente aplicou vira memória. `pulse.fact`
@@ -114,11 +132,19 @@ def simulate_world(state: dict, world: dict, factions, intel, periods: int = 1) 
     applied_fact = (
         f"[mundo] O perigo de {loc_name} mudou de {before_danger} para {after_danger}."
         if after_danger != before_danger else "")
-    if RAG_AVAILABLE and state.get("game_id") and applied_fact:
+    rumor = proposal.rumor
+    return world, (f"[ECOS DO MUNDO] {rumor}" if rumor else ""), (
+        [applied_fact] if applied_fact else []
+    )
+
+
+def simulate_world(state: dict, world: dict, factions, intel, periods: int = 1) -> Tuple[dict, str]:
+    """Compatibility boundary: propose → apply → persist derived intent."""
+    proposal = propose_world_pulse(state, world, factions, intel, periods)
+    world, note, intents = apply_world_pulse(world, proposal)
+    if RAG_AVAILABLE and state.get("game_id") and intents:
         try:
-            add_memory_to_session(state["game_id"], [applied_fact])
+            add_memory_to_session(state["game_id"], intents)
         except Exception:
             pass
-
-    rumor = sanitize_meta_preamble(pulse.rumor or "")
-    return world, (f"[ECOS DO MUNDO] {rumor}" if rumor else "")
+    return world, note
