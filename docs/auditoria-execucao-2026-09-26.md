@@ -36,6 +36,8 @@ nível error: zero achados. Políticas de acesso não foram alteradas.
 - `uv run ruff check .`: verde; validador de conteúdo: zero erros/avisos.
 - `uv run python scripts/audit_local_gate.py`: **25 passed, zero skipped**,
   82,03 s, após fault injection e correção do deadlock.
+- GitHub `validate` do commit funcional `c7eb25c`: **success**, run
+  `36263493848`, 1m01s (pytest, Node, build, Ruff e conteúdo).
 - JUnit local: `readiness_artifacts/audit/results.xml` (gitignored).
 
 O gate integrado cobre Postgres/pgvector, contexto serial/paralelo/async,

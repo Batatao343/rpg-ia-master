@@ -6,8 +6,8 @@
 > commit passaram; corpus narrativo ampliado (38 verdes). Correção adicional:
 > arquivamento perdido na serialização e deadlock de concorrência, ambos
 > encontrados pela matriz de mutações. Gate local **25/25**; suíte final
-> **1800 passed, 35 skipped, 15 deselected**. CI obrigatório
-> do commit b3dcc19 passou; CI infra remoto ainda pendente. Sem chamadas pagas.
+> **1800 passed, 35 skipped, 15 deselected**. CI obrigatório do commit funcional
+> `c7eb25c` passou (run 36263493848); CI infra remoto ainda pendente. Sem chamadas pagas.
 > Este bloco prevalece sobre o histórico abaixo.
 
 > **26/09 — auditoria executada em todos os nove eixos; aceite ainda parcial.**

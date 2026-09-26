@@ -16,6 +16,8 @@
 > expôs e corrigiu perda de arquivamento e deadlock por ordem de locks. Nenhum
 > provider pago. [Reconciliação](docs/RECONCILIACAO_ARTE.md)
 > documenta contenção segura; importação administrativa ainda não implementada.
+> Commit funcional `c7eb25c` publicado na main; CI obrigatório `validate`
+> **verde** (run 36263493848, 1m01s). CI infra manual ainda não disparado.
 > Este bloco prevalece sobre as pendências históricas abaixo.
 
 > **RETOMADA 2026-09-26 — execução da auditoria, com gates locais reais.**
