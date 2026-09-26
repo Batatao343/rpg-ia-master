@@ -1,8 +1,12 @@
 name: audit-local
-# Explicit/manual until the first remote run certifies provisioning and timing.
+# Certified remotely on 2026-09-26 (run 36263717580, 3m27s).
 # No cloud account, provider secrets or paid model is used by this job.
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 jobs:
   infra-browser:
     runs-on: ubuntu-latest

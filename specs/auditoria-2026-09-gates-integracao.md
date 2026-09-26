@@ -1,6 +1,6 @@
 # SPEC — Gates de integração e regressões da auditoria
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-09-22 · **Atualizada:** 2026-09-26
 > **Aprovação:** usuário pediu “transforma tudo em specs e começa a executar”.
 > **Depende de:** Specs da auditoria: gates adicionados incrementalmente, não esperar todas concluírem
@@ -35,9 +35,9 @@ Deploy, migração de dados reais, nova campanha paga e mudança de provider. Im
 
 ## 5. Critérios de aceite
 
-- [ ] Offline, build e testes cliente automáticos.
-- [ ] Infra/browser executados no CI ou explicitamente pendentes.
-- [ ] Artefatos reproduzíveis e matriz B separada.
+- [x] Offline, build e testes cliente automáticos.
+- [x] Infra/browser executados no CI ou explicitamente pendentes.
+- [x] Artefatos reproduzíveis e matriz B separada.
 
 ## 6. Smoke test com LLM real / integração aplicável
 
@@ -49,4 +49,11 @@ Instalações locais baixam dependências mas não contratam serviços. Manter l
 
 ## Execução — 26/09 (prevalece sobre as pendências históricas)
 
-CI existente agora roda npm test e instala extra postgres. Workflow audit-local separado, manual (workflow_dispatch), provisiona stack/browser e roda scripts/audit_local_gate.py. Runner local final: **25 testes verdes**, zero skip, com JUnit, `summary.json` e screenshots 390/1440 em `readiness_artifacts/audit/`, sem providers pagos. Inclui kill/restart, rollback de arte, disputa simultânea de mutações, resposta tardia e refresh. O teste de corrida encontrou deadlock PostgreSQL por ordem de locks; corrigido com ordem global `game -> operation`. Infra no GitHub ainda não executada nem promovida a gate obrigatório de PR; isso exige autorização para consumir quota do GitHub Actions. Matriz B e contratos pagos continuam separados.
+CI existente roda npm test e instala extra postgres. Workflow audit-local separado provisiona stack/browser e roda scripts/audit_local_gate.py. Runner local final: **25 testes verdes**, zero skip, com JUnit, `summary.json` e screenshots 390/1440 em `readiness_artifacts/audit/`, sem providers pagos. Inclui kill/restart, rollback de arte, disputa simultânea de mutações, resposta tardia e refresh. O teste de corrida encontrou deadlock PostgreSQL por ordem de locks; corrigido com ordem global `game -> operation`.
+
+Primeira certificação remota: GitHub Actions run **36263717580**, verde em
+3m27s, com artifact `audit-local-results` e teardown executado. Após esse verde,
+o workflow foi promovido para `push`/`pull_request` da main, mantendo
+`workflow_dispatch`. O repositório é público e usa runner padrão `ubuntu-latest`,
+gratuito segundo a documentação oficial do GitHub. Matriz B e contratos pagos
+continuam separados e não são executados neste CI.

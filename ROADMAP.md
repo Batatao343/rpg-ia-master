@@ -1,13 +1,14 @@
 # ROADMAP — RPG IA (Revisado 2026-09-26)
 
-> **Continuação 26/09:** seis specs da auditoria `done`: artes, contexto,
-> operações, efeitos, leases e frontend; três aguardam gates externos. Novos
+> **Continuação 26/09:** sete specs da auditoria `done`: artes, contexto,
+> operações, efeitos, leases, frontend e gates; duas aguardam LLM real. Novos
 > gates de crash de processo e desconexão após
 > commit passaram; corpus narrativo ampliado (38 verdes). Correção adicional:
 > arquivamento perdido na serialização e deadlock de concorrência, ambos
 > encontrados pela matriz de mutações. Gate local **25/25**; suíte final
 > **1800 passed, 35 skipped, 15 deselected**. CI obrigatório do commit funcional
-> `c7eb25c` passou (run 36263493848); CI infra remoto ainda pendente. Sem chamadas pagas.
+> `c7eb25c` passou; CI infra também verde (run 36263717580, 3m27s) e promovido
+> para push/PR. Sem chamadas pagas.
 > Este bloco prevalece sobre o histórico abaixo.
 
 > **26/09 — auditoria executada em todos os nove eixos; aceite ainda parcial.**

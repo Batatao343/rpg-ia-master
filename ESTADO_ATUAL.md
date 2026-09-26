@@ -1,9 +1,9 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
-> **CONTINUAÇÃO 26/09 — testes adversos e correções.** Seis eixos `done`:
-> artes, contexto, operações, efeitos, leases e frontend. Três permanecem
+> **CONTINUAÇÃO 26/09 — testes adversos e correções.** Sete eixos `done`:
+> artes, contexto, operações, efeitos, leases, frontend e gates. Dois permanecem
 > `in-progress`: narrativa/recompensas aguardam contrato DeepSeek explicitamente
-> autorizado; gates aguardam primeira execução CI infra remota/quota.
+> autorizado.
 > Recuperação de imagem/cenário após erro validada em Chromium 390/1440.
 > Logout integrado ao topo; retomada de ação tolera confirmação perdida sem
 > duplicar turno. Guard de memória/contexto agora respeita hipóteses/boatos sem
@@ -16,8 +16,8 @@
 > expôs e corrigiu perda de arquivamento e deadlock por ordem de locks. Nenhum
 > provider pago. [Reconciliação](docs/RECONCILIACAO_ARTE.md)
 > documenta contenção segura; importação administrativa ainda não implementada.
-> Commit funcional `c7eb25c` publicado na main; CI obrigatório `validate`
-> **verde** (run 36263493848, 1m01s). CI infra manual ainda não disparado.
+> Commit funcional `c7eb25c` publicado na main; CI `validate` verde. CI infra
+> **verde** (run 36263717580, 3m27s) e promovido a push/PR da main.
 > Este bloco prevalece sobre as pendências históricas abaixo.
 
 > **RETOMADA 2026-09-26 — execução da auditoria, com gates locais reais.**

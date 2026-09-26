@@ -1,8 +1,8 @@
 # Auditoria — execução e evidências de 26/09
 
 As nove specs têm implementação iniciada. Artes, contexto, operações, efeitos,
-leases e frontend estão `done`; narrativa, recompensas e gates seguem
-`in-progress`, cada uma bloqueada apenas por validação externa explícita.
+leases, frontend e gates estão `done`; narrativa e recompensas seguem
+`in-progress`, bloqueadas apenas pelo contrato DeepSeek externo.
 Não confundir código implementado com todos os critérios de aceite certificados.
 
 ## Alterações verificadas
@@ -60,10 +60,11 @@ permanecem apenas na autenticação local.
 | Efeitos transacionais | Concluída: INSERT de arte/crash/rollback verdes |
 | Leases | Concluída: kill/restart e reconciliação documentada |
 | Frontend sessão | Concluída: rede/401/troca durante resposta verdes |
-| Gates | Primeiro CI infra remoto e promoção após certificação |
+| Gates | Concluída: CI infra 36263717580 verde e promovido a push/PR |
 
-O workflow `audit-local.yml` é manual até sua primeira certificação remota.
-Não foi disparado durante a validação. Depois, o usuário autorizou commit e
+O workflow `audit-local.yml` foi manual até sua primeira certificação remota.
+Após o run remoto verde, foi promovido a gate automático de `push` e PR da
+`main`. Antes disso, o usuário autorizou commit e
 push de todas as alterações do projeto para `main`; publicação Git não é deploy
 da aplicação. A suíte de cliente foi
 adicionada ao workflow obrigatório existente. Execução local usa recursos do
