@@ -1,6 +1,6 @@
 # SPEC — Operações idempotentes e execução unificada do turno
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-09-22 · **Atualizada:** 2026-09-26
 > **Aprovação:** usuário pediu “transforma tudo em specs e começa a executar”.
 > **Depende de:** Nenhuma para replay; efeitos transacionais integram na spec própria
@@ -35,9 +35,9 @@ Estender receipt(principal, operation_id, *, game_id, kind, request_hash) no por
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R5 e paridade de transportes cobertos.
-- [ ] Suite completa e smoke local transacional verdes.
-- [ ] Nenhum replay dispara LLM nem efeitos externos.
+- [x] R1–R5 e paridade de transportes cobertos.
+- [x] Suite completa e smoke local transacional verdes.
+- [x] Nenhum replay dispara LLM nem efeitos externos.
 
 ## 6. Smoke test com LLM real / integração aplicável
 
@@ -50,3 +50,11 @@ Não invalidar recibos antigos silenciosamente; quando metadados insuficientes, 
 ## Execução — 26/09 (prevalece sobre as pendências históricas)
 
 Executor compartilhado POST/SSE, validação de recibo por owner/game/kind/hash, replay antes das precondições mutáveis e limpeza de claim via operation_scope. Gate autenticado confirmou SSE→replay POST sem nova entrada no histórico e 409 para payload divergente. Migração 20260926132501 inclui art no domínio de operações; aplicada somente local. Ainda falta a matriz curta completa de morte/equip/levelup, desconexão durante commit e concorrência na API. Legacy mantém ledger limitado, sem garantia de recibo histórico completo.
+
+Continuação: matriz HTTP real local de death/equip/levelup passou, com replay
+após alteração de precondições e liberação do claim rejeitado. Encontrou e
+corrigiu perda de archived/archived_reason na serialização; arquivamento agora
+também interrompe o grafo antes de qualquer nó. Regressões curtas adicionadas.
+Browser passou com confirmação perdida após commit e retomada sem duplicação.
+Corrida simultânea pela API passou: uma mutação confirma e a concorrente recebe
+409, com incremento único de versão. Isso fecha a lacuna antes pendente.

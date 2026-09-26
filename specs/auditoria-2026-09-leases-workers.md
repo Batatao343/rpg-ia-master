@@ -1,6 +1,6 @@
 # SPEC — Renovação de leases e recuperação segura de workers
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-09-22 · **Atualizada:** 2026-09-26
 > **Aprovação:** usuário pediu “transforma tudo em specs e começa a executar”.
 > **Depende de:** auditoria-2026-09-operacoes-turno; integrar efeitos-transacionais
@@ -35,9 +35,9 @@ Novo services/lease_heartbeat.py: contextmanager keep_lease_alive(renew:Callable
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R5 verdes em testes e integração local.
-- [ ] Não existem threads de heartbeat órfãs.
-- [ ] Zero geração automática repetida diante de resultado externo incerto.
+- [x] R1–R5 verdes em testes e integração local.
+- [x] Não existem threads de heartbeat órfãs.
+- [x] Zero geração automática repetida diante de resultado externo incerto.
 
 ## 6. Smoke test com LLM real / integração aplicável
 
@@ -50,3 +50,11 @@ Não trocar fila nem acrescentar serviço pago. Garantia de idempotência do pro
 ## Execução — 26/09 (prevalece sobre as pendências históricas)
 
 Heartbeat no escopo de operação e job, reserva serial de um job, publicação de arte/crônica com token vigente e parada sem novas reservas. Dois workers reais locais: execução >2 TTL sem roubo e token antigo rejeitado. Arte com resultado incerto fica failed/external_result_uncertain (persistido) e é apresentada como reconcile_required; geração órfã sem lease ativa também exige conferência. Não foi criada coluna/status SQL novo: esta projeção pública é desvio explícito do design inicial. Regressão prova uma chamada ao gerador falso mesmo após retry. Falta teste de kill/restart do processo e procedimento operacional de reconciliação; nunca retornar a pending cegamente.
+
+Continuação: kill real do processo e retomada por novo worker comprovados;
+crash após retorno do gerador falso preserva generating inativo e rejeita
+nova geração (zero chamadas do substituto). Procedimento em
+`docs/RECONCILIACAO_ARTE.md`: contenção/diagnóstico seguros, sem reset cego.
+Importação administrativa de resultado externo recuperado continua ausente;
+esse limite operacional está explícito, não foi apresentado como recuperação
+automática entregue.

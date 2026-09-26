@@ -415,6 +415,8 @@ class GameState(TypedDict):
     narrative_summary: str # Resumo de curto prazo (contexto comprimido)
     archivist_last_run: int # Controle de frequência do arquivista
     archive_due: bool       # flag transitória: evento relevante pede arquivamento (cadência)
+    archived: bool         # Arquivamento é persistente, inclusive após passar pelo grafo.
+    archived_reason: str
     game_over: bool         # Fase 4.6: player morreu — save vira memorial (sem chave no
                             # GameState o LangGraph DESCARTA o update; achado do smoke real)
     death_pending: bool     # spec checkpoints-morte: queda letal — aguardando a TELA DE

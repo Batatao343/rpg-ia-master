@@ -460,28 +460,29 @@ def validate_memory_fact(record: dict, state: dict) -> tuple[Optional[dict], Opt
     item = normalized[0]
     from services.narrative_evidence import build_evidence, validate_narrative
     check = validate_narrative(item['text'], build_evidence(state), channel='memory')
+    reasons = {row['reason'] for row in check.rejections}
     # Existing reason codes remain stable for the older guards below.
     if any(row['reason'] in {'current_location', 'reward_delta'} for row in check.rejections):
         return None, 'narrative_evidence_contradiction'
     secret_id = find_strict_unrevealed(item["text"], state)
     if secret_id:
         return None, f"unrevealed_secret:{secret_id}"
-    if false_player_death_claim(item["text"], state):
+    if 'player_death' in reasons:
         return None, "player_downed_not_dead"
     contradiction = canonical_location_contradiction(item["text"])
-    if contradiction:
+    if contradiction and 'location_region' in reasons:
         return None, (
             "location_region_contradiction:"
             f"{contradiction['location_id']}:{contradiction['claimed_region']}"
         )
     inventory_contradiction = inventory_possession_contradiction(item["text"], state)
-    if inventory_contradiction:
+    if inventory_contradiction and 'inventory_possession' in reasons:
         return None, (
             "inventory_possession_contradiction:"
             f"{inventory_contradiction['item_name']}"
         )
     npc_contradiction = npc_identity_contradiction(item["text"], state)
-    if npc_contradiction:
+    if npc_contradiction and 'npc_identity' in reasons:
         return None, (
             "npc_identity_contradiction:"
             f"{npc_contradiction['npc_name']}:{npc_contradiction['field']}"

@@ -340,7 +340,7 @@ select {
 }
 .topbar__place { font-family: var(--display); font-size: 1.04rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
 .topbar__meta { margin-left: 0.6rem; color: var(--faint); font-size: 0.82rem; font-variant-numeric: tabular-nums; }
-.topbar__right { display: flex; gap: 0.5rem; }
+.topbar__right { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .iconbtn {
   font-family: var(--display); font-size: 0.74rem; letter-spacing: 0.06em;
   background: transparent; border: 1px solid var(--line-soft);
@@ -361,7 +361,7 @@ select {
 .art-dialog img { display: block; max-width: 90vw; max-height: 80dvh; object-fit: contain; }
 .art-dialog__close { display: block; margin: 0 0 0.6rem auto; }
 .generated-portrait img { width: 100%; max-height: 280px; object-fit: contain; }
-.pending-operation { position: fixed; z-index: 100; bottom: 0.5rem; left: 50%; transform: translateX(-50%); max-width: 95vw; background: var(--bg); }
+.pending-operation { position: fixed; z-index: 100; bottom: 5rem; left: 50%; transform: translateX(-50%); max-width: 95vw; background: var(--bg); }
 .card__select { background: transparent; color: inherit; border: 0; font: inherit; cursor: pointer; width: 100%; }
 .visual-art img, .visual-art__monogram {
   display: block; width: 100%; object-fit: contain; object-position: center;

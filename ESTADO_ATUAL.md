@@ -1,5 +1,23 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **CONTINUAÇÃO 26/09 — testes adversos e correções.** Seis eixos `done`:
+> artes, contexto, operações, efeitos, leases e frontend. Três permanecem
+> `in-progress`: narrativa/recompensas aguardam contrato DeepSeek explicitamente
+> autorizado; gates aguardam primeira execução CI infra remota/quota.
+> Recuperação de imagem/cenário após erro validada em Chromium 390/1440.
+> Logout integrado ao topo; retomada de ação tolera confirmação perdida sem
+> duplicar turno. Guard de memória/contexto agora respeita hipóteses/boatos sem
+> permitir segredos; corpus ampliado: 38 testes verdes. Corrigida resposta de
+> estado atrasada na retomada e perda de archived/archived_reason em save/load.
+> Três testes de crash real locais verdes (job, INSERT de arte, retorno do
+> gerador falso). Suíte final: **1800 passed, 35 skipped, 15 deselected**,
+> 285,46 s; skips/deseleções são gates opt-in. Build/Node/Ruff/conteúdo verdes.
+> Gate final: **25 passed, zero skipped**, com JSON/screenshots/JUnit. A matriz
+> expôs e corrigiu perda de arquivamento e deadlock por ordem de locks. Nenhum
+> provider pago. [Reconciliação](docs/RECONCILIACAO_ARTE.md)
+> documenta contenção segura; importação administrativa ainda não implementada.
+> Este bloco prevalece sobre as pendências históricas abaixo.
+
 > **RETOMADA 2026-09-26 — execução da auditoria, com gates locais reais.**
 > [Relatório atual e pendências exatas](docs/auditoria-execucao-2026-09-26.md).
 > Nove specs iniciadas: contexto autenticado `done`; oito `in-progress`.

@@ -28,9 +28,10 @@ interface Props {
   onNew: () => void;
   onLevelUp: (choiceId: string, pick: LevelUpPick) => void;
   onEquip: (pick: { item_id?: string; unequip_slot?: string }) => void;
+  onLogout?: () => void;
 }
 
-export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction, onNew, onLevelUp, onEquip }: Props) {
+export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction, onNew, onLevelUp, onEquip, onLogout }: Props) {
   const [input, setInput] = useState("");
   const [hudOpen, setHudOpen] = useState(false);
   const [luDismissed, setLuDismissed] = useState(false);
@@ -109,6 +110,8 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
           <button className="iconbtn" type="button" disabled={busy} onClick={onNew}>
             {simulation ? "Reiniciar" : "Nova"}
           </button>
+          {onLogout && <button className="iconbtn" type="button" disabled={busy}
+            onClick={onLogout} aria-label="Encerrar sessão">Sair</button>}
         </div>
       </header>
 

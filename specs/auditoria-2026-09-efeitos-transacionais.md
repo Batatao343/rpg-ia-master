@@ -1,6 +1,6 @@
 # SPEC — Memória, arte e checkpoint atômicos ao turno
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-09-22 · **Atualizada:** 2026-09-26
 > **Aprovação:** usuário pediu “transforma tudo em specs e começa a executar”.
 > **Depende de:** auditoria-2026-09-operacoes-turno
@@ -35,9 +35,9 @@ Ligar MemoryIntentCollector à unidade de trabalho do executor; gravação SQL c
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R5 demonstrados, não apenas métodos isolados.
-- [ ] Offline + Postgres real local verdes; saves legacy preservados.
-- [ ] Zero chamada paga nos testes; arte falsa verifica no-call em rollback.
+- [x] R1–R5 demonstrados, não apenas métodos isolados.
+- [x] Offline + Postgres real local verdes; saves legacy preservados.
+- [x] Zero chamada paga nos testes; arte falsa verifica no-call em rollback.
 
 ## 6. Smoke test com LLM real / integração aplicável
 
@@ -50,3 +50,8 @@ Migração pode precisar tratar commit_version NULL legado conservadoramente sem
 ## Execução — 26/09 (prevalece sobre as pendências históricas)
 
 TurnEffects coleta memória e reserva/enfileiramento de arte; commit_game/commit_create publicam junto do estado/recibo. Metadados memory_* normalizados, inclusive IDs canônicos. Restore invalida memória posterior e jobs/arte obsoletos. Digest e documentos de crônica agora confirmam juntos, com epoch e fence. Fault injection Postgres confirmou rollback de memória/job; gate browser confirmou reserva de arte durável. Ainda falta injeção de falha específica após INSERT de arte e crash de processo nas fronteiras. Legacy/FAISS não oferece transação distribuída. Correção adicional: ledger e orçamento por arco preservados em GameState e save/load, com regressão curta.
+
+Continuação: processo filho morto após INSERT de arte dentro de commit_game;
+Postgres preservou versão/estado anterior e zero geração/turno/checkpoint
+publicados. Teste em `test_process_crash_local.py`, sem provider. Memória/job
+continuam cobertos por rollback/restore no gate local. Último gate: 24 passed.

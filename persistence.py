@@ -624,6 +624,8 @@ def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
         "game_over": bool(state.get("game_over", False)),
         # --- spec checkpoints-morte: tela de morte pendente (persiste entre requests) ---
         "death_pending": bool(state.get("death_pending", False)),
+        "archived": bool(state.get("archived", False)),
+        "archived_reason": str(state.get("archived_reason") or ""),
         "combat_simulation": deepcopy(state.get("combat_simulation")),
 
         # --- Histórico ---

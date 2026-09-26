@@ -50,3 +50,14 @@ Regex é defesa auxiliar, não prova semântica universal. Não migrar arquitetu
 ## Execução — 26/09 (prevalece sobre as pendências históricas)
 
 EvidenceSnapshot e guard compartilhado integrados em mensagem, resumo, crônica e contexto; auditoria limitada/persistida. Corpus cobre morte, chegada, negação, rumor e pronome reflexivo. Pendente: unificar totalmente os guards antigos de memory_fact/contexto (que ainda podem descartar rumores), ampliar corpus de posse/identidade/segredo/recompensa e validar grafo/save/load dirigido. Smoke com provider real não executado. evidence_ids ainda não é atribuição por alegação; não tratar regex como certificação semântica.
+
+Continuação: decisão unificada em memory_fact/contexto, preservando os códigos
+de rejeição legados. Corpus ampliado de posse, espécie, recompensa e segredo
+citado como boato: **38 passed**. Grafo/save/load dirigido e contrato real ainda
+pendentes; o resultado não constitui prova semântica universal.
+
+Contrato mínimo opt-in preparado em `tests/test_audit_real_contracts.py`: rota
+exclusiva DeepSeek, sem fallback/imagem e até três tentativas estruturadas. A
+execução externa foi bloqueada antes de qualquer request porque ainda requer
+autorização explícita para enviar o estado/prompt sintético ao DeepSeek e aceitar
+o custo. Nenhum dado nem custo externo ocorreu.

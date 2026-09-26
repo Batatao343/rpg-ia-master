@@ -1,7 +1,8 @@
 # Auditoria — execução e evidências de 26/09
 
-As nove specs têm implementação iniciada. Contexto autenticado está `done`;
-as outras oito seguem `in-progress`, com lacunas específicas registradas nelas.
+As nove specs têm implementação iniciada. Artes, contexto, operações, efeitos,
+leases e frontend estão `done`; narrativa, recompensas e gates seguem
+`in-progress`, cada uma bloqueada apenas por validação externa explícita.
 Não confundir código implementado com todos os critérios de aceite certificados.
 
 ## Alterações verificadas
@@ -27,14 +28,14 @@ nível error: zero achados. Políticas de acesso não foram alteradas.
 
 ## Evidências e comandos
 
-- `uv run pytest`: **1776 passed, 26 skipped, 14 deselected**, 261,64 s,
-  após o ajuste de persistência; um aviso existente de descontinuação FAISS.
+- `uv run pytest`: **1800 passed, 35 skipped, 15 deselected**, 285,46 s,
+  após o ajuste final de lock; um aviso existente de descontinuação FAISS.
 - `npm.cmd test`: **5 passed** (CSRF/cookies, refresh concorrente, erro de
   refresh, identidade da operação após reload e falha de armazenamento).
 - `npm.cmd run build`: TypeScript/Vite verdes, 461 módulos.
 - `uv run ruff check .`: verde; validador de conteúdo: zero erros/avisos.
-- `uv run python scripts/audit_local_gate.py`: **16 passed, zero skipped**,
-  48,75 s, depois das correções de migração e persistência de arte.
+- `uv run python scripts/audit_local_gate.py`: **25 passed, zero skipped**,
+  82,03 s, após fault injection e correção do deadlock.
 - JUnit local: `readiness_artifacts/audit/results.xml` (gitignored).
 
 O gate integrado cobre Postgres/pgvector, contexto serial/paralelo/async,
@@ -49,15 +50,15 @@ permanecem apenas na autenticação local.
 
 | Spec | Falta para encerramento |
 | --- | --- |
-| Artes | Falha de imagem seguida de troca de asset/cenário no browser |
-| Narrativa | Unificação dos guards legados de memória, corpus ampliado, grafo/save/load e contrato real curto |
-| Recompensas | Smoke dirigido de grafo e contrato real curto |
+| Artes | Concluída: troca de asset/cenário após falha passou no browser |
+| Narrativa | Contrato real curto (local/unificação/corpus concluídos) |
+| Recompensas | Contrato real curto (grafo/finalizer/save concluídos) |
 | Contexto | Concluída: isolamento real local comprovado |
-| Operações | Morte/equip/levelup e desconexão/concorrência na API |
-| Efeitos transacionais | Falha específica na reserva de arte e crash nas fronteiras |
-| Leases | Kill/restart de processo e procedimento de reconciliação |
-| Frontend sessão | Rede/expiração/troca de campanha durante resposta |
-| Gates | Primeiro CI remoto, promoção de infra a obrigatório e artifacts completos |
+| Operações | Concluída: matriz, desconexão e concorrência na API verdes |
+| Efeitos transacionais | Concluída: INSERT de arte/crash/rollback verdes |
+| Leases | Concluída: kill/restart e reconciliação documentada |
+| Frontend sessão | Concluída: rede/401/troca durante resposta verdes |
+| Gates | Primeiro CI infra remoto e promoção após certificação |
 
 O workflow `audit-local.yml` é manual até sua primeira certificação remota.
 Não foi disparado durante a validação. Depois, o usuário autorizou commit e
@@ -66,6 +67,12 @@ da aplicação. A suíte de cliente foi
 adicionada ao workflow obrigatório existente. Execução local usa recursos do
 computador, sem contratação cloud ou chamada paga. GitHub Actions tem suas
 próprias quotas: não se promete custo remoto zero.
+
+O contrato curto DeepSeek foi preparado com rota única, sem fallback ou imagem,
+e limite técnico de três tentativas estruturadas. A plataforma recusou iniciar
+o request externo sem autorização específica para o envio do prompt/estado
+sintético ao DeepSeek e sem um teto de custo garantido pelo provider. Portanto
+zero request/custo foi realizado; esse gate não foi marcado como concluído.
 
 Revisão das capturas finais: em 390 px o botão fixo de logout se sobrepõe aos
 controles do topo. Correção de layout e teste de sobreposição permanecem na

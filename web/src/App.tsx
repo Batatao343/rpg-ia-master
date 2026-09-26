@@ -301,7 +301,13 @@ export function App() {
       const status = await api.getOperation(gid, operation.operation_id);
       if (status.status === "completed") {
         clearPending(user, gid);
-        if (active()) { setPending(null); setData(await api.getState(gid)); await loadHistory(gid, generation); }
+        if (active()) {
+          setPending(null);
+          const restored = await api.getState(gid);
+          if (!active()) return;
+          setData(restored);
+          await loadHistory(gid, generation);
+        }
         return;
       }
       if (status.status === "running") throw new Error("Esta ação ainda está sendo processada. Consulte novamente em instantes.");
@@ -478,7 +484,7 @@ export function App() {
         onClick={() => void handleAction(pending.payload.input_text)}>
         Consultar / retomar ação pendente
       </button>}
-      {authRequired && screen !== "auth" && (
+      {authRequired && screen !== "auth" && screen !== "play" && (
         <button className="session-logout btn btn--ghost" disabled={busy}
           onClick={() => void handleLogout()}>
           Encerrar sessão
@@ -564,6 +570,7 @@ export function App() {
               onNew={handleNew}
               onLevelUp={handleLevelUp}
               onEquip={handleEquip}
+              onLogout={authRequired ? handleLogout : undefined}
             />
           </motion.div>
         )}

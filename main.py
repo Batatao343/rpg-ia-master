@@ -62,7 +62,7 @@ def build_game_graph():
     # jogador escolher Continuar (restaura) ou Aceitar (memorial).
     workflow.add_conditional_edges(
         START,
-        lambda s: "__end__" if (s.get("game_over") or s.get("death_pending")) else "action_guard",
+        lambda s: "__end__" if (s.get("game_over") or s.get("death_pending") or s.get("archived")) else "action_guard",
         {"__end__": END, "action_guard": "action_guard"},
     )
     workflow.add_conditional_edges(

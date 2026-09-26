@@ -1,6 +1,6 @@
 # SPEC — Artes integrais, cards e visualização ampliada
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-09-22 · **Atualizada:** 2026-09-26
 > **Aprovação:** usuário pediu “transforma tudo em specs e começa a executar”.
 > **Depende de:** Nenhuma
@@ -36,7 +36,7 @@ web/src/styles.css: escopo específico para card__art, portrait e banner; evitar
 ## 5. Critérios de aceite
 
 - [x] R1/R2: imagens integrais e cards sem transbordamento.
-- [ ] R3/R4/R5: ampliação, acessibilidade, recuperação e resolução adequadas.
+- [x] R3/R4/R5: ampliação, acessibilidade, recuperação e resolução adequadas.
 - [x] Build, suíte offline e smoke visual desktop/mobile verdes (lote CSS; repetir após R3–R5).
 
 ## 6. Smoke test com LLM real / integração aplicável
@@ -56,3 +56,13 @@ Regressão visual falhou nos dois viewports antes do ajuste e passou depois: `RP
 ## Execução — 26/09 (prevalece sobre as pendências históricas)
 
 Implementados diálogo compartilhado com Escape/retorno de foco, fallback por asset/URL, sizes por apresentação e cards sem botões aninhados. Gate visual Chromium 390/1440 e fluxo autenticado passaram. Falta a regressão explícita de falha de rede seguida de troca de asset/cenário; não encerrar R4 só pelo caminho feliz.
+
+### Fechamento do aceite
+
+`tests/test_artwork_recovery_browser.py`: **2 passed**, renderizando os componentes
+de produção no mesmo root React. Falha de rede seguida de troca de asset recupera
+retrato e cenário, em 390/1440 px; sizes, diálogo, Escape e foco verificados.
+Gate integrado com artes reais locais: **20 passed**, sem skips. Build verde;
+suíte completa final: **1800 passed, 35 skipped, 15 deselected**.
+Os skips são gates opt-in, executados separadamente quando aplicáveis. Nenhuma
+regeneração de arte nem chamada paga. Esta evidência encerra a pendência acima.

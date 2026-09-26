@@ -121,3 +121,27 @@ def test_second_nonstackable_item_appears_in_receipt_and_survives_serialization(
     state["last_turn_outcome"] = outcome
     loaded = persistence._raw_to_state(persistence._state_to_save_data(state, state["game_id"]))
     assert loaded["last_turn_outcome"] == outcome
+
+
+def test_story_reward_through_graph_finalizer_and_save_load(story, monkeypatch):
+    from uuid import uuid4
+    import main
+    import persistence
+    from gamedata import ARTIFACTS_DB
+    item = 'art_adaga_vidro_dragao'
+    state = _state()
+    state['game_id'] = str(uuid4())
+    state['campaign_plan'] = {'beats': [{'description': 'Investigar', 'status': 'pending'}],
+                              'current_step': 0}
+    # Fix planning/routing only: storyteller, archive and finalizer are real nodes.
+    monkeypatch.setattr(main, 'campaign_manager_node', lambda state: {})
+    monkeypatch.setattr(main, 'route_intent_node', lambda state: {'next': 'storyteller'})
+    monkeypatch.setattr(main, 'storyteller_node', lambda state: story(state,
+        beat_completed=True, items_gained=[item, ARTIFACTS_DB[item]['name']]))
+    result = main.build_game_graph().invoke(state)
+    assert result['player']['xp'] == 150
+    assert get_qty(result['player']['inventory'], item) == 1
+    assert result['last_turn_outcome']['items_gained'] == {item: 1}
+    loaded = persistence._raw_to_state(persistence._state_to_save_data(result, state['game_id']))
+    assert loaded['last_turn_outcome'] == result['last_turn_outcome']
+    assert loaded['player']['xp'] == 150

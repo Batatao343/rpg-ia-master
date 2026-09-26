@@ -38,6 +38,27 @@ class PostgresTurnCoordinator:
         token = uuid4()
         interval = timedelta(seconds=self.lease_seconds)
         with self.pool.connection() as connection, connection.transaction():
+            game = None
+            # Global lock order for game-scoped operations: game -> operation.
+            # Inserting an operation takes a FK lock on games; doing the insert
+            # first lets two contenders each hold a shared FK lock and then
+            # deadlock while upgrading to FOR UPDATE.
+            if game_id is not None:
+                game = connection.execute(
+                    "select * from app.games where id=%s and owner_id=%s for update",
+                    (game_id, principal.user_id),
+                ).fetchone()
+                if not game:
+                    raise NotFound("campanha não encontrada")
+                if base_version is not None and int(game["version"]) != int(base_version):
+                    raise StaleVersion("versão base da operação divergiu")
+                if game["active_operation_id"] not in (None, operation_id):
+                    fresh = connection.execute(
+                        "select coalesce(%s > now(),false) as fresh",
+                        (game["active_lease_until"],),
+                    ).fetchone()["fresh"]
+                    if fresh:
+                        raise LeaseHeld("game_busy")
             inserted = connection.execute(
                 """
                 insert into app.operations
@@ -81,21 +102,6 @@ class PostgresTurnCoordinator:
                     (token, interval, operation_id),
                 )
             if game_id is not None:
-                game = connection.execute(
-                    "select * from app.games where id=%s and owner_id=%s for update",
-                    (game_id, principal.user_id),
-                ).fetchone()
-                if not game:
-                    raise NotFound("campanha não encontrada")
-                if base_version is not None and int(game["version"]) != int(base_version):
-                    raise StaleVersion("versão base da operação divergiu")
-                if game["active_operation_id"] not in (None, operation_id):
-                    fresh = connection.execute(
-                        "select coalesce(%s > now(),false) as fresh",
-                        (game["active_lease_until"],),
-                    ).fetchone()["fresh"]
-                    if fresh:
-                        raise LeaseHeld("game_busy")
                 connection.execute(
                     """
                     update app.games set active_operation_id=%s,active_lease_token=%s,
@@ -131,6 +137,10 @@ class PostgresTurnCoordinator:
         if UUID(str(document["game_id"])) != claim.game_id:
             raise Conflict("game_id do documento divergiu")
         with self.pool.connection() as connection, connection.transaction():
+            previous = connection.execute(
+                'select state from app.games where id=%s and owner_id=%s for update',
+                (claim.game_id, principal.user_id),
+            ).fetchone()
             operation = connection.execute(
                 """select status,lease_token,base_game_version from app.operations
                 where id=%s and owner_id=%s for update""",
@@ -139,10 +149,6 @@ class PostgresTurnCoordinator:
             if (not operation or operation["status"] != "running"
                     or operation["lease_token"] != claim.lease_token):
                 raise LeaseHeld("fencing token inválido")
-            previous = connection.execute(
-                'select state from app.games where id=%s and owner_id=%s for update',
-                (claim.game_id, principal.user_id),
-            ).fetchone()
             old_epoch = int(((previous or {}).get('state', {}).get('continuity') or {}).get('timeline_epoch', 0))
             new_epoch = int((document.get('continuity') or {}).get('timeline_epoch', 0))
             if new_epoch > old_epoch:
@@ -360,6 +366,10 @@ class PostgresTurnCoordinator:
     def heartbeat(self, claim: OperationClaim) -> None:
         interval = timedelta(seconds=self.lease_seconds)
         with self.pool.connection() as connection, connection.transaction():
+            if claim.game_id is not None:
+                connection.execute(
+                    "select id from app.games where id=%s for update", (claim.game_id,),
+                ).fetchone()
             result = connection.execute(
                 """
                 update app.operations set lease_until=now()+%s,heartbeat_at=now()
@@ -381,6 +391,10 @@ class PostgresTurnCoordinator:
     def complete(self, claim: OperationClaim, *, committed_version: int | None,
                  receipt: Mapping[str, Any]) -> dict[str, Any]:
         with self.pool.connection() as connection, connection.transaction():
+            if claim.game_id is not None:
+                connection.execute(
+                    "select id from app.games where id=%s for update", (claim.game_id,),
+                ).fetchone()
             result = connection.execute(
                 """
                 update app.operations set status='completed',committed_game_version=%s,
@@ -404,6 +418,10 @@ class PostgresTurnCoordinator:
 
     def fail(self, claim: OperationClaim, error_code: str) -> None:
         with self.pool.connection() as connection, connection.transaction():
+            if claim.game_id is not None:
+                connection.execute(
+                    "select id from app.games where id=%s for update", (claim.game_id,),
+                ).fetchone()
             result = connection.execute(
                 """
                 update app.operations set status='failed',error_code=%s,lease_token=null,

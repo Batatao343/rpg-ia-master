@@ -432,20 +432,10 @@ def build_context_pack(state: Dict, query: str, purpose: str,
         clean = str(text or "").strip()
         from services.narrative_evidence import build_evidence, validate_narrative
         clean = validate_narrative(clean, build_evidence(state), channel='context').text
-        from services.memory_provenance import (
-            canonical_location_contradiction,
-            false_player_death_claim,
-            inventory_possession_contradiction,
-            npc_identity_contradiction,
-        )
         if (
             not clean
             or clean in seen_memory_text
             or find_strict_unrevealed(clean, state)
-            or false_player_death_claim(clean, state)
-            or canonical_location_contradiction(clean)
-            or inventory_possession_contradiction(clean, state)
-            or npc_identity_contradiction(clean, state)
         ):
             return
         # O índice pré-spec devolve texto cru; jamais lhe atribuímos autoridade.
@@ -490,12 +480,8 @@ def active_memory_facts(rows, *, current_turn: int,
                         state: Optional[dict] = None) -> list[dict]:
     """Contexto ativo: especulação não confirmada expira após 20 turnos."""
     records = normalize_memory_facts(rows)
-    from services.memory_provenance import (
-        canonical_location_contradiction,
-        false_player_death_claim,
-        inventory_possession_contradiction,
-        npc_identity_contradiction,
-    )
+    from services.narrative_evidence import build_evidence, validate_narrative
+    evidence = build_evidence(state or {})
     return [
         record for record in records
         if not (
@@ -503,8 +489,5 @@ def active_memory_facts(rows, *, current_turn: int,
             and record.get("source_turn") is not None
             and int(current_turn) - int(record.get("source_turn") or 0) >= 20
         )
-        and not (state and false_player_death_claim(record["text"], state))
-        and not canonical_location_contradiction(record["text"])
-        and not (state and inventory_possession_contradiction(record["text"], state))
-        and not (state and npc_identity_contradiction(record["text"], state))
+        and not validate_narrative(record['text'], evidence, channel='context').rejections
     ]

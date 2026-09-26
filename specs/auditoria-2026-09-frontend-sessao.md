@@ -1,6 +1,6 @@
 # SPEC — Sessão frontend, histórico e retrato de ponta a ponta
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-09-22 · **Atualizada:** 2026-09-26
 > **Aprovação:** usuário pediu “transforma tudo em specs e começa a executar”.
 > **Depende de:** operacoes-turno para recuperação durável; efeitos-transacionais para arte
@@ -36,9 +36,9 @@ web/src/api.ts: HttpError(status, code, detail), helper de headers e refresh; ho
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R6 implementados com testes.
-- [ ] Smoke browser autenticado desktop/mobile e stack local verdes.
-- [ ] Retrato pronto realmente aparece; nenhum custo automático extra.
+- [x] R1–R6 implementados com testes.
+- [x] Smoke browser autenticado desktop/mobile e stack local verdes.
+- [x] Retrato pronto realmente aparece; nenhum custo automático extra.
 
 ## 6. Smoke test com LLM real / integração aplicável
 
@@ -55,3 +55,12 @@ Achado visual adicional: botão fixo de logout sobrepõe Ficha/Nova no viewport
 de ausência de overflow não detecta esta classe de falha.
 
 HTTP/SSE com CSRF, cookies e refresh single-flight; operação persistida antes do envio; geração de sessão invalida callbacks atrasados; histórico paginado e epoch; retrato com polling/backoff, URL assinada e ampliação. Cinco testes Node verdes. Browser autenticado 390/1440 confirmou cadastro, diálogo/foco, retrato sintético via Storage real local, SSE, replay e histórico após reload. Correção adicional de save/load do ledger/orçamento de arte e migração do kind art. Ainda faltam fault injections no navegador: desconexão/expiração durante resposta e troca de campanha com resposta atrasada. Não afirmar cobertura completa de R1–R6 pelo caminho feliz.
+
+Continuação: logout movido para o topo, com teste de ausência de sobreposição;
+banner de operação pendente afastado do input. Browser 390/1440 passou com perda
+das confirmações SSE e POST após commit, retomada por recibo e histórico único.
+Novo guard revalida sessão após await de getState no replay. Teste de refresh
+401 acrescentado ao gate. Fault injection segura uma resposta de estado da
+campanha anterior, expira a autenticação, abre outra campanha e só então libera
+a resposta: o game_id atual permanece o novo. Gate final: **25 passed** em
+390/1440, com screenshots e JSON de execução; nenhum provider pago.

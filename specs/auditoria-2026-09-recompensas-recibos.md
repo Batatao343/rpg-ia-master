@@ -56,3 +56,10 @@ Pendente: smoke dedicado de grafo e smoke dirigido com provider real. Nenhuma ch
 ## Execução — 26/09 (prevalece sobre as pendências históricas)
 
 Regras determinísticas seguem validadas na suíte completa. Nenhum smoke dirigido pago foi executado; ainda falta o smoke dedicado storyteller→finalizer. Não houve rebalanceamento nem remoção de duplicatas em saves existentes.
+
+Continuação: smoke dedicado executa grafo com storyteller/archivist/finalizer
+reais e saída LLM controlada. Beat válido concede 150 XP; aliases concedem um
+unique; recibo e save/load preservam o ganho. Suíte focada com arquivamento:
+18 passed. O contrato opt-in DeepSeek está implementado junto ao gate narrativo,
+mas sua execução externa foi bloqueada antes de qualquer request até autorização
+explícita de payload/destino/custo.
