@@ -54,7 +54,11 @@ def test_compressao_overlay_e_busca_lexical_da_cronica_local():
     store.create(principal, state)
     assert repository.enqueue_due(principal, state) == 1
     queue = PostgresJobQueue(pool)
-    job = queue.lease("chronicle-test", {"compress_chronicle"}, 1)[0]
+    # Isolate this fixture from jobs left by an interrupted local smoke.
+    kind = f"chronicle-test-{game_id}"
+    with pool.connection() as connection, connection.transaction():
+        connection.execute('update app.jobs set kind=%s where game_id=%s', (kind, game_id))
+    job = queue.lease("chronicle-test", {kind}, 1)[0]
     digest = compress_chronicle_job(job.request.payload, llm=_Fallback())
     repository.complete(job.request.payload, digest)
     queue.complete(job.job_id, job.lease_token, {"status": digest["status"]})

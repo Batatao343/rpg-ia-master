@@ -571,6 +571,10 @@ def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
         "pending_memory_facts": normalize_memory_facts(
             state.get("pending_memory_facts"), pending=True,
         ),
+        "presentation_history": list(state.get("presentation_history") or []),
+        "art_generation_ledger": deepcopy(state.get("art_generation_ledger") or []),
+        "art_arc_budgets": deepcopy(state.get("art_arc_budgets") or {}),
+        "evidence_rejections": list(state.get("evidence_rejections") or [])[-64:],
         "memory_rejections": bounded_audit_rows(
             state.get("memory_rejections"), limit=MAX_MEMORY_REJECTIONS,
         ),
@@ -752,6 +756,10 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         "pending_memory_facts": normalize_memory_facts(
             raw_data.get("pending_memory_facts"), pending=True,
         ),
+        "presentation_history": list(raw_data.get("presentation_history") or []),
+        "art_generation_ledger": deepcopy(raw_data.get("art_generation_ledger") or []),
+        "art_arc_budgets": deepcopy(raw_data.get("art_arc_budgets") or {}),
+        "evidence_rejections": list(raw_data.get("evidence_rejections") or [])[-64:],
         "memory_rejections": bounded_audit_rows(
             raw_data.get("memory_rejections"), limit=MAX_MEMORY_REJECTIONS,
         ),

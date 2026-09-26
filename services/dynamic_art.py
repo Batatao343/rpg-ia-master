@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from contextlib import nullcontext
+
 import hashlib
 from typing import Any
 from uuid import NAMESPACE_URL, UUID, uuid5
@@ -21,11 +23,12 @@ class DynamicArtRepository:
         self.profile_version = profile_version
 
     def reserve(self, principal: Principal, game_id: UUID, *, timeline_epoch: int,
-                generation_id: UUID, request: ArtGenerationRequest, brief: ArtBrief) -> dict[str, Any]:
+                generation_id: UUID, request: ArtGenerationRequest, brief: ArtBrief, connection=None) -> dict[str, Any]:
         prompt = render_image_prompt(brief)
         prompt_hash = hashlib.sha256(prompt.encode()).hexdigest()
         anchor_hash = hashlib.sha256("\n".join(brief["reference_asset_ids"]).encode()).hexdigest()
-        with self.pool.connection() as connection, connection.transaction():
+        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        with scope as connection, connection.transaction():
             row = connection.execute(
                 """insert into app.art_generations
                 (generation_id,owner_id,game_id,timeline_epoch,arc_instance_id,trigger_kind,
@@ -53,7 +56,12 @@ class DynamicArtRepository:
     def get(self, principal: Principal, generation_id: UUID) -> dict[str, Any] | None:
         with self.pool.connection() as connection:
             row = connection.execute(
-                "select * from app.art_generations where generation_id=%s and owner_id=%s",
+                """select g.*, not exists (
+                    select 1 from app.jobs j where j.kind='generate_dynamic_art'
+                    and j.dedupe_key='art:' || g.generation_id::text
+                    and j.status='running' and j.lease_until > now()
+                ) as worker_inactive
+                from app.art_generations g where generation_id=%s and owner_id=%s""",
                 (generation_id, principal.user_id),
             ).fetchone()
             return dict(row) if row else None
@@ -95,11 +103,14 @@ class DynamicArtRepository:
                  result: dict[str, Any]) -> None:
         variants = list(result.get("variants") or [])
         with self.pool.connection() as connection, connection.transaction():
+            from services.job_fence import require_job_fence
+
+            require_job_fence(connection)
             generation = connection.execute(
                 "select * from app.art_generations where generation_id=%s for update",
                 (generation_id,),
             ).fetchone()
-            if not generation:
+            if not generation or generation['status'] != 'generating':
                 raise Conflict("geração não encontrada")
             display_asset_id = None
             for variant in variants:
@@ -128,10 +139,13 @@ class DynamicArtRepository:
 
     def fail(self, generation_id: UUID, error_code: str, *, retryable: bool = True) -> None:
         with self.pool.connection() as connection, connection.transaction():
+            from services.job_fence import require_job_fence
+
+            require_job_fence(connection)
             connection.execute(
                 """update app.art_generations set
                 status=%s,error_code=%s,updated_at=now()
-                where generation_id=%s""",
+                where generation_id=%s and status='generating'""",
                 ("failed_retryable" if retryable else "failed", error_code[:100], generation_id),
             )
 

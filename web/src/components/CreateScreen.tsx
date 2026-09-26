@@ -225,16 +225,15 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
             <h2 className="wizard__title">Quem você é?</h2>
             <div className="cards" role="radiogroup" aria-label="Origem (raça)">
               {raceCards.map(({ full, card }) => (
-                <button
+                <article
                   key={full.id}
-                  type="button"
                   className="card"
-                  aria-pressed={race === full.name}
-                  onClick={() => setRace(full.name)}
+                  data-selected={race === full.name}
                 >
                   <VisualArtwork asset={opts.visuals?.races?.[full.id] ?? null}
-                    name={card?.name || full.name} className="card__art" />
-                  <span className="card__name">{card?.name || full.name}</span>
+                    name={card?.name || full.name} className="card__art" variant="card" />
+                  <button type="button" className="card__name card__select" aria-pressed={race === full.name}
+                    onClick={() => setRace(full.name)}>{card?.name || full.name}</button>
                   <span className="card__tagline">{card?.tagline || full.desc}</span>
                   {card && <span className="card__desc">{card.description}</span>}
                   <span className="card__chips">
@@ -245,7 +244,7 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                       <span key={"e" + i} className="chip chip--mech">{c}</span>
                     ))}
                   </span>
-                </button>
+                </article>
               ))}
             </div>
           </section>
@@ -258,16 +257,15 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
               {opts.classes.map((cls) => {
                 const card = lore.classes[cls];
                 return (
-                  <button
+                  <article
                     key={cls}
-                    type="button"
                     className="card"
-                    aria-pressed={className === cls}
-                    onClick={() => setClassName(cls)}
+                    data-selected={className === cls}
                   >
                     <VisualArtwork asset={opts.visuals?.classes?.[cls] ?? null}
-                      name={cls} className="card__art" />
-                    <span className="card__name">{cls}</span>
+                      name={cls} className="card__art" variant="card" />
+                    <button type="button" className="card__name card__select" aria-pressed={className === cls}
+                      onClick={() => setClassName(cls)}>{cls}</button>
                     {card && (
                       <>
                         <span className="card__tagline">{card.tagline}</span>
@@ -275,7 +273,7 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                         <span className="card__hook">{card.playstyle}</span>
                       </>
                     )}
-                  </button>
+                  </article>
                 );
               })}
             </div>

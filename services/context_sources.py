@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from contextvars import copy_context
 import asyncio
 from dataclasses import dataclass
 import os
@@ -125,11 +126,13 @@ def acquire_context_sources(query: EmbeddedContextQuery, *, game_id: str | None,
             )
 
     if max_workers <= 1 or len(order) <= 1:
-        return tuple(run(source) for source in order)
+        return tuple(copy_context().run(run, source) for source in order)
     completed: dict[str, ContextSourceResult] = {}
     with ThreadPoolExecutor(max_workers=min(max_workers, len(order)),
                             thread_name_prefix="context-source") as executor:
-        futures = {executor.submit(run, source): source for source in order}
+        # One Context per task: a Context cannot be entered concurrently. Preserve
+        # request identity/correlation without leaking a reader's assignments.
+        futures = {executor.submit(copy_context().run, run, source): source for source in order}
         for future in as_completed(futures):
             result = future.result()
             completed[result.source] = result

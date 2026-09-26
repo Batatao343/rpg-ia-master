@@ -928,12 +928,14 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                  scenario: Optional[str] = None,
                  start_level: int = 1,
                  provider_min_interval_seconds: float = 0.0,
-                 require_all_llm_invocations_successful: bool = False) -> CampaignResult:
+                 require_all_llm_invocations_successful: bool = False,
+                 stop_on_error: bool = False) -> CampaignResult:
     """Joga `turns` turnos com o perfil `profile` e devolve o CampaignResult.
 
     - `on_turn_end(state, turn)` roda após cada turno; exceção conta como erro.
     - `invariants=True` (default) audita cada turno com playtest.invariants
       (se disponível); violações vão p/ `result.violations` sem parar a campanha.
+      `stop_on_error=True` (matriz A/B) encerra no primeiro erro, preservando o turno.
     - `max_requests`/`max_cost` (só fazem sentido com `use_real_llm`) abortam a
       campanha educadamente ao atingir o teto (spec 5.3 R6). 0 = desligado.
     - `turn_timeout_seconds` limita startup e cada turno. `None` usa 120s em
@@ -1283,6 +1285,12 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     # mantém o estado anterior; próximo turno continua
 
                 history.append(rec)
+
+                if stop_on_error and (rec.error or any(
+                    row.get("severity") == "error" for row in rec.violation_details
+                )):
+                    aborted_reason = aborted_reason or f"contract_failure (turno {turn})"
+                    break
 
                 # Uma operação vencida pode continuar apenas no worker daemon.
                 # Não inicia outro turno nem toca checkpoints com estado parcial.

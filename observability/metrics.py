@@ -10,6 +10,7 @@ from typing import Mapping
 
 
 LABELS = {
+    "rpg_lease_renewals_total": {"outcome"},
     "rpg_http_requests_total": {"route", "status_class"},
     "rpg_http_duration_seconds": {"route"},
     "rpg_sse_first_event_seconds": {"route"},

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import re
 import copy
+import unicodedata
 from enum import StrEnum
 from typing import Literal, TypedDict
 
@@ -38,10 +39,27 @@ _ORPHAN_PHASES = {
 }
 
 
+_RECOVERY_CLAUSE = (
+    r"(?:descans\w*|repous\w*|durmo|dormir|acampo|me recupero)"
+    r"(?:\s+(?:um pouco|para me recuperar|ate me recuperar|em seguranca))?"
+    r"|(?:aguardo|espero)(?:\s+por)?\s+(?:socorro|ajuda|tratamento|recuperacao|acordar)"
+    r"|(?:peco|recebo)\s+(?:socorro|ajuda|tratamento)"
+    r"|(?:socorro|tratamento|descanso|recuperacao)"
+)
 _RECOVERY = re.compile(
-    r"\b(?:descans|repous|recuper|trat|socorr|ajud|aguard[^.]{0,20}(?:acord|socorr))",
+    rf"(?:eu\s+)?(?:{_RECOVERY_CLAUSE})"
+    rf"(?:(?:\s+e\s+|\s*[,;]\s*)(?:{_RECOVERY_CLAUSE}))*[.!?]*",
     re.IGNORECASE,
 )
+
+
+def is_recovery_turn(state: dict) -> bool:
+    """Consume a guarded recovery decision only while that phase still applies."""
+    return (
+        not (state.get("combat") or {}).get("active")
+        and classify_actor(state) in {ActorPhase.UNCONSCIOUS, ActorPhase.INCAPACITATED}
+        and (state.get("last_action_outcome") or {}).get("action_kind") == "recovery"
+    )
 
 
 def classify_actor(state: dict) -> ActorPhase:
@@ -145,7 +163,12 @@ def evaluate_action(state: dict, action: str) -> ActionEligibility:
     if phase == ActorPhase.ACTIVE:
         return {"phase": phase.value, "allowed": True, "code": "ok",
                 "action_kind": "normal", "message": ""}
-    if phase == ActorPhase.UNCONSCIOUS and _RECOVERY.search(str(action or "")):
+    normalized_action = "".join(
+        char for char in unicodedata.normalize("NFKD", str(action or ""))
+        if not unicodedata.combining(char)
+    ).strip()
+    if (phase in {ActorPhase.UNCONSCIOUS, ActorPhase.INCAPACITATED}
+            and _RECOVERY.fullmatch(normalized_action)):
         return {"phase": phase.value, "allowed": True, "code": "recovery_requested",
                 "action_kind": "recovery", "message": ""}
     messages = {

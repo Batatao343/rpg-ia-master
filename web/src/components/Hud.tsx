@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { GeneratedPortrait } from './GeneratedPortrait';
 import { mdLite, pct, prettyItem } from "../lib";
 import { searchChronicle } from "../api";
 import type { ChronicleChapter, ChronicleSearchHit, CombatBlock, Condition, FactionView, GameResponse, NpcView } from "../types";
@@ -82,6 +83,9 @@ export function Hud({ data, open, onEquip, busy }: {
       </nav>
 
       <div className="tabpanel" role="tabpanel">
+        {tab === 'ficha' && data?.portrait_generation_id && <GeneratedPortrait
+          key={`${data.game_id}:${data.portrait_generation_id}`}
+          gameId={data.game_id} generationId={data.portrait_generation_id} />}
         {tab === "ficha" && <FichaTab data={data} hpHitKey={vitalityHit} onEquip={onEquip} busy={busy} />}
         {tab === "combate" && <CombatTab c={data?.combat} hitKey={vitalityHit} party={data?.party ?? []} />}
         {tab === "personagens" && <PeopleTab npcs={data?.npcs ?? []} />}

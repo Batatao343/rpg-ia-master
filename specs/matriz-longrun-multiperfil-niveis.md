@@ -92,6 +92,16 @@ matriz como um único experimento comparável.
 
 ## 5. Critérios de aceite
 
+### Adendo aprovado — 19/09
+
+`stop_on_error=True` encerra a campanha no primeiro turno com erro/invariante
+`error`, preservando a evidência. O orquestrador não inicia o próximo par após
+erro, incompletude ou falha de observabilidade. O harness comum mantém coleta
+contínua por compatibilidade. Warnings ficam visíveis e requerem revisão.
+Fixtures provam a interrupção sem requests; B integral e relatório A/B continuam
+sendo a entrega real desta spec. Plano no
+[adendo pré-matriz](remediacao-local-contratos-pre-matriz.md).
+
 - [x] Níveis 1/3/9/20 têm builds coerentes e sem escolhas essenciais pendentes.
 - [x] Matriz curta offline 10×3 completa e manifesta os dez pares.
 - [x] Matriz A real completa 10×200 e gera relatório curado.

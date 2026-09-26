@@ -139,6 +139,16 @@ class PostgresTurnCoordinator:
             if (not operation or operation["status"] != "running"
                     or operation["lease_token"] != claim.lease_token):
                 raise LeaseHeld("fencing token inválido")
+            previous = connection.execute(
+                'select state from app.games where id=%s and owner_id=%s for update',
+                (claim.game_id, principal.user_id),
+            ).fetchone()
+            old_epoch = int(((previous or {}).get('state', {}).get('continuity') or {}).get('timeline_epoch', 0))
+            new_epoch = int((document.get('continuity') or {}).get('timeline_epoch', 0))
+            if new_epoch > old_epoch:
+                from services.restore_effects import restore_effects
+                restore_effects(connection, principal=principal, game_id=claim.game_id,
+                               document=document)
             row = connection.execute(
                 """update app.games set
                   schema_version=%s,version=version+1,state=%s,state_sha256=%s,
@@ -161,6 +171,14 @@ class PostgresTurnCoordinator:
             if not row:
                 raise StaleVersion("versão/lease do jogo divergiu no commit")
             committed_version = int(row["version"])
+            from services.turn_effects import current_effects
+            from infrastructure.pgvector_memory import PgVectorMemoryStore
+            effects = current_effects()
+            if effects is not None:
+                effects.flush(connection, memory_store=PgVectorMemoryStore(self.pool),
+                    principal=principal, game_id=claim.game_id,
+                    epoch=int((document.get('continuity') or {}).get('timeline_epoch', 0)),
+                    version=committed_version)
             PostgresGameStore._insert_events(
                 connection, principal.user_id, claim.game_id, document,
             )
@@ -171,7 +189,7 @@ class PostgresTurnCoordinator:
                     """insert into app.game_checkpoints
                       (game_id,owner_id,game_version,canonical_turn,timeline_epoch,
                        memory_commit_version,state,state_sha256)
-                    values(%s,%s,%s,%s,%s,0,%s,%s)
+                    values(%s,%s,%s,%s,%s,%s,%s,%s)
                     on conflict(game_id) do update set
                       owner_id=excluded.owner_id,game_version=excluded.game_version,
                       canonical_turn=excluded.canonical_turn,
@@ -183,6 +201,7 @@ class PostgresTurnCoordinator:
                         claim.game_id, principal.user_id, committed_version,
                         int(world.get("turn_count", 0) or 0),
                         int(continuity.get("timeline_epoch", 0) or 0),
+                        committed_version,
                         Jsonb(document), digest,
                     ),
                 )
@@ -255,6 +274,14 @@ class PostgresTurnCoordinator:
                 ),
             ).fetchone()
             version = int(row["version"])
+            from services.turn_effects import current_effects
+            from infrastructure.pgvector_memory import PgVectorMemoryStore
+            effects = current_effects()
+            if effects is not None:
+                effects.flush(connection, memory_store=PgVectorMemoryStore(self.pool),
+                    principal=principal, game_id=game_id,
+                    epoch=int((document.get('continuity') or {}).get('timeline_epoch', 0)),
+                    version=version)
             PostgresGameStore._insert_events(connection, principal.user_id, game_id, document)
             if checkpoint:
                 world = document.get("world") or {}
@@ -263,11 +290,11 @@ class PostgresTurnCoordinator:
                     """insert into app.game_checkpoints
                       (game_id,owner_id,game_version,canonical_turn,timeline_epoch,
                        memory_commit_version,state,state_sha256)
-                    values(%s,%s,%s,%s,%s,0,%s,%s)""",
+                    values(%s,%s,%s,%s,%s,%s,%s,%s)""",
                     (game_id, principal.user_id, version,
                      int(world.get("turn_count", 0) or 0),
                      int(continuity.get("timeline_epoch", 0) or 0),
-                     Jsonb(document), digest),
+                     version, Jsonb(document), digest),
                 )
             persisted_receipt = dict(receipt)
             persisted_receipt["committed_version"] = version
@@ -312,14 +339,22 @@ class PostgresTurnCoordinator:
             )
         return persisted
 
-    def receipt(self, principal: Principal, operation_id: UUID) -> dict[str, Any] | None:
+    def receipt(self, principal: Principal, operation_id: UUID, *,
+                game_id: UUID | None = None, kind: str | None = None,
+                request_hash: str | None = None) -> dict[str, Any] | None:
         with self.pool.connection() as connection:
             row = connection.execute(
-                "select status,receipt from app.operations where id=%s and owner_id=%s",
+                "select status,receipt,game_id,kind,request_sha256 from app.operations where id=%s and owner_id=%s",
                 (operation_id, principal.user_id),
             ).fetchone()
             if not row:
                 return None
+            if kind is not None:
+                # Creation acquires an ID before a campaign exists; completion
+                # fills game_id. Kind/hash still bind that initial request.
+                if (row['kind'] != kind or row['request_sha256'] != request_hash
+                        or (kind != 'new_game' and row['game_id'] != game_id)):
+                    raise Conflict('operation_request_mismatch')
             return row["receipt"] if row["status"] == "completed" else None
 
     def heartbeat(self, claim: OperationClaim) -> None:

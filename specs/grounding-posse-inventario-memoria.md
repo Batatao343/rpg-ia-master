@@ -48,13 +48,20 @@ Extração genérica de entidades de qualquer frase e alteração das regras de 
 
 ## 5. Critérios de aceite
 
+### Adendo aprovado — 19/09
+
+Sujeito e verbo afirmativo devem ser diretos. Negações e relato sobre posse de
+NPC não são posse do jogador; uma oração coordenada com outro sujeito encerra
+a lista de objetos atribuída ao player. Nomes são comparados com fronteiras de
+palavra. Plano/gates no [adendo pré-matriz](remediacao-local-contratos-pre-matriz.md).
+
 - [x] O fato real “O viajante carrega: diário...” é recusado.
 - [x] Item presente no inventário é aceito, mesmo se recusado anteriormente.
 - [x] Contexto e resumo não propagam posse fantasma.
 - [x] Invariante dedicado cobre regressão sem long run.
 - [x] Saves antigos continuam carregando.
 - [x] `uv run pytest` verde (17/09: 1681 passed, 16 skipped, 14 deselected).
-- [ ] Matriz B integral sem posse fantasma no build atual.
+- [ ] Smoke real dirigido de inventário/memória confirma integração; B integral é gate global separado.
 
 ## 6. Smoke test com LLM real
 

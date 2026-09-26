@@ -25,9 +25,12 @@ def normalize_runtime_npc_ref(value: str) -> str:
 
 def runtime_npc_aliases(key: str, npc: Mapping[str, Any] | None = None) -> set[str]:
     row = npc or {}
+    known_aliases = row.get("aliases") or []
+    if not isinstance(known_aliases, (list, tuple)):
+        known_aliases = []
     return {
         alias
-        for value in (key, row.get("id"), row.get("name"))
+        for value in (key, row.get("id"), row.get("name"), *known_aliases)
         if (alias := normalize_runtime_npc_ref(str(value or "")))
     }
 
@@ -70,6 +73,9 @@ def _merge_runtime_npc(primary: dict, incoming: dict) -> dict:
     ):
         primary, incoming = incoming, primary
     merged = dict(primary)
+    merged["aliases"] = sorted(
+        runtime_npc_aliases("", primary) | runtime_npc_aliases("", incoming)
+    )
     for key, value in incoming.items():
         if key not in merged or merged[key] in (None, "", [], {}):
             merged[key] = value
@@ -106,11 +112,23 @@ def coalesce_runtime_npcs(npcs: Mapping[str, Any] | None) -> dict[str, Any]:
             out[key] = raw_row
             continue
         row = dict(raw_row)
+        row["aliases"] = sorted(runtime_npc_aliases(key, row))
         existing = find_runtime_npc_key(out, key, row)
         if existing is None:
             out[key] = row
         else:
-            out[existing] = _merge_runtime_npc(dict(out[existing]), row)
+            merged = _merge_runtime_npc(dict(out[existing]), row)
+            # A bridge may join multiple groups already seen. Preserve the
+            # first runtime key, not the incidental order of the alias rows.
+            while True:
+                aliases = runtime_npc_aliases(existing, merged)
+                linked = next((other for other, value in out.items()
+                               if other != existing and isinstance(value, Mapping)
+                               and aliases & runtime_npc_aliases(other, value)), None)
+                if linked is None:
+                    break
+                merged = _merge_runtime_npc(merged, dict(out.pop(linked)))
+            out[existing] = merged
     return out
 
 

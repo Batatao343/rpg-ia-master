@@ -283,6 +283,11 @@ def storyteller_node(state: GameState):
     if not messages: return {"messages": [AIMessage(content="Comece a história.")]}
     
     last_user_input = messages[-1].content if isinstance(messages[-1], HumanMessage) else ""
+    from services.actor_lifecycle import is_recovery_turn
+    recovery_turn = is_recovery_turn(state)
+    if recovery_turn:
+        # Recovery is passage of time/treatment, never permission for another action.
+        last_user_input = "Descanso e aguardo socorro."
     world = ensure_world(state.get("world", {}))
 
     # --- Fase 0: viagem / descanso (determinístico) ---
@@ -564,7 +569,12 @@ def storyteller_node(state: GameState):
     campaign_plan = state.get("campaign_plan") or {}
     beats = [dict(beat) for beat in campaign_plan.get("beats", [])]
     current_step = campaign_plan.get("current_step", 0)
-    active_step = beats[current_step].get("description") if current_step < len(beats) else "Clímax ou Ação Livre."
+    beat_eligible = (
+        isinstance(current_step, int) and not isinstance(current_step, bool)
+        and 0 <= current_step < len(beats)
+        and beats[current_step].get("status", "pending") in {"pending", "active"}
+    )
+    active_step = beats[current_step].get("description") if beat_eligible else "Clímax ou Ação Livre."
 
     llm = get_llm(temperature=0.7)
     
@@ -787,6 +797,7 @@ def storyteller_node(state: GameState):
         beat_done = (
             bool(getattr(update, "beat_completed", False))
             and not quarantine_llm_payload
+            and beat_eligible
         )
         # Fase 4.1: beat concluído = XP determinístico (o LLM só sinaliza o beat;
         # valor/level up são do motor). Level ups viram eventos source="progression".
@@ -799,7 +810,7 @@ def storyteller_node(state: GameState):
             from progression import grant_xp, XP_PER_BEAT
             base_p = rested_player if rested_player is not None else dict(state.get("player") or {})
             leveled_player, level_up_events = grant_xp(base_p, XP_PER_BEAT)
-        if campaign_plan and beats and beat_done and current_step < len(beats):
+        if beat_done:
             beats[current_step] = {**beats[current_step], "status": "done"}
             new_step = current_step + 1
             updated_plan = {**campaign_plan, "beats": beats, "current_step": new_step}
@@ -860,12 +871,13 @@ def storyteller_node(state: GameState):
         ]
         rejected_claims: List[str] = []
         if gained:
-            from inventory import add_item, is_unique, resolve_item_name
+            from inventory import add_item, get_qty, is_unique, resolve_item_name
             from services.economy import claim_event, is_unique_available
             proj = state.get("world_projection") or {}
             cur_p = dict(updates.get("player") or state.get("player") or {})
             inv = list(cur_p.get("inventory") or [])
             changed = False
+            seen_unique: set[str] = set()
             for g in gained:
                 if _is_monetary_claim(g):
                     # O valor válido já foi aplicado pela exploração/economia.
@@ -877,13 +889,20 @@ def storyteller_node(state: GameState):
                     rejected_claims.append(str(g))
                     continue
                 # Fase 6.2: único já reclamado NUNCA re-entra pela narrativa
-                if is_unique(iid) and not is_unique_available(iid, proj):
+                unique = is_unique(iid)
+                if unique and iid in seen_unique:
+                    # Name/ID aliases in one payload represent one grant, not a
+                    # second rejection that would erase the valid first grant.
+                    continue
+                if unique:
+                    seen_unique.add(iid)
+                if unique and (get_qty(inv, iid) > 0 or not is_unique_available(iid, proj)):
                     print(f"⚠️ [STORYTELLER] item ÚNICO já reclamado ignorado: {iid}")
                     rejected_claims.append(str(g))
                     continue
                 inv = add_item(inv, iid, 1)
                 changed = True
-                if is_unique(iid):
+                if unique:
                     rep_events.append(claim_event(iid, "player"))
             if changed:
                 cur_p["inventory"] = inv

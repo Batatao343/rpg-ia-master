@@ -81,6 +81,13 @@ Rebalancear perseguição, mudar dano climático ou remover a escolha de checkpo
 
 ## 5. Critérios de aceite
 
+### Adendo aprovado — 19/09
+
+O contrato local inclui recuperação pelo grafo, recibo estável e save/load,
+com asserts independentes de local, relógio e consciência. Não basta testar o
+guard isolado. Plano/gates no
+[adendo pré-matriz](remediacao-local-contratos-pre-matriz.md).
+
 - [x] Nenhum produtor encerra turno jogável com transição sem dono.
 - [x] Limite de fuga não sobrepõe bloqueio de lifecycle.
 - [x] Checkpoint/restore não perpetua flags efêmeras.
@@ -88,7 +95,7 @@ Rebalancear perseguição, mudar dano climático ou remover a escolha de checkpo
 - [x] Região e plano são marcados para convergir após restore/fuga.
 - [x] Invariantes reportam a transição órfã na fronteira, antes da cascata.
 - [x] Suíte completa offline verde após a revisão de 17/09 (1681 passed).
-- [ ] Matriz B integral reiniciada sem a regressão.
+- [ ] Smoke real dirigido de transição/restore sem regressão; B integral é gate global separado.
 
 ### Revisão local de 17/09
 
@@ -103,9 +110,11 @@ continua bloqueado pelo HTTP 402 DeepSeek; ver o
 
 ## 6. Smoke real
 
-Repetir o par 1/seed 6200 por 200 turnos antes da matriz integral. Confirmar zero
+Usar estado preparado de fuga/queda/restore e executar ações dirigidas. Confirmar zero
 `transition.unresolved_at_boundary`, zero cauda de guard e zero checkpoint
 instável.
+O par 1 de 200 turnos pertence à matriz global; não executar campanha duplicada
+como pré-requisito desta spec.
 
 ## 7. Riscos
 

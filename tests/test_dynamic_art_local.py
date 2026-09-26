@@ -5,7 +5,7 @@ from uuid import uuid4
 
 import pytest
 
-from infrastructure.contracts import Principal
+from infrastructure.contracts import JobRequest, LeaseHeld, Principal
 from infrastructure.file_blob import FileBlobStore
 from services.art_triggers import ArtGenerationRequest
 from tests.fakes.fake_image_generator import FakeImageGenerator
@@ -21,6 +21,8 @@ def test_reserva_worker_e_promocao_de_arte_no_postgres_local(tmp_path):
     if not dsn:
         pytest.skip("RPG_TEST_DATABASE_URL ausente")
     from infrastructure.postgres import PostgresGameStore, PostgresPool
+    from infrastructure.postgres_jobs import PostgresJobQueue
+    from services.job_fence import job_scope
     from services.dynamic_art import DynamicArtRepository
 
     pool = PostgresPool(dsn)
@@ -50,6 +52,10 @@ def test_reserva_worker_e_promocao_de_arte_no_postgres_local(tmp_path):
         principal, game_id, timeline_epoch=0, generation_id=generation_id,
         request=request, brief=brief,
     )
+    queue = PostgresJobQueue(pool)
+    kind = f'art-fence-{generation_id}'
+    job_id = queue.enqueue(JobRequest(kind, kind, {}, owner_id=owner_id, game_id=game_id))
+    first = queue.lease('first', {kind}, 1)[0]
     assert repository.begin(generation_id) is True
     result = generate_dynamic_art_job(
         generator=FakeImageGenerator(), blob_store=FileBlobStore(tmp_path),
@@ -60,7 +66,15 @@ def test_reserva_worker_e_promocao_de_arte_no_postgres_local(tmp_path):
         },
         owner_id=owner_id, game_id=game_id, asset_id=asset_id,
     )
-    repository.complete(generation_id, asset_id=asset_id, result=result)
+    with pool.connection() as connection, connection.transaction():
+        connection.execute("update app.jobs set lease_until=now()-interval '1 second' where id=%s", (job_id,))
+    second = queue.lease('second', {kind}, 1)[0]
+    with job_scope(first), pytest.raises(LeaseHeld):
+        repository.complete(generation_id, asset_id=asset_id, result=result)
+    assert repository.assets(principal, generation_id) == []
+    with job_scope(second):
+        repository.complete(generation_id, asset_id=asset_id, result=result)
+    queue.complete(second.job_id, second.lease_token, {'ready': True})
     assert repository.get(principal, generation_id)["status"] == "ready"
     assert {row["variant"] for row in repository.assets(principal, generation_id)} == {
         "full", "thumb",

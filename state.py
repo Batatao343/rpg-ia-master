@@ -432,6 +432,9 @@ class GameState(TypedDict):
     chronicle: List[ChronicleChapter]  # Crônica por capítulos: milestones (event_log) + prosa de menestrel
 
     messages: Annotated[List[BaseMessage], operator.add]
+    presentation_history: List[Dict[str, Any]]
+    art_generation_ledger: List[Dict[str, Any]]
+    art_arc_budgets: Dict[str, Dict[str, Any]]
     next: Optional[str]
     player: PlayerStats
     world: WorldState
@@ -485,6 +488,7 @@ class GameState(TypedDict):
     memory_promotions: List[Dict]       # promoções com fonte canônica (bounded)
     pending_npc_memory: List[Dict]      # fila bounded de retries add_npc_memory
     narrative_rejections: List[str]     # guardrails narrativos transitórios
+    evidence_rejections: List[Dict[str, str]]  # bounded, no private text
     rejected_item_claims: List[str]     # itens recusados pelo motor (bounded, durável)
     rag_persistence_error: Optional[str]  # falha sanitizada de memória da sessão
     event_rejections: List[Dict]         # propostas recusadas + metadados sanitizados

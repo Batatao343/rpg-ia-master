@@ -198,6 +198,42 @@ def _should_archive(state: GameState, turn: int) -> bool:
 
 
 def archive_node(state: GameState):
+    from langgraph.types import Overwrite
+    from services.narrative_evidence import build_evidence, guard_current_messages, validate_narrative
+
+    # Validate after event processing, before feeding prose back to the model.
+    event_updates = process_pending_events(state)
+    effective = {**state, **event_updates}
+    messages, audit = guard_current_messages(effective)
+    effective['messages'] = messages
+    evidence = build_evidence(effective)
+    # Keep the pre-event baseline for new-event memory detection. Processing the
+    # same pending queue twice loses that baseline even if application is deduped.
+    result = _archive_node({**state, 'messages': messages}, event_updates=event_updates)
+    if 'narrative_summary' in result:
+        check = validate_narrative(result['narrative_summary'], evidence, channel='summary')
+        result['narrative_summary'] = check.text
+        audit.extend(check.rejections)
+    if 'chronicle' in result:
+        from copy import deepcopy
+        chapters = deepcopy(result['chronicle'])
+        for chapter in chapters:
+            for entry in chapter.get('entries', []):
+                if entry.get('kind') != 'prose' or entry.get('turn') != evidence.turn:
+                    continue
+                check = validate_narrative(entry.get('text', ''), evidence, channel='chronicle')
+                entry['text'] = check.text
+                audit.extend(check.rejections)
+            chapter['entries'] = [entry for entry in chapter.get('entries', []) if entry.get('text')]
+        result['chronicle'] = chapters
+    if audit:
+        result['evidence_rejections'] = [*(state.get('evidence_rejections') or []), *audit][-64:]
+    if messages != list(state.get('messages') or []):
+        result['messages'] = Overwrite(messages)
+    return result
+
+
+def _archive_node(state: GameState, *, event_updates: dict | None = None):
     """
     Compacta o histórico recente em um resumo e extrai fatos para o RAG.
     Roda com cadência (evento relevante OU a cada ~10 turnos) — não em todo turno.
@@ -211,7 +247,8 @@ def archive_node(state: GameState):
     # Fase 2.6: valida/aplica a fila de eventos estruturados em TODO turno, ANTES da
     # guarda de cadência — turno trivial ainda precisa consolidar o mundo. No-op se
     # a fila está vazia (retorna {}).
-    event_updates = process_pending_events(state)
+    if event_updates is None:
+        event_updates = process_pending_events(state)
 
     turn = state.get("world", {}).get("turn_count", 0)
     prior_event_ids = {

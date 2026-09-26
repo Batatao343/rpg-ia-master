@@ -52,13 +52,21 @@ alterações legítimas de roupa, ferimentos ou envelhecimento.
 
 ## 5. Critérios de aceite
 
+### Adendo aprovado — 19/09
+
+Aliases viram metadados persistidos. Coalescência une componentes transitivos,
+inclusive uma ficha-ponte entre dois grupos anteriores, sem perder os nomes/IDs
+descartados. As seis permutações de três fichas são testadas com roundtrip e
+idempotência; identidade antiga e dinâmica recente permanecem separadas.
+Gates no [adendo pré-matriz](remediacao-local-contratos-pre-matriz.md).
+
 - [x] Reintroduzir `npc_skriit_mil_olhos` mantém uma única chave/ficha.
 - [x] “Skriit (homem alto...)” é recusado; “Skriit, goblin pequeno...” passa.
 - [x] Duplicata legada é coalescida no roundtrip.
 - [x] Contexto não expõe fato contraditório.
 - [x] Invariantes curtas cobrem ambos os defeitos.
 - [x] `uv run pytest` verde (17/09: 1681 passed, 16 skipped, 14 deselected).
-- [ ] Matriz B integral comprova ausência de reincidência no real.
+- [ ] Smoke real dirigido de reintrodução por alias confirma integração; B integral é gate global separado.
 
 ## 6. Smoke test com LLM real
 

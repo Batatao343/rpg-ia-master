@@ -61,7 +61,13 @@ _NPC_SCAFFOLD = re.compile(
 
 def semantic_opening(text: str, words: int = 6) -> str:
     """Opening without the deterministic speaker label used by NPC messages."""
-    return opening(_NPC_SCAFFOLD.sub("", str(text or ""), count=1), words)
+    value = _NPC_SCAFFOLD.sub("", str(text or ""), count=1).lstrip('* "“')
+    while True:
+        prefix = next((p for p in _NEUTRAL_TRANSITIONS if value.startswith(p)), None)
+        if prefix is None:
+            break
+        value = value[len(prefix):].lstrip('* "“')
+    return opening(value, words)
 
 
 def is_deterministic_interaction_message(text: str) -> bool:

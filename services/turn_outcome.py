@@ -6,16 +6,24 @@ import re
 from collections import Counter
 
 _NEGATIVE_REWARD = re.compile(
-    r"[^.!?]*(?:nada novo (?:foi )?obtido|nenhum(?:a)? "
-    r"(?:recompensa|objeto|item)[^.!?]{0,50}(?:obtido|acrescentado))[^.!?]*[.!?]?",
+    r"[^.!?]*(?:nada novo (?:foi )?obtido|nenhuma "
+    r"recompensa[^.!?]{0,50}(?:obtido|obtida|acrescentado|acrescentada))[^.!?]*[.!?]?",
+    re.IGNORECASE,
+)
+_NEGATIVE_ITEM = re.compile(
+    r"[^.!?]*nenhum(?:a)? (?:objeto|item)[^.!?]{0,50}(?:obtido|acrescentado)[^.!?]*[.!?]?",
     re.IGNORECASE,
 )
 
 
 def _inventory(actor: dict) -> Counter[str]:
-    return Counter({str(entry.get("id")): int(entry.get("qty", 1) or 0)
-                    for entry in (actor.get("inventory") or [])
-                    if isinstance(entry, dict) and entry.get("id")})
+    counts: Counter[str] = Counter()
+    for entry in actor.get("inventory") or []:
+        if isinstance(entry, dict) and entry.get("id"):
+            qty = int(entry.get("qty", 1) or 0)
+            if qty > 0:
+                counts[str(entry["id"])] += qty
+    return counts
 
 
 def capture_baseline(state: dict) -> dict:
@@ -43,8 +51,13 @@ def render_player_message(narrative: str, outcome: dict) -> str:
              or int(outcome.get("xp_delta", 0) or 0) > 0
              or bool(outcome.get("items_gained")) or bool(outcome.get("quests_completed")))
     text = str(narrative or "").strip()
+    # Reserved receipt blocks are untrusted input, even when emitted by a model.
+    # Replace each marker's line; retain unrelated prose on following lines.
+    text = re.sub(r"\[RESULTADO\][^\r\n]*", "", text).strip()
     if gains:
         text = _NEGATIVE_REWARD.sub("", text).strip()
+    if outcome.get("items_gained"):
+        text = _NEGATIVE_ITEM.sub("", text).strip()
     receipt: list[str] = []
     if int(outcome.get("gold_delta", 0) or 0) > 0:
         receipt.append(f"+{outcome['gold_delta']} ouro")
@@ -54,7 +67,7 @@ def render_player_message(narrative: str, outcome: dict) -> str:
                    in sorted((outcome.get("items_gained") or {}).items()))
     if outcome.get("quests_completed"):
         receipt.append(f"{len(outcome['quests_completed'])} missão(ões) concluída(s)")
-    if receipt and "[RESULTADO]" not in text:
+    if receipt:
         text = f"{text}\n\n[RESULTADO] " + " · ".join(receipt)
     return text
 

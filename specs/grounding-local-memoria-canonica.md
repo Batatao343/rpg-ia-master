@@ -53,6 +53,13 @@ faz a mesma regressão aparecer em teste curto.
 
 ## 5. Critérios de aceite
 
+### Adendo aprovado — 19/09
+
+Corpus determinístico verifica pertencimento correto/incorreto, viagem e
+negação direta com expectativas independentes. Não se promete detectar toda
+afirmação livre; a campanha real mede cobertura linguística fora desse corpus.
+Gates no [adendo pré-matriz](remediacao-local-contratos-pre-matriz.md).
+
 - [x] Frase exata da B é rejeitada e auditada.
 - [x] Menção válida Anel Dourado→Brekmar como viagem é aceita.
 - [x] ContextPack não expõe o fato legado contraditório.
@@ -60,7 +67,7 @@ faz a mesma regressão aparecer em teste curto.
 - [x] Suíte completa offline verde.
 - [x] Guard de FallbackLLM: usa o guard existente do arquivista.
 - [x] Saves antigos permanecem carregando; somente contexto ativo é filtrado.
-- [ ] Matriz B integral sem reincidência no build atual.
+- [ ] Smoke real dirigido de memória geográfica confirma integração; B integral é gate global separado.
 
 ## 6. Smoke real
 

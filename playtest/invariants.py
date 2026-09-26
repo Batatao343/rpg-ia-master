@@ -1041,6 +1041,16 @@ def check_actor_lifecycle(state: dict, prev: Optional[dict], turn: int) -> List[
     previous = prev.get("player") or {}
     was_blocked = not previous.get("conscious", True) or previous.get("incapacitated")
     action = state.get("last_action_outcome") or {}
+    # Independent observation of location: trusting allowed=False here alone
+    # would reproduce the product guard's own blind spot for mixed actions.
+    if (was_blocked and not (prev.get("combat") or {}).get("active")
+            and not prev.get("death_pending") and not state.get("death_pending")
+            and ((prev.get("continuity") or {}).get("timeline_epoch", 0)
+                 == (state.get("continuity") or {}).get("timeline_epoch", 0))):
+        if ((state.get("world") or {}).get("current_location_id")
+                != (prev.get("world") or {}).get("current_location_id")):
+            return [_V("player.action_while_incapacitated", "error", turn,
+                       "recuperação de ator incapacitado alterou localização")]
     if was_blocked and action.get("allowed") is False:
         prev_world, world = prev.get("world") or {}, state.get("world") or {}
         if (world.get("turn_count") != prev_world.get("turn_count")
@@ -1179,22 +1189,7 @@ def check_false_player_death(
     state: dict, prev: Optional[dict], turn: int,
 ) -> List[Violation]:
     """A recoverable down may never be memorialized as a confirmed death."""
-    previous_ids = {
-        str(event.get("event_id") or "")
-        for event in ((prev or {}).get("event_log") or [])
-        if isinstance(event, dict)
-    }
-    new_events = [
-        event for event in (state.get("event_log") or [])
-        if isinstance(event, dict)
-        and str(event.get("event_id") or "") not in previous_ids
-    ]
-    types = {str(event.get("type") or "") for event in new_events}
-    if "player_downed" not in types or "player_died" in types or state.get("game_over"):
-        return []
     player_name = str((state.get("player") or {}).get("name") or "").strip()
-    if not player_name:
-        return []
     previous_facts = {
         str(row.get("memory_id") or "")
         for row in ((prev or {}).get("memory_facts") or [])
@@ -1208,18 +1203,13 @@ def check_false_player_death(
         if isinstance(row, dict)
         and str(row.get("memory_id") or "") not in previous_facts
     )
-    name = re.escape(player_name)
-    terminal_claim = re.compile(
-        rf"(?:{name}.{{0,32}}\b(?:morreu|est[aá]\s+mort[oa])\b|"
-        rf"\bmorte\s+(?:definitiva\s+)?de\s+{name}\b)",
-        re.IGNORECASE,
-    )
-    offending = next((text for text in texts if terminal_claim.search(text)), "")
+    from services.memory_provenance import false_player_death_claim
+    offending = next((text for text in texts if false_player_death_claim(text, state)), "")
     if not offending:
         return []
     return [_V(
         "narrative.false_player_death", "error", turn,
-        "queda recuperável foi registrada como morte confirmada",
+        "morte do protagonista afirmada sem evidência terminal",
         source_excerpt=offending[:180], player=player_name,
     )]
 

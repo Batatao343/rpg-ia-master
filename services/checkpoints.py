@@ -15,6 +15,7 @@ Fundação determinística (sem LLM). O flip do fluxo de morte em `agents/combat
 from __future__ import annotations
 
 import copy
+import os
 import hashlib
 from typing import Any, Dict, Optional
 
@@ -156,7 +157,7 @@ def resolve_death_choice(state: dict, choice: str, *,
                 str(state["game_id"]), captured)
     elif state.get("game_id"):
         restored = persistence.load_checkpoint(state["game_id"])
-        if restored is not None:
+        if restored is not None and os.getenv('RPG_RUNTIME_PROFILE', 'legacy') == 'legacy':
             restored_external = persistence.restore_checkpoint_memory(
                 str(state["game_id"]))
             if not restored_external:

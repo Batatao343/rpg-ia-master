@@ -1,5 +1,71 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **RETOMADA 2026-09-26 — execução da auditoria, com gates locais reais.**
+> [Relatório atual e pendências exatas](docs/auditoria-execucao-2026-09-26.md).
+> Nove specs iniciadas: contexto autenticado `done`; oito `in-progress`.
+> Implementados guard narrativo, executor/replay, outbox, restore de derivados,
+> heartbeat/fencing, sessão/histórico e exibição de retrato. Gate integrado:
+> **16 passed, zero skipped** em Postgres/Auth/Storage/browser locais, com
+> narrador/gerador falsos. Retrato confirmado → URL assinada → ficha/reload;
+> SSE → replay POST sem duplicação; payload divergente → 409.
+> Corrigidos dois bugs extras: CHECK de operações sem `art` e perda de ledger/
+> orçamento de arte no grafo/save/load. Migração aplicada somente local.
+> **1776 passed, 26 skipped, 14 deselected**, 261,64 s, após ajuste de save/load.
+> Build e 5 testes cliente verdes;
+> Ruff e conteúdo verdes. CI infra configurado como manual, ainda não rodado.
+> Restam fault injections específicas, unificação de guards e contratos reais;
+> detalhes no relatório/specs, inclusive logout sobreposto ao topo mobile.
+> Nenhum custo de provider ou deploy. Usuário autorizou publicar o trabalho
+> na main ao final desta validação; isso não encerra as specs pendentes.
+> Este resumo substitui os estados de 23/09 e históricos abaixo.
+
+> **RETOMADA 2026-09-23 — auditoria convertida em nove specs aprovadas; primeiro lote executado.**
+> [Índice, cobertura e evidências](docs/auditoria-remediacao-2026-09-22.md).
+> Três specs novas estão `in-progress` (artes, recompensas/recibos, contexto
+> autenticado); seis permanecem `approved`, ainda não implementadas.
+> Retratos de raça/classe agora cabem inteiros, sem figura fora do card ou
+> legenda duplicada; retratos narrativos usam contain. XP exige beat elegível,
+> unique não duplica por aliases no mesmo lote, recibos somam entradas repetidas.
+> Fontes de contexto preservam principal/correlação com ContextVars isoladas.
+>
+> **Validação:** 1743 passed, 18 skipped, 14 deselected (308,01 s); 22 testes
+> offline novos. Dois testes visuais novos opt-in passaram separadamente em
+> Chromium (390/1440 px), com smoke da aplicação e artes reais sobre API mock
+> isolada. Ruff/build/conteúdo verdes; zero erro/aviso de conteúdo.
+> Pendente: ampliação/fallback/sizes das artes, evidência narrativa compartilhada,
+> operações/transações/leases, sessão frontend e gates; smoke Postgres do contexto
+> e smoke dirigido de recompensas não executados. Onze specs anteriores ainda
+> têm gates reais pendentes. Nenhuma chamada paga, commit, push ou deploy.
+> Este resumo prevalece sobre as contagens e estados históricos abaixo.
+
+> **RETOMADA 2026-09-19 — remediação local antes da matriz B.** A revisão profunda
+> encontrou contratos incompletos apesar da suíte verde anterior. O usuário
+> aprovou corrigir primeiro as reproduções locais e separar os gates.
+> [Spec/adendo](specs/remediacao-local-contratos-pre-matriz.md) e
+> [relatório](docs/remediacao-pre-matriz-2026-09-19.md).
+>
+> Recuperação agora tem intenção fechada: “pedir ajuda” não libera viagem/ataque;
+> socorro usa descanso no mesmo local e incapacidade pode ser recuperada.
+> Recibos são calculados, nunca validados por marcador de texto. Memória separa
+> sujeito/negação/posse e exige evidência terminal do player para morte. Aliases
+> transitivos de NPC sobrevivem à coalescência e ao reload. Prefixos cosméticos
+> não escondem repetição da fala. Erros de schema/tool/transporte são distintos.
+> A matriz para no primeiro turno inválido e não inicia o próximo par.
+>
+> **Gates agora separados:** testes locais → contratos reais curtos por feature
+> → matriz B global de 2.000 turnos. As dez specs funcionais não exigem mais uma
+> B inteira como seu smoke individual; a spec da matriz mantém esse aceite.
+> Nenhuma validação real foi declarada concluída. Nenhuma chamada paga, recarga
+> consultada ou ação cloud nesta revisão. Os últimos dados de saldo (HTTP 402)
+> são históricos de 16/09, não uma consulta nova.
+>
+> Smoke offline `20260919-150042-217978`: **30/30** turnos, zero erros/violações;
+> Ruff e validador de conteúdo verdes (zero erro/aviso). Suíte completa:
+> **1721 passed, 16 skipped, 14 deselected** (309,18 s), com **40 testes novos**.
+> Inventário: **153 specs — 141 `done`, 11 `in-progress`, uma `draft`**.
+> O adendo local está `done`; as onze pendências reais estão discriminadas no
+> relatório, não mascaradas pela contagem offline.
+
 > **RETOMADA 2026-09-17 — fechamento local; aceite real bloqueado por saldo.**
 > Inventário auditado: **152 specs — 140 `done`, 11 `in-progress`, uma `draft`**.
 > As onze têm implementação local e aguardam B real integral; não estão

@@ -46,54 +46,72 @@ class PgVectorMemoryStore:
         return intent.principal.user_id, intent.game_id, intent.npc_id
 
     def stage(self, intent: MemoryWriteIntent) -> None:
+        from services.turn_effects import current_effects
+        effects = current_effects()
+        if effects is not None:
+            effects.memory.add(intent)
+            return
+        with self.pool.connection() as connection, connection.transaction():
+            self.stage_on(connection, intent)
+
+    def stage_on(self, connection, intent: MemoryWriteIntent) -> None:
         intent = normalized_intent(intent)
         owner_id, game_id, npc_id = self._scope_values(intent)
         metadata = intent.document.metadata
         digest = hashlib.sha256(intent.document.text.encode("utf-8")).hexdigest()
         identity_digest = intent_sha256(intent)
-        with self.pool.connection() as connection, connection.transaction():
-            row = connection.execute(
-                """
-                insert into app.memory_documents
-                  (id,owner_id,game_id,npc_id,scope,content,content_sha256,metadata,
-                   provenance,confidence,source_id,source_turn,canonical_entity_ids,
-                   visibility,timeline_epoch,commit_version,embedding_profile_id)
-                values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                on conflict (id) do nothing returning id
-                """,
-                (
-                    intent.document.document_id, owner_id, game_id, npc_id,
-                    intent.document.scope, intent.document.text, digest, Jsonb(metadata),
-                    metadata.get("provenance"), metadata.get("confidence"),
-                    metadata.get("source_id"), metadata.get("source_turn"),
-                    list(metadata.get("canonical_entity_ids", [])),
-                    metadata.get("visibility", "public"), intent.timeline_epoch,
-                    metadata.get("commit_version"), self.profile_id,
-                ),
+        row = connection.execute(
+            """
+            insert into app.memory_documents
+              (id,owner_id,game_id,npc_id,scope,content,content_sha256,metadata,
+               provenance,confidence,source_id,source_turn,canonical_entity_ids,
+               visibility,timeline_epoch,commit_version,embedding_profile_id)
+            values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            on conflict (id) do nothing returning id
+            """,
+            (
+                intent.document.document_id, owner_id, game_id, npc_id,
+                intent.document.scope, intent.document.text, digest, Jsonb(metadata),
+                metadata.get("provenance"), metadata.get("confidence"),
+                metadata.get("source_id"), metadata.get("source_turn"),
+                list(metadata.get("canonical_entity_ids", [])),
+                metadata.get("visibility", "public"), intent.timeline_epoch,
+                metadata.get("commit_version"), self.profile_id,
+            ),
+        ).fetchone()
+        if row is None:
+            existing = connection.execute(
+                "select content,metadata,owner_id,game_id,npc_id,scope,timeline_epoch from app.memory_documents where id=%s",
+                (intent.document.document_id,),
             ).fetchone()
-            if row is None:
-                existing = connection.execute(
-                    "select content,metadata,owner_id,game_id,npc_id,scope,timeline_epoch from app.memory_documents where id=%s",
-                    (intent.document.document_id,),
-                ).fetchone()
-                comparable = MemoryWriteIntent(
-                    MemoryDocument(intent.document.document_id, existing["content"], existing["scope"], dict(existing["metadata"])),
-                    intent.principal if existing["owner_id"] else None,
-                    existing["game_id"], existing["npc_id"], existing["timeline_epoch"],
-                )
-                if intent_sha256(comparable) != identity_digest:
-                    raise Conflict("memory_id reutilizado com conteúdo divergente")
-                return
-            connection.execute(
-                """
-                insert into app.jobs(id,owner_id,game_id,kind,dedupe_key,status,payload,max_attempts)
-                values (gen_random_uuid(),%s,%s,'embed_memory',%s,'queued',%s,5)
-                on conflict (kind,dedupe_key) do nothing
-                """,
-                (owner_id, game_id, intent.document.document_id,
-                 Jsonb({"memory_id": intent.document.document_id, "content_sha256": digest,
-                        "profile_id": self.profile_id})),
+            comparable = MemoryWriteIntent(
+                MemoryDocument(intent.document.document_id, existing["content"], existing["scope"], dict(existing["metadata"])),
+                intent.principal if existing["owner_id"] else None,
+                existing["game_id"], existing["npc_id"], existing["timeline_epoch"],
             )
+            # Repeating an identical fact on a later commit keeps the original
+            # visibility boundary, not a new version that changes its identity.
+            from dataclasses import replace
+            comparison_metadata = dict(intent.document.metadata)
+            comparison_metadata['commit_version'] = existing['metadata'].get('commit_version')
+            if 'commit_version' not in existing['metadata']:
+                comparison_metadata.pop('commit_version', None)
+            identity_digest = intent_sha256(replace(intent,
+                document=replace(intent.document, metadata=comparison_metadata)))
+            if intent_sha256(comparable) != identity_digest:
+                raise Conflict("memory_id reutilizado com conteúdo divergente")
+            return
+        connection.execute(
+            """
+            insert into app.jobs(id,owner_id,game_id,kind,dedupe_key,status,payload,max_attempts)
+            values (gen_random_uuid(),%s,%s,'embed_memory',%s,'queued',%s,5)
+            on conflict (kind,dedupe_key) do nothing
+            """,
+            (owner_id, game_id, intent.document.document_id,
+             Jsonb({"memory_id": intent.document.document_id, "content_sha256": digest,
+                    "profile_id": self.profile_id, "timeline_epoch": intent.timeline_epoch,
+                    "commit_version": metadata.get('commit_version')})),
+        )
 
     def set_embedding(self, document_id: str, values: Sequence[float], *, content_sha256: str) -> None:
         vector = vector_literal(values)

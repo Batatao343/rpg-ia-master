@@ -1,6 +1,6 @@
 # SPEC — Interações com progresso, elegibilidade e repetição útil
 
-> **Status:** `in-progress` — implementação offline verde; aguarda matriz B real
+> **Status:** `in-progress` — aceite local verde; smoke real dirigido pendente (B é gate global)
 > **Criada:** 2026-08-27 · **Atualizada:** 2026-09-17
 > **Depende de:** `npcs-3-camadas`, `aliados-em-combate`, `polish-prosa-v2` (`done`)
 > **Supera:** smoke de recrutador que usava apenas `RECRUIT_MIN_REL`
@@ -61,6 +61,14 @@ extra por LLM.
 
 ## 5. Critérios de aceite
 
+### Adendo aprovado — 19/09
+
+Transições neutras inseridas pelo motor são removidas ao calcular a abertura
+semântica. A variação cosmética não pode esconder repetição do conteúdo; o teste
+do ator agora exige que o aviso sobreviva. Redução de warnings por esse artifício
+não conta como melhoria. Regressões independentes e gates no
+[adendo pré-matriz](remediacao-local-contratos-pre-matriz.md).
+
 - [x] Produto e harness usam a mesma decisão de recrutamento.
 - [x] Nenhum perfil lê limiar duplicado nem raspa motivo da fala.
 - [x] Relação 7/limiar 10 não causa convites indefinidos.
@@ -68,7 +76,7 @@ extra por LLM.
 - [x] Três ações sem progresso são detectadas em teste unitário.
 - [x] Scaffold NPC não conta como abertura semântica.
 - [x] Suíte completa offline verde.
-- [ ] Matriz B real confirma redução dos episódios repetidos sem vazamento.
+- [ ] Smoke real dirigido (§6) avalia progresso e repetição sem vazamento; B integral é gate global separado.
 
 ## 6. Smoke real
 

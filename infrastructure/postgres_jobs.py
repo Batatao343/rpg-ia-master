@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from contextlib import nullcontext
+
 import hashlib
 from datetime import timedelta
 from typing import Any
@@ -20,9 +22,10 @@ class PostgresJobQueue:
         self.pool = pool
         self.lease_seconds = lease_seconds
 
-    def enqueue(self, job: JobRequest) -> UUID:
+    def enqueue(self, job: JobRequest, connection=None) -> UUID:
         job_id = uuid4()
-        with self.pool.connection() as connection, connection.transaction():
+        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        with scope as connection, connection.transaction():
             row = connection.execute(
                 """
                 insert into app.jobs

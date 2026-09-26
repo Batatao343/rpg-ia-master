@@ -460,6 +460,8 @@ export interface PartyMember {
 }
 
 export interface GameResponse {
+  timeline_epoch?: number;
+  portrait_generation_id?: string | null;
   game_id: string;
   message: string;
   message_type: MessageType;

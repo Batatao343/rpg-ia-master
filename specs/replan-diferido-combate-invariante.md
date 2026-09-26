@@ -45,13 +45,19 @@ resposta estruturada inválida e exceção do provider, sem campanha longa.
 
 ## 5. Critérios de aceite
 
+### Adendo aprovado — 19/09
+
+Sem nova mudança de mecânica: rodar as regressões de combate/viagem junto ao
+corpus pré-matriz. Aceite técnico local e smoke dirigido são separados da
+certificação global. Ver [adendo pré-matriz](remediacao-local-contratos-pre-matriz.md).
+
 - [x] Combate ativo não gera falso positivo.
 - [x] Saída de combate recebe uma única janela.
 - [x] Pendência órfã no turno seguinte falha.
 - [x] Suíte completa offline verde.
 - [x] Guard LLM: N/A; invariante puro.
 - [x] Saves antigos: nenhum schema novo.
-- [ ] Matriz B integral valida o build revisado sem reincidência.
+- [ ] Smoke real dirigido de viagem/combate/replan valida integração; B integral é gate global separado.
 
 ## 6. Smoke real
 

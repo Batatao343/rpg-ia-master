@@ -430,6 +430,8 @@ def build_context_pack(state: Dict, query: str, purpose: str,
 
     def add_memory_part(text: str, *, legacy_if_unlabeled: bool = False) -> None:
         clean = str(text or "").strip()
+        from services.narrative_evidence import build_evidence, validate_narrative
+        clean = validate_narrative(clean, build_evidence(state), channel='context').text
         from services.memory_provenance import (
             canonical_location_contradiction,
             false_player_death_claim,

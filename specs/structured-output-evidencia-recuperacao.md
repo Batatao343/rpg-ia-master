@@ -1,6 +1,6 @@
 # SPEC — Structured output com evidência e recuperação orientada à causa
 
-> **Status:** `in-progress` — implementação offline verde; aguarda matriz B real
+> **Status:** `in-progress` — aceite local verde; contrato real curto pendente (B é gate global)
 > **Criada/Atualizada:** 2026-08-27
 > **Depende de:** `hardening-structured-sentinelas-rag` (`done`)
 > **Supera:** retry cego de `structured-output-retry-provider`
@@ -68,6 +68,14 @@ de latência.
 
 ## 5. Critérios de aceite
 
+### Adendo aprovado — 19/09
+
+Tool call com nome diferente é `wrong_tool`; JSON presente que não valida é
+`schema_validation`; falha de transporte ganha código próprio. Fixtures não
+dependem de provocar essas falhas por sorte em campanha longa. Não se ativa
+JSON mode nem se muda fallback nesta remediação. Gates separados no
+[adendo pré-matriz](remediacao-local-contratos-pre-matriz.md).
+
 - [x] `CampaignPlanModel=None` tem código causal observável.
 - [x] JSON bruto válido é recuperado sem segunda chamada.
 - [x] Retry não é genérico nem vaza raw/prompt.
@@ -75,7 +83,7 @@ de latência.
 - [x] Fail-closed e fallback entre providers permanecem.
 - [x] Testes cobrem as recorrências sem campanha longa.
 - [x] Suíte completa offline verde.
-- [ ] Matriz B real confirma recuperação/classificação sob o provider real.
+- [ ] Contrato real curto (§6) confirma integração com provider; B integral é gate global separado.
 
 ## 6. Smoke real
 

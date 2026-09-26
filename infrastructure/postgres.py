@@ -37,7 +37,8 @@ class PostgresPool:
             min_size=min_size,
             max_size=max_size,
             timeout=timeout,
-            kwargs={"row_factory": dict_row},
+            kwargs={"row_factory": dict_row, "connect_timeout": 5,
+                    "options": "-c statement_timeout=15000 -c lock_timeout=5000"},
             open=True,
         )
 

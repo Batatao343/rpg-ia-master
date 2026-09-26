@@ -134,6 +134,10 @@ def dm_router_node(state: GameState):
     if combat.get("active"):
         return _combat_gate(state, world, combat)
 
+    from services.actor_lifecycle import is_recovery_turn
+    if is_recovery_turn(state):
+        return _base_route_payload(RouteType.STORY, world)
+
     # Descanso e viagem explícitos fora de combate são mecânicas de STORY.
     # Fechar essa borda evita que contexto hostil antigo reabra um conflito no
     # turno imediatamente posterior a uma fuga.

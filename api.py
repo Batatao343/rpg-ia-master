@@ -169,16 +169,19 @@ class AuthRequest(BaseModel):
 def auth_config(request: Request):
     required = _database_profile()
     authenticated = False
+    principal = None
     if required:
         try:
             from infrastructure.runtime import get_runtime
             from services.auth_sessions import ACCESS_COOKIE
-            authenticated = bool(get_runtime().identity_verifier.verify(
+            principal = get_runtime().identity_verifier.verify(
                 request.cookies.get(ACCESS_COOKIE),
-            ))
+            )
+            authenticated = bool(principal)
         except Exception:
             authenticated = False
-    return {"required": required, "authenticated": authenticated}
+    return {"required": required, "authenticated": authenticated,
+            **({"user_id": str(principal.user_id)} if principal else {})}
 
 
 def _set_session_cookies(response: Response, tokens) -> str:
@@ -654,6 +657,8 @@ class VisualResponse(BaseModel):
     cue: Optional[VisualCueResponse] = None
 
 class GameResponse(BaseModel):
+    timeline_epoch: int = 0
+    portrait_generation_id: Optional[str] = None
     game_id: str # <--- Novo: Frontend precisa saber o ID
     message: str
     message_type: str
@@ -683,17 +688,9 @@ def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> Gam
     # Pega a última mensagem
     from services.turn_outcome import player_facing_message
     last_content = player_facing_message(state)
-    
-    # Define o tipo de mensagem
-    msg_type = "STORY"
-    next_node = state.get("next", "")
-    
-    if "⚔️" in last_content or next_node == "combat_agent":
-        msg_type = "COMBAT"
-    elif "💰" in last_content or "item" in last_content.lower():
-        msg_type = "LOOT"
-    elif "🗣️" in last_content or '"' in last_content:
-        msg_type = "NPC"
+
+    from services.presentation_history import message_kind
+    msg_type = message_kind(state)
 
     player = state["player"]
     vitality = int(player.get("vitalidade", 0) or 0)
@@ -707,6 +704,10 @@ def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> Gam
             "victory" if not active else None
         )
     return GameResponse(
+        timeline_epoch=int((state.get('continuity') or {}).get('timeline_epoch', 0)),
+        portrait_generation_id=next((str(row['generation_id'])
+            for row in reversed(state.get('art_generation_ledger') or [])
+            if row.get('trigger_kind') == 'player_portrait' and row.get('generation_id')), None),
         game_id=state.get("game_id", "unknown"),
         message=last_content,
         message_type=msg_type,
@@ -1531,12 +1532,12 @@ def get_current_state(game_id: Optional[str] = None):
     # A lógica de carregar arquivo especifico deve ser implementada no persistence futuramente
     # Por enquanto, load_game_state carrega o mais recente se não passarmos nada
     # Se você implementou o load_game_state(specific_file), usaria aqui
-    
+
     file_to_load = None
     file_to_load = _resolve_save_file(game_id)
         
     state = load_game_state(file_to_load)
-    
+
     if not state:
         raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
     return format_response(state)
@@ -1551,6 +1552,44 @@ def get_player_codex(game_id: Optional[str] = None):
     if not state:
         raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
     return player_codex(state)
+
+@app.get('/game/history')
+def game_history(game_id: str, cursor: Optional[str] = None, limit: int = 50):
+    state = load_game_state(_resolve_save_file(game_id))
+    if not state:
+        raise HTTPException(404, 'Jogo não encontrado.')
+    from services.presentation_history import history_page
+    try:
+        return history_page(state, cursor=cursor, limit=limit)
+    except (ValueError, TypeError) as exc:
+        raise HTTPException(409, 'history_cursor_stale') from exc
+
+
+@app.get('/game/{game_id}/operations/{operation_id}')
+def operation_status(game_id: str, operation_id: str):
+    state = load_game_state(_resolve_save_file(game_id))  # ownership before lookup
+    if not state:
+        raise HTTPException(404, 'Jogo não encontrado.')
+    try:
+        op, gid = uuid.UUID(operation_id), uuid.UUID(str(state['game_id']))
+    except ValueError as exc:
+        raise HTTPException(400, 'ID inválido.') from exc
+    if not _database_profile():
+        return {'status': 'completed' if _action_already_processed(state, operation_id) else 'unknown',
+                'response': None, 'legacy': True}
+    from infrastructure.request_context import current_principal
+    from infrastructure.runtime import get_runtime
+    runtime = get_runtime()
+    with runtime.resources[0].connection() as connection:
+        row = connection.execute(
+            'select status,receipt,request_sha256 from app.operations where id=%s and game_id=%s and owner_id=%s',
+            (op, gid, current_principal().user_id),
+        ).fetchone()
+    if not row:
+        return {'status': 'unknown', 'response': None}
+    return {'status': row['status'], 'response': (row['receipt'] or {}).get('response'),
+            'request_hash': row['request_sha256']}
+
 
 @app.post("/game/prologue")
 def game_prologue(req: CreateCharacterRequest):
@@ -1601,27 +1640,39 @@ def _enqueue_art_generation(state: dict, trigger, brief: dict) -> dict:
         "profile_version": str(profile.get("profile_version") or "valoria-dynamic-v1"),
         "private_brief": brief,
     }
-    if runtime.config.profile != "legacy" and principal and runtime.resources:
-        from services.dynamic_art import DynamicArtRepository
-        repository = DynamicArtRepository(
-            runtime.resources[0], model=generation["model"],
-            profile_version=generation["profile_version"],
-        )
-        repository.reserve(
-            principal, uuid.UUID(str(state["game_id"])),
-            timeline_epoch=int((state.get("continuity") or {}).get("timeline_epoch", 0) or 0),
-            generation_id=uuid.UUID(reserved["generation_id"]), request=trigger,
-            brief=brief,
-        )
-    job_id = runtime.job_queue.enqueue(JobRequest(
-        "generate_dynamic_art", f"art:{reserved['generation_id']}",
-        {"generation": generation, "asset_id": str(uuid.uuid4()),
-         "owner_id": str(owner_id), "game_id": str(state["game_id"])},
-        owner_id=owner_id, game_id=uuid.UUID(str(state["game_id"])), max_attempts=3,
-    ))
-    return {"status": "pending", "generation_id": reserved["generation_id"],
-            "job_id": str(job_id)}
+    from services.turn_effects import current_effects
+    effects = current_effects()
+    durable = runtime.config.profile != "legacy" and principal and runtime.resources
+    if durable and effects is None:
+        raise RuntimeError("dynamic art requires a turn effect scope")
+    job_id = None  # Assigned by the queue only when the transaction commits.
+    asset_id = uuid.uuid5(uuid.NAMESPACE_URL, f"art-asset:{reserved['generation_id']}")
 
+    def publish(connection=None, epoch=0, version=0):
+        if durable:
+            from services.dynamic_art import DynamicArtRepository
+            repository = DynamicArtRepository(runtime.resources[0],
+                model=generation["model"], profile_version=generation["profile_version"])
+            repository.reserve(principal, uuid.UUID(str(state["game_id"])),
+                timeline_epoch=epoch, generation_id=uuid.UUID(reserved["generation_id"]),
+                request=trigger, brief=brief, connection=connection)
+        request = JobRequest(
+            "generate_dynamic_art", f"art:{reserved['generation_id']}",
+            {"generation": {**generation, "timeline_epoch": epoch},
+             "asset_id": str(asset_id), "owner_id": str(owner_id),
+             "game_id": str(state["game_id"]), "timeline_epoch": epoch,
+             "commit_version": version},
+            owner_id=owner_id, game_id=uuid.UUID(str(state["game_id"])), max_attempts=3)
+        if durable:
+            return runtime.job_queue.enqueue(request, connection=connection)
+        return runtime.job_queue.enqueue(request)
+
+    if durable:
+        effects.defer(publish)
+    else:
+        job_id = publish()
+    return {"status": "pending", "generation_id": reserved["generation_id"],
+            **({"job_id": str(job_id)} if job_id is not None else {})}
 
 def _enqueue_turn_art(state_before: dict, state_after: dict, action_key: str) -> None:
     if os.getenv("RPG_DYNAMIC_ART_ENABLED", "0").strip().lower() not in {"1", "true", "yes"}:
@@ -1643,30 +1694,44 @@ def _enqueue_turn_art(state_before: dict, state_after: dict, action_key: str) ->
 
 @app.post("/game/{game_id}/art/player/confirm")
 def confirm_player_art(game_id: str, req: ArtConfirmRequest):
-    if os.getenv("RPG_DYNAMIC_ART_ENABLED", "0").strip() not in {"1", "true", "yes"}:
-        return {"status": "disabled", "placeholder": True}
-    state = load_game_state(_resolve_save_file(game_id))
-    if not state:
-        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
-    ledger = list(state.get("art_generation_ledger") or [])
-    player_rows = [row for row in ledger if row.get("trigger_kind") == "player_portrait"]
-    if req.reformulation and len(player_rows) >= 2:
-        raise HTTPException(status_code=409, detail="A reformulação visual já foi usada.")
-    if not req.reformulation and player_rows:
-        return {"status": player_rows[-1].get("status"),
-                "generation_id": player_rows[-1].get("generation_id"), "placeholder": True}
-    from services.art_brief import build_player_art_brief
-    from services.art_triggers import ArtGenerationRequest
-    trigger = ArtGenerationRequest(
-        "player_portrait", req.action_id, "player", "player", None, req.action_id)
-    brief = build_player_art_brief(state.get("player") or {}, reformulation=req.reformulation)
-    result = _enqueue_art_generation(state, trigger, brief)
-    if result.get("status") == "deduplicated":
-        raise HTTPException(status_code=409, detail="Geração visual já reservada.")
-    if not save_game_state(state):
-        raise HTTPException(status_code=500, detail="Não foi possível reservar a arte.")
-    return {**result, "placeholder": True}
-
+    from infrastructure.runtime import get_runtime
+    from services.turn_execution import operation_scope
+    from services.turn_effects import effect_scope
+    lock = _game_lock(game_id) if not _database_profile() else nullcontext()
+    with lock:
+        state = load_game_state(_resolve_save_file(game_id))
+        if not state:
+            raise HTTPException(404, "Jogo não encontrado.")
+        claim, request_hash, receipt = _begin_state_mutation(
+            state, action_id=req.action_id, kind="art",
+            payload={"game_id": game_id, **req.model_dump(mode="json", exclude={"action_id"})})
+        if receipt is not None:
+            return receipt
+        with operation_scope(get_runtime().turn_coordinator if claim else None, claim), effect_scope():
+            _reject_memorial(state)
+            _reject_archived(state)
+            if state.get("death_pending"):
+                raise HTTPException(409, "Resolva a queda antes de encomendar arte.")
+            if os.getenv("RPG_DYNAMIC_ART_ENABLED", "0").strip() not in {"1", "true", "yes"}:
+                return _commit_state_mutation(state, {"status": "disabled", "placeholder": True},
+                                              claim=claim, request_hash=request_hash)
+            rows = [row for row in state.get("art_generation_ledger", [])
+                    if row.get("trigger_kind") == "player_portrait"]
+            if req.reformulation and len(rows) >= 2:
+                raise HTTPException(409, "A reformulação visual já foi usada.")
+            if not req.reformulation and rows:
+                result = {"status": rows[-1].get("status"), "generation_id": rows[-1].get("generation_id")}
+            else:
+                from services.art_brief import build_player_art_brief
+                from services.art_triggers import ArtGenerationRequest
+                trigger = ArtGenerationRequest("player_portrait", req.action_id, "player",
+                                               "player", None, req.action_id)
+                result = _enqueue_art_generation(state, trigger,
+                    build_player_art_brief(state.get("player") or {}, reformulation=req.reformulation))
+                if result.get("status") == "deduplicated":
+                    raise HTTPException(409, "Geração visual já reservada.")
+            return _commit_state_mutation(state, {**result, "placeholder": True},
+                                          claim=claim, request_hash=request_hash)
 
 @app.get("/game/{game_id}/art/{generation_id}")
 def dynamic_art_status(game_id: str, generation_id: str):
@@ -1707,11 +1772,17 @@ def dynamic_art_status(game_id: str, generation_id: str):
                     "sha256": asset["sha256"],
                 })
         public_error = None
+        public_status = generation["status"]
+        if generation.get("error_code") == "external_result_uncertain" or (
+            public_status == "generating" and generation.get("worker_inactive")
+        ):
+            public_status = "reconcile_required"
+            public_error = "O resultado da geração precisa ser conferido; não haverá nova geração automática."
         if str(generation["status"]).startswith("failed"):
-            public_error = "A arte não pôde ser gerada; o jogo continua com placeholder."
+            public_error = public_error or "A arte não pôde ser gerada; o jogo continua com placeholder."
         return {
             "generation_id": generation_id,
-            "status": generation["status"],
+            "status": public_status,
             "placeholder": generation["status"] != "ready",
             "assets": assets,
             "error": public_error,
@@ -1760,10 +1831,17 @@ def dynamic_art_quality(game_id: str, generation_id: str, req: ArtQualityRequest
 
 @app.post("/game/new", response_model=GameResponse)
 def new_game(req: CreateCharacterRequest):
-    """Cria um novo personagem e inicia a campanha com ID único."""
+    from infrastructure.runtime import get_runtime
+    from services.turn_execution import operation_scope
+    from services.turn_effects import effect_scope
     claim, request_hash, prior = _begin_create_operation(req)
     if prior is not None:
         return prior
+    with operation_scope(get_runtime().turn_coordinator if claim else None, claim), effect_scope():
+        return _create_game(req, claim)
+
+
+def _create_game(req: CreateCharacterRequest, claim):
     print(f"Criando personagem: {req.name}")
 
     char_input = {
@@ -1899,6 +1977,8 @@ def new_game(req: CreateCharacterRequest):
         final_state.update(resolve_turn_visual_state(initial_state, final_state,
                                                      action_key=visual_key))
         response = format_response(final_state, cue_action_key=visual_key)
+        from services.presentation_history import record_history
+        record_history(final_state, response.message, include_input=False)
         if claim is not None:
             from infrastructure.request_context import current_principal
             from infrastructure.runtime import get_runtime
@@ -2009,6 +2089,16 @@ def _operation_hash(req: ActionRequest) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
+def _validated_receipt(coordinator, principal, operation_id, *, game_id, kind, request_hash):
+    from infrastructure.contracts import Conflict
+    try:
+        return coordinator.receipt(
+            principal, operation_id, game_id=game_id, kind=kind, request_hash=request_hash,
+        )
+    except Conflict as exc:
+        raise HTTPException(status_code=409, detail="operation_request_mismatch") from exc
+
+
 def _begin_turn_operation(state: dict, req: ActionRequest):
     """Retorna ``(claim, request_hash, receipt_response)`` no perfil durável."""
     if not _database_profile():
@@ -2023,8 +2113,10 @@ def _begin_turn_operation(state: dict, req: ActionRequest):
     principal = current_principal()
     operation_id = uuid.UUID(req.action_id)
     request_hash = _operation_hash(req)
-    receipt_fn = getattr(runtime.turn_coordinator, "receipt", None)
-    receipt = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+    def receipt_fn():
+        return _validated_receipt(runtime.turn_coordinator, principal, operation_id,
+            game_id=uuid.UUID(str(state["game_id"])), kind="turn", request_hash=request_hash)
+    receipt = receipt_fn()
     if receipt and isinstance(receipt.get("response"), dict):
         return None, request_hash, GameResponse.model_validate(receipt["response"])
     try:
@@ -2034,7 +2126,7 @@ def _begin_turn_operation(state: dict, req: ActionRequest):
             base_version=int(state.get("_storage_version", 0) or 0),
         )
     except Conflict as exc:
-        receipt = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+        receipt = receipt_fn()
         if receipt and isinstance(receipt.get("response"), dict):
             return None, request_hash, GameResponse.model_validate(receipt["response"])
         code = "operation_in_progress" if isinstance(exc, LeaseHeld) else "operation_conflict"
@@ -2063,8 +2155,10 @@ def _begin_state_mutation(state: dict, *, action_id: Optional[str], kind: str,
     request_hash = hashlib.sha256(encoded).hexdigest()
     runtime = get_runtime()
     principal = current_principal()
-    receipt_fn = getattr(runtime.turn_coordinator, "receipt", None)
-    receipt = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+    def receipt_fn():
+        return _validated_receipt(runtime.turn_coordinator, principal, operation_id,
+            game_id=uuid.UUID(str(state["game_id"])), kind=kind, request_hash=request_hash)
+    receipt = receipt_fn()
     if receipt and "response" in receipt:
         return None, request_hash, receipt["response"]
     try:
@@ -2074,7 +2168,7 @@ def _begin_state_mutation(state: dict, *, action_id: Optional[str], kind: str,
             base_version=int(state.get("_storage_version", 0) or 0),
         )
     except Conflict as exc:
-        receipt = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+        receipt = receipt_fn()
         if receipt and "response" in receipt:
             return None, request_hash, receipt["response"]
         raise HTTPException(status_code=409, detail="operation_in_progress") from exc
@@ -2100,8 +2194,10 @@ def _begin_create_operation(req: CreateCharacterRequest):
     ).encode()).hexdigest()
     runtime = get_runtime()
     principal = current_principal()
-    receipt_fn = getattr(runtime.turn_coordinator, "receipt", None)
-    receipt = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+    def receipt_fn():
+        return _validated_receipt(runtime.turn_coordinator, principal, operation_id,
+            game_id=None, kind="new_game", request_hash=request_hash)
+    receipt = receipt_fn()
     if receipt and isinstance(receipt.get("response"), dict):
         return None, request_hash, GameResponse.model_validate(receipt["response"])
     try:
@@ -2110,7 +2206,7 @@ def _begin_create_operation(req: CreateCharacterRequest):
             request_hash=request_hash, base_version=None,
         )
     except Conflict as exc:
-        receipt = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+        receipt = receipt_fn()
         if receipt and isinstance(receipt.get("response"), dict):
             return None, request_hash, GameResponse.model_validate(receipt["response"])
         raise HTTPException(status_code=409, detail="operation_in_progress") from exc
@@ -2162,6 +2258,8 @@ def _commit_turn(
     llm_events: list[dict],
     llm_attempts: list[dict],
 ) -> None:
+    from services.presentation_history import record_history
+    record_history(state, response.message)
     if claim is None:
         _require_saved(state, detail="turno")
         if checkpoint:
@@ -2283,7 +2381,16 @@ def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
 
 def _run_turn(state: dict, input_text: str,
               action_id: Optional[str] = None, *, claim=None,
-              request_hash: str = "") -> GameResponse:
+              request_hash: str = "", progress=None) -> GameResponse:
+    from services.turn_effects import effect_scope
+    with effect_scope():
+        return _run_turn_collected(state, input_text, action_id, claim=claim,
+                                   request_hash=request_hash, progress=progress)
+
+
+def _run_turn_collected(state: dict, input_text: str,
+              action_id: Optional[str] = None, *, claim=None,
+              request_hash: str = "", progress=None) -> GameResponse:
     """Miolo do turno (spec streaming-turno-sse R2): grafo + save + log.
     Compartilhado pelo POST clássico e pelo stream — carga/validações ficam
     nos endpoints. Levanta HTTPException(500) genérica em falha (A6)."""
@@ -2295,7 +2402,8 @@ def _run_turn(state: dict, input_text: str,
     attempt_token = _llm_attempt_events.set([])
     try:
         previous_state = deepcopy(state)
-        new_state = game_graph.invoke(state)
+        from services.turn_execution import execute_graph
+        new_state = execute_graph(game_graph, state, progress=progress)
         visual_key = action_id or f"turn:{(new_state.get('world') or {}).get('turn_count', 0)}"
         new_state.update(resolve_turn_visual_state(previous_state, new_state,
                                                    action_key=visual_key))
@@ -2348,33 +2456,32 @@ def _run_turn(state: dict, input_text: str,
         _llm_attempt_events.reset(attempt_token)
 
 
-@app.post("/game/action", response_model=GameResponse)
-def game_action(req: ActionRequest):
-    """Envia uma ação do jogador."""
-
+def _execute_action(req: ActionRequest, *, progress=None) -> GameResponse:
+    from infrastructure.runtime import get_runtime
+    from services.turn_execution import operation_scope
     lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
     with lock:
-        file_to_load = _resolve_save_file(req.game_id)
-        state = load_game_state(file_to_load)
+        state = load_game_state(_resolve_save_file(req.game_id))
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
         claim, request_hash, receipt = _begin_turn_operation(state, req)
         if receipt is not None:
             return receipt
-        if _action_already_processed(state, req.action_id):
-            return format_response(state, cue_action_key=req.action_id)
+        with operation_scope(get_runtime().turn_coordinator if claim else None, claim):
+            if _action_already_processed(state, req.action_id):
+                return format_response(state, cue_action_key=req.action_id)
+            _reject_memorial(state)
+            _reject_archived(state)
+            if state.get("death_pending"):
+                raise HTTPException(409, "Você tombou. Resolva a tela de morte.")
+            _apply_action_options(state, req)
+            return _run_turn(state, req.input_text, req.action_id, claim=claim,
+                             request_hash=request_hash, progress=progress)
 
-        _reject_memorial(state)
-        _reject_archived(state)
-        if state.get("death_pending"):
-            raise HTTPException(status_code=409,
-                                detail="Você tombou. Escolha continuar do checkpoint ou aceitar o fim.")
 
-        _apply_action_options(state, req)
-        return _run_turn(
-            state, req.input_text, req.action_id,
-            claim=claim, request_hash=request_hash,
-        )
+@app.post("/game/action", response_model=GameResponse)
+def game_action(req: ActionRequest):
+    return _execute_action(req)
 
 
 class DeathChoiceRequest(BaseModel):
@@ -2394,23 +2501,31 @@ def game_death(req: DeathChoiceRequest):
         state = load_game_state(file_to_load)
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
-        if not state.get("death_pending"):
-            raise HTTPException(status_code=409, detail="Nenhuma queda pendente para resolver.")
         claim, request_hash, receipt = _begin_state_mutation(
             state, action_id=req.action_id, kind="death",
             payload=req.model_dump(mode="json", exclude={"action_id"}),
         )
         if receipt is not None:
             return GameResponse.model_validate(receipt)
-        from services import checkpoints as _cp
-        new_state = _cp.resolve_death_choice(state, req.choice)
-        response = format_response(new_state)
-        _commit_state_mutation(
-            new_state, response.model_dump(mode="json"), claim=claim,
-            request_hash=request_hash,
-        )
-        return response
-
+        from infrastructure.runtime import get_runtime
+        from services.turn_execution import operation_scope
+        with operation_scope(get_runtime().turn_coordinator if claim else None, claim):
+            _reject_archived(state)
+            try:
+                _reject_archived(state)
+                if not state.get("death_pending"):
+                    raise HTTPException(status_code=409, detail="Nenhuma queda pendente para resolver.")
+            except Exception as exc:
+                _fail_operation(claim, type(exc).__name__)
+                raise
+            from services import checkpoints as _cp
+            new_state = _cp.resolve_death_choice(state, req.choice)
+            response = format_response(new_state)
+            _commit_state_mutation(
+                new_state, response.model_dump(mode="json"), claim=claim,
+                request_hash=request_hash,
+            )
+            return response
 
 # --- STREAMING DO TURNO (spec streaming-turno-sse) ---------------------------
 
@@ -2438,105 +2553,18 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None) -> I
     )
     yield _sse("accepted", {"game_id": accepted_game_id})
     q: "queue.Queue" = queue.Queue()
-    llm_acc: List[dict] = []
-    llm_attempt_acc: List[dict] = []
 
     def _worker():
-        acc_token = _llm_turn_events.set(llm_acc)
-        attempt_token = _llm_attempt_events.set(llm_attempt_acc)
-        state: Optional[dict] = None
-        t0 = time.monotonic()
-        eventos_antes = 0
-        rejections_antes = 0
-        claim = None
         try:
             from infrastructure.request_context import principal_scope
-            principal_context = principal_scope(principal) if principal is not None else nullcontext()
-            lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
-            with principal_context, lock:
-                state = load_game_state(_resolve_save_file(req.game_id))
-                if not state:
-                    raise HTTPException(status_code=404, detail="Jogo não encontrado.")
-                claim, request_hash, receipt = _begin_turn_operation(state, req)
-                if receipt is not None:
-                    q.put(("response", receipt))
-                    return
-                if _action_already_processed(state, req.action_id):
-                    q.put(("response", format_response(state, cue_action_key=req.action_id)))
-                    return
-                _reject_memorial(state)
-                _reject_archived(state)
-                if state.get("death_pending"):
-                    raise HTTPException(
-                        status_code=409,
-                        detail="Você tombou. Resolva a tela de morte.",
-                    )
-                _apply_action_options(state, req)
-                _append_player_input(state, req.input_text)
-                eventos_antes = len(state.get("event_log", []))
-                rejections_antes = len(state.get("event_rejections", []) or [])
-                visual_previous = deepcopy(state)
-                final_state: Optional[dict] = None
-                for chunk in game_graph.stream(state, stream_mode=["updates", "values"]):
-                    q.put(("chunk", chunk))
-                    mode, data = chunk
-                    if mode == "values":
-                        final_state = data
-                if final_state is None:
-                    raise RuntimeError("stream não produziu estado final")
-                visual_key = req.action_id or f"turn:{(final_state.get('world') or {}).get('turn_count', 0)}"
-                final_state.update(resolve_turn_visual_state(
-                    visual_previous, final_state, action_key=visual_key,
-                ))
-                _enqueue_turn_art(visual_previous, final_state, visual_key)
-                _mark_action_processed(final_state, req.action_id)
-                checkpoint = _prepare_checkpoint(final_state, state)
-                _prepare_chronicle_derivatives(final_state)
-                response = format_response(final_state, cue_action_key=visual_key)
-                _commit_turn(
-                    final_state, response, claim=claim, request_hash=request_hash,
-                    checkpoint=checkpoint,
-                    latency_ms=int((time.monotonic() - t0) * 1000),
-                    llm_events=llm_acc, llm_attempts=llm_attempt_acc,
-                )
-                _log_turn(
-                    final_state, t0, eventos_antes, None, llm_acc,
-                    rejections_antes=rejections_antes,
-                    llm_attempts=llm_attempt_acc,
-                )
-                metrics.observe(
-                    "rpg_turn_duration_seconds",
-                    {"route": "/game/action/stream", "outcome": "ok",
-                     "simulated": str(is_simulated()).lower()},
-                    time.monotonic() - t0,
-                )
+            context = principal_scope(principal) if principal is not None else nullcontext()
+            with context:
+                response = _execute_action(req, progress=lambda chunk: q.put(("chunk", chunk)))
                 q.put(("response", response))
         except HTTPException as exc:
             q.put(("http_error", {"detail": exc.detail, "code": exc.status_code}))
-        except Exception as e:  # noqa: BLE001
-            metrics.observe(
-                "rpg_turn_duration_seconds",
-                {"route": "/game/action/stream", "outcome": "error",
-                 "simulated": str(is_simulated()).lower()},
-                time.monotonic() - t0,
-            )
-            if claim is not None:
-                try:
-                    from infrastructure.runtime import get_runtime
-                    get_runtime().turn_coordinator.fail(claim, type(e).__name__)
-                except Exception:
-                    pass
-            if state is not None:
-                _log_turn(
-                    state, t0, eventos_antes, type(e).__name__, llm_acc,
-                    rejections_antes=rejections_antes,
-                    llm_attempts=llm_attempt_acc,
-                )
-            print(f"Erro no stream: {e}")
-            q.put(("exc", e))
-        finally:
-            _llm_turn_events.reset(acc_token)
-            _llm_attempt_events.reset(attempt_token)
+        except Exception as exc:
+            q.put(("exc", exc))
 
     threading.Thread(target=_worker, daemon=True).start()
 
@@ -2605,35 +2633,40 @@ def game_equip(req: EquipRequest):
         state = load_game_state(file_to_load)
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
-        _reject_memorial(state)
         claim, request_hash, receipt = _begin_state_mutation(
             state, action_id=req.action_id, kind="equip",
             payload=req.model_dump(mode="json", exclude={"action_id"}),
         )
         if receipt is not None:
             return receipt
+        from infrastructure.runtime import get_runtime
+        from services.turn_execution import operation_scope
+        with operation_scope(get_runtime().turn_coordinator if claim else None, claim):
+            _reject_archived(state)
+            _reject_memorial(state)
+            if state.get("death_pending"):
+                raise HTTPException(409, "Resolva a queda antes desta alteração.")
 
-        if req.item_id:
-            player, err = inv_mod.equip(state["player"], req.item_id)
-        elif req.unequip_slot:
-            player, err = inv_mod.unequip(state["player"], req.unequip_slot)
-        else:
-            _fail_operation(claim, "invalid_equip_request")
-            raise HTTPException(status_code=400, detail="Informe item_id ou unequip_slot.")
-        if err:
-            _fail_operation(claim, "invalid_equip")
-            raise HTTPException(status_code=400, detail=err)
+            if req.item_id:
+                player, err = inv_mod.equip(state["player"], req.item_id)
+            elif req.unequip_slot:
+                player, err = inv_mod.unequip(state["player"], req.unequip_slot)
+            else:
+                _fail_operation(claim, "invalid_equip_request")
+                raise HTTPException(status_code=400, detail="Informe item_id ou unequip_slot.")
+            if err:
+                _fail_operation(claim, "invalid_equip")
+                raise HTTPException(status_code=400, detail=err)
 
-        state["player"] = player
-        import combat_mechanics as cm_mod
-        stats = cm_mod.compute_player_combat_stats(player)
-        response = {"ok": True, "equipment": player.get("equipment"),
-                    "inventory": _inventory_block(player),
-                    "derived": {"ac": stats["ac"], "attack": stats["attack"]}}
-        return _commit_state_mutation(
-            state, response, claim=claim, request_hash=request_hash,
-        )
-
+            state["player"] = player
+            import combat_mechanics as cm_mod
+            stats = cm_mod.compute_player_combat_stats(player)
+            response = {"ok": True, "equipment": player.get("equipment"),
+                        "inventory": _inventory_block(player),
+                        "derived": {"ac": stats["ac"], "attack": stats["attack"]}}
+            return _commit_state_mutation(
+                state, response, claim=claim, request_hash=request_hash,
+            )
 
 @app.post("/game/levelup")
 def game_levelup(req: LevelUpRequest):
@@ -2648,63 +2681,68 @@ def game_levelup(req: LevelUpRequest):
         state = load_game_state(file_to_load)
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
-        _reject_memorial(state)
         claim, request_hash, receipt = _begin_state_mutation(
             state, action_id=req.action_id, kind="levelup",
             payload=req.model_dump(mode="json", exclude={"action_id"}),
         )
         if receipt is not None:
             return receipt
+        from infrastructure.runtime import get_runtime
+        from services.turn_execution import operation_scope
+        with operation_scope(get_runtime().turn_coordinator if claim else None, claim):
+            _reject_archived(state)
+            _reject_memorial(state)
+            if state.get("death_pending"):
+                raise HTTPException(409, "Resolva a queda antes desta alteração.")
 
-        player, err = progression.apply_choice(
-            state["player"], req.choice_id,
-            card_id=req.card_id, evolve_card_id=req.evolve_card_id,
-            caminho=req.caminho, virtude=req.virtude, attr=req.attr,
-            subclass_id=req.subclass_id, virtue_card_id=req.virtue_card_id)
-        if err:
-            _fail_operation(claim, "invalid_choice")
-            raise HTTPException(status_code=400, detail=err)
+            player, err = progression.apply_choice(
+                state["player"], req.choice_id,
+                card_id=req.card_id, evolve_card_id=req.evolve_card_id,
+                caminho=req.caminho, virtude=req.virtude, attr=req.attr,
+                subclass_id=req.subclass_id, virtue_card_id=req.virtue_card_id)
+            if err:
+                _fail_operation(claim, "invalid_choice")
+                raise HTTPException(status_code=400, detail=err)
 
-        progression_events = list(player.pop("progression_events", []) or [])
-        state["player"] = player
-        for progress_event in progression_events:
-            if progress_event.get("type") == "subclass_chosen":
-                from uuid import uuid4
-                from services.chronicle import append_entry
-                subclass_id = str(progress_event.get("subclass_id", ""))
-                option = next((row for row in progression.eligible_subclasses(player)
-                               if row["id"] == subclass_id), {"name": subclass_id})
-                turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
-                event_id = uuid4().hex
-                state["event_log"] = list(state.get("event_log") or []) + [{
-                    "event_id": event_id, "turn": turn, "type": "subclass_chosen",
-                    "actor_id": "player", "target_id": subclass_id,
-                    "payload": {"subclass_id": subclass_id, "name": option["name"]},
-                    "source": "progression",
-                }]
-                state["chronicle"] = append_entry(
-                    state.get("chronicle") or [], text=f"A subclasse {option['name']} foi escolhida.",
-                    turn=turn, kind="milestone", event_id=event_id)
-        response = {
-        "ok": True,
-        "player_stats": {
-            "level": player.get("level", 1),
-            "xp": player.get("xp", 0),
-            "vitalidade": int(player.get("vitalidade", 0) or 0),
-            "max_vitalidade": int(player.get("max_vitalidade", 0) or 0),
-            "hp": int(player.get("vitalidade", 0) or 0),
-            "max_hp": int(player.get("max_vitalidade", 0) or 0),
-            "xp_next_level": progression.xp_to_next(int(player.get("level", 1) or 1)),
-            "virtudes": player.get("virtudes", {}),
-            "cards": _cards_block(player),
-            "pending_choices": player.get("pending_choices", []) or [],
-            "level_up": _levelup_block(player),
-        },
-        }
-        return _commit_state_mutation(
-            state, response, claim=claim, request_hash=request_hash,
-        )
-
+            progression_events = list(player.pop("progression_events", []) or [])
+            state["player"] = player
+            for progress_event in progression_events:
+                if progress_event.get("type") == "subclass_chosen":
+                    from uuid import uuid4
+                    from services.chronicle import append_entry
+                    subclass_id = str(progress_event.get("subclass_id", ""))
+                    option = next((row for row in progression.eligible_subclasses(player)
+                                   if row["id"] == subclass_id), {"name": subclass_id})
+                    turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
+                    event_id = uuid4().hex
+                    state["event_log"] = list(state.get("event_log") or []) + [{
+                        "event_id": event_id, "turn": turn, "type": "subclass_chosen",
+                        "actor_id": "player", "target_id": subclass_id,
+                        "payload": {"subclass_id": subclass_id, "name": option["name"]},
+                        "source": "progression",
+                    }]
+                    state["chronicle"] = append_entry(
+                        state.get("chronicle") or [], text=f"A subclasse {option['name']} foi escolhida.",
+                        turn=turn, kind="milestone", event_id=event_id)
+            response = {
+            "ok": True,
+            "player_stats": {
+                "level": player.get("level", 1),
+                "xp": player.get("xp", 0),
+                "vitalidade": int(player.get("vitalidade", 0) or 0),
+                "max_vitalidade": int(player.get("max_vitalidade", 0) or 0),
+                "hp": int(player.get("vitalidade", 0) or 0),
+                "max_hp": int(player.get("max_vitalidade", 0) or 0),
+                "xp_next_level": progression.xp_to_next(int(player.get("level", 1) or 1)),
+                "virtudes": player.get("virtudes", {}),
+                "cards": _cards_block(player),
+                "pending_choices": player.get("pending_choices", []) or [],
+                "level_up": _levelup_block(player),
+            },
+            }
+            return _commit_state_mutation(
+                state, response, claim=claim, request_hash=request_hash,
+            )
 
 # --- SAVES E CRÔNICA (spec polish-sessao) ------------------------------------
 

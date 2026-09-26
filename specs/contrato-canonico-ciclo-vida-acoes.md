@@ -1,6 +1,6 @@
 # SPEC — Contrato canônico de ciclo de vida e elegibilidade de ações
 
-> **Status:** `in-progress` — implementação offline verde; aguarda matriz B real
+> **Status:** `in-progress` — aceite local verde; smoke real dirigido pendente (B é gate global)
 > **Criada/Atualizada:** 2026-08-27
 > **Depende de:** `fix-vitalidade-ferimentos-terminal` (`done`)
 > **Supera:** R1–R3 de `fuga-vitalidade-zero` (`done`, contrato incorreto)
@@ -68,6 +68,16 @@ Rebalancear dano, mudar capacidades de Ferimentos ou redesenhar checkpoints.
 
 ## 5. Critérios de aceite
 
+### Adendo aprovado — 19/09
+
+Recuperação usa uma gramática fechada de intenção, não a presença de “ajuda”.
+Ações mistas são recusadas. Router e storyteller consomem a recuperação como
+passagem de tempo/descanso no mesmo local, inclusive para incapacidade; clima
+bloqueante mantém as restrições. O invariante verifica deslocamento por delta
+de estado independentemente do `allowed` do guard. Regressões em
+`tests/test_pre_matrix_contracts.py`; plano/gates no
+[adendo pré-matriz](remediacao-local-contratos-pre-matriz.md).
+
 - [x] Vitalidade zero consciente não é classificada como morte.
 - [x] Inconsciente não viaja, conversa, saqueia nem inicia conflito.
 - [x] Ação bloqueada não consome turno e não chama LLM.
@@ -75,7 +85,7 @@ Rebalancear dano, mudar capacidades de Ferimentos ou redesenhar checkpoints.
 - [x] Fuga não usa `vitalidade > 0` como gate.
 - [x] Testes reproduzem os turnos 71–73 da matriz A em memória.
 - [x] Suíte completa offline verde e saves antigos carregam.
-- [ ] Matriz B real confirma zero regressão do ciclo de vida.
+- [ ] Smoke real dirigido confirma o fluxo de recuperação (§6); não exige B integral nesta spec.
 
 ## 6. Smoke real
 
@@ -85,6 +95,9 @@ o build atual; ver [fechamento local](../docs/fechamento-local-2026-09-17.md).
 
 Na matriz B, nenhum turno deve registrar ação mecânica incompatível com a fase;
 Vitalidade zero consciente pode existir sem falso positivo.
+O smoke dirigido pode usar estados preparados e poucas ações: viagem bloqueada,
+socorro no mesmo local, recuperação e reload. B integral permanece gate global
+de `matriz-longrun-multiperfil-niveis`, não dependência de desenvolvimento.
 
 ## 7. Riscos
 

@@ -106,7 +106,7 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
           <button className="iconbtn" type="button" onClick={() => setHudOpen((v) => !v)}>
             ☰ Ficha
           </button>
-          <button className="iconbtn" type="button" onClick={onNew}>
+          <button className="iconbtn" type="button" disabled={busy} onClick={onNew}>
             {simulation ? "Reiniciar" : "Nova"}
           </button>
         </div>

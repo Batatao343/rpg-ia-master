@@ -590,12 +590,17 @@ class RoutedLLM:
         if isinstance(parsed, schema) and parsing_error is None:
             return (result if caller_include_raw else parsed), None, None
         raw = result.get("raw")
+        calls = list(getattr(raw, "tool_calls", None) or [])
+        calls.extend(getattr(raw, "invalid_tool_calls", None) or [])
+        expected_name = schema.model_json_schema().get("title") or schema.__name__
+        if calls and any(call.get("name") != expected_name for call in calls):
+            return result, "wrong_tool", None
         payload = self._json_object_from_text(getattr(raw, "content", ""))
         if payload is not None:
             try:
                 recovered = schema.model_validate(payload)
             except Exception:
-                recovered = None
+                return result, "schema_validation", None
             if recovered is not None:
                 if caller_include_raw:
                     return {"raw": raw, "parsed": recovered, "parsing_error": None}, None, "local_json"
@@ -701,6 +706,7 @@ class RoutedLLM:
                         outcome="invoke_error",
                         error=str(e),
                         structured=structured_contract is not None,
+                        structured_failure_code="transport",
                     ))
                     attempt_index += 1
                     _open_circuit_if_permanent(provider, model, e)

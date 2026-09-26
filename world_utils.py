@@ -238,6 +238,7 @@ def apply_rest(player: dict, world: dict, allies: list = None) -> Tuple[dict, di
         player["post_combat_state"] = recovery_state
         if recovery_state in ("acordado", "tratavel"):
             player["conscious"] = True
+            player["incapacitated"] = False
         elif recovery_state == "inconsciente":
             player["conscious"] = False
         gamedata.sync_legacy_hp_aliases(player)

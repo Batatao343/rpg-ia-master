@@ -6,6 +6,7 @@
   "description": "Frontend React+Vite do RPG (Fase 1). Fala com a API FastAPI.",
   "scripts": {
     "dev": "vite",
+    "test": "node --test tests/*.test.mjs",
     "build": "tsc -b && vite build",
     "preview": "vite preview"
   },

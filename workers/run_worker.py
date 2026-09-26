@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import argparse
 import os
+import signal
 import sys
-import time
 from pathlib import Path
 from uuid import UUID
 
@@ -37,11 +37,15 @@ def build_handlers():
             pool, model=generation["model"],
             profile_version=generation["profile_version"],
         )
+        # Configuration failure happens before claiming any external effect.
+        generator = OpenAIImageGenerator(os.environ["OPENAI_API_KEY"])
+        # A reclaimed job may have reached the provider before crashing. Never
+        # turn an uncertain external result into another paid generation.
+        if not repository.begin(generation_id):
+            return {"status": "already_ready", "generation_id": str(generation_id)}
         try:
-            if not repository.begin(generation_id):
-                return {"status": "already_ready", "generation_id": str(generation_id)}
             result = generate_dynamic_art_job(
-                generator=OpenAIImageGenerator(os.environ["OPENAI_API_KEY"]),
+                generator=generator,
                 blob_store=runtime.blob_store, generation=generation,
                 owner_id=UUID(str(payload["owner_id"])),
                 game_id=UUID(str(payload["game_id"])),
@@ -52,7 +56,7 @@ def build_handlers():
             )
             return result
         except Exception as exc:
-            repository.fail(generation_id, type(exc).__name__)
+            repository.fail(generation_id, "external_result_uncertain", retryable=False)
             raise
 
     def embed(payload: dict) -> dict:
@@ -87,12 +91,15 @@ def main() -> int:
     parser.add_argument("--once", action="store_true")
     args = parser.parse_args()
     worker = JobWorker(get_runtime().job_queue, build_handlers(), worker_id=args.worker_id)
-    while True:
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        signal.signal(sig, lambda *_: worker.request_stop())
+    while not worker.stop_event.is_set():
         processed = worker.run_once(limit=10)
         if args.once:
             return 0
         if processed == 0:
-            time.sleep(0.5)
+            worker.stop_event.wait(0.5)
+    return 0
 
 
 if __name__ == "__main__":

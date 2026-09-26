@@ -1,4 +1,48 @@
-# ROADMAP — RPG IA (Revisado 2026-09-17)
+# ROADMAP — RPG IA (Revisado 2026-09-26)
+
+> **26/09 — auditoria executada em todos os nove eixos; aceite ainda parcial.**
+> [Implementação, testes e lacunas](docs/auditoria-execucao-2026-09-26.md).
+> Contexto autenticado `done` (RAG real local em três modos); oito specs em
+> `in-progress`. Gate integrado **16/16** verde em Postgres/Auth/Storage/browser,
+> incluindo retrato sintético, replay e persistência do orçamento por arco.
+> Narração, operações, transações, workers e frontend implementados com
+> regressões; faltam testes adversos especificados e contratos reais curtos.
+> CI cliente atualizado; infra CI manual, sem execução remota ainda.
+> Suíte final: **1776 passed, 26 skipped, 14 deselected**, após ajuste de
+> save/load. Build/5 testes Node/Ruff/conteúdo verdes.
+> Sem chamadas pagas ou deploy; publicação Git na main autorizada pelo usuário.
+> Gates antigos não encerrados. Sobreposição do logout mobile ainda pendente.
+> Este bloco prevalece sobre o histórico abaixo.
+
+> **23/09 — nove specs da auditoria aprovadas; três iniciadas.**
+> [Plano completo e evidências](docs/auditoria-remediacao-2026-09-22.md).
+> Entregue no primeiro lote: enquadramento integral dos retratos e correção dos
+> cards; elegibilidade de XP/unique; soma canônica do inventário nos recibos;
+> identidade e correlação nas leituras paralelas de contexto.
+> **1743 passed, 18 skipped, 14 deselected**, mais **2 testes visuais opt-in
+> verdes** (390/1440 px); Ruff, build e conteúdo verdes. 24 novos testes ao todo.
+> As três specs seguem `in-progress`: faltam ampliação/fallback/sizes visuais,
+> smoke de recompensas e integração autenticada com Postgres. As outras seis
+> seguem `approved`: consistência narrativa, operações de turno, efeitos
+> transacionais, leases/workers, sessão frontend e gates de integração.
+> Gates reais anteriores permanecem pendentes. Sem chamadas pagas ou deploy.
+> Este resumo prevalece sobre os blocos históricos abaixo.
+
+> **19/09 — remediação pré-matriz:** [adendo aprovado e implementado](specs/remediacao-local-contratos-pre-matriz.md)
+> corrige recuperação que permitia viagem, recibo textual enganoso, memória de
+> morte/posse, aliases transitivos, classificação de erros estruturados e
+> interrupção da matriz. Métrica de repetição não aceita prefixo cosmético como
+> diversidade. Regressões curtas independentes e teste de grafo/save/load.
+> [Evidências](docs/remediacao-pre-matriz-2026-09-19.md).
+>
+> Desenvolvimento e aceite local não aguardam 2.000 turnos. Próximas etapas
+> separadas: contratos reais curtos por feature; depois B integral no build
+> estável e relatório A/B. Essas validações reais continuam pendentes.
+> Smoke offline 10×3 verde, conteúdo/Ruff verdes. Sem chamadas pagas ou deploy.
+> Suíte completa: **1721 passed, 16 skipped, 14 deselected**; 40 testes novos.
+> Adendo local `done`; inventário 153 specs: 141 `done`, 11 `in-progress`, uma
+> `draft`. Nenhum aceite real foi marcado sem execução.
+> O histórico abaixo é superado por este resumo e pelos adendos de 19/09.
 
 > **Estado atual — fechamento local, gate real pendente:** 152 specs auditadas,
 > 140 `done`, 11 `in-progress` (código local implementado, B integral pendente)

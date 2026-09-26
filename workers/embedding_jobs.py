@@ -17,6 +17,8 @@ def embed_memory_job(store: PgVectorMemoryStore, payload: dict,
         ).fetchone()
     if not row:
         return {"status": "missing"}
+    if row['embedding_status'] == 'discarded':
+        return {'status': 'discarded'}
     if row["embedding_status"] == "ready":
         return {"status": "already_ready"}
     values = embedder(row["content"])

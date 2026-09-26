@@ -62,12 +62,21 @@ Alterar a UX da tela de morte, o número de checkpoints ou a letalidade.
 
 ## 5. Critérios de aceite
 
+### Adendo aprovado — 19/09
+
+A proteção não exige um `player_downed` prévio: morte afirmada diretamente pelo
+nome/sujeito do protagonista exige `player_died` do player na timeline atual ou
+memorial. Quest, morte de NPC e evento de outra timeline não servem. Negações
+diretas são preservadas. A invariante também roda sem evento de queda. Os
+padrões são fechados; não se promete interpretação semântica irrestrita.
+Plano/gates no [adendo pré-matriz](remediacao-local-contratos-pre-matriz.md).
+
 - [x] Queda recuperável nunca entra em `mortos`.
 - [x] Morte confirmada continua registrada uma única vez.
 - [x] Archivist/RAG/Crônica usam a mesma semântica.
 - [x] Invariante curta captura a falsidade observada na B1.
 - [x] Suíte completa offline verde após a revisão de 17/09 (1681 passed).
-- [ ] Matriz B integral sem falso fato de morte.
+- [ ] Smoke real dirigido de queda/memorial confirma a integração; B integral é gate global separado.
 
 Revisão de 17/09: o template de `player_downed` também deixa de afirmar que o
 herói já se levantou ou foi saqueado. A crônica mantém a escolha pendente até o

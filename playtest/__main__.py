@@ -268,6 +268,7 @@ def _run_matrix_suite(args) -> int:
                 on_turn_end=lambda _state, _turn: telemetry.touch_run(run_id),
                 provider_min_interval_seconds=args.groq_min_interval,
                 require_all_llm_invocations_successful=bool(args.real),
+                stop_on_error=True,
             )
             result.profile = label
             summary = telemetry.persist_campaign(
@@ -281,11 +282,8 @@ def _run_matrix_suite(args) -> int:
                 or int(summary.get("observability_errors", 0) or 0)
             ):
                 exit_code = 1
-            if str(result.aborted_reason or "").startswith(
-                "llm_terminal_failure"
-            ):
                 print(
-                    "  matriz interrompida: capacidade LLM-only perdida; "
+                    "  matriz interrompida: campanha inválida; "
                     "os pares seguintes não serão iniciados",
                     file=sys.stderr,
                 )

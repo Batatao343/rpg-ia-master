@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import replace
+from threading import RLock
 
 from infrastructure.contracts import Conflict, MemoryWriteIntent
 
@@ -40,16 +41,19 @@ def intent_sha256(intent: MemoryWriteIntent) -> str:
 class MemoryIntentCollector:
     def __init__(self) -> None:
         self._intents: dict[str, tuple[str, MemoryWriteIntent]] = {}
+        self._lock = RLock()
 
     def add(self, intent: MemoryWriteIntent) -> None:
         normalized = normalized_intent(intent)
         digest = intent_sha256(normalized)
-        existing = self._intents.get(normalized.document.document_id)
-        if existing and existing[0] != digest:
-            raise Conflict("memory_id reutilizado com conteúdo divergente")
-        self._intents[normalized.document.document_id] = (digest, normalized)
+        with self._lock:
+            existing = self._intents.get(normalized.document.document_id)
+            if existing and existing[0] != digest:
+                raise Conflict("memory_id reutilizado com conteúdo divergente")
+            self._intents[normalized.document.document_id] = (digest, normalized)
 
     def drain(self) -> list[MemoryWriteIntent]:
-        result = [item[1] for item in self._intents.values()]
-        self._intents.clear()
+        with self._lock:
+            result = [item[1] for item in self._intents.values()]
+            self._intents.clear()
         return result

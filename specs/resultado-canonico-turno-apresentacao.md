@@ -1,6 +1,6 @@
 # SPEC — Resultado canônico do turno antes da apresentação
 
-> **Status:** `in-progress` — implementação offline verde; aguarda matriz B real
+> **Status:** `in-progress` — aceite local verde; smoke real dirigido pendente (B é gate global)
 > **Criada/Atualizada:** 2026-08-27
 > **Depende de:** `feedback-ledger-recompensas` e eventos estruturados (`done`)
 > **Supera:** cobertura apenas intranó de `feedback-ledger-recompensas`
@@ -63,14 +63,22 @@ Toast visual novo, async do archivist e mudanças nos valores de recompensa.
 
 ## 5. Critérios de aceite
 
+### Adendo aprovado — 19/09
+
+`[RESULTADO]` é um bloco reservado, não prova de recibo. O renderer substitui o
+bloco pelo resultado calculado e permanece idempotente. Negação de item só é
+removida quando houve item ganho; ganho de ouro não a contradiz. O escopo é o
+vocabulário fechado dos testes, não toda negação possível da língua portuguesa.
+Regressões e gates: [adendo pré-matriz](remediacao-local-contratos-pre-matriz.md).
+
 - [x] As quatro sequências da matriz A têm regressão curta.
 - [x] Estado/event log são fonte única; texto nunca concede economia.
 - [x] Quest reward tardia aparece na mesma resposta do turno.
-- [x] Nenhuma apresentação contém negação contraditória.
+- [x] As construções fechadas cobertas reconciliam negação por categoria de ganho.
 - [x] Retry não duplica recibo/recurso.
 - [x] API, SSE, CLI e harness exibem o mesmo texto.
 - [x] Suíte completa offline verde e saves antigos carregam.
-- [ ] Matriz B real confirma zero contradição de recompensa.
+- [ ] Smoke real dirigido de recompensa tardia (§6) confirma a integração; B integral é gate global separado.
 
 ## 6. Smoke real
 

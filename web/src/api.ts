@@ -14,32 +14,15 @@ import type {
   VisualResponse,
 } from "./types";
 
+import { http, HttpError } from "./http";
+export { HttpError } from "./http";
+
 async function req<T>(path: string, opts: RequestInit = {}): Promise<T> {
-  const headers = new Headers(opts.headers);
-  if (!headers.has("Content-Type")) headers.set("Content-Type", "application/json");
-  if (opts.method && !["GET", "HEAD", "OPTIONS"].includes(opts.method.toUpperCase())) {
-    const csrf = document.cookie.split("; ").find((row) => row.startsWith("rpg_csrf="))?.split("=")[1];
-    if (csrf) headers.set("X-CSRF-Token", decodeURIComponent(csrf));
-  }
-  const res = await fetch(path, {
-    ...opts,
-    headers,
-    credentials: "include",
-  });
-  if (!res.ok) {
-    let detail = res.statusText;
-    try {
-      detail = (await res.json()).detail || detail;
-    } catch {
-      /* corpo não-JSON */
-    }
-    throw new Error(detail);
-  }
-  if (res.status === 204) return undefined as T;
-  return res.json() as Promise<T>;
+  const res = await http(path, opts);
+  return res.status === 204 ? undefined as T : res.json() as Promise<T>;
 }
 
-export const getAuthConfig = () => req<{ required: boolean; authenticated: boolean }>("/auth/config");
+export const getAuthConfig = () => req<{ required: boolean; authenticated: boolean; user_id?: string }>("/auth/config");
 export const login = (email: string, password: string) =>
   req<{ authenticated: boolean; csrf_token: string }>("/auth/login", {
     method: "POST", body: JSON.stringify({ email, password }),
@@ -112,7 +95,7 @@ export async function sendActionStream(
   handlers: StreamHandlers = {},
   options: ActionOptions = {},
 ): Promise<GameResponse> {
-  const res = await fetch("/game/action/stream", {
+  const res = await http("/game/action/stream", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ input_text, game_id, ...options }),
@@ -127,7 +110,7 @@ export async function sendActionStream(
 
   const handleEvent = (name: string, data: string) => {
     const payload = JSON.parse(data);
-    if (name === "error") throw new Error(payload.detail || "erro no stream");
+    if (name === "error") throw new HttpError(Number(payload.code || 500), "stream_error", payload.detail || "erro no stream");
     if (name === "phase") handlers.onPhase?.(payload.node);
     else if (name === "route") handlers.onRoute?.(payload.route);
     else if (name === "narrative") handlers.onChunk?.(payload.chunk, payload.done);
@@ -157,6 +140,19 @@ export async function sendActionStream(
 
 export const getState = (game_id: string) =>
   req<GameResponse>("/game/state?game_id=" + encodeURIComponent(game_id));
+
+export interface HistoryEntry { id: string; turn: number; epoch: number; role: 'player' | 'narrator'; text: string; type: import('./types').LogEntry['type'] }
+export const getHistory = (game: string, cursor?: string) => req<{
+  entries: HistoryEntry[]; next_cursor: string | null; epoch: number; partial_history: boolean;
+}>(`/game/history?game_id=${encodeURIComponent(game)}${cursor ? '&cursor=' + encodeURIComponent(cursor) : ''}`);
+export const getOperation = (game: string, operation: string) => req<{
+  status: string; response: GameResponse | null; request_hash?: string;
+}>(`/game/${encodeURIComponent(game)}/operations/${encodeURIComponent(operation)}`);
+export interface ArtStatus { status: string; placeholder: boolean; assets?: Array<{
+  asset_id: string; variant: string; url: string; width: number; height: number;
+}> }
+export const getArtStatus = (game: string, generation: string, signal?: AbortSignal) => req<ArtStatus>(
+  `/game/${encodeURIComponent(game)}/art/${encodeURIComponent(generation)}`, { signal });
 
 export const getCodex = (game_id: string) =>
   req<PlayerCodex>("/game/codex?game_id=" + encodeURIComponent(game_id));

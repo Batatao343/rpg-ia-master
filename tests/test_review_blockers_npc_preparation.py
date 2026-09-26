@@ -286,7 +286,7 @@ def test_npc_dialogue_marks_memory_as_canonical_only(monkeypatch):
     assert result["memory_facts"][0]["source_id"] == "npc:npc_grum"
 
 
-def test_npc_dialogue_varia_abertura_sem_nova_chamada(monkeypatch):
+def test_npc_dialogue_varia_abertura_sem_ocultar_repeticao(monkeypatch):
     llm = _RepeatedOpeningDialogueLLM()
     calls = []
     original_invoke = llm.invoke
@@ -331,7 +331,8 @@ def test_npc_dialogue_varia_abertura_sem_nova_chamada(monkeypatch):
 
     from playtest.invariants import check_repeated_opening
     combined = {"messages": [*state["messages"], *result["messages"]]}
-    assert check_repeated_opening(combined, None, 3) == []
+    assert [v.check_id for v in check_repeated_opening(combined, None, 3)] == [
+        "narrative.repeated_opening"]
 
 
 def test_npc_dialogue_success_is_idempotent_in_global_ledger(monkeypatch):

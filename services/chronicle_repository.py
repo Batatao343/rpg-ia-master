@@ -87,6 +87,15 @@ class ChronicleRepository:
             raise ValueError("source hash da crônica divergiu")
         status = str(digest.get("status") or "extractive_fallback")
         with self.pool.connection() as connection, connection.transaction():
+            from services.job_fence import require_job_fence
+
+            game = connection.execute(
+                'select state,version from app.games where id=%s and owner_id=%s for update',
+                (game_id, owner_id),
+            ).fetchone()
+            if not game or self._epoch(game['state']) != epoch:
+                raise ValueError("chronicle timeline was superseded")
+            require_job_fence(connection)
             result = connection.execute(
                 """update app.chronicle_digests set status=%s,digest=%s
                 where owner_id=%s and game_id=%s and timeline_epoch=%s
@@ -96,35 +105,36 @@ class ChronicleRepository:
             )
             if result.rowcount != 1:
                 raise ValueError("reserva de digest não encontrada")
-        principal = Principal(owner_id, "worker", str(owner_id))
-        common = {
-            "chapter_id": chapter["chapter_id"], "visibility": "public",
-            "source_hash": source_hash,
-        }
-        for entry in chapter.get("entries") or []:
-            self.memory.stage(MemoryWriteIntent(
+            principal = Principal(owner_id, "worker", str(owner_id))
+            common = {
+                "chapter_id": chapter["chapter_id"], "visibility": "public",
+                "source_hash": source_hash,
+                "commit_version": game["version"],
+            }
+            for entry in chapter.get("entries") or []:
+                self.memory.stage_on(connection, MemoryWriteIntent(
+                    MemoryDocument(
+                        f"chronicle:{game_id}:{epoch}:entry:{entry['entry_id']}",
+                        str(entry.get("text", "")), "chronicle",
+                        {**common, "source_kind": "entry",
+                         "domain_document_id": entry["entry_id"],
+                         "entry_id": entry["entry_id"], "event_id": entry.get("event_id"),
+                         "from_turn": int(entry.get("turn", 0) or 0),
+                         "to_turn": int(entry.get("turn", 0) or 0)},
+                    ),
+                    principal, game_id, timeline_epoch=epoch,
+                ))
+            self.memory.stage_on(connection, MemoryWriteIntent(
                 MemoryDocument(
-                    f"chronicle:{game_id}:{epoch}:entry:{entry['entry_id']}",
-                    str(entry.get("text", "")), "chronicle",
-                    {**common, "source_kind": "entry",
-                     "domain_document_id": entry["entry_id"],
-                     "entry_id": entry["entry_id"], "event_id": entry.get("event_id"),
-                     "from_turn": int(entry.get("turn", 0) or 0),
-                     "to_turn": int(entry.get("turn", 0) or 0)},
+                    f"chronicle:{game_id}:{epoch}:digest:{chapter['chapter_id']}:{source_hash}",
+                    str(digest.get("summary", "")), "chronicle",
+                    {**common, "source_kind": "digest",
+                     "domain_document_id": f"{chapter['chapter_id']}:digest",
+                     "from_turn": int(digest.get("from_turn", 0) or 0),
+                     "to_turn": int(digest.get("to_turn", 0) or 0)},
                 ),
                 principal, game_id, timeline_epoch=epoch,
             ))
-        self.memory.stage(MemoryWriteIntent(
-            MemoryDocument(
-                f"chronicle:{game_id}:{epoch}:digest:{chapter['chapter_id']}:{source_hash}",
-                str(digest.get("summary", "")), "chronicle",
-                {**common, "source_kind": "digest",
-                 "domain_document_id": f"{chapter['chapter_id']}:digest",
-                 "from_turn": int(digest.get("from_turn", 0) or 0),
-                 "to_turn": int(digest.get("to_turn", 0) or 0)},
-            ),
-            principal, game_id, timeline_epoch=epoch,
-        ))
 
     def overlay(self, principal: Principal, state: dict[str, Any]) -> dict[str, Any]:
         result = deepcopy(state)

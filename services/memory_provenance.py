@@ -207,26 +207,24 @@ def source_is_applicable(source_id: Optional[str], state: dict) -> bool:
 
 
 def false_player_death_claim(text: str, state: dict) -> bool:
-    """True only for a terminal claim contradicted by canonical player events."""
+    """Explicit player death needs a terminal player event, never a quest source."""
     player_name = str((state.get("player") or {}).get("name") or "").strip()
-    event_types = {
-        str(event.get("type") or "")
+    epoch = (state.get("continuity") or {}).get("timeline_epoch", 0)
+    terminal = any(
+        isinstance(event, dict) and event.get("type") == "player_died"
+        and event.get("target_id", "player") == "player"
+        and event.get("timeline_epoch", epoch) == epoch
         for event in (state.get("event_log") or [])
-        if isinstance(event, dict)
-    }
-    if (
-        not player_name
-        or "player_downed" not in event_types
-        or "player_died" in event_types
-        or state.get("game_over")
-    ):
+    )
+    if terminal or state.get("game_over"):
         return False
-    name = re.escape(player_name)
+    names = [re.escape(_fold(player_name))] if player_name else []
+    names.extend([r"o heroi", r"a heroina", r"o jogador", r"o protagonista", r"voce"])
+    subject = "(?:" + "|".join(names) + ")"
     return bool(re.search(
-        rf"(?:{name}.{{0,32}}\b(?:morreu|est[aá]\s+mort[oa])\b|"
-        rf"\bmorte\s+(?:definitiva\s+)?de\s+{name}\b)",
-        str(text or ""),
-        re.IGNORECASE,
+        rf"(?:\b{subject}\b\s+(?:morreu|esta\s+mort[oa])\b|"
+        rf"\bmorte\s+(?:definitiva\s+)?de\s+{subject}\b)",
+        _fold(text),
     ))
 
 
@@ -383,11 +381,7 @@ def sanitize_npc_identity_grounding(text: str, state: dict) -> tuple[str, list[d
     return " ".join(accepted).strip(), rejected
 
 
-_PLAYER_POSSESSION = re.compile(
-    r"\b(?:o\s+)?(?:viajante|aventureir[oa]|heroi|heroina|personagem)\b"
-    r"[^.!?]{0,40}?\b(?:carrega|possui|leva\s+consigo|tem\s+no\s+inventario)\b"
-    r"(?P<items>[^.!?]{0,360})",
-)
+_POSSESSION_VERB = r"(?:carrega|possui|leva\s+consigo|tem\s+no\s+inventario)"
 
 
 def inventory_possession_contradiction(text: str, state: dict) -> Optional[dict]:
@@ -399,16 +393,24 @@ def inventory_possession_contradiction(text: str, state: dict) -> Optional[dict]
     folded = _fold(text)
     player = state.get("player") or {}
     player_name = _fold(player.get("name", ""))
-    subject_pattern = _PLAYER_POSSESSION
-    match = subject_pattern.search(folded)
-    if match is None and player_name:
-        match = re.search(
-            rf"\b{re.escape(player_name)}\b[^.!?]{{0,40}}?\b"
-            r"(?:carrega|possui|leva\s+consigo|tem\s+no\s+inventario)\b"
-            r"(?P<items>[^.!?]{0,360})",
-            folded,
-        )
-    if match is None:
+    subjects = [r"(?:o\s+)?(?:viajante|aventureir[oa]|heroi|heroina|personagem)", r"voce"]
+    if player_name:
+        subjects.append(re.escape(player_name))
+    # Direct subject + affirmative verb only. An intervening reporting verb or
+    # negation is not evidence of possession by this subject.
+    subject_pattern = re.compile(
+        rf"\b(?:{'|'.join(subjects)})\s+{_POSSESSION_VERB}\b"
+    )
+    clauses = []
+    for match in subject_pattern.finditer(folded):
+        # Do not attribute a later coordinated subject's possessions to player.
+        clause = re.split(
+            rf"\s+(?:e|mas|enquanto)\s+(?=[^,;:]{{1,80}}?\s+{_POSSESSION_VERB}\b)|[;:]",
+            re.split(r"[.!?]", folded[match.end():match.end() + 360], maxsplit=1)[0].lstrip(" :"),
+            maxsplit=1,
+        )[0]
+        clauses.append(clause)
+    if not clauses:
         return None
 
     from gamedata import ARTIFACTS_DB
@@ -421,17 +423,17 @@ def inventory_possession_contradiction(text: str, state: dict) -> Optional[dict]
         for row in inventory
         if (name := _fold(item_display(row)))
     }
-    clause = match.group("items")
+    clause = " . ".join(clauses)
 
     for rejected in state.get("rejected_item_claims") or []:
         label = _fold(rejected)
-        if label and label in clause and label not in present_names:
+        if label and re.search(rf"(?<!\w){re.escape(label)}(?!\w)", clause) and label not in present_names:
             return {"item_name": str(rejected), "claim_kind": "rejected_item"}
 
     for item_id, item in ARTIFACTS_DB.items():
         name = str((item or {}).get("name") or "")
         label = _fold(name)
-        if label and label in clause and str(item_id) not in present_ids:
+        if label and re.search(rf"(?<!\w){re.escape(label)}(?!\w)", clause) and str(item_id) not in present_ids:
             return {"item_name": name, "item_id": str(item_id), "claim_kind": "absent_canonical_item"}
     return None
 
@@ -456,6 +458,11 @@ def validate_memory_fact(record: dict, state: dict) -> tuple[Optional[dict], Opt
     if not normalized:
         return None, "invalid_memory_fact"
     item = normalized[0]
+    from services.narrative_evidence import build_evidence, validate_narrative
+    check = validate_narrative(item['text'], build_evidence(state), channel='memory')
+    # Existing reason codes remain stable for the older guards below.
+    if any(row['reason'] in {'current_location', 'reward_delta'} for row in check.rejections):
+        return None, 'narrative_evidence_contradiction'
     secret_id = find_strict_unrevealed(item["text"], state)
     if secret_id:
         return None, f"unrevealed_secret:{secret_id}"
