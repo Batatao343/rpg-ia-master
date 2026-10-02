@@ -1,0 +1,19 @@
+# Mirror the actual protected ruler boundaries from main; candidate work must not weaken them.
+evals/core
+evals/evaluators
+evals/__main__.py
+evals/datasets/regression
+evals/manifest.lock.json
+evals/metrics-registry.yaml
+evals/protected-paths.txt
+evals/eval-case.schema.json
+evals/eval-result.schema.json
+evals/eval-run.schema.json
+evals/eval-run-result.schema.json
+web/e2e/contracts
+
+# Experimental Jev artifacts MAY live under evals/experiments/ because that path is intentionally outside the protected ruler.
+# Never version secrets:
+.env
+.env.*.local
+# Never place credentials in web/ or Android assets.

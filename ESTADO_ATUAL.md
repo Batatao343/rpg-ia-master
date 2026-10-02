@@ -1,5 +1,27 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **02/10 — SPEC-176 `done`; pacote v5 importado (176–198).** A
+> correção local de integridade classificou `STALE_LOCK` por LF/CRLF: 27 casos
+> narrative/NPC idênticos à evidência aprovada; o relock canônico mudou somente
+> esse hash. `.gitattributes` fixa LF para régua/source; Project Index gerado do
+> source final tem 5.516 nós/14.089 arestas e continua selective-only. Focused:
+> **80 verdes**; CLI sete suites: **86/86**, sem error/skip; smoke backend:
+> **14 perfis × 3 turnos**, zero erro/violações. Gate completo no clone:
+> **1.898 passed, 35 skipped, 15 deselected** (317,92 s). Baseline v1 permanece histórica e incompatível por hashes
+> CRLF (dataset e artifacts); nenhum delta A/B é válido contra v1. Evidências:
+> `docs/spec176/README.md`, `dataset-audit.json` e handoff Sol. Executor atestado
+> `gpt-6.1-sol/high`, tarefa `/root/spec176_executor`; revisão independente Sol
+> **APPROVED técnico local** em `/root/spec176_reviewer`. O owner aprovou o
+> environment `eval-governance`; `validate` 37011116395, `audit-local`
+> 37011116477 e `eval-gates` 37011116324 terminaram `success` no commit
+> `e621fe0` do [PR #12](https://github.com/Batatao343/rpg-ia-master/pull/12).
+> A variável temporária `EVALUATOR_CHANGE_APPROVED` foi removida após o gate.
+> SPEC-177 é a próxima; depende de executor Terra High, indisponível nesta
+> sessão sem substituição expressamente aprovada. Patch está na branch remota.
+> As artes preexistentes do workspace foram preservadas. Nenhum provider,
+> gameplay/prompt, cloud ou long-run foi alterado/executado. Este bloco prevalece
+> sobre os históricos abaixo.
+
 > **01/10 — plano de evals v4 concluído; SPEC-175 `done`.** O benchmark A/B
 > confirmatório v6 foi selado antes dos runs, ocultou o ground truth por
 > AES-256-GCM, executou 4 sessões/32 observações e passou revisão Sol no run

@@ -1,0 +1,20 @@
+schema_version: 2
+source_of_truth: examples/spec-model-contract.yaml
+enforcement:
+  exact_executor_required: true
+  exact_effort_required: true
+  silent_upgrade_allowed: false
+  silent_downgrade_allowed: false
+  independent_review_context_required: true
+  on_mismatch: MODEL_HANDOFF_REQUIRED
+luna:
+  role: mechanical_delegate_only
+  can_decide_architecture: false
+  can_approve_review: false
+astra:
+  allowed_by_default_only_for:
+    - SPEC-184
+    - SPEC-195
+long_run:
+  automatic: false
+  requires_explicit_user_request: true

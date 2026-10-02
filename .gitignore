@@ -47,3 +47,7 @@ web/playwright-report/
 # Handoffs de arte são fontes locais grandes; apenas os WebP derivados entram.
 VALORIA_GAME_ART_HANDOFF.zip
 
+# Imported planning package staging; canonical specs/contracts live in specs/docs.
+/rpg-ia-next-jev-golive-v5.zip
+/rpg-next-jev-golive-plan/
+

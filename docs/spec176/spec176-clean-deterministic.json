@@ -1,0 +1,3465 @@
+{
+  "run_id": "spec176-clean-deterministic",
+  "metadata": {
+    "schema_version": 1,
+    "evaluator_version": "1.6.0",
+    "ruler_hashes": {
+      "__main__.py": "sha256:eb2ed6ea5aece574c9f0804c02806617aefddbd8faf9c236dab244b85c836643",
+      "core/__init__.py": "sha256:d5815280b433f039fbf05976bb50d84f6e75c6ca07dcf7c89d19296824d86077",
+      "core/adapters.py": "sha256:52d869beab838bc6b589214c153438ff9eaf6e690070d9ba499eedf08e857784",
+      "core/compare.py": "sha256:3baeff2f0297ef7fbb9e3bf161a251ff66088ac1b2c99440d0b38e2f215853ef",
+      "core/governance.py": "sha256:7d349216ac55315fb823a01b9a562493c372a9fea121b85b7b6a8b26d6994300",
+      "core/hashing.py": "sha256:2f5cdff5235b59f94a94eb39a76e1114adbb4256917ee5533e3b7853ead6b620",
+      "core/runner.py": "sha256:4f282f8e356b9e4aaa5ce5c9876815acec9b717074f7376292fa7d6caa703540",
+      "core/schemas.py": "sha256:077bd7bee5a3b3a82304fe8996fd14ace4915de97d0d305f03902c7a8ab05014",
+      "evaluators/__init__.py": "sha256:2871832a03e160d238fd7342c53a3bb342639c10b553c579b8974ec55e0cd6b3",
+      "evaluators/exact.py": "sha256:21c39d7a5bb19819115a4073c87d6c1d8471c15830120ab0cfd85be6a0f54e29",
+      "evaluators/memory.py": "sha256:be0cd0bff8396bd8470bdc824ab9f30a984bc7a4156309a998625b95e4802a2d",
+      "evaluators/narrative.py": "sha256:3a2979dfc81b0569ebaea27ea5e5d83cf8c6e7bdd57f22c8f6c80df5397abc5b",
+      "evaluators/projection.py": "sha256:a4946dfc918115811f2419eeedf177afd34d3290094f6c24e7e3712d18870985",
+      "evaluators/routing.py": "sha256:f5d18a68bef529fe270e73ec69e8bd8c74dde0db9caee290d9eb3abb0633b7ee"
+    },
+    "metrics_schema_version": 1,
+    "metrics_registry_hash": "sha256:18f4747a961cc163ab849a78f3af2e9683212ba9f30fe1d45951739b49597152",
+    "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+    "product_tree_hash": "sha256:9953e56047f030c074cb3134bb855bbf9a6f742706b5a8c4a49b9853e35bc338",
+    "product_dirty": false,
+    "dataset_hashes": {
+      "datasets/regression/governance.jsonl": "sha256:70495f46b2487a95bda9c5863cfa3d57ae384a2199e072b409f3e1a89f3fdd69",
+      "datasets/regression/harness.jsonl": "sha256:6d0ec855914693e20fcd5bc7ae356ea984164f45b0b779d657fe7dc8d00ad2b4",
+      "datasets/regression/memory_context.jsonl": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "datasets/regression/narrative_npc.jsonl": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "datasets/regression/routing_actions.jsonl": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "datasets/regression/state_rules.jsonl": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733"
+    },
+    "case_selection_hash": "sha256:ece132c765c5bcb865f00ebe4b5342ca8989bd240dc46998a4027cd783a224b1",
+    "seed": 7,
+    "started_at": "2026-10-02T12:32:15.647412Z",
+    "provider": null,
+    "model": null,
+    "temperature": null,
+    "embedding": null,
+    "platform": "windows-py3.13.14"
+  },
+  "eligible_case_ids": [
+    "context.budget.discards-low-score",
+    "context.budget.global-cap",
+    "context.include.cross-sections",
+    "context.memory.expiration",
+    "context.trace.unknown-section",
+    "context.trace.visibility-reason",
+    "context.visibility.hidden-allowed",
+    "context.visibility.secret-filtered",
+    "memory.generate.boundary",
+    "memory.retrieve.exact-top1",
+    "memory.retrieve.hidden-allowed",
+    "memory.retrieve.multiple-required",
+    "memory.retrieve.only-secret",
+    "memory.retrieve.relevant-rank2",
+    "memory.retrieve.secret-filtered",
+    "memory.retrieve.stable-tie",
+    "memory.write.canonical-event",
+    "memory.write.confirmed-without-source",
+    "memory.write.false-player-death",
+    "memory.write.inference",
+    "memory.write.negated-death",
+    "memory.write.npc-identity",
+    "memory.write.npc-report",
+    "memory.write.player-possession",
+    "memory.write.secret-revealed",
+    "memory.write.secret-unrevealed",
+    "memory.write.supersession",
+    "narrative.action.active-travel",
+    "narrative.action.death-pending",
+    "narrative.action.unconscious-attack",
+    "narrative.action.unconscious-recovery",
+    "narrative.death.canonical",
+    "narrative.death.false",
+    "narrative.death.negated",
+    "narrative.death.reported",
+    "narrative.inventory.actual-possession",
+    "narrative.inventory.false-possession",
+    "narrative.lifecycle.captive-consistent",
+    "narrative.lifecycle.captive-escaped",
+    "narrative.lifecycle.dead-consistent",
+    "narrative.lifecycle.dead-revived",
+    "narrative.location.current-false",
+    "narrative.location.current-true",
+    "narrative.location.region-false",
+    "narrative.npc.identity-false",
+    "narrative.npc.identity-true",
+    "narrative.reward.false-gold",
+    "narrative.reward.true-gold",
+    "narrative.scene.absent-npc",
+    "narrative.scene.party-present",
+    "narrative.scene.present-npc",
+    "narrative.scene.wrong-home",
+    "narrative.secret.revealed",
+    "narrative.secret.unrevealed",
+    "routing.combat.active-flee",
+    "routing.combat.attack.base",
+    "routing.combat.attack.case",
+    "routing.combat.attack.punctuation",
+    "routing.combat.attack.spacing",
+    "routing.loot.craft.forge",
+    "routing.loot.craft.keyword",
+    "routing.loot.shop.buy",
+    "routing.loot.shop.sell",
+    "routing.loot.treasure.base",
+    "routing.loot.treasure.case",
+    "routing.loot.treasure.chest",
+    "routing.negative.injection",
+    "routing.negative.sql",
+    "routing.npc.corvo.accepted-set",
+    "routing.npc.corvo.base",
+    "routing.npc.corvo.case",
+    "routing.story.travel.base",
+    "routing.story.travel.case",
+    "routing.story.travel.punctuation",
+    "routing.story.travel.spacing",
+    "state.combat.transition-owner",
+    "state.event.npc-killed",
+    "state.event.route-replay",
+    "state.event.unique-claimed",
+    "state.lifecycle.accept-death",
+    "state.lifecycle.restore-checkpoint",
+    "state.lifecycle.unconscious-readable",
+    "state.persistence.migration-idempotent",
+    "state.persistence.save-load",
+    "state.quest.reward-once",
+    "state.rule.set-entity"
+  ],
+  "results": [
+    {
+      "case_id": "context.budget.discards-low-score",
+      "suite": "context_grounding",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [
+          "event-high"
+        ],
+        "discarded_evidence": [
+          {
+            "id": "event-low",
+            "section": "current_state",
+            "reason": "section_or_global_budget"
+          }
+        ],
+        "total_tokens_est": 32,
+        "hard_cap": 126,
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": null,
+          "index": "context-budget-v1"
+        }
+      },
+      "expected": {
+        "required_ids": [
+          "event-high"
+        ],
+        "acceptable_ids": [],
+        "forbidden_ids": [
+          "event-low"
+        ],
+        "secret_ids": []
+      },
+      "metric_values": {
+        "context_recall_at_5": 1.0,
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0,
+        "context_token_budget_violation": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.720725Z",
+      "duration_ms": 0.05410006269812584
+    },
+    {
+      "case_id": "context.budget.global-cap",
+      "suite": "context_grounding",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [
+          "current-a",
+          "current-b",
+          "lore-a",
+          "memory-a"
+        ],
+        "discarded_evidence": [],
+        "total_tokens_est": 96,
+        "hard_cap": 168,
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": null,
+          "index": "context-budget-v1"
+        }
+      },
+      "expected": {
+        "required_ids": [
+          "current-a"
+        ],
+        "acceptable_ids": [
+          "current-b",
+          "lore-a",
+          "memory-a"
+        ],
+        "forbidden_ids": [],
+        "secret_ids": []
+      },
+      "metric_values": {
+        "context_recall_at_5": 1.0,
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0,
+        "context_token_budget_violation": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.721029Z",
+      "duration_ms": 0.039999838918447495
+    },
+    {
+      "case_id": "context.include.cross-sections",
+      "suite": "context_grounding",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [
+          "event-current",
+          "lore-bridge",
+          "memory-witness"
+        ],
+        "discarded_evidence": [],
+        "total_tokens_est": 40,
+        "hard_cap": 840,
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": null,
+          "index": "context-budget-v1"
+        }
+      },
+      "expected": {
+        "required_ids": [
+          "event-current",
+          "lore-bridge",
+          "memory-witness"
+        ],
+        "acceptable_ids": [],
+        "forbidden_ids": [],
+        "secret_ids": []
+      },
+      "metric_values": {
+        "context_recall_at_5": 1.0,
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0,
+        "context_token_budget_violation": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.721177Z",
+      "duration_ms": 0.02719997428357601
+    },
+    {
+      "case_id": "context.memory.expiration",
+      "suite": "context_grounding",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [
+          "memory-recent"
+        ],
+        "discarded_evidence": [],
+        "total_tokens_est": 21,
+        "hard_cap": 525,
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": null,
+          "index": "context-budget-v1"
+        }
+      },
+      "expected": {
+        "required_ids": [
+          "memory-recent"
+        ],
+        "acceptable_ids": [],
+        "forbidden_ids": [
+          "memory-stale"
+        ],
+        "secret_ids": []
+      },
+      "metric_values": {
+        "context_recall_at_5": 1.0,
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0,
+        "context_token_budget_violation": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.765379Z",
+      "duration_ms": 0.016999896615743637
+    },
+    {
+      "case_id": "context.trace.unknown-section",
+      "suite": "context_grounding",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [],
+        "discarded_evidence": [
+          {
+            "id": "unknown-evidence",
+            "section": "unsupported",
+            "reason": "unknown_section"
+          }
+        ],
+        "total_tokens_est": 16,
+        "hard_cap": 525,
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": null,
+          "index": "context-budget-v1"
+        }
+      },
+      "expected": {
+        "required_ids": [],
+        "acceptable_ids": [],
+        "forbidden_ids": [
+          "unknown-evidence"
+        ],
+        "secret_ids": []
+      },
+      "metric_values": {
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0,
+        "context_token_budget_violation": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.765464Z",
+      "duration_ms": 0.007200054824352264
+    },
+    {
+      "case_id": "context.trace.visibility-reason",
+      "suite": "context_grounding",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [
+          "public-safe"
+        ],
+        "discarded_evidence": [
+          {
+            "id": "secret-rejected",
+            "section": "session_memory",
+            "reason": "visibility"
+          }
+        ],
+        "total_tokens_est": 21,
+        "hard_cap": 525,
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": null,
+          "index": "context-budget-v1"
+        }
+      },
+      "expected": {
+        "required_ids": [
+          "public-safe"
+        ],
+        "acceptable_ids": [],
+        "forbidden_ids": [
+          "secret-rejected"
+        ],
+        "secret_ids": [
+          "secret-rejected"
+        ]
+      },
+      "metric_values": {
+        "context_recall_at_5": 1.0,
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0,
+        "context_token_budget_violation": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.765509Z",
+      "duration_ms": 0.009699957445263863
+    },
+    {
+      "case_id": "context.visibility.hidden-allowed",
+      "suite": "context_grounding",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [
+          "hidden-thread"
+        ],
+        "discarded_evidence": [
+          {
+            "id": "secret-thread",
+            "section": "lore",
+            "reason": "visibility"
+          }
+        ],
+        "total_tokens_est": 25,
+        "hard_cap": 525,
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": null,
+          "index": "context-budget-v1"
+        }
+      },
+      "expected": {
+        "required_ids": [
+          "hidden-thread"
+        ],
+        "acceptable_ids": [],
+        "forbidden_ids": [
+          "secret-thread"
+        ],
+        "secret_ids": [
+          "secret-thread"
+        ]
+      },
+      "metric_values": {
+        "context_recall_at_5": 1.0,
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0,
+        "context_token_budget_violation": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.765547Z",
+      "duration_ms": 0.009200070053339005
+    },
+    {
+      "case_id": "context.visibility.secret-filtered",
+      "suite": "context_grounding",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [
+          "public-rumor"
+        ],
+        "discarded_evidence": [
+          {
+            "id": "secret-truth",
+            "section": "lore",
+            "reason": "visibility"
+          }
+        ],
+        "total_tokens_est": 22,
+        "hard_cap": 525,
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": null,
+          "index": "context-budget-v1"
+        }
+      },
+      "expected": {
+        "required_ids": [
+          "public-rumor"
+        ],
+        "acceptable_ids": [],
+        "forbidden_ids": [
+          "secret-truth"
+        ],
+        "secret_ids": [
+          "secret-truth"
+        ]
+      },
+      "metric_values": {
+        "context_recall_at_5": 1.0,
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0,
+        "context_token_budget_violation": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.765592Z",
+      "duration_ms": 0.007200054824352264
+    },
+    {
+      "case_id": "memory.generate.boundary",
+      "suite": "generation_boundary",
+      "passed": true,
+      "actual": {
+        "layer": "generate",
+        "memory_context_scored": false,
+        "accepted_text": "",
+        "rejection_reasons": [
+          "player_death"
+        ]
+      },
+      "expected": {
+        "layer": "generate",
+        "memory_context_scored": false,
+        "accepted_text": "",
+        "rejection_reasons": [
+          "player_death"
+        ]
+      },
+      "metric_values": {
+        "exact_match": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "exact",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.765704Z",
+      "duration_ms": 0.01400010660290718
+    },
+    {
+      "case_id": "memory.retrieve.exact-top1",
+      "suite": "memory_retrieval",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [
+          "fact-brother",
+          "fact-market"
+        ],
+        "trace": [
+          {
+            "id": "fact-brother",
+            "source": "session",
+            "score": -0.0,
+            "text": "O irmao de Brunna se chama Arven.",
+            "visibility": "public",
+            "metadata": {
+              "evidence_id": "fact-brother",
+              "source": "session",
+              "visibility": "public"
+            }
+          },
+          {
+            "id": "fact-market",
+            "source": "session",
+            "score": -2.0,
+            "text": "O mercado fecha ao anoitecer.",
+            "visibility": "public",
+            "metadata": {
+              "evidence_id": "fact-market",
+              "source": "session",
+              "visibility": "public"
+            }
+          }
+        ],
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": "fixture-vectors",
+          "index": "faiss-in-memory",
+          "k": 5,
+          "max_visibility": "public"
+        }
+      },
+      "expected": {
+        "required_ids": [
+          "fact-brother"
+        ],
+        "acceptable_ids": [],
+        "forbidden_ids": [],
+        "secret_ids": []
+      },
+      "metric_values": {
+        "memory_recall_at_1": 1.0,
+        "memory_recall_at_3": 1.0,
+        "memory_recall_at_5": 1.0,
+        "memory_mrr": 1.0,
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.809472Z",
+      "duration_ms": 0.02100015990436077
+    },
+    {
+      "case_id": "memory.retrieve.hidden-allowed",
+      "suite": "memory_retrieval",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [
+          "hidden-plan",
+          "public-rumor"
+        ],
+        "trace": [
+          {
+            "id": "hidden-plan",
+            "source": "lore",
+            "score": -0.0,
+            "text": "Plano oculto.",
+            "visibility": "hidden",
+            "metadata": {
+              "evidence_id": "hidden-plan",
+              "source": "lore",
+              "visibility": "hidden"
+            }
+          },
+          {
+            "id": "public-rumor",
+            "source": "lore",
+            "score": -0.5,
+            "text": "Rumor publico.",
+            "visibility": "public",
+            "metadata": {
+              "evidence_id": "public-rumor",
+              "source": "lore",
+              "visibility": "public"
+            }
+          }
+        ],
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": "fixture-vectors",
+          "index": "faiss-in-memory",
+          "k": 3,
+          "max_visibility": "hidden"
+        }
+      },
+      "expected": {
+        "required_ids": [
+          "hidden-plan"
+        ],
+        "acceptable_ids": [
+          "public-rumor"
+        ],
+        "forbidden_ids": [
+          "secret-core"
+        ],
+        "secret_ids": [
+          "secret-core"
+        ]
+      },
+      "metric_values": {
+        "memory_recall_at_1": 1.0,
+        "memory_recall_at_3": 1.0,
+        "memory_recall_at_5": 1.0,
+        "memory_mrr": 1.0,
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.809790Z",
+      "duration_ms": 0.012499978765845299
+    },
+    {
+      "case_id": "memory.retrieve.multiple-required",
+      "suite": "memory_retrieval",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [
+          "fact-a",
+          "fact-b",
+          "fact-c"
+        ],
+        "trace": [
+          {
+            "id": "fact-a",
+            "source": "lore",
+            "score": -0.0,
+            "text": "Primeiro fato.",
+            "visibility": "public",
+            "metadata": {
+              "evidence_id": "fact-a",
+              "source": "lore",
+              "visibility": "public"
+            }
+          },
+          {
+            "id": "fact-b",
+            "source": "lore",
+            "score": -0.020000005140900612,
+            "text": "Segundo fato.",
+            "visibility": "public",
+            "metadata": {
+              "evidence_id": "fact-b",
+              "source": "lore",
+              "visibility": "public"
+            }
+          },
+          {
+            "id": "fact-c",
+            "source": "lore",
+            "score": -2.0,
+            "text": "Distrator.",
+            "visibility": "public",
+            "metadata": {
+              "evidence_id": "fact-c",
+              "source": "lore",
+              "visibility": "public"
+            }
+          }
+        ],
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": "fixture-vectors",
+          "index": "faiss-in-memory",
+          "k": 5,
+          "max_visibility": "public"
+        }
+      },
+      "expected": {
+        "required_ids": [
+          "fact-a",
+          "fact-b"
+        ],
+        "acceptable_ids": [],
+        "forbidden_ids": [],
+        "secret_ids": []
+      },
+      "metric_values": {
+        "memory_recall_at_1": 0.5,
+        "memory_recall_at_3": 1.0,
+        "memory_recall_at_5": 1.0,
+        "memory_mrr": 1.0,
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.809960Z",
+      "duration_ms": 0.01109996810555458
+    },
+    {
+      "case_id": "memory.retrieve.only-secret",
+      "suite": "memory_retrieval",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [],
+        "trace": [],
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": "fixture-vectors",
+          "index": "faiss-in-memory",
+          "k": 5,
+          "max_visibility": "public"
+        }
+      },
+      "expected": {
+        "required_ids": [],
+        "acceptable_ids": [],
+        "forbidden_ids": [
+          "secret-only"
+        ],
+        "secret_ids": [
+          "secret-only"
+        ]
+      },
+      "metric_values": {
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.810060Z",
+      "duration_ms": 0.005899928510189056
+    },
+    {
+      "case_id": "memory.retrieve.relevant-rank2",
+      "suite": "memory_retrieval",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [
+          "fact-distractor",
+          "fact-relevant",
+          "fact-other"
+        ],
+        "trace": [
+          {
+            "id": "fact-distractor",
+            "source": "session",
+            "score": -0.4000000059604645,
+            "text": "Uma pista parecida.",
+            "visibility": "public",
+            "metadata": {
+              "evidence_id": "fact-distractor",
+              "source": "session",
+              "visibility": "public"
+            }
+          },
+          {
+            "id": "fact-relevant",
+            "source": "session",
+            "score": -0.5799999833106995,
+            "text": "A pista correta.",
+            "visibility": "public",
+            "metadata": {
+              "evidence_id": "fact-relevant",
+              "source": "session",
+              "visibility": "public"
+            }
+          },
+          {
+            "id": "fact-other",
+            "source": "session",
+            "score": -2.0,
+            "text": "Outro assunto.",
+            "visibility": "public",
+            "metadata": {
+              "evidence_id": "fact-other",
+              "source": "session",
+              "visibility": "public"
+            }
+          }
+        ],
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": "fixture-vectors",
+          "index": "faiss-in-memory",
+          "k": 5,
+          "max_visibility": "public"
+        }
+      },
+      "expected": {
+        "required_ids": [
+          "fact-relevant"
+        ],
+        "acceptable_ids": [
+          "fact-distractor"
+        ],
+        "forbidden_ids": [],
+        "secret_ids": []
+      },
+      "metric_values": {
+        "memory_recall_at_1": 0.0,
+        "memory_recall_at_3": 1.0,
+        "memory_recall_at_5": 1.0,
+        "memory_mrr": 0.5,
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.810229Z",
+      "duration_ms": 0.01640012487769127
+    },
+    {
+      "case_id": "memory.retrieve.secret-filtered",
+      "suite": "memory_retrieval",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [
+          "rumor-valerius"
+        ],
+        "trace": [
+          {
+            "id": "rumor-valerius",
+            "source": "lore",
+            "score": -0.07999999821186066,
+            "text": "Ha rumores sobre Valerius.",
+            "visibility": "public",
+            "metadata": {
+              "evidence_id": "rumor-valerius",
+              "source": "lore",
+              "visibility": "public"
+            }
+          }
+        ],
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": "fixture-vectors",
+          "index": "faiss-in-memory",
+          "k": 5,
+          "max_visibility": "public"
+        }
+      },
+      "expected": {
+        "required_ids": [
+          "rumor-valerius"
+        ],
+        "acceptable_ids": [],
+        "forbidden_ids": [
+          "secret-valerius"
+        ],
+        "secret_ids": [
+          "secret-valerius"
+        ]
+      },
+      "metric_values": {
+        "memory_recall_at_1": 1.0,
+        "memory_recall_at_3": 1.0,
+        "memory_recall_at_5": 1.0,
+        "memory_mrr": 1.0,
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.810395Z",
+      "duration_ms": 0.01209997572004795
+    },
+    {
+      "case_id": "memory.retrieve.stable-tie",
+      "suite": "memory_retrieval",
+      "passed": true,
+      "actual": {
+        "ranked_ids": [
+          "tie-first",
+          "tie-required"
+        ],
+        "trace": [
+          {
+            "id": "tie-first",
+            "source": "session",
+            "score": -0.0,
+            "text": "Primeiro empate.",
+            "visibility": "public",
+            "metadata": {
+              "evidence_id": "tie-first",
+              "source": "session",
+              "visibility": "public"
+            }
+          },
+          {
+            "id": "tie-required",
+            "source": "session",
+            "score": -0.0,
+            "text": "Segundo empate.",
+            "visibility": "public",
+            "metadata": {
+              "evidence_id": "tie-required",
+              "source": "session",
+              "visibility": "public"
+            }
+          }
+        ],
+        "within_budget": true,
+        "retrieval_metadata": {
+          "provider": null,
+          "embedding": "fixture-vectors",
+          "index": "faiss-in-memory",
+          "k": 3,
+          "max_visibility": "public"
+        }
+      },
+      "expected": {
+        "required_ids": [
+          "tie-required"
+        ],
+        "acceptable_ids": [
+          "tie-first"
+        ],
+        "forbidden_ids": [],
+        "secret_ids": []
+      },
+      "metric_values": {
+        "memory_recall_at_1": 0.0,
+        "memory_recall_at_3": 1.0,
+        "memory_recall_at_5": 1.0,
+        "memory_mrr": 0.5,
+        "context_forbidden_leak_rate": 0.0,
+        "secret_leak_count": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "evidence_ranking",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.810523Z",
+      "duration_ms": 0.012400094419717789
+    },
+    {
+      "case_id": "memory.write.canonical-event",
+      "suite": "memory_write",
+      "passed": true,
+      "actual": {
+        "accepted_ids": [
+          "fact-bridge"
+        ],
+        "rejected": []
+      },
+      "expected": {
+        "accepted_ids": [
+          "fact-bridge"
+        ],
+        "rejected": []
+      },
+      "metric_values": {
+        "memory_write_precision": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "memory_write_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.815402Z",
+      "duration_ms": 0.015500001609325409
+    },
+    {
+      "case_id": "memory.write.confirmed-without-source",
+      "suite": "memory_write",
+      "passed": true,
+      "actual": {
+        "accepted_ids": [],
+        "rejected": [
+          {
+            "id": "fact-false-confirmed",
+            "reason": "confirmed_without_applicable_source"
+          }
+        ]
+      },
+      "expected": {
+        "accepted_ids": [],
+        "rejected": [
+          {
+            "id": "fact-false-confirmed",
+            "reason": "confirmed_without_applicable_source"
+          }
+        ]
+      },
+      "metric_values": {
+        "memory_write_precision": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "memory_write_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.815910Z",
+      "duration_ms": 0.009699957445263863
+    },
+    {
+      "case_id": "memory.write.false-player-death",
+      "suite": "memory_write",
+      "passed": true,
+      "actual": {
+        "accepted_ids": [],
+        "rejected": [
+          {
+            "id": "fact-false-death",
+            "reason": "player_downed_not_dead"
+          }
+        ]
+      },
+      "expected": {
+        "accepted_ids": [],
+        "rejected": [
+          {
+            "id": "fact-false-death",
+            "reason": "player_downed_not_dead"
+          }
+        ]
+      },
+      "metric_values": {
+        "memory_write_precision": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "memory_write_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.816044Z",
+      "duration_ms": 0.006500165909528732
+    },
+    {
+      "case_id": "memory.write.inference",
+      "suite": "memory_write",
+      "passed": true,
+      "actual": {
+        "accepted_ids": [
+          "fact-rain"
+        ],
+        "rejected": []
+      },
+      "expected": {
+        "accepted_ids": [
+          "fact-rain"
+        ],
+        "rejected": []
+      },
+      "metric_values": {
+        "memory_write_precision": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "memory_write_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.816476Z",
+      "duration_ms": 0.007500173524022102
+    },
+    {
+      "case_id": "memory.write.negated-death",
+      "suite": "memory_write",
+      "passed": true,
+      "actual": {
+        "accepted_ids": [
+          "fact-negated-death"
+        ],
+        "rejected": []
+      },
+      "expected": {
+        "accepted_ids": [
+          "fact-negated-death"
+        ],
+        "rejected": []
+      },
+      "metric_values": {
+        "memory_write_precision": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "memory_write_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.817007Z",
+      "duration_ms": 0.007200054824352264
+    },
+    {
+      "case_id": "memory.write.npc-identity",
+      "suite": "memory_write",
+      "passed": true,
+      "actual": {
+        "accepted_ids": [],
+        "rejected": [
+          {
+            "id": "fact-false-identity",
+            "reason": "npc_identity_contradiction:Borin:species"
+          }
+        ]
+      },
+      "expected": {
+        "accepted_ids": [],
+        "rejected": [
+          {
+            "id": "fact-false-identity",
+            "reason": "npc_identity_contradiction:Borin:species"
+          }
+        ]
+      },
+      "metric_values": {
+        "memory_write_precision": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "memory_write_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.818137Z",
+      "duration_ms": 0.013299984857439995
+    },
+    {
+      "case_id": "memory.write.npc-report",
+      "suite": "memory_write",
+      "passed": true,
+      "actual": {
+        "accepted_ids": [
+          "fact-npc-report"
+        ],
+        "rejected": []
+      },
+      "expected": {
+        "accepted_ids": [
+          "fact-npc-report"
+        ],
+        "rejected": []
+      },
+      "metric_values": {
+        "memory_write_precision": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "memory_write_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.818512Z",
+      "duration_ms": 0.008699949830770493
+    },
+    {
+      "case_id": "memory.write.player-possession",
+      "suite": "memory_write",
+      "passed": true,
+      "actual": {
+        "accepted_ids": [],
+        "rejected": [
+          {
+            "id": "fact-false-item",
+            "reason": "inventory_possession_contradiction:Coroa Impossivel"
+          }
+        ]
+      },
+      "expected": {
+        "accepted_ids": [],
+        "rejected": [
+          {
+            "id": "fact-false-item",
+            "reason": "inventory_possession_contradiction:Coroa Impossivel"
+          }
+        ]
+      },
+      "metric_values": {
+        "memory_write_precision": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "memory_write_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.823948Z",
+      "duration_ms": 0.014499993994832039
+    },
+    {
+      "case_id": "memory.write.secret-revealed",
+      "suite": "memory_write",
+      "passed": true,
+      "actual": {
+        "accepted_ids": [
+          "fact-secret-revealed"
+        ],
+        "rejected": []
+      },
+      "expected": {
+        "accepted_ids": [
+          "fact-secret-revealed"
+        ],
+        "rejected": []
+      },
+      "metric_values": {
+        "memory_write_precision": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "memory_write_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.824647Z",
+      "duration_ms": 0.01100008375942707
+    },
+    {
+      "case_id": "memory.write.secret-unrevealed",
+      "suite": "memory_write",
+      "passed": true,
+      "actual": {
+        "accepted_ids": [],
+        "rejected": [
+          {
+            "id": "fact-secret",
+            "reason": "unrevealed_secret:pacto_valerius"
+          }
+        ]
+      },
+      "expected": {
+        "accepted_ids": [],
+        "rejected": [
+          {
+            "id": "fact-secret",
+            "reason": "unrevealed_secret:pacto_valerius"
+          }
+        ]
+      },
+      "metric_values": {
+        "memory_write_precision": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "memory_write_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.824836Z",
+      "duration_ms": 0.010200077667832375
+    },
+    {
+      "case_id": "memory.write.supersession",
+      "suite": "memory_write",
+      "passed": true,
+      "actual": {
+        "texts": [
+          "A ponte caiu."
+        ],
+        "confidences": [
+          "confirmed"
+        ],
+        "promotions": 1
+      },
+      "expected": {
+        "texts": [
+          "A ponte caiu."
+        ],
+        "confidences": [
+          "confirmed"
+        ],
+        "promotions": 1
+      },
+      "metric_values": {
+        "memory_write_precision": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "memory_write_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.825066Z",
+      "duration_ms": 0.014200108125805855
+    },
+    {
+      "case_id": "narrative.action.active-travel",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "trace": {
+          "operation": "action_eligibility",
+          "phase": "active",
+          "code": "ok",
+          "allowed": true
+        }
+      },
+      "expected": {
+        "accepted": true,
+        "rejection_reasons": []
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.827182Z",
+      "duration_ms": 0.0212998129427433
+    },
+    {
+      "case_id": "narrative.action.death-pending",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": false,
+        "rejection_reasons": [
+          "action_incompatible"
+        ],
+        "trace": {
+          "operation": "action_eligibility",
+          "phase": "death_pending",
+          "code": "blocked_death_pending",
+          "allowed": false
+        }
+      },
+      "expected": {
+        "accepted": false,
+        "rejection_reasons": [
+          "action_incompatible"
+        ]
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.827271Z",
+      "duration_ms": 0.016700010746717453
+    },
+    {
+      "case_id": "narrative.action.unconscious-attack",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": false,
+        "rejection_reasons": [
+          "action_incompatible"
+        ],
+        "trace": {
+          "operation": "action_eligibility",
+          "phase": "unconscious",
+          "code": "blocked_unconscious",
+          "allowed": false
+        }
+      },
+      "expected": {
+        "accepted": false,
+        "rejection_reasons": [
+          "action_incompatible"
+        ]
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.827319Z",
+      "duration_ms": 0.010800082236528397
+    },
+    {
+      "case_id": "narrative.action.unconscious-recovery",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "trace": {
+          "operation": "action_eligibility",
+          "phase": "unconscious",
+          "code": "recovery_requested",
+          "allowed": true
+        }
+      },
+      "expected": {
+        "accepted": true,
+        "rejection_reasons": []
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.827354Z",
+      "duration_ms": 0.0070999376475811005
+    },
+    {
+      "case_id": "narrative.death.canonical",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": [
+            "death"
+          ]
+        },
+        "sanitized_text": "Ari morreu."
+      },
+      "expected": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "sanitized_text": "Ari morreu."
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.827690Z",
+      "duration_ms": 0.013799872249364853
+    },
+    {
+      "case_id": "narrative.death.false",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": false,
+        "rejection_reasons": [
+          "player_death"
+        ],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": []
+        },
+        "sanitized_text": ""
+      },
+      "expected": {
+        "accepted": false,
+        "rejection_reasons": [
+          "player_death"
+        ],
+        "sanitized_text": "",
+        "forbidden_output_fragments": [
+          "Ari morreu."
+        ]
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.827787Z",
+      "duration_ms": 0.013199867680668831
+    },
+    {
+      "case_id": "narrative.death.negated",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": []
+        },
+        "sanitized_text": "Ari não morreu."
+      },
+      "expected": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "sanitized_text": "Ari não morreu."
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.828077Z",
+      "duration_ms": 0.011100200936198235
+    },
+    {
+      "case_id": "narrative.death.reported",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": []
+        },
+        "sanitized_text": "O guarda diz que Ari morreu."
+      },
+      "expected": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "sanitized_text": "O guarda diz que Ari morreu."
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.828158Z",
+      "duration_ms": 0.008400063961744308
+    },
+    {
+      "case_id": "narrative.inventory.actual-possession",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": []
+        },
+        "sanitized_text": "Ari carrega a Poção de Cura Menor."
+      },
+      "expected": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "sanitized_text": "Ari carrega a Poção de Cura Menor."
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.831467Z",
+      "duration_ms": 0.019800150766968727
+    },
+    {
+      "case_id": "narrative.inventory.false-possession",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": false,
+        "rejection_reasons": [
+          "inventory_possession"
+        ],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": []
+        },
+        "sanitized_text": ""
+      },
+      "expected": {
+        "accepted": false,
+        "rejection_reasons": [
+          "inventory_possession"
+        ],
+        "sanitized_text": "",
+        "forbidden_output_fragments": [
+          "Ari carrega a Coroa Impossível."
+        ]
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.831745Z",
+      "duration_ms": 0.017300015315413475
+    },
+    {
+      "case_id": "narrative.lifecycle.captive-consistent",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "trace": {
+          "operation": "conflict_lifecycle",
+          "violation_count": 0
+        }
+      },
+      "expected": {
+        "accepted": true,
+        "rejection_reasons": []
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.836513Z",
+      "duration_ms": 0.01810002140700817
+    },
+    {
+      "case_id": "narrative.lifecycle.captive-escaped",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": false,
+        "rejection_reasons": [
+          "lifecycle_contradiction"
+        ],
+        "trace": {
+          "operation": "conflict_lifecycle",
+          "violation_count": 1
+        }
+      },
+      "expected": {
+        "accepted": false,
+        "rejection_reasons": [
+          "lifecycle_contradiction"
+        ]
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.836589Z",
+      "duration_ms": 0.0100000761449337
+    },
+    {
+      "case_id": "narrative.lifecycle.dead-consistent",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "trace": {
+          "operation": "conflict_lifecycle",
+          "violation_count": 0
+        }
+      },
+      "expected": {
+        "accepted": true,
+        "rejection_reasons": []
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.836726Z",
+      "duration_ms": 0.011299969628453255
+    },
+    {
+      "case_id": "narrative.lifecycle.dead-revived",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": false,
+        "rejection_reasons": [
+          "lifecycle_contradiction"
+        ],
+        "trace": {
+          "operation": "conflict_lifecycle",
+          "violation_count": 1
+        }
+      },
+      "expected": {
+        "accepted": false,
+        "rejection_reasons": [
+          "lifecycle_contradiction"
+        ]
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.836761Z",
+      "duration_ms": 0.0078000593930482864
+    },
+    {
+      "case_id": "narrative.location.current-false",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": false,
+        "rejection_reasons": [
+          "current_location"
+        ],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": []
+        },
+        "sanitized_text": ""
+      },
+      "expected": {
+        "accepted": false,
+        "rejection_reasons": [
+          "current_location"
+        ],
+        "sanitized_text": "",
+        "forbidden_output_fragments": [
+          "Você se encontra em Brekmar."
+        ]
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.841547Z",
+      "duration_ms": 0.02010003663599491
+    },
+    {
+      "case_id": "narrative.location.current-true",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": []
+        },
+        "sanitized_text": "Você chegou a Nova Arcádia."
+      },
+      "expected": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "sanitized_text": "Você chegou a Nova Arcádia."
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.846162Z",
+      "duration_ms": 0.017700018361210823
+    },
+    {
+      "case_id": "narrative.location.region-false",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": false,
+        "rejection_reasons": [
+          "location_region"
+        ],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": []
+        },
+        "sanitized_text": ""
+      },
+      "expected": {
+        "accepted": false,
+        "rejection_reasons": [
+          "location_region"
+        ],
+        "sanitized_text": "",
+        "forbidden_output_fragments": [
+          "Nova Arcádia fica em Brekmar."
+        ]
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.846453Z",
+      "duration_ms": 0.012999866157770157
+    },
+    {
+      "case_id": "narrative.npc.identity-false",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": false,
+        "rejection_reasons": [
+          "npc_identity"
+        ],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": []
+        },
+        "sanitized_text": ""
+      },
+      "expected": {
+        "accepted": false,
+        "rejection_reasons": [
+          "npc_identity"
+        ],
+        "sanitized_text": "",
+        "forbidden_output_fragments": [
+          "Borin é um elfo."
+        ]
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0,
+        "npc_identity_errors": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.846690Z",
+      "duration_ms": 0.013499986380338669
+    },
+    {
+      "case_id": "narrative.npc.identity-true",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": []
+        },
+        "sanitized_text": "Borin é um anão pequeno."
+      },
+      "expected": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "sanitized_text": "Borin é um anão pequeno."
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0,
+        "npc_identity_errors": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.847070Z",
+      "duration_ms": 0.010999850928783417
+    },
+    {
+      "case_id": "narrative.reward.false-gold",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": false,
+        "rejection_reasons": [
+          "reward_delta"
+        ],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": []
+        },
+        "sanitized_text": ""
+      },
+      "expected": {
+        "accepted": false,
+        "rejection_reasons": [
+          "reward_delta"
+        ],
+        "sanitized_text": "",
+        "forbidden_output_fragments": [
+          "Você ganhou 80 ouro."
+        ]
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.847338Z",
+      "duration_ms": 0.01100008375942707
+    },
+    {
+      "case_id": "narrative.reward.true-gold",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": []
+        },
+        "sanitized_text": "Você ganhou 2 ouro."
+      },
+      "expected": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "sanitized_text": "Você ganhou 2 ouro."
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.847641Z",
+      "duration_ms": 0.010399846360087395
+    },
+    {
+      "case_id": "narrative.scene.absent-npc",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": false,
+        "rejection_reasons": [
+          "entity_out_of_scene"
+        ],
+        "trace": {
+          "operation": "scene_presence",
+          "entity": "Borin",
+          "present": false
+        }
+      },
+      "expected": {
+        "accepted": false,
+        "rejection_reasons": [
+          "entity_out_of_scene"
+        ]
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.850796Z",
+      "duration_ms": 0.02150004729628563
+    },
+    {
+      "case_id": "narrative.scene.party-present",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "trace": {
+          "operation": "scene_presence",
+          "entity": "Lysa",
+          "present": true
+        }
+      },
+      "expected": {
+        "accepted": true,
+        "rejection_reasons": []
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.850877Z",
+      "duration_ms": 0.008200062438845634
+    },
+    {
+      "case_id": "narrative.scene.present-npc",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "trace": {
+          "operation": "scene_presence",
+          "entity": "Borin",
+          "present": true
+        }
+      },
+      "expected": {
+        "accepted": true,
+        "rejection_reasons": []
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.850910Z",
+      "duration_ms": 0.005699926987290382
+    },
+    {
+      "case_id": "narrative.scene.wrong-home",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": false,
+        "rejection_reasons": [
+          "entity_out_of_scene"
+        ],
+        "trace": {
+          "operation": "scene_presence",
+          "entity": "Borin",
+          "present": false
+        }
+      },
+      "expected": {
+        "accepted": false,
+        "rejection_reasons": [
+          "entity_out_of_scene"
+        ]
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.850935Z",
+      "duration_ms": 0.0070999376475811005
+    },
+    {
+      "case_id": "narrative.secret.revealed",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": [
+            "reveal-pacto"
+          ]
+        },
+        "sanitized_text": "O guarda diz que houve um pacto com Valerius."
+      },
+      "expected": {
+        "accepted": true,
+        "rejection_reasons": [],
+        "sanitized_text": "O guarda diz que houve um pacto com Valerius."
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.851053Z",
+      "duration_ms": 0.009100185707211494
+    },
+    {
+      "case_id": "narrative.secret.unrevealed",
+      "suite": "narrative_claims",
+      "passed": true,
+      "actual": {
+        "accepted": false,
+        "rejection_reasons": [
+          "unrevealed_secret"
+        ],
+        "trace": {
+          "operation": "narrative_guard",
+          "turn": 3,
+          "location_id": "nova_arcadia",
+          "accepted_event_ids": []
+        },
+        "sanitized_text": ""
+      },
+      "expected": {
+        "accepted": false,
+        "rejection_reasons": [
+          "unrevealed_secret"
+        ],
+        "sanitized_text": "",
+        "forbidden_output_fragments": [
+          "O guarda diz que houve um pacto com Valerius."
+        ]
+      },
+      "metric_values": {
+        "narrative_claim_accuracy": 1.0,
+        "narrative_hard_contradictions": 0.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "narrative_claim_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:16.851115Z",
+      "duration_ms": 0.009800074622035027
+    },
+    {
+      "case_id": "routing.combat.active-flee",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "combat_agent",
+        "target": null,
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": true,
+        "flee_destination": "loc_b"
+      },
+      "expected": {
+        "route": "combat_agent",
+        "target": null,
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": true,
+        "flee_destination": "loc_b"
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.257709Z",
+      "duration_ms": 0.015799887478351593
+    },
+    {
+      "case_id": "routing.combat.attack.base",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "combat_agent",
+        "target": "Inimigo",
+        "loot_context": null,
+        "combat_origin_hint": "player_provoked",
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "combat_agent",
+        "target": "Inimigo",
+        "loot_context": null,
+        "combat_origin_hint": "player_provoked",
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264292Z",
+      "duration_ms": 0.01009996049106121
+    },
+    {
+      "case_id": "routing.combat.attack.case",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "combat_agent",
+        "target": "Inimigo",
+        "loot_context": null,
+        "combat_origin_hint": "player_provoked",
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "combat_agent",
+        "target": "Inimigo",
+        "loot_context": null,
+        "combat_origin_hint": "player_provoked",
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264399Z",
+      "duration_ms": 0.004200031980872154
+    },
+    {
+      "case_id": "routing.combat.attack.punctuation",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "combat_agent",
+        "target": "Inimigo",
+        "loot_context": null,
+        "combat_origin_hint": "player_provoked",
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "combat_agent",
+        "target": "Inimigo",
+        "loot_context": null,
+        "combat_origin_hint": "player_provoked",
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264447Z",
+      "duration_ms": 0.0032999087125062943
+    },
+    {
+      "case_id": "routing.combat.attack.spacing",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "combat_agent",
+        "target": "Inimigo",
+        "loot_context": null,
+        "combat_origin_hint": "player_provoked",
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "combat_agent",
+        "target": "Inimigo",
+        "loot_context": null,
+        "combat_origin_hint": "player_provoked",
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264486Z",
+      "duration_ms": 0.002699904143810272
+    },
+    {
+      "case_id": "routing.loot.craft.forge",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "loot",
+        "target": null,
+        "loot_context": "CRAFT",
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "loot",
+        "target": null,
+        "loot_context": "CRAFT",
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264528Z",
+      "duration_ms": 0.0034999102354049683
+    },
+    {
+      "case_id": "routing.loot.craft.keyword",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "loot",
+        "target": null,
+        "loot_context": "CRAFT",
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "loot",
+        "target": null,
+        "loot_context": "CRAFT",
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264566Z",
+      "duration_ms": 0.002500135451555252
+    },
+    {
+      "case_id": "routing.loot.shop.buy",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "loot",
+        "target": null,
+        "loot_context": "SHOP",
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "loot",
+        "target": null,
+        "loot_context": "SHOP",
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264600Z",
+      "duration_ms": 0.002700136974453926
+    },
+    {
+      "case_id": "routing.loot.shop.sell",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "loot",
+        "target": null,
+        "loot_context": "SHOP",
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "loot",
+        "target": null,
+        "loot_context": "SHOP",
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264639Z",
+      "duration_ms": 0.002499902620911598
+    },
+    {
+      "case_id": "routing.loot.treasure.base",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "loot",
+        "target": null,
+        "loot_context": "TREASURE",
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "loot",
+        "target": null,
+        "loot_context": "TREASURE",
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264673Z",
+      "duration_ms": 0.002299901098012924
+    },
+    {
+      "case_id": "routing.loot.treasure.case",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "loot",
+        "target": null,
+        "loot_context": "TREASURE",
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "loot",
+        "target": null,
+        "loot_context": "TREASURE",
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264703Z",
+      "duration_ms": 0.002100132405757904
+    },
+    {
+      "case_id": "routing.loot.treasure.chest",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "loot",
+        "target": null,
+        "loot_context": "TREASURE",
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "loot",
+        "target": null,
+        "loot_context": "TREASURE",
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264735Z",
+      "duration_ms": 0.002300133928656578
+    },
+    {
+      "case_id": "routing.negative.injection",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "storyteller",
+        "target": null,
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "storyteller",
+        "target": null,
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264775Z",
+      "duration_ms": 0.0029001384973526
+    },
+    {
+      "case_id": "routing.negative.sql",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "storyteller",
+        "target": null,
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "storyteller",
+        "target": null,
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264811Z",
+      "duration_ms": 0.002600019797682762
+    },
+    {
+      "case_id": "routing.npc.corvo.accepted-set",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "npc_actor",
+        "target": "Corvo",
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "npc_actor",
+        "target": [
+          "Corvo",
+          "Corvo Cinzento"
+        ],
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264865Z",
+      "duration_ms": 0.004600035026669502
+    },
+    {
+      "case_id": "routing.npc.corvo.base",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "npc_actor",
+        "target": "Corvo",
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "npc_actor",
+        "target": "Corvo",
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264915Z",
+      "duration_ms": 0.002499902620911598
+    },
+    {
+      "case_id": "routing.npc.corvo.case",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "npc_actor",
+        "target": "Corvo",
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "npc_actor",
+        "target": "Corvo",
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264956Z",
+      "duration_ms": 0.002800021320581436
+    },
+    {
+      "case_id": "routing.story.travel.base",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "storyteller",
+        "target": null,
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "storyteller",
+        "target": null,
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264976Z",
+      "duration_ms": 0.0023997854441404343
+    },
+    {
+      "case_id": "routing.story.travel.case",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "storyteller",
+        "target": null,
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "storyteller",
+        "target": null,
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.264993Z",
+      "duration_ms": 0.00200001522898674
+    },
+    {
+      "case_id": "routing.story.travel.punctuation",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "storyteller",
+        "target": null,
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "storyteller",
+        "target": null,
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.265009Z",
+      "duration_ms": 0.0018998980522155762
+    },
+    {
+      "case_id": "routing.story.travel.spacing",
+      "suite": "routing",
+      "passed": true,
+      "actual": {
+        "route": "storyteller",
+        "target": null,
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "expected": {
+        "route": "storyteller",
+        "target": null,
+        "loot_context": null,
+        "combat_origin_hint": null,
+        "flee_attempt": false,
+        "flee_destination": null
+      },
+      "metric_values": {
+        "route_accuracy": 1.0,
+        "target_accuracy": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "routing_contract",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.265025Z",
+      "duration_ms": 0.00200001522898674
+    },
+    {
+      "case_id": "state.combat.transition-owner",
+      "suite": "state_rules",
+      "passed": true,
+      "actual": {
+        "ready": false,
+        "code": "combat_active",
+        "phase": "combat"
+      },
+      "expected": {
+        "ready": false,
+        "code": "combat_active",
+        "phase": "combat"
+      },
+      "metric_values": {
+        "state_transition_pass_rate": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "state_projection",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.265045Z",
+      "duration_ms": 0.005600042641162872
+    },
+    {
+      "case_id": "state.event.npc-killed",
+      "suite": "state_rules",
+      "passed": true,
+      "actual": {
+        "projection": {
+          "entities.npc_grum.alive": false
+        },
+        "input_unchanged": true,
+        "idempotent": null
+      },
+      "expected": {
+        "projection": {
+          "entities.npc_grum.alive": false
+        },
+        "input_unchanged": true,
+        "idempotent": null
+      },
+      "metric_values": {
+        "state_transition_pass_rate": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "state_projection",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.292368Z",
+      "duration_ms": 0.014200108125805855
+    },
+    {
+      "case_id": "state.event.route-replay",
+      "suite": "state_rules",
+      "passed": true,
+      "actual": {
+        "projection": {
+          "blocked_routes": [
+            {
+              "a": "loc_a",
+              "b": "loc_b",
+              "blocked_by_event": "evt_route_001"
+            }
+          ]
+        },
+        "input_unchanged": true,
+        "idempotent": true
+      },
+      "expected": {
+        "projection": {
+          "blocked_routes": [
+            {
+              "a": "loc_a",
+              "b": "loc_b",
+              "blocked_by_event": "evt_route_001"
+            }
+          ]
+        },
+        "input_unchanged": true,
+        "idempotent": true
+      },
+      "metric_values": {
+        "state_transition_pass_rate": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "state_projection",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.292483Z",
+      "duration_ms": 0.012700213119387627
+    },
+    {
+      "case_id": "state.event.unique-claimed",
+      "suite": "state_rules",
+      "passed": true,
+      "actual": {
+        "projection": {
+          "unique_items.artefato_unico.holder": "player",
+          "unique_items.artefato_unico.event_id": "evt_unique_001",
+          "unique_items.artefato_unico.turn": 5
+        },
+        "input_unchanged": true,
+        "idempotent": null
+      },
+      "expected": {
+        "projection": {
+          "unique_items.artefato_unico.holder": "player",
+          "unique_items.artefato_unico.event_id": "evt_unique_001",
+          "unique_items.artefato_unico.turn": 5
+        },
+        "input_unchanged": true,
+        "idempotent": null
+      },
+      "metric_values": {
+        "state_transition_pass_rate": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "state_projection",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.292541Z",
+      "duration_ms": 0.006400048732757568
+    },
+    {
+      "case_id": "state.lifecycle.accept-death",
+      "suite": "state_rules",
+      "passed": true,
+      "actual": {
+        "state": {
+          "death_pending": false,
+          "game_over": true
+        },
+        "event_types": [
+          "player_died"
+        ]
+      },
+      "expected": {
+        "state": {
+          "death_pending": false,
+          "game_over": true
+        },
+        "event_types": [
+          "player_died"
+        ]
+      },
+      "metric_values": {
+        "state_transition_pass_rate": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "state_projection",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.299795Z",
+      "duration_ms": 0.0200001522898674
+    },
+    {
+      "case_id": "state.lifecycle.restore-checkpoint",
+      "suite": "state_rules",
+      "passed": true,
+      "actual": {
+        "state": {
+          "death_pending": false,
+          "game_over": false,
+          "player.gold": 7,
+          "world.turn_count": 8
+        },
+        "event_types": []
+      },
+      "expected": {
+        "state": {
+          "death_pending": false,
+          "game_over": false,
+          "player.gold": 7,
+          "world.turn_count": 8
+        },
+        "event_types": []
+      },
+      "metric_values": {
+        "state_transition_pass_rate": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "state_projection",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.302464Z",
+      "duration_ms": 0.01740013249218464
+    },
+    {
+      "case_id": "state.lifecycle.unconscious-readable",
+      "suite": "state_rules",
+      "passed": true,
+      "actual": {
+        "ready": true,
+        "code": "ready",
+        "phase": "unconscious"
+      },
+      "expected": {
+        "ready": true,
+        "code": "ready",
+        "phase": "unconscious"
+      },
+      "metric_values": {
+        "state_transition_pass_rate": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "state_projection",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.302562Z",
+      "duration_ms": 0.005400041118264198
+    },
+    {
+      "case_id": "state.persistence.migration-idempotent",
+      "suite": "state_rules",
+      "passed": true,
+      "actual": {
+        "state": {
+          "schema_version": 8,
+          "player.level": 1,
+          "world.turn_count": 3
+        },
+        "input_unchanged": true,
+        "idempotent": true
+      },
+      "expected": {
+        "state": {
+          "schema_version": 8,
+          "player.level": 1,
+          "world.turn_count": 3
+        },
+        "input_unchanged": true,
+        "idempotent": true
+      },
+      "metric_values": {
+        "state_transition_pass_rate": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "state_projection",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.310475Z",
+      "duration_ms": 0.020300038158893585
+    },
+    {
+      "case_id": "state.persistence.save-load",
+      "suite": "state_rules",
+      "passed": true,
+      "actual": {
+        "saved": true,
+        "state": {
+          "game_id": "00000000-0000-0000-0000-000000000168",
+          "player.gold": 31,
+          "world.current_location": "aethelgard",
+          "world_projection.unique_items.artefato_unico.holder": "player",
+          "processed_action_ids": [
+            "op-1"
+          ]
+        }
+      },
+      "expected": {
+        "saved": true,
+        "state": {
+          "game_id": "00000000-0000-0000-0000-000000000168",
+          "player.gold": 31,
+          "world.current_location": "aethelgard",
+          "world_projection.unique_items.artefato_unico.holder": "player",
+          "processed_action_ids": [
+            "op-1"
+          ]
+        }
+      },
+      "metric_values": {
+        "state_transition_pass_rate": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "state_projection",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.330661Z",
+      "duration_ms": 0.028499867767095566
+    },
+    {
+      "case_id": "state.quest.reward-once",
+      "suite": "state_rules",
+      "passed": true,
+      "actual": {
+        "quests": {
+          "quests.0.status": "completed",
+          "quests.0.reward_gold": 20,
+          "quests.0.reward_delivered": true,
+          "quests.0.resolved_turn": 9
+        },
+        "first_reward": 20,
+        "second_reward": 0,
+        "idempotent": true
+      },
+      "expected": {
+        "quests": {
+          "quests.0.status": "completed",
+          "quests.0.reward_gold": 20,
+          "quests.0.reward_delivered": true,
+          "quests.0.resolved_turn": 9
+        },
+        "first_reward": 20,
+        "second_reward": 0,
+        "idempotent": true
+      },
+      "metric_values": {
+        "state_transition_pass_rate": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "state_projection",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.330846Z",
+      "duration_ms": 0.014499993994832039
+    },
+    {
+      "case_id": "state.rule.set-entity",
+      "suite": "state_rules",
+      "passed": true,
+      "actual": {
+        "projection": {
+          "world_projection.entities.npc_x.alive": false
+        },
+        "emitted": []
+      },
+      "expected": {
+        "projection": {
+          "world_projection.entities.npc_x.alive": false
+        },
+        "emitted": []
+      },
+      "metric_values": {
+        "state_transition_pass_rate": 1.0
+      },
+      "diagnostics": [],
+      "evaluator_id": "state_projection",
+      "evaluator_version": "1.6.0",
+      "product_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+      "dataset_hash": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733",
+      "seed": 7,
+      "started_at": "2026-10-02T12:32:17.335997Z",
+      "duration_ms": 0.02850010059773922
+    }
+  ],
+  "error_case_ids": [],
+  "skipped_case_ids": [],
+  "case_diagnostics": {},
+  "metric_values": {
+    "exact_match": 1.0,
+    "state_transition_pass_rate": 1.0,
+    "route_accuracy": 1.0,
+    "target_accuracy": 1.0,
+    "memory_write_precision": 1.0,
+    "memory_recall_at_1": 0.5833333333333334,
+    "memory_recall_at_3": 1.0,
+    "memory_recall_at_5": 1.0,
+    "memory_mrr": 0.8333333333333334,
+    "context_recall_at_5": 1.0,
+    "context_forbidden_leak_rate": 0.0,
+    "secret_leak_count": 0.0,
+    "context_token_budget_violation": 0.0,
+    "narrative_claim_accuracy": 1.0,
+    "narrative_hard_contradictions": 0.0,
+    "npc_identity_errors": 0.0
+  },
+  "aggregates": {
+    "route_confusion_matrix": {
+      "combat_agent": {
+        "combat_agent": 5
+      },
+      "loot": {
+        "loot": 7
+      },
+      "storyteller": {
+        "storyteller": 6
+      },
+      "npc_actor": {
+        "npc_actor": 3
+      }
+    },
+    "narrative_reason_matrix": {
+      "accepted": {
+        "accepted": 14
+      },
+      "action_incompatible": {
+        "action_incompatible": 2
+      },
+      "player_death": {
+        "player_death": 1
+      },
+      "inventory_possession": {
+        "inventory_possession": 1
+      },
+      "lifecycle_contradiction": {
+        "lifecycle_contradiction": 2
+      },
+      "current_location": {
+        "current_location": 1
+      },
+      "location_region": {
+        "location_region": 1
+      },
+      "npc_identity": {
+        "npc_identity": 1
+      },
+      "reward_delta": {
+        "reward_delta": 1
+      },
+      "entity_out_of_scene": {
+        "entity_out_of_scene": 2
+      },
+      "unrevealed_secret": {
+        "unrevealed_secret": 1
+      }
+    },
+    "layer_outcomes": {
+      "context": {
+        "passed": 8,
+        "failed": 0,
+        "error": 0
+      },
+      "generate": {
+        "passed": 1,
+        "failed": 0,
+        "error": 0
+      },
+      "retrieve": {
+        "passed": 7,
+        "failed": 0,
+        "error": 0
+      },
+      "store": {
+        "passed": 11,
+        "failed": 0,
+        "error": 0
+      }
+    }
+  },
+  "hard_failures": [],
+  "passed": true
+}

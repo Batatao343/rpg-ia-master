@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["product_sha", "dataset_version", "evaluator_version", "baseline", "candidate"],
+  "properties": {
+    "product_sha": {"type": "string"},
+    "dataset_version": {"type": "string"},
+    "evaluator_version": {"type": "string"},
+    "baseline": {"type": "object"},
+    "candidate": {
+      "type": "object",
+      "required": ["requested_model", "resolved_models", "route_accuracy", "p95_ms"],
+      "properties": {
+        "requested_model": {"type": "string"},
+        "resolved_models": {"type": "array", "items": {"type": "string"}},
+        "route_accuracy": {"type": "number"},
+        "target_accuracy": {"type": ["number", "null"]},
+        "loot_context_accuracy": {"type": ["number", "null"]},
+        "p50_ms": {"type": "number"},
+        "p95_ms": {"type": "number"},
+        "input_tokens": {"type": "integer"},
+        "cost_usd": {"type": ["number", "null"]},
+        "hard_failures": {"type": "integer"}
+      }
+    },
+    "decision": {"enum": ["go", "no-go", "inconclusive", "eval-authoring-required"]}
+  }
+}

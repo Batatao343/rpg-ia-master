@@ -3110,3 +3110,394 @@ specs:
   tie_breaker: null
   lineage_ambiguous: false
   lineage_note: null
+- id: SPEC-176
+  slug: ci-eval-clean-checkout-integrity
+  status: done
+  path: specs/SPEC-176-ci-eval-clean-checkout-integrity.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: e621fe0e9a27db45ad7e8cb9ab1f93852a06c154
+  completed_at: '2026-10-02'
+  completed_order: 175
+  depends_on:
+  - SPEC-175
+  depends_on_raw:
+  - SPEC-175 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Clean-checkout remediation; Sol review approved; GitHub PR 12 eval-governance and applicable CI green
+- id: SPEC-177
+  slug: jev-decision-backend-adapter
+  status: approved
+  path: specs/SPEC-177-jev-decision-backend-adapter.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-176
+  depends_on_raw:
+  - SPEC-176 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-178
+  slug: jev-router-ab-eval
+  status: approved
+  path: specs/SPEC-178-jev-router-ab-eval.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-177
+  depends_on_raw:
+  - SPEC-177 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-179
+  slug: jev-target-loot-context-eval
+  status: approved
+  path: specs/SPEC-179-jev-target-loot-context-eval.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-178
+  depends_on_raw:
+  - SPEC-178 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-180
+  slug: jev-classify-expansion-promotion
+  status: approved
+  path: specs/SPEC-180-jev-classify-expansion-promotion.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-179
+  depends_on_raw:
+  - SPEC-179 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-181
+  slug: hosted-supabase-runtime-contract
+  status: approved
+  path: specs/SPEC-181-hosted-supabase-runtime-contract.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-180
+  depends_on_raw:
+  - SPEC-180 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-182
+  slug: real-usage-metering
+  status: approved
+  path: specs/SPEC-182-real-usage-metering.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-181
+  depends_on_raw:
+  - SPEC-181 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-183
+  slug: pricing-estilhas-margin
+  status: approved
+  path: specs/SPEC-183-pricing-estilhas-margin.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-182
+  depends_on_raw:
+  - SPEC-182 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-184
+  slug: wallet-ledger-reservations
+  status: approved
+  path: specs/SPEC-184-wallet-ledger-reservations.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-183
+  depends_on_raw:
+  - SPEC-183 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-185
+  slug: account-dashboard-cost-attribution
+  status: approved
+  path: specs/SPEC-185-account-dashboard-cost-attribution.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-184
+  depends_on_raw:
+  - SPEC-184 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-186
+  slug: speech-to-text-routing
+  status: approved
+  path: specs/SPEC-186-speech-to-text-routing.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-185
+  depends_on_raw:
+  - SPEC-185 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-187
+  slug: voice-input-web-mobile
+  status: approved
+  path: specs/SPEC-187-voice-input-web-mobile.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-186
+  depends_on_raw:
+  - SPEC-186 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-188
+  slug: paid-image-quotes
+  status: approved
+  path: specs/SPEC-188-paid-image-quotes.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-187
+  depends_on_raw:
+  - SPEC-187 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-189
+  slug: stripe-web-checkout-webhooks
+  status: approved
+  path: specs/SPEC-189-stripe-web-checkout-webhooks.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-188
+  depends_on_raw:
+  - SPEC-188 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-190
+  slug: account-lifecycle-abuse-security
+  status: approved
+  path: specs/SPEC-190-account-lifecycle-abuse-security.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-189
+  depends_on_raw:
+  - SPEC-189 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-191
+  slug: supabase-remote-staging
+  status: approved
+  path: specs/SPEC-191-supabase-remote-staging.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-190
+  depends_on_raw:
+  - SPEC-190 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-192
+  slug: vercel-staging-worker-topology
+  status: approved
+  path: specs/SPEC-192-vercel-staging-worker-topology.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-191
+  depends_on_raw:
+  - SPEC-191 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-193
+  slug: capacitor-android-foundation
+  status: approved
+  path: specs/SPEC-193-capacitor-android-foundation.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-192
+  depends_on_raw:
+  - SPEC-192 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-194
+  slug: google-play-billing-consumables
+  status: approved
+  path: specs/SPEC-194-google-play-billing-consumables.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-193
+  depends_on_raw:
+  - SPEC-193 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-195
+  slug: cross-channel-reconciliation-refunds
+  status: approved
+  path: specs/SPEC-195-cross-channel-reconciliation-refunds.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-194
+  depends_on_raw:
+  - SPEC-194 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-196
+  slug: finops-margin-guard-observability
+  status: approved
+  path: specs/SPEC-196-finops-margin-guard-observability.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-195
+  depends_on_raw:
+  - SPEC-195 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-197
+  slug: closed-paid-beta-release-gate
+  status: approved
+  path: specs/SPEC-197-closed-paid-beta-release-gate.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-196
+  depends_on_raw:
+  - SPEC-196 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-198
+  slug: google-play-publication
+  status: approved
+  path: specs/SPEC-198-google-play-publication.md
+  created_commit: null
+  created_at: '2026-10-02'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-197
+  depends_on_raw:
+  - SPEC-197 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Imported approved v5 package; implementation not started

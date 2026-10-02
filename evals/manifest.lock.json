@@ -3,7 +3,7 @@
     "datasets/regression/governance.jsonl": "sha256:70495f46b2487a95bda9c5863cfa3d57ae384a2199e072b409f3e1a89f3fdd69",
     "datasets/regression/harness.jsonl": "sha256:6d0ec855914693e20fcd5bc7ae356ea984164f45b0b779d657fe7dc8d00ad2b4",
     "datasets/regression/memory_context.jsonl": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
-    "datasets/regression/narrative_npc.jsonl": "sha256:30e96c262d5cadd2a3c5810044e44eb15d75d2d7b96824bf385639269d99f892",
+    "datasets/regression/narrative_npc.jsonl": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
     "datasets/regression/routing_actions.jsonl": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
     "datasets/regression/state_rules.jsonl": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733"
   },
