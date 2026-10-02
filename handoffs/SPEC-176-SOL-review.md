@@ -1,5 +1,12 @@
 # SPEC-176 — review-pending: Sol High independente
 
+> **Correção do preflight:** o usuário esclareceu que a sessão principal já
+> estava configurada em Sol High. O bloqueio de modelo descrito na seção
+> histórica abaixo foi um erro de interpretação do coordenador: ele tratou a
+> identificação genérica da sessão como ausência de configuração. A execução
+> foi delegada desnecessariamente; a revisão em contexto independente segue
+> exigida pelo contrato. Nenhum gate foi dispensado por essa correção.
+
 ## Execução local atual (2026-10-02)
 
 O coordenador atestou a seleção deste executor pelos parâmetros reais do
