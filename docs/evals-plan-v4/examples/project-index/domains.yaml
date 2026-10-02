@@ -1,0 +1,42 @@
+schema_version: 1
+# Exemplo inicial; deve ser validado contra o código no momento da implementação.
+domains:
+  memory:
+    entrypoints:
+      - rag.py
+      - agents/archivist.py
+    core:
+      - services/context_builder.py
+      - services/memory_provenance.py
+      - services/memory_summary.py
+      - services/narrative_evidence.py
+    state:
+      - memory_facts
+      - narrative_summary
+      - archivist_last_run
+    tests:
+      - tests/test_npc_memory.py
+      - tests/test_memory_provenance.py
+      - tests/test_archivist_facts.py
+    evals:
+      - memory_write_precision
+      - retrieval_recall_at_5
+      - context_evidence_recall
+      - false_memory_rate
+
+  turn_pipeline:
+    entrypoints:
+      - api.py
+      - main.py
+    core:
+      - services/turn_execution.py
+      - services/turn_pipeline.py
+      - agents/router.py
+      - agents/turn_finalizer.py
+    tests:
+      - tests/test_input_normalization.py
+      - tests/test_api_attempt_telemetry.py
+    evals:
+      - routing_accuracy
+      - state_transition_correctness
+      - turn_success_rate

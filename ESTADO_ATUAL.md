@@ -1,5 +1,158 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **01/10 — plano de evals v4 concluído; SPEC-175 `done`.** O benchmark A/B
+> confirmatório v6 foi selado antes dos runs, ocultou o ground truth por
+> AES-256-GCM, executou 4 sessões/32 observações e passou revisão Sol no run
+> `SPEC-175-SOL-20261001-V6-01`. Localização empatou em 16/16, mas a condição
+> com Project Index teve **0/8 vitórias de custo** e piorou as medianas de calls
+> (5→8), bytes lidos (24.676→30.999,5) e wall time (38,907s→58,2535s). Decisão:
+> retirar o índice do contexto/fluxo padrão e mantê-lo apenas para consultas
+> explícitas, seletivas e confirmadas no source. Evidência completa em
+> `docs/project-index-benchmark/v6/` e `handoffs/SPEC-175-SOL-review-v6.md`.
+> Gate final: **1.895 passed, 35 skipped, 15 deselected**; Project Index fresco
+> em **5.507 nós/14.056 arestas**. SPEC-104 cloud permanece `draft`/on hold;
+> nenhum provider pago ou long-run foi executado. Este bloco prevalece sobre os
+> históricos abaixo.
+
+> **30/09 — SPEC-174 `done`; SPEC-175 em execução.** A baseline v1 preserva 86
+> casos determinísticos e F01–F16: todos os hard gates verdes, hashes/ambiente/
+> evaluator registrados, comparação de validação com deltas zero. Provider real
+> foi omitido pela restrição de custo existente e long-run foi excluído pela
+> spec; nenhum target ou dado foi inventado. Evidência em
+> `docs/eval-baselines/v1/`. A etapa final mede A/B do Project Index com tarefas
+> históricas e decisão pré-registrada; SPEC-104 cloud segue on hold. Este bloco
+> prevalece sobre os históricos abaixo.
+
+> **30/09 — SPEC-173 `done`; SPEC-174 em execução.** O CI agora tem gate
+> determinístico sempre ativo e jobs seletivos backend/frontend, proteção por
+> Environment para régua/datasets, holdout privado somente agregado, contrato
+> real manual com teto duro de 20 requests/US$ 0,20 e smoke post-deploy
+> read-only com verificação de SHA. Smokes locais: 7 suites de produto verdes,
+> frontend 16/16 e playtest 14 perfis x 3 turnos com zero erro/violação. Nenhum
+> provider pago foi executado. A SPEC-174 mede a baseline v1 sem mudar produto,
+> sem targets inventados e sem long-run; SPEC-104 cloud segue on hold. Este
+> bloco prevalece sobre os históricos abaixo.
+
+> **30/09 — SPEC-173 em execução.** Após fechar a SPEC-172 com 16/16 jornadas e
+> gate offline verde, a etapa ativa implementa gates CI seletivos, proteção da
+> régua, artifacts compatíveis e workflows manuais para provider/holdout/smoke.
+> Nenhum long-run ou provider real será disparado nesta implementação; SPEC-104
+> cloud segue on hold. Este bloco prevalece sobre os históricos abaixo.
+
+> **30/09 — SPEC-172 `done`; SPEC-173 é a próxima etapa.** Frontend evals agora
+> executam F01–F16 em Playwright/Chromium com API determinística, guards globais
+> de pageerror/console/rede/5xx, axe e viewports 320/390/768/1440. Smoke
+> canônico: **16/16**, pass rate `1.0` e zero erros inesperados, overflow e
+> violações a11y serious/critical. A execução encontrou e corrigiu cinco falhas
+> reais: bootstrap de auth vazando requests protegidos, fim de SSE sem narração,
+> mapa não interativo, contraste 3,77:1 e HUD móvel sem controle de fechar.
+> Registry/lock 1.6.0; build, Node e Ruff verdes. Gate final: **1.883 passed,
+> 35 skipped, 15 deselected**. Zero provider pago/cloud/long-run; SPEC-104 cloud
+> continua on hold. Este bloco prevalece sobre os históricos abaixo.
+
+> **30/09 — SPEC-171 `done`; SPEC-172 está em execução.** Narrative/NPC evals
+> têm 27 casos determinísticos para morte, posse, localização, identidade,
+> segredo, reward/outcome, presença em cena, ação e lifecycle. O evaluator mede
+> decisão, reason e output sanitizado fixture-authored; mutações separam vazamento
+> real, substituição neutra e supressão indevida. Smoke v3: claim accuracy `1.0`,
+> hard contradictions `0`, NPC identity errors `0`; zero provider/judge. Persona
+> segue não bloqueante e sem calibração. Astra aprovou
+> `SPEC-171-ASTRA-20260930-01`. Gate final: **1.878 passed, 35 skipped, 15
+> deselected**; Project Index **5.420 nodes/13.866 edges**. SPEC-104 cloud segue
+> on hold. Este bloco prevalece sobre os históricos abaixo.
+
+> **29/09 — SPEC-170 `done`; SPEC-171 está em execução.** Memory/RAG/context
+> agora separa `store -> retrieve -> context -> generation` em 27 casos públicos,
+> com adapters nos caminhos reais, trace por evidence ID, Recall@1/3/5, MRR,
+> inclusão/descarte de contexto e hard gates de secret/forbidden leak e budget.
+> Smoke final `spec170-memory-context-smoke-v3`: 27/27 verde; R@1 `0.5833`,
+> R@3/5 `1.0`, MRR `0.8333`, context R@5/write precision `1.0`, leaks/budget
+> zero. Astra aprovou `SPEC-170-ASTRA-20260929-01`. Vetores são fixtures offline
+> e generation cobre o guard determinístico, não qualidade semântica/prosa. Gate
+> final: **1.866 passed, 35 skipped, 15 deselected**. Project Index: **5.399
+> nodes/13.814 edges**. SPEC-104 cloud permanece on hold. Este bloco prevalece
+> sobre os históricos abaixo.
+
+> **29/09 — SPEC-169 `done`; SPEC-170 está em execução.** Routing/action evals
+> agora têm corpus fechado de 25 casos, decisão estruturada pré-narração,
+> target exato/conjunto aceito, variantes metamórficas, negativos, diagnóstico
+> de structured output e matriz de confusão. Smoke CLI offline: `route_accuracy`,
+> `target_accuracy` e `exact_match` em `1.0`, matriz diagonal; zero provider.
+> Gate final: **1.851 passed, 35 skipped, 15 deselected**, Ruff verde. Project
+> Index: 5.358 nodes/13.713 edges. Revisão por escalada não foi necessária porque
+> `RouteType` não mudou. SPEC-104 cloud permanece on hold. Este bloco prevalece
+> sobre os históricos abaixo. A SPEC-170 iniciou a separação de
+> store/retrieve/context/generate e exige revisão independente Astra.
+
+> **28/09 — SPEC-168 `done`; SPEC-169 é a etapa ativa.** O corpus estruturado de
+> state/rules usa `ProjectionEvaluator` e compara só campos declarados. São 12
+> casos para eventos, regras, economia/inventário/item único, quests/recompensas,
+> lifecycle/death/restore, combate, migração, save/load e replay, além do adapter
+> de invariantes existente. Métricas do smoke: `state_transition_pass_rate=1.0`
+> e `exact_match=1.0`. Gate final: **1.845 passed, 35 skipped, 15 deselected**,
+> zero falhas. Revisão por escalada não foi necessária; zero provider/judge/
+> long-run. SPEC-104 cloud permanece on hold. Este bloco prevalece abaixo.
+
+> **28/09 — SPEC-167 `done`; SPEC-168 é a etapa ativa.** O harness em `evals/`
+> executa datasets travados sem API key, usa registry explícito de adapters,
+> mantém expected/oracle fora da visão do produto, reutiliza invariantes de
+> `playtest/`, contabiliza result/error/skip e grava JSON/Markdown endereçáveis.
+> Comparação falha fechado por ruler/dataset/config incompatível; identidade do
+> produto inclui HEAD, hash dos bytes Git-visible e dirty state. Sol aprovou no
+> run `SPEC-167-SOL-20260928-02`. Gate final: **1.841 passed, 35 skipped, 15
+> deselected**, zero falhas. SPEC-104 cloud segue on hold; nenhum provider real
+> ou long-run. Este bloco prevalece sobre os históricos abaixo.
+
+> **28/09 — SPEC-166 `done`; SPEC-167 é a etapa ativa.** O Project Index local
+> entrega grafo determinístico por AST Python, mapa file-only TS/JS, proveniência
+> e confidence, ownership/eval maps curados, exclusão de conteúdo privado/gerado,
+> freshness por source-tree hash e CLI bounded. Relações HTTP são explicitamente
+> `static_best_effort` para não alegar autoridade em Python dinâmico. Sol aprovou
+> no run `SPEC-166-SOL-20260928-06` após testes adversariais de staleness, imports,
+> schema e bindings FastAPI. Gate final: **1.832 passed, 35 skipped, 15
+> deselected**, zero falhas. SPEC-104 cloud segue `draft`/on hold; nenhum provider
+> real ou long-run foi usado. Este bloco prevalece sobre os históricos abaixo.
+
+> **28/09 — SPEC-165 `done`; SPEC-166 é a etapa ativa.** A governança em `evals/`
+> congela datasets, registry e todo o bundle da régua por SHA-256; compara
+> seleção/configuração de baseline; contabiliza resultado/erro/skip; protege os
+> próprios controles; proíbe judge blocking até meta-eval; e mantém holdout fora
+> do repo público. Astra aprovou no run `SPEC-165-ASTRA-20260928-03` após duas
+> rodadas adversariais. Gate: **1825 passed, 35 skipped, 15 deselected**. SPEC-104
+> cloud segue `draft`/on hold. Este bloco prevalece sobre os históricos abaixo.
+
+> **28/09 — SPEC-164 `done`; SPEC-165 é a etapa ativa.** `AGENTS.md` agora
+> roteia retomada por SPEC-ID, índice/project index, integridade de eval,
+> ownership, fluxo deterministic-first, long-run opt-in e menor modelo suficiente.
+> Os 9 testes focados passaram; suíte completa: **1809 passed, 35 skipped, 15
+> deselected**. A revisão independente Sol foi aprovada no run
+> `SPEC-164-SOL-20260928-02`, após corrigir a antiga criação de specs sem ID.
+> SPEC-165 (governança de evals) foi desbloqueada. SPEC-104 cloud continua
+> deliberadamente `draft`/on hold. Este bloco prevalece sobre os históricos abaixo.
+
+> **28/09 — contratos reais concluídos; matriz B em 1.951/2.000.** Doze specs
+> funcionais (SPEC-141/142/144–147/149–152/154/161) passaram seus smokes
+> DeepSeek e agora estão `done`. Contrato dirigido: beat elegível concedeu 150
+> XP com outcome consistente. Matriz B: campanhas 1–9 completas, zero erros,
+> zero violações `error` e zero invocações terminais; campanha 10 parou em
+> 151/200 por HTTP 402 `Insufficient Balance`. Total estimado: US$ 1,17628 e
+> 4.201 requests. O usuário dispensou a repetição do par 10 após informar que os
+> US$ 5 adicionados foram consumidos; SPEC-128 encerrada `done` com a limitação
+> explícita. Achados: custo estimado subcontado, prefixo NPC duplicável e warnings
+> de repetição NPC ausentes do summary. [Evidência](docs/playtest-matriz-b-2026-09-28.md).
+> Gate offline final: **1807 passed, 35 skipped, 15 deselected**.
+> Este bloco prevalece sobre os históricos abaixo.
+
+> **27/09 — evals v4: SPEC-163 `done`.** As 162 specs históricas receberam IDs
+> estáveis `SPEC-001`–`SPEC-162` pela ordem comprovada de criação no Git; a ordem
+> de conclusão permanece separada. A [SPEC-163](specs/SPEC-163-normalizacao-historica-specs.md)
+> e o [índice reproduzível](specs/index.yaml) registram status, commits, datas,
+> dependências e ambiguidades. [Plano e evidências](docs/evals-inicio-2026-09-27.md).
+> Verificador da migração, 7 regressões e Ruff verdes; lint de conteúdo sem
+> erros/avisos; suíte final **1807 passed, 35 skipped, 15 deselected**. Nenhum
+> provider real ou long-run. SPEC-164 é a próxima etapa; baseline ainda não foi
+> medida. Este bloco prevalece sobre os históricos abaixo.
+
 > **CONTINUAÇÃO 26/09 — testes adversos e correções.** Sete eixos `done`:
 > artes, contexto, operações, efeitos, leases, frontend e gates. Dois permanecem
 > `in-progress`: narrativa/recompensas aguardam contrato DeepSeek explicitamente
@@ -61,7 +214,7 @@
 > **RETOMADA 2026-09-19 — remediação local antes da matriz B.** A revisão profunda
 > encontrou contratos incompletos apesar da suíte verde anterior. O usuário
 > aprovou corrigir primeiro as reproduções locais e separar os gates.
-> [Spec/adendo](specs/remediacao-local-contratos-pre-matriz.md) e
+> [Spec/adendo](specs/SPEC-162-remediacao-local-contratos-pre-matriz.md) e
 > [relatório](docs/remediacao-pre-matriz-2026-09-19.md).
 >
 > Recuperação agora tem intenção fechada: “pedir ajuda” não libera viagem/ataque;
@@ -111,7 +264,7 @@
 > Latência: experimento concluído com **no-go** no R29 real; produção permanece
 > `RPG_TURN_EXECUTION=sequential`. Fan-out LLM é experimental; arquivista continua
 > inline. `ainvoke` usa `to_thread`, sem cancelamento nativo de HTTP.
-> [Spec corrigida](specs/latencia-turno-caminho-critico-concorrente.md).
+> [Spec corrigida](specs/SPEC-143-latencia-turno-caminho-critico-concorrente.md).
 > Idempotência de claim Postgres foi corrigida e teve gate infra local 13/13 em
 > 28/08; não foi realizado deploy. Cloud permanece `draft`, dependente de
 > autorização/contas/orçamento. Fase 9 (sprites/som) não tem spec aprovada.
@@ -126,10 +279,10 @@
 > [playtest-matriz-a-2026-08-27](docs/playtest-matriz-a-2026-08-27.md).
 >
 > A auditoria mostrou quatro recorrências de correções antigas incompletas. As
-> specs [ciclo de vida](specs/contrato-canonico-ciclo-vida-acoes.md),
-> [resultado canônico](specs/resultado-canonico-turno-apresentacao.md),
-> [interações/progresso](specs/interacoes-progresso-elegibilidade.md) e
-> [structured output com evidência](specs/structured-output-evidencia-recuperacao.md)
+> specs [ciclo de vida](specs/SPEC-141-contrato-canonico-ciclo-vida-acoes.md),
+> [resultado canônico](specs/SPEC-144-resultado-canonico-turno-apresentacao.md),
+> [interações/progresso](specs/SPEC-142-interacoes-progresso-elegibilidade.md) e
+> [structured output com evidência](specs/SPEC-145-structured-output-evidencia-recuperacao.md)
 > estão `in-progress`: implementação offline concluída, aguardando somente a B.
 > O grafo agora barra ação incompatível pela fase do ator (Vitalidade 0 sozinha
 > não é morte), finaliza ledger antes da apresentação, compartilha elegibilidade
@@ -147,7 +300,7 @@
 > inválido e não entra na comparação. A spec de latência permanece `draft`.
 
 > **📝 SESSÃO 57 (2026-08-27): spec de latência intraturno em `draft`.** A
-> [spec de caminho crítico concorrente](specs/latencia-turno-caminho-critico-concorrente.md)
+> [spec de caminho crítico concorrente](specs/SPEC-143-latencia-turno-caminho-critico-concorrente.md)
 > separa latência de uma interação, throughput entre campanhas e latência
 > percebida pelo SSE. Com base em 2.000 turnos válidos da matriz A, especifica
 > fan-out/fan-in seguro de plano+rota, embedding único com buscas de contexto
@@ -350,10 +503,10 @@
 
 > **📝 SESSÃO 50 (2026-08-17): quatro specs de produto, sem implementação.**
 > Foram especificadas as quatro pendências priorizadas com o usuário:
-> [tiers 5+ / níveis 9–20](specs/tiers-5-plus-classes-niveis-9-20.md),
-> [Fase 8B — arte dinâmica rara](specs/fase-8b-geracao-dinamica-arte.md),
-> [Crônica avançada](specs/cronica-avancada-compressao-busca-semantica.md) e
-> [playtest longo comerciante](specs/playtest-longo-perfil-comerciante.md), todas
+> [tiers 5+ / níveis 9–20](specs/SPEC-127-tiers-5-plus-classes-niveis-9-20.md),
+> [Fase 8B — arte dinâmica rara](specs/SPEC-125-fase-8b-geracao-dinamica-arte.md),
+> [Crônica avançada](specs/SPEC-124-cronica-avancada-compressao-busca-semantica.md) e
+> [playtest longo comerciante](specs/SPEC-126-playtest-longo-perfil-comerciante.md), todas
 > `draft`. Nenhuma mecânica, migration, dependência ou chamada paga foi executada.
 >
 > Decisões fechadas: cap real 20 + **80 Cartas** tardias (20 tronco/45 subclasse/
@@ -386,7 +539,7 @@
 > OpenAI-compat primários quanto o fallback Anthropic num ambiente limpo.
 
 > **📝 SESSÃO 48 (2026-08-16): alvo de hospedagem escolhido, sem deploy.**
-> A [certificação cloud](specs/fase-10b-certificacao-cloud-portavel.md) agora
+> A [certificação cloud](specs/SPEC-104-fase-10b-certificacao-cloud-portavel.md) agora
 > registra **Railway como alvo primário e Render como contingência**. A decisão
 > aproveita a arquitetura existente: um serviço público `api-web` serve
 > `web/dist` + FastAPI na mesma origem e um serviço privado `worker` reutiliza a
@@ -407,15 +560,15 @@
 > cliente sem identidade, assets, jobs, backup e operação.
 >
 > Foram criadas **9 specs `draft`**: o
-> [plano mestre](specs/fase-10b-plano-mestre-local-first.md) + oito fatias em
-> ordem — [fundação/adapters](specs/fase-10b-fundacao-local-portas-adapters.md),
-> [Postgres](specs/fase-10b-postgres-persistencia-transacional.md),
-> [turnos/fila](specs/fase-10b-turnos-duraveis-concorrencia-fila.md),
-> [Auth/RLS](specs/fase-10b-auth-rls-isolamento.md),
-> [pgvector](specs/fase-10b-pgvector-memoria-transacional.md),
-> [storage](specs/fase-10b-storage-assets-portavel.md),
-> [operação/backup/caos](specs/fase-10b-observabilidade-backup-caos.md) e
-> [certificação cloud futura](specs/fase-10b-certificacao-cloud-portavel.md).
+> [plano mestre](specs/SPEC-108-fase-10b-plano-mestre-local-first.md) + oito fatias em
+> ordem — [fundação/adapters](specs/SPEC-105-fase-10b-fundacao-local-portas-adapters.md),
+> [Postgres](specs/SPEC-109-fase-10b-postgres-persistencia-transacional.md),
+> [turnos/fila](specs/SPEC-111-fase-10b-turnos-duraveis-concorrencia-fila.md),
+> [Auth/RLS](specs/SPEC-103-fase-10b-auth-rls-isolamento.md),
+> [pgvector](specs/SPEC-107-fase-10b-pgvector-memoria-transacional.md),
+> [storage](specs/SPEC-110-fase-10b-storage-assets-portavel.md),
+> [operação/backup/caos](specs/SPEC-106-fase-10b-observabilidade-backup-caos.md) e
+> [certificação cloud futura](specs/SPEC-104-fase-10b-certificacao-cloud-portavel.md).
 >
 > Decisões: Supabase Local como ensaio zero-custo, mas domínio atrás de portas
 > Python e perfil Postgres+pgvector/OIDC/S3 portátil; JSON+FAISS permanecem para
@@ -433,11 +586,11 @@
 
 > **✅ SESSÃO 46 (2026-08-16): cinco remediações do longrun real `done`.**
 > Os achados da sessão 45 viraram as specs
-> [memória NPC](specs/memoria-npc-sucesso-ledger.md),
-> [chase/fuga](specs/chase-progresso-e-fuga.md),
-> [retomada/conversão de quests](specs/quests-retomada-conversao.md),
-> [estado/origem pós-fuga](specs/pos-fuga-roteamento-origem.md) e
-> [ritmo normal v2](specs/ritmo-combate-normal-v2.md), todas `done`.
+> [memória NPC](specs/SPEC-114-memoria-npc-sucesso-ledger.md),
+> [chase/fuga](specs/SPEC-100-chase-progresso-e-fuga.md),
+> [retomada/conversão de quests](specs/SPEC-119-quests-retomada-conversao.md),
+> [estado/origem pós-fuga](specs/SPEC-118-pos-fuga-roteamento-origem.md) e
+> [ritmo normal v2](specs/SPEC-121-ritmo-combate-normal-v2.md), todas `done`.
 >
 > Sucesso direto de memória privada agora espelha o mesmo `npc_claim/reported`
 > no ledger sem segundo write; chase entra no fingerprint e fuga tem teto local
@@ -477,11 +630,11 @@
 > **1466 passed, 1 skipped, 14 deselected**.
 
 > **✅ SESSÃO 44 (2026-08-13): remediação do longrun de observabilidade `done`.**
-> Cinco specs fecharam P0/P1/P2: [checkpoint seguro](specs/checkpoint-seguro-fora-combate.md),
-> [origem por cena](specs/origem-combate-por-cena.md),
-> [memória/quests verificáveis](specs/memoria-autoridade-quests-verificaveis.md),
-> [telemetria de rollback/abort](specs/telemetria-rollback-abort.md) e
-> [latência do início de combate](specs/latencia-inicio-combate.md).
+> Cinco specs fecharam P0/P1/P2: [checkpoint seguro](specs/SPEC-101-checkpoint-seguro-fora-combate.md),
+> [origem por cena](specs/SPEC-117-origem-combate-por-cena.md),
+> [memória/quests verificáveis](specs/SPEC-113-memoria-autoridade-quests-verificaveis.md),
+> [telemetria de rollback/abort](specs/SPEC-123-telemetria-rollback-abort.md) e
+> [latência do início de combate](specs/SPEC-112-latencia-inicio-combate.md).
 >
 > Checkpoint ativo é recusado e slot legado é saneado; a causa da cena nova
 > vence rótulo histórico; alegações de NPC entram no ledger como `reported` e
@@ -519,10 +672,10 @@
 > nenhuma campanha real chegou a 200 por suspensão recorrente desta máquina.
 
 > **✅ SESSÃO 42 (2026-08-13): melhorias pós-longrun `done`.** Quatro specs
-> fecharam os oito pontos da análise: [objetivo público + ciclo de quests](specs/objetivo-publico-ciclo-quests.md),
-> [direção social + origem de combates](specs/ritmo-social-origem-combates.md),
-> [latência por nó](specs/observabilidade-latencia-nos.md) e
-> [continuidade/memória/morte](specs/continuidade-memoria-morte.md).
+> fecharam os oito pontos da análise: [objetivo público + ciclo de quests](specs/SPEC-115-objetivo-publico-ciclo-quests.md),
+> [direção social + origem de combates](specs/SPEC-122-ritmo-social-origem-combates.md),
+> [latência por nó](specs/SPEC-116-observabilidade-latencia-nos.md) e
+> [continuidade/memória/morte](specs/SPEC-102-continuidade-memoria-morte.md).
 >
 > Beats e clímax privados não saem mais pela API nem orientam NPCs; a view pública
 > usa side quest ativa ou arco/local. Quests têm ledger `created →
@@ -539,7 +692,7 @@
 > build Vite verde. Gate: **1455 passed, 1 skipped, 14 deselected**.
 
 > **✅ SESSÃO 41 (2026-08-12): remediação P0/P1/P2 do playtest real `done`.** A
-> spec [remediacao-playtest-real-100t](specs/remediacao-playtest-real-100t.md)
+> spec [remediacao-playtest-real-100t](specs/SPEC-120-remediacao-playtest-real-100t.md)
 > entregou prazo absoluto no watchdog (resultado tardio após suspensão é
 > rejeitado), perfil `normal` restrito à visão pública, pedido diegético de tarefa
 > com funil observável até quest, cooldown/retirada prudente e voz de loot em
@@ -643,7 +796,7 @@
 > (4 warnings de dependências). Specs funcionais: **93 `done`**.
 
 > **✅ SESSÃO 36 (2026-08-12): Fase 8A especificada e `approved`.** A
-> spec [fase-8-ancoras-visuais-contextuais](specs/fase-8-ancoras-visuais-contextuais.md)
+> spec [fase-8-ancoras-visuais-contextuais](specs/SPEC-094-fase-8-ancoras-visuais-contextuais.md)
 > mapeia a integração das imagens no onboarding (raça/classe), na cena do local e
 > na primeira aparição de NPC. A decisão visual é determinística por ID canônico,
 > visibilidade e estado persistido; não haverá escolha de arquivo pela LLM nem
@@ -670,7 +823,8 @@
 > de dependências). Specs funcionais: **92 `done` + 1 `approved`**.
 
 > **✅ SESSÃO 35 (2026-08-11): hardening de persistência/SSE `done`.** A spec
-> [hardening-persistencia-sse-idempotencia](specs/hardening-persistencia-sse-idempotencia.md)
+> [hardening-persistencia-sse-idempotencia](specs/SPEC-086-hardening-persistencia-sse-idempotencia.md)
+
 > corrigiu o vazamento de `*.checkpoint.json` na listagem/latest, exclusão agora
 > remove save+checkpoint+memória e JSON usa temp+`fsync`+`os.replace`. Falha de
 > escrita deixou de responder sucesso falso na API/CLI.
@@ -692,7 +846,7 @@
 > verde. Specs funcionais: **92 `done`**, nenhuma aprovada pendente.
 
 > **✅ SESSÃO 34 (2026-08-03): laboratório de combate no frontend `done`.** A
-> spec [modo-simulacao-combate](specs/modo-simulacao-combate.md) criou entrada
+> spec [modo-simulacao-combate](specs/SPEC-090-modo-simulacao-combate.md) criou entrada
 > “Simular combate” nas telas iniciais, configuração de classe/nível/inimigo/
 > quantidade e arena direta usando a UI tática e o motor determinístico reais.
 >
@@ -710,7 +864,7 @@
 
 > **✅ SESSÃO 33 (2026-08-03): revisão geral encontrou e corrigiu 2 bugs do
 > hardening de playtest.** A spec
-> [fix-playtest-liveness-telemetria-circuito](specs/fix-playtest-liveness-telemetria-circuito.md)
+> [fix-playtest-liveness-telemetria-circuito](specs/SPEC-080-fix-playtest-liveness-telemetria-circuito.md)
 > foi criada `approved`, executada testes-first e fechada `done`.
 >
 > **Bug 1 — falso stale:** recovery usava apenas `created_at`; uma matriz real
@@ -732,9 +886,9 @@
 
 > **✅ SESSÃO 32 (2026-08-03): remediações dos relatos de gameplay `done`.**
 > Três specs novas foram aprovadas e executadas em ordem:
-> [polish-prosa-v2](specs/polish-prosa-v2.md),
-> [hardening-playtest-watchdog](specs/hardening-playtest-watchdog.md) e
-> [smoke-dirigido-recrutamento-comercio](specs/smoke-dirigido-recrutamento-comercio.md).
+> [polish-prosa-v2](specs/SPEC-091-polish-prosa-v2.md),
+> [hardening-playtest-watchdog](specs/SPEC-088-hardening-playtest-watchdog.md) e
+> [smoke-dirigido-recrutamento-comercio](specs/SPEC-092-smoke-dirigido-recrutamento-comercio.md).
 >
 > **Prosa:** a fronteira Python remove `Contexto do local`, `[ECOS DO MUNDO]`
 > e imperativos ecoados; repetição literal recebe transição neutra determinística
@@ -760,7 +914,7 @@
 
 > **✅ SESSÃO 31 (2026-08-02): volume do Mundo Vivo `done`; épico v2 fechado.**
 > A spec
-> [conflito-17-volume-conteudo-mundo-vivo](specs/conflito-17-volume-conteudo-mundo-vivo.md)
+> [conflito-17-volume-conteudo-mundo-vivo](specs/SPEC-078-conflito-17-volume-conteudo-mundo-vivo.md)
 > elevou o acervo para **153 Cartas de jogador + 40 inimigas**, o bestiário para
 > **124 criaturas** (40 novas) e o elenco para **36 NPCs novos** (3 por cada um
 > dos 12 hubs). As 15 subclasses têm 5–6 Cartas próprias e Superior; toda região
@@ -782,7 +936,7 @@
 > item de produto/ROADMAP antes de abrir uma nova spec.
 
 > **✅ SESSÃO 30 (2026-08-02): frontend tático de Cartas `done`.** A spec
-> [conflito-16-frontend-combate-cartas](specs/conflito-16-frontend-combate-cartas.md)
+> [conflito-16-frontend-combate-cartas](specs/SPEC-077-conflito-16-frontend-combate-cartas.md)
 > entregou contrato API e UI React para mão preparada, custo/frequência/Ruptura,
 > escolha de Reação, zonas, Vitalidade/Ferimentos, conhecimento progressivo do
 > inimigo, perseguição e morte rica. O level-up legado também foi alinhado às
@@ -796,10 +950,10 @@
 > turno. **Gate:** `uv run pytest` = **1353 passed, 1 skipped, 14 deselected**.
 >
 > **Próxima spec por ordem:**
-> [conflito-17-volume-conteudo-mundo-vivo](specs/conflito-17-volume-conteudo-mundo-vivo.md).
+> [conflito-17-volume-conteudo-mundo-vivo](specs/SPEC-078-conflito-17-volume-conteudo-mundo-vivo.md).
 
 > **✅ SESSÃO 29 (2026-08-02): proveniência de memória `done`.** A spec
-> [hardening-memoria-proveniencia](specs/hardening-memoria-proveniencia.md)
+> [hardening-memoria-proveniencia](specs/SPEC-085-hardening-memoria-proveniencia.md)
 > fechou o ledger narrativo: `canonical_event | player_observation | npc_claim |
 > inference | legacy_unverified`, confiança derivada pelo motor, fonte/turno,
 > metadata no FAISS, retry idempotente e contexto rotulado. Inferência da LLM é
@@ -819,7 +973,7 @@
 > **Gate:** `uv run pytest` = **1349 passed, 1 skipped, 14 deselected**.
 >
 > **Próxima spec por ordem:**
-> [conflito-16-frontend-combate-cartas](specs/conflito-16-frontend-combate-cartas.md),
+> [conflito-16-frontend-combate-cartas](specs/SPEC-077-conflito-16-frontend-combate-cartas.md),
 > seguida de `conflito-17-volume-conteudo-mundo-vivo`.
 
 > **✅ SESSÃO 28 (2026-08-02): `conflito-13` E REMEDIAÇÕES `done`.** Os achados
@@ -965,7 +1119,7 @@ Achado dominante nos logs: **combate/explorador morrem por AUSÊNCIA de recovery
 combate) — não por dano alto. Quester sobrevive só evitando luta.
 
 **Decisões do usuário → entregas:**
-1. **[letalidade-early-game-v2](specs/letalidade-early-game-v2.md) Etapa 2
+1. **[letalidade-early-game-v2](specs/SPEC-056-letalidade-early-game-v2.md) Etapa 2
    IMPLEMENTADA** (`approved`) — 4 alavancas determinísticas: (1) **descanso/viagem
    recuperam** — descanso de early-game (nível ≤3) em zona não-apex de perigo ≤3
    NÃO sorteia encontro (`world_utils.recovery_rest_safe` + fio no storyteller) +
@@ -974,12 +1128,12 @@ combate) — não por dano alto. Quester sobrevive só evitando luta.
    Sangromante/Corruptor/Médico →30, Devoto →40), via gerador; (4) **+dano de
    early-game** runtime (`combat_mechanics.early_game_damage_bonus`: +2 nível 1–2,
    +1 nível 3, 0 do 4+, só o herói). **+9 testes.**
-2. **[fix-explorador-loop-navegacao](specs/fix-explorador-loop-navegacao.md)
+2. **[fix-explorador-loop-navegacao](specs/SPEC-061-fix-explorador-loop-navegacao.md)
    `done`** (B) — perfil Explorador oscilava cidade↔interior quando tudo já foi
    visitado (interior tem 1 saída) → bounce + `loot-exploracao` nunca dispara. Fix
    = memória anti-backtrack + fronteira primeiro (`_recent`, reset por campanha no
    runner). **+6 testes.**
-3. **[checkpoints-morte](specs/checkpoints-morte.md) `in-progress`** (C) — 8
+3. **[checkpoints-morte](specs/SPEC-060-checkpoints-morte.md) `in-progress`** (C) — 8
    decisões RESOLVIDAS (§2.1; memorial = escolha voluntária na tela de morte,
    nunca imposto; sem permadeath; restore do início se sem checkpoint). **FUNDAÇÃO
    + VERTICAL DE MORTE `done`:** `services/checkpoints.py` + `persistence`
@@ -1003,7 +1157,7 @@ combate) — não por dano alto. Quester sobrevive só evitando luta.
 
 5. **Parity ESTÁTICA das habilidades `done`** (pedido do usuário: "nenhuma muito
    mais forte que a outra") —
-   [balanceamento-classes-pos-playtest §10](specs/balanceamento-classes-pos-playtest.md).
+   [balanceamento-classes-pos-playtest §10](specs/SPEC-049-balanceamento-classes-pos-playtest.md).
    Insight: parity MECÂNICA é número → medida direto do catálogo
    (`player_abilities.json`), **sem playtest**. Métrica = dano-efetivo/custo-real
    (`custo = Entropia + self_harm/2`; conta DoT/efeito). Achado: roster **bem
@@ -1030,7 +1184,7 @@ fato (comparar `first_death_turn` com `20260720-093014`).
 Análise do run `20260719-160014` + decisões do usuário → 5 specs `approved` e
 implementadas (TDD, suíte **970 → 1001 offline verdes**, +31; 1 skip):
 
-1. **[playtest-agente-curioso-entropia](specs/playtest-agente-curioso-entropia.md)
+1. **[playtest-agente-curioso-entropia](specs/SPEC-059-playtest-agente-curioso-entropia.md)
    `done` — o BLOQUEADOR do balanceamento.** Raiz achada: os perfis de combate
    só mandavam "Ataco X" → as 101 habilidades NUNCA rodavam → Entropia travava em
    16/16 (flooding=100%/starvation=0% era artefato disso + do snapshot). Fix em 2
@@ -1041,23 +1195,23 @@ implementadas (TDD, suíte **970 → 1001 offline verdes**, +31; 1 skip):
    `_last_ability_id`/`_last_used_active` (transitório); runner lê gated por rota;
    `summary.entropy` reescrito (spent_total, %ativa, starvation/flooding
    redefinidos por gasto, não snapshot); report ganhou `%ativa`/`gasto/turno`.
-2. **[npc-in-scene-viagem](specs/npc-in-scene-viagem.md) `done`** — os 43
+2. **[npc-in-scene-viagem](specs/SPEC-058-npc-in-scene-viagem.md) `done`** — os 43
    `recycled_npc`: fuga de combate aplicava viagem SEM `reset_scene` → flag zumbi.
    Fix: [combat.py:726](agents/combat.py) reseta cena na fuga; invariante mede
    vazamento real (`npcs_for_context`), não flag crua; party excluída.
-3. **[aliados-em-combate](specs/aliados-em-combate.md) `done`** — motor de combate
+3. **[aliados-em-combate](specs/SPEC-055-aliados-em-combate.md) `done`** — motor de combate
    já incluía party ativa; faltava ponte NPC-amigo-em-cena → combatente. Novo
    `party.scene_allies` (in_scene + rel≥6 + fação não-hostil → aliado TRANSITÓRIO,
    não vira party permanente, dano reflete no NPC); `combat_party` na iniciativa/
    resolução; `encounter_budget` conta transitórios; invariante `combat.phantom_ally`.
    **Perfil `recrutador` novo** (faz o máx. de amigos).
-4. **[loot-exploracao](specs/loot-exploracao.md) `done`** — explorar recompensa
+4. **[loot-exploracao](specs/SPEC-057-loot-exploracao.md) `done`** — explorar recompensa
    (escada de raridade): novo `services/exploration.py` reusa `economy.roll_loot`
    (raridade por perigo, claim de único); achado na 1ª visita (fog of war) NUNCA
    único; **baú curado** (`treasure` no world_map: `pm_profundezas`,
    `ae_ruinas_submersas`) one-shot via `world.looted_locations`, pode ter único.
    Fiado no storyteller (nota no prompt + claim no pending).
-5. **[letalidade-early-game-v2](specs/letalidade-early-game-v2.md) `approved`
+5. **[letalidade-early-game-v2](specs/SPEC-056-letalidade-early-game-v2.md) `approved`
    (medir→decidir)** — sem código novo: instrumentação já existe; a Etapa 1
    (baseline com agente corrigido) É o playtest desta sessão; tuning decidido
    DEPOIS com o usuário.
@@ -1074,7 +1228,7 @@ mudanças e gerar os novos achados. **Backlog `comerciante`** endereçado no run
 1 instrumentada.** Auditoria do épico de classes (sessão 19) achou bugs que o
 mock/testes de unidade escondiam:
 
-1. **[fiacao-regras-orfas-classes](specs/fiacao-regras-orfas-classes.md) `done`
+1. **[fiacao-regras-orfas-classes](specs/SPEC-050-fiacao-regras-orfas-classes.md) `done`
    — 3 mecânicas de classe estavam MORTAS** (função pronta + testada em unidade,
    NUNCA chamada pelo fluxo de jogo): (a) **taunt do Devoto** — `pick_target`
    ignorava a condição `control:"taunt"`; o tank não tankava. (b)
@@ -1084,7 +1238,7 @@ mock/testes de unidade escondiam:
    Fix + **R4 anti-órfão**: `combat_mechanics.HANDLED_KINDS` + teste que varre
    os JSONs gerados e exige handler p/ todo kind/trigger (teria pego os 3).
    **+11 testes.**
-2. **[isolar-cache-runtime](specs/isolar-cache-runtime.md) `done` — bug
+2. **[isolar-cache-runtime](specs/SPEC-051-isolar-cache-runtime.md) `done` — bug
    recorrente das sessões 15/16.** `bestiary.json`/`npc_database.json`/
    `custom_artifacts.json` eram gravados em runtime nos arquivos versionados
    (exigia `git checkout` manual; run real gravou "Afogado" e derrubou testes).
@@ -1092,7 +1246,7 @@ mock/testes de unidade escondiam:
    env resolvida no call), curadoria READ-ONLY (vence no merge); suíte→tmp,
    playtest→`saves_playtest/runtime/`. `git rm --cached data/npc_database.json`.
    **+8 testes; suíte e playtest deixam `data/` limpo.**
-3. **[balanceamento-classes-pos-playtest](specs/balanceamento-classes-pos-playtest.md)
+3. **[balanceamento-classes-pos-playtest](specs/SPEC-049-balanceamento-classes-pos-playtest.md)
    `in-progress` — instrumentação `done`, tuning adiado.** Harness ganhou
    `--class`, telemetria de Entropia/Carga por turno e seção **Classes** no
    report. Baseline mock (40 campanhas, 0 erro) + real parcial capturados. Os 8
@@ -1120,14 +1274,14 @@ auditoria de mecânica-morta + 2 decisões do usuário:**
    agora, gate por LLM não faz falta"). Removido `agents/class_themes.py` + 2
    testes + stub `archive_narrative`; `class_themes.json` fica só p/ flavor do
    prólogo; CLAUDE.md corrigido.
-8. **[weather-global-vivo](specs/weather-global-vivo.md) `in-progress`** (o
+8. **[weather-global-vivo](specs/SPEC-052-weather-global-vivo.md) `in-progress`** (o
    usuário QUIS: "acho bem legal ter e que impactasse no jogo"). A máquina de
    clima GLOBAL estava 90% pronta (tick+efeitos fiados) mas nada iniciava
    eventos. Novo trigger **determinístico** em `advance_weather`
    (`maybe_start_global_weather`: chance base 6% + 3%/perigo, sem canal LLM);
    Tempestade de Éter / Noite Sem Estrelas agora varrem Valoria e impactam
    combate/percepção/descanso/viagem. **+7 testes.** Suíte **945 → 950**.
-9. **[itens-vivos-e-luz](specs/itens-vivos-e-luz.md) `in-progress`** (3 perguntas
+9. **[itens-vivos-e-luz](specs/SPEC-053-itens-vivos-e-luz.md) `in-progress`** (3 perguntas
    do usuário: itens aplicam habilidades? passivas? tem luz? — **as 3 eram
    NÃO**). Fiado: **passiva de item** entra em `player_passives` (era ignorada);
    **item ativo ofensivo** (`use_item_in_combat` com alvo — stun/sono/dot/medo no
@@ -1143,7 +1297,7 @@ auditoria de mecânica-morta + 2 decisões do usuário:**
 ## TL;DR — sessão 19 (épico de classes)
 
 **Sessão 2026-07-19 (19): SISTEMA DE CLASSES REFATORADO — 5 POSTURAS DIANTE DO
-ABISMO** ([spec `done`](specs/refatoracao-sistema-classes.md); mecânica em
+ABISMO** ([spec `done`](specs/SPEC-048-refatoracao-sistema-classes.md); mecânica em
 [docs/CLASSES.md](docs/CLASSES.md), narrativa em
 [docs/CLASSES_NARRATIVA.md](docs/CLASSES_NARRATIVA.md)):
 1. **10 classes → 5 classes × 3 subclasses.** Devoto do Abismo (tank/ama) ·
@@ -1176,7 +1330,7 @@ ABISMO** ([spec `done`](specs/refatoracao-sistema-classes.md); mecânica em
    mapeada (16/16) + mana/stamina 0; auto-dano somou Entropia+Carga; descanso
    recompôs Entropia sem baixar Carga; Devoto apanhou → on_damage_taken.
 
-**Segunda spec do épico — [arvores-habilidade-classes](specs/arvores-habilidade-classes.md)
+**Segunda spec do épico — [arvores-habilidade-classes](specs/SPEC-047-arvores-habilidade-classes.md)
 `done` (mesma sessão, autoria em Fable):**
 9. **Árvore RICA: 101 habilidades** (41 ativas + **35 passivas + 25 utilitárias**),
    geradas por `scripts/gen_classes_v2.py`. Cada tronco: 2 ativas + 2 utilitárias
@@ -1211,19 +1365,19 @@ natural: balanceamento dos números `[BALANCEAR]` após playtest; tiers 5+
 1. **Todas as specs pendentes viraram `approved` com ordem de dev cravada no
    header de cada uma.** Duas fases:
    - **Sistema de classes (2 specs, ordem #1→#2):**
-     [refatoracao-sistema-classes](specs/refatoracao-sistema-classes.md) →
-     [arvores-habilidade-classes](specs/arvores-habilidade-classes.md)
+     [refatoracao-sistema-classes](specs/SPEC-048-refatoracao-sistema-classes.md) →
+     [arvores-habilidade-classes](specs/SPEC-047-arvores-habilidade-classes.md)
      (a 2ª depende do motor de Entropia/Carga da 1ª).
    - **Playtest longo (8 specs, ordem #1→#8):**
-     [embeddings-provider](specs/embeddings-provider.md) →
-     [playtest-stop-gameover](specs/playtest-stop-gameover.md) →
-     [combate-lifecycle](specs/combate-lifecycle.md) →
-     [pos-saque-recuperacao](specs/pos-saque-recuperacao.md) →
-     [npc-fallback-sem-alvo](specs/npc-fallback-sem-alvo.md) →
-     [beats-visibilidade-ptbr](specs/beats-visibilidade-ptbr.md) →
-     [encontros-dedupe](specs/encontros-dedupe.md) →
-     [polish-prosa](specs/polish-prosa.md).
-2. **[embeddings-provider](specs/embeddings-provider.md) `done`:** `rag.py`
+     [embeddings-provider](specs/SPEC-039-embeddings-provider.md) →
+     [playtest-stop-gameover](specs/SPEC-042-playtest-stop-gameover.md) →
+     [combate-lifecycle](specs/SPEC-038-combate-lifecycle.md) →
+     [pos-saque-recuperacao](specs/SPEC-044-pos-saque-recuperacao.md) →
+     [npc-fallback-sem-alvo](specs/SPEC-041-npc-fallback-sem-alvo.md) →
+     [beats-visibilidade-ptbr](specs/SPEC-037-beats-visibilidade-ptbr.md) →
+     [encontros-dedupe](specs/SPEC-040-encontros-dedupe.md) →
+     [polish-prosa](specs/SPEC-043-polish-prosa.md).
+2. **[embeddings-provider](specs/SPEC-039-embeddings-provider.md) `done`:** `rag.py`
    ganhou cadeia multi-provider
    `EMBEDDING_ROUTES = [jina, openai, ollama, gemini]` (Gemini é o ÚLTIMO
    fallback). Cada índice FAISS grava `embeddings_meta.json` e fica **PINADO**
@@ -1238,7 +1392,7 @@ natural: balanceamento dos números `[BALANCEAR]` após playtest; tiers 5+
    meta jina); smoke §6 3/3 (queries PT-BR sem 429 + memória de sessão).
    ⚠️ Free tier Jina = **100k tokens/min**: re-index do Codex esgota o minuto,
    regras precisaram de ~70s de espera (não é erro).
-3. **[playtest-stop-gameover](specs/playtest-stop-gameover.md) `done`:**
+3. **[playtest-stop-gameover](specs/SPEC-042-playtest-stop-gameover.md) `done`:**
    harness agora PARA no `game_over` (turno da morte é o
    último; `aborted_reason="player_death (turno N)"`) — antes rodava 140/300
    turnos mortos poluindo p50/rotas/custo. **Rota fiel:** `_run_turn` captura a
@@ -1254,7 +1408,7 @@ natural: balanceamento dos números `[BALANCEAR]` após playtest; tiers 5+
    cada turno (rede/rate limit → timeout). **Smoke §6 real 3/3:** combate morreu
    no t14, run PAROU (aborted player_death), routes com combat_agent=6, p50=14s
    sem turnos de 1ms, $0.04 (deepseek 49 + groq 5).
-4. **[combate-lifecycle](specs/combate-lifecycle.md) `done`:**
+4. **[combate-lifecycle](specs/SPEC-038-combate-lifecycle.md) `done`:**
    o router ganhou **gate determinístico de combate**
    (`_combat_gate`): com `combat.active`, viagem NÃO teleporta — vira tentativa
    de fuga (R1: flag `combat_flee_attempt`+destino; sucesso aplica
@@ -1268,7 +1422,7 @@ natural: balanceamento dos números `[BALANCEAR]` após playtest; tiers 5+
    maior sequência de combate ativo = 4t (era 59)**. Smoke §6 real: "Viajo para
    X" em combate → narrou FUGA e viajou só após escapar (nunca teleporte),
    combate limpo.
-5. **[pos-saque-recuperacao](specs/pos-saque-recuperacao.md) `done`:** o Saque
+5. **[pos-saque-recuperacao](specs/SPEC-044-pos-saque-recuperacao.md) `done`:** o Saque
    deixa de ser espiral de morte. `apply_downed` agora deixa **1 poção de cura**
    (R1) + marca `downed_recente` (R4) + **carência de 1 dia** no local seguro
    (`downed_grace_until_day`, R2: storyteller não sorteia encontro em zona segura
@@ -1278,7 +1432,7 @@ natural: balanceamento dos números `[BALANCEAR]` após playtest; tiers 5+
    recuperação (R4). Invariante `downed.no_recovery_path` (R5, warning).
    **+13 `test_pos_saque`.** Harness 3 seeds: 0 violações, sobrevivência muito
    além do baseline 1-4t. Smoke real: poção+beat+narração ✓.
-6. **[npc-fallback-sem-alvo](specs/npc-fallback-sem-alvo.md) `done`:** rota NPC
+6. **[npc-fallback-sem-alvo](specs/SPEC-041-npc-fallback-sem-alvo.md) `done`:** rota NPC
    sem alvo não devolve mais "Ninguém responde." (o quester perdia 7+ turnos).
    `npc_layers.npcs_in_scene` resolve alvo (NPC em cena → aliado presente, R1);
    sem candidato → `npc_actor` delega ao `storyteller` (nova aresta condicional
@@ -1286,7 +1440,7 @@ natural: balanceamento dos números `[BALANCEAR]` após playtest; tiers 5+
    o beat atual no contexto do NPC (R4, `_mission_hint_block`). **+9
    `test_npc_fallback`.** Mock quester/npc_only 50t: **0 "Ninguém responde"**.
    Smoke real: aliado cita objetivo; sozinho → gancho rico.
-7. **[beats-visibilidade-ptbr](specs/beats-visibilidade-ptbr.md) `done`:**
+7. **[beats-visibilidade-ptbr](specs/SPEC-037-beats-visibilidade-ptbr.md) `done`:**
    segredo não vaza mais pelo BEAT + beats sempre pt-BR. Novo módulo
    `services/secret_signatures.py` (R1: assinaturas + rumor público + heurística
    de idioma) consumido pelo invariante E pelo planner. `campaign_manager`
@@ -1296,7 +1450,7 @@ natural: balanceamento dos números `[BALANCEAR]` após playtest; tiers 5+
    **Achado F resolvido:** o "beat em inglês" era o **fallback template** (estava
    em inglês) — traduzido. **+11 `test_beats_visibilidade`.** Smoke real: 3
    planos pt-BR sem segredo.
-8. **[encontros-dedupe](specs/encontros-dedupe.md) `done`:** NPC gerado não
+8. **[encontros-dedupe](specs/SPEC-040-encontros-dedupe.md) `done`:** NPC gerado não
    vira mais carrossel de template ('Sobrevivente moribundo' em 3 locais em 6
    turnos). `npc_layers.npcs_for_context` filtra o contexto do narrador por
    vínculo de local (`home_location_id`) + in_scene/party (R1) — usado pelo
@@ -1305,7 +1459,7 @@ natural: balanceamento dos números `[BALANCEAR]` após playtest; tiers 5+
    de encontro 2× no mesmo local (`world.last_encounter_id`). Invariante
    `narrative.recycled_npc` (R4). **+7 `test_encontros_dedupe`.** Smoke real: NPC
    gerado preso ao local (não vaza p/ outro).
-9. **[polish-prosa](specs/polish-prosa.md) `done`:** três tiques de prosa do
+9. **[polish-prosa](specs/SPEC-043-polish-prosa.md) `done`:** três tiques de prosa do
    playtest resolvidos. Novo `services/prose_guard.py` (aberturas, repeats,
    openings_clause, log). Storyteller e combat recebem as 2 últimas aberturas e
    pedem variação (R1); morte/downed exigem 2ª pessoa, proibindo "o herói/
@@ -1328,13 +1482,13 @@ natural: balanceamento dos números `[BALANCEAR]` após playtest; tiers 5+
 **[docs/HANDOFF-sistema-classes.md](docs/HANDOFF-sistema-classes.md)** — Etapa
 1/8 done; Etapa 2 pronta em `scripts/gen_classes_v2.py` (aplicar derruba 41
 testes em 10 arquivos, inventariados no handoff); faltam etapas 2-8. Depois:
-[arvores-habilidade-classes](specs/arvores-habilidade-classes.md) (árvore rica,
+[arvores-habilidade-classes](specs/SPEC-047-arvores-habilidade-classes.md) (árvore rica,
 autoria em Fable).
 
 ---
 
 **Sessão 2026-07-17 (17): CRIAÇÃO DE PERSONAGEM IMERSIVA ENTREGUE** —
-1. **[onboarding-valoria](specs/onboarding-valoria.md) `done`:** criação virou
+1. **[onboarding-valoria](specs/SPEC-046-onboarding-valoria.md) `done`:** criação virou
    wizard de 5 passos com lore curado — `data/onboarding.json` (intro de
    Valoria + 12 regiões + 10 classes + 6 raças; cards de região com
    `name`/`bonus` espelhados de `origins.json`, teste anti-drift),
@@ -1343,7 +1497,7 @@ autoria em Fable).
    faltar). Smoke de UI: **15/15 checks** via Playwright (estado preservado ao
    voltar, "Pular introdução", mobile 390px sem overflow). Autoria dos cards:
    `docs/AUTORIA.md` § Fluxo D.
-2. **[inicio-personalizado](specs/inicio-personalizado.md) `done`:**
+2. **[inicio-personalizado](specs/SPEC-045-inicio-personalizado.md) `done`:**
    `POST /game/prologue` (1 chamada SMART + guard → template determinístico,
    nunca 500; entra no rate-limit) gera prólogo confirmável;
    `/game/new` com `scenario` (re-validado na borda — 422 p/ excedente) semeia
@@ -1377,14 +1531,14 @@ autoria em Fable).
    espiral pós-Saque, combate zumbi 59 turnos, segredo vazando via beat,
    "Ninguém responde." com aliado em cena, beat em inglês, NPC reciclado).
 3. **Todos os achados viraram specs `draft` (aguardando aprovação):**
-   [playtest-stop-gameover](specs/playtest-stop-gameover.md) ·
-   [combate-lifecycle](specs/combate-lifecycle.md) ·
-   [pos-saque-recuperacao](specs/pos-saque-recuperacao.md) ·
-   [npc-fallback-sem-alvo](specs/npc-fallback-sem-alvo.md) ·
-   [beats-visibilidade-ptbr](specs/beats-visibilidade-ptbr.md) ·
-   [encontros-dedupe](specs/encontros-dedupe.md) ·
-   [polish-prosa](specs/polish-prosa.md) ·
-   [embeddings-provider](specs/embeddings-provider.md).
+   [playtest-stop-gameover](specs/SPEC-042-playtest-stop-gameover.md) ·
+   [combate-lifecycle](specs/SPEC-038-combate-lifecycle.md) ·
+   [pos-saque-recuperacao](specs/SPEC-044-pos-saque-recuperacao.md) ·
+   [npc-fallback-sem-alvo](specs/SPEC-041-npc-fallback-sem-alvo.md) ·
+   [beats-visibilidade-ptbr](specs/SPEC-037-beats-visibilidade-ptbr.md) ·
+   [encontros-dedupe](specs/SPEC-040-encontros-dedupe.md) ·
+   [polish-prosa](specs/SPEC-043-polish-prosa.md) ·
+   [embeddings-provider](specs/SPEC-039-embeddings-provider.md).
 4. **Embeddings:** Google 429 "prepayment credits depleted" desde 2026-07-14 —
    RAG global + memória de sessão MORTOS. Pesquisa feita (DeepSeek NÃO tem
    embeddings): recomendação = **Jina v3** ($0.02/M + 10M tokens grátis,
@@ -1535,10 +1689,10 @@ ser re-introduzido em outro local pela narrativa/player (relocaliza o
 - Onze specs aguardam a matriz B integral com LLM real e relatório A/B;
   bloqueio atual: saldo DeepSeek (HTTP 402). Lista e retomada no
   [fechamento local](docs/fechamento-local-2026-09-17.md).
-- [Playtest longo do perfil comerciante](specs/playtest-longo-perfil-comerciante.md)
+- [Playtest longo do perfil comerciante](specs/SPEC-126-playtest-longo-perfil-comerciante.md)
   — **concluído**, inclusive 1×200 real em 20/08; não confundir esse aceite com
   o par comerciante da nova matriz B, ainda pendente.
-- [Certificação cloud portátil](specs/fase-10b-certificacao-cloud-portavel.md)
+- [Certificação cloud portátil](specs/SPEC-104-fase-10b-certificacao-cloud-portavel.md)
   — `draft`; Railway/Supabase remoto exigem autorização, contas e orçamento.
 - Fase 9 (sprites/som) segue como backlog de produto, ainda sem spec aprovada.
 - O import de FAISS via `langchain-community` emite aviso de descontinuação na

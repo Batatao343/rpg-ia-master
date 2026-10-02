@@ -6,7 +6,7 @@ Uma proposta (`dict`, vinda de `pending_world_events`) só vira `GameEvent` se
 descarta com log. Revalida do zero via Pydantic (defesa em profundidade: o LLM pode
 ter inventado id/tipo mesmo com o bloco <ENTIDADES_CANONICAS> no prompt).
 
-Spec: specs/fase-2.6-structured-events.md §3.
+Spec: specs/SPEC-003-fase-2.6-structured-events.md §3.
 """
 
 from __future__ import annotations

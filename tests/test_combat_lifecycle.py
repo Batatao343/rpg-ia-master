@@ -1,6 +1,6 @@
 """Suíte da spec combate-lifecycle — viagem=fuga, combate órfão expira, R5.
 
-Offline/determinístico (MockLLM via conftest). Ver specs/combate-lifecycle.md.
+Offline/determinístico (MockLLM via conftest). Ver specs/SPEC-038-combate-lifecycle.md.
 """
 import random
 

@@ -3,7 +3,7 @@
 data/bestiary.json = curadoria READ-ONLY em runtime; inimigos/NPCs/artefatos
 gerados vão p/ RPG_RUNTIME_CACHE_DIR (default data/runtime/). Suíte e playtest
 redirecionam o overlay — zero diff em data/ após rodar.
-Ver specs/isolar-cache-runtime.md.
+Ver specs/SPEC-051-isolar-cache-runtime.md.
 """
 import json
 import os

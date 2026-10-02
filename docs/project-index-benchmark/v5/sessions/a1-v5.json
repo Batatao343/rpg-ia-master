@@ -1,0 +1,343 @@
+{
+  "schema_version": 2,
+  "session_id": "a1-v5",
+  "condition": "A",
+  "replicate": 1,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "discovery_budget": {
+    "max_calls_per_task": 12,
+    "max_source_bytes_per_task": 50000,
+    "max_wall_seconds_per_task": 300.0
+  },
+  "prompt_hash": "sha256:dadf5eb4a66f77e0d1e42dc7f90fbda52e6a528d151a8a61018c0b899e7e3bb4",
+  "condition_prompt_hash": "sha256:05b5351299d44822930d8d23afaaff3cd970d35bf99951374c236bd772dfe6b2",
+  "session_prompt_hash": "sha256:8a84d8e136346df88c233a63b772d854b574e346dbd8ff137e16f65f2aeb9475",
+  "source_tree_hash": "sha256:3a39a331dfcb09764807deb3abe6a580482bd957ed7b2e5a40701d722fc0e2de",
+  "project_index_graph_hash": "sha256:8403926ab9d4167f859457e1946f545dc632a17fa74150013f47bcfc314d91e4",
+  "attestation_hash": "sha256:5004e35f97950e060f0c2ff45410f622d879c261cb7a95db432b39bd8a783717",
+  "order": [
+    "B01",
+    "B02",
+    "B03",
+    "B04",
+    "B05",
+    "B06",
+    "B07",
+    "B08"
+  ],
+  "next_task_index": 5,
+  "active_task": "B06",
+  "status": "running",
+  "created_at": "2026-10-01T11:45:26.884096+00:00",
+  "task_usage": {
+    "B01": {
+      "discovery_calls": 3,
+      "source_bytes_read": 39128,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:46:02.337694+00:00",
+          "op": "search",
+          "source_bytes": 10794,
+          "pattern": "player_downed",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "state.py",
+            "main.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:46:17.792240+00:00",
+          "op": "read",
+          "source_bytes": 4185,
+          "path": "agents/combat.py",
+          "start": 990,
+          "lines": 80
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T11:46:22.557144+00:00",
+          "op": "search",
+          "source_bytes": 24149,
+          "pattern": "death_pending",
+          "paths": [
+            "agents",
+            "services",
+            "main.py",
+            "tests",
+            "state.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B02": {
+      "discovery_calls": 3,
+      "source_bytes_read": 41161,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:47:50.746522+00:00",
+          "op": "search",
+          "source_bytes": 29644,
+          "pattern": "alias",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "persistence.py",
+            "state.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:47:57.301948+00:00",
+          "op": "read",
+          "source_bytes": 6473,
+          "path": "services/entity_identity.py",
+          "start": 1,
+          "lines": 150
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T11:48:01.413889+00:00",
+          "op": "search",
+          "source_bytes": 5044,
+          "pattern": "coalesce_runtime_npcs",
+          "paths": [
+            "persistence.py",
+            "agents",
+            "services",
+            "tests"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B03": {
+      "discovery_calls": 3,
+      "source_bytes_read": 29881,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:48:15.123705+00:00",
+          "op": "search",
+          "source_bytes": 21153,
+          "pattern": "receipt",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "api.py",
+            "state.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:48:19.387395+00:00",
+          "op": "read",
+          "source_bytes": 4882,
+          "path": "services/turn_outcome.py",
+          "start": 1,
+          "lines": 110
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T11:48:23.652360+00:00",
+          "op": "search",
+          "source_bytes": 3846,
+          "pattern": "finalize_outcome",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "main.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B04": {
+      "discovery_calls": 4,
+      "source_bytes_read": 15127,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:48:39.879079+00:00",
+          "op": "search",
+          "source_bytes": 2402,
+          "pattern": "unconscious",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "api.py",
+            "main.py",
+            "state.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:48:44.200376+00:00",
+          "op": "read",
+          "source_bytes": 7332,
+          "path": "services/actor_lifecycle.py",
+          "start": 1,
+          "lines": 180
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T11:48:48.368193+00:00",
+          "op": "read",
+          "source_bytes": 1896,
+          "path": "services/actor_lifecycle.py",
+          "start": 158,
+          "lines": 65
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T11:48:52.893514+00:00",
+          "op": "search",
+          "source_bytes": 3497,
+          "pattern": "evaluate_action",
+          "paths": [
+            "agents",
+            "services",
+            "api.py",
+            "tests",
+            "main.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B05": {
+      "discovery_calls": 1,
+      "source_bytes_read": 48462,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:49:19.438889+00:00",
+          "op": "search",
+          "source_bytes": 48462,
+          "pattern": "json",
+          "paths": [
+            "llm_setup.py",
+            "agents",
+            "services",
+            "tests/test_routing.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B06": {
+      "discovery_calls": 1,
+      "source_bytes_read": 43518,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:49:36.142657+00:00",
+          "op": "search",
+          "source_bytes": 43518,
+          "pattern": "art_",
+          "paths": [
+            "persistence.py",
+            "state.py",
+            "services",
+            "api.py",
+            "tests"
+          ],
+          "context": 2
+        }
+      ]
+    }
+  },
+  "results": [
+    {
+      "id": "B01",
+      "files": [
+        "agents/combat.py",
+        "services/memory_provenance.py",
+        "main.py"
+      ],
+      "tests": [
+        "tests/test_transicoes_criticas_b1.py",
+        "tests/test_death_flow.py"
+      ],
+      "resolution": "Combat-handles-downing-as-death-pending-and-rejects-false-death-memory.",
+      "discovery_calls": 3,
+      "source_bytes_read": 39128,
+      "wall_seconds": 109.406
+    },
+    {
+      "id": "B02",
+      "files": [
+        "services/entity_identity.py",
+        "persistence.py",
+        "services/memory_provenance.py"
+      ],
+      "tests": [
+        "tests/test_npc_identity_grounding.py",
+        "tests/test_pre_matrix_contracts.py"
+      ],
+      "resolution": "NPC-aliases-coalesce-into-one-runtime-identity-while-memory-and-save-load-preserve-the-merged-record.",
+      "discovery_calls": 3,
+      "source_bytes_read": 41161,
+      "wall_seconds": 20.46
+    },
+    {
+      "id": "B03",
+      "files": [
+        "services/turn_outcome.py",
+        "agents/turn_finalizer.py"
+      ],
+      "tests": [
+        "tests/test_audit_reward_contracts.py",
+        "tests/test_matriz_a_contratos.py"
+      ],
+      "resolution": "Canonical-receipts-derive-from-state-deltas-and-replace-untrusted-narrative-reward-markers-at-turn-finalization.",
+      "discovery_calls": 3,
+      "source_bytes_read": 29881,
+      "wall_seconds": 19.925
+    },
+    {
+      "id": "B04",
+      "files": [
+        "services/actor_lifecycle.py",
+        "agents/action_guard.py",
+        "main.py"
+      ],
+      "tests": [
+        "tests/test_matriz_a_contratos.py",
+        "tests/test_death_flow.py"
+      ],
+      "resolution": "Action-eligibility-allows-only-recovery-while-unconscious-and-blocks-death-pending-until-the-explicit-death-choice.",
+      "discovery_calls": 4,
+      "source_bytes_read": 15127,
+      "wall_seconds": 23.561
+    },
+    {
+      "id": "B05",
+      "files": [
+        "llm_setup.py"
+      ],
+      "tests": [
+        "tests/test_routing.py"
+      ],
+      "resolution": "Structured-output-recovery-extracts-and-validates-bounded-raw-JSON-locally-before-any-provider-retry.",
+      "discovery_calls": 1,
+      "source_bytes_read": 48462,
+      "wall_seconds": 22.812
+    }
+  ],
+  "task_started_at": "2026-10-01T11:49:31.411586+00:00"
+}

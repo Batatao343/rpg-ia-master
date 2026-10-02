@@ -5,7 +5,7 @@ Princípio: *LLM propõe, motor aplica.* O agente devolve um `ProposedWorldEvent
 (ou uma lista deles); nada disso altera o mundo até passar por
 `services.world_validators.validate_proposal` e `services.event_processor`.
 
-Spec: specs/fase-2.6-structured-events.md §3.
+Spec: specs/SPEC-003-fase-2.6-structured-events.md §3.
 """
 
 from __future__ import annotations

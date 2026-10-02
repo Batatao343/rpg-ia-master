@@ -1,7 +1,7 @@
 """Fase 10 — hardening técnico local: save_path anti-traversal, schema_version
 + migrations, CORS por env, rate limit, log de turno.
 
-Spec: specs/fase-10-hardening-tecnico.md.
+Spec: specs/SPEC-025-fase-10-hardening-tecnico.md.
 """
 
 from __future__ import annotations

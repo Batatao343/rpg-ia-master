@@ -1,6 +1,6 @@
 """Contratos do laboratório de combate isolado.
 
-Spec: specs/modo-simulacao-combate.md.
+Spec: specs/SPEC-090-modo-simulacao-combate.md.
 """
 from __future__ import annotations
 

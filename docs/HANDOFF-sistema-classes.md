@@ -1,17 +1,17 @@
 # HANDOFF — Épico do Sistema de Classes (Cinco Posturas diante do Abismo)
 
 > ✅ **ÉPICO 100% CONCLUÍDO em 2026-07-19** — as DUAS specs `done`:
-> [refatoracao-sistema-classes](../specs/refatoracao-sistema-classes.md) (motor:
+> [refatoracao-sistema-classes](../specs/SPEC-048-refatoracao-sistema-classes.md) (motor:
 > 5 Posturas + Entropia/Carga; etapas 1–8) e
-> [arvores-habilidade-classes](../specs/arvores-habilidade-classes.md) (árvore
+> [arvores-habilidade-classes](../specs/SPEC-047-arvores-habilidade-classes.md) (árvore
 > rica: 101 habilidades com passivas/utilitárias, autoria em Fable).
 > 918 offline verdes + 2 smokes reais 4/4. Referência viva:
 > [CLASSES.md](CLASSES.md) (mecânica) e [CLASSES_NARRATIVA.md](CLASSES_NARRATIVA.md).
 > O texto abaixo é o plano original de retomada — registro histórico.
 >
 > Documento auto-contido (histórico) para retomar. Fonte da verdade do design:
-> [specs/refatoracao-sistema-classes.md](../specs/refatoracao-sistema-classes.md)
-> (motor/dados) e [specs/arvores-habilidade-classes.md](../specs/arvores-habilidade-classes.md)
+> [specs/SPEC-048-refatoracao-sistema-classes.md](../specs/SPEC-048-refatoracao-sistema-classes.md)
+> (motor/dados) e [specs/SPEC-047-arvores-habilidade-classes.md](../specs/SPEC-047-arvores-habilidade-classes.md)
 > (árvore rica — passivas/utilitárias, autoria em **Fable**).
 > Criado: 2026-07-18. Suíte no ponto de partida: **881 offline verdes**.
 

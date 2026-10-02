@@ -5,7 +5,7 @@ discovery.py — Codex do jogador + bestiário progressivo (Fase 3.2).
 alimentam graus de conhecimento; `player_codex` agrega o que o jogador já registrou
 (locais visitados, fações conhecidas, NPCs, segredos revelados, criaturas) a partir
 do que já está no save — sem estado novo além do bestiário.
-Spec: specs/fase-3.2-conhecimento-revelavel.md.
+Spec: specs/SPEC-007-fase-3.2-conhecimento-revelavel.md.
 """
 
 from __future__ import annotations

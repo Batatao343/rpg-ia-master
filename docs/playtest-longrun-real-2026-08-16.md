@@ -103,11 +103,11 @@ O perfil normal passou 90/200 turnos em combate, acima do warning de 35%. Foram
 
 Os cinco pontos foram convertidos em specs independentes e concluídos:
 
-- [memoria-npc-sucesso-ledger](../specs/memoria-npc-sucesso-ledger.md);
-- [chase-progresso-e-fuga](../specs/chase-progresso-e-fuga.md);
-- [quests-retomada-conversao](../specs/quests-retomada-conversao.md);
-- [pos-fuga-roteamento-origem](../specs/pos-fuga-roteamento-origem.md);
-- [ritmo-combate-normal-v2](../specs/ritmo-combate-normal-v2.md).
+- [memoria-npc-sucesso-ledger](../specs/SPEC-114-memoria-npc-sucesso-ledger.md);
+- [chase-progresso-e-fuga](../specs/SPEC-100-chase-progresso-e-fuga.md);
+- [quests-retomada-conversao](../specs/SPEC-119-quests-retomada-conversao.md);
+- [pos-fuga-roteamento-origem](../specs/SPEC-118-pos-fuga-roteamento-origem.md);
+- [ritmo-combate-normal-v2](../specs/SPEC-121-ritmo-combate-normal-v2.md).
 
 O ator NPC agora espelha no ledger o mesmo record aceito pelo write privado. O
 chase participa do fingerprint e encerra na sexta tentativa consecutiva com

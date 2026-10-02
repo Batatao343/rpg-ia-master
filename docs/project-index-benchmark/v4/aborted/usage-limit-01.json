@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "excluded_from_aggregation": true,
+  "reason": "Delegated-agent platform usage limit interrupted two sessions; neither incomplete session is reused.",
+  "ground_truth_revealed": false,
+  "thresholds_changed": false,
+  "sessions": [
+    {"session_id":"a2-v4","completed_tasks":7,"active_task":"B01","sha256":"cdb1b0ca49b8bdec85ffffce38faf5c6b2a5573c811cd4ceb3d9974e85823ebc","artifact":"a2-v4.usage-limit-01.partial.json"},
+    {"session_id":"b1-v4","completed_tasks":4,"active_task":"B04","sha256":"0c88052706a51efbf535714afe43c6e414d41a81d3fc0bc29eefd30e8ae50f88","artifact":"b1-v4.usage-limit-01.partial.json"}
+  ],
+  "restart_rule": "Each incomplete session restarts from its first preregistered task with a fresh Terra High agent. A1 remains valid and B2 had not started."
+}

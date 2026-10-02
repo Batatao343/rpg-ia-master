@@ -1,0 +1,326 @@
+{
+  "schema_version": 2,
+  "session_id": "a2-v5",
+  "condition": "A",
+  "replicate": 2,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "discovery_budget": {
+    "max_calls_per_task": 12,
+    "max_source_bytes_per_task": 50000,
+    "max_wall_seconds_per_task": 300.0
+  },
+  "prompt_hash": "sha256:dadf5eb4a66f77e0d1e42dc7f90fbda52e6a528d151a8a61018c0b899e7e3bb4",
+  "condition_prompt_hash": "sha256:05b5351299d44822930d8d23afaaff3cd970d35bf99951374c236bd772dfe6b2",
+  "session_prompt_hash": "sha256:d8e170a7c5c02dc4fc781b8d96991e483544426bbb2d42be7e8fda99ed236e78",
+  "source_tree_hash": "sha256:3a39a331dfcb09764807deb3abe6a580482bd957ed7b2e5a40701d722fc0e2de",
+  "project_index_graph_hash": "sha256:8403926ab9d4167f859457e1946f545dc632a17fa74150013f47bcfc314d91e4",
+  "attestation_hash": "sha256:5004e35f97950e060f0c2ff45410f622d879c261cb7a95db432b39bd8a783717",
+  "order": [
+    "B08",
+    "B07",
+    "B06",
+    "B05",
+    "B04",
+    "B03",
+    "B02",
+    "B01"
+  ],
+  "next_task_index": 4,
+  "active_task": "B04",
+  "status": "running",
+  "created_at": "2026-10-01T11:45:27.083014+00:00",
+  "task_usage": {
+    "B08": {
+      "discovery_calls": 2,
+      "source_bytes_read": 3170,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:46:08.227999+00:00",
+          "op": "search",
+          "source_bytes": 2625,
+          "pattern": "logout",
+          "paths": [
+            "web/src",
+            "web/e2e"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:46:16.648830+00:00",
+          "op": "search",
+          "source_bytes": 545,
+          "pattern": "session-logout",
+          "paths": [
+            "web/src",
+            "web/e2e"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B07": {
+      "discovery_calls": 5,
+      "source_bytes_read": 41314,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:48:07.092886+00:00",
+          "op": "search",
+          "source_bytes": 8795,
+          "pattern": "idempotent",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "api.py",
+            "persistence.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:48:11.513073+00:00",
+          "op": "search",
+          "source_bytes": 5519,
+          "pattern": "divergent",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "api.py",
+            "persistence.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T11:48:15.442452+00:00",
+          "op": "search",
+          "source_bytes": 1312,
+          "pattern": "request_id",
+          "paths": [
+            "api.py",
+            "services",
+            "tests"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T11:48:19.315277+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "interaction_id",
+          "paths": [
+            "api.py",
+            "services",
+            "tests",
+            "state.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 5,
+          "at": "2026-10-01T11:48:23.070655+00:00",
+          "op": "search",
+          "source_bytes": 25688,
+          "pattern": "action_id",
+          "paths": [
+            "api.py",
+            "services",
+            "tests",
+            "state.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B06": {
+      "discovery_calls": 2,
+      "source_bytes_read": 36426,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:48:41.501457+00:00",
+          "op": "search",
+          "source_bytes": 32228,
+          "pattern": "art_",
+          "paths": [
+            "state.py",
+            "persistence.py",
+            "api.py",
+            "tests"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:48:45.998980+00:00",
+          "op": "search",
+          "source_bytes": 4198,
+          "pattern": "art_arc_budgets",
+          "paths": [
+            "tests",
+            "state.py",
+            "persistence.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B05": {
+      "discovery_calls": 1,
+      "source_bytes_read": 692,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:48:58.515205+00:00",
+          "op": "search",
+          "source_bytes": 692,
+          "pattern": "raw_json",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "llm_setup.py",
+            "api.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B04": {
+      "discovery_calls": 5,
+      "source_bytes_read": 21021,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:49:18.973157+00:00",
+          "op": "search",
+          "source_bytes": 4041,
+          "pattern": "death_pending",
+          "paths": [
+            "api.py",
+            "state.py",
+            "tests/test_combat_lifecycle.py",
+            "tests/test_mvp.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:49:29.054464+00:00",
+          "op": "search",
+          "source_bytes": 961,
+          "pattern": "Resolva a queda",
+          "paths": [
+            "tests",
+            "api.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T11:49:35.055347+00:00",
+          "op": "search",
+          "source_bytes": 4079,
+          "pattern": "death_history",
+          "paths": [
+            "tests",
+            "api.py",
+            "state.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T11:49:40.268311+00:00",
+          "op": "search",
+          "source_bytes": 10511,
+          "pattern": "death_pending",
+          "paths": [
+            "tests/test_checkpoints.py",
+            "services",
+            "api.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 5,
+          "at": "2026-10-01T11:49:44.848953+00:00",
+          "op": "search",
+          "source_bytes": 1429,
+          "pattern": "DEATH_PENDING",
+          "paths": [
+            "tests",
+            "services/actor_lifecycle.py",
+            "api.py"
+          ],
+          "context": 2
+        }
+      ]
+    }
+  },
+  "results": [
+    {
+      "id": "B08",
+      "files": [
+        "web/src/App.tsx",
+        "web/src/styles.css"
+      ],
+      "tests": [
+        "web/e2e/critical-journeys.spec.ts"
+      ],
+      "resolution": "Logout-placement-and-mobile-overlap-covered.",
+      "discovery_calls": 2,
+      "source_bytes_read": 3170,
+      "wall_seconds": 114.112
+    },
+    {
+      "id": "B07",
+      "files": [
+        "api.py",
+        "state.py"
+      ],
+      "tests": [
+        "tests/test_hardening_persistencia_sse.py",
+        "tests/test_audit_browser_local.py"
+      ],
+      "resolution": "Action-ID-ledger-replays-identical-requests-and-rejects-divergent-payloads.",
+      "discovery_calls": 5,
+      "source_bytes_read": 41314,
+      "wall_seconds": 25.203
+    },
+    {
+      "id": "B06",
+      "files": [
+        "state.py",
+        "persistence.py"
+      ],
+      "tests": [
+        "tests/test_art_state_persistence.py"
+      ],
+      "resolution": "Art-generation-ledger-and-arc-budgets-round-trip-through-save-load.",
+      "discovery_calls": 2,
+      "source_bytes_read": 36426,
+      "wall_seconds": 18.101
+    },
+    {
+      "id": "B05",
+      "files": [
+        "llm_setup.py"
+      ],
+      "tests": [
+        "tests/test_routing.py"
+      ],
+      "resolution": "Structured-output-routing-recovers-parseable-raw-JSON-without-a-second-provider-request.",
+      "discovery_calls": 1,
+      "source_bytes_read": 692,
+      "wall_seconds": 13.004
+    }
+  ],
+  "task_started_at": "2026-10-01T11:49:11.251674+00:00"
+}

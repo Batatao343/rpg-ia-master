@@ -1,6 +1,6 @@
 """
 Suíte da Fase 2.7 — Rules engine sistêmica (líder morre → cascata de mundo).
-Spec: specs/fase-2.7-rules-engine.md. 100% offline e determinística (sem LLM).
+Spec: specs/SPEC-004-fase-2.7-rules-engine.md. 100% offline e determinística (sem LLM).
 
 Ids canônicos reais de data/graph/entities.json usados aqui:
   npc que controla local direto: npc_valerius → nova_arcadia (não lidera fação)

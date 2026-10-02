@@ -13,6 +13,7 @@ data/saves_memory/
 saves_playtest/
 playtest_runs/
 readiness_artifacts/
+evals/runs/
 
 # Caches gerados em runtime (spec isolar-cache-runtime: overlay em data/runtime/;
 # npc_database.json legado deixou de ser versionado — fallback de leitura local)
@@ -25,11 +26,14 @@ data/npc_database.json
 
 # Pytest
 .pytest_cache/
+.pytest-*/
+.tmp/
 supabase/.temp/
 supabase/.branches/
 
 # Skills do Claude (locais, não versionar)
 .claude/skills/
+.claude/settings.local.json
 
 # Frontend React (web/) — deps, build e artefatos do tsc -b
 web/node_modules/
@@ -37,6 +41,8 @@ web/dist/
 web/*.tsbuildinfo
 web/vite.config.js
 web/vite.config.d.ts
+web/test-results/
+web/playwright-report/
 
 # Handoffs de arte são fontes locais grandes; apenas os WebP derivados entram.
 VALORIA_GAME_ART_HANDOFF.zip

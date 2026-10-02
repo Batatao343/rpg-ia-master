@@ -1,0 +1,127 @@
+schema_version: 1
+domains:
+  memory:
+    responsibility: session memory, retrieval, provenance and bounded context assembly
+    entrypoints:
+      - rag.py
+      - agents/archivist.py
+    core:
+      - services/context_builder.py
+      - services/context_sources.py
+      - services/memory_provenance.py
+      - services/memory_summary.py
+      - services/narrative_evidence.py
+    state:
+      - narrative_summary
+      - memory_facts
+      - archivist_last_run
+    tests:
+      - tests/test_npc_memory.py
+      - tests/test_memory_provenance.py
+      - tests/test_archivist_facts.py
+    evals:
+      - memory_write_precision
+      - memory_recall_at_1
+      - memory_recall_at_3
+      - memory_recall_at_5
+      - memory_mrr
+      - context_recall_at_5
+      - context_forbidden_leak_rate
+      - secret_leak_count
+      - context_token_budget_violation
+  turn_pipeline:
+    responsibility: request normalization, execution, finalization and durable outcomes
+    entrypoints:
+      - api.py
+      - main.py
+    core:
+      - services/input_normalization.py
+      - services/turn_execution.py
+      - services/turn_pipeline.py
+      - services/turn_outcome.py
+      - agents/turn_finalizer.py
+    state:
+      - operation_id
+      - turn_outcome
+      - messages
+    tests:
+      - tests/test_input_normalization.py
+      - tests/test_turn_pipeline_concurrency.py
+      - tests/test_turn_effects_atomicity.py
+    evals:
+      - state_transition_pass_rate
+  state_rules:
+    responsibility: canonical state, events, projections, rules and persistence
+    entrypoints:
+      - state.py
+      - persistence.py
+    core:
+      - services/event_processor.py
+      - services/rule_engine.py
+      - services/world_validators.py
+      - services/game_serialization.py
+    state:
+      - event_log
+      - world_projection
+      - pending_world_events
+    tests:
+      - tests/test_fase26.py
+      - tests/test_fase27.py
+      - tests/test_fase10.py
+    evals:
+      - state_transition_pass_rate
+  routing_action:
+    responsibility: action normalization, route selection and deterministic interpretation
+    entrypoints:
+      - agents/router.py
+      - agents/action_guard.py
+    core:
+      - services/input_normalization.py
+      - services/structured_outputs.py
+    state:
+      - active_npc_name
+      - combat_target
+      - loot_source
+    tests:
+      - tests/test_routing.py
+      - tests/test_input_normalization.py
+      - tests/test_hardening_mechanical_inputs.py
+    evals:
+      - route_accuracy
+  narrative_npc:
+    responsibility: grounded narration, NPC identity, dialogue and prose reconciliation
+    entrypoints:
+      - agents/storyteller.py
+      - agents/npc.py
+    core:
+      - services/narrative_evidence.py
+      - services/entity_identity.py
+      - services/npc_layers.py
+      - services/prose_guard.py
+    state:
+      - npcs
+      - active_npc_name
+      - narrative_summary
+    tests:
+      - tests/test_narrative_evidence.py
+      - tests/test_npc_identity_grounding.py
+      - tests/test_prose_guard.py
+    evals:
+      - narrative_hard_contradictions
+      - npc_persona_score
+  frontend:
+    responsibility: React presentation, critical journeys and API client contracts
+    entrypoints:
+      - web/src/App.tsx
+      - web/src/api.ts
+    core:
+      - web/src/components/PlayScreen.tsx
+      - web/src/components/StoryLog.tsx
+      - web/src/components/Hud.tsx
+    state: []
+    tests:
+      - tests/test_frontend_accessibility_contracts.py
+      - tests/test_frontend_visual_contracts.py
+      - tests/test_frontend_auth_bootstrap.py
+    evals:
+      - frontend_critical_journey_pass_rate

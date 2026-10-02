@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "recorded_after_all_sessions_complete": true,
+  "statements": {
+    "a1-v6": "Completed B01-B08 using only the benchmark harness; no edits or tests.",
+    "a2-v6": "Completed all eight tasks within budgets; no edits or tests.",
+    "b1-v6": "Completed all eight tasks using the required lifecycle; no edits or tests.",
+    "b2-v6": "Completed B01-B08 through the harness; no edits or tests."
+  }
+}

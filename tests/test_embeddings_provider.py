@@ -2,7 +2,7 @@
 
 Tudo offline: usa embedding fake determinístico (sem rede). A cadeia de
 resolução é controlada por env keys (monkeypatch), o builder por um registro
-fake. Ver specs/embeddings-provider.md.
+fake. Ver specs/SPEC-039-embeddings-provider.md.
 """
 import hashlib
 import json

@@ -1,0 +1,42 @@
+schema_version: 1
+metrics:
+  route_accuracy:
+    direction: higher
+    kind: deterministic
+    blocking: true
+  state_transition_pass_rate:
+    direction: higher
+    kind: deterministic
+    blocking: true
+  memory_recall_at_5:
+    direction: higher
+    kind: ranking
+    blocking: after_baseline
+  memory_mrr:
+    direction: higher
+    kind: ranking
+    blocking: after_baseline
+  context_forbidden_leak_rate:
+    direction: lower
+    hard_limit: 0
+    kind: deterministic
+    blocking: true
+  narrative_hard_contradictions:
+    direction: lower
+    hard_limit: 0
+    kind: deterministic
+    blocking: true
+  frontend_critical_journey_pass_rate:
+    direction: higher
+    hard_limit: 1.0
+    kind: deterministic
+    blocking: true
+  frontend_uncaught_page_errors:
+    direction: lower
+    hard_limit: 0
+    kind: deterministic
+    blocking: true
+  npc_persona_score:
+    direction: higher
+    kind: llm_judge
+    blocking: false

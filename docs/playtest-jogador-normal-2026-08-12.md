@@ -217,12 +217,12 @@ schema/estado, não como aceite de jogabilidade.
 
 As seis recomendações viraram specs e foram implementadas na ordem acima:
 
-- [fuga progressiva](../specs/fuga-progressiva-persistente.md);
-- [checkpoint transacional](../specs/checkpoint-transacional-memoria.md);
-- [grounding regional](../specs/replan-grounding-troca-regiao.md);
-- [resumo/budget](../specs/resumo-curto-budget-rigido.md);
-- [feedback por ledger](../specs/feedback-ledger-recompensas.md);
-- [perfil normal e invariantes](../specs/perfil-jogador-normal-invariantes.md).
+- [fuga progressiva](../specs/SPEC-096-fuga-progressiva-persistente.md);
+- [checkpoint transacional](../specs/SPEC-093-checkpoint-transacional-memoria.md);
+- [grounding regional](../specs/SPEC-098-replan-grounding-troca-regiao.md);
+- [resumo/budget](../specs/SPEC-099-resumo-curto-budget-rigido.md);
+- [feedback por ledger](../specs/SPEC-095-feedback-ledger-recompensas.md);
+- [perfil normal e invariantes](../specs/SPEC-097-perfil-jogador-normal-invariantes.md).
 
 O novo perfil `normal` completou o smoke mock de 50 turnos
 `20260812-172231-913670` com as quatro rotas, três escolhas de progressão e zero

@@ -2,7 +2,7 @@
 
 Offline/determinístico. `_run_turn` é testado direto com um grafo fake (evita
 depender de combate real acontecer num turno específico); a rota nunca-vazia é
-verificada também numa campanha mock real. Ver specs/playtest-stop-gameover.md.
+verificada também numa campanha mock real. Ver specs/SPEC-042-playtest-stop-gameover.md.
 """
 from playtest import runner
 from playtest.runner import CampaignResult, TurnRecord, _run_turn, run_campaign

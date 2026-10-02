@@ -1,6 +1,6 @@
 """Suíte da spec weather-global-vivo — trigger determinístico de fenômenos globais.
 
-Offline/determinístico. Ver specs/weather-global-vivo.md.
+Offline/determinístico. Ver specs/SPEC-052-weather-global-vivo.md.
 """
 import random
 

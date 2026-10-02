@@ -1,0 +1,1 @@
+Condição B: antes de search/read em cada tarefa, use ao menos uma consulta index do harness; depois confirme na fonte real.

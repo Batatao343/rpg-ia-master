@@ -1,0 +1,85 @@
+{
+  "additionalProperties": false,
+  "description": "Addressable result emitted by a versioned evaluator.",
+  "properties": {
+    "actual": {
+      "title": "Actual"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "dataset_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Dataset Hash",
+      "type": "string"
+    },
+    "diagnostics": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Diagnostics",
+      "type": "array"
+    },
+    "duration_ms": {
+      "minimum": 0,
+      "title": "Duration Ms",
+      "type": "number"
+    },
+    "evaluator_id": {
+      "title": "Evaluator Id",
+      "type": "string"
+    },
+    "evaluator_version": {
+      "title": "Evaluator Version",
+      "type": "string"
+    },
+    "expected": {
+      "title": "Expected"
+    },
+    "metric_values": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Metric Values",
+      "type": "object"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "product_sha": {
+      "title": "Product Sha",
+      "type": "string"
+    },
+    "seed": {
+      "title": "Seed",
+      "type": "integer"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "suite": {
+      "title": "Suite",
+      "type": "string"
+    }
+  },
+  "required": [
+    "case_id",
+    "suite",
+    "passed",
+    "actual",
+    "expected",
+    "evaluator_id",
+    "evaluator_version",
+    "product_sha",
+    "dataset_hash",
+    "seed",
+    "started_at",
+    "duration_ms"
+  ],
+  "title": "EvalCaseResult",
+  "type": "object"
+}

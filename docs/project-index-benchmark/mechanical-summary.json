@@ -1,0 +1,47 @@
+{
+  "spec_id": "SPEC-175",
+  "ground_truth_sha256": "d9a8ce2b087d7eb59ace5677b6cede18868e28d121a78b9ac5f20adcda957e39",
+  "commitment_sha256": "d9a8ce2b087d7eb59ace5677b6cede18868e28d121a78b9ac5f20adcda957e39",
+  "ground_truth_hash_match": true,
+  "observations_per_condition": 16,
+  "metrics": {
+    "A": {
+      "localization_hits": 15,
+      "localization_rate": 0.9375,
+      "irrelevant_files_total": 11,
+      "irrelevant_files_mean": 0.6875,
+      "relevant_tests_selected_recall_mean": 0.40625,
+      "medians": {"discovery_calls": 3, "source_bytes_read": 9054.5, "wall_seconds": 2.8}
+    },
+    "B": {
+      "localization_hits": 16,
+      "localization_rate": 1.0,
+      "irrelevant_files_total": 10,
+      "irrelevant_files_mean": 0.625,
+      "relevant_tests_selected_recall_mean": 0.375,
+      "medians": {"discovery_calls": 4, "source_bytes_read": 17027, "wall_seconds": 10.3}
+    }
+  },
+  "per_task_replica_averages": {
+    "B01": {"A": {"discovery_calls": 4, "source_bytes_read": 8646}, "B": {"discovery_calls": 6, "source_bytes_read": 21961.5}, "cost_win": false},
+    "B02": {"A": {"discovery_calls": 3.5, "source_bytes_read": 14147}, "B": {"discovery_calls": 4.5, "source_bytes_read": 29456}, "cost_win": false},
+    "B03": {"A": {"discovery_calls": 3.5, "source_bytes_read": 10291}, "B": {"discovery_calls": 4, "source_bytes_read": 15211}, "cost_win": false},
+    "B04": {"A": {"discovery_calls": 2.5, "source_bytes_read": 10712.5}, "B": {"discovery_calls": 5, "source_bytes_read": 18047}, "cost_win": false},
+    "B05": {"A": {"discovery_calls": 1.5, "source_bytes_read": 8059}, "B": {"discovery_calls": 4, "source_bytes_read": 12990}, "cost_win": false},
+    "B06": {"A": {"discovery_calls": 1.5, "source_bytes_read": 4861}, "B": {"discovery_calls": 3, "source_bytes_read": 9884}, "cost_win": false},
+    "B07": {"A": {"discovery_calls": 6.5, "source_bytes_read": 20081}, "B": {"discovery_calls": 5.5, "source_bytes_read": 30577}, "cost_win": false},
+    "B08": {"A": {"discovery_calls": 5, "source_bytes_read": 8707}, "B": {"discovery_calls": 5, "source_bytes_read": 13952.5}, "cost_win": false}
+  },
+  "cost_preregistration": {
+    "cost_wins": 0,
+    "cost_win_tasks": [],
+    "median_discovery_calls_reduction": -0.3333333333,
+    "median_source_bytes_read_reduction": -0.8805178931,
+    "global_20_percent_reduction_met": false,
+    "conditional_decision_if_resolved_does_not_fall": "pending_sol_review"
+  },
+  "pending_sol_review": {
+    "resolved": "not_scored",
+    "decision_note": "Mandatory and selective thresholds are not met by the mechanical cost results. The removal clause's localization-justification wording remains for Sol review; B has 1/16 more localization hits and no increase in irrelevant-file total."
+  }
+}

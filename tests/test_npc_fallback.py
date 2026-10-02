@@ -1,6 +1,6 @@
 """Suíte da spec npc-fallback-sem-alvo — fim do "Ninguém responde.".
 
-Offline/determinístico. Ver specs/npc-fallback-sem-alvo.md.
+Offline/determinístico. Ver specs/SPEC-041-npc-fallback-sem-alvo.md.
 """
 from langchain_core.messages import HumanMessage
 

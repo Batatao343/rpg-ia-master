@@ -1,0 +1,7 @@
+sessions/
+ground-truth.json
+mechanical-summary.json
+mechanical-summary.md
+review.md
+seal-commit.json
+agent-tool-attestations.json

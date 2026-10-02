@@ -6,7 +6,7 @@ Rodar:  uv run pytest -m llm_contract -v -s
 Orçamento total: ~13 requests (free tier = 20/dia/modelo). O contrato de
 fallback roda SEM chave (offline). Fora do CI padrão (addopts -m "not llm_contract").
 
-Spec: specs/fase-11-llm-contract-tests.md. Substitui tests/test_real_llm.py.
+Spec: specs/SPEC-026-fase-11-llm-contract-tests.md. Substitui tests/test_real_llm.py.
 """
 import os
 

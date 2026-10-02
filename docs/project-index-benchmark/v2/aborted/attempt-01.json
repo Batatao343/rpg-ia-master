@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "attempt_id": "v2-attempt-01",
+  "excluded_from_aggregation": true,
+  "exclusion_reason": "No session completed all eight preregistered tasks; partial traces are preserved only for audit.",
+  "ground_truth_revealed": false,
+  "thresholds_changed": false,
+  "attestation_changed": false,
+  "sessions": [
+    {
+      "session_id": "a1-v2",
+      "status_at_abort": "running",
+      "completed_tasks": 3,
+      "active_task": "B04",
+      "reason": "Delegated-agent usage limit interrupted the session.",
+      "artifact": "a1-v2.partial.json",
+      "sha256": "537091b22c35d61b6c32766a41223b9f5da7855ac356c47ced8520d951310c85"
+    },
+    {
+      "session_id": "a2-v2",
+      "status_at_abort": "running",
+      "completed_tasks": 0,
+      "active_task": "B08",
+      "reason": "Coordinator supplied incorrect CLI argument forms; discovery of the real syntax consumed the 120-second task budget.",
+      "artifact": "a2-v2.partial.json",
+      "sha256": "cb80da4ad5a5d5ed9ab194c550a7c64dc7780dbf9fdbb462794f187cdbd9488d"
+    },
+    {
+      "session_id": "b1-v2",
+      "status_at_abort": "ready",
+      "completed_tasks": 1,
+      "active_task": null,
+      "reason": "Delegated agent stopped after one task despite the eight-task instruction.",
+      "artifact": "b1-v2.partial.json",
+      "sha256": "b0d76ca0b32c58bd8762346c2a46c4de33cc81f0a6572f68e86e2c8ccaf5775f"
+    },
+    {
+      "session_id": "b2-v2",
+      "status_at_abort": "running",
+      "completed_tasks": 0,
+      "active_task": "B01",
+      "reason": "Delegated-agent usage limit interrupted the session.",
+      "artifact": "b2-v2.partial.json",
+      "sha256": "b86090c6a2c7399607d94dd3712f8076b05b978d1159daecb07c20d2d52b2ec6"
+    }
+  ],
+  "restart_rule": "All four sessions restart from task 1 with fresh agents and unchanged preregistration, ground-truth commitment, attestation, orders, budgets, and thresholds. No partial observation is reused."
+}

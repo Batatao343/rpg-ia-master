@@ -1,6 +1,6 @@
 """
 Fase 4.3 — Inventário estruturado, equipamento e itens usáveis em combate.
-Spec: specs/fase-4.3-inventario-equipamento.md. 100% offline.
+Spec: specs/SPEC-013-fase-4.3-inventario-equipamento.md. 100% offline.
 """
 import copy
 

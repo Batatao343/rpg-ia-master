@@ -1,0 +1,94 @@
+{
+  "additionalProperties": false,
+  "description": "One immutable public dev/regression case.",
+  "properties": {
+    "created_from": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Created From"
+    },
+    "description": {
+      "minLength": 1,
+      "title": "Description",
+      "type": "string"
+    },
+    "expected": {
+      "title": "Expected"
+    },
+    "fixture": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fixture"
+    },
+    "id": {
+      "minLength": 3,
+      "pattern": "^[a-z0-9][a-z0-9._-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "input": {
+      "title": "Input"
+    },
+    "oracle": {
+      "enum": [
+        "exact",
+        "projection",
+        "classification",
+        "memory_write",
+        "ranking",
+        "narrative_claim",
+        "property",
+        "judge"
+      ],
+      "title": "Oracle",
+      "type": "string"
+    },
+    "source": {
+      "enum": [
+        "manual",
+        "regression",
+        "canonical",
+        "synthetic"
+      ],
+      "title": "Source",
+      "type": "string"
+    },
+    "suite": {
+      "minLength": 1,
+      "title": "Suite",
+      "type": "string"
+    },
+    "tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "array"
+    }
+  },
+  "required": [
+    "id",
+    "suite",
+    "description",
+    "input",
+    "expected",
+    "oracle",
+    "source"
+  ],
+  "title": "EvalCase",
+  "type": "object"
+}

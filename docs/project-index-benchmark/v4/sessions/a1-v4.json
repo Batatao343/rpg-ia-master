@@ -1,0 +1,486 @@
+{
+  "schema_version": 2,
+  "session_id": "a1-v4",
+  "condition": "A",
+  "replicate": 1,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "discovery_budget": {
+    "max_calls_per_task": 12,
+    "max_source_bytes_per_task": 50000,
+    "max_wall_seconds_per_task": 300.0
+  },
+  "prompt_hash": "sha256:dadf5eb4a66f77e0d1e42dc7f90fbda52e6a528d151a8a61018c0b899e7e3bb4",
+  "condition_prompt_hash": "sha256:05b5351299d44822930d8d23afaaff3cd970d35bf99951374c236bd772dfe6b2",
+  "session_prompt_hash": "sha256:edc4684d1b47d63327f31e2eb915031266833e2498602b4b6ba227ec6a6a1a04",
+  "source_tree_hash": "sha256:b3171bcf014f5d9104a8223854709d5e3b1420092ea5b73af347d8cd618a76cd",
+  "project_index_graph_hash": "sha256:a30ab6f3ced9b09662c5ba3eee3df7f8c019e292c6705bd10a3171e6e53b2e07",
+  "attestation_hash": "sha256:1434a5c3d2054ce819537ed93883586c1fcdc33dde5b2ee774975db528d91e8c",
+  "order": [
+    "B01",
+    "B02",
+    "B03",
+    "B04",
+    "B05",
+    "B06",
+    "B07",
+    "B08"
+  ],
+  "next_task_index": 8,
+  "active_task": null,
+  "status": "complete",
+  "created_at": "2026-10-01T02:17:12.696941+00:00",
+  "task_usage": {
+    "B01": {
+      "discovery_calls": 3,
+      "source_bytes_read": 24461,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:17:45.798950+00:00",
+          "op": "search",
+          "source_bytes": 10794,
+          "pattern": "player_downed",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "api.py",
+            "main.py",
+            "state.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:17:50.716041+00:00",
+          "op": "search",
+          "source_bytes": 8692,
+          "pattern": "player_died",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "state.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T02:18:07.790101+00:00",
+          "op": "read",
+          "source_bytes": 4975,
+          "path": "services/checkpoints.py",
+          "start": 80,
+          "lines": 100
+        }
+      ]
+    },
+    "B02": {
+      "discovery_calls": 1,
+      "source_bytes_read": 29644,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:19:18.371687+00:00",
+          "op": "search",
+          "source_bytes": 29644,
+          "pattern": "alias",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "state.py",
+            "persistence.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B03": {
+      "discovery_calls": 2,
+      "source_bytes_read": 15474,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:19:39.243711+00:00",
+          "op": "search",
+          "source_bytes": 11628,
+          "pattern": "receipt",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "state.py",
+            "persistence.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:19:43.950585+00:00",
+          "op": "search",
+          "source_bytes": 3846,
+          "pattern": "finalize_outcome",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "api.py",
+            "main.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B04": {
+      "discovery_calls": 4,
+      "source_bytes_read": 14451,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:19:58.742375+00:00",
+          "op": "search",
+          "source_bytes": 2402,
+          "pattern": "unconscious",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "api.py",
+            "main.py",
+            "state.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:20:03.444360+00:00",
+          "op": "read",
+          "source_bytes": 7332,
+          "path": "services/actor_lifecycle.py",
+          "start": 1,
+          "lines": 180
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T02:20:07.666806+00:00",
+          "op": "read",
+          "source_bytes": 1220,
+          "path": "services/actor_lifecycle.py",
+          "start": 170,
+          "lines": 55
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T02:20:12.200834+00:00",
+          "op": "search",
+          "source_bytes": 3497,
+          "pattern": "evaluate_action",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "api.py",
+            "main.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B05": {
+      "discovery_calls": 3,
+      "source_bytes_read": 16595,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:20:27.633727+00:00",
+          "op": "search",
+          "source_bytes": 692,
+          "pattern": "raw_json",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "llm_setup.py",
+            "rag.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:20:32.406847+00:00",
+          "op": "search",
+          "source_bytes": 11738,
+          "pattern": "recupera",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "llm_setup.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T02:20:36.890194+00:00",
+          "op": "search",
+          "source_bytes": 4165,
+          "pattern": "include_raw",
+          "paths": [
+            "llm_setup.py",
+            "tests",
+            "services",
+            "agents"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B06": {
+      "discovery_calls": 1,
+      "source_bytes_read": 43835,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:20:51.167298+00:00",
+          "op": "search",
+          "source_bytes": 43835,
+          "pattern": "art_",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "state.py",
+            "persistence.py",
+            "api.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B07": {
+      "discovery_calls": 2,
+      "source_bytes_read": 28527,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:21:06.337098+00:00",
+          "op": "search",
+          "source_bytes": 8408,
+          "pattern": "idempotent",
+          "paths": [
+            "infrastructure",
+            "services",
+            "tests",
+            "api.py",
+            "main.py",
+            "persistence.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:21:11.190192+00:00",
+          "op": "search",
+          "source_bytes": 20119,
+          "pattern": "request_hash",
+          "paths": [
+            "infrastructure",
+            "services",
+            "tests",
+            "api.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B08": {
+      "discovery_calls": 5,
+      "source_bytes_read": 15377,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:21:27.268494+00:00",
+          "op": "search",
+          "source_bytes": 3594,
+          "pattern": "logout",
+          "paths": [
+            "web/src",
+            "web/e2e",
+            "tests",
+            "api.py",
+            "services"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:21:32.140779+00:00",
+          "op": "read",
+          "source_bytes": 4388,
+          "path": "web/src/styles.css",
+          "start": 980,
+          "lines": 100
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T02:21:36.819169+00:00",
+          "op": "read",
+          "source_bytes": 2744,
+          "path": "web/src/App.tsx",
+          "start": 455,
+          "lines": 60
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T02:21:42.030350+00:00",
+          "op": "search",
+          "source_bytes": 2300,
+          "pattern": "Encerrar sessão",
+          "paths": [
+            "web/src",
+            "web/e2e",
+            "tests"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 5,
+          "at": "2026-10-01T02:21:48.957025+00:00",
+          "op": "read",
+          "source_bytes": 2351,
+          "path": "web/e2e/critical-journeys.spec.ts",
+          "start": 230,
+          "lines": 45
+        }
+      ]
+    }
+  },
+  "results": [
+    {
+      "id": "B01",
+      "files": [
+        "services/checkpoints.py",
+        "services/memory_provenance.py"
+      ],
+      "tests": [
+        "tests/test_checkpoints.py",
+        "tests/test_transicoes_criticas_b1.py"
+      ],
+      "resolution": "Death-choice-only;downed-state-is-not-death-evidence.",
+      "discovery_calls": 3,
+      "source_bytes_read": 24461,
+      "wall_seconds": 93.74
+    },
+    {
+      "id": "B02",
+      "files": [
+        "services/entity_identity.py",
+        "agents/npc.py",
+        "persistence.py"
+      ],
+      "tests": [
+        "tests/test_npc_identity_grounding.py",
+        "tests/test_pre_matrix_contracts.py",
+        "tests/test_playtest_observability_hardening.py"
+      ],
+      "resolution": "Runtime-NPC-aliases-are-coalesced-and-persisted-so-identity-and-memory-survive-name-changes-and-reloads.",
+      "discovery_calls": 1,
+      "source_bytes_read": 29644,
+      "wall_seconds": 16.927
+    },
+    {
+      "id": "B03",
+      "files": [
+        "services/turn_outcome.py",
+        "agents/turn_finalizer.py",
+        "persistence.py"
+      ],
+      "tests": [
+        "tests/test_audit_reward_contracts.py",
+        "tests/test_matriz_a_contratos.py"
+      ],
+      "resolution": "Player-facing-reward-receipts-are-derived-from-canonical-state-deltas-and-persisted-across-reloads.",
+      "discovery_calls": 2,
+      "source_bytes_read": 15474,
+      "wall_seconds": 14.759
+    },
+    {
+      "id": "B04",
+      "files": [
+        "services/actor_lifecycle.py",
+        "agents/action_guard.py"
+      ],
+      "tests": [
+        "tests/test_matriz_a_contratos.py",
+        "tests/test_pre_matrix_contracts.py",
+        "tests/test_eval_narrative_npc.py"
+      ],
+      "resolution": "The-action-guard-blocks-unconscious-and-death-pending-actions-while-permitting-only-explicit-recovery-when-applicable.",
+      "discovery_calls": 4,
+      "source_bytes_read": 14451,
+      "wall_seconds": 24.403
+    },
+    {
+      "id": "B05",
+      "files": [
+        "llm_setup.py"
+      ],
+      "tests": [
+        "tests/test_routing.py"
+      ],
+      "resolution": "Structured-output-routing-recovers-valid-raw-JSON-locally-before-trying-another-provider.",
+      "discovery_calls": 3,
+      "source_bytes_read": 16595,
+      "wall_seconds": 19.004
+    },
+    {
+      "id": "B06",
+      "files": [
+        "state.py",
+        "persistence.py"
+      ],
+      "tests": [
+        "tests/test_art_state_persistence.py"
+      ],
+      "resolution": "The-art-generation-ledger-and-per-arc-budgets-are-declared-in-state-and-round-trip-through-save-load.",
+      "discovery_calls": 1,
+      "source_bytes_read": 43835,
+      "wall_seconds": 10.326
+    },
+    {
+      "id": "B07",
+      "files": [
+        "api.py",
+        "infrastructure/postgres_turns.py",
+        "infrastructure/local_adapters.py"
+      ],
+      "tests": [
+        "tests/test_operation_replay_boundaries.py",
+        "tests/test_postgres_jobs_local.py"
+      ],
+      "resolution": "Operation-replay-returns-the-committed-receipt-only-when-game-kind-and-request-hash-match;divergent-payloads-conflict.",
+      "discovery_calls": 2,
+      "source_bytes_read": 28527,
+      "wall_seconds": 16.23
+    },
+    {
+      "id": "B08",
+      "files": [
+        "web/src/App.tsx",
+        "web/src/components/PlayScreen.tsx",
+        "web/src/styles.css"
+      ],
+      "tests": [
+        "web/e2e/critical-journeys.spec.ts",
+        "tests/test_audit_browser_local.py"
+      ],
+      "resolution": "PlayScreen-owns-the-in-game-logout-control-and-responsive-coverage-asserts-it-does-not-overlap-the-character-sheet-button.",
+      "discovery_calls": 5,
+      "source_bytes_read": 15377,
+      "wall_seconds": 33.672
+    }
+  ],
+  "completed_at": "2026-10-01T02:21:56.634927+00:00"
+}

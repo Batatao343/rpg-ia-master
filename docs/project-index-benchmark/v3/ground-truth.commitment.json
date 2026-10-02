@@ -1,0 +1,7 @@
+{
+  "schema_version": 3,
+  "canonicalization": "UTF-8 JSON.stringify with insertion-ordered keys and no whitespace",
+  "sha256": "fc7facdf29e1eeaed440f97b4649d66ccfde181e36900f3bfb1a55204a054330",
+  "revealed_at_seal_time": false,
+  "content_unchanged_from_v2_commitment": true
+}

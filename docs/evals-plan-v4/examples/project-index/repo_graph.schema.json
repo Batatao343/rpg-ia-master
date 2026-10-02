@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Valoria Repository Graph",
+  "type": "object",
+  "required": ["schema_version", "commit_sha", "nodes", "edges"],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "commit_sha": {"type": "string", "minLength": 7},
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "path"],
+        "properties": {
+          "id": {"type": "string"},
+          "kind": {"enum": ["file", "module", "class", "function", "method", "test", "endpoint", "artifact"]},
+          "path": {"type": "string"},
+          "line": {"type": ["integer", "null"]},
+          "qualified_name": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "target", "type", "confidence", "provenance"],
+        "properties": {
+          "source": {"type": "string"},
+          "target": {"type": "string"},
+          "type": {"enum": ["imports", "defines", "contains", "references", "calls", "route_to", "likely_test_for"]},
+          "confidence": {"enum": ["static_exact", "static_best_effort", "curated"]},
+          "provenance": {
+            "type": "object",
+            "required": ["file"],
+            "properties": {
+              "file": {"type": "string"},
+              "line": {"type": ["integer", "null"]},
+              "extractor": {"type": ["string", "null"]}
+            }
+          }
+        }
+      }
+    }
+  }
+}

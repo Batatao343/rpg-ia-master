@@ -1,9 +1,10 @@
 # Auditoria — execução e evidências de 26/09
 
-As nove specs têm implementação iniciada. Artes, contexto, operações, efeitos,
-leases, frontend e gates estão `done`; narrativa e recompensas seguem
-`in-progress`, bloqueadas apenas pelo contrato DeepSeek externo.
-Não confundir código implementado com todos os critérios de aceite certificados.
+As nove specs estão `done`. Em 28/09, narrativa e recompensas passaram o
+contrato DeepSeek dirigido: beat elegível concedeu exatamente 150 XP e o
+`last_turn_outcome` confirmou o mesmo delta. STORY/NPC/LOOT/memória também
+foram exercitados na matriz B real sem alegação crítica inválida. Evidência:
+[matriz B](playtest-matriz-b-2026-09-28.md).
 
 ## Alterações verificadas
 

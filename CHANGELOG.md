@@ -487,7 +487,7 @@ saga + memorial 409).
 
 ## 2026-07-03 — Fase 2.8: Context builder com orçamento de tokens
 
-Entregas (spec `specs/fase-2.8-context-builder.md`):
+Entregas (spec `specs/SPEC-005-fase-2.8-context-builder.md`):
 - `services/context_builder.py` — `estimate_tokens` (chars/4), `score_fact`
   (0.35 rel + 0.25 local + 0.20 entidade + 0.10 impacto + 0.10 recência), `render_event`
   (`EVENT_TEMPLATES`; nome canônico via `gr.get_entity`, não id cru), `collect_dynamic_facts`,
@@ -502,7 +502,7 @@ Entregas (spec `specs/fase-2.8-context-builder.md`):
 
 ## 2026-07-02 — Fase 2.7: Rules engine sistêmica
 
-Entregas (spec `specs/fase-2.7-rules-engine.md`):
+Entregas (spec `specs/SPEC-004-fase-2.7-rules-engine.md`):
 - `services/rule_engine.py` — `resolve_path` seguro (só literais/`event.`/`target.`/
   `component:`; dunder + expressão arbitrária → `RuleActionError`), `check_conditions`,
   `execute_action` (ops: set_entity_state, adjust_faction_stability, disable_controls_edges,
@@ -517,7 +517,7 @@ Entregas (spec `specs/fase-2.7-rules-engine.md`):
 
 ## 2026-07-02 — Fase 2.6: Structured world changes
 
-Entregas (spec `specs/fase-2.6-structured-events.md`):
+Entregas (spec `specs/SPEC-003-fase-2.6-structured-events.md`):
 - `services/structured_outputs.py` — `ProposedWorldEvent` / `WorldChangeProposal` (Pydantic).
 - `services/world_validators.py` — `validate_proposal(dict, state)` → `ValidationResult(ok, reason)`;
   regras por tipo (npc_killed, secret_revealed, location_control_changed, quest_completed,
@@ -612,7 +612,7 @@ frase-final). 4 testes novos em `tests/test_fase25.py`. Codex reindexado (2579 c
 ## 2026-07-02 — Fase 2.5: Codex + grafo de mundo
 
 Lore REESCRITO em `lore_nova/` (universo **Valoria**, ~690KB), SUBSTITUI o lore antigo.
-Spec `specs/fase-2.5-codex-world-state.md` → `done`:
+Spec `specs/SPEC-001-fase-2.5-codex-world-state.md` → `done`:
 
 - `scripts/migrate_lore_nova.py` → gera `data/codex/` (635 .md com frontmatter
   `id/type/name/tags/visibility`) + `data/graph/entities.json` (558 entidades: 12 regiões,

@@ -1213,7 +1213,11 @@ def _interiors_block(loc_id: str) -> Dict[str, Any]:
 
 @app.get("/health")
 def health_check():
-    return {"status": "online", "engine": "RPG IA v9.0 Hybrid Memory"}
+    return {
+        "status": "online",
+        "engine": "RPG IA v9.0 Hybrid Memory",
+        "git_sha": os.getenv("GIT_SHA") or os.getenv("VERCEL_GIT_COMMIT_SHA") or "",
+    }
 
 
 @app.get("/metrics", include_in_schema=False)

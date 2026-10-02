@@ -11,7 +11,7 @@ vetores de providers diferentes no mesmo índice FAISS são incompatíveis
 (dimensão/espaço). O fallback é só na RESOLUÇÃO (qual provider está disponível
 ao construir). Cada índice grava `embeddings_meta.json` e fica PINADO ao
 provider que o gerou; abrir com outro provider é proibido (índice desativado
-com aviso; re-index para trocar). Ver specs/embeddings-provider.md.
+com aviso; re-index para trocar). Ver specs/SPEC-039-embeddings-provider.md.
 """
 import json
 import hashlib
@@ -23,7 +23,7 @@ import unicodedata
 import uuid
 from collections import Counter
 from dataclasses import dataclass, field
-from typing import Callable, Dict, List, Literal, Optional
+from typing import Any, Callable, Dict, List, Literal, Optional
 import httpx
 from langchain_community.vectorstores import FAISS
 from langchain_community.document_loaders import TextLoader
@@ -75,6 +75,23 @@ class RAGOperationEvent:
     provider: Optional[str]
     error: Optional[str]
     provenance_counts: Dict[str, int] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class RetrievedEvidence:
+    """Structured retrieval result used by diagnostics and evals.
+
+    Production callers may keep using the text-returning query functions. This
+    shape exposes stable evidence identity without making text matching an
+    oracle.
+    """
+
+    id: str
+    source: str
+    score: float
+    text: str
+    visibility: str
+    metadata: Dict[str, Any] = field(default_factory=dict)
 
 
 _RAG_OPERATION_HOOK: Optional[Callable[[RAGOperationEvent], None]] = None
@@ -484,6 +501,74 @@ def vis_rank(visibility: Optional[str]) -> int:
     return _VIS_ORDER.get(visibility, _VIS_ORDER["secret"])
 
 
+def query_faiss_evidence(
+    db: Any,
+    vector: List[float],
+    *,
+    k: int = 5,
+    fetch_k: Optional[int] = None,
+    max_visibility: Optional[str] = None,
+    source: str = "lore",
+) -> List[RetrievedEvidence]:
+    """Return the same FAISS ranking used by production as structured evidence.
+
+    The text-returning production APIs format this trace after ranking. Evals can
+    inspect IDs and visibility directly, using an in-memory FAISS index with
+    deterministic fixture vectors and no external embedding provider.
+    """
+
+    if k < 1:
+        raise ValueError("k must be positive")
+    if not vector:
+        raise ValueError("vector cannot be empty")
+    candidate_count = k if fetch_k is None else int(fetch_k)
+    if candidate_count < k:
+        raise ValueError("fetch_k cannot be smaller than k")
+    maximum = vis_rank(max_visibility) if max_visibility is not None else None
+    candidates = db.similarity_search_with_score_by_vector(
+        [float(value) for value in vector],
+        k=candidate_count,
+    )
+    evidence: List[RetrievedEvidence] = []
+    seen_ids: set[str] = set()
+    for document, distance in candidates:
+        metadata = dict(getattr(document, "metadata", {}) or {})
+        visibility = str(metadata.get("visibility") or "public").strip().lower()
+        if maximum is not None and vis_rank(visibility) > maximum:
+            continue
+        content = str(getattr(document, "page_content", "") or "")
+        content_digest = hashlib.sha256(content.encode("utf-8")).hexdigest()[:24]
+        evidence_id = str(
+            metadata.get("evidence_id")
+            or metadata.get("memory_id")
+            or ""
+        ).strip()
+        if not evidence_id:
+            entity_id = str(metadata.get("entity_id") or metadata.get("id") or "").strip()
+            if entity_id:
+                metadata.setdefault("entity_id", entity_id)
+                evidence_id = f"{entity_id}#chunk_{content_digest}"
+            else:
+                evidence_id = f"content_{content_digest}"
+        if evidence_id in seen_ids:
+            chunk_id = f"{evidence_id}#chunk_{content_digest}"
+            if chunk_id in seen_ids:
+                continue
+            evidence_id = chunk_id
+        seen_ids.add(evidence_id)
+        evidence.append(RetrievedEvidence(
+            id=evidence_id,
+            source=str(metadata.get("source") or source),
+            score=-float(distance),
+            text=content,
+            visibility=visibility,
+            metadata=metadata,
+        ))
+        if len(evidence) >= k:
+            break
+    return evidence
+
+
 def _query_session_documents(query: str, game_id: str, *, k: int = 2) -> list:
     if not query or not game_id:
         return []
@@ -513,7 +598,9 @@ def _format_documents(documents: list) -> str:
     seen = set()
     final_text = []
     for doc in documents:
-        content = str(getattr(doc, "page_content", "") or "").strip()
+        content = str(
+            getattr(doc, "page_content", None) or getattr(doc, "text", "") or ""
+        ).strip()
         if content and content not in seen:
             seen.add(content)
             final_text.append(content)
@@ -530,7 +617,9 @@ def _format_memory_documents(documents: list) -> str:
     by_text: dict[str, tuple[int, str]] = {}
     order: list[str] = []
     for doc in documents:
-        content = str(getattr(doc, "page_content", "") or "").strip()
+        content = str(
+            getattr(doc, "page_content", None) or getattr(doc, "text", "") or ""
+        ).strip()
         if not content:
             continue
         metadata = dict(getattr(doc, "metadata", {}) or {})
@@ -645,13 +734,15 @@ def query_global_by_vector(vector: List[float], index_name: str = "lore",
         return ""
     try:
         db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
-        candidates = db.similarity_search_by_vector(vector, k=6)
-        maximum = vis_rank(max_visibility)
-        visible = [
-            doc for doc in candidates
-            if vis_rank(doc.metadata.get("visibility")) <= maximum
-        ]
-        return _format_documents(visible[:2])
+        evidence = query_faiss_evidence(
+            db,
+            vector,
+            k=2,
+            fetch_k=6,
+            max_visibility=max_visibility,
+            source=index_name,
+        )
+        return _format_documents(evidence)
     except Exception:
         return ""
 
@@ -676,7 +767,10 @@ def query_session_by_vector(vector: List[float], game_id: str, *, k: int = 6) ->
         return ""
     try:
         db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
-        return _format_memory_documents(db.similarity_search_by_vector(vector, k=k))
+        evidence = query_faiss_evidence(
+            db, vector, k=k, source="session"
+        )
+        return _format_memory_documents(evidence)
     except Exception:
         return ""
 
@@ -701,7 +795,10 @@ def query_npc_by_vector(vector: List[float], game_id: str, npc_id: str, *, k: in
         return ""
     try:
         db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
-        return _format_memory_documents(db.similarity_search_by_vector(vector, k=k))
+        evidence = query_faiss_evidence(
+            db, vector, k=k, source="npc"
+        )
+        return _format_memory_documents(evidence)
     except Exception:
         return ""
 

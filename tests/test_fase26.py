@@ -1,6 +1,6 @@
 """
 Suíte da Fase 2.6 — Structured world changes (LLM propõe, motor valida/aplica).
-Spec: specs/fase-2.6-structured-events.md. 100% offline.
+Spec: specs/SPEC-003-fase-2.6-structured-events.md. 100% offline.
 
 Usa ids canônicos reais de data/graph/entities.json:
   npc vivo canônico: npc_valerius (controla nova_arcadia)

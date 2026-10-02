@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "baseline_id": "baseline-v1",
+  "status": "complete",
+  "measured_at": "2026-09-30",
+  "product_identity": {
+    "commit_sha": "cadbdd1013022c98f506ee335fa9072efcc9df6c",
+    "source_tree_hash": "sha256:37501dc7b23f5da682fb9252add29e9761763ba4a183ef3dc6ed4faf34dd10c7",
+    "dirty": true
+  },
+  "evaluator_identity": {
+    "version": "1.6.0",
+    "metrics_schema_version": 1,
+    "metrics_registry_hash": "sha256:18f4747a961cc163ab849a78f3af2e9683212ba9f30fe1d45951739b49597152",
+    "case_selection_hash": "sha256:ece132c765c5bcb865f00ebe4b5342ca8989bd240dc46998a4027cd783a224b1",
+    "seed": 7
+  },
+  "environment": {
+    "backend": "windows-py3.13.14",
+    "frontend_os": "Windows-11-10.0.26200-SP0",
+    "node": "24.17.0",
+    "playwright": "1.55.1",
+    "browser": "Chromium 151.0.7922.71",
+    "locale": "pt-BR",
+    "timezone": "America/Sao_Paulo",
+    "reduced_motion": true
+  },
+  "datasets": {
+    "datasets/regression/governance.jsonl": "sha256:70495f46b2487a95bda9c5863cfa3d57ae384a2199e072b409f3e1a89f3fdd69",
+    "datasets/regression/harness.jsonl": "sha256:6d0ec855914693e20fcd5bc7ae356ea984164f45b0b779d657fe7dc8d00ad2b4",
+    "datasets/regression/memory_context.jsonl": "sha256:d355382c5017045da223613867275c5b1136b2173e60ce2c700e064a7e79cc7b",
+    "datasets/regression/narrative_npc.jsonl": "sha256:30e96c262d5cadd2a3c5810044e44eb15d75d2d7b96824bf385639269d99f892",
+    "datasets/regression/routing_actions.jsonl": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
+    "datasets/regression/state_rules.jsonl": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733"
+  },
+  "artifacts": {
+    "baseline-v1.json": "sha256:fb373477617038490737a9038cc4c3b0f37674c6022f204041b54b86d4826046",
+    "baseline-v1.md": "sha256:09ae38742b9a33d8d2eebae883855ec2cd63531b58d63a42004a46a0316fc0d5",
+    "frontend-playwright-raw.json": "sha256:389e177c8f0fd09b11dd0b61f7916ed4cd45b0d748503d596aae3aca1ece9bb5",
+    "frontend.json": "sha256:17ee69fe092814337451fcf80a678ef38aec268e84db123e7acc3515f6871bb7"
+  },
+  "coverage": {
+    "deterministic_cases": 86,
+    "frontend_critical_journeys": 16,
+    "frontend_visual_snapshot": "skipped_outside_pinned_linux",
+    "real_provider_short": "omitted_by_existing_user_cost_constraint",
+    "long_run": "excluded_by_spec"
+  },
+  "targets_defined": false
+}

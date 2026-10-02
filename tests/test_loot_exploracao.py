@@ -1,7 +1,7 @@
 """Suíte da spec loot-exploracao — explorar recompensa (escada de raridade + baús).
 
 Offline/determinístico. Reusa a engine de loot da Fase 6. Ver
-specs/loot-exploracao.md.
+specs/SPEC-057-loot-exploracao.md.
 """
 import random
 

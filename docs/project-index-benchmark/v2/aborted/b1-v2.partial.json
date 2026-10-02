@@ -1,0 +1,165 @@
+{
+  "schema_version": 2,
+  "session_id": "b1-v2",
+  "condition": "B",
+  "replicate": 1,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "discovery_budget": {
+    "max_calls_per_task": 12,
+    "max_source_bytes_per_task": 50000,
+    "max_wall_seconds_per_task": 120.0
+  },
+  "prompt_hash": "sha256:288f94ef6bff615ea82c31fe66778fd5f156b04a8090554e49dbd62f8919586b",
+  "condition_prompt_hash": "sha256:2d506c97b4bc8617ebed71f1ed1584e5948485deffd6ca9e781df9717efd1a17",
+  "source_tree_hash": "sha256:0ce74d0377077626c38060217bc0fe174aa8fe536f6c94df751ed808f6a709ca",
+  "project_index_graph_hash": "sha256:2ed22df662a5dd2ce17426d1b12fd527783d87eed5232fcc7cd5de15c14dfe44",
+  "attestation_hash": "sha256:260ac9431a35ec061325473067a8df2312d29ded611c2245b43ed884c2ef1015",
+  "order": [
+    "B08",
+    "B07",
+    "B06",
+    "B05",
+    "B04",
+    "B03",
+    "B02",
+    "B01"
+  ],
+  "next_task_index": 1,
+  "active_task": null,
+  "status": "ready",
+  "created_at": "2026-09-30T19:34:40.643032+00:00",
+  "task_usage": {
+    "B08": {
+      "discovery_calls": 11,
+      "source_bytes_read": 5336,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-09-30T19:35:34.987435+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "logout mobile duplicado sobreposto",
+          "limit": 12,
+          "output_bytes": 2510
+        },
+        {
+          "sequence": 2,
+          "at": "2026-09-30T19:35:44.435499+00:00",
+          "op": "search",
+          "source_bytes": 500,
+          "pattern": "logout",
+          "paths": [
+            "api.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 3,
+          "at": "2026-09-30T19:35:48.799881+00:00",
+          "op": "read",
+          "source_bytes": 1346,
+          "path": "api.py",
+          "start": 260,
+          "lines": 28
+        },
+        {
+          "sequence": 4,
+          "at": "2026-09-30T19:35:56.098701+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "mobile logout auth button overlay",
+          "limit": 12,
+          "output_bytes": 3343
+        },
+        {
+          "sequence": 5,
+          "at": "2026-09-30T19:36:01.346652+00:00",
+          "op": "search",
+          "source_bytes": 390,
+          "pattern": "logout",
+          "paths": [
+            "web/src/App.tsx"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 6,
+          "at": "2026-09-30T19:36:05.748632+00:00",
+          "op": "read",
+          "source_bytes": 1089,
+          "path": "web/src/App.tsx",
+          "start": 110,
+          "lines": 35
+        },
+        {
+          "sequence": 7,
+          "at": "2026-09-30T19:36:10.331708+00:00",
+          "op": "read",
+          "source_bytes": 2011,
+          "path": "web/src/App.tsx",
+          "start": 460,
+          "lines": 47
+        },
+        {
+          "sequence": 8,
+          "at": "2026-09-30T19:36:17.773936+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "PlayScreen logout mobile fixed header",
+          "limit": 12,
+          "output_bytes": 3609
+        },
+        {
+          "sequence": 9,
+          "at": "2026-09-30T19:36:22.340483+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "logout",
+          "paths": [
+            "web/src/components/PlayScreen.tsx"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 10,
+          "at": "2026-09-30T19:36:29.630944+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "session-logout CSS media mobile",
+          "limit": 12,
+          "output_bytes": 3532
+        },
+        {
+          "sequence": 11,
+          "at": "2026-09-30T19:36:35.749836+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "session-logout",
+          "paths": [
+            "tests/test_frontend_visual_contracts.py"
+          ],
+          "context": 2
+        }
+      ],
+      "index_queried": true
+    }
+  },
+  "results": [
+    {
+      "id": "B08",
+      "files": [
+        "web/src/App.tsx",
+        "api.py",
+        "tests/test_frontend_visual_contracts.py"
+      ],
+      "tests": [
+        "tests/test_frontend_visual_contracts.py"
+      ],
+      "resolution": "Logout and the single conditional button stay outside play, preventing duplicate or overlay in the mobile flow.",
+      "discovery_calls": 11,
+      "source_bytes_read": 5336,
+      "wall_seconds": 104.464
+    }
+  ]
+}

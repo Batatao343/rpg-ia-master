@@ -4,7 +4,7 @@ content_validator.py — Lint de conteúdo autoral (Fase 7.1).
 Valida frontmatter, ids, referências, aliases, visibilidade e encoding de todo
 o conteúdo do Codex (`data/codex/**/*.md`) e do grafo (`data/graph/*.json`).
 Funções puras, zero LLM/rede; leem disco fresco (NÃO usam os caches do
-graph_resolver). Spec: specs/fase-7.1-validadores-conteudo.md.
+graph_resolver). Spec: specs/SPEC-022-fase-7.1-validadores-conteudo.md.
 
 CLI: `uv run python scripts/validate_content.py` (exit 1 com qualquer ERRO).
 O gate sobre os dados reais do repo é `tests/test_fase71.py::test_repo_content_sem_erros`.

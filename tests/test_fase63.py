@@ -1,6 +1,6 @@
 """
 Fase 6.3 — Migração de monstros: população reage à caça e ao poder.
-Spec: specs/fase-6.3-migracao-de-monstros.md. 100% offline, zero estado novo.
+Spec: specs/SPEC-019-fase-6.3-migracao-de-monstros.md. 100% offline, zero estado novo.
 """
 import random
 

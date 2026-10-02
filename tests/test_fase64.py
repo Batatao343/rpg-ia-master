@@ -1,6 +1,6 @@
 """
 Fase 6.4 — Encontros sistêmicos: detecção, surpresa e variedade.
-Spec: specs/fase-6.4-encontros-sistemicos.md. 100% offline, zero LLM novo.
+Spec: specs/SPEC-020-fase-6.4-encontros-sistemicos.md. 100% offline, zero LLM novo.
 """
 import random
 

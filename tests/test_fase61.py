@@ -1,6 +1,6 @@
 """
 Fase 6.1 — Economia viva: rotas, escassez e eventos no comércio.
-Spec: specs/fase-6.1-economia-viva.md. 100% offline.
+Spec: specs/SPEC-017-fase-6.1-economia-viva.md. 100% offline.
 
 Geografia real usada: brekmar ↔ nova_arcadia são conexão direta;
 brekmar tem economy_tags ["porto"] e tag de mapa via economy_tags.

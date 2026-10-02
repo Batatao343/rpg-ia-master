@@ -39,9 +39,9 @@ grafo ainda aceita viagem, conversa, loot e novo conflito. A correção precisa
 centralizar elegibilidade de ação por fase de vida, nunca usar Vitalidade como
 atalho para morte.
 
-Spec definitiva: `contrato-canonico-ciclo-vida-acoes.md`. Ela supera os requisitos
-R1–R3 de `fuga-vitalidade-zero.md`, preservando o contrato de
-`fix-vitalidade-ferimentos-terminal.md`.
+Spec definitiva: `SPEC-141-contrato-canonico-ciclo-vida-acoes.md`. Ela supera os requisitos
+R1–R3 de `SPEC-131-fuga-vitalidade-zero.md`, preservando o contrato de
+`SPEC-083-fix-vitalidade-ferimentos-terminal.md`.
 
 ### A2 — recompensa consolidada depois da fala
 
@@ -50,8 +50,8 @@ e 94). Em todos, o storyteller negou recompensa e só depois o archivist aplicou
 `quest_completed`, ouro e XP. O patch anterior cobria apenas delta concedido
 dentro do storyteller; não cobria mutação canônica tardia.
 
-Spec definitiva: `resultado-canonico-turno-apresentacao.md`, que amplia e
-substitui a cobertura parcial de `feedback-ledger-recompensas.md`.
+Spec definitiva: `SPEC-144-resultado-canonico-turno-apresentacao.md`, que amplia e
+substitui a cobertura parcial de `SPEC-095-feedback-ledger-recompensas.md`.
 
 ### A3 — interação sem progresso e elegibilidade divergente
 
@@ -61,7 +61,7 @@ repetia o mesmo convite e a mesma recusa por mais de cem turnos. Diplomático e
 secret rusher somaram 58 warnings; parte mede scaffold determinístico do NPC,
 não a abertura semântica da prosa.
 
-Spec definitiva: `interacoes-progresso-elegibilidade.md`, com uma decisão
+Spec definitiva: `SPEC-142-interacoes-progresso-elegibilidade.md`, com uma decisão
 tipada compartilhada pelo produto e pelo harness, máquina de estados adaptativa
 e telemetria episódica.
 
@@ -72,8 +72,8 @@ tentativa excluída encerrou a matriz após três respostas inválidas consecuti
 O retry atual pede regeneração às cegas porque `include_raw=False` elimina a
 resposta e a causa do parse.
 
-Spec definitiva: `structured-output-evidencia-recuperacao.md`, que supera o
-retry genérico de `structured-output-retry-provider.md` sem relaxar fail-closed.
+Spec definitiva: `SPEC-145-structured-output-evidencia-recuperacao.md`, que supera o
+retry genérico de `SPEC-136-structured-output-retry-provider.md` sem relaxar fail-closed.
 
 ## Gate A→correções→B
 

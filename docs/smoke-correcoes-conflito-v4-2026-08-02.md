@@ -165,7 +165,7 @@ rumor/inferência pode retornar depois com aparência de fato.
 
 Esse problema é mais amplo que o `ConflictSummary`, cujo lifecycle foi
 corrigido. Foi aberto como
-[`hardening-memoria-proveniencia`](../specs/hardening-memoria-proveniencia.md),
+[`hardening-memoria-proveniencia`](../specs/SPEC-085-hardening-memoria-proveniencia.md),
 status `draft`, para separar fatos confirmados, observações, alegações de NPC e
 inferências, com confiança e fonte auditáveis.
 

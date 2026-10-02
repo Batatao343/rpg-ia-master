@@ -6,7 +6,7 @@ Tudo aqui é VIEW: nenhum campo novo persistido, só leitura/agregação do que 
 chama filtra por `intel.known`/`world.visited` ANTES de usar estas funções (elas não
 sabem de intel — recebem só o que já foi liberado pro jogador).
 
-Spec: specs/fase-3.4-visualizacao-estado.md §3.
+Spec: specs/SPEC-009-fase-3.4-visualizacao-estado.md §3.
 """
 
 from __future__ import annotations

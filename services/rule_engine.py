@@ -19,7 +19,7 @@ Cascata: `run_rules` é dono da cascata — aplica os eventos derivados na proje
 até profundidade 2 (anti-loop). O `event_processor` só anexa os derivados ao `event_log`
 (não re-aplica). `apply_event` continua sendo o único tradutor evento→projection.
 
-Spec: specs/fase-2.7-rules-engine.md.
+Spec: specs/SPEC-004-fase-2.7-rules-engine.md.
 """
 
 from __future__ import annotations

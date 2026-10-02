@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "benchmark": "SPEC-175 v4",
+  "scope": "Mechanical aggregation only; semantic resolved scoring and final index decision are pending Sol.",
+  "exclusions": ["v1", "v2", "v3", "v4/aborted"],
+  "integrity": {
+    "ground_truth_canonical_sha256": "sha256:1f5ec3ce3b235271d7a2cb0e02d3fd9fdf57326554dbde9e4f2714dee63f9af3",
+    "ground_truth_canonical_matches_commitment": true,
+    "revealed_ground_truth_file_sha256": "sha256:1194c5cd6fc23c7bcd1c9a67e802dfc636094370e9711c9c002d23137fc3a3d6",
+    "revealed_ground_truth_matches_sealed_file_hash": true,
+    "commitment_file_sha256": "sha256:5e2ab0c5d00eb8f3394de279dd81beaa658fd5f8ca09e8342d6ce917ddb1ceac",
+    "preregistration_sha256": "sha256:99be09f43b0299a9b88e9a5fa25676b4d2a0f73472e0954dca386dcd1bb03408",
+    "attestation_self_sha256": "sha256:1434a5c3d2054ce819537ed93883586c1fcdc33dde5b2ee774975db528d91e8c",
+    "attestation_self_hash_valid": true,
+    "source_tree_hash": "sha256:b3171bcf014f5d9104a8223854709d5e3b1420092ea5b73af347d8cd618a76cd",
+    "source_tree_hash_matches_manifest": true,
+    "project_index_graph_hash": "sha256:a30ab6f3ced9b09662c5ba3eee3df7f8c019e292c6705bd10a3171e6e53b2e07",
+    "project_index_graph_hash_matches_manifest": true,
+    "prompt_hash": "sha256:dadf5eb4a66f77e0d1e42dc7f90fbda52e6a528d151a8a61018c0b899e7e3bb4",
+    "condition_prompt_hashes": {
+      "A": "sha256:05b5351299d44822930d8d23afaaff3cd970d35bf99951374c236bd772dfe6b2",
+      "B": "sha256:93e20291884ee919a00ed1a3ac24dd3c98ed1235957b03f3f2aee7a858d9def6"
+    },
+    "session_prompts": {
+      "a1-v4": {"expected_sha256": "sha256:edc4684d1b47d63327f31e2eb915031266833e2498602b4b6ba227ec6a6a1a04", "actual_sha256": "sha256:edc4684d1b47d63327f31e2eb915031266833e2498602b4b6ba227ec6a6a1a04", "valid": true},
+      "a2-v4": {"expected_sha256": "sha256:a705ee2ec4310db5dd197ffa94e90d9d36dcce0b39d6ed642fe60a3d3a6371c5", "actual_sha256": "sha256:a705ee2ec4310db5dd197ffa94e90d9d36dcce0b39d6ed642fe60a3d3a6371c5", "valid": true},
+      "b1-v4": {"expected_sha256": "sha256:909c0d4f4baf441b47666527d78d5a18d94895b59a153d304743d3f0943308aa", "actual_sha256": "sha256:909c0d4f4baf441b47666527d78d5a18d94895b59a153d304743d3f0943308aa", "valid": true},
+      "b2-v4": {"expected_sha256": "sha256:653ad182d12e6fb800edfa187a33ac6a337595c8e88114f5ab8fa7d9d1202c10", "actual_sha256": "sha256:653ad182d12e6fb800edfa187a33ac6a337595c8e88114f5ab8fa7d9d1202c10", "valid": true}
+    }
+  },
+  "sessions": [
+    {"id": "a1-v4", "condition": "A", "replicate": 1, "model": "gpt-5.6-terra", "effort": "high", "order": ["B01", "B02", "B03", "B04", "B05", "B06", "B07", "B08"], "complete": true, "prompt_hash_valid": true, "trace_usage_reconciles": true, "within_all_task_budgets": true, "session_file_sha256": "sha256:6053d3dd19e9b42d172e095856b362bcb734f33bfe0c672a9ced1e2710e2bf3e"},
+    {"id": "a2-v4", "condition": "A", "replicate": 2, "model": "gpt-5.6-terra", "effort": "high", "order": ["B08", "B07", "B06", "B05", "B04", "B03", "B02", "B01"], "complete": true, "prompt_hash_valid": true, "trace_usage_reconciles": true, "within_all_task_budgets": true, "session_file_sha256": "sha256:e188443fcc62b0a719350a9236f06ed67624596fd60df2b6ebc8185cfeb4da48"},
+    {"id": "b1-v4", "condition": "B", "replicate": 1, "model": "gpt-5.6-terra", "effort": "high", "order": ["B08", "B07", "B06", "B05", "B04", "B03", "B02", "B01"], "complete": true, "prompt_hash_valid": true, "first_trace_operation_for_each_task_is_index_query": true, "trace_usage_reconciles": true, "within_all_task_budgets": true, "session_file_sha256": "sha256:b4bc3d129a431b9d74b791742caaf1345222e617da157bcb9c9c1d347295d9dd"},
+    {"id": "b2-v4", "condition": "B", "replicate": 2, "model": "gpt-5.6-terra", "effort": "high", "order": ["B01", "B02", "B03", "B04", "B05", "B06", "B07", "B08"], "complete": true, "prompt_hash_valid": true, "first_trace_operation_for_each_task_is_index_query": true, "trace_usage_reconciles": true, "within_all_task_budgets": true, "session_file_sha256": "sha256:32ff7481906cd57aabfd275ac5fdc63a6ed511853fb851c1f8064597324644e8"}
+  ],
+  "validation": {
+    "complete_sessions": 4,
+    "observations": 32,
+    "A_has_any_index_trace": false,
+    "B_all_tasks_begin_with_index_query": true,
+    "trace_calls_equal_stored_usage_and_result_for_all_observations": true,
+    "trace_source_bytes_equal_stored_usage_and_result_for_all_observations": true,
+    "all_tasks_within_preregistered_budgets": true,
+    "budgets": {"discovery_calls_max": 12, "source_bytes_max": 50000, "wall_seconds_max": 300}
+  },
+  "metrics": {
+    "definition": "Each condition uses its 16 task observations. Localization is a ground-truth core file among the first three reported files. Irrelevant count is reported implementation files outside core_files; tests are excluded. Test recall is the fraction of ground-truth test_files selected after stripping any ::test_name suffix. Medians use the arithmetic mean of the two middle observations.",
+    "A": {"observations": 16, "localization_hit": 15, "irrelevant_implementation_files_total": 10, "irrelevant_implementation_files_mean": 0.625, "relevant_test_recall_mean": 0.5833333333, "median_discovery_calls": 4, "median_source_bytes_read": 25142, "median_wall_seconds": 17.9655},
+    "B": {"observations": 16, "localization_hit": 15, "irrelevant_implementation_files_total": 9, "irrelevant_implementation_files_mean": 0.5625, "relevant_test_recall_mean": 0.4166666667, "median_discovery_calls": 4.5, "median_source_bytes_read": 10115.5, "median_wall_seconds": 28.419},
+    "per_task_two_replicate_averages": [
+      {"task": "B01", "A_calls": 4, "A_bytes": 18053, "B_calls": 6, "B_bytes": 20020, "cost_win": false},
+      {"task": "B02", "A_calls": 2.5, "A_bytes": 37970.5, "B_calls": 2.5, "B_bytes": 11634, "cost_win": true},
+      {"task": "B03", "A_calls": 3, "A_bytes": 21064.5, "B_calls": 4, "B_bytes": 8280.5, "cost_win": false},
+      {"task": "B04", "A_calls": 5.5, "A_bytes": 18563, "B_calls": 4.5, "B_bytes": 10732.5, "cost_win": true},
+      {"task": "B05", "A_calls": 2, "A_bytes": 31158.5, "B_calls": 4.5, "B_bytes": 12107, "cost_win": false},
+      {"task": "B06", "A_calls": 3, "A_bytes": 34829, "B_calls": 4, "B_bytes": 5558, "cost_win": false},
+      {"task": "B07", "A_calls": 4, "A_bytes": 37819.5, "B_calls": 7, "B_bytes": 17171, "cost_win": false},
+      {"task": "B08", "A_calls": 6, "A_bytes": 13482.5, "B_calls": 7.5, "B_bytes": 11464, "cost_win": false}
+    ],
+    "cost_win_rule": "B reduces calls or bytes, and the other dimension does not worsen by more than 10%.",
+    "cost_wins": 2,
+    "cost_win_tasks": ["B02", "B04"],
+    "global_20_percent_criterion": {"bytes_median_reduction": 0.5976652613, "calls_median_change": 0.125, "other_dimension_worsening_max": 0.10, "passed": false}
+  },
+  "decision": {"resolved_scoring": "pending Sol", "mandatory_selective_remove": "not applied; resolved and sufficient-localization-gain review are reserved for Sol"}
+}

@@ -1,6 +1,6 @@
 """
 Suíte da Fase 2.5 — Codex estruturado + World State Graph.
-Spec: specs/fase-2.5-codex-world-state.md. 100% offline (sem embeddings/LLM real).
+Spec: specs/SPEC-001-fase-2.5-codex-world-state.md. 100% offline (sem embeddings/LLM real).
 """
 
 import json

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "attempt_id": "v2-attempt-02",
+  "excluded_from_aggregation": true,
+  "exclusion_reason": "Pre-result operational validation exposed harness/prompt defects; no task produced a result.",
+  "ground_truth_revealed": false,
+  "thresholds_changed": false,
+  "sessions": [
+    {"session_id":"a1-v2","status_at_abort":"running","completed_tasks":0,"active_task":"B01","sha256":"3c34f6e17bb9987b43e2ec1cd962538a60722f48ac8ee105255c43a03ac7c2eb","reason":"Directory discovery contract and coordinator result schema were not reproducible."},
+    {"session_id":"a2-v2","status_at_abort":"running","completed_tasks":0,"active_task":"B08","sha256":"2b19d7becd36cb11c3c3c29d7eac778a8948d6fb9dba26ff1e72dd7436f17d6e","reason":"Allowed directory root web/src was rejected by the harness."},
+    {"session_id":"b1-v2","status_at_abort":"running","completed_tasks":0,"active_task":"B08","sha256":"1c41b07abfb3a8af2874a7580799b8d167d2cd814833939e2e9fe06276515779","reason":"Allowed directory root web/src was rejected by the harness."},
+    {"session_id":"b2-v2","status_at_abort":"ready","completed_tasks":0,"active_task":null,"sha256":"22d28adc4ba90ea9565173c55afc59ebce4388857788207e496de3ff1ddba3eb","reason":"Not started."}
+  ],
+  "successor": "v3",
+  "restart_rule": "V3 must be sealed only after directory-root discovery and the exact finish schema are regression-tested. V1/V2 remain excluded."
+}

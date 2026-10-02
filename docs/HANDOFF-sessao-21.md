@@ -8,7 +8,7 @@
 
 ## 1. Frontend — polish de imersão (`done`)
 
-Spec registrada: **[specs/polish-frontend-imersao.md](../specs/polish-frontend-imersao.md)**
+Spec registrada: **[specs/SPEC-054-polish-frontend-imersao.md](../specs/SPEC-054-polish-frontend-imersao.md)**
 (`done`, R1–R8). Auditoria visual com Edge headless (screenshots reais). Puro
 apresentação — **zero mudança de estado/schema/regra**. Arquivos:
 `web/src/components/StoryLog.tsx`, `web/src/styles.css`.
@@ -57,7 +57,7 @@ sessão 20 ("NÃO rode nada no Jina concorrente") está **VENCIDO** — Jina liv
    indecidíveis** por telemetria agregada. Antes suspeitávamos que era artefato do
    mock; agora sabemos que é da **definição da métrica** (mede algo que é sempre
    100%, provável: "turnos que usaram ataque básico" vs uso de habilidade). Ver
-   [spec balanceamento §8](../specs/balanceamento-classes-pos-playtest.md).
+   [spec balanceamento §8](../specs/SPEC-049-balanceamento-classes-pos-playtest.md).
    **Próximo passo real:** ou (a) redefinir flooding/starvation em
    `playtest/telemetry.py`, ou (b) minerar o jsonl por turno pra medir gasto real
    de Entropia (habilidade ativa vs ataque básico). Sem isso, tuning segue no escuro.
@@ -106,7 +106,7 @@ sessão 20 ("NÃO rode nada no Jina concorrente") está **VENCIDO** — Jina liv
 ## 4. Estado do git ao fim desta sessão
 
 - `main`, working tree limpo após os commits desta sessão.
-- Commitado: frontend polish (2 arquivos) + `specs/polish-frontend-imersao.md` +
+- Commitado: frontend polish (2 arquivos) + `specs/SPEC-054-polish-frontend-imersao.md` +
   este handoff + updates de `ESTADO_ATUAL.md`/`ROADMAP.md`.
 - `playtest_runs/`, `data/runtime/`, `saves_playtest/` seguem gitignored (nada de
   telemetria no git).

@@ -1,6 +1,6 @@
 """
 Suíte da Fase 3.2 — Conhecimento revelável (Codex do jogador + bestiário progressivo).
-Spec: specs/fase-3.2-conhecimento-revelavel.md. 100% offline, zero LLM.
+Spec: specs/SPEC-007-fase-3.2-conhecimento-revelavel.md. 100% offline, zero LLM.
 
 Usa ids reais de data/bestiary.json e data/codex/ (evita fixtures inventadas que
 mascarariam bug de id):

@@ -4,7 +4,7 @@
 
 A auditoria identificou lacunas locais que não dependiam da LLM real. O usuário
 aprovou corrigi-las antes de repetir a matriz B. O
-[adendo](../specs/remediacao-local-contratos-pre-matriz.md) registra o escopo,
+[adendo](../specs/SPEC-162-remediacao-local-contratos-pre-matriz.md) registra o escopo,
 complementa as onze specs e separa três gates:
 
 1. Implementação e regressões locais, sem rede/provider pago.

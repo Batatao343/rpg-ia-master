@@ -11,7 +11,7 @@ facção desestabiliza → controle do local muda → rival ocupa. `run_rules` �
 (aplica os derivados na projection e recursa até depth 2); aqui só anexamos os derivados ao
 `event_log` (não re-aplicamos).
 
-Spec: specs/fase-2.6-structured-events.md §3 · specs/fase-2.7-rules-engine.md §3.
+Spec: specs/SPEC-003-fase-2.6-structured-events.md §3 · specs/SPEC-004-fase-2.7-rules-engine.md §3.
 """
 
 from __future__ import annotations

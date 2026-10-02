@@ -1,6 +1,6 @@
 """
 Suíte da Fase 3.1 — Diário + Crônica melhorada (capítulos por arco).
-Spec: specs/fase-3.1-diario-cronica.md. 100% offline.
+Spec: specs/SPEC-006-fase-3.1-diario-cronica.md. 100% offline.
 
 Usa ids canônicos reais de data/graph/entities.json:
   npc vivo canônico: npc_valerius (nome "Lorde Protetor Valerius", controla nova_arcadia)

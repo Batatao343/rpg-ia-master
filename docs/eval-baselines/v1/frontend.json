@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "source": "playwright-json",
+  "journeys": {
+    "registered": 16,
+    "executed": 16,
+    "passed": 16,
+    "results": {
+      "F01": true,
+      "F02": true,
+      "F03": true,
+      "F04": true,
+      "F05": true,
+      "F06": true,
+      "F07": true,
+      "F08": true,
+      "F09": true,
+      "F10": true,
+      "F11": true,
+      "F12": true,
+      "F13": true,
+      "F14": true,
+      "F15": true,
+      "F16": true
+    }
+  },
+  "metrics": {
+    "frontend_critical_journey_pass_rate": 1.0,
+    "frontend_uncaught_page_errors": 0,
+    "frontend_unexpected_console_errors": 0,
+    "frontend_unexpected_failed_requests": 0,
+    "frontend_unexpected_5xx_responses": 0,
+    "frontend_horizontal_overflow_cases": 0,
+    "frontend_a11y_serious_critical": 0
+  },
+  "hard_gates_passed": true,
+  "measurement_identity": {
+    "product_sha": "cadbdd1013022c98f506ee335fa9072efcc9df6c",
+    "evaluator_version": "1.6.0",
+    "metrics_registry_hash": "sha256:18f4747a961cc163ab849a78f3af2e9683212ba9f30fe1d45951739b49597152",
+    "journey_manifest_hash": "sha256:f0a88baa316bd7a85d18a06747994595c09e48e106d3f97a3738654bcbcd590c",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "browser": "chromium",
+    "playwright": "^1.55.1"
+  }
+}

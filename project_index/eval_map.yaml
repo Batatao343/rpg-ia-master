@@ -1,0 +1,98 @@
+schema_version: 1
+coverage:
+  eval_governance:
+    product_paths:
+      - evals/core/governance.py
+      - evals/core/schemas.py
+    metrics:
+      - exact_match
+    regression_tests:
+      - tests/test_eval_governance.py
+    datasets:
+      - evals/datasets/regression/governance.jsonl
+  memory_retrieval:
+    product_paths:
+      - rag.py
+      - services/context_builder.py
+      - services/memory_provenance.py
+    metrics:
+      - memory_write_precision
+      - memory_recall_at_1
+      - memory_recall_at_3
+      - memory_recall_at_5
+      - memory_mrr
+      - context_recall_at_5
+      - context_forbidden_leak_rate
+      - secret_leak_count
+      - context_token_budget_violation
+    regression_tests:
+      - tests/test_eval_memory_context.py
+      - tests/test_npc_memory.py
+      - tests/test_memory_provenance.py
+    datasets:
+      - evals/datasets/regression/memory_context.jsonl
+  routing:
+    product_paths:
+      - agents/router.py
+      - services/input_normalization.py
+    metrics:
+      - route_accuracy
+      - target_accuracy
+    regression_tests:
+      - tests/test_eval_routing.py
+      - tests/test_input_normalization.py
+    datasets:
+      - evals/datasets/regression/routing_actions.jsonl
+  state_transitions:
+    product_paths:
+      - state.py
+      - persistence.py
+      - services/event_processor.py
+      - services/rule_engine.py
+    metrics:
+      - state_transition_pass_rate
+    regression_tests:
+      - tests/test_fase26.py
+      - tests/test_fase27.py
+      - tests/test_fase10.py
+    datasets:
+      - evals/datasets/regression/state_rules.jsonl
+  narrative_npc:
+    product_paths:
+      - agents/storyteller.py
+      - agents/npc.py
+      - services/narrative_evidence.py
+      - services/actor_lifecycle.py
+      - services/conflict_summary.py
+      - services/npc_layers.py
+    metrics:
+      - narrative_hard_contradictions
+      - narrative_claim_accuracy
+      - npc_identity_errors
+      - npc_persona_score
+    regression_tests:
+      - tests/test_eval_narrative_npc.py
+      - tests/test_narrative_evidence.py
+      - tests/test_npc_identity_grounding.py
+    datasets:
+      - evals/datasets/regression/narrative_npc.jsonl
+  frontend:
+    product_paths:
+      - web/src/App.tsx
+      - web/src/api.ts
+      - web/src/components/Hud.tsx
+      - web/src/components/WorldMap.tsx
+    metrics:
+      - frontend_critical_journey_pass_rate
+      - frontend_uncaught_page_errors
+      - frontend_unexpected_console_errors
+      - frontend_unexpected_failed_requests
+      - frontend_unexpected_5xx_responses
+      - frontend_horizontal_overflow_cases
+      - frontend_a11y_serious_critical
+    regression_tests:
+      - tests/test_eval_frontend.py
+      - tests/test_frontend_accessibility_contracts.py
+      - tests/test_frontend_visual_contracts.py
+    datasets:
+      - web/e2e/critical-journeys.yaml

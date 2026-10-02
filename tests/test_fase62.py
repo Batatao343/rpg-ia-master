@@ -1,6 +1,6 @@
 """
 Fase 6.2 — Itens únicos: um por mundo, rastreados no event_log.
-Spec: specs/fase-6.2-itens-unicos.md. 100% offline.
+Spec: specs/SPEC-018-fase-6.2-itens-unicos.md. 100% offline.
 """
 import random
 

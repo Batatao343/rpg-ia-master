@@ -14,8 +14,10 @@ type Tab = "ficha" | "combate" | "personagens" | "mapa" | "faccoes" | "missoes" 
 
 type EquipFn = (pick: { item_id?: string; unequip_slot?: string }) => void;
 
-export function Hud({ data, open, onEquip, busy }: {
+export function Hud({ data, open, onEquip, busy, onTravel, onClose }: {
   data: GameResponse | null; open: boolean; onEquip?: EquipFn; busy?: boolean;
+  onTravel?: (locationName: string) => void;
+  onClose?: () => void;
 }) {
   const p = data?.player_stats;
   const sub = [p?.class_name, p?.race].filter(Boolean).join(" · ") || "—";
@@ -62,6 +64,8 @@ export function Hud({ data, open, onEquip, busy }: {
           <p className="hud__name">{p?.name || "—"}</p>
           <p className="hud__sub">{sub}</p>
         </div>
+        {onClose && <button type="button" className="hud__close iconbtn"
+          aria-label="Fechar ficha" onClick={onClose}>×</button>}
       </div>
 
       <nav className="tabs" role="tablist">
@@ -82,7 +86,7 @@ export function Hud({ data, open, onEquip, busy }: {
         ))}
       </nav>
 
-      <div className="tabpanel" role="tabpanel">
+      <div className="tabpanel" role="tabpanel" tabIndex={0}>
         {tab === 'ficha' && data?.portrait_generation_id && <GeneratedPortrait
           key={`${data.game_id}:${data.portrait_generation_id}`}
           gameId={data.game_id} generationId={data.portrait_generation_id} />}
@@ -101,6 +105,7 @@ export function Hud({ data, open, onEquip, busy }: {
               overlays={data?.world.map_overlays}
               currentTurn={data?.world.turn_count ?? 0}
               blockedRoutes={data?.world.blocked_routes ?? []}
+              onTravel={(location) => onTravel?.(location.name)}
             />
           </div>
         )}

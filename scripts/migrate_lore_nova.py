@@ -2,7 +2,7 @@
 migrate_lore_nova.py — Migra o lore reescrito de `lore_nova/*.txt` (Codex Omnia /
 Valoria) para o Codex estruturado (`data/codex/**/*.md`) + `data/graph/entities.json`.
 
-Spec: specs/fase-2.5-codex-world-state.md §3 (tabela fonte → destino).
+Spec: specs/SPEC-001-fase-2.5-codex-world-state.md §3 (tabela fonte → destino).
 
 ATENÇÃO: rodar este script REGERA data/codex/ e data/graph/entities.json do zero.
 Curadoria que SOBREVIVE à regeração (Fase 7.2):

@@ -1,6 +1,6 @@
 """Suíte da spec beats-visibilidade-ptbr — sanitizar segredo + PT-BR nos beats.
 
-Offline/determinístico. Ver specs/beats-visibilidade-ptbr.md.
+Offline/determinístico. Ver specs/SPEC-037-beats-visibilidade-ptbr.md.
 """
 from services import secret_signatures as ss
 from playtest import invariants as inv

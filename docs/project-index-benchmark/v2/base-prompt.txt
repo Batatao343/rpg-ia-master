@@ -1,0 +1,5 @@
+Localize oito bugs históricos no código atual sem editar arquivos nem executar testes.
+Use exclusivamente scripts/project_index_ab_harness.py para toda consulta, busca e leitura.
+Não use outras ferramentas de descoberta, Git, docs, specs, AGENTS, ESTADO_ATUAL ou resultados de benchmark.
+Para cada tarefa: begin, descoberta dentro do budget, finish com até cinco files, três tests e uma frase resolution.
+Tarefas: B01 morte falsa após player_downed; B02 identidade/memória por aliases NPC; B03 reward narrativo versus receipt; B04 ação durante inconsciência/death_pending; B05 JSON raw structured recuperável; B06 campos de arte perdidos no save/load; B07 replay idempotente e payload divergente; B08 logout mobile duplicado/sobreposto.

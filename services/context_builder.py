@@ -7,13 +7,14 @@ orçamento de tokens por seção, e devolve um `ContextPack` com o bloco
 verdade viva vence o canônico quando conflitam.
 
 100% determinístico: zero chamada LLM extra (só o `query_rag` que os agentes já
-faziam, agora aqui dentro e com try/except). Spec: specs/fase-2.8-context-builder.md.
+faziam, agora aqui dentro e com try/except). Spec: specs/SPEC-005-fase-2.8-context-builder.md.
 """
 from __future__ import annotations
 
 import math
 import os
 import re
+import hashlib
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
@@ -85,6 +86,7 @@ class ContextBudget:
         "lore": 0.15,
         "session_memory": 0.10,
     })
+    max_visibility: str = "public"
 
 
 @dataclass
@@ -93,6 +95,7 @@ class ScoredFact:
     score: float
     section: str
     source_id: str = ""
+    visibility: str = "public"
 
 
 @dataclass
@@ -102,6 +105,8 @@ class ContextPack:
     memory_block: str
     total_tokens_est: int
     dropped: int
+    evidence_ids: List[str] = field(default_factory=list)
+    discarded_evidence: List[Dict[str, str]] = field(default_factory=list)
 
 
 # --------------------------------------------------------------------------- #
@@ -250,8 +255,21 @@ def collect_dynamic_facts(state: Dict, *, purpose: str, query: str,
 def _assemble(facts: List[ScoredFact], budget: ContextBudget):
     """Preenche cada seção na ordem de `budget.reserved` até a cota (em tokens);
     sobra de cota rola para a próxima seção. Corta no limite global (margem 5%)."""
+    visibility_rank = {"public": 0, "hidden": 1, "secret": 2}
+    maximum_visibility = visibility_rank.get(budget.max_visibility, -1)
     by_section: Dict[str, List[ScoredFact]] = {}
+    discarded_evidence: List[Dict[str, str]] = []
+    visibility_dropped = 0
     for f in facts:
+        if visibility_rank.get(f.visibility, 3) > maximum_visibility:
+            visibility_dropped += 1
+            if f.source_id:
+                discarded_evidence.append({
+                    "id": f.source_id,
+                    "section": f.section,
+                    "reason": "visibility",
+                })
+            continue
         by_section.setdefault(f.section, []).append(f)
     for lst in by_section.values():
         lst.sort(key=lambda f: f.score, reverse=True)
@@ -259,7 +277,7 @@ def _assemble(facts: List[ScoredFact], budget: ContextBudget):
     hard_cap = math.floor(budget.max_tokens * 1.05)
     used_total = _WRAPPER_TOKENS
     carry = 0.0
-    dropped = 0
+    dropped = visibility_dropped
     chosen: Dict[str, List[ScoredFact]] = {}
 
     for section, pct in budget.reserved.items():
@@ -274,10 +292,31 @@ def _assemble(facts: List[ScoredFact], budget: ContextBudget):
                 used_total += t
             else:
                 dropped += 1
+                if fct.source_id:
+                    discarded_evidence.append({
+                        "id": fct.source_id,
+                        "section": section,
+                        "reason": "section_or_global_budget",
+                    })
         chosen[section] = picked
         carry = max(0.0, quota - section_used)
 
-    return chosen, used_total, dropped
+    known_sections = set(budget.reserved)
+    for section, section_facts in by_section.items():
+        if section in known_sections:
+            continue
+        dropped += len(section_facts)
+        discarded_evidence.extend(
+            {
+                "id": fact.source_id,
+                "section": section,
+                "reason": "unknown_section",
+            }
+            for fact in section_facts
+            if fact.source_id
+        )
+
+    return chosen, used_total, dropped, discarded_evidence
 
 
 def _block(facts: List[ScoredFact]) -> str:
@@ -292,7 +331,16 @@ def assemble_pack(facts: List[ScoredFact], budget: ContextBudget,
     resultado RAG grande não torne a seção inteira indivisível e descartável."""
     facts = list(facts)
     if lore_text:
-        facts.append(ScoredFact(text=lore_text, score=1.0, section="lore", source_id="lore"))
+        lore_id = "lore_content_" + hashlib.sha256(
+            lore_text.encode("utf-8")
+        ).hexdigest()[:24]
+        facts.append(ScoredFact(
+            text=lore_text,
+            score=1.0,
+            section="lore",
+            source_id=lore_id,
+            visibility="public",
+        ))
     if memory_text:
         chunks: List[str] = []
         for line in (part.strip() for part in memory_text.splitlines()):
@@ -307,14 +355,18 @@ def assemble_pack(facts: List[ScoredFact], budget: ContextBudget,
             if line:
                 chunks.append(line)
         for index, chunk in enumerate(chunks):
+            memory_id = "memory_content_" + hashlib.sha256(
+                chunk.encode("utf-8")
+            ).hexdigest()[:24]
             facts.append(ScoredFact(
                 text=chunk,
                 score=1.0 - min(index, 1000) * 0.0001,
                 section="session_memory",
-                source_id=f"memory:{index}",
+                source_id=memory_id,
+                visibility="public",
             ))
 
-    chosen, used_total, dropped = _assemble(facts, budget)
+    chosen, used_total, dropped, discarded_evidence = _assemble(facts, budget)
 
     ws_body = "\n".join(
         _block(chosen.get(sec, [])) for sec in _WS_SECTIONS if chosen.get(sec)
@@ -322,6 +374,12 @@ def assemble_pack(facts: List[ScoredFact], budget: ContextBudget,
     world_state_block = f"<ESTADO_ATUAL_DO_MUNDO>\n{ws_body}\n</ESTADO_ATUAL_DO_MUNDO>"
     lore_block = _block(chosen.get("lore", []))
     memory_block = _block(chosen.get("session_memory", []))
+    evidence_ids = [
+        fact.source_id
+        for section in budget.reserved
+        for fact in chosen.get(section, [])
+        if fact.source_id
+    ]
 
     return ContextPack(
         world_state_block=world_state_block,
@@ -329,6 +387,8 @@ def assemble_pack(facts: List[ScoredFact], budget: ContextBudget,
         memory_block=memory_block,
         total_tokens_est=used_total,
         dropped=dropped,
+        evidence_ids=evidence_ids,
+        discarded_evidence=discarded_evidence,
     )
 
 

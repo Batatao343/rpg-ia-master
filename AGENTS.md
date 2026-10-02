@@ -9,6 +9,42 @@ Stack: Python 3.13 · FastAPI · LangGraph · FAISS · Google Gemini · uv
 
 ---
 
+## Operação de specs e evals
+
+Ao retomar trabalho spec-driven:
+
+1. leia `ESTADO_ATUAL.md` e `specs/index.yaml`;
+2. identifique a `SPEC-ID` ativa e confirme que suas dependências estão `done`;
+3. o Project Index não entra no contexto ou fluxo padrão. Use
+   `project_index/domains.yaml`, `repo_graph`, `state_ownership` ou `eval_map`
+   somente em uma consulta explícita e seletiva, com hipótese cross-file clara;
+4. confirme qualquer achado de índice no source real antes de modificar
+   comportamento; o source permanece a verdade;
+5. consulte `docs/evals-plan-v4/12_MODEL_EXECUTION_POLICY.md` e use o menor tier
+   suficiente;
+6. rode primeiro a menor suíte determinística que prove a mudança.
+
+Integridade de eval: quem otimiza o produto não altera evaluator, expected,
+dataset de regressão, denominador, baseline ou exclusões na mesma tarefa. O
+fluxo é deterministic-first; LLM-as-judge não substitui um oráculo estruturado.
+O contrato completo fica em `docs/evals-plan-v4/08_CONTRATO_CODING_AGENT.md`.
+
+Antes de criar um writer persistente, consulte o mapa de ownership quando ele
+existir e confirme canonical owner, invariantes e round-trip save/load.
+
+Roteamento mínimo: Luna para inventário, transformações e relatórios; Terra para
+implementação bounded; Sol para trabalho cross-domain, concorrência, estado e
+revisão técnica; Astra somente para checkpoints conceituais e semântica de
+evaluators. Se o modelo ou reviewer mínimo não estiver disponível, registre
+`MODEL_HANDOFF_REQUIRED`, prepare `handoffs/SPEC-xxx-<model>-review.md` e não
+autoaprove a revisão independente.
+
+Long-runs, campanhas de 100/200 turnos e a matriz 10×200 são estritamente
+opt-in. Só execute por pedido explícito do usuário ou por spec de horizonte longo
+explicitamente aprovada; baseline, release e regressão não constituem permissão.
+
+---
+
 ## Comandos essenciais
 
 > Use sempre `uv run` (o `python` global deste Windows é 3.14 — errado; o projeto
@@ -259,8 +295,10 @@ data/saves_memory/    # índices FAISS por sessão (gerado em runtime)
 
 Toda feature/fase nova segue o fluxo de `specs/`:
 
-1. **Spec antes de código.** Feature nova começa como `specs/<nome>.md` (copiar
-   `specs/TEMPLATE.md`), status `draft`. Nada de implementar direto do ROADMAP.
+1. **Spec antes de código.** Feature nova recebe o próximo ID nunca utilizado e
+   começa como `specs/SPEC-NNN-<slug>.md` (copiar `specs/TEMPLATE.md`), status
+   `draft`, com registro correspondente em `specs/index.yaml`. Nada de
+   implementar direto do ROADMAP nem criar spec canônica sem ID/índice.
 2. **Aprovação.** O usuário revisa; spec vira `approved`. Só então implementar.
 3. **Implementação segue o plano da spec** (etapas ordenadas, testes primeiro).
    Desvio necessário durante a implementação? Atualizar a spec no mesmo commit.

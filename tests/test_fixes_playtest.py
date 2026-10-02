@@ -1,5 +1,5 @@
 """Suíte da spec fix-playtest-achados — 5 correções achadas no playtest real.
-Offline (MockLLM). Spec: specs/fix-playtest-achados.md."""
+Offline (MockLLM). Spec: specs/SPEC-033-fix-playtest-achados.md."""
 from langchain_core.messages import AIMessage, HumanMessage
 
 

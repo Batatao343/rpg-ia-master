@@ -8,15 +8,15 @@ Nove specs originadas da varredura de backend/frontend. São complementos das sp
 
 ## Ordem e cobertura
 
-1. [Artes integrais, cards e visualização ampliada](../specs/auditoria-2026-09-artes-enquadramento.md)
-2. [Contrato compartilhado de evidências narrativas](../specs/auditoria-2026-09-consistencia-narrativa.md)
-3. [Recompensas elegíveis e contagem canônica](../specs/auditoria-2026-09-recompensas-recibos.md)
-4. [Identidade e correlação na aquisição paralela de contexto](../specs/auditoria-2026-09-contexto-autenticado.md)
-5. [Operações idempotentes e execução unificada do turno](../specs/auditoria-2026-09-operacoes-turno.md)
-6. [Memória, arte e checkpoint atômicos ao turno](../specs/auditoria-2026-09-efeitos-transacionais.md)
-7. [Renovação de leases e recuperação segura de workers](../specs/auditoria-2026-09-leases-workers.md)
-8. [Sessão frontend, histórico e retrato de ponta a ponta](../specs/auditoria-2026-09-frontend-sessao.md)
-9. [Gates de integração e regressões da auditoria](../specs/auditoria-2026-09-gates-integracao.md)
+1. [Artes integrais, cards e visualização ampliada](../specs/SPEC-153-auditoria-2026-09-artes-enquadramento.md)
+2. [Contrato compartilhado de evidências narrativas](../specs/SPEC-154-auditoria-2026-09-consistencia-narrativa.md)
+3. [Recompensas elegíveis e contagem canônica](../specs/SPEC-161-auditoria-2026-09-recompensas-recibos.md)
+4. [Identidade e correlação na aquisição paralela de contexto](../specs/SPEC-155-auditoria-2026-09-contexto-autenticado.md)
+5. [Operações idempotentes e execução unificada do turno](../specs/SPEC-160-auditoria-2026-09-operacoes-turno.md)
+6. [Memória, arte e checkpoint atômicos ao turno](../specs/SPEC-156-auditoria-2026-09-efeitos-transacionais.md)
+7. [Renovação de leases e recuperação segura de workers](../specs/SPEC-159-auditoria-2026-09-leases-workers.md)
+8. [Sessão frontend, histórico e retrato de ponta a ponta](../specs/SPEC-157-auditoria-2026-09-frontend-sessao.md)
+9. [Gates de integração e regressões da auditoria](../specs/SPEC-158-auditoria-2026-09-gates-integracao.md)
 
 Primeiro lote: enquadramento CSS, identidade no contexto, elegibilidade de XP/unique e contagem do recibo. Demais mudanças seguem em lotes próprios, com gates explícitos. Nenhuma autorização de commit/push/deploy inferida.
 

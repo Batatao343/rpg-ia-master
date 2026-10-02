@@ -1,0 +1,27 @@
+schema_version: 1
+coverage:
+  memory_retrieval:
+    product_paths:
+      - rag.py
+      - services/context_builder.py
+    metrics:
+      - retrieval_recall_at_5
+      - retrieval_mrr
+      - context_evidence_recall
+    regression_tests:
+      - tests/test_npc_memory.py
+      - tests/test_memory_provenance.py
+    datasets:
+      - evals/datasets/memory/dev.jsonl
+      - evals/datasets/memory/regression.jsonl
+
+  routing:
+    product_paths:
+      - agents/router.py
+    metrics:
+      - routing_accuracy
+      - routing_target_accuracy
+    regression_tests:
+      - tests/test_mvp.py
+    datasets:
+      - evals/datasets/routing/dev.jsonl

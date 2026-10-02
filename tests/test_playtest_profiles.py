@@ -1,7 +1,7 @@
 """Suíte da spec playtest-agente-curioso-entropia (Etapa 2): perfis de combate
 usam habilidade de Entropia + curam com HP baixo, sem quebrar o determinismo.
 
-Offline/determinístico. Ver specs/playtest-agente-curioso-entropia.md.
+Offline/determinístico. Ver specs/SPEC-059-playtest-agente-curioso-entropia.md.
 """
 import random
 

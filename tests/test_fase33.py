@@ -1,6 +1,6 @@
 """
 Suíte da Fase 3.3 — Quest log (side quests persistentes).
-Spec: specs/fase-3.3-quest-log.md. 100% offline.
+Spec: specs/SPEC-008-fase-3.3-quest-log.md. 100% offline.
 
 Usa ids reais de data/graph/entities.json e data/world_map.json (mesmos da Fase 3.1/3.2):
   npc vivo canônico: npc_valerius (controla nova_arcadia)

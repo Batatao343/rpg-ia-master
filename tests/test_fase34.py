@@ -1,6 +1,6 @@
 """
 Suíte da Fase 3.4 — Visualização de estado (mapa dinâmico + histórico de reputação).
-Spec: specs/fase-3.4-visualizacao-estado.md. 100% offline, zero LLM.
+Spec: specs/SPEC-009-fase-3.4-visualizacao-estado.md. 100% offline, zero LLM.
 
 Usa ids reais de data/graph/entities.json e data/world_map.json (mesmos das fases
 2.6/2.7/3.1/3.2/3.3):

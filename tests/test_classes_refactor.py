@@ -1,7 +1,7 @@
 """Suíte da spec refatoracao-sistema-classes (Cinco Posturas diante do Abismo).
 
 Etapa 1: recurso Entropia. Offline/determinístico.
-Ver specs/refatoracao-sistema-classes.md.
+Ver specs/SPEC-048-refatoracao-sistema-classes.md.
 """
 import combat_mechanics as cm
 import world_utils as wu

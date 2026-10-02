@@ -1,0 +1,224 @@
+schema_version: 1
+evaluator_version: 1.6.0
+metrics:
+  exact_match:
+    direction: higher
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: cases whose actual value equals fixture-authored expected value
+    denominator: all valid exact-oracle cases executed
+    exclusions: []
+    hard_limit: 1.0
+  route_accuracy:
+    direction: higher
+    kind: classification
+    blocking: true
+    unit: ratio
+    numerator: routing cases with the expected route label
+    denominator: all valid routing cases executed
+    exclusions: []
+  target_accuracy:
+    direction: higher
+    kind: classification
+    blocking: true
+    unit: ratio
+    numerator: routing cases whose selected target matches the exact or accepted target set
+    denominator: routing cases with a fixture-authored target contract
+    exclusions:
+      - routing cases that deliberately omit a target contract
+  state_transition_pass_rate:
+    direction: higher
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: state cases whose expected projection and invariants pass
+    denominator: all valid state transition cases executed
+    exclusions: []
+  memory_write_precision:
+    direction: higher
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: memory-write cases whose accepted and rejected IDs and reasons match labels
+    denominator: all valid memory-write cases executed
+    exclusions: []
+    hard_limit: 1.0
+  memory_recall_at_1:
+    direction: higher
+    kind: ranking
+    blocking: after_baseline
+    unit: ratio
+    numerator: sum of per-query recall at one
+    denominator: eligible queries with at least one required evidence ID
+    exclusions:
+      - queries explicitly marked without relevant evidence
+  memory_recall_at_3:
+    direction: higher
+    kind: ranking
+    blocking: after_baseline
+    unit: ratio
+    numerator: sum of per-query recall at three
+    denominator: eligible queries with at least one required evidence ID
+    exclusions:
+      - queries explicitly marked without relevant evidence
+  memory_recall_at_5:
+    direction: higher
+    kind: ranking
+    blocking: after_baseline
+    unit: ratio
+    numerator: sum of per-query recall at five
+    denominator: eligible queries with at least one required evidence ID
+    exclusions:
+      - queries explicitly marked without relevant evidence
+  memory_mrr:
+    direction: higher
+    kind: ranking
+    blocking: after_baseline
+    unit: reciprocal rank
+    numerator: sum of reciprocal ranks of the first relevant evidence ID
+    denominator: eligible queries with at least one relevant evidence ID
+    exclusions:
+      - queries explicitly marked without relevant evidence
+  context_recall_at_5:
+    direction: higher
+    kind: ranking
+    blocking: after_baseline
+    unit: ratio
+    numerator: sum of per-case recall of required context evidence in the first five IDs
+    denominator: eligible context cases with at least one required evidence ID
+    exclusions:
+      - context cases explicitly marked without required evidence
+  context_forbidden_leak_rate:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: sum of per-case forbidden IDs divided by returned IDs
+    denominator: all valid retrieval and context cases executed
+    exclusions: []
+    hard_limit: 0.0
+  secret_leak_count:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: count
+    numerator: returned evidence IDs labelled as unrevealed secrets
+    denominator: all valid retrieval and context cases executed
+    exclusions: []
+    hard_limit: 0.0
+  context_token_budget_violation:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: count
+    numerator: context packs whose estimated tokens exceed the declared hard cap
+    denominator: all valid context grounding cases executed
+    exclusions: []
+    hard_limit: 0.0
+  narrative_hard_contradictions:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: count
+    numerator: fixture-labelled hard contradictions accepted by the deterministic product contracts
+    denominator: all eligible fixture-labelled hard claims executed
+    exclusions:
+      - subjective style claims without structured ground truth
+    hard_limit: 0.0
+  narrative_claim_accuracy:
+    direction: higher
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: hard claim cases whose accept/reject, reason and sanitized output match fixture-authored labels
+    denominator: all valid narrative-claim cases executed, including adapter errors as zero
+    exclusions:
+      - subjective style and persona judgements
+    hard_limit: 1.0
+  npc_identity_errors:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: count
+    numerator: fixture-labelled NPC identity contradictions accepted by the deterministic guard
+    denominator: all eligible identity claims executed
+    exclusions:
+      - subjective persona quality
+    hard_limit: 0.0
+  frontend_critical_journey_pass_rate:
+    direction: higher
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: critical journeys completed without contract violation
+    denominator: all registered critical journeys executed
+    exclusions: []
+    hard_limit: 1.0
+  frontend_uncaught_page_errors:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: count
+    numerator: uncaught pageerror events recorded by critical journeys
+    denominator: all registered critical journeys executed
+    exclusions: []
+    hard_limit: 0.0
+  frontend_unexpected_console_errors:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: count
+    numerator: console.error events outside each journey's explicit fault-injection allowlist
+    denominator: all registered critical journeys executed
+    exclusions:
+      - browser diagnostics caused by an error response deliberately asserted by the journey
+    hard_limit: 0.0
+  frontend_unexpected_failed_requests:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: count
+    numerator: requestfailed events outside each journey's explicit fault-injection allowlist
+    denominator: all registered critical journeys executed
+    exclusions:
+      - AbortController cancellation during React StrictMode remount
+      - network failures deliberately injected and asserted by F14
+    hard_limit: 0.0
+  frontend_unexpected_5xx_responses:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: count
+    numerator: HTTP responses at or above 500 outside an explicit journey allowlist
+    denominator: all registered critical journeys executed
+    exclusions: []
+    hard_limit: 0.0
+  frontend_horizontal_overflow_cases:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: count
+    numerator: required viewports where document width exceeds the viewport
+    denominator: the four F16 required viewports
+    exclusions: []
+    hard_limit: 0.0
+  frontend_a11y_serious_critical:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: count
+    numerator: serious or critical axe violations in critical journey terminal states
+    denominator: all registered critical journeys executed
+    exclusions:
+      - moderate and minor axe findings
+    hard_limit: 0.0
+  npc_persona_score:
+    direction: higher
+    kind: llm_judge
+    blocking: false
+    unit: mean rubric score
+    numerator: sum of blinded calibrated-rubric scores
+    denominator: judge-eligible NPC samples successfully scored
+    exclusions:
+      - samples with provider failure or invalid judge schema

@@ -41,7 +41,7 @@ uv run python -m playtest transcript 20260719-160014
    Entropia/Carga por turno + seção Classes no report). Cruze starvation/
    flooding/Carga por classe × perfil. Alimenta o tuning dos **8 knobs
    `[BALANCEAR]`** em `data/classes.json` (que seguem marcados — spec
-   [balanceamento-classes-pos-playtest](../specs/balanceamento-classes-pos-playtest.md)).
+   [balanceamento-classes-pos-playtest](../specs/SPEC-049-balanceamento-classes-pos-playtest.md)).
    **Tuning = editar `scripts/gen_classes_v2.py` e regenerar**, NUNCA o JSON.
 2. **Caça-bug** — no console já apareceu um `❌ [RAG ERROR] ... faiss::FileIOReader`
    (memória de sessão; archivist resiliente, não derrubou turno). Investigar se

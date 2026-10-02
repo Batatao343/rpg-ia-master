@@ -7,7 +7,7 @@
 > registrou cinco `ValidationError` do scanner antes de o fallback funcionar.
 > A inspeção do transcrito, dos saves e das fronteiras do motor encontrou ainda
 > defeitos bloqueadores que o harness classificou como verde. A spec
-> [`conflito-13`](../specs/conflito-13-cutover-migracao-playtest.md) permanece
+> [`conflito-13`](../specs/SPEC-074-conflito-13-cutover-migracao-playtest.md) permanece
 > `in-progress`.
 
 ## 1. Resumo executivo

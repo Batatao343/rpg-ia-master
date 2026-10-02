@@ -1,0 +1,37 @@
+# DRAFT: adapt during SPEC-173 after SPEC-165..172 are implemented.
+name: evals
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  deterministic-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --extra openai --extra anthropic --extra postgres
+      - run: uv run python scripts/eval_backend.py --mode deterministic --dataset dev,regression
+
+  frontend-critical:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+        working-directory: web
+      - run: npx playwright install --with-deps chromium
+        working-directory: web
+      - run: npm run test:unit
+        working-directory: web
+      - run: npm run test:e2e
+        working-directory: web
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frontend-eval-artifacts
+          path: web/test-results/

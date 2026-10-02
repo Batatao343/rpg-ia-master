@@ -1,6 +1,6 @@
 """Suíte da spec encontros-dedupe — NPC gerado com vínculo de local + dedupe.
 
-Offline/determinístico. Ver specs/encontros-dedupe.md.
+Offline/determinístico. Ver specs/SPEC-040-encontros-dedupe.md.
 """
 from playtest import invariants as inv
 from services.npc_layers import npcs_for_context

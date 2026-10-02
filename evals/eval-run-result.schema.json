@@ -1,0 +1,316 @@
+{
+  "$defs": {
+    "EvalCaseResult": {
+      "additionalProperties": false,
+      "description": "Addressable result emitted by a versioned evaluator.",
+      "properties": {
+        "actual": {
+          "title": "Actual"
+        },
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "dataset_hash": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Dataset Hash",
+          "type": "string"
+        },
+        "diagnostics": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Diagnostics",
+          "type": "array"
+        },
+        "duration_ms": {
+          "minimum": 0,
+          "title": "Duration Ms",
+          "type": "number"
+        },
+        "evaluator_id": {
+          "title": "Evaluator Id",
+          "type": "string"
+        },
+        "evaluator_version": {
+          "title": "Evaluator Version",
+          "type": "string"
+        },
+        "expected": {
+          "title": "Expected"
+        },
+        "metric_values": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Metric Values",
+          "type": "object"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "product_sha": {
+          "title": "Product Sha",
+          "type": "string"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        },
+        "suite": {
+          "title": "Suite",
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "suite",
+        "passed",
+        "actual",
+        "expected",
+        "evaluator_id",
+        "evaluator_version",
+        "product_sha",
+        "dataset_hash",
+        "seed",
+        "started_at",
+        "duration_ms"
+      ],
+      "title": "EvalCaseResult",
+      "type": "object"
+    },
+    "EvalRunMetadata": {
+      "additionalProperties": false,
+      "description": "Compatibility identity for one eval run or stored baseline.",
+      "properties": {
+        "case_selection_hash": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Case Selection Hash",
+          "type": "string"
+        },
+        "dataset_hashes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Dataset Hashes",
+          "type": "object"
+        },
+        "embedding": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Embedding"
+        },
+        "evaluator_version": {
+          "title": "Evaluator Version",
+          "type": "string"
+        },
+        "metrics_registry_hash": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Metrics Registry Hash",
+          "type": "string"
+        },
+        "metrics_schema_version": {
+          "minimum": 1,
+          "title": "Metrics Schema Version",
+          "type": "integer"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model"
+        },
+        "platform": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Platform"
+        },
+        "product_dirty": {
+          "title": "Product Dirty",
+          "type": "boolean"
+        },
+        "product_sha": {
+          "minLength": 7,
+          "title": "Product Sha",
+          "type": "string"
+        },
+        "product_tree_hash": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Product Tree Hash",
+          "type": "string"
+        },
+        "provider": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider"
+        },
+        "ruler_hashes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Ruler Hashes",
+          "type": "object"
+        },
+        "schema_version": {
+          "minimum": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temperature"
+        }
+      },
+      "required": [
+        "schema_version",
+        "evaluator_version",
+        "ruler_hashes",
+        "metrics_schema_version",
+        "metrics_registry_hash",
+        "product_sha",
+        "product_tree_hash",
+        "product_dirty",
+        "dataset_hashes",
+        "case_selection_hash",
+        "seed",
+        "started_at"
+      ],
+      "title": "EvalRunMetadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Run-level accounting that makes skipped/error cases part of the denominator.",
+  "properties": {
+    "aggregates": {
+      "additionalProperties": true,
+      "title": "Aggregates",
+      "type": "object"
+    },
+    "case_diagnostics": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Case Diagnostics",
+      "type": "object"
+    },
+    "eligible_case_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Eligible Case Ids",
+      "type": "array"
+    },
+    "error_case_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Error Case Ids",
+      "type": "array"
+    },
+    "hard_failures": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Hard Failures",
+      "type": "array"
+    },
+    "metadata": {
+      "$ref": "#/$defs/EvalRunMetadata"
+    },
+    "metric_values": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Metric Values",
+      "type": "object"
+    },
+    "passed": {
+      "default": false,
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "results": {
+      "items": {
+        "$ref": "#/$defs/EvalCaseResult"
+      },
+      "title": "Results",
+      "type": "array"
+    },
+    "run_id": {
+      "default": "unassigned",
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "skipped_case_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Skipped Case Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "metadata",
+    "eligible_case_ids",
+    "results"
+  ],
+  "title": "EvalRunResult",
+  "type": "object"
+}

@@ -1,0 +1,11 @@
+Controlled benchmark run only. Do not edit files or run tests. Use only scripts/project_index_ab_harness.py for repository discovery and source reads. Do not use Git or read docs, specs, AGENTS.md, ESTADO_ATUAL.md, ROADMAP.md, benchmark artifacts, or ground truth.
+
+CLI: .\.venv\Scripts\python.exe scripts/project_index_ab_harness.py
+
+For every task, call begin with the bare session ID and task ID. Use search/read only through the harness. Search paths may be exact files or these directory roots: agents, services, tests, web/src, web/e2e, infrastructure, playtest, evals. Allowed root files include api.py, main.py, state.py, persistence.py, llm_setup.py, rag.py, world_utils.py, combat_mechanics.py, and inventory.py. Finish with JSON containing exactly id, files, tests, and resolution. Example shape: {"id":"B01","files":["path.py"],"tests":["tests/test_path.py"],"resolution":"One concise sentence explaining both functional aspects found."}. Files must contain 1..5 implementation paths and tests at most 3 paths. Do not include self-reported counters.
+
+Finish each task within 240 seconds; hard budgets are 12 discovery calls, 50,000 source bytes, and 300 seconds. Continue until all eight tasks are complete. Tasks: B01 false death after player_downed; B02 NPC identity/memory across aliases; B03 narrative reward versus canonical receipt; B04 actions while unconscious/death_pending; B05 recoverable raw structured JSON; B06 two art fields lost in save/load; B07 idempotent replay and divergent payload; B08 duplicate/overlapping mobile logout.
+
+Condition B: the first discovery call after every begin must be one harness index query. Then confirm findings in source through harness search/read.
+
+Session: b2-v5. Order: B01,B02,B03,B04,B05,B06,B07,B08. For every command, use b2-v5 as the session positional. Exact lifecycle example: `... begin b2-v5 B01`; first `... index b2-v5 B01 query "false death player downed" --limit 8`; then search/read; `... finish b2-v5 B01 --result-json '<JSON>'`.

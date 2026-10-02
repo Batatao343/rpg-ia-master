@@ -1,0 +1,380 @@
+{
+  "schema_version": 2,
+  "session_id": "b1-v4",
+  "condition": "B",
+  "replicate": 1,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "discovery_budget": {
+    "max_calls_per_task": 12,
+    "max_source_bytes_per_task": 50000,
+    "max_wall_seconds_per_task": 300.0
+  },
+  "prompt_hash": "sha256:dadf5eb4a66f77e0d1e42dc7f90fbda52e6a528d151a8a61018c0b899e7e3bb4",
+  "condition_prompt_hash": "sha256:93e20291884ee919a00ed1a3ac24dd3c98ed1235957b03f3f2aee7a858d9def6",
+  "session_prompt_hash": "sha256:909c0d4f4baf441b47666527d78d5a18d94895b59a153d304743d3f0943308aa",
+  "source_tree_hash": "sha256:b3171bcf014f5d9104a8223854709d5e3b1420092ea5b73af347d8cd618a76cd",
+  "project_index_graph_hash": "sha256:a30ab6f3ced9b09662c5ba3eee3df7f8c019e292c6705bd10a3171e6e53b2e07",
+  "attestation_hash": "sha256:1434a5c3d2054ce819537ed93883586c1fcdc33dde5b2ee774975db528d91e8c",
+  "order": [
+    "B08",
+    "B07",
+    "B06",
+    "B05",
+    "B04",
+    "B03",
+    "B02",
+    "B01"
+  ],
+  "next_task_index": 4,
+  "active_task": "B04",
+  "status": "running",
+  "created_at": "2026-10-01T02:17:13.091977+00:00",
+  "task_usage": {
+    "B08": {
+      "discovery_calls": 6,
+      "source_bytes_read": 10740,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:18:08.463841+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "mobile logout overlap",
+          "limit": 8,
+          "output_bytes": 2321
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:18:24.942506+00:00",
+          "op": "read",
+          "source_bytes": 3779,
+          "path": "api.py",
+          "start": 250,
+          "lines": 80
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T02:18:32.300214+00:00",
+          "op": "search",
+          "source_bytes": 1052,
+          "pattern": "logout",
+          "paths": [
+            "web/src"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T02:18:36.062048+00:00",
+          "op": "read",
+          "source_bytes": 2019,
+          "path": "web/src/App.tsx",
+          "start": 105,
+          "lines": 55
+        },
+        {
+          "sequence": 5,
+          "at": "2026-10-01T02:18:41.736120+00:00",
+          "op": "read",
+          "source_bytes": 1629,
+          "path": "web/src/App.tsx",
+          "start": 470,
+          "lines": 38
+        },
+        {
+          "sequence": 6,
+          "at": "2026-10-01T02:18:45.912443+00:00",
+          "op": "read",
+          "source_bytes": 2261,
+          "path": "web/src/styles.css",
+          "start": 1010,
+          "lines": 60
+        }
+      ],
+      "index_queried": true
+    },
+    "B07": {
+      "discovery_calls": 4,
+      "source_bytes_read": 25468,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:19:48.185373+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "idempotent replay divergent payload",
+          "limit": 8,
+          "output_bytes": 2402
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:19:51.987189+00:00",
+          "op": "search",
+          "source_bytes": 2947,
+          "pattern": "idempot",
+          "paths": [
+            "services"
+          ],
+          "context": 3
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T02:19:55.815247+00:00",
+          "op": "search",
+          "source_bytes": 19927,
+          "pattern": "operation_id",
+          "paths": [
+            "infrastructure"
+          ],
+          "context": 3
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T02:19:59.822836+00:00",
+          "op": "read",
+          "source_bytes": 2594,
+          "path": "infrastructure/local_adapters.py",
+          "start": 530,
+          "lines": 75
+        }
+      ],
+      "index_queried": true
+    },
+    "B06": {
+      "discovery_calls": 4,
+      "source_bytes_read": 3563,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:20:32.152430+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "art fields save load",
+          "limit": 8,
+          "output_bytes": 1955
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:20:36.536092+00:00",
+          "op": "search",
+          "source_bytes": 271,
+          "pattern": "art_",
+          "paths": [
+            "state.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T02:20:40.330758+00:00",
+          "op": "search",
+          "source_bytes": 1113,
+          "pattern": "art_generation_ledger|art_arc_budgets",
+          "paths": [
+            "persistence.py"
+          ],
+          "context": 3
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T02:20:44.890049+00:00",
+          "op": "read",
+          "source_bytes": 2179,
+          "path": "persistence.py",
+          "start": 550,
+          "lines": 35
+        }
+      ],
+      "index_queried": true
+    },
+    "B05": {
+      "discovery_calls": 7,
+      "source_bytes_read": 15534,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:21:05.360819+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "recoverable raw structured JSON",
+          "limit": 8,
+          "output_bytes": 3088
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:21:10.725748+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "include_raw|raw",
+          "paths": [
+            "agents/router.py"
+          ],
+          "context": 3
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T02:21:15.005136+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "include_raw",
+          "paths": [
+            "services"
+          ],
+          "context": 3
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T02:21:23.641535+00:00",
+          "op": "read",
+          "source_bytes": 3171,
+          "path": "tests/test_routing.py",
+          "start": 390,
+          "lines": 75
+        },
+        {
+          "sequence": 5,
+          "at": "2026-10-01T02:21:31.021213+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "RoutedLLM structured output recovery local json",
+          "limit": 8,
+          "output_bytes": 2809
+        },
+        {
+          "sequence": 6,
+          "at": "2026-10-01T02:21:35.169528+00:00",
+          "op": "read",
+          "source_bytes": 6589,
+          "path": "llm_setup.py",
+          "start": 390,
+          "lines": 130
+        },
+        {
+          "sequence": 7,
+          "at": "2026-10-01T02:21:39.260045+00:00",
+          "op": "read",
+          "source_bytes": 5774,
+          "path": "llm_setup.py",
+          "start": 511,
+          "lines": 115
+        }
+      ],
+      "index_queried": true
+    },
+    "B04": {
+      "discovery_calls": 5,
+      "source_bytes_read": 9360,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:21:54.182516+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "actions unconscious death_pending",
+          "limit": 8,
+          "output_bytes": 1860
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:21:58.576778+00:00",
+          "op": "search",
+          "source_bytes": 1890,
+          "pattern": "death_pending",
+          "paths": [
+            "agents"
+          ],
+          "context": 3
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T02:22:02.403499+00:00",
+          "op": "read",
+          "source_bytes": 1943,
+          "path": "agents/action_guard.py",
+          "start": 1,
+          "lines": 100
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T02:22:06.454392+00:00",
+          "op": "search",
+          "source_bytes": 2896,
+          "pattern": "death_pending|unconscious|inconsciente",
+          "paths": [
+            "services/actor_lifecycle.py"
+          ],
+          "context": 4
+        },
+        {
+          "sequence": 5,
+          "at": "2026-10-01T02:22:10.358077+00:00",
+          "op": "read",
+          "source_bytes": 2631,
+          "path": "services/actor_lifecycle.py",
+          "start": 140,
+          "lines": 68
+        }
+      ],
+      "index_queried": true
+    }
+  },
+  "results": [
+    {
+      "id": "B08",
+      "files": [
+        "web/src/App.tsx",
+        "web/src/styles.css"
+      ],
+      "tests": [
+        "tests/test_browser_local.py"
+      ],
+      "resolution": "LogoutOverlapsMobileContent",
+      "discovery_calls": 6,
+      "source_bytes_read": 10740,
+      "wall_seconds": 93.57
+    },
+    {
+      "id": "B07",
+      "files": [
+        "infrastructure/local_adapters.py",
+        "infrastructure/postgres_turns.py"
+      ],
+      "tests": [
+        "tests/test_operation_replay_boundaries.py"
+      ],
+      "resolution": "Claims\\u0020reject\\u0020reused\\u0020operation\\u0020IDs\\u0020when\\u0020the\\u0020principal\\u0020or\\u0020request\\u0020hash\\u0020changes,\\u0020while\\u0020matching\\u0020replays\\u0020retain\\u0020the\\u0020stored\\u0020receipt.",
+      "discovery_calls": 4,
+      "source_bytes_read": 25468,
+      "wall_seconds": 30.01
+    },
+    {
+      "id": "B06",
+      "files": [
+        "state.py",
+        "persistence.py"
+      ],
+      "tests": [
+        "tests/test_art_state_persistence.py"
+      ],
+      "resolution": "ArtLedgerAndArcBudgetsRoundTrip",
+      "discovery_calls": 4,
+      "source_bytes_read": 3563,
+      "wall_seconds": 32.143
+    },
+    {
+      "id": "B05",
+      "files": [
+        "llm_setup.py"
+      ],
+      "tests": [
+        "tests/test_routing.py"
+      ],
+      "resolution": "RawStructuredJSONIsLocallyValidatedBeforeFallback",
+      "discovery_calls": 7,
+      "source_bytes_read": 15534,
+      "wall_seconds": 45.373
+    }
+  ],
+  "task_started_at": "2026-10-01T02:21:48.086655+00:00"
+}

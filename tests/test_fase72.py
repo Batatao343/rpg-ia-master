@@ -1,7 +1,7 @@
 """Fase 7.2 — pipeline de autoria: overrides migration-safe, curated preservado,
 lint de overrides, gate no reindex, templates.
 
-Spec: specs/fase-7.2-autoria-curadoria.md.
+Spec: specs/SPEC-023-fase-7.2-autoria-curadoria.md.
 """
 
 from __future__ import annotations

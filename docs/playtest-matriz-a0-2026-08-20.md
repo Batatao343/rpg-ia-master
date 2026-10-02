@@ -26,14 +26,14 @@ turnos, zero exceção do runner, uma violação `error` e 25 warnings.
 
 ## Achados transformados em specs
 
-1. [Capacidade de provider antes do longrun](../specs/matriz-a-capacidade-provider.md):
+1. [Capacidade de provider antes do longrun](../specs/SPEC-132-matriz-a-capacidade-provider.md):
    preflight dos três tiers, preset Groq-only, pacing e contrato para histórico
    estruturado terminado em `AIMessage`.
-2. [Loop de Mimetismo Morto](../specs/combate-mimetismo-morto-loop.md): inimigo
+2. [Loop de Mimetismo Morto](../specs/SPEC-130-combate-mimetismo-morto-loop.md): inimigo
    já oculto não pode escolher outra Carta de esconder.
-3. [Fuga com Vitalidade zero](../specs/fuga-vitalidade-zero.md): a fuga é
+3. [Fuga com Vitalidade zero](../specs/SPEC-131-fuga-vitalidade-zero.md): a fuga é
    bloqueada e o conflito resolve o fluxo terminal.
-4. [NPC reciclado e mortes](../specs/observabilidade-npc-mortes-longrun.md):
+4. [NPC reciclado e mortes](../specs/SPEC-133-observabilidade-npc-mortes-longrun.md):
    menção memorial não significa presença e o relatório lista todas as mortes.
 
 ## Evidência após a correção

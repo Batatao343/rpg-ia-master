@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RPG Eval Case",
+  "type": "object",
+  "required": [
+    "id",
+    "suite",
+    "description",
+    "input",
+    "expected",
+    "oracle",
+    "tags",
+    "source"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "suite": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "fixture": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "input": {},
+    "expected": {},
+    "oracle": {
+      "enum": [
+        "exact",
+        "projection",
+        "ranking",
+        "property",
+        "judge"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source": {
+      "enum": [
+        "manual",
+        "regression",
+        "canonical",
+        "synthetic"
+      ]
+    },
+    "created_from": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

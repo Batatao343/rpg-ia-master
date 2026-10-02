@@ -1,0 +1,35 @@
+{
+  "schema_version": 2,
+  "session_id": "b2-v5",
+  "condition": "B",
+  "replicate": 2,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "discovery_budget": {
+    "max_calls_per_task": 12,
+    "max_source_bytes_per_task": 50000,
+    "max_wall_seconds_per_task": 300.0
+  },
+  "prompt_hash": "sha256:dadf5eb4a66f77e0d1e42dc7f90fbda52e6a528d151a8a61018c0b899e7e3bb4",
+  "condition_prompt_hash": "sha256:93e20291884ee919a00ed1a3ac24dd3c98ed1235957b03f3f2aee7a858d9def6",
+  "session_prompt_hash": "sha256:cf89bd29e597788c5328dc3a7b44a563b5c2fd844cbf2a9ebf0f5c95250ee6e5",
+  "source_tree_hash": "sha256:3a39a331dfcb09764807deb3abe6a580482bd957ed7b2e5a40701d722fc0e2de",
+  "project_index_graph_hash": "sha256:8403926ab9d4167f859457e1946f545dc632a17fa74150013f47bcfc314d91e4",
+  "attestation_hash": "sha256:5004e35f97950e060f0c2ff45410f622d879c261cb7a95db432b39bd8a783717",
+  "order": [
+    "B01",
+    "B02",
+    "B03",
+    "B04",
+    "B05",
+    "B06",
+    "B07",
+    "B08"
+  ],
+  "next_task_index": 0,
+  "active_task": null,
+  "status": "ready",
+  "created_at": "2026-10-01T11:45:27.411892+00:00",
+  "task_usage": {},
+  "results": []
+}

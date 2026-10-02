@@ -1,6 +1,6 @@
 """
 Fase 6.5 — Clima com efeito real: cadeias por região e mecânica.
-Spec: specs/fase-6.5-clima-com-efeito.md. 100% offline.
+Spec: specs/SPEC-021-fase-6.5-clima-com-efeito.md. 100% offline.
 """
 import random
 

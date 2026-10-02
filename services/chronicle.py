@@ -10,7 +10,7 @@ Capítulos abrem quando o `arc_title` do campaign_manager muda.
 Funções são PURAS (agentes retornam dict parcial do GameState): `append_entry` e
 `open_chapter` devolvem cópia, nunca mutam a lista recebida.
 
-Spec: specs/fase-3.1-diario-cronica.md §3.
+Spec: specs/SPEC-006-fase-3.1-diario-cronica.md §3.
 """
 
 from __future__ import annotations

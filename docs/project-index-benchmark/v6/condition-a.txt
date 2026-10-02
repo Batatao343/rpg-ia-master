@@ -1,0 +1,1 @@
+Condition A: Project Index is forbidden. Use only harness search/read after begin.

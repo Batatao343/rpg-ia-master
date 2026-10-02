@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "invalidated_at": "2026-10-01T17:31:30.003362+00:00",
+  "excluded_from_aggregation": true,
+  "reason": "Attestation sealed the temporary-snapshot graph hash before repo_graph commit_sha normalization; canonical Project Index rejected B as stale. No complete session exists.",
+  "sessions": [
+    {
+      "session_id": "a1-v5",
+      "status": "running",
+      "completed_tasks": 5,
+      "active_task": "B06",
+      "sha256": "d388bc3dd55beb55146f2132c8127dc18ba7b6a5f29610db81a2097a9b9885c4"
+    },
+    {
+      "session_id": "a2-v5",
+      "status": "running",
+      "completed_tasks": 4,
+      "active_task": "B04",
+      "sha256": "1cc2cf764a7f3670e156282362ca44800f3ddfbc6ab6ea4d03690fc5b1c5eec5"
+    },
+    {
+      "session_id": "b1-v5",
+      "status": "running",
+      "completed_tasks": 0,
+      "active_task": "B08",
+      "sha256": "c72c848e79c21b5956678a98ba32f7ef50d9e49a815424bb6b693c25da00aac2"
+    },
+    {
+      "session_id": "b2-v5",
+      "status": "ready",
+      "completed_tasks": 0,
+      "active_task": null,
+      "sha256": "06710aa9a90fd49194869dda5ccff86a31a89508735e92d11ec01b216c2a5d1e"
+    }
+  ]
+}

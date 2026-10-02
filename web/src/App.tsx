@@ -34,7 +34,7 @@ const ROUTE_TEXTS: Record<string, string> = {
 };
 
 export function App() {
-  const [screen, setScreen] = useState<"auth" | "saves" | "create" | "simulator" | "play">("create");
+  const [screen, setScreen] = useState<"bootstrap" | "auth" | "saves" | "create" | "simulator" | "play">("bootstrap");
   const [data, setData] = useState<GameResponse | null>(null);
   const [log, setLog] = useState<LogEntry[]>([]);
   const [busy, setBusy] = useState(false);
@@ -83,16 +83,17 @@ export function App() {
         const list = await api.getSaves();
         if (!active) return;
         setSaves(list);
-        if (list.length > 0) setScreen("saves");
+        setScreen(list.length > 0 ? "saves" : "create");
       } catch {
         // API antiga/sem saves — mantém o fluxo clássico de "continuar última".
         const saved = localStorage.getItem(LS_KEY);
-        if (!saved) return;
+        if (!saved) { if (active) setScreen("create"); return; }
         try {
           const response = await api.getState(saved);
-          if (active) setContinueData(response);
+          if (active) { setContinueData(response); setScreen("create"); }
         } catch {
           localStorage.removeItem(LS_KEY);
+          if (active) setScreen("create");
         }
       }
     }
@@ -320,7 +321,12 @@ export function App() {
           onPhase: node => { if (active()) setPhaseLabel(PHASE_TEXTS[node] ?? null); },
           onRoute: route => { if (active()) setPhaseLabel(ROUTE_TEXTS[route] ?? PHASE_TEXTS.storyteller); },
           onVisual: visual => { if (active()) attachStreamVisual(visual); },
-          onChunk: (chunk, done) => { if (active()) { hadChunks = true; appendChunk(chunk, done); } },
+          onChunk: (chunk, done) => {
+            if (active()) {
+              if (!done) hadChunks = true;
+              appendChunk(chunk, done);
+            }
+          },
         }, requestOptions);
         clearPending(user, gid);
         if (!active()) return;
@@ -499,7 +505,12 @@ export function App() {
         />
       )}
       <AnimatePresence mode="wait">
-        {screen === "auth" ? (
+        {screen === "bootstrap" ? (
+          <motion.main key="bootstrap" className="create" aria-busy="true"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <p role="status" className="muted">Abrindo as Crônicas…</p>
+          </motion.main>
+        ) : screen === "auth" ? (
           <motion.div key="auth" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <AuthScreen busy={busy} onLogin={handleLogin} error={authError} />
           </motion.div>

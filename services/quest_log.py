@@ -11,7 +11,7 @@ Conclusão de quest reusa o pipeline de eventos estruturados (Fase 2.6): o LLM p
 Falha sistêmica (`fail_orphan_quests`) roda após `npc_killed` aplicado — 100% sistêmico,
 nunca passa pelo pipeline de propostas do LLM (`source="system"`).
 
-Spec: specs/fase-3.3-quest-log.md §3.
+Spec: specs/SPEC-008-fase-3.3-quest-log.md §3.
 """
 
 from __future__ import annotations

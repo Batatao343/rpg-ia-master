@@ -53,7 +53,7 @@ narrativa após a perda de provider não pode ser usada como evidência.
 
 ## Nova proteção
 
-A spec [playtest real LLM-only fail-closed](../specs/playtest-real-llm-fail-closed.md)
+A spec [playtest real LLM-only fail-closed](../specs/SPEC-134-playtest-real-llm-fail-closed.md)
 faz a matriz agrupar candidatos pelo `attempt_index`. Se uma invocação inteira
 terminar sem `success`, a campanha grava `llm_terminal_failure`, aborta no mesmo
 turno e não inicia o próximo par. A política vale apenas para a matriz real;
@@ -74,7 +74,7 @@ beats válidos, enquanto `CampaignPlanModel` rejeitava qualquer lista acima de
 cinco. Nenhum outro par foi iniciado.
 
 Esse run também não é baseline. O achado é tratado pela spec
-[`campaign-beats-overflow-provider`](../specs/campaign-beats-overflow-provider.md):
+[`campaign-beats-overflow-provider`](../specs/SPEC-135-campaign-beats-overflow-provider.md):
 a borda aceita excesso recuperável e trunca deterministicamente para os cinco
 primeiros beats não vazios, sem fabricar conteúdo ausente. A1 será reiniciada
 desde o par 1 depois da regressão e da suíte completa.
@@ -86,7 +86,7 @@ que não era perda geral de capacidade. O comportamento resiliente do jogo fez
 no-op, mas o fail-closed corretamente recusou esse fallback determinístico e
 não iniciou os nove pares restantes.
 
-A spec [`structured-output-retry-provider`](../specs/structured-output-retry-provider.md)
+A spec [`structured-output-retry-provider`](../specs/SPEC-136-structured-output-retry-provider.md)
 adiciona uma única regeneração semântica no mesmo provider/modelo quando houve
 resposta de rede, mas o payload Pydantic foi inválido. Erros HTTP, timeout, quota
 e saldo permanecem fail-fast (`max_retries=0`). A telemetria usa índices
@@ -131,19 +131,19 @@ chamadas tiveram sucesso, porém três invocações lógicas independentes expir
 entre 12,0 e 12,5 s (FAST structured, SMART structured e SMART plain). O limite
 de produção de 12 s é deliberadamente fail-fast para permitir fallback, mas é
 curto para o preset isolado sem fallback e para o watchdog experimental de
-120 s. A spec [`deepseek-paid-timeout-longrun`](../specs/deepseek-paid-timeout-longrun.md)
+120 s. A spec [`deepseek-paid-timeout-longrun`](../specs/SPEC-137-deepseek-paid-timeout-longrun.md)
 define 40 s somente dentro do contexto `deepseek-paid` e restaura a env ao sair.
 
 Antes da falha de capacidade, o explorador morreu nove vezes. As últimas cinco
 mortes ocorreram na Fortaleza de Vorr: o checkpoint retornava a Skallgard e o
 perfil voltava a classificar Vorr como fronteira desejável. A spec
-[`explorador-aprende-com-mortes`](../specs/explorador-aprende-com-mortes.md)
+[`explorador-aprende-com-mortes`](../specs/SPEC-138-explorador-aprende-com-mortes.md)
 adiciona `location_id` ao ledger de morte, resolve registros legados por nome e
 exclui destinos fatais das viagens do agente. Sem saída segura ele observa em
 vez de repetir uma viagem suicida; fuga de combate continua permitida.
 
 Por fim, o processo Groq órfão deixou de ser apenas um achado: a spec
-[`playtest-matrix-single-flight`](../specs/playtest-matrix-single-flight.md)
+[`playtest-matrix-single-flight`](../specs/SPEC-139-playtest-matrix-single-flight.md)
 adiciona lock atômico por PID/host/token antes do preflight. Locks mortos ou
 inválidos são recuperados, e somente o dono remove o arquivo. Gate combinado:
 **1608 passed, 16 skipped, 14 deselected**. Como o perfil e a política do agente
@@ -172,7 +172,7 @@ Fortaleza de Vorr. Não houve timeout no antigo limiar de 12 s nas quatro
 campanhas completas mais 81 turnos; a falha final foi conexão, não latência. O
 single-flight também rejeitou uma segunda matriz antes do preflight.
 
-A spec [`playtest-matrix-continuacao`](../specs/playtest-matrix-continuacao.md)
+A spec [`playtest-matrix-continuacao`](../specs/SPEC-140-playtest-matrix-continuacao.md)
 introduz `--start-index` sem alterar a matriz canônica. A continuação começa no
 par 5 e cria manifesto separado para os seis pares restantes. Os dois runs serão
 agregados por índice/seed na análise A. Gate pré-retomada: **1610 passed, 16

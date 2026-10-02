@@ -1,0 +1,102 @@
+{
+  "schema_version": 2,
+  "session_id": "a2-v2",
+  "condition": "A",
+  "replicate": 2,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "discovery_budget": {
+    "max_calls_per_task": 12,
+    "max_source_bytes_per_task": 50000,
+    "max_wall_seconds_per_task": 120.0
+  },
+  "prompt_hash": "sha256:288f94ef6bff615ea82c31fe66778fd5f156b04a8090554e49dbd62f8919586b",
+  "condition_prompt_hash": "sha256:f832b30462e4dfd330db6c289f37d02023b61c3a585f7d05bdff2aa69e2c2022",
+  "source_tree_hash": "sha256:0ce74d0377077626c38060217bc0fe174aa8fe536f6c94df751ed808f6a709ca",
+  "project_index_graph_hash": "sha256:2ed22df662a5dd2ce17426d1b12fd527783d87eed5232fcc7cd5de15c14dfe44",
+  "attestation_hash": "sha256:260ac9431a35ec061325473067a8df2312d29ded611c2245b43ed884c2ef1015",
+  "order": [
+    "B08",
+    "B07",
+    "B06",
+    "B05",
+    "B04",
+    "B03",
+    "B02",
+    "B01"
+  ],
+  "next_task_index": 0,
+  "active_task": "B08",
+  "status": "running",
+  "created_at": "2026-09-30T19:34:40.376249+00:00",
+  "task_usage": {
+    "B08": {
+      "discovery_calls": 6,
+      "source_bytes_read": 11446,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-09-30T19:37:03.212777+00:00",
+          "op": "search",
+          "source_bytes": 390,
+          "pattern": "logout",
+          "paths": [
+            "web/src/App.tsx"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-09-30T19:37:11.516902+00:00",
+          "op": "read",
+          "source_bytes": 2100,
+          "path": "web/src/App.tsx",
+          "start": 470,
+          "lines": 45
+        },
+        {
+          "sequence": 3,
+          "at": "2026-09-30T19:37:20.963069+00:00",
+          "op": "search",
+          "source_bytes": 328,
+          "pattern": "F16",
+          "paths": [
+            "web/e2e/critical-journeys.spec.ts"
+          ],
+          "context": 3
+        },
+        {
+          "sequence": 4,
+          "at": "2026-09-30T19:37:25.321176+00:00",
+          "op": "read",
+          "source_bytes": 1490,
+          "path": "web/e2e/critical-journeys.spec.ts",
+          "start": 245,
+          "lines": 45
+        },
+        {
+          "sequence": 5,
+          "at": "2026-09-30T19:37:31.212810+00:00",
+          "op": "search",
+          "source_bytes": 6324,
+          "pattern": "openGame",
+          "paths": [
+            "web/e2e/critical-journeys.spec.ts"
+          ],
+          "context": 3
+        },
+        {
+          "sequence": 6,
+          "at": "2026-09-30T19:37:36.370675+00:00",
+          "op": "read",
+          "source_bytes": 814,
+          "path": "web/e2e/critical-journeys.spec.ts",
+          "start": 11,
+          "lines": 18
+        }
+      ]
+    }
+  },
+  "results": [],
+  "task_started_at": "2026-09-30T19:36:43.697146+00:00"
+}

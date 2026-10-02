@@ -1,0 +1,357 @@
+{
+  "schema_version": 2,
+  "session_id": "a1-v2",
+  "condition": "A",
+  "replicate": 1,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "discovery_budget": {
+    "max_calls_per_task": 12,
+    "max_source_bytes_per_task": 50000,
+    "max_wall_seconds_per_task": 120.0
+  },
+  "prompt_hash": "sha256:288f94ef6bff615ea82c31fe66778fd5f156b04a8090554e49dbd62f8919586b",
+  "condition_prompt_hash": "sha256:f832b30462e4dfd330db6c289f37d02023b61c3a585f7d05bdff2aa69e2c2022",
+  "source_tree_hash": "sha256:0ce74d0377077626c38060217bc0fe174aa8fe536f6c94df751ed808f6a709ca",
+  "project_index_graph_hash": "sha256:2ed22df662a5dd2ce17426d1b12fd527783d87eed5232fcc7cd5de15c14dfe44",
+  "attestation_hash": "sha256:260ac9431a35ec061325473067a8df2312d29ded611c2245b43ed884c2ef1015",
+  "order": [
+    "B01",
+    "B02",
+    "B03",
+    "B04",
+    "B05",
+    "B06",
+    "B07",
+    "B08"
+  ],
+  "next_task_index": 3,
+  "active_task": "B04",
+  "status": "running",
+  "created_at": "2026-09-30T19:34:39.995525+00:00",
+  "task_usage": {
+    "B01": {
+      "discovery_calls": 11,
+      "source_bytes_read": 23221,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-09-30T19:35:22.635631+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "player_downed",
+          "paths": [
+            "combat_mechanics.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-09-30T19:35:27.007760+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "death_pending",
+          "paths": [
+            "services/conflict_orchestrator.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 3,
+          "at": "2026-09-30T19:35:33.536474+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "downed",
+          "paths": [
+            "state.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 4,
+          "at": "2026-09-30T19:35:41.701356+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "game_over",
+          "paths": [
+            "services/conflict_orchestrator.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 5,
+          "at": "2026-09-30T19:35:46.123906+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "player",
+          "paths": [
+            "main.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 6,
+          "at": "2026-09-30T19:35:51.733534+00:00",
+          "op": "read",
+          "source_bytes": 4319,
+          "path": "services/conflict_orchestrator.py",
+          "start": 1,
+          "lines": 80
+        },
+        {
+          "sequence": 7,
+          "at": "2026-09-30T19:36:00.234566+00:00",
+          "op": "read",
+          "source_bytes": 4319,
+          "path": "services/conflict_orchestrator.py",
+          "start": 1,
+          "lines": 80
+        },
+        {
+          "sequence": 8,
+          "at": "2026-09-30T19:36:04.915300+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "player_downed",
+          "paths": [
+            "services/conflict_orchestrator.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 9,
+          "at": "2026-09-30T19:36:11.079583+00:00",
+          "op": "search",
+          "source_bytes": 11188,
+          "pattern": "player",
+          "paths": [
+            "services/conflict_orchestrator.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 10,
+          "at": "2026-09-30T19:36:15.961135+00:00",
+          "op": "read",
+          "source_bytes": 3395,
+          "path": "services/conflict_orchestrator.py",
+          "start": 960,
+          "lines": 60
+        },
+        {
+          "sequence": 11,
+          "at": "2026-09-30T19:36:21.731350+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "player_dead",
+          "paths": [
+            "tests/test_combat_lifecycle.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B02": {
+      "discovery_calls": 4,
+      "source_bytes_read": 8375,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-09-30T19:37:16.881680+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "alias",
+          "paths": [
+            "services/npc_layers.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-09-30T19:37:22.718780+00:00",
+          "op": "search",
+          "source_bytes": 660,
+          "pattern": "aliases",
+          "paths": [
+            "agents/npc.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 3,
+          "at": "2026-09-30T19:37:27.443994+00:00",
+          "op": "search",
+          "source_bytes": 1487,
+          "pattern": "runtime_npc_aliases",
+          "paths": [
+            "services/entity_identity.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 4,
+          "at": "2026-09-30T19:37:31.933920+00:00",
+          "op": "read",
+          "source_bytes": 6228,
+          "path": "services/entity_identity.py",
+          "start": 1,
+          "lines": 145
+        }
+      ]
+    },
+    "B03": {
+      "discovery_calls": 8,
+      "source_bytes_read": 25548,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-09-30T19:37:47.960440+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "receipt",
+          "paths": [
+            "agents/loot.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-09-30T19:37:53.057970+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "reward",
+          "paths": [
+            "agents/loot.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 3,
+          "at": "2026-09-30T19:38:04.384995+00:00",
+          "op": "search",
+          "source_bytes": 8802,
+          "pattern": "receipt",
+          "paths": [
+            "api.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 4,
+          "at": "2026-09-30T19:38:09.084254+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "reward",
+          "paths": [
+            "api.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 5,
+          "at": "2026-09-30T19:38:14.699060+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "reward",
+          "paths": [
+            "services/turn_execution.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 6,
+          "at": "2026-09-30T19:38:19.894732+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "receipt",
+          "paths": [
+            "services/turn_execution.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 7,
+          "at": "2026-09-30T19:38:25.325643+00:00",
+          "op": "read",
+          "source_bytes": 7859,
+          "path": "agents/loot.py",
+          "start": 1,
+          "lines": 160
+        },
+        {
+          "sequence": 8,
+          "at": "2026-09-30T19:38:29.868140+00:00",
+          "op": "read",
+          "source_bytes": 8887,
+          "path": "agents/loot.py",
+          "start": 130,
+          "lines": 170
+        }
+      ]
+    },
+    "B04": {
+      "discovery_calls": 2,
+      "source_bytes_read": 8366,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-09-30T19:38:46.272733+00:00",
+          "op": "search",
+          "source_bytes": 3176,
+          "pattern": "death_pending",
+          "paths": [
+            "api.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-09-30T19:38:51.040232+00:00",
+          "op": "read",
+          "source_bytes": 5190,
+          "path": "api.py",
+          "start": 2440,
+          "lines": 100
+        }
+      ]
+    }
+  },
+  "results": [
+    {
+      "id": "B01",
+      "files": [
+        "services/conflict_orchestrator.py"
+      ],
+      "tests": [],
+      "resolution": "Só-morte-real-marca-player_dead;queda-continua-jogável.",
+      "discovery_calls": 11,
+      "source_bytes_read": 23221,
+      "wall_seconds": 118.664
+    },
+    {
+      "id": "B02",
+      "files": [
+        "agents/npc.py",
+        "services/entity_identity.py"
+      ],
+      "tests": [],
+      "resolution": "Aliases-normalizados-coalescem-NPCs-e-preservam-memória-dinâmica.",
+      "discovery_calls": 4,
+      "source_bytes_read": 8375,
+      "wall_seconds": 27.176
+    },
+    {
+      "id": "B03",
+      "files": [
+        "agents/loot.py",
+        "services/conflict_summary.py"
+      ],
+      "tests": [],
+      "resolution": "Prosa-de-loot-é-validada-pelo-resumo-canônico-e-o-ledger-SISTEMA-mantém-o-receipt-exato.",
+      "discovery_calls": 8,
+      "source_bytes_read": 25548,
+      "wall_seconds": 53.065
+    }
+  ],
+  "task_started_at": "2026-09-30T19:38:41.419154+00:00"
+}

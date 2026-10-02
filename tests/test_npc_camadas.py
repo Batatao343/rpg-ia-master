@@ -1,6 +1,6 @@
 """Spec npcs-3-camadas — traits ocultos, gate in_scene, canal de cena, API.
 
-Spec: specs/npcs-3-camadas-traits.md.
+Spec: specs/SPEC-028-npcs-3-camadas-traits.md.
 """
 
 from __future__ import annotations

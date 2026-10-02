@@ -1,0 +1,1 @@
+Condition B: the first discovery call after every begin must be one harness index query. Then confirm findings in source through harness search/read.

@@ -3,7 +3,7 @@ codex_loader.py — Ingestão do Codex (data/codex/**/*.md) no índice FAISS de 
 preservando metadados (id, type, name, tags, visibility) em cada chunk.
 
 O split roda offline (não usa embeddings); só `ingest_codex` precisa de chave.
-Spec: specs/fase-2.5-codex-world-state.md §3.
+Spec: specs/SPEC-001-fase-2.5-codex-world-state.md §3.
 """
 
 from __future__ import annotations

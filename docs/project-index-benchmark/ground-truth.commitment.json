@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "canonicalization": "UTF-8 JSON.stringify with insertion-ordered keys and no whitespace",
+  "sha256": "d9a8ce2b087d7eb59ace5677b6cede18868e28d121a78b9ac5f20adcda957e39",
+  "revealed": true,
+  "reveal_path": "docs/project-index-benchmark/ground-truth.json"
+}

@@ -1,0 +1,64 @@
+schema_version: 1
+policy: curated_only_never_overwrite_from_static_inference
+state:
+  player.gold:
+    canonical_domain: economy
+    intended_writers:
+      - services/economy.py
+      - agents/loot.py
+      - services/event_processor.py
+      - services/exploration.py
+    important_readers:
+      - agents/storyteller.py
+      - services/context_builder.py
+      - services/turn_outcome.py
+      - api.py
+    invariants:
+      - economy.gold_non_negative
+  narrative_summary:
+    canonical_domain: memory
+    intended_writers:
+      - agents/archivist.py
+      - persistence.py
+    important_readers:
+      - services/context_builder.py
+      - services/secret_signatures.py
+      - api.py
+    invariants:
+      - memory.summary_bounds
+  event_log:
+    canonical_domain: state_rules
+    intended_writers:
+      - services/event_processor.py
+      - services/checkpoints.py
+      - persistence.py
+    important_readers:
+      - services/context_builder.py
+      - services/memory_provenance.py
+      - services/state_views.py
+      - api.py
+    invariants:
+      - events.append_only_unique_event_id
+  quest_log:
+    canonical_domain: quests
+    intended_writers:
+      - services/quest_log.py
+      - services/event_processor.py
+      - agents/storyteller.py
+      - agents/npc.py
+    important_readers:
+      - api.py
+      - services/context_builder.py
+    invariants:
+      - quests.reward_delivered_once
+  operation_id:
+    canonical_domain: turn_pipeline
+    intended_writers:
+      - services/turn_execution.py
+      - services/turn_pipeline.py
+      - api.py
+    important_readers:
+      - services/operation_recovery.py
+      - persistence.py
+    invariants:
+      - operations.idempotent_claim_and_replay

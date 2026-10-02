@@ -1,0 +1,624 @@
+{
+  "schema_version": 1,
+  "benchmark": "SPEC-175 v6",
+  "scope": "Mechanical aggregation only; semantic resolved scoring and final index decision are pending independent Sol review. V1-v5 excluded.",
+  "integrity": {
+    "attestation_self_hash_expected": "sha256:e4de94d418baa87deb76f061c35560795d2873ef12899e7cf731a400fe74b36e",
+    "attestation_self_hash_actual": "sha256:e4de94d418baa87deb76f061c35560795d2873ef12899e7cf731a400fe74b36e",
+    "attestation_self_hash_valid": true,
+    "sealed_artifact_hashes": {
+      "preregistration.md": {
+        "expected_sha256": "sha256:5b0cfa672fb70345043ee05cafd13e2d83523226ac0ab208f231cfad0eeabb7d",
+        "actual_sha256": "sha256:5b0cfa672fb70345043ee05cafd13e2d83523226ac0ab208f231cfad0eeabb7d",
+        "valid": true
+      },
+      "ground-truth.commitment.json": {
+        "expected_sha256": "sha256:803ca34e521857dee3330c17d7decab17b67b19ee1c8f59af357f53d8da02aba",
+        "actual_sha256": "sha256:803ca34e521857dee3330c17d7decab17b67b19ee1c8f59af357f53d8da02aba",
+        "valid": true
+      },
+      "ground-truth.sealed.aesgcm.json": {
+        "expected_sha256": "sha256:79fbf3f770a241520da2cdc9307aca941af28f419df189b8e15d53934824ec6e",
+        "actual_sha256": "sha256:79fbf3f770a241520da2cdc9307aca941af28f419df189b8e15d53934824ec6e",
+        "valid": true
+      },
+      "base-prompt.txt": {
+        "expected_sha256": "sha256:dadf5eb4a66f77e0d1e42dc7f90fbda52e6a528d151a8a61018c0b899e7e3bb4",
+        "actual_sha256": "sha256:dadf5eb4a66f77e0d1e42dc7f90fbda52e6a528d151a8a61018c0b899e7e3bb4",
+        "valid": true
+      },
+      "condition-a.txt": {
+        "expected_sha256": "sha256:05b5351299d44822930d8d23afaaff3cd970d35bf99951374c236bd772dfe6b2",
+        "actual_sha256": "sha256:05b5351299d44822930d8d23afaaff3cd970d35bf99951374c236bd772dfe6b2",
+        "valid": true
+      },
+      "condition-b.txt": {
+        "expected_sha256": "sha256:93e20291884ee919a00ed1a3ac24dd3c98ed1235957b03f3f2aee7a858d9def6",
+        "actual_sha256": "sha256:93e20291884ee919a00ed1a3ac24dd3c98ed1235957b03f3f2aee7a858d9def6",
+        "valid": true
+      },
+      "session-prompts/a1-v6.txt": {
+        "expected_sha256": "sha256:e8aed9fa3c0b86a7203a68104cc86c662f90a01c5b8e0eef73226eb742397d2f",
+        "actual_sha256": "sha256:e8aed9fa3c0b86a7203a68104cc86c662f90a01c5b8e0eef73226eb742397d2f",
+        "valid": true
+      },
+      "session-prompts/a2-v6.txt": {
+        "expected_sha256": "sha256:870e6e8fd52820452e9f737f8e0a5e68c97b8e58719667513a0d05fedc9152a2",
+        "actual_sha256": "sha256:870e6e8fd52820452e9f737f8e0a5e68c97b8e58719667513a0d05fedc9152a2",
+        "valid": true
+      },
+      "session-prompts/b1-v6.txt": {
+        "expected_sha256": "sha256:42ec25f70faaff85781fa85088fbab233c25b4fc4cafe496a9dc11869f463ce3",
+        "actual_sha256": "sha256:42ec25f70faaff85781fa85088fbab233c25b4fc4cafe496a9dc11869f463ce3",
+        "valid": true
+      },
+      "session-prompts/b2-v6.txt": {
+        "expected_sha256": "sha256:31f75a647c678abcd79dd078bb255473104c619dad562f6dac7aacb557992fb3",
+        "actual_sha256": "sha256:31f75a647c678abcd79dd078bb255473104c619dad562f6dac7aacb557992fb3",
+        "valid": true
+      }
+    },
+    "all_sealed_artifact_hashes_valid": true,
+    "ground_truth_canonical_sha256": "sha256:1f5ec3ce3b235271d7a2cb0e02d3fd9fdf57326554dbde9e4f2714dee63f9af3",
+    "ground_truth_canonical_matches_commitment": true,
+    "revealed_ground_truth_file_sha256": "sha256:1194c5cd6fc23c7bcd1c9a67e802dfc636094370e9711c9c002d23137fc3a3d6",
+    "revealed_ground_truth_matches_committed_file_hash": true,
+    "ciphertext_sha256": "sha256:79fbf3f770a241520da2cdc9307aca941af28f419df189b8e15d53934824ec6e",
+    "ciphertext_matches_commitment": true,
+    "commitment_file_sha256": "sha256:803ca34e521857dee3330c17d7decab17b67b19ee1c8f59af357f53d8da02aba",
+    "commitment_hash_matches_attestation": true,
+    "seal_commit_file_sha256": "sha256:b7116d50e2e45266ad4f8a3bd2eab996b2f1019dc0afd8327855e65d27885be1",
+    "seal_time_validation_passed": true,
+    "seal_commit_content_and_cleanliness_passed": true,
+    "source_tree_hash": "sha256:c1149edc3b294bcc08cd6ea5b507a533588413cecf53f84c586629fd67a2f20a",
+    "source_tree_hash_matches_manifest": true,
+    "project_index_graph_hash": "sha256:6c313519c72fb3624070b81a7128bbbdfdfd24e22c2d514139e1ca07e2e07a16",
+    "project_index_graph_hash_matches_manifest": true,
+    "session_prompts": {
+      "a1-v6": {
+        "expected_sha256": "sha256:e8aed9fa3c0b86a7203a68104cc86c662f90a01c5b8e0eef73226eb742397d2f",
+        "actual_sha256": "sha256:e8aed9fa3c0b86a7203a68104cc86c662f90a01c5b8e0eef73226eb742397d2f",
+        "valid": true
+      },
+      "a2-v6": {
+        "expected_sha256": "sha256:870e6e8fd52820452e9f737f8e0a5e68c97b8e58719667513a0d05fedc9152a2",
+        "actual_sha256": "sha256:870e6e8fd52820452e9f737f8e0a5e68c97b8e58719667513a0d05fedc9152a2",
+        "valid": true
+      },
+      "b1-v6": {
+        "expected_sha256": "sha256:42ec25f70faaff85781fa85088fbab233c25b4fc4cafe496a9dc11869f463ce3",
+        "actual_sha256": "sha256:42ec25f70faaff85781fa85088fbab233c25b4fc4cafe496a9dc11869f463ce3",
+        "valid": true
+      },
+      "b2-v6": {
+        "expected_sha256": "sha256:31f75a647c678abcd79dd078bb255473104c619dad562f6dac7aacb557992fb3",
+        "actual_sha256": "sha256:31f75a647c678abcd79dd078bb255473104c619dad562f6dac7aacb557992fb3",
+        "valid": true
+      }
+    },
+    "attestation_file_sha256": "sha256:cd31abcdf035dffb1f9e73d31d0bf21a1786f93a11034d874c304d1a4737fb0a",
+    "attestation_file_matches_seal_commit": true
+  },
+  "sessions": [
+    {
+      "id": "a1-v6",
+      "condition": "A",
+      "replicate": 1,
+      "model": "gpt-5.6-sol",
+      "effort": "high",
+      "order": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08"
+      ],
+      "complete": true,
+      "prompt_hash_expected": "sha256:e8aed9fa3c0b86a7203a68104cc86c662f90a01c5b8e0eef73226eb742397d2f",
+      "prompt_hash_actual": "sha256:e8aed9fa3c0b86a7203a68104cc86c662f90a01c5b8e0eef73226eb742397d2f",
+      "prompt_hash_valid": true,
+      "session_file_sha256": "sha256:10734f0ce3cc03faf865f893ec2e9acfc336fad5b66b5a4f6fa3cf4d61de2a52",
+      "task_count": 8,
+      "usage_reconciles": true,
+      "within_all_task_budgets": true,
+      "first_operation_by_task": {
+        "B01": "search",
+        "B02": "search",
+        "B03": "search",
+        "B04": "search",
+        "B05": null,
+        "B06": "search",
+        "B07": "search",
+        "B08": "search"
+      },
+      "source_tree_hash_valid": true,
+      "project_index_graph_hash_valid": true,
+      "attestation_hash_valid": true,
+      "budget_definition_valid": true
+    },
+    {
+      "id": "a2-v6",
+      "condition": "A",
+      "replicate": 2,
+      "model": "gpt-5.6-sol",
+      "effort": "high",
+      "order": [
+        "B08",
+        "B07",
+        "B06",
+        "B05",
+        "B04",
+        "B03",
+        "B02",
+        "B01"
+      ],
+      "complete": true,
+      "prompt_hash_expected": "sha256:870e6e8fd52820452e9f737f8e0a5e68c97b8e58719667513a0d05fedc9152a2",
+      "prompt_hash_actual": "sha256:870e6e8fd52820452e9f737f8e0a5e68c97b8e58719667513a0d05fedc9152a2",
+      "prompt_hash_valid": true,
+      "session_file_sha256": "sha256:0de6eea0a5d3913bbed51eb5c5926be1d018648998d144bd289017f431f8c94a",
+      "task_count": 8,
+      "usage_reconciles": true,
+      "within_all_task_budgets": true,
+      "first_operation_by_task": {
+        "B08": "search",
+        "B07": "search",
+        "B06": "search",
+        "B05": "search",
+        "B04": "search",
+        "B03": "search",
+        "B02": "search",
+        "B01": "search"
+      },
+      "source_tree_hash_valid": true,
+      "project_index_graph_hash_valid": true,
+      "attestation_hash_valid": true,
+      "budget_definition_valid": true
+    },
+    {
+      "id": "b1-v6",
+      "condition": "B",
+      "replicate": 1,
+      "model": "gpt-5.6-sol",
+      "effort": "high",
+      "order": [
+        "B08",
+        "B07",
+        "B06",
+        "B05",
+        "B04",
+        "B03",
+        "B02",
+        "B01"
+      ],
+      "complete": true,
+      "prompt_hash_expected": "sha256:42ec25f70faaff85781fa85088fbab233c25b4fc4cafe496a9dc11869f463ce3",
+      "prompt_hash_actual": "sha256:42ec25f70faaff85781fa85088fbab233c25b4fc4cafe496a9dc11869f463ce3",
+      "prompt_hash_valid": true,
+      "session_file_sha256": "sha256:4048dca761fda9b636b1a77dd4ff24b5821d790e4896122243489ad0b4b462af",
+      "task_count": 8,
+      "usage_reconciles": true,
+      "within_all_task_budgets": true,
+      "first_operation_by_task": {
+        "B08": "index:query",
+        "B07": "index:query",
+        "B06": "index:query",
+        "B05": "index:query",
+        "B04": "index:query",
+        "B03": "index:query",
+        "B02": "index:query",
+        "B01": "index:query"
+      },
+      "source_tree_hash_valid": true,
+      "project_index_graph_hash_valid": true,
+      "attestation_hash_valid": true,
+      "budget_definition_valid": true
+    },
+    {
+      "id": "b2-v6",
+      "condition": "B",
+      "replicate": 2,
+      "model": "gpt-5.6-sol",
+      "effort": "high",
+      "order": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08"
+      ],
+      "complete": true,
+      "prompt_hash_expected": "sha256:31f75a647c678abcd79dd078bb255473104c619dad562f6dac7aacb557992fb3",
+      "prompt_hash_actual": "sha256:31f75a647c678abcd79dd078bb255473104c619dad562f6dac7aacb557992fb3",
+      "prompt_hash_valid": true,
+      "session_file_sha256": "sha256:40f9e48d977597a2ed95f961324b2c418a404504892511ee4566a66095e37ae8",
+      "task_count": 8,
+      "usage_reconciles": true,
+      "within_all_task_budgets": true,
+      "first_operation_by_task": {
+        "B01": "index:query",
+        "B02": "index:query",
+        "B03": "index:query",
+        "B04": "index:query",
+        "B05": "index:query",
+        "B06": "index:query",
+        "B07": "index:query",
+        "B08": "index:query"
+      },
+      "source_tree_hash_valid": true,
+      "project_index_graph_hash_valid": true,
+      "attestation_hash_valid": true,
+      "budget_definition_valid": true
+    }
+  ],
+  "validation": {
+    "complete_sessions": 4,
+    "observations": 32,
+    "A_has_any_index_trace": false,
+    "B_all_tasks_begin_with_index_query": true,
+    "trace_calls_equal_stored_usage_and_result_for_all_observations": true,
+    "trace_source_bytes_equal_stored_usage_and_result_for_all_observations": true,
+    "all_tasks_within_preregistered_budgets": true,
+    "budgets": {
+      "discovery_calls_max": 12,
+      "source_bytes_max": 50000,
+      "wall_seconds_max": 300
+    },
+    "nested_seal_commit": {
+      "expected_sha": "aa50ca35af7e0f7c3785e7405b04c23ee68ab326",
+      "actual_head_sha": "aa50ca35af7e0f7c3785e7405b04c23ee68ab326",
+      "expected_time": "2026-10-01T14:35:52-03:00",
+      "actual_commit_time": "2026-10-01T14:35:52-03:00",
+      "working_tree_clean": true,
+      "all_sealed_artifacts_present_and_content_matches_commit": true,
+      "session_creation_and_first_trace_after_commit": true,
+      "session_creation_times": [
+        "2026-10-01T17:36:11.013191+00:00",
+        "2026-10-01T17:36:11.185928+00:00",
+        "2026-10-01T17:36:11.385530+00:00",
+        "2026-10-01T17:36:11.601440+00:00"
+      ],
+      "earliest_trace_at": "2026-10-01T17:36:53.241522+00:00",
+      "sealed_file_blobs": {
+        "preregistration.md": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "ground-truth.commitment.json": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "ground-truth.sealed.aesgcm.json": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "base-prompt.txt": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "condition-a.txt": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "condition-b.txt": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "session-prompts/a1-v6.txt": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "session-prompts/a2-v6.txt": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "session-prompts/b1-v6.txt": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "session-prompts/b2-v6.txt": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        }
+      },
+      "sealed_commit_files": {
+        ".gitignore": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "attestation.json": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "base-prompt.txt": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "condition-a.txt": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "condition-b.txt": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "ground-truth.commitment.json": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "ground-truth.sealed.aesgcm.json": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "preregistration.md": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "session-prompts/a1-v6.txt": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "session-prompts/a2-v6.txt": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "session-prompts/b1-v6.txt": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        },
+        "session-prompts/b2-v6.txt": {
+          "present_in_seal_commit": true,
+          "current_bytes_match_seal_blob": true
+        }
+      },
+      "all_sealed_commit_files_match": true
+    },
+    "agent_tool_attestations": {
+      "file_sha256": "sha256:0d11fc51e8be2feca6d78c4baf142e369988e1bb3afba2810c0a8d22b579fc19",
+      "recorded_after_all_sessions_complete": true,
+      "statements": {
+        "a1-v6": "Completed B01-B08 using only the benchmark harness; no edits or tests.",
+        "a2-v6": "Completed all eight tasks within budgets; no edits or tests.",
+        "b1-v6": "Completed all eight tasks using the required lifecycle; no edits or tests.",
+        "b2-v6": "Completed B01-B08 through the harness; no edits or tests."
+      },
+      "covers_all_four_sessions": true
+    },
+    "all_sessions_match_source_graph_attestation_and_budget": true
+  },
+  "metrics": {
+    "A": {
+      "observations": 16,
+      "localization_hit": 16,
+      "irrelevant_implementation_files_total": 18,
+      "irrelevant_implementation_files_mean": 1.125,
+      "relevant_test_recall_mean": 0.6041666666666666,
+      "median_discovery_calls": 5.0,
+      "median_source_bytes_read": 24676.0,
+      "median_wall_seconds": 38.907
+    },
+    "B": {
+      "observations": 16,
+      "localization_hit": 16,
+      "irrelevant_implementation_files_total": 12,
+      "irrelevant_implementation_files_mean": 0.75,
+      "relevant_test_recall_mean": 0.6458333333333334,
+      "median_discovery_calls": 8.0,
+      "median_source_bytes_read": 30999.5,
+      "median_wall_seconds": 58.2535
+    },
+    "per_task_two_replicate_averages": [
+      {
+        "task": "B01",
+        "A_calls": 5.5,
+        "A_bytes": 45170.5,
+        "A_replicate_calls": [
+          3,
+          8
+        ],
+        "A_replicate_bytes": [
+          47430,
+          42911
+        ],
+        "B_calls": 10.0,
+        "B_bytes": 38177.5,
+        "B_replicate_calls": [
+          12,
+          8
+        ],
+        "B_replicate_bytes": [
+          34784,
+          41571
+        ],
+        "cost_win": false
+      },
+      {
+        "task": "B02",
+        "A_calls": 3.5,
+        "A_bytes": 44938.0,
+        "A_replicate_calls": [
+          3,
+          4
+        ],
+        "A_replicate_bytes": [
+          40741,
+          49135
+        ],
+        "B_calls": 8.0,
+        "B_bytes": 45503.0,
+        "B_replicate_calls": [
+          12,
+          4
+        ],
+        "B_replicate_bytes": [
+          44599,
+          46407
+        ],
+        "cost_win": false
+      },
+      {
+        "task": "B03",
+        "A_calls": 6.0,
+        "A_bytes": 32319.0,
+        "A_replicate_calls": [
+          4,
+          8
+        ],
+        "A_replicate_bytes": [
+          25528,
+          39110
+        ],
+        "B_calls": 10.5,
+        "B_bytes": 25457.0,
+        "B_replicate_calls": [
+          9,
+          12
+        ],
+        "B_replicate_bytes": [
+          13408,
+          37506
+        ],
+        "cost_win": false
+      },
+      {
+        "task": "B04",
+        "A_calls": 6.5,
+        "A_bytes": 23252.5,
+        "A_replicate_calls": [
+          6,
+          7
+        ],
+        "A_replicate_bytes": [
+          23025,
+          23480
+        ],
+        "B_calls": 7.5,
+        "B_bytes": 20445.5,
+        "B_replicate_calls": [
+          9,
+          6
+        ],
+        "B_replicate_bytes": [
+          19699,
+          21192
+        ],
+        "cost_win": false
+      },
+      {
+        "task": "B05",
+        "A_calls": 3.5,
+        "A_bytes": 11753.5,
+        "A_replicate_calls": [
+          0,
+          7
+        ],
+        "A_replicate_bytes": [
+          0,
+          23507
+        ],
+        "B_calls": 6.5,
+        "B_bytes": 30999.5,
+        "B_replicate_calls": [
+          6,
+          7
+        ],
+        "B_replicate_bytes": [
+          29380,
+          32619
+        ],
+        "cost_win": false
+      },
+      {
+        "task": "B06",
+        "A_calls": 2.0,
+        "A_bytes": 21717.0,
+        "A_replicate_calls": [
+          2,
+          2
+        ],
+        "A_replicate_bytes": [
+          11044,
+          32390
+        ],
+        "B_calls": 7.0,
+        "B_bytes": 9015.0,
+        "B_replicate_calls": [
+          7,
+          7
+        ],
+        "B_replicate_bytes": [
+          11485,
+          6545
+        ],
+        "cost_win": false
+      },
+      {
+        "task": "B07",
+        "A_calls": 4.5,
+        "A_bytes": 31266.5,
+        "A_replicate_calls": [
+          2,
+          7
+        ],
+        "A_replicate_bytes": [
+          23824,
+          38709
+        ],
+        "B_calls": 7.0,
+        "B_bytes": 44914.0,
+        "B_replicate_calls": [
+          9,
+          5
+        ],
+        "B_replicate_bytes": [
+          49875,
+          39953
+        ],
+        "cost_win": false
+      },
+      {
+        "task": "B08",
+        "A_calls": 6.0,
+        "A_bytes": 10820.0,
+        "A_replicate_calls": [
+          6,
+          6
+        ],
+        "A_replicate_bytes": [
+          13585,
+          8055
+        ],
+        "B_calls": 10.0,
+        "B_bytes": 21700.5,
+        "B_replicate_calls": [
+          12,
+          8
+        ],
+        "B_replicate_bytes": [
+          21916,
+          21485
+        ],
+        "cost_win": false
+      }
+    ],
+    "cost_win_rule": "B reduces calls or bytes while worsening the other dimension by no more than 10%; task-level comparisons use the mean of the two replicates.",
+    "cost_wins": 0,
+    "cost_win_tasks": [],
+    "global_20_percent_criterion": {
+      "bytes_median_reduction": -0.2562611444318366,
+      "calls_median_change": 0.6,
+      "other_dimension_worsening_max": 0.1,
+      "passed": false
+    }
+  },
+  "decision": {
+    "resolved_scoring": "pending independent Sol",
+    "mandatory_selective_remove": "pending independent Sol; not applied in mechanical aggregation"
+  }
+}

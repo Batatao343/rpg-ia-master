@@ -1,6 +1,6 @@
 """Suíte da spec aliados-em-combate — aliado presente entra no combate.
 
-Offline/determinístico (MockLLM via conftest). Ver specs/aliados-em-combate.md.
+Offline/determinístico (MockLLM via conftest). Ver specs/SPEC-055-aliados-em-combate.md.
 """
 import random
 

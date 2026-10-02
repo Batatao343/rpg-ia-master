@@ -1,5 +1,5 @@
 """Suíte da Fase 2.8 — Context builder com orçamento de tokens.
-Spec: specs/fase-2.8-context-builder.md. 100% offline e determinística (sem LLM).
+Spec: specs/SPEC-005-fase-2.8-context-builder.md. 100% offline e determinística (sem LLM).
 
 Ids canônicos reais de data/graph/entities.json usados aqui:
   npc_valerius → controla nova_arcadia (não lidera fação)

@@ -1,0 +1,571 @@
+{
+  "schema_version": 2,
+  "session_id": "b1-v4",
+  "condition": "B",
+  "replicate": 1,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "discovery_budget": {
+    "max_calls_per_task": 12,
+    "max_source_bytes_per_task": 50000,
+    "max_wall_seconds_per_task": 300.0
+  },
+  "prompt_hash": "sha256:dadf5eb4a66f77e0d1e42dc7f90fbda52e6a528d151a8a61018c0b899e7e3bb4",
+  "condition_prompt_hash": "sha256:93e20291884ee919a00ed1a3ac24dd3c98ed1235957b03f3f2aee7a858d9def6",
+  "session_prompt_hash": "sha256:909c0d4f4baf441b47666527d78d5a18d94895b59a153d304743d3f0943308aa",
+  "source_tree_hash": "sha256:b3171bcf014f5d9104a8223854709d5e3b1420092ea5b73af347d8cd618a76cd",
+  "project_index_graph_hash": "sha256:a30ab6f3ced9b09662c5ba3eee3df7f8c019e292c6705bd10a3171e6e53b2e07",
+  "attestation_hash": "sha256:1434a5c3d2054ce819537ed93883586c1fcdc33dde5b2ee774975db528d91e8c",
+  "order": [
+    "B08",
+    "B07",
+    "B06",
+    "B05",
+    "B04",
+    "B03",
+    "B02",
+    "B01"
+  ],
+  "next_task_index": 8,
+  "active_task": null,
+  "status": "complete",
+  "created_at": "2026-10-01T11:17:04.973251+00:00",
+  "task_usage": {
+    "B08": {
+      "discovery_calls": 7,
+      "source_bytes_read": 10792,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:17:50.034432+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "mobile logout overlap",
+          "limit": 8,
+          "output_bytes": 2321
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:18:07.218205+00:00",
+          "op": "read",
+          "source_bytes": 2856,
+          "path": "api.py",
+          "start": 250,
+          "lines": 60
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T11:18:16.897425+00:00",
+          "op": "search",
+          "source_bytes": 1442,
+          "pattern": "logout",
+          "paths": [
+            "web/src"
+          ],
+          "context": 3
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T11:18:21.524874+00:00",
+          "op": "read",
+          "source_bytes": 2084,
+          "path": "web/src/App.tsx",
+          "start": 110,
+          "lines": 55
+        },
+        {
+          "sequence": 5,
+          "at": "2026-10-01T11:18:29.605533+00:00",
+          "op": "read",
+          "source_bytes": 2523,
+          "path": "web/src/App.tsx",
+          "start": 460,
+          "lines": 55
+        },
+        {
+          "sequence": 6,
+          "at": "2026-10-01T11:18:34.166764+00:00",
+          "op": "read",
+          "source_bytes": 1887,
+          "path": "web/src/styles.css",
+          "start": 1015,
+          "lines": 50
+        },
+        {
+          "sequence": 7,
+          "at": "2026-10-01T11:18:38.754199+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "session-logout",
+          "paths": [
+            "tests"
+          ],
+          "context": 2
+        }
+      ],
+      "index_queried": true
+    },
+    "B07": {
+      "discovery_calls": 7,
+      "source_bytes_read": 7842,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:20:56.195353+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "idempotent replay divergent payload",
+          "limit": 8,
+          "output_bytes": 2402
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:21:08.048714+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "claim operation replay coordinator",
+          "limit": 8,
+          "output_bytes": 3080
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T11:21:11.876094+00:00",
+          "op": "read",
+          "source_bytes": 2884,
+          "path": "services/turn_pipeline.py",
+          "start": 1,
+          "lines": 300
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T11:21:16.321188+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "operation_id",
+          "paths": [
+            "services/turn_execution.py"
+          ],
+          "context": 4
+        },
+        {
+          "sequence": 5,
+          "at": "2026-10-01T11:21:20.624510+00:00",
+          "op": "search",
+          "source_bytes": 1997,
+          "pattern": "idempot",
+          "paths": [
+            "infrastructure"
+          ],
+          "context": 3
+        },
+        {
+          "sequence": 6,
+          "at": "2026-10-01T11:21:24.903045+00:00",
+          "op": "read",
+          "source_bytes": 2961,
+          "path": "infrastructure/local_adapters.py",
+          "start": 520,
+          "lines": 65
+        },
+        {
+          "sequence": 7,
+          "at": "2026-10-01T11:21:29.014009+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "diverg",
+          "paths": [
+            "tests/test_operation_replay_boundaries.py"
+          ],
+          "context": 3
+        }
+      ],
+      "index_queried": true
+    },
+    "B06": {
+      "discovery_calls": 4,
+      "source_bytes_read": 2360,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:21:45.613148+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "two art fields lost save load",
+          "limit": 8,
+          "output_bytes": 2200
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:21:49.537502+00:00",
+          "op": "read",
+          "source_bytes": 1104,
+          "path": "tests/test_art_state_persistence.py",
+          "start": 1,
+          "lines": 200
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T11:21:53.476566+00:00",
+          "op": "search",
+          "source_bytes": 276,
+          "pattern": "art_generation_ledger",
+          "paths": [
+            "state.py"
+          ],
+          "context": 3
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T11:21:57.429462+00:00",
+          "op": "search",
+          "source_bytes": 980,
+          "pattern": "art_arc_budgets",
+          "paths": [
+            "persistence.py"
+          ],
+          "context": 3
+        }
+      ],
+      "index_queried": true
+    },
+    "B05": {
+      "discovery_calls": 5,
+      "source_bytes_read": 13453,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:22:14.595616+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "recoverable raw structured JSON",
+          "limit": 8,
+          "output_bytes": 3088
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:22:18.510886+00:00",
+          "op": "read",
+          "source_bytes": 2996,
+          "path": "services/structured_outputs.py",
+          "start": 1,
+          "lines": 180
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T11:22:22.476067+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "include_raw",
+          "paths": [
+            "agents/router.py"
+          ],
+          "context": 5
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T11:22:27.278447+00:00",
+          "op": "search",
+          "source_bytes": 5012,
+          "pattern": "raw",
+          "paths": [
+            "llm_setup.py"
+          ],
+          "context": 4
+        },
+        {
+          "sequence": 5,
+          "at": "2026-10-01T11:22:31.749944+00:00",
+          "op": "read",
+          "source_bytes": 5445,
+          "path": "llm_setup.py",
+          "start": 510,
+          "lines": 110
+        }
+      ],
+      "index_queried": true
+    },
+    "B04": {
+      "discovery_calls": 3,
+      "source_bytes_read": 5859,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:22:48.045132+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "actions unconscious death_pending",
+          "limit": 8,
+          "output_bytes": 1860
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:22:51.937309+00:00",
+          "op": "search",
+          "source_bytes": 5859,
+          "pattern": "death_pending",
+          "paths": [
+            "api.py"
+          ],
+          "context": 4
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T11:22:59.901037+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "death pending rejects action test",
+          "limit": 8,
+          "output_bytes": 5686
+        }
+      ],
+      "index_queried": true
+    },
+    "B03": {
+      "discovery_calls": 4,
+      "source_bytes_read": 7522,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:23:17.457692+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "narrative reward canonical receipt",
+          "limit": 8,
+          "output_bytes": 4202
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:23:21.378350+00:00",
+          "op": "search",
+          "source_bytes": 961,
+          "pattern": "reward",
+          "paths": [
+            "services/narrative_evidence.py"
+          ],
+          "context": 5
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T11:23:26.134953+00:00",
+          "op": "search",
+          "source_bytes": 3070,
+          "pattern": "receipt",
+          "paths": [
+            "services"
+          ],
+          "context": 3
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T11:23:30.036549+00:00",
+          "op": "read",
+          "source_bytes": 3491,
+          "path": "services/turn_outcome.py",
+          "start": 35,
+          "lines": 65
+        }
+      ],
+      "index_queried": true
+    },
+    "B02": {
+      "discovery_calls": 2,
+      "source_bytes_read": 3329,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:23:49.056561+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "NPC identity memory aliases",
+          "limit": 8,
+          "output_bytes": 4206
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:23:53.845083+00:00",
+          "op": "search",
+          "source_bytes": 3329,
+          "pattern": "alias",
+          "paths": [
+            "services/entity_identity.py"
+          ],
+          "context": 4
+        }
+      ],
+      "index_queried": true
+    },
+    "B01": {
+      "discovery_calls": 5,
+      "source_bytes_read": 9470,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T11:24:20.892440+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "false death after player_downed",
+          "limit": 8,
+          "output_bytes": 2272
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T11:24:25.003801+00:00",
+          "op": "read",
+          "source_bytes": 7487,
+          "path": "services/death_flow.py",
+          "start": 1,
+          "lines": 150
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T11:24:30.204662+00:00",
+          "op": "search",
+          "source_bytes": 406,
+          "pattern": "uses_full_death_flow",
+          "paths": [
+            "services/death_flow.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T11:24:41.528411+00:00",
+          "op": "search",
+          "source_bytes": 616,
+          "pattern": "false_player_death_claim",
+          "paths": [
+            "services/memory_provenance.py"
+          ],
+          "context": 5
+        },
+        {
+          "sequence": 5,
+          "at": "2026-10-01T11:24:45.698697+00:00",
+          "op": "search",
+          "source_bytes": 961,
+          "pattern": "terminal",
+          "paths": [
+            "services/memory_provenance.py"
+          ],
+          "context": 4
+        }
+      ],
+      "index_queried": true
+    }
+  },
+  "results": [
+    {
+      "id": "B08",
+      "files": [
+        "web/src/App.tsx",
+        "web/src/styles.css"
+      ],
+      "tests": [],
+      "resolution": "fixed-mobile-logout-overlap",
+      "discovery_calls": 7,
+      "source_bytes_read": 10792,
+      "wall_seconds": 187.739
+    },
+    {
+      "id": "B07",
+      "files": [
+        "infrastructure/local_adapters.py",
+        "infrastructure/postgres_turns.py"
+      ],
+      "tests": [
+        "tests/test_operation_replay_boundaries.py"
+      ],
+      "resolution": "Replay-reuses-matching-claim-and-rejects-divergent-payload",
+      "discovery_calls": 7,
+      "source_bytes_read": 7842,
+      "wall_seconds": 45.26
+    },
+    {
+      "id": "B06",
+      "files": [
+        "state.py",
+        "persistence.py"
+      ],
+      "tests": [
+        "tests/test_art_state_persistence.py"
+      ],
+      "resolution": "Art-ledger-and-arc-budgets-round-trip-save-load",
+      "discovery_calls": 4,
+      "source_bytes_read": 2360,
+      "wall_seconds": 23.778
+    },
+    {
+      "id": "B05",
+      "files": [
+        "llm_setup.py"
+      ],
+      "tests": [
+        "tests/test_routing.py"
+      ],
+      "resolution": "Structured-output-recovers-valid-raw-JSON-locally",
+      "discovery_calls": 5,
+      "source_bytes_read": 13453,
+      "wall_seconds": 29.608
+    },
+    {
+      "id": "B04",
+      "files": [
+        "api.py"
+      ],
+      "tests": [
+        "tests/test_death_flow.py"
+      ],
+      "resolution": "Action-endpoints-block-unresolved-death-pending-state",
+      "discovery_calls": 3,
+      "source_bytes_read": 5859,
+      "wall_seconds": 23.83
+    },
+    {
+      "id": "B03",
+      "files": [
+        "services/turn_outcome.py",
+        "services/narrative_evidence.py"
+      ],
+      "tests": [
+        "tests/test_narrative_evidence.py"
+      ],
+      "resolution": "Narrative-rewards-are-checked-against-deltas-and-receipt-is-canonical",
+      "discovery_calls": 4,
+      "source_bytes_read": 7522,
+      "wall_seconds": 26.863
+    },
+    {
+      "id": "B02",
+      "files": [
+        "services/entity_identity.py",
+        "agents/npc.py",
+        "rag.py"
+      ],
+      "tests": [
+        "tests/test_npc_memory.py",
+        "tests/test_npc_identity_grounding.py"
+      ],
+      "resolution": "NPC-aliases-coalesce-to-one-identity-and-namespaced-memory",
+      "discovery_calls": 2,
+      "source_bytes_read": 3329,
+      "wall_seconds": 27.146
+    },
+    {
+      "id": "B01",
+      "files": [
+        "services/death_flow.py",
+        "services/memory_provenance.py",
+        "services/narrative_evidence.py"
+      ],
+      "tests": [
+        "tests/test_death_flow.py",
+        "tests/test_narrative_evidence.py"
+      ],
+      "resolution": "Downed-player-is-not-treated-as-terminal-death-without-player-died-event",
+      "discovery_calls": 5,
+      "source_bytes_read": 9470,
+      "wall_seconds": 37.756
+    }
+  ],
+  "completed_at": "2026-10-01T11:24:52.420949+00:00"
+}

@@ -1,7 +1,7 @@
 """Suíte da spec balanceamento-classes-pos-playtest — instrumentação (Etapa 1).
 
 `--class` no harness + telemetria de Entropia/Carga por turno + seção Classes
-no relatório. Offline/determinístico. Ver specs/balanceamento-classes-pos-playtest.md.
+no relatório. Offline/determinístico. Ver specs/SPEC-049-balanceamento-classes-pos-playtest.md.
 """
 import pytest
 

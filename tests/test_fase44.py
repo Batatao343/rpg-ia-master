@@ -1,6 +1,6 @@
 """
 Fase 4.4 — Economia determinística: craft, mercadores, preços e loot tables.
-Spec: specs/fase-4.4-economia-deterministica.md. 100% offline.
+Spec: specs/SPEC-014-fase-4.4-economia-deterministica.md. 100% offline.
 """
 import random
 

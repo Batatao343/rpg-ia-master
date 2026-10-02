@@ -1,0 +1,24 @@
+schema_version: 1
+# Curado: extractor pode auditar writers observados, mas nunca sobrescrever isto.
+state:
+  player.gold:
+    canonical_domain: economy
+    intended_writers:
+      - services/economy.py
+      - agents/loot.py
+      - services/turn_effects.py
+    important_readers:
+      - agents/storyteller.py
+      - services/context_builder.py
+      - api.py
+    invariants:
+      - economy.gold_non_negative
+
+  narrative_summary:
+    canonical_domain: memory
+    intended_writers:
+      - agents/archivist.py
+    important_readers:
+      - services/context_builder.py
+    invariants:
+      - memory.summary_bounds

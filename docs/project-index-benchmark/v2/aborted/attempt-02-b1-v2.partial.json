@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "session_id": "b1-v2",
+  "condition": "B",
+  "replicate": 1,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "discovery_budget": {
+    "max_calls_per_task": 12,
+    "max_source_bytes_per_task": 50000,
+    "max_wall_seconds_per_task": 120.0
+  },
+  "prompt_hash": "sha256:288f94ef6bff615ea82c31fe66778fd5f156b04a8090554e49dbd62f8919586b",
+  "condition_prompt_hash": "sha256:2d506c97b4bc8617ebed71f1ed1584e5948485deffd6ca9e781df9717efd1a17",
+  "source_tree_hash": "sha256:0ce74d0377077626c38060217bc0fe174aa8fe536f6c94df751ed808f6a709ca",
+  "project_index_graph_hash": "sha256:2ed22df662a5dd2ce17426d1b12fd527783d87eed5232fcc7cd5de15c14dfe44",
+  "attestation_hash": "sha256:260ac9431a35ec061325473067a8df2312d29ded611c2245b43ed884c2ef1015",
+  "order": [
+    "B08",
+    "B07",
+    "B06",
+    "B05",
+    "B04",
+    "B03",
+    "B02",
+    "B01"
+  ],
+  "next_task_index": 0,
+  "active_task": "B08",
+  "status": "running",
+  "created_at": "2026-10-01T01:55:36.670230+00:00",
+  "task_usage": {
+    "B08": {
+      "discovery_calls": 1,
+      "source_bytes_read": 0,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T01:56:41.237657+00:00",
+          "op": "index:query",
+          "source_bytes": 0,
+          "value": "mobile logout duplicate overlapping",
+          "limit": 8,
+          "output_bytes": 2169
+        }
+      ],
+      "index_queried": true
+    }
+  },
+  "results": [],
+  "task_started_at": "2026-10-01T01:56:32.720016+00:00"
+}

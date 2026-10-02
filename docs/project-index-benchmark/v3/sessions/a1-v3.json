@@ -1,0 +1,507 @@
+{
+  "schema_version": 2,
+  "session_id": "a1-v3",
+  "condition": "A",
+  "replicate": 1,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "discovery_budget": {
+    "max_calls_per_task": 12,
+    "max_source_bytes_per_task": 50000,
+    "max_wall_seconds_per_task": 300.0
+  },
+  "prompt_hash": "sha256:dadf5eb4a66f77e0d1e42dc7f90fbda52e6a528d151a8a61018c0b899e7e3bb4",
+  "condition_prompt_hash": "sha256:05b5351299d44822930d8d23afaaff3cd970d35bf99951374c236bd772dfe6b2",
+  "session_prompt_hash": "sha256:50e1f839c30540d7d424b3208c365bf9b10f93a3f40413754277977965b5228b",
+  "source_tree_hash": "sha256:61f7f3f0d849be57d12a758d09a7d6fa9332b0e712f4d48e7ba0206536eec547",
+  "project_index_graph_hash": "sha256:a2f535de67b2010503b0b6838912309ada2f60a8f4a7533a4390c9839cb0d8c1",
+  "attestation_hash": "sha256:74f02fbb1a9a63705a4703ccc31bbed8081d90db123cde613b63c2c7fcd83884",
+  "order": [
+    "B01",
+    "B02",
+    "B03",
+    "B04",
+    "B05",
+    "B06",
+    "B07",
+    "B08"
+  ],
+  "next_task_index": 8,
+  "active_task": null,
+  "status": "complete",
+  "created_at": "2026-10-01T02:01:57.574099+00:00",
+  "task_usage": {
+    "B01": {
+      "discovery_calls": 5,
+      "source_bytes_read": 46214,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:02:32.195591+00:00",
+          "op": "search",
+          "source_bytes": 10794,
+          "pattern": "player_downed",
+          "paths": [
+            "services",
+            "agents",
+            "tests",
+            "state.py",
+            "main.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:02:43.782716+00:00",
+          "op": "read",
+          "source_bytes": 4557,
+          "path": "agents/combat.py",
+          "start": 1,
+          "lines": 120
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T02:02:44.000965+00:00",
+          "op": "read",
+          "source_bytes": 4193,
+          "path": "tests/test_transicoes_criticas_b1.py",
+          "start": 1,
+          "lines": 120
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T02:02:49.632330+00:00",
+          "op": "search",
+          "source_bytes": 22957,
+          "pattern": "death_pending",
+          "paths": [
+            "agents",
+            "services",
+            "tests"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 5,
+          "at": "2026-10-01T02:02:49.823130+00:00",
+          "op": "search",
+          "source_bytes": 3713,
+          "pattern": "false",
+          "paths": [
+            "agents",
+            "services",
+            "tests/test_transicoes_criticas_b1.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B02": {
+      "discovery_calls": 1,
+      "source_bytes_read": 28962,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:03:48.166872+00:00",
+          "op": "search",
+          "source_bytes": 28962,
+          "pattern": "alias",
+          "paths": [
+            "services",
+            "agents",
+            "tests",
+            "api.py",
+            "persistence.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B03": {
+      "discovery_calls": 2,
+      "source_bytes_read": 33990,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:04:07.687889+00:00",
+          "op": "search",
+          "source_bytes": 21153,
+          "pattern": "receipt",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "api.py",
+            "inventory.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:04:07.905654+00:00",
+          "op": "search",
+          "source_bytes": 12837,
+          "pattern": "reward",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "inventory.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B04": {
+      "discovery_calls": 2,
+      "source_bytes_read": 28888,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:04:29.444796+00:00",
+          "op": "search",
+          "source_bytes": 2402,
+          "pattern": "unconscious",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "api.py",
+            "main.py",
+            "state.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:04:29.673192+00:00",
+          "op": "search",
+          "source_bytes": 26486,
+          "pattern": "death_pending",
+          "paths": [
+            "api.py",
+            "agents",
+            "services",
+            "tests"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B05": {
+      "discovery_calls": 2,
+      "source_bytes_read": 6998,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:04:56.895711+00:00",
+          "op": "search",
+          "source_bytes": 692,
+          "pattern": "raw_json",
+          "paths": [
+            "agents",
+            "services",
+            "tests",
+            "llm_setup.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:04:57.119047+00:00",
+          "op": "search",
+          "source_bytes": 6306,
+          "pattern": "JSON",
+          "paths": [
+            "services",
+            "agents",
+            "tests",
+            "llm_setup.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B06": {
+      "discovery_calls": 1,
+      "source_bytes_read": 43518,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:05:18.998499+00:00",
+          "op": "search",
+          "source_bytes": 43518,
+          "pattern": "art_",
+          "paths": [
+            "services",
+            "tests",
+            "api.py",
+            "persistence.py",
+            "state.py"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B07": {
+      "discovery_calls": 3,
+      "source_bytes_read": 35779,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:05:39.834832+00:00",
+          "op": "search",
+          "source_bytes": 7985,
+          "pattern": "divergent",
+          "paths": [
+            "api.py",
+            "infrastructure",
+            "services",
+            "tests"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:05:40.044659+00:00",
+          "op": "search",
+          "source_bytes": 7675,
+          "pattern": "idempotent",
+          "paths": [
+            "api.py",
+            "infrastructure",
+            "services",
+            "tests"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T02:05:40.270670+00:00",
+          "op": "search",
+          "source_bytes": 20119,
+          "pattern": "request_hash",
+          "paths": [
+            "api.py",
+            "infrastructure",
+            "tests"
+          ],
+          "context": 2
+        }
+      ]
+    },
+    "B08": {
+      "discovery_calls": 6,
+      "source_bytes_read": 7265,
+      "trace": [
+        {
+          "sequence": 1,
+          "at": "2026-10-01T02:06:06.981223+00:00",
+          "op": "search",
+          "source_bytes": 3201,
+          "pattern": "logout",
+          "paths": [
+            "web/src",
+            "web/e2e",
+            "tests",
+            "api.py"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 2,
+          "at": "2026-10-01T02:06:07.189087+00:00",
+          "op": "search",
+          "source_bytes": 1221,
+          "pattern": "mobile",
+          "paths": [
+            "web/src",
+            "web/e2e",
+            "tests"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 3,
+          "at": "2026-10-01T02:06:07.393902+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "signOut",
+          "paths": [
+            "web/src",
+            "web/e2e",
+            "tests"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 4,
+          "at": "2026-10-01T02:06:14.021352+00:00",
+          "op": "search",
+          "source_bytes": 543,
+          "pattern": "session-logout",
+          "paths": [
+            "web/src",
+            "web/e2e",
+            "tests"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 5,
+          "at": "2026-10-01T02:06:14.259290+00:00",
+          "op": "search",
+          "source_bytes": 0,
+          "pattern": "nav-actions",
+          "paths": [
+            "web/src",
+            "web/e2e",
+            "tests"
+          ],
+          "context": 2
+        },
+        {
+          "sequence": 6,
+          "at": "2026-10-01T02:06:14.471985+00:00",
+          "op": "search",
+          "source_bytes": 2300,
+          "pattern": "Encerrar sessão",
+          "paths": [
+            "web/src",
+            "web/e2e",
+            "tests"
+          ],
+          "context": 2
+        }
+      ]
+    }
+  },
+  "results": [
+    {
+      "id": "B01",
+      "files": [
+        "agents/combat.py",
+        "services/memory_provenance.py",
+        "services/narrative_evidence.py"
+      ],
+      "tests": [
+        "tests/test_transicoes_criticas_b1.py",
+        "tests/test_balance_early.py"
+      ],
+      "resolution": "Combat records player_downed as a pending terminal transition while provenance and narrative evidence reject death claims until a confirmed memorial event.",
+      "discovery_calls": 5,
+      "source_bytes_read": 46214,
+      "wall_seconds": 81.484
+    },
+    {
+      "id": "B02",
+      "files": [
+        "services/entity_identity.py",
+        "agents/npc.py",
+        "persistence.py"
+      ],
+      "tests": [
+        "tests/test_pre_matrix_contracts.py",
+        "tests/test_npc_identity_grounding.py"
+      ],
+      "resolution": "Runtime NPC aliases are normalized and transitively coalesced into one stable record, then preserved through save and load for conversation and memory lookup.",
+      "discovery_calls": 1,
+      "source_bytes_read": 28962,
+      "wall_seconds": 13.786
+    },
+    {
+      "id": "B03",
+      "files": [
+        "agents/storyteller.py",
+        "services/turn_outcome.py",
+        "services/narrative_evidence.py"
+      ],
+      "tests": [
+        "tests/test_feedback_ledger_recompensas.py",
+        "tests/test_pre_matrix_contracts.py",
+        "tests/test_audit_reward_contracts.py"
+      ],
+      "resolution": "Narrative reward language is stripped or checked against state deltas, while the player receipt is deterministically rendered from the canonical completed-turn outcome.",
+      "discovery_calls": 2,
+      "source_bytes_read": 33990,
+      "wall_seconds": 14.457
+    },
+    {
+      "id": "B04",
+      "files": [
+        "services/actor_lifecycle.py",
+        "agents/action_guard.py",
+        "api.py"
+      ],
+      "tests": [
+        "tests/test_matriz_a_contratos.py",
+        "tests/test_death_flow.py",
+        "tests/test_transicoes_criticas_b1.py"
+      ],
+      "resolution": "Lifecycle evaluation blocks non-recovery actions for an unconscious player, and API mutation boundaries reject every action while death_pending awaits its explicit resolution.",
+      "discovery_calls": 2,
+      "source_bytes_read": 28888,
+      "wall_seconds": 15.453
+    },
+    {
+      "id": "B05",
+      "files": [
+        "llm_setup.py"
+      ],
+      "tests": [
+        "tests/test_routing.py"
+      ],
+      "resolution": "The routed structured-output wrapper extracts a bounded JSON object from a raw model response and validates it locally, avoiding a second provider request when recovery succeeds.",
+      "discovery_calls": 2,
+      "source_bytes_read": 6998,
+      "wall_seconds": 14.096
+    },
+    {
+      "id": "B06",
+      "files": [
+        "state.py",
+        "persistence.py"
+      ],
+      "tests": [
+        "tests/test_art_state_persistence.py"
+      ],
+      "resolution": "Art generation ledger and per-arc budget fields are explicit game state and are deep-copied in both persistence directions to survive save and reload.",
+      "discovery_calls": 1,
+      "source_bytes_read": 43518,
+      "wall_seconds": 13.731
+    },
+    {
+      "id": "B07",
+      "files": [
+        "api.py",
+        "infrastructure/postgres_turns.py",
+        "infrastructure/local_adapters.py"
+      ],
+      "tests": [
+        "tests/test_operation_replay_boundaries.py",
+        "tests/test_audit_browser_local.py"
+      ],
+      "resolution": "Action requests bind an operation ID to a canonical payload hash, returning the completed receipt for an identical replay and rejecting any reused ID with divergent payload or operation metadata.",
+      "discovery_calls": 3,
+      "source_bytes_read": 35779,
+      "wall_seconds": 19.829
+    },
+    {
+      "id": "B08",
+      "files": [
+        "web/src/App.tsx",
+        "web/src/components/PlayScreen.tsx",
+        "web/src/styles.css"
+      ],
+      "tests": [
+        "web/e2e/critical-journeys.spec.ts",
+        "tests/test_audit_browser_local.py"
+      ],
+      "resolution": "The app renders the global logout only outside play while PlayScreen owns its in-game control, and mobile browser coverage asserts the logout and character-sheet controls remain visible without overlap.",
+      "discovery_calls": 6,
+      "source_bytes_read": 7265,
+      "wall_seconds": 23.004
+    }
+  ],
+  "completed_at": "2026-10-01T02:06:29.762601+00:00"
+}

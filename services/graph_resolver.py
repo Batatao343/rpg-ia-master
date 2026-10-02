@@ -5,7 +5,7 @@ Combina o grafo ESTÁTICO autoral (data/graph/) com o estado DINÂMICO da sessã
 (`world_projection` do GameState): base_edges − disabled_edges + dynamic_edges.
 
 Sem estado global mutável além dos caches de leitura; a projection sempre chega
-por parâmetro (vem do GameState). Spec: specs/fase-2.5-codex-world-state.md §3.
+por parâmetro (vem do GameState). Spec: specs/SPEC-001-fase-2.5-codex-world-state.md §3.
 """
 
 from __future__ import annotations

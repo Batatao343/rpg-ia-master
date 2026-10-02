@@ -1,6 +1,6 @@
 """Suíte da spec itens-vivos-e-luz — passivas/ativas de item + sistema de luz.
 
-Offline/determinístico. Ver specs/itens-vivos-e-luz.md.
+Offline/determinístico. Ver specs/SPEC-053-itens-vivos-e-luz.md.
 """
 import random
 

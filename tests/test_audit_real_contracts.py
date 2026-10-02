@@ -7,7 +7,10 @@ from types import SimpleNamespace
 from uuid import uuid4
 
 import pytest
+from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage
+
+load_dotenv(override=True)
 
 pytestmark = pytest.mark.llm_contract
 

@@ -1,0 +1,143 @@
+{
+  "additionalProperties": false,
+  "description": "Compatibility identity for one eval run or stored baseline.",
+  "properties": {
+    "case_selection_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Case Selection Hash",
+      "type": "string"
+    },
+    "dataset_hashes": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Dataset Hashes",
+      "type": "object"
+    },
+    "embedding": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Embedding"
+    },
+    "evaluator_version": {
+      "title": "Evaluator Version",
+      "type": "string"
+    },
+    "metrics_registry_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Metrics Registry Hash",
+      "type": "string"
+    },
+    "metrics_schema_version": {
+      "minimum": 1,
+      "title": "Metrics Schema Version",
+      "type": "integer"
+    },
+    "model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model"
+    },
+    "platform": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Platform"
+    },
+    "product_dirty": {
+      "title": "Product Dirty",
+      "type": "boolean"
+    },
+    "product_sha": {
+      "minLength": 7,
+      "title": "Product Sha",
+      "type": "string"
+    },
+    "product_tree_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Product Tree Hash",
+      "type": "string"
+    },
+    "provider": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider"
+    },
+    "ruler_hashes": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Ruler Hashes",
+      "type": "object"
+    },
+    "schema_version": {
+      "minimum": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "seed": {
+      "title": "Seed",
+      "type": "integer"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "temperature": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Temperature"
+    }
+  },
+  "required": [
+    "schema_version",
+    "evaluator_version",
+    "ruler_hashes",
+    "metrics_schema_version",
+    "metrics_registry_hash",
+    "product_sha",
+    "product_tree_hash",
+    "product_dirty",
+    "dataset_hashes",
+    "case_selection_hash",
+    "seed",
+    "started_at"
+  ],
+  "title": "EvalRunMetadata",
+  "type": "object"
+}

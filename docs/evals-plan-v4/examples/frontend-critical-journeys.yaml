@@ -1,0 +1,50 @@
+schema_version: 1
+journeys:
+  - id: F01
+    name: auth_signup_login
+    hard: true
+  - id: F02
+    name: character_creation
+    hard: true
+  - id: F03
+    name: resume_save
+    hard: true
+  - id: F04
+    name: action_stream
+    hard: true
+  - id: F05
+    name: idempotent_replay
+    hard: true
+  - id: F06
+    name: map_travel
+    hard: true
+  - id: F07
+    name: npc_interaction
+    hard: true
+  - id: F08
+    name: combat_core
+    hard: true
+  - id: F09
+    name: quest_progress
+    hard: true
+  - id: F10
+    name: death_recovery
+    hard: true
+  - id: F11
+    name: level_up
+    hard: true
+  - id: F12
+    name: art_portrait
+    hard: true
+  - id: F13
+    name: session_expiry
+    hard: true
+  - id: F14
+    name: network_failure_recovery
+    hard: true
+  - id: F15
+    name: game_switch_inflight
+    hard: true
+  - id: F16
+    name: responsive_navigation
+    hard: true

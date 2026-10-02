@@ -1,0 +1,81 @@
+name: eval-protected
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Bounded protected gate
+        required: true
+        type: choice
+        options: [real-provider-short, private-holdout]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eval-protected-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  real-provider-short:
+    if: inputs.mode == 'real-provider-short'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: eval-provider
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --extra openai --extra anthropic
+      - name: Require protected provider key
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: test -n "$GOOGLE_API_KEY"
+      - name: Run bounded real-provider contracts
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: >-
+          uv run python scripts/run_llm_contract_gate.py
+          --max-requests 20 --max-cost-usd 0.20
+          --junitxml readiness_artifacts/provider/junit.xml
+          --output readiness_artifacts/provider/manifest.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-provider-short-${{ github.run_id }}-${{ github.run_attempt }}
+          path: readiness_artifacts/provider/
+          if-no-files-found: error
+
+  private-holdout:
+    if: inputs.mode == 'private-holdout'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: eval-holdout
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Require private companion configuration
+        env:
+          HOLDOUT_REPOSITORY: ${{ vars.HOLDOUT_REPOSITORY }}
+          HOLDOUT_TOKEN: ${{ secrets.HOLDOUT_REPOSITORY_TOKEN }}
+        run: test -n "$HOLDOUT_REPOSITORY" && test -n "$HOLDOUT_TOKEN"
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ vars.HOLDOUT_REPOSITORY }}
+          token: ${{ secrets.HOLDOUT_REPOSITORY_TOKEN }}
+          path: private-holdout
+          persist-credentials: false
+      - run: uv sync
+      - name: Run private holdout without case-level output
+        run: >-
+          uv run python private-holdout/run_holdout.py
+          --product-root .
+          --output readiness_artifacts/holdout/aggregate.json
+      - run: >-
+          uv run python scripts/validate_holdout_aggregate.py
+          readiness_artifacts/holdout/aggregate.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: private-holdout-aggregate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: readiness_artifacts/holdout/aggregate.json
+          if-no-files-found: error

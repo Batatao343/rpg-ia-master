@@ -175,7 +175,7 @@ Nenhuma dessas recomendações foi implementada neste diagnóstico.
 ## Remediação entregue
 
 Os achados autorizados foram implementados pela spec
-[remediacao-playtest-real-100t](../specs/remediacao-playtest-real-100t.md):
+[remediacao-playtest-real-100t](../specs/SPEC-120-remediacao-playtest-real-100t.md):
 
 - watchdog rejeita resultado entregue depois do deadline absoluto, inclusive
   após salto do relógio/suspensão;

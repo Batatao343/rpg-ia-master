@@ -1,6 +1,6 @@
 """Fase 7.1 — lint de conteúdo (validadores puros + CLI + gate nos dados reais).
 
-Spec: specs/fase-7.1-validadores-conteudo.md.
+Spec: specs/SPEC-022-fase-7.1-validadores-conteudo.md.
 Fixtures em tmp_path; o gate `test_repo_content_sem_erros` roda nos dados reais.
 """
 

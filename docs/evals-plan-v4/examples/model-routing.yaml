@@ -1,0 +1,39 @@
+version: 1
+principle: minimum_sufficient_model
+models:
+  luna:
+    id: gpt-5.6-luna
+    role: mechanical_read_transform_report
+  terra:
+    id: gpt-5.6-terra
+    role: default_bounded_implementation
+  sol:
+    id: gpt-5.6-sol
+    role: complex_cross_domain_debug_review
+  astra:
+    id: gpt-6-astra
+    role: scarce_architecture_and_eval_semantics_review
+specs:
+  SPEC-163: {executor: terra, delegates: [luna], review: null}
+  SPEC-164: {executor: terra, delegates: [luna], review: sol}
+  SPEC-165: {executor: sol, delegates: [], review: astra}
+  SPEC-166: {executor: terra, delegates: [luna], review: sol}
+  SPEC-167: {executor: terra, delegates: [luna], review: sol}
+  SPEC-168: {executor: terra, delegates: [luna], review: escalation_only}
+  SPEC-169: {executor: terra, delegates: [luna], review: escalation_only}
+  SPEC-170: {executor: sol, delegates: [terra, luna], review: astra}
+  SPEC-171: {executor: sol, delegates: [terra, luna], review: astra}
+  SPEC-172: {executor: terra, delegates: [luna], review: escalation_only}
+  SPEC-173: {executor: terra, delegates: [luna], review: conditional_sol}
+  SPEC-174: {executor: luna, delegates: [], review: null, product_changes: forbidden}
+  SPEC-175: {executor: terra, delegates: [luna], review: sol}
+escalation:
+  order: [luna, terra, sol, astra]
+  conditions:
+    - two_coherent_attempts_fail_nonlocally
+    - cross_domain_state_ownership
+    - concurrency_transaction_retry_idempotency_ambiguity
+    - expected_behavior_not_derivable
+    - architecture_redefinition_required
+review_unavailable: MODEL_HANDOFF_REQUIRED
+long_run: explicit_user_or_future_approved_spec_only

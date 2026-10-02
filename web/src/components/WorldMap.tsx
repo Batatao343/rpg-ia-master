@@ -18,6 +18,7 @@ export function WorldMap({
   overlays,
   currentTurn = 0,
   blockedRoutes = [],
+  onTravel,
 }: {
   visited: string[];
   currentId: string;
@@ -27,6 +28,7 @@ export function WorldMap({
   overlays?: MapOverlays;
   currentTurn?: number;
   blockedRoutes?: Array<{ a: string; b: string }>; // Fase 6.1
+  onTravel?: (location: MapLocation) => void;
 }) {
   const [map, setMap] = useState<WorldMapData | null>(null);
 
@@ -105,12 +107,16 @@ export function WorldMap({
             + `\n${loc.lore_seed}`
           : "Região inexplorada";
         return (
-          <div
+          <button
+            type="button"
             key={loc.id}
             className={cls}
             data-danger={danger}
             style={{ left: loc.coords.x + "%", top: loc.coords.y + "%" }}
             title={title}
+            aria-label={known ? `${loc.name}${isCurrent ? " (local atual)" : ""}` : "Região inexplorada"}
+            disabled={!known || isCurrent || !onTravel}
+            onClick={() => onTravel?.(loc)}
           >
             <span className="worldmap__dot" />
             <span className="worldmap__label">
@@ -119,7 +125,7 @@ export function WorldMap({
               {threatHint ? "⚠ " : ""}
               {known ? loc.name : "???"}
             </span>
-          </div>
+          </button>
         );
       })}
       </div>

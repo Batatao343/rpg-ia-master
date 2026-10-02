@@ -1,6 +1,6 @@
 """Spec mapa-sublocais — travel_times por conexão + camada interior.
 
-Spec: specs/mapa-sublocais-viagem-variavel.md.
+Spec: specs/SPEC-027-mapa-sublocais-viagem-variavel.md.
 """
 
 from __future__ import annotations

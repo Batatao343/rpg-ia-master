@@ -1,6 +1,6 @@
 """Suíte da spec polish-prosa — anti-repetição, voz, menu de opções.
 
-Offline/determinístico. Ver specs/polish-prosa.md.
+Offline/determinístico. Ver specs/SPEC-043-polish-prosa.md.
 """
 from langchain_core.messages import AIMessage, HumanMessage
 

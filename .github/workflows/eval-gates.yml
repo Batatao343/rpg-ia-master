@@ -1,0 +1,144 @@
+name: eval-gates
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scope:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.scope.outputs.backend }}
+      frontend: ${{ steps.scope.outputs.frontend }}
+      protected: ${{ steps.scope.outputs.protected }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync
+      - id: scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: >-
+          uv run python scripts/ci_eval_scope.py
+          --base "$BASE_SHA" --head "$HEAD_SHA"
+          --manifest readiness_artifacts/evals/change-scope.json
+          --github-output "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eval-change-scope
+          path: readiness_artifacts/evals/change-scope.json
+          if-no-files-found: error
+
+  protected-evaluator-review:
+    needs: scope
+    if: needs.scope.outputs.protected == 'true'
+    runs-on: ubuntu-latest
+    environment: eval-governance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: eval-change-scope
+          path: readiness_artifacts/evals
+      - name: Require guarded evaluator approval
+        env:
+          EVALUATOR_CHANGE_APPROVED: ${{ vars.EVALUATOR_CHANGE_APPROVED }}
+        run: >-
+          python scripts/verify_protected_eval_change.py
+          readiness_artifacts/evals/change-scope.json
+          --approved "$EVALUATOR_CHANGE_APPROVED"
+
+  deterministic-evals:
+    needs: scope
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync
+      - run: uv run python -m evals.core.governance check --root .
+      - run: uv run python -m project_index check
+      - run: uv run pytest tests/test_eval_governance.py tests/test_eval_harness.py
+      - run: >-
+          uv run python -m evals run
+          --suite state_rules --suite routing
+          --suite memory_write --suite memory_retrieval
+          --suite context_grounding --suite generation_boundary
+          --suite narrative_claims
+          --run-id ci-${{ github.run_id }}-${{ github.run_attempt }}
+          --output readiness_artifacts/evals
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deterministic-evals-${{ github.run_id }}-${{ github.run_attempt }}
+          path: readiness_artifacts/evals/
+          if-no-files-found: error
+
+  backend-selective:
+    needs: scope
+    if: needs.scope.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync
+      - run: >-
+          uv run pytest
+          tests/test_eval_state_rules.py tests/test_eval_routing.py
+          tests/test_eval_memory_context.py tests/test_eval_narrative_npc.py
+      - run: uv run python -m playtest run --all --turns 3
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backend-selective-${{ github.run_id }}-${{ github.run_attempt }}
+          path: playtest_runs/
+          if-no-files-found: error
+
+  frontend-selective:
+    needs: scope
+    if: needs.scope.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: uv sync
+      - run: npm ci
+        working-directory: web
+      - run: npx playwright install --with-deps chromium
+        working-directory: web
+      - run: npm test
+        working-directory: web
+      - run: npm run build
+        working-directory: web
+      - run: npm run test:e2e
+        working-directory: web
+      - run: >-
+          uv run python scripts/frontend_eval_report.py
+          web/test-results/results.json
+          --output readiness_artifacts/evals/frontend.json --check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frontend-evals-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            readiness_artifacts/evals/frontend.json
+            web/test-results/
+          if-no-files-found: error

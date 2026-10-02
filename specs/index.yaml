@@ -1,0 +1,3112 @@
+schema_version: 1
+source_sha: cadbdd1013022c98f506ee335fa9072efcc9df6c
+history_shallow: false
+specs:
+- id: SPEC-001
+  slug: fase-2.5-codex-world-state
+  status: done
+  path: specs/SPEC-001-fase-2.5-codex-world-state.md
+  created_commit: 07973b8a315afca01741eb3fb5dcf0766a4a6834
+  created_at: '2026-07-02T22:41:11-03:00'
+  completed_commit: 07973b8a315afca01741eb3fb5dcf0766a4a6834
+  completed_at: '2026-07-02T22:41:11-03:00'
+  completed_order: 1
+  depends_on: []
+  depends_on_raw:
+  - — (primeira spec da série Mundo Vivo v1)
+  depends_on_unresolved:
+  - — (primeira spec da série Mundo Vivo v1)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-002
+  slug: fase-2.5b-valoria-dados-mecanicos
+  status: done
+  path: specs/SPEC-002-fase-2.5b-valoria-dados-mecanicos.md
+  created_commit: 07973b8a315afca01741eb3fb5dcf0766a4a6834
+  created_at: '2026-07-02T22:41:11-03:00'
+  completed_commit: 4a0d067f64023aeb7a13a1489af16dd9f1276bcb
+  completed_at: '2026-07-14T04:11:34-03:00'
+  completed_order: 36
+  depends_on:
+  - SPEC-001
+  depends_on_raw:
+  - '[SPEC-001-fase-2.5-codex-world-state.md](SPEC-001-fase-2.5-codex-world-state.md)'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-003
+  slug: fase-2.6-structured-events
+  status: done
+  path: specs/SPEC-003-fase-2.6-structured-events.md
+  created_commit: 07973b8a315afca01741eb3fb5dcf0766a4a6834
+  created_at: '2026-07-02T22:41:11-03:00'
+  completed_commit: 1551667ecb084f6a414154ddd48f1ab371ccec72
+  completed_at: '2026-07-02T23:09:07-03:00'
+  completed_order: 2
+  depends_on:
+  - SPEC-001
+  depends_on_raw:
+  - '[SPEC-001-fase-2.5-codex-world-state.md](SPEC-001-fase-2.5-codex-world-state.md)
+    (`done`)'
+  depends_on_unresolved:
+  - '[SPEC-001-fase-2.5-codex-world-state.md](SPEC-001-fase-2.5-codex-world-state.md)
+    (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-004
+  slug: fase-2.7-rules-engine
+  status: done
+  path: specs/SPEC-004-fase-2.7-rules-engine.md
+  created_commit: 07973b8a315afca01741eb3fb5dcf0766a4a6834
+  created_at: '2026-07-02T22:41:11-03:00'
+  completed_commit: 232e03f0a3565d6a44db904e94e9729dfc400abe
+  completed_at: '2026-07-02T23:42:23-03:00'
+  completed_order: 3
+  depends_on:
+  - SPEC-003
+  depends_on_raw:
+  - '[SPEC-003-fase-2.6-structured-events.md](SPEC-003-fase-2.6-structured-events.md)
+    (`done`)'
+  depends_on_unresolved:
+  - '[SPEC-003-fase-2.6-structured-events.md](SPEC-003-fase-2.6-structured-events.md)
+    (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-005
+  slug: fase-2.8-context-builder
+  status: done
+  path: specs/SPEC-005-fase-2.8-context-builder.md
+  created_commit: 07973b8a315afca01741eb3fb5dcf0766a4a6834
+  created_at: '2026-07-02T22:41:11-03:00'
+  completed_commit: ce391a98691b90afc4d7fa3b43d3fe0b0c81577d
+  completed_at: '2026-07-03T07:00:00-03:00'
+  completed_order: 4
+  depends_on:
+  - SPEC-004
+  depends_on_raw:
+  - '[SPEC-004-fase-2.7-rules-engine.md](SPEC-004-fase-2.7-rules-engine.md) (`done`)'
+  depends_on_unresolved:
+  - '[SPEC-004-fase-2.7-rules-engine.md](SPEC-004-fase-2.7-rules-engine.md) (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-006
+  slug: fase-3.1-diario-cronica
+  status: done
+  path: specs/SPEC-006-fase-3.1-diario-cronica.md
+  created_commit: 6caaef3a34cde3142217dfd60e81e0d95a335990
+  created_at: '2026-07-03T07:56:40-03:00'
+  completed_commit: 46387699422f7dcfb4ad45093ff33849d656425d
+  completed_at: '2026-07-03T14:12:44-03:00'
+  completed_order: 5
+  depends_on:
+  - SPEC-003
+  depends_on_raw:
+  - '[SPEC-003-fase-2.6-structured-events.md](SPEC-003-fase-2.6-structured-events.md)
+    (`done`),'
+  depends_on_unresolved:
+  - '[SPEC-003-fase-2.6-structured-events.md](SPEC-003-fase-2.6-structured-events.md)
+    (`done`),'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-007
+  slug: fase-3.2-conhecimento-revelavel
+  status: done
+  path: specs/SPEC-007-fase-3.2-conhecimento-revelavel.md
+  created_commit: 6caaef3a34cde3142217dfd60e81e0d95a335990
+  created_at: '2026-07-03T07:56:40-03:00'
+  completed_commit: 5e4aac168844d318e78a2ed5cdaa33f4222ee400
+  completed_at: '2026-07-03T15:03:09-03:00'
+  completed_order: 6
+  depends_on:
+  - SPEC-001
+  depends_on_raw:
+  - '[SPEC-001-fase-2.5-codex-world-state.md](SPEC-001-fase-2.5-codex-world-state.md)
+    (`done`),'
+  depends_on_unresolved:
+  - '[SPEC-001-fase-2.5-codex-world-state.md](SPEC-001-fase-2.5-codex-world-state.md)
+    (`done`),'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-008
+  slug: fase-3.3-quest-log
+  status: done
+  path: specs/SPEC-008-fase-3.3-quest-log.md
+  created_commit: 6caaef3a34cde3142217dfd60e81e0d95a335990
+  created_at: '2026-07-03T07:56:40-03:00'
+  completed_commit: 8d24bf21c099cedbb48ebbf0b8e772dfc440837b
+  completed_at: '2026-07-03T18:29:38-03:00'
+  completed_order: 7
+  depends_on:
+  - SPEC-003
+  depends_on_raw:
+  - '[SPEC-003-fase-2.6-structured-events.md](SPEC-003-fase-2.6-structured-events.md)
+    (`done`),'
+  depends_on_unresolved:
+  - '[SPEC-003-fase-2.6-structured-events.md](SPEC-003-fase-2.6-structured-events.md)
+    (`done`),'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-009
+  slug: fase-3.4-visualizacao-estado
+  status: done
+  path: specs/SPEC-009-fase-3.4-visualizacao-estado.md
+  created_commit: 6caaef3a34cde3142217dfd60e81e0d95a335990
+  created_at: '2026-07-03T07:56:40-03:00'
+  completed_commit: ff6f14522ad63b83f68717f2e42553f72d148f69
+  completed_at: '2026-07-03T19:42:59-03:00'
+  completed_order: 8
+  depends_on:
+  - SPEC-004
+  depends_on_raw:
+  - '[SPEC-004-fase-2.7-rules-engine.md](SPEC-004-fase-2.7-rules-engine.md) (`done`),'
+  depends_on_unresolved:
+  - '[SPEC-004-fase-2.7-rules-engine.md](SPEC-004-fase-2.7-rules-engine.md) (`done`),'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-010
+  slug: fase-4.1-progressao
+  status: done
+  path: specs/SPEC-010-fase-4.1-progressao.md
+  created_commit: 281fe9795002708181cd99d2d4e724dd055959de
+  created_at: '2026-07-03T20:45:51-03:00'
+  completed_commit: 46672aaad16846d86b8ee138660d3a6d34b6cd5f
+  completed_at: '2026-07-05T00:32:31-03:00'
+  completed_order: 10
+  depends_on: []
+  depends_on_raw:
+  - Fase 2.6 (structured events, `done`) · Fase 3.1 (crônica, `done`)
+  depends_on_unresolved:
+  - Fase 2.6 (structured events, `done`) · Fase 3.1 (crônica, `done`)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-011
+  slug: fase-4.1b-arvores-valoria
+  status: done
+  path: specs/SPEC-011-fase-4.1b-arvores-valoria.md
+  created_commit: 281fe9795002708181cd99d2d4e724dd055959de
+  created_at: '2026-07-03T20:45:51-03:00'
+  completed_commit: b71a142a18418e5fbd2c2dc31f9fb927ef7a7a7a
+  completed_at: '2026-07-04T10:04:02-03:00'
+  completed_order: 9
+  depends_on: []
+  depends_on_raw:
+  - Fase 4.1 Etapas 1–2a (schema da árvore + validadores) — o schema é
+  depends_on_unresolved:
+  - Fase 4.1 Etapas 1–2a (schema da árvore + validadores) — o schema é
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-012
+  slug: fase-4.2-buffs-mecanicos
+  status: done
+  path: specs/SPEC-012-fase-4.2-buffs-mecanicos.md
+  created_commit: 281fe9795002708181cd99d2d4e724dd055959de
+  created_at: '2026-07-03T20:45:51-03:00'
+  completed_commit: 46672aaad16846d86b8ee138660d3a6d34b6cd5f
+  completed_at: '2026-07-05T00:32:31-03:00'
+  completed_order: 11
+  depends_on: []
+  depends_on_raw:
+  - Fase 4.1 (schema `effects` tipado nas habilidades; árvores da 4.1b o preenchem)
+  depends_on_unresolved:
+  - Fase 4.1 (schema `effects` tipado nas habilidades; árvores da 4.1b o preenchem)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-013
+  slug: fase-4.3-inventario-equipamento
+  status: done
+  path: specs/SPEC-013-fase-4.3-inventario-equipamento.md
+  created_commit: 281fe9795002708181cd99d2d4e724dd055959de
+  created_at: '2026-07-03T20:45:51-03:00'
+  completed_commit: 46672aaad16846d86b8ee138660d3a6d34b6cd5f
+  completed_at: '2026-07-05T00:32:31-03:00'
+  completed_order: 12
+  depends_on: []
+  depends_on_raw:
+  - Fase 4.1 (padrão de ids canônicos + backfill em persistence)
+  depends_on_unresolved:
+  - Fase 4.1 (padrão de ids canônicos + backfill em persistence)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-014
+  slug: fase-4.4-economia-deterministica
+  status: done
+  path: specs/SPEC-014-fase-4.4-economia-deterministica.md
+  created_commit: 281fe9795002708181cd99d2d4e724dd055959de
+  created_at: '2026-07-03T20:45:51-03:00'
+  completed_commit: 46672aaad16846d86b8ee138660d3a6d34b6cd5f
+  completed_at: '2026-07-05T00:32:31-03:00'
+  completed_order: 13
+  depends_on: []
+  depends_on_raw:
+  - Fase 4.3 (inventário estruturado `{id, qty}` + stacks)
+  depends_on_unresolved:
+  - Fase 4.3 (inventário estruturado `{id, qty}` + stacks)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-015
+  slug: fase-4.5-party-aliados
+  status: done
+  path: specs/SPEC-015-fase-4.5-party-aliados.md
+  created_commit: 281fe9795002708181cd99d2d4e724dd055959de
+  created_at: '2026-07-03T20:45:51-03:00'
+  completed_commit: 46672aaad16846d86b8ee138660d3a6d34b6cd5f
+  completed_at: '2026-07-05T00:32:31-03:00'
+  completed_order: 14
+  depends_on: []
+  depends_on_raw:
+  - Fase 4.2 (condições/modificadores simétricos — aliado usa o mesmo motor)
+  depends_on_unresolved:
+  - Fase 4.2 (condições/modificadores simétricos — aliado usa o mesmo motor)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-016
+  slug: fase-4.6-dificuldade-ia-morte
+  status: done
+  path: specs/SPEC-016-fase-4.6-dificuldade-ia-morte.md
+  created_commit: 281fe9795002708181cd99d2d4e724dd055959de
+  created_at: '2026-07-03T20:45:51-03:00'
+  completed_commit: 46672aaad16846d86b8ee138660d3a6d34b6cd5f
+  completed_at: '2026-07-05T00:32:31-03:00'
+  completed_order: 15
+  depends_on: []
+  depends_on_raw:
+  - Fase 4.1 (nível do player p/ orçamento) · 4.2 (condições — habilidades de inimigo
+    aplicam) · 4.5 (party no orçamento de encontro)
+  depends_on_unresolved:
+  - Fase 4.1 (nível do player p/ orçamento) · 4.2 (condições — habilidades de inimigo
+    aplicam) · 4.5 (party no orçamento de encontro)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-017
+  slug: fase-6.1-economia-viva
+  status: done
+  path: specs/SPEC-017-fase-6.1-economia-viva.md
+  created_commit: e213cafb207f74b948f83fe402ada11fc2d6ae6e
+  created_at: '2026-07-05T01:11:11-03:00'
+  completed_commit: c9251eb15cd68a46dd29db8b972bfcf807e4081b
+  completed_at: '2026-07-05T14:36:20-03:00'
+  completed_order: 16
+  depends_on: []
+  depends_on_raw:
+  - Fase 4.4 (economia determinística, `done`) · Fase 2.6 (pipeline de eventos, `done`)
+  depends_on_unresolved:
+  - Fase 4.4 (economia determinística, `done`) · Fase 2.6 (pipeline de eventos, `done`)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-018
+  slug: fase-6.2-itens-unicos
+  status: done
+  path: specs/SPEC-018-fase-6.2-itens-unicos.md
+  created_commit: e213cafb207f74b948f83fe402ada11fc2d6ae6e
+  created_at: '2026-07-05T01:11:11-03:00'
+  completed_commit: c9251eb15cd68a46dd29db8b972bfcf807e4081b
+  completed_at: '2026-07-05T14:36:20-03:00'
+  completed_order: 17
+  depends_on: []
+  depends_on_raw:
+  - Fase 4.3 (inventário estruturado) · 4.4 (loot tables/mercadores) · 2.6 (event_log)
+  depends_on_unresolved:
+  - Fase 4.3 (inventário estruturado) · 4.4 (loot tables/mercadores) · 2.6 (event_log)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-019
+  slug: fase-6.3-migracao-de-monstros
+  status: done
+  path: specs/SPEC-019-fase-6.3-migracao-de-monstros.md
+  created_commit: e213cafb207f74b948f83fe402ada11fc2d6ae6e
+  created_at: '2026-07-05T01:11:11-03:00'
+  completed_commit: c9251eb15cd68a46dd29db8b972bfcf807e4081b
+  completed_at: '2026-07-05T14:36:20-03:00'
+  completed_order: 18
+  depends_on: []
+  depends_on_raw:
+  - Fase 2.5b (pick_encounter_enemy/behavior) · 3.2 (bestiary_knowledge) · 4.4 (loot
+    tables) · 4.6 (fill_encounter)
+  depends_on_unresolved:
+  - Fase 2.5b (pick_encounter_enemy/behavior) · 3.2 (bestiary_knowledge) · 4.4 (loot
+    tables) · 4.6 (fill_encounter)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-020
+  slug: fase-6.4-encontros-sistemicos
+  status: done
+  path: specs/SPEC-020-fase-6.4-encontros-sistemicos.md
+  created_commit: 5cfb6e9b4b79542e8d880bedea1ccc013994b87c
+  created_at: '2026-07-05T01:13:31-03:00'
+  completed_commit: c9251eb15cd68a46dd29db8b972bfcf807e4081b
+  completed_at: '2026-07-05T14:36:20-03:00'
+  completed_order: 19
+  depends_on: []
+  depends_on_raw:
+  - Fase 4.6 (orçamento de encontro, `done`) · 6.3 (sorteio ponderado — integrar,
+    não duplicar)
+  depends_on_unresolved:
+  - Fase 4.6 (orçamento de encontro, `done`) · 6.3 (sorteio ponderado — integrar,
+    não duplicar)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-021
+  slug: fase-6.5-clima-com-efeito
+  status: done
+  path: specs/SPEC-021-fase-6.5-clima-com-efeito.md
+  created_commit: 5cfb6e9b4b79542e8d880bedea1ccc013994b87c
+  created_at: '2026-07-05T01:13:31-03:00'
+  completed_commit: c9251eb15cd68a46dd29db8b972bfcf807e4081b
+  completed_at: '2026-07-05T14:36:20-03:00'
+  completed_order: 20
+  depends_on: []
+  depends_on_raw:
+  - Fase 0 (relógio/período) · 4.2 (condições tipadas) · 6.4 (detecção — clima modifica)
+  depends_on_unresolved:
+  - Fase 0 (relógio/período) · 4.2 (condições tipadas) · 6.4 (detecção — clima modifica)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-022
+  slug: fase-7.1-validadores-conteudo
+  status: done
+  path: specs/SPEC-022-fase-7.1-validadores-conteudo.md
+  created_commit: 8b8e2d33e984f47a792a98a57b774a59794cf45b
+  created_at: '2026-07-05T21:40:08-03:00'
+  completed_commit: 8b8e2d33e984f47a792a98a57b774a59794cf45b
+  completed_at: '2026-07-05T21:40:08-03:00'
+  completed_order: 21
+  depends_on: []
+  depends_on_raw:
+  - Fase 2.5 (Codex estruturado + grafo) `done`
+  depends_on_unresolved:
+  - Fase 2.5 (Codex estruturado + grafo) `done`
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-023
+  slug: fase-7.2-autoria-curadoria
+  status: done
+  path: specs/SPEC-023-fase-7.2-autoria-curadoria.md
+  created_commit: 8b8e2d33e984f47a792a98a57b774a59794cf45b
+  created_at: '2026-07-05T21:40:08-03:00'
+  completed_commit: 8b8e2d33e984f47a792a98a57b774a59794cf45b
+  completed_at: '2026-07-05T21:40:08-03:00'
+  completed_order: 22
+  depends_on: []
+  depends_on_raw:
+  - 7.1 (validadores) `done`
+  depends_on_unresolved:
+  - 7.1 (validadores) `done`
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-024
+  slug: fase-7.3-npc-segredos
+  status: done
+  path: specs/SPEC-024-fase-7.3-npc-segredos.md
+  created_commit: 8b8e2d33e984f47a792a98a57b774a59794cf45b
+  created_at: '2026-07-05T21:40:08-03:00'
+  completed_commit: 8b8e2d33e984f47a792a98a57b774a59794cf45b
+  completed_at: '2026-07-05T21:40:08-03:00'
+  completed_order: 23
+  depends_on: []
+  depends_on_raw:
+  - 7.1 (validadores) `done`; 7.2 (overrides/idempotência do migrate) `done`
+  depends_on_unresolved:
+  - 7.1 (validadores) `done`; 7.2 (overrides/idempotência do migrate) `done`
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-025
+  slug: fase-10-hardening-tecnico
+  status: done
+  path: specs/SPEC-025-fase-10-hardening-tecnico.md
+  created_commit: 287ce8adb07a7c88fe0db5528b3e622a18f0cff6
+  created_at: '2026-07-06T00:11:08-03:00'
+  completed_commit: df018b9652df2e7d80297060688bef95e3fa949a
+  completed_at: '2026-07-06T00:51:58-03:00'
+  completed_order: 24
+  depends_on: []
+  depends_on_raw:
+  - nada bloqueante (motor estável; Fases 2.5–7 `done`)
+  depends_on_unresolved:
+  - nada bloqueante (motor estável; Fases 2.5–7 `done`)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-026
+  slug: fase-11-llm-contract-tests
+  status: done
+  path: specs/SPEC-026-fase-11-llm-contract-tests.md
+  created_commit: 287ce8adb07a7c88fe0db5528b3e622a18f0cff6
+  created_at: '2026-07-06T00:11:08-03:00'
+  completed_commit: df018b9652df2e7d80297060688bef95e3fa949a
+  completed_at: '2026-07-06T00:51:58-03:00'
+  completed_order: 25
+  depends_on: []
+  depends_on_raw:
+  - Fases 2.6/2.8/4.x `done` (contratos que serão testados)
+  depends_on_unresolved:
+  - Fases 2.6/2.8/4.x `done` (contratos que serão testados)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-027
+  slug: mapa-sublocais-viagem-variavel
+  status: done
+  path: specs/SPEC-027-mapa-sublocais-viagem-variavel.md
+  created_commit: 287ce8adb07a7c88fe0db5528b3e622a18f0cff6
+  created_at: '2026-07-06T00:11:08-03:00'
+  completed_commit: df018b9652df2e7d80297060688bef95e3fa949a
+  completed_at: '2026-07-06T00:51:58-03:00'
+  completed_order: 26
+  depends_on: []
+  depends_on_raw:
+  - Fase 2.5b (mapa de Valoria 30 nós) `done`; Fase 6.5 (clima) `done`
+  depends_on_unresolved:
+  - Fase 2.5b (mapa de Valoria 30 nós) `done`; Fase 6.5 (clima) `done`
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-028
+  slug: npcs-3-camadas-traits
+  status: done
+  path: specs/SPEC-028-npcs-3-camadas-traits.md
+  created_commit: 287ce8adb07a7c88fe0db5528b3e622a18f0cff6
+  created_at: '2026-07-06T00:11:08-03:00'
+  completed_commit: df018b9652df2e7d80297060688bef95e3fa949a
+  completed_at: '2026-07-06T00:51:58-03:00'
+  completed_order: 27
+  depends_on: []
+  depends_on_raw:
+  - 2.6 (structured events) `done`; 3.2 (codex do jogador) `done`; 2.8 (context builder)
+    `done`
+  depends_on_unresolved:
+  - 2.6 (structured events) `done`; 3.2 (codex do jogador) `done`; 2.8 (context builder)
+    `done`
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-029
+  slug: fase-5.1-playtest-harness
+  status: done
+  path: specs/SPEC-029-fase-5.1-playtest-harness.md
+  created_commit: ffae055f3a251714563c7db68294478921692657
+  created_at: '2026-07-06T10:38:43-03:00'
+  completed_commit: 13da7110b198433d81e67a52c91b395c948f0b56
+  completed_at: '2026-07-07T04:17:40-03:00'
+  completed_order: 28
+  depends_on: []
+  depends_on_raw:
+  - motor estável (Fases 0–7, 10, 11 `done`); MockLLM da suíte;
+  depends_on_unresolved:
+  - motor estável (Fases 0–7, 10, 11 `done`); MockLLM da suíte;
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-030
+  slug: fase-5.2-invariantes
+  status: done
+  path: specs/SPEC-030-fase-5.2-invariantes.md
+  created_commit: ffae055f3a251714563c7db68294478921692657
+  created_at: '2026-07-06T10:38:43-03:00'
+  completed_commit: 13da7110b198433d81e67a52c91b395c948f0b56
+  completed_at: '2026-07-07T04:17:40-03:00'
+  completed_order: 29
+  depends_on: []
+  depends_on_raw:
+  - 5.1 (harness — hook `on_turn_end`) `done`
+  depends_on_unresolved:
+  - 5.1 (harness — hook `on_turn_end`) `done`
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-031
+  slug: fase-5.3-telemetria-relatorio
+  status: done
+  path: specs/SPEC-031-fase-5.3-telemetria-relatorio.md
+  created_commit: ffae055f3a251714563c7db68294478921692657
+  created_at: '2026-07-06T10:38:43-03:00'
+  completed_commit: 13da7110b198433d81e67a52c91b395c948f0b56
+  completed_at: '2026-07-07T04:17:40-03:00'
+  completed_order: 30
+  depends_on: []
+  depends_on_raw:
+  - 5.1 (harness) `done`; 5.2 (invariantes) `done`;
+  depends_on_unresolved:
+  - 5.1 (harness) `done`; 5.2 (invariantes) `done`;
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-032
+  slug: roteamento-multi-provider
+  status: done
+  path: specs/SPEC-032-roteamento-multi-provider.md
+  created_commit: 74ca91267fb6dbdd37fe30f640d37984fb3eccc0
+  created_at: '2026-07-06T14:21:53-03:00'
+  completed_commit: 13da7110b198433d81e67a52c91b395c948f0b56
+  completed_at: '2026-07-07T04:17:40-03:00'
+  completed_order: 31
+  depends_on: []
+  depends_on_raw:
+  - motor estável (Fases 0–7, 10, 11 `done`); `llm_setup.py`,
+  depends_on_unresolved:
+  - motor estável (Fases 0–7, 10, 11 `done`); `llm_setup.py`,
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-033
+  slug: fix-playtest-achados
+  status: done
+  path: specs/SPEC-033-fix-playtest-achados.md
+  created_commit: f279a80227b1876ad2fdf75eb82b309a73654ae3
+  created_at: '2026-07-13T10:37:57-03:00'
+  completed_commit: f279a80227b1876ad2fdf75eb82b309a73654ae3
+  completed_at: '2026-07-13T10:37:57-03:00'
+  completed_order: 32
+  depends_on: []
+  depends_on_raw:
+  - Fase 5 (harness + invariantes + telemetria) `done`
+  depends_on_unresolved:
+  - Fase 5 (harness + invariantes + telemetria) `done`
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-034
+  slug: balanceamento-early-game
+  status: done
+  path: specs/SPEC-034-balanceamento-early-game.md
+  created_commit: 78198536cd4cd01be91d3aeae716cd45f931cb40
+  created_at: '2026-07-13T15:33:58-03:00'
+  completed_commit: b4b8c44f57ad13e57b7d6f3e95bb8ae62c8ee5b3
+  completed_at: '2026-07-13T21:14:45-03:00'
+  completed_order: 33
+  depends_on:
+  - SPEC-033
+  depends_on_raw:
+  - Fase 5 (harness/invariantes/telemetria) `done`; fix-playtest-achados `done`
+  depends_on_unresolved:
+  - Fase 5 (harness/invariantes/telemetria) `done`; fix-playtest-achados `done`
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-035
+  slug: polish-sessao
+  status: done
+  path: specs/SPEC-035-polish-sessao.md
+  created_commit: 78198536cd4cd01be91d3aeae716cd45f931cb40
+  created_at: '2026-07-13T15:33:58-03:00'
+  completed_commit: b4b8c44f57ad13e57b7d6f3e95bb8ae62c8ee5b3
+  completed_at: '2026-07-13T21:14:45-03:00'
+  completed_order: 34
+  depends_on: []
+  depends_on_raw:
+  - Fase 10 fatia local `done` (save_path/UUID); Fase 3.1 `done` (crônica)
+  depends_on_unresolved:
+  - Fase 10 fatia local `done` (save_path/UUID); Fase 3.1 `done` (crônica)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-036
+  slug: streaming-turno-sse
+  status: done
+  path: specs/SPEC-036-streaming-turno-sse.md
+  created_commit: 78198536cd4cd01be91d3aeae716cd45f931cb40
+  created_at: '2026-07-13T15:33:58-03:00'
+  completed_commit: b4b8c44f57ad13e57b7d6f3e95bb8ae62c8ee5b3
+  completed_at: '2026-07-13T21:14:45-03:00'
+  completed_order: 35
+  depends_on: []
+  depends_on_raw:
+  - Fase 10 fatia local `done` (rate limit/log de turno); roteamento multi-provider
+    `done`
+  depends_on_unresolved:
+  - Fase 10 fatia local `done` (rate limit/log de turno); roteamento multi-provider
+    `done`
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-037
+  slug: beats-visibilidade-ptbr
+  status: done
+  path: specs/SPEC-037-beats-visibilidade-ptbr.md
+  created_commit: c044b5dd68075fbfedb147984bb3d11b44e801b5
+  created_at: '2026-07-16T22:49:49-03:00'
+  completed_commit: 07779ef56e5e0f382035a88d731d627d2cddb52d
+  completed_at: '2026-07-18T00:56:50-03:00'
+  completed_order: 44
+  depends_on: []
+  depends_on_raw:
+  - Fase 7.3 segredos (`done`), Fase 2.8 context builder (`done`)
+  depends_on_unresolved:
+  - Fase 7.3 segredos (`done`), Fase 2.8 context builder (`done`)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-038
+  slug: combate-lifecycle
+  status: done
+  path: specs/SPEC-038-combate-lifecycle.md
+  created_commit: c044b5dd68075fbfedb147984bb3d11b44e801b5
+  created_at: '2026-07-16T22:49:49-03:00'
+  completed_commit: e81492d000261418b28aa6eca32fe41a5f43f1e5
+  completed_at: '2026-07-18T00:27:15-03:00'
+  completed_order: 41
+  depends_on:
+  - SPEC-033
+  depends_on_raw:
+  - fix-playtest-achados (fuga do jogador, `done`)
+  depends_on_unresolved:
+  - fix-playtest-achados (fuga do jogador, `done`)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-039
+  slug: embeddings-provider
+  status: done
+  path: specs/SPEC-039-embeddings-provider.md
+  created_commit: c044b5dd68075fbfedb147984bb3d11b44e801b5
+  created_at: '2026-07-16T22:49:49-03:00'
+  completed_commit: 68fe719cc2aa290b0aee0623a6348761f2f18458
+  completed_at: '2026-07-17T23:40:11-03:00'
+  completed_order: 39
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-040
+  slug: encontros-dedupe
+  status: done
+  path: specs/SPEC-040-encontros-dedupe.md
+  created_commit: c044b5dd68075fbfedb147984bb3d11b44e801b5
+  created_at: '2026-07-16T22:49:49-03:00'
+  completed_commit: cf3b9aa33a9554dadbc3f1f1f689fdc9645905f8
+  completed_at: '2026-07-18T11:12:53-03:00'
+  completed_order: 45
+  depends_on: []
+  depends_on_raw:
+  - npcs-3-camadas (`done`), Fase 2.8 context builder (`done`)
+  depends_on_unresolved:
+  - npcs-3-camadas (`done`), Fase 2.8 context builder (`done`)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-041
+  slug: npc-fallback-sem-alvo
+  status: done
+  path: specs/SPEC-041-npc-fallback-sem-alvo.md
+  created_commit: c044b5dd68075fbfedb147984bb3d11b44e801b5
+  created_at: '2026-07-16T22:49:49-03:00'
+  completed_commit: fd09c4f833763461d7d04104de7a79ca4e47f7c9
+  completed_at: '2026-07-18T00:48:18-03:00'
+  completed_order: 43
+  depends_on: []
+  depends_on_raw:
+  - npcs-3-camadas (`done`), Fase 4.5 party (`done`)
+  depends_on_unresolved:
+  - npcs-3-camadas (`done`), Fase 4.5 party (`done`)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-042
+  slug: playtest-stop-gameover
+  status: done
+  path: specs/SPEC-042-playtest-stop-gameover.md
+  created_commit: c044b5dd68075fbfedb147984bb3d11b44e801b5
+  created_at: '2026-07-16T22:49:49-03:00'
+  completed_commit: d4db14487e92f8a78c51248d095826d7b3c0cd31
+  completed_at: '2026-07-18T00:09:35-03:00'
+  completed_order: 40
+  depends_on: []
+  depends_on_raw:
+  - Fase 5 (`done`)
+  depends_on_unresolved:
+  - Fase 5 (`done`)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-043
+  slug: polish-prosa
+  status: done
+  path: specs/SPEC-043-polish-prosa.md
+  created_commit: c044b5dd68075fbfedb147984bb3d11b44e801b5
+  created_at: '2026-07-16T22:49:49-03:00'
+  completed_commit: a3a2322630306aaba7bdc8d0d7e7c3ee180eb60c
+  completed_at: '2026-07-18T11:23:13-03:00'
+  completed_order: 46
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-044
+  slug: pos-saque-recuperacao
+  status: done
+  path: specs/SPEC-044-pos-saque-recuperacao.md
+  created_commit: c044b5dd68075fbfedb147984bb3d11b44e801b5
+  created_at: '2026-07-16T22:49:49-03:00'
+  completed_commit: a68f8f609b63663a00f31f13755c9c49a3c1d29a
+  completed_at: '2026-07-18T00:39:13-03:00'
+  completed_order: 42
+  depends_on:
+  - SPEC-034
+  - SPEC-038
+  depends_on_raw:
+  - balanceamento-early-game (`done`), combate-lifecycle (ideal)
+  depends_on_unresolved:
+  - balanceamento-early-game (`done`), combate-lifecycle (ideal)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-045
+  slug: inicio-personalizado
+  status: done
+  path: specs/SPEC-045-inicio-personalizado.md
+  created_commit: f674576073f44f3e53f7adb71baf52ce02d86cd7
+  created_at: '2026-07-16T23:38:53-03:00'
+  completed_commit: 8eec77eb926d3defd37784ee55c2ffbdaeb33466
+  completed_at: '2026-07-17T13:44:17-03:00'
+  completed_order: 37
+  depends_on:
+  - SPEC-046
+  depends_on_raw:
+  - onboarding-valoria (apenas o frontend do passo 6; o backend
+  depends_on_unresolved:
+  - onboarding-valoria (apenas o frontend do passo 6; o backend
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-046
+  slug: onboarding-valoria
+  status: done
+  path: specs/SPEC-046-onboarding-valoria.md
+  created_commit: f674576073f44f3e53f7adb71baf52ce02d86cd7
+  created_at: '2026-07-16T23:38:53-03:00'
+  completed_commit: 8eec77eb926d3defd37784ee55c2ffbdaeb33466
+  completed_at: '2026-07-17T13:44:17-03:00'
+  completed_order: 38
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved:
+  - nenhuma
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-047
+  slug: arvores-habilidade-classes
+  status: done
+  path: specs/SPEC-047-arvores-habilidade-classes.md
+  created_commit: 68fe719cc2aa290b0aee0623a6348761f2f18458
+  created_at: '2026-07-17T23:40:11-03:00'
+  completed_commit: 87959e1ae20c85246147db51683888d7f8e3913c
+  completed_at: '2026-07-19T02:53:58-03:00'
+  completed_order: 48
+  depends_on:
+  - SPEC-048
+  depends_on_raw:
+  - '[refatoracao-sistema-classes](SPEC-048-refatoracao-sistema-classes.md) `approved`'
+  depends_on_unresolved:
+  - '[refatoracao-sistema-classes](SPEC-048-refatoracao-sistema-classes.md) `approved`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-048
+  slug: refatoracao-sistema-classes
+  status: done
+  path: specs/SPEC-048-refatoracao-sistema-classes.md
+  created_commit: 68fe719cc2aa290b0aee0623a6348761f2f18458
+  created_at: '2026-07-17T23:40:11-03:00'
+  completed_commit: fb7ca99c73fc7fc370051893bcc23efea84b291d
+  completed_at: '2026-07-19T02:34:26-03:00'
+  completed_order: 47
+  depends_on: []
+  depends_on_raw:
+  - Fase 4.1 (`progression.py` — árvore/ramos) · 4.1b (árvores de Valoria) ·
+  depends_on_unresolved:
+  - Fase 4.1 (`progression.py` — árvore/ramos) · 4.1b (árvores de Valoria) ·
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-049
+  slug: balanceamento-classes-pos-playtest
+  status: done
+  path: specs/SPEC-049-balanceamento-classes-pos-playtest.md
+  created_commit: 727b75574fad0f7308d01aea84870a44613d44db
+  created_at: '2026-07-19T15:53:48-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 69
+  depends_on:
+  - SPEC-048
+  depends_on_raw:
+  - '[refatoracao-sistema-classes](SPEC-048-refatoracao-sistema-classes.md) `done`
+    ·'
+  depends_on_unresolved:
+  - '[refatoracao-sistema-classes](SPEC-048-refatoracao-sistema-classes.md) `done`
+    ·'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-050
+  slug: fiacao-regras-orfas-classes
+  status: done
+  path: specs/SPEC-050-fiacao-regras-orfas-classes.md
+  created_commit: 727b75574fad0f7308d01aea84870a44613d44db
+  created_at: '2026-07-19T15:53:48-03:00'
+  completed_commit: 727b75574fad0f7308d01aea84870a44613d44db
+  completed_at: '2026-07-19T15:53:48-03:00'
+  completed_order: 49
+  depends_on:
+  - SPEC-048
+  depends_on_raw:
+  - '[refatoracao-sistema-classes](SPEC-048-refatoracao-sistema-classes.md) `done`
+    ·'
+  depends_on_unresolved:
+  - '[refatoracao-sistema-classes](SPEC-048-refatoracao-sistema-classes.md) `done`
+    ·'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-051
+  slug: isolar-cache-runtime
+  status: done
+  path: specs/SPEC-051-isolar-cache-runtime.md
+  created_commit: 727b75574fad0f7308d01aea84870a44613d44db
+  created_at: '2026-07-19T15:53:48-03:00'
+  completed_commit: 727b75574fad0f7308d01aea84870a44613d44db
+  completed_at: '2026-07-19T15:53:48-03:00'
+  completed_order: 50
+  depends_on: []
+  depends_on_raw:
+  - — (bug de infraestrutura; nenhuma spec pendente)
+  depends_on_unresolved:
+  - — (bug de infraestrutura; nenhuma spec pendente)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-052
+  slug: weather-global-vivo
+  status: done
+  path: specs/SPEC-052-weather-global-vivo.md
+  created_commit: 99449504eddc17decb26db195deff93d32f9474d
+  created_at: '2026-07-19T16:34:52-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 92
+  depends_on: []
+  depends_on_raw:
+  - Fase 6.5 (clima local) `done`
+  depends_on_unresolved:
+  - Fase 6.5 (clima local) `done`
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-053
+  slug: itens-vivos-e-luz
+  status: done
+  path: specs/SPEC-053-itens-vivos-e-luz.md
+  created_commit: d0f240e9f98f446fe4e75cb720406e3a50febdf8
+  created_at: '2026-07-19T17:01:00-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 84
+  depends_on: []
+  depends_on_raw:
+  - Fase 4.2 (buffs mecânicos) · 4.3 (inventário/slots) · 6.4 (detection_check) ·
+    6.5 (clima) — todas `done`
+  depends_on_unresolved:
+  - Fase 4.2 (buffs mecânicos) · 4.3 (inventário/slots) · 6.4 (detection_check) ·
+    6.5 (clima) — todas `done`
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-054
+  slug: polish-frontend-imersao
+  status: done
+  path: specs/SPEC-054-polish-frontend-imersao.md
+  created_commit: 149ae4590180ccabd3ee6e00e859d7530bdda521
+  created_at: '2026-07-20T00:31:49-03:00'
+  completed_commit: 149ae4590180ccabd3ee6e00e859d7530bdda521
+  completed_at: '2026-07-20T00:31:49-03:00'
+  completed_order: 51
+  depends_on:
+  - SPEC-045
+  - SPEC-046
+  depends_on_raw:
+  - onboarding-valoria `done`, inicio-personalizado `done`,
+  depends_on_unresolved:
+  - onboarding-valoria `done`, inicio-personalizado `done`,
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-055
+  slug: aliados-em-combate
+  status: done
+  path: specs/SPEC-055-aliados-em-combate.md
+  created_commit: f860d2c81c8b36feae5407999e918cf0e2285e77
+  created_at: '2026-07-20T09:24:57-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 68
+  depends_on: []
+  depends_on_raw:
+  - Fase 4.5 (party + combate com aliados) `done` ·
+  depends_on_unresolved:
+  - Fase 4.5 (party + combate com aliados) `done` ·
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-056
+  slug: letalidade-early-game-v2
+  status: done
+  path: specs/SPEC-056-letalidade-early-game-v2.md
+  created_commit: f860d2c81c8b36feae5407999e918cf0e2285e77
+  created_at: '2026-07-20T09:24:57-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 85
+  depends_on:
+  - SPEC-034
+  depends_on_raw:
+  - '[balanceamento-early-game](SPEC-034-balanceamento-early-game.md) `done` (1ª passada
+    — "O Saque" + tuning spawn nível 1) ·'
+  depends_on_unresolved:
+  - '[balanceamento-early-game](SPEC-034-balanceamento-early-game.md) `done` (1ª passada
+    — "O Saque" + tuning spawn nível 1) ·'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-057
+  slug: loot-exploracao
+  status: done
+  path: specs/SPEC-057-loot-exploracao.md
+  created_commit: f860d2c81c8b36feae5407999e918cf0e2285e77
+  created_at: '2026-07-20T09:24:57-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 86
+  depends_on: []
+  depends_on_raw:
+  - Fase 0 (viagem/fog of war, `world_utils`) · Fase 4 (economia/inventário) ·
+  depends_on_unresolved:
+  - Fase 0 (viagem/fog of war, `world_utils`) · Fase 4 (economia/inventário) ·
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-058
+  slug: npc-in-scene-viagem
+  status: done
+  path: specs/SPEC-058-npc-in-scene-viagem.md
+  created_commit: f860d2c81c8b36feae5407999e918cf0e2285e77
+  created_at: '2026-07-20T09:24:57-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 88
+  depends_on:
+  - SPEC-040
+  depends_on_raw:
+  - '[encontros-dedupe](SPEC-040-encontros-dedupe.md) `done` (vínculo de local + invariante)
+    ·'
+  depends_on_unresolved:
+  - '[encontros-dedupe](SPEC-040-encontros-dedupe.md) `done` (vínculo de local + invariante)
+    ·'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-059
+  slug: playtest-agente-curioso-entropia
+  status: done
+  path: specs/SPEC-059-playtest-agente-curioso-entropia.md
+  created_commit: f860d2c81c8b36feae5407999e918cf0e2285e77
+  created_at: '2026-07-20T09:24:57-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 89
+  depends_on:
+  - SPEC-048
+  depends_on_raw:
+  - '[refatoracao-sistema-classes](SPEC-048-refatoracao-sistema-classes.md) `done`
+    ·'
+  depends_on_unresolved:
+  - '[refatoracao-sistema-classes](SPEC-048-refatoracao-sistema-classes.md) `done`
+    ·'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-060
+  slug: checkpoints-morte
+  status: done
+  path: specs/SPEC-060-checkpoints-morte.md
+  created_commit: 7c0db1a24f33001e302490bb1fc3f291755dce12
+  created_at: '2026-07-22T20:01:52-03:00'
+  completed_commit: 7c0db1a24f33001e302490bb1fc3f291755dce12
+  completed_at: '2026-07-22T20:01:52-03:00'
+  completed_order: 52
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-061
+  slug: fix-explorador-loop-navegacao
+  status: done
+  path: specs/SPEC-061-fix-explorador-loop-navegacao.md
+  created_commit: 7c0db1a24f33001e302490bb1fc3f291755dce12
+  created_at: '2026-07-22T20:01:52-03:00'
+  completed_commit: 7c0db1a24f33001e302490bb1fc3f291755dce12
+  completed_at: '2026-07-22T20:01:52-03:00'
+  completed_order: 53
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-062
+  slug: conflito-01-virtudes-vitalidade
+  status: done
+  path: specs/SPEC-062-conflito-01-virtudes-vitalidade.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  completed_at: '2026-07-22T21:58:38-03:00'
+  completed_order: 54
+  depends_on: []
+  depends_on_raw:
+  - nenhuma — fundação do épico de migração do sistema de conflitos
+  depends_on_unresolved:
+  - nenhuma — fundação do épico de migração do sistema de conflitos
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-063
+  slug: conflito-02-cartas-acervo-preparacao
+  status: done
+  path: specs/SPEC-063-conflito-02-cartas-acervo-preparacao.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: 4191fe68ac0f4ca7f4abc6b05beb177816684525
+  completed_at: '2026-07-22T22:09:14-03:00'
+  completed_order: 55
+  depends_on:
+  - SPEC-062
+  depends_on_raw:
+  - '`conflito-01-virtudes-vitalidade` (`done` antes de iniciar)'
+  depends_on_unresolved:
+  - '`conflito-01-virtudes-vitalidade` (`done` antes de iniciar)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-064
+  slug: conflito-03-zonas-cena-objetos
+  status: done
+  path: specs/SPEC-064-conflito-03-zonas-cena-objetos.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: 48f790516c981aaf860bddbc1ab4f86d8554be15
+  completed_at: '2026-07-22T22:15:38-03:00'
+  completed_order: 56
+  depends_on:
+  - SPEC-062
+  depends_on_raw:
+  - '`conflito-01-virtudes-vitalidade` (`done` antes de iniciar)'
+  depends_on_unresolved:
+  - '`conflito-01-virtudes-vitalidade` (`done` antes de iniciar)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-065
+  slug: conflito-04-turnos-iniciativa-ataques
+  status: done
+  path: specs/SPEC-065-conflito-04-turnos-iniciativa-ataques.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: b05fa6d910e4c4d06d15bfb3e3aa78bc47025fe4
+  completed_at: '2026-07-22T22:21:52-03:00'
+  completed_order: 57
+  depends_on:
+  - SPEC-062
+  - SPEC-063
+  depends_on_raw:
+  - '`conflito-01-virtudes-vitalidade`, `conflito-02-cartas-acervo-preparacao`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-066
+  slug: conflito-05-armadura-dano-ferimentos
+  status: done
+  path: specs/SPEC-066-conflito-05-armadura-dano-ferimentos.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: 29933e7f1386f81431012639d9e15293b077ab9b
+  completed_at: '2026-07-23T06:40:11-03:00'
+  completed_order: 58
+  depends_on:
+  - SPEC-062
+  - SPEC-065
+  depends_on_raw:
+  - '`conflito-01-virtudes-vitalidade`, `conflito-04-turnos-iniciativa-ataques`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-067
+  slug: conflito-06-reacoes-movimento
+  status: done
+  path: specs/SPEC-067-conflito-06-reacoes-movimento.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: e860d607b67e2a9fb85236b7c3b3837dd60af13b
+  completed_at: '2026-07-23T06:49:51-03:00'
+  completed_order: 59
+  depends_on:
+  - SPEC-063
+  - SPEC-064
+  depends_on_raw:
+  - '`conflito-02-cartas-acervo-preparacao`, `conflito-03-zonas-cena-objetos`,'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-068
+  slug: conflito-07-morte-rendicao-captura
+  status: done
+  path: specs/SPEC-068-conflito-07-morte-rendicao-captura.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: 3746816441c1b98880614df424a836daef590040
+  completed_at: '2026-07-23T07:25:48-03:00'
+  completed_order: 60
+  depends_on:
+  - SPEC-062
+  - SPEC-065
+  depends_on_raw:
+  - '`conflito-01-virtudes-vitalidade`, `conflito-04-turnos-iniciativa-ataques`,'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-069
+  slug: conflito-08-comportamento-tatico-companheiros
+  status: done
+  path: specs/SPEC-069-conflito-08-comportamento-tatico-companheiros.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: 2bf0f40117db883931f4b674c5ba2ebb23598157
+  completed_at: '2026-07-23T07:30:18-03:00'
+  completed_order: 61
+  depends_on:
+  - SPEC-063
+  - SPEC-065
+  depends_on_raw:
+  - '`conflito-02-cartas-acervo-preparacao`, `conflito-04-turnos-iniciativa-ataques`,'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-070
+  slug: conflito-09-fuga-perseguicao
+  status: done
+  path: specs/SPEC-070-conflito-09-fuga-perseguicao.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: b340bd533c6ea5266175d9f53d6d9fbfdfd0cb85
+  completed_at: '2026-07-23T07:34:08-03:00'
+  completed_order: 62
+  depends_on:
+  - SPEC-064
+  - SPEC-065
+  depends_on_raw:
+  - '`conflito-03-zonas-cena-objetos`, `conflito-04-turnos-iniciativa-ataques`,'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-071
+  slug: conflito-10-abismo-em-conflito
+  status: done
+  path: specs/SPEC-071-conflito-10-abismo-em-conflito.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: 8e6e1b890854490e5e81faf5b25f95968cb08a8e
+  completed_at: '2026-07-23T07:37:22-03:00'
+  completed_order: 63
+  depends_on:
+  - SPEC-062
+  - SPEC-064
+  depends_on_raw:
+  - '`conflito-01-virtudes-vitalidade` (Cargas), `conflito-03-zonas-cena-objetos`'
+  depends_on_unresolved:
+  - '`conflito-01-virtudes-vitalidade` (Cargas), `conflito-03-zonas-cena-objetos`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-072
+  slug: conflito-11-preparacao-encontro-llm
+  status: done
+  path: specs/SPEC-072-conflito-11-preparacao-encontro-llm.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: dc5f3f82675102cdc6f8bc4a35eb0702fc8d8a32
+  completed_at: '2026-07-23T07:41:08-03:00'
+  completed_order: 64
+  depends_on:
+  - SPEC-063
+  - SPEC-064
+  depends_on_raw:
+  - '`conflito-02-cartas-acervo-preparacao`, `conflito-03-zonas-cena-objetos`,'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-073
+  slug: conflito-12-loot-resumo-narrativo
+  status: done
+  path: specs/SPEC-073-conflito-12-loot-resumo-narrativo.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: d22788b391f78dba7a84dba7362dc5ee9cf495bc
+  completed_at: '2026-07-23T07:44:29-03:00'
+  completed_order: 65
+  depends_on:
+  - SPEC-068
+  - SPEC-069
+  depends_on_raw:
+  - '`conflito-07-morte-rendicao-captura`, `conflito-08-comportamento-tatico-companheiros`,'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-074
+  slug: conflito-13-cutover-migracao-playtest
+  status: done
+  path: specs/SPEC-074-conflito-13-cutover-migracao-playtest.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 70
+  depends_on: []
+  depends_on_raw:
+  - '`conflito-01` a `conflito-12` (TODAS `done` antes de iniciar)'
+  depends_on_unresolved:
+  - '`conflito-01` a `conflito-12` (TODAS `done` antes de iniciar)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-075
+  slug: conflito-14-autoria-cartas-classes
+  status: done
+  path: specs/SPEC-075-conflito-14-autoria-cartas-classes.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: d3b231bde63c8712dfadfc1713d5c51a71290c8d
+  completed_at: '2026-07-23T13:38:36-03:00'
+  completed_order: 66
+  depends_on:
+  - SPEC-063
+  depends_on_raw:
+  - '`conflito-02-cartas-acervo-preparacao` (`done` — schema de Carta'
+  depends_on_unresolved:
+  - '`conflito-02-cartas-acervo-preparacao` (`done` — schema de Carta'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-076
+  slug: conflito-15-autoria-bestiario-perfis
+  status: done
+  path: specs/SPEC-076-conflito-15-autoria-bestiario-perfis.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: d3b231bde63c8712dfadfc1713d5c51a71290c8d
+  completed_at: '2026-07-23T13:38:36-03:00'
+  completed_order: 67
+  depends_on:
+  - SPEC-066
+  - SPEC-069
+  depends_on_raw:
+  - '`conflito-05-armadura-dano-ferimentos`, `conflito-08-comportamento-tatico-companheiros`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-077
+  slug: conflito-16-frontend-combate-cartas
+  status: done
+  path: specs/SPEC-077-conflito-16-frontend-combate-cartas.md
+  created_commit: a34a0059c9e72dc67274a871042cc7f7b1dd247a
+  created_at: '2026-07-22T21:58:38-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 71
+  depends_on:
+  - SPEC-074
+  depends_on_raw:
+  - '`conflito-13-cutover-migracao-playtest` (`done` — motor precisa'
+  depends_on_unresolved:
+  - '`conflito-13-cutover-migracao-playtest` (`done` — motor precisa'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-078
+  slug: conflito-17-volume-conteudo-mundo-vivo
+  status: done
+  path: specs/SPEC-078-conflito-17-volume-conteudo-mundo-vivo.md
+  created_commit: d3b231bde63c8712dfadfc1713d5c51a71290c8d
+  created_at: '2026-07-23T13:38:36-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 72
+  depends_on: []
+  depends_on_raw:
+  - '`conflito-14` (`done` — Cartas + gerador), `conflito-15`'
+  depends_on_unresolved:
+  - '`conflito-14` (`done` — Cartas + gerador), `conflito-15`'
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-079
+  slug: fix-playtest-decisoes-atomicas
+  status: done
+  path: specs/SPEC-079-fix-playtest-decisoes-atomicas.md
+  created_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  created_at: '2026-08-11T14:02:30-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 73
+  depends_on:
+  - SPEC-083
+  depends_on_raw:
+  - '`fix-vitalidade-ferimentos-terminal`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-080
+  slug: fix-playtest-liveness-telemetria-circuito
+  status: done
+  path: specs/SPEC-080-fix-playtest-liveness-telemetria-circuito.md
+  created_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  created_at: '2026-08-11T14:02:30-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 74
+  depends_on:
+  - SPEC-088
+  depends_on_raw:
+  - '`hardening-playtest-watchdog` (`done`)'
+  depends_on_unresolved:
+  - '`hardening-playtest-watchdog` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-081
+  slug: fix-reacoes-runtime-observaveis
+  status: done
+  path: specs/SPEC-081-fix-reacoes-runtime-observaveis.md
+  created_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  created_at: '2026-08-11T14:02:30-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 75
+  depends_on:
+  - SPEC-067
+  depends_on_raw:
+  - '`conflito-06-reacoes-movimento`, `conflito-08-perfil-tatico`'
+  depends_on_unresolved:
+  - '`conflito-06-reacoes-movimento`, `conflito-08-perfil-tatico`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-082
+  slug: fix-resumo-conflito-grounding
+  status: done
+  path: specs/SPEC-082-fix-resumo-conflito-grounding.md
+  created_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  created_at: '2026-08-11T14:02:30-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 76
+  depends_on:
+  - SPEC-089
+  depends_on_raw:
+  - '`conflito-12`, `hardening-structured-sentinelas-rag`'
+  depends_on_unresolved:
+  - '`conflito-12`, `hardening-structured-sentinelas-rag`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-083
+  slug: fix-vitalidade-ferimentos-terminal
+  status: done
+  path: specs/SPEC-083-fix-vitalidade-ferimentos-terminal.md
+  created_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  created_at: '2026-08-11T14:02:30-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 77
+  depends_on: []
+  depends_on_raw:
+  - '`conflito-01`, `conflito-05`, `conflito-07` e'
+  depends_on_unresolved:
+  - '`conflito-01`, `conflito-05`, `conflito-07` e'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-084
+  slug: hardening-entradas-mecanicas-llm
+  status: done
+  path: specs/SPEC-084-hardening-entradas-mecanicas-llm.md
+  created_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  created_at: '2026-08-11T14:02:30-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 78
+  depends_on: []
+  depends_on_raw:
+  - '`conflito-11`, `conflito-15`'
+  depends_on_unresolved:
+  - '`conflito-11`, `conflito-15`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-085
+  slug: hardening-memoria-proveniencia
+  status: done
+  path: specs/SPEC-085-hardening-memoria-proveniencia.md
+  created_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  created_at: '2026-08-11T14:02:30-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 79
+  depends_on:
+  - SPEC-003
+  - SPEC-082
+  depends_on_raw:
+  - '`fix-resumo-conflito-grounding`, `fase-2.6-structured-events`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-086
+  slug: hardening-persistencia-sse-idempotencia
+  status: done
+  path: specs/SPEC-086-hardening-persistencia-sse-idempotencia.md
+  created_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  created_at: '2026-08-11T14:02:30-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 80
+  depends_on:
+  - SPEC-036
+  - SPEC-060
+  depends_on_raw:
+  - '[checkpoints-morte](SPEC-060-checkpoints-morte.md) `done` · [streaming-turno-sse](SPEC-036-streaming-turno-sse.md)
+    `done`'
+  depends_on_unresolved:
+  - '[checkpoints-morte](SPEC-060-checkpoints-morte.md) `done` · [streaming-turno-sse](SPEC-036-streaming-turno-sse.md)
+    `done`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-087
+  slug: hardening-playtest-observabilidade
+  status: done
+  path: specs/SPEC-087-hardening-playtest-observabilidade.md
+  created_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  created_at: '2026-08-11T14:02:30-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 81
+  depends_on:
+  - SPEC-079
+  depends_on_raw:
+  - '`fix-playtest-decisoes-atomicas`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-088
+  slug: hardening-playtest-watchdog
+  status: done
+  path: specs/SPEC-088-hardening-playtest-watchdog.md
+  created_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  created_at: '2026-08-11T14:02:30-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 82
+  depends_on:
+  - SPEC-087
+  depends_on_raw:
+  - '`hardening-playtest-observabilidade` (`done`)'
+  depends_on_unresolved:
+  - '`hardening-playtest-observabilidade` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-089
+  slug: hardening-structured-sentinelas-rag
+  status: done
+  path: specs/SPEC-089-hardening-structured-sentinelas-rag.md
+  created_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  created_at: '2026-08-11T14:02:30-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 83
+  depends_on:
+  - SPEC-032
+  - SPEC-039
+  depends_on_raw:
+  - '`roteamento-multi-provider`, `embeddings-provider`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-090
+  slug: modo-simulacao-combate
+  status: done
+  path: specs/SPEC-090-modo-simulacao-combate.md
+  created_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  created_at: '2026-08-11T14:02:30-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 87
+  depends_on:
+  - SPEC-077
+  depends_on_raw:
+  - '`conflito-16-frontend-combate-cartas` (`done`)'
+  depends_on_unresolved:
+  - '`conflito-16-frontend-combate-cartas` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-091
+  slug: polish-prosa-v2
+  status: done
+  path: specs/SPEC-091-polish-prosa-v2.md
+  created_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  created_at: '2026-08-11T14:02:30-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 90
+  depends_on:
+  - SPEC-043
+  depends_on_raw:
+  - '`polish-prosa` (`done`)'
+  depends_on_unresolved:
+  - '`polish-prosa` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-092
+  slug: smoke-dirigido-recrutamento-comercio
+  status: done
+  path: specs/SPEC-092-smoke-dirigido-recrutamento-comercio.md
+  created_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  created_at: '2026-08-11T14:02:30-03:00'
+  completed_commit: ff018c267219cb2442c45d2bcbc6361313f613f8
+  completed_at: '2026-08-11T14:02:30-03:00'
+  completed_order: 91
+  depends_on:
+  - SPEC-055
+  depends_on_raw:
+  - '`aliados-em-combate`, Fase 4.4 (`done`)'
+  depends_on_unresolved:
+  - '`aliados-em-combate`, Fase 4.4 (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-093
+  slug: checkpoint-transacional-memoria
+  status: done
+  path: specs/SPEC-093-checkpoint-transacional-memoria.md
+  created_commit: ac4c4ab17306045650b41571e89a1eeca2f41171
+  created_at: '2026-08-12T18:02:56-03:00'
+  completed_commit: ac4c4ab17306045650b41571e89a1eeca2f41171
+  completed_at: '2026-08-12T18:02:56-03:00'
+  completed_order: 93
+  depends_on:
+  - SPEC-060
+  depends_on_raw:
+  - '`checkpoints-morte` e memória híbrida (`done`)'
+  depends_on_unresolved:
+  - '`checkpoints-morte` e memória híbrida (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-094
+  slug: fase-8-ancoras-visuais-contextuais
+  status: done
+  path: specs/SPEC-094-fase-8-ancoras-visuais-contextuais.md
+  created_commit: ac4c4ab17306045650b41571e89a1eeca2f41171
+  created_at: '2026-08-12T18:02:56-03:00'
+  completed_commit: ac4c4ab17306045650b41571e89a1eeca2f41171
+  completed_at: '2026-08-12T18:02:56-03:00'
+  completed_order: 94
+  depends_on:
+  - SPEC-045
+  - SPEC-046
+  depends_on_raw:
+  - '`onboarding-valoria`, `inicio-personalizado`,'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-095
+  slug: feedback-ledger-recompensas
+  status: done
+  path: specs/SPEC-095-feedback-ledger-recompensas.md
+  created_commit: ac4c4ab17306045650b41571e89a1eeca2f41171
+  created_at: '2026-08-12T18:02:56-03:00'
+  completed_commit: ac4c4ab17306045650b41571e89a1eeca2f41171
+  completed_at: '2026-08-12T18:02:56-03:00'
+  completed_order: 95
+  depends_on:
+  - SPEC-057
+  depends_on_raw:
+  - '`loot-exploracao` e grounding boundaries (`done`)'
+  depends_on_unresolved:
+  - '`loot-exploracao` e grounding boundaries (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-096
+  slug: fuga-progressiva-persistente
+  status: done
+  path: specs/SPEC-096-fuga-progressiva-persistente.md
+  created_commit: ac4c4ab17306045650b41571e89a1eeca2f41171
+  created_at: '2026-08-12T18:02:56-03:00'
+  completed_commit: ac4c4ab17306045650b41571e89a1eeca2f41171
+  completed_at: '2026-08-12T18:02:56-03:00'
+  completed_order: 96
+  depends_on:
+  - SPEC-038
+  depends_on_raw:
+  - '`conflito-09` e `combate-lifecycle` (`done`)'
+  depends_on_unresolved:
+  - '`conflito-09` e `combate-lifecycle` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-097
+  slug: perfil-jogador-normal-invariantes
+  status: done
+  path: specs/SPEC-097-perfil-jogador-normal-invariantes.md
+  created_commit: ac4c4ab17306045650b41571e89a1eeca2f41171
+  created_at: '2026-08-12T18:02:56-03:00'
+  completed_commit: ac4c4ab17306045650b41571e89a1eeca2f41171
+  completed_at: '2026-08-12T18:02:56-03:00'
+  completed_order: 97
+  depends_on: []
+  depends_on_raw:
+  - Fase 5 (`done`) e cinco correções deste pacote
+  depends_on_unresolved:
+  - Fase 5 (`done`) e cinco correções deste pacote
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-098
+  slug: replan-grounding-troca-regiao
+  status: done
+  path: specs/SPEC-098-replan-grounding-troca-regiao.md
+  created_commit: ac4c4ab17306045650b41571e89a1eeca2f41171
+  created_at: '2026-08-12T18:02:56-03:00'
+  completed_commit: ac4c4ab17306045650b41571e89a1eeca2f41171
+  completed_at: '2026-08-12T18:02:56-03:00'
+  completed_order: 98
+  depends_on:
+  - SPEC-034
+  depends_on_raw:
+  - '`balanceamento-early-game` e campaign manager (`done`)'
+  depends_on_unresolved:
+  - '`balanceamento-early-game` e campaign manager (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-099
+  slug: resumo-curto-budget-rigido
+  status: done
+  path: specs/SPEC-099-resumo-curto-budget-rigido.md
+  created_commit: ac4c4ab17306045650b41571e89a1eeca2f41171
+  created_at: '2026-08-12T18:02:56-03:00'
+  completed_commit: ac4c4ab17306045650b41571e89a1eeca2f41171
+  completed_at: '2026-08-12T18:02:56-03:00'
+  completed_order: 99
+  depends_on: []
+  depends_on_raw:
+  - '`context-builder` e archivist (`done`)'
+  depends_on_unresolved:
+  - '`context-builder` e archivist (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-100
+  slug: chase-progresso-e-fuga
+  status: done
+  path: specs/SPEC-100-chase-progresso-e-fuga.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 100
+  depends_on:
+  - SPEC-123
+  depends_on_raw:
+  - '`telemetria-rollback-abort` (`done`)'
+  depends_on_unresolved:
+  - '`telemetria-rollback-abort` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-101
+  slug: checkpoint-seguro-fora-combate
+  status: done
+  path: specs/SPEC-101-checkpoint-seguro-fora-combate.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 101
+  depends_on:
+  - SPEC-102
+  depends_on_raw:
+  - '`continuidade-memoria-morte` (`done`)'
+  depends_on_unresolved:
+  - '`continuidade-memoria-morte` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-102
+  slug: continuidade-memoria-morte
+  status: done
+  path: specs/SPEC-102-continuidade-memoria-morte.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 102
+  depends_on:
+  - SPEC-060
+  - SPEC-085
+  depends_on_raw:
+  - '`checkpoints-morte`, `hardening-memoria-proveniencia` (`done`)'
+  depends_on_unresolved:
+  - '`checkpoints-morte`, `hardening-memoria-proveniencia` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-103
+  slug: fase-10b-auth-rls-isolamento
+  status: done
+  path: specs/SPEC-103-fase-10b-auth-rls-isolamento.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  completed_at: '2026-08-20T11:12:18-03:00'
+  completed_order: 116
+  depends_on:
+  - SPEC-109
+  - SPEC-111
+  depends_on_raw:
+  - '[Postgres transacional](SPEC-109-fase-10b-postgres-persistencia-transacional.md)
+    `done` · [turnos duráveis](SPEC-111-fase-10b-turnos-duraveis-concorrencia-fila.md)
+    `done`'
+  depends_on_unresolved:
+  - '[Postgres transacional](SPEC-109-fase-10b-postgres-persistencia-transacional.md)
+    `done` · [turnos duráveis](SPEC-111-fase-10b-turnos-duraveis-concorrencia-fila.md)
+    `done`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-104
+  slug: fase-10b-certificacao-cloud-portavel
+  status: draft
+  path: specs/SPEC-104-fase-10b-certificacao-cloud-portavel.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-106
+  depends_on_raw:
+  - '[observabilidade, backup e caos](SPEC-106-fase-10b-observabilidade-backup-caos.md)
+    `done`'
+  depends_on_unresolved:
+  - '[observabilidade, backup e caos](SPEC-106-fase-10b-observabilidade-backup-caos.md)
+    `done`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-105
+  slug: fase-10b-fundacao-local-portas-adapters
+  status: done
+  path: specs/SPEC-105-fase-10b-fundacao-local-portas-adapters.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  completed_at: '2026-08-20T11:12:18-03:00'
+  completed_order: 117
+  depends_on:
+  - SPEC-108
+  depends_on_raw:
+  - '[plano mestre local-first](SPEC-108-fase-10b-plano-mestre-local-first.md) `approved`'
+  depends_on_unresolved:
+  - '[plano mestre local-first](SPEC-108-fase-10b-plano-mestre-local-first.md) `approved`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-106
+  slug: fase-10b-observabilidade-backup-caos
+  status: done
+  path: specs/SPEC-106-fase-10b-observabilidade-backup-caos.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  completed_at: '2026-08-20T11:12:18-03:00'
+  completed_order: 118
+  depends_on: []
+  depends_on_raw:
+  - specs Fase 10b.1–10b.6 `done`
+  depends_on_unresolved:
+  - specs Fase 10b.1–10b.6 `done`
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-107
+  slug: fase-10b-pgvector-memoria-transacional
+  status: done
+  path: specs/SPEC-107-fase-10b-pgvector-memoria-transacional.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  completed_at: '2026-08-20T11:12:18-03:00'
+  completed_order: 119
+  depends_on:
+  - SPEC-103
+  - SPEC-109
+  - SPEC-111
+  depends_on_raw:
+  - '[Postgres transacional](SPEC-109-fase-10b-postgres-persistencia-transacional.md)
+    `done` · [turnos duráveis](SPEC-111-fase-10b-turnos-duraveis-concorrencia-fila.md)
+    `done` · [Auth/RLS](SPEC-103-fase-10b-auth-rls-isolamento.md) `done`'
+  depends_on_unresolved:
+  - '[Postgres transacional](SPEC-109-fase-10b-postgres-persistencia-transacional.md)
+    `done` · [turnos duráveis](SPEC-111-fase-10b-turnos-duraveis-concorrencia-fila.md)
+    `done` · [Auth/RLS](SPEC-103-fase-10b-auth-rls-isolamento.md) `done`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-108
+  slug: fase-10b-plano-mestre-local-first
+  status: done
+  path: specs/SPEC-108-fase-10b-plano-mestre-local-first.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  completed_at: '2026-08-20T11:12:18-03:00'
+  completed_order: 120
+  depends_on:
+  - SPEC-025
+  - SPEC-086
+  depends_on_raw:
+  - '[Fase 10 — hardening técnico](SPEC-025-fase-10-hardening-tecnico.md) `done` ·
+    [hardening de persistência/SSE](SPEC-086-hardening-persistencia-sse-idempotencia.md)
+    `done`'
+  depends_on_unresolved:
+  - '[Fase 10 — hardening técnico](SPEC-025-fase-10-hardening-tecnico.md) `done` ·
+    [hardening de persistência/SSE](SPEC-086-hardening-persistencia-sse-idempotencia.md)
+    `done`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-109
+  slug: fase-10b-postgres-persistencia-transacional
+  status: done
+  path: specs/SPEC-109-fase-10b-postgres-persistencia-transacional.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  completed_at: '2026-08-20T11:12:18-03:00'
+  completed_order: 121
+  depends_on:
+  - SPEC-105
+  depends_on_raw:
+  - '[fundação local e portas](SPEC-105-fase-10b-fundacao-local-portas-adapters.md)
+    `done`'
+  depends_on_unresolved:
+  - '[fundação local e portas](SPEC-105-fase-10b-fundacao-local-portas-adapters.md)
+    `done`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-110
+  slug: fase-10b-storage-assets-portavel
+  status: done
+  path: specs/SPEC-110-fase-10b-storage-assets-portavel.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  completed_at: '2026-08-20T11:12:18-03:00'
+  completed_order: 122
+  depends_on:
+  - SPEC-103
+  - SPEC-107
+  - SPEC-111
+  depends_on_raw:
+  - '[turnos/fila](SPEC-111-fase-10b-turnos-duraveis-concorrencia-fila.md) `done`
+    · [Auth/RLS](SPEC-103-fase-10b-auth-rls-isolamento.md) `done` · [pgvector](SPEC-107-fase-10b-pgvector-memoria-transacional.md)
+    `done`'
+  depends_on_unresolved:
+  - '[turnos/fila](SPEC-111-fase-10b-turnos-duraveis-concorrencia-fila.md) `done`
+    · [Auth/RLS](SPEC-103-fase-10b-auth-rls-isolamento.md) `done` · [pgvector](SPEC-107-fase-10b-pgvector-memoria-transacional.md)
+    `done`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-111
+  slug: fase-10b-turnos-duraveis-concorrencia-fila
+  status: done
+  path: specs/SPEC-111-fase-10b-turnos-duraveis-concorrencia-fila.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  completed_at: '2026-08-20T11:12:18-03:00'
+  completed_order: 123
+  depends_on:
+  - SPEC-109
+  depends_on_raw:
+  - '[Postgres transacional](SPEC-109-fase-10b-postgres-persistencia-transacional.md)
+    `done`'
+  depends_on_unresolved:
+  - '[Postgres transacional](SPEC-109-fase-10b-postgres-persistencia-transacional.md)
+    `done`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-112
+  slug: latencia-inicio-combate
+  status: done
+  path: specs/SPEC-112-latencia-inicio-combate.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 103
+  depends_on:
+  - SPEC-116
+  depends_on_raw:
+  - '`observabilidade-latencia-nos`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-113
+  slug: memoria-autoridade-quests-verificaveis
+  status: done
+  path: specs/SPEC-113-memoria-autoridade-quests-verificaveis.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 104
+  depends_on:
+  - SPEC-102
+  - SPEC-115
+  depends_on_raw:
+  - '`objetivo-publico-ciclo-quests`, `continuidade-memoria-morte`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-114
+  slug: memoria-npc-sucesso-ledger
+  status: done
+  path: specs/SPEC-114-memoria-npc-sucesso-ledger.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 105
+  depends_on:
+  - SPEC-113
+  depends_on_raw:
+  - '`memoria-autoridade-quests-verificaveis` (`done`)'
+  depends_on_unresolved:
+  - '`memoria-autoridade-quests-verificaveis` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-115
+  slug: objetivo-publico-ciclo-quests
+  status: done
+  path: specs/SPEC-115-objetivo-publico-ciclo-quests.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 106
+  depends_on:
+  - SPEC-008
+  depends_on_raw:
+  - '`fase-3.3-quest-log` (`done`)'
+  depends_on_unresolved:
+  - '`fase-3.3-quest-log` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-116
+  slug: observabilidade-latencia-nos
+  status: done
+  path: specs/SPEC-116-observabilidade-latencia-nos.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 107
+  depends_on: []
+  depends_on_raw:
+  - '`fase-5.3-telemetria` (`done`)'
+  depends_on_unresolved:
+  - '`fase-5.3-telemetria` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-117
+  slug: origem-combate-por-cena
+  status: done
+  path: specs/SPEC-117-origem-combate-por-cena.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 108
+  depends_on:
+  - SPEC-122
+  depends_on_raw:
+  - '`ritmo-social-origem-combates` (`done`)'
+  depends_on_unresolved:
+  - '`ritmo-social-origem-combates` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-118
+  slug: pos-fuga-roteamento-origem
+  status: done
+  path: specs/SPEC-118-pos-fuga-roteamento-origem.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 109
+  depends_on:
+  - SPEC-100
+  - SPEC-117
+  depends_on_raw:
+  - '`origem-combate-por-cena` (`done`), `chase-progresso-e-fuga`'
+  depends_on_unresolved:
+  - '`origem-combate-por-cena` (`done`), `chase-progresso-e-fuga`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-119
+  slug: quests-retomada-conversao
+  status: done
+  path: specs/SPEC-119-quests-retomada-conversao.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 110
+  depends_on:
+  - SPEC-113
+  depends_on_raw:
+  - '`memoria-autoridade-quests-verificaveis` (`done`)'
+  depends_on_unresolved:
+  - '`memoria-autoridade-quests-verificaveis` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-120
+  slug: remediacao-playtest-real-100t
+  status: done
+  path: specs/SPEC-120-remediacao-playtest-real-100t.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 111
+  depends_on:
+  - SPEC-008
+  - SPEC-088
+  - SPEC-097
+  depends_on_raw:
+  - '`hardening-playtest-watchdog`, `perfil-jogador-normal-invariantes`, `fase-3.3-quest-log`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-121
+  slug: ritmo-combate-normal-v2
+  status: done
+  path: specs/SPEC-121-ritmo-combate-normal-v2.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 112
+  depends_on:
+  - SPEC-100
+  - SPEC-118
+  - SPEC-119
+  depends_on_raw:
+  - '`chase-progresso-e-fuga`, `quests-retomada-conversao`, `pos-fuga-roteamento-origem`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-122
+  slug: ritmo-social-origem-combates
+  status: done
+  path: specs/SPEC-122-ritmo-social-origem-combates.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 113
+  depends_on:
+  - SPEC-038
+  - SPEC-041
+  depends_on_raw:
+  - '`combate-lifecycle` (`done`), `npc-fallback-sem-alvo` (`done`)'
+  depends_on_unresolved:
+  - '`combate-lifecycle` (`done`), `npc-fallback-sem-alvo` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-123
+  slug: telemetria-rollback-abort
+  status: done
+  path: specs/SPEC-123-telemetria-rollback-abort.md
+  created_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  created_at: '2026-08-17T09:28:26-03:00'
+  completed_commit: d5478aea81203a8503fd79119c8d05f71d700ca4
+  completed_at: '2026-08-17T09:28:26-03:00'
+  completed_order: 114
+  depends_on:
+  - SPEC-102
+  - SPEC-116
+  depends_on_raw:
+  - '`observabilidade-latencia-nos`, `continuidade-memoria-morte`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-124
+  slug: cronica-avancada-compressao-busca-semantica
+  status: done
+  path: specs/SPEC-124-cronica-avancada-compressao-busca-semantica.md
+  created_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  created_at: '2026-08-20T11:12:18-03:00'
+  completed_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  completed_at: '2026-08-20T11:12:18-03:00'
+  completed_order: 115
+  depends_on:
+  - SPEC-006
+  - SPEC-035
+  depends_on_raw:
+  - '`fase-3.1-diario-cronica`, `polish-sessao` (`done`) ·'
+  depends_on_unresolved:
+  - '`fase-3.1-diario-cronica`, `polish-sessao` (`done`) ·'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-125
+  slug: fase-8b-geracao-dinamica-arte
+  status: done
+  path: specs/SPEC-125-fase-8b-geracao-dinamica-arte.md
+  created_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  created_at: '2026-08-20T11:12:18-03:00'
+  completed_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  completed_at: '2026-08-20T11:12:18-03:00'
+  completed_order: 124
+  depends_on:
+  - SPEC-094
+  depends_on_raw:
+  - '`fase-8-ancoras-visuais-contextuais` (`done`) ·'
+  depends_on_unresolved:
+  - '`fase-8-ancoras-visuais-contextuais` (`done`) ·'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-126
+  slug: playtest-longo-perfil-comerciante
+  status: done
+  path: specs/SPEC-126-playtest-longo-perfil-comerciante.md
+  created_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  created_at: '2026-08-20T11:12:18-03:00'
+  completed_commit: 33b75fdc67c08ccff6b94bfa4f4b9733c3ba3435
+  completed_at: '2026-08-20T12:06:49-03:00'
+  completed_order: 126
+  depends_on:
+  - SPEC-030
+  depends_on_raw:
+  - '`fase-5.1-harness`, `fase-5.2-invariantes`,'
+  depends_on_unresolved:
+  - '`fase-5.1-harness`, `fase-5.2-invariantes`,'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-127
+  slug: tiers-5-plus-classes-niveis-9-20
+  status: done
+  path: specs/SPEC-127-tiers-5-plus-classes-niveis-9-20.md
+  created_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  created_at: '2026-08-20T11:12:18-03:00'
+  completed_commit: 7abbe47293def7d8cebf215bc5ef513a9fcc4a77
+  completed_at: '2026-08-20T11:12:18-03:00'
+  completed_order: 125
+  depends_on:
+  - SPEC-062
+  depends_on_raw:
+  - '`conflito-01-virtudes-vitalidade`,'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-128
+  slug: matriz-longrun-multiperfil-niveis
+  status: done
+  path: specs/SPEC-128-matriz-longrun-multiperfil-niveis.md
+  created_commit: 6d0b3e1dcd43916d8beec7f2b1142548adafa274
+  created_at: '2026-08-20T13:42:27-03:00'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-129
+  depends_on_raw:
+  - '`remediacao-playtest-comerciante-real`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-129
+  slug: remediacao-playtest-comerciante-real
+  status: done
+  path: specs/SPEC-129-remediacao-playtest-comerciante-real.md
+  created_commit: 6d0b3e1dcd43916d8beec7f2b1142548adafa274
+  created_at: '2026-08-20T13:42:27-03:00'
+  completed_commit: a410977ff30d411b0138346bee2aabd1d6f8a9e6
+  completed_at: '2026-09-17T16:55:34-03:00'
+  completed_order: 139
+  depends_on:
+  - SPEC-126
+  depends_on_raw:
+  - '`playtest-longo-perfil-comerciante` (`done`)'
+  depends_on_unresolved:
+  - '`playtest-longo-perfil-comerciante` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-130
+  slug: combate-mimetismo-morto-loop
+  status: done
+  path: specs/SPEC-130-combate-mimetismo-morto-loop.md
+  created_commit: 4ff18f7671e970479ef2aba9b01b9388e5b98e08
+  created_at: '2026-08-20T15:52:23-03:00'
+  completed_commit: 6280ef5cb9bcebedc9975a6377464c00afe2356a
+  completed_at: '2026-08-20T17:13:10-03:00'
+  completed_order: 127
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-131
+  slug: fuga-vitalidade-zero
+  status: done
+  path: specs/SPEC-131-fuga-vitalidade-zero.md
+  created_commit: 4ff18f7671e970479ef2aba9b01b9388e5b98e08
+  created_at: '2026-08-20T15:52:23-03:00'
+  completed_commit: 6280ef5cb9bcebedc9975a6377464c00afe2356a
+  completed_at: '2026-08-20T17:13:10-03:00'
+  completed_order: 128
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-132
+  slug: matriz-a-capacidade-provider
+  status: done
+  path: specs/SPEC-132-matriz-a-capacidade-provider.md
+  created_commit: 4ff18f7671e970479ef2aba9b01b9388e5b98e08
+  created_at: '2026-08-20T15:52:23-03:00'
+  completed_commit: a410977ff30d411b0138346bee2aabd1d6f8a9e6
+  completed_at: '2026-09-17T16:55:34-03:00'
+  completed_order: 136
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-133
+  slug: observabilidade-npc-mortes-longrun
+  status: done
+  path: specs/SPEC-133-observabilidade-npc-mortes-longrun.md
+  created_commit: 4ff18f7671e970479ef2aba9b01b9388e5b98e08
+  created_at: '2026-08-20T15:52:23-03:00'
+  completed_commit: 6280ef5cb9bcebedc9975a6377464c00afe2356a
+  completed_at: '2026-08-20T17:13:10-03:00'
+  completed_order: 129
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-134
+  slug: playtest-real-llm-fail-closed
+  status: done
+  path: specs/SPEC-134-playtest-real-llm-fail-closed.md
+  created_commit: 6280ef5cb9bcebedc9975a6377464c00afe2356a
+  created_at: '2026-08-20T17:13:10-03:00'
+  completed_commit: a410977ff30d411b0138346bee2aabd1d6f8a9e6
+  completed_at: '2026-09-17T16:55:34-03:00'
+  completed_order: 138
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-135
+  slug: campaign-beats-overflow-provider
+  status: done
+  path: specs/SPEC-135-campaign-beats-overflow-provider.md
+  created_commit: 8148c18c106c5ff95b225012187c19d20178dcf7
+  created_at: '2026-08-20T18:11:30-03:00'
+  completed_commit: 6159ec1bc092ba43bbc9b535903bd4099c4b9c23
+  completed_at: '2026-08-20T18:56:00-03:00'
+  completed_order: 130
+  depends_on:
+  - SPEC-132
+  depends_on_raw:
+  - '`matriz-a-capacidade-provider`'
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-136
+  slug: structured-output-retry-provider
+  status: done
+  path: specs/SPEC-136-structured-output-retry-provider.md
+  created_commit: bd541d9d80a2988c61c3a0abf7b27814d81d64d6
+  created_at: '2026-08-20T18:19:49-03:00'
+  completed_commit: a410977ff30d411b0138346bee2aabd1d6f8a9e6
+  completed_at: '2026-09-17T16:55:34-03:00'
+  completed_order: 140
+  depends_on:
+  - SPEC-134
+  depends_on_raw:
+  - '`playtest-real-llm-fail-closed`'
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-137
+  slug: deepseek-paid-timeout-longrun
+  status: done
+  path: specs/SPEC-137-deepseek-paid-timeout-longrun.md
+  created_commit: f5474c410270d48c0fc202d714d38129f8c3df57
+  created_at: '2026-08-20T20:03:53-03:00'
+  completed_commit: 73952372709e02b18aa30bc43cb2f1cb93381126
+  completed_at: '2026-08-21T00:18:56-03:00'
+  completed_order: 131
+  depends_on:
+  - SPEC-132
+  depends_on_raw:
+  - '`matriz-a-capacidade-provider`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-138
+  slug: explorador-aprende-com-mortes
+  status: done
+  path: specs/SPEC-138-explorador-aprende-com-mortes.md
+  created_commit: f5474c410270d48c0fc202d714d38129f8c3df57
+  created_at: '2026-08-20T20:03:53-03:00'
+  completed_commit: 73952372709e02b18aa30bc43cb2f1cb93381126
+  completed_at: '2026-08-21T00:18:56-03:00'
+  completed_order: 132
+  depends_on:
+  - SPEC-102
+  depends_on_raw:
+  - '`continuidade-memoria-morte`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-139
+  slug: playtest-matrix-single-flight
+  status: done
+  path: specs/SPEC-139-playtest-matrix-single-flight.md
+  created_commit: f5474c410270d48c0fc202d714d38129f8c3df57
+  created_at: '2026-08-20T20:03:53-03:00'
+  completed_commit: 73952372709e02b18aa30bc43cb2f1cb93381126
+  completed_at: '2026-08-21T00:18:56-03:00'
+  completed_order: 133
+  depends_on:
+  - SPEC-128
+  depends_on_raw:
+  - '`matriz-longrun-multiperfil-niveis`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-140
+  slug: playtest-matrix-continuacao
+  status: done
+  path: specs/SPEC-140-playtest-matrix-continuacao.md
+  created_commit: 73952372709e02b18aa30bc43cb2f1cb93381126
+  created_at: '2026-08-21T00:18:56-03:00'
+  completed_commit: a410977ff30d411b0138346bee2aabd1d6f8a9e6
+  completed_at: '2026-09-17T16:55:34-03:00'
+  completed_order: 137
+  depends_on:
+  - SPEC-128
+  - SPEC-139
+  depends_on_raw:
+  - '`matriz-longrun-multiperfil-niveis`, `playtest-matrix-single-flight`'
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-141
+  slug: contrato-canonico-ciclo-vida-acoes
+  status: done
+  path: specs/SPEC-141-contrato-canonico-ciclo-vida-acoes.md
+  created_commit: 2bbfd57fdca7ebe54e16a084652aac1b890a0577
+  created_at: '2026-08-27T13:56:39-03:00'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-083
+  depends_on_raw:
+  - '`fix-vitalidade-ferimentos-terminal` (`done`)'
+  depends_on_unresolved:
+  - '`fix-vitalidade-ferimentos-terminal` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-142
+  slug: interacoes-progresso-elegibilidade
+  status: done
+  path: specs/SPEC-142-interacoes-progresso-elegibilidade.md
+  created_commit: 2bbfd57fdca7ebe54e16a084652aac1b890a0577
+  created_at: '2026-08-27T13:56:39-03:00'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-055
+  - SPEC-091
+  depends_on_raw:
+  - '`npcs-3-camadas`, `aliados-em-combate`, `polish-prosa-v2` (`done`)'
+  depends_on_unresolved:
+  - '`npcs-3-camadas`, `aliados-em-combate`, `polish-prosa-v2` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-143
+  slug: latencia-turno-caminho-critico-concorrente
+  status: done
+  path: specs/SPEC-143-latencia-turno-caminho-critico-concorrente.md
+  created_commit: 2bbfd57fdca7ebe54e16a084652aac1b890a0577
+  created_at: '2026-08-27T13:56:39-03:00'
+  completed_commit: a410977ff30d411b0138346bee2aabd1d6f8a9e6
+  completed_at: '2026-09-17T16:55:34-03:00'
+  completed_order: 135
+  depends_on:
+  - SPEC-036
+  - SPEC-116
+  depends_on_raw:
+  - observabilidade-latencia-nos, streaming-turno-sse
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-144
+  slug: resultado-canonico-turno-apresentacao
+  status: done
+  path: specs/SPEC-144-resultado-canonico-turno-apresentacao.md
+  created_commit: 2bbfd57fdca7ebe54e16a084652aac1b890a0577
+  created_at: '2026-08-27T13:56:39-03:00'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-095
+  depends_on_raw:
+  - '`feedback-ledger-recompensas` e eventos estruturados (`done`)'
+  depends_on_unresolved:
+  - '`feedback-ledger-recompensas` e eventos estruturados (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-145
+  slug: structured-output-evidencia-recuperacao
+  status: done
+  path: specs/SPEC-145-structured-output-evidencia-recuperacao.md
+  created_commit: 2bbfd57fdca7ebe54e16a084652aac1b890a0577
+  created_at: '2026-08-27T13:56:39-03:00'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-089
+  depends_on_raw:
+  - '`hardening-structured-sentinelas-rag` (`done`)'
+  depends_on_unresolved:
+  - '`hardening-structured-sentinelas-rag` (`done`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-146
+  slug: grounding-local-memoria-canonica
+  status: done
+  path: specs/SPEC-146-grounding-local-memoria-canonica.md
+  created_commit: a410977ff30d411b0138346bee2aabd1d6f8a9e6
+  created_at: '2026-09-17T16:55:34-03:00'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-085
+  - SPEC-098
+  depends_on_raw:
+  - '`hardening-memoria-proveniencia`, `replan-grounding-troca-regiao`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-147
+  slug: grounding-posse-inventario-memoria
+  status: done
+  path: specs/SPEC-147-grounding-posse-inventario-memoria.md
+  created_commit: a410977ff30d411b0138346bee2aabd1d6f8a9e6
+  created_at: '2026-09-17T16:55:34-03:00'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-146
+  depends_on_raw:
+  - '`grounding-local-memoria-canonica` (`in-progress`)'
+  depends_on_unresolved:
+  - '`grounding-local-memoria-canonica` (`in-progress`)'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-148
+  slug: idempotencia-claim-operacao-concorrente
+  status: done
+  path: specs/SPEC-148-idempotencia-claim-operacao-concorrente.md
+  created_commit: a410977ff30d411b0138346bee2aabd1d6f8a9e6
+  created_at: '2026-09-17T16:55:34-03:00'
+  completed_commit: a410977ff30d411b0138346bee2aabd1d6f8a9e6
+  completed_at: '2026-09-17T16:55:34-03:00'
+  completed_order: 134
+  depends_on:
+  - SPEC-111
+  depends_on_raw:
+  - '`fase-10b-turnos-duraveis-concorrencia-fila`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-149
+  slug: identidade-canonica-npc-memoria
+  status: done
+  path: specs/SPEC-149-identidade-canonica-npc-memoria.md
+  created_commit: a410977ff30d411b0138346bee2aabd1d6f8a9e6
+  created_at: '2026-09-17T16:55:34-03:00'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-040
+  - SPEC-146
+  depends_on_raw:
+  - '`encontros-dedupe`, `grounding-local-memoria-canonica`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-150
+  slug: protocolo-transicoes-criticas-checkpoint
+  status: done
+  path: specs/SPEC-150-protocolo-transicoes-criticas-checkpoint.md
+  created_commit: a410977ff30d411b0138346bee2aabd1d6f8a9e6
+  created_at: '2026-09-17T16:55:34-03:00'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-060
+  - SPEC-141
+  depends_on_raw:
+  - '`contrato-canonico-ciclo-vida-acoes`, `checkpoints-morte`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-151
+  slug: replan-diferido-combate-invariante
+  status: done
+  path: specs/SPEC-151-replan-diferido-combate-invariante.md
+  created_commit: a410977ff30d411b0138346bee2aabd1d6f8a9e6
+  created_at: '2026-09-17T16:55:34-03:00'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-098
+  - SPEC-143
+  depends_on_raw:
+  - '`latencia-turno-caminho-critico-concorrente`, `replan-grounding-troca-regiao`'
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-152
+  slug: semantica-queda-morte-memoria
+  status: done
+  path: specs/SPEC-152-semantica-queda-morte-memoria.md
+  created_commit: a410977ff30d411b0138346bee2aabd1d6f8a9e6
+  created_at: '2026-09-17T16:55:34-03:00'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-060
+  depends_on_raw:
+  - '`conflito-12`, `checkpoints-morte`, `cronica-avancada`'
+  depends_on_unresolved:
+  - '`conflito-12`, `checkpoints-morte`, `cronica-avancada`'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-153
+  slug: auditoria-2026-09-artes-enquadramento
+  status: done
+  path: specs/SPEC-153-auditoria-2026-09-artes-enquadramento.md
+  created_commit: b3dcc19da1768fd11f391a13b301124c825ad6e7
+  created_at: '2026-09-26T14:13:16-03:00'
+  completed_commit: c7eb25cde62606e1034eac6cc1a2f73ef047293d
+  completed_at: '2026-09-26T15:42:15-03:00'
+  completed_order: 143
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved:
+  - Nenhuma
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-154
+  slug: auditoria-2026-09-consistencia-narrativa
+  status: done
+  path: specs/SPEC-154-auditoria-2026-09-consistencia-narrativa.md
+  created_commit: b3dcc19da1768fd11f391a13b301124c825ad6e7
+  created_at: '2026-09-26T14:13:16-03:00'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-161
+  depends_on_raw:
+  - auditoria-2026-09-recompensas-recibos (para consequências econômicas)
+  depends_on_unresolved:
+  - auditoria-2026-09-recompensas-recibos (para consequências econômicas)
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-155
+  slug: auditoria-2026-09-contexto-autenticado
+  status: done
+  path: specs/SPEC-155-auditoria-2026-09-contexto-autenticado.md
+  created_commit: b3dcc19da1768fd11f391a13b301124c825ad6e7
+  created_at: '2026-09-26T14:13:16-03:00'
+  completed_commit: b3dcc19da1768fd11f391a13b301124c825ad6e7
+  completed_at: '2026-09-26T14:13:16-03:00'
+  completed_order: 141
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved:
+  - Nenhuma
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-156
+  slug: auditoria-2026-09-efeitos-transacionais
+  status: done
+  path: specs/SPEC-156-auditoria-2026-09-efeitos-transacionais.md
+  created_commit: b3dcc19da1768fd11f391a13b301124c825ad6e7
+  created_at: '2026-09-26T14:13:16-03:00'
+  completed_commit: c7eb25cde62606e1034eac6cc1a2f73ef047293d
+  completed_at: '2026-09-26T15:42:15-03:00'
+  completed_order: 144
+  depends_on:
+  - SPEC-160
+  depends_on_raw:
+  - auditoria-2026-09-operacoes-turno
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-157
+  slug: auditoria-2026-09-frontend-sessao
+  status: done
+  path: specs/SPEC-157-auditoria-2026-09-frontend-sessao.md
+  created_commit: b3dcc19da1768fd11f391a13b301124c825ad6e7
+  created_at: '2026-09-26T14:13:16-03:00'
+  completed_commit: c7eb25cde62606e1034eac6cc1a2f73ef047293d
+  completed_at: '2026-09-26T15:42:15-03:00'
+  completed_order: 145
+  depends_on: []
+  depends_on_raw:
+  - operacoes-turno para recuperação durável; efeitos-transacionais para arte
+  depends_on_unresolved:
+  - operacoes-turno para recuperação durável; efeitos-transacionais para arte
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-158
+  slug: auditoria-2026-09-gates-integracao
+  status: done
+  path: specs/SPEC-158-auditoria-2026-09-gates-integracao.md
+  created_commit: b3dcc19da1768fd11f391a13b301124c825ad6e7
+  created_at: '2026-09-26T14:13:16-03:00'
+  completed_commit: cadbdd1013022c98f506ee335fa9072efcc9df6c
+  completed_at: '2026-09-26T15:53:13-03:00'
+  completed_order: 148
+  depends_on: []
+  depends_on_raw:
+  - 'Specs da auditoria: gates adicionados incrementalmente, não esperar todas concluírem'
+  depends_on_unresolved:
+  - 'Specs da auditoria: gates adicionados incrementalmente, não esperar todas concluírem'
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-159
+  slug: auditoria-2026-09-leases-workers
+  status: done
+  path: specs/SPEC-159-auditoria-2026-09-leases-workers.md
+  created_commit: b3dcc19da1768fd11f391a13b301124c825ad6e7
+  created_at: '2026-09-26T14:13:16-03:00'
+  completed_commit: c7eb25cde62606e1034eac6cc1a2f73ef047293d
+  completed_at: '2026-09-26T15:42:15-03:00'
+  completed_order: 146
+  depends_on:
+  - SPEC-160
+  depends_on_raw:
+  - auditoria-2026-09-operacoes-turno; integrar efeitos-transacionais
+  depends_on_unresolved:
+  - auditoria-2026-09-operacoes-turno; integrar efeitos-transacionais
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-160
+  slug: auditoria-2026-09-operacoes-turno
+  status: done
+  path: specs/SPEC-160-auditoria-2026-09-operacoes-turno.md
+  created_commit: b3dcc19da1768fd11f391a13b301124c825ad6e7
+  created_at: '2026-09-26T14:13:16-03:00'
+  completed_commit: c7eb25cde62606e1034eac6cc1a2f73ef047293d
+  completed_at: '2026-09-26T15:42:15-03:00'
+  completed_order: 147
+  depends_on: []
+  depends_on_raw:
+  - Nenhuma para replay; efeitos transacionais integram na spec própria
+  depends_on_unresolved:
+  - Nenhuma para replay; efeitos transacionais integram na spec própria
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-161
+  slug: auditoria-2026-09-recompensas-recibos
+  status: done
+  path: specs/SPEC-161-auditoria-2026-09-recompensas-recibos.md
+  created_commit: b3dcc19da1768fd11f391a13b301124c825ad6e7
+  created_at: '2026-09-26T14:13:16-03:00'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved:
+  - Nenhuma
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-162
+  slug: remediacao-local-contratos-pre-matriz
+  status: done
+  path: specs/SPEC-162-remediacao-local-contratos-pre-matriz.md
+  created_commit: b3dcc19da1768fd11f391a13b301124c825ad6e7
+  created_at: '2026-09-26T14:13:16-03:00'
+  completed_commit: b3dcc19da1768fd11f391a13b301124c825ad6e7
+  completed_at: '2026-09-26T14:13:16-03:00'
+  completed_order: 142
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: slug_lexical
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-163
+  slug: normalizacao-historica-specs
+  status: done
+  path: specs/SPEC-163-normalizacao-historica-specs.md
+  created_commit: null
+  created_at: null
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: true
+  lineage_note: uncommitted-current-spec
+- id: SPEC-164
+  slug: agents-md-model-routing
+  status: done
+  path: specs/SPEC-164-agents-md-model-routing.md
+  created_commit: null
+  created_at: '2026-09-28'
+  completed_commit: null
+  completed_at: '2026-09-28'
+  completed_order: 163
+  depends_on:
+  - SPEC-163
+  depends_on_raw:
+  - SPEC-163 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-165
+  slug: eval-governance
+  status: done
+  path: specs/SPEC-165-eval-governance.md
+  created_commit: null
+  created_at: '2026-09-28'
+  completed_commit: null
+  completed_at: '2026-09-28'
+  completed_order: 164
+  depends_on:
+  - SPEC-164
+  depends_on_raw:
+  - SPEC-164 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-166
+  slug: project-index-core
+  status: done
+  path: specs/SPEC-166-project-index-core.md
+  created_commit: null
+  created_at: '2026-09-28'
+  completed_commit: null
+  completed_at: '2026-09-28'
+  completed_order: 165
+  depends_on:
+  - SPEC-165
+  depends_on_raw:
+  - SPEC-165 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-167
+  slug: deterministic-eval-harness
+  status: done
+  path: specs/SPEC-167-deterministic-eval-harness.md
+  created_commit: null
+  created_at: '2026-09-28'
+  completed_commit: null
+  completed_at: '2026-09-28'
+  completed_order: 166
+  depends_on:
+  - SPEC-166
+  depends_on_raw:
+  - SPEC-166 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-168
+  slug: state-rules-evals
+  status: done
+  path: specs/SPEC-168-state-rules-evals.md
+  created_commit: null
+  created_at: '2026-09-28'
+  completed_commit: null
+  completed_at: '2026-09-28'
+  completed_order: 167
+  depends_on:
+  - SPEC-167
+  depends_on_raw:
+  - SPEC-167 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-169
+  slug: routing-action-evals
+  status: done
+  path: specs/SPEC-169-routing-action-evals.md
+  created_commit: null
+  created_at: '2026-09-28'
+  completed_commit: null
+  completed_at: '2026-09-29'
+  completed_order: 168
+  depends_on:
+  - SPEC-168
+  depends_on_raw:
+  - SPEC-168 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-170
+  slug: memory-rag-context-evals
+  status: done
+  path: specs/SPEC-170-memory-rag-context-evals.md
+  created_commit: null
+  created_at: '2026-09-29'
+  completed_commit: null
+  completed_at: '2026-09-29'
+  completed_order: 169
+  depends_on:
+  - SPEC-169
+  depends_on_raw:
+  - SPEC-169 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-171
+  slug: narrative-npc-evals
+  status: done
+  path: specs/SPEC-171-narrative-npc-evals.md
+  created_commit: null
+  created_at: '2026-09-29'
+  completed_commit: null
+  completed_at: '2026-09-30'
+  completed_order: 170
+  depends_on:
+  - SPEC-170
+  depends_on_raw:
+  - SPEC-170 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-172
+  slug: frontend-evals
+  status: done
+  path: specs/SPEC-172-frontend-evals.md
+  created_commit: null
+  created_at: '2026-09-30'
+  completed_commit: null
+  completed_at: '2026-09-30'
+  completed_order: 171
+  depends_on:
+  - SPEC-171
+  depends_on_raw:
+  - SPEC-171 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-173
+  slug: ci-gates
+  status: done
+  path: specs/SPEC-173-ci-gates.md
+  created_commit: null
+  created_at: '2026-09-30'
+  completed_commit: null
+  completed_at: '2026-09-30'
+  completed_order: 172
+  depends_on:
+  - SPEC-172
+  depends_on_raw:
+  - SPEC-172 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-174
+  slug: baseline-v1
+  status: done
+  path: specs/SPEC-174-baseline-v1.md
+  created_commit: null
+  created_at: '2026-09-30'
+  completed_commit: null
+  completed_at: '2026-09-30'
+  completed_order: 173
+  depends_on:
+  - SPEC-173
+  depends_on_raw:
+  - SPEC-173 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null
+- id: SPEC-175
+  slug: project-index-ab-benchmark
+  status: done
+  path: specs/SPEC-175-project-index-ab-benchmark.md
+  created_commit: null
+  created_at: '2026-09-30'
+  completed_commit: null
+  completed_at: '2026-10-01'
+  completed_order: 174
+  depends_on:
+  - SPEC-174
+  depends_on_raw:
+  - SPEC-174 `done`
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: null

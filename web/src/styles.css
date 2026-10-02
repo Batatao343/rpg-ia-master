@@ -466,6 +466,7 @@ select {
   display: flex; flex-direction: column; min-height: 0;
 }
 .hud__head { padding: 1.15rem 1.15rem 0.4rem; display: flex; align-items: center; gap: 0.7rem; }
+.hud__close { display: none; margin-left: auto; }
 .hud__medallion { flex: none; color: var(--accent); }
 .hud__id { display: grid; gap: 0.1rem; min-width: 0; }
 .hud__name { font-family: var(--display); font-size: 1.1rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -729,7 +730,7 @@ select {
 .quest__status--completed { color: var(--accent); }
 .quest__status--failed { color: var(--danger, oklch(0.6 0.18 25)); }
 .quest__desc { margin: 0.3rem 0 0.3rem; font-size: 0.9rem; font-style: italic; color: var(--muted); line-height: 1.45; }
-.quest__meta { margin: 0.2rem 0 0; font-size: 0.78rem; color: var(--faint); }
+.quest__meta { margin: 0.2rem 0 0; font-size: 0.78rem; color: var(--muted); }
 
 /* ---- Codex do jogador (Fase 3.2) ---- */
 .codex-cats { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0 0 0.8rem; }
@@ -1003,6 +1004,7 @@ select {
   .laboratory-flag + .combat-flag { display: none; }
   .stage { grid-template-columns: 1fr; }
   .hud { width: 100vw; top: 0; }
+  .hud__close { display: inline-flex; }
   .story { padding: 0.7rem 0.7rem 1rem; }
   .scene-art { flex-basis: 132px; }
   .scene-art p { left: 0.7rem; bottom: 0.35rem; font-size: 0.6rem; }
@@ -1036,4 +1038,16 @@ select {
   top: 0.75rem;
   right: 0.75rem;
   width: auto;
+}
+
+/* O mapa é também navegação: preserva o desenho dos nós ao usar controles
+   semânticos e deixa destinos conhecidos acessíveis por teclado. */
+.worldmap__node {
+  font: inherit;
+  padding: 0;
+}
+.worldmap__node:disabled { cursor: default; }
+.worldmap__node:not(:disabled):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
 }

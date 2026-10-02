@@ -1,6 +1,6 @@
 """Fase 7.3 — separação público/segredo nos NPCs do Codex.
 
-Spec: specs/fase-7.3-npc-segredos.md.
+Spec: specs/SPEC-024-fase-7.3-npc-segredos.md.
 Etapas 1-3 em fixtures; testes de dado real (Valerius) rodam sobre data/codex/.
 """
 

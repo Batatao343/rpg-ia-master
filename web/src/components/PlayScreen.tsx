@@ -137,7 +137,9 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
           <SceneArtwork scene={data?.visual?.scene} />
           <StoryLog entries={log} thinking={thinking} thinkingLabel={thinkingLabel} />
         </div>
-        <Hud data={data} open={hudOpen} onEquip={onEquip} busy={busy} />
+        <Hud data={data} open={hudOpen} onEquip={onEquip} busy={busy}
+          onTravel={(locationName) => onAction(`Viajo para ${locationName}`)}
+          onClose={() => setHudOpen(false)} />
       </div>
 
       {showOnboard && data?.game_id && <OnboardingHint gameId={data.game_id} />}
