@@ -1,0 +1,60 @@
+{
+  "spec_id": "SPEC-176",
+  "status": "review-pending",
+  "executor": {
+    "model": "sol",
+    "actual_model": "gpt-6.1-sol",
+    "effort": "high",
+    "actual_effort": "high",
+    "session_id": "/root/spec176_executor",
+    "run_id": null,
+    "provenance": "coordinator attestation of spawn_agent parameters"
+  },
+  "review": {
+    "required": true,
+    "model": "sol",
+    "effort": "high",
+    "decision": "APPROVED",
+    "actual_model": "gpt-6.1-sol",
+    "session_id": "/root/spec176_reviewer",
+    "run_id": null,
+    "scope": "technical_local_patch_and_gates",
+    "reviewed_snapshot_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55"
+  },
+  "human_eval_governance_approval": "PENDING",
+  "remote_ci": "NOT_RUN",
+  "head_sha_before": "1beefc432cce5ded4e3468e42c5e583aa4431a44",
+  "head_sha_after_workspace": "1beefc432cce5ded4e3468e42c5e583aa4431a44",
+  "verification_snapshot_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
+  "classification": "STALE_LOCK",
+  "tests": {
+    "passed": 1898,
+    "skipped": 35,
+    "deselected": 15,
+    "warning": 1,
+    "duration_seconds": 317.92,
+    "focused_passed": 80
+  },
+  "deterministic_eval": {
+    "run_id": "spec176-clean-deterministic",
+    "passed": 86,
+    "errors": 0,
+    "skips": 0,
+    "provider": null
+  },
+  "baseline_v1_comparable": false,
+  "index": {
+    "source_tree_hash": "sha256:6c8d3607912d46a5766868f8db7b90c23dbff6c4971423c3baf920b0d0d07bf7",
+    "nodes": 5516,
+    "edges": 14089
+  },
+  "artifacts": {
+    "backend-smoke.json": "sha256:4e11da5a3928c8a6d927cce81192edb9af2ac962d17fc3de1e0f65aca603dd1b",
+    "dataset-audit.json": "sha256:fa4cde5cb94604823edb578dbbb175ee5a160095dbbbfc870ac2b5ff2a9b52f9",
+    "pytest-focused-clean.txt": "sha256:6cb46bca94470c6b008059a874ad00ea01d95ca04ce3ed1914e603d1c2f14992",
+    "pytest-full-clean.txt": "sha256:719013057c526ab037a23c583098a5802a93651d4234b0a1b0f639e6a48e078a",
+    "README.md": "sha256:6e519019c0faaa669c414bb140156f9989ee2df79ed8853620466dab7b47f790",
+    "spec176-clean-deterministic.json": "sha256:c4459e8c182628bbb0a08968997d16fa839845118ee9b6436ff19f8f39530f65",
+    "spec176-clean-deterministic.md": "sha256:e71f6ac691469a0dd2390a01141e18f8d517250a7762f9bf8d8566c73a7df852"
+  }
+}

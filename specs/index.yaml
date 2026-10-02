@@ -3126,7 +3126,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Local remediation; independent review and CI approval pending
+  lineage_note: Local remediation; independent technical review approved; human approval and remote CI pending
 - id: SPEC-177
   slug: jev-decision-backend-adapter
   status: approved

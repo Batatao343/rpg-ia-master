@@ -1,0 +1,105 @@
+{
+  "run_id": "20261002-093517-155759",
+  "mock": true,
+  "requested_turns_per_profile": 3,
+  "profiles": [
+    {
+      "profile": "agressivo",
+      "turns": 3,
+      "errors": 0,
+      "error_violations": 0,
+      "warning_violations": 0
+    },
+    {
+      "profile": "combate",
+      "turns": 3,
+      "errors": 0,
+      "error_violations": 0,
+      "warning_violations": 0
+    },
+    {
+      "profile": "comerciante",
+      "turns": 3,
+      "errors": 0,
+      "error_violations": 0,
+      "warning_violations": 0
+    },
+    {
+      "profile": "diplomatico",
+      "turns": 3,
+      "errors": 0,
+      "error_violations": 0,
+      "warning_violations": 0
+    },
+    {
+      "profile": "explorador",
+      "turns": 3,
+      "errors": 0,
+      "error_violations": 0,
+      "warning_violations": 0
+    },
+    {
+      "profile": "fujao",
+      "turns": 3,
+      "errors": 0,
+      "error_violations": 0,
+      "warning_violations": 0
+    },
+    {
+      "profile": "loot_abuser",
+      "turns": 3,
+      "errors": 0,
+      "error_violations": 0,
+      "warning_violations": 0
+    },
+    {
+      "profile": "mapa_breaker",
+      "turns": 3,
+      "errors": 0,
+      "error_violations": 0,
+      "warning_violations": 0
+    },
+    {
+      "profile": "normal",
+      "turns": 3,
+      "errors": 0,
+      "error_violations": 0,
+      "warning_violations": 0
+    },
+    {
+      "profile": "npc_only",
+      "turns": 3,
+      "errors": 0,
+      "error_violations": 0,
+      "warning_violations": 0
+    },
+    {
+      "profile": "quester",
+      "turns": 3,
+      "errors": 0,
+      "error_violations": 0,
+      "warning_violations": 0
+    },
+    {
+      "profile": "recrutador",
+      "turns": 3,
+      "errors": 0,
+      "error_violations": 0,
+      "warning_violations": 0
+    },
+    {
+      "profile": "secret_rusher",
+      "turns": 3,
+      "errors": 0,
+      "error_violations": 0,
+      "warning_violations": 0
+    },
+    {
+      "profile": "troll",
+      "turns": 3,
+      "errors": 0,
+      "error_violations": 0,
+      "warning_violations": 0
+    }
+  ]
+}

@@ -58,16 +58,16 @@ Fazer um **checkout limpo do commitado** reproduzir os mesmos gates verdes do wo
 
 ## Critérios de aceite
 
-- [ ] `evals.core.governance check` verde em checkout limpo;
-- [ ] `project_index check` verde em checkout limpo;
+- [x] `evals.core.governance check` verde em checkout limpo;
+- [x] `project_index check` verde em checkout limpo;
 - [ ] `uv run pytest -q` verde no commit final;
 - [ ] `deterministic-evals` realmente executa as suites em vez de parar no governance check;
 - [ ] `backend-selective` verde quando selecionado;
 - [ ] `protected-evaluator-review` passa por aprovação explícita e auditável quando paths protegidos mudam;
-- [ ] nenhum gate foi removido, convertido em warning ou tornado permissivo;
-- [ ] nenhuma mudança de produto/modelo/JeV;
+- [x] nenhum gate foi removido, convertido em warning ou tornado permissivo;
+- [x] nenhuma mudança de produto/modelo/JeV;
 - [ ] `ESTADO_ATUAL.md` registra causa raiz e run verde final;
-- [ ] somente após tudo acima a SPEC-177 pode começar.
+- [x] somente após tudo acima a SPEC-177 pode começar (não iniciada).
 
 ## Model routing
 
@@ -75,7 +75,35 @@ Executor desta spec é **Sol High** porque o problema cruza evaluator governance
 
 ## Gate de fechamento adicional
 
-- [ ] o commit corretivo não altera gameplay, prompts, provider routing ou thresholds de produto;
-- [ ] `git status --porcelain` é vazio no checkout usado para o gate final;
-- [ ] o reviewer Sol recebe causa raiz + diff + logs dos runs vermelhos/verdes e retorna `APPROVED`;
+- [x] o commit corretivo não altera gameplay, prompts, provider routing ou thresholds de produto;
+- [x] `git status --porcelain` é vazio no checkout usado para o gate final;
+- [x] o reviewer Sol recebe causa raiz + diff + logs dos runs vermelhos/verdes e retorna `APPROVED` técnico local;
 - [ ] se a causa for `UNAPPROVED_DATASET_DRIFT`, esta spec NÃO pode absorver a mudança: deve parar com `EVAL_AUTHORING_REQUIRED`.
+
+## Execução local — 2026-10-02
+
+- Executor selecionado pelo harness: Sol High (`gpt-6.1-sol/high`), task/session
+  `/root/spec176_executor`; proveniência: parâmetros `spawn_agent` atestados
+  pelo coordenador. Nenhum run ID adicional foi inventado.
+- Causa: `STALE_LOCK` por LF/CRLF, sem drift semântico; 27 IDs/expected e bytes
+  aprovados comprovados antes do relock. Detalhes/auditoria em
+  `docs/spec176/README.md` e `docs/spec176/dataset-audit.json`.
+- O relock canônico muda apenas um hash; hashing continua raw. `.gitattributes`
+  fixa bytes LF e três regressões provam clones true/false e tamper fail-closed.
+  Nenhum evaluator/dataset/expected/registry/schema semântico/baseline/workflow
+  foi alterado. Project Index final: 5.516 nós/14.089 arestas, selective-only.
+- Snapshot local de código validado:
+  `d988991fc35f2f4532131eb8c748b7f6609b5d55`, somente no clone de verificação.
+  Focused: 80 verdes; CLI sete suites: 86/86; smoke 14 perfis × 3 turnos,
+  zero erro/violações. Suíte completa no clone: **1.898 passed, 35 skipped,
+  15 deselected**, 1 warning, 317,92 s.
+- Baseline v1 é evidência histórica intocada e estritamente incompatível com
+  a régua LF; hashes históricos de artifacts também divergem. Não alegar
+  score delta A/B contra v1 nem reescrever seus hashes nesta tarefa.
+- Revisão Sol independente **APPROVED técnico local**, tarefa
+  `/root/spec176_reviewer`; parecer em
+  `handoffs/SPEC-176-SOL-independent-review.md`. Status máximo permanece
+  `review-pending`: approval humano `eval-governance` e push/CI real verde
+  são gates ainda pendentes.
+  SPEC-177 não iniciou; artes preexistentes preservadas. Nenhum provider real,
+  cloud, JeV ou long-run foi executado.
