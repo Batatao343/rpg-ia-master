@@ -1,0 +1,277 @@
+{
+  "package": "rpg-next-jev-golive-v5",
+  "revision": 5,
+  "created_date": "2026-10-02",
+  "observed_repo": "Batatao343/rpg-ia-master",
+  "observed_main_sha": "1beefc432cce5ded4e3468e42c5e583aa4431a44",
+  "execution_precondition": "SPEC-163..SPEC-175 done; SPEC-176 free; current CI failures reproduced before remediation",
+  "new_specs": "SPEC-176..SPEC-198",
+  "model_policy": "exact executor/effort per spec; no silent substitution; independent exact-model reviews; Luna mechanical delegation only",
+  "model_contract": "examples/spec-model-contract.yaml",
+  "harness_contract": "11_HARNESS_MODEL_CONTRACT.md",
+  "eval_routing_contract": "canonical run_eval remains MockLLM/offline; live Jev A/B uses read-only corpus via evals/experiments",
+  "project_index_policy": "selective-only; SPEC-176 may regenerate stale versioned artifacts solely to restore current CI freshness contract",
+  "currency_name": "Estilhas de Éter",
+  "market": "Brazil / BRL",
+  "long_run": "manual-only",
+  "critical_review_updates": [
+    "SPEC-176 executor promoted to Sol due eval-governance/protected-boundary risk",
+    "SPEC-181/186/190 executor promoted to Sol due auth/metering/security boundaries",
+    "SPEC-188 forbids paid automatic image generation from existing triggers",
+    "SPEC-194 technical completion decoupled from Play Console; real certification in SPEC-198",
+    "billing remains outside GameState; history cost is read-model enrichment",
+    "hosted-Supabase contract preserves existing hosted OIDC/S3 semantics"
+  ],
+  "files": [
+    {
+      "path": "00_ESTADO_OBSERVADO.md",
+      "sha256": "7ad5906dc0f7d1e6a790852aade5439991114855e0fbd2b6d0c14ee08a63e6dd",
+      "bytes": 4174
+    },
+    {
+      "path": "01_ARQUITETURA_ALVO.md",
+      "sha256": "531314f502992a474008460d071b63da2396cf72f6e2686b6382656feadf2bd8",
+      "bytes": 2937
+    },
+    {
+      "path": "02_BILLING_E_MARGIN.md",
+      "sha256": "32f33e3bc4964edaf68df9c0a1085a72235bba64e5ff5c1a876105d26d108ac8",
+      "bytes": 3084
+    },
+    {
+      "path": "03_MODEL_EXECUTION_POLICY.md",
+      "sha256": "e1e7ddd727a0955f6a56f52272592fd2e77d4816e06c3e9aa70121a104e52c8f",
+      "bytes": 2602
+    },
+    {
+      "path": "04_VOZ_STT.md",
+      "sha256": "1e4e5d6d3909437b01399ec361c0b83712c92098b104b4dc65abe0bf4924da76",
+      "bytes": 1362
+    },
+    {
+      "path": "05_CLOUD_VERCEL_SUPABASE.md",
+      "sha256": "1d7874c7abe20e4524b4781c9836d061cec946b187ef4604efc8f884abfbffcc",
+      "bytes": 1243
+    },
+    {
+      "path": "06_ANDROID_GOOGLE_PLAY.md",
+      "sha256": "d42c001d26e7bd7a036d6c636787ea9b4f1e31832dd16b70f7d7c4c4742bf600",
+      "bytes": 1455
+    },
+    {
+      "path": "07_SECURITY_RELEASE.md",
+      "sha256": "63e85b73e39aa297995512b13179438f46c337771f813ab58d00dd8ec6d7b94c",
+      "bytes": 1057
+    },
+    {
+      "path": "08_REFERENCIAS_ATUAIS.md",
+      "sha256": "bba954b625e541111223feedec48fd75d8db9a892868f3e321fbd9dd9c1132ef",
+      "bytes": 2558
+    },
+    {
+      "path": "09_CHECKLIST_DO_PACOTE.md",
+      "sha256": "3be8fb2f2f40b5fade075a794f9b643e666f056eb2a9d8f88c12cf3399008d9e",
+      "bytes": 2110
+    },
+    {
+      "path": "10_JEV_DECISION_LAYER.md",
+      "sha256": "87554fcd5953039bc8f43e55224c982ff0c9b59870342308b5af1a3e9cd4e3ac",
+      "bytes": 2780
+    },
+    {
+      "path": "11_HARNESS_MODEL_CONTRACT.md",
+      "sha256": "293cc34494cf6776c131da7e81e6100c878d9b3440707907baf0f1a8dd2f2502",
+      "bytes": 3016
+    },
+    {
+      "path": "12_REVIEW_RATIONALE.md",
+      "sha256": "01897b661555218d0d2aeba64590cda139c25bff748f0d300c77e02667f11d23",
+      "bytes": 4179
+    },
+    {
+      "path": "PROTECTED_PATHS.txt",
+      "sha256": "e3732f93a71ac422d69da93a1d6f7a2fcac0b59b5392d5fa61520f575961de78",
+      "bytes": 607
+    },
+    {
+      "path": "README.md",
+      "sha256": "5fbfb9e9cf0b5554f704b912b2c9a0df9c1e4ffdce55e6f3e22b324d9924afa4",
+      "bytes": 3575
+    },
+    {
+      "path": "SPEC_EXECUTION_ORDER.md",
+      "sha256": "1a9613d554bed31b4c7dc387054f21e4458fd7527b34dfce1b8f51887ca2bde6",
+      "bytes": 3729
+    },
+    {
+      "path": "START_HERE_PROMPT.md",
+      "sha256": "80b9f220a9436425dc4a6363284aebfdbeac50a05bed719ad8ad4e1058d757fb",
+      "bytes": 4396
+    },
+    {
+      "path": "examples/jev-ab-report.schema.json",
+      "sha256": "78c59bb527f55f432b3981a1f0b2803bf258e3bc8fe2b40e2f865170e3009135",
+      "bytes": 1121
+    },
+    {
+      "path": "examples/jev-router-request.example.json",
+      "sha256": "896cdaa690f9b727db395e6946b6c10ba1db589809d350bcff6a4f99bdb79095",
+      "bytes": 1172
+    },
+    {
+      "path": "examples/model-execution-attestation.schema.json",
+      "sha256": "5290262297e2dbd4227e99406aeb78231e50a3a4932c4b085a9d618fba32855b",
+      "bytes": 1331
+    },
+    {
+      "path": "examples/model-routing.yaml",
+      "sha256": "9cdd233257f672589d080b308c429cad15dcb386a2b0eee76c2a0c32af1381c9",
+      "bytes": 528
+    },
+    {
+      "path": "examples/pricing-config.example.yaml",
+      "sha256": "8f2a343cc5adc08e242f0aeadc0c4a2e7ed853c3694610f80cdd23f407a5f950",
+      "bytes": 407
+    },
+    {
+      "path": "examples/purchase-state-machine.md",
+      "sha256": "5469ed4451009c0b855eb55b83ff53e4239c21356f47a25c3d5d8e349ecea6fc",
+      "bytes": 559
+    },
+    {
+      "path": "examples/spec-model-contract.yaml",
+      "sha256": "1d8dfcf0eaa24cd63fd443f217da80f6847300aaa1479dfad2c62927fff3b1ee",
+      "bytes": 12925
+    },
+    {
+      "path": "examples/stt-routes.example.yaml",
+      "sha256": "658e9df8599b9b5a6edbd4dccd878a76ad95b309e64487844393f7ef79d19bb5",
+      "bytes": 210
+    },
+    {
+      "path": "examples/usage_event.schema.json",
+      "sha256": "bc9f6abf1bf70bbfed42fc37fd1c53ebfd532c8277bd0f76e2edfdd61fdbe6a2",
+      "bytes": 962
+    },
+    {
+      "path": "specs/176-ci-eval-clean-checkout-integrity.md",
+      "sha256": "75aba8436c2990af2bb68e8ee51e4e963b7b80cf69f3f85698bf22f787ac29e0",
+      "bytes": 5558
+    },
+    {
+      "path": "specs/177-jev-decision-backend-adapter.md",
+      "sha256": "fb90950d0edc69ce8bcf26f27e7902e23b4742fe36bc03ce0559f387bfe3eb94",
+      "bytes": 4070
+    },
+    {
+      "path": "specs/178-jev-router-ab-eval.md",
+      "sha256": "e1cf5f0847960204f8f3148fdeb7c697ba4a730aa57b4b8265d2af56303ed279",
+      "bytes": 4382
+    },
+    {
+      "path": "specs/179-jev-target-loot-context-eval.md",
+      "sha256": "85c47a296154b632ed386ea7ba91d6c5316856d7479ef754daf8739d024f6add",
+      "bytes": 3204
+    },
+    {
+      "path": "specs/180-jev-classify-expansion-promotion.md",
+      "sha256": "f97f17f461211144eb252204a10216adfa30e8fd649b4a095b1b19704aaaaad8",
+      "bytes": 4318
+    },
+    {
+      "path": "specs/181-hosted-supabase-runtime-contract.md",
+      "sha256": "6a27a0750851f15de250bbfe298a73d36df5ba41ffee6de4ea04da4f34185f03",
+      "bytes": 2973
+    },
+    {
+      "path": "specs/182-real-usage-metering.md",
+      "sha256": "51aae78d10ba44e7824f9e55f9183b1db14804c1ce06a3a278b4b61efedda870",
+      "bytes": 3648
+    },
+    {
+      "path": "specs/183-pricing-estilhas-margin.md",
+      "sha256": "404be259ead48233f5c9529f5c35c7c435bcde9a4a8925d8ca5c832f596abb03",
+      "bytes": 3373
+    },
+    {
+      "path": "specs/184-wallet-ledger-reservations.md",
+      "sha256": "de178e188c58bf2b983563bfd70aab40811bb0af9779c2bff26dc8184950b5ff",
+      "bytes": 3603
+    },
+    {
+      "path": "specs/185-account-dashboard-cost-attribution.md",
+      "sha256": "7f5d9328fce5d22f2627a594eed9af5c11851ef820463ccebccc0b60bf4f6980",
+      "bytes": 2821
+    },
+    {
+      "path": "specs/186-speech-to-text-routing.md",
+      "sha256": "f0db0ba3c586f4ea5da1e37c76f41dbca7288ff3104370883948319b9b8d176e",
+      "bytes": 2675
+    },
+    {
+      "path": "specs/187-voice-input-web-mobile.md",
+      "sha256": "a3bba06512b3f81270e40b25335b715b7e9b5bb876a29c7985205c0d28ee884d",
+      "bytes": 2315
+    },
+    {
+      "path": "specs/188-paid-image-quotes.md",
+      "sha256": "b322a74ef2ec5eff07a0492dd7b8dc19eb5906cc0c6fcc92723e57ac3a01a1ba",
+      "bytes": 3218
+    },
+    {
+      "path": "specs/189-stripe-web-checkout-webhooks.md",
+      "sha256": "d9a751d9b3951eab563ceec9eb28d7b3f88198bff866dbdd3fd1791b949da28b",
+      "bytes": 2900
+    },
+    {
+      "path": "specs/190-account-lifecycle-abuse-security.md",
+      "sha256": "990a65c7025ba00a652b06fa09ac534be8f3b258e40cc9a47da8b660df810772",
+      "bytes": 2588
+    },
+    {
+      "path": "specs/191-supabase-remote-staging.md",
+      "sha256": "b1181925a8546dc3cd0d0f83d8cce97413f4f0651b52a85e0b27d34e0967fc7c",
+      "bytes": 2557
+    },
+    {
+      "path": "specs/192-vercel-staging-worker-topology.md",
+      "sha256": "314e71e918481bcee2efe265373724081f2520acdadd1744e419fa1210c320e6",
+      "bytes": 2962
+    },
+    {
+      "path": "specs/193-capacitor-android-foundation.md",
+      "sha256": "8077534e39b54680d2cb49e1300ff45421fffa8ab708ceb7ee210f75abc86ecf",
+      "bytes": 2442
+    },
+    {
+      "path": "specs/194-google-play-billing-consumables.md",
+      "sha256": "496ab6969a88b272bfad98d086b660a6aadc37598041e21f879fa260d90c1b52",
+      "bytes": 3088
+    },
+    {
+      "path": "specs/195-cross-channel-reconciliation-refunds.md",
+      "sha256": "2b5e7b35d944d226112a3516285df920426562061a41cfb03f5839de6cb66a89",
+      "bytes": 3013
+    },
+    {
+      "path": "specs/196-finops-margin-guard-observability.md",
+      "sha256": "cc91e9e2b6c2e0abec5eb84693d88983da8abaef7d9f823302bb63716c9aee35",
+      "bytes": 2431
+    },
+    {
+      "path": "specs/197-closed-paid-beta-release-gate.md",
+      "sha256": "e30598376374040fd77795ba2629efa5ab111ef38f659d064508fd77ee5f3cc9",
+      "bytes": 2731
+    },
+    {
+      "path": "specs/198-google-play-publication.md",
+      "sha256": "fae6c39d828d951f00c7e5a12565a017f4630e2ab6e67b7603177ece9c857831",
+      "bytes": 3017
+    },
+    {
+      "path": "tools/validate_model_contract.py",
+      "sha256": "53fffd9aa9585ead586abbbc3a50477f89abaa54f96cf75ebbba1338cd4022db",
+      "bytes": 2148
+    }
+  ]
+}

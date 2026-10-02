@@ -1,0 +1,10 @@
+routes:
+  - provider: groq
+    model: whisper-large-v3-turbo
+    max_seconds: 60
+  - provider: openai
+    model: gpt-4o-mini-transcribe
+    max_seconds: 60
+persistence:
+  raw_audio: never
+  transcript: allowed

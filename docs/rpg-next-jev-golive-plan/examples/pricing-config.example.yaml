@@ -1,0 +1,16 @@
+# EXEMPLO estrutural — números NÃO aprovados para venda.
+currency: BRL
+credit_unit: ether_shard
+target_margin_pct: 5.0
+tax_pct: 0.0
+fx:
+  source: configured_snapshot
+  safety_buffer_pct: 0.0
+channels:
+  stripe_web:
+    fee_model: versioned_account_config
+  google_play:
+    fee_model: versioned_account_config
+    require_verified_fee_tier: true
+fixed_infra:
+  included_in_per_transaction_margin: false

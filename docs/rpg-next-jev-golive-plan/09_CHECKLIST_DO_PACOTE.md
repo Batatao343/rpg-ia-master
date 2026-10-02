@@ -1,0 +1,34 @@
+# Checklist de integridade deste plano
+
+- [ ] SPEC-163..175 concluídas no HEAD real antes de começar.
+- [ ] Harness leu `examples/spec-model-contract.yaml` antes da SPEC-176.
+- [ ] Cada spec executa no modelo/effort exatos; mismatch para com `MODEL_HANDOFF_REQUIRED`.
+- [ ] Reviews obrigatórios usam contexto independente e modelo exato.
+- [ ] Luna só executa subtarefas mecânicas explicitamente permitidas.
+- [ ] IDs 176..198 importados sem colisão.
+- [ ] SPEC-176 reproduz os failures atuais em checkout limpo antes de corrigir.
+- [ ] Dataset protegido é validado semanticamente antes de qualquer relock.
+- [ ] `evals.core.governance check` e `project_index check` verdes no commit final.
+- [ ] Protected evaluator approval continua explícita/auditável; nenhum bypass permanente.
+- [ ] Nenhum Jev antes de SPEC-176 `done` + CI verde.
+- [ ] SPEC-177 não altera produção.
+- [ ] Jev é avaliado via corpus existente, sem alterar expected/holdout/threshold pós-hoc.
+- [ ] Target Jev usa IDs canônicos + unknown/none, nunca string inventada.
+- [ ] Nenhuma substituição global de `ModelTier.CLASSIFY` sem eval por callsite.
+- [ ] LLM atual permanece fallback onde necessário.
+- [ ] `run_eval()` canônico segue offline/MockLLM e intocado pelo experimento Jev.
+- [ ] A/B Jev live fica em `evals/experiments/`.
+- [ ] Project Index não volta ao fluxo padrão após a remediação de freshness.
+- [ ] Estilhas de Éter não entram em GameState.
+- [ ] Nenhum crédito grátis.
+- [ ] Turnos normais sem confirmação de preço.
+- [ ] Todo provider call de imagem exige quote/confirm; triggers automáticos só oferecem/cue.
+- [ ] Voz transcreve e volta editável; sem auto-send.
+- [ ] Stripe web; Google Play Android; wallet única.
+- [ ] Android v1 sem link Stripe/alternate billing.
+- [ ] Metering real inclui Jev se ele for promovido.
+- [ ] Metering precede pricing/wallet.
+- [ ] Cloud staging precede produção.
+- [ ] Google Play publication é a última spec.
+- [ ] Long-run nunca automático.
+- [ ] Astra apenas SPEC-184 e SPEC-195 por default; qualquer outra escalada exige aprovação humana.

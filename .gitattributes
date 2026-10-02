@@ -1,0 +1,20 @@
+# Exact-byte eval locks and Project Index freshness must survive Git checkout
+# on Windows and Linux. Keep hashes strict; make measured text bytes portable.
+*.py text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.toml text eol=lf
+*.json text eol=lf
+*.jsonl text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+Procfile text eol=lf
+
+# Binary art is outside text conversion.
+*.webp binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.zip binary

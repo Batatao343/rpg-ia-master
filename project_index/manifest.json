@@ -1,15 +1,42 @@
 {
-  "schema_version": 1,
-  "generator_version": "1.0.0",
-  "commit_sha": "cadbdd1013022c98f506ee335fa9072efcc9df6c",
-  "source_tree_hash": "sha256:c1149edc3b294bcc08cd6ea5b507a533588413cecf53f84c586629fd67a2f20a",
-  "graph_hash": "sha256:6c313519c72fb3624070b81a7128bbbdfdfd24e22c2d514139e1ca07e2e07a16",
-  "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "languages": {
-    "python": "ast",
-    "typescript_javascript": "file_only"
+  "commit_sha": "1beefc432cce5ded4e3468e42c5e583aa4431a44",
+  "edge_counts": {
+    "calls": 7735,
+    "contains": 389,
+    "defines": 4660,
+    "imports": 797,
+    "likely_test_for": 477,
+    "route_to": 31
   },
+  "excluded_prefixes": [
+    ".agents",
+    ".claude",
+    ".git",
+    ".venv",
+    ".pytest_cache",
+    ".pytest-spec-index",
+    ".ruff_cache",
+    ".tmp",
+    ".uv-cache",
+    "__pycache__",
+    "assets",
+    "data",
+    "faiss_lore_index",
+    "faiss_rules_index",
+    "frontend",
+    "lore_nova",
+    "node_modules",
+    "playtest_runs",
+    "saves",
+    "saves_playtest",
+    "web/dist",
+    "web/node_modules",
+    "web/public/art"
+  ],
+  "generator_version": "1.0.0",
+  "graph_hash": "sha256:211644862c7e325bd174f6e5e44d1edf85703af4bd7316d77524e03f7136b866",
+  "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
     ".github/workflows/eval-gates.yml",
@@ -32,6 +59,7 @@
     "character_creator.py",
     "combat_mechanics.py",
     "conftest.py",
+    "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -229,6 +257,7 @@
     "tests/test_browser_local.py",
     "tests/test_campaign_grounding_deferred.py",
     "tests/test_chaos_local.py",
+    "tests/test_checkout_integrity.py",
     "tests/test_checkpoint_memoria_transacional.py",
     "tests/test_checkpoints.py",
     "tests/test_chronicle_advanced.py",
@@ -446,47 +475,20 @@
     "workers/run_worker.py",
     "world_utils.py"
   ],
-  "excluded_prefixes": [
-    ".agents",
-    ".claude",
-    ".git",
-    ".venv",
-    ".pytest_cache",
-    ".pytest-spec-index",
-    ".ruff_cache",
-    ".tmp",
-    ".uv-cache",
-    "__pycache__",
-    "assets",
-    "data",
-    "faiss_lore_index",
-    "faiss_rules_index",
-    "frontend",
-    "lore_nova",
-    "node_modules",
-    "playtest_runs",
-    "saves",
-    "saves_playtest",
-    "web/dist",
-    "web/node_modules",
-    "web/public/art"
-  ],
+  "languages": {
+    "python": "ast",
+    "typescript_javascript": "file_only"
+  },
   "node_counts": {
     "artifact": 8,
     "class": 371,
     "endpoint": 31,
-    "file": 426,
-    "function": 1563,
+    "file": 428,
+    "function": 1565,
     "method": 335,
-    "module": 387,
-    "test": 2386
+    "module": 389,
+    "test": 2389
   },
-  "edge_counts": {
-    "calls": 7713,
-    "contains": 387,
-    "defines": 4655,
-    "imports": 795,
-    "likely_test_for": 475,
-    "route_to": 31
-  }
+  "schema_version": 1,
+  "source_tree_hash": "sha256:6c8d3607912d46a5766868f8db7b90c23dbff6c4971423c3baf920b0d0d07bf7"
 }

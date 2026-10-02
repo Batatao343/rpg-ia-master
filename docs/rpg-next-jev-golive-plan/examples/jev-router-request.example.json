@@ -1,0 +1,35 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "last_player_action": "Pergunto a Brunna se ela viu o mercador.",
+    "current_location_id": "example_location",
+    "npcs_in_scene": [
+      {"id": "npc_brunna", "name": "Brunna"},
+      {"id": "npc_merchant", "name": "Mercador"}
+    ],
+    "enemies_in_scene": []
+  },
+  "questions": {
+    "route": {
+      "type": "choice",
+      "instructions": "Escolha a rota mecânica da intenção atual do jogador.",
+      "criteria": {
+        "storyteller": "movimento, exploração, cenário ou ação geral",
+        "combat_agent": "ataque, hostilidade ou ação de combate",
+        "npc_actor": "fala ou interação social com personagem",
+        "loot": "saquear, comprar, vender ou criar item",
+        "none": "não há intenção acionável clara"
+      }
+    },
+    "target": {
+      "type": "choice",
+      "instructions": "Escolha o alvo explícito ou mais diretamente endereçado pela ação.",
+      "criteria": {
+        "npc_brunna": "Brunna",
+        "npc_merchant": "Mercador",
+        "unknown": "há um alvo, mas ele não está entre os candidatos",
+        "none": "não há alvo específico"
+      }
+    }
+  }
+}

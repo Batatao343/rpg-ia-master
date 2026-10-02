@@ -1,0 +1,14 @@
+{
+  "classification": "STALE_LOCK",
+  "head_sha": "1beefc432cce5ded4e3468e42c5e583aa4431a44",
+  "approved_crlf_hash": "sha256:30e96c262d5cadd2a3c5810044e44eb15d75d2d7b96824bf385639269d99f892",
+  "git_blob_lf_hash": "sha256:fa831fd0f96b952fc0a384cbc6a928a4b2c65a49dfb7e3a6d3da4984ec634d58",
+  "records": 27,
+  "all_json_records_equal": true,
+  "baseline_case_ids_equal": true,
+  "baseline_expected_equal": true,
+  "git_blob_equals_worktree_after_crlf_only_conversion": true,
+  "tracked_history": [
+    "1beefc432cce5ded4e3468e42c5e583aa4431a44 feat: deliver deterministic eval system"
+  ]
+}

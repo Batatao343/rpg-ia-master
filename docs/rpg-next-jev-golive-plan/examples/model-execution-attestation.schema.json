@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Valoria spec model execution attestation",
+  "type": "object",
+  "required": ["spec_id", "executor", "review", "head_sha_before", "head_sha_after", "gates"],
+  "properties": {
+    "spec_id": {"type": "string", "pattern": "^SPEC-[0-9]{3}$"},
+    "executor": {
+      "type": "object",
+      "required": ["model", "effort", "run_id"],
+      "properties": {
+        "model": {"enum": ["Luna", "Terra", "Sol", "Astra"]},
+        "effort": {"enum": ["low", "medium", "high", "extra_high"]},
+        "run_id": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "review": {
+      "type": "object",
+      "required": ["required", "model", "effort", "run_id", "decision"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "model": {"type": ["string", "null"]},
+        "effort": {"type": ["string", "null"]},
+        "run_id": {"type": ["string", "null"]},
+        "decision": {"enum": ["APPROVED", "CHANGES_REQUESTED", "PENDING", null]}
+      },
+      "additionalProperties": false
+    },
+    "head_sha_before": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "head_sha_after": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "gates": {"type": "object"}
+  },
+  "additionalProperties": false
+}

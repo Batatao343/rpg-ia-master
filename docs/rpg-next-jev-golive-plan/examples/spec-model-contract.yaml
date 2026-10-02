@@ -1,0 +1,376 @@
+schema_version: 1
+policy: exact-model-no-silent-substitution
+specs:
+  SPEC-176:
+    executor_model: sol
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - coletar logs dos runs 36955976005/36955975775
+    - calcular/comparar hashes e listar arquivos protegidos alterados
+    executor_must_own:
+    - classificar causa raiz STALE_LOCK vs UNAPPROVED_DATASET_DRIFT
+    - decidir/remediar lock/index sem relaxar governance
+    - reproduzir em checkout limpo e preparar commit final
+    review_focus:
+    - validar semântica da régua e protected boundary
+    - confirmar que nenhum gate foi enfraquecido
+  SPEC-177:
+    executor_model: terra
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - inventariar casos HTTP/erros e documentação oficial
+    - formatar fixtures sanitizadas e relatório de smoke
+    executor_must_own:
+    - implementar DecisionBackend/cliente Jev
+    - redaction, timeout, idempotency e config JEVMODEL_API_KEY
+    - testes offline
+    review_focus:
+    - API boundary, secret handling, fail-closed e zero mudança de produção
+  SPEC-178:
+    executor_model: terra
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - agregar resultados brutos das réplicas
+    - calcular tabelas/percentis a partir dos artifacts
+    executor_must_own:
+    - implementar runner experimental A/B
+    - garantir isolamento expected/oracle
+    - executar protocolo pareado e persistir artifacts
+    review_focus:
+    - metodologia, leakage, cherry-picking, metadata e comparabilidade
+  SPEC-179:
+    executor_model: sol
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - agregar métricas após corpus já congelado
+    executor_must_own:
+    - derivar candidatos canônicos/seguros
+    - congelar corpus experimental antes de live call
+    - implementar target/loot experiment e handling >20
+    review_focus:
+    - secret/out-of-scene leakage, alias canonicalization, representability
+  SPEC-180:
+    executor_model: sol
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - grep/inventário mecânico de callsites CLASSIFY
+    executor_must_own:
+    - classificar callsites bounded/dynamic/free-form
+    - implementar off/shadow/primary+fallback
+    - aplicar regra pré-declarada de decisão
+    review_focus:
+    - rollout safety, threshold/fallback, rollback e aderência às evidências
+  SPEC-181:
+    executor_model: sol
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - inventariar env/docs/runtime combinations e resultados de pool tests
+    executor_must_own:
+    - desenhar/implementar hosted-Supabase sem mudar hosted OIDC/S3
+    - pool config + cloud_doctor + fail-closed tests
+    review_focus:
+    - auth/storage boundary, connection pooling/serverless semantics, backward compatibility
+  SPEC-182:
+    executor_model: sol
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - inventariar usage metadata disponíveis e rate cards
+    - agregar comparison report estimate antigo vs normalized
+    executor_must_own:
+    - schema/repository usage_events
+    - normalização cross-provider/stream/decision/image/STT
+    - idempotency + spend accounting hooks
+    review_focus:
+    - double counting, billable failures, unknown pricing e attribution
+  SPEC-183:
+    executor_model: terra
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - coletar fees/rate cards versionados e gerar relatório de inputs
+    executor_must_own:
+    - implementar Decimal/fixed-point pricing engine
+    - property tests de margem/rounding/FX
+    - CLI de simulação
+    review_focus:
+    - equações, unidades, rounding e fail-closed de pricing stale
+  SPEC-184:
+    executor_model: sol
+    executor_effort: high
+    review_required: true
+    review_model: astra
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - executar/agregar testes financeiros sem editar código de ledger
+    executor_must_own:
+    - schema wallet/ledger/reservations
+    - transações SQL/locks/constraints
+    - spend ceiling, settlement/release e recovery
+    review_focus:
+    - conservação, concorrência, crash boundaries, ownership/RLS e criação/destruição
+      indevida de valor
+  SPEC-185:
+    executor_model: terra
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - fixtures de dashboard e relatório a11y/visual
+    executor_must_own:
+    - read APIs owner-scoped
+    - Account screen/graphs
+    - cost enrichment por turn/operation sem GameState billing
+    review_focus:
+    - ownership, timeline attribution, query shape/N+1 e privacy
+  SPEC-186:
+    executor_model: sol
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - agregar benchmark STT/latency/cost já executado
+    executor_must_own:
+    - STT provider abstraction/fallback
+    - temp-file lifecycle, limits e rate limit
+    - wallet reservation/metering/idempotency
+    review_focus:
+    - privacy, double billing, fallback semantics e spend control
+  SPEC-187:
+    executor_model: terra
+    executor_effort: high
+    review_required: false
+    review_model: null
+    review_effort: null
+    review_must_be_independent_context: false
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - matriz browser/a11y e relatório
+    executor_must_own:
+    - recorder state machine
+    - composer UX/editable transcript
+    - permission/background cleanup tests
+    review_focus: []
+  SPEC-188:
+    executor_model: sol
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - inventariar todos os paths/triggers que chegam ao image provider
+    - agregar fault-test evidence
+    executor_must_own:
+    - quote service e owner-bound reservation
+    - converter triggers automáticos em offer/cue
+    - worker settlement/uncertain reconciliation
+    review_focus:
+    - prova de zero provider call sem confirm, idempotency e external_result_uncertain
+  SPEC-189:
+    executor_model: sol
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - inventariar webhook event fixtures e gerar relatório
+    executor_must_own:
+    - payment_orders/Stripe event store
+    - Checkout endpoint + signed webhook
+    - idempotent fulfillment/refund event handling
+    review_focus:
+    - signature verification, server-side SKU authority, replay/out-of-order
+  SPEC-190:
+    executor_model: sol
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - inventariar data lifecycle e checklist de dados privados
+    executor_must_own:
+    - verify/reset/CAPTCHA/rate limits
+    - account deletion/export/retention workflow
+    - UI account lifecycle
+    review_focus:
+    - auth enumeration, deletion order, financial retention, cross-owner isolation
+  SPEC-191:
+    executor_model: terra
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - coletar staging evidence/advisors/backup logs
+    executor_must_own:
+    - provisionar/aplicar migrations após approval
+    - A/B RLS/Auth/Storage/pgvector
+    - backup/restore e pooler smoke
+    review_focus:
+    - security findings, environment isolation, migration reproducibility
+  SPEC-192:
+    executor_model: sol
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - agregar cold-start/latency/cost/bundle measurements
+    executor_must_own:
+    - Vercel staging integration
+    - comparar worker topologies preservando JobQueue
+    - redeploy/crash/recovery e rollback runbook
+    review_focus:
+    - topology decision, beta dependency risk, preview isolation e worker durability
+  SPEC-193:
+    executor_model: terra
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - build reports, permission inventory e secret-scan report
+    executor_must_own:
+    - Capacitor shell/env config
+    - WebView auth/session/resume
+    - pending operation e mic seam
+    review_focus:
+    - native/WebView boundary, session security, process-resume idempotency
+  SPEC-194:
+    executor_model: sol
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - SKU/fixture inventory e report
+    executor_must_own:
+    - Google purchase adapter
+    - server verification boundary/fulfillment
+    - pending/cancel/replay/process-death tests
+    review_focus:
+    - purchase token trust boundary, acknowledge/consume ordering, wallet idempotency
+  SPEC-195:
+    executor_model: sol
+    executor_effort: high
+    review_required: true
+    review_model: astra
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - agregar golden event vectors sem editar policy
+    executor_must_own:
+    - state machine cross-channel
+    - reconciliation jobs e debt/hold policy aprovada
+    - admin adjustments/audit
+    review_focus:
+    - out-of-order/reversal conservation, debt semantics, cross-channel trust boundary
+  SPEC-196:
+    executor_model: terra
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - agregar séries/report FinOps e checklist de freshness
+    executor_must_own:
+    - server-side aggregators/alerts
+    - margin simulation
+    - kill switches e stale-pricing guards
+    review_focus:
+    - equações de margin, alert blind spots e kill-switch safety
+  SPEC-197:
+    executor_model: terra
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - compilar evidence bundle/checklist final
+    executor_must_own:
+    - release checklist automation
+    - production promotion/smokes após approvals
+    - incident/rollback drill
+    review_focus:
+    - P0/P1 readiness, payment/ledger reconciliation, security/cost gates
+  SPEC-198:
+    executor_model: terra
+    executor_effort: high
+    review_required: true
+    review_model: sol
+    review_effort: high
+    review_must_be_independent_context: true
+    silent_substitution_allowed: false
+    allowed_luna_tasks:
+    - draft Data Safety/store metadata/checklist
+    executor_must_own:
+    - Play config/internal/closed testing após approval
+    - AAB/signing workflow
+    - device purchase/recovery certification
+    review_focus:
+    - store/billing evidence, privacy declarations, release integrity

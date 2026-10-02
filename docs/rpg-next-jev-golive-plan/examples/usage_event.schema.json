@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["usage_event_id","owner_id","operation_id","category","provider","model","cost_usd","cost_basis","pricing_version"],
+  "properties": {
+    "usage_event_id": {"type":"string","format":"uuid"},
+    "owner_id": {"type":"string","format":"uuid"},
+    "operation_id": {"type":"string","format":"uuid"},
+    "game_id": {"type":["string","null"]},
+    "category": {"enum":["llm","embedding","speech_to_text","image","other"]},
+    "provider": {"type":"string"},
+    "model": {"type":"string"},
+    "input_units": {"type":["integer","number","null"]},
+    "output_units": {"type":["integer","number","null"]},
+    "cached_units": {"type":["integer","number","null"]},
+    "cost_usd": {"type":"string","pattern":"^[0-9]+(\\.[0-9]+)?$"},
+    "cost_basis": {"enum":["provider_reported","token_priced","rate_card","estimated"]},
+    "pricing_version": {"type":"string"}
+  }
+}
