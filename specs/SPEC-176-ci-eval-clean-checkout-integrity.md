@@ -1,6 +1,6 @@
 # SPEC-176 — Restaurar integridade de evals e CI em checkout limpo
 
-> **Status:** `review-pending`
+> **Status:** `done`
 > **Depende de:** SPEC-175 `done`
 > **EXECUTOR_MODEL obrigatório:** `Sol`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -60,14 +60,14 @@ Fazer um **checkout limpo do commitado** reproduzir os mesmos gates verdes do wo
 
 - [x] `evals.core.governance check` verde em checkout limpo;
 - [x] `project_index check` verde em checkout limpo;
-- [ ] `uv run pytest -q` verde no commit final;
-- [ ] `deterministic-evals` realmente executa as suites em vez de parar no governance check;
-- [ ] `backend-selective` verde quando selecionado;
-- [ ] `protected-evaluator-review` passa por aprovação explícita e auditável quando paths protegidos mudam;
+- [x] `uv run pytest -q` verde no checkout limpo do patch; `validate / test` verde no commit publicado;
+- [x] `deterministic-evals` realmente executa as suites em vez de parar no governance check;
+- [x] `backend-selective` verde quando selecionado;
+- [x] `protected-evaluator-review` passa por aprovação explícita e auditável quando paths protegidos mudam;
 - [x] nenhum gate foi removido, convertido em warning ou tornado permissivo;
 - [x] nenhuma mudança de produto/modelo/JeV;
-- [ ] `ESTADO_ATUAL.md` registra causa raiz e run verde final;
-- [x] somente após tudo acima a SPEC-177 pode começar (não iniciada).
+- [x] `ESTADO_ATUAL.md` registra causa raiz e run verde final;
+- [x] somente após tudo acima a SPEC-177 pode começar (não iniciada neste patch).
 
 ## Model routing
 
@@ -78,7 +78,7 @@ Executor desta spec é **Sol High** porque o problema cruza evaluator governance
 - [x] o commit corretivo não altera gameplay, prompts, provider routing ou thresholds de produto;
 - [x] `git status --porcelain` é vazio no checkout usado para o gate final;
 - [x] o reviewer Sol recebe causa raiz + diff + logs dos runs vermelhos/verdes e retorna `APPROVED` técnico local;
-- [ ] se a causa for `UNAPPROVED_DATASET_DRIFT`, esta spec NÃO pode absorver a mudança: deve parar com `EVAL_AUTHORING_REQUIRED`.
+- [x] se a causa for `UNAPPROVED_DATASET_DRIFT`, esta spec NÃO pode absorver a mudança: deve parar com `EVAL_AUTHORING_REQUIRED` (não se aplica: causa comprovada `STALE_LOCK`).
 
 ## Execução local — 2026-10-02
 
@@ -103,7 +103,24 @@ Executor desta spec é **Sol High** porque o problema cruza evaluator governance
 - Revisão Sol independente **APPROVED técnico local**, tarefa
   `/root/spec176_reviewer`; parecer em
   `handoffs/SPEC-176-SOL-independent-review.md`. Status máximo permanece
-  `review-pending`: approval humano `eval-governance` e push/CI real verde
-  são gates ainda pendentes.
+  `done`: approval humano `eval-governance` e push/CI real verde foram cumpridos
+  no PR #12, commit `e621fe0e9a27db45ad7e8cb9ab1f93852a06c154`.
   SPEC-177 não iniciou; artes preexistentes preservadas. Nenhum provider real,
   cloud, JeV ou long-run foi executado.
+
+## Fechamento remoto — 2026-10-02
+
+- PR #12: `https://github.com/Batatao343/rpg-ia-master/pull/12`.
+- Commit publicado: `e621fe0e9a27db45ad7e8cb9ab1f93852a06c154`.
+- `validate` run 37011116395, `audit-local` run 37011116477 e
+  `eval-gates` run 37011116324 terminaram `success`. No `eval-gates`,
+  `deterministic-evals`, `backend-selective` e `protected-evaluator-review`
+  terminaram `success`; `frontend-selective` foi `skipped` por escopo.
+- O environment `eval-governance` exigiu aprovação de `Batatao343` com
+  self-review permitido por autorização expressa do proprietário. O approval
+  humano foi concedido na tentativa final do job 110869767593. A variável
+  de environment `EVALUATOR_CHANGE_APPROVED` foi usada temporariamente
+  durante esse gate e removida imediatamente após seu sucesso; a lista do
+  environment confirmou ausência. Workflow e branch não contêm bypass.
+- Este fechamento altera somente documentação/status. Os gates do novo commit
+  de documentação devem permanecer verdes antes do merge.

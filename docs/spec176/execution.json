@@ -1,6 +1,6 @@
 {
   "spec_id": "SPEC-176",
-  "status": "review-pending",
+  "status": "done",
   "executor": {
     "model": "sol",
     "actual_model": "gpt-6.1-sol",
@@ -21,8 +21,15 @@
     "scope": "technical_local_patch_and_gates",
     "reviewed_snapshot_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55"
   },
-  "human_eval_governance_approval": "PENDING",
-  "remote_ci": "NOT_RUN",
+  "human_eval_governance_approval": "APPROVED by owner Batatao343 on eval-gates run 37011116324, protected job 110869767593",
+  "remote_ci": {
+    "commit_sha": "e621fe0e9a27db45ad7e8cb9ab1f93852a06c154",
+    "pull_request": 12,
+    "validate": {"run_id": 37011116395, "conclusion": "success"},
+    "audit_local": {"run_id": 37011116477, "conclusion": "success"},
+    "eval_gates": {"run_id": 37011116324, "conclusion": "success", "protected_job_id": 110869767593},
+    "temporary_approval_variable_removed": true
+  },
   "head_sha_before": "1beefc432cce5ded4e3468e42c5e583aa4431a44",
   "head_sha_after_workspace": "1beefc432cce5ded4e3468e42c5e583aa4431a44",
   "verification_snapshot_sha": "d988991fc35f2f4532131eb8c748b7f6609b5d55",
@@ -53,15 +60,8 @@
     "dataset-audit.json": "sha256:fa4cde5cb94604823edb578dbbb175ee5a160095dbbbfc870ac2b5ff2a9b52f9",
     "pytest-focused-clean.txt": "sha256:87e6b4b23930979243673b28b613348b5c4edc3a1a1d988dac861a9ec9d73caf",
     "pytest-full-clean.txt": "sha256:1af8a5481e7ba0ac3b7d8c66730c13638b68a31aea484e14a3ee78d3d230656e",
-    "README.md": "sha256:9f64b6f5299a25521d449cc3a04b31fdc722128808dc616c32a2f7c6144d67b6",
     "spec176-clean-deterministic.json": "sha256:c4459e8c182628bbb0a08968997d16fa839845118ee9b6436ff19f8f39530f65",
     "spec176-clean-deterministic.md": "sha256:e71f6ac691469a0dd2390a01141e18f8d517250a7762f9bf8d8566c73a7df852"
   },
-  "external_write_block": {
-    "github_connector_push": false,
-    "gh_auth_status": "invalid_token",
-    "provenance": "coordinator checks",
-    "required": "reauthentication/write access and human eval-governance approval"
-  },
-  "publishable_branch": "spec-176-clean-checkout-integrity (isolated clone)"
+  "published_branch": "spec-176-clean-checkout-integrity"
 }

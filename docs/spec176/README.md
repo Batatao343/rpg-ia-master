@@ -1,4 +1,4 @@
-# SPEC-176 — integridade de checkout (review-pending)
+# SPEC-176 — integridade de checkout (done)
 
 ## Executor e fronteira de aprovação
 
@@ -7,12 +7,13 @@ Seleção atestada pelo coordenador: `collaboration.spawn_agent` com
 sessão: `/root/spec176_executor`. Não foi fornecido um run ID adicional.
 Revisão independente Sol High **APPROVED técnico local** na tarefa
 `/root/spec176_reviewer`, para o snapshot de código abaixo. Parecer de sua
-própria sessão em `handoffs/SPEC-176-SOL-independent-review.md`. O approval
-humano do Environment `eval-governance` e o
-push/CI verde continuam pendentes. SPEC-177 não foi iniciada.
+própria sessão em `handoffs/SPEC-176-SOL-independent-review.md`. O owner
+aprovou o Environment `eval-governance` e os jobs aplicáveis passaram no
+commit `e621fe0e9a27db45ad7e8cb9ab1f93852a06c154` do PR #12.
+SPEC-177 não foi iniciada.
 
 HEAD inicial do workspace: `1beefc432cce5ded4e3468e42c5e583aa4431a44`.
-Snapshot corretivo commitado somente no clone local `.tmp/spec176-clone`:
+Snapshot corretivo originalmente validado no clone `.tmp/spec176-clone`:
 `d988991fc35f2f4532131eb8c748b7f6609b5d55`. O workspace principal permanece
 com as deleções/inacessibilidade preexistentes de `web/public/art/v1`, que não
 integram esse snapshot.
@@ -78,7 +79,7 @@ desatualizado no clone LF, portanto não era apenas efeito de Windows.
 - Ruff e validador da matriz de modelos verdes. `git diff --check` verde;
   `status --porcelain` vazio no snapshot de validação.
 - Suíte completa no clone: **1.898 passed, 35 skipped, 15 deselected**,
-+  1 warning, em 317,92 s; saída integral em `pytest-full-clean.txt`.
+  1 warning, em 317,92 s; saída integral em `pytest-full-clean.txt`.
 
 Comandos canônicos de validação:
 
@@ -119,13 +120,22 @@ sob `Área de Trabalho`. O gate completo usa o clone com os blobs de arte
 originais do HEAD e tempdir ASCII, sem restaurar arte no workspace e sem
 excluir testes. Frontend não foi alterado/selecionado pelo patch.
 
-O `protected-evaluator-review` deve passar por approval humano real. Nenhum
-`EVALUATOR_CHANGE_APPROVED=true` foi injetado em workflow/config de produção.
-O coordenador confirmou um bloqueio externo adicional: o connector GitHub
-tem `push:false` e `gh auth status` identificou token inválido. Push/CI remoto
-exigem reautenticação ou acesso de escrita, além do approval humano. O patch
-foi preparado na branch local `spec-176-clean-checkout-integrity`, no clone
-isolado, sem incorporar as artes preexistentes. O root permanece reviewável,
-sem commit ou troca de branch nesta execução.
-Nenhum push, provider real, Jev, cloud, gameplay, prompt, modelo de produto ou
+O `protected-evaluator-review` passou por approval humano real no Environment
+`eval-governance`, com owner `Batatao343` como reviewer e self-review permitido
+conforme autorização expressa. A variável de Environment
+`EVALUATOR_CHANGE_APPROVED=true` foi ativada temporariamente para o gate e
+removida após a tentativa final do job 110869767593 terminar `success`;
+listagem do Environment confirmou ausência. Nenhum bypass foi fixado em
+workflow ou configuração do repositório.
+
+O patch foi publicado na branch `spec-176-clean-checkout-integrity` como
+`e621fe0e9a27db45ad7e8cb9ab1f93852a06c154`, no
+[PR #12](https://github.com/Batatao343/rpg-ia-master/pull/12). Os runs
+`validate` 37011116395, `audit-local` 37011116477 e `eval-gates`
+37011116324 terminaram `success`. No último, `deterministic-evals`,
+`backend-selective` e `protected-evaluator-review` terminaram `success`;
+`frontend-selective` foi `skipped` por escopo. O commit de fechamento de
+documentação deve repetir CI verde antes do merge.
+
+Nenhum provider real, Jev, cloud, gameplay, prompt, modelo de produto ou
 long-run foi executado/alterado.

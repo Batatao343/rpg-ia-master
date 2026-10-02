@@ -1,18 +1,20 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
-> **02/10 — gate zero do pacote v5: SPEC-176 `review-pending`.** As SPEC-176–198
+> **02/10 — gate zero do pacote v5: SPEC-176 `done`.** As SPEC-176–198
 > foram importadas com IDs/dependências preservados. Correção local de
 > integridade LF/CRLF, relock de um hash e Project Index sincronizado estão
 > cobertos por 80 testes focused, CLI 86/86 e smoke offline 14 × 3. Suíte
 > completa no clone: **1.898 passed, 35 skipped, 15 deselected**. A [SPEC-176](specs/SPEC-176-ci-eval-clean-checkout-integrity.md)
-> passou revisão Sol independente (**APPROVED técnico local**) e ainda exige
-> approval humano `eval-governance` e push/CI verde. A baseline v1 permanece
+> passou revisão Sol independente (**APPROVED técnico local**), aprovação humana
+> `eval-governance` e CI verde no [PR #12](https://github.com/Batatao343/rpg-ia-master/pull/12)
+> (validate 37011116395, audit-local 37011116477, eval-gates 37011116324).
+> O sinal temporário de aprovação foi removido. A baseline v1 permanece
 > histórica/incompatível; não alegar
-> deltas de score A/B. SPEC-177 segue bloqueada, sem implementação. Detalhes em
+> deltas de score A/B. SPEC-177 é a próxima, sem implementação. Detalhes em
 > [evidência local](docs/spec176/README.md). Sem mudança de produto/JeV/cloud e
 > sem provider real/long-run; Project Index continua selective-only.
-> Push/CI remoto bloqueados por connector sem escrita e token `gh` inválido;
-> requer reautenticação/acesso de escrita e approval humano `eval-governance`.
+> SPEC-177 exige Terra High como executor; esse modelo não está disponível
+> nesta sessão e não permite substituição sem aprovação expressa.
 
 > **01/10 — pacote de evals v4 entregue (SPEC-163–175 `done`).** A SPEC-175
 > concluiu o A/B confirmatório com 4 sessões e 32 observações seladas antes dos
