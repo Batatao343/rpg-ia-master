@@ -54,6 +54,8 @@ incompatível (incluindo hashes de artifacts CRLF), e ausência de delta A/B.
 A revisão independente Sol High retornou **APPROVED técnico local** para
 `d988991`; parecer autoral em `SPEC-176-SOL-independent-review.md`.
 O approval real `eval-governance` e push/CI verde são gates restantes.
+Bloqueio externo confirmado pelo coordenador: connector GitHub com
+`push:false` e token `gh` inválido; requer acesso de escrita/reautenticação.
 SPEC-177 não foi iniciada; não marcar `done`.
 
 ## Preflight histórico em 2026-10-02

@@ -13,6 +13,8 @@
 > `gpt-6.1-sol/high`, tarefa `/root/spec176_executor`; revisão independente Sol
 > **APPROVED técnico local** em `/root/spec176_reviewer`. Approval humano
 > `eval-governance`/push/CI verde pendentes. SPEC-177 não iniciou.
+> Push bloqueado por connector `push:false` e token `gh` inválido; precisa de
+> acesso de escrita/reautenticação. Patch preparado em branch local.
 > As artes preexistentes do workspace foram preservadas. Nenhum provider,
 > gameplay/prompt, cloud ou long-run foi alterado/executado. Este bloco prevalece
 > sobre os históricos abaixo.

@@ -51,10 +51,17 @@
   "artifacts": {
     "backend-smoke.json": "sha256:4e11da5a3928c8a6d927cce81192edb9af2ac962d17fc3de1e0f65aca603dd1b",
     "dataset-audit.json": "sha256:fa4cde5cb94604823edb578dbbb175ee5a160095dbbbfc870ac2b5ff2a9b52f9",
-    "pytest-focused-clean.txt": "sha256:6cb46bca94470c6b008059a874ad00ea01d95ca04ce3ed1914e603d1c2f14992",
-    "pytest-full-clean.txt": "sha256:719013057c526ab037a23c583098a5802a93651d4234b0a1b0f639e6a48e078a",
-    "README.md": "sha256:6e519019c0faaa669c414bb140156f9989ee2df79ed8853620466dab7b47f790",
+    "pytest-focused-clean.txt": "sha256:87e6b4b23930979243673b28b613348b5c4edc3a1a1d988dac861a9ec9d73caf",
+    "pytest-full-clean.txt": "sha256:1af8a5481e7ba0ac3b7d8c66730c13638b68a31aea484e14a3ee78d3d230656e",
+    "README.md": "sha256:9f64b6f5299a25521d449cc3a04b31fdc722128808dc616c32a2f7c6144d67b6",
     "spec176-clean-deterministic.json": "sha256:c4459e8c182628bbb0a08968997d16fa839845118ee9b6436ff19f8f39530f65",
     "spec176-clean-deterministic.md": "sha256:e71f6ac691469a0dd2390a01141e18f8d517250a7762f9bf8d8566c73a7df852"
-  }
+  },
+  "external_write_block": {
+    "github_connector_push": false,
+    "gh_auth_status": "invalid_token",
+    "provenance": "coordinator checks",
+    "required": "reauthentication/write access and human eval-governance approval"
+  },
+  "publishable_branch": "spec-176-clean-checkout-integrity (isolated clone)"
 }

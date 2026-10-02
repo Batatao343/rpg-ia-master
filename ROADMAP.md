@@ -11,6 +11,8 @@
 > deltas de score A/B. SPEC-177 segue bloqueada, sem implementação. Detalhes em
 > [evidência local](docs/spec176/README.md). Sem mudança de produto/JeV/cloud e
 > sem provider real/long-run; Project Index continua selective-only.
+> Push/CI remoto bloqueados por connector sem escrita e token `gh` inválido;
+> requer reautenticação/acesso de escrita e approval humano `eval-governance`.
 
 > **01/10 — pacote de evals v4 entregue (SPEC-163–175 `done`).** A SPEC-175
 > concluiu o A/B confirmatório com 4 sessões e 32 observações seladas antes dos

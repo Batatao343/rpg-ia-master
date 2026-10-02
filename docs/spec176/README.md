@@ -121,5 +121,11 @@ excluir testes. Frontend não foi alterado/selecionado pelo patch.
 
 O `protected-evaluator-review` deve passar por approval humano real. Nenhum
 `EVALUATOR_CHANGE_APPROVED=true` foi injetado em workflow/config de produção.
+O coordenador confirmou um bloqueio externo adicional: o connector GitHub
+tem `push:false` e `gh auth status` identificou token inválido. Push/CI remoto
+exigem reautenticação ou acesso de escrita, além do approval humano. O patch
+foi preparado na branch local `spec-176-clean-checkout-integrity`, no clone
+isolado, sem incorporar as artes preexistentes. O root permanece reviewável,
+sem commit ou troca de branch nesta execução.
 Nenhum push, provider real, Jev, cloud, gameplay, prompt, modelo de produto ou
 long-run foi executado/alterado.
