@@ -1,5 +1,17 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **03/10 — SPEC-177 `done` no clone isolado; publicação/CI remoto pendentes.**
+> Adapter Jev server-side em `services/jev_decision.py`, com Choice/Noul/Score
+> tipados, DTO mínimo, idempotência, timeout total com limite de workers,
+> erros fechados e telemetria sem payload/segredo. Nenhuma rota de produção
+> mudou. Usuário autorizou Sol High no lugar de Terra High; revisão Sol
+> independente **APPROVED** em `handoffs/SPEC-177-SOL-independent-review.md`.
+> **22 testes focados** e suíte completa **1.920 passed, 35 skipped,
+> 15 deselected** no clone com temp ASCII; governance, índice e Ruff verdes.
+> Sem `JEVMODEL_API_KEY`, smoke live opt-in não ocorreu. A SPEC-178 exige A/B
+> real com três réplicas e ainda depende da chave, além de autorização
+> específica para substituir Terra High. Evidência: `docs/spec177/README.md`.
+
 > **02/10 — SPEC-176 `done`; pacote v5 importado (176–198).** A
 > correção local de integridade classificou `STALE_LOCK` por LF/CRLF: 27 casos
 > narrative/NPC idênticos à evidência aprovada; o relock canônico mudou somente

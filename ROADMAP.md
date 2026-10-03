@@ -1,5 +1,14 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **03/10 — SPEC-177 `done` localmente.** O adapter Jev server-side isolado
+> está implementado e aprovado por revisão Sol independente; 22 testes
+> focados e suíte completa **1.920 passed, 35 skipped, 15 deselected** verdes.
+> Nenhuma rota de produção ou avaliador protegido mudou. Sem chave Jev,
+> nenhuma chamada real foi feita. Próxima é [SPEC-178](specs/SPEC-178-jev-router-ab-eval.md):
+> A/B live de três réplicas, dependente de `JEVMODEL_API_KEY` e da substituição
+> explícita de Terra High por Sol High nesta sessão. Detalhes em
+> [evidência SPEC-177](docs/spec177/README.md). Publicação/CI da 177 pendentes.
+
 > **02/10 — gate zero do pacote v5: SPEC-176 `done`.** As SPEC-176–198
 > foram importadas com IDs/dependências preservados. Correção local de
 > integridade LF/CRLF, relock de um hash e Project Index sincronizado estão

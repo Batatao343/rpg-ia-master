@@ -1,0 +1,14 @@
+{
+  "model": "jev-latest",
+  "answers": {
+    "route": {
+      "type": "choice",
+      "choice": "npc",
+      "probabilities": {"story": 0.08, "npc": 0.92},
+      "confidence": 0.92
+    },
+    "urgent": {"type": "noul", "noul": 0.12},
+    "danger": {"type": "score", "score": 1.4, "confidence": 0.88}
+  },
+  "usage": {"input_tokens": 136, "output_tokens": 18}
+}
