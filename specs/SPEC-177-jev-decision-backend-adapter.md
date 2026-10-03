@@ -78,3 +78,9 @@ source novo; não entrou no contexto/fluxo do produto e `eval_map` não mudou.
 Sem chave local, o smoke real opcional não foi executado; nenhuma promoção
 de Jev ou mudança de gameplay ocorreu. Evidência detalhada em
 `docs/spec177/README.md`.
+
+Commit de implementação `31ec7779570b13b746f52c3e5b1f00cfed2f6908`
+publicado no [PR #13](https://github.com/Batatao343/rpg-ia-master/pull/13),
+empilhado sobre o PR #12. GitHub `validate` run 37142521573 e `eval-gates`
+run 37142521566 terminaram `success`. O protected-evaluator-review foi
+`skipped` porque a SPEC-177 não alterou paths protegidos.

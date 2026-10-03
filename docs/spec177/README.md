@@ -60,4 +60,9 @@ documenta retry de 429/502 com a mesma `Idempotency-Key`.
 - Ruff passou; `git diff --check` passou. Parecer do reviewer em
   `handoffs/SPEC-177-SOL-independent-review.md`.
 
-CI remoto e SHA de publicação serão anexados após o push.
+Commit publicado: `31ec7779570b13b746f52c3e5b1f00cfed2f6908` no
+[PR #13](https://github.com/Batatao343/rpg-ia-master/pull/13), empilhado
+sobre o PR #12. Os runs GitHub `validate` 37142521573 e `eval-gates`
+37142521566 terminaram `success`. O gate protegido foi `skipped`, pois
+nenhum path protegido mudou nesta spec. Este registro de fechamento altera
+somente documentação/índice da spec; o novo commit deve repetir CI verde.

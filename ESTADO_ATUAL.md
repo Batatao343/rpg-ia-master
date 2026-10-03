@@ -1,6 +1,6 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
-> **03/10 — SPEC-177 `done` no clone isolado; publicação/CI remoto pendentes.**
+> **03/10 — SPEC-177 `done`; PR #13 publicado e CI verde.**
 > Adapter Jev server-side em `services/jev_decision.py`, com Choice/Noul/Score
 > tipados, DTO mínimo, idempotência, timeout total com limite de workers,
 > erros fechados e telemetria sem payload/segredo. Nenhuma rota de produção
@@ -8,6 +8,9 @@
 > independente **APPROVED** em `handoffs/SPEC-177-SOL-independent-review.md`.
 > **22 testes focados** e suíte completa **1.920 passed, 35 skipped,
 > 15 deselected** no clone com temp ASCII; governance, índice e Ruff verdes.
+> Commit `31ec777` publicado em [PR #13](https://github.com/Batatao343/rpg-ia-master/pull/13),
+> empilhado sobre PR #12; `validate` 37142521573 e `eval-gates` 37142521566
+> terminaram `success`.
 > Sem `JEVMODEL_API_KEY`, smoke live opt-in não ocorreu. A SPEC-178 exige A/B
 > real com três réplicas e ainda depende da chave, além de autorização
 > específica para substituir Terra High. Evidência: `docs/spec177/README.md`.

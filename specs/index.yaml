@@ -3133,7 +3133,7 @@ specs:
   path: specs/SPEC-177-jev-decision-backend-adapter.md
   created_commit: null
   created_at: '2026-10-02'
-  completed_commit: null
+  completed_commit: 31ec7779570b13b746f52c3e5b1f00cfed2f6908
   completed_at: '2026-10-03'
   completed_order: 176
   depends_on:
@@ -3143,7 +3143,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Sol High substitution expressly authorized; independent Sol review approved; offline adapter and full suite green; publication SHA pending
+  lineage_note: Sol High substitution expressly authorized; independent Sol review approved; full suite and GitHub CI green in PR 13
 - id: SPEC-178
   slug: jev-router-ab-eval
   status: approved
