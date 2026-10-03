@@ -11,9 +11,13 @@
 > Commit `31ec777` publicado em [PR #13](https://github.com/Batatao343/rpg-ia-master/pull/13),
 > empilhado sobre PR #12; `validate` 37142521573 e `eval-gates` 37142521566
 > terminaram `success`.
-> Sem `JEVMODEL_API_KEY`, smoke live opt-in não ocorreu. A SPEC-178 exige A/B
+> Sem `JEVMODEL_API_KEY` no início da execução, smoke live opt-in não ocorreu. A SPEC-178 exige A/B
 > real com três réplicas e ainda depende da chave, além de autorização
 > específica para substituir Terra High. Evidência: `docs/spec177/README.md`.
+> **SPEC-178 `MODEL_HANDOFF_REQUIRED`:** handoff preparado em
+> `handoffs/SPEC-178-terra-review.md`. A chave Jev foi detectada depois como
+> presente no `.env`, sem ler seu valor; chamadas live e substituição Sol High
+> para esta spec aguardam autorização expressa.
 
 > **02/10 — SPEC-176 `done`; pacote v5 importado (176–198).** A
 > correção local de integridade classificou `STALE_LOCK` por LF/CRLF: 27 casos

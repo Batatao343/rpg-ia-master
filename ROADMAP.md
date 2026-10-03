@@ -10,6 +10,8 @@
 > A/B live de três réplicas, dependente de `JEVMODEL_API_KEY` e da substituição
 > explícita de Terra High por Sol High nesta sessão. Detalhes em
 > [evidência SPEC-177](docs/spec177/README.md). PR #13 está empilhado sobre #12.
+> Handoff da SPEC-178 em `handoffs/SPEC-178-terra-review.md` registra
+> `MODEL_HANDOFF_REQUIRED`; não houve implementação ou chamadas externas da 178.
 
 > **02/10 — gate zero do pacote v5: SPEC-176 `done`.** As SPEC-176–198
 > foram importadas com IDs/dependências preservados. Correção local de
