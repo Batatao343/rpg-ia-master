@@ -1,6 +1,6 @@
 # SPEC-177 — Jev decision backend adapter (sem promoção)
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Depende de:** SPEC-176 `done`
 > **EXECUTOR_MODEL obrigatório:** `Terra`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -43,20 +43,44 @@ Promoção, thresholds, regression dataset, holdout, billing e long-run.
 
 ## Critérios de aceite
 
-- [ ] suíte offline verde sem `JEVMODEL_API_KEY`;
-- [ ] Choice/Noul/Score retornam tipos fechados;
-- [ ] erro externo nunca vira decisão válida silenciosa;
-- [ ] nenhuma route/target de produção muda;
-- [ ] nenhum segredo/state sensível em log;
-- [ ] live smoke, se autorizado, registra modelo/latência/usage;
-- [ ] paths protegidos da eval intactos;
-- [ ] revisão Sol aprovada ou `MODEL_HANDOFF_REQUIRED`.
+- [x] suíte offline verde sem `JEVMODEL_API_KEY`;
+- [x] Choice/Noul/Score retornam tipos fechados;
+- [x] erro externo nunca vira decisão válida silenciosa;
+- [x] nenhuma route/target de produção muda;
+- [x] nenhum segredo/state sensível em log;
+- [x] live smoke condicional: não autorizado/configurado nesta execução; sem
+      `JEVMODEL_API_KEY`, nenhuma chamada foi feita;
+- [x] paths protegidos da eval intactos;
+- [x] revisão Sol independente `APPROVED`.
 
 ## Gate de fechamento — evidência obrigatória
 
-- [ ] `agents/router.py` e `llm_setup.py` permanecem byte-identical nesta spec;
-- [ ] client possui timeout total explícito, retry somente para classes permitidas e reutiliza `Idempotency-Key`;
-- [ ] 401/402/422/429/5xx/timeout/resposta inválida têm erros distintos e nenhum retorna decisão válida;
-- [ ] payload enviado ao Jev não contém `expected`, `oracle`, GameState integral, secrets nem narrativa histórica desnecessária;
-- [ ] `JEVMODEL_API_KEY` não aparece em bundle web, Android, logs ou fixtures;
-- [ ] revisão Sol independente `APPROVED`; sem ela, status máximo `review-pending`.
+- [x] `agents/router.py` e `llm_setup.py` permanecem byte-identical nesta spec;
+- [x] client possui timeout total explícito, retry somente para 429/502 e reutiliza `Idempotency-Key`;
+- [x] 401/402/422/429/5xx/timeout/resposta inválida têm erros distintos e nenhum retorna decisão válida;
+- [x] payload enviado ao Jev não contém `expected`, `oracle`, GameState integral, secrets nem narrativa histórica desnecessária;
+- [x] `JEVMODEL_API_KEY` não aparece em bundle web, Android, logs ou fixtures;
+- [x] revisão Sol independente `APPROVED` em `handoffs/SPEC-177-SOL-independent-review.md`.
+
+## Execução — 2026-10-03
+
+Usuário autorizou expressamente Sol High como substituto de Terra High nesta
+spec; o custo de modelo foi maior que o mínimo planejado. Revisão Sol High em
+contexto independente retornou `APPROVED` após corrigir três gaps reproduzidos
+offline: timeout total, coerção de tipos da resposta e mutação do request.
+
+O adapter está em `services/jev_decision.py`, fixture sintética e 22 testes em
+`tests/test_jev_decision_backend.py`. `httpx` é dependência direta. A suíte
+completa passou em checkout isolado com basetemp ASCII: **1.920 passed,
+35 skipped, 15 deselected**. Governance, Project Index e Ruff passaram.
+Project Index foi regenerado exclusivamente para o CI verificar freshness do
+source novo; não entrou no contexto/fluxo do produto e `eval_map` não mudou.
+Sem chave local, o smoke real opcional não foi executado; nenhuma promoção
+de Jev ou mudança de gameplay ocorreu. Evidência detalhada em
+`docs/spec177/README.md`.
+
+Commit de implementação `31ec7779570b13b746f52c3e5b1f00cfed2f6908`
+publicado no [PR #13](https://github.com/Batatao343/rpg-ia-master/pull/13),
+empilhado sobre o PR #12. GitHub `validate` run 37142521573 e `eval-gates`
+run 37142521566 terminaram `success`. O protected-evaluator-review foi
+`skipped` porque a SPEC-177 não alterou paths protegidos.
