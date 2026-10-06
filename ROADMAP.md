@@ -1,5 +1,15 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **05/10 — [SPEC-178](specs/SPEC-178-jev-router-ab-eval.md) `blocked-by-provider`.**
+> O runner A/B experimental e preflight offline estão implementados; 21 casos
+> de rota, 16 elegíveis por instrumentação e 5 gates Python. A única chamada
+> Jev de sanity retornou HTTP 401; a chave local presente não tem o prefixo
+> `sk-` documentado. Não houve réplicas A/B nem decisão de promoção.
+> Runner aprovado tecnicamente por Sol independente; 8 testes focados e
+> `uv run pytest` completo verdes (1.928 passed, 35 skipped, 15 deselected).
+> [Evidência e retomada](docs/spec178/README.md). SPEC-179 segue pendente da
+> conclusão da 178; produção permanece no CLASSIFY atual.
+
 > **03/10 — SPEC-177 `done`; PR #13 com CI verde.** O adapter Jev server-side isolado
 > está implementado e aprovado por revisão Sol independente; 22 testes
 > focados e suíte completa **1.920 passed, 35 skipped, 15 deselected** verdes.

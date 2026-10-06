@@ -3146,7 +3146,7 @@ specs:
   lineage_note: Sol High substitution expressly authorized; independent Sol review approved; full suite and GitHub CI green in PR 13
 - id: SPEC-178
   slug: jev-router-ab-eval
-  status: approved
+  status: blocked-by-provider
   path: specs/SPEC-178-jev-router-ab-eval.md
   created_commit: null
   created_at: '2026-10-02'
@@ -3160,7 +3160,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Imported approved v5 package; implementation not started
+  lineage_note: Sol High substitution authorized; offline runner implemented; live protocol blocked by Jev HTTP 401
 - id: SPEC-179
   slug: jev-target-loot-context-eval
   status: approved

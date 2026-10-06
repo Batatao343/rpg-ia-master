@@ -1,5 +1,11 @@
 # SPEC-178 — handoff de executor (`MODEL_HANDOFF_REQUIRED`)
 
+> Atualização 2026-10-05: este handoff histórico foi superado pela autorização
+> expressa do usuário para Sol High executar a SPEC-178 e para o A/B live com
+> teto de 100 chamadas/US$ 1. O runner offline está em
+> `evals/experiments/jev_router_ab.py`. Uma chamada Jev anterior retornou 401;
+> o estado e os próximos passos atuais estão em `docs/spec178/README.md`.
+
 Data: 2026-10-03. Base técnica: `9e00415bf62c1534daaab55636de96b49ba1d38d`
 (SPEC-177, PR #13). SPEC-176 e 177 constam `done`; PRs #12 e #13
 permanecem draft/empilhados enquanto a integração em `main` aguarda

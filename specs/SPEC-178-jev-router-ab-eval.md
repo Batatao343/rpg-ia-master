@@ -1,6 +1,6 @@
 # SPEC-178 — A/B live Jev vs CLASSIFY atual no dm_router
 
-> **Status:** `approved`
+> **Status:** `blocked-by-provider`
 > **Depende de:** SPEC-177 `done`
 > **EXECUTOR_MODEL obrigatório:** `Terra`
 > **EXECUTOR_EFFORT obrigatório:** `High`

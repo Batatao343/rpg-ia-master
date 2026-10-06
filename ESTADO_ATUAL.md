@@ -1,5 +1,19 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **05/10 — SPEC-178 `blocked-by-provider`.** Usuário autorizou Sol High como
+> executor substituto e live A/B com teto de 100 chamadas/US$ 1. Runner
+> experimental e testes offline em `evals/experiments/jev_router_ab.py` e
+> `tests/test_jev_router_ab_experiment.py`; preflight do corpus protegido confirmou
+> hash `ad6f48be...59b4`, 21 casos route, 16 elegíveis e 5 gates Python.
+> Uma única chamada Jev de sanity retornou HTTP 401. `JEVMODEL_API_KEY` está
+> presente no `.env`, mas sem o prefixo `sk-` exigido pela documentação. Nenhuma
+> réplica A/B foi executada e não há score ou promoção. O protocolo exige três
+> réplicas completas e revisão Sol independente antes de `done`; SPEC-179 espera.
+> Evidência e comandos: `docs/spec178/README.md`. Revisão Sol independente
+> **APPROVED técnico local**, 8 testes focados verdes; `uv run pytest` completo
+> verde (1.928 passed, 35 skipped, 15 deselected). Gate de governance e Ruff
+> verdes. Isso não constitui aprovação do resultado A/B live.
+
 > **03/10 — SPEC-177 `done`; PR #13 publicado e CI verde.**
 > Adapter Jev server-side em `services/jev_decision.py`, com Choice/Noul/Score
 > tipados, DTO mínimo, idempotência, timeout total com limite de workers,
