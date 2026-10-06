@@ -1,5 +1,38 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **05/10 — [SPEC-178](specs/SPEC-178-jev-router-ab-eval.md) `done`.** A/B
+> live de 3 réplicas pareadas concluído: CLASSIFY 48/48 e Jev 46/48 nos
+> elegíveis; no pipeline completo, 21/21 e 20/21. Jev teve p50 265,5 ms vs
+> 1.367,5 ms, com duas divergências no mesmo caso de NPC. Sol High aprovou
+> independentemente a evidência como desenvolvimento/regressão, **sem
+> promoção**. Produção segue no CLASSIFY. Total 102/120 chamadas autorizadas;
+> custo real indisponível. [Relatório e hashes](docs/spec178/README.md).
+> Próxima: [SPEC-179](specs/SPEC-179-jev-target-loot-context-eval.md).
+
+> **05/10 — [SPEC-178](specs/SPEC-178-jev-router-ab-eval.md) bloqueada na
+> sanidade CLASSIFY.** Após a rotação da chave TypeSafe, DeepSeek retornou 402
+> por saldo insuficiente; Groq respondeu via fallback, mas a regra
+> pré-registrada interrompe a comparação em falha de quota. Duas chamadas
+> ocorreram nessa tentativa, quatro no total; restam 96 das 100 autorizadas,
+> enquanto um novo A/B completo requer no mínimo 98. Nenhum caso foi enviado
+> ao Jev após a rotação. Sem réplicas, score ou promoção; SPEC-179 aguarda.
+> Correção da gravação OneDrive verificada: **1.936 passed, 35 skipped,
+> 15 deselected** e revisão Sol independente aprovada.
+> Evidência e artifact recuperado em [docs/spec178/README.md](docs/spec178/README.md).
+
+> **05/10 — [SPEC-178](specs/SPEC-178-jev-router-ab-eval.md) `blocked-by-provider`.**
+> O usuário identificou que sua chave veio da TypeSafe. O 401 anterior foi
+> causado pelo adapter apontar para `jevmodel.org`; uma chamada sintética ao
+> endpoint oficial `api.typesafe.ai` passou com Jev `jev-1.13.0`. A primeira
+> chamada enviou a chave ao host errado; o usuário vai revogar/substituí-la e
+> chamadas live estão pausadas. O runner A/B
+> experimental tem 21 casos de rota, 16 elegíveis e 5 gates Python. Restam 98
+> chamadas do teto autorizado para as três réplicas. Ainda não há score ou
+> promoção; a produção permanece no CLASSIFY atual e a SPEC-179 espera.
+> Suíte offline após a correção: **1.935 passed, 35 skipped, 15 deselected**;
+> revisão Sol independente aprovada para o adapter corrigido.
+> [Evidência e retomada](docs/spec178/README.md).
+
 > **03/10 — SPEC-177 `done`; PR #13 com CI verde.** O adapter Jev server-side isolado
 > está implementado e aprovado por revisão Sol independente; 22 testes
 > focados e suíte completa **1.920 passed, 35 skipped, 15 deselected** verdes.
@@ -10,6 +43,8 @@
 > A/B live de três réplicas, dependente de `JEVMODEL_API_KEY` e da substituição
 > explícita de Terra High por Sol High nesta sessão. Detalhes em
 > [evidência SPEC-177](docs/spec177/README.md). PR #13 está empilhado sobre #12.
+> Handoff da SPEC-178 em `handoffs/SPEC-178-terra-review.md` registra
+> `MODEL_HANDOFF_REQUIRED`; não houve implementação ou chamadas externas da 178.
 
 > **02/10 — gate zero do pacote v5: SPEC-176 `done`.** As SPEC-176–198
 > foram importadas com IDs/dependências preservados. Correção local de

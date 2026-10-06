@@ -3143,16 +3143,16 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Sol High substitution expressly authorized; independent Sol review approved; full suite and GitHub CI green in PR 13
+  lineage_note: Sol High substitution expressly authorized; TypeSafe host correction after user clarified key origin; original PR 13 CI green; official smoke succeeded
 - id: SPEC-178
   slug: jev-router-ab-eval
-  status: approved
+  status: done
   path: specs/SPEC-178-jev-router-ab-eval.md
   created_commit: null
   created_at: '2026-10-02'
-  completed_commit: null
-  completed_at: null
-  completed_order: null
+  completed_commit: ec68012d5291ccd5428053b5dc76f6694421334d
+  completed_at: '2026-10-05'
+  completed_order: 177
   depends_on:
   - SPEC-177
   depends_on_raw:
@@ -3160,7 +3160,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Imported approved v5 package; implementation not started
+  lineage_note: Sol High substitution authorized; after TypeSafe rotation and DeepSeek recharge, 3 paired replicas complete in 98 calls (102 cumulative); independent Sol result review approved development evidence, no promotion
 - id: SPEC-179
   slug: jev-target-loot-context-eval
   status: approved

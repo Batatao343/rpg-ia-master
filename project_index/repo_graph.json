@@ -1,5 +1,5 @@
 {
-  "commit_sha": "239c1f194b4aea6b5ceeb304e5a268d14ef9599b",
+  "commit_sha": "ec68012d5291ccd5428053b5dc76f6694421334d",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -703,6 +703,28 @@
       },
       "source": "file:evals/evaluators/routing.py",
       "target": "module:evals.evaluators.routing",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/__init__.py",
+        "line": 1
+      },
+      "source": "file:evals/experiments/__init__.py",
+      "target": "module:evals.experiments",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 1
+      },
+      "source": "file:evals/experiments/jev_router_ab.py",
+      "target": "module:evals.experiments.jev_router_ab",
       "type": "contains"
     },
     {
@@ -6786,6 +6808,39 @@
       },
       "source": "file:tests/test_jev_decision_backend.py",
       "target": "module:tests.test_jev_decision_backend",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 10
+      },
+      "source": "file:tests/test_jev_router_ab_experiment.py",
+      "target": "file:evals/experiments/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 11
+      },
+      "source": "file:tests/test_jev_router_ab_experiment.py",
+      "target": "file:services/jev_decision.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 1
+      },
+      "source": "file:tests/test_jev_router_ab_experiment.py",
+      "target": "module:tests.test_jev_router_ab_experiment",
       "type": "contains"
     },
     {
@@ -14893,6 +14948,226 @@
       },
       "source": "module:evals.evaluators.routing",
       "target": "symbol:evals.evaluators.routing.RoutingEvaluator",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 24
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "module:evals.core.adapters",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 25
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "module:evals.core.governance",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 26
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "module:evals.core.hashing",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 27
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "module:services.jev_decision",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 66
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab.Budget",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 53
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 61
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab._ClassifierReached",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 228
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab._arm_a",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 261
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab._arm_b",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 95
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab._candidate",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 149
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab._capture_classify",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 104
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab._cases",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 118
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab._eligible",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 308
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab._error_result",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 333
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab._percentile",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 317
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab._write_json",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 466
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 137
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab.preflight",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 378
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab.run",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 342
+      },
+      "source": "module:evals.experiments.jev_router_ab",
+      "target": "symbol:evals.experiments.jev_router_ab.score",
       "type": "defines"
     },
     {
@@ -29376,7 +29651,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 180
+        "line": 182
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.DecisionBackend",
@@ -29398,7 +29673,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 161
+        "line": 163
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.DecisionResult",
@@ -29420,7 +29695,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 170
+        "line": 172
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.DecisionTelemetry",
@@ -29431,7 +29706,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 198
+        "line": 200
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevAuthenticationError",
@@ -29442,7 +29717,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 194
+        "line": 196
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevConfigurationError",
@@ -29453,7 +29728,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 202
+        "line": 204
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevCreditsError",
@@ -29464,7 +29739,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 277
+        "line": 297
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -29475,7 +29750,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 190
+        "line": 192
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevError",
@@ -29486,7 +29761,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 230
+        "line": 232
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevHTTPError",
@@ -29497,7 +29772,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 210
+        "line": 212
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevRateLimitError",
@@ -29508,7 +29783,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 226
+        "line": 228
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevResponseError",
@@ -29519,7 +29794,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 218
+        "line": 220
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevTimeoutError",
@@ -29530,7 +29805,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 222
+        "line": 224
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevTransportError",
@@ -29541,7 +29816,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 214
+        "line": 216
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevUpstreamError",
@@ -29552,7 +29827,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 206
+        "line": 208
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevValidationError",
@@ -29607,7 +29882,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 150
+        "line": 152
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.Usage",
@@ -29640,7 +29915,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 155
+        "line": 157
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision._WireResponse",
@@ -29651,7 +29926,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 242
+        "line": 244
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision._api_key",
@@ -29673,7 +29948,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 258
+        "line": 262
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision._validate_answer",
@@ -51277,7 +51552,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 48
+        "line": 49
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -51299,7 +51574,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 109
+        "line": 111
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry",
@@ -51310,7 +51585,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 224
+        "line": 234
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_incompatible_200_never_becomes_a_decision",
@@ -51321,7 +51596,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 275
+        "line": 285
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_key_migration_and_conflicting_variables_fail_closed",
@@ -51332,7 +51607,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 247
+        "line": 257
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
@@ -51343,7 +51618,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 233
+        "line": 243
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
@@ -51354,7 +51629,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 66
+        "line": 67
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state",
@@ -51365,7 +51640,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 175
+        "line": 177
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls",
@@ -51376,7 +51651,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 128
+        "line": 130
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request",
@@ -51387,7 +51662,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 159
+        "line": 161
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing",
@@ -51398,10 +51673,131 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 144
+        "line": 146
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 10
+      },
+      "source": "module:tests.test_jev_router_ab_experiment",
+      "target": "module:evals.experiments",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 11
+      },
+      "source": "module:tests.test_jev_router_ab_experiment",
+      "target": "module:services.jev_decision",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 39
+      },
+      "source": "module:tests.test_jev_router_ab_experiment",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_budget_stops_before_next_external_call",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 28
+      },
+      "source": "module:tests.test_jev_router_ab_experiment",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_candidate_never_contains_expected_or_oracle",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 82
+      },
+      "source": "module:tests.test_jev_router_ab_experiment",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_capture_marks_build_failure_fatal_and_keeps_raw_usage",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 186
+      },
+      "source": "module:tests.test_jev_router_ab_experiment",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 106
+      },
+      "source": "module:tests.test_jev_router_ab_experiment",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 14
+      },
+      "source": "module:tests.test_jev_router_ab_experiment",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_preflight_proves_classifier_eligibility_without_calling_provider",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 133
+      },
+      "source": "module:tests.test_jev_router_ab_experiment",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 49
+      },
+      "source": "module:tests.test_jev_router_ab_experiment",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 73
+      },
+      "source": "module:tests.test_jev_router_ab_experiment",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_reported_cost_is_not_treated_as_zero",
       "type": "defines"
     },
     {
@@ -71675,6 +72071,765 @@
       },
       "source": "symbol:evals.evaluators.routing.RoutingEvaluator.evaluate",
       "target": "symbol:evals.evaluators.exact.strict_equal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 75
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.Budget",
+      "target": "symbol:evals.experiments.jev_router_ab.Budget.consume",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 84
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.Budget",
+      "target": "symbol:evals.experiments.jev_router_ab.Budget.record_cost",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 81
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.Budget.consume",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 88
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.Budget.record_cost",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 92
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.Budget.record_cost",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 56
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 232
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_a",
+      "target": "symbol:evals.core.adapters.RoutingAdapter",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 234
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_a",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 240
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_a",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 247
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_a",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 232
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_a",
+      "target": "symbol:evals.experiments.jev_router_ab._candidate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 230
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_a",
+      "target": "symbol:evals.experiments.jev_router_ab._capture_classify",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 236
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_a",
+      "target": "symbol:evals.experiments.jev_router_ab._error_result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 242
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_a",
+      "target": "symbol:evals.experiments.jev_router_ab._error_result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 248
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_a",
+      "target": "symbol:evals.experiments.jev_router_ab._error_result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 280
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_b",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 287
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_b",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 304
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_b",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 263
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_b",
+      "target": "symbol:evals.experiments.jev_router_ab._candidate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 282
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_b",
+      "target": "symbol:evals.experiments.jev_router_ab._error_result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 266
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_b",
+      "target": "symbol:services.jev_decision.DecisionRequest",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 267
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._arm_b",
+      "target": "symbol:services.jev_decision.DecisionState",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 97
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._candidate",
+      "target": "symbol:evals.core.adapters.AdapterCase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 167
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._capture_classify",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 196
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._capture_classify",
+      "target": "symbol:evals.experiments.jev_router_ab._capture_classify.attempt",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 170
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._capture_classify",
+      "target": "symbol:evals.experiments.jev_router_ab._capture_classify.invoke",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 176
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._capture_classify",
+      "target": "symbol:evals.experiments.jev_router_ab._capture_classify.normalize",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 164
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._capture_classify",
+      "target": "symbol:evals.experiments.jev_router_ab._capture_classify.real_only",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 191
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._capture_classify",
+      "target": "symbol:evals.experiments.jev_router_ab._capture_classify.slot",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 167
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._capture_classify.real_only",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 110
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._cases",
+      "target": "symbol:evals.core.governance.load_cases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 105
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._cases",
+      "target": "symbol:evals.core.governance.validate_repository",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 106
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._cases",
+      "target": "symbol:evals.core.hashing.sha256_file",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 108
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._cases",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 114
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._cases",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 129
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._eligible",
+      "target": "symbol:evals.core.adapters.RoutingAdapter",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 129
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._eligible",
+      "target": "symbol:evals.experiments.jev_router_ab._candidate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 123
+      },
+      "source": "symbol:evals.experiments.jev_router_ab._eligible",
+      "target": "symbol:evals.experiments.jev_router_ab._eligible.reached",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 480
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.main",
+      "target": "symbol:evals.experiments.jev_router_ab.Budget",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 474
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.main",
+      "target": "symbol:evals.experiments.jev_router_ab.preflight",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 480
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.main",
+      "target": "symbol:evals.experiments.jev_router_ab.run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 138
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.preflight",
+      "target": "symbol:evals.experiments.jev_router_ab._cases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 139
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.preflight",
+      "target": "symbol:evals.experiments.jev_router_ab._eligible",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 395
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.core.hashing.repository_identity",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 385
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab.Budget",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 384
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 392
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 417
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 411
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._arm_a",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 442
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._arm_a",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 419
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._arm_b",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 448
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._arm_b",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 386
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._cases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 413
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._error_result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 421
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._error_result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 444
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._error_result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 450
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._error_result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 406
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._write_json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 415
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._write_json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 423
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._write_json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 446
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._write_json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 452
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._write_json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 459
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._write_json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 462
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._write_json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 387
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab.preflight",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 462
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab.score",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 408
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:services.jev_decision.JevDecisionBackend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 365
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.score",
+      "target": "symbol:evals.experiments.jev_router_ab._percentile",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 366
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.score",
+      "target": "symbol:evals.experiments.jev_router_ab._percentile",
       "type": "calls"
     },
     {
@@ -99369,7 +100524,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 181
+        "line": 183
       },
       "source": "symbol:services.jev_decision.DecisionBackend",
       "target": "symbol:services.jev_decision.DecisionBackend.decide",
@@ -99413,7 +100568,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 309
+        "line": 329
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend",
       "target": "symbol:services.jev_decision.JevDecisionBackend.__enter__",
@@ -99424,7 +100579,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 312
+        "line": 332
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend",
       "target": "symbol:services.jev_decision.JevDecisionBackend.__exit__",
@@ -99435,7 +100590,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 280
+        "line": 300
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend",
       "target": "symbol:services.jev_decision.JevDecisionBackend.__init__",
@@ -99446,7 +100601,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 322
+        "line": 342
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend",
       "target": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
@@ -99457,7 +100612,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 315
+        "line": 335
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend",
       "target": "symbol:services.jev_decision.JevDecisionBackend._emit",
@@ -99468,7 +100623,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 304
+        "line": 324
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend",
       "target": "symbol:services.jev_decision.JevDecisionBackend.close",
@@ -99479,7 +100634,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 382
+        "line": 402
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend",
       "target": "symbol:services.jev_decision.JevDecisionBackend.decide",
@@ -99490,7 +100645,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 291
+        "line": 311
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.__init__",
       "target": "symbol:services.jev_decision._api_key",
@@ -99501,7 +100656,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 343
+        "line": 363
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "target": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline.send",
@@ -99512,7 +100667,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 358
+        "line": 378
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "target": "symbol:services.jev_decision.JevResponseError",
@@ -99523,7 +100678,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 376
+        "line": 396
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "target": "symbol:services.jev_decision.JevTimeoutError",
@@ -99534,7 +100689,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 334
+        "line": 354
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "target": "symbol:services.jev_decision.JevTransportError",
@@ -99545,7 +100700,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 336
+        "line": 356
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "target": "symbol:services.jev_decision.JevTransportError",
@@ -99556,7 +100711,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 339
+        "line": 359
+      },
+      "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
+      "target": "symbol:services.jev_decision.JevTransportError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 394
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "target": "symbol:services.jev_decision.JevTransportError",
@@ -99570,17 +100736,6 @@
         "line": 374
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
-      "target": "symbol:services.jev_decision.JevTransportError",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/jev_decision.py",
-        "line": 354
-      },
-      "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "target": "symbol:services.jev_decision._validate_answer",
       "type": "calls"
     },
@@ -99589,7 +100744,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 358
+        "line": 378
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline.send",
       "target": "symbol:services.jev_decision.JevResponseError",
@@ -99600,7 +100755,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 354
+        "line": 374
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline.send",
       "target": "symbol:services.jev_decision._validate_answer",
@@ -99611,7 +100766,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 435
+        "line": 455
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.DecisionResult",
@@ -99622,7 +100777,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 443
+        "line": 463
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.DecisionTelemetry",
@@ -99633,7 +100788,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 465
+        "line": 485
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.DecisionTelemetry",
@@ -99644,7 +100799,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 410
+        "line": 430
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.JevTimeoutError",
@@ -99655,7 +100810,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 418
+        "line": 438
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.JevTimeoutError",
@@ -99666,7 +100821,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 431
+        "line": 451
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.JevTimeoutError",
@@ -99677,7 +100832,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 392
+        "line": 412
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.JevTransportError",
@@ -99688,7 +100843,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 421
+        "line": 441
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.JevTransportError",
@@ -99699,7 +100854,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 427
+        "line": 447
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.JevTransportError",
@@ -99754,7 +100909,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 247
+        "line": 250
       },
       "source": "symbol:services.jev_decision._api_key",
       "target": "symbol:services.jev_decision.JevConfigurationError",
@@ -99765,7 +100920,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 249
+        "line": 252
       },
       "source": "symbol:services.jev_decision._api_key",
       "target": "symbol:services.jev_decision.JevConfigurationError",
@@ -99776,7 +100931,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 251
+        "line": 255
       },
       "source": "symbol:services.jev_decision._api_key",
       "target": "symbol:services.jev_decision.JevConfigurationError",
@@ -99787,7 +100942,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 254
+        "line": 258
       },
       "source": "symbol:services.jev_decision._api_key",
       "target": "symbol:services.jev_decision.JevConfigurationError",
@@ -99809,17 +100964,6 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 260
-      },
-      "source": "symbol:services.jev_decision._validate_answer",
-      "target": "symbol:services.jev_decision.JevResponseError",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/jev_decision.py",
         "line": 264
       },
       "source": "symbol:services.jev_decision._validate_answer",
@@ -99831,7 +100975,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 269
+        "line": 268
       },
       "source": "symbol:services.jev_decision._validate_answer",
       "target": "symbol:services.jev_decision.JevResponseError",
@@ -99842,7 +100986,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 271
+        "line": 273
       },
       "source": "symbol:services.jev_decision._validate_answer",
       "target": "symbol:services.jev_decision.JevResponseError",
@@ -99853,7 +100997,84 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 274
+        "line": 275
+      },
+      "source": "symbol:services.jev_decision._validate_answer",
+      "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 277
+      },
+      "source": "symbol:services.jev_decision._validate_answer",
+      "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 279
+      },
+      "source": "symbol:services.jev_decision._validate_answer",
+      "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 283
+      },
+      "source": "symbol:services.jev_decision._validate_answer",
+      "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 285
+      },
+      "source": "symbol:services.jev_decision._validate_answer",
+      "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 287
+      },
+      "source": "symbol:services.jev_decision._validate_answer",
+      "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 289
+      },
+      "source": "symbol:services.jev_decision._validate_answer",
+      "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 294
       },
       "source": "symbol:services.jev_decision._validate_answer",
       "target": "symbol:services.jev_decision.JevResponseError",
@@ -137099,21 +138320,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 56
+        "line": 57
       },
       "source": "symbol:tests.test_jev_decision_backend._request",
       "target": "symbol:services.jev_decision.ChoiceQuestion",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_decision_backend.py",
-        "line": 49
-      },
-      "source": "symbol:tests.test_jev_decision_backend._request",
-      "target": "symbol:services.jev_decision.DecisionRequest",
       "type": "calls"
     },
     {
@@ -137124,7 +138334,7 @@
         "line": 50
       },
       "source": "symbol:tests.test_jev_decision_backend._request",
-      "target": "symbol:services.jev_decision.DecisionState",
+      "target": "symbol:services.jev_decision.DecisionRequest",
       "type": "calls"
     },
     {
@@ -137132,10 +138342,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 60
+        "line": 51
       },
       "source": "symbol:tests.test_jev_decision_backend._request",
-      "target": "symbol:services.jev_decision.NoulQuestion",
+      "target": "symbol:services.jev_decision.DecisionState",
       "type": "calls"
     },
     {
@@ -137146,7 +138356,7 @@
         "line": 61
       },
       "source": "symbol:tests.test_jev_decision_backend._request",
-      "target": "symbol:services.jev_decision.ScoreQuestion",
+      "target": "symbol:services.jev_decision.NoulQuestion",
       "type": "calls"
     },
     {
@@ -137154,10 +138364,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 119
+        "line": 62
       },
-      "source": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry",
-      "target": "symbol:services.jev_decision.JevDecisionBackend",
+      "source": "symbol:tests.test_jev_decision_backend._request",
+      "target": "symbol:services.jev_decision.ScoreQuestion",
       "type": "calls"
     },
     {
@@ -137168,6 +138378,17 @@
         "line": 121
       },
       "source": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry",
+      "target": "symbol:services.jev_decision.JevDecisionBackend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_decision_backend.py",
+        "line": 123
+      },
+      "source": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry",
       "target": "symbol:tests.test_jev_decision_backend._request",
       "type": "calls"
     },
@@ -137176,7 +138397,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 114
+        "line": 116
       },
       "source": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry",
       "target": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry.handler",
@@ -137187,7 +138408,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 228
+        "line": 238
       },
       "source": "symbol:tests.test_jev_decision_backend.test_incompatible_200_never_becomes_a_decision",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -137198,7 +138419,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 230
+        "line": 240
       },
       "source": "symbol:tests.test_jev_decision_backend.test_incompatible_200_never_becomes_a_decision",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -137209,7 +138430,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 277
+        "line": 287
       },
       "source": "symbol:tests.test_jev_decision_backend.test_key_migration_and_conflicting_variables_fail_closed",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -137220,7 +138441,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 280
+        "line": 290
       },
       "source": "symbol:tests.test_jev_decision_backend.test_key_migration_and_conflicting_variables_fail_closed",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -137231,7 +138452,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 283
+        "line": 293
       },
       "source": "symbol:tests.test_jev_decision_backend.test_key_migration_and_conflicting_variables_fail_closed",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -137242,7 +138463,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 253
+        "line": 297
+      },
+      "source": "symbol:tests.test_jev_decision_backend.test_key_migration_and_conflicting_variables_fail_closed",
+      "target": "symbol:services.jev_decision.JevDecisionBackend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_decision_backend.py",
+        "line": 263
       },
       "source": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -137253,7 +138485,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 268
+        "line": 278
       },
       "source": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -137264,7 +138496,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 250
+        "line": 260
       },
       "source": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
       "target": "symbol:services.jev_decision.NoulQuestion",
@@ -137275,7 +138507,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 248
+        "line": 258
       },
       "source": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -137286,7 +138518,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 257
+        "line": 267
       },
       "source": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -137297,7 +138529,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 260
+        "line": 270
       },
       "source": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
       "target": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable.handler",
@@ -137308,7 +138540,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 237
+        "line": 247
       },
       "source": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
       "target": "symbol:services.jev_decision.ChoiceQuestion",
@@ -137319,7 +138551,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 241
+        "line": 251
       },
       "source": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
       "target": "symbol:services.jev_decision.DecisionRequest",
@@ -137330,7 +138562,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 235
+        "line": 245
       },
       "source": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
       "target": "symbol:services.jev_decision.DecisionState",
@@ -137341,7 +138573,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 242
+        "line": 252
       },
       "source": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
       "target": "symbol:services.jev_decision.DecisionState",
@@ -137352,7 +138584,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 243
+        "line": 253
       },
       "source": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
       "target": "symbol:services.jev_decision.NoulQuestion",
@@ -137363,7 +138595,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 239
+        "line": 249
       },
       "source": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
       "target": "symbol:services.jev_decision.ScoreQuestion",
@@ -137374,7 +138606,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 75
+        "line": 76
       },
       "source": "symbol:tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -137385,7 +138617,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 76
+        "line": 77
       },
       "source": "symbol:tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -137396,7 +138628,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 70
+        "line": 71
       },
       "source": "symbol:tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state",
       "target": "symbol:tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state.handler",
@@ -137407,7 +138639,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 188
+        "line": 190
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -137418,7 +138650,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 193
+        "line": 195
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -137429,7 +138661,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 197
+        "line": 199
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -137440,7 +138672,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 201
+        "line": 203
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -137451,7 +138683,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 180
+        "line": 182
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls",
       "target": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls.handler",
@@ -137462,7 +138694,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 137
+        "line": 139
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -137473,7 +138705,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 139
+        "line": 141
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -137484,7 +138716,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 131
+        "line": 133
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request",
       "target": "symbol:tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request.handler",
@@ -137495,7 +138727,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 166
+        "line": 168
       },
       "source": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -137506,7 +138738,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 171
+        "line": 173
       },
       "source": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -137517,7 +138749,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 160
+        "line": 162
       },
       "source": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing",
       "target": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing.SlowJsonResponse",
@@ -137528,7 +138760,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 161
+        "line": 163
       },
       "source": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing.SlowJsonResponse",
       "target": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing.SlowJsonResponse.json",
@@ -137539,7 +138771,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 150
+        "line": 152
       },
       "source": "symbol:tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -137550,7 +138782,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 155
+        "line": 157
       },
       "source": "symbol:tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -137561,11 +138793,440 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 145
+        "line": 147
       },
       "source": "symbol:tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success",
       "target": "symbol:tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success.handler",
       "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 40
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_budget_stops_before_next_external_call",
+      "target": "symbol:evals.experiments.jev_router_ab.Budget",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 30
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_candidate_never_contains_expected_or_oracle",
+      "target": "symbol:evals.experiments.jev_router_ab._candidate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 29
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_candidate_never_contains_expected_or_oracle",
+      "target": "symbol:evals.experiments.jev_router_ab._cases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 87
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_capture_marks_build_failure_fatal_and_keeps_raw_usage",
+      "target": "symbol:evals.experiments.jev_router_ab.Budget",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 88
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_capture_marks_build_failure_fatal_and_keeps_raw_usage",
+      "target": "symbol:evals.experiments.jev_router_ab._capture_classify",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 202
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 207
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score",
+      "target": "symbol:evals.experiments.jev_router_ab.run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 191
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 201
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.rejected",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 195
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__enter__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 198
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__exit__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 192
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 202
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.rejected",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 123
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
+      "target": "symbol:evals.experiments.jev_router_ab.Budget",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 125
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
+      "target": "symbol:evals.experiments.jev_router_ab._arm_b",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 107
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
+      "target": "symbol:evals.experiments.jev_router_ab._cases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 107
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
+      "target": "symbol:evals.experiments.jev_router_ab.preflight",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 113
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
+      "target": "symbol:services.jev_decision.ChoiceAnswer",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 111
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
+      "target": "symbol:services.jev_decision.DecisionResult",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 119
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
+      "target": "symbol:services.jev_decision.Usage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 109
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 110
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend.decide",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 113
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend.decide",
+      "target": "symbol:services.jev_decision.ChoiceAnswer",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 111
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend.decide",
+      "target": "symbol:services.jev_decision.DecisionResult",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 119
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend.decide",
+      "target": "symbol:services.jev_decision.Usage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 21
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_preflight_proves_classifier_eligibility_without_calling_provider",
+      "target": "symbol:evals.experiments.jev_router_ab.preflight",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 17
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_preflight_proves_classifier_eligibility_without_calling_provider",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_preflight_proves_classifier_eligibility_without_calling_provider.forbidden",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 139
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order",
+      "target": "symbol:evals.experiments.jev_router_ab._cases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 175
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order",
+      "target": "symbol:evals.experiments.jev_router_ab.run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 142
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 152
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.actual",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 167
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.checked_score",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 146
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__enter__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 149
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__exit__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 143
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 53
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock",
+      "target": "symbol:evals.experiments.jev_router_ab._write_json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 65
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock",
+      "target": "symbol:evals.experiments.jev_router_ab._write_json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 57
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock.locked_once",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 74
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_reported_cost_is_not_treated_as_zero",
+      "target": "symbol:evals.experiments.jev_router_ab.Budget",
+      "type": "calls"
     },
     {
       "confidence": "static_best_effort",
@@ -156994,6 +158655,20 @@
       "qualified_name": null
     },
     {
+      "id": "file:evals/experiments/__init__.py",
+      "kind": "file",
+      "line": 1,
+      "path": "evals/experiments/__init__.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:evals/experiments/jev_router_ab.py",
+      "kind": "file",
+      "line": 1,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:game_engine.py",
       "kind": "file",
       "line": 1,
@@ -158884,6 +160559,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_jev_router_ab_experiment.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_letalidade_early.py",
       "kind": "file",
       "line": 1,
@@ -160002,6 +161684,20 @@
       "line": 1,
       "path": "evals/evaluators/routing.py",
       "qualified_name": "evals.evaluators.routing"
+    },
+    {
+      "id": "module:evals.experiments",
+      "kind": "module",
+      "line": 1,
+      "path": "evals/experiments/__init__.py",
+      "qualified_name": "evals.experiments"
+    },
+    {
+      "id": "module:evals.experiments.jev_router_ab",
+      "kind": "module",
+      "line": 1,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab"
     },
     {
       "id": "module:game_engine",
@@ -161892,6 +163588,13 @@
       "line": 1,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend"
+    },
+    {
+      "id": "module:tests.test_jev_router_ab_experiment",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment"
     },
     {
       "id": "module:tests.test_letalidade_early",
@@ -165203,6 +166906,181 @@
       "line": 17,
       "path": "evals/evaluators/routing.py",
       "qualified_name": "evals.evaluators.routing.RoutingEvaluator.evaluate"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab.Budget",
+      "kind": "class",
+      "line": 66,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab.Budget"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab.Budget.consume",
+      "kind": "method",
+      "line": 75,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab.Budget.consume"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab.Budget.record_cost",
+      "kind": "method",
+      "line": 84,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab.Budget.record_cost"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "kind": "class",
+      "line": 53,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab.ExperimentBlocked"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked.__init__",
+      "kind": "method",
+      "line": 56,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab.ExperimentBlocked.__init__"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._ClassifierReached",
+      "kind": "class",
+      "line": 61,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._ClassifierReached"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._arm_a",
+      "kind": "function",
+      "line": 228,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._arm_a"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._arm_b",
+      "kind": "function",
+      "line": 261,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._arm_b"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._candidate",
+      "kind": "function",
+      "line": 95,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._candidate"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._capture_classify",
+      "kind": "function",
+      "line": 149,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._capture_classify"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._capture_classify.attempt",
+      "kind": "function",
+      "line": 196,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._capture_classify.attempt"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._capture_classify.invoke",
+      "kind": "function",
+      "line": 170,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._capture_classify.invoke"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._capture_classify.normalize",
+      "kind": "function",
+      "line": 176,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._capture_classify.normalize"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._capture_classify.real_only",
+      "kind": "function",
+      "line": 164,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._capture_classify.real_only"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._capture_classify.slot",
+      "kind": "function",
+      "line": 191,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._capture_classify.slot"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._cases",
+      "kind": "function",
+      "line": 104,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._cases"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._eligible",
+      "kind": "function",
+      "line": 118,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._eligible"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._eligible.reached",
+      "kind": "function",
+      "line": 123,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._eligible.reached"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._error_result",
+      "kind": "function",
+      "line": 308,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._error_result"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._percentile",
+      "kind": "function",
+      "line": 333,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._percentile"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab._write_json",
+      "kind": "function",
+      "line": 317,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab._write_json"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab.main",
+      "kind": "function",
+      "line": 466,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab.main"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab.preflight",
+      "kind": "function",
+      "line": 137,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab.preflight"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab.run",
+      "kind": "function",
+      "line": 378,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab.run"
+    },
+    {
+      "id": "symbol:evals.experiments.jev_router_ab.score",
+      "kind": "function",
+      "line": 342,
+      "path": "evals/experiments/jev_router_ab.py",
+      "qualified_name": "evals.experiments.jev_router_ab.score"
     },
     {
       "id": "symbol:game_engine.Colors",
@@ -175539,14 +177417,14 @@
     {
       "id": "symbol:services.jev_decision.DecisionBackend",
       "kind": "class",
-      "line": 180,
+      "line": 182,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.DecisionBackend"
     },
     {
       "id": "symbol:services.jev_decision.DecisionBackend.decide",
       "kind": "method",
-      "line": 181,
+      "line": 183,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.DecisionBackend.decide"
     },
@@ -175574,7 +177452,7 @@
     {
       "id": "symbol:services.jev_decision.DecisionResult",
       "kind": "class",
-      "line": 161,
+      "line": 163,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.DecisionResult"
     },
@@ -175588,147 +177466,147 @@
     {
       "id": "symbol:services.jev_decision.DecisionTelemetry",
       "kind": "class",
-      "line": 170,
+      "line": 172,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.DecisionTelemetry"
     },
     {
       "id": "symbol:services.jev_decision.JevAuthenticationError",
       "kind": "class",
-      "line": 198,
+      "line": 200,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevAuthenticationError"
     },
     {
       "id": "symbol:services.jev_decision.JevConfigurationError",
       "kind": "class",
-      "line": 194,
+      "line": 196,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevConfigurationError"
     },
     {
       "id": "symbol:services.jev_decision.JevCreditsError",
       "kind": "class",
-      "line": 202,
+      "line": 204,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevCreditsError"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend",
       "kind": "class",
-      "line": 277,
+      "line": 297,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend.__enter__",
       "kind": "method",
-      "line": 309,
+      "line": 329,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend.__enter__"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend.__exit__",
       "kind": "method",
-      "line": 312,
+      "line": 332,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend.__exit__"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend.__init__",
       "kind": "method",
-      "line": 280,
+      "line": 300,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend.__init__"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "kind": "method",
-      "line": 322,
+      "line": 342,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend._call_with_deadline"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline.send",
       "kind": "method",
-      "line": 343,
+      "line": 363,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend._call_with_deadline.send"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend._emit",
       "kind": "method",
-      "line": 315,
+      "line": 335,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend._emit"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend.close",
       "kind": "method",
-      "line": 304,
+      "line": 324,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend.close"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "kind": "method",
-      "line": 382,
+      "line": 402,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend.decide"
     },
     {
       "id": "symbol:services.jev_decision.JevError",
       "kind": "class",
-      "line": 190,
+      "line": 192,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevError"
     },
     {
       "id": "symbol:services.jev_decision.JevHTTPError",
       "kind": "class",
-      "line": 230,
+      "line": 232,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevHTTPError"
     },
     {
       "id": "symbol:services.jev_decision.JevRateLimitError",
       "kind": "class",
-      "line": 210,
+      "line": 212,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevRateLimitError"
     },
     {
       "id": "symbol:services.jev_decision.JevResponseError",
       "kind": "class",
-      "line": 226,
+      "line": 228,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevResponseError"
     },
     {
       "id": "symbol:services.jev_decision.JevTimeoutError",
       "kind": "class",
-      "line": 218,
+      "line": 220,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevTimeoutError"
     },
     {
       "id": "symbol:services.jev_decision.JevTransportError",
       "kind": "class",
-      "line": 222,
+      "line": 224,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevTransportError"
     },
     {
       "id": "symbol:services.jev_decision.JevUpstreamError",
       "kind": "class",
-      "line": 214,
+      "line": 216,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevUpstreamError"
     },
     {
       "id": "symbol:services.jev_decision.JevValidationError",
       "kind": "class",
-      "line": 206,
+      "line": 208,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevValidationError"
     },
@@ -175777,7 +177655,7 @@
     {
       "id": "symbol:services.jev_decision.Usage",
       "kind": "class",
-      "line": 150,
+      "line": 152,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.Usage"
     },
@@ -175798,14 +177676,14 @@
     {
       "id": "symbol:services.jev_decision._WireResponse",
       "kind": "class",
-      "line": 155,
+      "line": 157,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision._WireResponse"
     },
     {
       "id": "symbol:services.jev_decision._api_key",
       "kind": "function",
-      "line": 242,
+      "line": 244,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision._api_key"
     },
@@ -175819,7 +177697,7 @@
     {
       "id": "symbol:services.jev_decision._validate_answer",
       "kind": "function",
-      "line": 258,
+      "line": 262,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision._validate_answer"
     },
@@ -188923,7 +190801,7 @@
     {
       "id": "symbol:tests.test_jev_decision_backend._request",
       "kind": "test",
-      "line": 48,
+      "line": 49,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend._request"
     },
@@ -188937,128 +190815,296 @@
     {
       "id": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry",
       "kind": "test",
-      "line": 109,
+      "line": 111,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry.handler",
       "kind": "test",
-      "line": 114,
+      "line": 116,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry.handler"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_incompatible_200_never_becomes_a_decision",
       "kind": "test",
-      "line": 224,
+      "line": 234,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_incompatible_200_never_becomes_a_decision"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_key_migration_and_conflicting_variables_fail_closed",
       "kind": "test",
-      "line": 275,
+      "line": 285,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_key_migration_and_conflicting_variables_fail_closed"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
       "kind": "test",
-      "line": 247,
+      "line": 257,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable.handler",
       "kind": "test",
-      "line": 260,
+      "line": 270,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable.handler"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
       "kind": "test",
-      "line": 233,
+      "line": 243,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state",
       "kind": "test",
-      "line": 66,
+      "line": 67,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state.handler",
       "kind": "test",
-      "line": 70,
+      "line": 71,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state.handler"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls",
       "kind": "test",
-      "line": 175,
+      "line": 177,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls.handler",
       "kind": "test",
-      "line": 180,
+      "line": 182,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls.handler"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request",
       "kind": "test",
-      "line": 128,
+      "line": 130,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request.handler",
       "kind": "test",
-      "line": 131,
+      "line": 133,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request.handler"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing",
       "kind": "test",
-      "line": 159,
+      "line": 161,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing.SlowJsonResponse",
       "kind": "class",
-      "line": 160,
+      "line": 162,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing.SlowJsonResponse"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing.SlowJsonResponse.json",
       "kind": "test",
-      "line": 161,
+      "line": 163,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing.SlowJsonResponse.json"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success",
       "kind": "test",
-      "line": 144,
+      "line": 146,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success.handler",
       "kind": "test",
-      "line": 145,
+      "line": 147,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success.handler"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_budget_stops_before_next_external_call",
+      "kind": "test",
+      "line": 39,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_budget_stops_before_next_external_call"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_candidate_never_contains_expected_or_oracle",
+      "kind": "test",
+      "line": 28,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_candidate_never_contains_expected_or_oracle"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_capture_marks_build_failure_fatal_and_keeps_raw_usage",
+      "kind": "test",
+      "line": 82,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_capture_marks_build_failure_fatal_and_keeps_raw_usage"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score",
+      "kind": "test",
+      "line": 186,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend",
+      "kind": "class",
+      "line": 191,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__enter__",
+      "kind": "test",
+      "line": 195,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__enter__"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__exit__",
+      "kind": "test",
+      "line": 198,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__exit__"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__init__",
+      "kind": "test",
+      "line": 192,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__init__"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.rejected",
+      "kind": "test",
+      "line": 201,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.rejected"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
+      "kind": "test",
+      "line": 106,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend",
+      "kind": "class",
+      "line": 109,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend.decide",
+      "kind": "test",
+      "line": 110,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend.decide"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_preflight_proves_classifier_eligibility_without_calling_provider",
+      "kind": "test",
+      "line": 14,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_preflight_proves_classifier_eligibility_without_calling_provider"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_preflight_proves_classifier_eligibility_without_calling_provider.forbidden",
+      "kind": "test",
+      "line": 17,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_preflight_proves_classifier_eligibility_without_calling_provider.forbidden"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order",
+      "kind": "test",
+      "line": 133,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend",
+      "kind": "class",
+      "line": 142,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__enter__",
+      "kind": "test",
+      "line": 146,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__enter__"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__exit__",
+      "kind": "test",
+      "line": 149,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__exit__"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__init__",
+      "kind": "test",
+      "line": 143,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__init__"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.actual",
+      "kind": "test",
+      "line": 152,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.actual"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.checked_score",
+      "kind": "test",
+      "line": 167,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.checked_score"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock",
+      "kind": "test",
+      "line": 49,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock.locked_once",
+      "kind": "test",
+      "line": 57,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock.locked_once"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_reported_cost_is_not_treated_as_zero",
+      "kind": "test",
+      "line": 73,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_reported_cost_is_not_treated_as_zero"
     },
     {
       "id": "symbol:tests.test_letalidade_early._actor",
@@ -195586,5 +197632,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:d7050ec6bf0a82d7ca0b3733662e8025700bc7a29a5dde6fa027e228453292ca"
+  "source_tree_hash": "sha256:768de77232381cc58d69bb0740d3bd54e23d24a4db5ef80769073b256cbe3b48"
 }

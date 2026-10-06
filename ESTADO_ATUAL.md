@@ -1,5 +1,50 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **05/10 — SPEC-178 `done`; A/B live confirmatório.** Após recarga da
+> DeepSeek, o usuário ampliou o teto total para 120 chamadas/US$ 1,20. O run
+> `SPEC-178-20261006T013715Z-bedc56c2` completou 3 réplicas pareadas:
+> `pipeline_full` A 21/21 vs Jev 20/21; `classifier_eligible` A 48/48 vs Jev
+> 46/48. Jev foi mais rápido neste conjunto (p50 265,5 vs 1.367,5 ms), mas
+> divergiu duas vezes no mesmo caso de NPC. Raw/summary em
+> `evals/runs/jev-router-ab/20261006T013714Z/`, hashes e relatório em
+> `docs/spec178/README.md`. Foram 98 chamadas no run, **102/120 no histórico**;
+> custo real `unavailable` (reserva não é cobrança). Revisor Sol independente
+> **APPROVED** como evidência development/regression; **sem promoção**. A
+> produção continua no CLASSIFY atual. SPEC-179 é a próxima dependência.
+
+> **05/10 — SPEC-178 segue `blocked-by-provider` após rotação da chave.** O
+> usuário confirmou a troca da chave TypeSafe. A primeira tentativa A/B depois
+> disso parou na sanidade do braço CLASSIFY: DeepSeek respondeu HTTP 402
+> `Insufficient Balance`; a cascata caiu para Groq e obteve decisão válida,
+> mas o protocolo pré-registrado interrompe em erro de quota/configuração.
+> Foram 2 chamadas nesta tentativa e 4 das 100 autorizadas no total; 96
+> restam, menos que as 98 necessárias para um novo run completo. Jev não foi
+> chamado após a rotação; nenhuma réplica, score ou promoção ocorreu. O estado
+> bruto final está em `evals/runs/jev-router-ab/20261006T012413Z/raw-recovered.json`
+> (SHA-256 `2c80eba8...633aa`); o `raw.json` original ficou stale por bloqueio
+> transitório do OneDrive ao substituir o arquivo. O runner agora tenta novamente
+> a substituição atômica; 9 testes focados e suíte completa verdes (**1.936
+> passed, 35 skipped, 15 deselected**). Revisão Sol independente aprovada em
+> `handoffs/SPEC-178-SOL-live-blocker-review.md`. Aguardam saldo DeepSeek e
+> decisão do usuário sobre ampliar o limite de chamadas/custo.
+
+> **05/10 — correção TypeSafe; SPEC-178 `blocked-by-provider`.** O usuário esclareceu
+> que `JEVMODEL_API_KEY` local veio de `console.typesafe.ai`. O adapter apontava
+> indevidamente para `jevmodel.org`, de onde veio o 401. Corrigido para a API
+> oficial `api.typesafe.ai/v1/systemone`, com `TYPESAFE_API_KEY` canônica e
+> alias para a variável local. Smoke sintético oficial: Jev `jev-1.13.0`,
+> Choice válido, usage 394/58, latência 327 ms. A primeira chamada enviou a
+> chave TypeSafe ao domínio errado; o usuário foi informado e vai revogar/
+> substituí-la. **Nenhuma outra chamada live até confirmar a rotação.**
+> O runner A/B permanece fora de produção; preflight do corpus protegido tem
+> hash `ad6f48be...59b4`, 21 casos route, 16 elegíveis e 5 gates Python.
+> O usuário autorizou Sol High, 100 chamadas/US$ 1; duas chamadas já ocorreram,
+> restando 98. Três réplicas pareadas e revisão Sol do resultado ainda faltam;
+> não há score ou promoção. SPEC-179 aguarda. Evidência: `docs/spec178/README.md`.
+> Após a correção do host, `uv run pytest` terminou verde: **1.935 passed,
+> 35 skipped, 15 deselected**. A revisão Sol independente aprovou a correção
+> offline; o A/B live continua bloqueado pela rotação da chave.
+
 > **03/10 — SPEC-177 `done`; PR #13 publicado e CI verde.**
 > Adapter Jev server-side em `services/jev_decision.py`, com Choice/Noul/Score
 > tipados, DTO mínimo, idempotência, timeout total com limite de workers,
@@ -11,9 +56,13 @@
 > Commit `31ec777` publicado em [PR #13](https://github.com/Batatao343/rpg-ia-master/pull/13),
 > empilhado sobre PR #12; `validate` 37142521573 e `eval-gates` 37142521566
 > terminaram `success`.
-> Sem `JEVMODEL_API_KEY`, smoke live opt-in não ocorreu. A SPEC-178 exige A/B
+> Sem `JEVMODEL_API_KEY` no início da execução, smoke live opt-in não ocorreu. A SPEC-178 exige A/B
 > real com três réplicas e ainda depende da chave, além de autorização
 > específica para substituir Terra High. Evidência: `docs/spec177/README.md`.
+> **SPEC-178 `MODEL_HANDOFF_REQUIRED`:** handoff preparado em
+> `handoffs/SPEC-178-terra-review.md`. A chave Jev foi detectada depois como
+> presente no `.env`, sem ler seu valor; chamadas live e substituição Sol High
+> para esta spec aguardam autorização expressa.
 
 > **02/10 — SPEC-176 `done`; pacote v5 importado (176–198).** A
 > correção local de integridade classificou `STALE_LOCK` por LF/CRLF: 27 casos

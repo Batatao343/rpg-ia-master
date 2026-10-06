@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "239c1f194b4aea6b5ceeb304e5a268d14ef9599b",
+  "commit_sha": "ec68012d5291ccd5428053b5dc76f6694421334d",
   "edge_counts": {
-    "calls": 7803,
-    "contains": 391,
-    "defines": 4725,
-    "imports": 798,
-    "likely_test_for": 478,
+    "calls": 7894,
+    "contains": 394,
+    "defines": 4774,
+    "imports": 804,
+    "likely_test_for": 480,
     "route_to": 31
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:229589102748f5cab5b80d66bd3eaab69f763238055dfff933ed4ee1cee1fe22",
+  "graph_hash": "sha256:b8ade10edebabd31035d29fb55917f6439d43b712863946281c458d6e4494b2e",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -76,6 +76,8 @@
     "evals/evaluators/narrative.py",
     "evals/evaluators/projection.py",
     "evals/evaluators/routing.py",
+    "evals/experiments/__init__.py",
+    "evals/experiments/jev_router_ab.py",
     "game_engine.py",
     "gamedata.py",
     "infrastructure/__init__.py",
@@ -348,6 +350,7 @@
     "tests/test_input_normalization.py",
     "tests/test_itens_vivos.py",
     "tests/test_jev_decision_backend.py",
+    "tests/test_jev_router_ab_experiment.py",
     "tests/test_letalidade_early.py",
     "tests/test_local_atomic_retry.py",
     "tests/test_longrun_remediation_v3.py",
@@ -483,14 +486,14 @@
   },
   "node_counts": {
     "artifact": 8,
-    "class": 399,
+    "class": 405,
     "endpoint": 31,
-    "file": 430,
-    "function": 1569,
-    "method": 349,
-    "module": 391,
-    "test": 2408
+    "file": 433,
+    "function": 1588,
+    "method": 352,
+    "module": 394,
+    "test": 2429
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:d7050ec6bf0a82d7ca0b3733662e8025700bc7a29a5dde6fa027e228453292ca"
+  "source_tree_hash": "sha256:768de77232381cc58d69bb0740d3bd54e23d24a4db5ef80769073b256cbe3b48"
 }

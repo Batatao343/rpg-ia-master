@@ -1,6 +1,6 @@
 """Server-side Jev decision backend. No gameplay route imports this module.
 
-Wire contract checked against https://jevmodel.org/docs/ on 2026-10-02.
+Wire contract checked against https://docs.typesafe.ai/api on 2026-10-05.
 Only the narrow DecisionState DTO may cross the provider boundary.
 """
 
@@ -20,7 +20,7 @@ from dotenv import load_dotenv
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
 
-ENDPOINT = "https://jevmodel.org/v1/systemone"
+ENDPOINT = "https://api.typesafe.ai/v1/systemone"
 _IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]{0,63}\Z")
 _HEADER_ID = re.compile(r"[A-Za-z0-9._:-]{1,100}\Z")
 _GLOBAL_INFLIGHT = threading.BoundedSemaphore(8)
@@ -46,8 +46,8 @@ class ChoiceQuestion(_ClosedModel):
 
     @model_validator(mode="after")
     def valid_criteria(self) -> ChoiceQuestion:
-        if not 2 <= len(self.criteria) <= 20:
-            raise ValueError("choice requires 2–20 options")
+        if not 2 <= len(self.criteria) <= 255:
+            raise ValueError("choice requires 2–255 options")
         if any(not _IDENTIFIER.fullmatch(key) or not value for key, value in self.criteria.items()):
             raise ValueError("choice criteria must have identifier keys and descriptions")
         _check_criteria_size(self.criteria)
@@ -141,6 +141,8 @@ class NoulAnswer(_StrictWireModel):
 class ScoreAnswer(_StrictWireModel):
     type: Literal["score"]
     score: float = Field(ge=0, allow_inf_nan=False)
+    legend: dict[str, str]
+    probabilities: dict[str, float]
     confidence: float = Field(ge=0, le=1, allow_inf_nan=False)
 
 
@@ -241,17 +243,19 @@ _STATUS_ERRORS: Mapping[int, type[JevError]] = {
 
 def _api_key(explicit: str | None) -> str:
     load_dotenv(override=False)
-    canonical = os.getenv("JEVMODEL_API_KEY") or None
+    canonical = os.getenv("TYPESAFE_API_KEY") or None
+    compatibility = os.getenv("JEVMODEL_API_KEY") or None
     legacy = os.getenv("JEV_API_KEY") or None
-    if canonical and legacy and canonical != legacy:
-        raise JevConfigurationError("Conflicting Jev key variables")
-    if legacy and not canonical:
-        raise JevConfigurationError("Rename JEV_API_KEY to JEVMODEL_API_KEY")
-    if explicit and canonical and explicit != canonical:
+    if canonical and compatibility and canonical != compatibility:
+        raise JevConfigurationError("Conflicting TypeSafe key variables")
+    if legacy:
+        raise JevConfigurationError("Rename JEV_API_KEY to TYPESAFE_API_KEY")
+    configured = canonical or compatibility
+    if explicit and configured and explicit != configured:
         raise JevConfigurationError("Conflicting explicit Jev key")
-    key = explicit or canonical
+    key = explicit or configured
     if not key:
-        raise JevConfigurationError("JEVMODEL_API_KEY is required")
+        raise JevConfigurationError("TYPESAFE_API_KEY or JEVMODEL_API_KEY is required")
     return key
 
 
@@ -269,9 +273,25 @@ def _validate_answer(request: DecisionRequest, raw: _WireResponse) -> None:
                 raise JevResponseError("Jev choice outside requested criteria")
             if any(not 0 <= probability <= 1 for probability in answer.probabilities.values()):
                 raise JevResponseError("Jev choice probability outside [0, 1]")
+            if abs(sum(answer.probabilities.values()) - 1.0) > 0.02:
+                raise JevResponseError("Jev choice probabilities do not sum to one")
+            if answer.probabilities[answer.choice] < max(answer.probabilities.values()):
+                raise JevResponseError("Jev choice differs from highest probability")
         if isinstance(question, ScoreQuestion) and isinstance(answer, ScoreAnswer):
-            if answer.score > len(question.criteria):
+            levels = {str(index): description for index, description in enumerate(question.criteria)}
+            if answer.score > len(question.criteria) - 1:
                 raise JevResponseError("Jev score outside requested rubric")
+            if answer.legend != levels or set(answer.probabilities) != set(levels):
+                raise JevResponseError("Jev score levels differ from requested rubric")
+            if any(not 0 <= probability <= 1 for probability in answer.probabilities.values()):
+                raise JevResponseError("Jev score probability outside [0, 1]")
+            if abs(sum(answer.probabilities.values()) - 1.0) > 0.02:
+                raise JevResponseError("Jev score probabilities do not sum to one")
+            weighted_score = sum(
+                int(level) * probability for level, probability in answer.probabilities.items()
+            )
+            if abs(answer.score - weighted_score) > 0.05:
+                raise JevResponseError("Jev score differs from weighted probabilities")
 
 
 class JevDecisionBackend:
@@ -455,7 +475,7 @@ class JevDecisionBackend:
             if error_type is None:
                 error_type = JevUpstreamError if 500 <= status <= 599 else JevHTTPError
             error = error_type(f"Jev HTTP {status}")
-            if status not in (429, 502) or attempt >= self._max_retries:
+            if status not in (429, 529) or attempt >= self._max_retries:
                 break
             pause = min(0.5 * (2**attempt), max(0, deadline - time.monotonic()))
             if pause > 0:

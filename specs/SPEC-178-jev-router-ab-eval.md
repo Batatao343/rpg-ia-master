@@ -1,6 +1,6 @@
 # SPEC-178 — A/B live Jev vs CLASSIFY atual no dm_router
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Depende de:** SPEC-177 `done`
 > **EXECUTOR_MODEL obrigatório:** `Terra`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -14,6 +14,30 @@
 ## Objetivo
 
 Medir Jev contra o classifier real atual para a decisão fechada de `route`, reutilizando o corpus/oráculos da SPEC-169 sem alterar a eval determinística protegida.
+
+> **Correção de configuração 2026-10-05:** o braço B usa a API oficial
+> `api.typesafe.ai/v1/systemone`. A chave TypeSafe que o usuário guardou em
+> `JEVMODEL_API_KEY` funciona como alias local de `TYPESAFE_API_KEY`; um smoke
+> oficial retornou `jev-1.13.0`. O 401 anterior veio de `jevmodel.org`, outro
+> host. A chave TypeSafe foi enviada ao host errado nessa primeira chamada;
+> o usuário foi informado e vai revogar/substituir a credencial antes de mais
+> chamadas live. Nenhuma amostra do corpus foi enviada no smoke sintético.
+
+> **Execução 2026-10-05:** após confirmação da troca da chave, a sanidade A
+> encontrou DeepSeek HTTP 402 `Insufficient Balance` e fallback Groq válido.
+> O protocolo parou antes de chamar Jev, sem réplica/score. Quatro chamadas
+> externas ocorreram no total; 96 restam sob o teto original, menos que as 98
+> exigidas por um novo run. O artifact final recuperado e o erro de gravação
+> OneDrive estão documentados em `docs/spec178/README.md`.
+
+> **Execução confirmatória 2026-10-05:** o usuário recarregou a DeepSeek e
+> autorizou ampliar o teto total para 120 chamadas/US$ 1,20. O run
+> `SPEC-178-20261006T013715Z-bedc56c2` completou 3 réplicas pareadas e
+> `pipeline_full`, com 98 chamadas nessa execução e 102 no histórico. O
+> CLASSIFY acertou 48/48 no recorte elegível; Jev 46/48, divergindo no mesmo
+> caso de NPC nas réplicas 1 e 3. Evidência de desenvolvimento/regressão;
+> sem promoção. Raw e summary, hashes e parecer Sol independente ficam em
+> `docs/spec178/README.md`.
 
 ## Regra arquitetural obrigatória
 
@@ -55,14 +79,14 @@ Criar runner experimental em `evals/experiments/` que:
 
 ## Critérios de aceite
 
-- [ ] runner experimental não altera paths protegidos;
-- [ ] A/B pareado reproduzível com SHA/dataset/model metadata;
-- [ ] `classifier_eligible` e `pipeline_full` separados;
-- [ ] nenhuma decisão recebe expected/oracle como input;
-- [ ] todas divergências inspecionáveis por case;
-- [ ] custo/latência não estimados quando provider não fornece usage;
-- [ ] produção permanece no CLASSIFY atual;
-- [ ] sem long-run.
+- [x] runner experimental não altera paths protegidos;
+- [x] A/B pareado reproduzível com SHA/dataset/model metadata;
+- [x] `classifier_eligible` e `pipeline_full` separados;
+- [x] nenhuma decisão recebe expected/oracle como input;
+- [x] todas divergências inspecionáveis por case;
+- [x] custo/latência não estimados quando provider não fornece usage;
+- [x] produção permanece no CLASSIFY atual;
+- [x] sem long-run.
 
 ## Protocolo confirmatório pré-registrado
 
@@ -74,8 +98,8 @@ Criar runner experimental em `evals/experiments/` que:
 
 ## Gate de fechamento
 
-- [ ] corpus protegido permanece byte-identical;
-- [ ] 3 réplicas pareadas completas ou spec fica `blocked-by-provider`, nunca `done` com amostra parcial;
-- [ ] relatório separa `A current CLASSIFY cascade` de `B Jev-only` e não mistura fallback futuro;
-- [ ] cada caso mostra route, confidence/probabilities quando disponíveis, latency, attempts e erro;
-- [ ] review Sol independente valida que candidate code nunca recebeu expected/oracle e que comparação não sofreu cherry-picking.
+- [x] corpus protegido permanece byte-identical;
+- [x] 3 réplicas pareadas completas ou spec fica `blocked-by-provider`, nunca `done` com amostra parcial;
+- [x] relatório separa `A current CLASSIFY cascade` de `B Jev-only` e não mistura fallback futuro;
+- [x] cada caso mostra route, confidence/probabilities quando disponíveis, latency, attempts e erro;
+- [x] review Sol independente valida que candidate code nunca recebeu expected/oracle e que comparação não sofreu cherry-picking.

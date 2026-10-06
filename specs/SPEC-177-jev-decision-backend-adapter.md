@@ -18,8 +18,8 @@ Integrar Jev/TypeSafe atrás de um seam server-side próprio, testável offline,
 ## Requisitos
 
 - **R1 — seam próprio:** `DecisionBackend`/adapter equivalente; não fingir que Jev é `RoutedLLM` ou `ModelTier.CLASSIFY`.
-- **R2 — API atual:** implementar `POST https://jevmodel.org/v1/systemone` com Bearer auth, `Idempotency-Key` estável por tentativa lógica e contrato vigente no dia da execução; registrar modelo resolvido. Respeitar limites oficiais atuais (state serializado, perguntas e cardinalidade Choice) e testá-los localmente.
-- **R3 — segredo/config:** nome canônico `JEVMODEL_API_KEY` (conforme documentação oficial Jev) apenas backend; `.env.example` contém apenas a chave vazia. Se o ambiente local ainda usar `JEV_API_KEY`, não copiar/ecoar o segredo: emitir migração de configuração explícita ou alias temporário testado; se ambos existirem e divergirem, falhar fechado.
+- **R2 — API atual (corrigido em 2026-10-05):** implementar `POST https://api.typesafe.ai/v1/systemone` com Bearer auth e contrato oficial TypeSafe vigente; registrar modelo resolvido. `Idempotency-Key` é enviado como identificador estável, mas a API oficial não documenta garantia de deduplicação. Respeitar limites atuais e testar o formato oficial de Score (`legend`/`probabilities`).
+- **R3 — segredo/config (corrigido em 2026-10-05):** nome canônico `TYPESAFE_API_KEY` apenas backend; aceitar `JEVMODEL_API_KEY` como alias compatível para a chave TypeSafe já instalada pelo usuário, sem imprimir/copiar o valor. `JEV_API_KEY` legado exige migração; chaves divergentes falham fechado.
 - **R4 — tipos:** respostas Choice/Noul/Score necessárias ao experimento, validação estrita e erros tipados.
 - **R5 — observabilidade:** correlation id, modelo, latência, usage/cost quando disponível; nunca state/prompt completo em log.
 - **R6 — fixture/replay:** live response sanitizada pode virar fixture para testes do adapter; suíte default sem rede.
@@ -56,7 +56,7 @@ Promoção, thresholds, regression dataset, holdout, billing e long-run.
 ## Gate de fechamento — evidência obrigatória
 
 - [x] `agents/router.py` e `llm_setup.py` permanecem byte-identical nesta spec;
-- [x] client possui timeout total explícito, retry somente para 429/502 e reutiliza `Idempotency-Key`;
+- [x] client possui timeout total explícito, retry somente para 429/529 conforme API oficial e reutiliza `Idempotency-Key` como identificador (sem alegar deduplicação de cobrança);
 - [x] 401/402/422/429/5xx/timeout/resposta inválida têm erros distintos e nenhum retorna decisão válida;
 - [x] payload enviado ao Jev não contém `expected`, `oracle`, GameState integral, secrets nem narrativa histórica desnecessária;
 - [x] `JEVMODEL_API_KEY` não aparece em bundle web, Android, logs ou fixtures;
@@ -84,3 +84,15 @@ publicado no [PR #13](https://github.com/Batatao343/rpg-ia-master/pull/13),
 empilhado sobre o PR #12. GitHub `validate` run 37142521573 e `eval-gates`
 run 37142521566 terminaram `success`. O protected-evaluator-review foi
 `skipped` porque a SPEC-177 não alterou paths protegidos.
+
+## Correção do host — 2026-10-05
+
+O usuário esclareceu que a chave vem de `console.typesafe.ai`. A integração
+original foi apontada indevidamente para `jevmodel.org`, um serviço distinto;
+o HTTP 401 nesse host não validava a chave TypeSafe. A documentação oficial
+confirma `api.typesafe.ai/v1/systemone` e `TYPESAFE_API_KEY`. O adapter foi
+ajustado no mesmo branch da SPEC-178, com alias compatível para a variável já
+preenchida. Uma chamada live ao host oficial retornou Jev `jev-1.13.0`, Choice
+válido e usage. A primeira chamada enviou a chave TypeSafe como Bearer ao
+host errado; o usuário foi informado e vai revogar/substituir a credencial
+antes de mais chamadas live. Nenhum valor da chave foi impresso ou commitado.
