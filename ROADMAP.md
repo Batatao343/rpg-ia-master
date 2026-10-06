@@ -1,5 +1,14 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **05/10 — [SPEC-178](specs/SPEC-178-jev-router-ab-eval.md) `done`.** A/B
+> live de 3 réplicas pareadas concluído: CLASSIFY 48/48 e Jev 46/48 nos
+> elegíveis; no pipeline completo, 21/21 e 20/21. Jev teve p50 265,5 ms vs
+> 1.367,5 ms, com duas divergências no mesmo caso de NPC. Sol High aprovou
+> independentemente a evidência como desenvolvimento/regressão, **sem
+> promoção**. Produção segue no CLASSIFY. Total 102/120 chamadas autorizadas;
+> custo real indisponível. [Relatório e hashes](docs/spec178/README.md).
+> Próxima: [SPEC-179](specs/SPEC-179-jev-target-loot-context-eval.md).
+
 > **05/10 — [SPEC-178](specs/SPEC-178-jev-router-ab-eval.md) bloqueada na
 > sanidade CLASSIFY.** Após a rotação da chave TypeSafe, DeepSeek retornou 402
 > por saldo insuficiente; Groq respondeu via fallback, mas a regra

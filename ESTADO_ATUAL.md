@@ -1,5 +1,17 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **05/10 — SPEC-178 `done`; A/B live confirmatório.** Após recarga da
+> DeepSeek, o usuário ampliou o teto total para 120 chamadas/US$ 1,20. O run
+> `SPEC-178-20261006T013715Z-bedc56c2` completou 3 réplicas pareadas:
+> `pipeline_full` A 21/21 vs Jev 20/21; `classifier_eligible` A 48/48 vs Jev
+> 46/48. Jev foi mais rápido neste conjunto (p50 265,5 vs 1.367,5 ms), mas
+> divergiu duas vezes no mesmo caso de NPC. Raw/summary em
+> `evals/runs/jev-router-ab/20261006T013714Z/`, hashes e relatório em
+> `docs/spec178/README.md`. Foram 98 chamadas no run, **102/120 no histórico**;
+> custo real `unavailable` (reserva não é cobrança). Revisor Sol independente
+> **APPROVED** como evidência development/regression; **sem promoção**. A
+> produção continua no CLASSIFY atual. SPEC-179 é a próxima dependência.
+
 > **05/10 — SPEC-178 segue `blocked-by-provider` após rotação da chave.** O
 > usuário confirmou a troca da chave TypeSafe. A primeira tentativa A/B depois
 > disso parou na sanidade do braço CLASSIFY: DeepSeek respondeu HTTP 402
@@ -9,7 +21,7 @@
 > restam, menos que as 98 necessárias para um novo run completo. Jev não foi
 > chamado após a rotação; nenhuma réplica, score ou promoção ocorreu. O estado
 > bruto final está em `evals/runs/jev-router-ab/20261006T012413Z/raw-recovered.json`
-> (SHA-256 `2c80ebaa...633aa`); o `raw.json` original ficou stale por bloqueio
+> (SHA-256 `2c80eba8...633aa`); o `raw.json` original ficou stale por bloqueio
 > transitório do OneDrive ao substituir o arquivo. O runner agora tenta novamente
 > a substituição atômica; 9 testes focados e suíte completa verdes (**1.936
 > passed, 35 skipped, 15 deselected**). Revisão Sol independente aprovada em
