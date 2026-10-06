@@ -7,8 +7,13 @@
 > casos sem Choice Jev e preserva resposta/usage em bloqueio de custo.
 > Mínimo de **26 chamadas externas** para A/B; nenhuma ocorreu nesta spec.
 > O orçamento anterior de SPEC-178 não cobre esta rodada. Evidência e limites:
-> `docs/spec179/README.md`. SPEC-179 segue `approved` até live e revisão de
+> `docs/spec179/README.md`. Gate offline completo no commit de freeze:
+> **1.953 passed, 35 skipped, 15 deselected**; revisão Sol independente aprovada.
+> SPEC-179 segue `approved` até live e revisão de
 > resultado; SPEC-180 depende dela. Produção e régua protegida inalteradas.
+> Freeze local `6792193`; push/PR ainda não publicados: auto-review bloqueou
+> publicação desse código no GitHub público sem autorização explícita do
+> payload e destino, mesmo após varredura de segredos sem achados.
 
 > **05/10 — SPEC-178 `done`; A/B live confirmatório.** Após recarga da
 > DeepSeek, o usuário ampliou o teto total para 120 chamadas/US$ 1,20. O run

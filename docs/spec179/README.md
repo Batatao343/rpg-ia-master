@@ -34,6 +34,8 @@ Produção e régua protegida permanecem sem alterações.
 ## Verificação offline
 
 - 17 testes focados verdes; Ruff verde.
+- Suíte completa no commit de freeze: **1.953 passed, 35 skipped,
+  15 deselected** em 181,70 s.
 - Revisão Sol independente: **APPROVED técnico offline** após correções de
   identidade, visibilidade relativa, seleção de aliado e preservação de raw
   (`handoffs/SPEC-179-SOL-offline-review.md`).
