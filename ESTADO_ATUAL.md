@@ -1,5 +1,15 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **06/10 — SPEC-179 em preparação offline.** Corpus experimental de 14 casos
+> (10 target, 4 loot_context), hash `748ab521...89034`; pré voo identifica
+> 12 representáveis e 2 não representáveis. O runner usa IDs canônicos da
+> cena, exclui segredo/morto/oculto do jogador, registra fallback atual nos
+> casos sem Choice Jev e preserva resposta/usage em bloqueio de custo.
+> Mínimo de **26 chamadas externas** para A/B; nenhuma ocorreu nesta spec.
+> O orçamento anterior de SPEC-178 não cobre esta rodada. Evidência e limites:
+> `docs/spec179/README.md`. SPEC-179 segue `approved` até live e revisão de
+> resultado; SPEC-180 depende dela. Produção e régua protegida inalteradas.
+
 > **05/10 — SPEC-178 `done`; A/B live confirmatório.** Após recarga da
 > DeepSeek, o usuário ampliou o teto total para 120 chamadas/US$ 1,20. O run
 > `SPEC-178-20261006T013715Z-bedc56c2` completou 3 réplicas pareadas:

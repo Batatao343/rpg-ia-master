@@ -1,5 +1,12 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **06/10 — [SPEC-179](specs/SPEC-179-jev-target-loot-context-eval.md) em
+> preparação offline.** Corpus de 14 casos e runner de target/loot prontos para
+> revisão e congelamento: 12 representáveis, 2 com fallback; mínimo de 26
+> chamadas externas para o A/B. Nenhuma chamada desta spec ocorreu. Live,
+> revisão de resultado e decisão permanecem pendentes; a SPEC-180 depende do
+> fechamento da 179. [Pré voo](docs/spec179/README.md).
+
 > **05/10 — [SPEC-178](specs/SPEC-178-jev-router-ab-eval.md) `done`.** A/B
 > live de 3 réplicas pareadas concluído: CLASSIFY 48/48 e Jev 46/48 nos
 > elegíveis; no pipeline completo, 21/21 e 20/21. Jev teve p50 265,5 ms vs

@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "ec68012d5291ccd5428053b5dc76f6694421334d",
+  "commit_sha": "81753bdce0c0180d4a82d61d409998780f29c355",
   "edge_counts": {
-    "calls": 7894,
-    "contains": 394,
-    "defines": 4774,
-    "imports": 804,
-    "likely_test_for": 480,
+    "calls": 8012,
+    "contains": 396,
+    "defines": 4818,
+    "imports": 813,
+    "likely_test_for": 483,
     "route_to": 31
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:b8ade10edebabd31035d29fb55917f6439d43b712863946281c458d6e4494b2e",
+  "graph_hash": "sha256:7081c96aca10f8dabaf3e76ce3290522bfd91476eadfd4bf34e5f2595e95dfdf",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -78,6 +78,7 @@
     "evals/evaluators/routing.py",
     "evals/experiments/__init__.py",
     "evals/experiments/jev_router_ab.py",
+    "evals/experiments/jev_target_loot.py",
     "game_engine.py",
     "gamedata.py",
     "infrastructure/__init__.py",
@@ -351,6 +352,7 @@
     "tests/test_itens_vivos.py",
     "tests/test_jev_decision_backend.py",
     "tests/test_jev_router_ab_experiment.py",
+    "tests/test_jev_target_loot_experiment.py",
     "tests/test_letalidade_early.py",
     "tests/test_local_atomic_retry.py",
     "tests/test_longrun_remediation_v3.py",
@@ -486,14 +488,14 @@
   },
   "node_counts": {
     "artifact": 8,
-    "class": 405,
+    "class": 410,
     "endpoint": 31,
-    "file": 433,
-    "function": 1588,
+    "file": 435,
+    "function": 1599,
     "method": 352,
-    "module": 394,
-    "test": 2429
+    "module": 396,
+    "test": 2457
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:768de77232381cc58d69bb0740d3bd54e23d24a4db5ef80769073b256cbe3b48"
+  "source_tree_hash": "sha256:1dff8a228c4f38e1a88c26531f3e3308a9f4a027273dd32ddee580c5b9888dfe"
 }

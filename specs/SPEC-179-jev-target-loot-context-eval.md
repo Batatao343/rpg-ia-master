@@ -28,6 +28,13 @@ Testar se `RouterDecision` pode ser decomposto em decisões fechadas sem perder 
 - **R9 — experimento:** usar runner/artefatos de `evals/experiments/`, sem tocar na régua protegida.
 - **R10 — nenhuma promoção:** produção continua inalterada.
 
+> **Interpretação R4 (2026-10-06):** a API TypeSafe oficial aceita até 255
+> opções por Choice ([referência](https://docs.typesafe.ai/api)); o gate
+> aprovado abaixo exige `unrepresentable` quando há **mais de 20 targets
+> canônicos**, um limite conservador deste experimento, não do provider.
+> Aplicar ambos os limites e registrar qual deles causou a não
+> representabilidade. Não selecionar os primeiros 20 silenciosamente.
+
 ## Critérios de aceite
 
 - [ ] nenhum target fora do conjunto canônico pode sair do adapter;
