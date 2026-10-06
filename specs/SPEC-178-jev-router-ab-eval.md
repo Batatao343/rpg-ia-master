@@ -15,6 +15,14 @@
 
 Medir Jev contra o classifier real atual para a decisão fechada de `route`, reutilizando o corpus/oráculos da SPEC-169 sem alterar a eval determinística protegida.
 
+> **Correção de configuração 2026-10-05:** o braço B usa a API oficial
+> `api.typesafe.ai/v1/systemone`. A chave TypeSafe que o usuário guardou em
+> `JEVMODEL_API_KEY` funciona como alias local de `TYPESAFE_API_KEY`; um smoke
+> oficial retornou `jev-1.13.0`. O 401 anterior veio de `jevmodel.org`, outro
+> host. A chave TypeSafe foi enviada ao host errado nessa primeira chamada;
+> o usuário foi informado e vai revogar/substituir a credencial antes de mais
+> chamadas live. Nenhuma amostra do corpus foi enviada no smoke sintético.
+
 ## Regra arquitetural obrigatória
 
 `evals.core.runner.run_eval()` força `RPG_FORCE_MOCK=1` e metadata sem provider. Portanto **não usar nem modificar o runner canônico para o A/B live**.

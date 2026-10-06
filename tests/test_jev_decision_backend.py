@@ -42,6 +42,7 @@ FIXTURE = json.loads(
 def clear_jev_environment(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr("services.jev_decision.load_dotenv", lambda **_: False)
     monkeypatch.delenv("JEVMODEL_API_KEY", raising=False)
+    monkeypatch.delenv("TYPESAFE_API_KEY", raising=False)
     monkeypatch.delenv("JEV_API_KEY", raising=False)
 
 
@@ -80,8 +81,8 @@ def test_success_is_typed_and_sends_only_minimal_state() -> None:
     assert isinstance(result.answers["danger"], ScoreAnswer)
     assert result.answers["route"].choice == "npc"
     assert result.usage.input_tokens == 136
-    assert result.model == "jev-latest"
-    assert sent[0].url == "https://jevmodel.org/v1/systemone"
+    assert result.model == "jev-1.13.0"
+    assert sent[0].url == "https://api.typesafe.ai/v1/systemone"
     assert sent[0].headers["authorization"] == "Bearer test-secret"
     assert sent[0].headers["idempotency-key"] == "turn-17"
     body = json.loads(sent[0].content)
@@ -103,7 +104,8 @@ def test_success_is_typed_and_sends_only_minimal_state() -> None:
         (422, JevValidationError, 1),
         (429, JevRateLimitError, 2),
         (500, JevUpstreamError, 1),
-        (502, JevUpstreamError, 2),
+        (502, JevUpstreamError, 1),
+        (529, JevUpstreamError, 2),
     ],
 )
 def test_http_failures_are_typed_and_only_documented_statuses_retry(
@@ -214,6 +216,14 @@ def test_timed_out_worker_is_quarantined_and_close_blocks_new_calls() -> None:
         lambda body: body["answers"]["route"].update(choice="invented"),
         lambda body: body["answers"]["urgent"].update(noul=1.1),
         lambda body: body["answers"]["danger"].update(score=99),
+        lambda body: body["answers"]["danger"]["legend"].update({"2": "wrong"}),
+        lambda body: body["answers"]["danger"]["probabilities"].update({"5": 0.1}),
+        lambda body: body["answers"]["route"]["probabilities"].update(npc=0.4),
+        lambda body: body["answers"]["route"].update(
+            choice="story", probabilities={"story": 0.495, "npc": 0.505}
+        ),
+        lambda body: body["answers"]["danger"]["probabilities"].update({"2": 0.2}),
+        lambda body: body["answers"]["danger"].update(score=1.7),
         lambda body: body["answers"].pop("route"),
         lambda body: body.update(model=""),
         lambda body: body["answers"]["urgent"].update(noul=True),
@@ -234,7 +244,7 @@ def test_request_budget_and_closed_state_are_enforced_before_transport() -> None
     with pytest.raises(ValidationError):
         DecisionState(action="olhar", player={"gold": 999, "secret": "x"})
     with pytest.raises(ValidationError):
-        ChoiceQuestion(instructions="Rota?", criteria={str(i): "label" for i in range(21)})
+        ChoiceQuestion(instructions="Rota?", criteria={f"route_{i}": "label" for i in range(256)})
     with pytest.raises(ValidationError):
         ScoreQuestion(instructions="Risco?", criteria=["x"])
     with pytest.raises(ValidationError):
@@ -261,7 +271,7 @@ def test_mutated_request_is_revalidated_and_retry_body_is_stable() -> None:
         sent_bodies.append(json.loads(http_request.content))
         if len(sent_bodies) == 1:
             request.questions["route"].criteria["injected"] = "late mutation"
-            return httpx.Response(502)
+            return httpx.Response(529)
         return httpx.Response(200, json=FIXTURE)
 
     with httpx.Client(transport=httpx.MockTransport(handler)) as client:
@@ -273,11 +283,15 @@ def test_mutated_request_is_revalidated_and_retry_body_is_stable() -> None:
 
 
 def test_key_migration_and_conflicting_variables_fail_closed(monkeypatch: pytest.MonkeyPatch) -> None:
-    with pytest.raises(JevConfigurationError, match="JEVMODEL_API_KEY"):
+    with pytest.raises(JevConfigurationError, match="TYPESAFE_API_KEY"):
         JevDecisionBackend()
     monkeypatch.setenv("JEV_API_KEY", "legacy-secret")
     with pytest.raises(JevConfigurationError, match="Rename"):
         JevDecisionBackend()
+    monkeypatch.delenv("JEV_API_KEY")
     monkeypatch.setenv("JEVMODEL_API_KEY", "different-secret")
+    with JevDecisionBackend() as backend:
+        assert backend._key == "different-secret"
+    monkeypatch.setenv("TYPESAFE_API_KEY", "canonical-secret")
     with pytest.raises(JevConfigurationError, match="Conflicting"):
         JevDecisionBackend()

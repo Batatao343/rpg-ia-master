@@ -1,14 +1,17 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
 > **05/10 — [SPEC-178](specs/SPEC-178-jev-router-ab-eval.md) `blocked-by-provider`.**
-> O runner A/B experimental e preflight offline estão implementados; 21 casos
-> de rota, 16 elegíveis por instrumentação e 5 gates Python. A única chamada
-> Jev de sanity retornou HTTP 401; a chave local presente não tem o prefixo
-> `sk-` documentado. Não houve réplicas A/B nem decisão de promoção.
-> Runner aprovado tecnicamente por Sol independente; 8 testes focados e
-> `uv run pytest` completo verdes (1.928 passed, 35 skipped, 15 deselected).
-> [Evidência e retomada](docs/spec178/README.md). SPEC-179 segue pendente da
-> conclusão da 178; produção permanece no CLASSIFY atual.
+> O usuário identificou que sua chave veio da TypeSafe. O 401 anterior foi
+> causado pelo adapter apontar para `jevmodel.org`; uma chamada sintética ao
+> endpoint oficial `api.typesafe.ai` passou com Jev `jev-1.13.0`. A primeira
+> chamada enviou a chave ao host errado; o usuário vai revogar/substituí-la e
+> chamadas live estão pausadas. O runner A/B
+> experimental tem 21 casos de rota, 16 elegíveis e 5 gates Python. Restam 98
+> chamadas do teto autorizado para as três réplicas. Ainda não há score ou
+> promoção; a produção permanece no CLASSIFY atual e a SPEC-179 espera.
+> Suíte offline após a correção: **1.935 passed, 35 skipped, 15 deselected**;
+> revisão Sol independente aprovada para o adapter corrigido.
+> [Evidência e retomada](docs/spec178/README.md).
 
 > **03/10 — SPEC-177 `done`; PR #13 com CI verde.** O adapter Jev server-side isolado
 > está implementado e aprovado por revisão Sol independente; 22 testes

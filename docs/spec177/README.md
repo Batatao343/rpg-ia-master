@@ -1,6 +1,26 @@
 # SPEC-177 — Jev decision backend adapter (`done`)
 
-## Contrato e escopo
+> **Correção 2026-10-05 — prevalece sobre o registro original abaixo.** O
+> usuário forneceu uma chave da TypeSafe, não de jevmodel.org. O endpoint
+> correto é `POST https://api.typesafe.ai/v1/systemone`, com
+> `TYPESAFE_API_KEY` canônica e `JEVMODEL_API_KEY` aceita como alias local.
+> Score oficial inclui `legend` e `probabilities`; retries documentados são
+> 429/529. A API oficial não documenta deduplicação por `Idempotency-Key`.
+> Uma chamada live ao host correto retornou `jev-1.13.0`, Choice válido e
+> usage 394/58. O 401 anterior não testou autenticação na TypeSafe, mas a
+> primeira chamada expôs a chave como Bearer ao host errado.
+> Os limites locais de estado/perguntas/critérios são conservadores; não são
+> os limites anunciados pela API oficial. A chave enviada ao host errado será
+> revogada/substituída antes de novas chamadas live.
+> Evidência: [Quick start](https://docs.typesafe.ai/introduction/quickstart),
+> [API reference](https://docs.typesafe.ai/api).
+
+## Registro histórico da primeira implementação
+
+O texto abaixo descreve o contrato de `jevmodel.org` usado em 2026-10-02;
+endpoint, autenticação, limites e retries citados ali não se aplicam à chave
+TypeSafe do usuário. A correção acima e o adapter atual são a referência para
+novas chamadas.
 
 Executor nesta sessão: Sol High, em substituição a Terra High com autorização
 expressa do usuário. Revisão independente Sol High: `/root/spec176_reviewer`,

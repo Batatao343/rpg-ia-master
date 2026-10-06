@@ -1,5 +1,5 @@
 {
-  "commit_sha": "0515f7333b99ce2836ff94b11c97e72d08d38f2c",
+  "commit_sha": "9b3e6555f2260a4cc6b091c13359b4d3f57577e5",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -29651,7 +29651,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 180
+        "line": 182
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.DecisionBackend",
@@ -29673,7 +29673,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 161
+        "line": 163
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.DecisionResult",
@@ -29695,7 +29695,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 170
+        "line": 172
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.DecisionTelemetry",
@@ -29706,7 +29706,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 198
+        "line": 200
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevAuthenticationError",
@@ -29717,7 +29717,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 194
+        "line": 196
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevConfigurationError",
@@ -29728,7 +29728,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 202
+        "line": 204
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevCreditsError",
@@ -29739,7 +29739,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 277
+        "line": 297
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -29750,7 +29750,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 190
+        "line": 192
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevError",
@@ -29761,7 +29761,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 230
+        "line": 232
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevHTTPError",
@@ -29772,7 +29772,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 210
+        "line": 212
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevRateLimitError",
@@ -29783,7 +29783,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 226
+        "line": 228
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevResponseError",
@@ -29794,7 +29794,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 218
+        "line": 220
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevTimeoutError",
@@ -29805,7 +29805,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 222
+        "line": 224
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevTransportError",
@@ -29816,7 +29816,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 214
+        "line": 216
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevUpstreamError",
@@ -29827,7 +29827,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 206
+        "line": 208
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.JevValidationError",
@@ -29882,7 +29882,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 150
+        "line": 152
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision.Usage",
@@ -29915,7 +29915,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 155
+        "line": 157
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision._WireResponse",
@@ -29926,7 +29926,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 242
+        "line": 244
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision._api_key",
@@ -29948,7 +29948,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 258
+        "line": 262
       },
       "source": "module:services.jev_decision",
       "target": "symbol:services.jev_decision._validate_answer",
@@ -51552,7 +51552,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 48
+        "line": 49
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -51574,7 +51574,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 109
+        "line": 111
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry",
@@ -51585,7 +51585,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 224
+        "line": 234
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_incompatible_200_never_becomes_a_decision",
@@ -51596,7 +51596,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 275
+        "line": 285
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_key_migration_and_conflicting_variables_fail_closed",
@@ -51607,7 +51607,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 247
+        "line": 257
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
@@ -51618,7 +51618,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 233
+        "line": 243
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
@@ -51629,7 +51629,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 66
+        "line": 67
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state",
@@ -51640,7 +51640,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 175
+        "line": 177
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls",
@@ -51651,7 +51651,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 128
+        "line": 130
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request",
@@ -51662,7 +51662,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 159
+        "line": 161
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing",
@@ -51673,7 +51673,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 144
+        "line": 146
       },
       "source": "module:tests.test_jev_decision_backend",
       "target": "symbol:tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success",
@@ -72485,7 +72485,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 463
+        "line": 471
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.main",
+      "target": "symbol:evals.experiments.jev_router_ab.Budget",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 465
       },
       "source": "symbol:evals.experiments.jev_router_ab.main",
       "target": "symbol:evals.experiments.jev_router_ab.preflight",
@@ -72496,7 +72507,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 467
+        "line": 471
       },
       "source": "symbol:evals.experiments.jev_router_ab.main",
       "target": "symbol:evals.experiments.jev_router_ab.run",
@@ -100502,7 +100513,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 181
+        "line": 183
       },
       "source": "symbol:services.jev_decision.DecisionBackend",
       "target": "symbol:services.jev_decision.DecisionBackend.decide",
@@ -100546,7 +100557,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 309
+        "line": 329
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend",
       "target": "symbol:services.jev_decision.JevDecisionBackend.__enter__",
@@ -100557,7 +100568,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 312
+        "line": 332
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend",
       "target": "symbol:services.jev_decision.JevDecisionBackend.__exit__",
@@ -100568,7 +100579,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 280
+        "line": 300
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend",
       "target": "symbol:services.jev_decision.JevDecisionBackend.__init__",
@@ -100579,7 +100590,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 322
+        "line": 342
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend",
       "target": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
@@ -100590,7 +100601,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 315
+        "line": 335
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend",
       "target": "symbol:services.jev_decision.JevDecisionBackend._emit",
@@ -100601,7 +100612,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 304
+        "line": 324
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend",
       "target": "symbol:services.jev_decision.JevDecisionBackend.close",
@@ -100612,7 +100623,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 382
+        "line": 402
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend",
       "target": "symbol:services.jev_decision.JevDecisionBackend.decide",
@@ -100623,7 +100634,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 291
+        "line": 311
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.__init__",
       "target": "symbol:services.jev_decision._api_key",
@@ -100634,7 +100645,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 343
+        "line": 363
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "target": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline.send",
@@ -100645,7 +100656,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 358
+        "line": 378
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "target": "symbol:services.jev_decision.JevResponseError",
@@ -100656,7 +100667,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 376
+        "line": 396
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "target": "symbol:services.jev_decision.JevTimeoutError",
@@ -100667,7 +100678,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 334
+        "line": 354
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "target": "symbol:services.jev_decision.JevTransportError",
@@ -100678,7 +100689,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 336
+        "line": 356
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "target": "symbol:services.jev_decision.JevTransportError",
@@ -100689,7 +100700,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 339
+        "line": 359
+      },
+      "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
+      "target": "symbol:services.jev_decision.JevTransportError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 394
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "target": "symbol:services.jev_decision.JevTransportError",
@@ -100703,17 +100725,6 @@
         "line": 374
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
-      "target": "symbol:services.jev_decision.JevTransportError",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/jev_decision.py",
-        "line": 354
-      },
-      "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "target": "symbol:services.jev_decision._validate_answer",
       "type": "calls"
     },
@@ -100722,7 +100733,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 358
+        "line": 378
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline.send",
       "target": "symbol:services.jev_decision.JevResponseError",
@@ -100733,7 +100744,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 354
+        "line": 374
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline.send",
       "target": "symbol:services.jev_decision._validate_answer",
@@ -100744,7 +100755,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 435
+        "line": 455
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.DecisionResult",
@@ -100755,7 +100766,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 443
+        "line": 463
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.DecisionTelemetry",
@@ -100766,7 +100777,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 465
+        "line": 485
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.DecisionTelemetry",
@@ -100777,7 +100788,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 410
+        "line": 430
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.JevTimeoutError",
@@ -100788,7 +100799,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 418
+        "line": 438
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.JevTimeoutError",
@@ -100799,7 +100810,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 431
+        "line": 451
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.JevTimeoutError",
@@ -100810,7 +100821,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 392
+        "line": 412
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.JevTransportError",
@@ -100821,7 +100832,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 421
+        "line": 441
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.JevTransportError",
@@ -100832,7 +100843,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 427
+        "line": 447
       },
       "source": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "target": "symbol:services.jev_decision.JevTransportError",
@@ -100887,7 +100898,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 247
+        "line": 250
       },
       "source": "symbol:services.jev_decision._api_key",
       "target": "symbol:services.jev_decision.JevConfigurationError",
@@ -100898,7 +100909,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 249
+        "line": 252
       },
       "source": "symbol:services.jev_decision._api_key",
       "target": "symbol:services.jev_decision.JevConfigurationError",
@@ -100909,7 +100920,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 251
+        "line": 255
       },
       "source": "symbol:services.jev_decision._api_key",
       "target": "symbol:services.jev_decision.JevConfigurationError",
@@ -100920,7 +100931,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 254
+        "line": 258
       },
       "source": "symbol:services.jev_decision._api_key",
       "target": "symbol:services.jev_decision.JevConfigurationError",
@@ -100942,17 +100953,6 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 260
-      },
-      "source": "symbol:services.jev_decision._validate_answer",
-      "target": "symbol:services.jev_decision.JevResponseError",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/jev_decision.py",
         "line": 264
       },
       "source": "symbol:services.jev_decision._validate_answer",
@@ -100964,7 +100964,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 269
+        "line": 268
       },
       "source": "symbol:services.jev_decision._validate_answer",
       "target": "symbol:services.jev_decision.JevResponseError",
@@ -100975,7 +100975,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 271
+        "line": 273
       },
       "source": "symbol:services.jev_decision._validate_answer",
       "target": "symbol:services.jev_decision.JevResponseError",
@@ -100986,7 +100986,84 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_decision.py",
-        "line": 274
+        "line": 275
+      },
+      "source": "symbol:services.jev_decision._validate_answer",
+      "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 277
+      },
+      "source": "symbol:services.jev_decision._validate_answer",
+      "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 279
+      },
+      "source": "symbol:services.jev_decision._validate_answer",
+      "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 283
+      },
+      "source": "symbol:services.jev_decision._validate_answer",
+      "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 285
+      },
+      "source": "symbol:services.jev_decision._validate_answer",
+      "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 287
+      },
+      "source": "symbol:services.jev_decision._validate_answer",
+      "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 289
+      },
+      "source": "symbol:services.jev_decision._validate_answer",
+      "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_decision.py",
+        "line": 294
       },
       "source": "symbol:services.jev_decision._validate_answer",
       "target": "symbol:services.jev_decision.JevResponseError",
@@ -138232,21 +138309,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 56
+        "line": 57
       },
       "source": "symbol:tests.test_jev_decision_backend._request",
       "target": "symbol:services.jev_decision.ChoiceQuestion",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_decision_backend.py",
-        "line": 49
-      },
-      "source": "symbol:tests.test_jev_decision_backend._request",
-      "target": "symbol:services.jev_decision.DecisionRequest",
       "type": "calls"
     },
     {
@@ -138257,7 +138323,7 @@
         "line": 50
       },
       "source": "symbol:tests.test_jev_decision_backend._request",
-      "target": "symbol:services.jev_decision.DecisionState",
+      "target": "symbol:services.jev_decision.DecisionRequest",
       "type": "calls"
     },
     {
@@ -138265,10 +138331,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 60
+        "line": 51
       },
       "source": "symbol:tests.test_jev_decision_backend._request",
-      "target": "symbol:services.jev_decision.NoulQuestion",
+      "target": "symbol:services.jev_decision.DecisionState",
       "type": "calls"
     },
     {
@@ -138279,7 +138345,7 @@
         "line": 61
       },
       "source": "symbol:tests.test_jev_decision_backend._request",
-      "target": "symbol:services.jev_decision.ScoreQuestion",
+      "target": "symbol:services.jev_decision.NoulQuestion",
       "type": "calls"
     },
     {
@@ -138287,10 +138353,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 119
+        "line": 62
       },
-      "source": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry",
-      "target": "symbol:services.jev_decision.JevDecisionBackend",
+      "source": "symbol:tests.test_jev_decision_backend._request",
+      "target": "symbol:services.jev_decision.ScoreQuestion",
       "type": "calls"
     },
     {
@@ -138301,6 +138367,17 @@
         "line": 121
       },
       "source": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry",
+      "target": "symbol:services.jev_decision.JevDecisionBackend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_decision_backend.py",
+        "line": 123
+      },
+      "source": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry",
       "target": "symbol:tests.test_jev_decision_backend._request",
       "type": "calls"
     },
@@ -138309,7 +138386,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 114
+        "line": 116
       },
       "source": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry",
       "target": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry.handler",
@@ -138320,7 +138397,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 228
+        "line": 238
       },
       "source": "symbol:tests.test_jev_decision_backend.test_incompatible_200_never_becomes_a_decision",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -138331,7 +138408,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 230
+        "line": 240
       },
       "source": "symbol:tests.test_jev_decision_backend.test_incompatible_200_never_becomes_a_decision",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -138342,7 +138419,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 277
+        "line": 287
       },
       "source": "symbol:tests.test_jev_decision_backend.test_key_migration_and_conflicting_variables_fail_closed",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -138353,7 +138430,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 280
+        "line": 290
       },
       "source": "symbol:tests.test_jev_decision_backend.test_key_migration_and_conflicting_variables_fail_closed",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -138364,7 +138441,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 283
+        "line": 293
       },
       "source": "symbol:tests.test_jev_decision_backend.test_key_migration_and_conflicting_variables_fail_closed",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -138375,7 +138452,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 253
+        "line": 297
+      },
+      "source": "symbol:tests.test_jev_decision_backend.test_key_migration_and_conflicting_variables_fail_closed",
+      "target": "symbol:services.jev_decision.JevDecisionBackend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_decision_backend.py",
+        "line": 263
       },
       "source": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -138386,7 +138474,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 268
+        "line": 278
       },
       "source": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -138397,7 +138485,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 250
+        "line": 260
       },
       "source": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
       "target": "symbol:services.jev_decision.NoulQuestion",
@@ -138408,7 +138496,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 248
+        "line": 258
       },
       "source": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -138419,7 +138507,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 257
+        "line": 267
       },
       "source": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -138430,7 +138518,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 260
+        "line": 270
       },
       "source": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
       "target": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable.handler",
@@ -138441,7 +138529,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 237
+        "line": 247
       },
       "source": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
       "target": "symbol:services.jev_decision.ChoiceQuestion",
@@ -138452,7 +138540,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 241
+        "line": 251
       },
       "source": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
       "target": "symbol:services.jev_decision.DecisionRequest",
@@ -138463,7 +138551,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 235
+        "line": 245
       },
       "source": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
       "target": "symbol:services.jev_decision.DecisionState",
@@ -138474,7 +138562,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 242
+        "line": 252
       },
       "source": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
       "target": "symbol:services.jev_decision.DecisionState",
@@ -138485,7 +138573,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 243
+        "line": 253
       },
       "source": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
       "target": "symbol:services.jev_decision.NoulQuestion",
@@ -138496,7 +138584,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 239
+        "line": 249
       },
       "source": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
       "target": "symbol:services.jev_decision.ScoreQuestion",
@@ -138507,7 +138595,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 75
+        "line": 76
       },
       "source": "symbol:tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -138518,7 +138606,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 76
+        "line": 77
       },
       "source": "symbol:tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -138529,7 +138617,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 70
+        "line": 71
       },
       "source": "symbol:tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state",
       "target": "symbol:tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state.handler",
@@ -138540,7 +138628,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 188
+        "line": 190
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -138551,7 +138639,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 193
+        "line": 195
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -138562,7 +138650,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 197
+        "line": 199
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -138573,7 +138661,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 201
+        "line": 203
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -138584,7 +138672,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 180
+        "line": 182
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls",
       "target": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls.handler",
@@ -138595,7 +138683,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 137
+        "line": 139
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -138606,7 +138694,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 139
+        "line": 141
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -138617,7 +138705,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 131
+        "line": 133
       },
       "source": "symbol:tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request",
       "target": "symbol:tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request.handler",
@@ -138628,7 +138716,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 166
+        "line": 168
       },
       "source": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -138639,7 +138727,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 171
+        "line": 173
       },
       "source": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -138650,7 +138738,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 160
+        "line": 162
       },
       "source": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing",
       "target": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing.SlowJsonResponse",
@@ -138661,7 +138749,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 161
+        "line": 163
       },
       "source": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing.SlowJsonResponse",
       "target": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing.SlowJsonResponse.json",
@@ -138672,7 +138760,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 150
+        "line": 152
       },
       "source": "symbol:tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -138683,7 +138771,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 155
+        "line": 157
       },
       "source": "symbol:tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success",
       "target": "symbol:tests.test_jev_decision_backend._request",
@@ -138694,7 +138782,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_decision_backend.py",
-        "line": 145
+        "line": 147
       },
       "source": "symbol:tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success",
       "target": "symbol:tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success.handler",
@@ -177285,14 +177373,14 @@
     {
       "id": "symbol:services.jev_decision.DecisionBackend",
       "kind": "class",
-      "line": 180,
+      "line": 182,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.DecisionBackend"
     },
     {
       "id": "symbol:services.jev_decision.DecisionBackend.decide",
       "kind": "method",
-      "line": 181,
+      "line": 183,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.DecisionBackend.decide"
     },
@@ -177320,7 +177408,7 @@
     {
       "id": "symbol:services.jev_decision.DecisionResult",
       "kind": "class",
-      "line": 161,
+      "line": 163,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.DecisionResult"
     },
@@ -177334,147 +177422,147 @@
     {
       "id": "symbol:services.jev_decision.DecisionTelemetry",
       "kind": "class",
-      "line": 170,
+      "line": 172,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.DecisionTelemetry"
     },
     {
       "id": "symbol:services.jev_decision.JevAuthenticationError",
       "kind": "class",
-      "line": 198,
+      "line": 200,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevAuthenticationError"
     },
     {
       "id": "symbol:services.jev_decision.JevConfigurationError",
       "kind": "class",
-      "line": 194,
+      "line": 196,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevConfigurationError"
     },
     {
       "id": "symbol:services.jev_decision.JevCreditsError",
       "kind": "class",
-      "line": 202,
+      "line": 204,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevCreditsError"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend",
       "kind": "class",
-      "line": 277,
+      "line": 297,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend.__enter__",
       "kind": "method",
-      "line": 309,
+      "line": 329,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend.__enter__"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend.__exit__",
       "kind": "method",
-      "line": 312,
+      "line": 332,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend.__exit__"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend.__init__",
       "kind": "method",
-      "line": 280,
+      "line": 300,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend.__init__"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline",
       "kind": "method",
-      "line": 322,
+      "line": 342,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend._call_with_deadline"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend._call_with_deadline.send",
       "kind": "method",
-      "line": 343,
+      "line": 363,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend._call_with_deadline.send"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend._emit",
       "kind": "method",
-      "line": 315,
+      "line": 335,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend._emit"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend.close",
       "kind": "method",
-      "line": 304,
+      "line": 324,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend.close"
     },
     {
       "id": "symbol:services.jev_decision.JevDecisionBackend.decide",
       "kind": "method",
-      "line": 382,
+      "line": 402,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevDecisionBackend.decide"
     },
     {
       "id": "symbol:services.jev_decision.JevError",
       "kind": "class",
-      "line": 190,
+      "line": 192,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevError"
     },
     {
       "id": "symbol:services.jev_decision.JevHTTPError",
       "kind": "class",
-      "line": 230,
+      "line": 232,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevHTTPError"
     },
     {
       "id": "symbol:services.jev_decision.JevRateLimitError",
       "kind": "class",
-      "line": 210,
+      "line": 212,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevRateLimitError"
     },
     {
       "id": "symbol:services.jev_decision.JevResponseError",
       "kind": "class",
-      "line": 226,
+      "line": 228,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevResponseError"
     },
     {
       "id": "symbol:services.jev_decision.JevTimeoutError",
       "kind": "class",
-      "line": 218,
+      "line": 220,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevTimeoutError"
     },
     {
       "id": "symbol:services.jev_decision.JevTransportError",
       "kind": "class",
-      "line": 222,
+      "line": 224,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevTransportError"
     },
     {
       "id": "symbol:services.jev_decision.JevUpstreamError",
       "kind": "class",
-      "line": 214,
+      "line": 216,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevUpstreamError"
     },
     {
       "id": "symbol:services.jev_decision.JevValidationError",
       "kind": "class",
-      "line": 206,
+      "line": 208,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.JevValidationError"
     },
@@ -177523,7 +177611,7 @@
     {
       "id": "symbol:services.jev_decision.Usage",
       "kind": "class",
-      "line": 150,
+      "line": 152,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision.Usage"
     },
@@ -177544,14 +177632,14 @@
     {
       "id": "symbol:services.jev_decision._WireResponse",
       "kind": "class",
-      "line": 155,
+      "line": 157,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision._WireResponse"
     },
     {
       "id": "symbol:services.jev_decision._api_key",
       "kind": "function",
-      "line": 242,
+      "line": 244,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision._api_key"
     },
@@ -177565,7 +177653,7 @@
     {
       "id": "symbol:services.jev_decision._validate_answer",
       "kind": "function",
-      "line": 258,
+      "line": 262,
       "path": "services/jev_decision.py",
       "qualified_name": "services.jev_decision._validate_answer"
     },
@@ -190669,7 +190757,7 @@
     {
       "id": "symbol:tests.test_jev_decision_backend._request",
       "kind": "test",
-      "line": 48,
+      "line": 49,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend._request"
     },
@@ -190683,126 +190771,126 @@
     {
       "id": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry",
       "kind": "test",
-      "line": 109,
+      "line": 111,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry.handler",
       "kind": "test",
-      "line": 114,
+      "line": 116,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_http_failures_are_typed_and_only_documented_statuses_retry.handler"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_incompatible_200_never_becomes_a_decision",
       "kind": "test",
-      "line": 224,
+      "line": 234,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_incompatible_200_never_becomes_a_decision"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_key_migration_and_conflicting_variables_fail_closed",
       "kind": "test",
-      "line": 275,
+      "line": 285,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_key_migration_and_conflicting_variables_fail_closed"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable",
       "kind": "test",
-      "line": 247,
+      "line": 257,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable.handler",
       "kind": "test",
-      "line": 260,
+      "line": 270,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_mutated_request_is_revalidated_and_retry_body_is_stable.handler"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport",
       "kind": "test",
-      "line": 233,
+      "line": 243,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_request_budget_and_closed_state_are_enforced_before_transport"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state",
       "kind": "test",
-      "line": 66,
+      "line": 67,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state.handler",
       "kind": "test",
-      "line": 70,
+      "line": 71,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_success_is_typed_and_sends_only_minimal_state.handler"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls",
       "kind": "test",
-      "line": 175,
+      "line": 177,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls.handler",
       "kind": "test",
-      "line": 180,
+      "line": 182,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_timed_out_worker_is_quarantined_and_close_blocks_new_calls.handler"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request",
       "kind": "test",
-      "line": 128,
+      "line": 130,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request.handler",
       "kind": "test",
-      "line": 131,
+      "line": 133,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_timeout_is_terminal_and_does_not_leak_request.handler"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing",
       "kind": "test",
-      "line": 159,
+      "line": 161,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing.SlowJsonResponse",
       "kind": "class",
-      "line": 160,
+      "line": 162,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing.SlowJsonResponse"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing.SlowJsonResponse.json",
       "kind": "test",
-      "line": 161,
+      "line": 163,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_total_deadline_covers_response_parsing.SlowJsonResponse.json"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success",
       "kind": "test",
-      "line": 144,
+      "line": 146,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success"
     },
     {
       "id": "symbol:tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success.handler",
       "kind": "test",
-      "line": 145,
+      "line": 147,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success.handler"
     },
@@ -197486,5 +197574,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:9a04caee52f05b285246e0171626fbb0d5a6651f2187d189924f8587c76ffb5e"
+  "source_tree_hash": "sha256:5bb6c1a9271fc058ebf2ed6e685f825f2a1685c368a8cd8e8e6b614e5cf80d03"
 }

@@ -3143,7 +3143,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Sol High substitution expressly authorized; independent Sol review approved; full suite and GitHub CI green in PR 13
+  lineage_note: Sol High substitution expressly authorized; TypeSafe host correction after user clarified key origin; original PR 13 CI green; official smoke succeeded
 - id: SPEC-178
   slug: jev-router-ab-eval
   status: blocked-by-provider
@@ -3160,7 +3160,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Sol High substitution authorized; offline runner implemented; live protocol blocked by Jev HTTP 401
+  lineage_note: Sol High substitution authorized; TypeSafe endpoint corrected and synthetic smoke succeeded; credential rotation pending after wrong-host exposure; paired A/B pending
 - id: SPEC-179
   slug: jev-target-loot-context-eval
   status: approved

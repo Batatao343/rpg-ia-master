@@ -34,3 +34,8 @@ nem score. O teto de chamadas é efetivo antes da rede; o teto em USD usa custo
 reportado e uma reserva de parada, e não garante gasto real desconhecido. A
 SPEC-178 permanece `blocked-by-provider`; após credencial válida e run completo,
 o revisor precisa inspecionar os artifacts e a conclusão de score novamente.
+
+> Atualização 2026-10-05: o 401 acima foi causado por host errado para a
+> chave TypeSafe. O smoke no host oficial passou. O adapter e o limite de
+> chamadas do runner foram corrigidos depois deste parecer; uma nova revisão
+> independente foi solicitada antes das réplicas live.

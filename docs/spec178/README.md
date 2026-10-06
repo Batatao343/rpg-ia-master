@@ -1,6 +1,6 @@
 # SPEC-178 — Jev vs CLASSIFY: estado de execução
 
-Data: 2026-10-05. Status: `blocked-by-provider`.
+Data: 2026-10-05. Status: `blocked-by-provider` até rotação da credencial.
 
 ## Autorização e escopo
 
@@ -23,20 +23,31 @@ do executor. Nenhuma rota de produção ou caminho protegido de eval foi alterad
   3 réplicas pareadas dos 16 elegíveis, na ordem do dataset, e `pipeline_full`
   com os 21 casos na réplica 1. São no mínimo 98 chamadas externas (2 sanity +
   96 comparação), se não houver fallback ou regeneração.
-- Verificação local: 8 testes focados verdes; suíte completa `uv run pytest`
-  verde (1.928 passed, 35 skipped, 15 deselected); Ruff, governance e
-  Project Index atualizado/verde. Revisão Sol independente aprova a
-  implementação offline em `handoffs/SPEC-178-SOL-independent-review.md`.
+- Verificação local: 37 testes focados verdes após a correção TypeSafe;
+  suíte completa `uv run pytest` verde (1.935 passed, 35 skipped,
+  15 deselected); Ruff, governance e Project Index atualizado/verde. Revisões
+  Sol independentes aprovam a implementação offline em
+  `handoffs/SPEC-178-SOL-independent-review.md` e
+  `handoffs/SPEC-177-SOL-typesafe-correction-review.md`.
 
-## Bloqueio live
+## Correção de configuração e smoke live
 
-A única chamada Jev de sanity anterior à implementação do runner retornou
-`JevAuthenticationError`/HTTP 401. O valor da chave nunca foi impresso, copiado
-ou persistido. Uma checagem booleana local confirmou `JEVMODEL_API_KEY` presente
-no `.env`, porém sem o prefixo `sk-` que a documentação do endpoint exige.
-Nenhuma chamada CLASSIFY do A/B ou réplica comparativa foi realizada. O runner
-não foi executado live com a credencial rejeitada. O corpus não tem score A/B;
-nenhuma conclusão de qualidade ou promoção é válida.
+A primeira chamada Jev retornou HTTP 401 porque foi enviada a `jevmodel.org`.
+O usuário esclareceu que sua chave veio da TypeSafe. A documentação oficial
+indica `api.typesafe.ai/v1/systemone` e `TYPESAFE_API_KEY`; o adapter passou a
+aceitar a variável local `JEVMODEL_API_KEY` como alias compatível. Uma única
+chamada sintética ao host oficial retornou `jev-1.13.0`, Choice `storyteller`,
+usage 394 tokens de entrada e 58 de saída, latência 327 ms. A chave nunca foi
+impressa, copiada para artifacts ou persistida. **A primeira chamada enviou a
+chave TypeSafe como Bearer a um domínio diferente.** O usuário foi informado e
+vai revogar/substituir a credencial no painel TypeSafe. Nenhuma outra chamada
+live será feita até confirmar a rotação. Nenhuma amostra do corpus foi enviada
+no smoke. Até o A/B terminar, não há score nem promoção válida.
+
+Antes do A/B, ocorreram **2 chamadas externas**: a 401 ao host errado e a
+sanidade oficial bem-sucedida. Restam **98 chamadas** do teto autorizado de
+100; o runner deve ser invocado com `--max-calls 98 --max-cost-usd 0.98` e
+interromper se qualquer fallback/regeneração consumir uma chamada extra.
 
 O budget reserva US$ 0,01 por tentativa como regra conservadora de parada e
 registra custo reportado quando existir. Essa reserva **não é custo medido** nem
@@ -49,8 +60,7 @@ outra fonte confiável de cobrança antes de liberar o A/B live.
 
 ```powershell
 uv run python -m evals.experiments.jev_router_ab --preflight
-# Somente após corrigir a credencial e garantir o teto externo de gasto:
-uv run python -m evals.experiments.jev_router_ab --output-dir evals/runs/jev-router-ab/<run-id>
+uv run python -m evals.experiments.jev_router_ab --output-dir evals/runs/jev-router-ab/<run-id> --max-calls 98 --max-cost-usd 0.98
 ```
 
 O segundo comando deve ser executado uma vez por experimento; `raw.json`
@@ -60,8 +70,7 @@ descartados após observar o score. `evals/runs/` é ignorado pelo Git.
 
 ## Próximos passos
 
-1. Corrigir a credencial de jevmodel.org localmente, sem enviá-la no chat.
-2. Confirmar um mecanismo de teto financeiro externo de US$ 1.
-3. Executar o protocolo completo e anexar paths/identidade dos artifacts.
-4. Obter revisão Sol independente do resultado, incluindo vazamento e seleção.
-5. Só então marcar a SPEC-178 `done` e iniciar a SPEC-179.
+1. Usuário revoga a chave TypeSafe antiga e avisa após substituir o valor local.
+2. Executar o protocolo completo e anexar paths/identidade dos artifacts.
+3. Obter revisão Sol independente do resultado, incluindo vazamento e seleção.
+4. Só então marcar a SPEC-178 `done` e iniciar a SPEC-179.

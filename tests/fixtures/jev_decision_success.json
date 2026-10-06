@@ -1,5 +1,5 @@
 {
-  "model": "jev-latest",
+  "model": "jev-1.13.0",
   "answers": {
     "route": {
       "type": "choice",
@@ -8,7 +8,13 @@
       "confidence": 0.92
     },
     "urgent": {"type": "noul", "noul": 0.12},
-    "danger": {"type": "score", "score": 1.4, "confidence": 0.88}
+    "danger": {
+      "type": "score",
+      "score": 1.4,
+      "legend": {"0": "baixo", "1": "médio", "2": "alto"},
+      "probabilities": {"0": 0.0, "1": 0.6, "2": 0.4},
+      "confidence": 0.88
+    }
   },
   "usage": {"input_tokens": 136, "output_tokens": 18}
 }

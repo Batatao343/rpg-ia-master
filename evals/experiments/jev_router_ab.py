@@ -458,13 +458,17 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--preflight", action="store_true")
     parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--max-calls", type=int, default=100)
+    parser.add_argument("--max-cost-usd", type=float, default=1.0)
     args = parser.parse_args()
     if args.preflight:
         print(json.dumps(preflight(), ensure_ascii=False, indent=2))
         return
     if args.output_dir is None:
         parser.error("--output-dir is required for live execution")
-    result = run(args.output_dir)
+    if args.max_calls <= 0 or args.max_cost_usd <= 0:
+        parser.error("call and spending caps must be positive")
+    result = run(args.output_dir, Budget(max_calls=args.max_calls, max_cost_usd=args.max_cost_usd))
     print(json.dumps({"run_id": result["run_id"], "status": result["status"], "calls": result["budget"]["calls"]}))
 
 
