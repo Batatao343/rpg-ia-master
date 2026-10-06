@@ -318,7 +318,16 @@ def _write_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    temporary.replace(path)
+    # OneDrive/Windows can briefly hold the previous JSON open while syncing it.
+    # Keep the completed .tmp artifact intact until an atomic replacement succeeds.
+    for attempt in range(10):
+        try:
+            temporary.replace(path)
+            return
+        except PermissionError:
+            if attempt == 9:
+                raise
+            time.sleep(0.2)
 
 
 def _percentile(values: list[int], fraction: float) -> float | str:

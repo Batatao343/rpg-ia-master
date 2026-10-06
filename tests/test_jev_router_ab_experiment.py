@@ -46,6 +46,30 @@ def test_budget_stops_before_next_external_call() -> None:
     assert budget.exhausted
 
 
+def test_raw_write_retries_transient_windows_replace_lock(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    path = tmp_path / "raw.json"
+    experiment._write_json(path, {"status": "in_progress"})
+    original_replace = Path.replace
+    attempts = 0
+
+    def locked_once(source: Path, target: Path) -> Path:
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise PermissionError("transient sync lock")
+        return original_replace(source, target)
+
+    monkeypatch.setattr(Path, "replace", locked_once)
+    experiment._write_json(path, {"status": "blocked-by-provider", "calls": 2})
+    assert attempts == 2
+    assert json.loads(path.read_text(encoding="utf-8")) == {
+        "status": "blocked-by-provider", "calls": 2,
+    }
+    assert not path.with_suffix(".json.tmp").exists()
+
+
 def test_reported_cost_is_not_treated_as_zero() -> None:
     budget = experiment.Budget(max_calls=100, max_cost_usd=0.02)
     assert budget.reported_cost_usd is None

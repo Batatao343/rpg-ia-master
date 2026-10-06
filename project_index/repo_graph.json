@@ -1,5 +1,5 @@
 {
-  "commit_sha": "9b3e6555f2260a4cc6b091c13359b4d3f57577e5",
+  "commit_sha": "41e885c239716f3d9f0acae3038925971f7a1e89",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -15109,7 +15109,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 324
+        "line": 333
       },
       "source": "module:evals.experiments.jev_router_ab",
       "target": "symbol:evals.experiments.jev_router_ab._percentile",
@@ -15131,7 +15131,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 457
+        "line": 466
       },
       "source": "module:evals.experiments.jev_router_ab",
       "target": "symbol:evals.experiments.jev_router_ab.main",
@@ -15153,7 +15153,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 369
+        "line": 378
       },
       "source": "module:evals.experiments.jev_router_ab",
       "target": "symbol:evals.experiments.jev_router_ab.run",
@@ -15164,7 +15164,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 333
+        "line": 342
       },
       "source": "module:evals.experiments.jev_router_ab",
       "target": "symbol:evals.experiments.jev_router_ab.score",
@@ -51728,7 +51728,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 58
+        "line": 82
       },
       "source": "module:tests.test_jev_router_ab_experiment",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_capture_marks_build_failure_fatal_and_keeps_raw_usage",
@@ -51739,7 +51739,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 162
+        "line": 186
       },
       "source": "module:tests.test_jev_router_ab_experiment",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score",
@@ -51750,7 +51750,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 82
+        "line": 106
       },
       "source": "module:tests.test_jev_router_ab_experiment",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
@@ -51772,7 +51772,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 109
+        "line": 133
       },
       "source": "module:tests.test_jev_router_ab_experiment",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order",
@@ -51784,6 +51784,17 @@
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
         "line": 49
+      },
+      "source": "module:tests.test_jev_router_ab_experiment",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 73
       },
       "source": "module:tests.test_jev_router_ab_experiment",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_reported_cost_is_not_treated_as_zero",
@@ -72485,7 +72496,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 471
+        "line": 480
       },
       "source": "symbol:evals.experiments.jev_router_ab.main",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -72496,7 +72507,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 465
+        "line": 474
       },
       "source": "symbol:evals.experiments.jev_router_ab.main",
       "target": "symbol:evals.experiments.jev_router_ab.preflight",
@@ -72507,7 +72518,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 471
+        "line": 480
       },
       "source": "symbol:evals.experiments.jev_router_ab.main",
       "target": "symbol:evals.experiments.jev_router_ab.run",
@@ -72540,7 +72551,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 386
+        "line": 395
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.core.hashing.repository_identity",
@@ -72551,7 +72562,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 376
+        "line": 385
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -72562,7 +72573,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 375
+        "line": 384
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -72573,7 +72584,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 383
+        "line": 392
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -72584,7 +72595,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 408
+        "line": 417
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -72595,7 +72606,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 402
+        "line": 411
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab._arm_a",
@@ -72606,7 +72617,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 433
+        "line": 442
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab._arm_a",
@@ -72617,7 +72628,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 410
+        "line": 419
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab._arm_b",
@@ -72628,7 +72639,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 439
+        "line": 448
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab._arm_b",
@@ -72639,7 +72650,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 377
+        "line": 386
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab._cases",
@@ -72650,7 +72661,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 404
+        "line": 413
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab._error_result",
@@ -72661,7 +72672,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 412
+        "line": 421
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab._error_result",
@@ -72672,7 +72683,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 435
+        "line": 444
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab._error_result",
@@ -72683,21 +72694,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 441
+        "line": 450
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab._error_result",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_router_ab.py",
-        "line": 397
-      },
-      "source": "symbol:evals.experiments.jev_router_ab.run",
-      "target": "symbol:evals.experiments.jev_router_ab._write_json",
       "type": "calls"
     },
     {
@@ -72716,7 +72716,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 414
+        "line": 415
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab._write_json",
@@ -72727,7 +72727,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 437
+        "line": 423
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab._write_json",
@@ -72738,7 +72738,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 443
+        "line": 446
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab._write_json",
@@ -72749,7 +72749,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 450
+        "line": 452
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab._write_json",
@@ -72760,7 +72760,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 453
+        "line": 459
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab._write_json",
@@ -72771,7 +72771,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 378
+        "line": 462
+      },
+      "source": "symbol:evals.experiments.jev_router_ab.run",
+      "target": "symbol:evals.experiments.jev_router_ab._write_json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_router_ab.py",
+        "line": 387
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab.preflight",
@@ -72782,7 +72793,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 453
+        "line": 462
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:evals.experiments.jev_router_ab.score",
@@ -72793,7 +72804,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 399
+        "line": 408
       },
       "source": "symbol:evals.experiments.jev_router_ab.run",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -72804,7 +72815,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 356
+        "line": 365
       },
       "source": "symbol:evals.experiments.jev_router_ab.score",
       "target": "symbol:evals.experiments.jev_router_ab._percentile",
@@ -72815,7 +72826,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_router_ab.py",
-        "line": 357
+        "line": 366
       },
       "source": "symbol:evals.experiments.jev_router_ab.score",
       "target": "symbol:evals.experiments.jev_router_ab._percentile",
@@ -138826,7 +138837,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 63
+        "line": 87
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_capture_marks_build_failure_fatal_and_keeps_raw_usage",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -138837,7 +138848,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 64
+        "line": 88
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_capture_marks_build_failure_fatal_and_keeps_raw_usage",
       "target": "symbol:evals.experiments.jev_router_ab._capture_classify",
@@ -138848,7 +138859,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 178
+        "line": 202
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -138859,7 +138870,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 183
+        "line": 207
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score",
       "target": "symbol:evals.experiments.jev_router_ab.run",
@@ -138870,7 +138881,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 167
+        "line": 191
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend",
@@ -138881,7 +138892,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 177
+        "line": 201
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.rejected",
@@ -138892,7 +138903,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 171
+        "line": 195
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__enter__",
@@ -138903,7 +138914,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 174
+        "line": 198
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__exit__",
@@ -138914,7 +138925,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 168
+        "line": 192
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__init__",
@@ -138925,7 +138936,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 178
+        "line": 202
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.rejected",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -138936,7 +138947,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 99
+        "line": 123
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -138947,7 +138958,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 101
+        "line": 125
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
       "target": "symbol:evals.experiments.jev_router_ab._arm_b",
@@ -138958,7 +138969,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 83
+        "line": 107
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
       "target": "symbol:evals.experiments.jev_router_ab._cases",
@@ -138969,7 +138980,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 83
+        "line": 107
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
       "target": "symbol:evals.experiments.jev_router_ab.preflight",
@@ -138980,7 +138991,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 89
+        "line": 113
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
       "target": "symbol:services.jev_decision.ChoiceAnswer",
@@ -138991,7 +139002,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 87
+        "line": 111
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
       "target": "symbol:services.jev_decision.DecisionResult",
@@ -139002,7 +139013,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 95
+        "line": 119
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
       "target": "symbol:services.jev_decision.Usage",
@@ -139013,7 +139024,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 85
+        "line": 109
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend",
@@ -139024,7 +139035,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 86
+        "line": 110
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend.decide",
@@ -139035,7 +139046,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 89
+        "line": 113
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend.decide",
       "target": "symbol:services.jev_decision.ChoiceAnswer",
@@ -139046,7 +139057,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 87
+        "line": 111
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend.decide",
       "target": "symbol:services.jev_decision.DecisionResult",
@@ -139057,7 +139068,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 95
+        "line": 119
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend.decide",
       "target": "symbol:services.jev_decision.Usage",
@@ -139090,7 +139101,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 115
+        "line": 139
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order",
       "target": "symbol:evals.experiments.jev_router_ab._cases",
@@ -139101,7 +139112,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 151
+        "line": 175
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order",
       "target": "symbol:evals.experiments.jev_router_ab.run",
@@ -139112,7 +139123,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 118
+        "line": 142
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend",
@@ -139123,7 +139134,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 128
+        "line": 152
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.actual",
@@ -139134,7 +139145,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 143
+        "line": 167
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.checked_score",
@@ -139145,7 +139156,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 122
+        "line": 146
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__enter__",
@@ -139156,7 +139167,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 125
+        "line": 149
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__exit__",
@@ -139167,7 +139178,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 119
+        "line": 143
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend",
       "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__init__",
@@ -139178,7 +139189,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
-        "line": 50
+        "line": 53
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock",
+      "target": "symbol:evals.experiments.jev_router_ab._write_json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 65
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock",
+      "target": "symbol:evals.experiments.jev_router_ab._write_json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 57
+      },
+      "source": "symbol:tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock",
+      "target": "symbol:tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock.locked_once",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_ab_experiment.py",
+        "line": 74
       },
       "source": "symbol:tests.test_jev_router_ab_experiment.test_reported_cost_is_not_treated_as_zero",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -166999,7 +167043,7 @@
     {
       "id": "symbol:evals.experiments.jev_router_ab._percentile",
       "kind": "function",
-      "line": 324,
+      "line": 333,
       "path": "evals/experiments/jev_router_ab.py",
       "qualified_name": "evals.experiments.jev_router_ab._percentile"
     },
@@ -167013,7 +167057,7 @@
     {
       "id": "symbol:evals.experiments.jev_router_ab.main",
       "kind": "function",
-      "line": 457,
+      "line": 466,
       "path": "evals/experiments/jev_router_ab.py",
       "qualified_name": "evals.experiments.jev_router_ab.main"
     },
@@ -167027,14 +167071,14 @@
     {
       "id": "symbol:evals.experiments.jev_router_ab.run",
       "kind": "function",
-      "line": 369,
+      "line": 378,
       "path": "evals/experiments/jev_router_ab.py",
       "qualified_name": "evals.experiments.jev_router_ab.run"
     },
     {
       "id": "symbol:evals.experiments.jev_router_ab.score",
       "kind": "function",
-      "line": 333,
+      "line": 342,
       "path": "evals/experiments/jev_router_ab.py",
       "qualified_name": "evals.experiments.jev_router_ab.score"
     },
@@ -190911,70 +190955,70 @@
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_capture_marks_build_failure_fatal_and_keeps_raw_usage",
       "kind": "test",
-      "line": 58,
+      "line": 82,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_capture_marks_build_failure_fatal_and_keeps_raw_usage"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score",
       "kind": "test",
-      "line": 162,
+      "line": 186,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend",
       "kind": "class",
-      "line": 167,
+      "line": 191,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__enter__",
       "kind": "test",
-      "line": 171,
+      "line": 195,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__enter__"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__exit__",
       "kind": "test",
-      "line": 174,
+      "line": 198,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__exit__"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__init__",
       "kind": "test",
-      "line": 168,
+      "line": 192,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.OfflineBackend.__init__"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.rejected",
       "kind": "test",
-      "line": 177,
+      "line": 201,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_incomplete_run_has_no_score.rejected"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response",
       "kind": "test",
-      "line": 82,
+      "line": 106,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend",
       "kind": "class",
-      "line": 85,
+      "line": 109,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend.decide",
       "kind": "test",
-      "line": 86,
+      "line": 110,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_jev_over_budget_keeps_observed_response.Backend.decide"
     },
@@ -190995,56 +191039,70 @@
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order",
       "kind": "test",
-      "line": 109,
+      "line": 133,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend",
       "kind": "class",
-      "line": 118,
+      "line": 142,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__enter__",
       "kind": "test",
-      "line": 122,
+      "line": 146,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__enter__"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__exit__",
       "kind": "test",
-      "line": 125,
+      "line": 149,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__exit__"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__init__",
       "kind": "test",
-      "line": 119,
+      "line": 143,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.OfflineBackend.__init__"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.actual",
       "kind": "test",
-      "line": 128,
+      "line": 152,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.actual"
     },
     {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.checked_score",
       "kind": "test",
-      "line": 143,
+      "line": 167,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_is_durable_before_scoring_and_all_pairs_keep_order.checked_score"
     },
     {
-      "id": "symbol:tests.test_jev_router_ab_experiment.test_reported_cost_is_not_treated_as_zero",
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock",
       "kind": "test",
       "line": 49,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock.locked_once",
+      "kind": "test",
+      "line": 57,
+      "path": "tests/test_jev_router_ab_experiment.py",
+      "qualified_name": "tests.test_jev_router_ab_experiment.test_raw_write_retries_transient_windows_replace_lock.locked_once"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_ab_experiment.test_reported_cost_is_not_treated_as_zero",
+      "kind": "test",
+      "line": 73,
       "path": "tests/test_jev_router_ab_experiment.py",
       "qualified_name": "tests.test_jev_router_ab_experiment.test_reported_cost_is_not_treated_as_zero"
     },
@@ -197574,5 +197632,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:5bb6c1a9271fc058ebf2ed6e685f825f2a1685c368a8cd8e8e6b614e5cf80d03"
+  "source_tree_hash": "sha256:768de77232381cc58d69bb0740d3bd54e23d24a4db5ef80769073b256cbe3b48"
 }

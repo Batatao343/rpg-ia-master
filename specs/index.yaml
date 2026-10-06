@@ -3160,7 +3160,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Sol High substitution authorized; TypeSafe endpoint corrected and synthetic smoke succeeded; credential rotation pending after wrong-host exposure; paired A/B pending
+  lineage_note: Sol High substitution authorized; TypeSafe credential replaced; live A sanity stopped on DeepSeek 402 despite Groq fallback; 4 total calls used, 96 remain below 98 needed for clean run; paired A/B pending
 - id: SPEC-179
   slug: jev-target-loot-context-eval
   status: approved

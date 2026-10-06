@@ -1,6 +1,31 @@
 # SPEC-178 — Jev vs CLASSIFY: estado de execução
 
-Data: 2026-10-05. Status: `blocked-by-provider` até rotação da credencial.
+Data: 2026-10-05. Status: `blocked-by-provider` por quota no CLASSIFY.
+
+## Tentativa após a rotação da chave
+
+O usuário confirmou que substituiu a chave TypeSafe. A tentativa
+`SPEC-178-20261006T012415Z-ba7f0fc4` parou na sanidade A, antes de chamar
+Jev: DeepSeek `deepseek-v4-flash` retornou HTTP 402 `Insufficient Balance`;
+a cascata produziu `combat_agent` via Groq `openai/gpt-oss-20b`, mas o protocolo
+interrompe em falha de autenticação/quota/configuração mesmo com fallback.
+Não houve réplica, score, resumo ou promoção. O budget registrou **2 chamadas**
+nesta tentativa, **4 no total** desde o início do trabalho e **96 restantes**
+do teto de 100. Um novo protocolo completo exige pelo menos 98 chamadas;
+aguardam saldo DeepSeek e decisão do usuário sobre um novo teto.
+
+O Windows/OneDrive bloqueou a substituição atômica final de `raw.json`.
+`evals/runs/jev-router-ab/20261006T012413Z/raw.json` contém o registro
+intermediário; `raw.json.tmp` contém o estado final `blocked-by-provider`
+e foi copiado byte-identical para `raw-recovered.json` (SHA-256
+`2c80ebaa8cb337ac13c4bc7cd5a62f07e7640a94399bcd7290921f1e72ae633aa`).
+O runner ganhou retry limitado para bloqueio transitório de arquivo; o teste
+focado dessa falha passou. Nove testes focados e a suíte completa ficaram
+verdes (**1.936 passed, 35 skipped, 15 deselected**); governance, índice e
+Ruff também passaram. Revisão Sol independente: `handoffs/SPEC-178-SOL-live-blocker-review.md`.
+O próximo run deve gravar artifacts em um diretório
+temporário local fora da pasta sincronizada e só depois copiá-los com hashes
+conferidos. Nenhuma chamada externa adicional foi feita durante a correção.
 
 ## Autorização e escopo
 
@@ -32,7 +57,7 @@ do executor. Nenhuma rota de produção ou caminho protegido de eval foi alterad
 
 ## Correção de configuração e smoke live
 
-A primeira chamada Jev retornou HTTP 401 porque foi enviada a `jevmodel.org`.
+A primeira chamada Jev histórica retornou HTTP 401 porque foi enviada a `jevmodel.org`.
 O usuário esclareceu que sua chave veio da TypeSafe. A documentação oficial
 indica `api.typesafe.ai/v1/systemone` e `TYPESAFE_API_KEY`; o adapter passou a
 aceitar a variável local `JEVMODEL_API_KEY` como alias compatível. Uma única
@@ -40,14 +65,14 @@ chamada sintética ao host oficial retornou `jev-1.13.0`, Choice `storyteller`,
 usage 394 tokens de entrada e 58 de saída, latência 327 ms. A chave nunca foi
 impressa, copiada para artifacts ou persistida. **A primeira chamada enviou a
 chave TypeSafe como Bearer a um domínio diferente.** O usuário foi informado e
-vai revogar/substituir a credencial no painel TypeSafe. Nenhuma outra chamada
-live será feita até confirmar a rotação. Nenhuma amostra do corpus foi enviada
+informou que substituiu a credencial no painel TypeSafe. Nenhuma outra chamada
+live foi feita até confirmar a rotação. Nenhuma amostra do corpus foi enviada
 no smoke. Até o A/B terminar, não há score nem promoção válida.
 
-Antes do A/B, ocorreram **2 chamadas externas**: a 401 ao host errado e a
-sanidade oficial bem-sucedida. Restam **98 chamadas** do teto autorizado de
-100; o runner deve ser invocado com `--max-calls 98 --max-cost-usd 0.98` e
-interromper se qualquer fallback/regeneração consumir uma chamada extra.
+Antes da tentativa A/B, ocorreram **2 chamadas externas**: a 401 ao host
+errado e a sanidade oficial bem-sucedida. O teto então permitia 98 chamadas;
+a tentativa CLASSIFY acima consumiu outras duas. O comando histórico abaixo
+não deve ser reexecutado sob o teto original.
 
 O budget reserva US$ 0,01 por tentativa como regra conservadora de parada e
 registra custo reportado quando existir. Essa reserva **não é custo medido** nem
@@ -60,7 +85,8 @@ outra fonte confiável de cobrança antes de liberar o A/B live.
 
 ```powershell
 uv run python -m evals.experiments.jev_router_ab --preflight
-uv run python -m evals.experiments.jev_router_ab --output-dir evals/runs/jev-router-ab/<run-id> --max-calls 98 --max-cost-usd 0.98
+# Histórico: exige novo budget autorizado antes de executar outra vez.
+uv run python -m evals.experiments.jev_router_ab --output-dir <diretorio-local-nao-sincronizado> --max-calls <saldo-aprovado> --max-cost-usd <saldo-aprovado>
 ```
 
 O segundo comando deve ser executado uma vez por experimento; `raw.json`
@@ -70,7 +96,8 @@ descartados após observar o score. `evals/runs/` é ignorado pelo Git.
 
 ## Próximos passos
 
-1. Usuário revoga a chave TypeSafe antiga e avisa após substituir o valor local.
+1. Resolver o saldo da DeepSeek e obter autorização para um teto que comporte
+   um run novo (mínimo de 98 chamadas adicionais).
 2. Executar o protocolo completo e anexar paths/identidade dos artifacts.
 3. Obter revisão Sol independente do resultado, incluindo vazamento e seleção.
 4. Só então marcar a SPEC-178 `done` e iniciar a SPEC-179.

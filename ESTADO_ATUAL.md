@@ -1,5 +1,21 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **05/10 — SPEC-178 segue `blocked-by-provider` após rotação da chave.** O
+> usuário confirmou a troca da chave TypeSafe. A primeira tentativa A/B depois
+> disso parou na sanidade do braço CLASSIFY: DeepSeek respondeu HTTP 402
+> `Insufficient Balance`; a cascata caiu para Groq e obteve decisão válida,
+> mas o protocolo pré-registrado interrompe em erro de quota/configuração.
+> Foram 2 chamadas nesta tentativa e 4 das 100 autorizadas no total; 96
+> restam, menos que as 98 necessárias para um novo run completo. Jev não foi
+> chamado após a rotação; nenhuma réplica, score ou promoção ocorreu. O estado
+> bruto final está em `evals/runs/jev-router-ab/20261006T012413Z/raw-recovered.json`
+> (SHA-256 `2c80ebaa...633aa`); o `raw.json` original ficou stale por bloqueio
+> transitório do OneDrive ao substituir o arquivo. O runner agora tenta novamente
+> a substituição atômica; 9 testes focados e suíte completa verdes (**1.936
+> passed, 35 skipped, 15 deselected**). Revisão Sol independente aprovada em
+> `handoffs/SPEC-178-SOL-live-blocker-review.md`. Aguardam saldo DeepSeek e
+> decisão do usuário sobre ampliar o limite de chamadas/custo.
+
 > **05/10 — correção TypeSafe; SPEC-178 `blocked-by-provider`.** O usuário esclareceu
 > que `JEVMODEL_API_KEY` local veio de `console.typesafe.ai`. O adapter apontava
 > indevidamente para `jevmodel.org`, de onde veio o 401. Corrigido para a API

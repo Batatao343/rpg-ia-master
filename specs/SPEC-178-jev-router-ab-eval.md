@@ -23,6 +23,13 @@ Medir Jev contra o classifier real atual para a decisão fechada de `route`, reu
 > o usuário foi informado e vai revogar/substituir a credencial antes de mais
 > chamadas live. Nenhuma amostra do corpus foi enviada no smoke sintético.
 
+> **Execução 2026-10-05:** após confirmação da troca da chave, a sanidade A
+> encontrou DeepSeek HTTP 402 `Insufficient Balance` e fallback Groq válido.
+> O protocolo parou antes de chamar Jev, sem réplica/score. Quatro chamadas
+> externas ocorreram no total; 96 restam sob o teto original, menos que as 98
+> exigidas por um novo run. O artifact final recuperado e o erro de gravação
+> OneDrive estão documentados em `docs/spec178/README.md`.
+
 ## Regra arquitetural obrigatória
 
 `evals.core.runner.run_eval()` força `RPG_FORCE_MOCK=1` e metadata sem provider. Portanto **não usar nem modificar o runner canônico para o A/B live**.

@@ -1,5 +1,16 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **05/10 — [SPEC-178](specs/SPEC-178-jev-router-ab-eval.md) bloqueada na
+> sanidade CLASSIFY.** Após a rotação da chave TypeSafe, DeepSeek retornou 402
+> por saldo insuficiente; Groq respondeu via fallback, mas a regra
+> pré-registrada interrompe a comparação em falha de quota. Duas chamadas
+> ocorreram nessa tentativa, quatro no total; restam 96 das 100 autorizadas,
+> enquanto um novo A/B completo requer no mínimo 98. Nenhum caso foi enviado
+> ao Jev após a rotação. Sem réplicas, score ou promoção; SPEC-179 aguarda.
+> Correção da gravação OneDrive verificada: **1.936 passed, 35 skipped,
+> 15 deselected** e revisão Sol independente aprovada.
+> Evidência e artifact recuperado em [docs/spec178/README.md](docs/spec178/README.md).
+
 > **05/10 — [SPEC-178](specs/SPEC-178-jev-router-ab-eval.md) `blocked-by-provider`.**
 > O usuário identificou que sua chave veio da TypeSafe. O 401 anterior foi
 > causado pelo adapter apontar para `jevmodel.org`; uma chamada sintética ao
