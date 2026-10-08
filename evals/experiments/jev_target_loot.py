@@ -47,6 +47,7 @@ _RESUME_ONLY_PATHS = frozenset({
     "specs/SPEC-179-jev-target-loot-context-eval.md",
     "docs/spec179/README.md",
     "handoffs/SPEC-179-SOL-offline-review.md",
+    "handoffs/SPEC-179-SOL-recovery-review.md",
     "ESTADO_ATUAL.md", "ROADMAP.md",
     "project_index/manifest.json", "project_index/repo_graph.json",
 })

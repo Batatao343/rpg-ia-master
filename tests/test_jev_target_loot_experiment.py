@@ -213,6 +213,18 @@ def test_resume_rejects_product_code_change(monkeypatch: pytest.MonkeyPatch) -> 
         experiment._assert_resume_code_drift("prior", "current")
 
 
+def test_resume_allows_its_own_review_evidence(monkeypatch: pytest.MonkeyPatch) -> None:
+    def git_probe(args: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        if args[1] == "merge-base":
+            return subprocess.CompletedProcess(args, 0, "", "")
+        return subprocess.CompletedProcess(
+            args, 0, "handoffs/SPEC-179-SOL-recovery-review.md\n", "",
+        )
+
+    monkeypatch.setattr(experiment.subprocess, "run", git_probe)
+    experiment._assert_resume_code_drift("prior", "current")
+
+
 def test_over_twenty_is_reported_without_truncating_candidates() -> None:
     options = experiment._target_options(_case("target.over20").input["state"])
     assert options.unrepresentable_reason == "experiment_target_cap_20"

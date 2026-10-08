@@ -1,5 +1,5 @@
 {
-  "commit_sha": "266955e44de7fa1b1c6419980dfe7db00e820b42",
+  "commit_sha": "5703a40addd75598af14784b80d3b3190f9e879a",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -15296,7 +15296,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 63
+        "line": 64
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot.ExperimentCase",
@@ -15307,7 +15307,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 72
+        "line": 73
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot.TargetOptions",
@@ -15318,7 +15318,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 247
+        "line": 248
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot._arm_a",
@@ -15329,7 +15329,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 291
+        "line": 292
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot._arm_b",
@@ -15340,7 +15340,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 407
+        "line": 408
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot._assert_resume_code_drift",
@@ -15351,7 +15351,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 398
+        "line": 399
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot._required_calls",
@@ -15362,7 +15362,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 425
+        "line": 426
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot._resume_raw",
@@ -15373,7 +15373,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 114
+        "line": 115
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot._scene_visible",
@@ -15384,7 +15384,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 121
+        "line": 122
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -15395,7 +15395,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 106
+        "line": 107
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot._visible",
@@ -15406,7 +15406,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 218
+        "line": 219
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot.canonical_target",
@@ -15417,7 +15417,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 80
+        "line": 81
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot.load_cases",
@@ -15428,7 +15428,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 588
+        "line": 589
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot.main",
@@ -15439,7 +15439,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 230
+        "line": 231
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot.preflight",
@@ -15450,7 +15450,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 494
+        "line": 495
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot.run",
@@ -15461,7 +15461,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 353
+        "line": 354
       },
       "source": "module:evals.experiments.jev_target_loot",
       "target": "symbol:evals.experiments.jev_target_loot.score",
@@ -52245,7 +52245,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 306
+        "line": 318
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts",
@@ -52278,7 +52278,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 216
+        "line": 228
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_over_twenty_is_reported_without_truncating_candidates",
@@ -52311,7 +52311,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 249
+        "line": 261
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
@@ -52322,7 +52322,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 324
+        "line": 216
+      },
+      "source": "module:tests.test_jev_target_loot_experiment",
+      "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_target_loot_experiment.py",
+        "line": 336
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
@@ -52344,7 +52355,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 224
+        "line": 236
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_score_keeps_unrepresentable_in_semantic_denominator",
@@ -73398,7 +73409,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 251
+        "line": 252
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_a",
       "target": "symbol:evals.core.adapters.RoutingAdapter",
@@ -73409,7 +73420,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 254
+        "line": 255
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_a",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -73420,7 +73431,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 261
+        "line": 262
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_a",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -73431,7 +73442,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 268
+        "line": 269
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_a",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -73442,7 +73453,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 287
+        "line": 288
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_a",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -73453,7 +73464,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 251
+        "line": 252
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_a",
       "target": "symbol:evals.experiments.jev_router_ab._candidate",
@@ -73464,7 +73475,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 249
+        "line": 250
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_a",
       "target": "symbol:evals.experiments.jev_router_ab._capture_classify",
@@ -73475,7 +73486,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 265
+        "line": 266
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_a",
       "target": "symbol:evals.experiments.jev_router_ab._eligible",
@@ -73486,7 +73497,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 254
+        "line": 255
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_a",
       "target": "symbol:evals.experiments.jev_router_ab._error_result",
@@ -73497,7 +73508,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 261
+        "line": 262
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_a",
       "target": "symbol:evals.experiments.jev_router_ab._error_result",
@@ -73508,7 +73519,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 268
+        "line": 269
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_a",
       "target": "symbol:evals.experiments.jev_router_ab._error_result",
@@ -73519,7 +73530,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 271
+        "line": 272
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_a",
       "target": "symbol:evals.experiments.jev_target_loot.canonical_target",
@@ -73530,7 +73541,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 327
+        "line": 328
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_b",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -73541,7 +73552,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 333
+        "line": 334
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_b",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -73552,7 +73563,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 349
+        "line": 350
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_b",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -73563,7 +73574,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 327
+        "line": 328
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_b",
       "target": "symbol:evals.experiments.jev_router_ab._error_result",
@@ -73574,7 +73585,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 300
+        "line": 301
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_b",
       "target": "symbol:services.jev_decision.ChoiceQuestion",
@@ -73585,21 +73596,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 307
+        "line": 308
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_b",
       "target": "symbol:services.jev_decision.ChoiceQuestion",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_target_loot.py",
-        "line": 313
-      },
-      "source": "symbol:evals.experiments.jev_target_loot._arm_b",
-      "target": "symbol:services.jev_decision.DecisionRequest",
       "type": "calls"
     },
     {
@@ -73610,6 +73610,17 @@
         "line": 314
       },
       "source": "symbol:evals.experiments.jev_target_loot._arm_b",
+      "target": "symbol:services.jev_decision.DecisionRequest",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_target_loot.py",
+        "line": 315
+      },
+      "source": "symbol:evals.experiments.jev_target_loot._arm_b",
       "target": "symbol:services.jev_decision.DecisionState",
       "type": "calls"
     },
@@ -73618,7 +73629,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 416
+        "line": 417
       },
       "source": "symbol:evals.experiments.jev_target_loot._assert_resume_code_drift",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -73629,7 +73640,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 422
+        "line": 423
       },
       "source": "symbol:evals.experiments.jev_target_loot._assert_resume_code_drift",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -73640,7 +73651,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 431
+        "line": 432
       },
       "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
       "target": "symbol:evals.core.hashing.sha256_file",
@@ -73651,73 +73662,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 433
-      },
-      "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
-      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_target_loot.py",
-        "line": 447
-      },
-      "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
-      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_target_loot.py",
-        "line": 453
-      },
-      "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
-      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_target_loot.py",
-        "line": 460
-      },
-      "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
-      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_target_loot.py",
-        "line": 469
-      },
-      "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
-      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_target_loot.py",
-        "line": 475
-      },
-      "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
-      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_target_loot.py",
-        "line": 481
+        "line": 434
       },
       "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -73731,7 +73676,7 @@
         "line": 448
       },
       "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
-      "target": "symbol:evals.experiments.jev_target_loot._assert_resume_code_drift",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
       "type": "calls"
     },
     {
@@ -73739,10 +73684,65 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 478
+        "line": 454
       },
       "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
-      "target": "symbol:evals.experiments.jev_target_loot._required_calls",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_target_loot.py",
+        "line": 461
+      },
+      "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_target_loot.py",
+        "line": 470
+      },
+      "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_target_loot.py",
+        "line": 476
+      },
+      "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_target_loot.py",
+        "line": 482
+      },
+      "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_target_loot.py",
+        "line": 449
+      },
+      "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
+      "target": "symbol:evals.experiments.jev_target_loot._assert_resume_code_drift",
       "type": "calls"
     },
     {
@@ -73761,7 +73761,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 115
+        "line": 480
+      },
+      "source": "symbol:evals.experiments.jev_target_loot._resume_raw",
+      "target": "symbol:evals.experiments.jev_target_loot._required_calls",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_target_loot.py",
+        "line": 116
       },
       "source": "symbol:evals.experiments.jev_target_loot._scene_visible",
       "target": "symbol:services.graph_resolver.is_alive",
@@ -73772,7 +73783,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 215
+        "line": 216
       },
       "source": "symbol:evals.experiments.jev_target_loot._target_options",
       "target": "symbol:evals.experiments.jev_target_loot.TargetOptions",
@@ -73783,7 +73794,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 163
+        "line": 164
       },
       "source": "symbol:evals.experiments.jev_target_loot._target_options",
       "target": "symbol:evals.experiments.jev_target_loot._scene_visible",
@@ -73794,7 +73805,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 184
+        "line": 185
       },
       "source": "symbol:evals.experiments.jev_target_loot._target_options",
       "target": "symbol:evals.experiments.jev_target_loot._scene_visible",
@@ -73805,7 +73816,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 142
+        "line": 143
       },
       "source": "symbol:evals.experiments.jev_target_loot._target_options",
       "target": "symbol:evals.experiments.jev_target_loot._visible",
@@ -73816,7 +73827,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 173
+        "line": 174
       },
       "source": "symbol:evals.experiments.jev_target_loot._target_options",
       "target": "symbol:evals.experiments.jev_target_loot._visible",
@@ -73827,43 +73838,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 190
+        "line": 191
       },
       "source": "symbol:evals.experiments.jev_target_loot._target_options",
       "target": "symbol:services.entity_identity.normalize_runtime_npc_ref",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_target_loot.py",
-        "line": 146
-      },
-      "source": "symbol:evals.experiments.jev_target_loot._target_options",
-      "target": "symbol:services.entity_identity.resolve_npc_entity_id",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_target_loot.py",
-        "line": 151
-      },
-      "source": "symbol:evals.experiments.jev_target_loot._target_options",
-      "target": "symbol:services.entity_identity.resolve_npc_entity_id",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_target_loot.py",
-        "line": 168
-      },
-      "source": "symbol:evals.experiments.jev_target_loot._target_options",
-      "target": "symbol:services.entity_identity.runtime_npc_aliases",
       "type": "calls"
     },
     {
@@ -73874,7 +73852,7 @@
         "line": 147
       },
       "source": "symbol:evals.experiments.jev_target_loot._target_options",
-      "target": "symbol:services.graph_resolver.get_entity",
+      "target": "symbol:services.entity_identity.resolve_npc_entity_id",
       "type": "calls"
     },
     {
@@ -73882,7 +73860,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 158
+        "line": 152
+      },
+      "source": "symbol:evals.experiments.jev_target_loot._target_options",
+      "target": "symbol:services.entity_identity.resolve_npc_entity_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_target_loot.py",
+        "line": 169
+      },
+      "source": "symbol:evals.experiments.jev_target_loot._target_options",
+      "target": "symbol:services.entity_identity.runtime_npc_aliases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_target_loot.py",
+        "line": 148
       },
       "source": "symbol:evals.experiments.jev_target_loot._target_options",
       "target": "symbol:services.graph_resolver.get_entity",
@@ -73893,7 +73893,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 180
+        "line": 159
       },
       "source": "symbol:evals.experiments.jev_target_loot._target_options",
       "target": "symbol:services.graph_resolver.get_entity",
@@ -73904,7 +73904,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 205
+        "line": 181
+      },
+      "source": "symbol:evals.experiments.jev_target_loot._target_options",
+      "target": "symbol:services.graph_resolver.get_entity",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_target_loot.py",
+        "line": 206
       },
       "source": "symbol:evals.experiments.jev_target_loot._target_options",
       "target": "symbol:services.jev_decision.ChoiceQuestion",
@@ -73915,7 +73926,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 134
+        "line": 135
       },
       "source": "symbol:evals.experiments.jev_target_loot._target_options",
       "target": "symbol:services.npc_layers.is_in_scene",
@@ -73926,7 +73937,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 130
+        "line": 131
       },
       "source": "symbol:evals.experiments.jev_target_loot._target_options",
       "target": "symbol:services.npc_layers.npcs_in_scene",
@@ -73937,7 +73948,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 224
+        "line": 225
       },
       "source": "symbol:evals.experiments.jev_target_loot.canonical_target",
       "target": "symbol:services.entity_identity.normalize_runtime_npc_ref",
@@ -73948,7 +73959,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 81
+        "line": 82
       },
       "source": "symbol:evals.experiments.jev_target_loot.load_cases",
       "target": "symbol:evals.core.hashing.sha256_file",
@@ -73959,54 +73970,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 83
+        "line": 84
       },
       "source": "symbol:evals.experiments.jev_target_loot.load_cases",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_target_loot.py",
-        "line": 90
-      },
-      "source": "symbol:evals.experiments.jev_target_loot.load_cases",
-      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_target_loot.py",
-        "line": 98
-      },
-      "source": "symbol:evals.experiments.jev_target_loot.load_cases",
-      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_target_loot.py",
-        "line": 102
-      },
-      "source": "symbol:evals.experiments.jev_target_loot.load_cases",
-      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "evals/experiments/jev_target_loot.py",
-        "line": 85
-      },
-      "source": "symbol:evals.experiments.jev_target_loot.load_cases",
-      "target": "symbol:evals.experiments.jev_router_ab._cases",
       "type": "calls"
     },
     {
@@ -74017,6 +73984,50 @@
         "line": 91
       },
       "source": "symbol:evals.experiments.jev_target_loot.load_cases",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_target_loot.py",
+        "line": 99
+      },
+      "source": "symbol:evals.experiments.jev_target_loot.load_cases",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_target_loot.py",
+        "line": 103
+      },
+      "source": "symbol:evals.experiments.jev_target_loot.load_cases",
+      "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_target_loot.py",
+        "line": 86
+      },
+      "source": "symbol:evals.experiments.jev_target_loot.load_cases",
+      "target": "symbol:evals.experiments.jev_router_ab._cases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/experiments/jev_target_loot.py",
+        "line": 92
+      },
+      "source": "symbol:evals.experiments.jev_target_loot.load_cases",
       "target": "symbol:evals.experiments.jev_target_loot.ExperimentCase",
       "type": "calls"
     },
@@ -74025,7 +74036,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 605
+        "line": 606
       },
       "source": "symbol:evals.experiments.jev_target_loot.main",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -74036,7 +74047,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 598
+        "line": 599
       },
       "source": "symbol:evals.experiments.jev_target_loot.main",
       "target": "symbol:evals.experiments.jev_target_loot.preflight",
@@ -74047,7 +74058,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 604
+        "line": 605
       },
       "source": "symbol:evals.experiments.jev_target_loot.main",
       "target": "symbol:evals.experiments.jev_target_loot.run",
@@ -74058,7 +74069,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 235
+        "line": 236
       },
       "source": "symbol:evals.experiments.jev_target_loot.preflight",
       "target": "symbol:evals.experiments.jev_router_ab._eligible",
@@ -74069,7 +74080,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 234
+        "line": 235
       },
       "source": "symbol:evals.experiments.jev_target_loot.preflight",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -74080,7 +74091,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 231
+        "line": 232
       },
       "source": "symbol:evals.experiments.jev_target_loot.preflight",
       "target": "symbol:evals.experiments.jev_target_loot.load_cases",
@@ -74091,7 +74102,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 508
+        "line": 509
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.core.hashing.repository_identity",
@@ -74102,7 +74113,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 502
+        "line": 503
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -74113,7 +74124,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 507
+        "line": 508
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -74124,7 +74135,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 510
+        "line": 511
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -74135,7 +74146,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 512
+        "line": 513
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_router_ab.ExperimentBlocked",
@@ -74146,7 +74157,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 554
+        "line": 555
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_router_ab._error_result",
@@ -74157,7 +74168,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 566
+        "line": 567
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_router_ab._error_result",
@@ -74168,7 +74179,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 572
+        "line": 573
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_router_ab._error_result",
@@ -74179,7 +74190,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 533
+        "line": 534
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_router_ab._write_json",
@@ -74190,7 +74201,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 560
+        "line": 561
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_router_ab._write_json",
@@ -74201,7 +74212,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 568
+        "line": 569
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_router_ab._write_json",
@@ -74212,7 +74223,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 575
+        "line": 576
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_router_ab._write_json",
@@ -74223,7 +74234,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 582
+        "line": 583
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_router_ab._write_json",
@@ -74234,7 +74245,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 584
+        "line": 585
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_router_ab._write_json",
@@ -74245,7 +74256,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 552
+        "line": 553
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_target_loot._arm_a",
@@ -74256,7 +74267,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 564
+        "line": 565
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_target_loot._arm_a",
@@ -74267,7 +74278,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 570
+        "line": 571
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_target_loot._arm_b",
@@ -74278,7 +74289,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 505
+        "line": 506
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_target_loot._required_calls",
@@ -74289,7 +74300,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 524
+        "line": 525
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_target_loot._resume_raw",
@@ -74300,7 +74311,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 539
+        "line": 540
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -74311,7 +74322,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 503
+        "line": 504
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_target_loot.load_cases",
@@ -74322,7 +74333,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 504
+        "line": 505
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_target_loot.preflight",
@@ -74333,7 +74344,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 584
+        "line": 585
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:evals.experiments.jev_target_loot.score",
@@ -74344,7 +74355,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/experiments/jev_target_loot.py",
-        "line": 535
+        "line": 536
       },
       "source": "symbol:evals.experiments.jev_target_loot.run",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -141147,7 +141158,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 320
+        "line": 332
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -141158,7 +141169,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 320
+        "line": 332
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts",
       "target": "symbol:evals.experiments.jev_target_loot.run",
@@ -141169,7 +141180,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 314
+        "line": 326
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts.forbidden_backend",
@@ -141301,7 +141312,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 217
+        "line": 229
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_over_twenty_is_reported_without_truncating_candidates",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -141312,7 +141323,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 217
+        "line": 229
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_over_twenty_is_reported_without_truncating_candidates",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
@@ -141411,7 +141422,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 293
+        "line": 305
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -141422,7 +141433,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 293
+        "line": 305
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
       "target": "symbol:evals.experiments.jev_target_loot.run",
@@ -141433,7 +141444,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 256
+        "line": 268
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend",
@@ -141444,7 +141455,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 268
+        "line": 280
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.arm_a",
@@ -141455,7 +141466,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 273
+        "line": 285
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.arm_b",
@@ -141466,7 +141477,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 282
+        "line": 294
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.checked_score",
@@ -141477,7 +141488,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 260
+        "line": 272
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__enter__",
@@ -141488,7 +141499,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 263
+        "line": 275
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__exit__",
@@ -141499,7 +141510,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 257
+        "line": 269
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__init__",
@@ -141510,7 +141521,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 353
+        "line": 225
+      },
+      "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence",
+      "target": "symbol:evals.experiments.jev_target_loot._assert_resume_code_drift",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_target_loot_experiment.py",
+        "line": 217
+      },
+      "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence",
+      "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence.git_probe",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_target_loot_experiment.py",
+        "line": 365
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -141521,7 +141554,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 391
+        "line": 403
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -141532,7 +141565,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 394
+        "line": 406
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -141543,7 +141576,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 330
+        "line": 342
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:evals.experiments.jev_target_loot.load_cases",
@@ -141554,7 +141587,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 331
+        "line": 343
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:evals.experiments.jev_target_loot.preflight",
@@ -141565,7 +141598,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 391
+        "line": 403
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:evals.experiments.jev_target_loot.run",
@@ -141576,7 +141609,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 394
+        "line": 406
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:evals.experiments.jev_target_loot.run",
@@ -141587,7 +141620,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 362
+        "line": 374
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend",
@@ -141598,7 +141631,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 372
+        "line": 384
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.arm_a",
@@ -141609,7 +141642,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 379
+        "line": 391
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.arm_b",
@@ -141620,7 +141653,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 366
+        "line": 378
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__enter__",
@@ -141631,7 +141664,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 369
+        "line": 381
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__exit__",
@@ -141642,7 +141675,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 363
+        "line": 375
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__init__",
@@ -141675,7 +141708,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 238
+        "line": 250
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_score_keeps_unrepresentable_in_semantic_denominator",
       "target": "symbol:evals.experiments.jev_target_loot.score",
@@ -141686,7 +141719,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 225
+        "line": 237
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_score_keeps_unrepresentable_in_semantic_denominator",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
@@ -169588,112 +169621,112 @@
     {
       "id": "symbol:evals.experiments.jev_target_loot.ExperimentCase",
       "kind": "class",
-      "line": 63,
+      "line": 64,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot.ExperimentCase"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot.TargetOptions",
       "kind": "class",
-      "line": 72,
+      "line": 73,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot.TargetOptions"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot._arm_a",
       "kind": "function",
-      "line": 247,
+      "line": 248,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot._arm_a"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot._arm_b",
       "kind": "function",
-      "line": 291,
+      "line": 292,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot._arm_b"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot._assert_resume_code_drift",
       "kind": "function",
-      "line": 407,
+      "line": 408,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot._assert_resume_code_drift"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot._required_calls",
       "kind": "function",
-      "line": 398,
+      "line": 399,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot._required_calls"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot._resume_raw",
       "kind": "function",
-      "line": 425,
+      "line": 426,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot._resume_raw"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot._scene_visible",
       "kind": "function",
-      "line": 114,
+      "line": 115,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot._scene_visible"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot._target_options",
       "kind": "function",
-      "line": 121,
+      "line": 122,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot._target_options"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot._visible",
       "kind": "function",
-      "line": 106,
+      "line": 107,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot._visible"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot.canonical_target",
       "kind": "function",
-      "line": 218,
+      "line": 219,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot.canonical_target"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot.load_cases",
       "kind": "function",
-      "line": 80,
+      "line": 81,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot.load_cases"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot.main",
       "kind": "function",
-      "line": 588,
+      "line": 589,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot.main"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot.preflight",
       "kind": "function",
-      "line": 230,
+      "line": 231,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot.preflight"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot.run",
       "kind": "function",
-      "line": 494,
+      "line": 495,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot.run"
     },
     {
       "id": "symbol:evals.experiments.jev_target_loot.score",
       "kind": "function",
-      "line": 353,
+      "line": 354,
       "path": "evals/experiments/jev_target_loot.py",
       "qualified_name": "evals.experiments.jev_target_loot.score"
     },
@@ -193829,14 +193862,14 @@
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts",
       "kind": "test",
-      "line": 306,
+      "line": 318,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts.forbidden_backend",
       "kind": "test",
-      "line": 314,
+      "line": 326,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts.forbidden_backend"
     },
@@ -193857,7 +193890,7 @@
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_over_twenty_is_reported_without_truncating_candidates",
       "kind": "test",
-      "line": 216,
+      "line": 228,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_over_twenty_is_reported_without_truncating_candidates"
     },
@@ -193899,105 +193932,119 @@
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
       "kind": "test",
-      "line": 249,
+      "line": 261,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend",
       "kind": "class",
-      "line": 256,
+      "line": 268,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__enter__",
       "kind": "test",
-      "line": 260,
+      "line": 272,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__enter__"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__exit__",
       "kind": "test",
-      "line": 263,
+      "line": 275,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__exit__"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__init__",
       "kind": "test",
-      "line": 257,
+      "line": 269,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__init__"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.arm_a",
       "kind": "test",
-      "line": 268,
+      "line": 280,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.arm_a"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.arm_b",
       "kind": "test",
-      "line": 273,
+      "line": 285,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.arm_b"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.checked_score",
       "kind": "test",
-      "line": 282,
+      "line": 294,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.checked_score"
     },
     {
+      "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence",
+      "kind": "test",
+      "line": 216,
+      "path": "tests/test_jev_target_loot_experiment.py",
+      "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence"
+    },
+    {
+      "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence.git_probe",
+      "kind": "test",
+      "line": 217,
+      "path": "tests/test_jev_target_loot_experiment.py",
+      "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence.git_probe"
+    },
+    {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "kind": "test",
-      "line": 324,
+      "line": 336,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend",
       "kind": "class",
-      "line": 362,
+      "line": 374,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__enter__",
       "kind": "test",
-      "line": 366,
+      "line": 378,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__enter__"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__exit__",
       "kind": "test",
-      "line": 369,
+      "line": 381,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__exit__"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__init__",
       "kind": "test",
-      "line": 363,
+      "line": 375,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__init__"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.arm_a",
       "kind": "test",
-      "line": 372,
+      "line": 384,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.arm_a"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.arm_b",
       "kind": "test",
-      "line": 379,
+      "line": 391,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.arm_b"
     },
@@ -194018,7 +194065,7 @@
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_score_keeps_unrepresentable_in_semantic_denominator",
       "kind": "test",
-      "line": 224,
+      "line": 236,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_score_keeps_unrepresentable_in_semantic_denominator"
     },
@@ -200555,5 +200602,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:b337c3805a90823de9e3bba1603b44d2133952dbc3ca99d706a2b7d0cc9d8e70"
+  "source_tree_hash": "sha256:36276cffbc6bd3415aeb9c0cead41317926b650c2717605a708ff6acdccd2818"
 }
