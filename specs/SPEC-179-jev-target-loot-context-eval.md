@@ -1,6 +1,6 @@
 # SPEC-179 — Jev para target e loot_context dinâmicos
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Depende de:** SPEC-178 `done`
 > **EXECUTOR_MODEL obrigatório:** `Sol`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -28,14 +28,32 @@ Testar se `RouterDecision` pode ser decomposto em decisões fechadas sem perder 
 - **R9 — experimento:** usar runner/artefatos de `evals/experiments/`, sem tocar na régua protegida.
 - **R10 — nenhuma promoção:** produção continua inalterada.
 
+> **Interpretação R4 (2026-10-06):** a API TypeSafe oficial aceita até 255
+> opções por Choice ([referência](https://docs.typesafe.ai/api)); o gate
+> aprovado abaixo exige `unrepresentable` quando há **mais de 20 targets
+> canônicos**, um limite conservador deste experimento, não do provider.
+> Aplicar ambos os limites e registrar qual deles causou a não
+> representabilidade. Não selecionar os primeiros 20 silenciosamente.
+
+> **Recuperação do primeiro live (2026-10-07, R9):** o router atual pode
+> resolver uma ação por gate Python sem invocar CLASSIFY. O caso experimental
+> `target.missing_id` segue esse caminho; ausência de tentativa externa só é
+> aceita após `_eligible` confirmar que o classificador não seria alcançado e
+> que a rota observada coincide com o gate. O primeiro run parou após 17
+> chamadas, antes do score. É permitida uma retomada restrita a esse raw
+> parcial, com hash do raw anterior, corpus/ordem/opções idênticos, prefixo
+> pareado íntegro, linha interrompida com zero tentativas e teto **cumulativo**
+> de 40 chamadas/US$ 0,40. O raw anterior permanece imutável. Não editar
+> expected, corpus, critérios de Choice ou resultado já observado.
+
 ## Critérios de aceite
 
-- [ ] nenhum target fora do conjunto canônico pode sair do adapter;
-- [ ] target e loot_context têm métricas separadas;
-- [ ] opções dinâmicas não vazam segredo/fora-da-cena;
-- [ ] não representáveis aparecem no denominador/relatório apropriado;
-- [ ] paths protegidos intactos;
-- [ ] nenhuma mudança de produção.
+- [x] nenhum target fora do conjunto canônico pode sair do adapter;
+- [x] target e loot_context têm métricas separadas;
+- [x] opções dinâmicas não vazam segredo/fora-da-cena;
+- [x] não representáveis aparecem no denominador/relatório apropriado;
+- [x] paths protegidos intactos;
+- [x] nenhuma mudança de produção.
 
 ## Casos mínimos do corpus experimental (congelados antes de live call)
 
@@ -48,8 +66,16 @@ Testar se `RouterDecision` pode ser decomposto em decisões fechadas sem perder 
 
 ## Gate de fechamento
 
-- [ ] hash do corpus experimental é registrado antes da primeira chamada Jev;
-- [ ] nenhum resultado Jev é usado para editar expected/opções do mesmo experimento;
-- [ ] invalid/secret/out-of-scene target count = 0;
-- [ ] >20 candidates é tratado como `unrepresentable`, nunca seleção parcial;
-- [ ] produção permanece inalterada e revisão Sol independente aprova.
+- [x] hash do corpus experimental é registrado antes da primeira chamada Jev;
+- [x] nenhum resultado Jev é usado para editar expected/opções do mesmo experimento;
+- [x] invalid/secret/out-of-scene target count = 0;
+- [x] >20 candidates é tratado como `unrepresentable`, nunca seleção parcial;
+- [x] produção permanece inalterada e revisão Sol independente aprova.
+
+> **Fechamento 2026-10-07:** run completo
+> `SPEC-179-20261008T003243Z-8b3d8749`, 25 chamadas cumulativas (13 DeepSeek,
+> 12 Jev), zero erro e zero target inválido. Target representável: A 5/8, Jev
+> 6/8; loot_context: 4/4 em ambos. Dois fallbacks sem truncagem. Evidência e
+> hashes em `docs/spec179/README.md`, revisão Sol independente em
+> `handoffs/SPEC-179-SOL-result-review.md`. Suíte completa: **1.957 passed,
+> 35 skipped, 15 deselected**. Custo efetivo indisponível, nenhuma promoção.

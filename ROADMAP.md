@@ -1,5 +1,14 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **07/10 — [SPEC-179](specs/SPEC-179-jev-target-loot-context-eval.md) `done`.**
+> A/B experimental de target/loot completo por retomada auditável: 25/40
+> chamadas cumulativas; target CLASSIFY 5/8, Jev 6/8; loot 4/4 em ambos.
+> Dois fallbacks e zero target inválido; custo real indisponível. Revisão Sol
+> independente aprovada, **sem promoção**. Suíte final: **1.957 passed,
+> 35 skipped, 15 deselected**. [Relatório e hashes](docs/spec179/README.md);
+> [PR draft #15](https://github.com/Batatao343/rpg-ia-master/pull/15)
+> empilhado sobre #14. Próxima: SPEC-180, que aplica a regra de rollout.
+
 > **05/10 — [SPEC-178](specs/SPEC-178-jev-router-ab-eval.md) `done`.** A/B
 > live de 3 réplicas pareadas concluído: CLASSIFY 48/48 e Jev 46/48 nos
 > elegíveis; no pipeline completo, 21/21 e 20/21. Jev teve p50 265,5 ms vs

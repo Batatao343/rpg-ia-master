@@ -1,5 +1,18 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **07/10 — SPEC-179 `done`; A/B target/loot live concluído.** Corpus
+> experimental de 14 casos congelado em `6792193`, hash `748ab521...89034`.
+> Primeiro raw parou no gate Python `target.missing_id` após 17 chamadas;
+> retomada auditável somou mais 8, **25/40** chamadas no teto próprio de
+> US$ 0,40 de reserva. Target representável: CLASSIFY 5/8, Jev 6/8; loot 4/4
+> nos dois braços. Dois fallbacks, zero erros/targets inválidos. Custo real
+> indisponível; **sem promoção**. Raw/summary/hashes em `docs/spec179/README.md`;
+> revisão Sol independente **APPROVED**. Gate final: **1.957 passed,
+> 35 skipped, 15 deselected**. Produção e régua protegida intactas.
+> [PR draft #15](https://github.com/Batatao343/rpg-ia-master/pull/15)
+> empilhado sobre #14. Próxima: SPEC-180, decisão de expansão/rollout pela regra
+> pré-declarada; nenhuma decisão de promoção antecipada.
+
 > **05/10 — SPEC-178 `done`; A/B live confirmatório.** Após recarga da
 > DeepSeek, o usuário ampliou o teto total para 120 chamadas/US$ 1,20. O run
 > `SPEC-178-20261006T013715Z-bedc56c2` completou 3 réplicas pareadas:
