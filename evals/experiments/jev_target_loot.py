@@ -14,6 +14,7 @@ import json
 import os
 from pathlib import Path
 import re
+import subprocess
 import time
 from typing import Any, Literal
 from uuid import uuid4
@@ -24,6 +25,7 @@ from evals.core.adapters import RoutingAdapter
 from evals.core.hashing import repository_identity, sha256_file
 from evals.experiments.jev_router_ab import (
     Budget, ExperimentBlocked, ROOT, _candidate, _capture_classify, _cases as routing_cases,
+    _eligible,
     _error_result, _write_json,
 )
 from services import graph_resolver, npc_layers
@@ -38,6 +40,16 @@ CORPUS = ROOT / "evals/experiments/data/spec179_corpus.jsonl"
 CORPUS_LOCK = ROOT / "evals/experiments/data/spec179_corpus.sha256"
 MAX_EXPERIMENT_TARGETS = 20  # Approved SPEC-179 gate; TypeSafe itself allows 255 Choice options.
 MAX_PROVIDER_OPTIONS = 255
+RECOVERY_RAW_SHA256 = "sha256:110e11597c79985b0b64a006ca09043a4e57e1a83ea6ee9caab674e3974ea836"
+_RESUME_ONLY_PATHS = frozenset({
+    "evals/experiments/jev_target_loot.py",
+    "tests/test_jev_target_loot_experiment.py",
+    "specs/SPEC-179-jev-target-loot-context-eval.md",
+    "docs/spec179/README.md",
+    "handoffs/SPEC-179-SOL-offline-review.md",
+    "ESTADO_ATUAL.md", "ROADMAP.md",
+    "project_index/manifest.json", "project_index/repo_graph.json",
+})
 _IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]{0,63}\Z")
 LOOT_CRITERIA = {
     "TREASURE": "Abrir baú, vasculhar corpo ou recolher tesouro encontrado",
@@ -220,11 +232,14 @@ def preflight() -> dict[str, Any]:
     rows = []
     for case in cases:
         options = _target_options(case.input.get("state") or {}) if case.measure == "target" else None
+        classifier_eligible, python_gate_route = _eligible(case)
         rows.append({
             "id": case.id, "measure": case.measure,
             "candidate_ids": list(options.candidate_ids) if options else [],
             "filtered_hidden_count": options.filtered_hidden_count if options else 0,
             "unrepresentable_reason": options.unrepresentable_reason if options else None,
+            "classifier_eligible": classifier_eligible,
+            "python_gate_route": python_gate_route,
         })
     return {"corpus_hash": digest, "cases": rows}
 
@@ -239,11 +254,20 @@ def _arm_a(case: ExperimentCase, options: TargetOptions | None, budget: Budget) 
             raise ExperimentBlocked(message, _error_result(
                 message, round((time.perf_counter() - start) * 1000), capture["attempts"],
             )) from exc
-    if budget.exhausted or not any(attempt["outcome"] == "success" for attempt in capture["attempts"]):
+    attempts = capture["attempts"]
+    success = next((attempt for attempt in attempts if attempt["outcome"] == "success"), None)
+    if budget.exhausted or (attempts and success is None):
         message = f"CLASSIFY has no real decision for {case.id}"
         raise ExperimentBlocked(message, _error_result(
-            message, round((time.perf_counter() - start) * 1000), capture["attempts"],
+            message, round((time.perf_counter() - start) * 1000), attempts,
         ))
+    if success is None:
+        classifier_eligible, gate_route = _eligible(case)
+        if classifier_eligible or gate_route != actual.get("route"):
+            message = f"CLASSIFY unexpectedly skipped for {case.id}"
+            raise ExperimentBlocked(message, _error_result(
+                message, round((time.perf_counter() - start) * 1000), attempts,
+            ))
     value = (canonical_target(actual.get("target"), options)
              if options is not None else actual.get("loot_context") or "none")
     if case.measure == "loot_context" and value not in LOOT_CRITERIA:
@@ -252,9 +276,9 @@ def _arm_a(case: ExperimentCase, options: TargetOptions | None, budget: Budget) 
         "choice": value, "route": actual.get("route"),
         "confidence": capture["confidence"], "probabilities": "unavailable",
         "latency_ms": round((time.perf_counter() - start) * 1000),
-        "attempts": capture["attempts"],
-        "provider": next(row["provider"] for row in capture["attempts"] if row["outcome"] == "success"),
-        "model": next(row["model"] for row in capture["attempts"] if row["outcome"] == "success"),
+        "attempts": attempts,
+        "provider": success["provider"] if success else "python_gate",
+        "model": success["model"] if success else "unavailable",
         "usage": capture["usage_rows"] or "unavailable", "cost_usd": "unavailable",
         "error": None, "fatal_sanity_error": capture["fatal_sanity_error"],
     }
@@ -371,7 +395,106 @@ def score(raw: dict[str, Any], cases: list[ExperimentCase]) -> dict[str, Any]:
     return summary
 
 
-def run(output_dir: Path, budget: Budget) -> dict[str, Any]:
+def _required_calls(rows: list[dict[str, Any]]) -> int:
+    return sum(
+        (2 if row["unrepresentable_reason"] is None else 1)
+        if row["classifier_eligible"] else
+        (1 if row["unrepresentable_reason"] is None else 0)
+        for row in rows
+    )
+
+
+def _assert_resume_code_drift(prior_sha: str, current_sha: str) -> None:
+    """Only experiment and derived evidence may change between paired segments."""
+    if prior_sha == current_sha:
+        return
+    ancestor = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", prior_sha, current_sha],
+        cwd=ROOT, capture_output=True, text=True, check=False,
+    )
+    if ancestor.returncode:
+        raise ExperimentBlocked("initial run commit is not an ancestor of resume")
+    result = subprocess.run(
+        ["git", "diff", "--name-only", prior_sha, current_sha, "--"],
+        cwd=ROOT, capture_output=True, text=True, check=False,
+    )
+    if result.returncode or not set(result.stdout.splitlines()) <= _RESUME_ONLY_PATHS:
+        raise ExperimentBlocked("product code changed between initial run and resume")
+
+
+def _resume_raw(
+    source_path: Path, cases: list[ExperimentCase], digest: str,
+    prepared: list[dict[str, Any]], budget: Budget, current_sha: str,
+    expected_raw_sha256: str,
+) -> tuple[dict[str, Any], int]:
+    """Resume only the zero-call Python-gate instrumentation failure from this run."""
+    source_hash = sha256_file(source_path)
+    if expected_raw_sha256 != RECOVERY_RAW_SHA256 or source_hash != expected_raw_sha256:
+        raise ExperimentBlocked("resume raw hash differs from pre-registered recovery artifact")
+    source = json.loads(source_path.read_text(encoding="utf-8"))
+    rows = source.get("rows") or []
+    old_budget = source.get("budget") or {}
+    if (source.get("status") != "blocked-by-provider" or
+            source.get("corpus_hash") != digest or
+            source.get("case_order") != [case.id for case in cases] or
+            not rows or len(rows) > len(cases) or
+            old_budget.get("max_calls") != budget.max_calls or
+            old_budget.get("max_cost_usd") != budget.max_cost_usd or
+            not isinstance(old_budget.get("calls"), int) or
+            source.get("product_dirty") is not False or
+            not source.get("product_sha") or not source.get("product_tree_hash") or
+            budget.calls != 0 or budget.reported_cost_usd is not None):
+        raise ExperimentBlocked("resume source or cumulative budget does not match frozen run")
+    _assert_resume_code_drift(source["product_sha"], current_sha)
+    for index, row in enumerate(rows):
+        if (row.get("case_id") != cases[index].id or
+                row.get("measure") != cases[index].measure or
+                row.get("candidate_ids") != prepared[index]["candidate_ids"]):
+            raise ExperimentBlocked("resume row does not match frozen corpus preflight")
+    for row in rows[:-1]:
+        if (row.get("status") not in {"paired", "unrepresentable"} or
+                row.get("a", {}).get("error") is not None or
+                (row["status"] == "paired" and
+                 (row.get("b", {}).get("error") is not None or "b" not in row)) or
+                (row["status"] == "unrepresentable" and "fallback" not in row)):
+            raise ExperimentBlocked("resume prefix contains incomplete case")
+    interrupted = rows[-1]
+    if (interrupted.get("case_id") != "target.missing_id" or
+            interrupted.get("status") != "unrepresentable" or
+            interrupted.get("reason") != "visible_actor_without_canonical_id" or
+            prepared[len(rows) - 1]["classifier_eligible"] or
+            not interrupted.get("a", {}).get("error") or
+            interrupted["a"].get("attempts") != [] or
+            "b" in interrupted or "fallback" in interrupted):
+        raise ExperimentBlocked("resume is restricted to the zero-call Python gate")
+    observed_calls = sum(
+        len(row.get(arm, {}).get("attempts") or [])
+        for row in rows for arm in ("a", "b")
+    )
+    if observed_calls != old_budget["calls"] or old_budget.get("exhausted"):
+        raise ExperimentBlocked("resume call ledger does not match persisted attempts")
+    budget.calls = old_budget["calls"]
+    budget.reported_cost_usd = old_budget.get("reported_cost_usd")
+    if (budget.calls + _required_calls(prepared[len(rows) - 1:]) > budget.max_calls or
+            (budget.calls + _required_calls(prepared[len(rows) - 1:]))
+            * budget.reserved_per_call_usd > budget.max_cost_usd):
+        raise ExperimentBlocked("remaining calls exceed cumulative approved cap")
+    resumed = copy.deepcopy(source)
+    resumed["resumed_from"] = {
+        "run_id": source["run_id"], "raw_sha256": source_hash,
+        "prior_product_sha": source["product_sha"],
+        "prior_blocker": source.get("blocker"), "calls_before_resume": budget.calls,
+    }
+    resumed["rows"][-1]["a_before_resume"] = resumed["rows"][-1].pop("a")
+    resumed.pop("blocker", None)
+    resumed["status"] = "in_progress"
+    return resumed, len(rows) - 1
+
+
+def run(
+    output_dir: Path, budget: Budget, *, resume_from: Path | None = None,
+    resume_sha256: str | None = None,
+) -> dict[str, Any]:
     local_env = ROOT / ".env"
     checkout_env = ROOT.parent.parent / ".env" if ROOT.parent.name == ".tmp" else local_env
     load_dotenv(local_env if local_env.exists() else checkout_env, override=False)
@@ -379,34 +502,50 @@ def run(output_dir: Path, budget: Budget) -> dict[str, Any]:
         raise ExperimentBlocked("mock/no-mock/provider override invalidates current CLASSIFY cascade")
     cases, digest = load_cases()
     prepared = preflight()
-    representable = sum(row["unrepresentable_reason"] is None for row in prepared["cases"])
-    minimum = representable * 2 + (len(cases) - representable)
+    minimum = _required_calls(prepared["cases"])
     if minimum > budget.max_calls or minimum * budget.reserved_per_call_usd > budget.max_cost_usd:
         raise ExperimentBlocked(f"minimum {minimum} calls exceed approved cap")
     product_sha, tree_hash, dirty = repository_identity(ROOT)
     if dirty:
         raise ExperimentBlocked("SPEC-179 corpus and product code must be committed before live calls")
-    output_dir.mkdir(parents=True, exist_ok=False)
+    if (resume_from is None) != (resume_sha256 is None):
+        raise ExperimentBlocked("resume-from and resume-sha256 must be provided together")
     run_id = datetime.now(timezone.utc).strftime("SPEC-179-%Y%m%dT%H%M%SZ") + "-" + uuid4().hex[:8]
-    raw: dict[str, Any] = {
-        "run_id": run_id, "product_sha": product_sha, "product_tree_hash": tree_hash,
-        "product_dirty": dirty, "corpus_hash": digest,
-        "started_at": datetime.now(timezone.utc).isoformat(),
-        "case_order": [case.id for case in cases], "budget": asdict(budget),
-        "rows": [], "status": "in_progress",
-    }
+    if resume_from is None:
+        raw: dict[str, Any] = {
+            "run_id": run_id, "product_sha": product_sha, "product_tree_hash": tree_hash,
+            "product_dirty": dirty, "corpus_hash": digest,
+            "started_at": datetime.now(timezone.utc).isoformat(),
+            "case_order": [case.id for case in cases], "budget": asdict(budget),
+            "rows": [], "status": "in_progress",
+        }
+        start_index = 0
+    else:
+        raw, start_index = _resume_raw(resume_from, cases, digest, prepared["cases"], budget,
+                                       product_sha, resume_sha256)
+        raw["run_id"] = run_id
+        raw["product_sha"] = product_sha
+        raw["product_tree_hash"] = tree_hash
+        raw["started_at"] = datetime.now(timezone.utc).isoformat()
+        raw["budget"] = asdict(budget)
+    output_dir.mkdir(parents=True, exist_ok=False)
     path = output_dir / "raw.json"
     _write_json(path, raw)
     try:
         with JevDecisionBackend(max_retries=0) as backend:
-            for case, prepared_row in zip(cases, prepared["cases"], strict=True):
+            for index, (case, prepared_row) in enumerate(zip(cases, prepared["cases"], strict=True)):
+                if index < start_index:
+                    continue
                 options = _target_options(case.input.get("state") or {}) if case.measure == "target" else None
-                row: dict[str, Any] = {
-                    "case_id": case.id, "measure": case.measure,
-                    "candidate_ids": prepared_row["candidate_ids"],
-                    "filtered_hidden_count": prepared_row["filtered_hidden_count"],
-                }
-                raw["rows"].append(row)
+                if index < len(raw["rows"]):
+                    row = raw["rows"][index]
+                else:
+                    row = {
+                        "case_id": case.id, "measure": case.measure,
+                        "candidate_ids": prepared_row["candidate_ids"],
+                        "filtered_hidden_count": prepared_row["filtered_hidden_count"],
+                    }
+                    raw["rows"].append(row)
                 if prepared_row["unrepresentable_reason"]:
                     row.update(status="unrepresentable", reason=prepared_row["unrepresentable_reason"])
                     try:
@@ -450,6 +589,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--preflight", action="store_true")
     parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--resume-from", type=Path)
+    parser.add_argument("--resume-sha256")
     parser.add_argument("--max-calls", type=int)
     parser.add_argument("--max-cost-usd", type=float)
     args = parser.parse_args()
@@ -460,7 +601,10 @@ def main() -> None:
         parser.error("live execution requires output-dir, max-calls and max-cost-usd")
     if args.max_calls <= 0 or args.max_cost_usd <= 0:
         parser.error("call and spending caps must be positive")
-    result = run(args.output_dir, Budget(max_calls=args.max_calls, max_cost_usd=args.max_cost_usd))
+    result = run(
+        args.output_dir, Budget(max_calls=args.max_calls, max_cost_usd=args.max_cost_usd),
+        resume_from=args.resume_from, resume_sha256=args.resume_sha256,
+    )
     print(json.dumps({"run_id": result["run_id"], "status": result["status"], "calls": result["budget"]["calls"]}))
 
 

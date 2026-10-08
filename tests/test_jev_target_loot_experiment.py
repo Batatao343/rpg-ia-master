@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 from contextlib import contextmanager
+from dataclasses import asdict
 
 import pytest
 
@@ -28,8 +30,10 @@ def test_corpus_is_frozen_before_any_provider_call() -> None:
     assert {row["id"]: row["unrepresentable_reason"] for row in pre["cases"]
             if row["unrepresentable_reason"]} == {
                 "target.over20": "experiment_target_cap_20",
-                "target.missing_id": "visible_actor_without_canonical_id",
-            }
+        "target.missing_id": "visible_actor_without_canonical_id",
+    }
+    assert experiment._required_calls(pre["cases"]) == 25
+    assert next(row for row in pre["cases"] if row["id"] == "target.missing_id")["classifier_eligible"] is False
 
 
 def test_mismatched_corpus_lock_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -177,6 +181,38 @@ def test_jev_response_survives_reported_cost_block() -> None:
     assert blocked.value.record["usage"]["input_tokens"] == 11
 
 
+def test_python_gate_current_router_needs_zero_provider_calls(monkeypatch: pytest.MonkeyPatch) -> None:
+    @contextmanager
+    def captured(_budget: Budget):
+        yield {"attempts": [], "confidence": None, "usage_rows": [], "fatal_sanity_error": False}
+
+    class GateAdapter:
+        def execute(self, _candidate: object):
+            return type("Response", (), {"actual": {
+                "route": "storyteller", "target": None, "loot_context": None,
+            }})()
+
+    monkeypatch.setattr(experiment, "_capture_classify", captured)
+    monkeypatch.setattr(experiment, "RoutingAdapter", GateAdapter)
+    budget = Budget()
+    case = _case("target.missing_id")
+    record = experiment._arm_a(case, experiment._target_options(case.input["state"]), budget)
+    assert record["provider"] == "python_gate"
+    assert record["choice"] == "none"
+    assert budget.calls == 0
+
+
+def test_resume_rejects_product_code_change(monkeypatch: pytest.MonkeyPatch) -> None:
+    def git_probe(args: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        if args[1] == "merge-base":
+            return subprocess.CompletedProcess(args, 0, "", "")
+        return subprocess.CompletedProcess(args, 0, "agents/router.py\n", "")
+
+    monkeypatch.setattr(experiment.subprocess, "run", git_probe)
+    with pytest.raises(ExperimentBlocked, match="product code changed"):
+        experiment._assert_resume_code_drift("prior", "current")
+
+
 def test_over_twenty_is_reported_without_truncating_candidates() -> None:
     options = experiment._target_options(_case("target.over20").input["state"])
     assert options.unrepresentable_reason == "experiment_target_cap_20"
@@ -283,3 +319,87 @@ def test_live_rejects_dirty_checkout_before_backend_or_artifacts(
     with pytest.raises(ExperimentBlocked, match="must be committed"):
         experiment.run(output_dir, Budget(max_calls=26, max_cost_usd=0.26))
     assert not output_dir.exists()
+
+
+def test_resume_preserves_prior_raw_and_cumulative_budget(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("RPG_FORCE_MOCK", raising=False)
+    monkeypatch.delenv("RPG_NO_MOCK", raising=False)
+    monkeypatch.delenv("LLM_PROVIDER", raising=False)
+    cases, digest = experiment.load_cases()
+    prepared = experiment.preflight()["cases"]
+    rows = []
+    for case, pre in zip(cases[:10], prepared[:10], strict=True):
+        row = {"case_id": case.id, "measure": case.measure,
+               "candidate_ids": pre["candidate_ids"],
+               "filtered_hidden_count": pre["filtered_hidden_count"]}
+        if case.id == "target.missing_id":
+            row.update(status="unrepresentable", reason=pre["unrepresentable_reason"],
+                       a={"error": "CLASSIFY has no real decision", "attempts": []})
+        elif case.id == "target.over20":
+            row.update(status="unrepresentable", reason=pre["unrepresentable_reason"],
+                       a={"choice": "unknown", "attempts": [{"outcome": "success"}], "error": None},
+                       fallback={"choice": "unknown", "fallback_from": "a"})
+        else:
+            row.update(status="paired",
+                       a={"choice": "none", "attempts": [{"outcome": "success"}], "error": None},
+                       b={"choice": "none", "attempts": [{"outcome": "success"}], "error": None})
+        rows.append(row)
+    prior = {"run_id": "prior", "product_sha": "prior-sha", "product_tree_hash": "prior-tree",
+             "product_dirty": False,
+             "status": "blocked-by-provider", "blocker": "CLASSIFY gate misread",
+             "corpus_hash": digest, "case_order": [case.id for case in cases],
+             "budget": asdict(Budget(max_calls=40, max_cost_usd=0.40, calls=17)), "rows": rows}
+    source_path = tmp_path / "prior-raw.json"
+    source_path.write_text(json.dumps(prior), encoding="utf-8")
+    original_bytes = source_path.read_bytes()
+    source_hash = experiment.sha256_file(source_path)
+    monkeypatch.setattr(experiment, "RECOVERY_RAW_SHA256", source_hash)
+    monkeypatch.setattr(experiment, "_assert_resume_code_drift", lambda *_args: None)
+    calls: list[str] = []
+
+    class OfflineBackend:
+        def __init__(self, **_kwargs: object) -> None:
+            pass
+
+        def __enter__(self) -> OfflineBackend:
+            return self
+
+        def __exit__(self, *_args: object) -> None:
+            pass
+
+    def arm_a(case: experiment.ExperimentCase, _options: object, budget: Budget) -> dict:
+        calls.append("a:" + case.id)
+        if case.id != "target.missing_id":
+            budget.consume()
+        return {"choice": "none", "provider": "python_gate" if case.id == "target.missing_id" else "test",
+                "attempts": [], "error": None}
+
+    def arm_b(case: experiment.ExperimentCase, _options: object,
+              _backend: object, budget: Budget, _run_id: str) -> dict:
+        calls.append("b:" + case.id)
+        budget.consume()
+        return {"choice": "none", "attempts": [], "error": None}
+
+    monkeypatch.setattr(experiment, "JevDecisionBackend", OfflineBackend)
+    monkeypatch.setattr(experiment, "_arm_a", arm_a)
+    monkeypatch.setattr(experiment, "_arm_b", arm_b)
+    monkeypatch.setattr(experiment, "repository_identity", lambda _root: ("new-sha", "new-tree", False))
+    output_dir = tmp_path / "resumed"
+    with pytest.raises(ExperimentBlocked, match="raw hash differs"):
+        experiment.run(output_dir, Budget(max_calls=40, max_cost_usd=0.40),
+                       resume_from=source_path, resume_sha256="sha256:" + "0" * 64)
+    assert not output_dir.exists()
+    raw = experiment.run(output_dir, Budget(max_calls=40, max_cost_usd=0.40),
+                         resume_from=source_path, resume_sha256=source_hash)
+    assert raw["status"] == "complete"
+    assert raw["budget"]["calls"] == 25
+    assert raw["resumed_from"]["calls_before_resume"] == 17
+    assert raw["rows"][9]["a_before_resume"]["error"] == "CLASSIFY has no real decision"
+    assert raw["rows"][9]["a"]["provider"] == "python_gate"
+    assert calls == ["a:target.missing_id",
+                     "a:loot.treasure", "b:loot.treasure", "a:loot.shop", "b:loot.shop",
+                     "a:loot.craft", "b:loot.craft", "a:loot.none", "b:loot.none"]
+    assert source_path.read_bytes() == original_bytes
+    assert (output_dir / "summary.json").exists()

@@ -1,19 +1,21 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
-> **06/10 — SPEC-179 em preparação offline.** Corpus experimental de 14 casos
+> **07/10 — SPEC-179 live parcial e recuperação em revisão.** Corpus experimental de 14 casos
 > (10 target, 4 loot_context), hash `748ab521...89034`; pré voo identifica
 > 12 representáveis e 2 não representáveis. O runner usa IDs canônicos da
 > cena, exclui segredo/morto/oculto do jogador, registra fallback atual nos
 > casos sem Choice Jev e preserva resposta/usage em bloqueio de custo.
-> Mínimo de **26 chamadas externas** para A/B; nenhuma ocorreu nesta spec.
-> O orçamento anterior de SPEC-178 não cobre esta rodada. Evidência e limites:
-> `docs/spec179/README.md`. Gate offline completo no commit de freeze:
-> **1.953 passed, 35 skipped, 15 deselected**; revisão Sol independente aprovada.
+> O usuário autorizou teto próprio de **40 chamadas/US$ 0,40 de reserva**.
+> O primeiro live parou após **17 chamadas** no gate Python de
+> `target.missing_id`; raw preservado e hash em `docs/spec179/README.md`.
+> Recuperação restrita ao raw imutável está aprovada; faltam 8 chamadas
+> para os quatro pares de loot, com teto cumulativo. A régua e corpus não mudaram.
+> Gate da recuperação: **1.956 passed, 35 skipped, 15 deselected**; revisão Sol
+> independente aprovada. PR draft [#15](https://github.com/Batatao343/rpg-ia-master/pull/15)
+> empilhado sobre #14.
 > SPEC-179 segue `approved` até live e revisão de
 > resultado; SPEC-180 depende dela. Produção e régua protegida inalteradas.
-> Freeze local `6792193`; push/PR ainda não publicados: auto-review bloqueou
-> publicação desse código no GitHub público sem autorização explícita do
-> payload e destino, mesmo após varredura de segredos sem achados.
+> Freeze do corpus `6792193` publicado; nenhuma promoção de Jev.
 
 > **05/10 — SPEC-178 `done`; A/B live confirmatório.** Após recarga da
 > DeepSeek, o usuário ampliou o teto total para 120 chamadas/US$ 1,20. O run

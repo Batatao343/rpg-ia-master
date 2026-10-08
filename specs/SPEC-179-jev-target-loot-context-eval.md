@@ -35,6 +35,17 @@ Testar se `RouterDecision` pode ser decomposto em decisões fechadas sem perder 
 > Aplicar ambos os limites e registrar qual deles causou a não
 > representabilidade. Não selecionar os primeiros 20 silenciosamente.
 
+> **Recuperação do primeiro live (2026-10-07, R9):** o router atual pode
+> resolver uma ação por gate Python sem invocar CLASSIFY. O caso experimental
+> `target.missing_id` segue esse caminho; ausência de tentativa externa só é
+> aceita após `_eligible` confirmar que o classificador não seria alcançado e
+> que a rota observada coincide com o gate. O primeiro run parou após 17
+> chamadas, antes do score. É permitida uma retomada restrita a esse raw
+> parcial, com hash do raw anterior, corpus/ordem/opções idênticos, prefixo
+> pareado íntegro, linha interrompida com zero tentativas e teto **cumulativo**
+> de 40 chamadas/US$ 0,40. O raw anterior permanece imutável. Não editar
+> expected, corpus, critérios de Choice ou resultado já observado.
+
 ## Critérios de aceite
 
 - [ ] nenhum target fora do conjunto canônico pode sair do adapter;
