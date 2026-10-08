@@ -51,8 +51,9 @@ TypeSafe. Nenhum save/schema ou outro callsite CLASSIFY foi alterado.
 - `shadow`: Jev observa o turno, mas não fornece rota nem altera GameState.
   Falha, timeout e configuração ausente não mudam o resultado. **Opt-in de
   custo/latência**, com deadline total de 2 s; sem orçamento de chamadas live
-  nesta spec. A execução síncrona acrescenta uma chamada e até 2 s ao turno
-  elegível.
+  nesta spec. A execução síncrona acrescenta uma chamada; 2 s é o deadline
+  interno do adapter, além do pequeno overhead de construção/fechamento do
+  cliente e do hook.
 - `primary`: exige também `RPG_JEV_ROUTER_PRIMARY_APPROVED=1` e
   `PRIMARY_CALIBRATION` congelado em código com ID de evidência e limiar
   revisados. **Hoje `PRIMARY_CALIBRATION=None`** após NO_GO; qualquer tentativa
@@ -82,5 +83,15 @@ para o usage metering da SPEC-182. Jev é backend de decisão, **não** entra em
 - A regressão protegida permanece byte-identical; nenhuma expected, corpus,
   evaluator, denominador ou baseline foi ajustado.
 - Sem long-run e sem chamada externa nesta spec.
+- `uv run python -m evals.core.governance check`: seis datasets válidos.
+- Smoke real local com `RPG_FORCE_MOCK=1` e modo `off`: `dm_router_node`
+  devolveu `npc_actor` para uma fala social, sem tocar Jev.
+- O primeiro full pytest encontrou apenas dois testes do Project Index gerado
+  stale após adicionar o serviço. Regenerado do source canônico; os sete
+  testes focados de índice e `project_index check` passaram.
 
-Revisão independente e gate final serão registrados após os testes.
+Suíte completa final: **1.964 passed, 35 skipped, 15 deselected**, 1 warning,
+209,89 s. Revisão Sol High independente: **APPROVED técnico local**,
+`SPEC-180-SOL-b25bed2-final-01`;
+`handoffs/SPEC-180-SOL-independent-review.md`. O revisor confirmou o inventário,
+a decisão `NO_GO`, os p95, fallback e ausência de promoção.

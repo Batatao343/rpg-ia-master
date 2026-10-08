@@ -1,5 +1,15 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **07/10 — [SPEC-180](specs/SPEC-180-jev-classify-expansion-promotion.md)
+> `done`: `NO_GO` para Jev em produção.** Cinco callsites CLASSIFY
+> inventariados. O router ganhou modos reversíveis `off|shadow|primary`, com
+> default `off`; `primary` está fechado até calibração e aprovação separadas.
+> Nenhum outro callsite migrou, nem houve chamada live nesta spec. Review Sol
+> independente aprovado; **1.964 passed, 35 skipped, 15 deselected**;
+> smoke `off`, governança de eval e Project Index
+> verdes. [Decisão e métricas](docs/spec180/README.md). Próxima:
+> [SPEC-181](specs/SPEC-181-hosted-supabase-runtime-contract.md).
+
 > **07/10 — [SPEC-179](specs/SPEC-179-jev-target-loot-context-eval.md) `done`.**
 > A/B experimental de target/loot completo por retomada auditável: 25/40
 > chamadas cumulativas; target CLASSIFY 5/8, Jev 6/8; loot 4/4 em ambos.

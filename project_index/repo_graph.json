@@ -1,5 +1,5 @@
 {
-  "commit_sha": "5703a40addd75598af14784b80d3b3190f9e879a",
+  "commit_sha": "b25bed2349196caeb1fe8690b3e0dcd1d2ea280d",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -2089,6 +2089,17 @@
       },
       "source": "file:services/jev_decision.py",
       "target": "module:services.jev_decision",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 1
+      },
+      "source": "file:services/jev_rollout.py",
+      "target": "module:services.jev_rollout",
       "type": "contains"
     },
     {
@@ -6819,6 +6830,39 @@
       },
       "source": "file:tests/test_jev_decision_backend.py",
       "target": "module:tests.test_jev_decision_backend",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 11
+      },
+      "source": "file:tests/test_jev_rollout.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 12
+      },
+      "source": "file:tests/test_jev_rollout.py",
+      "target": "file:services/jev_decision.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 1
+      },
+      "source": "file:tests/test_jev_rollout.py",
+      "target": "module:tests.test_jev_rollout",
       "type": "contains"
     },
     {
@@ -30266,6 +30310,105 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 17
+      },
+      "source": "module:services.jev_rollout",
+      "target": "module:services.jev_decision",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 46
+      },
+      "source": "module:services.jev_rollout",
+      "target": "symbol:services.jev_rollout.JevRolloutEvent",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 70
+      },
+      "source": "module:services.jev_rollout",
+      "target": "symbol:services.jev_rollout._emit",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 109
+      },
+      "source": "module:services.jev_rollout",
+      "target": "symbol:services.jev_rollout._idempotency_key",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 90
+      },
+      "source": "module:services.jev_rollout",
+      "target": "symbol:services.jev_rollout._request",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 83
+      },
+      "source": "module:services.jev_rollout",
+      "target": "symbol:services.jev_rollout._threshold",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 117
+      },
+      "source": "module:services.jev_rollout",
+      "target": "symbol:services.jev_rollout.decide_route",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 78
+      },
+      "source": "module:services.jev_rollout",
+      "target": "symbol:services.jev_rollout.rollout_mode",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 63
+      },
+      "source": "module:services.jev_rollout",
+      "target": "symbol:services.jev_rollout.set_jev_rollout_telemetry_hook",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "services/job_fence.py",
         "line": 9
       },
@@ -51980,6 +52123,127 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 11
+      },
+      "source": "module:tests.test_jev_rollout",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 12
+      },
+      "source": "module:tests.test_jev_rollout",
+      "target": "module:services.jev_decision",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 15
+      },
+      "source": "module:tests.test_jev_rollout",
+      "target": "symbol:tests.test_jev_rollout.Backend",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 43
+      },
+      "source": "module:tests.test_jev_rollout",
+      "target": "symbol:tests.test_jev_rollout.state",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 51
+      },
+      "source": "module:tests.test_jev_rollout",
+      "target": "symbol:tests.test_jev_rollout.test_off_and_invalid_config_never_call_backend",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 103
+      },
+      "source": "module:tests.test_jev_rollout",
+      "target": "symbol:tests.test_jev_rollout.test_primary_requires_approval_and_threshold",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 113
+      },
+      "source": "module:tests.test_jev_rollout",
+      "target": "symbol:tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 144
+      },
+      "source": "module:tests.test_jev_rollout",
+      "target": "symbol:tests.test_jev_rollout.test_python_gate_precedes_jev_and_rollback_uses_baseline",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 193
+      },
+      "source": "module:tests.test_jev_rollout",
+      "target": "symbol:tests.test_jev_rollout.test_question_contract_matches_frozen_ab",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 160
+      },
+      "source": "module:tests.test_jev_rollout",
+      "target": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 59
+      },
+      "source": "module:tests.test_jev_rollout",
+      "target": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_jev_router_ab_experiment.py",
         "line": 10
       },
@@ -66435,7 +66699,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 186
+        "line": 153
+      },
+      "source": "symbol:agents.router.dm_router_node",
+      "target": "symbol:agents.router._base_route_payload",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/router.py",
+        "line": 193
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:agents.router._base_route_payload",
@@ -66468,7 +66743,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 160
+        "line": 167
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:llm_setup.get_llm",
@@ -66479,7 +66754,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 201
+        "line": 208
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:services.input_normalization.optional_entity_ref",
@@ -102607,6 +102882,149 @@
       },
       "source": "symbol:services.jev_decision._validate_answer",
       "target": "symbol:services.jev_decision.JevResponseError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 97
+      },
+      "source": "symbol:services.jev_rollout._request",
+      "target": "symbol:services.jev_decision.DecisionRequest",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 98
+      },
+      "source": "symbol:services.jev_rollout._request",
+      "target": "symbol:services.jev_decision.DecisionState",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 156
+      },
+      "source": "symbol:services.jev_rollout.decide_route",
+      "target": "symbol:services.jev_decision.JevDecisionBackend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 134
+      },
+      "source": "symbol:services.jev_rollout.decide_route",
+      "target": "symbol:services.jev_rollout.JevRolloutEvent",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 138
+      },
+      "source": "symbol:services.jev_rollout.decide_route",
+      "target": "symbol:services.jev_rollout.JevRolloutEvent",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 193
+      },
+      "source": "symbol:services.jev_rollout.decide_route",
+      "target": "symbol:services.jev_rollout.JevRolloutEvent",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 134
+      },
+      "source": "symbol:services.jev_rollout.decide_route",
+      "target": "symbol:services.jev_rollout._emit",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 138
+      },
+      "source": "symbol:services.jev_rollout.decide_route",
+      "target": "symbol:services.jev_rollout._emit",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 193
+      },
+      "source": "symbol:services.jev_rollout.decide_route",
+      "target": "symbol:services.jev_rollout._emit",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 160
+      },
+      "source": "symbol:services.jev_rollout.decide_route",
+      "target": "symbol:services.jev_rollout._idempotency_key",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 152
+      },
+      "source": "symbol:services.jev_rollout.decide_route",
+      "target": "symbol:services.jev_rollout._request",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 136
+      },
+      "source": "symbol:services.jev_rollout.decide_route",
+      "target": "symbol:services.jev_rollout._threshold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 130
+      },
+      "source": "symbol:services.jev_rollout.decide_route",
+      "target": "symbol:services.jev_rollout.rollout_mode",
       "type": "calls"
     },
     {
@@ -140329,6 +140747,567 @@
       "type": "defines"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 16
+      },
+      "source": "symbol:tests.test_jev_rollout.Backend",
+      "target": "symbol:tests.test_jev_rollout.Backend.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 39
+      },
+      "source": "symbol:tests.test_jev_rollout.Backend",
+      "target": "symbol:tests.test_jev_rollout.Backend.close",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 24
+      },
+      "source": "symbol:tests.test_jev_rollout.Backend",
+      "target": "symbol:tests.test_jev_rollout.Backend.decide",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 31
+      },
+      "source": "symbol:tests.test_jev_rollout.Backend.decide",
+      "target": "symbol:services.jev_decision.ChoiceAnswer",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 30
+      },
+      "source": "symbol:tests.test_jev_rollout.Backend.decide",
+      "target": "symbol:services.jev_decision.DecisionResult",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 35
+      },
+      "source": "symbol:tests.test_jev_rollout.Backend.decide",
+      "target": "symbol:services.jev_decision.Usage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 55
+      },
+      "source": "symbol:tests.test_jev_rollout.test_off_and_invalid_config_never_call_backend",
+      "target": "symbol:services.jev_rollout.decide_route",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 52
+      },
+      "source": "symbol:tests.test_jev_rollout.test_off_and_invalid_config_never_call_backend",
+      "target": "symbol:tests.test_jev_rollout.Backend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 55
+      },
+      "source": "symbol:tests.test_jev_rollout.test_off_and_invalid_config_never_call_backend",
+      "target": "symbol:tests.test_jev_rollout.state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 107
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_requires_approval_and_threshold",
+      "target": "symbol:services.jev_rollout.decide_route",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 109
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_requires_approval_and_threshold",
+      "target": "symbol:services.jev_rollout.decide_route",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 106
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_requires_approval_and_threshold",
+      "target": "symbol:tests.test_jev_rollout.Backend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 107
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_requires_approval_and_threshold",
+      "target": "symbol:tests.test_jev_rollout.state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 109
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_requires_approval_and_threshold",
+      "target": "symbol:tests.test_jev_rollout.state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 123
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency",
+      "target": "symbol:services.jev_rollout.decide_route",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 125
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency",
+      "target": "symbol:services.jev_rollout.decide_route",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 127
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency",
+      "target": "symbol:services.jev_rollout.decide_route",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 129
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency",
+      "target": "symbol:services.jev_rollout.decide_route",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 130
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency",
+      "target": "symbol:services.jev_rollout.decide_route",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 120
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency",
+      "target": "symbol:services.jev_rollout.set_jev_rollout_telemetry_hook",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 132
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency",
+      "target": "symbol:services.jev_rollout.set_jev_rollout_telemetry_hook",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 122
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency",
+      "target": "symbol:tests.test_jev_rollout.Backend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 124
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency",
+      "target": "symbol:tests.test_jev_rollout.Backend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 126
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency",
+      "target": "symbol:tests.test_jev_rollout.Backend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 128
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency",
+      "target": "symbol:tests.test_jev_rollout.Backend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 117
+      },
+      "source": "symbol:tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency",
+      "target": "symbol:tests.test_jev_rollout.state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 152
+      },
+      "source": "symbol:tests.test_jev_rollout.test_python_gate_precedes_jev_and_rollback_uses_baseline",
+      "target": "symbol:agents.router.dm_router_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 156
+      },
+      "source": "symbol:tests.test_jev_rollout.test_python_gate_precedes_jev_and_rollback_uses_baseline",
+      "target": "symbol:services.jev_rollout.decide_route",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 148
+      },
+      "source": "symbol:tests.test_jev_rollout.test_python_gate_precedes_jev_and_rollback_uses_baseline",
+      "target": "symbol:tests.test_jev_rollout.Backend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 150
+      },
+      "source": "symbol:tests.test_jev_rollout.test_python_gate_precedes_jev_and_rollback_uses_baseline",
+      "target": "symbol:tests.test_jev_rollout.state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 156
+      },
+      "source": "symbol:tests.test_jev_rollout.test_python_gate_precedes_jev_and_rollback_uses_baseline",
+      "target": "symbol:tests.test_jev_rollout.state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 176
+      },
+      "source": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback",
+      "target": "symbol:agents.router.RouterDecision",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 172
+      },
+      "source": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback",
+      "target": "symbol:agents.router.dm_router_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 189
+      },
+      "source": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback",
+      "target": "symbol:agents.router.dm_router_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 165
+      },
+      "source": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback",
+      "target": "symbol:tests.test_jev_rollout.Backend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 172
+      },
+      "source": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback",
+      "target": "symbol:tests.test_jev_rollout.state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 189
+      },
+      "source": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback",
+      "target": "symbol:tests.test_jev_rollout.state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 181
+      },
+      "source": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback",
+      "target": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback.LLM",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 168
+      },
+      "source": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback",
+      "target": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback.forbidden_llm",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 185
+      },
+      "source": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback.LLM",
+      "target": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback.LLM.invoke",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 182
+      },
+      "source": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback.LLM",
+      "target": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback.LLM.with_structured_output",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 69
+      },
+      "source": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state",
+      "target": "symbol:agents.router.RouterDecision",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 87
+      },
+      "source": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state",
+      "target": "symbol:agents.router.dm_router_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 85
+      },
+      "source": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state",
+      "target": "symbol:services.jev_rollout.set_jev_rollout_telemetry_hook",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 89
+      },
+      "source": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state",
+      "target": "symbol:services.jev_rollout.set_jev_rollout_telemetry_hook",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 61
+      },
+      "source": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state",
+      "target": "symbol:tests.test_jev_rollout.Backend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 82
+      },
+      "source": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state",
+      "target": "symbol:tests.test_jev_rollout.state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 74
+      },
+      "source": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state",
+      "target": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state.LLM",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 64
+      },
+      "source": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state",
+      "target": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state.build_backend",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 78
+      },
+      "source": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state.LLM",
+      "target": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state.LLM.invoke",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_rollout.py",
+        "line": 75
+      },
+      "source": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state.LLM",
+      "target": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state.LLM.with_structured_output",
+      "type": "defines"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
@@ -162045,6 +163024,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:services/jev_rollout.py",
+      "kind": "file",
+      "line": 1,
+      "path": "services/jev_rollout.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:services/job_fence.py",
       "kind": "file",
       "line": 1,
@@ -163071,6 +164057,13 @@
       "kind": "file",
       "line": 1,
       "path": "tests/test_jev_decision_backend.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_jev_rollout.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_jev_rollout.py",
       "qualified_name": null
     },
     {
@@ -165090,6 +166083,13 @@
       "qualified_name": "services.jev_decision"
     },
     {
+      "id": "module:services.jev_rollout",
+      "kind": "module",
+      "line": 1,
+      "path": "services/jev_rollout.py",
+      "qualified_name": "services.jev_rollout"
+    },
+    {
       "id": "module:services.job_fence",
       "kind": "module",
       "line": 1,
@@ -166117,6 +167117,13 @@
       "line": 1,
       "path": "tests/test_jev_decision_backend.py",
       "qualified_name": "tests.test_jev_decision_backend"
+    },
+    {
+      "id": "module:tests.test_jev_rollout",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout"
     },
     {
       "id": "module:tests.test_jev_router_ab_experiment",
@@ -180357,6 +181364,62 @@
       "qualified_name": "services.jev_decision._wire_json"
     },
     {
+      "id": "symbol:services.jev_rollout.JevRolloutEvent",
+      "kind": "class",
+      "line": 46,
+      "path": "services/jev_rollout.py",
+      "qualified_name": "services.jev_rollout.JevRolloutEvent"
+    },
+    {
+      "id": "symbol:services.jev_rollout._emit",
+      "kind": "function",
+      "line": 70,
+      "path": "services/jev_rollout.py",
+      "qualified_name": "services.jev_rollout._emit"
+    },
+    {
+      "id": "symbol:services.jev_rollout._idempotency_key",
+      "kind": "function",
+      "line": 109,
+      "path": "services/jev_rollout.py",
+      "qualified_name": "services.jev_rollout._idempotency_key"
+    },
+    {
+      "id": "symbol:services.jev_rollout._request",
+      "kind": "function",
+      "line": 90,
+      "path": "services/jev_rollout.py",
+      "qualified_name": "services.jev_rollout._request"
+    },
+    {
+      "id": "symbol:services.jev_rollout._threshold",
+      "kind": "function",
+      "line": 83,
+      "path": "services/jev_rollout.py",
+      "qualified_name": "services.jev_rollout._threshold"
+    },
+    {
+      "id": "symbol:services.jev_rollout.decide_route",
+      "kind": "function",
+      "line": 117,
+      "path": "services/jev_rollout.py",
+      "qualified_name": "services.jev_rollout.decide_route"
+    },
+    {
+      "id": "symbol:services.jev_rollout.rollout_mode",
+      "kind": "function",
+      "line": 78,
+      "path": "services/jev_rollout.py",
+      "qualified_name": "services.jev_rollout.rollout_mode"
+    },
+    {
+      "id": "symbol:services.jev_rollout.set_jev_rollout_telemetry_hook",
+      "kind": "function",
+      "line": 63,
+      "path": "services/jev_rollout.py",
+      "qualified_name": "services.jev_rollout.set_jev_rollout_telemetry_hook"
+    },
+    {
       "id": "symbol:services.job_fence.job_scope",
       "kind": "function",
       "line": 15,
@@ -193587,6 +194650,146 @@
       "qualified_name": "tests.test_jev_decision_backend.test_total_deadline_rejects_slow_success.handler"
     },
     {
+      "id": "symbol:tests.test_jev_rollout.Backend",
+      "kind": "class",
+      "line": 15,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.Backend"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.Backend.__init__",
+      "kind": "test",
+      "line": 16,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.Backend.__init__"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.Backend.close",
+      "kind": "test",
+      "line": 39,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.Backend.close"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.Backend.decide",
+      "kind": "test",
+      "line": 24,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.Backend.decide"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.state",
+      "kind": "test",
+      "line": 43,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.state"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_off_and_invalid_config_never_call_backend",
+      "kind": "test",
+      "line": 51,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_off_and_invalid_config_never_call_backend"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_primary_requires_approval_and_threshold",
+      "kind": "test",
+      "line": 103,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_primary_requires_approval_and_threshold"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency",
+      "kind": "test",
+      "line": 113,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_primary_threshold_unrepresentable_error_and_idempotency"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_python_gate_precedes_jev_and_rollback_uses_baseline",
+      "kind": "test",
+      "line": 144,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_python_gate_precedes_jev_and_rollback_uses_baseline"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_question_contract_matches_frozen_ab",
+      "kind": "test",
+      "line": 193,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_question_contract_matches_frozen_ab"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback",
+      "kind": "test",
+      "line": 160,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback.LLM",
+      "kind": "class",
+      "line": 181,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback.LLM"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback.LLM.invoke",
+      "kind": "test",
+      "line": 185,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback.LLM.invoke"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback.LLM.with_structured_output",
+      "kind": "test",
+      "line": 182,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback.LLM.with_structured_output"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback.forbidden_llm",
+      "kind": "test",
+      "line": 168,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_router_primary_candidate_and_error_fallback.forbidden_llm"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state",
+      "kind": "test",
+      "line": 59,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state.LLM",
+      "kind": "class",
+      "line": 74,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state.LLM"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state.LLM.invoke",
+      "kind": "test",
+      "line": 78,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state.LLM.invoke"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state.LLM.with_structured_output",
+      "kind": "test",
+      "line": 75,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state.LLM.with_structured_output"
+    },
+    {
+      "id": "symbol:tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state.build_backend",
+      "kind": "test",
+      "line": 64,
+      "path": "tests/test_jev_rollout.py",
+      "qualified_name": "tests.test_jev_rollout.test_shadow_observes_but_keeps_baseline_route_and_state.build_backend"
+    },
+    {
       "id": "symbol:tests.test_jev_router_ab_experiment.test_budget_stops_before_next_external_call",
       "kind": "test",
       "line": 39,
@@ -200602,5 +201805,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:36276cffbc6bd3415aeb9c0cead41317926b650c2717605a708ff6acdccd2818"
+  "source_tree_hash": "sha256:f9945818e50c379766a51877635e38580c1c87707dc676d7674c2ea0a50425cb"
 }
