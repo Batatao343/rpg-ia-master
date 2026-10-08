@@ -79,6 +79,16 @@ def test_reserva_worker_e_promocao_de_arte_no_postgres_local(tmp_path):
     assert {row["variant"] for row in repository.assets(principal, generation_id)} == {
         "full", "thumb",
     }
+    with pool.connection() as connection:
+        row = connection.execute(
+            """select u.category,u.provider,u.model,u.image_units,u.cost_basis,u.cost_usd,
+                      o.kind from app.usage_events u join app.operations o on o.id=u.operation_id
+               where u.operation_id=%s""", (generation_id,),
+        ).fetchone()
+    assert row is not None
+    assert row["category"] == "image" and row["kind"] == "art"
+    assert row["provider"] == "openai" and row["model"] == "gpt-image-2-2026-04-21"
+    assert row["image_units"] == 1 and row["cost_basis"] == "provider_reported"
     # A retry after promotion must not call the expensive provider again.
     assert repository.begin(generation_id) is False
     store.delete(principal, game_id)

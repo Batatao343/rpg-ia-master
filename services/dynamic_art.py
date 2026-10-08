@@ -112,6 +112,37 @@ class DynamicArtRepository:
             ).fetchone()
             if not generation or generation['status'] != 'generating':
                 raise Conflict("geração não encontrada")
+            # The background generation is a logical art operation of its own.
+            # Persist its content-free usage with the asset in one transaction.
+            from infrastructure.usage_events import append_usage_events
+            from services.usage_metering import normalize_attempts, safe_provider_usage
+
+            safe_usage = safe_provider_usage(result.get("usage"), image_generated=True)
+            connection.execute(
+                """insert into app.operations
+                  (id,owner_id,game_id,kind,status,request_sha256,finished_at)
+                values (%s,%s,%s,'art','completed',%s,now())
+                on conflict (id) do nothing""",
+                (generation_id, generation["owner_id"], generation["game_id"],
+                 generation["prompt_hash"]),
+            )
+            operation = connection.execute(
+                """select kind,request_sha256 from app.operations
+                where id=%s and owner_id=%s and game_id=%s""",
+                (generation_id, generation["owner_id"], generation["game_id"]),
+            ).fetchone()
+            if (not operation or operation["kind"] != "art"
+                    or operation["request_sha256"] != generation["prompt_hash"]):
+                raise Conflict("operação de imagem divergiu")
+            usage_events = normalize_attempts([{
+                "provider": "openai", "model": result.get("model") or generation["model"],
+                "outcome": "success", "network_attempted": True, "usage": safe_usage,
+            }], operation_id=generation_id, component="image", category="image")
+            append_usage_events(
+                connection, owner_id=generation["owner_id"],
+                operation_id=generation_id, game_id=generation["game_id"],
+                events=usage_events,
+            )
             display_asset_id = None
             for variant in variants:
                 row_id = uuid5(NAMESPACE_URL, f"{asset_id}:{variant['variant']}")
@@ -134,7 +165,7 @@ class DynamicArtRepository:
             connection.execute(
                 """update app.art_generations set status='ready',asset_id=%s,
                 usage_json=%s,updated_at=now() where generation_id=%s""",
-                (display_asset_id, Jsonb(result.get("usage") or {}), generation_id),
+                (display_asset_id, Jsonb(safe_usage), generation_id),
             )
 
     def fail(self, generation_id: UUID, error_code: str, *, retryable: bool = True) -> None:

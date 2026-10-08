@@ -21,7 +21,7 @@ LABELS = {
     "rpg_db_pool": {"state"},
     "rpg_llm_attempts_total": {"provider", "tier", "outcome"},
     "rpg_llm_duration_seconds": {"provider", "tier", "outcome"},
-    "rpg_llm_cost_usd_total": {"provider", "tier"},
+    "rpg_llm_cost_usd_total": {"provider", "tier", "basis"},
     "rpg_rag_duration_seconds": {"scope", "outcome"},
     "rpg_memory_embedding_backlog": {"status"},
     "rpg_jobs": {"kind", "status"},

@@ -1,0 +1,42 @@
+{
+  "version": "2026-10-08-v1",
+  "observed_at": "2026-10-08",
+  "models": {
+    "groq:openai/gpt-oss-20b": {
+      "input_per_million": "0.075",
+      "cached_input_per_million": "0.037",
+      "output_per_million": "0.30",
+      "max_input_units": 131072,
+      "max_output_units": 65536,
+      "pricing_mode": "published_fixed",
+      "source": "https://console.groq.com/docs/models"
+    },
+    "groq:openai/gpt-oss-120b": {
+      "input_per_million": "0.15",
+      "cached_input_per_million": "0.075",
+      "output_per_million": "0.60",
+      "max_input_units": 131072,
+      "max_output_units": 65536,
+      "pricing_mode": "published_fixed",
+      "source": "https://console.groq.com/docs/models"
+    },
+    "deepseek:deepseek-flash": {
+      "input_per_million": "0.30",
+      "cached_input_per_million": "0.006",
+      "output_per_million": "1.20",
+      "max_input_units": 1000000,
+      "max_output_units": 384000,
+      "pricing_mode": "conservative_peak",
+      "source": "https://api-docs.deepseek.com/quick_start/pricing/"
+    },
+    "deepseek:deepseek-v4-flash": {
+      "input_per_million": "0.30",
+      "cached_input_per_million": "0.006",
+      "output_per_million": "1.20",
+      "max_input_units": 1000000,
+      "max_output_units": 384000,
+      "pricing_mode": "conservative_peak",
+      "source": "https://api-docs.deepseek.com/quick_start/pricing/"
+    }
+  }
+}

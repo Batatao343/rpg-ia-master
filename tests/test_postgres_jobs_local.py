@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import os
 from uuid import uuid4
+from decimal import Decimal
 
 import pytest
 
 from infrastructure.contracts import JobRequest, LeaseHeld, Principal
+from infrastructure.contracts import Conflict
+from services.usage_metering import normalize_attempts, operation_cost
 
 
 pytestmark = pytest.mark.infra_local
@@ -90,9 +93,17 @@ def test_commit_de_turno_confirma_estado_eventos_e_receipt_na_mesma_transacao(in
         "event_id": "evt-commit", "type": "quest_completed", "turn": 1,
         "payload": {"quest_title": "Teste"}, "source": "test",
     }]
+    usage_events = normalize_attempts([
+        {"provider": "groq", "model": "openai/gpt-oss-20b", "outcome": "invalid_structured",
+         "network_attempted": True, "usage": {"input_tokens": 1000, "output_tokens": 100}},
+        {"provider": "groq", "model": "openai/gpt-oss-120b", "outcome": "success",
+         "network_attempted": True, "usage": {"input_tokens": 800, "output_tokens": 200}},
+    ], operation_id=operation_id)
     version, receipt = coordinator.commit_game(
         principal, claim, changed, receipt={"response": {"game_id": str(game_id)}},
-        input_sha256="d" * 64, latency_ms=12, llm_cost_usd=0.0, checkpoint=True,
+        input_sha256="d" * 64, latency_ms=12,
+        llm_cost_usd=operation_cost(usage_events), usage_events=usage_events,
+        checkpoint=True,
     )
     assert version == created.version + 1
     assert receipt["committed_version"] == version
@@ -107,6 +118,77 @@ def test_commit_de_turno_confirma_estado_eventos_e_receipt_na_mesma_transacao(in
         assert connection.execute(
             "select count(*) as n from app.game_checkpoints where game_id=%s", (game_id,),
         ).fetchone()["n"] == 1
+        turn = connection.execute(
+            "select llm_cost_usd from app.turns where operation_id=%s", (operation_id,),
+        ).fetchone()
+        assert turn["llm_cost_usd"] == operation_cost(usage_events)
+        ledger = connection.execute(
+            "select cost_usd,cost_basis,pricing_version,input_units from app.usage_events "
+            "where operation_id=%s order by attempt_ordinal", (operation_id,),
+        ).fetchall()
+        assert len(ledger) == 2
+        assert sum((row["cost_usd"] for row in ledger), Decimal("0")) == turn["llm_cost_usd"]
+        assert all(row["cost_basis"] == "token_priced" for row in ledger)
+        assert all(row["pricing_version"] for row in ledger)
+    store.delete(principal, game_id)
+
+
+def test_usage_ledger_replay_is_idempotent_and_divergence_rolls_back(infra):
+    store, _, coordinator, _ = infra
+    from infrastructure.usage_events import append_usage_events
+
+    owner_id, game_id, operation_id = uuid4(), uuid4(), uuid4()
+    principal = Principal(owner_id, "test", str(owner_id), local=True)
+    created = store.create(principal, _state(game_id))
+    coordinator.claim(principal, operation_id, game_id=game_id, kind="turn",
+                      request_hash="e" * 64, base_version=created.version)
+    original = normalize_attempts([{
+        "provider": "groq", "model": "openai/gpt-oss-20b", "outcome": "success",
+        "network_attempted": True, "usage": {"input_tokens": 20, "output_tokens": 5},
+    }], operation_id=operation_id)
+    changed = normalize_attempts([{
+        "provider": "groq", "model": "openai/gpt-oss-20b", "outcome": "success",
+        "network_attempted": True, "usage": {"input_tokens": 21, "output_tokens": 5},
+    }], operation_id=operation_id)
+    with coordinator.pool.connection() as connection:
+        with connection.transaction():
+            append_usage_events(connection, owner_id=owner_id, operation_id=operation_id,
+                                game_id=game_id, events=original)
+            append_usage_events(connection, owner_id=owner_id, operation_id=operation_id,
+                                game_id=game_id, events=original)
+            assert connection.execute(
+                "select count(*) as n from app.usage_events where operation_id=%s",
+                (operation_id,),
+            ).fetchone()["n"] == 1
+        with pytest.raises(Conflict), connection.transaction():
+            append_usage_events(connection, owner_id=owner_id, operation_id=operation_id,
+                                game_id=game_id, events=changed)
+        with pytest.raises(Conflict), connection.transaction():
+            append_usage_events(connection, owner_id=uuid4(), operation_id=operation_id,
+                                game_id=game_id, events=original)
+        assert connection.execute(
+            "select input_units from app.usage_events where operation_id=%s",
+            (operation_id,),
+        ).fetchone()["input_units"] == 20
+        with connection.transaction():
+            connection.execute("set local role rpg_api")
+            connection.execute("select set_config('request.jwt.claim.sub',%s,true)",
+                               (str(owner_id),))
+            assert connection.execute(
+                "select count(*) as n from app.usage_events where operation_id=%s",
+                (operation_id,),
+            ).fetchone()["n"] == 1
+            assert connection.execute(
+                "select has_table_privilege('rpg_api','app.usage_events','UPDATE') as allowed",
+            ).fetchone()["allowed"] is False
+        with connection.transaction():
+            connection.execute("set local role rpg_api")
+            connection.execute("select set_config('request.jwt.claim.sub',%s,true)",
+                               (str(uuid4()),))
+            assert connection.execute(
+                "select count(*) as n from app.usage_events where operation_id=%s",
+                (operation_id,),
+            ).fetchone()["n"] == 0
     store.delete(principal, game_id)
 
 

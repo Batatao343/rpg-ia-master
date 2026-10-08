@@ -42,7 +42,7 @@ from llm_setup import (
     set_llm_attempt_telemetry_hook,
     set_llm_telemetry_hook,
 )
-from playtest import pricing as llm_pricing
+from services.usage_metering import normalize_attempts, operation_cost
 import progression
 from services import quest_log
 from services import state_views as sv
@@ -310,13 +310,7 @@ def _game_lock(game_id: Optional[str]) -> threading.RLock:
 
 def _telemetry_hook(provider: str, model: str, tier, latency_ms: int,
                     fell_back: bool) -> None:
-    from observability.metrics import metrics
     from observability.telemetry import span
-    metrics.increment(
-        "rpg_llm_cost_usd_total",
-        {"provider": provider, "tier": getattr(tier, "value", str(tier))},
-        amount=llm_pricing.estimate_cost(model),
-    )
     with span(
         "llm.invoke", provider=provider, tier=getattr(tier, "value", str(tier)),
         latency_ms=latency_ms, fell_back=fell_back,
@@ -344,6 +338,17 @@ def _attempt_telemetry_hook(event: LLMAttemptEvent) -> None:
         {"provider": event.provider, "tier": tier, "outcome": event.outcome},
         max(0, int(event.latency_ms)) / 1000,
     )
+    measured = normalize_attempts([{
+        "provider": event.provider, "model": event.model,
+        "outcome": event.outcome, "usage": event.usage,
+        "network_attempted": event.outcome not in {"build_error", "circuit_open"},
+    }], operation_id=uuid.UUID(int=0))
+    for item in measured:
+        metrics.increment(
+            "rpg_llm_cost_usd_total",
+            {"provider": event.provider, "tier": tier, "basis": item.cost_basis},
+            amount=float(item.cost_usd),
+        )
     acc = _llm_attempt_events.get()
     if acc is not None:
         network_attempted = event.outcome not in {"build_error", "circuit_open"}
@@ -355,9 +360,9 @@ def _attempt_telemetry_hook(event: LLMAttemptEvent) -> None:
             "latency_ms": int(event.latency_ms),
             "fell_back": bool(event.fell_back),
             "outcome": event.outcome,
-            "error": event.error,
             "structured": bool(event.structured),
             "network_attempted": network_attempted,
+            "usage": dict(event.usage) if event.usage else None,
         })
 
 
@@ -373,7 +378,8 @@ def _llm_log_fields(events: Optional[List[dict]],
         if event.get("network_attempted",
                      event.get("outcome") not in {"build_error", "circuit_open"})]
     skipped = [event for event in attempts if event not in network_attempts]
-    cost_events = network_attempts or events
+    cost_events = _usage_attempts(events, attempts)
+    normalized = normalize_attempts(cost_events, operation_id=uuid.UUID(int=0))
     return {
         "llm_calls": len(events),
         "llm_requests": len(network_attempts) if attempts else len(events),
@@ -385,8 +391,20 @@ def _llm_log_fields(events: Optional[List[dict]],
             event.get("outcome") or "?" for event in attempts)),
         "llm_providers": dict(Counter(e.get("provider") or "?" for e in events)),
         "fell_back": any(e.get("fell_back") for e in events),
-        "cost_usd_est": round(llm_pricing.turn_cost(cost_events), 6),
+        "cost_usd_est": round(float(operation_cost(normalized)), 9),
+        "cost_basis": "estimated" if any(not item.billing_exact for item in normalized)
+                      else "normalized",
     }
+
+
+def _usage_attempts(events: Optional[List[dict]],
+                    attempts: Optional[List[dict]]) -> List[dict]:
+    if attempts:
+        return list(attempts)
+    return [
+        {**event, "outcome": "success", "network_attempted": True}
+        for event in (events or [])
+    ]
 
 
 def _resolve_save_file(game_id: Optional[str]) -> Optional[str]:
@@ -2279,7 +2297,10 @@ def _commit_turn(
     commit = getattr(runtime.turn_coordinator, "commit_game", None)
     if not callable(commit):
         raise RuntimeError("coordinator durável sem commit transacional")
-    cost_events = llm_attempts or llm_events
+    usage_events = normalize_attempts(
+        _usage_attempts(llm_events, llm_attempts),
+        operation_id=claim.operation_id,
+    )
     from observability.metrics import metrics
     db_started = time.monotonic()
     from observability.telemetry import span
@@ -2290,7 +2311,8 @@ def _commit_turn(
                 receipt={"response": response.model_dump(mode="json")},
                 input_sha256=request_hash,
                 latency_ms=latency_ms,
-                llm_cost_usd=llm_pricing.turn_cost(cost_events),
+                llm_cost_usd=operation_cost(usage_events),
+                usage_events=usage_events,
                 checkpoint=checkpoint,
             )
     except Exception:

@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 from datetime import timedelta
-from typing import Any, Mapping
+from decimal import Decimal
+from typing import Any, Mapping, Sequence
 from uuid import UUID, uuid4
 
 from psycopg.types.json import Jsonb
@@ -18,6 +19,7 @@ from infrastructure.contracts import (
     StaleVersion,
 )
 from infrastructure.postgres import PostgresPool
+from services.usage_metering import UsageEvent
 
 
 class PostgresTurnCoordinator:
@@ -120,9 +122,10 @@ class PostgresTurnCoordinator:
         receipt: Mapping[str, Any],
         input_sha256: str,
         latency_ms: int,
-        llm_cost_usd: float,
+        llm_cost_usd: Decimal | float,
         checkpoint: bool = False,
         record_turn: bool = True,
+        usage_events: Sequence[UsageEvent] = (),
     ) -> tuple[int, dict[str, Any]]:
         """Confirma jogo, eventos, turno e recibo sob o mesmo fencing token.
 
@@ -223,8 +226,15 @@ class PostgresTurnCoordinator:
                         int(continuity.get("timeline_epoch", 0) or 0),
                         str(document.get("next") or ""), input_sha256,
                         claim.base_version, committed_version, max(0, int(latency_ms)),
-                        max(0.0, float(llm_cost_usd)),
+                        max(Decimal("0"), Decimal(str(llm_cost_usd))),
                     ),
+                )
+            if usage_events:
+                from infrastructure.usage_events import append_usage_events
+                append_usage_events(
+                    connection, owner_id=principal.user_id,
+                    operation_id=claim.operation_id, game_id=claim.game_id,
+                    events=usage_events,
                 )
             persisted_receipt = dict(receipt)
             persisted_receipt["committed_version"] = committed_version

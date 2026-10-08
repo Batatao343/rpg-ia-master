@@ -10,6 +10,7 @@ from infrastructure.contracts import BlobMetadata
 from infrastructure.ports import ImageGenerationInput, ImageGenerator
 from services.art_brief import render_image_prompt
 from services.asset_pipeline import object_key, process_image
+from services.usage_metering import safe_provider_usage
 
 
 def generate_dynamic_art_job(*, generator: ImageGenerator, blob_store, generation: dict,
@@ -41,5 +42,6 @@ def generate_dynamic_art_job(*, generator: ImageGenerator, blob_store, generatio
                      for ref, variant in refs],
         "provider_request_id_hash": hashlib.sha256(
             str(generated.provider_request_id or "").encode()).hexdigest()[:16],
-        "model": generated.model, "usage": generated.usage,
+        "model": generated.model,
+        "usage": safe_provider_usage(generated.usage, image_generated=True),
     }
