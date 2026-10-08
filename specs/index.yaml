@@ -3197,13 +3197,13 @@ specs:
   lineage_note: Sol High implementation and independent review approved; predeclared decision NO_GO, default off, primary fails closed without separate calibration and promotion approval
 - id: SPEC-181
   slug: hosted-supabase-runtime-contract
-  status: approved
+  status: done
   path: specs/SPEC-181-hosted-supabase-runtime-contract.md
   created_commit: null
   created_at: '2026-10-02'
-  completed_commit: null
-  completed_at: null
-  completed_order: null
+  completed_commit: ff90ead9cb94c9bff3e2092758332bf9bfc12d16
+  completed_at: '2026-10-08'
+  completed_order: 180
   depends_on:
   - SPEC-180
   depends_on_raw:
@@ -3211,7 +3211,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Imported approved v5 package; implementation not started
+  lineage_note: Hosted Supabase profile with fail-closed DSN/auth/storage, bounded transaction pool, redacted cloud doctor; Sol High independent review approved and local audit passed; no remote resources created
 - id: SPEC-182
   slug: real-usage-metering
   status: approved

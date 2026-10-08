@@ -1,5 +1,20 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **08/10 — SPEC-181 `done`; hosted-Supabase pronto para configuração cloud.**
+> Novo `RPG_RUNTIME_PROFILE=hosted-supabase` compõe Auth/Storage Supabase com
+> Postgres/pgvector e pool transacional serverless (0..1 por instância por
+> default). `hosted`/`portable` seguem OIDC+S3. Validação fail-closed rejeita
+> DSN com overrides libpq, multihost, socket Unix, aliases de loopback e
+> project ref divergente; chave elevada só no backend, doctor read-only sem
+> valores sensíveis. Pool desativa prepared statements e aplica timeouts
+> transacionais. Revisão Sol High independente **APPROVED** após 33 probes
+> negativos; [evidência](docs/spec181/README.md) e
+> [parecer](handoffs/SPEC-181-SOL-independent-review.md). Suíte completa:
+> **2.010 passed, 36 skipped, 15 deselected**; teste local de concorrência
+> atingiu pico 2 com limite 2; audit-local passou 25 testes em execução
+> isolada. Nenhum recurso remoto criado; conectividade hosted real não foi
+> testada. Próxima: SPEC-182 (metering real), dependente desta spec.
+
 > **07/10 — SPEC-180 `done`; decisão Jev `NO_GO`, default `off`.** Inventário
 > por source: cinco callsites CLASSIFY. SPEC-178 perdeu 2/48 acertos do baseline
 > em rota; SPEC-179 ganhou +1 líquido em target representável, mas perdeu dois

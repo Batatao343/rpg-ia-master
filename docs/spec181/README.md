@@ -71,4 +71,22 @@ Teste com sentinelas verificou ausência de todos os valores no stdout.
   conexão cloud. O teste é `infra_local` opt-in.
 - `cloud_doctor` é read-only; não há migração SQL nem mudança de esquema.
 
-Revisão Sol High independente e gates finais serão registrados no fechamento.
+## Fechamento
+
+Implementação revisada em `ff90ead9cb94c9bff3e2092758332bf9bfc12d16`.
+Sol High independente aprovou após **33 probes negativos bloqueados**,
+incluindo overrides de DSN, multihost, sockets Unix, aliases numéricos de
+loopback e JWT sem `service_role`; parecer em
+`handoffs/SPEC-181-SOL-independent-review.md` (`review_run_id`
+`SPEC-181-SOL-ff90ead-final-01`).
+
+- Testes focados do executor: **53 passed**; Ruff verde.
+- Suíte offline completa no source final: **2.010 passed, 36 skipped,
+  15 deselected**.
+- Audit-local isolado: **25 passed**; frontend compilado e Supabase local.
+  Uma execução concorrente com a suíte teve uma falha transitória no teste
+  visual 1440 px; o teste isolado passou 2/2, seguido do audit-local verde.
+- Project Index: `fresh_commit_drift` após commits, source hash
+  `sha256:420d8e6dbb52540a5c70ab58732c6eda4938912c46d1ac318eb3af2ae1194915`.
+- Nenhuma chamada ou recurso cloud remoto. O perfil hosted real ainda depende
+  da configuração e de um smoke no ambiente de destino.
