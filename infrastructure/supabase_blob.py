@@ -20,7 +20,11 @@ class SupabaseBlobStore:
         self.timeout = timeout
 
     def _headers(self, content_type: str | None = None) -> dict[str, str]:
-        headers = {"apikey": self._key, "Authorization": f"Bearer {self._key}"}
+        headers = {"apikey": self._key}
+        # Modern sb_secret keys are API keys, not JWTs. Legacy service_role
+        # JWTs still need Authorization for Storage's RLS bypass path.
+        if not self._key.startswith("sb_secret_"):
+            headers["Authorization"] = f"Bearer {self._key}"
         if content_type:
             headers["Content-Type"] = content_type
         return headers

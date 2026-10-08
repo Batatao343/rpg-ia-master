@@ -5,6 +5,7 @@ from __future__ import annotations
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from typing import Any, Iterator
+from urllib.parse import parse_qs, urlsplit
 from uuid import UUID
 
 from infrastructure.contracts import Conflict, NotFound, Principal, StaleVersion, StoredGame
@@ -29,16 +30,25 @@ except ImportError:  # pragma: no cover - erro acionável no extra opcional
 
 
 class PostgresPool:
-    def __init__(self, dsn: str, *, min_size: int = 0, max_size: int = 4, timeout: float = 5.0):
+    def __init__(self, dsn: str, *, min_size: int = 0, max_size: int = 4,
+                 timeout: float = 5.0, transaction_pooler: bool = False):
         if ConnectionPool is None:
             raise RuntimeError("instale o extra postgres: uv sync --extra postgres")
+        kwargs: dict[str, Any] = {"row_factory": dict_row, "connect_timeout": 5}
+        if transaction_pooler:
+            # Supavisor transaction mode cannot preserve prepared/session state.
+            # Keep verify-full if already requested; never downgrade TLS.
+            sslmodes = parse_qs(urlsplit(dsn).query).get("sslmode", [])
+            kwargs["sslmode"] = "verify-full" if "verify-full" in sslmodes else "require"
+            kwargs["prepare_threshold"] = None
+        else:
+            kwargs["options"] = "-c statement_timeout=15000 -c lock_timeout=5000"
         self._pool = ConnectionPool(
             conninfo=dsn,
             min_size=min_size,
             max_size=max_size,
             timeout=timeout,
-            kwargs={"row_factory": dict_row, "connect_timeout": 5,
-                    "options": "-c statement_timeout=15000 -c lock_timeout=5000"},
+            kwargs=kwargs,
             open=True,
         )
 

@@ -1,5 +1,5 @@
 {
-  "commit_sha": "b25bed2349196caeb1fe8690b3e0dcd1d2ea280d",
+  "commit_sha": "e2163ff425ab6a29dcc2b7c5047a84166cda613e",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -1352,6 +1352,17 @@
       },
       "source": "file:scripts/ci_eval_scope.py",
       "target": "module:scripts.ci_eval_scope",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cloud_doctor.py",
+        "line": 1
+      },
+      "source": "file:scripts/cloud_doctor.py",
+      "target": "module:scripts.cloud_doctor",
       "type": "contains"
     },
     {
@@ -6687,6 +6698,50 @@
       },
       "source": "file:tests/test_hardening_persistencia_sse.py",
       "target": "module:tests.test_hardening_persistencia_sse",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 10
+      },
+      "source": "file:tests/test_hosted_supabase_contract.py",
+      "target": "file:infrastructure/runtime.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 1
+      },
+      "source": "file:tests/test_hosted_supabase_contract.py",
+      "target": "module:tests.test_hosted_supabase_contract",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_local.py",
+        "line": 12
+      },
+      "source": "file:tests/test_hosted_supabase_local.py",
+      "target": "file:infrastructure/postgres.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_local.py",
+        "line": 1
+      },
+      "source": "file:tests/test_hosted_supabase_local.py",
+      "target": "module:tests.test_hosted_supabase_local",
       "type": "contains"
     },
     {
@@ -16594,7 +16649,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 10
+        "line": 11
       },
       "source": "module:infrastructure.postgres",
       "target": "module:infrastructure.contracts",
@@ -16605,7 +16660,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 11
+        "line": 12
       },
       "source": "module:infrastructure.postgres",
       "target": "module:services.game_serialization",
@@ -16616,7 +16671,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 65
+        "line": 75
       },
       "source": "module:infrastructure.postgres",
       "target": "symbol:infrastructure.postgres.PostgresGameStore",
@@ -16627,7 +16682,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 31
+        "line": 32
       },
       "source": "module:infrastructure.postgres",
       "target": "symbol:infrastructure.postgres.PostgresPool",
@@ -16638,7 +16693,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 54
+        "line": 64
       },
       "source": "module:infrastructure.postgres",
       "target": "symbol:infrastructure.postgres._stored",
@@ -16825,7 +16880,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 12
+        "line": 14
       },
       "source": "module:infrastructure.runtime",
       "target": "module:infrastructure.contracts",
@@ -16836,7 +16891,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 23
+        "line": 25
       },
       "source": "module:infrastructure.runtime",
       "target": "module:infrastructure.local_adapters",
@@ -16847,7 +16902,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 132
+        "line": 242
       },
       "source": "module:infrastructure.runtime",
       "target": "symbol:infrastructure.runtime.InfrastructureRuntime",
@@ -16858,7 +16913,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 38
+        "line": 104
       },
       "source": "module:infrastructure.runtime",
       "target": "symbol:infrastructure.runtime.RuntimeConfig",
@@ -16869,7 +16924,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 164
+        "line": 39
+      },
+      "source": "module:infrastructure.runtime",
+      "target": "symbol:infrastructure.runtime._loopback_host",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/runtime.py",
+        "line": 82
+      },
+      "source": "module:infrastructure.runtime",
+      "target": "symbol:infrastructure.runtime._supabase_api_ref",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/runtime.py",
+        "line": 274
       },
       "source": "module:infrastructure.runtime",
       "target": "symbol:infrastructure.runtime.build_database_runtime",
@@ -16880,7 +16957,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 145
+        "line": 255
       },
       "source": "module:infrastructure.runtime",
       "target": "symbol:infrastructure.runtime.build_legacy_runtime",
@@ -16891,7 +16968,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 239
+        "line": 356
       },
       "source": "module:infrastructure.runtime",
       "target": "symbol:infrastructure.runtime.build_runtime",
@@ -16902,7 +16979,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 250
+        "line": 367
       },
       "source": "module:infrastructure.runtime",
       "target": "symbol:infrastructure.runtime.get_runtime",
@@ -16913,7 +16990,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 265
+        "line": 51
+      },
+      "source": "module:infrastructure.runtime",
+      "target": "symbol:infrastructure.runtime.hosted_supabase_dsn_ref",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/runtime.py",
+        "line": 382
       },
       "source": "module:infrastructure.runtime",
       "target": "symbol:infrastructure.runtime.reset_runtime",
@@ -16924,7 +17012,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 259
+        "line": 376
       },
       "source": "module:infrastructure.runtime",
       "target": "symbol:infrastructure.runtime.set_runtime",
@@ -22296,6 +22384,39 @@
       },
       "source": "module:scripts.ci_eval_scope",
       "target": "symbol:scripts.ci_eval_scope.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cloud_doctor.py",
+        "line": 14
+      },
+      "source": "module:scripts.cloud_doctor",
+      "target": "module:infrastructure.runtime",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cloud_doctor.py",
+        "line": 43
+      },
+      "source": "module:scripts.cloud_doctor",
+      "target": "symbol:scripts.cloud_doctor.diagnose",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cloud_doctor.py",
+        "line": 79
+      },
+      "source": "module:scripts.cloud_doctor",
+      "target": "symbol:scripts.cloud_doctor.main",
       "type": "defines"
     },
     {
@@ -51408,6 +51529,127 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 10
+      },
+      "source": "module:tests.test_hosted_supabase_contract",
+      "target": "module:infrastructure.runtime",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 13
+      },
+      "source": "module:tests.test_hosted_supabase_contract",
+      "target": "symbol:tests.test_hosted_supabase_contract.hosted_env",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 164
+      },
+      "source": "module:tests.test_hosted_supabase_contract",
+      "target": "symbol:tests.test_hosted_supabase_contract.test_blob_headers_distinguish_secret_api_key_from_legacy_jwt",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 177
+      },
+      "source": "module:tests.test_hosted_supabase_contract",
+      "target": "symbol:tests.test_hosted_supabase_contract.test_cloud_doctor_is_read_only_and_redacts_secrets",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 90
+      },
+      "source": "module:tests.test_hosted_supabase_contract",
+      "target": "symbol:tests.test_hosted_supabase_contract.test_hosted_pool_settings_and_backend_validation_before_pool",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 85
+      },
+      "source": "module:tests.test_hosted_supabase_contract",
+      "target": "symbol:tests.test_hosted_supabase_contract.test_hosted_rejects_unsafe_config",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 137
+      },
+      "source": "module:tests.test_hosted_supabase_contract",
+      "target": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 27
+      },
+      "source": "module:tests.test_hosted_supabase_contract",
+      "target": "symbol:tests.test_hosted_supabase_contract.test_new_profile_and_legacy_contracts",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 105
+      },
+      "source": "module:tests.test_hosted_supabase_contract",
+      "target": "symbol:tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_local.py",
+        "line": 12
+      },
+      "source": "module:tests.test_hosted_supabase_local",
+      "target": "module:infrastructure.postgres",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_local.py",
+        "line": 16
+      },
+      "source": "module:tests.test_hosted_supabase_local",
+      "target": "symbol:tests.test_hosted_supabase_local.test_pool_concurrent_active_connections_never_exceed_max",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_infrastructure_contracts.py",
         "line": 9
       },
@@ -76577,7 +76819,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 66
+        "line": 76
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore",
       "target": "symbol:infrastructure.postgres.PostgresGameStore.__init__",
@@ -76588,7 +76830,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 75
+        "line": 85
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore",
       "target": "symbol:infrastructure.postgres.PostgresGameStore._insert_events",
@@ -76599,7 +76841,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 70
+        "line": 80
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore",
       "target": "symbol:infrastructure.postgres.PostgresGameStore._prepare",
@@ -76610,7 +76852,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 103
+        "line": 113
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore",
       "target": "symbol:infrastructure.postgres.PostgresGameStore.create",
@@ -76621,7 +76863,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 184
+        "line": 194
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore",
       "target": "symbol:infrastructure.postgres.PostgresGameStore.delete",
@@ -76632,7 +76874,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 132
+        "line": 142
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore",
       "target": "symbol:infrastructure.postgres.PostgresGameStore.get",
@@ -76643,7 +76885,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 226
+        "line": 236
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore",
       "target": "symbol:infrastructure.postgres.PostgresGameStore.get_checkpoint",
@@ -76654,7 +76896,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 140
+        "line": 150
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore",
       "target": "symbol:infrastructure.postgres.PostgresGameStore.list",
@@ -76665,7 +76907,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 148
+        "line": 158
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore",
       "target": "symbol:infrastructure.postgres.PostgresGameStore.save",
@@ -76676,7 +76918,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 192
+        "line": 202
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore",
       "target": "symbol:infrastructure.postgres.PostgresGameStore.save_checkpoint",
@@ -76687,7 +76929,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 101
+        "line": 111
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore._insert_events",
       "target": "symbol:infrastructure.contracts.Conflict",
@@ -76698,7 +76940,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 81
+        "line": 91
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore._insert_events",
       "target": "symbol:services.game_serialization.document_sha256",
@@ -76709,7 +76951,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 80
+        "line": 90
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore._insert_events",
       "target": "symbol:services.game_serialization.event_document",
@@ -76720,7 +76962,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 72
+        "line": 82
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore._prepare",
       "target": "symbol:services.game_serialization.document_sha256",
@@ -76731,7 +76973,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 72
+        "line": 82
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore._prepare",
       "target": "symbol:services.game_serialization.game_projection",
@@ -76742,7 +76984,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 71
+        "line": 81
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore._prepare",
       "target": "symbol:services.game_serialization.serialize_game_state",
@@ -76753,7 +76995,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 127
+        "line": 137
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore.create",
       "target": "symbol:infrastructure.contracts.Conflict",
@@ -76764,7 +77006,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 130
+        "line": 140
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore.create",
       "target": "symbol:infrastructure.postgres._stored",
@@ -76775,7 +77017,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 138
+        "line": 148
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore.get",
       "target": "symbol:infrastructure.postgres._stored",
@@ -76786,7 +77028,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 232
+        "line": 242
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore.get_checkpoint",
       "target": "symbol:services.game_serialization.deserialize_game_state",
@@ -76797,7 +77039,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 146
+        "line": 156
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore.list",
       "target": "symbol:infrastructure.postgres._stored",
@@ -76808,7 +77050,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 152
+        "line": 162
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore.save",
       "target": "symbol:infrastructure.contracts.Conflict",
@@ -76819,7 +77061,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 180
+        "line": 190
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore.save",
       "target": "symbol:infrastructure.contracts.NotFound",
@@ -76830,7 +77072,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 179
+        "line": 189
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore.save",
       "target": "symbol:infrastructure.contracts.StaleVersion",
@@ -76841,7 +77083,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 182
+        "line": 192
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore.save",
       "target": "symbol:infrastructure.postgres._stored",
@@ -76852,7 +77094,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 203
+        "line": 213
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore.save_checkpoint",
       "target": "symbol:infrastructure.contracts.StaleVersion",
@@ -76863,7 +77105,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 222
+        "line": 232
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore.save_checkpoint",
       "target": "symbol:services.game_serialization.document_sha256",
@@ -76874,7 +77116,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 194
+        "line": 204
       },
       "source": "symbol:infrastructure.postgres.PostgresGameStore.save_checkpoint",
       "target": "symbol:services.game_serialization.serialize_game_state",
@@ -76885,7 +77127,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 32
+        "line": 33
       },
       "source": "symbol:infrastructure.postgres.PostgresPool",
       "target": "symbol:infrastructure.postgres.PostgresPool.__init__",
@@ -76896,7 +77138,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 50
+        "line": 60
       },
       "source": "symbol:infrastructure.postgres.PostgresPool",
       "target": "symbol:infrastructure.postgres.PostgresPool.close",
@@ -76907,7 +77149,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 46
+        "line": 56
       },
       "source": "symbol:infrastructure.postgres.PostgresPool",
       "target": "symbol:infrastructure.postgres.PostgresPool.connection",
@@ -76918,7 +77160,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 55
+        "line": 65
       },
       "source": "symbol:infrastructure.postgres._stored",
       "target": "symbol:infrastructure.contracts.StoredGame",
@@ -76929,7 +77171,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres.py",
-        "line": 60
+        "line": 70
       },
       "source": "symbol:infrastructure.postgres._stored",
       "target": "symbol:services.game_serialization.deserialize_game_state",
@@ -77501,7 +77743,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 56
+        "line": 125
       },
       "source": "symbol:infrastructure.runtime.RuntimeConfig",
       "target": "symbol:infrastructure.runtime.RuntimeConfig.from_env",
@@ -77512,7 +77754,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 88
+        "line": 169
       },
       "source": "symbol:infrastructure.runtime.RuntimeConfig",
       "target": "symbol:infrastructure.runtime.RuntimeConfig.validate",
@@ -77523,7 +77765,62 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 222
+        "line": 183
+      },
+      "source": "symbol:infrastructure.runtime.RuntimeConfig.validate",
+      "target": "symbol:infrastructure.runtime._loopback_host",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/runtime.py",
+        "line": 203
+      },
+      "source": "symbol:infrastructure.runtime.RuntimeConfig.validate",
+      "target": "symbol:infrastructure.runtime._loopback_host",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/runtime.py",
+        "line": 209
+      },
+      "source": "symbol:infrastructure.runtime.RuntimeConfig.validate",
+      "target": "symbol:infrastructure.runtime._loopback_host",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/runtime.py",
+        "line": 235
+      },
+      "source": "symbol:infrastructure.runtime.RuntimeConfig.validate",
+      "target": "symbol:infrastructure.runtime._supabase_api_ref",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/runtime.py",
+        "line": 235
+      },
+      "source": "symbol:infrastructure.runtime.RuntimeConfig.validate",
+      "target": "symbol:infrastructure.runtime.hosted_supabase_dsn_ref",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/runtime.py",
+        "line": 339
       },
       "source": "symbol:infrastructure.runtime.build_database_runtime",
       "target": "symbol:infrastructure.runtime.InfrastructureRuntime",
@@ -77534,7 +77831,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 148
+        "line": 258
       },
       "source": "symbol:infrastructure.runtime.build_legacy_runtime",
       "target": "symbol:infrastructure.contracts.Principal",
@@ -77545,7 +77842,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 156
+        "line": 266
       },
       "source": "symbol:infrastructure.runtime.build_legacy_runtime",
       "target": "symbol:infrastructure.local_adapters.FileBlobStore",
@@ -77556,7 +77853,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 151
+        "line": 261
       },
       "source": "symbol:infrastructure.runtime.build_legacy_runtime",
       "target": "symbol:infrastructure.local_adapters.FileGameStore",
@@ -77567,7 +77864,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 160
+        "line": 270
       },
       "source": "symbol:infrastructure.runtime.build_legacy_runtime",
       "target": "symbol:infrastructure.local_adapters.FixedIdentityVerifier",
@@ -77578,7 +77875,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 152
+        "line": 262
       },
       "source": "symbol:infrastructure.runtime.build_legacy_runtime",
       "target": "symbol:infrastructure.local_adapters.InMemoryMemoryStore",
@@ -77589,7 +77886,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 157
+        "line": 267
       },
       "source": "symbol:infrastructure.runtime.build_legacy_runtime",
       "target": "symbol:infrastructure.local_adapters.InProcessTurnCoordinator",
@@ -77600,7 +77897,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 158
+        "line": 268
       },
       "source": "symbol:infrastructure.runtime.build_legacy_runtime",
       "target": "symbol:infrastructure.local_adapters.InlineJobQueue",
@@ -77611,7 +77908,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 153
+        "line": 263
       },
       "source": "symbol:infrastructure.runtime.build_legacy_runtime",
       "target": "symbol:infrastructure.local_adapters.LegacyRuntimeCatalogStore",
@@ -77622,7 +77919,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 159
+        "line": 269
       },
       "source": "symbol:infrastructure.runtime.build_legacy_runtime",
       "target": "symbol:infrastructure.local_adapters.MemoryRateLimiter",
@@ -77633,7 +77930,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 149
+        "line": 259
       },
       "source": "symbol:infrastructure.runtime.build_legacy_runtime",
       "target": "symbol:infrastructure.runtime.InfrastructureRuntime",
@@ -77644,7 +77941,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 243
+        "line": 360
       },
       "source": "symbol:infrastructure.runtime.build_runtime",
       "target": "symbol:infrastructure.runtime.build_database_runtime",
@@ -77655,7 +77952,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 242
+        "line": 359
       },
       "source": "symbol:infrastructure.runtime.build_runtime",
       "target": "symbol:infrastructure.runtime.build_legacy_runtime",
@@ -77666,7 +77963,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/runtime.py",
-        "line": 255
+        "line": 372
       },
       "source": "symbol:infrastructure.runtime.get_runtime",
       "target": "symbol:infrastructure.runtime.build_runtime",
@@ -77787,7 +78084,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/supabase_blob.py",
-        "line": 29
+        "line": 33
       },
       "source": "symbol:infrastructure.supabase_blob.SupabaseBlobStore",
       "target": "symbol:infrastructure.supabase_blob.SupabaseBlobStore._metric",
@@ -77798,7 +78095,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/supabase_blob.py",
-        "line": 86
+        "line": 90
       },
       "source": "symbol:infrastructure.supabase_blob.SupabaseBlobStore",
       "target": "symbol:infrastructure.supabase_blob.SupabaseBlobStore.delete",
@@ -77809,7 +78106,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/supabase_blob.py",
-        "line": 58
+        "line": 62
       },
       "source": "symbol:infrastructure.supabase_blob.SupabaseBlobStore",
       "target": "symbol:infrastructure.supabase_blob.SupabaseBlobStore.open",
@@ -77820,7 +78117,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/supabase_blob.py",
-        "line": 40
+        "line": 44
       },
       "source": "symbol:infrastructure.supabase_blob.SupabaseBlobStore",
       "target": "symbol:infrastructure.supabase_blob.SupabaseBlobStore.put",
@@ -77831,7 +78128,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/supabase_blob.py",
-        "line": 70
+        "line": 74
       },
       "source": "symbol:infrastructure.supabase_blob.SupabaseBlobStore",
       "target": "symbol:infrastructure.supabase_blob.SupabaseBlobStore.signed_url",
@@ -77842,7 +78139,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/supabase_blob.py",
-        "line": 67
+        "line": 71
       },
       "source": "symbol:infrastructure.supabase_blob.SupabaseBlobStore.open",
       "target": "symbol:infrastructure.contracts.NotFound",
@@ -77853,7 +78150,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/supabase_blob.py",
-        "line": 56
+        "line": 60
       },
       "source": "symbol:infrastructure.supabase_blob.SupabaseBlobStore.put",
       "target": "symbol:infrastructure.contracts.BlobRef",
@@ -77864,7 +78161,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/supabase_blob.py",
-        "line": 45
+        "line": 49
       },
       "source": "symbol:infrastructure.supabase_blob.SupabaseBlobStore.put",
       "target": "symbol:infrastructure.contracts.Conflict",
@@ -77875,7 +78172,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/supabase_blob.py",
-        "line": 55
+        "line": 59
       },
       "source": "symbol:infrastructure.supabase_blob.SupabaseBlobStore.put",
       "target": "symbol:infrastructure.contracts.Conflict",
@@ -77886,7 +78183,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/supabase_blob.py",
-        "line": 82
+        "line": 86
       },
       "source": "symbol:infrastructure.supabase_blob.SupabaseBlobStore.signed_url",
       "target": "symbol:infrastructure.contracts.NotFound",
@@ -88351,6 +88648,50 @@
       },
       "source": "symbol:scripts.ci_eval_scope.main",
       "target": "symbol:scripts.ci_eval_scope.git_changed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cloud_doctor.py",
+        "line": 71
+      },
+      "source": "symbol:scripts.cloud_doctor.diagnose",
+      "target": "symbol:infrastructure.runtime.RuntimeConfig.from_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cloud_doctor.py",
+        "line": 65
+      },
+      "source": "symbol:scripts.cloud_doctor.diagnose",
+      "target": "symbol:infrastructure.runtime._loopback_host",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cloud_doctor.py",
+        "line": 55
+      },
+      "source": "symbol:scripts.cloud_doctor.diagnose",
+      "target": "symbol:infrastructure.runtime.hosted_supabase_dsn_ref",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cloud_doctor.py",
+        "line": 80
+      },
+      "source": "symbol:scripts.cloud_doctor.main",
+      "target": "symbol:scripts.cloud_doctor.diagnose",
       "type": "calls"
     },
     {
@@ -139397,6 +139738,303 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 180
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_cloud_doctor_is_read_only_and_redacts_secrets",
+      "target": "symbol:tests.test_hosted_supabase_contract.hosted_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 95
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_hosted_pool_settings_and_backend_validation_before_pool",
+      "target": "symbol:infrastructure.runtime.RuntimeConfig.from_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 93
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_hosted_pool_settings_and_backend_validation_before_pool",
+      "target": "symbol:tests.test_hosted_supabase_contract.hosted_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 87
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_hosted_rejects_unsafe_config",
+      "target": "symbol:infrastructure.runtime.RuntimeConfig.from_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 87
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_hosted_rejects_unsafe_config",
+      "target": "symbol:tests.test_hosted_supabase_contract.hosted_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 152
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool",
+      "target": "symbol:infrastructure.runtime.RuntimeConfig.from_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 152
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool",
+      "target": "symbol:tests.test_hosted_supabase_contract.hosted_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 159
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool",
+      "target": "symbol:tests.test_hosted_supabase_contract.hosted_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 160
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool",
+      "target": "symbol:tests.test_hosted_supabase_contract.hosted_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 144
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool",
+      "target": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool.FakePool",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 145
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool.FakePool",
+      "target": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool.FakePool.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 148
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool.FakePool",
+      "target": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool.FakePool.close",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 28
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_new_profile_and_legacy_contracts",
+      "target": "symbol:infrastructure.runtime.RuntimeConfig.from_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 35
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_new_profile_and_legacy_contracts",
+      "target": "symbol:infrastructure.runtime.RuntimeConfig.from_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 36
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_new_profile_and_legacy_contracts",
+      "target": "symbol:infrastructure.runtime.RuntimeConfig.from_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 42
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_new_profile_and_legacy_contracts",
+      "target": "symbol:infrastructure.runtime.RuntimeConfig.from_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 48
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_new_profile_and_legacy_contracts",
+      "target": "symbol:infrastructure.runtime.RuntimeConfig.from_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 56
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_new_profile_and_legacy_contracts",
+      "target": "symbol:infrastructure.runtime.RuntimeConfig.from_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 28
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_new_profile_and_legacy_contracts",
+      "target": "symbol:tests.test_hosted_supabase_contract.hosted_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 57
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_new_profile_and_legacy_contracts",
+      "target": "symbol:tests.test_hosted_supabase_contract.hosted_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 119
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings",
+      "target": "symbol:tests.test_hosted_supabase_contract.hosted_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 129
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings",
+      "target": "symbol:tests.test_hosted_supabase_contract.hosted_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 110
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings",
+      "target": "symbol:tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings.FakePool",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 111
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings.FakePool",
+      "target": "symbol:tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings.FakePool.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
+        "line": 114
+      },
+      "source": "symbol:tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings.FakePool",
+      "target": "symbol:tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings.FakePool.close",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_local.py",
+        "line": 20
+      },
+      "source": "symbol:tests.test_hosted_supabase_local.test_pool_concurrent_active_connections_never_exceed_max",
+      "target": "symbol:infrastructure.postgres.PostgresPool",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_local.py",
+        "line": 25
+      },
+      "source": "symbol:tests.test_hosted_supabase_local.test_pool_concurrent_active_connections_never_exceed_max",
+      "target": "symbol:tests.test_hosted_supabase_local.test_pool_concurrent_active_connections_never_exceed_max.use_connection",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_infrastructure_contracts.py",
         "line": 21
       },
@@ -162555,6 +163193,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:scripts/cloud_doctor.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/cloud_doctor.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:scripts/content_report.py",
       "kind": "file",
       "line": 1,
@@ -164029,6 +164674,20 @@
       "kind": "file",
       "line": 1,
       "path": "tests/test_hardening_persistencia_sse.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_hosted_supabase_contract.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_hosted_supabase_local.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_hosted_supabase_local.py",
       "qualified_name": null
     },
     {
@@ -165614,6 +166273,13 @@
       "qualified_name": "scripts.ci_eval_scope"
     },
     {
+      "id": "module:scripts.cloud_doctor",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/cloud_doctor.py",
+      "qualified_name": "scripts.cloud_doctor"
+    },
+    {
       "id": "module:scripts.content_report",
       "kind": "module",
       "line": 1,
@@ -167089,6 +167755,20 @@
       "line": 1,
       "path": "tests/test_hardening_persistencia_sse.py",
       "qualified_name": "tests.test_hardening_persistencia_sse"
+    },
+    {
+      "id": "module:tests.test_hosted_supabase_contract",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract"
+    },
+    {
+      "id": "module:tests.test_hosted_supabase_local",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_hosted_supabase_local.py",
+      "qualified_name": "tests.test_hosted_supabase_local"
     },
     {
       "id": "module:tests.test_infrastructure_contracts",
@@ -171923,112 +172603,112 @@
     {
       "id": "symbol:infrastructure.postgres.PostgresGameStore",
       "kind": "class",
-      "line": 65,
+      "line": 75,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresGameStore"
     },
     {
       "id": "symbol:infrastructure.postgres.PostgresGameStore.__init__",
       "kind": "method",
-      "line": 66,
+      "line": 76,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresGameStore.__init__"
     },
     {
       "id": "symbol:infrastructure.postgres.PostgresGameStore._insert_events",
       "kind": "method",
-      "line": 75,
+      "line": 85,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresGameStore._insert_events"
     },
     {
       "id": "symbol:infrastructure.postgres.PostgresGameStore._prepare",
       "kind": "method",
-      "line": 70,
+      "line": 80,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresGameStore._prepare"
     },
     {
       "id": "symbol:infrastructure.postgres.PostgresGameStore.create",
       "kind": "method",
-      "line": 103,
+      "line": 113,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresGameStore.create"
     },
     {
       "id": "symbol:infrastructure.postgres.PostgresGameStore.delete",
       "kind": "method",
-      "line": 184,
+      "line": 194,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresGameStore.delete"
     },
     {
       "id": "symbol:infrastructure.postgres.PostgresGameStore.get",
       "kind": "method",
-      "line": 132,
+      "line": 142,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresGameStore.get"
     },
     {
       "id": "symbol:infrastructure.postgres.PostgresGameStore.get_checkpoint",
       "kind": "method",
-      "line": 226,
+      "line": 236,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresGameStore.get_checkpoint"
     },
     {
       "id": "symbol:infrastructure.postgres.PostgresGameStore.list",
       "kind": "method",
-      "line": 140,
+      "line": 150,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresGameStore.list"
     },
     {
       "id": "symbol:infrastructure.postgres.PostgresGameStore.save",
       "kind": "method",
-      "line": 148,
+      "line": 158,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresGameStore.save"
     },
     {
       "id": "symbol:infrastructure.postgres.PostgresGameStore.save_checkpoint",
       "kind": "method",
-      "line": 192,
+      "line": 202,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresGameStore.save_checkpoint"
     },
     {
       "id": "symbol:infrastructure.postgres.PostgresPool",
       "kind": "class",
-      "line": 31,
+      "line": 32,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresPool"
     },
     {
       "id": "symbol:infrastructure.postgres.PostgresPool.__init__",
       "kind": "method",
-      "line": 32,
+      "line": 33,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresPool.__init__"
     },
     {
       "id": "symbol:infrastructure.postgres.PostgresPool.close",
       "kind": "method",
-      "line": 50,
+      "line": 60,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresPool.close"
     },
     {
       "id": "symbol:infrastructure.postgres.PostgresPool.connection",
       "kind": "method",
-      "line": 46,
+      "line": 56,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres.PostgresPool.connection"
     },
     {
       "id": "symbol:infrastructure.postgres._stored",
       "kind": "function",
-      "line": 54,
+      "line": 64,
       "path": "infrastructure/postgres.py",
       "qualified_name": "infrastructure.postgres._stored"
     },
@@ -172259,70 +172939,91 @@
     {
       "id": "symbol:infrastructure.runtime.InfrastructureRuntime",
       "kind": "class",
-      "line": 132,
+      "line": 242,
       "path": "infrastructure/runtime.py",
       "qualified_name": "infrastructure.runtime.InfrastructureRuntime"
     },
     {
       "id": "symbol:infrastructure.runtime.RuntimeConfig",
       "kind": "class",
-      "line": 38,
+      "line": 104,
       "path": "infrastructure/runtime.py",
       "qualified_name": "infrastructure.runtime.RuntimeConfig"
     },
     {
       "id": "symbol:infrastructure.runtime.RuntimeConfig.from_env",
       "kind": "method",
-      "line": 56,
+      "line": 125,
       "path": "infrastructure/runtime.py",
       "qualified_name": "infrastructure.runtime.RuntimeConfig.from_env"
     },
     {
       "id": "symbol:infrastructure.runtime.RuntimeConfig.validate",
       "kind": "method",
-      "line": 88,
+      "line": 169,
       "path": "infrastructure/runtime.py",
       "qualified_name": "infrastructure.runtime.RuntimeConfig.validate"
     },
     {
+      "id": "symbol:infrastructure.runtime._loopback_host",
+      "kind": "function",
+      "line": 39,
+      "path": "infrastructure/runtime.py",
+      "qualified_name": "infrastructure.runtime._loopback_host"
+    },
+    {
+      "id": "symbol:infrastructure.runtime._supabase_api_ref",
+      "kind": "function",
+      "line": 82,
+      "path": "infrastructure/runtime.py",
+      "qualified_name": "infrastructure.runtime._supabase_api_ref"
+    },
+    {
       "id": "symbol:infrastructure.runtime.build_database_runtime",
       "kind": "function",
-      "line": 164,
+      "line": 274,
       "path": "infrastructure/runtime.py",
       "qualified_name": "infrastructure.runtime.build_database_runtime"
     },
     {
       "id": "symbol:infrastructure.runtime.build_legacy_runtime",
       "kind": "function",
-      "line": 145,
+      "line": 255,
       "path": "infrastructure/runtime.py",
       "qualified_name": "infrastructure.runtime.build_legacy_runtime"
     },
     {
       "id": "symbol:infrastructure.runtime.build_runtime",
       "kind": "function",
-      "line": 239,
+      "line": 356,
       "path": "infrastructure/runtime.py",
       "qualified_name": "infrastructure.runtime.build_runtime"
     },
     {
       "id": "symbol:infrastructure.runtime.get_runtime",
       "kind": "function",
-      "line": 250,
+      "line": 367,
       "path": "infrastructure/runtime.py",
       "qualified_name": "infrastructure.runtime.get_runtime"
     },
     {
+      "id": "symbol:infrastructure.runtime.hosted_supabase_dsn_ref",
+      "kind": "function",
+      "line": 51,
+      "path": "infrastructure/runtime.py",
+      "qualified_name": "infrastructure.runtime.hosted_supabase_dsn_ref"
+    },
+    {
       "id": "symbol:infrastructure.runtime.reset_runtime",
       "kind": "function",
-      "line": 265,
+      "line": 382,
       "path": "infrastructure/runtime.py",
       "qualified_name": "infrastructure.runtime.reset_runtime"
     },
     {
       "id": "symbol:infrastructure.runtime.set_runtime",
       "kind": "function",
-      "line": 259,
+      "line": 376,
       "path": "infrastructure/runtime.py",
       "qualified_name": "infrastructure.runtime.set_runtime"
     },
@@ -172399,35 +173100,35 @@
     {
       "id": "symbol:infrastructure.supabase_blob.SupabaseBlobStore._metric",
       "kind": "method",
-      "line": 29,
+      "line": 33,
       "path": "infrastructure/supabase_blob.py",
       "qualified_name": "infrastructure.supabase_blob.SupabaseBlobStore._metric"
     },
     {
       "id": "symbol:infrastructure.supabase_blob.SupabaseBlobStore.delete",
       "kind": "method",
-      "line": 86,
+      "line": 90,
       "path": "infrastructure/supabase_blob.py",
       "qualified_name": "infrastructure.supabase_blob.SupabaseBlobStore.delete"
     },
     {
       "id": "symbol:infrastructure.supabase_blob.SupabaseBlobStore.open",
       "kind": "method",
-      "line": 58,
+      "line": 62,
       "path": "infrastructure/supabase_blob.py",
       "qualified_name": "infrastructure.supabase_blob.SupabaseBlobStore.open"
     },
     {
       "id": "symbol:infrastructure.supabase_blob.SupabaseBlobStore.put",
       "kind": "method",
-      "line": 40,
+      "line": 44,
       "path": "infrastructure/supabase_blob.py",
       "qualified_name": "infrastructure.supabase_blob.SupabaseBlobStore.put"
     },
     {
       "id": "symbol:infrastructure.supabase_blob.SupabaseBlobStore.signed_url",
       "kind": "method",
-      "line": 70,
+      "line": 74,
       "path": "infrastructure/supabase_blob.py",
       "qualified_name": "infrastructure.supabase_blob.SupabaseBlobStore.signed_url"
     },
@@ -176497,6 +177198,20 @@
       "line": 72,
       "path": "scripts/ci_eval_scope.py",
       "qualified_name": "scripts.ci_eval_scope.main"
+    },
+    {
+      "id": "symbol:scripts.cloud_doctor.diagnose",
+      "kind": "function",
+      "line": 43,
+      "path": "scripts/cloud_doctor.py",
+      "qualified_name": "scripts.cloud_doctor.diagnose"
+    },
+    {
+      "id": "symbol:scripts.cloud_doctor.main",
+      "kind": "function",
+      "line": 79,
+      "path": "scripts/cloud_doctor.py",
+      "qualified_name": "scripts.cloud_doctor.main"
     },
     {
       "id": "symbol:scripts.content_report._json",
@@ -194146,6 +194861,118 @@
       "qualified_name": "tests.test_hardening_persistencia_sse.test_worker_sse_persiste_mesmo_se_consumidor_fecha.Graph.stream"
     },
     {
+      "id": "symbol:tests.test_hosted_supabase_contract.hosted_env",
+      "kind": "test",
+      "line": 13,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.hosted_env"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_contract.test_blob_headers_distinguish_secret_api_key_from_legacy_jwt",
+      "kind": "test",
+      "line": 164,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.test_blob_headers_distinguish_secret_api_key_from_legacy_jwt"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_contract.test_cloud_doctor_is_read_only_and_redacts_secrets",
+      "kind": "test",
+      "line": 177,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.test_cloud_doctor_is_read_only_and_redacts_secrets"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_contract.test_hosted_pool_settings_and_backend_validation_before_pool",
+      "kind": "test",
+      "line": 90,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.test_hosted_pool_settings_and_backend_validation_before_pool"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_contract.test_hosted_rejects_unsafe_config",
+      "kind": "test",
+      "line": 85,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.test_hosted_rejects_unsafe_config"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool",
+      "kind": "test",
+      "line": 137,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool.FakePool",
+      "kind": "class",
+      "line": 144,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool.FakePool"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool.FakePool.__init__",
+      "kind": "test",
+      "line": 145,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool.FakePool.__init__"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool.FakePool.close",
+      "kind": "test",
+      "line": 148,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.test_hosted_runtime_wires_supabase_auth_storage_and_single_pool.FakePool.close"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_contract.test_new_profile_and_legacy_contracts",
+      "kind": "test",
+      "line": 27,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.test_new_profile_and_legacy_contracts"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings",
+      "kind": "test",
+      "line": 105,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings.FakePool",
+      "kind": "class",
+      "line": 110,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings.FakePool"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings.FakePool.__init__",
+      "kind": "test",
+      "line": 111,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings.FakePool.__init__"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings.FakePool.close",
+      "kind": "test",
+      "line": 114,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.test_pool_uses_transaction_safe_psycopg_settings.FakePool.close"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_local.test_pool_concurrent_active_connections_never_exceed_max",
+      "kind": "test",
+      "line": 16,
+      "path": "tests/test_hosted_supabase_local.py",
+      "qualified_name": "tests.test_hosted_supabase_local.test_pool_concurrent_active_connections_never_exceed_max"
+    },
+    {
+      "id": "symbol:tests.test_hosted_supabase_local.test_pool_concurrent_active_connections_never_exceed_max.use_connection",
+      "kind": "test",
+      "line": 25,
+      "path": "tests/test_hosted_supabase_local.py",
+      "qualified_name": "tests.test_hosted_supabase_local.test_pool_concurrent_active_connections_never_exceed_max.use_connection"
+    },
+    {
       "id": "symbol:tests.test_infrastructure_contracts._principal",
       "kind": "test",
       "line": 19,
@@ -201805,5 +202632,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:f9945818e50c379766a51877635e38580c1c87707dc676d7674c2ea0a50425cb"
+  "source_tree_hash": "sha256:b7856b29bd49a6edbd4aa787f9354691aa038a71c7bb5ca2457a00796a4222ce"
 }

@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import os
+import ipaddress
 import threading
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Mapping
+from urllib.parse import parse_qs, urlsplit
 from uuid import UUID
 
 from infrastructure.contracts import (
@@ -34,6 +36,70 @@ from infrastructure.local_adapters import (
 LOCAL_PRINCIPAL_ID = UUID("00000000-0000-0000-0000-000000000001")
 
 
+def _loopback_host(host: str) -> bool:
+    normalized = host.strip("[]").rstrip(".").lower()
+    if normalized == "localhost" or normalized.endswith(".localhost"):
+        return True
+    if normalized.startswith("127."):
+        return True
+    try:
+        return ipaddress.ip_address(normalized).is_loopback
+    except ValueError:
+        return False
+
+
+def hosted_supabase_dsn_ref(dsn: str) -> str:
+    """Validate serverless transaction-pooler DSN without exposing its secret."""
+    try:
+        parsed = urlsplit(dsn)
+        host = (parsed.hostname or "").lower()
+        port = parsed.port
+        user = parsed.username or ""
+        sslmodes = parse_qs(parsed.query).get("sslmode", [])
+    except ValueError:
+        raise ValueError("DATABASE_URL inválida para hosted-supabase") from None
+    if (parsed.scheme not in {"postgres", "postgresql"} or port != 6543
+            or not parsed.password or not parsed.path.strip("/")
+            or any(mode not in {"require", "verify-full"} for mode in sslmodes)):
+        raise ValueError("DATABASE_URL exige pooler transacional Supabase em 6543")
+    if host.endswith(".pooler.supabase.com"):
+        # Shared Supavisor requires the project ref in the username.
+        ref = user.rpartition(".")[2]
+        if not ref or ref == user:
+            raise ValueError("DATABASE_URL do pooler exige user.project_ref")
+    elif host.startswith("db.") and host.endswith(".supabase.co"):
+        # Dedicated paid-plan pooler is also transaction mode on 6543.
+        ref = host[len("db."):-len(".supabase.co")]
+        if user != "postgres":
+            raise ValueError("DATABASE_URL do pooler dedicado exige postgres")
+    else:
+        raise ValueError("DATABASE_URL exige host de pooler Supabase")
+    if not ref or not all(ch.isascii() and (ch.islower() or ch.isdigit()) for ch in ref):
+        raise ValueError("DATABASE_URL contém project_ref inválida")
+    return ref
+
+
+def _supabase_api_ref(url: str) -> str:
+    try:
+        parsed = urlsplit(url)
+        host = (parsed.hostname or "").lower()
+        port = parsed.port
+    except ValueError:
+        raise ValueError("SUPABASE_URL inválida") from None
+    suffix = ".supabase.co"
+    if (parsed.scheme != "https" or not host.endswith(suffix)
+            or host.startswith("db.") or port not in (None, 443)
+            or parsed.username or parsed.password or parsed.path not in ("", "/")
+            or parsed.query or parsed.fragment):
+        raise ValueError("SUPABASE_URL exige API HTTPS do projeto")
+    ref = host[:-len(suffix)]
+    if not ref or "." in ref or not all(
+        ch.isascii() and (ch.islower() or ch.isdigit()) for ch in ref
+    ):
+        raise ValueError("SUPABASE_URL contém project_ref inválida")
+    return ref
+
+
 @dataclass(frozen=True)
 class RuntimeConfig:
     profile: str
@@ -45,12 +111,15 @@ class RuntimeConfig:
     rate_limit_store: str
     auth_mode: str
     bind_host: str
-    database_url: str = ""
+    database_url: str = field(default="", repr=False)
     supabase_url: str = ""
-    supabase_publishable_key: str = ""
-    supabase_service_role_key: str = ""
+    supabase_publishable_key: str = field(default="", repr=False)
+    supabase_service_role_key: str = field(default="", repr=False)
     oidc_userinfo_url: str = ""
     oidc_issuer: str = ""
+    db_pool_min_size: int = 0
+    db_pool_max_size: int = 4
+    db_pool_timeout: float = 5.0
 
     @classmethod
     def from_env(cls, env: Mapping[str, str] | None = None) -> "RuntimeConfig":
@@ -61,10 +130,19 @@ class RuntimeConfig:
             "local": ("postgres", "pgvector", "postgres", "supabase", "postgres", "postgres", "supabase"),
             "portable": ("postgres", "pgvector", "postgres", "s3", "postgres", "postgres", "oidc"),
             "hosted": ("postgres", "pgvector", "postgres", "s3", "postgres", "postgres", "oidc"),
+            "hosted-supabase": ("postgres", "pgvector", "postgres", "supabase", "postgres", "postgres", "supabase"),
         }
         if profile not in defaults:
             raise ValueError(f"RPG_RUNTIME_PROFILE inválido: {profile}")
         selected = defaults[profile]
+        try:
+            pool_min = int(values.get("RPG_DB_POOL_MIN_SIZE", "0"))
+            pool_max = int(values.get(
+                "RPG_DB_POOL_MAX_SIZE", "1" if profile == "hosted-supabase" else "4",
+            ))
+            pool_timeout = float(values.get("RPG_DB_POOL_TIMEOUT_SECONDS", "5"))
+        except ValueError:
+            raise ValueError("RPG_DB_POOL_* exige limites numéricos válidos") from None
         config = cls(
             profile=profile,
             game_store=values.get("RPG_GAME_STORE", selected[0]).strip().lower(),
@@ -81,12 +159,14 @@ class RuntimeConfig:
             supabase_service_role_key=values.get("SUPABASE_SERVICE_ROLE_KEY", "").strip(),
             oidc_userinfo_url=values.get("RPG_OIDC_USERINFO_URL", "").strip(),
             oidc_issuer=values.get("RPG_OIDC_ISSUER", "").strip(),
+            db_pool_min_size=pool_min,
+            db_pool_max_size=pool_max,
+            db_pool_timeout=pool_timeout,
         )
         config.validate()
         return config
 
     def validate(self) -> None:
-        loopback = {"127.0.0.1", "localhost", "::1"}
         if self.profile == "legacy":
             expected = ("file", "faiss", "file", "file", "inline", "memory", "disabled")
             actual = (
@@ -100,9 +180,9 @@ class RuntimeConfig:
             )
             if actual != expected:
                 raise ValueError("perfil legacy exige apenas adapters legados")
-            if self.bind_host not in loopback:
+            if not _loopback_host(self.bind_host):
                 raise ValueError("perfil legacy só pode escutar em loopback")
-        if self.profile in {"local", "portable", "hosted"}:
+        if self.profile in {"local", "portable", "hosted", "hosted-supabase"}:
             if self.game_store != "postgres" or self.memory_store != "pgvector":
                 raise ValueError(f"perfil {self.profile} exige Postgres + pgvector")
             if self.runtime_catalog != "postgres" or self.job_queue != "postgres":
@@ -115,15 +195,45 @@ class RuntimeConfig:
                 raise ValueError(f"perfil {self.profile} recusa BlobStore em filesystem")
             if not self.database_url:
                 raise ValueError(f"perfil {self.profile} exige DATABASE_URL")
-        if self.profile == "hosted" and self.bind_host in loopback:
-            raise ValueError("perfil hosted exige bind de serviço explícito")
+            if (not 0 <= self.db_pool_min_size <= self.db_pool_max_size <= 4
+                    or self.db_pool_max_size < 1
+                    or not 0.1 <= self.db_pool_timeout <= 30):
+                raise ValueError("RPG_DB_POOL_* fora dos limites seguros")
+        if self.profile in {"hosted", "hosted-supabase"}:
+            if _loopback_host(self.bind_host):
+                raise ValueError(f"perfil {self.profile} exige bind de serviço explícito")
+            try:
+                db_host = (urlsplit(self.database_url).hostname or "").lower()
+            except ValueError:
+                raise ValueError("DATABASE_URL inválida") from None
+            if _loopback_host(db_host) or db_host == "0.0.0.0":
+                raise ValueError("perfil hosted recusa DATABASE_URL loopback")
         if self.profile in {"portable", "hosted"}:
             if self.auth_mode != "oidc":
                 raise ValueError(f"perfil {self.profile} exige auth OIDC")
+            if self.blob_store != "s3":
+                raise ValueError(f"perfil {self.profile} exige BlobStore S3")
             if not self.oidc_userinfo_url or not self.oidc_issuer:
                 raise ValueError(
                     f"perfil {self.profile} exige RPG_OIDC_USERINFO_URL e RPG_OIDC_ISSUER"
                 )
+        if self.profile == "hosted-supabase":
+            if self.auth_mode != "supabase" or self.blob_store != "supabase":
+                raise ValueError("perfil hosted-supabase exige auth/storage Supabase")
+            if not self.supabase_url or not self.supabase_publishable_key or not self.supabase_service_role_key:
+                raise ValueError(
+                    "perfil hosted-supabase exige SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY e "
+                    "SUPABASE_SERVICE_ROLE_KEY"
+                )
+            if not self.supabase_publishable_key.startswith("sb_publishable_"):
+                raise ValueError("SUPABASE_PUBLISHABLE_KEY deve ser publishable")
+            if self.supabase_publishable_key == self.supabase_service_role_key:
+                raise ValueError("publishable e service role devem ser credenciais distintas")
+            if (not self.supabase_service_role_key.startswith("sb_secret_")
+                    and self.supabase_service_role_key.count(".") != 2):
+                raise ValueError("SUPABASE_SERVICE_ROLE_KEY exige secret key ou service_role JWT")
+            if hosted_supabase_dsn_ref(self.database_url) != _supabase_api_ref(self.supabase_url):
+                raise ValueError("DATABASE_URL e SUPABASE_URL apontam a projetos diferentes")
         if self.supabase_service_role_key and self.supabase_service_role_key.startswith("VITE_"):
             raise ValueError("service role nunca pode usar namespace Vite")
 
@@ -163,6 +273,7 @@ def build_legacy_runtime(config: RuntimeConfig | None = None) -> InfrastructureR
 
 def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
     """Compõe adapters compartilhando um único pool; falha antes de servir."""
+    config.validate()
     from infrastructure.pgvector_memory import PgVectorMemoryStore
     from infrastructure.postgres import PostgresGameStore, PostgresPool
     from infrastructure.postgres_catalog import PostgresRuntimeCatalogStore
@@ -171,7 +282,13 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
     from infrastructure.supabase_blob import SupabaseBlobStore
     from infrastructure.supabase_identity import SupabaseIdentityProvider
 
-    pool = PostgresPool(config.database_url)
+    pool = PostgresPool(
+        config.database_url,
+        min_size=config.db_pool_min_size,
+        max_size=config.db_pool_max_size,
+        timeout=config.db_pool_timeout,
+        transaction_pooler=config.profile == "hosted-supabase",
+    )
     try:
         if config.blob_store == "supabase":
             if not config.supabase_url or not config.supabase_service_role_key:
