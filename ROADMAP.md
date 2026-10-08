@@ -1,5 +1,14 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **08/10 — [SPEC-181](specs/SPEC-181-hosted-supabase-runtime-contract.md)
+> `done`.** Profile hosted-Supabase explícito com DSN/pool transacional
+> fail-closed, Auth/Storage separados por chave publishable/secret, e
+> `cloud_doctor` read-only/redacted. `hosted` e `portable` preservam OIDC+S3.
+> Revisão Sol High independente aprovada; **2.010 passed, 36 skipped,
+> 15 deselected**, audit-local **25 passed**, pool local concorrente limitado.
+> Nenhum recurso remoto foi criado. [Contrato e evidência](docs/spec181/README.md).
+> Próxima: [SPEC-182](specs/SPEC-182-real-usage-metering.md).
+
 > **07/10 — [SPEC-180](specs/SPEC-180-jev-classify-expansion-promotion.md)
 > `done`: `NO_GO` para Jev em produção.** Cinco callsites CLASSIFY
 > inventariados. O router ganhou modos reversíveis `off|shadow|primary`, com

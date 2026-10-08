@@ -1,6 +1,6 @@
 # SPEC-181 — Contrato hosted Supabase + runtime serverless
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Depende de:** SPEC-180 `done`
 > **EXECUTOR_MODEL obrigatório:** `Sol`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -38,11 +38,11 @@ Provisionar cloud real; trocar provider; alterar regras do jogo.
 
 ## Critérios de aceite
 
-- [ ] hosted Supabase é um profile legítimo e testado.
-- [ ] portable OIDC/S3 continua funcionando.
-- [ ] nenhum secret aparece no frontend/log.
-- [ ] pool não cria tempestade de conexões em teste concorrente.
-- [ ] zero recurso remoto criado.
+- [x] hosted Supabase é um profile legítimo e testado.
+- [x] portable OIDC/S3 continua funcionando.
+- [x] nenhum secret aparece no frontend/log.
+- [x] pool não cria tempestade de conexões em teste concorrente.
+- [x] zero recurso remoto criado.
 
 ## Gates / evidência
 
@@ -50,9 +50,9 @@ pytest focado + suíte offline + audit-local afetado. Sol revisa fronteira auth/
 
 ## Gate de fechamento
 
-- [ ] testes provam que perfis legados mantêm defaults anteriores;
-- [ ] hosted-Supabase rejeita loopback, auth disabled, filesystem blob e ausência de secrets necessários;
-- [ ] pool size/timeout são configuráveis por env e um teste concorrente comprova que conexões ativas não excedem `max_size` configurado;
-- [ ] `cloud_doctor` imprime apenas nomes/status/redacted metadata, nunca valores de secret;
-- [ ] nenhum recurso remoto é criado;
-- [ ] review Sol independente aprova auth/storage/pool boundary.
+- [x] testes provam que perfis legados mantêm defaults anteriores;
+- [x] hosted-Supabase rejeita loopback, auth disabled, filesystem blob e ausência de secrets necessários;
+- [x] pool size/timeout são configuráveis por env e um teste concorrente comprova que conexões ativas não excedem `max_size` configurado;
+- [x] `cloud_doctor` imprime apenas nomes/status/redacted metadata, nunca valores de secret;
+- [x] nenhum recurso remoto é criado;
+- [x] review Sol independente aprova auth/storage/pool boundary.

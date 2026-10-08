@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "b25bed2349196caeb1fe8690b3e0dcd1d2ea280d",
+  "commit_sha": "b09a06e6582ba8dd2c2f32468a424f1a0c660afd",
   "edge_counts": {
-    "calls": 8100,
-    "contains": 398,
-    "defines": 4864,
-    "imports": 816,
-    "likely_test_for": 485,
+    "calls": 8141,
+    "contains": 401,
+    "defines": 4901,
+    "imports": 819,
+    "likely_test_for": 487,
     "route_to": 31
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:55acfff70be751ffb38efab55cb36691b8029c83b14e77f54559e5c844086cc8",
+  "graph_hash": "sha256:10bb834ccb3a4b9cdbb9b4ece7cd35c531f500353f80fc8d3276a70bb177cfb4",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -137,6 +137,7 @@
     "scripts/browser_local.py",
     "scripts/chaos_test.py",
     "scripts/ci_eval_scope.py",
+    "scripts/cloud_doctor.py",
     "scripts/content_report.py",
     "scripts/dev_stack.py",
     "scripts/export_game_data.py",
@@ -348,6 +349,8 @@
     "tests/test_grounding_boundaries.py",
     "tests/test_hardening_mechanical_inputs.py",
     "tests/test_hardening_persistencia_sse.py",
+    "tests/test_hosted_supabase_contract.py",
+    "tests/test_hosted_supabase_local.py",
     "tests/test_infrastructure_contracts.py",
     "tests/test_input_normalization.py",
     "tests/test_itens_vivos.py",
@@ -490,14 +493,14 @@
   },
   "node_counts": {
     "artifact": 8,
-    "class": 416,
+    "class": 421,
     "endpoint": 31,
-    "file": 437,
-    "function": 1609,
+    "file": 440,
+    "function": 1617,
     "method": 352,
-    "module": 398,
-    "test": 2487
+    "module": 401,
+    "test": 2511
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:f9945818e50c379766a51877635e38580c1c87707dc676d7674c2ea0a50425cb"
+  "source_tree_hash": "sha256:420d8e6dbb52540a5c70ab58732c6eda4938912c46d1ac318eb3af2ae1194915"
 }
