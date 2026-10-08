@@ -1,5 +1,16 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **08/10 — SPEC-182 implementada; gate live pendente.** Ledger `app.usage_events`
+> com RLS e atribuição owner/operação/jogo, contadores por tentativa e custo com
+> origem/versionamento. Turnos, criação, prólogo, busca semântica, embeddings de
+> worker, compressão da crônica e arte dinâmica agora registram uso; falhas e
+> retries preservam as tentativas, e o custo consolidado do turno soma o ledger.
+> Testes offline e Postgres local cobrem fallback, replay, stream, RLS, falha e
+> retry. Suíte completa: **2.029 passed, 43 skipped, 15 deselected**; integração
+> Postgres local: **13 passed**. [Evidência e limites](docs/spec182/README.md). SPEC-182 continua
+> `approved` até revisão independente final e gate de 3–5 chamadas reais curtas
+> com orçamento específico; nenhuma chamada live desta spec foi feita.
+
 > **08/10 — SPEC-181 `done`; hosted-Supabase pronto para configuração cloud.**
 > Novo `RPG_RUNTIME_PROFILE=hosted-supabase` compõe Auth/Storage Supabase com
 > Postgres/pgvector e pool transacional serverless (0..1 por instância por

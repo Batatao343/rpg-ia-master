@@ -1,6 +1,11 @@
 -- SPEC-182: immutable-by-repository usage facts, committed with the operation.
 -- Account/game deletion still cascades for user-data erasure.
 alter table app.turns alter column llm_cost_usd type numeric(18,9);
+alter table app.operations drop constraint operations_kind_check,
+  add constraint operations_kind_check check (
+    kind in ('new_game','turn','death','equip','levelup','delete','account_delete',
+             'art','embedding','prologue','chronicle_search','chronicle_compress')
+  );
 
 create table app.usage_events (
   event_id uuid primary key,
@@ -41,3 +46,25 @@ create policy usage_events_read_own on app.usage_events for select to rpg_api
   using (owner_id=app.current_owner_id());
 create policy usage_events_insert_own on app.usage_events for insert to rpg_api
   with check (owner_id=app.current_owner_id());
+
+-- FKs by id alone cannot prove that owner/game match the referenced operation.
+-- The repository checks this too, but direct rpg_api inserts must fail closed.
+create function app.validate_usage_attribution() returns trigger
+language plpgsql security definer set search_path = '' as $$
+declare
+  canonical_owner uuid;
+  canonical_game uuid;
+begin
+  select owner_id,game_id into canonical_owner,canonical_game
+    from app.operations where id=new.operation_id;
+  if canonical_owner is null or canonical_owner <> new.owner_id
+     or canonical_game is distinct from new.game_id then
+    raise exception 'usage attribution mismatch' using errcode='23514';
+  end if;
+  return new;
+end;
+$$;
+revoke all on function app.validate_usage_attribution() from public, anon, authenticated;
+create trigger usage_events_attribution_before_insert
+  before insert on app.usage_events for each row
+  execute function app.validate_usage_attribution();

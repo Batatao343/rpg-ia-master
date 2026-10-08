@@ -99,6 +99,60 @@ class DynamicArtRepository:
             if result.rowcount != 1:
                 raise Conflict("geração não está pronta para avaliação")
 
+    @staticmethod
+    def _record_usage(connection, generation: dict, *, model: str,
+                      usage: dict) -> dict:
+        from infrastructure.usage_events import append_usage_events
+        from services.usage_metering import normalize_attempts, safe_provider_usage
+
+        generation_id = generation["generation_id"]
+        safe_usage = safe_provider_usage(usage, image_generated=True)
+        connection.execute(
+            """insert into app.operations
+              (id,owner_id,game_id,kind,status,request_sha256,finished_at)
+            values (%s,%s,%s,'art','completed',%s,now())
+            on conflict (id) do nothing""",
+            (generation_id, generation["owner_id"], generation["game_id"],
+             generation["prompt_hash"]),
+        )
+        operation = connection.execute(
+            """select kind,request_sha256 from app.operations
+            where id=%s and owner_id=%s and game_id=%s""",
+            (generation_id, generation["owner_id"], generation["game_id"]),
+        ).fetchone()
+        if (not operation or operation["kind"] != "art"
+                or operation["request_sha256"] != generation["prompt_hash"]):
+            raise Conflict("operação de imagem divergiu")
+        usage_events = normalize_attempts([{
+            "provider": "openai", "model": model,
+            "outcome": "success", "network_attempted": True, "usage": safe_usage,
+        }], operation_id=generation_id, component="image", category="image")
+        append_usage_events(
+            connection, owner_id=generation["owner_id"],
+            operation_id=generation_id, game_id=generation["game_id"],
+            events=usage_events,
+        )
+        connection.execute(
+            """update app.art_generations set usage_json=%s,updated_at=now()
+            where generation_id=%s""",
+            (Jsonb(safe_usage), generation_id),
+        )
+        return safe_usage
+
+    def record_usage(self, generation_id: UUID, *, model: str, usage: dict) -> None:
+        """Commit provider usage before image processing or blob I/O can fail."""
+        from services.job_fence import require_job_fence
+
+        with self.pool.connection() as connection, connection.transaction():
+            require_job_fence(connection)
+            generation = connection.execute(
+                "select * from app.art_generations where generation_id=%s for update",
+                (generation_id,),
+            ).fetchone()
+            if not generation or generation["status"] != "generating":
+                raise Conflict("geração não encontrada")
+            self._record_usage(connection, generation, model=model, usage=usage)
+
     def complete(self, generation_id: UUID, *, asset_id: UUID,
                  result: dict[str, Any]) -> None:
         variants = list(result.get("variants") or [])
@@ -112,36 +166,10 @@ class DynamicArtRepository:
             ).fetchone()
             if not generation or generation['status'] != 'generating':
                 raise Conflict("geração não encontrada")
-            # The background generation is a logical art operation of its own.
-            # Persist its content-free usage with the asset in one transaction.
-            from infrastructure.usage_events import append_usage_events
-            from services.usage_metering import normalize_attempts, safe_provider_usage
-
-            safe_usage = safe_provider_usage(result.get("usage"), image_generated=True)
-            connection.execute(
-                """insert into app.operations
-                  (id,owner_id,game_id,kind,status,request_sha256,finished_at)
-                values (%s,%s,%s,'art','completed',%s,now())
-                on conflict (id) do nothing""",
-                (generation_id, generation["owner_id"], generation["game_id"],
-                 generation["prompt_hash"]),
-            )
-            operation = connection.execute(
-                """select kind,request_sha256 from app.operations
-                where id=%s and owner_id=%s and game_id=%s""",
-                (generation_id, generation["owner_id"], generation["game_id"]),
-            ).fetchone()
-            if (not operation or operation["kind"] != "art"
-                    or operation["request_sha256"] != generation["prompt_hash"]):
-                raise Conflict("operação de imagem divergiu")
-            usage_events = normalize_attempts([{
-                "provider": "openai", "model": result.get("model") or generation["model"],
-                "outcome": "success", "network_attempted": True, "usage": safe_usage,
-            }], operation_id=generation_id, component="image", category="image")
-            append_usage_events(
-                connection, owner_id=generation["owner_id"],
-                operation_id=generation_id, game_id=generation["game_id"],
-                events=usage_events,
+            safe_usage = self._record_usage(
+                connection, generation,
+                model=result.get("model") or generation["model"],
+                usage=result.get("usage") or {},
             )
             display_asset_id = None
             for variant in variants:

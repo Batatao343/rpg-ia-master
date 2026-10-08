@@ -73,6 +73,13 @@ def test_reserva_worker_e_promocao_de_arte_no_postgres_local(tmp_path):
         repository.complete(generation_id, asset_id=asset_id, result=result)
     assert repository.assets(principal, generation_id) == []
     with job_scope(second):
+        repository.record_usage(
+            generation_id, model=result["model"], usage=result["usage"])
+        with pool.connection() as connection:
+            assert connection.execute(
+                "select count(*) as n from app.usage_events where operation_id=%s",
+                (generation_id,),
+            ).fetchone()["n"] == 1
         repository.complete(generation_id, asset_id=asset_id, result=result)
     queue.complete(second.job_id, second.lease_token, {'ready': True})
     assert repository.get(principal, generation_id)["status"] == "ready"

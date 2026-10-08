@@ -50,6 +50,8 @@ def build_handlers():
                 owner_id=UUID(str(payload["owner_id"])),
                 game_id=UUID(str(payload["game_id"])),
                 asset_id=UUID(str(payload["asset_id"])),
+                usage_sink=lambda model, usage: repository.record_usage(
+                    generation_id, model=model, usage=usage),
             )
             repository.complete(
                 generation_id, asset_id=UUID(str(payload["asset_id"])), result=result,
@@ -61,20 +63,56 @@ def build_handlers():
 
     def embed(payload: dict) -> dict:
         import rag
-        embeddings = rag.get_embeddings()
-        if embeddings is None:
-            raise RuntimeError("provider de embedding indisponível")
+        from infrastructure.usage_events import append_embedding_job_attempt
+        from services.job_fence import current_job
 
-        def query(text: str):
-            values = embeddings.embed_query(text)
-            if len(values) != 1024:
-                raise ValueError(f"embedding incompatível: {len(values)} dimensões")
-            return values
+        job = current_job()
+        attempts: list[dict] = []
 
-        return embed_memory_job(runtime.memory_store, payload, query)
+        def capture(event: dict) -> None:
+            attempts.append(event)
+            if job is not None:
+                append_embedding_job_attempt(pool, job, attempts)
+
+        with rag.embedding_usage_scope(capture):
+            embeddings = rag.get_embeddings()
+            if embeddings is None:
+                raise RuntimeError("provider de embedding indisponível")
+
+            def query(text: str):
+                values = embeddings.embed_query(text)
+                if len(values) != 1024:
+                    raise ValueError(f"embedding incompatível: {len(values)} dimensões")
+                return values
+
+            return embed_memory_job(runtime.memory_store, payload, query)
 
     def compress(payload: dict) -> dict:
-        digest = compress_chronicle_job(payload)
+        from infrastructure.usage_events import append_chronicle_job_attempt
+        from llm_setup import llm_attempt_scope
+        from services.job_fence import current_job
+
+        job = current_job()
+        attempts: list[dict] = []
+        capture_errors: list[Exception] = []
+
+        def capture(event) -> None:
+            attempts.append({
+                "provider": event.provider, "model": event.model,
+                "outcome": event.outcome,
+                "network_attempted": event.outcome not in {"build_error", "circuit_open"},
+                "usage": dict(event.usage) if event.usage else None,
+            })
+            if job is not None:
+                try:
+                    append_chronicle_job_attempt(pool, job, attempts)
+                except Exception as exc:
+                    capture_errors.append(exc)
+
+        with llm_attempt_scope(capture):
+            digest = compress_chronicle_job(payload)
+        if capture_errors:
+            raise capture_errors[0]
         ChronicleRepository(pool, runtime.memory_store).complete(payload, digest)
         return {"status": digest["status"], "source_hash": digest["source_hash"]}
 

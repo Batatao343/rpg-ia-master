@@ -1,5 +1,13 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **08/10 — [SPEC-182](specs/SPEC-182-real-usage-metering.md) em validação.**
+> Metering por tentativa implementado para turnos, criação, prólogo, busca da
+> crônica, workers de embedding/compressão e arte. Ledger vincula owner/operação/
+> jogo, separa custo exato de estimativa e consolida no turno. Falta o gate de
+> 3–5 chamadas reais curtas com teto próprio e revisão Sol final; spec segue
+> `approved`. Suíte completa: **2.029 passed, 43 skipped, 15 deselected**;
+> Postgres local **13 passed**. [Evidência](docs/spec182/README.md).
+
 > **08/10 — [SPEC-181](specs/SPEC-181-hosted-supabase-runtime-contract.md)
 > `done`.** Profile hosted-Supabase explícito com DSN/pool transacional
 > fail-closed, Auth/Storage separados por chave publishable/secret, e

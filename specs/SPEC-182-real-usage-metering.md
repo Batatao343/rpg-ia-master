@@ -54,6 +54,8 @@ Corpus determinístico + 3–5 chamadas reais curtas somente com aprovação/or�
 
 Cada `usage_event` precisa de uma chave determinística que identifique a tentativa lógica (operação + componente + ordinal/attempt id). Replays de operação não podem criar eventos novos. Failed attempts só entram em custo quando o provider reportar/for conhecido que houve consumo billable; `unknown` nunca vira zero silencioso.
 
+Prólogo e busca semântica são requests de leitura/preview sem `action_id` no contrato HTTP existente. Cada request aceito recebe uma operação nova; duas chamadas HTTP, inclusive retry do cliente, podem consumir o provider duas vezes. A idempotência acima vale para o replay da mesma operação interna, não para deduplicação entre requests sem chave. A busca usa claim sem exclusividade sobre o turno.
+
 ## Gate de fechamento
 
 - [ ] fixtures cobrem success, fallback, retry structured, timeout pré-resposta, resposta billable com erro, streaming final e replay;

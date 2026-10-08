@@ -22,8 +22,10 @@ import time
 import unicodedata
 import uuid
 from collections import Counter
+from contextlib import contextmanager
+from contextvars import ContextVar
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Literal, Optional
+from typing import Any, Callable, Dict, Iterator, List, Literal, Optional
 import httpx
 from langchain_community.vectorstores import FAISS
 from langchain_community.document_loaders import TextLoader
@@ -36,6 +38,34 @@ from services.memory_provenance import format_memory_fact, make_memory_fact
 load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
 
 _LOG = logging.getLogger("rpg.rag")
+_embedding_usage_hook: ContextVar[Callable[[dict], None] | None] = ContextVar(
+    "embedding_usage_hook", default=None)
+
+
+@contextmanager
+def embedding_usage_scope(hook: Callable[[dict], None]) -> Iterator[None]:
+    token = _embedding_usage_hook.set(hook)
+    try:
+        yield
+    finally:
+        _embedding_usage_hook.reset(token)
+
+
+def _emit_embedding_attempt(provider: str, model: str, outcome: str,
+                            usage: object = None) -> None:
+    hook = _embedding_usage_hook.get()
+    if hook is None:
+        return
+    from services.usage_metering import safe_provider_usage
+
+    reading = safe_provider_usage(usage)
+    if ("input_tokens" not in reading and isinstance(usage, dict)
+            and isinstance(usage.get("total_tokens"), int)
+            and not isinstance(usage["total_tokens"], bool)
+            and usage["total_tokens"] >= 0):
+        reading["input_tokens"] = usage["total_tokens"]
+    hook({"provider": provider, "model": model, "outcome": outcome,
+          "network_attempted": True, "usage": reading})
 
 # Configurações de Caminho
 SAVES_DIR = "data/saves_memory" # Pasta onde ficam os vetores dos saves individuais
@@ -216,6 +246,40 @@ _JINA_API_URL = "https://api.jina.ai/v1/embeddings"
 _TRANSIENT_EMBEDDING_STATUS = {408, 429, 500, 502, 503, 504}
 
 
+class _ScopedMeteredEmbeddings(Embeddings):
+    """Count opaque SDK calls when their vector API omits usage metadata."""
+
+    def __init__(self, delegate: Embeddings, provider: str, model: str) -> None:
+        self.delegate = delegate
+        self.provider = provider
+        self.model = model
+
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        try:
+            vectors = self.delegate.embed_documents(texts)
+        except Exception:
+            _emit_embedding_attempt(self.provider, self.model, "error")
+            raise
+        _emit_embedding_attempt(self.provider, self.model, "response")
+        return vectors
+
+    def embed_query(self, text: str) -> List[float]:
+        try:
+            vector = self.delegate.embed_query(text)
+        except Exception:
+            _emit_embedding_attempt(self.provider, self.model, "error")
+            raise
+        _emit_embedding_attempt(self.provider, self.model, "response")
+        return vector
+
+
+def _scoped_embeddings(provider: str, embeddings: Embeddings) -> Embeddings:
+    if provider == "jina" or _embedding_usage_hook.get() is None:
+        return embeddings
+    return _ScopedMeteredEmbeddings(
+        embeddings, provider, _PROVIDER_MODELS.get(provider, "unknown"))
+
+
 class _JinaEmbeddingsHTTPX(Embeddings):
     """Cliente Jina pequeno, síncrono e com limite de rede explícito.
 
@@ -249,14 +313,25 @@ class _JinaEmbeddingsHTTPX(Embeddings):
                 )
                 if (response.status_code in _TRANSIENT_EMBEDDING_STATUS
                         and attempt + 1 < self.max_attempts):
+                    _emit_embedding_attempt("jina", self.model_name, "http_error")
                     last_error = httpx.HTTPStatusError(
                         f"Jina transitório: HTTP {response.status_code}",
                         request=response.request,
                         response=response,
                     )
                     continue
+                if response.status_code >= 400:
+                    _emit_embedding_attempt("jina", self.model_name, "http_error")
                 response.raise_for_status()
-                payload = response.json()
+                try:
+                    payload = response.json()
+                except ValueError:
+                    _emit_embedding_attempt("jina", self.model_name, "invalid_response")
+                    raise
+                _emit_embedding_attempt(
+                    "jina", self.model_name, "response",
+                    payload.get("usage") if isinstance(payload, dict) else None,
+                )
                 rows = payload.get("data") if isinstance(payload, dict) else None
                 if not isinstance(rows, list):
                     raise ValueError("resposta Jina sem lista 'data'")
@@ -267,6 +342,7 @@ class _JinaEmbeddingsHTTPX(Embeddings):
                     raise ValueError("resposta Jina com embeddings inválidos")
                 return vectors
             except httpx.TransportError as exc:
+                _emit_embedding_attempt("jina", self.model_name, "transport_error")
                 last_error = exc
                 if attempt + 1 >= self.max_attempts:
                     raise
@@ -371,7 +447,7 @@ def get_embeddings_for(provider: str) -> Optional[object]:
     """Constrói (com cache) o objeto de embeddings de UM provider específico.
     Usado para abrir índice pinado. None se o builder falhar (key/dep faltando)."""
     if provider in _embeddings_cache:
-        return _embeddings_cache[provider]
+        return _scoped_embeddings(provider, _embeddings_cache[provider])
     builder = _EMBEDDING_BUILDERS.get(provider)
     if builder is None:
         _LOG.warning("Embeddings: provider desconhecido '%s'.", provider)
@@ -382,7 +458,7 @@ def get_embeddings_for(provider: str) -> Optional[object]:
         _LOG.warning("Embeddings: falha ao inicializar '%s': %s", provider, exc)
         return None
     _embeddings_cache[provider] = emb
-    return emb
+    return _scoped_embeddings(provider, emb)
 
 
 def active_provider() -> Optional[str]:

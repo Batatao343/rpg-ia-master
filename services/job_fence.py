@@ -20,6 +20,10 @@ def job_scope(job: LeasedJob) -> Iterator[None]:
         _current.reset(token)
 
 
+def current_job() -> LeasedJob | None:
+    return _current.get()
+
+
 def require_job_fence(connection: Any) -> None:
     """Lock the job through publication; direct maintenance calls have no job."""
     job = _current.get()

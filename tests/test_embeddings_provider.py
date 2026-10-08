@@ -153,6 +153,46 @@ def test_jina_erro_nao_transitorio_nao_repete():
     assert calls == 1
 
 
+def test_jina_usage_scope_captures_each_request_without_text():
+    calls = 0
+
+    def handler(request):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            return httpx.Response(429, request=request, json={"detail": "SECRET_PROMPT"})
+        return httpx.Response(200, request=request, json={
+            "data": [{"index": 0, "embedding": [0.1, 0.2]}],
+            "usage": {"prompt_tokens": 17, "total_tokens": 17,
+                      "private_text": "SECRET_NARRATIVE"},
+        })
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    emb = rag._JinaEmbeddingsHTTPX(
+        api_key="secret-key", model_name="jina-test", client=client,
+        max_attempts=2,
+    )
+    captured = []
+    with rag.embedding_usage_scope(captured.append):
+        assert emb.embed_query("SECRET_PROMPT") == [0.1, 0.2]
+    assert [event["outcome"] for event in captured] == ["http_error", "response"]
+    assert captured[1]["usage"] == {"input_tokens": 17}
+    assert "SECRET" not in repr(captured)
+
+
+def test_opaque_embedding_sdk_is_metered_only_inside_operation_scope():
+    captured = []
+    with rag.embedding_usage_scope(captured.append):
+        embedding = rag.get_embeddings_for("openai")
+        assert embedding.embed_query("SECRET_TEXT")
+    assert captured == [{
+        "provider": "openai", "model": "text-embedding-3-small",
+        "outcome": "response", "network_attempted": True, "usage": {},
+    }]
+    assert isinstance(rag.get_embeddings_for("openai"), FakeEmbeddings)
+    assert "SECRET" not in repr(captured)
+
+
 # --- Etapa 1: meta por índice + pin -----------------------------------------
 
 def test_meta_round_trip(tmp_path):

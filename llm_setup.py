@@ -19,6 +19,7 @@ import os
 import threading
 import time
 from contextlib import contextmanager
+from contextvars import ContextVar
 from collections.abc import Mapping
 from dataclasses import dataclass
 from enum import Enum
@@ -416,6 +417,17 @@ def _get_cached_client(provider: str, model: str, temperature: float) -> "BaseLa
 # ---------------------------------------------------------------------------
 _TELEMETRY_HOOK: Optional[Callable[[str, str, ModelTier, int, bool], None]] = None
 _ATTEMPT_TELEMETRY_HOOK: Optional[Callable[[LLMAttemptEvent], None]] = None
+_SCOPED_ATTEMPT_HOOK: ContextVar[Optional[Callable[[LLMAttemptEvent], None]]] = ContextVar(
+    "scoped_llm_attempt_hook", default=None)
+
+
+@contextmanager
+def llm_attempt_scope(fn: Callable[[LLMAttemptEvent], None]):
+    token = _SCOPED_ATTEMPT_HOOK.set(fn)
+    try:
+        yield
+    finally:
+        _SCOPED_ATTEMPT_HOOK.reset(token)
 
 
 def set_llm_telemetry_hook(fn: Optional[Callable[[str, str, ModelTier, int, bool], None]]) -> None:
@@ -447,13 +459,13 @@ def _emit_telemetry(provider: str, model: str, tier: ModelTier, latency_ms: int,
 
 
 def _emit_attempt_telemetry(event: LLMAttemptEvent) -> None:
-    hook = _ATTEMPT_TELEMETRY_HOOK
-    if hook is None:
-        return
-    try:
-        hook(event)
-    except Exception as e:  # telemetria NUNCA derruba o turno
-        _LOG.warning("attempt telemetry hook falhou: %s", type(e).__name__)
+    for hook in (_ATTEMPT_TELEMETRY_HOOK, _SCOPED_ATTEMPT_HOOK.get()):
+        if hook is None:
+            continue
+        try:
+            hook(event)
+        except Exception as e:  # telemetria NUNCA derruba o turno
+            _LOG.warning("attempt telemetry hook falhou: %s", type(e).__name__)
 
 
 # ---------------------------------------------------------------------------
@@ -903,12 +915,27 @@ class RoutedLLM:
                 ))
                 _open_circuit_if_permanent(provider, model, e)
                 continue
-            yield first
             usage_snapshot = _usage_snapshot(first)
             try:
+                yield first
                 for chunk in it:
                     usage_snapshot = _usage_snapshot(chunk) or usage_snapshot
                     yield chunk
+            except GeneratorExit:
+                latency_ms = int((time.perf_counter() - t0) * 1000)
+                _emit_attempt_telemetry(LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="stream_error",
+                    error="consumer_closed",
+                    structured=structured,
+                    usage=usage_snapshot,
+                ))
+                raise
             except Exception as e:  # falha no meio do stream: encerra o que veio
                 _LOG.warning("stream interrompido %s:%s (%s)", provider, model, type(e).__name__)
                 latency_ms = int((time.perf_counter() - t0) * 1000)

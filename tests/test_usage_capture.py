@@ -94,3 +94,23 @@ def test_provider_cache_units_survive_langchain_usage_metadata(monkeypatch) -> N
     assert events[0].usage == {
         "input_tokens": 200, "output_tokens": 10, "cached_tokens": 75,
     }
+
+
+def test_closed_stream_still_emits_one_attempt_without_content(monkeypatch) -> None:
+    class FakeClient:
+        def stream(self, _input):
+            yield AIMessageChunk(content="SECRET_FIRST_CHUNK")
+            yield AIMessageChunk(content="SECRET_NOT_CONSUMED")
+
+    events = []
+    monkeypatch.setattr(llm_setup, "_get_cached_client", lambda *_args: FakeClient())
+    monkeypatch.setattr(llm_setup, "_ATTEMPT_TELEMETRY_HOOK", events.append)
+    stream = llm_setup.RoutedLLM(
+        llm_setup.ModelTier.FAST, 0, [("usage-test", "model")],
+    ).stream("prompt")
+    assert next(stream).content == "SECRET_FIRST_CHUNK"
+    stream.close()
+    assert len(events) == 1
+    assert events[0].outcome == "stream_error"
+    assert events[0].error == "consumer_closed"
+    assert "SECRET" not in repr(events[0])

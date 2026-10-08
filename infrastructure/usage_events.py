@@ -78,3 +78,56 @@ def append_usage_events(connection, *, owner_id: UUID, operation_id: UUID,
         ).fetchone()
         if not existing or existing["event_sha256"] != digest:
             raise Conflict("usage replay divergiu")
+
+
+def append_embedding_job_attempt(pool, job, attempts: Sequence[dict]) -> None:
+    """Record each provider response under a fenced embedding job operation."""
+    _append_job_attempt(pool, job, attempts, job_kind="embed_memory",
+                        operation_kind="embedding", category="embedding")
+
+
+def append_chronicle_job_attempt(pool, job, attempts: Sequence[dict]) -> None:
+    """Record SMART compression calls, including fallback and retry attempts."""
+    _append_job_attempt(pool, job, attempts, job_kind="compress_chronicle",
+                        operation_kind="chronicle_compress", category="llm")
+
+
+def _append_job_attempt(pool, job, attempts: Sequence[dict], *, job_kind: str,
+                        operation_kind: str, category: str) -> None:
+    if not attempts:
+        return
+    from infrastructure.postgres_jobs import PostgresJobQueue
+    from services.usage_metering import normalize_attempts
+
+    with pool.connection() as connection, connection.transaction():
+        row = PostgresJobQueue._require_running(
+            connection, job.job_id, job.lease_token)
+        if row["kind"] != job_kind or row["owner_id"] is None:
+            raise Conflict("job de usage sem owner")
+        request_hash = sha256(
+            f"{operation_kind}:{job.job_id}:{row['dedupe_key']}".encode("utf-8")
+        ).hexdigest()
+        connection.execute(
+            """insert into app.operations
+              (id,owner_id,game_id,kind,status,request_sha256,finished_at)
+            values (%s,%s,%s,%s,'completed',%s,now())
+            on conflict (id) do nothing""",
+            (job.job_id, row["owner_id"], row["game_id"], operation_kind, request_hash),
+        )
+        operation = connection.execute(
+            """select kind,request_sha256 from app.operations
+            where id=%s and owner_id=%s and game_id is not distinct from %s""",
+            (job.job_id, row["owner_id"], row["game_id"]),
+        ).fetchone()
+        if (not operation or operation["kind"] != operation_kind
+                or operation["request_sha256"] != request_hash):
+            raise Conflict("operação de usage divergiu")
+        events = normalize_attempts(
+            attempts, operation_id=job.job_id,
+            component=f"{category}:{job.attempt}", category=category,
+        )
+        append_usage_events(
+            connection, owner_id=row["owner_id"],
+            operation_id=job.job_id, game_id=row["game_id"],
+            events=events[-1:],
+        )
