@@ -1,13 +1,14 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
-> **08/10 — [SPEC-182](specs/SPEC-182-real-usage-metering.md) em validação.**
+> **08/10 — [SPEC-182](specs/SPEC-182-real-usage-metering.md) `done`.**
 > Metering por tentativa implementado para turnos, criação, prólogo, busca da
 > crônica, workers de embedding/compressão e arte. Ledger vincula owner/operação/
-> jogo, separa custo exato de estimativa e consolida no turno. Falta o gate de
-> 3–5 chamadas reais curtas com teto próprio; revisão Sol High independente
-> [aprovada](handoffs/SPEC-182-SOL-independent-review.md), spec segue
-> `approved`. Suíte completa: **2.029 passed, 43 skipped, 15 deselected**;
-> Postgres local **13 passed**. [Evidência](docs/spec182/README.md).
+> jogo, separa custo exato de estimativa e consolida no turno. Quatro chamadas
+> live DeepSeek/Groq validaram invoke e stream sob teto US$ 0,50; custo
+> normalizado US$ 0,000041550. Revisões Sol High técnica e live
+> [aprovadas](handoffs/SPEC-182-SOL-independent-review.md). Suíte completa:
+> **2.029 passed, 43 skipped, 15 deselected**; Postgres local **13 passed**.
+> [Evidência](docs/spec182/README.md). Próxima: [SPEC-183](specs/SPEC-183-pricing-estilhas-margin.md).
 
 > **08/10 — [SPEC-181](specs/SPEC-181-hosted-supabase-runtime-contract.md)
 > `done`.** Profile hosted-Supabase explícito com DSN/pool transacional

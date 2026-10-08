@@ -27,7 +27,7 @@ Fixture: primeira tentativa Groq 20b retorna structured inválido (1.000 input, 
 - Arte dinâmica escreve no ledger. O endpoint de imagem pode não fornecer uso/custo para o modelo atual; nesse caso o registro é estimado e nunca elegível a cobrança exata.
 - Jina expõe `usage.prompt_tokens`; o adapter captura esses contadores. Os SDKs de OpenAI/Gemini/Ollama usados pelo RAG retornam apenas vetor nesse contrato e ficam `estimated`, sem inventar tokens.
 - STT é a SPEC-186; `category=speech_to_text` e `audio_units` já têm contrato e fixture, sem chamadas de áudio nesta spec.
-- O rate card não é atualização automática nem garante preço futuro. Não houve chamadas live nesta implementação até definição de orçamento específico.
+- O rate card não é atualização automática nem garante preço futuro. O gate live abaixo usa a versão observada em 2026-10-08.
 - Nenhum banco consegue confirmar atomicamente uma resposta de provider externo. Um crash entre a resposta e o callback local ainda pode deixar consumo não registrado; reconciliação com fatura/provider é trabalho posterior da wallet, e `billing_exact=false` impede liquidar reservas como cobrança precisa.
 - Prólogo e busca da crônica não têm chave de idempotência no contrato HTTP atual: cada request recebido é uma operação nova e pode consumir provider novamente. Replay de uma operação com a mesma chave interna não duplica seus eventos; isso não deduplica dois requests de preview/busca separados.
 
@@ -39,4 +39,8 @@ Suíte completa após as correções: **2.029 passed, 43 skipped, 15 deselected*
 
 Revisão independente Sol High: **APPROVED técnico**, 47 testes focados verdes, sem blocker remanescente. [Parecer](../../handoffs/SPEC-182-SOL-independent-review.md).
 
-Gate pendente: 3–5 chamadas reais curtas para conferir metadata DeepSeek/Groq, somente após aprovação de teto de chamadas e custo. Nenhum long-run é necessário.
+## Gate live autorizado e executado
+
+O usuário aprovou **4 chamadas curtas, teto US$ 0,50**. Foram feitas duas chamadas DeepSeek `deepseek-v4-flash` e duas Groq `openai/gpt-oss-20b`: invoke e stream completo em cada provider. Todas retornaram `success` e contadores de input/output; DeepSeek também retornou cache. O normalizador produziu **4 eventos**, sem duplicar streaming. DeepSeek ficou `estimated` por tarifa variável; Groq ficou `token_priced` pela tarifa publicada. O custo normalizado somado foi **US$ 0,000041550**, abaixo do teto. Não houve campanha longa nem conteúdo de resposta gravado na evidência.
+
+[Evidência redigida](live-metadata-2026-10-08.json), SHA-256 `e8eb57e68748ca92c44c441f286597b8b79cdbe621f0a96dbaea285c58e9822d`. O artefato contém apenas provider/model, modo, outcome, contadores e custo; busca automatizada por campos de prompt, resposta, áudio ou chave retornou vazia. A estimativa não é fatura do provider.

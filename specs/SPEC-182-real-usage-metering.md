@@ -1,6 +1,6 @@
 # SPEC-182 — Metering real de uso e custo
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Depende de:** SPEC-181 `done`
 > **EXECUTOR_MODEL obrigatório:** `Sol`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -40,15 +40,15 @@ Wallet, Stripe, UI de conta, definir preço dos pacotes.
 
 ## Critérios de aceite
 
-- [ ] uma operação com fallback soma tentativas corretamente.
-- [ ] replay/idempotency não duplica usage.
-- [ ] cost_basis sempre presente.
-- [ ] unknown model não vira custo zero silencioso.
-- [ ] redaction verde.
+- [x] uma operação com fallback soma tentativas corretamente.
+- [x] replay/idempotency não duplica usage.
+- [x] cost_basis sempre presente.
+- [x] unknown model não vira custo zero silencioso.
+- [x] redaction verde.
 
 ## Gates / evidência
 
-Corpus determinístico + 3–5 chamadas reais curtas somente com aprovação/orçamento para validar metadata de providers. Sem long-run.
+Corpus determinístico + 4 chamadas reais curtas autorizadas (2 DeepSeek, 2 Groq; invoke e stream), com teto US$ 0,50, para validar metadata de providers. Custo normalizado US$ 0,000041550. Evidência: [relatório](../docs/spec182/README.md) e [JSON redigido](../docs/spec182/live-metadata-2026-10-08.json). Revisão Sol High independente técnica e live **APPROVED** em [parecer](../handoffs/SPEC-182-SOL-independent-review.md). Sem long-run.
 
 ## Contrato de idempotência/attribution
 
@@ -58,9 +58,9 @@ Prólogo e busca semântica são requests de leitura/preview sem `action_id` no 
 
 ## Gate de fechamento
 
-- [ ] fixtures cobrem success, fallback, retry structured, timeout pré-resposta, resposta billable com erro, streaming final e replay;
-- [ ] uma operação com N attempts produz exatamente N eventos esperados e um consolidado único no turno;
-- [ ] `llm_cost_usd` histórico continua carregável e novos valores vêm do consolidado normalizado;
-- [ ] prompt/narrativa/áudio bruto não aparece em tabela/log/metric;
-- [ ] provider/model desconhecido resulta em `cost_basis=unknown/estimated-conservative` e bloqueia billing exato, nunca `0`;
-- [ ] review Sol independente aprova attribution/fallback/streaming.
+- [x] fixtures cobrem success, fallback, retry structured, timeout pré-resposta, resposta billable com erro, streaming final e replay;
+- [x] uma operação com N attempts produz exatamente N eventos esperados e um consolidado único no turno;
+- [x] `llm_cost_usd` histórico continua carregável e novos valores vêm do consolidado normalizado;
+- [x] prompt/narrativa/áudio bruto não aparece em tabela/log/metric;
+- [x] provider/model desconhecido resulta em `cost_basis=unknown/estimated-conservative` e bloqueia billing exato, nunca `0`;
+- [x] review Sol independente aprova attribution/fallback/streaming.

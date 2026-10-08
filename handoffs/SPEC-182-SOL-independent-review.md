@@ -23,3 +23,15 @@ operação nova, conforme o contrato da spec.
 
 **Status da spec após a revisão: `approved`.** Não marcar `done` antes do gate
 live e da evidência final.
+
+## Revisão independente do gate live
+
+`review_run_id`: `SPEC-182-SOL-live-metadata-20261008-01`.
+Parecer: **APPROVED**. O revisor recalculou o SHA-256 do
+[`live-metadata-2026-10-08.json`](../docs/spec182/live-metadata-2026-10-08.json),
+confirmou DeepSeek/Groq × invoke/stream, uma tentativa e um evento por chamada,
+contadores presentes, bases de custo coerentes, total US$ 0,000041550 abaixo
+do teto US$ 0,50 e ausência de prompt/narrativa/áudio/chave no artefato.
+O JSON registra metadados observados e custo normalizado, não fatura do provider.
+
+Com o gate live aprovado e a suíte final verde, SPEC-182 pode ser marcada `done`.
