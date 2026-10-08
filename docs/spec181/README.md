@@ -26,7 +26,8 @@ região.
 No DSN hosted-Supabase, somente `sslmode=require|verify-full` pode aparecer na
 query, uma vez; `host`, `hostaddr`, `port`, `user`, `service` e demais overrides
 libpq são recusados. O perfil `hosted` OIDC/S3 também exige URL Postgres com
-autoridade e recusa overrides de destino. JWT `service_role` legado tem role e
+autoridade e recusa overrides de destino. Ambos exigem hostname único, sem
+listas, escapes de host ou socket Unix. JWT `service_role` legado tem role e
 project ref conferidos estruturalmente; a validade criptográfica continua a
 cargo do Supabase.
 

@@ -53,6 +53,21 @@ def _unsafe_hosted_host(host: str) -> bool:
     return _loopback_host(host) or host.lower().startswith("127.")
 
 
+def _single_database_host(host: str) -> bool:
+    """Accept one literal IP or DNS name, never libpq multi-host/socket syntax."""
+    if not host or not host.isascii() or any(ch in host for ch in (",", "%", "/", "\\")):
+        return False
+    try:
+        ipaddress.ip_address(host)
+        return True
+    except ValueError:
+        return all(
+            label and len(label) <= 63 and label[0].isalnum() and label[-1].isalnum()
+            and all(ch.isascii() and (ch.isalnum() or ch == "-") for ch in label)
+            for label in host.split(".")
+        )
+
+
 def _legacy_service_role_ref(key: str) -> str | None:
     """Check legacy JWT claims structurally; Supabase verifies its signature."""
     parts = key.split(".")
@@ -87,6 +102,7 @@ def hosted_supabase_dsn_ref(dsn: str) -> str:
     except ValueError:
         raise ValueError("DATABASE_URL inválida para hosted-supabase") from None
     if (parsed.scheme not in {"postgres", "postgresql"} or port != 6543
+            or not _single_database_host(host)
             or not parsed.password or not parsed.path.strip("/")
             or parsed.fragment or any(mode not in {"require", "verify-full"} for mode in sslmodes)):
         raise ValueError("DATABASE_URL exige pooler transacional Supabase em 6543")
@@ -240,7 +256,8 @@ class RuntimeConfig:
             if self.profile == "hosted":
                 try:
                     query = parse_qsl(db_url.query, keep_blank_values=True, strict_parsing=True)
-                    if (db_url.scheme not in {"postgres", "postgresql"} or not db_host
+                    if (db_url.scheme not in {"postgres", "postgresql"}
+                            or not _single_database_host(db_host)
                             or db_url.fragment or len(query) > 1
                             or any(key != "sslmode" or value not in {"require", "verify-ca", "verify-full"}
                                    for key, value in query)):

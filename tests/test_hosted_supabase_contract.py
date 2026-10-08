@@ -92,6 +92,9 @@ def test_legacy_bind_and_hosted_dsn_are_fail_closed() -> None:
         "host=127.0.0.1 dbname=postgres",
         base["DATABASE_URL"] + "?hostaddr=127.0.0.1",
         base["DATABASE_URL"] + "?host=outside.example&port=5432",
+        "postgresql://user:fake@localhost,db.example.com:5432/postgres",
+        "postgresql://user:fake@localhost%2Cdb.example.com:5432/postgres",
+        "postgresql://user:fake@%2Ftmp%2Fdb.example.com:5432/postgres",
     ):
         with pytest.raises(ValueError):
             RuntimeConfig.from_env({**base, "DATABASE_URL": dsn})
@@ -125,6 +128,10 @@ def test_legacy_bind_and_hosted_dsn_are_fail_closed() -> None:
     {"DATABASE_URL": hosted_env()["DATABASE_URL"] + "&sslmode=disable"},
     {"DATABASE_URL": hosted_env()["DATABASE_URL"] + "&host%61ddr=127.0.0.1"},
     {"DATABASE_URL": hosted_env()["DATABASE_URL"] + "#host=127.0.0.1"},
+    {"DATABASE_URL": "postgresql://postgres.projectref:fake@localhost,aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require"},
+    {"DATABASE_URL": "postgresql://postgres.projectref:fake@localhost%2Caws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require"},
+    {"DATABASE_URL": "postgresql://postgres.projectref:fake@outside.example,aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require"},
+    {"DATABASE_URL": "postgresql://postgres.projectref:fake@%2Ftmp%2Faws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require"},
     {"RPG_DB_POOL_MAX_SIZE": "0"},
     {"RPG_DB_POOL_MIN_SIZE": "2"},
     {"RPG_DB_POOL_TIMEOUT_SECONDS": "0"},
@@ -285,3 +292,11 @@ def test_cloud_doctor_is_read_only_and_redacts_secrets(capsys: pytest.CaptureFix
     })
     assert query_override["status"] == "invalid"
     assert query_override["checks"]["dsn_shape"] == "invalid"
+    multi_host = diagnose({
+        **values,
+        "DATABASE_URL": values["DATABASE_URL"].replace(
+            "@aws-0-us-east-1", "@localhost,aws-0-us-east-1",
+        ),
+    })
+    assert multi_host["status"] == "invalid"
+    assert multi_host["checks"]["dsn_shape"] == "invalid"
