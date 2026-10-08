@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "5703a40addd75598af14784b80d3b3190f9e879a",
+  "commit_sha": "b25bed2349196caeb1fe8690b3e0dcd1d2ea280d",
   "edge_counts": {
-    "calls": 8046,
-    "contains": 396,
-    "defines": 4836,
-    "imports": 813,
-    "likely_test_for": 483,
+    "calls": 8100,
+    "contains": 398,
+    "defines": 4864,
+    "imports": 816,
+    "likely_test_for": 485,
     "route_to": 31
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:6c977e4e9136aa6cf643fbacc1fa525c6f5dd27458c8a35544f63fb37a1e9607",
+  "graph_hash": "sha256:55acfff70be751ffb38efab55cb36691b8029c83b14e77f54559e5c844086cc8",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -204,6 +204,7 @@
     "services/graph_resolver.py",
     "services/input_normalization.py",
     "services/jev_decision.py",
+    "services/jev_rollout.py",
     "services/job_fence.py",
     "services/lease_heartbeat.py",
     "services/local_backup.py",
@@ -351,6 +352,7 @@
     "tests/test_input_normalization.py",
     "tests/test_itens_vivos.py",
     "tests/test_jev_decision_backend.py",
+    "tests/test_jev_rollout.py",
     "tests/test_jev_router_ab_experiment.py",
     "tests/test_jev_target_loot_experiment.py",
     "tests/test_letalidade_early.py",
@@ -488,14 +490,14 @@
   },
   "node_counts": {
     "artifact": 8,
-    "class": 412,
+    "class": 416,
     "endpoint": 31,
-    "file": 435,
-    "function": 1602,
+    "file": 437,
+    "function": 1609,
     "method": 352,
-    "module": 396,
-    "test": 2470
+    "module": 398,
+    "test": 2487
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:36276cffbc6bd3415aeb9c0cead41317926b650c2717605a708ff6acdccd2818"
+  "source_tree_hash": "sha256:f9945818e50c379766a51877635e38580c1c87707dc676d7674c2ea0a50425cb"
 }

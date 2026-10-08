@@ -1,5 +1,19 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **07/10 — SPEC-180 `done`; decisão Jev `NO_GO`, default `off`.** Inventário
+> por source: cinco callsites CLASSIFY. SPEC-178 perdeu 2/48 acertos do baseline
+> em rota; SPEC-179 ganhou +1 líquido em target representável, mas perdeu dois
+> acertos que A tinha; custo real indisponível. Jev continua fora do fluxo
+> padrão. Rollout reversível `off|shadow|primary` foi implementado só no router:
+> shadow é opt-in e não muda a rota; primary fica fechado por
+> `PRIMARY_CALIBRATION=None` até eval/calibração e aprovação separadas. Gates
+> Python mantêm precedência; os outros quatro callsites não migraram.
+> Evidência: `docs/spec180/README.md`; revisão Sol independente **APPROVED** em
+> `handoffs/SPEC-180-SOL-independent-review.md`. Smoke local com `off` passou;
+> suíte completa **1.964 passed, 35 skipped, 15 deselected**; governança de
+> 6 datasets e Project Index sincronizado verdes. Próxima:
+> SPEC-181 (contrato hosted Supabase), dependente desta decisão.
+
 > **07/10 — SPEC-179 `done`; A/B target/loot live concluído.** Corpus
 > experimental de 14 casos congelado em `6792193`, hash `748ab521...89034`.
 > Primeiro raw parou no gate Python `target.missing_id` após 17 chamadas;

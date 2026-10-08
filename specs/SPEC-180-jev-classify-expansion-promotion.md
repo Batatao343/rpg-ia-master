@@ -1,6 +1,6 @@
 # SPEC-180 — Expansão seletiva de Jev e decisão de promoção
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Depende de:** SPEC-179 `done`
 > **EXECUTOR_MODEL obrigatório:** `Sol`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -36,14 +36,14 @@ Decidir, com evidência, quais callsites de `ModelTier.CLASSIFY` podem migrar pa
 
 ## Critérios de aceite
 
-- [ ] todos os callsites CLASSIFY do HEAD inventariados;
-- [ ] nenhuma migração sem eval/evidência;
-- [ ] free-form não convertido a Choice à força;
-- [ ] rollout `off/shadow/primary` e fallback testados;
-- [ ] regression routing protegida continua verde;
-- [ ] paths protegidos byte-identical salvo tarefa de eval-authoring separada;
-- [ ] revisão Sol independente aprovada;
-- [ ] sem long-run.
+- [x] todos os callsites CLASSIFY do HEAD inventariados;
+- [x] nenhuma migração sem eval/evidência;
+- [x] free-form não convertido a Choice à força;
+- [x] rollout `off/shadow/primary` e fallback testados;
+- [x] regression routing protegida continua verde;
+- [x] paths protegidos byte-identical salvo tarefa de eval-authoring separada;
+- [x] revisão Sol independente aprovada;
+- [x] sem long-run.
 
 ## Regra de decisão pré-declarada
 
@@ -57,9 +57,16 @@ A spec pode implementar os modos `off|shadow|primary`, mas o default pós-spec �
 
 ## Gate de fechamento
 
-- [ ] todos os callsites CLASSIFY do HEAD foram listados por source search e classificados;
-- [ ] nenhum `mixed/free_form` migrou;
-- [ ] `shadow` não afeta gameplay nem duplica side effects;
-- [ ] `primary` (quando manualmente habilitado) tem timeout/idempotency/fallback testados;
-- [ ] rollback para `off` não exige migration nem recomputação de saves;
-- [ ] review Sol independente aprova a decisão e o modo default.
+- [x] todos os callsites CLASSIFY do HEAD foram listados por source search e classificados;
+- [x] nenhum `mixed/free_form` migrou;
+- [x] `shadow` não afeta gameplay nem duplica side effects;
+- [x] `primary` (caminho futuro simulado; hoje bloqueado por calibração ausente) tem timeout/idempotency/fallback testados;
+- [x] rollback para `off` não exige migration nem recomputação de saves;
+- [x] review Sol independente aprova a decisão e o modo default.
+
+> **Fechamento 2026-10-07:** `NO_GO` pela regra pré-declarada; default `off`.
+> `PRIMARY_CALIBRATION=None` impede promoção via env. Inventário, métricas e
+> limitações em `docs/spec180/README.md`; revisão independente em
+> `handoffs/SPEC-180-SOL-independent-review.md`. Nenhuma chamada Jev live nesta
+> spec e nenhuma alteração da régua protegida. Smoke local `off` passou;
+> suíte completa: **1.964 passed, 35 skipped, 15 deselected**.
