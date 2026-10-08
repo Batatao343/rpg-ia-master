@@ -1,5 +1,18 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **08/10 — SPEC-182 `done`; metering real por tentativa entregue.** Ledger `app.usage_events`
+> com RLS e atribuição owner/operação/jogo, contadores por tentativa e custo com
+> origem/versionamento. Turnos, criação, prólogo, busca semântica, embeddings de
+> worker, compressão da crônica e arte dinâmica agora registram uso; falhas e
+> retries preservam as tentativas, e o custo consolidado do turno soma o ledger.
+> Testes offline e Postgres local cobrem fallback, replay, stream, RLS, falha e
+> retry. Suíte completa: **2.029 passed, 43 skipped, 15 deselected**; integração
+> Postgres local: **13 passed**. Quatro chamadas live autorizadas
+> (DeepSeek/Groq × invoke/stream) retornaram usage; custo normalizado total
+> **US$ 0,000041550** sob teto US$ 0,50. Revisões Sol High técnica e live
+> **APPROVED** ([parecer](handoffs/SPEC-182-SOL-independent-review.md)).
+> [Evidência e limites](docs/spec182/README.md). Próxima: SPEC-183 (pricing).
+
 > **08/10 — SPEC-181 `done`; hosted-Supabase pronto para configuração cloud.**
 > Novo `RPG_RUNTIME_PROFILE=hosted-supabase` compõe Auth/Storage Supabase com
 > Postgres/pgvector e pool transacional serverless (0..1 por instância por

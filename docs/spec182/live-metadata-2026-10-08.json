@@ -1,0 +1,107 @@
+{
+  "rows": [
+    {
+      "provider": "deepseek",
+      "model": "deepseek-v4-flash",
+      "mode": "invoke",
+      "attempts": [
+        {
+          "outcome": "success",
+          "usage": {
+            "input_tokens": 9,
+            "output_tokens": 1,
+            "cached_tokens": 0
+          }
+        }
+      ],
+      "normalized": [
+        {
+          "input_units": 9,
+          "output_units": 1,
+          "cached_units": 0,
+          "cost_usd": "0.000003900",
+          "cost_basis": "estimated",
+          "billing_exact": false
+        }
+      ],
+      "cumulative_usd": "0.000003900"
+    },
+    {
+      "provider": "groq",
+      "model": "openai/gpt-oss-20b",
+      "mode": "invoke",
+      "attempts": [
+        {
+          "outcome": "success",
+          "usage": {
+            "input_tokens": 77,
+            "output_tokens": 37
+          }
+        }
+      ],
+      "normalized": [
+        {
+          "input_units": 77,
+          "output_units": 37,
+          "cached_units": null,
+          "cost_usd": "0.000016875",
+          "cost_basis": "token_priced",
+          "billing_exact": true
+        }
+      ],
+      "cumulative_usd": "0.000020775"
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-v4-flash",
+      "mode": "stream",
+      "attempts": [
+        {
+          "outcome": "success",
+          "usage": {
+            "input_tokens": 9,
+            "output_tokens": 1,
+            "cached_tokens": 0
+          }
+        }
+      ],
+      "normalized": [
+        {
+          "input_units": 9,
+          "output_units": 1,
+          "cached_units": 0,
+          "cost_usd": "0.000003900",
+          "cost_basis": "estimated",
+          "billing_exact": false
+        }
+      ],
+      "cumulative_usd": "0.000024675"
+    },
+    {
+      "provider": "groq",
+      "model": "openai/gpt-oss-20b",
+      "mode": "stream",
+      "attempts": [
+        {
+          "outcome": "success",
+          "usage": {
+            "input_tokens": 77,
+            "output_tokens": 37
+          }
+        }
+      ],
+      "normalized": [
+        {
+          "input_units": 77,
+          "output_units": 37,
+          "cached_units": null,
+          "cost_usd": "0.000016875",
+          "cost_basis": "token_priced",
+          "billing_exact": true
+        }
+      ],
+      "cumulative_usd": "0.000041550"
+    }
+  ],
+  "max_usd": "0.50"
+}

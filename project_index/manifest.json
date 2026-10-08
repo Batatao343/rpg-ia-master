@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "b09a06e6582ba8dd2c2f32468a424f1a0c660afd",
+  "commit_sha": "3da5a20160652fba96979f11f42e46414214ffc6",
   "edge_counts": {
-    "calls": 8141,
-    "contains": 401,
-    "defines": 4901,
-    "imports": 819,
-    "likely_test_for": 487,
+    "calls": 8298,
+    "contains": 405,
+    "defines": 4985,
+    "imports": 830,
+    "likely_test_for": 494,
     "route_to": 31
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:10bb834ccb3a4b9cdbb9b4ece7cd35c531f500353f80fc8d3276a70bb177cfb4",
+  "graph_hash": "sha256:74e6191ab1faaae33787e28990be2b914d3559af3bd04f0d94e14c8a9530c745",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -99,6 +99,7 @@
     "infrastructure/supabase_blob.py",
     "infrastructure/supabase_identity.py",
     "infrastructure/testing.py",
+    "infrastructure/usage_events.py",
     "inventory.py",
     "llm_setup.py",
     "main.py",
@@ -233,6 +234,7 @@
     "services/turn_execution.py",
     "services/turn_outcome.py",
     "services/turn_pipeline.py",
+    "services/usage_metering.py",
     "services/visual_catalog.py",
     "services/world_validators.py",
     "state.py",
@@ -434,6 +436,8 @@
     "tests/test_turn_effects_atomicity.py",
     "tests/test_turn_latency_contract.py",
     "tests/test_turn_pipeline_concurrency.py",
+    "tests/test_usage_capture.py",
+    "tests/test_usage_metering.py",
     "tests/test_visual_assets.py",
     "tests/test_weather_global.py",
     "tests/test_worker_fence_local.py",
@@ -493,14 +497,14 @@
   },
   "node_counts": {
     "artifact": 8,
-    "class": 421,
+    "class": 433,
     "endpoint": 31,
-    "file": 440,
-    "function": 1617,
-    "method": 352,
-    "module": 401,
-    "test": 2511
+    "file": 444,
+    "function": 1642,
+    "method": 357,
+    "module": 405,
+    "test": 2553
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:420d8e6dbb52540a5c70ab58732c6eda4938912c46d1ac318eb3af2ae1194915"
+  "source_tree_hash": "sha256:0988a2344a483bcb77015415b4bfc29dd500efc54b0c5505968f98775028b672"
 }

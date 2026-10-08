@@ -19,6 +19,8 @@ import os
 import threading
 import time
 from contextlib import contextmanager
+from contextvars import ContextVar
+from collections.abc import Mapping
 from dataclasses import dataclass
 from enum import Enum
 from typing import TYPE_CHECKING, Callable, Literal, Optional
@@ -106,6 +108,57 @@ class LLMAttemptEvent:
     structured: bool
     structured_failure_code: Optional[str] = None
     recovery: Optional[str] = None
+    usage: Optional[dict[str, int | str]] = None
+
+
+def _usage_snapshot(result: object) -> Optional[dict[str, int | str]]:
+    """Copy only numeric usage/cost metadata, never content or raw responses."""
+    if isinstance(result, Mapping) and "raw" in result:
+        result = result["raw"]
+    source = getattr(result, "usage_metadata", None)
+    metadata = getattr(result, "response_metadata", None)
+    if not isinstance(metadata, Mapping):
+        metadata = {}
+    if not isinstance(source, Mapping):
+        source = metadata.get("token_usage") or metadata.get("usage")
+    if not isinstance(source, Mapping):
+        source = {}
+    provider_usage = metadata.get("token_usage") or metadata.get("usage") or {}
+    if not isinstance(provider_usage, Mapping):
+        provider_usage = {}
+    input_details = source.get("input_token_details") or source.get("prompt_tokens_details") or {}
+    output_details = source.get("output_token_details") or source.get("completion_tokens_details") or {}
+    provider_input_details = provider_usage.get("prompt_tokens_details") or {}
+    if not isinstance(input_details, Mapping):
+        input_details = {}
+    if not isinstance(output_details, Mapping):
+        output_details = {}
+    if not isinstance(provider_input_details, Mapping):
+        provider_input_details = {}
+    cached = source.get("prompt_cache_hit_tokens")
+    if cached is None:
+        cached = input_details.get("cache_read", input_details.get("cached_tokens"))
+    if cached is None:
+        cached = provider_usage.get("prompt_cache_hit_tokens",
+                                    provider_input_details.get("cached_tokens"))
+    fields = {
+        "input_tokens": source.get("input_tokens", source.get("prompt_tokens")),
+        "output_tokens": source.get("output_tokens", source.get("completion_tokens")),
+        "cached_tokens": cached,
+        "audio_units": input_details.get("audio", output_details.get("audio")),
+        "image_units": input_details.get("image", output_details.get("image")),
+    }
+    safe: dict[str, int | str] = {
+        key: value for key, value in fields.items()
+        if isinstance(value, int) and not isinstance(value, bool) and value >= 0
+    }
+    cost = metadata.get("cost_usd", source.get("cost_usd"))
+    if isinstance(cost, (int, float, str)) and not isinstance(cost, bool):
+        from services.usage_metering import _money
+        valid_cost = _money(cost)
+        if valid_cost is not None:
+            safe["provider_cost_usd"] = str(valid_cost)
+    return safe or None
 
 
 # Registro de providers
@@ -254,6 +307,9 @@ def _build_openai(provider: str, temperature: float, model: str) -> "BaseLanguag
             raise ValueError(f"endpoint desconhecido para provider {provider!r}")
 
     kwargs = {}
+    if provider in {"deepseek", "groq"}:
+        # Both chat-completion APIs expose final stream usage via stream_options.
+        kwargs["stream_usage"] = True
     if provider == "deepseek" and model.startswith("deepseek-v4-"):
         # `deepseek-chat` era o alias não-pensante do Flash. O alias foi retirado
         # em 2026-07-24; preservar o modo evita raciocínio oculto/latência extra e
@@ -361,6 +417,17 @@ def _get_cached_client(provider: str, model: str, temperature: float) -> "BaseLa
 # ---------------------------------------------------------------------------
 _TELEMETRY_HOOK: Optional[Callable[[str, str, ModelTier, int, bool], None]] = None
 _ATTEMPT_TELEMETRY_HOOK: Optional[Callable[[LLMAttemptEvent], None]] = None
+_SCOPED_ATTEMPT_HOOK: ContextVar[Optional[Callable[[LLMAttemptEvent], None]]] = ContextVar(
+    "scoped_llm_attempt_hook", default=None)
+
+
+@contextmanager
+def llm_attempt_scope(fn: Callable[[LLMAttemptEvent], None]):
+    token = _SCOPED_ATTEMPT_HOOK.set(fn)
+    try:
+        yield
+    finally:
+        _SCOPED_ATTEMPT_HOOK.reset(token)
 
 
 def set_llm_telemetry_hook(fn: Optional[Callable[[str, str, ModelTier, int, bool], None]]) -> None:
@@ -388,17 +455,17 @@ def _emit_telemetry(provider: str, model: str, tier: ModelTier, latency_ms: int,
     try:
         hook(provider, model, tier, latency_ms, fell_back)
     except Exception as e:  # telemetria NUNCA derruba o turno
-        _LOG.warning("telemetry hook falhou: %s", e)
+        _LOG.warning("telemetry hook falhou: %s", type(e).__name__)
 
 
 def _emit_attempt_telemetry(event: LLMAttemptEvent) -> None:
-    hook = _ATTEMPT_TELEMETRY_HOOK
-    if hook is None:
-        return
-    try:
-        hook(event)
-    except Exception as e:  # telemetria NUNCA derruba o turno
-        _LOG.warning("attempt telemetry hook falhou: %s", e)
+    for hook in (_ATTEMPT_TELEMETRY_HOOK, _SCOPED_ATTEMPT_HOOK.get()):
+        if hook is None:
+            continue
+        try:
+            hook(event)
+        except Exception as e:  # telemetria NUNCA derruba o turno
+            _LOG.warning("attempt telemetry hook falhou: %s", type(e).__name__)
 
 
 # ---------------------------------------------------------------------------
@@ -619,7 +686,7 @@ class RoutedLLM:
             fell_back = provider_index > 0
             circuit_reason = _OPEN_CIRCUITS.get((provider, model))
             if circuit_reason:
-                errors.append(f"{provider}:{model} circuit:{circuit_reason}")
+                errors.append(f"{provider}:{model} circuit")
                 _emit_attempt_telemetry(LLMAttemptEvent(
                     provider=provider,
                     model=model,
@@ -638,8 +705,8 @@ class RoutedLLM:
                 client = _get_cached_client(provider, model, self.temperature)
             except Exception as e:
                 latency_ms = int((time.perf_counter() - build_t0) * 1000)
-                errors.append(f"{provider}:{model} build:{e}")
-                _LOG.warning("build falhou %s:%s (%s)", provider, model, e)
+                errors.append(f"{provider}:{model} build:{type(e).__name__}")
+                _LOG.warning("build falhou %s:%s (%s)", provider, model, type(e).__name__)
                 _emit_attempt_telemetry(LLMAttemptEvent(
                     provider=provider,
                     model=model,
@@ -648,7 +715,7 @@ class RoutedLLM:
                     latency_ms=latency_ms,
                     fell_back=fell_back,
                     outcome="build_error",
-                    error=str(e),
+                    error=type(e).__name__,
                     structured=structured_contract is not None,
                 ))
                 attempt_index += 1
@@ -658,8 +725,8 @@ class RoutedLLM:
                 client = self._apply(client, provider)
             except Exception as e:
                 latency_ms = int((time.perf_counter() - build_t0) * 1000)
-                errors.append(f"{provider}:{model} apply:{e}")
-                _LOG.warning("apply falhou %s:%s (%s)", provider, model, e)
+                errors.append(f"{provider}:{model} apply:{type(e).__name__}")
+                _LOG.warning("apply falhou %s:%s (%s)", provider, model, type(e).__name__)
                 _emit_attempt_telemetry(LLMAttemptEvent(
                     provider=provider,
                     model=model,
@@ -668,7 +735,7 @@ class RoutedLLM:
                     latency_ms=latency_ms,
                     fell_back=fell_back,
                     outcome="build_error",
-                    error=f"apply: {e}",
+                    error=f"apply:{type(e).__name__}",
                     structured=structured_contract is not None,
                 ))
                 attempt_index += 1
@@ -694,8 +761,8 @@ class RoutedLLM:
                     latency_ms = int((time.perf_counter() - t0) * 1000)
                 except Exception as e:
                     latency_ms = int((time.perf_counter() - t0) * 1000)
-                    errors.append(f"{provider}:{model} invoke:{e}")
-                    _LOG.warning("invoke falhou %s:%s (%s)", provider, model, e)
+                    errors.append(f"{provider}:{model} invoke:{type(e).__name__}")
+                    _LOG.warning("invoke falhou %s:%s (%s)", provider, model, type(e).__name__)
                     _emit_attempt_telemetry(LLMAttemptEvent(
                         provider=provider,
                         model=model,
@@ -704,25 +771,25 @@ class RoutedLLM:
                         latency_ms=latency_ms,
                         fell_back=fell_back,
                         outcome="invoke_error",
-                        error=str(e),
+                        error=type(e).__name__,
                         structured=structured_contract is not None,
                         structured_failure_code="transport",
+                        usage=_usage_snapshot(e),
                     ))
                     attempt_index += 1
                     _open_circuit_if_permanent(provider, model, e)
                     break
+                usage_snapshot = _usage_snapshot(result)
                 result, failure_code, recovery = self._normalize_internal_structured_result(result)
                 valid, validation_error, structured = self._validate_structured_result(result)
                 if not valid:
                     last_failure_code = failure_code or "schema_validation"
-                    errors.append(
-                        f"{provider}:{model} structured:{validation_error}"
-                    )
+                    errors.append(f"{provider}:{model} structured:{last_failure_code}")
                     _LOG.warning(
                         "structured inválido %s:%s (%s)",
                         provider,
                         model,
-                        validation_error,
+                        last_failure_code,
                     )
                     _emit_attempt_telemetry(LLMAttemptEvent(
                         provider=provider,
@@ -732,9 +799,10 @@ class RoutedLLM:
                         latency_ms=latency_ms,
                         fell_back=fell_back,
                         outcome="invalid_structured",
-                        error=validation_error,
+                        error=last_failure_code,
                         structured=structured,
                         structured_failure_code=failure_code,
+                        usage=usage_snapshot,
                     ))
                     attempt_index += 1
                     continue
@@ -749,6 +817,7 @@ class RoutedLLM:
                     error=None,
                     structured=structured,
                     recovery=recovery,
+                    usage=usage_snapshot,
                 ))
                 _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
                 return result
@@ -777,7 +846,7 @@ class RoutedLLM:
             structured = self._pydantic_structured_contract() is not None
             circuit_reason = _OPEN_CIRCUITS.get((provider, model))
             if circuit_reason:
-                errors.append(f"{provider}:{model} circuit:{circuit_reason}")
+                errors.append(f"{provider}:{model} circuit")
                 _emit_attempt_telemetry(LLMAttemptEvent(
                     provider=provider,
                     model=model,
@@ -796,7 +865,7 @@ class RoutedLLM:
                 client = self._apply(client, provider)
             except Exception as e:
                 latency_ms = int((time.perf_counter() - build_t0) * 1000)
-                errors.append(f"{provider}:{model} build:{e}")
+                errors.append(f"{provider}:{model} build:{type(e).__name__}")
                 _emit_attempt_telemetry(LLMAttemptEvent(
                     provider=provider,
                     model=model,
@@ -805,7 +874,7 @@ class RoutedLLM:
                     latency_ms=latency_ms,
                     fell_back=fell_back,
                     outcome="build_error",
-                    error=str(e),
+                    error=type(e).__name__,
                     structured=structured,
                 ))
                 _open_circuit_if_permanent(provider, model, e)
@@ -831,8 +900,8 @@ class RoutedLLM:
                 return
             except Exception as e:
                 latency_ms = int((time.perf_counter() - t0) * 1000)
-                errors.append(f"{provider}:{model} stream:{e}")
-                _LOG.warning("stream falhou %s:%s (%s)", provider, model, e)
+                errors.append(f"{provider}:{model} stream:{type(e).__name__}")
+                _LOG.warning("stream falhou %s:%s (%s)", provider, model, type(e).__name__)
                 _emit_attempt_telemetry(LLMAttemptEvent(
                     provider=provider,
                     model=model,
@@ -841,17 +910,34 @@ class RoutedLLM:
                     latency_ms=latency_ms,
                     fell_back=fell_back,
                     outcome="stream_error",
-                    error=str(e),
+                    error=type(e).__name__,
                     structured=structured,
                 ))
                 _open_circuit_if_permanent(provider, model, e)
                 continue
-            yield first
+            usage_snapshot = _usage_snapshot(first)
             try:
+                yield first
                 for chunk in it:
+                    usage_snapshot = _usage_snapshot(chunk) or usage_snapshot
                     yield chunk
+            except GeneratorExit:
+                latency_ms = int((time.perf_counter() - t0) * 1000)
+                _emit_attempt_telemetry(LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="stream_error",
+                    error="consumer_closed",
+                    structured=structured,
+                    usage=usage_snapshot,
+                ))
+                raise
             except Exception as e:  # falha no meio do stream: encerra o que veio
-                _LOG.warning("stream interrompido %s:%s (%s)", provider, model, e)
+                _LOG.warning("stream interrompido %s:%s (%s)", provider, model, type(e).__name__)
                 latency_ms = int((time.perf_counter() - t0) * 1000)
                 _emit_attempt_telemetry(LLMAttemptEvent(
                     provider=provider,
@@ -863,6 +949,7 @@ class RoutedLLM:
                     outcome="stream_error",
                     error=str(e),
                     structured=structured,
+                    usage=usage_snapshot,
                 ))
                 _open_circuit_if_permanent(provider, model, e)
                 return
@@ -877,6 +964,7 @@ class RoutedLLM:
                 outcome="success",
                 error=None,
                 structured=structured,
+                usage=usage_snapshot,
             ))
             _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
             return

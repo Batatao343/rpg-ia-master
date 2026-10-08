@@ -3214,13 +3214,13 @@ specs:
   lineage_note: Hosted Supabase profile with fail-closed DSN/auth/storage, bounded transaction pool, redacted cloud doctor; Sol High independent review approved and local audit passed; no remote resources created
 - id: SPEC-182
   slug: real-usage-metering
-  status: approved
+  status: done
   path: specs/SPEC-182-real-usage-metering.md
   created_commit: null
   created_at: '2026-10-02'
-  completed_commit: null
-  completed_at: null
-  completed_order: null
+  completed_commit: 05ae3ebe336fbf8ccd67c9cab421b0d3211d455a
+  completed_at: '2026-10-08'
+  completed_order: 181
   depends_on:
   - SPEC-181
   depends_on_raw:
@@ -3228,7 +3228,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Imported approved v5 package; implementation not started
+  lineage_note: Usage ledger and provider seams delivered; 2029 offline tests, 13 local DB tests, four authorized DeepSeek/Groq live metadata calls under USD 0.50 cap, Sol High technical and live reviews approved
 - id: SPEC-183
   slug: pricing-estilhas-margin
   status: approved

@@ -16,7 +16,7 @@ import threading
 import time
 import uvicorn
 import uuid # <--- Necessário para gerar IDs de sessão
-from contextlib import nullcontext
+from contextlib import contextmanager, nullcontext
 from collections import Counter, defaultdict, deque
 from copy import deepcopy
 from fastapi import FastAPI, HTTPException, Request, Response
@@ -42,7 +42,7 @@ from llm_setup import (
     set_llm_attempt_telemetry_hook,
     set_llm_telemetry_hook,
 )
-from playtest import pricing as llm_pricing
+from services.usage_metering import normalize_attempts, operation_cost
 import progression
 from services import quest_log
 from services import state_views as sv
@@ -295,6 +295,29 @@ _llm_turn_events: contextvars.ContextVar = contextvars.ContextVar(
     "rpg_llm_turn_events", default=None)
 _llm_attempt_events: contextvars.ContextVar = contextvars.ContextVar(
     "rpg_llm_attempt_events", default=None)
+_embedding_attempt_events: contextvars.ContextVar = contextvars.ContextVar(
+    "rpg_embedding_attempt_events", default=None)
+
+
+def _embedding_telemetry_hook(event: dict) -> None:
+    captured = _embedding_attempt_events.get()
+    if captured is not None:
+        captured.append(event)
+
+
+def _captured_usage(claim):
+    if claim is None:
+        return []
+    events = normalize_attempts(
+        _usage_attempts(_llm_turn_events.get(), _llm_attempt_events.get()),
+        operation_id=claim.operation_id,
+        component=f"llm:{claim.lease_token}",
+    )
+    events.extend(normalize_attempts(
+        _embedding_attempt_events.get() or [], operation_id=claim.operation_id,
+        component=f"embedding:{claim.lease_token}", category="embedding",
+    ))
+    return events
 
 # Hardening 2026-08-11: mutações do mesmo save são serializadas no processo.
 # A Fase 10b substituirá isto por transação/lock distribuído no storage.
@@ -310,13 +333,7 @@ def _game_lock(game_id: Optional[str]) -> threading.RLock:
 
 def _telemetry_hook(provider: str, model: str, tier, latency_ms: int,
                     fell_back: bool) -> None:
-    from observability.metrics import metrics
     from observability.telemetry import span
-    metrics.increment(
-        "rpg_llm_cost_usd_total",
-        {"provider": provider, "tier": getattr(tier, "value", str(tier))},
-        amount=llm_pricing.estimate_cost(model),
-    )
     with span(
         "llm.invoke", provider=provider, tier=getattr(tier, "value", str(tier)),
         latency_ms=latency_ms, fell_back=fell_back,
@@ -344,6 +361,17 @@ def _attempt_telemetry_hook(event: LLMAttemptEvent) -> None:
         {"provider": event.provider, "tier": tier, "outcome": event.outcome},
         max(0, int(event.latency_ms)) / 1000,
     )
+    measured = normalize_attempts([{
+        "provider": event.provider, "model": event.model,
+        "outcome": event.outcome, "usage": event.usage,
+        "network_attempted": event.outcome not in {"build_error", "circuit_open"},
+    }], operation_id=uuid.UUID(int=0))
+    for item in measured:
+        metrics.increment(
+            "rpg_llm_cost_usd_total",
+            {"provider": event.provider, "tier": tier, "basis": item.cost_basis},
+            amount=float(item.cost_usd),
+        )
     acc = _llm_attempt_events.get()
     if acc is not None:
         network_attempted = event.outcome not in {"build_error", "circuit_open"}
@@ -355,9 +383,9 @@ def _attempt_telemetry_hook(event: LLMAttemptEvent) -> None:
             "latency_ms": int(event.latency_ms),
             "fell_back": bool(event.fell_back),
             "outcome": event.outcome,
-            "error": event.error,
             "structured": bool(event.structured),
             "network_attempted": network_attempted,
+            "usage": dict(event.usage) if event.usage else None,
         })
 
 
@@ -373,7 +401,8 @@ def _llm_log_fields(events: Optional[List[dict]],
         if event.get("network_attempted",
                      event.get("outcome") not in {"build_error", "circuit_open"})]
     skipped = [event for event in attempts if event not in network_attempts]
-    cost_events = network_attempts or events
+    cost_events = _usage_attempts(events, attempts)
+    normalized = normalize_attempts(cost_events, operation_id=uuid.UUID(int=0))
     return {
         "llm_calls": len(events),
         "llm_requests": len(network_attempts) if attempts else len(events),
@@ -385,8 +414,20 @@ def _llm_log_fields(events: Optional[List[dict]],
             event.get("outcome") or "?" for event in attempts)),
         "llm_providers": dict(Counter(e.get("provider") or "?" for e in events)),
         "fell_back": any(e.get("fell_back") for e in events),
-        "cost_usd_est": round(llm_pricing.turn_cost(cost_events), 6),
+        "cost_usd_est": round(float(operation_cost(normalized)), 9),
+        "cost_basis": "estimated" if any(not item.billing_exact for item in normalized)
+                      else "normalized",
     }
+
+
+def _usage_attempts(events: Optional[List[dict]],
+                    attempts: Optional[List[dict]]) -> List[dict]:
+    if attempts:
+        return list(attempts)
+    return [
+        {**event, "outcome": "success", "network_attempted": True}
+        for event in (events or [])
+    ]
 
 
 def _resolve_save_file(game_id: Optional[str]) -> Optional[str]:
@@ -1609,8 +1650,51 @@ def game_prologue(req: CreateCharacterRequest):
         "backstory": req.backstory,
         "level": req.level,
     }
-    scenario, mock = build_start_scenario(char_input)
+    with _meter_auxiliary_operation("prologue"):
+        scenario, mock = build_start_scenario(char_input)
     return {"scenario": scenario.model_dump(), "mock": mock}
+
+
+@contextmanager
+def _meter_auxiliary_operation(kind: str, *, game_id: uuid.UUID | None = None):
+    """Own stateless provider calls without persisting their input or output."""
+    from rag import embedding_usage_scope
+
+    claim = None
+    coordinator = None
+    if _database_profile():
+        from infrastructure.request_context import current_principal
+        from infrastructure.runtime import get_runtime
+
+        coordinator = get_runtime().turn_coordinator
+        operation_id = uuid.uuid4()
+        claim = coordinator.claim(
+            current_principal(), operation_id, game_id=game_id, kind=kind,
+            request_hash=hashlib.sha256(operation_id.bytes).hexdigest(),
+            base_version=None, exclusive=False,
+        )
+    llm_token = _llm_turn_events.set([])
+    attempt_token = _llm_attempt_events.set([])
+    embedding_token = _embedding_attempt_events.set([])
+    try:
+        with embedding_usage_scope(_embedding_telemetry_hook):
+            yield
+        if claim is not None:
+            coordinator.complete(claim, committed_version=None,
+                                 receipt={"status": "completed"},
+                                 usage_events=_captured_usage(claim))
+    except Exception as exc:
+        if claim is not None:
+            try:
+                coordinator.fail(claim, type(exc).__name__,
+                                 usage_events=_captured_usage(claim))
+            except Exception:
+                pass
+        raise
+    finally:
+        _llm_turn_events.reset(llm_token)
+        _llm_attempt_events.reset(attempt_token)
+        _embedding_attempt_events.reset(embedding_token)
 
 
 @app.post("/game/art/brief")
@@ -1836,13 +1920,30 @@ def dynamic_art_quality(game_id: str, generation_id: str, req: ArtQualityRequest
 @app.post("/game/new", response_model=GameResponse)
 def new_game(req: CreateCharacterRequest):
     from infrastructure.runtime import get_runtime
+    from rag import embedding_usage_scope
     from services.turn_execution import operation_scope
     from services.turn_effects import effect_scope
     claim, request_hash, prior = _begin_create_operation(req)
     if prior is not None:
         return prior
-    with operation_scope(get_runtime().turn_coordinator if claim else None, claim), effect_scope():
-        return _create_game(req, claim)
+    llm_token = _llm_turn_events.set([])
+    attempt_token = _llm_attempt_events.set([])
+    embedding_token = _embedding_attempt_events.set([])
+    try:
+        with operation_scope(get_runtime().turn_coordinator if claim else None, claim), effect_scope(), embedding_usage_scope(_embedding_telemetry_hook):
+            return _create_game(req, claim)
+    except Exception as exc:
+        if claim is not None:
+            try:
+                get_runtime().turn_coordinator.fail(
+                    claim, type(exc).__name__, usage_events=_captured_usage(claim))
+            except Exception:
+                pass
+        raise
+    finally:
+        _llm_turn_events.reset(llm_token)
+        _llm_attempt_events.reset(attempt_token)
+        _embedding_attempt_events.reset(embedding_token)
 
 
 def _create_game(req: CreateCharacterRequest, claim):
@@ -1989,6 +2090,7 @@ def _create_game(req: CreateCharacterRequest, claim):
             version, _receipt = get_runtime().turn_coordinator.commit_create(
                 current_principal(), claim, final_state,
                 receipt={"response": response.model_dump(mode="json")}, checkpoint=True,
+                usage_events=_captured_usage(claim),
             )
             final_state["_storage_version"] = version
         else:
@@ -2002,7 +2104,6 @@ def _create_game(req: CreateCharacterRequest, claim):
                 raise RuntimeError("falha ao persistir checkpoint inicial")
         return response
     except Exception as e:
-        _fail_operation(claim, type(e).__name__)
         # Auditoria A6: detalhe interno só no log do servidor, nunca na resposta.
         print(f"Erro ao criar jogo: {e}")
         raise HTTPException(status_code=500, detail="Erro interno ao criar o jogo.")
@@ -2261,6 +2362,7 @@ def _commit_turn(
     latency_ms: int,
     llm_events: list[dict],
     llm_attempts: list[dict],
+    embedding_attempts: list[dict] | None = None,
 ) -> None:
     from services.presentation_history import record_history
     record_history(state, response.message)
@@ -2279,7 +2381,15 @@ def _commit_turn(
     commit = getattr(runtime.turn_coordinator, "commit_game", None)
     if not callable(commit):
         raise RuntimeError("coordinator durável sem commit transacional")
-    cost_events = llm_attempts or llm_events
+    llm_usage_events = normalize_attempts(
+        _usage_attempts(llm_events, llm_attempts),
+        operation_id=claim.operation_id,
+        component=f"llm:{claim.lease_token}",
+    )
+    usage_events = [*llm_usage_events, *normalize_attempts(
+        embedding_attempts or [], operation_id=claim.operation_id,
+        component=f"embedding:{claim.lease_token}", category="embedding",
+    )]
     from observability.metrics import metrics
     db_started = time.monotonic()
     from observability.telemetry import span
@@ -2290,7 +2400,8 @@ def _commit_turn(
                 receipt={"response": response.model_dump(mode="json")},
                 input_sha256=request_hash,
                 latency_ms=latency_ms,
-                llm_cost_usd=llm_pricing.turn_cost(cost_events),
+                llm_cost_usd=operation_cost(usage_events),
+                usage_events=usage_events,
                 checkpoint=checkpoint,
             )
     except Exception:
@@ -2387,7 +2498,8 @@ def _run_turn(state: dict, input_text: str,
               action_id: Optional[str] = None, *, claim=None,
               request_hash: str = "", progress=None) -> GameResponse:
     from services.turn_effects import effect_scope
-    with effect_scope():
+    from rag import embedding_usage_scope
+    with effect_scope(), embedding_usage_scope(_embedding_telemetry_hook):
         return _run_turn_collected(state, input_text, action_id, claim=claim,
                                    request_hash=request_hash, progress=progress)
 
@@ -2404,6 +2516,7 @@ def _run_turn_collected(state: dict, input_text: str,
     rejections_antes = len(state.get("event_rejections", []) or [])
     acc_token = _llm_turn_events.set([])
     attempt_token = _llm_attempt_events.set([])
+    embedding_token = _embedding_attempt_events.set([])
     try:
         previous_state = deepcopy(state)
         from services.turn_execution import execute_graph
@@ -2422,6 +2535,7 @@ def _run_turn_collected(state: dict, input_text: str,
             new_state, response, claim=claim, request_hash=request_hash,
             checkpoint=checkpoint, latency_ms=int((time.monotonic() - t0) * 1000),
             llm_events=llm_events, llm_attempts=llm_attempts,
+            embedding_attempts=_embedding_attempt_events.get() or [],
         )
         _log_turn(
             new_state, t0, eventos_antes, None, llm_events,
@@ -2446,7 +2560,18 @@ def _run_turn_collected(state: dict, input_text: str,
         if claim is not None:
             try:
                 from infrastructure.runtime import get_runtime
-                get_runtime().turn_coordinator.fail(claim, type(e).__name__)
+                failed_usage = normalize_attempts(
+                    _usage_attempts(_llm_turn_events.get(), _llm_attempt_events.get()),
+                    operation_id=claim.operation_id,
+                    component=f"llm:{claim.lease_token}",
+                )
+                failed_usage.extend(normalize_attempts(
+                    _embedding_attempt_events.get() or [],
+                    operation_id=claim.operation_id,
+                    component=f"embedding:{claim.lease_token}", category="embedding",
+                ))
+                get_runtime().turn_coordinator.fail(
+                    claim, type(e).__name__, usage_events=failed_usage)
             except Exception:
                 pass
         _log_turn(
@@ -2458,6 +2583,7 @@ def _run_turn_collected(state: dict, input_text: str,
     finally:
         _llm_turn_events.reset(acc_token)
         _llm_attempt_events.reset(attempt_token)
+        _embedding_attempt_events.reset(embedding_token)
 
 
 def _execute_action(req: ActionRequest, *, progress=None) -> GameResponse:
@@ -2834,12 +2960,15 @@ def search_chronicle_endpoint(req: ChronicleSearchRequest):
 
             runtime = get_runtime()
             if runtime.resources and isinstance(runtime.memory_store, PgVectorMemoryStore):
-                semantic = ChronicleRepository(
-                    runtime.resources[0], runtime.memory_store,
-                ).semantic_candidates(
-                    current_principal(), uuid.UUID(str(state["game_id"])),
-                    req.query, top_k=req.top_k,
-                )
+                with _meter_auxiliary_operation(
+                    "chronicle_search", game_id=uuid.UUID(str(state["game_id"]))
+                ):
+                    semantic = ChronicleRepository(
+                        runtime.resources[0], runtime.memory_store,
+                    ).semantic_candidates(
+                        current_principal(), uuid.UUID(str(state["game_id"])),
+                        req.query, top_k=req.top_k,
+                    )
         return search_chronicle(
             state.get("chronicle") or [], req.query, top_k=req.top_k,
             semantic=semantic,
