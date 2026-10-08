@@ -1,7 +1,7 @@
 # SPEC-179 — pré voo do experimento target/loot
 
-Estado: primeiro live interrompido após 17 chamadas; recuperação restrita em
-preparação. Ainda não há score A/B completo, revisão de resultado ou promoção.
+Estado: SPEC-179 `done`. A/B live completo por retomada auditável; revisão Sol
+do resultado **APPROVED**. Não há promoção de Jev para produção.
 
 ## Corpus experimental
 
@@ -38,6 +38,35 @@ específico daquela rodada e não autoriza esta execução.
   (`handoffs/SPEC-179-SOL-recovery-review.md`). Focados: 20/20; Ruff verde.
 - Suíte completa da recuperação: **1.956 passed, 35 skipped, 15 deselected**
   em 219,42 s.
+
+## Resultado live completo
+
+- Run `SPEC-179-20261008T003243Z-8b3d8749`, produto `f778e03`, 14/14 linhas,
+  25/40 chamadas cumulativas (17 iniciais + 8 retomadas), zero erro de braço.
+- Raw `evals/runs/jev-target-loot/20261008T003242Z-resume/raw.json` (gitignored):
+  SHA-256 `cb60be1a01304b4888fbd6e52ac7ac171100f3b2dadd51c9e607491e91548350`.
+- Summary do mesmo diretório: SHA-256
+  `c7d08e2a8526718e4617a3cb1f8b838cb9fafffe46cb363185d740520f97851e`.
+- Auditoria local recalculou o summary a partir do raw com igualdade exata;
+  25 tentativas persistidas = 13 DeepSeek + 12 Jev, igual ao ledger de budget.
+  O erro da primeira execução consta em `a_before_resume`. Custo real ficou
+  `unavailable`; US$ 0,25 é reserva interna, não cobrança certificada.
+
+| Medida | A: router atual | B: Jev | Cobertura |
+|---|---:|---:|---|
+| target | 5/8 (62,5%) | 6/8 (75%) | 8 representáveis; 2 fallbacks |
+| loot_context | 4/4 (100%) | 4/4 (100%) | 4 representáveis |
+
+Target teve cinco divergências entre braços. Os dois casos não representáveis
+entraram no denominador sem Choice Jev; ambos usaram fallback atual. A contagem
+de target inválido foi zero. O corpus é pequeno e experimental: os números
+descrevem apenas estes casos, sem evidência suficiente para promoção.
+
+Revisão independente final em `handoffs/SPEC-179-SOL-result-review.md`:
+hashes, prefixo, diff de produção, ledger, denominadores e ausência de promoção
+aprovados. Suíte completa final: **1.957 passed, 35 skipped, 15 deselected** em
+178,89 s. A próxima decisão de rollout pertence à SPEC-180 e à sua regra
+pré-declarada.
 
 ## Guardas do runner
 

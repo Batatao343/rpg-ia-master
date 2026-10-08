@@ -3163,13 +3163,13 @@ specs:
   lineage_note: Sol High substitution authorized; after TypeSafe rotation and DeepSeek recharge, 3 paired replicas complete in 98 calls (102 cumulative); independent Sol result review approved development evidence, no promotion
 - id: SPEC-179
   slug: jev-target-loot-context-eval
-  status: approved
+  status: done
   path: specs/SPEC-179-jev-target-loot-context-eval.md
   created_commit: null
   created_at: '2026-10-02'
-  completed_commit: null
-  completed_at: null
-  completed_order: null
+  completed_commit: f778e03d42e7002223c77f506b1120ac49906de1
+  completed_at: '2026-10-07'
+  completed_order: 178
   depends_on:
   - SPEC-178
   depends_on_raw:
@@ -3177,7 +3177,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Imported approved v5 package; implementation not started
+  lineage_note: Experimental corpus frozen before Jev calls; live resumed from immutable raw after deterministic Python gate; 25 cumulative calls, independent Sol result review approved, no production promotion
 - id: SPEC-180
   slug: jev-classify-expansion-promotion
   status: approved

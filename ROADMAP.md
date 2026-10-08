@@ -1,14 +1,13 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
-> **07/10 — [SPEC-179](specs/SPEC-179-jev-target-loot-context-eval.md) live parcial.**
-> Corpus de 14 casos congelado em `6792193`, 12 representáveis e 2 com
-> fallback. [PR draft #15](https://github.com/Batatao343/rpg-ia-master/pull/15)
-> empilhado sobre #14. Sob teto próprio de 40 chamadas/US$ 0,40, o primeiro
-> live parou após 17 chamadas por um gate Python não tratado pelo runner; raw
-> preservado. Recuperação cumulativa (mais 8 chamadas) aprovada em revisão Sol;
-> **1.956 passed, 35 skipped, 15 deselected**. Score,
-> revisão de resultado e fechamento continuam pendentes; SPEC-180 depende da
-> 179. [Evidência](docs/spec179/README.md).
+> **07/10 — [SPEC-179](specs/SPEC-179-jev-target-loot-context-eval.md) `done`.**
+> A/B experimental de target/loot completo por retomada auditável: 25/40
+> chamadas cumulativas; target CLASSIFY 5/8, Jev 6/8; loot 4/4 em ambos.
+> Dois fallbacks e zero target inválido; custo real indisponível. Revisão Sol
+> independente aprovada, **sem promoção**. Suíte final: **1.957 passed,
+> 35 skipped, 15 deselected**. [Relatório e hashes](docs/spec179/README.md);
+> [PR draft #15](https://github.com/Batatao343/rpg-ia-master/pull/15)
+> empilhado sobre #14. Próxima: SPEC-180, que aplica a regra de rollout.
 
 > **05/10 — [SPEC-178](specs/SPEC-178-jev-router-ab-eval.md) `done`.** A/B
 > live de 3 réplicas pareadas concluído: CLASSIFY 48/48 e Jev 46/48 nos
