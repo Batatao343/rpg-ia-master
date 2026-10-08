@@ -95,6 +95,9 @@ def test_legacy_bind_and_hosted_dsn_are_fail_closed() -> None:
         "postgresql://user:fake@localhost,db.example.com:5432/postgres",
         "postgresql://user:fake@localhost%2Cdb.example.com:5432/postgres",
         "postgresql://user:fake@%2Ftmp%2Fdb.example.com:5432/postgres",
+        "postgresql://user:fake@2130706433:5432/postgres",
+        "postgresql://user:fake@0x7f000001:5432/postgres",
+        "postgresql://user:fake@0177.0.0.1:5432/postgres",
     ):
         with pytest.raises(ValueError):
             RuntimeConfig.from_env({**base, "DATABASE_URL": dsn})

@@ -7,6 +7,7 @@ import ipaddress
 import base64
 import binascii
 import json
+import socket
 import threading
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -46,7 +47,13 @@ def _loopback_host(host: str) -> bool:
     try:
         return ipaddress.ip_address(normalized).is_loopback
     except ValueError:
-        return False
+        try:
+            numeric = socket.getaddrinfo(normalized, None, flags=socket.AI_NUMERICHOST)
+        except socket.gaierror:
+            return False
+        return bool(numeric) and all(
+            ipaddress.ip_address(item[4][0]).is_loopback for item in numeric
+        )
 
 
 def _unsafe_hosted_host(host: str) -> bool:
@@ -61,11 +68,18 @@ def _single_database_host(host: str) -> bool:
         ipaddress.ip_address(host)
         return True
     except ValueError:
+        pass
+    try:
+        # Non-canonical numeric IPv4 (octal/hex/integer) can resolve to
+        # loopback while looking like a DNS label to ipaddress.
+        socket.getaddrinfo(host, None, flags=socket.AI_NUMERICHOST)
+    except socket.gaierror:
         return all(
             label and len(label) <= 63 and label[0].isalnum() and label[-1].isalnum()
             and all(ch.isascii() and (ch.isalnum() or ch == "-") for ch in label)
             for label in host.split(".")
         )
+    return False
 
 
 def _legacy_service_role_ref(key: str) -> str | None:
