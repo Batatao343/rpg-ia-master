@@ -43,6 +43,7 @@ class PostgresPool:
             kwargs["prepare_threshold"] = None
         else:
             kwargs["options"] = "-c statement_timeout=15000 -c lock_timeout=5000"
+        self._transaction_pooler = transaction_pooler
         self._pool = ConnectionPool(
             conninfo=dsn,
             min_size=min_size,
@@ -55,6 +56,11 @@ class PostgresPool:
     @contextmanager
     def connection(self) -> Iterator[Connection]:
         with self._pool.connection() as connection:
+            if self._transaction_pooler:
+                # SET LOCAL lives only for this transaction; the serverless
+                # transaction pooler must not retain session settings.
+                connection.execute("SET LOCAL statement_timeout = 15000")
+                connection.execute("SET LOCAL lock_timeout = 5000")
             yield connection
 
     def close(self) -> None:

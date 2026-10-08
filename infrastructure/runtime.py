@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import os
 import ipaddress
+import base64
+import binascii
+import json
 import threading
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Mapping
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import parse_qsl, urlsplit
 from uuid import UUID
 
 from infrastructure.contracts import (
@@ -40,12 +43,32 @@ def _loopback_host(host: str) -> bool:
     normalized = host.strip("[]").rstrip(".").lower()
     if normalized == "localhost" or normalized.endswith(".localhost"):
         return True
-    if normalized.startswith("127."):
-        return True
     try:
         return ipaddress.ip_address(normalized).is_loopback
     except ValueError:
         return False
+
+
+def _unsafe_hosted_host(host: str) -> bool:
+    return _loopback_host(host) or host.lower().startswith("127.")
+
+
+def _legacy_service_role_ref(key: str) -> str | None:
+    """Check legacy JWT claims structurally; Supabase verifies its signature."""
+    parts = key.split(".")
+    if len(parts) != 3 or not all(parts):
+        raise ValueError("SUPABASE_SERVICE_ROLE_KEY exige service_role JWT")
+    try:
+        payload = base64.urlsafe_b64decode(parts[1] + "=" * (-len(parts[1]) % 4))
+        claims = json.loads(payload)
+    except (ValueError, UnicodeDecodeError, binascii.Error):
+        raise ValueError("SUPABASE_SERVICE_ROLE_KEY exige service_role JWT") from None
+    if not isinstance(claims, dict) or claims.get("role") != "service_role":
+        raise ValueError("SUPABASE_SERVICE_ROLE_KEY exige role service_role")
+    ref = claims.get("ref")
+    if ref is not None and not isinstance(ref, str):
+        raise ValueError("SUPABASE_SERVICE_ROLE_KEY contém project_ref inválida")
+    return ref
 
 
 def hosted_supabase_dsn_ref(dsn: str) -> str:
@@ -55,12 +78,17 @@ def hosted_supabase_dsn_ref(dsn: str) -> str:
         host = (parsed.hostname or "").lower()
         port = parsed.port
         user = parsed.username or ""
-        sslmodes = parse_qs(parsed.query).get("sslmode", [])
+        query = parse_qsl(parsed.query, keep_blank_values=True, strict_parsing=True)
+        # libpq treats URL query parameters as effective connection settings.
+        # A second host/port/user here would bypass the authority checks below.
+        if len(query) > 1 or any(key != "sslmode" for key, _ in query):
+            raise ValueError("DATABASE_URL contém parâmetros não permitidos")
+        sslmodes = [value for _, value in query]
     except ValueError:
         raise ValueError("DATABASE_URL inválida para hosted-supabase") from None
     if (parsed.scheme not in {"postgres", "postgresql"} or port != 6543
             or not parsed.password or not parsed.path.strip("/")
-            or any(mode not in {"require", "verify-full"} for mode in sslmodes)):
+            or parsed.fragment or any(mode not in {"require", "verify-full"} for mode in sslmodes)):
         raise ValueError("DATABASE_URL exige pooler transacional Supabase em 6543")
     if host.endswith(".pooler.supabase.com"):
         # Shared Supavisor requires the project ref in the username.
@@ -200,14 +228,25 @@ class RuntimeConfig:
                     or not 0.1 <= self.db_pool_timeout <= 30):
                 raise ValueError("RPG_DB_POOL_* fora dos limites seguros")
         if self.profile in {"hosted", "hosted-supabase"}:
-            if _loopback_host(self.bind_host):
+            if _unsafe_hosted_host(self.bind_host):
                 raise ValueError(f"perfil {self.profile} exige bind de serviço explícito")
             try:
-                db_host = (urlsplit(self.database_url).hostname or "").lower()
+                db_url = urlsplit(self.database_url)
+                db_host = (db_url.hostname or "").lower()
             except ValueError:
                 raise ValueError("DATABASE_URL inválida") from None
-            if _loopback_host(db_host) or db_host == "0.0.0.0":
+            if _unsafe_hosted_host(db_host) or db_host == "0.0.0.0":
                 raise ValueError("perfil hosted recusa DATABASE_URL loopback")
+            if self.profile == "hosted":
+                try:
+                    query = parse_qsl(db_url.query, keep_blank_values=True, strict_parsing=True)
+                    if (db_url.scheme not in {"postgres", "postgresql"} or not db_host
+                            or db_url.fragment or len(query) > 1
+                            or any(key != "sslmode" or value not in {"require", "verify-ca", "verify-full"}
+                                   for key, value in query)):
+                        raise ValueError
+                except ValueError:
+                    raise ValueError("DATABASE_URL hosted exige URL Postgres sem override de destino") from None
         if self.profile in {"portable", "hosted"}:
             if self.auth_mode != "oidc":
                 raise ValueError(f"perfil {self.profile} exige auth OIDC")
@@ -229,11 +268,14 @@ class RuntimeConfig:
                 raise ValueError("SUPABASE_PUBLISHABLE_KEY deve ser publishable")
             if self.supabase_publishable_key == self.supabase_service_role_key:
                 raise ValueError("publishable e service role devem ser credenciais distintas")
-            if (not self.supabase_service_role_key.startswith("sb_secret_")
-                    and self.supabase_service_role_key.count(".") != 2):
-                raise ValueError("SUPABASE_SERVICE_ROLE_KEY exige secret key ou service_role JWT")
-            if hosted_supabase_dsn_ref(self.database_url) != _supabase_api_ref(self.supabase_url):
+            db_ref = hosted_supabase_dsn_ref(self.database_url)
+            api_ref = _supabase_api_ref(self.supabase_url)
+            if db_ref != api_ref:
                 raise ValueError("DATABASE_URL e SUPABASE_URL apontam a projetos diferentes")
+            if not self.supabase_service_role_key.startswith("sb_secret_"):
+                key_ref = _legacy_service_role_ref(self.supabase_service_role_key)
+                if key_ref is not None and key_ref != api_ref:
+                    raise ValueError("service_role JWT aponta a projeto diferente")
         if self.supabase_service_role_key and self.supabase_service_role_key.startswith("VITE_"):
             raise ValueError("service role nunca pode usar namespace Vite")
 

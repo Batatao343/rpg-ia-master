@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import base64
 import json
 
 import pytest
@@ -22,6 +23,11 @@ def hosted_env() -> dict[str, str]:
         "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_PUBLIC_SENTINEL",
         "SUPABASE_SERVICE_ROLE_KEY": "sb_secret_PRIVATE_SENTINEL",
     }
+
+
+def legacy_service_role_jwt(role: str, ref: str = "projectref") -> str:
+    payload = base64.urlsafe_b64encode(json.dumps({"role": role, "ref": ref}).encode()).decode().rstrip("=")
+    return f"header.{payload}.signature"
 
 
 def test_new_profile_and_legacy_contracts() -> None:
@@ -57,6 +63,38 @@ def test_new_profile_and_legacy_contracts() -> None:
             **hosted_env(), "RPG_RUNTIME_PROFILE": "hosted",
             "RPG_BLOB_STORE": "s3",
         })
+    assert RuntimeConfig.from_env({
+        **hosted_env(), "SUPABASE_SERVICE_ROLE_KEY": legacy_service_role_jwt("service_role"),
+    }).profile == "hosted-supabase"
+
+
+@pytest.mark.parametrize("key", [
+    legacy_service_role_jwt("anon"),
+    legacy_service_role_jwt("authenticated"),
+    legacy_service_role_jwt("service_role", "otherref"),
+    "header.payload.signature",
+])
+def test_hosted_rejects_non_service_role_jwt(key: str) -> None:
+    with pytest.raises(ValueError):
+        RuntimeConfig.from_env({**hosted_env(), "SUPABASE_SERVICE_ROLE_KEY": key})
+
+
+def test_legacy_bind_and_hosted_dsn_are_fail_closed() -> None:
+    with pytest.raises(ValueError, match="loopback"):
+        RuntimeConfig.from_env({"RPG_BIND_HOST": "127.public.example"})
+    base = {
+        "RPG_RUNTIME_PROFILE": "hosted", "RPG_BIND_HOST": "0.0.0.0",
+        "DATABASE_URL": "postgresql://user:fake@db.example.com:5432/postgres",
+        "RPG_OIDC_USERINFO_URL": "https://identity.example/userinfo",
+        "RPG_OIDC_ISSUER": "https://identity.example",
+    }
+    for dsn in (
+        "host=127.0.0.1 dbname=postgres",
+        base["DATABASE_URL"] + "?hostaddr=127.0.0.1",
+        base["DATABASE_URL"] + "?host=outside.example&port=5432",
+    ):
+        with pytest.raises(ValueError):
+            RuntimeConfig.from_env({**base, "DATABASE_URL": dsn})
 
 
 @pytest.mark.parametrize("override", [
@@ -78,6 +116,15 @@ def test_new_profile_and_legacy_contracts() -> None:
     {"DATABASE_URL": "postgresql://postgres.projectref:fake@aws-0-us-east-1.pooler.supabase.com:5432/postgres"},
     {"DATABASE_URL": "postgresql://postgres.otherref:fake@aws-0-us-east-1.pooler.supabase.com:6543/postgres"},
     {"DATABASE_URL": "postgresql://postgres.projectref:fake@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=disable"},
+    {"DATABASE_URL": hosted_env()["DATABASE_URL"] + "&host=127.0.0.1"},
+    {"DATABASE_URL": hosted_env()["DATABASE_URL"] + "&hostaddr=127.0.0.1"},
+    {"DATABASE_URL": hosted_env()["DATABASE_URL"] + "&host=outside.example&port=5432"},
+    {"DATABASE_URL": hosted_env()["DATABASE_URL"] + "&user=attacker.otherproject"},
+    {"DATABASE_URL": hosted_env()["DATABASE_URL"] + "&service=outside"},
+    {"DATABASE_URL": hosted_env()["DATABASE_URL"] + "&options=-c%20search_path%3Doutside"},
+    {"DATABASE_URL": hosted_env()["DATABASE_URL"] + "&sslmode=disable"},
+    {"DATABASE_URL": hosted_env()["DATABASE_URL"] + "&host%61ddr=127.0.0.1"},
+    {"DATABASE_URL": hosted_env()["DATABASE_URL"] + "#host=127.0.0.1"},
     {"RPG_DB_POOL_MAX_SIZE": "0"},
     {"RPG_DB_POOL_MIN_SIZE": "2"},
     {"RPG_DB_POOL_TIMEOUT_SECONDS": "0"},
@@ -132,6 +179,44 @@ def test_pool_uses_transaction_safe_psycopg_settings(monkeypatch: pytest.MonkeyP
     postgres.PostgresPool("postgresql://localhost/postgres").close()
     assert "options" in seen[2]["kwargs"]
     assert "prepare_threshold" not in seen[2]["kwargs"]
+
+
+def test_transaction_pool_reestablishes_local_query_timeouts(monkeypatch: pytest.MonkeyPatch) -> None:
+    from infrastructure import postgres
+
+    commands: list[str] = []
+
+    class FakeConnection:
+        def execute(self, statement: str) -> None:
+            commands.append(statement)
+
+    class ConnectionContext:
+        def __enter__(self) -> FakeConnection:
+            return FakeConnection()
+
+        def __exit__(self, *_args: object) -> None:
+            pass
+
+    class FakePool:
+        def __init__(self, **_kwargs: object):
+            pass
+
+        def connection(self) -> ConnectionContext:
+            return ConnectionContext()
+
+        def close(self) -> None:
+            pass
+
+    monkeypatch.setattr(postgres, "ConnectionPool", FakePool)
+    with postgres.PostgresPool(hosted_env()["DATABASE_URL"], transaction_pooler=True).connection():
+        pass
+    assert commands == [
+        "SET LOCAL statement_timeout = 15000", "SET LOCAL lock_timeout = 5000",
+    ]
+    commands.clear()
+    with postgres.PostgresPool("postgresql://localhost/postgres").connection():
+        pass
+    assert commands == []
 
 
 def test_hosted_runtime_wires_supabase_auth_storage_and_single_pool(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -195,3 +280,8 @@ def test_cloud_doctor_is_read_only_and_redacts_secrets(capsys: pytest.CaptureFix
     inherited_legacy = diagnose({**values, "RPG_BLOB_STORE": "file"})
     assert inherited_legacy["status"] == "invalid"
     assert inherited_legacy["checks"]["RPG_BLOB_STORE"] == "invalid"
+    query_override = diagnose({
+        **values, "DATABASE_URL": values["DATABASE_URL"] + "&hostaddr=127.0.0.1",
+    })
+    assert query_override["status"] == "invalid"
+    assert query_override["checks"]["dsn_shape"] == "invalid"

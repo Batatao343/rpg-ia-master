@@ -22,11 +22,21 @@ em porta 6543. O project ref do DSN e da API precisa coincidir. Recusa
 loopback, filesystem BlobStore, auth disabled/OIDC, DSN direto/sessão,
 credenciais ausentes, `sslmode` fraco e pool fora dos limites. Para conectar,
 copie o DSN de **Transaction pooler** do painel; não fabrique o hostname da
-região. O pool por instância warm inicia em 0 e tem máximo 1 por padrão;
+região.
+No DSN hosted-Supabase, somente `sslmode=require|verify-full` pode aparecer na
+query, uma vez; `host`, `hostaddr`, `port`, `user`, `service` e demais overrides
+libpq são recusados. O perfil `hosted` OIDC/S3 também exige URL Postgres com
+autoridade e recusa overrides de destino. JWT `service_role` legado tem role e
+project ref conferidos estruturalmente; a validade criptográfica continua a
+cargo do Supabase.
+
+O pool por instância warm inicia em 0 e tem máximo 1 por padrão;
 `RPG_DB_POOL_MIN_SIZE`, `RPG_DB_POOL_MAX_SIZE` (1–4) e
 `RPG_DB_POOL_TIMEOUT_SECONDS` (0,1–30) podem ajustá-lo. `prepare_threshold=None`
 evita prepared statements incompatíveis com modo transacional;
 `sslmode=require` é forçado, preservando `verify-full` quando escolhido.
+Cada checkout transacional abre `SET LOCAL` para `statement_timeout=15s` e
+`lock_timeout=5s`, que expiram junto com a transação e não vazam entre clientes.
 `reset_runtime()` fecha o pool compartilhado. [Guia oficial de conexão](https://supabase.com/docs/guides/database/connecting-to-postgres),
 [Psycopg prepared statements](https://www.psycopg.org/psycopg3/docs/advanced/prepare.html).
 
