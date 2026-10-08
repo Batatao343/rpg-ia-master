@@ -37,4 +37,6 @@ Corpus offline: `tests/test_usage_metering.py`, `tests/test_usage_capture.py`, `
 
 Suíte completa após as correções: **2.029 passed, 43 skipped, 15 deselected** (`uv run --no-sync pytest`, `--basetemp` ASCII no Windows). Integração Postgres local focada: **13 passed**. Nenhuma alteração foi feita em evaluator, expected ou dataset de regressão.
 
+Revisão independente Sol High: **APPROVED técnico**, 47 testes focados verdes, sem blocker remanescente. [Parecer](../../handoffs/SPEC-182-SOL-independent-review.md).
+
 Gate pendente: 3–5 chamadas reais curtas para conferir metadata DeepSeek/Groq, somente após aprovação de teto de chamadas e custo. Nenhum long-run é necessário.

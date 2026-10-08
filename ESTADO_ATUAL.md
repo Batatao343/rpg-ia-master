@@ -7,8 +7,10 @@
 > retries preservam as tentativas, e o custo consolidado do turno soma o ledger.
 > Testes offline e Postgres local cobrem fallback, replay, stream, RLS, falha e
 > retry. Suíte completa: **2.029 passed, 43 skipped, 15 deselected**; integração
-> Postgres local: **13 passed**. [Evidência e limites](docs/spec182/README.md). SPEC-182 continua
-> `approved` até revisão independente final e gate de 3–5 chamadas reais curtas
+> Postgres local: **13 passed**. Revisão Sol High independente **APPROVED**,
+> [parecer](handoffs/SPEC-182-SOL-independent-review.md).
+> [Evidência e limites](docs/spec182/README.md). SPEC-182 continua
+> `approved` até o gate de 3–5 chamadas reais curtas
 > com orçamento específico; nenhuma chamada live desta spec foi feita.
 
 > **08/10 — SPEC-181 `done`; hosted-Supabase pronto para configuração cloud.**

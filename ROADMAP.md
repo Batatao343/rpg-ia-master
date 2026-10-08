@@ -4,7 +4,8 @@
 > Metering por tentativa implementado para turnos, criação, prólogo, busca da
 > crônica, workers de embedding/compressão e arte. Ledger vincula owner/operação/
 > jogo, separa custo exato de estimativa e consolida no turno. Falta o gate de
-> 3–5 chamadas reais curtas com teto próprio e revisão Sol final; spec segue
+> 3–5 chamadas reais curtas com teto próprio; revisão Sol High independente
+> [aprovada](handoffs/SPEC-182-SOL-independent-review.md), spec segue
 > `approved`. Suíte completa: **2.029 passed, 43 skipped, 15 deselected**;
 > Postgres local **13 passed**. [Evidência](docs/spec182/README.md).
 
