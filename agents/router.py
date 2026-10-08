@@ -145,6 +145,13 @@ def dm_router_node(state: GameState):
     if _EXPLICIT_STORY_RE.search(last_human):
         return _base_route_payload(RouteType.STORY, world)
 
+    # SPEC-180: Jev is opt-in and limited to decisions its closed contract can
+    # fully represent. Shadow never supplies a route; every other result uses
+    # the existing CLASSIFY path. Python gates above retain precedence.
+    from services.jev_rollout import decide_route
+    if decide_route(state, last_human) == RouteType.STORY.value:
+        return _base_route_payload(RouteType.STORY, world)
+
     system_instruction = f"""
     Roteador de RPG. Classifique a intenção da ÚLTIMA mensagem do jogador.
     
