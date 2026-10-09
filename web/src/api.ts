@@ -141,13 +141,26 @@ export async function sendActionStream(
 export const getState = (game_id: string) =>
   req<GameResponse>("/game/state?game_id=" + encodeURIComponent(game_id));
 
-export interface HistoryEntry { id: string; turn: number; epoch: number; role: 'player' | 'narrator'; text: string; type: import('./types').LogEntry['type'] }
+export interface HistoryEntry { id: string; turn: number; epoch: number; role: 'player' | 'narrator'; text: string; type: import('./types').LogEntry['type']; cost_milli?: string | null; technical_cost_usd?: string | null; technical_cost_basis?: string | null; technical_cost_exact?: boolean }
 export const getHistory = (game: string, cursor?: string) => req<{
   entries: HistoryEntry[]; next_cursor: string | null; epoch: number; partial_history: boolean;
 }>(`/game/history?game_id=${encodeURIComponent(game)}${cursor ? '&cursor=' + encodeURIComponent(cursor) : ''}`);
 export const getOperation = (game: string, operation: string) => req<{
   status: string; response: GameResponse | null; request_hash?: string;
 }>(`/game/${encodeURIComponent(game)}/operations/${encodeURIComponent(operation)}`);
+export const getTurnCost = (game: string, operation: string) => req<{
+  history_id: string | null; epoch?: number; cost_milli: string | null;
+  technical_cost_usd: string | null; technical_cost_basis: string | null; technical_cost_exact: boolean;
+}>(`/game/${encodeURIComponent(game)}/operations/${encodeURIComponent(operation)}/cost`);
+export interface AccountBalance { available_milli: string; reserved_milli: string }
+export interface AccountPoint { start: string; game: string; image: string; voice: string; total: string }
+export interface AccountHistoryItem { id: string; created_at: string; category: 'game' | 'image' | 'voice'; operation: string }
+export interface PurchaseItem { id: string; created_at: string; kind: 'purchase' | 'refund' | 'reversal'; amount_milli: string }
+export interface AccountPage<T> { items: T[]; next_cursor: string | null }
+export const getAccountBalance = () => req<AccountBalance>('/account/balance');
+export const getAccountSeries = (period: '24h' | '7d' | '30d') => req<{ period: string; unit: 'milli_shard'; totals: Record<'game' | 'image' | 'voice', string>; points: AccountPoint[] }>(`/account/series?period=${period}`);
+export const getAccountUsage = (cursor?: string) => req<AccountPage<AccountHistoryItem>>(`/account/usage${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`);
+export const getAccountPurchases = (cursor?: string) => req<AccountPage<PurchaseItem>>(`/account/purchases${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`);
 export interface ArtStatus { status: string; placeholder: boolean; assets?: Array<{
   asset_id: string; variant: string; url: string; width: number; height: number;
 }> }

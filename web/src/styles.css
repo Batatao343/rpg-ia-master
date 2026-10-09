@@ -1039,6 +1039,62 @@ select {
   right: 0.75rem;
   width: auto;
 }
+.account-shell-link {
+  position: fixed; z-index: 50; top: 0.75rem; right: 9rem; width: auto;
+}
+.account-screen {
+  width: min(100% - 2rem, 960px); margin: 0 auto; padding: 5rem 0 3rem;
+  color: var(--ink);
+}
+.account-screen__header, .account-card__heading {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+}
+.account-screen h1, .account-screen h2 { font-family: var(--display); }
+.account-screen h1 { margin: 0; font-size: clamp(1.7rem, 5vw, 2.5rem); }
+.account-screen h2 { margin: 0 0 0.8rem; font-size: 1.25rem; }
+.account-card {
+  margin-top: 1.2rem; padding: clamp(1rem, 3vw, 1.6rem); border: 1px solid var(--line-soft);
+  background: var(--surface); border-radius: var(--r-md);
+}
+.account-kicker { color: var(--muted); margin: 0; }
+.account-balance { font: 600 clamp(2rem, 7vw, 3.4rem) var(--display); color: var(--accent); margin: 0.3rem 0; }
+.account-balance span { font-size: 0.4em; }
+.account-periods { display: flex; gap: 0.35rem; }
+.account-periods [aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.account-chart {
+  display: flex; align-items: end; gap: 3px; height: 150px; padding: 0.5rem 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.account-chart__bar { flex: 1; min-width: 2px; height: 100%; display: flex; flex-direction: column-reverse; justify-content: flex-start; }
+.account-chart__segment { display: block; min-height: 0; }
+.account-chart__segment--game { background: var(--accent); }
+.account-chart__segment--image { background: #88a7a0; }
+.account-chart__segment--voice { background: #b07d8c; }
+.account-legend { color: var(--muted); font-size: 0.85rem; }
+.account-chart-data summary { cursor: pointer; color: var(--accent); }
+.account-chart-data__scroll { overflow-x: auto; max-width: 100%; }
+.account-chart-data table { border-collapse: collapse; width: 100%; min-width: 520px; }
+.account-chart-data th, .account-chart-data td { padding: 0.45rem; border-bottom: 1px solid var(--line-soft); text-align: right; }
+.account-chart-data th:first-child { text-align: left; }
+.account-card ul { padding: 0; margin: 0.5rem 0 1rem; list-style: none; }
+.account-card li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--line-soft); }
+.account-card time { color: var(--muted); }
+.msg__cost { position: relative; display: inline-flex; align-items: center; margin-top: 0.5rem; }
+.msg__cost-button {
+  border: 1px solid var(--line-soft); background: transparent; border-radius: 50%;
+  color: var(--faint); min-width: 32px; min-height: 32px; cursor: pointer;
+}
+.msg__cost-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.msg__cost-detail {
+  display: none; margin-left: 0.5rem; color: var(--muted); font-size: 0.84rem;
+}
+.msg__cost:hover .msg__cost-detail, .msg__cost:focus-within .msg__cost-detail,
+.msg__cost-detail.is-open { display: inline; }
+@media (max-width: 600px) {
+  .account-shell-link { right: 7.5rem; max-width: calc(100vw - 9rem); }
+  .account-card li { flex-direction: column; gap: 0.2rem; }
+  .account-chart { gap: 1px; }
+}
 
 /* O mapa é também navegação: preserva o desenho dos nós ao usar controles
    semânticos e deixa destinos conhecidos acessíveis por teclado. */

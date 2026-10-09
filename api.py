@@ -87,7 +87,7 @@ def _database_profile() -> bool:
 @app.middleware("http")
 async def _session_boundary(request: Request, call_next):
     """Auth/CSRF só nos perfis Postgres; legacy loopback permanece intacto."""
-    if not _database_profile() or not request.url.path.startswith("/game"):
+    if not _database_profile() or not request.url.path.startswith(("/game", "/account")):
         return await call_next(request)
     from infrastructure.contracts import Unauthorized
     from infrastructure.request_context import reset_current_principal, set_current_principal
@@ -1605,9 +1605,94 @@ def game_history(game_id: str, cursor: Optional[str] = None, limit: int = 50):
         raise HTTPException(404, 'Jogo não encontrado.')
     from services.presentation_history import history_page
     try:
-        return history_page(state, cursor=cursor, limit=limit)
+        page = history_page(state, cursor=cursor, limit=limit)
+        # Enrichment must never mutate a presentation_history row held by the
+        # loaded GameState, even transiently.
+        page['entries'] = [dict(entry) for entry in page['entries']]
     except (ValueError, TypeError) as exc:
         raise HTTPException(409, 'history_cursor_stale') from exc
+    # Financial data is an optional read projection. A failed query must never
+    # hide the narrative or invent zero spend.
+    if _database_profile() and page['entries']:
+        try:
+            from infrastructure.account_read_model import PostgresAccountReader
+            from infrastructure.request_context import current_principal
+            from infrastructure.runtime import get_runtime
+            reader = PostgresAccountReader(get_runtime().game_store.pool)
+            costs = reader.history_costs(current_principal(), uuid.UUID(game_id), page['entries'])
+            for entry in page['entries']:
+                if entry.get('role') == 'narrator':
+                    entry.update(costs.get(entry['id'],
+                                       {'cost_milli': None, 'technical_cost_usd': None,
+                                        'technical_cost_basis': None, 'technical_cost_exact': False}))
+        except Exception:
+            for entry in page['entries']:
+                if entry.get('role') == 'narrator':
+                    entry['cost_milli'] = None
+                    entry['technical_cost_usd'] = None
+                    entry['technical_cost_basis'] = None
+                    entry['technical_cost_exact'] = False
+    return page
+
+
+def _account_reader():
+    if not _database_profile():
+        raise HTTPException(404, 'Conta indisponível neste perfil.')
+    from infrastructure.account_read_model import PostgresAccountReader
+    from infrastructure.runtime import get_runtime
+    return PostgresAccountReader(get_runtime().game_store.pool)
+
+
+@app.get('/account/balance')
+def account_balance():
+    from infrastructure.request_context import current_principal
+    return _account_reader().balance(current_principal())
+
+
+@app.get('/account/purchases')
+def account_purchases(cursor: Optional[str] = None, limit: int = 20):
+    from infrastructure.request_context import current_principal
+    try:
+        return _account_reader().purchases(current_principal(), cursor=cursor, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+
+
+@app.get('/account/usage')
+def account_usage(cursor: Optional[str] = None, limit: int = 20):
+    from infrastructure.request_context import current_principal
+    try:
+        return _account_reader().usage(current_principal(), cursor=cursor, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+
+
+@app.get('/account/series')
+def account_series(period: str = '7d'):
+    from infrastructure.request_context import current_principal
+    try:
+        return _account_reader().series(current_principal(), period)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+
+
+@app.get('/game/{game_id}/operations/{operation_id}/cost')
+def turn_cost(game_id: str, operation_id: str):
+    state = load_game_state(_resolve_save_file(game_id))
+    if not state:
+        raise HTTPException(404, 'Jogo não encontrado.')
+    if not _database_profile():
+        return {'history_id': None, 'cost_milli': None, 'technical_cost_usd': None,
+                'technical_cost_basis': None, 'technical_cost_exact': False}
+    from infrastructure.request_context import current_principal
+    try:
+        cost = _account_reader().operation_cost(current_principal(), uuid.UUID(game_id),
+                                                uuid.UUID(operation_id))
+    except ValueError as exc:
+        raise HTTPException(400, 'ID inválido.') from exc
+    if cost is None:
+        raise HTTPException(404, 'Turno não encontrado.')
+    return cost
 
 
 @app.get('/game/{game_id}/operations/{operation_id}')
@@ -2365,7 +2450,7 @@ def _commit_turn(
     embedding_attempts: list[dict] | None = None,
 ) -> None:
     from services.presentation_history import record_history
-    record_history(state, response.message)
+    presentation_entry_id = record_history(state, response.message)
     if claim is None:
         _require_saved(state, detail="turno")
         if checkpoint:
@@ -2403,6 +2488,7 @@ def _commit_turn(
                 llm_cost_usd=operation_cost(usage_events),
                 usage_events=usage_events,
                 checkpoint=checkpoint,
+                presentation_entry_id=presentation_entry_id,
             )
     except Exception:
         metrics.increment("rpg_turn_commits_total", {"outcome": "error"})
