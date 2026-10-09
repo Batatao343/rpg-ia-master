@@ -1,5 +1,16 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **09/10 — [SPEC-185](specs/SPEC-185-account-dashboard-cost-attribution.md)
+> `done`.** Account fora da campanha, saldo discreto, históricos paginados,
+> séries UTC de consumo liquidado e custo técnico sob demanda por turno.
+> Atribuição por ID de apresentação/operação/epoch com isolamento de owner;
+> quatro E2E Chromium, 12 testes focados e suíte Python completa
+> **2.056 passed, 59 skipped, 15 deselected** verdes.
+> Revisão Sol High independente [aprovada](handoffs/SPEC-185-SOL-independent-review.md).
+> [Evidência](docs/spec185/README.md). **Pendente em spec futura:** integrar
+> `reserve → execute → settle → release` das jogadas normais; não há cobrança
+> comercial ativa. Próxima: [SPEC-186](specs/SPEC-186-speech-to-text-routing.md).
+
 > **09/10 — [SPEC-184](specs/SPEC-184-wallet-ledger-reservations.md) `done`.**
 > Ledger/reservas/tickets/teto/recovery implementados e validados localmente
 > (17 testes focados, pgTAP 14/14, Ruff; suíte completa **2.093 passed,

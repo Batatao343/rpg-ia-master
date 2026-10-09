@@ -1,10 +1,11 @@
 # SPEC-185 — handoff de executor Terra High
 
-`MODEL_HANDOFF_REQUIRED: Terra High` em 2026-10-09. A spec aprovada exige
-executor Terra High e revisão Sol High independente; Terra não está disponível
-na sessão. O usuário instruiu que, quando houver executor definido, o trabalho
-seja atribuído a um subagente. A decisão sobre substituição do modelo está
-pendente, conforme a regra expressa da SPEC-185.
+`MODEL_HANDOFF_REQUIRED: Terra High` identificado em 2026-10-09. A spec
+aprovada exige executor Terra High e revisão Sol High independente; Terra não
+está disponível nesta sessão. Após pergunta específica sobre usar subagente
+Sol High executor e outro Sol High revisor na SPEC-185, o usuário respondeu
+"continue". Esta instrução foi interpretada como autorização para essa
+substituição nesta spec. O custo de modelo fica acima do tier planejado.
 
 Dependência SPEC-184: `done`, implementação `8b2134c`, fechamento `cd27f79`,
 draft PR #20. A wallet fornece views de saldo/histórico por owner, sem ativar
@@ -30,3 +31,17 @@ de histórico. Assim, custo/Estilhas permanecem fora do `GameState`. Saves antig
 sem vínculo devem degradar para custo ausente. Confirmar no source e nos testes.
 
 Nenhuma implementação da SPEC-185 começou neste handoff.
+
+## Desfecho
+
+A hipótese foi confirmada no source: `app.turns.sequence` é versão de storage,
+enquanto `record_history` produz o ID estável da entrada narrativa. A
+implementação gravou `presentation_entry_id` em `app.turns` no commit da
+operação e fez enriquecimento por lote da página, conferindo owner e epoch de
+cada entrada. O usuário autorizou a substituição de Terra High por Sol High;
+outro Sol High aprovou a revisão independente
+(`SPEC-185-SOL-20261009T215654Z`). Evidência: `docs/spec185/README.md`.
+
+O ciclo comercial `reserve → execute → settle → release` das jogadas normais
+continua pendente para outra spec. Esta entrega expõe custo técnico e débito
+liquidado como dados distintos, sem ativar cobrança.

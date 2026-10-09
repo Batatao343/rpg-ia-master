@@ -1,5 +1,20 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **09/10 — SPEC-185 `done`; conta e custo por turno entregues sem ativar
+> cobrança.** Account abre sem campanha e apresenta saldo, históricos paginados
+> e séries UTC 24h/7d/30d de **consumo liquidado**. StoryLog revela custo
+> técnico USD por operação sob hover/focus/tap e separa eventual débito em
+> Estilhas. O ID persistido do narrador é vinculado a `app.turns` no commit;
+> enriquecimento do histórico é owner-scoped, em lote e degradável. Testes:
+> suíte Python completa **2.056 passed, 59 skipped, 15 deselected**, 12
+> focados (inclui Postgres real), 4 E2E
+> Chromium 390/1440, 5 Node, Ruff e TypeScript verdes. Revisão Sol High
+> independente **APPROVED** ([parecer](handoffs/SPEC-185-SOL-independent-review.md));
+> executor Sol High autorizado após handoff Terra. [Evidência](docs/spec185/README.md).
+> **Pendente:** ligar `reserve → execute → settle → release` às jogadas normais
+> em spec futura, conforme `02_BILLING_E_MARGIN.md`. Uso técnico registrado
+> ainda não é débito comercial; checkout e compra não estão ativos.
+
 > **09/10 — SPEC-184 `done`, sem ativação comercial.** Wallet por conta
 > implementada no backend/Postgres com ledger append-only, reservas, tickets
 > prévios por tentativa, teto, settlement por usage exato e recovery com fence.
