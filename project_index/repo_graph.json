@@ -1,5 +1,5 @@
 {
-  "commit_sha": "3da5a20160652fba96979f11f42e46414214ffc6",
+  "commit_sha": "4eee012d57e95bd4052f41ebe629ccf50aca8920",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -896,6 +896,17 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "infrastructure/pricing_catalog.py",
+        "line": 1
+      },
+      "source": "file:infrastructure/pricing_catalog.py",
+      "target": "module:infrastructure.pricing_catalog",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "infrastructure/request_context.py",
         "line": 1
       },
@@ -1539,6 +1550,17 @@
       },
       "source": "file:scripts/post_deploy_smoke.py",
       "target": "module:scripts.post_deploy_smoke",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/pricing_report.py",
+        "line": 1
+      },
+      "source": "file:scripts/pricing_report.py",
+      "target": "module:scripts.pricing_report",
       "type": "contains"
     },
     {
@@ -2331,6 +2353,17 @@
       },
       "source": "file:services/secret_signatures.py",
       "target": "module:services.secret_signatures",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 1
+      },
+      "source": "file:services/shard_pricing.py",
+      "target": "module:services.shard_pricing",
       "type": "contains"
     },
     {
@@ -9569,6 +9602,83 @@
       },
       "source": "file:tests/test_s3_blob.py",
       "target": "module:tests.test_s3_blob",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 14
+      },
+      "source": "file:tests/test_shard_pricing.py",
+      "target": "file:services/shard_pricing.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 19
+      },
+      "source": "file:tests/test_shard_pricing.py",
+      "target": "file:services/usage_metering.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 1
+      },
+      "source": "file:tests/test_shard_pricing.py",
+      "target": "module:tests.test_shard_pricing",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing_local.py",
+        "line": 11
+      },
+      "source": "file:tests/test_shard_pricing_local.py",
+      "target": "file:infrastructure/pricing_catalog.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing_local.py",
+        "line": 12
+      },
+      "source": "file:tests/test_shard_pricing_local.py",
+      "target": "file:services/shard_pricing.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing_local.py",
+        "line": 13
+      },
+      "source": "file:tests/test_shard_pricing_local.py",
+      "target": "file:services/usage_metering.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing_local.py",
+        "line": 1
+      },
+      "source": "file:tests/test_shard_pricing_local.py",
+      "target": "module:tests.test_shard_pricing_local",
       "type": "contains"
     },
     {
@@ -17000,6 +17110,28 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "infrastructure/pricing_catalog.py",
+        "line": 12
+      },
+      "source": "module:infrastructure.pricing_catalog",
+      "target": "module:services.shard_pricing",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/pricing_catalog.py",
+        "line": 17
+      },
+      "source": "module:infrastructure.pricing_catalog",
+      "target": "symbol:infrastructure.pricing_catalog.quote_published_sku",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "infrastructure/request_context.py",
         "line": 9
       },
@@ -24243,6 +24375,50 @@
       },
       "source": "module:scripts.post_deploy_smoke",
       "target": "symbol:scripts.post_deploy_smoke.run",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/pricing_report.py",
+        "line": 17
+      },
+      "source": "module:scripts.pricing_report",
+      "target": "module:services.shard_pricing",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/pricing_report.py",
+        "line": 21
+      },
+      "source": "module:scripts.pricing_report",
+      "target": "module:services.usage_metering",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/pricing_report.py",
+        "line": 24
+      },
+      "source": "module:scripts.pricing_report",
+      "target": "symbol:scripts.pricing_report._encode",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/pricing_report.py",
+        "line": 32
+      },
+      "source": "module:scripts.pricing_report",
+      "target": "symbol:scripts.pricing_report.main",
       "type": "defines"
     },
     {
@@ -32427,6 +32603,182 @@
       },
       "source": "module:services.secret_signatures",
       "target": "symbol:services.secret_signatures.sanitize_beat",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 18
+      },
+      "source": "module:services.shard_pricing",
+      "target": "module:services.usage_metering",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 75
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing.ChannelFee",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 35
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 91
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing.PricingVersion",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 179
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing.PurchaseQuote",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 161
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing.PurchaseSku",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 195
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing.UsageQuote",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 39
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing._decimal",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 156
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing._missing_fee",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 47
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing._numeric",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 56
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing._ratio_units",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 68
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing._utc",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 268
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing.contribution_report",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 207
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing.quote_purchase",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 239
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing.quote_usage",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 282
+      },
+      "source": "module:services.shard_pricing",
+      "target": "symbol:services.shard_pricing.version_from_record",
       "type": "defines"
     },
     {
@@ -61858,6 +62210,215 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 14
+      },
+      "source": "module:tests.test_shard_pricing",
+      "target": "module:services.shard_pricing",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 19
+      },
+      "source": "module:tests.test_shard_pricing",
+      "target": "module:services.usage_metering",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 41
+      },
+      "source": "module:tests.test_shard_pricing",
+      "target": "symbol:tests.test_shard_pricing.sku",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 218
+      },
+      "source": "module:tests.test_shard_pricing",
+      "target": "symbol:tests.test_shard_pricing.test_cli_reports_only_simulation_and_keeps_fixed_infra_separate",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 111
+      },
+      "source": "module:tests.test_shard_pricing",
+      "target": "symbol:tests.test_shard_pricing.test_estimated_or_wrong_card_usage_cannot_be_debited",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 177
+      },
+      "source": "module:tests.test_shard_pricing",
+      "target": "symbol:tests.test_shard_pricing.test_extreme_numeric_bounds_use_exact_ratio_or_fail_closed",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 131
+      },
+      "source": "module:tests.test_shard_pricing",
+      "target": "symbol:tests.test_shard_pricing.test_financial_property_conservation_and_margin_1000_cases",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 45
+      },
+      "source": "module:tests.test_shard_pricing",
+      "target": "symbol:tests.test_shard_pricing.test_golden_channel_vectors_include_fixed_fee_and_different_gross",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 64
+      },
+      "source": "module:tests.test_shard_pricing",
+      "target": "symbol:tests.test_shard_pricing.test_golden_usage_ceil_buffer_and_pricing_provenance",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 102
+      },
+      "source": "module:tests.test_shard_pricing",
+      "target": "symbol:tests.test_shard_pricing.test_missing_or_stale_fx_rate_card_fails_closed",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 83
+      },
+      "source": "module:tests.test_shard_pricing",
+      "target": "symbol:tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 161
+      },
+      "source": "module:tests.test_shard_pricing",
+      "target": "symbol:tests.test_shard_pricing.test_usage_property_ceil_never_underfunds_1000_cases",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 198
+      },
+      "source": "module:tests.test_shard_pricing",
+      "target": "symbol:tests.test_shard_pricing.test_version_loader_rejects_floats_and_roundtrips_text_config",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 25
+      },
+      "source": "module:tests.test_shard_pricing",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing_local.py",
+        "line": 11
+      },
+      "source": "module:tests.test_shard_pricing_local",
+      "target": "module:infrastructure.pricing_catalog",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing_local.py",
+        "line": 12
+      },
+      "source": "module:tests.test_shard_pricing_local",
+      "target": "module:services.shard_pricing",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing_local.py",
+        "line": 13
+      },
+      "source": "module:tests.test_shard_pricing_local",
+      "target": "module:services.usage_metering",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing_local.py",
+        "line": 19
+      },
+      "source": "module:tests.test_shard_pricing_local",
+      "target": "symbol:tests.test_shard_pricing_local._Rollback",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing_local.py",
+        "line": 23
+      },
+      "source": "module:tests.test_shard_pricing_local",
+      "target": "symbol:tests.test_shard_pricing_local.test_catalog_roundtrip_immutable_and_backend_read_only",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 47
       },
@@ -78853,6 +79414,61 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "infrastructure/pricing_catalog.py",
+        "line": 24
+      },
+      "source": "symbol:infrastructure.pricing_catalog.quote_published_sku",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/pricing_catalog.py",
+        "line": 30
+      },
+      "source": "symbol:infrastructure.pricing_catalog.quote_published_sku",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/pricing_catalog.py",
+        "line": 31
+      },
+      "source": "symbol:infrastructure.pricing_catalog.quote_published_sku",
+      "target": "symbol:services.shard_pricing.PurchaseSku",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/pricing_catalog.py",
+        "line": 35
+      },
+      "source": "symbol:infrastructure.pricing_catalog.quote_published_sku",
+      "target": "symbol:services.shard_pricing.quote_purchase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/pricing_catalog.py",
+        "line": 35
+      },
+      "source": "symbol:infrastructure.pricing_catalog.quote_published_sku",
+      "target": "symbol:services.shard_pricing.version_from_record",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "infrastructure/request_context.py",
         "line": 20
       },
@@ -93384,6 +94000,83 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "scripts/pricing_report.py",
+        "line": 44
+      },
+      "source": "symbol:scripts.pricing_report.main",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/pricing_report.py",
+        "line": 45
+      },
+      "source": "symbol:scripts.pricing_report.main",
+      "target": "symbol:services.shard_pricing.PurchaseSku",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/pricing_report.py",
+        "line": 52
+      },
+      "source": "symbol:scripts.pricing_report.main",
+      "target": "symbol:services.shard_pricing.contribution_report",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/pricing_report.py",
+        "line": 51
+      },
+      "source": "symbol:scripts.pricing_report.main",
+      "target": "symbol:services.shard_pricing.quote_purchase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/pricing_report.py",
+        "line": 64
+      },
+      "source": "symbol:scripts.pricing_report.main",
+      "target": "symbol:services.shard_pricing.quote_usage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/pricing_report.py",
+        "line": 41
+      },
+      "source": "symbol:scripts.pricing_report.main",
+      "target": "symbol:services.shard_pricing.version_from_record",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/pricing_report.py",
+        "line": 55
+      },
+      "source": "symbol:scripts.pricing_report.main",
+      "target": "symbol:services.usage_metering.UsageEvent",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "scripts/project_index_ab_harness.py",
         "line": 89
       },
@@ -106798,6 +107491,809 @@
       },
       "source": "symbol:services.secret_signatures.sanitize_beat",
       "target": "symbol:services.secret_signatures.find_unrevealed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 80
+      },
+      "source": "symbol:services.shard_pricing.ChannelFee",
+      "target": "symbol:services.shard_pricing.ChannelFee.__post_init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 82
+      },
+      "source": "symbol:services.shard_pricing.ChannelFee.__post_init__",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 87
+      },
+      "source": "symbol:services.shard_pricing.ChannelFee.__post_init__",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 83
+      },
+      "source": "symbol:services.shard_pricing.ChannelFee.__post_init__",
+      "target": "symbol:services.shard_pricing._decimal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 84
+      },
+      "source": "symbol:services.shard_pricing.ChannelFee.__post_init__",
+      "target": "symbol:services.shard_pricing._numeric",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 85
+      },
+      "source": "symbol:services.shard_pricing.ChannelFee.__post_init__",
+      "target": "symbol:services.shard_pricing._numeric",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 106
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion",
+      "target": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 152
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion",
+      "target": "symbol:services.shard_pricing.PricingVersion.fee_for",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 136
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion",
+      "target": "symbol:services.shard_pricing.PricingVersion.require_fresh",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 108
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 115
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 119
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 122
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 126
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 128
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 131
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 109
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "target": "symbol:services.shard_pricing._decimal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 110
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "target": "symbol:services.shard_pricing._decimal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 111
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "target": "symbol:services.shard_pricing._numeric",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 112
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "target": "symbol:services.shard_pricing._numeric",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 113
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "target": "symbol:services.shard_pricing._numeric",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 123
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "target": "symbol:services.shard_pricing._utc",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 124
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "target": "symbol:services.shard_pricing._utc",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 153
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.fee_for",
+      "target": "symbol:services.shard_pricing._missing_fee",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 138
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.require_fresh",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 140
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.require_fresh",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 142
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.require_fresh",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 150
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.require_fresh",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 141
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.require_fresh",
+      "target": "symbol:services.shard_pricing._utc",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 143
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.require_fresh",
+      "target": "symbol:services.shard_pricing._utc",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 148
+      },
+      "source": "symbol:services.shard_pricing.PricingVersion.require_fresh",
+      "target": "symbol:services.shard_pricing._utc",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 168
+      },
+      "source": "symbol:services.shard_pricing.PurchaseSku",
+      "target": "symbol:services.shard_pricing.PurchaseSku.__post_init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 170
+      },
+      "source": "symbol:services.shard_pricing.PurchaseSku.__post_init__",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 175
+      },
+      "source": "symbol:services.shard_pricing.PurchaseSku.__post_init__",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 171
+      },
+      "source": "symbol:services.shard_pricing.PurchaseSku.__post_init__",
+      "target": "symbol:services.shard_pricing._decimal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 172
+      },
+      "source": "symbol:services.shard_pricing.PurchaseSku.__post_init__",
+      "target": "symbol:services.shard_pricing._numeric",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 41
+      },
+      "source": "symbol:services.shard_pricing._decimal",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 43
+      },
+      "source": "symbol:services.shard_pricing._decimal",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 157
+      },
+      "source": "symbol:services.shard_pricing._missing_fee",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 52
+      },
+      "source": "symbol:services.shard_pricing._numeric",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 49
+      },
+      "source": "symbol:services.shard_pricing._numeric",
+      "target": "symbol:services.shard_pricing._decimal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 64
+      },
+      "source": "symbol:services.shard_pricing._ratio_units",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 70
+      },
+      "source": "symbol:services.shard_pricing._utc",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 270
+      },
+      "source": "symbol:services.shard_pricing.contribution_report",
+      "target": "symbol:services.shard_pricing._numeric",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 211
+      },
+      "source": "symbol:services.shard_pricing.quote_purchase",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 226
+      },
+      "source": "symbol:services.shard_pricing.quote_purchase",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 229
+      },
+      "source": "symbol:services.shard_pricing.quote_purchase",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 232
+      },
+      "source": "symbol:services.shard_pricing.quote_purchase",
+      "target": "symbol:services.shard_pricing.PurchaseQuote",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 227
+      },
+      "source": "symbol:services.shard_pricing.quote_purchase",
+      "target": "symbol:services.shard_pricing._ratio_units",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 243
+      },
+      "source": "symbol:services.shard_pricing.quote_usage",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 245
+      },
+      "source": "symbol:services.shard_pricing.quote_usage",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 247
+      },
+      "source": "symbol:services.shard_pricing.quote_usage",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 250
+      },
+      "source": "symbol:services.shard_pricing.quote_usage",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 252
+      },
+      "source": "symbol:services.shard_pricing.quote_usage",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 261
+      },
+      "source": "symbol:services.shard_pricing.quote_usage",
+      "target": "symbol:services.shard_pricing.UsageQuote",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 253
+      },
+      "source": "symbol:services.shard_pricing.quote_usage",
+      "target": "symbol:services.shard_pricing._numeric",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 259
+      },
+      "source": "symbol:services.shard_pricing.quote_usage",
+      "target": "symbol:services.shard_pricing._ratio_units",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 311
+      },
+      "source": "symbol:services.shard_pricing.version_from_record",
+      "target": "symbol:services.shard_pricing.ChannelFee",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 286
+      },
+      "source": "symbol:services.shard_pricing.version_from_record",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 290
+      },
+      "source": "symbol:services.shard_pricing.version_from_record",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 294
+      },
+      "source": "symbol:services.shard_pricing.version_from_record",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 303
+      },
+      "source": "symbol:services.shard_pricing.version_from_record",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 304
+      },
+      "source": "symbol:services.shard_pricing.version_from_record",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 308
+      },
+      "source": "symbol:services.shard_pricing.version_from_record",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 314
+      },
+      "source": "symbol:services.shard_pricing.version_from_record",
+      "target": "symbol:services.shard_pricing.PricingVersion",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 288
+      },
+      "source": "symbol:services.shard_pricing.version_from_record",
+      "target": "symbol:services.shard_pricing.version_from_record.decimal_text",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 306
+      },
+      "source": "symbol:services.shard_pricing.version_from_record",
+      "target": "symbol:services.shard_pricing.version_from_record.seconds",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 296
+      },
+      "source": "symbol:services.shard_pricing.version_from_record",
+      "target": "symbol:services.shard_pricing.version_from_record.when",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 290
+      },
+      "source": "symbol:services.shard_pricing.version_from_record.decimal_text",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 294
+      },
+      "source": "symbol:services.shard_pricing.version_from_record.decimal_text",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 308
+      },
+      "source": "symbol:services.shard_pricing.version_from_record.seconds",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 303
+      },
+      "source": "symbol:services.shard_pricing.version_from_record.when",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 304
+      },
+      "source": "symbol:services.shard_pricing.version_from_record.when",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
       "type": "calls"
     },
     {
@@ -159472,6 +160968,633 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 42
+      },
+      "source": "symbol:tests.test_shard_pricing.sku",
+      "target": "symbol:services.shard_pricing.PurchaseSku",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 117
+      },
+      "source": "symbol:tests.test_shard_pricing.test_estimated_or_wrong_card_usage_cannot_be_debited",
+      "target": "symbol:services.shard_pricing.quote_usage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 123
+      },
+      "source": "symbol:tests.test_shard_pricing.test_estimated_or_wrong_card_usage_cannot_be_debited",
+      "target": "symbol:services.shard_pricing.quote_usage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 125
+      },
+      "source": "symbol:tests.test_shard_pricing.test_estimated_or_wrong_card_usage_cannot_be_debited",
+      "target": "symbol:services.shard_pricing.quote_usage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 127
+      },
+      "source": "symbol:tests.test_shard_pricing.test_estimated_or_wrong_card_usage_cannot_be_debited",
+      "target": "symbol:services.shard_pricing.quote_usage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 112
+      },
+      "source": "symbol:tests.test_shard_pricing.test_estimated_or_wrong_card_usage_cannot_be_debited",
+      "target": "symbol:services.usage_metering.normalize_attempts",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 118
+      },
+      "source": "symbol:tests.test_shard_pricing.test_estimated_or_wrong_card_usage_cannot_be_debited",
+      "target": "symbol:services.usage_metering.normalize_attempts",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 117
+      },
+      "source": "symbol:tests.test_shard_pricing.test_estimated_or_wrong_card_usage_cannot_be_debited",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 123
+      },
+      "source": "symbol:tests.test_shard_pricing.test_estimated_or_wrong_card_usage_cannot_be_debited",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 125
+      },
+      "source": "symbol:tests.test_shard_pricing.test_estimated_or_wrong_card_usage_cannot_be_debited",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 128
+      },
+      "source": "symbol:tests.test_shard_pricing.test_estimated_or_wrong_card_usage_cannot_be_debited",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 193
+      },
+      "source": "symbol:tests.test_shard_pricing.test_extreme_numeric_bounds_use_exact_ratio_or_fail_closed",
+      "target": "symbol:services.shard_pricing.quote_purchase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 188
+      },
+      "source": "symbol:tests.test_shard_pricing.test_extreme_numeric_bounds_use_exact_ratio_or_fail_closed",
+      "target": "symbol:services.shard_pricing.quote_usage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 190
+      },
+      "source": "symbol:tests.test_shard_pricing.test_extreme_numeric_bounds_use_exact_ratio_or_fail_closed",
+      "target": "symbol:services.shard_pricing.quote_usage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 183
+      },
+      "source": "symbol:tests.test_shard_pricing.test_extreme_numeric_bounds_use_exact_ratio_or_fail_closed",
+      "target": "symbol:services.usage_metering.UsageEvent",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 193
+      },
+      "source": "symbol:tests.test_shard_pricing.test_extreme_numeric_bounds_use_exact_ratio_or_fail_closed",
+      "target": "symbol:tests.test_shard_pricing.sku",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 178
+      },
+      "source": "symbol:tests.test_shard_pricing.test_extreme_numeric_bounds_use_exact_ratio_or_fail_closed",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 195
+      },
+      "source": "symbol:tests.test_shard_pricing.test_extreme_numeric_bounds_use_exact_ratio_or_fail_closed",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 140
+      },
+      "source": "symbol:tests.test_shard_pricing.test_financial_property_conservation_and_margin_1000_cases",
+      "target": "symbol:services.shard_pricing.ChannelFee",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 150
+      },
+      "source": "symbol:tests.test_shard_pricing.test_financial_property_conservation_and_margin_1000_cases",
+      "target": "symbol:services.shard_pricing.quote_purchase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 150
+      },
+      "source": "symbol:tests.test_shard_pricing.test_financial_property_conservation_and_margin_1000_cases",
+      "target": "symbol:tests.test_shard_pricing.sku",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 138
+      },
+      "source": "symbol:tests.test_shard_pricing.test_financial_property_conservation_and_margin_1000_cases",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 59
+      },
+      "source": "symbol:tests.test_shard_pricing.test_golden_channel_vectors_include_fixed_fee_and_different_gross",
+      "target": "symbol:services.shard_pricing.contribution_report",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 46
+      },
+      "source": "symbol:tests.test_shard_pricing.test_golden_channel_vectors_include_fixed_fee_and_different_gross",
+      "target": "symbol:services.shard_pricing.quote_purchase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 47
+      },
+      "source": "symbol:tests.test_shard_pricing.test_golden_channel_vectors_include_fixed_fee_and_different_gross",
+      "target": "symbol:services.shard_pricing.quote_purchase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 46
+      },
+      "source": "symbol:tests.test_shard_pricing.test_golden_channel_vectors_include_fixed_fee_and_different_gross",
+      "target": "symbol:tests.test_shard_pricing.sku",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 47
+      },
+      "source": "symbol:tests.test_shard_pricing.test_golden_channel_vectors_include_fixed_fee_and_different_gross",
+      "target": "symbol:tests.test_shard_pricing.sku",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 46
+      },
+      "source": "symbol:tests.test_shard_pricing.test_golden_channel_vectors_include_fixed_fee_and_different_gross",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 47
+      },
+      "source": "symbol:tests.test_shard_pricing.test_golden_channel_vectors_include_fixed_fee_and_different_gross",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 73
+      },
+      "source": "symbol:tests.test_shard_pricing.test_golden_usage_ceil_buffer_and_pricing_provenance",
+      "target": "symbol:services.shard_pricing.quote_usage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 65
+      },
+      "source": "symbol:tests.test_shard_pricing.test_golden_usage_ceil_buffer_and_pricing_provenance",
+      "target": "symbol:services.usage_metering.UsageEvent",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 73
+      },
+      "source": "symbol:tests.test_shard_pricing.test_golden_usage_ceil_buffer_and_pricing_provenance",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 108
+      },
+      "source": "symbol:tests.test_shard_pricing.test_missing_or_stale_fx_rate_card_fails_closed",
+      "target": "symbol:services.shard_pricing.quote_purchase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 108
+      },
+      "source": "symbol:tests.test_shard_pricing.test_missing_or_stale_fx_rate_card_fails_closed",
+      "target": "symbol:tests.test_shard_pricing.sku",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 104
+      },
+      "source": "symbol:tests.test_shard_pricing.test_missing_or_stale_fx_rate_card_fails_closed",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 85
+      },
+      "source": "symbol:tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku",
+      "target": "symbol:services.shard_pricing.quote_purchase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 87
+      },
+      "source": "symbol:tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku",
+      "target": "symbol:services.shard_pricing.quote_purchase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 89
+      },
+      "source": "symbol:tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku",
+      "target": "symbol:services.shard_pricing.quote_purchase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 91
+      },
+      "source": "symbol:tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku",
+      "target": "symbol:services.shard_pricing.quote_purchase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 85
+      },
+      "source": "symbol:tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku",
+      "target": "symbol:tests.test_shard_pricing.sku",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 87
+      },
+      "source": "symbol:tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku",
+      "target": "symbol:tests.test_shard_pricing.sku",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 89
+      },
+      "source": "symbol:tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku",
+      "target": "symbol:tests.test_shard_pricing.sku",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 91
+      },
+      "source": "symbol:tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku",
+      "target": "symbol:tests.test_shard_pricing.sku",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 85
+      },
+      "source": "symbol:tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 87
+      },
+      "source": "symbol:tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 89
+      },
+      "source": "symbol:tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 91
+      },
+      "source": "symbol:tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 172
+      },
+      "source": "symbol:tests.test_shard_pricing.test_usage_property_ceil_never_underfunds_1000_cases",
+      "target": "symbol:services.shard_pricing.quote_usage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 167
+      },
+      "source": "symbol:tests.test_shard_pricing.test_usage_property_ceil_never_underfunds_1000_cases",
+      "target": "symbol:services.usage_metering.UsageEvent",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 166
+      },
+      "source": "symbol:tests.test_shard_pricing.test_usage_property_ceil_never_underfunds_1000_cases",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 212
+      },
+      "source": "symbol:tests.test_shard_pricing.test_version_loader_rejects_floats_and_roundtrips_text_config",
+      "target": "symbol:services.shard_pricing.version_from_record",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 215
+      },
+      "source": "symbol:tests.test_shard_pricing.test_version_loader_rejects_floats_and_roundtrips_text_config",
+      "target": "symbol:services.shard_pricing.version_from_record",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 199
+      },
+      "source": "symbol:tests.test_shard_pricing.test_version_loader_rejects_floats_and_roundtrips_text_config",
+      "target": "symbol:tests.test_shard_pricing.version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 35
+      },
+      "source": "symbol:tests.test_shard_pricing.version",
+      "target": "symbol:services.shard_pricing.ChannelFee",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 36
+      },
+      "source": "symbol:tests.test_shard_pricing.version",
+      "target": "symbol:services.shard_pricing.ChannelFee",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing.py",
+        "line": 26
+      },
+      "source": "symbol:tests.test_shard_pricing.version",
+      "target": "symbol:services.shard_pricing.PricingVersion",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_shard_pricing_local.py",
+        "line": 58
+      },
+      "source": "symbol:tests.test_shard_pricing_local.test_catalog_roundtrip_immutable_and_backend_read_only",
+      "target": "symbol:infrastructure.pricing_catalog.quote_published_sku",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 49
       },
@@ -166100,6 +168223,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:infrastructure/pricing_catalog.py",
+      "kind": "file",
+      "line": 1,
+      "path": "infrastructure/pricing_catalog.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:infrastructure/request_context.py",
       "kind": "file",
       "line": 1,
@@ -166510,6 +168640,13 @@
       "kind": "file",
       "line": 1,
       "path": "scripts/post_deploy_smoke.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:scripts/pricing_report.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/pricing_report.py",
       "qualified_name": null
     },
     {
@@ -167014,6 +169151,13 @@
       "kind": "file",
       "line": 1,
       "path": "services/secret_signatures.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:services/shard_pricing.py",
+      "kind": "file",
+      "line": 1,
+      "path": "services/shard_pricing.py",
       "qualified_name": null
     },
     {
@@ -168410,6 +170554,20 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_shard_pricing.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_shard_pricing.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_shard_pricing_local.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_shard_pricing_local.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_spec_index.py",
       "kind": "file",
       "line": 1,
@@ -169208,6 +171366,13 @@
       "qualified_name": "infrastructure.postgres_turns"
     },
     {
+      "id": "module:infrastructure.pricing_catalog",
+      "kind": "module",
+      "line": 1,
+      "path": "infrastructure/pricing_catalog.py",
+      "qualified_name": "infrastructure.pricing_catalog"
+    },
+    {
       "id": "module:infrastructure.request_context",
       "kind": "module",
       "line": 1,
@@ -169619,6 +171784,13 @@
       "line": 1,
       "path": "scripts/post_deploy_smoke.py",
       "qualified_name": "scripts.post_deploy_smoke"
+    },
+    {
+      "id": "module:scripts.pricing_report",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/pricing_report.py",
+      "qualified_name": "scripts.pricing_report"
     },
     {
       "id": "module:scripts.project_index_ab_harness",
@@ -170123,6 +172295,13 @@
       "line": 1,
       "path": "services/secret_signatures.py",
       "qualified_name": "services.secret_signatures"
+    },
+    {
+      "id": "module:services.shard_pricing",
+      "kind": "module",
+      "line": 1,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing"
     },
     {
       "id": "module:services.social_direction",
@@ -171516,6 +173695,20 @@
       "line": 1,
       "path": "tests/test_s3_blob.py",
       "qualified_name": "tests.test_s3_blob"
+    },
+    {
+      "id": "module:tests.test_shard_pricing",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_shard_pricing.py",
+      "qualified_name": "tests.test_shard_pricing"
+    },
+    {
+      "id": "module:tests.test_shard_pricing_local",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_shard_pricing_local.py",
+      "qualified_name": "tests.test_shard_pricing_local"
     },
     {
       "id": "module:tests.test_spec_index",
@@ -176192,6 +178385,13 @@
       "line": 374,
       "path": "infrastructure/postgres_turns.py",
       "qualified_name": "infrastructure.postgres_turns.PostgresTurnCoordinator.receipt"
+    },
+    {
+      "id": "symbol:infrastructure.pricing_catalog.quote_published_sku",
+      "kind": "function",
+      "line": 17,
+      "path": "infrastructure/pricing_catalog.py",
+      "qualified_name": "infrastructure.pricing_catalog.quote_published_sku"
     },
     {
       "id": "symbol:infrastructure.request_context.current_principal",
@@ -181493,6 +183693,20 @@
       "qualified_name": "scripts.post_deploy_smoke.run"
     },
     {
+      "id": "symbol:scripts.pricing_report._encode",
+      "kind": "function",
+      "line": 24,
+      "path": "scripts/pricing_report.py",
+      "qualified_name": "scripts.pricing_report._encode"
+    },
+    {
+      "id": "symbol:scripts.pricing_report.main",
+      "kind": "function",
+      "line": 32,
+      "path": "scripts/pricing_report.py",
+      "qualified_name": "scripts.pricing_report.main"
+    },
+    {
       "id": "symbol:scripts.project_index_ab_harness.HarnessError",
       "kind": "class",
       "line": 43,
@@ -186538,6 +188752,167 @@
       "line": 85,
       "path": "services/secret_signatures.py",
       "qualified_name": "services.secret_signatures.sanitize_beat"
+    },
+    {
+      "id": "symbol:services.shard_pricing.ChannelFee",
+      "kind": "class",
+      "line": 75,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.ChannelFee"
+    },
+    {
+      "id": "symbol:services.shard_pricing.ChannelFee.__post_init__",
+      "kind": "method",
+      "line": 80,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.ChannelFee.__post_init__"
+    },
+    {
+      "id": "symbol:services.shard_pricing.PricingUnavailable",
+      "kind": "class",
+      "line": 35,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.PricingUnavailable"
+    },
+    {
+      "id": "symbol:services.shard_pricing.PricingVersion",
+      "kind": "class",
+      "line": 91,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.PricingVersion"
+    },
+    {
+      "id": "symbol:services.shard_pricing.PricingVersion.__post_init__",
+      "kind": "method",
+      "line": 106,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.PricingVersion.__post_init__"
+    },
+    {
+      "id": "symbol:services.shard_pricing.PricingVersion.fee_for",
+      "kind": "method",
+      "line": 152,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.PricingVersion.fee_for"
+    },
+    {
+      "id": "symbol:services.shard_pricing.PricingVersion.require_fresh",
+      "kind": "method",
+      "line": 136,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.PricingVersion.require_fresh"
+    },
+    {
+      "id": "symbol:services.shard_pricing.PurchaseQuote",
+      "kind": "class",
+      "line": 179,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.PurchaseQuote"
+    },
+    {
+      "id": "symbol:services.shard_pricing.PurchaseSku",
+      "kind": "class",
+      "line": 161,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.PurchaseSku"
+    },
+    {
+      "id": "symbol:services.shard_pricing.PurchaseSku.__post_init__",
+      "kind": "method",
+      "line": 168,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.PurchaseSku.__post_init__"
+    },
+    {
+      "id": "symbol:services.shard_pricing.UsageQuote",
+      "kind": "class",
+      "line": 195,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.UsageQuote"
+    },
+    {
+      "id": "symbol:services.shard_pricing._decimal",
+      "kind": "function",
+      "line": 39,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing._decimal"
+    },
+    {
+      "id": "symbol:services.shard_pricing._missing_fee",
+      "kind": "function",
+      "line": 156,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing._missing_fee"
+    },
+    {
+      "id": "symbol:services.shard_pricing._numeric",
+      "kind": "function",
+      "line": 47,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing._numeric"
+    },
+    {
+      "id": "symbol:services.shard_pricing._ratio_units",
+      "kind": "function",
+      "line": 56,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing._ratio_units"
+    },
+    {
+      "id": "symbol:services.shard_pricing._utc",
+      "kind": "function",
+      "line": 68,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing._utc"
+    },
+    {
+      "id": "symbol:services.shard_pricing.contribution_report",
+      "kind": "function",
+      "line": 268,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.contribution_report"
+    },
+    {
+      "id": "symbol:services.shard_pricing.quote_purchase",
+      "kind": "function",
+      "line": 207,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.quote_purchase"
+    },
+    {
+      "id": "symbol:services.shard_pricing.quote_usage",
+      "kind": "function",
+      "line": 239,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.quote_usage"
+    },
+    {
+      "id": "symbol:services.shard_pricing.version_from_record",
+      "kind": "function",
+      "line": 282,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.version_from_record"
+    },
+    {
+      "id": "symbol:services.shard_pricing.version_from_record.decimal_text",
+      "kind": "function",
+      "line": 288,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.version_from_record.decimal_text"
+    },
+    {
+      "id": "symbol:services.shard_pricing.version_from_record.seconds",
+      "kind": "function",
+      "line": 306,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.version_from_record.seconds"
+    },
+    {
+      "id": "symbol:services.shard_pricing.version_from_record.when",
+      "kind": "function",
+      "line": 296,
+      "path": "services/shard_pricing.py",
+      "qualified_name": "services.shard_pricing.version_from_record.when"
     },
     {
       "id": "symbol:services.social_direction.build_social_direction",
@@ -204873,6 +207248,104 @@
       "qualified_name": "tests.test_s3_blob.test_s3_recusa_hash_e_expiracao_invalidos"
     },
     {
+      "id": "symbol:tests.test_shard_pricing.sku",
+      "kind": "test",
+      "line": 41,
+      "path": "tests/test_shard_pricing.py",
+      "qualified_name": "tests.test_shard_pricing.sku"
+    },
+    {
+      "id": "symbol:tests.test_shard_pricing.test_cli_reports_only_simulation_and_keeps_fixed_infra_separate",
+      "kind": "test",
+      "line": 218,
+      "path": "tests/test_shard_pricing.py",
+      "qualified_name": "tests.test_shard_pricing.test_cli_reports_only_simulation_and_keeps_fixed_infra_separate"
+    },
+    {
+      "id": "symbol:tests.test_shard_pricing.test_estimated_or_wrong_card_usage_cannot_be_debited",
+      "kind": "test",
+      "line": 111,
+      "path": "tests/test_shard_pricing.py",
+      "qualified_name": "tests.test_shard_pricing.test_estimated_or_wrong_card_usage_cannot_be_debited"
+    },
+    {
+      "id": "symbol:tests.test_shard_pricing.test_extreme_numeric_bounds_use_exact_ratio_or_fail_closed",
+      "kind": "test",
+      "line": 177,
+      "path": "tests/test_shard_pricing.py",
+      "qualified_name": "tests.test_shard_pricing.test_extreme_numeric_bounds_use_exact_ratio_or_fail_closed"
+    },
+    {
+      "id": "symbol:tests.test_shard_pricing.test_financial_property_conservation_and_margin_1000_cases",
+      "kind": "test",
+      "line": 131,
+      "path": "tests/test_shard_pricing.py",
+      "qualified_name": "tests.test_shard_pricing.test_financial_property_conservation_and_margin_1000_cases"
+    },
+    {
+      "id": "symbol:tests.test_shard_pricing.test_golden_channel_vectors_include_fixed_fee_and_different_gross",
+      "kind": "test",
+      "line": 45,
+      "path": "tests/test_shard_pricing.py",
+      "qualified_name": "tests.test_shard_pricing.test_golden_channel_vectors_include_fixed_fee_and_different_gross"
+    },
+    {
+      "id": "symbol:tests.test_shard_pricing.test_golden_usage_ceil_buffer_and_pricing_provenance",
+      "kind": "test",
+      "line": 64,
+      "path": "tests/test_shard_pricing.py",
+      "qualified_name": "tests.test_shard_pricing.test_golden_usage_ceil_buffer_and_pricing_provenance"
+    },
+    {
+      "id": "symbol:tests.test_shard_pricing.test_missing_or_stale_fx_rate_card_fails_closed",
+      "kind": "test",
+      "line": 102,
+      "path": "tests/test_shard_pricing.py",
+      "qualified_name": "tests.test_shard_pricing.test_missing_or_stale_fx_rate_card_fails_closed"
+    },
+    {
+      "id": "symbol:tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku",
+      "kind": "test",
+      "line": 83,
+      "path": "tests/test_shard_pricing.py",
+      "qualified_name": "tests.test_shard_pricing.test_quote_rejects_impossible_or_mismatched_sku"
+    },
+    {
+      "id": "symbol:tests.test_shard_pricing.test_usage_property_ceil_never_underfunds_1000_cases",
+      "kind": "test",
+      "line": 161,
+      "path": "tests/test_shard_pricing.py",
+      "qualified_name": "tests.test_shard_pricing.test_usage_property_ceil_never_underfunds_1000_cases"
+    },
+    {
+      "id": "symbol:tests.test_shard_pricing.test_version_loader_rejects_floats_and_roundtrips_text_config",
+      "kind": "test",
+      "line": 198,
+      "path": "tests/test_shard_pricing.py",
+      "qualified_name": "tests.test_shard_pricing.test_version_loader_rejects_floats_and_roundtrips_text_config"
+    },
+    {
+      "id": "symbol:tests.test_shard_pricing.version",
+      "kind": "test",
+      "line": 25,
+      "path": "tests/test_shard_pricing.py",
+      "qualified_name": "tests.test_shard_pricing.version"
+    },
+    {
+      "id": "symbol:tests.test_shard_pricing_local._Rollback",
+      "kind": "class",
+      "line": 19,
+      "path": "tests/test_shard_pricing_local.py",
+      "qualified_name": "tests.test_shard_pricing_local._Rollback"
+    },
+    {
+      "id": "symbol:tests.test_shard_pricing_local.test_catalog_roundtrip_immutable_and_backend_read_only",
+      "kind": "test",
+      "line": 23,
+      "path": "tests/test_shard_pricing_local.py",
+      "qualified_name": "tests.test_shard_pricing_local.test_catalog_roundtrip_immutable_and_backend_read_only"
+    },
+    {
       "id": "symbol:tests.test_spec_index._apply",
       "kind": "test",
       "line": 47,
@@ -206589,5 +209062,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:0988a2344a483bcb77015415b4bfc29dd500efc54b0c5505968f98775028b672"
+  "source_tree_hash": "sha256:9962971b22d37ca6ae8e1b1fd1fe5284dd07eb352ea6c961423bea3927ff5f3b"
 }

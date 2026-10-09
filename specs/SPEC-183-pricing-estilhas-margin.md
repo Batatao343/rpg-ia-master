@@ -8,6 +8,7 @@
 > **REVIEW_EFFORT:** `High`
 > **REVIEW_REQUIRED:** `true`
 > **SUBSTITUIÇÃO DE MODELO:** proibida sem aprovação explícita do usuário; mismatch => `MODEL_HANDOFF_REQUIRED`
+> **Substituição autorizada nesta execução (2026-10-08):** Terra High indisponível; após o handoff, o usuário orientou disparar subagente equivalente. Executor Sol High em subagente, com revisão Sol High independente por outro agente. Registro em `handoffs/SPEC-183-Terra-review.md`.
 > **Delegação Luna permitida:** Luna: coleta de taxas/rate cards versionados e geração de relatórios; equações/rounding ficam com Terra e revisão Sol.
 > **MODEL_BREAKDOWN:** `docs/rpg-next-jev-golive-plan/examples/spec-model-contract.yaml` → `SPEC-183` é source of truth para subtarefas/review focus
 

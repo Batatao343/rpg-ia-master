@@ -1,5 +1,11 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **SPEC-183 — implementação em andamento.** Terra High, executor original da
+> spec, não está disponível nesta sessão. Após o handoff, o usuário orientou
+> disparar um subagente equivalente; Sol High executa e outro Sol High fará
+> revisão independente. A spec continua `approved` até critérios e gates verdes.
+> [Registro da substituição](handoffs/SPEC-183-Terra-review.md).
+
 > **08/10 — SPEC-182 `done`; metering real por tentativa entregue.** Ledger `app.usage_events`
 > com RLS e atribuição owner/operação/jogo, contadores por tentativa e custo com
 > origem/versionamento. Turnos, criação, prólogo, busca semântica, embeddings de

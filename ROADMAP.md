@@ -1,5 +1,10 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **SPEC-183 em implementação.** Pricing de Estilhas segue `approved` enquanto
+> um subagente Sol High executa por orientação do usuário após indisponibilidade
+> de Terra High. Revisão independente Sol High continua obrigatória.
+> [Handoff da substituição](handoffs/SPEC-183-Terra-review.md).
+
 > **08/10 — [SPEC-182](specs/SPEC-182-real-usage-metering.md) `done`.**
 > Metering por tentativa implementado para turnos, criação, prólogo, busca da
 > crônica, workers de embedding/compressão e arte. Ledger vincula owner/operação/
