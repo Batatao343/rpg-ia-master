@@ -1,5 +1,14 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **09/10 — SPEC-184 em revisão, sem ativação comercial.** Wallet por conta
+> implementada no backend/Postgres com ledger append-only, reservas, tickets
+> prévios por tentativa, teto, settlement por usage exato e recovery com fence.
+> Testes locais focados: **17 passed**; pgTAP RLS **14/14**; Ruff verde;
+> suíte completa **2.093 passed, 13 skipped, 15 deselected**. Parecer Astra
+> independente ainda é gate de fechamento.
+> Views da wallet ficam em `public`, sem `USAGE app` para `authenticated`.
+> [Evidência](docs/spec184/README.md). A spec permanece `approved` até review.
+
 > **08/10 — SPEC-183 `done`; pricing de Estilhas versionado entregue.** Após
 > indisponibilidade de Terra High, o usuário orientou subagente equivalente:
 > Sol High executou e outro Sol High aprovou a revisão independente. Motor

@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "4eee012d57e95bd4052f41ebe629ccf50aca8920",
+  "commit_sha": "1d8b20d5b2b04193e6c86c2689a31a6ac9e36886",
   "edge_counts": {
-    "calls": 8432,
-    "contains": 410,
-    "defines": 5025,
-    "imports": 839,
-    "likely_test_for": 499,
+    "calls": 8562,
+    "contains": 413,
+    "defines": 5083,
+    "imports": 850,
+    "likely_test_for": 506,
     "route_to": 31
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:c40f15d0e53a956486ad000d43aa8cbcba7921eba8e8c5a6ca81a16f7f54b48a",
+  "graph_hash": "sha256:60a7f6fda1e64f561f54cd4a26e3a1a3f2c65efbfdfe733fa988f399e790006b",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -101,6 +101,7 @@
     "infrastructure/supabase_identity.py",
     "infrastructure/testing.py",
     "infrastructure/usage_events.py",
+    "infrastructure/wallet.py",
     "inventory.py",
     "llm_setup.py",
     "main.py",
@@ -444,6 +445,8 @@
     "tests/test_usage_capture.py",
     "tests/test_usage_metering.py",
     "tests/test_visual_assets.py",
+    "tests/test_wallet_local.py",
+    "tests/test_wallet_spend_guard.py",
     "tests/test_weather_global.py",
     "tests/test_worker_fence_local.py",
     "tests/test_worker_lease_lifecycle.py",
@@ -502,14 +505,14 @@
   },
   "node_counts": {
     "artifact": 8,
-    "class": 440,
+    "class": 448,
     "endpoint": 31,
-    "file": 449,
-    "function": 1657,
-    "method": 362,
-    "module": 410,
-    "test": 2566
+    "file": 452,
+    "function": 1665,
+    "method": 377,
+    "module": 413,
+    "test": 2593
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:9962971b22d37ca6ae8e1b1fd1fe5284dd07eb352ea6c961423bea3927ff5f3b"
+  "source_tree_hash": "sha256:648a8f0e5c5c5fdcf76fe41d6ec110dc34588da8ef195153489272b63293aee6"
 }

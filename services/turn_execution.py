@@ -2,17 +2,18 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator
-from contextlib import contextmanager
-from typing import Any
+from contextlib import contextmanager, nullcontext
+from typing import Any, ContextManager
 
 from services.lease_heartbeat import keep_lease_alive
 
 
 @contextmanager
-def operation_scope(coordinator: Any, claim: Any) -> Iterator[Any]:
+def operation_scope(coordinator: Any, claim: Any, *,
+                    spend_scope: ContextManager[None] | None = None) -> Iterator[Any]:
     renew = getattr(coordinator, 'heartbeat', None) if claim is not None else None
     try:
-        with keep_lease_alive(
+        with (spend_scope or nullcontext()), keep_lease_alive(
             (lambda: renew(claim)) if renew else None,
             interval_seconds=float(getattr(coordinator, 'lease_seconds', 180)) / 4,
         ) as lease:

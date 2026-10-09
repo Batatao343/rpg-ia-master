@@ -3262,7 +3262,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Imported approved v5 package; implementation not started
+  lineage_note: Implemented locally by required Sol High executor; status remains approved pending full gate and independent Astra High review
 - id: SPEC-185
   slug: account-dashboard-cost-attribution
   status: approved
