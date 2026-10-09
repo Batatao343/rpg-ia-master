@@ -72,4 +72,6 @@ confirmação externa; não há endpoint de compra. DeepSeek com preço
   ou erro (JUnit: 2.106 tests). No Windows, o gate precisou de `--basetemp`
   ASCII para FAISS/arte e `safe.directory` Git apenas no ambiente do processo
   por diferença de owner do sandbox; nenhum source de eval foi alterado.
-- Parecer Astra independente: pendente neste registro.
+- Parecer Astra High independente: **APPROVED**
+  ([registro](../../handoffs/SPEC-184-ASTRA-independent-review.md), run
+  `SPEC-184-ASTRA-20261009-final2`). A SPEC-184 está `done`.

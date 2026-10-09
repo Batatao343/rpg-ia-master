@@ -1,6 +1,6 @@
 # SPEC-184 — Wallet ledger, reservas e settlement atômico
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Depende de:** SPEC-183 `done`
 > **EXECUTOR_MODEL obrigatório:** `Sol`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -45,7 +45,7 @@ Stripe/Google; UI; créditos grátis; overdraft.
 - [x] saldo nunca negativo.
 - [x] crash converge.
 - [x] cliente só lê views próprias; backend é único writer.
-- [ ] Astra review aprovada.
+- [x] Astra review aprovada ([parecer](../handoffs/SPEC-184-ASTRA-independent-review.md)).
 
 ## Gates / evidência
 
@@ -64,4 +64,4 @@ Normal turns referenciam `operation_id`; outros efeitos usam reference type/id p
 - [x] crash em cada fronteira reserve->effect->settle/release converge por recovery idempotente;
 - [x] RLS/client roles não conseguem INSERT/UPDATE/DELETE ledger;
 - [x] soma do ledger reconstrói o saldo armazenado/cacheado em property/fault tests;
-- [ ] Astra independente retorna `APPROVED`; sem isso a spec não fecha.
+- [x] Astra independente retorna `APPROVED`; sem isso a spec não fecha.

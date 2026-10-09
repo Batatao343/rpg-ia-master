@@ -1,10 +1,10 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
-> **09/10 — [SPEC-184](specs/SPEC-184-wallet-ledger-reservations.md) em revisão.**
+> **09/10 — [SPEC-184](specs/SPEC-184-wallet-ledger-reservations.md) `done`.**
 > Ledger/reservas/tickets/teto/recovery implementados e validados localmente
 > (17 testes focados, pgTAP 14/14, Ruff; suíte completa **2.093 passed,
 > 13 skipped, 15 deselected**). Cobrança de produção não foi ativada.
-> Fechamento aguarda parecer Astra independente.
+> Revisão Astra High independente [aprovada](handoffs/SPEC-184-ASTRA-independent-review.md).
 > [Evidência](docs/spec184/README.md). Próxima após aprovação:
 > [SPEC-185](specs/SPEC-185-account-dashboard-cost-attribution.md).
 
