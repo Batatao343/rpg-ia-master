@@ -1,6 +1,6 @@
 # SPEC-183 — Pricing de Estilhas e margem por canal
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Depende de:** SPEC-182 `done`
 > **EXECUTOR_MODEL obrigatório:** `Terra`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -8,6 +8,7 @@
 > **REVIEW_EFFORT:** `High`
 > **REVIEW_REQUIRED:** `true`
 > **SUBSTITUIÇÃO DE MODELO:** proibida sem aprovação explícita do usuário; mismatch => `MODEL_HANDOFF_REQUIRED`
+> **Substituição autorizada nesta execução (2026-10-08):** Terra High indisponível; após o handoff, o usuário orientou disparar subagente equivalente. Executor Sol High em subagente, com revisão Sol High independente por outro agente. Registro em `handoffs/SPEC-183-Terra-review.md`.
 > **Delegação Luna permitida:** Luna: coleta de taxas/rate cards versionados e geração de relatórios; equações/rounding ficam com Terra e revisão Sol.
 > **MODEL_BREAKDOWN:** `docs/rpg-next-jev-golive-plan/examples/spec-model-contract.yaml` → `SPEC-183` é source of truth para subtarefas/review focus
 
@@ -40,11 +41,11 @@ Cobrar usuário; subscriptions; promo/free credits.
 
 ## Critérios de aceite
 
-- [ ] margem nunca fica abaixo do target por erro de rounding.
-- [ ] fee fixa de canal é contemplada.
-- [ ] Google fee tier não é hardcoded como verdade eterna.
-- [ ] pacote impossível é rejeitado.
-- [ ] pricing version de compra/usage é auditável.
+- [x] margem nunca fica abaixo do target por erro de rounding.
+- [x] fee fixa de canal é contemplada.
+- [x] Google fee tier não é hardcoded como verdade eterna.
+- [x] pacote impossível é rejeitado.
+- [x] pricing version de compra/usage é auditável.
 
 ## Gates / evidência
 
@@ -58,8 +59,10 @@ Para uso: custo variável normalizado é convertido para BRL usando FX/version +
 
 ## Gate de fechamento
 
-- [ ] property tests provam que rounding nunca concede orçamento variável maior que o disponível após fee+margem;
-- [ ] fee percentual + fee fixa e Play percentage-only/configurável são cobertas;
-- [ ] FX/rate-card ausente ou stale falha fechado para pricing comercial;
-- [ ] nenhum preço/pacote final é publicado nesta spec;
-- [ ] review Sol independente valida equações, units e rounding.
+- [x] property tests provam que rounding nunca concede orçamento variável maior que o disponível após fee+margem;
+- [x] fee percentual + fee fixa e Play percentage-only/configurável são cobertas;
+- [x] FX/rate-card ausente ou stale falha fechado para pricing comercial;
+- [x] nenhum preço/pacote final é publicado nesta spec;
+- [x] review Sol independente valida equações, units e rounding.
+
+Evidência: [relatório](../docs/spec183/README.md) e [parecer independente](../handoffs/SPEC-183-SOL-independent-review.md). Suíte completa: 2.045 passed, 44 skipped, 15 deselected; 17 testes focados verdes, inclusive Postgres local. Não houve publicação de preço comercial.

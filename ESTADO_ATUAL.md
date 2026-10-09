@@ -1,5 +1,17 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **08/10 — SPEC-183 `done`; pricing de Estilhas versionado entregue.** Após
+> indisponibilidade de Terra High, o usuário orientou subagente equivalente:
+> Sol High executou e outro Sol High aprovou a revisão independente. Motor
+> `Decimal` usa `shard_milli`, floor/ceil exatos e margem-alvo de 5%; schema
+> imutável guarda FX/rate card/fees e SKUs apenas no backend, sem publicar
+> pacote comercial. Dois riscos de borda foram corrigidos: precisão em extremo
+> NUMERIC e frescor de card date-only. **2.045 passed, 44 skipped,
+> 15 deselected**; 17 focados com Postgres local verdes. [Evidência](docs/spec183/README.md),
+> [parecer Sol](handoffs/SPEC-183-SOL-independent-review.md) e
+> [registro da substituição](handoffs/SPEC-183-Terra-review.md).
+> Próxima: SPEC-184 (wallet ledger/reservas).
+
 > **08/10 — SPEC-182 `done`; metering real por tentativa entregue.** Ledger `app.usage_events`
 > com RLS e atribuição owner/operação/jogo, contadores por tentativa e custo com
 > origem/versionamento. Turnos, criação, prólogo, busca semântica, embeddings de
