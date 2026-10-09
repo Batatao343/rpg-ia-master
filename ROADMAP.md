@@ -1,9 +1,13 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
-> **SPEC-183 em implementação.** Pricing de Estilhas segue `approved` enquanto
-> um subagente Sol High executa por orientação do usuário após indisponibilidade
-> de Terra High. Revisão independente Sol High continua obrigatória.
-> [Handoff da substituição](handoffs/SPEC-183-Terra-review.md).
+> **08/10 — [SPEC-183](specs/SPEC-183-pricing-estilhas-margin.md) `done`.**
+> Pricing versionado em `Decimal` e `shard_milli`, margem-alvo 5%, fees por
+> canal, FX/rate card com frescor e hash, versões/SKUs imutáveis e backend como
+> autoridade. Sem pacotes comerciais publicados. Executor Sol High em subagente
+> por orientação do usuário; revisão Sol High independente
+> [aprovada](handoffs/SPEC-183-SOL-independent-review.md). Suíte completa:
+> **2.045 passed, 44 skipped, 15 deselected**; 17 focados com Postgres local.
+> [Evidência](docs/spec183/README.md). Próxima: [SPEC-184](specs/SPEC-184-wallet-ledger-reservations.md).
 
 > **08/10 — [SPEC-182](specs/SPEC-182-real-usage-metering.md) `done`.**
 > Metering por tentativa implementado para turnos, criação, prólogo, busca da

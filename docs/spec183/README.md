@@ -70,3 +70,10 @@ evidência faturável.
   mutação, bloqueio de fees inválidas e `rpg_api` sem permissão de INSERT.
 - Limite: sem FX verificado da conta, fee real por canal e baseline de uso, a
   migration permanece vazia; não há pricing comercial pronto para publicar.
+
+Resultado: **17 testes focados verdes**, incluindo Postgres local; Ruff verde;
+suíte completa **2.045 passed, 44 skipped, 15 deselected**. A revisão
+independente Sol High **APPROVED** conferiu equações, units, rounding,
+imutabilidade e autoridade server-side; registrou e verificou as correções de
+precisão extrema e frescor de rate card em
+[handoffs/SPEC-183-SOL-independent-review.md](../../handoffs/SPEC-183-SOL-independent-review.md).
