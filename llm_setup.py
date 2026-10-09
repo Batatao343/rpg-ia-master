@@ -419,6 +419,8 @@ _TELEMETRY_HOOK: Optional[Callable[[str, str, ModelTier, int, bool], None]] = No
 _ATTEMPT_TELEMETRY_HOOK: Optional[Callable[[LLMAttemptEvent], None]] = None
 _SCOPED_ATTEMPT_HOOK: ContextVar[Optional[Callable[[LLMAttemptEvent], None]]] = ContextVar(
     "scoped_llm_attempt_hook", default=None)
+_SCOPED_SPEND_GUARD: ContextVar[Optional[Callable[[str, str], None]]] = ContextVar(
+    "scoped_llm_spend_guard", default=None)
 
 
 @contextmanager
@@ -428,6 +430,26 @@ def llm_attempt_scope(fn: Callable[[LLMAttemptEvent], None]):
         yield
     finally:
         _SCOPED_ATTEMPT_HOOK.reset(token)
+
+
+@contextmanager
+def llm_spend_guard_scope(fn: Callable[[str, str], None]):
+    """Paid operation guard; failure propagates before network dispatch.
+
+    Unlike telemetry this callback is authoritative and is never swallowed.
+    Every fallback and structured retry invokes it independently.
+    """
+    token = _SCOPED_SPEND_GUARD.set(fn)
+    try:
+        yield
+    finally:
+        _SCOPED_SPEND_GUARD.reset(token)
+
+
+def _authorize_provider_attempt(provider: str, model: str) -> None:
+    guard = _SCOPED_SPEND_GUARD.get()
+    if guard is not None:
+        guard(provider, model)
 
 
 def set_llm_telemetry_hook(fn: Optional[Callable[[str, str, ModelTier, int, bool], None]]) -> None:
@@ -755,6 +777,7 @@ class RoutedLLM:
                     if semantic_attempt else self._input_for_provider(input, provider)
                 )
                 t0 = time.perf_counter()
+                _authorize_provider_attempt(provider, model)
                 try:
                     with _provider_slot(provider):
                         result = client.invoke(request_input)
@@ -880,6 +903,7 @@ class RoutedLLM:
                 _open_circuit_if_permanent(provider, model, e)
                 continue
             t0 = time.perf_counter()
+            _authorize_provider_attempt(provider, model)
             try:
                 it = iter(client.stream(input))
                 first = next(it)

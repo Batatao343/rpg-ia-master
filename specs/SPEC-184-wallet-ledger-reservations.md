@@ -1,6 +1,6 @@
 # SPEC-184 — Wallet ledger, reservas e settlement atômico
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Depende de:** SPEC-183 `done`
 > **EXECUTOR_MODEL obrigatório:** `Sol`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -40,12 +40,12 @@ Stripe/Google; UI; créditos grátis; overdraft.
 
 ## Critérios de aceite
 
-- [ ] conservação financeira em todos os testes.
-- [ ] replay não cobra duas vezes.
-- [ ] saldo nunca negativo.
-- [ ] crash converge.
-- [ ] cliente só lê views próprias; backend é único writer.
-- [ ] Astra review aprovada.
+- [x] conservação financeira em todos os testes.
+- [x] replay não cobra duas vezes.
+- [x] saldo nunca negativo.
+- [x] crash converge.
+- [x] cliente só lê views próprias; backend é único writer.
+- [x] Astra review aprovada ([parecer](../handoffs/SPEC-184-ASTRA-independent-review.md)).
 
 ## Gates / evidência
 
@@ -53,15 +53,15 @@ pytest financeiro + Postgres local concorrente + fault injection + pgTAP/RLS. Se
 
 ## Invariantes formais
 
-Para cada wallet: `purchases + releases + positive_adjustments - settles - refunds - reversals - negative_adjustments = available + reserved + explicitly_accounted_debt/holds`. Reservas nunca podem ser gastas duas vezes e `available >= 0` é hard invariant.
+Para cada wallet: `purchases + positive_adjustments - settles - refunds - reversals - negative_adjustments = available + reserved`. `reserve` transfere valor de `available` para `reserved`; `release` faz a transferência inversa. Nenhum dos dois cria valor. Débito ou hold além da reserva fica fora de escopo nesta versão, que não permite overdraft. Reservas nunca podem ser gastas duas vezes e `available >= 0` é hard invariant. Correção conceitual registrada na implementação após revisão Astra: a equação anterior somava `releases` ao patrimônio e criava valor fictício.
 
 Normal turns referenciam `operation_id`; outros efeitos usam reference type/id próprio. Não ampliar `app.operations.kind` apenas para “caber billing” sem necessidade arquitetural.
 
 ## Gate de fechamento
 
-- [ ] corrida com duas reservas sobre o mesmo saldo permite no máximo o valor disponível, sem overspend;
-- [ ] replay do mesmo operation/reference gera zero débito adicional;
-- [ ] crash em cada fronteira reserve->effect->settle/release converge por recovery idempotente;
-- [ ] RLS/client roles não conseguem INSERT/UPDATE/DELETE ledger;
-- [ ] soma do ledger reconstrói o saldo armazenado/cacheado em property/fault tests;
-- [ ] Astra independente retorna `APPROVED`; sem isso a spec não fecha.
+- [x] corrida com duas reservas sobre o mesmo saldo permite no máximo o valor disponível, sem overspend;
+- [x] replay do mesmo operation/reference gera zero débito adicional;
+- [x] crash em cada fronteira reserve->effect->settle/release converge por recovery idempotente;
+- [x] RLS/client roles não conseguem INSERT/UPDATE/DELETE ledger;
+- [x] soma do ledger reconstrói o saldo armazenado/cacheado em property/fault tests;
+- [x] Astra independente retorna `APPROVED`; sem isso a spec não fecha.

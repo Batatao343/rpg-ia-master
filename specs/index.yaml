@@ -3248,13 +3248,13 @@ specs:
   lineage_note: User directed equivalent Sol High subagent when Terra unavailable; separate Sol High High review approved Decimal pricing equations, immutable server-side catalog, local DB tests and full suite; no commercial SKU seeded
 - id: SPEC-184
   slug: wallet-ledger-reservations
-  status: approved
+  status: done
   path: specs/SPEC-184-wallet-ledger-reservations.md
   created_commit: null
   created_at: '2026-10-02'
-  completed_commit: null
-  completed_at: null
-  completed_order: null
+  completed_commit: 8b2134c1ec3096326888746a1f3f805d944da18a
+  completed_at: '2026-10-09'
+  completed_order: 183
   depends_on:
   - SPEC-183
   depends_on_raw:
@@ -3262,7 +3262,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Imported approved v5 package; implementation not started
+  lineage_note: Required Sol High executor delivered append-only wallet/reservations and spend tickets; independent Astra High APPROVED after view security hardening; 2093 passed, 13 skipped, 15 deselected; pgTAP 14/14; no commercial billing activated
 - id: SPEC-185
   slug: account-dashboard-cost-attribution
   status: approved

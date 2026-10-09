@@ -1,5 +1,13 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **09/10 — [SPEC-184](specs/SPEC-184-wallet-ledger-reservations.md) `done`.**
+> Ledger/reservas/tickets/teto/recovery implementados e validados localmente
+> (17 testes focados, pgTAP 14/14, Ruff; suíte completa **2.093 passed,
+> 13 skipped, 15 deselected**). Cobrança de produção não foi ativada.
+> Revisão Astra High independente [aprovada](handoffs/SPEC-184-ASTRA-independent-review.md).
+> [Evidência](docs/spec184/README.md). Próxima após aprovação:
+> [SPEC-185](specs/SPEC-185-account-dashboard-cost-attribution.md).
+
 > **08/10 — [SPEC-183](specs/SPEC-183-pricing-estilhas-margin.md) `done`.**
 > Pricing versionado em `Decimal` e `shard_milli`, margem-alvo 5%, fees por
 > canal, FX/rate card com frescor e hash, versões/SKUs imutáveis e backend como

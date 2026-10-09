@@ -236,9 +236,24 @@ def quote_purchase(sku: PurchaseSku, version: PricingVersion, *, at: datetime) -
         )
 
 
-def quote_usage(events: Sequence[UsageEvent], version: PricingVersion, *, at: datetime) -> UsageQuote:
-    """Debit ceil(exact provider cost converted with versioned buffered FX)."""
+def quote_attempt_ceiling(cost_usd: Decimal, version: PricingVersion, *, at: datetime) -> int:
+    """Authorize one provider attempt against immutable pricing before dispatch."""
     version.require_fresh(at)
+    _numeric(cost_usd, 18, 9)
+    with localcontext() as context:
+        context.prec = 100
+        buffered_brl = cost_usd * version.fx_usd_brl * (Decimal("1") + version.fx_buffer_rate)
+        return max(1, _ratio_units(buffered_brl, version.shard_budget_unit_brl, ceiling=True))
+
+
+def quote_usage(events: Sequence[UsageEvent], version: PricingVersion, *, at: datetime,
+                authorized_snapshot: bool = False) -> UsageQuote:
+    """Debit ceil(exact provider cost converted with versioned buffered FX)."""
+    # A previously authorized reservation may settle after FX/card expiry. Its
+    # immutable pricing row and persisted exact usage, not a current quote,
+    # determine the debit. Freshness is mandatory when authorizing new spend.
+    if not authorized_snapshot:
+        version.require_fresh(at)
     if not events or any(not event.billing_exact for event in events):
         raise PricingUnavailable("usage exato indisponível")
     if len({event.event_id for event in events}) != len(events):
