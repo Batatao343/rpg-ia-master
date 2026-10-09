@@ -13,6 +13,7 @@ import { DeathModal } from "./components/DeathModal";
 import type { LevelUpPick } from "./components/LevelUpModal";
 import { CombatSimulatorScreen } from "./components/CombatSimulatorScreen";
 import { AuthScreen } from "./components/AuthScreen";
+import { AccountScreen, shards } from "./components/AccountScreen";
 
 const LS_KEY = "cronicas_game_id";
 
@@ -34,7 +35,10 @@ const ROUTE_TEXTS: Record<string, string> = {
 };
 
 export function App() {
-  const [screen, setScreen] = useState<"bootstrap" | "auth" | "saves" | "create" | "simulator" | "play">("bootstrap");
+  type Screen = "bootstrap" | "auth" | "saves" | "create" | "simulator" | "play" | "account";
+  const [screen, setScreen] = useState<Screen>("bootstrap");
+  const accountReturn = useRef<Screen>("saves");
+  const [accountBalance, setAccountBalance] = useState<string | null>(null);
   const [data, setData] = useState<GameResponse | null>(null);
   const [log, setLog] = useState<LogEntry[]>([]);
   const [busy, setBusy] = useState(false);
@@ -55,6 +59,7 @@ export function App() {
     const expired = () => {
       session.current++;
       setBusy(false); setThinking(false); setData(null); setLog([]);
+      setAccountBalance(null);
       setScreen("auth");
     };
     window.addEventListener('rpg:auth-expired', expired);
@@ -76,6 +81,7 @@ export function App() {
           setScreen("auth");
           return; // não chama rotas protegidas antes do login
         }
+        if (config.authenticated) void refreshBalance(config.user_id || "legacy", session.current);
       } catch {
         // Compatibilidade com API legacy anterior à rota /auth/config.
       }
@@ -115,6 +121,7 @@ export function App() {
       const list = await api.getSaves();
       setSaves(list);
       setScreen(list.length ? "saves" : "create");
+      void refreshBalance(nextOwner, session.current);
     } catch (error) {
       setAuthError(errMsg(error));
     } finally {
@@ -133,6 +140,7 @@ export function App() {
       gameId.current = null;
       setData(null);
       setLog([]);
+      setAccountBalance(null);
       setSaves([]);
       setScreen("auth");
     } catch (error) {
@@ -146,7 +154,15 @@ export function App() {
     setLog((prev) => [...prev, { id: logSeq.current++, text, role, type }]);
   }
 
-  function onTurn(r: GameResponse) {
+  async function refreshBalance(expectedOwner: string, generation: number) {
+    try {
+      const balance = await api.getAccountBalance();
+      if (owner.current === expectedOwner && session.current === generation)
+        setAccountBalance(balance.available_milli);
+    } catch { if (owner.current === expectedOwner && session.current === generation) setAccountBalance(null); }
+  }
+
+  function onTurn(r: GameResponse): number {
     const generation = session.current;
     const entryId = logSeq.current++;
     gameId.current = r.game_id || gameId.current;
@@ -177,6 +193,7 @@ export function App() {
         kind: "warn",
       });
     }
+    return entryId;
   }
 
   async function handleCreate(payload: CreatePayload) {
@@ -271,7 +288,7 @@ export function App() {
     });
   }
 
-  function finishStreamEntry(r: GameResponse) {
+  function finishStreamEntry(r: GameResponse): number | null {
     const id = streamEntryId.current;
     streamEntryId.current = null;
     setLog((prev) => {
@@ -286,6 +303,20 @@ export function App() {
       ];
     });
     pendingVisual.current = null;
+    return id;
+  }
+
+  async function refreshTurnCost(gid: string, operationId: string, entryId: number | null,
+                                 generation: number, expectedOwner: string) {
+    if (entryId === null || !authRequired) return;
+    try {
+      const result = await api.getTurnCost(gid, operationId);
+      if (session.current !== generation || owner.current !== expectedOwner || gameId.current !== gid) return;
+      if (result.history_id) setLog(prev => prev.map(entry => entry.id === entryId
+        ? { ...entry, historyId: result.history_id ?? undefined, costMilli: result.cost_milli,
+            technicalCostUsd: result.technical_cost_usd, technicalCostExact: result.technical_cost_exact } : entry));
+    } catch { /* optional read model: story remains visible */ }
+    void refreshBalance(expectedOwner, generation);
   }
 
   async function handleAction(text: string, options: ActionOptions = {}) {
@@ -331,7 +362,9 @@ export function App() {
         clearPending(user, gid);
         if (!active()) return;
         setPending(null);
-        if (hadChunks) { finishStreamEntry(r); setData(r); } else onTurn(r);
+        const entryId = hadChunks ? finishStreamEntry(r) : onTurn(r);
+        if (hadChunks) setData(r);
+        void refreshTurnCost(gid, operation.operation_id, entryId, generation, user);
       } catch (error) {
         if (!active()) return;
         if (error instanceof api.HttpError && error.status < 500) {
@@ -344,7 +377,8 @@ export function App() {
         if (orphan !== null) setLog(prev => prev.filter(e => e.id !== orphan));
         const r = await api.sendAction(operation.payload.input_text, gid, requestOptions);
         clearPending(user, gid);
-        if (active()) { setPending(null); onTurn(r); }
+        if (active()) { setPending(null); const entryId = onTurn(r);
+          void refreshTurnCost(gid, operation.operation_id, entryId, generation, user); }
       }
     } catch (error) {
       if (active()) setBanner({ msg: "Ação não confirmada: " + errMsg(error), kind: "error" });
@@ -363,7 +397,11 @@ export function App() {
       cursor = page.next_cursor || undefined;
       if (page.partial_history) setBanner({ msg: "Este save antigo contém apenas o trecho de histórico preservado.", kind: "warn" });
     } while (cursor);
-    if (session.current === generation) setLog([...entries.values()].map(entry => ({ ...entry, id: logSeq.current++ })));
+    if (session.current === generation) setLog([...entries.values()].map(entry => ({
+      ...entry, historyId: entry.id, costMilli: entry.cost_milli,
+      technicalCostUsd: entry.technical_cost_usd, technicalCostExact: entry.technical_cost_exact,
+      id: logSeq.current++,
+    })));
   }
 
   function handleContinue() {
@@ -486,11 +524,16 @@ export function App() {
       <div className="atmosphere" aria-hidden />
       <EmberField />
       <Banner state={banner} onDone={() => setBanner(null)} />
+      {authRequired && screen !== "auth" && screen !== "bootstrap" && screen !== "account" && screen !== "play" &&
+        <button className="account-shell-link btn btn--ghost" type="button" disabled={busy}
+          onClick={() => { accountReturn.current = screen; setScreen("account"); }}>
+          Conta{accountBalance !== null ? ` · ${shards(accountBalance)} Estilhas` : ""}
+        </button>}
       {screen === "play" && pending && <button className="pending-operation btn" disabled={busy}
         onClick={() => void handleAction(pending.payload.input_text)}>
         Consultar / retomar ação pendente
       </button>}
-      {authRequired && screen !== "auth" && screen !== "play" && (
+      {authRequired && screen !== "auth" && screen !== "play" && screen !== "account" && (
         <button className="session-logout btn btn--ghost" disabled={busy}
           onClick={() => void handleLogout()}>
           Encerrar sessão
@@ -513,6 +556,10 @@ export function App() {
         ) : screen === "auth" ? (
           <motion.div key="auth" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <AuthScreen busy={busy} onLogin={handleLogin} error={authError} />
+          </motion.div>
+        ) : screen === "account" ? (
+          <motion.div key="account" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <AccountScreen onBack={() => setScreen(accountReturn.current)} />
           </motion.div>
         ) : screen === "saves" ? (
           <motion.div
@@ -582,6 +629,8 @@ export function App() {
               onLevelUp={handleLevelUp}
               onEquip={handleEquip}
               onLogout={authRequired ? handleLogout : undefined}
+              onAccount={authRequired ? () => { accountReturn.current = "play"; setScreen("account"); } : undefined}
+              accountBalance={accountBalance}
             />
           </motion.div>
         )}

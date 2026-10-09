@@ -10,7 +10,7 @@ def message_kind(state: dict) -> str:
             'npc': 'NPC', 'loot': 'LOOT', 'loot_agent': 'LOOT'}.get(route, 'STORY')
 
 
-def record_history(state: dict, text: str, *, include_input: bool = True) -> None:
+def record_history(state: dict, text: str, *, include_input: bool = True) -> str | None:
     history = list(state.get('presentation_history') or [])
     epoch = int((state.get('continuity') or {}).get('timeline_epoch', 0))
     turn = int((state.get('world') or {}).get('turn_count', 0))
@@ -21,12 +21,16 @@ def record_history(state: dict, text: str, *, include_input: bool = True) -> Non
         if human:
             rows.append(('player', str(human.content)))
     rows.append(('narrator', text))
+    narrator_id = None
     for role, content in rows:
         key = sha256(f"{state['game_id']}:{epoch}:{turn}:{role}".encode()).hexdigest()[:24]
         if not any(row['id'] == key for row in history):
             history.append({'id': key, 'turn': turn, 'epoch': epoch, 'role': role,
                             'text': content, 'type': message_kind(state) if role == 'narrator' else 'STORY'})
+            if role == 'narrator':
+                narrator_id = key
     state['presentation_history'] = history
+    return narrator_id
 
 
 def history_page(state: dict, *, cursor: str | None = None, limit: int = 50) -> dict:

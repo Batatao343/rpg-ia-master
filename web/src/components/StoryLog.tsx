@@ -1,9 +1,10 @@
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { mdLite, roleLabel } from "../lib";
 import { useTypewriter } from "../hooks/useTypewriter";
 import type { LogEntry } from "../types";
 import { VisualArtwork } from "./VisualArtwork";
+import { shards } from "./AccountScreen";
 
 export function StoryLog({ entries, thinking, thinkingLabel }: {
   entries: LogEntry[];
@@ -51,6 +52,13 @@ export function StoryLog({ entries, thinking, thinkingLabel }: {
 
 function LogEntryItem({ entry }: { entry: LogEntry }) {
   const displayedText = useTypewriter(entry.text, entry.streaming);
+  const [costOpen, setCostOpen] = useState(false);
+  const technical = entry.technicalCostUsd && /[1-9]/.test(entry.technicalCostUsd)
+    ? `${entry.technicalCostExact ? "Custo técnico registrado" : "Estimativa de custo técnico"}: US$ ${entry.technicalCostUsd.replace(".", ",")}`
+    : null;
+  const settled = entry.costMilli != null
+    ? `Débito liquidado: ${shards(entry.costMilli)} Estilhas` : null;
+  const costText = [technical, settled].filter(Boolean).join(" · ");
 
   // A narração é a voz padrão do diário — não carimba "Narrador" em todo bloco
   // (era um eyebrow repetido). Rótulo só quando muda o sentido: fala do jogador,
@@ -73,6 +81,16 @@ function LogEntryItem({ entry }: { entry: LogEntry }) {
         dangerouslySetInnerHTML={{ __html: mdLite(displayedText) }}
       />
       {entry.streaming && <span className="msg__cursor" />}
+      {entry.role === "narrator" && costText && !entry.streaming &&
+        <span className="msg__cost">
+          <button type="button" className="msg__cost-button" aria-expanded={costOpen}
+            aria-controls={`cost-${entry.id}`}
+            aria-label={`Custo deste turno. ${costText}`}
+            onClick={() => setCostOpen(value => !value)}>✧</button>
+          <span id={`cost-${entry.id}`} className={`msg__cost-detail${costOpen ? " is-open" : ""}`}>
+            {costText}{!settled ? " · Sem débito em Estilhas" : ""}
+          </span>
+        </span>}
     </motion.article>
   );
 }

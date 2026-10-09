@@ -1,13 +1,13 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "1d8b20d5b2b04193e6c86c2689a31a6ac9e36886",
+  "commit_sha": "21bdeba33d9e928f003155a3f37694d06c8f8e3f",
   "edge_counts": {
-    "calls": 8562,
-    "contains": 413,
-    "defines": 5083,
-    "imports": 850,
-    "likely_test_for": 506,
-    "route_to": 31
+    "calls": 8617,
+    "contains": 417,
+    "defines": 5138,
+    "imports": 860,
+    "likely_test_for": 514,
+    "route_to": 36
   },
   "excluded_prefixes": [
     ".agents",
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:60a7f6fda1e64f561f54cd4a26e3a1a3f2c65efbfdfe733fa988f399e790006b",
+  "graph_hash": "sha256:638da5b8e99890a1ebae3863daf6acecd51e4eabe458788101a4412628f32a29",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -82,6 +82,7 @@
     "game_engine.py",
     "gamedata.py",
     "infrastructure/__init__.py",
+    "infrastructure/account_read_model.py",
     "infrastructure/contracts.py",
     "infrastructure/file_blob.py",
     "infrastructure/local_adapters.py",
@@ -246,6 +247,9 @@
     "tests/fakes/__init__.py",
     "tests/fakes/fake_image_generator.py",
     "tests/fakes/local_portrait.py",
+    "tests/test_account_api.py",
+    "tests/test_account_read_model.py",
+    "tests/test_account_read_model_local.py",
     "tests/test_agents_contract.py",
     "tests/test_aliados_combate.py",
     "tests/test_api_attempt_telemetry.py",
@@ -451,6 +455,7 @@
     "tests/test_worker_fence_local.py",
     "tests/test_worker_lease_lifecycle.py",
     "tests/test_world_sim.py",
+    "web/e2e/account.spec.ts",
     "web/e2e/critical-journeys.spec.ts",
     "web/e2e/fixtures.ts",
     "web/e2e/visual-surfaces.spec.ts",
@@ -458,6 +463,7 @@
     "web/playwright.config.ts",
     "web/src/api.ts",
     "web/src/App.tsx",
+    "web/src/components/AccountScreen.tsx",
     "web/src/components/ArtworkDialog.tsx",
     "web/src/components/AuthScreen.tsx",
     "web/src/components/Banner.tsx",
@@ -505,14 +511,14 @@
   },
   "node_counts": {
     "artifact": 8,
-    "class": 448,
-    "endpoint": 31,
-    "file": 452,
-    "function": 1665,
-    "method": 377,
-    "module": 413,
-    "test": 2593
+    "class": 457,
+    "endpoint": 36,
+    "file": 458,
+    "function": 1676,
+    "method": 384,
+    "module": 417,
+    "test": 2621
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:648a8f0e5c5c5fdcf76fe41d6ec110dc34588da8ef195153489272b63293aee6"
+  "source_tree_hash": "sha256:c084ed3fe9b80089882b4be9a75eb221b654a82faf0df0ca586aca49eb75235d"
 }
