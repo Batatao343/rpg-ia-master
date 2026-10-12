@@ -163,6 +163,9 @@ export class DeterministicBackend {
       return this.json(route, { detail: "expired" }, 401);
     }
 
+    // Default fixture data must never imply a real balance or expose another
+    // owner's account data. Account E2E scenarios install their own route stubs.
+    if (path === "/account/balance") return this.json(route, { available_milli: "0", reserved_milli: "0" });
     if (path === "/game/saves") return this.json(route, this.saves);
     if (path === "/data/options") return this.json(route, {
       races: ["Humano", "Elfo"], classes: ["Devoto do Abismo", "Médico do Véu"], regions: ["Porto Cinzento", "Brumalta"],
@@ -238,7 +241,7 @@ export class DeterministicBackend {
   async install(page: Page) {
     await page.route("**/*", async (route) => {
       const path = new URL(route.request().url()).pathname;
-      if (path.startsWith("/auth/") || path.startsWith("/data/") || path.startsWith("/game/")) return this.handleApi(route);
+      if (path.startsWith("/auth/") || path.startsWith("/data/") || path.startsWith("/game/") || path.startsWith("/account/")) return this.handleApi(route);
       return route.continue();
     });
   }
