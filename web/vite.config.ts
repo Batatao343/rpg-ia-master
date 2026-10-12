@@ -13,6 +13,7 @@ export default defineConfig({
     proxy: {
       "/data": API,
       "/game": API,
+      "/account": API,
       "/health": API,
     },
   },

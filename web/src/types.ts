@@ -692,6 +692,10 @@ export interface PlayerCodex {
 // Mensagem renderizada no log da história.
 export interface LogEntry {
   id: number;
+  historyId?: string;
+  costMilli?: string | null;
+  technicalCostUsd?: string | null;
+  technicalCostExact?: boolean;
   text: string;
   role: "player" | "narrator";
   type: MessageType;

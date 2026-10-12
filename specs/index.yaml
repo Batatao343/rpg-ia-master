@@ -3265,13 +3265,13 @@ specs:
   lineage_note: Required Sol High executor delivered append-only wallet/reservations and spend tickets; independent Astra High APPROVED after view security hardening; 2093 passed, 13 skipped, 15 deselected; pgTAP 14/14; no commercial billing activated
 - id: SPEC-185
   slug: account-dashboard-cost-attribution
-  status: approved
+  status: done
   path: specs/SPEC-185-account-dashboard-cost-attribution.md
   created_commit: null
   created_at: '2026-10-02'
-  completed_commit: null
-  completed_at: null
-  completed_order: null
+  completed_commit: 660d9fb45fc5955787dedad96a3878e7b2069637
+  completed_at: '2026-10-09'
+  completed_order: 184
   depends_on:
   - SPEC-184
   depends_on_raw:
@@ -3279,7 +3279,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Imported approved v5 package; implementation not started
+  lineage_note: User authorized Sol High executor after Terra High handoff; independent Sol High APPROVED owner-scoped read model and operation/epoch cost attribution; 2056 passed, 59 skipped, 15 deselected plus local Postgres and 4 browser E2E; normal turn billing remains unactivated
 - id: SPEC-186
   slug: speech-to-text-routing
   status: approved

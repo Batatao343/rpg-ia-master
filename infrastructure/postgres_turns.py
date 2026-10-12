@@ -127,6 +127,7 @@ class PostgresTurnCoordinator:
         llm_cost_usd: Decimal | float,
         checkpoint: bool = False,
         record_turn: bool = True,
+        presentation_entry_id: str | None = None,
         usage_events: Sequence[UsageEvent] = (),
     ) -> tuple[int, dict[str, Any]]:
         """Confirma jogo, eventos, turno e recibo sob o mesmo fencing token.
@@ -236,14 +237,15 @@ class PostgresTurnCoordinator:
                 connection.execute(
                     """insert into app.turns
                   (operation_id,game_id,owner_id,sequence,timeline_epoch,route,
-                   input_sha256,state_version_before,state_version_after,latency_ms,llm_cost_usd)
-                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                   input_sha256,state_version_before,state_version_after,latency_ms,llm_cost_usd,
+                   presentation_entry_id)
+                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
                     (
                         claim.operation_id, claim.game_id, principal.user_id, sequence,
                         int(continuity.get("timeline_epoch", 0) or 0),
                         str(document.get("next") or ""), input_sha256,
                         claim.base_version, committed_version, max(0, int(latency_ms)),
-                        consolidated_cost,
+                        consolidated_cost, presentation_entry_id,
                     ),
                 )
             persisted_receipt = dict(receipt)

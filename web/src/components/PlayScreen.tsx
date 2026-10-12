@@ -9,6 +9,7 @@ import { ReactionPrompt } from "./ReactionPrompt";
 import { SceneZones } from "./SceneZones";
 import { WoundTrack } from "./WoundTrack";
 import { SceneArtwork } from "./SceneArtwork";
+import { shards } from "./AccountScreen";
 
 const TACTICAL_MANEUVERS = [
   { label: "Engajar", kind: "maneuver" as const, maneuver: "engajar" as const },
@@ -29,9 +30,11 @@ interface Props {
   onLevelUp: (choiceId: string, pick: LevelUpPick) => void;
   onEquip: (pick: { item_id?: string; unequip_slot?: string }) => void;
   onLogout?: () => void;
+  onAccount?: () => void;
+  accountBalance?: string | null;
 }
 
-export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction, onNew, onLevelUp, onEquip, onLogout }: Props) {
+export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction, onNew, onLevelUp, onEquip, onLogout, onAccount, accountBalance }: Props) {
   const [input, setInput] = useState("");
   const [hudOpen, setHudOpen] = useState(false);
   const [luDismissed, setLuDismissed] = useState(false);
@@ -96,6 +99,9 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
           <span className="topbar__meta">{clock}</span>
         </div>
         <div className="topbar__right">
+          {onAccount && <button className="iconbtn" type="button" disabled={busy} onClick={onAccount}>
+            Conta{accountBalance != null ? ` · ${shards(accountBalance)} Estilhas` : ""}
+          </button>}
           {simulation && <span className="laboratory-flag">Laboratório</span>}
           {fighting && <span className="combat-flag">⚔ Combate</span>}
           {pending.length > 0 && !showLevelUp && !blocked && (
