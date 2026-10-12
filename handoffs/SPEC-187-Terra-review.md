@@ -1,6 +1,15 @@
 # SPEC-187 — handoff para executor Terra High
 
-`MODEL_HANDOFF_REQUIRED: Terra High`
+**12/10/2026 — substituição autorizada explicitamente pelo usuário:** executor
+Sol High no lugar de Terra High. O bloqueio de modelo abaixo é histórico;
+implementação/evidência em `docs/spec187/README.md`. A spec não exige reviewer
+independente. Uso de tier superior para execução bounded registrado como custo
+não otimizado; nenhuma recarga de provider autorizada ou executada.
+
+**Fechamento:** SPEC-187 `done`; 18 Node, 11 browser e suíte Python completa
+2.094 passed / 65 skipped / 15 deselected verdes. Evidência acima.
+
+## Registro histórico do bloqueio
 
 SPEC-187 exige executor **Terra / High**. Terra High não está disponível entre
 os modelos de execução desta sessão e a substituição é proibida sem aprovação
@@ -77,4 +86,3 @@ Capacitor antes da SPEC-193.
 
 Somente ampliar para `uv run pytest` após os gates focados verdes. Long-runs e
 chamadas STT reais não são necessários para esta spec.
-

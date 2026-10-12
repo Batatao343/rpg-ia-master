@@ -1,6 +1,6 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "f29fb6c687b7e467c1afb288e67d71bf1aaab245",
+  "commit_sha": "840b95cd28e2ae888189f8ab92b248e0524e5147",
   "edge_counts": {
     "calls": 8762,
     "contains": 423,
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:15e74aa4a5ce3efb25a6f0ede2910dd98ad3efc0a8fbd458d0006ba8f8edb9aa",
+  "graph_hash": "sha256:3902ba5baaeafa7c84dc022fc2a370fe3f50bce2dcc88491728cec146547efd7",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -465,6 +465,7 @@
     "web/e2e/critical-journeys.spec.ts",
     "web/e2e/fixtures.ts",
     "web/e2e/visual-surfaces.spec.ts",
+    "web/e2e/voice-input.spec.ts",
     "web/package.json",
     "web/playwright.config.ts",
     "web/src/api.ts",
@@ -500,8 +501,12 @@
     "web/src/main.tsx",
     "web/src/pendingOperation.ts",
     "web/src/types.ts",
+    "web/src/voice/controller.ts",
+    "web/src/voice/recorder.ts",
+    "web/src/voice/useVoiceInput.ts",
     "web/tests/artwork.fixture.tsx",
     "web/tests/vite.fixture.config.ts",
+    "web/tests/voice-hook.fixture.tsx",
     "web/vite.config.ts",
     "workers/__init__.py",
     "workers/chronicle_jobs.py",
@@ -519,12 +524,12 @@
     "artifact": 8,
     "class": 469,
     "endpoint": 37,
-    "file": 464,
+    "file": 469,
     "function": 1687,
     "method": 397,
     "module": 423,
     "test": 2682
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:55a373d0ac7e48ab9187f74a361ac1016aae9e6cd287fee4acf76f971b610ad0"
+  "source_tree_hash": "sha256:992fe618300405cad887bd2aff9559a4ea27a3f5ac7dabb54bbf6c3b8873e10f"
 }

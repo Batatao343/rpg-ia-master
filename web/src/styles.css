@@ -620,9 +620,17 @@ select {
 .faction__history { margin: 0.25rem 0 0; font-size: 0.74rem; color: var(--faint); }
 
 /* --- barra de ação --- */
-.actionbar { flex: none; display: flex; gap: 0.6rem; padding: 0.9rem clamp(0.9rem, 3vw, 2.9rem); border-top: 1px solid var(--line-soft); background: oklch(0.13 0.012 250 / 0.92); backdrop-filter: blur(10px); }
-.actionbar input { flex: 1 1 auto; }
+.actionbar { flex: none; display: flex; flex-direction: column; gap: 0.4rem; padding: 0.9rem clamp(0.9rem, 3vw, 2.9rem); border-top: 1px solid var(--line-soft); background: oklch(0.13 0.012 250 / 0.92); backdrop-filter: blur(10px); }
+.actionbar__composer { display: flex; gap: 0.5rem; min-width: 0; }
+.actionbar input { flex: 1 1 auto; min-width: 0; }
 .actionbar .btn { flex: none; }
+.voice-button { min-width: 44px; min-height: 44px; padding-inline: 0.65rem; background: var(--bg-deep); color: var(--ink); }
+.voice-button[aria-pressed="true"] { border-color: var(--danger-bright); color: var(--danger-bright); }
+.voice-status { display: flex; align-items: center; flex-wrap: wrap; gap: 0.35rem 0.7rem; color: var(--muted); font-size: 0.85rem; }
+.voice-status:has(> span:empty):not(:has(button)) { display: none; }
+.voice-status[data-voice-state="error"] { color: var(--danger-bright); }
+.voice-status .iconbtn { min-height: 44px; }
+.voice-timer { font-variant-numeric: tabular-nums; }
 
 /* ---------- banner / overlay ---------- */
 .banner { position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-banner); padding: 0.72rem 1.25rem; text-align: center; font-size: 0.95rem; background: var(--danger); color: oklch(0.97 0.02 60); box-shadow: 0 10px 30px -15px oklch(0 0 0 / 0.8); }

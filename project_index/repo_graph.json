@@ -1,5 +1,5 @@
 {
-  "commit_sha": "f29fb6c687b7e467c1afb288e67d71bf1aaab245",
+  "commit_sha": "840b95cd28e2ae888189f8ab92b248e0524e5147",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -177829,6 +177829,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/e2e/voice-input.spec.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/e2e/voice-input.spec.ts",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/playwright.config.ts",
       "kind": "file",
       "line": 1,
@@ -178067,6 +178074,27 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/src/voice/controller.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/voice/controller.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/voice/recorder.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/voice/recorder.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/voice/useVoiceInput.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/voice/useVoiceInput.ts",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/tests/artwork.fixture.tsx",
       "kind": "file",
       "line": 1,
@@ -178078,6 +178106,13 @@
       "kind": "file",
       "line": 1,
       "path": "web/tests/vite.fixture.config.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/tests/voice-hook.fixture.tsx",
+      "kind": "file",
+      "line": 1,
+      "path": "web/tests/voice-hook.fixture.tsx",
       "qualified_name": null
     },
     {
@@ -217744,5 +217779,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:55a373d0ac7e48ab9187f74a361ac1016aae9e6cd287fee4acf76f971b610ad0"
+  "source_tree_hash": "sha256:992fe618300405cad887bd2aff9559a4ea27a3f5ac7dabb54bbf6c3b8873e10f"
 }
