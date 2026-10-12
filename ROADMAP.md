@@ -1,5 +1,14 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **12/10 — [SPEC-187](specs/SPEC-187-voice-input-web-mobile.md) `done`.**
+> Entrada de voz web/mobile: transcript editável, Agir explícito, hard stop 60s,
+> permissões/cleanup de background/unmount e adapter sem dependência nativa.
+> **18 Node, 11 Chromium 390/1440**, 6 Python focados, build e índice fresh;
+> suíte completa **2.094 passed, 65 skipped, 15 deselected**, exit 0.
+> Smoke nativo usa áudio sintético; manual humano condicionado à disponibilidade
+> não ocorreu, sem prova de precisão pt-BR. Sem STT pago/recargas; backend
+> desativado por default. [Evidência](docs/spec187/README.md). Próxima: SPEC-188.
+
 > **12/10 — [SPEC-186](specs/SPEC-186-speech-to-text-routing.md) `done`.**
 > STT privado Groq → OpenAI, limites antes de reservar,
 > tickets/usage/settlement e voz na conta, sem áudio/transcript persistidos nem

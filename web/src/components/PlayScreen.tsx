@@ -10,6 +10,7 @@ import { SceneZones } from "./SceneZones";
 import { WoundTrack } from "./WoundTrack";
 import { SceneArtwork } from "./SceneArtwork";
 import { shards } from "./AccountScreen";
+import { useVoiceInput } from "../voice/useVoiceInput";
 
 const TACTICAL_MANEUVERS = [
   { label: "Engajar", kind: "maneuver" as const, maneuver: "engajar" as const },
@@ -36,6 +37,8 @@ interface Props {
 
 export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction, onNew, onLevelUp, onEquip, onLogout, onAccount, accountBalance }: Props) {
   const [input, setInput] = useState("");
+  const voice = useVoiceInput(text => setInput(current => current ? `${current}${/\s$/.test(current) ? "" : " "}${text}` : text), data?.game_id);
+  const voiceActive = voice.requesting || ["recording", "uploading", "transcribing"].includes(voice.phase);
   const [hudOpen, setHudOpen] = useState(false);
   const [luDismissed, setLuDismissed] = useState(false);
   const [reading, setReading] = useState(false); // memorial: ler a crônica
@@ -83,8 +86,11 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (busy || blocked) return;
     const text = input.trim();
     if (!text) return;
+    // Explicit text submission cancels any outstanding capture/transcript.
+    if (voiceActive) voice.cancel();
     setInput("");
     onAction(text, { reaction_card_id: reactionCardId });
   }
@@ -188,8 +194,10 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
       )}
 
       <form className="actionbar" onSubmit={submit}>
+        <div className="actionbar__composer">
         <input
           type="text"
+          aria-label="Sua ação"
           autoComplete="off"
           disabled={blocked}
           placeholder={
@@ -208,9 +216,28 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
+        <button className="btn voice-button" type="button"
+          disabled={blocked || (voice.phase !== "recording" && (busy || voiceActive))}
+          aria-label={voice.phase === "recording" ? "Parar gravação" : "Gravar ação por voz"}
+          aria-pressed={voice.phase === "recording"}
+          onClick={voice.phase === "recording" ? voice.stop : voice.start}>
+          {voice.phase === "recording" ? "Parar" : "Voz"}
+        </button>
         <button className="btn btn--primary" type="submit" disabled={busy || blocked} aria-label="Agir">
           {busy ? "…" : fighting ? "Lutar" : "Agir"}
         </button>
+        </div>
+        <div className="voice-status" data-voice-state={voice.phase}>
+          <span role={voice.phase === "error" ? "alert" : "status"} aria-live="polite" aria-atomic="true">
+            {voice.message}
+          </span>
+          {voice.phase === "recording" && <span className="voice-timer" aria-label="Tempo de gravação">
+            {String(voice.seconds).padStart(2, "0")} / 60 s
+          </span>}
+          {voiceActive && <button type="button" className="iconbtn" onClick={voice.cancel}>
+            Cancelar voz
+          </button>}
+        </div>
       </form>
 
       {showLevelUp && data && (

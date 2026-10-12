@@ -1,5 +1,20 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **12/10 — SPEC-187 `done`; voz editável no composer web/mobile.**
+> Voz → Parar (ou hard stop 60s) → transcript na edição atual → Agir explícito.
+> Controller/hook libera microfone e cancela upload em background/pagehide,
+> unmount e mudança de sessão; erros preservam o texto e não enviam ações.
+> Adapter negocia MIME de navegador; upload binário com cookies/CSRF/operação
+> UUID; nenhuma dependência nativa. **18 Node, 11 Chromium 390/1440** com
+> teclado/touch/Axe, **6 contratos Python focados**, build e índice fresh verdes.
+> Suíte completa: **2.094 passed, 65 skipped, 15 deselected**, exit 0.
+> Smoke nativo Chromium com áudio sintético confirmou Blob e track ended;
+> manual humano condicionado à disponibilidade não ocorreu por ausência de
+> operador/dispositivo, sem alegar precisão pt-BR. Nenhuma chamada paga ou
+> recarga; STT segue desativado por default no backend da SPEC-186.
+> Executor Sol High autorizado após handoff Terra; reviewer independente não
+> exigido. [Evidência/limites](docs/spec187/README.md). Próxima: SPEC-188.
+
 > **12/10 — SPEC-186 `done`; STT privado e wallet validados live.**
 > `/account/transcriptions` autenticado/CSRF recebe áudio limitado (8MiB/60s),
 > Groq Whisper Turbo → OpenAI mini com modelos configuráveis, wallet/tickets

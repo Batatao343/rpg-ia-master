@@ -1,6 +1,6 @@
 # SPEC-187 — Voice input no web/mobile
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Depende de:** SPEC-186 `done`
 > **EXECUTOR_MODEL obrigatório:** `Terra`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -10,6 +10,9 @@
 > **SUBSTITUIÇÃO DE MODELO:** proibida sem aprovação explícita do usuário; mismatch => `MODEL_HANDOFF_REQUIRED`
 > **Delegação Luna permitida:** Luna: matriz de navegadores/a11y e relatório; implementação React permanece com Terra.
 > **MODEL_BREAKDOWN:** `docs/rpg-next-jev-golive-plan/examples/spec-model-contract.yaml` → `SPEC-187` é source of truth para subtarefas/review focus
+
+> **Execução:** Sol High, substituição autorizada explicitamente pelo usuário
+> em 12/10/2026 após handoff Terra. Reviewer independente não exigido.
 
 ## Objetivo
 
@@ -39,10 +42,10 @@ TTS, wake word, voice chat full-duplex.
 
 ## Critérios de aceite
 
-- [ ] fluxo padrão é exatamente `tap record -> tap stop (ou hard-stop) -> transcript no composer -> Send explícito`; não existe confirmação intermediária obrigatória nem auto-send;
-- [ ] erro de STT não envia ação.
-- [ ] input textual nunca fica bloqueado.
-- [ ] mobile layout sem overlap.
+- [x] fluxo padrão é exatamente `tap record -> tap stop (ou hard-stop) -> transcript no composer -> Send explícito`; não existe confirmação intermediária obrigatória nem auto-send;
+- [x] erro de STT não envia ação.
+- [x] input textual nunca fica bloqueado.
+- [x] mobile layout sem overlap.
 
 ## Gates / evidência
 
@@ -50,8 +53,21 @@ Node/browser tests; áudio real manual curto somente quando disponível.
 
 ## Gate de fechamento
 
-- [ ] state machine cobre cancelamento, permission denied, tab/background e component unmount;
-- [ ] background/unmount para captura e libera tracks do microfone;
-- [ ] falha STT preserva input textual e não perde texto já digitado;
-- [ ] Playwright/browser cobre 390 e 1440, teclado e touch;
-- [ ] nenhuma dependência nativa obrigatória é introduzida antes da SPEC-193.
+- [x] state machine cobre cancelamento, permission denied, tab/background e component unmount;
+- [x] background/unmount para captura e libera tracks do microfone;
+- [x] falha STT preserva input textual e não perde texto já digitado;
+- [x] Playwright/browser cobre 390 e 1440, teclado e touch;
+- [x] nenhuma dependência nativa obrigatória é introduzida antes da SPEC-193.
+
+## Resultado e evidência
+
+Adapter Web MediaRecorder + controller/hook com cleanup e fence; upload binário
+autenticado/CSRF em `/account/transcriptions` com MIME real e operação UUID.
+Transcript acrescentado à edição atual; somente Agir/Enter explícito envia ação.
+18 Node, 11 Chromium (390/1440, teclado/touch, Axe e recorder nativo), 6 contratos
+Python focados e build verdes. Suíte completa: **2.094 passed, 65 skipped,
+15 deselected**, exit 0. O smoke automatizado usa áudio sintético com recorder
+nativo; áudio manual humano, condicionado à disponibilidade, não foi realizado
+por ausência de operador/dispositivo nesta execução. Não comprova precisão pt-BR.
+Sem chamada paga de STT, recarga ou dependência nativa. Evidência e limites:
+[docs/spec187/README.md](../docs/spec187/README.md).

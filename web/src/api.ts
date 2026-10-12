@@ -14,8 +14,13 @@ import type {
   VisualResponse,
 } from "./types";
 
-import { http, HttpError } from "./http";
+import { http, HttpError, uploadAudio } from "./http";
 export { HttpError } from "./http";
+
+export async function transcribeAudio(audio: Blob, signal: AbortSignal, uploaded: () => void): Promise<string> {
+  const result = await uploadAudio(audio, crypto.randomUUID(), signal, uploaded);
+  return result.text;
+}
 
 async function req<T>(path: string, opts: RequestInit = {}): Promise<T> {
   const res = await http(path, opts);
