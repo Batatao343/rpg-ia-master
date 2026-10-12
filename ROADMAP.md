@@ -7,6 +7,9 @@
 > quatro E2E Chromium, 12 testes focados e suíte Python completa
 > **2.056 passed, 59 skipped, 15 deselected** verdes.
 > Revisão Sol High independente [aprovada](handoffs/SPEC-185-SOL-independent-review.md).
+> Correção responsiva pós-CI em 12/10: barra superior cresce com os botões;
+> PR #21 passou em frontend, testes e evals determinísticos, com aprovação
+> independente reafirmada.
 > [Evidência](docs/spec185/README.md). **Pendente em spec futura:** integrar
 > `reserve → execute → settle → release` das jogadas normais; não há cobrança
 > comercial ativa. Próxima: [SPEC-186](specs/SPEC-186-speech-to-text-routing.md).

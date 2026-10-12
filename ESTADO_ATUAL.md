@@ -11,6 +11,10 @@
 > Chromium 390/1440, 5 Node, Ruff e TypeScript verdes. Revisão Sol High
 > independente **APPROVED** ([parecer](handoffs/SPEC-185-SOL-independent-review.md));
 > executor Sol High autorizado após handoff Terra. [Evidência](docs/spec185/README.md).
+> **12/10 — correção pós-CI:** barra superior agora cresce quando os controles
+> quebram linha no mobile; “Ficha” voltou a receber cliques em 320/390/768/1440px.
+> PR #21 com checks `frontend-selective`, `test`, `scope` e
+> `deterministic-evals` verdes; revisão Sol High reafirmou **APPROVED**.
 > **Pendente:** ligar `reserve → execute → settle → release` às jogadas normais
 > em spec futura, conforme `02_BILLING_E_MARGIN.md`. Uso técnico registrado
 > ainda não é débito comercial; checkout e compra não estão ativos.

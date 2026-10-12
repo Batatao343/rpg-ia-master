@@ -40,6 +40,11 @@
 - `npm.cmd test` — **5 passed**; `tsc -b` e Ruff dos arquivos alterados verdes.
 - Revisão Sol High independente: **APPROVED**, run
   `SPEC-185-SOL-20261009T215654Z`, sem bloqueios.
+- Correção pós-CI em 12/10: `.topbar` passou de altura fixa para mínima para
+  preservar a área clicável de “Ficha” quando “Conta” quebra linha. PR #21:
+  `frontend-selective`, `test`, `scope` e `deterministic-evals` verdes;
+  revisor Sol High reafirmou **APPROVED**. Suíte Python local após a correção:
+  **2.056 passed, 59 skipped, 15 deselected**.
 
 ## Limite comercial
 
