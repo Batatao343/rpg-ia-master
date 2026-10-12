@@ -102,7 +102,8 @@ def reserve_next_attempt(provider: str, model: str) -> Decimal | None:
     """Worst published-card bound, or None to make a wallet fail closed."""
     card = _MODELS.get(f"{provider}:{model}")
     if card is None:
-        return None
+        from services.speech_pricing import speech_bound
+        return speech_bound(provider, model)
     return _priced_cost(card, int(card["max_input_units"]),
                         int(card["max_output_units"]), 0)
 
