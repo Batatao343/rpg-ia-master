@@ -71,7 +71,7 @@ export class DeterministicBackend {
   refreshCount = 0;
   unexpectedAllowed: RegExp[] = [];
   expectedConsole: RegExp[] = [];
-  operations = new Map<string, { signature: string; response: GameResponse }>();
+  operations = new Map<string, { signature: string; response: GameResponse; gameId: string; ownerId: string }>();
   failNextTurn = false;
   private delayedStream: Deferred | null = null;
   private expirePaths = new Set<string>();
@@ -199,9 +199,21 @@ export class DeterministicBackend {
       const found = this.operations.get(opMatch[2]);
       return this.json(route, found ? { status: "completed", response: found.response } : { status: "missing", response: null });
     }
+    const costMatch = path.match(/^\/game\/([^/]+)\/operations\/([^/]+)\/cost$/);
+    if (costMatch) {
+      const [, gameId, operationId] = costMatch;
+      const found = this.operations.get(operationId);
+      if (!found || found.gameId !== gameId || found.ownerId !== this.userId) {
+        return this.json(route, { detail: "operation not found" }, 404);
+      }
+      return this.json(route, {
+        history_id: null, cost_milli: null, technical_cost_usd: null,
+        technical_cost_basis: null, technical_cost_exact: false,
+      });
+    }
     if (path === "/game/action/stream") {
       const gid = String(body?.game_id ?? "game-a"); const input = String(body?.input_text ?? ""); const actionId = String(body?.action_id ?? "");
-      const result = this.actionResult(gid, input); this.operations.set(actionId, { signature: JSON.stringify(body), response: result });
+      const result = this.actionResult(gid, input); this.operations.set(actionId, { signature: JSON.stringify(body), response: result, gameId: gid, ownerId: this.userId });
       if (this.delayedStream) await this.delayedStream.promise;
       if (this.failNextTurn) return route.abort("failed");
       const sse = `event: phase\ndata: {"node":"storyteller"}\n\nevent: narrative\ndata: ${JSON.stringify({ chunk: result.message, done: true })}\n\nevent: state\ndata: ${JSON.stringify(result)}\n\n`;
@@ -213,7 +225,7 @@ export class DeterministicBackend {
       const signature = JSON.stringify(body); const existing = this.operations.get(actionId);
       if (existing && existing.signature !== signature) return this.json(route, { detail: "idempotency conflict" }, 409);
       if (existing) return this.json(route, existing.response);
-      const result = this.actionResult(gid, input); this.operations.set(actionId, { signature, response: result }); return this.json(route, result);
+      const result = this.actionResult(gid, input); this.operations.set(actionId, { signature, response: result, gameId: gid, ownerId: this.userId }); return this.json(route, result);
     }
     if (path === "/game/death") {
       const gid = String(body?.game_id ?? "game-a"); const state = structuredClone(this.states.get(gid) ?? gameState(gid));
