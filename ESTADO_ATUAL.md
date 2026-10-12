@@ -1,5 +1,21 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **12/10 — SPEC-186 implementada offline; fechamento pendente.**
+> `/account/transcriptions` autenticado/CSRF recebe áudio limitado (8MiB/60s),
+> Groq Whisper Turbo → OpenAI mini com modelos configuráveis, wallet/tickets
+> por tentativa, usage privado e categoria voice na conta. Áudio temporário é
+> removido em todos os exits; transcript é efêmero e nunca envia ação ao jogo.
+> **44 testes focados verdes**, incluindo seis de Postgres real com rollback e
+> decode real WebM/Ogg/MP4; 19 verificações afetadas também verdes. Suíte completa
+> atingiu 100% com **exit 0** (contagem suprimida pelo duplo `-q`), Ruff verde.
+> Revisão Sol High independente **APPROVED**, run `SPEC-186-SOL-20261012-01`
+> ([parecer](handoffs/SPEC-186-SOL-independent-review.md)). Nenhuma chamada real de STT
+> ocorreu; smoke curto de até quatro chamadas/US$0,10 exige autorização.
+> SPEC permanece `approved`; SPEC-187 depende do fechamento.
+> Defaults: STT desativado; WAV PCM usa stdlib e formatos de navegador exigem
+> ffmpeg server-side. Cobrança desconhecida/duração somente na OpenAI preserva
+> reserva para reconciliação. [Contrato/evidência](docs/spec186/README.md).
+
 > **09/10 — SPEC-185 `done`; conta e custo por turno entregues sem ativar
 > cobrança.** Account abre sem campanha e apresenta saldo, históricos paginados
 > e séries UTC 24h/7d/30d de **consumo liquidado**. StoryLog revela custo

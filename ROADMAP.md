@@ -1,5 +1,15 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **12/10 — [SPEC-186](specs/SPEC-186-speech-to-text-routing.md) implementada
+> offline, `approved`.** STT privado Groq → OpenAI, limites antes de reservar,
+> tickets/usage/settlement e voz na conta, sem áudio/transcript persistidos nem
+> auto-send. Testes focados **44 passed**, seis em Postgres real e decoder real
+> em três formatos. Suíte completa chegou a 100% com **exit 0**, Ruff verde;
+> revisão Sol High independente [APPROVED](handoffs/SPEC-186-SOL-independent-review.md).
+> Pendente: smoke real curto explicitamente autorizado, até quatro
+> chamadas/US$0,10. [Evidência](docs/spec186/README.md). SPEC-187 aguarda
+> fechamento da dependência; transcrição segue desativada por default.
+
 > **09/10 — [SPEC-185](specs/SPEC-185-account-dashboard-cost-attribution.md)
 > `done`.** Account fora da campanha, saldo discreto, históricos paginados,
 > séries UTC de consumo liquidado e custo técnico sob demanda por turno.

@@ -261,9 +261,13 @@ def quote_usage(events: Sequence[UsageEvent], version: PricingVersion, *, at: da
     if len({event.operation_id for event in events}) != 1:
         raise PricingUnavailable("usage de operações diferentes")
     for event in events:
+        from services.speech_pricing import SPEECH_PRICING_VERSION
+        speech_card = (event.cost_basis == "rate_card" and
+                       event.category == "speech_to_text" and
+                       event.pricing_version == SPEECH_PRICING_VERSION)
         if event.cost_basis == "token_priced" and event.pricing_version != version.rate_card_version:
             raise PricingUnavailable("rate card de usage diverge da versão")
-        if event.cost_basis not in {"token_priced", "provider_reported"}:
+        if event.cost_basis not in {"token_priced", "provider_reported"} and not speech_card:
             raise PricingUnavailable("origem de custo não faturável")
         _numeric(event.cost_usd, 18, 9)
     with localcontext() as context:

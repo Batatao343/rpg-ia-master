@@ -1,0 +1,22 @@
+{
+  "version": "speech-2026-10-12-v1",
+  "observed_at": "2026-10-12",
+  "models": {
+    "groq:whisper-large-v3-turbo": {
+      "mode": "duration",
+      "usd_per_hour": "0.04",
+      "minimum_seconds": "10",
+      "max_cost_usd": "0.000666667",
+      "source": "https://console.groq.com/docs/speech-to-text"
+    },
+    "openai:gpt-4o-mini-transcribe": {
+      "mode": "tokens",
+      "input_per_million": "1.25",
+      "output_per_million": "5.00",
+      "max_input_tokens": 16000,
+      "max_output_tokens": 2000,
+      "max_cost_usd": "0.030000000",
+      "source": "https://developers.openai.com/api/docs/models/gpt-4o-mini-transcribe"
+    }
+  }
+}

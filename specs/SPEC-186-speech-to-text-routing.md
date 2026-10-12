@@ -39,11 +39,11 @@ Voice conversation realtime/TTS; armazenar recordings; Deepgram obrigatório.
 
 ## Critérios de aceite
 
-- [ ] fallback não duplica cobrança.
-- [ ] arquivo sempre removido.
-- [ ] áudio > limites rejeitado antes de provider.
-- [ ] zero auto-send.
-- [ ] custo aparece como voice no account dashboard.
+- [x] fallback não duplica cobrança (gates determinísticos/Postgres).
+- [x] arquivo sempre removido (success/errors/timeout/cancelamento/finanças).
+- [x] áudio > limites rejeitado antes de provider e reserva.
+- [x] zero auto-send.
+- [x] custo aparece como voice no account dashboard (Postgres real).
 
 ## Gates / evidência
 
@@ -51,10 +51,33 @@ Offline fixtures primeiro. Real: poucas frases pt-BR + nomes Valoria; sem long-r
 
 ## Gate de fechamento
 
-- [ ] provider/model IDs são reverificados no dia da implementação e ficam configuráveis, não hardcoded como eternos;
-- [ ] 60s, bytes e MIME são validados antes de reservar/chamar provider;
-- [ ] arquivo temporário é removido em success, 4xx, 5xx, timeout, cancelamento e exceção interna;
-- [ ] fallback usa reference/idempotency único por tentativa e settlement soma somente tentativas billable;
-- [ ] transcript nunca é autoenviado ao jogo;
-- [ ] sem saldo/reserva válida, zero provider call;
-- [ ] review Sol independente aprova wallet/privacy/fallback.
+- [x] provider/model IDs são reverificados no dia da implementação e ficam configuráveis, não hardcoded como eternos (2026-10-12);
+- [x] 60s, bytes e MIME são validados antes de reservar/chamar provider;
+- [x] arquivo temporário é removido em success, 4xx, 5xx, timeout, cancelamento e exceção interna;
+- [x] fallback usa reference/idempotency único por tentativa e settlement soma somente tentativas billable;
+- [x] transcript nunca é autoenviado ao jogo;
+- [x] sem saldo/reserva válida, zero provider call;
+- [x] review Sol independente aprova wallet/privacy/fallback (`SPEC-186-SOL-20261012-01`, APPROVED).
+
+## Execução 2026-10-12
+
+Implementação offline concluída pelo executor Sol High obrigatório, sem
+substituição. Revisão Sol High independente `SPEC-186-SOL-20261012-01`
+**APPROVED**. Status permanece `approved` até smoke real
+explicitamente autorizado. [Contrato, decisões, evidência e plano de smoke](../docs/spec186/README.md).
+
+Gate focado final: **44 passed**, incluindo Postgres real e decode real em
+WebM/Ogg/MP4; 19 verificações afetadas também verdes. Suíte completa atingiu
+100% com **exit 0** (duplo `-q` suprimiu contagens); Ruff e diff-check verdes.
+
+Rota: `POST /account/transcriptions`, raw body (evita spool multipart), UUID
+por operação, owner da sessão e CSRF. WAV é canonicalizado pelos frames
+validados; formatos WebM/Ogg/MP4 exigem ffmpeg e falham antes da reserva se
+ausente. Byte/duration/MIME e teto financeiro são server-side. Receipt guarda
+só metadata, e replay não retranscreve nem persiste transcript. Usage exato
+soma tentativas; cobrança desconhecida permanece em reserva com fence para
+reconciliação. A estimativa OpenAI por minuto não autoriza settlement.
+
+Migration acrescenta o tipo `speech_to_text` à operação. Cards históricos de
+LLM, evaluator/expected/baselines/datasets permanecem intactos; STT usa card
+separado com versão+hash e IDs configuráveis. Sem alteração de GameState.

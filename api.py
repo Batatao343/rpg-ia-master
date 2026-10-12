@@ -1649,6 +1649,58 @@ def account_balance():
     return _account_reader().balance(current_principal())
 
 
+@app.post('/account/transcriptions')
+async def account_transcription(request: Request):
+    """Raw audio upload, separate from game actions. No multipart spool or recording store."""
+    from infrastructure.contracts import Conflict
+    from infrastructure.request_context import current_principal
+    from infrastructure.runtime import get_runtime
+    from infrastructure.wallet import InsufficientShards, WalletConflict
+    from services.shard_pricing import PricingUnavailable
+    from services.speech_to_text import (
+        MAX_AUDIO_BYTES, SpeechError, canonical_mime, transcribe_audio,
+    )
+    if not _database_profile() or os.getenv('RPG_SPEECH_ENABLED', '0') != '1':
+        raise HTTPException(503, 'speech_disabled')
+    principal = current_principal()
+    runtime = get_runtime()
+    decision = runtime.rate_limiter.consume(
+        f'speech:{principal.user_id}', limit=5, window_seconds=60,
+    )
+    if not decision.allowed:
+        raise HTTPException(429, 'speech_rate_limit',
+                            headers={'Retry-After': str(decision.retry_after_seconds)})
+    try:
+        operation_id = uuid.UUID(request.headers.get('x-operation-id', ''))
+        mime = canonical_mime(request.headers.get('content-type', ''))
+        declared = request.headers.get('content-length')
+        if declared is not None and (not declared.isdecimal() or not 0 < int(declared) <= MAX_AUDIO_BYTES):
+            raise SpeechError('audio_bytes', 413)
+        payload = bytearray()
+        async with __import__('asyncio').timeout(15):
+            async for chunk in request.stream():
+                if len(payload) + len(chunk) > MAX_AUDIO_BYTES:
+                    raise SpeechError('audio_bytes', 413)
+                payload.extend(chunk)
+        from infrastructure.speech_finance import PostgresSpeechFinance
+        result = await transcribe_audio(bytes(payload), mime, operation_id,
+                                        PostgresSpeechFinance(runtime, principal))
+        return JSONResponse(result, headers={'Cache-Control': 'no-store'})
+    except SpeechError as exc:
+        raise HTTPException(exc.status, exc.code) from None
+    except InsufficientShards:
+        raise HTTPException(402, 'speech_insufficient_balance') from None
+    except (Conflict, WalletConflict):
+        # Transcript is ephemeral. A consumed key never retranscribes its audio.
+        raise HTTPException(409, 'speech_operation_unavailable') from None
+    except PricingUnavailable:
+        raise HTTPException(503, 'speech_pricing_unavailable') from None
+    except (ValueError, TimeoutError):
+        raise HTTPException(422, 'speech_request_invalid') from None
+    except Exception:
+        raise HTTPException(503, 'speech_internal_error') from None
+
+
 @app.get('/account/purchases')
 def account_purchases(cursor: Optional[str] = None, limit: int = 20):
     from infrastructure.request_context import current_principal
