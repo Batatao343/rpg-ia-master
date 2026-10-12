@@ -3282,13 +3282,13 @@ specs:
   lineage_note: User authorized Sol High executor after Terra High handoff; independent Sol High APPROVED owner-scoped read model and operation/epoch cost attribution; 2056 passed, 59 skipped, 15 deselected plus local Postgres and 4 browser E2E; normal turn billing remains unactivated
 - id: SPEC-186
   slug: speech-to-text-routing
-  status: approved
+  status: done
   path: specs/SPEC-186-speech-to-text-routing.md
   created_commit: null
   created_at: '2026-10-02'
-  completed_commit: null
-  completed_at: null
-  completed_order: null
+  completed_commit: 53c9802029da92e4c05ac74a8120fdc065e99bc1
+  completed_at: '2026-10-12'
+  completed_order: 185
   depends_on:
   - SPEC-185
   depends_on_raw:
@@ -3296,7 +3296,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Offline implementation and independent Sol High review APPROVED; 44 focused tests and full pytest exit 0; status approved pending explicitly authorized real STT smoke (docs/spec186/README.md).
+  lineage_note: Required Sol High implementation and independent offline/live reviews APPROVED; 44 focused tests and full pytest exit 0; four explicitly authorized Groq live calls settled through Postgres wallet, voice events 2+1+1, reserved zero; USD0.000444448 rate-card normalized not invoice verified; synthetic English voice not pt-BR accuracy proof; OpenAI live skipped_missing_key and fallback offline-tested; no audio/transcript persisted or commercial activation (docs/spec186/README.md).
 - id: SPEC-187
   slug: voice-input-web-mobile
   status: approved

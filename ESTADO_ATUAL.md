@@ -1,6 +1,6 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
-> **12/10 — SPEC-186 implementada offline; fechamento pendente.**
+> **12/10 — SPEC-186 `done`; STT privado e wallet validados live.**
 > `/account/transcriptions` autenticado/CSRF recebe áudio limitado (8MiB/60s),
 > Groq Whisper Turbo → OpenAI mini com modelos configuráveis, wallet/tickets
 > por tentativa, usage privado e categoria voice na conta. Áudio temporário é
@@ -9,9 +9,15 @@
 > decode real WebM/Ogg/MP4; 19 verificações afetadas também verdes. Suíte completa
 > atingiu 100% com **exit 0** (contagem suprimida pelo duplo `-q`), Ruff verde.
 > Revisão Sol High independente **APPROVED**, run `SPEC-186-SOL-20261012-01`
-> ([parecer](handoffs/SPEC-186-SOL-independent-review.md)). Nenhuma chamada real de STT
-> ocorreu; smoke curto de até quatro chamadas/US$0,10 exige autorização.
-> SPEC permanece `approved`; SPEC-187 depende do fechamento.
+> ([parecer](handoffs/SPEC-186-SOL-independent-review.md)). Smoke autorizado:
+> **quatro chamadas Groq**, todas success/settled via wallet Postgres real;
+> voice por owner **2 + 1 + 1**, reservado final zero. Custo normalizado pelo
+> rate card **US$0,000444448**, não confirmado por invoice. Áudios sintéticos
+> 1,75s/2,69s; dupla final 648/829ms. Voz flite em inglês: similaridades
+> 0,811/0,735, nomes parcialmente perdidos, **sem comprovação de precisão pt-BR**.
+> OpenAI live `skipped_missing_key`; fallback offline verde. Áudio/transcript
+> não persistidos; sem recargas ou ativação comercial. Revisão live
+> `SPEC-186-SOL-20261012-LIVE-01` **APPROVED**; próxima: SPEC-187.
 > Defaults: STT desativado; WAV PCM usa stdlib e formatos de navegador exigem
 > ffmpeg server-side. Cobrança desconhecida/duração somente na OpenAI preserva
 > reserva para reconciliação. [Contrato/evidência](docs/spec186/README.md).

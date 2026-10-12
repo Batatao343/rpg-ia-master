@@ -1,8 +1,9 @@
 # SPEC-186 — Speech-to-text privado com wallet
 
-Implementação offline pronta e revisão Sol High independente **APPROVED**;
-fechamento aguarda smoke real explicitamente autorizado. A spec permanece `approved`, e a SPEC-187 ainda
-depende de seu fechamento. **Zero chamadas reais de STT nesta execução.**
+SPEC-186 **`done`** após implementação, gates e smoke real explicitamente
+autorizado pelo usuário. Revisões Sol High independentes offline e de
+fechamento **APPROVED**. A dependência da SPEC-187 está concluída. O serviço
+continua desativado por default; nenhuma ativação comercial ocorreu.
 
 ## Contrato HTTP e privacidade
 
@@ -135,6 +136,10 @@ eventos e settlements como `voice`, com filtro de owner e sem usar GameState.
 - Revisão Sol High independente **APPROVED**, run
   `SPEC-186-SOL-20261012-01`, sem bloqueios;
   [parecer](../../handoffs/SPEC-186-SOL-independent-review.md).
+- Fechamento documental: `tests/test_spec_index.py` **4 passed**; check do
+  Project Index exit 0, `fresh_commit_drift` (source idêntico, só SHA de commit
+  divergente), e `git diff --check` verde. Código/testes de produto não mudaram
+  após os gates completos.
 
 Supabase changelog e RLS oficiais consultados em 2026-10-12. Não há mudança
 de Auth/Storage/Data API. CLI `supabase` indisponível neste ambiente; migration
@@ -142,12 +147,37 @@ criada seguindo a convenção local e validada em transação com rollback no
 Postgres de teste, sem aplicação cloud ou edição do histórico de migrations.
 Nenhum evaluator, expected, baseline ou dataset de regressão foi alterado.
 
-## Smoke real pendente de autorização
+## Smoke real autorizado e fechamento
 
-Plano curto e isolado: duas frases pt-BR (por exemplo “Ayla chega a Valoria”
-e “Quero falar com o guarda de Porto”), cada uma com menos de 10s, contra
-Groq e OpenAI; **no máximo quatro chamadas**, sem retries, sob teto técnico
-total **US$0,10**. WAVs serão temporários e apagados; a evidência persistirá
-somente modelo/provider, duração, latência, contadores, custo e resultado de
-contrato, sem áudio/transcript. Requer keys e pricing/wallet de teste com
-saldo, além da autorização explícita do usuário. Não é campanha/long-run.
+O usuário autorizou os testes reais com teto de quatro chamadas/US$0,10 e
+**sem recarga de providers**. Foram exatamente **quatro chamadas Groq** com
+`whisper-large-v3-turbo`, passando pela wallet Postgres real. Todas terminaram
+`success`/`settled`; o dashboard registrou eventos voice **2 + 1 + 1** nos três
+owners de teste, e todas as reservas terminaram com saldo reservado zero.
+As execuções usaram transações locais com rollback; os créditos e registros
+financeiros de teste não ativaram nem alteraram contas comerciais.
+Nenhum áudio/transcript foi persistido; os arquivos temporários foram
+removidos. Não houve envio de ação ao jogo, long-run ou ativação comercial.
+
+Os dois áudios sintéticos tinham **1,75s e 2,69s**. Na dupla final, as latências
+medidas foram **648ms e 829ms**. O custo total normalizado pelo card publicado,
+incluindo o mínimo faturado de 10s por chamada Groq, foi **US$0,000444448**;
+essa é uma normalização de rate-card, **sem confirmação por invoice**.
+
+A voz sintética flite disponível estava em inglês. As similaridades observadas
+foram **0,811/0,735**, com nomes próprios parcialmente perdidos. Esses valores
+descrevem apenas as frases sintéticas desse smoke: **não comprovaram precisão
+pt-BR nem qualidade de nomes de Valoria**. Testes/fixtures pt-BR determinísticos
+permanecem a evidência offline; o smoke comprovou o contrato live, o caminho
+financeiro e a limpeza, com essa limitação de qualidade registrada.
+
+OpenAI live: **`skipped_missing_key`**. Nenhuma chamada OpenAI ou recarga foi
+feita. O fallback OpenAI continua verificado nos gates offline/MockTransport;
+qualidade/latência e uso efetivo desse provider não foram medidos ao vivo.
+
+Run live: `SPEC-186-LIVE-20261012T1518BRT`, 2026-10-12, aproximadamente
+15:15–15:18 (America/Sao_Paulo). Revisor Sol High independente aprovou o fechamento (`SPEC-186-SOL-20261012-LIVE-01`)
+com essas limitações, após a revisão técnica offline
+`SPEC-186-SOL-20261012-01`. O [parecer com addendum](../../handoffs/SPEC-186-SOL-independent-review.md)
+registra **APPROVED** para marcar `done`. O gate da suíte completa e seus
+limites de contagem permanecem os registrados acima.

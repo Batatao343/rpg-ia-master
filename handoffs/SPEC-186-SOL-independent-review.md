@@ -82,3 +82,54 @@ O plano concreto de até quatro chamadas sob teto de US$0,10 está em
 Este APPROVED cobre a implementação técnica offline/local. **A SPEC-186
 permanece `approved`, sem fechamento `done`, até o smoke autorizado ou uma
 dispensa explícita.** O parecer não autoriza ativação comercial.
+
+## Aditamento — smoke autorizado e fechamento
+
+- **Parecer de fechamento:** APPROVED; a SPEC-186 pode ser marcada `done`.
+- **Review run:** `SPEC-186-SOL-20261012-LIVE-01`, complementar ao parecer técnico local acima.
+- **Run live informado pelo root:** `SPEC-186-LIVE-20261012T1518BRT`, em 2026-10-12, aproximadamente 15:15–15:18, America/Sao_Paulo.
+
+O usuário autorizou expressamente os testes e proibiu recargas dos providers.
+O root informou que respeitou essa restrição e o plano de no máximo quatro
+chamadas/US$0,10. O revisor não efetuou chamadas live; analisou os resultados
+apresentados pelo root em contexto independente.
+
+Foram **exatamente quatro chamadas live ao Groq `whisper-large-v3-turbo`**:
+duas frases distintas, sintetizadas por flite, cada uma repetida uma vez.
+As durações dos WAVs foram 1,75s e 2,69s. Todas as quatro transcrições tiveram
+sucesso e `billing_status=settled`, passando pela wallet Postgres real.
+As execuções observaram eventos de categoria `voice` na conta em grupos
+2+1+1 e `reserved_milli=0` ao terminar cada run.
+
+O custo normalizado exato segundo o rate card foi
+**4 × US$0,000111112 = US$0,000444448**, abaixo do teto autorizado. A fatura
+do provider não foi consultada independentemente; esse valor é custo
+normalizado pelo card, não confirmação de uma fatura. Não houve recarga.
+
+Somente o par final teve latência individual instrumentada: **648ms e 829ms**.
+O primeiro par não teve essa medição; não há estimativa de latência para ele.
+As similaridades informadas foram **0,811 e 0,735**. A voz flite sintética
+inglesa falhou em alguns nomes próprios e termos das frases pt-BR, incluindo
+Ayla/Valoria na primeira e guarda na segunda; Porto foi reconhecido.
+Esse resultado não estabelece WER, qualidade de voz humana ou acurácia em
+produção. Não há limiar mínimo de qualidade predeclarado na SPEC-186.
+
+Cada run usou `TemporaryDirectory` e rollback da conexão Postgres.
+O root confirmou limpeza dos WAVs e ausência de áudio/transcript persistidos.
+Somente a metadata de evidência é registrada neste parecer.
+
+**OpenAI live: `skipped_missing_key`.** Não houve chamada real ao fallback
+`gpt-4o-mini-transcribe`; sua cobertura é determinística, via fake providers,
+MockTransport e integração wallet/usage já aprovados. Não se declara
+validação live da OpenAI.
+
+O smoke real autorizado do primary, integrado à wallet/account, satisfaz o
+gate real juntamente com os **44 testes focados**, a suíte completa **exit 0**
+e os demais gates locais registrados acima. A spec não exige live de ambos
+os providers nem um score mínimo de qualidade. Portanto, o fechamento
+`done` é honesto desde que preserve esses limites na evidência e no handoff.
+
+Este aditamento supera exclusivamente a pendência de smoke e a orientação
+anterior de manter `approved`; o parecer técnico e seu histórico permanecem.
+**APPROVED para fechamento da implementação; nenhuma ativação comercial ou
+alegação de qualidade em produção é autorizada por este parecer.**
