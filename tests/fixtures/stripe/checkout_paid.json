@@ -1,0 +1,1 @@
+{"id":"evt_fixture_paid","type":"checkout.session.completed","livemode":false,"created":1791892800,"data":{"object":{"id":"cs_test_fixture","mode":"payment","payment_status":"paid","amount_total":1050,"currency":"brl","payment_intent":"pi_fixture","metadata":{"order_id":"00000000-0000-0000-0000-000000000189"}}}}

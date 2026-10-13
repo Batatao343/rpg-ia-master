@@ -3333,7 +3333,7 @@ specs:
   lineage_note: Sol High implementation a82adea and independent Sol High review SPEC-188-SOL-20261013-INDEPENDENT-01 APPROVED with no open findings; immutable owner/type/model/pricing/expiry quote, atomic wallet reserve plus queue, mandatory ticket before provider, exact Standard image token pricing and uncertain holds, public NPC/scene results after reopen. Focused 78 passed (22 Postgres rollback), image E2E 7 passed, browser full 38 passed and 1 skipped, reviewed full pytest 2118 passed 90 skipped 15 deselected; closure rerun 2121 passed 87 skipped 15 deselected. No live image spend, provider recharge or commercial activation (docs/spec188/README.md).
 - id: SPEC-189
   slug: stripe-web-checkout-webhooks
-  status: approved
+  status: review-pending
   path: specs/SPEC-189-stripe-web-checkout-webhooks.md
   created_commit: null
   created_at: '2026-10-02'
@@ -3347,7 +3347,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Imported approved v5 package; implementation not started
+  lineage_note: Sol High implementation in review-pending; test-only Stripe adapter, immutable server orders, raw signature and atomic event/order/wallet fulfillment, refund/dispute audit, 39 focused tests including 23 PG rollback and 3 real multi-connection races, 24 affected tests, 7 Checkout Chromium, full browser 45 passed and 1 skipped, full Python 2134 passed and 113 skipped and 15 deselected exit 0, build/Ruff/bundle scan/index green. Three preliminary review findings fixed, formal independent Sol High review required on frozen commit. No Stripe remote call, live mode or commercial SKU (docs/spec189/README.md).
 - id: SPEC-190
   slug: account-lifecycle-abuse-security
   status: approved

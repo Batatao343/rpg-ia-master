@@ -123,17 +123,19 @@ class PostgresWallet:
         return WalletBalance(int(row["available_milli"]), int(row["reserved_milli"])) if row else WalletBalance(0, 0)
 
     def credit_verified_purchase(self, principal: Principal, *, channel: str,
-                                 payment_id: str, sku_id: str, verified: bool) -> WalletBalance:
+                                 payment_id: str, sku_id: str, verified: bool,
+                                 connection=None) -> WalletBalance:
         """Credit an externally verified payment once, using server-side SKU units.
 
-        Payment verification belongs to the future store/webhook integration;
-        this method has no HTTP route and rejects unverified invocations.
+        SPEC-189 authenticates Stripe raw events before calling this method.
+        Its shared connection keeps event, order and ledger in one transaction.
         """
         if verified is not True:
             raise WalletConflict("compra sem prova verificada")
         source = "payment:" + _reference(channel, 30)
         key = _reference(payment_id)
-        with self.pool.connection() as connection, connection.transaction():
+        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        with scope as connection, connection.transaction():
             sku = connection.execute(
                 "select sku_id,pricing_version_id,shard_milli,channel from app.purchase_skus where sku_id=%s",
                 (sku_id,),
@@ -162,12 +164,13 @@ class PostgresWallet:
             return WalletBalance(int(row["available_milli"]), int(row["reserved_milli"]))
 
     def refund_purchase(self, principal: Principal, *, purchase_entry_id: UUID,
-                        refund_id: str, kind: str = "refund") -> WalletBalance:
+                        refund_id: str, kind: str = "refund", connection=None) -> WalletBalance:
         """Full purchase refund/reversal once; fail if spent funds are unavailable."""
         if kind not in ("refund", "reversal") or not isinstance(purchase_entry_id, UUID):
             raise WalletConflict("refund/reversal inválido")
         refund_key = _reference(refund_id)
-        with self.pool.connection() as connection, connection.transaction():
+        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        with scope as connection, connection.transaction():
             account = self._locked_account(connection, principal.user_id)
             source = connection.execute(
                 "select entry_id,amount_milli from app.wallet_entries "

@@ -1086,6 +1086,8 @@ select {
 .account-chart-data th:first-child { text-align: left; }
 .account-card ul { padding: 0; margin: 0.5rem 0 1rem; list-style: none; }
 .account-card li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--line-soft); }
+.checkout-packages li { align-items: center; }
+.checkout-packages .btn { flex: none; }
 .account-card time { color: var(--muted); }
 .msg__cost { position: relative; display: inline-flex; align-items: center; margin-top: 0.5rem; }
 .msg__cost-button {
@@ -1101,6 +1103,7 @@ select {
 @media (max-width: 600px) {
   .account-shell-link { right: 7.5rem; max-width: calc(100vw - 9rem); }
   .account-card li { flex-direction: column; gap: 0.2rem; }
+  .checkout-packages li { align-items: stretch; }
   .account-chart { gap: 1px; }
 }
 
