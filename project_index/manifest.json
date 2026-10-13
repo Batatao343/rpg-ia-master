@@ -1,13 +1,13 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "840b95cd28e2ae888189f8ab92b248e0524e5147",
+  "commit_sha": "ab081be12ea0782c60ce37fe67fa569c06269c38",
   "edge_counts": {
-    "calls": 8762,
-    "contains": 423,
-    "defines": 5235,
-    "imports": 884,
-    "likely_test_for": 529,
-    "route_to": 37
+    "calls": 8898,
+    "contains": 428,
+    "defines": 5298,
+    "imports": 915,
+    "likely_test_for": 550,
+    "route_to": 39
   },
   "excluded_prefixes": [
     ".agents",
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:3902ba5baaeafa7c84dc022fc2a370fe3f50bce2dcc88491728cec146547efd7",
+  "graph_hash": "sha256:81b11ee20842b31d7061814944ae6614692f4c4fb200d62c269f56a6d030c8f9",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -209,6 +209,8 @@
     "services/game_serialization.py",
     "services/game_transfer.py",
     "services/graph_resolver.py",
+    "services/image_pricing.py",
+    "services/image_quotes.py",
     "services/input_normalization.py",
     "services/jev_decision.py",
     "services/jev_rollout.py",
@@ -364,6 +366,9 @@
     "tests/test_hardening_persistencia_sse.py",
     "tests/test_hosted_supabase_contract.py",
     "tests/test_hosted_supabase_local.py",
+    "tests/test_image_pricing.py",
+    "tests/test_image_quotes.py",
+    "tests/test_image_quotes_local.py",
     "tests/test_infrastructure_contracts.py",
     "tests/test_input_normalization.py",
     "tests/test_itens_vivos.py",
@@ -464,6 +469,7 @@
     "web/e2e/account.spec.ts",
     "web/e2e/critical-journeys.spec.ts",
     "web/e2e/fixtures.ts",
+    "web/e2e/image-quote.spec.ts",
     "web/e2e/visual-surfaces.spec.ts",
     "web/e2e/voice-input.spec.ts",
     "web/package.json",
@@ -480,8 +486,10 @@
     "web/src/components/CreateScreen.tsx",
     "web/src/components/DeathModal.tsx",
     "web/src/components/EmberField.tsx",
+    "web/src/components/GeneratedArtCard.tsx",
     "web/src/components/GeneratedPortrait.tsx",
     "web/src/components/Hud.tsx",
+    "web/src/components/ImageQuoteDialog.tsx",
     "web/src/components/LevelUpModal.tsx",
     "web/src/components/OnboardingHint.tsx",
     "web/src/components/ornaments.tsx",
@@ -522,14 +530,14 @@
   },
   "node_counts": {
     "artifact": 8,
-    "class": 469,
-    "endpoint": 37,
-    "file": 469,
-    "function": 1687,
-    "method": 397,
-    "module": 423,
-    "test": 2682
+    "class": 474,
+    "endpoint": 39,
+    "file": 477,
+    "function": 1694,
+    "method": 406,
+    "module": 428,
+    "test": 2724
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:992fe618300405cad887bd2aff9559a4ea27a3f5ac7dabb54bbf6c3b8873e10f"
+  "source_tree_hash": "sha256:04708cf92d19fd959337bd67fb4a53113395382531fd07c0b163fc77aed11fc8"
 }

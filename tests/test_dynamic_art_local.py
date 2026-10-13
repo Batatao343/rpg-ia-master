@@ -65,6 +65,8 @@ def test_reserva_worker_e_promocao_de_arte_no_postgres_local(tmp_path):
             "trigger_kind": "player_portrait",
         },
         owner_id=owner_id, game_id=game_id, asset_id=asset_id,
+        admission=lambda: {"private_brief": brief, "model": "gpt-image-2-2026-04-21",
+                           "subject_type": "player", "subject_id": "player", "trigger_kind": "player_portrait"},
     )
     with pool.connection() as connection, connection.transaction():
         connection.execute("update app.jobs set lease_until=now()-interval '1 second' where id=%s", (job_id,))

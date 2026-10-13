@@ -144,7 +144,7 @@ async def _correlation_boundary(request: Request, call_next):
             )
             raise
         route_object = request.scope.get("route")
-        route = getattr(route_object, "path", route)
+        route = re.sub(r"\{[^}]+\}", "{id}", getattr(route_object, "path", route))
         metrics.increment(
             "rpg_http_requests_total",
             {"route": route, "status_class": f"{response.status_code // 100}xx"},
@@ -598,7 +598,23 @@ class ArtBriefRequest(BaseModel):
 
 
 class ArtConfirmRequest(BaseModel):
+    model_config = {"extra": "forbid"}
     action_id: str
+    quote_id: uuid.UUID
+    confirmed: Literal[True]
+
+    @field_validator("confirmed", mode="before")
+    @classmethod
+    def explicit_confirmation(cls, value):
+        if value is not True:
+            raise ValueError("confirmed must be the boolean true")
+        return value
+
+
+class ArtQuoteRequest(BaseModel):
+    model_config = {"extra": "forbid"}
+    image_type: Literal["player", "npc", "scene"] = "player"
+    offer_id: Optional[uuid.UUID] = None
     reformulation: bool = False
 
 
@@ -714,6 +730,8 @@ class GameResponse(BaseModel):
     quest: Dict[str, Any] = {} # objetivo atual, beats (status), clímax, progresso
     combat: Dict[str, Any] = {} # inimigos, condições, iniciativa, round, cooldowns
     npcs: List[Dict[str, Any]] = [] # NPCs conhecidos (nome, papel, local, relação, última lembrança)
+    art_offers: List[Dict[str, str]] = []
+    art_generations: List[Dict[str, str]] = []
     chronicle: List[Dict[str, Any]] = [] # capítulos: {title, started_turn, location, entries[{text,turn,kind,event_id?}]}
     factions: List[Dict[str, Any]] = [] # fações vivas: objetivo, progresso, postura, reputação
     party: List[Dict[str, Any]] = [] # Fase 4.5: companheiros {name, hp, max_hp, active, archetype, status}
@@ -725,6 +743,19 @@ class GameResponse(BaseModel):
     visual: VisualResponse
 
 # --- HELPER: FORMATA RESPOSTA ---
+def _public_art_refs(state: dict) -> dict:
+    """Public references from the owner-scoped save; private quotes never enter UI."""
+    generations = []
+    for row in state.get("art_generation_ledger") or []:
+        image_type = row.get("subject_type") or ("player" if row.get("trigger_kind") == "player_portrait" else None)
+        if row.get("generation_id") and image_type in {"player", "npc", "scene"}:
+            generations.append({"generation_id": str(row["generation_id"]), "type": image_type,
+                                "subject_id": str(row.get("subject_id") or "player")})
+    return {"art_generations": generations,
+            "art_offers": [{"offer_id": row["offer_id"], "type": row["type"]}
+                           for row in state.get("art_offers") or []]}
+
+
 def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> GameResponse:
     # Pega a última mensagem
     from services.turn_outcome import player_facing_message
@@ -796,6 +827,7 @@ def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> Gam
                            state.get("world") or {}),
         combat=_combat_block(state),
         npcs=_npcs_block(state.get("npcs", {}) or {}),
+        **_public_art_refs(state),
         chronicle=_chronicle_block(state.get("chronicle", []) or []),
         party=[{"name": c.get("name", "?"),
                 "vitalidade": int(c.get("vitalidade", 0) or 0),
@@ -1843,61 +1875,17 @@ def preview_player_art_brief(req: ArtBriefRequest):
 
 
 def _enqueue_art_generation(state: dict, trigger, brief: dict) -> dict:
-    from infrastructure.contracts import JobRequest
-    from infrastructure.request_context import current_principal
-    from infrastructure.runtime import LOCAL_PRINCIPAL_ID, get_runtime
-    from services.art_triggers import reserve_request
+    """Automatic triggers publish offers; no reservation or job is created."""
+    from dataclasses import asdict
+    offer_id = str(uuid.uuid5(uuid.NAMESPACE_URL,
+        f"art-offer:{state['game_id']}:{trigger.trigger_kind}:{trigger.trigger_instance_id}:{trigger.arc_instance_id}"))
+    offers = list(state.get("art_offers") or [])
+    if not any(row.get("offer_id") == offer_id for row in offers):
+        offers.append({"offer_id": offer_id, "type": trigger.subject_type,
+                       "trigger": asdict(trigger), "brief": brief})
+    state["art_offers"] = offers[-32:]
+    return {"status": "offered", "offer_id": offer_id, "placeholder": True}
 
-    reserved = reserve_request(state, trigger)
-    if not reserved:
-        return {"status": "deduplicated"}
-    state.update({key: reserved[key] for key in ("art_arc_budgets", "art_generation_ledger")})
-    runtime = get_runtime()
-    principal = current_principal(required=False)
-    owner_id = principal.user_id if principal else LOCAL_PRINCIPAL_ID
-    profile = load_json_data("dynamic_art_profiles.json") or {}
-    generation = {
-        "generation_id": reserved["generation_id"],
-        "trigger_kind": trigger.trigger_kind,
-        "subject_type": trigger.subject_type,
-        "subject_id": trigger.subject_id,
-        "model": str(profile.get("model") or "gpt-image-2-2026-04-21"),
-        "profile_version": str(profile.get("profile_version") or "valoria-dynamic-v1"),
-        "private_brief": brief,
-    }
-    from services.turn_effects import current_effects
-    effects = current_effects()
-    durable = runtime.config.profile != "legacy" and principal and runtime.resources
-    if durable and effects is None:
-        raise RuntimeError("dynamic art requires a turn effect scope")
-    job_id = None  # Assigned by the queue only when the transaction commits.
-    asset_id = uuid.uuid5(uuid.NAMESPACE_URL, f"art-asset:{reserved['generation_id']}")
-
-    def publish(connection=None, epoch=0, version=0):
-        if durable:
-            from services.dynamic_art import DynamicArtRepository
-            repository = DynamicArtRepository(runtime.resources[0],
-                model=generation["model"], profile_version=generation["profile_version"])
-            repository.reserve(principal, uuid.UUID(str(state["game_id"])),
-                timeline_epoch=epoch, generation_id=uuid.UUID(reserved["generation_id"]),
-                request=trigger, brief=brief, connection=connection)
-        request = JobRequest(
-            "generate_dynamic_art", f"art:{reserved['generation_id']}",
-            {"generation": {**generation, "timeline_epoch": epoch},
-             "asset_id": str(asset_id), "owner_id": str(owner_id),
-             "game_id": str(state["game_id"]), "timeline_epoch": epoch,
-             "commit_version": version},
-            owner_id=owner_id, game_id=uuid.UUID(str(state["game_id"])), max_attempts=3)
-        if durable:
-            return runtime.job_queue.enqueue(request, connection=connection)
-        return runtime.job_queue.enqueue(request)
-
-    if durable:
-        effects.defer(publish)
-    else:
-        job_id = publish()
-    return {"status": "pending", "generation_id": reserved["generation_id"],
-            **({"job_id": str(job_id)} if job_id is not None else {})}
 
 def _enqueue_turn_art(state_before: dict, state_after: dict, action_key: str) -> None:
     if os.getenv("RPG_DYNAMIC_ART_ENABLED", "0").strip().lower() not in {"1", "true", "yes"}:
@@ -1917,46 +1905,129 @@ def _enqueue_turn_art(state_before: dict, state_after: dict, action_key: str) ->
         _enqueue_art_generation(state_after, trigger, brief)
 
 
-@app.post("/game/{game_id}/art/player/confirm")
-def confirm_player_art(game_id: str, req: ArtConfirmRequest):
+def _image_finance():
+    from infrastructure.request_context import current_principal
     from infrastructure.runtime import get_runtime
+    from services.image_quotes import ImageQuoteRepository
+    if not _database_profile() or os.getenv("RPG_DYNAMIC_ART_ENABLED", "0").lower() not in {"1", "true", "yes"}:
+        raise HTTPException(503, "image_quotes_unavailable")
+    runtime = get_runtime()
+    return runtime, current_principal(), ImageQuoteRepository(runtime.resources[0])
+
+
+def _validate_image_request(state: dict, reformulation: bool, image_type: str) -> None:
+    _reject_memorial(state)
+    _reject_archived(state)
+    if state.get("death_pending"):
+        raise HTTPException(409, "Resolva a queda antes de encomendar arte.")
+    if image_type == "player":
+        rows = [row for row in state.get("art_generation_ledger", []) if row.get("trigger_kind") == "player_portrait"]
+        if (reformulation and len(rows) != 1) or (not reformulation and rows):
+            raise HTTPException(409, "Retrato ou reformulação indisponível.")
+
+
+@app.post("/game/{game_id}/art/quote")
+def create_image_quote(game_id: str, req: ArtQuoteRequest):
+    from infrastructure.contracts import Conflict
+    from services.art_brief import build_player_art_brief
+    from services.art_triggers import ArtGenerationRequest
+    from services.image_quotes import public_quote
+    from services.shard_pricing import PricingUnavailable
+    runtime, principal, repository = _image_finance()
+    state = load_game_state(_resolve_save_file(game_id))
+    if not state:
+        raise HTTPException(404, "Jogo não encontrado.")
+    _validate_image_request(state, req.reformulation, req.image_type)
+    if req.image_type == "player":
+        if req.offer_id:
+            raise HTTPException(422, "player_offer_not_required")
+        if req.reformulation:
+            with runtime.resources[0].connection() as connection:
+                blocked = connection.execute(
+                    """select 1 from app.art_generations g join app.wallet_reservations w
+                    on w.reservation_id=g.wallet_reservation_id where g.game_id=%s and g.owner_id=%s
+                    and g.subject_type='player' and w.status not in ('settled','released')""",
+                    (uuid.UUID(game_id), principal.user_id)).fetchone()
+            if blocked:
+                raise HTTPException(409, "Confira a geração anterior antes de reformular.")
+        request_key = str(uuid.uuid4())
+        trigger = ArtGenerationRequest("player_portrait", request_key, "player", "player", None, request_key)
+        brief = build_player_art_brief(state.get("player") or {}, reformulation=req.reformulation)
+    else:
+        if req.reformulation:
+            raise HTTPException(422, "reformulation_only_player")
+        offer = next((row for row in state.get("art_offers", []) if row["offer_id"] == str(req.offer_id)
+                      and row["type"] == req.image_type), None)
+        if not offer:
+            raise HTTPException(404, "Oferta não encontrada.")
+        trigger = ArtGenerationRequest(**offer["trigger"])
+        brief = offer["brief"]
+    profile = load_json_data("dynamic_art_profiles.json") or {}
+    try:
+        quote = repository.issue(principal, uuid.UUID(game_id), request=trigger, brief=brief,
+            model=str(profile.get("model")), profile_version=str(profile.get("profile_version")),
+            reformulation=req.reformulation)
+    except PricingUnavailable:
+        raise HTTPException(503, "image_pricing_unavailable") from None
+    except Conflict:
+        raise HTTPException(409, "image_quote_conflict") from None
+    return public_quote(quote)
+
+
+@app.post("/game/{game_id}/art/player/confirm")
+@app.post("/game/{game_id}/art/confirm")
+def confirm_player_art(game_id: str, req: ArtConfirmRequest):
+    from infrastructure.contracts import Conflict
+    from infrastructure.wallet import InsufficientShards, WalletConflict
+    from services.shard_pricing import PricingUnavailable
     from services.turn_execution import operation_scope
     from services.turn_effects import effect_scope
-    lock = _game_lock(game_id) if not _database_profile() else nullcontext()
-    with lock:
-        state = load_game_state(_resolve_save_file(game_id))
-        if not state:
-            raise HTTPException(404, "Jogo não encontrado.")
-        claim, request_hash, receipt = _begin_state_mutation(
-            state, action_id=req.action_id, kind="art",
+    from services.art_triggers import ArtGenerationRequest, reserve_request
+    runtime, principal, repository = _image_finance()
+    claim = None
+    state = load_game_state(_resolve_save_file(game_id))
+    if not state:
+        raise HTTPException(404, "Jogo não encontrado.")
+    try:
+        quote = repository.get(principal, uuid.UUID(game_id), req.quote_id)
+        with runtime.resources[0].connection() as connection:
+            prior = connection.execute("select generation_id,status from app.art_generations where image_quote_id=%s and owner_id=%s",
+                                       (req.quote_id, principal.user_id)).fetchone()
+        if prior:
+            return {"status": prior["status"], "generation_id": str(prior["generation_id"]),
+                    "type": quote["image_type"], "placeholder": prior["status"] != "ready",
+                    **_public_art_refs(state)}
+        _validate_image_request(state, quote["reformulation"], quote["image_type"])
+        claim, request_hash, receipt = _begin_state_mutation(state, action_id=req.action_id, kind="art",
             payload={"game_id": game_id, **req.model_dump(mode="json", exclude={"action_id"})})
         if receipt is not None:
             return receipt
-        with operation_scope(get_runtime().turn_coordinator if claim else None, claim), effect_scope():
-            _reject_memorial(state)
-            _reject_archived(state)
-            if state.get("death_pending"):
-                raise HTTPException(409, "Resolva a queda antes de encomendar arte.")
-            if os.getenv("RPG_DYNAMIC_ART_ENABLED", "0").strip() not in {"1", "true", "yes"}:
-                return _commit_state_mutation(state, {"status": "disabled", "placeholder": True},
-                                              claim=claim, request_hash=request_hash)
-            rows = [row for row in state.get("art_generation_ledger", [])
-                    if row.get("trigger_kind") == "player_portrait"]
-            if req.reformulation and len(rows) >= 2:
-                raise HTTPException(409, "A reformulação visual já foi usada.")
-            if not req.reformulation and rows:
-                result = {"status": rows[-1].get("status"), "generation_id": rows[-1].get("generation_id")}
-            else:
-                from services.art_brief import build_player_art_brief
-                from services.art_triggers import ArtGenerationRequest
-                trigger = ArtGenerationRequest("player_portrait", req.action_id, "player",
-                                               "player", None, req.action_id)
-                result = _enqueue_art_generation(state, trigger,
-                    build_player_art_brief(state.get("player") or {}, reformulation=req.reformulation))
-                if result.get("status") == "deduplicated":
-                    raise HTTPException(409, "Geração visual já reservada.")
-            return _commit_state_mutation(state, {**result, "placeholder": True},
+        with operation_scope(runtime.turn_coordinator if claim else None, claim), effect_scope() as effects:
+            trigger = ArtGenerationRequest(**quote["trigger"])
+            reserved = reserve_request(state, trigger)
+            if not reserved:
+                raise HTTPException(409, "Orçamento visual indisponível.")
+            generation_id = str(uuid.uuid5(uuid.NAMESPACE_URL, f"image-quote:{req.quote_id}"))
+            reserved["art_generation_ledger"][-1]["generation_id"] = generation_id
+            reserved["art_generation_ledger"][-1]["image_quote_id"] = str(req.quote_id)
+            state.update({key: reserved[key] for key in ("art_arc_budgets", "art_generation_ledger")})
+            state["art_offers"] = [row for row in state.get("art_offers", []) if row.get("trigger") != quote["trigger"]]
+            effects.defer(lambda connection, epoch, version: repository.confirm(principal, uuid.UUID(game_id),
+                req.quote_id, connection=connection, epoch=epoch, version=version, queue=runtime.job_queue))
+            return _commit_state_mutation(state, {"status": "pending", "generation_id": generation_id,
+                "type": quote["image_type"], "placeholder": True, **_public_art_refs(state)},
                                           claim=claim, request_hash=request_hash)
+    except InsufficientShards:
+        raise HTTPException(402, "image_insufficient_shards") from None
+    except PricingUnavailable:
+        raise HTTPException(503, "image_pricing_unavailable") from None
+    except (Conflict, WalletConflict):
+        _fail_operation(claim, "image_quote_conflict")
+        raise HTTPException(409, "image_quote_conflict") from None
+    except Exception:
+        _fail_operation(claim, "image_confirmation_failed")
+        raise
+
 
 @app.get("/game/{game_id}/art/{generation_id}")
 def dynamic_art_status(game_id: str, generation_id: str):
@@ -2010,6 +2081,8 @@ def dynamic_art_status(game_id: str, generation_id: str):
             "status": public_status,
             "placeholder": generation["status"] != "ready",
             "assets": assets,
+            "financial_status": generation.get("financial_status"),
+            "credits_held": generation.get("financial_status") in {"reserved", "effect_started", "uncertain"},
             "error": public_error,
         }
     row = next((item for item in state.get("art_generation_ledger") or []

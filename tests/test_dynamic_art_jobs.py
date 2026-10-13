@@ -21,7 +21,7 @@ def test_worker_fake_gera_duas_variantes_privadas_sem_provider_real(tmp_path):
     }
     result = generate_dynamic_art_job(
         generator=generator, blob_store=FileBlobStore(tmp_path), generation=generation,
-        owner_id=owner, game_id=game, asset_id=asset,
+        owner_id=owner, game_id=game, asset_id=asset, admission=lambda: generation,
     )
     assert generator.calls == 1 and result["status"] == "ready"
     assert len(result["variants"]) == 2
@@ -47,7 +47,7 @@ def test_usage_is_published_before_image_processing_can_fail(tmp_path, monkeypat
     with pytest.raises(RuntimeError, match="failed after provider"):
         generate_dynamic_art_job(
             generator=FakeImageGenerator(), blob_store=FileBlobStore(tmp_path),
-            generation=generation, owner_id=uuid4(), game_id=uuid4(), asset_id=uuid4(),
+            generation=generation, owner_id=uuid4(), game_id=uuid4(), asset_id=uuid4(), admission=lambda: generation,
             usage_sink=lambda model, usage: published.append((model, usage)),
         )
     assert published == [("gpt-image-2-2026-04-21", {

@@ -29,6 +29,24 @@ def restore_effects(connection, *, principal, game_id, document: dict) -> None:
         (game_id, principal.user_id, cutoff, game_id))
     retained = [str(row['generation_id']) for row in document.get('art_generation_ledger', [])
                 if row.get('generation_id')]
+    # Quote reservations are historical finance, not checkpoint state. Release
+    # only a proven pre-ticket hold; a dispatched effect stays reconciliable.
+    rows = connection.execute(
+        """select g.image_quote_id,g.wallet_reservation_id from app.art_generations g
+        where g.game_id=%s and g.owner_id=%s and g.image_quote_id is not null
+        and not(g.generation_id=any(%s::uuid[])) for update""",
+        (game_id, principal.user_id, retained)).fetchall()
+    if rows:
+        from infrastructure.wallet import PostgresWallet
+        wallet = PostgresWallet(None)
+        for row in rows:
+            reservation = wallet._locked_reservation(connection, principal, row['wallet_reservation_id'])
+            if reservation['status'] == 'reserved':
+                wallet.release_pre_effect(principal, row['wallet_reservation_id'],
+                    fence_token=row['image_quote_id'], connection=connection)
+            else:
+                wallet.mark_uncertain(principal, row['wallet_reservation_id'],
+                    reason='image_timeline_abandoned', connection=connection)
     connection.execute(
         """update app.art_generations set status='superseded',updated_at=now()
         where game_id=%s and owner_id=%s and not(generation_id=any(%s::uuid[]))""",

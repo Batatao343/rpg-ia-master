@@ -31,25 +31,28 @@ def build_handlers():
         raise RuntimeError("worker durável exige PgVectorMemoryStore")
 
     def generate(payload: dict) -> dict:
-        generation = dict(payload["generation"])
-        generation_id = UUID(str(generation["generation_id"]))
+        from infrastructure.contracts import Principal, Conflict
+        from services.image_quotes import ImageQuoteRepository
+        generation_id = UUID(str(payload["generation"]["generation_id"]))
+        owner_id, game_id = UUID(str(payload["owner_id"])), UUID(str(payload["game_id"]))
         repository = DynamicArtRepository(
-            pool, model=generation["model"],
-            profile_version=generation["profile_version"],
+            pool, model="", profile_version="",
         )
-        # Configuration failure happens before claiming any external effect.
-        generator = OpenAIImageGenerator(os.environ["OPENAI_API_KEY"])
-        # A reclaimed job may have reached the provider before crashing. Never
-        # turn an uncertain external result into another paid generation.
-        if not repository.begin(generation_id):
-            return {"status": "already_ready", "generation_id": str(generation_id)}
+        finance = ImageQuoteRepository(pool)
         try:
+            generation = repository.get(Principal(owner_id, "worker", str(owner_id)), generation_id)
+            if not generation or generation["game_id"] != game_id or not generation.get("image_quote_id"):
+                raise Conflict("image_quote confirmation required")
+            if generation["status"] == "ready":
+                return {"status": "already_ready", "generation_id": str(generation_id)}
+            # Configuration errors happen before the durable dispatch ticket.
+            generator = OpenAIImageGenerator(os.environ["OPENAI_API_KEY"])
             result = generate_dynamic_art_job(
                 generator=generator,
                 blob_store=runtime.blob_store, generation=generation,
-                owner_id=UUID(str(payload["owner_id"])),
-                game_id=UUID(str(payload["game_id"])),
+                owner_id=owner_id, game_id=game_id,
                 asset_id=UUID(str(payload["asset_id"])),
+                admission=lambda: finance.dispatch(generation_id, owner_id, game_id),
                 usage_sink=lambda model, usage: repository.record_usage(
                     generation_id, model=model, usage=usage),
             )
@@ -57,8 +60,8 @@ def build_handlers():
                 generation_id, asset_id=UUID(str(payload["asset_id"])), result=result,
             )
             return result
-        except Exception as exc:
-            repository.fail(generation_id, "external_result_uncertain", retryable=False)
+        except Exception:
+            finance.hold_or_release(generation_id)
             raise
 
     def embed(payload: dict) -> dict:

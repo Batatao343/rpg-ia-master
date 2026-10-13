@@ -265,9 +265,12 @@ def quote_usage(events: Sequence[UsageEvent], version: PricingVersion, *, at: da
         speech_card = (event.cost_basis == "rate_card" and
                        event.category == "speech_to_text" and
                        event.pricing_version == SPEECH_PRICING_VERSION)
+        from services.image_pricing import IMAGE_PRICING_VERSION
+        image_card = (event.cost_basis == "rate_card" and event.category == "image"
+                      and event.provider == "openai" and event.pricing_version == IMAGE_PRICING_VERSION)
         if event.cost_basis == "token_priced" and event.pricing_version != version.rate_card_version:
             raise PricingUnavailable("rate card de usage diverge da versão")
-        if event.cost_basis not in {"token_priced", "provider_reported"} and not speech_card:
+        if event.cost_basis not in {"token_priced", "provider_reported"} and not (speech_card or image_card):
             raise PricingUnavailable("origem de custo não faturável")
         _numeric(event.cost_usd, 18, 9)
     with localcontext() as context:

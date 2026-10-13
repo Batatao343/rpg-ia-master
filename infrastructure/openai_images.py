@@ -38,7 +38,7 @@ class OpenAIImageGenerator:
             response = httpx.post(
                 f"{self.base_url}/images/edits", headers=headers,
                 data={"model": request.model, "prompt": request.prompt,
-                      "size": request.size, "response_format": "b64_json"},
+                      "size": request.size},
                 files=files, timeout=self.timeout,
             )
         else:
@@ -46,7 +46,7 @@ class OpenAIImageGenerator:
                 f"{self.base_url}/images/generations",
                 headers={**headers, "Content-Type": "application/json"},
                 json={"model": request.model, "prompt": request.prompt,
-                      "size": request.size, "response_format": "b64_json"},
+                      "size": request.size},
                 timeout=self.timeout,
             )
         if response.status_code in (400, 403) and "safety" in response.text.lower():

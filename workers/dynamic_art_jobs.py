@@ -16,7 +16,12 @@ from services.usage_metering import safe_provider_usage
 
 def generate_dynamic_art_job(*, generator: ImageGenerator, blob_store, generation: dict,
                              owner_id: UUID, game_id: UUID, asset_id: UUID,
-                             usage_sink: Callable[[str, dict], None] | None = None) -> dict:
+                             usage_sink: Callable[[str, dict], None] | None = None,
+                             admission: Callable[[], dict] | None = None) -> dict:
+    if admission is None:
+        from infrastructure.contracts import Conflict
+        raise Conflict("image_quote confirmation and reservation required")
+    generation = admission()
     brief = dict(generation["private_brief"])
     generated = generator.generate(ImageGenerationInput(
         render_image_prompt(brief), generation["model"], brief["size"], ()))

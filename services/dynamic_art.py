@@ -16,6 +16,14 @@ from services.art_brief import ArtBrief, render_image_prompt
 from services.art_triggers import ArtGenerationRequest
 
 
+def lock_art_game(connection, generation_id: UUID) -> None:
+    """Match game → job → generation lock order before FK-backed derived writes."""
+    connection.execute(
+        "select id from app.games where id=(select game_id from app.art_generations where generation_id=%s) for key share",
+        (generation_id,),
+    ).fetchone()
+
+
 class DynamicArtRepository:
     def __init__(self, pool: PostgresPool, *, model: str, profile_version: str) -> None:
         self.pool = pool
@@ -56,12 +64,14 @@ class DynamicArtRepository:
     def get(self, principal: Principal, generation_id: UUID) -> dict[str, Any] | None:
         with self.pool.connection() as connection:
             row = connection.execute(
-                """select g.*, not exists (
+                """select g.*, w.status as financial_status, not exists (
                     select 1 from app.jobs j where j.kind='generate_dynamic_art'
                     and j.dedupe_key='art:' || g.generation_id::text
                     and j.status='running' and j.lease_until > now()
                 ) as worker_inactive
-                from app.art_generations g where generation_id=%s and owner_id=%s""",
+                from app.art_generations g left join app.wallet_reservations w
+                on w.reservation_id=g.wallet_reservation_id
+                where generation_id=%s and g.owner_id=%s""",
                 (generation_id, principal.user_id),
             ).fetchone()
             return dict(row) if row else None
@@ -127,6 +137,8 @@ class DynamicArtRepository:
             "provider": "openai", "model": model,
             "outcome": "success", "network_attempted": True, "usage": safe_usage,
         }], operation_id=generation_id, component="image", category="image")
+        from services.image_pricing import price_image_event
+        usage_events = [price_image_event(event, safe_usage) for event in usage_events]
         append_usage_events(
             connection, owner_id=generation["owner_id"],
             operation_id=generation_id, game_id=generation["game_id"],
@@ -144,6 +156,7 @@ class DynamicArtRepository:
         from services.job_fence import require_job_fence
 
         with self.pool.connection() as connection, connection.transaction():
+            lock_art_game(connection, generation_id)
             require_job_fence(connection)
             generation = connection.execute(
                 "select * from app.art_generations where generation_id=%s for update",
@@ -159,6 +172,7 @@ class DynamicArtRepository:
         with self.pool.connection() as connection, connection.transaction():
             from services.job_fence import require_job_fence
 
+            lock_art_game(connection, generation_id)
             require_job_fence(connection)
             generation = connection.execute(
                 "select * from app.art_generations where generation_id=%s for update",
@@ -195,6 +209,24 @@ class DynamicArtRepository:
                 usage_json=%s,updated_at=now() where generation_id=%s""",
                 (display_asset_id, Jsonb(safe_usage), generation_id),
             )
+            if generation.get("image_quote_id"):
+                from infrastructure.wallet import PostgresWallet
+                from services.shard_pricing import PricingUnavailable
+                from infrastructure.wallet import WalletConflict
+
+                wallet = PostgresWallet(self.pool)
+                principal = Principal(generation["owner_id"], "worker", str(generation["owner_id"]))
+                ids = [row["event_id"] for row in connection.execute(
+                    "select event_id from app.usage_events where operation_id=%s and owner_id=%s",
+                    (generation_id, generation["owner_id"]),
+                ).fetchall()]
+                try:
+                    wallet.settle_usage(principal, generation["wallet_reservation_id"],
+                        fence_token=generation["image_quote_id"], usage_event_ids=ids,
+                        connection=connection, cap_confirmed_image=True)
+                except (PricingUnavailable, WalletConflict):
+                    wallet.mark_uncertain(principal, generation["wallet_reservation_id"],
+                        reason="image_usage_requires_reconciliation", connection=connection)
 
     def fail(self, generation_id: UUID, error_code: str, *, retryable: bool = True) -> None:
         with self.pool.connection() as connection, connection.transaction():

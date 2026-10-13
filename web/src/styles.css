@@ -1115,3 +1115,17 @@ select {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
+:root .image-quote-dialog {
+  color: var(--text, #eadcc4); background: #191713; border: 1px solid #8f7752;
+  border-radius: 12px; padding: 24px; width: min(480px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px); overflow: auto;
+}
+.image-quote-dialog::backdrop { background: rgba(0, 0, 0, .75); }
+.image-quote-actions, .image-offers { display: flex; flex-wrap: wrap; gap: 12px; }
+.image-offers { padding: 8px 16px; }
+.image-quote-actions .btn:not(.btn--ghost) { background: #3d2c16; color: #f5e9d6; }
+.image-generations { display: flex; flex-wrap: wrap; gap: 0.75rem; padding: 0.5rem 1rem; }
+.generated-art-card { width: min(20rem, 100%); padding: 0.75rem; border: 1px solid var(--line-soft); border-radius: var(--r-md); background: var(--surface); }
+.generated-art-card h3 { margin: 0 0 0.4rem; color: var(--ink); font-size: 0.95rem; }
+.generated-art-card p { margin: 0.25rem 0 0.5rem; color: var(--muted); }
+.generated-art-card img { display: block; max-width: 100%; max-height: 18rem; object-fit: contain; }

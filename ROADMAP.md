@@ -1,5 +1,14 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **13/10 — [SPEC-188](specs/SPEC-188-paid-image-quotes.md) `review-pending`.**
+> Cotação/confirm explícitos em Estilhas, reserva atômica, worker com ticket e
+> settlement, hold incerto sem retry pago, NPC/cena visíveis após reopen.
+> **78 focados (22 Postgres), 7 E2E imagem, 38 browser passed/1 skipped**,
+> build/Ruff verdes; full Python **2.118 passed, 90 skipped, 15 deselected**.
+> Implementação verificada e quatro achados da revisão corrigidos; aguarda
+> parecer Sol independente. Sem imagem live, recarga ou preços comerciais.
+> [Evidência](docs/spec188/README.md). SPEC-189 depende do fechamento desta.
+
 > **12/10 — [SPEC-187](specs/SPEC-187-voice-input-web-mobile.md) `done`.**
 > Entrada de voz web/mobile: transcript editável, Agir explícito, hard stop 60s,
 > permissões/cleanup de background/unmount e adapter sem dependência nativa.

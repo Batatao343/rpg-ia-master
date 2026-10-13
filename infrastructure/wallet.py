@@ -7,7 +7,7 @@ trusted backend DB connection may mutate these tables.
 from __future__ import annotations
 
 from collections import Counter
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -237,7 +237,7 @@ class PostgresWallet:
     def reserve(self, principal: Principal, *, reference_type: str, reference_id: str,
                 pricing_version_id: str, ceiling_milli: int, fence_token: UUID,
                 usage_operation_id: UUID | None = None,
-                at: datetime | None = None) -> WalletReservation:
+                at: datetime | None = None, connection=None) -> WalletReservation:
         _positive_amount(ceiling_milli)
         if reference_type not in {"operation", "image", "speech_to_text", "embedding", "other"}:
             raise WalletConflict("tipo de referência inválido")
@@ -248,7 +248,8 @@ class PostgresWallet:
             if UUID(reference_id) != usage_operation_id:
                 raise WalletConflict("operation_id de usage divergente")
         at = at or datetime.now(timezone.utc)
-        with self.pool.connection() as connection, connection.transaction():
+        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        with scope as connection, connection.transaction():
             if usage_operation_id is not None:
                 operation = connection.execute(
                     "select owner_id from app.operations where id=%s for key share",
@@ -388,14 +389,52 @@ class PostgresWallet:
             (settled, released, status, list(usage_ids), reason, reservation_id),
         ).fetchone())
 
+    def admit_image_attempt(self, principal: Principal, reservation_id: UUID, *,
+                            quote_id: UUID, generation_id: UUID, connection) -> None:
+        """Authorize exactly one image dispatch from immutable, confirmed DB facts."""
+        row = self._locked_reservation(connection, principal, reservation_id)
+        quote = connection.execute(
+            """select q.* from app.image_quotes q join app.art_generations g
+            on g.image_quote_id=q.quote_id and g.wallet_reservation_id=%s
+            where q.quote_id=%s and q.owner_id=%s and g.generation_id=%s""",
+            (reservation_id, quote_id, principal.user_id, generation_id),
+        ).fetchone()
+        if (not quote or row["reference_type"] != "image" or row["reference_id"] != str(quote_id)
+                or row["status"] != "reserved" or row["fence_token"] != quote_id
+                or row["ceiling_milli"] != quote["credits_milli"]
+                or row["pricing_version_id"] != quote["pricing_version_id"]
+                or row["usage_operation_id"] != generation_id):
+            raise UncertainEffect("reserva de imagem não está disponível")
+        connection.execute(
+            """insert into app.wallet_attempt_tickets
+            (ticket_id,reservation_id,owner_id,attempt_key,provider,model,max_liability_milli,fence_token)
+            values (%s,%s,%s,'image:1','openai',%s,%s,%s)""",
+            (uuid4(), reservation_id, principal.user_id, quote["model"], quote["credits_milli"], quote_id),
+        )
+        connection.execute("update app.wallet_reservations set status='effect_started' where reservation_id=%s",
+                           (reservation_id,))
+
+    def mark_uncertain(self, principal: Principal, reservation_id: UUID, *,
+                       reason: str, connection) -> str:
+        """Retain a ticketed hold without changing its financial fence or refunding."""
+        row = self._locked_reservation(connection, principal, reservation_id)
+        if row["status"] in {"effect_started", "uncertain"}:
+            connection.execute(
+                "update app.wallet_reservations set status='uncertain',reconciliation_reason=%s where reservation_id=%s",
+                (_reference(reason), reservation_id))
+            return "uncertain"
+        return row["status"]
+
     def settle_usage(self, principal: Principal, reservation_id: UUID, *,
                      fence_token: UUID, usage_event_ids: Sequence[UUID],
-                     at: datetime | None = None) -> WalletReservation:
+                     at: datetime | None = None, connection=None,
+                     cap_confirmed_image: bool = False) -> WalletReservation:
         """Atomically settle exact, persisted usage and release the remainder."""
         ids = tuple(usage_event_ids)
         if not ids or len(ids) != len(set(ids)) or any(not isinstance(v, UUID) for v in ids):
             raise WalletConflict("usage IDs ausentes, repetidos ou inválidos")
-        with self.pool.connection() as connection, connection.transaction():
+        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        with scope as connection, connection.transaction():
             row = self._locked_reservation(connection, principal, reservation_id)
             if row["fence_token"] != fence_token:
                 raise UncertainEffect("worker perdeu fence financeiro")
@@ -437,7 +476,23 @@ class PostgresWallet:
             quote = quote_usage(readings, version_from_record(version_row),
                                 at=at or datetime.now(timezone.utc),
                                 authorized_snapshot=True)
-            if quote.shard_milli_debited > int(row["ceiling_milli"]):
+            debit = quote.shard_milli_debited
+            if cap_confirmed_image:
+                image = connection.execute(
+                    "select 1 from app.art_generations where wallet_reservation_id=%s "
+                    "and image_quote_id is not null and generation_id=%s and owner_id=%s",
+                    (reservation_id, row["usage_operation_id"], principal.user_id),
+                ).fetchone()
+                if row["reference_type"] != "image" or not image:
+                    raise WalletConflict("teto de imagem sem quote confirmado")
+                if debit > int(row["ceiling_milli"]):
+                    connection.execute(
+                        "update app.art_generations set financial_anomaly_milli=%s "
+                        "where wallet_reservation_id=%s",
+                        (debit - int(row["ceiling_milli"]), reservation_id),
+                    )
+                    debit = int(row["ceiling_milli"])
+            if debit > int(row["ceiling_milli"]):
                 raise SpendCeilingExceeded("custo real excedeu teto confirmado")
             for event in events:
                 connection.execute(
@@ -448,7 +503,7 @@ class PostgresWallet:
                      event["event_sha256"], event["cost_usd"],
                      event["cost_basis"], event["pricing_version"]),
                 )
-            return self._terminal_transfer(connection, row, quote.shard_milli_debited,
+            return self._terminal_transfer(connection, row, debit,
                                            ids, status="settled")
 
     def recover(self, principal: Principal, reservation_id: UUID, *,
@@ -493,8 +548,9 @@ class PostgresWallet:
                                            reason="recovery_pre_dispatch")
 
     def release_pre_effect(self, principal: Principal, reservation_id: UUID, *,
-                           fence_token: UUID) -> WalletReservation:
-        with self.pool.connection() as connection, connection.transaction():
+                           fence_token: UUID, connection=None) -> WalletReservation:
+        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        with scope as connection, connection.transaction():
             row = self._locked_reservation(connection, principal, reservation_id)
             if row["fence_token"] != fence_token:
                 raise UncertainEffect("worker perdeu fence financeiro")
