@@ -19,6 +19,8 @@
 > [Evidência/limites](docs/spec188/README.md),
 > [handoff Sol](handoffs/SPEC-188-SOL-review.md) e
 > [parecer independente](handoffs/SPEC-188-SOL-independent-review.md).
+> Pós-publicação: Project Index regenerado após detectar staleness no CI;
+> `project_index check` e 7 testes focados do índice verdes localmente.
 > Próxima: SPEC-189.
 
 > **12/10 — SPEC-187 `done`; voz editável no composer web/mobile.**

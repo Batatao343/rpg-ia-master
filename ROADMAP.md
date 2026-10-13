@@ -10,6 +10,8 @@
 > **APPROVED** sobre `a82adea`. Sem imagem live, recarga ou preços comerciais.
 > [Evidência](docs/spec188/README.md) e
 > [parecer](handoffs/SPEC-188-SOL-independent-review.md). Próxima: SPEC-189.
+> Project Index regenerado após staleness no CI; check e 7 testes focados
+> do índice verdes localmente.
 
 > **12/10 — [SPEC-187](specs/SPEC-187-voice-input-web-mobile.md) `done`.**
 > Entrada de voz web/mobile: transcript editável, Agir explícito, hard stop 60s,
