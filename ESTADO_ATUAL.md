@@ -1,6 +1,6 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
-> **13/10 — SPEC-189 `review-pending`; Checkout Stripe test-only.**
+> **13/10 — SPEC-189 `done`; Checkout Stripe test-only.**
 > SKU/version/bruto/créditos são server-side; pedido durável + sessão idempotente,
 > webhook com assinatura raw body antes de JSON e crédito atômico com event store.
 > Refund/dispute preservam ledger; partial/inquiry/FX/saldo gasto/closed mantêm
@@ -8,10 +8,13 @@
 > **39 focados (23 Postgres rollback + 3 races reais), 24 afetados, 7 E2E Checkout**
 > verdes; build/Ruff e bundle scan verdes. Gate Python pré-commit:
 > **2.134 passed,113 skipped,15 deselected**, exit 0; browser **45 passed,1 skipped**.
-> Project Index fresh; revisão independente formal pendente no commit congelado.
+> Project Index fresh; revisão Sol High independente **APPROVED** sobre
+> `b171698` (`SPEC-189-SOL-20261013-INDEPENDENT-01`), sem achados abertos.
 > Default desativado, nenhum SKU comercial/chamada Stripe/live/recarga.
 > [Evidência/limites](docs/spec189/README.md),
-> [handoff Sol](handoffs/SPEC-189-SOL-review.md). Próxima depende da revisão.
+> [handoff Sol](handoffs/SPEC-189-SOL-review.md) e
+> [parecer independente](handoffs/SPEC-189-SOL-independent-review.md).
+> Próxima: SPEC-190.
 
 > **13/10 — SPEC-188 `done`; quote explícito de imagem.**
 > Imagens agora exigem quote imutável do owner e confirmação explícita do teto

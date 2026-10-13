@@ -1,7 +1,8 @@
 # SPEC-189 — evidência do Checkout Stripe web
 
-Status: `review-pending`; executor Sol High, revisão Sol High em contexto
-independente exigida. SPEC-188 está `done`; fix de CI do índice incorporado
+Status: `done`; executor Sol High e revisão Sol High independente **APPROVED**
+(`SPEC-189-SOL-20261013-INDEPENDENT-01`, sem achados abertos) sobre `b171698`.
+SPEC-188 está `done`; fix de CI do índice incorporado
 como `85d2bcc` (cherry-pick de `29c1881`). Nenhuma chamada Stripe, pagamento
 real, recarga de IA ou ativação comercial nesta execução.
 
@@ -94,7 +95,7 @@ Revisão preliminar Sol detectou inquiry/statuses ausentes, chargeback com
 valor/FX distinto e prefixo de disputa (`du_`, conforme Stripe). Corrigidos
 com fixtures de IDs reais e sete regressões Postgres: warning
 statuses/prevented preservam outcome sem debit; valores >gross/moedas
-divergentes ficam auditados em hold. Parecer formal depende do commit congelado.
+divergentes ficam auditados em hold. O parecer formal aprovou o commit congelado.
 
 Fontes consultadas em 2026-10-13:
 
@@ -139,5 +140,8 @@ full final válido usou path curto ASCII com source semanticamente estável.
 A repetição resolve esses failures sem alterar produto RAG, testes existentes
 ou oráculos. Nenhum full adicional é necessário para atualizar estas docs.
 
-Commit de implementação congelado será entregue ao reviewer pelo root;
-status permanece `review-pending`, sem push/PR/done nesta etapa.
+Commit de implementação `b171698` foi aprovado pelo revisor independente;
+[parecer completo](../../handoffs/SPEC-189-SOL-independent-review.md).
+Branch enviada ao GitHub na [PR #25](https://github.com/Batatao343/rpg-ia-master/pull/25).
+O fechamento local não ativa Checkout comercial; Stripe test-mode conectado
+continua condicionado à conta e é obrigatório no release gate SPEC-197.

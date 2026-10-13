@@ -1,6 +1,6 @@
 # SPEC-189 — Stripe Checkout web + webhooks
 
-> **Status:** `review-pending`
+> **Status:** `done`
 > **Depende de:** SPEC-188 `done`
 > **EXECUTOR_MODEL obrigatório:** `Sol`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -59,7 +59,7 @@ Local fixtures obrigatórias; Stripe test mode opcional na spec. Nada live.
 - [x] success/cancel page nunca concede saldo e funciona mesmo se webhook chegar depois;
 - [x] refund/dispute cria evento/estado reversível sem apagar purchase/ledger;
 - [x] test fixtures passam offline; chamada Stripe test-mode não é requisito para `done` se conta ainda não estiver conectada, mas fica obrigatória no release gate SPEC-197;
-- [ ] review Sol independente aprova signature/idempotency/fulfillment.
+- [x] review Sol independente aprova signature/idempotency/fulfillment.
 
 ## Decisões de implementação e evidência
 
@@ -88,3 +88,6 @@ Local fixtures obrigatórias; Stripe test mode opcional na spec. Nada live.
 - **39 focados**, incluindo **23 Postgres rollback + 3 races em schema local
   descartável**, e **24 testes afetados** verdes. Gates completos, revisão e
   evidência final em [docs/spec189/README.md](../docs/spec189/README.md).
+- Revisão Sol High independente **APPROVED**, run
+  `SPEC-189-SOL-20261013-INDEPENDENT-01`, sobre `b171698` sem achados abertos:
+  [parecer](../handoffs/SPEC-189-SOL-independent-review.md).
