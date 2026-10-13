@@ -1,5 +1,17 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **13/10 — [SPEC-189](specs/SPEC-189-stripe-web-checkout-webhooks.md) `done`.**
+> Checkout Stripe test-only, autoridade de preço/créditos server-side,
+> webhook autenticado e fulfillment atômico/idempotente; refund/dispute
+> append-only, retorno success/cancel sem conceder saldo. **39 focados,
+> 24 afetados e 7 E2E Checkout** verdes; build/Ruff/bundle scan e índice verdes.
+> Full Python pré-commit **2.134 passed,113 skipped,15 deselected**, exit 0;
+> browser **45 passed,1 skipped**. Revisão Sol High independente **APPROVED**
+> sobre `b724736` (rebase byte-idêntico do commit revisado), sem achados abertos.
+> Nenhum Stripe remoto ou ativação comercial.
+> [Evidência](docs/spec189/README.md), [handoff](handoffs/SPEC-189-SOL-review.md)
+> e [parecer](handoffs/SPEC-189-SOL-independent-review.md). Próxima: SPEC-190.
+
 > **13/10 — [SPEC-188](specs/SPEC-188-paid-image-quotes.md) `done`.**
 > Cotação/confirm explícitos em Estilhas, reserva atômica, worker com ticket e
 > settlement, hold incerto sem retry pago, NPC/cena visíveis após reopen.

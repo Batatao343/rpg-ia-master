@@ -166,6 +166,19 @@ export const getAccountBalance = () => req<AccountBalance>('/account/balance');
 export const getAccountSeries = (period: '24h' | '7d' | '30d') => req<{ period: string; unit: 'milli_shard'; totals: Record<'game' | 'image' | 'voice', string>; points: AccountPoint[] }>(`/account/series?period=${period}`);
 export const getAccountUsage = (cursor?: string) => req<AccountPage<AccountHistoryItem>>(`/account/usage${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`);
 export const getAccountPurchases = (cursor?: string) => req<AccountPage<PurchaseItem>>(`/account/purchases${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`);
+export interface CheckoutSku { sku_id: string; gross_brl: string; shard_milli: string }
+export interface CheckoutOrder {
+  order_id: string; status: 'created' | 'checkout_pending' | 'paid' | 'refunded' |
+    'disputed' | 'reconciliation_required' | 'expired';
+  sku_id: string; gross_brl: string; shard_milli: string;
+}
+export const getCheckoutSkus = () => req<{ items: CheckoutSku[] }>('/account/checkout/skus');
+export const createCheckout = (skuId: string, requestId: string) =>
+  req<CheckoutOrder & { checkout_url: string | null }>('/account/checkout', {
+    method: 'POST', body: JSON.stringify({ sku_id: skuId, request_id: requestId }),
+  });
+export const getCheckoutOrder = (orderId: string, signal?: AbortSignal) =>
+  req<CheckoutOrder>(`/account/checkout/${encodeURIComponent(orderId)}`, { signal });
 export interface ArtStatus { status: string; placeholder: boolean; financial_status?: string | null; credits_held?: boolean; assets?: Array<{
   asset_id: string; variant: string; url: string; width: number; height: number;
 }> }

@@ -41,7 +41,10 @@ export function App() {
   type Screen = "bootstrap" | "auth" | "saves" | "create" | "simulator" | "play" | "account";
   const [screen, setScreen] = useState<Screen>("bootstrap");
   const accountReturn = useRef<Screen>("saves");
+  const checkoutReturnRequested = () => ["success", "cancel"].includes(
+    new URLSearchParams(window.location.search).get("checkout") || "");
   const [accountBalance, setAccountBalance] = useState<string | null>(null);
+  const accountBalanceGeneration = useRef(0);
   const [data, setData] = useState<GameResponse | null>(null);
   const [log, setLog] = useState<LogEntry[]>([]);
   const [busy, setBusy] = useState(false);
@@ -102,7 +105,8 @@ export function App() {
         const list = await api.getSaves();
         if (!active) return;
         setSaves(list);
-        setScreen(list.length > 0 ? "saves" : "create");
+        accountReturn.current = list.length > 0 ? "saves" : "create";
+        setScreen(checkoutReturnRequested() ? "account" : accountReturn.current);
       } catch {
         // API antiga/sem saves — mantém o fluxo clássico de "continuar última".
         const saved = localStorage.getItem(LS_KEY);
@@ -134,7 +138,8 @@ export function App() {
       setPending(null);
       const list = await api.getSaves();
       setSaves(list);
-      setScreen(list.length ? "saves" : "create");
+      accountReturn.current = list.length ? "saves" : "create";
+      setScreen(checkoutReturnRequested() ? "account" : accountReturn.current);
       void refreshBalance(nextOwner, session.current);
     } catch (error) {
       setAuthError(errMsg(error));
@@ -170,11 +175,21 @@ export function App() {
   }
 
   async function refreshBalance(expectedOwner: string, generation: number) {
+    const balanceGeneration = ++accountBalanceGeneration.current;
     try {
       const balance = await api.getAccountBalance();
-      if (owner.current === expectedOwner && session.current === generation)
+      if (owner.current === expectedOwner && session.current === generation
+          && accountBalanceGeneration.current === balanceGeneration)
         setAccountBalance(balance.available_milli);
-    } catch { if (owner.current === expectedOwner && session.current === generation) setAccountBalance(null); }
+    } catch {
+      if (owner.current === expectedOwner && session.current === generation
+          && accountBalanceGeneration.current === balanceGeneration) setAccountBalance(null);
+    }
+  }
+
+  function syncAccountBalance(availableMilli: string) {
+    accountBalanceGeneration.current++;
+    setAccountBalance(availableMilli);
   }
 
   function onTurn(r: GameResponse): number {
@@ -620,7 +635,8 @@ export function App() {
           </motion.div>
         ) : screen === "account" ? (
           <motion.div key="account" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <AccountScreen onBack={() => setScreen(accountReturn.current)} />
+            <AccountScreen onBack={() => setScreen(accountReturn.current)}
+              onBalanceChange={syncAccountBalance} />
           </motion.div>
         ) : screen === "saves" ? (
           <motion.div

@@ -1681,6 +1681,86 @@ def account_balance():
     return _account_reader().balance(current_principal())
 
 
+def _stripe_payments():
+    if not _database_profile():
+        raise HTTPException(503, 'stripe_disabled')
+    from services.stripe_checkout import StripeSettings, StripeTestAdapter
+    settings = StripeSettings.from_env()
+    from infrastructure.runtime import get_runtime
+    from infrastructure.stripe_payments import StripePayments
+    return StripePayments(get_runtime().game_store.pool, settings, StripeTestAdapter(settings.secret_key))
+
+
+class CheckoutRequest(BaseModel):
+    model_config = {'extra': 'forbid'}
+    sku_id: str = Field(min_length=1, max_length=120)
+    request_id: uuid.UUID
+
+
+@app.get('/account/checkout/skus')
+def checkout_skus():
+    from services.stripe_checkout import StripeError
+    try:
+        return JSONResponse(_stripe_payments().skus(), headers={'Cache-Control': 'no-store'})
+    except StripeError:
+        raise HTTPException(503, 'stripe_catalog_unavailable') from None
+
+
+@app.post('/account/checkout')
+def checkout_create(body: CheckoutRequest):
+    from infrastructure.request_context import current_principal
+    from services.shard_pricing import PricingUnavailable
+    from services.stripe_checkout import StripeError
+    try:
+        return JSONResponse(_stripe_payments().checkout(current_principal(), body.sku_id, body.request_id),
+                            headers={'Cache-Control': 'no-store'})
+    except (StripeError, PricingUnavailable):
+        raise HTTPException(503, 'stripe_checkout_unavailable') from None
+
+
+@app.get('/account/checkout/{order_id}')
+def checkout_status(order_id: uuid.UUID):
+    from infrastructure.request_context import current_principal
+    from services.stripe_checkout import StripeError
+    try:
+        result = _stripe_payments().order(current_principal(), str(order_id))
+    except StripeError:
+        raise HTTPException(503, 'stripe_checkout_unavailable') from None
+    if result is None:
+        raise HTTPException(404, 'payment_order_not_found')
+    return JSONResponse(result, headers={'Cache-Control': 'no-store'})
+
+
+@app.post('/payments/stripe/webhook')
+async def stripe_webhook(request: Request):
+    """External provider route: raw signature replaces user cookie/CSRF auth."""
+    import hashlib
+    from starlette.concurrency import run_in_threadpool
+    from services.stripe_checkout import MAX_WEBHOOK_BYTES, StripeError, StripeSettings, verify_event
+    try:
+        settings = StripeSettings.from_env()
+    except StripeError:
+        raise HTTPException(503, 'stripe_disabled') from None
+    declared = request.headers.get('content-length')
+    if declared is not None and (not declared.isdecimal() or int(declared) > MAX_WEBHOOK_BYTES):
+        raise HTTPException(413, 'stripe_body_limit')
+    payload = bytearray()
+    try:
+        async with __import__('asyncio').timeout(15):
+            async for chunk in request.stream():
+                if len(payload) + len(chunk) > MAX_WEBHOOK_BYTES:
+                    raise HTTPException(413, 'stripe_body_limit')
+                payload.extend(chunk)
+        raw_body = bytes(payload)
+        event = verify_event(raw_body, request.headers.get('stripe-signature', ''), settings.webhook_secret)
+        return await run_in_threadpool(_stripe_payments().accept_event, event,
+                                       body_sha256=hashlib.sha256(raw_body).hexdigest())
+    except StripeError:
+        raise HTTPException(400, 'stripe_event_invalid') from None
+    except TimeoutError:
+        raise HTTPException(408, 'stripe_body_timeout') from None
+
+
 @app.post('/account/transcriptions')
 async def account_transcription(request: Request):
     """Raw audio upload, separate from game actions. No multipart spool or recording store."""

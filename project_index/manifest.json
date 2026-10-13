@@ -1,13 +1,13 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "39c66b6f61a8cc3d4c947f430ed45d4d605b6f80",
+  "commit_sha": "2c345f69eb9fd914142d3d22887132496c1b36f6",
   "edge_counts": {
-    "calls": 8898,
-    "contains": 428,
-    "defines": 5298,
-    "imports": 915,
-    "likely_test_for": 550,
-    "route_to": 39
+    "calls": 9060,
+    "contains": 434,
+    "defines": 5383,
+    "imports": 937,
+    "likely_test_for": 567,
+    "route_to": 43
   },
   "excluded_prefixes": [
     ".agents",
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:73cf37f5b04f0bfd7b166000f93b2ea08820f3570c400dabe197e47a9f9efa4f",
+  "graph_hash": "sha256:ea74ccf949972d9b8a73a401710ce393110ec3ee9da86e8521cecf189220aa6b",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -99,6 +99,7 @@
     "infrastructure/runtime.py",
     "infrastructure/s3_blob.py",
     "infrastructure/speech_finance.py",
+    "infrastructure/stripe_payments.py",
     "infrastructure/supabase_blob.py",
     "infrastructure/supabase_identity.py",
     "infrastructure/testing.py",
@@ -238,6 +239,7 @@
     "services/speech_pricing.py",
     "services/speech_to_text.py",
     "services/state_views.py",
+    "services/stripe_checkout.py",
     "services/structured_outputs.py",
     "services/tactical_profile.py",
     "services/turn_effects.py",
@@ -450,6 +452,10 @@
     "tests/test_speech_to_text.py",
     "tests/test_storage_security_local.py",
     "tests/test_streaming.py",
+    "tests/test_stripe_checkout.py",
+    "tests/test_stripe_checkout_api.py",
+    "tests/test_stripe_checkout_concurrency_local.py",
+    "tests/test_stripe_checkout_local.py",
     "tests/test_tactical_archetypes_runtime.py",
     "tests/test_telemetry_redaction.py",
     "tests/test_tiers_5_plus_content.py",
@@ -467,6 +473,7 @@
     "tests/test_worker_lease_lifecycle.py",
     "tests/test_world_sim.py",
     "web/e2e/account.spec.ts",
+    "web/e2e/checkout.spec.ts",
     "web/e2e/critical-journeys.spec.ts",
     "web/e2e/fixtures.ts",
     "web/e2e/image-quote.spec.ts",
@@ -530,14 +537,14 @@
   },
   "node_counts": {
     "artifact": 8,
-    "class": 474,
-    "endpoint": 39,
-    "file": 477,
-    "function": 1694,
-    "method": 406,
-    "module": 428,
-    "test": 2724
+    "class": 482,
+    "endpoint": 43,
+    "file": 484,
+    "function": 1705,
+    "method": 421,
+    "module": 434,
+    "test": 2775
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:4df0bb7831c54061532505d045a65fc88f58fc6d987d34f9733ae5ba3497fd3d"
+  "source_tree_hash": "sha256:00628ceed21cc0c66568c37e55af07d80072f936ebfe4d9c79269288ef0bb582"
 }
