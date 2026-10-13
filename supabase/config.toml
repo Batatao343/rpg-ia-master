@@ -30,12 +30,23 @@ file_size_limit = "20MiB"
 
 [auth]
 enabled = true
-site_url = "http://127.0.0.1:5173"
-additional_redirect_urls = ["http://127.0.0.1:5173"]
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["http://localhost:5173"]
 jwt_expiry = 3600
 enable_signup = true
 enable_anonymous_sign_ins = false
 minimum_password_length = 8
+
+[auth.email]
+enable_confirmations = true
+
+[auth.email.template.confirmation]
+subject = "Confirme seu e-mail em Valoria"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "Recupere seu acesso a Valoria"
+content_path = "./supabase/templates/recovery.html"
 
 [realtime]
 enabled = false

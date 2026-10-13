@@ -28,6 +28,7 @@ LABELS = {
     "rpg_job_oldest_age_seconds": {"kind"},
     "rpg_blob_operations_total": {"operation", "outcome"},
     "rpg_backup_age_seconds": {"component"},
+    "rpg_auth_email_delivery_failures_total": {"action", "status_class"},
 }
 
 

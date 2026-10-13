@@ -179,7 +179,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
 }
 
-input[type="text"], select, textarea {
+input[type="text"], input[type="email"], input[type="password"], select, textarea {
   width: 100%; background: var(--bg-deep);
   border: 1px solid var(--line-soft); border-radius: var(--r-sm);
   padding: 0.72rem 0.85rem; color: var(--ink); font-family: var(--body); font-size: 1.02rem;
@@ -1089,6 +1089,10 @@ select {
 .checkout-packages li { align-items: center; }
 .checkout-packages .btn { flex: none; }
 .account-card time { color: var(--muted); }
+.account-lifecycle > label, .account-lifecycle details label { display: block; margin: 0.8rem 0 0.4rem; }
+.account-lifecycle input { display: block; max-width: 28rem; margin-bottom: 0.8rem; }
+.account-lifecycle details { margin-top: 1.3rem; border-top: 1px solid var(--line-soft); padding-top: 1rem; }
+.account-lifecycle summary { cursor: pointer; color: var(--accent); }
 .msg__cost { position: relative; display: inline-flex; align-items: center; margin-top: 0.5rem; }
 .msg__cost-button {
   border: 1px solid var(--line-soft); background: transparent; border-radius: 50%;

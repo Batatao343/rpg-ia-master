@@ -367,7 +367,7 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
             if not config.supabase_url or not config.supabase_service_role_key:
                 raise ValueError("BlobStore Supabase exige SUPABASE_URL e service role no backend")
             blob_store: BlobStore = SupabaseBlobStore(
-                config.supabase_url, config.supabase_service_role_key,
+                config.supabase_url, config.supabase_service_role_key, pool=pool,
             )
         elif config.blob_store == "s3":
             try:
@@ -392,6 +392,7 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
                 raise ValueError("auth Supabase exige SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY")
             identity: IdentityVerifier = SupabaseIdentityProvider(
                 config.supabase_url, config.supabase_publishable_key,
+                pool=pool, service_key=config.supabase_service_role_key,
             )
         elif config.auth_mode == "oidc":
             from infrastructure.oidc_identity import OidcIdentityProvider

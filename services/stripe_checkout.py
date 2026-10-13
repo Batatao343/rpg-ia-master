@@ -59,17 +59,43 @@ class StripeSettings:
     origin: str
     allowed_skus: tuple[str, ...]
 
+    @staticmethod
+    def _valid_origin(origin: str) -> bool:
+        parsed = urlsplit(origin)
+        return (parsed.scheme == "https" and bool(parsed.netloc) and not parsed.username
+                and not parsed.password and not parsed.path and not parsed.query and not parsed.fragment)
+
+    @classmethod
+    def for_cleanup(cls) -> StripeSettings:
+        """Close old sessions even when new checkout sales are disabled."""
+        key = os.getenv("STRIPE_SECRET_KEY", "")
+        origin = os.getenv("RPG_CHECKOUT_ORIGIN", "").rstrip("/")
+        try:
+            valid = cls._valid_origin(origin)
+        except ValueError:
+            valid = False
+        if not key.startswith("sk_test_") or not valid:
+            raise StripeError("stripe_cleanup_unconfigured")
+        return cls(key, "", origin, ())
+
+    @classmethod
+    def for_reconciliation(cls) -> StripeSettings:
+        """Accept signed late webhooks after the sales kill switch is off."""
+        key = os.getenv("STRIPE_SECRET_KEY", "")
+        secret = os.getenv("STRIPE_WEBHOOK_SECRET", "")
+        if not key.startswith("sk_test_") or not secret.startswith("whsec_"):
+            raise StripeError("stripe_reconciliation_unconfigured")
+        return cls(key, secret, "", ())
+
     @classmethod
     def from_env(cls) -> StripeSettings:
         try:
             key, secret = os.getenv("STRIPE_SECRET_KEY", ""), os.getenv("STRIPE_WEBHOOK_SECRET", "")
             origin = os.getenv("RPG_CHECKOUT_ORIGIN", "").rstrip("/")
-            parsed = urlsplit(origin)
             skus = json.loads(os.getenv("RPG_STRIPE_ALLOWED_SKUS", "[]"))
             if (os.getenv("RPG_STRIPE_ENABLED", "0") != "1" or not key.startswith("sk_test_")
-                    or not secret.startswith("whsec_") or parsed.scheme != "https"
-                    or not parsed.netloc or parsed.username or parsed.password or parsed.path
-                    or parsed.query or parsed.fragment or not isinstance(skus, list) or not skus
+                    or not secret.startswith("whsec_") or not cls._valid_origin(origin)
+                    or not isinstance(skus, list) or not skus
                     or any(not isinstance(s, str) or not 0 < len(s) <= 120 for s in skus)):
                 raise ValueError
             return cls(key, secret, origin, tuple(skus))
@@ -113,6 +139,23 @@ class StripeTestAdapter:
                 or not checkout_url_valid(result.get("url"))):
             raise StripeError("stripe_session_invalid")
         return result
+
+    def expire_session(self, session_id: str) -> str:
+        """Close an open test Checkout session; report already closed sessions."""
+        if not re.fullmatch(r"cs_test_[A-Za-z0-9_-]{1,150}", session_id):
+            raise StripeError("stripe_session_invalid")
+        try:
+            result = self._request("POST", f"checkout/sessions/{session_id}/expire")
+        except StripeError:
+            # Stripe rejects expiration once a session completes or expires.
+            # A read also distinguishes that state from a transient API failure.
+            result = self._request("GET", f"checkout/sessions/{session_id}")
+        if result.get("id") != session_id or result.get("livemode") is not False:
+            raise StripeError("stripe_session_invalid")
+        status = result.get("status")
+        if status not in {"expired", "complete"}:
+            raise StripeError("stripe_session_not_closed")
+        return status
 
     def payment_economics(self, payment_intent: str) -> dict | None:
         """Resolve the actual balance transaction, never fees from a customer payload."""

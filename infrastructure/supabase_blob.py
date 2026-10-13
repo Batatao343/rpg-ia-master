@@ -5,19 +5,27 @@ from __future__ import annotations
 import hashlib
 from io import BytesIO
 from urllib.parse import quote
+from uuid import UUID
 
 import httpx
 
-from infrastructure.contracts import BlobMetadata, BlobRef, Conflict, NotFound
+from infrastructure.contracts import BlobMetadata, BlobRef, Conflict, NotFound, Unauthorized
 
 
 class SupabaseBlobStore:
     def __init__(self, base_url: str, service_key: str, *, bucket: str = "rpg-dynamic",
-                 timeout: float = 15.0) -> None:
+                 timeout: float = 15.0, pool=None) -> None:
         self.base_url = base_url.rstrip("/")
         self._key = service_key
         self.bucket = bucket
         self.timeout = timeout
+        self.pool = pool
+
+    def _account_active(self, owner: UUID) -> bool:
+        if self.pool is None:
+            return True
+        with self.pool.connection() as db:
+            return not db.execute("select 1 from app.account_deletions where owner_id=%s", (owner,)).fetchone()
 
     def _headers(self, content_type: str | None = None) -> dict[str, str]:
         headers = {"apikey": self._key}
@@ -42,6 +50,13 @@ class SupabaseBlobStore:
             pass
 
     def put(self, key, payload, metadata: BlobMetadata) -> BlobRef:
+        if not key.startswith(f"users/{metadata.owner_id}/") or not self._account_active(metadata.owner_id):
+            raise Unauthorized("account_deleted_or_invalid_blob_owner")
+        # The migration also fences storage.objects publication including service_role.
+        # A caller-side HTTP lock cannot fence a remote commit after timeout/crash.
+        return self._put(key, payload, metadata)
+
+    def _put(self, key, payload, metadata: BlobMetadata) -> BlobRef:
         data = payload.read()
         digest = hashlib.sha256(data).hexdigest()
         if digest != metadata.sha256:
