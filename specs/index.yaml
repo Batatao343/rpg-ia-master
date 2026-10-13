@@ -3337,7 +3337,7 @@ specs:
   path: specs/SPEC-189-stripe-web-checkout-webhooks.md
   created_commit: null
   created_at: '2026-10-02'
-  completed_commit: b1716983be7e929285356fe429acdb53b91e3b4b
+  completed_commit: b724736bcb188bd7113fe1480d2a47ce933391f6
   completed_at: '2026-10-13'
   completed_order: 188
   depends_on:
@@ -3347,7 +3347,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Sol High implementation b171698 and independent Sol High review SPEC-189-SOL-20261013-INDEPENDENT-01 APPROVED with no open findings; test-only Stripe adapter, immutable server orders, raw signature and atomic event/order/wallet fulfillment, refund/dispute audit, 39 focused tests including 23 PG rollback and 3 real multi-connection races, 24 affected tests, 7 Checkout Chromium, full browser 45 passed and 1 skipped, full Python 2134 passed and 113 skipped and 15 deselected exit 0, build/Ruff/bundle scan/index green. No Stripe remote call, live mode or commercial SKU (docs/spec189/README.md; handoffs/SPEC-189-SOL-independent-review.md).
+  lineage_note: Sol High implementation b724736 (byte-identical rebase of reviewed b171698 onto SPEC-188 base 29c1881) and independent Sol High review SPEC-189-SOL-20261013-INDEPENDENT-01 APPROVED with no open findings; test-only Stripe adapter, immutable server orders, raw signature and atomic event/order/wallet fulfillment, refund/dispute audit, 39 focused tests including 23 PG rollback and 3 real multi-connection races, 24 affected tests, 7 Checkout Chromium, full browser 45 passed and 1 skipped, full Python 2134 passed and 113 skipped and 15 deselected exit 0, build/Ruff/bundle scan/index green. No Stripe remote call, live mode or commercial SKU (docs/spec189/README.md; handoffs/SPEC-189-SOL-independent-review.md).
 - id: SPEC-190
   slug: account-lifecycle-abuse-security
   status: approved

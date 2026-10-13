@@ -115,3 +115,23 @@ operacional permanece no gate de release. Disputas/partial/closed/saldo gasto
 exigem reconciliação de operador e eventual ajuste auditado. Não houve
 provisionamento, advisors ou migração cloud. Esses limites estão explícitos
 na spec e em `docs/spec189/README.md` e não impedem o fechamento local.
+
+## Atestação após alinhamento da base — 2026-10-13
+
+A decisão **APPROVED** também se aplica à implementação rebased
+`b724736bcb188bd7113fe1480d2a47ce933391f6`, sobre a base
+`29c1881fee6dd745117aeece5e685f9884a3ebfe`. Confirmei independentemente:
+
+- `b171698` e `b724736` têm o mesmo tree Git:
+  `f220a79c5bff7984ac9105319dadb5e27c2027ca`.
+- Closure anterior `69736a4a82b9eb8f460f10794e08081985e9da97`
+  (`backup/spec189-before-base-align`) e closure nova
+  `2c345f69eb9fd914142d3d22887132496c1b36f6` têm o mesmo tree:
+  `2171c75abc6997dd56903d58249c1cd26e26128a`.
+- Bases `85d2bcc` e `29c1881` também têm trees idênticos; os dois
+  `git diff --exit-code` passaram e `git range-diff` marcou ambos os commits `=`.
+
+O alinhamento mudou somente o histórico/hashes. Source e conteúdo versionado
+equivalentes preservam o parecer e seus gates; não revisei código novamente
+nem executei testes adicionais. Atualizações posteriores de referências,
+documentação e índice ficam fora desta atestação de igualdade dos trees.

@@ -1,9 +1,9 @@
 # SPEC-189 — evidência do Checkout Stripe web
 
 Status: `done`; executor Sol High e revisão Sol High independente **APPROVED**
-(`SPEC-189-SOL-20261013-INDEPENDENT-01`, sem achados abertos) sobre `b171698`.
-SPEC-188 está `done`; fix de CI do índice incorporado
-como `85d2bcc` (cherry-pick de `29c1881`). Nenhuma chamada Stripe, pagamento
+(`SPEC-189-SOL-20261013-INDEPENDENT-01`, sem achados abertos) sobre `b724736`
+(rebase byte-idêntico do commit revisado `b171698`). SPEC-188 está `done`;
+base `29c1881` já contém a correção de CI do índice. Nenhuma chamada Stripe, pagamento
 real, recarga de IA ou ativação comercial nesta execução.
 
 ## Contratos e ownership
@@ -140,7 +140,8 @@ full final válido usou path curto ASCII com source semanticamente estável.
 A repetição resolve esses failures sem alterar produto RAG, testes existentes
 ou oráculos. Nenhum full adicional é necessário para atualizar estas docs.
 
-Commit de implementação `b171698` foi aprovado pelo revisor independente;
+Commit de implementação `b724736` preserva byte a byte a árvore de `b171698`,
+aprovado pelo revisor independente;
 [parecer completo](../../handoffs/SPEC-189-SOL-independent-review.md).
 Branch enviada ao GitHub na [PR #25](https://github.com/Batatao343/rpg-ia-master/pull/25).
 O fechamento local não ativa Checkout comercial; Stripe test-mode conectado

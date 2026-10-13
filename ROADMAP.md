@@ -7,7 +7,8 @@
 > 24 afetados e 7 E2E Checkout** verdes; build/Ruff/bundle scan e índice verdes.
 > Full Python pré-commit **2.134 passed,113 skipped,15 deselected**, exit 0;
 > browser **45 passed,1 skipped**. Revisão Sol High independente **APPROVED**
-> sobre `b171698`, sem achados abertos. Nenhum Stripe remoto ou ativação comercial.
+> sobre `b724736` (rebase byte-idêntico do commit revisado), sem achados abertos.
+> Nenhum Stripe remoto ou ativação comercial.
 > [Evidência](docs/spec189/README.md), [handoff](handoffs/SPEC-189-SOL-review.md)
 > e [parecer](handoffs/SPEC-189-SOL-independent-review.md). Próxima: SPEC-190.
 

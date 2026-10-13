@@ -3,13 +3,13 @@
 Executor: Sol High (`gpt-6.1-sol`), contrato obrigatório cumprido.
 Reviewer: Sol High em contexto independente; decisão ainda pendente.
 Branch: `spec-189-stripe-web-checkout-webhooks`, base SPEC-188 `done` + fix CI
-`85d2bcc`. Commit congelado será informado pelo executor após os gates.
+`29c1881` após rebase byte-idêntico. Commit de implementação congelado: `b724736`.
 
 Leia `specs/SPEC-189-stripe-web-checkout-webhooks.md` e
 `docs/spec189/README.md`. Source relevante: `api.py` routes checkout/webhook;
 `services/stripe_checkout.py`; `infrastructure/stripe_payments.py`;
 `infrastructure/wallet.py` shared connection; migration `20261013120000`;
-AccountScreen/App/api web e novo checkout E2E. Comparar com base `85d2bcc`.
+AccountScreen/App/api web e novo checkout E2E. Comparar com base `29c1881`.
 
 Foco obrigatório: raw bytes/assinatura antes de parse; server-side SKU/version/
 credits; owner/CSRF; retry/Stripe janela 24h; session/order/intent/mode/paid/

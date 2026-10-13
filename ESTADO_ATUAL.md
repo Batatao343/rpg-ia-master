@@ -9,7 +9,8 @@
 > verdes; build/Ruff e bundle scan verdes. Gate Python pré-commit:
 > **2.134 passed,113 skipped,15 deselected**, exit 0; browser **45 passed,1 skipped**.
 > Project Index fresh; revisão Sol High independente **APPROVED** sobre
-> `b171698` (`SPEC-189-SOL-20261013-INDEPENDENT-01`), sem achados abertos.
+> `b724736` (`SPEC-189-SOL-20261013-INDEPENDENT-01`, rebase byte-idêntico
+> do commit revisado), sem achados abertos.
 > Default desativado, nenhum SKU comercial/chamada Stripe/live/recarga.
 > [Evidência/limites](docs/spec189/README.md),
 > [handoff Sol](handoffs/SPEC-189-SOL-review.md) e

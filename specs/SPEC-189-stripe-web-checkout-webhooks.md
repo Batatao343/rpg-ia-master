@@ -89,5 +89,6 @@ Local fixtures obrigatórias; Stripe test mode opcional na spec. Nada live.
   descartável**, e **24 testes afetados** verdes. Gates completos, revisão e
   evidência final em [docs/spec189/README.md](../docs/spec189/README.md).
 - Revisão Sol High independente **APPROVED**, run
-  `SPEC-189-SOL-20261013-INDEPENDENT-01`, sobre `b171698` sem achados abertos:
+  `SPEC-189-SOL-20261013-INDEPENDENT-01`, sobre `b724736` (rebase byte-idêntico
+  de `b171698`) sem achados abertos:
   [parecer](../handoffs/SPEC-189-SOL-independent-review.md).
