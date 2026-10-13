@@ -166,7 +166,7 @@ export const getAccountBalance = () => req<AccountBalance>('/account/balance');
 export const getAccountSeries = (period: '24h' | '7d' | '30d') => req<{ period: string; unit: 'milli_shard'; totals: Record<'game' | 'image' | 'voice', string>; points: AccountPoint[] }>(`/account/series?period=${period}`);
 export const getAccountUsage = (cursor?: string) => req<AccountPage<AccountHistoryItem>>(`/account/usage${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`);
 export const getAccountPurchases = (cursor?: string) => req<AccountPage<PurchaseItem>>(`/account/purchases${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`);
-export interface ArtStatus { status: string; placeholder: boolean; assets?: Array<{
+export interface ArtStatus { status: string; placeholder: boolean; financial_status?: string | null; credits_held?: boolean; assets?: Array<{
   asset_id: string; variant: string; url: string; width: number; height: number;
 }> }
 export const getArtStatus = (game: string, generation: string, signal?: AbortSignal) => req<ArtStatus>(
@@ -238,10 +238,26 @@ export const postArtBrief = (payload: {
   "/game/art/brief", { method: "POST", body: JSON.stringify(payload) },
 );
 
-export const confirmPlayerArt = (gameId: string, actionId: string, reformulation = false) =>
-  req<{ status: string; generation_id?: string; placeholder: boolean }>(
-    `/game/${encodeURIComponent(gameId)}/art/player/confirm`, {
+export interface ImageQuote {
+  quote_id: string;
+  type: "player" | "npc" | "scene";
+  credits_milli: string;
+  pricing_version: string;
+  expires_at: string;
+  reformulation: boolean;
+}
+
+export const requestImageQuote = (gameId: string, imageType: ImageQuote["type"] = "player", reformulation = false, offerId?: string) =>
+  req<ImageQuote>(`/game/${encodeURIComponent(gameId)}/art/quote`, {
+    method: "POST", body: JSON.stringify({ image_type: imageType, reformulation, offer_id: offerId }),
+  });
+
+export const confirmPlayerArt = (gameId: string, actionId: string, quoteId: string) =>
+  req<{ status: string; generation_id?: string; type: ImageQuote["type"]; placeholder: boolean;
+    art_generations?: { generation_id: string; type: ImageQuote["type"]; subject_id: string }[];
+    art_offers?: { offer_id: string; type: "npc" | "scene" }[] }>(
+    `/game/${encodeURIComponent(gameId)}/art/confirm`, {
       method: "POST",
-      body: JSON.stringify({ action_id: actionId, reformulation }),
+      body: JSON.stringify({ action_id: actionId, quote_id: quoteId, confirmed: true }),
     },
   );

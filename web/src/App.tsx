@@ -15,6 +15,9 @@ import { CombatSimulatorScreen } from "./components/CombatSimulatorScreen";
 import { AuthScreen } from "./components/AuthScreen";
 import { AccountScreen, shards } from "./components/AccountScreen";
 
+import { ImageQuoteDialog } from "./components/ImageQuoteDialog";
+import { GeneratedArtCard } from "./components/GeneratedArtCard";
+
 const LS_KEY = "cronicas_game_id";
 
 // spec streaming-turno-sse (R4): textos curados por nó/rota do grafo.
@@ -49,6 +52,15 @@ export function App() {
   const [saves, setSaves] = useState<SaveSummary[]>([]);
   const [authError, setAuthError] = useState("");
   const [authRequired, setAuthRequired] = useState(false);
+  const [imageQuote, setImageQuote] = useState<{ quote: api.ImageQuote; gameId: string; session: number; actionId: string } | null>(null);
+  const [imageBusy, setImageBusy] = useState(false);
+  const [imageError, setImageError] = useState("");
+
+  function resetImageQuote() {
+    setImageQuote(null);
+    setImageBusy(false);
+    setImageError("");
+  }
 
   const gameId = useRef<string | null>(localStorage.getItem(LS_KEY));
   const logSeq = useRef(0);
@@ -58,6 +70,7 @@ export function App() {
   useEffect(() => {
     const expired = () => {
       session.current++;
+      resetImageQuote();
       setBusy(false); setThinking(false); setData(null); setLog([]);
       setAccountBalance(null);
       setScreen("auth");
@@ -117,6 +130,7 @@ export function App() {
       if (owner.current !== nextOwner) clearOwner(owner.current);
       owner.current = nextOwner;
       session.current++;
+      resetImageQuote();
       setPending(null);
       const list = await api.getSaves();
       setSaves(list);
@@ -134,6 +148,7 @@ export function App() {
     try {
       await api.logout();
       session.current++;
+      resetImageQuote();
       clearOwner(owner.current);
       setPending(null);
       localStorage.removeItem(LS_KEY);
@@ -196,10 +211,44 @@ export function App() {
     return entryId;
   }
 
+  async function openImageQuote(id: string, type: api.ImageQuote["type"] = "player", reformulation = false, offerId?: string) {
+    const generation = session.current;
+    setImageBusy(true); setImageError("");
+    try {
+      const quote = await api.requestImageQuote(id, type, reformulation, offerId);
+      if (session.current === generation) setImageQuote({ quote, gameId: id, session: generation, actionId: crypto.randomUUID() });
+    } catch (error) {
+      if (session.current === generation) setBanner({ msg: "Cotação indisponível: " + errMsg(error), kind: "warn" });
+    } finally { if (session.current === generation) setImageBusy(false); }
+  }
+
+  async function confirmImageQuote() {
+    const current = imageQuote;
+    if (!current || imageBusy || current.session !== session.current) return;
+    setImageBusy(true); setImageError("");
+    try {
+      const art = await api.confirmPlayerArt(current.gameId, current.actionId, current.quote.quote_id);
+      if (session.current !== current.session) return;
+      setData(prev => prev?.game_id === current.gameId ? {
+        ...prev,
+        portrait_generation_id: art.generation_id && current.quote.type === "player"
+          ? art.generation_id : prev.portrait_generation_id,
+        art_generations: art.art_generations ?? prev.art_generations,
+        art_offers: art.art_offers ?? prev.art_offers,
+      } : prev);
+      setImageQuote(null);
+      setBanner({ msg: "Imagem confirmada. O saldo foi reservado e a geração será processada.", kind: "warn" });
+      if (authRequired) void refreshBalance(owner.current, current.session);
+    } catch (error) {
+      if (session.current === current.session) setImageError("Não foi possível confirmar: " + errMsg(error));
+    } finally { if (session.current === current.session) setImageBusy(false); }
+  }
+
   async function handleCreate(payload: CreatePayload) {
     if (busy) return;
     setBusy(true);
     const generation = ++session.current;
+    resetImageQuote();
     setScreen("play");
     setLog([]);
     setThinking(true);
@@ -208,18 +257,8 @@ export function App() {
       if (session.current !== generation) return;
       onTurn(r);
       if (payload.generate_portrait && r.game_id) {
-        void api.confirmPlayerArt(r.game_id, crypto.randomUUID()).then((art) => {
-          if (session.current !== generation) return;
-          if (art.generation_id) setData(prev => prev?.game_id === r.game_id ? { ...prev, portrait_generation_id: art.generation_id } : prev);
-          setBanner({
-            msg: art.status === "disabled"
-              ? "Retrato dinâmico desativado; a arte-base permanece disponível."
-              : "Retrato encomendado. Ele aparecerá quando o processamento terminar.",
-            kind: "warn",
-          });
-        }).catch((error) => {
-          if (session.current === generation) setBanner({ msg: "O retrato não foi encomendado: " + errMsg(error), kind: "warn" });
-        });
+        void openImageQuote(r.game_id);
+
       }
     } catch (err) {
       if (session.current !== generation) return;
@@ -233,6 +272,7 @@ export function App() {
   async function handleCreateSimulation(payload: CombatSimulatorPayload) {
     if (busy) return;
     const generation = ++session.current;
+    resetImageQuote();
     setBusy(true);
     setThinking(true);
     setScreen("play");
@@ -411,6 +451,7 @@ export function App() {
   async function handleContinueSave(gid: string) {
     if (busy) return;
     const generation = ++session.current;
+    resetImageQuote();
     setBusy(true);
     try {
       const r = await api.getState(gid);
@@ -455,6 +496,7 @@ export function App() {
   function handleNew() {
     if (busy) return;
     session.current++;
+    resetImageQuote();
     setPending(null);
     setScreen(data?.combat_simulation?.enabled ? "simulator" : "create");
     setData(null);
@@ -524,6 +566,25 @@ export function App() {
       <div className="atmosphere" aria-hidden />
       <EmberField />
       <Banner state={banner} onDone={() => setBanner(null)} />
+      {imageQuote && imageQuote.session === session.current && screen === "play" &&
+        <ImageQuoteDialog quote={imageQuote.quote} busy={imageBusy} error={imageError}
+          onConfirm={() => void confirmImageQuote()} onCancel={() => setImageQuote(null)} />}
+      {screen === "play" && data?.game_id && !data.combat_simulation?.enabled && !data.game_over &&
+        <div className="image-offers">
+          <button className="btn btn--ghost" disabled={busy || imageBusy} onClick={() => void openImageQuote(data.game_id!, "player", Boolean(data.portrait_generation_id))}>
+            {data.portrait_generation_id ? "Cotar reformulação" : "Cotar retrato"}
+          </button>
+          {(data.art_offers || []).map(offer => <button key={offer.offer_id} className="btn btn--ghost" disabled={busy || imageBusy}
+            onClick={() => void openImageQuote(data.game_id!, offer.type, false, offer.offer_id)}>
+            {offer.type === "npc" ? "Cotar retrato de NPC" : "Cotar cena épica"}
+          </button>)}
+        </div>}
+      {screen === "play" && data?.game_id && (data.art_generations || []).some(row => row.type !== "player") &&
+        <div className="image-generations" aria-label="Imagens encomendadas">
+          {(data.art_generations || []).filter(row => row.type !== "player").map(row =>
+            <GeneratedArtCard key={`${data.game_id}:${row.generation_id}`} gameId={data.game_id}
+              generationId={row.generation_id} type={row.type as "npc" | "scene"} />)}
+        </div>}
       {authRequired && screen !== "auth" && screen !== "bootstrap" && screen !== "account" && screen !== "play" &&
         <button className="account-shell-link btn btn--ghost" type="button" disabled={busy}
           onClick={() => { accountReturn.current = screen; setScreen("account"); }}>
@@ -613,9 +674,9 @@ export function App() {
         ) : (
           <motion.div
             key="play"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
+            initial={{ y: 10 }}
+            animate={{ y: 0 }}
+            exit={{ y: 0 }}
             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
           >
             <PlayScreen

@@ -73,6 +73,11 @@ def safe_provider_usage(value: object, *, image_generated: bool = False) -> dict
         "cached_tokens": ("cached_tokens", "prompt_cache_hit_tokens"),
         "audio_units": ("audio_units",),
         "image_units": ("image_units", "images"),
+        "text_input_tokens": ("text_input_tokens",),
+        "image_input_tokens": ("image_input_tokens",),
+        "text_output_tokens": ("text_output_tokens",),
+        "image_output_tokens": ("image_output_tokens",),
+        "image_counter_error": ("image_counter_error",),
     }
     safe: dict[str, int | str] = {}
     for field, keys in aliases.items():
@@ -82,6 +87,19 @@ def safe_provider_usage(value: object, *, image_generated: bool = False) -> dict
             safe[field] = valid
     if image_generated:
         safe["image_units"] = max(1, int(safe.get("image_units", 0)))
+        for detail_name, suffix in (("input_tokens_details", "input_tokens"),
+                                    ("output_tokens_details", "output_tokens")):
+            if detail_name in value:
+                detail = value[detail_name]
+                if not isinstance(detail, Mapping):
+                    safe["image_counter_error"] = 1
+                    continue
+                for modality in ("text", "image"):
+                    counter = _nonnegative_int(detail.get(f"{modality}_tokens"))
+                    if counter is None:
+                        safe["image_counter_error"] = 1
+                    else:
+                        safe[f"{modality}_{suffix}"] = counter
     reported = _money(value.get("provider_cost_usd", value.get("cost_usd")))
     if reported is not None:
         safe["provider_cost_usd"] = str(reported)

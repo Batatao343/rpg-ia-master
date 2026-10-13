@@ -1,0 +1,19 @@
+{
+  "version": "openai-image-standard-2026-10-12",
+  "observed_at": "2026-10-12T00:00:00+00:00",
+  "provider": "openai",
+  "model": "gpt-image-2-2026-04-21",
+  "api": "direct_images",
+  "processing": "standard",
+  "text_input_per_million": "5.00",
+  "image_input_per_million": "8.00",
+  "image_output_per_million": "30.00",
+  "cached_input_discount": false,
+  "sources": [
+    "https://developers.openai.com/api/docs/models/gpt-image-2",
+    "https://developers.openai.com/api/docs/pricing",
+    "https://developers.openai.com/api/docs/guides/image-generation",
+    "https://developers.openai.com/api/docs/guides/batch"
+  ],
+  "derivation": "Pinned snapshot is listed on the model page. Standard output rate is explicitly shared by GPT Image 2 and 2.5 in the generation guide ($30/M). Pricing page places GPT Image 2 input rates in the Batch table: $2.50 text/$4 image. Standard input rates use the documented 50% Batch discount, yielding $5 text/$8 image. Direct Images API does not receive cached input discounts. These are provider technical rates, not a commercial SKU or activation."
+}

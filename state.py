@@ -436,6 +436,7 @@ class GameState(TypedDict):
     messages: Annotated[List[BaseMessage], operator.add]
     presentation_history: List[Dict[str, Any]]
     art_generation_ledger: List[Dict[str, Any]]
+    art_offers: List[Dict[str, Any]]
     art_arc_budgets: Dict[str, Dict[str, Any]]
     next: Optional[str]
     player: PlayerStats

@@ -1,5 +1,28 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **13/10 — SPEC-188 `done`; quote explícito de imagem.**
+> Imagens agora exigem quote imutável do owner e confirmação explícita do teto
+> em Estilhas; reserva/fila/save são atômicos. Triggers de NPC/cena somente
+> oferecem arte; resultado/hold permanece visível após reopen. Worker exige
+> ticket antes da rede, liquida tokens documentados por card técnico Standard,
+> limita débito ao quote e registra excesso para FinOps; efeito incerto retém
+> saldo sem retry/refund automático. **78 focados (22 Postgres rollback),
+> 7 E2E de imagem, browser completo 38 passed/1 skipped**, build e Ruff verdes.
+> Suíte Python no fechamento: **2.121 passed, 87 skipped, 15 deselected**,
+> exit 0 (gate revisado: 2.118/90/15). A rodada adicional executou três
+> casos locais antes ignorados.
+> Quatro achados da revisão foram corrigidos; Sol High independente aprovou
+> `a82adea` (`SPEC-188-SOL-20261013-INDEPENDENT-01`) sem achados abertos.
+> Sem imagem live, recarga ou ativação comercial;
+> preço/profile server-side ainda não publicado. Smoke browser opt-in antigo
+> usa confirmação sem quote e precisa de fixture nova; não foi relaxado.
+> [Evidência/limites](docs/spec188/README.md),
+> [handoff Sol](handoffs/SPEC-188-SOL-review.md) e
+> [parecer independente](handoffs/SPEC-188-SOL-independent-review.md).
+> Pós-publicação: Project Index regenerado após detectar staleness no CI;
+> `project_index check` e 7 testes focados do índice verdes localmente.
+> Próxima: SPEC-189.
+
 > **12/10 — SPEC-187 `done`; voz editável no composer web/mobile.**
 > Voz → Parar (ou hard stop 60s) → transcript na edição atual → Agir explícito.
 > Controller/hook libera microfone e cancela upload em background/pagehide,

@@ -38,7 +38,11 @@ export function GeneratedPortrait({ gameId, generationId }: { gameId: string; ge
   if (!generationId) return null;
   const art = result?.key === key ? result.art : null;
   const image = art?.status === 'ready' ? art.assets?.find(a => a.variant === 'full') : null;
+  const financeMessage = art?.financial_status === 'uncertain'
+    ? 'Resultado financeiro incerto: o saldo segue reservado para conferência. A geração não será repetida automaticamente.'
+    : art?.credits_held ? 'Saldo reservado até a conclusão financeira da imagem.' : null;
   return <section className="generated-portrait" aria-label="Retrato do personagem">
+    {financeMessage && <p role="status">{financeMessage}</p>}
     {image ? <>
       <button type="button" className="card__select" onClick={() => setExpanded(true)} aria-label="Ampliar retrato do personagem">
         <img src={image.url} width={image.width} height={image.height} alt="Retrato do personagem" />

@@ -414,10 +414,10 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                   <span>
                     <input type="checkbox" checked={generatePortrait}
                       onChange={(event) => setGeneratePortrait(event.target.checked)} />{" "}
-                    Confirmo a geração do retrato com GPT Image
+                    Quero consultar o preço do retrato
                   </span>
                   <small className="muted">
-                    Esta chamada pode ter custo no provedor. O jogo continua normalmente se estiver desativada ou falhar.
+                    Depois da criação, você verá o custo em Estilhas e poderá confirmar ou cancelar.
                   </small>
                 </label>
               </>

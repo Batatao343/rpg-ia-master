@@ -3316,13 +3316,13 @@ specs:
   lineage_note: User explicitly authorized Sol High executor after Terra handoff; editable voice composer with adapter, 60s hard stop, permission/background/unmount cleanup and explicit Send only; 18 Node, 11 Chromium (390/1440, keyboard/touch, Axe, native synthetic audio), 6 focused Python and build green; full pytest 2094 passed, 65 skipped, 15 deselected; conditional human manual smoke unavailable, no live STT spend or native dependency (docs/spec187/README.md).
 - id: SPEC-188
   slug: paid-image-quotes
-  status: approved
+  status: done
   path: specs/SPEC-188-paid-image-quotes.md
   created_commit: null
   created_at: '2026-10-02'
-  completed_commit: null
-  completed_at: null
-  completed_order: null
+  completed_commit: a82adea3333284003629bd106bf58f1eb1440154
+  completed_at: '2026-10-13'
+  completed_order: 187
   depends_on:
   - SPEC-187
   depends_on_raw:
@@ -3330,7 +3330,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Imported approved v5 package; implementation not started
+  lineage_note: Sol High implementation a82adea and independent Sol High review SPEC-188-SOL-20261013-INDEPENDENT-01 APPROVED with no open findings; immutable owner/type/model/pricing/expiry quote, atomic wallet reserve plus queue, mandatory ticket before provider, exact Standard image token pricing and uncertain holds, public NPC/scene results after reopen. Focused 78 passed (22 Postgres rollback), image E2E 7 passed, browser full 38 passed and 1 skipped, reviewed full pytest 2118 passed 90 skipped 15 deselected; closure rerun 2121 passed 87 skipped 15 deselected. No live image spend, provider recharge or commercial activation (docs/spec188/README.md).
 - id: SPEC-189
   slug: stripe-web-checkout-webhooks
   status: approved
