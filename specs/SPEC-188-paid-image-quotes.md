@@ -1,6 +1,6 @@
 # SPEC-188 — Quote e cobrança explícita de geração de imagem
 
-> **Status:** `review-pending`
+> **Status:** `done`
 > **Depende de:** SPEC-187 `done`
 > **EXECUTOR_MODEL obrigatório:** `Sol`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -62,13 +62,13 @@ Se o custo real do provider exceder o quote confirmado, registrar margem negativ
 - [x] quote é owner-bound, one-time, expira e não pode ter credits/model/type alterados pelo client;
 - [x] duplicate confirm/replay = uma geração e um settlement no máximo;
 - [x] `external_result_uncertain` mantém hold/reconciliation explícita e não retry cego;
-- [ ] review Sol independente aprova todos os provider-call paths.
+- [x] review Sol independente aprova todos os provider-call paths.
 
 ## Implementação e validação — 13/10/2026
 
-Sol High executou; a revisão Sol independente está em contexto separado e
-aguarda o parecer formal. A SPEC não está `done` enquanto esse gate estiver
-aberto. SPEC-187 permaneceu `done`; nenhum provider/modelo foi recarregado.
+Sol High executou e outro Sol High aprovou a revisão independente sobre o
+commit `a82adea` (`SPEC-188-SOL-20261013-INDEPENDENT-01`), sem achados abertos.
+SPEC-187 permaneceu `done`; nenhum provider/modelo foi recarregado.
 
 Quotes vinculam owner/campanha/epoch, tipo, modelo, brief/hash, teto, versão
 FX/pricing e hash do card técnico de imagem. A validade é janela de aceite;
@@ -89,11 +89,14 @@ anomalia e nunca debita o excesso ao usuário.
 
 Gates: **78 focados**, incluindo **22 Postgres real** com dados em rollback;
 **7 E2E da SPEC**, **38 browser completos passed + 1 skipped**, build e Ruff
-verdes. Suíte Python final: **2.118 passed, 90 skipped, 15 deselected**, exit 0,
-213,41s. Smoke live de imagem não executado: só permitido com pedido/budget
+verdes. Suíte Python revisada: **2.118 passed, 90 skipped, 15 deselected**,
+exit 0, 213,41s; repetição de fechamento: **2.121 passed, 87 skipped,
+15 deselected**, exit 0. Smoke live de imagem não executado: só permitido com pedido/budget
 explícito de imagem; o gate aprovado usa gerador/HTTP fake e fault injection.
 
 Evidência e inventário de todos os paths:
 [docs/spec188/README.md](../docs/spec188/README.md).
 Handoff para decisão independente:
 [handoffs/SPEC-188-SOL-review.md](../handoffs/SPEC-188-SOL-review.md).
+Parecer independente:
+[handoffs/SPEC-188-SOL-independent-review.md](../handoffs/SPEC-188-SOL-independent-review.md).

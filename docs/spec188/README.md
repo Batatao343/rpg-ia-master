@@ -1,6 +1,8 @@
 # SPEC-188 — cotação explícita de imagem
 
-Execução Sol High; revisão independente Sol High ainda pendente. Nenhuma imagem
+Execução Sol High; revisão independente Sol High **APPROVED** sobre `a82adea`
+(`SPEC-188-SOL-20261013-INDEPENDENT-01`,
+[parecer](../../handoffs/SPEC-188-SOL-independent-review.md)). Nenhuma imagem
 real foi gerada, nenhum provider pago foi chamado e nenhum saldo de provider foi
 recarregado. Preços comerciais e ativação permanecem sem configuração.
 
@@ -137,6 +139,11 @@ até essa prova/política; não foi publicada uma política comercial de refund.
   `PYTHONUTF8=1`, `safe.directory` process-scoped para este clone, cache/basetemp
   graváveis. Integrações locais condicionadas ao DSN ficam skipped nessa suíte;
   os **22 Postgres** foram executados no gate focado com DSN localhost e rollback.
+- Repetição de fechamento após o parecer e as atualizações de status:
+  `uv run --no-sync pytest --basetemp=C:/tmp/rpg_spec188_done`, **2.121 passed,
+  87 skipped, 15 deselected**, exit 0 em 310,47s. Três casos locais adicionais
+  executaram nesta rodada; os cinco avisos de depreciação anteriores permaneceram
+  e houve um aviso de cache do pytest sem efeito sobre os testes.
 - Índice de source regenerado para satisfazer o gate de freshness.
 
 Integrações Postgres não receberam fatos comerciais: versões, profiles e

@@ -1,10 +1,11 @@
 # SPEC-188 — handoff de implementação para revisão Sol High
 
-Status: `review-pending`. Executor Sol High; revisão Sol High obrigatória em
-contexto independente. Não há autoaprovação nem substituição silenciosa.
+Status: `review-complete`. Executor Sol High; revisão Sol High concluída em
+contexto independente. Não houve autoaprovação nem substituição silenciosa.
 Base: SPEC-187 `done`, commit `ab081be12ea0782c60ce37fe67fa569c06269c38`.
-Branch local: `spec-188-paid-image-quotes`. Commit de implementação a congelar
-após este handoff; não houve push ou PR nesta execução.
+Branch local: `spec-188-paid-image-quotes`. Commit de implementação congelado:
+`a82adea3333284003629bd106bf58f1eb1440154`. Não havia push ou PR no
+momento da revisão.
 
 ## Escopo de revisão
 
@@ -56,3 +57,10 @@ testes isolados e na suíte final; não foi suprimida nem contada como sucesso.
 
 Registrar `review_model`, `review_effort`, `review_run_id` e decisão em parecer
 separado. Só então marcar a SPEC e o índice `done` e liberar SPEC-189.
+
+## Decisão posterior ao congelamento
+
+O revisor Sol High independente aprovou o commit `a82adea` sem achados abertos
+no run `SPEC-188-SOL-20261013-INDEPENDENT-01`. O parecer está em
+[SPEC-188-SOL-independent-review.md](SPEC-188-SOL-independent-review.md);
+SPEC-188 foi promovida a `done` após esse parecer.
