@@ -1,5 +1,15 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **14/10 — código na `main`; deploy funcional em espera.** Publicado por
+> avanço direto o trabalho concluído até SPEC-190 e o handoff da SPEC-191.
+> `validate`/`eval-gates` verdes; o gate `eval-governance` usou aprovação
+> temporária do dono e a variável foi removida. O `audit-local` revelou
+> incompatibilidade dos seus usuários sintéticos com a confirmação de e-mail
+> local ativada pela SPEC-190; o harness foi ajustado para usuários locais
+> pré-confirmados, login normal e cleanup; Project Index regenerado. A
+> confirmação segue ativa no produto. O deploy aguarda a resolução da cota
+> Supabase e a SPEC-191.
+
 > **14/10 — staging e deploy em espera.** O projeto Supabase exclusivo da
 > [SPEC-191](specs/SPEC-191-supabase-remote-staging.md) não pôde ser criado:
 > a cota Free de dois projetos ativos de um administrador foi atingida.

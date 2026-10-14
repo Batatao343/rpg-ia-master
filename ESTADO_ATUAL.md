@@ -1,5 +1,17 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **14/10 — publicação na `main` e ajuste do audit local.** O histórico até
+> SPEC-190 `done` e o preparo documental da SPEC-191 foram publicados por
+> avanço direto, sem force push. O build Vite e a suíte Python offline
+> completa passaram; `validate` e `eval-gates` do GitHub passaram após o gate
+> protegido `eval-governance`, com variável de aprovação temporária removida.
+> O `audit-local` expôs uma fixture anterior à confirmação obrigatória de
+> e-mail da SPEC-190: os smokes de browser/mutação agora criam usuários
+> sintéticos já confirmados **somente no GoTrue local**, entram pela API/UI e
+> apagam esses usuários no teardown. O fluxo real de confirmação permanece
+> habilitado. O Project Index derivado foi regenerado para o novo helper.
+> Deploy funcional continua em espera pelo staging da SPEC-191.
+
 > **14/10 — SPEC-191 em espera por decisão do usuário sobre cota Supabase.**
 > A SPEC-190 permanece `done` e seu PR #26 está no GitHub. A tentativa única
 > de criar `rpg-ia-master-staging` na organização `jm0nteiroz` foi recusada

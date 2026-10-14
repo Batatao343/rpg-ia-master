@@ -9,6 +9,7 @@ import pytest
 
 from infrastructure.contracts import Principal
 from tests.test_postgres_jobs_local import infra  # noqa: F401
+from tests.fakes.local_auth import create_confirmed_user, delete_confirmed_user
 
 pytestmark = pytest.mark.infra_local
 
@@ -20,23 +21,28 @@ def campaign(infra):
         pytest.skip('local audit API required')
     assert urlsplit(base).hostname in {'127.0.0.1', 'localhost'}
     store, _, _, _ = infra
-    with httpx.Client(base_url=base, timeout=30, trust_env=False) as client:
-        signup = client.post('/auth/signup', json={'email': f'mutation-{uuid4().hex}@example.test',
-                                                  'password': 'LocalAuditOnly-2026!'})
-        assert signup.status_code == 200, signup.text
-        client.headers.update({'Origin': base, 'X-CSRF-Token': signup.json()['csrf_token']})
-        owner = UUID(client.get('/auth/config').json()['user_id'])
-        principal = Principal(owner, 'test', str(owner), local=True)
-        options = client.get('/data/options').json()
-        created = client.post('/game/new', json={'name': 'Mutation audit',
-            'race': options['races'][0], 'class_name': options['classes'][0],
-            'region': options['regions'][0], 'action_id': str(uuid4())})
-        assert created.status_code == 200, created.text
-        game = UUID(created.json()['game_id'])
-        try:
-            yield client, store, principal, game
-        finally:
-            store.delete(principal, game)
+    email = f'mutation-{uuid4().hex}@example.test'
+    owner = create_confirmed_user(email, 'LocalAuditOnly-2026!')
+    try:
+        with httpx.Client(base_url=base, timeout=30, trust_env=False) as client:
+            login = client.post('/auth/login', headers={'Origin': base},
+                                json={'email': email, 'password': 'LocalAuditOnly-2026!'})
+            assert login.status_code == 200, login.text
+            client.headers.update({'Origin': base, 'X-CSRF-Token': login.json()['csrf_token']})
+            assert UUID(client.get('/auth/config').json()['user_id']) == owner
+            principal = Principal(owner, 'test', str(owner), local=True)
+            options = client.get('/data/options').json()
+            created = client.post('/game/new', json={'name': 'Mutation audit',
+                'race': options['races'][0], 'class_name': options['classes'][0],
+                'region': options['regions'][0], 'action_id': str(uuid4())})
+            assert created.status_code == 200, created.text
+            game = UUID(created.json()['game_id'])
+            try:
+                yield client, store, principal, game
+            finally:
+                store.delete(principal, game)
+    finally:
+        delete_confirmed_user(owner)
 
 
 @pytest.mark.parametrize('kind', ['death', 'equip', 'levelup'])

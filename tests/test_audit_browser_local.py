@@ -8,6 +8,7 @@ from uuid import uuid4
 import pytest
 
 from scripts.browser_local import find_chrome
+from tests.fakes.local_auth import create_confirmed_user, delete_confirmed_user
 
 pytestmark = pytest.mark.browser_local
 
@@ -22,6 +23,8 @@ def test_authenticated_stream_reload_history_and_art_dialog(width, tmp_path):
     pw = pytest.importorskip('playwright.sync_api')
     chrome = find_chrome()
     email = f'audit-{uuid4().hex}@example.test'
+    # Local GoTrue requires email confirmation; this audit starts authenticated.
+    user_id = create_confirmed_user(email, 'LocalAuditOnly-2026!')
     with pw.sync_playwright() as runtime:
         browser = runtime.chromium.launch(executable_path=str(chrome) if chrome else None, headless=True)
         context = browser.new_context(viewport={'width': width, 'height': 900})
@@ -33,8 +36,7 @@ def test_authenticated_stream_reload_history_and_art_dialog(width, tmp_path):
             page.goto(base)
             page.get_by_label('E-mail', exact=True).fill(email)
             page.get_by_label('Senha', exact=True).fill('LocalAuditOnly-2026!')
-            page.get_by_role('button', name='Criar uma conta local').click()
-            page.get_by_role('button', name='Criar conta', exact=True).click()
+            page.get_by_role('button', name='Entrar', exact=True).click()
             page.get_by_role('button', name='2 Origem').wait_for(timeout=30_000)
             page.get_by_role('button', name='2 Origem').click()
             enlarge = page.get_by_role('button', name='Ampliar imagem de').first
@@ -183,5 +185,8 @@ def test_authenticated_stream_reload_history_and_art_dialog(width, tmp_path):
             page.request.delete(base + f'/game/save/{second_gid}', headers={**headers, 'Idempotency-Key': str(uuid4())})
         finally:
             browser.close()
-            for cleanup in cleanups:
-                cleanup()
+            try:
+                for cleanup in cleanups:
+                    cleanup()
+            finally:
+                delete_confirmed_user(user_id)
