@@ -11,8 +11,9 @@
 > final. SPEC-192–198 dependem em cadeia da 191 e não podem ser fechadas
 > agora; SPEC-104 continua `draft`. Nenhum deploy funcional foi feito:
 > a topologia de staging da SPEC-192 exige Supabase staging e ainda não há
-> projeto Vercel ligado a este repositório. O pedido de publicação temporária
-> apenas da interface está aguardando escolha do usuário.
+> projeto Vercel ligado a este repositório. O usuário escolheu aguardar o
+> deploy funcional e publicar o código concluído no GitHub; nenhuma prévia
+> estática da interface será criada nesta etapa.
 
 > **13/10 — SPEC-190 `done`; ciclo de conta e exclusão com retenção financeira.**
 > Confirmação/reset de email com GoTrue local, mensagens genéricas, CAPTCHA

@@ -9,8 +9,8 @@
 > [SPEC-192](specs/SPEC-192-vercel-staging-worker-topology.md)–SPEC-198
 > dependem sequencialmente da 191 e permanecem `approved`; SPEC-104 ainda é
 > `draft`. O deploy funcional exige esses gates de staging; não há projeto
-> Vercel do RPG ligado à conta. Uma eventual prévia estática da interface
-> depende da escolha do usuário e não prova o jogo ou a API.
+> Vercel do RPG ligado à conta. O usuário escolheu aguardar o deploy funcional
+> e publicar o código concluído no GitHub, sem prévia estática agora.
 
 > **13/10 — [SPEC-190](specs/SPEC-190-account-lifecycle-abuse-security.md) `done`.**
 > Confirmação/reset de email, CAPTCHA/rate limits, export e exclusão de conta
