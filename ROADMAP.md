@@ -1,5 +1,17 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **13/10 — [SPEC-190](specs/SPEC-190-account-lifecycle-abuse-security.md) `done`.**
+> Confirmação/reset de email, CAPTCHA/rate limits, export e exclusão de conta
+> com prova recente, revogação de sessão, erasure privado e retenção financeira
+> auditável. Stripe indisponível não impede apagar dados privados; webhook tardio
+> mantém reconciliação sem novo crédito. **2.159 Python passed, 126 skipped,
+> 15 deselected; 53 Chromium passed, 1 skipped; 18 Node passed**; build, Ruff,
+> lint de conteúdo e Project Index verdes. Revisão Sol High independente
+> **APPROVED** sobre `9453a8e`. GoTrue/PostgreSQL smoke local verde; CAPTCHA
+> nativo, SMTP hosted e scheduler cloud permanecem gates das SPEC-191/192.
+> [Evidência](docs/spec190/README.md) e
+> [parecer](handoffs/SPEC-190-SOL-independent-review.md). Próxima: SPEC-191.
+
 > **13/10 — [SPEC-189](specs/SPEC-189-stripe-web-checkout-webhooks.md) `done`.**
 > Checkout Stripe test-only, autoridade de preço/créditos server-side,
 > webhook autenticado e fulfillment atômico/idempotente; refund/dispute

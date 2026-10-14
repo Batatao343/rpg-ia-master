@@ -1,6 +1,6 @@
 # SPEC-190 — Lifecycle de conta, recuperação e antiabuso
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Depende de:** SPEC-189 `done`
 > **EXECUTOR_MODEL obrigatório:** `Sol`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -39,10 +39,10 @@ MFA obrigatório para jogadores; marketing emails.
 
 ## Critérios de aceite
 
-- [ ] reset/verify funcionam local/staging config.
-- [ ] usuário apagado não continua autenticado.
-- [ ] dados privados removidos conforme política; ledger não é corrompido.
-- [ ] signup não recebe Estilhas.
+- [x] reset/verify funcionam na stack local GoTrue; configuração hosted será comprovada na SPEC-191.
+- [x] usuário apagado não continua autenticado.
+- [x] dados privados removidos conforme política; ledger não é corrompido.
+- [x] signup não recebe Estilhas.
 
 ## Gates / evidência
 
@@ -50,9 +50,11 @@ Auth local/integration + RLS + browser.
 
 ## Gate de fechamento
 
-- [ ] verify/reset não revela existência de e-mail por diferença de mensagem contratual;
-- [ ] rate limit/CAPTCHA seam pode ser habilitado sem alterar frontend contract e falha fechado no hosted quando configurado required;
-- [ ] delete account é idempotente, revoga sessões primeiro, cancela jobs, remove private gameplay/blob/memory e preserva somente registros financeiros definidos pela policy;
-- [ ] export/delete de A nunca toca B;
-- [ ] nenhuma rota de signup cria wallet credit gratuito;
-- [ ] review Sol independente aprova auth/delete/retention trust boundary.
+- [x] verify/reset não revela existência de e-mail por diferença de mensagem contratual;
+- [x] rate limit/CAPTCHA seam pode ser habilitado sem alterar frontend contract e falha fechado no hosted quando configurado required;
+- [x] delete account é idempotente, revoga sessões primeiro, cancela jobs, remove private gameplay/blob/memory e preserva somente registros financeiros definidos pela policy;
+- [x] export/delete de A nunca toca B;
+- [x] nenhuma rota de signup cria wallet credit gratuito;
+- [x] review Sol independente aprova auth/delete/retention trust boundary.
+
+**Fechamento (13/10/2026):** implementação `9453a8e`; revisão independente Sol High **APPROVED** em `handoffs/SPEC-190-SOL-independent-review.md`. Gate Python completo: 2.159 passed, 126 skipped, 15 deselected; Chromium: 53 passed, 1 skipped; Node: 18 passed; build, Ruff, lint de conteúdo e Project Index verdes. O smoke real de Auth foi local com GoTrue e PostgreSQL; configuração hosted, CAPTCHA nativo e scheduler são gates das SPEC-191/192. Evidência e limites em `docs/spec190/README.md`.

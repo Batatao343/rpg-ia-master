@@ -1,5 +1,22 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **13/10 — SPEC-190 `done`; ciclo de conta e exclusão com retenção financeira.**
+> Confirmação/reset de email com GoTrue local, mensagens genéricas, CAPTCHA
+> Turnstile encaminhado ao Auth nativo em modo hosted e limites no proxy.
+> Export/delete exigem prova recente; a exclusão revoga sessões primeiro,
+> apaga dados privados e Auth, mantém ledger financeiro auditável e pode ser
+> retomada por tombstone/worker. Falha Stripe não impede erasure privado;
+> webhook tardio reconcilia sem conceder Estilhas à conta apagada.
+> Gate pré-commit: **2.159 Python passed, 126 skipped, 15 deselected**;
+> **53 Chromium passed, 1 skipped**; **18 Node passed**; build, Ruff, lint de
+> conteúdo e Project Index fresh. Revisão independente Sol High **APPROVED**
+> sobre a implementação `9453a8e`, sem bloqueios. Limite: teste concorrente
+> usa uma conexão PG compartilhada; smoke hosted de Auth CAPTCHA/SMTP e
+> scheduler de recuperação são gates das SPEC-191/192. Nenhuma chamada Stripe
+> live, venda comercial ou recarga de IA.
+> [Evidência](docs/spec190/README.md) e
+> [parecer](handoffs/SPEC-190-SOL-independent-review.md). Próxima: SPEC-191.
+
 > **13/10 — SPEC-189 `done`; Checkout Stripe test-only.**
 > SKU/version/bruto/créditos são server-side; pedido durável + sessão idempotente,
 > webhook com assinatura raw body antes de JSON e crédito atômico com event store.
