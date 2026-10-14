@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as api from "../api";
+import { TurnstileChallenge } from "./TurnstileChallenge";
 
 const categories = ["game", "image", "voice"] as const;
 const labels = { game: "Jogo", image: "Imagem", voice: "Voz" };
@@ -16,8 +17,12 @@ const brl = (amount: string) => new Intl.NumberFormat("pt-BR", {
 const ORDER_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const finalOrderStatuses = new Set(["paid", "refunded", "disputed", "reconciliation_required", "expired"]);
 
-export function AccountScreen({ onBack, onBalanceChange }: {
+export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, captcha, onDeletionStarted, onDeleted,
+  onRecoveryRequired }: {
   onBack: () => void; onBalanceChange?: (availableMilli: string) => void;
+  lifecycleAvailable: boolean; captcha?: api.AuthConfig["captcha"];
+  onDeletionStarted: () => void; onDeleted: () => void;
+  onRecoveryRequired: () => void;
 }) {
   const [period, setPeriod] = useState<"24h" | "7d" | "30d">("7d");
   const [balance, setBalance] = useState<api.AccountBalance | null>(null);
@@ -33,12 +38,43 @@ export function AccountScreen({ onBack, onBalanceChange }: {
   const [checkoutBusy, setCheckoutBusy] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState("");
   const [checkoutNotice, setCheckoutNotice] = useState("");
+  const [reauthPassword, setReauthPassword] = useState("");
+  const [reauthCaptchaToken, setReauthCaptchaToken] = useState("");
+  const [reauthCaptchaRevision, setReauthCaptchaRevision] = useState(0);
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
+  const [accountAction, setAccountAction] = useState<"export" | "delete" | null>(null);
+  const [accountActionError, setAccountActionError] = useState("");
+  const [accountActionNotice, setAccountActionNotice] = useState("");
+  const [deletionPending, setDeletionPending] = useState(false);
+  const [deleteNeedsPassword, setDeleteNeedsPassword] = useState(false);
+  const [deleteNeedsSignIn, setDeleteNeedsSignIn] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+  const [deleteCaptchaToken, setDeleteCaptchaToken] = useState("");
+  const [deleteCaptchaRevision, setDeleteCaptchaRevision] = useState(0);
   const [order, setOrder] = useState<api.CheckoutOrder | null>(null);
   const [orderError, setOrderError] = useState("");
   const [orderLoading, setOrderLoading] = useState(false);
   const [orderRefresh, setOrderRefresh] = useState(0);
   const checkoutIds = useRef<Record<string, string>>({});
   const financialGeneration = useRef(0);
+  const mounted = useRef(false);
+  const deletionStarted = useRef(false);
+  const accountReads = useRef(new Set<AbortController>());
+  const nativeCaptcha = captcha?.required === true && captcha.mode === "gotrue";
+  function startRead() {
+    const controller = new AbortController();
+    accountReads.current.add(controller);
+    return controller;
+  }
+  function stopRead(controller: AbortController) { accountReads.current.delete(controller); }
+  function cancelReads() {
+    for (const controller of accountReads.current) controller.abort();
+    accountReads.current.clear();
+  }
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
   const query = new URLSearchParams(window.location.search);
   const returnKind = query.get("checkout");
   const rawOrderId = query.get("order_id") || "";
@@ -46,54 +82,63 @@ export function AccountScreen({ onBack, onBalanceChange }: {
     ? rawOrderId : null;
 
   function refreshFinancial(isCurrent: () => boolean = () => true) {
+    if (deletionStarted.current) return;
     const generation = ++financialGeneration.current;
-    void Promise.all([api.getAccountBalance(), api.getAccountPurchases()])
+    const controller = startRead();
+    void Promise.all([api.getAccountBalance(controller.signal), api.getAccountPurchases(undefined, controller.signal)])
       .then(([nextBalance, nextPurchases]) => {
-        if (isCurrent() && financialGeneration.current === generation) {
+        if (isCurrent() && mounted.current && !deletionStarted.current
+            && financialGeneration.current === generation) {
           setBalance(nextBalance); setPurchases(nextPurchases);
           onBalanceChange?.(nextBalance.available_milli);
         }
-      }).catch(() => { /* A later account load or manual refresh can retry. */ });
+      }).catch(() => { /* A later account load or manual refresh can retry. */ })
+      .finally(() => stopRead(controller));
   }
 
   useEffect(() => {
     let current = true;
+    const controller = startRead();
     const generation = financialGeneration.current;
     setLoading(true); setError(false);
-    void Promise.all([api.getAccountBalance(), api.getAccountSeries(period),
-      api.getAccountUsage(), api.getAccountPurchases()]).then(([b, s, u, p]) => {
-      if (!current) return;
+    void Promise.all([api.getAccountBalance(controller.signal), api.getAccountSeries(period, controller.signal),
+      api.getAccountUsage(undefined, controller.signal), api.getAccountPurchases(undefined, controller.signal)]).then(([b, s, u, p]) => {
+      if (!current || deletionStarted.current) return;
       if (financialGeneration.current === generation) {
         setBalance(b); setPurchases(p); onBalanceChange?.(b.available_milli);
       }
       setSeries(s.points); setTotals(s.totals); setUsage(u); setLoading(false);
-    }).catch(() => { if (current) { setError(true); setLoading(false); } });
+    }).catch(() => { if (current && !deletionStarted.current) { setError(true); setLoading(false); } })
+      .finally(() => stopRead(controller));
     return () => { current = false; };
   }, [period]);
 
   useEffect(() => {
     let active = true;
-    void api.getCheckoutSkus().then(result => {
-      if (!active) return;
+    const controller = startRead();
+    void api.getCheckoutSkus(controller.signal).then(result => {
+      if (!active || deletionStarted.current) return;
       setSkus(result.items);
       setCheckoutAvailable(result.items.length > 0);
     }).catch(() => {
-      if (active) { setSkus([]); setCheckoutAvailable(false); }
-    }).finally(() => { if (active) setCheckoutLoading(false); });
+      if (active && !deletionStarted.current) { setSkus([]); setCheckoutAvailable(false); }
+    }).finally(() => { stopRead(controller); if (active && !deletionStarted.current) setCheckoutLoading(false); });
     return () => { active = false; };
   }, []);
 
   useEffect(() => {
-    if (!returnOrderId) return;
+    if (!returnOrderId || deletionPending) return;
     let active = true;
     let attempts = 0;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const abort = new AbortController();
+    accountReads.current.add(abort);
     const poll = async () => {
+      if (deletionStarted.current) return;
       setOrderLoading(true);
       try {
         const next = await api.getCheckoutOrder(returnOrderId, abort.signal);
-        if (!active) return;
+        if (!active || deletionStarted.current) return;
         setOrder(next); setOrderError(""); setOrderLoading(false);
         if (next.status === "paid") {
           // Only the server's wallet and purchase ledger can update these views.
@@ -102,19 +147,20 @@ export function AccountScreen({ onBack, onBalanceChange }: {
           timer = setTimeout(poll, 5000);
         }
       } catch {
-        if (active) { setOrderError("Não foi possível consultar o pedido. Atualize o status mais tarde."); setOrderLoading(false); }
+        if (active && !deletionStarted.current) { setOrderError("Não foi possível consultar o pedido. Atualize o status mais tarde."); setOrderLoading(false); }
       }
     };
     void poll();
-    return () => { active = false; abort.abort(); clearTimeout(timer); };
-  }, [returnOrderId, orderRefresh]);
+    return () => { active = false; abort.abort(); stopRead(abort); clearTimeout(timer); };
+  }, [returnOrderId, orderRefresh, deletionPending]);
 
   async function beginCheckout(sku: api.CheckoutSku) {
-    if (checkoutBusy || !checkoutAvailable) return;
+    if (checkoutBusy || accountAction || deletionStarted.current || !checkoutAvailable) return;
     const requestId = checkoutIds.current[sku.sku_id] ||= crypto.randomUUID();
     setCheckoutBusy(sku.sku_id); setCheckoutError(""); setCheckoutNotice("");
     try {
       const result = await api.createCheckout(sku.sku_id, requestId);
+      if (!mounted.current || deletionStarted.current) return;
       if (!result.checkout_url) {
         if (["paid", "refunded", "disputed", "expired"].includes(result.status))
           delete checkoutIds.current[sku.sku_id];
@@ -148,26 +194,136 @@ export function AccountScreen({ onBack, onBalanceChange }: {
   }
 
   async function moreUsage() {
-    if (!usage.next_cursor) return;
+    if (!usage.next_cursor || deletionStarted.current) return;
+    const controller = startRead();
     try {
-      const next = await api.getAccountUsage(usage.next_cursor);
-      setUsage(prev => ({ items: [...prev.items, ...next.items], next_cursor: next.next_cursor }));
-    } catch { setError(true); }
+      const next = await api.getAccountUsage(usage.next_cursor, controller.signal);
+      if (!deletionStarted.current && mounted.current)
+        setUsage(prev => ({ items: [...prev.items, ...next.items], next_cursor: next.next_cursor }));
+    } catch { if (!deletionStarted.current && mounted.current) setError(true); }
+    finally { stopRead(controller); }
   }
   async function morePurchases() {
-    if (!purchases.next_cursor) return;
+    if (!purchases.next_cursor || deletionStarted.current) return;
+    const controller = startRead();
     try {
-      const next = await api.getAccountPurchases(purchases.next_cursor);
-      setPurchases(prev => ({ items: [...prev.items, ...next.items], next_cursor: next.next_cursor }));
-    } catch { setError(true); }
+      const next = await api.getAccountPurchases(purchases.next_cursor, controller.signal);
+      if (!deletionStarted.current && mounted.current)
+        setPurchases(prev => ({ items: [...prev.items, ...next.items], next_cursor: next.next_cursor }));
+    } catch { if (!deletionStarted.current && mounted.current) setError(true); }
+    finally { stopRead(controller); }
+  }
+
+  function beginDeletion() {
+    deletionStarted.current = true;
+    financialGeneration.current++;
+    cancelReads();
+    setDeletionPending(true);
+    onDeletionStarted();
+  }
+
+  async function accountDataAction(action: "export" | "delete") {
+    if (accountAction || checkoutBusy || deletionStarted.current || !reauthPassword
+        || (nativeCaptcha && !reauthCaptchaToken)
+        || (action === "delete" && deleteConfirmation !== "EXCLUIR")) return;
+    setAccountAction(action); setAccountActionError(""); setAccountActionNotice("");
+    try {
+      await api.reauthenticate(reauthPassword, reauthCaptchaToken || undefined);
+      if (!mounted.current || deletionStarted.current) return;
+      setReauthPassword("");
+      if (action === "export") {
+        const blob = await api.exportAccount();
+        if (!mounted.current || deletionStarted.current) return;
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url; link.download = "cronicas-valoria-conta.json";
+        document.body.appendChild(link); link.click(); link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+        setAccountActionNotice("Arquivo da conta preparado para download.");
+      } else {
+        // The server may revoke access before its response reaches the browser.
+        beginDeletion();
+        const result = await api.deleteAccount();
+        if (!mounted.current) return;
+        if (result.status === "deleted") onDeleted();
+        else setAccountActionNotice("Exclusão em andamento. Tente concluir novamente se necessário.");
+      }
+    } catch (cause) {
+      if (!mounted.current) return;
+      if (deletionStarted.current) {
+        if (cause instanceof api.HttpError && cause.status === 403) {
+          setDeleteNeedsPassword(true);
+          setAccountActionError("A confirmação da sessão expirou. Confirme sua senha para retomar.");
+        } else if (cause instanceof api.HttpError && [401, 422].includes(cause.status)) {
+          setDeleteNeedsSignIn(true);
+          setAccountActionError("A sessão não permite concluir a exclusão. Entre novamente para verificar a conta.");
+        } else setAccountActionError("Não foi possível concluir a exclusão. Tente novamente.");
+        return;
+      }
+      setAccountActionError(cause instanceof api.HttpError && cause.status === 403
+        ? "Confirme sua senha e tente novamente."
+        : "Não foi possível concluir. Tente novamente mais tarde.");
+    } finally {
+      setAccountAction(null);
+      if (nativeCaptcha) { setReauthCaptchaToken(""); setReauthCaptchaRevision(value => value + 1); }
+    }
+  }
+
+  async function retryDeletion() {
+    if (accountAction || !mounted.current || deleteNeedsSignIn
+        || (deleteNeedsPassword && (!deletePassword || (nativeCaptcha && !deleteCaptchaToken)))) return;
+    setAccountAction("delete"); setAccountActionError("");
+    try {
+      if (deleteNeedsPassword) {
+        await api.reauthenticate(deletePassword, deleteCaptchaToken || undefined);
+        if (!mounted.current) return;
+        setDeletePassword(""); setDeleteNeedsPassword(false);
+      }
+      const result = await api.deleteAccount();
+      if (!mounted.current) return;
+      if (result.status === "deleted") onDeleted();
+      else setAccountActionNotice("Exclusão em andamento. Tente concluir novamente se necessário.");
+    } catch (cause) {
+      if (!mounted.current) return;
+      if (cause instanceof api.HttpError && cause.status === 403) {
+        setDeleteNeedsPassword(true);
+        setAccountActionError("Confirme sua senha para retomar a exclusão.");
+      } else if (cause instanceof api.HttpError && [401, 422].includes(cause.status)) {
+        setDeleteNeedsSignIn(true);
+        setAccountActionError("A sessão expirou. Entre novamente para verificar a conta.");
+      } else setAccountActionError("Não foi possível consultar a exclusão. Tente novamente.");
+    }
+    finally {
+      setAccountAction(null);
+      if (nativeCaptcha) { setDeleteCaptchaToken(""); setDeleteCaptchaRevision(value => value + 1); }
+    }
   }
 
   const max = Math.max(1, ...series.map(point => Number(point.total)));
   const periodLabel = { "24h": "24 horas", "7d": "7 dias", "30d": "30 dias" }[period];
 
+  if (deletionPending) return <main className="account-screen" aria-labelledby="delete-pending-title">
+    <h1 id="delete-pending-title">Exclusão em andamento</h1>
+    <p role="status">Seus dados de jogo não estão mais disponíveis nesta sessão.</p>
+    {accountActionNotice && <p>{accountActionNotice}</p>}
+    {accountActionError && <p role="alert">{accountActionError}</p>}
+    {deleteNeedsPassword && !deleteNeedsSignIn && <>
+      <label htmlFor="delete-retry-password">Senha atual</label>
+      <input id="delete-retry-password" type="password" autoComplete="current-password"
+        value={deletePassword} onChange={event => setDeletePassword(event.target.value)} />
+      {nativeCaptcha && <TurnstileChallenge required siteKey={captcha?.site_key ?? null}
+        action="reauth" revision={deleteCaptchaRevision} onToken={setDeleteCaptchaToken} />}
+    </>}
+    {deleteNeedsSignIn ? <button className="btn btn--primary" onClick={onRecoveryRequired}>
+      Voltar para entrar</button> : <button className="btn btn--primary"
+      disabled={accountAction !== null || (deleteNeedsPassword && (!deletePassword || (nativeCaptcha && !deleteCaptchaToken)))}
+      onClick={() => void retryDeletion()}>Concluir exclusão</button>}
+  </main>;
+
   return <main className="account-screen" aria-labelledby="account-title">
     <header className="account-screen__header">
-      <button className="btn btn--ghost" onClick={leaveAccount}>← Voltar</button>
+      <button className="btn btn--ghost" disabled={accountAction !== null || checkoutBusy !== null}
+        onClick={leaveAccount}>← Voltar</button>
       <h1 id="account-title">Minha conta</h1>
     </header>
     {loading && <p role="status">Carregando conta…</p>}
@@ -204,7 +360,7 @@ export function AccountScreen({ onBack, onBalanceChange }: {
         <p className="muted">Escolha um pacote. O pagamento abre no Checkout seguro do Stripe; seu saldo é atualizado após a confirmação pelo servidor.</p>
         <ul className="checkout-packages">{skus.map(sku => <li key={sku.sku_id}>
           <span>{shards(sku.shard_milli)} Estilhas · {brl(sku.gross_brl)}</span>
-          <button className="btn btn--primary" type="button" disabled={checkoutBusy !== null}
+          <button className="btn btn--primary" type="button" disabled={checkoutBusy !== null || accountAction !== null}
             onClick={() => void beginCheckout(sku)}>Comprar pacote</button>
         </li>)}</ul>
         {checkoutError && <p role="alert">{checkoutError}</p>}
@@ -258,5 +414,29 @@ export function AccountScreen({ onBack, onBalanceChange }: {
         {purchases.next_cursor && <button className="btn btn--ghost" onClick={() => void morePurchases()}>Ver mais compras</button>}
       </section>
     </>}
+      {lifecycleAvailable && <section className="account-card account-lifecycle" aria-labelledby="account-data-title">
+        <h2 id="account-data-title">Dados e segurança da conta</h2>
+        <p className="muted">Baixe seus dados de jogo ou solicite a exclusão da conta. Confirme sua senha antes de continuar.</p>
+        <label htmlFor="account-reauth-password">Senha atual</label>
+        <input id="account-reauth-password" type="password" autoComplete="current-password"
+          value={reauthPassword} onChange={event => setReauthPassword(event.target.value)} />
+        {nativeCaptcha && <TurnstileChallenge required siteKey={captcha?.site_key ?? null}
+          action="reauth" revision={reauthCaptchaRevision} onToken={setReauthCaptchaToken} />}
+        <button className="btn btn--ghost" type="button" disabled={accountAction !== null || checkoutBusy !== null || !reauthPassword || (nativeCaptcha && !reauthCaptchaToken)}
+          onClick={() => void accountDataAction("export")}>Baixar meus dados</button>
+        <details>
+          <summary>Excluir minha conta</summary>
+          <p className="muted">Campanhas, memórias e artes serão removidas. Registros financeiros necessários para conciliação permanecem conforme a política de retenção.</p>
+          <label htmlFor="account-delete-confirmation">Digite EXCLUIR para confirmar</label>
+          <input id="account-delete-confirmation" value={deleteConfirmation}
+            onChange={event => setDeleteConfirmation(event.target.value)} autoComplete="off" />
+          <button className="btn btn--ghost" type="button"
+            disabled={accountAction !== null || checkoutBusy !== null || !reauthPassword || (nativeCaptcha && !reauthCaptchaToken) || deleteConfirmation !== "EXCLUIR"}
+            onClick={() => void accountDataAction("delete")}>Excluir conta</button>
+        </details>
+        {accountActionError && <p role="alert">{accountActionError}</p>}
+        {accountActionNotice && <p role="status">{accountActionNotice}</p>}
+        <p className="muted">Suporte: canal de atendimento será informado aqui quando estiver disponível.</p>
+      </section>}
   </main>;
 }

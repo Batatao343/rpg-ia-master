@@ -27,18 +27,47 @@ async function req<T>(path: string, opts: RequestInit = {}): Promise<T> {
   return res.status === 204 ? undefined as T : res.json() as Promise<T>;
 }
 
-export const getAuthConfig = () => req<{ required: boolean; authenticated: boolean; user_id?: string }>("/auth/config");
-export const login = (email: string, password: string) =>
-  req<{ authenticated: boolean; csrf_token: string }>("/auth/login", {
-    method: "POST", body: JSON.stringify({ email, password }),
+export interface AuthConfig {
+  required: boolean;
+  authenticated: boolean;
+  user_id?: string;
+  lifecycle_available?: boolean;
+  email_confirmation_required?: boolean;
+  captcha?: { required: boolean; site_key: string | null; provider: "turnstile"; mode?: "app" | "gotrue" };
+}
+export interface AuthResponse { authenticated: boolean; csrf_token?: string; message?: string }
+export const getAuthConfig = () => req<AuthConfig>("/auth/config");
+export const login = (email: string, password: string, captchaToken?: string) =>
+  req<AuthResponse>("/auth/login", {
+    method: "POST", body: JSON.stringify({ email, password,
+      ...(captchaToken ? { captcha_token: captchaToken } : {}) }),
   });
 
-export const signup = (email: string, password: string) =>
-  req<{ authenticated: boolean; csrf_token: string }>("/auth/signup", {
+export const signup = (email: string, password: string, captchaToken?: string) =>
+  req<AuthResponse>("/auth/signup", {
     method: "POST",
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ email, password, ...(captchaToken ? { captcha_token: captchaToken } : {}) }),
   });
 export const logout = () => req<void>("/auth/logout", { method: "POST" });
+export const requestPasswordReset = (email: string, captchaToken?: string) =>
+  req<{ message: string }>("/auth/reset/request", { method: "POST",
+    body: JSON.stringify({ email, ...(captchaToken ? { captcha_token: captchaToken } : {}) }) });
+export const requestEmailVerification = (email: string, captchaToken?: string) =>
+  req<{ message: string }>("/auth/verify/request", { method: "POST",
+    body: JSON.stringify({ email, ...(captchaToken ? { captcha_token: captchaToken } : {}) }) });
+export const confirmEmailVerification = (tokenHash: string) =>
+  req<AuthResponse>("/auth/verify", { method: "POST",
+    body: JSON.stringify({ token_hash: tokenHash, type: "signup" }) });
+export const confirmPasswordReset = (tokenHash: string, newPassword: string) =>
+  req<{ authenticated: false; message: string }>("/auth/reset/confirm", { method: "POST",
+    body: JSON.stringify({ token_hash: tokenHash, new_password: newPassword }) });
+export const reauthenticate = (password: string, captchaToken?: string) =>
+  req<{ recent: boolean }>("/auth/reauth", { method: "POST", body: JSON.stringify({ password,
+    ...(captchaToken ? { captcha_token: captchaToken } : {}) }) });
+export const exportAccount = async (): Promise<Blob> => (await http("/account/export")).blob();
+export const deleteAccount = () => req<{ status: "deleted" | "deleting" }>("/account/delete", {
+  method: "POST", body: JSON.stringify({ confirmation: "EXCLUIR" }),
+});
 
 export const getOptions = () => req<CreateOptions>("/data/options");
 
@@ -162,17 +191,17 @@ export interface AccountPoint { start: string; game: string; image: string; voic
 export interface AccountHistoryItem { id: string; created_at: string; category: 'game' | 'image' | 'voice'; operation: string }
 export interface PurchaseItem { id: string; created_at: string; kind: 'purchase' | 'refund' | 'reversal'; amount_milli: string }
 export interface AccountPage<T> { items: T[]; next_cursor: string | null }
-export const getAccountBalance = () => req<AccountBalance>('/account/balance');
-export const getAccountSeries = (period: '24h' | '7d' | '30d') => req<{ period: string; unit: 'milli_shard'; totals: Record<'game' | 'image' | 'voice', string>; points: AccountPoint[] }>(`/account/series?period=${period}`);
-export const getAccountUsage = (cursor?: string) => req<AccountPage<AccountHistoryItem>>(`/account/usage${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`);
-export const getAccountPurchases = (cursor?: string) => req<AccountPage<PurchaseItem>>(`/account/purchases${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`);
+export const getAccountBalance = (signal?: AbortSignal) => req<AccountBalance>('/account/balance', { signal });
+export const getAccountSeries = (period: '24h' | '7d' | '30d', signal?: AbortSignal) => req<{ period: string; unit: 'milli_shard'; totals: Record<'game' | 'image' | 'voice', string>; points: AccountPoint[] }>(`/account/series?period=${period}`, { signal });
+export const getAccountUsage = (cursor?: string, signal?: AbortSignal) => req<AccountPage<AccountHistoryItem>>(`/account/usage${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`, { signal });
+export const getAccountPurchases = (cursor?: string, signal?: AbortSignal) => req<AccountPage<PurchaseItem>>(`/account/purchases${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`, { signal });
 export interface CheckoutSku { sku_id: string; gross_brl: string; shard_milli: string }
 export interface CheckoutOrder {
   order_id: string; status: 'created' | 'checkout_pending' | 'paid' | 'refunded' |
     'disputed' | 'reconciliation_required' | 'expired';
   sku_id: string; gross_brl: string; shard_milli: string;
 }
-export const getCheckoutSkus = () => req<{ items: CheckoutSku[] }>('/account/checkout/skus');
+export const getCheckoutSkus = (signal?: AbortSignal) => req<{ items: CheckoutSku[] }>('/account/checkout/skus', { signal });
 export const createCheckout = (skuId: string, requestId: string) =>
   req<CheckoutOrder & { checkout_url: string | null }>('/account/checkout', {
     method: 'POST', body: JSON.stringify({ sku_id: skuId, request_id: requestId }),

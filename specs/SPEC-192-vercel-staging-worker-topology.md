@@ -25,6 +25,8 @@ Subir frontend/FastAPI em Vercel staging e provar a melhor topologia para os job
 - **R6** — preview nunca escreve produção.
 - **R7** — environment vars/secrets separados.
 - **R8** — fallback documentado se beta Vercel falhar gate.
+- **R9** — agendar a recuperação de exclusões iniciadas da SPEC-190 a cada
+  cinco minutos, com idempotência sob concorrência e alerta em falhas persistentes.
 
 ### Fora de escopo
 
@@ -34,7 +36,7 @@ Publicar produção; trocar toda a fila sem benchmark.
 
 1. Build/doctor local Vercel.
 2. Deploy staging com Supabase staging.
-3. C1 API/SSE/auth; C2 DB pool; C3 worker/job; C4 redeploy/retry; C5 bundle/cold start; C6 cost sample.
+3. C1 API/SSE/auth; C2 DB pool; C3 worker/job; C4 redeploy/retry; C5 bundle/cold start; C6 cost sample; C7 recuperação agendada de exclusões.
 4. Selecionar topologia pela evidência.
 5. Runbook rollback.
 
@@ -62,4 +64,7 @@ SPEC-104 contém uma preferência antiga por Railway baseada no estado de Vercel
 - [ ] preview não consegue usar secrets/DB de produção;
 - [ ] cold start, streaming, duration/bundle e custo amostral ficam registrados com data/plan;
 - [ ] existe fallback operacional se Services/Queues beta falhar;
+- [ ] o staging executa `scripts.recover_account_deletions --batch` a cada cinco
+  minutos; uma interrupção após revogar a sessão é recuperada sem ação do
+  usuário, e falhas persistentes geram alerta sem bloquear outras exclusões;
 - [ ] review Sol independente aprova topologia escolhida.

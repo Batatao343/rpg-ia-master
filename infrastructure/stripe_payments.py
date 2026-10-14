@@ -64,6 +64,15 @@ def _public(row, *, include_url=False) -> dict:
     return result
 
 
+def _account_deleted(db, owner_id: UUID) -> bool:
+    # SPEC-189's isolated rollback fixture deliberately applies only its own
+    # migration. The production schema always has SPEC-190 once deletion opens.
+    present = db.execute("select to_regclass('app.account_deletions') as relation").fetchone()
+    if present["relation"] is None:
+        return False
+    return db.execute("select 1 from app.account_deletions where owner_id=%s", (owner_id,)).fetchone() is not None
+
+
 class StripePayments:
     def __init__(self, pool, settings: StripeSettings, adapter, *, at: datetime | None = None) -> None:
         self.pool, self.settings, self.adapter = pool, settings, adapter
@@ -93,6 +102,49 @@ class StripePayments:
             row = db.execute("select * from app.payment_orders where owner_id=%s and order_id=%s",
                              (owner.user_id, UUID(order_id))).fetchone()
         return _public(row) if row else None
+
+    def close_deleted_owner_checkouts(self, owner_id: UUID) -> bool:
+        """Provider-close open sessions before final erasure; retry safely."""
+        with self.pool.connection() as db:
+            pending = db.execute("""select * from app.payment_orders where owner_id=%s
+                and status <> 'paid' and checkout_closed_at is null
+                order by created_at,order_id""", (owner_id,)).fetchall()
+        for order in pending:
+            session_id = order["stripe_session_id"]
+            if not session_id:
+                # Recover an in-flight/lost create with the SAME order id and
+                # Stripe idempotency key. Never invent a second paid order.
+                order_id = str(order["order_id"])
+                session = self.adapter.create_session(
+                    order_id, amount_cents=order["gross_cents"],
+                    success_url=self.settings.origin + "/?checkout=success&order_id=" + order_id,
+                    cancel_url=self.settings.origin + "/?checkout=cancel&order_id=" + order_id)
+                if not _id(session.get("id"), "cs_test_"):
+                    raise StripeError("stripe_session_invalid")
+                session_id = session["id"]
+                with self.pool.connection() as db, db.transaction():
+                    row = db.execute("select * from app.payment_orders where order_id=%s for update",
+                                     (order["order_id"],)).fetchone()
+                    if row["stripe_session_id"] not in (None, session_id):
+                        raise StripeError("stripe_checkout_session_conflict")
+                    db.execute("""update app.payment_orders set stripe_session_id=%s,checkout_url=null,
+                        updated_at=now() where order_id=%s""", (session_id, order["order_id"]))
+            closed = self.adapter.expire_session(session_id)
+            with self.pool.connection() as db, db.transaction():
+                row = db.execute("select * from app.payment_orders where order_id=%s for update",
+                                 (order["order_id"],)).fetchone()
+                # A completed session may be awaiting its paid webhook. Preserve
+                # an explicit financial hold instead of crediting a dead wallet.
+                status = "reconciliation_required" if closed == "complete" else "expired"
+                if row["status"] in TERMINAL | {"paid"}:
+                    status = row["status"]
+                db.execute("""update app.payment_orders set status=%s,checkout_url=null,
+                    checkout_closed_at=now(),updated_at=now() where order_id=%s""",
+                    (status, order["order_id"]))
+        with self.pool.connection() as db:
+            return not db.execute("""select 1 from app.payment_orders where owner_id=%s
+                and status <> 'paid' and checkout_closed_at is null limit 1""",
+                (owner_id,)).fetchone()
 
     def checkout(self, owner: Principal, sku_id: str, request_id: UUID) -> dict:
         if sku_id not in self.settings.allowed_skus or not isinstance(request_id, UUID):
@@ -129,11 +181,15 @@ class StripePayments:
             amount = int(prior["gross_cents"])
         # No remote network within the financial transaction. A lost response can
         # be retried only within 23h, below Stripe's 24h idempotency retention.
+        with self.pool.connection() as db:
+            if _account_deleted(db, owner.user_id):
+                raise StripeError("account_deleted")
         session = self.adapter.create_session(order_id, amount_cents=amount,
             success_url=self.settings.origin + "/?checkout=success&order_id=" + order_id,
             cancel_url=self.settings.origin + "/?checkout=cancel&order_id=" + order_id)
         if not _id(session.get("id"), "cs_test_") or not checkout_url_valid(session.get("url")):
             raise StripeError("stripe_session_invalid")
+        deleted_after_create = False
         with self.pool.connection() as db, db.transaction():
             row = db.execute("select * from app.payment_orders where order_id=%s for update", (UUID(order_id),)).fetchone()
             if row["stripe_session_id"] not in (None, session["id"]):
@@ -141,7 +197,12 @@ class StripePayments:
             row = db.execute("""update app.payment_orders set stripe_session_id=%s,checkout_url=%s,
                 status=case when status='created' then 'checkout_pending' else status end,updated_at=now()
                 where order_id=%s returning *""", (session["id"],session["url"],UUID(order_id))).fetchone()
-            return _public(row, include_url=True)
+            deleted_after_create = _account_deleted(db, owner.user_id)
+            result = _public(row, include_url=True)
+        if deleted_after_create:
+            self.close_deleted_owner_checkouts(owner.user_id)
+            raise StripeError("account_deleted")
+        return result
 
     def accept_event(self, event: dict, *, body_sha256: str) -> dict:
         facts = _facts(event)
@@ -161,7 +222,7 @@ class StripePayments:
                               values (%s,%s,%s,%s,%s)""",
                            (event["id"],event["type"],body_sha256,event["created"],Jsonb(facts)))
             if event["type"] in PAID_EVENTS:
-                row = self._checkout_event(db, event["type"], facts)
+                row = self._checkout_event(db, event["id"], event["type"], facts)
                 if row and row["stripe_payment_intent"]:
                     intent_for_fee = row["stripe_payment_intent"]
             elif event["type"] in FINANCIAL_EVENTS:
@@ -174,7 +235,7 @@ class StripePayments:
             self.reconcile_fee(intent_for_fee)
         return {"received": True, "duplicate": previous is not None}
 
-    def _checkout_event(self, db, kind: str, facts: dict):
+    def _checkout_event(self, db, event_id: str, kind: str, facts: dict):
         if not facts["order_id"]:
             return None
         row = db.execute("select * from app.payment_orders where order_id=%s for update",
@@ -200,6 +261,19 @@ class StripePayments:
         for item in pending:
             self._financial_event(db, row, item["event_id"], item["event_type"], item["facts"])
             row = db.execute("select * from app.payment_orders where order_id=%s", (row["order_id"],)).fetchone()
+        if _account_deleted(db, row["owner_id"]):
+            outcome = "already_refunded" if row["status"] == "refunded" else "refund_required"
+            db.execute("""insert into app.payment_financial_events
+                (financial_id,order_id,stripe_event_id,kind,provider_reference,amount_cents,currency,outcome)
+                values (%s,%s,%s,'late_paid_after_delete',%s,%s,%s,%s)
+                on conflict (order_id,kind,provider_reference) do nothing""",
+                (uuid4(),row["order_id"],event_id,facts["payment_intent"],row["gross_cents"],
+                 row["currency"],outcome))
+            if outcome != "already_refunded":
+                row = db.execute("""update app.payment_orders set status='reconciliation_required',
+                    checkout_url=null,updated_at=now() where order_id=%s returning *""",
+                    (row["order_id"],)).fetchone()
+            return row
         if row["status"] not in TERMINAL:
             sku = db.execute("select * from app.purchase_skus where sku_id=%s", (row["sku_id"],)).fetchone()
             if (not sku or sku["channel"] != "web" or sku["pricing_version_id"] != row["pricing_version_id"]

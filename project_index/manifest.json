@@ -1,13 +1,13 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "2c345f69eb9fd914142d3d22887132496c1b36f6",
+  "commit_sha": "edc1ea9b034bae9f64d34e10244c62b407b8cbd3",
   "edge_counts": {
-    "calls": 9060,
-    "contains": 434,
-    "defines": 5383,
-    "imports": 937,
-    "likely_test_for": 567,
-    "route_to": 43
+    "calls": 9202,
+    "contains": 446,
+    "defines": 5529,
+    "imports": 967,
+    "likely_test_for": 593,
+    "route_to": 50
   },
   "excluded_prefixes": [
     ".agents",
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:ea74ccf949972d9b8a73a401710ce393110ec3ee9da86e8521cecf189220aa6b",
+  "graph_hash": "sha256:8ea51c1b48f9b78ed293eed1e00f3821916d63a352fbcc5df0e67c4f37e6f389",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -82,6 +82,7 @@
     "game_engine.py",
     "gamedata.py",
     "infrastructure/__init__.py",
+    "infrastructure/account_lifecycle.py",
     "infrastructure/account_read_model.py",
     "infrastructure/contracts.py",
     "infrastructure/file_blob.py",
@@ -162,6 +163,7 @@
     "scripts/pricing_report.py",
     "scripts/project_index_ab_harness.py",
     "scripts/readiness_report.py",
+    "scripts/recover_account_deletions.py",
     "scripts/recover_operations.py",
     "scripts/restore_local.py",
     "scripts/run_llm_contract_gate.py",
@@ -173,6 +175,7 @@
     "scripts/verify_restore.py",
     "services/__init__.py",
     "services/abyss_events.py",
+    "services/account_security.py",
     "services/actor_lifecycle.py",
     "services/art_brief.py",
     "services/art_triggers.py",
@@ -255,6 +258,15 @@
     "tests/fakes/fake_image_generator.py",
     "tests/fakes/local_portrait.py",
     "tests/test_account_api.py",
+    "tests/test_account_auth_gotrue_local.py",
+    "tests/test_account_auth_transport.py",
+    "tests/test_account_checkout_expiry_transport.py",
+    "tests/test_account_deletion_recovery_cli.py",
+    "tests/test_account_email_templates.py",
+    "tests/test_account_lifecycle_financial_local.py",
+    "tests/test_account_lifecycle_local.py",
+    "tests/test_account_lifecycle_security.py",
+    "tests/test_account_lifecycle_worker_local.py",
     "tests/test_account_read_model.py",
     "tests/test_account_read_model_local.py",
     "tests/test_agents_contract.py",
@@ -472,6 +484,7 @@
     "tests/test_worker_fence_local.py",
     "tests/test_worker_lease_lifecycle.py",
     "tests/test_world_sim.py",
+    "web/e2e/account-lifecycle.spec.ts",
     "web/e2e/account.spec.ts",
     "web/e2e/checkout.spec.ts",
     "web/e2e/critical-journeys.spec.ts",
@@ -507,6 +520,7 @@
     "web/src/components/SceneArtwork.tsx",
     "web/src/components/SceneZones.tsx",
     "web/src/components/StoryLog.tsx",
+    "web/src/components/TurnstileChallenge.tsx",
     "web/src/components/VisualArtwork.tsx",
     "web/src/components/WorldMap.tsx",
     "web/src/components/WoundTrack.tsx",
@@ -537,14 +551,14 @@
   },
   "node_counts": {
     "artifact": 8,
-    "class": 482,
-    "endpoint": 43,
-    "file": 484,
-    "function": 1705,
-    "method": 421,
-    "module": 434,
-    "test": 2775
+    "class": 500,
+    "endpoint": 50,
+    "file": 498,
+    "function": 1726,
+    "method": 440,
+    "module": 446,
+    "test": 2863
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:00628ceed21cc0c66568c37e55af07d80072f936ebfe4d9c79269288ef0bb582"
+  "source_tree_hash": "sha256:471e8e8ac259a08b3330ba9541f9a798004fc5cca32571bf608145ec23cb5550"
 }

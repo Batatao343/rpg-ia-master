@@ -3350,13 +3350,13 @@ specs:
   lineage_note: Sol High implementation b724736 (byte-identical rebase of reviewed b171698 onto SPEC-188 base 29c1881) and independent Sol High review SPEC-189-SOL-20261013-INDEPENDENT-01 APPROVED with no open findings; test-only Stripe adapter, immutable server orders, raw signature and atomic event/order/wallet fulfillment, refund/dispute audit, 39 focused tests including 23 PG rollback and 3 real multi-connection races, 24 affected tests, 7 Checkout Chromium, full browser 45 passed and 1 skipped, full Python 2134 passed and 113 skipped and 15 deselected exit 0, build/Ruff/bundle scan/index green. No Stripe remote call, live mode or commercial SKU (docs/spec189/README.md; handoffs/SPEC-189-SOL-independent-review.md).
 - id: SPEC-190
   slug: account-lifecycle-abuse-security
-  status: approved
+  status: done
   path: specs/SPEC-190-account-lifecycle-abuse-security.md
   created_commit: null
   created_at: '2026-10-02'
-  completed_commit: null
-  completed_at: null
-  completed_order: null
+  completed_commit: 9453a8ebb59a35afc880b101f8eec62e212106c4
+  completed_at: '2026-10-13'
+  completed_order: 189
   depends_on:
   - SPEC-189
   depends_on_raw:
@@ -3364,7 +3364,7 @@ specs:
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false
-  lineage_note: Imported approved v5 package; implementation not started
+  lineage_note: Sol High implementation 9453a8e and independent Sol High review APPROVED; local GoTrue/PostgreSQL reset and verify, native CAPTCHA forwarding seam, owner-bound export/delete with recent proof, session revocation and private erasure, retained financial ledger and Stripe reconciliation after deletion. Full Python 2159 passed 126 skipped 15 deselected; Chromium 53 passed 1 skipped; Node 18 passed; build/Ruff/content lint/Project Index green. Hosted Auth CAPTCHA, SMTP and recovery scheduler remain staging gates in SPEC-191/192 (docs/spec190/README.md; handoffs/SPEC-190-SOL-independent-review.md).
 - id: SPEC-191
   slug: supabase-remote-staging
   status: approved

@@ -12,7 +12,7 @@ import { EmberField } from "./components/EmberField";
 import { DeathModal } from "./components/DeathModal";
 import type { LevelUpPick } from "./components/LevelUpModal";
 import { CombatSimulatorScreen } from "./components/CombatSimulatorScreen";
-import { AuthScreen } from "./components/AuthScreen";
+import { AuthScreen, hasEmailActionLink } from "./components/AuthScreen";
 import { AccountScreen, shards } from "./components/AccountScreen";
 
 import { ImageQuoteDialog } from "./components/ImageQuoteDialog";
@@ -45,6 +45,8 @@ export function App() {
     new URLSearchParams(window.location.search).get("checkout") || "");
   const [accountBalance, setAccountBalance] = useState<string | null>(null);
   const accountBalanceGeneration = useRef(0);
+  const accountBalanceAbort = useRef<AbortController | null>(null);
+  const deletionInProgress = useRef(false);
   const [data, setData] = useState<GameResponse | null>(null);
   const [log, setLog] = useState<LogEntry[]>([]);
   const [busy, setBusy] = useState(false);
@@ -54,6 +56,8 @@ export function App() {
   const [continueData, setContinueData] = useState<GameResponse | null>(null);
   const [saves, setSaves] = useState<SaveSummary[]>([]);
   const [authError, setAuthError] = useState("");
+  const [authNotice, setAuthNotice] = useState("");
+  const [authConfig, setAuthConfig] = useState<api.AuthConfig>();
   const [authRequired, setAuthRequired] = useState(false);
   const [imageQuote, setImageQuote] = useState<{ quote: api.ImageQuote; gameId: string; session: number; actionId: string } | null>(null);
   const [imageBusy, setImageBusy] = useState(false);
@@ -72,6 +76,7 @@ export function App() {
   const [pending, setPending] = useState<PendingOperation | null>(null);
   useEffect(() => {
     const expired = () => {
+      if (deletionInProgress.current) return;
       session.current++;
       resetImageQuote();
       setBusy(false); setThinking(false); setData(null); setLog([]);
@@ -92,7 +97,16 @@ export function App() {
         const config = await api.getAuthConfig();
         if (!active) return;
         setAuthRequired(config.required);
+        setAuthConfig(config);
         owner.current = config.user_id || "legacy";
+        if (hasEmailActionLink) {
+          clearOwner(owner.current);
+          localStorage.removeItem(LS_KEY);
+          gameId.current = null;
+          setPending(null);
+          setScreen("auth");
+          return;
+        }
         if (config.required && !config.authenticated) {
           setScreen("auth");
           return; // não chama rotas protegidas antes do login
@@ -124,12 +138,11 @@ export function App() {
     return () => { active = false; };
   }, []);
 
-  async function handleLogin(email: string, password: string, create: boolean) {
-    setBusy(true);
-    setAuthError("");
-    try {
-      await (create ? api.signup(email, password) : api.login(email, password));
+  async function completeAuthenticatedSession() {
+      deletionInProgress.current = false;
       const config = await api.getAuthConfig();
+      if (!config.authenticated) throw new Error("Sessão não confirmada.");
+      setAuthConfig(config);
       const nextOwner = config.user_id || "legacy";
       if (owner.current !== nextOwner) clearOwner(owner.current);
       owner.current = nextOwner;
@@ -141,6 +154,18 @@ export function App() {
       accountReturn.current = list.length ? "saves" : "create";
       setScreen(checkoutReturnRequested() ? "account" : accountReturn.current);
       void refreshBalance(nextOwner, session.current);
+  }
+
+  async function handleLogin(email: string, password: string, create: boolean, captchaToken?: string) {
+    setBusy(true);
+    setAuthError(""); setAuthNotice("");
+    try {
+      const result = await (create ? api.signup(email, password, captchaToken) : api.login(email, password, captchaToken));
+      if (!result.authenticated) {
+        setAuthNotice(result.message || "Se o endereço puder receber mensagens, enviaremos as instruções.");
+        return;
+      }
+      await completeAuthenticatedSession();
     } catch (error) {
       setAuthError(errMsg(error));
     } finally {
@@ -148,10 +173,43 @@ export function App() {
     }
   }
 
+  function handleDeletionStarted() {
+    deletionInProgress.current = true;
+    accountBalanceAbort.current?.abort();
+    accountBalanceGeneration.current++;
+    session.current++;
+    resetImageQuote();
+    clearOwner(owner.current);
+    owner.current = "legacy";
+    setPending(null);
+    localStorage.removeItem(LS_KEY);
+    gameId.current = null;
+    setData(null); setContinueData(null); setLog([]);
+    setBanner(null); setPhaseLabel(null); setThinking(false);
+    setAccountBalance(null); setSaves([]);
+    setAuthConfig(previous => previous ? { ...previous, authenticated: false, user_id: undefined } : previous);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("checkout"); url.searchParams.delete("order_id");
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+    setAuthError("");
+  }
+
+  function handleAccountDeleted() {
+    setAuthNotice("Exclusão da conta iniciada. Seus dados de jogo não estão mais disponíveis.");
+    setScreen("auth");
+  }
+
+  function handleDeletionRecoveryRequired() {
+    deletionInProgress.current = false;
+    setAuthNotice("Entre novamente para verificar ou retomar a exclusão da conta.");
+    setScreen("auth");
+  }
+
   async function handleLogout() {
     setBusy(true);
     try {
       await api.logout();
+      deletionInProgress.current = false;
       session.current++;
       resetImageQuote();
       clearOwner(owner.current);
@@ -176,14 +234,19 @@ export function App() {
 
   async function refreshBalance(expectedOwner: string, generation: number) {
     const balanceGeneration = ++accountBalanceGeneration.current;
+    accountBalanceAbort.current?.abort();
+    const abort = new AbortController();
+    accountBalanceAbort.current = abort;
     try {
-      const balance = await api.getAccountBalance();
+      const balance = await api.getAccountBalance(abort.signal);
       if (owner.current === expectedOwner && session.current === generation
           && accountBalanceGeneration.current === balanceGeneration)
         setAccountBalance(balance.available_milli);
     } catch {
       if (owner.current === expectedOwner && session.current === generation
           && accountBalanceGeneration.current === balanceGeneration) setAccountBalance(null);
+    } finally {
+      if (accountBalanceAbort.current === abort) accountBalanceAbort.current = null;
     }
   }
 
@@ -576,6 +639,8 @@ export function App() {
     }
   }
 
+  const renderedOwner = owner.current;
+  const renderedSession = session.current;
   return (
     <MotionConfig reducedMotion="user">
       <div className="atmosphere" aria-hidden />
@@ -631,12 +696,18 @@ export function App() {
           </motion.main>
         ) : screen === "auth" ? (
           <motion.div key="auth" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <AuthScreen busy={busy} onLogin={handleLogin} error={authError} />
+            <AuthScreen busy={busy} onLogin={handleLogin} onAuthenticated={completeAuthenticatedSession}
+              config={authConfig} error={authError} notice={authNotice} />
           </motion.div>
         ) : screen === "account" ? (
           <motion.div key="account" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <AccountScreen onBack={() => setScreen(accountReturn.current)}
-              onBalanceChange={syncAccountBalance} />
+              captcha={authConfig?.captcha} onBalanceChange={value => {
+                if (owner.current === renderedOwner && session.current === renderedSession
+                    && !deletionInProgress.current) syncAccountBalance(value);
+              }} lifecycleAvailable={authConfig?.lifecycle_available ?? false}
+              onDeletionStarted={handleDeletionStarted} onDeleted={handleAccountDeleted}
+              onRecoveryRequired={handleDeletionRecoveryRequired} />
           </motion.div>
         ) : screen === "saves" ? (
           <motion.div

@@ -97,9 +97,31 @@ async def _session_boundary(request: Request, call_next):
     )
 
     try:
-        principal = get_runtime().identity_verifier.verify(
-            request.cookies.get(ACCESS_COOKIE),
-        )
+        try:
+            principal = get_runtime().identity_verifier.verify(request.cookies.get(ACCESS_COOKIE))
+        except Unauthorized:
+            if request.url.path != "/account/delete":
+                raise
+            from services.account_security import proof_owner
+            from infrastructure.contracts import Principal
+            from services.auth_sessions import ACCESS_COOKIE
+            receipt = request.cookies.get("rpg_deletion")
+            if receipt:
+                owner = proof_owner(receipt, "delete", max_age=604800)
+            else:
+                # Crash after DB revocation but before Set-Cookie: a recent
+                # password proof bound to this SAME stale access cookie can
+                # resume only an existing tombstone, never start a deletion.
+                if not request.cookies.get(ACCESS_COOKIE):
+                    raise Unauthorized("account_delete_not_requested")
+                owner = proof_owner(request.cookies.get("rpg_recent"), "recent",
+                                    request.cookies[ACCESS_COOKIE])
+            with get_runtime().game_store.pool.connection() as db:
+                requested = db.execute("select 1 from app.account_deletions where owner_id=%s",
+                                       (owner,)).fetchone()
+            if not requested:
+                raise Unauthorized("account_delete_not_requested")
+            principal = Principal(owner, "deletion-retry", str(owner))
         if request.method not in {"GET", "HEAD", "OPTIONS"}:
             secret = os.getenv("RPG_SESSION_SECRET", "")
             signer = CsrfSigner(secret)
@@ -163,6 +185,7 @@ async def _correlation_boundary(request: Request, call_next):
 class AuthRequest(BaseModel):
     email: str = Field(min_length=3, max_length=320)
     password: str = Field(min_length=8, max_length=256)
+    captcha_token: str | None = Field(default=None, max_length=4096)
 
 
 @app.get("/auth/config")
@@ -180,17 +203,28 @@ def auth_config(request: Request):
             authenticated = bool(principal)
         except Exception:
             authenticated = False
+    from services.account_security import captcha_config
+    lifecycle = False
+    if required:
+        from infrastructure.supabase_identity import SupabaseIdentityProvider
+        from infrastructure.runtime import get_runtime
+        lifecycle = isinstance(get_runtime().identity_verifier, SupabaseIdentityProvider)
     return {"required": required, "authenticated": authenticated,
+            "lifecycle_available": lifecycle,
+            "email_confirmation_required": _email_confirmation_required(),
+            "captcha": captcha_config(),
             **({"user_id": str(principal.user_id)} if principal else {})}
 
 
-def _set_session_cookies(response: Response, tokens) -> str:
+def _set_session_cookies(response: Response, tokens, *, clear_deletion: bool = True) -> str:
     from services.auth_sessions import (
         ACCESS_COOKIE, CSRF_COOKIE, REFRESH_COOKIE, CsrfSigner, cookie_settings,
     )
 
     secure = os.getenv("RPG_COOKIE_SECURE", "0") == "1"
     csrf = CsrfSigner(os.getenv("RPG_SESSION_SECRET", "")).issue()
+    if clear_deletion:
+        response.delete_cookie("rpg_deletion", path="/account/delete")
     response.set_cookie(ACCESS_COOKIE, tokens.access_token, **cookie_settings(secure=secure))
     response.set_cookie(
         REFRESH_COOKIE, tokens.refresh_token,
@@ -204,7 +238,7 @@ def _set_session_cookies(response: Response, tokens) -> str:
 
 
 @app.post("/auth/login")
-def auth_login(body: AuthRequest, response: Response):
+def auth_login(body: AuthRequest, request: Request, response: Response):
     if not _database_profile():
         raise HTTPException(status_code=404, detail="auth desativada no perfil legacy")
     from infrastructure.contracts import Unauthorized
@@ -212,26 +246,259 @@ def auth_login(body: AuthRequest, response: Response):
 
     try:
         provider = get_runtime().identity_verifier
-        tokens = provider.login(body.email, body.password)
+        from services.account_security import auth_limit, captcha_config
+        captcha_mode = captcha_config()["mode"]
+        if captcha_mode not in {"app", "gotrue"}:
+            raise HTTPException(503, "captcha_unavailable")
+        if captcha_mode == "gotrue":
+            _auth_abuse(request, action="login", email=body.email, captcha_token=body.captcha_token)
+            tokens = provider.login(body.email, body.password, captcha_token=body.captcha_token)
+        else:
+            auth_limit(get_runtime(), request, action="login", email=body.email)
+            tokens = provider.login(body.email, body.password)
+        provider.verify(tokens.access_token)
         csrf = _set_session_cookies(response, tokens)
+        _set_recent_cookie(response, tokens.user_id, tokens.access_token)
         return {"authenticated": True, "csrf_token": csrf}
     except Unauthorized as exc:
         raise HTTPException(status_code=401, detail=str(exc)) from exc
 
 
 @app.post("/auth/signup")
-def auth_signup(body: AuthRequest, response: Response):
+def auth_signup(body: AuthRequest, request: Request, response: Response):
     if not _database_profile():
         raise HTTPException(status_code=404, detail="auth desativada no perfil legacy")
     from infrastructure.contracts import Unauthorized
     from infrastructure.runtime import get_runtime
 
+    from services.account_security import GENERIC_MESSAGE
+    _auth_abuse(request, action="signup", email=body.email, captcha_token=body.captcha_token)
     try:
-        tokens = get_runtime().identity_verifier.signup(body.email, body.password)
+        from services.account_security import captcha_config
+        if captcha_config()["mode"] == "gotrue":
+            tokens = get_runtime().identity_verifier.signup(
+                body.email, body.password, captcha_token=body.captcha_token)
+        else:
+            tokens = get_runtime().identity_verifier.signup(body.email, body.password)
+        if tokens is None or _email_confirmation_required():
+            if tokens:
+                get_runtime().identity_verifier.logout(tokens.access_token)
+            response.status_code = 202
+            return {"authenticated": False, "message": GENERIC_MESSAGE}
         csrf = _set_session_cookies(response, tokens)
         return {"authenticated": True, "csrf_token": csrf}
     except Unauthorized as exc:
+        if _email_confirmation_required():
+            response.status_code = 202
+            return {"authenticated": False, "message": GENERIC_MESSAGE}
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+def _email_confirmation_required() -> bool:
+    return os.getenv("RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED", "1" if os.getenv("RPG_RUNTIME_PROFILE", "").startswith("hosted") else "0") == "1"
+
+
+def _set_recent_cookie(response: Response, owner, access: str) -> None:
+    from services.account_security import RECENT_COOKIE, proof
+    response.set_cookie(RECENT_COOKIE, proof(owner, "recent", access), max_age=300,
+                        httponly=True, secure=os.getenv("RPG_COOKIE_SECURE", "0") == "1", samesite="strict", path="/")
+
+
+def _lifecycle_runtime():
+    from infrastructure.runtime import get_runtime
+    from infrastructure.supabase_identity import SupabaseIdentityProvider
+    runtime = get_runtime()
+    if not _database_profile() or not isinstance(runtime.identity_verifier, SupabaseIdentityProvider):
+        raise HTTPException(404, "lifecycle_unavailable")
+    return runtime
+
+
+def _auth_abuse(request: Request, *, action: str, email: str = "", captcha_token: str | None = None) -> None:
+    from infrastructure.runtime import get_runtime
+    from infrastructure.contracts import Unauthorized
+    from services.account_security import auth_limit, validate_captcha
+    origin = request.headers.get("origin")
+    if origin not in _CORS_ORIGINS:
+        raise HTTPException(403, "origin_invalid")
+    runtime = get_runtime()
+    auth_limit(runtime, request, action=action, email=email)
+    from services.account_security import captcha_config
+    captcha_mode = captcha_config()["mode"]
+    if captcha_mode not in {"app", "gotrue"}:
+        raise HTTPException(503, "captcha_unavailable")
+    if action in {"signup", "reset", "verify"} or (
+            captcha_mode == "gotrue" and action in {"login", "reauth"}):
+        try:
+            validate_captcha(captcha_token, remote_ip=request.client.host if request.client else "unknown", action=action)
+        except ValueError:
+            raise HTTPException(503, "captcha_unavailable") from None
+        except Unauthorized as exc:
+            raise HTTPException(403, str(exc)) from None
+
+
+class EmailRequest(BaseModel):
+    email: str = Field(min_length=3, max_length=320)
+    captcha_token: str | None = Field(default=None, max_length=4096)
+
+
+class VerifyEmailRequest(BaseModel):
+    token_hash: str = Field(min_length=10, max_length=512)
+    type: Literal["signup"] = "signup"
+
+
+class ResetPasswordRequest(BaseModel):
+    token_hash: str = Field(min_length=10, max_length=512)
+    new_password: str = Field(min_length=8, max_length=256)
+
+
+@app.post("/auth/reset/request", status_code=202)
+@app.post("/auth/verify/request", status_code=202)
+def auth_email_request(body: EmailRequest, request: Request):
+    import httpx
+    import logging
+    from services.account_security import GENERIC_MESSAGE
+    from infrastructure.supabase_identity import AuthEmailDeliveryError
+    from observability.metrics import metrics
+    from observability.telemetry import correlation, safe_json
+    runtime = _lifecycle_runtime()
+    recovery = request.url.path == "/auth/reset/request"
+    action = "reset" if recovery else "verify"
+    _auth_abuse(request, action=action, email=body.email, captcha_token=body.captcha_token)
+    try:
+        from services.account_security import captcha_config
+        if captcha_config()["mode"] == "gotrue":
+            runtime.identity_verifier.request_email(body.email, recovery=recovery,
+                                                    captcha_token=body.captcha_token)
+        else:
+            runtime.identity_verifier.request_email(body.email, recovery=recovery)
+    except (AuthEmailDeliveryError, httpx.HTTPError) as exc:
+        status_class = exc.status_class if isinstance(exc, AuthEmailDeliveryError) else "network"
+        metrics.increment("rpg_auth_email_delivery_failures_total",
+                          {"action": action, "status_class": status_class})
+        logging.getLogger("rpg.account").warning(safe_json({
+            "event": "auth.email_delivery_failed", "flow": action,
+            "status_class": status_class, "request_id": correlation().get("request_id"),
+        }))
+    return {"message": GENERIC_MESSAGE}
+
+
+@app.post("/auth/verify")
+def auth_verify_email(body: VerifyEmailRequest, request: Request, response: Response):
+    from infrastructure.contracts import Unauthorized
+    runtime = _lifecycle_runtime()
+    _auth_abuse(request, action="verify_link")
+    try:
+        tokens = runtime.identity_verifier.verify_email(body.token_hash)
+        runtime.identity_verifier.verify(tokens.access_token)
+        return {"authenticated": True, "csrf_token": _set_session_cookies(response, tokens)}
+    except Unauthorized as exc:
+        raise HTTPException(400, str(exc)) from None
+
+
+def _clear_auth_cookies(response: Response, *, keep_csrf: bool = False) -> None:
+    from services.auth_sessions import ACCESS_COOKIE, CSRF_COOKIE, REFRESH_COOKIE
+    from services.account_security import RECENT_COOKIE
+    response.delete_cookie(ACCESS_COOKIE, path="/")
+    response.delete_cookie(REFRESH_COOKIE, path="/auth/refresh")
+    response.delete_cookie(RECENT_COOKIE, path="/")
+    if not keep_csrf:
+        response.delete_cookie(CSRF_COOKIE, path="/")
+
+
+@app.post("/auth/reset/confirm")
+def auth_reset_confirm(body: ResetPasswordRequest, request: Request, response: Response):
+    from infrastructure.contracts import Unauthorized
+    runtime = _lifecycle_runtime()
+    _auth_abuse(request, action="reset_link")
+    try:
+        runtime.identity_verifier.reset_password(body.token_hash, body.new_password)
+    except Unauthorized as exc:
+        raise HTTPException(400, str(exc)) from None
+    _clear_auth_cookies(response)
+    return {"authenticated": False, "message": "Senha atualizada. Entre novamente."}
+
+
+class ReauthRequest(BaseModel):
+    password: str = Field(min_length=8, max_length=256)
+    captcha_token: str | None = Field(default=None, max_length=4096)
+
+
+@app.post("/auth/reauth")
+def auth_reauthenticate(body: ReauthRequest, request: Request, response: Response):
+    from infrastructure.contracts import Unauthorized
+    from services.auth_sessions import ACCESS_COOKIE
+    runtime = _lifecycle_runtime()
+    _auth_abuse(request, action="reauth", captcha_token=body.captcha_token)
+    try:
+        _validate_auth_csrf(request)
+        access = request.cookies.get(ACCESS_COOKIE)
+        from services.account_security import captcha_config
+        if captcha_config()["mode"] == "gotrue":
+            owner = runtime.identity_verifier.reauthenticate(
+                access, body.password, captcha_token=body.captcha_token)
+        else:
+            owner = runtime.identity_verifier.reauthenticate(access, body.password)
+        _set_recent_cookie(response, owner, access)
+        return {"recent": True}
+    except Unauthorized as exc:
+        raise HTTPException(401, str(exc)) from None
+
+
+def _require_recent(request: Request, owner) -> None:
+    from services.account_security import RECENT_COOKIE, proof_owner
+    from services.auth_sessions import ACCESS_COOKIE
+    from infrastructure.contracts import Unauthorized
+    try:
+        if proof_owner(request.cookies.get(RECENT_COOKIE), "recent", request.cookies.get(ACCESS_COOKIE) or "") != owner:
+            raise Unauthorized("recent_session_required")
+    except Unauthorized:
+        raise HTTPException(403, "recent_session_required") from None
+
+
+@app.get("/account/export")
+def account_export(request: Request):
+    from fastapi.encoders import jsonable_encoder
+    from infrastructure.request_context import current_principal
+    from infrastructure.account_lifecycle import PostgresAccountLifecycle
+    runtime = _lifecycle_runtime()
+    principal = current_principal()
+    _require_recent(request, principal.user_id)
+    data = PostgresAccountLifecycle(runtime.game_store.pool, runtime.identity_verifier, runtime.blob_store).export(principal)
+    return JSONResponse(jsonable_encoder(data), headers={"Content-Disposition": 'attachment; filename="valoria-account.json"', "Cache-Control": "no-store"})
+
+
+class DeleteAccountRequest(BaseModel):
+    confirmation: Literal["EXCLUIR"]
+
+
+@app.post("/account/delete")
+def account_delete(body: DeleteAccountRequest, request: Request):
+    from infrastructure.request_context import current_principal
+    from infrastructure.account_lifecycle import PostgresAccountLifecycle
+    from services.account_security import DELETE_COOKIE, proof
+    runtime = _lifecycle_runtime()
+    principal = current_principal()
+    if principal.issuer != "deletion-retry":
+        _require_recent(request, principal.user_id)
+    lifecycle = PostgresAccountLifecycle(runtime.game_store.pool, runtime.identity_verifier, runtime.blob_store)
+    if principal.issuer != "deletion-retry":
+        lifecycle.begin(principal.user_id)
+    try:
+        status = lifecycle.finish(principal.user_id)
+    except Exception as exc:
+        import logging
+        from observability.telemetry import correlation, pseudonym, safe_json
+        logging.getLogger("rpg.account").warning(safe_json({
+            "event": "account.delete.finish_failed", "owner_ref": pseudonym(principal.user_id),
+            "request_id": correlation().get("request_id"), "error_type": type(exc).__name__,
+        }))
+        status = "deleting"  # Durable denial remains; receipt enables a safe retry.
+    response = JSONResponse({"status": status}, status_code=200 if status == "deleted" else 202,
+                            headers={"Cache-Control": "no-store"})
+    _clear_auth_cookies(response, keep_csrf=True)
+    response.set_cookie(DELETE_COOKIE, proof(principal.user_id, "delete"), max_age=604800,
+                        httponly=True, secure=os.getenv("RPG_COOKIE_SECURE", "0") == "1", samesite="strict", path="/account/delete")
+    return response
 
 
 def _validate_auth_csrf(request: Request) -> None:
@@ -258,7 +525,8 @@ def auth_refresh(request: Request, response: Response):
         if not token:
             raise Unauthorized("sessão ausente")
         tokens = get_runtime().identity_verifier.refresh(token)
-        csrf = _set_session_cookies(response, tokens)
+        get_runtime().identity_verifier.verify(tokens.access_token)
+        csrf = _set_session_cookies(response, tokens, clear_deletion=False)
         return {"authenticated": True, "csrf_token": csrf}
     except Unauthorized as exc:
         raise HTTPException(status_code=401, detail=str(exc)) from exc
@@ -276,6 +544,8 @@ def auth_logout(request: Request, response: Response):
     response.delete_cookie(ACCESS_COOKIE, path="/")
     response.delete_cookie(CSRF_COOKIE, path="/")
     response.delete_cookie(REFRESH_COOKIE, path="/auth/refresh")
+    response.delete_cookie("rpg_recent", path="/")
+    response.delete_cookie("rpg_deletion", path="/account/delete")
 
 # Fase 10 (R7): 1 linha JSON por turno no stderr (base de observabilidade).
 _turn_logger = logging.getLogger("rpg.turn")
@@ -1684,8 +1954,13 @@ def account_balance():
 def _stripe_payments():
     if not _database_profile():
         raise HTTPException(503, 'stripe_disabled')
-    from services.stripe_checkout import StripeSettings, StripeTestAdapter
-    settings = StripeSettings.from_env()
+    from services.stripe_checkout import StripeError, StripeSettings, StripeTestAdapter
+    try:
+        settings = StripeSettings.from_env()
+    except StripeError:
+        # A sales kill switch keeps signed late webhooks available while the
+        # empty SKU allowlist prevents a new Checkout session.
+        settings = StripeSettings.for_reconciliation()
     from infrastructure.runtime import get_runtime
     from infrastructure.stripe_payments import StripePayments
     return StripePayments(get_runtime().game_store.pool, settings, StripeTestAdapter(settings.secret_key))
@@ -1738,7 +2013,10 @@ async def stripe_webhook(request: Request):
     from starlette.concurrency import run_in_threadpool
     from services.stripe_checkout import MAX_WEBHOOK_BYTES, StripeError, StripeSettings, verify_event
     try:
-        settings = StripeSettings.from_env()
+        try:
+            settings = StripeSettings.from_env()
+        except StripeError:
+            settings = StripeSettings.for_reconciliation()
     except StripeError:
         raise HTTPException(503, 'stripe_disabled') from None
     declared = request.headers.get('content-length')

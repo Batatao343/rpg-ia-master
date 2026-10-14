@@ -25,6 +25,9 @@ Criar e certificar um projeto Supabase remoto exclusivo de staging, promovendo m
 - **R6** — email config de staging; custom SMTP pode ficar release gate.
 - **R7** — backup/restore/export portátil comprovado com dados sintéticos.
 - **R8** — secrets por ambiente.
+- **R9** — habilitar e provar CAPTCHA e rate limits nativos do Supabase Auth nos
+  endpoints públicos de signup/recover/resend; o proxy da aplicação não é a
+  única barreira. Medir o efeito do IP de saída compartilhado do backend.
 
 ### Fora de escopo
 
@@ -35,7 +38,8 @@ Produção; dados reais; importar saves pessoais sem consentimento.
 1. `EXTERNAL_ACTION_APPROVAL_REQUIRED`.
 2. Criar/linkar staging.
 3. Aplicar migrations.
-4. Rodar RLS/pgvector/storage/auth smoke A/B.
+4. Rodar RLS/pgvector/storage/auth smoke A/B, incluindo chamada Auth direta sem
+   CAPTCHA, token válido encaminhado pelo proxy e limites com IP compartilhado.
 5. Advisors e backup/restore.
 6. Registrar custos/config sem secrets.
 
@@ -56,6 +60,9 @@ Evidência cloud com IDs não-secretos, comandos e resultados. Sem long-run.
 
 - [ ] migrations aplicadas a staging reproduzem schema a partir de zero sem edição manual necessária;
 - [ ] dois usuários reais de staging passam matriz A/B em Auth + RLS + Storage + pgvector;
+- [ ] Auth público rejeita signup/recover/resend sem CAPTCHA quando exigido;
+  limites nativos e impacto do IP de saída compartilhado ficam configurados e
+  documentados sem expor segredo ou depender do limite do proxy;
 - [ ] Security Advisor: zero findings de severidade error/high não justificados; warnings restantes documentados;
 - [ ] pooler/SSL testados pela mesma DSN/config que a SPEC-192 consumirá;
 - [ ] backup -> restore em ambiente descartável recupera dados sintéticos e objetos necessários;
