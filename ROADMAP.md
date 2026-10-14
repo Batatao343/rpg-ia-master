@@ -1,5 +1,17 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **14/10 — staging e deploy em espera.** O projeto Supabase exclusivo da
+> [SPEC-191](specs/SPEC-191-supabase-remote-staging.md) não pôde ser criado:
+> a cota Free de dois projetos ativos de um administrador foi atingida.
+> Nenhum recurso remoto foi criado; por pedido do usuário, a implementação
+> Supabase aguarda resolução da cota. O
+> [handoff de retomada](handoffs/SPEC-191-Terra-review.md) está preparado.
+> [SPEC-192](specs/SPEC-192-vercel-staging-worker-topology.md)–SPEC-198
+> dependem sequencialmente da 191 e permanecem `approved`; SPEC-104 ainda é
+> `draft`. O deploy funcional exige esses gates de staging; não há projeto
+> Vercel do RPG ligado à conta. Uma eventual prévia estática da interface
+> depende da escolha do usuário e não prova o jogo ou a API.
+
 > **13/10 — [SPEC-190](specs/SPEC-190-account-lifecycle-abuse-security.md) `done`.**
 > Confirmação/reset de email, CAPTCHA/rate limits, export e exclusão de conta
 > com prova recente, revogação de sessão, erasure privado e retenção financeira

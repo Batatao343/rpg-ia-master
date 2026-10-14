@@ -1,5 +1,19 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **14/10 — SPEC-191 em espera por decisão do usuário sobre cota Supabase.**
+> A SPEC-190 permanece `done` e seu PR #26 está no GitHub. A tentativa única
+> de criar `rpg-ia-master-staging` na organização `jm0nteiroz` foi recusada
+> pelo limite Free de dois projetos ativos associado a um administrador;
+> **nenhum recurso remoto foi criado**. O usuário pediu para suspender a
+> implementação Supabase enquanto resolve o conflito. O
+> [handoff](handoffs/SPEC-191-Terra-review.md) contém inventário local e
+> sequência de retomada. SPEC-191 fica `approved`, sem gates cloud nem revisão
+> final. SPEC-192–198 dependem em cadeia da 191 e não podem ser fechadas
+> agora; SPEC-104 continua `draft`. Nenhum deploy funcional foi feito:
+> a topologia de staging da SPEC-192 exige Supabase staging e ainda não há
+> projeto Vercel ligado a este repositório. O pedido de publicação temporária
+> apenas da interface está aguardando escolha do usuário.
+
 > **13/10 — SPEC-190 `done`; ciclo de conta e exclusão com retenção financeira.**
 > Confirmação/reset de email com GoTrue local, mensagens genéricas, CAPTCHA
 > Turnstile encaminhado ao Auth nativo em modo hosted e limites no proxy.
