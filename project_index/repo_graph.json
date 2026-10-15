@@ -1,5 +1,5 @@
 {
-  "commit_sha": "fe2317e2eb9881676ce3b3dae6475e759c444551",
+  "commit_sha": "8570d62db4daa9d99a64461104e8cfb9bd26eddd",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -2353,6 +2353,17 @@
       },
       "source": "file:scripts/staging/preview_isolation.py",
       "target": "module:scripts.staging.preview_isolation",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 1
+      },
+      "source": "file:scripts/staging/runtime_role.py",
+      "target": "module:scripts.staging.runtime_role",
       "type": "contains"
     },
     {
@@ -11431,6 +11442,17 @@
       "type": "contains"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_runtime_role_local.py",
+        "line": 1
+      },
+      "source": "file:tests/test_runtime_role_local.py",
+      "target": "module:tests.test_runtime_role_local",
+      "type": "contains"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
@@ -12385,6 +12407,39 @@
       },
       "source": "file:tests/test_spec197_legal_pages.py",
       "target": "module:tests.test_spec197_legal_pages",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_runtime_role.py",
+        "line": 4
+      },
+      "source": "file:tests/test_spec197_runtime_role.py",
+      "target": "file:infrastructure/runtime.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_runtime_role.py",
+        "line": 5
+      },
+      "source": "file:tests/test_spec197_runtime_role.py",
+      "target": "file:scripts/staging/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_runtime_role.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec197_runtime_role.py",
+      "target": "module:tests.test_spec197_runtime_role",
       "type": "contains"
     },
     {
@@ -31344,6 +31399,61 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 18
+      },
+      "source": "module:scripts.staging.runtime_role",
+      "target": "module:scripts.staging",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 46
+      },
+      "source": "module:scripts.staging.runtime_role",
+      "target": "symbol:scripts.staging.runtime_role.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 24
+      },
+      "source": "module:scripts.staging.runtime_role",
+      "target": "symbol:scripts.staging.runtime_role.new_password",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 29
+      },
+      "source": "module:scripts.staging.runtime_role",
+      "target": "symbol:scripts.staging.runtime_role.runtime_dsn",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 37
+      },
+      "source": "module:scripts.staging.runtime_role",
+      "target": "symbol:scripts.staging.runtime_role.upsert_env",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
         "line": 18
       },
@@ -32082,7 +32192,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 98
+        "line": 102
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.main",
@@ -32093,7 +32203,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 75
+        "line": 79
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -62893,6 +63003,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_hosted_supabase_contract.py",
+        "line": 350
+      },
+      "source": "module:tests.test_hosted_supabase_contract",
+      "target": "symbol:tests.test_hosted_supabase_contract.test_hosted_dsn_accepts_least_privilege_runtime_role_and_rejects_wrong_ref",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_hosted_supabase_contract.py",
         "line": 147
       },
       "source": "module:tests.test_hosted_supabase_contract",
@@ -73166,6 +73287,72 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_runtime_role_local.py",
+        "line": 17
+      },
+      "source": "module:tests.test_runtime_role_local",
+      "target": "symbol:tests.test_runtime_role_local.conns",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_runtime_role_local.py",
+        "line": 65
+      },
+      "source": "module:tests.test_runtime_role_local",
+      "target": "symbol:tests.test_runtime_role_local.test_every_app_object_is_covered_by_runtime_grants",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_runtime_role_local.py",
+        "line": 29
+      },
+      "source": "module:tests.test_runtime_role_local",
+      "target": "symbol:tests.test_runtime_role_local.test_role_attributes_are_least_privilege",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_runtime_role_local.py",
+        "line": 36
+      },
+      "source": "module:tests.test_runtime_role_local",
+      "target": "symbol:tests.test_runtime_role_local.test_runtime_cannot_ddl_or_write_auth_and_storage",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_runtime_role_local.py",
+        "line": 47
+      },
+      "source": "module:tests.test_runtime_role_local",
+      "target": "symbol:tests.test_runtime_role_local.test_runtime_reads_identity_via_definer_functions_and_storage",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_runtime_role_local.py",
+        "line": 83
+      },
+      "source": "module:tests.test_runtime_role_local",
+      "target": "symbol:tests.test_runtime_role_local.test_runtime_sees_cross_owner_rows_and_append_only_triggers_still_hold",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_s3_blob.py",
         "line": 9
       },
@@ -74183,6 +74370,17 @@
       },
       "source": "module:tests.test_spec192_vercel_env",
       "target": "symbol:tests.test_spec192_vercel_env.test_refuses_other_project",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 39
+      },
+      "source": "module:tests.test_spec192_vercel_env",
+      "target": "symbol:tests.test_spec192_vercel_env.test_runtime_dsn_replaces_admin_dsn_unless_rollback_requested",
       "type": "defines"
     },
     {
@@ -77120,6 +77318,61 @@
       },
       "source": "module:tests.test_spec197_legal_pages",
       "target": "symbol:tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_draft_banner",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_runtime_role.py",
+        "line": 4
+      },
+      "source": "module:tests.test_spec197_runtime_role",
+      "target": "module:infrastructure.runtime",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_runtime_role.py",
+        "line": 5
+      },
+      "source": "module:tests.test_spec197_runtime_role",
+      "target": "module:scripts.staging",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_runtime_role.py",
+        "line": 8
+      },
+      "source": "module:tests.test_spec197_runtime_role",
+      "target": "symbol:tests.test_spec197_runtime_role.test_dsn_uses_tenant_user_port_6543_and_passes_runtime_validation",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_runtime_role.py",
+        "line": 22
+      },
+      "source": "module:tests.test_spec197_runtime_role",
+      "target": "symbol:tests.test_spec197_runtime_role.test_password_is_48_alnum_and_env_upsert_replaces_in_place",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_runtime_role.py",
+        "line": 17
+      },
+      "source": "module:tests.test_spec197_runtime_role",
+      "target": "symbol:tests.test_spec197_runtime_role.test_refuses_non_pooler_host",
       "type": "defines"
     },
     {
@@ -93880,7 +94133,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_lifecycle.py",
-        "line": 114
+        "line": 113
       },
       "source": "symbol:infrastructure.account_lifecycle.PostgresAccountLifecycle",
       "target": "symbol:infrastructure.account_lifecycle.PostgresAccountLifecycle.delete",
@@ -93902,7 +94155,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_lifecycle.py",
-        "line": 66
+        "line": 65
       },
       "source": "symbol:infrastructure.account_lifecycle.PostgresAccountLifecycle",
       "target": "symbol:infrastructure.account_lifecycle.PostgresAccountLifecycle.finish",
@@ -93924,7 +94177,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_lifecycle.py",
-        "line": 70
+        "line": 69
       },
       "source": "symbol:infrastructure.account_lifecycle.PostgresAccountLifecycle.finish",
       "target": "symbol:infrastructure.contracts.Unauthorized",
@@ -93935,7 +94188,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_lifecycle.py",
-        "line": 96
+        "line": 95
       },
       "source": "symbol:infrastructure.account_lifecycle.PostgresAccountLifecycle.finish",
       "target": "symbol:infrastructure.contracts.Unauthorized",
@@ -99897,7 +100150,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/supabase_identity.py",
-        "line": 171
+        "line": 169
       },
       "source": "symbol:infrastructure.supabase_identity.SupabaseIdentityProvider.verify",
       "target": "symbol:infrastructure.contracts.Principal",
@@ -99941,7 +100194,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/supabase_identity.py",
-        "line": 170
+        "line": 168
       },
       "source": "symbol:infrastructure.supabase_identity.SupabaseIdentityProvider.verify",
       "target": "symbol:infrastructure.contracts.Unauthorized",
@@ -119528,6 +119781,105 @@
       "type": "calls"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 48
+      },
+      "source": "symbol:scripts.staging.runtime_role.main",
+      "target": "symbol:scripts.staging.common.add_guard_args",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 53
+      },
+      "source": "symbol:scripts.staging.runtime_role.main",
+      "target": "symbol:scripts.staging.common.assert_ref_in",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 52
+      },
+      "source": "symbol:scripts.staging.runtime_role.main",
+      "target": "symbol:scripts.staging.common.require_staging",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 58
+      },
+      "source": "symbol:scripts.staging.runtime_role.main",
+      "target": "symbol:scripts.staging.runtime_role.new_password",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 66
+      },
+      "source": "symbol:scripts.staging.runtime_role.main",
+      "target": "symbol:scripts.staging.runtime_role.runtime_dsn",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 67
+      },
+      "source": "symbol:scripts.staging.runtime_role.main",
+      "target": "symbol:scripts.staging.runtime_role.upsert_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 59
+      },
+      "source": "symbol:scripts.staging.runtime_role.main",
+      "target": "symbol:scripts.staging.s192.db",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 51
+      },
+      "source": "symbol:scripts.staging.runtime_role.main",
+      "target": "symbol:scripts.staging.s192.load_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/runtime_role.py",
+        "line": 33
+      },
+      "source": "symbol:scripts.staging.runtime_role.runtime_dsn",
+      "target": "symbol:scripts.staging.common.GuardError",
+      "type": "calls"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
@@ -120786,7 +121138,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 111
+        "line": 116
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env._load_files",
@@ -120797,7 +121149,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 113
+        "line": 118
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.build_env",
@@ -120808,7 +121160,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 126
+        "line": 131
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -120819,7 +121171,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 127
+        "line": 132
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -196377,6 +196729,39 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 41
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_runtime_dsn_replaces_admin_dsn_unless_rollback_requested",
+      "target": "symbol:scripts.staging.vercel_env.build_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 42
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_runtime_dsn_replaces_admin_dsn_unless_rollback_requested",
+      "target": "symbol:scripts.staging.vercel_env.build_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 43
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_runtime_dsn_replaces_admin_dsn_unless_rollback_requested",
+      "target": "symbol:scripts.staging.vercel_env.build_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec192_vercel_packaging.py",
         "line": 62
       },
@@ -205589,6 +205974,72 @@
       },
       "source": "symbol:tests.test_spec197_daily_cap.test_under_cap_does_nothing",
       "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_runtime_role.py",
+        "line": 13
+      },
+      "source": "symbol:tests.test_spec197_runtime_role.test_dsn_uses_tenant_user_port_6543_and_passes_runtime_validation",
+      "target": "symbol:infrastructure.runtime.hosted_supabase_dsn_ref",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_runtime_role.py",
+        "line": 14
+      },
+      "source": "symbol:tests.test_spec197_runtime_role.test_dsn_uses_tenant_user_port_6543_and_passes_runtime_validation",
+      "target": "symbol:scripts.staging.common.target_matches_ref",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_runtime_role.py",
+        "line": 9
+      },
+      "source": "symbol:tests.test_spec197_runtime_role.test_dsn_uses_tenant_user_port_6543_and_passes_runtime_validation",
+      "target": "symbol:scripts.staging.runtime_role.runtime_dsn",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_runtime_role.py",
+        "line": 23
+      },
+      "source": "symbol:tests.test_spec197_runtime_role.test_password_is_48_alnum_and_env_upsert_replaces_in_place",
+      "target": "symbol:scripts.staging.runtime_role.new_password",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_runtime_role.py",
+        "line": 27
+      },
+      "source": "symbol:tests.test_spec197_runtime_role.test_password_is_48_alnum_and_env_upsert_replaces_in_place",
+      "target": "symbol:scripts.staging.runtime_role.upsert_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_runtime_role.py",
+        "line": 19
+      },
+      "source": "symbol:tests.test_spec197_runtime_role.test_refuses_non_pooler_host",
+      "target": "symbol:scripts.staging.runtime_role.runtime_dsn",
       "type": "calls"
     },
     {
@@ -216772,6 +217223,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:scripts/staging/runtime_role.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/staging/runtime_role.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:scripts/staging/s192.py",
       "kind": "file",
       "line": 1,
@@ -218928,6 +219386,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_runtime_role_local.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_runtime_role_local.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_s3_blob.py",
       "kind": "file",
       "line": 1,
@@ -219058,6 +219523,13 @@
       "kind": "file",
       "line": 1,
       "path": "tests/test_spec197_legal_pages.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_spec197_runtime_role.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec197_runtime_role.py",
       "qualified_name": null
     },
     {
@@ -220830,6 +221302,13 @@
       "line": 1,
       "path": "scripts/staging/preview_isolation.py",
       "qualified_name": "scripts.staging.preview_isolation"
+    },
+    {
+      "id": "module:scripts.staging.runtime_role",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/staging/runtime_role.py",
+      "qualified_name": "scripts.staging.runtime_role"
     },
     {
       "id": "module:scripts.staging.s192",
@@ -222988,6 +223467,13 @@
       "qualified_name": "tests.test_runtime_profiles"
     },
     {
+      "id": "module:tests.test_runtime_role_local",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_runtime_role_local.py",
+      "qualified_name": "tests.test_runtime_role_local"
+    },
+    {
       "id": "module:tests.test_s3_blob",
       "kind": "module",
       "line": 1,
@@ -223119,6 +223605,13 @@
       "line": 1,
       "path": "tests/test_spec197_legal_pages.py",
       "qualified_name": "tests.test_spec197_legal_pages"
+    },
+    {
+      "id": "module:tests.test_spec197_runtime_role",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec197_runtime_role.py",
+      "qualified_name": "tests.test_spec197_runtime_role"
     },
     {
       "id": "module:tests.test_spec198_rename_package",
@@ -227085,7 +227578,7 @@
     {
       "id": "symbol:infrastructure.account_lifecycle.PostgresAccountLifecycle.delete",
       "kind": "method",
-      "line": 114,
+      "line": 113,
       "path": "infrastructure/account_lifecycle.py",
       "qualified_name": "infrastructure.account_lifecycle.PostgresAccountLifecycle.delete"
     },
@@ -227099,7 +227592,7 @@
     {
       "id": "symbol:infrastructure.account_lifecycle.PostgresAccountLifecycle.finish",
       "kind": "method",
-      "line": 66,
+      "line": 65,
       "path": "infrastructure/account_lifecycle.py",
       "qualified_name": "infrastructure.account_lifecycle.PostgresAccountLifecycle.finish"
     },
@@ -236246,6 +236739,34 @@
       "qualified_name": "scripts.staging.preview_isolation.preview_env_leaks"
     },
     {
+      "id": "symbol:scripts.staging.runtime_role.main",
+      "kind": "function",
+      "line": 46,
+      "path": "scripts/staging/runtime_role.py",
+      "qualified_name": "scripts.staging.runtime_role.main"
+    },
+    {
+      "id": "symbol:scripts.staging.runtime_role.new_password",
+      "kind": "function",
+      "line": 24,
+      "path": "scripts/staging/runtime_role.py",
+      "qualified_name": "scripts.staging.runtime_role.new_password"
+    },
+    {
+      "id": "symbol:scripts.staging.runtime_role.runtime_dsn",
+      "kind": "function",
+      "line": 29,
+      "path": "scripts/staging/runtime_role.py",
+      "qualified_name": "scripts.staging.runtime_role.runtime_dsn"
+    },
+    {
+      "id": "symbol:scripts.staging.runtime_role.upsert_env",
+      "kind": "function",
+      "line": 37,
+      "path": "scripts/staging/runtime_role.py",
+      "qualified_name": "scripts.staging.runtime_role.upsert_env"
+    },
+    {
       "id": "symbol:scripts.staging.s192.Admin",
       "kind": "class",
       "line": 103,
@@ -236759,14 +237280,14 @@
     {
       "id": "symbol:scripts.staging.vercel_env.main",
       "kind": "function",
-      "line": 98,
+      "line": 102,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.main"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.push",
       "kind": "function",
-      "line": 75,
+      "line": 79,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.push"
     },
@@ -256329,6 +256850,13 @@
       "qualified_name": "tests.test_hosted_supabase_contract.test_connect_timeout_rejects_invalid"
     },
     {
+      "id": "symbol:tests.test_hosted_supabase_contract.test_hosted_dsn_accepts_least_privilege_runtime_role_and_rejects_wrong_ref",
+      "kind": "test",
+      "line": 350,
+      "path": "tests/test_hosted_supabase_contract.py",
+      "qualified_name": "tests.test_hosted_supabase_contract.test_hosted_dsn_accepts_least_privilege_runtime_role_and_rejects_wrong_ref"
+    },
+    {
       "id": "symbol:tests.test_hosted_supabase_contract.test_hosted_pool_settings_and_backend_validation_before_pool",
       "kind": "test",
       "line": 147,
@@ -262930,6 +263458,48 @@
       "qualified_name": "tests.test_runtime_profiles.test_portable_exige_oidc_e_s3_sem_supabase"
     },
     {
+      "id": "symbol:tests.test_runtime_role_local.conns",
+      "kind": "test",
+      "line": 17,
+      "path": "tests/test_runtime_role_local.py",
+      "qualified_name": "tests.test_runtime_role_local.conns"
+    },
+    {
+      "id": "symbol:tests.test_runtime_role_local.test_every_app_object_is_covered_by_runtime_grants",
+      "kind": "test",
+      "line": 65,
+      "path": "tests/test_runtime_role_local.py",
+      "qualified_name": "tests.test_runtime_role_local.test_every_app_object_is_covered_by_runtime_grants"
+    },
+    {
+      "id": "symbol:tests.test_runtime_role_local.test_role_attributes_are_least_privilege",
+      "kind": "test",
+      "line": 29,
+      "path": "tests/test_runtime_role_local.py",
+      "qualified_name": "tests.test_runtime_role_local.test_role_attributes_are_least_privilege"
+    },
+    {
+      "id": "symbol:tests.test_runtime_role_local.test_runtime_cannot_ddl_or_write_auth_and_storage",
+      "kind": "test",
+      "line": 36,
+      "path": "tests/test_runtime_role_local.py",
+      "qualified_name": "tests.test_runtime_role_local.test_runtime_cannot_ddl_or_write_auth_and_storage"
+    },
+    {
+      "id": "symbol:tests.test_runtime_role_local.test_runtime_reads_identity_via_definer_functions_and_storage",
+      "kind": "test",
+      "line": 47,
+      "path": "tests/test_runtime_role_local.py",
+      "qualified_name": "tests.test_runtime_role_local.test_runtime_reads_identity_via_definer_functions_and_storage"
+    },
+    {
+      "id": "symbol:tests.test_runtime_role_local.test_runtime_sees_cross_owner_rows_and_append_only_triggers_still_hold",
+      "kind": "test",
+      "line": 83,
+      "path": "tests/test_runtime_role_local.py",
+      "qualified_name": "tests.test_runtime_role_local.test_runtime_sees_cross_owner_rows_and_append_only_triggers_still_hold"
+    },
+    {
       "id": "symbol:tests.test_s3_blob.FakeS3",
       "kind": "class",
       "line": 13,
@@ -263789,6 +264359,13 @@
       "line": 35,
       "path": "tests/test_spec192_vercel_env.py",
       "qualified_name": "tests.test_spec192_vercel_env.test_refuses_other_project"
+    },
+    {
+      "id": "symbol:tests.test_spec192_vercel_env.test_runtime_dsn_replaces_admin_dsn_unless_rollback_requested",
+      "kind": "test",
+      "line": 39,
+      "path": "tests/test_spec192_vercel_env.py",
+      "qualified_name": "tests.test_spec192_vercel_env.test_runtime_dsn_replaces_admin_dsn_unless_rollback_requested"
     },
     {
       "id": "symbol:tests.test_spec192_vercel_packaging.test_entry_exports_fastapi_app",
@@ -265721,6 +266298,27 @@
       "line": 11,
       "path": "tests/test_spec197_legal_pages.py",
       "qualified_name": "tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_draft_banner"
+    },
+    {
+      "id": "symbol:tests.test_spec197_runtime_role.test_dsn_uses_tenant_user_port_6543_and_passes_runtime_validation",
+      "kind": "test",
+      "line": 8,
+      "path": "tests/test_spec197_runtime_role.py",
+      "qualified_name": "tests.test_spec197_runtime_role.test_dsn_uses_tenant_user_port_6543_and_passes_runtime_validation"
+    },
+    {
+      "id": "symbol:tests.test_spec197_runtime_role.test_password_is_48_alnum_and_env_upsert_replaces_in_place",
+      "kind": "test",
+      "line": 22,
+      "path": "tests/test_spec197_runtime_role.py",
+      "qualified_name": "tests.test_spec197_runtime_role.test_password_is_48_alnum_and_env_upsert_replaces_in_place"
+    },
+    {
+      "id": "symbol:tests.test_spec197_runtime_role.test_refuses_non_pooler_host",
+      "kind": "test",
+      "line": 17,
+      "path": "tests/test_spec197_runtime_role.py",
+      "qualified_name": "tests.test_spec197_runtime_role.test_refuses_non_pooler_host"
     },
     {
       "id": "symbol:tests.test_spec198_rename_package.repo",
@@ -268531,5 +269129,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:997fa686081407aa5f9cb44ee19221c59398fd33855a1f1d428316b9fdf7d838"
+  "source_tree_hash": "sha256:548b3bdf58e67f833b60e63478d7fcd753c9f350e32de2971af709628bb1e7a1"
 }

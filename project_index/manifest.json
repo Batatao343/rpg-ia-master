@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "fe2317e2eb9881676ce3b3dae6475e759c444551",
+  "commit_sha": "8570d62db4daa9d99a64461104e8cfb9bd26eddd",
   "edge_counts": {
-    "calls": 10783,
-    "contains": 520,
-    "defines": 6450,
-    "imports": 1086,
-    "likely_test_for": 659,
+    "calls": 10801,
+    "contains": 523,
+    "defines": 6465,
+    "imports": 1089,
+    "likely_test_for": 661,
     "route_to": 58
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:f4fbe5fc093af86bc36625e7456c024925c7c920809decc5f0bdde563061adcd",
+  "graph_hash": "sha256:137881bfbe18cd85d4040b2e879dabb19925f418a996fbe1bdd8f79c0038398e",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -215,6 +215,7 @@
     "scripts/staging/measure.py",
     "scripts/staging/migrations.py",
     "scripts/staging/preview_isolation.py",
+    "scripts/staging/runtime_role.py",
     "scripts/staging/s192.py",
     "scripts/staging/schedule_cron.py",
     "scripts/staging/schema_diff.py",
@@ -523,6 +524,7 @@
     "tests/test_routing_tiers.py",
     "tests/test_runtime_cache.py",
     "tests/test_runtime_profiles.py",
+    "tests/test_runtime_role_local.py",
     "tests/test_s3_blob.py",
     "tests/test_shard_pricing.py",
     "tests/test_shard_pricing_local.py",
@@ -542,6 +544,7 @@
     "tests/test_spec197_checklist.py",
     "tests/test_spec197_daily_cap.py",
     "tests/test_spec197_legal_pages.py",
+    "tests/test_spec197_runtime_role.py",
     "tests/test_spec198_rename_package.py",
     "tests/test_spec_index.py",
     "tests/test_spec_migration_safety.py",
@@ -649,12 +652,12 @@
     "artifact": 9,
     "class": 587,
     "endpoint": 58,
-    "file": 593,
-    "function": 2040,
+    "file": 596,
+    "function": 2044,
     "method": 593,
-    "module": 520,
-    "test": 3230
+    "module": 523,
+    "test": 3241
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:997fa686081407aa5f9cb44ee19221c59398fd33855a1f1d428316b9fdf7d838"
+  "source_tree_hash": "sha256:548b3bdf58e67f833b60e63478d7fcd753c9f350e32de2971af709628bb1e7a1"
 }
