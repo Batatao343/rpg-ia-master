@@ -1,5 +1,5 @@
 {
-  "commit_sha": "29bff8d3310f1c0ed5ba3a2a57280f55e9b2da97",
+  "commit_sha": "d0efb5f9afefef9270d1ad9c383498a4294ca65a",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -12385,6 +12385,17 @@
       },
       "source": "file:tests/test_spec197_legal_pages.py",
       "target": "module:tests.test_spec197_legal_pages",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec198_rename_package.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec198_rename_package.py",
+      "target": "module:tests.test_spec198_rename_package",
       "type": "contains"
     },
     {
@@ -27462,7 +27473,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/android/rename_package.py",
-        "line": 48
+        "line": 57
       },
       "source": "module:scripts.android.rename_package",
       "target": "symbol:scripts.android.rename_package.main",
@@ -27473,10 +27484,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/android/rename_package.py",
-        "line": 34
+        "line": 50
       },
       "source": "module:scripts.android.rename_package",
       "target": "symbol:scripts.android.rename_package.plan",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/android/rename_package.py",
+        "line": 39
+      },
+      "source": "module:scripts.android.rename_package",
+      "target": "symbol:scripts.android.rename_package.text_files",
       "type": "defines"
     },
     {
@@ -29827,7 +29849,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 71
+        "line": 73
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.Deps",
@@ -29838,7 +29860,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 45
+        "line": 47
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.Result",
@@ -29849,7 +29871,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 264
+        "line": 283
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist._dotenv",
@@ -29860,7 +29882,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 60
+        "line": 62
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist._http_get",
@@ -29871,7 +29893,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 55
+        "line": 57
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist._run",
@@ -29882,7 +29904,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 102
+        "line": 105
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.check_ci",
@@ -29893,7 +29915,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 168
+        "line": 182
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.check_env_names",
@@ -29904,7 +29926,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 131
+        "line": 134
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.check_eval_locks",
@@ -29915,7 +29937,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 136
+        "line": 139
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.check_finops_config",
@@ -29926,7 +29948,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 81
+        "line": 84
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.check_git",
@@ -29937,7 +29959,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 156
+        "line": 170
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.check_health",
@@ -29948,7 +29970,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 143
+        "line": 157
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.check_kill_switch",
@@ -29959,7 +29981,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 183
+        "line": 197
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.check_legal",
@@ -29970,7 +29992,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 116
+        "line": 119
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.check_migrations",
@@ -29981,7 +30003,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 217
+        "line": 236
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.check_risks",
@@ -29992,7 +30014,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 92
+        "line": 95
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.check_specs",
@@ -30003,7 +30025,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 305
+        "line": 334
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.main",
@@ -30014,7 +30036,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 201
+        "line": 220
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.parse_risks",
@@ -30025,7 +30047,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 295
+        "line": 324
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.real_finops_cron_active",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 314
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.real_kill_switch_load",
@@ -30036,7 +30069,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 272
+        "line": 291
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.real_remote_migrations",
@@ -30047,7 +30080,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 282
+        "line": 301
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.real_vercel_env_names",
@@ -30058,7 +30091,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 228
+        "line": 247
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.run_checklist",
@@ -30069,7 +30102,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 241
+        "line": 260
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.to_markdown",
@@ -30080,7 +30113,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 254
+        "line": 273
       },
       "source": "module:scripts.release.checklist",
       "target": "symbol:scripts.release.checklist.write_report",
@@ -36482,7 +36515,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/daily_spend_cap.py",
-        "line": 16
+        "line": 22
       },
       "source": "module:services.daily_spend_cap",
       "target": "module:services.finops_alerts",
@@ -36493,7 +36526,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/daily_spend_cap.py",
-        "line": 17
+        "line": 23
       },
       "source": "module:services.daily_spend_cap",
       "target": "module:services.kill_switches",
@@ -36504,7 +36537,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/daily_spend_cap.py",
-        "line": 45
+        "line": 41
+      },
+      "source": "module:services.daily_spend_cap",
+      "target": "symbol:services.daily_spend_cap.CapConfigError",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 97
       },
       "source": "module:services.daily_spend_cap",
       "target": "symbol:services.daily_spend_cap.CapResult",
@@ -36515,7 +36559,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/daily_spend_cap.py",
-        "line": 24
+        "line": 75
+      },
+      "source": "module:services.daily_spend_cap",
+      "target": "symbol:services.daily_spend_cap._manually_reenabled",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 67
+      },
+      "source": "module:services.daily_spend_cap",
+      "target": "symbol:services.daily_spend_cap._ts",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 30
       },
       "source": "module:services.daily_spend_cap",
       "target": "symbol:services.daily_spend_cap.cap_from_env",
@@ -36526,7 +36592,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/daily_spend_cap.py",
-        "line": 35
+        "line": 59
+      },
+      "source": "module:services.daily_spend_cap",
+      "target": "symbol:services.daily_spend_cap.cap_switches",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 87
       },
       "source": "module:services.daily_spend_cap",
       "target": "symbol:services.daily_spend_cap.day_start",
@@ -36537,10 +36614,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/daily_spend_cap.py",
-        "line": 62
+        "line": 116
       },
       "source": "module:services.daily_spend_cap",
       "target": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 45
+      },
+      "source": "module:services.daily_spend_cap",
+      "target": "symbol:services.daily_spend_cap.tz_offset_hours",
       "type": "defines"
     },
     {
@@ -38498,6 +38586,17 @@
         "line": 15
       },
       "source": "module:services.finops_job",
+      "target": "module:services.finops_alerts",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/finops_job.py",
+        "line": 16
+      },
+      "source": "module:services.finops_job",
       "target": "module:services.kill_switches",
       "type": "imports"
     },
@@ -38506,7 +38605,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 18
+        "line": 19
       },
       "source": "module:services.finops_job",
       "target": "symbol:services.finops_job.run_finops",
@@ -61972,6 +62071,17 @@
         "line": 18
       },
       "source": "module:tests.test_frontend_visual_contracts",
+      "target": "symbol:tests.test_frontend_visual_contracts.test_home_header_buttons_do_not_overlap",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_frontend_visual_contracts.py",
+        "line": 39
+      },
+      "source": "module:tests.test_frontend_visual_contracts",
       "target": "symbol:tests.test_frontend_visual_contracts.test_portraits_are_uncropped_and_stay_inside_cards",
       "type": "defines"
     },
@@ -76621,10 +76731,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
+        "line": 151
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_closed_status_is_exact_token",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
         "line": 87
       },
       "source": "module:tests.test_spec197_checklist",
       "target": "symbol:tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 168
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
       "type": "defines"
     },
     {
@@ -76676,6 +76808,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
+        "line": 175
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
         "line": 61
       },
       "source": "module:tests.test_spec197_checklist",
@@ -76687,10 +76830,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
+        "line": 164
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_production_requires_daily_cap_env",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
         "line": 132
       },
       "source": "module:tests.test_spec197_checklist",
       "target": "symbol:tests.test_spec197_checklist.test_real_register_parses",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 159
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_real_register_r12_not_closed",
       "type": "defines"
     },
     {
@@ -76852,6 +77017,39 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_daily_cap.py",
+        "line": 135
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "symbol:tests.test_spec197_daily_cap.test_manual_reenable_same_day_not_retripped",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 128
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "symbol:tests.test_spec197_daily_cap.test_model_switches_invalid_key_errors",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 119
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "symbol:tests.test_spec197_daily_cap.test_model_switches_opt_in",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
         "line": 32
       },
       "source": "module:tests.test_spec197_daily_cap",
@@ -76896,6 +77094,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_daily_cap.py",
+        "line": 151
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "symbol:tests.test_spec197_daily_cap.test_tz_offset_validation",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
         "line": 40
       },
       "source": "module:tests.test_spec197_daily_cap",
@@ -76911,6 +77120,61 @@
       },
       "source": "module:tests.test_spec197_legal_pages",
       "target": "symbol:tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_draft_banner",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec198_rename_package.py",
+        "line": 15
+      },
+      "source": "module:tests.test_spec198_rename_package",
+      "target": "symbol:tests.test_spec198_rename_package.repo",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec198_rename_package.py",
+        "line": 34
+      },
+      "source": "module:tests.test_spec198_rename_package",
+      "target": "symbol:tests.test_spec198_rename_package.test_apply_renames_everything",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec198_rename_package.py",
+        "line": 44
+      },
+      "source": "module:tests.test_spec198_rename_package",
+      "target": "symbol:tests.test_spec198_rename_package.test_dry_run_changes_nothing",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec198_rename_package.py",
+        "line": 50
+      },
+      "source": "module:tests.test_spec198_rename_package",
+      "target": "symbol:tests.test_spec198_rename_package.test_rejects_bad_app_name",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec198_rename_package.py",
+        "line": 55
+      },
+      "source": "module:tests.test_spec198_rename_package",
+      "target": "symbol:tests.test_spec198_rename_package.test_rejects_invalid_id",
       "type": "defines"
     },
     {
@@ -111348,7 +111612,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/android/rename_package.py",
-        "line": 59
+        "line": 70
       },
       "source": "symbol:scripts.android.rename_package.main",
       "target": "symbol:scripts.android.rename_package.detect_old",
@@ -111359,10 +111623,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/android/rename_package.py",
-        "line": 60
+        "line": 71
       },
       "source": "symbol:scripts.android.rename_package.main",
       "target": "symbol:scripts.android.rename_package.plan",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/android/rename_package.py",
+        "line": 100
+      },
+      "source": "symbol:scripts.android.rename_package.main",
+      "target": "symbol:scripts.android.rename_package.text_files",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/android/rename_package.py",
+        "line": 54
+      },
+      "source": "symbol:scripts.android.rename_package.plan",
+      "target": "symbol:scripts.android.rename_package.text_files",
       "type": "calls"
     },
     {
@@ -115913,22 +116199,11 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 51
+        "line": 53
       },
       "source": "symbol:scripts.release.checklist.Result",
       "target": "symbol:scripts.release.checklist.Result.as_dict",
       "type": "defines"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/release/checklist.py",
-        "line": 106
-      },
-      "source": "symbol:scripts.release.checklist.check_ci",
-      "target": "symbol:scripts.release.checklist.Result",
-      "type": "calls"
     },
     {
       "confidence": "static_best_effort",
@@ -115946,7 +116221,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 113
+        "line": 112
       },
       "source": "symbol:scripts.release.checklist.check_ci",
       "target": "symbol:scripts.release.checklist.Result",
@@ -115957,7 +116232,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 170
+        "line": 116
+      },
+      "source": "symbol:scripts.release.checklist.check_ci",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 184
       },
       "source": "symbol:scripts.release.checklist.check_env_names",
       "target": "symbol:scripts.release.checklist.Result",
@@ -115968,7 +116254,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 174
+        "line": 188
       },
       "source": "symbol:scripts.release.checklist.check_env_names",
       "target": "symbol:scripts.release.checklist.Result",
@@ -115979,7 +116265,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 176
+        "line": 190
       },
       "source": "symbol:scripts.release.checklist.check_env_names",
       "target": "symbol:scripts.release.checklist.Result",
@@ -115990,7 +116276,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 179
+        "line": 193
       },
       "source": "symbol:scripts.release.checklist.check_env_names",
       "target": "symbol:scripts.release.checklist.Result",
@@ -116001,7 +116287,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 133
+        "line": 136
       },
       "source": "symbol:scripts.release.checklist.check_eval_locks",
       "target": "symbol:scripts.release.checklist.Result",
@@ -116012,7 +116298,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 140
+        "line": 144
       },
       "source": "symbol:scripts.release.checklist.check_finops_config",
       "target": "symbol:scripts.release.checklist.Result",
@@ -116023,9 +116309,42 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 85
+        "line": 146
       },
-      "source": "symbol:scripts.release.checklist.check_git",
+      "source": "symbol:scripts.release.checklist.check_finops_config",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 150
+      },
+      "source": "symbol:scripts.release.checklist.check_finops_config",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 152
+      },
+      "source": "symbol:scripts.release.checklist.check_finops_config",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 153
+      },
+      "source": "symbol:scripts.release.checklist.check_finops_config",
       "target": "symbol:scripts.release.checklist.Result",
       "type": "calls"
     },
@@ -116045,7 +116364,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 158
+        "line": 91
+      },
+      "source": "symbol:scripts.release.checklist.check_git",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 172
       },
       "source": "symbol:scripts.release.checklist.check_health",
       "target": "symbol:scripts.release.checklist.Result",
@@ -116056,9 +116386,42 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 162
+        "line": 176
       },
       "source": "symbol:scripts.release.checklist.check_health",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 179
+      },
+      "source": "symbol:scripts.release.checklist.check_health",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 159
+      },
+      "source": "symbol:scripts.release.checklist.check_kill_switch",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 163
+      },
+      "source": "symbol:scripts.release.checklist.check_kill_switch",
       "target": "symbol:scripts.release.checklist.Result",
       "type": "calls"
     },
@@ -116069,7 +116432,7 @@
         "file": "scripts/release/checklist.py",
         "line": 165
       },
-      "source": "symbol:scripts.release.checklist.check_health",
+      "source": "symbol:scripts.release.checklist.check_kill_switch",
       "target": "symbol:scripts.release.checklist.Result",
       "type": "calls"
     },
@@ -116078,7 +116441,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 145
+        "line": 166
       },
       "source": "symbol:scripts.release.checklist.check_kill_switch",
       "target": "symbol:scripts.release.checklist.Result",
@@ -116089,40 +116452,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 149
-      },
-      "source": "symbol:scripts.release.checklist.check_kill_switch",
-      "target": "symbol:scripts.release.checklist.Result",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/release/checklist.py",
-        "line": 151
-      },
-      "source": "symbol:scripts.release.checklist.check_kill_switch",
-      "target": "symbol:scripts.release.checklist.Result",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/release/checklist.py",
-        "line": 152
-      },
-      "source": "symbol:scripts.release.checklist.check_kill_switch",
-      "target": "symbol:scripts.release.checklist.Result",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/release/checklist.py",
-        "line": 185
+        "line": 199
       },
       "source": "symbol:scripts.release.checklist.check_legal",
       "target": "symbol:scripts.release.checklist.Result",
@@ -116133,7 +116463,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 198
+        "line": 217
       },
       "source": "symbol:scripts.release.checklist.check_legal",
       "target": "symbol:scripts.release.checklist.Result",
@@ -116144,7 +116474,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 119
+        "line": 122
       },
       "source": "symbol:scripts.release.checklist.check_migrations",
       "target": "symbol:scripts.release.checklist.Result",
@@ -116155,7 +116485,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 123
+        "line": 126
       },
       "source": "symbol:scripts.release.checklist.check_migrations",
       "target": "symbol:scripts.release.checklist.Result",
@@ -116166,7 +116496,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 125
+        "line": 128
       },
       "source": "symbol:scripts.release.checklist.check_migrations",
       "target": "symbol:scripts.release.checklist.Result",
@@ -116177,7 +116507,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 127
+        "line": 130
       },
       "source": "symbol:scripts.release.checklist.check_migrations",
       "target": "symbol:scripts.release.checklist.Result",
@@ -116188,7 +116518,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 220
+        "line": 239
       },
       "source": "symbol:scripts.release.checklist.check_risks",
       "target": "symbol:scripts.release.checklist.Result",
@@ -116199,7 +116529,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 223
+        "line": 242
       },
       "source": "symbol:scripts.release.checklist.check_risks",
       "target": "symbol:scripts.release.checklist.Result",
@@ -116210,7 +116540,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 218
+        "line": 237
       },
       "source": "symbol:scripts.release.checklist.check_risks",
       "target": "symbol:scripts.release.checklist.parse_risks",
@@ -116221,7 +116551,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 98
+        "line": 101
       },
       "source": "symbol:scripts.release.checklist.check_specs",
       "target": "symbol:scripts.release.checklist.Result",
@@ -116232,7 +116562,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 314
+        "line": 345
       },
       "source": "symbol:scripts.release.checklist.main",
       "target": "symbol:scripts.release.checklist.Deps",
@@ -116243,7 +116573,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 316
+        "line": 348
       },
       "source": "symbol:scripts.release.checklist.main",
       "target": "symbol:scripts.release.checklist.run_checklist",
@@ -116254,7 +116584,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 317
+        "line": 349
       },
       "source": "symbol:scripts.release.checklist.main",
       "target": "symbol:scripts.release.checklist.write_report",
@@ -116265,7 +116595,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 296
+        "line": 325
+      },
+      "source": "symbol:scripts.release.checklist.real_finops_cron_active",
+      "target": "symbol:scripts.release.checklist._dotenv",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 315
       },
       "source": "symbol:scripts.release.checklist.real_kill_switch_load",
       "target": "symbol:scripts.release.checklist._dotenv",
@@ -116276,7 +116617,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 273
+        "line": 292
       },
       "source": "symbol:scripts.release.checklist.real_remote_migrations",
       "target": "symbol:scripts.release.checklist._dotenv",
@@ -116287,7 +116628,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 284
+        "line": 303
       },
       "source": "symbol:scripts.release.checklist.real_vercel_env_names",
       "target": "symbol:scripts.release.checklist._dotenv",
@@ -116298,7 +116639,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 231
+        "line": 250
       },
       "source": "symbol:scripts.release.checklist.run_checklist",
       "target": "symbol:scripts.release.checklist.check_ci",
@@ -116309,7 +116650,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 233
+        "line": 252
       },
       "source": "symbol:scripts.release.checklist.run_checklist",
       "target": "symbol:scripts.release.checklist.check_env_names",
@@ -116320,7 +116661,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 232
+        "line": 251
       },
       "source": "symbol:scripts.release.checklist.run_checklist",
       "target": "symbol:scripts.release.checklist.check_eval_locks",
@@ -116331,7 +116672,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 232
+        "line": 251
       },
       "source": "symbol:scripts.release.checklist.run_checklist",
       "target": "symbol:scripts.release.checklist.check_finops_config",
@@ -116342,7 +116683,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 230
+        "line": 249
       },
       "source": "symbol:scripts.release.checklist.run_checklist",
       "target": "symbol:scripts.release.checklist.check_git",
@@ -116353,7 +116694,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 233
+        "line": 252
       },
       "source": "symbol:scripts.release.checklist.run_checklist",
       "target": "symbol:scripts.release.checklist.check_health",
@@ -116364,7 +116705,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 232
+        "line": 251
       },
       "source": "symbol:scripts.release.checklist.run_checklist",
       "target": "symbol:scripts.release.checklist.check_kill_switch",
@@ -116375,7 +116716,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 234
+        "line": 253
       },
       "source": "symbol:scripts.release.checklist.run_checklist",
       "target": "symbol:scripts.release.checklist.check_legal",
@@ -116386,7 +116727,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 231
+        "line": 250
       },
       "source": "symbol:scripts.release.checklist.run_checklist",
       "target": "symbol:scripts.release.checklist.check_migrations",
@@ -116397,7 +116738,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 234
+        "line": 253
       },
       "source": "symbol:scripts.release.checklist.run_checklist",
       "target": "symbol:scripts.release.checklist.check_risks",
@@ -116408,7 +116749,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 231
+        "line": 250
       },
       "source": "symbol:scripts.release.checklist.run_checklist",
       "target": "symbol:scripts.release.checklist.check_specs",
@@ -116419,7 +116760,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/release/checklist.py",
-        "line": 259
+        "line": 278
       },
       "source": "symbol:scripts.release.checklist.write_report",
       "target": "symbol:scripts.release.checklist.to_markdown",
@@ -128607,7 +128948,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/daily_spend_cap.py",
-        "line": 55
+        "line": 108
       },
       "source": "symbol:services.daily_spend_cap.CapResult",
       "target": "symbol:services.daily_spend_cap.CapResult.summary",
@@ -128618,7 +128959,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/daily_spend_cap.py",
-        "line": 65
+        "line": 81
+      },
+      "source": "symbol:services.daily_spend_cap._manually_reenabled",
+      "target": "symbol:services.daily_spend_cap._ts",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 63
+      },
+      "source": "symbol:services.daily_spend_cap.cap_switches",
+      "target": "symbol:services.daily_spend_cap.CapConfigError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 90
+      },
+      "source": "symbol:services.daily_spend_cap.day_start",
+      "target": "symbol:services.daily_spend_cap.tz_offset_hours",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 119
       },
       "source": "symbol:services.daily_spend_cap.evaluate_daily_cap",
       "target": "symbol:services.daily_spend_cap.CapResult",
@@ -128629,7 +129003,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/daily_spend_cap.py",
-        "line": 64
+        "line": 138
+      },
+      "source": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "target": "symbol:services.daily_spend_cap._manually_reenabled",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 118
       },
       "source": "symbol:services.daily_spend_cap.evaluate_daily_cap",
       "target": "symbol:services.daily_spend_cap.cap_from_env",
@@ -128640,7 +129025,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/daily_spend_cap.py",
-        "line": 69
+        "line": 131
+      },
+      "source": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "target": "symbol:services.daily_spend_cap.cap_switches",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 123
       },
       "source": "symbol:services.daily_spend_cap.evaluate_daily_cap",
       "target": "symbol:services.daily_spend_cap.day_start",
@@ -128651,10 +129047,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/daily_spend_cap.py",
-        "line": 85
+        "line": 143
       },
       "source": "symbol:services.daily_spend_cap.evaluate_daily_cap",
       "target": "symbol:services.finops_alerts.Alert",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 50
+      },
+      "source": "symbol:services.daily_spend_cap.tz_offset_hours",
+      "target": "symbol:services.daily_spend_cap.CapConfigError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 52
+      },
+      "source": "symbol:services.daily_spend_cap.tz_offset_hours",
+      "target": "symbol:services.daily_spend_cap.CapConfigError",
       "type": "calls"
     },
     {
@@ -131478,7 +131896,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 62
+        "line": 64
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.daily_spend_cap.evaluate_daily_cap",
@@ -131489,7 +131907,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 38
+        "line": 39
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops.build_report",
@@ -131500,7 +131918,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 37
+        "line": 38
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops.load_fixed_costs",
@@ -131511,7 +131929,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 35
+        "line": 36
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops.newest_pricing",
@@ -131522,7 +131940,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 79
+        "line": 89
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops.report_to_dict",
@@ -131533,10 +131951,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 52
+        "line": 73
       },
       "source": "symbol:services.finops_job.run_finops",
-      "target": "symbol:services.finops_alerts.AlertInputs",
+      "target": "symbol:services.finops_alerts.Alert",
       "type": "calls"
     },
     {
@@ -131544,21 +131962,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 57
+        "line": 78
       },
       "source": "symbol:services.finops_job.run_finops",
-      "target": "symbol:services.finops_alerts.Thresholds.from_env",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/finops_job.py",
-        "line": 52
-      },
-      "source": "symbol:services.finops_job.run_finops",
-      "target": "symbol:services.finops_alerts.evaluate_alerts",
+      "target": "symbol:services.finops_alerts.Alert",
       "type": "calls"
     },
     {
@@ -131569,6 +131976,39 @@
         "line": 53
       },
       "source": "symbol:services.finops_job.run_finops",
+      "target": "symbol:services.finops_alerts.AlertInputs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/finops_job.py",
+        "line": 58
+      },
+      "source": "symbol:services.finops_job.run_finops",
+      "target": "symbol:services.finops_alerts.Thresholds.from_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/finops_job.py",
+        "line": 53
+      },
+      "source": "symbol:services.finops_job.run_finops",
+      "target": "symbol:services.finops_alerts.evaluate_alerts",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/finops_job.py",
+        "line": 54
+      },
+      "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops_alerts.installed_freshness",
       "type": "calls"
     },
@@ -131577,7 +132017,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 70
+        "line": 80
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops_alerts.publish_alert_metrics",
@@ -131588,7 +132028,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 73
+        "line": 83
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops_alerts.publish_evaluation_age",
@@ -131599,7 +132039,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 71
+        "line": 81
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops_alerts.publish_margin_metrics",
@@ -131610,7 +132050,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 72
+        "line": 82
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops_alerts.publish_switch_metrics",
@@ -131621,7 +132061,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 51
+        "line": 52
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.kill_switches.get_switches",
@@ -131632,7 +132072,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 61
+        "line": 63
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.kill_switches.get_switches",
@@ -131643,7 +132083,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 66
+        "line": 68
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.kill_switches.get_switches",
@@ -173225,6 +173665,17 @@
         "file": "tests/test_frontend_visual_contracts.py",
         "line": 20
       },
+      "source": "symbol:tests.test_frontend_visual_contracts.test_home_header_buttons_do_not_overlap",
+      "target": "symbol:scripts.browser_local.find_chrome",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_frontend_visual_contracts.py",
+        "line": 41
+      },
       "source": "symbol:tests.test_frontend_visual_contracts.test_portraits_are_uncropped_and_stay_inside_cards",
       "target": "symbol:scripts.browser_local.find_chrome",
       "type": "calls"
@@ -203748,6 +204199,28 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
+        "line": 154
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_closed_status_is_exact_token",
+      "target": "symbol:scripts.release.checklist.check_risks",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 156
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_closed_status_is_exact_token",
+      "target": "symbol:scripts.release.checklist.check_risks",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
         "line": 89
       },
       "source": "symbol:tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock",
@@ -203829,6 +204302,83 @@
       },
       "source": "symbol:tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock",
       "target": "symbol:scripts.release.checklist.check_env_names",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 170
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 171
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 172
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 169
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "target": "symbol:scripts.release.checklist.check_finops_config",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 170
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "target": "symbol:scripts.release.checklist.check_finops_config",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 171
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "target": "symbol:scripts.release.checklist.check_finops_config",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 172
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "target": "symbol:scripts.release.checklist.check_finops_config",
       "type": "calls"
     },
     {
@@ -204188,6 +204738,105 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
+        "line": 181
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 184
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 186
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 181
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
+      "target": "symbol:scripts.release.checklist.check_legal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 184
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
+      "target": "symbol:scripts.release.checklist.check_legal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 186
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
+      "target": "symbol:scripts.release.checklist.check_legal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 181
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
+      "target": "symbol:tests.test_spec197_checklist.http",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 184
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
+      "target": "symbol:tests.test_spec197_checklist.http",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 186
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
+      "target": "symbol:tests.test_spec197_checklist.http",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
         "line": 65
       },
       "source": "symbol:tests.test_spec197_checklist.test_migrations_drift",
@@ -204290,6 +204939,17 @@
         "line": 133
       },
       "source": "symbol:tests.test_spec197_checklist.test_real_register_parses",
+      "target": "symbol:scripts.release.checklist.parse_risks",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 160
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_real_register_r12_not_closed",
       "target": "symbol:scripts.release.checklist.parse_risks",
       "type": "calls"
     },
@@ -204551,6 +205211,149 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_daily_cap.py",
+        "line": 140
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_manual_reenable_same_day_not_retripped",
+      "target": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 142
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_manual_reenable_same_day_not_retripped",
+      "target": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 147
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_manual_reenable_same_day_not_retripped",
+      "target": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 139
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_manual_reenable_same_day_not_retripped",
+      "target": "symbol:services.kill_switches.MemorySwitchStore",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 140
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_manual_reenable_same_day_not_retripped",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 142
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_manual_reenable_same_day_not_retripped",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 147
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_manual_reenable_same_day_not_retripped",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 131
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_model_switches_invalid_key_errors",
+      "target": "symbol:services.finops_job.run_finops",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 131
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_model_switches_invalid_key_errors",
+      "target": "symbol:services.kill_switches.MemorySwitchStore",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 131
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_model_switches_invalid_key_errors",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 123
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_model_switches_opt_in",
+      "target": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 122
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_model_switches_opt_in",
+      "target": "symbol:services.kill_switches.MemorySwitchStore",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 123
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_model_switches_opt_in",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
         "line": 34
       },
       "source": "symbol:tests.test_spec197_daily_cap.test_off_without_env_never_touches_switches",
@@ -204727,6 +205530,39 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_daily_cap.py",
+        "line": 154
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_tz_offset_validation",
+      "target": "symbol:services.finops_job.run_finops",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 154
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_tz_offset_validation",
+      "target": "symbol:services.kill_switches.MemorySwitchStore",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 154
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_tz_offset_validation",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
         "line": 43
       },
       "source": "symbol:tests.test_spec197_daily_cap.test_under_cap_does_nothing",
@@ -204754,6 +205590,17 @@
       "source": "symbol:tests.test_spec197_daily_cap.test_under_cap_does_nothing",
       "target": "symbol:tests.test_spec197_daily_cap.reader",
       "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec198_rename_package.py",
+        "line": 16
+      },
+      "source": "symbol:tests.test_spec198_rename_package.repo",
+      "target": "symbol:tests.test_spec198_rename_package.repo.w",
+      "type": "defines"
     },
     {
       "confidence": "static_best_effort",
@@ -218214,6 +219061,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_spec198_rename_package.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec198_rename_package.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_spec_index.py",
       "kind": "file",
       "line": 1,
@@ -222265,6 +223119,13 @@
       "line": 1,
       "path": "tests/test_spec197_legal_pages.py",
       "qualified_name": "tests.test_spec197_legal_pages"
+    },
+    {
+      "id": "module:tests.test_spec198_rename_package",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec198_rename_package.py",
+      "qualified_name": "tests.test_spec198_rename_package"
     },
     {
       "id": "module:tests.test_spec_index",
@@ -233168,16 +234029,23 @@
     {
       "id": "symbol:scripts.android.rename_package.main",
       "kind": "function",
-      "line": 48,
+      "line": 57,
       "path": "scripts/android/rename_package.py",
       "qualified_name": "scripts.android.rename_package.main"
     },
     {
       "id": "symbol:scripts.android.rename_package.plan",
       "kind": "function",
-      "line": 34,
+      "line": 50,
       "path": "scripts/android/rename_package.py",
       "qualified_name": "scripts.android.rename_package.plan"
+    },
+    {
+      "id": "symbol:scripts.android.rename_package.text_files",
+      "kind": "function",
+      "line": 39,
+      "path": "scripts/android/rename_package.py",
+      "qualified_name": "scripts.android.rename_package.text_files"
     },
     {
       "id": "symbol:scripts.audit_local_gate.main",
@@ -234484,175 +235352,182 @@
     {
       "id": "symbol:scripts.release.checklist.Deps",
       "kind": "class",
-      "line": 71,
+      "line": 73,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.Deps"
     },
     {
       "id": "symbol:scripts.release.checklist.Result",
       "kind": "class",
-      "line": 45,
+      "line": 47,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.Result"
     },
     {
       "id": "symbol:scripts.release.checklist.Result.as_dict",
       "kind": "method",
-      "line": 51,
+      "line": 53,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.Result.as_dict"
     },
     {
       "id": "symbol:scripts.release.checklist._dotenv",
       "kind": "function",
-      "line": 264,
+      "line": 283,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist._dotenv"
     },
     {
       "id": "symbol:scripts.release.checklist._http_get",
       "kind": "function",
-      "line": 60,
+      "line": 62,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist._http_get"
     },
     {
       "id": "symbol:scripts.release.checklist._run",
       "kind": "function",
-      "line": 55,
+      "line": 57,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist._run"
     },
     {
       "id": "symbol:scripts.release.checklist.check_ci",
       "kind": "function",
-      "line": 102,
+      "line": 105,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.check_ci"
     },
     {
       "id": "symbol:scripts.release.checklist.check_env_names",
       "kind": "function",
-      "line": 168,
+      "line": 182,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.check_env_names"
     },
     {
       "id": "symbol:scripts.release.checklist.check_eval_locks",
       "kind": "function",
-      "line": 131,
+      "line": 134,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.check_eval_locks"
     },
     {
       "id": "symbol:scripts.release.checklist.check_finops_config",
       "kind": "function",
-      "line": 136,
+      "line": 139,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.check_finops_config"
     },
     {
       "id": "symbol:scripts.release.checklist.check_git",
       "kind": "function",
-      "line": 81,
+      "line": 84,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.check_git"
     },
     {
       "id": "symbol:scripts.release.checklist.check_health",
       "kind": "function",
-      "line": 156,
+      "line": 170,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.check_health"
     },
     {
       "id": "symbol:scripts.release.checklist.check_kill_switch",
       "kind": "function",
-      "line": 143,
+      "line": 157,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.check_kill_switch"
     },
     {
       "id": "symbol:scripts.release.checklist.check_legal",
       "kind": "function",
-      "line": 183,
+      "line": 197,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.check_legal"
     },
     {
       "id": "symbol:scripts.release.checklist.check_migrations",
       "kind": "function",
-      "line": 116,
+      "line": 119,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.check_migrations"
     },
     {
       "id": "symbol:scripts.release.checklist.check_risks",
       "kind": "function",
-      "line": 217,
+      "line": 236,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.check_risks"
     },
     {
       "id": "symbol:scripts.release.checklist.check_specs",
       "kind": "function",
-      "line": 92,
+      "line": 95,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.check_specs"
     },
     {
       "id": "symbol:scripts.release.checklist.main",
       "kind": "function",
-      "line": 305,
+      "line": 334,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.main"
     },
     {
       "id": "symbol:scripts.release.checklist.parse_risks",
       "kind": "function",
-      "line": 201,
+      "line": 220,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.parse_risks"
     },
     {
+      "id": "symbol:scripts.release.checklist.real_finops_cron_active",
+      "kind": "function",
+      "line": 324,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.real_finops_cron_active"
+    },
+    {
       "id": "symbol:scripts.release.checklist.real_kill_switch_load",
       "kind": "function",
-      "line": 295,
+      "line": 314,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.real_kill_switch_load"
     },
     {
       "id": "symbol:scripts.release.checklist.real_remote_migrations",
       "kind": "function",
-      "line": 272,
+      "line": 291,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.real_remote_migrations"
     },
     {
       "id": "symbol:scripts.release.checklist.real_vercel_env_names",
       "kind": "function",
-      "line": 282,
+      "line": 301,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.real_vercel_env_names"
     },
     {
       "id": "symbol:scripts.release.checklist.run_checklist",
       "kind": "function",
-      "line": 228,
+      "line": 247,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.run_checklist"
     },
     {
       "id": "symbol:scripts.release.checklist.to_markdown",
       "kind": "function",
-      "line": 241,
+      "line": 260,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.to_markdown"
     },
     {
       "id": "symbol:scripts.release.checklist.write_report",
       "kind": "function",
-      "line": 254,
+      "line": 273,
       "path": "scripts/release/checklist.py",
       "qualified_name": "scripts.release.checklist.write_report"
     },
@@ -238577,39 +239452,74 @@
       "qualified_name": "services.cron_internal.cron_reconciliation.task"
     },
     {
+      "id": "symbol:services.daily_spend_cap.CapConfigError",
+      "kind": "class",
+      "line": 41,
+      "path": "services/daily_spend_cap.py",
+      "qualified_name": "services.daily_spend_cap.CapConfigError"
+    },
+    {
       "id": "symbol:services.daily_spend_cap.CapResult",
       "kind": "class",
-      "line": 45,
+      "line": 97,
       "path": "services/daily_spend_cap.py",
       "qualified_name": "services.daily_spend_cap.CapResult"
     },
     {
       "id": "symbol:services.daily_spend_cap.CapResult.summary",
       "kind": "method",
-      "line": 55,
+      "line": 108,
       "path": "services/daily_spend_cap.py",
       "qualified_name": "services.daily_spend_cap.CapResult.summary"
     },
     {
+      "id": "symbol:services.daily_spend_cap._manually_reenabled",
+      "kind": "function",
+      "line": 75,
+      "path": "services/daily_spend_cap.py",
+      "qualified_name": "services.daily_spend_cap._manually_reenabled"
+    },
+    {
+      "id": "symbol:services.daily_spend_cap._ts",
+      "kind": "function",
+      "line": 67,
+      "path": "services/daily_spend_cap.py",
+      "qualified_name": "services.daily_spend_cap._ts"
+    },
+    {
       "id": "symbol:services.daily_spend_cap.cap_from_env",
       "kind": "function",
-      "line": 24,
+      "line": 30,
       "path": "services/daily_spend_cap.py",
       "qualified_name": "services.daily_spend_cap.cap_from_env"
     },
     {
+      "id": "symbol:services.daily_spend_cap.cap_switches",
+      "kind": "function",
+      "line": 59,
+      "path": "services/daily_spend_cap.py",
+      "qualified_name": "services.daily_spend_cap.cap_switches"
+    },
+    {
       "id": "symbol:services.daily_spend_cap.day_start",
       "kind": "function",
-      "line": 35,
+      "line": 87,
       "path": "services/daily_spend_cap.py",
       "qualified_name": "services.daily_spend_cap.day_start"
     },
     {
       "id": "symbol:services.daily_spend_cap.evaluate_daily_cap",
       "kind": "function",
-      "line": 62,
+      "line": 116,
       "path": "services/daily_spend_cap.py",
       "qualified_name": "services.daily_spend_cap.evaluate_daily_cap"
+    },
+    {
+      "id": "symbol:services.daily_spend_cap.tz_offset_hours",
+      "kind": "function",
+      "line": 45,
+      "path": "services/daily_spend_cap.py",
+      "qualified_name": "services.daily_spend_cap.tz_offset_hours"
     },
     {
       "id": "symbol:services.death_flow.LastStandResult",
@@ -239811,7 +240721,7 @@
     {
       "id": "symbol:services.finops_job.run_finops",
       "kind": "function",
-      "line": 18,
+      "line": 19,
       "path": "services/finops_job.py",
       "qualified_name": "services.finops_job.run_finops"
     },
@@ -254880,9 +255790,16 @@
       "qualified_name": "tests.test_frontend_auth_bootstrap.test_frontend_nao_chama_saves_protegidos_antes_de_confirmar_auth"
     },
     {
-      "id": "symbol:tests.test_frontend_visual_contracts.test_portraits_are_uncropped_and_stay_inside_cards",
+      "id": "symbol:tests.test_frontend_visual_contracts.test_home_header_buttons_do_not_overlap",
       "kind": "test",
       "line": 18,
+      "path": "tests/test_frontend_visual_contracts.py",
+      "qualified_name": "tests.test_frontend_visual_contracts.test_home_header_buttons_do_not_overlap"
+    },
+    {
+      "id": "symbol:tests.test_frontend_visual_contracts.test_portraits_are_uncropped_and_stay_inside_cards",
+      "kind": "test",
+      "line": 39,
       "path": "tests/test_frontend_visual_contracts.py",
       "qualified_name": "tests.test_frontend_visual_contracts.test_portraits_are_uncropped_and_stay_inside_cards"
     },
@@ -264568,11 +265485,25 @@
       "qualified_name": "tests.test_spec197_checklist.test_ci_states"
     },
     {
+      "id": "symbol:tests.test_spec197_checklist.test_closed_status_is_exact_token",
+      "kind": "test",
+      "line": 151,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_closed_status_is_exact_token"
+    },
+    {
       "id": "symbol:tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock",
       "kind": "test",
       "line": 87,
       "path": "tests/test_spec197_checklist.py",
       "qualified_name": "tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "kind": "test",
+      "line": 168,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_finops_cron_must_be_active"
     },
     {
       "id": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
@@ -264610,6 +265541,13 @@
       "qualified_name": "tests.test_spec197_checklist.test_legal_pages"
     },
     {
+      "id": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
+      "kind": "test",
+      "line": 175,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders"
+    },
+    {
       "id": "symbol:tests.test_spec197_checklist.test_migrations_drift",
       "kind": "test",
       "line": 61,
@@ -264624,11 +265562,25 @@
       "qualified_name": "tests.test_spec197_checklist.test_migrations_drift.boom"
     },
     {
+      "id": "symbol:tests.test_spec197_checklist.test_production_requires_daily_cap_env",
+      "kind": "test",
+      "line": 164,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_production_requires_daily_cap_env"
+    },
+    {
       "id": "symbol:tests.test_spec197_checklist.test_real_register_parses",
       "kind": "test",
       "line": 132,
       "path": "tests/test_spec197_checklist.py",
       "qualified_name": "tests.test_spec197_checklist.test_real_register_parses"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_real_register_r12_not_closed",
+      "kind": "test",
+      "line": 159,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_real_register_r12_not_closed"
     },
     {
       "id": "symbol:tests.test_spec197_checklist.test_risks_gate",
@@ -264687,6 +265639,27 @@
       "qualified_name": "tests.test_spec197_daily_cap.test_invalid_cap_value_disables"
     },
     {
+      "id": "symbol:tests.test_spec197_daily_cap.test_manual_reenable_same_day_not_retripped",
+      "kind": "test",
+      "line": 135,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.test_manual_reenable_same_day_not_retripped"
+    },
+    {
+      "id": "symbol:tests.test_spec197_daily_cap.test_model_switches_invalid_key_errors",
+      "kind": "test",
+      "line": 128,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.test_model_switches_invalid_key_errors"
+    },
+    {
+      "id": "symbol:tests.test_spec197_daily_cap.test_model_switches_opt_in",
+      "kind": "test",
+      "line": 119,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.test_model_switches_opt_in"
+    },
+    {
       "id": "symbol:tests.test_spec197_daily_cap.test_off_without_env_never_touches_switches",
       "kind": "test",
       "line": 32,
@@ -264729,6 +265702,13 @@
       "qualified_name": "tests.test_spec197_daily_cap.test_store_failure_is_reported_not_raised.Boom.set"
     },
     {
+      "id": "symbol:tests.test_spec197_daily_cap.test_tz_offset_validation",
+      "kind": "test",
+      "line": 151,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.test_tz_offset_validation"
+    },
+    {
       "id": "symbol:tests.test_spec197_daily_cap.test_under_cap_does_nothing",
       "kind": "test",
       "line": 40,
@@ -264741,6 +265721,48 @@
       "line": 11,
       "path": "tests/test_spec197_legal_pages.py",
       "qualified_name": "tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_draft_banner"
+    },
+    {
+      "id": "symbol:tests.test_spec198_rename_package.repo",
+      "kind": "test",
+      "line": 15,
+      "path": "tests/test_spec198_rename_package.py",
+      "qualified_name": "tests.test_spec198_rename_package.repo"
+    },
+    {
+      "id": "symbol:tests.test_spec198_rename_package.repo.w",
+      "kind": "test",
+      "line": 16,
+      "path": "tests/test_spec198_rename_package.py",
+      "qualified_name": "tests.test_spec198_rename_package.repo.w"
+    },
+    {
+      "id": "symbol:tests.test_spec198_rename_package.test_apply_renames_everything",
+      "kind": "test",
+      "line": 34,
+      "path": "tests/test_spec198_rename_package.py",
+      "qualified_name": "tests.test_spec198_rename_package.test_apply_renames_everything"
+    },
+    {
+      "id": "symbol:tests.test_spec198_rename_package.test_dry_run_changes_nothing",
+      "kind": "test",
+      "line": 44,
+      "path": "tests/test_spec198_rename_package.py",
+      "qualified_name": "tests.test_spec198_rename_package.test_dry_run_changes_nothing"
+    },
+    {
+      "id": "symbol:tests.test_spec198_rename_package.test_rejects_bad_app_name",
+      "kind": "test",
+      "line": 50,
+      "path": "tests/test_spec198_rename_package.py",
+      "qualified_name": "tests.test_spec198_rename_package.test_rejects_bad_app_name"
+    },
+    {
+      "id": "symbol:tests.test_spec198_rename_package.test_rejects_invalid_id",
+      "kind": "test",
+      "line": 55,
+      "path": "tests/test_spec198_rename_package.py",
+      "qualified_name": "tests.test_spec198_rename_package.test_rejects_invalid_id"
     },
     {
       "id": "symbol:tests.test_spec_index._apply",
@@ -267509,5 +268531,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:94ff9292cdfd997925089099143ba94249d7a9d41171f1c113fa793c69e3a45f"
+  "source_tree_hash": "sha256:997fa686081407aa5f9cb44ee19221c59398fd33855a1f1d428316b9fdf7d838"
 }

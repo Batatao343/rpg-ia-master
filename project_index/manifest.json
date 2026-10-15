@@ -1,11 +1,11 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "29bff8d3310f1c0ed5ba3a2a57280f55e9b2da97",
+  "commit_sha": "d0efb5f9afefef9270d1ad9c383498a4294ca65a",
   "edge_counts": {
-    "calls": 10731,
-    "contains": 519,
-    "defines": 6427,
-    "imports": 1085,
+    "calls": 10783,
+    "contains": 520,
+    "defines": 6450,
+    "imports": 1086,
     "likely_test_for": 659,
     "route_to": 58
   },
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:f9cc90eaf1c2806338aebcd3cb881a38bcf3fffd4782ec362c4f68ac1c6a768d",
+  "graph_hash": "sha256:5ed61aac071dd0f36ac3ecc59943f37b1015fe6f0ed19d11a30f0c85e109f9a7",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -542,6 +542,7 @@
     "tests/test_spec197_checklist.py",
     "tests/test_spec197_daily_cap.py",
     "tests/test_spec197_legal_pages.py",
+    "tests/test_spec198_rename_package.py",
     "tests/test_spec_index.py",
     "tests/test_spec_migration_safety.py",
     "tests/test_speech_api.py",
@@ -646,14 +647,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 586,
+    "class": 587,
     "endpoint": 58,
-    "file": 592,
-    "function": 2034,
+    "file": 593,
+    "function": 2040,
     "method": 593,
-    "module": 519,
-    "test": 3214
+    "module": 520,
+    "test": 3230
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:94ff9292cdfd997925089099143ba94249d7a9d41171f1c113fa793c69e3a45f"
+  "source_tree_hash": "sha256:997fa686081407aa5f9cb44ee19221c59398fd33855a1f1d428316b9fdf7d838"
 }
