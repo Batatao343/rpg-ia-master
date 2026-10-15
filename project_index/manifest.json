@@ -1,10 +1,10 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "ef4e2c813303b8a833a90ef956c94e4b87473a84",
+  "commit_sha": "7f98d0863636c13a82b9ac7424f33a131ccfdc2b",
   "edge_counts": {
-    "calls": 9662,
+    "calls": 9673,
     "contains": 487,
-    "defines": 5831,
+    "defines": 5836,
     "imports": 1003,
     "likely_test_for": 605,
     "route_to": 53
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:2e7284955c9132edb6a0751d4dd8fa9b41f5a9507f1c40809ec7a0ce7ebe9166",
+  "graph_hash": "sha256:1eea79647985aa2d96597db4cbde43e9ef88b60f00b60f063e3db373c3d1da53",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -538,6 +538,7 @@
     "tests/test_worker_lease_lifecycle.py",
     "tests/test_world_sim.py",
     "vercel_app.py",
+    "web/capacitor.config.ts",
     "web/e2e/account-lifecycle.spec.ts",
     "web/e2e/account.spec.ts",
     "web/e2e/checkout.spec.ts",
@@ -582,7 +583,14 @@
     "web/src/http.ts",
     "web/src/lib.ts",
     "web/src/main.tsx",
+    "web/src/native/backPolicy.ts",
+    "web/src/native/lifecycle.ts",
+    "web/src/native/platform.ts",
     "web/src/pendingOperation.ts",
+    "web/src/purchases/androidPlay.ts",
+    "web/src/purchases/index.ts",
+    "web/src/purchases/types.ts",
+    "web/src/purchases/webStripe.ts",
     "web/src/types.ts",
     "web/src/voice/controller.ts",
     "web/src/voice/recorder.ts",
@@ -608,12 +616,12 @@
     "artifact": 9,
     "class": 517,
     "endpoint": 53,
-    "file": 552,
-    "function": 1893,
+    "file": 560,
+    "function": 1894,
     "method": 454,
     "module": 487,
-    "test": 2967
+    "test": 2971
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:5d1756cc0486d1588265692586dc1104be44cdb5c61c6d69d4ee86078512873f"
+  "source_tree_hash": "sha256:eedd044e55955fc17df7dc2b86e5437177a4e8dadb3e28a9503035bf21dd5629"
 }

@@ -1,12 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
-import ts from 'typescript';
+import { build } from 'esbuild';
+import { fileURLToPath } from 'node:url';
 
 async function load(name) {
-  const source = await readFile(new URL(`../src/${name}.ts`, import.meta.url), 'utf8');
-  const { outputText } = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 }});
-  return import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}#${Math.random()}`);
+  const { outputFiles } = await build({ entryPoints: [fileURLToPath(new URL(`../src/${name}.ts`, import.meta.url))],
+    bundle: true, write: false, format: 'esm', platform: 'neutral', logLevel: 'silent' });
+  return import(`data:text/javascript;base64,${Buffer.from(outputFiles[0].text).toString('base64')}#${Math.random()}`);
 }
 
 test('POST stream sends CSRF and cookies', async () => {
@@ -87,4 +87,18 @@ test('voice failure is typed and announces an actionable fallback', async () => 
   const malformed = uploadAudio(new Blob(['a']), 'two', new AbortController().signal, () => {});
   xhr().responseText = 'null'; xhr().status = 200; xhr().onload();
   await assert.rejects(malformed, /Resposta.*inválida/);
+});
+
+test('Android client marker is sent only inside the Capacitor native shell', async () => {
+  const { http } = await load('http');
+  globalThis.document = { cookie: '' };
+  const seen = [];
+  globalThis.fetch = async (url, options) => { seen.push(options.headers.get('X-RPG-Client')); return new Response('{}'); };
+  delete globalThis.Capacitor;
+  await http('/game/state');
+  globalThis.Capacitor = { isNativePlatform: () => true, getPlatform: () => 'android' };
+  await http('/game/state');
+  await http('/game/action', { method: 'POST', body: '{}' });
+  delete globalThis.Capacitor;
+  assert.deepEqual(seen, [null, 'android', 'android']);
 });

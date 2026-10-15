@@ -250,3 +250,48 @@ def test_captcha_checks_hostname_and_flow_and_does_not_send_provider_key(monkeyp
         result.update({"success":True,"hostname":"localhost","action":"reset"})
         result.update(changes)
         with pytest.raises(Unauthorized): validate_captcha("token",remote_ip="127.0.0.1",action="reset")
+
+
+def _set_cookie_headers(resp, name):
+    return [h for h in resp.headers.get_list("set-cookie") if h.startswith(name + "=")]
+
+
+def test_android_client_gets_max_age_on_refresh_and_csrf_cookies_only(account_client, monkeypatch):
+    """SPEC-193: header X-RPG-Client nao e fronteira de seguranca; so ajusta Max-Age."""
+    client, *_ = account_client
+    body = {"email": "a@test.test", "password": "password-123"}
+    web = client.post("/auth/login", json=body)
+    assert "max-age" not in _set_cookie_headers(web, "rpg_refresh")[0].lower()
+    droid = client.post("/auth/login", json=body, headers={"X-RPG-Client": "android"})
+    assert "Max-Age=1209600" in _set_cookie_headers(droid, "rpg_refresh")[0]
+    assert "max-age" not in _set_cookie_headers(droid, "rpg_access")[0].lower()
+    assert "Max-Age=1209600" in _set_cookie_headers(droid, "rpg_csrf")[0]
+    assert "max-age" not in _set_cookie_headers(web, "rpg_csrf")[0].lower()
+    monkeypatch.setenv("RPG_ANDROID_REFRESH_MAX_AGE_SECONDS", "10")  # clamp 3600..2592000
+    low = client.post("/auth/login", json=body, headers={"X-RPG-Client": "android"})
+    assert "Max-Age=3600" in _set_cookie_headers(low, "rpg_refresh")[0]
+    monkeypatch.setenv("RPG_ANDROID_REFRESH_MAX_AGE_SECONDS", "99999999")
+    high = client.post("/auth/login", json=body, headers={"X-RPG-Client": "android"})
+    assert "Max-Age=2592000" in _set_cookie_headers(high, "rpg_refresh")[0]
+
+
+def test_logout_clears_android_refresh_cookie(account_client):
+    client, identity, *_ = account_client
+    identity.logout = lambda access: identity.revoked.add(access)
+    client.post("/auth/login", json={"email": "a@test.test", "password": "password-123"},
+                headers={"X-RPG-Client": "android"})
+    out = client.post("/auth/logout", headers={"X-CSRF-Token": client.cookies["rpg_csrf"],
+                                               "X-RPG-Client": "android"})
+    assert out.status_code == 204
+    assert "Max-Age=0" in _set_cookie_headers(out, "rpg_refresh")[0]
+    assert "Max-Age=0" in _set_cookie_headers(out, "rpg_csrf")[0]
+    assert "Max-Age=0" in _set_cookie_headers(out, "rpg_access")[0]
+
+
+def test_permissions_policy_allows_microphone_for_self(account_client):
+    client, *_ = account_client
+    pp = client.get("/health").headers["permissions-policy"]
+    assert "microphone=(self)" in pp and "camera=()" in pp
+    # getUserMedia depende de Permissions-Policy; CSP nao tem diretiva de microfone.
+    csp = client.get("/health").headers.get("content-security-policy", "")
+    assert "microphone" not in csp

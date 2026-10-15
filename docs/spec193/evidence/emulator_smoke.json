@@ -1,0 +1,88 @@
+{
+  "checks": {
+    "platform_android": {
+      "ok": true
+    },
+    "staging_origin_loaded_remotely": {
+      "ok": true,
+      "origin": "https://rpg-ia-master-staging.vercel.app"
+    },
+    "login_authenticated": {
+      "ok": true,
+      "ui_alert": "",
+      "net": "[[\"/auth/login\",200],[\"/auth/config\",200],[\"/game/saves\",200],[\"/account/balance\",200],[\"/data/onboarding\",200],[\"/data/options\",200],[\"/auth/config\",200]]",
+      "token_len": null
+    },
+    "no_session_token_in_js_cookie": {
+      "ok": true,
+      "js_visible_cookie_names": [
+        "rpg_csrf"
+      ]
+    },
+    "no_bearer_in_web_storage": {
+      "ok": true,
+      "keys": "[[],[]]"
+    },
+    "game_created": {
+      "ok": true,
+      "status": 200
+    },
+    "action_ok": {
+      "ok": true,
+      "status": 200
+    },
+    "session_survives_background_resume": {
+      "ok": true
+    },
+    "no_duplicate_turn_on_replay_after_resume": {
+      "ok": true,
+      "turn_before": 2,
+      "turn_after": 2,
+      "replay_status": 200,
+      "op_status": "completed"
+    },
+    "local_storage_survives_process_restart": {
+      "ok": true
+    },
+    "relogin_after_process_restart": {
+      "ok": true
+    },
+    "no_duplicate_after_process_restart": {
+      "ok": true,
+      "turn_after": 2,
+      "replay_status": 200
+    },
+    "mic_getUserMedia_after_runtime_grant": {
+      "ok": false,
+      "result": "NotAllowedError:Permission denied"
+    },
+    "synthetic_user_cleanup": {
+      "ok": true,
+      "status": 200
+    }
+  },
+  "cookies_after_restart": [
+    {
+      "name": "rpg_recent",
+      "session": false,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Strict"
+    }
+  ],
+  "config_after_restart": {
+    "required": true,
+    "authenticated": false
+  },
+  "refresh_after_restart_status": 401,
+  "process_restart_requires_relogin": true,
+  "permissions_in_dumpsys": [
+    "android.permission.INTERNET",
+    "android.permission.MODIFY_AUDIO_SETTINGS",
+    "android.permission.RECORD_AUDIO"
+  ],
+  "all_ok": false,
+  "mic_note": "Native path ready (RECORD_AUDIO granted via pm grant; MainActivity allows AUDIO_CAPTURE for the staging origin only). getUserMedia is rejected because the DEPLOYED staging responds Permissions-Policy: microphone=() (api.py). Fixed in working tree to microphone=(self); re-run after redeploy.",
+  "all_ok_except_mic": true,
+  "remote_bundle_note": "Staging bundle at test time predates SPEC-193 web changes (no X-RPG-Client header / resume handler); smoke covers WebView, cookies, session background/resume and server-side action_id idempotency."
+}

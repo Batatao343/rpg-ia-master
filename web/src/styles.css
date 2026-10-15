@@ -1008,6 +1008,9 @@ select {
   .topbar__meta { display: none; }
   .topbar__right { gap: 0.28rem; }
   .topbar__right .iconbtn { padding-inline: 0.48rem; font-size: 0.66rem; }
+  /* SPEC-193: 360px — acoes ganham linha propria e rotulos longos truncam em vez de sobrepor */
+  .topbar__right { flex: 1 1 100%; justify-content: flex-end; min-width: 0; }
+  .topbar__right .iconbtn { min-width: 0; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .laboratory-flag { padding-inline: 0.42rem; font-size: 0.58rem; }
   .laboratory-flag + .combat-flag { display: none; }
   .stage { grid-template-columns: 1fr; }

@@ -1,3 +1,5 @@
+import { isAndroidClient } from './native/platform';
+
 export class HttpError extends Error {
   constructor(public status: number, public code: string, detail: string) { super(detail); }
 }
@@ -8,6 +10,7 @@ let authVersion = 0;
 function optionsWithAuth(opts: RequestInit): RequestInit {
   const headers = new Headers(opts.headers);
   if (!headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  if (isAndroidClient()) headers.set('X-RPG-Client', 'android');
   if (!['GET', 'HEAD', 'OPTIONS'].includes((opts.method || 'GET').toUpperCase())) {
     const csrf = document.cookie.split('; ').find(row => row.startsWith('rpg_csrf='))?.split('=')[1];
     if (csrf) headers.set('X-CSRF-Token', decodeURIComponent(csrf));
@@ -19,6 +22,11 @@ async function errorFor(response: Response): Promise<HttpError> {
   let detail = response.statusText || 'Falha na requisição';
   try { detail = String((await response.json()).detail || detail); } catch { /* non-JSON */ }
   return new HttpError(response.status, detail, detail);
+}
+
+// SPEC-193: one-shot cookie-session refresh used by the native boot (never loops).
+export async function refreshSessionOnce(): Promise<boolean> {
+  try { return (await fetch('/auth/refresh', optionsWithAuth({ method: 'POST' }))).ok; } catch { return false; }
 }
 
 export async function http(path: string, opts: RequestInit = {}): Promise<Response> {

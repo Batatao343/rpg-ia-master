@@ -197,7 +197,7 @@ async def _correlation_boundary(request: Request, call_next):
         response.headers["X-Request-ID"] = request_id
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("Referrer-Policy", "same-origin")
-        response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+        response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(self), geolocation=()")
         response.headers.setdefault("X-Frame-Options", "DENY")
         if request.url.path not in _DOCS_PATHS:  # swagger UI loads CDN scripts
             response.headers.setdefault("Content-Security-Policy", CONTENT_SECURITY_POLICY)
@@ -238,7 +238,23 @@ def auth_config(request: Request):
             **({"user_id": str(principal.user_id)} if principal else {})}
 
 
-def _set_session_cookies(response: Response, tokens, *, clear_deletion: bool = True) -> str:
+def _android_refresh_max_age(request: Request | None) -> int | None:
+    """SPEC-193: Max-Age so no refresh cookie e so p/ cliente nativo.
+
+    O header X-RPG-Client NAO e fronteira de seguranca (qualquer cliente pode
+    envia-lo); rotacao/revogacao do refresh token (SPEC-190) continua valendo.
+    """
+    if request is None or request.headers.get("x-rpg-client", "").lower() != "android":
+        return None
+    try:
+        value = int(os.getenv("RPG_ANDROID_REFRESH_MAX_AGE_SECONDS", "1209600"))
+    except ValueError:
+        value = 1209600
+    return min(max(value, 3600), 2592000)
+
+
+def _set_session_cookies(response: Response, tokens, *, clear_deletion: bool = True,
+                         request: Request | None = None) -> str:
     from services.auth_sessions import (
         ACCESS_COOKIE, CSRF_COOKIE, REFRESH_COOKIE, CsrfSigner, cookie_settings,
     )
@@ -248,13 +264,17 @@ def _set_session_cookies(response: Response, tokens, *, clear_deletion: bool = T
     if clear_deletion:
         response.delete_cookie("rpg_deletion", path="/account/delete")
     response.set_cookie(ACCESS_COOKIE, tokens.access_token, **cookie_settings(secure=secure))
+    age = _android_refresh_max_age(request)
     response.set_cookie(
         REFRESH_COOKIE, tokens.refresh_token,
         **cookie_settings(secure=secure, refresh=True),
+        **({"max_age": age} if age else {}),
     )
     response.set_cookie(
         CSRF_COOKIE, csrf, httponly=False, secure=secure,
         samesite="strict", path="/",
+        # SPEC-193: o CSRF acompanha a vida do refresh no cliente nativo (senao /auth/refresh no boot falha).
+        **({"max_age": age} if age else {}),
     )
     return csrf
 
@@ -279,7 +299,7 @@ def auth_login(body: AuthRequest, request: Request, response: Response):
             auth_limit(get_runtime(), request, action="login", email=body.email)
             tokens = provider.login(body.email, body.password)
         provider.verify(tokens.access_token)
-        csrf = _set_session_cookies(response, tokens)
+        csrf = _set_session_cookies(response, tokens, request=request)
         _set_recent_cookie(response, tokens.user_id, tokens.access_token)
         return {"authenticated": True, "csrf_token": csrf}
     except Unauthorized as exc:
@@ -307,7 +327,7 @@ def auth_signup(body: AuthRequest, request: Request, response: Response):
                 get_runtime().identity_verifier.logout(tokens.access_token)
             response.status_code = 202
             return {"authenticated": False, "message": GENERIC_MESSAGE}
-        csrf = _set_session_cookies(response, tokens)
+        csrf = _set_session_cookies(response, tokens, request=request)
         return {"authenticated": True, "csrf_token": csrf}
     except Unauthorized as exc:
         if _email_confirmation_required():
@@ -412,7 +432,7 @@ def auth_verify_email(body: VerifyEmailRequest, request: Request, response: Resp
     try:
         tokens = runtime.identity_verifier.verify_email(body.token_hash)
         runtime.identity_verifier.verify(tokens.access_token)
-        return {"authenticated": True, "csrf_token": _set_session_cookies(response, tokens)}
+        return {"authenticated": True, "csrf_token": _set_session_cookies(response, tokens, request=request)}
     except Unauthorized as exc:
         raise HTTPException(400, str(exc)) from None
 
@@ -548,7 +568,7 @@ def auth_refresh(request: Request, response: Response):
             raise Unauthorized("sessão ausente")
         tokens = get_runtime().identity_verifier.refresh(token)
         get_runtime().identity_verifier.verify(tokens.access_token)
-        csrf = _set_session_cookies(response, tokens, clear_deletion=False)
+        csrf = _set_session_cookies(response, tokens, clear_deletion=False, request=request)
         return {"authenticated": True, "csrf_token": csrf}
     except Unauthorized as exc:
         raise HTTPException(status_code=401, detail=str(exc)) from exc

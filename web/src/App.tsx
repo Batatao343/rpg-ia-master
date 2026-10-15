@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import * as api from "./api";
+import { isNativeApp } from "./native/platform";
+import { installNativeLifecycle } from "./native/lifecycle";
+import { decideBack } from "./native/backPolicy";
 import { preparePending, loadPending, clearPending, clearOwner, type PendingOperation } from "./pendingOperation";
 import { looksDegraded } from "./lib";
 import type { ActionOptions, CombatSimulatorPayload, GameResponse, CreatePayload, LogEntry, SaveSummary } from "./types";
@@ -87,6 +90,43 @@ export function App() {
     return () => window.removeEventListener('rpg:auth-expired', expired);
   }, []);
 
+  // SPEC-193: Android back/resume. Latest-state ref so the listeners registered once never go stale.
+  const nativeCtx = useRef({ screen: "bootstrap" as Screen, busy: false, pending: null as PendingOperation | null, hasSaves: false });
+  nativeCtx.current = { screen, busy, pending, hasSaves: saves.length > 0 };
+  const resumeBusy = useRef(false);
+  useEffect(() => {
+    let dispose: () => void = () => {};
+    let cancelled = false;
+    void installNativeLifecycle({
+      onBack: () => decideBack(nativeCtx.current.screen, nativeCtx.current.busy, !!nativeCtx.current.pending),
+      onBackNavigate: () => setScreen(nativeCtx.current.screen === "account" ? accountReturn.current : (nativeCtx.current.hasSaves ? "saves" : "create")),
+      onResume: () => { void resumeSession(); },
+    }).then(d => { if (cancelled) d(); else dispose = d; }).catch(() => {});
+    return () => { cancelled = true; dispose(); };
+  }, []);
+
+  // Resume never re-sends: it re-validates the cookie session and reconciles a persisted pending
+  // operation by its operation_id (server idempotency, SPEC-111/141), exactly like a reload.
+  async function resumeSession() {
+    if (resumeBusy.current) return;
+    resumeBusy.current = true;
+    try {
+      const config = await api.getAuthConfig();
+      if (config.required && !config.authenticated) { window.dispatchEvent(new Event('rpg:auth-expired')); return; }
+      const gid = gameId.current, user = owner.current;
+      if (nativeCtx.current.screen !== "play" || !gid || nativeCtx.current.busy) return;
+      const saved = loadPending(user, gid);
+      if (!saved) return;
+      const status = await api.getOperation(gid, saved.operation_id);
+      if (status.status === "completed") {
+        clearPending(user, gid); setPending(null);
+        setData(await api.getState(gid));
+        await loadHistory(gid, session.current);
+      }
+    } catch { /* offline/transient: user can retry; pending stays persisted */ }
+    finally { resumeBusy.current = false; }
+  }
+
   const simNoticed = useRef(false);
 
   // spec polish-sessao (R3): havendo campanhas salvas, a tela inicial as lista.
@@ -94,7 +134,12 @@ export function App() {
     let active = true;
     async function bootstrapSession() {
       try {
-        const config = await api.getAuthConfig();
+        let config = await api.getAuthConfig();
+        // SPEC-193: native app restart drops session cookies; the persistent refresh cookie
+        // revives it. Exactly ONE refresh attempt, then re-check config; never loops.
+        if (isNativeApp() && config.required && !config.authenticated && await api.refreshSessionOnce()) {
+          config = await api.getAuthConfig();
+        }
         if (!active) return;
         setAuthRequired(config.required);
         setAuthConfig(config);

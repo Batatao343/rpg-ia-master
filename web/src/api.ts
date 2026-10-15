@@ -16,6 +16,7 @@ import type {
 
 import { http, HttpError, uploadAudio } from "./http";
 export { HttpError } from "./http";
+export { refreshSessionOnce } from "./http";
 
 export async function transcribeAudio(audio: Blob, signal: AbortSignal, uploaded: () => void): Promise<string> {
   const result = await uploadAudio(audio, crypto.randomUUID(), signal, uploaded);

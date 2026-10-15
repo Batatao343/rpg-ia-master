@@ -1,3 +1,4 @@
+import { isAndroidClient } from "../native/platform";
 import { useEffect, useRef, useState } from "react";
 import * as api from "../api";
 import { TurnstileChallenge } from "./TurnstileChallenge";
@@ -115,6 +116,8 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
 
   useEffect(() => {
     let active = true;
+    // Android: Stripe checkout is not offered (store policy); Play Billing arrives with SPEC-194 native.
+    if (isAndroidClient()) { setCheckoutLoading(false); return; }
     const controller = startRead();
     void api.getCheckoutSkus(controller.signal).then(result => {
       if (!active || deletionStarted.current) return;
