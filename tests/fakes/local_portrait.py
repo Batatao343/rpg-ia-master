@@ -30,7 +30,8 @@ def publish_portrait(game_id: str, generation_id: str):
         assert row, 'confirmed portrait must have one durable outbox job'
         payload = row['payload']
         generation = payload['generation']
-        repository = DynamicArtRepository(pool, model=generation['model'], profile_version=generation['profile_version'])
+        assert generation['generation_id'] == generation_id
+        repository = DynamicArtRepository(pool, model='', profile_version='')
         finance = ImageQuoteRepository(pool)
         queue = PostgresJobQueue(pool)
         leased = queue.lease('audit-local-fake-image', {'generate_dynamic_art'}, 1)
