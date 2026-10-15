@@ -1,0 +1,34 @@
+# SPEC-192 — fora do upload para a Vercel (runtime precisa de data/*.json, data/codex,
+# faiss_lore_index, faiss_rules_index, assets/, web/ fonte p/ build).
+.git
+.venv
+.tmp
+.claude
+.env
+.env.*
+!.env.example
+saves
+saves_playtest
+playtest_runs
+readiness_artifacts
+evals/runs
+data/runtime
+data/saves_memory
+docs
+handoffs
+tests
+project_index
+infra
+supabase
+lore_nova
+frontend
+web/node_modules
+web/dist
+web/test-results
+web/e2e
+web/tests
+__pycache__
+*.pyc
+.pytest_cache
+.pytest-*
+*.original.md

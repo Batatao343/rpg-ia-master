@@ -1,0 +1,156 @@
+{
+  "at": "2026-10-15T14:12:42.274204+00:00",
+  "checks": {
+    "failure_alerting": {
+      "error_log_lines": 10,
+      "error_log_sample": [
+        "error {\"auth_buckets_purged\": 0, \"claimed\": 1, \"consecutive_failures\": 10, \"deleted\": 0, \"duration_s\": 0.08, \"event\": \"rpg.cron\", \"failed\": 1, \"outcome\": \"failed\", \"task\": \"account_deletions\"}",
+        "error {\"auth_buckets_purged\": 0, \"claimed\": 1, \"consecutive_failures\": 9, \"deleted\": 0, \"duration_s\": 0.086, \"event\": \"rpg.cron\", \"failed\": 1, \"outcome\": \"failed\", \"task\": \"account_deletions\"}",
+        "error {\"auth_buckets_purged\": 0, \"claimed\": 1, \"consecutive_failures\": 8, \"deleted\": 0, \"duration_s\": 0.082, \"event\": \"rpg.cron\", \"failed\": 1, \"outcome\": \"failed\", \"task\": \"account_deletions\"}"
+      ],
+      "ok": true,
+      "sweeps": [
+        {
+          "auth_buckets_purged": 0,
+          "claimed": 1,
+          "deleted": 0,
+          "duration_s": 0.091,
+          "failed": 1,
+          "ok": false,
+          "status": 200
+        },
+        {
+          "auth_buckets_purged": 0,
+          "claimed": 1,
+          "deleted": 0,
+          "duration_s": 0.082,
+          "failed": 1,
+          "ok": false,
+          "status": 200
+        },
+        {
+          "auth_buckets_purged": 0,
+          "claimed": 1,
+          "deleted": 0,
+          "duration_s": 0.086,
+          "failed": 1,
+          "ok": false,
+          "status": 200
+        },
+        {
+          "auth_buckets_purged": 0,
+          "claimed": 1,
+          "deleted": 0,
+          "duration_s": 0.08,
+          "failed": 1,
+          "ok": false,
+          "status": 200
+        }
+      ]
+    },
+    "persistent_failure_isolated": {
+      "bad_tombstone": {
+        "attempted": true,
+        "status": "deleting"
+      },
+      "ok": true
+    },
+    "recovered_by_cron": {
+      "auth_user_via_admin_api": false,
+      "cron_runs": [
+        {
+          "end_time": "2026-10-15 14:15:00.052113+00:00",
+          "start_time": "2026-10-15 14:15:00.046096+00:00",
+          "status": "succeeded"
+        },
+        {
+          "end_time": "2026-10-15 14:10:00.044088+00:00",
+          "start_time": "2026-10-15 14:10:00.039667+00:00",
+          "status": "succeeded"
+        },
+        {
+          "end_time": "2026-10-15 14:05:00.047914+00:00",
+          "start_time": "2026-10-15 14:05:00.043431+00:00",
+          "status": "succeeded"
+        },
+        {
+          "end_time": "2026-10-15 14:00:00.114125+00:00",
+          "start_time": "2026-10-15 14:00:00.064842+00:00",
+          "status": "succeeded"
+        },
+        {
+          "end_time": "2026-10-15 13:55:00.073794+00:00",
+          "start_time": "2026-10-15 13:55:00.069996+00:00",
+          "status": "succeeded"
+        }
+      ],
+      "elapsed_s": 137,
+      "final": {
+        "auth_user": 0,
+        "private_rows": {},
+        "sessions": 0,
+        "storage_objects": 0
+      },
+      "http_responses": [
+        {
+          "content": "{\"ok\":false,\"claimed\":2,\"deleted\":1,\"failed\":1,\"auth_buckets_purged\":0,\"duration_s\":5.974}",
+          "status_code": 200
+        },
+        {
+          "content": "{\"ok\":false,\"claimed\":2,\"deleted\":1,\"failed\":1,\"auth_buckets_purged\":0,\"duration_s\":2.807}",
+          "status_code": 200
+        },
+        {
+          "content": "{\"ok\":false,\"claimed\":2,\"deleted\":1,\"failed\":1,\"auth_buckets_purged\":0,\"duration_s\":2.21}",
+          "status_code": 200
+        },
+        {
+          "content": "{\"ok\":false,\"claimed\":2,\"deleted\":1,\"failed\":1,\"auth_buckets_purged\":0,\"duration_s\":6.822}",
+          "status_code": 200
+        },
+        {
+          "content": "{\"ok\":false,\"claimed\":2,\"deleted\":1,\"failed\":1,\"auth_buckets_purged\":0,\"duration_s\":2.753}",
+          "status_code": 200
+        }
+      ],
+      "ok": true,
+      "tombstone_status": "deleted"
+    },
+    "setup": {
+      "after_crash": {
+        "auth_user": 1,
+        "private_rows": {
+          "game_checkpoints": 1,
+          "games": 1,
+          "operations": 1,
+          "usage_events": 3
+        },
+        "sessions": 0,
+        "storage_objects": 1
+      },
+      "before": {
+        "auth_user": 1,
+        "private_rows": {
+          "game_checkpoints": 1,
+          "games": 1,
+          "operations": 1,
+          "usage_events": 3
+        },
+        "sessions": 1,
+        "storage_objects": 1
+      },
+      "game_status": 200,
+      "ok": true,
+      "tombstone": {
+        "revoked": true,
+        "status": "deleting"
+      },
+      "upload_status": 200
+    }
+  },
+  "cleanup": {
+    "tombstones_removed": true,
+    "user_delete_status": 404
+  },
+  "ok": true
+}

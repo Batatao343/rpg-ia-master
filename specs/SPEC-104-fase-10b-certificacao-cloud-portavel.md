@@ -222,3 +222,12 @@ aprovado ao final.
 - **Lock-in acidental:** gate de export/restore portátil bloqueia certificação.
 - **Ação externa:** esta spec permanece deliberadamente `draft`; escrever o
   documento não concede autorização para provisionar ou publicar.
+
+---
+
+**Nota de 2026-10-15 (SPEC-192):** a preferência por Railway registrada acima
+(baseada no estado da Vercel de 2026-08-16) foi **superada pela evidência atual**:
+o staging roda na Vercel Hobby (FastAPI + `web/dist`, same-origin, região `gru1`)
+com `pg_cron`/`pg_net` -> endpoints `/internal/cron/*`. O histórico desta spec
+permanece inalterado; Railway/Render continuam como **fallback operacional**
+(runbook em `docs/spec192/README.md`). Ver evidências em `docs/spec192/evidence/`.

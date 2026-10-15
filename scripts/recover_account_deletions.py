@@ -14,15 +14,43 @@ from infrastructure.runtime import RuntimeConfig, build_runtime
 
 
 def claim_pending(pool, limit: int) -> list[dict]:
-    """Rotate failed tombstones so one unavailable owner cannot starve others."""
+    """Rotate failed tombstones so one unavailable owner cannot starve others (2 min re-claim cooldown)."""
     with pool.connection() as db, db.transaction():
         return db.execute("""with due as (
             select owner_id from app.account_deletions where status='deleting'
+            and (recovery_attempted_at is null
+                 or recovery_attempted_at < now() - interval '2 minutes')
             order by coalesce(recovery_attempted_at,requested_at),requested_at,owner_id
             limit %s for update skip locked
         ) update app.account_deletions d set recovery_attempted_at=clock_timestamp()
           from due where d.owner_id=due.owner_id
           returning d.owner_id,d.status,d.requested_at,d.completed_at""", (limit,)).fetchall()
+
+
+def run_recovery_batch(runtime, max_items: int, *, rows: list[dict] | None = None) -> dict:
+    """Bounded sweep shared by the CLI and the cron endpoint.
+
+    Concurrency-safe: ``claim_pending`` uses FOR UPDATE SKIP LOCKED while claiming and stamps
+    ``recovery_attempted_at``; an owner stamped within the last 2 minutes is not re-claimed, so a
+    sweep that starts while another is still finishing never repeats the same owner.
+    """
+    pool = runtime.game_store.pool
+    if rows is None:
+        rows = claim_pending(pool, max_items)
+    lifecycle = PostgresAccountLifecycle(pool, runtime.identity_verifier, runtime.blob_store)
+    with pool.connection() as db, db.transaction():
+        purged = db.execute("""delete from app.rate_limit_buckets
+            where bucket_key like 'auth:%' and updated_at < now() - interval '24 hours'""").rowcount
+    results = []
+    for row in rows:
+        try:
+            status = lifecycle.finish(row["owner_id"])
+        except Exception as exc:
+            results.append({"owner_id": str(row["owner_id"]), "status": "deleting",
+                            "error_type": type(exc).__name__})
+            continue
+        results.append({"owner_id": str(row["owner_id"]), "status": status})
+    return {"count": len(results), "auth_buckets_purged": purged, "results": results}
 
 
 def main() -> int:
@@ -57,23 +85,9 @@ def main() -> int:
                         from app.account_deletions where status='deleting'
                         order by requested_at limit 100""").fetchall()
         if args.batch:
-            lifecycle = PostgresAccountLifecycle(runtime.game_store.pool, runtime.identity_verifier,
-                                                runtime.blob_store)
-            with runtime.game_store.pool.connection() as db, db.transaction():
-                purged = db.execute("""delete from app.rate_limit_buckets
-                    where bucket_key like 'auth:%' and updated_at < now() - interval '24 hours'""").rowcount
-            results = []
-            for row in rows:
-                try:
-                    status = lifecycle.finish(row["owner_id"])
-                except Exception as exc:
-                    status = "deleting"
-                    results.append({"owner_id": str(row["owner_id"]), "status": status,
-                                    "error_type": type(exc).__name__})
-                    continue
-                results.append({"owner_id": str(row["owner_id"]), "status": status})
-            print(json.dumps({"mode": "batch", "count": len(results), "auth_buckets_purged": purged,
-                              "results": results}, sort_keys=True))
+            payload = run_recovery_batch(runtime, args.max, rows=rows)
+            print(json.dumps({"mode": "batch", **payload}, sort_keys=True))
+            results = payload["results"]
             return 0 if all(item["status"] == "deleted" for item in results) else 2
         if args.apply:
             if not rows:

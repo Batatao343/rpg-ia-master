@@ -1,0 +1,104 @@
+{
+  "at": "2026-10-15T14:28:03.978695+00:00",
+  "checks": {
+    "A_crash_lease_expiry": {
+      "after_expiry": {
+        "attempts": 2,
+        "documents": 1,
+        "embedding_status": "ready",
+        "jobs_for_doc": 1,
+        "last_error_code": null,
+        "leased": false,
+        "status": "succeeded",
+        "waited_s": 45
+      },
+      "during_lease_window": {
+        "attempts": 1,
+        "documents": 1,
+        "embedding_status": "pending",
+        "jobs_for_doc": 1,
+        "last_error_code": null,
+        "leased": true,
+        "status": "running"
+      },
+      "ok": true,
+      "stale_token_calls": {
+        "complete": "LeaseHeld",
+        "fail": "LeaseHeld",
+        "heartbeat": "LeaseHeld"
+      }
+    },
+    "B_real_redeploy": {
+      "cron_runs_during_window": [
+        {
+          "n": 2,
+          "status": "succeeded"
+        }
+      ],
+      "deploy": {
+        "attempts": 1,
+        "done": true,
+        "returncode": 0,
+        "seconds": 89
+      },
+      "http_status_counts_during_window": [
+        {
+          "n": 4,
+          "status_code": 200
+        }
+      ],
+      "jobs": [
+        {
+          "attempts": 1,
+          "documents": 1,
+          "embedding_status": "ready",
+          "jobs_for_doc": 1,
+          "last_error_code": null,
+          "leased": false,
+          "status": "succeeded"
+        },
+        {
+          "attempts": 1,
+          "documents": 1,
+          "embedding_status": "ready",
+          "jobs_for_doc": 1,
+          "last_error_code": null,
+          "leased": false,
+          "status": "succeeded"
+        },
+        {
+          "attempts": 1,
+          "documents": 1,
+          "embedding_status": "ready",
+          "jobs_for_doc": 1,
+          "last_error_code": null,
+          "leased": false,
+          "status": "succeeded"
+        },
+        {
+          "attempts": 1,
+          "documents": 1,
+          "embedding_status": "ready",
+          "jobs_for_doc": 1,
+          "last_error_code": null,
+          "leased": false,
+          "status": "succeeded"
+        }
+      ],
+      "ok": true,
+      "waited": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "cleanup": {
+    "rows_deleted": {
+      "games": 1
+    },
+    "user_delete_status": 200
+  },
+  "ok": true
+}

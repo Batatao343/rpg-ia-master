@@ -1,0 +1,56 @@
+{
+  "at": "2026-10-15T14:16:41.765895+00:00",
+  "non_2xx_sample": [],
+  "ok": true,
+  "responses": {
+    "by_status": {
+      "200": 36
+    },
+    "n": 36,
+    "ok_false_in_2xx_body": 5
+  },
+  "runs": [
+    {
+      "avg_s": "0.014",
+      "first": "2026-10-15 13:55:00.069996+00:00",
+      "jobname": "rpg-cron-account-deletions",
+      "last": "2026-10-15 14:15:00.046096+00:00",
+      "n": 5,
+      "status": "succeeded"
+    },
+    {
+      "avg_s": "0.014",
+      "first": "2026-10-15 13:51:00.095515+00:00",
+      "jobname": "rpg-cron-jobs",
+      "last": "2026-10-15 14:16:00.016786+00:00",
+      "n": 26,
+      "status": "succeeded"
+    },
+    {
+      "avg_s": "0.013",
+      "first": "2026-10-15 13:55:00.058635+00:00",
+      "jobname": "rpg-cron-operations",
+      "last": "2026-10-15 14:15:00.050138+00:00",
+      "n": 5,
+      "status": "succeeded"
+    }
+  ],
+  "schedule": [
+    {
+      "active": true,
+      "jobname": "rpg-cron-account-deletions",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "active": true,
+      "jobname": "rpg-cron-jobs",
+      "schedule": "* * * * *"
+    },
+    {
+      "active": true,
+      "jobname": "rpg-cron-operations",
+      "schedule": "*/5 * * * *"
+    }
+  ],
+  "window_min": 60
+}

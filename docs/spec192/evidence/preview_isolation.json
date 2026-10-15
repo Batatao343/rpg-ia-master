@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-15T13:49:33.653735+00:00",
+  "checks": {
+    "auth_config_db_route": {
+      "body": "Internal Server Error",
+      "fails_closed": true,
+      "status": 500
+    },
+    "cron_jobs_random_bearer": {
+      "body": "{\"detail\":\"cron_not_configured\"}",
+      "fails_closed": true,
+      "status": 503
+    },
+    "deployment": {
+      "after_delete_get_status": 404,
+      "delete_status": 200,
+      "readyState": "READY",
+      "region": "gru1",
+      "target": null
+    },
+    "game_saves_no_session": {
+      "body": "{\"detail\":\"perfil hosted-supabase exige DATABASE_URL\"}",
+      "fails_closed": true,
+      "status": 401
+    },
+    "health": {
+      "body": "{\"status\":\"online\",\"engine\":\"RPG IA v9.0 Hybrid Memory\",\"git_sha\":\"d5718da071341ff1a8383ee334905368bd7c9a4d\"}",
+      "status": 200
+    },
+    "project_env_preview_targets": {
+      "db_secrets_on_preview": [],
+      "ok": true,
+      "preview_env_names": [
+        "RPG_BIND_HOST",
+        "RPG_FORCE_MOCK",
+        "RPG_RUNTIME_PROFILE"
+      ]
+    },
+    "unauthenticated_access": {
+      "protected": true,
+      "status": 302
+    }
+  },
+  "ok": true,
+  "preview_host_hash": "0f060889870e"
+}

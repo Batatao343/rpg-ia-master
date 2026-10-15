@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-15T14:50:24.013434+00:00",
+  "base": "https://rpg-ia-master-staging.vercel.app",
+  "extensions": {
+    "pg_cron": "1.6.4",
+    "pg_net": "0.19.5"
+  },
+  "jobs": [
+    {
+      "jobid": 4,
+      "name": "rpg-cron-jobs",
+      "schedule": "* * * * *"
+    },
+    {
+      "jobid": 5,
+      "name": "rpg-cron-account-deletions",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "jobid": 6,
+      "name": "rpg-cron-operations",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "jobid": 7,
+      "name": "rpg-cron-health",
+      "schedule": "*/15 * * * *"
+    }
+  ],
+  "scheduled_rows": [
+    {
+      "active": true,
+      "jobname": "rpg-cron-account-deletions",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "active": true,
+      "jobname": "rpg-cron-health",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "active": true,
+      "jobname": "rpg-cron-jobs",
+      "schedule": "* * * * *"
+    },
+    {
+      "active": true,
+      "jobname": "rpg-cron-operations",
+      "schedule": "*/5 * * * *"
+    }
+  ],
+  "vault": "updated"
+}

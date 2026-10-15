@@ -12,7 +12,12 @@ dependencies = [
     "langchain>=1.1.2",
     "langchain-community>=0.4.1",
     "langchain-google-genai>=3.2.0",
+    # SPEC-192: a Vercel instala só as deps core do uv.lock; hosted-supabase exige psycopg
+    # e o primário DeepSeek/Groq usa langchain-openai.
+    "langchain-openai>=0.3",
     "langgraph>=1.0.4",
+    "psycopg[binary,pool]>=3.2,<4",
+    "pillow>=12.3.0",
     "pydantic>=2.12.5",
     "python-dotenv>=1.2.1",
     "pyyaml>=6.0.3",
@@ -77,3 +82,7 @@ markers = [
     "chaos_local: testes opt-in de kill/restart/timeouts na stack local",
     "browser_local: browser real opt-in contra servidor local",
 ]
+
+[tool.vercel]
+# SPEC-192: `main.py` exporta um objeto LangGraph chamado `app` — entrypoint explícito.
+entrypoint = "vercel_app:app"

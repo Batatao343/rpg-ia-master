@@ -1,0 +1,104 @@
+{
+  "at": "2026-10-15T14:31:20.197535+00:00",
+  "base": "https://rpg-ia-master-staging.vercel.app",
+  "cold_start": {
+    "first_request_after_deploy_ms": 6062,
+    "note": "first request imports langgraph/langchain",
+    "second_request_ms": 181,
+    "status": 200
+  },
+  "cost": {
+    "paid_provider_calls": 0,
+    "supabase": "Free plan (project ref staging)",
+    "vercel": "USD 0 (Hobby plan; free tier limits)"
+  },
+  "cron_calls": {
+    "account-deletions": {
+      "client_ms": {
+        "max_ms": 70.5,
+        "n": 3,
+        "p50_ms": 68.7,
+        "p95_ms": 70.5
+      },
+      "server_duration_s": [
+        0.042,
+        0.034,
+        0.035
+      ]
+    },
+    "jobs": {
+      "client_ms": {
+        "max_ms": 94.5,
+        "n": 3,
+        "p50_ms": 44.6,
+        "p95_ms": 94.5
+      },
+      "server_duration_s": [
+        0.063,
+        0.018,
+        0.018
+      ]
+    },
+    "operations": {
+      "client_ms": {
+        "max_ms": 51.6,
+        "n": 3,
+        "p50_ms": 48.5,
+        "p95_ms": 51.6
+      },
+      "server_duration_s": [
+        0.017,
+        0.013,
+        0.012
+      ]
+    }
+  },
+  "db_route_game_saves_warm": {
+    "login_status": 200,
+    "max_ms": 134.2,
+    "n": 20,
+    "p50_ms": 106.2,
+    "p95_ms": 132.6
+  },
+  "health_warm": {
+    "max_ms": 183.6,
+    "n": 30,
+    "p50_ms": 29.7,
+    "p95_ms": 179.3
+  },
+  "redeploy": {
+    "returncode": 0,
+    "seconds": 109
+  },
+  "sse_from_e2e": {
+    "total_ms": {
+      "max_ms": 2335.7,
+      "n": 5,
+      "p50_ms": 670.8,
+      "p95_ms": 2335.7
+    },
+    "ttfb_ms": {
+      "max_ms": 173.7,
+      "n": 5,
+      "p50_ms": 153.1,
+      "p95_ms": 173.7
+    }
+  },
+  "vercel": {
+    "build_duration_s": 56,
+    "bundle_mb_mentions": [
+      314.61
+    ],
+    "deployment": "dpl_EeQB7tGNy2oX4T5G2FSy47nofbzk",
+    "function_max_duration_s": 300,
+    "plan": "hobby",
+    "regions": [
+      "gru1"
+    ]
+  },
+  "vercel_usage_api": {
+    "status": 400,
+    "code": "plan_upgrade_required",
+    "note": "GET /v1/usage exists only on Pro/Enterprise; Hobby usage is read in the dashboard. Cost = USD 0 (Hobby)."
+  }
+}

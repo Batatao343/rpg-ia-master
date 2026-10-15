@@ -80,6 +80,10 @@ app.add_middleware(
 )
 
 
+from services.cron_internal import router as _cron_router
+app.include_router(_cron_router)  # SPEC-192: bearer-secret auth, no cookies/CSRF flow
+
+
 def _database_profile() -> bool:
     return os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy"
 
@@ -142,6 +146,21 @@ async def _session_boundary(request: Request, call_next):
         return JSONResponse({"detail": str(exc)}, status_code=401)
 
 
+# SPEC-192 F6: SPA CSP. Google Fonts are linked from web/index.html (styles+fonts); Stripe checkout is a
+# top-level redirect so no Stripe origin is needed; Vite emits a single external module script.
+CONTENT_SECURITY_POLICY = (
+    "default-src 'self'; "
+    "connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com; "
+    "script-src 'self' https://challenges.cloudflare.com; "
+    "frame-src https://challenges.cloudflare.com; "
+    "img-src 'self' data: blob: https://*.supabase.co; "
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+    "font-src 'self' data: https://fonts.gstatic.com; "
+    "media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
+)
+_DOCS_PATHS = {"/docs", "/redoc", "/openapi.json", "/docs/oauth2-redirect"}
+
+
 @app.middleware("http")
 async def _correlation_boundary(request: Request, call_next):
     import re
@@ -179,6 +198,9 @@ async def _correlation_boundary(request: Request, call_next):
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("Referrer-Policy", "same-origin")
         response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+        response.headers.setdefault("X-Frame-Options", "DENY")
+        if request.url.path not in _DOCS_PATHS:  # swagger UI loads CDN scripts
+            response.headers.setdefault("Content-Security-Policy", CONTENT_SECURITY_POLICY)
         return response
 
 

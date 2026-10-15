@@ -46,3 +46,10 @@ def abandon_expired(pool: PostgresPool, operation_id: UUID) -> bool:
                 (row["game_id"], operation_id),
             )
         return True
+
+
+def recover_expired(pool: PostgresPool, max_items: int) -> dict[str, int]:
+    """Bounded cron sweep: release expired-lease operations (idempotent, conditional UPDATE)."""
+    expired = orphan_operations(pool)
+    released = sum(1 for row in expired[:max_items] if abandon_expired(pool, row["id"]))
+    return {"orphans_seen": len(expired), "released": released}
