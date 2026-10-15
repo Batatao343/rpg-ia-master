@@ -1,5 +1,5 @@
 {
-  "commit_sha": "45c36815069162899e25ca60f225bc1ee8af5449",
+  "commit_sha": "29bff8d3310f1c0ed5ba3a2a57280f55e9b2da97",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -1825,6 +1825,17 @@
       },
       "source": "file:scripts/admin_wallet_adjust.py",
       "target": "module:scripts.admin_wallet_adjust",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/android/rename_package.py",
+        "line": 1
+      },
+      "source": "file:scripts/android/rename_package.py",
+      "target": "module:scripts.android.rename_package",
       "type": "contains"
     },
     {
@@ -27433,6 +27444,39 @@
       },
       "source": "module:scripts.admin_wallet_adjust",
       "target": "symbol:scripts.admin_wallet_adjust.validate",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/android/rename_package.py",
+        "line": 27
+      },
+      "source": "module:scripts.android.rename_package",
+      "target": "symbol:scripts.android.rename_package.detect_old",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/android/rename_package.py",
+        "line": 48
+      },
+      "source": "module:scripts.android.rename_package",
+      "target": "symbol:scripts.android.rename_package.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/android/rename_package.py",
+        "line": 34
+      },
+      "source": "module:scripts.android.rename_package",
+      "target": "symbol:scripts.android.rename_package.plan",
       "type": "defines"
     },
     {
@@ -111297,6 +111341,28 @@
       },
       "source": "symbol:scripts.admin_wallet_adjust.main",
       "target": "symbol:scripts.admin_wallet_adjust.validate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/android/rename_package.py",
+        "line": 59
+      },
+      "source": "symbol:scripts.android.rename_package.main",
+      "target": "symbol:scripts.android.rename_package.detect_old",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/android/rename_package.py",
+        "line": 60
+      },
+      "source": "symbol:scripts.android.rename_package.main",
+      "target": "symbol:scripts.android.rename_package.plan",
       "type": "calls"
     },
     {
@@ -215523,6 +215589,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:scripts/android/rename_package.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/android/rename_package.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:scripts/audit_local_gate.py",
       "kind": "file",
       "line": 1,
@@ -219567,6 +219640,13 @@
       "line": 1,
       "path": "scripts/admin_wallet_adjust.py",
       "qualified_name": "scripts.admin_wallet_adjust"
+    },
+    {
+      "id": "module:scripts.android.rename_package",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/android/rename_package.py",
+      "qualified_name": "scripts.android.rename_package"
     },
     {
       "id": "module:scripts.audit_local_gate",
@@ -233077,6 +233157,27 @@
       "line": 29,
       "path": "scripts/admin_wallet_adjust.py",
       "qualified_name": "scripts.admin_wallet_adjust.validate"
+    },
+    {
+      "id": "symbol:scripts.android.rename_package.detect_old",
+      "kind": "function",
+      "line": 27,
+      "path": "scripts/android/rename_package.py",
+      "qualified_name": "scripts.android.rename_package.detect_old"
+    },
+    {
+      "id": "symbol:scripts.android.rename_package.main",
+      "kind": "function",
+      "line": 48,
+      "path": "scripts/android/rename_package.py",
+      "qualified_name": "scripts.android.rename_package.main"
+    },
+    {
+      "id": "symbol:scripts.android.rename_package.plan",
+      "kind": "function",
+      "line": 34,
+      "path": "scripts/android/rename_package.py",
+      "qualified_name": "scripts.android.rename_package.plan"
     },
     {
       "id": "symbol:scripts.audit_local_gate.main",
@@ -267408,5 +267509,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:1d9d64ac219eae127b96e4fbd7f0a3dd80e169dabd2b2ebf8786ad5bcdd72661"
+  "source_tree_hash": "sha256:94ff9292cdfd997925089099143ba94249d7a9d41171f1c113fa793c69e3a45f"
 }

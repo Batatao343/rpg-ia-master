@@ -1,10 +1,10 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "45c36815069162899e25ca60f225bc1ee8af5449",
+  "commit_sha": "29bff8d3310f1c0ed5ba3a2a57280f55e9b2da97",
   "edge_counts": {
-    "calls": 10729,
-    "contains": 518,
-    "defines": 6424,
+    "calls": 10731,
+    "contains": 519,
+    "defines": 6427,
     "imports": 1085,
     "likely_test_for": 659,
     "route_to": 58
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:d4766f5b01c2dda7c0ca6f445bf1b33204e8eb7ce85e16675217c62c270ea012",
+  "graph_hash": "sha256:f9cc90eaf1c2806338aebcd3cb881a38bcf3fffd4782ec362c4f68ac1c6a768d",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -167,6 +167,7 @@
     "rag.py",
     "scripts/admin_kill_switch.py",
     "scripts/admin_wallet_adjust.py",
+    "scripts/android/rename_package.py",
     "scripts/audit_local_gate.py",
     "scripts/audit_local_server.py",
     "scripts/backup_local.py",
@@ -647,12 +648,12 @@
     "artifact": 9,
     "class": 586,
     "endpoint": 58,
-    "file": 591,
-    "function": 2031,
+    "file": 592,
+    "function": 2034,
     "method": 593,
-    "module": 518,
+    "module": 519,
     "test": 3214
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:1d9d64ac219eae127b96e4fbd7f0a3dd80e169dabd2b2ebf8786ad5bcdd72661"
+  "source_tree_hash": "sha256:94ff9292cdfd997925089099143ba94249d7a9d41171f1c113fa793c69e3a45f"
 }
