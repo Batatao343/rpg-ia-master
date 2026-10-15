@@ -27,7 +27,7 @@ O QUE VOCE FAZ
 - Combate tatico por Cartas, com Reacoes, Ferimentos e consequencias reais. A matematica e do jogo, nao da IA.
 - Explore um mapa de 35 locais, converse com NPCs que lembram de voce, recrute aliados e siga missoes.
 - Sua cronica e salva por capitulo: continue de onde parou, em qualquer dispositivo da sua conta.
-- Entrada por voz opcional: o audio e transcrito e apagado imediatamente.
+- Entrada por voz opcional: o audio nao e armazenado em nossos servidores; e enviado ao provedor de transcricao, sujeito a retencao dele.
 
 CONTA E COMPRAS
 - Crie uma conta com e-mail. Exporte ou exclua seus dados no proprio app.
@@ -48,7 +48,7 @@ WHAT YOU DO
 - Tactical Card combat with Reactions, Wounds and real consequences. The math is the game's, not the AI's.
 - Explore a 35-location map, talk to NPCs who remember you, recruit allies and follow quests.
 - Your chronicle is saved chapter by chapter: continue anywhere with your account.
-- Optional voice input: audio is transcribed and deleted immediately.
+- Optional voice input: audio is not stored on our servers; it is sent to the transcription provider and subject to that provider's retention.
 
 ACCOUNT AND PURCHASES
 - Sign up with email. Export or delete your data inside the app.

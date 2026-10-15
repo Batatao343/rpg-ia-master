@@ -27,7 +27,15 @@ beta. Valores sao PROPOSTAS para o usuario confirmar em `external-inputs.md`.
   com ator `system:finops` e motivo na auditoria, uma unica vez (idempotente), e emite o alerta bloqueante
   `daily_spend_cap` (`FinopsDailySpendCap`). NUNCA religa sozinho: o humano faz
   `scripts/admin_kill_switch.py on <chave> --actor <voce> --reason "<motivo>" --apply`. Compras (`new_purchases`) e
-  leitura de campanhas nao sao tocadas. Depende do cron estar agendado (R-12); cadencia 15-30 min.
+  leitura de campanhas nao sao tocadas.
+  **Cobertura honesta:** o cap corta SOMENTE imagem e STT caro. O gasto de LLM de texto NAO e limitado por ele: so
+  pelo saldo prepago dos provedores (R-11). Opt-in `RPG_DAILY_SPEND_CAP_MODEL_SWITCHES=model:<provider>/<model>,...`
+  desliga tambem esses fallbacks caros quando o teto estoura (mesma auditoria, mesmo nunca-religa).
+  **Re-religar no mesmo dia:** se um humano religar uma chave depois do corte, o cron NAO a desliga de novo ate virar o
+  dia (00:00 BRT); para voltar a ter protecao, suba `RPG_DAILY_SPEND_CAP_BRL` (religar sem subir o teto deixa o dia
+  sem corte naquela chave) ou espere a virada. `RPG_DAILY_SPEND_TZ_OFFSET_HOURS` deve ser inteiro em -12..14.
+  Erro na avaliacao do cap (config invalida, store fora) gera alerta bloqueante `daily_spend_cap_error` e o cron
+  responde nao-2xx (`failed=1`), acionando o watchdog. Depende do cron estar agendado (R-12); cadencia 15-30 min.
 - `data/finops_fixed_costs.json` deve refletir Supabase Pro + Vercel Pro reais antes da producao;
   `scripts/finops_margin_sim.py` reexecutado com precos live.
 

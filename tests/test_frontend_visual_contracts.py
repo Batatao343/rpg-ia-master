@@ -14,6 +14,27 @@ pytestmark = [pytest.mark.browser_local, pytest.mark.skipif(
     os.getenv("RPG_VISUAL_BROWSER") != "1", reason="RPG_VISUAL_BROWSER=1 required")]
 
 
+@pytest.mark.parametrize("width", [360, 390, 1440])
+def test_home_header_buttons_do_not_overlap(width: int) -> None:
+    playwright = pytest.importorskip("playwright.sync_api")
+    chrome = find_chrome()
+    css = (Path(__file__).resolve().parents[1] / "web/src/styles.css").read_text(encoding="utf-8")
+    with playwright.sync_playwright() as pw:
+        browser = pw.chromium.launch(executable_path=str(chrome) if chrome else None, headless=True)
+        try:
+            page = browser.new_page(viewport={"width": width, "height": 844}, bypass_csp=True)
+            page.set_content(f'''<style>{css}</style>
+                <button class="account-shell-link btn btn--ghost">Conta · 0 Estilhas</button>
+                <button class="session-logout btn btn--ghost">Encerrar sessão</button>''')
+            a, b = (page.locator(s).bounding_box() for s in (".account-shell-link", ".session-logout"))
+            assert (a["x"] + a["width"] <= b["x"] + 0.5 or b["x"] + b["width"] <= a["x"] + 0.5
+                    or a["y"] + a["height"] <= b["y"] + 0.5 or b["y"] + b["height"] <= a["y"] + 0.5)
+            assert a["x"] >= 0 and a["x"] + a["width"] <= width
+            assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+        finally:
+            browser.close()
+
+
 @pytest.mark.parametrize("width", [390, 1440])
 def test_portraits_are_uncropped_and_stay_inside_cards(width: int) -> None:
     playwright = pytest.importorskip("playwright.sync_api")

@@ -146,3 +146,41 @@ def test_run_and_report(tmp_path: Path):
     assert j.name == f"checklist-{SHA[:12]}-production.json" and json.loads(j.read_text())["sha"] == SHA
     assert "BLOQUEADO" in m.read_text(encoding="utf-8")
     assert "dirty" in json.dumps(rep) or True
+
+
+def test_closed_status_is_exact_token(tmp_path: Path):
+    p = tmp_path / "r.md"
+    p.write_text("| R-01 | P1 | t | d | fechado (staging) | m |\n| R-02 | P1 | t | d | mitigado | m |\n", encoding="utf-8")
+    assert c.check_risks(p).detail["open_p0_p1"] == ["R-01", "R-02"]
+    p.write_text("| R-01 | P1 | t | d | Fechado | m |\n", encoding="utf-8")
+    assert c.check_risks(p).status == "pass"
+
+
+def test_real_register_r12_not_closed():
+    rows = {r["id"]: r for r in c.parse_risks(c.ROOT / "docs" / "spec197" / "risk-register.md")}
+    assert rows["R-12"]["status"] == "mitigado"
+
+
+def test_production_requires_daily_cap_env():
+    assert "RPG_DAILY_SPEND_CAP_BRL" in c.REQUIRED_ENV["production"]
+
+
+def test_finops_cron_must_be_active():
+    assert c.check_finops_config().status == "skip"
+    assert c.check_finops_config(deps=c.Deps(finops_cron_active=lambda e: True)).status == "pass"
+    assert c.check_finops_config(deps=c.Deps(finops_cron_active=lambda e: False)).status == "fail"
+    assert c.check_finops_config(deps=c.Deps(finops_cron_active=lambda e: None)).status == "skip"
+
+
+def test_legal_rejects_draft_and_placeholders():
+    urls = {n: f"https://x/{n}" for n in ("privacy", "terms", "support", "refund")}
+    clean = "<main><p>texto final</p></main>"
+    draft = '<p class="legal__banner"><strong>RASCUNHO</strong></p>'
+    ph = "<p>contato <code>suporte@&lt;dominio-a-definir&gt;</code></p>"
+    table = {u: (200, clean) for u in urls.values()}
+    assert c.check_legal(urls, c.Deps(http_get=http(table))).status == "pass"
+    table[urls["terms"]] = (200, draft)
+    table[urls["support"]] = (200, ph)
+    r = c.check_legal(urls, c.Deps(http_get=http(table)))
+    assert r.status == "fail" and set(r.detail["problems"]) == {"terms", "support"}
+    assert c.check_legal(urls, c.Deps(http_get=http(table)), allow_draft=True).status == "pass"

@@ -68,7 +68,15 @@ export function renderMarkdown(md) {
   return out.join('\n');
 }
 
-export function renderPage({ label, slug }, bodyHtml, cssHref) {
+/** Optional front-matter block with `status: draft|final`; anything but `final` is treated as draft. */
+export function parseFrontMatter(md) {
+  const m = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(md);
+  if (!m) return { status: 'draft', body: md };
+  const st = /^status:\s*(\w+)/m.exec(m[1]);
+  return { status: st && st[1].toLowerCase() === 'final' ? 'final' : 'draft', body: md.slice(m[0].length) };
+}
+
+export function renderPage({ label, slug }, bodyHtml, cssHref, status = 'draft') {
   const nav = PAGES.map((p) => `<a href="/${p.slug}/"${p.slug === slug ? ' aria-current="page"' : ''}>${p.label}</a>`).join('');
   return `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -83,7 +91,7 @@ ${cssHref ? `<link rel="stylesheet" href="${cssHref}" />` : ''}
 </head>
 <body>
 <main class="legal" data-legal-page="${slug}">
-<p class="legal__banner" role="note"><strong>RASCUNHO</strong> - texto em revisão pelo titular; não vale como documento jurídico final.</p>
+${status === 'final' ? '' : '<p class="legal__banner" role="note"><strong>RASCUNHO</strong> - texto em revisão pelo titular; não vale como documento jurídico final.</p>'}
 <nav class="legal__nav" aria-label="Documentos legais">${nav}<a href="/">Voltar ao jogo</a></nav>
 ${bodyHtml}
 </main>
@@ -97,8 +105,8 @@ export function buildLegal({ dist, legalDir }) {
   const css = existsSync(assets) ? readdirSync(assets).find((f) => f.endsWith('.css')) : undefined;
   const written = [];
   for (const page of PAGES) {
-    const md = readFileSync(join(legalDir, page.file), 'utf8');
-    const html = renderPage(page, renderMarkdown(md), css ? `/assets/${css}` : '');
+    const { status, body } = parseFrontMatter(readFileSync(join(legalDir, page.file), 'utf8'));
+    const html = renderPage(page, renderMarkdown(body), css ? `/assets/${css}` : '', status);
     mkdirSync(join(dist, page.slug), { recursive: true });
     writeFileSync(join(dist, page.slug, 'index.html'), html);
     written.push(page.slug);

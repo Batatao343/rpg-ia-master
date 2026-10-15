@@ -48,6 +48,7 @@ Ordem obrigatoria no banco: migrations de producao aplicadas ANTES do deploy (ex
 protegidos na execucao da SPEC-197 (R1: criacao do projeto prod exige aprovacao explicita do usuario).
 
 Env de producao (nomes; valores so no dashboard/CLI): `REQUIRED_ENV["production"]` em
-`scripts/release/checklist.py`. `RPG_FORCE_MOCK` NUNCA existe em producao. Preview segue sem segredos (`vercel_env.py`).
+`scripts/release/checklist.py`. `RPG_FORCE_MOCK` NUNCA existe em producao.
+Pins de processadores (devem constar no ambiente de producao para a lista da politica/Data Safety ser exata): `RPG_ROUTES` (JSON; somente DeepSeek + Groq) e `RPG_EMBEDDINGS=jina` (sem fallback para openai/ollama/gemini). Preview segue sem segredos (`vercel_env.py`).
 
 Pos-promocao: aquecer `/health`; agendar crons (`schedule_cron.py`, `finops`); smoke de dois usuarios (R6).

@@ -4,7 +4,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { PAGES, renderMarkdown, buildLegal } from '../scripts/legal.mjs';
+import { PAGES, renderMarkdown, buildLegal, parseFrontMatter, renderPage } from '../scripts/legal.mjs';
 
 test('markdown subset: headings, lists, tables, escaping', () => {
   const html = renderMarkdown('# T\n\n> **RASCUNHO** x\n\n1. **a** `<b>`\n   cont\n2. c\n\n| A | B |\n|---|---|\n| 1 | <script> |\n\n- x\n');
@@ -29,4 +29,14 @@ test('builds the four static pages: RASCUNHO banner, no inline script, cross lin
     assert.doesNotMatch(html, /<script|onclick=|javascript:/i);
     for (const q of PAGES) assert.ok(html.includes(`href="/${q.slug}/"`));
   }
+});
+
+test('front-matter status drives the RASCUNHO banner (draft default)', () => {
+  assert.equal(parseFrontMatter('# x').status, 'draft');
+  assert.equal(parseFrontMatter('---\nstatus: draft\n---\n# x').status, 'draft');
+  const fin = parseFrontMatter('---\nstatus: final\n---\n# x');
+  assert.equal(fin.status, 'final');
+  assert.equal(fin.body, '# x');
+  assert.match(renderPage(PAGES[0], '', '', 'draft'), /RASCUNHO/);
+  assert.doesNotMatch(renderPage(PAGES[0], '', '', 'final'), /RASCUNHO/);
 });

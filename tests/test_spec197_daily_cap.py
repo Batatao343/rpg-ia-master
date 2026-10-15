@@ -114,3 +114,46 @@ def test_postgres_store_audit_actor_and_idempotency(monkeypatch):
             store.set(STT_FALLBACK, True, actor_id="lab", reason="lab-cleanup")
     finally:
         pool.close()
+
+
+def test_model_switches_opt_in(monkeypatch):
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "1")
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_MODEL_SWITCHES", "model:anthropic/claude-x, model:gemini/pro")
+    store = MemorySwitchStore()
+    res = evaluate_daily_cap(reader("5"), store, NOW, D("5"))
+    assert set(res.switched_off) == {*CAP_SWITCHES, "model:anthropic/claude-x", "model:gemini/pro"}
+    assert store.state["model:gemini/pro"] is False
+
+
+def test_model_switches_invalid_key_errors(monkeypatch):
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "1")
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_MODEL_SWITCHES", "new_purchases")
+    out = run_finops(reader("20"), now=NOW, switch_store=MemorySwitchStore())
+    assert out["failed"] == 1 and "daily_spend_cap_error" in out["alert_kinds"]
+
+
+def test_manual_reenable_same_day_not_retripped(monkeypatch):
+    import time
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "1")
+    now = datetime.now(timezone.utc)
+    store = MemorySwitchStore()
+    evaluate_daily_cap(reader("5"), store, now, D("5"))
+    store.set(IMAGE, True, actor_id="human", reason="ok")
+    res = evaluate_daily_cap(reader("5"), store, now, D("5"))
+    assert res.manual_override == [IMAGE] and res.switched_off == [] and res.already_off == [STT_FALLBACK]
+    assert store.state[IMAGE] is True
+    # a human re-enable from before today's boundary does not block a new trip
+    store.audit_rows[-1]["at"] = time.time() - 3 * 86400
+    assert evaluate_daily_cap(reader("5"), store, now, D("5")).switched_off == [IMAGE]
+
+
+@pytest.mark.parametrize("val", ["abc", "20", "-13", ""])
+def test_tz_offset_validation(monkeypatch, val):
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "1")
+    monkeypatch.setenv("RPG_DAILY_SPEND_TZ_OFFSET_HOURS", val)
+    out = run_finops(reader("20"), now=NOW, switch_store=MemorySwitchStore())
+    if val == "":
+        assert out["failed"] == 0
+    else:
+        assert out["failed"] == 1 and out["daily_cap_error"] == "CapConfigError"
+        assert "daily_spend_cap_error" in out["alert_kinds"] and out["blocking_alerts"] >= 1

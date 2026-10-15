@@ -1051,7 +1051,7 @@ select {
   width: auto;
 }
 .account-shell-link {
-  position: fixed; z-index: 50; top: 0.75rem; right: 9rem; width: auto;
+  position: fixed; z-index: 50; top: 0.75rem; right: 15rem; width: auto;
 }
 .account-screen {
   width: min(100% - 2rem, 960px); margin: 0 auto; padding: 5rem 0 3rem;
@@ -1108,7 +1108,8 @@ select {
 .msg__cost:hover .msg__cost-detail, .msg__cost:focus-within .msg__cost-detail,
 .msg__cost-detail.is-open { display: inline; }
 @media (max-width: 600px) {
-  .account-shell-link { right: 7.5rem; max-width: calc(100vw - 9rem); }
+  /* Home estreita: os dois botões fixos não cabem lado a lado — empilha (logout em cima). */
+  .account-shell-link { top: 3.6rem; right: 0.75rem; max-width: calc(100vw - 1.5rem); }
   .account-card li { flex-direction: column; gap: 0.2rem; }
   .checkout-packages li { align-items: stretch; }
   .account-chart { gap: 1px; }

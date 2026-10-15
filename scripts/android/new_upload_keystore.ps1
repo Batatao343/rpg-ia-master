@@ -10,13 +10,18 @@ if ($Dir -match 'OneDrive') { throw 'Refusing: keystore dir must be outside OneD
 $jdk = Get-ChildItem "$env:LOCALAPPDATA\jdk21" -Directory -Filter 'jdk-21*' -ErrorAction SilentlyContinue | Select-Object -First 1
 $keytool = if ($jdk) { Join-Path $jdk.FullName 'bin\keytool.exe' } else { 'keytool' }
 New-Item -ItemType Directory -Force $Dir | Out-Null
+# Lock the folder to the current user BEFORE any secret is written.
+icacls $Dir /inheritance:r /grant:r "$($env:USERNAME):(OI)(CI)F" | Out-Null
+if ($LASTEXITCODE -ne 0) { throw 'icacls failed: refusing to write secrets into an unrestricted folder' }
 $ks = Join-Path $Dir 'upload.jks'; $props = Join-Path $Dir 'signing.properties'
 if ((Test-Path $ks) -or (Test-Path $props)) { throw "Refusing to overwrite existing $ks / $props" }
 $bytes = New-Object byte[] 24; [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
 $pw = ([Convert]::ToBase64String($bytes)) -replace '[^A-Za-z0-9]', 'x'
-& $keytool -genkeypair -v -keystore $ks -alias $Alias -keyalg RSA -keysize 2048 -validity 10000 -storepass $pw -keypass $pw -dname $Dname | Out-Null
-if ($LASTEXITCODE -ne 0) { throw 'keytool failed' }
+$env:RPG_KT_PW = $pw
+try {
+  & $keytool -genkeypair -v -keystore $ks -alias $Alias -keyalg RSA -keysize 2048 -validity 10000 -storepass:env RPG_KT_PW -keypass:env RPG_KT_PW -dname $Dname | Out-Null
+  if ($LASTEXITCODE -ne 0) { throw 'keytool failed' }
+} finally { Remove-Item Env:RPG_KT_PW -ErrorAction SilentlyContinue }
 $storeFwd = $ks.Replace([string][char]92, '/')
 Set-Content -Encoding ascii $props "storeFile=$storeFwd`nstorePassword=$pw`nkeyAlias=$Alias`nkeyPassword=$pw`n"
-icacls $Dir /inheritance:r /grant:r "$($env:USERNAME):(OI)(CI)F" | Out-Null
 Write-Host "Created $ks and $props (permissions restricted to current user). BACK UP BOTH OFFLINE; do not commit."

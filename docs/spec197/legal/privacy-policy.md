@@ -11,8 +11,8 @@ Ultima atualizacao: `<data>`.
   (access/refresh/CSRF) estritamente necessarios.
 - **Jogo:** personagens, campanhas, historico de turnos, memoria narrativa (texto e vetores), cronica, preferencias.
 - **Texto digitado** nos turnos: enviado a provedores de IA para gerar a narracao (secao 4).
-- **Voz:** o audio gravado e enviado para transcricao e e **apagado imediatamente apos o processamento**; nao e gravado
-  em banco, log ou armazenamento, e a transcricao nao e retida pelo recibo da operacao (apenas o tipo e a marca
+- **Voz:** o audio gravado e enviado para transcricao; **nao o armazenamos em nossos servidores** (nao e gravado
+  em banco, log ou armazenamento) e ele fica sujeito a retencao do provedor de transcricao (`<confirmar prazo>`), e a transcricao nao e retida pelo recibo da operacao (apenas o tipo e a marca
   `result_retained=false`). O texto transcrito passa a ser um turno normal do jogo.
 - **Imagens:** retratos/cenas geradas por IA a partir de descricoes do jogo ficam em armazenamento privado do usuario;
   voce nao envia fotos pessoais.
@@ -31,13 +31,14 @@ Banco e armazenamento: Supabase, regiao **sa-east-1 (Sao Paulo)**. Aplicacao: Ve
 disponivel). Provedores de IA e pagamento podem processar dados fora do Brasil (transferencia internacional com as
 salvaguardas do art. 33 da LGPD).
 
-## 4. Compartilhamento (operadores)
+## 4. Operadores (processadores em nosso nome)
+Estes operadores tratam dados por nossa conta; para a Google Play Data Safety isso nao e "compartilhamento com terceiros".
 | Operador | Para que | Dados |
 |---|---|---|
 | Supabase | banco, autenticacao, armazenamento | conta, jogo, arquivos |
 | Vercel | hospedagem da aplicacao | requisicoes, logs tecnicos |
-| Provedores de LLM (`<DeepSeek, Groq, ...>` - confirmar lista final) | gerar narracao | texto do turno e contexto da campanha |
-| Provedor de transcricao (`<Groq/OpenAI>`) | voz para texto | audio temporario |
+| Provedores de LLM (DeepSeek e Groq, fixados em producao via `RPG_ROUTES`) | gerar narracao | texto do turno e contexto da campanha |
+| Provedor de transcricao (Groq `whisper-large-v3-turbo`; fallback OpenAI `gpt-4o-mini-transcribe`) | voz para texto | audio (retencao do provedor) |
 | Provedor de imagem (`<...>`) | gerar arte | descricao textual da cena |
 | Jina | embeddings da memoria | trechos de texto da campanha |
 | Cloudflare Turnstile | antibot em cadastro/login | sinais do navegador e IP |

@@ -6,7 +6,7 @@ file("$rootDir/version.properties").withInputStream { versionProps.load(it) }
 
 // SPEC-198: upload-key signing. Secrets come ONLY from env vars or a gitignored keystore.properties
 // (never committed). Env wins: RPG_UPLOAD_STORE_FILE / RPG_UPLOAD_STORE_PASSWORD / RPG_UPLOAD_KEY_ALIAS / RPG_UPLOAD_KEY_PASSWORD.
-// keystore.properties keys: storeFile, storePassword, keyAlias, keyPassword. Without them the release is built UNSIGNED.
+// keystore.properties keys: storeFile, storePassword, keyAlias, keyPassword. Without them release assemble/bundle FAILS (checkReleaseSigning).
 def ksProps = new Properties()
 def ksFile = file("$rootDir/keystore.properties")
 if (ksFile.exists()) ksFile.withInputStream { ksProps.load(it) }
@@ -64,7 +64,10 @@ tasks.register('checkReleaseCleartext') {
     def merged = layout.buildDirectory.file('intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml')
     doLast {
         if (cfg.exists()) {
-            def url = new groovy.json.JsonSlurper().parse(cfg)?.server?.url
+            def server = new groovy.json.JsonSlurper().parse(cfg)?.server
+            def url = server?.url
+            if (server?.cleartext == true)
+                throw new GradleException("Release build refused: capacitor.config.json server.cleartext is true. Re-run 'npx cap sync android' without CAP_BUILD=debug.")
             if (url != null && url.toString().toLowerCase().startsWith('http://'))
                 throw new GradleException("Release build refused: capacitor.config.json server.url is cleartext (${url}). Re-run 'npx cap sync android' without CAP_BUILD=debug and with an https CAP_SERVER_URL.")
         }
@@ -73,7 +76,16 @@ tasks.register('checkReleaseCleartext') {
             throw new GradleException('Release build refused: merged manifest has usesCleartextTraffic=true')
     }
 }
+// SPEC-198: a release artifact without a signing config would be unsigned (unusable): fail loudly instead.
+tasks.register('checkReleaseSigning') {
+    def resolved = uploadStore != null
+    doLast {
+        if (!resolved)
+            throw new GradleException('Release build refused: no signing config resolved. Set RPG_UPLOAD_STORE_FILE/RPG_UPLOAD_STORE_PASSWORD/RPG_UPLOAD_KEY_ALIAS/RPG_UPLOAD_KEY_PASSWORD or provide keystore.properties (see scripts/android/release_build.ps1).')
+    }
+}
 afterEvaluate {
+    ['assembleRelease', 'bundleRelease'].each { n -> tasks.matching { it.name == n }.configureEach { dependsOn 'checkReleaseSigning' } }
     tasks.named('checkReleaseCleartext').configure { it.dependsOn('processReleaseManifest') }
     ['assembleRelease', 'bundleRelease'].each { n -> tasks.matching { it.name == n }.configureEach { dependsOn 'checkReleaseCleartext' } }
 }

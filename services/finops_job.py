@@ -12,6 +12,7 @@ from services.finops_alerts import (
     publish_margin_metrics, publish_switch_metrics,
 )
 from services.daily_spend_cap import evaluate_daily_cap
+from services.finops_alerts import Alert
 from services.kill_switches import get_switches
 
 
@@ -57,6 +58,7 @@ def run_finops(reader, now: datetime | None = None, *, report_days: int | None =
         unpriced_versions=report.missing_pricing), now, Thresholds.from_env())
     # Daily spend cap (opt-in via RPG_DAILY_SPEND_CAP_BRL): auto-off only, never auto-on.
     cap_summary: dict = {}
+    cap_failed = 0
     try:
         store = switch_store if switch_store is not None else get_switches()._resolve_store()
         cap = evaluate_daily_cap(reader, store, now, fx)
@@ -67,11 +69,19 @@ def run_finops(reader, now: datetime | None = None, *, report_days: int | None =
             off = sorted({*off, *cap.switched_off})
     except Exception as exc:  # the cap must not break the evaluation; surfaced in the summary
         cap_summary = {"daily_cap_error": type(exc).__name__}
+        cap_failed = 1
+        alerts = [*alerts, Alert("daily_spend_cap_error",
+                                 f"daily spend cap evaluation failed: {type(exc).__name__}: {str(exc)[:200]}",
+                                 blocking=True)]
+    if cap_summary.get("daily_cap_error") and not cap_failed:  # store problem reported by the evaluator
+        cap_failed = 1
+        alerts = [*alerts, Alert("daily_spend_cap_error", "daily spend cap error: " + cap_summary["daily_cap_error"],
+                                 blocking=True)]
     publish_alert_metrics(alerts)
     publish_margin_metrics(report.skus, report.unit_costs)
     publish_switch_metrics(off)
     publish_evaluation_age(evaluated=True)
-    summary = {"failed": 0, "alerts": len(alerts), "blocking_alerts": sum(a.blocking for a in alerts),
+    summary = {"failed": cap_failed, "alerts": len(alerts), "blocking_alerts": sum(a.blocking for a in alerts),
             "alert_kinds": ",".join(sorted({a.kind for a in alerts})), "skus": len(report.skus),
             "skus_below_target": sum(1 for s in report.skus if s.meets_target is False),
             "switches_off": len(off), "purchases": sum(r.purchases for r in report.rows),
