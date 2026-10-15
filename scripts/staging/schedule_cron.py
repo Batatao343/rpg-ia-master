@@ -16,6 +16,8 @@ JOBS = (
     ("rpg-cron-jobs", "* * * * *", "/internal/cron/jobs"),
     ("rpg-cron-account-deletions", "*/5 * * * *", "/internal/cron/account-deletions"),
     ("rpg-cron-operations", "*/5 * * * *", "/internal/cron/operations"),
+    ("rpg-cron-reconciliation", "*/15 * * * *", "/internal/cron/reconciliation"),  # SPEC-195
+    ("rpg-cron-finops", "0 * * * *", "/internal/cron/finops"),  # SPEC-196
 )
 SECRET_NAME = "rpg_cron_secret"
 EXTENSIONS = ("pg_cron", "pg_net")

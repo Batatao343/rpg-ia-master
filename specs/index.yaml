@@ -3452,7 +3452,7 @@ specs:
   lineage_note: Imported approved v5 package; implementation not started
 - id: SPEC-196
   slug: finops-margin-guard-observability
-  status: approved
+  status: done
   path: specs/SPEC-196-finops-margin-guard-observability.md
   created_commit: null
   created_at: '2026-10-02'

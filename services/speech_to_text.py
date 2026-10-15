@@ -122,7 +122,20 @@ def configured_candidates() -> list[Candidate]:
                   Candidate("openai", os.getenv("RPG_SPEECH_OPENAI_MODEL", "gpt-4o-mini-transcribe"))]
     if any(not re.fullmatch(r"[A-Za-z0-9._/-]{1,150}", c.model) for c in candidates):
         raise SpeechError("speech_configuration", 503)
-    return [c for c in candidates if os.getenv(_KEYS[c.provider]) and SPEECH_CIRCUIT.available(c)]
+    return [c for c in candidates if os.getenv(_KEYS[c.provider]) and SPEECH_CIRCUIT.available(c)
+            and _allowed_by_switches(c, primary=candidates[0])]
+
+
+def _allowed_by_switches(candidate: Candidate, *, primary: Candidate) -> bool:
+    """SPEC-196 kill switches: expensive STT fallback and per-model switches (fail-safe: allow)."""
+    try:
+        from services.kill_switches import STT_FALLBACK, get_switches, model_key
+        switches = get_switches()
+        if not switches.is_enabled(model_key(candidate.provider, candidate.model)):
+            return False
+        return candidate == primary or switches.is_enabled(STT_FALLBACK)
+    except Exception:
+        return True
 
 
 def canonical_mime(value: str) -> str:

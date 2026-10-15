@@ -60,6 +60,11 @@ class GooglePlayPurchases:
                 self._consume(prior)
                 prior = self.store.get_by_token(digest)
             return _public(prior)
+        from services.kill_switches import SwitchOff, require_purchases  # SPEC-196: NEW purchases only
+        try:
+            require_purchases("google_play")
+        except SwitchOff:
+            raise GooglePlayError("new_purchases_disabled") from None
         facts = self.client.get_purchase(product_id, purchase_token)
         if facts.product_id != product_id:
             raise GooglePlayError("google_play_product_mismatch")

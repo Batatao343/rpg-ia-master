@@ -34,6 +34,12 @@ def build_handlers():
         from infrastructure.contracts import Principal, Conflict
         from services.image_quotes import ImageQuoteRepository
         generation_id = UUID(str(payload["generation"]["generation_id"]))
+        from infrastructure.contracts import JobDeferred
+        from services.kill_switches import IMAGE, get_switches
+        if not get_switches().is_enabled(IMAGE):
+            # SPEC-196 F5: paused, not failed. Reservation stays held; the job resumes when the
+            # switch is turned back on (no attempt consumed, no release, no provider call).
+            raise JobDeferred("image_generation_disabled", 60.0)
         owner_id, game_id = UUID(str(payload["owner_id"])), UUID(str(payload["game_id"]))
         repository = DynamicArtRepository(
             pool, model="", profile_version="",

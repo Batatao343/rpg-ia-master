@@ -78,17 +78,17 @@ class FakeConn:
 def test_schedule_is_idempotent_and_keeps_secret_out_of_command():
     plans = sc.plan("https://x.example/")
     assert [p[0] for p in plans] == ["rpg-cron-jobs", "rpg-cron-account-deletions", "rpg-cron-operations",
-                                        "rpg-cron-health"]
+                                        "rpg-cron-reconciliation", "rpg-cron-finops", "rpg-cron-health"]
     assert all("SECRETVALUE" not in p[2] for p in plans)
-    assert all("https://x.example/internal/cron/" in p[2] and "app.cron_requests" in p[2] for p in plans[:3])
-    assert plans[3][2] == "select app.cron_health_check()"
+    assert all("https://x.example/internal/cron/" in p[2] and "app.cron_requests" in p[2] for p in plans[:5])
+    assert plans[5][2] == "select app.cron_health_check()"
     assert "vault.decrypted_secrets" in plans[0][2]
     for exists, verb in ((False, "create_secret"), (True, "update_secret")):
         c = FakeConn(exists)
         res = sc.apply(c, "https://x.example", "SECRETVALUE")
         text = " ".join(s for s, _ in c.sql)
         assert verb in text and res["vault"] == ("updated" if exists else "created")
-        assert text.count("cron.unschedule") == 4 and text.count("cron.schedule") == 4
+        assert text.count("cron.unschedule") == 6 and text.count("cron.schedule") == 6
         assert not any("SECRETVALUE" in str(p) for s, p in c.sql if "cron.schedule" in s)
 
 

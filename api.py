@@ -1684,6 +1684,8 @@ def prometheus_metrics():
             )
     except OSError:
         pass
+    from services.finops_alerts import publish_evaluation_age  # SPEC-196: grows if cron stops
+    publish_evaluation_age()
     return Response(
         metrics.render_prometheus(),
         media_type="text/plain; version=0.0.4; charset=utf-8",
@@ -2034,11 +2036,14 @@ def _refuse_android_stripe(request: Request) -> None:
 def checkout_create(body: CheckoutRequest, request: Request):
     _refuse_android_stripe(request)
     from infrastructure.request_context import current_principal
+    from services.kill_switches import SwitchOff
     from services.shard_pricing import PricingUnavailable
     from services.stripe_checkout import StripeError
     try:
         return JSONResponse(_stripe_payments().checkout(current_principal(), body.sku_id, body.request_id),
                             headers={'Cache-Control': 'no-store'})
+    except SwitchOff:
+        raise HTTPException(503, 'new_purchases_disabled') from None
     except (StripeError, PricingUnavailable):
         raise HTTPException(503, 'stripe_checkout_unavailable') from None
 
@@ -2080,11 +2085,17 @@ def google_play_profile():
     """Value the app must pass to setObfuscatedAccountId before launching billing."""
     from infrastructure.request_context import current_principal
     from services.google_play import GooglePlayError, obfuscated_account_id
+    from services.kill_switches import SwitchOff, require_purchases
+    try:  # SPEC-196 F4: client must hide buy buttons BEFORE the user pays at Google
+        require_purchases('google_play')
+    except SwitchOff:
+        return JSONResponse({'purchases_disabled': True, 'reason': 'new_purchases_disabled'},
+                            headers={'Cache-Control': 'no-store'})
     try:
         account_id = obfuscated_account_id(current_principal().user_id)
     except GooglePlayError:
         raise HTTPException(503, 'google_play_unconfigured') from None
-    return JSONResponse({'obfuscated_account_id': account_id},
+    return JSONResponse({'obfuscated_account_id': account_id, 'purchases_disabled': False},
                         headers={'Cache-Control': 'no-store'})
 
 
@@ -2104,7 +2115,7 @@ def google_play_verify(body: GooglePlayVerifyRequest):
     from infrastructure.request_context import current_principal
     from infrastructure.wallet import WalletConflict
     from services.google_play import GooglePlayError
-    unavailable = ('google_play_unavailable', 'google_play_unconfigured')
+    unavailable = ('google_play_unavailable', 'google_play_unconfigured', 'new_purchases_disabled')
     conflicts = ('google_play_token_conflict', 'google_play_purchase_cancelled', 'google_play_already_consumed')
     try:
         result = _google_play().verify(current_principal(), body.product_id, body.purchase_token, body.order_id)
@@ -2394,12 +2405,28 @@ def _enqueue_turn_art(state_before: dict, state_after: dict, action_key: str) ->
         _enqueue_art_generation(state_after, trigger, brief)
 
 
-def _image_finance():
+def _guard_image_effect() -> None:
+    """SPEC-196: kill switch + stale rate card refuse NEW image quotes/generation only."""
+    from services.finops_alerts import require_paid_effect
+    from services.kill_switches import IMAGE, SwitchOff, get_switches
+    from services.shard_pricing import PricingUnavailable
+    try:
+        get_switches().require(IMAGE)
+        require_paid_effect("image")
+    except SwitchOff:
+        raise HTTPException(503, "image_generation_disabled") from None
+    except PricingUnavailable:
+        raise HTTPException(503, "image_pricing_unavailable") from None
+
+
+def _image_finance(*, guard: bool = True):
     from infrastructure.request_context import current_principal
     from infrastructure.runtime import get_runtime
     from services.image_quotes import ImageQuoteRepository
     if not _database_profile() or os.getenv("RPG_DYNAMIC_ART_ENABLED", "0").lower() not in {"1", "true", "yes"}:
         raise HTTPException(503, "image_quotes_unavailable")
+    if guard:
+        _guard_image_effect()
     runtime = get_runtime()
     return runtime, current_principal(), ImageQuoteRepository(runtime.resources[0])
 
@@ -2472,7 +2499,9 @@ def confirm_player_art(game_id: str, req: ArtConfirmRequest):
     from services.turn_execution import operation_scope
     from services.turn_effects import effect_scope
     from services.art_triggers import ArtGenerationRequest, reserve_request
-    runtime, principal, repository = _image_finance()
+    # SPEC-196: replay of an existing generation must keep working with the switch off;
+    # only a NEW confirm is refused (guard runs after the `prior` lookup below).
+    runtime, principal, repository = _image_finance(guard=False)
     claim = None
     state = load_game_state(_resolve_save_file(game_id))
     if not state:
@@ -2486,6 +2515,7 @@ def confirm_player_art(game_id: str, req: ArtConfirmRequest):
             return {"status": prior["status"], "generation_id": str(prior["generation_id"]),
                     "type": quote["image_type"], "placeholder": prior["status"] != "ready",
                     **_public_art_refs(state)}
+        _guard_image_effect()
         _validate_image_request(state, quote["reformulation"], quote["image_type"])
         claim, request_hash, receipt = _begin_state_mutation(state, action_id=req.action_id, kind="art",
             payload={"game_id": game_id, **req.model_dump(mode="json", exclude={"action_id"})})

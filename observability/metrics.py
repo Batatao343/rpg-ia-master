@@ -29,8 +29,15 @@ LABELS = {
     "rpg_blob_operations_total": {"operation", "outcome"},
     "rpg_backup_age_seconds": {"component"},
     "rpg_auth_email_delivery_failures_total": {"action", "status_class"},
+    # SPEC-196: closed, low-cardinality FinOps labels (never user/game/order ids).
     # SPEC-195: unresolved reconciliation events by closed status (parked | orphaned).
     "rpg_reconciliation_events": {"status"},
+    "rpg_finops_alert_active": {"kind", "channel", "sku_id", "provider", "model"},
+    "rpg_finops_margin_ratio": {"channel", "sku_id"},
+    "rpg_finops_unit_cost_usd": {"kind"},
+    "rpg_finops_kill_switch_off": {"kind"},
+    "rpg_finops_evaluation_age_seconds": {"kind"},
+    "rpg_kill_switch_load_errors_total": {"error"},
 }
 
 
@@ -68,6 +75,12 @@ class Metrics:
         key = self._key(name, labels)
         with self._lock:
             self._gauges[key] = float(value)
+
+    def clear_gauge(self, name: str, labels: Mapping[str, object]) -> None:
+        """Drop a gauge series (e.g. a SKU that left the report window)."""
+        key = self._key(name, labels)
+        with self._lock:
+            self._gauges.pop(key, None)
 
     def snapshot(self) -> dict[str, float]:
         with self._lock:

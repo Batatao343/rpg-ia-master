@@ -131,6 +131,19 @@ class PostgresJobQueue:
                 (status, error_code[:100], timedelta(seconds=seconds + jitter), job_id),
             )
 
+    def defer(self, job_id: UUID, lease_token: UUID, delay_seconds: float, reason: str) -> None:
+        """Back to 'queued' for later WITHOUT burning the attempt (kill-switch pause, not failure)."""
+        with self.pool.connection() as connection, connection.transaction():
+            self._require_running(connection, job_id, lease_token)
+            connection.execute(
+                """
+                update app.jobs set status='queued',attempts=greatest(attempts-1,0),
+                  last_error_code=%s,lease_token=null,lease_owner=null,lease_until=null,
+                  available_at=now()+%s,updated_at=now() where id=%s
+                """,
+                (reason[:100], timedelta(seconds=max(1.0, delay_seconds)), job_id),
+            )
+
     def cancel(self, job_id: UUID) -> bool:
         with self.pool.connection() as connection, connection.transaction():
             result = connection.execute(

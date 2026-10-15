@@ -446,6 +446,15 @@ def llm_spend_guard_scope(fn: Callable[[str, str], None]):
         _SCOPED_SPEND_GUARD.reset(token)
 
 
+def _kill_switch_disabled(provider: str, model: str) -> bool:
+    """True when an operator disabled ``model:<provider>/<model>``; never raises (fail-safe)."""
+    try:
+        from services.kill_switches import model_disabled
+        return model_disabled(provider, model)
+    except Exception:
+        return False
+
+
 def _authorize_provider_attempt(provider: str, model: str) -> None:
     guard = _SCOPED_SPEND_GUARD.get()
     if guard is not None:
@@ -706,6 +715,9 @@ class RoutedLLM:
         structured_contract = self._pydantic_structured_contract()
         for provider_index, (provider, model) in enumerate(self.candidates):
             fell_back = provider_index > 0
+            if _kill_switch_disabled(provider, model):  # SPEC-196: operator switched model off
+                errors.append(f"{provider}:{model} kill_switch")
+                continue
             circuit_reason = _OPEN_CIRCUITS.get((provider, model))
             if circuit_reason:
                 errors.append(f"{provider}:{model} circuit")
@@ -866,6 +878,9 @@ class RoutedLLM:
         errors = []
         for idx, (provider, model) in enumerate(self.candidates):
             fell_back = idx > 0
+            if _kill_switch_disabled(provider, model):  # SPEC-196
+                errors.append(f"{provider}:{model} kill_switch")
+                continue
             structured = self._pydantic_structured_contract() is not None
             circuit_reason = _OPEN_CIRCUITS.get((provider, model))
             if circuit_reason:

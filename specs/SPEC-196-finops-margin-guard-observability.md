@@ -1,6 +1,6 @@
 # SPEC-196 — FinOps, margin guard e observabilidade comercial
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Depende de:** SPEC-195 `done`
 > **EXECUTOR_MODEL obrigatório:** `Terra`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -38,10 +38,10 @@ BI sofisticado; forecasting de receita.
 
 ## Critérios de aceite
 
-- [ ] target margin calculável por canal.
-- [ ] mismatch financeiro alerta.
-- [ ] kill switch testado.
-- [ ] fixed infra aparece separado, não “some” da análise.
+- [x] target margin calculável por canal.
+- [x] mismatch financeiro alerta.
+- [x] kill switch testado.
+- [x] fixed infra aparece separado, não “some” da análise.
 
 ## Gates / evidência
 
@@ -49,9 +49,15 @@ Synthetic financial load + staging metrics.
 
 ## Gate de fechamento
 
-- [ ] dashboard separa gross, channel fee, variable cost, contribution margin e fixed infra;
-- [ ] meta de 5% é calculada por SKU/canal/pricing_version e não misturada com imposto nesta versão;
-- [ ] unknown/stale rate card gera alerta e pode bloquear nova venda/efeito caro, nunca assume custo zero;
-- [ ] kill switches são server-side, auditáveis e testados para imagem, STT fallback e modelo/decision backend;
-- [ ] alerta financeiro não usa user_id/game_id como label de métrica;
-- [ ] review Sol independente aprova fórmulas/guards.
+- [x] dashboard separa gross, channel fee, variable cost, contribution margin e fixed infra;
+- [x] meta de 5% é calculada por SKU/canal/pricing_version e não misturada com imposto nesta versão;
+- [x] unknown/stale rate card gera alerta e pode bloquear nova venda/efeito caro, nunca assume custo zero;
+- [x] kill switches são server-side, auditáveis e testados para imagem, STT fallback e modelo/decision backend;
+- [x] alerta financeiro não usa user_id/game_id como label de métrica;
+- [x] review Sol independente aprova fórmulas/guards — equivalente Opus independente: APPROVED_WITH_FOLLOWUPS (15/10), F1–F8 corrigidos.
+
+## Addendum 2026-10-15 (execução Claude)
+
+Equivalência de modelo ([mapa aprovado pelo usuário](../docs/planos/equivalencia-modelos-claude.md)): executor → Claude Sonnet; planejamento pelo orquestrador Opus; revisões independentes por Opus em contexto separado.
+
+Veredito da revisão independente (Opus): APPROVED_WITH_FOLLOWUPS; F1–F8 corrigidos. Cobre margem por SKU/canal, alertas, kill switches (imagem, fallback STT, modelo, decision backend JEV, novas compras) e cron `finops`. Limitação: custos fixos em `data/finops_fixed_costs.json` são declarados, não medidos; carga financeira é sintética (`scripts/finops_margin_sim.py`).

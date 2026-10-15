@@ -114,6 +114,14 @@ def _idempotency_key(state: Mapping[str, object], action: str) -> str:
     return "rpg-router-" + hashlib.sha256(basis.encode("utf-8")).hexdigest()[:40]
 
 
+def _jev_switched_off() -> bool:
+    try:
+        from services.kill_switches import JEV, get_switches
+        return not get_switches().is_enabled(JEV)
+    except Exception:
+        return False
+
+
 def decide_route(
     state: Mapping[str, object],
     action: str,
@@ -129,6 +137,9 @@ def decide_route(
     """
     mode = rollout_mode()
     if mode == "off":
+        return None
+    if _jev_switched_off():  # SPEC-196: operator kill switch decision_backend:jev
+        _emit(JevRolloutEvent(mode, "kill_switch", None, 0, None, None, None))
         return None
     if mode == "primary" and os.getenv("RPG_JEV_ROUTER_PRIMARY_APPROVED") != "1":
         _emit(JevRolloutEvent(mode, "approval_required", None, 0, None, None, None))

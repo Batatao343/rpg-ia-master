@@ -1,0 +1,44 @@
+rule_files:
+  - finops.yml
+evaluation_interval: 1m
+tests:
+  - name: finops-alerts-fire
+    interval: 1m
+    input_series:
+      - series: 'rpg_finops_alert_active{kind="unknown_pricing",channel="",sku_id="",provider="deepseek",model="x"}'
+        values: '1 1 1 1 1 1 1'
+      - series: 'rpg_finops_margin_ratio{channel="stripe",sku_id="pack-a"}'
+        values: '0.02x40'
+      - series: 'rpg_finops_alert_active{kind="wallet_mismatch",channel="",sku_id="",provider="",model=""}'
+        values: '1 1 1'
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: FinopsUnknownPricing
+        exp_alerts:
+          - exp_labels: {severity: critical, kind: unknown_pricing, channel: "", sku_id: "", provider: deepseek, model: x}
+      - eval_time: 2m
+        alertname: FinopsWalletMismatch
+        exp_alerts:
+          - exp_labels: {severity: critical, kind: wallet_mismatch, channel: "", sku_id: "", provider: "", model: ""}
+      - eval_time: 31m
+        alertname: FinopsMarginBelowTarget
+        exp_alerts:
+          - exp_labels: {severity: critical, channel: stripe, sku_id: pack-a}
+  - name: finops-watchdogs
+    interval: 1m
+    input_series:
+      - series: 'rpg_kill_switch_load_errors_total{error="OperationalError"}'
+        values: '0 1 2 3 4 5 6 7 8 9 10'
+      - series: 'rpg_finops_evaluation_age_seconds{kind="finops"}'
+        values: '9000x10'
+    alert_rule_test:
+      - eval_time: 8m
+        alertname: KillSwitchStoreUnreadable
+        exp_alerts:
+          - exp_labels: {severity: critical}
+            exp_annotations: {summary: "kill switch store unreadable: switches fail open (or per RPG_KILL_SWITCH_FAIL_CLOSED)"}
+      - eval_time: 8m
+        alertname: FinopsEvaluationStale
+        exp_alerts:
+          - exp_labels: {severity: critical, kind: finops}
+            exp_annotations: {summary: "POST /internal/cron/finops has not run for over 2h; alerts are blind"}

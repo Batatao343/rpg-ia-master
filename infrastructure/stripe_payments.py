@@ -154,6 +154,8 @@ class StripePayments:
             prior = db.execute("select * from app.payment_orders where owner_id=%s and request_id=%s for update",
                                (owner.user_id, request_id)).fetchone()
             if prior is None:
+                from services.kill_switches import require_purchases  # SPEC-196: NEW orders only
+                require_purchases("stripe")
                 quote = quote_published_sku(db, sku_id, at=now)
                 if quote.channel != "web":
                     raise StripeError("stripe_sku_channel_invalid")

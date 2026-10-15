@@ -153,3 +153,28 @@ def cron_reconciliation(request: Request):
         return {**result, "google_voided_new": google_new, "google_poll_errors": google_error,
                 "failed": result["failed"] + google_error}
     return _run("reconciliation", task)
+
+
+def _finops_reader():
+    from infrastructure.finops_reader import PostgresFinopsReader
+    return PostgresFinopsReader(_runtime().game_store.pool)
+
+
+def _finops_recorder():
+    """Persist each evaluation (app.finops_evaluations) for SQL/pg_cron staleness checks."""
+    try:
+        from infrastructure.finops_reader import PostgresFinopsEvaluationStore
+        return PostgresFinopsEvaluationStore(_runtime().game_store.pool)
+    except Exception:  # no Postgres pool (legacy profile): evaluation still runs
+        return None
+
+
+@router.post("/finops")
+def cron_finops(request: Request):
+    """SPEC-196: margin report + alert evaluation + Prometheus gauges (owner-free output)."""
+    authorize(request)
+
+    def task():
+        from services.finops_job import run_finops
+        return run_finops(_finops_reader(), recorder=_finops_recorder())
+    return _run("finops", task)

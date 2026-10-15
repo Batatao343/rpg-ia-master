@@ -1,13 +1,13 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "d1b4d120a09d7ab71a4252cf4c980a9181d7a5d4",
+  "commit_sha": "8638b9d3c669b1c34a428a230c144525cb0e8ba0",
   "edge_counts": {
-    "calls": 10231,
-    "contains": 501,
-    "defines": 6136,
-    "imports": 1045,
-    "likely_test_for": 639,
-    "route_to": 57
+    "calls": 10536,
+    "contains": 510,
+    "defines": 6346,
+    "imports": 1070,
+    "likely_test_for": 652,
+    "route_to": 58
   },
   "excluded_prefixes": [
     ".agents",
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:c9b8db2f095582303bc1fa021c0a6574520b5dfa2cdc21097430cbe0d27e075a",
+  "graph_hash": "sha256:1d7f9cb94dc1581ded82f2738377763469793f2120228f686af7ecef1506196a",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -110,7 +110,9 @@
     "infrastructure/account_read_model.py",
     "infrastructure/contracts.py",
     "infrastructure/file_blob.py",
+    "infrastructure/finops_reader.py",
     "infrastructure/google_play_payments.py",
+    "infrastructure/kill_switch_store.py",
     "infrastructure/local_adapters.py",
     "infrastructure/oidc_identity.py",
     "infrastructure/openai_images.py",
@@ -163,6 +165,7 @@
     "project_index/query.py",
     "pyproject.toml",
     "rag.py",
+    "scripts/admin_kill_switch.py",
     "scripts/admin_wallet_adjust.py",
     "scripts/audit_local_gate.py",
     "scripts/audit_local_server.py",
@@ -176,6 +179,7 @@
     "scripts/content_report.py",
     "scripts/dev_stack.py",
     "scripts/export_game_data.py",
+    "scripts/finops_margin_sim.py",
     "scripts/frontend_eval_report.py",
     "scripts/gen_cards_v4.py",
     "scripts/gen_classes_v2.py",
@@ -260,6 +264,9 @@
     "services/entity_identity.py",
     "services/event_processor.py",
     "services/exploration.py",
+    "services/finops.py",
+    "services/finops_alerts.py",
+    "services/finops_job.py",
     "services/game_serialization.py",
     "services/game_transfer.py",
     "services/google_play.py",
@@ -271,6 +278,7 @@
     "services/jev_decision.py",
     "services/jev_rollout.py",
     "services/job_fence.py",
+    "services/kill_switches.py",
     "services/lease_heartbeat.py",
     "services/local_backup.py",
     "services/memory_intents.py",
@@ -524,6 +532,7 @@
     "tests/test_spec195_followups.py",
     "tests/test_spec195_postgres_local.py",
     "tests/test_spec195_reconciliation.py",
+    "tests/test_spec196_finops.py",
     "tests/test_spec_index.py",
     "tests/test_spec_migration_safety.py",
     "tests/test_speech_api.py",
@@ -628,14 +637,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 545,
-    "endpoint": 57,
-    "file": 574,
-    "function": 1936,
-    "method": 535,
-    "module": 501,
-    "test": 3120
+    "class": 581,
+    "endpoint": 58,
+    "file": 583,
+    "function": 1994,
+    "method": 586,
+    "module": 510,
+    "test": 3185
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:4723a7bae48676a95657341cdae9b851cce940d1c2a660b28cd375e88e44fb7c"
+  "source_tree_hash": "sha256:f7c1ec719d1899f9ca024947c5d55728661e70c6769bb516ff1f5f14f873198e"
 }

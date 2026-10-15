@@ -15,10 +15,13 @@ from uuid import uuid4
 import pytest
 
 from infrastructure.contracts import Principal
+from infrastructure.finops_reader import PostgresFinopsReader
 from infrastructure.google_play_payments import GooglePlayPurchases, PostgresPurchaseStore
+from infrastructure.kill_switch_store import PostgresSwitchStore
 from infrastructure.postgres import PostgresPool
 from infrastructure.reconciliation import PostgresStore, Reconciler
 from infrastructure.wallet import FinancialHold, PostgresWallet
+from services import kill_switches as ks
 from services.google_play import (
     GooglePlayError, ProductPurchase, obfuscated_account_id, token_digest,
 )
@@ -57,9 +60,9 @@ def lab():
     import psycopg
     with psycopg.connect(dsn) as c:
         for table in ("app.google_play_purchases", "app.purchase_reconciliation_events",
-                      "app.wallet_debt_entries"):
+                      "app.wallet_debt_entries", "app.kill_switches"):
             if c.execute("select to_regclass(%s)", (table,)).fetchone()[0] is None:
-                pytest.skip("migrations SPEC-194/195 não aplicadas")
+                pytest.skip("migrations SPEC-194/195/196 não aplicadas")
         version, product, web_sku, gp_sku = ("lab-" + uuid4().hex[:12] for _ in range(4))
         product = "gp_" + uuid4().hex[:12]
         at = datetime.now(timezone.utc)
@@ -287,6 +290,48 @@ def test_google_void_after_consumption_creates_debt(lab):
     Reconciler(lab.store).ingest(Event(GOOGLE, "void-" + order, "voided", order, None, None, 0))
     assert lab.store.reconcile(GOOGLE, order) == "applied"
     assert (balance(lab, owner), debt(lab, owner)) == (0, SHARD)
+
+
+# ---------------------------------------------------------------- SPEC-196: kill switch + FinOps
+def test_kill_switch_set_and_audit_via_postgres_store(lab):
+    store = PostgresSwitchStore(lab.pool)
+    store.set(ks.IMAGE, False, actor_id="ana", reason="lab-off")
+    assert store.load()[ks.IMAGE] is False
+    store.set(ks.IMAGE, True, actor_id="ana", reason="lab-on")
+    assert store.load()[ks.IMAGE] is True
+    audit = [a for a in store.audit(10) if a["key"] == ks.IMAGE]
+    assert [a["enabled"] for a in audit[:2]] == [True, False]
+    assert audit[0]["previous_enabled"] is False and audit[0]["actor_id"] == "ana"
+    with pytest.raises(Exception):
+        store.set(ks.IMAGE, False, actor_id="", reason="")
+
+
+def test_finops_reader_returns_expected_aggregates_for_seeded_scenario(lab_rb):
+    lab = lab_rb
+    owner = Principal(uuid4(), "test", "fo")
+    ref_web = web_purchase(lab, owner)
+    Reconciler(lab.store).ingest(ev("fee_reconciled", ref_web, 1, 57))
+    lab.store.reconcile(STRIPE, ref_web)
+    order, token = "GPA." + uuid4().hex[:12], "tok_" + uuid4().hex
+    google = FakeGoogle(lab.product, order)
+    google.base["account_id"] = obfuscated_account_id(owner.user_id)
+    GooglePlayPurchases(PostgresPurchaseStore(lab.pool), google).verify(owner, lab.product, token)
+    reader = PostgresFinopsReader(lab.pool)
+    refs, fresh = reader.pricing()
+    assert lab.version in refs and "google_play" in refs[lab.version].fees and fresh
+    now = datetime.now(timezone.utc)
+    mine = [p for p in reader.purchases(now - timedelta(hours=1), now + timedelta(hours=1))
+            if p.owner_key == str(owner.user_id)]
+    assert {p.sku_channel for p in mine} == {"web", "google_play"} and len(mine) == 2
+    by = {p.sku_channel: p for p in mine}
+    assert by["web"].gross_brl == GROSS and by["web"].shard_milli == SHARD
+    assert by["web"].fee_actual_brl == Decimal("0.57")  # real fee wins over the estimate
+    assert by["google_play"].fee_actual_brl is None
+    assert reader.wallet_mismatch()[0] == 0  # ledger == accounts everywhere in the lab
+    reader.ops_counts(now - timedelta(hours=1), now)  # query shape valid on the real schema
+    reader.usage_groups(now - timedelta(hours=1), now)
+    reader.owner_usage(now - timedelta(hours=1), now)
+    reader.backlogs(now)
 
 
 def test_google_poison_consume_counts_attempts_then_terminal_consume_failed(lab):

@@ -41,6 +41,16 @@ class LeaseHeld(Conflict):
     pass
 
 
+class JobDeferred(InfrastructureError):
+    """The handler refuses to run NOW (e.g. a kill switch is off) but the job stays valid:
+    the worker re-queues it without consuming an attempt (SPEC-196 F5)."""
+
+    def __init__(self, reason: str, delay_seconds: float = 60.0) -> None:
+        super().__init__(reason)
+        self.reason = reason
+        self.delay_seconds = delay_seconds
+
+
 class PersistenceUnavailable(InfrastructureError):
     pass
 
@@ -218,6 +228,9 @@ class JobQueue(Protocol):
     def complete(self, job_id: UUID, lease_token: UUID, result: dict[str, Any]) -> None: ...
 
     def fail(self, job_id: UUID, lease_token: UUID, error_code: str) -> None: ...
+
+    # Optional: ``defer(job_id, lease_token, delay_seconds, reason)`` re-queues without
+    # consuming an attempt; JobWorker falls back to ``fail`` when an adapter lacks it.
 
 
 class TurnCoordinator(Protocol):

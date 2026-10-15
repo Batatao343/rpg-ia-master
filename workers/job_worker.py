@@ -6,7 +6,7 @@ import threading
 from collections.abc import Callable
 from typing import Any
 
-from infrastructure.contracts import JobQueue, LeasedJob, LeaseHeld
+from infrastructure.contracts import JobDeferred, JobQueue, LeasedJob, LeaseHeld
 from services.lease_heartbeat import keep_lease_alive
 from services.job_fence import job_scope
 
@@ -47,6 +47,16 @@ class JobWorker:
             self.queue.complete(job.job_id, job.lease_token, result)
         except LeaseHeld:
             return  # New owner's fence controls publication, never fail its job.
+        except JobDeferred as exc:
+            defer = getattr(self.queue, "defer", None)
+            try:
+                if defer is not None:
+                    defer(job.job_id, job.lease_token, exc.delay_seconds, str(exc.reason))
+                else:
+                    self.queue.fail(job.job_id, job.lease_token, str(exc.reason)[:100])
+            except LeaseHeld:
+                pass
+            return
         except Exception as exc:
             code = getattr(exc, "error_code", "handler_error")
             try:

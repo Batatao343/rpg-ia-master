@@ -1,0 +1,52 @@
+# SPEC-196: commercial/FinOps alerts. Gauges are published by POST /internal/cron/finops
+# (labels: kind, channel, sku_id, provider, model only -- never user/game/order ids).
+groups:
+  - name: valoria-finops
+    rules:
+      - alert: FinopsUnknownPricing
+        expr: rpg_finops_alert_active{kind="unknown_pricing"} == 1
+        for: 5m
+        labels: {severity: critical}
+      - alert: FinopsUnknownPurchasePricing
+        expr: rpg_finops_alert_active{kind="finops_unknown_purchase_pricing"} == 1
+        for: 5m
+        labels: {severity: critical}
+      - alert: FinopsStaleRateCard
+        expr: rpg_finops_alert_active{kind="stale_rate_card"} == 1
+        for: 5m
+        labels: {severity: critical}
+      - alert: FinopsCostSpike
+        expr: rpg_finops_alert_active{kind="cost_spike"} == 1
+        labels: {severity: warning}
+      - alert: FinopsExpensiveFallback
+        expr: rpg_finops_alert_active{kind="expensive_fallback"} == 1
+        for: 15m
+        labels: {severity: warning}
+      - alert: FinopsWalletMismatch
+        expr: rpg_finops_alert_active{kind="wallet_mismatch"} == 1
+        labels: {severity: critical}
+      - alert: FinopsWebhookBacklog
+        expr: rpg_finops_alert_active{kind="webhook_backlog"} == 1
+        for: 10m
+        labels: {severity: warning}
+      - alert: FinopsProviderFailure
+        expr: rpg_finops_alert_active{kind="provider_failure"} == 1
+        for: 10m
+        labels: {severity: warning}
+      - alert: FinopsMarginBelowTarget
+        expr: rpg_finops_margin_ratio < 0.05
+        for: 30m
+        labels: {severity: critical}
+      - alert: FinopsKillSwitchActive
+        expr: rpg_finops_kill_switch_off > 0
+        labels: {severity: info}
+      - alert: KillSwitchStoreUnreadable
+        expr: increase(rpg_kill_switch_load_errors_total[10m]) > 0
+        for: 5m
+        labels: {severity: critical}
+        annotations: {summary: "kill switch store unreadable: switches fail open (or per RPG_KILL_SWITCH_FAIL_CLOSED)"}
+      - alert: FinopsEvaluationStale
+        expr: rpg_finops_evaluation_age_seconds{kind="finops"} > 7200
+        for: 5m
+        labels: {severity: critical}
+        annotations: {summary: "POST /internal/cron/finops has not run for over 2h; alerts are blind"}

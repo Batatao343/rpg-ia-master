@@ -482,6 +482,15 @@ class InlineJobQueue:
             row.status = "succeeded"
             row.result = deepcopy(result)
 
+    def defer(self, job_id: UUID, lease_token: UUID, delay_seconds: float, reason: str) -> None:
+        del delay_seconds  # in-memory queue has no clock: next lease() may retry immediately
+        with self._lock:
+            row = self._leased(job_id, lease_token)
+            row.error_code = reason
+            row.lease_token = None
+            row.attempt = max(0, row.attempt - 1)
+            row.status = "queued"
+
     def fail(self, job_id: UUID, lease_token: UUID, error_code: str) -> None:
         with self._lock:
             row = self._leased(job_id, lease_token)

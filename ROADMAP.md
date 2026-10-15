@@ -1,5 +1,12 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **15/10 — SPEC-196 `done`: FinOps, margin guard e kill switches.** Margem por SKU/canal/versão de preço
+> (gross, taxa de canal, custo variável, contribuição; infra fixa separada), alertas Prometheus sem ids de
+> usuário, rate card ausente/velho bloqueia novo efeito caro (nunca custo zero) e kill switches server-side
+> auditáveis (imagem, fallback STT, modelo, decision backend, novas compras) com `scripts/admin_kill_switch.py`.
+> Jobs deferem em vez de falhar. Cron `POST /internal/cron/finops`. Revisão independente
+> APPROVED_WITH_FOLLOWUPS (F1–F8 corrigidos). [Evidência](docs/spec196/README.md). Próxima: SPEC-197.
+
 > **15/10 — SPEC-195 `done`: reconciliação de reembolsos/disputas/revogações entre canais.** Eventos
 > Stripe e Google (`voidedpurchases`) normalizados e aplicados por um reconciliador idempotente fora de ordem;
 > saldo gasto nunca fica negativo: a diferença vira dívida/hold (`app.wallet_debt_entries`) que bloqueia novo uso

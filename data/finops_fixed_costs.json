@@ -1,0 +1,8 @@
+{
+  "_comment": "SPEC-196 fixed infrastructure, monthly, kept SEPARATE from SKU margins (never allocated). Values in USD. Vercel Hobby and Supabase Free are $0 today; update when plans change (Vercel Pro = 20/seat, Supabase Pro = 25 + compute).",
+  "currency": "USD",
+  "items": [
+    {"name": "vercel", "plan": "hobby", "monthly_usd": "0"},
+    {"name": "supabase", "plan": "free", "monthly_usd": "0"}
+  ]
+}
