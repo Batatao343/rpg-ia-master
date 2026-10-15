@@ -120,7 +120,7 @@ com HTTP 402 DeepSeek. A retomada de 16/09 falhou no preflight pelo mesmo motivo
 Após os fixes adicionais, B deve reiniciar do par 1; campanhas parciais anteriores
 são histórico, não aceite do build atual. O smoke offline 10×3 de 17/09 passou
 sem erros/violações (`20260917-112524-245088`). Detalhes e comando em
-[fechamento local](../docs/fechamento-local-2026-09-17.md).
+[fechamento local](../docs/auditorias/fechamento-local-2026-09-17.md).
 
 A própria matriz A é o smoke de descoberta e a B é o smoke de regressão. Cada
 campanha deve registrar `mock=false`, pelo menos um sucesso de rede no startup e
@@ -149,4 +149,4 @@ tentativas de rede/provider que falharam. Os 14 warnings observados são todos
 `narrative.repeated_opening`, contra 193 na matriz A; a decisão final exige a
 campanha 10 completa para uma certificação estrita, limitação aceita no
 fechamento. Evidência detalhada:
-[matriz B de 28/09](../docs/playtest-matriz-b-2026-09-28.md).
+[matriz B de 28/09](../docs/playtests/playtest-matriz-b-2026-09-28.md).

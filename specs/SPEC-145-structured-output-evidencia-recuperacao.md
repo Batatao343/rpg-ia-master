@@ -89,7 +89,7 @@ JSON mode nem se muda fallback nesta remediação. Gates separados no
 
 Atualização de 17/09: B integral bloqueada por HTTP 402 DeepSeek. O último
 preflight falhou por saldo, não valida a recuperação do build atual; ver
-[fechamento local](../docs/fechamento-local-2026-09-17.md).
+[fechamento local](../docs/auditorias/fechamento-local-2026-09-17.md).
 
 Executar 10 gerações de CampaignPlan no DeepSeek com telemetria; toda falha deve
 ser classificada, recuperada ou cair para provider segundo a política, sem None
@@ -104,4 +104,4 @@ em tamanho, sem `eval`, e toda saída passa pelo Pydantic original.
 ## Fechamento real ? 2026-09-28
 
 Preflights cobriram os tr?s tiers e a matriz recuperou respostas estruturadas inv?lidas sem None opaco ou invoca??o terminal nas campanhas v?lidas.
-Evid?ncia consolidada: [matriz B](../docs/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.
+Evid?ncia consolidada: [matriz B](../docs/playtests/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.

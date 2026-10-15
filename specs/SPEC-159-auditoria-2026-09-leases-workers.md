@@ -54,7 +54,7 @@ Heartbeat no escopo de operação e job, reserva serial de um job, publicação 
 Continuação: kill real do processo e retomada por novo worker comprovados;
 crash após retorno do gerador falso preserva generating inativo e rejeita
 nova geração (zero chamadas do substituto). Procedimento em
-`docs/RECONCILIACAO_ARTE.md`: contenção/diagnóstico seguros, sem reset cego.
+`docs/operacao/RECONCILIACAO_ARTE.md`: contenção/diagnóstico seguros, sem reset cego.
 Importação administrativa de resultado externo recuperado continua ausente;
 esse limite operacional está explícito, não foi apresentado como recuperação
 automática entregue.

@@ -91,7 +91,7 @@ de estado independentemente do `allowed` do guard. Regressões em
 
 Atualização de 17/09: validação local revisada com protocolo de reparo/recibo;
 B integral bloqueada por HTTP 402 DeepSeek. Evidência histórica não certifica
-o build atual; ver [fechamento local](../docs/fechamento-local-2026-09-17.md).
+o build atual; ver [fechamento local](../docs/auditorias/fechamento-local-2026-09-17.md).
 
 Na matriz B, nenhum turno deve registrar ação mecânica incompatível com a fase;
 Vitalidade zero consciente pode existir sem falso positivo.
@@ -108,4 +108,4 @@ tipada, testada por tabela e independente da linguagem livre do LLM.
 ## Fechamento real ? 2026-09-28
 
 Estados reais de queda/recupera??o atravessaram restore e retomaram a??es sem falsa morte ou viola??o de lifecycle.
-Evid?ncia consolidada: [matriz B](../docs/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.
+Evid?ncia consolidada: [matriz B](../docs/playtests/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.

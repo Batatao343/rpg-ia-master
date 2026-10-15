@@ -129,7 +129,7 @@ conflito termine em número limitado de golpes mesmo quando a região se repete.
 **Evidência (2026-08-02):** matriz offline `20260802-154317-705789` e matriz
 real composta de 13 perfis × 30 turnos concluíram sem divergência
 HP↔Vitalidade, `combat.no_progress` ou violação terminal. Detalhes em
-[`docs/smoke-correcoes-conflito-v4-2026-08-02.md`](../docs/smoke-correcoes-conflito-v4-2026-08-02.md).
+[`docs/playtests/smoke-correcoes-conflito-v4-2026-08-02.md`](../docs/playtests/smoke-correcoes-conflito-v4-2026-08-02.md).
 
 ## 7. Riscos & compatibilidade
 

@@ -81,10 +81,10 @@ datas confiáveis; sem essas datas, mantém a primeira identidade. O estado
 dinâmico segue a ocorrência mais recente. Isso não infere qual aparência é
 verdadeira quando não há evidência de origem. A invariante compara todos os
 aliases, inclusive nome igual com IDs distintos. Testes locais passaram;
-o [gate real](../docs/fechamento-local-2026-09-17.md) permanece bloqueado por saldo.
+o [gate real](../docs/auditorias/fechamento-local-2026-09-17.md) permanece bloqueado por saldo.
 
 
 ## Fechamento real ? 2026-09-28
 
 Reintrodu??o real resolveu Mulher de unhas pretas para Mulher de xale pu?do, sem duplicata ou memory.npc_identity_grounding.
-Evid?ncia consolidada: [matriz B](../docs/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.
+Evid?ncia consolidada: [matriz B](../docs/playtests/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.

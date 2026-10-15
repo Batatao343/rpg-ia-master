@@ -19,8 +19,8 @@
 > **Fonte de design:** `VALORIA_spec_sistema_classes.md` (documento do usuário). Onde o
 > documento marca `[A BALANCEAR]`, esta spec **propõe** um número inicial e o marca
 > `[BALANCEAR]` — placeholder consciente, não valor final canonizado.
-> **▶ REFERÊNCIA:** mecânica em [docs/CLASSES.md](../docs/CLASSES.md); narrativa em
-> [docs/CLASSES_NARRATIVA.md](../docs/CLASSES_NARRATIVA.md).
+> **▶ REFERÊNCIA:** mecânica em [docs/design/CLASSES.md](../docs/design/CLASSES.md); narrativa em
+> [docs/design/CLASSES_NARRATIVA.md](../docs/design/CLASSES_NARRATIVA.md).
 
 ---
 

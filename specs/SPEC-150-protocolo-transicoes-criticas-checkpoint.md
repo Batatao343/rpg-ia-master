@@ -106,7 +106,7 @@ O finalizer aplica `transition_readiness` e inclui a decisão no recibo; combate
 ativo e escolha de morte são fronteiras válidas, mas não checkpoints jogáveis.
 Regressões curtas em `tests/test_transicoes_criticas_b1.py` passaram. O gate real
 continua bloqueado pelo HTTP 402 DeepSeek; ver o
-[fechamento local](../docs/fechamento-local-2026-09-17.md).
+[fechamento local](../docs/auditorias/fechamento-local-2026-09-17.md).
 
 ## 6. Smoke real
 
@@ -126,4 +126,4 @@ snapshot legado, nunca no meio de um combate vivo.
 ## Fechamento real ? 2026-09-28
 
 M?ltiplos player_downed reais restauraram checkpoint e retomaram sem transition.unresolved_at_boundary ou cauda de guard.
-Evid?ncia consolidada: [matriz B](../docs/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.
+Evid?ncia consolidada: [matriz B](../docs/playtests/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.

@@ -70,7 +70,7 @@ não cancela nem declara cumprido o aceite real da matriz B.
 
 Evidência: **1721 passed, 16 skipped, 14 deselected**, 309,18 s; 40 testes novos.
 Ruff e conteúdo verdes. Smoke offline `20260919-150042-217978`, 30/30 sem erros
-ou violações. [Relatório](../docs/remediacao-pre-matriz-2026-09-19.md).
+ou violações. [Relatório](../docs/auditorias/remediacao-pre-matriz-2026-09-19.md).
 
 ## 5. Limites
 

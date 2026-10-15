@@ -11,7 +11,7 @@
 
 ## 1. Contexto & Objetivo
 
-O playtest longo (`docs/playtest-longrun-2026-07-14.md`) registrou: **"Aliados sem
+O playtest longo (`docs/playtests/playtest-longrun-2026-07-14.md`) registrou: **"Aliados sem
 presença mecânica. Gorim/Korvus aparecem na prosa mas não existem pro gate de NPC
 nem (aparentemente) pro combate."** O usuário definiu a regra desejada
 (2026-07-20): **"os aliados devem aparecer no combate se estão juntos quando o

@@ -2,7 +2,7 @@
 
 > **Status:** `done` (2026-08-02) — cutover, remediações e rerun real aceitos.
 > Evidência final:
-> [`docs/smoke-correcoes-conflito-v4-2026-08-02.md`](../docs/smoke-correcoes-conflito-v4-2026-08-02.md).
+> [`docs/playtests/smoke-correcoes-conflito-v4-2026-08-02.md`](../docs/playtests/smoke-correcoes-conflito-v4-2026-08-02.md).
 > Cutover executado em ESTÁGIOS commitados verdes na branch
 > `refactor/reestruturacao-combate` (só o merge final pra `main` é atômico).
 > **Criada:** 2026-07-22 · **Atualizada:** 2026-08-02

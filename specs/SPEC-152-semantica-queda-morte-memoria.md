@@ -81,7 +81,7 @@ Plano/gates no [adendo pré-matriz](SPEC-162-remediacao-local-contratos-pre-matr
 Revisão de 17/09: o template de `player_downed` também deixa de afirmar que o
 herói já se levantou ou foi saqueado. A crônica mantém a escolha pendente até o
 evento canônico seguinte. Regressão curta cobre queda versus morte confirmada.
-O [gate real](../docs/fechamento-local-2026-09-17.md) depende da recarga DeepSeek.
+O [gate real](../docs/auditorias/fechamento-local-2026-09-17.md) depende da recarga DeepSeek.
 
 ## 6. Smoke real
 
@@ -98,4 +98,4 @@ para o protagonista sob o protocolo explícito de checkpoint.
 ## Fechamento real ? 2026-09-28
 
 Quedas reais foram persistidas como caiu/aguarda recupera??o e o jogo retomou sem promover morte do protagonista.
-Evid?ncia consolidada: [matriz B](../docs/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.
+Evid?ncia consolidada: [matriz B](../docs/playtests/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.

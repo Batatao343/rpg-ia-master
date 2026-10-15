@@ -46,7 +46,7 @@ def _repo(tmp_path: Path) -> Path:
 
 def _apply(repo: Path, count: int) -> list[normalizer.SpecRecord]:
     records, source_sha, shallow = normalizer.build_plan(repo, expected_count=count)
-    normalizer._apply(repo, records, source_sha, shallow, repo / "docs" / "specs-migration-report.md")
+    normalizer._apply(repo, records, source_sha, shallow, repo / "docs" / "auditorias" / "specs-migration-report.md")
     return records
 
 
@@ -104,7 +104,7 @@ def test_migration_tie_done_evidence_relative_references_and_idempotence(tmp_pat
     assert [entry["id"] for entry in index["specs"]] == ["SPEC-001", "SPEC-002", "SPEC-003"]
 
     records_again = _apply(repo, 3)
-    assert normalizer._check(repo, records_again, done_commit, False, repo / "docs" / "specs-migration-report.md") == []
+    assert normalizer._check(repo, records_again, done_commit, False, repo / "docs" / "auditorias" / "specs-migration-report.md") == []
 
 
 def test_followed_rename_uses_original_creation_and_first_done_blob(tmp_path: Path) -> None:
@@ -131,7 +131,7 @@ def test_check_reports_broken_internal_markdown_link(tmp_path: Path) -> None:
     _write(repo / "docs" / "broken.md", "[missing](missing.md)\n")
 
     records, source_sha, shallow = normalizer.build_plan(repo, expected_count=1)
-    errors = normalizer._check(repo, records, source_sha, shallow, repo / "docs" / "specs-migration-report.md")
+    errors = normalizer._check(repo, records, source_sha, shallow, repo / "docs" / "auditorias" / "specs-migration-report.md")
     assert any("broken Markdown link" in error for error in errors)
 
 

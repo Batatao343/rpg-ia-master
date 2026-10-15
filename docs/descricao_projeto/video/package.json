@@ -1,0 +1,24 @@
+{
+  "name": "rpg-ia-descricao-video",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vídeo explicativo completo do rpg-ia-master, feito em Remotion",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts RpgIaExplicado out/rpg-ia-explicado.mp4",
+    "still": "remotion still src/index.ts RpgIaExplicado out/frame.png --frame=200",
+    "render:linkedin": "remotion render src/index.ts RpgIaLinkedIn ../rpg-ia-master-linkedin-3min.mp4",
+    "timeline:linkedin": "python scripts/build_timeline.py --roteiro ../roteiro_linkedin.json --out src/data/timeline_linkedin.json --silent --music music/crossing_the_chasm.mp3"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.535",
+    "@remotion/google-fonts": "^4.0.535",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.535"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "typescript": "5.8.3"
+  }
+}

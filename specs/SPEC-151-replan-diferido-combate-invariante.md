@@ -63,7 +63,7 @@ certificação global. Ver [adendo pré-matriz](SPEC-162-remediacao-local-contra
 
 Reiniciar a matriz B; os cinco turnos de Ophidia não podem reincidir.
 Gate bloqueado por saldo DeepSeek, conforme
-[fechamento local](../docs/fechamento-local-2026-09-17.md).
+[fechamento local](../docs/auditorias/fechamento-local-2026-09-17.md).
 
 ## 7. Riscos & compatibilidade
 
@@ -74,4 +74,4 @@ exceção genérica para qualquer plano stale.
 ## Fechamento real ? 2026-09-28
 
 Viagem, combate e replans reais completaram sem recorr?ncia dos casos de Ophidia ou viola??o de replan.
-Evid?ncia consolidada: [matriz B](../docs/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.
+Evid?ncia consolidada: [matriz B](../docs/playtests/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.

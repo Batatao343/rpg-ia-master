@@ -15,7 +15,7 @@ chaves longas normalizadas por `combat_mechanics.normalize_attr`/`_ATTR_ALIASES`
 HP simples (`hp/max_hp`), Entropia (pool único pós-`refatoracao-sistema-classes`) e
 Carga do Abismo (`abyss_charge`) sem Ferimentos localizados.
 
-`docs/valoria_conflict_migration_v2/01_VALORIA_REGRAS_CONSOLIDADAS_CONFLITOS.md`
+`docs/design/valoria_conflict_migration_v2/01_VALORIA_REGRAS_CONSOLIDADAS_CONFLITOS.md`
 (§8) substitui os 6 atributos por **5 Virtudes** (Mente/Agilidade/Força/Carisma/Corpo,
 0–5) e o HP simples por **Vitalidade + Ferimentos localizados** (Leve/Grave/Crítico)
 derivados de Corpo. Esta spec é a fundação de dados do épico inteiro: sem ela,

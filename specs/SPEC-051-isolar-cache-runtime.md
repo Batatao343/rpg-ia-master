@@ -61,7 +61,7 @@ do repo.
 
 - Curadoria de conteúdo do bestiário (regiões inválidas já gravadas etc.) —
   o arquivo versionado atual é tratado como baseline curado.
-- Promover criatura gerada a curada (fluxo `docs/AUTORIA.md` — manual, como hoje).
+- Promover criatura gerada a curada (fluxo `docs/guias/AUTORIA.md` — manual, como hoje).
 - Outros arquivos de `data/` (nenhum outro é gravado em runtime — verificado:
   só os 2 caches).
 

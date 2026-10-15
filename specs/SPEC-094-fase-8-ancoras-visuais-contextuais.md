@@ -455,7 +455,7 @@ CSS em `web/src/styles.css` mantém retrato vertical, cena horizontal e layout d
 - `web/public/art/v1/system/aguardando-arte.png` — placeholder compartilhado,
   com composição visual gerada e tipografia final aplicada por Pillow.
 - `web/src/components/VisualArtwork.tsx` e `SceneArtwork.tsx`.
-- `tests/test_visual_assets.py` e `docs/ARTE_VISUAL.md`.
+- `tests/test_visual_assets.py` e `docs/guias/ARTE_VISUAL.md`.
 
 **Alterados:**
 
@@ -467,7 +467,7 @@ CSS em `web/src/styles.css` mantém retrato vertical, cena horizontal e layout d
 - `web/src/types.ts`, `App.tsx`, `CreateScreen.tsx`, `StoryLog.tsx`,
   `PlayScreen.tsx`, `styles.css` — apresentação responsiva.
 - `tests/test_api.py`/suítes equivalentes de API, persistência e frontend.
-- `ESTADO_ATUAL.md`, `ROADMAP.md`, `docs/AUTORIA.md` — operação e autoria.
+- `ESTADO_ATUAL.md`, `ROADMAP.md`, `docs/guias/AUTORIA.md` — operação e autoria.
 
 ---
 
@@ -480,7 +480,7 @@ CSS em `web/src/styles.css` mantém retrato vertical, cena horizontal e layout d
    duplicidade de `(subject_type, subject_id)` e path fora da raiz.
 2. **Placeholder:** usar a composição neutra já gerada no mesmo tom dark medieval
    das âncoras; validar `AGUARDANDO ARTE`/dimensões/formato em Pillow e registrar
-   prompt/proveniência e hash em `docs/ARTE_VISUAL.md`.
+   prompt/proveniência e hash em `docs/guias/ARTE_VISUAL.md`.
 3. **Curadoria:** preencher a matriz pacote → ID do jogo. O pacote final trouxe
    arte exata aprovada para todas as raças; `awaiting_art` permanece reserva de
    sistema e não foi publicado para elas.
@@ -493,7 +493,7 @@ CSS em `web/src/styles.css` mantém retrato vertical, cena horizontal e layout d
    `test_import_preserves_aspect_ratio`, `test_import_respects_byte_budget`,
    `test_check_does_not_write`, `test_prune_is_opt_in`.
 2. **Implementação:** adicionar Pillow dev, CLI transacional e derivados WebP com
-   hashes no nome; documentar o comando em `docs/ARTE_VISUAL.md`.
+   hashes no nome; documentar o comando em `docs/guias/ARTE_VISUAL.md`.
 3. **Verificação:** rodar import duas vezes (`--check` na segunda), lint de
    conteúdo e `git diff --check`.
 
@@ -539,7 +539,7 @@ CSS em `web/src/styles.css` mantém retrato vertical, cena horizontal e layout d
 2. `uv run ruff check .`, `uv run pytest` e `npm run build` verdes.
 3. Smoke API clássico + SSE e smoke browser desktop/mobile conforme seção 6.
 4. Atualizar esta spec para `done`, `ROADMAP.md`, `ESTADO_ATUAL.md`,
-   `docs/AUTORIA.md` e contagem real de testes.
+   `docs/guias/AUTORIA.md` e contagem real de testes.
 
 ---
 

@@ -23,7 +23,7 @@ dependência de RAG (embeddings hoje indisponíveis), zero risco de vazar
 conteúdo `hidden`/`secret`.
 
 Princípio de arquitetura: conteúdo é dado versionado em `data/` (Fase 7.2 —
-autoria via `docs/AUTORIA.md`), não geração em runtime.
+autoria via `docs/guias/AUTORIA.md`), não geração em runtime.
 
 ## 2. Requisitos
 
@@ -52,7 +52,7 @@ autoria via `docs/AUTORIA.md`), não geração em runtime.
   acessível a partir do passo 1.
 - **R9** — Conteúdo do `onboarding.json` não menciona nenhuma entidade cujo
   documento do Codex seja `visibility: hidden|secret` (curadoria manual;
-  regra de autoria registrada em `docs/AUTORIA.md`).
+  regra de autoria registrada em `docs/guias/AUTORIA.md`).
 
 ### Fora de escopo
 
@@ -80,7 +80,7 @@ autoria via `docs/AUTORIA.md`), não geração em runtime.
 - `web/src/components/CreateScreen.tsx` — wizard 5 passos (estado local:
   `step: 0..4`; campos atuais preservados).
 - `web/src/styles.css` (ou equivalente) — layout de cards + stepper, mobile 390px.
-- `docs/AUTORIA.md` — seção curta: como editar cards do onboarding (R9).
+- `docs/guias/AUTORIA.md` — seção curta: como editar cards do onboarding (R9).
 
 ### Formato de `data/onboarding.json` (exemplo real, ids canônicos)
 
@@ -138,7 +138,7 @@ Chaves: `regions.*` e `races.*` usam os **ids** de `origins.json`
    - `test_onboarding_field_limits` — tagline ≤ 90, description ≤ 400,
      hook ≤ 200, playstyle ≤ 160; `world_intro.paragraphs` tem 3 itens.
 2. **Implementação:** escrever `data/onboarding.json` completo (28 cards +
-   intro), seguindo `docs/AUTORIA.md`; consultar `lore_nova/` via Grep para
+   intro), seguindo `docs/guias/AUTORIA.md`; consultar `lore_nova/` via Grep para
    fidelidade (sem copiar conteúdo de `secrets.txt`/docs `hidden`).
 3. **Verificação:** `uv run pytest tests/test_onboarding.py` verde.
 
@@ -173,7 +173,7 @@ Chaves: `regions.*` e `races.*` usam os **ids** de `origins.json`
 > `bonus` (espelhos de `origins.json`, teste anti-drift) e os de raça `name` —
 > o frontend precisa mapear id → nome sem tocar no `/data/options`. Cobertura
 > de campos e R9 testados em `tests/test_onboarding.py` (10 testes). Regra de
-> autoria registrada em `docs/AUTORIA.md` § Fluxo D.
+> autoria registrada em `docs/guias/AUTORIA.md` § Fluxo D.
 
 ## 6. Smoke test com LLM real
 

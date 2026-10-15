@@ -74,7 +74,7 @@ Gates no [adendo pré-matriz](SPEC-162-remediacao-local-contratos-pre-matriz.md)
 A matriz B reinicia do par 1. Qualquer `memory.location_grounding` interrompe o
 ciclo novamente.
 Gate bloqueado por HTTP 402 DeepSeek; ver
-[fechamento local](../docs/fechamento-local-2026-09-17.md).
+[fechamento local](../docs/auditorias/fechamento-local-2026-09-17.md).
 
 ## 7. Riscos & compatibilidade
 
@@ -86,4 +86,4 @@ audit de rejeições, não é corrigido silenciosamente.
 ## Fechamento real ? 2026-09-28
 
 Matriz real n?o registrou memory.location_grounding em 1.951 turnos v?lidos.
-Evid?ncia consolidada: [matriz B](../docs/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.
+Evid?ncia consolidada: [matriz B](../docs/playtests/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.

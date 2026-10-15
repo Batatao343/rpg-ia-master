@@ -326,7 +326,7 @@
 > repetição depois do consumo dos US$ 5 adicionados; SPEC-128 encerrada `done`
 > com a limitação documentada e os achados de custo/prosa/observabilidade.
 > Gate offline final: **1807 passed, 35 skipped, 15 deselected**.
-> [Relatório completo](docs/playtest-matriz-b-2026-09-28.md).
+> [Relatório completo](docs/playtests/playtest-matriz-b-2026-09-28.md).
 
 > **Evals v4 — SPEC-163 `done`.** Normalização histórica concluída: 162 specs
 > receberam IDs estáveis e evidência Git em [specs/index.yaml](specs/index.yaml),
@@ -348,7 +348,7 @@
 > Este bloco prevalece sobre o histórico abaixo.
 
 > **26/09 — auditoria executada em todos os nove eixos; aceite ainda parcial.**
-> [Implementação, testes e lacunas](docs/auditoria-execucao-2026-09-26.md).
+> [Implementação, testes e lacunas](docs/auditorias/auditoria-execucao-2026-09-26.md).
 > Contexto autenticado `done` (RAG real local em três modos); oito specs em
 > `in-progress`. Gate integrado **16/16** verde em Postgres/Auth/Storage/browser,
 > incluindo retrato sintético, replay e persistência do orçamento por arco.
@@ -362,7 +362,7 @@
 > Este bloco prevalece sobre o histórico abaixo.
 
 > **23/09 — nove specs da auditoria aprovadas; três iniciadas.**
-> [Plano completo e evidências](docs/auditoria-remediacao-2026-09-22.md).
+> [Plano completo e evidências](docs/auditorias/auditoria-remediacao-2026-09-22.md).
 > Entregue no primeiro lote: enquadramento integral dos retratos e correção dos
 > cards; elegibilidade de XP/unique; soma canônica do inventário nos recibos;
 > identidade e correlação nas leituras paralelas de contexto.
@@ -380,7 +380,7 @@
 > morte/posse, aliases transitivos, classificação de erros estruturados e
 > interrupção da matriz. Métrica de repetição não aceita prefixo cosmético como
 > diversidade. Regressões curtas independentes e teste de grafo/save/load.
-> [Evidências](docs/remediacao-pre-matriz-2026-09-19.md).
+> [Evidências](docs/auditorias/remediacao-pre-matriz-2026-09-19.md).
 >
 > Desenvolvimento e aceite local não aguardam 2.000 turnos. Próximas etapas
 > separadas: contratos reais curtos por feature; depois B integral no build
@@ -397,7 +397,7 @@
 > por saldo DeepSeek, HTTP 402, confirmado novamente no preflight de 16/09.
 > Nenhuma campanha real em execução. Após recarga, B reinicia do par 1 com os
 > fixes atuais. Lista, evidências e comando no
-> [fechamento local](docs/fechamento-local-2026-09-17.md).
+> [fechamento local](docs/auditorias/fechamento-local-2026-09-17.md).
 >
 > Revisão entregue no código: aliases de NPC em diálogo/recrutamento; proteção
 > de memória geográfica, posse e identidade; semântica de queda; checkpoints,
@@ -415,7 +415,7 @@
 > **Os blocos datados abaixo são histórico**; prevalecem este resumo e as specs.
 
 > **Matriz A concluída; remediação offline verde:** 2.000/2.000 turnos reais
-> analisados em [relatório A](docs/playtest-matriz-a-2026-08-27.md). Quatro specs
+> analisados em [relatório A](docs/playtests/playtest-matriz-a-2026-08-27.md). Quatro specs
 > definitivas estão `in-progress` aguardando apenas a B: [ciclo de vida e ações](specs/SPEC-141-contrato-canonico-ciclo-vida-acoes.md),
 > [resultado canônico do turno](specs/SPEC-144-resultado-canonico-turno-apresentacao.md),
 > [interações com progresso](specs/SPEC-142-interacoes-progresso-elegibilidade.md) e
@@ -498,8 +498,8 @@ atrás de portas Python, sem provisionar serviço remoto:
    perfil stateful e não onisciente, conservação, margem, net worth, restock e
    arbitragem regional auditáveis. Revalidação pós-upgrade: 5×200, zero erro/
    violação, 38 transações, três a cinco mercados e restock em todas as seeds
-   ([relatório](docs/playtest-comerciante-2026-08-20.md)). Aceite real:
-   [1×200](docs/playtest-comerciante-real-2026-08-20.md), `mock=false`, zero erro,
+   ([relatório](docs/playtests/playtest-comerciante-2026-08-20.md)). Aceite real:
+   [1×200](docs/playtests/playtest-comerciante-real-2026-08-20.md), `mock=false`, zero erro,
    US$ 0,162860; três P1 e três P2 ficaram evidenciados para specs próprias.
 
 Fase 10b local: Supabase local, Postgres/RLS/Auth/pgvector/storage, turnos e jobs
@@ -508,7 +508,7 @@ código e cobertos por contratos. G0–G7 estão verdes: 1565 testes offline,
 `infra_local` 13, `security_local` 5, pgTAP 14/14, caos 5/5, commit DB p95
 32,257 ms, backup RPO 0/RTO 36,19 s, browser desktop/390 e stack
 Prometheus+Grafana+Collector+Tempo. Evidência versionada em
-[docs/readiness/readiness-local.md](docs/readiness/readiness-local.md).
+[docs/operacao/readiness/readiness-local.md](docs/operacao/readiness/readiness-local.md).
 
 Pendências que exigem opt-in explícito continuam abertas: certificação remota em
 Railway/Supabase. Tiers 5+, Fase 8B, Crônica avançada e comerciante estão
@@ -546,7 +546,7 @@ deselected**; Ruff verde.
 O run `20260816-100206-334105` completou 200/200 ações reais, sem exceção ou
 timeout, por US$ 0,137760. Confirmou checkpoint seguro (duas mortes, dois epochs,
 zero replay), origens variadas e queda do p95 35,3→20,1 s. Detalhe em
-[playtest-longrun-real-2026-08-16](docs/playtest-longrun-real-2026-08-16.md).
+[playtest-longrun-real-2026-08-16](docs/playtests/playtest-longrun-real-2026-08-16.md).
 
 Achados observados naquele run, posteriormente resolvidos na entrega acima:
 
@@ -563,7 +563,7 @@ Achados observados naquele run, posteriormente resolvidos na entrega acima:
 
 ## ✅ ENTREGUE — remediação do longrun de observabilidade (2026-08-13)
 
-O relatório [playtest-longrun-observabilidade-2026-08-13](docs/playtest-longrun-observabilidade-2026-08-13.md)
+O relatório [playtest-longrun-observabilidade-2026-08-13](docs/playtests/playtest-longrun-observabilidade-2026-08-13.md)
 combinou 114 ações úteis com LLM real em duas tentativas e uma matriz 200/200
 MockLLM. Os achados foram convertidos e executados em cinco specs `done`:
 
@@ -629,7 +629,7 @@ Ruff verde. Configuração/saldo/chaves dos fallbacks reais não pertencem à sp
 O run pós-remediações `20260812-215427-501557` concluiu 100/100 turnos com
 `mock=false`, zero exceções e 273 sucessos LLM de rede por US$ 0,085208. As seis
 correções do ciclo anterior permaneceram válidas. O relatório
-[playtest-longrun-real-2026-08-12-v2](docs/playtest-longrun-real-2026-08-12-v2.md)
+[playtest-longrun-real-2026-08-12-v2](docs/playtests/playtest-longrun-real-2026-08-12-v2.md)
 registrou cinco frentes, posteriormente tratadas pela spec consolidada acima:
 
 1. watchdog com prazo forte diante de suspensão/lacuna de heartbeat — um turno
@@ -647,7 +647,7 @@ do escopo por decisão do usuário.
 
 ## ✅ ENTREGUE — Correções do playtest longo de jogador normal (2026-08-12)
 
-O diagnóstico [playtest-jogador-normal-2026-08-12](docs/playtest-jogador-normal-2026-08-12.md)
+O diagnóstico [playtest-jogador-normal-2026-08-12](docs/playtests/playtest-jogador-normal-2026-08-12.md)
 executou 440 turnos mistos (400 MockLLM + 40 DeepSeek real) e originou seis
 specs, todas `done`:
 
@@ -770,11 +770,11 @@ incluído, menos prioritário** (última spec).
 | 10 ✅ | [conflito-10-abismo-em-conflito](specs/SPEC-071-conflito-10-abismo-em-conflito.md) | Eventos do Abismo preparados (base na cena obrigatória), carregamento determinístico/seed por Cargas+gatilho+prioridade, proibições rígidas (R4/R6), assinatura visual fixa — **`done`** (motor; fiação → cutover 13) |
 | 11 ✅ | [conflito-11-preparacao-encontro-llm](specs/SPEC-072-conflito-11-preparacao-encontro-llm.md) | LLM prepara cena jogável; Nível do Encontro absoluto (Python, sem party), potência por categoria (`data/potency_by_level.json`), validação de catálogo/base/região, cena de segurança, ficha de combate completa do NPC — **`done`** (motor+geração; fiação de grafo → cutover 13) |
 | 12 ✅ | [conflito-12-loot-resumo-narrativo](specs/SPEC-073-conflito-12-loot-resumo-narrativo.md) | `ConflictSummary` canônico (18 campos), `loot_context` (Nível do Encontro→danger, `roll_loot` intacta), contrato de não-reversão da narrativa, fatos p/ archivist — **`done`** (motor; fiação → cutover 13) |
-| 13 ✅ | [conflito-13-cutover-migracao-playtest](specs/SPEC-074-conflito-13-cutover-migracao-playtest.md) | **`done` (2026-08-02)** — sete specs de remediação entregues; matriz real pós-fix composta, 13×30, 390/390 turnos, `mock=false`, 0 erro/violação `error`, 1.119 sucessos de rede, US$ 0,328488, 4 reações e 28 táticas. [Relatório final](docs/smoke-correcoes-conflito-v4-2026-08-02.md). |
-| 14 ✅ | [conflito-14-autoria-cartas-classes](specs/SPEC-075-conflito-14-autoria-cartas-classes.md) | 80 Cartas autorais (escala nova 2d10+Virtude, 16/classe), catálogo fechado, Ruptura+Evolução A/B nas 15 centrais, parity, `docs/CARTAS.md` — **`done`** (entra em produção no cutover 13) |
+| 13 ✅ | [conflito-13-cutover-migracao-playtest](specs/SPEC-074-conflito-13-cutover-migracao-playtest.md) | **`done` (2026-08-02)** — sete specs de remediação entregues; matriz real pós-fix composta, 13×30, 390/390 turnos, `mock=false`, 0 erro/violação `error`, 1.119 sucessos de rede, US$ 0,328488, 4 reações e 28 táticas. [Relatório final](docs/playtests/smoke-correcoes-conflito-v4-2026-08-02.md). |
+| 14 ✅ | [conflito-14-autoria-cartas-classes](specs/SPEC-075-conflito-14-autoria-cartas-classes.md) | 80 Cartas autorais (escala nova 2d10+Virtude, 16/classe), catálogo fechado, Ruptura+Evolução A/B nas 15 centrais, parity, `docs/design/CARTAS.md` — **`done`** (entra em produção no cutover 13) |
 | 15 ✅ | [conflito-15-autoria-bestiario-perfis](specs/SPEC-076-conflito-15-autoria-bestiario-perfis.md) | 84 criaturas migradas pro schema v4 (categoria/Virtudes/Vitalidade/resistências), 10 arquétipos táticos ricos, 18 Cartas de inimigo com assinatura oculta — **`done`** (ADITIVO; fiação → cutover 13) |
 | 16 ✅ | [conflito-16-frontend-combate-cartas](specs/SPEC-077-conflito-16-frontend-combate-cartas.md) | **`done` (2026-08-02)** — mão de Cartas/Reação/Ruptura, zonas, Ferimentos, conhecimento progressivo, perseguição e morte rica; build + browser desktop/mobile + smoke LLM real verdes. |
-| 17 ✅ | [conflito-17-volume-conteudo-mundo-vivo](specs/SPEC-078-conflito-17-volume-conteudo-mundo-vivo.md) | **`done` (2026-08-02)** — 153 Cartas jogador + 40 inimigo, 124 criaturas (40 novas), 36 NPCs (3×12 hubs), guardas anti-reskin e [relatório de cobertura](docs/content-coverage-2026-08-02.md). |
+| 17 ✅ | [conflito-17-volume-conteudo-mundo-vivo](specs/SPEC-078-conflito-17-volume-conteudo-mundo-vivo.md) | **`done` (2026-08-02)** — 153 Cartas jogador + 40 inimigo, 124 criaturas (40 novas), 36 NPCs (3×12 hubs), guardas anti-reskin e [relatório de cobertura](docs/playtests/content-coverage-2026-08-02.md). |
 | Q ✅ | [hardening-memoria-proveniencia](specs/SPEC-085-hardening-memoria-proveniencia.md) | **`done` (2026-08-02)** — ledger com proveniência/confiança/fonte, metadata FAISS, segredo fail-closed, retry idempotente, invariante e telemetria. Smoke real 3×30: 90/90, 0 erro/violação `error`, 15 writes `npc_claim`, nenhuma promoção indevida. |
 
 **Ordem:** 01 → 02/03 (paralelizáveis após 01) → 04 → 05 → 06 → 07 → 08 → 09/10 →
@@ -1030,7 +1030,7 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
   ([spec](specs/SPEC-128-matriz-longrun-multiperfil-niveis.md)): `start_level` canônico,
   10 pares fixos em cinco classes e níveis 1–20. A0 foi um diagnóstico parcial
   de 678 turnos, pois 8/10 pares bateram o cap por capacidade de provider
-  ([relatório](docs/playtest-matriz-a0-2026-08-20.md)). Quatro specs `approved`
+  ([relatório](docs/playtests/playtest-matriz-a0-2026-08-20.md)). Quatro specs `approved`
   corrigem [capacidade/preflight](specs/SPEC-132-matriz-a-capacidade-provider.md),
   [Mimetismo Morto](specs/SPEC-130-combate-mimetismo-morto-loop.md),
   [fuga a Vitalidade zero](specs/SPEC-131-fuga-vitalidade-zero.md) e
@@ -1042,7 +1042,7 @@ no smoke). Pendente só playtest de balanceamento. Próxima: **Fase 5**.
   **A1 interrompida por capacidade:** `20260820-155300-494278` concluiu apenas o
   par normal e revelou 707 falhas em 796 tentativas, com 146 turnos sem sucesso
   LLM. O resultado foi invalidado e os nove pares seguintes não rodaram
-  ([diagnóstico](docs/playtest-matriz-a1-capacidade-2026-08-20.md)). A spec
+  ([diagnóstico](docs/playtests/playtest-matriz-a1-capacidade-2026-08-20.md)). A spec
   [LLM-only fail-closed](specs/SPEC-134-playtest-real-llm-fail-closed.md) agora aborta no
   primeiro invoke terminal. Três correções A0 ficaram `done` (Mimetismo, fuga a
   Vitalidade 0, observabilidade); o gate tem 1594 testes e smoke 30/30. A1 foi
@@ -1165,7 +1165,7 @@ testes offline verdes.**
 
 > 3 perfis × 100 turnos no DeepSeek (agora principal no SMART + 1º fallback do
 > FAST). ~$0.25, zero erro de turno. Análise completa + recomendações
-> priorizadas: **[docs/playtest-longrun-2026-07-14.md](docs/playtest-longrun-2026-07-14.md)**.
+> priorizadas: **[docs/playtests/playtest-longrun-2026-07-14.md](docs/playtests/playtest-longrun-2026-07-14.md)**.
 
 - **Prosa/imersão do DeepSeek: salto claro** (arco da Thrace no quester = ponto
   alto; 7/7 quests, level 5). Custo ~$0.001/turno.
@@ -1237,8 +1237,8 @@ testes offline verdes.**
 
 > Decisão do usuário: substituir as **10 classes** por **5 classes × 3 subclasses**,
 > cada uma uma **postura filosófica diante do Abismo** (não uma profissão). Detalhe
-> técnico só na spec; referência viva em [docs/CLASSES.md](docs/CLASSES.md) (mecânica)
-> e [docs/CLASSES_NARRATIVA.md](docs/CLASSES_NARRATIVA.md) (história).
+> técnico só na spec; referência viva em [docs/design/CLASSES.md](docs/design/CLASSES.md) (mecânica)
+> e [docs/design/CLASSES_NARRATIVA.md](docs/design/CLASSES_NARRATIVA.md) (história).
 
 1. [refatoracao-sistema-classes](specs/SPEC-048-refatoracao-sistema-classes.md) `done` —
    Devoto do Abismo · Sangromante · Corruptor · Arcanista Cinzento · Médico de
@@ -1304,7 +1304,7 @@ testes offline verdes.**
 
 ## ✅ ENTREGUE — Polish de frontend + fim do playtest longo (2026-07-20, sessão 21)
 
-Handoff detalhado: **[docs/HANDOFF-sessao-21.md](docs/HANDOFF-sessao-21.md)**.
+Handoff detalhado: **[docs/historico/HANDOFF-sessao-21.md](docs/historico/HANDOFF-sessao-21.md)**.
 
 1. **[polish-frontend-imersao](specs/SPEC-054-polish-frontend-imersao.md) `done`** —
    auditoria visual (Edge headless) das telas-herói. Leitura como diário iluminado
@@ -1411,7 +1411,7 @@ Depende de Codex estruturado (Fase 2.5) estar estável.
   débito 2.5); arquivos manuais com `curated: true` não são apagados pelo script (entidade em
   `entities_extra.json`, padrão 2.5b); templates Markdown por tipo em `docs/templates/codex/`
   (local, facção, raça, NPC, monstro, artefato); `rag.py` roda o lint 7.1 ANTES de reindexar e
-  aborta com erro (fecha "comando para reindexar"); workflow documentado em `docs/AUTORIA.md`.
+  aborta com erro (fecha "comando para reindexar"); workflow documentado em `docs/guias/AUTORIA.md`.
 - [x] **7.3 — Separação público/segredo nos NPCs** ([spec](specs/SPEC-024-fase-7.3-npc-segredos.md)):
   migrate divide cada NPC por rótulo de parágrafo (lista curada: "História real", "Motivação real",
   "O pacto e seus efeitos"...) → doc paralelo `npcs/segredos/{npc_id}_segredo.md` com

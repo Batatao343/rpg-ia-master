@@ -251,7 +251,7 @@ def test_reindex_aborta_com_erro_de_lint(monkeypatch, capsys):
 # Etapa 5 — templates
 # ---------------------------------------------------------------------------
 
-_TEMPLATES_DIR = os.path.join("docs", "templates", "codex")
+_TEMPLATES_DIR = os.path.join("docs", "guias", "templates", "codex")
 _TEMPLATES = ("local.md", "faccao.md", "raca.md", "npc.md", "monstro.md", "artefato.md")
 
 

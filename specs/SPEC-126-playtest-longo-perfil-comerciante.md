@@ -11,7 +11,7 @@
 > **Aceite:** offline concluído no run `20260819-004210-869761`; rodada real
 > concluída em `20260820-112050-208317` com 200/200, `mock=false`, zero erro/
 > invariante `error` e US$ 0,162860 de US$ 0,25 aprovados. Achados:
-> [relatório real](../docs/playtest-comerciante-real-2026-08-20.md).
+> [relatório real](../docs/playtests/playtest-comerciante-real-2026-08-20.md).
 
 ---
 

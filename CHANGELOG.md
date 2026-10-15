@@ -16,7 +16,7 @@ via `deepseek-chat` sem fallback. CLAUDE.md (tabela de tiers) atualizado.
 **Playtest longo REAL** — 3 perfis × 100 turnos (runs `20260714-044513`
 explorador, `20260714-050009` combate, `20260714-050339` quester; ~$0.25 total,
 zero erro de turno, CLASSIFY com override `RPG_ROUTES` runtime p/ não estourar
-o free do Groq). Análise completa: `docs/playtest-longrun-2026-07-14.md`.
+o free do Groq). Análise completa: `docs/playtests/playtest-longrun-2026-07-14.md`.
 - **Bom:** prosa DeepSeek muito acima dos free anteriores; arco da Thrace
   (quester t51–58) com fracasso de quest tratado narrativamente; 7/7 quests,
   level 5; "O Saque" disparou como projetado; custo ~$0.001/turno vivo.
@@ -244,7 +244,7 @@ qwen 401 (opcional; Groq cobre). `LLM_PROVIDER=gemini` força só-Gemini.
 520 → **581 verdes**; lint do repo 0 erros; smoke real de não-vazamento.
 7.1 lint (`services/content_validator.py` + CLI + gate + CI validate.yml);
 7.2 curadoria migration-safe (`codex_overrides.yaml`, `curated: true`, 6 templates,
-`docs/AUTORIA.md`, `reindex_global()` com gate de lint); 7.3 segredos de NPC
+`docs/guias/AUTORIA.md`, `reindex_global()` com gate de lint); 7.3 segredos de NPC
 (migrate divide por rótulo → doc `hidden` paralelo; 141 NPCs, 14 c/ segredo;
 auditoria fechou vazamento real do pacto Valerius↔Daruun na fonte).
 

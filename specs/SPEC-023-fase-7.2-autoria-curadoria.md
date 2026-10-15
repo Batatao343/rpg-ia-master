@@ -23,7 +23,7 @@ patches de frontmatter por id que sobrevivem à regeração; (2) **arquivos manu
 preservados** — `.md` com `curated: true` no frontmatter não são apagados pelo
 script (entidade correspondente vive em `entities_extra.json`, padrão já
 existente); (3) **templates de autoria** por tipo de entidade + doc de workflow
-(`docs/AUTORIA.md`) + **gate de validação no reindex**: `rag.py` roda o lint da
+(`docs/guias/AUTORIA.md`) + **gate de validação no reindex**: `rag.py` roda o lint da
 7.1 antes de ingerir e aborta com erro — conteúdo inválido nunca entra no FAISS.
 
 Critério de aceite da Fase 7 no ROADMAP: "Adicionar NPC novo segue template, é
@@ -51,7 +51,7 @@ validado automaticamente, entra em entities.json com IDs únicos."
   FORA de `data/codex/` (o `os.walk` do loader ingere qualquer `.md` lá dentro).
 - **R6 — Reindex com gate:** `uv run python rag.py` roda `validate_all()` antes
   de ingerir; qualquer ERRO → aborta sem tocar nos índices FAISS, exit 1.
-- **R7 — Workflow documentado:** `docs/AUTORIA.md` — passo a passo para
+- **R7 — Workflow documentado:** `docs/guias/AUTORIA.md` — passo a passo para
   (a) adicionar entidade manual via template, (b) curar entidade gerada via
   override, (c) rerodar migrate + validar + reindexar. CLAUDE.md aponta pra ele.
 
@@ -68,7 +68,7 @@ validado automaticamente, entra em entities.json com IDs únicos."
 
 - `data/codex_overrides.yaml` — curadoria declarativa (começa vazio/exemplo comentado).
 - `docs/templates/codex/{local,faccao,raca,npc,monstro,artefato}.md`
-- `docs/AUTORIA.md`
+- `docs/guias/AUTORIA.md`
 - `tests/test_fase72.py`
 
 ### Arquivos alterados
@@ -81,7 +81,7 @@ validado automaticamente, entra em entities.json com IDs únicos."
   entra no `validate_all()`.
 - `rag.py` — bloco de ingestão de lore chama `validate_all()`; com ERRO imprime
   achados e `sys.exit(1)` antes de qualquer `FAISS.from_documents`.
-- `CLAUDE.md` — 1 linha apontando `docs/AUTORIA.md` na seção de comandos.
+- `CLAUDE.md` — 1 linha apontando `docs/guias/AUTORIA.md` na seção de comandos.
 
 ### Formato do `codex_overrides.yaml`
 
@@ -211,7 +211,7 @@ em runtime NÃO valida (custo por turno desnecessário; índice já nasceu váli
    template com `parse_codex_file` substituindo placeholders `<...>` por dummy —
    ou valida presença dos campos obrigatórios por regex);
    `test_templates_fora_do_codex_dir` (nenhum `.md` de template sob `data/codex/`).
-2. **Implementação:** 6 templates + `docs/AUTORIA.md` (3 fluxos do R7) + linha
+2. **Implementação:** 6 templates + `docs/guias/AUTORIA.md` (3 fluxos do R7) + linha
    no CLAUDE.md.
 3. **Verificação:** `uv run pytest` completo verde; seguir o AUTORIA.md à mão
    criando 1 NPC de teste (depois remover) — template → lint → entra.
@@ -226,7 +226,7 @@ em runtime NÃO valida (custo por turno desnecessário; índice já nasceu váli
 - [x] NPC novo criado via template passa no lint e (com entrada em
       `entities_extra.json`) aparece em `load_entities()` — smoke executado
       (`npc_teste_smoke` criado, validado, sobreviveu ao migrate, removido)
-- [x] `docs/AUTORIA.md` cobre os 3 fluxos (manual, override, regeração)
+- [x] `docs/guias/AUTORIA.md` cobre os 3 fluxos (manual, override, regeração)
 - [x] `uv run pytest` verde (suíte completa offline — 581 testes)
 - [x] Guard de FallbackLLM — N/A (zero structured output novo)
 - [x] Saves antigos continuam carregando (nada de estado de jogo mudou)

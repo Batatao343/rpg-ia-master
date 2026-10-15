@@ -11,7 +11,7 @@
 
 O run real `20260820-112050-208317` completou 200/200 sem erro mecânico, mas a
 auditoria de 21 turnos encontrou três P1 e três P2 no relatório
-`docs/playtest-comerciante-real-2026-08-20.md`. Esta spec corrige os seis antes
+`docs/playtests/playtest-comerciante-real-2026-08-20.md`. Esta spec corrige os seis antes
 da matriz multiperfil, preservando a regra de que mecânica e estado autoritativo
 são Python e a LLM apenas identifica/narra.
 

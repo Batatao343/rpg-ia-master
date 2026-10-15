@@ -10,7 +10,7 @@
 
 ## 1. Contexto & Objetivo
 
-O playtest longo (`docs/playtest-longrun-2026-07-14.md`) registrou: **explorador
+O playtest longo (`docs/playtests/playtest-longrun-2026-07-14.md`) registrou: **explorador
 visitou 23 locais → 0 quest, ouro 0, level 3.** Explorar rende só prosa; nenhum
 loot ou descoberta mecânica. O codex/bestiário progressivo existe mas não vira
 recompensa SENTIDA. O jogador atravessa 23 lugares e não acha nada.

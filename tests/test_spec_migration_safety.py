@@ -86,7 +86,7 @@ def test_migration_anchor_and_ids_survive_later_commits(tmp_path: Path) -> None:
     repo = _repository(tmp_path)
     _migrate(repo, "--apply")
     original_index = (repo / "specs/index.yaml").read_bytes()
-    original_report = (repo / "docs/specs-migration-report.md").read_bytes()
+    original_report = (repo / "docs/auditorias/specs-migration-report.md").read_bytes()
     _git(repo, "add", ".")
     _git(repo, "commit", "-m", "normalize specs")
     (repo / "README.md").write_text("Unrelated documentation\n", encoding="utf-8")
@@ -95,4 +95,4 @@ def test_migration_anchor_and_ids_survive_later_commits(tmp_path: Path) -> None:
     _migrate(repo, "--check")
     _migrate(repo, "--apply")
     assert (repo / "specs/index.yaml").read_bytes() == original_index
-    assert (repo / "docs/specs-migration-report.md").read_bytes() == original_report
+    assert (repo / "docs/auditorias/specs-migration-report.md").read_bytes() == original_report

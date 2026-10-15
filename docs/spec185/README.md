@@ -50,7 +50,7 @@
 
 Nenhuma rota credita compra ou ativa checkout. As jogadas normais ainda não
 executam o ciclo `reserve → execute → settle → release` do plano
-`docs/rpg-next-jev-golive-plan/02_BILLING_E_MARGIN.md`; essa integração precisa
+`docs/planos/rpg-next-jev-golive-plan/02_BILLING_E_MARGIN.md`; essa integração precisa
 de spec futura. Assim, o custo técnico de um turno pode aparecer no StoryLog
 enquanto o dashboard informa zero de consumo liquidado. Zero e indisponível
 são distintos no DTO.

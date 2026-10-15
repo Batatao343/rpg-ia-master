@@ -71,7 +71,7 @@ de bug em definitivo.
   declarado consta num registro explícito de handlers do motor
   (`combat_mechanics.HANDLED_KINDS = {...}` mantido junto dos handlers).
   Kind novo nos dados sem handler → suíte vermelha. (Teria pego os 3 bugs.)
-- **R5 — Docs corrigidos.** ESTADO_ATUAL/docs/CLASSES.md param de afirmar que
+- **R5 — Docs corrigidos.** ESTADO_ATUAL/docs/design/CLASSES.md param de afirmar que
   taunt/Transformação/Purga funcionam até esta spec fechar; ao fechar, refletem
   a fiação real.
 
@@ -105,7 +105,7 @@ de bug em definitivo.
   bloco `reset_entropy_turn`/`tick_boiler` (linha ~479); callsite de
   `pick_target` (combat_mechanics.py:1442) passa `player`.
 - `tests/test_fiacao_classes.py` — novo (ver Etapas).
-- `ESTADO_ATUAL.md` / `docs/CLASSES.md` — R5.
+- `ESTADO_ATUAL.md` / `docs/design/CLASSES.md` — R5.
 
 **Assinaturas**
 ```python
@@ -156,7 +156,7 @@ HANDLED_KINDS: Dict[str, set]  # categoria -> kinds com handler no motor
 
 1. Harness mock: `uv run python -m playtest run --profile combate --turns 50`
    (Devoto default) — log de combate mostra provocação segurando alvo.
-2. ESTADO_ATUAL/docs/CLASSES.md atualizados; suíte completa verde.
+2. ESTADO_ATUAL/docs/design/CLASSES.md atualizados; suíte completa verde.
 
 ## 5. Critérios de aceite
 

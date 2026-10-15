@@ -1,0 +1,374 @@
+{
+  "title": "rpg-ia-master em 3 minutos",
+  "chapters": [
+    {
+      "id": "L1",
+      "title": "A ideia",
+      "color": "#d4a24c",
+      "scenes": [
+        {
+          "id": "li01",
+          "title": "Gancho",
+          "narration": "E se a IA fosse o mestre do jogo — mas não pudesse roubar nos dados? Este é o rpg-ia-master: um RPG de texto onde a IA narra e o Python decide.",
+          "visual": {
+            "type": "title",
+            "heading": "A IA narra. O Python decide.",
+            "subheading": "rpg-ia-master — um RPG de texto multi-agente"
+          }
+        },
+        {
+          "id": "li02",
+          "title": "Em números",
+          "narration": "Um grafo de agentes. 3 tiers de modelo com fallback. 699 documentos de lore, 124 criaturas, ~1.900 testes e 198 especificações.",
+          "visual": {
+            "type": "stats",
+            "heading": "O projeto em números",
+            "items": [
+              {
+                "value": "13",
+                "label": "nós no grafo de um turno"
+              },
+              {
+                "value": "3",
+                "label": "tiers de IA com fallback"
+              },
+              {
+                "value": "699",
+                "label": "documentos de lore"
+              },
+              {
+                "value": "124",
+                "label": "criaturas no bestiário"
+              },
+              {
+                "value": "~1.900",
+                "label": "testes offline"
+              },
+              {
+                "value": "198",
+                "label": "especificações"
+              }
+            ]
+          }
+        },
+        {
+          "id": "li03",
+          "title": "O princípio",
+          "narration": "LLMs são ótimos contadores de história e péssimos contadores de moedas. Então a IA interpreta e narra. Dados, dano, economia e XP são código determinístico.",
+          "visual": {
+            "type": "compare",
+            "heading": "Quem faz o quê",
+            "left": {
+              "title": "IA",
+              "items": [
+                "Entende a intenção do jogador",
+                "Narra a cena e interpreta NPCs",
+                "Propõe eventos e missões"
+              ]
+            },
+            "right": {
+              "title": "Python",
+              "items": [
+                "Rola os dados e aplica o dano",
+                "Calcula preço, XP e recompensa",
+                "Valida tudo que a IA propõe"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "L2",
+      "title": "Como funciona",
+      "color": "#9b7be0",
+      "scenes": [
+        {
+          "id": "li04",
+          "title": "Um turno",
+          "narration": "Cada ação percorre um grafo LangGraph. Um guarda barra ações impossíveis e um roteador escolhe o agente. No fim, o arquivista guarda a memória e o recibo sai da diferença real de estado.",
+          "visual": {
+            "type": "graph",
+            "heading": "Um turno",
+            "direction": "LR",
+            "nodes": [
+              {
+                "id": "a",
+                "label": "Ação do jogador",
+                "group": "io"
+              },
+              {
+                "id": "g",
+                "label": "Guarda de ação",
+                "group": "python"
+              },
+              {
+                "id": "r",
+                "label": "Roteador",
+                "group": "llm"
+              },
+              {
+                "id": "s",
+                "label": "Narrador",
+                "group": "llm"
+              },
+              {
+                "id": "c",
+                "label": "Combate",
+                "group": "python"
+              },
+              {
+                "id": "n",
+                "label": "NPC",
+                "group": "llm"
+              },
+              {
+                "id": "l",
+                "label": "Loot",
+                "group": "python"
+              },
+              {
+                "id": "m",
+                "label": "Arquivista",
+                "group": "data"
+              },
+              {
+                "id": "f",
+                "label": "Recibo do turno",
+                "group": "python"
+              }
+            ],
+            "edges": [
+              {
+                "from": "a",
+                "to": "g"
+              },
+              {
+                "from": "g",
+                "to": "r"
+              },
+              {
+                "from": "r",
+                "to": "s"
+              },
+              {
+                "from": "r",
+                "to": "c"
+              },
+              {
+                "from": "r",
+                "to": "n"
+              },
+              {
+                "from": "r",
+                "to": "l"
+              },
+              {
+                "from": "s",
+                "to": "m"
+              },
+              {
+                "from": "c",
+                "to": "m"
+              },
+              {
+                "from": "n",
+                "to": "m"
+              },
+              {
+                "from": "l",
+                "to": "m"
+              },
+              {
+                "from": "m",
+                "to": "f"
+              }
+            ]
+          }
+        },
+        {
+          "id": "li05",
+          "title": "Resiliência",
+          "narration": "Nenhum agente chama um provedor direto. DeepSeek é o primário, Groq o reserva. Se todos falharem, cada nó segue por um caminho determinístico — o jogador nunca vê erro.",
+          "visual": {
+            "type": "callout",
+            "kind": "key",
+            "heading": "Resiliência",
+            "text": "DeepSeek → Groq → MiniMax → Claude → Gemini. Falha de rede troca de provedor; JSON inválido regenera; se tudo cair, o jogo segue por um caminho determinístico."
+          }
+        },
+        {
+          "id": "li06",
+          "title": "Um ataque",
+          "narration": "O combate é um jogo tático de Cartas: 2d10 + Virtude contra a Esquiva do alvo. Dados iguais = crítico. A IA só narra o que o motor já resolveu.",
+          "visual": {
+            "type": "example",
+            "heading": "Um ataque resolvido",
+            "lines": [
+              {
+                "label": "Dados (2d10)",
+                "value": "3 + 10 = 13"
+              },
+              {
+                "label": "+ Força",
+                "value": "+4 → 17"
+              },
+              {
+                "label": "Esquiva do alvo",
+                "value": "13 → acerto"
+              },
+              {
+                "label": "Dano da Carta + bônus",
+                "value": "4 + 2 = 6"
+              },
+              {
+                "label": "Dupla nos dados?",
+                "value": "Crítico ×2, sempre acerta"
+              }
+            ]
+          }
+        },
+        {
+          "id": "li07",
+          "title": "Memória",
+          "narration": "A memória sabe de onde veio cada fato. Evento do motor é confirmado; fala de NPC é relato; inferência da IA é especulação. Boato de taverna nunca vira verdade.",
+          "visual": {
+            "type": "table",
+            "heading": "Memória com proveniência",
+            "columns": [
+              "Origem do fato",
+              "Confiança"
+            ],
+            "rows": [
+              [
+                "Evento aplicado pelo motor",
+                "confirmado"
+              ],
+              [
+                "Observação do jogador",
+                "relato"
+              ],
+              [
+                "Fala de um NPC",
+                "relato"
+              ],
+              [
+                "Inferência livre da IA",
+                "especulativo"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "li08",
+          "title": "Mundo vivo",
+          "narration": "O mundo muda de verdade: se um líder morre, sua facção enfraquece e outra toma a cidade. Facções, clima e segredos seguem regras que a IA não pode quebrar.",
+          "visual": {
+            "type": "bullets",
+            "heading": "Um mundo que reage",
+            "items": [
+              "Event sourcing: a IA propõe, o motor valida e aplica",
+              "Regras em cascata: líder morto, cidade trocada de mãos",
+              "Facções, clima e luz avançam com o relógio do mundo",
+              "Segredos protegidos no índice, por assinatura e por evento"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "L3",
+      "title": "Engenharia",
+      "color": "#5fbfa8",
+      "scenes": [
+        {
+          "id": "li09",
+          "title": "Infra",
+          "narration": "Por baixo: Postgres local-first. Nenhuma transação aberta enquanto a IA pensa, e cada turno é gravado exatamente uma vez — mesmo se a conexão cair.",
+          "visual": {
+            "type": "flow",
+            "heading": "Turno durável",
+            "steps": [
+              {
+                "label": "Reserva o jogo",
+                "detail": "lease curto, um turno por vez"
+              },
+              {
+                "label": "IA e motor rodam",
+                "detail": "fora de qualquer transação"
+              },
+              {
+                "label": "Commit único",
+                "detail": "versão + fencing + recibo"
+              },
+              {
+                "label": "Retry seguro",
+                "detail": "mesma chave devolve o mesmo turno"
+              }
+            ]
+          }
+        },
+        {
+          "id": "li10",
+          "title": "Playtest",
+          "narration": "14 perfis automatizados jogaram campanhas de 200 turnos, com invariantes checadas a cada turno. A 1ª matriz achou 12 violações graves. Depois das correções: zero.",
+          "visual": {
+            "type": "stats",
+            "heading": "Playtest agêntico",
+            "items": [
+              {
+                "value": "14",
+                "label": "perfis de jogador automatizados"
+              },
+              {
+                "value": "2.000",
+                "label": "turnos por matriz"
+              },
+              {
+                "value": "12 → 0",
+                "label": "violações graves, antes e depois"
+              }
+            ]
+          }
+        },
+        {
+          "id": "li11",
+          "title": "Processo",
+          "narration": "Nada é implementado sem spec aprovada, testes primeiro e teste real com IA no fim. Cada playtest longo gera novas specs — e o ciclo recomeça.",
+          "visual": {
+            "type": "flow",
+            "heading": "Desenvolvimento guiado por specs",
+            "steps": [
+              {
+                "label": "Spec aprovada",
+                "detail": "198 com ID estável"
+              },
+              {
+                "label": "Testes primeiro",
+                "detail": "suíte offline com IA simulada"
+              },
+              {
+                "label": "Teste real",
+                "detail": "o mock esconde bugs de mapeamento"
+              },
+              {
+                "label": "Playtest longo",
+                "detail": "achados viram novas specs"
+              }
+            ]
+          }
+        },
+        {
+          "id": "li12",
+          "title": "Encerramento",
+          "narration": "Uma IA criativa, cercada de regras que ela não pode quebrar. Trilha: “Crossing the Chasm”, Kevin MacLeod (incompetech.com) — CC BY 4.0.",
+          "visual": {
+            "type": "title",
+            "heading": "rpg-ia-master",
+            "subheading": "Uma IA criativa, cercada de regras que ela não pode quebrar."
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -82,7 +82,7 @@ Princípios: "Mecânica é Python", "dado declara capacidade → motor FIA"
   temático), ativas ofensivas/utilitárias (bomba de atordoamento, pó do sono,
   fumaça — fuga, óleo incendiário — `dot`), e itens de suporte (bênção — buff).
   Sem inventar entidade fora do Codex; itens únicos entram no claim engine (6.2)
-  quando `unique`. Seguir `docs/AUTORIA.md` (lint `validate_content.py` quando
+  quando `unique`. Seguir `docs/guias/AUTORIA.md` (lint `validate_content.py` quando
   aplicável). Balance dos números marcado `[BALANCEAR]`.
 
 ### Fora de escopo

@@ -113,7 +113,7 @@ def main() -> int:
     record.add_argument("--command", required=True)
     record.add_argument("--evidence", required=True)
     build = sub.add_parser("build")
-    build.add_argument("--output-dir", type=Path, default=Path("docs/readiness"))
+    build.add_argument("--output-dir", type=Path, default=Path("docs/operacao/readiness"))
     args = parser.parse_args()
     if args.action == "record":
         print(record_gate(

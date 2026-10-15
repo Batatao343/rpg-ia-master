@@ -1,6 +1,6 @@
 # Curadoria migration-safe — aplicada por scripts/migrate_lore_nova.py DEPOIS da
 # geração do Codex. Rode o migrate quantas vezes quiser: o que estiver aqui
-# sobrevive. Fluxo completo: docs/AUTORIA.md.
+# sobrevive. Fluxo completo: docs/guias/AUTORIA.md.
 #
 # Chaves por id do Codex (id órfão = ERRO de lint). Campos suportados:
 #   aliases:          SUBSTITUI a lista de aliases

@@ -84,7 +84,7 @@ Regressões e gates: [adendo pré-matriz](SPEC-162-remediacao-local-contratos-pr
 
 Atualização de 17/09: outcomes sobrevivem save/load e o recibo incorpora
 readiness da transição. B integral bloqueada por HTTP 402 DeepSeek; ver
-[fechamento local](../docs/fechamento-local-2026-09-17.md).
+[fechamento local](../docs/auditorias/fechamento-local-2026-09-17.md).
 
 Completar uma quest com ouro via evento proposto pelo LLM; comparar texto,
 `last_turn_outcome`, ledger e resposta SSE.
@@ -98,4 +98,4 @@ ativados quando o delta canônico contradiz explicitamente a frase.
 ## Fechamento real ? 2026-09-28
 
 Contrato DeepSeek concluiu beat eleg?vel, concedeu 150 XP e confirmou xp_delta=150 no outcome; matriz preservou recibos.
-Evid?ncia consolidada: [matriz B](../docs/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.
+Evid?ncia consolidada: [matriz B](../docs/playtests/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.

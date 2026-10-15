@@ -1,0 +1,1741 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guia do rpg-ia-master</title>
+<meta name="description" content="Guia interativo e pedagógico de como funciona o rpg-ia-master: grafo de agentes, IA, memória, combate, infraestrutura e processo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg0:#0c0a0e; --bg1:#141118; --bg2:#1b1720; --panel:rgba(255,244,225,.035); --panel2:rgba(255,244,225,.06);
+  --line:rgba(232,200,140,.16); --line2:rgba(232,200,140,.3);
+  --text:#efe6d6; --muted:#ab9e8a; --dim:#74695a; --gold:#e3b765; --gold2:#f3d395;
+  --llm:#b98cff; --python:#e6a94a; --data:#5fbfa8; --io:#6ea4e8; --infra:#98a3b3; --neutral:#cdbb9d;
+  --danger:#e0705a; --ok:#7cc48a; --warn:#e8b14f;
+  --r:14px; --shadow:0 10px 40px rgba(0,0,0,.45);
+  --ft:"Cinzel",Georgia,serif; --fb:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif; --fm:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+:root[data-theme="light"]{
+  --bg0:#f6f1e7; --bg1:#efe7d8; --bg2:#e7dccb; --panel:rgba(60,40,10,.04); --panel2:rgba(60,40,10,.07);
+  --line:rgba(110,80,30,.2); --line2:rgba(110,80,30,.35); --text:#2a2219; --muted:#6a5b47; --dim:#968670; --gold:#9a6a12; --gold2:#7d550c;
+  --llm:#7a4fd6; --python:#b06f0d; --data:#1f8a72; --io:#2f6fc0; --infra:#5d6878; --neutral:#7d6a4c; --shadow:0 8px 30px rgba(80,60,20,.15);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg0);color:var(--text);font-family:var(--fb);font-size:16px;line-height:1.65;
+  background-image:radial-gradient(circle at 15% 0%, rgba(227,183,101,.08), transparent 40%),radial-gradient(circle at 100% 40%, rgba(185,140,255,.05), transparent 40%);background-attachment:fixed}
+a{color:var(--gold)}
+code,.mono{font-family:var(--fm);font-size:.88em}
+code{background:var(--panel2);border:1px solid var(--line);padding:1px 6px;border-radius:6px;overflow-wrap:anywhere}
+h1,h2,h3,h4{font-family:var(--ft);font-weight:700;letter-spacing:.02em;line-height:1.2}
+h2{font-size:clamp(28px,4vw,40px);margin:0 0 6px}
+h3{font-size:22px;margin:34px 0 10px;color:var(--gold2)}
+h4{font-size:17px;margin:20px 0 6px}
+p{margin:10px 0}
+
+/* layout */
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:14px;padding:10px 20px;background:color-mix(in srgb,var(--bg0) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .brand{font-family:var(--ft);font-weight:700;color:var(--gold);white-space:nowrap}
+.topbar .progress{flex:1;height:4px;background:var(--panel2);border-radius:9px;overflow:hidden}
+.topbar .progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--llm))}
+.topbar button{flex:none}
+.wrap{display:grid;grid-template-columns:270px minmax(0,1fr);max-width:1500px;margin:0 auto}
+nav.toc{position:sticky;top:58px;height:calc(100vh - 58px);overflow:auto;padding:22px 14px 40px 20px;border-right:1px solid var(--line)}
+nav.toc a{display:flex;gap:10px;align-items:baseline;padding:6px 10px;border-radius:8px;color:var(--muted);text-decoration:none;font-size:14px;line-height:1.3}
+nav.toc a .n{font-family:var(--fm);font-size:11px;color:var(--dim);min-width:20px}
+nav.toc a:hover{background:var(--panel2);color:var(--text)}
+nav.toc a.active{background:var(--panel2);color:var(--gold);box-shadow:inset 3px 0 0 var(--gold)}
+nav.toc .grp{font-family:var(--ft);font-size:11px;letter-spacing:.14em;color:var(--dim);margin:18px 10px 6px;text-transform:uppercase}
+main{padding:30px clamp(16px,4vw,56px) 120px;min-width:0}
+section.chap{padding:40px 0 30px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--fm);font-size:12px;color:var(--gold);letter-spacing:.12em;text-transform:uppercase}
+.lead{font-size:18px;color:var(--muted);max-width:860px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px}
+.card h4{margin-top:0}
+.card.accent{border-color:var(--line2);background:var(--panel2)}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-family:var(--fm);padding:2px 9px;border-radius:99px;border:1px solid var(--line2);color:var(--muted);white-space:nowrap}
+.tag.llm{color:var(--llm);border-color:color-mix(in srgb,var(--llm) 50%,transparent)}
+.tag.python{color:var(--python);border-color:color-mix(in srgb,var(--python) 50%,transparent)}
+.tag.data{color:var(--data);border-color:color-mix(in srgb,var(--data) 50%,transparent)}
+.tag.io{color:var(--io);border-color:color-mix(in srgb,var(--io) 50%,transparent)}
+.tag.infra{color:var(--infra);border-color:color-mix(in srgb,var(--infra) 50%,transparent)}
+.tag.err{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 50%,transparent)}
+.tag.warn{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 50%,transparent)}
+.tag.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 50%,transparent)}
+.stat{text-align:center;padding:18px 10px}
+.stat b{display:block;font-family:var(--ft);font-size:34px;color:var(--gold);line-height:1.1}
+.stat span{font-size:13px;color:var(--muted)}
+.callout{border-left:4px solid var(--gold);background:var(--panel2);padding:14px 18px;border-radius:0 12px 12px 0;margin:16px 0}
+.callout.warn{border-color:var(--danger)}
+.callout.info{border-color:var(--io)}
+.callout b:first-child{color:var(--gold2)}
+.callout.warn b:first-child{color:var(--danger)}
+.analogy{border:1px dashed var(--line2);border-radius:12px;padding:12px 16px;margin:14px 0;color:var(--muted);font-style:italic}
+.analogy::before{content:"🜂 Analogia — ";font-style:normal;color:var(--gold);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--gold);font-weight:600;background:var(--panel2);position:sticky;top:0}
+.tblwrap{overflow:auto;max-height:520px;border:1px solid var(--line);border-radius:12px}
+.tblwrap table{margin:0}
+ol.steps,ul.clean{padding-left:22px}
+ul.clean li{margin:4px 0}
+button,.btn{font:inherit;font-size:14px;cursor:pointer;color:var(--text);background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:7px 14px;transition:.15s}
+button:hover{border-color:var(--gold);color:var(--gold2)}
+button.primary{background:var(--gold);color:#1a1205;border-color:var(--gold);font-weight:600}
+button.primary:hover{filter:brightness(1.1);color:#1a1205}
+button.on{border-color:var(--gold);color:var(--gold);background:color-mix(in srgb,var(--gold) 12%,transparent)}
+button:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+select,input[type=number],input[type=text],input[type=search]{font:inherit;font-size:14px;color:var(--text);background:var(--bg1);border:1px solid var(--line2);border-radius:9px;padding:6px 10px;min-width:0}
+input[type=range]{accent-color:var(--gold);width:100%}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);min-width:0;max-width:100%}
+label.f select,label.f input{width:100%;max-width:100%}
+.calc>*{min-width:0}
+
+/* diagram */
+.diagram{position:relative;background:var(--bg1);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin:16px 0}
+.diagram .dtitle{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:2px 4px 8px}
+.diagram .gh{overflow-x:auto}
+.diagram svg{display:block;width:100%;height:auto;overflow:visible;margin:0 auto}
+.diagram .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:8px 4px 0}
+.diagram .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.gnode{cursor:pointer}
+.gnode rect{transition:stroke-width .15s, opacity .2s}
+.gnode text{font-family:var(--fb);font-weight:600;pointer-events:none}
+.gnode:hover rect{stroke-width:3}
+.gnode.dim,.gedge.dim{opacity:.18}
+.gnode.hot rect{stroke-width:3.5;filter:drop-shadow(0 0 10px var(--gold))}
+.gedge path{fill:none;stroke-width:2;transition:opacity .2s}
+.gedge.hot path{stroke-width:3.5}
+.gedge text{font-family:var(--fm);font-size:11px;paint-order:stroke;stroke:var(--bg1);stroke-width:5px}
+.inspector{margin-top:10px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-height:70px}
+.inspector h5{font-family:var(--ft);font-size:16px;margin:0 0 6px;color:var(--gold2)}
+.inspector .hint{color:var(--dim);font-size:13px}
+
+/* stepper */
+.stepper{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);overflow:hidden;margin:16px 0}
+.stepper .sbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--panel2)}
+.stepper .sbar .count{margin-left:auto;font-family:var(--fm);font-size:12px;color:var(--muted)}
+.stepper .sbody{padding:16px 18px;min-height:120px}
+.stepper .sbody h5{font-family:var(--ft);font-size:18px;margin:0 0 8px;color:var(--gold2)}
+.dots{display:flex;gap:5px;padding:0 14px 12px;flex-wrap:wrap}
+.dots i{width:22px;height:5px;border-radius:9px;background:var(--panel2);cursor:pointer}
+.dots i.on{background:var(--gold)}
+
+/* calculators */
+.calc{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:18px}
+@media (max-width:820px){.calc{grid-template-columns:1fr}}
+.dice{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.die{width:54px;height:54px;border-radius:12px;display:grid;place-items:center;font-family:var(--ft);font-size:24px;font-weight:700;background:var(--bg2);border:2px solid var(--line2)}
+.die.kept{border-color:var(--gold);color:var(--gold2)}
+.die.drop{opacity:.35;text-decoration:line-through}
+.die.roll{animation:spin .45s ease}
+@keyframes spin{0%{transform:rotate(-30deg) scale(.7);opacity:.2}100%{transform:none;opacity:1}}
+.pipe{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.pipe div{display:flex;justify-content:space-between;gap:10px;padding:7px 12px;border-radius:9px;background:var(--panel2);font-size:14px}
+.pipe div b{font-family:var(--fm)}
+.verdict{font-family:var(--ft);font-size:22px;margin:10px 0}
+.bar{height:12px;background:var(--panel2);border-radius:9px;overflow:hidden;position:relative}
+.bar i{display:block;height:100%;background:var(--gold);transition:width .4s}
+.hbars{display:flex;flex-direction:column;gap:8px}
+.hbars .hb{display:grid;grid-template-columns:minmax(110px,180px) 1fr 64px;gap:10px;align-items:center;font-size:13px}
+.hbars .hb span:last-child{font-family:var(--fm);text-align:right;color:var(--muted)}
+
+/* misc */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.pill{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--panel2);color:var(--muted)}
+.timeline{position:relative;padding-left:26px;margin:16px 0}
+.timeline::before{content:"";position:absolute;left:8px;top:4px;bottom:4px;width:2px;background:var(--line2)}
+.timeline .ev{position:relative;margin:0 0 14px}
+.timeline .ev::before{content:"";position:absolute;left:-23px;top:7px;width:12px;height:12px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px var(--bg0)}
+.timeline .ev b{font-family:var(--fm);font-size:12px;color:var(--gold)}
+.quiz{border:1px solid var(--line2);border-radius:var(--r);padding:16px 18px;margin:20px 0;background:linear-gradient(180deg,var(--panel2),transparent)}
+.quiz .q{font-weight:600;margin-bottom:8px}
+.quiz .opts{display:flex;flex-direction:column;gap:6px}
+.quiz .opts button{text-align:left}
+.quiz .opts button.right{border-color:var(--ok);color:var(--ok)}
+.quiz .opts button.wrong{border-color:var(--danger);color:var(--danger)}
+.quiz .exp{margin-top:8px;font-size:14px;color:var(--muted);display:none}
+.quiz.done .exp{display:block}
+.recap{border:1px solid var(--line2);border-radius:var(--r);padding:14px 18px;margin:24px 0 6px;background:var(--panel)}
+.recap::before{content:"✦ Recapitulando";display:block;font-family:var(--ft);color:var(--gold);margin-bottom:6px}
+.seq{display:flex;flex-direction:column;gap:4px;font-family:var(--fm);font-size:13px}
+.seq .msg{display:grid;grid-template-columns:120px 1fr;gap:10px;padding:6px 10px;border-radius:8px;background:var(--panel2);opacity:.25;transition:opacity .3s}
+.seq .msg.on{opacity:1}
+.seq .msg span:first-child{color:var(--gold)}
+.hero{padding:50px 0 30px}
+.hero h1{font-size:clamp(36px,6vw,64px);margin:6px 0 10px;background:linear-gradient(90deg,var(--gold2),var(--gold),var(--llm));-webkit-background-clip:text;background-clip:text;color:transparent}
+.kbd{font-family:var(--fm);font-size:12px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:6px;padding:0 6px}
+.mapbox{position:relative;aspect-ratio:16/10;background:var(--bg1);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+details{border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0;background:var(--panel)}
+details summary{cursor:pointer;font-weight:600}
+details[open] summary{color:var(--gold2);margin-bottom:6px}
+.finding{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);margin:8px 0}
+.search{width:100%;margin:8px 0}
+.hidden{display:none!important}
+@media (max-width:980px){
+  .wrap{grid-template-columns:1fr}
+  nav.toc{position:fixed;inset:58px auto 0 0;width:min(86vw,300px);background:var(--bg0);z-index:25;transform:translateX(-102%);transition:transform .25s;box-shadow:var(--shadow)}
+  body.toc-open nav.toc{transform:none}
+}
+@media (min-width:981px){#tocBtn{display:none}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style></head><body>
+<header class="topbar">
+  <button id="tocBtn" aria-label="Abrir índice">☰</button>
+  <span class="brand">⚜ rpg-ia-master · Guia</span>
+  <div class="progress" aria-hidden="true"><i></i></div>
+  <button id="themeBtn" aria-label="Alternar tema claro/escuro">◐ tema</button>
+</header>
+<div class="wrap">
+<nav class="toc" aria-label="Índice">
+  <div class="grp">Fundamentos</div>
+  <a href="#inicio"><span class="n">00</span>Como usar este guia</a>
+  <a href="#visao"><span class="n">01</span>Visão geral e princípios</a>
+  <a href="#turno"><span class="n">02</span>Anatomia de um turno</a>
+  <a href="#agentes"><span class="n">03</span>Os agentes, um a um</a>
+  <a href="#llm"><span class="n">04</span>Camada de IA e resiliência</a>
+  <div class="grp">O mundo</div>
+  <a href="#valoria"><span class="n">05</span>Valoria: lore e Codex</a>
+  <a href="#rag"><span class="n">06</span>RAG e embeddings</a>
+  <a href="#eventos"><span class="n">07</span>Event sourcing e regras</a>
+  <a href="#memoria"><span class="n">08</span>Memória, contexto e segredos</a>
+  <a href="#vivo"><span class="n">09</span>Mundo vivo: NPCs, facções, clima, crônica</a>
+  <div class="grp">Mecânica</div>
+  <a href="#combate"><span class="n">10</span>Combate v4</a>
+  <a href="#cartas"><span class="n">11</span>Cartas, Posturas e progressão</a>
+  <a href="#sistemico"><span class="n">12</span>Viagem, economia e encontros</a>
+  <div class="grp">Produto</div>
+  <a href="#api"><span class="n">13</span>API e streaming</a>
+  <a href="#front"><span class="n">14</span>Frontend e jornada</a>
+  <a href="#arte"><span class="n">15</span>Arte visual</a>
+  <a href="#persist"><span class="n">16</span>Persistência e morte</a>
+  <a href="#infra"><span class="n">17</span>Infra local-first</a>
+  <div class="grp">Engenharia</div>
+  <a href="#qualidade"><span class="n">18</span>Testes e playtest</a>
+  <a href="#evals"><span class="n">19</span>Evals e Project Index</a>
+  <a href="#processo"><span class="n">20</span>Processo e história</a>
+  <a href="#arestas"><span class="n">21</span>Estado atual e arestas</a>
+  <a href="#glossario"><span class="n">22</span>Glossário</a>
+</nav>
+<main>
+
+<section class="chap hero" id="inicio">
+  <div class="eyebrow">Guia interativo e pedagógico</div>
+  <h1>Como funciona o rpg-ia-master</h1>
+  <p class="lead">Um RPG de texto em que <b>a IA narra e o Python decide</b>. Este guia percorre o projeto inteiro — do texto que o jogador digita até o disco, passando por agentes, memória, combate tático de Cartas, infraestrutura e o processo de engenharia que mantém tudo coerente.</p>
+  <div class="grid g4" style="margin:24px 0">
+    <div class="card stat"><b>13</b><span>nós no grafo de um turno</span></div>
+    <div class="card stat"><b>3</b><span>tiers de IA com fallback multi-provider</span></div>
+    <div class="card stat"><b>699</b><span>documentos de lore no Codex</span></div>
+    <div class="card stat"><b>~1.900</b><span>testes offline</span></div>
+    <div class="card stat"><b>124</b><span>criaturas no bestiário</span></div>
+    <div class="card stat"><b>5 × 3</b><span>Posturas × subclasses</span></div>
+    <div class="card stat"><b>14</b><span>perfis de playtest agêntico</span></div>
+    <div class="card stat"><b>198</b><span>specs com ID estável</span></div>
+  </div>
+  <h3>Como ler</h3>
+  <div class="grid g3">
+    <div class="card"><h4>◆ Diagramas vivos</h4>Clique em qualquer caixa para ler o que ela faz. Passe o mouse para ver de onde ela recebe e para onde envia. As cores indicam a natureza: <span class="tag llm">LLM</span> <span class="tag python">Python</span> <span class="tag data">Dados</span> <span class="tag io">E/S</span> <span class="tag infra">Infra</span>.</div>
+    <div class="card"><h4>▶ Passo a passo</h4>Os blocos com botões "próximo" contam uma história concreta — um turno de viagem, uma emboscada, uma morte — destacando no diagrama o nó ativo.</div>
+    <div class="card"><h4>🎲 Calculadoras</h4>Ataques, preços, orçamento de encontro e pontuação de contexto usam as <b>fórmulas reais</b> do código. Mexa nos controles e veja a regra funcionando.</div>
+  </div>
+  <div class="analogy">Pense no jogo como uma mesa de RPG presencial. A IA é o mestre que descreve a cena e interpreta os personagens. O Python é o livro de regras e os dados: ninguém na mesa — nem o mestre — pode inventar que o ataque acertou ou que o baú tinha 500 moedas.</div>
+</section>
+
+<section class="chap" id="visao">
+  <div class="eyebrow">Capítulo 01</div>
+  <h2>Visão geral e princípios</h2>
+  <p class="lead">O projeto é um motor de RPG de texto multi-agente. Stack: Python 3.13, LangGraph, FastAPI, FAISS/pgvector, React + Vite + TypeScript, gerenciado com <code>uv</code>. O mesmo grafo serve API, terminal (CLI) e harness de testes — o que é testado é exatamente o que roda.</p>
+  <div class="diagram" data-graph="arch"></div>
+  <h3>Os quatro princípios que aparecem em todo arquivo</h3>
+  <div class="grid g2">
+    <div class="card accent"><h4>1. A IA identifica e narra; o Python resolve os números</h4>Combate, dano, Ferimentos, economia, XP, viagem, descanso, clima e luz são código determinístico. A IA devolve intenção, classificação ou prosa.</div>
+    <div class="card accent"><h4>2. A IA propõe; o motor aplica</h4>Eventos de mundo, missões, itens narrados e reputação chegam como <b>propostas</b>. Validadores Python aceitam ou recusam cada uma contra o grafo do mundo, o catálogo e o estado.</div>
+    <div class="card accent"><h4>3. Toda saída estruturada tem guard</h4>Quando todos os provedores falham, o roteador devolve uma <code>AIMessage</code> vazia — nunca uma exceção. Cada nó checa <code>isinstance(res, Modelo)</code> e cai num caminho determinístico. O jogador nunca vê erro de provider.</div>
+    <div class="card accent"><h4>4. Tudo que o jogador lê passa por guardas</h4><code>prose_guard</code>, <code>narrative_evidence</code> e <code>turn_outcome</code> removem vazamento de meta-instrução, morte falsa, posse/local errados, segredos — e reescrevem o recibo de recompensa a partir do delta mecânico real.</div>
+  </div>
+  <div class="callout"><b>Por que isso importa?</b> Modelos de linguagem são ótimos contadores de história e péssimos contadores de moedas. Separar narração de regra torna o jogo justo, reproduzível por seed, testável offline e barato: a maioria das decisões nem chega a chamar a IA.</div>
+  <h3>Mapa das pastas</h3>
+  <div class="tblwrap"><table>
+    <tr><th>Onde</th><th>O que vive lá</th></tr>
+    <tr><td><code>main.py</code></td><td>Constrói e compila o grafo LangGraph (<code>app</code>).</td></tr>
+    <tr><td><code>state.py</code></td><td>Fonte da verdade do schema: <code>GameState</code> e todos os TypedDicts.</td></tr>
+    <tr><td><code>agents/</code></td><td>Nós do grafo: action_guard, router, storyteller, combat, npc, loot, archivist, campaign_manager, turn_finalizer, bestiary, librarian, world_simulator.</td></tr>
+    <tr><td><code>services/</code></td><td>~70 módulos determinísticos: conflito v4, Cartas, eventos, regras, contexto, memória, economia, checkpoints, arte, turnos duráveis.</td></tr>
+    <tr><td><code>llm_setup.py</code>, <code>mock_llm.py</code></td><td>Roteamento de modelos por tier e o modelo simulado offline.</td></tr>
+    <tr><td><code>rag.py</code></td><td>Índices FAISS, embeddings multi-provider, memória de sessão e por NPC.</td></tr>
+    <tr><td><code>api.py</code>, <code>web/</code>, <code>frontend/</code></td><td>API FastAPI, cliente React principal e cliente vanilla legado.</td></tr>
+    <tr><td><code>persistence.py</code></td><td>Saves JSON atômicos, migrações de schema (v8), checkpoints.</td></tr>
+    <tr><td><code>infrastructure/</code>, <code>workers/</code>, <code>supabase/</code></td><td>Portas e adapters, Postgres, filas, workers, migrations e RLS.</td></tr>
+    <tr><td><code>data/</code>, <code>lore_nova/</code></td><td>Mundo de Valoria: lore, Codex, grafo, mapa, bestiário, classes, Cartas.</td></tr>
+    <tr><td><code>tests/</code>, <code>playtest/</code>, <code>evals/</code></td><td>Suíte offline, harness de campanhas longas e plataforma de avaliações.</td></tr>
+    <tr><td><code>specs/</code>, <code>docs/</code></td><td>198 especificações com ID estável, relatórios de playtest e operação.</td></tr>
+  </table></div>
+  <div class="quiz" data-quiz="q1"></div>
+  <div class="recap"><ul class="clean"><li>Um só grafo para API, CLI e testes.</li><li>IA narra e propõe; Python resolve e valida.</li><li>Nada que a IA diz vira estado sem passar por um validador.</li></ul></div>
+</section>
+
+<section class="chap" id="turno">
+  <div class="eyebrow">Capítulo 02</div>
+  <h2>Anatomia de um turno</h2>
+  <p class="lead">Cada ação do jogador percorre um <b>StateGraph</b> síncrono. O estado é um dicionário tipado; cada nó devolve só as chaves que mudou. Único campo acumulativo: <code>messages</code> (reducer <code>operator.add</code>) — todo o resto é "último valor vence", por isso o router zera explicitamente os campos transitórios do turno anterior.</p>
+  <div class="diagram" data-graph="turn"></div>
+  <h3>Um turno de viagem, ponta a ponta</h3>
+  <div data-stepper="travel"></div>
+  <h3>Variações importantes</h3>
+  <div data-tabs>
+    <div class="tabs"><button data-tab="a">Emboscada na estrada</button><button data-tab="b">Conversa sem ninguém</button><button data-tab="c">Execução concorrente</button></div>
+    <div data-pane="a"><div data-stepper="ambush"></div></div>
+    <div data-pane="b"><div data-stepper="npcnone"></div></div>
+    <div data-pane="c"><div class="card"><p>Por padrão (<code>RPG_TURN_EXECUTION=sequential</code>) o turno é linear. Existe um modo experimental <code>concurrent</code> em que <code>campaign_manager</code> e <code>dm_router</code> rodam em paralelo a partir de <code>turn_prepare</code> e se juntam em <code>dispatch</code> — seguro porque escrevem canais disjuntos (o router nunca é dono de <code>world</code>).</p><p>O benchmark da SPEC-143 (agosto) mostrou sobreposição em ambiente controlado, mas <b>piorou com o DeepSeek real</b> (contenção quando SMART e CLASSIFY batem na mesma rota). Decisão: no-go; produção segue sequencial.</p></div></div>
+  </div>
+  <h3>O estado do jogo (<code>GameState</code>)</h3>
+  <div class="tblwrap"><table>
+    <tr><th>Grupo</th><th>Campos</th><th>Para que serve</th></tr>
+    <tr><td>Identidade</td><td><code>game_id</code>, <code>processed_action_ids</code> (64)</td><td>Isolar memória por sessão; deduplicar retries.</td></tr>
+    <tr><td>Memória</td><td><code>narrative_summary</code>, <code>memory_facts</code>, <code>pending_memory_facts</code>, <code>pending_npc_memory</code>, <code>memory_fact_policy</code></td><td>Resumo curto, ledger de fatos com proveniência, filas de retry.</td></tr>
+    <tr><td>Ciclo de vida</td><td><code>game_over</code>, <code>death_pending</code>, <code>archived</code>, <code>continuity</code></td><td>Memorial, tela de morte, linha do tempo e épocas.</td></tr>
+    <tr><td>Pipeline</td><td><code>action_guard_blocked</code>, <code>turn_baseline</code>, <code>last_turn_outcome</code>, <code>presentation_history</code></td><td>Gate, recibo por diferença, histórico estável para o cliente.</td></tr>
+    <tr><td>Entidades</td><td><code>player</code>, <code>world</code>, <code>party</code>, <code>enemies</code>, <code>npcs</code>, <code>factions</code>, <code>quests</code>, <code>bestiary_knowledge</code></td><td>Estado mecânico.</td></tr>
+    <tr><td>Campanha</td><td><code>campaign_plan</code>, <code>needs_replan</code>, <code>chronicle</code></td><td>Arco de 3–5 beats, crônica por capítulos.</td></tr>
+    <tr><td>Transições</td><td><code>combat_target</code>, <code>loot_source</code>, <code>active_npc_name</code>, <code>combat_declaration</code>, <code>conflict_summary</code>…</td><td>Canais efêmeros entre nós.</td></tr>
+    <tr><td>Combate</td><td><code>combat</code> (round, active, scene, chase, instance_id), <code>combat_simulation</code></td><td>Cena tática e laboratório.</td></tr>
+    <tr><td>Mundo estruturado</td><td><code>event_log</code>, <code>world_projection</code>, <code>pending_world_events</code>, <code>event_rejections</code></td><td>Event sourcing leve.</td></tr>
+    <tr><td>Auditoria</td><td><code>narrative_rejections</code>, <code>evidence_rejections</code>, <code>rejected_item_claims</code></td><td>O que os guardas removeram (limitado).</td></tr>
+  </table></div>
+  <p><code>PlayerStats</code> mostra duas camadas convivendo: a nova (5 Virtudes — mente, agilidade, força, carisma, corpo —, Vitalidade, Ferimentos por categoria, Cartas conhecidas e preparadas, Entropia e Carga do Abismo, escolhas pendentes) e aliases legados (<code>hp</code>, <code>max_hp</code>) derivados da Vitalidade.</p>
+  <div class="diagram" data-graph="lifecycle"></div>
+  <div class="quiz" data-quiz="q3"></div>
+  <div class="recap"><ul class="clean"><li>START barra herói morto/arquivado; action_guard barra ações impossíveis para a fase do jogador.</li><li>O router tem atalhos determinísticos antes de usar IA.</li><li>Todo caminho termina em archivist → turn_finalizer (exceto bloqueio e laboratório).</li><li>O recibo é diferença de estados, nunca texto da IA.</li></ul></div>
+</section>
+
+<section class="chap" id="agentes">
+  <div class="eyebrow">Capítulo 03</div>
+  <h2>Os agentes, um a um</h2>
+  <p class="lead">Cada nó é uma função que recebe o estado e devolve um dicionário parcial. A tabela resume custo e plano B de cada um.</p>
+  <div class="tblwrap"><table>
+    <tr><th>Nó / função</th><th>Tier</th><th>Schema</th><th>Chamadas típicas</th><th>Se a IA falhar…</th></tr>
+    <tr><td>campaign_manager</td><td><span class="tag llm">SMART</span></td><td>CampaignPlanModel</td><td>0 (1 a cada ~15 turnos)</td><td>Plano de 3 beats pt-BR; mantém o anterior se vier em inglês</td></tr>
+    <tr><td>dm_router</td><td><span class="tag llm">CLASSIFY</span></td><td>RouterDecision</td><td>0–1</td><td>STORY</td></tr>
+    <tr><td>storyteller</td><td><span class="tag llm">FAST</span></td><td>StoryUpdate</td><td>1 (+1 simulador de mundo em viagem)</td><td>Narração determinística das notas do turno</td></tr>
+    <tr><td>generate_new_npc</td><td>FAST/SMART + CLASSIFY</td><td>NPCSchema, EntityMatch</td><td>por NPC novo (com cache)</td><td>Ficha genérica</td></tr>
+    <tr><td>npc_actor</td><td><span class="tag llm">FAST</span></td><td>NPCResponse</td><td>1</td><td>"..."</td></tr>
+    <tr><td>combat spawn</td><td>CLASSIFY</td><td>EncounterScanner</td><td>1 no início</td><td>Inimigo Sombrio</td></tr>
+    <tr><td>combat parse</td><td>CLASSIFY</td><td>PlayerMove</td><td>0 se a UI declarou ou o nome da Carta está no texto</td><td>Ataque básico no 1º inimigo</td></tr>
+    <tr><td>combat narração</td><td>FAST</td><td>texto</td><td>1 por rodada</td><td>Log mecânico como prosa</td></tr>
+    <tr><td>Cicatriz</td><td>SMART</td><td>ScarModel</td><td>só em queda</td><td>Cicatriz determinística</td></tr>
+    <tr><td>loot (parse/narra)</td><td>CLASSIFY + FAST</td><td>TradeIntent</td><td>0–2</td><td>Palavras-chave + texto mecânico</td></tr>
+    <tr><td>archivist</td><td><span class="tag llm">SMART</span></td><td>MemoryUpdate</td><td>0–1 (cadência)</td><td>Resumo em texto plano; senão mantém</td></tr>
+    <tr><td>world_simulator</td><td>FAST</td><td>WorldPulse</td><td>1 em viagem/descanso</td><td>Sem rumor</td></tr>
+    <tr><td>character_creator / prólogo</td><td>SMART</td><td>PlayerFlavorSchema / StartScenario</td><td>1 na criação</td><td>Kit Básico / cenário template</td></tr>
+  </table></div>
+  <div class="grid g2" style="margin-top:16px">
+    <details open><summary>🛡 action_guard — o porteiro</summary>Sem IA. Classifica a fase do jogador e só deixa passar ações coerentes. Inconsciente digitando "vou até a taverna" recebe mensagem fixa; digitando "descanso" passa como <i>recovery</i>. Repara saves legados com transições órfãs (ex.: jogador em Estado Terminal sem combate) e grava o <code>turn_baseline</code>.</details>
+    <details open><summary>🗺 campaign_manager — o diretor</summary>Planeja arcos de 3–5 beats com clímax e título. Usa o <code>ContextPack</code> de propósito <i>planning</i>, o único que enxerga arestas hidden/secret do grafo — mas cada beat passa por <code>sanitize_beat</code> antes de chegar a narrador ou jogador. Guardas: idioma (retry se inglês), segredo, grounding (o local é sempre o real). Ao trocar de arco, abre capítulo novo na crônica. Normaliza saída de provider: mantém 5 beats não vazios (um sexto beat do DeepSeek já derrubou um plano).</details>
+    <details><summary>🧭 dm_router — o classificador</summary>Tier CLASSIFY (temperatura 0). Antes da IA: combate ativo força COMBAT (viagem vira tentativa de fuga com destino; combate ocioso expira após 3 turnos, fechando o bug do "combate zumbi"); recuperação e descanso/viagem explícitos viram STORY. Pós: NONE vira STORY (o LLM real escolhe "none" para emojis e injeções); NPC casa alvo com quem está em cena; COMBAT marca origem <code>player_provoked</code> se o texto é hostil explícito.</details>
+    <details><summary>📜 storyteller — o narrador</summary>Faz muito antes da IA: viagem (destino impossível recebe recusa canônica sem IA), descanso, cena zerada, encontros com dedupe, percepção, armadilhas, rastros, simulação do mundo. Monta prompt com blocos exatos (vitalidade e ouro reais, luz, clima, facções conhecidas, entidades canônicas permitidas, quests, capacidades utilitárias da ficha). Depois valida tudo e aplica efeitos: reputação, beat (XP só a partir do turno 2), NPCs, itens do catálogo, quests verificáveis.</details>
+    <details><summary>🗣 npc_actor — o ator</summary>Gate de cena, comandos de party em Python (a IA nunca decide se o NPC aceita entrar no grupo), regra "NÃO SEJA UMA WIKIPÉDIA" com filtro de conhecimento, anti-repetição verbatim, orientação de missão quando perguntado. Relação limitada a 0–10; traços ocultos revelados com o tempo; memória do NPC grava a experiência observável.</details>
+    <details><summary>⚔ combat_agent — o juiz</summary>Nó fino sobre <code>conflict_orchestrator</code>. Prepara cena uma vez, aceita declaração estruturada da UI (Carta, alvo, Ruptura, reação, manobra), trata fuga com trilha de perseguição, resolve a rodada, espelha vitais, gera Cicatriz, dá XP determinístico, narra só com base no log ("não invente dano").</details>
+    <details><summary>💰 loot_agent — o mercador</summary>TREASURE, SHOP ou CRAFT. A IA interpreta e narra; preço, estoque, receita e raridade são Python. Um modo explícito detectado em Python (vendo/compro/forjo/consultar) sobrescreve o que a IA disse. Itens únicos emitem evento de posse.</details>
+    <details><summary>📚 archivist — o cronista</summary>Sempre processa eventos pendentes; chama SMART só com cadência. Resumo ≤1200 chars ancorado no mapa, inventário e aparência dos NPCs; fatos livres viram <i>inference</i>; em turnos de conflito só o contrato canônico é persistido. Se a escrita RAG falha, não consome o resumo do conflito e tenta de novo.</details>
+    <details><summary>✅ turn_finalizer — o auditor</summary>Sem IA. Remove frases com contradições críticas (citações e "dizem que" ficam), exige fronteira de turno pronta (senão levanta erro — defesa dura contra salvar estado inválido) e escreve o recibo <code>[RESULTADO] +N ouro · +N XP · +1 item</code> calculado do delta.</details>
+    <details><summary>🧩 bestiary, librarian, world_simulator</summary><b>bestiary</b>: cache-first; a IA cria o conceito, e <code>materialize_enemy_concept</code> calcula a ficha por categoria/arquétipo/nível — o prompt proíbe números. <b>librarian</b>: deduplicação semântica em 4 camadas (slug exato → sobreposição de tokens/difflib → só então IA). <b>world_simulator</b>: propõe <code>WorldPulse</code>; Python limita o deslocamento de perigo a ±1 e só a consequência aplicada vira memória.</details>
+  </div>
+  <div class="recap"><ul class="clean"><li>A maioria dos turnos custa ~2 chamadas de IA.</li><li>Cada agente tem um plano B determinístico.</li><li>Quem decide número é sempre serviço Python.</li></ul></div>
+</section>
+
+<section class="chap" id="llm">
+  <div class="eyebrow">Capítulo 04</div>
+  <h2>Camada de IA e resiliência</h2>
+  <p class="lead"><code>get_llm(temperature, tier)</code> é a única porta para modelos. Cada tier é uma lista ordenada de candidatos; o <code>RoutedLLM</code> tenta o preferido e cai para o próximo em qualquer falha de transporte.</p>
+  <div class="diagram" data-graph="llm"></div>
+  <div class="tblwrap"><table>
+    <tr><th>Tier</th><th>Uso</th><th>Rota (ordem = preferência)</th></tr>
+    <tr><td>CLASSIFY</td><td>router, parse de combate, TradeIntent, librarian</td><td>DeepSeek v4 flash → Groq gpt-oss-20b → Gemini flash-lite</td></tr>
+    <tr><td>FAST</td><td>narrador, narração de combate e loot, NPC, simulador, bestiário</td><td>DeepSeek → Groq gpt-oss-120b → MiniMax → Qwen → Gemini flash</td></tr>
+    <tr><td>SMART</td><td>arquivista, campanha, criação, prólogo, Cicatriz</td><td>DeepSeek → Groq gpt-oss-120b → Anthropic Claude → Gemini pro</td></tr>
+  </table></div>
+  <h3>Simulador do RoutedLLM</h3>
+  <p>Escolha o que cada candidato faz e dispare um <code>invoke()</code>. Note a diferença deliberada entre falha de <b>transporte</b> (troca de provider na hora) e falha <b>semântica</b> (regenera até 3 vezes no mesmo provider, com uma mensagem dizendo qual contrato quebrou).</p>
+  <div class="card" id="routed"></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h4>Truques que tornam vários provedores compatíveis</h4><ul class="clean"><li>Para provedores OpenAI-compatíveis injeta <code>method="function_calling"</code>: o modo JSON estrito do Groq rejeitava schemas com dicionário aberto; tool calling aceita qualquer schema — por isso há um Groq grátis em todos os tiers.</li><li><code>include_raw=True</code> para recuperar JSON escrito em texto sem nova request.</li><li>Anthropic: sem <code>temperature</code> e sem prefill.</li><li>DeepSeek v4 com "thinking" desligado; timeout padrão 12 s.</li><li><code>max_retries=0</code>: 429 de quota não é transitório.</li><li>Semáforo por provider (2 chamadas em voo).</li></ul></div>
+    <div class="card"><h4>Telemetria</h4><p>Dois hooks: um por sucesso <code>(provider, model, tier, latency_ms, fell_back)</code> e um por tentativa, com código de falha estruturada (<code>transport</code>, <code>no_tool_call</code>, <code>wrong_tool</code>, <code>parsing_error</code>, <code>schema_validation</code>). Envolvidos em try/except: "telemetria nunca derruba o turno". A API usa para somar custo por turno; o playtest para medir provider e custo.</p><p>Trocar modelo = editar <code>ROUTES</code> ou apontar <code>RPG_ROUTES</code> para um JSON — sem tocar nos agentes.</p></div>
+  </div>
+  <div class="callout warn"><b>MockLLM esconde bugs de mapeamento.</b> Ele devolve sempre instâncias Pydantic válidas, então um nome de campo errado nunca quebra offline. Exemplo real: limites <code>max_length</code> duros no schema do prólogo derrubavam DeepSeek, Claude e Groq — o guard caía sempre no template. Solução-padrão do projeto: tamanho vira dica na descrição, Python trunca, e o limite estrito fica só na borda da API.</div>
+  <div class="quiz" data-quiz="q2"></div>
+  <div class="recap"><ul class="clean"><li>DeepSeek é o primário em todos os tiers; Groq grátis é o fallback vivo.</li><li>Transporte troca de provider; schema regenera no mesmo; JSON em texto é recuperado de graça.</li><li>Erro permanente (401/402) abre circuit breaker.</li><li>O fim da linha é AIMessage vazio + guard determinístico.</li></ul></div>
+</section>
+
+<section class="chap" id="valoria">
+  <div class="eyebrow">Capítulo 05</div>
+  <h2>Valoria: lore, Codex e grafo do mundo</h2>
+  <p class="lead">O mundo é dark fantasy medieval: um continente com 12 regiões, seis raças, facções com objetivos reais e declarados, uma timeline de eras e segredos que os personagens raramente conhecem — como o pacto de Valerius com Daruun, a Rede Carmesim sob Skallgard, a identidade do Arauto da Névoa e o Rei Subterrâneo.</p>
+  <div class="diagram" data-graph="lore"></div>
+  <div class="grid g4">
+    <div class="card stat"><b>35</b><span>nós no mapa (30 + 5 interiores)</span></div>
+    <div class="card stat"><b>12</b><span>regiões</span></div>
+    <div class="card stat"><b>594</b><span>entidades no grafo</span></div>
+    <div class="card stat"><b>101</b><span>arestas curadas</span></div>
+    <div class="card stat"><b>19</b><span>facções jogáveis</span></div>
+    <div class="card stat"><b>80</b><span>traços ocultos de NPC</span></div>
+    <div class="card stat"><b>639/41/19</b><span>docs public/hidden/secret</span></div>
+    <div class="card stat"><b>2</b><span>baús curados one-shot</span></div>
+  </div>
+  <h3>Três camadas de conteúdo</h3>
+  <div class="grid g3">
+    <div class="card"><h4>Fonte</h4><code>lore_nova/*.txt</code> — editável, sempre sobrevive.</div>
+    <div class="card"><h4>Gerado</h4><code>data/codex/**</code> e <code>entities.json</code> — regenerados pelo migrate; não editar à mão.</div>
+    <div class="card"><h4>Curadoria</h4><code>codex_overrides.yaml</code>, arquivos <code>curated: true</code>, <code>entities_extra</code>, arestas, componentes — sobrevivem.</div>
+  </div>
+  <p>O mapa (<code>world_map.json</code>) traz para cada nó: região, coordenadas, perigo 1–4, tags, conexões, semente de lore, tags de craft e economia, tempos de viagem e baús. Interiores (ex.: Taverna do Javali dentro do Anel de Lama) têm custo de viagem zero. Outros dados: <code>origins.json</code> (6 raças com traits mecânicos × 12 regiões com bônus), <code>onboarding.json</code> (lore curado do wizard), <code>bestiary.json</code> (124 criaturas schema v4), <code>factions.json</code>, <code>weather.json</code>, mercadores, tabelas de loot, armadilhas, companheiros e catálogo visual.</p>
+  <div class="recap"><ul class="clean"><li>Lore em texto vira Codex com visibilidade por documento.</li><li>Curadoria é migration-safe.</li><li>Um lint é o portão para reindexar.</li></ul></div>
+</section>
+
+<section class="chap" id="rag">
+  <div class="eyebrow">Capítulo 06</div>
+  <h2>RAG e embeddings</h2>
+  <p class="lead">Recuperação aumentada por busca: antes de narrar, o jogo busca trechos de lore e memória relevantes e os coloca no prompt.</p>
+  <div class="grid g2">
+    <div class="card"><h4>Quatro escopos de índice</h4><ul class="clean"><li><b>Lore global</b> — <code>faiss_lore_index/</code>, imutável durante o jogo.</li><li><b>Regras</b> — <code>faiss_rules_index/</code> a partir de <code>rules.txt</code>.</li><li><b>Sessão</b> — <code>data/saves_memory/{game_id}/</code>, escrito pelo arquivista.</li><li><b>NPC</b> — <code>…/{game_id}/{npc_id}/</code>, escrito pelo ator.</li></ul></div>
+    <div class="card"><h4>Embeddings pinados</h4><p>Cadeia <b>Jina v3 → OpenAI → Ollama → Gemini</b>. Diferente do LLM, embeddings <b>não</b> têm fallback por request: vetores de provedores diferentes são incompatíveis. Cada índice grava <code>embeddings_meta.json</code> e só é aberto com o provider que o gerou; provider indisponível desativa o índice com aviso (o jogo segue com ledger e resumo). Trocar provider = reindexar.</p></div>
+  </div>
+  <h3>Filtro de visibilidade (falha fechada)</h3>
+  <p>public &lt; hidden &lt; secret. Sem metadado = public; <b>valor desconhecido = secret</b>. Busca-se k=6 e mantém-se 2 após o filtro. Todos os leitores de produção usam <code>max_visibility="public"</code>.</p>
+  <div class="card" id="vis"></div>
+  <p style="margin-top:12px">No perfil Postgres a mesma interface grava em <b>pgvector</b> (vector 1024, HNSW cosseno + busca textual), com escrita via outbox e worker — ver capítulo 17.</p>
+  <div class="recap"><ul class="clean"><li>4 escopos; global imutável, sessão e NPC dinâmicos.</li><li>Cada índice preso ao seu provider de embedding.</li><li>Visibilidade desconhecida conta como segredo.</li></ul></div>
+</section>
+
+<section class="chap" id="eventos">
+  <div class="eyebrow">Capítulo 07</div>
+  <h2>Event sourcing e motor de regras</h2>
+  <p class="lead">O lore base é imutável; o que muda vive num <code>event_log</code> append-only e numa <code>world_projection</code> derivada. A IA só consegue <b>propor</b> eventos — e só de certos tipos.</p>
+  <div class="diagram" data-graph="events"></div>
+  <h3>Cascata: um líder de facção morre</h3>
+  <div data-stepper="cascade"></div>
+  <div class="tblwrap"><table>
+    <tr><th>Tipo de evento</th><th>Quem pode emitir</th></tr>
+    <tr><td>npc_killed, secret_revealed, location_control_changed, quest_completed, faction_relation_changed, reputation_changed, route_blocked, route_cleared</td><td>IA pode propor; validador decide</td></tr>
+    <tr><td>level_up, subclass_chosen, class_apex_unlocked</td><td>só <code>source="progression"</code></td></tr>
+    <tr><td>player_died, player_downed</td><td>só <code>source="combat"</code></td></tr>
+    <tr><td>unique_item_claimed, unique_item_lost</td><td>só <code>source="engine"</code></td></tr>
+  </table></div>
+  <div class="grid g2">
+    <div class="card"><h4>As 6 regras (world_rules.json)</h4><ol class="steps"><li>Morte de líder com vácuo de poder: estabilidade cai e locais controlados mudam de dono.</li><li>Morte genérica de NPC.</li><li>Ondulação de mudança de controle: +5 ao novo controlador.</li><li>Segredo revelado: −10 de estabilidade.</li><li>Quest concluída marcada na entidade.</li><li>Porto tomado por hostil bloqueia rotas.</li></ol></div>
+    <div class="card"><h4>Segurança do motor</h4><p>Sem <code>eval</code>/<code>exec</code>: valores dinâmicos só via resolvedor whitelisted (<code>event.campo</code>, <code>target.campo</code>, <code>component:x.campo</code>). Ação inválida é ignorada com log, o turno não quebra. Modelo híbrido: quem lidera/controla/é rival vem das arestas do grafo; o componente guarda só o que aresta não tem. O resolver calcula <b>base − desativadas + dinâmicas</b>.</p><p><b>Quests</b> seguem o mesmo princípio: <code>created → location_reached → investigation → completion_ready → completed</code>, conclusão por evidência (duas investigações distintas no alvo), recompensa idempotente; NPC de origem morto falha as quests órfãs.</p></div>
+  </div>
+  <div class="quiz" data-quiz="q5"></div>
+  <div class="recap"><ul class="clean"><li>event_log é a verdade do que mudou; projeção é derivada.</li><li>Só o arquivista escreve eventos, todo turno.</li><li>Cascata declarativa com profundidade máxima 2.</li></ul></div>
+</section>
+
+<section class="chap" id="memoria">
+  <div class="eyebrow">Capítulo 08</div>
+  <h2>Memória, contexto e segredos</h2>
+  <p class="lead">Lembrar não basta — o jogo precisa saber <b>de onde</b> veio cada lembrança. Um boato de taverna não pode virar fato do mundo só por ter sido repetido.</p>
+  <div class="diagram" data-graph="memory"></div>
+  <div class="tblwrap"><table>
+    <tr><th>Proveniência</th><th>Confiança (derivada)</th><th>Quem emite</th></tr>
+    <tr><td>canonical_event</td><td><span class="tag ok">confirmed</span></td><td>eventos aplicados, resumo canônico de conflito, política do motor</td></tr>
+    <tr><td>player_observation</td><td><span class="tag warn">reported</span></td><td>o que o jogador observou</td></tr>
+    <tr><td>npc_claim</td><td><span class="tag warn">reported</span></td><td>falas de NPC</td></tr>
+    <tr><td>inference</td><td><span class="tag err">speculative</span></td><td>fatos livres da IA no arquivista</td></tr>
+    <tr><td>legacy_unverified</td><td><span class="tag err">speculative</span></td><td>strings antigas sem metadado</td></tr>
+  </table></div>
+  <h3>Um fato atravessando a memória</h3>
+  <div data-stepper="magda"></div>
+  <h3>Montagem do contexto</h3>
+  <div class="diagram" data-graph="context"></div>
+  <p>Brinque com os pesos da pontuação de um fato e veja como o orçamento de 3.500 tokens é dividido. A sobra de uma seção rola para a próxima; teto global de 105%; tokens estimados como caracteres ÷ 4.</p>
+  <div class="card" id="score"></div>
+  <h3>Três camadas de proteção de segredos</h3>
+  <div class="grid g3">
+    <div class="card"><h4>1. No índice</h4>Docs hidden/secret nunca saem das buscas do narrador. Segredos de NPC ficam em documento hidden separado do público.</div>
+    <div class="card"><h4>2. Por assinatura</h4><code>secret_signatures</code> guarda frases da verdade oculta de 4 segredos e uma versão de boato neutra. Compara com o que o jogador já sabe (eventos, resumo, segredos conhecidos) — repetir o que a Magda contou não é vazamento. Sanitiza beats, valida memória, alimenta o invariante <code>knowledge.secret_leak</code>.</div>
+    <div class="card"><h4>3. Por evento</h4><code>secret_revealed</code> só é aceito se existe aresta hidden/secret no grafo para o alvo. É a única via oficial para um segredo passar a aparecer no estado.</div>
+  </div>
+  <div class="quiz" data-quiz="q4"></div>
+  <div class="recap"><ul class="clean"><li>5 camadas: resumo, ledger, FAISS sessão, FAISS NPC, event_log.</li><li>Confiança é função fechada da proveniência; repetição não promove.</li><li>Contexto pontuado e orçado por seção; segredos protegidos em três camadas.</li></ul></div>
+</section>
+<section class="chap" id="vivo">
+  <div class="eyebrow">Capítulo 09</div>
+  <h2>Mundo vivo: NPCs, facções, clima e crônica</h2>
+  <div class="grid g2">
+    <div class="card"><h4>NPCs em 3 camadas</h4><ol class="steps"><li><b>Todos</b> os NPCs da sessão.</li><li><b>Conhecidos pelo jogador</b> — a API só mostra estes, sem traços ocultos.</li><li><b>Em cena</b> — gate do ator: só conversa quem está presente.</li></ol><p>Traços ocultos (1–3 de 80) sorteados por semente estável <code>sha256(npc_id|game_id)</code> e revelados após N interações; afetam dificuldades mesmo antes de conhecidos ("o mundo é real antes de ser conhecido"). NPC gerado fica preso ao local onde surgiu (anti-carrossel), mas relocaliza se viajar junto ou for reintroduzido em outro lugar. Viajar zera a cena.</p></div>
+    <div class="card"><h4>Facções</h4><p>Progresso += ritmo × períodos, sem sorteio. Ao cruzar 100, aplica a ascensão autorada: dominar local, expandir região, elevar perigo, invocar entidade, eliminar facção. A nota ao narrador só nomeia a facção se o jogador já sabe dela; senão descreve apenas a consequência sentida. Reputação muda por impactos validados; NPCs revelam facções em níveis (existência → objetivo → progresso).</p></div>
+    <div class="card"><h4>Clima e luz</h4><p>Cadeia de Markov por região, avança a cada mudança de período. Fenômenos globais (Tempestade de Éter, Noite Sem Estrelas) começam com chance 6% + 3% por nível de perigo acima de 1 e afetam percepção, ataque, custo de viagem, DoT ao ar livre e bloqueio de descanso. Luz: anoitecer/noite ou local escuro, fora de abrigo, sem tocha/lanterna → percepção −3 e acerto −1.</p></div>
+    <div class="card"><h4>Simulador do mundo</h4><p>Em viagem/descanso, a IA propõe um <code>WorldPulse</code> (rumor, fato, deslocamento de perigo). Python limita a ±1 e o perigo a 1–4; o rumor aparece como "[ECOS DO MUNDO]"; só a consequência realmente aplicada vira memória.</p></div>
+    <div class="card"><h4>Crônica</h4><p>Capítulos abertos quando o título do arco muda. Duas fontes: <b>milestones</b> determinísticos a partir de eventos aplicados (morte de NPC, mudança de controle, quest, segredo, level-up, subclasse, Ápice, queda) e <b>prosa</b> do menestrel vinda do arquivista. Compressão em digest (≥20 entradas ou capítulo fechado) sem nunca substituir o raw; busca híbrida léxica + semântica fundida por RRF (k=60); export em .txt.</p></div>
+    <div class="card"><h4>Codex do jogador e bestiário progressivo</h4><p>O jogador descobre entidades aos poucos; corpos de documentos não-públicos nunca aparecem. Criaturas sobem de nível de conhecimento: Rumores → Encontrada → Estudada (3 derrotas) → Dominada (7). Cartas e resistências reveladas em combate persistem por arquétipo.</p></div>
+  </div>
+  <div class="recap"><ul class="clean"><li>NPCs com gate de cena e traços que se revelam.</li><li>Facções, clima e mundo avançam deterministicamente com o tempo.</li><li>Crônica = marcos canônicos + prosa, compressível e pesquisável.</li></ul></div>
+</section>
+
+<section class="chap" id="combate">
+  <div class="eyebrow">Capítulo 10</div>
+  <h2>Combate v4: um jogo tático de Cartas</h2>
+  <p class="lead">Desde o "cutover" do épico de conflitos (Valoria v2), o antigo d20 contra classe de armadura deu lugar a <b>2d10 + Virtude contra Esquiva</b>, Vitalidade e Ferimentos, zonas, reações e uma IA inimiga declarativa. A IA de linguagem só identifica a intenção e narra o log.</p>
+  <div class="diagram" data-graph="combat"></div>
+  <h3>Calculadora de ataque</h3>
+  <div class="card" id="atk"></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h4>Tabelas-base (gamedata.py)</h4><table>
+      <tr><th>Corpo</th><th>Vitalidade</th><th>Espaços L/G/C</th><th>Gravidade L / G / C</th></tr>
+      <tr><td>0</td><td>6</td><td>2/1/1</td><td>1–3 / 4–6 / 7+</td></tr>
+      <tr><td>1</td><td>8</td><td>3/1/1</td><td>1–4 / 5–8 / 9+</td></tr>
+      <tr><td>2</td><td>10</td><td>3/2/1</td><td>1–5 / 6–10 / 11+</td></tr>
+      <tr><td>3</td><td>12</td><td>4/2/2</td><td>1–6 / 7–12 / 13+</td></tr>
+      <tr><td>4</td><td>14</td><td>4/3/2</td><td>1–7 / 8–14 / 15+</td></tr>
+      <tr><td>5</td><td>16</td><td>5/3/3</td><td>1–8 / 9–16 / 17+</td></tr>
+    </table><p style="font-size:13px;color:var(--muted)">Mesma região agrava (leve+leve = grave); categoria cheia escala para a seguinte. Armas: leve 3, marcial 4, versátil 6, pesada 8.</p></div>
+    <div class="card"><h4>Cena posicional — sem grade</h4><ul class="clean"><li><b>Distância</b>: próximo → distante → separado (mudar encerra Escondido).</li><li><b>Postura</b>: protegido / neutro / exposto.</li><li><b>Ocultação</b> relativa a cada observador.</li><li><b>Engajamento</b> separado da distância: engajar custa Pré/Pós; desengajar custa a Ação mas evita Ataque de Oportunidade.</li><li>Manobras: guardar, esconder-se (exige cobertura plausível), procurar, alertar.</li><li>Objetos com catálogo fechado de efeitos; a cena congela após a preparação.</li></ul></div>
+    <div class="card"><h4>IA tática inimiga</h4><p>Perfil = lista ordenada <code>{gatilho → ação}</code>; vale a primeira verdadeira. Gatilhos calculados da cena: sozinho, muito ferido (≤35% ou ferimento grave), cercado, matilha quebrada, alvo vulnerável, plano falhou, aliado em perigo… Ações: atacar, proteger, estabilizar, flanquear, controlar, apoiar, fugir, render-se. 10 arquétipos (bruto, predador, covarde oportunista, conjurador, morto-vivo implacável…). Provocação do Devoto: chance de ser o alvo = min(90%, 50% × (1 + min(60%, 5% × Entropia))) — na prática o teto efetivo é 80%.</p></div>
+    <div class="card"><h4>Rendição, fim e resumo canônico</h4><p>Rendição 100% determinística pelo perfil (líder caído, moral quebrada, sem fuga…); golpe final pode ser não-letal. O combate só termina por objetivo mecânico ou todos os hostis inativos — nunca "perderam o interesse". Ao fim, o <code>ConflictSummary</code> (22 campos: mortos, rendidos, fugitivos, capturados, ferimentos, Cartas reveladas, loot…) é montado SEM IA e vira o contrato que narração, loot e memória respeitam. O nível do encontro vira o perigo do loot.</p></div>
+  </div>
+  <h3>Morte rica</h3>
+  <div class="diagram" data-graph="death"></div>
+  <div data-stepper="dying"></div>
+  <h3>Fuga e perseguição</h3>
+  <div class="diagram" data-graph="chase"></div>
+  <p>Cada rodada: 2d10 + Virtude do condutor (hoje Agilidade) vs <b>10 + Agilidade do perseguidor principal</b>. Teto de 6 tentativas seguidas. Companheiros deixados para trás têm o destino simulado por seed (fuga, captura, rendição, esconderijo, combate, morte, reencontro). Viajar durante combate vira automaticamente tentativa de fuga com destino.</p>
+  <h3>Preparação, Abismo e aliados</h3>
+  <div class="grid g3">
+    <div class="card"><h4>Nível do Encontro</h4>Perigo ABSOLUTO: max(perigo do local, da região) + tipo (emboscada +1, ritual +2, apex/chefe +3) + importância (clímax +2), limitado a 1–10. Nunca olha o nível da party. Potência por categoria (fraco/moderado/forte/devastador) calculada por tabela — números vindos da IA são descartados.</div>
+    <div class="card"><h4>Eventos do Abismo</h4>Preparados antes do combate com base obrigatória num objeto da cena; disparados em combate 100% por Cargas, gatilho, prioridade e usos. Proibidos: desfazer sucesso, controlar mente, criar Ferimento direto. Assinatura visual fixa ("o som abafa, uma fissura negra…").</div>
+    <div class="card"><h4>Aliados de cena</h4>NPC amigo em cena (relação ≥6, facção não hostil) vira combatente transitório (até 2); dano reflete no NPC; não vira party permanente. Party formal: recrutamento com relação ≥7, até 3 membros.</div>
+  </div>
+  <div class="callout info"><b>Laboratório de combate.</b> Pelo frontend dá para montar uma arena (classe, nível 1/3/5/10, inimigo, 1–3 cópias) que roda o MESMO <code>run_round</code> de produção — Cartas, Reações, Ruptura, Ferimentos, IA tática — sem planejamento de campanha, RAG, arquivista, XP, loot nem checkpoints.</div>
+  <div class="recap"><ul class="clean"><li>2d10 + Virtude vs 10 + Agilidade; dupla = crítico que sempre acerta.</li><li>Dano segue ordem fixa até Ferimentos por faixa de Gravidade.</li><li>Vitalidade 0 não mata; o fluxo terminal decide.</li><li>Fim de combate gera um resumo canônico sem IA.</li></ul></div>
+</section>
+
+<section class="chap" id="cartas">
+  <div class="eyebrow">Capítulo 11</div>
+  <h2>Cartas, as 5 Posturas e a progressão</h2>
+  <div class="grid g2">
+    <div class="card"><h4>Economia de Cartas</h4><ul class="clean"><li><b>Acervo</b> (conhecidas) e <b>Preparadas</b> (4 slots no nível 1 até 10 no nível 20); reorganizar só fora de combate em zona de perigo ≤3.</li><li><b>Frequência</b>: livre, turno, cena, descanso curto, descanso longo — reset em cascata.</li><li>Custo em <b>Entropia</b>.</li><li><b>Ruptura</b>: paga o custo, ganha Vantagem e efeito extra, gera +1 Carga do Abismo mesmo se falhar.</li><li><b>Evolução A/B</b> permanente a partir do nível 4 nas Cartas centrais.</li><li><b>Cartas de Virtude</b> (2, fora dos slots) escalam com o estágio da Virtude.</li><li>Tipos: ativa, passiva, utilitária, reação; efeitos de catálogo fechado. Utilitárias entram no contexto do narrador; as passivas de Carta não têm aplicador no motor atual (ver capítulo 21).</li></ul></div>
+    <div class="card"><h4>Acervo em números</h4><p>30–31 Cartas por Postura (153 no total, entre tronco, subclasses e Superiores), mais 80 Cartas tardias dos níveis 9–20 (tronco, subclasse e 15 Ápices), Cartas de inimigo (<code>bst_*</code>) com economia própria. Guarda de paridade: Carta de dano puro deve ter dano/custo entre 1,5 e 4,0. Inimigos ganham Entropia = 2 × Mente e a Carta universal "Defesa Instintiva".</p></div>
+  </div>
+  <h3>As cinco Posturas diante do Abismo</h3>
+  <p>Cada classe é uma postura filosófica diante do Abismo, com 3 subclasses escolhidas no nível 3 (irreversível). Dois recursos: <b>Entropia</b> (pool único, recompõe integral no descanso) e <b>Carga do Abismo</b> (longo prazo, não cai no descanso; patamares leve 1 / moderado 4 / severo 7).</p>
+  <div data-tabs>
+    <div class="tabs"><button data-tab="dev">Devoto do Abismo</button><button data-tab="san">Sangromante</button><button data-tab="cor">Corruptor</button><button data-tab="arc">Arcanista Cinzento</button><button data-tab="med">Médico de Campo</button></div>
+    <div data-pane="dev" class="card"><h4>Devoto do Abismo — tanque, <i>ama</i> o Abismo</h4><p>Virtudes iniciais: Força 4, Corpo 3, Carisma 2, Mente 1, Agilidade 1. Entropia 14 (+2/nível).</p><p><b>Gatilho:</b> ao sofrer dano, +1 Entropia a cada 4 de dano; +1 Carga por turno até 6. <b>Regra especial:</b> provocação escala com Entropia (+5% por ponto, teto +60%). <b>Consequência:</b> Insônia — descanso rende menos Vitalidade (−10/−25/−50% por patamar); aliado ativo mitiga.</p></div>
+    <div data-pane="san" class="card hidden"><h4>Sangromante — dano corpo a corpo, <i>negocia</i></h4><p>Agilidade 4, Corpo 3, Carisma 2, Força 1, Mente 1. Entropia 16 (+3/nível).</p><p><b>Gatilho:</b> ao sacrificar Vitalidade, 1 Entropia por ponto e +1 Carga. <b>Regra:</b> 25% da Entropia "de sangue" vaza quando é acertado. <b>Consequência:</b> Cicatriz — Carta "de pico" reduz a Vitalidade máxima permanentemente (−3). Sacrifício além de 0 vira Ferimento; armadura não protege.</p></div>
+    <div data-pane="cor" class="card hidden"><h4>Corruptor — controle e dano contínuo, <i>trabalha junto</i></h4><p>Mente 4, Corpo 3, Agilidade 2, Carisma 1, Força 1. Entropia 18 (+4/nível).</p><p><b>Gatilho:</b> decadência próxima (o que conta depende da subclasse) → +1 Entropia e +1 Carga. <b>Consequência:</b> Transformação — debuff por domínio e patamar (biologia: DoT extra; alma: −save; inorgânica: −defesa).</p></div>
+    <div data-pane="arc" class="card hidden"><h4>Arcanista Cinzento — distância e controle, <i>manipula</i></h4><p>Mente 4, Agilidade 3, Carisma 2, Corpo 1, Força 1. Entropia 20 (+6/nível).</p><p><b>Gatilho:</b> canalizar → +2 Entropia, +1 Carga. <b>Regra:</b> Caldeira — 3 turnos sem "vazão" = 2d6 de auto-dano arcano. <b>Consequência:</b> Dependência — sem arma e com Carga moderada, custo das Cartas dobra.</p></div>
+    <div data-pane="med" class="card hidden"><h4>Médico de Campo — suporte, <i>nega</i> o Abismo</h4><p>Mente 4, Carisma 3, Corpo 2, Agilidade 1, Força 1. Entropia 16 (+3/nível).</p><p><b>Gatilho:</b> aliado sofrendo → +1 Entropia, +1 Carga. Pode gastar 2 Entropia para purgar Carga de aliado; trata Ferimentos críticos com kit. <b>Consequência:</b> Recidiva — oculta (o HUD esconde o número); ao cruzar severo, um colapso: −4 de acerto por 3 turnos.</p></div>
+  </div>
+  <div class="callout"><b>Anti-órfão.</b> <code>HANDLED_KINDS</code> lista todo gatilho, regra, consequência e efeito que o motor sabe tratar; um teste varre os JSONs de classe e falha se surgir um tipo sem handler. Nasceu de uma revisão que achou três mecânicas "mortas" (provocação, Transformação, Purga) — implementadas e testadas em unidade, mas nunca chamadas pelo jogo.</div>
+  <h3>Progressão até o nível 20</h3>
+  <div class="card" id="xp"></div>
+  <p>Vitalidade não cresce com nível: vem de Corpo (+6 de bônus de classe). Criação: distribuição 4/3/2/1/1 entre as Virtudes, 6 Cartas no Acervo, 4 preparadas, 2 Cartas de Virtude. Escolhas pendentes não travam o jogo e são idempotentes por ledger. Bônus de early-game: +2 de dano nos níveis 1–2, +1 no 3.</p>
+  <div class="recap"><ul class="clean"><li>Cartas custam Entropia; Ruptura troca poder por Carga do Abismo.</li><li>Cada Postura tem gatilho, regra especial e consequência próprias — tudo Python.</li><li>Nível 3 escolhe subclasse; nível 20 dá Ápice.</li></ul></div>
+</section>
+
+<section class="chap" id="sistemico">
+  <div class="eyebrow">Capítulo 12</div>
+  <h2>Viagem, descanso, encontros e economia</h2>
+  <div class="grid g3">
+    <div class="card"><h4>Relógio e viagem</h4>5 períodos por dia (Amanhecer, Manhã, Tarde, Anoitecer, Noite). Custo de viagem: interior 0, senão <code>travel_times</code> do nó (padrão 1) + extra do clima. Fog of war: só destinos conectados; locais não visitados aparecem como "???".</div>
+    <div class="card"><h4>Descanso</h4>Recupera metade da Vitalidade máxima (× Insônia), remove Ferimentos leves, Integridade da armadura volta, Cartas de descanso resetam, Entropia integral, Carga intacta, avança 2 períodos. Miasma bloqueia. Early-game (nível ≤3, perigo ≤3, fora de apex): descanso não sorteia encontro.</div>
+    <div class="card"><h4>Encontros</h4>Gatilhos determinísticos: alerta de fuga, facção hostil dominando, ameaça iminente ou perigo ≥4. Cooldown 2 turnos (+2 no early-game). Tipos: perigo ≤2 → combate 50 / rastro 30 / social 20; ≥3 → combate 60 / armadilha 20 / social 10 / rastro 10. Mesmo template no mesmo local duas vezes seguidas é descartado.</div>
+  </div>
+  <h3>Orçamento de encontro</h3>
+  <div class="card" id="budget"></div>
+  <h3>Preço de mercado</h3>
+  <div class="card" id="price"></div>
+  <div class="grid g3" style="margin-top:16px">
+    <div class="card"><h4>Mercadores e craft</h4>Estoque base com reposição a cada 3 dias pelo relógio; local hostil esconde itens raros; rota bloqueada tira itens da prateleira. Craft valida local, classe, ingredientes e ouro. 20+ itens únicos com motor de posse (ninguém duplica).</div>
+    <div class="card"><h4>Exploração e ecologia</h4>Primeira visita: baú curado (one-shot) ou achado com chance min(50%, 12% + 8% × perigo), RNG estável por <code>sha256(game_id|local|turno)</code>. Pressão de caça: matar muito uma criatura a suprime da região; facção dominante dobra suas criaturas; vagas atraem migrantes.</div>
+    <div class="card"><h4>Inventário</h4>Entradas <code>{id, qty}</code>, empilháveis por tipo, slots arma/armadura/acessório. Itens com passiva (incl. tocha = luz), itens ativos ofensivos com alvo e salvaguarda. Equipar/desequipar 100% Python.</div>
+  </div>
+  <div class="recap"><ul class="clean"><li>Tempo, viagem e descanso são determinísticos.</li><li>Encontros têm gatilho, cooldown e orçamento com teto de sobrevivência.</li><li>Preço depende de oferta real no mapa, facção e mercador — nunca da IA.</li></ul></div>
+</section>
+
+<section class="chap" id="api">
+  <div class="eyebrow">Capítulo 13</div>
+  <h2>API e streaming</h2>
+  <p class="lead">Uma única borda HTTP (<code>api.py</code>), com dois modos controlados por <code>RPG_RUNTIME_PROFILE</code>: <b>legacy</b> (JSON + FAISS, sem login, só loopback) e <b>local/portable/hosted</b> (Postgres, auth por cookie, operações com lease).</p>
+  <input type="search" class="search" placeholder="Filtrar endpoints…" data-filter="#endpoints">
+  <div class="tblwrap" id="endpoints"><table>
+    <tr><th>Método e rota</th><th>Para quê</th></tr>
+    <tr data-row><td><code>GET /auth/config</code> · <code>POST /auth/login|signup|refresh|logout</code></td><td>Sessão por cookies HttpOnly + CSRF assinado (só perfis de banco).</td></tr>
+    <tr data-row><td><code>GET /health</code> · <code>GET /metrics</code></td><td>Status com git SHA (smoke pós-deploy); métricas Prometheus.</td></tr>
+    <tr data-row><td><code>GET /data/options</code> · <code>/data/onboarding</code> · <code>/data/map</code> · <code>/data/combat-simulator</code></td><td>Catálogos de criação, lore do wizard, mapa sem interiores, opções do laboratório.</td></tr>
+    <tr data-row><td><code>POST /game/prologue</code></td><td>Gera prólogo confirmável (arco pessoal, NPCs semente, cena). Sem estado; nunca 500.</td></tr>
+    <tr data-row><td><code>POST /game/new</code></td><td>Cria ficha, semeia cenário, roda o grafo uma vez, salva + checkpoint inicial.</td></tr>
+    <tr data-row><td><code>POST /game/combat-simulator</code></td><td>Arena isolada do laboratório.</td></tr>
+    <tr data-row><td><code>POST /game/action</code> · <code>/game/action/stream</code></td><td>Turno (JSON ou SSE). Texto livre + seleção tática: card_id, target_id, ruptura, reaction_card_id, action_kind, manobra.</td></tr>
+    <tr data-row><td><code>POST /game/death</code></td><td>continue (restaura checkpoint) ou accept (memorial).</td></tr>
+    <tr data-row><td><code>POST /game/equip</code> · <code>/game/levelup</code></td><td>Equipamento e escolhas de nível, validados em Python.</td></tr>
+    <tr data-row><td><code>GET /game/state</code> · <code>/game/codex</code> · <code>/game/history</code> · <code>/game/{id}/operations/{op}</code></td><td>Estado, Codex sob demanda, histórico paginado por época, status de ação pendente.</td></tr>
+    <tr data-row><td><code>GET /game/saves</code> · <code>DELETE /game/save/{id}</code></td><td>Lista e exclusão (save + checkpoint + memória).</td></tr>
+    <tr data-row><td><code>POST /game/chronicle/search</code> · <code>GET /game/chronicle/export</code></td><td>Busca na crônica e export .txt.</td></tr>
+    <tr data-row><td><code>POST /game/art/brief</code> · <code>/game/{id}/art/player/confirm</code> · <code>GET|POST /game/{id}/art/{gen}</code></td><td>Arte dinâmica: brief revisável sem custo, confirmação, status, qualidade.</td></tr>
+  </table></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h4>Proteções transversais</h4><ul class="clean"><li>CORS por allowlist; headers de segurança.</li><li>Rate limit por IP (30/min padrão) nas rotas que gastam.</li><li>Lock por jogo (legacy) ou claim com lease (banco).</li><li>Idempotência por <code>action_id</code>: retry devolve o mesmo resultado.</li><li>409 para memorial, arquivado ou queda pendente.</li><li>Erro interno = 500 genérico; detalhe só no log.</li><li>Log JSON <code>rpg.turn</code> por turno com pseudônimo do jogo, rota, latência, eventos e custo.</li></ul></div>
+    <div class="card"><h4>SSE: o que é ao vivo e o que não é</h4><p>Uma thread worker é dona do lock, da execução e do save — se o cliente desconectar, o turno termina e grava. As <b>fases</b> (phase/route) são reais; a narração é fatiada em pedaços de 80 caracteres depois de pronta, e a "digitação" é do cliente.</p></div>
+  </div>
+  <div class="card" id="sse" style="margin-top:16px"></div>
+  <div class="recap"><ul class="clean"><li>~30 rotas, dois modos de runtime.</li><li>action_id torna qualquer retry seguro.</li><li>SSE mostra o grafo trabalhando em tempo real.</li></ul></div>
+</section>
+
+<section class="chap" id="front">
+  <div class="eyebrow">Capítulo 14</div>
+  <h2>Frontend e jornada do jogador</h2>
+  <div class="diagram" data-graph="screens"></div>
+  <div class="grid g2">
+    <div class="card"><h4>Ação pendente à prova de queda</h4><p>Antes de enviar, o payload, um UUID e o SHA-256 são gravados no <code>localStorage</code>. Ao reabrir a aba, o cliente consulta <code>/operations</code>: se já concluiu, recarrega; se ainda roda, avisa; só então reenvia — sempre com o mesmo id. Refresh de sessão é single-flight; respostas atrasadas de outro jogo são descartadas.</p></div>
+    <div class="card"><h4>HUD de 8 abas</h4><p>Ficha (Vitalidade, Entropia, Carga, Virtudes, equipamento, retrato), Combate (inimigos só com dados públicos/revelados), Personagens, Mapa (fog of war, clique para viajar, selos de facção/ameaça/quest), Facções (reputação), Missões, Crônica (busca, export), Codex. Desktop lateral; gaveta em ≤900 px; tela cheia em ≤480 px.</p></div>
+    <div class="card"><h4>Combate tático na UI</h4><p><b>CardHand</b>: Cartas preparadas com custo, frequência, estado, botão de Ruptura e seletor de alvo — o texto é cosmético, o servidor usa o <code>card_id</code>. <b>ReactionPrompt</b> escolhe uma reação para a rodada. <b>WoundTrack</b> e <b>SceneZones</b> mostram ferimentos, zonas e trilha de fuga. Chips: Engajar, Guardar, Esconder-se, Procurar, Fugir.</p></div>
+    <div class="card"><h4>Tema e acessibilidade</h4><p>Dark medieval (Cinzel + EB Garamond, tokens OKLCH, brasas animadas), <code>motion</code> com movimento reduzido respeitado, axe sem violações sérias, 16 jornadas críticas testadas com Playwright em 320/390/768/1440 px. Banners avisam modo simulado ou degradado.</p></div>
+  </div>
+  <div class="recap"><ul class="clean"><li>SPA sem router: máquina de telas.</li><li>Wizard de 5 passos + prólogo personalizado.</li><li>Ação pendente sobrevive a fechar a aba.</li></ul></div>
+</section>
+
+<section class="chap" id="arte">
+  <div class="eyebrow">Capítulo 15</div>
+  <h2>Arte visual</h2>
+  <div class="grid g2">
+    <div class="card"><h4>Fase 8A — âncoras curadas</h4><p>45 ativos, 90 WebPs (thumb + display): 6 raças, 5 classes, 22 locais exatos e 12 NPCs. Os 35 locais ficam cobertos por 22 exatos + 13 fallbacks regionais. Escolha da imagem 100% por ID canônico e estado — a IA nunca escolhe arquivo, e nomes na prosa não são parseados. Primeira aparição de NPC gera um "cue" registrado num ledger por ação, então retry e SSE devolvem a mesma imagem. NPC sem arte ganha monograma — nunca o rosto de outro. NPCs secretos nunca entram no catálogo público.</p></div>
+    <div class="card"><h4>Fase 8B — arte dinâmica rara (opt-in)</h4><p>Desligada por padrão. Gatilhos: retrato do jogador (1 + 1 reformulação), primeira aparição de NPC sem arte, momento épico (chefe). Orçamento <b>por arco</b>: 4 NPCs + 1 épica, cooldown de 15 turnos; escolher subclasse custa zero. Brief com âncoras de estilo e sanitização anti-injeção; modelo de imagem pinado; worker gera uma vez só (resultado incerto nunca é regenerado = sem cobrança dupla); pipeline converte para WebP e guarda em storage privado com URL assinada.</p></div>
+  </div>
+</section>
+
+<section class="chap" id="persist">
+  <div class="eyebrow">Capítulo 16</div>
+  <h2>Persistência, checkpoints e continuidade</h2>
+  <div class="grid g2">
+    <div class="card"><h4>Save JSON (perfil legacy)</h4><p><code>saves/{uuid}.json</code> com caminho confinado (anti path-traversal). Escrita atômica: arquivo temporário → fsync → <code>os.replace</code> com retry (antivírus/OneDrive). Fonte única de serialização reaproveitada por save, checkpoint e Postgres. Falha de escrita nunca responde sucesso falso.</p></div>
+    <div class="card"><h4>Migrações (schema v8)</h4><div class="timeline">
+      <div class="ev"><b>v2</b> camadas de NPC</div><div class="ev"><b>v3</b> 5 Posturas + Entropia</div><div class="ev"><b>v4</b> Virtudes, Vitalidade, Ferimentos (saves anteriores ficam arquivados, só leitura)</div><div class="ev"><b>v5</b> Vitalidade canônica + aliases HP</div><div class="ev"><b>v6</b> ledger visual</div><div class="ev"><b>v7</b> metatempo (continuity)</div><div class="ev"><b>v8</b> crônica com IDs estáveis + progressão 1–20</div></div></div>
+    <div class="card"><h4>Checkpoints</h4><p>A cada 10 turnos ou ao entrar em zona segura (perigo ≤1), mais um inicial na criação. Nunca durante combate, Última Ação, Estado Terminal ou morte pendente. Slot único; inclui cópia da memória FAISS para que o restore reverta também os fatos.</p></div>
+    <div class="card"><h4>Três relógios</h4><p><code>world.turn_count</code> (canônico, volta no restore), <code>session_action_count</code> (nunca retrocede) e <code>timeline_epoch</code> (sobe a cada restore). O histórico de mortes guarda o que foi mantido e revertido — a tela de morte mostra isso. O histórico de apresentação é paginado por época, e um cursor de época antiga recebe 409.</p></div>
+  </div>
+  <div class="recap"><ul class="clean"><li>Escrita atômica e migrações idempotentes.</li><li>Checkpoint só em fronteira segura.</li><li>Restore cria nova época; nada se mistura entre linhas do tempo.</li></ul></div>
+</section>
+<section class="chap" id="infra">
+  <div class="eyebrow">Capítulo 17</div>
+  <h2>Infraestrutura local-first</h2>
+  <p class="lead">A Fase 10b transformou um motor de JSON + FAISS com lock por processo num <b>data plane substituível</b>: o domínio fala com <b>portas</b> (Protocols Python) e adapters implementam cada porta para arquivos ou para Postgres. Tudo foi certificado localmente com Supabase Local; a nuvem ainda não.</p>
+  <div class="tblwrap"><table>
+    <tr><th>Perfil</th><th>Jogos</th><th>Memória</th><th>Blob</th><th>Fila</th><th>Rate limit</th><th>Auth</th></tr>
+    <tr><td><b>legacy</b></td><td>arquivo</td><td>FAISS</td><td>arquivo</td><td>inline</td><td>memória</td><td>desligada (loopback)</td></tr>
+    <tr><td><b>local</b></td><td>Postgres</td><td>pgvector</td><td>Supabase Storage</td><td>Postgres</td><td>Postgres</td><td>Supabase Auth</td></tr>
+    <tr><td><b>portable</b></td><td>Postgres</td><td>pgvector</td><td>S3</td><td>Postgres</td><td>Postgres</td><td>OIDC</td></tr>
+    <tr><td><b>hosted</b></td><td>Postgres</td><td>pgvector</td><td>S3</td><td>Postgres</td><td>Postgres</td><td>OIDC (não-loopback)</td></tr>
+  </table></div>
+  <p>Validação <b>fail-closed</b>: combinações inválidas recusam iniciar; a service role nunca pode estar com prefixo <code>VITE_</code>. Portas: GameStore (versão otimista), RuntimeCatalogStore, MemoryStore, BlobStore, JobQueue, TurnCoordinator, RateLimiter, IdentityVerifier.</p>
+  <h3>Turno durável: claim → grafo → commit</h3>
+  <div class="card" id="claim"></div>
+  <div class="diagram" data-graph="outbox"></div>
+  <div class="grid g3">
+    <div class="card"><h4>Schema Postgres (8 migrations)</h4><code>app.games</code> (JSONB + sha + versão + mutex de operação), <code>game_checkpoints</code>, <code>game_events</code> (imutáveis por hash), <code>runtime_catalog</code>, <code>operations</code> (livro de idempotência e recibos), <code>turns</code> (telemetria por turno, só hash do input), <code>jobs</code>, <code>rate_limit_buckets</code>, <code>embedding_profiles</code>, <code>memory_documents</code> (vector 1024 + tsvector), <code>assets</code>, <code>chronicle_digests</code>, <code>art_generations</code>, bucket privado <code>rpg-dynamic</code>.</div>
+    <div class="card"><h4>Segurança</h4>RLS habilitada e forçada; role <code>rpg_api</code> sem login e sem BYPASSRLS; anon/authenticated sem acesso ao schema; 14 asserts pgTAP. Filtro explícito por dono em toda query (RLS é defesa em profundidade). Cookies HttpOnly, CSRF HMAC + Origin, refresh restrito. Chave de idempotência de outro dono responde "indisponível", sem vazar existência.</div>
+    <div class="card"><h4>Workers</h4>Um job por vez com lease e fence; LeaseHeld = outro dono manda, sai em silêncio. Handlers: <code>embed_memory</code>, <code>compress_chronicle</code>, <code>generate_dynamic_art</code> (proteção contra cobrança dupla). Backoff exponencial com jitter; dead-letter após o máximo de tentativas. Recuperação de operações órfãs é preview-first.</div>
+    <div class="card"><h4>Observabilidade</h4>17 métricas com labels fechados (cardinalidade controlada); redaction de tokens, e-mails, URLs assinadas e prosa; spans OpenTelemetry opcionais. Stack local: Prometheus, Grafana (dashboard provisionado), OTel Collector, Tempo; 7 alertas testados com promtool.</div>
+    <div class="card"><h4>Backup e restore</h4>Diretório com manifesto SHA-256; recusa operar fora do container local rotulado; restore exige destino vazio e confirmação. Medido: <b>RPO 0</b> e <b>RTO 36 s</b> (meta ≤30 min) com DB + Auth + Storage.</div>
+    <div class="card"><h4>Caos, carga e prontidão</h4>Caos 5/5 (lease expirado, takeover, fencing do token antigo). Carga multiprocesso: commit p95 32 ms. Soak 1.000 turnos sem erro. Relatório G0–G7 READY em 20/08. CI: <code>validate</code>, <code>audit-local</code> (sobe Supabase no runner), <code>eval-gates</code>, <code>eval-protected</code>, <code>post-deploy-smoke</code>.</div>
+  </div>
+  <div class="callout info"><b>Nuvem ainda em rascunho.</b> A SPEC-104 escolhe Railway (um serviço web servindo frontend + API na mesma origem e um worker com a mesma imagem) e Render como contingência — mas nada foi provisionado: exige aprovação e orçamento.</div>
+  <div class="quiz" data-quiz="q6"></div>
+  <div class="recap"><ul class="clean"><li>Portas + adapters: o domínio não sabe se é arquivo ou Postgres.</li><li>Nenhuma transação aberta durante chamada de IA.</li><li>Commit exactly-once por chave; memória via outbox.</li></ul></div>
+</section>
+
+<section class="chap" id="qualidade">
+  <div class="eyebrow">Capítulo 18</div>
+  <h2>Testes e playtest agêntico</h2>
+  <div class="diagram" data-graph="quality"></div>
+  <div class="grid g2">
+    <div class="card"><h4>Suíte offline</h4><p>~190 arquivos, ~1.900 testes (último gate registrado: 1.898 passed, 35 skipped, 15 deselected). <code>RPG_FORCE_MOCK=1</code> no conftest; saves e memória isolados em tmp. Markers fora do padrão: <code>llm_contract</code> (contratos reais), <code>llm_playtest</code> (4 perfis vitais × 30 turnos reais), <code>infra_local</code>/<code>security_local</code>/<code>chaos_local</code>/<code>browser_local</code> (precisam do Supabase/Docker). Skills: <code>/qa</code> (só falhas) e <code>/wrap-up</code> (suíte + docs + commit).</p></div>
+    <div class="card"><h4>Harness de playtest</h4><p>Joga campanhas longas sobre o MESMO grafo. Comandos: <code>run --profile|--all --turns --seed --start-level --class --real</code>, <code>report</code>, <code>transcript</code>, <code>merchant-suite</code>, <code>matrix-suite</code>, <code>--scenario recrutamento|comercio</code>. Modo real opt-in com tetos de requests e custo, preset DeepSeek isolado, preflight, watchdog com prazo absoluto, circuit breaker e manifesto com heartbeat.</p></div>
+  </div>
+  <div class="diagram" data-graph="playloop"></div>
+  <h3>Os 14 perfis</h3>
+  <div class="grid g4">
+    <div class="card"><b>Agressivo</b><br><small>ataca tudo; usa Cartas de Entropia</small></div>
+    <div class="card"><b>Explorador</b><br><small>fronteira primeiro, anti-backtrack, evita locais fatais</small></div>
+    <div class="card"><b>Comerciante</b><br><small>livro de cotações, metas de trade, não onisciente</small></div>
+    <div class="card"><b>Diplomático</b><br><small>fala com todos, tenta recrutar</small></div>
+    <div class="card"><b>Troll</b><br><small>entradas absurdas e injeções</small></div>
+    <div class="card"><b>MapaBreaker</b><br><small>viagens impossíveis</small></div>
+    <div class="card"><b>Combate</b><br><small>busca perigo alto</small></div>
+    <div class="card"><b>NpcOnly</b><br><small>só conversa, inclusive fora de cena</small></div>
+    <div class="card"><b>LootAbuser</b><br><small>tenta duplicar itens únicos</small></div>
+    <div class="card"><b>SecretRusher</b><br><small>pergunta direto pelos segredos</small></div>
+    <div class="card"><b>Quester</b><br><small>persegue quests e beats</small></div>
+    <div class="card"><b>Fujão</b><br><small>entra no perigo e foge</small></div>
+    <div class="card"><b>Recrutador</b><br><small>faz o máximo de aliados</small></div>
+    <div class="card"><b>Normal</b><br><small>jogador curioso e prudente, só visão pública</small></div>
+  </div>
+  <h3>Invariantes (só <span class="tag err">error</span> reprova)</h3>
+  <input type="search" class="search" placeholder="Filtrar invariantes…" data-filter="#invs">
+  <div class="tblwrap" id="invs"><table>
+    <tr><th>Invariante</th><th>Sev.</th><th>O que pega</th></tr>
+    <tr data-row><td>vitality.consistency / wound.capacity</td><td><span class="tag err">error</span></td><td>HP ≠ Vitalidade; ferimentos acima da capacidade</td></tr>
+    <tr data-row><td>player.zero_vitality_outside_terminal</td><td><span class="tag err">error</span></td><td>Vitalidade 0 fora do fluxo terminal (7 ocorrências na matriz A)</td></tr>
+    <tr data-row><td>transition.unresolved_at_boundary</td><td><span class="tag err">error</span></td><td>Turno termina com transição de fase sem dono</td></tr>
+    <tr data-row><td>narrative.false_player_death</td><td><span class="tag err">error</span></td><td>Prosa diz que o herói morreu sem morte mecânica</td></tr>
+    <tr data-row><td>memory.summary_bounds</td><td><span class="tag err">error</span></td><td>Resumo acima de 1.200 caracteres</td></tr>
+    <tr data-row><td>memory.*_grounding / confirmed_without_source</td><td><span class="tag err">error</span></td><td>Memória contradiz local, inventário ou identidade; confirmado sem fonte</td></tr>
+    <tr data-row><td>narrative.reward_contradiction / meta_leak</td><td><span class="tag err">error</span></td><td>Recompensa narrada errada; vazamento de instrução interna</td></tr>
+    <tr data-row><td>campaign.region_grounding</td><td><span class="tag err">error</span></td><td>Plano de uma região sobrevivendo à viagem para outra</td></tr>
+    <tr data-row><td>combat.zombie</td><td><span class="tag err">error</span></td><td>Combate ativo e ocioso por 5+ turnos</td></tr>
+    <tr data-row><td>entity.npc_duplicate_identity</td><td><span class="tag err">error</span></td><td>O mesmo NPC com duas identidades</td></tr>
+    <tr data-row><td>economy.transaction_conservation / stock_bounds</td><td><span class="tag err">error</span></td><td>Ouro ou estoque inconsistentes no livro do comerciante</td></tr>
+    <tr data-row><td>performance.turn_latency</td><td><span class="tag warn">warn</span>/<span class="tag err">error</span></td><td>&gt;45 s aviso; &gt;90 s erro</td></tr>
+    <tr data-row><td>knowledge.secret_leak</td><td><span class="tag warn">warning</span></td><td>Segredo na narração ou nos beats (ignora o que o jogador já sabe)</td></tr>
+    <tr data-row><td>narrative.repeated_opening / recycled_npc</td><td><span class="tag warn">warning</span></td><td>Aberturas repetidas; mesmo NPC-template em vários lugares</td></tr>
+    <tr data-row><td>combat.phantom_ally / interaction.no_progress</td><td><span class="tag warn">warning</span></td><td>Aliado inexistente; interação andando em círculos</td></tr>
+    <tr data-row><td>save.roundtrip</td><td><span class="tag warn">warning</span></td><td>Salvar e carregar muda o estado</td></tr>
+    <tr data-row><td>reprodutibilidade</td><td>—</td><td>Mesma seed duas vezes = mesmo resultado</td></tr>
+  </table></div>
+  <h3>Matriz pareada A/B (10 × 200 turnos)</h3>
+  <div class="tblwrap"><table>
+    <tr><th>#</th><th>Perfil</th><th>Classe</th><th>Nível</th><th>Seed</th></tr>
+    <tr><td>1</td><td>normal</td><td>Devoto do Abismo</td><td>1</td><td>6200</td></tr><tr><td>2</td><td>explorador</td><td>Arcanista Cinzento</td><td>3</td><td>6201</td></tr><tr><td>3</td><td>diplomático</td><td>Médico de Campo</td><td>5</td><td>6202</td></tr><tr><td>4</td><td>combate</td><td>Sangromante</td><td>7</td><td>6203</td></tr><tr><td>5</td><td>comerciante</td><td>Corruptor</td><td>9</td><td>6204</td></tr><tr><td>6</td><td>quester</td><td>Devoto do Abismo</td><td>11</td><td>6205</td></tr><tr><td>7</td><td>recrutador</td><td>Médico de Campo</td><td>13</td><td>6206</td></tr><tr><td>8</td><td>fujão</td><td>Arcanista Cinzento</td><td>15</td><td>6207</td></tr><tr><td>9</td><td>secret_rusher</td><td>Corruptor</td><td>18</td><td>6208</td></tr><tr><td>10</td><td>loot_abuser</td><td>Sangromante</td><td>20</td><td>6209</td></tr>
+  </table></div>
+  <div class="grid g3" style="margin-top:12px">
+    <div class="card stat"><b>2.000</b><span>turnos da matriz A · 12 violações error · US$ 1,46</span></div>
+    <div class="card stat"><b>1.951</b><span>turnos da matriz B · 0 erros · 0 violações error</span></div>
+    <div class="card stat"><b>fail-closed</b><span>primeiro grupo sem sucesso real aborta a matriz (o fallback não pode mascarar provider morto)</span></div>
+  </div>
+  <div class="quiz" data-quiz="q7"></div>
+</section>
+
+<section class="chap" id="evals">
+  <div class="eyebrow">Capítulo 19</div>
+  <h2>Evals determinísticos e Project Index</h2>
+  <p class="lead">Testes dizem "funciona"; evals dizem "o quanto bem" — com uma <b>régua protegida</b> que quem otimiza o produto não pode mexer na mesma tarefa.</p>
+  <div class="grid g2">
+    <div class="card"><h4>Governança</h4><ul class="clean"><li><code>manifest.lock.json</code>: SHA-256 de cada dataset, versão do evaluator (1.6.0), registry de métricas e cada arquivo da régua; checagem falha fechado.</li><li><code>protected-paths.txt</code> + job de CI com aprovação humana quando a régua muda.</li><li>LLM-as-judge nunca bloqueia (sem meta-eval).</li><li>Holdout verdadeiro em repositório privado, só agregados; sem ele, os números são "dev scores".</li><li>Comparação só entre runs com régua, datasets e configuração compatíveis.</li></ul></div>
+    <div class="card"><h4>Domínios (95 casos públicos + 16 jornadas)</h4><table>
+      <tr><th>Spec</th><th>Domínio</th><th>Resultado</th></tr>
+      <tr><td>168</td><td>estado/regras (12)</td><td>pass rate 1,0</td></tr>
+      <tr><td>169</td><td>roteamento/ação (25)</td><td>acurácia 1,0, matriz diagonal</td></tr>
+      <tr><td>170</td><td>memória/RAG/contexto (27)</td><td>R@1 0,58 · R@3/5 1,0 · MRR 0,83 · 0 vazamentos</td></tr>
+      <tr><td>171</td><td>narrativa/NPC (27)</td><td>claims 1,0 · 0 contradições</td></tr>
+      <tr><td>172</td><td>frontend F01–F16</td><td>16/16; 5 bugs reais corrigidos</td></tr>
+      <tr><td>173–174</td><td>CI gates · baseline v1</td><td>gates seletivos; baseline registrada</td></tr>
+    </table></div>
+  </div>
+  <div class="callout warn"><b>SPEC-176.</b> Num checkout limpo os hashes da régua divergiam por fim de linha (LF vs CRLF). Corrigido com <code>.gitattributes</code> e relock — mas a baseline v1 ficou histórica e incompatível; nenhum delta A/B é válido contra ela. Status: revisão técnica aprovada, aprovação humana e CI pendentes.</div>
+  <h3>Project Index: um experimento que disse "não"</h3>
+  <p>Grafo do repositório gerado por AST (5.516 nós, 14.089 arestas), com proveniência, confiança e mapas de ownership/eval. Benchmark A/B v6 selado (ground truth cifrado antes dos runs):</p>
+  <div class="hbars">
+    <div class="hb"><span>Localização correta</span><div class="bar"><i style="width:100%"></i></div><span>16 = 16</span></div>
+    <div class="hb"><span>Chamadas (mediana) sem → com</span><div class="bar"><i style="width:62%"></i></div><span>5 → 8</span></div>
+    <div class="hb"><span>Bytes lidos sem → com</span><div class="bar"><i style="width:80%"></i></div><span>24,7k → 31k</span></div>
+    <div class="hb"><span>Tempo sem → com</span><div class="bar"><i style="width:67%"></i></div><span>39 s → 58 s</span></div>
+  </div>
+  <p>Decisão: o índice saiu do fluxo padrão e só é usado em consultas explícitas, confirmadas no código.</p>
+  <div class="quiz" data-quiz="q8"></div>
+</section>
+
+<section class="chap" id="processo">
+  <div class="eyebrow">Capítulo 20</div>
+  <h2>Processo spec-driven e história</h2>
+  <div class="diagram" data-graph="specflow"></div>
+  <div class="grid g2">
+    <div class="card"><h4>Regras</h4><ol class="steps"><li>Spec antes de código (<code>specs/SPEC-xxx</code>, a partir do TEMPLATE).</li><li>Aprovação do usuário.</li><li>Testes primeiro; desvio atualiza a spec no mesmo commit.</li><li><code>done</code> exige critérios marcados, pytest verde e smoke real; ROADMAP e ESTADO_ATUAL atualizados.</li><li>ROADMAP é resumo + link.</li></ol><p>198 specs com ID estável (174 done, 22 approved, 1 draft, 1 review-pending). Executor e revisor independentes por nível de risco, com handoffs registrados — sem autoaprovação.</p></div>
+    <div class="card"><h4>Autoria de conteúdo</h4><p>Templates em <code>docs/guias/templates/codex/</code>, <code>curated: true</code> obrigatório em doc manual, segredo de NPC em doc hidden paralelo, lint <code>validate_content.py</code> (também gate do reindex e da CI), curadoria migration-safe.</p></div>
+  </div>
+  <h3>Linha do tempo</h3>
+  <div class="timeline">
+    <div class="ev"><b>2025-12 → 2026-06</b><br>MVP: grafo multi-agente, RAG, saves, CLI e API; Fase 0 (mapa, relógio, viagem); Fase 1 (frontend React).</div>
+    <div class="ev"><b>2026-07-02/03</b><br>Mundo Vivo v1: Codex, event_log, projeção, regras, context builder; Fase 3 (crônica, conhecimento, quests).</div>
+    <div class="ev"><b>2026-07-04/06</b><br>Fases 4, 6, 7 (gameplay core, conteúdo sistêmico, autoria); roteamento multi-provider; Fase 5 (playtest); Fase 10 local; Fase 11 (contratos reais).</div>
+    <div class="ev"><b>2026-07-13/18</b><br>SSE, saves, onboarding; DeepSeek primário; playtest longo real → 8 specs; criação imersiva; embeddings Jina.</div>
+    <div class="ev"><b>2026-07-19/21</b><br>5 Posturas × 3 subclasses, Entropia e Carga; checkpoints de morte; aliados em combate; loot de exploração.</div>
+    <div class="ev"><b>2026-07-23 → 08-02</b><br>Épico de conflitos v4: Cartas, cena, dano, reações, morte rica, fuga, Abismo, cutover; 153 Cartas, 124 criaturas, 36 NPCs.</div>
+    <div class="ev"><b>2026-08-03/16</b><br>Laboratório de combate, hardening SSE/persistência, Fase 8A de arte, perfil normal, quatro ciclos de remediação de longrun.</div>
+    <div class="ev"><b>2026-08-19/20</b><br>Fase 10b local-first certificada (G0–G7), níveis até 20, Fase 8B, Crônica avançada.</div>
+    <div class="ev"><b>2026-08-20 → 09-28</b><br>Matriz A (2.000 turnos), remediações, matriz B (1.951, zero erros).</div>
+    <div class="ev"><b>2026-09-27 → 10-02</b><br>IDs estáveis para specs; plataforma de evals (SPEC-164–176); benchmark do Project Index; pacote v5 importado (SPEC-177–198: monetização, hosted, mobile).</div>
+  </div>
+</section>
+
+<section class="chap" id="arestas">
+  <div class="eyebrow">Capítulo 21</div>
+  <h2>Estado atual e arestas conhecidas</h2>
+  <p class="lead">Observações levantadas na exploração do código — úteis para quem vai mexer no projeto.</p>
+  <div class="finding"><span class="tag warn">mecânica</span><div><b>Buffs de Carta possivelmente sem efeito numérico.</b> Cartas de proteção, buff de defesa/acerto/dano e vantagem gravam condições que só a exibição da API parece ler; não foi achado consumidor no ataque, Esquiva ou dano. Vale um teste de integração.</div></div>
+  <div class="finding"><span class="tag warn">mecânica</span><div><b>Cartas passivas sem aplicador.</b> Utilitárias estão ligadas ao contexto do narrador, mas as Cartas do tipo passiva não têm quem as aplique no motor atual (as passivas de árvore anteriores ao cutover foram aposentadas).</div></div>
+  <div class="finding"><span class="tag warn">mecânica</span><div><b>Armadura/escudo do jogador não instanciados.</b> Proteção/Integridade só existem em fichas de teste/simulação; ataque básico sem Carta é 3 fixo (+ bônus de early-game).</div></div>
+  <div class="finding"><span class="tag">resíduo</span><div><b>d20 remanescente</b> em detecção, armadilhas e salvaguarda de item, diferente do 2d10 + Virtude do resto.</div></div>
+  <div class="finding"><span class="tag">fiação</span><div><b>Fuga</b> usa sempre Agilidade; abordagem e Teste de Sorte existem mas não estão ligados. <b>Eventos do Abismo</b> dependem de uma lista que a cena Python deixa vazia.</div></div>
+  <div class="finding"><span class="tag">estado</span><div>Campos <code>active_plan_step</code>, <code>router_confidence</code>, <code>last_routed_intent</code> declarados e nunca escritos; possível persistência do hint de "sem interlocutor"; replan por região chega um turno depois (intencional).</div></div>
+  <div class="finding"><span class="tag">memória</span><div>Retrieval devolve só 2 documentos; o simulador de mundo grava sem proveniência; assinaturas de segredo são curadas à mão (4 segredos).</div></div>
+  <div class="finding"><span class="tag">infra</span><div>Procfile só com processo web, sem Dockerfile; pip-audit/npm audit/scanner de segredos rodados manualmente (não estão na CI); alerta de backup sem produtor automático da métrica; nuvem não certificada.</div></div>
+  <div class="finding"><span class="tag">custo</span><div>Custo de playtest é estimativa por tokens fixos e subconta o real; medição real de uso está numa spec aprovada ainda não iniciada.</div></div>
+  <div class="finding"><span class="tag">docs</span><div>Documentação defasada em pontos: modelo de embedding antigo no CLAUDE.md, "13 perfis", comentário de nível máximo 10, CLASSES.md histórico.</div></div>
+  <div class="finding"><span class="tag ok">próximos</span><div>Fase 9 (sprites e som) sem spec; certificação cloud em rascunho; pacote SPEC-177–198 (Stripe, Google Play, Capacitor, carteira, FinOps, voz) aprovado e aguardando a SPEC-176 fechar.</div></div>
+</section>
+
+<section class="chap" id="glossario">
+  <div class="eyebrow">Capítulo 22</div>
+  <h2>Glossário</h2>
+  <input type="search" class="search" placeholder="Buscar termo…" data-filter="#gloss">
+  <div id="gloss" class="grid g2">
+    <div class="card" data-row><b>Beat</b> — passo do arco de campanha (3–5 por arco), privado do diretor.</div>
+    <div class="card" data-row><b>Carga do Abismo</b> — recurso de longo prazo que não cai no descanso; patamares disparam consequências.</div>
+    <div class="card" data-row><b>Checkpoint</b> — snapshot de restauração tirado só em fronteira segura.</div>
+    <div class="card" data-row><b>Codex</b> — documentos de lore com frontmatter e visibilidade.</div>
+    <div class="card" data-row><b>ContextPack</b> — contexto pontuado e orçado por seção que vai ao prompt.</div>
+    <div class="card" data-row><b>Entropia</b> — pool único que paga Cartas; recompõe no descanso.</div>
+    <div class="card" data-row><b>Esquiva</b> — 10 + Agilidade; alvo da rolagem de ataque.</div>
+    <div class="card" data-row><b>Época (timeline_epoch)</b> — sobe a cada restore; separa linhas do tempo.</div>
+    <div class="card" data-row><b>Fencing</b> — token que impede um processo com lease expirado de publicar.</div>
+    <div class="card" data-row><b>Ferimento</b> — leve/grave/crítico, nasce do excedente de dano sobre a Vitalidade.</div>
+    <div class="card" data-row><b>Guard</b> — checagem <code>isinstance</code> que protege contra AIMessage no lugar do modelo.</div>
+    <div class="card" data-row><b>Invariante</b> — regra checada a cada turno do playtest (error reprova).</div>
+    <div class="card" data-row><b>Lease</b> — posse temporária de uma operação ou job, renovada por heartbeat.</div>
+    <div class="card" data-row><b>MockLLM</b> — modelo simulado offline usado pela suíte e sem chave.</div>
+    <div class="card" data-row><b>Outbox</b> — intenções acumuladas no turno e gravadas na mesma transação do commit.</div>
+    <div class="card" data-row><b>Postura</b> — classe diante do Abismo (5), cada uma com 3 subclasses.</div>
+    <div class="card" data-row><b>Proveniência</b> — origem de um fato de memória; determina a confiança.</div>
+    <div class="card" data-row><b>Régua</b> — evaluators, datasets e lock dos evals; protegida contra edição.</div>
+    <div class="card" data-row><b>RoutedLLM</b> — roteador que tenta provedores em ordem por tier.</div>
+    <div class="card" data-row><b>Ruptura</b> — uso amplificado de uma Carta que gera Carga do Abismo.</div>
+    <div class="card" data-row><b>Spec</b> — especificação aprovada antes de implementar; ID estável SPEC-xxx.</div>
+    <div class="card" data-row><b>Tier</b> — CLASSIFY, FAST ou SMART: nível de modelo por tipo de tarefa.</div>
+    <div class="card" data-row><b>Virtudes</b> — mente, agilidade, força, carisma, corpo (0–5).</div>
+    <div class="card" data-row><b>Vitalidade</b> — pontos de vida derivados de Corpo; 0 não é morte.</div>
+  </div>
+  <p style="margin-top:30px;color:var(--dim);font-size:13px">Guia gerado a partir de uma exploração completa do código em 12/10/2026. Números refletem o working tree e os documentos de estado nessa data.</p>
+</section>
+</main>
+</div>
+<script>
+/* ===== Biblioteca mínima do guia: grafos em camadas, passo-a-passo, quiz, tabs ===== */
+const NS = 'http://www.w3.org/2000/svg';
+const GROUP_LABEL = {llm: 'LLM (IA)', python: 'Python determinístico', data: 'Dados / memória', io: 'Entrada / saída', infra: 'Infraestrutura', neutral: 'Outro'};
+const cssVar = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const el = (tag, attrs = {}, parent) => {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+};
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+
+const Graph = {
+  /** Desenha um DAG em camadas (caminho mais longo) dentro de `host`. Arestas `back:true` são laços desenhados por fora. */
+  render(host, spec) {
+    const dir = spec.direction || 'LR';
+    const lr = dir === 'LR';
+    const nodes = spec.nodes;
+    const byId = Object.fromEntries(nodes.map((n) => [n.id, n]));
+    const edges = spec.edges.filter((e) => byId[e.from] && byId[e.to]);
+    const fwd = edges.filter((e) => !e.back);
+    const lvl = Object.fromEntries(nodes.map((n) => [n.id, n.layer ?? 0]));
+    for (let k = 0; k < nodes.length; k++) {
+      let ch = false;
+      for (const e of fwd) if (lvl[e.to] < lvl[e.from] + 1) { lvl[e.to] = lvl[e.from] + 1; ch = true; }
+      if (!ch) break;
+    }
+    const layers = [];
+    nodes.forEach((n) => (layers[lvl[n.id]] ??= []).push(n.id));
+    const L = layers.filter(Boolean);
+    // barycentro: 2 passadas para reduzir cruzamentos
+    const idx = {};
+    const reindex = () => L.forEach((ly) => ly.forEach((id, i) => (idx[id] = i)));
+    reindex();
+    for (let pass = 0; pass < 2; pass++) {
+      for (let li = 1; li < L.length; li++) {
+        L[li].sort((a, b) => {
+          const pa = fwd.filter((e) => e.to === a).map((e) => idx[e.from]);
+          const pb = fwd.filter((e) => e.to === b).map((e) => idx[e.from]);
+          const ma = pa.length ? pa.reduce((x, y) => x + y) / pa.length : idx[a];
+          const mb = pb.length ? pb.reduce((x, y) => x + y) / pb.length : idx[b];
+          return ma - mb;
+        });
+        reindex();
+      }
+    }
+    const fs = spec.fontSize || 13;
+    const wOf = (n) => Math.max(spec.minW || 110, Math.min(spec.maxW || 220, (n.label.length * fs * 0.6) + 34));
+    const H = spec.nodeH || 44;
+    const gapMain = spec.gapMain || (lr ? 70 : 56);
+    const gapCross = spec.gapCross || (lr ? 18 : 22);
+    const layerSize = L.map((ly) => Math.max(...ly.map((id) => (lr ? wOf(byId[id]) : H))));
+    const crossSize = L.map((ly) => ly.reduce((a, id) => a + (lr ? H : wOf(byId[id])) + gapCross, -gapCross));
+    const maxCross = Math.max(...crossSize);
+    const pos = {};
+    let main = 20;
+    L.forEach((ly, li) => {
+      let c = 20 + (maxCross - crossSize[li]) / 2;
+      ly.forEach((id) => {
+        const n = byId[id];
+        const w = wOf(n);
+        pos[id] = lr ? {x: main + (layerSize[li] - w) / 2, y: c, w, h: H} : {x: c, y: main, w, h: H};
+        c += (lr ? H : w) + gapCross;
+      });
+      main += layerSize[li] + gapMain;
+    });
+    const W = lr ? main - gapMain + 20 : maxCross + 40;
+    // LR largo demais para a tela → refaz de cima para baixo (legível em vez de minúsculo)
+    if (lr && !spec.keepDir && host.clientWidth > 0 && host.clientWidth / W < 0.78) return Graph.render(host, {...spec, direction: 'TB', gapMain: 40, gapCross: 18});
+    const HH = lr ? maxCross + 40 + (edges.some((e) => e.back) ? 50 : 0) : main - gapMain + 20 + (edges.some((e) => e.back) ? 40 : 0);
+    host.innerHTML = '';
+    const svg = el('svg', {viewBox: `0 0 ${W} ${HH}`, role: 'img', 'aria-label': spec.title || 'diagrama'}, host);
+    svg.style.maxHeight = (spec.maxHeight || 620) + 'px';
+    if (spec.minScale) svg.style.minWidth = Math.min(W * spec.minScale, 1400) + 'px';
+    const defs = el('defs', {}, svg);
+    const mk = el('marker', {id: 'arr' + host.id, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse'}, defs);
+    el('path', {d: 'M0,0 L10,5 L0,10 z', fill: cssVar('--gold')}, mk);
+    const gE = el('g', {}, svg);
+    const gN = el('g', {}, svg);
+    const edgeEls = [];
+    edges.forEach((e) => {
+      const a = pos[e.from], b = pos[e.to];
+      let d, lx, ly;
+      if (e.back) {
+        if (lr) {
+          const x1 = a.x + a.w / 2, x2 = b.x + b.w / 2, y = maxCross + 40;
+          d = `M${x1},${a.y + a.h} C${x1},${y + 20} ${x2},${y + 20} ${x2},${b.y + b.h}`;
+          lx = (x1 + x2) / 2; ly = y + 12;
+        } else {
+          const y1 = a.y + a.h / 2, y2 = b.y + b.h / 2, x = W - 10;
+          d = `M${a.x + a.w},${y1} C${x + 30},${y1} ${x + 30},${y2} ${b.x + b.w},${y2}`;
+          lx = x + 4; ly = (y1 + y2) / 2;
+        }
+      } else if (lr) {
+        const x1 = a.x + a.w, y1 = a.y + a.h / 2, x2 = b.x, y2 = b.y + b.h / 2, m = (x1 + x2) / 2;
+        d = `M${x1},${y1} C${m},${y1} ${m},${y2} ${x2},${y2}`; lx = x2 - 6; ly = y2 - 8;
+      } else {
+        const x1 = a.x + a.w / 2, y1 = a.y + a.h, x2 = b.x + b.w / 2, y2 = b.y, m = (y1 + y2) / 2;
+        d = `M${x1},${y1} C${x1},${m} ${x2},${m} ${x2},${y2}`; lx = x2 + 8; ly = y2 - 8;
+      }
+      const g = el('g', {class: 'gedge'}, gE);
+      el('path', {d, stroke: e.color ? cssVar(e.color) || e.color : cssVar('--gold'), 'stroke-opacity': .6, 'marker-end': `url(#arr${host.id})`, 'stroke-dasharray': e.dashed ? '6 5' : ''}, g);
+      if (e.label) {
+        const t = el('text', {x: lx, y: ly, fill: cssVar('--muted'), 'text-anchor': e.back ? 'middle' : (lr ? 'end' : 'start')}, g);
+        t.textContent = e.label;
+      }
+      edgeEls.push({e, g});
+    });
+    const nodeEls = {};
+    nodes.forEach((n) => {
+      const p = pos[n.id];
+      const col = cssVar('--' + (n.group || 'neutral'));
+      const g = el('g', {class: 'gnode', tabindex: 0, role: 'button', 'aria-label': n.label}, gN);
+      el('rect', {x: p.x, y: p.y, width: p.w, height: p.h, rx: 10, fill: col, 'fill-opacity': .13, stroke: col, 'stroke-width': 1.8}, g);
+      const lines = String(n.label).split('\n');
+      lines.forEach((ln, i) => {
+        const t = el('text', {x: p.x + p.w / 2, y: p.y + p.h / 2 + (i - (lines.length - 1) / 2) * (fs + 2) + fs * 0.35, 'text-anchor': 'middle', fill: cssVar('--text'), 'font-size': fs}, g);
+        t.textContent = ln;
+      });
+      if (n.sub) {
+        const t = el('text', {x: p.x + p.w / 2, y: p.y + p.h + 13, 'text-anchor': 'middle', fill: cssVar('--dim'), 'font-size': 10.5, 'font-family': cssVar('--fm')}, g);
+        t.textContent = n.sub;
+      }
+      nodeEls[n.id] = g;
+      const show = () => api.inspect(n.id);
+      g.addEventListener('click', show);
+      g.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); show(); } });
+      g.addEventListener('mouseenter', () => { if (!api.locked) api.neighbors(n.id); });
+      g.addEventListener('mouseleave', () => { if (!api.locked) api.reset(); });
+    });
+    const inspector = host.parentElement.querySelector('.inspector');
+    const api = {
+      locked: false,
+      reset() { Object.values(nodeEls).forEach((g) => g.classList.remove('dim', 'hot')); edgeEls.forEach(({g}) => g.classList.remove('dim', 'hot')); },
+      neighbors(id) {
+        const near = new Set([id]);
+        edges.forEach((e) => { if (e.from === id) near.add(e.to); if (e.to === id) near.add(e.from); });
+        Object.entries(nodeEls).forEach(([k, g]) => g.classList.toggle('dim', !near.has(k)));
+        edgeEls.forEach(({e, g}) => g.classList.toggle('dim', !(e.from === id || e.to === id)));
+      },
+      highlight(ids = [], path = []) {
+        this.locked = ids.length > 0;
+        const s = new Set(ids);
+        Object.entries(nodeEls).forEach(([k, g]) => { g.classList.toggle('hot', s.has(k)); g.classList.toggle('dim', ids.length > 0 && !s.has(k)); });
+        const ps = new Set(path.map((p) => p.join('>')));
+        edgeEls.forEach(({e, g}) => { const on = ps.has(e.from + '>' + e.to); g.classList.toggle('hot', on); g.classList.toggle('dim', ids.length > 0 && !on); });
+        if (!ids.length) this.reset();
+      },
+      inspect(id) {
+        const n = byId[id];
+        if (!inspector) return;
+        const outs = edges.filter((e) => e.from === id).map((e) => byId[e.to].label.replace('\n', ' ') + (e.label ? ` <span class="pill">${esc(e.label)}</span>` : ''));
+        const ins = edges.filter((e) => e.to === id).map((e) => byId[e.from].label.replace('\n', ' '));
+        inspector.innerHTML = `<h5>${esc(n.label.replace('\n', ' '))} <span class="tag ${n.group || ''}">${GROUP_LABEL[n.group || 'neutral']}</span></h5>
+          <div>${n.info || '<span class="hint">Sem detalhes adicionais.</span>'}</div>
+          <div class="hint" style="margin-top:8px">${ins.length ? 'Recebe de: ' + ins.join(', ') + '. ' : ''}${outs.length ? 'Segue para: ' + outs.join(', ') + '.' : ''}</div>`;
+      },
+    };
+    if (spec.legend !== false) {
+      const groups = [...new Set(nodes.map((n) => n.group || 'neutral'))];
+      const lg = document.createElement('div');
+      lg.className = 'legend';
+      lg.innerHTML = groups.map((g) => `<span><i style="background:${cssVar('--' + g)}"></i>${GROUP_LABEL[g]}</span>`).join('') + '<span style="margin-left:auto">clique num nó para detalhes · passe o mouse para ver vizinhos</span>';
+      host.appendChild(lg);
+    }
+    return api;
+  },
+};
+
+/** Monta um diagrama declarado em DIAGRAMS[nome] dentro de um <div class="diagram" data-graph="nome">. */
+const GRAPHS = {};
+function mountDiagrams() {
+  document.querySelectorAll('[data-graph]').forEach((box) => {
+    const name = box.dataset.graph;
+    const spec = DIAGRAMS[name];
+    if (!spec) return;
+    box.innerHTML = `<div class="dtitle"><span>${esc(spec.title || '')}</span><button class="mini" data-reset>limpar destaque</button></div><div class="gh" id="g_${name}"></div><div class="inspector"><span class="hint">${esc(spec.hint || 'Clique em qualquer caixa para ver o que ela faz.')}</span></div>`;
+    GRAPHS[name] = Graph.render(box.querySelector('.gh'), spec);
+    box.querySelector('[data-reset]').onclick = () => GRAPHS[name].highlight([]);
+  });
+}
+
+/** Passo-a-passo: STEPPERS[nome] = {graph?: nome, steps:[{t, h, hi?:[ids], path?:[[a,b]]}]} */
+function mountSteppers() {
+  document.querySelectorAll('[data-stepper]').forEach((box) => {
+    const conf = STEPPERS[box.dataset.stepper];
+    if (!conf) return;
+    let i = 0;
+    let timer = null;
+    box.classList.add('stepper');
+    box.innerHTML = `<div class="sbar"><button data-p>◀ anterior</button><button class="primary" data-n>próximo ▶</button><button data-a>▶▶ auto</button><span class="count"></span></div><div class="sbody"></div><div class="dots"></div>`;
+    const body = box.querySelector('.sbody'), cnt = box.querySelector('.count'), dots = box.querySelector('.dots');
+    dots.innerHTML = conf.steps.map((_, k) => `<i data-k="${k}" title="passo ${k + 1}"></i>`).join('');
+    const show = (initial) => {
+      const s = conf.steps[i];
+      body.innerHTML = `<h5>${i + 1}. ${s.t}</h5><div>${s.h}</div>`;
+      cnt.textContent = `passo ${i + 1} de ${conf.steps.length}`;
+      dots.querySelectorAll('i').forEach((d, k) => d.classList.toggle('on', k <= i));
+      if (!initial && conf.graph && GRAPHS[conf.graph]) {
+        GRAPHS[conf.graph].highlight(s.hi || [], s.path || []);
+        if (s.hi && s.hi.length === 1) GRAPHS[conf.graph].inspect(s.hi[0]);
+      }
+      if (conf.onStep) conf.onStep(i, s);
+    };
+    box.querySelector('[data-p]').onclick = () => { i = Math.max(0, i - 1); show(); };
+    box.querySelector('[data-n]').onclick = () => { i = Math.min(conf.steps.length - 1, i + 1); show(); };
+    box.querySelector('[data-a]').onclick = (ev) => {
+      if (timer) { clearInterval(timer); timer = null; ev.target.textContent = '▶▶ auto'; return; }
+      ev.target.textContent = '❚❚ pausar';
+      timer = setInterval(() => { if (i >= conf.steps.length - 1) { clearInterval(timer); timer = null; ev.target.textContent = '▶▶ auto'; return; } i++; show(); }, 3200);
+    };
+    dots.onclick = (ev) => { if (ev.target.dataset.k) { i = +ev.target.dataset.k; show(); } };
+    show(true);
+  });
+}
+
+/** Quiz: <div class="quiz" data-quiz="nome"> */
+function mountQuizzes() {
+  document.querySelectorAll('[data-quiz]').forEach((box) => {
+    const q = QUIZ[box.dataset.quiz];
+    if (!q) return;
+    box.innerHTML = `<div class="eyebrow">Teste rápido</div><div class="q">${q.q}</div><div class="opts">${q.o.map((o, k) => `<button data-k="${k}">${o}</button>`).join('')}</div><div class="exp">${q.e}</div>`;
+    box.querySelectorAll('.opts button').forEach((b) => (b.onclick = () => {
+      box.querySelectorAll('.opts button').forEach((x) => (x.disabled = true));
+      b.classList.add(+b.dataset.k === q.a ? 'right' : 'wrong');
+      box.querySelector(`[data-k="${q.a}"]`).classList.add('right');
+      box.classList.add('done');
+    }));
+  });
+}
+
+/** Tabs simples: <div data-tabs> com botões [data-tab=x] e painéis [data-pane=x] */
+function mountTabs() {
+  document.querySelectorAll('[data-tabs]').forEach((box) => {
+    const btns = box.querySelectorAll(':scope > .tabs > [data-tab]');
+    const panes = box.querySelectorAll(':scope > [data-pane]');
+    const go = (k) => { btns.forEach((b) => b.classList.toggle('on', b.dataset.tab === k)); panes.forEach((p) => p.classList.toggle('hidden', p.dataset.pane !== k)); };
+    btns.forEach((b) => (b.onclick = () => go(b.dataset.tab)));
+    if (btns[0]) go(btns[0].dataset.tab);
+  });
+}
+
+/** Índice lateral com destaque da seção ativa + barra de progresso */
+function mountToc() {
+  const secs = [...document.querySelectorAll('section.chap')];
+  const links = Object.fromEntries([...document.querySelectorAll('nav.toc a')].map((a) => [a.getAttribute('href').slice(1), a]));
+  const bar = document.querySelector('.topbar .progress i');
+  const onScroll = () => {
+    const y = scrollY + 120;
+    let cur = secs[0];
+    for (const s of secs) if (s.offsetTop <= y) cur = s;
+    Object.values(links).forEach((a) => a.classList.remove('active'));
+    if (cur && links[cur.id]) links[cur.id].classList.add('active');
+    const h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + '%';
+  };
+  addEventListener('scroll', onScroll, {passive: true});
+  onScroll();
+  document.getElementById('tocBtn').onclick = () => document.body.classList.toggle('toc-open');
+  document.querySelectorAll('nav.toc a').forEach((a) => (a.onclick = () => document.body.classList.remove('toc-open')));
+  const themeBtn = document.getElementById('themeBtn');
+  let saved = null;
+  try { saved = localStorage.getItem('guia-theme'); } catch (e) {}
+  if (saved) document.documentElement.dataset.theme = saved;
+  themeBtn.onclick = () => {
+    const cur = document.documentElement.dataset.theme || 'dark';
+    const nxt = cur === 'light' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = nxt;
+    try { localStorage.setItem('guia-theme', nxt); } catch (e) {}
+    mountDiagrams(); // recolore SVGs
+    mountSteppers();
+  };
+}
+
+/** Filtro de tabela/lista: <input data-filter="#alvo"> esconde linhas que não casam */
+function mountFilters() {
+  document.querySelectorAll('[data-filter]').forEach((inp) => {
+    const target = document.querySelector(inp.dataset.filter);
+    inp.addEventListener('input', () => {
+      const q = inp.value.trim().toLowerCase();
+      target.querySelectorAll('[data-row]').forEach((r) => r.classList.toggle('hidden', q && !r.textContent.toLowerCase().includes(q)));
+    });
+  });
+}
+/* ===== Diagramas: cada nó tem `info` com a explicação mostrada ao clicar ===== */
+const DIAGRAMS = {
+  arch: {
+    title: 'Arquitetura em camadas — do clique do jogador até o disco',
+    direction: 'TB', maxW: 230, gapCross: 26,
+    nodes: [
+      {id: 'player', label: 'Jogador', group: 'io', info: 'Digita texto livre ("Vou para a Floresta Cinzenta") ou clica em botões estruturados (Carta, manobra, alvo, equipar, level-up).'},
+      {id: 'web', label: 'Frontend React\n(web/)', group: 'io', info: 'SPA React + Vite + TypeScript em tom dark medieval. Máquina de telas em <code>App.tsx</code>: bootstrap → auth → saves/criação → jogo/simulador. Recebe SSE, mostra fases ao vivo e faz "digitação" no cliente.'},
+      {id: 'cli', label: 'CLI\n(game_engine.py)', group: 'io', info: 'Cliente de terminal. Usa o MESMO grafo <code>app</code>. Wizard de criação, comandos locais (status, equipar), menu de morte.'},
+      {id: 'api', label: 'API FastAPI\n(api.py)', group: 'io', info: '~30 rotas. Middlewares de CORS, sessão/CSRF, correlação e rate-limit. Faz lock por jogo, idempotência por <code>action_id</code>, gates (memorial/arquivado/queda pendente), executa o grafo, salva e devolve <code>GameResponse</code>.'},
+      {id: 'graph', label: 'Grafo LangGraph\n(main.py)', group: 'python', info: 'StateGraph síncrono compilado uma vez. START → action_guard → turn_prepare → campaign_manager → dm_router → dispatch → {storyteller, combat, npc, loot} → archivist → turn_finalizer → END.'},
+      {id: 'agents', label: 'Agentes (nós)\nagents/*.py', group: 'llm', info: 'Cada agente devolve um dict PARCIAL do GameState. Usam a IA apenas para identificar intenção e narrar; tudo que é número é delegado a serviços Python.'},
+      {id: 'services', label: 'Serviços determinísticos\nservices/ + raiz', group: 'python', info: 'Combate v4 (2d10 + Virtude), Cartas, Entropia/Carga, progressão, economia, clima, luz, viagem, eventos, regras, memória com proveniência, guardas de prosa. Zero LLM.'},
+      {id: 'llm', label: 'RoutedLLM\n(llm_setup.py)', group: 'llm', info: 'Três tiers (CLASSIFY, FAST, SMART). Cada tier é uma lista ordenada de (provider, modelo): DeepSeek primeiro, Groq grátis como fallback vivo, depois MiniMax/Qwen/Anthropic/Gemini. Nunca levanta exceção: no fim devolve AIMessage vazio.'},
+      {id: 'providers', label: 'Provedores LLM', group: 'llm', info: 'DeepSeek v4 flash (primário), Groq gpt-oss, MiniMax, Qwen, Anthropic Claude, Gemini. Sem chave nenhuma → MockLLM (jogo jogável offline).'},
+      {id: 'rag', label: 'RAG híbrido\n(rag.py)', group: 'data', info: 'Índices FAISS: lore global, regras, memória da sessão e memória por NPC. Embeddings Jina → OpenAI → Ollama → Gemini, cada índice pinado ao provider que o gerou. Filtro de visibilidade public/hidden/secret.'},
+      {id: 'static', label: 'Dados de Valoria\n(data/, lore_nova/)', group: 'data', info: '11 arquivos de lore → 699 docs do Codex; grafo de 594 entidades e 101 arestas; mapa de 35 nós; 124 criaturas; 5 classes; Cartas; facções; clima; mercadores.'},
+      {id: 'persist', label: 'Persistência\nJSON ou Postgres', group: 'data', info: 'Perfil legacy: <code>saves/{uuid}.json</code> com escrita atômica, checkpoint e memória FAISS. Perfis local/portable/hosted: Postgres (JSONB + eventos + recibos) com lease e fencing.'},
+      {id: 'infra', label: 'Infra local-first\nworkers, pgvector, blobs', group: 'infra', info: 'Supabase Local (Postgres + RLS + Auth + pgvector + Storage), fila Postgres com SKIP LOCKED, workers de embedding/crônica/arte, observabilidade Prometheus/Grafana/OTel/Tempo, backup/restore com manifesto SHA-256.'},
+    ],
+    edges: [
+      {from: 'player', to: 'web'}, {from: 'player', to: 'cli'}, {from: 'web', to: 'api', label: 'HTTP/SSE'}, {from: 'api', to: 'graph'}, {from: 'cli', to: 'graph'},
+      {from: 'graph', to: 'agents'}, {from: 'agents', to: 'services'}, {from: 'agents', to: 'llm'}, {from: 'llm', to: 'providers'}, {from: 'agents', to: 'rag'},
+      {from: 'services', to: 'static'}, {from: 'rag', to: 'static'}, {from: 'api', to: 'persist'}, {from: 'persist', to: 'infra'},
+    ],
+  },
+
+  turn: {
+    title: 'O grafo LangGraph de um turno (main.py)',
+    direction: 'TB', minW: 110, maxW: 170, gapMain: 34, gapCross: 16, fontSize: 13, maxHeight: 980, minScale: 0.7,
+    nodes: [
+      {id: 'START', label: 'START', group: 'neutral', info: 'Gate condicional ANTES de qualquer nó: se <code>game_over</code> (memorial), <code>death_pending</code> (tela de morte aberta) ou <code>archived</code> → END. Protege API, CLI, playtest e qualquer chamador direto.'},
+      {id: 'guard', label: 'action_guard', group: 'python', info: 'Sem LLM. Classifica a fase do jogador (active, unconscious, incapacitated, last_stand, terminal, death_pending, dead). Inconsciente só pode descansar/pedir socorro (regex). Repara "transições órfãs". Grava <code>turn_baseline</code> (ouro, XP, inventário, quests, ids de eventos ANTES do turno) para o recibo.'},
+      {id: 'prep', label: 'turn_prepare', group: 'python', info: 'Incrementa <code>world.turn_count</code> e <code>continuity.session_action_count</code> UMA vez. Extraído como nó puro para permitir o modo concorrente (plano e rota em paralelo) sem disputa pelo contador.'},
+      {id: 'cm', label: 'campaign_manager', group: 'llm', info: 'Tier SMART. Replaneja só quando precisa: sem plano, <code>needs_replan</code>, mudou de REGIÃO, 15 turnos desde o último plano ou beats esgotados. Gera arco de 3–5 beats + clímax + título. Sanitiza segredos, recusa inglês (1 retry), ancora o local ao mundo real. 14 de cada 15 turnos não custa chamada.'},
+      {id: 'router', label: 'dm_router', group: 'llm', info: 'Tier CLASSIFY (temp 0). Cinco atalhos determinísticos ANTES da IA: sem mensagens → STORY; combate ativo → COMBAT (viagem vira fuga; combate ocioso expira em 3); recuperação → STORY; descansar/viajar explícito → STORY. Só então classifica STORY | COMBAT | NPC | LOOT. NONE vira STORY.'},
+      {id: 'dispatch', label: 'dispatch', group: 'python', info: 'Só zera <code>turn_prepared</code>. A aresta condicional lê <code>state["next"]</code> e manda para o nó escolhido.'},
+      {id: 'npc', label: 'npc_actor', group: 'llm', info: 'Tier FAST. Gate de cena (NPC precisa estar <code>in_scene</code>); NPC conhecido longe → resposta determinística "não está aqui"; comandos de party resolvidos em Python. Memória por NPC com proveniência <code>npc_claim</code>. Sem interlocutor → delega ao storyteller.'},
+      {id: 'story', label: 'storyteller', group: 'llm', info: 'Tier FAST, o nó mais denso. Antes da IA: viagem (custo, fog of war, achados), descanso, encontros, clima, simulação do mundo. Depois: valida propostas (quarentena atômica), guarda de prosa, ouro reconciliado, itens só do catálogo, recompensa confirmada, quests.'},
+      {id: 'combat', label: 'combat_agent', group: 'python', info: 'Nó fino sobre o motor determinístico. A IA só faz spawn (CLASSIFY), parse da fala (CLASSIFY, pulado se a UI declarou a Carta), narração (FAST) e Cicatriz (SMART). Rodada inteira resolvida em <code>conflict_orchestrator.run_round</code>.'},
+      {id: 'loot', label: 'loot_agent', group: 'python', info: 'Três modos: TREASURE (raridade/ouro por <code>economy.roll_loot</code>), SHOP e CRAFT (preço, estoque e receitas em Python; a IA só interpreta "compro/vendo" e narra). Rodapé [SISTEMA] com o delta real.'},
+      {id: 'arch', label: 'archivist', group: 'data', info: 'Tier SMART com cadência (só quando algo relevante ou a cada 10 turnos). SEMPRE processa eventos pendentes (único escritor do event_log). Atualiza o resumo curto (≤1200 chars), grava fatos com proveniência no FAISS, escreve a crônica.'},
+      {id: 'fin', label: 'turn_finalizer', group: 'python', info: 'Sem LLM. Revalida a prosa contra a evidência (morte falsa, posse, local, segredo, ouro errado). Confere que o estado está pronto para fronteira. Calcula o recibo como DIFERENÇA de estados: +ouro, +XP, itens, quests.'},
+      {id: 'END', label: 'END', group: 'neutral', info: 'Fim do turno. Atalhos para cá (não desenhados para não poluir): START com herói morto/arquivado, action_guard bloqueando a ação, e combat_agent no laboratório de combate. Depois do END a API decide checkpoint, histórico, arte e salva.'},
+    ],
+    edges: [
+      {from: 'START', to: 'guard'},
+      {from: 'guard', to: 'prep'},
+      {from: 'prep', to: 'cm'}, {from: 'cm', to: 'router'}, {from: 'router', to: 'dispatch'},
+      {from: 'dispatch', to: 'npc', label: 'NPC'}, {from: 'dispatch', to: 'story', label: 'STORY'}, {from: 'dispatch', to: 'combat', label: 'COMBAT'}, {from: 'dispatch', to: 'loot', label: 'LOOT'},
+      {from: 'npc', to: 'story', label: 'sem alvo', dashed: true}, {from: 'story', to: 'combat', label: 'emboscada', dashed: true}, {from: 'combat', to: 'loot', label: 'vitória'},
+      {from: 'npc', to: 'arch'}, {from: 'story', to: 'arch'}, {from: 'combat', to: 'arch'}, {from: 'loot', to: 'arch'},
+      {from: 'arch', to: 'fin'}, {from: 'fin', to: 'END'},
+    ],
+  },
+
+  llm: {
+    title: 'Como get_llm() resolve um modelo e como o RoutedLLM cai de provider',
+    direction: 'LR', maxW: 190,
+    nodes: [
+      {id: 'call', label: 'get_llm(temp, tier)', group: 'python', info: 'ÚNICA porta de entrada para modelos. Nenhum agente instancia provider direto.'},
+      {id: 'force', label: 'RPG_FORCE_MOCK=1?', group: 'neutral', info: 'Usado pela suíte inteira (tests/conftest.py). Retorna MockLLM mesmo com chave.'},
+      {id: 'legacy', label: 'LLM_PROVIDER=x?', group: 'neutral', info: 'Força TODOS os tiers a um provider único (ex.: só Gemini, ou 100% local com Ollama).'},
+      {id: 'nokey', label: 'Nenhuma chave?', group: 'neutral', info: 'Zero-config: MockLLM (jogável sem rede). Com <code>RPG_NO_MOCK=1</code> vira FallbackLLM de erro.'},
+      {id: 'mock', label: 'MockLLM', group: 'llm', info: 'Devolve instâncias Pydantic válidas por nome de schema (RouterDecision, StoryUpdate...). Exerce caminhos de quest/beat. ATENÇÃO: esconde bugs de mapeamento de campo — validar com chave real.'},
+      {id: 'routed', label: 'RoutedLLM(ROUTES[tier])', group: 'llm', info: 'Acumula transformações (with_structured_output, bind_tools) e só instancia cada candidato no invoke. Injeta method="function_calling" para OpenAI-compat (Groq aceita qualquer schema) e include_raw=True para recuperar JSON.'},
+      {id: 'c1', label: 'Candidato 1\nDeepSeek v4 flash', group: 'llm', info: 'Primário em todos os tiers desde 2026-07-16. thinking desligado, timeout 12 s por padrão, max_retries=0.'},
+      {id: 'c2', label: 'Candidato 2\nGroq gpt-oss', group: 'llm', info: 'Fallback vivo grátis em todos os tiers (20b no CLASSIFY, 120b no FAST/SMART).'},
+      {id: 'cn', label: 'Demais candidatos\nMiniMax, Qwen, Claude, Gemini', group: 'llm', info: 'FAST: MiniMax → Qwen → Gemini flash. SMART: Anthropic Claude → Gemini pro. CLASSIFY: Gemini flash-lite.'},
+      {id: 'empty', label: 'AIMessage("")', group: 'neutral', info: 'Último recurso: NUNCA levanta. Por isso todo nó com structured output precisa do guard <code>isinstance(res, Modelo)</code> e de um caminho determinístico.'},
+    ],
+    edges: [
+      {from: 'call', to: 'force'}, {from: 'force', to: 'mock', label: 'sim'}, {from: 'force', to: 'legacy', label: 'não'},
+      {from: 'legacy', to: 'routed', label: 'sim (1 candidato)'}, {from: 'legacy', to: 'nokey', label: 'não'}, {from: 'nokey', to: 'mock', label: 'sim'}, {from: 'nokey', to: 'routed', label: 'não'},
+      {from: 'routed', to: 'c1'}, {from: 'c1', to: 'c2', label: 'falha transporte'}, {from: 'c2', to: 'cn', label: 'falha'}, {from: 'cn', to: 'empty', label: 'esgotou'},
+    ],
+  },
+
+  lore: {
+    title: 'Do texto de lore ao índice vetorial',
+    direction: 'LR', maxW: 200,
+    nodes: [
+      {id: 'src', label: 'lore_nova/*.txt\n11 arquivos', group: 'data', info: 'FONTE editável (~800 KB): npcs, creatures, timeline_completa, items, locations, races, factions, secrets, daily_life, faction_perspectives, rumors. Blocos [CATEGORIA] + [TAGS].'},
+      {id: 'ovr', label: 'codex_overrides.yaml', group: 'data', info: 'Curadoria que sobrevive a regenerações: aliases, tags_extra, visibility, related_entities, append_body. Ex.: o Verme Primordial virou hidden para não vazar.'},
+      {id: 'mig', label: 'migrate_lore_nova.py', group: 'python', info: 'Parser de blocos e da timeline (por era). Separa segredos de NPC em docs hidden paralelos. SOBRESCREVE data/codex/ (exceto arquivos curated: true) e aplica overrides.'},
+      {id: 'codex', label: 'data/codex/**.md\n699 docs', group: 'data', info: 'Frontmatter id/type/name/tags/visibility. 639 public, 41 hidden, 19 secret. Pastas: monsters 340, npcs 143, items 38, factions 29, secrets 19, timeline 14, rumors 13, locations 12, world_story 11, races 10.'},
+      {id: 'ent', label: 'graph/entities.json\n594 entidades', group: 'data', info: 'Gerado (+82 de entities_extra curado). edges.json (101 arestas curadas: located_in, operates_in, leads, enemy_of, controls, member_of, pact_with), components.json, world_rules.json.'},
+      {id: 'lint', label: 'content_validator\n(lint)', group: 'python', info: 'Frontmatter, ids, referências, aliases, visibilidade (impede segredo em doc público), encoding, overrides, Cartas (anti-reskin), bestiário, arte. Gate do reindex e da CI. Estado: 0 erros / 0 avisos.'},
+      {id: 'loader', label: 'codex_loader\nchunks 500/50', group: 'python', info: 'RecursiveCharacterTextSplitter (500 caracteres, overlap 50). Cada chunk herda id/type/tags/visibility.'},
+      {id: 'faiss', label: 'faiss_lore_index\n+ embeddings_meta', group: 'data', info: 'Índice global imutável durante o jogo, pinado ao provider de embedding que o gerou (ex.: Jina). ~2.239 chunks.'},
+      {id: 'rules', label: 'data/rules.txt →\nfaiss_rules_index', group: 'data', info: 'Regras indexadas separadamente (query_rag(index_name="rules")).'},
+    ],
+    edges: [
+      {from: 'src', to: 'mig'}, {from: 'ovr', to: 'mig'}, {from: 'mig', to: 'codex'}, {from: 'mig', to: 'ent'}, {from: 'codex', to: 'lint'}, {from: 'ent', to: 'lint'},
+      {from: 'lint', to: 'loader', label: 'sem erros'}, {from: 'loader', to: 'faiss'}, {from: 'lint', to: 'rules'},
+    ],
+  },
+
+  events: {
+    title: 'Event sourcing: a IA propõe, o Python valida e aplica',
+    direction: 'LR', maxW: 190,
+    nodes: [
+      {id: 'llm', label: 'StoryUpdate\nproposed_events', group: 'llm', info: 'A IA pode PROPOR: npc_killed, secret_revealed, location_control_changed, quest_completed, faction_relation_changed, reputation_changed, route_blocked, route_cleared. O schema não tem campo <code>source</code>, então ela não consegue forjar level_up, player_died ou unique_item_*.'},
+      {id: 'pre', label: 'prevalidate_event_batch', group: 'python', info: 'Pré-validação read-only no storyteller ANTES de mostrar a prosa. Política ATÔMICA: se uma proposta é inválida, todo o payload livre da resposta vai para quarentena e a narração é trocada por uma versão determinística.'},
+      {id: 'pend', label: 'pending_world_events', group: 'data', info: 'Fila de propostas aguardando o arquivista.'},
+      {id: 'proc', label: 'process_pending_events\n(no archivist)', group: 'python', info: 'Roda TODO turno, antes da cadência do arquivista. Único escritor do event_log e da world_projection. Rejeitadas vão para event_rejections (≤100).'},
+      {id: 'val', label: 'world_validators', group: 'python', info: 'Revalida schema; barra duplicata; validador por tipo: npc_killed exige NPC existente e vivo; secret_revealed exige aresta hidden/secret no grafo ainda não revelada; route_blocked exige conexão real.'},
+      {id: 'log', label: 'event_log\n(append-only)', group: 'data', info: 'GameEvent com uuid, turno, fonte. Fonte da verdade do que MUDOU no mundo.'},
+      {id: 'proj', label: 'world_projection', group: 'data', info: 'Estado derivado: entidades vivas/mortas, revealed_facts, disabled_edges + dynamic_edges (quem controla o quê), rotas bloqueadas, donos de itens únicos.'},
+      {id: 'rules', label: 'rule_engine\n(cascata depth<2)', group: 'python', info: '6 regras declarativas em world_rules.json, sem eval/exec. Ex.: líder de facção morre → estabilidade cai → controle dos locais muda → porto hostil bloqueia rotas. Profundidade máxima 2 (anti-loop).'},
+      {id: 'chron', label: 'Crônica\n(milestones)', group: 'data', info: 'Templates Python para eventos aplicados: "Comandante Thrace tombou por suas mãos."'},
+      {id: 'mem', label: 'Memória canônica\n(confirmed)', group: 'data', info: 'Cada evento novo vira fato canonical_event com confiança confirmed no FAISS da sessão.'},
+      {id: 'ctx', label: 'context_builder\n"ESTADO ATUAL VENCE"', group: 'python', info: 'Eventos e projeção entram no prompt com impacto alto; se contradizem o lore estático, o estado atual vence.'},
+    ],
+    edges: [
+      {from: 'llm', to: 'pre'}, {from: 'pre', to: 'pend', label: 'válidas'}, {from: 'pend', to: 'proc'}, {from: 'proc', to: 'val'}, {from: 'val', to: 'log', label: 'aceita'},
+      {from: 'log', to: 'proj', label: 'apply_event'}, {from: 'proj', to: 'rules'}, {from: 'rules', to: 'log', label: 'derivados', back: true}, {from: 'log', to: 'chron'}, {from: 'log', to: 'mem'}, {from: 'proj', to: 'ctx'},
+    ],
+  },
+
+  memory: {
+    title: 'As cinco camadas de memória e como um fato volta ao prompt',
+    direction: 'LR', maxW: 200,
+    nodes: [
+      {id: 'turn', label: 'Turno\n(fala, evento, conflito)', group: 'io', info: 'Fontes de fato: eventos aplicados, ConflictSummary, falas de NPC, observações, inferência livre do arquivista.'},
+      {id: 'prov', label: 'make_memory_fact\nproveniência → confiança', group: 'python', info: 'canonical_event → confirmed; player_observation e npc_claim → reported; inference e legacy_unverified → speculative. A confiança é DERIVADA; a IA não pode elevá-la.'},
+      {id: 'valid', label: 'validate_memory_fact', group: 'python', info: 'Fecha-falha: contradição com local/inventário/identidade de NPC, segredo não revelado, "derrubado ≠ morto", confirmed sem fonte aplicável.'},
+      {id: 'sum', label: '1. Resumo curto\nnarrative_summary ≤1200', group: 'data', info: 'Reescrito pelo arquivista; corta frases que contradizem mapa, inventário e aparência.'},
+      {id: 'ledger', label: '2. Ledger memory_facts\n≤500 no save', group: 'data', info: 'Durável, independe do FAISS. Retry via pending_memory_facts (≤100). Repetição nunca promove; só fonte mais forte promove.'},
+      {id: 'sess', label: '3. FAISS da sessão', group: 'data', info: 'data/saves_memory/{game_id}/ — cópia vetorial com metadados de proveniência.'},
+      {id: 'npcm', label: '4. FAISS por NPC', group: 'data', info: 'data/saves_memory/{game_id}/{npc_id}/ — o que este NPC viveu com o jogador. Retry em pending_npc_memory (≤50).'},
+      {id: 'ev', label: '5. event_log', group: 'data', info: 'Fonte da verdade do mundo; a memória só espelha.'},
+      {id: 'ctx', label: 'build_context_pack\n(orçamento 3500 tokens)', group: 'python', info: 'Lê resumo, 20 últimos fatos ativos (especulação com ≥20 turnos sai), sessão e NPC; rotula cada linha [CONFIRMADO | RELATO | ESPECULATIVO]. Revalida segredo.'},
+      {id: 'prompt', label: 'Prompt do narrador\n<MEMORIA_RECENTE>', group: 'llm', info: 'A IA recebe a memória rotulada: RELATO é "o que alguém disse", não verdade do mundo.'},
+    ],
+    edges: [
+      {from: 'turn', to: 'prov'}, {from: 'prov', to: 'valid'}, {from: 'valid', to: 'ledger'}, {from: 'valid', to: 'sess'}, {from: 'valid', to: 'npcm'}, {from: 'turn', to: 'sum'}, {from: 'turn', to: 'ev'},
+      {from: 'sum', to: 'ctx'}, {from: 'ledger', to: 'ctx'}, {from: 'sess', to: 'ctx'}, {from: 'npcm', to: 'ctx'}, {from: 'ev', to: 'ctx'}, {from: 'ctx', to: 'prompt'},
+    ],
+  },
+
+  combat: {
+    title: 'Uma rodada de combate v4 (conflict_orchestrator.run_round)',
+    direction: 'TB', maxW: 230, gapCross: 20, gapMain: 40,
+    nodes: [
+      {id: 'node', label: 'combat_node', group: 'python', info: 'Prepara a cena 1x (spawn, aliados, orçamento de encontro, origem), lê a declaração do jogador (UI ou parse CLASSIFY), trata fuga e chama run_round.'},
+      {id: 'init', label: 'Iniciativa por LADO\n2d10 + maior Agilidade', group: 'python', info: 'Heróis contra inimigos. Surpresa faz o lado iniciador agir primeiro sem disputa. Dentro do lado: Agilidade decrescente. Early-game: herói nível ≤2 com vida cheia ganha o primeiro round.'},
+      {id: 'tick', label: 'Condições / DoT', group: 'python', info: 'Sangramento, veneno etc. passam pelo MESMO pipeline de dano, sem resistência e sem armadura.'},
+      {id: 'ai', label: 'IA tática inimiga\npick_action', group: 'python', info: 'Lista ORDENADA de prioridades por gatilho (sozinho, muito_ferido, cercado, alvo_vulneravel...). Ações fechadas: attack, protect, stabilize, flank, control, support, flee, surrender. Zero LLM.'},
+      {id: 'aoo', label: 'Ataque de Oportunidade', group: 'python', info: 'Universal e fora do limite de reações: sair de Engajamento sem Desengajar provoca ataque básico de cada inimigo engajado.'},
+      {id: 'react', label: 'Janela de Reação', group: 'python', info: 'Uma reação COMUM por personagem por cadeia; reação pode responder reação. Ordem: alvo → aliados do alvo → aliados do ator → Agilidade.'},
+      {id: 'turn', label: 'resolve_turn\nPré · Ação · Pós', group: 'python', info: 'Orçamento: 1 Pré, 1 Ação, 1 Pós. Tipos: attack, card, item, maneuver, object, move, pass.'},
+      {id: 'atk', label: 'resolve_attack\n2d10 + Virtude vs Esquiva', group: 'python', info: 'Vantagem: 3d10 mantém os 2 maiores; Desvantagem: os 2 menores; não acumulam. Dupla 1–9 = Crítico ×2; dupla 10 = Supercrítico ×3; crítico sempre acerta.'},
+      {id: 'dmg', label: 'Dano → Ferimentos\n(ordem fixa R8)', group: 'python', info: 'Crítico → imunidade/resistência/vulnerabilidade → Proteção → Integridade → ígneo → Vitalidade e excedente → Ferimento por faixa de Gravidade (Corpo) → efeitos secundários.'},
+      {id: 'last', label: 'Última Ação', group: 'python', info: 'Quem enche o último espaço crítico age UMA vez fora de ordem, com Vantagem extrema, ignorando custos.'},
+      {id: 'term', label: 'Estado Terminal\nestabilização', group: 'python', info: 'Médico com kit ou poção → auto metade da Vitalidade. Aliado: 2d10 + Mente vs CD 12 (depois 15). Duas falhas = morte. Sobreviver = Cicatriz obrigatória.'},
+      {id: 'end', label: 'Fim de rodada\nEntropia por kill, Recidiva, Abismo', group: 'python', info: 'Gatilhos de classe de fim de rodada; eventos do Abismo preparados (se houver); checa fim do combate.'},
+    ],
+    edges: [
+      {from: 'node', to: 'init'}, {from: 'init', to: 'tick'}, {from: 'tick', to: 'ai'}, {from: 'ai', to: 'aoo'}, {from: 'aoo', to: 'react'}, {from: 'react', to: 'turn'},
+      {from: 'turn', to: 'atk'}, {from: 'atk', to: 'dmg'}, {from: 'dmg', to: 'last'}, {from: 'last', to: 'term'}, {from: 'term', to: 'end'},
+    ],
+  },
+
+  death: {
+    title: 'Morte rica e retorno ao checkpoint',
+    direction: 'LR', maxW: 170, gapMain: 50,
+    nodes: [
+      {id: 'active', label: 'Ativo', group: 'neutral', info: 'Vitalidade 0 NÃO é morte: o ator segue lutando até encher os espaços de Ferimento.'},
+      {id: 'crit', label: 'Último espaço\ncrítico cheio', group: 'python', info: 'Gatilho do fluxo completo (jogador, elite, chefe, nomeado, companheiro). Lacaio cai com qualquer Ferimento; padrão cai ao encher o crítico.'},
+      {id: 'last', label: 'Última Ação', group: 'python', info: 'Ataque fora de ordem com Vantagem extrema; pode declarar Ruptura (+1 Carga).'},
+      {id: 'term', label: 'Estado Terminal', group: 'python', info: 'Sem aliado capaz: morte imediata. Com aliado: até 2 tentativas de estabilização.'},
+      {id: 'scar', label: 'Sobrevive\n+ Cicatriz', group: 'llm', info: 'Cicatriz gerada pela IA (SMART) com guard e fallback determinístico: 1 consequência negativa + 1 habilidade ligada ao trauma. O combate continua.'},
+      {id: 'pend', label: 'death_pending', group: 'data', info: 'Só a morte REAL chega aqui. Grafo e API recusam novos turnos (409). Evento player_downed.'},
+      {id: 'modal', label: 'DeathModal', group: 'io', info: 'Mostra última ação, estabilização, matador, turno de retorno e o que se mantém/reverte. Botões: Continuar do checkpoint | Aceitar a morte.'},
+      {id: 'restore', label: 'Continuar\nrestore checkpoint', group: 'python', info: 'Carrega o checkpoint (a cada 10 turnos ou ao entrar em zona segura; ou o inicial), restaura a memória FAISS daquele ponto, timeline_epoch + 1, death_history ganha registro. Mundo volta; contagem de ações da sessão não.'},
+      {id: 'memorial', label: 'Aceitar\nmemorial', group: 'data', info: 'game_over=True, evento player_died, milestone na crônica. Save vira memorial somente-leitura.'},
+    ],
+    edges: [
+      {from: 'active', to: 'crit'}, {from: 'crit', to: 'last'}, {from: 'last', to: 'term'}, {from: 'term', to: 'scar', label: 'estabilizou'}, {from: 'term', to: 'pend', label: 'morreu'},
+      {from: 'pend', to: 'modal'}, {from: 'modal', to: 'restore'}, {from: 'modal', to: 'memorial'}, {from: 'scar', to: 'active', back: true, label: 'segue lutando'}, {from: 'restore', to: 'active', back: true, label: 'nova época'},
+    ],
+  },
+
+  chase: {
+    title: 'Trilha de fuga (services/chase.py)',
+    direction: 'LR', maxW: 150,
+    nodes: [
+      {id: 'caught', label: 'Alcançado', group: 'neutral', info: 'Recuar abaixo de Pressionado: o combate retorna.'},
+      {id: 'p', label: 'Pressionado', group: 'python', info: 'Posição inicial se a fuga começa colado (distância "próximo").'},
+      {id: 'a', label: 'Afastado', group: 'python', info: 'Início se estava "distante".'},
+      {id: 'q', label: 'Quase livre', group: 'python', info: 'Início se estava "separado".'},
+      {id: 'e', label: 'Escapou', group: 'io', info: 'Fuga concluída: se havia destino de viagem válido, o mundo move no mesmo turno e a cena de NPCs é limpa. Se nenhum inimigo tem política "persegue", a trilha já nasce aqui.'},
+    ],
+    edges: [{from: 'p', to: 'a', label: 'sucesso'}, {from: 'a', to: 'q', label: 'sucesso'}, {from: 'q', to: 'e', label: 'sucesso'}, {from: 'caught', to: 'p', label: 'falha recua', dashed: true}],
+  },
+
+  screens: {
+    title: 'Máquina de telas do frontend (App.tsx)',
+    direction: 'LR', maxW: 170,
+    nodes: [
+      {id: 'boot', label: 'Bootstrap', group: 'io', info: 'GET /auth/config e GET /game/saves decidem a próxima tela.'},
+      {id: 'auth', label: 'Login / Signup', group: 'io', info: 'Só perfis de banco. Cookies HttpOnly + CSRF. Expiração → evento rpg:auth-expired volta aqui.'},
+      {id: 'saves', label: 'Continuar jornada', group: 'io', info: 'Lista de saves com selos ⚰ memorial e ⚔ laboratório, excluir com confirmação.'},
+      {id: 'create', label: 'Wizard 5 passos', group: 'io', info: 'O Mundo → Origem (6 raças) → Vocação (5 Posturas) → Região (12) → Identidade (nome, história, aparência, brief de arte opcional).'},
+      {id: 'pro', label: 'Prólogo', group: 'llm', info: 'POST /game/prologue: arco pessoal, NPCs semente, cena de abertura. "Refinar" ou "Começar a jornada". Nunca dá 500 (fallback template).'},
+      {id: 'sim', label: 'Laboratório\nde combate', group: 'io', info: 'Classe, nível (1/3/5/10), inimigo e quantidade. Mesmo motor de produção, sem LLM de campanha, sem XP/loot/checkpoint.'},
+      {id: 'play', label: 'PlayScreen', group: 'io', info: 'Log narrativo com typewriter, arte do local, HUD de 8 abas (ficha, combate, personagens, mapa, facções, missões, crônica, codex), barra de ação.'},
+      {id: 'combat', label: 'Dock tático', group: 'io', info: 'CardHand (custo em Entropia, frequência, Ruptura), ReactionPrompt, WoundTrack, SceneZones, chips de manobra.'},
+      {id: 'lvl', label: 'LevelUpModal', group: 'io', info: 'Subclasse no nível 3 (irreversível), Carta ou evolução A/B, +1 Virtude, Maestria.'},
+      {id: 'death', label: 'DeathModal', group: 'io', info: 'Continuar do checkpoint ou aceitar a morte.'},
+    ],
+    edges: [
+      {from: 'boot', to: 'auth', label: 'precisa login'}, {from: 'boot', to: 'saves', label: 'há saves'}, {from: 'boot', to: 'create', label: 'sem saves'}, {from: 'auth', to: 'saves'},
+      {from: 'saves', to: 'create', label: 'nova'}, {from: 'saves', to: 'play', label: 'continuar'}, {from: 'create', to: 'pro'}, {from: 'pro', to: 'play', label: 'começar'}, {from: 'create', to: 'sim', label: 'simular'},
+      {from: 'sim', to: 'combat'}, {from: 'play', to: 'combat', label: 'luta'}, {from: 'play', to: 'lvl'}, {from: 'play', to: 'death', label: 'tombou'},
+    ],
+  },
+
+  outbox: {
+    title: 'Perfil durável: memória via outbox e worker',
+    direction: 'LR', maxW: 190,
+    nodes: [
+      {id: 'claim', label: 'claim\n(transação curta)', group: 'infra', info: 'Trava game → operation (ordem fixa contra deadlock). Single-flight por jogo. Lease de 180 s.'},
+      {id: 'graph', label: 'Grafo + LLM\nFORA de transação', group: 'llm', info: 'Nenhuma transação aberta durante chamada de LLM. Heartbeat renova o lease a cada 45 s.'},
+      {id: 'stage', label: 'TurnEffects.stage\n(só acumula)', group: 'python', info: 'O arquivista/NPC registram intenções de memória num ContextVar por request.'},
+      {id: 'commit', label: 'commit_game\n(2ª transação)', group: 'infra', info: 'Fencing (lease_token) + versão otimista. Grava jogo, eventos, checkpoint, turns, recibo e faz flush do outbox — tudo ou nada.'},
+      {id: 'doc', label: 'memory_documents\nstatus pending', group: 'data', info: 'Fato bruto durável com proveniência, epoch e commit_version. Só existe se o turno commitou.'},
+      {id: 'job', label: 'job embed_memory\n(mesma transação)', group: 'data', info: 'Dedupe por document_id; até 5 tentativas; backoff exponencial; dead-letter.'},
+      {id: 'worker', label: 'JobWorker\nSKIP LOCKED', group: 'infra', info: 'Lease do job + fence: worker que perdeu o lease não publica efeito derivado.'},
+      {id: 'ready', label: 'embedding ready\nvector(1024)', group: 'data', info: 'Busca híbrida: cosseno HNSW + full-text tsvector; se o embedder cai, só lexical.'},
+    ],
+    edges: [{from: 'claim', to: 'graph'}, {from: 'graph', to: 'stage'}, {from: 'stage', to: 'commit'}, {from: 'commit', to: 'doc'}, {from: 'commit', to: 'job'}, {from: 'job', to: 'worker'}, {from: 'worker', to: 'ready'}],
+  },
+
+  quality: {
+    title: 'Camadas de garantia — da mais barata à mais cara',
+    direction: 'LR', maxW: 190,
+    nodes: [
+      {id: 'pytest', label: 'pytest offline\n~1.900 testes', group: 'python', info: 'MockLLM forçado, sem rede, saves isolados em tmp. Gate de toda tarefa (/qa durante, /wrap-up no fim).'},
+      {id: 'lint', label: 'Lint de conteúdo\nRuff, build Vite', group: 'python', info: 'validate_content.py (0 erros/0 avisos), Ruff, tsc + vite build.'},
+      {id: 'play', label: 'Playtest agêntico\n14 perfis + invariantes', group: 'python', info: 'Campanhas longas sobre o MESMO grafo; invariantes por turno; telemetria JSONL; modo real opt-in com tetos e fail-closed.'},
+      {id: 'evals', label: 'Evals determinísticos\ndatasets travados', group: 'data', info: 'Régua protegida por SHA-256; 6 domínios; holdout privado; LLM-judge nunca bloqueia.'},
+      {id: 'contract', label: 'Contratos LLM reais\n-m llm_contract', group: 'llm', info: '9 contratos de shape contra provider real; suíte llm_playtest com 4 perfis vitais × 30 turnos.'},
+      {id: 'matrix', label: 'Matriz A/B\n10 × 200 turnos', group: 'llm', info: 'A mede baseline → specs → fixes → B repete pares/seeds/tetos. A: 12 violações error; B: 0.'},
+    ],
+    edges: [{from: 'pytest', to: 'lint'}, {from: 'lint', to: 'play'}, {from: 'play', to: 'evals'}, {from: 'evals', to: 'contract'}, {from: 'contract', to: 'matrix'}],
+  },
+
+  specflow: {
+    title: 'Ciclo spec-driven alimentado por playtests',
+    direction: 'LR', maxW: 180,
+    nodes: [
+      {id: 'idea', label: 'Ideia / achado', group: 'io', info: 'Pedido de produto ou defeito encontrado num playtest longo.'},
+      {id: 'draft', label: 'Spec draft\nspecs/SPEC-xxx', group: 'data', info: 'Copiada do TEMPLATE.md, com ID estável, requisitos, plano e critérios de aceite.'},
+      {id: 'appr', label: 'approved', group: 'io', info: 'O usuário revisa e aprova. Nada é implementado direto do ROADMAP.'},
+      {id: 'impl', label: 'Implementação\ntestes primeiro', group: 'python', info: 'Desvio necessário atualiza a spec no mesmo commit.'},
+      {id: 'gate', label: 'pytest verde\n+ smoke real', group: 'python', info: 'Smoke real é obrigatório porque o MockLLM esconde bugs de mapeamento.'},
+      {id: 'done', label: 'done\nROADMAP + ESTADO_ATUAL', group: 'data', info: 'ROADMAP é resumo + link; o detalhe vive só na spec.'},
+      {id: 'pt', label: 'Playtest longo', group: 'llm', info: 'Cada playtest gera specs; cada spec gera invariantes/testes curtos; a matriz B valida.'},
+    ],
+    edges: [{from: 'idea', to: 'draft'}, {from: 'draft', to: 'appr'}, {from: 'appr', to: 'impl'}, {from: 'impl', to: 'gate'}, {from: 'gate', to: 'done'}, {from: 'done', to: 'pt'}, {from: 'pt', to: 'idea', back: true, label: 'novos achados'}],
+  },
+
+  playloop: {
+    title: 'Um turno do harness de playtest',
+    direction: 'LR', maxW: 180,
+    nodes: [
+      {id: 'prof', label: 'Perfil.decide()\nProfileDecision', group: 'python', info: 'Decisão única e atômica: o texto e a mecânica (Carta, alvo, manobra) saem da mesma decisão.'},
+      {id: 'graph', label: 'Mesmo grafo\napp.invoke / stream', group: 'llm', info: 'Sem lógica paralela: o que é testado é o produto.'},
+      {id: 'cap', label: 'Captura\nrota real, latência', group: 'python', info: 'A rota vem do dm_router via streaming (não do next final). Latência por nó: count, média, p50, p95, max.'},
+      {id: 'inv', label: 'Invariantes\nerror | warning', group: 'python', info: 'Só error reprova. Dezenas de checks: vitais, economia, memória, segredo, combate zumbi, morte falsa, latência...'},
+      {id: 'jsonl', label: 'JSONL + summary', group: 'data', info: 'playtest_runs/<run_id>/: uma linha por turno; summary por campanha; manifesto v3 com owner + heartbeat.'},
+      {id: 'rep', label: 'report / transcript', group: 'io', info: 'Markdown agregado (per-perfil, violações, custo, Classes, Mortes) e transcrito ação → narração para julgar prompt à mão.'},
+    ],
+    edges: [{from: 'prof', to: 'graph'}, {from: 'graph', to: 'cap'}, {from: 'cap', to: 'inv'}, {from: 'inv', to: 'jsonl'}, {from: 'jsonl', to: 'rep'}],
+  },
+
+  context: {
+    title: 'Montagem do contexto (context_sources + context_builder)',
+    direction: 'LR', maxW: 190,
+    nodes: [
+      {id: 'q', label: 'Consulta do turno', group: 'io', info: 'Ex.: "Velha Magda Anel de Lama Quem é você de verdade?"'},
+      {id: 'emb', label: 'embed_context_query\n1 vetor só', group: 'python', info: 'Um embedding compartilhado se todos os índices estão pinados no mesmo provider/dimensão; semáforo de concorrência 2.'},
+      {id: 'lore', label: 'Leitor lore\n(public)', group: 'data', info: 'max_visibility="public". k=2 de fetch_k=6.'},
+      {id: 'sess', label: 'Leitor sessão', group: 'data', info: 'Memória vetorial da campanha.'},
+      {id: 'npc', label: 'Leitor NPC', group: 'data', info: 'Só quando há npc_id.'},
+      {id: 'dyn', label: 'collect_dynamic_facts', group: 'python', info: 'Controlador do local, últimos 100 eventos, fatos revelados, arestas efetivas (hidden só para o planejador), entidades notáveis.'},
+      {id: 'score', label: 'score_fact', group: 'python', info: '0,35·relevância + 0,25·mesmo local + 0,20·entidades em cena + 0,10·impacto + 0,10·recência.'},
+      {id: 'budget', label: 'Orçamento por seção\n3500 tokens', group: 'python', info: 'current_state 25% · active_location 20% · relations 15% · entities 15% · lore 15% · session_memory 10%. Sobra rola; teto global 105%; tokens = chars/4.'},
+      {id: 'pack', label: 'ContextPack', group: 'data', info: 'world_state_block, lore_block, memory_block, evidence_ids, discarded_evidence.'},
+    ],
+    edges: [{from: 'q', to: 'emb'}, {from: 'emb', to: 'lore'}, {from: 'emb', to: 'sess'}, {from: 'emb', to: 'npc'}, {from: 'q', to: 'dyn'}, {from: 'lore', to: 'score'}, {from: 'sess', to: 'score'}, {from: 'npc', to: 'score'}, {from: 'dyn', to: 'score'}, {from: 'score', to: 'budget'}, {from: 'budget', to: 'pack'}],
+  },
+
+  lifecycle: {
+    title: 'Fases do ator (services/actor_lifecycle.py)',
+    direction: 'LR', maxW: 150,
+    nodes: [
+      {id: 'a', label: 'ACTIVE', group: 'io', info: 'Pode tudo.'},
+      {id: 'u', label: 'UNCONSCIOUS', group: 'python', info: 'Só "descansar / aguardar socorro / pedir ajuda" passa (regex de recuperação, fullmatch sem acentos).'},
+      {id: 'i', label: 'INCAPACITATED', group: 'python', info: 'Mesma regra de recuperação.'},
+      {id: 'l', label: 'LAST_STAND', group: 'python', info: 'Bloqueia qualquer ação fora do combate.'},
+      {id: 't', label: 'TERMINAL', group: 'python', info: 'Idem; não pode virar checkpoint.'},
+      {id: 'dp', label: 'DEATH_PENDING', group: 'data', info: 'Tela de morte aberta.'},
+      {id: 'd', label: 'DEAD', group: 'neutral', info: 'Memorial.'},
+    ],
+    edges: [{from: 'a', to: 'u'}, {from: 'a', to: 'i'}, {from: 'a', to: 'l'}, {from: 'l', to: 't'}, {from: 't', to: 'dp'}, {from: 'dp', to: 'd'}, {from: 'u', to: 'a', back: true, label: 'descanso'}],
+  },
+};
+/* ===== Passo-a-passo guiados (destacam nós no diagrama associado) ===== */
+const STEPPERS = {
+  travel: {
+    graph: 'turn',
+    steps: [
+      {t: 'O jogador escreve', hi: [], h: `Herói de nível 2 em Nova Arcádia digita <b>"Vou para a Floresta Cinzenta"</b>. O cliente gera um <code>action_id</code> (UUID), guarda a ação pendente no <code>localStorage</code> e chama <code>POST /game/action/stream</code>.`},
+      {t: 'Borda da API', hi: [], h: `Middlewares de sessão, correlação e rate-limit. <code>_execute_action</code> pega o lock do jogo, carrega o save (migrando o schema se for antigo), confere se esse <code>action_id</code> já foi processado (se sim, devolve a resposta sem rodar nada) e barra memorial/arquivado/queda pendente com 409. Acrescenta a fala como <code>HumanMessage</code> (mantém as últimas 20).`},
+      {t: 'START → action_guard', hi: ['START', 'guard'], path: [['START', 'guard']], h: `O gate do START vê que o herói não está morto nem arquivado. O <b>action_guard</b> classifica o jogador como <i>active</i> e grava o <code>turn_baseline</code>: ouro, XP, inventário e quests <b>antes</b> do turno. É assim que o recibo será calculado depois — por diferença, não por texto da IA.`},
+      {t: 'turn_prepare', hi: ['prep'], path: [['guard', 'prep']], h: `<code>turn_count</code> 17 → 18 e <code>session_action_count</code> + 1. O contador avança exatamente uma vez por turno.`},
+      {t: 'campaign_manager', hi: ['cm'], path: [['prep', 'cm']], h: `Precisa replanejar? Faz 5 turnos desde o último plano e ainda há beats — devolve o plano existente <b>sem chamar a IA</b>. (O replanejamento por troca de região acontece no turno seguinte, marcado pelo próprio storyteller.)`},
+      {t: 'dm_router — atalho sem IA', hi: ['router'], path: [['cm', 'router']], h: `A frase casa a regex de viagem explícita ("vou para") → rota <b>STORY</b> sem gastar a chamada CLASSIFY. O router devolve o payload completo zerando transitórios antigos (alvo de combate, NPC ativo, fonte de loot).`},
+      {t: 'dispatch → storyteller', hi: ['dispatch', 'story'], path: [['router', 'dispatch'], ['dispatch', 'story']], h: `Antes da IA, Python faz o trabalho pesado: resolve o destino no mapa conectado, calcula o custo em períodos <b>antes</b> de mover, aplica a viagem (fog of war, relógio, clima), avança facções, sorteia achado de primeira visita e limpa a cena de NPCs ("ninguém teleporta junto"). Sorteio de encontro: nenhum combate; o simulador de mundo gera um rumor.`},
+      {t: 'storyteller — a IA narra e propõe', hi: ['story'], h: `Uma chamada FAST com <code>StoryUpdate</code>: narrativa + propostas (NPC "Guarda-florestal Ilse", eventos, quests, itens). O motor valida tudo: itens só do catálogo, ouro narrado reconciliado com o saldo real, NPC novo gerado e colocado em cena. <code>archive_due=True</code> porque houve viagem.`},
+      {t: 'archivist', hi: ['arch'], path: [['story', 'arch']], h: `Processa eventos pendentes (nenhum). Como <code>archive_due</code>, chama SMART <code>MemoryUpdate</code>: novo resumo (≤1200 chars, ancorado no mapa e no inventário), fatos livres como <i>inference / speculative</i>, gravados no FAISS da sessão com metadados.`},
+      {t: 'turn_finalizer', hi: ['fin', 'END'], path: [['arch', 'fin'], ['fin', 'END']], h: `Revalida a prosa contra a evidência e calcula o recibo: se a chegada achou um baú, aparece <b>[RESULTADO] +N ouro</b>, derivado do delta real.`},
+      {t: 'De volta à API', hi: [], h: `Arte (cue de primeira aparição do NPC), marca o <code>action_id</code> como processado, decide checkpoint (a cada 10 turnos ou ao entrar em zona segura), grava histórico estável, salva de forma atômica (temp + fsync + replace) e escreve uma linha JSON <code>rpg.turn</code> com rota, latência e custo. O SSE envia <code>visual</code>, a narração fatiada em pedaços de 80 caracteres e o <code>state</code>.`},
+    ],
+  },
+  ambush: {
+    graph: 'turn',
+    steps: [
+      {t: 'Mesmo comando de viagem', hi: ['story'], path: [['dispatch', 'story']], h: `Agora o sorteio de encontro (<code>check_encounter</code>) dispara. Teste de percepção (d20 + Mente + clima/luz vs CD 8 + 2×perigo) decide quem foi surpreendido; o tipo sorteado é <b>combat</b>.`},
+      {t: 'Sem narrador exploratório', hi: ['story', 'combat'], path: [['story', 'combat']], h: `O storyteller retorna IMEDIATAMENTE com <code>SystemMessage("COMBAT START ...")</code>, alvo, origem causal (<code>travel_encounter</code>) e <code>next="combat_agent"</code>. Nenhuma chamada FAST é gasta narrando a viagem.`},
+      {t: 'combat_agent prepara e resolve', hi: ['combat'], h: `Spawn de inimigos (CLASSIFY + bestiário), aliados de cena, orçamento de encontro, cena com zonas em Python, e já resolve a primeira rodada. Herói nível ≤2 com vida cheia ganha a iniciativa da 1ª rodada mesmo surpreendido.`},
+      {t: 'Um único response', hi: ['arch', 'fin'], path: [['combat', 'arch'], ['arch', 'fin']], h: `O jogador recebe no mesmo turno a chegada e o primeiro round. Daqui em diante, todo input vira COMBAT pelo gate do router; viajar vira tentativa de fuga.`},
+    ],
+  },
+  npcnone: {
+    graph: 'turn',
+    steps: [
+      {t: 'Pedido de conversa sem ninguém', hi: ['router'], h: `"Pergunto ao taverneiro sobre trabalho" — mas não há NPC em cena. O router classifica NPC.`},
+      {t: 'npc_actor delega', hi: ['npc', 'story'], path: [['dispatch', 'npc'], ['npc', 'story']], h: `Sem alvo e sem candidato: <code>{next: "storyteller", npc_fallback_hint}</code>. A resposta seca "Ninguém responde." foi aposentada.`},
+      {t: 'O narrador cria a ausência + gancho', hi: ['story'], h: `<code>build_social_direction</code> escolhe a conexão adjacente de <b>menor perigo</b> e sugere um destino concreto; o objetivo público nunca copia beats privados.`},
+    ],
+  },
+  cascade: {
+    graph: 'events',
+    steps: [
+      {t: 'A IA propõe uma morte', hi: ['llm'], h: `Na narração, o storyteller propõe <code>npc_killed</code> para o líder de facção Valerius.`},
+      {t: 'Pré-validação', hi: ['pre', 'pend'], path: [['llm', 'pre'], ['pre', 'pend']], h: `Válida → entra em <code>pending_world_events</code>. Se fosse inválida, TODO o payload livre iria para quarentena e a prosa seria substituída.`},
+      {t: 'Validação canônica no arquivista', hi: ['proc', 'val', 'log'], path: [['pend', 'proc'], ['proc', 'val'], ['val', 'log']], h: `O alvo existe em <code>entities.json</code>, é NPC e está vivo → <code>GameEvent</code> com uuid e turno.`},
+      {t: 'Projeção', hi: ['proj'], path: [['log', 'proj']], h: `<code>apply_event</code> marca <code>alive=False</code>.`},
+      {t: 'Cascata de regras', hi: ['rules', 'log'], path: [['proj', 'rules'], ['rules', 'log']], h: `<code>rule_faction_leader_death</code>: Valerius tem o componente <code>power_vacuum_trigger</code> → Legião de Ferro perde 50 de estabilidade → emite <code>location_control_changed</code> (Mão Sombria ocupa Nova Arcádia). Em profundidade 1: <code>rule_control_change_ripple</code> (+5 ao novo controlador) e, se for porto, bloqueio de rotas. Profundidade 2 para.`},
+      {t: 'Crônica, memória e contexto', hi: ['chron', 'mem', 'ctx'], path: [['log', 'chron'], ['log', 'mem'], ['proj', 'ctx']], h: `Milestone na crônica; fato <i>canonical_event / confirmed</i> no FAISS; e nos próximos turnos o bloco de estado mostra a mudança de controle com impacto máximo — "o ESTADO ATUAL vence o lore".`},
+    ],
+  },
+  magda: {
+    graph: 'memory',
+    steps: [
+      {t: 'Turno 12: conversa', hi: ['turn'], h: `O jogador pergunta à Velha Magda "Quem é você de verdade?". O npc_actor monta contexto com a memória vetorial DESTA NPC.`},
+      {t: 'Fato observável, não a opinião da IA', hi: ['prov'], path: [['turn', 'prov']], h: `Em vez do <code>memory_update</code> livre, grava: <i>"Turno 12: o jogador disse ...; Velha Magda respondeu ..."</i> com <code>provenance="npc_claim"</code> → <b>reported</b>.`},
+      {t: 'Validação e escrita física', hi: ['valid', 'npcm', 'ledger'], path: [['prov', 'valid'], ['valid', 'npcm'], ['valid', 'ledger']], h: `<code>add_npc_memory</code> no índice pinado ao provider. Só se o write físico der certo o mesmo registro é espelhado no ledger <code>memory_facts</code>. Falhou → fila <code>pending_npc_memory</code>. A política <code>canonical_only</code> impede o arquivista de transformar a conversa em fato global.`},
+      {t: 'Turno 14: volta ao prompt', hi: ['ctx', 'prompt'], path: [['npcm', 'ctx'], ['ledger', 'ctx'], ['ctx', 'prompt']], h: `Novo pedido à Magda: um vetor, leitura paralela de lore/sessão/NPC, e a linha volta rotulada <code>[RELATO | npc_claim | fonte npc:velha_magda | turno 12]</code>. Se contivesse "pacto com Daruun" sem o segredo revelado, seria descartada.`},
+    ],
+  },
+  dying: {
+    graph: 'death',
+    steps: [
+      {t: 'Vitalidade 0 não é morte', hi: ['active'], h: `O herói chega a 0 de Vitalidade mas continua: o excedente de dano vira Ferimento leve, grave ou crítico conforme o Corpo.`},
+      {t: 'O último crítico', hi: ['crit', 'last'], path: [['active', 'crit'], ['crit', 'last']], h: `Encheu o último espaço crítico: <b>Última Ação</b> fora de ordem, com Vantagem extrema, ignorando custos.`},
+      {t: 'Estado Terminal', hi: ['term'], path: [['last', 'term']], h: `Sem aliado capaz: morte imediata. Com aliado: 2d10 + Mente do ajudante vs CD 12, depois 15. Kit/Médico → 3d10 mantém 2.`},
+      {t: 'Se sobrevive', hi: ['scar'], path: [['term', 'scar']], h: `Reanima (metade da Vitalidade com kit, 1 se improvisado) e recebe Cicatriz obrigatória. O combate segue.`},
+      {t: 'Se morre', hi: ['pend', 'modal'], path: [['term', 'pend'], ['pend', 'modal']], h: `<code>death_pending=True</code>, evento <code>player_downed</code>, sem loot. Grafo e API recusam novos turnos até a escolha.`},
+      {t: 'Continuar', hi: ['restore'], path: [['modal', 'restore']], h: `Restaura o checkpoint e a memória FAISS daquele ponto; <code>timeline_epoch</code> sobe; o histórico de mortes permanece. No Postgres, <code>restore_effects</code> descarta memória/jobs/arte da linha do tempo abandonada.`},
+      {t: 'Ou aceitar', hi: ['memorial'], path: [['modal', 'memorial']], h: `Memorial: <code>game_over</code>, evento <code>player_died</code>, milestone. Sem permadeath imposto — o fim é uma escolha.`},
+    ],
+  },
+};
+
+/* ===== Quiz ===== */
+const QUIZ = {
+  q1: {q: 'Quem decide se um ataque acerta?', o: ['O modelo de linguagem, lendo a cena', 'Código Python: 2d10 + Virtude contra a Esquiva', 'Um sorteio feito pelo frontend'], a: 1, e: 'Princípio central: a IA identifica a intenção e narra; dados, dano, Ferimentos, economia e XP são resolvidos em código determinístico.'},
+  q2: {q: 'Por que todo nó com structured output precisa de um guard isinstance?', o: ['Porque o Pydantic é lento', 'Porque, esgotados os provedores, o RoutedLLM devolve AIMessage em vez do modelo', 'Porque o MockLLM devolve strings'], a: 1, e: 'O RoutedLLM nunca levanta exceção: no último recurso devolve AIMessage(""). Acessar resultado.campo sem checar o tipo quebraria o turno.'},
+  q3: {q: 'Um turno de exploração em cidade sem evento costuma custar quantas chamadas de IA?', o: ['Nenhuma', 'Cerca de duas (router CLASSIFY + narrador FAST)', 'Sete, uma por agente'], a: 1, e: 'O campaign_manager só replaneja a cada ~15 turnos e o arquivista tem cadência; viagem/descanso nem chamam o router.'},
+  q4: {q: 'Qual a confiança de um fato vindo da fala de um NPC?', o: ['confirmed', 'reported', 'speculative'], a: 1, e: 'npc_claim → reported. Só fonte mecânica aplicável (canonical_event) é confirmed; inferência livre é speculative.'},
+  q5: {q: 'O que acontece se uma única proposta de evento da IA for inválida?', o: ['Só ela é descartada', 'Todo o payload livre daquela resposta vai para quarentena e a prosa é trocada', 'O turno inteiro falha com erro 500'], a: 1, e: 'Política atômica: a prosa que afirmava a mudança não pode ir ao jogador se o motor vai recusar a mudança.'},
+  q6: {q: 'No perfil Postgres, quando um fato de memória passa a existir?', o: ['Assim que o arquivista o gera', 'Só se o turno commitou — ele é escrito no flush do outbox dentro da transação', 'Quando o worker termina o embedding'], a: 1, e: 'TurnEffects acumula intenções; commit_game faz flush na mesma transação. O vetor vem depois (job embed_memory), mas o fato bruto já é canônico.'},
+  q7: {q: 'Por que a matriz A/B usa as mesmas seeds, níveis e tetos?', o: ['Para economizar dinheiro', 'Para que a diferença entre A e B seja causada pelas correções e não pelo acaso', 'Porque o DeepSeek exige'], a: 1, e: 'Protocolo pareado: A mede, specs corrigem, B repete exatamente — 12 violações error em A, zero em B.'},
+  q8: {q: 'O que o benchmark A/B do Project Index concluiu?', o: ['O índice reduziu custo em 8/8', 'Mesma precisão, mas mais chamadas, bytes e tempo — índice saiu do fluxo padrão', 'O índice piorou a precisão'], a: 1, e: 'Localização empatou 16/16; com índice: 0/8 vitórias de custo, medianas piores. Fica só para consultas explícitas.'},
+};
+/* ===== Widgets interativos com as fórmulas reais do projeto ===== */
+const $ = (s, r = document) => r.querySelector(s);
+const d10 = () => 1 + Math.floor(Math.random() * 10);
+
+/* ---------- Calculadora de ataque (conflict_resolution + conflict_damage) ---------- */
+const GRAVIDADE = {0: [3, 6], 1: [4, 8], 2: [5, 10], 3: [6, 12], 4: [7, 14], 5: [8, 16]}; // leve até a, grave até b, crítico acima
+const VIT_CORPO = {0: 6, 1: 8, 2: 10, 3: 12, 4: 14, 5: 16};
+const ARMOR = {none: null, leve: {prot: 1, integ: 4, red: 1}, media: {prot: 2, integ: 6, red: 2}, pesada: {prot: 3, integ: 8, red: 3}};
+const PHYS = ['cortante', 'perfurante', 'impactante'];
+
+function mountAttack() {
+  const box = $('#atk');
+  if (!box) return;
+  box.innerHTML = `
+  <div class="calc">
+    <div class="grid" style="gap:10px">
+      <label class="f">Virtude do atacante (0–5) <input type="range" min="0" max="5" value="4" id="aV"><span class="mono" id="aVv"></span></label>
+      <label class="f">Nível do herói (bônus de early-game) <input type="range" min="1" max="20" value="1" id="aL"><span class="mono" id="aLv"></span></label>
+      <label class="f">Agilidade do alvo → Esquiva = 10 + Agilidade <input type="range" min="0" max="5" value="3" id="aA"><span class="mono" id="aAv"></span></label>
+      <label class="f">Dano-base <select id="aD"><option value="3">3 — ataque básico (sem Carta)</option><option value="3">3 — arma leve</option><option value="4" selected>4 — marcial</option><option value="6">6 — versátil</option><option value="8">8 — pesada</option></select></label>
+      <label class="f">Tipo de dano <select id="aT"><option>cortante</option><option>perfurante</option><option>impactante</option><option>ígneo</option><option>gélido</option><option>elétrico</option><option>abissal</option><option>arcano</option><option>corrosivo</option></select></label>
+      <div class="row"><label class="f">Vantagem <select id="aAdv"><option value="0">nenhuma</option><option value="1">Vantagem (3d10, 2 maiores)</option><option value="-1">Desvantagem (3d10, 2 menores)</option></select></label>
+        <label class="f">Luz/clima <select id="aEnv"><option value="0">neutro</option><option value="-1">escuro sem tocha (−1)</option><option value="-2">escuro + tempestade (−2)</option></select></label></div>
+      <div class="row"><label class="f">Resistência do alvo <select id="aR"><option value="0">nenhuma</option><option value="-2">resistência (−2)</option><option value="-4">resistência maior (−4)</option><option value="2">vulnerabilidade (+2)</option><option value="4">vulnerab. maior (+4)</option><option value="imune">imune</option></select></label>
+        <label class="f">Armadura do alvo <select id="aArm"><option value="none">nenhuma</option><option value="leve">leve (Prot 1, Integ 4)</option><option value="media">média (Prot 2, Integ 6)</option><option value="pesada">pesada (Prot 3, Integ 8)</option></select></label></div>
+      <div class="row"><label class="f">Vitalidade atual do alvo <input type="number" id="aHP" value="12" min="0" max="60"></label>
+        <label class="f">Corpo do alvo (0–5) <input type="number" id="aC" value="3" min="0" max="5"></label></div>
+      <div class="row"><button class="primary" id="aRoll">🎲 Rolar ataque</button><button id="aCrit">forçar Crítico (dupla 5-5)</button></div>
+    </div>
+    <div>
+      <div class="dice" id="aDice"></div>
+      <div class="verdict" id="aVerdict">Role para ver o ataque resolvido passo a passo.</div>
+      <div class="pipe" id="aPipe"></div>
+      <p class="hint" style="font-size:13px;color:var(--dim)">Fórmulas de <code>conflict_resolution.py</code> e <code>conflict_damage.py</code>. Simplificação didática: Proteção só vale para dano físico e a Integridade converte até o limite de reduções por ataque; secundários de gélido/elétrico/abissal/arcano não são simulados.</p>
+    </div>
+  </div>`;
+  const upd = () => { $('#aVv').textContent = '+' + $('#aV').value; $('#aLv').textContent = 'nível ' + $('#aL').value + ' → bônus +' + earlyBonus(+$('#aL').value); $('#aAv').textContent = 'Esquiva ' + (10 + +$('#aA').value); };
+  ['#aV', '#aL', '#aA'].forEach((s) => $(s).addEventListener('input', upd));
+  upd();
+  $('#aRoll').onclick = () => rollAttack(false);
+  $('#aCrit').onclick = () => rollAttack(true);
+}
+const earlyBonus = (lvl) => (lvl <= 2 ? 2 : lvl === 3 ? 1 : 0);
+
+function rollAttack(forceCrit) {
+  const adv = +$('#aAdv').value;
+  let dice = forceCrit ? [5, 5] : adv === 0 ? [d10(), d10()] : [d10(), d10(), d10()];
+  let kept = [...dice];
+  if (dice.length === 3) kept = [...dice].sort((a, b) => (adv > 0 ? b - a : a - b)).slice(0, 2);
+  const keptCopy = [...kept];
+  $('#aDice').innerHTML = dice.map((v) => {
+    const k = keptCopy.indexOf(v);
+    const isKept = k >= 0;
+    if (isKept) keptCopy.splice(k, 1);
+    return `<div class="die roll ${isKept ? 'kept' : 'drop'}">${v}</div>`;
+  }).join('');
+  const V = +$('#aV').value, env = +$('#aEnv').value, esq = 10 + +$('#aA').value;
+  const total = kept[0] + kept[1] + V + env;
+  const dupla = kept[0] === kept[1];
+  const mult = dupla ? (kept[0] === 10 ? 3 : 2) : 1;
+  const hit = dupla || total >= esq;
+  const lines = [];
+  lines.push([`Dados mantidos ${kept.join(' + ')}`, kept[0] + kept[1]]);
+  lines.push([`+ Virtude${env ? ' + ambiente' : ''}`, `${V}${env ? ' ' + env : ''} → total ${total}`]);
+  lines.push([`vs Esquiva do alvo`, esq]);
+  if (dupla) lines.push([kept[0] === 10 ? 'Dupla 10 = SUPERCRÍTICO' : `Dupla ${kept[0]} = CRÍTICO`, `×${mult} e acerta sempre`]);
+  if (!hit) {
+    $('#aVerdict').innerHTML = `<span style="color:var(--muted)">Errou.</span> ${total} < ${esq}`;
+    $('#aPipe').innerHTML = lines.map(([a, b]) => `<div><span>${a}</span><b>${b}</b></div>`).join('');
+    return;
+  }
+  const lvl = +$('#aL').value, type = $('#aT').value;
+  let dano = (+$('#aD').value + earlyBonus(lvl)) * mult;
+  lines.push([`1. Dano-base ${$('#aD').value} + early-game ${earlyBonus(lvl)}, ×${mult}`, dano]);
+  const r = $('#aR').value;
+  if (r === 'imune') { lines.push(['2. Imunidade', 'dano zerado']); finish(lines, 0, 0, null); return; }
+  if (+r) { dano = Math.max(0, dano + +r); lines.push([`2. Resistência/vulnerabilidade ${+r > 0 ? '+' : ''}${r}`, dano]); }
+  const arm = ARMOR[$('#aArm').value];
+  let absorbed = false;
+  if (arm && PHYS.includes(type) && dano > 0) {
+    const prot = Math.max(0, arm.prot - (type === 'perfurante' ? 1 : 0));
+    const before = dano; dano = Math.max(0, dano - prot); absorbed = before !== dano;
+    lines.push([`3. Proteção ${prot}${type === 'perfurante' ? ' (perfurante −1)' : ''}`, dano]);
+    const integCost = 1;
+    const red = Math.min(arm.red, arm.integ, dano);
+    if (red > 0) { dano -= red; lines.push([`4. Integridade converte ${red} em redução`, dano]); }
+    if (type === 'impactante' && absorbed) lines.push(['   impactante gasta +1 de Integridade', '—']);
+    void integCost;
+  } else if (arm) lines.push(['3–4. Armadura não protege este tipo', dano]);
+  if (type === 'ígneo' && dano >= 1) { dano += 2; lines.push(['5. Ígneo atravessou: +2', dano]); }
+  const hp = +$('#aHP').value;
+  const exc = Math.max(0, dano - hp), hpAfter = Math.max(0, hp - dano);
+  lines.push([`6. Vitalidade ${hp} → ${hpAfter}`, `excedente ${exc}`]);
+  const C = Math.max(0, Math.min(5, +$('#aC').value));
+  let cat = null;
+  if (exc > 0) { const [a, b] = GRAVIDADE[C]; cat = exc <= a ? 'leve' : exc <= b ? 'grave' : 'crítico'; lines.push([`7. Faixa de Gravidade do Corpo ${C} (leve ≤${GRAVIDADE[C][0]}, grave ≤${GRAVIDADE[C][1]})`, `Ferimento ${cat}`]); if (type === 'cortante') lines.push(['   cortante + ferido → Sangramento', '1 de dano, 1 turno']); }
+  finish(lines, dano, exc, cat);
+}
+function finish(lines, dano, exc, cat) {
+  $('#aVerdict').innerHTML = `Acertou: <b style="color:var(--gold)">${dano}</b> de dano${cat ? ` · <span style="color:var(--danger)">Ferimento ${cat}</span>` : exc === 0 ? ' · sem Ferimento' : ''}`;
+  $('#aPipe').innerHTML = lines.map(([a, b]) => `<div><span>${a}</span><b>${b}</b></div>`).join('');
+}
+
+/* ---------- Simulador do RoutedLLM ---------- */
+const ROUTES = {
+  CLASSIFY: ['DeepSeek v4 flash', 'Groq gpt-oss-20b', 'Gemini flash-lite'],
+  FAST: ['DeepSeek v4 flash', 'Groq gpt-oss-120b', 'MiniMax M2.5', 'Qwen plus', 'Gemini flash'],
+  SMART: ['DeepSeek v4 flash', 'Groq gpt-oss-120b', 'Anthropic Claude Sonnet', 'Gemini pro'],
+};
+const OUTCOMES = {ok: 'responde OK', timeout: 'timeout / 429 / 5xx', perm: '402 sem saldo / 401 chave inválida', schema: 'JSON fora do schema (3x)', schema1: 'JSON inválido 1x, depois OK', text: 'JSON em texto (sem tool call)'};
+function mountRouted() {
+  const box = $('#routed');
+  if (!box) return;
+  box.innerHTML = `<div class="row" style="margin-bottom:10px"><span>Tier:</span>${Object.keys(ROUTES).map((t, i) => `<button data-tier="${t}" class="${i === 1 ? 'on' : ''}">${t}</button>`).join('')}</div><div id="rCands" class="grid" style="gap:8px"></div><div class="row" style="margin:12px 0"><button class="primary" id="rGo">▶ Simular invoke()</button><button id="rRand">aleatório</button></div><div class="seq" id="rLog"></div>`;
+  let tier = 'FAST';
+  const draw = () => {
+    $('#rCands').innerHTML = ROUTES[tier].map((c, i) => `<div class="row card" style="padding:8px 12px"><b style="min-width:220px">${i + 1}. ${c}</b><select data-c="${i}">${Object.entries(OUTCOMES).map(([k, v]) => `<option value="${k}" ${i === ROUTES[tier].length - 1 || (i === 0 ? false : false) ? '' : ''}>${v}</option>`).join('')}</select></div>`).join('');
+    const sels = box.querySelectorAll('#rCands select');
+    if (sels[0]) sels[0].value = 'timeout';
+  };
+  box.querySelectorAll('[data-tier]').forEach((b) => (b.onclick = () => { tier = b.dataset.tier; box.querySelectorAll('[data-tier]').forEach((x) => x.classList.toggle('on', x === b)); draw(); }));
+  draw();
+  $('#rRand').onclick = () => box.querySelectorAll('#rCands select').forEach((s) => (s.value = Object.keys(OUTCOMES)[Math.floor(Math.random() * 6)]));
+  $('#rGo').onclick = () => {
+    const log = [];
+    const outs = [...box.querySelectorAll('#rCands select')].map((s) => s.value);
+    let ok = false;
+    for (let i = 0; i < outs.length && !ok; i++) {
+      const n = ROUTES[tier][i], o = outs[i];
+      if (o === 'ok') { log.push([n, '✔ sucesso na 1ª geração → devolve o modelo Pydantic']); ok = true; }
+      else if (o === 'timeout') log.push([n, '✖ erro de TRANSPORTE: não regenera no mesmo provider; troca de provider (max_retries=0)']);
+      else if (o === 'perm') log.push([n, '✖ erro PERMANENTE: abre circuit breaker até a próxima campanha; troca de provider']);
+      else if (o === 'schema') { log.push([n, '⟳ geração 1: falha de schema → regenera com mensagem dizendo qual contrato falhou']); log.push([n, '⟳ geração 2 e 3: ainda inválido → desiste deste provider']); }
+      else if (o === 'schema1') { log.push([n, '⟳ geração 1 inválida → regenera no MESMO provider']); log.push([n, '✔ geração 2 válida']); ok = true; }
+      else if (o === 'text') { log.push([n, '⚑ sem tool call, mas o texto tem um objeto JSON → recuperação local (recovery="local_json"), SEM nova request']); ok = true; }
+    }
+    if (!ok) log.push(['RoutedLLM', '∅ esgotou → AIMessage(""). O nó cai no caminho determinístico pelo guard isinstance — o jogador nunca vê erro de provider.']);
+    $('#rLog').innerHTML = log.map(([a, b]) => `<div class="msg"><span>${a}</span><span>${b}</span></div>`).join('');
+    [...$('#rLog').children].forEach((m, k) => setTimeout(() => m.classList.add('on'), 250 * k));
+  };
+}
+
+/* ---------- Economia: preço (services/economy.py) ---------- */
+const RARITY = {comum: 25, incomum: 100, raro: 400, 'épico': 1500, 'lendário': 6000};
+function mountPrice() {
+  const box = $('#price');
+  if (!box) return;
+  box.innerHTML = `<div class="calc"><div class="grid" style="gap:10px">
+    <label class="f">Raridade (preço-base) <select id="pR">${Object.entries(RARITY).map(([k, v]) => `<option value="${v}">${k} — ${v}</option>`).join('')}</select></label>
+    <label class="f">Oferta <select id="pS"><option value="0.6">o local PRODUZ o item (×0,6)</option><option value="1" selected>há produtor alcançável (×1,0)</option><option value="1.8">rotas até produtores bloqueadas (×1,8 — some da prateleira)</option></select></label>
+    <label class="f">Multiplicador do mercador <input type="range" min="0.8" max="1.4" step="0.05" value="1" id="pM"><span class="mono" id="pMv"></span></label>
+    <div class="row"><label><input type="checkbox" id="pH"> facção que controla o local é hostil (×1,5 na compra)</label></div>
+    <div class="row"><label><input type="checkbox" id="pV"> estou VENDENDO (×0,5)</label></div></div>
+    <div><div class="verdict" id="pOut"></div><div class="pipe" id="pPipe"></div><p style="font-size:13px;color:var(--dim)">Arredonda para múltiplo de 5. A IA nunca decide sinal nem valor do ouro: só interpreta "compro / vendo / quanto custa".</p></div></div>`;
+  const calc = () => {
+    const b = +$('#pR').value, s = +$('#pS').value, m = +$('#pM').value, h = $('#pH').checked && !$('#pV').checked, v = $('#pV').checked;
+    $('#pMv').textContent = '×' + m.toFixed(2);
+    let p = b * s * m * (h ? 1.5 : 1) * (v ? 0.5 : 1);
+    const r5 = Math.max(5, Math.round(p / 5) * 5);
+    $('#pOut').innerHTML = `Preço final: <b style="color:var(--gold)">${r5}</b> de ouro${s === 1.8 ? ' <span class="tag err">indisponível na prateleira</span>' : ''}`;
+    $('#pPipe').innerHTML = [[`base`, b], [`× oferta`, s], [`× mercador`, m.toFixed(2)], [`× hostil`, h ? 1.5 : 1], [`× venda`, v ? 0.5 : 1], [`= bruto`, p.toFixed(1)], ['arredondado (5)', r5]].map(([a, c]) => `<div><span>${a}</span><b>${c}</b></div>`).join('');
+  };
+  box.querySelectorAll('select,input').forEach((i) => i.addEventListener('input', calc));
+  calc();
+}
+
+/* ---------- Orçamento de encontro (encounter_budget.py) ---------- */
+function mountBudget() {
+  const box = $('#budget');
+  if (!box) return;
+  box.innerHTML = `<div class="calc"><div class="grid" style="gap:10px">
+    <label class="f">Nível do herói <input type="range" min="1" max="20" value="1" id="bL"><span class="mono" id="bLv"></span></label>
+    <label class="f">Perigo do local (1–4) <input type="range" min="1" max="4" value="4" id="bD"><span class="mono" id="bDv"></span></label>
+    <label class="f">Aliados <input type="range" min="0" max="3" value="0" id="bA"><span class="mono" id="bAv"></span></label></div>
+    <div><div class="verdict" id="bOut"></div><div class="pipe" id="bPipe"></div><p style="font-size:13px;color:var(--dim)">Custo por inimigo: lacaio 2, elite 5, chefe 12. Chefes nunca são cortados. No nível 1 no máximo 1 elite. O teto nasceu de um playtest: nível 1 em perigo 4 recebia 2 elites — sentença de morte.</p></div></div>`;
+  const BASE = {1: 2, 2: 4, 3: 7, 4: 10};
+  const calc = () => {
+    const L = +$('#bL').value, D = +$('#bD').value, A = +$('#bA').value;
+    $('#bLv').textContent = L; $('#bDv').textContent = D; $('#bAv').textContent = A;
+    const raw = BASE[D] + L + 2 * A, cap = 5 + 3 * L + 2 * A, b = Math.min(raw, cap);
+    $('#bOut').innerHTML = `Orçamento: <b style="color:var(--gold)">${b}</b> pontos ≈ ${Math.floor(b / 2)} lacaios ou ${Math.floor(b / 5)} elite(s)`;
+    $('#bPipe').innerHTML = [[`base pelo perigo ${D}`, BASE[D]], ['+ nível', L], ['+ 2 × aliados', 2 * A], ['= bruto', raw], ['teto de sobrevivência 5 + 3·nível + 2·aliados', cap], ['= min(bruto, teto)', b]].map(([a, c]) => `<div><span>${a}</span><b>${c}</b></div>`).join('');
+  };
+  box.querySelectorAll('input').forEach((i) => i.addEventListener('input', calc));
+  calc();
+}
+
+/* ---------- Pontuação de fatos no contexto ---------- */
+function mountScore() {
+  const box = $('#score');
+  if (!box) return;
+  const f = [['rel', 'Relevância (termos da consulta)', 0.35, 0.6], ['loc', 'Mesmo local', 0.25, 1], ['ent', 'Entidades em cena', 0.2, 0.5], ['imp', 'Impacto do tipo de evento', 0.1, 1], ['rec', 'Recência (1 − turnos/50)', 0.1, 0.8]];
+  box.innerHTML = `<div class="calc"><div class="grid" style="gap:8px">${f.map(([k, l, w, v]) => `<label class="f">${l} <span class="pill">peso ${w}</span><input type="range" min="0" max="1" step="0.05" value="${v}" data-k="${k}" data-w="${w}"></label>`).join('')}</div>
+  <div><div class="verdict" id="sOut"></div><div class="hbars" id="sBars"></div><h4>Orçamento de 3.500 tokens por seção</h4><div class="hbars" id="sBudget"></div></div></div>`;
+  const budget = [['current_state', 25], ['active_location', 20], ['relations', 15], ['entities', 15], ['lore', 15], ['session_memory', 10]];
+  $('#sBudget').innerHTML = budget.map(([n, p]) => `<div class="hb"><span>${n}</span><div class="bar"><i style="width:${p * 4}%"></i></div><span>${Math.round(3500 * p / 100)} tk</span></div>`).join('');
+  const calc = () => {
+    let s = 0;
+    const parts = [...box.querySelectorAll('input')].map((i) => { const c = +i.value * +i.dataset.w; s += c; return [i.parentElement.firstChild.textContent.trim(), c]; });
+    $('#sOut').innerHTML = `score = <b style="color:var(--gold)">${s.toFixed(3)}</b>`;
+    $('#sBars').innerHTML = parts.map(([n, c]) => `<div class="hb"><span>${n}</span><div class="bar"><i style="width:${(c / 0.35) * 100}%"></i></div><span>${c.toFixed(3)}</span></div>`).join('');
+  };
+  box.querySelectorAll('input').forEach((i) => i.addEventListener('input', calc));
+  calc();
+}
+
+/* ---------- Tabela de XP ---------- */
+function mountXP() {
+  const box = $('#xp');
+  if (!box) return;
+  const T = {2: 300, 3: 900, 4: 2700, 5: 6500, 6: 14000, 7: 23000, 8: 34000, 9: 48000, 10: 64000, 11: 85000, 12: 100000, 13: 120000, 14: 140000, 15: 165000, 16: 195000, 17: 225000, 18: 265000, 19: 305000, 20: 355000};
+  const slots = (n) => (n <= 3 ? 4 : n <= 6 ? 5 : n <= 9 ? 6 : n <= 12 ? 7 : n <= 16 ? 8 : n <= 19 ? 9 : 10);
+  const extra = (n) => [n === 3 ? 'subclasse (irreversível)' : '', [2, 4, 6, 8, 10].includes(n) ? '+1 Virtude' : '', [12, 16, 20].includes(n) ? 'Maestria' : '', n === 20 ? 'Ápice automático' : '', n < 20 ? 'Carta ou evolução A/B' : ''].filter(Boolean).join(' · ');
+  box.innerHTML = `<div class="hbars">${Object.entries(T).map(([n, x]) => `<div class="hb" title="${extra(+n)}"><span>nível ${n} · ${slots(+n)} slots</span><div class="bar"><i style="width:${(x / 355000) * 100}%"></i></div><span>${x.toLocaleString('pt-BR')}</span></div>`).join('')}</div><p style="font-size:13px;color:var(--dim)">Passe o mouse para ver as escolhas de cada nível. XP: lacaio 50, elite 200, chefe 1.000, beat de campanha 150, quest 200 (+20 de ouro).</p>`;
+}
+
+/* ---------- Sequência SSE ---------- */
+function mountSSE() {
+  const box = $('#sse');
+  if (!box) return;
+  const ev = [['accepted', '{game_id} — a thread worker assumiu o turno (dona do lock e do save)'], ['phase', '{node:"campaign_manager", status:"done"} → "O mestre consulta os arcanos…"'], ['route', '{route:"storyteller"} → "O narrador tece o destino…"'], ['phase', '{node:"storyteller"}'], ['phase', '{node:"archivist"}'], [': ping', 'a cada 10 s sem evento (evita timeout de proxy)'], ['visual', 'cue de primeira aparição de NPC + cena do local'], ['narrative', '{chunk:"Você deixa as muralhas…", done:false} — pedaços de 80 caracteres'], ['narrative', '{chunk:"", done:true}'], ['state', 'GameResponse completo (HUD, mapa, combate, missões, crônica…)']];
+  box.innerHTML = `<div class="row" style="margin-bottom:8px"><button class="primary" id="sseGo">▶ Reproduzir stream</button><span style="font-size:13px;color:var(--dim)">Se o stream cair, o cliente reenvia via POST com o MESMO action_id — o backend devolve o mesmo turno, nunca roda duas vezes.</span></div><div class="seq">${ev.map(([a, b]) => `<div class="msg"><span>${a}</span><span>${b}</span></div>`).join('')}</div>`;
+  $('#sseGo').onclick = () => { const m = box.querySelectorAll('.msg'); m.forEach((x) => x.classList.remove('on')); m.forEach((x, k) => setTimeout(() => x.classList.add('on'), 420 * k)); };
+}
+
+/* ---------- Sequência claim/commit ---------- */
+function mountClaim() {
+  const box = $('#claim');
+  if (!box) return;
+  const ev = [['cliente', 'POST com action_id (obrigatório no perfil durável)'], ['receipt?', 'já existe recibo para essa operação? → devolve a resposta gravada (exactly-once)'], ['claim', 'TX curta: SELECT games FOR UPDATE → versão bate? jogo livre? INSERT operations ON CONFLICT → lease 180 s'], ['heartbeat', 'thread renova o lease a cada 45 s enquanto a IA pensa'], ['grafo', 'LangGraph roda FORA de qualquer transação'], ['commit_game', 'TX: fencing (lease_token) + versão otimista; UPDATE games version+1; eventos; checkpoint; turns; flush do outbox; receipt'], ['falha?', 'perdeu o lease → LeaseHeld; versão velha → StaleVersion (409); worker atrasado não publica'], ['retry', 'mesma chave e mesmo payload → recibo; payload diferente → 409 operation_request_mismatch']];
+  box.innerHTML = `<div class="row" style="margin-bottom:8px"><button class="primary" id="clGo">▶ Reproduzir</button></div><div class="seq">${ev.map(([a, b]) => `<div class="msg"><span>${a}</span><span>${b}</span></div>`).join('')}</div>`;
+  $('#clGo').onclick = () => { const m = box.querySelectorAll('.msg'); m.forEach((x) => x.classList.remove('on')); m.forEach((x, k) => setTimeout(() => x.classList.add('on'), 500 * k)); };
+}
+
+/* ---------- Visibilidade do RAG ---------- */
+function mountVis() {
+  const box = $('#vis');
+  if (!box) return;
+  const docs = [['Anel de Lama — descrição sensorial do bairro', 'public'], ['Velha Magda — curandeira do Anel de Lama', 'public'], ['Velha Magda — identidade secreta (Mão Sombria)', 'hidden'], ['O Aprendiz que destruiu Aethelgard foi o maior herói', 'secret'], ['Verme Primordial das Raízes do Mundo', 'hidden'], ['Rumores sobre Valerius', 'public'], ['Doc com visibilidade digitada errado: "publik"', '???']];
+  const rank = {public: 0, hidden: 1, secret: 2};
+  box.innerHTML = `<div class="row" style="margin-bottom:8px"><span>Quem consulta?</span><button data-v="0" class="on">narrador / NPC (public)</button><button data-v="1">planejador de campanha (vê hidden/secret no grafo)</button></div><div id="visList" class="grid" style="gap:6px"></div>`;
+  const draw = (max) => { $('#visList').innerHTML = docs.map(([t, v]) => { const r = v in rank ? rank[v] : 2; const ok = max === 1 || r <= max; return `<div class="row card" style="padding:8px 12px;opacity:${ok ? 1 : 0.35}"><span class="tag ${v === 'public' ? 'ok' : v === 'hidden' ? 'warn' : 'err'}">${v}${v === '???' ? ' → tratado como secret' : ''}</span><span>${t}</span><span style="margin-left:auto">${ok ? '✔ entra' : '✖ filtrado'}</span></div>`; }).join(''); };
+  box.querySelectorAll('[data-v]').forEach((b) => (b.onclick = () => { box.querySelectorAll('[data-v]').forEach((x) => x.classList.toggle('on', x === b)); draw(+b.dataset.v); }));
+  draw(0);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  mountDiagrams(); mountSteppers(); mountQuizzes(); mountTabs(); mountToc(); mountFilters();
+  mountAttack(); mountRouted(); mountPrice(); mountBudget(); mountScore(); mountXP(); mountSSE(); mountClaim(); mountVis();
+});
+</script></body></html>

@@ -25,7 +25,7 @@ O projeto já possui:
 
 ### Baseline histórico
 
-`docs/playtest-matriz-a-2026-08-27.md` registrou 10×200 turnos reais com DeepSeek, mas essa baseline **não deve ser usada como baseline do build atual**. O projeto mudou substancialmente depois dela.
+`docs/playtests/playtest-matriz-a-2026-08-27.md` registrou 10×200 turnos reais com DeepSeek, mas essa baseline **não deve ser usada como baseline do build atual**. O projeto mudou substancialmente depois dela.
 
 O build atual deve ganhar uma baseline nova, criada somente depois da instrumentação de evals estar estabilizada.
 

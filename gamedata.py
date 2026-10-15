@@ -170,7 +170,7 @@ XP_TABLE = {
 }
 
 # --- CONFLITO v2 (spec conflito-01): Virtudes / Vitalidade / Ferimentos ---
-# Doc: docs/valoria_conflict_migration_v2/01_..._CONFLITOS.md §8.1
+# Doc: docs/design/valoria_conflict_migration_v2/01_..._CONFLITOS.md §8.1
 # 5 Virtudes (chaves curtas): mente/agilidade/forca/carisma/corpo (0-5).
 VIRTUDES = ("mente", "agilidade", "forca", "carisma", "corpo")
 

@@ -59,7 +59,7 @@ desatualizado no clone LF, portanto não era apenas efeito de Windows.
   Continua selective-only; a política da SPEC-175 permanece vigente.
 - As SPEC-176..198 foram importadas com IDs/dependências preservados. A 176
   permanece `review-pending`; 177..198 estão `approved`, sem implementação.
-  O pacote original foi arquivado em `docs/rpg-next-jev-golive-plan/`;
+  O pacote original foi arquivado em `docs/planos/rpg-next-jev-golive-plan/`;
   `specs/index.yaml` aponta exclusivamente para as specs canônicas em `specs/`.
   ZIP e pasta de staging permanecem presentes, agora ignorados pelo Git.
 

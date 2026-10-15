@@ -25,7 +25,7 @@ definido.
 - Ainda não há motor de pricing, `pricing_versions`, `purchase_skus` nem wallet.
   Ouro pertence ao `GameState`; Estilhas pertencem à conta e não entram no save.
 - A fórmula canônica e os limites estão na SPEC-183 e em
-  `docs/rpg-next-jev-golive-plan/02_BILLING_E_MARGIN.md`: `Decimal` e
+  `docs/planos/rpg-next-jev-golive-plan/02_BILLING_E_MARGIN.md`: `Decimal` e
   `shard_milli` inteiro, floor na concessão, ceil no débito, margem-alvo 5%,
   imposto zero nesta versão, fee fixa+percentual por canal, FX/rate card
   versionados, infra fixa reportada à parte. Não publicar pacotes finais.

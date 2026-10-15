@@ -12,7 +12,7 @@
 
 ## 1. Contexto & Objetivo
 
-Playtest longo 2026-07-14 (achados A+I de `docs/playtest-longrun-2026-07-14.md`):
+Playtest longo 2026-07-14 (achados A+I de `docs/playtests/playtest-longrun-2026-07-14.md`):
 `combate` morreu no turno 13 e `explorador` no 47, mas o runner seguiu até 100 —
 **140/300 turnos** repetindo o memorial verbatim (o grafo termina em `START →
 __end__` com `game_over`, main.py:54). Isso polui TODAS as métricas: p50 de

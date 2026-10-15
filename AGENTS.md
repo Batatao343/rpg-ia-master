@@ -81,7 +81,7 @@ llm_playtest"`), como os contratos da Fase 11.
 `/wrap-up` = ritual de fim de tarefa (suíte completa + docs + commit).
 
 **Autoria de conteúdo (Fase 7.2):** adicionar/curar entidade do mundo segue
-`docs/AUTORIA.md` — templates em `docs/templates/codex/`, lint via
+`docs/guias/AUTORIA.md` — templates em `docs/templates/codex/`, lint via
 `uv run python scripts/validate_content.py`, curadoria migration-safe em
 `data/codex_overrides.yaml` + arquivos `curated: true`.
 
@@ -311,7 +311,7 @@ Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `done` (smoke real 2026-07-14
 4.1–4.6 + 4.1b `done` — **Fase 4 completa**; 6.1–6.5 `done` — **Fase 6 completa**;
 7.1 (validadores+CI) · 7.2 (autoria/curadoria) · 7.3 (segredos de NPC) `done` —
 **Fase 7 completa** (lint `services/content_validator.py` + CLI
-`scripts/validate_content.py`; gate no `rag.py`; autoria em `docs/AUTORIA.md`).
+`scripts/validate_content.py`; gate no `rag.py`; autoria em `docs/guias/AUTORIA.md`).
 2026-07-06: fase 10 fatia local (hardening: `save_path` UUID, `schema_version`+
 migrations, CORS/rate-limit/log) · fase 11 (contratos `-m llm_contract`, 9 verdes
 no Gemini real) · mapa (interiores + `travel_times`) · NPCs 3 camadas
@@ -323,7 +323,7 @@ streaming-turno-sse (`POST /game/action/stream` + custo real no log `rpg.turn`) 
 polish-sessao (`GET /game/saves` + DELETE + chips mecânicos de combate +
 export/busca da crônica + onboarding + mobile 390px).
 2026-07-16: **8 specs `draft`** do playtest longo real (3×100 turnos, análise em
-`docs/playtest-longrun-2026-07-14.md`): playtest-stop-gameover ·
+`docs/playtests/playtest-longrun-2026-07-14.md`): playtest-stop-gameover ·
 combate-lifecycle · pos-saque-recuperacao · npc-fallback-sem-alvo ·
 beats-visibilidade-ptbr · encontros-dedupe · polish-prosa · embeddings-provider
 — aguardando aprovação. 2026-07-17: **criação imersiva `done`** —
@@ -342,7 +342,7 @@ v3; HUD Entropia/Carga. **Árvore RICA `done` (arvores-habilidade-classes, autor
 Fable):** 101 habilidades (41 ativas + 35 passivas + 25 utilitárias) via
 `scripts/gen_classes_v2.py`; `ability_kind` + `player_passives` + 5 triggers de
 Entropia/Carga; utilitárias no contexto do storyteller (gate determinístico);
-selo ✦/⚒ no HUD (ver [docs/CLASSES.md](docs/CLASSES.md)).
+selo ✦/⚒ no HUD (ver [docs/design/CLASSES.md](docs/design/CLASSES.md)).
 2026-07-19 (sessão 20): **revisão pós-épico** — 3 bugs de fiação de classe
 corrigidos (taunt/Transformação/Purga estavam mortos; `HANDLED_KINDS` +
 teste anti-órfão) · cache runtime isolado em `data/runtime/` (fim do `git

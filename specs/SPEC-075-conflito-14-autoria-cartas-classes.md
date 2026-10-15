@@ -75,7 +75,7 @@ Motor de Cartas em si (`conflito-02`); bestiário/perfis táticos de inimigos
   implementação), substituindo `data/player_abilities.json`.
 - `data/classes.json` — `base_stats`/`branches`/`starting_abilities` atualizados.
 - `data/potency_by_level.json` — preenchido (R7).
-- `docs/CARTAS.md` (novo, espelhando `docs/CLASSES.md`) — referência viva do
+- `docs/design/CARTAS.md` (novo, espelhando `docs/design/CLASSES.md`) — referência viva do
   catálogo de Cartas, mecânica + narrativa.
 
 ## 4. Plano passo a passo
@@ -143,7 +143,7 @@ Motor de Cartas em si (`conflito-02`); bestiário/perfis táticos de inimigos
   `data/cards/*.json` (gerado) · `data/cards/virtude_sugeridas.json` (R6) ·
   `services/cards.py` (catálogo + helpers `cards_at_patamar`/
   `suggested_virtue_cards`) · `services/content_validator.py::validate_cards`
-  (Etapa 5) · `docs/CARTAS.md` · `tests/test_conflito_autoria_cartas.py` (16).
+  (Etapa 5) · `docs/design/CARTAS.md` · `tests/test_conflito_autoria_cartas.py` (16).
 
 ## 6. Smoke test com LLM real
 

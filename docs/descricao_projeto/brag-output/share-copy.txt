@@ -1,0 +1,3 @@
+Construí um mestre de RPG feito de IA que não pode roubar nos dados: em Crônicas de Valoria a IA narra a cena e interpreta os NPCs, mas cada rolagem, dano e moeda é resolvido em Python determinístico. Agentes em LangGraph, memória que sabe de onde veio cada fato, combate tático de Cartas e ~1.900 testes para manter a IA honesta.
+
+Música: "Crossing the Chasm" — Kevin MacLeod (incompetech.com), licença CC BY 4.0.

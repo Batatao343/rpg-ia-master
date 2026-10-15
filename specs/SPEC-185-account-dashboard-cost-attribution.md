@@ -9,7 +9,7 @@
 > **REVIEW_REQUIRED:** `true`
 > **SUBSTITUIÇÃO DE MODELO:** usuário autorizou Sol High executor após handoff Terra High; outro Sol High fez revisão independente.
 > **Delegação Luna permitida:** Luna: fixtures de dashboard, inventário de rotas e relatório visual; ownership/DTOs ficam com Terra.
-> **MODEL_BREAKDOWN:** `docs/rpg-next-jev-golive-plan/examples/spec-model-contract.yaml` → `SPEC-185` é source of truth para subtarefas/review focus
+> **MODEL_BREAKDOWN:** `docs/planos/rpg-next-jev-golive-plan/examples/spec-model-contract.yaml` → `SPEC-185` é source of truth para subtarefas/review focus
 
 ## Objetivo
 

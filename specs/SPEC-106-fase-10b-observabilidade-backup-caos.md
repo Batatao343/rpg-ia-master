@@ -67,13 +67,13 @@ backup e caos são orquestrados em Python. A suíte padrão continua leve/offlin
 - `observability/telemetry.py` — setup OTel, redaction e correlation context.
 - `observability/metrics.py` — nomes/buckets/cardinalidade fechados.
 - `observability/dashboards/` e `observability/alerts/` — artefatos versionados.
-- `infra/observability.compose.yml` — profile opcional, volumes locais dedicados.
+- `observability/compose.yml` — profile opcional, volumes locais dedicados.
 - `scripts/backup_local.py`, `scripts/restore_local.py`, `scripts/verify_restore.py`.
 - `scripts/load_test.py`, `scripts/chaos_test.py`, `scripts/readiness_report.py`.
 - `tests/test_telemetry_redaction.py`, `tests/test_backup_restore_local.py`,
   `tests/test_multiworker_local.py`, `tests/test_chaos_local.py`,
   `tests/test_browser_local.py`.
-- `docs/OPERACAO_LOCAL.md` — runbooks derivados da implementação.
+- `docs/operacao/OPERACAO_LOCAL.md` — runbooks derivados da implementação.
 
 ### Arquivos alterados
 

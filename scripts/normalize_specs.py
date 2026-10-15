@@ -707,7 +707,7 @@ def _arguments() -> argparse.Namespace:
     action.add_argument("--check", action="store_true", help="fail unless the migration is idempotently canonical")
     parser.add_argument("--repo", type=Path, default=Path.cwd())
     parser.add_argument("--expected-count", type=int, default=162)
-    parser.add_argument("--report", type=Path, default=Path("docs/specs-migration-report.md"))
+    parser.add_argument("--report", type=Path, default=Path("docs/auditorias/specs-migration-report.md"))
     return parser.parse_args()
 
 

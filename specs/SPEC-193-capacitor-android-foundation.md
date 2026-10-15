@@ -9,7 +9,7 @@
 > **REVIEW_REQUIRED:** `true`
 > **SUBSTITUIÇÃO DE MODELO:** proibida sem aprovação explícita do usuário; mismatch => `MODEL_HANDOFF_REQUIRED`
 > **Delegação Luna permitida:** Luna: build/report e inventário de permissões; boundary WebView/native fica com Terra e revisão Sol.
-> **MODEL_BREAKDOWN:** `docs/rpg-next-jev-golive-plan/examples/spec-model-contract.yaml` → `SPEC-193` é source of truth para subtarefas/review focus
+> **MODEL_BREAKDOWN:** `docs/planos/rpg-next-jev-golive-plan/examples/spec-model-contract.yaml` → `SPEC-193` é source of truth para subtarefas/review focus
 
 ## Objetivo
 

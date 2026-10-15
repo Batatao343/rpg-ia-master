@@ -31,7 +31,7 @@ def test_dashboard_alertas_e_compose_sao_configs_reais():
         "TurnErrorRate", "TurnP95High", "OperationLeaseExpired", "JobBacklogOld",
         "RagFailure", "DbPoolWaiting", "BackupStale",
     }
-    compose = yaml.safe_load(Path("infra/observability.compose.yml").read_text())
+    compose = yaml.safe_load(Path("observability/compose.yml").read_text())
     assert set(compose["services"]) == {
         "prometheus", "grafana", "otel-collector", "tempo",
     }

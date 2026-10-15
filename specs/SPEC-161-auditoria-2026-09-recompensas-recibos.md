@@ -68,4 +68,4 @@ explícita de payload/destino/custo.
 ## Fechamento real ? 2026-09-28
 
 Contrato DeepSeek real concluiu beat eleg?vel, concedeu exatamente 150 XP e gerou outcome consistente; grafo/save-load offline tamb?m verdes.
-Evid?ncia consolidada: [matriz B](../docs/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.
+Evid?ncia consolidada: [matriz B](../docs/playtests/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.

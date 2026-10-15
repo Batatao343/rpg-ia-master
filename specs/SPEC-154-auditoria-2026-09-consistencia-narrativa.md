@@ -66,4 +66,4 @@ o custo. Nenhum dado nem custo externo ocorreu.
 ## Fechamento real ? 2026-09-28
 
 Contrato DeepSeek e matriz real cobriram STORY/NPC/LOOT/mem?ria; zero alega??o cr?tica inv?lida e corpus offline de 38 casos verde.
-Evid?ncia consolidada: [matriz B](../docs/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.
+Evid?ncia consolidada: [matriz B](../docs/playtests/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.

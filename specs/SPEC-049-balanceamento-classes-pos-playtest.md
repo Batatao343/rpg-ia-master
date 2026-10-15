@@ -105,7 +105,7 @@ verificável por invariante, não por impressão de prosa.
   domínio de decadência e vazão da caldeira; regenerar `data/cards/*.json`.
 - `tests/test_playtest_harness.py` (ou novo `tests/test_balance_classes.py`) —
   cobertura dos itens da Etapa 1.
-- Specs/docs: `docs/CLASSES.md` (números finais), ESTADO_ATUAL/ROADMAP.
+- Specs/docs: `docs/design/CLASSES.md` (números finais), ESTADO_ATUAL/ROADMAP.
 
 **Formato JSONL (linha de turno — campos novos):**
 ```json

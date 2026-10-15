@@ -1,5 +1,5 @@
 {
-  "commit_sha": "f573561aaa5abeb37ae4189c4b559c45504aecf2",
+  "commit_sha": "7a792e4dfefbc24e872cb8f05f0d27de1c2e0189",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -731,11 +731,121 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
-        "file": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+        "file": "docs/descricao_projeto/fontes/roteiro/build.py",
         "line": 1
       },
-      "source": "file:docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
-      "target": "module:docs.rpg-next-jev-golive-plan.tools.validate_model_contract",
+      "source": "file:docs/descricao_projeto/fontes/roteiro/build.py",
+      "target": "module:docs.descricao_projeto.fontes.roteiro.build",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/h.py",
+        "line": 1
+      },
+      "source": "file:docs/descricao_projeto/fontes/roteiro/h.py",
+      "target": "module:docs.descricao_projeto.fontes.roteiro.h",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/p1.py",
+        "line": 1
+      },
+      "source": "file:docs/descricao_projeto/fontes/roteiro/p1.py",
+      "target": "module:docs.descricao_projeto.fontes.roteiro.p1",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/p2.py",
+        "line": 1
+      },
+      "source": "file:docs/descricao_projeto/fontes/roteiro/p2.py",
+      "target": "module:docs.descricao_projeto.fontes.roteiro.p2",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/p3.py",
+        "line": 1
+      },
+      "source": "file:docs/descricao_projeto/fontes/roteiro/p3.py",
+      "target": "module:docs.descricao_projeto.fontes.roteiro.p3",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/p4.py",
+        "line": 1
+      },
+      "source": "file:docs/descricao_projeto/fontes/roteiro/p4.py",
+      "target": "module:docs.descricao_projeto.fontes.roteiro.p4",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/p5.py",
+        "line": 1
+      },
+      "source": "file:docs/descricao_projeto/fontes/roteiro/p5.py",
+      "target": "module:docs.descricao_projeto.fontes.roteiro.p5",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/trim.py",
+        "line": 1
+      },
+      "source": "file:docs/descricao_projeto/fontes/roteiro/trim.py",
+      "target": "module:docs.descricao_projeto.fontes.roteiro.trim",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/validate_roteiro.py",
+        "line": 1
+      },
+      "source": "file:docs/descricao_projeto/fontes/roteiro/validate_roteiro.py",
+      "target": "module:docs.descricao_projeto.fontes.roteiro.validate_roteiro",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/video/scripts/build_timeline.py",
+        "line": 1
+      },
+      "source": "file:docs/descricao_projeto/video/scripts/build_timeline.py",
+      "target": "module:docs.descricao_projeto.video.scripts.build_timeline",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+        "line": 1
+      },
+      "source": "file:docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+      "target": "module:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract",
       "type": "contains"
     },
     {
@@ -16384,22 +16494,253 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
-        "file": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
-        "line": 14
+        "file": "docs/descricao_projeto/fontes/roteiro/build.py",
+        "line": 27
       },
-      "source": "module:docs.rpg-next-jev-golive-plan.tools.validate_model_contract",
-      "target": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
+      "source": "module:docs.descricao_projeto.fontes.roteiro.build",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.build.L",
       "type": "defines"
     },
     {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
-        "file": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+        "file": "docs/descricao_projeto/fontes/roteiro/build.py",
+        "line": 22
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.build",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.build.chk",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/build.py",
+        "line": 119
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.build",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.build.vis_md",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/h.py",
+        "line": 8
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.h",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.h.B",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/h.py",
+        "line": 27
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.h",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.h.C",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/h.py",
+        "line": 35
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.h",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.h.CMP",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/h.py",
+        "line": 43
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.h",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.h.CO",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/h.py",
+        "line": 47
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.h",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.h.EX",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/h.py",
+        "line": 23
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.h",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.h.F",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/h.py",
+        "line": 12
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.h",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.h.G",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/h.py",
+        "line": 31
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.h",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.h.S",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/h.py",
+        "line": 4
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.h",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.h.T",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/h.py",
+        "line": 39
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.h",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.h.TB",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/h.py",
+        "line": 55
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.h",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.h.ch",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/h.py",
+        "line": 51
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.h",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.h.sc",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/validate_roteiro.py",
+        "line": 12
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.validate_roteiro",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.validate_roteiro.L",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/validate_roteiro.py",
+        "line": 5
+      },
+      "source": "module:docs.descricao_projeto.fontes.roteiro.validate_roteiro",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.validate_roteiro.e",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/video/scripts/build_timeline.py",
+        "line": 89
+      },
+      "source": "module:docs.descricao_projeto.video.scripts.build_timeline",
+      "target": "symbol:docs.descricao_projeto.video.scripts.build_timeline.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/video/scripts/build_timeline.py",
+        "line": 78
+      },
+      "source": "module:docs.descricao_projeto.video.scripts.build_timeline",
+      "target": "symbol:docs.descricao_projeto.video.scripts.build_timeline.reading_frames",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/video/scripts/build_timeline.py",
+        "line": 69
+      },
+      "source": "module:docs.descricao_projeto.video.scripts.build_timeline",
+      "target": "symbol:docs.descricao_projeto.video.scripts.build_timeline.spoken",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/video/scripts/build_timeline.py",
+        "line": 83
+      },
+      "source": "module:docs.descricao_projeto.video.scripts.build_timeline",
+      "target": "symbol:docs.descricao_projeto.video.scripts.build_timeline.wav_frames",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+        "line": 14
+      },
+      "source": "module:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract",
+      "target": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
         "line": 19
       },
-      "source": "module:docs.rpg-next-jev-golive-plan.tools.validate_model_contract",
-      "target": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
+      "source": "module:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract",
+      "target": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
       "type": "defines"
     },
     {
@@ -79315,88 +79656,143 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
-        "file": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+        "file": "docs/descricao_projeto/fontes/roteiro/build.py",
+        "line": 28
+      },
+      "source": "symbol:docs.descricao_projeto.fontes.roteiro.build.L",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.build.chk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/fontes/roteiro/validate_roteiro.py",
+        "line": 13
+      },
+      "source": "symbol:docs.descricao_projeto.fontes.roteiro.validate_roteiro.L",
+      "target": "symbol:docs.descricao_projeto.fontes.roteiro.validate_roteiro.e",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/video/scripts/build_timeline.py",
+        "line": 129
+      },
+      "source": "symbol:docs.descricao_projeto.video.scripts.build_timeline.main",
+      "target": "symbol:docs.descricao_projeto.video.scripts.build_timeline.reading_frames",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/video/scripts/build_timeline.py",
+        "line": 104
+      },
+      "source": "symbol:docs.descricao_projeto.video.scripts.build_timeline.main",
+      "target": "symbol:docs.descricao_projeto.video.scripts.build_timeline.spoken",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/descricao_projeto/video/scripts/build_timeline.py",
+        "line": 129
+      },
+      "source": "symbol:docs.descricao_projeto.video.scripts.build_timeline.main",
+      "target": "symbol:docs.descricao_projeto.video.scripts.build_timeline.wav_frames",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
         "line": 25
       },
-      "source": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
-      "target": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
+      "source": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
+      "target": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
       "type": "calls"
     },
     {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
-        "file": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+        "file": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
         "line": 32
       },
-      "source": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
-      "target": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
+      "source": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
+      "target": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
       "type": "calls"
     },
     {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
-        "file": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+        "file": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
         "line": 37
       },
-      "source": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
-      "target": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
+      "source": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
+      "target": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
       "type": "calls"
     },
     {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
-        "file": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+        "file": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
         "line": 39
       },
-      "source": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
-      "target": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
+      "source": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
+      "target": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
       "type": "calls"
     },
     {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
-        "file": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+        "file": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
         "line": 43
       },
-      "source": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
-      "target": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
+      "source": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
+      "target": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
       "type": "calls"
     },
     {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
-        "file": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+        "file": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
         "line": 45
       },
-      "source": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
-      "target": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
+      "source": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
+      "target": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
       "type": "calls"
     },
     {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
-        "file": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+        "file": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
         "line": 47
       },
-      "source": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
-      "target": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
+      "source": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
+      "target": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
       "type": "calls"
     },
     {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
-        "file": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+        "file": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
         "line": 49
       },
-      "source": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
-      "target": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
+      "source": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
+      "target": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
       "type": "calls"
     },
     {
@@ -184978,6 +185374,13 @@
       "qualified_name": null
     },
     {
+      "id": "artifact:docs/descricao_projeto/video/package.json",
+      "kind": "artifact",
+      "line": 1,
+      "path": "docs/descricao_projeto/video/package.json",
+      "qualified_name": null
+    },
+    {
       "id": "artifact:pyproject.toml",
       "kind": "artifact",
       "line": 1,
@@ -185454,10 +185857,171 @@
       "qualified_name": null
     },
     {
-      "id": "file:docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+      "id": "file:docs/descricao_projeto/fontes/guia/data_graphs.js",
       "kind": "file",
       "line": 1,
-      "path": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+      "path": "docs/descricao_projeto/fontes/guia/data_graphs.js",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/fontes/guia/data_steps.js",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/guia/data_steps.js",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/fontes/guia/lib.js",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/guia/lib.js",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/fontes/guia/widgets.js",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/guia/widgets.js",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/fontes/roteiro/build.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/build.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/fontes/roteiro/h.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/h.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/fontes/roteiro/p1.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/p1.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/fontes/roteiro/p2.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/p2.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/fontes/roteiro/p3.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/p3.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/fontes/roteiro/p4.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/p4.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/fontes/roteiro/p5.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/p5.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/fontes/roteiro/trim.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/trim.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/fontes/roteiro/validate_roteiro.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/validate_roteiro.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/video/scripts/build_timeline.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/video/scripts/build_timeline.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/video/src/Root.tsx",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/video/src/Root.tsx",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/video/src/anim.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/video/src/anim.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/video/src/brag/Brag.tsx",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/video/src/brag/Brag.tsx",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/video/src/components/Graph.tsx",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/video/src/components/Graph.tsx",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/video/src/components/SceneFrame.tsx",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/video/src/components/SceneFrame.tsx",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/video/src/components/Visuals.tsx",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/video/src/components/Visuals.tsx",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/video/src/index.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/video/src/index.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/video/src/theme.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/video/src/theme.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/descricao_projeto/video/src/types.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/descricao_projeto/video/src/types.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
       "qualified_name": null
     },
     {
@@ -188954,11 +189518,81 @@
       "qualified_name": "conftest"
     },
     {
-      "id": "module:docs.rpg-next-jev-golive-plan.tools.validate_model_contract",
+      "id": "module:docs.descricao_projeto.fontes.roteiro.build",
       "kind": "module",
       "line": 1,
-      "path": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
-      "qualified_name": "docs.rpg-next-jev-golive-plan.tools.validate_model_contract"
+      "path": "docs/descricao_projeto/fontes/roteiro/build.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.build"
+    },
+    {
+      "id": "module:docs.descricao_projeto.fontes.roteiro.h",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/h.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.h"
+    },
+    {
+      "id": "module:docs.descricao_projeto.fontes.roteiro.p1",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/p1.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.p1"
+    },
+    {
+      "id": "module:docs.descricao_projeto.fontes.roteiro.p2",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/p2.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.p2"
+    },
+    {
+      "id": "module:docs.descricao_projeto.fontes.roteiro.p3",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/p3.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.p3"
+    },
+    {
+      "id": "module:docs.descricao_projeto.fontes.roteiro.p4",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/p4.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.p4"
+    },
+    {
+      "id": "module:docs.descricao_projeto.fontes.roteiro.p5",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/p5.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.p5"
+    },
+    {
+      "id": "module:docs.descricao_projeto.fontes.roteiro.trim",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/trim.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.trim"
+    },
+    {
+      "id": "module:docs.descricao_projeto.fontes.roteiro.validate_roteiro",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/descricao_projeto/fontes/roteiro/validate_roteiro.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.validate_roteiro"
+    },
+    {
+      "id": "module:docs.descricao_projeto.video.scripts.build_timeline",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/descricao_projeto/video/scripts/build_timeline.py",
+      "qualified_name": "docs.descricao_projeto.video.scripts.build_timeline"
+    },
+    {
+      "id": "module:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+      "qualified_name": "docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract"
     },
     {
       "id": "module:encounter_budget",
@@ -194267,18 +194901,165 @@
       "qualified_name": "combat_mechanics.virtude_mods"
     },
     {
-      "id": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.build.L",
       "kind": "function",
-      "line": 14,
-      "path": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
-      "qualified_name": "docs.rpg-next-jev-golive-plan.tools.validate_model_contract.fail"
+      "line": 27,
+      "path": "docs/descricao_projeto/fontes/roteiro/build.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.build.L"
     },
     {
-      "id": "symbol:docs.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.build.chk",
+      "kind": "function",
+      "line": 22,
+      "path": "docs/descricao_projeto/fontes/roteiro/build.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.build.chk"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.build.vis_md",
+      "kind": "function",
+      "line": 119,
+      "path": "docs/descricao_projeto/fontes/roteiro/build.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.build.vis_md"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.h.B",
+      "kind": "function",
+      "line": 8,
+      "path": "docs/descricao_projeto/fontes/roteiro/h.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.h.B"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.h.C",
+      "kind": "function",
+      "line": 27,
+      "path": "docs/descricao_projeto/fontes/roteiro/h.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.h.C"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.h.CMP",
+      "kind": "function",
+      "line": 35,
+      "path": "docs/descricao_projeto/fontes/roteiro/h.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.h.CMP"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.h.CO",
+      "kind": "function",
+      "line": 43,
+      "path": "docs/descricao_projeto/fontes/roteiro/h.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.h.CO"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.h.EX",
+      "kind": "function",
+      "line": 47,
+      "path": "docs/descricao_projeto/fontes/roteiro/h.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.h.EX"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.h.F",
+      "kind": "function",
+      "line": 23,
+      "path": "docs/descricao_projeto/fontes/roteiro/h.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.h.F"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.h.G",
+      "kind": "function",
+      "line": 12,
+      "path": "docs/descricao_projeto/fontes/roteiro/h.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.h.G"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.h.S",
+      "kind": "function",
+      "line": 31,
+      "path": "docs/descricao_projeto/fontes/roteiro/h.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.h.S"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.h.T",
+      "kind": "function",
+      "line": 4,
+      "path": "docs/descricao_projeto/fontes/roteiro/h.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.h.T"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.h.TB",
+      "kind": "function",
+      "line": 39,
+      "path": "docs/descricao_projeto/fontes/roteiro/h.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.h.TB"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.h.ch",
+      "kind": "function",
+      "line": 55,
+      "path": "docs/descricao_projeto/fontes/roteiro/h.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.h.ch"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.h.sc",
+      "kind": "function",
+      "line": 51,
+      "path": "docs/descricao_projeto/fontes/roteiro/h.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.h.sc"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.validate_roteiro.L",
+      "kind": "function",
+      "line": 12,
+      "path": "docs/descricao_projeto/fontes/roteiro/validate_roteiro.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.validate_roteiro.L"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.fontes.roteiro.validate_roteiro.e",
+      "kind": "function",
+      "line": 5,
+      "path": "docs/descricao_projeto/fontes/roteiro/validate_roteiro.py",
+      "qualified_name": "docs.descricao_projeto.fontes.roteiro.validate_roteiro.e"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.video.scripts.build_timeline.main",
+      "kind": "function",
+      "line": 89,
+      "path": "docs/descricao_projeto/video/scripts/build_timeline.py",
+      "qualified_name": "docs.descricao_projeto.video.scripts.build_timeline.main"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.video.scripts.build_timeline.reading_frames",
+      "kind": "function",
+      "line": 78,
+      "path": "docs/descricao_projeto/video/scripts/build_timeline.py",
+      "qualified_name": "docs.descricao_projeto.video.scripts.build_timeline.reading_frames"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.video.scripts.build_timeline.spoken",
+      "kind": "function",
+      "line": 69,
+      "path": "docs/descricao_projeto/video/scripts/build_timeline.py",
+      "qualified_name": "docs.descricao_projeto.video.scripts.build_timeline.spoken"
+    },
+    {
+      "id": "symbol:docs.descricao_projeto.video.scripts.build_timeline.wav_frames",
+      "kind": "function",
+      "line": 83,
+      "path": "docs/descricao_projeto/video/scripts/build_timeline.py",
+      "qualified_name": "docs.descricao_projeto.video.scripts.build_timeline.wav_frames"
+    },
+    {
+      "id": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.fail",
+      "kind": "function",
+      "line": 14,
+      "path": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+      "qualified_name": "docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.fail"
+    },
+    {
+      "id": "symbol:docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.main",
       "kind": "function",
       "line": 19,
-      "path": "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
-      "qualified_name": "docs.rpg-next-jev-golive-plan.tools.validate_model_contract.main"
+      "path": "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+      "qualified_name": "docs.planos.rpg-next-jev-golive-plan.tools.validate_model_contract.main"
     },
     {
       "id": "symbol:encounter_budget.clamp_encounter",
@@ -230710,5 +231491,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:ae974fcff27751b54e4b3465f33eab9a520ced3b1887eea7b34e48323a2d94d9"
+  "source_tree_hash": "sha256:0207b628690918f5e8c4853ad1ff877f62f25ab229ca6356d5707d087c0ce2a2"
 }

@@ -1,0 +1,192 @@
+<section class="chap" id="infra">
+  <div class="eyebrow">Capítulo 17</div>
+  <h2>Infraestrutura local-first</h2>
+  <p class="lead">A Fase 10b transformou um motor de JSON + FAISS com lock por processo num <b>data plane substituível</b>: o domínio fala com <b>portas</b> (Protocols Python) e adapters implementam cada porta para arquivos ou para Postgres. Tudo foi certificado localmente com Supabase Local; a nuvem ainda não.</p>
+  <div class="tblwrap"><table>
+    <tr><th>Perfil</th><th>Jogos</th><th>Memória</th><th>Blob</th><th>Fila</th><th>Rate limit</th><th>Auth</th></tr>
+    <tr><td><b>legacy</b></td><td>arquivo</td><td>FAISS</td><td>arquivo</td><td>inline</td><td>memória</td><td>desligada (loopback)</td></tr>
+    <tr><td><b>local</b></td><td>Postgres</td><td>pgvector</td><td>Supabase Storage</td><td>Postgres</td><td>Postgres</td><td>Supabase Auth</td></tr>
+    <tr><td><b>portable</b></td><td>Postgres</td><td>pgvector</td><td>S3</td><td>Postgres</td><td>Postgres</td><td>OIDC</td></tr>
+    <tr><td><b>hosted</b></td><td>Postgres</td><td>pgvector</td><td>S3</td><td>Postgres</td><td>Postgres</td><td>OIDC (não-loopback)</td></tr>
+  </table></div>
+  <p>Validação <b>fail-closed</b>: combinações inválidas recusam iniciar; a service role nunca pode estar com prefixo <code>VITE_</code>. Portas: GameStore (versão otimista), RuntimeCatalogStore, MemoryStore, BlobStore, JobQueue, TurnCoordinator, RateLimiter, IdentityVerifier.</p>
+  <h3>Turno durável: claim → grafo → commit</h3>
+  <div class="card" id="claim"></div>
+  <div class="diagram" data-graph="outbox"></div>
+  <div class="grid g3">
+    <div class="card"><h4>Schema Postgres (8 migrations)</h4><code>app.games</code> (JSONB + sha + versão + mutex de operação), <code>game_checkpoints</code>, <code>game_events</code> (imutáveis por hash), <code>runtime_catalog</code>, <code>operations</code> (livro de idempotência e recibos), <code>turns</code> (telemetria por turno, só hash do input), <code>jobs</code>, <code>rate_limit_buckets</code>, <code>embedding_profiles</code>, <code>memory_documents</code> (vector 1024 + tsvector), <code>assets</code>, <code>chronicle_digests</code>, <code>art_generations</code>, bucket privado <code>rpg-dynamic</code>.</div>
+    <div class="card"><h4>Segurança</h4>RLS habilitada e forçada; role <code>rpg_api</code> sem login e sem BYPASSRLS; anon/authenticated sem acesso ao schema; 14 asserts pgTAP. Filtro explícito por dono em toda query (RLS é defesa em profundidade). Cookies HttpOnly, CSRF HMAC + Origin, refresh restrito. Chave de idempotência de outro dono responde "indisponível", sem vazar existência.</div>
+    <div class="card"><h4>Workers</h4>Um job por vez com lease e fence; LeaseHeld = outro dono manda, sai em silêncio. Handlers: <code>embed_memory</code>, <code>compress_chronicle</code>, <code>generate_dynamic_art</code> (proteção contra cobrança dupla). Backoff exponencial com jitter; dead-letter após o máximo de tentativas. Recuperação de operações órfãs é preview-first.</div>
+    <div class="card"><h4>Observabilidade</h4>17 métricas com labels fechados (cardinalidade controlada); redaction de tokens, e-mails, URLs assinadas e prosa; spans OpenTelemetry opcionais. Stack local: Prometheus, Grafana (dashboard provisionado), OTel Collector, Tempo; 7 alertas testados com promtool.</div>
+    <div class="card"><h4>Backup e restore</h4>Diretório com manifesto SHA-256; recusa operar fora do container local rotulado; restore exige destino vazio e confirmação. Medido: <b>RPO 0</b> e <b>RTO 36 s</b> (meta ≤30 min) com DB + Auth + Storage.</div>
+    <div class="card"><h4>Caos, carga e prontidão</h4>Caos 5/5 (lease expirado, takeover, fencing do token antigo). Carga multiprocesso: commit p95 32 ms. Soak 1.000 turnos sem erro. Relatório G0–G7 READY em 20/08. CI: <code>validate</code>, <code>audit-local</code> (sobe Supabase no runner), <code>eval-gates</code>, <code>eval-protected</code>, <code>post-deploy-smoke</code>.</div>
+  </div>
+  <div class="callout info"><b>Nuvem ainda em rascunho.</b> A SPEC-104 escolhe Railway (um serviço web servindo frontend + API na mesma origem e um worker com a mesma imagem) e Render como contingência — mas nada foi provisionado: exige aprovação e orçamento.</div>
+  <div class="quiz" data-quiz="q6"></div>
+  <div class="recap"><ul class="clean"><li>Portas + adapters: o domínio não sabe se é arquivo ou Postgres.</li><li>Nenhuma transação aberta durante chamada de IA.</li><li>Commit exactly-once por chave; memória via outbox.</li></ul></div>
+</section>
+
+<section class="chap" id="qualidade">
+  <div class="eyebrow">Capítulo 18</div>
+  <h2>Testes e playtest agêntico</h2>
+  <div class="diagram" data-graph="quality"></div>
+  <div class="grid g2">
+    <div class="card"><h4>Suíte offline</h4><p>~190 arquivos, ~1.900 testes (último gate registrado: 1.898 passed, 35 skipped, 15 deselected). <code>RPG_FORCE_MOCK=1</code> no conftest; saves e memória isolados em tmp. Markers fora do padrão: <code>llm_contract</code> (contratos reais), <code>llm_playtest</code> (4 perfis vitais × 30 turnos reais), <code>infra_local</code>/<code>security_local</code>/<code>chaos_local</code>/<code>browser_local</code> (precisam do Supabase/Docker). Skills: <code>/qa</code> (só falhas) e <code>/wrap-up</code> (suíte + docs + commit).</p></div>
+    <div class="card"><h4>Harness de playtest</h4><p>Joga campanhas longas sobre o MESMO grafo. Comandos: <code>run --profile|--all --turns --seed --start-level --class --real</code>, <code>report</code>, <code>transcript</code>, <code>merchant-suite</code>, <code>matrix-suite</code>, <code>--scenario recrutamento|comercio</code>. Modo real opt-in com tetos de requests e custo, preset DeepSeek isolado, preflight, watchdog com prazo absoluto, circuit breaker e manifesto com heartbeat.</p></div>
+  </div>
+  <div class="diagram" data-graph="playloop"></div>
+  <h3>Os 14 perfis</h3>
+  <div class="grid g4">
+    <div class="card"><b>Agressivo</b><br><small>ataca tudo; usa Cartas de Entropia</small></div>
+    <div class="card"><b>Explorador</b><br><small>fronteira primeiro, anti-backtrack, evita locais fatais</small></div>
+    <div class="card"><b>Comerciante</b><br><small>livro de cotações, metas de trade, não onisciente</small></div>
+    <div class="card"><b>Diplomático</b><br><small>fala com todos, tenta recrutar</small></div>
+    <div class="card"><b>Troll</b><br><small>entradas absurdas e injeções</small></div>
+    <div class="card"><b>MapaBreaker</b><br><small>viagens impossíveis</small></div>
+    <div class="card"><b>Combate</b><br><small>busca perigo alto</small></div>
+    <div class="card"><b>NpcOnly</b><br><small>só conversa, inclusive fora de cena</small></div>
+    <div class="card"><b>LootAbuser</b><br><small>tenta duplicar itens únicos</small></div>
+    <div class="card"><b>SecretRusher</b><br><small>pergunta direto pelos segredos</small></div>
+    <div class="card"><b>Quester</b><br><small>persegue quests e beats</small></div>
+    <div class="card"><b>Fujão</b><br><small>entra no perigo e foge</small></div>
+    <div class="card"><b>Recrutador</b><br><small>faz o máximo de aliados</small></div>
+    <div class="card"><b>Normal</b><br><small>jogador curioso e prudente, só visão pública</small></div>
+  </div>
+  <h3>Invariantes (só <span class="tag err">error</span> reprova)</h3>
+  <input type="search" class="search" placeholder="Filtrar invariantes…" data-filter="#invs">
+  <div class="tblwrap" id="invs"><table>
+    <tr><th>Invariante</th><th>Sev.</th><th>O que pega</th></tr>
+    <tr data-row><td>vitality.consistency / wound.capacity</td><td><span class="tag err">error</span></td><td>HP ≠ Vitalidade; ferimentos acima da capacidade</td></tr>
+    <tr data-row><td>player.zero_vitality_outside_terminal</td><td><span class="tag err">error</span></td><td>Vitalidade 0 fora do fluxo terminal (7 ocorrências na matriz A)</td></tr>
+    <tr data-row><td>transition.unresolved_at_boundary</td><td><span class="tag err">error</span></td><td>Turno termina com transição de fase sem dono</td></tr>
+    <tr data-row><td>narrative.false_player_death</td><td><span class="tag err">error</span></td><td>Prosa diz que o herói morreu sem morte mecânica</td></tr>
+    <tr data-row><td>memory.summary_bounds</td><td><span class="tag err">error</span></td><td>Resumo acima de 1.200 caracteres</td></tr>
+    <tr data-row><td>memory.*_grounding / confirmed_without_source</td><td><span class="tag err">error</span></td><td>Memória contradiz local, inventário ou identidade; confirmado sem fonte</td></tr>
+    <tr data-row><td>narrative.reward_contradiction / meta_leak</td><td><span class="tag err">error</span></td><td>Recompensa narrada errada; vazamento de instrução interna</td></tr>
+    <tr data-row><td>campaign.region_grounding</td><td><span class="tag err">error</span></td><td>Plano de uma região sobrevivendo à viagem para outra</td></tr>
+    <tr data-row><td>combat.zombie</td><td><span class="tag err">error</span></td><td>Combate ativo e ocioso por 5+ turnos</td></tr>
+    <tr data-row><td>entity.npc_duplicate_identity</td><td><span class="tag err">error</span></td><td>O mesmo NPC com duas identidades</td></tr>
+    <tr data-row><td>economy.transaction_conservation / stock_bounds</td><td><span class="tag err">error</span></td><td>Ouro ou estoque inconsistentes no livro do comerciante</td></tr>
+    <tr data-row><td>performance.turn_latency</td><td><span class="tag warn">warn</span>/<span class="tag err">error</span></td><td>&gt;45 s aviso; &gt;90 s erro</td></tr>
+    <tr data-row><td>knowledge.secret_leak</td><td><span class="tag warn">warning</span></td><td>Segredo na narração ou nos beats (ignora o que o jogador já sabe)</td></tr>
+    <tr data-row><td>narrative.repeated_opening / recycled_npc</td><td><span class="tag warn">warning</span></td><td>Aberturas repetidas; mesmo NPC-template em vários lugares</td></tr>
+    <tr data-row><td>combat.phantom_ally / interaction.no_progress</td><td><span class="tag warn">warning</span></td><td>Aliado inexistente; interação andando em círculos</td></tr>
+    <tr data-row><td>save.roundtrip</td><td><span class="tag warn">warning</span></td><td>Salvar e carregar muda o estado</td></tr>
+    <tr data-row><td>reprodutibilidade</td><td>—</td><td>Mesma seed duas vezes = mesmo resultado</td></tr>
+  </table></div>
+  <h3>Matriz pareada A/B (10 × 200 turnos)</h3>
+  <div class="tblwrap"><table>
+    <tr><th>#</th><th>Perfil</th><th>Classe</th><th>Nível</th><th>Seed</th></tr>
+    <tr><td>1</td><td>normal</td><td>Devoto do Abismo</td><td>1</td><td>6200</td></tr><tr><td>2</td><td>explorador</td><td>Arcanista Cinzento</td><td>3</td><td>6201</td></tr><tr><td>3</td><td>diplomático</td><td>Médico de Campo</td><td>5</td><td>6202</td></tr><tr><td>4</td><td>combate</td><td>Sangromante</td><td>7</td><td>6203</td></tr><tr><td>5</td><td>comerciante</td><td>Corruptor</td><td>9</td><td>6204</td></tr><tr><td>6</td><td>quester</td><td>Devoto do Abismo</td><td>11</td><td>6205</td></tr><tr><td>7</td><td>recrutador</td><td>Médico de Campo</td><td>13</td><td>6206</td></tr><tr><td>8</td><td>fujão</td><td>Arcanista Cinzento</td><td>15</td><td>6207</td></tr><tr><td>9</td><td>secret_rusher</td><td>Corruptor</td><td>18</td><td>6208</td></tr><tr><td>10</td><td>loot_abuser</td><td>Sangromante</td><td>20</td><td>6209</td></tr>
+  </table></div>
+  <div class="grid g3" style="margin-top:12px">
+    <div class="card stat"><b>2.000</b><span>turnos da matriz A · 12 violações error · US$ 1,46</span></div>
+    <div class="card stat"><b>1.951</b><span>turnos da matriz B · 0 erros · 0 violações error</span></div>
+    <div class="card stat"><b>fail-closed</b><span>primeiro grupo sem sucesso real aborta a matriz (o fallback não pode mascarar provider morto)</span></div>
+  </div>
+  <div class="quiz" data-quiz="q7"></div>
+</section>
+
+<section class="chap" id="evals">
+  <div class="eyebrow">Capítulo 19</div>
+  <h2>Evals determinísticos e Project Index</h2>
+  <p class="lead">Testes dizem "funciona"; evals dizem "o quanto bem" — com uma <b>régua protegida</b> que quem otimiza o produto não pode mexer na mesma tarefa.</p>
+  <div class="grid g2">
+    <div class="card"><h4>Governança</h4><ul class="clean"><li><code>manifest.lock.json</code>: SHA-256 de cada dataset, versão do evaluator (1.6.0), registry de métricas e cada arquivo da régua; checagem falha fechado.</li><li><code>protected-paths.txt</code> + job de CI com aprovação humana quando a régua muda.</li><li>LLM-as-judge nunca bloqueia (sem meta-eval).</li><li>Holdout verdadeiro em repositório privado, só agregados; sem ele, os números são "dev scores".</li><li>Comparação só entre runs com régua, datasets e configuração compatíveis.</li></ul></div>
+    <div class="card"><h4>Domínios (95 casos públicos + 16 jornadas)</h4><table>
+      <tr><th>Spec</th><th>Domínio</th><th>Resultado</th></tr>
+      <tr><td>168</td><td>estado/regras (12)</td><td>pass rate 1,0</td></tr>
+      <tr><td>169</td><td>roteamento/ação (25)</td><td>acurácia 1,0, matriz diagonal</td></tr>
+      <tr><td>170</td><td>memória/RAG/contexto (27)</td><td>R@1 0,58 · R@3/5 1,0 · MRR 0,83 · 0 vazamentos</td></tr>
+      <tr><td>171</td><td>narrativa/NPC (27)</td><td>claims 1,0 · 0 contradições</td></tr>
+      <tr><td>172</td><td>frontend F01–F16</td><td>16/16; 5 bugs reais corrigidos</td></tr>
+      <tr><td>173–174</td><td>CI gates · baseline v1</td><td>gates seletivos; baseline registrada</td></tr>
+    </table></div>
+  </div>
+  <div class="callout warn"><b>SPEC-176.</b> Num checkout limpo os hashes da régua divergiam por fim de linha (LF vs CRLF). Corrigido com <code>.gitattributes</code> e relock — mas a baseline v1 ficou histórica e incompatível; nenhum delta A/B é válido contra ela. Status: revisão técnica aprovada, aprovação humana e CI pendentes.</div>
+  <h3>Project Index: um experimento que disse "não"</h3>
+  <p>Grafo do repositório gerado por AST (5.516 nós, 14.089 arestas), com proveniência, confiança e mapas de ownership/eval. Benchmark A/B v6 selado (ground truth cifrado antes dos runs):</p>
+  <div class="hbars">
+    <div class="hb"><span>Localização correta</span><div class="bar"><i style="width:100%"></i></div><span>16 = 16</span></div>
+    <div class="hb"><span>Chamadas (mediana) sem → com</span><div class="bar"><i style="width:62%"></i></div><span>5 → 8</span></div>
+    <div class="hb"><span>Bytes lidos sem → com</span><div class="bar"><i style="width:80%"></i></div><span>24,7k → 31k</span></div>
+    <div class="hb"><span>Tempo sem → com</span><div class="bar"><i style="width:67%"></i></div><span>39 s → 58 s</span></div>
+  </div>
+  <p>Decisão: o índice saiu do fluxo padrão e só é usado em consultas explícitas, confirmadas no código.</p>
+  <div class="quiz" data-quiz="q8"></div>
+</section>
+
+<section class="chap" id="processo">
+  <div class="eyebrow">Capítulo 20</div>
+  <h2>Processo spec-driven e história</h2>
+  <div class="diagram" data-graph="specflow"></div>
+  <div class="grid g2">
+    <div class="card"><h4>Regras</h4><ol class="steps"><li>Spec antes de código (<code>specs/SPEC-xxx</code>, a partir do TEMPLATE).</li><li>Aprovação do usuário.</li><li>Testes primeiro; desvio atualiza a spec no mesmo commit.</li><li><code>done</code> exige critérios marcados, pytest verde e smoke real; ROADMAP e ESTADO_ATUAL atualizados.</li><li>ROADMAP é resumo + link.</li></ol><p>198 specs com ID estável (174 done, 22 approved, 1 draft, 1 review-pending). Executor e revisor independentes por nível de risco, com handoffs registrados — sem autoaprovação.</p></div>
+    <div class="card"><h4>Autoria de conteúdo</h4><p>Templates em <code>docs/guias/templates/codex/</code>, <code>curated: true</code> obrigatório em doc manual, segredo de NPC em doc hidden paralelo, lint <code>validate_content.py</code> (também gate do reindex e da CI), curadoria migration-safe.</p></div>
+  </div>
+  <h3>Linha do tempo</h3>
+  <div class="timeline">
+    <div class="ev"><b>2025-12 → 2026-06</b><br>MVP: grafo multi-agente, RAG, saves, CLI e API; Fase 0 (mapa, relógio, viagem); Fase 1 (frontend React).</div>
+    <div class="ev"><b>2026-07-02/03</b><br>Mundo Vivo v1: Codex, event_log, projeção, regras, context builder; Fase 3 (crônica, conhecimento, quests).</div>
+    <div class="ev"><b>2026-07-04/06</b><br>Fases 4, 6, 7 (gameplay core, conteúdo sistêmico, autoria); roteamento multi-provider; Fase 5 (playtest); Fase 10 local; Fase 11 (contratos reais).</div>
+    <div class="ev"><b>2026-07-13/18</b><br>SSE, saves, onboarding; DeepSeek primário; playtest longo real → 8 specs; criação imersiva; embeddings Jina.</div>
+    <div class="ev"><b>2026-07-19/21</b><br>5 Posturas × 3 subclasses, Entropia e Carga; checkpoints de morte; aliados em combate; loot de exploração.</div>
+    <div class="ev"><b>2026-07-23 → 08-02</b><br>Épico de conflitos v4: Cartas, cena, dano, reações, morte rica, fuga, Abismo, cutover; 153 Cartas, 124 criaturas, 36 NPCs.</div>
+    <div class="ev"><b>2026-08-03/16</b><br>Laboratório de combate, hardening SSE/persistência, Fase 8A de arte, perfil normal, quatro ciclos de remediação de longrun.</div>
+    <div class="ev"><b>2026-08-19/20</b><br>Fase 10b local-first certificada (G0–G7), níveis até 20, Fase 8B, Crônica avançada.</div>
+    <div class="ev"><b>2026-08-20 → 09-28</b><br>Matriz A (2.000 turnos), remediações, matriz B (1.951, zero erros).</div>
+    <div class="ev"><b>2026-09-27 → 10-02</b><br>IDs estáveis para specs; plataforma de evals (SPEC-164–176); benchmark do Project Index; pacote v5 importado (SPEC-177–198: monetização, hosted, mobile).</div>
+  </div>
+</section>
+
+<section class="chap" id="arestas">
+  <div class="eyebrow">Capítulo 21</div>
+  <h2>Estado atual e arestas conhecidas</h2>
+  <p class="lead">Observações levantadas na exploração do código — úteis para quem vai mexer no projeto.</p>
+  <div class="finding"><span class="tag warn">mecânica</span><div><b>Buffs de Carta possivelmente sem efeito numérico.</b> Cartas de proteção, buff de defesa/acerto/dano e vantagem gravam condições que só a exibição da API parece ler; não foi achado consumidor no ataque, Esquiva ou dano. Vale um teste de integração.</div></div>
+  <div class="finding"><span class="tag warn">mecânica</span><div><b>Cartas passivas sem aplicador.</b> Utilitárias estão ligadas ao contexto do narrador, mas as Cartas do tipo passiva não têm quem as aplique no motor atual (as passivas de árvore anteriores ao cutover foram aposentadas).</div></div>
+  <div class="finding"><span class="tag warn">mecânica</span><div><b>Armadura/escudo do jogador não instanciados.</b> Proteção/Integridade só existem em fichas de teste/simulação; ataque básico sem Carta é 3 fixo (+ bônus de early-game).</div></div>
+  <div class="finding"><span class="tag">resíduo</span><div><b>d20 remanescente</b> em detecção, armadilhas e salvaguarda de item, diferente do 2d10 + Virtude do resto.</div></div>
+  <div class="finding"><span class="tag">fiação</span><div><b>Fuga</b> usa sempre Agilidade; abordagem e Teste de Sorte existem mas não estão ligados. <b>Eventos do Abismo</b> dependem de uma lista que a cena Python deixa vazia.</div></div>
+  <div class="finding"><span class="tag">estado</span><div>Campos <code>active_plan_step</code>, <code>router_confidence</code>, <code>last_routed_intent</code> declarados e nunca escritos; possível persistência do hint de "sem interlocutor"; replan por região chega um turno depois (intencional).</div></div>
+  <div class="finding"><span class="tag">memória</span><div>Retrieval devolve só 2 documentos; o simulador de mundo grava sem proveniência; assinaturas de segredo são curadas à mão (4 segredos).</div></div>
+  <div class="finding"><span class="tag">infra</span><div>Procfile só com processo web, sem Dockerfile; pip-audit/npm audit/scanner de segredos rodados manualmente (não estão na CI); alerta de backup sem produtor automático da métrica; nuvem não certificada.</div></div>
+  <div class="finding"><span class="tag">custo</span><div>Custo de playtest é estimativa por tokens fixos e subconta o real; medição real de uso está numa spec aprovada ainda não iniciada.</div></div>
+  <div class="finding"><span class="tag">docs</span><div>Documentação defasada em pontos: modelo de embedding antigo no CLAUDE.md, "13 perfis", comentário de nível máximo 10, CLASSES.md histórico.</div></div>
+  <div class="finding"><span class="tag ok">próximos</span><div>Fase 9 (sprites e som) sem spec; certificação cloud em rascunho; pacote SPEC-177–198 (Stripe, Google Play, Capacitor, carteira, FinOps, voz) aprovado e aguardando a SPEC-176 fechar.</div></div>
+</section>
+
+<section class="chap" id="glossario">
+  <div class="eyebrow">Capítulo 22</div>
+  <h2>Glossário</h2>
+  <input type="search" class="search" placeholder="Buscar termo…" data-filter="#gloss">
+  <div id="gloss" class="grid g2">
+    <div class="card" data-row><b>Beat</b> — passo do arco de campanha (3–5 por arco), privado do diretor.</div>
+    <div class="card" data-row><b>Carga do Abismo</b> — recurso de longo prazo que não cai no descanso; patamares disparam consequências.</div>
+    <div class="card" data-row><b>Checkpoint</b> — snapshot de restauração tirado só em fronteira segura.</div>
+    <div class="card" data-row><b>Codex</b> — documentos de lore com frontmatter e visibilidade.</div>
+    <div class="card" data-row><b>ContextPack</b> — contexto pontuado e orçado por seção que vai ao prompt.</div>
+    <div class="card" data-row><b>Entropia</b> — pool único que paga Cartas; recompõe no descanso.</div>
+    <div class="card" data-row><b>Esquiva</b> — 10 + Agilidade; alvo da rolagem de ataque.</div>
+    <div class="card" data-row><b>Época (timeline_epoch)</b> — sobe a cada restore; separa linhas do tempo.</div>
+    <div class="card" data-row><b>Fencing</b> — token que impede um processo com lease expirado de publicar.</div>
+    <div class="card" data-row><b>Ferimento</b> — leve/grave/crítico, nasce do excedente de dano sobre a Vitalidade.</div>
+    <div class="card" data-row><b>Guard</b> — checagem <code>isinstance</code> que protege contra AIMessage no lugar do modelo.</div>
+    <div class="card" data-row><b>Invariante</b> — regra checada a cada turno do playtest (error reprova).</div>
+    <div class="card" data-row><b>Lease</b> — posse temporária de uma operação ou job, renovada por heartbeat.</div>
+    <div class="card" data-row><b>MockLLM</b> — modelo simulado offline usado pela suíte e sem chave.</div>
+    <div class="card" data-row><b>Outbox</b> — intenções acumuladas no turno e gravadas na mesma transação do commit.</div>
+    <div class="card" data-row><b>Postura</b> — classe diante do Abismo (5), cada uma com 3 subclasses.</div>
+    <div class="card" data-row><b>Proveniência</b> — origem de um fato de memória; determina a confiança.</div>
+    <div class="card" data-row><b>Régua</b> — evaluators, datasets e lock dos evals; protegida contra edição.</div>
+    <div class="card" data-row><b>RoutedLLM</b> — roteador que tenta provedores em ordem por tier.</div>
+    <div class="card" data-row><b>Ruptura</b> — uso amplificado de uma Carta que gera Carga do Abismo.</div>
+    <div class="card" data-row><b>Spec</b> — especificação aprovada antes de implementar; ID estável SPEC-xxx.</div>
+    <div class="card" data-row><b>Tier</b> — CLASSIFY, FAST ou SMART: nível de modelo por tipo de tarefa.</div>
+    <div class="card" data-row><b>Virtudes</b> — mente, agilidade, força, carisma, corpo (0–5).</div>
+    <div class="card" data-row><b>Vitalidade</b> — pontos de vida derivados de Corpo; 0 não é morte.</div>
+  </div>
+  <p style="margin-top:30px;color:var(--dim);font-size:13px">Guia gerado a partir de uma exploração completa do código em 12/10/2026. Números refletem o working tree e os documentos de estado nessa data.</p>
+</section>
+</main>
+</div>

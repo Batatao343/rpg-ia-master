@@ -9,7 +9,7 @@
 > **REVIEW_REQUIRED:** `false`
 > **SUBSTITUIÇÃO DE MODELO:** proibida sem aprovação explícita do usuário; mismatch => `MODEL_HANDOFF_REQUIRED`
 > **Delegação Luna permitida:** Luna: matriz de navegadores/a11y e relatório; implementação React permanece com Terra.
-> **MODEL_BREAKDOWN:** `docs/rpg-next-jev-golive-plan/examples/spec-model-contract.yaml` → `SPEC-187` é source of truth para subtarefas/review focus
+> **MODEL_BREAKDOWN:** `docs/planos/rpg-next-jev-golive-plan/examples/spec-model-contract.yaml` → `SPEC-187` é source of truth para subtarefas/review focus
 
 > **Execução:** Sol High, substituição autorizada explicitamente pelo usuário
 > em 12/10/2026 após handoff Terra. Reviewer independente não exigido.

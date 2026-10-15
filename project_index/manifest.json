@@ -1,10 +1,10 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "f573561aaa5abeb37ae4189c4b559c45504aecf2",
+  "commit_sha": "7a792e4dfefbc24e872cb8f05f0d27de1c2e0189",
   "edge_counts": {
-    "calls": 9211,
-    "contains": 448,
-    "defines": 5533,
+    "calls": 9216,
+    "contains": 458,
+    "defines": 5554,
     "imports": 972,
     "likely_test_for": 598,
     "route_to": 50
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:99a504f4fed078ce207a1002ba65125c50c0d946efb2355b32a8a607e3621503",
+  "graph_hash": "sha256:4546cb6aa6a5d6972fa0cd1a94abeeb2fa53b739c769648398438df44ea5ad03",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -59,7 +59,31 @@
     "character_creator.py",
     "combat_mechanics.py",
     "conftest.py",
-    "docs/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+    "docs/descricao_projeto/fontes/guia/data_graphs.js",
+    "docs/descricao_projeto/fontes/guia/data_steps.js",
+    "docs/descricao_projeto/fontes/guia/lib.js",
+    "docs/descricao_projeto/fontes/guia/widgets.js",
+    "docs/descricao_projeto/fontes/roteiro/build.py",
+    "docs/descricao_projeto/fontes/roteiro/h.py",
+    "docs/descricao_projeto/fontes/roteiro/p1.py",
+    "docs/descricao_projeto/fontes/roteiro/p2.py",
+    "docs/descricao_projeto/fontes/roteiro/p3.py",
+    "docs/descricao_projeto/fontes/roteiro/p4.py",
+    "docs/descricao_projeto/fontes/roteiro/p5.py",
+    "docs/descricao_projeto/fontes/roteiro/trim.py",
+    "docs/descricao_projeto/fontes/roteiro/validate_roteiro.py",
+    "docs/descricao_projeto/video/package.json",
+    "docs/descricao_projeto/video/scripts/build_timeline.py",
+    "docs/descricao_projeto/video/src/anim.ts",
+    "docs/descricao_projeto/video/src/brag/Brag.tsx",
+    "docs/descricao_projeto/video/src/components/Graph.tsx",
+    "docs/descricao_projeto/video/src/components/SceneFrame.tsx",
+    "docs/descricao_projeto/video/src/components/Visuals.tsx",
+    "docs/descricao_projeto/video/src/index.ts",
+    "docs/descricao_projeto/video/src/Root.tsx",
+    "docs/descricao_projeto/video/src/theme.ts",
+    "docs/descricao_projeto/video/src/types.ts",
+    "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -552,15 +576,15 @@
     "typescript_javascript": "file_only"
   },
   "node_counts": {
-    "artifact": 8,
+    "artifact": 9,
     "class": 500,
     "endpoint": 50,
-    "file": 500,
-    "function": 1726,
+    "file": 523,
+    "function": 1747,
     "method": 440,
-    "module": 448,
+    "module": 458,
     "test": 2867
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:ae974fcff27751b54e4b3465f33eab9a520ced3b1887eea7b34e48323a2d94d9"
+  "source_tree_hash": "sha256:0207b628690918f5e8c4853ad1ff877f62f25ab229ca6356d5707d087c0ce2a2"
 }

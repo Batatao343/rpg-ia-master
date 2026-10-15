@@ -78,7 +78,7 @@ e **guardas de variedade** que impedem reskin.
   quando couber).
 - **R9** — Elenco alvo: **≥30 NPCs nomeados** novos (de +/− os já existentes),
   com relações (`data/graph/edges.json`) que os conectam a fações/locais.
-- **R10** — NPCs seguem a autoria da Fase 7 (`docs/AUTORIA.md`): passam no lint
+- **R10** — NPCs seguem a autoria da Fase 7 (`docs/guias/AUTORIA.md`): passam no lint
   (`scripts/validate_content.py` — frontmatter/ids/refs/visibility), sem vazar
   segredo em doc `public`.
 
@@ -213,4 +213,4 @@ Julgar pelo `transcript`.
 - Smoke real aceito: `20260803-025211-710980`, 3/3 turnos, 4 locais/3 regiões,
   `mock=false`, zero erro/violação, custo US$ 0,010528; smoke direcionado carregou
   `mon_guardiao_basalto` com Cartas regionais e `Brunna Ponte-Alta` pela rota NPC.
-- Relatório detalhado: [`docs/content-coverage-2026-08-02.md`](../docs/content-coverage-2026-08-02.md).
+- Relatório detalhado: [`docs/playtests/content-coverage-2026-08-02.md`](../docs/playtests/content-coverage-2026-08-02.md).

@@ -1,0 +1,158 @@
+<section class="chap" id="vivo">
+  <div class="eyebrow">Capítulo 09</div>
+  <h2>Mundo vivo: NPCs, facções, clima e crônica</h2>
+  <div class="grid g2">
+    <div class="card"><h4>NPCs em 3 camadas</h4><ol class="steps"><li><b>Todos</b> os NPCs da sessão.</li><li><b>Conhecidos pelo jogador</b> — a API só mostra estes, sem traços ocultos.</li><li><b>Em cena</b> — gate do ator: só conversa quem está presente.</li></ol><p>Traços ocultos (1–3 de 80) sorteados por semente estável <code>sha256(npc_id|game_id)</code> e revelados após N interações; afetam dificuldades mesmo antes de conhecidos ("o mundo é real antes de ser conhecido"). NPC gerado fica preso ao local onde surgiu (anti-carrossel), mas relocaliza se viajar junto ou for reintroduzido em outro lugar. Viajar zera a cena.</p></div>
+    <div class="card"><h4>Facções</h4><p>Progresso += ritmo × períodos, sem sorteio. Ao cruzar 100, aplica a ascensão autorada: dominar local, expandir região, elevar perigo, invocar entidade, eliminar facção. A nota ao narrador só nomeia a facção se o jogador já sabe dela; senão descreve apenas a consequência sentida. Reputação muda por impactos validados; NPCs revelam facções em níveis (existência → objetivo → progresso).</p></div>
+    <div class="card"><h4>Clima e luz</h4><p>Cadeia de Markov por região, avança a cada mudança de período. Fenômenos globais (Tempestade de Éter, Noite Sem Estrelas) começam com chance 6% + 3% por nível de perigo acima de 1 e afetam percepção, ataque, custo de viagem, DoT ao ar livre e bloqueio de descanso. Luz: anoitecer/noite ou local escuro, fora de abrigo, sem tocha/lanterna → percepção −3 e acerto −1.</p></div>
+    <div class="card"><h4>Simulador do mundo</h4><p>Em viagem/descanso, a IA propõe um <code>WorldPulse</code> (rumor, fato, deslocamento de perigo). Python limita a ±1 e o perigo a 1–4; o rumor aparece como "[ECOS DO MUNDO]"; só a consequência realmente aplicada vira memória.</p></div>
+    <div class="card"><h4>Crônica</h4><p>Capítulos abertos quando o título do arco muda. Duas fontes: <b>milestones</b> determinísticos a partir de eventos aplicados (morte de NPC, mudança de controle, quest, segredo, level-up, subclasse, Ápice, queda) e <b>prosa</b> do menestrel vinda do arquivista. Compressão em digest (≥20 entradas ou capítulo fechado) sem nunca substituir o raw; busca híbrida léxica + semântica fundida por RRF (k=60); export em .txt.</p></div>
+    <div class="card"><h4>Codex do jogador e bestiário progressivo</h4><p>O jogador descobre entidades aos poucos; corpos de documentos não-públicos nunca aparecem. Criaturas sobem de nível de conhecimento: Rumores → Encontrada → Estudada (3 derrotas) → Dominada (7). Cartas e resistências reveladas em combate persistem por arquétipo.</p></div>
+  </div>
+  <div class="recap"><ul class="clean"><li>NPCs com gate de cena e traços que se revelam.</li><li>Facções, clima e mundo avançam deterministicamente com o tempo.</li><li>Crônica = marcos canônicos + prosa, compressível e pesquisável.</li></ul></div>
+</section>
+
+<section class="chap" id="combate">
+  <div class="eyebrow">Capítulo 10</div>
+  <h2>Combate v4: um jogo tático de Cartas</h2>
+  <p class="lead">Desde o "cutover" do épico de conflitos (Valoria v2), o antigo d20 contra classe de armadura deu lugar a <b>2d10 + Virtude contra Esquiva</b>, Vitalidade e Ferimentos, zonas, reações e uma IA inimiga declarativa. A IA de linguagem só identifica a intenção e narra o log.</p>
+  <div class="diagram" data-graph="combat"></div>
+  <h3>Calculadora de ataque</h3>
+  <div class="card" id="atk"></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h4>Tabelas-base (gamedata.py)</h4><table>
+      <tr><th>Corpo</th><th>Vitalidade</th><th>Espaços L/G/C</th><th>Gravidade L / G / C</th></tr>
+      <tr><td>0</td><td>6</td><td>2/1/1</td><td>1–3 / 4–6 / 7+</td></tr>
+      <tr><td>1</td><td>8</td><td>3/1/1</td><td>1–4 / 5–8 / 9+</td></tr>
+      <tr><td>2</td><td>10</td><td>3/2/1</td><td>1–5 / 6–10 / 11+</td></tr>
+      <tr><td>3</td><td>12</td><td>4/2/2</td><td>1–6 / 7–12 / 13+</td></tr>
+      <tr><td>4</td><td>14</td><td>4/3/2</td><td>1–7 / 8–14 / 15+</td></tr>
+      <tr><td>5</td><td>16</td><td>5/3/3</td><td>1–8 / 9–16 / 17+</td></tr>
+    </table><p style="font-size:13px;color:var(--muted)">Mesma região agrava (leve+leve = grave); categoria cheia escala para a seguinte. Armas: leve 3, marcial 4, versátil 6, pesada 8.</p></div>
+    <div class="card"><h4>Cena posicional — sem grade</h4><ul class="clean"><li><b>Distância</b>: próximo → distante → separado (mudar encerra Escondido).</li><li><b>Postura</b>: protegido / neutro / exposto.</li><li><b>Ocultação</b> relativa a cada observador.</li><li><b>Engajamento</b> separado da distância: engajar custa Pré/Pós; desengajar custa a Ação mas evita Ataque de Oportunidade.</li><li>Manobras: guardar, esconder-se (exige cobertura plausível), procurar, alertar.</li><li>Objetos com catálogo fechado de efeitos; a cena congela após a preparação.</li></ul></div>
+    <div class="card"><h4>IA tática inimiga</h4><p>Perfil = lista ordenada <code>{gatilho → ação}</code>; vale a primeira verdadeira. Gatilhos calculados da cena: sozinho, muito ferido (≤35% ou ferimento grave), cercado, matilha quebrada, alvo vulnerável, plano falhou, aliado em perigo… Ações: atacar, proteger, estabilizar, flanquear, controlar, apoiar, fugir, render-se. 10 arquétipos (bruto, predador, covarde oportunista, conjurador, morto-vivo implacável…). Provocação do Devoto: chance de ser o alvo = min(90%, 50% × (1 + min(60%, 5% × Entropia))) — na prática o teto efetivo é 80%.</p></div>
+    <div class="card"><h4>Rendição, fim e resumo canônico</h4><p>Rendição 100% determinística pelo perfil (líder caído, moral quebrada, sem fuga…); golpe final pode ser não-letal. O combate só termina por objetivo mecânico ou todos os hostis inativos — nunca "perderam o interesse". Ao fim, o <code>ConflictSummary</code> (22 campos: mortos, rendidos, fugitivos, capturados, ferimentos, Cartas reveladas, loot…) é montado SEM IA e vira o contrato que narração, loot e memória respeitam. O nível do encontro vira o perigo do loot.</p></div>
+  </div>
+  <h3>Morte rica</h3>
+  <div class="diagram" data-graph="death"></div>
+  <div data-stepper="dying"></div>
+  <h3>Fuga e perseguição</h3>
+  <div class="diagram" data-graph="chase"></div>
+  <p>Cada rodada: 2d10 + Virtude do condutor (hoje Agilidade) vs <b>10 + Agilidade do perseguidor principal</b>. Teto de 6 tentativas seguidas. Companheiros deixados para trás têm o destino simulado por seed (fuga, captura, rendição, esconderijo, combate, morte, reencontro). Viajar durante combate vira automaticamente tentativa de fuga com destino.</p>
+  <h3>Preparação, Abismo e aliados</h3>
+  <div class="grid g3">
+    <div class="card"><h4>Nível do Encontro</h4>Perigo ABSOLUTO: max(perigo do local, da região) + tipo (emboscada +1, ritual +2, apex/chefe +3) + importância (clímax +2), limitado a 1–10. Nunca olha o nível da party. Potência por categoria (fraco/moderado/forte/devastador) calculada por tabela — números vindos da IA são descartados.</div>
+    <div class="card"><h4>Eventos do Abismo</h4>Preparados antes do combate com base obrigatória num objeto da cena; disparados em combate 100% por Cargas, gatilho, prioridade e usos. Proibidos: desfazer sucesso, controlar mente, criar Ferimento direto. Assinatura visual fixa ("o som abafa, uma fissura negra…").</div>
+    <div class="card"><h4>Aliados de cena</h4>NPC amigo em cena (relação ≥6, facção não hostil) vira combatente transitório (até 2); dano reflete no NPC; não vira party permanente. Party formal: recrutamento com relação ≥7, até 3 membros.</div>
+  </div>
+  <div class="callout info"><b>Laboratório de combate.</b> Pelo frontend dá para montar uma arena (classe, nível 1/3/5/10, inimigo, 1–3 cópias) que roda o MESMO <code>run_round</code> de produção — Cartas, Reações, Ruptura, Ferimentos, IA tática — sem planejamento de campanha, RAG, arquivista, XP, loot nem checkpoints.</div>
+  <div class="recap"><ul class="clean"><li>2d10 + Virtude vs 10 + Agilidade; dupla = crítico que sempre acerta.</li><li>Dano segue ordem fixa até Ferimentos por faixa de Gravidade.</li><li>Vitalidade 0 não mata; o fluxo terminal decide.</li><li>Fim de combate gera um resumo canônico sem IA.</li></ul></div>
+</section>
+
+<section class="chap" id="cartas">
+  <div class="eyebrow">Capítulo 11</div>
+  <h2>Cartas, as 5 Posturas e a progressão</h2>
+  <div class="grid g2">
+    <div class="card"><h4>Economia de Cartas</h4><ul class="clean"><li><b>Acervo</b> (conhecidas) e <b>Preparadas</b> (4 slots no nível 1 até 10 no nível 20); reorganizar só fora de combate em zona de perigo ≤3.</li><li><b>Frequência</b>: livre, turno, cena, descanso curto, descanso longo — reset em cascata.</li><li>Custo em <b>Entropia</b>.</li><li><b>Ruptura</b>: paga o custo, ganha Vantagem e efeito extra, gera +1 Carga do Abismo mesmo se falhar.</li><li><b>Evolução A/B</b> permanente a partir do nível 4 nas Cartas centrais.</li><li><b>Cartas de Virtude</b> (2, fora dos slots) escalam com o estágio da Virtude.</li><li>Tipos: ativa, passiva, utilitária, reação; efeitos de catálogo fechado. Utilitárias entram no contexto do narrador; as passivas de Carta não têm aplicador no motor atual (ver capítulo 21).</li></ul></div>
+    <div class="card"><h4>Acervo em números</h4><p>30–31 Cartas por Postura (153 no total, entre tronco, subclasses e Superiores), mais 80 Cartas tardias dos níveis 9–20 (tronco, subclasse e 15 Ápices), Cartas de inimigo (<code>bst_*</code>) com economia própria. Guarda de paridade: Carta de dano puro deve ter dano/custo entre 1,5 e 4,0. Inimigos ganham Entropia = 2 × Mente e a Carta universal "Defesa Instintiva".</p></div>
+  </div>
+  <h3>As cinco Posturas diante do Abismo</h3>
+  <p>Cada classe é uma postura filosófica diante do Abismo, com 3 subclasses escolhidas no nível 3 (irreversível). Dois recursos: <b>Entropia</b> (pool único, recompõe integral no descanso) e <b>Carga do Abismo</b> (longo prazo, não cai no descanso; patamares leve 1 / moderado 4 / severo 7).</p>
+  <div data-tabs>
+    <div class="tabs"><button data-tab="dev">Devoto do Abismo</button><button data-tab="san">Sangromante</button><button data-tab="cor">Corruptor</button><button data-tab="arc">Arcanista Cinzento</button><button data-tab="med">Médico de Campo</button></div>
+    <div data-pane="dev" class="card"><h4>Devoto do Abismo — tanque, <i>ama</i> o Abismo</h4><p>Virtudes iniciais: Força 4, Corpo 3, Carisma 2, Mente 1, Agilidade 1. Entropia 14 (+2/nível).</p><p><b>Gatilho:</b> ao sofrer dano, +1 Entropia a cada 4 de dano; +1 Carga por turno até 6. <b>Regra especial:</b> provocação escala com Entropia (+5% por ponto, teto +60%). <b>Consequência:</b> Insônia — descanso rende menos Vitalidade (−10/−25/−50% por patamar); aliado ativo mitiga.</p></div>
+    <div data-pane="san" class="card hidden"><h4>Sangromante — dano corpo a corpo, <i>negocia</i></h4><p>Agilidade 4, Corpo 3, Carisma 2, Força 1, Mente 1. Entropia 16 (+3/nível).</p><p><b>Gatilho:</b> ao sacrificar Vitalidade, 1 Entropia por ponto e +1 Carga. <b>Regra:</b> 25% da Entropia "de sangue" vaza quando é acertado. <b>Consequência:</b> Cicatriz — Carta "de pico" reduz a Vitalidade máxima permanentemente (−3). Sacrifício além de 0 vira Ferimento; armadura não protege.</p></div>
+    <div data-pane="cor" class="card hidden"><h4>Corruptor — controle e dano contínuo, <i>trabalha junto</i></h4><p>Mente 4, Corpo 3, Agilidade 2, Carisma 1, Força 1. Entropia 18 (+4/nível).</p><p><b>Gatilho:</b> decadência próxima (o que conta depende da subclasse) → +1 Entropia e +1 Carga. <b>Consequência:</b> Transformação — debuff por domínio e patamar (biologia: DoT extra; alma: −save; inorgânica: −defesa).</p></div>
+    <div data-pane="arc" class="card hidden"><h4>Arcanista Cinzento — distância e controle, <i>manipula</i></h4><p>Mente 4, Agilidade 3, Carisma 2, Corpo 1, Força 1. Entropia 20 (+6/nível).</p><p><b>Gatilho:</b> canalizar → +2 Entropia, +1 Carga. <b>Regra:</b> Caldeira — 3 turnos sem "vazão" = 2d6 de auto-dano arcano. <b>Consequência:</b> Dependência — sem arma e com Carga moderada, custo das Cartas dobra.</p></div>
+    <div data-pane="med" class="card hidden"><h4>Médico de Campo — suporte, <i>nega</i> o Abismo</h4><p>Mente 4, Carisma 3, Corpo 2, Agilidade 1, Força 1. Entropia 16 (+3/nível).</p><p><b>Gatilho:</b> aliado sofrendo → +1 Entropia, +1 Carga. Pode gastar 2 Entropia para purgar Carga de aliado; trata Ferimentos críticos com kit. <b>Consequência:</b> Recidiva — oculta (o HUD esconde o número); ao cruzar severo, um colapso: −4 de acerto por 3 turnos.</p></div>
+  </div>
+  <div class="callout"><b>Anti-órfão.</b> <code>HANDLED_KINDS</code> lista todo gatilho, regra, consequência e efeito que o motor sabe tratar; um teste varre os JSONs de classe e falha se surgir um tipo sem handler. Nasceu de uma revisão que achou três mecânicas "mortas" (provocação, Transformação, Purga) — implementadas e testadas em unidade, mas nunca chamadas pelo jogo.</div>
+  <h3>Progressão até o nível 20</h3>
+  <div class="card" id="xp"></div>
+  <p>Vitalidade não cresce com nível: vem de Corpo (+6 de bônus de classe). Criação: distribuição 4/3/2/1/1 entre as Virtudes, 6 Cartas no Acervo, 4 preparadas, 2 Cartas de Virtude. Escolhas pendentes não travam o jogo e são idempotentes por ledger. Bônus de early-game: +2 de dano nos níveis 1–2, +1 no 3.</p>
+  <div class="recap"><ul class="clean"><li>Cartas custam Entropia; Ruptura troca poder por Carga do Abismo.</li><li>Cada Postura tem gatilho, regra especial e consequência próprias — tudo Python.</li><li>Nível 3 escolhe subclasse; nível 20 dá Ápice.</li></ul></div>
+</section>
+
+<section class="chap" id="sistemico">
+  <div class="eyebrow">Capítulo 12</div>
+  <h2>Viagem, descanso, encontros e economia</h2>
+  <div class="grid g3">
+    <div class="card"><h4>Relógio e viagem</h4>5 períodos por dia (Amanhecer, Manhã, Tarde, Anoitecer, Noite). Custo de viagem: interior 0, senão <code>travel_times</code> do nó (padrão 1) + extra do clima. Fog of war: só destinos conectados; locais não visitados aparecem como "???".</div>
+    <div class="card"><h4>Descanso</h4>Recupera metade da Vitalidade máxima (× Insônia), remove Ferimentos leves, Integridade da armadura volta, Cartas de descanso resetam, Entropia integral, Carga intacta, avança 2 períodos. Miasma bloqueia. Early-game (nível ≤3, perigo ≤3, fora de apex): descanso não sorteia encontro.</div>
+    <div class="card"><h4>Encontros</h4>Gatilhos determinísticos: alerta de fuga, facção hostil dominando, ameaça iminente ou perigo ≥4. Cooldown 2 turnos (+2 no early-game). Tipos: perigo ≤2 → combate 50 / rastro 30 / social 20; ≥3 → combate 60 / armadilha 20 / social 10 / rastro 10. Mesmo template no mesmo local duas vezes seguidas é descartado.</div>
+  </div>
+  <h3>Orçamento de encontro</h3>
+  <div class="card" id="budget"></div>
+  <h3>Preço de mercado</h3>
+  <div class="card" id="price"></div>
+  <div class="grid g3" style="margin-top:16px">
+    <div class="card"><h4>Mercadores e craft</h4>Estoque base com reposição a cada 3 dias pelo relógio; local hostil esconde itens raros; rota bloqueada tira itens da prateleira. Craft valida local, classe, ingredientes e ouro. 20+ itens únicos com motor de posse (ninguém duplica).</div>
+    <div class="card"><h4>Exploração e ecologia</h4>Primeira visita: baú curado (one-shot) ou achado com chance min(50%, 12% + 8% × perigo), RNG estável por <code>sha256(game_id|local|turno)</code>. Pressão de caça: matar muito uma criatura a suprime da região; facção dominante dobra suas criaturas; vagas atraem migrantes.</div>
+    <div class="card"><h4>Inventário</h4>Entradas <code>{id, qty}</code>, empilháveis por tipo, slots arma/armadura/acessório. Itens com passiva (incl. tocha = luz), itens ativos ofensivos com alvo e salvaguarda. Equipar/desequipar 100% Python.</div>
+  </div>
+  <div class="recap"><ul class="clean"><li>Tempo, viagem e descanso são determinísticos.</li><li>Encontros têm gatilho, cooldown e orçamento com teto de sobrevivência.</li><li>Preço depende de oferta real no mapa, facção e mercador — nunca da IA.</li></ul></div>
+</section>
+
+<section class="chap" id="api">
+  <div class="eyebrow">Capítulo 13</div>
+  <h2>API e streaming</h2>
+  <p class="lead">Uma única borda HTTP (<code>api.py</code>), com dois modos controlados por <code>RPG_RUNTIME_PROFILE</code>: <b>legacy</b> (JSON + FAISS, sem login, só loopback) e <b>local/portable/hosted</b> (Postgres, auth por cookie, operações com lease).</p>
+  <input type="search" class="search" placeholder="Filtrar endpoints…" data-filter="#endpoints">
+  <div class="tblwrap" id="endpoints"><table>
+    <tr><th>Método e rota</th><th>Para quê</th></tr>
+    <tr data-row><td><code>GET /auth/config</code> · <code>POST /auth/login|signup|refresh|logout</code></td><td>Sessão por cookies HttpOnly + CSRF assinado (só perfis de banco).</td></tr>
+    <tr data-row><td><code>GET /health</code> · <code>GET /metrics</code></td><td>Status com git SHA (smoke pós-deploy); métricas Prometheus.</td></tr>
+    <tr data-row><td><code>GET /data/options</code> · <code>/data/onboarding</code> · <code>/data/map</code> · <code>/data/combat-simulator</code></td><td>Catálogos de criação, lore do wizard, mapa sem interiores, opções do laboratório.</td></tr>
+    <tr data-row><td><code>POST /game/prologue</code></td><td>Gera prólogo confirmável (arco pessoal, NPCs semente, cena). Sem estado; nunca 500.</td></tr>
+    <tr data-row><td><code>POST /game/new</code></td><td>Cria ficha, semeia cenário, roda o grafo uma vez, salva + checkpoint inicial.</td></tr>
+    <tr data-row><td><code>POST /game/combat-simulator</code></td><td>Arena isolada do laboratório.</td></tr>
+    <tr data-row><td><code>POST /game/action</code> · <code>/game/action/stream</code></td><td>Turno (JSON ou SSE). Texto livre + seleção tática: card_id, target_id, ruptura, reaction_card_id, action_kind, manobra.</td></tr>
+    <tr data-row><td><code>POST /game/death</code></td><td>continue (restaura checkpoint) ou accept (memorial).</td></tr>
+    <tr data-row><td><code>POST /game/equip</code> · <code>/game/levelup</code></td><td>Equipamento e escolhas de nível, validados em Python.</td></tr>
+    <tr data-row><td><code>GET /game/state</code> · <code>/game/codex</code> · <code>/game/history</code> · <code>/game/{id}/operations/{op}</code></td><td>Estado, Codex sob demanda, histórico paginado por época, status de ação pendente.</td></tr>
+    <tr data-row><td><code>GET /game/saves</code> · <code>DELETE /game/save/{id}</code></td><td>Lista e exclusão (save + checkpoint + memória).</td></tr>
+    <tr data-row><td><code>POST /game/chronicle/search</code> · <code>GET /game/chronicle/export</code></td><td>Busca na crônica e export .txt.</td></tr>
+    <tr data-row><td><code>POST /game/art/brief</code> · <code>/game/{id}/art/player/confirm</code> · <code>GET|POST /game/{id}/art/{gen}</code></td><td>Arte dinâmica: brief revisável sem custo, confirmação, status, qualidade.</td></tr>
+  </table></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h4>Proteções transversais</h4><ul class="clean"><li>CORS por allowlist; headers de segurança.</li><li>Rate limit por IP (30/min padrão) nas rotas que gastam.</li><li>Lock por jogo (legacy) ou claim com lease (banco).</li><li>Idempotência por <code>action_id</code>: retry devolve o mesmo resultado.</li><li>409 para memorial, arquivado ou queda pendente.</li><li>Erro interno = 500 genérico; detalhe só no log.</li><li>Log JSON <code>rpg.turn</code> por turno com pseudônimo do jogo, rota, latência, eventos e custo.</li></ul></div>
+    <div class="card"><h4>SSE: o que é ao vivo e o que não é</h4><p>Uma thread worker é dona do lock, da execução e do save — se o cliente desconectar, o turno termina e grava. As <b>fases</b> (phase/route) são reais; a narração é fatiada em pedaços de 80 caracteres depois de pronta, e a "digitação" é do cliente.</p></div>
+  </div>
+  <div class="card" id="sse" style="margin-top:16px"></div>
+  <div class="recap"><ul class="clean"><li>~30 rotas, dois modos de runtime.</li><li>action_id torna qualquer retry seguro.</li><li>SSE mostra o grafo trabalhando em tempo real.</li></ul></div>
+</section>
+
+<section class="chap" id="front">
+  <div class="eyebrow">Capítulo 14</div>
+  <h2>Frontend e jornada do jogador</h2>
+  <div class="diagram" data-graph="screens"></div>
+  <div class="grid g2">
+    <div class="card"><h4>Ação pendente à prova de queda</h4><p>Antes de enviar, o payload, um UUID e o SHA-256 são gravados no <code>localStorage</code>. Ao reabrir a aba, o cliente consulta <code>/operations</code>: se já concluiu, recarrega; se ainda roda, avisa; só então reenvia — sempre com o mesmo id. Refresh de sessão é single-flight; respostas atrasadas de outro jogo são descartadas.</p></div>
+    <div class="card"><h4>HUD de 8 abas</h4><p>Ficha (Vitalidade, Entropia, Carga, Virtudes, equipamento, retrato), Combate (inimigos só com dados públicos/revelados), Personagens, Mapa (fog of war, clique para viajar, selos de facção/ameaça/quest), Facções (reputação), Missões, Crônica (busca, export), Codex. Desktop lateral; gaveta em ≤900 px; tela cheia em ≤480 px.</p></div>
+    <div class="card"><h4>Combate tático na UI</h4><p><b>CardHand</b>: Cartas preparadas com custo, frequência, estado, botão de Ruptura e seletor de alvo — o texto é cosmético, o servidor usa o <code>card_id</code>. <b>ReactionPrompt</b> escolhe uma reação para a rodada. <b>WoundTrack</b> e <b>SceneZones</b> mostram ferimentos, zonas e trilha de fuga. Chips: Engajar, Guardar, Esconder-se, Procurar, Fugir.</p></div>
+    <div class="card"><h4>Tema e acessibilidade</h4><p>Dark medieval (Cinzel + EB Garamond, tokens OKLCH, brasas animadas), <code>motion</code> com movimento reduzido respeitado, axe sem violações sérias, 16 jornadas críticas testadas com Playwright em 320/390/768/1440 px. Banners avisam modo simulado ou degradado.</p></div>
+  </div>
+  <div class="recap"><ul class="clean"><li>SPA sem router: máquina de telas.</li><li>Wizard de 5 passos + prólogo personalizado.</li><li>Ação pendente sobrevive a fechar a aba.</li></ul></div>
+</section>
+
+<section class="chap" id="arte">
+  <div class="eyebrow">Capítulo 15</div>
+  <h2>Arte visual</h2>
+  <div class="grid g2">
+    <div class="card"><h4>Fase 8A — âncoras curadas</h4><p>45 ativos, 90 WebPs (thumb + display): 6 raças, 5 classes, 22 locais exatos e 12 NPCs. Os 35 locais ficam cobertos por 22 exatos + 13 fallbacks regionais. Escolha da imagem 100% por ID canônico e estado — a IA nunca escolhe arquivo, e nomes na prosa não são parseados. Primeira aparição de NPC gera um "cue" registrado num ledger por ação, então retry e SSE devolvem a mesma imagem. NPC sem arte ganha monograma — nunca o rosto de outro. NPCs secretos nunca entram no catálogo público.</p></div>
+    <div class="card"><h4>Fase 8B — arte dinâmica rara (opt-in)</h4><p>Desligada por padrão. Gatilhos: retrato do jogador (1 + 1 reformulação), primeira aparição de NPC sem arte, momento épico (chefe). Orçamento <b>por arco</b>: 4 NPCs + 1 épica, cooldown de 15 turnos; escolher subclasse custa zero. Brief com âncoras de estilo e sanitização anti-injeção; modelo de imagem pinado; worker gera uma vez só (resultado incerto nunca é regenerado = sem cobrança dupla); pipeline converte para WebP e guarda em storage privado com URL assinada.</p></div>
+  </div>
+</section>
+
+<section class="chap" id="persist">
+  <div class="eyebrow">Capítulo 16</div>
+  <h2>Persistência, checkpoints e continuidade</h2>
+  <div class="grid g2">
+    <div class="card"><h4>Save JSON (perfil legacy)</h4><p><code>saves/{uuid}.json</code> com caminho confinado (anti path-traversal). Escrita atômica: arquivo temporário → fsync → <code>os.replace</code> com retry (antivírus/OneDrive). Fonte única de serialização reaproveitada por save, checkpoint e Postgres. Falha de escrita nunca responde sucesso falso.</p></div>
+    <div class="card"><h4>Migrações (schema v8)</h4><div class="timeline">
+      <div class="ev"><b>v2</b> camadas de NPC</div><div class="ev"><b>v3</b> 5 Posturas + Entropia</div><div class="ev"><b>v4</b> Virtudes, Vitalidade, Ferimentos (saves anteriores ficam arquivados, só leitura)</div><div class="ev"><b>v5</b> Vitalidade canônica + aliases HP</div><div class="ev"><b>v6</b> ledger visual</div><div class="ev"><b>v7</b> metatempo (continuity)</div><div class="ev"><b>v8</b> crônica com IDs estáveis + progressão 1–20</div></div></div>
+    <div class="card"><h4>Checkpoints</h4><p>A cada 10 turnos ou ao entrar em zona segura (perigo ≤1), mais um inicial na criação. Nunca durante combate, Última Ação, Estado Terminal ou morte pendente. Slot único; inclui cópia da memória FAISS para que o restore reverta também os fatos.</p></div>
+    <div class="card"><h4>Três relógios</h4><p><code>world.turn_count</code> (canônico, volta no restore), <code>session_action_count</code> (nunca retrocede) e <code>timeline_epoch</code> (sobe a cada restore). O histórico de mortes guarda o que foi mantido e revertido — a tela de morte mostra isso. O histórico de apresentação é paginado por época, e um cursor de época antiga recebe 409.</p></div>
+  </div>
+  <div class="recap"><ul class="clean"><li>Escrita atômica e migrações idempotentes.</li><li>Checkpoint só em fronteira segura.</li><li>Restore cria nova época; nada se mistura entre linhas do tempo.</li></ul></div>
+</section>

@@ -1,0 +1,277 @@
+<header class="topbar">
+  <button id="tocBtn" aria-label="Abrir índice">☰</button>
+  <span class="brand">⚜ rpg-ia-master · Guia</span>
+  <div class="progress" aria-hidden="true"><i></i></div>
+  <button id="themeBtn" aria-label="Alternar tema claro/escuro">◐ tema</button>
+</header>
+<div class="wrap">
+<nav class="toc" aria-label="Índice">
+  <div class="grp">Fundamentos</div>
+  <a href="#inicio"><span class="n">00</span>Como usar este guia</a>
+  <a href="#visao"><span class="n">01</span>Visão geral e princípios</a>
+  <a href="#turno"><span class="n">02</span>Anatomia de um turno</a>
+  <a href="#agentes"><span class="n">03</span>Os agentes, um a um</a>
+  <a href="#llm"><span class="n">04</span>Camada de IA e resiliência</a>
+  <div class="grp">O mundo</div>
+  <a href="#valoria"><span class="n">05</span>Valoria: lore e Codex</a>
+  <a href="#rag"><span class="n">06</span>RAG e embeddings</a>
+  <a href="#eventos"><span class="n">07</span>Event sourcing e regras</a>
+  <a href="#memoria"><span class="n">08</span>Memória, contexto e segredos</a>
+  <a href="#vivo"><span class="n">09</span>Mundo vivo: NPCs, facções, clima, crônica</a>
+  <div class="grp">Mecânica</div>
+  <a href="#combate"><span class="n">10</span>Combate v4</a>
+  <a href="#cartas"><span class="n">11</span>Cartas, Posturas e progressão</a>
+  <a href="#sistemico"><span class="n">12</span>Viagem, economia e encontros</a>
+  <div class="grp">Produto</div>
+  <a href="#api"><span class="n">13</span>API e streaming</a>
+  <a href="#front"><span class="n">14</span>Frontend e jornada</a>
+  <a href="#arte"><span class="n">15</span>Arte visual</a>
+  <a href="#persist"><span class="n">16</span>Persistência e morte</a>
+  <a href="#infra"><span class="n">17</span>Infra local-first</a>
+  <div class="grp">Engenharia</div>
+  <a href="#qualidade"><span class="n">18</span>Testes e playtest</a>
+  <a href="#evals"><span class="n">19</span>Evals e Project Index</a>
+  <a href="#processo"><span class="n">20</span>Processo e história</a>
+  <a href="#arestas"><span class="n">21</span>Estado atual e arestas</a>
+  <a href="#glossario"><span class="n">22</span>Glossário</a>
+</nav>
+<main>
+
+<section class="chap hero" id="inicio">
+  <div class="eyebrow">Guia interativo e pedagógico</div>
+  <h1>Como funciona o rpg-ia-master</h1>
+  <p class="lead">Um RPG de texto em que <b>a IA narra e o Python decide</b>. Este guia percorre o projeto inteiro — do texto que o jogador digita até o disco, passando por agentes, memória, combate tático de Cartas, infraestrutura e o processo de engenharia que mantém tudo coerente.</p>
+  <div class="grid g4" style="margin:24px 0">
+    <div class="card stat"><b>13</b><span>nós no grafo de um turno</span></div>
+    <div class="card stat"><b>3</b><span>tiers de IA com fallback multi-provider</span></div>
+    <div class="card stat"><b>699</b><span>documentos de lore no Codex</span></div>
+    <div class="card stat"><b>~1.900</b><span>testes offline</span></div>
+    <div class="card stat"><b>124</b><span>criaturas no bestiário</span></div>
+    <div class="card stat"><b>5 × 3</b><span>Posturas × subclasses</span></div>
+    <div class="card stat"><b>14</b><span>perfis de playtest agêntico</span></div>
+    <div class="card stat"><b>198</b><span>specs com ID estável</span></div>
+  </div>
+  <h3>Como ler</h3>
+  <div class="grid g3">
+    <div class="card"><h4>◆ Diagramas vivos</h4>Clique em qualquer caixa para ler o que ela faz. Passe o mouse para ver de onde ela recebe e para onde envia. As cores indicam a natureza: <span class="tag llm">LLM</span> <span class="tag python">Python</span> <span class="tag data">Dados</span> <span class="tag io">E/S</span> <span class="tag infra">Infra</span>.</div>
+    <div class="card"><h4>▶ Passo a passo</h4>Os blocos com botões "próximo" contam uma história concreta — um turno de viagem, uma emboscada, uma morte — destacando no diagrama o nó ativo.</div>
+    <div class="card"><h4>🎲 Calculadoras</h4>Ataques, preços, orçamento de encontro e pontuação de contexto usam as <b>fórmulas reais</b> do código. Mexa nos controles e veja a regra funcionando.</div>
+  </div>
+  <div class="analogy">Pense no jogo como uma mesa de RPG presencial. A IA é o mestre que descreve a cena e interpreta os personagens. O Python é o livro de regras e os dados: ninguém na mesa — nem o mestre — pode inventar que o ataque acertou ou que o baú tinha 500 moedas.</div>
+</section>
+
+<section class="chap" id="visao">
+  <div class="eyebrow">Capítulo 01</div>
+  <h2>Visão geral e princípios</h2>
+  <p class="lead">O projeto é um motor de RPG de texto multi-agente. Stack: Python 3.13, LangGraph, FastAPI, FAISS/pgvector, React + Vite + TypeScript, gerenciado com <code>uv</code>. O mesmo grafo serve API, terminal (CLI) e harness de testes — o que é testado é exatamente o que roda.</p>
+  <div class="diagram" data-graph="arch"></div>
+  <h3>Os quatro princípios que aparecem em todo arquivo</h3>
+  <div class="grid g2">
+    <div class="card accent"><h4>1. A IA identifica e narra; o Python resolve os números</h4>Combate, dano, Ferimentos, economia, XP, viagem, descanso, clima e luz são código determinístico. A IA devolve intenção, classificação ou prosa.</div>
+    <div class="card accent"><h4>2. A IA propõe; o motor aplica</h4>Eventos de mundo, missões, itens narrados e reputação chegam como <b>propostas</b>. Validadores Python aceitam ou recusam cada uma contra o grafo do mundo, o catálogo e o estado.</div>
+    <div class="card accent"><h4>3. Toda saída estruturada tem guard</h4>Quando todos os provedores falham, o roteador devolve uma <code>AIMessage</code> vazia — nunca uma exceção. Cada nó checa <code>isinstance(res, Modelo)</code> e cai num caminho determinístico. O jogador nunca vê erro de provider.</div>
+    <div class="card accent"><h4>4. Tudo que o jogador lê passa por guardas</h4><code>prose_guard</code>, <code>narrative_evidence</code> e <code>turn_outcome</code> removem vazamento de meta-instrução, morte falsa, posse/local errados, segredos — e reescrevem o recibo de recompensa a partir do delta mecânico real.</div>
+  </div>
+  <div class="callout"><b>Por que isso importa?</b> Modelos de linguagem são ótimos contadores de história e péssimos contadores de moedas. Separar narração de regra torna o jogo justo, reproduzível por seed, testável offline e barato: a maioria das decisões nem chega a chamar a IA.</div>
+  <h3>Mapa das pastas</h3>
+  <div class="tblwrap"><table>
+    <tr><th>Onde</th><th>O que vive lá</th></tr>
+    <tr><td><code>main.py</code></td><td>Constrói e compila o grafo LangGraph (<code>app</code>).</td></tr>
+    <tr><td><code>state.py</code></td><td>Fonte da verdade do schema: <code>GameState</code> e todos os TypedDicts.</td></tr>
+    <tr><td><code>agents/</code></td><td>Nós do grafo: action_guard, router, storyteller, combat, npc, loot, archivist, campaign_manager, turn_finalizer, bestiary, librarian, world_simulator.</td></tr>
+    <tr><td><code>services/</code></td><td>~70 módulos determinísticos: conflito v4, Cartas, eventos, regras, contexto, memória, economia, checkpoints, arte, turnos duráveis.</td></tr>
+    <tr><td><code>llm_setup.py</code>, <code>mock_llm.py</code></td><td>Roteamento de modelos por tier e o modelo simulado offline.</td></tr>
+    <tr><td><code>rag.py</code></td><td>Índices FAISS, embeddings multi-provider, memória de sessão e por NPC.</td></tr>
+    <tr><td><code>api.py</code>, <code>web/</code>, <code>frontend/</code></td><td>API FastAPI, cliente React principal e cliente vanilla legado.</td></tr>
+    <tr><td><code>persistence.py</code></td><td>Saves JSON atômicos, migrações de schema (v8), checkpoints.</td></tr>
+    <tr><td><code>infrastructure/</code>, <code>workers/</code>, <code>supabase/</code></td><td>Portas e adapters, Postgres, filas, workers, migrations e RLS.</td></tr>
+    <tr><td><code>data/</code>, <code>lore_nova/</code></td><td>Mundo de Valoria: lore, Codex, grafo, mapa, bestiário, classes, Cartas.</td></tr>
+    <tr><td><code>tests/</code>, <code>playtest/</code>, <code>evals/</code></td><td>Suíte offline, harness de campanhas longas e plataforma de avaliações.</td></tr>
+    <tr><td><code>specs/</code>, <code>docs/</code></td><td>198 especificações com ID estável, relatórios de playtest e operação.</td></tr>
+  </table></div>
+  <div class="quiz" data-quiz="q1"></div>
+  <div class="recap"><ul class="clean"><li>Um só grafo para API, CLI e testes.</li><li>IA narra e propõe; Python resolve e valida.</li><li>Nada que a IA diz vira estado sem passar por um validador.</li></ul></div>
+</section>
+
+<section class="chap" id="turno">
+  <div class="eyebrow">Capítulo 02</div>
+  <h2>Anatomia de um turno</h2>
+  <p class="lead">Cada ação do jogador percorre um <b>StateGraph</b> síncrono. O estado é um dicionário tipado; cada nó devolve só as chaves que mudou. Único campo acumulativo: <code>messages</code> (reducer <code>operator.add</code>) — todo o resto é "último valor vence", por isso o router zera explicitamente os campos transitórios do turno anterior.</p>
+  <div class="diagram" data-graph="turn"></div>
+  <h3>Um turno de viagem, ponta a ponta</h3>
+  <div data-stepper="travel"></div>
+  <h3>Variações importantes</h3>
+  <div data-tabs>
+    <div class="tabs"><button data-tab="a">Emboscada na estrada</button><button data-tab="b">Conversa sem ninguém</button><button data-tab="c">Execução concorrente</button></div>
+    <div data-pane="a"><div data-stepper="ambush"></div></div>
+    <div data-pane="b"><div data-stepper="npcnone"></div></div>
+    <div data-pane="c"><div class="card"><p>Por padrão (<code>RPG_TURN_EXECUTION=sequential</code>) o turno é linear. Existe um modo experimental <code>concurrent</code> em que <code>campaign_manager</code> e <code>dm_router</code> rodam em paralelo a partir de <code>turn_prepare</code> e se juntam em <code>dispatch</code> — seguro porque escrevem canais disjuntos (o router nunca é dono de <code>world</code>).</p><p>O benchmark da SPEC-143 (agosto) mostrou sobreposição em ambiente controlado, mas <b>piorou com o DeepSeek real</b> (contenção quando SMART e CLASSIFY batem na mesma rota). Decisão: no-go; produção segue sequencial.</p></div></div>
+  </div>
+  <h3>O estado do jogo (<code>GameState</code>)</h3>
+  <div class="tblwrap"><table>
+    <tr><th>Grupo</th><th>Campos</th><th>Para que serve</th></tr>
+    <tr><td>Identidade</td><td><code>game_id</code>, <code>processed_action_ids</code> (64)</td><td>Isolar memória por sessão; deduplicar retries.</td></tr>
+    <tr><td>Memória</td><td><code>narrative_summary</code>, <code>memory_facts</code>, <code>pending_memory_facts</code>, <code>pending_npc_memory</code>, <code>memory_fact_policy</code></td><td>Resumo curto, ledger de fatos com proveniência, filas de retry.</td></tr>
+    <tr><td>Ciclo de vida</td><td><code>game_over</code>, <code>death_pending</code>, <code>archived</code>, <code>continuity</code></td><td>Memorial, tela de morte, linha do tempo e épocas.</td></tr>
+    <tr><td>Pipeline</td><td><code>action_guard_blocked</code>, <code>turn_baseline</code>, <code>last_turn_outcome</code>, <code>presentation_history</code></td><td>Gate, recibo por diferença, histórico estável para o cliente.</td></tr>
+    <tr><td>Entidades</td><td><code>player</code>, <code>world</code>, <code>party</code>, <code>enemies</code>, <code>npcs</code>, <code>factions</code>, <code>quests</code>, <code>bestiary_knowledge</code></td><td>Estado mecânico.</td></tr>
+    <tr><td>Campanha</td><td><code>campaign_plan</code>, <code>needs_replan</code>, <code>chronicle</code></td><td>Arco de 3–5 beats, crônica por capítulos.</td></tr>
+    <tr><td>Transições</td><td><code>combat_target</code>, <code>loot_source</code>, <code>active_npc_name</code>, <code>combat_declaration</code>, <code>conflict_summary</code>…</td><td>Canais efêmeros entre nós.</td></tr>
+    <tr><td>Combate</td><td><code>combat</code> (round, active, scene, chase, instance_id), <code>combat_simulation</code></td><td>Cena tática e laboratório.</td></tr>
+    <tr><td>Mundo estruturado</td><td><code>event_log</code>, <code>world_projection</code>, <code>pending_world_events</code>, <code>event_rejections</code></td><td>Event sourcing leve.</td></tr>
+    <tr><td>Auditoria</td><td><code>narrative_rejections</code>, <code>evidence_rejections</code>, <code>rejected_item_claims</code></td><td>O que os guardas removeram (limitado).</td></tr>
+  </table></div>
+  <p><code>PlayerStats</code> mostra duas camadas convivendo: a nova (5 Virtudes — mente, agilidade, força, carisma, corpo —, Vitalidade, Ferimentos por categoria, Cartas conhecidas e preparadas, Entropia e Carga do Abismo, escolhas pendentes) e aliases legados (<code>hp</code>, <code>max_hp</code>) derivados da Vitalidade.</p>
+  <div class="diagram" data-graph="lifecycle"></div>
+  <div class="quiz" data-quiz="q3"></div>
+  <div class="recap"><ul class="clean"><li>START barra herói morto/arquivado; action_guard barra ações impossíveis para a fase do jogador.</li><li>O router tem atalhos determinísticos antes de usar IA.</li><li>Todo caminho termina em archivist → turn_finalizer (exceto bloqueio e laboratório).</li><li>O recibo é diferença de estados, nunca texto da IA.</li></ul></div>
+</section>
+
+<section class="chap" id="agentes">
+  <div class="eyebrow">Capítulo 03</div>
+  <h2>Os agentes, um a um</h2>
+  <p class="lead">Cada nó é uma função que recebe o estado e devolve um dicionário parcial. A tabela resume custo e plano B de cada um.</p>
+  <div class="tblwrap"><table>
+    <tr><th>Nó / função</th><th>Tier</th><th>Schema</th><th>Chamadas típicas</th><th>Se a IA falhar…</th></tr>
+    <tr><td>campaign_manager</td><td><span class="tag llm">SMART</span></td><td>CampaignPlanModel</td><td>0 (1 a cada ~15 turnos)</td><td>Plano de 3 beats pt-BR; mantém o anterior se vier em inglês</td></tr>
+    <tr><td>dm_router</td><td><span class="tag llm">CLASSIFY</span></td><td>RouterDecision</td><td>0–1</td><td>STORY</td></tr>
+    <tr><td>storyteller</td><td><span class="tag llm">FAST</span></td><td>StoryUpdate</td><td>1 (+1 simulador de mundo em viagem)</td><td>Narração determinística das notas do turno</td></tr>
+    <tr><td>generate_new_npc</td><td>FAST/SMART + CLASSIFY</td><td>NPCSchema, EntityMatch</td><td>por NPC novo (com cache)</td><td>Ficha genérica</td></tr>
+    <tr><td>npc_actor</td><td><span class="tag llm">FAST</span></td><td>NPCResponse</td><td>1</td><td>"..."</td></tr>
+    <tr><td>combat spawn</td><td>CLASSIFY</td><td>EncounterScanner</td><td>1 no início</td><td>Inimigo Sombrio</td></tr>
+    <tr><td>combat parse</td><td>CLASSIFY</td><td>PlayerMove</td><td>0 se a UI declarou ou o nome da Carta está no texto</td><td>Ataque básico no 1º inimigo</td></tr>
+    <tr><td>combat narração</td><td>FAST</td><td>texto</td><td>1 por rodada</td><td>Log mecânico como prosa</td></tr>
+    <tr><td>Cicatriz</td><td>SMART</td><td>ScarModel</td><td>só em queda</td><td>Cicatriz determinística</td></tr>
+    <tr><td>loot (parse/narra)</td><td>CLASSIFY + FAST</td><td>TradeIntent</td><td>0–2</td><td>Palavras-chave + texto mecânico</td></tr>
+    <tr><td>archivist</td><td><span class="tag llm">SMART</span></td><td>MemoryUpdate</td><td>0–1 (cadência)</td><td>Resumo em texto plano; senão mantém</td></tr>
+    <tr><td>world_simulator</td><td>FAST</td><td>WorldPulse</td><td>1 em viagem/descanso</td><td>Sem rumor</td></tr>
+    <tr><td>character_creator / prólogo</td><td>SMART</td><td>PlayerFlavorSchema / StartScenario</td><td>1 na criação</td><td>Kit Básico / cenário template</td></tr>
+  </table></div>
+  <div class="grid g2" style="margin-top:16px">
+    <details open><summary>🛡 action_guard — o porteiro</summary>Sem IA. Classifica a fase do jogador e só deixa passar ações coerentes. Inconsciente digitando "vou até a taverna" recebe mensagem fixa; digitando "descanso" passa como <i>recovery</i>. Repara saves legados com transições órfãs (ex.: jogador em Estado Terminal sem combate) e grava o <code>turn_baseline</code>.</details>
+    <details open><summary>🗺 campaign_manager — o diretor</summary>Planeja arcos de 3–5 beats com clímax e título. Usa o <code>ContextPack</code> de propósito <i>planning</i>, o único que enxerga arestas hidden/secret do grafo — mas cada beat passa por <code>sanitize_beat</code> antes de chegar a narrador ou jogador. Guardas: idioma (retry se inglês), segredo, grounding (o local é sempre o real). Ao trocar de arco, abre capítulo novo na crônica. Normaliza saída de provider: mantém 5 beats não vazios (um sexto beat do DeepSeek já derrubou um plano).</details>
+    <details><summary>🧭 dm_router — o classificador</summary>Tier CLASSIFY (temperatura 0). Antes da IA: combate ativo força COMBAT (viagem vira tentativa de fuga com destino; combate ocioso expira após 3 turnos, fechando o bug do "combate zumbi"); recuperação e descanso/viagem explícitos viram STORY. Pós: NONE vira STORY (o LLM real escolhe "none" para emojis e injeções); NPC casa alvo com quem está em cena; COMBAT marca origem <code>player_provoked</code> se o texto é hostil explícito.</details>
+    <details><summary>📜 storyteller — o narrador</summary>Faz muito antes da IA: viagem (destino impossível recebe recusa canônica sem IA), descanso, cena zerada, encontros com dedupe, percepção, armadilhas, rastros, simulação do mundo. Monta prompt com blocos exatos (vitalidade e ouro reais, luz, clima, facções conhecidas, entidades canônicas permitidas, quests, capacidades utilitárias da ficha). Depois valida tudo e aplica efeitos: reputação, beat (XP só a partir do turno 2), NPCs, itens do catálogo, quests verificáveis.</details>
+    <details><summary>🗣 npc_actor — o ator</summary>Gate de cena, comandos de party em Python (a IA nunca decide se o NPC aceita entrar no grupo), regra "NÃO SEJA UMA WIKIPÉDIA" com filtro de conhecimento, anti-repetição verbatim, orientação de missão quando perguntado. Relação limitada a 0–10; traços ocultos revelados com o tempo; memória do NPC grava a experiência observável.</details>
+    <details><summary>⚔ combat_agent — o juiz</summary>Nó fino sobre <code>conflict_orchestrator</code>. Prepara cena uma vez, aceita declaração estruturada da UI (Carta, alvo, Ruptura, reação, manobra), trata fuga com trilha de perseguição, resolve a rodada, espelha vitais, gera Cicatriz, dá XP determinístico, narra só com base no log ("não invente dano").</details>
+    <details><summary>💰 loot_agent — o mercador</summary>TREASURE, SHOP ou CRAFT. A IA interpreta e narra; preço, estoque, receita e raridade são Python. Um modo explícito detectado em Python (vendo/compro/forjo/consultar) sobrescreve o que a IA disse. Itens únicos emitem evento de posse.</details>
+    <details><summary>📚 archivist — o cronista</summary>Sempre processa eventos pendentes; chama SMART só com cadência. Resumo ≤1200 chars ancorado no mapa, inventário e aparência dos NPCs; fatos livres viram <i>inference</i>; em turnos de conflito só o contrato canônico é persistido. Se a escrita RAG falha, não consome o resumo do conflito e tenta de novo.</details>
+    <details><summary>✅ turn_finalizer — o auditor</summary>Sem IA. Remove frases com contradições críticas (citações e "dizem que" ficam), exige fronteira de turno pronta (senão levanta erro — defesa dura contra salvar estado inválido) e escreve o recibo <code>[RESULTADO] +N ouro · +N XP · +1 item</code> calculado do delta.</details>
+    <details><summary>🧩 bestiary, librarian, world_simulator</summary><b>bestiary</b>: cache-first; a IA cria o conceito, e <code>materialize_enemy_concept</code> calcula a ficha por categoria/arquétipo/nível — o prompt proíbe números. <b>librarian</b>: deduplicação semântica em 4 camadas (slug exato → sobreposição de tokens/difflib → só então IA). <b>world_simulator</b>: propõe <code>WorldPulse</code>; Python limita o deslocamento de perigo a ±1 e só a consequência aplicada vira memória.</details>
+  </div>
+  <div class="recap"><ul class="clean"><li>A maioria dos turnos custa ~2 chamadas de IA.</li><li>Cada agente tem um plano B determinístico.</li><li>Quem decide número é sempre serviço Python.</li></ul></div>
+</section>
+
+<section class="chap" id="llm">
+  <div class="eyebrow">Capítulo 04</div>
+  <h2>Camada de IA e resiliência</h2>
+  <p class="lead"><code>get_llm(temperature, tier)</code> é a única porta para modelos. Cada tier é uma lista ordenada de candidatos; o <code>RoutedLLM</code> tenta o preferido e cai para o próximo em qualquer falha de transporte.</p>
+  <div class="diagram" data-graph="llm"></div>
+  <div class="tblwrap"><table>
+    <tr><th>Tier</th><th>Uso</th><th>Rota (ordem = preferência)</th></tr>
+    <tr><td>CLASSIFY</td><td>router, parse de combate, TradeIntent, librarian</td><td>DeepSeek v4 flash → Groq gpt-oss-20b → Gemini flash-lite</td></tr>
+    <tr><td>FAST</td><td>narrador, narração de combate e loot, NPC, simulador, bestiário</td><td>DeepSeek → Groq gpt-oss-120b → MiniMax → Qwen → Gemini flash</td></tr>
+    <tr><td>SMART</td><td>arquivista, campanha, criação, prólogo, Cicatriz</td><td>DeepSeek → Groq gpt-oss-120b → Anthropic Claude → Gemini pro</td></tr>
+  </table></div>
+  <h3>Simulador do RoutedLLM</h3>
+  <p>Escolha o que cada candidato faz e dispare um <code>invoke()</code>. Note a diferença deliberada entre falha de <b>transporte</b> (troca de provider na hora) e falha <b>semântica</b> (regenera até 3 vezes no mesmo provider, com uma mensagem dizendo qual contrato quebrou).</p>
+  <div class="card" id="routed"></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h4>Truques que tornam vários provedores compatíveis</h4><ul class="clean"><li>Para provedores OpenAI-compatíveis injeta <code>method="function_calling"</code>: o modo JSON estrito do Groq rejeitava schemas com dicionário aberto; tool calling aceita qualquer schema — por isso há um Groq grátis em todos os tiers.</li><li><code>include_raw=True</code> para recuperar JSON escrito em texto sem nova request.</li><li>Anthropic: sem <code>temperature</code> e sem prefill.</li><li>DeepSeek v4 com "thinking" desligado; timeout padrão 12 s.</li><li><code>max_retries=0</code>: 429 de quota não é transitório.</li><li>Semáforo por provider (2 chamadas em voo).</li></ul></div>
+    <div class="card"><h4>Telemetria</h4><p>Dois hooks: um por sucesso <code>(provider, model, tier, latency_ms, fell_back)</code> e um por tentativa, com código de falha estruturada (<code>transport</code>, <code>no_tool_call</code>, <code>wrong_tool</code>, <code>parsing_error</code>, <code>schema_validation</code>). Envolvidos em try/except: "telemetria nunca derruba o turno". A API usa para somar custo por turno; o playtest para medir provider e custo.</p><p>Trocar modelo = editar <code>ROUTES</code> ou apontar <code>RPG_ROUTES</code> para um JSON — sem tocar nos agentes.</p></div>
+  </div>
+  <div class="callout warn"><b>MockLLM esconde bugs de mapeamento.</b> Ele devolve sempre instâncias Pydantic válidas, então um nome de campo errado nunca quebra offline. Exemplo real: limites <code>max_length</code> duros no schema do prólogo derrubavam DeepSeek, Claude e Groq — o guard caía sempre no template. Solução-padrão do projeto: tamanho vira dica na descrição, Python trunca, e o limite estrito fica só na borda da API.</div>
+  <div class="quiz" data-quiz="q2"></div>
+  <div class="recap"><ul class="clean"><li>DeepSeek é o primário em todos os tiers; Groq grátis é o fallback vivo.</li><li>Transporte troca de provider; schema regenera no mesmo; JSON em texto é recuperado de graça.</li><li>Erro permanente (401/402) abre circuit breaker.</li><li>O fim da linha é AIMessage vazio + guard determinístico.</li></ul></div>
+</section>
+
+<section class="chap" id="valoria">
+  <div class="eyebrow">Capítulo 05</div>
+  <h2>Valoria: lore, Codex e grafo do mundo</h2>
+  <p class="lead">O mundo é dark fantasy medieval: um continente com 12 regiões, seis raças, facções com objetivos reais e declarados, uma timeline de eras e segredos que os personagens raramente conhecem — como o pacto de Valerius com Daruun, a Rede Carmesim sob Skallgard, a identidade do Arauto da Névoa e o Rei Subterrâneo.</p>
+  <div class="diagram" data-graph="lore"></div>
+  <div class="grid g4">
+    <div class="card stat"><b>35</b><span>nós no mapa (30 + 5 interiores)</span></div>
+    <div class="card stat"><b>12</b><span>regiões</span></div>
+    <div class="card stat"><b>594</b><span>entidades no grafo</span></div>
+    <div class="card stat"><b>101</b><span>arestas curadas</span></div>
+    <div class="card stat"><b>19</b><span>facções jogáveis</span></div>
+    <div class="card stat"><b>80</b><span>traços ocultos de NPC</span></div>
+    <div class="card stat"><b>639/41/19</b><span>docs public/hidden/secret</span></div>
+    <div class="card stat"><b>2</b><span>baús curados one-shot</span></div>
+  </div>
+  <h3>Três camadas de conteúdo</h3>
+  <div class="grid g3">
+    <div class="card"><h4>Fonte</h4><code>lore_nova/*.txt</code> — editável, sempre sobrevive.</div>
+    <div class="card"><h4>Gerado</h4><code>data/codex/**</code> e <code>entities.json</code> — regenerados pelo migrate; não editar à mão.</div>
+    <div class="card"><h4>Curadoria</h4><code>codex_overrides.yaml</code>, arquivos <code>curated: true</code>, <code>entities_extra</code>, arestas, componentes — sobrevivem.</div>
+  </div>
+  <p>O mapa (<code>world_map.json</code>) traz para cada nó: região, coordenadas, perigo 1–4, tags, conexões, semente de lore, tags de craft e economia, tempos de viagem e baús. Interiores (ex.: Taverna do Javali dentro do Anel de Lama) têm custo de viagem zero. Outros dados: <code>origins.json</code> (6 raças com traits mecânicos × 12 regiões com bônus), <code>onboarding.json</code> (lore curado do wizard), <code>bestiary.json</code> (124 criaturas schema v4), <code>factions.json</code>, <code>weather.json</code>, mercadores, tabelas de loot, armadilhas, companheiros e catálogo visual.</p>
+  <div class="recap"><ul class="clean"><li>Lore em texto vira Codex com visibilidade por documento.</li><li>Curadoria é migration-safe.</li><li>Um lint é o portão para reindexar.</li></ul></div>
+</section>
+
+<section class="chap" id="rag">
+  <div class="eyebrow">Capítulo 06</div>
+  <h2>RAG e embeddings</h2>
+  <p class="lead">Recuperação aumentada por busca: antes de narrar, o jogo busca trechos de lore e memória relevantes e os coloca no prompt.</p>
+  <div class="grid g2">
+    <div class="card"><h4>Quatro escopos de índice</h4><ul class="clean"><li><b>Lore global</b> — <code>faiss_lore_index/</code>, imutável durante o jogo.</li><li><b>Regras</b> — <code>faiss_rules_index/</code> a partir de <code>rules.txt</code>.</li><li><b>Sessão</b> — <code>data/saves_memory/{game_id}/</code>, escrito pelo arquivista.</li><li><b>NPC</b> — <code>…/{game_id}/{npc_id}/</code>, escrito pelo ator.</li></ul></div>
+    <div class="card"><h4>Embeddings pinados</h4><p>Cadeia <b>Jina v3 → OpenAI → Ollama → Gemini</b>. Diferente do LLM, embeddings <b>não</b> têm fallback por request: vetores de provedores diferentes são incompatíveis. Cada índice grava <code>embeddings_meta.json</code> e só é aberto com o provider que o gerou; provider indisponível desativa o índice com aviso (o jogo segue com ledger e resumo). Trocar provider = reindexar.</p></div>
+  </div>
+  <h3>Filtro de visibilidade (falha fechada)</h3>
+  <p>public &lt; hidden &lt; secret. Sem metadado = public; <b>valor desconhecido = secret</b>. Busca-se k=6 e mantém-se 2 após o filtro. Todos os leitores de produção usam <code>max_visibility="public"</code>.</p>
+  <div class="card" id="vis"></div>
+  <p style="margin-top:12px">No perfil Postgres a mesma interface grava em <b>pgvector</b> (vector 1024, HNSW cosseno + busca textual), com escrita via outbox e worker — ver capítulo 17.</p>
+  <div class="recap"><ul class="clean"><li>4 escopos; global imutável, sessão e NPC dinâmicos.</li><li>Cada índice preso ao seu provider de embedding.</li><li>Visibilidade desconhecida conta como segredo.</li></ul></div>
+</section>
+
+<section class="chap" id="eventos">
+  <div class="eyebrow">Capítulo 07</div>
+  <h2>Event sourcing e motor de regras</h2>
+  <p class="lead">O lore base é imutável; o que muda vive num <code>event_log</code> append-only e numa <code>world_projection</code> derivada. A IA só consegue <b>propor</b> eventos — e só de certos tipos.</p>
+  <div class="diagram" data-graph="events"></div>
+  <h3>Cascata: um líder de facção morre</h3>
+  <div data-stepper="cascade"></div>
+  <div class="tblwrap"><table>
+    <tr><th>Tipo de evento</th><th>Quem pode emitir</th></tr>
+    <tr><td>npc_killed, secret_revealed, location_control_changed, quest_completed, faction_relation_changed, reputation_changed, route_blocked, route_cleared</td><td>IA pode propor; validador decide</td></tr>
+    <tr><td>level_up, subclass_chosen, class_apex_unlocked</td><td>só <code>source="progression"</code></td></tr>
+    <tr><td>player_died, player_downed</td><td>só <code>source="combat"</code></td></tr>
+    <tr><td>unique_item_claimed, unique_item_lost</td><td>só <code>source="engine"</code></td></tr>
+  </table></div>
+  <div class="grid g2">
+    <div class="card"><h4>As 6 regras (world_rules.json)</h4><ol class="steps"><li>Morte de líder com vácuo de poder: estabilidade cai e locais controlados mudam de dono.</li><li>Morte genérica de NPC.</li><li>Ondulação de mudança de controle: +5 ao novo controlador.</li><li>Segredo revelado: −10 de estabilidade.</li><li>Quest concluída marcada na entidade.</li><li>Porto tomado por hostil bloqueia rotas.</li></ol></div>
+    <div class="card"><h4>Segurança do motor</h4><p>Sem <code>eval</code>/<code>exec</code>: valores dinâmicos só via resolvedor whitelisted (<code>event.campo</code>, <code>target.campo</code>, <code>component:x.campo</code>). Ação inválida é ignorada com log, o turno não quebra. Modelo híbrido: quem lidera/controla/é rival vem das arestas do grafo; o componente guarda só o que aresta não tem. O resolver calcula <b>base − desativadas + dinâmicas</b>.</p><p><b>Quests</b> seguem o mesmo princípio: <code>created → location_reached → investigation → completion_ready → completed</code>, conclusão por evidência (duas investigações distintas no alvo), recompensa idempotente; NPC de origem morto falha as quests órfãs.</p></div>
+  </div>
+  <div class="quiz" data-quiz="q5"></div>
+  <div class="recap"><ul class="clean"><li>event_log é a verdade do que mudou; projeção é derivada.</li><li>Só o arquivista escreve eventos, todo turno.</li><li>Cascata declarativa com profundidade máxima 2.</li></ul></div>
+</section>
+
+<section class="chap" id="memoria">
+  <div class="eyebrow">Capítulo 08</div>
+  <h2>Memória, contexto e segredos</h2>
+  <p class="lead">Lembrar não basta — o jogo precisa saber <b>de onde</b> veio cada lembrança. Um boato de taverna não pode virar fato do mundo só por ter sido repetido.</p>
+  <div class="diagram" data-graph="memory"></div>
+  <div class="tblwrap"><table>
+    <tr><th>Proveniência</th><th>Confiança (derivada)</th><th>Quem emite</th></tr>
+    <tr><td>canonical_event</td><td><span class="tag ok">confirmed</span></td><td>eventos aplicados, resumo canônico de conflito, política do motor</td></tr>
+    <tr><td>player_observation</td><td><span class="tag warn">reported</span></td><td>o que o jogador observou</td></tr>
+    <tr><td>npc_claim</td><td><span class="tag warn">reported</span></td><td>falas de NPC</td></tr>
+    <tr><td>inference</td><td><span class="tag err">speculative</span></td><td>fatos livres da IA no arquivista</td></tr>
+    <tr><td>legacy_unverified</td><td><span class="tag err">speculative</span></td><td>strings antigas sem metadado</td></tr>
+  </table></div>
+  <h3>Um fato atravessando a memória</h3>
+  <div data-stepper="magda"></div>
+  <h3>Montagem do contexto</h3>
+  <div class="diagram" data-graph="context"></div>
+  <p>Brinque com os pesos da pontuação de um fato e veja como o orçamento de 3.500 tokens é dividido. A sobra de uma seção rola para a próxima; teto global de 105%; tokens estimados como caracteres ÷ 4.</p>
+  <div class="card" id="score"></div>
+  <h3>Três camadas de proteção de segredos</h3>
+  <div class="grid g3">
+    <div class="card"><h4>1. No índice</h4>Docs hidden/secret nunca saem das buscas do narrador. Segredos de NPC ficam em documento hidden separado do público.</div>
+    <div class="card"><h4>2. Por assinatura</h4><code>secret_signatures</code> guarda frases da verdade oculta de 4 segredos e uma versão de boato neutra. Compara com o que o jogador já sabe (eventos, resumo, segredos conhecidos) — repetir o que a Magda contou não é vazamento. Sanitiza beats, valida memória, alimenta o invariante <code>knowledge.secret_leak</code>.</div>
+    <div class="card"><h4>3. Por evento</h4><code>secret_revealed</code> só é aceito se existe aresta hidden/secret no grafo para o alvo. É a única via oficial para um segredo passar a aparecer no estado.</div>
+  </div>
+  <div class="quiz" data-quiz="q4"></div>
+  <div class="recap"><ul class="clean"><li>5 camadas: resumo, ledger, FAISS sessão, FAISS NPC, event_log.</li><li>Confiança é função fechada da proveniência; repetição não promove.</li><li>Contexto pontuado e orçado por seção; segredos protegidos em três camadas.</li></ul></div>
+</section>

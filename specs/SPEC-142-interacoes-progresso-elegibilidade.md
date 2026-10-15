@@ -86,7 +86,7 @@ no-progress. O ator recebe aberturas anteriores no prompt, normaliza aspas
 externas e usa a variação de abertura existente sem request extra; a memória
 mantém o diálogo original. Regressões curtas cobrem os caminhos. O warning real
 do turno 90 da B anterior motivou essa revisão; não constitui validação do fix.
-O [gate B integral](../docs/fechamento-local-2026-09-17.md) aguarda saldo DeepSeek.
+O [gate B integral](../docs/auditorias/fechamento-local-2026-09-17.md) aguarda saldo DeepSeek.
 
 Executar recrutador/diplomático/secret rusher por 30 turnos; confirmar adaptação,
 zero vazamento e redução drástica de episódios repetidos.
@@ -100,4 +100,4 @@ real precisaria para reagir; limiar/trait permanecem internos ao motor.
 ## Fechamento real ? 2026-09-28
 
 Perfis reais: diplom?tico 200 turnos (warnings 5?0), recrutador 200 (132?1) e secret_rusher 200 (53?0), sem vazamento.
-Evid?ncia consolidada: [matriz B](../docs/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.
+Evid?ncia consolidada: [matriz B](../docs/playtests/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.

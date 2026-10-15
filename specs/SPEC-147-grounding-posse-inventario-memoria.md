@@ -66,7 +66,7 @@ palavra. Plano/gates no [adendo pré-matriz](SPEC-162-remediacao-local-contratos
 ## 6. Smoke test com LLM real
 
 Gate bloqueado por HTTP 402 DeepSeek; evidência histórica e retomada em
-[fechamento local](../docs/fechamento-local-2026-09-17.md).
+[fechamento local](../docs/auditorias/fechamento-local-2026-09-17.md).
 
 1. Repetir a matriz B com DeepSeek sem fallback determinístico.
 2. Confirmar zero `memory.inventory_grounding` e ausência de posse fantasma no relatório.
@@ -81,4 +81,4 @@ Gate bloqueado por HTTP 402 DeepSeek; evidência histórica e retomada em
 ## Fechamento real ? 2026-09-28
 
 Matriz real n?o registrou memory.inventory_grounding nem posse fantasma.
-Evid?ncia consolidada: [matriz B](../docs/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.
+Evid?ncia consolidada: [matriz B](../docs/playtests/playtest-matriz-b-2026-09-28.md), `20260927-214549-731406` e `20260928-084057-102826`. A matriz global incompleta permanece responsabilidade exclusiva da SPEC-128.

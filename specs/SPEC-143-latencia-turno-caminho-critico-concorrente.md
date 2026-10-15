@@ -3,7 +3,7 @@
 > **Status:** `done` — experimento concluído com **no-go** para promoção do fan-out LLM
 > **Criada:** 2026-08-27 · **Atualizada:** 2026-09-17
 > **Depende de:** observabilidade-latencia-nos, streaming-turno-sse
-> **Evidência:** [gate R28/R29](../docs/latencia-turno-r29-2026-08-28.md)
+> **Evidência:** [gate R28/R29](../docs/playtests/latencia-turno-r29-2026-08-28.md)
 
 ## 1. Resultado e escopo efetivamente entregue
 

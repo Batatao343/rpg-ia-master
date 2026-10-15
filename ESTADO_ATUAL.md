@@ -455,7 +455,7 @@
 > 4.201 requests. O usuário dispensou a repetição do par 10 após informar que os
 > US$ 5 adicionados foram consumidos; SPEC-128 encerrada `done` com a limitação
 > explícita. Achados: custo estimado subcontado, prefixo NPC duplicável e warnings
-> de repetição NPC ausentes do summary. [Evidência](docs/playtest-matriz-b-2026-09-28.md).
+> de repetição NPC ausentes do summary. [Evidência](docs/playtests/playtest-matriz-b-2026-09-28.md).
 > Gate offline final: **1807 passed, 35 skipped, 15 deselected**.
 > Este bloco prevalece sobre os históricos abaixo.
 
@@ -463,7 +463,7 @@
 > estáveis `SPEC-001`–`SPEC-162` pela ordem comprovada de criação no Git; a ordem
 > de conclusão permanece separada. A [SPEC-163](specs/SPEC-163-normalizacao-historica-specs.md)
 > e o [índice reproduzível](specs/index.yaml) registram status, commits, datas,
-> dependências e ambiguidades. [Plano e evidências](docs/evals-inicio-2026-09-27.md).
+> dependências e ambiguidades. [Plano e evidências](docs/planos/evals-inicio-2026-09-27.md).
 > Verificador da migração, 7 regressões e Ruff verdes; lint de conteúdo sem
 > erros/avisos; suíte final **1807 passed, 35 skipped, 15 deselected**. Nenhum
 > provider real ou long-run. SPEC-164 é a próxima etapa; baseline ainda não foi
@@ -483,14 +483,14 @@
 > 285,46 s; skips/deseleções são gates opt-in. Build/Node/Ruff/conteúdo verdes.
 > Gate final: **25 passed, zero skipped**, com JSON/screenshots/JUnit. A matriz
 > expôs e corrigiu perda de arquivamento e deadlock por ordem de locks. Nenhum
-> provider pago. [Reconciliação](docs/RECONCILIACAO_ARTE.md)
+> provider pago. [Reconciliação](docs/operacao/RECONCILIACAO_ARTE.md)
 > documenta contenção segura; importação administrativa ainda não implementada.
 > Commit funcional `c7eb25c` publicado na main; CI `validate` verde. CI infra
 > **verde** (run 36263717580, 3m27s) e promovido a push/PR da main.
 > Este bloco prevalece sobre as pendências históricas abaixo.
 
 > **RETOMADA 2026-09-26 — execução da auditoria, com gates locais reais.**
-> [Relatório atual e pendências exatas](docs/auditoria-execucao-2026-09-26.md).
+> [Relatório atual e pendências exatas](docs/auditorias/auditoria-execucao-2026-09-26.md).
 > Nove specs iniciadas: contexto autenticado `done`; oito `in-progress`.
 > Implementados guard narrativo, executor/replay, outbox, restore de derivados,
 > heartbeat/fencing, sessão/histórico e exibição de retrato. Gate integrado:
@@ -509,7 +509,7 @@
 > Este resumo substitui os estados de 23/09 e históricos abaixo.
 
 > **RETOMADA 2026-09-23 — auditoria convertida em nove specs aprovadas; primeiro lote executado.**
-> [Índice, cobertura e evidências](docs/auditoria-remediacao-2026-09-22.md).
+> [Índice, cobertura e evidências](docs/auditorias/auditoria-remediacao-2026-09-22.md).
 > Três specs novas estão `in-progress` (artes, recompensas/recibos, contexto
 > autenticado); seis permanecem `approved`, ainda não implementadas.
 > Retratos de raça/classe agora cabem inteiros, sem figura fora do card ou
@@ -531,7 +531,7 @@
 > encontrou contratos incompletos apesar da suíte verde anterior. O usuário
 > aprovou corrigir primeiro as reproduções locais e separar os gates.
 > [Spec/adendo](specs/SPEC-162-remediacao-local-contratos-pre-matriz.md) e
-> [relatório](docs/remediacao-pre-matriz-2026-09-19.md).
+> [relatório](docs/auditorias/remediacao-pre-matriz-2026-09-19.md).
 >
 > Recuperação agora tem intenção fechada: “pedir ajuda” não libera viagem/ataque;
 > socorro usa descanso no mesmo local e incapacidade pode ser recuperada.
@@ -563,7 +563,7 @@
 > o mesmo bloqueio. **Nenhuma matriz real está rodando.** Após recarga, reiniciar
 > B do par 1, não reutilizar campanhas antigas como aceite do build alterado.
 > Relatório, lista exata de specs, evidências e comando:
-> [fechamento local de 17/09](docs/fechamento-local-2026-09-17.md).
+> [fechamento local de 17/09](docs/auditorias/fechamento-local-2026-09-17.md).
 >
 > Correções: identidade NPC por aliases no ator/recrutamento e save/load;
 > grounding de local, inventário e identidade na memória; queda distinta de morte;
@@ -592,7 +592,7 @@
 > matriz B real é o próximo gate.** A baseline válida reúne **10×200 = 2.000
 > turnos**, zero erro de turno, 12 violações `error`, 193 warnings, 5.205 sucessos
 > LLM em 5.224 tentativas e US$ 1,46272. Relatório e seleção exata dos runs:
-> [playtest-matriz-a-2026-08-27](docs/playtest-matriz-a-2026-08-27.md).
+> [playtest-matriz-a-2026-08-27](docs/playtests/playtest-matriz-a-2026-08-27.md).
 >
 > A auditoria mostrou quatro recorrências de correções antigas incompletas. As
 > specs [ciclo de vida](specs/SPEC-141-contrato-canonico-ciclo-vida-acoes.md),
@@ -704,7 +704,7 @@
 > Groq-only com pacing; structured output OpenAI-compat seguro após `AIMessage`;
 > Mimetismo Morto não se repete quando o inimigo já está oculto; fuga a
 > Vitalidade 0 não evita o fluxo terminal; e relatório/NPC reciclado ganharam
-> precisão. Detalhe: [diagnóstico A0](docs/playtest-matriz-a0-2026-08-20.md).
+> precisão. Detalhe: [diagnóstico A0](docs/playtests/playtest-matriz-a0-2026-08-20.md).
 >
 > Preflight real passou nos tiers CLASSIFY/FAST/SMART; smoke offline pós-fix
 > `20260820-155100-829869` fez **30/30**, sem erro/violação. Suíte completa:
@@ -717,7 +717,7 @@
 > rate/tool call e 146 turnos ficaram sem sucesso de rede. Guards do produto
 > mantiveram a campanha viva, portanto o resultado NÃO é baseline LLM-only.
 > O processo foi abortado antes dos outros nove pares. Relatório:
-> [A1 capacidade](docs/playtest-matriz-a1-capacidade-2026-08-20.md).
+> [A1 capacidade](docs/playtests/playtest-matriz-a1-capacidade-2026-08-20.md).
 >
 > A spec `playtest-real-llm-fail-closed` agora agrupa tentativas por invoke e
 > aborta a matriz no primeiro grupo sem `success`, sem iniciar o par seguinte;
@@ -746,7 +746,7 @@
 > parseada como compra, NPC remoto como aliado sem recrutamento e sinal visual
 > errado ao vender) e três P2 (contexto NPC residual, ouro divergente na prosa e
 > uma cauda de 47,1 s). Foram especificados/corrigidos na sessão 55 acima.
-> Relatório: [playtest real comerciante](docs/playtest-comerciante-real-2026-08-20.md).
+> Relatório: [playtest real comerciante](docs/playtests/playtest-comerciante-real-2026-08-20.md).
 > Gate final: `uv run pytest` = **1565 passed, 16 skipped, 14 deselected**.
 
 > **✅ SESSÃO 53 (2026-08-20): prontidão local G0–G7 certificada.** As sete
@@ -768,7 +768,7 @@
 > Supply chain: `uv lock --upgrade`, `pip-audit` e `npm audit` com **0
 > vulnerabilidades**, scanner de segredos com **0 findings**, Ruff/conteúdo/Vite
 > verdes. Gate final: `uv run pytest` = **1564 passed, 16 skipped, 14
-> deselected**. Relatório: [readiness-local](docs/readiness/readiness-local.md).
+> deselected**. Relatório: [readiness-local](docs/operacao/readiness/readiness-local.md).
 > Produto: tiers 5+/níveis 9–20, Fase 8B e Crônica avançada estão `done` no
 > aceite local. Restam apenas dois opt-ins: comerciante 1×200 real (custo LLM) e
 > certificação cloud Railway/Supabase.
@@ -792,7 +792,7 @@
 > `data_complete=true`, zero erro/violação, 36 transações, 4–5 mercados,
 > 3–4 regiões e cinco restocks. Foram corrigidos dano climático pré-fuga sem
 > fluxo terminal e aprendizado do destino fatal após rollback. Relatório:
-> [playtest-comerciante-2026-08-19](docs/playtest-comerciante-2026-08-19.md).
+> [playtest-comerciante-2026-08-19](docs/playtests/playtest-comerciante-2026-08-19.md).
 >
 > Gates finais: conteúdo e Ruff verdes; Vite (457 módulos) verde; browser em
 > 390 px sem overflow/console error; `uv run pytest` = **1548 passed, 12 skipped,
@@ -941,7 +941,7 @@
 > tentativas, mas `combat.no_progress` gerou falso positivo por ignorar o track;
 > quest criada em D+1 chegou a uma investigação e não foi retomada pelo perfil;
 > descanso pós-fuga reabriu combate como `player_provoked`; combate ocupou 45%.
-> Relatório: [playtest-longrun-real-2026-08-16](docs/playtest-longrun-real-2026-08-16.md).
+> Relatório: [playtest-longrun-real-2026-08-16](docs/playtests/playtest-longrun-real-2026-08-16.md).
 > Nenhuma correção de código foi aplicada nesta sessão de diagnóstico. Gate:
 > **1466 passed, 1 skipped, 14 deselected**.
 
@@ -980,7 +980,7 @@
 > canônicos/relatos; uma quest progrediu mas não concluiu após retomadas. P2:
 > morte mistura relógios, `downed_count` some no rollback, encerramentos inflam e
 > linha abortada degrada o contrato JSONL. Diagnóstico completo em
-> [playtest-longrun-observabilidade-2026-08-13](docs/playtest-longrun-observabilidade-2026-08-13.md).
+> [playtest-longrun-observabilidade-2026-08-13](docs/playtests/playtest-longrun-observabilidade-2026-08-13.md).
 > Nenhuma mecânica foi alterada nesta sessão; achados aguardam specs.
 > Segunda tentativa real `20260813-012402-094797`: 34 úteis + timeout após nova
 > suspensão, zero violações/mortes, p95 29,0 s, 106/109 sucessos e US$ 0,033944.
@@ -1037,7 +1037,7 @@
 > com chave inválida (401), perfil copia instrução interna `Descreva...` do beat,
 > zero quests em 100 turnos apesar de muitos ganchos, combate ocupou 45% da sessão
 > e loot alterna para terceira pessoa. Diagnóstico completo:
-> [playtest-longrun-real-2026-08-12-v2](docs/playtest-longrun-real-2026-08-12-v2.md).
+> [playtest-longrun-real-2026-08-12-v2](docs/playtests/playtest-longrun-real-2026-08-12-v2.md).
 > Nenhuma correção/spec nova foi criada nesta sessão; recomendações aguardam
 > priorização. Gate offline: **1436 passed, 1 skipped, 14 deselected**.
 
@@ -1061,7 +1061,7 @@
 > fallback Groq absorveu 1 structured inválido do planner. Ruff verde. Gate:
 > `uv run pytest` = **1436 passed, 1 skipped, 14 deselected**. Specs funcionais:
 > **99 `done`**. Relatório atualizado em
-> [playtest-jogador-normal-2026-08-12](docs/playtest-jogador-normal-2026-08-12.md).
+> [playtest-jogador-normal-2026-08-12](docs/playtests/playtest-jogador-normal-2026-08-12.md).
 >
 > **Próxima:** nenhuma spec funcional aprovada ficou pendente; escolher o
 > próximo item de produto/ROADMAP.
@@ -1082,7 +1082,7 @@
 > turnos, com bypass do budget), feedback que nega ouro já concedido e cauda de
 > latência de até 94 s.
 >
-> Relatório e reproduções: [playtest-jogador-normal-2026-08-12](docs/playtest-jogador-normal-2026-08-12.md).
+> Relatório e reproduções: [playtest-jogador-normal-2026-08-12](docs/playtests/playtest-jogador-normal-2026-08-12.md).
 > **Naquele momento nenhuma regra foi alterada:** os achados aguardavam specs na ordem
 > fuga → checkpoint/memória → grounding regional → resumo/budget → feedback →
 > perfil misto/invariantes. Gate final: `uv run pytest` = **1409 passed,
@@ -1102,7 +1102,7 @@
 > a mesma cue. Frontend: capas em raça/classe, cena do local e retrato no mesmo
 > bloco narrativo, com alt/dimensões, fallback, reduced motion e passe a 390 px.
 > O lint de conteúdo agora verifica identidade, visibilidade, hash, bytes, teto e
-> cobertura visual. Operação/proveniência: `docs/ARTE_VISUAL.md`.
+> cobertura visual. Operação/proveniência: `docs/guias/ARTE_VISUAL.md`.
 >
 > Smoke real/browser: game `8afdb0d3-427b-442d-a2b1-2a514f2a3267`
 > (`simulated=false`, removido após o teste), Nova Arcádia e Grum renderizados;
@@ -1240,7 +1240,7 @@
 > **Dados/RAG:** 36 documentos curados com papel/facção/gancho, entidades e
 > arestas `located_in`; Codex Jina reindexado (2.239 chunks), consulta de NPC novo
 > confirmada. Lint = **0 erros/0 avisos**. Relatório:
-> [`docs/content-coverage-2026-08-02.md`](docs/content-coverage-2026-08-02.md).
+> [`docs/playtests/content-coverage-2026-08-02.md`](docs/playtests/content-coverage-2026-08-02.md).
 >
 > **Smoke real:** run `20260803-025211-710980` = 3/3 turnos, 4 locais/3 regiões,
 > `mock=false`, 0 erro/violação, 18 requests Groq (16 sucessos), US$ 0,010528.
@@ -1295,7 +1295,7 @@
 > **✅ SESSÃO 28 (2026-08-02): `conflito-13` E REMEDIAÇÕES `done`.** Os achados
 > do smoke real `20260725-101933` viraram sete specs, foram corrigidos e aceitos
 > numa nova matriz real de 13 perfis × 30 turnos. Relatório completo:
-> [`docs/smoke-correcoes-conflito-v4-2026-08-02.md`](docs/smoke-correcoes-conflito-v4-2026-08-02.md).
+> [`docs/playtests/smoke-correcoes-conflito-v4-2026-08-02.md`](docs/playtests/smoke-correcoes-conflito-v4-2026-08-02.md).
 >
 > **Evidência aceita:** matriz offline `20260802-154317-705789` = 390/390,
 > zero erro/violação. Matriz real composta = 390/390, `mock=false`, 0 erro, 0
@@ -1414,7 +1414,7 @@
 > bestiário/perfis)** — rodam em paralelo, NÃO quebram nada, mantêm o repo verde.
 > **14 `done`** (80 Cartas autorais na escala nova, 16/classe: 7 tronco + 3×3
 > subclasse; catálogo fechado `CARD_EFFECT_KINDS`; Ruptura+Evolução A/B nas 15
-> centrais; parity `dano_base/custo ∈ [1.5,4.0]`; `docs/CARTAS.md`;
+> centrais; parity `dano_base/custo ∈ [1.5,4.0]`; `docs/design/CARTAS.md`;
 > `scripts/gen_cards_v4.py`; +16 testes). **15 `done`** (84 criaturas migradas pro
 > schema v4 via `scripts/migrate_bestiary_v4.py` — categoria canônica, Virtudes
 > 0-5, Vitalidade×Corpo, resistências tipadas, 10 arquétipos táticos ricos com
@@ -1614,8 +1614,8 @@ auditoria de mecânica-morta + 2 decisões do usuário:**
 
 **Sessão 2026-07-19 (19): SISTEMA DE CLASSES REFATORADO — 5 POSTURAS DIANTE DO
 ABISMO** ([spec `done`](specs/SPEC-048-refatoracao-sistema-classes.md); mecânica em
-[docs/CLASSES.md](docs/CLASSES.md), narrativa em
-[docs/CLASSES_NARRATIVA.md](docs/CLASSES_NARRATIVA.md)):
+[docs/design/CLASSES.md](docs/design/CLASSES.md), narrativa em
+[docs/design/CLASSES_NARRATIVA.md](docs/design/CLASSES_NARRATIVA.md)):
 1. **10 classes → 5 classes × 3 subclasses.** Devoto do Abismo (tank/ama) ·
    Sangromante (dano/negocia) · Corruptor (DoT/trabalha junto) · Arcanista
    Cinzento (dist/manipula) · Médico de Campo (suporte/nega). Cada classe é uma
@@ -1795,7 +1795,7 @@ natural: balanceamento dos números `[BALANCEAR]` após playtest; tiers 5+
 **🏁 AS 8 SPECS DO PLAYTEST LONGO ESTÃO `done`** + archivist fix + NPC relocável.
 
 **Próximo — ÉPICO DO SISTEMA DE CLASSES (retomar em sessão limpa):** leia
-**[docs/HANDOFF-sistema-classes.md](docs/HANDOFF-sistema-classes.md)** — Etapa
+**[docs/historico/HANDOFF-sistema-classes.md](docs/historico/HANDOFF-sistema-classes.md)** — Etapa
 1/8 done; Etapa 2 pronta em `scripts/gen_classes_v2.py` (aplicar derruba 41
 testes em 10 arquivos, inventariados no handoff); faltam etapas 2-8. Depois:
 [arvores-habilidade-classes](specs/SPEC-047-arvores-habilidade-classes.md) (árvore rica,
@@ -1812,7 +1812,7 @@ autoria em Fable).
    stepper com navegação livre, fallback pro form clássico se o endpoint
    faltar). Smoke de UI: **15/15 checks** via Playwright (estado preservado ao
    voltar, "Pular introdução", mobile 390px sem overflow). Autoria dos cards:
-   `docs/AUTORIA.md` § Fluxo D.
+   `docs/guias/AUTORIA.md` § Fluxo D.
 2. **[inicio-personalizado](specs/SPEC-045-inicio-personalizado.md) `done`:**
    `POST /game/prologue` (1 chamada SMART + guard → template determinístico,
    nunca 500; entra no rate-limit) gera prólogo confirmável;
@@ -1841,7 +1841,7 @@ autoria em Fable).
    ~$0.001/turno). Groq free segue de fallback vivo em todos.
 2. **Playtest longo REAL** (explorador/combate/quester × 100 turnos, ~$0.25,
    zero erro de turno): análise completa em
-   **[docs/playtest-longrun-2026-07-14.md](docs/playtest-longrun-2026-07-14.md)**.
+   **[docs/playtests/playtest-longrun-2026-07-14.md](docs/playtests/playtest-longrun-2026-07-14.md)**.
    Destaque: quester 7/7 quests, level 5, arco da Thrace excelente — mas 1
    local em 100 turnos. 7 defeitos priorizados (harness sem stop no game_over,
    espiral pós-Saque, combate zumbi 59 turnos, segredo vazando via beat,
@@ -2004,7 +2004,7 @@ ser re-introduzido em outro local pela narrativa/player (relocaliza o
 
 - Onze specs aguardam a matriz B integral com LLM real e relatório A/B;
   bloqueio atual: saldo DeepSeek (HTTP 402). Lista e retomada no
-  [fechamento local](docs/fechamento-local-2026-09-17.md).
+  [fechamento local](docs/auditorias/fechamento-local-2026-09-17.md).
 - [Playtest longo do perfil comerciante](specs/SPEC-126-playtest-longo-perfil-comerciante.md)
   — **concluído**, inclusive 1×200 real em 20/08; não confundir esse aceite com
   o par comerciante da nova matriz B, ainda pendente.
@@ -2022,7 +2022,7 @@ ser re-introduzido em outro local pela narrativa/player (relocaliza o
 - ~~Cache runtime gravado em `data/`~~ ✅ isolado em `data/runtime/` (sessão 20,
   spec isolar-cache-runtime).
 - **Achados do playtest longo (sessão 16)** — 7 defeitos/melhorias priorizados
-  em [docs/playtest-longrun-2026-07-14.md](docs/playtest-longrun-2026-07-14.md):
+  em [docs/playtests/playtest-longrun-2026-07-14.md](docs/playtests/playtest-longrun-2026-07-14.md):
   harness sem stop no game_over · espiral pós-Saque · combate zumbi (59 turnos
   ativo) / viagem durante combate · vazamento de segredo via beat do
   campaign_manager · "Ninguém responde." com aliado em cena · beat em inglês ·
