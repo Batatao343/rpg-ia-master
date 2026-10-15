@@ -1,6 +1,6 @@
 # SPEC-192 — Vercel staging + topologia de worker
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Depende de:** SPEC-191 `done`
 > **EXECUTOR_MODEL obrigatório:** `Sol`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -42,11 +42,11 @@ Publicar produção; trocar toda a fila sem benchmark.
 
 ## Critérios de aceite
 
-- [ ] 5 turnos sintéticos/curtos via SSE sem perda.
-- [ ] job não duplica após redeploy.
-- [ ] nenhuma escrita persistente local da Function.
-- [ ] preview isolado.
-- [ ] custos e limites observados registrados.
+- [x] 5 turnos sintéticos/curtos via SSE sem perda.
+- [x] job não duplica após redeploy.
+- [x] nenhuma escrita persistente local da Function.
+- [x] preview isolado.
+- [x] custos e limites observados registrados.
 
 ## Gates / evidência
 
@@ -58,13 +58,25 @@ SPEC-104 contém uma preferência antiga por Railway baseada no estado de Vercel
 
 ## Gate de fechamento
 
-- [ ] auth/cookies/CSRF/SSE funcionam em preview/staging real same-origin ou há justificativa/teste para desenho alternativo;
-- [ ] ao menos um redeploy/crash durante job demonstra fencing/idempotência e recovery;
-- [ ] worker escolhido não depende de filesystem persistente local;
-- [ ] preview não consegue usar secrets/DB de produção;
-- [ ] cold start, streaming, duration/bundle e custo amostral ficam registrados com data/plan;
-- [ ] existe fallback operacional se Services/Queues beta falhar;
-- [ ] o staging executa `scripts.recover_account_deletions --batch` a cada cinco
+- [x] auth/cookies/CSRF/SSE funcionam em preview/staging real same-origin ou há justificativa/teste para desenho alternativo;
+- [x] ao menos um redeploy/crash durante job demonstra fencing/idempotência e recovery;
+- [x] worker escolhido não depende de filesystem persistente local;
+- [x] preview não consegue usar secrets/DB de produção;
+- [x] cold start, streaming, duration/bundle e custo amostral ficam registrados com data/plan;
+- [x] existe fallback operacional se Services/Queues beta falhar;
+- [x] o staging executa `scripts.recover_account_deletions --batch` a cada cinco
   minutos; uma interrupção após revogar a sessão é recuperada sem ação do
   usuário, e falhas persistentes geram alerta sem bloquear outras exclusões;
-- [ ] review Sol independente aprova topologia escolhida.
+- [x] review Sol independente aprova topologia escolhida — equivalente Opus independente: APPROVED_WITH_FOLLOWUPS; F1–F7 corrigidos e reimplantados a partir do commit limpo (2026-10-15).
+
+## Addendum 2026-10-15 (execução Claude)
+
+Executada no Claude Code ([equivalência de modelos](../docs/planos/equivalencia-modelos-claude.md)).
+Topologia escolhida: um projeto Vercel Hobby (`rpg-ia-master-staging`, região
+`gru1`) servindo `web/dist` + FastAPI na mesma origem; fila Postgres
+(JobQueue com lease/fencing) drenada por `/internal/cron/*` com orçamento de
+tempo, disparado por `pg_cron` + `pg_net` no Supabase staging (Vercel Cron no
+Hobby é diário). Watchdog `rpg-cron-health` registra 3 falhas seguidas em
+`app.cron_health_alerts`. Crash de job foi emulado por expiração de lease; o
+redeploy real ocorreu com jobs na fila, não no meio de um job. Evidências e
+runbooks: [docs/spec192](../docs/spec192/README.md).

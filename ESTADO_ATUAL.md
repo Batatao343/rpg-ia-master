@@ -1,5 +1,18 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **15/10 — SPEC-192 `done`: staging Vercel no ar.** https://rpg-ia-master-staging.vercel.app
+> (Hobby, `gru1`, bundle ~315 MB/500, cold start ~6 s, warm `/health` p50 30 ms).
+> FastAPI + `web/dist` na mesma origem; `psycopg`, `langchain-openai` e `pillow`
+> viraram deps core (a Vercel instala só o core do `uv.lock`). Jobs: fila Postgres
+> drenada por `/internal/cron/{jobs,account-deletions,operations}` (Bearer
+> `RPG_CRON_SECRET`, orçamento < 58 s, falha → HTTP 500) via `pg_cron`/`pg_net`
+> no Supabase; watchdog grava `app.cron_health_alerts`. Gates reais: login
+> cookie/CSRF/Turnstile + 5 turnos SSE sem duplicar, desconexão SSE no meio do
+> turno → 1 turno só, preview sem segredos (fail-closed), exclusão interrompida
+> recuperada em 137 s, job sobrevive a crash/redeploy, CSP + X-Frame-Options.
+> Revisão Opus independente com follow-ups fechados; deploy do commit exato.
+> [Evidência](docs/spec192/README.md). Próxima: SPEC-193.
+
 > **15/10 — SPEC-191 `done`: Supabase staging remoto certificado (execução Claude).**
 > Execução migrou do Codex para Claude Code; equivalência de modelos aprovada pelo
 > usuário em [docs/planos/equivalencia-modelos-claude.md](docs/planos/equivalencia-modelos-claude.md)

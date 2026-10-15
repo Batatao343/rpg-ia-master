@@ -3384,7 +3384,7 @@ specs:
   lineage_note: Imported approved v5 package; implementation not started
 - id: SPEC-192
   slug: vercel-staging-worker-topology
-  status: approved
+  status: done
   path: specs/SPEC-192-vercel-staging-worker-topology.md
   created_commit: null
   created_at: '2026-10-02'
