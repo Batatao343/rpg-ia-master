@@ -56,11 +56,11 @@ Android emulator/device + web regression.
 - [x] permissões mínimas (internet/mic e apenas o necessário) documentadas;
 - [x] secret scan do APK/AAB não encontra keys backend;
 - [x] production applicationId permanece placeholder/config até SPEC-198;
-- [x] review Sol independente do boundary WebView/native/session: CHANGES_REQUIRED (15/10) -> 6 correções aplicadas (Addendum); re-aprovação formal a cargo do orquestrador.
+- [x] review Sol independente do boundary WebView/native/session — equivalente Opus independente: CHANGES_REQUIRED (15/10) → correções aplicadas → re-revisão Opus independente APPROVED_WITH_FOLLOWUPS (15/10).
 
 ## Addendum 2026-10-15 (execução Claude)
 
-Equivalência de modelo: o executor original exigido era `Terra`; esta rodada de correções foi feita por Claude Opus 5.5 por decisão do orquestrador (opção (a)) após o review independente CHANGES_REQUIRED. Detalhes e decisões: [docs/spec193/README.md](../docs/spec193/README.md#addendum-2026-10-15-execução-claude).
+Equivalência de modelo ([mapa aprovado pelo usuário](../docs/planos/equivalencia-modelos-claude.md)): executor `Terra` → Claude Sonnet; planejamento e decisão da opção (a) pelo orquestrador Opus; revisões independentes por Opus em contexto separado. Detalhes e decisões: [docs/spec193/README.md](../docs/spec193/README.md#addendum-2026-10-15-execução-claude).
 
 Decisões: refresh e `rpg_csrf` persistentes (mesmo Max-Age) só com `X-RPG-Client: android`; um único `POST /auth/refresh` no boot nativo; WebView depurável só em `BuildConfig.DEBUG`; sem `CAP_APP_ID`; FileProvider só com cache; topbar a 360px sem sobreposição; risco de spoofing do header aceito e documentado.
 

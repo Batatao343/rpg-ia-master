@@ -24,7 +24,7 @@ Capacitor ainda copia `web/dist` para o APK (`assets/public`), mas não é usado
 Capacitor 8 exige **JDK 21** (JDK 17 falha com `invalid source release: 21`). Usado Microsoft OpenJDK 21 em `%LOCALAPPDATA%\jdk21` (fora do repo).
 ```
 cd web && npm ci && npm run build
-npx cap sync android          # CAP_SERVER_URL=... CAP_DEBUG_WEBVIEW=1 opcionais
+npx cap sync android          # CAP_SERVER_URL=... opcional (depuração do WebView segue BuildConfig.DEBUG)
 cd android && JAVA_HOME=<jdk21> gradlew.bat assembleDebug
 ```
 APK: `web/android/app/build/outputs/apk/debug/app-debug.apk` (~21 MB).
@@ -68,7 +68,10 @@ Telas: `evidence/0*.png`.
 3. **Microfone (achado 2):** `Permissions-Policy: camera=(), microphone=(self), geolocation=()` com teste. `getUserMedia` e governado por Permissions-Policy, nao por CSP (CSP nao tem diretiva de microfone). Ainda requer redeploy + reexecucao do check `mic_getUserMedia` no staging.
 
 ## Addendum 2026-10-15 (execução Claude)
-Equivalência de modelo: Claude Opus 5.5 executou as correções do review independente (Sol: CHANGES_REQUIRED, opção (a)).
+Equivalência de modelo: Claude Sonnet executou (equivalente a Terra); o orquestrador Opus decidiu a opção (a); revisão independente Opus: CHANGES_REQUIRED → re-revisão APPROVED_WITH_FOLLOWUPS.
 Correções: (1) `rpg_csrf` ganha o mesmo Max-Age do refresh para `X-RPG-Client: android`; logout/exclusão limpam os três cookies; boot nativo faz um único `POST /auth/refresh` antes de mostrar login (testes pytest + node). (2) `MainActivity` força `setWebContentsDebuggingEnabled(BuildConfig.DEBUG)` (`buildConfig` ligado no gradle). (3) `CAP_APP_ID` removido (ver Layout). (4) `file_paths.xml` sem `external-path` (só cache). (5) Topbar a 360px: ações ocupam linha própria e rótulos truncam com reticências. (6) Claims e risco de spoofing do header corrigidos acima.
 O pacote de produto fica só com o contrato do SPEC-193; Stripe segue oculto no Android (`isAndroidClient`) — a política de servidor `_refuse_android_stripe` pertence ao SPEC-194.
 Evidência do redeploy e do smoke v2: `evidence/emulator_smoke_v2.json`, `evidence/vercel_smoke_v2.txt`.
+
+
+Nota de rastreabilidade: o "process restart" do `emulator_smoke_v2.json` foi `adb shell am force-stop dev.rpgia.valoria.staging` seguido de `adb shell am start -n dev.rpgia.valoria.staging/.MainActivity`. O texto "Carregando conta…" em `v2_06_account.png` é o estado de carga dos dados de saldo/série (não depende do Stripe), capturado antes do fim da requisição.
