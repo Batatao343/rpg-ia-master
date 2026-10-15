@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-15T14:50:24.013434+00:00",
+  "at": "2026-10-15T17:28:15.265338+00:00",
   "base": "https://rpg-ia-master-staging.vercel.app",
   "extensions": {
     "pg_cron": "1.6.4",
@@ -7,22 +7,32 @@
   },
   "jobs": [
     {
-      "jobid": 4,
+      "jobid": 8,
       "name": "rpg-cron-jobs",
       "schedule": "* * * * *"
     },
     {
-      "jobid": 5,
+      "jobid": 9,
       "name": "rpg-cron-account-deletions",
       "schedule": "*/5 * * * *"
     },
     {
-      "jobid": 6,
+      "jobid": 10,
       "name": "rpg-cron-operations",
       "schedule": "*/5 * * * *"
     },
     {
-      "jobid": 7,
+      "jobid": 11,
+      "name": "rpg-cron-reconciliation",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "jobid": 12,
+      "name": "rpg-cron-finops",
+      "schedule": "0 * * * *"
+    },
+    {
+      "jobid": 13,
       "name": "rpg-cron-health",
       "schedule": "*/15 * * * *"
     }
@@ -32,6 +42,11 @@
       "active": true,
       "jobname": "rpg-cron-account-deletions",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "active": true,
+      "jobname": "rpg-cron-finops",
+      "schedule": "0 * * * *"
     },
     {
       "active": true,
@@ -47,6 +62,11 @@
       "active": true,
       "jobname": "rpg-cron-operations",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "active": true,
+      "jobname": "rpg-cron-reconciliation",
+      "schedule": "*/15 * * * *"
     }
   ],
   "vault": "updated"

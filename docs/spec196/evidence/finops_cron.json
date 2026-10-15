@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-15T17:32:28.182975+00:00",
+  "status": 200,
+  "unauthenticated_status": 401,
+  "result": {
+    "ok": true,
+    "failed": 0,
+    "alerts": 4,
+    "blocking_alerts": 2,
+    "alert_kinds": "cost_spike,provider_failure,stale_rate_card,unknown_pricing",
+    "skus": 1,
+    "skus_below_target": 0,
+    "switches_off": 0,
+    "purchases": 2,
+    "unpriced_purchases": 0,
+    "evaluation_recorded": true,
+    "duration_s": 0.301
+  }
+}

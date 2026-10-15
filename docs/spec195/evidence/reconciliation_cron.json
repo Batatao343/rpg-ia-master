@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-15T17:32:28.182975+00:00",
+  "base": "https://rpg-ia-master-staging.vercel.app",
+  "status": 200,
+  "result": {
+    "ok": true,
+    "ingested": 0,
+    "applied": 0,
+    "parked": 0,
+    "orphaned": 0,
+    "failed": 0,
+    "unconsumed_retried": 0,
+    "consume_failed": 0,
+    "parked_total": 0,
+    "orphaned_total": 0,
+    "google_voided_new": 0,
+    "google_poll_errors": 0,
+    "duration_s": 0.082
+  },
+  "unauthenticated_status": 401
+}

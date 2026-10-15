@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-15T17:32:28.182975+00:00",
+  "base": "https://rpg-ia-master-staging.vercel.app",
+  "deployed_commit": "6064020bbafa1bb7889e67e1f86bdb09c02b189f",
+  "health_git_sha_matches": true,
+  "vercel_cli": "64.2.0",
+  "migrations_pushed": [
+    "20261015130000",
+    "20261015140000",
+    "20261015150000",
+    "20261015151000"
+  ],
+  "migrations_in_sync_after": true,
+  "cron_jobs_scheduled": [
+    "rpg-cron-jobs",
+    "rpg-cron-account-deletions",
+    "rpg-cron-operations",
+    "rpg-cron-reconciliation (*/15)",
+    "rpg-cron-finops (hourly)",
+    "rpg-cron-health (watchdog)"
+  ],
+  "smokes": {
+    "vercel_smoke": "evidence/vercel_smoke.json",
+    "e2e_session": "evidence/e2e_session.json"
+  },
+  "cron_endpoints": {
+    "reconciliation": 200,
+    "finops": 200,
+    "unauthenticated": [
+      401,
+      401
+    ]
+  },
+  "finops_staging_note": "alerts on staging are real staging data (synthetic spec191 pricing version / stale rate card), not a defect; google_play not configured -> reported, not failing",
+  "schema_diff": "evidence/schema_diff.json (ok=true, diff empty after `supabase db reset` of the lab)"
+}

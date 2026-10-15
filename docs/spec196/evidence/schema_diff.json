@@ -1,0 +1,79 @@
+{
+  "counts": {
+    "buckets": {
+      "local": 1,
+      "staging": 1
+    },
+    "columns": {
+      "local": 440,
+      "staging": 440
+    },
+    "constraints": {
+      "local": 289,
+      "staging": 289
+    },
+    "extensions": {
+      "local": 6,
+      "staging": 9
+    },
+    "function_grants": {
+      "local": 29,
+      "staging": 29
+    },
+    "functions": {
+      "local": 21,
+      "staging": 21
+    },
+    "grants": {
+      "local": 375,
+      "staging": 375
+    },
+    "indexes": {
+      "local": 105,
+      "staging": 105
+    },
+    "policies": {
+      "local": 37,
+      "staging": 37
+    },
+    "tables": {
+      "local": 40,
+      "staging": 40
+    },
+    "triggers": {
+      "local": 42,
+      "staging": 42
+    }
+  },
+  "diff": {},
+  "excluded_pending_migration": {
+    "local": {},
+    "markers": [],
+    "note": "no pending markers: staging has every repo migration (SPEC-194..196)",
+    "staging": {}
+  },
+  "informational_diff": {
+    "extensions": {
+      "only_local": [
+        "vector 0.8.2"
+      ],
+      "only_staging": [
+        "pg_cron 1.6.4",
+        "pg_graphql 1.5.11",
+        "pg_net 0.19.5",
+        "vector 0.8.0"
+      ]
+    }
+  },
+  "ok": true,
+  "policy_schemas": [
+    "app",
+    "public",
+    "storage"
+  ],
+  "project_ref": "uzeagzcyvxzrpjgrhaql",
+  "schemas": [
+    "app",
+    "public"
+  ]
+}
