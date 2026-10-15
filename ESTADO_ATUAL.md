@@ -21,8 +21,10 @@
 > foi alinhado ao payload atual do job, que contém apenas `generation_id`.
 > Nenhum crédito de provedor ou recurso remoto foi criado. `uv run --all-extras
 > pytest -q` passou em 100% da suíte offline (2.285 casos coletados, com
-> integrações locais sem Docker ignoradas); o audit integrado do CI ainda
-> precisa confirmar o resultado desta correção.
+> integrações locais sem Docker ignoradas). No commit `cf31110`, o GitHub
+> concluiu `validate`, `eval-gates` e `audit-local` verdes; o audit integrado
+> passou com **31 testes** e gerador de imagem falso. Deploy funcional segue
+> em espera pelo staging da SPEC-191, por decisão do usuário.
 
 > **14/10 — SPEC-191 em espera por decisão do usuário sobre cota Supabase.**
 > A SPEC-190 permanece `done` e seu PR #26 está no GitHub. A tentativa única
