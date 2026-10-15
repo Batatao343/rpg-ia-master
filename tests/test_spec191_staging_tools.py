@@ -237,7 +237,7 @@ def test_synthetic_and_backup_main_reject_wrong_project_url(monkeypatch):
 def test_schema_diff_pure_helpers():
     from scripts.staging import schema_diff
     snap = {"tables": ["app.a", "app.google_play_purchases"], "grants": ["x"]}
-    keep, excl = schema_diff.split_pending(snap)
+    keep, excl = schema_diff.split_pending(snap, ("google_play",))
     assert keep["tables"] == ["app.a"] and excl == {"tables": ["app.google_play_purchases"]}
     d = schema_diff.diff({"t": ["a", "b"]}, {"t": ["a", "c"]})
     assert d == {"t": {"only_staging": ["b"], "only_local": ["c"]}}
