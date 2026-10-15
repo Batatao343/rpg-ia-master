@@ -1,0 +1,102 @@
+{
+  "at": "2026-10-15T18:35:24.007507+00:00",
+  "kill_switch": {
+    "audit_has_drill_actor": true,
+    "baseline": {
+      "quote": [
+        200,
+        null
+      ],
+      "state": 200
+    },
+    "cleanup_user_status": 200,
+    "off": {
+      "cli_returncode": 0,
+      "cli_seconds": 0.63,
+      "last_seen": [
+        [
+          200,
+          null
+        ],
+        [
+          200,
+          null
+        ],
+        [
+          503,
+          "image_generation_disabled"
+        ]
+      ],
+      "propagation_seconds": 5.23,
+      "reached_503_image_generation_disabled": true,
+      "state_readable_while_off": true,
+      "total_seconds_from_cli_start": 5.86
+    },
+    "ok": true,
+    "on": {
+      "cli_returncode": 0,
+      "cli_seconds": 0.56,
+      "last_seen": [
+        [
+          503,
+          "image_generation_disabled"
+        ],
+        [
+          503,
+          "image_generation_disabled"
+        ],
+        [
+          200,
+          null
+        ]
+      ],
+      "propagation_seconds": 4.71,
+      "quote_restored": true
+    },
+    "switch": "image_generation"
+  },
+  "ok": true,
+  "vercel_rollback": {
+    "current_url": "https://rpg-ia-master-staging-lyllnq7rp-guilherme-medeiros-projects.vercel.app",
+    "health_while_rolled_back": {
+      "git_sha": "?"
+    },
+    "ok": true,
+    "previous_url": "https://rpg-ia-master-staging-2enucoyyr-guilherme-medeiros-projects.vercel.app",
+    "promote_command": {
+      "cli_seconds": 9.17,
+      "output": "ects.vercel.app\" in guilherme-medeiros-projects?\nPromote in progress?\nPromote in progress?\nPromote in progress?\n> Promote in progress?\n> Success! rpg-ia-master-staging was promoted to rpg-ia-master-staging-lyllnq7rp-guilherme-medeiros-projects.vercel.app (dpl_3ERkqNQGpSmsjJC7DhFhKUYUpkKf) [-1553ms]\n",
+      "returncode": 0
+    },
+    "promote_serving_current_sha": {
+      "last_seen": [
+        "1fe88de"
+      ],
+      "ok": true,
+      "seconds_after_cli": 0.1
+    },
+    "rollback_command": {
+      "cli_seconds": 7.66,
+      "output": "-medeiros-projects?\nRollback in progress?\nRollback in progress?\nRollback in progress?\nRollback in progress?\n> Rollback in progress?\n> Success! rpg-ia-master-staging was rolled back to rpg-ia-master-staging-2enucoyyr-guilherme-medeiros-projects.vercel.app (dpl_DwyoexniouWUvs2sR9492fgKBbpW) [-1086ms]\n",
+      "returncode": 0
+    },
+    "rollback_serving_previous_sha": {
+      "last_seen": [
+        "1fe88de",
+        "?",
+        ""
+      ],
+      "ok": true,
+      "seconds_after_cli": 17.27
+    },
+    "sha_before": "1fe88de",
+    "total_rollback_cycle_seconds": 34.2
+  },
+  "notes": [
+    "Vercel Hobby: `vercel rollback <url>` to anything older than the previous production deployment fails with HTTP 402 'upgrade to pro' (measured; R-06).",
+    "Rollback target was the previous production deployment (built without GIT_SHA, health git_sha ''), then promote back to the current one (git_sha 1fe88de, clean worktree of HEAD, same code as 6064020 + test/docs commit).",
+    "health_while_rolled_back '?' = one transient connection reset while the alias switched (client retried by polling).",
+    "kill-switch propagation is bounded by RPG_KILL_SWITCH_TTL_SECONDS (default 5 s) per instance; measured 4.7-5.2 s end to end.",
+    "Synthetic image_price_profiles row 'spec197-staging-portrait' + env RPG_DYNAMIC_ART_ENABLED/RPG_IMAGE_PRICE_PROFILE* exist on staging only (no provider call)."
+  ]
+}

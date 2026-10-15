@@ -27,7 +27,7 @@ _ID_LIKE = re.compile(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-|^[0-9a-fA-F]{24,}$|@")
 _SAFE = re.compile(r"^[A-Za-z0-9_.:/+-]{1,60}$")
 ALERT_KINDS = ("unknown_pricing", "stale_rate_card", "cost_spike", "expensive_fallback",
                "wallet_mismatch", "webhook_backlog", "provider_failure", "margin_below_target",
-               "finops_unknown_purchase_pricing")
+               "finops_unknown_purchase_pricing", "daily_spend_cap")
 
 
 def safe_label(value: object) -> str:

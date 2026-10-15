@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "1fe88de2dad6b766ef4067314f4cde4a86945612",
+  "commit_sha": "45f84bc0d136f1bccaf43aeabb109b6665b950e7",
   "edge_counts": {
-    "calls": 10536,
-    "contains": 510,
-    "defines": 6346,
-    "imports": 1070,
-    "likely_test_for": 652,
+    "calls": 10729,
+    "contains": 518,
+    "defines": 6424,
+    "imports": 1085,
+    "likely_test_for": 659,
     "route_to": 58
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:b0e99865054be39125adebed87e372771e03e1252e672d6545d7e6a7ba2cffcc",
+  "graph_hash": "sha256:e7df965e2a5515765f55e0b12628a6aa384964f00765a4c9fe9c939d77961e3b",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -197,6 +197,8 @@
     "scripts/readiness_report.py",
     "scripts/recover_account_deletions.py",
     "scripts/recover_operations.py",
+    "scripts/release/__init__.py",
+    "scripts/release/checklist.py",
     "scripts/restore_local.py",
     "scripts/run_llm_contract_gate.py",
     "scripts/seed_google_play_skus.py",
@@ -207,6 +209,7 @@
     "scripts/staging/backup_restore.py",
     "scripts/staging/common.py",
     "scripts/staging/e2e_session.py",
+    "scripts/staging/incident_drill.py",
     "scripts/staging/job_survival.py",
     "scripts/staging/measure.py",
     "scripts/staging/migrations.py",
@@ -217,6 +220,7 @@
     "scripts/staging/smoke_ab.py",
     "scripts/staging/sse_disconnect.py",
     "scripts/staging/synthetic_data.py",
+    "scripts/staging/two_user_smoke.py",
     "scripts/staging/vercel_env.py",
     "scripts/staging/vercel_smoke.py",
     "scripts/staging/verify_cron.py",
@@ -255,6 +259,7 @@
     "services/context_sources.py",
     "services/continuity.py",
     "services/cron_internal.py",
+    "services/daily_spend_cap.py",
     "services/death_flow.py",
     "services/discovery.py",
     "services/dynamic_art.py",
@@ -533,6 +538,9 @@
     "tests/test_spec195_postgres_local.py",
     "tests/test_spec195_reconciliation.py",
     "tests/test_spec196_finops.py",
+    "tests/test_spec197_checklist.py",
+    "tests/test_spec197_daily_cap.py",
+    "tests/test_spec197_legal_pages.py",
     "tests/test_spec_index.py",
     "tests/test_spec_migration_safety.py",
     "tests/test_speech_api.py",
@@ -637,14 +645,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 581,
+    "class": 586,
     "endpoint": 58,
-    "file": 583,
-    "function": 1994,
-    "method": 586,
-    "module": 510,
-    "test": 3185
+    "file": 591,
+    "function": 2031,
+    "method": 593,
+    "module": 518,
+    "test": 3214
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:9b4cfd18460fd3b3b4a97fad75655ad41b14d4a51e8ab7df82b2a231141372fc"
+  "source_tree_hash": "sha256:eb61312292fee0ce7faffc2cc5692ecd5f9c5e318e50ea8ab3475aeb51be5395"
 }

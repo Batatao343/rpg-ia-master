@@ -1,0 +1,138 @@
+{
+  "schema": 1,
+  "env": "staging",
+  "sha": "1fe88de2dad6b766ef4067314f4cde4a86945612",
+  "base_url": "https://rpg-ia-master-staging.vercel.app",
+  "ok": false,
+  "failing": [
+    "git_clean_tree",
+    "legal_pages",
+    "open_p0_p1"
+  ],
+  "strict": false,
+  "results": [
+    {
+      "name": "git_clean_tree",
+      "status": "fail",
+      "blocking": true,
+      "detail": {
+        "sha": "1fe88de2dad6b766ef4067314f4cde4a86945612",
+        "dirty_files": 19
+      }
+    },
+    {
+      "name": "specs_176_196_done",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "not_done": {},
+        "checked": 21
+      }
+    },
+    {
+      "name": "ci_green",
+      "status": "skip",
+      "blocking": true,
+      "detail": "gh unavailable or unauthenticated"
+    },
+    {
+      "name": "migrations_drift",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "local_count": 22,
+        "remote_count": 22,
+        "pending": [],
+        "remote_only": [],
+        "version_mismatch": []
+      }
+    },
+    {
+      "name": "eval_locks_unchanged",
+      "status": "pass",
+      "blocking": true,
+      "detail": "eval governance valid: 6 dataset(s)"
+    },
+    {
+      "name": "budget_alert_config_present",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "missing": []
+      }
+    },
+    {
+      "name": "kill_switch_store_reachable",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "switches_recorded": 1,
+        "switched_off": []
+      }
+    },
+    {
+      "name": "health_sha",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "http": 200,
+        "deployed_sha": "1fe88de",
+        "expected": "1fe88de2dad6b766ef4067314f4cde4a86945612"
+      }
+    },
+    {
+      "name": "vercel_env_names",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "missing": [],
+        "forbidden_present": []
+      }
+    },
+    {
+      "name": "legal_pages",
+      "status": "fail",
+      "blocking": true,
+      "detail": "no privacy/terms/support/refund URLs configured (--legal-url name=url)"
+    },
+    {
+      "name": "open_p0_p1",
+      "status": "fail",
+      "blocking": true,
+      "detail": {
+        "open_p0_p1": [
+          "R-01",
+          "R-02",
+          "R-03",
+          "R-04",
+          "R-05",
+          "R-06",
+          "R-07",
+          "R-09",
+          "R-10",
+          "R-11",
+          "R-12",
+          "R-13",
+          "R-14"
+        ],
+        "p2_awaiting_acceptance": [
+          "R-15",
+          "R-16",
+          "R-17",
+          "R-18",
+          "R-19",
+          "R-20",
+          "R-21",
+          "R-22",
+          "R-23",
+          "R-24",
+          "R-25",
+          "R-26",
+          "R-27",
+          "R-28"
+        ],
+        "total": 28
+      }
+    }
+  ]
+}

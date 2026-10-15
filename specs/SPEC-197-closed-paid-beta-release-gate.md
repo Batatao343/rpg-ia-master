@@ -1,6 +1,6 @@
 # SPEC-197 — Closed paid beta — release gate
 
-> **Status:** `approved`
+> **Status:** `in-progress`
 > **Depende de:** SPEC-196 `done`
 > **EXECUTOR_MODEL obrigatório:** `Terra`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -59,3 +59,15 @@ Checklist + evidence bundle por SHA/env; Luna pode compilar relatório, Terra co
 - [ ] Stripe live small-value smoke só ocorre após approval humano e valor explícito;
 - [ ] zero P0/P1 aberto; P2 conhecido precisa de risk acceptance documentado;
 - [ ] review Sol independente retorna release recommendation e o usuário dá aprovação final para abrir beta.
+
+## Addendum 2026-10-15 (execução Claude — em andamento)
+
+Executada no Claude Code ([equivalência de modelos](../docs/planos/equivalencia-modelos-claude.md)).
+Partes autônomas entregues: checklist de release automatizado
+(`scripts/release/checklist.py`), registro de riscos, runbooks
+(incidente, rollback, promoção, orçamento), corte automático de gasto diário,
+drill de restore com dados de carteira, páginas legais em rascunho,
+drill de incidente/rollback e smoke de dois usuários no staging
+([docs/spec197](../docs/spec197/)). Pendente de decisão/conta do usuário:
+[decision-request.md](../docs/spec197/decision-request.md) (produção paga,
+Stripe live, SMTP, Turnstile real, dados jurídicos, aceite de P2 e go/no-go).

@@ -1139,3 +1139,22 @@ select {
 .generated-art-card h3 { margin: 0 0 0.4rem; color: var(--ink); font-size: 0.95rem; }
 .generated-art-card p { margin: 0.25rem 0 0.5rem; color: var(--muted); }
 .generated-art-card img { display: block; max-width: 100%; max-height: 18rem; object-fit: contain; }
+
+/* SPEC-197 R3: legal pages (static, build-time) + footer links */
+.legal { max-width: 46rem; margin: 0 auto; padding: 1.5rem 16px 4rem; font-family: var(--body); line-height: 1.6; }
+.legal h1, .legal h2 { color: var(--ink); }
+.legal h1 { font-size: 1.7rem; margin: 1rem 0; }
+.legal h2 { font-size: 1.2rem; margin: 1.8rem 0 0.6rem; }
+.legal a { color: var(--accent); }
+.legal__banner { border: 1px solid var(--accent); background: var(--bg-deep); padding: 0.6rem 0.9rem; margin: 0 0 1rem; }
+.legal__draft { border-left: 3px solid var(--accent); margin: 1rem 0; padding: 0.2rem 0 0.2rem 1rem; color: var(--muted); }
+.legal__nav, .legal-links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; font-size: 0.9rem; }
+.legal__nav { margin-bottom: 1rem; }
+.legal__nav [aria-current="page"] { color: var(--ink); text-decoration: none; font-weight: 600; }
+.legal__table { overflow-x: auto; }
+.legal table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+.legal th, .legal td { border: 1px solid var(--line-soft); padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+.legal code { font-size: 0.88em; background: var(--bg-deep); padding: 0 0.25em; }
+.legal-links { justify-content: center; padding: 1.2rem 16px 2rem; }
+.legal-links a { color: var(--muted); }
+.legal-links a:hover { color: var(--accent); }

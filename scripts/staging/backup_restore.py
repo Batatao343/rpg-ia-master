@@ -161,7 +161,8 @@ def _storage_headers(env: Mapping[str, str]) -> tuple[str, dict[str, str]]:
 
 
 def restore(src: Path, target_dsn: str, objects_dir: Path, confirmed: bool,
-            env: Mapping[str, str] | None = None, client: httpx.Client | None = None) -> dict:
+            env: Mapping[str, str] | None = None, client: httpx.Client | None = None,
+            skip_objects: bool = False) -> dict:
     """Data-only restore on top of a DB already built from supabase/migrations (proves migrations-from-zero
     + data), then bytes re-uploaded through the local Storage API (metadata rows from the dump are dropped first)."""
     assert_disposable(target_dsn, confirmed)
@@ -186,7 +187,7 @@ def restore(src: Path, target_dsn: str, objects_dir: Path, confirmed: bool,
         conn.execute("set storage.allow_delete_query = 'true'")
         conn.execute("delete from storage.objects where bucket_id = %s", (BUCKET,))
     uploaded = 0
-    if (src / "objects" / BUCKET).exists():
+    if (src / "objects" / BUCKET).exists() and not skip_objects:
         url, h = _storage_headers(env or os.environ)
         http = client or httpx.Client(timeout=30)
         for name, _sha in object_hashes(src).items():
@@ -195,17 +196,20 @@ def restore(src: Path, target_dsn: str, objects_dir: Path, confirmed: bool,
                           headers={**h, "Content-Type": "image/webp"})
             r.raise_for_status()
             uploaded += 1
-    return {"restored": True, "objects_uploaded": uploaded}
+    return {"restored": True, "objects_uploaded": uploaded, "objects_skipped": skip_objects}
 
 
 def verify(src: Path, target_dsn: str, objects_dir: Path, env: Mapping[str, str] | None = None,
-           client: httpx.Client | None = None) -> dict:
+           client: httpx.Client | None = None, skip_objects: bool = False) -> dict:
     """Row counts from the target DB; object checksums computed from bytes DOWNLOADED from the local Storage."""
     import psycopg
     assert_disposable(target_dsn, True)
     expected = json.loads((src / "state.json").read_text(encoding="utf-8"))
     with psycopg.connect(target_dsn, autocommit=True) as conn:
         counts = count_rows(conn, list(expected["row_counts"]))
+    if skip_objects:  # DB-only verification (e.g. lab Storage API unusable); object checksums stay in the manifest
+        res = compare_state({"row_counts": expected["row_counts"]}, counts, {})
+        return {**res, "objects_skipped": True}
     url, h = _storage_headers(env or os.environ)
     http = client or httpx.Client(timeout=30)
     actual: dict[str, str] = {}
@@ -229,6 +233,8 @@ def main(argv: list[str] | None = None) -> int:
         s.add_argument("--target-dsn", required=True)
         s.add_argument("--objects-dir", type=Path, default=Path("."), help="(legado, ignorado)")
         s.add_argument("--confirm-disposable", action="store_true")
+        s.add_argument("--skip-objects", action="store_true",
+                       help="restore/verify only the database (Storage API of the disposable lab unusable)")
     for s in sub.choices.values():
         s.add_argument("--out")
     a = p.parse_args(argv)
@@ -238,9 +244,10 @@ def main(argv: list[str] | None = None) -> int:
                              RPG_STAGING_DB_URL=common.env_required("RPG_STAGING_DB_URL"))
         result = {"project_ref": ref, **export(a.dest.resolve(), os.environ)}
     elif a.mode == "restore":
-        result = restore(a.src, a.target_dsn, a.objects_dir, a.confirm_disposable, os.environ)
+        result = restore(a.src, a.target_dsn, a.objects_dir, a.confirm_disposable, os.environ,
+                         skip_objects=a.skip_objects)
     else:
-        result = verify(a.src, a.target_dsn, a.objects_dir, os.environ)
+        result = verify(a.src, a.target_dsn, a.objects_dir, os.environ, skip_objects=a.skip_objects)
     print(common.write_evidence(f"backup_{a.mode}", result, a.out))
     return 0 if result.get("ok", True) else 1
 

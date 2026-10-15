@@ -3469,7 +3469,7 @@ specs:
   lineage_note: Imported approved v5 package; implementation not started
 - id: SPEC-197
   slug: closed-paid-beta-release-gate
-  status: approved
+  status: in-progress
   path: specs/SPEC-197-closed-paid-beta-release-gate.md
   created_commit: null
   created_at: '2026-10-02'

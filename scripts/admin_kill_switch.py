@@ -3,6 +3,11 @@
   uv run python scripts/admin_kill_switch.py list
   uv run python scripts/admin_kill_switch.py off image_generation --actor guilherme --reason "custo anomalo"
   uv run python scripts/admin_kill_switch.py on  image_generation --actor guilherme --reason "normalizado" --apply
+
+Target database: default = runtime pool (DATABASE_URL + RPG_RUNTIME_PROFILE). To act on another database
+explicitly (e.g. staging from a workstation) pass the NAME of an env var holding the DSN, optionally with
+a dotenv file (secrets never go on argv):
+  uv run python scripts/admin_kill_switch.py --dsn-env RPG_STAGING_DB_URL --env-file .env.staging list
 """
 from __future__ import annotations
 
@@ -21,6 +26,8 @@ from services.kill_switches import KEY_RE, validate_change
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument("--dsn-env", help="name of the env var that holds the target database DSN")
+    p.add_argument("--env-file", help="dotenv file to read --dsn-env from (not exported to the process env)")
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("list")
     sub.add_parser("audit").add_argument("--limit", type=int, default=50)
@@ -37,8 +44,20 @@ def main(argv: Sequence[str] | None = None, *, store=None) -> int:
     args = build_parser().parse_args(argv)
     if store is None:
         from infrastructure.kill_switch_store import PostgresSwitchStore
-        from infrastructure.runtime import get_runtime
-        store = PostgresSwitchStore(get_runtime().game_store.pool)
+        if args.dsn_env:
+            import os
+            dsn = os.getenv(args.dsn_env, "")
+            if not dsn and args.env_file:
+                from dotenv import dotenv_values
+                dsn = dotenv_values(args.env_file).get(args.dsn_env) or ""
+            if not dsn:
+                print(f"error: {args.dsn_env} is empty", file=sys.stderr)
+                return 2
+            from infrastructure.postgres import PostgresPool
+            store = PostgresSwitchStore(PostgresPool(dsn, max_size=2))
+        else:
+            from infrastructure.runtime import get_runtime
+            store = PostgresSwitchStore(get_runtime().game_store.pool)
     if args.cmd == "list":
         print(json.dumps(store.load(), indent=2, sort_keys=True))
         return 0

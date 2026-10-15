@@ -11,12 +11,13 @@ from services.finops_alerts import (
     AlertInputs, Thresholds, evaluate_alerts, installed_freshness, publish_alert_metrics, publish_evaluation_age,
     publish_margin_metrics, publish_switch_metrics,
 )
+from services.daily_spend_cap import evaluate_daily_cap
 from services.kill_switches import get_switches
 
 
 def run_finops(reader, now: datetime | None = None, *, report_days: int | None = None,
                alert_hours: int | None = None, baselines: int = 3,
-               fixed_path: Path | None = None, recorder=None) -> dict:
+               fixed_path: Path | None = None, recorder=None, switch_store=None) -> dict:
     """``recorder.record(now, summary, alerts)`` (optional) persists the evaluation owner-free so
     staleness is checkable via SQL when there is no Prometheus scrape target (Vercel)."""
     now = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
@@ -54,6 +55,18 @@ def run_finops(reader, now: datetime | None = None, *, report_days: int | None =
         backlogs=reader.backlogs(now), baseline_cost_by_provider=base, skus=report.skus,
         switches_off=off, unpriced_purchases=report.unpriced_purchases,
         unpriced_versions=report.missing_pricing), now, Thresholds.from_env())
+    # Daily spend cap (opt-in via RPG_DAILY_SPEND_CAP_BRL): auto-off only, never auto-on.
+    cap_summary: dict = {}
+    try:
+        store = switch_store if switch_store is not None else get_switches()._resolve_store()
+        cap = evaluate_daily_cap(reader, store, now, fx)
+        alerts = [*alerts, *cap.alerts]
+        cap_summary = cap.summary()
+        if cap.switched_off:
+            get_switches().invalidate()
+            off = sorted({*off, *cap.switched_off})
+    except Exception as exc:  # the cap must not break the evaluation; surfaced in the summary
+        cap_summary = {"daily_cap_error": type(exc).__name__}
     publish_alert_metrics(alerts)
     publish_margin_metrics(report.skus, report.unit_costs)
     publish_switch_metrics(off)
@@ -63,7 +76,7 @@ def run_finops(reader, now: datetime | None = None, *, report_days: int | None =
             "skus_below_target": sum(1 for s in report.skus if s.meets_target is False),
             "switches_off": len(off), "purchases": sum(r.purchases for r in report.rows),
             "unpriced_purchases": report.unpriced_purchases,
-            "report": finops.report_to_dict(report)}
+            **cap_summary, "report": finops.report_to_dict(report)}
     if recorder is not None:
         try:
             recorder.record(now, {k: v for k, v in summary.items() if k != "report"},

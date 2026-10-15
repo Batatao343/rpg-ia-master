@@ -835,7 +835,20 @@ export function App() {
           </motion.div>
         )}
       </AnimatePresence>
+      {screen !== "play" && screen !== "bootstrap" && <LegalLinks />}
     </MotionConfig>
+  );
+}
+
+/** SPEC-197 R3: static legal pages (RASCUNHO until published by the owner). Plain links, no script. */
+function LegalLinks() {
+  return (
+    <footer className="legal-links" aria-label="Documentos legais">
+      <a href="/privacidade/">Privacidade</a>
+      <a href="/termos/">Termos</a>
+      <a href="/reembolso/">Reembolso</a>
+      <a href="/suporte/">Suporte</a>
+    </footer>
   );
 }
 

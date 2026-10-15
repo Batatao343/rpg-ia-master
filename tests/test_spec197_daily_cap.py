@@ -1,0 +1,116 @@
+"""SPEC-197 R7: daily spend cap -> automatic kill switches (never auto re-enable)."""
+from __future__ import annotations
+
+import os
+from datetime import datetime, timezone
+from decimal import Decimal as D
+
+import pytest
+
+from infrastructure.finops_reader import FakeFinopsReader
+from services import finops
+from services import finops_alerts as fa
+from services.daily_spend_cap import ACTOR, CAP_SWITCHES, day_start, evaluate_daily_cap
+from services.finops_job import run_finops
+from services.kill_switches import IMAGE, MemorySwitchStore, STT_FALLBACK, NEW_PURCHASES
+
+NOW = datetime(2026, 10, 15, 15, tzinfo=timezone.utc)
+PRICING = {"v1": finops.PricingRef("v1", D("5"), {})}
+
+
+def reader(usd: str) -> FakeFinopsReader:
+    g = fa.UsageGroup("deepseek", "m", "llm", "v1", "token_priced", "success", 1, D(usd))
+    return FakeFinopsReader(pricing_refs=PRICING, groups=[g])
+
+
+@pytest.fixture(autouse=True)
+def _env(monkeypatch):
+    monkeypatch.delenv("RPG_DAILY_SPEND_CAP_BRL", raising=False)
+    monkeypatch.delenv("RPG_KILL_SWITCHES_OFF", raising=False)
+
+
+def test_off_without_env_never_touches_switches():
+    store = MemorySwitchStore()
+    res = evaluate_daily_cap(reader("999"), store, NOW, D("5"))
+    assert not res.enabled and store.audit_rows == []
+    out = run_finops(reader("999"), now=NOW, switch_store=store)
+    assert out["daily_cap_enabled"] is False and store.state == {}
+
+
+def test_under_cap_does_nothing(monkeypatch):
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "50")
+    store = MemorySwitchStore()
+    res = evaluate_daily_cap(reader("2"), store, NOW, D("5"))  # R$ 10
+    assert res.enabled and not res.exceeded and store.audit_rows == []
+
+
+def test_exceeded_switches_off_audited_idempotent_no_reenable(monkeypatch):
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "50")
+    store = MemorySwitchStore()
+    out = run_finops(reader("20"), now=NOW, switch_store=store)  # R$ 100 > 50
+    assert out["daily_cap_exceeded"] and set(out["daily_cap_switched_off"].split(",")) == set(CAP_SWITCHES)
+    assert "daily_spend_cap" in out["alert_kinds"] and out["blocking_alerts"] >= 1
+    assert store.state[IMAGE] is False and store.state[STT_FALLBACK] is False
+    assert NEW_PURCHASES not in store.state
+    assert {r["actor_id"] for r in store.audit_rows} == {ACTOR}
+    assert all("daily spend cap" in r["reason"] for r in store.audit_rows)
+    n = len(store.audit_rows)
+    again = run_finops(reader("20"), now=NOW, switch_store=store)  # idempotent: no new writes
+    assert len(store.audit_rows) == n and again["daily_cap_switched_off"] == ""
+    run_finops(reader("0.1"), now=NOW, switch_store=store)  # spend back under cap: still OFF
+    assert store.state[IMAGE] is False and len(store.audit_rows) == n
+
+
+def test_partially_off_only_writes_missing(monkeypatch):
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "1")
+    store = MemorySwitchStore({IMAGE: False})
+    res = evaluate_daily_cap(reader("5"), store, NOW, D("5"))
+    assert res.switched_off == [STT_FALLBACK] and res.already_off == [IMAGE]
+
+
+def test_day_boundary_uses_sao_paulo_midnight():
+    assert day_start(NOW) == datetime(2026, 10, 15, 3, tzinfo=timezone.utc)
+
+
+def test_invalid_cap_value_disables(monkeypatch):
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "abc")
+    assert not evaluate_daily_cap(reader("99"), MemorySwitchStore(), NOW, D("5")).enabled
+
+
+def test_store_failure_is_reported_not_raised(monkeypatch):
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "1")
+
+    class Boom(MemorySwitchStore):
+        def set(self, *a, **k):
+            raise RuntimeError("db down")
+    out = run_finops(reader("20"), now=NOW, switch_store=Boom())
+    assert out["daily_cap_error"] == "RuntimeError"
+
+
+@pytest.mark.infra_local
+def test_postgres_store_audit_actor_and_idempotency(monkeypatch):
+    psycopg = pytest.importorskip("psycopg")
+    dsn = os.getenv("RPG_TEST_DATABASE_URL")
+    if not dsn:
+        pytest.skip("RPG_TEST_DATABASE_URL ausente")
+    from infrastructure.kill_switch_store import PostgresSwitchStore
+    from infrastructure.postgres import PostgresPool
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "1")
+    pool = PostgresPool(dsn, max_size=2)
+    try:
+        store = PostgresSwitchStore(pool)
+        store.set(IMAGE, True, actor_id="lab", reason="lab-reset")
+        store.set(STT_FALLBACK, True, actor_id="lab", reason="lab-reset")
+        try:
+            res = evaluate_daily_cap(reader("5"), store, NOW, D("5"))
+            assert sorted(res.switched_off) == sorted(CAP_SWITCHES)
+            assert store.load()[IMAGE] is False
+            sys_rows = [a for a in store.audit(10) if a["actor_id"] == ACTOR]
+            assert len(sys_rows) >= 2 and all(a["enabled"] is False for a in sys_rows[:2])
+            again = evaluate_daily_cap(reader("5"), store, NOW, D("5"))
+            assert again.switched_off == [] and sorted(again.already_off) == sorted(CAP_SWITCHES)
+        finally:
+            store.set(IMAGE, True, actor_id="lab", reason="lab-cleanup")
+            store.set(STT_FALLBACK, True, actor_id="lab", reason="lab-cleanup")
+    finally:
+        pool.close()

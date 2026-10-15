@@ -1,5 +1,5 @@
 {
-  "commit_sha": "1fe88de2dad6b766ef4067314f4cde4a86945612",
+  "commit_sha": "45f84bc0d136f1bccaf43aeabb109b6665b950e7",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -2161,6 +2161,28 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "scripts/release/__init__.py",
+        "line": 1
+      },
+      "source": "file:scripts/release/__init__.py",
+      "target": "module:scripts.release",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 1
+      },
+      "source": "file:scripts/release/checklist.py",
+      "target": "module:scripts.release.checklist",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "scripts/restore_local.py",
         "line": 1
       },
@@ -2271,6 +2293,17 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 1
+      },
+      "source": "file:scripts/staging/incident_drill.py",
+      "target": "module:scripts.staging.incident_drill",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
         "line": 1
       },
@@ -2375,6 +2408,17 @@
       },
       "source": "file:scripts/staging/synthetic_data.py",
       "target": "module:scripts.staging.synthetic_data",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 1
+      },
+      "source": "file:scripts/staging/two_user_smoke.py",
+      "target": "module:scripts.staging.two_user_smoke",
       "type": "contains"
     },
     {
@@ -2793,6 +2837,17 @@
       },
       "source": "file:services/cron_internal.py",
       "target": "module:services.cron_internal",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 1
+      },
+      "source": "file:services/daily_spend_cap.py",
+      "target": "module:services.daily_spend_cap",
       "type": "contains"
     },
     {
@@ -12209,6 +12264,116 @@
       },
       "source": "file:tests/test_spec196_finops.py",
       "target": "module:tests.test_spec196_finops",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 7
+      },
+      "source": "file:tests/test_spec197_checklist.py",
+      "target": "file:scripts/release/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec197_checklist.py",
+      "target": "module:tests.test_spec197_checklist",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 10
+      },
+      "source": "file:tests/test_spec197_daily_cap.py",
+      "target": "file:infrastructure/finops_reader.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 11
+      },
+      "source": "file:tests/test_spec197_daily_cap.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 12
+      },
+      "source": "file:tests/test_spec197_daily_cap.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 13
+      },
+      "source": "file:tests/test_spec197_daily_cap.py",
+      "target": "file:services/daily_spend_cap.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 14
+      },
+      "source": "file:tests/test_spec197_daily_cap.py",
+      "target": "file:services/finops_job.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 15
+      },
+      "source": "file:tests/test_spec197_daily_cap.py",
+      "target": "file:services/kill_switches.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec197_daily_cap.py",
+      "target": "module:tests.test_spec197_daily_cap",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_legal_pages.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec197_legal_pages.py",
+      "target": "module:tests.test_spec197_legal_pages",
       "type": "contains"
     },
     {
@@ -27198,7 +27363,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/admin_kill_switch.py",
-        "line": 19
+        "line": 24
       },
       "source": "module:scripts.admin_kill_switch",
       "target": "module:services.kill_switches",
@@ -27209,7 +27374,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/admin_kill_switch.py",
-        "line": 22
+        "line": 27
       },
       "source": "module:scripts.admin_kill_switch",
       "target": "symbol:scripts.admin_kill_switch.build_parser",
@@ -27220,7 +27385,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/admin_kill_switch.py",
-        "line": 36
+        "line": 43
       },
       "source": "module:scripts.admin_kill_switch",
       "target": "symbol:scripts.admin_kill_switch.main",
@@ -29617,6 +29782,270 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 71
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 45
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 264
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist._dotenv",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 60
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist._http_get",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 55
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist._run",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 102
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.check_ci",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 168
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.check_env_names",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 131
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.check_eval_locks",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 136
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.check_finops_config",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 81
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.check_git",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 156
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.check_health",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 143
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.check_kill_switch",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 183
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.check_legal",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 116
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.check_migrations",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 217
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.check_risks",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 92
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.check_specs",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 305
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 201
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.parse_risks",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 295
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.real_kill_switch_load",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 272
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.real_remote_migrations",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 282
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.real_vercel_env_names",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 228
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.run_checklist",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 241
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.to_markdown",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 254
+      },
+      "source": "module:scripts.release.checklist",
+      "target": "symbol:scripts.release.checklist.write_report",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "scripts/restore_local.py",
         "line": 14
       },
@@ -30124,7 +30553,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 219
+        "line": 223
       },
       "source": "module:scripts.staging.backup_restore",
       "target": "symbol:scripts.staging.backup_restore.main",
@@ -30157,7 +30586,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 201
+        "line": 202
       },
       "source": "module:scripts.staging.backup_restore",
       "target": "symbol:scripts.staging.backup_restore.verify",
@@ -30381,6 +30810,94 @@
       },
       "source": "module:scripts.staging.e2e_session",
       "target": "symbol:scripts.staging.e2e_session.turns_ok",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 22
+      },
+      "source": "module:scripts.staging.incident_drill",
+      "target": "module:scripts.staging",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 23
+      },
+      "source": "module:scripts.staging.incident_drill",
+      "target": "module:scripts.staging.two_user_smoke",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 37
+      },
+      "source": "module:scripts.staging.incident_drill",
+      "target": "symbol:scripts.staging.incident_drill._poll",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 88
+      },
+      "source": "module:scripts.staging.incident_drill",
+      "target": "symbol:scripts.staging.incident_drill._sha",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 29
+      },
+      "source": "module:scripts.staging.incident_drill",
+      "target": "symbol:scripts.staging.incident_drill._switch",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 48
+      },
+      "source": "module:scripts.staging.incident_drill",
+      "target": "symbol:scripts.staging.incident_drill.kill_switch",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 113
+      },
+      "source": "module:scripts.staging.incident_drill",
+      "target": "symbol:scripts.staging.incident_drill.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 95
+      },
+      "source": "module:scripts.staging.incident_drill",
+      "target": "symbol:scripts.staging.incident_drill.rollback",
       "type": "defines"
     },
     {
@@ -31312,7 +31829,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 30
+        "line": 31
       },
       "source": "module:scripts.staging.synthetic_data",
       "target": "symbol:scripts.staging.synthetic_data.build_manifest",
@@ -31323,7 +31840,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 78
+        "line": 177
       },
       "source": "module:scripts.staging.synthetic_data",
       "target": "symbol:scripts.staging.synthetic_data.cleanup",
@@ -31334,7 +31851,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 105
+        "line": 122
+      },
+      "source": "module:scripts.staging.synthetic_data",
+      "target": "symbol:scripts.staging.synthetic_data.compare_wallet",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/synthetic_data.py",
+        "line": 204
       },
       "source": "module:scripts.staging.synthetic_data",
       "target": "symbol:scripts.staging.synthetic_data.main",
@@ -31345,10 +31873,109 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 36
+        "line": 130
       },
       "source": "module:scripts.staging.synthetic_data",
       "target": "symbol:scripts.staging.synthetic_data.seed",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/synthetic_data.py",
+        "line": 64
+      },
+      "source": "module:scripts.staging.synthetic_data",
+      "target": "symbol:scripts.staging.synthetic_data.seed_wallet",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/synthetic_data.py",
+        "line": 44
+      },
+      "source": "module:scripts.staging.synthetic_data",
+      "target": "symbol:scripts.staging.synthetic_data.seed_wallet_prereqs",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/synthetic_data.py",
+        "line": 98
+      },
+      "source": "module:scripts.staging.synthetic_data",
+      "target": "symbol:scripts.staging.synthetic_data.wallet_snapshot",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 17
+      },
+      "source": "module:scripts.staging.two_user_smoke",
+      "target": "module:scripts.staging",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 18
+      },
+      "source": "module:scripts.staging.two_user_smoke",
+      "target": "module:scripts.staging.e2e_session",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 19
+      },
+      "source": "module:scripts.staging.two_user_smoke",
+      "target": "module:scripts.staging.synthetic_data",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 24
+      },
+      "source": "module:scripts.staging.two_user_smoke",
+      "target": "symbol:scripts.staging.two_user_smoke.User",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 166
+      },
+      "source": "module:scripts.staging.two_user_smoke",
+      "target": "symbol:scripts.staging.two_user_smoke.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 56
+      },
+      "source": "module:scripts.staging.two_user_smoke",
+      "target": "symbol:scripts.staging.two_user_smoke.run",
       "type": "defines"
     },
     {
@@ -35810,6 +36437,72 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 16
+      },
+      "source": "module:services.daily_spend_cap",
+      "target": "module:services.finops_alerts",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 17
+      },
+      "source": "module:services.daily_spend_cap",
+      "target": "module:services.kill_switches",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 45
+      },
+      "source": "module:services.daily_spend_cap",
+      "target": "symbol:services.daily_spend_cap.CapResult",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 24
+      },
+      "source": "module:services.daily_spend_cap",
+      "target": "symbol:services.daily_spend_cap.cap_from_env",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 35
+      },
+      "source": "module:services.daily_spend_cap",
+      "target": "symbol:services.daily_spend_cap.day_start",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 62
+      },
+      "source": "module:services.daily_spend_cap",
+      "target": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "services/death_flow.py",
         "line": 18
       },
@@ -37736,6 +38429,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
+        "line": 14
+      },
+      "source": "module:services.finops_job",
+      "target": "module:services.daily_spend_cap",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/finops_job.py",
         "line": 10
       },
       "source": "module:services.finops_job",
@@ -37747,7 +38451,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 14
+        "line": 15
       },
       "source": "module:services.finops_job",
       "target": "module:services.kill_switches",
@@ -37758,7 +38462,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 17
+        "line": 18
       },
       "source": "module:services.finops_job",
       "target": "symbol:services.finops_job.run_finops",
@@ -75828,6 +76532,347 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 7
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "module:scripts.release",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 12
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.fake_run",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 24
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.http",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 52
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_ci_states",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 87
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 33
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 77
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_health_sha",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 110
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_kill_switch_store",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 99
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_legal_pages",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 61
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_migrations_drift",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 132
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_real_register_parses",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 121
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_risks_gate",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 137
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_run_and_report",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 40
+      },
+      "source": "module:tests.test_spec197_checklist",
+      "target": "symbol:tests.test_spec197_checklist.test_specs_statuses",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 10
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "module:infrastructure.finops_reader",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 11
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 12
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 13
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "module:services.daily_spend_cap",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 14
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "module:services.finops_job",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 15
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "module:services.kill_switches",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 27
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "symbol:tests.test_spec197_daily_cap._env",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 21
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 71
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "symbol:tests.test_spec197_daily_cap.test_day_boundary_uses_sao_paulo_midnight",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 47
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "symbol:tests.test_spec197_daily_cap.test_exceeded_switches_off_audited_idempotent_no_reenable",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 75
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "symbol:tests.test_spec197_daily_cap.test_invalid_cap_value_disables",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 32
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "symbol:tests.test_spec197_daily_cap.test_off_without_env_never_touches_switches",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 64
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "symbol:tests.test_spec197_daily_cap.test_partially_off_only_writes_missing",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 91
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "symbol:tests.test_spec197_daily_cap.test_postgres_store_audit_actor_and_idempotency",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 80
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "symbol:tests.test_spec197_daily_cap.test_store_failure_is_reported_not_raised",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 40
+      },
+      "source": "module:tests.test_spec197_daily_cap",
+      "target": "symbol:tests.test_spec197_daily_cap.test_under_cap_does_nothing",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_legal_pages.py",
+        "line": 11
+      },
+      "source": "module:tests.test_spec197_legal_pages",
+      "target": "symbol:tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_draft_banner",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 47
       },
@@ -110204,7 +111249,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/admin_kill_switch.py",
-        "line": 37
+        "line": 44
       },
       "source": "symbol:scripts.admin_kill_switch.main",
       "target": "symbol:scripts.admin_kill_switch.build_parser",
@@ -110215,7 +111260,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/admin_kill_switch.py",
-        "line": 52
+        "line": 71
       },
       "source": "symbol:scripts.admin_kill_switch.main",
       "target": "symbol:services.kill_switches.validate_change",
@@ -114798,6 +115843,523 @@
       "type": "calls"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 51
+      },
+      "source": "symbol:scripts.release.checklist.Result",
+      "target": "symbol:scripts.release.checklist.Result.as_dict",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 106
+      },
+      "source": "symbol:scripts.release.checklist.check_ci",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 109
+      },
+      "source": "symbol:scripts.release.checklist.check_ci",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 113
+      },
+      "source": "symbol:scripts.release.checklist.check_ci",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 170
+      },
+      "source": "symbol:scripts.release.checklist.check_env_names",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 174
+      },
+      "source": "symbol:scripts.release.checklist.check_env_names",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 176
+      },
+      "source": "symbol:scripts.release.checklist.check_env_names",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 179
+      },
+      "source": "symbol:scripts.release.checklist.check_env_names",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 133
+      },
+      "source": "symbol:scripts.release.checklist.check_eval_locks",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 140
+      },
+      "source": "symbol:scripts.release.checklist.check_finops_config",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 85
+      },
+      "source": "symbol:scripts.release.checklist.check_git",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 88
+      },
+      "source": "symbol:scripts.release.checklist.check_git",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 158
+      },
+      "source": "symbol:scripts.release.checklist.check_health",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 162
+      },
+      "source": "symbol:scripts.release.checklist.check_health",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 165
+      },
+      "source": "symbol:scripts.release.checklist.check_health",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 145
+      },
+      "source": "symbol:scripts.release.checklist.check_kill_switch",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 149
+      },
+      "source": "symbol:scripts.release.checklist.check_kill_switch",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 151
+      },
+      "source": "symbol:scripts.release.checklist.check_kill_switch",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 152
+      },
+      "source": "symbol:scripts.release.checklist.check_kill_switch",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 185
+      },
+      "source": "symbol:scripts.release.checklist.check_legal",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 198
+      },
+      "source": "symbol:scripts.release.checklist.check_legal",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 119
+      },
+      "source": "symbol:scripts.release.checklist.check_migrations",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 123
+      },
+      "source": "symbol:scripts.release.checklist.check_migrations",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 125
+      },
+      "source": "symbol:scripts.release.checklist.check_migrations",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 127
+      },
+      "source": "symbol:scripts.release.checklist.check_migrations",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 220
+      },
+      "source": "symbol:scripts.release.checklist.check_risks",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 223
+      },
+      "source": "symbol:scripts.release.checklist.check_risks",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 218
+      },
+      "source": "symbol:scripts.release.checklist.check_risks",
+      "target": "symbol:scripts.release.checklist.parse_risks",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 98
+      },
+      "source": "symbol:scripts.release.checklist.check_specs",
+      "target": "symbol:scripts.release.checklist.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 314
+      },
+      "source": "symbol:scripts.release.checklist.main",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 316
+      },
+      "source": "symbol:scripts.release.checklist.main",
+      "target": "symbol:scripts.release.checklist.run_checklist",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 317
+      },
+      "source": "symbol:scripts.release.checklist.main",
+      "target": "symbol:scripts.release.checklist.write_report",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 296
+      },
+      "source": "symbol:scripts.release.checklist.real_kill_switch_load",
+      "target": "symbol:scripts.release.checklist._dotenv",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 273
+      },
+      "source": "symbol:scripts.release.checklist.real_remote_migrations",
+      "target": "symbol:scripts.release.checklist._dotenv",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 284
+      },
+      "source": "symbol:scripts.release.checklist.real_vercel_env_names",
+      "target": "symbol:scripts.release.checklist._dotenv",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 231
+      },
+      "source": "symbol:scripts.release.checklist.run_checklist",
+      "target": "symbol:scripts.release.checklist.check_ci",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 233
+      },
+      "source": "symbol:scripts.release.checklist.run_checklist",
+      "target": "symbol:scripts.release.checklist.check_env_names",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 232
+      },
+      "source": "symbol:scripts.release.checklist.run_checklist",
+      "target": "symbol:scripts.release.checklist.check_eval_locks",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 232
+      },
+      "source": "symbol:scripts.release.checklist.run_checklist",
+      "target": "symbol:scripts.release.checklist.check_finops_config",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 230
+      },
+      "source": "symbol:scripts.release.checklist.run_checklist",
+      "target": "symbol:scripts.release.checklist.check_git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 233
+      },
+      "source": "symbol:scripts.release.checklist.run_checklist",
+      "target": "symbol:scripts.release.checklist.check_health",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 232
+      },
+      "source": "symbol:scripts.release.checklist.run_checklist",
+      "target": "symbol:scripts.release.checklist.check_kill_switch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 234
+      },
+      "source": "symbol:scripts.release.checklist.run_checklist",
+      "target": "symbol:scripts.release.checklist.check_legal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 231
+      },
+      "source": "symbol:scripts.release.checklist.run_checklist",
+      "target": "symbol:scripts.release.checklist.check_migrations",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 234
+      },
+      "source": "symbol:scripts.release.checklist.run_checklist",
+      "target": "symbol:scripts.release.checklist.check_risks",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 231
+      },
+      "source": "symbol:scripts.release.checklist.run_checklist",
+      "target": "symbol:scripts.release.checklist.check_specs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/release/checklist.py",
+        "line": 259
+      },
+      "source": "symbol:scripts.release.checklist.write_report",
+      "target": "symbol:scripts.release.checklist.to_markdown",
+      "type": "calls"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
@@ -115737,7 +117299,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 239
+        "line": 245
       },
       "source": "symbol:scripts.staging.backup_restore.main",
       "target": "symbol:scripts.staging.backup_restore.export",
@@ -115748,7 +117310,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 241
+        "line": 247
       },
       "source": "symbol:scripts.staging.backup_restore.main",
       "target": "symbol:scripts.staging.backup_restore.restore",
@@ -115759,7 +117321,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 243
+        "line": 250
       },
       "source": "symbol:scripts.staging.backup_restore.main",
       "target": "symbol:scripts.staging.backup_restore.verify",
@@ -115770,7 +117332,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 224
+        "line": 228
       },
       "source": "symbol:scripts.staging.backup_restore.main",
       "target": "symbol:scripts.staging.common.add_guard_args",
@@ -115781,7 +117343,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 237
+        "line": 243
       },
       "source": "symbol:scripts.staging.backup_restore.main",
       "target": "symbol:scripts.staging.common.assert_ref_in",
@@ -115792,7 +117354,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 237
+        "line": 243
       },
       "source": "symbol:scripts.staging.backup_restore.main",
       "target": "symbol:scripts.staging.common.env_required",
@@ -115803,7 +117365,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 238
+        "line": 244
       },
       "source": "symbol:scripts.staging.backup_restore.main",
       "target": "symbol:scripts.staging.common.env_required",
@@ -115814,7 +117376,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 220
+        "line": 224
       },
       "source": "symbol:scripts.staging.backup_restore.main",
       "target": "symbol:scripts.staging.common.load_dotenv_quietly",
@@ -115825,7 +117387,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 236
+        "line": 242
       },
       "source": "symbol:scripts.staging.backup_restore.main",
       "target": "symbol:scripts.staging.common.require_staging",
@@ -115836,7 +117398,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 244
+        "line": 251
       },
       "source": "symbol:scripts.staging.backup_restore.main",
       "target": "symbol:scripts.staging.common.write_evidence",
@@ -115858,7 +117420,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 182
+        "line": 183
       },
       "source": "symbol:scripts.staging.backup_restore.restore",
       "target": "symbol:scripts.staging.backup_restore._run",
@@ -115869,7 +117431,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 190
+        "line": 191
       },
       "source": "symbol:scripts.staging.backup_restore.restore",
       "target": "symbol:scripts.staging.backup_restore._storage_headers",
@@ -115880,54 +117442,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 167
-      },
-      "source": "symbol:scripts.staging.backup_restore.restore",
-      "target": "symbol:scripts.staging.backup_restore.assert_disposable",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/backup_restore.py",
         "line": 168
       },
       "source": "symbol:scripts.staging.backup_restore.restore",
       "target": "symbol:scripts.staging.backup_restore.assert_disposable",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/backup_restore.py",
-        "line": 192
-      },
-      "source": "symbol:scripts.staging.backup_restore.restore",
-      "target": "symbol:scripts.staging.backup_restore.object_hashes",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/backup_restore.py",
-        "line": 168
-      },
-      "source": "symbol:scripts.staging.backup_restore.restore",
-      "target": "symbol:scripts.staging.common.env_required",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/backup_restore.py",
-        "line": 173
-      },
-      "source": "symbol:scripts.staging.backup_restore.restore",
-      "target": "symbol:scripts.staging.common.split_dsn_password",
       "type": "calls"
     },
     {
@@ -115938,6 +117456,50 @@
         "line": 169
       },
       "source": "symbol:scripts.staging.backup_restore.restore",
+      "target": "symbol:scripts.staging.backup_restore.assert_disposable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/backup_restore.py",
+        "line": 193
+      },
+      "source": "symbol:scripts.staging.backup_restore.restore",
+      "target": "symbol:scripts.staging.backup_restore.object_hashes",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/backup_restore.py",
+        "line": 169
+      },
+      "source": "symbol:scripts.staging.backup_restore.restore",
+      "target": "symbol:scripts.staging.common.env_required",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/backup_restore.py",
+        "line": 174
+      },
+      "source": "symbol:scripts.staging.backup_restore.restore",
+      "target": "symbol:scripts.staging.common.split_dsn_password",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/backup_restore.py",
+        "line": 170
+      },
+      "source": "symbol:scripts.staging.backup_restore.restore",
       "target": "symbol:services.local_backup.verify_manifest",
       "type": "calls"
     },
@@ -115946,7 +117508,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 209
+        "line": 213
       },
       "source": "symbol:scripts.staging.backup_restore.verify",
       "target": "symbol:scripts.staging.backup_restore._storage_headers",
@@ -115957,7 +117519,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 205
+        "line": 206
       },
       "source": "symbol:scripts.staging.backup_restore.verify",
       "target": "symbol:scripts.staging.backup_restore.assert_disposable",
@@ -115968,7 +117530,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 216
+        "line": 211
       },
       "source": "symbol:scripts.staging.backup_restore.verify",
       "target": "symbol:scripts.staging.backup_restore.compare_state",
@@ -115979,7 +117541,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 208
+        "line": 220
+      },
+      "source": "symbol:scripts.staging.backup_restore.verify",
+      "target": "symbol:scripts.staging.backup_restore.compare_state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/backup_restore.py",
+        "line": 209
       },
       "source": "symbol:scripts.staging.backup_restore.verify",
       "target": "symbol:scripts.staging.backup_restore.count_rows",
@@ -115990,7 +117563,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/backup_restore.py",
-        "line": 212
+        "line": 216
       },
       "source": "symbol:scripts.staging.backup_restore.verify",
       "target": "symbol:scripts.staging.backup_restore.list_objects",
@@ -116423,6 +117996,248 @@
       },
       "source": "symbol:scripts.staging.e2e_session.summarize_stream",
       "target": "symbol:scripts.staging.s192.sequence_summary",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 64
+      },
+      "source": "symbol:scripts.staging.incident_drill.kill_switch",
+      "target": "symbol:scripts.staging.incident_drill._poll",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 70
+      },
+      "source": "symbol:scripts.staging.incident_drill.kill_switch",
+      "target": "symbol:scripts.staging.incident_drill._poll",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 63
+      },
+      "source": "symbol:scripts.staging.incident_drill.kill_switch",
+      "target": "symbol:scripts.staging.incident_drill._switch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 69
+      },
+      "source": "symbol:scripts.staging.incident_drill.kill_switch",
+      "target": "symbol:scripts.staging.incident_drill._switch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 84
+      },
+      "source": "symbol:scripts.staging.incident_drill.kill_switch",
+      "target": "symbol:scripts.staging.incident_drill._switch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 49
+      },
+      "source": "symbol:scripts.staging.incident_drill.kill_switch",
+      "target": "symbol:scripts.staging.s192.Admin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 81
+      },
+      "source": "symbol:scripts.staging.incident_drill.kill_switch",
+      "target": "symbol:scripts.staging.s192.query",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 50
+      },
+      "source": "symbol:scripts.staging.incident_drill.kill_switch",
+      "target": "symbol:scripts.staging.two_user_smoke.User",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 125
+      },
+      "source": "symbol:scripts.staging.incident_drill.main",
+      "target": "symbol:scripts.staging.incident_drill.kill_switch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 127
+      },
+      "source": "symbol:scripts.staging.incident_drill.main",
+      "target": "symbol:scripts.staging.incident_drill.rollback",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 122
+      },
+      "source": "symbol:scripts.staging.incident_drill.main",
+      "target": "symbol:scripts.staging.s192.load_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 128
+      },
+      "source": "symbol:scripts.staging.incident_drill.main",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 100
+      },
+      "source": "symbol:scripts.staging.incident_drill.rollback",
+      "target": "symbol:scripts.staging.incident_drill._poll",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 106
+      },
+      "source": "symbol:scripts.staging.incident_drill.rollback",
+      "target": "symbol:scripts.staging.incident_drill._poll",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 96
+      },
+      "source": "symbol:scripts.staging.incident_drill.rollback",
+      "target": "symbol:scripts.staging.incident_drill._sha",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 100
+      },
+      "source": "symbol:scripts.staging.incident_drill.rollback",
+      "target": "symbol:scripts.staging.incident_drill._sha",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 102
+      },
+      "source": "symbol:scripts.staging.incident_drill.rollback",
+      "target": "symbol:scripts.staging.incident_drill._sha",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 106
+      },
+      "source": "symbol:scripts.staging.incident_drill.rollback",
+      "target": "symbol:scripts.staging.incident_drill._sha",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 97
+      },
+      "source": "symbol:scripts.staging.incident_drill.rollback",
+      "target": "symbol:scripts.staging.s192.timed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 103
+      },
+      "source": "symbol:scripts.staging.incident_drill.rollback",
+      "target": "symbol:scripts.staging.s192.timed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 97
+      },
+      "source": "symbol:scripts.staging.incident_drill.rollback",
+      "target": "symbol:scripts.staging.s192.vercel",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/incident_drill.py",
+        "line": 103
+      },
+      "source": "symbol:scripts.staging.incident_drill.rollback",
+      "target": "symbol:scripts.staging.s192.vercel",
       "type": "calls"
     },
     {
@@ -118146,7 +119961,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 80
+        "line": 179
       },
       "source": "symbol:scripts.staging.synthetic_data.cleanup",
       "target": "symbol:scripts.staging.common.env_required",
@@ -118157,7 +119972,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 81
+        "line": 180
       },
       "source": "symbol:scripts.staging.synthetic_data.cleanup",
       "target": "symbol:scripts.staging.common.env_required",
@@ -118168,7 +119983,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 82
+        "line": 181
       },
       "source": "symbol:scripts.staging.synthetic_data.cleanup",
       "target": "symbol:scripts.staging.common.env_required",
@@ -118179,18 +119994,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 109
-      },
-      "source": "symbol:scripts.staging.synthetic_data.main",
-      "target": "symbol:scripts.staging.common.add_guard_args",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/synthetic_data.py",
-        "line": 113
+        "line": 222
       },
       "source": "symbol:scripts.staging.synthetic_data.main",
       "target": "symbol:scripts.staging.common.assert_ref_in",
@@ -118201,7 +120005,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 113
+        "line": 222
       },
       "source": "symbol:scripts.staging.synthetic_data.main",
       "target": "symbol:scripts.staging.common.env_required",
@@ -118212,7 +120016,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 114
+        "line": 223
       },
       "source": "symbol:scripts.staging.synthetic_data.main",
       "target": "symbol:scripts.staging.common.env_required",
@@ -118223,7 +120027,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 106
+        "line": 205
       },
       "source": "symbol:scripts.staging.synthetic_data.main",
       "target": "symbol:scripts.staging.common.load_dotenv_quietly",
@@ -118234,7 +120038,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 112
+        "line": 221
       },
       "source": "symbol:scripts.staging.synthetic_data.main",
       "target": "symbol:scripts.staging.common.require_staging",
@@ -118245,7 +120049,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 116
+        "line": 219
       },
       "source": "symbol:scripts.staging.synthetic_data.main",
       "target": "symbol:scripts.staging.common.write_evidence",
@@ -118256,7 +120060,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 115
+        "line": 225
+      },
+      "source": "symbol:scripts.staging.synthetic_data.main",
+      "target": "symbol:scripts.staging.common.write_evidence",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/synthetic_data.py",
+        "line": 224
       },
       "source": "symbol:scripts.staging.synthetic_data.main",
       "target": "symbol:scripts.staging.synthetic_data.cleanup",
@@ -118267,7 +120082,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 115
+        "line": 217
+      },
+      "source": "symbol:scripts.staging.synthetic_data.main",
+      "target": "symbol:scripts.staging.synthetic_data.compare_wallet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/synthetic_data.py",
+        "line": 224
       },
       "source": "symbol:scripts.staging.synthetic_data.main",
       "target": "symbol:scripts.staging.synthetic_data.seed",
@@ -118278,7 +120104,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 41
+        "line": 217
+      },
+      "source": "symbol:scripts.staging.synthetic_data.main",
+      "target": "symbol:scripts.staging.synthetic_data.wallet_snapshot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/synthetic_data.py",
+        "line": 218
+      },
+      "source": "symbol:scripts.staging.synthetic_data.main",
+      "target": "symbol:scripts.staging.synthetic_data.wallet_snapshot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/synthetic_data.py",
+        "line": 135
       },
       "source": "symbol:scripts.staging.synthetic_data.seed",
       "target": "symbol:scripts.staging.common.env_required",
@@ -118289,7 +120137,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 42
+        "line": 136
       },
       "source": "symbol:scripts.staging.synthetic_data.seed",
       "target": "symbol:scripts.staging.common.env_required",
@@ -118300,7 +120148,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 43
+        "line": 137
       },
       "source": "symbol:scripts.staging.synthetic_data.seed",
       "target": "symbol:scripts.staging.common.env_required",
@@ -118311,10 +120159,219 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/synthetic_data.py",
-        "line": 73
+        "line": 167
       },
       "source": "symbol:scripts.staging.synthetic_data.seed",
       "target": "symbol:scripts.staging.synthetic_data.build_manifest",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/synthetic_data.py",
+        "line": 171
+      },
+      "source": "symbol:scripts.staging.synthetic_data.seed",
+      "target": "symbol:scripts.staging.synthetic_data.seed_wallet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/synthetic_data.py",
+        "line": 77
+      },
+      "source": "symbol:scripts.staging.synthetic_data.seed_wallet",
+      "target": "symbol:scripts.staging.synthetic_data.seed_wallet_prereqs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/synthetic_data.py",
+        "line": 95
+      },
+      "source": "symbol:scripts.staging.synthetic_data.seed_wallet",
+      "target": "symbol:scripts.staging.synthetic_data.wallet_snapshot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 25
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.User",
+      "target": "symbol:scripts.staging.two_user_smoke.User.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 49
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.User",
+      "target": "symbol:scripts.staging.two_user_smoke.User.get",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 33
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.User",
+      "target": "symbol:scripts.staging.two_user_smoke.User.login",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 40
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.User",
+      "target": "symbol:scripts.staging.two_user_smoke.User.new_game",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 52
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.User",
+      "target": "symbol:scripts.staging.two_user_smoke.User.post",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 34
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.User.login",
+      "target": "symbol:scripts.staging.e2e_session._h",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 43
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.User.new_game",
+      "target": "symbol:scripts.staging.e2e_session._h",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 53
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.User.post",
+      "target": "symbol:scripts.staging.e2e_session._h",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 171
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.main",
+      "target": "symbol:scripts.staging.s192.load_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 171
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.main",
+      "target": "symbol:scripts.staging.two_user_smoke.run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 75
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.run",
+      "target": "symbol:scripts.staging.e2e_session.stream_turn",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 61
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.run",
+      "target": "symbol:scripts.staging.s192.Admin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 148
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.run",
+      "target": "symbol:scripts.staging.s192.db",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 62
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.run",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 98
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.run",
+      "target": "symbol:scripts.staging.synthetic_data.seed_wallet_prereqs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 66
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.run",
+      "target": "symbol:scripts.staging.two_user_smoke.User",
       "type": "calls"
     },
     {
@@ -126480,6 +128537,61 @@
       "type": "calls"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 55
+      },
+      "source": "symbol:services.daily_spend_cap.CapResult",
+      "target": "symbol:services.daily_spend_cap.CapResult.summary",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 65
+      },
+      "source": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "target": "symbol:services.daily_spend_cap.CapResult",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 64
+      },
+      "source": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "target": "symbol:services.daily_spend_cap.cap_from_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 69
+      },
+      "source": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "target": "symbol:services.daily_spend_cap.day_start",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/daily_spend_cap.py",
+        "line": 85
+      },
+      "source": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "target": "symbol:services.finops_alerts.Alert",
+      "type": "calls"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
@@ -129300,7 +131412,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 37
+        "line": 62
+      },
+      "source": "symbol:services.finops_job.run_finops",
+      "target": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/finops_job.py",
+        "line": 38
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops.build_report",
@@ -129311,7 +131434,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 36
+        "line": 37
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops.load_fixed_costs",
@@ -129322,7 +131445,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 34
+        "line": 35
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops.newest_pricing",
@@ -129333,7 +131456,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 66
+        "line": 79
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops.report_to_dict",
@@ -129344,7 +131467,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 51
+        "line": 52
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops_alerts.AlertInputs",
@@ -129355,7 +131478,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 56
+        "line": 57
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops_alerts.Thresholds.from_env",
@@ -129366,7 +131489,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 51
+        "line": 52
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops_alerts.evaluate_alerts",
@@ -129377,7 +131500,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 52
+        "line": 53
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops_alerts.installed_freshness",
@@ -129388,7 +131511,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 57
+        "line": 70
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops_alerts.publish_alert_metrics",
@@ -129399,7 +131522,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 60
+        "line": 73
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops_alerts.publish_evaluation_age",
@@ -129410,7 +131533,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 58
+        "line": 71
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops_alerts.publish_margin_metrics",
@@ -129421,7 +131544,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 59
+        "line": 72
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.finops_alerts.publish_switch_metrics",
@@ -129432,7 +131555,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/finops_job.py",
-        "line": 50
+        "line": 51
+      },
+      "source": "symbol:services.finops_job.run_finops",
+      "target": "symbol:services.kill_switches.get_switches",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/finops_job.py",
+        "line": 61
+      },
+      "source": "symbol:services.finops_job.run_finops",
+      "target": "symbol:services.kill_switches.get_switches",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/finops_job.py",
+        "line": 66
       },
       "source": "symbol:services.finops_job.run_finops",
       "target": "symbol:services.kill_switches.get_switches",
@@ -201379,6 +203524,1172 @@
       "type": "calls"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 13
+      },
+      "source": "symbol:tests.test_spec197_checklist.fake_run",
+      "target": "symbol:tests.test_spec197_checklist.fake_run.run",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 25
+      },
+      "source": "symbol:tests.test_spec197_checklist.http",
+      "target": "symbol:tests.test_spec197_checklist.http.get",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 54
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_ci_states",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 56
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_ci_states",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 57
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_ci_states",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 58
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_ci_states",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 54
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_ci_states",
+      "target": "symbol:scripts.release.checklist.check_ci",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 56
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_ci_states",
+      "target": "symbol:scripts.release.checklist.check_ci",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 57
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_ci_states",
+      "target": "symbol:scripts.release.checklist.check_ci",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 58
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_ci_states",
+      "target": "symbol:scripts.release.checklist.check_ci",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 54
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_ci_states",
+      "target": "symbol:tests.test_spec197_checklist.fake_run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 56
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_ci_states",
+      "target": "symbol:tests.test_spec197_checklist.fake_run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 57
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_ci_states",
+      "target": "symbol:tests.test_spec197_checklist.fake_run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 58
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_ci_states",
+      "target": "symbol:tests.test_spec197_checklist.fake_run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 89
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 92
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 95
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 96
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 89
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock",
+      "target": "symbol:scripts.release.checklist.check_env_names",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 92
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock",
+      "target": "symbol:scripts.release.checklist.check_env_names",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 95
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock",
+      "target": "symbol:scripts.release.checklist.check_env_names",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 96
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock",
+      "target": "symbol:scripts.release.checklist.check_env_names",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 34
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 36
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 34
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
+      "target": "symbol:scripts.release.checklist.check_git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 36
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
+      "target": "symbol:scripts.release.checklist.check_git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 34
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
+      "target": "symbol:tests.test_spec197_checklist.fake_run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 36
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
+      "target": "symbol:tests.test_spec197_checklist.fake_run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 78
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_health_sha",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 80
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_health_sha",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 82
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_health_sha",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 84
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_health_sha",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 79
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_health_sha",
+      "target": "symbol:scripts.release.checklist.check_health",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 81
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_health_sha",
+      "target": "symbol:scripts.release.checklist.check_health",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 83
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_health_sha",
+      "target": "symbol:scripts.release.checklist.check_health",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 84
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_health_sha",
+      "target": "symbol:scripts.release.checklist.check_health",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 78
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_health_sha",
+      "target": "symbol:tests.test_spec197_checklist.http",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 80
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_health_sha",
+      "target": "symbol:tests.test_spec197_checklist.http",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 82
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_health_sha",
+      "target": "symbol:tests.test_spec197_checklist.http",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 111
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_kill_switch_store",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 114
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_kill_switch_store",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 118
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_kill_switch_store",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 112
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_kill_switch_store",
+      "target": "symbol:scripts.release.checklist.check_kill_switch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 114
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_kill_switch_store",
+      "target": "symbol:scripts.release.checklist.check_kill_switch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 118
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_kill_switch_store",
+      "target": "symbol:scripts.release.checklist.check_kill_switch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 116
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_kill_switch_store",
+      "target": "symbol:tests.test_spec197_checklist.test_kill_switch_store.boom",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 101
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_pages",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 103
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_pages",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 102
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_pages",
+      "target": "symbol:scripts.release.checklist.check_legal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 104
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_pages",
+      "target": "symbol:scripts.release.checklist.check_legal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 105
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_pages",
+      "target": "symbol:scripts.release.checklist.check_legal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 107
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_pages",
+      "target": "symbol:scripts.release.checklist.check_legal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 101
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_pages",
+      "target": "symbol:tests.test_spec197_checklist.http",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 103
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_legal_pages",
+      "target": "symbol:tests.test_spec197_checklist.http",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 65
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_migrations_drift",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 67
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_migrations_drift",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 70
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_migrations_drift",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 74
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_migrations_drift",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 66
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_migrations_drift",
+      "target": "symbol:scripts.release.checklist.check_migrations",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 68
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_migrations_drift",
+      "target": "symbol:scripts.release.checklist.check_migrations",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 70
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_migrations_drift",
+      "target": "symbol:scripts.release.checklist.check_migrations",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 74
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_migrations_drift",
+      "target": "symbol:scripts.release.checklist.check_migrations",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 72
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_migrations_drift",
+      "target": "symbol:tests.test_spec197_checklist.test_migrations_drift.boom",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 133
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_real_register_parses",
+      "target": "symbol:scripts.release.checklist.parse_risks",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 125
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_risks_gate",
+      "target": "symbol:scripts.release.checklist.check_risks",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 128
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_risks_gate",
+      "target": "symbol:scripts.release.checklist.check_risks",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 129
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_risks_gate",
+      "target": "symbol:scripts.release.checklist.check_risks",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 138
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_run_and_report",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 139
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_run_and_report",
+      "target": "symbol:scripts.release.checklist.run_checklist",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 143
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_run_and_report",
+      "target": "symbol:scripts.release.checklist.run_checklist",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 145
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_run_and_report",
+      "target": "symbol:scripts.release.checklist.write_report",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 138
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_run_and_report",
+      "target": "symbol:tests.test_spec197_checklist.fake_run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 44
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_specs_statuses",
+      "target": "symbol:scripts.release.checklist.check_specs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 48
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_specs_statuses",
+      "target": "symbol:scripts.release.checklist.check_specs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 23
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.reader",
+      "target": "symbol:infrastructure.finops_reader.FakeFinopsReader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 22
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.reader",
+      "target": "symbol:services.finops_alerts.UsageGroup",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 72
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_day_boundary_uses_sao_paulo_midnight",
+      "target": "symbol:services.daily_spend_cap.day_start",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 50
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_exceeded_switches_off_audited_idempotent_no_reenable",
+      "target": "symbol:services.finops_job.run_finops",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 58
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_exceeded_switches_off_audited_idempotent_no_reenable",
+      "target": "symbol:services.finops_job.run_finops",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 60
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_exceeded_switches_off_audited_idempotent_no_reenable",
+      "target": "symbol:services.finops_job.run_finops",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 49
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_exceeded_switches_off_audited_idempotent_no_reenable",
+      "target": "symbol:services.kill_switches.MemorySwitchStore",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 50
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_exceeded_switches_off_audited_idempotent_no_reenable",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 58
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_exceeded_switches_off_audited_idempotent_no_reenable",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 60
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_exceeded_switches_off_audited_idempotent_no_reenable",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 77
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_invalid_cap_value_disables",
+      "target": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 77
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_invalid_cap_value_disables",
+      "target": "symbol:services.kill_switches.MemorySwitchStore",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 77
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_invalid_cap_value_disables",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 34
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_off_without_env_never_touches_switches",
+      "target": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 36
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_off_without_env_never_touches_switches",
+      "target": "symbol:services.finops_job.run_finops",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 33
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_off_without_env_never_touches_switches",
+      "target": "symbol:services.kill_switches.MemorySwitchStore",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 34
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_off_without_env_never_touches_switches",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 36
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_off_without_env_never_touches_switches",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 67
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_partially_off_only_writes_missing",
+      "target": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 66
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_partially_off_only_writes_missing",
+      "target": "symbol:services.kill_switches.MemorySwitchStore",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 67
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_partially_off_only_writes_missing",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 105
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_postgres_store_audit_actor_and_idempotency",
+      "target": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 110
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_postgres_store_audit_actor_and_idempotency",
+      "target": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 105
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_postgres_store_audit_actor_and_idempotency",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 110
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_postgres_store_audit_actor_and_idempotency",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 86
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_store_failure_is_reported_not_raised",
+      "target": "symbol:services.finops_job.run_finops",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 86
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_store_failure_is_reported_not_raised",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 83
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_store_failure_is_reported_not_raised",
+      "target": "symbol:tests.test_spec197_daily_cap.test_store_failure_is_reported_not_raised.Boom",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 84
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_store_failure_is_reported_not_raised.Boom",
+      "target": "symbol:tests.test_spec197_daily_cap.test_store_failure_is_reported_not_raised.Boom.set",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 43
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_under_cap_does_nothing",
+      "target": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 42
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_under_cap_does_nothing",
+      "target": "symbol:services.kill_switches.MemorySwitchStore",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_daily_cap.py",
+        "line": 43
+      },
+      "source": "symbol:tests.test_spec197_daily_cap.test_under_cap_does_nothing",
+      "target": "symbol:tests.test_spec197_daily_cap.reader",
+      "type": "calls"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
@@ -212422,6 +215733,20 @@
       "qualified_name": null
     },
     {
+      "id": "file:scripts/release/__init__.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/release/__init__.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:scripts/release/checklist.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:scripts/restore_local.py",
       "kind": "file",
       "line": 1,
@@ -212492,6 +215817,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:scripts/staging/incident_drill.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/staging/incident_drill.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:scripts/staging/job_survival.py",
       "kind": "file",
       "line": 1,
@@ -212559,6 +215891,13 @@
       "kind": "file",
       "line": 1,
       "path": "scripts/staging/synthetic_data.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:scripts/staging/two_user_smoke.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/staging/two_user_smoke.py",
       "qualified_name": null
     },
     {
@@ -212825,6 +216164,13 @@
       "kind": "file",
       "line": 1,
       "path": "services/cron_internal.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:services/daily_spend_cap.py",
+      "kind": "file",
+      "line": 1,
+      "path": "services/daily_spend_cap.py",
       "qualified_name": null
     },
     {
@@ -214774,6 +218120,27 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_spec197_checklist.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_spec197_daily_cap.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_spec197_legal_pages.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec197_legal_pages.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_spec_index.py",
       "kind": "file",
       "line": 1,
@@ -216412,6 +219779,20 @@
       "qualified_name": "scripts.recover_operations"
     },
     {
+      "id": "module:scripts.release",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/release/__init__.py",
+      "qualified_name": "scripts.release"
+    },
+    {
+      "id": "module:scripts.release.checklist",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist"
+    },
+    {
       "id": "module:scripts.restore_local",
       "kind": "module",
       "line": 1,
@@ -216482,6 +219863,13 @@
       "qualified_name": "scripts.staging.e2e_session"
     },
     {
+      "id": "module:scripts.staging.incident_drill",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/staging/incident_drill.py",
+      "qualified_name": "scripts.staging.incident_drill"
+    },
+    {
       "id": "module:scripts.staging.job_survival",
       "kind": "module",
       "line": 1,
@@ -216550,6 +219938,13 @@
       "line": 1,
       "path": "scripts/staging/synthetic_data.py",
       "qualified_name": "scripts.staging.synthetic_data"
+    },
+    {
+      "id": "module:scripts.staging.two_user_smoke",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/staging/two_user_smoke.py",
+      "qualified_name": "scripts.staging.two_user_smoke"
     },
     {
       "id": "module:scripts.staging.vercel_env",
@@ -216816,6 +220211,13 @@
       "line": 1,
       "path": "services/cron_internal.py",
       "qualified_name": "services.cron_internal"
+    },
+    {
+      "id": "module:services.daily_spend_cap",
+      "kind": "module",
+      "line": 1,
+      "path": "services/daily_spend_cap.py",
+      "qualified_name": "services.daily_spend_cap"
     },
     {
       "id": "module:services.death_flow",
@@ -218762,6 +222164,27 @@
       "line": 1,
       "path": "tests/test_spec196_finops.py",
       "qualified_name": "tests.test_spec196_finops"
+    },
+    {
+      "id": "module:tests.test_spec197_checklist",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist"
+    },
+    {
+      "id": "module:tests.test_spec197_daily_cap",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap"
+    },
+    {
+      "id": "module:tests.test_spec197_legal_pages",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec197_legal_pages.py",
+      "qualified_name": "tests.test_spec197_legal_pages"
     },
     {
       "id": "module:tests.test_spec_index",
@@ -229616,14 +233039,14 @@
     {
       "id": "symbol:scripts.admin_kill_switch.build_parser",
       "kind": "function",
-      "line": 22,
+      "line": 27,
       "path": "scripts/admin_kill_switch.py",
       "qualified_name": "scripts.admin_kill_switch.build_parser"
     },
     {
       "id": "symbol:scripts.admin_kill_switch.main",
       "kind": "function",
-      "line": 36,
+      "line": 43,
       "path": "scripts/admin_kill_switch.py",
       "qualified_name": "scripts.admin_kill_switch.main"
     },
@@ -230958,6 +234381,181 @@
       "qualified_name": "scripts.recover_operations.main"
     },
     {
+      "id": "symbol:scripts.release.checklist.Deps",
+      "kind": "class",
+      "line": 71,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.Deps"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.Result",
+      "kind": "class",
+      "line": 45,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.Result"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.Result.as_dict",
+      "kind": "method",
+      "line": 51,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.Result.as_dict"
+    },
+    {
+      "id": "symbol:scripts.release.checklist._dotenv",
+      "kind": "function",
+      "line": 264,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist._dotenv"
+    },
+    {
+      "id": "symbol:scripts.release.checklist._http_get",
+      "kind": "function",
+      "line": 60,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist._http_get"
+    },
+    {
+      "id": "symbol:scripts.release.checklist._run",
+      "kind": "function",
+      "line": 55,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist._run"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.check_ci",
+      "kind": "function",
+      "line": 102,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.check_ci"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.check_env_names",
+      "kind": "function",
+      "line": 168,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.check_env_names"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.check_eval_locks",
+      "kind": "function",
+      "line": 131,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.check_eval_locks"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.check_finops_config",
+      "kind": "function",
+      "line": 136,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.check_finops_config"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.check_git",
+      "kind": "function",
+      "line": 81,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.check_git"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.check_health",
+      "kind": "function",
+      "line": 156,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.check_health"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.check_kill_switch",
+      "kind": "function",
+      "line": 143,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.check_kill_switch"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.check_legal",
+      "kind": "function",
+      "line": 183,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.check_legal"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.check_migrations",
+      "kind": "function",
+      "line": 116,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.check_migrations"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.check_risks",
+      "kind": "function",
+      "line": 217,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.check_risks"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.check_specs",
+      "kind": "function",
+      "line": 92,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.check_specs"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.main",
+      "kind": "function",
+      "line": 305,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.main"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.parse_risks",
+      "kind": "function",
+      "line": 201,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.parse_risks"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.real_kill_switch_load",
+      "kind": "function",
+      "line": 295,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.real_kill_switch_load"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.real_remote_migrations",
+      "kind": "function",
+      "line": 272,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.real_remote_migrations"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.real_vercel_env_names",
+      "kind": "function",
+      "line": 282,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.real_vercel_env_names"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.run_checklist",
+      "kind": "function",
+      "line": 228,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.run_checklist"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.to_markdown",
+      "kind": "function",
+      "line": 241,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.to_markdown"
+    },
+    {
+      "id": "symbol:scripts.release.checklist.write_report",
+      "kind": "function",
+      "line": 254,
+      "path": "scripts/release/checklist.py",
+      "qualified_name": "scripts.release.checklist.write_report"
+    },
+    {
       "id": "symbol:scripts.restore_local._assert_empty_target",
       "kind": "function",
       "line": 19,
@@ -231268,7 +234866,7 @@
     {
       "id": "symbol:scripts.staging.backup_restore.main",
       "kind": "function",
-      "line": 219,
+      "line": 223,
       "path": "scripts/staging/backup_restore.py",
       "qualified_name": "scripts.staging.backup_restore.main"
     },
@@ -231289,7 +234887,7 @@
     {
       "id": "symbol:scripts.staging.backup_restore.verify",
       "kind": "function",
-      "line": 201,
+      "line": 202,
       "path": "scripts/staging/backup_restore.py",
       "qualified_name": "scripts.staging.backup_restore.verify"
     },
@@ -231425,6 +235023,48 @@
       "line": 56,
       "path": "scripts/staging/e2e_session.py",
       "qualified_name": "scripts.staging.e2e_session.turns_ok"
+    },
+    {
+      "id": "symbol:scripts.staging.incident_drill._poll",
+      "kind": "function",
+      "line": 37,
+      "path": "scripts/staging/incident_drill.py",
+      "qualified_name": "scripts.staging.incident_drill._poll"
+    },
+    {
+      "id": "symbol:scripts.staging.incident_drill._sha",
+      "kind": "function",
+      "line": 88,
+      "path": "scripts/staging/incident_drill.py",
+      "qualified_name": "scripts.staging.incident_drill._sha"
+    },
+    {
+      "id": "symbol:scripts.staging.incident_drill._switch",
+      "kind": "function",
+      "line": 29,
+      "path": "scripts/staging/incident_drill.py",
+      "qualified_name": "scripts.staging.incident_drill._switch"
+    },
+    {
+      "id": "symbol:scripts.staging.incident_drill.kill_switch",
+      "kind": "function",
+      "line": 48,
+      "path": "scripts/staging/incident_drill.py",
+      "qualified_name": "scripts.staging.incident_drill.kill_switch"
+    },
+    {
+      "id": "symbol:scripts.staging.incident_drill.main",
+      "kind": "function",
+      "line": 113,
+      "path": "scripts/staging/incident_drill.py",
+      "qualified_name": "scripts.staging.incident_drill.main"
+    },
+    {
+      "id": "symbol:scripts.staging.incident_drill.rollback",
+      "kind": "function",
+      "line": 95,
+      "path": "scripts/staging/incident_drill.py",
+      "qualified_name": "scripts.staging.incident_drill.rollback"
     },
     {
       "id": "symbol:scripts.staging.job_survival.exactly_once",
@@ -232017,30 +235657,114 @@
     {
       "id": "symbol:scripts.staging.synthetic_data.build_manifest",
       "kind": "function",
-      "line": 30,
+      "line": 31,
       "path": "scripts/staging/synthetic_data.py",
       "qualified_name": "scripts.staging.synthetic_data.build_manifest"
     },
     {
       "id": "symbol:scripts.staging.synthetic_data.cleanup",
       "kind": "function",
-      "line": 78,
+      "line": 177,
       "path": "scripts/staging/synthetic_data.py",
       "qualified_name": "scripts.staging.synthetic_data.cleanup"
     },
     {
+      "id": "symbol:scripts.staging.synthetic_data.compare_wallet",
+      "kind": "function",
+      "line": 122,
+      "path": "scripts/staging/synthetic_data.py",
+      "qualified_name": "scripts.staging.synthetic_data.compare_wallet"
+    },
+    {
       "id": "symbol:scripts.staging.synthetic_data.main",
       "kind": "function",
-      "line": 105,
+      "line": 204,
       "path": "scripts/staging/synthetic_data.py",
       "qualified_name": "scripts.staging.synthetic_data.main"
     },
     {
       "id": "symbol:scripts.staging.synthetic_data.seed",
       "kind": "function",
-      "line": 36,
+      "line": 130,
       "path": "scripts/staging/synthetic_data.py",
       "qualified_name": "scripts.staging.synthetic_data.seed"
+    },
+    {
+      "id": "symbol:scripts.staging.synthetic_data.seed_wallet",
+      "kind": "function",
+      "line": 64,
+      "path": "scripts/staging/synthetic_data.py",
+      "qualified_name": "scripts.staging.synthetic_data.seed_wallet"
+    },
+    {
+      "id": "symbol:scripts.staging.synthetic_data.seed_wallet_prereqs",
+      "kind": "function",
+      "line": 44,
+      "path": "scripts/staging/synthetic_data.py",
+      "qualified_name": "scripts.staging.synthetic_data.seed_wallet_prereqs"
+    },
+    {
+      "id": "symbol:scripts.staging.synthetic_data.wallet_snapshot",
+      "kind": "function",
+      "line": 98,
+      "path": "scripts/staging/synthetic_data.py",
+      "qualified_name": "scripts.staging.synthetic_data.wallet_snapshot"
+    },
+    {
+      "id": "symbol:scripts.staging.two_user_smoke.User",
+      "kind": "class",
+      "line": 24,
+      "path": "scripts/staging/two_user_smoke.py",
+      "qualified_name": "scripts.staging.two_user_smoke.User"
+    },
+    {
+      "id": "symbol:scripts.staging.two_user_smoke.User.__init__",
+      "kind": "method",
+      "line": 25,
+      "path": "scripts/staging/two_user_smoke.py",
+      "qualified_name": "scripts.staging.two_user_smoke.User.__init__"
+    },
+    {
+      "id": "symbol:scripts.staging.two_user_smoke.User.get",
+      "kind": "method",
+      "line": 49,
+      "path": "scripts/staging/two_user_smoke.py",
+      "qualified_name": "scripts.staging.two_user_smoke.User.get"
+    },
+    {
+      "id": "symbol:scripts.staging.two_user_smoke.User.login",
+      "kind": "method",
+      "line": 33,
+      "path": "scripts/staging/two_user_smoke.py",
+      "qualified_name": "scripts.staging.two_user_smoke.User.login"
+    },
+    {
+      "id": "symbol:scripts.staging.two_user_smoke.User.new_game",
+      "kind": "method",
+      "line": 40,
+      "path": "scripts/staging/two_user_smoke.py",
+      "qualified_name": "scripts.staging.two_user_smoke.User.new_game"
+    },
+    {
+      "id": "symbol:scripts.staging.two_user_smoke.User.post",
+      "kind": "method",
+      "line": 52,
+      "path": "scripts/staging/two_user_smoke.py",
+      "qualified_name": "scripts.staging.two_user_smoke.User.post"
+    },
+    {
+      "id": "symbol:scripts.staging.two_user_smoke.main",
+      "kind": "function",
+      "line": 166,
+      "path": "scripts/staging/two_user_smoke.py",
+      "qualified_name": "scripts.staging.two_user_smoke.main"
+    },
+    {
+      "id": "symbol:scripts.staging.two_user_smoke.run",
+      "kind": "function",
+      "line": 56,
+      "path": "scripts/staging/two_user_smoke.py",
+      "qualified_name": "scripts.staging.two_user_smoke.run"
     },
     {
       "id": "symbol:scripts.staging.vercel_env._load_files",
@@ -234752,6 +238476,41 @@
       "qualified_name": "services.cron_internal.cron_reconciliation.task"
     },
     {
+      "id": "symbol:services.daily_spend_cap.CapResult",
+      "kind": "class",
+      "line": 45,
+      "path": "services/daily_spend_cap.py",
+      "qualified_name": "services.daily_spend_cap.CapResult"
+    },
+    {
+      "id": "symbol:services.daily_spend_cap.CapResult.summary",
+      "kind": "method",
+      "line": 55,
+      "path": "services/daily_spend_cap.py",
+      "qualified_name": "services.daily_spend_cap.CapResult.summary"
+    },
+    {
+      "id": "symbol:services.daily_spend_cap.cap_from_env",
+      "kind": "function",
+      "line": 24,
+      "path": "services/daily_spend_cap.py",
+      "qualified_name": "services.daily_spend_cap.cap_from_env"
+    },
+    {
+      "id": "symbol:services.daily_spend_cap.day_start",
+      "kind": "function",
+      "line": 35,
+      "path": "services/daily_spend_cap.py",
+      "qualified_name": "services.daily_spend_cap.day_start"
+    },
+    {
+      "id": "symbol:services.daily_spend_cap.evaluate_daily_cap",
+      "kind": "function",
+      "line": 62,
+      "path": "services/daily_spend_cap.py",
+      "qualified_name": "services.daily_spend_cap.evaluate_daily_cap"
+    },
+    {
       "id": "symbol:services.death_flow.LastStandResult",
       "kind": "class",
       "line": 82,
@@ -235951,7 +239710,7 @@
     {
       "id": "symbol:services.finops_job.run_finops",
       "kind": "function",
-      "line": 17,
+      "line": 18,
       "path": "services/finops_job.py",
       "qualified_name": "services.finops_job.run_finops"
     },
@@ -260673,6 +264432,216 @@
       "qualified_name": "tests.test_spec196_finops.test_wallet_mismatch_backlog_provider_failure_margin"
     },
     {
+      "id": "symbol:tests.test_spec197_checklist.fake_run",
+      "kind": "test",
+      "line": 12,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.fake_run"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.fake_run.run",
+      "kind": "test",
+      "line": 13,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.fake_run.run"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.http",
+      "kind": "test",
+      "line": 24,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.http"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.http.get",
+      "kind": "test",
+      "line": 25,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.http.get"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_ci_states",
+      "kind": "test",
+      "line": 52,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_ci_states"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock",
+      "kind": "test",
+      "line": 87,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_env_names_prod_requires_stripe_and_forbids_mock"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
+      "kind": "test",
+      "line": 33,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_git_dirty_fails"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_health_sha",
+      "kind": "test",
+      "line": 77,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_health_sha"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_kill_switch_store",
+      "kind": "test",
+      "line": 110,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_kill_switch_store"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_kill_switch_store.boom",
+      "kind": "test",
+      "line": 116,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_kill_switch_store.boom"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_legal_pages",
+      "kind": "test",
+      "line": 99,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_legal_pages"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_migrations_drift",
+      "kind": "test",
+      "line": 61,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_migrations_drift"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_migrations_drift.boom",
+      "kind": "test",
+      "line": 72,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_migrations_drift.boom"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_real_register_parses",
+      "kind": "test",
+      "line": 132,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_real_register_parses"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_risks_gate",
+      "kind": "test",
+      "line": 121,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_risks_gate"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_run_and_report",
+      "kind": "test",
+      "line": 137,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_run_and_report"
+    },
+    {
+      "id": "symbol:tests.test_spec197_checklist.test_specs_statuses",
+      "kind": "test",
+      "line": 40,
+      "path": "tests/test_spec197_checklist.py",
+      "qualified_name": "tests.test_spec197_checklist.test_specs_statuses"
+    },
+    {
+      "id": "symbol:tests.test_spec197_daily_cap._env",
+      "kind": "test",
+      "line": 27,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap._env"
+    },
+    {
+      "id": "symbol:tests.test_spec197_daily_cap.reader",
+      "kind": "test",
+      "line": 21,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.reader"
+    },
+    {
+      "id": "symbol:tests.test_spec197_daily_cap.test_day_boundary_uses_sao_paulo_midnight",
+      "kind": "test",
+      "line": 71,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.test_day_boundary_uses_sao_paulo_midnight"
+    },
+    {
+      "id": "symbol:tests.test_spec197_daily_cap.test_exceeded_switches_off_audited_idempotent_no_reenable",
+      "kind": "test",
+      "line": 47,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.test_exceeded_switches_off_audited_idempotent_no_reenable"
+    },
+    {
+      "id": "symbol:tests.test_spec197_daily_cap.test_invalid_cap_value_disables",
+      "kind": "test",
+      "line": 75,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.test_invalid_cap_value_disables"
+    },
+    {
+      "id": "symbol:tests.test_spec197_daily_cap.test_off_without_env_never_touches_switches",
+      "kind": "test",
+      "line": 32,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.test_off_without_env_never_touches_switches"
+    },
+    {
+      "id": "symbol:tests.test_spec197_daily_cap.test_partially_off_only_writes_missing",
+      "kind": "test",
+      "line": 64,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.test_partially_off_only_writes_missing"
+    },
+    {
+      "id": "symbol:tests.test_spec197_daily_cap.test_postgres_store_audit_actor_and_idempotency",
+      "kind": "test",
+      "line": 91,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.test_postgres_store_audit_actor_and_idempotency"
+    },
+    {
+      "id": "symbol:tests.test_spec197_daily_cap.test_store_failure_is_reported_not_raised",
+      "kind": "test",
+      "line": 80,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.test_store_failure_is_reported_not_raised"
+    },
+    {
+      "id": "symbol:tests.test_spec197_daily_cap.test_store_failure_is_reported_not_raised.Boom",
+      "kind": "class",
+      "line": 83,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.test_store_failure_is_reported_not_raised.Boom"
+    },
+    {
+      "id": "symbol:tests.test_spec197_daily_cap.test_store_failure_is_reported_not_raised.Boom.set",
+      "kind": "test",
+      "line": 84,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.test_store_failure_is_reported_not_raised.Boom.set"
+    },
+    {
+      "id": "symbol:tests.test_spec197_daily_cap.test_under_cap_does_nothing",
+      "kind": "test",
+      "line": 40,
+      "path": "tests/test_spec197_daily_cap.py",
+      "qualified_name": "tests.test_spec197_daily_cap.test_under_cap_does_nothing"
+    },
+    {
+      "id": "symbol:tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_draft_banner",
+      "kind": "test",
+      "line": 11,
+      "path": "tests/test_spec197_legal_pages.py",
+      "qualified_name": "tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_draft_banner"
+    },
+    {
       "id": "symbol:tests.test_spec_index._apply",
       "kind": "test",
       "line": 47,
@@ -263439,5 +267408,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:9b4cfd18460fd3b3b4a97fad75655ad41b14d4a51e8ab7df82b2a231141372fc"
+  "source_tree_hash": "sha256:eb61312292fee0ce7faffc2cc5692ecd5f9c5e318e50ea8ab3475aeb51be5395"
 }
