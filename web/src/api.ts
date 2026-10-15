@@ -209,6 +209,13 @@ export const createCheckout = (skuId: string, requestId: string) =>
   });
 export const getCheckoutOrder = (orderId: string, signal?: AbortSignal) =>
   req<CheckoutOrder>(`/account/checkout/${encodeURIComponent(orderId)}`, { signal });
+export const googlePlayBackend = {
+  profile: () => req<{ obfuscated_account_id?: string; purchases_disabled?: boolean }>('/account/purchases/google/profile'),
+  products: () => req<{ items: { product_id: string; sku_id: string; shard_milli: string }[] }>('/account/purchases/google/products'),
+  verify: (b: { product_id: string; purchase_token: string; order_id?: string }) =>
+    req<{ status: 'fulfilled' | 'pending'; shard_milli?: string; product_id?: string }>('/account/purchases/google/verify',
+      { method: 'POST', body: JSON.stringify(b) }),
+};
 export interface ArtStatus { status: string; placeholder: boolean; financial_status?: string | null; credits_held?: boolean; assets?: Array<{
   asset_id: string; variant: string; url: string; width: number; height: number;
 }> }

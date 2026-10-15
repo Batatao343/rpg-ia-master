@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPEC-194: release (and default) builds never allow cleartext. The debug source set overrides this
+     file reference with debug_network_security.xml (10.0.2.2 only, for the emulator smoke). -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>

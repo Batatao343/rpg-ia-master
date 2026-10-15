@@ -18,6 +18,7 @@ import com.getcapacitor.BridgeWebChromeClient;
 public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        registerPlugin(PlayBillingPlugin.class);
         super.onCreate(savedInstanceState);
         // Release builds are never WebView-debuggable, whatever the generated Capacitor config says.
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);

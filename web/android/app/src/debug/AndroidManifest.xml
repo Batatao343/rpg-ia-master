@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- SPEC-194 smoke only: DEBUG builds may reach the host dev server (10.0.2.2) over cleartext. Release unaffected. -->
+    <application android:networkSecurityConfig="@xml/debug_network_security"
+        tools:replace="android:networkSecurityConfig" />
+</manifest>

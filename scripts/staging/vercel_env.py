@@ -42,7 +42,9 @@ NON_SECRET_LITERALS = {
 # Preview: só flags inertes. Sem DATABASE_URL/SUPABASE_*/RPG_*_SECRET.
 PREVIEW_LITERALS = {"RPG_RUNTIME_PROFILE": "hosted-supabase", "RPG_BIND_HOST": "0.0.0.0",
                     "RPG_FORCE_MOCK": "1"}
-FORBIDDEN_IN_PREVIEW = frozenset(SECRET_FROM_FILE)
+# SPEC-194: HMAC key for Play obfuscated account ids (>=32 chars). Pushed only when present in the env files.
+OPTIONAL_SECRET_FROM_FILE = ("RPG_PLAY_ACCOUNT_KEY",)
+FORBIDDEN_IN_PREVIEW = frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE)
 
 
 def _load_files() -> dict[str, str]:
@@ -62,6 +64,9 @@ def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST
         raise KeyError(f"ausentes em .env.staging/.env: {', '.join(missing)}")
     for key in SECRET_FROM_FILE:
         production[key] = files[key]
+    for key in OPTIONAL_SECRET_FROM_FILE:
+        if files.get(key):
+            production[key] = files[key]
     preview = dict(PREVIEW_LITERALS)
     assert not FORBIDDEN_IN_PREVIEW & preview.keys()
     return production, preview
@@ -109,7 +114,7 @@ def main(argv: list[str] | None = None) -> int:
     except KeyError as exc:
         print(exc.args[0], file=sys.stderr)
         return 1
-    secrets = frozenset(SECRET_FROM_FILE)
+    secrets = frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE)
     print("production:", ", ".join(sorted(production)))
     print("preview:", ", ".join(sorted(preview)), "(sem segredos de DB/serviço)")
     if args.dry_run:

@@ -3418,7 +3418,7 @@ specs:
   lineage_note: Imported approved v5 package; implementation not started
 - id: SPEC-194
   slug: google-play-billing-consumables
-  status: approved
+  status: done
   path: specs/SPEC-194-google-play-billing-consumables.md
   created_commit: null
   created_at: '2026-10-02'

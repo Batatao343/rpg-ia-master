@@ -2015,7 +2015,8 @@ class CheckoutRequest(BaseModel):
 
 
 @app.get('/account/checkout/skus')
-def checkout_skus():
+def checkout_skus(request: Request):
+    _refuse_android_stripe(request)
     from services.stripe_checkout import StripeError
     try:
         return JSONResponse(_stripe_payments().skus(), headers={'Cache-Control': 'no-store'})
@@ -2023,8 +2024,15 @@ def checkout_skus():
         raise HTTPException(503, 'stripe_catalog_unavailable') from None
 
 
+def _refuse_android_stripe(request: Request) -> None:
+    # SPEC-194 R8 policy (not a security boundary): the Android app never uses Stripe.
+    if request.headers.get('x-rpg-client', '').lower() == 'android':
+        raise HTTPException(403, 'stripe_unavailable_on_android')
+
+
 @app.post('/account/checkout')
-def checkout_create(body: CheckoutRequest):
+def checkout_create(body: CheckoutRequest, request: Request):
+    _refuse_android_stripe(request)
     from infrastructure.request_context import current_principal
     from services.shard_pricing import PricingUnavailable
     from services.stripe_checkout import StripeError
@@ -2033,6 +2041,87 @@ def checkout_create(body: CheckoutRequest):
                             headers={'Cache-Control': 'no-store'})
     except (StripeError, PricingUnavailable):
         raise HTTPException(503, 'stripe_checkout_unavailable') from None
+
+
+_FAKE_GOOGLE = None
+
+
+def _google_play():
+    if not _database_profile():
+        raise HTTPException(503, 'google_play_disabled')
+    from infrastructure.google_play_payments import GooglePlayPurchases, PostgresPurchaseStore
+    from infrastructure.runtime import get_runtime
+    from services.google_play import GooglePlayError, _account_key, shared_client
+    from services.google_play_fake import FakeGooglePlayClient, fake_allowed, fake_requested
+    global _FAKE_GOOGLE
+    try:
+        _account_key()  # fail closed without the HMAC key (account binding cannot be trusted)
+        if fake_requested() and not fake_allowed():
+            raise GooglePlayError('google_play_unconfigured')  # fake flag on hosted/Vercel: refuse, never fall through
+        if fake_allowed():  # SPEC-194: local profile + explicit env only; never hosted
+            _FAKE_GOOGLE = _FAKE_GOOGLE or FakeGooglePlayClient()
+            client = _FAKE_GOOGLE
+        else:
+            client = shared_client()
+    except GooglePlayError:
+        raise HTTPException(503, 'google_play_unconfigured') from None
+    return GooglePlayPurchases(PostgresPurchaseStore(get_runtime().game_store.pool), client)
+
+
+class GooglePlayVerifyRequest(BaseModel):
+    model_config = {'extra': 'forbid'}
+    product_id: str = Field(min_length=1, max_length=128)
+    purchase_token: str = Field(min_length=16, max_length=2048)
+    order_id: str | None = Field(default=None, max_length=128)
+
+
+@app.get('/account/purchases/google/profile')
+def google_play_profile():
+    """Value the app must pass to setObfuscatedAccountId before launching billing."""
+    from infrastructure.request_context import current_principal
+    from services.google_play import GooglePlayError, obfuscated_account_id
+    try:
+        account_id = obfuscated_account_id(current_principal().user_id)
+    except GooglePlayError:
+        raise HTTPException(503, 'google_play_unconfigured') from None
+    return JSONResponse({'obfuscated_account_id': account_id},
+                        headers={'Cache-Control': 'no-store'})
+
+
+@app.get('/account/purchases/google/products')
+def google_play_products():
+    """Play product ids the app may query in the Store. No price: price comes from the Store only."""
+    from infrastructure.google_play_payments import PostgresPurchaseStore
+    from infrastructure.runtime import get_runtime
+    if not _database_profile():
+        raise HTTPException(503, 'google_play_disabled')
+    items = PostgresPurchaseStore(get_runtime().game_store.pool).list_products()
+    return JSONResponse({'items': items}, headers={'Cache-Control': 'no-store'})
+
+
+@app.post('/account/purchases/google/verify')
+def google_play_verify(body: GooglePlayVerifyRequest):
+    from infrastructure.request_context import current_principal
+    from infrastructure.wallet import WalletConflict
+    from services.google_play import GooglePlayError
+    unavailable = ('google_play_unavailable', 'google_play_unconfigured')
+    conflicts = ('google_play_token_conflict', 'google_play_purchase_cancelled', 'google_play_already_consumed')
+    try:
+        result = _google_play().verify(current_principal(), body.product_id, body.purchase_token, body.order_id)
+    except WalletConflict:
+        raise HTTPException(409, 'google_play_wallet_conflict') from None
+    except GooglePlayError as exc:
+        code = str(exc)
+        if code in unavailable:
+            status = 503
+        elif code in conflicts:
+            status = 409
+        elif code == 'account_deleted':
+            status = 403
+        else:
+            status = 422
+        raise HTTPException(status, code) from None
+    return JSONResponse(result, headers={'Cache-Control': 'no-store'})
 
 
 @app.get('/account/checkout/{order_id}')

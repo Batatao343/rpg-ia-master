@@ -20,18 +20,18 @@ test('platform detection: web by default, android only via native Capacitor', as
   delete globalThis.Capacitor;
 });
 
-test('purchase adapter selection by platform; Android stub is not available yet', async () => {
+test('purchase adapter selection by platform; Android needs the native plugin', async () => {
   const { selectPurchaseAdapter } = await load('purchases/index');
   const skus = async () => ({ items: [{ sku_id: 's1', gross_brl: '9.90', shard_milli: '1000' }] });
   const web = selectPurchaseAdapter('web', skus);
   assert.equal(web.kind, 'stripe');
   assert.equal(web.supportsWebCheckout, true);
   assert.deepEqual((await web.listProducts()).map(p => p.productId), ['s1']);
-  const android = selectPurchaseAdapter('android', skus);
+  const android = selectPurchaseAdapter('android', skus, {}, null);
   assert.equal(android.kind, 'google_play');
   assert.equal(android.supportsWebCheckout, false);
   for (const call of [() => android.listProducts(), () => android.purchase('p', 'acct'), () => android.restorePending()])
-    await assert.rejects(call, /not_available_until_spec_194_native/);
+    await assert.rejects(call, /play_billing_plugin_unavailable/);
 });
 
 test('back policy never exits mid-action and minimizes at root', async () => {

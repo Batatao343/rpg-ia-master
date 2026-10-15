@@ -1,4 +1,5 @@
 import { isAndroidClient } from "../native/platform";
+import { playAdapter, type StoreProduct } from "../purchases";
 import { useEffect, useRef, useState } from "react";
 import * as api from "../api";
 import { TurnstileChallenge } from "./TurnstileChallenge";
@@ -37,6 +38,11 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
   const [checkoutAvailable, setCheckoutAvailable] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(true);
   const [checkoutBusy, setCheckoutBusy] = useState<string | null>(null);
+  const [playProducts, setPlayProducts] = useState<StoreProduct[]>([]);
+  const [playDisabled, setPlayDisabled] = useState(false);
+  const [playBusy, setPlayBusy] = useState<string | null>(null);
+  const [playNotice, setPlayNotice] = useState("");
+  const [playError, setPlayError] = useState("");
   const [checkoutError, setCheckoutError] = useState("");
   const [checkoutNotice, setCheckoutNotice] = useState("");
   const [reauthPassword, setReauthPassword] = useState("");
@@ -116,8 +122,25 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
 
   useEffect(() => {
     let active = true;
-    // Android: Stripe checkout is not offered (store policy); Play Billing arrives with SPEC-194 native.
-    if (isAndroidClient()) { setCheckoutLoading(false); return; }
+    // Android: Stripe checkout is not offered (store policy); Play Billing (SPEC-194) lists Store products.
+    if (isAndroidClient()) {
+      const adapter = playAdapter(api.googlePlayBackend);
+      const unsubscribe = adapter.subscribe(r => {
+        if (!active) return;
+        setPlayBusy(null);
+        if (r.status === "fulfilled") { setPlayNotice("Compra confirmada pelo servidor. Seu saldo foi atualizado."); refreshFinancial(() => active); }
+        else if (r.status === "pending") setPlayNotice("Pagamento pendente. Nenhum crédito será dado até o servidor confirmar.");
+        else if (r.status === "cancelled") setPlayNotice("Compra cancelada. Nada foi cobrado.");
+        else if (r.status === "error") setPlayError("Não foi possível confirmar a compra agora. Ela será conferida novamente ao reabrir o app.");
+      });
+      void adapter.restorePending().catch(() => {});   // single-flight; token dedupe lives in the adapter
+      void adapter.listProducts().then(items => {
+        if (!active || deletionStarted.current) return;
+        setPlayDisabled(adapter.disabled); setPlayProducts(items);
+      }).catch(() => { if (active) setPlayError("A loja não está disponível neste momento."); })
+        .finally(() => { if (active && !deletionStarted.current) setCheckoutLoading(false); });
+      return () => { active = false; unsubscribe(); };
+    }
     const controller = startRead();
     void api.getCheckoutSkus(controller.signal).then(result => {
       if (!active || deletionStarted.current) return;
@@ -337,7 +360,7 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
         <p className="account-balance">{shards(balance.available_milli)} <span>Estilhas</span></p>
         {BigInt(balance.reserved_milli) > 0n && <p>{shards(balance.reserved_milli)} Estilhas reservadas</p>}
         {checkoutLoading ? <p className="muted" role="status">Consultando pacotes de Estilhas…</p>
-          : !checkoutAvailable && <p className="muted">A compra de Estilhas ainda não está disponível.</p>}
+          : !checkoutAvailable && !isAndroidClient() && <p className="muted">A compra de Estilhas ainda não está disponível.</p>}
       </section>
       {(returnKind === "success" || returnKind === "cancel") && <section className="account-card" aria-label="Retorno do pagamento">
         <h2>Pedido de Estilhas</h2>
@@ -357,6 +380,27 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
             <button className="btn btn--ghost" type="button" disabled={orderLoading}
               onClick={() => setOrderRefresh(value => value + 1)}>Atualizar status do pedido</button>
           </>}
+      </section>}
+      {isAndroidClient() && !checkoutLoading && <section className="account-card" aria-labelledby="play-title">
+        <h2 id="play-title">Comprar Estilhas</h2>
+        {playDisabled ? <p className="muted" role="status">Compras temporariamente indisponíveis.</p>
+          : playProducts.length === 0 ? <p className="muted">A compra de Estilhas ainda não está disponível.</p>
+            : <>
+              <p className="muted">O pagamento é feito pela Google Play; o saldo só muda depois da confirmação do servidor.</p>
+              <ul className="checkout-packages">{playProducts.map(p => <li key={p.productId}>
+                <span>{p.shardMilli ? `${shards(p.shardMilli)} Estilhas · ` : ""}{p.displayPrice}</span>
+                <button className="btn btn--primary" type="button" disabled={playBusy !== null || accountAction !== null}
+                  onClick={() => {
+                    setPlayBusy(p.productId); setPlayError(""); setPlayNotice("");
+                    void playAdapter(api.googlePlayBackend).purchase(p.productId).then(r => {
+                      if (r.status === "disabled") { setPlayDisabled(true); setPlayBusy(null); }
+                      else if (r.status === "cancelled") setPlayBusy(null);
+                    }).catch(() => { setPlayError("Não foi possível abrir a loja."); setPlayBusy(null); });
+                  }}>Comprar pacote</button>
+              </li>)}</ul>
+            </>}
+        {playError && <p role="alert">{playError}</p>}
+        {playNotice && <p role="status">{playNotice}</p>}
       </section>}
       {checkoutAvailable && <section className="account-card" aria-labelledby="checkout-title">
         <h2 id="checkout-title">Comprar Estilhas</h2>

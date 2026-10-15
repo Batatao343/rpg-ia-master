@@ -5,6 +5,13 @@ import type { CapacitorConfig } from '@capacitor/cli';
 // resolved when `npx cap sync android` runs; override with CAP_SERVER_URL.
 const serverUrl = process.env.CAP_SERVER_URL || 'https://rpg-ia-master-staging.vercel.app';
 const host = new URL(serverUrl).host;
+// Cleartext is allowed ONLY for the emulator loopback in a DEBUG sync: `CAP_BUILD=debug CAP_SERVER_URL=http://10.0.2.2:8765 npx cap sync android`.
+// Any other http:// URL is refused here, and app/build.gradle (checkReleaseCleartext) refuses a release build
+// whose synced capacitor.config.json still points at http:// (e.g. a stale debug sync).
+const debugEmulator = process.env.CAP_BUILD === 'debug' && serverUrl.startsWith('http://10.0.2.2:');
+if (serverUrl.startsWith('http://') && !debugEmulator) {
+  throw new Error('CAP_SERVER_URL must be https:// (http:// only with CAP_BUILD=debug and host 10.0.2.2)');
+}
 
 const config: CapacitorConfig = {
   // DEV id only (staging). This only affects the generated capacitor.config.json; the real Android
@@ -18,7 +25,7 @@ const config: CapacitorConfig = {
   server: {
     url: serverUrl,
     androidScheme: 'https',
-    cleartext: false,
+    cleartext: debugEmulator,
     // Top-level navigations stay on the trusted host; everything else opens externally.
     allowNavigation: [host],
   },

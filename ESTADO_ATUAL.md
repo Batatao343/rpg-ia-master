@@ -1,5 +1,14 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **15/10 — SPEC-194 `done`: Google Play Billing (consumíveis) com verificação no servidor.** Backend:
+> `POST /account/purchases/google/verify` valida no Play Developer API (token/produto/order são dados não
+> confiáveis; conta vinculada por `obfuscatedAccountId` HMAC), credita a carteira de forma idempotente
+> (advisory lock + `token_sha256`/`order_id` únicos) e só então consome; pending/cancelado não creditam; Stripe
+> recusado no Android (`X-RPG-Client`). Nativo: `PlayBillingPlugin` (Billing 9.1.0, preço só da Store). Revisão
+> independente APPROVED_WITH_FOLLOWUPS (corrigidos: restore single-flight, cleartext, consume envenenado,
+> fake barrado em hosted). Limite: só Google FAKE + AVD; Play Console/licença real = SPEC-198.
+> [Evidência](docs/spec194/README.md). Próxima: SPEC-195.
+
 > **15/10 — SPEC-193 `done`: app Android (Capacitor 8) sobre o mesmo frontend.** WebView carrega
 > o staging hospedado (cookies first-party, CSRF inalterado); `web/android/` + `capacitor.config.ts`.
 > Review independente deu CHANGES_REQUIRED; corrigido: refresh **e** `rpg_csrf` persistentes só

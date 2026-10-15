@@ -1,0 +1,86 @@
+{
+  "spec": "SPEC-194",
+  "mode": "PLAY_BILLING_FAKE debug build + mock API (NOT real Play Billing)",
+  "steps": [
+    {
+      "name": "platform is android",
+      "ok": true
+    },
+    {
+      "name": "plugin registered natively",
+      "ok": true
+    },
+    {
+      "name": "Conta link visible",
+      "ok": true
+    },
+    {
+      "name": "Play packages listed with Store price",
+      "ok": true
+    },
+    {
+      "name": "price shown is fake Store price R$ 9,99 (backend sends none)",
+      "ok": true
+    },
+    {
+      "name": "Stripe checkout NOT requested",
+      "ok": true
+    },
+    {
+      "name": "requests carry X-RPG-Client: android",
+      "ok": true
+    },
+    {
+      "name": "purchase -> purchaseUpdated -> /verify called once",
+      "ok": true,
+      "detail": [
+        {
+          "product_id": "estilhas_pack_small",
+          "purchase_token": "fake-ccccccc...",
+          "order_id": "GPA.FAKE1"
+        }
+      ]
+    },
+    {
+      "name": "verify body = product_id + fake token + order id only",
+      "ok": true
+    },
+    {
+      "name": "UI confirms only after server answer",
+      "ok": true
+    },
+    {
+      "name": "cancel path: notice, no verify",
+      "ok": true
+    },
+    {
+      "name": "pending path: notice, no verify, no credit",
+      "ok": true
+    },
+    {
+      "name": "kill switch: neutral message, billing never launched",
+      "ok": true
+    }
+  ],
+  "requests_seen": [
+    "GET /auth/config",
+    "GET /account/balance",
+    "GET /game/saves",
+    "GET /data/options",
+    "GET /data/onboarding",
+    "GET /account/series",
+    "GET /account/usage",
+    "GET /account/purchases",
+    "GET /account/purchases/google/profile",
+    "GET /account/purchases/google/products",
+    "POST /account/purchases/google/verify"
+  ],
+  "verify_calls": [
+    {
+      "product_id": "estilhas_pack_small",
+      "purchase_token": "fake-ccccccc...",
+      "order_id": "GPA.FAKE1"
+    }
+  ],
+  "passed": true
+}

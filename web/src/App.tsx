@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import * as api from "./api";
-import { isNativeApp } from "./native/platform";
+import { isNativeApp, isAndroidClient } from "./native/platform";
+import { playAdapter } from "./purchases";
 import { installNativeLifecycle } from "./native/lifecycle";
 import { decideBack } from "./native/backPolicy";
 import { preparePending, loadPending, clearPending, clearOwner, type PendingOperation } from "./pendingOperation";
@@ -113,6 +114,8 @@ export function App() {
     try {
       const config = await api.getAuthConfig();
       if (config.required && !config.authenticated) { window.dispatchEvent(new Event('rpg:auth-expired')); return; }
+      // SPEC-194: re-send unconsumed Play purchases (idempotent /verify; recovers process death).
+      if (isAndroidClient()) void playAdapter(api.googlePlayBackend).restorePending().catch(() => {});
       const gid = gameId.current, user = owner.current;
       if (nativeCtx.current.screen !== "play" || !gid || nativeCtx.current.busy) return;
       const saved = loadPending(user, gid);
@@ -156,7 +159,11 @@ export function App() {
           setScreen("auth");
           return; // não chama rotas protegidas antes do login
         }
-        if (config.authenticated) void refreshBalance(config.user_id || "legacy", session.current);
+        if (config.authenticated) {
+          void refreshBalance(config.user_id || "legacy", session.current);
+          // SPEC-194: cold start after process death — re-send unconsumed Play purchases (idempotent).
+          if (isAndroidClient()) void playAdapter(api.googlePlayBackend).restorePending().catch(() => {});
+        }
       } catch {
         // Compatibilidade com API legacy anterior à rota /auth/config.
       }

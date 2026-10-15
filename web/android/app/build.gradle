@@ -20,11 +20,38 @@ android {
         }
     }
     buildTypes {
+        debug {
+            // SPEC-194: fake Store only in debug builds, only when -PplayBillingFake=true
+            buildConfigField "boolean", "PLAY_BILLING_FAKE", (project.findProperty('playBillingFake') == 'true' ? 'true' : 'false')
+        }
         release {
+            buildConfigField "boolean", "PLAY_BILLING_FAKE", "false"
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+// SPEC-194: release artifacts must never ship cleartext. Fails assemble/bundleRelease when the synced
+// capacitor.config.json points at http:// or the merged release manifest enables usesCleartextTraffic.
+tasks.register('checkReleaseCleartext') {
+    def cfg = file('src/main/assets/capacitor.config.json')
+    def merged = layout.buildDirectory.file('intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml')
+    doLast {
+        if (cfg.exists()) {
+            def url = new groovy.json.JsonSlurper().parse(cfg)?.server?.url
+            if (url != null && url.toString().toLowerCase().startsWith('http://'))
+                throw new GradleException("Release build refused: capacitor.config.json server.url is cleartext (${url}). Re-run 'npx cap sync android' without CAP_BUILD=debug and with an https CAP_SERVER_URL.")
+        }
+        def m = merged.get().asFile
+        if (m.exists() && m.text =~ /usesCleartextTraffic\s*=\s*"true"/)
+            throw new GradleException('Release build refused: merged manifest has usesCleartextTraffic=true')
+    }
+}
+afterEvaluate {
+    tasks.named('checkReleaseCleartext').configure { it.dependsOn('processReleaseManifest') }
+    ['assembleRelease', 'bundleRelease'].each { n -> tasks.matching { it.name == n }.configureEach { dependsOn 'checkReleaseCleartext' } }
 }
 
 repositories {
@@ -39,6 +66,8 @@ dependencies {
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
     implementation project(':capacitor-android')
+    // SPEC-194: exact pin (latest stable per developer.android.com release notes: 9.1.0, 2026-06-18)
+    implementation "com.android.billingclient:billing:9.1.0"
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"

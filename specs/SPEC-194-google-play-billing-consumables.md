@@ -1,6 +1,6 @@
 # SPEC-194 — Google Play Billing — consumíveis
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Depende de:** SPEC-193 `done`
 > **EXECUTOR_MODEL obrigatório:** `Sol`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -41,11 +41,11 @@ Assinaturas; iOS; alternate billing.
 
 ## Critérios de aceite
 
-- [ ] client adulterado não cria Estilhas.
-- [ ] duplicate token não duplica.
-- [ ] compra consumível pode ser recomprada após consume.
-- [ ] cancelamento não cobra.
-- [ ] preço UI é Store-provided.
+- [x] client adulterado não cria Estilhas.
+- [x] duplicate token não duplica.
+- [x] compra consumível pode ser recomprada após consume.
+- [x] cancelamento não cobra.
+- [x] preço UI é Store-provided.
 
 ## Gates / evidência
 
@@ -57,10 +57,16 @@ Esta spec entrega a integração técnica e contratos usando fake/fixtures e sea
 
 ## Gate de fechamento
 
-- [ ] purchase token/sku/order são tratados como dados não confiáveis até verificação server-side;
-- [ ] token duplicado/replay/process death não duplica wallet;
-- [ ] acknowledge/consume só ocorre depois de fulfillment idempotente persistido;
-- [ ] pending/cancelled não gera crédito;
-- [ ] UI usa preço/localização fornecidos pela Store adapter;
-- [ ] nenhuma rota/link Stripe é oferecida dentro do Android v1;
-- [ ] review Sol independente aprova purchase lifecycle/verification.
+- [x] purchase token/sku/order são tratados como dados não confiáveis até verificação server-side;
+- [x] token duplicado/replay/process death não duplica wallet;
+- [x] acknowledge/consume só ocorre depois de fulfillment idempotente persistido;
+- [x] pending/cancelled não gera crédito;
+- [x] UI usa preço/localização fornecidos pela Store adapter;
+- [x] nenhuma rota/link Stripe é oferecida dentro do Android v1;
+- [x] review Sol independente aprova purchase lifecycle/verification — equivalente Opus independente: APPROVED_WITH_FOLLOWUPS (15/10), follow-ups corrigidos.
+
+## Addendum 2026-10-15 (execução Claude)
+
+Equivalência de modelo ([mapa aprovado pelo usuário](../docs/planos/equivalencia-modelos-claude.md)): executor → Claude Sonnet; planejamento pelo orquestrador Opus; revisões independentes por Opus em contexto separado.
+
+Limitação: o backend foi validado contra um Google FAKE (`services/google_play_fake.py`, só perfil local) e o plugin contra o fake de debug no AVD `rpg34`; nada prova billing real. Play Console, license testers, package definitivo e teste com licença real pertencem à SPEC-198 (delimitação desta spec). Veredito da revisão independente (Opus): APPROVED_WITH_FOLLOWUPS; follow-ups corrigidos (restore single-flight, cleartext, consume envenenado, guard do fake em hosted, WalletConflict→409). Evidência: `docs/spec194/`.

@@ -5,7 +5,14 @@ export interface StoreProduct {
   displayPrice: string;
   shardMilli?: string;
 }
-export type PurchaseResult = { status: 'fulfilled' | 'pending' | 'redirected'; orderId?: string };
+/**
+ * `started`: the Store flow was launched; the outcome arrives asynchronously (subscribe).
+ * `disabled`: server kill switch (SPEC-196) -> billing was never launched.
+ */
+export type PurchaseResult = {
+  status: 'fulfilled' | 'pending' | 'redirected' | 'started' | 'cancelled' | 'disabled' | 'error';
+  orderId?: string; productId?: string; shardMilli?: string; code?: string;
+};
 
 export interface PurchaseAdapter {
   readonly kind: 'stripe' | 'google_play';
