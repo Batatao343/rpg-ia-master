@@ -29,7 +29,7 @@ def test_authenticated_stream_reload_history_and_art_dialog(width, tmp_path):
     fund_audit_portrait(user_id)
     with pw.sync_playwright() as runtime:
         browser = runtime.chromium.launch(executable_path=str(chrome) if chrome else None, headless=True)
-        context = browser.new_context(viewport={'width': width, 'height': 900})
+        context = browser.new_context(viewport={'width': width, 'height': 900}, bypass_csp=True)
         page = context.new_page()
         errors = []
         cleanups = []

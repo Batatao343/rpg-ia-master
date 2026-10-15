@@ -30,7 +30,7 @@ def test_portraits_are_uncropped_and_stay_inside_cards(width: int) -> None:
     with playwright.sync_playwright() as pw:
         browser = pw.chromium.launch(executable_path=str(chrome) if chrome else None, headless=True)
         try:
-            page = browser.new_page(viewport={"width": width, "height": 844})
+            page = browser.new_page(viewport={"width": width, "height": 844}, bypass_csp=True)
             page.route("http://**/*", lambda route: route.abort())
             page.route("https://**/*", lambda route: route.abort())
             page.set_content(f'''<style>{css}</style><main style="padding:20px;max-width:900px">

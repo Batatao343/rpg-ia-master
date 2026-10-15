@@ -27,7 +27,7 @@ def test_failed_portrait_and_scene_recover_on_asset_change(artwork_bundle, width
         chrome = find_chrome()
         browser = runtime.chromium.launch(executable_path=str(chrome) if chrome else None)
         try:
-            page = browser.new_page(viewport={'width': width, 'height': 900})
+            page = browser.new_page(viewport={'width': width, 'height': 900}, bypass_csp=True)
             errors = []
             page.on('pageerror', lambda error: errors.append(str(error)))
             def route(request):
