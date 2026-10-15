@@ -3,7 +3,7 @@
 ## Projeto
 - Projeto Vercel: `rpg-ia-master-staging` — `prj_NRIbmA1hKLW2jxh6j3nKyqIq8dGw`, time `team_iPosop3vmF0kD9AXhIqWj26i` (Hobby).
 - URL: https://rpg-ia-master-staging.vercel.app (target `production` = site de staging).
-- Último deploy: `dpl_DU7Epi6TjxwtBTRHLxJgvvFSsKJy` (gru1) e redeploy posterior com `regions: ["gru1"]`.
+- Último deploy (build limpo da branch `spec192-clean`, commit `e4f4276`, 2026-10-15): `rpg-ia-master-staging-ehwusmnwq-guilherme-medeiros-projects.vercel.app` (gru1), alias acima; `/health` devolve `git_sha=e4f42766...` (injetado com `-e GIT_SHA=<sha>`, pois deploy via CLI de worktree não define `VERCEL_GIT_COMMIT_SHA`). Nova evidência: `evidence/sse_disconnect.json` (desconexão no meio do turno SSE + retry `action_id` = exatamente 1 turno), headers de segurança (CSP + `X-Frame-Options: DENY`) confirmados em produção.
 - Criado via REST (`POST /v11/projects`, framework `fastapi`): `vercel link` falhava porque o CLI detecta
   "services" e recusa `functions`/`buildCommand` top-level. `.vercel/project.json` escrito à mão (gitignored).
 
@@ -11,7 +11,7 @@
 ```bash
 uv run python scripts/staging/vercel_env.py [--dry-run]   # envia env (só imprime nomes)
 # deploy (token injetado do .env por subprocess; nunca na linha de comando)
-npx vercel@64.2.0 deploy --prod --yes
+npx vercel@64.2.0 deploy --prod --yes -e GIT_SHA=$(git rev-parse HEAD)
 uv run python scripts/staging/vercel_smoke.py             # grava docs/spec192/evidence/smoke.json
 npx vercel@64.2.0 logs --environment production --since 15m --query level:error
 ```

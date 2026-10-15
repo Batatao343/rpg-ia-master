@@ -1,63 +1,67 @@
 {
   "base": "https://rpg-ia-master-staging.vercel.app",
-  "at": "2026-10-15T13:34:19.462025+00:00",
+  "at": "2026-10-15T14:56:39.804374+00:00",
   "checks": {
     "health": {
       "ok": true,
       "status": 200,
-      "ms": 6834,
+      "ms": 104,
       "error": null,
       "headers": {
         "content-type": "application/json",
         "cache-control": "public, max-age=0, must-revalidate",
         "x-vercel-cache": "MISS",
-        "x-vercel-id": "gru1::gru1::69h55-1792071263933-23b7ec60df15",
+        "x-vercel-id": "gru1::gru1::v5v28-1792076204344-471de1ed697e",
         "server": "Vercel",
         "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
         "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "content-security-policy": "default-src 'self'; connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data: blob: https://*.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
         "referrer-policy": "same-origin"
       }
     },
     "static_index": {
       "ok": true,
       "status": 200,
-      "ms": 42,
+      "ms": 44,
       "error": null,
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "public, max-age=0, must-revalidate",
         "x-vercel-cache": "MISS",
-        "x-vercel-id": "gru1::gru1::zb4r2-1792071271606-f8a3d6473ef2",
+        "x-vercel-id": "gru1::gru1::smmsb-1792076204985-0c5d0f9b41fe",
         "server": "Vercel",
         "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
         "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "content-security-policy": "default-src 'self'; connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data: blob: https://*.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
         "referrer-policy": "same-origin"
       }
     },
     "cron_jobs": {
       "noauth_status": 401,
       "auth_status": 200,
-      "ms": 368,
+      "ms": 107,
       "body": {
         "ok": true,
         "processed": 0,
         "stopped_reason": "empty",
-        "elapsed_s": 0.181,
-        "duration_s": 0.183
+        "elapsed_s": 0.065,
+        "duration_s": 0.067
       },
       "ok": true
     },
     "cron_account-deletions": {
       "noauth_status": 401,
       "auth_status": 200,
-      "ms": 75,
+      "ms": 72,
       "body": {
         "ok": true,
         "claimed": 0,
         "deleted": 0,
         "failed": 0,
         "auth_buckets_purged": 0,
-        "duration_s": 0.046
+        "duration_s": 0.042
       },
       "ok": true
     },
@@ -70,16 +74,16 @@
         "orphans_seen": 0,
         "released": 0,
         "failed": 0,
-        "duration_s": 0.016
+        "duration_s": 0.019
       },
       "ok": true
     }
   },
-  "first_request_ms": 6834,
+  "first_request_ms": 104,
   "warm_ms": {
     "n": 10,
-    "p50": 36.0,
-    "max": 262
+    "p50": 32.0,
+    "max": 172
   },
   "ok": true
 }
