@@ -1,5 +1,35 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **14/10 — código na `main`; deploy funcional em espera.** Publicado por
+> avanço direto o trabalho concluído até SPEC-190 e o handoff da SPEC-191.
+> `validate`/`eval-gates` verdes; o gate `eval-governance` usou aprovação
+> temporária do dono e a variável foi removida. O `audit-local` revelou
+> incompatibilidade dos seus usuários sintéticos com a confirmação de e-mail
+> local ativada pela SPEC-190; o harness foi ajustado para usuários locais
+> pré-confirmados, login normal e cleanup; Project Index regenerado. A
+> confirmação segue ativa no produto. O deploy aguarda a resolução da cota
+> Supabase e a SPEC-191.
+
+> **14/10 — auditoria de retrato alinhada à SPEC-188.** O browser smoke passa
+> pelo orçamento e confirmação explícita, usando preço e saldo sintéticos no
+> banco local e gerador de imagem fake. O helper passa pelo lease/fence do job
+> e settlement reais da SPEC-188, após alinhar o payload do job ao
+> `generation_id`. A suíte Python offline completa passou; no commit `cf31110`,
+> `validate`, `eval-gates` e `audit-local` ficaram verdes (31 testes no audit).
+> Deploy funcional permanece em espera pela SPEC-191.
+
+> **14/10 — staging e deploy em espera.** O projeto Supabase exclusivo da
+> [SPEC-191](specs/SPEC-191-supabase-remote-staging.md) não pôde ser criado:
+> a cota Free de dois projetos ativos de um administrador foi atingida.
+> Nenhum recurso remoto foi criado; por pedido do usuário, a implementação
+> Supabase aguarda resolução da cota. O
+> [handoff de retomada](handoffs/SPEC-191-Terra-review.md) está preparado.
+> [SPEC-192](specs/SPEC-192-vercel-staging-worker-topology.md)–SPEC-198
+> dependem sequencialmente da 191 e permanecem `approved`; SPEC-104 ainda é
+> `draft`. O deploy funcional exige esses gates de staging; não há projeto
+> Vercel do RPG ligado à conta. O usuário escolheu aguardar o deploy funcional
+> e publicar o código concluído no GitHub, sem prévia estática agora.
+
 > **13/10 — [SPEC-190](specs/SPEC-190-account-lifecycle-abuse-security.md) `done`.**
 > Confirmação/reset de email, CAPTCHA/rate limits, export e exclusão de conta
 > com prova recente, revogação de sessão, erasure privado e retenção financeira

@@ -7,6 +7,7 @@ from pathlib import Path
 import subprocess
 import sys
 import time
+from uuid import uuid4
 
 import httpx
 
@@ -22,6 +23,7 @@ def main() -> int:
     artifacts = ROOT / 'readiness_artifacts' / 'audit'
     artifacts.mkdir(parents=True, exist_ok=True)
     env['RPG_AUDIT_ARTIFACTS'] = str(artifacts)
+    env['RPG_IMAGE_PRICE_PROFILE'] = f'audit-image-{uuid4()}'
     started = time.monotonic()
     result_code = 1
     server = subprocess.Popen(

@@ -1,5 +1,5 @@
 {
-  "commit_sha": "edc1ea9b034bae9f64d34e10244c62b407b8cbd3",
+  "commit_sha": "f573561aaa5abeb37ae4189c4b559c45504aecf2",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -2884,6 +2884,50 @@
       "type": "contains"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_auth.py",
+        "line": 11
+      },
+      "source": "file:tests/fakes/local_auth.py",
+      "target": "file:scripts/start_local_api.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_auth.py",
+        "line": 1
+      },
+      "source": "file:tests/fakes/local_auth.py",
+      "target": "module:tests.fakes.local_auth",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_image_finance.py",
+        "line": 9
+      },
+      "source": "file:tests/fakes/local_image_finance.py",
+      "target": "file:scripts/start_local_api.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_image_finance.py",
+        "line": 1
+      },
+      "source": "file:tests/fakes/local_image_finance.py",
+      "target": "module:tests.fakes.local_image_finance",
+      "type": "contains"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
@@ -3629,6 +3673,28 @@
       },
       "source": "file:tests/test_audit_browser_local.py",
       "target": "file:scripts/browser_local.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_audit_browser_local.py",
+        "line": 11
+      },
+      "source": "file:tests/test_audit_browser_local.py",
+      "target": "file:tests/fakes/local_auth.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_audit_browser_local.py",
+        "line": 12
+      },
+      "source": "file:tests/test_audit_browser_local.py",
+      "target": "file:tests/fakes/local_image_finance.py",
       "type": "likely_test_for"
     },
     {
@@ -8854,6 +8920,17 @@
       },
       "source": "file:tests/test_mutation_api_local.py",
       "target": "file:infrastructure/contracts.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mutation_api_local.py",
+        "line": 12
+      },
+      "source": "file:tests/test_mutation_api_local.py",
+      "target": "file:tests/fakes/local_auth.py",
       "type": "likely_test_for"
     },
     {
@@ -25020,7 +25097,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/audit_local_gate.py",
-        "line": 16
+        "line": 17
       },
       "source": "module:scripts.audit_local_gate",
       "target": "symbol:scripts.audit_local_gate.main",
@@ -37328,6 +37405,72 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/fakes/local_auth.py",
+        "line": 11
+      },
+      "source": "module:tests.fakes.local_auth",
+      "target": "module:scripts.start_local_api",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_auth.py",
+        "line": 15
+      },
+      "source": "module:tests.fakes.local_auth",
+      "target": "symbol:tests.fakes.local_auth._local_admin",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_auth.py",
+        "line": 25
+      },
+      "source": "module:tests.fakes.local_auth",
+      "target": "symbol:tests.fakes.local_auth.create_confirmed_user",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_auth.py",
+        "line": 37
+      },
+      "source": "module:tests.fakes.local_auth",
+      "target": "symbol:tests.fakes.local_auth.delete_confirmed_user",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_image_finance.py",
+        "line": 9
+      },
+      "source": "module:tests.fakes.local_image_finance",
+      "target": "module:scripts.start_local_api",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_image_finance.py",
+        "line": 12
+      },
+      "source": "module:tests.fakes.local_image_finance",
+      "target": "symbol:tests.fakes.local_image_finance.fund_audit_portrait",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/fakes/local_portrait.py",
         "line": 6
       },
@@ -38858,7 +39001,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 16
+        "line": 11
+      },
+      "source": "module:tests.test_audit_browser_local",
+      "target": "module:tests.fakes.local_auth",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_audit_browser_local.py",
+        "line": 12
+      },
+      "source": "module:tests.test_audit_browser_local",
+      "target": "module:tests.fakes.local_image_finance",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_audit_browser_local.py",
+        "line": 18
       },
       "source": "module:tests.test_audit_browser_local",
       "target": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
@@ -60462,6 +60627,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mutation_api_local.py",
+        "line": 12
+      },
+      "source": "module:tests.test_mutation_api_local",
+      "target": "module:tests.fakes.local_auth",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mutation_api_local.py",
         "line": 11
       },
       "source": "module:tests.test_mutation_api_local",
@@ -60473,7 +60649,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mutation_api_local.py",
-        "line": 17
+        "line": 18
       },
       "source": "module:tests.test_mutation_api_local",
       "target": "symbol:tests.test_mutation_api_local.campaign",
@@ -60484,7 +60660,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mutation_api_local.py",
-        "line": 43
+        "line": 49
       },
       "source": "module:tests.test_mutation_api_local",
       "target": "symbol:tests.test_mutation_api_local.test_completed_mutation_replays_before_changed_preconditions",
@@ -60495,7 +60671,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mutation_api_local.py",
-        "line": 78
+        "line": 84
       },
       "source": "module:tests.test_mutation_api_local",
       "target": "symbol:tests.test_mutation_api_local.test_two_simultaneous_mutations_commit_only_once",
@@ -120177,11 +120353,55 @@
       "type": "calls"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_auth.py",
+        "line": 16
+      },
+      "source": "symbol:tests.fakes.local_auth._local_admin",
+      "target": "symbol:scripts.start_local_api._supabase_status",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_auth.py",
+        "line": 26
+      },
+      "source": "symbol:tests.fakes.local_auth.create_confirmed_user",
+      "target": "symbol:tests.fakes.local_auth._local_admin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_auth.py",
+        "line": 38
+      },
+      "source": "symbol:tests.fakes.local_auth.delete_confirmed_user",
+      "target": "symbol:tests.fakes.local_auth._local_admin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_image_finance.py",
+        "line": 20
+      },
+      "source": "symbol:tests.fakes.local_image_finance.fund_audit_portrait",
+      "target": "symbol:scripts.start_local_api._supabase_status",
+      "type": "calls"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/local_portrait.py",
-        "line": 49
+        "line": 59
       },
       "source": "symbol:tests.fakes.local_portrait.publish_portrait",
       "target": "symbol:tests.fakes.local_portrait.publish_portrait.cleanup",
@@ -123272,10 +123492,43 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 23
+        "line": 25
       },
       "source": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
       "target": "symbol:scripts.browser_local.find_chrome",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_audit_browser_local.py",
+        "line": 28
+      },
+      "source": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
+      "target": "symbol:tests.fakes.local_auth.create_confirmed_user",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_audit_browser_local.py",
+        "line": 198
+      },
+      "source": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
+      "target": "symbol:tests.fakes.local_auth.delete_confirmed_user",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_audit_browser_local.py",
+        "line": 29
+      },
+      "source": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
+      "target": "symbol:tests.fakes.local_image_finance.fund_audit_portrait",
       "type": "calls"
     },
     {
@@ -163917,10 +164170,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mutation_api_local.py",
-        "line": 29
+        "line": 33
       },
       "source": "symbol:tests.test_mutation_api_local.campaign",
       "target": "symbol:infrastructure.contracts.Principal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mutation_api_local.py",
+        "line": 25
+      },
+      "source": "symbol:tests.test_mutation_api_local.campaign",
+      "target": "symbol:tests.fakes.local_auth.create_confirmed_user",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mutation_api_local.py",
+        "line": 45
+      },
+      "source": "symbol:tests.test_mutation_api_local.campaign",
+      "target": "symbol:tests.fakes.local_auth.delete_confirmed_user",
       "type": "calls"
     },
     {
@@ -163928,7 +164203,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mutation_api_local.py",
-        "line": 83
+        "line": 89
       },
       "source": "symbol:tests.test_mutation_api_local.test_two_simultaneous_mutations_commit_only_once",
       "target": "symbol:tests.test_mutation_api_local.test_two_simultaneous_mutations_commit_only_once.mutate",
@@ -186544,6 +186819,20 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/fakes/local_auth.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/fakes/local_auth.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/fakes/local_image_finance.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/fakes/local_image_finance.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/fakes/local_portrait.py",
       "kind": "file",
       "line": 1,
@@ -190028,6 +190317,20 @@
       "line": 1,
       "path": "tests/fakes/fake_image_generator.py",
       "qualified_name": "tests.fakes.fake_image_generator"
+    },
+    {
+      "id": "module:tests.fakes.local_auth",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/fakes/local_auth.py",
+      "qualified_name": "tests.fakes.local_auth"
+    },
+    {
+      "id": "module:tests.fakes.local_image_finance",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/fakes/local_image_finance.py",
+      "qualified_name": "tests.fakes.local_image_finance"
     },
     {
       "id": "module:tests.fakes.local_portrait",
@@ -201218,7 +201521,7 @@
     {
       "id": "symbol:scripts.audit_local_gate.main",
       "kind": "function",
-      "line": 16,
+      "line": 17,
       "path": "scripts/audit_local_gate.py",
       "qualified_name": "scripts.audit_local_gate.main"
     },
@@ -208804,6 +209107,34 @@
       "qualified_name": "tests.fakes.fake_image_generator.FakeImageGenerator.generate"
     },
     {
+      "id": "symbol:tests.fakes.local_auth._local_admin",
+      "kind": "test",
+      "line": 15,
+      "path": "tests/fakes/local_auth.py",
+      "qualified_name": "tests.fakes.local_auth._local_admin"
+    },
+    {
+      "id": "symbol:tests.fakes.local_auth.create_confirmed_user",
+      "kind": "test",
+      "line": 25,
+      "path": "tests/fakes/local_auth.py",
+      "qualified_name": "tests.fakes.local_auth.create_confirmed_user"
+    },
+    {
+      "id": "symbol:tests.fakes.local_auth.delete_confirmed_user",
+      "kind": "test",
+      "line": 37,
+      "path": "tests/fakes/local_auth.py",
+      "qualified_name": "tests.fakes.local_auth.delete_confirmed_user"
+    },
+    {
+      "id": "symbol:tests.fakes.local_image_finance.fund_audit_portrait",
+      "kind": "test",
+      "line": 12,
+      "path": "tests/fakes/local_image_finance.py",
+      "qualified_name": "tests.fakes.local_image_finance.fund_audit_portrait"
+    },
+    {
       "id": "symbol:tests.fakes.local_portrait.publish_portrait",
       "kind": "test",
       "line": 6,
@@ -208813,7 +209144,7 @@
     {
       "id": "symbol:tests.fakes.local_portrait.publish_portrait.cleanup",
       "kind": "test",
-      "line": 49,
+      "line": 59,
       "path": "tests/fakes/local_portrait.py",
       "qualified_name": "tests.fakes.local_portrait.publish_portrait.cleanup"
     },
@@ -210164,7 +210495,7 @@
     {
       "id": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
       "kind": "test",
-      "line": 16,
+      "line": 18,
       "path": "tests/test_audit_browser_local.py",
       "qualified_name": "tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog"
     },
@@ -223499,28 +223830,28 @@
     {
       "id": "symbol:tests.test_mutation_api_local.campaign",
       "kind": "test",
-      "line": 17,
+      "line": 18,
       "path": "tests/test_mutation_api_local.py",
       "qualified_name": "tests.test_mutation_api_local.campaign"
     },
     {
       "id": "symbol:tests.test_mutation_api_local.test_completed_mutation_replays_before_changed_preconditions",
       "kind": "test",
-      "line": 43,
+      "line": 49,
       "path": "tests/test_mutation_api_local.py",
       "qualified_name": "tests.test_mutation_api_local.test_completed_mutation_replays_before_changed_preconditions"
     },
     {
       "id": "symbol:tests.test_mutation_api_local.test_two_simultaneous_mutations_commit_only_once",
       "kind": "test",
-      "line": 78,
+      "line": 84,
       "path": "tests/test_mutation_api_local.py",
       "qualified_name": "tests.test_mutation_api_local.test_two_simultaneous_mutations_commit_only_once"
     },
     {
       "id": "symbol:tests.test_mutation_api_local.test_two_simultaneous_mutations_commit_only_once.mutate",
       "kind": "test",
-      "line": 83,
+      "line": 89,
       "path": "tests/test_mutation_api_local.py",
       "qualified_name": "tests.test_mutation_api_local.test_two_simultaneous_mutations_commit_only_once.mutate"
     },
@@ -230379,5 +230710,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:471e8e8ac259a08b3330ba9541f9a798004fc5cca32571bf608145ec23cb5550"
+  "source_tree_hash": "sha256:ae974fcff27751b54e4b3465f33eab9a520ced3b1887eea7b34e48323a2d94d9"
 }

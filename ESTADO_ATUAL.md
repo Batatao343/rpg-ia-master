@@ -1,5 +1,46 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **14/10 — publicação na `main` e ajuste do audit local.** O histórico até
+> SPEC-190 `done` e o preparo documental da SPEC-191 foram publicados por
+> avanço direto, sem force push. O build Vite e a suíte Python offline
+> completa passaram; `validate` e `eval-gates` do GitHub passaram após o gate
+> protegido `eval-governance`, com variável de aprovação temporária removida.
+> O `audit-local` expôs uma fixture anterior à confirmação obrigatória de
+> e-mail da SPEC-190: os smokes de browser/mutação agora criam usuários
+> sintéticos já confirmados **somente no GoTrue local**, entram pela API/UI e
+> apagam esses usuários no teardown. O fluxo real de confirmação permanece
+> habilitado. O Project Index derivado foi regenerado para o novo helper.
+> Deploy funcional continua em espera pelo staging da SPEC-191.
+
+> **14/10 — ajuste complementar do `audit-local`.** O smoke de retrato agora
+> obtém quote antes de confirmar com `quote_id` e `confirmed=true`, conforme a
+> SPEC-188. A auditoria publica perfil de preço e saldo **sintéticos apenas no
+> Postgres local**, por execução; a imagem continua produzida pelo gerador fake.
+> O helper de publicação agora passa pelo lease e fence do job, ticket de
+> dispatch, registro de uso e settlement da SPEC-188. Após o primeiro CI,
+> foi alinhado ao payload atual do job, que contém apenas `generation_id`.
+> Nenhum crédito de provedor ou recurso remoto foi criado. `uv run --all-extras
+> pytest -q` passou em 100% da suíte offline (2.285 casos coletados, com
+> integrações locais sem Docker ignoradas). No commit `cf31110`, o GitHub
+> concluiu `validate`, `eval-gates` e `audit-local` verdes; o audit integrado
+> passou com **31 testes** e gerador de imagem falso. Deploy funcional segue
+> em espera pelo staging da SPEC-191, por decisão do usuário.
+
+> **14/10 — SPEC-191 em espera por decisão do usuário sobre cota Supabase.**
+> A SPEC-190 permanece `done` e seu PR #26 está no GitHub. A tentativa única
+> de criar `rpg-ia-master-staging` na organização `jm0nteiroz` foi recusada
+> pelo limite Free de dois projetos ativos associado a um administrador;
+> **nenhum recurso remoto foi criado**. O usuário pediu para suspender a
+> implementação Supabase enquanto resolve o conflito. O
+> [handoff](handoffs/SPEC-191-Terra-review.md) contém inventário local e
+> sequência de retomada. SPEC-191 fica `approved`, sem gates cloud nem revisão
+> final. SPEC-192–198 dependem em cadeia da 191 e não podem ser fechadas
+> agora; SPEC-104 continua `draft`. Nenhum deploy funcional foi feito:
+> a topologia de staging da SPEC-192 exige Supabase staging e ainda não há
+> projeto Vercel ligado a este repositório. O usuário escolheu aguardar o
+> deploy funcional e publicar o código concluído no GitHub; nenhuma prévia
+> estática da interface será criada nesta etapa.
+
 > **13/10 — SPEC-190 `done`; ciclo de conta e exclusão com retenção financeira.**
 > Confirmação/reset de email com GoTrue local, mensagens genéricas, CAPTCHA
 > Turnstile encaminhado ao Auth nativo em modo hosted e limites no proxy.

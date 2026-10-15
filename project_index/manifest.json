@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "edc1ea9b034bae9f64d34e10244c62b407b8cbd3",
+  "commit_sha": "f573561aaa5abeb37ae4189c4b559c45504aecf2",
   "edge_counts": {
-    "calls": 9202,
-    "contains": 446,
-    "defines": 5529,
-    "imports": 967,
-    "likely_test_for": 593,
+    "calls": 9211,
+    "contains": 448,
+    "defines": 5533,
+    "imports": 972,
+    "likely_test_for": 598,
     "route_to": 50
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:8ea51c1b48f9b78ed293eed1e00f3821916d63a352fbcc5df0e67c4f37e6f389",
+  "graph_hash": "sha256:99a504f4fed078ce207a1002ba65125c50c0d946efb2355b32a8a607e3621503",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -256,6 +256,8 @@
     "tests/conftest.py",
     "tests/fakes/__init__.py",
     "tests/fakes/fake_image_generator.py",
+    "tests/fakes/local_auth.py",
+    "tests/fakes/local_image_finance.py",
     "tests/fakes/local_portrait.py",
     "tests/test_account_api.py",
     "tests/test_account_auth_gotrue_local.py",
@@ -553,12 +555,12 @@
     "artifact": 8,
     "class": 500,
     "endpoint": 50,
-    "file": 498,
+    "file": 500,
     "function": 1726,
     "method": 440,
-    "module": 446,
-    "test": 2863
+    "module": 448,
+    "test": 2867
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:471e8e8ac259a08b3330ba9541f9a798004fc5cca32571bf608145ec23cb5550"
+  "source_tree_hash": "sha256:ae974fcff27751b54e4b3465f33eab9a520ced3b1887eea7b34e48323a2d94d9"
 }
