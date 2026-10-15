@@ -16,8 +16,8 @@ from typing import Any, Iterable
 from scripts.staging import common
 
 SCHEMAS = ("app", "public")
-# Migrations present in the repo but deliberately NOT yet on staging (SPEC-194 gate).
-PENDING_MARKERS = ("google_play",)
+# Markers of repo migrations deliberately NOT yet on staging (empty after SPEC-194..196 were pushed).
+PENDING_MARKERS: tuple[str, ...] = ()
 # Platform-managed (pg_cron/pg_net/pg_graphql, vector patch level): reported, never fails parity.
 INFORMATIONAL = ("extensions",)
 
@@ -117,7 +117,7 @@ def main(argv: list[str] | None = None) -> int:
         "counts": {c: {"staging": len(st[c]), "local": len(lo[c])} for c in st},
         "excluded_pending_migration": {"markers": list(PENDING_MARKERS), "staging": st_excl,
                                        "local": {k: len(v) for k, v in lo_excl.items()},
-                                       "note": "20261015130000_google_play_purchases.sql is in the repo, not on staging (SPEC-194)"},
+                                       "note": "no pending markers: staging has every repo migration (SPEC-194..196)"},
         "diff": {k: v for k, v in d.items() if k not in INFORMATIONAL},
         "informational_diff": {k: v for k, v in d.items() if k in INFORMATIONAL},
         "ok": not any(k not in INFORMATIONAL for k in d),
