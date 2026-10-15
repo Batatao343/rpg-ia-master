@@ -1,5 +1,14 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **15/10 — SPEC-191 `done` (Supabase staging remoto).** Projeto `rpg-ia-master`
+> reaproveitado como staging com aprovação do usuário; migrations reproduzíveis,
+> Advisor 0 ERROR, matriz A/B, CAPTCHA nativo, backup→restore e schema diff
+> verdes ([evidência](docs/spec191/README.md)). Gates de release movidos para a
+> SPEC-197: SMTP custom, Turnstile real, backups gerenciados/PITR, role de menor
+> privilégio. Execução agora no Claude Code
+> ([equivalência de modelos](docs/planos/equivalencia-modelos-claude.md)).
+> Próxima: SPEC-192 (Vercel staging, já no ar em rpg-ia-master-staging.vercel.app).
+
 > **14/10 — código na `main`; deploy funcional em espera.** Publicado por
 > avanço direto o trabalho concluído até SPEC-190 e o handoff da SPEC-191.
 > `validate`/`eval-gates` verdes; o gate `eval-governance` usou aprovação

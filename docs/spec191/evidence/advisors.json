@@ -1,0 +1,35 @@
+{
+  "source": "Supabase MCP get_advisors (type=security) 2026-10-15",
+  "project_ref": "uzeagzcyvxzrpjgrhaql",
+  "observed_at": "2026-10-15T13:49:35Z",
+  "errors": 0,
+  "findings": [
+    {
+      "name": "authenticated_security_definer_function_executable",
+      "level": "WARN",
+      "count": 3,
+      "objects": [
+        "public.rpg_current_session_active()",
+        "public.rpg_wallet_balance()",
+        "public.rpg_wallet_history(p_limit integer)"
+      ],
+      "accepted": true,
+      "justification": "intentional: gated by auth.uid() + live session, search_path='', anon/public/rpg_api revoked"
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "count": 6,
+      "objects": [
+        "app.stripe_events",
+        "app.wallet_accounts",
+        "app.wallet_attempt_tickets",
+        "app.wallet_entries",
+        "app.wallet_reservations",
+        "app.wallet_settled_usage"
+      ],
+      "accepted": true,
+      "justification": "backend-only tables: deny-all by design; written via the privileged pool"
+    }
+  ]
+}

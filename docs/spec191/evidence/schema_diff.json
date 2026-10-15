@@ -1,0 +1,90 @@
+{
+  "counts": {
+    "buckets": {
+      "local": 1,
+      "staging": 1
+    },
+    "columns": {
+      "local": 348,
+      "staging": 348
+    },
+    "constraints": {
+      "local": 229,
+      "staging": 229
+    },
+    "extensions": {
+      "local": 6,
+      "staging": 9
+    },
+    "function_grants": {
+      "local": 23,
+      "staging": 23
+    },
+    "functions": {
+      "local": 15,
+      "staging": 15
+    },
+    "grants": {
+      "local": 271,
+      "staging": 271
+    },
+    "indexes": {
+      "local": 79,
+      "staging": 79
+    },
+    "policies": {
+      "local": 37,
+      "staging": 37
+    },
+    "tables": {
+      "local": 27,
+      "staging": 27
+    },
+    "triggers": {
+      "local": 32,
+      "staging": 32
+    }
+  },
+  "diff": {},
+  "excluded_pending_migration": {
+    "local": {
+      "columns": 15,
+      "constraints": 10,
+      "function_grants": 1,
+      "functions": 1,
+      "grants": 8,
+      "indexes": 4,
+      "tables": 1,
+      "triggers": 2
+    },
+    "markers": [
+      "google_play"
+    ],
+    "note": "20261015130000_google_play_purchases.sql is in the repo, not on staging (SPEC-194)",
+    "staging": {}
+  },
+  "informational_diff": {
+    "extensions": {
+      "only_local": [
+        "vector 0.8.2"
+      ],
+      "only_staging": [
+        "pg_cron 1.6.4",
+        "pg_graphql 1.5.11",
+        "pg_net 0.19.5",
+        "vector 0.8.0"
+      ]
+    }
+  },
+  "ok": true,
+  "policy_schemas": [
+    "app",
+    "public",
+    "storage"
+  ],
+  "project_ref": "uzeagzcyvxzrpjgrhaql",
+  "schemas": [
+    "app",
+    "public"
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "checks": {
+    "pooler": {
+      "concurrent": {
+        "connect": {
+          "errors": 0,
+          "mean_ms": 98.35,
+          "n": 10,
+          "p50_ms": 101.61,
+          "p95_ms": 106.02
+        },
+        "errors": 0,
+        "failovers": 0,
+        "max_total_ms": 115.76,
+        "mean_ms": 108.45,
+        "n": 10,
+        "p50_ms": 111.59,
+        "p95_ms": 115.76,
+        "peers": {
+          "18.228.163.245": 10
+        },
+        "query": {
+          "errors": 0,
+          "mean_ms": 10.1,
+          "n": 10,
+          "p50_ms": 9.73,
+          "p95_ms": 11.31
+        },
+        "slow_connects": 0
+      },
+      "connect_timeout_s": 3,
+      "n_concurrent": 10,
+      "n_sequential": 50,
+      "ok": true,
+      "overall": {
+        "connect": {
+          "errors": 0,
+          "mean_ms": 73.85,
+          "n": 60,
+          "p50_ms": 67.96,
+          "p95_ms": 102.59
+        },
+        "errors": 0,
+        "failovers": 0,
+        "max_total_ms": 115.76,
+        "mean_ms": 84.03,
+        "n": 60,
+        "p50_ms": 77.54,
+        "p95_ms": 113.68,
+        "peers": {
+          "18.228.163.245": 60
+        },
+        "query": {
+          "errors": 0,
+          "mean_ms": 10.19,
+          "n": 60,
+          "p50_ms": 9.68,
+          "p95_ms": 11.31
+        },
+        "slow_connects": 0
+      },
+      "sequential": {
+        "connect": {
+          "errors": 0,
+          "mean_ms": 68.94,
+          "n": 50,
+          "p50_ms": 66.73,
+          "p95_ms": 87.69
+        },
+        "errors": 0,
+        "failovers": 0,
+        "max_total_ms": 111.69,
+        "mean_ms": 79.15,
+        "n": 50,
+        "p50_ms": 76.94,
+        "p95_ms": 96.86,
+        "peers": {
+          "18.228.163.245": 50
+        },
+        "query": {
+          "errors": 0,
+          "mean_ms": 10.2,
+          "n": 50,
+          "p50_ms": 9.65,
+          "p95_ms": 11.88
+        },
+        "slow_connects": 0
+      },
+      "ssl_in_use_all": true
+    }
+  },
+  "cleanup": {
+    "users_delete_status": {
+      "A": 200,
+      "B": 200
+    }
+  },
+  "project_ref": "uzeagzcyvxzrpjgrhaql",
+  "summary": {
+    "failed": [],
+    "ok": true,
+    "pending_migration": []
+  }
+}

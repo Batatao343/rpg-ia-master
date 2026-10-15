@@ -31,10 +31,11 @@ except ImportError:  # pragma: no cover - erro acionável no extra opcional
 
 class PostgresPool:
     def __init__(self, dsn: str, *, min_size: int = 0, max_size: int = 4,
-                 timeout: float = 5.0, transaction_pooler: bool = False):
+                 timeout: float = 5.0, transaction_pooler: bool = False,
+                 connect_timeout: float = 5.0):
         if ConnectionPool is None:
             raise RuntimeError("instale o extra postgres: uv sync --extra postgres")
-        kwargs: dict[str, Any] = {"row_factory": dict_row, "connect_timeout": 5}
+        kwargs: dict[str, Any] = {"row_factory": dict_row, "connect_timeout": max(1, int(round(connect_timeout)))}
         if transaction_pooler:
             # Supavisor transaction mode cannot preserve prepared/session state.
             # Keep verify-full if already requested; never downgrade TLS.

@@ -1,0 +1,46 @@
+{
+  "applied": true,
+  "diff": {
+    "rate_limit_anonymous_users": {
+      "from": 30,
+      "to": 10
+    },
+    "rate_limit_email_sent": {
+      "from": 2,
+      "to": 10
+    },
+    "rate_limit_verify": {
+      "from": 30,
+      "to": 60
+    },
+    "security_captcha_enabled": {
+      "from": false,
+      "to": true
+    },
+    "security_captcha_provider": {
+      "from": "hcaptcha",
+      "to": "turnstile"
+    },
+    "security_captcha_secret": {
+      "from": "<write-only>",
+      "to": "[REDACTED]"
+    },
+    "uri_allow_list": {
+      "from": "",
+      "to": "https://rpg-ia-master-staging.vercel.app/**,https://rpg-ia-master-staging-*.vercel.app/**,http://localhost:5173/**"
+    }
+  },
+  "failures": {
+    "rate_limit_email_sent": {
+      "error": "{\"message\":\"Custom SMTP required to configure SMTP_SENDER_NAME or RATE_LIMIT_EMAIL_SENT. Missing SMTP_ADMIN_EMAIL, SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS fields.\"}",
+      "status": 401
+    }
+  },
+  "mode": "apply",
+  "project_ref": "uzeagzcyvxzrpjgrhaql",
+  "remaining": [
+    "rate_limit_email_sent"
+  ],
+  "turnstile_test_keys": true,
+  "verified": false
+}

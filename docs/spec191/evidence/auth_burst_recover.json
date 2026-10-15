@@ -1,0 +1,119 @@
+{
+  "all_captcha_rejected": true,
+  "calls": 15,
+  "detail": [
+    {
+      "captcha_error": true,
+      "i": 1,
+      "status": 400,
+      "t": 0.74
+    },
+    {
+      "captcha_error": true,
+      "i": 2,
+      "status": 400,
+      "t": 0.78
+    },
+    {
+      "captcha_error": true,
+      "i": 3,
+      "status": 400,
+      "t": 0.86
+    },
+    {
+      "captcha_error": true,
+      "i": 4,
+      "status": 400,
+      "t": 0.92
+    },
+    {
+      "captcha_error": true,
+      "i": 5,
+      "status": 400,
+      "t": 0.98
+    },
+    {
+      "captcha_error": true,
+      "i": 6,
+      "status": 400,
+      "t": 1.02
+    },
+    {
+      "captcha_error": true,
+      "i": 7,
+      "status": 400,
+      "t": 1.06
+    },
+    {
+      "captcha_error": true,
+      "i": 8,
+      "status": 400,
+      "t": 1.12
+    },
+    {
+      "captcha_error": true,
+      "i": 9,
+      "status": 400,
+      "t": 1.17
+    },
+    {
+      "captcha_error": true,
+      "i": 10,
+      "status": 400,
+      "t": 1.21
+    },
+    {
+      "captcha_error": true,
+      "i": 11,
+      "status": 400,
+      "t": 1.25
+    },
+    {
+      "captcha_error": true,
+      "i": 12,
+      "status": 400,
+      "t": 1.32
+    },
+    {
+      "captcha_error": true,
+      "i": 13,
+      "status": 400,
+      "t": 1.37
+    },
+    {
+      "captcha_error": true,
+      "i": 14,
+      "status": 400,
+      "t": 1.43
+    },
+    {
+      "captcha_error": true,
+      "i": 15,
+      "status": 400,
+      "t": 1.47
+    }
+  ],
+  "elapsed_s": 1.47,
+  "emails_sent": 0,
+  "endpoint": "/auth/v1/recover",
+  "first_429": null,
+  "interpretation": "If no 429 appears, captcha rejection happens before rate-limit accounting, so native per-IP limits are not measurable via captcha-less calls; limiter ceiling cannot be probed without sending real emails.",
+  "statuses": [
+    400,
+    400,
+    400,
+    400,
+    400,
+    400,
+    400,
+    400,
+    400,
+    400,
+    400,
+    400,
+    400,
+    400,
+    400
+  ],
+  "without_captcha": true
+}

@@ -1,0 +1,10 @@
+{
+  "command": "npx supabase test db",
+  "file": "supabase/tests/valoria_rls_test.sql",
+  "ok": true,
+  "passed": 14,
+  "result": "PASS",
+  "runs": "after first reset and after final clean reset",
+  "source": "manual transcription of command output",
+  "tests": 14
+}

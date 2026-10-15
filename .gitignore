@@ -54,3 +54,5 @@ VALORIA_GAME_ART_HANDOFF.zip
 
 # render intermediates
 docs/descricao_projeto/brag-output/work/
+.env.staging
+.vercel

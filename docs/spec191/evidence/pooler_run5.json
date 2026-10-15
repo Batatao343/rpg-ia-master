@@ -1,0 +1,66 @@
+{
+  "checks": {
+    "pooler": {
+      "concurrent": {
+        "connect": {
+          "errors": 0,
+          "mean_ms": 73.61,
+          "n": 10,
+          "p50_ms": 71.42,
+          "p95_ms": 81.82
+        },
+        "errors": 0,
+        "max_total_ms": 90.73,
+        "mean_ms": 81.04,
+        "n": 10,
+        "p50_ms": 77.97,
+        "p95_ms": 90.73,
+        "query": {
+          "errors": 0,
+          "mean_ms": 7.43,
+          "n": 10,
+          "p50_ms": 7.11,
+          "p95_ms": 8.91
+        }
+      },
+      "n_concurrent": 10,
+      "n_sequential": 50,
+      "ok": true,
+      "sequential": {
+        "connect": {
+          "errors": 0,
+          "mean_ms": 149.83,
+          "n": 50,
+          "p50_ms": 55.86,
+          "p95_ms": 86.42
+        },
+        "errors": 0,
+        "max_total_ms": 4629.63,
+        "mean_ms": 157.07,
+        "n": 50,
+        "p50_ms": 62.87,
+        "p95_ms": 92.93,
+        "query": {
+          "errors": 0,
+          "mean_ms": 7.24,
+          "n": 50,
+          "p50_ms": 7.01,
+          "p95_ms": 8.58
+        }
+      },
+      "ssl_in_use_all": true
+    }
+  },
+  "cleanup": {
+    "users_delete_status": {
+      "A": 200,
+      "B": 200
+    }
+  },
+  "project_ref": "uzeagzcyvxzrpjgrhaql",
+  "summary": {
+    "failed": [],
+    "ok": true,
+    "pending_migration": []
+  }
+}

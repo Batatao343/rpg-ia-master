@@ -3367,7 +3367,7 @@ specs:
   lineage_note: Sol High implementation 9453a8e and independent Sol High review APPROVED; local GoTrue/PostgreSQL reset and verify, native CAPTCHA forwarding seam, owner-bound export/delete with recent proof, session revocation and private erasure, retained financial ledger and Stripe reconciliation after deletion. Full Python 2159 passed 126 skipped 15 deselected; Chromium 53 passed 1 skipped; Node 18 passed; build/Ruff/content lint/Project Index green. Hosted Auth CAPTCHA, SMTP and recovery scheduler remain staging gates in SPEC-191/192 (docs/spec190/README.md; handoffs/SPEC-190-SOL-independent-review.md).
 - id: SPEC-191
   slug: supabase-remote-staging
-  status: approved
+  status: done
   path: specs/SPEC-191-supabase-remote-staging.md
   created_commit: null
   created_at: '2026-10-02'

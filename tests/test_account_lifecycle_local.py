@@ -157,7 +157,7 @@ def test_stale_jwt_denied_in_backend_direct_wallet_and_storage(deletion_case,mon
         c.db.execute("select set_config('request.jwt.claims',%s,true)",
                      (json.dumps({"sub":str(c.a.user_id),"session_id":str(c.sessions[0]),"role":"authenticated"}),))
         c.db.execute("set local role authenticated")
-        assert c.db.execute("select * from public.wallet_balance_view").fetchall()==[]
+        assert c.db.execute("select * from public.rpg_wallet_balance()").fetchall()==[]
         assert c.db.execute("select 1 from storage.objects where name=%s",(c.keys[0],)).fetchall()==[]
         c.db.execute("reset role")
     with c.db.transaction():
@@ -171,7 +171,7 @@ def test_stale_jwt_denied_in_backend_direct_wallet_and_storage(deletion_case,mon
         c.db.execute("select set_config('request.jwt.claims',%s,true)",
                      (json.dumps({"sub":str(c.b.user_id),"session_id":str(c.sessions[1]),"role":"authenticated"}),))
         c.db.execute("set local role authenticated")
-        assert len(c.db.execute("select * from public.wallet_balance_view").fetchall())==1
+        assert len(c.db.execute("select * from public.rpg_wallet_balance()").fetchall())==1
         assert c.db.execute("select 1 from storage.objects where name=%s",(c.keys[1],)).fetchone()
         c.db.execute("reset role")
 

@@ -1,0 +1,160 @@
+{
+  "checks": {
+    "auth_captcha": {
+      "ok": true,
+      "recover": {
+        "captcha_error": true,
+        "status": 400
+      },
+      "resend": {
+        "captcha_error": true,
+        "status": 400
+      },
+      "signup": {
+        "captcha_error": true,
+        "status": 400
+      }
+    },
+    "pgvector": {
+      "a_reads_own": true,
+      "b_reads_nothing": true,
+      "ok": true
+    },
+    "pooler": {
+      "concurrent": {
+        "connect": {
+          "errors": 0,
+          "mean_ms": 78.84,
+          "n": 10,
+          "p50_ms": 79.15,
+          "p95_ms": 85.19
+        },
+        "errors": 0,
+        "failovers": 0,
+        "max_total_ms": 94.01,
+        "mean_ms": 85.97,
+        "n": 10,
+        "p50_ms": 85.54,
+        "p95_ms": 94.01,
+        "peers": {
+          "52.67.188.92": 10
+        },
+        "query": {
+          "errors": 0,
+          "mean_ms": 7.13,
+          "n": 10,
+          "p50_ms": 6.8,
+          "p95_ms": 8.82
+        },
+        "slow_connects": 0
+      },
+      "connect_timeout_s": 3,
+      "n_concurrent": 10,
+      "n_sequential": 50,
+      "ok": true,
+      "overall": {
+        "connect": {
+          "errors": 0,
+          "mean_ms": 67.51,
+          "n": 60,
+          "p50_ms": 69.1,
+          "p95_ms": 85.19
+        },
+        "errors": 0,
+        "failovers": 0,
+        "max_total_ms": 113.19,
+        "mean_ms": 75.94,
+        "n": 60,
+        "p50_ms": 77.96,
+        "p95_ms": 94.01,
+        "peers": {
+          "18.228.163.245": 16,
+          "52.67.188.92": 44
+        },
+        "query": {
+          "errors": 0,
+          "mean_ms": 8.43,
+          "n": 60,
+          "p50_ms": 7.71,
+          "p95_ms": 11.55
+        },
+        "slow_connects": 0
+      },
+      "sequential": {
+        "connect": {
+          "errors": 0,
+          "mean_ms": 65.24,
+          "n": 50,
+          "p50_ms": 62.78,
+          "p95_ms": 85.4
+        },
+        "errors": 0,
+        "failovers": 0,
+        "max_total_ms": 113.19,
+        "mean_ms": 73.93,
+        "n": 50,
+        "p50_ms": 71.32,
+        "p95_ms": 94.24,
+        "peers": {
+          "18.228.163.245": 16,
+          "52.67.188.92": 34
+        },
+        "query": {
+          "errors": 0,
+          "mean_ms": 8.69,
+          "n": 50,
+          "p50_ms": 8.37,
+          "p95_ms": 12.37
+        },
+        "slow_connects": 0
+      },
+      "ssl_in_use_all": true
+    },
+    "rls": {
+      "a_sees_only_own": true,
+      "b_sees_only_own": true,
+      "ok": true,
+      "owner_reassign_blocked": true,
+      "rpg_api_bypassrls": false
+    },
+    "storage": {
+      "a_reads_own": true,
+      "a_upload_status": 200,
+      "anon_public_status": 400,
+      "anon_read_status": 400,
+      "b_read_status": 400,
+      "cleanup_status": 200,
+      "ok": true,
+      "signed_url_created": true,
+      "signed_url_expired_status": 400,
+      "signed_url_works": true
+    },
+    "wallet": {
+      "a_balance_is_own_and_311": true,
+      "a_balance_rows": 1,
+      "a_history_only_own": true,
+      "a_history_rows": 1,
+      "a_rpg_wallet_balance_status": 200,
+      "a_rpg_wallet_history_status": 200,
+      "anon_rpc_status": 401,
+      "b_balance_rows": 0,
+      "b_history_rows": 0,
+      "b_rpg_wallet_balance_status": 200,
+      "b_rpg_wallet_history_status": 200,
+      "ok": true,
+      "seeded_entries_for_a": 1
+    }
+  },
+  "cleanup": {
+    "users_delete_status": {
+      "A": 200,
+      "B": 200
+    }
+  },
+  "project_ref": "uzeagzcyvxzrpjgrhaql",
+  "summary": {
+    "failed": [],
+    "ok": true,
+    "pending_migration": []
+  }
+}

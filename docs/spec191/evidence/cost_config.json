@@ -1,0 +1,11 @@
+{
+  "source": "Supabase MCP get_project + manual",
+  "project_ref": "uzeagzcyvxzrpjgrhaql",
+  "plan": "Free",
+  "region": "sa-east-1",
+  "postgres": "17.6.1.063",
+  "pooler_host": "aws-1-sa-east-1.pooler.supabase.com",
+  "pooler_mode": "transaction (6543)",
+  "monthly_cost_usd": 0,
+  "notes": "Free plan: no PITR/backups guarantees, pauses after inactivity; custom SMTP not configured; reuse of existing project rpg-ia-master as dedicated staging"
+}

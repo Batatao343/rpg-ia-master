@@ -232,31 +232,24 @@ def test_client_roles_only_see_own_views_and_cannot_write(wallet_case):
         assert not connection.execute(
             "select has_schema_privilege('authenticated','app','USAGE')"
         ).fetchone()["has_schema_privilege"]
-        for view in ("wallet_balance_view", "wallet_history_view"):
-            options = connection.execute(
-                "select reloptions from pg_class where oid=%s::regclass",
-                (f"public.{view}",),
-            ).fetchone()["reloptions"]
-            assert "security_barrier=true" in options
+        assert connection.execute(
+            "select count(*) as n from pg_class where relnamespace='public'::regnamespace "
+            "and relname in ('wallet_balance_view','wallet_history_view')"
+        ).fetchone()["n"] == 0
+        for fn in ("public.rpg_wallet_balance()", "public.rpg_wallet_history(int)"):
             for role in ("authenticated", "anon", "rpg_api"):
                 assert connection.execute(
-                    "select has_table_privilege(%s,%s,'SELECT')",
-                    (role, f"public.{view}"),
-                ).fetchone()["has_table_privilege"] is (role == "authenticated")
-                for privilege in ("INSERT", "UPDATE", "DELETE"):
-                    assert not connection.execute(
-                        "select has_table_privilege(%s,%s,%s)",
-                        (role, f"public.{view}", privilege),
-                    ).fetchone()["has_table_privilege"]
+                    "select has_function_privilege(%s,%s,'EXECUTE')", (role, fn),
+                ).fetchone()["has_function_privilege"] is (role == "authenticated")
         with connection.transaction():
             connection.execute("set local role authenticated")
             connection.execute("select set_config('request.jwt.claim.sub',%s,true)",
                                (str(principal.user_id),))
-            rows = connection.execute("select * from public.wallet_balance_view").fetchall()
+            rows = connection.execute("select * from public.rpg_wallet_balance()").fetchall()
             assert len(rows) == 1 and rows[0]["available_milli"] == 311
             connection.execute("select set_config('request.jwt.claim.sub',%s,true)",
                                (str(other.user_id),))
-            assert connection.execute("select * from public.wallet_balance_view").fetchall() == []
+            assert connection.execute("select * from public.rpg_wallet_balance()").fetchall() == []
             with pytest.raises(psycopg.Error):
                 with connection.transaction():
                     connection.execute("insert into app.wallet_accounts(owner_id) values (%s)",

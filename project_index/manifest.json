@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "7a792e4dfefbc24e872cb8f05f0d27de1c2e0189",
+  "commit_sha": "3aa258a2d0ef4139855acbed3158ef984430e88f",
   "edge_counts": {
-    "calls": 9216,
-    "contains": 458,
-    "defines": 5554,
-    "imports": 972,
-    "likely_test_for": 598,
+    "calls": 9439,
+    "contains": 468,
+    "defines": 5676,
+    "imports": 980,
+    "likely_test_for": 599,
     "route_to": 50
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:4546cb6aa6a5d6972fa0cd1a94abeeb2fa53b739c769648398438df44ea5ad03",
+  "graph_hash": "sha256:9846629403c611c226c6dd74155a95ea851d1d6864c51fb002612d7c15fb2249",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -192,6 +192,14 @@
     "scripts/restore_local.py",
     "scripts/run_llm_contract_gate.py",
     "scripts/smoke_local_profile.py",
+    "scripts/staging/__init__.py",
+    "scripts/staging/auth_config.py",
+    "scripts/staging/backup_restore.py",
+    "scripts/staging/common.py",
+    "scripts/staging/migrations.py",
+    "scripts/staging/schema_diff.py",
+    "scripts/staging/smoke_ab.py",
+    "scripts/staging/synthetic_data.py",
     "scripts/start_local_api.py",
     "scripts/validate_content.py",
     "scripts/validate_holdout_aggregate.py",
@@ -483,6 +491,8 @@
     "tests/test_s3_blob.py",
     "tests/test_shard_pricing.py",
     "tests/test_shard_pricing_local.py",
+    "tests/test_spec191_migrations.py",
+    "tests/test_spec191_staging_tools.py",
     "tests/test_spec_index.py",
     "tests/test_spec_migration_safety.py",
     "tests/test_speech_api.py",
@@ -577,14 +587,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 500,
+    "class": 506,
     "endpoint": 50,
-    "file": 523,
-    "function": 1747,
-    "method": 440,
-    "module": 458,
-    "test": 2867
+    "file": 533,
+    "function": 1815,
+    "method": 449,
+    "module": 468,
+    "test": 2906
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:0207b628690918f5e8c4853ad1ff877f62f25ab229ca6356d5707d087c0ce2a2"
+  "source_tree_hash": "sha256:5795784d4dbdd5c10f01a13f392d2b92a4d34f001220ddcfedd85207b1db400a"
 }

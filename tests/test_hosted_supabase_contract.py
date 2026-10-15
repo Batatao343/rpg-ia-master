@@ -35,7 +35,7 @@ def test_new_profile_and_legacy_contracts() -> None:
     assert (new.auth_mode, new.blob_store, new.game_store) == (
         "supabase", "supabase", "postgres",
     )
-    assert (new.db_pool_min_size, new.db_pool_max_size, new.db_pool_timeout) == (0, 1, 5.0)
+    assert (new.db_pool_min_size, new.db_pool_max_size, new.db_pool_timeout) == (0, 1, 10.0)
     assert "SENTINEL" not in repr(new)
 
     assert RuntimeConfig.from_env({}).profile == "legacy"
@@ -148,7 +148,8 @@ def test_hosted_pool_settings_and_backend_validation_before_pool(monkeypatch: py
     from infrastructure import postgres, runtime
 
     env = {**hosted_env(), "RPG_DB_POOL_MIN_SIZE": "0", "RPG_DB_POOL_MAX_SIZE": "2",
-           "RPG_DB_POOL_TIMEOUT_SECONDS": "2.5"}
+           "RPG_DB_POOL_TIMEOUT_SECONDS": "2.5",
+           "RPG_DB_CONNECT_TIMEOUT_SECONDS": "1"}
     config = RuntimeConfig.from_env(env)
     assert (config.db_pool_min_size, config.db_pool_max_size, config.db_pool_timeout) == (0, 2, 2.5)
 
@@ -247,7 +248,8 @@ def test_hosted_runtime_wires_supabase_auth_storage_and_single_pool(monkeypatch:
     built = runtime.build_database_runtime(RuntimeConfig.from_env(hosted_env()))
     assert len(seen) == 1
     assert seen[0][1] == {
-        "min_size": 0, "max_size": 1, "timeout": 5.0, "transaction_pooler": True,
+        "min_size": 0, "max_size": 1, "timeout": 10.0, "transaction_pooler": True,
+        "connect_timeout": 3.0,
     }
     assert isinstance(built.identity_verifier, SupabaseIdentityProvider)
     assert isinstance(built.blob_store, SupabaseBlobStore)
@@ -303,3 +305,43 @@ def test_cloud_doctor_is_read_only_and_redacts_secrets(capsys: pytest.CaptureFix
     })
     assert multi_host["status"] == "invalid"
     assert multi_host["checks"]["dsn_shape"] == "invalid"
+
+
+def test_connect_timeout_defaults_and_bounds() -> None:
+    hosted = RuntimeConfig.from_env(hosted_env())
+    assert (hosted.db_connect_timeout, hosted.db_pool_timeout) == (3.0, 10.0)
+    assert hosted.db_pool_timeout > 2 * hosted.db_connect_timeout
+    local = RuntimeConfig.from_env({
+        "RPG_RUNTIME_PROFILE": "local", "DATABASE_URL": "postgresql://localhost/postgres",
+    })
+    assert (local.db_connect_timeout, local.db_pool_timeout) == (5.0, 5.0)
+    custom = RuntimeConfig.from_env({**hosted_env(), "RPG_DB_CONNECT_TIMEOUT_SECONDS": "4"})
+    assert custom.db_connect_timeout == 4.0
+
+
+@pytest.mark.parametrize("override", [
+    {"RPG_DB_CONNECT_TIMEOUT_SECONDS": "0.5"},
+    {"RPG_DB_CONNECT_TIMEOUT_SECONDS": "31"},
+    {"RPG_DB_CONNECT_TIMEOUT_SECONDS": "abc"},
+    {"RPG_DB_CONNECT_TIMEOUT_SECONDS": "5", "RPG_DB_POOL_TIMEOUT_SECONDS": "10"},
+    {"RPG_DB_POOL_TIMEOUT_SECONDS": "6"},
+])
+def test_connect_timeout_rejects_invalid(override: dict[str, str]) -> None:
+    with pytest.raises(ValueError):
+        RuntimeConfig.from_env({**hosted_env(), **override})
+
+
+def test_pool_receives_connect_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
+    from infrastructure import postgres
+
+    seen: dict = {}
+
+    def fake_pool(**kw):
+        seen.update(kw)
+        return object()
+
+    monkeypatch.setattr(postgres, "ConnectionPool", fake_pool)
+    postgres.PostgresPool("postgresql://u@h/db", transaction_pooler=True, connect_timeout=3)
+    assert seen["kwargs"]["connect_timeout"] == 3
+    postgres.PostgresPool("postgresql://u@h/db")
+    assert seen["kwargs"]["connect_timeout"] == 5

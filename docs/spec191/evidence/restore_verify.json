@@ -1,0 +1,23 @@
+{
+  "all_app_tables_compared": 27,
+  "objects_expected": 4,
+  "objects_extra": [],
+  "objects_hash_mismatch": [],
+  "objects_missing": [],
+  "ok": true,
+  "row_mismatch": {},
+  "sha256_of_each_object_matched_from_local_storage_download": true,
+  "source": "manual transcription of command output",
+  "synthetic_rows": {
+    "app.games": 2,
+    "app.jobs": 2,
+    "app.memory_documents": 2
+  },
+  "target": "local lab 127.0.0.1:55322 (supabase_admin for pg_restore); source staging export",
+  "timing_seconds": {
+    "db_reset_from_zero": 31.5,
+    "restore_db_plus_objects": 2.55,
+    "rto_total": 35.1,
+    "verify": 1.01
+  }
+}

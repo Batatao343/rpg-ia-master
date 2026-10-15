@@ -1,0 +1,15 @@
+{
+  "command": "npx supabase db reset (project_id rpg-ia-master-local)",
+  "lab_quirk": "storage-api v1.69.11 uploads fail with 42P10 (ON CONFLICT (name,bucket_id) without matching unique index after storage migration 72); restore proof used a lab-only unique index, removed by the final reset",
+  "migrations_applied": 18,
+  "migrations_applied_first_runs": 17,
+  "note": "an 18th migration (google_play_purchases) was added by a concurrent change before the final run",
+  "ok": true,
+  "reset_seconds": [
+    141,
+    32,
+    31
+  ],
+  "seed": "supabase/seed.sql applied",
+  "source": "manual transcription of command output"
+}

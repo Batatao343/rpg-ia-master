@@ -178,6 +178,7 @@ class RuntimeConfig:
     db_pool_min_size: int = 0
     db_pool_max_size: int = 4
     db_pool_timeout: float = 5.0
+    db_connect_timeout: float = 5.0
 
     @classmethod
     def from_env(cls, env: Mapping[str, str] | None = None) -> "RuntimeConfig":
@@ -198,9 +199,15 @@ class RuntimeConfig:
             pool_max = int(values.get(
                 "RPG_DB_POOL_MAX_SIZE", "1" if profile == "hosted-supabase" else "4",
             ))
-            pool_timeout = float(values.get("RPG_DB_POOL_TIMEOUT_SECONDS", "5"))
+            pooled = profile in {"hosted", "hosted-supabase"}
+            pool_timeout = float(values.get(
+                "RPG_DB_POOL_TIMEOUT_SECONDS", "10" if profile == "hosted-supabase" else "5",
+            ))
+            connect_timeout = float(values.get(
+                "RPG_DB_CONNECT_TIMEOUT_SECONDS", "3" if pooled else "5",
+            ))
         except ValueError:
-            raise ValueError("RPG_DB_POOL_* exige limites numéricos válidos") from None
+            raise ValueError("RPG_DB_POOL_*/RPG_DB_CONNECT_TIMEOUT_SECONDS exige limites numéricos válidos") from None
         config = cls(
             profile=profile,
             game_store=values.get("RPG_GAME_STORE", selected[0]).strip().lower(),
@@ -220,6 +227,7 @@ class RuntimeConfig:
             db_pool_min_size=pool_min,
             db_pool_max_size=pool_max,
             db_pool_timeout=pool_timeout,
+            db_connect_timeout=connect_timeout,
         )
         config.validate()
         return config
@@ -257,6 +265,13 @@ class RuntimeConfig:
                     or self.db_pool_max_size < 1
                     or not 0.1 <= self.db_pool_timeout <= 30):
                 raise ValueError("RPG_DB_POOL_* fora dos limites seguros")
+            if not 1 <= self.db_connect_timeout <= 30:
+                raise ValueError("RPG_DB_CONNECT_TIMEOUT_SECONDS fora de 1..30")
+            if (self.profile == "hosted-supabase"
+                    and self.db_pool_timeout <= 2 * self.db_connect_timeout):
+                raise ValueError(
+                    "RPG_DB_POOL_TIMEOUT_SECONDS deve exceder 2x RPG_DB_CONNECT_TIMEOUT_SECONDS "
+                    "(um failover de IP do pooler precisa caber)")
         if self.profile in {"hosted", "hosted-supabase"}:
             if _unsafe_hosted_host(self.bind_host):
                 raise ValueError(f"perfil {self.profile} exige bind de serviço explícito")
@@ -361,6 +376,7 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
         max_size=config.db_pool_max_size,
         timeout=config.db_pool_timeout,
         transaction_pooler=config.profile == "hosted-supabase",
+        connect_timeout=config.db_connect_timeout,
     )
     try:
         if config.blob_store == "supabase":
@@ -425,6 +441,20 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
     except Exception:
         pool.close()
         raise
+
+
+def apply_serverless_defaults(env: "os._Environ[str] | dict[str, str] | None" = None) -> str | None:
+    """SPEC-192: em Vercel (FS somente leitura salvo /tmp) o perfil hosted-* grava
+    caches de runtime em /tmp. Respeita override explícito; devolve o diretório
+    aplicado (ou None se nada mudou)."""
+    env = os.environ if env is None else env
+    profile = str(env.get("RPG_RUNTIME_PROFILE", "legacy")).strip().lower()
+    if not profile.startswith("hosted") or not env.get("VERCEL"):
+        return None
+    if env.get("RPG_RUNTIME_CACHE_DIR"):
+        return None
+    env["RPG_RUNTIME_CACHE_DIR"] = "/tmp/rpg-runtime"
+    return "/tmp/rpg-runtime"
 
 
 def build_runtime(config: RuntimeConfig | None = None) -> InfrastructureRuntime:

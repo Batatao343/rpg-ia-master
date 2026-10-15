@@ -1,5 +1,25 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **15/10 — SPEC-191 `done`: Supabase staging remoto certificado (execução Claude).**
+> Execução migrou do Codex para Claude Code; equivalência de modelos aprovada pelo
+> usuário em [docs/planos/equivalencia-modelos-claude.md](docs/planos/equivalencia-modelos-claude.md)
+> (Sol/Astra→Opus, Terra→Sonnet, Luna→Haiku). Staging = projeto existente
+> `rpg-ia-master` (`uzeagzcyvxzrpjgrhaql`, sa-east-1, Free), zerado com aprovação
+> explícita (desvio R2 documentado). 17 migrations aplicadas com histórico
+> reparado para as versões dos arquivos; nova migration troca as views de wallet
+> `security_definer` por funções definer gated (`rpg_wallet_balance/history`) —
+> Security Advisor **0 ERROR**. Auth: confirmação de email, Turnstile nativo
+> (chave de teste Cloudflare), rate limits; SMTP custom/limite de email, chaves
+> Turnstile reais, backups gerenciados/PITR e role de menor privilégio viraram
+> gates da SPEC-197. Smoke A/B real: RLS, Storage privado + signed URL com
+> expiração, pgvector, wallet RPC, CAPTCHA nativo e pooler/SSL verdes. Backup →
+> restore em lab descartável (reset do zero, pgTAP 14/14) bate 27 tabelas + 4
+> checksums, RTO ~35 s; schema diff staging×lab vazio. Achado: um IP do Supavisor
+> trava o handshake de forma intermitente; runtime agora usa
+> `RPG_DB_CONNECT_TIMEOUT_SECONDS` 3 s + pool 10 s (pior caso ~3,2 s, zero erro).
+> Revisão Opus independente em duas rodadas. Ferramentas em `scripts/staging/`;
+> evidências em [docs/spec191/](docs/spec191/README.md). Próxima: SPEC-192.
+
 > **14/10 — publicação na `main` e ajuste do audit local.** O histórico até
 > SPEC-190 `done` e o preparo documental da SPEC-191 foram publicados por
 > avanço direto, sem force push. O build Vite e a suíte Python offline

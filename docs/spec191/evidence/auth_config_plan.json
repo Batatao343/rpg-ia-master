@@ -1,0 +1,40 @@
+{
+  "applied": false,
+  "diff": {
+    "rate_limit_anonymous_users": {
+      "from": 30,
+      "to": 10
+    },
+    "rate_limit_email_sent": {
+      "from": 2,
+      "to": 10
+    },
+    "rate_limit_verify": {
+      "from": 30,
+      "to": 60
+    },
+    "security_captcha_enabled": {
+      "from": false,
+      "to": true
+    },
+    "security_captcha_provider": {
+      "from": "hcaptcha",
+      "to": "turnstile"
+    },
+    "security_captcha_secret": {
+      "from": "<write-only>",
+      "to": "[REDACTED]"
+    },
+    "site_url": {
+      "from": "http://localhost:3000",
+      "to": "https://rpg-ia-master-staging.vercel.app"
+    },
+    "uri_allow_list": {
+      "from": "",
+      "to": "https://rpg-ia-master-staging.vercel.app/**,https://rpg-ia-master-staging-*.vercel.app/**,http://localhost:5173/**"
+    }
+  },
+  "mode": "plan",
+  "project_ref": "uzeagzcyvxzrpjgrhaql",
+  "turnstile_test_keys": true
+}
