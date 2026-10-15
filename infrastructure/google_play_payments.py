@@ -178,7 +178,22 @@ class PostgresPurchaseStore:
                      sha, token, order_id, when, Jsonb(facts.snapshot())))
             elif row["token_sha256"] != sha or row["owner_id"] != owner_id:
                 raise GooglePlayError("google_play_token_conflict")
+        self._reconcile_order(order_id)
         return self.get_by_token(sha)
+
+    def _reconcile_order(self, order_id) -> None:
+        """Best-effort SPEC-195 pass (a void may have arrived first); the cron retries on failure."""
+        try:
+            from infrastructure.reconciliation import PostgresStore
+            with self.pool.connection() as db:  # nothing to apply unless a void/fee already arrived
+                waiting = db.execute("select 1 from app.purchase_reconciliation_events where "
+                                     "provider='google_play' and purchase_ref=%s limit 1", (order_id,)).fetchone()
+            if waiting:
+                PostgresStore(self.pool).reconcile("google_play", order_id)
+        except Exception as exc:  # never fail a fulfilled purchase on a recoverable pass
+            import logging  # error class only: no ids/amounts/PII
+            logging.getLogger("rpg.reconciliation").warning(
+                "immediate_reconcile_failed error=%s", type(exc).__name__)
 
     def set_state(self, token_sha, state):
         with self.pool.connection() as db, db.transaction():

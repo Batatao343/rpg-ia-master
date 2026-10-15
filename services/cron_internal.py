@@ -118,3 +118,38 @@ def cron_operations(request: Request):
         from services.operation_recovery import recover_expired
         return {**recover_expired(_runtime().game_store.pool, 50), "failed": 0}
     return _run("operations", task)
+
+
+def _reconciler():
+    """SPEC-195 job wiring; Google parts are optional when Play is not configured."""
+    from infrastructure.google_play_payments import GooglePlayPurchases, PostgresPurchaseStore
+    from infrastructure.reconciliation import PostgresStore, Reconciler
+    from services.google_play import GooglePlayClient, GooglePlayError, GooglePlaySettings
+    pool = _runtime().game_store.pool
+    try:
+        client = GooglePlayClient(GooglePlaySettings.from_env())
+        purchases = GooglePlayPurchases(PostgresPurchaseStore(pool), client)
+    except GooglePlayError:
+        client = purchases = None
+    return Reconciler(PostgresStore(pool), client, purchases)
+
+
+@router.post("/reconciliation")
+def cron_reconciliation(request: Request):
+    authorize(request)
+
+    def task():
+        from services.google_play import GooglePlayError
+        job = _reconciler()
+        google_new, google_error = 0, 0
+        try:  # a Google outage must not block Stripe/parked reconciliation
+            google_new = job.poll_google_voided()
+        except GooglePlayError:
+            google_error = 1
+        result = job.reconcile_batch(int(os.getenv("RPG_CRON_MAX_RECONCILE", "100")))
+        from observability.metrics import metrics
+        for status in ("parked", "orphaned"):
+            metrics.set_gauge("rpg_reconciliation_events", {"status": status}, result[f"{status}_total"])
+        return {**result, "google_voided_new": google_new, "google_poll_errors": google_error,
+                "failed": result["failed"] + google_error}
+    return _run("reconciliation", task)

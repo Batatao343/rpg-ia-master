@@ -84,6 +84,17 @@ def event(case, order, *, kind="checkout.session.completed", paid=True, eid=None
             "livemode": False, "data": {"object": obj}}
 
 
+def debt(case):
+    """Outstanding SPEC-195 refund debt (open - settle - release - forgive)."""
+    return int(case.db.execute("select coalesce(sum(debt_delta),0) n from app.wallet_debt_entries "
+                               "where owner_id=%s", (case.owner.user_id,)).fetchone()["n"])
+
+
+def entries(case, kind):
+    return int(case.db.execute("select coalesce(sum(amount_milli),0) n from app.wallet_entries "
+                               "where owner_id=%s and entry_type=%s", (case.owner.user_id, kind)).fetchone()["n"])
+
+
 def deliver(case, item):
     return case.repo.accept_event(item, body_sha256=hashlib.sha256(str(item).encode()).hexdigest())
 
@@ -152,8 +163,16 @@ def test_refund_keeps_purchase_and_audits_spent_funds(payment_case, spent):
     deliver(c, refund)
     deliver(c, refund)
     deliver(c, event(c, order))
-    assert c.repo.wallet.balance(c.owner).available_milli == (11 if spent else 0)
-    assert c.repo.order(c.owner, order["order_id"])["status"] == ("reconciliation_required" if spent else "refunded")
+    # SPEC-195 (V1/V2): refund -> normalized event queued -> reconciler claws back what is
+    # still available (311 or 11) and records the unrecoverable remainder as debt (0 or 300).
+    assert c.repo.wallet.balance(c.owner).available_milli == 0
+    assert debt(c) == (300 if spent else 0)
+    assert entries(c, "clawback") == (11 if spent else 311)
+    assert c.repo.order(c.owner, order["order_id"])["status"] == "refunded"
+    assert c.db.execute("select outcome from app.payment_financial_events").fetchone()["outcome"] == "queued_reconciliation"
+    # money conservation: purchase + adjustments - clawback == available
+    assert c.db.execute("select sum(available_delta) n from app.wallet_entries where owner_id=%s",
+                        (c.owner.user_id,)).fetchone()["n"] == 0
     assert c.db.execute("select count(*) n from app.wallet_entries where entry_type='purchase' and owner_id=%s", (c.owner.user_id,)).fetchone()["n"] == 1
     assert c.db.execute("select count(*) n from app.payment_financial_events").fetchone()["n"] == 1
 
@@ -205,10 +224,14 @@ def test_dispute_reordered_and_closed_preserves_reversal_and_hold(payment_case, 
     closed["data"]["object"].update(id="du_fixture", status="won")
     deliver(c, closed)
     deliver(c, event(c, order))
-    assert c.repo.wallet.balance(c.owner).available_milli == 0
-    assert c.repo.order(c.owner, order["order_id"])["status"] == "reconciliation_required"
+    # SPEC-195 (V6): the final fact is "won" whatever the arrival order -> hold released by
+    # compensating entries (history is never rewritten), full balance back, no debt.
+    assert c.repo.wallet.balance(c.owner).available_milli == 311
+    assert debt(c) == 0
+    assert entries(c, "clawback") == entries(c, "claw_release")
+    assert c.repo.order(c.owner, order["order_id"])["status"] == "paid"
     assert c.db.execute("select count(*) n from app.payment_financial_events where kind like 'dispute%'").fetchone()["n"] == 2
-    assert c.db.execute("select count(*) n from app.wallet_entries where owner_id=%s and entry_type='reversal'", (c.owner.user_id,)).fetchone()["n"] == 1
+    assert c.db.execute("select count(*) n from app.wallet_entries where owner_id=%s and entry_type='reversal'", (c.owner.user_id,)).fetchone()["n"] == 0
 
 
 def test_partial_refund_is_audited_and_never_silently_rounded(payment_case):
@@ -220,9 +243,12 @@ def test_partial_refund_is_audited_and_never_silently_rounded(payment_case):
     deliver(c, item)
     deliver(c, item)
     deliver(c, event(c, order))
-    assert c.repo.wallet.balance(c.owner).available_milli == 311
-    assert c.repo.order(c.owner, order["order_id"])["status"] == "reconciliation_required"
-    assert c.db.execute("select outcome from app.payment_financial_events").fetchone()["outcome"] == "partial_requires_reconciliation"
+    # SPEC-195 (V4): 500/1050c of 311 = floor(148.09) = 148 clawed back, never silently rounded
+    # up; the purchase stays paid and the fact is queued for the reconciler.
+    assert c.repo.wallet.balance(c.owner).available_milli == 311 - 148
+    assert debt(c) == 0
+    assert c.repo.order(c.owner, order["order_id"])["status"] == "paid"
+    assert c.db.execute("select outcome from app.payment_financial_events").fetchone()["outcome"] == "queued_reconciliation"
 
 
 def test_facts_immutable_private_and_order_owner_scoped_in_rls(payment_case):
@@ -281,15 +307,17 @@ def test_inquiry_and_prevented_dispute_do_not_debit_wallet(payment_case, status)
     assert c.db.execute("select outcome from app.payment_financial_events").fetchone()["outcome"] == "inquiry_" + status
 
 
-@pytest.mark.parametrize("amount,currency", [(1100, "brl"), (1050, "usd"), (900, "eur")])
-def test_dispute_fx_or_amount_difference_is_audited_without_rejecting_provider(payment_case, amount, currency):
+@pytest.mark.parametrize("amount,currency,remaining", [(1100, "brl", 0), (1050, "usd", 0), (900, "eur", 311 - 266)])
+def test_dispute_fx_or_amount_difference_is_audited_without_rejecting_provider(payment_case, amount, currency, remaining):
     c = payment_case
     order = checkout(c)
     deliver(c, event(c, order))
     item = event(c, order, kind="charge.dispute.created")
     item["data"]["object"].update(id="du_fx", status="needs_response", amount=amount, currency=currency)
     deliver(c, item)
-    assert c.repo.wallet.balance(c.owner).available_milli == 311
-    assert c.repo.order(c.owner, order["order_id"])["status"] == "reconciliation_required"
+    # SPEC-195: reversed = min(gross, disputed amount); target = floor(311 * reversed / 1050).
+    assert c.repo.wallet.balance(c.owner).available_milli == remaining
+    assert debt(c) == 0
+    assert c.repo.order(c.owner, order["order_id"])["status"] in ("disputed", "reconciliation_required")
     fact = c.db.execute("select amount_cents,currency from app.payment_financial_events").fetchone()
     assert (fact["amount_cents"],fact["currency"]) == (amount,currency)

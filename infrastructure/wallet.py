@@ -21,11 +21,28 @@ from services.shard_pricing import (
     MAX_SHARD_MILLI, PricingUnavailable, quote_attempt_ceiling,
     quote_usage, version_from_record,
 )
+from services.purchase_reconciliation import FinancialHold as _PureFinancialHold
 from services.usage_metering import UsageEvent, reserve_next_attempt
+from infrastructure.wallet_debt import owner_debt, settle_owner_debt
 
 
 class WalletConflict(ValueError):
     pass
+
+
+class FinancialHold(WalletConflict, _PureFinancialHold):
+    """SPEC-195: unsettled refund debt fences new paid operations."""
+
+
+@contextmanager
+def _hold_guard():
+    """Map the DB financial-hold trigger (SQLSTATE 42501 'financial_hold') to the app error."""
+    try:
+        yield
+    except Exception as exc:
+        if getattr(exc, "sqlstate", None) == "42501" and "financial_hold" in str(exc):
+            raise FinancialHold("financial_hold: dívida de reembolso pendente") from exc
+        raise
 
 
 class InsufficientShards(WalletConflict):
@@ -161,6 +178,11 @@ class PostgresWallet:
                 "where owner_id=%s returning available_milli,reserved_milli",
                 (amount, principal.user_id),
             ).fetchone()
+            # SPEC-195: a new purchase settles refund debt first.
+            if settle_owner_debt(connection, principal.user_id):
+                row = connection.execute(
+                    "select available_milli,reserved_milli from app.wallet_accounts where owner_id=%s",
+                    (principal.user_id,)).fetchone()
             return WalletBalance(int(row["available_milli"]), int(row["reserved_milli"]))
 
     def refund_purchase(self, principal: Principal, *, purchase_entry_id: UUID,
@@ -202,7 +224,8 @@ class PostgresWallet:
             return WalletBalance(int(row["available_milli"]), int(row["reserved_milli"]))
 
     def adjust_admin(self, principal: Principal, *, adjustment_id: str,
-                     signed_milli: int, actor_id: UUID, reason: str) -> WalletBalance:
+                     signed_milli: int, actor_id: UUID, reason: str,
+                     connection=None) -> WalletBalance:
         """Audited manual correction with a stable replay key and hard no-overdraft."""
         _reference(adjustment_id)
         if (isinstance(signed_milli, bool) or not isinstance(signed_milli, int)
@@ -212,7 +235,8 @@ class PostgresWallet:
         if (not isinstance(actor_id, UUID) or not isinstance(reason, str)
                 or not 0 < len(reason) <= 500 or reason != reason.strip()):
             raise WalletConflict("ator/justificativa de ajuste ausente")
-        with self.pool.connection() as connection, connection.transaction():
+        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        with scope as connection, connection.transaction():
             account = self._locked_account(connection, principal.user_id)
             prior = connection.execute(
                 "select available_delta,actor_id,reason from app.wallet_entries "
@@ -279,17 +303,20 @@ class PostgresWallet:
                         or prior["usage_operation_id"] != usage_operation_id):
                     raise WalletConflict("reservation replay divergente")
                 return _reservation(prior)
+            if owner_debt(connection, principal.user_id) > 0:
+                raise FinancialHold("financial_hold: dívida de reembolso pendente")
             if int(account["available_milli"]) < ceiling_milli:
                 raise InsufficientShards("saldo disponível insuficiente")
             reservation_id = uuid4()
-            connection.execute(
-                """insert into app.wallet_reservations
-                (reservation_id,owner_id,reference_type,reference_id,usage_operation_id,
-                 pricing_version_id,fence_token,ceiling_milli)
-                values (%s,%s,%s,%s,%s,%s,%s,%s)""",
-                (reservation_id, principal.user_id, reference_type, reference_id,
-                 usage_operation_id, pricing_version_id, fence_token, ceiling_milli),
-            )
+            with _hold_guard():
+                connection.execute(
+                    """insert into app.wallet_reservations
+                    (reservation_id,owner_id,reference_type,reference_id,usage_operation_id,
+                     pricing_version_id,fence_token,ceiling_milli)
+                    values (%s,%s,%s,%s,%s,%s,%s,%s)""",
+                    (reservation_id, principal.user_id, reference_type, reference_id,
+                     usage_operation_id, pricing_version_id, fence_token, ceiling_milli),
+                )
             connection.execute(
                 "update app.wallet_accounts set available_milli=available_milli-%s, "
                 "reserved_milli=reserved_milli+%s,updated_at=now() where owner_id=%s",
@@ -350,14 +377,15 @@ class PostgresWallet:
             ).fetchone()["total"]
             if int(spent) + liability > int(row["ceiling_milli"]):
                 raise SpendCeilingExceeded("próxima tentativa excede teto da reserva")
-            connection.execute(
-                """insert into app.wallet_attempt_tickets
-                (ticket_id,reservation_id,owner_id,attempt_key,provider,model,
-                 max_liability_milli,fence_token)
-                values (%s,%s,%s,%s,%s,%s,%s,%s)""",
-                (uuid4(), reservation_id, principal.user_id, attempt_key,
-                 provider, model, liability, fence_token),
-            )
+            with _hold_guard():
+                connection.execute(
+                    """insert into app.wallet_attempt_tickets
+                    (ticket_id,reservation_id,owner_id,attempt_key,provider,model,
+                     max_liability_milli,fence_token)
+                    values (%s,%s,%s,%s,%s,%s,%s,%s)""",
+                    (uuid4(), reservation_id, principal.user_id, attempt_key,
+                     provider, model, liability, fence_token),
+                )
             connection.execute(
                 "update app.wallet_reservations set status='effect_started' "
                 "where reservation_id=%s", (reservation_id,),
@@ -385,12 +413,17 @@ class PostgresWallet:
             "reserved_milli=reserved_milli-%s,updated_at=now() where owner_id=%s",
             (released, ceiling, owner_id),
         )
-        return _reservation(connection.execute(
+        result = _reservation(connection.execute(
             """update app.wallet_reservations set settled_milli=%s,released_milli=%s,
                status=%s,usage_event_ids=%s,reconciliation_reason=%s,finished_at=now()
                where reservation_id=%s returning *""",
             (settled, released, status, list(usage_ids), reason, reservation_id),
         ).fetchone())
+        if released:
+            # SPEC-195 rule 5: returned credit pays refund debt (settlement never DEPENDS on a
+            # release, it merely also runs here so a hold cannot outlive available credit).
+            settle_owner_debt(connection, owner_id)
+        return result
 
     def admit_image_attempt(self, principal: Principal, reservation_id: UUID, *,
                             quote_id: UUID, generation_id: UUID, connection) -> None:
@@ -408,12 +441,13 @@ class PostgresWallet:
                 or row["pricing_version_id"] != quote["pricing_version_id"]
                 or row["usage_operation_id"] != generation_id):
             raise UncertainEffect("reserva de imagem não está disponível")
-        connection.execute(
-            """insert into app.wallet_attempt_tickets
-            (ticket_id,reservation_id,owner_id,attempt_key,provider,model,max_liability_milli,fence_token)
-            values (%s,%s,%s,'image:1','openai',%s,%s,%s)""",
-            (uuid4(), reservation_id, principal.user_id, quote["model"], quote["credits_milli"], quote_id),
-        )
+        with _hold_guard():
+            connection.execute(
+                """insert into app.wallet_attempt_tickets
+                (ticket_id,reservation_id,owner_id,attempt_key,provider,model,max_liability_milli,fence_token)
+                values (%s,%s,%s,'image:1','openai',%s,%s,%s)""",
+                (uuid4(), reservation_id, principal.user_id, quote["model"], quote["credits_milli"], quote_id),
+            )
         connection.execute("update app.wallet_reservations set status='effect_started' where reservation_id=%s",
                            (reservation_id,))
 

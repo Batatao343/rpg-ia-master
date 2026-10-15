@@ -3435,7 +3435,7 @@ specs:
   lineage_note: Imported approved v5 package; implementation not started
 - id: SPEC-195
   slug: cross-channel-reconciliation-refunds
-  status: approved
+  status: done
   path: specs/SPEC-195-cross-channel-reconciliation-refunds.md
   created_commit: null
   created_at: '2026-10-02'

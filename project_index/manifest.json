@@ -1,13 +1,13 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "6402e6a877da1d83b2c3ad3c2b1f33ece7f23e6c",
+  "commit_sha": "d1b4d120a09d7ab71a4252cf4c980a9181d7a5d4",
   "edge_counts": {
-    "calls": 9775,
-    "contains": 493,
-    "defines": 5944,
-    "imports": 1017,
-    "likely_test_for": 615,
-    "route_to": 56
+    "calls": 10231,
+    "contains": 501,
+    "defines": 6136,
+    "imports": 1045,
+    "likely_test_for": 639,
+    "route_to": 57
   },
   "excluded_prefixes": [
     ".agents",
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:d1b91d31b12ce132dd35371e52a9325d774f844a35cd55a2852f1f15bd0069a8",
+  "graph_hash": "sha256:c9b8db2f095582303bc1fa021c0a6574520b5dfa2cdc21097430cbe0d27e075a",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -121,6 +121,7 @@
     "infrastructure/postgres_jobs.py",
     "infrastructure/postgres_turns.py",
     "infrastructure/pricing_catalog.py",
+    "infrastructure/reconciliation.py",
     "infrastructure/request_context.py",
     "infrastructure/runtime.py",
     "infrastructure/s3_blob.py",
@@ -131,6 +132,7 @@
     "infrastructure/testing.py",
     "infrastructure/usage_events.py",
     "infrastructure/wallet.py",
+    "infrastructure/wallet_debt.py",
     "inventory.py",
     "llm_setup.py",
     "main.py",
@@ -161,6 +163,7 @@
     "project_index/query.py",
     "pyproject.toml",
     "rag.py",
+    "scripts/admin_wallet_adjust.py",
     "scripts/audit_local_gate.py",
     "scripts/audit_local_server.py",
     "scripts/backup_local.py",
@@ -281,6 +284,7 @@
     "services/presentation_history.py",
     "services/prologue.py",
     "services/prose_guard.py",
+    "services/purchase_reconciliation.py",
     "services/quest_log.py",
     "services/reactions.py",
     "services/restore_effects.py",
@@ -514,8 +518,12 @@
     "tests/test_spec192_staging_scripts.py",
     "tests/test_spec192_vercel_env.py",
     "tests/test_spec192_vercel_packaging.py",
+    "tests/test_spec194_196_postgres_local.py",
     "tests/test_spec194_google_play.py",
     "tests/test_spec194_native_backend.py",
+    "tests/test_spec195_followups.py",
+    "tests/test_spec195_postgres_local.py",
+    "tests/test_spec195_reconciliation.py",
     "tests/test_spec_index.py",
     "tests/test_spec_migration_safety.py",
     "tests/test_speech_api.py",
@@ -620,14 +628,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 529,
-    "endpoint": 56,
-    "file": 566,
-    "function": 1909,
-    "method": 489,
-    "module": 493,
-    "test": 3017
+    "class": 545,
+    "endpoint": 57,
+    "file": 574,
+    "function": 1936,
+    "method": 535,
+    "module": 501,
+    "test": 3120
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:dadb2167eb673e7e58d23a28b05f556d7ae8ba74530e6a7971f7e3937f3fadbc"
+  "source_tree_hash": "sha256:4723a7bae48676a95657341cdae9b851cce940d1c2a660b28cd375e88e44fb7c"
 }

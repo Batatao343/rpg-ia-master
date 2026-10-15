@@ -89,7 +89,7 @@ class ProductPurchase:
                    num("purchaseType"))
 
     def snapshot(self) -> dict:
-        """Sanitized provider state persisted with the purchase (no token/PII)."""
+        """Sanitized state persisted for SPEC-195 reconciliation (no token/PII)."""
         return {"purchase_state": self.purchase_state, "consumption_state": self.consumption_state,
                 "acknowledgement_state": self.acknowledgement_state, "quantity": self.quantity,
                 "purchase_type": self.purchase_type}
@@ -189,3 +189,41 @@ class GooglePlayClient:
 
     def acknowledge(self, product_id: str, token: str) -> None:
         self._call("POST", product_id, token, ":acknowledge", body={})
+
+    def list_voided_events(self, start_ms: int | None = None, end_ms: int | None = None,
+                           *, max_pages: int = 5, page_size: int = 1000):
+        """purchases.voidedpurchases.list -> normalized SPEC-195 events.
+
+        GET .../applications/{package}/purchases/voidedpurchases. startTime cannot be older than
+        30 days (Google); the poll window therefore defaults to the last 30 days and pages by
+        tokenPagination.nextPageToken, sent back as the `token` query parameter with `maxResults`
+        (the REST reference lists them as pageSelection.*; the wire names are the bare ones).
+        type=0 (in-app only) is the default; consumables only.
+        """
+        from services.purchase_reconciliation import normalize_google_voided
+        now_ms = int(self.clock() * 1000)
+        end_ms = min(end_ms or now_ms, now_ms)
+        start_ms = max(start_ms or 0, end_ms - 30 * 86400 * 1000 + 60_000)
+        url = f"{API_ROOT}/{quote(self.settings.package_name, safe='')}/purchases/voidedpurchases"
+        params: dict = {"startTime": start_ms, "endTime": end_ms, "type": 0,
+                        "maxResults": page_size}
+        events = []
+        self.last_poll_complete = False  # True only when pagination ended before max_pages ran out
+        try:
+            with httpx.Client(transport=self.transport, timeout=15, follow_redirects=False) as client:
+                for _ in range(max_pages):
+                    response = client.get(url, headers=self._headers(client), params=params)
+                    response.raise_for_status()
+                    body = response.json()
+                    for item in body.get("voidedPurchases", []) or []:
+                        event = normalize_google_voided(item) if isinstance(item, dict) else None
+                        if event is not None:
+                            events.append(event)
+                    token = (body.get("tokenPagination") or {}).get("nextPageToken")
+                    if not token:
+                        self.last_poll_complete = True
+                        break
+                    params = {**params, "token": token}
+        except (httpx.HTTPError, ValueError, KeyError, TypeError, OSError) as exc:
+            raise GooglePlayError("google_play_unavailable") from exc
+        return events

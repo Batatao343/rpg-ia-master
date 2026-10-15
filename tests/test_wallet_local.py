@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
+import json
 import os
 import random
 from uuid import UUID, uuid4
@@ -241,10 +242,18 @@ def test_client_roles_only_see_own_views_and_cannot_write(wallet_case):
                 assert connection.execute(
                     "select has_function_privilege(%s,%s,'EXECUTE')", (role, fn),
                 ).fetchone()["has_function_privilege"] is (role == "authenticated")
+        session_id = uuid4()
+        connection.execute("insert into auth.users(id,email) values(%s,%s)",
+                           (principal.user_id, f"{principal.user_id}@example.test"))
+        connection.execute("insert into auth.sessions(id,user_id) values(%s,%s)",
+                           (session_id, principal.user_id))
         with connection.transaction():
             connection.execute("set local role authenticated")
             connection.execute("select set_config('request.jwt.claim.sub',%s,true)",
                                (str(principal.user_id),))
+            connection.execute("select set_config('request.jwt.claims',%s,true)", (
+                json.dumps({"sub": str(principal.user_id), "session_id": str(session_id),
+                            "role": "authenticated"}),))
             rows = connection.execute("select * from public.rpg_wallet_balance()").fetchall()
             assert len(rows) == 1 and rows[0]["available_milli"] == 311
             connection.execute("select set_config('request.jwt.claim.sub',%s,true)",

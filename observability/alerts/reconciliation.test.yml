@@ -1,0 +1,20 @@
+rule_files:
+  - reconciliation.yml
+evaluation_interval: 1m
+tests:
+  - name: reconciliation-orphaned
+    interval: 1m
+    input_series:
+      - series: 'rpg_reconciliation_events{status="orphaned"}'
+        values: '0x5 2x80'
+      - series: 'rpg_reconciliation_events{status="parked"}'
+        values: '9x85'
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: ReconciliationOrphaned
+        exp_alerts: []
+      - eval_time: 80m
+        alertname: ReconciliationOrphaned
+        exp_alerts:
+          - exp_labels: {severity: warning, status: orphaned}
+            exp_annotations: {summary: "reconciliation events orphaned: purchase never credited or needs manual triage (runbook: docs/spec195/README.md)"}

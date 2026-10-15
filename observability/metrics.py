@@ -29,6 +29,8 @@ LABELS = {
     "rpg_blob_operations_total": {"operation", "outcome"},
     "rpg_backup_age_seconds": {"component"},
     "rpg_auth_email_delivery_failures_total": {"action", "status_class"},
+    # SPEC-195: unresolved reconciliation events by closed status (parked | orphaned).
+    "rpg_reconciliation_events": {"status"},
 }
 
 

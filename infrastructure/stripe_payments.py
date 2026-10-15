@@ -14,7 +14,7 @@ from psycopg.types.json import Jsonb
 
 from infrastructure.contracts import Principal
 from infrastructure.pricing_catalog import quote_published_sku
-from infrastructure.wallet import InsufficientShards, PostgresWallet
+from infrastructure.wallet import PostgresWallet
 from services.shard_pricing import PricingUnavailable
 from services.stripe_checkout import StripeError, StripeSettings, checkout_url_valid
 
@@ -233,6 +233,8 @@ class StripePayments:
         # delivery; a provider outage never rolls back a verified purchase.
         if intent_for_fee:
             self.reconcile_fee(intent_for_fee)
+        if facts["payment_intent"] and (event["type"] in FINANCIAL_EVENTS or event["type"] in PAID_EVENTS):
+            self._reconcile_wallet(facts["payment_intent"])
         return {"received": True, "duplicate": previous is not None}
 
     def _checkout_event(self, db, event_id: str, kind: str, facts: dict):
@@ -286,6 +288,19 @@ class StripePayments:
                              (row["order_id"],)).fetchone()
         return row
 
+    def _reconcile_wallet(self, payment_intent: str) -> None:
+        """Best-effort immediate SPEC-195 pass; the cron job retries anything left pending."""
+        try:
+            from infrastructure.reconciliation import PostgresStore
+            store = PostgresStore(self.pool)
+            store.ingest_backlog(50)
+            store.reconcile("stripe", payment_intent)
+        except Exception as exc:  # never fail a verified webhook delivery on a recoverable pass
+            import logging  # error class only: no ids/amounts/PII in the log line
+            logging.getLogger("rpg.reconciliation").warning(
+                "immediate_reconcile_failed error=%s", type(exc).__name__)
+            return
+
     @staticmethod
     def _find_financial_order(db, facts):
         if not facts["payment_intent"]:
@@ -319,31 +334,31 @@ class StripePayments:
         if kind == "dispute_closed":
             # Won/lost facts never silently undo a debit. Restoration requires
             # an audited operator correction and keeps the prior reversal.
-            status, outcome = "reconciliation_required", "dispute_" + str(facts["dispute_status"])
+            outcome = "dispute_" + str(facts["dispute_status"])
+            # SPEC-195: won releases the hold via compensating entries; lost keeps the claw-back.
+            status = "paid" if facts["dispute_status"] in ("won", "warning_closed") else (
+                "disputed" if facts["dispute_status"] == "lost" else "reconciliation_required")
         elif kind == "dispute" and (facts["dispute_status"] is None
                 or facts["dispute_status"].startswith("warning_") or facts["dispute_status"] == "prevented"):
             status, outcome = "reconciliation_required", "inquiry_" + str(facts["dispute_status"])
-        elif amount != row["gross_cents"] or facts["currency"] != row["currency"]:
+        elif facts["currency"] != row["currency"]:
             status = "reconciliation_required"
-            outcome = "partial_requires_reconciliation" if kind == "refund" else "dispute_amount_requires_reconciliation"
+            outcome = "currency_requires_reconciliation"
         elif purchase:
-            reversed_already = db.execute("select 1 from app.wallet_entries where related_entry_id=%s "
-                                          "and entry_type in ('refund','reversal')", (purchase["entry_id"],)).fetchone()
-            if reversed_already:
-                outcome = "already_reversed"
-            else:
-                try:
-                    self.wallet.refund_purchase(
-                        Principal(row["owner_id"], "stripe", str(row["owner_id"])),
-                        purchase_entry_id=purchase["entry_id"], refund_id="stripe-order:" + str(row["order_id"]),
-                        kind="refund" if kind == "refund" else "reversal", connection=db)
-                    outcome = "wallet_reversed"
-                except InsufficientShards:
-                    status, outcome = "reconciliation_required", "spent_funds_requires_reconciliation"
+            # SPEC-195: the wallet effect (claw-back, debt, release) is applied by the
+            # idempotent reconciler from the normalized event, never by this handler.
+            outcome = "queued_reconciliation"
+            if kind == "refund" and amount < row["gross_cents"]:
+                status = row["status"]  # partial refund: purchase stays paid
         db.execute("""insert into app.payment_financial_events
             (financial_id,order_id,stripe_event_id,kind,provider_reference,amount_cents,currency,outcome)
             values (%s,%s,%s,%s,%s,%s,%s,%s)""",
             (uuid4(),row["order_id"],event_id,kind,fact_key,amount,facts["currency"],outcome))
+        if kind == "dispute" and status == "disputed" and db.execute(
+                "select 1 from app.payment_financial_events where order_id=%s and kind='dispute_closed' "
+                "and provider_reference=%s and outcome in ('dispute_won','dispute_warning_closed')",
+                (row["order_id"], reference)).fetchone():
+            status = "paid"  # a late `created` must not reopen a dispute already closed as won
         # Never downgrade a reconciliation hold by a late created/refund event.
         if row["status"] == "reconciliation_required":
             status = "reconciliation_required"

@@ -1,5 +1,13 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **15/10 — SPEC-195 `done`: reconciliação de reembolsos/disputas/revogações entre canais.** Eventos
+> Stripe e Google (`voidedpurchases`) normalizados e aplicados por um reconciliador idempotente fora de ordem;
+> saldo gasto nunca fica negativo: a diferença vira dívida/hold (`app.wallet_debt_entries`) que bloqueia novo uso
+> pago e é quitada por nova compra/crédito devolvido; disputa ganha libera por lançamentos compensatórios
+> (histórico nunca reescrito); ajuste admin só via `scripts/admin_wallet_adjust.py` (ator/motivo). Revisão
+> independente CHANGES_REQUIRED → corrigido → APPROVED_WITH_FOLLOWUPS. Cron `POST /internal/cron/reconciliation`.
+> [Evidência](docs/spec195/README.md). Próxima: SPEC-196.
+
 > **15/10 — SPEC-194 `done`: Google Play Billing (consumíveis) com verificação no servidor.** Backend:
 > `POST /account/purchases/google/verify` valida no Play Developer API (token/produto/order são dados não
 > confiáveis; conta vinculada por `obfuscatedAccountId` HMAC), credita a carteira de forma idempotente

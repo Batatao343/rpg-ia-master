@@ -47,7 +47,8 @@ def concurrent_payments():
         try:
             admin.execute("create schema " + schema)
             admin.execute("create function " + schema + ".current_owner_id() returns uuid language sql as $$ select app.current_owner_id() $$")
-            for filename in ["20261008160000_pricing_versions.sql", "20261008170000_wallet_ledger.sql", "20261013120000_stripe_checkout.sql"]:
+            for filename in ["20261008160000_pricing_versions.sql", "20261008170000_wallet_ledger.sql", "20261013120000_stripe_checkout.sql",
+                             "20261015140000_purchase_reconciliation.sql"]:
                 sql = Path("supabase/migrations", filename).read_text(encoding="utf-8")
                 admin.execute(sql.replace("app.", schema + ".").replace("public.", schema + "."))
             db = Connection(admin)

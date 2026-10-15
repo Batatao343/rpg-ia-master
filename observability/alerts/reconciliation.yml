@@ -1,0 +1,9 @@
+# SPEC-195: reconciliation events given up on (orphaned). Gauge published by POST /internal/cron/reconciliation.
+groups:
+  - name: valoria-reconciliation
+    rules:
+      - alert: ReconciliationOrphaned
+        expr: rpg_reconciliation_events{status="orphaned"} > 0
+        for: 1h
+        labels: {severity: warning}
+        annotations: {summary: "reconciliation events orphaned: purchase never credited or needs manual triage (runbook: docs/spec195/README.md)"}
