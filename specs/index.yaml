@@ -3486,7 +3486,7 @@ specs:
   lineage_note: Imported approved v5 package; implementation not started
 - id: SPEC-198
   slug: google-play-publication
-  status: approved
+  status: in-progress
   path: specs/SPEC-198-google-play-publication.md
   created_commit: null
   created_at: '2026-10-02'

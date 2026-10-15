@@ -1,6 +1,6 @@
 # SPEC-198 — Publicação Google Play
 
-> **Status:** `approved`
+> **Status:** `in-progress`
 > **Depende de:** SPEC-197 `done`
 > **EXECUTOR_MODEL obrigatório:** `Terra`
 > **EXECUTOR_EFFORT obrigatório:** `High`
@@ -60,3 +60,16 @@ Play Console artifacts + device smoke + final human approval.
 - [ ] signed AAB e signing secrets ficam fora do repo/harness logs;
 - [ ] Sol review independente aprova release evidence;
 - [ ] publicação em produção só acontece após comando/aprovação humana explícita.
+
+## Adendo 2026-10-15 - preparacao autonoma (sem Play Console)
+
+Status passa a `in-progress`: a parte que independe de conta foi feita; todo o irreversivel (criar app, package id, upload, produtos,
+service account, producao) segue pendente do usuario. Detalhes e runbook: [docs/spec198/README.md](../docs/spec198/README.md).
+
+- Pipeline de release: assinatura por env/`keystore.properties` gitignored, versao em `web/android/version.properties`,
+  `scripts/android/release_build.ps1` (AAB assinado, gate de cleartext verde, scan de segredos limpo) e `new_upload_keystore.ps1`
+  (chave de upload local fora do repo/OneDrive; custodia documentada). AAB de prova com id dev placeholder; nada enviado.
+- `scripts/android/rename_package.py` (dry-run; testado em copia temporaria) troca applicationId/namespace/pacote Java.
+- Rascunhos: `docs/spec198/store-listing.md` (pt-BR/en, IARC, plano de capturas), `data-safety.md` (fluxos, permissoes).
+- Politica do Google reconferida: closed testing 12 testers x 14 dias consecutivos para contas pessoais criadas apos 13/11/2023.
+- Criterios de aceite e gate de fechamento: todos continuam abertos.

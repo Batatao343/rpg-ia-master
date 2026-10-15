@@ -1,17 +1,40 @@
 apply plugin: 'com.android.application'
 
+// SPEC-198: version from a single source (web/android/version.properties).
+def versionProps = new Properties()
+file("$rootDir/version.properties").withInputStream { versionProps.load(it) }
+
+// SPEC-198: upload-key signing. Secrets come ONLY from env vars or a gitignored keystore.properties
+// (never committed). Env wins: RPG_UPLOAD_STORE_FILE / RPG_UPLOAD_STORE_PASSWORD / RPG_UPLOAD_KEY_ALIAS / RPG_UPLOAD_KEY_PASSWORD.
+// keystore.properties keys: storeFile, storePassword, keyAlias, keyPassword. Without them the release is built UNSIGNED.
+def ksProps = new Properties()
+def ksFile = file("$rootDir/keystore.properties")
+if (ksFile.exists()) ksFile.withInputStream { ksProps.load(it) }
+def ksVal = { String env, String key -> System.getenv(env) ?: ksProps.getProperty(key) }
+def uploadStore = ksVal('RPG_UPLOAD_STORE_FILE', 'storeFile')
+
 android {
     namespace = "dev.rpgia.valoria.staging"
     compileSdk = rootProject.ext.compileSdkVersion
     buildFeatures {
         buildConfig = true
     }
+    signingConfigs {
+        release {
+            if (uploadStore) {
+                storeFile file(uploadStore)
+                storePassword ksVal('RPG_UPLOAD_STORE_PASSWORD', 'storePassword')
+                keyAlias ksVal('RPG_UPLOAD_KEY_ALIAS', 'keyAlias')
+                keyPassword ksVal('RPG_UPLOAD_KEY_PASSWORD', 'keyPassword')
+            }
+        }
+    }
     defaultConfig {
         applicationId "dev.rpgia.valoria.staging"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode versionProps.getProperty("VERSION_CODE").toInteger()
+        versionName versionProps.getProperty("VERSION_NAME")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -26,6 +49,7 @@ android {
         }
         release {
             buildConfigField "boolean", "PLAY_BILLING_FAKE", "false"
+            if (uploadStore) signingConfig signingConfigs.release
 
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
