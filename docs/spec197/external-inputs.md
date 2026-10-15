@@ -23,7 +23,7 @@ Nenhum segredo vai neste arquivo; entregar por canal seguro (dashboard/CLI/`.env
 ## Juridico (R3)
 10. **Titular**: razao social/nome, CNPJ/CPF, endereco, encarregado (DPO).
 11. **E-mail de suporte** real e dominio (`suporte@...`), prazo de resposta, canal de status.
-12. Revisao juridica dos rascunhos de `legal/`, decisoes marcadas `<...>` (idade minima, prazo de retencao financeira, validade das Estilhas, foro) e **URLs publicadas** de privacidade/termos/reembolso/suporte.
+12. Revisao juridica dos rascunhos de `web/legal/`, decisoes marcadas `<...>` (idade minima, prazo de retencao financeira, validade das Estilhas, foro) e **URLs publicadas** de privacidade/termos/reembolso/suporte.
 
 ## Orcamento e provedores (R7)
 13. **Limites de gasto** (ver `runbooks/budget.md`): teto mensal por provedor (DeepSeek, Groq, OpenAI/STT/imagem, Jina), spend cap Supabase/Vercel, valores em R$/US$ e quem recebe os alertas (e-mail/telefone).

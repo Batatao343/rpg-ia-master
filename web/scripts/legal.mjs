@@ -1,4 +1,4 @@
-// SPEC-197 R3: renders docs/spec197/legal/*.md (RASCUNHO) into static pages at build time.
+// SPEC-197 R3: renders web/legal/*.md (RASCUNHO) into static pages at build time.
 // Output: dist/<slug>/index.html -- no inline script, same theme (links the built app stylesheet).
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -116,6 +116,6 @@ export function buildLegal({ dist, legalDir }) {
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const here = dirname(fileURLToPath(import.meta.url));
-  const written = buildLegal({ dist: join(here, '..', 'dist'), legalDir: join(here, '..', '..', 'docs', 'spec197', 'legal') });
+  const written = buildLegal({ dist: join(here, '..', 'dist'), legalDir: join(here, '..', 'legal') });
   console.log('legal pages:', written.join(', '));
 }

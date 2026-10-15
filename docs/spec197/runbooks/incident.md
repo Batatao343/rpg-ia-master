@@ -11,7 +11,7 @@ Papeis no beta pequeno: operador e comunicador = titular. Registrar linha do tem
 `docs/spec197/evidence/incident-<data>.md`.
 
 ## Comunicacao
-- Usuarios do beta: mensagem curta (o que houve, o que fazer, proxima atualizacao) pelo contato de `legal/support.md`.
+- Usuarios do beta: mensagem curta (o que houve, o que fazer, proxima atualizacao) pelo contato de `web/legal/support.md`.
 - Dados pessoais afetados: avaliar comunicacao a ANPD e aos titulares (LGPD art. 48) com apoio juridico.
 - Pagamentos: Stripe Dashboard (disputas/refunds) e Play Console; saldo/divida via `admin_wallet_adjust.py` (dry-run).
 

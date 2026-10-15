@@ -1,6 +1,6 @@
 # SPEC-198 - Rascunho de Data Safety e permissoes (Google Play)
 
-> RASCUNHO baseado no codigo/docs reais (SPEC-186/187/188/190/194/195, `llm_setup.ROUTES`, `docs/spec197/legal/privacy-policy.md`).
+> RASCUNHO baseado no codigo/docs reais (SPEC-186/187/188/190/194/195, `llm_setup.ROUTES`, `web/legal/privacy-policy.md`).
 > O formulario final so pode ser preenchido pelo titular, depois de fechar os `<...>` da politica de privacidade. Deve ser
 > identico ao que a politica publicada diz. Itens marcados CONFIRMAR dependem de decisao externa.
 

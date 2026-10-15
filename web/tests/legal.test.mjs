@@ -20,7 +20,7 @@ test('builds the four static pages: RASCUNHO banner, no inline script, cross lin
   const dist = mkdtempSync(join(tmpdir(), 'legal-'));
   mkdirSync(join(dist, 'assets'));
   writeFileSync(join(dist, 'assets', 'index-abc.css'), 'body{}');
-  const legalDir = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'docs', 'spec197', 'legal');
+  const legalDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'legal');
   assert.deepEqual(buildLegal({ dist, legalDir }), ['privacidade', 'termos', 'reembolso', 'suporte']);
   for (const p of PAGES) {
     const html = readFileSync(join(dist, p.slug, 'index.html'), 'utf8');
