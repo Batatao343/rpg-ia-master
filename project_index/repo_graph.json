@@ -1,5 +1,5 @@
 {
-  "commit_sha": "cbc5e3b8936acf1d32caaec4fd091fd5ee75d006",
+  "commit_sha": "3b8d41c3437c1fd17671a5049fc9528ae1b13749",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -2906,6 +2906,28 @@
       "type": "contains"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_image_finance.py",
+        "line": 9
+      },
+      "source": "file:tests/fakes/local_image_finance.py",
+      "target": "file:scripts/start_local_api.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_image_finance.py",
+        "line": 1
+      },
+      "source": "file:tests/fakes/local_image_finance.py",
+      "target": "module:tests.fakes.local_image_finance",
+      "type": "contains"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
@@ -3662,6 +3684,17 @@
       },
       "source": "file:tests/test_audit_browser_local.py",
       "target": "file:tests/fakes/local_auth.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_audit_browser_local.py",
+        "line": 12
+      },
+      "source": "file:tests/test_audit_browser_local.py",
+      "target": "file:tests/fakes/local_image_finance.py",
       "type": "likely_test_for"
     },
     {
@@ -25064,7 +25097,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/audit_local_gate.py",
-        "line": 16
+        "line": 17
       },
       "source": "module:scripts.audit_local_gate",
       "target": "symbol:scripts.audit_local_gate.main",
@@ -37416,6 +37449,28 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/fakes/local_image_finance.py",
+        "line": 9
+      },
+      "source": "module:tests.fakes.local_image_finance",
+      "target": "module:scripts.start_local_api",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_image_finance.py",
+        "line": 12
+      },
+      "source": "module:tests.fakes.local_image_finance",
+      "target": "symbol:tests.fakes.local_image_finance.fund_audit_portrait",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/fakes/local_portrait.py",
         "line": 6
       },
@@ -38957,7 +39012,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 17
+        "line": 12
+      },
+      "source": "module:tests.test_audit_browser_local",
+      "target": "module:tests.fakes.local_image_finance",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_audit_browser_local.py",
+        "line": 18
       },
       "source": "module:tests.test_audit_browser_local",
       "target": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
@@ -120320,11 +120386,22 @@
       "type": "calls"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/local_image_finance.py",
+        "line": 20
+      },
+      "source": "symbol:tests.fakes.local_image_finance.fund_audit_portrait",
+      "target": "symbol:scripts.start_local_api._supabase_status",
+      "type": "calls"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/local_portrait.py",
-        "line": 49
+        "line": 58
       },
       "source": "symbol:tests.fakes.local_portrait.publish_portrait",
       "target": "symbol:tests.fakes.local_portrait.publish_portrait.cleanup",
@@ -123415,7 +123492,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 24
+        "line": 25
       },
       "source": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
       "target": "symbol:scripts.browser_local.find_chrome",
@@ -123426,7 +123503,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 27
+        "line": 28
       },
       "source": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
       "target": "symbol:tests.fakes.local_auth.create_confirmed_user",
@@ -123437,10 +123514,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 192
+        "line": 198
       },
       "source": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
       "target": "symbol:tests.fakes.local_auth.delete_confirmed_user",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_audit_browser_local.py",
+        "line": 29
+      },
+      "source": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
+      "target": "symbol:tests.fakes.local_image_finance.fund_audit_portrait",
       "type": "calls"
     },
     {
@@ -186738,6 +186826,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/fakes/local_image_finance.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/fakes/local_image_finance.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/fakes/local_portrait.py",
       "kind": "file",
       "line": 1,
@@ -190229,6 +190324,13 @@
       "line": 1,
       "path": "tests/fakes/local_auth.py",
       "qualified_name": "tests.fakes.local_auth"
+    },
+    {
+      "id": "module:tests.fakes.local_image_finance",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/fakes/local_image_finance.py",
+      "qualified_name": "tests.fakes.local_image_finance"
     },
     {
       "id": "module:tests.fakes.local_portrait",
@@ -201419,7 +201521,7 @@
     {
       "id": "symbol:scripts.audit_local_gate.main",
       "kind": "function",
-      "line": 16,
+      "line": 17,
       "path": "scripts/audit_local_gate.py",
       "qualified_name": "scripts.audit_local_gate.main"
     },
@@ -209026,6 +209128,13 @@
       "qualified_name": "tests.fakes.local_auth.delete_confirmed_user"
     },
     {
+      "id": "symbol:tests.fakes.local_image_finance.fund_audit_portrait",
+      "kind": "test",
+      "line": 12,
+      "path": "tests/fakes/local_image_finance.py",
+      "qualified_name": "tests.fakes.local_image_finance.fund_audit_portrait"
+    },
+    {
       "id": "symbol:tests.fakes.local_portrait.publish_portrait",
       "kind": "test",
       "line": 6,
@@ -209035,7 +209144,7 @@
     {
       "id": "symbol:tests.fakes.local_portrait.publish_portrait.cleanup",
       "kind": "test",
-      "line": 49,
+      "line": 58,
       "path": "tests/fakes/local_portrait.py",
       "qualified_name": "tests.fakes.local_portrait.publish_portrait.cleanup"
     },
@@ -210386,7 +210495,7 @@
     {
       "id": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
       "kind": "test",
-      "line": 17,
+      "line": 18,
       "path": "tests/test_audit_browser_local.py",
       "qualified_name": "tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog"
     },
@@ -230601,5 +230710,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:f8f131c0d4bdcae17788b2983ed37e98e9633cf76e4014de29f50a2a75d42057"
+  "source_tree_hash": "sha256:0aaaced0b29d6746cc958e0f91afd02ea31c50754bb02f1116c8a3e77e780ee6"
 }

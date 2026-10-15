@@ -12,6 +12,17 @@
 > habilitado. O Project Index derivado foi regenerado para o novo helper.
 > Deploy funcional continua em espera pelo staging da SPEC-191.
 
+> **14/10 — ajuste complementar do `audit-local`.** O smoke de retrato agora
+> obtém quote antes de confirmar com `quote_id` e `confirmed=true`, conforme a
+> SPEC-188. A auditoria publica perfil de preço e saldo **sintéticos apenas no
+> Postgres local**, por execução; a imagem continua produzida pelo gerador fake.
+> O helper de publicação agora passa pelo lease e fence do job, ticket de
+> dispatch, registro de uso e settlement da SPEC-188.
+> Nenhum crédito de provedor ou recurso remoto foi criado. `uv run --all-extras
+> pytest -q` passou em 100% da suíte offline (2.285 casos coletados, com
+> integrações locais sem Docker ignoradas); o audit integrado do CI ainda
+> precisa confirmar o resultado desta correção.
+
 > **14/10 — SPEC-191 em espera por decisão do usuário sobre cota Supabase.**
 > A SPEC-190 permanece `done` e seu PR #26 está no GitHub. A tentativa única
 > de criar `rpg-ia-master-staging` na organização `jm0nteiroz` foi recusada

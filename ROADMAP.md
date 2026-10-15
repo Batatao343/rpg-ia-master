@@ -10,6 +10,13 @@
 > confirmação segue ativa no produto. O deploy aguarda a resolução da cota
 > Supabase e a SPEC-191.
 
+> **14/10 — auditoria de retrato alinhada à SPEC-188.** O browser smoke passa
+> pelo orçamento e confirmação explícita, usando preço e saldo sintéticos no
+> banco local e gerador de imagem fake. O helper passa pelo lease/fence do job
+> e settlement reais da SPEC-188. O CI integrado ainda precisa confirmar a
+> correção. A suíte Python offline completa passou; deploy funcional permanece
+> em espera pela SPEC-191.
+
 > **14/10 — staging e deploy em espera.** O projeto Supabase exclusivo da
 > [SPEC-191](specs/SPEC-191-supabase-remote-staging.md) não pôde ser criado:
 > a cota Free de dois projetos ativos de um administrador foi atingida.

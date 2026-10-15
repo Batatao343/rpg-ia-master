@@ -9,6 +9,7 @@ import pytest
 
 from scripts.browser_local import find_chrome
 from tests.fakes.local_auth import create_confirmed_user, delete_confirmed_user
+from tests.fakes.local_image_finance import fund_audit_portrait
 
 pytestmark = pytest.mark.browser_local
 
@@ -25,6 +26,7 @@ def test_authenticated_stream_reload_history_and_art_dialog(width, tmp_path):
     email = f'audit-{uuid4().hex}@example.test'
     # Local GoTrue requires email confirmation; this audit starts authenticated.
     user_id = create_confirmed_user(email, 'LocalAuditOnly-2026!')
+    fund_audit_portrait(user_id)
     with pw.sync_playwright() as runtime:
         browser = runtime.chromium.launch(executable_path=str(chrome) if chrome else None, headless=True)
         context = browser.new_context(viewport={'width': width, 'height': 900})
@@ -59,8 +61,12 @@ def test_authenticated_stream_reload_history_and_art_dialog(width, tmp_path):
             created = page.request.post(base + '/game/new', data=payload, headers=headers)
             assert created.status == 200, created.text()
             gid = created.json()['game_id']
+            quote = page.request.post(base + f'/game/{gid}/art/quote',
+                                      data={'image_type': 'player', 'reformulation': False}, headers=headers)
+            assert quote.status == 200, quote.text()
             art = page.request.post(base + f'/game/{gid}/art/player/confirm',
-                                    data={'action_id': str(uuid4())}, headers=headers)
+                                    data={'action_id': str(uuid4()), 'quote_id': quote.json()['quote_id'],
+                                          'confirmed': True}, headers=headers)
             assert art.status == 200, art.text()
             from tests.fakes.local_portrait import publish_portrait
             cleanups.append(publish_portrait(gid, art.json()['generation_id']))
