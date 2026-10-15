@@ -1,0 +1,140 @@
+{
+  "checks": {
+    "platform_android": {
+      "ok": true
+    },
+    "staging_origin_loaded_remotely": {
+      "ok": true,
+      "origin": "https://rpg-ia-master-staging.vercel.app"
+    },
+    "login_authenticated": {
+      "ok": true,
+      "ui_alert": "",
+      "net": "[[\"/auth/login\",200],[\"/auth/config\",200],[\"/game/saves\",200],[\"/account/balance\",200],[\"/data/options\",200],[\"/data/onboarding\",200],[\"/auth/config\",200]]",
+      "token_len": null
+    },
+    "x_rpg_client_header_sent_by_app": {
+      "ok": true,
+      "seen": [
+        [
+          "/auth/login",
+          "android"
+        ],
+        [
+          "/auth/config",
+          "android"
+        ],
+        [
+          "/game/saves",
+          "android"
+        ],
+        [
+          "/account/balance",
+          "android"
+        ],
+        [
+          "/data/options",
+          "android"
+        ],
+        [
+          "/data/onboarding",
+          "android"
+        ]
+      ]
+    },
+    "no_session_token_in_js_cookie": {
+      "ok": true,
+      "js_visible_cookie_names": [
+        "rpg_csrf"
+      ]
+    },
+    "no_bearer_in_web_storage": {
+      "ok": true,
+      "keys": "[[],[]]"
+    },
+    "game_created": {
+      "ok": true,
+      "status": 200
+    },
+    "action_ok": {
+      "ok": true,
+      "status": 200
+    },
+    "session_survives_background_resume": {
+      "ok": true
+    },
+    "no_duplicate_turn_on_replay_after_resume": {
+      "ok": true,
+      "turn_before": 2,
+      "turn_after": 2,
+      "replay_status": 200,
+      "op_status": "completed"
+    },
+    "restart_authenticated_without_login_via_boot_refresh": {
+      "ok": true
+    },
+    "local_storage_survives_process_restart": {
+      "ok": true
+    },
+    "no_duplicate_after_process_restart_pending_resend": {
+      "ok": true,
+      "turn_after": 2,
+      "replay_status": 200
+    },
+    "stripe_ui_hidden_on_android": {
+      "ok": true,
+      "opened_save": null,
+      "account_screen_opened": true,
+      "net": "[[\"/account/balance\",200],[\"/account/usage\",200]]"
+    },
+    "mic_getUserMedia_after_runtime_grant": {
+      "ok": true,
+      "result": "granted"
+    },
+    "synthetic_user_cleanup": {
+      "ok": true,
+      "status": 200
+    }
+  },
+  "cookies_after_restart": [
+    {
+      "name": "rpg_refresh",
+      "session": false,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Strict"
+    },
+    {
+      "name": "rpg_recent",
+      "session": false,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Strict"
+    },
+    {
+      "name": "rpg_access",
+      "session": true,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "rpg_csrf",
+      "session": false,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Strict"
+    }
+  ],
+  "config_after_restart": {
+    "required": true,
+    "authenticated": true
+  },
+  "process_restart_authenticated_without_login": true,
+  "permissions_in_dumpsys": [
+    "android.permission.INTERNET",
+    "android.permission.MODIFY_AUDIO_SETTINGS",
+    "android.permission.RECORD_AUDIO"
+  ],
+  "all_ok": true
+}

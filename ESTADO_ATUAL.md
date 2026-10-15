@@ -1,5 +1,16 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **15/10 — SPEC-193 `done`: app Android (Capacitor 8) sobre o mesmo frontend.** WebView carrega
+> o staging hospedado (cookies first-party, CSRF inalterado); `web/android/` + `capacitor.config.ts`.
+> Review independente deu CHANGES_REQUIRED; corrigido: refresh **e** `rpg_csrf` persistentes só
+> com `X-RPG-Client: android` + UM `POST /auth/refresh` no boot nativo (sessão sobrevive a
+> force-stop sem novo login); `MainActivity` só depurável em `BuildConfig.DEBUG`; `CAP_APP_ID`
+> removido (SPEC-198 muda `applicationId`+`namespace`+pacote Java juntos); FileProvider só cache;
+> topbar a 360px sem sobreposição; `Permissions-Policy: microphone=(self)`. Redeploy staging
+> verificado (`/health` git_sha), vercel_smoke + e2e_session verdes, APK sem secrets (0 achados),
+> smoke no AVD `rpg34` em `docs/spec193/evidence/emulator_smoke_v2.json`. Risco aceito: spoofing
+> do header só muda a duração do cookie (ver `docs/spec193/README.md`). Próxima: SPEC-194.
+
 > **15/10 — SPEC-192 `done`: staging Vercel no ar.** https://rpg-ia-master-staging.vercel.app
 > (Hobby, `gru1`, bundle ~315 MB/500, cold start ~6 s, warm `/health` p50 30 ms).
 > FastAPI + `web/dist` na mesma origem; `psycopg`, `langchain-openai` e `pillow`

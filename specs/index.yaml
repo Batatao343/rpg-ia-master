@@ -3401,7 +3401,7 @@ specs:
   lineage_note: Imported approved v5 package; implementation not started
 - id: SPEC-193
   slug: capacitor-android-foundation
-  status: approved
+  status: done
   path: specs/SPEC-193-capacitor-android-foundation.md
   created_commit: null
   created_at: '2026-10-02'

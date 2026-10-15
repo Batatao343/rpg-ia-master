@@ -1,0 +1,89 @@
+{
+  "base": "https://rpg-ia-master-staging.vercel.app",
+  "at": "2026-10-15T15:34:42.833709+00:00",
+  "checks": {
+    "health": {
+      "ok": true,
+      "status": 200,
+      "ms": 290,
+      "error": null,
+      "headers": {
+        "content-type": "application/json",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "x-vercel-cache": "MISS",
+        "x-vercel-id": "gru1::gru1::qpnn5-1792078487149-11ad709b25d5",
+        "server": "Vercel",
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "content-security-policy": "default-src 'self'; connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data: blob: https://*.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+        "referrer-policy": "same-origin"
+      }
+    },
+    "static_index": {
+      "ok": true,
+      "status": 200,
+      "ms": 32,
+      "error": null,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "x-vercel-cache": "MISS",
+        "x-vercel-id": "gru1::gru1::bddd6-1792078487864-002b39184f5d",
+        "server": "Vercel",
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "content-security-policy": "default-src 'self'; connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data: blob: https://*.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+        "referrer-policy": "same-origin"
+      }
+    },
+    "cron_jobs": {
+      "noauth_status": 401,
+      "auth_status": 200,
+      "ms": 117,
+      "body": {
+        "ok": true,
+        "processed": 0,
+        "stopped_reason": "empty",
+        "elapsed_s": 0.081,
+        "duration_s": 0.083
+      },
+      "ok": true
+    },
+    "cron_account-deletions": {
+      "noauth_status": 401,
+      "auth_status": 200,
+      "ms": 76,
+      "body": {
+        "ok": true,
+        "claimed": 0,
+        "deleted": 0,
+        "failed": 0,
+        "auth_buckets_purged": 0,
+        "duration_s": 0.046
+      },
+      "ok": true
+    },
+    "cron_operations": {
+      "noauth_status": 401,
+      "auth_status": 200,
+      "ms": 52,
+      "body": {
+        "ok": true,
+        "orphans_seen": 0,
+        "released": 0,
+        "failed": 0,
+        "duration_s": 0.018
+      },
+      "ok": true
+    }
+  },
+  "first_request_ms": 290,
+  "warm_ms": {
+    "n": 10,
+    "p50": 29.0,
+    "max": 205
+  },
+  "ok": true
+}
