@@ -345,3 +345,11 @@ def test_pool_receives_connect_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
     assert seen["kwargs"]["connect_timeout"] == 3
     postgres.PostgresPool("postgresql://u@h/db")
     assert seen["kwargs"]["connect_timeout"] == 5
+
+
+def test_hosted_dsn_accepts_least_privilege_runtime_role_and_rejects_wrong_ref():
+    from infrastructure.runtime import hosted_supabase_dsn_ref
+    host = "aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
+    assert hosted_supabase_dsn_ref(f"postgresql://rpg_runtime.projectref:fake@{host}") == "projectref"
+    with pytest.raises(ValueError):
+        hosted_supabase_dsn_ref(f"postgresql://rpg_runtime:fake@{host}")  # sem ref no tenant

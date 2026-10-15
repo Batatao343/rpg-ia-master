@@ -34,3 +34,10 @@ def test_bind_host_accepted_by_runtime_validation(monkeypatch):
 
 def test_refuses_other_project(capsys):
     assert ve.main(["--project-name", "outro", "--dry-run"]) == 2
+
+
+def test_runtime_dsn_replaces_admin_dsn_unless_rollback_requested():
+    files = {**FILES, "RPG_RUNTIME_DATABASE_URL": "postgresql://rpg_runtime.ref:x@h.pooler.supabase.com:6543/postgres"}
+    assert ve.build_env(files)[0]["DATABASE_URL"] == files["RPG_RUNTIME_DATABASE_URL"]
+    assert ve.build_env(files, use_admin_dsn=True)[0]["DATABASE_URL"] == FILES["DATABASE_URL"]
+    assert ve.build_env(FILES)[0]["DATABASE_URL"] == FILES["DATABASE_URL"]

@@ -54,7 +54,7 @@ def _load_files() -> dict[str, str]:
     return merged
 
 
-def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST
+def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admin_dsn: bool = False
               ) -> tuple[dict[str, str], dict[str, str]]:
     """Retorna (production, preview). Levanta KeyError com NOME do segredo ausente."""
     production = dict(NON_SECRET_LITERALS)
@@ -67,6 +67,10 @@ def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST
     for key in OPTIONAL_SECRET_FROM_FILE:
         if files.get(key):
             production[key] = files[key]
+    # SPEC-197 R-05: o runtime usa o papel de menor privilégio quando provisionado (runtime_role.py);
+    # `use_admin_dsn` mantém o DSN `postgres` (rollback).
+    if files.get("RPG_RUNTIME_DATABASE_URL") and not use_admin_dsn:
+        production["DATABASE_URL"] = files["RPG_RUNTIME_DATABASE_URL"]
     preview = dict(PREVIEW_LITERALS)
     assert not FORBIDDEN_IN_PREVIEW & preview.keys()
     return production, preview
@@ -100,6 +104,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--project-name", default=PROJECT_NAME)
     ap.add_argument("--public-host", default=PUBLIC_HOST)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--use-admin-dsn", action="store_true", help="rollback: DATABASE_URL = postgres")
     args = ap.parse_args(argv)
     if args.project_name != PROJECT_NAME:
         print(f"recusado: projeto deve ser {PROJECT_NAME}", file=sys.stderr)
@@ -110,7 +115,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     files = _load_files()
     try:
-        production, preview = build_env(files, args.public_host)
+        production, preview = build_env(files, args.public_host, args.use_admin_dsn)
     except KeyError as exc:
         print(exc.args[0], file=sys.stderr)
         return 1

@@ -1,17 +1,17 @@
 {
   "base": "https://rpg-ia-master-staging.vercel.app",
-  "at": "2026-10-15T14:56:39.804374+00:00",
+  "at": "2026-10-15T22:29:52.541854+00:00",
   "checks": {
     "health": {
       "ok": true,
       "status": 200,
-      "ms": 104,
+      "ms": 234,
       "error": null,
       "headers": {
         "content-type": "application/json",
         "cache-control": "public, max-age=0, must-revalidate",
         "x-vercel-cache": "MISS",
-        "x-vercel-id": "gru1::gru1::v5v28-1792076204344-471de1ed697e",
+        "x-vercel-id": "gru1::gru1::l2ppl-1792103397003-304fa0599265",
         "server": "Vercel",
         "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
         "x-content-type-options": "nosniff",
@@ -23,13 +23,13 @@
     "static_index": {
       "ok": true,
       "status": 200,
-      "ms": 44,
+      "ms": 39,
       "error": null,
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "public, max-age=0, must-revalidate",
         "x-vercel-cache": "MISS",
-        "x-vercel-id": "gru1::gru1::smmsb-1792076204985-0c5d0f9b41fe",
+        "x-vercel-id": "gru1::gru1::8xtb7-1792103397999-a405302d728e",
         "server": "Vercel",
         "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
         "x-content-type-options": "nosniff",
@@ -41,49 +41,49 @@
     "cron_jobs": {
       "noauth_status": 401,
       "auth_status": 200,
-      "ms": 107,
+      "ms": 168,
       "body": {
         "ok": true,
         "processed": 0,
         "stopped_reason": "empty",
-        "elapsed_s": 0.065,
-        "duration_s": 0.067
+        "elapsed_s": 0.081,
+        "duration_s": 0.084
       },
       "ok": true
     },
     "cron_account-deletions": {
       "noauth_status": 401,
       "auth_status": 200,
-      "ms": 72,
+      "ms": 111,
       "body": {
         "ok": true,
         "claimed": 0,
         "deleted": 0,
         "failed": 0,
         "auth_buckets_purged": 0,
-        "duration_s": 0.042
+        "duration_s": 0.076
       },
       "ok": true
     },
     "cron_operations": {
       "noauth_status": 401,
       "auth_status": 200,
-      "ms": 46,
+      "ms": 65,
       "body": {
         "ok": true,
         "orphans_seen": 0,
         "released": 0,
         "failed": 0,
-        "duration_s": 0.019
+        "duration_s": 0.027
       },
       "ok": true
     }
   },
-  "first_request_ms": 104,
+  "first_request_ms": 234,
   "warm_ms": {
     "n": 10,
     "p50": 32.0,
-    "max": 172
+    "max": 210
   },
   "ok": true
 }

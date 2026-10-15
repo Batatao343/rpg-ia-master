@@ -137,3 +137,10 @@ função pode ser congelada/encerrada depois que a resposta fecha. Recuperação
 fica com lease no Postgres; (2) o cron `/internal/cron/operations` libera operações de lease vencida; (3) o cliente
 repete a mesma ação (`action_id`) pelo fallback POST, idempotente: aplica o turno uma única vez ou devolve o
 resultado já gravado. Evidência: `evidence/sse_disconnect.json` (`scripts/staging/sse_disconnect.py`).
+
+## DATABASE_URL e papel de runtime (SPEC-197 R-05)
+O runtime deve conectar como `rpg_runtime.<ref>` (pooler 6543), não `postgres`. Fluxo: `migrations push` (cria o papel sem senha) →
+`uv run python -m scripts.staging.runtime_role --confirm-staging <ref> --apply` (grava `RPG_RUNTIME_DB_PASSWORD` e
+`RPG_RUNTIME_DATABASE_URL` só no `.env.staging`) → `vercel_env.py` (usa `RPG_RUNTIME_DATABASE_URL` como `DATABASE_URL` de produção; `--use-admin-dsn`
+reverte para `postgres`) → `vercel redeploy rpg-ia-master-staging.vercel.app --target production` (env só vale em novo deployment).
+Migrations e ferramentas `scripts/staging` continuam com `RPG_STAGING_DB_URL`/`postgres`. Migrations novas em `app` devem chamar `select app.grant_runtime_access();`.

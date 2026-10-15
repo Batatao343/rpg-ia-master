@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-15T18:05:54.151815+00:00",
+  "at": "2026-10-15T22:30:29.465179+00:00",
   "base": "https://rpg-ia-master-staging.vercel.app",
   "checks": {
     "delete_account": {
@@ -113,11 +113,11 @@
       "B": 200
     }
   },
-  "deployed_git_sha": "1fe88de",
-  "ok": true,
+  "deployed_git_sha": "be631ab60cc0b7ac78159dc80e3787b2f6b90c3d",
   "not_exercised": {
-    "voice": "not_configured",
+    "image_generate": "not_called: paid provider (quote only)",
     "stripe_test_purchase": "blocked: stripe_test_keys_missing",
-    "image_generate": "not_called: paid provider (quote only)"
-  }
+    "voice": "not_configured"
+  },
+  "ok": true
 }

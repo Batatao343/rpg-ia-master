@@ -162,10 +162,8 @@ class SupabaseIdentityProvider:
             except (ValueError, KeyError, IndexError, TypeError):
                 raise Unauthorized("sessão inválida") from None
             with self.pool.connection() as db:
-                active = db.execute("""select 1 from auth.sessions s where s.id=%s and s.user_id=%s
-                    and (s.not_after is null or s.not_after>now())
-                    and not exists (select 1 from app.account_deletions where owner_id=%s)""",
-                    (session_id, user_id, user_id)).fetchone()
+                active = db.execute("select app.runtime_session_active(%s,%s) as ok",
+                                    (session_id, user_id)).fetchone()["ok"]
             if not active:
                 raise Unauthorized("sessão revogada")
         return Principal(user_id, f"{self.base_url}/auth/v1", str(user_id))

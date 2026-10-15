@@ -314,7 +314,7 @@ def bind_api(case, monkeypatch):
     def loaded(_):
         game = case.store.get(case.owner, case.game_id)
         return {**deepcopy(game.state), "_storage_version": game.version}
-    monkeypatch.setattr(api, "_image_finance", lambda: (runtime, case.owner, case.repo))
+    monkeypatch.setattr(api, "_image_finance", lambda *, guard=True: (runtime, case.owner, case.repo))
     monkeypatch.setattr(api, "_database_profile", lambda: True)
     monkeypatch.setattr(api, "load_game_state", loaded)
     monkeypatch.setattr(api, "_resolve_save_file", lambda _: None)

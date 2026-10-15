@@ -1,0 +1,32 @@
+{
+  "risk": "R-05",
+  "role": "rpg_runtime",
+  "migration": "20261015160000_runtime_login_role.sql",
+  "attributes": {
+    "rolsuper": false,
+    "rolcreatedb": false,
+    "rolcreaterole": false,
+    "rolreplication": false,
+    "rolbypassrls": false,
+    "login": true
+  },
+  "rls_strategy": "policy runtime_all por tabela (sem BYPASSRLS)",
+  "auth_access": "funcoes SECURITY DEFINER app.runtime_*",
+  "staging": {
+    "migration_applied": true,
+    "password_rotated": true,
+    "pooler_connect_as_rpg_runtime": true,
+    "runtime_role_tests": "5 passed",
+    "vercel_cutover": "tentado e revertido: codigo HEAD be631ab ainda consulta auth.sessions direto (login 500); cron/static/health ok sob o papel",
+    "current_vercel_database_url": "postgres (admin) - revertido; smokes vercel_smoke/e2e_session/two_user_smoke verdes"
+  },
+  "lab": {
+    "runtime_role_tests": "5 passed",
+    "infra_suites_as_rpg_runtime": "153 passed; erros restantes = setup de teste que exige admin (DDL/CREATE DATABASE/auth.users)"
+  },
+  "preexisting_failures_unrelated": [
+    "test_image_quotes_local (bind_api guard kwarg)",
+    "test_spec197_daily_cap::test_postgres_store_audit_actor_and_idempotency",
+    "test_account_lifecycle_financial_local (replay de migration em lab atualizado)"
+  ]
+}

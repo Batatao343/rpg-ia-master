@@ -43,10 +43,10 @@ class PostgresAccountLifecycle:
             if db.execute("select 1 from app.account_deletions where owner_id=%s", (owner,)).fetchone():
                 return
             from services.account_security import auth_email_bucket_keys
-            user = db.execute("select email from auth.users where id=%s", (owner,)).fetchone()
-            if user and user["email"]:
+            email = db.execute("select app.runtime_auth_email(%s) as email", (owner,)).fetchone()["email"]
+            if email:
                 db.execute("delete from app.rate_limit_buckets where bucket_key=any(%s)",
-                           (list(auth_email_bucket_keys(user["email"])),))
+                           (list(auth_email_bucket_keys(email)),))
             prefix = f"users/{owner}/"
             keys = {row["name"] for row in db.execute("""select name from storage.objects
                 where bucket_id=%s and starts_with(name,%s)""", (self.blobs.bucket, prefix)).fetchall()}
@@ -54,8 +54,7 @@ class PostgresAccountLifecycle:
                 "select object_key from app.assets where owner_id=%s", (owner,)).fetchall()
                         if row["object_key"].startswith(prefix))
             # Global auth revocation is authoritative before private cleanup begins.
-            db.execute("delete from auth.sessions where user_id=%s", (owner,))
-            db.execute("delete from auth.refresh_tokens where user_id=%s", (str(owner),))
+            db.execute("select app.runtime_revoke_auth(%s)", (owner,))
             # Fence queued AND leased work before tombstone triggers deny later writes.
             db.execute("""update app.jobs set status='cancelled',lease_token=null,lease_owner=null,
                 lease_until=null,payload='{}',result=null,last_error_code='account_deleted',updated_at=now()
