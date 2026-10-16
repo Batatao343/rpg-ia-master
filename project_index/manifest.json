@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "de2c2b1d8ea31eb8b8d3ede1806d1ed4d41777c4",
+  "commit_sha": "7a30346f91652efbbe2d0e91d9db8daf6a61873f",
   "edge_counts": {
-    "calls": 11283,
-    "contains": 539,
-    "defines": 6737,
-    "imports": 1132,
-    "likely_test_for": 692,
+    "calls": 11691,
+    "contains": 541,
+    "defines": 6848,
+    "imports": 1142,
+    "likely_test_for": 701,
     "route_to": 58
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:d3eac466ef54fc421e5ef841e69be6fc22f3e9adf1b96a154c10a2ea505373fc",
+  "graph_hash": "sha256:ff97422582bb467a82d7a3da80d6ed37fa9ec0398e0947fde464ee7da7716f15",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -365,6 +365,7 @@
     "tests/test_blob_contract.py",
     "tests/test_browser_local.py",
     "tests/test_bug_api_pending_erros.py",
+    "tests/test_bug_combate_modificadores.py",
     "tests/test_bug_combate_morte_aliados.py",
     "tests/test_bug_contabilidade_recompensas.py",
     "tests/test_bug_economia_integridade.py",
@@ -482,6 +483,7 @@
     "tests/test_mapa_interiores.py",
     "tests/test_matrix_lock.py",
     "tests/test_matriz_a_contratos.py",
+    "tests/test_mecanica_orfa.py",
     "tests/test_melhorias_longrun_v2.py",
     "tests/test_memory_provenance.py",
     "tests/test_merchant_profile.py",
@@ -669,14 +671,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 600,
+    "class": 608,
     "endpoint": 58,
-    "file": 615,
-    "function": 2105,
+    "file": 617,
+    "function": 2132,
     "method": 595,
-    "module": 539,
-    "test": 3437
+    "module": 541,
+    "test": 3513
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:729302fd10030772c6d8b8652a43c87d1f24946a9e49d328774efc4ca5b99997"
+  "source_tree_hash": "sha256:47f5354b23a3603f18221dc5ae27e6a2295f2e647a7efce62ce1c488de08fa76"
 }
