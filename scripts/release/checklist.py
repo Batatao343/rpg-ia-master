@@ -20,6 +20,9 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from infrastructure.runtime import FORBIDDEN_IN_HOSTED, HOSTED_REQUIRED_ENV  # noqa: E402
 EVIDENCE = ROOT / "docs" / "spec197" / "evidence"
 SPEC_RANGE = range(176, 197)
 OK_SPEC_STATUSES = {"done"}
@@ -27,16 +30,16 @@ OK_SPEC_STATUSES = {"done"}
 REQUIRED_ENV = {
     "staging": (
         "DATABASE_URL", "SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_SERVICE_ROLE_KEY",
-        "RPG_SESSION_SECRET", "RPG_CRON_SECRET", "RPG_RUNTIME_PROFILE", "RPG_COOKIE_SECURE",
-        "RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED", "RPG_AUTH_CAPTCHA_MODE", "RPG_AUTH_CAPTCHA_REQUIRED",
-        "RPG_TURNSTILE_SITE_KEY", "RPG_CORS_ORIGINS",
-    ),
+        "RPG_CRON_SECRET", "RPG_RUNTIME_PROFILE", "RPG_AUTH_CAPTCHA_MODE", "RPG_TURNSTILE_SITE_KEY",
+    ) + HOSTED_REQUIRED_ENV,  # SPEC-218: lista de seguranca vem de infrastructure.runtime (fonte unica)
 }
 REQUIRED_ENV["production"] = REQUIRED_ENV["staging"] + (
     "STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "RPG_CHECKOUT_ORIGIN", "JINA_API_KEY",
     "DEEPSEEK_API_KEY", "GROQ_API_KEY", "RPG_DAILY_SPEND_CAP_BRL",
 )
-FORBIDDEN_IN_PROD = ("RPG_FORCE_MOCK", "RPG_GOOGLE_PLAY_FAKE", "RPG_PLAY_ACCEPT_TEST_PURCHASES")  # mock / fake Play / test purchases off in production (SPEC-225 R8)
+# SPEC-218: mock/fake Play/overrides de laboratorio fora de producao; SPEC-225 R8: compras de teste.
+FORBIDDEN_IN_PROD = tuple(dict.fromkeys(
+    (*FORBIDDEN_IN_HOSTED, "RPG_FORCE_MOCK", "RPG_GOOGLE_PLAY_FAKE", "RPG_PLAY_ACCEPT_TEST_PURCHASES")))
 RISK_ROW = re.compile(r"^\|\s*(R-\d+)\s*\|(.+)\|\s*$")
 CLOSED = ("fechado", "closed", "aceito", "accepted")  # exact status tokens ("fechado (staging)" does not count)
 DRAFT_MARKERS = ("RASCUNHO",)

@@ -3930,7 +3930,7 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-218
   slug: fail-closed-perfil-config-hosted
-  status: draft
+  status: in-progress
   path: specs/SPEC-218-fail-closed-perfil-config-hosted.md
   created_commit: null
   created_at: '2026-10-15'

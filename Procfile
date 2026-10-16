@@ -1,1 +1,1 @@
-web: uvicorn api:app --host 0.0.0.0 --port $PORT
+web: uvicorn api:app --host ${RPG_BIND_HOST:-127.0.0.1} --port $PORT

@@ -11,7 +11,7 @@ import socket
 import threading
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Mapping
+from typing import Callable, Mapping, NamedTuple
 from urllib.parse import parse_qsl, urlsplit
 from uuid import UUID
 
@@ -234,6 +234,10 @@ class RuntimeConfig:
             db_connect_timeout=connect_timeout,
         )
         config.validate()
+        if profile in HOSTED_PROFILES and not _flag(values, "RPG_ALLOW_INSECURE_HOSTED"):
+            problems = hosted_security_problems(values)
+            if problems:
+                raise ValueError("hosted_config_insecure: " + "; ".join(problems))
         return config
 
     def validate(self) -> None:
@@ -330,6 +334,191 @@ class RuntimeConfig:
                     raise ValueError("service_role JWT aponta a projeto diferente")
         if self.supabase_service_role_key and self.supabase_service_role_key.startswith("VITE_"):
             raise ValueError("service role nunca pode usar namespace Vite")
+
+
+# ---------------------------------------------------------------------------
+# SPEC-218: fail-closed de perfil/configuracao em deploy exposto
+# ---------------------------------------------------------------------------
+HOSTED_PROFILES = frozenset({"hosted", "hosted-supabase"})
+_PLATFORM_MARKERS = ("VERCEL", "RAILWAY_ENVIRONMENT", "RENDER", "K_SERVICE", "FLY_APP_NAME")
+# Fonte unica (importada por scripts/release/checklist.py como FORBIDDEN_IN_PROD).
+FORBIDDEN_IN_HOSTED = (
+    "RPG_FORCE_MOCK", "RPG_GOOGLE_PLAY_FAKE", "RPG_ADMIN_ALLOW_PROFILE",
+    "RPG_KILL_SWITCHES_OFF", "RPG_ALLOW_INSECURE_HOSTED", "RPG_ALLOW_LEGACY_EXPOSED",
+    "RPG_EXPOSE_OPENAPI",
+)
+_LLM_PROVIDER_ALLOWLIST = frozenset({"gemini", "openai"})
+KILL_SWITCH_HOSTED_FAIL_CLOSED = ("image_generation", "stt_fallback_expensive")
+
+
+class Requirement(NamedTuple):
+    name: str
+    check: Callable[[Mapping[str, str]], "str | None"]
+
+
+def _profile_of(env: Mapping[str, str]) -> str:
+    return str(env.get("RPG_RUNTIME_PROFILE", "legacy")).strip().lower() or "legacy"
+
+
+def _flag(env: Mapping[str, str], name: str) -> bool:
+    return str(env.get(name, "")).strip() == "1"
+
+
+def _truthy(env: Mapping[str, str], name: str) -> bool:
+    return str(env.get(name, "")).strip().lower() not in {"", "0", "false", "no"}
+
+
+def exposure_markers(env: Mapping[str, str]) -> set[str]:
+    """Nomes de marcadores que indicam processo exposto fora de loopback (sem valores)."""
+    found = {name for name in _PLATFORM_MARKERS if str(env.get(name, "")).strip()}
+    bind = str(env.get("RPG_BIND_HOST", "")).strip()
+    if bind and not _loopback_host(bind):
+        found.add("RPG_BIND_HOST")
+    if str(env.get("PORT", "")).strip() and not (bind and _loopback_host(bind)):
+        found.add("PORT")
+    return found
+
+
+def _cors_problem(env: Mapping[str, str]) -> "str | None":
+    raw = str(env.get("RPG_CORS_ORIGINS", "")).strip()
+    items = [item.strip() for item in raw.split(",") if item.strip()]
+    if not items:
+        return "ausente"
+    for item in items:
+        try:
+            parts = urlsplit(item)
+            host = (parts.hostname or "").lower()
+            _ = parts.port  # valida a porta
+        except ValueError:
+            return "origem invalida"
+        if (item == "*" or parts.scheme != "https" or not host
+                or parts.path not in {"", "/"} or parts.query or parts.fragment
+                or parts.username or parts.password):
+            return "origem deve ser https://host[:porta] sem path"
+        if host in {"localhost", "0.0.0.0"} or _loopback_host(host) or host.startswith("127."):
+            return "origem loopback recusada"
+    return None
+
+
+def _provider_key_problem(env: Mapping[str, str]) -> "str | None":
+    if _flag(env, "RPG_NO_MOCK"):
+        return None
+    from llm_setup import PROVIDER_KEY_ENV
+
+    if any(str(env.get(name, "")).strip() for name in set(PROVIDER_KEY_ENV.values())):
+        return None
+    return "sem chave de provider e RPG_NO_MOCK!=1 (cairia em MockLLM)"
+
+
+def _rate_limit_problem(env: Mapping[str, str]) -> "str | None":
+    raw = str(env.get("RPG_RATE_LIMIT", "")).strip()
+    if not raw:
+        return None
+    try:
+        return None if int(raw) >= 1 else "deve ser inteiro >= 1"
+    except ValueError:
+        return "deve ser inteiro >= 1"
+
+
+def _secret_len(name: str) -> Callable[[Mapping[str, str]], "str | None"]:
+    return lambda env: None if len(str(env.get(name, ""))) >= 32 else "ausente ou < 32 caracteres"
+
+
+def _captcha_problem(env: Mapping[str, str]) -> "str | None":
+    if not _flag(env, "RPG_AUTH_CAPTCHA_REQUIRED"):
+        return "deve ser 1"
+    if not str(env.get("RPG_TURNSTILE_SITE_KEY", "")).strip():
+        return "RPG_TURNSTILE_SITE_KEY ausente"
+    mode = str(env.get("RPG_AUTH_CAPTCHA_MODE", "app")).strip().lower()
+    if mode == "app" and not str(env.get("RPG_TURNSTILE_SECRET", "")).strip():
+        return "RPG_TURNSTILE_SECRET ausente (modo app)"
+    return None
+
+
+def _forbidden_problem(env: Mapping[str, str]) -> "str | None":
+    present = [name for name in FORBIDDEN_IN_HOSTED if _truthy(env, name)]
+    return ("variaveis proibidas presentes: " + ",".join(present)) if present else None
+
+
+def _llm_provider_problem(env: Mapping[str, str]) -> "str | None":
+    value = str(env.get("LLM_PROVIDER", "")).strip().lower()
+    return None if not value or value in _LLM_PROVIDER_ALLOWLIST else "fora da allowlist"
+
+
+# Envs de seguranca que DEVEM estar definidas em hosted (usado pelo checklist de release).
+HOSTED_REQUIRED_ENV = (
+    "RPG_COOKIE_SECURE", "RPG_SESSION_SECRET", "RPG_TELEMETRY_SECRET", "RPG_CORS_ORIGINS",
+    "RPG_AUTH_CAPTCHA_REQUIRED", "RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED",
+)
+
+HOSTED_SECURITY_REQUIREMENTS: tuple[Requirement, ...] = (
+    Requirement("RPG_COOKIE_SECURE", lambda e: None if _flag(e, "RPG_COOKIE_SECURE") else "deve ser 1"),
+    Requirement("RPG_SESSION_SECRET", _secret_len("RPG_SESSION_SECRET")),
+    Requirement("RPG_TELEMETRY_SECRET", _secret_len("RPG_TELEMETRY_SECRET")),
+    Requirement("RPG_CORS_ORIGINS", _cors_problem),
+    Requirement("RPG_AUTH_CAPTCHA_REQUIRED", _captcha_problem),
+    Requirement("RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED",
+                lambda e: None if _flag(e, "RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED") else "deve ser 1"),
+    Requirement("RPG_RATE_LIMIT", _rate_limit_problem),
+    Requirement("RPG_NO_MOCK", _provider_key_problem),
+    Requirement("LLM_PROVIDER", _llm_provider_problem),
+    Requirement("FORBIDDEN_IN_HOSTED", _forbidden_problem),
+)
+
+
+def hosted_security_problems(env: Mapping[str, str]) -> list[str]:
+    """Motivos (apenas nomes + razao, nunca valores) pelos quais a config hosted e insegura."""
+    problems = []
+    for requirement in HOSTED_SECURITY_REQUIREMENTS:
+        reason = requirement.check(env)
+        if reason:
+            problems.append(f"{requirement.name}: {reason}")
+    return problems
+
+
+def is_hardened(env: Mapping[str, str] | None = None) -> bool:
+    """True so em perfil hosted* sem NENHUM problema (ignora o override de laboratorio)."""
+    values = os.environ if env is None else env
+    return _profile_of(values) in HOSTED_PROFILES and not hosted_security_problems(values)
+
+
+def docs_enabled(env: Mapping[str, str] | None = None) -> bool:
+    values = os.environ if env is None else env
+    if _profile_of(values) in {"legacy", "local"}:
+        return True
+    return _flag(values, "RPG_EXPOSE_OPENAPI")
+
+
+def kill_switch_fail_closed_default(profile: str) -> tuple[str, ...]:
+    return KILL_SWITCH_HOSTED_FAIL_CLOSED if profile in HOSTED_PROFILES else ()
+
+
+def assert_boot_policy(env: Mapping[str, str] | None = None) -> None:
+    """Boot fail-closed: exposto nunca sobe em legacy; perfil DB valida config ja no import."""
+    values = os.environ if env is None else env
+    profile = _profile_of(values)
+    if profile == "legacy":
+        markers = exposure_markers(values)
+        if markers and not _flag(values, "RPG_ALLOW_LEGACY_EXPOSED"):
+            raise RuntimeError(
+                "legacy_profile_exposed: markers=" + ",".join(sorted(markers))
+                + "; set RPG_RUNTIME_PROFILE=hosted-supabase "
+                "(or RPG_ALLOW_LEGACY_EXPOSED=1 for a lab)"
+            )
+        return
+    markers = exposure_markers(values)
+    if markers and profile == "local" and not _flag(values, "RPG_ALLOW_LEGACY_EXPOSED"):
+        # Revisao Astra: `local` (docs on, sem hardening) exposto e o mesmo bypass do legacy.
+        raise RuntimeError(
+            "local_profile_exposed: markers=" + ",".join(sorted(markers))
+            + "; set RPG_RUNTIME_PROFILE=hosted-supabase"
+        )
+    RuntimeConfig.from_env(values)
+    if markers and profile == "portable" and not _flag(values, "RPG_ALLOW_INSECURE_HOSTED"):
+        # Revisao Astra: `portable` exposto exige o mesmo hardening de hosted*.
+        problems = hosted_security_problems(values)
+        if problems:
+            raise ValueError("hosted_config_insecure: " + "; ".join(problems))
 
 
 @dataclass
@@ -462,6 +651,8 @@ def apply_serverless_defaults(env: "os._Environ[str] | dict[str, str] | None" = 
     aplicado (ou None se nada mudou)."""
     env = os.environ if env is None else env
     profile = str(env.get("RPG_RUNTIME_PROFILE", "legacy")).strip().lower()
+    if profile in HOSTED_PROFILES:
+        env.setdefault("RPG_NO_MOCK", "1")  # SPEC-218: hosted nunca cai em MockLLM
     if not profile.startswith("hosted") or not env.get("VERCEL"):
         return None
     if env.get("RPG_RUNTIME_CACHE_DIR"):

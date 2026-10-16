@@ -1,6 +1,6 @@
 # SPEC-218 — Fail-closed de perfil e configuração de segurança em deploy exposto
 
-> **Status:** `draft`
+> **Status:** `in-progress`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** nenhuma · evolui SPEC-181 `done` e o checklist da SPEC-197 `in-progress` sem reabri-los (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212, SPEC-219, SPEC-224; gate de release da SPEC-197 (ordem final 2026-10-15)

@@ -11,7 +11,9 @@ import os
 from collections.abc import Mapping
 from urllib.parse import urlsplit
 
-from infrastructure.runtime import RuntimeConfig, _loopback_host, hosted_supabase_dsn_ref
+from infrastructure.runtime import (
+    HOSTED_SECURITY_REQUIREMENTS, RuntimeConfig, _loopback_host, hosted_supabase_dsn_ref,
+)
 
 
 _REQUIRED = {
@@ -67,6 +69,10 @@ def diagnose(env: Mapping[str, str] | None = None) -> dict[str, object]:
             )
         except ValueError:
             checks["dsn_shape"] = "invalid"
+    if profile in {"hosted", "hosted-supabase"}:
+        # SPEC-218: present/missing por requirement, nunca valores.
+        for requirement in HOSTED_SECURITY_REQUIREMENTS:
+            checks[f"security:{requirement.name}"] = "missing" if requirement.check(values) else "present"
     try:
         RuntimeConfig.from_env(values)
         valid = profile != "invalid" and all(value not in {"missing", "invalid"} for value in checks.values())

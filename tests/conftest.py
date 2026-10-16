@@ -13,6 +13,17 @@ os.environ.setdefault("RPG_RATE_LIMIT", "0")
 os.environ.setdefault("RPG_PLAY_ACCOUNT_KEY", "test-play-account-key-0123456789abcdef")
 
 
+# SPEC-218 R10: marcadores de plataforma/bind do ambiente do dev/CI nunca vazam para a suíte.
+_EXPOSURE_ENV = ("VERCEL", "PORT", "RAILWAY_ENVIRONMENT", "RENDER", "K_SERVICE", "FLY_APP_NAME",
+                 "RPG_BIND_HOST", "RPG_ALLOW_LEGACY_EXPOSED")
+
+
+@pytest.fixture(autouse=True)
+def _no_exposure_markers(monkeypatch):
+    for name in _EXPOSURE_ENV:
+        monkeypatch.delenv(name, raising=False)
+
+
 @pytest.fixture(autouse=True)
 def _isolated_runtime_cache(monkeypatch, tmp_path):
     """spec isolar-cache-runtime (R5): caches gerados em runtime (bestiário

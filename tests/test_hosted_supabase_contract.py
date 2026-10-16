@@ -22,6 +22,16 @@ def hosted_env() -> dict[str, str]:
         "SUPABASE_URL": "https://projectref.supabase.co",
         "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_PUBLIC_SENTINEL",
         "SUPABASE_SERVICE_ROLE_KEY": "sb_secret_PRIVATE_SENTINEL",
+        # SPEC-218: config de seguranca exigida em hosted*
+        "RPG_COOKIE_SECURE": "1",
+        "RPG_SESSION_SECRET": "x" * 32,
+        "RPG_TELEMETRY_SECRET": "y" * 32,
+        "RPG_CORS_ORIGINS": "https://app.example.com",
+        "RPG_AUTH_CAPTCHA_REQUIRED": "1",
+        "RPG_AUTH_CAPTCHA_MODE": "gotrue",
+        "RPG_TURNSTILE_SITE_KEY": "site",
+        "RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED": "1",
+        "RPG_NO_MOCK": "1",
     }
 
 
@@ -54,6 +64,7 @@ def test_new_profile_and_legacy_contracts() -> None:
     assert (portable.auth_mode, portable.blob_store) == ("oidc", "s3")
     legacy_hosted = RuntimeConfig.from_env({
         "RPG_RUNTIME_PROFILE": "hosted", "RPG_BIND_HOST": "0.0.0.0",
+        "RPG_ALLOW_INSECURE_HOSTED": "1",  # SPEC-218: o foco aqui e a topologia OIDC/S3
         "DATABASE_URL": "postgresql://user:fake@db.example.com:5432/postgres",
         "RPG_OIDC_USERINFO_URL": "https://identity.example/userinfo",
         "RPG_OIDC_ISSUER": "https://identity.example",

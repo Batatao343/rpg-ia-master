@@ -63,10 +63,20 @@ from services.visual_catalog import (
 from world_utils import starting_world
 
 # --- CONFIGURAÇÃO DA API ---
+# SPEC-218: boot fail-closed. Processo exposto (plataforma/bind) nunca sobe em
+# `legacy`; perfis DB validam a config de segurança já no import, não no 1º request.
+from infrastructure.runtime import assert_boot_policy, docs_enabled, is_hardened
+
+assert_boot_policy(os.environ)
+_DOCS_ON = docs_enabled(os.environ)
+
 app = FastAPI(
     title="RPG IA Engine API",
     description="Backend para RPG de Texto com IA, Crafting e NPCs.",
-    version="v2.0 Hybrid Memory"
+    version="v2.0 Hybrid Memory",
+    docs_url="/docs" if _DOCS_ON else None,
+    redoc_url="/redoc" if _DOCS_ON else None,
+    openapi_url="/openapi.json" if _DOCS_ON else None,
 )
 
 
@@ -110,8 +120,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=_CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+    allow_headers=["content-type", "x-csrf-token", "x-request-id", "x-rpg-client", "x-operation-id", "idempotency-key"],
 )
 
 
@@ -126,7 +136,7 @@ app.add_middleware(BodyLimitMiddleware, default_limit=256 * 1024, per_path={
 })
 
 from services.cron_internal import router as _cron_router
-app.include_router(_cron_router)  # SPEC-192: bearer-secret auth, no cookies/CSRF flow
+app.include_router(_cron_router, include_in_schema=False)  # SPEC-192: bearer-secret auth, no cookies/CSRF flow
 
 
 def _database_profile() -> bool:
@@ -223,7 +233,7 @@ CONTENT_SECURITY_POLICY = (
     "font-src 'self' data:; "
     "media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'"
 )
-_DOCS_PATHS = {"/docs", "/redoc", "/openapi.json", "/docs/oauth2-redirect"}
+_DOCS_PATHS = {"/docs", "/redoc", "/openapi.json", "/docs/oauth2-redirect"} if _DOCS_ON else set()
 
 
 @app.middleware("http")
@@ -1947,6 +1957,8 @@ def health_check():
         "status": "online",
         "engine": "RPG IA v9.0 Hybrid Memory",
         "git_sha": os.getenv("GIT_SHA") or os.getenv("VERCEL_GIT_COMMIT_SHA") or "",
+        "profile": os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() or "legacy",
+        "hardened": is_hardened(os.environ),
     }
 
 

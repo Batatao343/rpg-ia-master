@@ -37,6 +37,10 @@ def run(
         if not actual_sha.startswith(expected_sha) and not expected_sha.startswith(actual_sha):
             raise RuntimeError(f"deployed SHA mismatch: expected {expected_sha}, got {actual_sha or 'missing'}")
         checks["health"] = "passed"
+        # SPEC-218 R9: deploy exposto nunca pode estar em legacy nem sem hardening.
+        if body.get("profile") in (None, "legacy") or body.get("hardened") is not True:
+            raise RuntimeError("deployed profile is not hardened (SPEC-218)")
+        checks["profile_hardened"] = "passed"
         checks["git_sha"] = actual_sha
         for path in ("/auth/config", "/data/options", "/data/map"):
             response = client.get(path)

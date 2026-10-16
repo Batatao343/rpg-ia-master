@@ -99,7 +99,11 @@ def _daily_cap_configured() -> bool:
 def _fail_closed_keys() -> set[str]:
     """RPG_KILL_SWITCH_FAIL_CLOSED=new_purchases,image_generation: keys that become OFF when the
     store is unreadable AND no good snapshot was ever loaded (default: none, i.e. fail open)."""
-    raw = os.getenv("RPG_KILL_SWITCH_FAIL_CLOSED", "")
+    raw = os.getenv("RPG_KILL_SWITCH_FAIL_CLOSED")
+    if raw is None:  # SPEC-218 R5: ausente => default por perfil; env explícita (até "") vence
+        from infrastructure.runtime import kill_switch_fail_closed_default
+        profile = os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower()
+        raw = ",".join(kill_switch_fail_closed_default(profile))
     keys = {k.strip() for k in raw.split(",") if KEY_RE.fullmatch(k.strip())}
     # SPEC-236 R10: with the daily spend cap configured, the switches the cap protects fail
     # CLOSED on a cold start with an unreadable store (otherwise a DB incident would reopen

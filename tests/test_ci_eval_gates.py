@@ -59,7 +59,7 @@ def test_post_deploy_smoke_is_read_only_and_checks_sha():
     def handler(request: httpx.Request) -> httpx.Response:
         requested.append((request.method, request.url.path))
         if request.url.path == "/health":
-            return httpx.Response(200, json={"status": "online", "git_sha": "abcdef123456"})
+            return httpx.Response(200, json={"status": "online", "git_sha": "abcdef123456", "profile": "hosted-supabase", "hardened": True})
         return httpx.Response(200, json={})
 
     result = run_post_deploy(

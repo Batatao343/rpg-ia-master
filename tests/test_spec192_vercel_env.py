@@ -28,7 +28,8 @@ def test_bind_host_accepted_by_runtime_validation(monkeypatch):
     env = {"RPG_RUNTIME_PROFILE": "hosted-supabase", "RPG_BIND_HOST": "0.0.0.0",
            "DATABASE_URL": "postgresql://postgres.abcdefghij:p@aws-0-sa-east-1.pooler.supabase.com:6543/postgres",
            "SUPABASE_URL": "https://abcdefghij.supabase.co",
-           "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_x", "SUPABASE_SERVICE_ROLE_KEY": "sb_secret_y"}
+           "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_x", "SUPABASE_SERVICE_ROLE_KEY": "sb_secret_y",
+           "RPG_ALLOW_INSECURE_HOSTED": "1"}  # só o bind é o foco; hardening: tests/test_boot_policy.py
     assert RuntimeConfig.from_env(env).bind_host == "0.0.0.0"
 
 
