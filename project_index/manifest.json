@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "16bf785f4bf44b7441d0c3225deca1c7ebf19085",
+  "commit_sha": "cce8d853cce27058cd2ddb3f96f924bd1a9df36a",
   "edge_counts": {
-    "calls": 12586,
-    "contains": 568,
-    "defines": 7369,
-    "imports": 1196,
-    "likely_test_for": 739,
+    "calls": 12874,
+    "contains": 574,
+    "defines": 7503,
+    "imports": 1224,
+    "likely_test_for": 767,
     "route_to": 59
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:3da5954c870ec6d99e57ff4a785aecaedf1ea2a5db5a9fea2b289468f6304989",
+  "graph_hash": "sha256:491e8424d0a9359c532ecfbf9ea5792c853558264770f187fb8445a56c0eaa03",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -280,6 +280,7 @@
     "services/dynamic_art.py",
     "services/ecology.py",
     "services/economy.py",
+    "services/encounter_manifest.py",
     "services/encounter_preparation.py",
     "services/entity_identity.py",
     "services/event_processor.py",
@@ -435,6 +436,11 @@
     "tests/test_efficiency.py",
     "tests/test_embeddings_provider.py",
     "tests/test_encontros_dedupe.py",
+    "tests/test_encounter_astra_review.py",
+    "tests/test_encounter_identity_repro.py",
+    "tests/test_encounter_lifecycle_reload.py",
+    "tests/test_encounter_manifest.py",
+    "tests/test_eval_encounter_manifest.py",
     "tests/test_eval_frontend.py",
     "tests/test_eval_governance.py",
     "tests/test_eval_harness.py",
@@ -623,6 +629,7 @@
     "web/e2e/account-lifecycle.spec.ts",
     "web/e2e/account.spec.ts",
     "web/e2e/checkout.spec.ts",
+    "web/e2e/combat-outcome.spec.ts",
     "web/e2e/critical-journeys.spec.ts",
     "web/e2e/diagnostics/spec201-capture.spec.ts",
     "web/e2e/fixtures.ts",
@@ -638,12 +645,14 @@
     "web/src/api.ts",
     "web/src/App.tsx",
     "web/src/codexKnowledge.ts",
+    "web/src/combatOutcome.ts",
     "web/src/components/AccountScreen.tsx",
     "web/src/components/ArtworkDialog.tsx",
     "web/src/components/AuthScreen.tsx",
     "web/src/components/Banner.tsx",
     "web/src/components/CardHand.tsx",
     "web/src/components/CodexTab.tsx",
+    "web/src/components/CombatOutcomePanel.tsx",
     "web/src/components/CombatSimulatorScreen.tsx",
     "web/src/components/CreateScreen.tsx",
     "web/src/components/DeathModal.tsx",
@@ -707,14 +716,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 641,
+    "class": 650,
     "endpoint": 59,
-    "file": 653,
-    "function": 2315,
-    "method": 637,
-    "module": 568,
-    "test": 3776
+    "file": 662,
+    "function": 2361,
+    "method": 640,
+    "module": 574,
+    "test": 3852
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:cd722b17f9158ae58112204c0be84d22826784b21a666525527aa1064fa7ebfa"
+  "source_tree_hash": "sha256:b66e9aee4459a7806e45338282db2c40a0a07db9a3bb188d409781aa3f2bda6f"
 }
