@@ -60,9 +60,44 @@
   sem troca de espécie. 14 invokes deepseek nesta execução (uma 1ª execução idêntica com 4
   rodadas falhou só no `json.dumps` final após ~14 invokes). Custo total do smoke < US$ 0,02.
 
+## Evals (autoria separada, 2026-10-16)
+Tarefa separada conforme o [handoff](../../handoffs/SPEC-203-eval-authoring.md); nenhum código de
+produto alterado. Suíte dedicada nova `encounter_manifest` (não altera casos antigos de
+`state_rules`/`narrative_npc`):
+- Dataset `evals/datasets/regression/encounter_manifest.jsonl` — **31 casos** fixture-authored,
+  determinísticos, sem LLM (`RPG_FORCE_MOCK` do runner; o router só passa por gates Python).
+  Oráculo `projection` (`ProjectionEvaluator`, métrica `state_transition_pass_rate`).
+- `evals/core/adapters.py::EncounterManifestAdapter` chama só funções de produto:
+  1. **Elenco estável** (7): `reconcile_roster`/`validate_roster`/`sync_statuses` por rodada +
+     `assert_immutable` (2 rodadas estáveis, saída só por evento `dead`, intruso `corvo` → `cut
+     roster_violation`, espécie trocada → `species_drift`, ausente → `departed`, 2 sondas de
+     imutabilidade `species_label`/`role` que o oráculo DEVE rejeitar).
+  2. **Reload** (5): `_state_to_save_data → _raw_to_state` em `entering|active|resolving|ended`
+     + 2 bandidos ativos; `schema_version` 8, manifesto/fase/`next_step` preservados, 2º reload estável.
+  3. **Terminal → exploração** (5): vitória/rendição/fuga → `storyteller` + `explore_resumed=True`
+     uma vez; já retomado não é reescrito; `death` não marca e mantém `death_pending`.
+  4. **Save v8 legado** (3): combate ativo → `legacy_migrated` + `active` idempotente; sem combate
+     → `ended` sem manifesto; manifesto corrompido → reconstruído.
+  5. **Ciclo de fases** (3): ciclo canônico, transições inválidas, outcome só em `ended`; `end_combat`.
+  6. **Desfecho sem XP** (2): `build_result` só tem `xp_event_ref=None` (nenhum valor de XP),
+     `result_event_id` determinístico, `loot_ref` só com loot.
+  7. **Prosa (narrative)** (6): `prose_guard.species_drift` marca/neutraliza "corvo"/"lobos" com
+     elenco de bandidos; espécie canônica, canônica+fauna de passagem, elenco corvo e prosa sem
+     espécie não são marcadas.
+- CI: `--suite encounter_manifest` no job `deterministic-evals` e
+  `tests/test_eval_encounter_manifest.py` no `backend-selective`.
+- Relock pelo comando oficial (`python -m evals.core.governance lock --root . --dataset …` com os 8
+  datasets): muda só o hash novo do dataset e o de `core/adapters.py`; `EVALUATOR_VERSION` 1.7.0
+  inalterado (sem oráculo/métrica novos). `governance check` verde; todas as suítes do CI verdes
+  (`passed=True`, zero hard failures, `state_transition_pass_rate` 1.0).
+- **Publicar exige aprovação do environment `eval-governance`** (paths protegidos:
+  `evals/core`, `evals/datasets/regression`, `evals/manifest.lock.json`).
+
 ## Limites / pendências
-- Revisão independente Astra **não executada** (REVIEW_REQUIRED) e evals novos aguardam autoria
-  separada ([handoff](../../handoffs/SPEC-203-eval-authoring.md)).
+- Revisão independente Astra aprovada com 2 correções (registro em ESTADO_ATUAL/ROADMAP; o
+  parecer não foi versionado em `handoffs/`). Evals autorados (seção acima).
+- O caso de prosa testa o detector `species_drift`; a substituição pelo texto determinístico
+  dentro de `_narrate` (depende de LLM) segue coberta por `tests/test_encounter_manifest.py`.
 - Parse de fala livre do jogador continua CLASSIFY (identifica a ação, não o elenco); "zero
   CLASSIFY nas rodadas ≥1" vale com declaração estruturada (UI/harness) — interpretação registrada.
 - Store Postgres (perfis não-legacy) não passa por `_raw_to_state`; `combat_node` reconstrói

@@ -761,6 +761,239 @@ class PlayerKnowledgeAdapter:
         raise AdapterError(f"unsupported player_knowledge operation: {operation}")
 
 
+class EncounterManifestAdapter:
+    """Observe the frozen encounter manifest, its lifecycle and reload (SPEC-203).
+
+    Every operation calls the product functions in `services.encounter_manifest`,
+    `persistence`, `agents.router` and `services.prose_guard`; the adapter only
+    builds fixture state and reports `actual`.
+    """
+
+    adapter_id = "encounter_manifest"
+
+    @staticmethod
+    def _manifest(case_input: dict[str, Any]) -> dict[str, Any]:
+        from services import encounter_manifest as em
+
+        enemies = case_input.get("manifest_enemies")
+        if not isinstance(enemies, list) or not enemies:
+            raise AdapterError("encounter_manifest requires input.manifest_enemies list")
+        return em.build_manifest(
+            copy.deepcopy(enemies),
+            source=str(case_input.get("source") or "systemic"),
+            origin=str(case_input.get("origin") or "unknown"),
+            encounter_id=str(case_input.get("encounter_id") or "eval:0:1"),
+        )
+
+    @staticmethod
+    def _reload(state: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+        import persistence
+
+        raw = json.loads(
+            json.dumps(persistence._state_to_save_data(state, state["game_id"]), default=str)
+        )
+        return raw, {**state, **persistence._raw_to_state(raw)}
+
+    def execute(self, case: AdapterCase) -> AdapterOutput:
+        if not isinstance(case.input, dict):
+            raise AdapterError("encounter_manifest requires object input")
+        from services import encounter_manifest as em
+
+        operation = case.input.get("operation")
+        if operation == "roster_rounds":
+            initial = self._manifest(case.input)
+            manifest = copy.deepcopy(initial)
+            violations: list[list[str]] = []
+            kept_ids: list[list[str]] = []
+            for row in case.input.get("rounds") or []:
+                enemies = copy.deepcopy(row.get("enemies") or [])
+                round_ = int(row.get("round", 0))
+                manifest, kept, found = em.reconcile_roster(manifest, enemies, round_)
+                manifest = em.sync_statuses(manifest, kept, round_)
+                violations.append(sorted(found))
+                kept_ids.append([str(enemy.get("id")) for enemy in kept])
+            mutation = case.input.get("mutate_participant")
+            if isinstance(mutation, dict):
+                for participant in manifest.get("participants") or []:
+                    if participant.get("participant_id") == mutation.get("participant_id"):
+                        participant[str(mutation.get("field"))] = mutation.get("value")
+            try:
+                em.assert_immutable(initial, manifest)
+                immutable = "ok"
+            except ValueError as error:
+                immutable = str(error)
+            return AdapterOutput(actual={
+                "participants": [
+                    [p["participant_id"], p["species_label"], p["bestiary_id"],
+                     p["faction_id"], p["role"]]
+                    for p in initial.get("participants") or []
+                ],
+                "violations": violations,
+                "kept_ids": kept_ids,
+                "final_statuses": {
+                    p["participant_id"]: p["status"] for p in manifest.get("participants") or []
+                },
+                "event_kinds": [
+                    [event["kind"], event["participant_id"], event["cause"]]
+                    for event in manifest.get("events") or []
+                ],
+                "immutable": immutable,
+            })
+
+        if operation == "reload_phase":
+            manifest = self._manifest(case.input)
+            phase = str(case.input.get("phase") or "")
+            active = phase != "ended"
+            combat = {
+                "active": active,
+                "phase": phase,
+                "outcome": None if active else case.input.get("outcome"),
+                "encounter": manifest,
+                "round": int(case.input.get("round", 1)),
+            }
+            state = {
+                "game_id": "00000000-0000-4000-8000-0000000000e3",
+                "player": {"name": "Eval"},
+                "world": {},
+                "messages": [],
+                "enemies": copy.deepcopy(case.input["manifest_enemies"]) if active else [],
+                "combat": combat,
+            }
+            raw, loaded = self._reload(state)
+            _raw_again, again = self._reload(loaded)
+            return AdapterOutput(actual={
+                "schema_version": raw.get("schema_version"),
+                "phase": loaded["combat"].get("phase"),
+                "outcome": loaded["combat"].get("outcome"),
+                "encounter_preserved": loaded["combat"].get("encounter") == manifest,
+                "next_step_before": em.next_step(combat),
+                "next_step_after": em.next_step(loaded["combat"]),
+                "enemy_ids_after": [e.get("id") for e in loaded.get("enemies") or []],
+                "second_reload_stable": again["combat"] == loaded["combat"],
+            })
+
+        if operation == "router_resume":
+            from langchain_core.messages import HumanMessage
+
+            from agents.router import dm_router_node
+
+            manifest = self._manifest(case.input)
+            outcome = str(case.input.get("outcome") or "victory")
+            combat = em.end_combat(
+                {"phase": "active", "encounter": manifest, "round": 2}, outcome
+            )
+            combat["active"] = False
+            combat["result"] = em.build_result(manifest, outcome, 2)
+            if case.input.get("explore_resumed"):
+                combat["explore_resumed"] = True
+            state = {
+                "game_id": "eval-router",
+                "world": {"current_location": "Trilha", "current_location_id": "eval_trilha"},
+                "player": {"name": "Eval"},
+                "enemies": [],
+                "combat": combat,
+                "death_pending": bool(case.input.get("death_pending")),
+                "messages": [HumanMessage(content=str(case.input.get("message") or ""))],
+            }
+            first = dm_router_node(copy.deepcopy(state))
+            merged = {**state, **{k: v for k, v in first.items() if k != "messages"}}
+            second = dm_router_node(copy.deepcopy(merged))
+            return AdapterOutput(actual={
+                "phase": combat.get("phase"),
+                "next": first.get("next"),
+                "explore_resumed": (first.get("combat") or {}).get("explore_resumed"),
+                "second_next": second.get("next"),
+                "second_rewrites_combat": "combat" in second,
+                "death_pending": merged.get("death_pending"),
+                "next_step": em.next_step(merged["combat"]),
+            })
+
+        if operation == "legacy_load":
+            import persistence
+
+            raw = copy.deepcopy(case.input.get("raw"))
+            if not isinstance(raw, dict):
+                raise AdapterError("legacy_load requires input.raw object")
+            loaded = persistence._raw_to_state(copy.deepcopy(raw))
+            combat = loaded.get("combat") or {}
+            encounter = combat.get("encounter")
+            roundtrip_raw = json.loads(json.dumps(
+                persistence._state_to_save_data(loaded, str(raw.get("game_id") or "g")),
+                default=str,
+            ))
+            again = persistence._raw_to_state(roundtrip_raw)
+            return AdapterOutput(actual={
+                "phase": combat.get("phase"),
+                "outcome": combat.get("outcome"),
+                "has_encounter": encounter is not None,
+                "source": (encounter or {}).get("source"),
+                "encounter_id": (encounter or {}).get("encounter_id"),
+                "participant_ids": [
+                    p.get("participant_id") for p in (encounter or {}).get("participants") or []
+                ],
+                "roundtrip_schema_version": roundtrip_raw.get("schema_version"),
+                "idempotent": (again.get("combat") or {}) == combat,
+            })
+
+        if operation == "phase_cycle":
+            cycle: dict[str, Any] = {}
+            trace: list[str] = []
+            for step in case.input.get("steps") or []:
+                try:
+                    cycle = em.transition(cycle, str(step.get("to")), step.get("outcome"))
+                    trace.append(f"{cycle['phase']}:{cycle.get('outcome')}")
+                except em.InvalidEncounterTransition:
+                    trace.append("invalid")
+            ended: dict[str, Any] = {}
+            if case.input.get("end_outcome"):
+                ended = em.end_combat(
+                    {"phase": case.input.get("end_from")}, str(case.input["end_outcome"])
+                )
+            return AdapterOutput(actual={
+                "trace": trace,
+                "end_combat": {
+                    "phase": ended.get("phase"),
+                    "outcome": ended.get("outcome"),
+                    "violations": len(ended.get("phase_violations") or []),
+                } if ended else None,
+            })
+
+        if operation == "build_result":
+            manifest = self._manifest(case.input)
+            round_ = int(case.input.get("round", 1))
+            for pid, kind in (case.input.get("exits") or {}).items():
+                manifest = em.apply_composition(manifest, str(kind), str(pid), "combat_round",
+                                                round_)
+            outcome = str(case.input.get("outcome") or "victory")
+            loot = bool(case.input.get("loot"))
+            result = em.build_result(manifest, outcome, round_, loot=loot)
+            repeat = em.build_result(manifest, outcome, round_, loot=loot)
+            return AdapterOutput(actual={
+                "keys": sorted(result),
+                "outcome": result["outcome"],
+                "participants": [
+                    [p["participant_id"], p["species_label"], p["final_status"]]
+                    for p in result["participants"]
+                ],
+                "xp_event_ref": result["xp_event_ref"],
+                "has_loot_ref": result["loot_ref"] is not None,
+                "deterministic_event_id": result["result_event_id"] == repeat["result_event_id"],
+            })
+
+        if operation == "species_drift":
+            from services import prose_guard
+
+            manifest = self._manifest(case.input) if case.input.get("manifest_enemies") else None
+            flags = prose_guard.species_drift(str(case.input.get("text") or ""), manifest)
+            return AdapterOutput(actual={
+                "flagged_species": [flag.get("species") for flag in flags],
+                "canonical": sorted({c for flag in flags for c in flag.get("canonical") or []}),
+                "neutralized": bool(flags),
+            })
+
+        raise AdapterError(f"unknown encounter_manifest operation: {operation!r}")
+
+
 class AdapterRegistry:
     """Small explicit suite registry; unknown suites fail closed."""
 
@@ -793,6 +1026,7 @@ def default_registry() -> AdapterRegistry:
             "generation_boundary": GenerationBoundaryAdapter(),
             "narrative_claims": NarrativeClaimAdapter(),
             "player_knowledge": PlayerKnowledgeAdapter(),
+            "encounter_manifest": EncounterManifestAdapter(),
         }
     )
 
@@ -803,6 +1037,7 @@ __all__ = [
     "AdapterOutput",
     "AdapterRegistry",
     "EvalAdapter",
+    "EncounterManifestAdapter",
     "FixtureActualAdapter",
     "PlaytestInvariantsAdapter",
     "NarrativeClaimAdapter",

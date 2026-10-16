@@ -1,6 +1,6 @@
 # SPEC-203 — Manifesto do encontro, elenco fixo e desfecho do combate
 
-> **Status:** `in-progress` (implementação + testes concluídos; falta revisão Astra e autoria de evals)
+> **Status:** `done` (implementação, revisão Astra e autoria de evals concluídas — corpus `encounter_manifest`, 2026-10-16)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-199 `done` (evento estruturado de XP), SPEC-228 `done` (guard de schema + morte/checkpoint corretos), SPEC-231 `done` (morte com aliados/`scene_allies` corretos) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-205, SPEC-209, SPEC-212 (ordem final 2026-10-15)
@@ -323,7 +323,9 @@ Manifesto ausente/corrompido num save → reconstruído de `state["enemies"]` co
 - [x] Saves v8 (com e sem combate ativo) carregam e fazem round-trip (v8 aditivo, sem bump — ver nota de schema).
 - [x] Guard de FallbackLLM preservado no scanner; nenhum `with_structured_output` novo sem guard.
 - [x] `uv run pytest` verde (suíte offline completa); `npm run build` verde.
-- [ ] Revisão independente Astra aprovada; evals novos autorados em tarefa separada.
+- [x] Revisão independente Astra aprovada; evals novos autorados em tarefa separada
+      (suíte dedicada `encounter_manifest`, 31 casos, `state_transition_pass_rate` 1.0 —
+      ver `docs/spec203/README.md` § Evals).
 
 ## 6. Smoke
 
@@ -373,6 +375,13 @@ sistêmicos e zero drift. Não executar sem pedido do dono.
 - Parecer Astra em `handoffs/SPEC-203-ASTRA-independent-review.md`.
 - Handoff de autoria de evals (`handoffs/SPEC-203-eval-authoring.md`) — tarefa separada.
 
+**Status da evidência (2026-10-16):** atendida. Autoria de evals concluída em commit
+separado (`test(evals): author encounter manifest cases for SPEC-203`): dataset novo
+`evals/datasets/regression/encounter_manifest.jsonl` (31 casos fixture-authored, sem LLM)
++ `EncounterManifestAdapter`; casos antigos de `state_rules`/`narrative_npc` intocados.
+Relock oficial, `governance check` verde, todas as suítes do CI verdes. Publicar exige
+aprovação do environment `eval-governance`.
+
 ## 10. Registro de execução (2026-10-16)
 
 - **Etapa 0:** H1, H2, H2b, H3, H4 reproduziram bug de estado no HEAD `50d4620`; H5 só narrativo
@@ -391,5 +400,5 @@ sistêmicos e zero drift. Não executar sem pedido do dono.
   (`resolve_bestiary_name`) é tratado como fonte (c) `threat`; `reinforcements/controlled`
   também viram `threat`.
 - **Smoke real** (DeepSeek, ≤10 turnos autorizados): ver `docs/spec203/README.md`.
-- **Pendente para `done`:** revisão independente Astra; autoria dos evals
-  (`handoffs/SPEC-203-eval-authoring.md`).
+- **Fechamento:** revisão Astra aprovada (2 correções); autoria dos evals concluída
+  (suíte `encounter_manifest`) — status `done`.
