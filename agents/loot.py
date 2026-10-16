@@ -18,6 +18,7 @@ from gamedata import get_location
 from llm_setup import ModelTier, get_llm
 from services import conflict_summary as conflict_summary_service
 from services import economy, prose_guard
+from services.turn_outcome import record_gain
 from state import GameState
 
 
@@ -248,6 +249,10 @@ def loot_node(state: GameState):
                 ).get("quotes", []),
             },
         }
+        # SPEC-226 R10: ganho (venda) / gasto (compra/craft) individual no baseline.
+        _bl = record_gain(state.get("turn_baseline"), "gold", delta)
+        if _bl is not state.get("turn_baseline"):
+            result["turn_baseline"] = _bl
         # Fase 6.2: posse de item único muda de mãos → evento do motor na fila
         if outcome.get("pending_events"):
             result["pending_world_events"] = (state.get("pending_world_events", []) or []) \
@@ -316,6 +321,9 @@ def loot_node(state: GameState):
     }
     if conflict_summary:
         result["conflict_summary"] = conflict_summary
+    _bl = record_gain(state.get("turn_baseline"), "gold", int(roll["gold"]))  # SPEC-226 R10
+    if _bl is not state.get("turn_baseline"):
+        result["turn_baseline"] = _bl
     if unique_events:
         result["pending_world_events"] = (state.get("pending_world_events", []) or []) + unique_events
     return result

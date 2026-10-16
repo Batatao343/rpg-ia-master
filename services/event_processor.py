@@ -205,6 +205,32 @@ def prevalidate_event_batch(
     return results
 
 
+def _revert_reputation(factions: list, proposal: Dict) -> list:
+    """SPEC-226 R8: o storyteller aplica a reputação ao propor; se o pipeline
+    rejeita o `reputation_changed`, o delta exato aplicado é desfeito (estado e
+    log nunca divergem). Só proposta do motor (`source=storyteller`) com delta."""
+    if proposal.get("source") != "storyteller":
+        return factions
+    payload = proposal.get("payload") or {}
+    try:
+        delta = int(payload.get("delta", 0) or 0)
+        new_value = int(payload.get("new_value"))
+    except (TypeError, ValueError):
+        return factions
+    if not delta:
+        return factions
+    from world_utils import REP_MAX, REP_MIN, _disposition_for
+    out = []
+    for f in factions:
+        f = dict(f) if isinstance(f, dict) else f
+        if isinstance(f, dict) and f.get("id") == proposal.get("target_id")                 and int(f.get("reputation", 0) or 0) == new_value:
+            old = max(REP_MIN, min(REP_MAX, new_value - delta))
+            f["reputation"] = old
+            f["disposition"] = _disposition_for(old)
+        out.append(f)
+    return out
+
+
 def process_pending_events(state: Dict) -> Dict:
     """Valida/aplica a fila `pending_world_events`. Retorna updates parciais do GameState.
 
@@ -226,6 +252,7 @@ def process_pending_events(state: Dict) -> Dict:
     quests_completed = 0  # Fase 4.1: cada conclusão vale XP_PER_QUEST
     quest_reward_gold = 0
     killed_targets: list = []  # SPEC-230 R4
+    factions_reverted = None  # SPEC-226 R8: reputação de proposta rejeitada é desfeita
     original_rejections = list(state.get("event_rejections") or [])
     event_rejections = _bounded_rejections(original_rejections)
     rejection_count_before = len(event_rejections)
@@ -268,6 +295,12 @@ def process_pending_events(state: Dict) -> Dict:
                 "target_id": str(proposal.get("target_id") or ""),
                 "reason": str(result.reason or "")[:240],
             }])
+            if proposal.get("type") == "reputation_changed":
+                factions_reverted = _revert_reputation(
+                    factions_reverted if factions_reverted is not None
+                    else list(state.get("factions") or []),
+                    proposal,
+                )
             continue
         event = _build_event(proposal, turn)
         event_log.append(event)
@@ -281,10 +314,14 @@ def process_pending_events(state: Dict) -> Dict:
                 origem = next((q for q in quests if q.get("id") == qid), None)
                 if origem:
                     event["payload"]["quest_title"] = origem.get("title", "")
+                was_active = any(q.get("id") == qid and q.get("status") == "active"
+                                 for q in quests)
                 quests, delivered = quest_log.complete_quest_with_reward(quests, qid, turn)
                 quest_reward_gold += delivered
                 quests_changed = True
-                quests_completed += 1
+                if was_active:  # SPEC-226 R2: XP só na transição real
+                    quests_completed += 1
+                working["quests"] = quests
 
         print(f"✅ [EVENT] {event['type']} → {event['target_id']} (id={event['event_id'][:8]})")
         _chronicle_milestone(event, projection)  # Fase 3.1: evento aplicado → crônica
@@ -329,11 +366,23 @@ def process_pending_events(state: Dict) -> Dict:
                                      XP_PER_QUEST * quests_completed)
         player["gold"] = int(player.get("gold", 0) or 0) + quest_reward_gold
         updates["player"] = player
+        # SPEC-226 R10: cada conclusão é um ganho individual (XP e ouro).
+        from services.turn_outcome import record_gain
+        bl = state.get("turn_baseline")
+        for _ in range(quests_completed):
+            bl = record_gain(bl, "xp", XP_PER_QUEST)
+        for _ in range(quests_completed if quest_reward_gold else 0):
+            bl = record_gain(bl, "gold", quest_reward_gold // quests_completed)
+        if bl is not state.get("turn_baseline"):
+            updates["turn_baseline"] = bl
         for prop in lvl_props:
             ev = _build_event(prop, turn)
             event_log.append(ev)
             print(f"⬆️ [XP] level_up → nível {ev['payload'].get('new_level')} (id={ev['event_id'][:8]})")
             _chronicle_milestone(ev, projection)
+
+    if factions_reverted is not None and factions_reverted != list(state.get("factions") or []):
+        updates["factions"] = factions_reverted
 
     if killed_targets:
         from services.npc_layers import apply_npc_death

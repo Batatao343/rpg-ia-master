@@ -1,6 +1,6 @@
 # SPEC-226 — Contabilidade de recompensas: XP por abate, quests, beats, achados e eventos derivados
 
-> **Status:** `draft`
+> **Status:** `done`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** nenhuma · SPEC-142 interacoes-progresso-elegibilidade, SPEC-057 loot-exploracao e SPEC-010 fase-4.1-progressao `done` são corrigidas, não reabertas (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-199, SPEC-212, SPEC-223; baseline de XP do balanceamento (ordem final 2026-10-15)
@@ -128,11 +128,11 @@ nunca > XP máximo possível de um turno; `defeated` ≤ abates.
 
 ## 5. Critérios de aceite
 
-- [ ] 10 testes vermelhos → verdes; `tests/test_audit_reward_contracts.py`, `test_fase33.py`, `test_fase27.py`,
+- [x] 10 testes vermelhos → verdes; `tests/test_audit_reward_contracts.py`, `test_fase33.py`, `test_fase27.py`,
       `test_matriz_a_contratos.py`, `test_pre_matrix_contracts.py`, `test_beats_visibilidade.py` verdes ou diff justificado.
-- [ ] `uv run pytest` verde; playtest offline com run_id e grep de XP por turno.
-- [ ] Saves antigos carregam (sem mudança de schema; `xp_awarded` é campo opcional no inimigo).
-- [ ] Guard de FallbackLLM: `campaign_manager` já tem isinstance (R4 muda só o fallback).
+- [x] `uv run pytest` verde; playtest offline com run_id e grep de XP por turno.
+- [x] Saves antigos carregam (sem mudança de schema; `xp_awarded` é campo opcional no inimigo).
+- [x] Guard de FallbackLLM: `campaign_manager` já tem isinstance (R4 muda só o fallback).
 
 ## 6. Smoke test com LLM real
 
@@ -153,7 +153,19 @@ nunca > XP máximo possível de um turno; `defeated` ≤ abates.
   via `ConflictSummary.mortos` (mais simples, muda a cadência do HUD).
 - **D-B (Jaccard 0,6):** limiar sugerido; alternativa mais simples: exigir turnos não consecutivos.
 
-## 9. Evidência requerida
+## 8b. Decisoes aplicadas e desvios (execucao 2026-10-16)
+
+- **D-A**: default (transicao vivo->morto + `xp_awarded`) implementado; mortos presentes no estado de entrada nunca rendem.
+- **D-B**: Jaccard 0,6 (`FINGERPRINT_JACCARD`).
+- **R8**: dedupe por `faction_id` (ultimo vence) ANTES de aplicar; e (revisao Sol) `event_processor._revert_reputation` desfaz o delta exato aplicado pelo storyteller quando o `reputation_changed` e REJEITADO por qualquer motivo (ex.: faccao derrotada). Aceito = nada a desfazer, sem aplicar 2x. Estado e log nunca divergem.
+- **R10**: o guard aceita o liquido, liquido+gasto (`turn_baseline[<gold|xp>_spent]`) ou qualquer ganho individual (`turn_baseline[<gold|xp>_gains]`). Ledger alimentado por um helper unico `services/turn_outcome.record_gain(baseline, kind, amount)` (ganho >0, gasto <0; sem baseline = no-op) nos pontos reais: combate (XP de abate), storyteller (baú/achado ouro, armadilha XP, beat XP), event_processor (quest XP+ouro), loot (saque ouro, venda ganho, compra/craft gasto).
+- **R2**: a repro exige propostas com `target_id` distintos (mesmo alvo/turno ja era rejeitado por dedupe).
+- **R7**: `type` e so fallback; ficha sem `categoria` e desconhecida continua lacaio. Fichas de combate recebem `categoria` via `ensure_combat_sheet`.
+- **R4 (revisao Sol)**: o plano anterior so e mantido se for da MESMA regiao (`_same_region`); de outra regiao cai no template ancorado no local atual (evita transplante de ganchos, P1 sessao 38).
+- **Follow-up (D-A, nao trivial)**: reforco que reaproveite o id de um cadaver (`{base}_{N}`) nao renderia XP. `conflict_scene.fire_reinforcement` nao tem callsite de producao hoje; quem ligar reforcos deve gerar id de instancia unico por conflito.
+- Smoke real (secao 6) nao executado (sem provider real); cobertura offline via MockLLM.
+
+## 9. Evidencia requerida
 
 - `uv run pytest` completo; testes antes/depois; run_ids do playtest com grep de XP por turno.
 - `docs/<spec>/README.md` com os scripts `test_r4.py`, `r1.py`, `repro1.py` transcritos e revisão `Sol` independente.

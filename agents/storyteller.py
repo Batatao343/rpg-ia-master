@@ -294,6 +294,9 @@ def storyteller_node(state: GameState):
     # --- Fase 2: o tempo que passa avança as fações off-screen (mundo vivo) ---
     travel_note = rest_note = faction_note = ""
     rested_player = None
+    # SPEC-226 R10: ganhos individuais do turno (guard narrativo aceita o bruto).
+    from services.turn_outcome import record_gain
+    turn_bl = state.get("turn_baseline")
     factions = ensure_factions(state.get("factions"))
     intel = ensure_faction_intel(state.get("faction_intel"))
     travel_intent = bool(
@@ -343,10 +346,14 @@ def storyteller_node(state: GameState):
                 int(world.get("turn_count", 0) or 0))
             disc_note, discovery_events = exploration.discover_on_arrival(
                 _pl, world, dest, int(_pl.get("level", 1) or 1), _rng,
-                projection=state.get("world_projection"))
+                projection=state.get("world_projection"),
+                first_visit=first_visit)
             if disc_note:
                 faction_note = (faction_note + " " + disc_note).strip()
             discovery_player = _pl
+            turn_bl = record_gain(turn_bl, "gold",
+                                  int(_pl.get("gold", 0) or 0)
+                                  - int((state.get("player") or {}).get("gold", 0) or 0))
         if travel_periods == 0:
             travel_note = (
                 f"O jogador ENTROU em {dest['name']} (mesma cidade — o tempo não passou). "
@@ -481,6 +488,8 @@ def storyteller_node(state: GameState):
                     updates["player"] = discovery_player
                 # spec loot-exploracao: claim de único do baú curado não se perde
                 # se um encontro disparar na mesma chegada.
+                if turn_bl is not state.get("turn_baseline"):
+                    updates["turn_baseline"] = turn_bl
                 if discovery_events:
                     updates["pending_world_events"] = (
                         state.get("pending_world_events", []) or []) + discovery_events
@@ -500,6 +509,8 @@ def storyteller_node(state: GameState):
                     base_p, loc_node, danger, helper=helper,
                 )
                 rested_player = new_p  # reusa o encanamento de player existente
+                turn_bl = record_gain(turn_bl, "xp", int(new_p.get("xp", 0) or 0)
+                                      - int(base_p.get("xp", 0) or 0))
                 world_note = "ENCONTRO NA ESTRADA (armadilha — números JÁ resolvidos, narre-os):\n" \
                     + "\n".join(trap_logs)
                 if info:
@@ -781,7 +792,12 @@ def storyteller_node(state: GameState):
             [] if quarantine_llm_payload
             else (getattr(update, "faction_impacts", []) or [])
         )
+        # SPEC-226 R8: 1 impacto por facção/turno (último vence) — o validador já
+        # rejeitaria o 2º reputation_changed, mas o estado teria movido 2×.
+        _by_fid: dict = {}
         for imp in faction_impacts:
+            _by_fid[getattr(imp, "faction_id", "")] = imp
+        for imp in _by_fid.values():
             fid = getattr(imp, "faction_id", "")
             direction = getattr(imp, "direction", "")
             factions, rep_ev = apply_reputation(factions, fid, direction)
@@ -810,8 +826,12 @@ def storyteller_node(state: GameState):
         # criação (achado do smoke real 2026-07-05). XP de beat só do turno 2 em diante.
         if beat_done and int(world.get("turn_count", 0) or 0) > 1:
             from progression import grant_xp, XP_PER_BEAT
-            base_p = rested_player if rested_player is not None else dict(state.get("player") or {})
+            # SPEC-226 R3: compõe sobre o jogador já atualizado (descanso/achado).
+            base_p = (rested_player if rested_player is not None
+                      else discovery_player if discovery_player is not None
+                      else dict(state.get("player") or {}))
             leveled_player, level_up_events = grant_xp(base_p, XP_PER_BEAT)
+            turn_bl = record_gain(turn_bl, "xp", XP_PER_BEAT)
         if beat_done:
             beats[current_step] = {**beats[current_step], "status": "done"}
             new_step = current_step + 1
@@ -1014,6 +1034,8 @@ def storyteller_node(state: GameState):
         if created or new_quests != list(state.get("quests", []) or []):
             updates["quests"] = new_quests
             updates["archive_due"] = True  # nova missão é evento relevante
+        if turn_bl is not state.get("turn_baseline"):
+            updates["turn_baseline"] = turn_bl
         return updates
 
     except Exception as e:

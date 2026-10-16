@@ -807,3 +807,24 @@ def _condition_from_effect(eff: Dict, source: str) -> Optional[Dict]:
         return {"name": _CONTROL_NAMES.get(ckind, ckind), "dot": 0, "duration": dur,
                 "source": source, "control": ckind}
     return None
+
+
+# SPEC-226 R7: categoria canônica (fonte única p/ XP de abate e custo de orçamento).
+_CATEGORIA_CANON = {
+    "minion": "lacaio", "lacaio": "lacaio", "trivial": "lacaio",
+    "padrao": "padrao", "standard": "padrao", "normal": "padrao", "grunt": "padrao",
+    "elite": "elite", "veterano": "elite",
+    "boss": "chefe", "chefe": "chefe", "chefao": "chefe",
+    "nomeado": "nomeado", "named": "nomeado", "unico": "nomeado",
+}
+
+
+def normalize_categoria(sheet: dict) -> str:
+    """lacaio|padrao|elite|chefe|nomeado. `categoria` vence; `type` é só fallback
+    para fichas legadas sem categoria; desconhecido → lacaio (comportamento antigo)."""
+    for key in ("categoria", "type"):
+        raw = str((sheet or {}).get(key) or "").strip().lower()
+        if raw in _CATEGORIA_CANON:
+            return _CATEGORIA_CANON[raw]
+    return "lacaio"
+

@@ -16,6 +16,24 @@ _NEGATIVE_ITEM = re.compile(
 )
 
 
+def record_gain(baseline: dict | None, kind: str, amount: int) -> dict | None:
+    """SPEC-226 R10: registra um ganho (amount > 0) ou gasto (amount < 0) individual
+    de `kind` ('gold'|'xp') no `turn_baseline` do turno, para o guard narrativo
+    aceitar o GANHO BRUTO por fonte. PURO: devolve cópia; sem baseline (nó chamado
+    fora do grafo) devolve o próprio valor, sem inventar um baseline parcial."""
+    if not baseline or kind not in ("gold", "xp"):
+        return baseline
+    amount = int(amount or 0)
+    if not amount:
+        return baseline
+    out = dict(baseline)
+    if amount > 0:
+        out[f"{kind}_gains"] = [*(baseline.get(f"{kind}_gains") or []), amount]
+    else:
+        out[f"{kind}_spent"] = int(baseline.get(f"{kind}_spent", 0) or 0) - amount
+    return out
+
+
 def _inventory(actor: dict) -> Counter[str]:
     counts: Counter[str] = Counter()
     for entry in actor.get("inventory") or []:

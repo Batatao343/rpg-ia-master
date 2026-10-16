@@ -206,6 +206,16 @@ def _build_plan(state: GameState) -> CampaignPlan:
         }
     except Exception as exc:  # noqa: BLE001
         print(f"[CAMPAIGN MANAGER ERROR] {exc}")
+        # SPEC-226 R4: com plano válido existente, falha do planejador mantém o
+        # plano (None → needs_replan fica). Template genérico só sem plano —
+        # senão cada beat genérico reabriria XP_PER_BEAT.
+        # Revisão Sol: só mantém o plano se ele é da MESMA região — plano de
+        # outra região transplantaria ganchos (achado P1 da sessão 38); aí o
+        # template ancorado no local atual é o mal menor (1× por troca de região).
+        _old = state.get("campaign_plan") or {}
+        if _old.get("beats") and _same_region(str(_old.get("location") or ""),
+                                              str(current_loc or "")):
+            return None
         # spec beats-visibilidade-ptbr (achado F): o fallback ERA em inglês —
         # fonte real do "beat em inglês" quando o LLM falha. Agora em pt-BR.
         fallback_beats: List[CampaignBeat] = [

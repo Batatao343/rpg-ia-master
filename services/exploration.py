@@ -95,6 +95,7 @@ def _grant_items(player: dict, item_ids: List[str],
 def discover_on_arrival(player: dict, world: dict, loc: dict, player_level: int,
                         rng: Optional[random.Random] = None,
                         projection: Optional[dict] = None,
+                        *, first_visit: bool = True,
                         ) -> Tuple[str, list]:
     """Entrypoint do storyteller ao CHEGAR num local novo. Resolve baú curado
     (prioridade) OU achado ambiental, MUTA player.inventory/gold + world (marca
@@ -111,7 +112,9 @@ def discover_on_arrival(player: dict, world: dict, loc: dict, player_level: int,
                   + ([f"{tre['gold']} de ouro"] if tre["gold"] else [])]
         return (f"O jogador ENCONTROU um baú/esconderijo em {loc.get('name','o local')}: "
                 f"{' e '.join(partes)}. Descreva o achado.", unique_events)
-    # 2) achado ambiental (só 1ª visita — o caller já checou fog of war).
+    # 2) achado ambiental (SPEC-226 R5: só na 1ª visita — fog of war).
+    if not first_visit:
+        return ("", [])
     disc = roll_discovery(world, loc, player_level, rng)
     if not disc:
         return ("", [])

@@ -618,6 +618,11 @@ def combat_node(state: GameState):
     bestiary_knowledge = dict(state.get("bestiary_knowledge") or {})
     bk_changed = False
     is_simulation = bool((state.get("combat_simulation") or {}).get("enabled"))
+    # SPEC-226 R1: mortos que já constavam no estado de entrada não rendem de novo.
+    dead_before = {
+        str(e.get("id") or e.get("name")) for e in (state.get("enemies") or [])
+        if e.get("dead") or e.get("status") == "morto" or e.get("xp_awarded")
+    }
 
     if (not player.get("conscious", True)
             and not combat_meta.get("active")):
@@ -907,8 +912,18 @@ def combat_node(state: GameState):
             death_flow.generate_scar(player, llm)
 
     dead = [e for e in enemies if e.get("dead") or e.get("status") == "morto"]
-    if dead:
-        bestiary_knowledge = disc.record_kills(bestiary_knowledge, dead, turn)
+    # SPEC-226 R1: só quem transitou para morto NESTA rodada gera XP/kill/evento.
+    newly_dead = [
+        e for e in dead
+        if not e.get("xp_awarded")
+        and str(e.get("id") or e.get("name")) not in dead_before
+    ]
+    for e in newly_dead:
+        e["xp_awarded"] = True
+    for e in dead:
+        e["xp_awarded"] = True
+    if newly_dead:
+        bestiary_knowledge = disc.record_kills(bestiary_knowledge, newly_dead, turn)
         bk_changed = True
 
     player_dead = bool(out.get("player_dead")) or bool(player.get("dead"))
@@ -925,11 +940,13 @@ def combat_node(state: GameState):
 
     # ---- XP determinístico (fugitivo/queda letal não contam) ----
     level_up_events: List[Dict] = []
-    if dead and not player_dead and not is_simulation:
+    kill_xp = 0  # SPEC-226 R10: ganho individual p/ o guard narrativo
+    if newly_dead and not player_dead and not is_simulation:
         import progression as pg
-        xp = pg.xp_for_kills(dead)
+        xp = pg.xp_for_kills(newly_dead)
         if xp:
             player, level_up_events = pg.grant_xp(player, xp)
+            kill_xp = xp
             logs.append(f"+{xp} XP" + (f" — NÍVEL {player['level']}!" if level_up_events else ""))
 
     # ---- Narração ----
@@ -1000,13 +1017,18 @@ def combat_node(state: GameState):
         result["world"] = world_out
     if bk_changed:
         result["bestiary_knowledge"] = bestiary_knowledge
+    if kill_xp:
+        from services.turn_outcome import record_gain
+        _bl = record_gain(state.get("turn_baseline"), "xp", kill_xp)
+        if _bl is not state.get("turn_baseline"):
+            result["turn_baseline"] = _bl
 
     # ---- Reflexo dos aliados transitórios no NPC de origem ----
     if scene_tr:
         result["npcs"] = _reflect_scene_allies(state, scene_tr, allies, combat_over)
 
     # ---- Eventos de mundo (kills canônicas + level up + morte do jogador) ----
-    engine_events = [] if is_simulation else _kill_events(dead) + level_up_events
+    engine_events = [] if is_simulation else _kill_events(newly_dead) + level_up_events
     if out.get("recidiva_event"):
         engine_events.append(out["recidiva_event"])
 

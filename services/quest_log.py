@@ -151,6 +151,31 @@ def _normalized_words(value: str) -> set[str]:
     }
 
 
+FINGERPRINT_JACCARD = 0.6  # SPEC-226 R6 (D-B): similaridade máxima p/ "ação distinta"
+
+
+def normalize_fingerprint(action: str) -> frozenset:
+    """Tokens (>= 4 chars) sem acento/pontuação — insensível a caixa e pontuação."""
+    text = unicodedata.normalize("NFKD", str(action or "")).casefold()
+    text = "".join(ch for ch in text if not unicodedata.combining(ch))
+    words = re.findall(r"[a-z0-9]+", text)
+    tokens = frozenset(w for w in words if len(w) >= 4)
+    return tokens or frozenset(words)
+
+
+def _jaccard(a: frozenset, b: frozenset) -> float:
+    if not a and not b:
+        return 1.0
+    return len(a & b) / len(a | b)
+
+
+def _is_distinct(tokens: frozenset, existing: list) -> bool:
+    return all(
+        _jaccard(tokens, normalize_fingerprint(str(fp or ""))) < FINGERPRINT_JACCARD
+        for fp in existing
+    )
+
+
 def sync_action_progress(
     quests: List[Dict],
     location_id: str,
@@ -173,7 +198,8 @@ def sync_action_progress(
     )
     ready_ids: List[str] = []
     out: List[Dict] = []
-    fingerprint = unicodedata.normalize("NFKC", action).casefold()
+    fp_tokens = normalize_fingerprint(action)
+    fingerprint = " ".join(sorted(fp_tokens))
     for original in quests or []:
         q = dict(original)
         progress = [dict(row) for row in (q.get("progress_log") or [])]
@@ -192,21 +218,24 @@ def sync_action_progress(
             and fresh
             and not already_ready
         ):
-            fingerprints = {
-                str(row.get("fingerprint") or "")
-                for row in progress if row.get("kind") == "investigation"
-            }
-            if fingerprint not in fingerprints:
+            if _is_distinct(fp_tokens, [
+                row.get("fingerprint") for row in progress
+                if row.get("kind") == "investigation"
+            ]):
                 progress.append({
                     "kind": "investigation",
                     "turn": int(turn),
                     "detail": action,
                     "fingerprint": fingerprint,
                 })
-            investigations = {
-                str(row.get("fingerprint") or "")
-                for row in progress if row.get("kind") == "investigation"
-            }
+            distinct: List[frozenset] = []
+            for row in progress:
+                if row.get("kind") != "investigation":
+                    continue
+                toks = normalize_fingerprint(str(row.get("fingerprint") or ""))
+                if all(_jaccard(toks, d) < FINGERPRINT_JACCARD for d in distinct):
+                    distinct.append(toks)
+            investigations = distinct
             if len(investigations) >= 2:
                 q["completion_ready"] = True
                 progress.append({

@@ -10,12 +10,14 @@ regional (pick_encounter_enemy, 2.5b). LLM nunca decide a quantidade final.
 from typing import Dict, List, Optional, Tuple
 
 TIER_COST = {"minion": 2, "elite": 5, "boss": 12}
+# SPEC-226 R7: custo por categoria canônica.
+CATEGORIA_COST = {"lacaio": 2, "padrao": 3, "elite": 5, "chefe": 12, "nomeado": 12}
 BASE_BY_DANGER = {1: 2, 2: 4, 3: 7, 4: 10}
 
 
 def tier_cost(enemy: Dict) -> int:
-    return TIER_COST.get(str(enemy.get("type", "minion")).strip().lower(),
-                         TIER_COST["minion"])
+    from combat_mechanics import normalize_categoria
+    return CATEGORIA_COST[normalize_categoria(enemy)]
 
 
 def encounter_budget(player_level: int, danger: int, allies_count: int = 0) -> int:

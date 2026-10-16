@@ -20,6 +20,8 @@ import gamedata
 from gamedata import CLASSES, XP_TABLE
 
 XP_BY_TIER = {"minion": 50, "elite": 200, "boss": 1000}
+# SPEC-226 R7: XP por categoria canônica (fonte v4).
+XP_BY_CATEGORIA = {"lacaio": 50, "padrao": 100, "elite": 200, "chefe": 1000, "nomeado": 1000}
 XP_PER_BEAT = 150
 XP_PER_QUEST = 200
 # spec conflito-01 R3: nível máximo passa de 20 para 10.
@@ -38,8 +40,8 @@ def xp_for_kills(dead_enemies: List[Dict]) -> int:
     """XP por inimigos MORTOS neste round (fugitivo não entra na lista)."""
     total = 0
     for e in dead_enemies or []:
-        tier = str(e.get("type", "minion")).strip().lower()
-        total += XP_BY_TIER.get(tier, XP_BY_TIER["minion"])
+        from combat_mechanics import normalize_categoria
+        total += XP_BY_CATEGORIA[normalize_categoria(e)]
     return total
 
 

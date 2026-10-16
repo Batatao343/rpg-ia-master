@@ -89,7 +89,14 @@ def _reason(sentence: str, evidence: EvidenceSnapshot) -> str | None:
     if reward and state.get('turn_baseline'):
         key = 'gold' if reward[2] == 'ouro' else 'xp'
         delta = int((state.get('player') or {}).get(key, 0)) - int(state['turn_baseline'].get(key, 0))
-        if delta != int(reward[1]):
+        # SPEC-226 R10: a frase descreve o GANHO BRUTO (ganho 50 - gasto 30 = líquido
+        # 20, "recebeu 50" é verdadeiro). Bruto = líquido + gasto do turno, ou um
+        # ganho individual em `turn_baseline[<chave>_gains]`.
+        baseline = state['turn_baseline']
+        spent = max(0, int(baseline.get(f'{key}_spent', 0) or 0))
+        gains = {int(g) for g in (baseline.get(f'{key}_gains') or []) if str(g).lstrip('-').isdigit()}
+        accepted = {delta, delta + spent} | gains
+        if int(reward[1]) not in accepted:
             return 'reward_delta'
     return None
 

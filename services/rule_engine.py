@@ -367,6 +367,7 @@ def run_rules(event: dict, state: dict, depth: int = 0) -> List[dict]:
             print(f"⚠️ [RULE] '{rule.get('id')}' ignorada: {exc}")
             continue
         for d in emitted:
+            d["turn"] = event.get("turn", 0)  # SPEC-226 R9: derivado herda o turno
             state["world_projection"] = apply_event(d, state["world_projection"])
             derived_all.append(d)
             derived_all += run_rules(d, state, depth + 1)
