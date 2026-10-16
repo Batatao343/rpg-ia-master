@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "53e26d8f4267b6f7caa40289a29b8765ce18f9e2",
+  "commit_sha": "8729ac7ecddd9f4449289b50efa9690a52da5f5e",
   "edge_counts": {
-    "calls": 11079,
-    "contains": 531,
-    "defines": 6593,
-    "imports": 1111,
-    "likely_test_for": 674,
+    "calls": 11190,
+    "contains": 535,
+    "defines": 6679,
+    "imports": 1121,
+    "likely_test_for": 681,
     "route_to": 58
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:20bcc155eec8bcd584561f2f98b218c9b52b6f27e3660100d0d9d0d7e6628a24",
+  "graph_hash": "sha256:e3446012b1c524425754ab874dc14f9973db0d9c887e9324da2b654bc2ced00b",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -189,6 +189,7 @@
     "scripts/import_visual_assets.py",
     "scripts/load_test.py",
     "scripts/migrate_bestiary_v4.py",
+    "scripts/migrate_embedding_profile.py",
     "scripts/migrate_file_saves.py",
     "scripts/migrate_lore_nova.py",
     "scripts/normalize_specs.py",
@@ -363,8 +364,10 @@
     "tests/test_beats_visibilidade.py",
     "tests/test_blob_contract.py",
     "tests/test_browser_local.py",
+    "tests/test_bug_contabilidade_recompensas.py",
     "tests/test_bug_economia_integridade.py",
     "tests/test_bug_intencao_parsers.py",
+    "tests/test_bug_memoria_resiliencia.py",
     "tests/test_bug_morte_checkpoint.py",
     "tests/test_bug_npc_ciclo_de_vida.py",
     "tests/test_campaign_grounding_deferred.py",
@@ -553,6 +556,7 @@
     "tests/test_spec197_legal_pages.py",
     "tests/test_spec197_runtime_role.py",
     "tests/test_spec198_rename_package.py",
+    "tests/test_spec234_pgvector_profile_local.py",
     "tests/test_spec_index.py",
     "tests/test_spec_migration_safety.py",
     "tests/test_speech_api.py",
@@ -659,14 +663,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 593,
+    "class": 598,
     "endpoint": 58,
-    "file": 605,
-    "function": 2080,
-    "method": 593,
-    "module": 531,
-    "test": 3327
+    "file": 609,
+    "function": 2096,
+    "method": 595,
+    "module": 535,
+    "test": 3390
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:b0c5a17451f6de550b947758d7ef2c2476b6d0cc4ed1dacbc49be60aabaf92c9"
+  "source_tree_hash": "sha256:03a08630c77af7e9f204592c6f378f1eecd7fb24b729c5a003952137621ddb17"
 }
