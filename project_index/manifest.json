@@ -1,6 +1,6 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "7a30346f91652efbbe2d0e91d9db8daf6a61873f",
+  "commit_sha": "2e03974961df27e1b0f8f06c96f4ba295d057fcd",
   "edge_counts": {
     "calls": 11691,
     "contains": 541,
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:ff97422582bb467a82d7a3da80d6ed37fa9ec0398e0947fde464ee7da7716f15",
+  "graph_hash": "sha256:fd125f42b731a984b49d03cef3aab1cc649e2104d0083a7a82c570914ab1c7a6",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -597,6 +597,7 @@
     "web/e2e/account.spec.ts",
     "web/e2e/checkout.spec.ts",
     "web/e2e/critical-journeys.spec.ts",
+    "web/e2e/diagnostics/spec201-capture.spec.ts",
     "web/e2e/fixtures.ts",
     "web/e2e/image-quote.spec.ts",
     "web/e2e/pending-discard.spec.ts",
@@ -673,12 +674,12 @@
     "artifact": 9,
     "class": 608,
     "endpoint": 58,
-    "file": 617,
+    "file": 618,
     "function": 2132,
     "method": 595,
     "module": 541,
     "test": 3513
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:47f5354b23a3603f18221dc5ae27e6a2295f2e647a7efce62ce1c488de08fa76"
+  "source_tree_hash": "sha256:58eb5591dac9f81476de0ce7c6c9b96f60ad78f92dfe3b247551909c19e88b3b"
 }

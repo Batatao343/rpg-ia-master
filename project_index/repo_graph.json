@@ -1,5 +1,5 @@
 {
-  "commit_sha": "7a30346f91652efbbe2d0e91d9db8daf6a61873f",
+  "commit_sha": "2e03974961df27e1b0f8f06c96f4ba295d057fcd",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -235121,6 +235121,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/e2e/diagnostics/spec201-capture.spec.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/e2e/diagnostics/spec201-capture.spec.ts",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/e2e/fixtures.ts",
       "kind": "file",
       "line": 1,
@@ -287307,5 +287314,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:47f5354b23a3603f18221dc5ae27e6a2295f2e647a7efce62ce1c488de08fa76"
+  "source_tree_hash": "sha256:58eb5591dac9f81476de0ce7c6c9b96f60ad78f92dfe3b247551909c19e88b3b"
 }
