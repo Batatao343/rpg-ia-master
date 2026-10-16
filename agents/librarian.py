@@ -4,7 +4,7 @@ Utilitário de consistência. Verifica se entidades já existem antes de criar n
 """
 import difflib
 from typing import List, Optional
-from langchain_core.messages import SystemMessage, HumanMessage
+from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage
 from pydantic import BaseModel, Field
 from llm_setup import get_llm, ModelTier
 
@@ -71,7 +71,8 @@ def find_existing_entity(user_query: str, entity_type: str, existing_ids: List[s
         matcher = llm.with_structured_output(EntityMatch)
         result = matcher.invoke([system_msg, human_msg])
         
-        if result.match_found and result.existing_id in existing_ids:
+        if (not isinstance(result, BaseMessage) and result.match_found
+                and result.existing_id in existing_ids):
             print(f"✅ [LIBRARIAN] Match encontrado: '{user_query}' -> '{result.existing_id}'")
             return result.existing_id
         

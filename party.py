@@ -239,6 +239,12 @@ def active_allies(state: Dict) -> List[Dict]:
             and not c.get("surrendered") and c.get("conscious", True)]
 
 
+def _relationship(npc: Dict) -> int:
+    """SPEC-230 R6: 0 é valor válido (não cai no default 5)."""
+    rel = npc.get("relationship")
+    return 5 if rel is None else int(rel)
+
+
 def scene_allies(state: Dict, *, excluded: Optional[List[str]] = None) -> List[Dict]:
     """spec aliados-em-combate (R2): NPCs amigos EM CENA (in_scene) que não são
     party formal → companheiros TRANSITÓRIOS (`transient=True`) p/ este combate.
@@ -265,7 +271,7 @@ def scene_allies(state: Dict, *, excluded: Optional[List[str]] = None) -> List[D
         identity = {name, npc.get("name", ""), npc.get("id", "")}
         if any(_fold(value) in excluded_folded for value in identity if value):
             continue
-        if int(npc.get("relationship", 5) or 5) < SCENE_ALLY_MIN_REL:
+        if _relationship(npc) < SCENE_ALLY_MIN_REL:
             continue
         if (npc.get("faction") or "") in hostile:
             continue
@@ -288,7 +294,7 @@ def recruitment_decision(state: Dict, npc_name: str) -> RecruitmentDecision:
     npc_key = find_runtime_npc_key(npcs, npc_name) or npc_name
     npc = npcs.get(npc_key) or {}
     display_name = str(npc.get("name") or npc_key)
-    rel = int(npc.get("relationship", 5) or 5)
+    rel = _relationship(npc)
     from services.npc_layers import trait_dc_modifier
     required = max(3, min(10, RECRUIT_MIN_REL + trait_dc_modifier(npc, "persuasao")))
 

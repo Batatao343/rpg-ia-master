@@ -82,9 +82,47 @@ def ensure_npc_fields(npc: dict, game_id: str, home_location_id: str = "",
     return npc
 
 
+def npc_alive(npc: dict, *, projection: dict | None = None) -> bool:
+    """SPEC-230 R3: predicado único de vida do NPC (dict de runtime ou membro de
+    party). Morto = `dead` ou `status` morto, ou entidade da projection com
+    `alive is False`."""
+    if not isinstance(npc, dict):
+        return True
+    if npc.get("dead") or str(npc.get("status") or "").strip().lower() in ("morto", "dead"):
+        return False
+    if projection:
+        ent = (projection.get("entities") or {}).get(npc.get("id"))
+        if isinstance(ent, dict) and ent.get("alive") is False:
+            return False
+    return True
+
+
+def apply_npc_death(state_npcs: dict, party: list, name_or_id: str,
+                    turn: int) -> tuple[dict, list]:
+    """SPEC-230 R4: sincroniza a morte em `state.npcs` e `party` (puro).
+    D-B default: companheiro morto é REMOVIDO da party (memorial fica na
+    crônica via milestone do evento)."""
+    from services.entity_identity import find_runtime_npc_key, runtime_npc_aliases
+    npcs = dict(state_npcs or {})
+    key = find_runtime_npc_key(npcs, name_or_id)
+    aliases = runtime_npc_aliases(name_or_id, npcs.get(key) if key else None)
+    if key is not None:
+        npcs[key] = {**npcs[key], "status": "morto", "in_scene": False,
+                     "died_turn": int(turn or 0)}
+    new_party = [
+        c for c in (party or [])
+        if not (isinstance(c, dict)
+                and aliases & runtime_npc_aliases(str(c.get("name") or ""), c))
+    ]
+    return npcs, new_party
+
+
 def is_in_scene(npc: dict) -> bool:
     """Gate da camada 3: só `in_scene=False` EXPLÍCITO bloqueia (ausente =
-    legado presente — save antigo no meio de cena não fica órfão)."""
+    legado presente — save antigo no meio de cena não fica órfão). NPC morto
+    nunca está em cena (SPEC-230 R3)."""
+    if not npc_alive(npc):
+        return False
     return bool(npc.get("in_scene", True))
 
 
@@ -101,7 +139,7 @@ def npcs_in_scene(state: Dict) -> List[str]:
                 and (not home or not loc or home == loc) and name not in out):
             out.append(name)
     for c in state.get("party") or []:
-        if (isinstance(c, dict) and c.get("active")
+        if (isinstance(c, dict) and c.get("active") and npc_alive(c)
                 and c.get("status", "ativo") == "ativo"
                 and c.get("name") and c.get("name") not in out):
             out.append(c["name"])
@@ -122,10 +160,10 @@ def npcs_for_context(state: Dict) -> List[str]:
     world = state.get("world") or {}
     loc = world.get("current_location_id", "") or ""
     party_names = {c.get("name") for c in (state.get("party") or [])
-                   if isinstance(c, dict)}
+                   if isinstance(c, dict) and npc_alive(c)}
     out: List[str] = []
     for name, npc in (state.get("npcs") or {}).items():
-        if not isinstance(npc, dict):
+        if not isinstance(npc, dict) or not npc_alive(npc):
             continue
         home = npc.get("home_location_id") or ""
         if name in party_names:
@@ -207,7 +245,8 @@ def visible_npc_view(npcs: Dict[str, dict]) -> List[dict]:
             "home_location_id": npc.get("home_location_id", ""),
             "relationship": npc.get("relationship", 5),
             "knowledge_source": npc.get("knowledge_source", "met"),
-            "in_scene": bool(npc.get("in_scene", False)),
+            "in_scene": bool(npc.get("in_scene", False)) and npc_alive(npc),
+            "status": "morto" if not npc_alive(npc) else str(npc.get("status") or ""),
             "revealed_traits": trait_names(npc.get("revealed_traits") or []),
             "last_memory": mem[-1] if isinstance(mem, list) and mem else "",
         })

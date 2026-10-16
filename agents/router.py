@@ -54,6 +54,7 @@ def _base_route_payload(route: RouteType, world: dict) -> dict:
         "active_npc_name": None,
         "loot_source": None,
         "combat_origin_hint": None,
+        "npc_fallback_hint": None,  # SPEC-230 R8: transitório
     }
 
 

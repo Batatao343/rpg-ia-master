@@ -1,6 +1,6 @@
 # SPEC-230 — NPC: guard de geração, ciclo de vida (morte/party/cena) e relação como mecânica Python
 
-> **Status:** `draft`
+> **Status:** `done`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** nenhuma · SPEC-028 npcs-3-camadas-traits, SPEC-040 encontros-dedupe, SPEC-041 npc-fallback-sem-alvo e SPEC-055 aliados-em-combate `done` são corrigidas (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-202, SPEC-212, SPEC-215, SPEC-223 (ordem final 2026-10-15)
@@ -110,11 +110,11 @@ NPC `status == "morto"` (grep no transcript), zero "SEM INTERLOCUTOR" fora de tu
 
 ## 5. Critérios de aceite
 
-- [ ] 8 testes vermelhos → verdes; `tests/test_npc_fallback.py`, `test_encontros_dedupe.py`, `test_aliados_combate.py`,
+- [x] 8 testes vermelhos → verdes; `tests/test_npc_fallback.py`, `test_encontros_dedupe.py`, `test_aliados_combate.py`,
       `test_fase28.py`, `test_fase33.py`, `test_npcs_3_camadas*.py` verdes ou diff justificado.
-- [ ] `uv run pytest` verde; playtest offline com run_id.
-- [ ] Guard de FallbackLLM em TODO `with_structured_output` (R2 passa a ser teste permanente).
-- [ ] Saves antigos carregam (campos novos opcionais).
+- [x] `uv run pytest` verde; playtest offline com run_id.
+- [x] Guard de FallbackLLM em TODO `with_structured_output` (R2 passa a ser teste permanente).
+- [x] Saves antigos carregam (campos novos opcionais).
 
 ## 6. Smoke test com LLM real
 
@@ -140,3 +140,11 @@ NPC `status == "morto"` (grep no transcript), zero "SEM INTERLOCUTOR" fora de tu
 - `uv run pytest` completo; testes antes/depois; run_ids do playtest.
 - `docs/<spec>/README.md` com `repro6.py` transcrito, lista de sites varridos por R2 e handoff ao corpus SPEC-171
   (caso "NPC morto responde" como regressão).
+
+## 10. Execução (2026-10-16)
+
+Defaults usados: **D-A = ±1** por turno (`RELATIONSHIP_STEP_CAP`), **D-B** = companheiro morto removido da party.
+Desvios: R3 — "Falo com Grum" com NPC morto cai em `npc_actor`, que responde "X está morto." deterministicamente
+(router só deixou de listar mortos em `npcs_in_scene`). R8 — hint zerado em `_base_route_payload` (router a cada turno).
+R2 — `campaign_manager::_invoke` na allowlist (chamador valida isinstance); `librarian` ganhou guard.
+Evidência: `docs/spec230/README.md`.

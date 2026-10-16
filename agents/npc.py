@@ -4,6 +4,7 @@ Gerador de NPCs com Persistência, Memória, RAG e Filtro de Ignorância.
 Contém tanto a fábrica de NPCs (generate_new_npc) quanto o ator (npc_actor_node).
 """
 import json
+import logging
 import os
 import re
 import inspect
@@ -140,7 +141,40 @@ def _npc_db_path() -> str:
     return runtime_cache_path("npc_database.json")
 
 
+RELATIONSHIP_STEP_CAP = 1  # SPEC-230 R7 (D-A default ±1 por turno)
+
+
+def clamp_relationship_change(delta, who: str = "") -> int:
+    """Relação é mecânica Python: o LLM propõe, o teto por turno decide."""
+    try:
+        delta = int(delta or 0)
+    except (TypeError, ValueError):
+        return 0
+    clamped = max(-RELATIONSHIP_STEP_CAP, min(RELATIONSHIP_STEP_CAP, delta))
+    if clamped != delta:
+        logging.getLogger("rpg.npc.relationship_clamped").info(
+            "npc=%s proposed=%s applied=%s", who, delta, clamped)
+    return clamped
+
+
+def _npc_entry_broken(entry) -> bool:
+    return (not isinstance(entry, dict) or entry.get("id") == "fallback"
+            or ("role" in entry and not entry["role"])
+            or ("persona" in entry and not entry["persona"]))
+
+
 def load_npc_db():
+    """SPEC-230: descarta (com log) entradas quebradas já persistidas."""
+    raw = _load_npc_db_raw()
+    clean = {k: v for k, v in raw.items() if not _npc_entry_broken(v)}
+    if len(clean) != len(raw):
+        logging.getLogger("rpg.npc").warning(
+            "npc_database: %d entrada(s) quebrada(s) descartada(s): %s",
+            len(raw) - len(clean), sorted(set(raw) - set(clean)))
+    return clean
+
+
+def _load_npc_db_raw():
     from infrastructure.runtime import get_runtime
 
     values = get_runtime().runtime_catalog.list(
@@ -259,6 +293,8 @@ def generate_new_npc(name, context=""):
             HumanMessage(content=f"Context: {context}")
         ])
         
+        if not isinstance(res, NPCSchema):  # SPEC-230 R1: FallbackLLM -> AIMessage
+            raise TypeError("structured output inválido (FallbackLLM)")
         data = res.model_dump()
         # Identidade pedida pelo router é canônica. Providers (e especialmente o
         # MockLLM) podem devolver outro nome apesar do schema estar válido.
@@ -276,6 +312,8 @@ def generate_new_npc(name, context=""):
         }
 
     data = _materialize_npc_combat_sheet(data)
+    if data.get("id") == "fallback":
+        return data  # SPEC-230 R1: o fallback nunca envenena o cache de runtime
     try:
         save_npc_template(data)
     except Exception as exc:
@@ -337,11 +375,30 @@ def npc_actor_node(state: GameState):
     # conversa — resposta determinística, ZERO chamada de LLM. Membro de party
     # está sempre com o jogador (estado próprio, 4.5). ---
     target_aliases = runtime_npc_aliases(npc_state_key or npc_name, npc_data)
-    in_party = any(
-        isinstance(c, dict)
-        and bool(target_aliases & runtime_npc_aliases(str(c.get("name") or ""), c))
-        for c in state.get("party") or []
+    member = next(
+        (c for c in state.get("party") or []
+         if isinstance(c, dict)
+         and bool(target_aliases & runtime_npc_aliases(str(c.get("name") or ""), c))),
+        None,
     )
+    # SPEC-230 R3/R5: morto não conversa; membro esperando só fala no próprio local.
+    if (member is not None and not npc_layers.npc_alive(member)) or (
+            from_state and not npc_layers.npc_alive(npc_data)):
+        dname = (npc_data or member or {}).get("name") or npc_state_key or npc_name
+        return {"messages": [AIMessage(content=f"{dname} está morto. Não há resposta — só o silêncio onde antes havia uma voz.")]}
+    in_party = False
+    if member is not None:
+        cur = state.get("world", {}) or {}
+        here = {str(cur.get("current_location") or ""), str(cur.get("current_location_id") or "")} - {""}
+        waiting = str(member.get("waiting_at") or "")
+        if member.get("active", True) or not waiting:
+            in_party = bool(member.get("active")) or not waiting
+        else:
+            in_party = waiting in here
+        if not in_party:
+            dname = member.get("name") or npc_name
+            return {"messages": [AIMessage(
+                content=f"🗣️ {dname} não está aqui. Está esperando em {waiting}.")]}
     if from_state and not in_party and not npc_layers.is_in_scene(npc_data):
         home = npc_data.get("home_location_id") or npc_data.get("location", "")
         hint = f" Foi visto pela última vez em {home}." if home else ""
@@ -546,7 +603,10 @@ def npc_actor_node(state: GameState):
         
         # Atualiza memória e relação (com guardas contra chaves ausentes)
         turn = state.get('world', {}).get('turn_count', 0)
-        npc_data['relationship'] = max(0, min(10, npc_data.get('relationship', 5) + res.relationship_change))
+        delta = clamp_relationship_change(res.relationship_change, npc_data.get("name", npc_name))
+        rel_now = npc_data.get('relationship')
+        rel_now = 5 if rel_now is None else int(rel_now)
+        npc_data['relationship'] = max(0, min(10, rel_now + delta))
         npc_data.setdefault('memory', [])
         # Memória registra a EXPERIÊNCIA observável (fala/resposta), não promove
         # `memory_update` livre da IA a verdade canônica.

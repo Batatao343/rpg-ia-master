@@ -10,6 +10,7 @@
 > de produto alterado.
 > **SPEC-227 `done` (16/10):** ouro infinito fechado (venda/craft atômicos, exigem mercador), equipamento sem posse sem bônus, item recusado não gasta turno nem Ação, nível alto via XP; 18 testes; smoke real TradeIntent ok.
 > **SPEC-229 `done` (16/10):** "Entro na taverna"/"Sigo em frente" não são mais viagem inválida, "Vou ao X" viaja, "recuperar/retirar/recusar" não disparam fuga, hostilidade vence atalho de história; smoke real ok.
+> **SPEC-230 `done` (16/10):** guard de structured output em `generate_new_npc`/librarian (fallback nunca vai ao cache; cache quebrado saneado no load), NPC morto sai de cena/party e não dialoga, relação ±1 por turno em Python, varredura AST de guards.
 
 > **15/10 — SPEC-196 `done`: FinOps, margin guard e kill switches.** Margem por SKU/canal/versão de preço
 > (gross, taxa de canal, custo variável, contribuição; infra fixa separada), alertas Prometheus sem ids de

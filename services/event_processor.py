@@ -225,6 +225,7 @@ def process_pending_events(state: Dict) -> Dict:
     quests_changed = False
     quests_completed = 0  # Fase 4.1: cada conclusão vale XP_PER_QUEST
     quest_reward_gold = 0
+    killed_targets: list = []  # SPEC-230 R4
     original_rejections = list(state.get("event_rejections") or [])
     event_rejections = _bounded_rejections(original_rejections)
     rejection_count_before = len(event_rejections)
@@ -294,9 +295,14 @@ def process_pending_events(state: Dict) -> Dict:
         working["event_log"] = event_log
         for d in rule_engine.run_rules(event, working, depth=0):
             event_log.append(d)
+            if d.get("type") == "npc_killed":
+                killed_targets.append(d.get("target_id"))
             print(f"⚙️ [RULE] {d['type']} → {d['target_id']} (src=rule_engine, id={d['event_id'][:8]})")
             _chronicle_milestone(d, working["world_projection"])
         projection = working["world_projection"]
+
+        if event["type"] == "npc_killed":
+            killed_targets.append(event.get("target_id"))
 
         # Fase 3.3 (R4): NPC canônico morto → toda quest órfã falha sistemicamente.
         if event["type"] == "npc_killed":
@@ -329,6 +335,16 @@ def process_pending_events(state: Dict) -> Dict:
             print(f"⬆️ [XP] level_up → nível {ev['payload'].get('new_level')} (id={ev['event_id'][:8]})")
             _chronicle_milestone(ev, projection)
 
+    if killed_targets:
+        from services.npc_layers import apply_npc_death
+        npcs_now, party_now = state.get("npcs") or {}, state.get("party") or []
+        for tid in killed_targets:
+            if tid:
+                npcs_now, party_now = apply_npc_death(npcs_now, party_now, str(tid), turn)
+        if npcs_now != (state.get("npcs") or {}):
+            updates["npcs"] = npcs_now
+        if party_now != (state.get("party") or []):
+            updates["party"] = party_now
     if chronicle_changed:
         updates["chronicle"] = chronicle
     if quests_changed:

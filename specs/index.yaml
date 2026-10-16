@@ -4118,7 +4118,7 @@ specs:
   lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
 - id: SPEC-230
   slug: npc-ciclo-de-vida-guard
-  status: draft
+  status: done
   path: specs/SPEC-230-npc-ciclo-de-vida-guard.md
   created_commit: null
   created_at: '2026-10-15'
