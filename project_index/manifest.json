@@ -1,11 +1,11 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "89360b5e549b2c4af40956bffc4f92b4c7a66f39",
+  "commit_sha": "e7ce278d19058dea429c7cb93ca11c327cc59cc8",
   "edge_counts": {
-    "calls": 10801,
-    "contains": 523,
-    "defines": 6465,
-    "imports": 1089,
+    "calls": 10811,
+    "contains": 524,
+    "defines": 6471,
+    "imports": 1093,
     "likely_test_for": 661,
     "route_to": 58
   },
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:1dc3fe0e543d26b175a6d9144666c09ed8399dfd3b04f23b0b141dc21caffb35",
+  "graph_hash": "sha256:415fe6af1f1cafc694c8bd0c80892714ace361c38d63a0e01f83b9065f3bb848",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -226,6 +226,7 @@
     "scripts/staging/vercel_env.py",
     "scripts/staging/vercel_smoke.py",
     "scripts/staging/verify_cron.py",
+    "scripts/staging/voice_smoke.py",
     "scripts/start_local_api.py",
     "scripts/validate_content.py",
     "scripts/validate_holdout_aggregate.py",
@@ -631,6 +632,7 @@
     "web/src/voice/controller.ts",
     "web/src/voice/recorder.ts",
     "web/src/voice/useVoiceInput.ts",
+    "web/src/voice/wav.ts",
     "web/tests/artwork.fixture.tsx",
     "web/tests/vite.fixture.config.ts",
     "web/tests/voice-hook.fixture.tsx",
@@ -652,12 +654,12 @@
     "artifact": 9,
     "class": 587,
     "endpoint": 58,
-    "file": 596,
-    "function": 2044,
+    "file": 598,
+    "function": 2047,
     "method": 593,
-    "module": 523,
-    "test": 3241
+    "module": 524,
+    "test": 3244
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:548b3bdf58e67f833b60e63478d7fcd753c9f350e32de2971af709628bb1e7a1"
+  "source_tree_hash": "sha256:d58b473e8a73e5ae599d328155ea18178ae1bd8906ae4961f720458c12318b8e"
 }

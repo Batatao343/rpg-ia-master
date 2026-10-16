@@ -1,5 +1,5 @@
 {
-  "commit_sha": "89360b5e549b2c4af40956bffc4f92b4c7a66f39",
+  "commit_sha": "e7ce278d19058dea429c7cb93ca11c327cc59cc8",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -2474,6 +2474,17 @@
       },
       "source": "file:scripts/staging/verify_cron.py",
       "target": "module:scripts.staging.verify_cron",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 1
+      },
+      "source": "file:scripts/staging/voice_smoke.py",
+      "target": "module:scripts.staging.voice_smoke",
       "type": "contains"
     },
     {
@@ -32170,7 +32181,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 50
+        "line": 54
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env._load_files",
@@ -32181,7 +32192,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 57
+        "line": 61
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.build_env",
@@ -32192,7 +32203,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 102
+        "line": 106
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.main",
@@ -32203,7 +32214,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 79
+        "line": 83
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -32284,6 +32295,83 @@
       },
       "source": "module:scripts.staging.verify_cron",
       "target": "symbol:scripts.staging.verify_cron.summarize_responses",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 18
+      },
+      "source": "module:scripts.staging.voice_smoke",
+      "target": "module:scripts.staging",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 19
+      },
+      "source": "module:scripts.staging.voice_smoke",
+      "target": "module:scripts.staging.e2e_session",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 20
+      },
+      "source": "module:scripts.staging.voice_smoke",
+      "target": "module:scripts.staging.synthetic_data",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 21
+      },
+      "source": "module:scripts.staging.voice_smoke",
+      "target": "module:scripts.staging.two_user_smoke",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 101
+      },
+      "source": "module:scripts.staging.voice_smoke",
+      "target": "symbol:scripts.staging.voice_smoke.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 40
+      },
+      "source": "module:scripts.staging.voice_smoke",
+      "target": "symbol:scripts.staging.voice_smoke.run",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 26
+      },
+      "source": "module:scripts.staging.voice_smoke",
+      "target": "symbol:scripts.staging.voice_smoke.synthetic_wav",
       "type": "defines"
     },
     {
@@ -74321,6 +74409,28 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec192_staging_scripts.py",
+        "line": 134
+      },
+      "source": "module:tests.test_spec192_staging_scripts",
+      "target": "symbol:tests.test_spec192_staging_scripts.test_vercel_env_groq_and_speech_flags_production_only",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_staging_scripts.py",
+        "line": 126
+      },
+      "source": "module:tests.test_spec192_staging_scripts",
+      "target": "symbol:tests.test_spec192_staging_scripts.test_voice_smoke_synthetic_wav_is_valid_pcm",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec192_vercel_env.py",
         "line": 4
       },
@@ -77985,7 +78095,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 253
+        "line": 262
       },
       "source": "module:tests.test_speech_to_text",
       "target": "symbol:tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket",
@@ -78007,7 +78117,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 168
+        "line": 177
       },
       "source": "module:tests.test_speech_to_text",
       "target": "symbol:tests.test_speech_to_text.test_compressed_decode_ignores_spoofed_metadata_and_bounds_process",
@@ -78040,7 +78150,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 271
+        "line": 280
       },
       "source": "module:tests.test_speech_to_text",
       "target": "symbol:tests.test_speech_to_text.test_decoder_timeout_removes_all_temporary_files_before_finance",
@@ -78062,7 +78172,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 285
+        "line": 294
       },
       "source": "module:tests.test_speech_to_text",
       "target": "symbol:tests.test_speech_to_text.test_financial_finish_failure_still_removes_files",
@@ -78073,7 +78183,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 296
+        "line": 305
       },
       "source": "module:tests.test_speech_to_text",
       "target": "symbol:tests.test_speech_to_text.test_groq_adapter_response_and_duration_usage_are_private",
@@ -78084,7 +78194,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 191
+        "line": 200
       },
       "source": "module:tests.test_speech_to_text",
       "target": "symbol:tests.test_speech_to_text.test_http_adapter_bounds_and_redacts_response",
@@ -78106,6 +78216,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
+        "line": 168
+      },
+      "source": "module:tests.test_speech_to_text",
+      "target": "symbol:tests.test_speech_to_text.test_missing_ffmpeg_gives_stable_503_code_for_every_compressed_format",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_speech_to_text.py",
         "line": 143
       },
       "source": "module:tests.test_speech_to_text",
@@ -78117,7 +78238,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 180
+        "line": 189
       },
       "source": "module:tests.test_speech_to_text",
       "target": "symbol:tests.test_speech_to_text.test_openai_duration_or_invalid_counters_never_become_exact",
@@ -78128,7 +78249,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 216
+        "line": 225
       },
       "source": "module:tests.test_speech_to_text",
       "target": "symbol:tests.test_speech_to_text.test_original_wav_extra_chunks_never_reach_provider",
@@ -78139,7 +78260,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 241
+        "line": 250
       },
       "source": "module:tests.test_speech_to_text",
       "target": "symbol:tests.test_speech_to_text.test_oversized_provider_response_falls_back_without_body_leak",
@@ -78161,7 +78282,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 313
+        "line": 322
       },
       "source": "module:tests.test_speech_to_text",
       "target": "symbol:tests.test_speech_to_text.test_quote_accepts_only_registered_exact_speech_card",
@@ -78172,7 +78293,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 224
+        "line": 233
       },
       "source": "module:tests.test_speech_to_text",
       "target": "symbol:tests.test_speech_to_text.test_real_decoder_browser_media_round_trip",
@@ -121138,7 +121259,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 116
+        "line": 120
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env._load_files",
@@ -121149,7 +121270,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 118
+        "line": 122
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.build_env",
@@ -121160,7 +121281,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 131
+        "line": 135
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -121171,7 +121292,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 132
+        "line": 136
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -121318,6 +121439,105 @@
       },
       "source": "symbol:scripts.staging.verify_cron.main",
       "target": "symbol:scripts.staging.verify_cron.summarize_responses",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 106
+      },
+      "source": "symbol:scripts.staging.voice_smoke.main",
+      "target": "symbol:scripts.staging.s192.load_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 106
+      },
+      "source": "symbol:scripts.staging.voice_smoke.main",
+      "target": "symbol:scripts.staging.voice_smoke.run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 61
+      },
+      "source": "symbol:scripts.staging.voice_smoke.run",
+      "target": "symbol:scripts.staging.e2e_session._h",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 44
+      },
+      "source": "symbol:scripts.staging.voice_smoke.run",
+      "target": "symbol:scripts.staging.s192.Admin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 81
+      },
+      "source": "symbol:scripts.staging.voice_smoke.run",
+      "target": "symbol:scripts.staging.s192.db",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 45
+      },
+      "source": "symbol:scripts.staging.voice_smoke.run",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 53
+      },
+      "source": "symbol:scripts.staging.voice_smoke.run",
+      "target": "symbol:scripts.staging.synthetic_data.seed_wallet_prereqs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 48
+      },
+      "source": "symbol:scripts.staging.voice_smoke.run",
+      "target": "symbol:scripts.staging.two_user_smoke.User",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/voice_smoke.py",
+        "line": 59
+      },
+      "source": "symbol:scripts.staging.voice_smoke.run",
+      "target": "symbol:scripts.staging.voice_smoke.synthetic_wav",
       "type": "calls"
     },
     {
@@ -207510,7 +207730,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 260
+        "line": 269
       },
       "source": "symbol:tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket",
       "target": "symbol:services.speech_to_text.transcribe_audio",
@@ -207521,7 +207741,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 254
+        "line": 263
       },
       "source": "symbol:tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket",
       "target": "symbol:tests.test_speech_to_text.FakeFinance",
@@ -207532,7 +207752,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 254
+        "line": 263
       },
       "source": "symbol:tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket",
       "target": "symbol:tests.test_speech_to_text.FakeProvider",
@@ -207543,7 +207763,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 259
+        "line": 268
       },
       "source": "symbol:tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket",
       "target": "symbol:tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket.cancel",
@@ -207554,7 +207774,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 255
+        "line": 264
       },
       "source": "symbol:tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket",
       "target": "symbol:tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket.wait_then_cancel",
@@ -207565,7 +207785,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 260
+        "line": 269
       },
       "source": "symbol:tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket",
       "target": "symbol:tests.test_speech_to_text.wav_bytes",
@@ -207576,7 +207796,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 260
+        "line": 269
       },
       "source": "symbol:tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket.cancel",
       "target": "symbol:services.speech_to_text.transcribe_audio",
@@ -207587,7 +207807,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 260
+        "line": 269
       },
       "source": "symbol:tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket.cancel",
       "target": "symbol:tests.test_speech_to_text.wav_bytes",
@@ -207631,7 +207851,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 177
+        "line": 186
       },
       "source": "symbol:tests.test_speech_to_text.test_compressed_decode_ignores_spoofed_metadata_and_bounds_process",
       "target": "symbol:services.speech_to_text.prepare_audio",
@@ -207642,7 +207862,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 169
+        "line": 178
       },
       "source": "symbol:tests.test_speech_to_text.test_compressed_decode_ignores_spoofed_metadata_and_bounds_process",
       "target": "symbol:tests.test_speech_to_text.test_compressed_decode_ignores_spoofed_metadata_and_bounds_process.decode",
@@ -207653,7 +207873,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 174
+        "line": 183
       },
       "source": "symbol:tests.test_speech_to_text.test_compressed_decode_ignores_spoofed_metadata_and_bounds_process",
       "target": "symbol:tests.test_speech_to_text.wav_bytes",
@@ -207664,7 +207884,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 174
+        "line": 183
       },
       "source": "symbol:tests.test_speech_to_text.test_compressed_decode_ignores_spoofed_metadata_and_bounds_process.decode",
       "target": "symbol:tests.test_speech_to_text.wav_bytes",
@@ -207730,7 +207950,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 280
+        "line": 289
       },
       "source": "symbol:tests.test_speech_to_text.test_decoder_timeout_removes_all_temporary_files_before_finance",
       "target": "symbol:services.speech_to_text.transcribe_audio",
@@ -207741,7 +207961,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 278
+        "line": 287
       },
       "source": "symbol:tests.test_speech_to_text.test_decoder_timeout_removes_all_temporary_files_before_finance",
       "target": "symbol:tests.test_speech_to_text.FakeFinance",
@@ -207752,7 +207972,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 278
+        "line": 287
       },
       "source": "symbol:tests.test_speech_to_text.test_decoder_timeout_removes_all_temporary_files_before_finance",
       "target": "symbol:tests.test_speech_to_text.FakeProvider",
@@ -207763,7 +207983,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 274
+        "line": 283
       },
       "source": "symbol:tests.test_speech_to_text.test_decoder_timeout_removes_all_temporary_files_before_finance",
       "target": "symbol:tests.test_speech_to_text.test_decoder_timeout_removes_all_temporary_files_before_finance.timeout",
@@ -207818,7 +208038,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 290
+        "line": 299
       },
       "source": "symbol:tests.test_speech_to_text.test_financial_finish_failure_still_removes_files",
       "target": "symbol:services.speech_to_text.ProviderReading",
@@ -207829,7 +208049,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 286
+        "line": 295
       },
       "source": "symbol:tests.test_speech_to_text.test_financial_finish_failure_still_removes_files",
       "target": "symbol:tests.test_speech_to_text.FakeFinance",
@@ -207840,7 +208060,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 290
+        "line": 299
       },
       "source": "symbol:tests.test_speech_to_text.test_financial_finish_failure_still_removes_files",
       "target": "symbol:tests.test_speech_to_text.FakeProvider",
@@ -207851,7 +208071,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 292
+        "line": 301
       },
       "source": "symbol:tests.test_speech_to_text.test_financial_finish_failure_still_removes_files",
       "target": "symbol:tests.test_speech_to_text.run",
@@ -207862,7 +208082,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 287
+        "line": 296
       },
       "source": "symbol:tests.test_speech_to_text.test_financial_finish_failure_still_removes_files",
       "target": "symbol:tests.test_speech_to_text.test_financial_finish_failure_still_removes_files.fail",
@@ -207873,7 +208093,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 308
+        "line": 317
       },
       "source": "symbol:tests.test_speech_to_text.test_groq_adapter_response_and_duration_usage_are_private",
       "target": "symbol:services.speech_to_text.HttpSpeechProvider",
@@ -207884,7 +208104,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 308
+        "line": 317
       },
       "source": "symbol:tests.test_speech_to_text.test_groq_adapter_response_and_duration_usage_are_private",
       "target": "symbol:tests.test_speech_to_text.run",
@@ -207895,7 +208115,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 298
+        "line": 307
       },
       "source": "symbol:tests.test_speech_to_text.test_groq_adapter_response_and_duration_usage_are_private",
       "target": "symbol:tests.test_speech_to_text.test_groq_adapter_response_and_duration_usage_are_private.respond",
@@ -207906,7 +208126,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 208
+        "line": 217
       },
       "source": "symbol:tests.test_speech_to_text.test_http_adapter_bounds_and_redacts_response",
       "target": "symbol:services.speech_to_text.HttpSpeechProvider",
@@ -207917,7 +208137,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 209
+        "line": 218
       },
       "source": "symbol:tests.test_speech_to_text.test_http_adapter_bounds_and_redacts_response",
       "target": "symbol:tests.test_speech_to_text.run",
@@ -207928,7 +208148,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 194
+        "line": 203
       },
       "source": "symbol:tests.test_speech_to_text.test_http_adapter_bounds_and_redacts_response",
       "target": "symbol:tests.test_speech_to_text.test_http_adapter_bounds_and_redacts_response.respond",
@@ -207972,6 +208192,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
+        "line": 173
+      },
+      "source": "symbol:tests.test_speech_to_text.test_missing_ffmpeg_gives_stable_503_code_for_every_compressed_format",
+      "target": "symbol:services.speech_to_text.prepare_audio",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_speech_to_text.py",
         "line": 146
       },
       "source": "symbol:tests.test_speech_to_text.test_no_balance_means_no_provider",
@@ -208005,7 +208236,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 184
+        "line": 193
       },
       "source": "symbol:tests.test_speech_to_text.test_openai_duration_or_invalid_counters_never_become_exact",
       "target": "symbol:services.speech_pricing.speech_event",
@@ -208016,7 +208247,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 186
+        "line": 195
       },
       "source": "symbol:tests.test_speech_to_text.test_openai_duration_or_invalid_counters_never_become_exact",
       "target": "symbol:services.speech_pricing.speech_event",
@@ -208027,7 +208258,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 218
+        "line": 227
       },
       "source": "symbol:tests.test_speech_to_text.test_original_wav_extra_chunks_never_reach_provider",
       "target": "symbol:services.speech_to_text.prepare_audio",
@@ -208038,7 +208269,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 217
+        "line": 226
       },
       "source": "symbol:tests.test_speech_to_text.test_original_wav_extra_chunks_never_reach_provider",
       "target": "symbol:tests.test_speech_to_text.wav_bytes",
@@ -208049,7 +208280,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 219
+        "line": 228
       },
       "source": "symbol:tests.test_speech_to_text.test_original_wav_extra_chunks_never_reach_provider",
       "target": "symbol:tests.test_speech_to_text.wav_bytes",
@@ -208060,7 +208291,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 248
+        "line": 257
       },
       "source": "symbol:tests.test_speech_to_text.test_oversized_provider_response_falls_back_without_body_leak",
       "target": "symbol:services.speech_to_text.HttpSpeechProvider",
@@ -208071,7 +208302,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 246
+        "line": 255
       },
       "source": "symbol:tests.test_speech_to_text.test_oversized_provider_response_falls_back_without_body_leak",
       "target": "symbol:tests.test_speech_to_text.FakeFinance",
@@ -208082,7 +208313,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 248
+        "line": 257
       },
       "source": "symbol:tests.test_speech_to_text.test_oversized_provider_response_falls_back_without_body_leak",
       "target": "symbol:tests.test_speech_to_text.run",
@@ -208126,7 +208357,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 316
+        "line": 325
       },
       "source": "symbol:tests.test_speech_to_text.test_quote_accepts_only_registered_exact_speech_card",
       "target": "symbol:services.speech_pricing.speech_event",
@@ -208137,7 +208368,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 235
+        "line": 244
       },
       "source": "symbol:tests.test_speech_to_text.test_real_decoder_browser_media_round_trip",
       "target": "symbol:services.speech_to_text.prepare_audio",
@@ -208148,7 +208379,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_speech_to_text.py",
-        "line": 232
+        "line": 241
       },
       "source": "symbol:tests.test_speech_to_text.test_real_decoder_browser_media_round_trip",
       "target": "symbol:tests.test_speech_to_text.wav_bytes",
@@ -217300,6 +217531,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:scripts/staging/voice_smoke.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/staging/voice_smoke.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:scripts/start_local_api.py",
       "kind": "file",
       "line": 1,
@@ -220128,6 +220366,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/src/voice/wav.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/voice/wav.ts",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/tests/artwork.fixture.tsx",
       "kind": "file",
       "line": 1,
@@ -221379,6 +221624,13 @@
       "line": 1,
       "path": "scripts/staging/verify_cron.py",
       "qualified_name": "scripts.staging.verify_cron"
+    },
+    {
+      "id": "module:scripts.staging.voice_smoke",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/staging/voice_smoke.py",
+      "qualified_name": "scripts.staging.voice_smoke"
     },
     {
       "id": "module:scripts.start_local_api",
@@ -237266,28 +237518,28 @@
     {
       "id": "symbol:scripts.staging.vercel_env._load_files",
       "kind": "function",
-      "line": 50,
+      "line": 54,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env._load_files"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.build_env",
       "kind": "function",
-      "line": 57,
+      "line": 61,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.build_env"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.main",
       "kind": "function",
-      "line": 102,
+      "line": 106,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.main"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.push",
       "kind": "function",
-      "line": 79,
+      "line": 83,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.push"
     },
@@ -237332,6 +237584,27 @@
       "line": 12,
       "path": "scripts/staging/verify_cron.py",
       "qualified_name": "scripts.staging.verify_cron.summarize_responses"
+    },
+    {
+      "id": "symbol:scripts.staging.voice_smoke.main",
+      "kind": "function",
+      "line": 101,
+      "path": "scripts/staging/voice_smoke.py",
+      "qualified_name": "scripts.staging.voice_smoke.main"
+    },
+    {
+      "id": "symbol:scripts.staging.voice_smoke.run",
+      "kind": "function",
+      "line": 40,
+      "path": "scripts/staging/voice_smoke.py",
+      "qualified_name": "scripts.staging.voice_smoke.run"
+    },
+    {
+      "id": "symbol:scripts.staging.voice_smoke.synthetic_wav",
+      "kind": "function",
+      "line": 26,
+      "path": "scripts/staging/voice_smoke.py",
+      "qualified_name": "scripts.staging.voice_smoke.synthetic_wav"
     },
     {
       "id": "symbol:scripts.start_local_api._supabase_status",
@@ -264333,6 +264606,20 @@
       "qualified_name": "tests.test_spec192_staging_scripts.test_stream_summary_and_turn_increment_rule"
     },
     {
+      "id": "symbol:tests.test_spec192_staging_scripts.test_vercel_env_groq_and_speech_flags_production_only",
+      "kind": "test",
+      "line": 134,
+      "path": "tests/test_spec192_staging_scripts.py",
+      "qualified_name": "tests.test_spec192_staging_scripts.test_vercel_env_groq_and_speech_flags_production_only"
+    },
+    {
+      "id": "symbol:tests.test_spec192_staging_scripts.test_voice_smoke_synthetic_wav_is_valid_pcm",
+      "kind": "test",
+      "line": 126,
+      "path": "tests/test_spec192_staging_scripts.py",
+      "qualified_name": "tests.test_spec192_staging_scripts.test_voice_smoke_synthetic_wav_is_valid_pcm"
+    },
+    {
       "id": "symbol:tests.test_spec192_vercel_env.test_bind_host_accepted_by_runtime_validation",
       "kind": "test",
       "line": 26,
@@ -266743,21 +267030,21 @@
     {
       "id": "symbol:tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket",
       "kind": "test",
-      "line": 253,
+      "line": 262,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket"
     },
     {
       "id": "symbol:tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket.cancel",
       "kind": "test",
-      "line": 259,
+      "line": 268,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket.cancel"
     },
     {
       "id": "symbol:tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket.wait_then_cancel",
       "kind": "test",
-      "line": 255,
+      "line": 264,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_cancelled_wait_removes_audio_and_records_ticket.wait_then_cancel"
     },
@@ -266771,14 +267058,14 @@
     {
       "id": "symbol:tests.test_speech_to_text.test_compressed_decode_ignores_spoofed_metadata_and_bounds_process",
       "kind": "test",
-      "line": 168,
+      "line": 177,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_compressed_decode_ignores_spoofed_metadata_and_bounds_process"
     },
     {
       "id": "symbol:tests.test_speech_to_text.test_compressed_decode_ignores_spoofed_metadata_and_bounds_process.decode",
       "kind": "test",
-      "line": 169,
+      "line": 178,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_compressed_decode_ignores_spoofed_metadata_and_bounds_process.decode"
     },
@@ -266799,14 +267086,14 @@
     {
       "id": "symbol:tests.test_speech_to_text.test_decoder_timeout_removes_all_temporary_files_before_finance",
       "kind": "test",
-      "line": 271,
+      "line": 280,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_decoder_timeout_removes_all_temporary_files_before_finance"
     },
     {
       "id": "symbol:tests.test_speech_to_text.test_decoder_timeout_removes_all_temporary_files_before_finance.timeout",
       "kind": "test",
-      "line": 274,
+      "line": 283,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_decoder_timeout_removes_all_temporary_files_before_finance.timeout"
     },
@@ -266820,42 +267107,42 @@
     {
       "id": "symbol:tests.test_speech_to_text.test_financial_finish_failure_still_removes_files",
       "kind": "test",
-      "line": 285,
+      "line": 294,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_financial_finish_failure_still_removes_files"
     },
     {
       "id": "symbol:tests.test_speech_to_text.test_financial_finish_failure_still_removes_files.fail",
       "kind": "test",
-      "line": 287,
+      "line": 296,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_financial_finish_failure_still_removes_files.fail"
     },
     {
       "id": "symbol:tests.test_speech_to_text.test_groq_adapter_response_and_duration_usage_are_private",
       "kind": "test",
-      "line": 296,
+      "line": 305,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_groq_adapter_response_and_duration_usage_are_private"
     },
     {
       "id": "symbol:tests.test_speech_to_text.test_groq_adapter_response_and_duration_usage_are_private.respond",
       "kind": "test",
-      "line": 298,
+      "line": 307,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_groq_adapter_response_and_duration_usage_are_private.respond"
     },
     {
       "id": "symbol:tests.test_speech_to_text.test_http_adapter_bounds_and_redacts_response",
       "kind": "test",
-      "line": 191,
+      "line": 200,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_http_adapter_bounds_and_redacts_response"
     },
     {
       "id": "symbol:tests.test_speech_to_text.test_http_adapter_bounds_and_redacts_response.respond",
       "kind": "test",
-      "line": 194,
+      "line": 203,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_http_adapter_bounds_and_redacts_response.respond"
     },
@@ -266867,6 +267154,13 @@
       "qualified_name": "tests.test_speech_to_text.test_limits_before_reservation_and_provider"
     },
     {
+      "id": "symbol:tests.test_speech_to_text.test_missing_ffmpeg_gives_stable_503_code_for_every_compressed_format",
+      "kind": "test",
+      "line": 168,
+      "path": "tests/test_speech_to_text.py",
+      "qualified_name": "tests.test_speech_to_text.test_missing_ffmpeg_gives_stable_503_code_for_every_compressed_format"
+    },
+    {
       "id": "symbol:tests.test_speech_to_text.test_no_balance_means_no_provider",
       "kind": "test",
       "line": 143,
@@ -266876,21 +267170,21 @@
     {
       "id": "symbol:tests.test_speech_to_text.test_openai_duration_or_invalid_counters_never_become_exact",
       "kind": "test",
-      "line": 180,
+      "line": 189,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_openai_duration_or_invalid_counters_never_become_exact"
     },
     {
       "id": "symbol:tests.test_speech_to_text.test_original_wav_extra_chunks_never_reach_provider",
       "kind": "test",
-      "line": 216,
+      "line": 225,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_original_wav_extra_chunks_never_reach_provider"
     },
     {
       "id": "symbol:tests.test_speech_to_text.test_oversized_provider_response_falls_back_without_body_leak",
       "kind": "test",
-      "line": 241,
+      "line": 250,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_oversized_provider_response_falls_back_without_body_leak"
     },
@@ -266904,14 +267198,14 @@
     {
       "id": "symbol:tests.test_speech_to_text.test_quote_accepts_only_registered_exact_speech_card",
       "kind": "test",
-      "line": 313,
+      "line": 322,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_quote_accepts_only_registered_exact_speech_card"
     },
     {
       "id": "symbol:tests.test_speech_to_text.test_real_decoder_browser_media_round_trip",
       "kind": "test",
-      "line": 224,
+      "line": 233,
       "path": "tests/test_speech_to_text.py",
       "qualified_name": "tests.test_speech_to_text.test_real_decoder_browser_media_round_trip"
     },
@@ -269129,5 +269423,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:548b3bdf58e67f833b60e63478d7fcd753c9f350e32de2971af709628bb1e7a1"
+  "source_tree_hash": "sha256:d58b473e8a73e5ae599d328155ea18178ae1bd8906ae4961f720458c12318b8e"
 }
