@@ -1,0 +1,29 @@
+{
+  "database": "supabase local (rollback)",
+  "results": [
+    {
+      "call": "A exporta o proprio jogo",
+      "status": 200,
+      "verify_audit_zip": []
+    },
+    {
+      "call": "A sem prova recente",
+      "status": 403,
+      "detail": "recent_session_required"
+    },
+    {
+      "call": "B pede o jogo de A",
+      "status": 404,
+      "detail": "game_not_found"
+    },
+    {
+      "call": "B pede uuid inexistente",
+      "status": 404,
+      "detail": "game_not_found"
+    },
+    {
+      "call": "corpo 404 identico (alheio vs inexistente)",
+      "equal": true
+    }
+  ]
+}

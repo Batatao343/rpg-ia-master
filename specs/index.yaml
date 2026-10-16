@@ -3651,7 +3651,7 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-207
   slug: export-sessao-auditoria-beta
-  status: draft
+  status: done
   path: specs/SPEC-207-export-sessao-auditoria-beta.md
   created_commit: null
   created_at: '2026-10-15'

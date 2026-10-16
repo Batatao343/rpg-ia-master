@@ -930,7 +930,7 @@ select {
 .savecard__badge--lab { color: var(--accent); border-color: var(--accent); }
 .savecard.is-memorial .savecard__main { opacity: 0.75; }
 .savecard__meta { font-size: 0.82rem; color: var(--muted); }
-.savecard__del { align-self: center; }
+.savecard__del, .savecard__audit { align-self: center; }
 .savecard__confirm { display: flex; gap: 0.6rem; justify-content: center; margin-top: 0.6rem; }
 .btn--danger { background: linear-gradient(180deg, var(--danger-bright), var(--danger)); border-color: oklch(0.66 0.2 26 / 0.6); color: oklch(0.98 0.02 30); }
 

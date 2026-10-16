@@ -71,6 +71,9 @@ export const reauthenticate = (password: string, captchaToken?: string) =>
   req<{ recent: boolean }>("/auth/reauth", { method: "POST", body: JSON.stringify({ password,
     ...(captchaToken ? { captcha_token: captchaToken } : {}) }) });
 export const exportAccount = async (): Promise<Blob> => (await http("/account/export")).blob();
+// SPEC-207: pacote ZIP de auditoria da campanha (owner-only, exige prova recente).
+export const exportGameAudit = async (game_id: string): Promise<Blob> =>
+  (await http("/game/" + encodeURIComponent(game_id) + "/audit-export", { method: "POST" })).blob();
 export const deleteAccount = () => req<{ status: "deleted" | "deleting" }>("/account/delete", {
   method: "POST", body: JSON.stringify({ confirmation: "EXCLUIR" }),
 });

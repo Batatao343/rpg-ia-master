@@ -1,7 +1,7 @@
 # SPEC-207 — Export de sessão para auditoria beta (pacote sob demanda)
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `done` (revisão Astra APPROVED_WITH_FIXES 2026-10-16)
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-200 `done` (timings por `action_id`), SPEC-206 `done` (taxonomia de conhecimento), SPEC-228 `done` (export fiel ao save) · reaproveita SPEC-190 `done` (prova de auth recente) e SPEC-182 `done` (`app.usage_events`) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 08; referência `referencias/AUDITOR_PROMPT_MODELO.md`
@@ -270,20 +270,20 @@ e nada é enviado (fail-closed). Turnos anteriores à migração: `context_refs`
 
 ## 5. Critérios de aceite
 
-- [ ] ZIP contém os 10 artefatos de R3 e `verify_audit_zip` retorna `[]`.
-- [ ] Teste cross-account (Postgres local) prova 404 para game alheio, sem diferença de corpo/status.
-- [ ] Sem prova recente → 403; com prova → 200 e download.
-- [ ] Scan de PII do ZIP: zero e-mail, IP, uuid de owner, token, signed URL, áudio.
-- [ ] Itens privados aparecem só com o rótulo literal e só no export do dono.
-- [ ] Mesmo estado → mesmos bytes; limites de turnos/bytes respeitados e sinalizados.
-- [ ] Zero `usage_events` e zero invoke de LLM gerados pelo export.
-- [ ] Save v8 carrega e faz round-trip após a migração v9.
-- [ ] `knowledge_visibility.jsonl` usa só valores da taxonomia SPEC-206; itens privados com campos `null` + rótulo; reveal via `accepted_secret_ids`.
-- [ ] `timings.jsonl` com os nomes de campo da SPEC-200 (R5/R17) ou `timing: null` marcado; `errors.jsonl` sem mensagem de exceção crua.
-- [ ] `AUDITOR_PROMPT.md` + `README_SCHEMA.md` presentes e coerentes com os campos reais.
-- [ ] Handoff legal escrito; SPEC-197 e `docs/spec197/legal/*` intocados (diff vazio).
-- [ ] `uv run pytest` verde (suíte completa offline); build web verde.
-- [ ] Revisão Astra independente APPROVED.
+- [x] ZIP contém os 10 artefatos de R3 e `verify_audit_zip` retorna `[]`.
+- [x] Teste cross-account (Postgres local) prova 404 para game alheio, sem diferença de corpo/status.
+- [x] Sem prova recente → 403; com prova → 200 e download.
+- [x] Scan de PII do ZIP: zero e-mail, IP, uuid de owner, token, signed URL, áudio.
+- [x] Itens privados aparecem só com o rótulo literal e só no export do dono.
+- [x] Mesmo estado → mesmos bytes; limites de turnos/bytes respeitados e sinalizados.
+- [x] Zero `usage_events` e zero invoke de LLM gerados pelo export.
+- [x] Save v8 carrega e faz round-trip com `audit_trace` (campo aditivo, default `[]`; **sem bump** — regra da onda).
+- [x] `knowledge_visibility.jsonl` usa só valores da taxonomia SPEC-206; itens privados com campos `null` + rótulo; reveal via `accepted_secret_ids`.
+- [x] `timings.jsonl` com os nomes de campo da SPEC-200 (R5/R17) ou `timing: null` marcado; `errors.jsonl` sem mensagem de exceção crua.
+- [x] `AUDITOR_PROMPT.md` + `README_SCHEMA.md` presentes e coerentes com os campos reais.
+- [x] Handoff legal escrito; SPEC-197 e `docs/spec197/legal/*` intocados (diff vazio).
+- [x] `uv run pytest` verde (suíte completa offline); build web verde.
+- [x] Revisão Astra independente APPROVED (with fixes — `handoffs/SPEC-207-ASTRA-independent-review.md`).
 
 ## 6. Smoke
 
@@ -332,3 +332,26 @@ Provider real: **não necessário**. Opcional: entregar um ZIP real a um coding 
 - JSON do smoke de dois usuários (status por chamada, sem ids crus).
 - Diff provando que `specs/SPEC-197-*`, `docs/spec197/legal/*` e `evals/` não foram alterados.
 - Parecer Astra em `handoffs/SPEC-207-ASTRA-independent-review.md`.
+
+## 10. Registro de execução (2026-10-16)
+
+**Defaults do dono adotados (seção 8):** D4 como descrito; D-a = incluir segredos rotulados
+(`final_snapshot.private_reference` + itens não públicos com `private_label`, aviso de spoiler na UI);
+D-b = não persistir prompt/resposta bruta; D-c = ring buffer 200 (`RPG_AUDIT_TRACE_MAX`), export 500
+turnos / 25 MiB.
+
+**Desvios:**
+- Sem bump de `SCHEMA_VERSION` (regra da onda: o eval protegido fixa 8). `audit_trace` é campo
+  ADITIVO com default `[]` em `_raw_to_state` e corte idempotente no save; teste de round-trip com save v8.
+- Teste Postgres em `tests/test_audit_export_local.py` (padrão `*_local.py`, marcador `infra_local`),
+  não em `tests/integration/`.
+- `AUDITOR_PROMPT.md`/`README_SCHEMA.md` canônicos em `docs/auditoria/`; cópia byte-idêntica em
+  `data/auditoria/` para o runtime (a `.vercelignore` exclui `docs/`), garantida por teste.
+- `state/initial_snapshot.json` = projeção final com os deltas dos turnos exportados revertidos
+  (não há snapshot inicial persistido); mudanças fora de turno não entram.
+- `errors.jsonl`: `node` de falha LLM sai `null` (a tentativa só conhece o tier, gravado em `tier`);
+  `error_class` só em `turn_failed` (nome de classe validado). `cost_basis` copia `cost_usd_basis` da SPEC-200.
+- Teste de UI em Node (`web/tests/auditExport.test.mjs`, fluxo puro com API mock), não Playwright.
+
+**Revisão Astra:** APPROVED_WITH_FIXES (scrubber ampliado, trace compactado — ring de 200 turnos reais ≈ 208 KB ≤ 400 KB, refs agrupadas + delta de `source_ids` entre turnos —, game_id sensível). Smoke em staging não executado (opcional);
+smoke de 2 usuários executado contra o Supabase local. Evidência: `docs/spec207/README.md`.

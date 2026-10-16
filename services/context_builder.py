@@ -16,7 +16,7 @@ import os
 import re
 import hashlib
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from services import graph_resolver as gr
 from services.memory_provenance import (
@@ -107,6 +107,8 @@ class ContextPack:
     dropped: int
     evidence_ids: List[str] = field(default_factory=list)
     discarded_evidence: List[Dict[str, str]] = field(default_factory=list)
+    # SPEC-207 R7: refs SEM texto ({source_id, section, visibility} + selo SPEC-206).
+    context_refs: List[Dict[str, Any]] = field(default_factory=list)
 
 
 # --------------------------------------------------------------------------- #
@@ -388,6 +390,15 @@ def assemble_pack(facts: List[ScoredFact], budget: ContextBudget,
         if fact.source_id
     ]
 
+    from services.audit_trace import classify_fact
+    context_refs = [
+        classify_fact(section=fact.section, source_id=fact.source_id,
+                      visibility=fact.visibility, text=fact.text)
+        for section in budget.reserved
+        for fact in chosen.get(section, [])
+        if fact.source_id
+    ]
+
     return ContextPack(
         world_state_block=world_state_block,
         lore_block=lore_block,
@@ -396,6 +407,7 @@ def assemble_pack(facts: List[ScoredFact], budget: ContextBudget,
         dropped=dropped,
         evidence_ids=evidence_ids,
         discarded_evidence=discarded_evidence,
+        context_refs=context_refs,
     )
 
 
@@ -440,7 +452,11 @@ def build_context_pack(state: Dict, query: str, purpose: str,
     """SPEC-200: mede a fase `context` (no-op sem timeline). Sem mudar comportamento."""
     from observability.latency import TurnPhase, phase as _phase
     with _phase(TurnPhase.CONTEXT):
-        return _build_context_pack(state, query, purpose, token_budget, game_id, npc_id)
+        pack = _build_context_pack(state, query, purpose, token_budget, game_id, npc_id)
+    # SPEC-207 R7: refs do contexto visto vão ao coletor do turno (no-op fora do turno).
+    from services.audit_trace import note_context
+    note_context(pack, purpose=purpose, npc_id=npc_id)
+    return pack
 
 
 def _build_context_pack(state: Dict, query: str, purpose: str,

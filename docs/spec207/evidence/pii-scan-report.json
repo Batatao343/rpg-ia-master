@@ -1,0 +1,58 @@
+{
+  "verify_audit_zip": [],
+  "files": {
+    "AUDITOR_PROMPT.md": {
+      "bytes": 3385,
+      "pii_findings": []
+    },
+    "README_SCHEMA.md": {
+      "bytes": 5590,
+      "pii_findings": []
+    },
+    "errors.jsonl": {
+      "bytes": 0,
+      "pii_findings": []
+    },
+    "knowledge_visibility.jsonl": {
+      "bytes": 69813,
+      "pii_findings": []
+    },
+    "manifest.json": {
+      "bytes": 1317,
+      "pii_findings": []
+    },
+    "sessions/0.jsonl": {
+      "bytes": 2958,
+      "pii_findings": []
+    },
+    "state/deltas.jsonl": {
+      "bytes": 284,
+      "pii_findings": []
+    },
+    "state/final_snapshot.json": {
+      "bytes": 1378,
+      "pii_findings": []
+    },
+    "state/initial_snapshot.json": {
+      "bytes": 770,
+      "pii_findings": []
+    },
+    "timings.jsonl": {
+      "bytes": 2054,
+      "pii_findings": []
+    }
+  },
+  "planted_values_absent": {
+    "jogador.real@example.com": true,
+    "(11) 98765-4321": true,
+    "123.456.789-09": true,
+    "11987654321": true,
+    "AKIAIOSFODNN7EXAMPLE": true,
+    "hunter22": true,
+    "192.168.0.10": true,
+    "game_id": true
+  },
+  "audit_trace_ring_bytes_4_turns": 7072,
+  "zip_sha256": "0639988fdea0cc0c6dd7ee6071e5a234e43f1b4c2ee92de8bf32daecb9f0ac66",
+  "zip_bytes": 11701
+}

@@ -22,6 +22,7 @@ from services.conflict_summary import (
     ensure_conflict_id,
     normalize_consumed_conflict_ids,
 )
+from services.audit_trace import normalize_audit_trace
 from services.memory_retry import normalize_pending_npc_memory
 from services.memory_provenance import (
     MAX_MEMORY_PROMOTIONS,
@@ -58,6 +59,7 @@ def _replace_with_retry(source: str, destination: str, *, attempts: int = 6) -> 
 # v6 = ledger visual; v7 = metatempo; v8 = crônica estável + progressão 1–20.
 # SPEC-202 (`last_speaker` + speaker_* no histórico) é ADITIVA: sem bump; default
 # no load (`_raw_to_state`) e rótulo legado derivado na leitura (history_page).
+# SPEC-207 (`audit_trace`, ring buffer de refs por turno) também é ADITIVA: sem bump.
 SCHEMA_VERSION = 8
 MAX_REJECTED_ITEM_CLAIMS = 100
 
@@ -583,6 +585,8 @@ def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
             state.get("pending_memory_facts"), pending=True,
         ),
         "presentation_history": list(state.get("presentation_history") or []),
+        # SPEC-207 (aditivo, sem bump): ring buffer de refs por turno p/ auditoria.
+        "audit_trace": normalize_audit_trace(state.get("audit_trace")),
         "art_generation_ledger": deepcopy(state.get("art_generation_ledger") or []),
         "art_arc_budgets": deepcopy(state.get("art_arc_budgets") or {}),
         "art_offers": deepcopy(state.get("art_offers") or []),
@@ -777,6 +781,8 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
             raw_data.get("pending_memory_facts"), pending=True,
         ),
         "presentation_history": list(raw_data.get("presentation_history") or []),
+        # SPEC-207 (aditivo, sem bump): save antigo sem a chave → [].
+        "audit_trace": normalize_audit_trace(raw_data.get("audit_trace")),
         "art_generation_ledger": deepcopy(raw_data.get("art_generation_ledger") or []),
         "art_arc_budgets": deepcopy(raw_data.get("art_arc_budgets") or {}),
         "art_offers": deepcopy(raw_data.get("art_offers") or []),

@@ -811,6 +811,7 @@ export function App() {
               onDelete={handleDeleteSave}
               onNew={handleNew}
               onSimulate={() => setScreen("simulator")}
+              auditExport={authConfig?.lifecycle_available ?? false}
             />
           </motion.div>
         ) : screen === "create" ? (

@@ -525,6 +525,49 @@ def account_export(request: Request):
     return JSONResponse(jsonable_encoder(data), headers={"Content-Disposition": 'attachment; filename="valoria-account.json"', "Cache-Control": "no-store"})
 
 
+@app.post("/game/{game_id}/audit-export")
+def game_audit_export(game_id: str, request: Request):
+    """SPEC-207: pacote ZIP de auditoria, owner-only, prova recente, zero LLM.
+
+    Gerado em memória e devolvido como download; nada é retido no servidor."""
+    if not _database_profile():
+        raise HTTPException(404, "audit_export_unavailable_in_legacy")
+    from infrastructure.audit_source import AccountDeleted, PostgresAuditSource
+    from infrastructure.request_context import current_principal
+    from infrastructure.runtime import get_runtime
+    from observability.telemetry import pseudonym
+    from services.audit_export import bundle_zip
+    from services.audit_redaction import AuditRedactionError
+    principal = current_principal()
+    _require_recent(request, principal.user_id)
+    try:
+        game_uuid = uuid.UUID(game_id)
+    except ValueError:
+        raise HTTPException(404, "game_not_found") from None
+    runtime = get_runtime()
+    decision = runtime.rate_limiter.consume(
+        f"audit-export:{pseudonym(principal.user_id)}", limit=3, window_seconds=600)
+    if not decision.allowed:
+        raise HTTPException(429, "audit_export_rate_limit",
+                            headers={"Retry-After": str(decision.retry_after_seconds)})
+    try:
+        source = PostgresAuditSource(runtime.game_store.pool, runtime.game_store,
+                                     principal).load(game_uuid)
+    except AccountDeleted:
+        raise HTTPException(401, "account_deleted") from None
+    if source is None:
+        raise HTTPException(404, "game_not_found")
+    build_sha = os.getenv("GIT_SHA") or os.getenv("VERCEL_GIT_COMMIT_SHA") or "unknown"
+    try:
+        data = bundle_zip(source, build_sha=build_sha)
+    except AuditRedactionError:
+        raise HTTPException(500, "audit_export_redaction_failed") from None
+    filename = f"valoria-auditoria-{pseudonym(game_uuid)}.zip"
+    return Response(content=data, media_type="application/zip", headers={
+        "Content-Disposition": f'attachment; filename="{filename}"',
+        "Cache-Control": "no-store"})
+
+
 class DeleteAccountRequest(BaseModel):
     confirmation: Literal["EXCLUIR"]
 
@@ -3481,13 +3524,29 @@ def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
     }))
 
 
+def _record_audit_trace(new_state: dict, previous_state: dict, *, action_id, timeline,
+                        llm_events, llm_attempts, input_text: str) -> None:
+    """SPEC-207 R7: trilha de auditoria por turno, dentro do commit. Nunca derruba
+    o turno (falha vira trilha ausente, marcada `unavailable` no export)."""
+    try:
+        from services.audit_trace import record_turn_trace
+        # Popula os campos SPEC-200 da timeline (idempotente; recomputado no log).
+        _latency_log_fields(timeline, llm_events, llm_attempts,
+                            action_id=action_id, input_text=input_text)
+        record_turn_trace(new_state, previous_state=previous_state, action_id=action_id,
+                          timeline=timeline, llm_attempts=llm_attempts)
+    except Exception as exc:
+        print(f"⚠️ audit_trace não gravado: {type(exc).__name__}")
+
+
 def _run_turn(state: dict, input_text: str,
               action_id: Optional[str] = None, *, claim=None,
               request_hash: str = "", progress=None,
               timeline=None) -> GameResponse:
     from services.turn_effects import effect_scope
+    from services.audit_trace import collecting as _audit_collecting
     from rag import embedding_usage_scope
-    with effect_scope(), embedding_usage_scope(_embedding_telemetry_hook):
+    with effect_scope(), embedding_usage_scope(_embedding_telemetry_hook), _audit_collecting():
         return _run_turn_collected(state, input_text, action_id, claim=claim,
                                    request_hash=request_hash, progress=progress,
                                    timeline=timeline)
@@ -3544,6 +3603,9 @@ def _run_turn_collected(state: dict, input_text: str,
             response = format_response(new_state, cue_action_key=visual_key)
             llm_events = _llm_turn_events.get() or []
             llm_attempts = _llm_attempt_events.get() or []
+            _record_audit_trace(new_state, previous_state, action_id=action_id,
+                                timeline=timeline, llm_events=llm_events,
+                                llm_attempts=llm_attempts, input_text=input_text)
             _commit_turn(
                 new_state, response, claim=claim, request_hash=request_hash,
                 checkpoint=checkpoint, latency_ms=int((time.monotonic() - t0) * 1000),

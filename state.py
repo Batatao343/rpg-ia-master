@@ -436,6 +436,10 @@ class GameState(TypedDict):
 
     messages: Annotated[List[BaseMessage], operator.add]
     presentation_history: List[Dict[str, Any]]
+    # SPEC-207: ring buffer (default 200) de refs de auditoria por turno — só ids,
+    # visibilidade, delta mínimo, erros (enum fechado) e timing SPEC-200. Escrito
+    # só por services.audit_trace.record_turn_trace na finalização do turno.
+    audit_trace: List[Dict[str, Any]]
     art_generation_ledger: List[Dict[str, Any]]
     art_offers: List[Dict[str, Any]]
     art_arc_budgets: Dict[str, Dict[str, Any]]
