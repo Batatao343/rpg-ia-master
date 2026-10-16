@@ -55,7 +55,23 @@ def _base_route_payload(route: RouteType, world: dict) -> dict:
         "loot_source": None,
         "combat_origin_hint": None,
         "npc_fallback_hint": None,  # SPEC-230 R8: transitório
+        # SPEC-202: transitórios do interlocutor (zerados a cada rota).
+        "interlocutor_reason": None,
+        "mediated_subject_id": None,
     }
+
+
+def _interlocutor_payload(resolution, world: dict) -> dict:
+    """SPEC-202: payload de rota a partir de uma InterlocutorResolution."""
+    route = RouteType(resolution.route)
+    payload = _base_route_payload(route, world)
+    payload["interlocutor_reason"] = resolution.reason
+    payload["mediated_subject_id"] = resolution.mediated_subject_id
+    if route == RouteType.NPC:
+        payload["active_npc_name"] = resolution.npc_state_key
+    if resolution.fallback_hint:
+        payload["npc_fallback_hint"] = resolution.fallback_hint
+    return payload
 
 
 def _combat_gate(state: GameState, world: dict, combat: dict):
@@ -76,7 +92,8 @@ def _combat_gate(state: GameState, world: dict, combat: dict):
                              "os inimigos perdem seu rastro e o combate termina.")]}
 
     combat["idle_turns"] = idle
-    payload = {"next": RouteType.COMBAT.value, "world": world, "combat": combat}
+    payload = {"next": RouteType.COMBAT.value, "world": world, "combat": combat,
+               "interlocutor_reason": None, "mediated_subject_id": None}
     intent = _last_human_text(state.get("messages", []))
     # Uma borda estruturada (API/harness) já resolveu o id exato do destino.
     # O parser textual é apenas fallback: nomes de interiores contêm o nome da
@@ -155,14 +172,27 @@ def dm_router_node(state: GameState):
     if decide_route(state, last_human) == RouteType.STORY.value:
         return _base_route_payload(RouteType.STORY, world)
 
+    # SPEC-202 R2/R3: meta-pergunta ao narrador e descrição de cena são decididas
+    # em Python, SEM chamar o CLASSIFY (zero invoke).
+    from services import interlocutor
+    pre = interlocutor.pre_classify(state, last_human)
+    if pre is not None:
+        return _interlocutor_payload(pre, world)
+
+    scene_names = ", ".join(
+        interlocutor.canonical_npc_name(state, key)
+        for key in interlocutor.scene_keys(state)) or "ninguém"
+
     system_instruction = f"""
     Roteador de RPG. Classifique a intenção da ÚLTIMA mensagem do jogador.
     
     Local Atual: {loc}
-    
+    NPCs presentes na cena: {scene_names}
+
     REGRAS:
     - COMBAT: Jogador ataca, saca armas ou reage a uma ameaça narrada. IMPORTANTE: Identifique o 'target' (inimigo).
-    - NPC: Conversa social, diplomacia.
+    - NPC: Conversa social, diplomacia DIRIGIDA a um personagem presente. 'target' = nome EXATO de um NPC presente (ou vazio).
+    - Pergunta ao narrador/mestre SOBRE alguém (o que sente, se mente, quem é) = STORY, não NPC.
     - LOOT: "Vasculhar corpo", "Pegar item", "Abrir baú" (TREASURE) ou "Comprar/Vender/Criar" (SHOP/CRAFT).
     - STORY: Movimentação, exploração, observar cenário.
     """
@@ -174,12 +204,14 @@ def dm_router_node(state: GameState):
         decision = router_llm.invoke([SystemMessage(content=system_instruction)] + messages[-3:])
     except Exception as e:
         print(f"⚠️ Router Error: {e}")
-        return {"next": RouteType.STORY.value}
+        return {**_base_route_payload(RouteType.STORY, world),
+                "interlocutor_reason": "classify_fallback"}
 
     # Sem API key (FallbackLLM) o invoke devolve um AIMessage, não um
     # RouterDecision. Nesse caso seguimos para o storyteller (modo degradado).
     if not isinstance(decision, RouterDecision):
-        return {"next": RouteType.STORY.value}
+        return {**_base_route_payload(RouteType.STORY, world),
+                "interlocutor_reason": "classify_fallback"}
 
     # RouteType.NONE ("nenhuma intenção clara": input sem ação, lixo ou injeção)
     # NÃO é um nó do grafo — o mapping condicional de main.py só conhece
@@ -193,35 +225,18 @@ def dm_router_node(state: GameState):
 
     print(f"🚦 [ROUTER] {decision.route.value} -> Alvo: {decision.target}")
 
+    # SPEC-202 R3–R8: o alvo do CLASSIFY só vira interlocutor se resolver para
+    # uma ficha existente em cena; o alvo cru NUNCA é propagado (R5).
+    if decision.route in (RouteType.NPC, RouteType.STORY):
+        resolution = interlocutor.post_classify(
+            state, last_human, decision.route.value, decision.target)
+        return _interlocutor_payload(resolution, world)
+
     response_payload = _base_route_payload(decision.route, world)
+    response_payload["interlocutor_reason"] = "classify_story"
 
     if decision.route == RouteType.LOOT:
         response_payload["loot_source"] = decision.loot_context or "TREASURE"
-
-    # GATILHO DE NPC:
-    # O ator de NPC exige 'active_npc_name'. Sem isso ele responde "Ninguém responde".
-    # Tentamos casar o alvo identificado com um NPC já presente na cena.
-    if decision.route == RouteType.NPC:
-        from services import npc_layers
-
-        chosen = None
-        valid_npc_names = [
-            normalized
-            for npc_name in npc_layers.npcs_in_scene(state)
-            if (normalized := optional_entity_ref(npc_name)) is not None
-        ]
-        if decision.target:
-            tgt = decision.target.lower()
-            for npc_name in valid_npc_names:
-                if tgt in npc_name.lower() or npc_name.lower() in tgt:
-                    chosen = npc_name
-                    break
-        # Fallback: se só há um NPC na cena, fala com ele.
-        if not chosen and len(valid_npc_names) == 1:
-            chosen = valid_npc_names[0]
-        if not chosen and decision.target:
-            chosen = decision.target  # deixa o ator tentar carregar do DB
-        response_payload["active_npc_name"] = chosen
 
     # GATILHO DE COMBATE:
     # Se for combate, adicionamos uma flag no histórico (temporária) para o Combat Agent saber que é o turno 1

@@ -3,7 +3,7 @@ import random
 import re
 from collections import Counter
 from copy import deepcopy
-from typing import Dict, List
+from typing import Dict, List, Optional
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
@@ -180,6 +180,92 @@ def _npc_fallback_clause(state: GameState) -> str:
             f'("{str(hint)[:120]}"), mas NÃO há ninguém por perto para responder. '
             "Narre a solidão/silêncio SEM inventar um NPC novo em cena, e ofereça "
             f"esta direção ÚTIL e canônica: {direction}")
+
+
+def _mediated_subject_view(state: GameState) -> Optional[dict]:
+    """SPEC-202 R11: recorte PÚBLICO (camada 2) do NPC de quem o narrador fala."""
+    subject_id = state.get("mediated_subject_id")
+    if not subject_id:
+        return None
+    from services import interlocutor, npc_layers
+    for key, row in (state.get("npcs") or {}).items():
+        if isinstance(row, dict) and interlocutor.canonical_npc_id(state, key) == subject_id:
+            views = npc_layers.visible_npc_view({key: row})
+            if not views:
+                return None
+            view = dict(views[0])
+            # R15(b): pronome só se o registro já tiver o campo (P4: sem dado novo).
+            for field in ("pronouns", "pronome", "gender", "genero"):
+                if row.get(field):
+                    view["pronome"] = str(row[field])
+                    break
+            return view
+    return None
+
+
+def _mediation_clause(state: GameState) -> str:
+    """SPEC-202 R2/R7/R11: o narrador responde SOBRE um NPC ou media vários
+    presentes — sem fala em 1ª pessoa de personagem, só dados públicos. Pura."""
+    from services import interlocutor
+    reason = state.get("interlocutor_reason")
+    if reason not in interlocutor.MEDIATION_REASONS:
+        return ""
+    if reason == "ambiguous_multi_mediated":
+        present = ", ".join(
+            interlocutor.canonical_npc_name(state, key)
+            for key in interlocutor.scene_keys(state)) or "ninguém"
+        return ("\n    - VÁRIOS PRESENTES: o jogador falou sem indicar a quem "
+                f"({present}). Descreva quem está presente e como cada um reage, "
+                "sem eleger um porta-voz que responda em primeira pessoa.")
+    clause = ("\n    - PERGUNTA AO NARRADOR: o jogador se dirigiu a VOCÊ (narrador), "
+              "não a um personagem. Responda como narrador, em terceira pessoa, só com "
+              "o que o herói pode observar ou já sabe; NENHUM personagem fala em "
+              "primeira pessoa e nada oculto é revelado.")
+    view = _mediated_subject_view(state)
+    if view:
+        traits = ", ".join(t.get("name", "") for t in view.get("revealed_traits") or []
+                           if isinstance(t, dict)) or "nenhum percebido"
+        parts = [f"nome={view.get('name', '')}", f"papel={view.get('role') or '?'}",
+                 "presente na cena=" + ("sim (descreva o que o herói observa nele/nela)"
+                                        if view.get("in_scene") else "não"),
+                 f"relação com o herói={view.get('relationship', 5)}/10",
+                 f"traços já percebidos={traits}"]
+        if view.get("pronome"):
+            parts.append(f"pronome={view['pronome']}")
+        if view.get("last_memory"):
+            parts.append(f"última lembrança={str(view['last_memory'])[:160]}")
+        clause += " Sujeito (dados públicos): " + "; ".join(parts) + "."
+    return clause
+
+
+def _guard_mediation_secret(text: str, state: GameState) -> tuple[str, List[str]]:
+    """SPEC-202 R11: parágrafo mediado com assinatura de segredo não revelado vira
+    descrição observável neutra (determinística) + registro de rejeição."""
+    from services import interlocutor
+    from services.secret_signatures import find_unrevealed
+    if state.get("interlocutor_reason") not in interlocutor.MEDIATION_REASONS:
+        return text, []
+    hit = find_unrevealed(text, state)
+    if not hit:
+        return text, []
+    view = _mediated_subject_view(state) or {}
+    who = view.get("name") or "A cena"
+    neutral = (f"{who} não deixa transparecer mais do que o óbvio; o que você "
+               "consegue observar não basta para afirmar nada além disso.")
+    rejections: List[str] = []
+    paragraphs = str(text).split("\n\n")
+    out: List[str] = []
+    for paragraph in paragraphs:
+        found = find_unrevealed(paragraph, state)
+        if found:
+            rejections.append(f"mediation_secret:{found[0]}")
+            if neutral not in out:
+                out.append(neutral)
+        else:
+            out.append(paragraph)
+    if not rejections:  # assinatura atravessando parágrafos: troca o texto todo
+        out, rejections = [neutral], [f"mediation_secret:{hit[0]}"]
+    return "\n\n".join(out), list(dict.fromkeys(rejections))
 
 
 def _player_facing_note(note: str) -> str:
@@ -632,6 +718,8 @@ def storyteller_node(state: GameState):
 
     # spec npc-fallback-sem-alvo (R2): rota NPC sem interlocutor delegou aqui.
     npc_fallback_clause = _npc_fallback_clause(scene_state)
+    # SPEC-202 R2/R7/R11: mediação do narrador (dados públicos do sujeito).
+    npc_fallback_clause += _mediation_clause(scene_state)
     # spec polish-prosa: R1 (varie a abertura) + R3 (menu de opções concretas).
     from services import prose_guard
     _aberturas = prose_guard.ultimas_aberturas(messages)
@@ -805,6 +893,10 @@ def storyteller_node(state: GameState):
                 f"{(world or {}).get('turn_count', 0)}:storyteller"
             ),
         )
+
+        # SPEC-202 R11: narração mediada não revela segredo não revelado.
+        narrative_text, mediation_rejections = _guard_mediation_secret(
+            str(narrative_text), scene_state)
 
         # spec polish-prosa (R4): telemetria de abertura repetida (não re-tenta).
         prose_guard.log_if_repeats(str(narrative_text),
@@ -1063,6 +1155,11 @@ def storyteller_node(state: GameState):
             updates["archive_due"] = True  # nova missão é evento relevante
         if turn_bl is not state.get("turn_baseline"):
             updates["turn_baseline"] = turn_bl
+        if mediation_rejections:
+            updates["narrative_rejections"] = [
+                *list(updates.get("narrative_rejections") or []),
+                *mediation_rejections,
+            ]
         return updates
 
     except Exception as e:

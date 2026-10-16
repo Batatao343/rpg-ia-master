@@ -468,6 +468,14 @@ export interface TurnOutcome {
   source: "combat" | "loot" | "story" | "quest" | "exploration" | "mixed" | "none";
 }
 
+// SPEC-202: quem respondeu o turno (indicador PASSIVO; não há seletor).
+export interface Speaker {
+  kind: "narrator" | "npc" | "system";
+  id: string;
+  name: string;
+  reason?: string;
+}
+
 export interface GameResponse {
   timeline_epoch?: number;
   art_offers?: { offer_id: string; type: "npc" | "scene" }[];
@@ -476,6 +484,7 @@ export interface GameResponse {
   game_id: string;
   message: string;
   message_type: MessageType;
+  speaker?: Speaker;
   player_stats: PlayerStats;
   inventory: InventoryEntry[];
   current_location: string;
@@ -711,6 +720,7 @@ export interface LogEntry {
   text: string;
   role: "player" | "narrator";
   type: MessageType;
+  speaker?: Speaker | null;  // SPEC-202: quem respondeu (rótulo passivo)
   streaming?: boolean;  // true enquanto texto está sendo revelado (typewriter)
   visual?: VisualCue | null;
   onTypewriterDone?: () => void;  // fim real da animação (SPEC-235 R7)

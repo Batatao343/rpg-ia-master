@@ -7,7 +7,7 @@ import { installNativeLifecycle } from "./native/lifecycle";
 import { decideBack } from "./native/backPolicy";
 import { safeStorage } from "./safeStorage";
 import { preparePending, loadPending, clearPending, clearOwner, shouldClearPending, type PendingOperation } from "./pendingOperation";
-import { looksDegraded } from "./lib";
+import { looksDegraded, speakerFromHistory } from "./lib";
 import type { ActionOptions, CombatSimulatorPayload, GameResponse, CreatePayload, LogEntry, SaveSummary } from "./types";
 import { Banner, type BannerState } from "./components/Banner";
 import { CreateScreen } from "./components/CreateScreen";
@@ -319,7 +319,8 @@ export function App() {
     // Cria entrada com streaming=true, que ativa efeito typewriter
     setLog((prev) => [
       ...prev,
-      { id: entryId, text: r.message, role: "narrator", type: r.message_type || "STORY", streaming: true, visual: r.visual?.cue,
+      { id: entryId, text: r.message, role: "narrator", type: r.message_type || "STORY", speaker: r.speaker ?? null,
+        streaming: true, visual: r.visual?.cue,
         // Fim REAL da animação (SPEC-235 R7), não um timer fixo que corta textos longos.
         onTypewriterDone: () => {
           if (session.current !== generation) return;
@@ -470,7 +471,7 @@ export function App() {
       const entry = prev[idx];
       return [
         ...prev.slice(0, idx),
-        { ...entry, text: r.message, type: r.message_type || "STORY", streaming: false,
+        { ...entry, text: r.message, type: r.message_type || "STORY", speaker: r.speaker ?? null, streaming: false,
           visual: entry.visual ?? r.visual?.cue },
         ...prev.slice(idx + 1),
       ];
@@ -596,7 +597,7 @@ export function App() {
       if (page.partial_history) setBanner({ msg: "Este save antigo contém apenas o trecho de histórico preservado.", kind: "warn" });
     } while (cursor);
     if (session.current === generation) setLog([...entries.values()].map(entry => ({
-      ...entry, historyId: entry.id, costMilli: entry.cost_milli,
+      ...entry, historyId: entry.id, costMilli: entry.cost_milli, speaker: speakerFromHistory(entry),
       technicalCostUsd: entry.technical_cost_usd, technicalCostExact: entry.technical_cost_exact,
       id: logSeq.current++,
     })));

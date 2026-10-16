@@ -1073,6 +1073,8 @@ class GameResponse(BaseModel):
     game_id: str # <--- Novo: Frontend precisa saber o ID
     message: str
     message_type: str
+    # SPEC-202 R9: quem respondeu — {kind: narrator|npc|system, id, name, reason}.
+    speaker: Dict[str, str] = {}
     player_stats: Dict[str, Any]
     # Fase 4.3: estruturado — {id, name, qty, type, equipped, slot}
     inventory: List[Dict[str, Any]]
@@ -1111,6 +1113,11 @@ def _public_art_refs(state: dict) -> dict:
                            for row in state.get("art_offers") or []]}
 
 
+def _response_speaker(state: dict) -> Dict[str, str]:
+    from services.interlocutor import response_speaker
+    return response_speaker(state)
+
+
 def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> GameResponse:
     # Pega a última mensagem
     from services.turn_outcome import player_facing_message
@@ -1141,6 +1148,7 @@ def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> Gam
         game_id=state.get("game_id", "unknown"),
         message=last_content,
         message_type=msg_type,
+        speaker=_response_speaker(state),
         player_stats={
             "name": player.get("name", "Herói"),
             "class_name": player.get("class_name") or player.get("class", ""),

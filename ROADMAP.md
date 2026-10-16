@@ -21,6 +21,7 @@
 > **SPEC-201 `done` (16/10):** diagnóstico UX entregue (`docs/spec201/`: matriz M01–M36, 20 atritos sem animação, gaps de tokens/estados, 90 capturas). Achados: hitbox do Create no botão interno, dock de combate espreme a narração, `--danger-dim` inexistente, tablist sem setas, modais sem foco/Esc, narração sem `aria-live`.
 > **SPEC-200 `done` (16/10):** latência por turno instrumentada (ack, TTFMC, TTLT, fases router/context/narrator/archivist/persistence) com métricas novas, marcas no cliente e baseline OFFLINE reprodutível em `docs/spec200/`; beacon do cliente desligado; experimento com provider real documentado, não executado.
 > **SPEC-199 `done` (16/10):** XP e recibo `[RESULTADO]` saem da prosa; `turn_outcome` estruturado (receipt_id, source por origem do ganho) em POST/SSE/state e chip de XP na UI com `aria-live`, sem reanimar no reload.
+> **SPEC-202 `done` (16/10):** interlocutor automático — pergunta ao narrador sobre NPC é mediada pelo narrador (sem fala do NPC, sem segredo), NPC ausente/alucinado nunca fala nem é criado por nome, `speaker` canônico em POST/SSE/state/history com rótulo na UI, zero chamada LLM extra; campo aditivo, sem bump de schema.
 
 > **15/10 — SPEC-196 `done`: FinOps, margin guard e kill switches.** Margem por SKU/canal/versão de preço
 > (gross, taxa de canal, custo variável, contribuição; infra fixa separada), alertas Prometheus sem ids de

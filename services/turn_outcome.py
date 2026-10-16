@@ -161,6 +161,10 @@ def finalize_outcome(state: dict) -> dict:
     outcome["level_after"] = now["level"]
     outcome["source"] = _source(outcome, baseline.get("gain_origins"))
     outcome["player_message"] = render_player_message(_last_ai_text(state), outcome)
+    # SPEC-202 R9: quem respondeu (público). Fora do receipt_id, que permanece
+    # derivado só das mudanças mecânicas.
+    from services.interlocutor import public_speaker, speaker_for_turn
+    outcome["speaker"] = public_speaker(speaker_for_turn(state))
     return outcome
 
 

@@ -188,7 +188,7 @@ export async function sendActionStream(
 export const getState = (game_id: string) =>
   req<GameResponse>("/game/state?game_id=" + encodeURIComponent(game_id));
 
-export interface HistoryEntry { id: string; turn: number; epoch: number; role: 'player' | 'narrator'; text: string; type: import('./types').LogEntry['type']; cost_milli?: string | null; technical_cost_usd?: string | null; technical_cost_basis?: string | null; technical_cost_exact?: boolean }
+export interface HistoryEntry { id: string; turn: number; epoch: number; role: 'player' | 'narrator'; text: string; type: import('./types').LogEntry['type']; speaker_kind?: 'narrator' | 'npc' | 'system'; speaker_id?: string; speaker_name?: string; cost_milli?: string | null; technical_cost_usd?: string | null; technical_cost_basis?: string | null; technical_cost_exact?: boolean }
 export const getHistory = (game: string, cursor?: string) => req<{
   entries: HistoryEntry[]; next_cursor: string | null; epoch: number; partial_history: boolean;
 }>(`/game/history?game_id=${encodeURIComponent(game)}${cursor ? '&cursor=' + encodeURIComponent(cursor) : ''}`);

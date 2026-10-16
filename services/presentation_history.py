@@ -21,12 +21,19 @@ def record_history(state: dict, text: str, *, include_input: bool = True) -> str
         if human:
             rows.append(('player', str(human.content)))
     rows.append(('narrator', text))
+    # SPEC-202 R9: quem respondeu, gravado na linha do narrador.
+    from services.interlocutor import response_speaker
+    speaker = response_speaker(state)
     narrator_id = None
     for role, content in rows:
         key = sha256(f"{state['game_id']}:{epoch}:{turn}:{role}".encode()).hexdigest()[:24]
         if not any(row['id'] == key for row in history):
-            history.append({'id': key, 'turn': turn, 'epoch': epoch, 'role': role,
-                            'text': content, 'type': message_kind(state) if role == 'narrator' else 'STORY'})
+            row = {'id': key, 'turn': turn, 'epoch': epoch, 'role': role,
+                   'text': content, 'type': message_kind(state) if role == 'narrator' else 'STORY'}
+            if role == 'narrator':
+                row.update(speaker_kind=speaker['kind'], speaker_id=speaker['id'],
+                           speaker_name=speaker['name'])
+            history.append(row)
             if role == 'narrator':
                 narrator_id = key
     state['presentation_history'] = history
@@ -49,6 +56,13 @@ def history_page(state: dict, *, cursor: str | None = None, limit: int = 50) -> 
             if role:
                 entries.append({'id': f'legacy:{epoch}:{i}', 'turn': 0, 'epoch': epoch,
                                 'role': role, 'text': str(msg.content), 'type': 'STORY'})
+    # SPEC-202: linha legada sem speaker_* lê com rótulo derivado do `type`.
+    from services.interlocutor import legacy_row_speaker
+    entries = [
+        {**legacy_row_speaker(row), **row}
+        if row.get('role') == 'narrator' and 'speaker_kind' not in row else row
+        for row in entries
+    ]
     end = offset + max(1, min(100, limit))
     return {'entries': entries[offset:end], 'next_cursor': f'{epoch}:{end}' if end < len(entries) else None,
             'epoch': epoch, 'partial_history': partial}

@@ -3550,7 +3550,7 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-202
   slug: interlocutor-automatico-narrador-npc
-  status: draft
+  status: done
   path: specs/SPEC-202-interlocutor-automatico-narrador-npc.md
   created_commit: null
   created_at: '2026-10-15'

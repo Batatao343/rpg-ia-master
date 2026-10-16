@@ -63,7 +63,9 @@ function LogEntryItem({ entry }: { entry: LogEntry }) {
   // A narração é a voz padrão do diário — não carimba "Narrador" em todo bloco
   // (era um eyebrow repetido). Rótulo só quando muda o sentido: fala do jogador,
   // diálogo de NPC, combate, espólio.
-  const showRole = entry.role === "player" || (entry.role === "narrator" && entry.type !== "STORY");
+  // SPEC-202: fala de NPC identificado sempre mostra o nome canônico (passivo).
+  const showRole = entry.role === "player"
+    || (entry.role === "narrator" && (entry.type !== "STORY" || entry.speaker?.kind === "npc"));
 
   return (
     <motion.article
@@ -75,7 +77,7 @@ function LogEntryItem({ entry }: { entry: LogEntry }) {
       {entry.visual && <VisualArtwork asset={entry.visual.asset}
         name={entry.visual.subject_name} caption={entry.visual.caption}
         className="msg__visual" />}
-      {showRole && <p className="msg__role">{roleLabel(entry.role, entry.type)}</p>}
+      {showRole && <p className="msg__role">{roleLabel(entry.role, entry.type, entry.speaker)}</p>}
       <div
         className="msg__body"
         dangerouslySetInnerHTML={{ __html: mdLite(displayedText) }}

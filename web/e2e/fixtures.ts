@@ -113,6 +113,7 @@ export class DeterministicBackend {
 
   private actionResult(gid: string, input: string): GameResponse {
     const current = structuredClone(this.states.get(gid) ?? gameState(gid));
+    current.speaker = { kind: "narrator", id: "narrator", name: "Narrador", reason: "classify_story" };
     current.world.turn_count += 1;
     current.continuity = { ...(current.continuity!), canonical_turn: current.world.turn_count };
     if (/Brumalta/i.test(input)) {
@@ -120,6 +121,8 @@ export class DeterministicBackend {
       current.message = "A trilha termina nos portões de Brumalta.";
     } else if (/Borin|convers/i.test(input)) {
       current.message = "Borin, o barqueiro, responde sem desviar o olhar."; current.message_type = "NPC";
+      // SPEC-202: speaker canônico do turno (indicador passivo no StoryLog).
+      current.speaker = { kind: "npc", id: "borin", name: "Borin", reason: "direct_address" };
     } else if (current.combat.active) {
       current.combat.round += 1; current.combat.active = false; current.combat.enemies = [];
       current.message = "O último saqueador cai; o combate termina."; current.message_type = "COMBAT";

@@ -356,7 +356,8 @@ def npc_actor_node(state: GameState):
             for candidate in npc_layers.npcs_in_scene(state)
             if (normalized := optional_entity_ref(candidate)) is not None
         ]  # R1: NPC em cena / aliado presente
-        if candidatos:
+        # SPEC-202 R5: alvo dito pelo jogador e inexistente não cai no 1º da cena.
+        if candidatos and state.get("interlocutor_reason") != "npc_unknown_absent":
             npc_name = candidatos[0]
         else:
             # R2: ninguém para responder → o storyteller narra a solidão + gancho
@@ -385,7 +386,8 @@ def npc_actor_node(state: GameState):
     if (member is not None and not npc_layers.npc_alive(member)) or (
             from_state and not npc_layers.npc_alive(npc_data)):
         dname = (npc_data or member or {}).get("name") or npc_state_key or npc_name
-        return {"messages": [AIMessage(content=f"{dname} está morto. Não há resposta — só o silêncio onde antes havia uma voz.")]}
+        return {"messages": [AIMessage(content=f"{dname} está morto. Não há resposta — só o silêncio onde antes havia uma voz.")],
+                "interlocutor_reason": "npc_absent_known"}
     in_party = False
     if member is not None:
         cur = state.get("world", {}) or {}
@@ -398,13 +400,25 @@ def npc_actor_node(state: GameState):
         if not in_party:
             dname = member.get("name") or npc_name
             return {"messages": [AIMessage(
-                content=f"🗣️ {dname} não está aqui. Está esperando em {waiting}.")]}
+                content=f"🗣️ {dname} não está aqui. Está esperando em {waiting}.")],
+                "interlocutor_reason": "npc_absent_known"}
     if from_state and not in_party and not npc_layers.is_in_scene(npc_data):
         home = npc_data.get("home_location_id") or npc_data.get("location", "")
         hint = f" Foi visto pela última vez em {home}." if home else ""
         display_name = npc_data.get("name") or npc_state_key or npc_name
-        return {"messages": [AIMessage(content=f"🗣️ {display_name} não está aqui.{hint}")]}
+        return {"messages": [AIMessage(content=f"🗣️ {display_name} não está aqui.{hint}")],
+                "interlocutor_reason": "npc_absent_known"}
 
+    # SPEC-202 R5/R6: alvo sem ficha no estado/party NUNCA vira identidade nova,
+    # exceto papel genérico autorizado pelo router (generic_role_spawn, P2).
+    # Companheiro de party sem ficha segue o caminho antigo (persona gerada p/ um
+    # membro que JÁ existe — não é identidade nova). O
+    # narrador explica a ausência (SPEC-041 R2) — nenhum NPC fala em 1ª pessoa.
+    if not npc_data and member is None and (
+            state.get("interlocutor_reason") != "generic_role_spawn"):
+        action = str(getattr(messages[-1], "content", "")) if messages else ""
+        return {"next": "storyteller", "npc_fallback_hint": action or npc_name,
+                "active_npc_name": None, "interlocutor_reason": "npc_unknown_absent"}
     if not npc_data:
         db = load_npc_db()
         db_key = find_runtime_npc_key(db, npc_name)
@@ -705,6 +719,8 @@ def npc_actor_node(state: GameState):
                 f"\"{dialogue}\"\n*({action_description})*{reveal_note}"
             ))],
             "npcs": new_npcs,
+            # SPEC-202 R9: chave de estado de quem falou (speaker canônico).
+            "active_npc_name": npc_state_key,
             "faction_intel": intel,
             "archive_due": True,  # conversa com NPC = evento relevante p/ o arquivista
             # O diálogo continua útil como memória relacional do NPC, mas rumor

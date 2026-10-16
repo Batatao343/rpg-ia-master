@@ -18,7 +18,10 @@ def turn_finalizer_node(state: dict) -> dict:
         )
     outcome = finalize_outcome(state)
     outcome["transition_readiness"] = dict(readiness)
-    updates = {"last_turn_outcome": outcome}
+    from services.interlocutor import speaker_for_turn
+    updates = {"last_turn_outcome": outcome,
+               # SPEC-202 R9: único escritor de last_speaker num turno processado.
+               "last_speaker": speaker_for_turn(state)}
     if audit:
         updates['messages'] = Overwrite(messages)
         updates['evidence_rejections'] = [*(state.get('evidence_rejections') or []), *audit][-64:]

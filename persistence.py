@@ -56,6 +56,8 @@ def _replace_with_retry(source: str, destination: str, *, attempts: int = 6) -> 
 # v3 = 10 classes antigas → 5 Posturas + Entropia (spec refatoracao-sistema-classes).
 # v4 = Virtudes/Vitalidade/Ferimentos; v5 = Vitalidade canônica + aliases HP derivados.
 # v6 = ledger visual; v7 = metatempo; v8 = crônica estável + progressão 1–20.
+# SPEC-202 (`last_speaker` + speaker_* no histórico) é ADITIVA: sem bump; default
+# no load (`_raw_to_state`) e rótulo legado derivado na leitura (history_page).
 SCHEMA_VERSION = 8
 MAX_REJECTED_ITEM_CLAIMS = 100
 
@@ -601,6 +603,7 @@ def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
         "continuity": deepcopy(state.get("continuity") or {}),
         # Canonical presentation receipts survive reload/idempotent retries.
         "last_turn_outcome": deepcopy(state.get("last_turn_outcome") or {}),
+        "last_speaker": deepcopy(state.get("last_speaker") or {}),
         "last_interaction_outcome": deepcopy(
             state.get("last_interaction_outcome") or {}
         ),
@@ -793,6 +796,9 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         "rag_persistence_error": raw_data.get("rag_persistence_error"),
         "continuity": deepcopy(raw_data.get("continuity") or {}),
         "last_turn_outcome": deepcopy(raw_data.get("last_turn_outcome") or {}),
+        # SPEC-202 (aditivo, sem bump): save antigo/sem dict → {} (= narrador).
+        "last_speaker": (deepcopy(raw_data["last_speaker"])
+                         if isinstance(raw_data.get("last_speaker"), dict) else {}),
         "last_interaction_outcome": deepcopy(
             raw_data.get("last_interaction_outcome") or {}
         ),

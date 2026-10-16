@@ -1,0 +1,724 @@
+{
+ "schema_version": 8,
+ "game_id": "1827b2f9-acba-4e54-8928-98fe7674ef99",
+ "processed_action_ids": [],
+ "visual_seen_entity_ids": [
+  "npc:npc_mv_brunna_ponte_alta"
+ ],
+ "visual_cue_ledger": [
+  {
+   "action_key": "new:1827b2f9-acba-4e54-8928-98fe7674ef99",
+   "cue": null
+  },
+  {
+   "action_key": "turn:2",
+   "cue": null
+  },
+  {
+   "action_key": "turn:3",
+   "cue": {
+    "kind": "npc_first_appearance",
+    "subject_id": "npc_mv_brunna_ponte_alta",
+    "subject_name": "Brunna Ponte-Alta",
+    "caption": "Barqueira",
+    "asset_id": null,
+    "fallback": true
+   }
+  }
+ ],
+ "narrative_summary": "A jornada segue por terras sombrias; a tensão cresce.",
+ "archivist_last_run": 3,
+ "archive_due": true,
+ "chronicle": [
+  {
+   "title": "O início da jornada — Nova Arcádia",
+   "started_turn": 0,
+   "location": "Nova Arcádia",
+   "entries": [],
+   "chapter_id": "ce525d97ad96577a9132db13e3e6df2d"
+  },
+  {
+   "chapter_id": "0097a6ac1a865a529f866dd7bc3b620b",
+   "title": "A Verdade Enterrada",
+   "started_turn": 1,
+   "location": "Nova Arcádia",
+   "entries": []
+  }
+ ],
+ "consumed_conflict_ids": [],
+ "memory_fact_policy": "canonical_only",
+ "memory_canonical_facts": [],
+ "memory_facts": [],
+ "pending_memory_facts": [],
+ "presentation_history": [
+  {
+   "id": "bc87931fea9306cd30f59cec",
+   "turn": 1,
+   "epoch": 0,
+   "role": "narrator",
+   "text": "Tochas mortas forram o corredor de pedra. Você descreva o cenário ao meu redor. Sou um Sangromante de nível 1. Algo sussurra o seu nome — ou talvez seja só o eco da sua própria respiração. No chão, ossos pequenos formam um círculo deliberado.\n\nQual o seu próximo movimento?",
+   "type": "STORY"
+  },
+  {
+   "id": "e5e0313d6746de4ec110278b",
+   "turn": 2,
+   "epoch": 0,
+   "role": "player",
+   "text": "olho ao redor",
+   "type": "STORY"
+  },
+  {
+   "id": "e96ac8c70116b676f79b1bf9",
+   "turn": 2,
+   "epoch": 0,
+   "role": "narrator",
+   "text": "O céu cor de chumbo se fecha sobre a aldeia abandonada. Você olho ao redor. Janelas vazias encaram você como órbitas ocas. Um corvo pousa, inclina a cabeça, e espera.\n\nPara onde você vai?",
+   "type": "STORY"
+  },
+  {
+   "id": "e6ee697610ee28e0ec1f9e77",
+   "turn": 3,
+   "epoch": 0,
+   "role": "player",
+   "text": "Brunna, você viu o barco?",
+   "type": "STORY"
+  },
+  {
+   "id": "66aec5e9b024a47ba199f20a",
+   "turn": 3,
+   "epoch": 0,
+   "role": "narrator",
+   "text": "**Brunna Ponte-Alta:** \"Você não é daqui, é? Poucos chegam tão longe e ainda respiram.\"\n*(ajusta o capuz, escondendo metade do rosto)*",
+   "type": "NPC"
+  }
+ ],
+ "art_generation_ledger": [],
+ "art_arc_budgets": {},
+ "art_offers": [],
+ "evidence_rejections": [],
+ "memory_rejections": [],
+ "memory_promotions": [],
+ "rejected_item_claims": [],
+ "pending_npc_memory": [
+  {
+   "operation": "add_npc_memory",
+   "npc_id": "npc_brunna_ponte-alta",
+   "facts": [
+    "Turno 3: o jogador disse \"Brunna, você viu o barco?\"; Brunna Ponte-Alta respondeu \"Você não é daqui, é? Poucos chegam tão longe e ainda respiram.\"."
+   ]
+  }
+ ],
+ "rag_persistence_error": "Falha ao persistir memória de npc_brunna_ponte-alta.",
+ "continuity": {
+  "session_action_count": 2,
+  "timeline_epoch": 0,
+  "last_checkpoint_turn": 1,
+  "checkpoint_deferred": false,
+  "synthetic_from_turn": null,
+  "death_history": []
+ },
+ "last_turn_outcome": {
+  "turn": 3,
+  "gold_delta": 0,
+  "xp_delta": 0,
+  "level_delta": 0,
+  "items_gained": {},
+  "quests_completed": [],
+  "event_ids": [],
+  "receipt_id": "e0da80be5f11f5842207",
+  "player_message": "**Brunna Ponte-Alta:** \"Você não é daqui, é? Poucos chegam tão longe e ainda respiram.\"\n*(ajusta o capuz, escondendo metade do rosto)*",
+  "speaker": {
+   "kind": "npc",
+   "id": "npc_mv_brunna_ponte_alta",
+   "name": "Brunna Ponte-Alta",
+   "reason": "direct_address"
+  },
+  "transition_readiness": {
+   "ready": true,
+   "code": "ready",
+   "phase": "active"
+  }
+ },
+ "last_interaction_outcome": {},
+ "combat_target": null,
+ "loot_source": null,
+ "combat": {},
+ "conflict_summary": null,
+ "player": {
+  "name": "Arquivo",
+  "class_name": "Sangromante",
+  "race": "Humano",
+  "level": 1,
+  "xp": 0,
+  "hp": 18,
+  "max_hp": 18,
+  "entropy": 16,
+  "max_entropy": 16,
+  "abyss_charge": 0,
+  "gold": 50,
+  "alignment": "Neutro",
+  "virtudes": {
+   "mente": 1,
+   "agilidade": 4,
+   "forca": 1,
+   "carisma": 2,
+   "corpo": 3
+  },
+  "vitalidade": 18,
+  "max_vitalidade": 18,
+  "vitalidade_max_penalty": 0,
+  "ferimento_espacos": {
+   "leve": 4,
+   "grave": 2,
+   "critico": 2
+  },
+  "ferimentos": {
+   "leve": [],
+   "grave": [],
+   "critico": []
+  },
+  "inventory": [
+   {
+    "id": "adaga_ferro",
+    "qty": 1
+   },
+   {
+    "id": "pocao_cura",
+    "qty": 2
+   },
+   {
+    "id": "item_desconhecido",
+    "qty": 1,
+    "display_name": "Kit de Viajante"
+   }
+  ],
+  "equipment": {
+   "weapon": "adaga_ferro",
+   "armor": null,
+   "accessory": null
+  },
+  "known_cards": [
+   "san_corte_troca",
+   "san_finta",
+   "san_esquiva",
+   "san_pacto",
+   "san_passo",
+   "corte_sangrento"
+  ],
+  "prepared_cards": [
+   "san_corte_troca",
+   "san_finta",
+   "san_esquiva",
+   "san_pacto"
+  ],
+  "card_usage": {},
+  "virtue_cards": [
+   {
+    "card_id": "vc_forca_bruta",
+    "virtude": "forca",
+    "estagio": 1,
+    "mastery": 0
+   },
+   {
+    "card_id": "vc_mente_lucida",
+    "virtude": "mente",
+    "estagio": 1,
+    "mastery": 0
+   }
+  ],
+  "evolved_cards": {},
+  "pending_choices": [],
+  "defense": 14,
+  "attack_bonus": 6,
+  "active_conditions": [],
+  "racial_traits": [
+   "Inundação",
+   "Improviso"
+  ],
+  "condition_resists": [],
+  "racial_save_bonus": {},
+  "appearance": "",
+  "visual_exclusions": "",
+  "progression_grants": [],
+  "vitalidade_base_bonus": 6
+ },
+ "world": {
+  "current_location": "Nova Arcádia",
+  "current_location_id": "nova_arcadia",
+  "visited": [
+   "nova_arcadia"
+  ],
+  "world_clock": {
+   "day": 1,
+   "period": "Amanhecer"
+  },
+  "time_of_day": "Amanhecer",
+  "turn_count": 3,
+  "danger_level": 1,
+  "weather": "Céu limpo",
+  "weather_state": "limpo",
+  "quest_plan": [],
+  "quest_plan_origin": null,
+  "threat_alerts": []
+ },
+ "party": [],
+ "enemies": [],
+ "factions": [
+  {
+   "id": "legiao_ferro",
+   "name": "A Legião de Ferro",
+   "goal": "Cumprir as quotas do Código de Ferro e caçar magos não registrados nos três anéis de Nova Arcádia.",
+   "region": "Nova Arcádia",
+   "progress": 0,
+   "pace": 3,
+   "disposition": "neutro",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "dominar_local",
+    "target": "na_anel_lama",
+    "perceived": "Pela primeira vez a Legião ocupa o Anel de Lama de verdade: barreiras nos becos, fogueiras de 'sedição' acesas por dias, e os Inquisidores do Código revistando casa por casa com artefatos que sugam Éter."
+   }
+  },
+  {
+   "id": "mao_sombria",
+   "name": "A Mão Sombria",
+   "goal": "Expandir a rota de venenos de Ophidia e amarrar o comércio proibido entre Nova Arcádia e Brekmar.",
+   "region": "Nova Arcádia",
+   "progress": 0,
+   "pace": 4,
+   "disposition": "neutro",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "expandir_regiao",
+    "region": "Brekmar",
+    "next_goal": "Colocar um agente da Víbora dentro de cada um dos três sindicatos do porto.",
+    "perceived": "Os preços do mercado negro mudaram da noite para o dia, e mercadorias que só existiam no Beco do Sussurro agora aparecem nas docas de Brekmar — alguém costurou as duas cidades por baixo."
+   }
+  },
+  {
+   "id": "filhos_chama_azul",
+   "name": "Os Filhos da Chama Azul",
+   "goal": "Libertar Malagor da armadura selada no Palácio de Obsidiana e 'terminar o trabalho' do fogo.",
+   "region": "Nova Arcádia",
+   "progress": 0,
+   "pace": 2,
+   "disposition": "hostil",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "invocar_entidade",
+    "target": "na_anel_dourado",
+    "threat": "Um calor errado emana do Palácio de Obsidiana; a armadura no salão do trono racha, e chamas azuis lambem as frestas sem consumir nada.",
+    "perceived": "Cicatrizes de queimadura nos lábios aparecem em cada vez mais rostos na multidão; incêndios de chama azul irrompem em três pontos da cidade na mesma noite, e ninguém viu quem os acendeu."
+   }
+  },
+  {
+   "id": "clas_combate",
+   "name": "Os Clãs de Combate de Skallgard",
+   "goal": "Acumular suprimentos e contatos para tornar os caçadores independentes dos clãs tecnológicos.",
+   "region": "Skallgard",
+   "progress": 0,
+   "pace": 3,
+   "disposition": "neutro",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "dominar_local",
+    "target": "skallgard",
+    "perceived": "Os caçadores tomaram a Sala Fria e a distribuição de comida: Vehkr Punho-de-Gelo fala pela cidade agora, e os engenheiros negociam calor por carne em vez de ditar os termos."
+   }
+  },
+  {
+   "id": "renegados_ermo",
+   "name": "Os Renegados do Ermo",
+   "goal": "Saquear expedições no Ermo Branco e juntar provas da armação que exilou Korrin Sem-Clã.",
+   "region": "Skallgard",
+   "progress": 0,
+   "pace": 4,
+   "disposition": "hostil",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "elevar_perigo",
+    "target": "skallgard",
+    "perceived": "Expedições inteiras deixaram de voltar; os Renegados atacam agora à vista das muralhas de Skallgard, e a Parede dos Mortos ganhou uma fileira nova em uma única lua."
+   }
+  },
+  {
+   "id": "bandos_orc_saidas_baixas",
+   "name": "Os Bandos Orc das Saídas Baixas",
+   "goal": "Fechar o cerco sobre as passagens das Montanhas Afiadas e cobrar pedágio em bens ou sangue.",
+   "region": "Montanhas Afiadas",
+   "progress": 0,
+   "pace": 4,
+   "disposition": "hostil",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "dominar_local",
+    "target": "ma_saidas_baixas",
+    "perceived": "Gruumsha Quebra-Espinha uniu os bandos: as saídas baixas viraram um pedágio permanente com paliçadas de osso, e nenhuma caravana passa sem pagar — ou sem sangrar."
+   }
+  },
+  {
+   "id": "goblins_mineiros",
+   "name": "Os Goblins-Mineiros",
+   "goal": "Saquear as relíquias do Reino Anão perdido antes que qualquer outro chegue a elas.",
+   "region": "Montanhas Afiadas",
+   "progress": 0,
+   "pace": 3,
+   "disposition": "neutro",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "elevar_perigo",
+    "target": "ma_boca",
+    "perceived": "Skriit Mil-Olhos escavou fundo demais atrás de relíquias: algo respondeu lá embaixo, e agora até os Goblins evitam os níveis que eles mesmos abriram — o que sobe pela Boca não calcula números."
+   }
+  },
+  {
+   "id": "ultimos_anoes_reino",
+   "name": "Os Últimos Anões do Reino",
+   "goal": "Recuperar os Registros Perdidos do Reino e a verdade sobre a Falha Crítica de Contenção.",
+   "region": "Montanhas Afiadas",
+   "progress": 0,
+   "pace": 2,
+   "disposition": "neutro",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "eliminar_faccao",
+    "target": "goblins_mineiros",
+    "perceived": "Durgrim Último-Martelo comprou, chantageou e guiou aventureiros até expulsar os Goblins dos níveis intermediários; os túneis agora têm marcas Anãs novas por cima das antigas."
+   }
+  },
+  {
+   "id": "druidas_ciclo_cinzento",
+   "name": "Os Druidas do Ciclo Cinzento",
+   "goal": "Conter o avanço do Pântano da Melancolia e manter vivo o fornecimento do chá da Praga de Ferro.",
+   "region": "Pântano da Melancolia",
+   "progress": 0,
+   "pace": 3,
+   "disposition": "neutro",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "eliminar_faccao",
+    "target": "druidas_renegados",
+    "perceived": "As estacas de medição voltaram a ficar de pé: Arcante Gresh encontrou os jardins de Tumores de Saelwen e os queimou com fogo cinzento. O pântano ainda avança — mas ninguém mais o ajuda."
+   }
+  },
+  {
+   "id": "druidas_renegados",
+   "name": "Os Druidas-Renegados",
+   "goal": "Sabotar a contenção do Ciclo Cinzento e cultivar os Tumores para que o pântano cresça.",
+   "region": "Pântano da Melancolia",
+   "progress": 0,
+   "pace": 3,
+   "disposition": "hostil",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "elevar_perigo",
+    "target": "pantano_melancolia",
+    "perceived": "A névoa do pântano engrossou e avançou uma légua em uma estação; viajantes somem da estrada leste, e os que voltam falam de uma mulher bela na água que oferece descanso."
+   }
+  },
+  {
+   "id": "tribos_devoradores_sol",
+   "name": "As Tribos dos Devoradores de Sol",
+   "goal": "Caçar forasteiros no Mar de Vidro pela água do corpo e beber suas memórias nos Cristais de Urath.",
+   "region": "Deserto de Zhur",
+   "progress": 0,
+   "pace": 3,
+   "disposition": "hostil",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "dominar_local",
+    "target": "deserto_zhur",
+    "perceived": "As tribos pararam de guerrear entre si: Khatarn Olhos-de-Obsidiana as uniu sob um único propósito, e agora nenhuma rota cruza o Mar de Vidro sem ser vista pelas lentes de obsidiana."
+   }
+  },
+  {
+   "id": "colmeia_hospedeiros",
+   "name": "A Colmeia dos Hospedeiros",
+   "goal": "Defender as cidades nas copas e conter o avanço do contágio de Morrakh sobre a Árvore-Mãe.",
+   "region": "Selva de Xylos",
+   "progress": 0,
+   "pace": 2,
+   "disposition": "neutro",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "dominar_local",
+    "target": "selva_xylos",
+    "perceived": "A selva inteira parece acordada: cipós fecham trilhas atrás de quem entra, e os Hospedeiros sabem de cada passo de um forasteiro antes que ele veja a primeira plataforma. A colmeia traçou uma fronteira — e a selva a obedece."
+   }
+  },
+  {
+   "id": "cultistas_destilacao",
+   "name": "Os Cultistas da Destilação",
+   "goal": "Recuperar o Amuleto de Oghma e reaprender a Destilação — o refino de Éter a partir de almas.",
+   "region": "Aethelgard",
+   "progress": 0,
+   "pace": 2,
+   "disposition": "hostil",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "invocar_entidade",
+    "target": "ae_ruinas_submersas",
+    "threat": "Corvane reativou uma câmara de Destilação parcial: os Afogados patrulham em formação agora, e à noite o lago brilha por baixo — algo nas profundezas voltou a trabalhar.",
+    "perceived": "Pescadores da margem juram que o lago 'canta' depois do anoitecer; barcos amanhecem arrastados para dentro d'água, e desapareceram pessoas de três vilas próximas — todas com talento para magia."
+   }
+  },
+  {
+   "id": "poder_kahen",
+   "name": "O Poder de Kahen",
+   "goal": "Manter o equilíbrio entre sindicatos, piratas e contrabandistas — sem deixar ninguém dominar Brekmar.",
+   "region": "Brekmar",
+   "progress": 0,
+   "pace": 3,
+   "disposition": "neutro",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "dominar_local",
+    "target": "brekmar",
+    "perceived": "Depois de uma noite de sangue que ninguém descreve igual, os três sindicatos mandaram emissários ao navio de Kahen no mesmo dia. O porto tem dono agora — mesmo que ele nunca use essa palavra."
+   }
+  },
+  {
+   "id": "grupos_piratas_rivais",
+   "name": "Os Grupos Piratas Rivais",
+   "goal": "Vencer a guerra pela rota de alto valor do mar oeste — a que passa perto do horizonte de Ophidia.",
+   "region": "Brekmar",
+   "progress": 0,
+   "pace": 4,
+   "disposition": "hostil",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "expandir_regiao",
+    "region": "Costa Negra",
+    "next_goal": "Montar um porto de saque entre as ossadas para emboscar tudo que navega a rota do oeste.",
+    "perceived": "Velas negras ancoram entre as costelas dos leviatãs: a guerra das rotas transbordou para a Costa Negra, e caranguejeiros dividem a praia com acampamentos de piratas que atiram primeiro."
+   }
+  },
+  {
+   "id": "osshari_brekmar",
+   "name": "Os Osshari de Brekmar",
+   "goal": "Guardar a neutralidade sagrada do Ossário do Leviatã e os mistérios do mar oeste.",
+   "region": "Brekmar",
+   "progress": 0,
+   "pace": 2,
+   "disposition": "neutro",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "dominar_local",
+    "target": "bk_docas_velhas",
+    "perceived": "Depois que 'O Que Come nas Praias' levou mais um estivador, os Osshari fecharam as docas velhas com fileiras de arpões fincados: agora ninguém carrega nem descarrega ali sem a bênção de Maré-Funda."
+   }
+  },
+  {
+   "id": "bandos_nomades",
+   "name": "Os Bandos Nômades da Pradaria",
+   "goal": "Dominar as rotas da Pradaria das Ruínas pelo terror de Kaarg e pelo pedágio dos Cavaleiros-Cinza.",
+   "region": "Pradaria das Ruínas",
+   "progress": 0,
+   "pace": 4,
+   "disposition": "hostil",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "dominar_local",
+    "target": "pradaria_ruinas",
+    "perceived": "Crânios pintados marcam cada encruzilhada da Pradaria: os bandos pararam de disputar entre si e passaram a cobrar juntos. Viajar sem pagar o Osso Pintado virou aposta de vida."
+   }
+  },
+  {
+   "id": "mercadores_escravos_pradaria",
+   "name": "Os Mercadores de Escravos da Pradaria",
+   "goal": "Capturar viajantes e esvaziar vilas isoladas para alimentar a rede continental de tráfico de Groth.",
+   "region": "Pradaria das Ruínas",
+   "progress": 0,
+   "pace": 3,
+   "disposition": "hostil",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "expandir_regiao",
+    "region": "Nova Arcádia",
+    "next_goal": "Fechar contrato fixo com Lorde Vespério e escoar 'inventário' direto pelo Mercado de Carne.",
+    "perceived": "As jaulas de Groth Algema-Fria agora chegam até os portões de Nova Arcádia sem serem paradas; vilas inteiras da Pradaria amanhecem vazias, e o Mercado de Carne anuncia 'estoque novo' toda semana."
+   }
+  },
+  {
+   "id": "cidades_estado_sobreviventes_vaelorn_solvhen",
+   "name": "As Cidades-Estado Sobreviventes",
+   "goal": "Preservar a memória élfica e cinzéu e proteger Vaelorn e Solvhen dos bandos e traficantes.",
+   "region": "Pradaria das Ruínas",
+   "progress": 0,
+   "pace": 2,
+   "disposition": "neutro",
+   "reputation": 0,
+   "completed": false,
+   "ascension": {
+    "type": "eliminar_faccao",
+    "target": "mercadores_escravos_pradaria",
+    "perceived": "Lady Aerwen e Keeper Morvan fizeram o que ninguém esperava: agiram juntos. As jaulas de Groth foram encontradas abertas e queimadas na estrada — e os capturados, devolvidos às vilas por escoltas élficas."
+   }
+  }
+ ],
+ "faction_intel": {},
+ "bestiary_knowledge": {},
+ "npcs": {
+  "Brunna Ponte-Alta": {
+   "name": "Brunna Ponte-Alta",
+   "role": "Barqueira",
+   "in_scene": true,
+   "home_location_id": "nova_arcadia",
+   "relationship": 5,
+   "memory": [
+    "Turno 3: o jogador disse \"Brunna, você viu o barco?\"; Brunna Ponte-Alta respondeu \"Você não é daqui, é? Poucos chegam tão longe e ainda respiram.\"."
+   ],
+   "known_by_player": true,
+   "aliases": [
+    "brunna ponte alta"
+   ],
+   "revealed_traits": [],
+   "interaction_count": 1,
+   "knowledge_source": "met",
+   "hidden_traits": [
+    "leal_a_familia",
+    "hidromel_e_verdade"
+   ]
+  }
+ },
+ "inventory": [],
+ "quests": [],
+ "campaign_plan": {
+  "location": "Nova Arcádia",
+  "beats": [
+   {
+    "description": "Estabeleça a atmosfera opressora do local e um detalhe perturbador.",
+    "status": "pending"
+   },
+   {
+    "description": "O jogador encontra um vestígio de quem esteve aqui antes.",
+    "status": "pending"
+   },
+   {
+    "description": "Uma ameaça se revela — sutil primeiro, depois inegável.",
+    "status": "pending"
+   }
+  ],
+  "climax": "Um confronto final contra a verdade enterrada no local.",
+  "current_step": 0,
+  "last_planned_turn": 1,
+  "arc_title": "A Verdade Enterrada"
+ },
+ "event_log": [],
+ "world_projection": {},
+ "pending_world_events": [],
+ "event_rejections": [],
+ "game_over": false,
+ "death_pending": false,
+ "needs_replan": false,
+ "archived": false,
+ "archived_reason": "",
+ "combat_simulation": null,
+ "message_history": [
+  {
+   "type": "system",
+   "data": {
+    "content": "A jornada de Arquivo começa em Nova Arcádia.",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "system",
+    "name": null,
+    "id": null
+   }
+  },
+  {
+   "type": "human",
+   "data": {
+    "content": "Descreva o cenário ao meu redor. Sou um Sangromante de nível 1.",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "human",
+    "name": null,
+    "id": null
+   }
+  },
+  {
+   "type": "ai",
+   "data": {
+    "content": "Tochas mortas forram o corredor de pedra. Você descreva o cenário ao meu redor. Sou um Sangromante de nível 1. Algo sussurra o seu nome — ou talvez seja só o eco da sua própria respiração. No chão, ossos pequenos formam um círculo deliberado.\n\nQual o seu próximo movimento?",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "ai",
+    "name": null,
+    "id": null,
+    "tool_calls": [],
+    "invalid_tool_calls": [],
+    "usage_metadata": null
+   }
+  },
+  {
+   "type": "human",
+   "data": {
+    "content": "olho ao redor",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "human",
+    "name": null,
+    "id": null
+   }
+  },
+  {
+   "type": "ai",
+   "data": {
+    "content": "O céu cor de chumbo se fecha sobre a aldeia abandonada. Você olho ao redor. Janelas vazias encaram você como órbitas ocas. Um corvo pousa, inclina a cabeça, e espera.\n\nPara onde você vai?",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "ai",
+    "name": null,
+    "id": null,
+    "tool_calls": [],
+    "invalid_tool_calls": [],
+    "usage_metadata": null
+   }
+  },
+  {
+   "type": "human",
+   "data": {
+    "content": "Brunna, você viu o barco?",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "human",
+    "name": null,
+    "id": null
+   }
+  },
+  {
+   "type": "ai",
+   "data": {
+    "content": "**Brunna Ponte-Alta:** \"Você não é daqui, é? Poucos chegam tão longe e ainda respiram.\"\n*(ajusta o capuz, escondendo metade do rosto)*",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "ai",
+    "name": null,
+    "id": null,
+    "tool_calls": [],
+    "invalid_tool_calls": [],
+    "usage_metadata": null
+   }
+  }
+ ],
+ "messages": []
+}

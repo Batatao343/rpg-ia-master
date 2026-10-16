@@ -1,14 +1,14 @@
 # SPEC-202 — Interlocutor automático narrador × NPC
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `done` (implementação + smoke real + revisão Astra independente; mudança de save ADITIVA, sem bump de schema — ver §10)
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-228 `done` (R9 recusa save mais novo antes do 1º bump de schema), SPEC-229 `done` (mesmo `agents/router.py`; parsers de intenção primeiro), SPEC-230 `done` (NPC vivo/em cena confiável) · SPEC-041, SPEC-149, SPEC-169, SPEC-186, SPEC-187 `done` (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212, SPEC-215 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 07
 > **EXECUTOR_MODEL:** `Sol` (≡ Opus, ver `docs/planos/equivalencia-modelos-claude.md`)
 > **REVIEW_MODEL:** `Astra` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true`
 > **EVAL_AUTHORING_REQUIRED:** `true` — corpus `routing.interlocutor.*` (casos de interlocutor + `speaker_kind`/`speaker_id` esperados), autoria em tarefa separada ligada à SPEC-169; quem implementa esta spec não edita `evals/datasets/regression/routing_actions.jsonl` nem `evals/evaluators/routing.py`.
-> **Nota de schema (cadeia final 2026-10-15):** ordem dos bumps de `SCHEMA_VERSION` (hoje 8): SPEC-228 primeiro (R9 recusa save de versão mais nova; sem bump) → [SPEC-227 só se D-C = migração; default sem bump] → SPEC-202 → SPEC-203 → SPEC-207 → SPEC-213 → SPEC-215. Nenhuma outra spec 199–236 altera o schema de save (SPEC-228 R7 `needs_replan` e SPEC-231 `scene_allies` usam default/campo existente, sem bump). Cada spec usa o próximo `SCHEMA_VERSION` livre no HEAD ao implementar e encadeia sua migração após a anterior; onde o texto disser "v8→v9", leia "vN→vN+1".
+> **Nota de schema (cadeia final 2026-10-15):** ordem dos bumps de `SCHEMA_VERSION` (hoje 8): SPEC-228 primeiro (R9 recusa save de versão mais nova; sem bump) → [SPEC-227 só se D-C = migração; default sem bump] → SPEC-202 → SPEC-203 → SPEC-207 → SPEC-213 → SPEC-215. Nenhuma outra spec 199–236 altera o schema de save (SPEC-228 R7 `needs_replan` e SPEC-231 `scene_allies` usam default/campo existente, sem bump). Cada spec usa o próximo `SCHEMA_VERSION` livre no HEAD ao implementar e encadeia sua migração após a anterior; onde o texto disser "v8→v9", leia "vN→vN+1". **Atualização 2026-10-16 (revisão Astra): a SPEC-202 SAIU da cadeia de bump** — `last_speaker`/`speaker_*` são aditivos (default no load, rótulo legado derivado na leitura); `SCHEMA_VERSION` segue 8 e o próximo bump da cadeia é o da SPEC-203.
 
 Rótulos: **[F]** fato observado no HEAD `6b94f66` · **[D]** decisão de produto fechada · **[H]** hipótese técnica · **[R]** recomendação.
 
@@ -153,18 +153,18 @@ Preparar `handoffs/SPEC-202-eval-authoring.md` listando os casos da Etapa 1 como
 
 ## 5. Critérios de aceite
 
-- [ ] R1: teste de contagem prova ≤ 1 invoke CLASSIFY por turno de router em todos os casos; meta/descrição com 0.
-- [ ] R2/R3: meta-pergunta e descrição de cena nunca produzem `speaker.kind="npc"` nem linha `**Nome:**`.
-- [ ] R5: nenhum caminho do router entrega `decision.target` não resolvido ao `npc_actor`; `generate_new_npc` só chamado com `generic_role_spawn`.
-- [ ] R7/R8: casos de múltiplos NPCs e pronomes resolvem por regra documentada; ambiguidade → narrador.
-- [ ] R9/R10: `speaker` presente e idêntico em POST, SSE final, `/game/state` e `/game/history`; estável entre aliases e save→load.
-- [ ] R11: nenhum `hidden_traits`/assinatura não revelada em narração mediada (teste com fixture de segredo de `secret_signatures`).
-- [ ] R12: suítes existentes de router, npc_fallback, encontros_dedupe, aliados e SPEC-169 (`uv run python -m evals run --suite routing`) verdes sem mudança de expected.
-- [ ] R15: `speaker.name` e o prefixo `**Nome:**` usam o nome canônico mesmo quando o jogador usa alias.
-- [ ] R13: UI sem seletor; rótulo do falante visível em 390/1440 px.
-- [ ] Saves antigos carregam; `presentation_history` legado exibe rótulo derivado.
-- [ ] `uv run pytest` verde (suíte completa offline); Ruff verde; `npm run build` verde.
-- [ ] Handoff de eval escrito; revisão Astra registrada em `handoffs/SPEC-202-ASTRA-independent-review.md`.
+- [x] R1: teste de contagem prova ≤ 1 invoke CLASSIFY por turno de router em todos os casos; meta/descrição com 0.
+- [x] R2/R3: meta-pergunta e descrição de cena nunca produzem `speaker.kind="npc"` nem linha `**Nome:**`.
+- [x] R5: nenhum caminho do router entrega `decision.target` não resolvido ao `npc_actor`; `generate_new_npc` só chamado com `generic_role_spawn`.
+- [x] R7/R8: casos de múltiplos NPCs e pronomes resolvem por regra documentada; ambiguidade → narrador.
+- [x] R9/R10: `speaker` presente e idêntico em POST, SSE final, `/game/state` e `/game/history`; estável entre aliases e save→load.
+- [x] R11: nenhum `hidden_traits`/assinatura não revelada em narração mediada (teste com fixture de segredo de `secret_signatures`).
+- [x] R12: suítes existentes de router, npc_fallback, encontros_dedupe, aliados e SPEC-169 (`uv run python -m evals run --suite routing`) verdes sem mudança de expected.
+- [x] R15: `speaker.name` e o prefixo `**Nome:**` usam o nome canônico mesmo quando o jogador usa alias.
+- [x] R13: UI sem seletor; rótulo do falante visível em 390/1440 px.
+- [x] Saves antigos carregam; `presentation_history` legado exibe rótulo derivado.
+- [x] `uv run pytest` verde (suíte completa offline); Ruff verde; `npm run build` verde. — após a conversão aditiva (sem bump) a suíte completa fecha exit 0, inclusive `test_eval_state_rules` (schema v8 intacto).
+- [x] Handoff de eval escrito (`handoffs/SPEC-202-eval-authoring.md` ✔); revisão Astra independente concluída (2026-10-16, ver §10).
 
 ## 6. Smoke
 
@@ -200,3 +200,54 @@ Preparar `handoffs/SPEC-202-eval-authoring.md` listando os casos da Etapa 1 como
 - Captura do StoryLog com rótulo do falante (desktop e 390 px) e asserção de ausência de seletor.
 - Handoff de eval (`handoffs/SPEC-202-eval-authoring.md`) e parecer Astra.
 - Se o smoke real for autorizado: run_id, requests/custo dentro do teto e `speaker` por turno.
+
+## 10. Execução (2026-10-16)
+
+Evidência: [docs/spec202/README.md](../docs/spec202/README.md).
+
+**Defaults de decisão usados (§8):** P1 narrador media (sem pergunta de
+esclarecimento); P2 papel genérico só gera NPC em assentamento (tag de local
+cidade/favela/porto/docas/taverna/salão/urbano/comércio ou economia comércio/porto)
+e só para a lista fechada `GENERIC_ROLES`; P3 janela de continuidade ≤ 2 ações com
+o NPC ainda em cena; P4 sem campo novo de pronome (usa `pronouns/gender` só se a
+ficha já tiver).
+
+**Schema (aditivo, SEM bump — revisão Astra):** `SCHEMA_VERSION` permanece **8**; não há
+`_migrate_v8_to_v9`. `_raw_to_state` defaulta `last_speaker` para `{}` (save antigo ou
+valor não-dict), que `response_speaker` lê como narrador; linhas `narrator` legadas do
+`presentation_history` recebem `speaker_*` derivado do `type` NA LEITURA (`history_page`;
+NPC legado sem id). Round-trip save→load com a fixture v8 e idempotência de
+`migrate_state` (no-op) testados. A SPEC-202 saiu da cadeia de bumps; o caso protegido
+`state.persistence.migration-idempotent` (v8) segue válido sem edição em `evals/`.
+
+**Desvios/refinamentos:**
+- R3: descrição de cena é ignorada quando há vocativo/verbo de fala explícito a NPC
+  em cena ("Brunna, descreva o barco" segue para a Brunna).
+- R4: vocativo/verbo de fala a NPC presente também promove um STORY do CLASSIFY a NPC;
+  pronome + verbo de fala ("pergunto a ela", "e você?") segue a regra da rota NPC
+  sem alvo (R8).
+- R5: o alvo do CLASSIFY só conta se algum token significativo dele estiver no
+  texto do jogador (MockLLM e LLM real alucinam alvos); nome de NPC em cena citado
+  pelo jogador decide antes do alvo. Sem NPC algum em cena, o caso "desconhecido"
+  mantém a rota NPC sem alvo (caminho SPEC-041 → narrador, mesmo efeito final) para
+  preservar os testes de precedência existentes sem mudar expected; com NPCs em
+  cena vai direto a STORY.
+- R9: `action_guard` também grava `last_speaker` (`system`) na recusa, porque o grafo
+  encerra antes do `turn_finalizer`; preserva `last_npc` p/ continuidade. Campos
+  internos no save: `turn`, `state_key`, `last_npc` (a resposta pública expõe só
+  kind/id/name/reason).
+- R11: a cláusula de mediação informa `presente na cena=sim/não` (o smoke real
+  mostrou o narrador afirmando ausência de NPC presente sem esse dado).
+- Companheiro de party sem ficha em `npcs` mantém o caminho antigo (persona gerada
+  para um membro que já existe — não é identidade nova).
+
+**Revisão Astra independente (2026-10-16):** APPROVED após correções no WT:
+(1) bump 8→9 convertido em mudança aditiva (acima); (2) falso positivo de meta —
+"pergunto ao mestre Orlan…"/"falo com o mestre ferreiro" iam ao narrador como
+`meta_to_narrator`; agora "mestre" só é meta no fim da frase ou antes de palavra
+funcional (o que/se/sobre/quem/ela…), "narrador" segue sempre meta (teste
+`test_mestre_com_nome_ou_papel_e_personagem_nao_meta`). Ataques sem defeito: segredo
+via mediação (prompt só com `visible_npc_view`; saída por `find_unrevealed`), NPC
+alucinado não criado, continuidade P3 exige NPC em cena + janela ≤2, zero invoke
+extra no router (meta/descrição = 0, demais = 1), speaker idêntico POST/SSE/state/history.
+Pendente (não bloqueante): autoria do corpus `routing.interlocutor.*` (handoff).

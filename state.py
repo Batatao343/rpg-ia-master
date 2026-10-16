@@ -453,6 +453,12 @@ class GameState(TypedDict):
     npcs: Dict[str, Dict]
     active_npc_name: Optional[str]
     npc_fallback_hint: Optional[str]   # TRANSITORIO (SPEC-230 R8: zerado pelo router a cada turno); spec npc-fallback-sem-alvo (R2): rota NPC sem alvo → storyteller narra a ausência
+    # SPEC-202: quem respondeu o último turno — {kind, id, name, reason} públicos
+    # + internos turn/state_key/last_npc (continuidade R7/R8). Escrito só no fim do
+    # turno (turn_finalizer) ou na recusa determinística (action_guard). Persistido.
+    last_speaker: Optional[Dict[str, Any]]
+    interlocutor_reason: Optional[str]   # TRANSITÓRIO (zerado pelo router a cada rota)
+    mediated_subject_id: Optional[str]   # TRANSITÓRIO: NPC de quem o narrador fala (R2/R7)
     active_plan_step: Optional[str]
     router_confidence: Optional[float]
     last_routed_intent: Optional[str]
