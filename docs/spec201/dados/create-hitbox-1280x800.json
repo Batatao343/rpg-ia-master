@@ -1,0 +1,35 @@
+{
+  "cardCursor": "pointer",
+  "card": {
+    "x": 515.1875,
+    "y": 279.8125,
+    "width": 249.609375,
+    "height": 518.796875
+  },
+  "button": {
+    "x": 533.1875,
+    "y": 665.796875,
+    "width": 213.609375,
+    "height": 27.5
+  },
+  "buttonAreaRatio": 0.045,
+  "pts": {
+    "topLeftCorner": {
+      "tag": "DIV",
+      "cls": "visual-art__monogram",
+      "insideButton": false
+    },
+    "center": {
+      "tag": "DIV",
+      "cls": "visual-art__monogram",
+      "insideButton": false
+    },
+    "bottom": {
+      "tag": "ARTICLE",
+      "cls": "card",
+      "insideButton": false
+    }
+  },
+  "pressedBefore": "false",
+  "pressedAfterClickCenter": "false"
+}

@@ -18,6 +18,7 @@
 > **SPEC-235 `done` (16/10):** operação `failed` pode ser retomada com a mesma chave mesmo com versão mudada (fim do 409 eterno), equip/levelup barram com 409 `pending_operation` legível, botão "Descartar ação pendente", storage bloqueado degrada para memória, export com nome unicode; validado em Postgres local + Playwright.
 > **SPEC-233 `done` (16/10):** perigo efetivo único (encontros, mapa e save antigo concordam), drift limitado ±1 com decaimento sem apagar ascensão de facção, masmorra/caverna escuras, clima avança por período, exceção do storyteller preserva o turno, laboratório encerra com 409 após o fim.
 > **SPEC-232 `done` (16/10):** buffs/debuffs, passivas/Virtude e efeitos de Reação passam a valer no motor (antes inertes), alvo validado antes do custo, carta de cura sem alvo cura o jogador (não o inimigo), preparação de cena por LLM para Elite/Chefe com schema enxuto (smoke real 3/3). Letalidade sobe — rebalancear (SPEC-049).
+> **SPEC-201 `done` (16/10):** diagnóstico UX entregue (`docs/spec201/`: matriz M01–M36, 20 atritos sem animação, gaps de tokens/estados, 90 capturas). Achados: hitbox do Create no botão interno, dock de combate espreme a narração, `--danger-dim` inexistente, tablist sem setas, modais sem foco/Esc, narração sem `aria-live`.
 
 > **15/10 — SPEC-196 `done`: FinOps, margin guard e kill switches.** Margem por SKU/canal/versão de preço
 > (gross, taxa de canal, custo variável, contribuição; infra fixa separada), alertas Prometheus sem ids de

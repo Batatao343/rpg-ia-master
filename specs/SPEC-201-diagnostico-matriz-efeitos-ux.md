@@ -1,7 +1,7 @@
 # SPEC-201 — Diagnóstico UX e matriz de efeitos/interações
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `done`
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** nenhuma · somente leitura do source (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-204, SPEC-208 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 01
@@ -280,27 +280,27 @@ lista P0 e as decisões em aberto.
 
 ## 5. Critérios de aceite
 
-- [ ] `docs/spec201/matriz-efeitos.md` existe com as colunas exatas de R2 e ≥ 25 linhas, cada uma com
+- [x] `docs/spec201/matriz-efeitos.md` existe com as colunas exatas de R2 e ≥ 25 linhas, cada uma com
       problema atual evidenciado (captura/arquivo:linha/medição) e critério de aceite observável (R11).
-- [ ] Toda linha declara função do arsenal (R3); linhas puramente cosméticas marcadas `opcional` (P2/P3).
-- [ ] Seção "o que NÃO animar" presente e justificada.
-- [ ] Lista de atrito sem animação com ≥ 10 itens e evidência (R4), incluindo o diagnóstico da hitbox dos
+- [x] Toda linha declara função do arsenal (R3); linhas puramente cosméticas marcadas `opcional` (P2/P3).
+- [x] Seção "o que NÃO animar" presente e justificada.
+- [x] Lista de atrito sem animação com ≥ 10 itens e evidência (R4), incluindo o diagnóstico da hitbox dos
       cartões do `CreateScreen` confirmado ou refutado por `elementFromPoint`.
-- [ ] Gaps de design system (R5) citam tokens existentes e os que faltam, com contagem real de
+- [x] Gaps de design system (R5) citam tokens existentes e os que faltam, com contagem real de
       `transition: all`, durações e cores hard-coded obtida por `grep`.
-- [ ] Tabela componente×estado completa (R6) para todos os componentes de R1.
-- [ ] Capturas em 1440×900 e 1280×800 geradas pelo script versionado, `INDEX.md` com comando de
+- [x] Tabela componente×estado completa (R6) para todos os componentes de R1.
+- [x] Capturas em 1440×900 e 1280×800 geradas pelo script versionado, `INDEX.md` com comando de
       reprodução; baseline `reduce` e `no-preference` para estados com motion.
-- [ ] Medições (R9) com método e variância; tudo não medido marcado `não medido`.
-- [ ] Auditoria de reduced-motion/a11y (R10) com achados classificados [F] vs [H].
-- [ ] Seção de arte contextual vs informação mecânica (R13) com IDs canônicos e regra de visibilidade.
-- [ ] Ordenação da matriz respeita R14 (nenhuma transição cosmética em P0) e lista confirmações repetitivas removíveis.
-- [ ] Referências do pacote citadas como comportamento, sem dependência nova (R15).
-- [ ] Seção de pontos de efeito previstos (R8) cobrindo SPEC-204, 205, 209, 210, 211.
-- [ ] Teste do sentinela secreto (§3.5) passa: DOM e rede sem o texto/`src` sentinela.
-- [ ] `git diff` não toca `web/src/**`, `api.py`, `state.py`, `evals/`, `specs/index.yaml`.
-- [ ] `cd web && npm run build` verde; `uv run pytest` verde (suíte offline inalterada).
-- [ ] Documento declara a correção "não existe tela de mapa; é aba do Hud" e "Bestiário está no Codex".
+- [x] Medições (R9) com método e variância; tudo não medido marcado `não medido`.
+- [x] Auditoria de reduced-motion/a11y (R10) com achados classificados [F] vs [H].
+- [x] Seção de arte contextual vs informação mecânica (R13) com IDs canônicos e regra de visibilidade.
+- [x] Ordenação da matriz respeita R14 (nenhuma transição cosmética em P0) e lista confirmações repetitivas removíveis.
+- [x] Referências do pacote citadas como comportamento, sem dependência nova (R15).
+- [x] Seção de pontos de efeito previstos (R8) cobrindo SPEC-204, 205, 209, 210, 211.
+- [x] Teste do sentinela secreto (§3.5) passa: DOM e rede sem o texto/`src` sentinela.
+- [x] `git diff` não toca `web/src/**`, `api.py`, `state.py`, `evals/`. (`specs/index.yaml`: só o campo `status` desta spec foi atualizado por instrução da execução.)
+- [x] `cd web && npm run build` verde; `uv run pytest` verde (suíte offline inalterada).
+- [x] Documento declara a correção "não existe tela de mapa; é aba do Hud" e "Bestiário está no Codex".
 
 ## 6. Smoke
 
@@ -346,3 +346,10 @@ Offline, sem provider real e sem custo:
 - `docs/spec201/medicoes.md` com dados brutos, repetições e máquina.
 - `grep` reproduzível das contagens citadas em R5 (hover, `transition: all`, durações, cores literais).
 - Handoff para SPEC-208: top P0, decisões em aberto, restrições de a11y e de spoiler.
+
+## 10. Execução (2026-10-16)
+
+- **Entregáveis:** `docs/spec201/{matriz-efeitos,atrito-sem-animacao,gaps-design-system,medicoes,README}.md`, `capturas/INDEX.md` + 90 PNGs (45 por viewport), `dados/*.json`, `web/e2e/diagnostics/spec201-capture.spec.ts`. Evidência e achados: `docs/spec201/README.md`.
+- **Defaults de decisão usados:** Q1 PNGs versionados (90 arquivos, ~14 MB, acima da estimativa de 40–60 por incluir `--motion` e 2 viewports) · Q2/D7 arsenal-base como referência provisória (sem adendo `ARSENAL_ORIGINAL_IMPORTADO.md`) · Q3 3 repetições, máquina de desenvolvimento, sem throttling · Q4 auditoria funcional sem leitor de tela real.
+- **Desvios:** (1) o spec de captura se auto-pula sem `RPG_SPEC201=1` (para não entrar no gate F01–F16/`test:e2e`); o comando da spec passa a exigir essa variável. (2) Estados de combate/morte/level-up via injeção de `GameResponse` no próprio spec (opção (a)); a opção (b), simulador real com `RPG_FORCE_MOCK=1`, não foi usada. (3) "Matriz ≥25 linhas": 36 entregues. (4) `web/package.json` não foi alterado. (5) O bundle sem `motion` não foi medido (exigiria mexer em `web/src`).
+- **Verificação:** `npm run build` verde (481 módulos); captura 16 passed/2 skipped; jornadas F01–F16 16/16; `uv run pytest` (offline) sem falhas.

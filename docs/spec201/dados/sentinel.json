@@ -1,0 +1,9 @@
+{
+  "domContainsSentinel": false,
+  "attrHits": [],
+  "networkLeakPaths": [
+    "/data/map",
+    "/data/map"
+  ],
+  "note": "DOM limpo; a resposta de /data/map entrega nos nao visitados ao cliente (mascarados so na renderizacao)."
+}

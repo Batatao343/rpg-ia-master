@@ -1,0 +1,217 @@
+{
+  "sizes": {
+    ".iconbtn": {
+      "n": 4,
+      "minW": 58,
+      "minH": 35
+    },
+    ".tab": {
+      "n": 8,
+      "minW": 82,
+      "minH": 34
+    },
+    ".btn": {
+      "n": 3,
+      "minW": 59,
+      "minH": 48
+    },
+    ".msg__cost-button": {
+      "n": 0,
+      "minW": 9999,
+      "minH": 9999
+    },
+    ".codex-cat": {
+      "n": 5,
+      "minW": 89,
+      "minH": 30
+    },
+    ".worldmap__node": {
+      "n": 2,
+      "minW": 68,
+      "minH": 22
+    },
+    "nodeCursor": "default"
+  },
+  "gameStateRef": "game-a",
+  "reps": [
+    {
+      "rep": 1,
+      "noBlur": false,
+      "msgCount": 60,
+      "mountFrames": {
+        "n": 428,
+        "p50": 7,
+        "p95": 13.9,
+        "max": 27.8,
+        "long": 0
+      },
+      "scrollFrames": {
+        "n": 60,
+        "p50": 6.9,
+        "p95": 7.1,
+        "max": 7.2,
+        "long": 0
+      }
+    },
+    {
+      "rep": 1,
+      "noBlur": true,
+      "msgCount": 60,
+      "mountFrames": {
+        "n": 441,
+        "p50": 7,
+        "p95": 13.9,
+        "max": 21,
+        "long": 0
+      },
+      "scrollFrames": {
+        "n": 60,
+        "p50": 6.9,
+        "p95": 7.1,
+        "max": 7.1,
+        "long": 0
+      }
+    },
+    {
+      "rep": 2,
+      "noBlur": false,
+      "msgCount": 60,
+      "mountFrames": {
+        "n": 414,
+        "p50": 7,
+        "p95": 13.9,
+        "max": 48.6,
+        "long": 1
+      },
+      "scrollFrames": {
+        "n": 62,
+        "p50": 7,
+        "p95": 7.1,
+        "max": 7.1,
+        "long": 0
+      }
+    },
+    {
+      "rep": 2,
+      "noBlur": true,
+      "msgCount": 60,
+      "mountFrames": {
+        "n": 415,
+        "p50": 7,
+        "p95": 13.9,
+        "max": 27.8,
+        "long": 0
+      },
+      "scrollFrames": {
+        "n": 61,
+        "p50": 7,
+        "p95": 7.1,
+        "max": 7.3,
+        "long": 0
+      }
+    },
+    {
+      "rep": 3,
+      "noBlur": false,
+      "msgCount": 60,
+      "mountFrames": {
+        "n": 421,
+        "p50": 7,
+        "p95": 13.9,
+        "max": 27.6,
+        "long": 0
+      },
+      "scrollFrames": {
+        "n": 61,
+        "p50": 6.9,
+        "p95": 7,
+        "max": 7.1,
+        "long": 0
+      }
+    },
+    {
+      "rep": 3,
+      "noBlur": true,
+      "msgCount": 60,
+      "mountFrames": {
+        "n": 426,
+        "p50": 7,
+        "p95": 13.9,
+        "max": 20.9,
+        "long": 0
+      },
+      "scrollFrames": {
+        "n": 60,
+        "p50": 6.9,
+        "p95": 7.1,
+        "max": 7.1,
+        "long": 0
+      }
+    }
+  ],
+  "idle": [
+    {
+      "reducedMotion": "no-preference",
+      "rep": 1,
+      "taskDurationMsPer3s": 210.1,
+      "scriptDurationMsPer3s": 47.6,
+      "rafFrames": 436,
+      "canvasDisplay": "block"
+    },
+    {
+      "reducedMotion": "no-preference",
+      "rep": 2,
+      "taskDurationMsPer3s": 208.5,
+      "scriptDurationMsPer3s": 54.4,
+      "rafFrames": 435,
+      "canvasDisplay": "block"
+    },
+    {
+      "reducedMotion": "no-preference",
+      "rep": 3,
+      "taskDurationMsPer3s": 246.2,
+      "scriptDurationMsPer3s": 49,
+      "rafFrames": 434,
+      "canvasDisplay": "block"
+    },
+    {
+      "reducedMotion": "reduce",
+      "rep": 1,
+      "taskDurationMsPer3s": 76.4,
+      "scriptDurationMsPer3s": 8.6,
+      "rafFrames": 434,
+      "canvasDisplay": "none"
+    },
+    {
+      "reducedMotion": "reduce",
+      "rep": 2,
+      "taskDurationMsPer3s": 98.6,
+      "scriptDurationMsPer3s": 9.7,
+      "rafFrames": 435,
+      "canvasDisplay": "none"
+    },
+    {
+      "reducedMotion": "reduce",
+      "rep": 3,
+      "taskDurationMsPer3s": 73,
+      "scriptDurationMsPer3s": 8.2,
+      "rafFrames": 434,
+      "canvasDisplay": "none"
+    }
+  ],
+  "movingInReduce": [],
+  "liveRegions": [
+    "SPAN.|polite"
+  ],
+  "storyAttrs": {
+    "role": null,
+    "live": null,
+    "tabindex": "0"
+  },
+  "contrast": {
+    "faint": "oklch(0.58 0.026 78)",
+    "muted": "oklch(0.75 0.030 80)",
+    "bg": "oklch(0.15 0.012 250)"
+  },
+  "axeViolations": []
+}
