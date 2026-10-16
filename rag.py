@@ -13,6 +13,7 @@ ao construir). Cada índice grava `embeddings_meta.json` e fica PINADO ao
 provider que o gerou; abrir com outro provider é proibido (índice desativado
 com aviso; re-index para trocar). Ver specs/SPEC-039-embeddings-provider.md.
 """
+from observability.telemetry import log_event as _log_event
 import json
 import hashlib
 import logging
@@ -1022,7 +1023,7 @@ def _query_rag_impl(query: str, index_name: str = "lore", game_id: Optional[str]
                 ]
                 global_results.extend(visiveis[:2])
             except Exception as e:
-                print(f"⚠️ [RAG] Erro ao ler Global '{index_name}': {e}")
+                _log_event("rag", "global_index_read_failed", level="warning", index=index_name, error=type(e).__name__)
 
     # 2. Busca na Sessão (Se houver game_id)
     # A memória da sessão é agnóstica ao index_name (é tudo "memória do jogo")
@@ -1169,7 +1170,7 @@ def add_memory_to_session(
                 db = FAISS.from_texts(texts, embeddings, metadatas=metadatas)
 
         _save_index(db, session_path, provider)
-        print(f"💾 [RAG] Memória salva para sessão '{game_id}': +{facts_count} fatos.")
+        _log_event("rag", "session_memory_saved", level="debug", facts=facts_count)
         return _rag_operation_result(
             "add_session_memory",
             True,
@@ -1182,7 +1183,7 @@ def add_memory_to_session(
             metadatas=metadatas,
         )
     except Exception as exc:
-        print(f"❌ [RAG ERROR] Falha ao salvar memória: {exc}")
+        _log_event("rag", "session_memory_failed", level="error", error=type(exc).__name__)
         return _rag_operation_result(
             "add_session_memory",
             False,
@@ -1312,10 +1313,7 @@ def add_npc_memory(
                 db = FAISS.from_texts(texts, embeddings, metadatas=metadatas)
 
         _save_index(db, npc_path, provider)
-        print(
-            f"🧠 [RAG] Memória de NPC '{npc_id}' "
-            f"(sessão '{game_id}'): +{facts_count} fatos."
-        )
+        _log_event("rag", "npc_memory_saved", level="debug", facts=facts_count)
         return _rag_operation_result(
             "add_npc_memory",
             True,
@@ -1328,7 +1326,7 @@ def add_npc_memory(
             metadatas=metadatas,
         )
     except Exception as exc:
-        print(f"❌ [RAG ERROR] Falha ao salvar memória do NPC '{npc_id}': {exc}")
+        _log_event("rag", "npc_memory_failed", level="error", error=type(exc).__name__)
         return _rag_operation_result(
             "add_npc_memory",
             False,
@@ -1387,14 +1385,14 @@ def ingest_file(file_path: str, index_name: str):
     Use isso no setup ou quando alterar o data/rules.txt.
     """
     if not os.path.exists(file_path):
-        print(f"[ERRO] Arquivo não encontrado: {file_path}")
+        _log_event("rag", "ingest_file_missing", level="error")
         return
 
     embeddings = get_embeddings()
     if embeddings is None: return
     provider = _resolve_provider()
 
-    print(f"--- INGESTÃO: {file_path} -> ÍNDICE: {index_name} (provider: {provider}) ---")
+    _log_event("rag", "ingest_started", level="info", index=index_name, provider=provider)
 
     loader = TextLoader(file_path, encoding='utf-8')
     docs = loader.load()
@@ -1406,7 +1404,7 @@ def ingest_file(file_path: str, index_name: str):
     path = get_global_db_path(index_name)
     db = FAISS.from_documents(chunks, embeddings)
     _save_index(db, path, provider)
-    print(f"✅ Indexado com sucesso em '{path}'!")
+    _log_event("rag", "ingest_done", level="info", index=index_name)
 
 def reindex_global() -> None:
     """Re-gera os índices globais (lore do Codex + regras).
@@ -1423,25 +1421,27 @@ def reindex_global() -> None:
     errors = [f for f in findings if f.severity == "error"]
     if errors:
         for f in errors:
-            print(f"❌ [{f.validator}] {f.path}: {f.message}")
-        print(f"Lint de conteúdo falhou ({len(errors)} erro(s)) — reindexação abortada.")
+            _log_event("rag", "lint_error", level="error", validator=f.validator, path=f.path, message=f.message)
+        _log_event("rag", "reindex_aborted", level="error", lint_errors=len(errors))
         sys.exit(1)
 
     # Fase 2.5: lore vem do Codex (data/codex/); world_lore.txt foi removido na 2.5b (R5).
-    print("Recriando índices globais...")
+    _log_event("rag", "reindex_started", level="info")
     from services.codex_loader import ingest_codex
     ingest_codex()
     rules_path = os.path.join("data", "rules.txt")
     if os.path.exists(rules_path):
         ingest_file(rules_path, "rules")
     else:
-        print(f"[ERRO] Regras não encontradas em {rules_path}")
+        _log_event("rag", "rules_missing", level="error")
 
 
 if __name__ == "__main__":
     # Console Windows é cp1252; força UTF-8 p/ os emojis dos prints não quebrarem
     # (main.py já faz isso no fluxo do jogo; aqui rodamos standalone).
     import sys
+    # SPEC-222: o CLI de reindexação mostra os eventos rpg.rag/rpg.codex no terminal.
+    logging.basicConfig(level=logging.INFO, stream=sys.stdout, format="%(name)s %(message)s")
     for _stream in (sys.stdout, sys.stderr):
         try:
             _stream.reconfigure(encoding="utf-8")

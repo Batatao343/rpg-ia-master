@@ -1,0 +1,52 @@
+"""SPEC-222 R6: apagar uma campanha também apaga seus arquivos no Storage.
+
+``commit_delete`` captura as chaves dos assets (que somem por cascade com o jogo) e
+enfileira ``purge_blobs`` na mesma transação. O worker/cron ``/internal/cron/jobs``
+apaga os objetos; é idempotente (apagar objeto ausente é sucesso) e varre também o
+prefixo da campanha para pegar uploads não registrados.
+"""
+from __future__ import annotations
+
+from uuid import UUID, uuid4
+
+from psycopg.types.json import Jsonb
+
+KIND = "purge_blobs"
+MAX_ATTEMPTS = 10
+
+
+def game_prefix(owner_id: UUID, game_id: UUID) -> str:
+    return f"users/{owner_id}/games/{game_id}/"
+
+
+def enqueue_game_blob_purge(connection, owner_id: UUID, game_id: UUID,
+                            object_keys: list[str]) -> None:
+    prefix = game_prefix(owner_id, game_id)
+    keys = sorted({key for key in object_keys if key.startswith(prefix)})
+    # game_id stays NULL: jobs.game_id cascades with the game being deleted.
+    connection.execute(
+        """insert into app.jobs (id,owner_id,game_id,kind,dedupe_key,status,payload,max_attempts)
+           values (%s,%s,null,%s,%s,'queued',%s,%s)
+           on conflict (kind,dedupe_key) do nothing""",
+        (uuid4(), owner_id, KIND, f"game:{game_id}",
+         Jsonb({"owner_id": str(owner_id), "game_id": str(game_id), "object_keys": keys}),
+         MAX_ATTEMPTS),
+    )
+
+
+def purge_game_blobs_job(pool, blob_store, payload: dict) -> dict:
+    owner_id, game_id = UUID(str(payload["owner_id"])), UUID(str(payload["game_id"]))
+    prefix = game_prefix(owner_id, game_id)
+    keys = {key for key in payload.get("object_keys") or [] if isinstance(key, str)
+            and key.startswith(prefix)}
+    bucket = getattr(blob_store, "bucket", None)
+    if bucket:
+        with pool.connection() as connection:
+            if connection.execute("select to_regclass('storage.objects') as r").fetchone()["r"]:
+                keys.update(row["name"] for row in connection.execute(
+                    "select name from storage.objects where bucket_id=%s and starts_with(name,%s)",
+                    (bucket, prefix)).fetchall())
+    failed = [key for key in sorted(keys) if not blob_store.delete(key)]
+    if failed:
+        raise RuntimeError("blob_purge_incomplete")  # retried by the queue
+    return {"status": "purged", "deleted": len(keys)}

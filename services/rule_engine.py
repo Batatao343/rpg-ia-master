@@ -23,6 +23,7 @@ Spec: specs/SPEC-004-fase-2.7-rules-engine.md.
 """
 
 from __future__ import annotations
+from observability.telemetry import log_event as _log_event
 
 import json
 import os
@@ -156,7 +157,7 @@ def load_rules() -> List[dict]:
                 with open(RULES_PATH, "r", encoding="utf-8") as f:
                     _rules_cache = json.load(f)
             except Exception as exc:
-                print(f"⚠️ [RULE] Falha ao ler {RULES_PATH}: {exc}")
+                _log_event("rule", "read_failed", level="warning", error=type(exc).__name__)
                 _rules_cache = []
     return _rules_cache
 
@@ -364,7 +365,7 @@ def run_rules(event: dict, state: dict, depth: int = 0) -> List[dict]:
             for action in rule.get("actions", []) or []:
                 emitted += execute_action(action, event, state)
         except RuleActionError as exc:
-            print(f"⚠️ [RULE] '{rule.get('id')}' ignorada: {exc}")
+            _log_event("rule", "rule_ignored", level="warning", rule_id=rule.get('id'), error=type(exc).__name__)
             continue
         for d in emitted:
             d["turn"] = event.get("turn", 0)  # SPEC-226 R9: derivado herda o turno

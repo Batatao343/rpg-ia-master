@@ -15,6 +15,7 @@ Spec: specs/SPEC-003-fase-2.6-structured-events.md §3 · specs/SPEC-004-fase-2.
 """
 
 from __future__ import annotations
+from observability.telemetry import log_event as _log_event
 
 import copy
 import uuid
@@ -323,8 +324,7 @@ def process_pending_events(state: Dict) -> Dict:
             except Exception as exc:
                 result = ValidationResult(False, f"proposta malformada: {exc}")
         if not result.ok:
-            print(f"🚫 [EVENT] proposta rejeitada ({proposal.get('type')}/"
-                  f"{proposal.get('target_id')}): {result.reason}")
+            _log_event("event", "proposal_rejected", level="info", type=proposal.get('type'))
             event_rejections = _bounded_rejections([*event_rejections, {
                 "turn": turn,
                 "type": str(proposal.get("type") or ""),
@@ -360,7 +360,7 @@ def process_pending_events(state: Dict) -> Dict:
                     quests_completed += 1
                 working["quests"] = quests
 
-        print(f"✅ [EVENT] {event['type']} → {event['target_id']} (id={event['event_id'][:8]})")
+        _log_event("event", "applied", level="debug", type=event['type'], event_id=event['event_id'][:8])
         _chronicle_milestone(event, projection)  # Fase 3.1: evento aplicado → crônica
 
         # Fase 2.7: cascata sistêmica. run_rules muta a projection in place e recursa
@@ -371,7 +371,7 @@ def process_pending_events(state: Dict) -> Dict:
             event_log.append(d)
             if d.get("type") == "npc_killed":
                 killed_targets.append(d.get("target_id"))
-            print(f"⚙️ [RULE] {d['type']} → {d['target_id']} (src=rule_engine, id={d['event_id'][:8]})")
+            _log_event("rule", "derived", level="debug", type=d['type'], event_id=d['event_id'][:8])
             _chronicle_milestone(d, working["world_projection"])
         projection = working["world_projection"]
 
@@ -385,8 +385,7 @@ def process_pending_events(state: Dict) -> Dict:
                 quests_changed = True
                 for qf in qfailed:
                     event_log.append(qf)
-                    print(f"⚰️ [QUEST] {qf['payload'].get('quest_title','?')} fracassou "
-                          f"(origem morta, id={qf['event_id'][:8]})")
+                    _log_event("quest", "failed", level="info")
                     _chronicle_milestone(qf, projection)
 
     updates = {
@@ -415,7 +414,7 @@ def process_pending_events(state: Dict) -> Dict:
         for prop in lvl_props:
             ev = _build_event(prop, turn)
             event_log.append(ev)
-            print(f"⬆️ [XP] level_up → nível {ev['payload'].get('new_level')} (id={ev['event_id'][:8]})")
+            _log_event("xp", "level_up", level="info", new_level=ev['payload'].get('new_level'))
             _chronicle_milestone(ev, projection)
 
     if factions_reverted is not None and factions_reverted != list(state.get("factions") or []):

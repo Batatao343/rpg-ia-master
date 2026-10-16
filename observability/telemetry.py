@@ -6,6 +6,7 @@ import contextvars
 import hashlib
 import hmac
 import json
+import logging
 import os
 import re
 from contextlib import contextmanager
@@ -83,6 +84,21 @@ def redact(value: Any, *, key: str = "") -> Any:
 
 def safe_json(event: Mapping[str, Any]) -> str:
     return json.dumps(redact(event), ensure_ascii=False, sort_keys=True, default=str)
+
+
+_LEVELS = {"debug": logging.DEBUG, "info": logging.INFO, "warning": logging.WARNING,
+           "error": logging.ERROR}
+
+
+def log_event(area: str, event: str, *, level: str = "info", **fields: Any) -> None:
+    """SPEC-222 R1: log técnico estruturado de produção (substitui ``print``).
+
+    Campos devem ser contagens, ids de catálogo, nomes de classe de exceção ou
+    pseudônimos — nunca texto do jogador, narração ou nome de personagem. Ainda
+    assim passam por ``safe_json``/``redact``.
+    """
+    logging.getLogger(f"rpg.{area}").log(
+        _LEVELS.get(level, logging.INFO), safe_json({"event": f"{area}.{event}", **fields}))
 
 
 def correlation() -> dict[str, str]:

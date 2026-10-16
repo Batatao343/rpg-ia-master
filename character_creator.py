@@ -5,6 +5,7 @@ Versão V7.0 (spec conflito-01): 5 Virtudes (0-5) substituem os 6 atributos D&D;
 Vitalidade/Ferimentos derivam de Corpo. A distribuição das Virtudes vem do JOGADOR
 (wizard) — a classe apenas RECOMENDA. O LLM só sugere inventário/flavor textual.
 """
+from observability.telemetry import log_event as _log_event
 from typing import Dict, Any, List
 from langchain_core.messages import SystemMessage, HumanMessage
 from pydantic import BaseModel, Field
@@ -324,7 +325,7 @@ def create_player_character(user_input: Dict[str, Any], *,
                 if isinstance(dumped, dict) and "inventory" in dumped:
                     flavor_data = dumped
         except Exception as e:
-            print(f"⚠️ Erro IA: {e}")
+            _log_event("character", "ai_failed", level="warning", error=type(e).__name__)
 
     if not flavor_data:
         flavor_data = {

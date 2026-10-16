@@ -13,6 +13,7 @@ Fluxo de 1 chamada = 1 RODADA:
   → run_round (iniciativa/ataques/dano→Ferimento/Reações/Terminal/Abismo)
   → espelhar Vitalidade→hp (HUD/checkpoints) → narrar → summary→loot na vitória.
 """
+from observability.telemetry import log_event as _log_event
 import random
 import re
 from typing import Dict, List, NamedTuple, Optional
@@ -168,8 +169,7 @@ def _grounded_template(name: str, context: str, encounter_level: int) -> Dict:
     if em.shares_identity(name, str(template.get("name") or "")) \
             or em.shares_identity(name, str(template.get("id") or "")):
         return template
-    print(f"⚠️ [COMBAT SPAWN] identidade divergente: pedido '{name}' → "
-          f"'{template.get('name')}' — mantendo o pedido")
+    _log_event("combat", "spawn_identity_mismatch", level="warning")
     from agents.bestiary import _slug, materialize_enemy_concept
     return materialize_enemy_concept({
         "name": name, "id": f"fallback_{_slug(name)}",
@@ -202,7 +202,7 @@ def _spawn_v4_enemies(messages: List, target_hint: str, state: Optional[Dict],
     dica. `meta` (out-param) recebe source/target_ref/joined_ids/cut_ids."""
     from services import encounter_manifest as em
     meta = meta if meta is not None else {}
-    print(f"⚡ [COMBAT] Preparando encontro. Dica: '{target_hint}'...")
+    _log_event("combat", "preparing_encounter", level="info")
     enemies: List[Dict] = []
     flavor = "Algo hostil emerge."
     world = (state or {}).get("world") or {}
@@ -256,8 +256,7 @@ def _spawn_v4_enemies(messages: List, target_hint: str, state: Optional[Dict],
                     grounded = [(n, c) for n, c in groups
                                 if em.shares_identity(target_hint, n)]
                     if len(grounded) != len(groups):
-                        print("⚠️ [COMBAT SPAWN] scanner fora da dica descartado: "
-                              f"{[n for n, _c in groups if (n, _c) not in grounded]}")
+                        _log_event("combat", "spawn_scanner_discarded", level="warning")
                     groups = grounded or [(str(target_hint).strip(),
                                            em.hint_count(target_hint))]
                 for name, count in groups:
@@ -266,14 +265,14 @@ def _spawn_v4_enemies(messages: List, target_hint: str, state: Optional[Dict],
                 if enemies:
                     meta.update(source="scanner", target_ref=str(target_hint or ""))
         except Exception as e:
-            print(f"⚠️ [COMBAT SPAWN] {e}")
+            _log_event("combat", "spawn_failed", level="warning", error=type(e).__name__)
 
     if not enemies:
         enemies = [orch.ensure_combat_sheet(
             {"id": "sombrio_1", "name": "Inimigo Sombrio", "type": "padrao",
              "virtudes": {"forca": 2, "agilidade": 2, "corpo": 2, "mente": 1, "carisma": 1}})]
         meta.update(source="fallback", target_ref=str(target_hint or ""))
-        print("⚠️ [COMBAT SPAWN] source=fallback (Inimigo Sombrio)")
+        _log_event("combat", "spawn_fallback", level="warning")
 
     # Orçamento determinístico do encontro (mesma lógica da Fase 4.6, escala nova).
     if state is not None:
@@ -321,7 +320,7 @@ def _apply_encounter_budget(enemies: List[Dict], state: Dict, flavor: str, *,
         if extra:
             flavor = f"{flavor} {extra}".strip()
     except Exception as e:
-        print(f"⚠️ [COMBAT BUDGET] {e}")
+        _log_event("combat", "budget_failed", level="warning", error=type(e).__name__)
     return enemies, flavor
 
 
@@ -388,7 +387,7 @@ def _prepare_scene(state: Dict, enemies: List[Dict], player: Dict, allies: List[
             llm = get_llm(temperature=0.4, tier=ModelTier.FAST)
             scene = prep.prepare_encounter(ctx, llm)   # guard + fallback internos
         except Exception as e:
-            print(f"⚠️ [COMBAT PREP] {e}")
+            _log_event("combat", "prep_failed", level="warning", error=type(e).__name__)
             scene = prep.fallback_safe_scene(ctx)
     else:
         scene = prep.fallback_safe_scene(ctx)
@@ -550,7 +549,7 @@ def _parse_turn_declaration(player: Dict, enemies: List[Dict], intent: str,
             return TurnDeclaration(actor_id=_PLAYER_ID,
                                    acao=TurnStep(kind="attack", target_id=tid))
     except Exception as e:
-        print(f"⚠️ [COMBAT PARSE] {e}")
+        _log_event("combat", "parse_failed", level="warning", error=type(e).__name__)
     return fallback
 
 
@@ -724,7 +723,7 @@ def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
                 return text
             prose_guard.log_species_drift(drift, where="combate")
     except Exception as e:
-        print(f"⚠️ [COMBAT NARRATE] {e}")
+        _log_event("combat", "narrate_failed", level="warning", error=type(e).__name__)
     prefix = (spawned_flavor + "\n\n") if spawned_flavor else ""
     suffix = "\n\nVitória! O campo silencia." if victory else "\n\nO que você faz?"
     return f"⚔️ {prefix}" + "\n".join(f"• {l}" for l in logs if l) + suffix
@@ -854,7 +853,7 @@ def combat_node(state: GameState):
             target_ref=spawn_meta.get("target_ref") or str(combat_target or ""),
             scene=scene, joined_ids=spawn_meta.get("joined_ids") or (),
             cut_ids=spawn_meta.get("cut_ids") or ())
-        print(f"⚔️ Combate: {[e['name'] for e in enemies]}")
+        _log_event("combat", "started", level="info", enemies=len(enemies))
     else:
         # R2: leitura por rodada — manifesto é a verdade; nunca reclassifica.
         if not em.is_valid_manifest(combat_meta.get("encounter")):

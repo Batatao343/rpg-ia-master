@@ -5,6 +5,7 @@ Atualizado para suportar Memória Híbrida (Game ID e Resumo).
 Fase 10: game_id validado (UUID) na borda, CORS por env, rate limit mínimo,
 log JSON por turno.
 """
+from observability.telemetry import log_event as _log_event
 import contextvars
 import hashlib
 import json
@@ -217,8 +218,9 @@ CONTENT_SECURITY_POLICY = (
     "script-src 'self' https://challenges.cloudflare.com; "
     "frame-src https://challenges.cloudflare.com; "
     "img-src 'self' data: blob: https://*.supabase.co; "
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-    "font-src 'self' data: https://fonts.gstatic.com; "
+    # SPEC-222 R8: fonts are self-hosted (web/public/fonts) -- no Google Fonts origin.
+    "style-src 'self' 'unsafe-inline'; "
+    "font-src 'self' data:; "
     "media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'"
 )
 _DOCS_PATHS = {"/docs", "/redoc", "/openapi.json", "/docs/oauth2-redirect"}
@@ -3155,7 +3157,7 @@ def new_game(req: CreateCharacterRequest):
 
 
 def _create_game(req: CreateCharacterRequest, claim):
-    print(f"Criando personagem: {req.name}")
+    _log_event("api", "character_create", level="info")
 
     char_input = {
         "name": req.name,
@@ -3317,7 +3319,7 @@ def _create_game(req: CreateCharacterRequest, claim):
         return response
     except Exception as e:
         # Auditoria A6: detalhe interno só no log do servidor, nunca na resposta.
-        print(f"Erro ao criar jogo: {e}")
+        _log_event("api", "new_game_failed", level="error", error=type(e).__name__)
         raise HTTPException(status_code=500, detail="Erro interno ao criar o jogo.")
 
 def _append_player_input(state: dict, input_text: str) -> None:
@@ -3626,7 +3628,7 @@ def _commit_turn(
                 meta = normalize(state.get("continuity"), canonical_turn=turn)
                 meta["checkpoint_deferred"] = True
                 state["continuity"] = meta
-                print("⚠️ checkpoint adiado: falha ao gravar; tentará no próximo turno")
+                _log_event("api", "checkpoint_deferred", level="warning")
         _require_saved(state, detail="turno")
         _schedule_chronicle_jobs(state)
         return
@@ -3871,7 +3873,7 @@ def _record_audit_trace(new_state: dict, previous_state: dict, *, action_id, tim
         record_turn_trace(new_state, previous_state=previous_state, action_id=action_id,
                           timeline=timeline, llm_attempts=llm_attempts)
     except Exception as exc:
-        print(f"⚠️ audit_trace não gravado: {type(exc).__name__}")
+        _log_event("api", "audit_trace_not_written", level="warning", error=type(exc).__name__)
 
 
 def _run_turn(state: dict, input_text: str,
@@ -4012,7 +4014,7 @@ def _run_turn_collected(state: dict, input_text: str,
             latency_fields=_latency_log_fields(
                 timeline, _llm_turn_events.get(), _llm_attempt_events.get(),
                 action_id=action_id, input_text=input_text))
-        print(f"Erro na API: {type(e).__name__}")
+        _log_event("api", "turn_failed", level="error", error=type(e).__name__)
         raise HTTPException(status_code=500, detail="Erro interno ao processar o turno.")
     finally:
         _lat.unbind(timeline_token)

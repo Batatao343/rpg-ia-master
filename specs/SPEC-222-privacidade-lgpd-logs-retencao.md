@@ -1,7 +1,7 @@
 # SPEC-222 — Privacidade/LGPD: logs sem conteúdo de jogo, exclusão/export completos e transparência
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `in-progress` (código + testes locais entregues; faltam smoke em staging, texto legal pelo titular e revisão Sol)
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** nenhuma · evolui SPEC-190/194/195 `done`; complementa SPEC-197 R3/R-10 (ordem final 2026-10-15)
 > **Desbloqueia:** gate legal da SPEC-197; Data Safety da SPEC-198 (ordem final 2026-10-15)
 > **Origem:** auditoria de segurança 2026-10-15 — achados PRIV-01 (+PRIV-09), PRIV-02, PRIV-03, PRIV-04, PRIV-05 (parcial), PRIV-06, PRIV-07
@@ -71,10 +71,21 @@ Objetivo: o código passa a cumprir o que a política diz — e a política pass
 2. **Implementação:** §3. **Verificação:** `uv run pytest -q`, `npm run build`, `npm test`, `checklist.py --legal-url`.
 
 ## 5. Critérios de aceite
-- [ ] Etapa 0 vermelha no HEAD, verde ao final; R1–R10 cobertos; suíte Python/Node/e2e verdes; Postgres local verde.
-- [ ] Staging: turno real → logs da função Vercel sem texto do jogador (inspeção manual de 1 turno com sentinela); compra fake/teste → após consume `purchase_token IS NULL`; delete de campanha com arte → objeto some do bucket em ≤ 1 ciclo de cron; `/account/export` contém as novas tabelas sem token.
-- [ ] Política e Data Safety sem `<...>`; `web/dist/index.html` sem `fonts.googleapis.com`; signup com aceite + links.
+- [x] Etapa 0 vermelha no HEAD, verde ao final; R1–R10 cobertos; suíte Python/Node/e2e verdes; Postgres local verde. (R8/R10 do texto da política: ver desvios.)
+- [ ] Staging: turno real → logs da função Vercel sem texto do jogador (inspeção manual de 1 turno com sentinela); compra fake/teste → após consume `purchase_token IS NULL`; delete de campanha com arte → objeto some do bucket em ≤ 1 ciclo de cron; `/account/export` contém as novas tabelas sem token. **Pendente:** exige aplicar a migration `20261016120000_privacy_retention.sql` no staging e deploy (coordenador).
+- [ ] Política e Data Safety sem `<...>`; `web/dist/index.html` sem `fonts.googleapis.com`; signup com aceite + links. **Parcial:** `web/dist` sem Google Fonts ✔, signup com aceite + idade ✔, Data Safety alinhado ao código ✔; a política (`web/legal/`, texto legal SPEC-197) não é editada por agente — texto proposto em `handoffs/SPEC-222-legal-text.md`; os `<...>` do controlador/SMTP/domínio dependem do titular.
 - [ ] Revisão Sol independente APPROVED.
+
+### Execução (2026-10-16) — defaults e desvios
+
+- **Defaults §8 adotados:** D-A URLs assinadas 300 s no JSON (`asset_downloads`, `format_version: 2`); D-B `usage_events` 13 meses, `account_deletions` compactada após 30 d e apagada após 5 anos, retenção financeira 5 anos; D-C self-host (Cinzel, Cinzel Decorative, EB Garamond — latin/latin-ext, ~290 KB) + CSP sem Google; D-D 18 anos com checkbox obrigatório.
+- **R1:** `print` → `observability.telemetry.log_event` (`rpg.<area>` + `safe_json`, só contagens/ids de catálogo/`type(exc).__name__`). Escopo do teste AST ampliado para todo `.py` da raiz + `agents/ services/ infrastructure/ observability/ workers/` (exclui `game_engine.py`, `scripts/`, `playtest/`, `evals/`, `__main__`). O CLI `python rag.py` configura logging para stdout no `__main__`.
+- **R4 (desvio):** minimização das linhas Google feita em `begin()` (antes do tombstone), não em `finish()`: o trigger `account_write_fence` bloqueia UPDATE após o tombstone. Anulação no consumo é imposta no banco (trigger `protect_google_play_purchase` reescrito) — o código não depende da coluna nullable para consumir. `google_state` já era um snapshot sem token; o subconjunto mantido é `purchase_state, consumption_state, purchase_type, quantity` (`orderId`/`purchaseTime` já são colunas próprias). Backfill de linhas terminais/de contas excluídas na migration.
+- **R6 (desvio):** `app.assets` cai por cascade com o jogo, então as chaves são capturadas antes do `delete` e vão no payload do job `purge_blobs` (enfileirado na mesma transação, `game_id` nulo, dedupe `game:<id>`); o handler também varre o prefixo `users/<owner>/games/<game>/` em `storage.objects`. Não há linha `delete_pending` porque a linha deixa de existir.
+- **R7:** `services/retention.py` no cron `/internal/cron/operations`, lotes de 1000; operações referenciadas por `turns`/`usage_events`/`wallet_reservations` nunca são apagadas (o FK em cascade apagaria histórico/uso).
+- **R10 (desvio):** a fonte gerada é `docs/spec222/retencao.md` (`scripts/gen_retention_doc.py`, teste de sincronia); a seção §5 da política só muda via handoff.
+- **R9:** Playwright `web/e2e/consent.spec.ts`; specs de cadastro existentes (inclusive a jornada F01 de `critical-journeys.spec.ts`) ganharam o passo de marcar a idade — só o passo, sem mudar asserções.
+- **Dependência de deploy:** o código é seguro sem a migration (a minimização em `begin()` só roda se `app.minimize_google_state` existir; `purge_blobs`/TTL/export não usam objetos novos). Mas R4 (token anulado, índices de TTL, backfill) **só vale depois de aplicar `supabase/migrations/20261016120000_privacy_retention.sql` no staging**; aplicar antes/junto do deploy.
 
 ## 6. Smoke test
 Staging, sem LLM pago (MockLLM não existe em hosted — usar 1 turno real, custo ~US$ 0,001): sentinela no texto + inspeção de logs; delete de campanha com asset; export.

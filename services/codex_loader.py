@@ -7,6 +7,7 @@ Spec: specs/SPEC-001-fase-2.5-codex-world-state.md §3.
 """
 
 from __future__ import annotations
+from observability.telemetry import log_event as _log_event
 
 import os
 from typing import Dict, List, Optional, Tuple
@@ -86,7 +87,7 @@ def codex_index(codex_dir: str = CODEX_DIR) -> Dict[str, str]:
                 try:
                     frontmatter, _body = parse_codex_file(path)
                 except ValueError as exc:
-                    print(f"⚠️ [CODEX] {exc}")
+                    _log_event("codex", "doc_skipped", level="warning", error=type(exc).__name__)
                     continue
                 index[frontmatter["id"]] = path
         _codex_index_cache = index
@@ -123,17 +124,16 @@ def ingest_codex(codex_dir: str = CODEX_DIR) -> None:
 
     embeddings = get_embeddings()
     if embeddings is None:
-        print("[CODEX] Sem embeddings (chave ausente) — ingestão abortada.")
+        _log_event("codex", "no_embeddings", level="warning")
         return
 
     docs = load_codex(codex_dir)
     if not docs:
-        print(f"[CODEX] Nenhum documento em {codex_dir}.")
+        _log_event("codex", "no_documents", level="warning")
         return
 
     provider = _resolve_provider()
-    print(f"--- INGESTÃO DO CODEX: {codex_dir} ({len(docs)} chunks) → índice 'lore' "
-          f"(provider: {provider}) ---")
+    _log_event("codex", "ingest_started", level="info", chunks=len(docs))
     db = FAISS.from_documents(docs, embeddings)
     _save_index(db, get_global_db_path("lore"), provider)
-    print("✅ Codex indexado em 'faiss_lore_index'.")
+    _log_event("codex", "indexed", level="info")

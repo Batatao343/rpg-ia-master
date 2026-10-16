@@ -2,6 +2,7 @@
 agents/librarian.py
 Utilitário de consistência. Verifica se entidades já existem antes de criar novas.
 """
+from observability.telemetry import log_event as _log_event
 import difflib
 from typing import List, Optional
 from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage
@@ -39,11 +40,11 @@ def find_existing_entity(user_query: str, entity_type: str, existing_ids: List[s
     candidates += [c for c in difflib.get_close_matches(query_slug, existing_ids, n=8, cutoff=0.7)
                    if c not in candidates]
     if not candidates:
-        print(f"🆕 [LIBRARIAN] Sem candidato plausível p/ '{user_query}' — entidade nova (sem LLM).")
+        _log_event("librarian", "no_candidate", level="debug")
         return None
 
     # 4. Match Semântico com IA — só entre os candidatos próximos (prompt enxuto).
-    print(f"🔍 [LIBRARIAN] Verificando duplicatas para: '{user_query}' em {entity_type}...")
+    _log_event("librarian", "checking_duplicates", level="debug", entity_type=str(entity_type))
 
     llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
 
@@ -73,11 +74,11 @@ def find_existing_entity(user_query: str, entity_type: str, existing_ids: List[s
         
         if (not isinstance(result, BaseMessage) and result.match_found
                 and result.existing_id in existing_ids):
-            print(f"✅ [LIBRARIAN] Match encontrado: '{user_query}' -> '{result.existing_id}'")
+            _log_event("librarian", "match_found", level="debug", existing_id=result.existing_id)
             return result.existing_id
         
     except Exception as e:
-        print(f"⚠️ Erro no Librarian: {e}")
+        _log_event("librarian", "failed", level="warning", error=type(e).__name__)
         
-    print(f"🆕 [LIBRARIAN] Nenhum match. Entidade nova.")
+    _log_event("librarian", "no_match", level="debug")
     return None

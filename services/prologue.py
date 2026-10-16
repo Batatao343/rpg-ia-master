@@ -11,6 +11,7 @@ confirm (API continua stateless por save).
 """
 
 from __future__ import annotations
+from observability.telemetry import log_event as _log_event
 
 from typing import List, Tuple
 
@@ -207,7 +208,7 @@ def build_start_scenario(char_input: dict) -> Tuple[StartScenario, bool]:
             return fallback_scenario(char_input), mock
         return _normalize(result, char_input), mock
     except Exception as exc:  # noqa: BLE001
-        print(f"[PROLOGUE ERROR] {exc}")
+        _log_event("prologue", "failed", level="error", error=type(exc).__name__)
         return fallback_scenario(char_input), mock
 
 

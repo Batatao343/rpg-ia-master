@@ -404,12 +404,20 @@ class PostgresTurnCoordinator:
             if (not operation or operation["status"] != "running"
                     or operation["lease_token"] != claim.lease_token):
                 raise LeaseHeld("fencing token inválido")
+            # SPEC-222 R6: asset rows cascade with the game, so the object keys are
+            # captured first and handed to a durable purge job in the same commit.
+            object_keys = [row["object_key"] for row in connection.execute(
+                "select object_key from app.assets where game_id=%s and owner_id=%s",
+                (game_id, principal.user_id),
+            ).fetchall()]
             deleted = connection.execute(
                 "delete from app.games where id=%s and owner_id=%s",
                 (game_id, principal.user_id),
             )
             if deleted.rowcount != 1:
                 raise NotFound("campanha não encontrada")
+            from workers.blob_purge_jobs import enqueue_game_blob_purge
+            enqueue_game_blob_purge(connection, principal.user_id, game_id, object_keys)
             persisted = dict(receipt)
             connection.execute(
                 """update app.operations set status='completed',receipt=%s,

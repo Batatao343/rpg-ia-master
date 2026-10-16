@@ -1316,3 +1316,10 @@ article.card[data-selected="true"]::before {
 .abyss-chip[data-tier="severo"] .abyss-chip__dot { animation-iteration-count: 3; }
 /* território disputado: anel estático (antes: box-shadow animado em loop) */
 .worldmap__node.is-contested .worldmap__dot { animation: none; }
+/* SPEC-222 R9: aceite + idade mínima no cadastro; links legais na tela de acesso. */
+.auth-consent { display: grid; gap: 0.6rem; font-size: 0.95rem; }
+.auth-consent p { margin: 0; }
+.auth-consent a, .auth-legal a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+.auth-consent__age { display: flex; gap: 0.55rem; align-items: center; cursor: pointer; }
+.auth-consent__age input { width: 1.1rem; height: 1.1rem; accent-color: currentColor; }
+.auth-legal { display: flex; gap: 1.2rem; justify-content: center; margin-top: 1.2rem; font-size: 0.9rem; }

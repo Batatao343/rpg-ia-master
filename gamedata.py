@@ -3,6 +3,7 @@ gamedata.py
 Central de Dados Estáticos e Dinâmicos.
 Gerencia o carregamento de regras, itens, bestiário e a persistência de criações da IA.
 """
+from observability.telemetry import log_event as _log_event
 import json
 import os
 
@@ -33,10 +34,10 @@ def load_json_data(filename: str) -> dict:
         # Se não existir ou estiver corrompido, retorna vazio para evitar crash
         if "custom" in filename:
             return {}
-        print(f"⚠️ Aviso: Arquivo '{filename}' não encontrado ou inválido em {DATA_DIR}.")
+        _log_event("gamedata", "file_missing", level="warning", file=filename)
         return {}
     except Exception as e:
-        print(f"❌ Erro ao ler '{filename}': {e}")
+        _log_event("gamedata", "read_failed", level="error", file=filename, error=type(e).__name__)
         return {}
 
 def _read_json_file(file_path: str) -> dict:
@@ -64,9 +65,9 @@ def save_custom_artifact(item_id: str, item_data: dict):
             "custom_artifact", item_id, item_data,
             scope="global", owner_id=None, game_id=None,
         )
-        print(f"💾 [SYSTEM] Item '{item_id}' salvo em custom_artifacts.json (runtime)")
+        _log_event("gamedata", "artifact_saved", level="info")
     except Exception as e:
-        print(f"❌ Erro ao salvar artifact: {e}")
+        _log_event("gamedata", "artifact_save_failed", level="error", error=type(e).__name__)
 
     # 4. Atualiza a memória global (Hot Reload)
     ARTIFACTS_DB[item_id] = item_data

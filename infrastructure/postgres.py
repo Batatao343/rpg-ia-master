@@ -1,6 +1,7 @@
 """Pool e GameStore Postgres síncronos, sem transações durante chamadas LLM."""
 
 from __future__ import annotations
+from observability.telemetry import log_event as _log_event
 
 from contextlib import contextmanager
 from datetime import UTC, datetime
@@ -89,7 +90,7 @@ def _stored_rows_tolerant(rows: list[dict[str, Any]]) -> list[StoredGame]:
         try:
             out.append(_stored(row))
         except IncompatibleSaveError as exc:
-            print(f"⚠️ partida {row.get('id')} ignorada na listagem: {exc}")
+            _log_event("store", "listing_row_skipped", level="warning", error=type(exc).__name__)
     return out
 
 

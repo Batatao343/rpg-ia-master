@@ -15,6 +15,7 @@ Spec: specs/SPEC-008-fase-3.3-quest-log.md §3.
 """
 
 from __future__ import annotations
+from observability.telemetry import log_event as _log_event
 
 import difflib
 import re
@@ -85,11 +86,11 @@ def register_proposed_quests(quests: List[Dict], proposals: List, *, turn: int =
         active_titles = [q for q in quests if q.get("status") == "active"]
         if any(difflib.SequenceMatcher(None, title.lower(), q.get("title", "").lower()).ratio()
                >= TITLE_SIMILARITY for q in active_titles):
-            print(f"🚫 [QUEST] proposta ignorada (duplicata por similaridade): {title!r}")
+            _log_event("quest", "proposal_duplicate_ignored", level="info")
             continue
 
         if len(active_titles) >= MAX_ACTIVE_QUESTS:
-            print(f"🚫 [QUEST] teto de {MAX_ACTIVE_QUESTS} quests ativas — ignorada: {title!r}")
+            _log_event("quest", "active_cap_reached", level="info", cap=MAX_ACTIVE_QUESTS)
             continue
 
         location_id = str(p.get("location_id") or "")

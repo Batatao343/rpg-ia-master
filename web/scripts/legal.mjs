@@ -86,7 +86,6 @@ export function renderPage({ label, slug }, bodyHtml, cssHref, status = 'draft')
 <meta name="robots" content="noindex" />
 <title>${esc(label)} - Crônicas</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" />
 ${cssHref ? `<link rel="stylesheet" href="${cssHref}" />` : ''}
 </head>
 <body>

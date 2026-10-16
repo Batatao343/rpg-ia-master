@@ -127,8 +127,12 @@ def build_handlers():
 
     from workers.projection_jobs import make_handler as make_projection_handler
     project = make_projection_handler(pool, runtime.memory_store)
+    def purge_blobs(payload: dict) -> dict:
+        from workers.blob_purge_jobs import purge_game_blobs_job
+        return purge_game_blobs_job(pool, runtime.blob_store, payload)
 
     return {
+        "purge_blobs": purge_blobs,
         "generate_dynamic_art": generate,
         "embed_memory": embed,
         "compress_chronicle": compress,

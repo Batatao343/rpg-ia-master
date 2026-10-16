@@ -187,8 +187,11 @@ def test_operations_endpoint(monkeypatch):
     monkeypatch.setattr(cron_internal, "_runtime", lambda: _runtime(object()))
     monkeypatch.setattr("services.operation_recovery.recover_expired",
                         lambda pool, n: {"orphans_seen": 2, "released": 2})
+    monkeypatch.setattr("services.retention.purge_expired",  # SPEC-222 R7
+                        lambda pool: {"purged_jobs": 3})
     body = client.post("/internal/cron/operations", headers=H).json()
     assert body["released"] == 2 and body["ok"] is True
+    assert body["purged_jobs"] == 3
 
 
 def test_security_headers_csp():

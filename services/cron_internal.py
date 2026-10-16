@@ -116,7 +116,11 @@ def cron_operations(request: Request):
 
     def task():
         from services.operation_recovery import recover_expired
-        return {**recover_expired(_runtime().game_store.pool, 50), "failed": 0}
+        from services.retention import purge_expired
+        pool = _runtime().game_store.pool
+        recovered = recover_expired(pool, 50)
+        # SPEC-222 R7: TTL of terminal technical metadata, count-only output.
+        return {**recovered, **purge_expired(pool), "failed": 0}
     return _run("operations", task)
 
 

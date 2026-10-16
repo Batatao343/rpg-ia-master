@@ -219,5 +219,7 @@ class PostgresPurchaseStore:
         with self.pool.connection() as db:
             return [dict(r) for r in db.execute(
                 "select * from app.google_play_purchases where state in ('fulfilled','fulfilled_unconsumed') "
+                # SPEC-222 R4: a deleted account's row loses its token; nothing left to consume.
+                "and purchase_token is not null "
                 "and updated_at < now() - interval '1 minute' order by updated_at limit %s",
                 (limit,)).fetchall()]

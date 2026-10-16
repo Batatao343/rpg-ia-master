@@ -3,6 +3,7 @@ agents/npc.py
 Gerador de NPCs com Persistência, Memória, RAG e Filtro de Ignorância.
 Contém tanto a fábrica de NPCs (generate_new_npc) quanto o ator (npc_actor_node).
 """
+from observability.telemetry import log_event as _log_event
 import json
 import logging
 import os
@@ -216,7 +217,7 @@ def _load_legacy_npc_file() -> dict:
         with open(NPC_DB_FILE, 'r', encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
-        print(f"⚠️ [NPC DB] Falha ao ler {NPC_DB_FILE}: {e}")
+        _log_event("npc", "db_read_failed", level="warning", error=type(e).__name__)
         return {}
 
 
@@ -317,7 +318,7 @@ def generate_new_npc(name, context=""):
     
     found_id = find_existing_entity(name, "NPC", existing_ids)
     if found_id:
-        print(f"♻️ [NPC] Cache Hit: {found_id}")
+        _log_event("npc", "cache_hit", level="debug")
         data = db[found_id]
         changed = False
         if "attributes" not in data:  # Auto-fix legado
@@ -329,7 +330,7 @@ def generate_new_npc(name, context=""):
         return normalized
 
     # 2. GERAÇÃO
-    print(f"🎭 [NPC] Criando: {name}...")
+    _log_event("npc", "creating", level="info")
     lore_info = query_rag(f"{name} {context}", index_name="lore")
     
     llm = get_llm(temperature=0.7, tier=_infer_tier_from_name(name))
@@ -354,7 +355,7 @@ def generate_new_npc(name, context=""):
         data["id"] = f"npc_{name.lower().replace(' ', '_')}"
         
     except Exception as e: 
-        print(f"❌ Erro NPC AI: {e}")
+        _log_event("npc", "generation_failed", level="error", error=type(e).__name__)
         # Fallback de segurança
         data = {
             "name": name, "role": "Desconhecido", "id": "fallback", "persona": "Genérico",
@@ -369,7 +370,7 @@ def generate_new_npc(name, context=""):
     try:
         save_npc_template(data)
     except Exception as exc:
-        print(f"⚠️ [NPC DB] Falha ao persistir ficha v4 de '{name}': {exc}")
+        _log_event("npc", "db_persist_failed", level="warning", error=type(exc).__name__)
     return data
 
 _MISSION_RE = re.compile(
@@ -836,5 +837,5 @@ def npc_actor_node(state: GameState):
 
         return updates
     except Exception as e:
-        print(f"Erro NPC Actor: {e}")
+        _log_event("npc", "actor_failed", level="error", error=type(e).__name__)
         return {"messages": [AIMessage(content="...")]}

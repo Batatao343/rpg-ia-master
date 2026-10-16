@@ -37,6 +37,8 @@ export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, noti
   const [localBusy, setLocalBusy] = useState(false);
   const [localError, setLocalError] = useState("");
   const [localNotice, setLocalNotice] = useState("");
+  // SPEC-222 R9 (D-D): idade mínima 18, autodeclarada e obrigatória no cadastro.
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
   const working = busy || localBusy;
   const lifecycle = config?.lifecycle_available ?? false;
   const captchaRequired = config?.captcha?.required ?? false;
@@ -50,7 +52,7 @@ export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, noti
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (working || (needsCaptcha && !captchaToken)) return;
+    if (working || (needsCaptcha && !captchaToken) || (mode === "signup" && !ageConfirmed)) return;
     setLocalError(""); setLocalNotice("");
     try {
       if (mode === "login" || mode === "signup") {
@@ -127,9 +129,22 @@ export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, noti
         </div>}
         {needsCaptcha && <TurnstileChallenge required siteKey={config?.captcha?.site_key ?? null}
           action={captchaAction} revision={captchaRevision} onToken={setCaptchaToken} />}
+        {mode === "signup" && <div className="auth-consent" data-testid="signup-consent">
+          <p className="muted">
+            Ao criar conta você concorda com os <a href="/termos/" target="_blank" rel="noopener">Termos</a> e
+            a <a href="/privacidade/" target="_blank" rel="noopener">Política de Privacidade</a>; texto e voz
+            enviados ao jogo são processados por provedores de IA listados na política.
+          </p>
+          <label className="auth-consent__age">
+            <input type="checkbox" required checked={ageConfirmed}
+              onChange={event => setAgeConfirmed(event.target.checked)} />
+            Declaro ter 18 anos ou mais.
+          </label>
+        </div>}
         {(localError || error) && <p role="alert" className="muted">{localError || error}</p>}
         {(localNotice || notice) && <p role="status" className="muted">{localNotice || notice}</p>}
-        <button className="btn btn--primary" disabled={working || (needsCaptcha && !captchaToken)}>
+        <button className="btn btn--primary"
+          disabled={working || (needsCaptcha && !captchaToken) || (mode === "signup" && !ageConfirmed)}>
           {working ? "Aguarde…" : mode === "signup" ? "Criar conta" : mode === "reset_request"
             ? "Enviar recuperação" : mode === "verify_request" ? "Enviar confirmação"
               : mode === "verify_link" ? "Confirmar e-mail" : mode === "reset_link" ? "Atualizar senha" : "Entrar"}
@@ -147,6 +162,10 @@ export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, noti
         {mode !== "login" && mode !== "signup" && <button type="button" className="btn btn--ghost"
           disabled={working} onClick={() => switchMode("login")}>Voltar para entrar</button>}
       </form>
+      <nav className="auth-legal" aria-label="Documentos legais">
+        <a href="/privacidade/">Privacidade</a>
+        <a href="/termos/">Termos</a>
+      </nav>
     </Frame>
   </main>;
 }

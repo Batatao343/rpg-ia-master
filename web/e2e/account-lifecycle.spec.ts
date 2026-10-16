@@ -16,6 +16,7 @@ test("SPEC-190 signup awaits verification and email requests disclose no account
   await page.getByRole("button", { name: "Criar uma conta local" }).click();
   await page.getByLabel("E-mail").fill("novo@example.test");
   await page.getByLabel("Senha", { exact: true }).fill("SenhaSegura123!");
+  await page.getByLabel("Declaro ter 18 anos ou mais.").check(); // SPEC-222 R9
   await page.getByRole("button", { name: "Criar conta", exact: true }).click();
   await expect(page.getByRole("status")).toContainText("Se o endereço puder receber mensagens");
   expect(backend.protectedBeforeAuth).toBe(0);
@@ -96,6 +97,7 @@ test("SPEC-190 Turnstile binds each abuse flow to its server action", async ({ p
   await page.getByRole("button", { name: "Criar uma conta local" }).click();
   await page.getByLabel("E-mail").fill("novo@example.test");
   await page.getByLabel("Senha", { exact: true }).fill("SenhaSegura123!");
+  await page.getByLabel("Declaro ter 18 anos ou mais.").check(); // SPEC-222 R9
   await page.getByRole("button", { name: "Criar conta", exact: true }).click();
   await page.getByRole("button", { name: "Já tenho uma conta" }).click();
   await page.getByRole("button", { name: "Esqueci minha senha" }).click();
@@ -120,6 +122,7 @@ test("SPEC-190 required CAPTCHA without a site key fails closed in the browser",
   await page.getByLabel("E-mail").fill("novo@example.test");
   await page.getByLabel("Senha", { exact: true }).fill("SenhaSegura123!");
   await expect(page.getByRole("alert")).toContainText("Verificação de segurança indisponível");
+  await page.getByLabel("Declaro ter 18 anos ou mais.").check(); // SPEC-222 R9
   await expect(page.getByRole("button", { name: "Criar conta", exact: true })).toBeDisabled();
   expect(backend.requests.some(item => item.path === "/auth/signup")).toBe(false);
 });

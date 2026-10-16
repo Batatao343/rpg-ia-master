@@ -3992,7 +3992,7 @@ specs:
   lineage_note: Authored from security audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
 - id: SPEC-222
   slug: privacidade-lgpd-logs-retencao
-  status: draft
+  status: in-progress
   path: specs/SPEC-222-privacidade-lgpd-logs-retencao.md
   created_commit: null
   created_at: '2026-10-15'

@@ -14,6 +14,7 @@ ADITIVO: a mudança de GRAFO (mover `_spawn_enemies_integrated` pra fora do
 `combat_node`, NPC nascer com ficha completa em `agents/npc.py`) é o cutover
 (conflito-13). Aqui: motor puro + o builder de ficha de combate + testes.
 """
+from observability.telemetry import log_event as _log_event
 import json
 import os
 from copy import deepcopy
@@ -421,7 +422,7 @@ def _invoke_with_deadline(call):
     try:
         return future.result(timeout=timeout)
     except concurrent.futures.TimeoutError:
-        print(f"⚠️ [COMBAT PREP] preparação excedeu {timeout:.0f}s — cena de segurança")
+        _log_event("combat", "prep_timeout", level="warning", timeout_s=round(timeout))
         return None
     finally:
         pool.shutdown(wait=False, cancel_futures=True)

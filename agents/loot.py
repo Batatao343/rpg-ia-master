@@ -6,6 +6,7 @@ resultado; preços, estoques, receitas e raridade de drop resolvem em Python
 (services/economy.py). O antigo TransactionResult (LLM decidia sucesso, preço
 e itens) morreu aqui.
 """
+from observability.telemetry import log_event as _log_event
 import random
 import re
 import unicodedata
@@ -89,7 +90,7 @@ def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeI
         if isinstance(res, TradeIntent) and res.item_ref:
             return res.model_copy(update={"mode": explicit_mode}) if explicit_mode else res
     except Exception as e:
-        print(f"⚠️ [TRADE PARSE] {e}")
+        _log_event("loot", "trade_parse_failed", level="warning", error=type(e).__name__)
     return fallback
 
 
@@ -124,7 +125,7 @@ def _narrate(context: str, fallback_text: str,
                 return _validated_narrative(canonical_summary, text)
             return text
     except Exception as e:
-        print(f"⚠️ [LOOT NARRATE] {e}")
+        _log_event("loot", "narrate_failed", level="warning", error=type(e).__name__)
     fallback = prose_guard.sanitize_meta_preamble(fallback_text)
     return (_validated_narrative(canonical_summary, fallback)
             if canonical_summary else fallback)

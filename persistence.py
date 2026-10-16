@@ -7,6 +7,7 @@ Fase 10: `save_path()` é o ÚNICO lugar que monta caminho de save a partir de
 game_id vindo do cliente (valida UUID — anti path-traversal); saves carregam
 `schema_version` e passam pelo hard cut de compatibilidade no load.
 """
+from observability.telemetry import log_event as _log_event
 import os
 import json
 import glob
@@ -694,7 +695,7 @@ def save_game_state(state: Dict[str, Any]) -> bool:
             state["_storage_version"] = stored.version
             return True
         except Exception as e:
-            print(f"❌ Erro crítico ao salvar jogo no GameStore: {e}")
+            _log_event("persistence", "store_save_failed", level="error", error=type(e).__name__)
             return False
 
     try:
@@ -715,7 +716,7 @@ def save_game_state(state: Dict[str, Any]) -> bool:
         return True
 
     except Exception as e:
-        print(f"❌ Erro crítico ao salvar jogo: {e}")
+        _log_event("persistence", "save_failed", level="error", error=type(e).__name__)
         return False
 
 def load_game_state(specific_file: str = None) -> Dict[str, Any]:
@@ -753,7 +754,7 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
         except IncompatibleSaveError:
             raise
         except Exception as e:
-            print(f"⚠️ Erro ao carregar GameStore: {e}")
+            _log_event("persistence", "store_load_failed", level="warning", error=type(e).__name__)
             return None
 
     target_file = specific_file
@@ -772,7 +773,7 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
     except IncompatibleSaveError:
         raise
     except Exception as e:
-        print(f"⚠️ Erro ao carregar save '{target_file}': {e}")
+        _log_event("persistence", "load_failed", level="warning", error=type(e).__name__)
         return None
 
 
@@ -785,7 +786,7 @@ def _normalize_combat_on_load(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         return normalize_combat(combat, raw_data.get("enemies") or [],
                                 game_id=str(raw_data.get("game_id") or "game"))
     except Exception as exc:  # nunca derruba o load
-        print(f"⚠️ [SAVE] combate não normalizado: {exc}")
+        _log_event("persistence", "combat_normalize_failed", level="warning", error=type(exc).__name__)
         return combat
 
 
@@ -946,7 +947,7 @@ def save_checkpoint(state: Dict[str, Any]) -> bool:
             store.save_checkpoint(principal, stored, state)
             return True
         except Exception as e:
-            print(f"❌ Erro ao gravar checkpoint no GameStore: {e}")
+            _log_event("persistence", "store_checkpoint_failed", level="error", error=type(e).__name__)
             return False
     memory_backup: Optional[str] = None
     memory_destination: Optional[str] = None
@@ -976,7 +977,7 @@ def save_checkpoint(state: Dict[str, Any]) -> bool:
                 _replace_with_retry(memory_backup, memory_destination)
         if memory_backup:
             shutil.rmtree(memory_backup, ignore_errors=True)
-        print(f"❌ Erro ao gravar checkpoint: {e}")
+        _log_event("persistence", "checkpoint_write_failed", level="error", error=type(e).__name__)
         return False
 
 
@@ -1023,7 +1024,7 @@ def ensure_synthetic_checkpoint(state: Dict[str, Any]) -> bool:
         cp_turn = checkpoint_turn(gid)
         if cp_turn is None or cp_turn <= turn:
             return False
-        print(f"⚠️ checkpoint à frente do save (t{cp_turn} > t{turn}); descartado")
+        _log_event("persistence", "checkpoint_ahead_discarded", level="warning", checkpoint_turn=cp_turn, turn=turn)
     snap = deepcopy(state)
     cont = dict(snap.get("continuity") or {})
     cont["synthetic_from_turn"] = turn
@@ -1045,7 +1046,7 @@ def load_checkpoint(game_id: str) -> Optional[Dict[str, Any]]:
                 return None
             return store.get_checkpoint(principal, uuid.UUID(str(game_id)))
         except Exception as e:
-            print(f"⚠️ Erro ao carregar checkpoint do GameStore: {e}")
+            _log_event("persistence", "store_checkpoint_load_failed", level="warning", error=type(e).__name__)
             return None
     path = _safe_save_path(game_id, suffix=".checkpoint")
     if not os.path.exists(path):
@@ -1054,5 +1055,5 @@ def load_checkpoint(game_id: str) -> Optional[Dict[str, Any]]:
         with open(path, "r", encoding="utf-8") as f:
             return _raw_to_state(json.load(f))
     except Exception as e:
-        print(f"⚠️ Erro ao carregar checkpoint '{path}': {e}")
+        _log_event("persistence", "checkpoint_load_failed", level="warning", error=type(e).__name__)
         return None

@@ -13,23 +13,23 @@
 | Texto digitado nos turnos + contexto da campanha | usuario | Supabase (banco) + provedores de LLM: em producao, `RPG_ROUTES` fixa DeepSeek (primario) + Groq (fallback); sem outros processadores | banco: ate exclusao; provedores: conforme termos deles (retencao/treino em aberto) | Coletado; processadores (nao e compartilhamento) |
 | Conteudo de jogo (personagens, cronica, memoria narrativa, vetores) | geracao | Supabase; Jina (embeddings de trechos de texto; em producao `RPG_EMBEDDINGS=jina` fixa o provedor, sem cadeia de fallback) | ate exclusao | Coletado; processador Jina (nao e compartilhamento) |
 | Audio de voz (STT) | microfone, so ao tocar em VOZ | provedor de transcricao: Groq `whisper-large-v3-turbo` (primario) / OpenAI `gpt-4o-mini-transcribe` (fallback) | **nao armazenamos o audio em nossos servidores** (nao vai a banco/log/storage; recibo guarda so `result_retained=false`); no provedor, vale a retencao dele (item aberto) | Coletado, **efemero** (marcar "processado de forma efemera") |
-| Imagens geradas (retratos/cenas) | descricao textual | provedor de imagem (CONFIRMAR) -> Supabase Storage privado | ate exclusao | Gerado; nao ha foto/arquivo do usuario |
-| Historico de compras (token, order id, SKU, valor creditado) | Google Play Billing | backend (Supabase), verificacao server-side na Android Publisher API | extrato append-only, pseudonimizado por UUID apos exclusao; prazo fiscal `<definir>` | Coletado |
+| Imagens geradas (retratos/cenas) | descricao textual (aparencia do heroi) + retrato de referencia do heroi | OpenAI GPT Image 2 (`infrastructure/openai_images.py`) -> Supabase Storage privado | ate apagar a campanha (job `purge_blobs`, SPEC-222) ou a conta | Gerado; nao ha foto/arquivo do usuario |
+| Historico de compras (order id, SKU, valor creditado) | Google Play Billing | backend (Supabase), verificacao server-side na Android Publisher API | `purchase_token` anulado apos consumo/exclusao (fica so o hash para idempotencia) e `google_state` minimizado (SPEC-222); extrato append-only por UUID retido 5 anos (D-B, SPEC-222) | Coletado |
 | Compras web (Stripe) | **somente web; o app Android nao expoe Stripe** (403 `stripe_unavailable_on_android`) | Stripe | fora do escopo do app | n/a no formulario Android |
-| Logs/metricas tecnicas | servidor | Vercel / Supabase; sem conteudo de jogo nem e-mail/token | conforme plataforma `<dias>` | Coletado (diagnostico), nao vinculado a perfil de ads |
+| Logs/metricas tecnicas | servidor | Vercel / Supabase; sem conteudo de jogo nem e-mail/token (SPEC-222: zero `print()` em producao, teste de sentinela) | conforme plataforma `<dias>`; metadados tecnicos no banco com TTL (operacoes 90 d, jobs 30 d, uso 13 meses) | Coletado (diagnostico), nao vinculado a perfil de ads |
 | IP / antibot | login/cadastro | Cloudflare Turnstile; rate limit por IP e e-mail em hash, expira em <=24 h | <=24 h | Coletado (seguranca) |
 
-Nao ha SDK de analytics, anuncios, localizacao, contatos, fotos ou ID de publicidade no APK (a verificar com o relatorio de
+Fontes tipograficas sao servidas pelo proprio app (sem Google Fonts; SPEC-222). Nao ha SDK de analytics, anuncios, localizacao, contatos, fotos ou ID de publicidade no APK (a verificar com o relatorio de
 dependencias do AAB: unicas libs sao Capacitor, AndroidX e Play Billing 9.1.0).
 
 ## 2. Respostas propostas no formulario Data Safety
 
 - **Coleta de dados?** Sim. **Compartilha com terceiros?** **Nao**, pela regra do Google: transferencia a *service providers* que
-  processam dados em nosso nome (Supabase, Vercel, DeepSeek, Groq, OpenAI-STT, Jina, provedor de imagem/SMTP) NAO e "compartilhamento".
+  processam dados em nosso nome (Supabase, Vercel, DeepSeek, Groq, OpenAI (STT e imagens), Jina, Cloudflare Turnstile, SMTP) NAO e "compartilhamento".
   Criterio unico em todo o documento e na politica de privacidade; a tabela abaixo marca esses casos como "Nao (processador)".
 - **Criptografia em transito:** Sim (HTTPS obrigatorio; cleartext proibido no release - gate `checkReleaseCleartext`, `usesCleartextTraffic=false`).
 - **Usuario pode pedir exclusao:** Sim - no app (SPEC-190, exige senha recente) e URL web `<URL de exclusao>` (obrigatoria pela politica de contas).
-- **Compromisso com a Politica de Familias:** nao aplicavel (publico geral, nao direcionado a criancas) - definir idade minima (`<18/13?>`).
+- **Compromisso com a Politica de Familias:** nao aplicavel (publico geral, nao direcionado a criancas). Idade minima 18 (D-D, SPEC-222): checkbox obrigatorio no cadastro; espelhar na listagem do Play.
 
 Categorias Play -> itens:
 

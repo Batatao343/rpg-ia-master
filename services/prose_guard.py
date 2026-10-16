@@ -257,7 +257,9 @@ def openings_clause(aberturas: List[str]) -> str:
 def log_if_repeats(new_text: str, prev_text: str, *, where: str = "prose") -> bool:
     """R4: telemetria (não pune) — loga warning se a abertura repete a anterior."""
     if repeats(new_text, prev_text):
-        _LOG.warning("Abertura repetida (%s): “%s…”", where, opening(new_text))
+        # SPEC-222 R2/PRIV-09: nunca o trecho da narração (pode conter nomes do jogador).
+        digest = hashlib.sha256(opening(new_text).encode("utf-8")).hexdigest()[:12]
+        _LOG.warning("Abertura repetida (%s): opening_sha=%s", where, digest)
         return True
     return False
 

@@ -1,4 +1,5 @@
 """Campaign planning node used to keep multi-step story arcs coherent."""
+from observability.telemetry import log_event as _log_event
 
 from typing import List
 
@@ -191,7 +192,7 @@ def _build_plan(state: GameState) -> CampaignPlan:
                            "em PORTUGUÊS DO BRASIL (pt-BR). Reescreva TUDO em pt-BR agora.")
             if (not isinstance(plan, CampaignPlanModel)
                     or any(looks_english(b) for b in plan.beats)):
-                print("[CAMPAIGN] beats em inglês após retry — mantendo plano anterior.")
+                _log_event("campaign", "beats_english_after_retry", level="warning")
                 return None
 
         # R2: sanitiza a verdade oculta no TEXTO (beats/climax/arc_title).
@@ -209,7 +210,7 @@ def _build_plan(state: GameState) -> CampaignPlan:
             "arc_title": sanitize_beat((plan.arc_title or "").strip() or current_arc, state),
         }
     except Exception as exc:  # noqa: BLE001
-        print(f"[CAMPAIGN MANAGER ERROR] {exc}")
+        _log_event("campaign", "planner_failed", level="error", error=type(exc).__name__)
         # SPEC-226 R4: com plano válido existente, falha do planejador mantém o
         # plano (None → needs_replan fica). Template genérico só sem plano —
         # senão cada beat genérico reabriria XP_PER_BEAT.
@@ -294,7 +295,7 @@ def _campaign_manager_node(state: GameState):
             "continuity": continuity,
         }
 
-    print(f"🗺️ [CAMPAIGN] Generating new plot for: {world.get('current_location')}")
+    _log_event("campaign", "generating_plot", level="info")
     new_plan = _build_plan(effective_state)
     # spec beats-visibilidade-ptbr (R4): não conseguiu um plano em pt-BR → mantém
     # o anterior e deixa needs_replan ligado para tentar de novo no próximo turno.

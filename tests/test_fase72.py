@@ -227,7 +227,7 @@ def test_curated_agregador_nao_gera_aviso(tmp_path):
 # Etapa 4 — gate no reindex
 # ---------------------------------------------------------------------------
 
-def test_reindex_aborta_com_erro_de_lint(monkeypatch, capsys):
+def test_reindex_aborta_com_erro_de_lint(monkeypatch, caplog):
     import rag
     from services import content_validator
     from services.content_validator import Finding
@@ -240,11 +240,13 @@ def test_reindex_aborta_com_erro_de_lint(monkeypatch, capsys):
     monkeypatch.setattr(rag, "get_embeddings",
                         lambda: chamado.__setitem__("embeddings", True))
 
+    caplog.set_level("ERROR", logger="rpg.rag")
     with pytest.raises(SystemExit) as exc:
         rag.reindex_global()
     assert exc.value.code == 1
     assert chamado["embeddings"] is False  # abortou antes de tocar embeddings
-    assert "abortada" in capsys.readouterr().out
+    # SPEC-222 R1: o CLI loga via rpg.rag (stdout configurado só no __main__).
+    assert any("reindex_aborted" in r.getMessage() for r in caplog.records)
 
 
 # ---------------------------------------------------------------------------

@@ -3,6 +3,7 @@ agents/bestiary.py
 Gerador de Inimigos V8 (Refatorado Check-First + RAG).
 Correção: Prompt reforçado para garantir lista de ataques estruturada.
 """
+from observability.telemetry import log_event as _log_event
 import json
 import os
 import re
@@ -152,7 +153,7 @@ def _read_json(path: str) -> Dict:
     try:
         with open(path, 'r', encoding='utf-8') as f: return json.load(f)
     except Exception as e:
-        print(f"⚠️ [BESTIARY] Falha ao ler {path}: {e}")
+        _log_event("bestiary", "read_failed", level="warning", error=type(e).__name__)
         return {}
 
 
@@ -221,12 +222,12 @@ def generate_new_enemy(name: str, context: str = "", *,
     
     found_id = find_existing_entity(name, "Monster", existing_ids)
     if found_id:
-        print(f"♻️ [BESTIARY] Cache Hit: {found_id}")
+        _log_event("bestiary", "cache_hit", level="debug", entity_id=found_id)
         data = dict(db[found_id])
         
         # Auto-correção de legado
         if "id" not in data:
-             print(f"🔧 [BESTIARY] Corrigindo monstro legado sem ID: {name}")
+             _log_event("bestiary", "legacy_monster_without_id", level="info")
              data["id"] = found_id
              save_enemy(data)
 
@@ -242,7 +243,7 @@ def generate_new_enemy(name: str, context: str = "", *,
         return normalized
 
     # 2. GERAÇÃO
-    print(f"👾 [BESTIARY] Criando: {name}...")
+    _log_event("bestiary", "creating", level="info")
     
     lore = query_rag(f"{name} {context}", index_name="lore")
     if not lore: lore = "Standard RPG Monster."
@@ -269,7 +270,7 @@ def generate_new_enemy(name: str, context: str = "", *,
         return data
         
     except Exception as e:
-        print(f"❌ [BESTIARY ERROR] {e}")
+        _log_event("bestiary", "generation_failed", level="error", error=type(e).__name__)
         # Fallback de segurança para não quebrar o jogo
         return materialize_enemy_concept({
             "name": name, "id": f"fallback_{_slug(name)}",

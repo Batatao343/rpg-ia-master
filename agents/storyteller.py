@@ -1,4 +1,5 @@
 """Narration agent that advances the story and campaign plan."""
+from observability.telemetry import log_event as _log_event
 import random
 import re
 from collections import Counter
@@ -1056,7 +1057,7 @@ def storyteller_node(state: GameState):
                     continue
                 iid = resolve_item_name(str(g))
                 if not iid:
-                    print(f"⚠️ [STORYTELLER] item narrado desconhecido ignorado: {g!r}")
+                    _log_event("storyteller", "unknown_item_ignored", level="warning")
                     rejected_claims.append(str(g))
                     continue
                 # Fase 6.2: único já reclamado NUNCA re-entra pela narrativa
@@ -1068,7 +1069,7 @@ def storyteller_node(state: GameState):
                 if unique:
                     seen_unique.add(iid)
                 if unique and (get_qty(inv, iid) > 0 or not is_unique_available(iid, proj)):
-                    print(f"⚠️ [STORYTELLER] item ÚNICO já reclamado ignorado: {iid}")
+                    _log_event("storyteller", "unique_item_claimed_ignored", level="warning", item_id=iid)
                     rejected_claims.append(str(g))
                     continue
                 inv = add_item(inv, iid, 1)
@@ -1193,7 +1194,7 @@ def storyteller_node(state: GameState):
         return updates
 
     except Exception as e:
-        print(f"[STORYTELLER ERROR] {e}")
+        _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         fallback = {"messages": [AIMessage(content=_deterministic_story_fallback(
             (travel_note, rest_note, world_note, faction_note, weather_note), _ll,
         ))]}

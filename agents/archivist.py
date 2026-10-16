@@ -2,6 +2,7 @@
 agents/archivist.py
 Gerencia a Memória de Curto (Resumo) e Longo Prazo (RAG) da sessão.
 """
+from observability.telemetry import log_event as _log_event
 import re
 import inspect
 from typing import List
@@ -101,7 +102,7 @@ def _extract_summary_plain(llm, context_msgs: list, current_summary: str) -> str
             return ""
         return text
     except Exception as e:
-        print(f"⚠️ [ARCHIVIST] Fallback texto falhou: {e}")
+        _log_event("archivist", "fallback_text_failed", level="warning", error=type(e).__name__)
         return ""
 
 
@@ -133,9 +134,9 @@ def _persist_memory_records(game_id: str, records: List[dict]) -> bool:
         else:  # compatibilidade de testes/callers que monkeypatcham a função
             ok = add_memory_to_session(game_id, texts)
     except Exception as exc:
-        print(f"⚠️ [ARCHIVIST] Persistência RAG falhou: {exc}")
+        _log_event("archivist", "rag_persist_failed", level="warning", error=type(exc).__name__)
         return False
-    print(f"📚 [ARCHIVIST] Fatos: {texts}")
+    _log_event("archivist", "facts_extracted", level="debug", count=len(texts))
     return ok is not False
 
 
@@ -448,7 +449,7 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None,
                     memory_facts, [item["memory_id"] for item in retry_records],
                     "pending",
                 )
-                print("⚠️ [ARCHIVIST] Índice vetorial indisponível; ledger mantém os fatos pendentes.")
+                _log_event("archivist", "vector_index_unavailable", level="warning")
         event_updates = {
             **event_updates,
             "memory_facts": memory_facts,
@@ -507,7 +508,7 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None,
                         list(write["facts"]),
                     ) is not False
             except Exception as exc:
-                print(f"⚠️ [ARCHIVIST] Retry de memória NPC falhou: {exc}")
+                _log_event("archivist", "npc_memory_retry_failed", level="warning", error=type(exc).__name__)
                 ok = False
             if not ok:
                 remaining_npc_memory.append(write)
@@ -814,8 +815,7 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None,
         if not isinstance(result, MemoryUpdate):
             # Structured output falhou (Gemini retornou None ou tipo inesperado).
             # Fallback: plain-text para garantir ao menos o narrative_summary.
-            print(f"⚠️ [ARCHIVIST] Structured output retornou {type(result).__name__}. "
-                  "Ativando fallback de texto (fatos/crônica perdidos neste turno)...")
+            _log_event("archivist", "structured_output_unexpected", level="warning", result_type=type(result).__name__)
             summary = (current_summary if suppress_free_facts and not conflict_summary
                        else _extract_summary_plain(llm, context_msgs, current_summary))
             rag_ok = persist_records(authoritative_records) and not pending_memory_facts
@@ -859,7 +859,7 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None,
                 ], limit=MAX_MEMORY_REJECTIONS)
             summary = merged_summary(grounded_summary or current_summary)
             if summary or canonical_text:
-                print("📝 [ARCHIVIST] narrative_summary salvo via fallback de texto.")
+                _log_event("archivist", "summary_saved_text_fallback", level="info")
                 updates = {
                     **memory_state_updates(),
                     "narrative_summary": summary,
@@ -890,7 +890,7 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None,
                     updates["memory_canonical_facts"] = []
                 return {**event_updates, **updates}
             # Plain-text também falhou — mantém estado atual (mas eventos já processados).
-            print("⚠️ [ARCHIVIST] Ambos os caminhos falharam. Estado mantido.")
+            _log_event("archivist", "both_paths_failed", level="warning")
             return dict(event_updates)
 
         updates: dict = {}
@@ -1005,5 +1005,5 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None,
         return {**event_updates, **updates}
 
     except Exception as e:
-        print(f"⚠️ Erro no Arquivista: {e}")
+        _log_event("archivist", "node_failed", level="error", error=type(e).__name__)
         return dict(event_updates)

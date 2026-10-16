@@ -31,6 +31,7 @@ test("F01 auth_signup_login", async ({ page, backend }) => {
   await page.getByLabel("E-mail").fill("ayla@example.test");
   await page.getByLabel("Senha").fill("segredo-valoria");
   await page.getByRole("button", { name: "Criar uma conta local" }).click();
+  await page.getByLabel("Declaro ter 18 anos ou mais.").check(); // SPEC-222 R9
   await page.getByRole("button", { name: "Criar conta" }).click();
   await expect(page.getByRole("heading", { name: "Forje sua lenda" })).toBeVisible();
   await page.getByRole("button", { name: "Encerrar sessão" }).click();

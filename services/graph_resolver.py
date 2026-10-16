@@ -9,6 +9,7 @@ por parâmetro (vem do GameState). Spec: specs/SPEC-001-fase-2.5-codex-world-sta
 """
 
 from __future__ import annotations
+from observability.telemetry import log_event as _log_event
 
 import json
 import os
@@ -29,7 +30,7 @@ def _read_json(filename: str, default):
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
     except Exception as exc:
-        print(f"⚠️ [GRAPH] Falha ao ler {path}: {exc}")
+        _log_event("graph", "read_failed", level="warning", error=type(exc).__name__)
         return default
 
 
@@ -48,7 +49,7 @@ def load_entities() -> Dict[str, dict]:
         merged = dict(base)
         for eid, ent in extra.items():
             if eid in merged:
-                print(f"⚠️ [GRAPH] entities_extra ignorado: id '{eid}' já existe no canônico.")
+                _log_event("graph", "extra_entity_ignored", level="warning", entity_id=eid)
                 continue
             merged[eid] = ent
         # Fase 2.7: overlay de componentes (migration-safe — migrate_lore_nova.py não toca).
@@ -59,7 +60,7 @@ def load_entities() -> Dict[str, dict]:
             if eid.startswith("_"):
                 continue
             if eid not in merged:
-                print(f"⚠️ [GRAPH] components.json ignorado: id '{eid}' não existe.")
+                _log_event("graph", "component_ignored", level="warning", entity_id=eid)
                 continue
             ent = dict(merged[eid])
             ent["components"] = {**(ent.get("components") or {}), **comps}

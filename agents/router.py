@@ -3,6 +3,7 @@ agents/router.py
 Roteador de Intenções.
 Agora com detecção explícita de início de combate para acionar o Spawner.
 """
+from observability.telemetry import log_event as _log_event
 from enum import Enum
 import re
 from typing import Literal, Optional
@@ -86,7 +87,7 @@ def _combat_gate(state: GameState, world: dict, combat: dict):
 
     idle = int(combat.get("idle_turns", 0)) + 1
     if idle >= COMBAT_IDLE_EXPIRE:
-        print("🧟 [COMBAT] Combate órfão expirou (idle) — encerrando.")
+        _log_event("router", "orphan_combat_expired", level="info")
         cleared = {"active": False, "round": combat.get("round", 1),
                    "order": combat.get("order", []), "idle_turns": 0}
         # SPEC-203 R5/R7: expiração vira outcome explícito, com desfecho na UI.
@@ -125,7 +126,7 @@ def _combat_gate(state: GameState, world: dict, combat: dict):
     elif dest is not None:
         payload["combat_flee_attempt"] = True
         payload["combat_flee_destination"] = dest["id"]
-        print(f"🏃 [COMBAT] Viagem em combate → tentativa de FUGA para {dest['name']}.")
+        _log_event("router", "travel_in_combat_flee", level="info")
     return payload
 
 class RouterDecision(BaseModel):
@@ -234,7 +235,7 @@ def dm_router_node(state: GameState):
         decision = router_llm.invoke(
             [SystemMessage(content=system_instruction)] + guard_messages(messages[-3:]))
     except Exception as e:
-        print(f"⚠️ Router Error: {e}")
+        _log_event("router", "failed", level="error", error=type(e).__name__)
         return _resumed({**_base_route_payload(RouteType.STORY, world),
                          "interlocutor_reason": "classify_fallback"})
 
@@ -258,7 +259,7 @@ def dm_router_node(state: GameState):
             and not _EXPLICIT_HOSTILITY_RE.search(last_human)):
         decision.route = RouteType.STORY
 
-    print(f"🚦 [ROUTER] {decision.route.value} -> Alvo: {decision.target}")
+    _log_event("router", "decision", level="debug", route=decision.route.value)
 
     # SPEC-202 R3–R8: o alvo do CLASSIFY só vira interlocutor se resolver para
     # uma ficha existente em cena; o alvo cru NUNCA é propagado (R5).
