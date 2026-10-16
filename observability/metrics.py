@@ -13,7 +13,14 @@ LABELS = {
     "rpg_lease_renewals_total": {"outcome"},
     "rpg_http_requests_total": {"route", "status_class"},
     "rpg_http_duration_seconds": {"route"},
+    # DEPRECATED (SPEC-200 R7): mede o enfileiramento do evento `accepted`, nao a latencia
+    # percebida. Mantida para nao abrir buraco em series; use rpg_sse_ack_seconds.
     "rpg_sse_first_event_seconds": {"route"},
+    # SPEC-200: latencia percebida (labels fechados; nunca ids).
+    "rpg_sse_ack_seconds": {"route"},
+    "rpg_turn_phase_seconds": {"route", "phase"},
+    "rpg_turn_first_content_seconds": {"route", "source"},
+    "rpg_turn_last_content_seconds": {"route", "source"},
     "rpg_turn_duration_seconds": {"route", "outcome", "simulated"},
     "rpg_turn_commits_total": {"outcome"},
     "rpg_operation_lease_age_seconds": {"kind"},

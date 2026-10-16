@@ -1,0 +1,716 @@
+{
+  "fingerprint": {
+    "execution_mode": "sequential",
+    "git_sha": "afe98941a541dc5643b1f2f1f4ef3ba7563fcca6",
+    "journeys": [
+      "J1_story_simple",
+      "J2_combat_start",
+      "J3_npc_dialogue",
+      "J4_loot_shop",
+      "J5_travel_replan",
+      "J6_first_turn_new_game"
+    ],
+    "journeys_version": 1,
+    "mode": "offline-virtual",
+    "profile": "typical",
+    "pseudo_streaming": true,
+    "python": "3.13",
+    "schema_version": 1
+  },
+  "journeys": {
+    "J1_story_simple": {
+      "ack": {
+        "max": 0,
+        "n": 90,
+        "p50": 0,
+        "p95": 0
+      },
+      "by_input_size": {
+        "long": {
+          "n": 30,
+          "total": {
+            "max": 12012,
+            "n": 30,
+            "p50": 3313,
+            "p95": 7739
+          },
+          "ttfmc": {
+            "max": 12012,
+            "n": 30,
+            "p50": 3313,
+            "p95": 7739
+          }
+        },
+        "medium": {
+          "n": 30,
+          "total": {
+            "max": 7766,
+            "n": 30,
+            "p50": 6412,
+            "p95": 7731
+          },
+          "ttfmc": {
+            "max": 7766,
+            "n": 30,
+            "p50": 6412,
+            "p95": 7731
+          }
+        },
+        "short": {
+          "n": 30,
+          "total": {
+            "max": 7570,
+            "n": 30,
+            "p50": 6046,
+            "p95": 7545
+          },
+          "ttfmc": {
+            "max": 7570,
+            "n": 30,
+            "p50": 6046,
+            "p95": 7545
+          }
+        }
+      },
+      "indicative": false,
+      "llm_attempts_mean": 2.556,
+      "llm_fallbacks_total": 0,
+      "n": 90,
+      "phases": {
+        "archivist": {
+          "p50": 3272,
+          "p95": 4609,
+          "share": 0.4223
+        },
+        "context": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "narrator": {
+          "p50": 2534,
+          "p95": 2984,
+          "share": 0.4992
+        },
+        "other": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "persistence": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "router": {
+          "p50": 299,
+          "p95": 357,
+          "share": 0.0785
+        }
+      },
+      "routes": {
+        "storyteller": 90
+      },
+      "state": {
+        "max": 12012,
+        "n": 90,
+        "p50": 6247,
+        "p95": 7661
+      },
+      "total": {
+        "max": 12012,
+        "n": 90,
+        "p50": 6247,
+        "p95": 7661
+      },
+      "ttfmc": {
+        "max": 12012,
+        "n": 90,
+        "p50": 6247,
+        "p95": 7661
+      },
+      "ttlt": {
+        "max": 12012,
+        "n": 90,
+        "p50": 6247,
+        "p95": 7661
+      }
+    },
+    "J2_combat_start": {
+      "ack": {
+        "max": 0,
+        "n": 60,
+        "p50": 0,
+        "p95": 0
+      },
+      "by_input_size": {
+        "medium": {
+          "n": 30,
+          "total": {
+            "max": 14036,
+            "n": 30,
+            "p50": 6293,
+            "p95": 13064
+          },
+          "ttfmc": {
+            "max": 14036,
+            "n": 30,
+            "p50": 6293,
+            "p95": 13064
+          }
+        },
+        "short": {
+          "n": 30,
+          "total": {
+            "max": 13191,
+            "n": 30,
+            "p50": 3020,
+            "p95": 13150
+          },
+          "ttfmc": {
+            "max": 13191,
+            "n": 30,
+            "p50": 3020,
+            "p95": 13150
+          }
+        }
+      },
+      "indicative": false,
+      "llm_attempts_mean": 4.667,
+      "llm_fallbacks_total": 0,
+      "n": 60,
+      "phases": {
+        "archivist": {
+          "p50": 0,
+          "p95": 4421,
+          "share": 0.0972
+        },
+        "context": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "narrator": {
+          "p50": 5485,
+          "p95": 8646,
+          "share": 0.871
+        },
+        "other": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "persistence": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "router": {
+          "p50": 270,
+          "p95": 354,
+          "share": 0.0318
+        }
+      },
+      "routes": {
+        "combat_agent": 60
+      },
+      "state": {
+        "max": 14036,
+        "n": 60,
+        "p50": 5782,
+        "p95": 13064
+      },
+      "total": {
+        "max": 14036,
+        "n": 60,
+        "p50": 5782,
+        "p95": 13064
+      },
+      "ttfmc": {
+        "max": 14036,
+        "n": 60,
+        "p50": 5782,
+        "p95": 13064
+      },
+      "ttlt": {
+        "max": 14036,
+        "n": 60,
+        "p50": 5782,
+        "p95": 13064
+      }
+    },
+    "J3_npc_dialogue": {
+      "ack": {
+        "max": 0,
+        "n": 60,
+        "p50": 0,
+        "p95": 0
+      },
+      "by_input_size": {
+        "medium": {
+          "n": 60,
+          "total": {
+            "max": 9902,
+            "n": 60,
+            "p50": 6761,
+            "p95": 8780
+          },
+          "ttfmc": {
+            "max": 9902,
+            "n": 60,
+            "p50": 6761,
+            "p95": 8780
+          }
+        }
+      },
+      "indicative": false,
+      "llm_attempts_mean": 3.067,
+      "llm_fallbacks_total": 0,
+      "n": 60,
+      "phases": {
+        "archivist": {
+          "p50": 3810,
+          "p95": 4707,
+          "share": 0.5712
+        },
+        "context": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "narrator": {
+          "p50": 2503,
+          "p95": 4865,
+          "share": 0.3854
+        },
+        "other": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "persistence": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "router": {
+          "p50": 294,
+          "p95": 353,
+          "share": 0.0434
+        }
+      },
+      "routes": {
+        "npc_actor": 60
+      },
+      "state": {
+        "max": 9902,
+        "n": 60,
+        "p50": 6761,
+        "p95": 8780
+      },
+      "total": {
+        "max": 9902,
+        "n": 60,
+        "p50": 6761,
+        "p95": 8780
+      },
+      "ttfmc": {
+        "max": 9902,
+        "n": 60,
+        "p50": 6761,
+        "p95": 8780
+      },
+      "ttlt": {
+        "max": 9902,
+        "n": 60,
+        "p50": 6761,
+        "p95": 8780
+      }
+    },
+    "J4_loot_shop": {
+      "ack": {
+        "max": 0,
+        "n": 60,
+        "p50": 0,
+        "p95": 0
+      },
+      "by_input_size": {
+        "short": {
+          "n": 60,
+          "total": {
+            "max": 8138,
+            "n": 60,
+            "p50": 7043,
+            "p95": 7964
+          },
+          "ttfmc": {
+            "max": 8138,
+            "n": 60,
+            "p50": 7043,
+            "p95": 7964
+          }
+        }
+      },
+      "indicative": false,
+      "llm_attempts_mean": 3.5,
+      "llm_fallbacks_total": 0,
+      "n": 60,
+      "phases": {
+        "archivist": {
+          "p50": 4172,
+          "p95": 4709,
+          "share": 0.5786
+        },
+        "context": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "narrator": {
+          "p50": 2665,
+          "p95": 3230,
+          "share": 0.3782
+        },
+        "other": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "persistence": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "router": {
+          "p50": 306,
+          "p95": 354,
+          "share": 0.0432
+        }
+      },
+      "routes": {
+        "loot": 60
+      },
+      "state": {
+        "max": 8138,
+        "n": 60,
+        "p50": 7043,
+        "p95": 7964
+      },
+      "total": {
+        "max": 8138,
+        "n": 60,
+        "p50": 7043,
+        "p95": 7964
+      },
+      "ttfmc": {
+        "max": 8138,
+        "n": 60,
+        "p50": 7043,
+        "p95": 7964
+      },
+      "ttlt": {
+        "max": 8138,
+        "n": 60,
+        "p50": 7043,
+        "p95": 7964
+      }
+    },
+    "J5_travel_replan": {
+      "ack": {
+        "max": 0,
+        "n": 30,
+        "p50": 0,
+        "p95": 0
+      },
+      "by_input_size": {
+        "short": {
+          "n": 30,
+          "total": {
+            "max": 7734,
+            "n": 30,
+            "p50": 6573,
+            "p95": 7707
+          },
+          "ttfmc": {
+            "max": 7734,
+            "n": 30,
+            "p50": 6573,
+            "p95": 7707
+          }
+        }
+      },
+      "indicative": false,
+      "llm_attempts_mean": 2.0,
+      "llm_fallbacks_total": 0,
+      "n": 30,
+      "phases": {
+        "archivist": {
+          "p50": 3994,
+          "p95": 4776,
+          "share": 0.6157
+        },
+        "context": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "narrator": {
+          "p50": 2507,
+          "p95": 2940,
+          "share": 0.3843
+        },
+        "other": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "persistence": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "router": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        }
+      },
+      "routes": {
+        "storyteller": 30
+      },
+      "state": {
+        "max": 7734,
+        "n": 30,
+        "p50": 6573,
+        "p95": 7707
+      },
+      "total": {
+        "max": 7734,
+        "n": 30,
+        "p50": 6573,
+        "p95": 7707
+      },
+      "ttfmc": {
+        "max": 7734,
+        "n": 30,
+        "p50": 6573,
+        "p95": 7707
+      },
+      "ttlt": {
+        "max": 7734,
+        "n": 30,
+        "p50": 6573,
+        "p95": 7707
+      }
+    },
+    "J6_first_turn_new_game": {
+      "ack": {
+        "max": 0,
+        "n": 30,
+        "p50": 0,
+        "p95": 0
+      },
+      "by_input_size": {
+        "short": {
+          "n": 30,
+          "total": {
+            "max": 7932,
+            "n": 30,
+            "p50": 2978,
+            "p95": 7882
+          },
+          "ttfmc": {
+            "max": 7932,
+            "n": 30,
+            "p50": 2978,
+            "p95": 7882
+          }
+        }
+      },
+      "indicative": false,
+      "llm_attempts_mean": 2.4,
+      "llm_fallbacks_total": 0,
+      "n": 30,
+      "phases": {
+        "archivist": {
+          "p50": 0,
+          "p95": 4712,
+          "share": 0.3773
+        },
+        "context": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "narrator": {
+          "p50": 2479,
+          "p95": 2957,
+          "share": 0.5568
+        },
+        "other": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "persistence": {
+          "p50": 0,
+          "p95": 0,
+          "share": 0.0
+        },
+        "router": {
+          "p50": 302,
+          "p95": 350,
+          "share": 0.0659
+        }
+      },
+      "routes": {
+        "storyteller": 30
+      },
+      "state": {
+        "max": 7932,
+        "n": 30,
+        "p50": 2978,
+        "p95": 7882
+      },
+      "total": {
+        "max": 7932,
+        "n": 30,
+        "p50": 2978,
+        "p95": 7882
+      },
+      "ttfmc": {
+        "max": 7932,
+        "n": 30,
+        "p50": 2978,
+        "p95": 7882
+      },
+      "ttlt": {
+        "max": 7932,
+        "n": 30,
+        "p50": 2978,
+        "p95": 7882
+      }
+    }
+  },
+  "overall": {
+    "ack": {
+      "max": 0,
+      "n": 330,
+      "p50": 0,
+      "p95": 0
+    },
+    "by_input_size": {
+      "long": {
+        "n": 30,
+        "total": {
+          "max": 12012,
+          "n": 30,
+          "p50": 3313,
+          "p95": 7739
+        },
+        "ttfmc": {
+          "max": 12012,
+          "n": 30,
+          "p50": 3313,
+          "p95": 7739
+        }
+      },
+      "medium": {
+        "n": 120,
+        "total": {
+          "max": 14036,
+          "n": 120,
+          "p50": 6514,
+          "p95": 9902
+        },
+        "ttfmc": {
+          "max": 14036,
+          "n": 120,
+          "p50": 6514,
+          "p95": 9902
+        }
+      },
+      "short": {
+        "n": 180,
+        "total": {
+          "max": 13191,
+          "n": 180,
+          "p50": 6417,
+          "p95": 7882
+        },
+        "ttfmc": {
+          "max": 13191,
+          "n": 180,
+          "p50": 6417,
+          "p95": 7882
+        }
+      }
+    },
+    "indicative": false,
+    "llm_attempts_mean": 3.139,
+    "llm_fallbacks_total": 0,
+    "n": 330,
+    "phases": {
+      "archivist": {
+        "p50": 3589,
+        "p95": 4709,
+        "share": 0.447
+      },
+      "context": {
+        "p50": 0,
+        "p95": 0,
+        "share": 0.0
+      },
+      "narrator": {
+        "p50": 2658,
+        "p95": 5996,
+        "share": 0.5064
+      },
+      "other": {
+        "p50": 0,
+        "p95": 0,
+        "share": 0.0
+      },
+      "persistence": {
+        "p50": 0,
+        "p95": 0,
+        "share": 0.0
+      },
+      "router": {
+        "p50": 289,
+        "p95": 355,
+        "share": 0.0466
+      }
+    },
+    "routes": {
+      "combat_agent": 60,
+      "loot": 60,
+      "npc_actor": 60,
+      "storyteller": 150
+    },
+    "state": {
+      "max": 14036,
+      "n": 330,
+      "p50": 6417,
+      "p95": 7964
+    },
+    "total": {
+      "max": 14036,
+      "n": 330,
+      "p50": 6417,
+      "p95": 7964
+    },
+    "ttfmc": {
+      "max": 14036,
+      "n": 330,
+      "p50": 6417,
+      "p95": 7964
+    },
+    "ttlt": {
+      "max": 14036,
+      "n": 330,
+      "p50": 6417,
+      "p95": 7964
+    }
+  }
+}

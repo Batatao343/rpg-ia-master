@@ -1,7 +1,7 @@
 # SPEC-200 — Baseline de latência percebida (ack, TTFMC, TTLT) e decomposição por fase
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `done`
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** nenhuma · SPEC-116 `done`, SPEC-143 `done` NO-GO e SPEC-182 `done` são insumos. Recomendado (não bloqueia): medir após a SPEC-235 para não instrumentar o pending antigo (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-207, SPEC-212, SPEC-213, SPEC-214, SPEC-217 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 09
@@ -149,19 +149,19 @@ Linha `rpg.turn` (exemplo, campos novos em negrito conceitual):
 
 ## 5. Critérios de aceite
 
-- [ ] `TurnTimeline` produz fases exclusivas com soma igual ao total (±1 ms) em teste com `FakeClock`.
-- [ ] `rpg.turn` contém os campos de R5, sem PII/texto/ids crus; campos antigos intactos.
-- [ ] `rpg_sse_ack_seconds` reflete atraso injetado antes do primeiro byte; `rpg_sse_first_event_seconds` segue registrada e documentada como deprecada; `local.yml`/`local.test.yml` inalterados e verdes.
-- [ ] Marcas `performance` no cliente seguem a ordem definida; TTFMC ignora `accepted`/ping/`phase`.
-- [ ] Endpoint de reporte exige sessão/CSRF, rejeita campos extras, clampa valores, está desligado por default.
-- [ ] Baseline offline: 6 jornadas × N reps, mesma seed ⇒ `summary.json` idêntico; relatório p50/p95 por jornada e por fase; fingerprint presente; `compare` recusa ambientes incompatíveis.
-- [ ] Modo `--real` não roda sem autorização + `--max-requests` + `--max-cost`; nenhuma chamada paga foi feita para fechar a spec (a menos que o dono autorize, P5).
-- [ ] `rpg.turn` contém `lock_wait_ms`, `llm_by_tier`, `llm_by_phase`, `cached_tokens`/`cache_hit_ratio` (ou `null`), `input_size`; teste `test_lock_wait_measured` (segundo turno concorrente no mesmo `game_id` registra espera > 0 com `FakeClock`) e `test_llm_attempt_attributed_to_phase` verdes (R17).
-- [ ] Relatório imprime TTFT com a nota `TTFT ≡ TTFMC (pseudo_streaming)` e percentis estratificados por `input_size` (R17).
-- [ ] Teste de equivalência R16 verde; ordem de nós e nº de chamadas LLM inalterados.
-- [ ] `uv run pytest` verde (suíte completa offline); `npm run build` e testes Node verdes; Ruff verde nos arquivos tocados.
-- [ ] Guard de FallbackLLM: nenhum `with_structured_output` novo (a spec não adiciona nós LLM).
-- [ ] Saves antigos continuam carregando (nenhum campo de save alterado).
+- [x] `TurnTimeline` produz fases exclusivas com soma igual ao total (±1 ms) em teste com `FakeClock`.
+- [x] `rpg.turn` contém os campos de R5, sem PII/texto/ids crus; campos antigos intactos.
+- [x] `rpg_sse_ack_seconds` reflete atraso injetado antes do primeiro byte; `rpg_sse_first_event_seconds` segue registrada e documentada como deprecada; `local.yml`/`local.test.yml` inalterados e verdes.
+- [x] Marcas `performance` no cliente seguem a ordem definida; TTFMC ignora `accepted`/ping/`phase`.
+- [x] Endpoint de reporte exige sessão/CSRF, rejeita campos extras, clampa valores, está desligado por default.
+- [x] Baseline offline: 6 jornadas × N reps, mesma seed ⇒ `summary.json` idêntico; relatório p50/p95 por jornada e por fase; fingerprint presente; `compare` recusa ambientes incompatíveis.
+- [x] Modo `--real` não roda sem autorização + `--max-requests` + `--max-cost`; nenhuma chamada paga foi feita para fechar a spec (a menos que o dono autorize, P5).
+- [x] `rpg.turn` contém `lock_wait_ms`, `llm_by_tier`, `llm_by_phase`, `cached_tokens`/`cache_hit_ratio` (ou `null`), `input_size`; teste `test_lock_wait_measured` (segundo turno concorrente no mesmo `game_id` registra espera > 0 com `FakeClock`) e `test_llm_attempt_attributed_to_phase` verdes (R17).
+- [x] Relatório imprime TTFT com a nota `TTFT ≡ TTFMC (pseudo_streaming)` e percentis estratificados por `input_size` (R17).
+- [x] Teste de equivalência R16 verde; ordem de nós e nº de chamadas LLM inalterados.
+- [x] `uv run pytest` verde (suíte completa offline); `npm run build` e testes Node verdes; Ruff verde nos arquivos tocados.
+- [x] Guard de FallbackLLM: nenhum `with_structured_output` novo (a spec não adiciona nós LLM).
+- [x] Saves antigos continuam carregando (nenhum campo de save alterado).
 
 ## 6. Smoke test
 
@@ -204,3 +204,23 @@ Linha `rpg.turn` (exemplo, campos novos em negrito conceitual):
 - Diff de `observability/alerts/*` vazio (ou justificado por P3).
 - Para o experimento real, se autorizado: run id, nº de requests, custo normalizado com `cost_basis`, e relatório separado `mode=real`.
 - Parecer da revisão Sol independente (concorrência da `TurnTimeline`, cardinalidade, endpoint novo).
+
+## 10. Registro de execução (2026-10-16)
+
+Evidência, números e desvios completos: [docs/spec200/README.md](../docs/spec200/README.md).
+
+**Defaults de decisão usados (seção 8):** P1 sem meta numérica · P2 beacon implementado e DESLIGADO
+(`RPG_CLIENT_LATENCY_REPORT=0`; sinal em `/auth/config`) · P3 série do alerta `TurnP95High` mantida sem quebra
+(`local.yml`/`local.test.yml` inalterados; a expressão não filtra `route`) · P4 sem gate numérico em `evals/` ·
+P5 experimento com provider real **não executado** (comando documentado no README).
+
+**Desvios:** (1) `cost_basis` já existia na linha `rpg.turn` com outros valores → o novo campo é `cost_usd` +
+`cost_usd_basis`; (2) `ttfmc/ttlt` do stream saem numa linha `evt:"turn_delivery"` (o worker já logou `turn`
+antes da entrega); (3) a flag do beacon viaja em `/auth/config`, não em `/health`; (4) POST executa o grafo via
+`stream` (mesmo estado final, testado) para decompor por fase; (5) e2e Chromium usa a API determinística das
+fixtures, e o smoke em tempo real é o comando `serve` do script; (6) fase `context` só envolve
+`build_context_pack`.
+
+**Pendente (fora do alcance do executor):** parecer da revisão Sol independente (`REVIEW_REQUIRED: true`) e a
+execução do experimento `--real` (depende de autorização/teto do dono).
+

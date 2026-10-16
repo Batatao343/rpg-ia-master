@@ -1,0 +1,28 @@
+{
+  "viewport": 1440,
+  "profile": "typical",
+  "scale": 0.2,
+  "measures": [
+    {
+      "name": "ack:ms",
+      "duration": 17
+    },
+    {
+      "name": "first_phase:ms",
+      "duration": 22
+    },
+    {
+      "name": "ttfmc:ms",
+      "duration": 1366
+    },
+    {
+      "name": "ttlt:ms",
+      "duration": 1369
+    },
+    {
+      "name": "state:ms",
+      "duration": 1370
+    }
+  ],
+  "console_errors": []
+}

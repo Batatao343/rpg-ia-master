@@ -23,7 +23,7 @@ from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, Dict, Iterator, List, Literal, Optional
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
@@ -104,7 +104,8 @@ def _database_profile() -> bool:
 @app.middleware("http")
 async def _session_boundary(request: Request, call_next):
     """Auth/CSRF só nos perfis Postgres; legacy loopback permanece intacto."""
-    if not _database_profile() or not request.url.path.startswith(("/game", "/account")):
+    if not _database_profile() or not request.url.path.startswith(
+            ("/game", "/account", "/telemetry")):
         return await call_next(request)
     from infrastructure.contracts import Unauthorized
     from infrastructure.request_context import reset_current_principal, set_current_principal
@@ -248,6 +249,8 @@ def auth_config(request: Request):
             "lifecycle_available": lifecycle,
             "email_confirmation_required": _email_confirmation_required(),
             "captcha": captcha_config(),
+            # SPEC-200 R10: so aparece quando LIGADO (default: ausente => cliente nao envia).
+            **({"client_latency_report": True} if _client_latency_enabled() else {}),
             **({"user_id": str(principal.user_id)} if principal else {})}
 
 
@@ -706,6 +709,13 @@ def _attempt_telemetry_hook(event: LLMAttemptEvent) -> None:
             {"provider": event.provider, "tier": tier, "basis": item.cost_basis},
             amount=float(item.cost_usd),
         )
+    try:
+        from observability.latency import current_timeline
+        _tl = current_timeline()
+        if _tl is not None and event.outcome not in {"build_error", "circuit_open"}:
+            _tl.note_attempt(tier)   # SPEC-200 R17: chamadas por fase
+    except Exception:
+        pass
     acc = _llm_attempt_events.get()
     if acc is not None:
         network_attempted = event.outcome not in {"build_error", "circuit_open"}
@@ -805,6 +815,7 @@ def _reject_archived(state: dict) -> None:
 # RPG_RATE_LIMIT = req/min em /game/action e /game/new; 0 desliga (suíte/smoke).
 _RATE_WINDOW_S = 60.0
 _rate_hits: Dict[str, deque] = defaultdict(deque)
+_CLIENT_LATENCY_PATH = "/telemetry/client-latency"
 
 
 def _rate_limit_max() -> int:
@@ -822,11 +833,15 @@ async def _rate_limit(request: Request, call_next):
                                            "/game/new", "/game/combat-simulator",
                                            "/game/equip", "/game/levelup",
                                            # spec inicio-personalizado (R11): 1 SMART por chamada
-                                           "/game/prologue")
+                                           "/game/prologue",
+                                           # SPEC-200 R10: balde PROPRIO (nao come o das acoes)
+                                           _CLIENT_LATENCY_PATH)
                       # spec polish-sessao (R2): DELETE de save também é mutação
                       or (request.method == "DELETE"
                           and request.url.path.startswith("/game/save/"))):
         ip = request.client.host if request.client else "?"
+        if request.url.path == _CLIENT_LATENCY_PATH:
+            ip = f"{ip}#latency"
         if _database_profile():
             from infrastructure.runtime import get_runtime
             from observability.telemetry import pseudonym
@@ -1638,6 +1653,64 @@ def health_check():
         "engine": "RPG IA v9.0 Hybrid Memory",
         "git_sha": os.getenv("GIT_SHA") or os.getenv("VERCEL_GIT_COMMIT_SHA") or "",
     }
+
+
+def _client_latency_enabled() -> bool:
+    return os.getenv("RPG_CLIENT_LATENCY_REPORT", "0").strip() == "1"
+
+
+_LATENCY_CLAMP_MAX = 600_000
+
+
+class ClientLatencyReport(BaseModel):
+    """SPEC-200 R10: corpo FECHADO — sem game_id, sem texto livre."""
+    model_config = ConfigDict(extra="forbid")
+    action_id: uuid.UUID
+    transport: Literal["stream", "post"]
+    ack_ms: Optional[int] = None
+    first_phase_ms: Optional[int] = None
+    ttfmc_ms: Optional[int] = None
+    ttlt_ms: Optional[int] = None
+    state_ms: Optional[int] = None
+    outcome: Literal["ok", "error", "aborted"] = "ok"
+
+    @field_validator("ack_ms", "first_phase_ms", "ttfmc_ms", "ttlt_ms", "state_ms",
+                     mode="before")
+    @classmethod
+    def _clamp(cls, value):
+        if value is None:
+            return None
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise ValueError("inteiro esperado")
+        return max(0, min(_LATENCY_CLAMP_MAX, int(value)))
+
+
+@app.post(_CLIENT_LATENCY_PATH, status_code=204, include_in_schema=False)
+def client_latency(report: ClientLatencyReport):
+    """Beacon opcional (desligado por default): so loga e observa metricas
+    `source=client`. Sem efeito em estado, saves ou saldo."""
+    if not _client_latency_enabled():
+        raise HTTPException(status_code=404, detail="Not Found")
+    try:
+        from observability.metrics import metrics
+        from observability.telemetry import pseudonym, safe_json
+        route = "/game/action/stream" if report.transport == "stream" else "/game/action"
+        if report.ttfmc_ms is not None:
+            metrics.observe("rpg_turn_first_content_seconds",
+                            {"route": route, "source": "client"}, report.ttfmc_ms / 1000)
+        if report.ttlt_ms is not None:
+            metrics.observe("rpg_turn_last_content_seconds",
+                            {"route": route, "source": "client"}, report.ttlt_ms / 1000)
+        _turn_logger.info(safe_json({
+            "evt": "client_latency", "action_ref": pseudonym(report.action_id),
+            "transport": report.transport, "ack_ms": report.ack_ms,
+            "first_phase_ms": report.first_phase_ms, "ttfmc_ms": report.ttfmc_ms,
+            "ttlt_ms": report.ttlt_ms, "state_ms": report.state_ms,
+            "outcome": report.outcome,
+        }))
+    except Exception:
+        pass
+    return Response(status_code=204)
 
 
 @app.get("/metrics", include_in_schema=False)
@@ -3295,10 +3368,89 @@ def _apply_action_options(state: dict, req: ActionRequest) -> None:
         }
 
 
+def _latency_log_fields(timeline, llm_events: Optional[List[dict]],
+                        llm_attempts: Optional[List[dict]], *,
+                        action_id: Optional[str] = None,
+                        input_text: str = "") -> Dict[str, Any]:
+    """SPEC-200 R5/R17: campos ADITIVOS da linha `rpg.turn`. Nunca levanta e
+    nunca leva texto do jogador nem game_id cru (so contagens, ms e pseudonimos)."""
+    if timeline is None:
+        return {}
+    try:
+        from decimal import Decimal
+        from observability.latency import input_size
+        from observability.telemetry import pseudonym
+        attempts = list(llm_attempts or [])
+        network = [a for a in attempts if a.get(
+            "network_attempted", a.get("outcome") not in {"build_error", "circuit_open"})]
+        by_tier: Dict[str, Dict[str, Any]] = {}
+        for item in network:
+            row = by_tier.setdefault(str(item.get("tier") or "?"), {
+                "attempts": 0, "failed": 0, "fallbacks": 0, "latency_ms": 0})
+            row["attempts"] += 1
+            row["failed"] += 0 if item.get("outcome") == "success" else 1
+            row["fallbacks"] += 1 if item.get("fell_back") else 0
+            row["latency_ms"] += int(item.get("latency_ms") or 0)
+        with_usage = [a for a in network if a.get("usage")]
+        normalized = normalize_attempts(network, operation_id=uuid.UUID(int=0))
+        priced = [(a, e) for a, e in zip(network, normalized) if a.get("usage")]
+        for item, event in priced:
+            row = by_tier[str(item.get("tier") or "?")]
+            row["cost_usd"] = str(Decimal(row.get("cost_usd", "0")) + event.cost_usd)
+        if not network:
+            cost_usd, basis = "0", "none"
+        elif not with_usage:
+            cost_usd, basis = None, "unavailable"   # nunca zero fabricado
+        else:
+            cost_usd = str(sum((e.cost_usd for _, e in priced), Decimal("0")))
+            basis = "usage" if len(with_usage) == len(network) else "partial"
+        reported = [a["usage"] for a in with_usage if "cached_tokens" in a["usage"]]
+        cached_total = sum(int(u.get("cached_tokens") or 0) for u in reported) if reported else None
+        input_total = sum(int(u.get("input_tokens") or 0) for u in reported)
+        ratio = round(cached_total / input_total, 4) if reported and input_total > 0 else None
+        timeline.extra.update({
+            "action_ref": pseudonym(action_id) if action_id else None,
+            "execution_mode": os.getenv("RPG_TURN_EXECUTION", "sequential").strip().lower(),
+            "attribution": "interval",
+            "llm_attempts": len(attempts),
+            "llm_fallbacks": sum(1 for a in network if a.get("fell_back")),
+            "llm_failed_attempts": sum(1 for a in network if a.get("outcome") != "success"),
+            "providers_used": sorted({str(a.get("provider") or "?") for a in network}),
+            "cost_usd": cost_usd,
+            "cost_usd_basis": basis,
+            "llm_by_tier": by_tier,
+            "cached_tokens": cached_total,
+            "cache_hit_ratio": ratio,
+            "input_chars": len(input_text or ""),
+            "input_size": input_size(len(input_text or "")),
+            "rag_cache": "not_instrumented",
+        })
+        timeline.extra.setdefault("lock_wait_ms", 0)
+        return timeline.fields()
+    except Exception:
+        return {}
+
+
+def _emit_turn_latency_metrics(timeline, route: str) -> None:
+    """SPEC-200 R6: fases por turno (labels fechados). Falha nao quebra o turno."""
+    try:
+        from observability.metrics import metrics
+        for phase_name, ms in timeline.phase_ms().items():
+            metrics.observe("rpg_turn_phase_seconds",
+                            {"route": route, "phase": phase_name}, ms / 1000)
+    except Exception:
+        pass
+
+
+def _turn_route(timeline) -> str:
+    return "/game/action/stream" if getattr(timeline, "transport", "") == "stream" else "/game/action"
+
+
 def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
               llm_events: Optional[List[dict]] = None, *,
               rejections_antes: int = 0,
-              llm_attempts: Optional[List[dict]] = None) -> None:
+              llm_attempts: Optional[List[dict]] = None,
+              latency_fields: Optional[Dict[str, Any]] = None) -> None:
     from observability.telemetry import correlation, pseudonym, safe_json
     _turn_logger.info(safe_json({
         "evt": "turn",
@@ -3313,25 +3465,32 @@ def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
             if not error else 0),
         "error": error,
         **_llm_log_fields(llm_events, llm_attempts),
+        **(latency_fields or {}),
     }))
 
 
 def _run_turn(state: dict, input_text: str,
               action_id: Optional[str] = None, *, claim=None,
-              request_hash: str = "", progress=None) -> GameResponse:
+              request_hash: str = "", progress=None,
+              timeline=None) -> GameResponse:
     from services.turn_effects import effect_scope
     from rag import embedding_usage_scope
     with effect_scope(), embedding_usage_scope(_embedding_telemetry_hook):
         return _run_turn_collected(state, input_text, action_id, claim=claim,
-                                   request_hash=request_hash, progress=progress)
+                                   request_hash=request_hash, progress=progress,
+                                   timeline=timeline)
 
 
 def _run_turn_collected(state: dict, input_text: str,
               action_id: Optional[str] = None, *, claim=None,
-              request_hash: str = "", progress=None) -> GameResponse:
+              request_hash: str = "", progress=None,
+              timeline=None) -> GameResponse:
     """Miolo do turno (spec streaming-turno-sse R2): grafo + save + log.
     Compartilhado pelo POST clássico e pelo stream — carga/validações ficam
     nos endpoints. Levanta HTTPException(500) genérica em falha (A6)."""
+    from observability import latency as _lat
+    if timeline is None:
+        timeline = _lat.TurnTimeline(transport="post")
     _append_player_input(state, input_text)
     t0 = time.monotonic()
     eventos_antes = len(state.get("event_log", []))
@@ -3339,46 +3498,74 @@ def _run_turn_collected(state: dict, input_text: str,
     acc_token = _llm_turn_events.set([])
     attempt_token = _llm_attempt_events.set([])
     embedding_token = _embedding_attempt_events.set([])
+    timeline_token = _lat.bind(timeline)
+
+    def _timeline_progress(chunk):
+        # SPEC-200 R3: atribuicao por intervalo entre updates (criterio da SPEC-116).
+        try:
+            mode, data = chunk
+            if mode == "updates":
+                for node, update in (data or {}).items():
+                    timeline.node_done(str(node))
+                    if node == "dm_router" and isinstance(update, dict) and update.get("next"):
+                        timeline.extra["route_next"] = str(update["next"])
+        except Exception:
+            pass
+        if progress is not None:
+            progress(chunk)
+
     try:
         previous_state = deepcopy(state)
         from services.turn_execution import execute_graph
-        new_state = execute_graph(game_graph, state, progress=progress)
-        visual_key = action_id or f"turn:{(new_state.get('world') or {}).get('turn_count', 0)}"
-        new_state.update(resolve_turn_visual_state(previous_state, new_state,
-                                                   action_key=visual_key))
-        _enqueue_turn_art(previous_state, new_state, visual_key)
-        _mark_action_processed(new_state, action_id)
-        checkpoint = _prepare_checkpoint(new_state, state)
-        _prepare_chronicle_derivatives(new_state)
-        response = format_response(new_state, cue_action_key=visual_key)
-        llm_events = _llm_turn_events.get() or []
-        llm_attempts = _llm_attempt_events.get() or []
-        _commit_turn(
-            new_state, response, claim=claim, request_hash=request_hash,
-            checkpoint=checkpoint, latency_ms=int((time.monotonic() - t0) * 1000),
-            llm_events=llm_events, llm_attempts=llm_attempts,
-            embedding_attempts=_embedding_attempt_events.get() or [],
-        )
+        new_state = execute_graph(
+            game_graph, state,
+            progress=_timeline_progress if hasattr(game_graph, "stream") else progress)
+        timeline.settle()
+        with timeline.phase(_lat.TurnPhase.PERSISTENCE):
+            visual_key = action_id or f"turn:{(new_state.get('world') or {}).get('turn_count', 0)}"
+            new_state.update(resolve_turn_visual_state(previous_state, new_state,
+                                                       action_key=visual_key))
+            _enqueue_turn_art(previous_state, new_state, visual_key)
+            _mark_action_processed(new_state, action_id)
+            checkpoint = _prepare_checkpoint(new_state, state)
+            _prepare_chronicle_derivatives(new_state)
+            response = format_response(new_state, cue_action_key=visual_key)
+            llm_events = _llm_turn_events.get() or []
+            llm_attempts = _llm_attempt_events.get() or []
+            _commit_turn(
+                new_state, response, claim=claim, request_hash=request_hash,
+                checkpoint=checkpoint, latency_ms=int((time.monotonic() - t0) * 1000),
+                llm_events=llm_events, llm_attempts=llm_attempts,
+                embedding_attempts=_embedding_attempt_events.get() or [],
+            )
+        timeline.finish()
+        timeline.extra.setdefault("route_next", str(new_state.get("next", "") or ""))
         _log_turn(
             new_state, t0, eventos_antes, None, llm_events,
             rejections_antes=rejections_antes,
-            llm_attempts=llm_attempts)
+            llm_attempts=llm_attempts,
+            latency_fields=_latency_log_fields(
+                timeline, llm_events, llm_attempts,
+                action_id=action_id, input_text=input_text))
         from observability.metrics import metrics
+        route_label = _turn_route(timeline)
         metrics.observe(
             "rpg_turn_duration_seconds",
-            {"route": "/game/action", "outcome": "ok",
+            {"route": route_label, "outcome": "ok",
              "simulated": str(is_simulated()).lower()},
             time.monotonic() - t0,
         )
+        _emit_turn_latency_metrics(timeline, route_label)
         return response
     except Exception as e:
         from observability.metrics import metrics
         metrics.observe(
             "rpg_turn_duration_seconds",
-            {"route": "/game/action", "outcome": "error",
+            {"route": _turn_route(timeline), "outcome": "error",
              "simulated": str(is_simulated()).lower()},
             time.monotonic() - t0,
         )
+        timeline.finish()
         if claim is not None:
             try:
                 from infrastructure.runtime import get_runtime
@@ -3399,18 +3586,25 @@ def _run_turn_collected(state: dict, input_text: str,
         _log_turn(
             state, t0, eventos_antes, type(e).__name__, _llm_turn_events.get(),
             rejections_antes=rejections_antes,
-            llm_attempts=_llm_attempt_events.get())
+            llm_attempts=_llm_attempt_events.get(),
+            latency_fields=_latency_log_fields(
+                timeline, _llm_turn_events.get(), _llm_attempt_events.get(),
+                action_id=action_id, input_text=input_text))
         print(f"Erro na API: {type(e).__name__}")
         raise HTTPException(status_code=500, detail="Erro interno ao processar o turno.")
     finally:
+        _lat.unbind(timeline_token)
         _llm_turn_events.reset(acc_token)
         _llm_attempt_events.reset(attempt_token)
         _embedding_attempt_events.reset(embedding_token)
 
 
-def _execute_action(req: ActionRequest, *, progress=None) -> GameResponse:
+def _execute_action(req: ActionRequest, *, progress=None, timeline=None) -> GameResponse:
     from infrastructure.runtime import get_runtime
+    from observability import latency as _lat
     from services.turn_execution import operation_scope
+    if timeline is None:
+        timeline = _lat.TurnTimeline(transport="post")
     if not req.game_id and not _database_profile():
         # SPEC-228 R8: resolve o "mais recente" UMA vez; lock e load usam o UUID.
         latest = persistence_module.get_latest_save_file()
@@ -3422,13 +3616,20 @@ def _execute_action(req: ActionRequest, *, progress=None) -> GameResponse:
         except ValueError:
             pass
     lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
+    lock_wait_started = _lat.now()
     with lock:
+        # SPEC-200 R17: a "fila" do turno = espera do lock (e, em perfis hosted, da operacao).
+        timeline.extra["lock_wait_ms"] = int(round((_lat.now() - lock_wait_started) * 1000))
         state = load_game_state(_resolve_save_file(req.game_id))
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
         if not _database_profile():
             persistence_module.ensure_synthetic_checkpoint(state)   # SPEC-228 R4
+        operation_wait_started = _lat.now()
         claim, request_hash, receipt = _begin_turn_operation(state, req)
+        if _database_profile():
+            timeline.extra["lock_wait_ms"] += int(round(
+                (_lat.now() - operation_wait_started) * 1000))
         if receipt is not None:
             return receipt
         with operation_scope(get_runtime().turn_coordinator if claim else None, claim):
@@ -3440,12 +3641,33 @@ def _execute_action(req: ActionRequest, *, progress=None) -> GameResponse:
                 raise HTTPException(409, "Você tombou. Resolva a tela de morte.")
             _apply_action_options(state, req)
             return _run_turn(state, req.input_text, req.action_id, claim=claim,
-                             request_hash=request_hash, progress=progress)
+                             request_hash=request_hash, progress=progress,
+                             timeline=timeline)
+
+
+def _publish_timeline(timeline, outcome: str) -> None:
+    """Entrega o registro final aos sinks (baseline). Nunca levanta."""
+    try:
+        from observability import latency as _lat
+        if outcome != "client_gone":     # o worker ainda pode estar rodando
+            timeline.finish()
+        _lat.publish({**timeline.fields(), "outcome": outcome,
+                      "total_ms": timeline.total_ms()})
+    except Exception:
+        pass
 
 
 @app.post("/game/action", response_model=GameResponse)
 def game_action(req: ActionRequest):
-    return _execute_action(req)
+    from observability import latency as _lat
+    timeline = _lat.TurnTimeline(transport="post")
+    outcome = "error"
+    try:
+        response = _execute_action(req, timeline=timeline)
+        outcome = "ok"
+        return response
+    finally:
+        _publish_timeline(timeline, outcome)
 
 
 class DeathChoiceRequest(BaseModel):
@@ -3511,7 +3733,46 @@ def _sse(event: str, data: dict) -> str:
     return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
 
 
-def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None) -> Iterator[str]:
+_STREAM_ROUTE = "/game/action/stream"
+
+
+def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None,
+                 timeline=None) -> Iterator[str]:
+    """Envolve o gerador SSE com as marcas de latencia (SPEC-200) e publica o
+    registro final mesmo se o consumidor desconectar (GeneratorExit)."""
+    from observability import latency as _lat
+    if timeline is None:
+        timeline = _lat.TurnTimeline(transport="stream")
+    outcome = {"value": "client_gone"}
+    try:
+        yield from _stream_turn_events(req, accepted_game_id, principal, timeline, outcome)
+    finally:
+        _log_turn_delivery(timeline, outcome["value"])
+        _publish_timeline(timeline, outcome["value"])
+
+
+def _log_turn_delivery(timeline, outcome: str) -> None:
+    """Linha `evt:"turn_delivery"`: marcas de entrega que so existem apos o worker
+    ter logado `rpg.turn` (ttfmc/ttlt). Sem texto, sem game_id cru."""
+    try:
+        from observability.telemetry import safe_json
+        _turn_logger.info(safe_json({
+            "evt": "turn_delivery",
+            "action_ref": timeline.extra.get("action_ref"),
+            "transport": timeline.transport,
+            "pseudo_streaming": True,
+            "ack_server_ms": timeline.mark_ms("accepted"),
+            "ttfmc_server_ms": timeline.mark_ms("ttfmc"),
+            "ttlt_server_ms": timeline.mark_ms("ttlt"),
+            "state_server_ms": timeline.mark_ms("state"),
+            "outcome": outcome,
+        }))
+    except Exception:
+        pass
+
+
+def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
+                        timeline, outcome: dict) -> Iterator[str]:
     """SSE cujo worker possui lock, execução e persistência do turno.
 
     Se o consumidor desconectar, a thread termina o save e o ``action_id`` torna
@@ -3519,11 +3780,19 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None) -> I
     """
     stream_started = time.monotonic()
     from observability.metrics import metrics
+    # DEPRECATED (SPEC-200 R7): mede so o enfileiramento de `accepted`; mantida
+    # para nao abrir buraco em series. A medida honesta e `rpg_sse_ack_seconds`.
     metrics.observe(
-        "rpg_sse_first_event_seconds", {"route": "/game/action/stream"},
+        "rpg_sse_first_event_seconds", {"route": _STREAM_ROUTE},
         time.monotonic() - stream_started,
     )
     yield _sse("accepted", {"game_id": accepted_game_id})
+    timeline.mark("accepted")      # retomada do gerador = proxy de flush
+    try:
+        metrics.observe("rpg_sse_ack_seconds", {"route": _STREAM_ROUTE},
+                        (timeline.mark_ms("accepted") or 0) / 1000)
+    except Exception:
+        pass
     q: "queue.Queue" = queue.Queue()
 
     def _worker():
@@ -3531,7 +3800,9 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None) -> I
             from infrastructure.request_context import principal_scope
             context = principal_scope(principal) if principal is not None else nullcontext()
             with context:
-                response = _execute_action(req, progress=lambda chunk: q.put(("chunk", chunk)))
+                response = _execute_action(
+                    req, progress=lambda chunk: q.put(("chunk", chunk)),
+                    timeline=timeline)
                 q.put(("response", response))
         except HTTPException as exc:
             q.put(("http_error", {"detail": exc.detail, "code": exc.status_code}))
@@ -3540,6 +3811,14 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None) -> I
 
     threading.Thread(target=_worker, daemon=True).start()
 
+    def _observe_delivery(mark: str, metric: str) -> None:
+        try:
+            ms = timeline.mark_ms(mark)
+            if ms is not None:
+                metrics.observe(metric, {"route": _STREAM_ROUTE, "source": "server"}, ms / 1000)
+        except Exception:
+            pass
+
     while True:
         try:
             kind, payload = q.get(timeout=_SSE_PING_S)
@@ -3547,9 +3826,11 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None) -> I
             yield ": ping\n\n"
             continue
         if kind == "http_error":
+            outcome["value"] = "error"
             yield _sse("error", payload)
             return
         if kind == "exc":
+            outcome["value"] = "error"
             yield _sse("error", {"detail": "Erro interno ao processar o turno."})
             return
         if kind == "chunk":
@@ -3567,10 +3848,16 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None) -> I
             yield _sse("visual", resp.visual.model_dump(mode="json"))
             narrative = resp.message or ""
             for i in range(0, len(narrative), _NARRATIVE_CHUNK):
-                yield _sse("narrative", {
-                    "chunk": narrative[i:i + _NARRATIVE_CHUNK], "done": False,
-                })
+                piece = narrative[i:i + _NARRATIVE_CHUNK]
+                if piece.strip() and timeline.mark_ms("ttfmc") is None:
+                    timeline.mark("ttfmc")      # primeiro conteudo significativo (SPEC-200)
+                    _observe_delivery("ttfmc", "rpg_turn_first_content_seconds")
+                yield _sse("narrative", {"chunk": piece, "done": False})
+            timeline.mark("ttlt")
+            _observe_delivery("ttlt", "rpg_turn_last_content_seconds")
             yield _sse("narrative", {"chunk": "", "done": True})
+            timeline.mark("state")
+            outcome["value"] = "ok"
             yield _sse("state", json.loads(resp.model_dump_json()))
             return
 
@@ -3580,6 +3867,8 @@ def game_action_stream(req: ActionRequest):
     """R1: mesmo corpo do /game/action, resposta text/event-stream com fases
     reais do grafo. Guard-rails (rate limit via middleware, game_id, memorial,
     teto de input) valem aqui também (R3)."""
+    from observability import latency as _lat
+    timeline = _lat.TurnTimeline(transport="stream")   # t0 = entrada do handler (ACK servidor)
     file_to_load = _resolve_save_file(req.game_id)
     state = load_game_state(file_to_load)
     if not state:
@@ -3592,7 +3881,7 @@ def game_action_stream(req: ActionRequest):
         from infrastructure.request_context import current_principal
         principal = current_principal()
     return StreamingResponse(_stream_turn(
-        req, str(state.get("game_id", "?")), principal,
+        req, str(state.get("game_id", "?")), principal, timeline,
     ),
                              media_type="text/event-stream",
                              headers={"Cache-Control": "no-cache",

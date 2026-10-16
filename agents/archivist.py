@@ -220,14 +220,17 @@ def archive_node(state: GameState):
     # Validate after event processing, before feeding prose back to the model.
     event_updates = process_pending_events(state)
     effective = {**state, **event_updates}
-    messages, audit = guard_current_messages(effective)
+    from observability.latency import accumulate as _timed  # SPEC-200 R4 (so mede)
+    with _timed('archivist_validate_ms'):
+        messages, audit = guard_current_messages(effective)
     effective['messages'] = messages
     evidence = build_evidence(effective)
     # Keep the pre-event baseline for new-event memory detection. Processing the
     # same pending queue twice loses that baseline even if application is deduped.
     result = _archive_node({**state, 'messages': messages}, event_updates=event_updates)
     if 'narrative_summary' in result:
-        check = validate_narrative(result['narrative_summary'], evidence, channel='summary')
+        with _timed('archivist_validate_ms'):
+            check = validate_narrative(result['narrative_summary'], evidence, channel='summary')
         from services.memory_summary import compact_summary as _compact
         result['narrative_summary'] = (
             check.text
@@ -242,7 +245,8 @@ def archive_node(state: GameState):
             for entry in chapter.get('entries', []):
                 if entry.get('kind') != 'prose' or entry.get('turn') != evidence.turn:
                     continue
-                check = validate_narrative(entry.get('text', ''), evidence, channel='chronicle')
+                with _timed('archivist_validate_ms'):
+                    check = validate_narrative(entry.get('text', ''), evidence, channel='chronicle')
                 entry['text'] = check.text
                 audit.extend(check.rejections)
             chapter['entries'] = [entry for entry in chapter.get('entries', []) if entry.get('text')]

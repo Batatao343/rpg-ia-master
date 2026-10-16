@@ -437,6 +437,15 @@ def utility_context_block(player: Dict, *, abilities_db=None) -> str:
 def build_context_pack(state: Dict, query: str, purpose: str,
                        token_budget: int = 3500, game_id: Optional[str] = None,
                        npc_id: Optional[str] = None) -> ContextPack:
+    """SPEC-200: mede a fase `context` (no-op sem timeline). Sem mudar comportamento."""
+    from observability.latency import TurnPhase, phase as _phase
+    with _phase(TurnPhase.CONTEXT):
+        return _build_context_pack(state, query, purpose, token_budget, game_id, npc_id)
+
+
+def _build_context_pack(state: Dict, query: str, purpose: str,
+                        token_budget: int = 3500, game_id: Optional[str] = None,
+                        npc_id: Optional[str] = None) -> ContextPack:
     """Monta o ContextPack. Lore canônico e memória de sessão são buscados e
     rotulados separadamente; `npc_id` inclui ainda a memória privada do NPC."""
     if purpose not in PURPOSES:

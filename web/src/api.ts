@@ -15,6 +15,7 @@ import type {
 } from "./types";
 
 import { http, HttpError, uploadAudio } from "./http";
+import { setClientLatencyReport } from "./lib/turnLatency";
 export { HttpError } from "./http";
 export { refreshSessionOnce } from "./http";
 
@@ -33,11 +34,15 @@ export interface AuthConfig {
   authenticated: boolean;
   user_id?: string;
   lifecycle_available?: boolean;
+  client_latency_report?: boolean;
   email_confirmation_required?: boolean;
   captcha?: { required: boolean; site_key: string | null; provider: "turnstile"; mode?: "app" | "gotrue" };
 }
 export interface AuthResponse { authenticated: boolean; csrf_token?: string; message?: string }
-export const getAuthConfig = () => req<AuthConfig>("/auth/config");
+export const getAuthConfig = () => req<AuthConfig>("/auth/config").then((config) => {
+  setClientLatencyReport(config.client_latency_report === true);   // SPEC-200 R10
+  return config;
+});
 export const login = (email: string, password: string, captchaToken?: string) =>
   req<AuthResponse>("/auth/login", {
     method: "POST", body: JSON.stringify({ email, password,
@@ -122,6 +127,10 @@ export interface StreamHandlers {
   onRoute?: (route: string) => void;
   onChunk?: (chunk: string, done: boolean) => void;
   onVisual?: (visual: VisualResponse) => void;
+  /** SPEC-200: primeiro byte do corpo SSE lido (ack percebido). */
+  onAck?: () => void;
+  /** SPEC-200: TODOS os eventos decodificados, inclusive `accepted`. */
+  onEvent?: (name: string, payload: unknown) => void;
 }
 
 export async function sendActionStream(
@@ -145,6 +154,7 @@ export async function sendActionStream(
 
   const handleEvent = (name: string, data: string) => {
     const payload = JSON.parse(data);
+    handlers.onEvent?.(name, payload);
     if (name === "error") throw new HttpError(Number(payload.code || 500), "stream_error", payload.detail || "erro no stream");
     if (name === "phase") handlers.onPhase?.(payload.node);
     else if (name === "route") handlers.onRoute?.(payload.route);
@@ -153,9 +163,11 @@ export async function sendActionStream(
     else if (name === "state") finalState = payload as GameResponse;
   };
 
+  let acked = false;
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
+    if (!acked) { acked = true; handlers.onAck?.(); }
     buffer += decoder.decode(value, { stream: true });
     let nl: number;
     while ((nl = buffer.indexOf("\n")) >= 0) {
@@ -311,3 +323,7 @@ export const confirmPlayerArt = (gameId: string, actionId: string, quoteId: stri
       body: JSON.stringify({ action_id: actionId, quote_id: quoteId, confirmed: true }),
     },
   );
+
+// SPEC-200 R10: beacon (so roda se /auth/config sinalizar `client_latency_report`).
+export const sendClientLatency = (body: import("./lib/turnLatency").LatencySummary) =>
+  http("/telemetry/client-latency", { method: "POST", body: JSON.stringify(body) });

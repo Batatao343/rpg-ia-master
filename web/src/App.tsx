@@ -22,6 +22,7 @@ import { AccountScreen, shards } from "./components/AccountScreen";
 
 import { ImageQuoteDialog } from "./components/ImageQuoteDialog";
 import { GeneratedArtCard } from "./components/GeneratedArtCard";
+import { TurnLatencyTracker, reportClientLatency } from "./lib/turnLatency";
 
 const LS_KEY = "cronicas_game_id";
 
@@ -523,8 +524,13 @@ export function App() {
       pushLog(operation.payload.input_text, "player", "STORY");
       setPhaseLabel(PHASE_TEXTS.campaign_manager);
       let hadChunks = false;
+      const latency = new TurnLatencyTracker(operation.operation_id, "stream");
+      const reportLatency = () => void reportClientLatency(latency.summary(), api.sendClientLatency);
       try {
+        latency.submit();
         const r = await api.sendActionStream(operation.payload.input_text, gid, {
+          onAck: () => latency.firstBytes(),
+          onEvent: (name, payload) => latency.event(name, payload),
           onPhase: node => { if (active()) setPhaseLabel(PHASE_TEXTS[node] ?? null); },
           onRoute: route => { if (active()) setPhaseLabel(ROUTE_TEXTS[route] ?? PHASE_TEXTS.storyteller); },
           onVisual: visual => { if (active()) attachStreamVisual(visual); },
@@ -536,6 +542,7 @@ export function App() {
           },
         }, requestOptions);
         clearPending(user, gid);
+        reportLatency();
         if (!active()) return;
         setPending(null);
         const entryId = hadChunks ? finishStreamEntry(r) : onTurn(r);
@@ -554,7 +561,11 @@ export function App() {
         const orphan = streamEntryId.current;
         streamEntryId.current = null; pendingVisual.current = null;
         if (orphan !== null) setLog(prev => prev.filter(e => e.id !== orphan));
+        const post = new TurnLatencyTracker(operation.operation_id, "post");
+        post.submit();
         const r = await api.sendAction(operation.payload.input_text, gid, requestOptions);
+        post.completePost();
+        void reportClientLatency(post.summary(), api.sendClientLatency);
         clearPending(user, gid);
         if (active()) { setPending(null); const entryId = onTurn(r);
           void refreshTurnCost(gid, operation.operation_id, entryId, generation, user); }

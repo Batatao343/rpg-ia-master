@@ -56,3 +56,4 @@ VALORIA_GAME_ART_HANDOFF.zip
 docs/descricao_projeto/brag-output/work/
 .env.staging
 .vercel
+latency_runs/
