@@ -314,13 +314,20 @@ def validate_narrative_text(summary: dict, text: str) -> dict:
     violations: List[str] = []
     alive_terms = r"\b(vivo|viva|sobrevive|sobreviveu|ergueu-se|levanta-se|escapa|foge|fugiu)\b"
     free_terms = r"\b(livre|liberto|liberta|libertado|libertada|escapa|foge|fugiu)\b"
+    def _subject_hit(key: str, terms: str) -> bool:
+        # SPEC-229 R6: o verbo precisa ter o nome como sujeito na MESMA oração
+        # (<= 3 tokens entre ambos, sem ponto/; /vírgula entre eles).
+        cleaned = re.sub(re.escape(key) + r"\s*,", key, lowered)
+        pat = re.escape(key) + r"(?:\s+[\w-]+){0,3}?\s+" + terms
+        return any(re.search(pat, clause) for clause in re.split(r"[.;!?\n,:]+", cleaned))
+
     for name in summary.get("mortos") or []:
         key = str(name).strip().casefold()
-        if key and re.search(re.escape(key) + r".{0,80}" + alive_terms, lowered):
+        if key and _subject_hit(key, alive_terms):
             violations.append(f"{name} foi narrado vivo/fugitivo apesar de morto.")
     for name in summary.get("capturados") or []:
         key = str(name).strip().casefold()
-        if key and re.search(re.escape(key) + r".{0,80}" + free_terms, lowered):
+        if key and _subject_hit(key, free_terms):
             violations.append(f"{name} foi narrado livre apesar de capturado.")
     return {"ok": not violations, "violations": violations}
 

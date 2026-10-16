@@ -4103,7 +4103,7 @@ specs:
   lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
 - id: SPEC-229
   slug: intencao-viagem-fuga-router
-  status: draft
+  status: done
   path: specs/SPEC-229-intencao-viagem-fuga-router.md
   created_commit: null
   created_at: '2026-10-15'

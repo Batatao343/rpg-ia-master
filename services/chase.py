@@ -13,8 +13,17 @@ ADITIVO (como 03-08): módulo novo + testes. Substituir o fluxo simplificado atu
 import random
 from typing import Dict, List, Optional
 
+import re
+
 from services.conflict_resolution import roll_kept, virtude_value
 from services.tactical_profile import pick_action
+
+# SPEC-229 R5: formas verbais fechadas (nada de prefixos soltos tipo "recu"/"retir").
+FLEE_RE = re.compile(
+    r"\b(?:fujo|fuja|fugir|fugimos|fugindo|foge|escapo|escapar|escapamos|escapando|"
+    r"recuo|recuar|recuamos|me\s+retiro|nos\s+retiramos|retiro-me|retirada|"
+    r"corro\s+(?:para\s+longe|para\s+fora|de\s+volta)|bato\s+em\s+retirada)\b"
+)
 
 # Trilha de perseguição (R2). Abaixo de "pressionado" = alcançado (combate volta).
 TRACK = ("pressionado", "afastado", "quase_livre", "escapou")

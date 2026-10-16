@@ -27,7 +27,7 @@ class RouteType(str, Enum):
 COMBAT_IDLE_EXPIRE = 3
 
 _EXPLICIT_STORY_RE = re.compile(
-    r"\b(?:descans\w*|durm\w*|acamp\w*|viaj\w*|vou\s+para|sigo\s+para)\b",
+    r"\b(?:descanso|descansamos|durmo|dormimos|acampo|acampamos|viajo|viajamos|(?:quero|vou|vamos|preciso|posso)\s+(?:descansar|dormir|acampar|viajar)|vou\s+para|sigo\s+para)\b",
     re.IGNORECASE,
 )
 _EXPLICIT_HOSTILITY_RE = re.compile(
@@ -142,7 +142,9 @@ def dm_router_node(state: GameState):
     # Fechar essa borda evita que contexto hostil antigo reabra um conflito no
     # turno imediatamente posterior a uma fuga.
     last_human = _last_human_text(messages)
-    if _EXPLICIT_STORY_RE.search(last_human):
+    # SPEC-229 R4: hostilidade explícita tem precedência; formas verbais fechadas.
+    if (_EXPLICIT_STORY_RE.search(last_human)
+            and not _EXPLICIT_HOSTILITY_RE.search(last_human)):
         return _base_route_payload(RouteType.STORY, world)
 
     # SPEC-180: Jev is opt-in and limited to decisions its closed contract can

@@ -1,6 +1,6 @@
 # SPEC-229 — Parsers de intenção em Python: viagem, fuga e pré-classificação do router
 
-> **Status:** `draft`
+> **Status:** `done`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** nenhuma · Fase 0 (viagem, anterior às specs; `world_utils`), SPEC-038 combate-lifecycle e SPEC-100 chase-progresso-e-fuga `done` são corrigidas (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-202, SPEC-210, SPEC-212 (ordem final 2026-10-15)
@@ -123,12 +123,12 @@ precedência hostilidade > NPC/loot > história; e um corpus negativo congelado 
 
 ## 5. Critérios de aceite
 
-- [ ] Corpus: 100% nos positivos/negativos listados; testes vermelhos no HEAD → verdes.
-- [ ] `tests/test_fase0.py`, `test_mapa_interiores.py`, `test_grounding_boundaries.py`, `test_combat_lifecycle.py`,
+- [x] Corpus: 100% nos positivos/negativos listados; testes vermelhos no HEAD → verdes.
+- [x] `tests/test_fase0.py`, `test_mapa_interiores.py`, `test_grounding_boundaries.py`, `test_combat_lifecycle.py`,
       `test_router*.py`, `test_conflict_summary_lifecycle.py` verdes (ou diff justificado — ex.: teste que
       afirmava recusa para "entro na…").
-- [ ] `uv run pytest` verde; playtest offline R8 com run_id registrado.
-- [ ] Guard de FallbackLLM: não se aplica.
+- [x] `uv run pytest` verde; playtest offline R8 com run_id registrado.
+- [x] Guard de FallbackLLM: não se aplica.
 
 ## 6. Smoke test com LLM real
 
@@ -157,3 +157,9 @@ precedência hostilidade > NPC/loot > história; e um corpus negativo congelado 
   `rpg.intent_guard` e de "Não há rota direta".
 - **Handoff de eval (EVAL_AUTHORING_REQUIRED):** adicionar ao dataset de routing (SPEC-169) os casos de
   `story_not_story`/`travel_neg` como variantes metamórficas — autoria por quem não implementa, com relock de hash.
+
+## 10. Registro de execução (2026-10-16)
+
+- Defaults de decisão: **D-A** recusar topônimo capitalizado desconhecido com mensagem de mapa; **D-B** manter regex fechada `FLEE_RE` (`services/chase.py`).
+- Desvios: topônimo = palavra capitalizada entre as 2 primeiras de conteúdo após a preposição (evita "a fogueira com Grum"); `rpg.intent_guard` em `services/intent_guard.py`; `tests/test_jev_target_loot_experiment.py` ganhou fixture que restaura o gate de história antigo para manter reprodutível o experimento SPEC-179 congelado (o caso `target.missing_id` "Falo com a viajante" dependia do bug).
+- Playtest offline R8: runs `20261016-012204-781976` (explorador) e `20261016-012208-082006` (normal), zero "Não há rota direta". Evidência: `docs/spec229/README.md`. Handoff de eval: `handoffs/SPEC-229-eval-authoring.md`.

@@ -297,7 +297,7 @@ def storyteller_node(state: GameState):
     factions = ensure_factions(state.get("factions"))
     intel = ensure_faction_intel(state.get("faction_intel"))
     travel_intent = bool(
-        last_user_input and is_travel_intent(str(last_user_input))
+        last_user_input and is_travel_intent(str(last_user_input), world)
     )
     dest = (
         find_travel_destination(world, last_user_input)
@@ -310,6 +310,8 @@ def storyteller_node(state: GameState):
         except (ImportError, AttributeError):
             refusal = ""
         if refusal:
+            from services.intent_guard import log_intent_guard
+            log_intent_guard("travel_refused", "no_route", str(last_user_input))
             # Recusa canônica antes da LLM: destino impossível nunca aparece como
             # chegada na mensagem, no resumo nem na memória.
             return {

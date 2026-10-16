@@ -12,6 +12,19 @@ import pytest
 
 from evals.experiments import jev_target_loot as experiment
 from evals.experiments.jev_router_ab import Budget, ExperimentBlocked, _candidate
+
+
+@pytest.fixture(autouse=True)
+def _legacy_story_gate(monkeypatch: pytest.MonkeyPatch) -> None:
+    """SPEC-229: o experimento SPEC-179 foi congelado com o gate de história antigo
+    (prefixos por radical, sem fronteira). Reproduz-o para manter a evidência histórica."""
+    import re
+
+    from agents import router
+    monkeypatch.setattr(router, "_EXPLICIT_STORY_RE", re.compile(
+        r"\b(?:descans\w*|durm\w*|acamp\w*|viaj\w*|vou\s+para|sigo\s+para)\b", re.IGNORECASE))
+    monkeypatch.setattr(router, "_EXPLICIT_HOSTILITY_RE", re.compile(r"(?!x)x"), raising=True)
+
 from services.jev_decision import ChoiceAnswer, DecisionResult, Usage
 
 

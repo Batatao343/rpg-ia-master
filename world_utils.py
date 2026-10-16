@@ -66,41 +66,79 @@ def _fold_txt(s: str) -> str:
     return "".join(c for c in nfkd if not unicodedata.combining(c)).lower()
 
 
-def is_travel_intent(text: str) -> bool:
-    """True somente para uma ordem explícita de deslocamento.
+_TRAVEL_VERBS = (
+    r"vou|vamos|ir|viaj(?:o|ar|amos)|sigo|seguir|caminho|caminhar|parto|partir|"
+    r"me\s+dirijo|atravesso|atravessar|volto|voltar|retorno|retornar|fujo|fugir|"
+    r"entro|entrar|saio|sair"
+)
+_TRAVEL_PREPS = (
+    r"rumo\s+a|em\s+direcao\s+a|para|pra|pro|ate|aos|ao|as|a|em|nos|nas|no|na"
+)
+_ARTICLES = {"o", "a", "os", "as", "do", "da", "dos", "das", "um", "uma"}
+_TRAVEL_RE = None
 
-    Nome de local, sozinho, não basta: "o que sabe sobre Skallgard?" é consulta
-    de lore. O verbo pode trazer modificadores curtos ("viajo agora para..."),
-    mas precisa apontar para um destino por preposição.
+
+def looks_like_toponym(words: list) -> bool:
+    """Palavras (texto ORIGINAL, após a preposição) iniciam um nome próprio?
+
+    Só olha as 2 primeiras palavras de conteúdo (pulando artigos): "a fogueira com
+    Grum" não é topônimo; "o Pântano da Melancolia" é.
+    """
+    content = [w for w in words if _fold_txt(w) not in _ARTICLES][:2]
+    return any(w[:1].isupper() for w in content)
+
+
+def _all_location_names() -> list:
+    return [
+        (_fold_txt(loc.get("name", "")), loc.get("id", ""))
+        for loc in (gamedata.WORLD_MAP.get("locations") or [])
+        if loc.get("name")
+    ]
+
+
+def is_travel_intent(text: str, world: Optional[dict] = None) -> bool:
+    """True somente para ordem explícita de deslocamento a um DESTINO.
+
+    SPEC-229 R1: verbo fechado + preposição + (destino que resolve no mapa OU
+    topônimo capitalizado). Movimento dentro da cena ("entro na taverna",
+    "sigo em frente", "vou até a fogueira") NÃO é viagem.
     """
     import re
-    folded = re.sub(r"[^\w\s]", " ", _fold_txt(text))
-    folded = " ".join(folded.split())
+    global _TRAVEL_RE
+    if _TRAVEL_RE is None:
+        _TRAVEL_RE = re.compile(
+            r"\b(?:" + _TRAVEL_VERBS + r")\b((?:\s+\w+){0,3}?)\s+(?:" + _TRAVEL_PREPS +
+            r")\b(?P<rest>(?:\s+\w+)*)"
+        )
+    orig_words = re.findall(r"\w+", str(text or ""))
+    folded = " ".join(_fold_txt(w) for w in orig_words)
     if not folded:
         return False
-
-    # Perguntas sobre rota/local não executam movimento por acidente.
     if re.match(
         r"^(?:o\s+que|quem|qual|quais|como|onde|conte|fale|explique|"
         r"voce\s+sabe|sabe\s+algo|posso|poderia)\b",
         folded,
     ):
         return False
-
-    return bool(re.search(
-        r"\b(?:vou|vamos|ir|viaj(?:o|ar|amos)|sigo|seguir|"
-        r"caminho|caminhar|parto|partir|me\s+dirijo|atravesso|"
-        r"atravessar|volto|voltar|retorno|retornar|fujo|fugir|"
-        r"entro|entrar|saio|sair)\b"
-        r"(?:\s+\w+){0,5}\s+"
-        r"(?:para|ate|a|rumo\s+a|em|n[oa]s?)\s+\S+",
-        folded,
-    ))
+    folded_words = folded.split()
+    # tenta cada ocorrência de preposição (a 1ª pode ser só um "a" de "volto a falar")
+    for m in _TRAVEL_RE.finditer(folded):
+        rest = m.group("rest").split()
+        if not rest:
+            continue
+        rest_text = " ".join(rest)
+        for name, loc_id in _all_location_names():
+            if (name and name in rest_text) or (loc_id and loc_id in rest):
+                return True
+        idx = len(folded_words) - len(rest)
+        if looks_like_toponym(orig_words[idx:]):
+            return True
+    return False
 
 
 def invalid_travel_message(world: dict, text: str) -> str:
     """Recusa determinística para destino explícito que não é uma saída válida."""
-    if not is_travel_intent(text) or find_travel_destination(world, text) is not None:
+    if not is_travel_intent(text, world) or find_travel_destination(world, text) is not None:
         return ""
     current = (
         gamedata.get_location(world.get("current_location_id", ""))

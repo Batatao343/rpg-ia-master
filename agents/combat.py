@@ -738,7 +738,11 @@ def combat_node(state: GameState):
 
     # ---- Fuga: chase determinístico (conflito-09) ----
     flee_dest_id = None
-    flee_requested = bool(re.search(r"\bfuj|fugir|escap|retir|recu|corr[oe]\b", intent.lower()))
+    from services.chase import FLEE_RE
+    flee_requested = bool(FLEE_RE.search(intent.lower()))
+    if flee_requested:
+        from services.intent_guard import log_intent_guard
+        log_intent_guard("flee_regex", "FLEE_RE", intent)
     if (declaration is not None and declaration.acao is not None
             and declaration.acao.kind == "flee"):
         flee_requested = True
