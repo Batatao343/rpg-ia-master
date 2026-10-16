@@ -26,12 +26,17 @@ for (const width of [390, 1440]) {
     await expect(panel.getByRole("heading", { name: "Vitória" })).toBeVisible();
     await expect(panel.getByText("Saqueador — abatido")).toBeVisible();
     await expect(panel.getByText("+50 XP")).toBeVisible();
+    // SPEC-204 R12: < 1100px há uma superfície por vez; o desfecho fica na aba Combate
+    // (R10) e a narração no chat — alterna para o chat para conferir a narração.
+    const modes = page.getByRole("group", { name: "Modo de exibição" });
+    if (width < 1100) await modes.getByRole("button", { name: "Chat", exact: true }).click();
     // O chat recebe só a narração; nenhum número de XP no balão.
     await expect(page.getByText("O último saqueador cai; o combate termina.")).toBeVisible();
     await expect(page.locator(".story-log, .storylog, [class*=story]").getByText(/XP/)).toHaveCount(0);
 
     await page.locator("form.actionbar input").first().fill("rascunho preservado");
     const actions = backend.requests.filter((r) => r.path.startsWith("/game/action")).length;
+    if (width < 1100) await modes.getByRole("button", { name: "Painel", exact: true }).click();
     await panel.getByRole("button", { name: "Continuar" }).click();
     await expect(panel).toHaveCount(0);
     await expect(page.locator("form.actionbar input").first()).toHaveValue("rascunho preservado");

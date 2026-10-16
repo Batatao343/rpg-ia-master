@@ -3,8 +3,6 @@ import type { ActionOptions, GameResponse, LogEntry, TurnOutcome } from "../type
 import { StoryLog } from "../components/StoryLog";
 import { SceneArtwork } from "../components/SceneArtwork";
 import { OutcomeToast } from "../components/OutcomeToast";
-import { CombatOutcomePanel } from "../components/CombatOutcomePanel";
-import { resultFrom, shouldShowResult } from "../combatOutcome";
 import { OnboardingHint, onboardingDismissed } from "../components/OnboardingHint";
 import { useVoiceInput } from "../voice/useVoiceInput";
 import { getChatSession, setChatSession } from "./chatSessionStore";
@@ -28,9 +26,6 @@ export function ChatSurface({ data, log, thinking, thinkingLabel, busy, blocked,
   const showOnboard = !simulation && !blocked && (data?.world?.turn_count ?? 99) <= 1
     && !onboardingDismissed(gameId ?? null);
   const [initialScroll] = useState(() => getChatSession(gameId));
-  // SPEC-203 R8: "Continuar" fecha só o painel (estado local; reload o reexibe).
-  const [dismissedResult, setDismissedResult] = useState<string | null>(null);
-  const combatResult = resultFrom(data?.combat_result);
   const onScrollPosition = useCallback((scrollTop: number, atBottom: boolean) =>
     setChatSession(gameId, { scrollTop, atBottom }), [gameId]);
 
@@ -56,10 +51,6 @@ export function ChatSurface({ data, log, thinking, thinkingLabel, busy, blocked,
         <SceneArtwork scene={data?.visual?.scene} />
         {/* SPEC-199: chip mecânico do turno (aria-live, sem role="status"). */}
         <OutcomeToast outcome={data?.turn_outcome?.receipt_id ? (data.turn_outcome as TurnOutcome) : null} />
-        {combatResult && shouldShowResult(combatResult, dismissedResult) && (
-          <CombatOutcomePanel result={combatResult} outcome={data?.turn_outcome}
-            onContinue={() => setDismissedResult(combatResult.result_event_id)} />
-        )}
         {showOnboard && gameId && <OnboardingHint gameId={gameId} />}
         <StoryLog entries={log} thinking={thinking} thinkingLabel={thinkingLabel} active={active}
           initialScroll={initialScroll}

@@ -2,6 +2,9 @@ import type { ActionOptions, GameResponse } from "../../types";
 import { CombatTab } from "../../components/Hud";
 import { CardHand } from "../../components/CardHand";
 import { ReactionPrompt } from "../../components/ReactionPrompt";
+import { CombatOutcomePanel } from "../../components/CombatOutcomePanel";
+import { resultFrom, shouldShowResult } from "../../combatOutcome";
+import { useState } from "react";
 
 const TACTICAL_MANEUVERS = [
   { label: "Engajar", kind: "maneuver" as const, maneuver: "engajar" as const },
@@ -25,6 +28,10 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId,
   onAction: (text: string, options?: ActionOptions) => void;
 }) {
   const combat = data?.combat;
+  // SPEC-203 R8 na shell SPEC-204: o desfecho vive na aba Combate (que permanece aberta ao
+  // encerrar, R10) — visível em split e em tela estreita. "Continuar" fecha só o painel.
+  const [dismissedResult, setDismissedResult] = useState<string | null>(null);
+  const combatResult = resultFrom(data?.combat_result);
   const fighting = !!combat?.active;
   const simulation = !!data?.combat_simulation?.enabled;
   const live = fighting && !!combat && !blocked;
@@ -33,6 +40,10 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId,
     : [];
   return (
     <div className="ws-combat">
+      {combatResult && shouldShowResult(combatResult, dismissedResult) && (
+        <CombatOutcomePanel result={combatResult} outcome={data?.turn_outcome}
+          onContinue={() => setDismissedResult(combatResult.result_event_id)} />
+      )}
       {!fighting && ended && (
         <p className="ws-combat__ended" role="note">Combate encerrado — o desfecho está na narrativa.</p>
       )}
