@@ -21,6 +21,10 @@ from typing import Any, Dict, Optional
 
 import persistence
 
+
+class NoRestorePoint(Exception):
+    """Morte sem ponto de retorno válido (SPEC-228 R2/R3)."""
+
 CHECKPOINT_EVERY = 10   # D1: a cada N turnos
 SAFE_DANGER = 1         # zona segura = danger_level <= isto
 
@@ -50,6 +54,8 @@ def should_checkpoint(state: dict, prev: Optional[dict] = None) -> bool:
     if not transition_readiness(state)["ready"]:
         return False
     t = _turn(state)
+    if (state.get("continuity") or {}).get("checkpoint_deferred"):
+        return True   # SPEC-228 R5: checkpoint adiado é tentado de novo
     if t > 0 and t % CHECKPOINT_EVERY == 0:
         return True
     return entered_safe_zone(state, prev)
@@ -76,13 +82,18 @@ def snapshot(state: dict) -> Optional[dict]:
 def maybe_write(state: dict, prev: Optional[dict] = None) -> bool:
     """Grava o checkpoint em disco se a cadência (D1) mandar. Retorna se gravou."""
     if should_checkpoint(state, prev):
-        marked = copy.deepcopy(state)
-        from services.continuity import mark_checkpoint
-        marked["continuity"] = mark_checkpoint(
-            marked.get("continuity"), canonical_turn=_turn(marked),
-        )
-        return persistence.save_checkpoint(marked)
+        return write_now(state)
     return False
+
+
+def write_now(state: dict) -> bool:
+    """Grava o checkpoint sem reavaliar a cadência (já decidida pelo chamador)."""
+    marked = copy.deepcopy(state)
+    from services.continuity import mark_checkpoint
+    marked["continuity"] = mark_checkpoint(
+        marked.get("continuity"), canonical_turn=_turn(marked),
+    )
+    return persistence.save_checkpoint(marked)
 
 
 def _sanitize_legacy_combat_checkpoint(restored: dict) -> dict:
@@ -105,7 +116,8 @@ def _sanitize_legacy_combat_checkpoint(restored: dict) -> dict:
 
 def resolve_death_choice(state: dict, choice: str, *,
                          checkpoint: Optional[dict] = None,
-                         initial_state: Optional[dict] = None) -> dict:
+                         initial_state: Optional[dict] = None,
+                         strict: bool = True) -> dict:
     """Resolve a tela de morte (D2). Não muta o estado de entrada.
 
     - `choice == "accept"` → memorial: seta `game_over` (fluxo atual preservado),
@@ -166,8 +178,12 @@ def resolve_death_choice(state: dict, choice: str, *,
                 # `memory_facts` restaurado ainda sustenta a continuidade global.
                 persistence.restore_captured_session_memory(
                     str(state["game_id"]), None)
-    if restored is None:  # D7: sem checkpoint → início da sessão
-        restored = copy.deepcopy(initial_state) if initial_state is not None else copy.deepcopy(state)
+    if restored is None and initial_state is not None:  # D7: início da sessão
+        restored = copy.deepcopy(initial_state)
+    if restored is None:
+        if strict:
+            raise NoRestorePoint("sem ponto de retorno válido")
+        restored = copy.deepcopy(state)
     restored = _sanitize_legacy_combat_checkpoint(restored)
     restored["death_pending"] = False
     restored["game_over"] = False

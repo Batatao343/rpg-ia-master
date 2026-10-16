@@ -17,8 +17,15 @@ def normalize(value: Dict[str, Any] | None, *, canonical_turn: int = 0) -> Dict[
     return {
         "session_action_count": action_count,
         "timeline_epoch": max(0, int(value.get("timeline_epoch", 0) or 0)),
-        "last_checkpoint_turn": max(
-            0, int(value.get("last_checkpoint_turn", canonical_turn) or 0)
+        # SPEC-228 R10: ausente = desconhecido (None), nunca "o turno atual".
+        "last_checkpoint_turn": (
+            max(0, int(value["last_checkpoint_turn"]))
+            if value.get("last_checkpoint_turn") is not None else None
+        ),
+        "checkpoint_deferred": bool(value.get("checkpoint_deferred", False)),
+        "synthetic_from_turn": (
+            int(value["synthetic_from_turn"])
+            if value.get("synthetic_from_turn") is not None else None
         ),
         "death_history": [dict(row) for row in value.get("death_history", [])
                           if isinstance(row, dict)][-MAX_DEATH_HISTORY:],
@@ -34,6 +41,7 @@ def advance_action(value: Dict[str, Any] | None, *, canonical_turn: int) -> Dict
 def mark_checkpoint(value: Dict[str, Any] | None, *, canonical_turn: int) -> Dict[str, Any]:
     out = normalize(value, canonical_turn=canonical_turn)
     out["last_checkpoint_turn"] = int(canonical_turn)
+    out["checkpoint_deferred"] = False
     return out
 
 
@@ -61,5 +69,9 @@ def after_restore(dead_state: dict, restored_state: dict) -> Dict[str, Any]:
     }
     meta["timeline_epoch"] += 1
     meta["last_checkpoint_turn"] = restored_turn
+    meta["checkpoint_deferred"] = False
+    meta["synthetic_from_turn"] = (
+        normalize(restored_state.get("continuity"), canonical_turn=restored_turn)
+        .get("synthetic_from_turn"))
     meta["death_history"] = [*meta["death_history"], record][-MAX_DEATH_HISTORY:]
     return meta

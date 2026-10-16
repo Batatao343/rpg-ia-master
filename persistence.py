@@ -231,9 +231,16 @@ def _migrate_v7_to_v8(raw: Dict[str, Any]) -> Dict[str, Any]:
     return migrated
 
 
+class IncompatibleSaveError(Exception):
+    """Save gravado por um schema mais novo que o suportado (SPEC-228 R9)."""
+
+
 def migrate_state(raw: Dict[str, Any]) -> Dict[str, Any]:
     """Arquiva saves pré-v4 e normaliza v4→v6. Puro e idempotente."""
     version = int(raw.get("schema_version", 0) or 0)
+    if version > SCHEMA_VERSION:
+        raise IncompatibleSaveError(
+            f"save de versão mais nova (v{version} > v{SCHEMA_VERSION})")
     if version < 4:
         archived = _migrate_v3_to_v4(deepcopy(raw))
         archived["schema_version"] = 5
@@ -247,32 +254,34 @@ def migrate_state(raw: Dict[str, Any]) -> Dict[str, Any]:
         migrated = _migrate_v6_to_v7(migrated)
     return _migrate_v7_to_v8(migrated)
 
-def _serialize_messages(messages: List[BaseMessage]) -> List[Dict[str, str]]:
-    """Converte objetos Message do LangChain para dicionários simples (JSON)."""
-    serialized = []
-    for msg in messages:
-        msg_type = "unknown"
-        if isinstance(msg, HumanMessage): msg_type = "human"
-        elif isinstance(msg, AIMessage): msg_type = "ai"
-        elif isinstance(msg, SystemMessage): msg_type = "system"
-        
-        serialized.append({
-            "type": msg_type,
-            "content": msg.content
-        })
-    return serialized
+def _serialize_messages(messages: List[BaseMessage]) -> List[Dict[str, Any]]:
+    """Converte mensagens LangChain para dicts JSON (SPEC-228 R11: preserva
+    ToolMessage, additional_kwargs, name, id e tool_calls)."""
+    from langchain_core.messages import messages_to_dict
+    return messages_to_dict(list(messages))
 
-def _deserialize_messages(data: List[Dict[str, str]]) -> List[BaseMessage]:
-    """Reconstrói objetos Message do LangChain a partir de dicionários."""
-    messages = []
-    for item in data:
-        if item["type"] == "human":
-            messages.append(HumanMessage(content=item["content"]))
-        elif item["type"] == "ai":
-            messages.append(AIMessage(content=item["content"]))
-        elif item["type"] == "system":
-            messages.append(SystemMessage(content=item["content"]))
-    return messages
+
+def _deserialize_messages(data: List[Dict[str, Any]]) -> List[BaseMessage]:
+    """Lê o formato novo (messages_to_dict) e o legado {type, content}."""
+    from langchain_core.messages import messages_from_dict
+    out: List[BaseMessage] = []
+    for item in data or []:
+        if not isinstance(item, dict):
+            continue
+        if "data" in item:
+            try:
+                out.extend(messages_from_dict([item]))
+            except Exception:
+                continue
+            continue
+        kind, content = item.get("type"), item.get("content", "")
+        if kind == "human":
+            out.append(HumanMessage(content=content))
+        elif kind == "ai":
+            out.append(AIMessage(content=content))
+        elif kind == "system":
+            out.append(SystemMessage(content=content))
+    return out
 
 def get_latest_save_file() -> Optional[str]:
     """Retorna o caminho do arquivo de save mais recente na pasta saves/."""
@@ -625,6 +634,7 @@ def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
         "game_over": bool(state.get("game_over", False)),
         # --- spec checkpoints-morte: tela de morte pendente (persiste entre requests) ---
         "death_pending": bool(state.get("death_pending", False)),
+        "needs_replan": bool(state.get("needs_replan", False)),
         "archived": bool(state.get("archived", False)),
         "archived_reason": str(state.get("archived_reason") or ""),
         "combat_simulation": deepcopy(state.get("combat_simulation")),
@@ -713,6 +723,8 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
                     ).overlay(principal, state)
                     state["_storage_version"] = stored.version
             return state
+        except IncompatibleSaveError:
+            raise
         except Exception as e:
             print(f"⚠️ Erro ao carregar GameStore: {e}")
             return None
@@ -730,6 +742,8 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
             raw_data = json.load(f)
         return _raw_to_state(raw_data)
 
+    except IncompatibleSaveError:
+        raise
     except Exception as e:
         print(f"⚠️ Erro ao carregar save '{target_file}': {e}")
         return None
@@ -822,7 +836,7 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
 
         # Garante campos técnicos de fluxo
         "next": "storyteller",
-        "needs_replan": False,
+        "needs_replan": bool(raw_data.get("needs_replan", False)),
     }
     # Saves produzidos antes do protocolo de transição podiam persistir uma
     # Última Ação/Estado Terminal sem combate ou tela de morte capaz de
@@ -913,9 +927,54 @@ def save_checkpoint(state: Dict[str, Any]) -> bool:
 
 
 def has_checkpoint(game_id: str) -> bool:
+    """True só se o slot existe E é um save legível (SPEC-228 R1)."""
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
         return load_checkpoint(game_id) is not None
-    return os.path.exists(_safe_save_path(game_id, suffix=".checkpoint"))
+    path = _safe_save_path(game_id, suffix=".checkpoint")
+    if not os.path.exists(path):
+        return False
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            raw = json.load(f)
+    except Exception:
+        return False
+    return isinstance(raw, dict) and "schema_version" in raw and isinstance(raw.get("player"), dict)
+
+
+def checkpoint_turn(game_id: str) -> Optional[int]:
+    """Turno canônico do checkpoint REAL em disco (None se ausente/ilegível)."""
+    cp = load_checkpoint(game_id)
+    if not cp:
+        return None
+    return int((cp.get("world") or {}).get("turn_count", 0) or 0)
+
+
+def ensure_synthetic_checkpoint(state: Dict[str, Any]) -> bool:
+    """SPEC-228 R4: save sem checkpoint válido ganha um checkpoint sintético do
+    estado atual, marcado `synthetic_from_turn`. Retorna se gravou."""
+    if (not state or not state.get("game_id") or state.get("archived")
+            or state.get("game_over") or state.get("death_pending")):
+        return False
+    if (state.get("combat_simulation") or {}).get("enabled"):
+        return False
+    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+        return False
+    gid = str(state["game_id"])
+    turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
+    if has_checkpoint(gid):
+        # SPEC-228 §7: crash entre gravar o checkpoint e gravar o save deixa o
+        # slot um turno À FRENTE do save (linha do tempo abortada, com o
+        # action_id já processado). Esse slot é descartado e substituído por
+        # um sintético do save real.
+        cp_turn = checkpoint_turn(gid)
+        if cp_turn is None or cp_turn <= turn:
+            return False
+        print(f"⚠️ checkpoint à frente do save (t{cp_turn} > t{turn}); descartado")
+    snap = deepcopy(state)
+    cont = dict(snap.get("continuity") or {})
+    cont["synthetic_from_turn"] = turn
+    snap["continuity"] = cont
+    return save_checkpoint(snap)
 
 
 def load_checkpoint(game_id: str) -> Optional[Dict[str, Any]]:

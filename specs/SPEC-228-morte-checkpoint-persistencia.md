@@ -1,6 +1,6 @@
 # SPEC-228 — Morte sem checkpoint, ordem save/checkpoint e campos não persistidos
 
-> **Status:** `draft`
+> **Status:** `done`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** nenhuma · SPEC-060 checkpoints-morte, SPEC-086 hardening-persistencia-sse-idempotencia e SPEC-101 checkpoint-seguro-fora-combate `done` são corrigidas (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-202, SPEC-203, SPEC-207, SPEC-212, SPEC-213 (ordem final 2026-10-15)
@@ -139,12 +139,12 @@ Resposta de `/game/death` (409): `{"detail": "...", "code": "no_restore_point", 
 
 ## 5. Critérios de aceite
 
-- [ ] 9 testes de reprodução vermelhos → verdes; `tests/test_checkpoints*.py`, `tests/test_persistence*.py`,
+- [x] 9 testes de reprodução vermelhos → verdes; `tests/test_checkpoints*.py`, `tests/test_persistence*.py`,
       `tests/test_hardening_sse*.py` verdes ou diff justificado.
-- [ ] `uv run pytest` verde.
-- [ ] Saves v0..v8 carregam; save v99 recusado com 409.
-- [ ] `npm run build` verde (DeathModal).
-- [ ] Guard de FallbackLLM: não se aplica.
+- [x] `uv run pytest` verde.
+- [x] Saves v0..v8 carregam; save v99 recusado com 409.
+- [x] `npm run build` verde (DeathModal).
+- [x] Guard de FallbackLLM: não se aplica.
 
 ## 6. Smoke test com LLM real
 
@@ -172,3 +172,8 @@ Resposta de `/game/death` (409): `{"detail": "...", "code": "no_restore_point", 
 - `uv run pytest` completo; testes de reprodução antes/depois.
 - `docs/<spec>/README.md` com transcrição de `death.py`/`rt.py` como testes e screenshot do modal em 409.
 - Revisão `Sol` independente (fluxo de morte e ordem de persistência).
+
+## 10. Implementação (2026-10-16)
+
+Defaults usados: **D-A** = 409 `no_restore_point` (sem snapshot inicial separado: o checkpoint de 1 slot é o único ponto de retorno; R4 cria checkpoint sintético `synthetic_from_turn` em save legado no primeiro `/game/action`, não no `load_game_state`, para não ter efeito colateral em leituras); **D-B** = `messages_to_dict` com leitura retrocompatível; **D-C** = 409 `save_schema_newer`, sem bump de `SCHEMA_VERSION` (permanece 8).
+Desvios: a ordem checkpoint→save vale para o commit legacy via `checkpoints.write_now` (sem reavaliar a cadência); perfis DB seguem marcando antes (mesma transação). Testes: `tests/test_bug_morte_checkpoint.py`. Evidência: `docs/spec228/README.md`. Revisão Sol independente pendente (REVIEW_REQUIRED).

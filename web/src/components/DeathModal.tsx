@@ -13,6 +13,8 @@ interface Props {
  *  (memorial: a crônica encerra). O memorial nunca é imposto; é decisão do jogador. */
 export function DeathModal({ busy, onContinue, onAccept, death }: Props) {
   const action = death?.last_action;
+  // SPEC-228: sem checkpoint real, "Continuar" daria 409 no_restore_point.
+  const noRestorePoint = death != null && death.will_restore_turn === null;
   const lastAction = action?.kind === "card"
     ? `Carta ${death?.last_action_label || action.card_id || "desconhecida"}`
     : action?.kind ? action.kind.replace(/_/g, " ") : "não registrada";
@@ -35,8 +37,8 @@ export function DeathModal({ busy, onContinue, onAccept, death }: Props) {
           <div><dt>Estado Terminal</dt><dd>{death?.entered_terminal ? "atravessado" : "não registrado"}</dd></div>
           <div><dt>Estabilização</dt><dd>{death?.stabilization || `${death?.stabilization_attempts ?? 0} tentativa(s)`}</dd></div>
           {death?.killer && <div><dt>Queda diante de</dt><dd>{death.killer}</dd></div>}
-          <div><dt>Retorno</dt><dd>turno {death?.will_restore_turn ?? 0}</dd></div>
-          <div><dt>Progresso revertido</dt><dd>{death?.will_lose_turns ?? 0} turno(s)</dd></div>
+          <div><dt>Retorno</dt><dd>{death?.will_restore_turn != null ? `turno ${death.will_restore_turn}` : "ponto de retorno desconhecido"}</dd></div>
+          <div><dt>Progresso revertido</dt><dd>{death?.will_lose_turns != null ? `${death.will_lose_turns} turno(s)` : "desconhecido"}</dd></div>
         </dl>
         <p className="death-card__note">
           Mantém: {(death?.retained || []).join(", ") || "registro da sessão"}.<br />
@@ -46,7 +48,8 @@ export function DeathModal({ busy, onContinue, onAccept, death }: Props) {
           <button
             type="button"
             className="death-btn death-btn--continue"
-            disabled={busy}
+            disabled={busy || noRestorePoint}
+            title={noRestorePoint ? "Sem ponto de retorno válido" : undefined}
             onClick={onContinue}
           >
             Continuar do checkpoint

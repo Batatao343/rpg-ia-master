@@ -24,6 +24,49 @@ def _save_or_raise(state: dict) -> None:
         raise RuntimeError("não foi possível persistir o jogo")
 
 
+def _persist_turn_cli(state: dict) -> dict:
+    """SPEC-228 R5 (CLI): grava o checkpoint devido ANTES do save do turno e só
+    marca `last_checkpoint_turn` após gravar; falha vira `checkpoint_deferred`."""
+    from services import checkpoints as _cp
+    from services.continuity import mark_checkpoint, normalize
+    if not state.get("death_pending") and _cp.should_checkpoint(state):
+        turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
+        if _cp.write_now(state):
+            state["continuity"] = mark_checkpoint(
+                state.get("continuity"), canonical_turn=turn)
+        else:
+            meta = normalize(state.get("continuity"), canonical_turn=turn)
+            meta["checkpoint_deferred"] = True
+            state["continuity"] = meta
+            print("⚠️ checkpoint adiado: falha ao gravar; tentará no próximo turno")
+    _save_or_raise(state)
+    return state
+
+
+def _death_prompt_cli(state: dict, ask=None) -> tuple[dict, bool]:
+    """Tela de morte do terminal. Devolve (estado, continuar_jogando).
+    Sem ponto de retorno (SPEC-228 R2) nunca vira memorial sem confirmação."""
+    from services import checkpoints as _cp
+    ask = ask or input
+    print(f"\n{Colors.FAIL}☠️  Você tombou.{Colors.ENDC}")
+    esc = ask("  [1] Continuar do checkpoint   [2] Aceitar o fim\n  Escolha [1]: ").strip()
+    choice = "accept" if esc == "2" else "continue"
+    try:
+        state = _cp.resolve_death_choice(state, choice)
+    except _cp.NoRestorePoint:
+        print(f"\n{Colors.WARNING}Sem ponto de retorno válido.{Colors.ENDC}")
+        if ask("  Aceitar o fim? [s/N]: ").strip().lower() != "s":
+            print("A queda segue pendente; o save foi mantido.")
+            return state, False
+        state = _cp.resolve_death_choice(state, "accept")
+    _save_or_raise(state)
+    if state.get("game_over"):
+        print(f"\n{Colors.FAIL}💀 A saga termina. A crônica permanece como memorial.{Colors.ENDC}")
+        return state, False
+    print(f"\n{Colors.GREEN}A Roda do Abismo te devolve ao último respiro seguro.{Colors.ENDC}")
+    return state, True
+
+
 ORIGINS_DATA = load_json_data("origins.json")
 RACES = ORIGINS_DATA.get("races", [])
 REGIONS = ORIGINS_DATA.get("regions", [])
@@ -248,10 +291,23 @@ def run_game_loop():
     print(f"{Colors.BOLD}{Colors.CYAN}🐉 RPG IA ENGINE V9.0 - HYBRID MEMORY{Colors.ENDC}")
     
     # Carregar ou Criar
-    state = load_game_state()
+    import persistence as _persistence
+    try:
+        state = load_game_state()
+    except _persistence.IncompatibleSaveError as exc:
+        # SPEC-228 R9: recusa sem regravar o save de schema mais novo.
+        print(f"{Colors.FAIL}Save incompatível ({exc}); atualize o jogo.{Colors.ENDC}")
+        return
     if not state:
         state = create_character_wizard()
         _save_or_raise(state)
+    else:
+        _persistence.ensure_synthetic_checkpoint(state)   # SPEC-228 R4
+        if state.get("death_pending") and not state.get("game_over"):
+            # Save retomado já caído: resolve a tela de morte antes de jogar.
+            state, keep_playing = _death_prompt_cli(state)
+            if not keep_playing:
+                return
 
     print("\n--- INÍCIO DA SESSÃO ---")
     print(f"ID Sessão: {state.get('game_id')}")
@@ -343,25 +399,15 @@ def run_game_loop():
             # Fase 4.1: level up pendente? Resolve no fim do turno (não bloqueia o jogo:
             # ENTER pula e a escolha continua pendente para depois).
             state["player"] = _resolve_pending_choices(state["player"])
-            _save_or_raise(state)
+            # SPEC-228 R5: checkpoint (se devido) ANTES do save do turno.
+            state = _persist_turn_cli(state)
 
             # spec checkpoints-morte (D2): queda letal → tela de morte no terminal.
             if state.get("death_pending"):
-                from services import checkpoints as _cp
-                print(f"\n{Colors.FAIL}☠️  Você tombou.{Colors.ENDC}")
-                esc = input("  [1] Continuar do checkpoint   [2] Aceitar o fim\n  Escolha [1]: ").strip()
-                choice = "accept" if esc == "2" else "continue"
-                state = _cp.resolve_death_choice(state, choice)
-                _save_or_raise(state)
-                if state.get("game_over"):
-                    print(f"\n{Colors.FAIL}💀 A saga termina. A crônica permanece como memorial.{Colors.ENDC}")
+                state, keep_playing = _death_prompt_cli(state)
+                if not keep_playing:
                     break
-                print(f"\n{Colors.GREEN}A Roda do Abismo te devolve ao último respiro seguro.{Colors.ENDC}")
                 continue
-            # checkpoint na cadência (10 turnos) — o restore acima o consome.
-            from services import checkpoints as _cp
-            if _cp.should_checkpoint(state) and not _cp.maybe_write(state):
-                raise RuntimeError("não foi possível persistir o checkpoint")
 
         except KeyboardInterrupt:
             print("\nEncerrando...")

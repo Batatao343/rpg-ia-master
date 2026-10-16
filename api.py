@@ -33,7 +33,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 # Imports do seu motor
 from main import app as game_graph
 import gamedata
-from persistence import save_game_state, load_game_state, save_path, _serialize_messages
+import persistence as persistence_module
+from persistence import save_game_state, load_game_state, save_path, _serialize_messages, IncompatibleSaveError
 from character_creator import create_player_character
 from gamedata import CLASSES, load_json_data, seed_factions
 from llm_setup import (
@@ -62,6 +63,18 @@ app = FastAPI(
     description="Backend para RPG de Texto com IA, Crafting e NPCs.",
     version="v2.0 Hybrid Memory"
 )
+
+
+
+@app.exception_handler(IncompatibleSaveError)
+async def _incompatible_save_handler(_request, _exc):
+    """SPEC-228 R9: save de schema mais novo é recusado, nunca regravado."""
+    return JSONResponse(status_code=409, content={
+        "detail": "Este save foi criado por uma versão mais nova do jogo; "
+                  "atualize o servidor antes de continuar.",
+        "code": "save_schema_newer",
+    })
+
 
 # Fase 10 (R5): CORS restrito por default; configurável via RPG_CORS_ORIGINS
 # (CSV no .env; "*" só se explicitamente configurado).
@@ -638,6 +651,15 @@ _game_locks_guard = threading.Lock()
 
 
 def _game_lock(game_id: Optional[str]) -> threading.RLock:
+    if not game_id:
+        # SPEC-228 R8: sem game_id, trava pelo UUID REAL do save mais recente
+        # (legacy), para serializar com requisições que trazem o UUID.
+        try:
+            latest = persistence_module.get_latest_save_file()
+            stem = os.path.basename(latest).removesuffix(".json") if latest else ""
+            game_id = stem or None
+        except Exception:
+            game_id = None
     key = str(game_id or "__latest__")
     with _game_locks_guard:
         return _game_locks.setdefault(key, threading.RLock())
@@ -1260,7 +1282,13 @@ def _death_block(state: dict) -> Dict[str, Any]:
         last_action_label = str(card.get("name") or last_action.get("card_id") or "")
     continuity = _continuity_block(state)
     canonical = int(continuity.get("canonical_turn", 0) or 0)
-    checkpoint = int(continuity.get("last_checkpoint_turn", 0) or 0)
+    # SPEC-228 R6/R10: o turno de retorno vem do checkpoint REAL em disco.
+    checkpoint: Optional[int] = None
+    if state.get("game_id"):
+        try:
+            checkpoint = persistence_module.checkpoint_turn(str(state["game_id"]))
+        except Exception:
+            checkpoint = None
     return {
         "pending": bool(state.get("death_pending")),
         "last_action": last_action,
@@ -1275,7 +1303,8 @@ def _death_block(state: dict) -> Dict[str, Any]:
         ),
         "killer": context.get("killer", ""),
         "will_restore_turn": checkpoint,
-        "will_lose_turns": max(0, canonical - checkpoint),
+        "will_lose_turns": (max(0, canonical - checkpoint)
+                            if checkpoint is not None else None),
         "retained": ["histórico de mortes", "contagem de ações da sessão"],
         "reverted": ["mundo", "inventário", "posição e memória após o checkpoint"],
     }
@@ -2876,11 +2905,14 @@ def _prepare_checkpoint(state: dict, previous: dict) -> bool:
     from services import checkpoints as _cp
     if not _cp.should_checkpoint(state, previous):
         return False
-    from services.continuity import mark_checkpoint
-    state["continuity"] = mark_checkpoint(
-        state.get("continuity"),
-        canonical_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
-    )
+    if _database_profile():
+        # Postgres grava turno+checkpoint na mesma tx; legacy só marca depois
+        # que o arquivo existir (SPEC-228 R5).
+        from services.continuity import mark_checkpoint
+        state["continuity"] = mark_checkpoint(
+            state.get("continuity"),
+            canonical_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
+        )
     return True
 
 
@@ -3100,11 +3132,21 @@ def _commit_turn(
     from services.presentation_history import record_history
     presentation_entry_id = record_history(state, response.message)
     if claim is None:
-        _require_saved(state, detail="turno")
         if checkpoint:
+            # SPEC-228 R5: checkpoint ANTES do save; só marca após gravar.
+            # Falha vira adiamento (warning), nunca 500 com turno já salvo.
             from services import checkpoints as _cp
-            if not _cp.maybe_write(state):
-                raise RuntimeError("falha ao persistir checkpoint")
+            from services.continuity import mark_checkpoint, normalize
+            turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
+            if _cp.write_now(state):
+                state["continuity"] = mark_checkpoint(
+                    state.get("continuity"), canonical_turn=turn)
+            else:
+                meta = normalize(state.get("continuity"), canonical_turn=turn)
+                meta["checkpoint_deferred"] = True
+                state["continuity"] = meta
+                print("⚠️ checkpoint adiado: falha ao gravar; tentará no próximo turno")
+        _require_saved(state, detail="turno")
         _schedule_chronicle_jobs(state)
         return
     from infrastructure.request_context import current_principal
@@ -3323,11 +3365,23 @@ def _run_turn_collected(state: dict, input_text: str,
 def _execute_action(req: ActionRequest, *, progress=None) -> GameResponse:
     from infrastructure.runtime import get_runtime
     from services.turn_execution import operation_scope
+    if not req.game_id and not _database_profile():
+        # SPEC-228 R8: resolve o "mais recente" UMA vez; lock e load usam o UUID.
+        latest = persistence_module.get_latest_save_file()
+        stem = os.path.basename(latest).removesuffix(".json") if latest else ""
+        try:
+            if stem:
+                save_path(stem)
+                req = req.model_copy(update={"game_id": stem})
+        except ValueError:
+            pass
     lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
     with lock:
         state = load_game_state(_resolve_save_file(req.game_id))
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+        if not _database_profile():
+            persistence_module.ensure_synthetic_checkpoint(state)   # SPEC-228 R4
         claim, request_hash, receipt = _begin_turn_operation(state, req)
         if receipt is not None:
             return receipt
@@ -3383,7 +3437,15 @@ def game_death(req: DeathChoiceRequest):
                 _fail_operation(claim, type(exc).__name__)
                 raise
             from services import checkpoints as _cp
-            new_state = _cp.resolve_death_choice(state, req.choice)
+            try:
+                new_state = _cp.resolve_death_choice(state, req.choice)
+            except _cp.NoRestorePoint as exc:
+                _fail_operation(claim, "no_restore_point")
+                return JSONResponse(status_code=409, content={
+                    "detail": "Sem ponto de retorno válido; aceite o memorial "
+                              "ou inicie nova jornada.",
+                    "code": "no_restore_point", "death_pending": True,
+                })
             response = format_response(new_state)
             _commit_state_mutation(
                 new_state, response.model_dump(mode="json"), claim=claim,
@@ -3476,6 +3538,9 @@ def game_action_stream(req: ActionRequest):
     state = load_game_state(file_to_load)
     if not state:
         raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+    if not req.game_id and not _database_profile() and state.get("game_id"):
+        # SPEC-228 R8: resolve "mais recente" UMA vez; aceite e worker usam o UUID.
+        req = req.model_copy(update={"game_id": str(state["game_id"])})
     principal = None
     if _database_profile():
         from infrastructure.request_context import current_principal

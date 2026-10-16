@@ -344,8 +344,8 @@ export interface DeathView {
   stabilization: string;
   stabilization_attempts: number;
   killer: string;
-  will_restore_turn: number;
-  will_lose_turns: number;
+  will_restore_turn: number | null;
+  will_lose_turns: number | null;
   retained: string[];
   reverted: string[];
 }
@@ -354,7 +354,7 @@ export interface ContinuityView {
   session_action_count: number;
   canonical_turn: number;
   timeline_epoch: number;
-  last_checkpoint_turn: number;
+  last_checkpoint_turn: number | null;
   death_history: Array<Record<string, unknown>>;
 }
 

@@ -79,6 +79,20 @@ def _stored(row: dict[str, Any]) -> StoredGame:
     )
 
 
+def _stored_rows_tolerant(rows: list[dict[str, Any]]) -> list[StoredGame]:
+    """SPEC-228 R9: partida de schema mais novo é pulada (com log) na listagem,
+    sem derrubar as demais nem o "mais recente"; abrir por id segue 409."""
+    from persistence import IncompatibleSaveError
+
+    out: list[StoredGame] = []
+    for row in rows:
+        try:
+            out.append(_stored(row))
+        except IncompatibleSaveError as exc:
+            print(f"⚠️ partida {row.get('id')} ignorada na listagem: {exc}")
+    return out
+
+
 class PostgresGameStore:
     def __init__(self, pool: PostgresPool) -> None:
         self.pool = pool
@@ -160,7 +174,7 @@ class PostgresGameStore:
                 "select * from app.games where owner_id=%s order by updated_at desc",
                 (principal.user_id,),
             ).fetchall()
-            return [_stored(row) for row in rows]
+        return _stored_rows_tolerant(rows)
 
     def save(self, principal: Principal, game_id: UUID, expected_version: int,
              state: dict[str, Any]) -> StoredGame:
