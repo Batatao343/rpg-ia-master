@@ -187,6 +187,152 @@ def _v_player_downed(ev: ProposedWorldEvent, state: dict, proj: dict) -> Validat
     return ValidationResult(True)
 
 
+# --- SPEC-223: prova determinística p/ eventos propostos pelo LLM ---------------
+# Fontes do MOTOR (Python) — tudo o mais (sem `source`, ou "storyteller") é
+# proposta do LLM e precisa de prova no estado antes de virar fato.
+ENGINE_SOURCES = frozenset({
+    "system", "combat", "rule_engine", "engine", "progression", "trap",
+})
+PROOF_REQUIRED_TYPES = frozenset({"quest_completed", "secret_revealed", "npc_killed"})
+UNPROVEN_PREFIX = "sem prova determinística"
+LIMIT_PREFIX = "limite de conclusões"
+QUEST_COMPLETION_COOLDOWN = 3  # turnos entre conclusões propostas pelo LLM
+
+
+def is_engine_proposal(proposal: dict) -> bool:
+    return str((proposal or {}).get("source") or "") in ENGINE_SOURCES
+
+
+def _turn_of(state: dict) -> int:
+    try:
+        return int((state.get("world") or {}).get("turn_count", 0) or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _fold(value: object) -> str:
+    import unicodedata
+    folded = unicodedata.normalize("NFKD", str(value or ""))
+    return " ".join("".join(c for c in folded if not unicodedata.combining(c)).casefold().split())
+
+
+def scene_anchor_ids(state: dict) -> set:
+    """Ids canônicos ANCORADOS na cena atual: local atual + NPCs `in_scene`."""
+    from services.entity_identity import resolve_npc_entity_id
+    world = state.get("world") or {}
+    ids = {str(world.get("current_location_id") or "")}
+    for key, npc in (state.get("npcs") or {}).items():
+        if not isinstance(npc, dict) or not npc.get("in_scene"):
+            continue
+        eid = resolve_npc_entity_id(npc, str(key))
+        if eid:
+            ids.add(eid)
+    ids.discard("")
+    return ids
+
+
+def _hidden_edges(target_id: str, proj: dict) -> list:
+    return [e for e in gr.resolve_edges(proj, entity_id=target_id, include_hidden=True)
+            if e.get("visibility") in ("hidden", "secret")]
+
+
+def canonical_secret_detail(target_id: str, proj: dict,
+                            anchors: set | None = None) -> str:
+    """Texto do segredo vem do GRAFO (edges hidden/secret), nunca do LLM.
+
+    Com ``anchors`` e alvo FORA da cena, só entram as edges ancoradas na cena
+    (a revelação que a prova autorizou) — nunca os demais segredos do alvo."""
+    def name(eid: str) -> str:
+        return str((gr.get_entity(eid) or {}).get("name") or eid)
+    edges = _hidden_edges(target_id, proj)
+    if anchors is not None and target_id not in anchors:
+        edges = [e for e in edges
+                 if e.get("source") in anchors or e.get("target") in anchors]
+    parts = [f"{name(e.get('source'))} —{e.get('type')}→ {name(e.get('target'))}"
+             for e in edges]
+    return "; ".join(parts)
+
+
+def _quest_proof(ev: ProposedWorldEvent, state: dict) -> ValidationResult:
+    from services.quest_log import has_completion_proof
+    qid = ev.payload.get("quest_id")
+    if not qid:
+        # Modo beat: conclusão de beat é decidida por beat_completed (SPEC-142),
+        # não por evento proposto — o LLM não fecha beat por quest_completed.
+        return ValidationResult(False, f"{UNPROVEN_PREFIX}: quest_completed sem quest_id")
+    quest = next((q for q in state.get("quests", []) or []
+                  if isinstance(q, dict) and q.get("id") == qid), None)
+    if quest is None:
+        return ValidationResult(False, f"quest_id {qid} não é uma quest ativa")
+    ok, why = has_completion_proof(quest, state)
+    if not ok:
+        return ValidationResult(False, f"{UNPROVEN_PREFIX}: quest_completed ({why})")
+    turn = _turn_of(state)
+    done_turns = [int(e.get("turn", 0) or 0) for e in state.get("event_log") or []
+                  if isinstance(e, dict) and e.get("type") == "quest_completed"]
+    if any(t == turn for t in done_turns):
+        return ValidationResult(False, f"{LIMIT_PREFIX}: 1 quest_completed por turno")
+    past = [t for t in done_turns if t < turn]
+    if past and turn - max(past) < QUEST_COMPLETION_COOLDOWN:
+        return ValidationResult(
+            False, f"{LIMIT_PREFIX}: cooldown de {QUEST_COMPLETION_COOLDOWN} turnos")
+    return ValidationResult(True)
+
+
+def _secret_proof(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    anchors = scene_anchor_ids(state)
+    if ev.target_id in anchors:
+        return ValidationResult(True)
+    for edge in _hidden_edges(ev.target_id, proj):
+        if edge.get("source") in anchors or edge.get("target") in anchors:
+            return ValidationResult(True)
+    return ValidationResult(
+        False, f"{UNPROVEN_PREFIX}: secret_revealed sem âncora na cena ({ev.target_id})")
+
+
+def _killed_proof(ev: ProposedWorldEvent, state: dict) -> ValidationResult:
+    summary = state.get("conflict_summary") or {}
+    if isinstance(summary, dict):
+        try:
+            same_turn = int(summary.get("conflict_turn")) == _turn_of(state)
+        except (TypeError, ValueError):
+            same_turn = False
+        if same_turn:
+            ent = gr.get_entity(ev.target_id) or {}
+            wanted = {_fold(ev.target_id), _fold(ent.get("name"))} - {""}
+            for dead in summary.get("mortos") or []:
+                if _fold(dead) in wanted:
+                    return ValidationResult(True)
+    return ValidationResult(
+        False, f"{UNPROVEN_PREFIX}: npc_killed sem combate encerrado neste turno")
+
+
+def _proof_gate(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    if ev.type == "quest_completed":
+        return _quest_proof(ev, state)
+    if ev.type == "secret_revealed":
+        return _secret_proof(ev, state, proj)
+    if ev.type == "npc_killed":
+        return _killed_proof(ev, state)
+    return ValidationResult(True)
+
+
+def reason_class(reason: str) -> str:
+    """Classe FECHADA de rejeição p/ métrica (sem texto livre como label)."""
+    text = str(reason or "")
+    if text.startswith(UNPROVEN_PREFIX):
+        return "unproven"
+    if text.startswith(LIMIT_PREFIX):
+        return "rate_limited"
+    if "gerado pelo motor" in text or "registrada pelo motor" in text:
+        return "engine_only"
+    if text.startswith("duplicata"):
+        return "duplicate"
+    if text.startswith("proposta malformada"):
+        return "malformed"
+    return "invalid"
+
+
 _VALIDATORS = {
     "npc_killed": _v_npc_killed,
     "secret_revealed": _v_secret_revealed,
@@ -246,4 +392,10 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
             return ValidationResult(False, f"duplicata: {ev.type}/{ev.target_id} já no turno {turn}")
 
     # 3. Regra específica do tipo.
-    return _VALIDATORS[ev.type](ev, state, projection)
+    result = _VALIDATORS[ev.type](ev, state, projection)
+    if not result.ok:
+        return result
+    # 4. SPEC-223: proposta do LLM (sem fonte do motor) exige prova no estado.
+    if ev.type in PROOF_REQUIRED_TYPES and not is_engine_proposal(proposal):
+        return _proof_gate(ev, state, projection)
+    return result

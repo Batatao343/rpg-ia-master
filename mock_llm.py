@@ -67,7 +67,10 @@ _BEATS = [
 def _last_human(messages) -> str:
     for m in reversed(messages or []):
         if m.__class__.__name__ == "HumanMessage":
-            return str(getattr(m, "content", ""))
+            # SPEC-223 R5: a entrada chega delimitada; o mock lê o texto cru
+            # (fixtures não dependem do delimitador).
+            from services.prompt_guard import unwrap_player_input
+            return unwrap_player_input(getattr(m, "content", ""))
     return ""
 
 
@@ -191,24 +194,31 @@ def _story_update(model, messages):
     # Fase 3.3: ~15% dos turnos propõe 1 missão (offline exercita validação/zeragem de
     # ids inválidos — location_id/origin_entity_id de propósito fora do grafo).
     quests = []
+    todo_texto = " ".join(str(getattr(m, "content", "") or "") for m in messages)
     if random.random() < 0.15:
+        # SPEC-223: missão dada AQUI aponta para o local da cena (id do bloco
+        # <ENTIDADES_CANONICAS>), para o progresso Python poder prová-la.
+        loc_match = re.search(r"- id=(\S+) · [^\n]*· location", todo_texto)
         quests = [{"title": "Recuperar o medalhão perdido",
                    "description": "Um estranho pediu ajuda para achar uma relíquia.",
                    "origin_name": "Um estranho encapuzado", "origin_entity_id": "",
-                   "location_id": "", "reward_hint": "algumas moedas"}]
+                   "location_id": loc_match.group(1) if loc_match else "",
+                   "reward_hint": "algumas moedas"}]
     # Fase 5: se o prompt lista quests ATIVAS (bloco "- id=<id> · ..."), ~50% das
     # vezes propõe a CONCLUSÃO de uma delas. Sem isto o harness offline nunca
     # fecha quest (mock só criava, nunca completava — achado do playtest).
     proposed_events = []
-    todo_texto = " ".join(str(getattr(m, "content", "") or "") for m in messages)
     quests_match = re.search(
         r"<QUESTS_ATIVAS>(.*?)</QUESTS_ATIVAS>",
         todo_texto,
         flags=re.IGNORECASE | re.DOTALL,
     )
+    # SPEC-223 R1: LLM bem-comportado só propõe conclusão de quest PROVADA
+    # ("prova: ok"); sem o marcador (prompt legado) mantém o comportamento antigo.
+    bloco = quests_match.group(1) if quests_match else ""
     quest_ids = (
-        re.findall(r"- id=(\S+) ·", quests_match.group(1))
-        if quests_match else []
+        re.findall(r"- id=(\S+) ·[^\n]*prova: ok", bloco)
+        if "prova:" in bloco else re.findall(r"- id=(\S+) ·", bloco)
     )
     if quest_ids and random.random() < 0.5:
         qid = random.choice(quest_ids)

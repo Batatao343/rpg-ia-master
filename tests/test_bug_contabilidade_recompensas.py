@@ -68,7 +68,11 @@ def test_quest_completed_twice_in_batch_pays_once():
           "payload": {"quest_id": "q1"}, "source": "storyteller"}
     state = {"player": {"xp": 0, "gold": 0, "level": 1, "name": "A"},
              "world": {"turn_count": 5}, "event_log": [], "world_projection": {},
-             "quests": [{"id": "q1", "title": "T", "status": "active"}],
+             # SPEC-223 R1: quest com prova determinística (chegou + investigou).
+             "quests": [{"id": "q1", "title": "T", "status": "active",
+                         "created_turn": 1, "location_id": "nova_arcadia",
+                         "progress_log": [{"kind": "location_reached", "turn": 1},
+                                          {"kind": "investigation", "turn": 2}]}],
              "pending_world_events": [dict(ev), {**ev, "target_id": "q1_bis"}]}
     out = process_pending_events(state)
     assert out["player"]["xp"] == 200
@@ -296,7 +300,11 @@ def test_reward_guard_accepts_each_real_gain_beat_quest_discovery(story):
     from services.narrative_evidence import build_evidence, validate_narrative
     from services.turn_outcome import capture_baseline
     state = _travel_state()
-    state["quests"] = [{"id": "q1", "title": "T", "status": "active"}]
+    # SPEC-223 R1: quest com prova (chegou ao local + investigou em turno anterior).
+    state["quests"] = [{"id": "q1", "title": "T", "status": "active", "created_turn": 1,
+                        "location_id": "pantano_melancolia",
+                        "progress_log": [{"kind": "location_reached", "turn": 2},
+                                         {"kind": "investigation", "turn": 3}]}]
     state["pending_world_events"] = [{"type": "quest_completed", "actor_id": "player",
                                       "target_id": "q1", "payload": {"quest_id": "q1"},
                                       "source": "storyteller"}]

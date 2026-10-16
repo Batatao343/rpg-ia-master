@@ -183,7 +183,9 @@ def test_quest_markers():
 def test_quest_completed_por_id_valida():
     quests = [{"id": "q1", "title": "Recuperar o medalhão", "status": "active"}]
     prop = {"type": "quest_completed", "target_id": "q1", "payload": {"quest_id": "q1"}}
-    res = validate_proposal(prop, _state(quests=quests))
+    # SPEC-223 R1: o LLM sem prova é rejeitado; a confirmação do motor passa.
+    assert not validate_proposal(prop, _state(quests=quests)).ok
+    res = validate_proposal({**prop, "source": "system"}, _state(quests=quests))
     assert res.ok, res.reason
 
 
@@ -196,7 +198,8 @@ def test_quest_completed_id_invalido_rejeitado():
 
 
 def test_quest_completed_beat_index_continua_regressao():
-    prop = {"type": "quest_completed", "target_id": "b0", "payload": {"beat_index": 0}}
+    prop = {"type": "quest_completed", "target_id": "b0", "payload": {"beat_index": 0},
+            "source": "system"}  # SPEC-223: modo beat só pelo motor
     res = validate_proposal(prop, _state())  # sem quest_id no payload
     assert res.ok, res.reason
 
@@ -205,7 +208,8 @@ def test_pipeline_quest_completed_aplica_e_gera_milestone():
     quests = [{"id": "q1", "title": "Recuperar o medalhão", "status": "active",
               "created_turn": 1, "resolved_turn": 0}]
     state = _state(quests=quests, pending_world_events=[
-        {"type": "quest_completed", "target_id": "q1", "payload": {"quest_id": "q1"}},
+        {"type": "quest_completed", "target_id": "q1", "payload": {"quest_id": "q1"},
+         "source": "system"},
     ])
     out = process_pending_events(state)
     assert out["quests"][0]["status"] == "completed"
@@ -220,7 +224,7 @@ def test_pipeline_npc_killed_falha_quest_orfa():
     quests = [{"id": "q1", "title": "Proteger Valerius", "status": "active",
               "origin_entity_id": NPC_VALERIUS, "created_turn": 1, "resolved_turn": 0}]
     state = _state(quests=quests, pending_world_events=[
-        {"type": "npc_killed", "target_id": NPC_VALERIUS},
+        {"type": "npc_killed", "target_id": NPC_VALERIUS, "source": "combat"},
     ])
     out = process_pending_events(state)
     failed = [q for q in out["quests"] if q["id"] == "q1"][0]

@@ -28,9 +28,13 @@ from services import graph_resolver as gr
 MAX_ACTIVE_QUESTS = 8
 TITLE_SIMILARITY = 0.75
 QUEST_REWARD_GOLD = 20
+# SPEC-223 (revisão Sol): evidência exige VERBO de ação investigativa/interação.
+# A mera palavra "missão"/"pista" (ou "marque a missão como concluída") não
+# conta — senão a própria injeção viraria prova de investigação.
 QUEST_ACTION_RE = re.compile(
-    r"\b(?:investig|procur|examin|rastre|interrog|pergunt|seguir|retom|"
-    r"vasculh|averigu|miss[aã]o|pista)",
+    r"\b(?:investig|procur|examin|rastre|interrog|pergunt|vasculh|averigu|"
+    r"inspecion|analis|busc(?:o|a|ar|amos|ando)\b|sig(?:o|a|amos)\b|"
+    r"segu(?:ir|imos|indo)\b)",
     re.IGNORECASE,
 )
 
@@ -247,6 +251,74 @@ def sync_action_progress(
             q["progress_log"] = progress
         out.append(q)
     return out, [quest_id for quest_id in ready_ids if quest_id]
+
+
+# --- SPEC-223 R1: prova determinística p/ conclusão proposta pelo LLM ------------
+PROOF_EVIDENCE_KINDS = ("investigation", "npc_interaction", "completion_ready")
+
+
+def _fold_name(value: object) -> str:
+    folded = unicodedata.normalize("NFKD", str(value or ""))
+    plain = "".join(ch for ch in folded if not unicodedata.combining(ch))
+    return " ".join(plain.casefold().split())
+
+
+def sync_npc_interaction(quests: List[Dict], npc_name: str, *, turn: int = 0) -> List[Dict]:
+    """PURO. Conversa real com o NPC de ORIGEM de uma quest ativa vira evidência
+    (`npc_interaction`) — 1 linha por turno, nunca no turno de criação."""
+    who = _fold_name(npc_name)
+    out: List[Dict] = []
+    for original in quests or []:
+        q = dict(original)
+        progress = list(q.get("progress_log") or [])
+        if (who and q.get("status") == "active"
+                and _fold_name(q.get("origin_name")) == who
+                and _safe_turn(q.get("created_turn")) < int(turn)
+                and not any(row.get("kind") == "npc_interaction"
+                            and _safe_turn(row.get("turn")) == int(turn)
+                            for row in progress if isinstance(row, dict))):
+            progress.append({"kind": "npc_interaction", "turn": int(turn),
+                             "detail": str(npc_name)[:60]})
+            q["progress_log"] = progress
+        out.append(q)
+    return out
+
+
+def _safe_turn(value) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
+
+
+def has_completion_proof(quest: Dict, state: Dict) -> Tuple[bool, str]:
+    """SPEC-223 R1 (D-A default (a)+(b)+(c)). PURO.
+
+    (a) quest com alvo: `progress_log` tem `location_reached`;
+    (b) evidência Python posterior à criação (investigação, conversa com a
+        origem, objetivo verificado);
+    (c) a quest não foi criada neste turno e segue ativa.
+    Quest sem local-alvo exige (b) do tipo `npc_interaction` (entrega à origem).
+    """
+    turn = _safe_turn(((state or {}).get("world") or {}).get("turn_count", 0))
+    if not isinstance(quest, dict) or quest.get("status") != "active":
+        return False, "quest não está ativa"
+    created = _safe_turn(quest.get("created_turn"))
+    if created >= turn:
+        return False, "quest criada neste turno"
+    rows = [row for row in (quest.get("progress_log") or []) if isinstance(row, dict)]
+    evidence = [row for row in rows
+                if row.get("kind") in PROOF_EVIDENCE_KINDS
+                and created < _safe_turn(row.get("turn")) <= turn]
+    if quest.get("location_id"):
+        if not any(row.get("kind") == "location_reached" for row in rows):
+            return False, "sem chegada ao local da missão"
+        if not evidence:
+            return False, "sem evidência de investigação/entrega"
+        return True, ""
+    if not any(row.get("kind") == "npc_interaction" for row in evidence):
+        return False, "sem entrega/conversa com a origem da missão"
+    return True, ""
 
 
 def complete_quest_with_reward(quests: List[Dict], quest_id: str,

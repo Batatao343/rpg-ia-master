@@ -217,7 +217,7 @@ def test_recrutamento_usa_trait_persuasao():
     assert ok is False
 
     # sentimental (-2): rel 5 passa (limiar vira 5)
-    state2 = {"npcs": {"Nilo": _npc("Nilo", relationship=5,
+    state2 = {"npcs": {"Nilo": _npc("Nilo", relationship=5, interaction_count=2,  # SPEC-223 R4
                                     hidden_traits=["sentimental"], revealed_traits=[])},
               "party": [], "factions": []}
     ok2, _ = party.can_recruit(state2, "Nilo")

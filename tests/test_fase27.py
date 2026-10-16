@@ -284,7 +284,8 @@ def test_save_antigo_sem_projection_nao_quebra():
     st = {
         "world": {"turn_count": 1},
         "event_log": [],
-        "pending_world_events": [{"type": "npc_killed", "target_id": "npc_grum", "payload": {}}],
+        "pending_world_events": [{"type": "npc_killed", "target_id": "npc_grum", "payload": {},
+                                "source": "combat"}],
     }
     out = process_pending_events(st)  # não levanta
     assert out["world_projection"]["entities"]["npc_grum"]["alive"] is False

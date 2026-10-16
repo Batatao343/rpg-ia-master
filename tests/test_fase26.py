@@ -40,9 +40,13 @@ def _state(**over) -> dict:
 # ---------------------------------------------------------------------------
 
 def test_valida_npc_killed_ok():
-    prop = {"type": "npc_killed", "actor_id": "player", "target_id": "npc_valerius"}
+    # SPEC-223 R3: morte vem do combate (motor); proposta solta do LLM é rejeitada.
+    prop = {"type": "npc_killed", "actor_id": "player", "target_id": "npc_valerius",
+            "source": "combat"}
     res = validate_proposal(prop, _state())
     assert res.ok, res.reason
+    llm = {k: v for k, v in prop.items() if k != "source"}
+    assert not validate_proposal(llm, _state()).ok
 
 
 def test_rejeita_id_inexistente():
@@ -71,7 +75,7 @@ def test_rejeita_duplicata_no_turno():
 def test_duplicata_so_conta_mesmo_turno():
     """Mesmo type+target em turno ANTERIOR não bloqueia (só o turno atual)."""
     log = [{"type": "npc_killed", "target_id": "npc_grum", "turn": 1}]
-    prop = {"type": "npc_killed", "target_id": "npc_grum"}
+    prop = {"type": "npc_killed", "target_id": "npc_grum", "source": "combat"}
     res = validate_proposal(prop, _state(event_log=log))
     assert res.ok, res.reason
 
@@ -91,8 +95,10 @@ def test_rejeita_type_desconhecido():
 def test_secret_revealed_ok():
     prop = {"type": "secret_revealed", "target_id": "npc_velha_magda",
             "detail": "Magda lidera a Mão Sombria"}
-    res = validate_proposal(prop, _state())
+    # SPEC-223 R2: revelação exige âncora na cena (Magda presente).
+    res = validate_proposal(prop, _state(npcs={"Velha Magda": {"name": "Velha Magda", "in_scene": True}}))
     assert res.ok, res.reason
+    assert not validate_proposal(prop, _state()).ok
 
 
 def test_secret_revealed_rejeita_sem_segredo():
@@ -132,9 +138,13 @@ def test_faction_relation_changed_ok():
 
 
 def test_quest_completed_ok():
-    prop = {"type": "quest_completed", "target_id": "b0", "payload": {"beat_index": 0}}
+    # Modo beat só pelo motor (SPEC-223 R1): o LLM fecha beat via beat_completed.
+    prop = {"type": "quest_completed", "target_id": "b0", "payload": {"beat_index": 0},
+            "source": "system"}
     res = validate_proposal(prop, _state())
     assert res.ok, res.reason
+    llm = {k: v for k, v in prop.items() if k != "source"}
+    assert not validate_proposal(llm, _state()).ok
 
 
 def test_quest_completed_rejeita_beat_fora():
@@ -176,7 +186,7 @@ def test_rejeitado_nao_entra_no_log():
 
 
 def test_secret_revealed_registra_fato():
-    st = _state(pending_world_events=[
+    st = _state(npcs={"Velha Magda": {"name": "Velha Magda", "in_scene": True}}, pending_world_events=[
         {"type": "secret_revealed", "target_id": "npc_velha_magda",
          "detail": "Magda lidera a Mão Sombria"},
     ])
@@ -206,8 +216,8 @@ def test_location_control_changed_troca_edge():
 def test_duplicata_no_mesmo_lote_so_aplica_uma():
     # npc_grum (sem cascata 2.7) isola a checagem de duplicata.
     st = _state(pending_world_events=[
-        {"type": "npc_killed", "target_id": "npc_grum"},
-        {"type": "npc_killed", "target_id": "npc_grum"},  # duplicata no lote
+        {"type": "npc_killed", "target_id": "npc_grum", "source": "combat"},
+        {"type": "npc_killed", "target_id": "npc_grum", "source": "combat"},  # duplicata no lote
     ])
     up = process_pending_events(st)
     assert len(up["event_log"]) == 1
@@ -230,7 +240,8 @@ def test_apply_event_e_puro():
 def test_archivist_processa_pendings():
     from agents.archivist import archive_node
     st = _state(game_id="t26", archivist_last_run=5, messages=[],
-                pending_world_events=[{"type": "npc_killed", "target_id": "npc_grum"}])
+                pending_world_events=[{"type": "npc_killed", "target_id": "npc_grum",
+                                       "source": "combat"}])
     up = archive_node(st)
     assert up["archive_due"] is False           # turno trivial (não rodou o LLM)
     assert len(up["event_log"]) == 1

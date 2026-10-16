@@ -161,10 +161,13 @@ def load_bestiary() -> Dict:
     id — gerado nunca sombreia entrada curada)."""
     from infrastructure.runtime import get_runtime
 
-    overlay = get_runtime().runtime_catalog.list(
-        "bestiary_template", owner_id=None, game_id=None,
-    )
-    return {**overlay, **_read_json(BESTIARY_FILE)}
+    from agents.npc import catalog_owner_id
+
+    store = get_runtime().runtime_catalog
+    overlay = store.list("bestiary_template", owner_id=None, game_id=None)
+    owner = catalog_owner_id()  # SPEC-223 R7: gerado do dono, nunca de outro tenant
+    own = store.list("bestiary_template", owner_id=owner, game_id=None) if owner else {}
+    return {**own, **overlay, **_read_json(BESTIARY_FILE)}
 
 
 def save_enemy(data: Dict):
@@ -175,13 +178,17 @@ def save_enemy(data: Dict):
     key = data.get("id", data["name"].lower().replace(" ", "_"))
     if "id" not in data: data["id"] = key
 
+    from agents.npc import catalog_owner_id
+
+    owner = catalog_owner_id()  # SPEC-223 R7: escopo do dono em perfis com principal
     get_runtime().runtime_catalog.put(
         "bestiary_template", key, data,
-        scope="global", owner_id=None, game_id=None,
+        scope="user" if owner else "global", owner_id=owner, game_id=None,
     )
 
 def _infer_tier_from_name(name: str) -> ModelTier:
-    if any(x in name.lower() for x in ["dragon", "lich", "boss", "god", "lord"]): return ModelTier.SMART
+    """SPEC-223 R7 (D-C): nome vindo do jogador não escala para SMART."""
+    del name
     return ModelTier.FAST
 
 # --- GERADOR ---
@@ -206,6 +213,8 @@ def template_by_id(enemy_id: str, *, encounter_level: int = 1) -> Optional[Dict]
 
 def generate_new_enemy(name: str, context: str = "", *,
                        encounter_level: int = 1) -> Dict:
+    from services.prompt_guard import sanitize_entity_name
+    name = sanitize_entity_name(name) or "Criatura"  # SPEC-223 R7
     # 1. CHECK-FIRST
     db = load_bestiary()
     existing_ids = list(db.keys())

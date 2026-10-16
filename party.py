@@ -16,12 +16,14 @@ from services import graph_resolver as gr
 COMPANION_TEMPLATES: Dict[str, dict] = load_json_data("companions.json") or {}
 
 RECRUIT_MIN_REL = 7   # relationship 0..10 (escala da Fase 2)
+RECRUIT_MIN_INTERACTIONS = 2  # SPEC-223 R4: vínculo exige convivência registrada
 MAX_ACTIVE = 3
 
 
 class RecruitmentDecision(TypedDict):
     ok: bool
-    code: Literal["ok", "relationship_too_low", "party_full", "already_member", "hostile"]
+    code: Literal["ok", "relationship_too_low", "party_full", "already_member", "hostile",
+                  "too_few_interactions"]
     relationship: int
     required_relationship: int
     public_hint: str
@@ -321,7 +323,20 @@ def recruitment_decision(state: Dict, npc_name: str) -> RecruitmentDecision:
     if rel < required:
         return result(False, "relationship_too_low",
                       f"{display_name} ainda não confia o bastante em você.")
+    if interaction_count(npc) < RECRUIT_MIN_INTERACTIONS:
+        return result(False, "too_few_interactions",
+                      f"{display_name} mal te conhece ainda.")
     return result(True, "ok", "")
+
+
+def interaction_count(npc: Dict) -> int:
+    """SPEC-223 R4: conversas registradas pelo motor (contador de camadas ou memória)."""
+    try:
+        counted = int((npc or {}).get("interaction_count", 0) or 0)
+    except (TypeError, ValueError):
+        counted = 0
+    memory = (npc or {}).get("memory") or []
+    return max(counted, len(memory) if isinstance(memory, list) else 0)
 
 
 def can_recruit(state: Dict, npc_name: str) -> Tuple[bool, str]:

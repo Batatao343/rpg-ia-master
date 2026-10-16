@@ -11,6 +11,7 @@ from state import CampaignBeat, CampaignPlan, GameState
 # --- INTEGRAÇÃO RAG ---
 from rag import query_rag  # <--- Importação necessária
 from services.chronicle import default_chapter_title, open_chapter
+from services.prompt_guard import PLAYER_INPUT_RULE, wrap_player_input
 from services.context_builder import build_context_pack
 
 
@@ -156,13 +157,16 @@ def _build_plan(state: GameState) -> CampaignPlan:
             "<EXEMPLO>\n"
             "Lore: 'As Cavernas Sussurrantes são assombradas por ecos do passado.'\n"
             "Beats: ['Descreva os ecos perturbadores imitando o grupo', 'O jogador acha um esqueleto com um bilhete de aviso', 'Os ecos se fundem num guardião espectral']\n"
-            "Climax: 'Confronto com o Espectro ou a solução de seu enigma.'"
+            "Climax: 'Confronto com o Espectro ou a solução de seu enigma.'\n"
+            f"5. {PLAYER_INPUT_RULE}"
         )
     )
 
     prefix = "Recent player intent: " if last_human else "Initial setup: "
+    # SPEC-223 R5: a intenção do jogador entra delimitada como dado.
     human_msg = HumanMessage(
-        content=prefix + (last_intent if last_intent else "Start the scene with strong hooks.")
+        content=prefix + (wrap_player_input(last_intent) if last_intent
+                          else "Start the scene with strong hooks.")
     )
 
     # spec beats-visibilidade-ptbr (R2/R4): sanitização de segredo + idioma.

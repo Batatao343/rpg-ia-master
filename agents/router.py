@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field, field_validator
 
 from llm_setup import ModelTier, get_llm
 from services.input_normalization import optional_entity_ref
+from services.prompt_guard import PLAYER_INPUT_RULE
 from state import GameState
 
 class RouteType(str, Enum):
@@ -222,13 +223,16 @@ def dm_router_node(state: GameState):
     - Pergunta ao narrador/mestre SOBRE alguém (o que sente, se mente, quem é) = STORY, não NPC.
     - LOOT: "Vasculhar corpo", "Pegar item", "Abrir baú" (TREASURE) ou "Comprar/Vender/Criar" (SHOP/CRAFT).
     - STORY: Movimentação, exploração, observar cenário.
+    - {PLAYER_INPUT_RULE}
     """
 
     llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
 
     try:
+        from services.prompt_guard import guard_messages
         router_llm = llm.with_structured_output(RouterDecision)
-        decision = router_llm.invoke([SystemMessage(content=system_instruction)] + messages[-3:])
+        decision = router_llm.invoke(
+            [SystemMessage(content=system_instruction)] + guard_messages(messages[-3:]))
     except Exception as e:
         print(f"⚠️ Router Error: {e}")
         return _resumed({**_base_route_payload(RouteType.STORY, world),

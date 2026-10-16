@@ -9,7 +9,7 @@ import os
 import re
 import inspect
 from typing import Dict, Any, List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from state import GameState
 from llm_setup import ModelTier, get_llm
@@ -38,6 +38,7 @@ from services.prose_guard import (
     vary_repeated_opening,
 )
 from services.input_normalization import optional_entity_ref
+from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages
 from services.structured_outputs import ProposedQuest
 
 # Fallback para RAG
@@ -108,11 +109,25 @@ class FactionReveal(BaseModel):
     )
 
 
+RELATIONSHIP_STEP_CAP = 1  # SPEC-230 R7 (D-A default ±1 por turno); SPEC-223 R4 reusa
+
+
 class NPCResponse(BaseModel):
     dialogue: str
     action_description: str
     memory_update: str
-    relationship_change: int = 0
+    # SPEC-223 R4: teto por turno no PRÓPRIO schema (fonte única = SPEC-230).
+    # A truncagem roda antes da validação: valor fora da faixa nunca derruba a
+    # resposta inteira (padrão SPEC-045), só é clampado.
+    relationship_change: int = Field(
+        0, ge=-RELATIONSHIP_STEP_CAP, le=RELATIONSHIP_STEP_CAP,
+        description="Variação da relação NESTE turno: -1, 0 ou +1.",
+    )
+
+    @field_validator("relationship_change", mode="before")
+    @classmethod
+    def _clamp_relationship(cls, value):
+        return clamp_relationship_change(value)
     faction_reveals: List[FactionReveal] = Field(
         default_factory=list,
         description=(
@@ -139,9 +154,6 @@ class NPCResponse(BaseModel):
 def _npc_db_path() -> str:
     from gamedata import runtime_cache_path
     return runtime_cache_path("npc_database.json")
-
-
-RELATIONSHIP_STEP_CAP = 1  # SPEC-230 R7 (D-A default ±1 por turno)
 
 
 def clamp_relationship_change(delta, who: str = "") -> int:
@@ -174,14 +186,20 @@ def load_npc_db():
     return clean
 
 
-def _load_npc_db_raw():
-    from infrastructure.runtime import get_runtime
+def catalog_owner_id():
+    """SPEC-223 R7 (D-B default: por owner). Dono do catálogo gerado em runtime.
 
-    values = get_runtime().runtime_catalog.list(
-        "npc_template", owner_id=None, game_id=None,
-    )
-    if values:
-        return values
+    Perfis com principal (DB/hosted): o usuário da request. Legado/CLI sem
+    principal: ``None`` → catálogo global local (comportamento histórico)."""
+    try:
+        from infrastructure.request_context import current_principal
+        principal = current_principal(required=False)
+    except Exception:
+        principal = None
+    return getattr(principal, "user_id", None)
+
+
+def _load_legacy_npc_file() -> dict:
     if not os.path.exists(NPC_DB_FILE):
         return {}
     try:
@@ -191,10 +209,26 @@ def _load_npc_db_raw():
         print(f"⚠️ [NPC DB] Falha ao ler {NPC_DB_FILE}: {e}")
         return {}
 
-def save_npc_template(data):
+
+def _load_npc_db_raw():
     from infrastructure.runtime import get_runtime
 
-    db = load_npc_db()                   # 1º save carrega o legado → migra tudo
+    store = get_runtime().runtime_catalog
+    shared = store.list("npc_template", owner_id=None, game_id=None) \
+        or _load_legacy_npc_file()
+    owner = catalog_owner_id()
+    if owner is None:
+        return shared
+    # Global (curado/legado) é read-only e VENCE conflito de id; o gerado do
+    # próprio dono complementa — nunca o de outro tenant.
+    own = store.list("npc_template", owner_id=owner, game_id=None)
+    return {**own, **shared}
+
+
+def save_npc_template(data):
+    """SPEC-223 R7: grava SÓ o template novo (1 put), no escopo do dono."""
+    from infrastructure.runtime import get_runtime
+
     key = data.get("id", f"npc_{data['name'].lower().replace(' ', '_')}")
     if "id" not in data: data["id"] = key
 
@@ -202,13 +236,18 @@ def save_npc_template(data):
     if "attributes" not in data:
         data["attributes"] = {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10}
 
-    db[key] = data
     store = get_runtime().runtime_catalog
-    for item_id, item in db.items():
-        store.put(
-            "npc_template", item_id, item,
-            scope="global", owner_id=None, game_id=None,
-        )
+    owner = catalog_owner_id()
+    if owner is not None:
+        store.put("npc_template", key, data, scope="user", owner_id=owner, game_id=None)
+        return
+    # Legado local: 1º save migra o arquivo antigo para o overlay (uma vez só).
+    if not store.list("npc_template", owner_id=None, game_id=None):
+        for item_id, item in _load_legacy_npc_file().items():
+            if item_id != key and not _npc_entry_broken(item):
+                store.put("npc_template", item_id, item,
+                          scope="global", owner_id=None, game_id=None)
+    store.put("npc_template", key, data, scope="global", owner_id=None, game_id=None)
 
 
 _NPC_V4_FIELDS = (
@@ -249,8 +288,9 @@ def _materialize_npc_combat_sheet(data: dict) -> dict:
 
 
 def _infer_tier_from_name(name: str) -> ModelTier:
-    lowered = name.lower()
-    if any(m in lowered for m in ["king", "queen", "boss", "lord", "archmage"]): return ModelTier.SMART
+    """SPEC-223 R7 (D-C): o NOME (texto do jogador) não escala custo — tier fixo
+    FAST. SMART só por decisão do motor (ex.: Nomeado curado), nunca por palavra."""
+    del name
     return ModelTier.FAST
 
 # --- FÁBRICA DE NPCs (A FUNÇÃO QUE FALTAVA) ---
@@ -259,6 +299,8 @@ def generate_new_npc(name, context=""):
     Gera um novo NPC do zero usando IA ou recupera do cache se já existir.
     Usado pelo Storyteller para popular o mundo dinamicamente.
     """
+    from services.prompt_guard import sanitize_entity_name
+    name = sanitize_entity_name(name) or "Desconhecido"  # SPEC-223 R7
     # 1. CHECK-FIRST: Verifica se já existe
     db = load_npc_db()
     existing_ids = list(db.keys())
@@ -590,11 +632,12 @@ def npc_actor_node(state: GameState):
        NUNCA repita sua fala anterior literalmente — traga um detalhe NOVO, mude o
        ângulo, demonstre impaciência ("já te disse..."), ou avance a conversa.
     {openings_clause(aberturas_recentes)}
+    6. {PLAYER_INPUT_RULE}
     """)
 
     try:
         actor = llm.with_structured_output(NPCResponse)
-        res = actor.invoke([system_msg] + messages[-3:])
+        res = actor.invoke([system_msg] + guard_messages(messages[-3:]))
         if not isinstance(res, NPCResponse):
             raise TypeError(f"structured output inválido: {type(res).__name__}")
         dialogue = strip_outer_quotes(sanitize_meta_preamble(res.dialogue))
@@ -734,6 +777,11 @@ def npc_actor_node(state: GameState):
 
         # Fase 3.3: quem originou a missão é o NPC em cena — resolvido em Python
         # (não confiado ao LLM). Só title/description/location_id/reward_hint vêm do LLM.
+        # SPEC-223 R1(b): conversa real com quem deu a missão é evidência Python
+        # (entrega/retorno à origem) — registrada antes de novas propostas.
+        base_quests = list(state.get("quests", []) or [])
+        quests_now = quest_log.sync_npc_interaction(
+            base_quests, npc_data.get("name", npc_name), turn=int(turn or 0))
         proposals = getattr(res, "proposed_quests", []) or []
         if proposals:
             canonical_id = _canonical_npc_id(npc_data.get("name", npc_name))
@@ -743,11 +791,11 @@ def npc_actor_node(state: GameState):
                 p["origin_name"] = npc_data.get("name", npc_name)
                 p["origin_entity_id"] = canonical_id
                 stamped.append(p)
-            new_quests, created = quest_log.register_proposed_quests(
-                state.get("quests", []), stamped, turn=turn
+            quests_now, _created = quest_log.register_proposed_quests(
+                quests_now, stamped, turn=turn
             )
-            if created:
-                updates["quests"] = new_quests
+        if quests_now != base_quests:
+            updates["quests"] = quests_now
 
         return updates
     except Exception as e:

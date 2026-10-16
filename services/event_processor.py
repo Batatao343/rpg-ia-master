@@ -24,7 +24,14 @@ from services import graph_resolver as gr
 from services import quest_log
 from services import rule_engine
 from services.chronicle import append_entry, render_milestone
-from services.world_validators import ValidationResult, validate_proposal
+from services.world_validators import (
+    ValidationResult,
+    canonical_secret_detail,
+    is_engine_proposal,
+    reason_class,
+    scene_anchor_ids,
+    validate_proposal,
+)
 
 _MAX_EVENT_REJECTIONS = 100
 
@@ -57,6 +64,35 @@ def _bounded_rejections(rows: list[Dict]) -> list[Dict]:
         )
         unique[key] = sanitized
     return list(unique.values())[-_MAX_EVENT_REJECTIONS:]
+
+
+def _record_rejection_metric(proposal: Dict, reason: str) -> None:
+    """SPEC-223 R8: `rpg_world_events_rejected_total{type, reason_class}` (labels fechados)."""
+    try:
+        from typing import get_args
+
+        from observability.metrics import metrics
+        from services.structured_outputs import EventType
+        etype = str(proposal.get("type") or "")
+        if etype not in get_args(EventType):
+            etype = "other"
+        metrics.increment("rpg_world_events_rejected_total",
+                          {"type": etype, "reason_class": reason_class(reason)})
+    except Exception:
+        pass
+
+
+def _canonicalize_proposal(proposal: Dict, state: Dict | None = None,
+                           projection: Dict | None = None) -> Dict:
+    """SPEC-223 R2: o LLM só SINALIZA a revelação; o texto vem do grafo
+    (restrito às edges ancoradas na cena quando o alvo não está nela)."""
+    if proposal.get("type") != "secret_revealed" or is_engine_proposal(proposal):
+        return proposal
+    anchors = scene_anchor_ids(state) if state is not None else None
+    detail = canonical_secret_detail(
+        str(proposal.get("target_id") or ""), projection or {}, anchors)
+    payload = {**(proposal.get("payload") or {}), "detail": detail}
+    return {**proposal, "detail": detail, "payload": payload}
 
 
 def apply_event(event: Dict, projection: Dict) -> Dict:
@@ -295,6 +331,7 @@ def process_pending_events(state: Dict) -> Dict:
                 "target_id": str(proposal.get("target_id") or ""),
                 "reason": str(result.reason or "")[:240],
             }])
+            _record_rejection_metric(proposal, result.reason)
             if proposal.get("type") == "reputation_changed":
                 factions_reverted = _revert_reputation(
                     factions_reverted if factions_reverted is not None
@@ -302,7 +339,7 @@ def process_pending_events(state: Dict) -> Dict:
                     proposal,
                 )
             continue
-        event = _build_event(proposal, turn)
+        event = _build_event(_canonicalize_proposal(proposal, state, projection), turn)
         event_log.append(event)
         projection = apply_event(event, projection)
 

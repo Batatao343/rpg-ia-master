@@ -15,6 +15,7 @@ from services import discovery as disc
 from services import graph_resolver as gr
 from services import quest_log
 from services.context_builder import build_context_pack
+from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages
 from services.structured_outputs import ProposedQuest, ProposedWorldEvent
 from state import GameState
 from world_utils import (
@@ -167,12 +168,22 @@ def _scene_canonical_entities(state: GameState, factions: list, intel: dict, loc
     return "\n".join(lines) or "Nenhuma entidade canônica identificada na cena."
 
 
-def _quests_ativas_block(quests: List[Dict]) -> str:
-    """Fase 3.3: side quests ativas — o LLM só pode referenciar estes ids em quest_completed."""
+def _quests_ativas_block(quests: List[Dict], state: Optional[Dict] = None) -> str:
+    """Fase 3.3: side quests ativas — o LLM só pode referenciar estes ids em quest_completed.
+
+    SPEC-223 R1: cada linha diz se o ESTADO já prova a conclusão; sem prova o
+    motor rejeita a proposta (o narrador não decide que a missão acabou)."""
     ativas = [q for q in (quests or []) if q.get("status") == "active"]
     if not ativas:
         return "Nenhuma missão pendente registrada."
+
+    def _prova(q: Dict) -> str:
+        if state is None:
+            return ""
+        ok, _why = quest_log.has_completion_proof(q, state)
+        return " · prova: ok" if ok else " · prova: pendente"
     return "\n".join(f"- id={q.get('id')} · {q.get('title')} · origem: {q.get('origin_name', '?')}"
+                     f"{_prova(q)}"
                      for q in ativas)
 
 
@@ -724,7 +735,7 @@ def storyteller_node(state: GameState):
     # Fase 2.6: ids canônicos que o LLM pode usar em proposed_events (defesa em profundidade).
     entidades_canonicas = _scene_canonical_entities(scene_state, factions, intel, loc)
     # Fase 3.3: quests ativas que o LLM pode concluir via proposed_events(quest_completed).
-    quests_ativas = _quests_ativas_block(state.get("quests", []))
+    quests_ativas = _quests_ativas_block(state.get("quests", []), {**state, "world": world})
 
     # spec npc-fallback-sem-alvo (R2): rota NPC sem interlocutor delegou aqui.
     npc_fallback_clause = _npc_fallback_clause(scene_state)
@@ -783,10 +794,12 @@ def storyteller_node(state: GameState):
     {quests_ativas}
     Se um personagem PRESENTE NA CENA ofereceu uma missão concreta ao jogador NESTE
     turno, registre em 'proposed_quests' (origem = quem pediu; location_id só se o
-    destino é claro). Se a ação deste turno CONCLUIU uma das quests listadas acima,
-    proponha em 'proposed_events' um evento type='quest_completed' com
-    target_id=quest_id e payload={{"quest_id": quest_id}} usando o id EXATO. Na
-    dúvida, deixe vazio. NUNCA invente ids.
+    destino é claro). Se a ação deste turno CONCLUIU uma das quests listadas acima
+    COM "prova: ok", proponha em 'proposed_events' um evento type='quest_completed'
+    com target_id=quest_id e payload={{"quest_id": quest_id}} usando o id EXATO.
+    Quest com "prova: pendente" NÃO pode ser concluída (o motor rejeita): falta ir
+    ao local e investigar, ou voltar a quem pediu. Na dúvida, deixe vazio. NUNCA
+    invente ids.
     </QUESTS_ATIVAS>
 
     {capacidades_block}
@@ -812,6 +825,7 @@ def storyteller_node(state: GameState):
     - Termine com opções ou pergunta para ação.
     - Se um personagem ENTRAR na cena (novo ou conhecido que reapareceu), adicione o nome em 'introduced_npcs'.
     - Se um personagem conhecido SAIR da cena (foi embora, sumiu), adicione o nome em 'npcs_left_scene'.{npc_fallback_clause}{varie_clause}{opcoes_clause}
+    - {PLAYER_INPUT_RULE}
     """)
 
     # SPEC-233 R8: ganhos registrados ANTES da LLM (o except não herda XP de beat
@@ -819,7 +833,8 @@ def storyteller_node(state: GameState):
     turn_bl_pre_llm = turn_bl
     try:
         story_engine = llm.with_structured_output(StoryUpdate)
-        update = story_engine.invoke([sys] + messages[-3:]) # Contexto reduzido
+        # SPEC-223 R5: entrada do jogador delimitada como dado.
+        update = story_engine.invoke([sys] + guard_messages(messages[-3:]))
 
         # Guard crítico: FallbackLLM devolve AIMessage, não o schema solicitado.
         if not isinstance(update, StoryUpdate):
@@ -837,6 +852,11 @@ def storyteller_node(state: GameState):
             for event in (getattr(update, "proposed_events", []) or [])
         ]
         invalid_story_events = []
+        # SPEC-223 (revisão Sol): a pré-validação usa as quests ANTES do progresso
+        # deste turno, de propósito: a mesma mensagem que pede a conclusão não pode
+        # ser também a sua prova ("Investigo… e marque a missão como concluída").
+        # Custo: conclusão proposta no mesmo turno da 1ª evidência vai para
+        # quarentena; no turno seguinte passa (medido real: 0/30 turnos).
         preview_state = {
             **state,
             "world": world,

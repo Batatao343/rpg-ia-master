@@ -4007,7 +4007,7 @@ specs:
   lineage_note: Authored from security audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
 - id: SPEC-223
   slug: llm-autoridade-mecanica-prompt-injection
-  status: draft
+  status: done
   path: specs/SPEC-223-llm-autoridade-mecanica-prompt-injection.md
   created_commit: null
   created_at: '2026-10-15'

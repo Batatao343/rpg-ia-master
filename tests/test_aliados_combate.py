@@ -159,6 +159,7 @@ def test_perfil_recrutador_exercita_transitorio_e_party():
     assert "combate" in profile._next_action(scene, rng)
     assert "Converso" in profile._next_action(scene, rng)
     scene["npcs"]["Bors"]["relationship"] = party_mod.RECRUIT_MIN_REL
+    scene["npcs"]["Bors"]["interaction_count"] = party_mod.RECRUIT_MIN_INTERACTIONS  # SPEC-223 R4
     recruit_action = profile._next_action(scene, rng)
     assert party_mod.detect_party_command(recruit_action) == "recruit"
     scene["party"] = [party_mod.make_companion_from_npc(

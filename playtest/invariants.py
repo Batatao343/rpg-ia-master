@@ -1185,6 +1185,69 @@ def check_meta_leak(state: dict, prev: Optional[dict], turn: int) -> List[Violat
     return []
 
 
+def _unproven_anchor(ev: dict, state: dict, prev: dict, turn: int) -> List[Violation]:
+    """`npc_killed`/`secret_revealed` de fonte LLM: reaplica o gate de prova do
+    motor no estado do turno (combate do turno / âncora na cena). A prova vale
+    se o estado anterior OU o atual a sustentam (o archivist pode já ter limpo
+    o `conflict_summary` ou a cena ao fim do turno)."""
+    from pydantic import ValidationError
+
+    from services.structured_outputs import ProposedWorldEvent
+    from services.world_validators import _proof_gate
+    try:
+        proposal = ProposedWorldEvent(
+            type=ev.get("type"), actor_id=str(ev.get("actor_id") or "player"),
+            target_id=str(ev.get("target_id") or ""), payload=dict(ev.get("payload") or {}))
+    except ValidationError:
+        return []
+    ev_turn = int(ev.get("turn", 0) or 0)
+    reasons = []
+    for snapshot in (prev, state):
+        snap = {**snapshot, "world": {**(snapshot.get("world") or {}), "turn_count": ev_turn}}
+        result = _proof_gate(proposal, snap, snapshot.get("world_projection") or {})
+        if result.ok:
+            return []
+        reasons.append(result.reason)
+    return [_V("narrative.unproven_event", "error", turn,
+               f"{ev.get('type')} aplicado sem prova: {reasons[-1]}",
+               event_type=str(ev.get("type")), target_id=str(ev.get("target_id")))]
+
+
+def check_unproven_event(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    """SPEC-223 R8: evento de mundo vindo do LLM aplicado SEM prova é regressão.
+
+    Só eventos NOVOS (ausentes no estado anterior) de fonte não-motor contam.
+    `quest_completed` é reavaliado contra a quest do estado ANTERIOR; morte e
+    segredo de fonte LLM exigem a âncora gravada (combate do turno / cena)."""
+    from services.quest_log import has_completion_proof
+    from services.world_validators import ENGINE_SOURCES
+    if prev is None:
+        return []
+    seen = {e.get("event_id") for e in (prev.get("event_log") or []) if isinstance(e, dict)}
+    prev_quests = {q.get("id"): q for q in (prev.get("quests") or []) if isinstance(q, dict)}
+    out: List[Violation] = []
+    for ev in state.get("event_log") or []:
+        if not isinstance(ev, dict) or ev.get("event_id") in seen:
+            continue
+        if str(ev.get("source") or "") in ENGINE_SOURCES:
+            continue
+        if ev.get("type") in ("npc_killed", "secret_revealed"):
+            out.extend(_unproven_anchor(ev, state, prev, turn))
+            continue
+        if ev.get("type") != "quest_completed":
+            continue
+        qid = (ev.get("payload") or {}).get("quest_id")
+        quest = prev_quests.get(qid)
+        proof_state = {**prev, "world": {**(prev.get("world") or {}),
+                                         "turn_count": int(ev.get("turn", 0) or 0)}}
+        ok, why = has_completion_proof(quest, proof_state) if quest else (False, "quest ausente")
+        if not ok:
+            out.append(_V("narrative.unproven_event", "error", turn,
+                          f"quest_completed aplicado sem prova: {why}",
+                          event_type="quest_completed", target_id=str(ev.get("target_id"))))
+    return out
+
+
 def check_phantom_ally(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
     """spec aliados-em-combate (R5): nome de aliado CITADO na narração de combate
     sem combatente correspondente do lado herói = aliado fantasma (a lacuna que
@@ -1333,7 +1396,7 @@ CHECKS: List[Check] = [
     check_recycled_npc, check_actor_lifecycle,
     check_repeated_opening, check_interaction_no_progress, check_meta_leak,
     check_phantom_ally, check_false_player_death,
-    check_encounter_identity, check_encounter_phase,
+    check_encounter_identity, check_encounter_phase, check_unproven_event,
 ]
 
 

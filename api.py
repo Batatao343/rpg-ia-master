@@ -46,6 +46,7 @@ from llm_setup import (
 from services.usage_metering import normalize_attempts, operation_cost
 import progression
 from services import quest_log
+from services.prompt_guard import origin_fragment
 from services import state_views as sv
 from services.chronicle import default_chapter_title
 from services.discovery import player_codex
@@ -2892,7 +2893,7 @@ def _create_game(req: CreateCharacterRequest, claim):
         "processed_action_ids": [],
         "visual_seen_entity_ids": [],
         "visual_cue_ledger": [],
-        "narrative_summary": f"A jornada de {req.name} começa em {final_char['region']}. {req.backstory or ''}",
+        "narrative_summary": f"A jornada de {req.name} começa em {final_char['region']}. {origin_fragment(req.backstory)}".rstrip(),  # SPEC-223 R5
         "archivist_last_run": 0,
         # Fase 3.1: capítulo 1 existe desde o turno 0 (determinístico, sem LLM)
         "chronicle": [{"title": default_chapter_title(final_char["region"]),

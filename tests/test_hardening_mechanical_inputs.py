@@ -103,6 +103,7 @@ def test_companion_copia_ficha_v4_e_ignora_extremos_legados(extreme):
 
 def test_recrutamento_e_aliado_transitorio_preservam_ficha_v4_danificada():
     npc = _canonical_v4_npc()
+    npc["interaction_count"] = 2  # SPEC-223 R4: recrutar exige conversas registradas
     state = {
         "npcs": {"Iria": npc},
         "party": [],

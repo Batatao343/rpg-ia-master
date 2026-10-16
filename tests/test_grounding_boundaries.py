@@ -214,6 +214,9 @@ def test_resposta_com_evento_invalido_e_unidade_atomica_sem_side_effects(
         "id": "quest_valida",
         "title": "Quest válida",
         "status": "active",
+        # SPEC-223 R1: "válida" = com prova determinística (entrega à origem).
+        "created_turn": 1,
+        "progress_log": [{"kind": "npc_interaction", "turn": 2}],
     }]
     state["campaign_plan"] = {
         "beats": [{"description": "Investigar", "status": "active"}],

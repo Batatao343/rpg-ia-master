@@ -67,6 +67,8 @@ def prepare(name: str, state: dict) -> dict:
                 "promessas vazias."
             ),
             "relationship": 10,
+            # SPEC-223 R4: recrutar exige >= 2 conversas registradas.
+            "interaction_count": 2,
             "in_scene": True,
             "known_by_player": True,
             "home_location_id": "montanhas_afiadas",
