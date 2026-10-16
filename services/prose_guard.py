@@ -260,3 +260,63 @@ def log_if_repeats(new_text: str, prev_text: str, *, where: str = "prose") -> bo
         _LOG.warning("Abertura repetida (%s): “%s…”", where, opening(new_text))
         return True
     return False
+
+
+# ---------------------------------------------------------------------------
+# SPEC-203 R9 — prosa ancorada no manifesto do encontro
+# ---------------------------------------------------------------------------
+# Cabeças de nome de bestiário que são títulos/ofícios comuns (não espécie).
+_NON_SPECIES_HEADS = {"capitao", "guarda", "senhor", "senhora", "mestre", "rei", "rainha",
+                      "soldado", "lider", "chefe", "sacerdote", "cavaleiro", "guardiao",
+                      "filho", "filha", "mae", "pai", "irma", "irmao", "velho", "velha",
+                      "sombra", "voz", "eco", "coisa", "algo",
+                      # Revisão Astra: palavras comuns de prosa de combate (substantivo
+                      # não-criatura, verbo flexionado ou ofício genérico) que
+                      # derrubavam narração legítima ("uma faísca salta", "vinha").
+                      "fumaca", "faisca", "vinha", "horror", "eclipse", "vigia",
+                      "sentinela", "general", "lorde", "guerreiro", "cacador",
+                      "predador", "observador", "devorador", "iniciado", "nomade",
+                      "filhote", "larva", "elemental", "colosso", "renegado",
+                      "saqueador", "capanga", "assassino", "cobrador", "capturador"}
+
+
+def _species_heads() -> dict:
+    """{token-cabeça normalizado: nome} de cada espécie do bestiário curado."""
+    import gamedata
+    from services.encounter_manifest import name_tokens
+    heads: dict = {}
+    for entry in (gamedata.BESTIARY or {}).values():
+        tokens = name_tokens(entry.get("name", ""))
+        if tokens and len(tokens[0]) >= 4 and tokens[0] not in _NON_SPECIES_HEADS:
+            heads.setdefault(tokens[0], entry.get("name", ""))
+    return heads
+
+
+def species_drift(text: str, manifest: dict | None) -> list:
+    """Marca prosa que atribui ao encontro uma espécie fora do manifesto: menciona
+    espécie do bestiário ausente do elenco E não menciona nenhuma espécie canônica.
+    Não reescreve estado; o chamador decide neutralizar (texto determinístico)."""
+    from services.encounter_manifest import name_tokens
+    participants = (manifest or {}).get("participants") or []
+    if not text or not participants:
+        return []
+    canonical = set()
+    for p in participants:
+        canonical.update(name_tokens(p.get("species_label", "")))
+    prose_tokens = name_tokens(text)
+    if canonical & set(prose_tokens):
+        return []
+    heads = _species_heads()
+    flags, seen = [], set()
+    for tok in prose_tokens:
+        if tok in heads and tok not in canonical and tok not in seen:
+            seen.add(tok)
+            flags.append({"species": tok, "bestiary_name": heads[tok],
+                          "canonical": sorted({p.get("species_label", "") for p in participants})})
+    return flags
+
+
+def log_species_drift(flags: list, *, where: str = "combate") -> None:
+    if flags:
+        _LOG.warning("species_drift where=%s species=%s", where,
+                     [f.get("species") for f in flags])

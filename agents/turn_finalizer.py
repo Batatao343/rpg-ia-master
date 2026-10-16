@@ -22,6 +22,13 @@ def turn_finalizer_node(state: dict) -> dict:
     updates = {"last_turn_outcome": outcome,
                # SPEC-202 R9: único escritor de last_speaker num turno processado.
                "last_speaker": speaker_for_turn(state)}
+    # SPEC-203 R7: o desfecho do encontro referencia o recibo SPEC-199 do turno de
+    # término (uma vez só; replays/turnos seguintes não reescrevem).
+    combat = state.get("combat") or {}
+    result = combat.get("result") or {}
+    if combat.get("phase") == "ended" and result and not result.get("xp_event_ref"):
+        updates["combat"] = {**combat, "result": {**result,
+                                                  "xp_event_ref": outcome["receipt_id"]}}
     if audit:
         updates['messages'] = Overwrite(messages)
         updates['evidence_rejections'] = [*(state.get('evidence_rejections') or []), *audit][-64:]

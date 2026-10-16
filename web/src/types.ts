@@ -295,6 +295,37 @@ export interface CombatBlock {
     flee_destination_id: string | null;
   } | null;
   reactions?: Array<{ participant: string; card_id: string; custo: number }>;
+  // SPEC-203: state machine e elenco congelado do encontro (somente leitura).
+  phase?: EncounterPhase;
+  outcome?: EncounterOutcome | null;
+  encounter_id?: string | null;
+  encounter_view?: EncounterView | Record<string, never>;
+}
+
+export type EncounterPhase = "entering" | "active" | "resolving" | "ended";
+export type EncounterOutcome =
+  "victory" | "fled" | "surrendered_enemy" | "defeat" | "death" | "expired";
+
+export interface EncounterView {
+  encounter_id: string;
+  origin: string;
+  participants: Array<{
+    participant_id: string; species_label: string; categoria: string;
+    role: "hostile" | "ally" | "neutral" | "hazard";
+    presence: "present" | "arrived" | "departed";
+    status: "ativo" | "morto" | "fugiu" | "rendido" | "capturado" | "ausente";
+  }>;
+}
+
+/** SPEC-203 R7: desfecho mecânico; XP vem só de `turn_outcome` (xp_event_ref). */
+export interface CombatResultView {
+  encounter_id: string;
+  outcome: EncounterOutcome;
+  participants: Array<{ participant_id: string; species_label: string; final_status: string }>;
+  xp_event_ref: string | null;
+  loot_ref: string | null;
+  ended_round: number;
+  result_event_id: string;
 }
 
 export interface ActionOptions {
@@ -504,6 +535,7 @@ export interface GameResponse {
   continuity?: ContinuityView;
   combat_simulation: CombatSimulationMeta;
   turn_outcome?: Partial<TurnOutcome>;  // {} quando não há ganho
+  combat_result?: CombatResultView | Record<string, never>;  // SPEC-203: {} fora do turno de término
   visual: VisualResponse;
 }
 

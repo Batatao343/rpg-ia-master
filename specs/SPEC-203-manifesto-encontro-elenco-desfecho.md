@@ -1,7 +1,7 @@
 # SPEC-203 — Manifesto do encontro, elenco fixo e desfecho do combate
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `in-progress` (implementação + testes concluídos; falta revisão Astra e autoria de evals)
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-199 `done` (evento estruturado de XP), SPEC-228 `done` (guard de schema + morte/checkpoint corretos), SPEC-231 `done` (morte com aliados/`scene_allies` corretos) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-205, SPEC-209, SPEC-212 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 04 (parte b)
@@ -11,7 +11,8 @@
 > estável por rodada/reload, lifecycle terminal→exploração) e de `narrative_npc` (prosa de
 > combate não renomeia espécie do manifesto). Autoria em tarefa separada; o executor desta
 > spec NÃO edita `evals/` (evaluator, expected ou datasets protegidos).
-> **Nota de schema (cadeia final 2026-10-15):** ordem dos bumps de `SCHEMA_VERSION` (hoje 8): SPEC-228 primeiro (R9 recusa save de versão mais nova; sem bump) → [SPEC-227 só se D-C = migração; default sem bump] → SPEC-202 → SPEC-203 → SPEC-207 → SPEC-213 → SPEC-215. Nenhuma outra spec 199–236 altera o schema de save (SPEC-228 R7 `needs_replan` e SPEC-231 `scene_allies` usam default/campo existente, sem bump). Cada spec usa o próximo `SCHEMA_VERSION` livre no HEAD ao implementar e encadeia sua migração após a anterior; onde o texto disser "v8→v9", leia "vN→vN+1".
+> **Nota de schema (ATUALIZADA 2026-10-16 — fora da cadeia de bump):** por instrução do coordenador, esta spec **não** faz bump de `SCHEMA_VERSION` (permanece 8): o caso protegido `state.persistence.migration-idempotent` (evals/…/state_rules.jsonl) fixa v8 e editar `evals/` exige tarefa separada. `combat.phase/outcome/encounter/result` são campos ADITIVOS normalizados de forma idempotente no load (`persistence._normalize_combat_on_load` → `encounter_manifest.normalize_combat`). R12 lê-se "normalização aditiva v8" em vez de "migração v8→v9".
+> ~~Nota de schema (cadeia final 2026-10-15):~~ ordem dos bumps de `SCHEMA_VERSION` (hoje 8): SPEC-228 primeiro (R9 recusa save de versão mais nova; sem bump) → [SPEC-227 só se D-C = migração; default sem bump] → SPEC-202 → SPEC-203 → SPEC-207 → SPEC-213 → SPEC-215. Nenhuma outra spec 199–236 altera o schema de save (SPEC-228 R7 `needs_replan` e SPEC-231 `scene_allies` usam default/campo existente, sem bump). Cada spec usa o próximo `SCHEMA_VERSION` livre no HEAD ao implementar e encadeia sua migração após a anterior; onde o texto disser "v8→v9", leia "vN→vN+1".
 
 Contexto histórico (não executar, só referência): `historico-nao-executar/HISTORICO_SPEC-179-manifesto-encontro-fim-combate.md`
 e `HISTORICO_SPEC-183-pressao-tatica-balanceamento.md` do pacote. Os IDs 179/183 daquele
@@ -308,20 +309,20 @@ Manifesto ausente/corrompido num save → reconstruído de `state["enemies"]` co
 
 ## 5. Critérios de aceite
 
-- [ ] `docs/spec203/repro.md` registra quais hipóteses reproduziram no HEAD pré-mudança.
-- [ ] Todas as hipóteses reproduzidas passam a verde sem `xfail`; H7 (dano de inimigo)
+- [x] `docs/spec203/repro.md` registra quais hipóteses reproduziram no HEAD pré-mudança.
+- [x] Todas as hipóteses reproduzidas passam a verde sem `xfail`; H7 (dano de inimigo)
       classificada como bug corrigido ou como balanceamento encaminhado.
-- [ ] `combat_result.xp_event_ref == turn_outcome.receipt_id` (SPEC-199) e painel de
+- [x] `combat_result.xp_event_ref == turn_outcome.receipt_id` (SPEC-199) e painel de
       desfecho reaparece igual após reload em `ended` antes de "Continuar".
-- [ ] Zero invokes CLASSIFY em rodadas ≥1 (spy) e no spawn de fonte canônica.
-- [ ] Elenco do manifesto == elenco da rodada, salvo eventos de composição registrados.
-- [ ] Fluxo completo ameaça→2 rodadas→terminal→exploração verde para vitória, fuga,
+- [x] Zero invokes CLASSIFY em rodadas ≥1 (spy) e no spawn de fonte canônica.
+- [x] Elenco do manifesto == elenco da rodada, salvo eventos de composição registrados.
+- [x] Fluxo completo ameaça→2 rodadas→terminal→exploração verde para vitória, fuga,
       rendição, derrota/morte e expiração, com save/reload em cada fase.
-- [ ] Nenhum XP em `messages`/`presentation_history` narrativos; XP do painel vem do
+- [x] Nenhum XP em `messages`/`presentation_history` narrativos; XP do painel vem do
       evento SPEC-199 e é concedido exatamente uma vez sob replay.
-- [ ] Saves v8 (com e sem combate ativo) carregam e fazem round-trip v9.
-- [ ] Guard de FallbackLLM preservado no scanner; nenhum `with_structured_output` novo sem guard.
-- [ ] `uv run pytest` verde (suíte offline completa); `npm run build` verde.
+- [x] Saves v8 (com e sem combate ativo) carregam e fazem round-trip (v8 aditivo, sem bump — ver nota de schema).
+- [x] Guard de FallbackLLM preservado no scanner; nenhum `with_structured_output` novo sem guard.
+- [x] `uv run pytest` verde (suíte offline completa); `npm run build` verde.
 - [ ] Revisão independente Astra aprovada; evals novos autorados em tarefa separada.
 
 ## 6. Smoke
@@ -371,3 +372,24 @@ sistêmicos e zero drift. Não executar sem pedido do dono.
 - Diff da migração + fixture v8 usada.
 - Parecer Astra em `handoffs/SPEC-203-ASTRA-independent-review.md`.
 - Handoff de autoria de evals (`handoffs/SPEC-203-eval-authoring.md`) — tarefa separada.
+
+## 10. Registro de execução (2026-10-16)
+
+- **Etapa 0:** H1, H2, H2b, H3, H4 reproduziram bug de estado no HEAD `50d4620`; H5 só narrativo
+  (H5b: guard ausente); H6/H7 não reproduziram (H7 = sem bug; nada encaminhado à pressão tática).
+  Detalhe em `docs/spec203/repro.md`. Como houve reprodução, **D-A não se aplicou** (R3/R4 feitos).
+- **Defaults de decisão usados:** D-B (reforço vira evento `joined`/`arrived`; alvo canônico
+  protegido da variedade no clamp; regra numérica intacta); D-C ("Continuar" é ação local, não
+  consome turno, preserva o draft).
+- **Desvios:** (1) sem bump de schema (ver nota). (2) `clamp_encounter` ganhou kwarg opcional
+  `protected`; os ids cortados/adicionados são derivados no chamador (`_apply_encounter_budget`
+  report) em vez de mudar a tupla de retorno — evita quebrar chamadores. (3) "Zero CLASSIFY nas
+  rodadas ≥1" vale com declaração estruturada (UI/harness); a fala livre do jogador continua
+  sendo identificada por CLASSIFY (identifica ação, não elenco). (4) `{}` (jogo que nunca teve
+  combate) permanece `{}` no load. (5) `combat.result` guarda o snapshot persistido do desfecho;
+  `turn_finalizer` carimba `xp_event_ref` uma vez. (6) Nome canônico por token exato do bestiário
+  (`resolve_bestiary_name`) é tratado como fonte (c) `threat`; `reinforcements/controlled`
+  também viram `threat`.
+- **Smoke real** (DeepSeek, ≤10 turnos autorizados): ver `docs/spec203/README.md`.
+- **Pendente para `done`:** revisão independente Astra; autoria dos evals
+  (`handoffs/SPEC-203-eval-authoring.md`).

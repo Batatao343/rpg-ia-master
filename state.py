@@ -470,6 +470,11 @@ class GameState(TypedDict):
     # --- Campos de Transição ---
     combat_target: Optional[str]
     combat_origin_hint: Optional[str]  # causa transitória até combat.origin ser materializada
+    # SPEC-203: referências one-shot PROPOSTAS ao spawn (zeradas pelo combat_node):
+    # {enemy_id, reason, hint} do encontro sistêmico (storyteller) e "npc:<nome>"
+    # quando o alvo do router casa com NPC em cena.
+    combat_encounter_hint: Optional[Dict[str, Any]]
+    combat_target_ref: Optional[str]
     loot_source: Optional[str]
     last_economy_action: Dict[str, Any]
 
@@ -478,6 +483,11 @@ class GameState(TypedDict):
     #  "idle_turns": int}  — idle_turns (spec combate-lifecycle R3): turnos com
     #  combate ativo SEM rota de combate; o router incrementa, o combat_node zera,
     #  em >=3 o combate órfão expira. Sem migration (dict aberto, default 0).
+    # SPEC-203 (aditivo, sem bump de schema; normalizado no load):
+    #  "phase": entering|active|resolving|ended, "outcome": None|victory|fled|
+    #  surrendered_enemy|defeat|death|expired, "encounter": EncounterManifest
+    #  congelado (services/encounter_manifest), "result": snapshot do desfecho
+    #  (fonte do `combat_result` da API; xp_event_ref = receipt_id SPEC-199).
     combat: Optional[Dict]
 
     # spec combate-lifecycle (R1): o router marca que a ação de VIAGEM durante o

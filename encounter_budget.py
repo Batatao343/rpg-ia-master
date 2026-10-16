@@ -38,11 +38,14 @@ def encounter_budget(player_level: int, danger: int, allies_count: int = 0) -> i
 
 
 def clamp_encounter(enemies: List[Dict], budget: int,
-                    player_level: int = 0) -> Tuple[List[Dict], List[str]]:
+                    player_level: int = 0, *,
+                    protected: Optional[set] = None) -> Tuple[List[Dict], List[str]]:
     """Corta o excedente do orçamento. Regras: boss NUNCA é cortado; prioriza
     VARIEDADE (1 de cada template antes de repetições); mantém >= 1 inimigo.
     Nível 1 (spec balanceamento-early-game R2.1): no máximo 1 elite — burst de
     2+ elites é sentença de morte pro herói recém-criado. Bosses seguem intactos.
+    SPEC-203 (D-B): templates `protected` (alvo canônico resolvido) entram ANTES
+    da variedade — fauna nunca toma a vaga do alvo; a regra numérica não muda.
     Retorna (mantidos, logs de corte p/ o narrador)."""
     if not enemies:
         return [], []
@@ -59,15 +62,19 @@ def clamp_encounter(enemies: List[Dict], budget: int,
 
     # variedade primeiro: 1ª instância de cada template, depois repetições
     seen: Dict[str, int] = {}
-    firsts, repeats = [], []
+    canonical, firsts, repeats = [], [], []
+    protected = set(protected or ())
     for e in sorted(rest, key=tier_cost, reverse=True):  # elites antes de minions
         t = _template(e)
+        if t in protected:
+            canonical.append(e)
+            continue
         (firsts if t not in seen else repeats).append(e)
         seen[t] = seen.get(t, 0) + 1
 
     kept = list(bosses)
     spent = sum(tier_cost(e) for e in kept)
-    for e in firsts + repeats:
+    for e in canonical + firsts + repeats:
         c = tier_cost(e)
         if spent + c <= budget or not kept:
             kept.append(e)

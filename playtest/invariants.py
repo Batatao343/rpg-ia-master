@@ -502,6 +502,40 @@ def check_combat_zombie(state: dict, prev: Optional[dict], turn: int) -> List[Vi
     return []
 
 
+def check_encounter_identity(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    """SPEC-203: elenco da rodada == manifesto (salvo eventos) e participantes
+    congelados não mudam de espécie/bestiário/facção/papel."""
+    from services import encounter_manifest as em
+    combat = state.get("combat") or {}
+    manifest = combat.get("encounter")
+    if not combat.get("active") or not em.is_valid_manifest(manifest):
+        return []
+    out: List[Violation] = []
+    violations = em.validate_roster(manifest, state.get("enemies") or [])
+    if violations:
+        out.append(_V("encounter.identity_drift", "error", turn,
+                      f"elenco fora do manifesto: {violations}", field="enemies"))
+    prev_manifest = ((prev or {}).get("combat") or {}).get("encounter")
+    if (em.is_valid_manifest(prev_manifest)
+            and prev_manifest.get("encounter_id") == manifest.get("encounter_id")):
+        try:
+            em.assert_immutable(prev_manifest, manifest)
+        except ValueError as exc:
+            out.append(_V("encounter.identity_drift", "error", turn, str(exc),
+                          field="combat.encounter"))
+    return out
+
+
+def check_encounter_phase(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    """SPEC-203: combate inativo não pode ficar preso em fase não terminal."""
+    combat = state.get("combat") or {}
+    phase = combat.get("phase")
+    if phase and not combat.get("active") and phase != "ended":
+        return [_V("encounter.phase_stuck", "error", turn,
+                   f"combate inativo com fase {phase!r}", field="combat.phase")]
+    return []
+
+
 _INVALID_SENTINELS = {"null", "none", "nil", "undefined", "n/a", "nan"}
 
 
@@ -1299,6 +1333,7 @@ CHECKS: List[Check] = [
     check_recycled_npc, check_actor_lifecycle,
     check_repeated_opening, check_interaction_no_progress, check_meta_leak,
     check_phantom_ally, check_false_player_death,
+    check_encounter_identity, check_encounter_phase,
 ]
 
 

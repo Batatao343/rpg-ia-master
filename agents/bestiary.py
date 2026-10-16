@@ -7,7 +7,7 @@ import json
 import os
 import re
 import unicodedata
-from typing import Dict, List, Literal
+from typing import Dict, List, Literal, Optional
 from langchain_core.messages import SystemMessage, HumanMessage
 from pydantic import BaseModel, ConfigDict, Field
 from llm_setup import ModelTier, get_llm
@@ -185,6 +185,25 @@ def _infer_tier_from_name(name: str) -> ModelTier:
     return ModelTier.FAST
 
 # --- GERADOR ---
+def template_by_id(enemy_id: str, *, encounter_level: int = 1) -> Optional[Dict]:
+    """SPEC-203 R3: ficha de um id canônico do bestiário, SEM LLM (nem librarian).
+    Mesmo contrato do cache-hit de `generate_new_enemy`."""
+    db = load_bestiary()
+    if enemy_id not in db:
+        return None
+    data = dict(db[enemy_id])
+    data["id"] = enemy_id
+    if data.get("virtudes") and data.get("max_vitalidade") is not None:
+        data["vitalidade"] = int(data.get("max_vitalidade") or 0)
+        data["hp"] = data["vitalidade"]
+        data["max_hp"] = int(data.get("max_vitalidade") or 0)
+        data["status"] = "ativo"
+        return data
+    normalized = materialize_enemy_concept(data, encounter_level=encounter_level)
+    normalized["id"] = enemy_id
+    return normalized
+
+
 def generate_new_enemy(name: str, context: str = "", *,
                        encounter_level: int = 1) -> Dict:
     # 1. CHECK-FIRST

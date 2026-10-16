@@ -1140,6 +1140,7 @@ class GameResponse(BaseModel):
     continuity: Dict[str, Any] = {}
     combat_simulation: Dict[str, Any] = {}
     turn_outcome: Dict[str, Any] = {}  # SPEC-199: ganhos do turno (XP/ouro/itens/missões)
+    combat_result: Dict[str, Any] = {}  # SPEC-203: desfecho do encontro (turno de término)
     visual: VisualResponse
 
 # --- HELPER: FORMATA RESPOSTA ---
@@ -1184,6 +1185,7 @@ def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> Gam
     turn_outcome = {} if simulation.get("enabled") else public_outcome(state.get("last_turn_outcome"))
     return GameResponse(
         turn_outcome=turn_outcome,
+        combat_result={} if simulation.get("enabled") else _combat_result(state),
         timeline_epoch=int((state.get('continuity') or {}).get('timeline_epoch', 0)),
         portrait_generation_id=next((str(row['generation_id'])
             for row in reversed(state.get('art_generation_ledger') or [])
@@ -1510,6 +1512,19 @@ def _npcs_block(npcs: dict) -> List[Dict[str, Any]]:
 
 
 
+def _simulation_manifest(enemies: list, game_id: str, scene: dict) -> dict:
+    from services import encounter_manifest as em
+    return em.build_manifest(enemies, source="simulation", origin="unknown",
+                             encounter_id=f"{game_id}:sim", scene=scene)
+
+
+def _combat_result(state: dict) -> Dict[str, Any]:
+    """SPEC-203 R7: desfecho do turno de término, derivado de estado persistido."""
+    from services import encounter_manifest as em
+    from services.turn_outcome import public_outcome
+    return em.result_view(state.get("combat"), public_outcome(state.get("last_turn_outcome")))
+
+
 def _combat_block(state: dict) -> Dict[str, Any]:
     """View tática pública do conflito, sem vazar ficha secreta de inimigo."""
     meta = state.get("combat") or {}
@@ -1586,9 +1601,16 @@ def _combat_block(state: dict) -> Dict[str, Any]:
         "last_roll": dict(chase.get("_last") or {}),
     } if chase else {})
     wounds = player.get("ferimentos") or {}
+    from services import encounter_manifest as em
+    manifest = meta.get("encounter") if em.is_valid_manifest(meta.get("encounter")) else None
     return {
         "active": bool(meta.get("active")) and bool(alive),
         "round": meta.get("round", 0),
+        # SPEC-203: fase/elenco congelado (somente leitura no cliente).
+        "phase": meta.get("phase") or ("active" if meta.get("active") else "ended"),
+        "outcome": meta.get("outcome"),
+        "encounter_id": (manifest or {}).get("encounter_id") or meta.get("instance_id"),
+        "encounter_view": em.public_view(manifest, meta.get("scene")) if manifest else {},
         # Compat temporária do HUD atual: iniciativa agora é POR LADO.
         "order": [{"name": "Heróis" if side == "heroes" else "Inimigos",
                    "side": "hero" if side == "heroes" else "enemy", "init": 0}
@@ -1989,6 +2011,11 @@ def _build_combat_simulator_state(req: CombatSimulatorRequest) -> dict:
             "scene": scene,
             "idle_turns": 0,
             "encounter_level": world["danger_level"],
+            # SPEC-203: paridade de fase/manifesto (sem manifesto narrativo).
+            "phase": "active",
+            "outcome": None,
+            "instance_id": f"{game_id}:sim",
+            "encounter": _simulation_manifest(enemies, game_id, scene),
         },
         "event_log": [],
         "world_projection": {},

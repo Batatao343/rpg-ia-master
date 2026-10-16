@@ -58,6 +58,8 @@ def _base_route_payload(route: RouteType, world: dict) -> dict:
         # SPEC-202: transitórios do interlocutor (zerados a cada rota).
         "interlocutor_reason": None,
         "mediated_subject_id": None,
+        "combat_target_ref": None,  # SPEC-203: one-shot
+        "combat_encounter_hint": None,  # SPEC-203: one-shot
     }
 
 
@@ -86,6 +88,17 @@ def _combat_gate(state: GameState, world: dict, combat: dict):
         print("🧟 [COMBAT] Combate órfão expirou (idle) — encerrando.")
         cleared = {"active": False, "round": combat.get("round", 1),
                    "order": combat.get("order", []), "idle_turns": 0}
+        # SPEC-203 R5/R7: expiração vira outcome explícito, com desfecho na UI.
+        from services import encounter_manifest as em
+        manifest = combat.get("encounter")
+        if em.is_valid_manifest(manifest):
+            cleared["encounter"] = manifest
+            cleared["instance_id"] = combat.get("instance_id")
+        cleared["phase"] = combat.get("phase") or "active"
+        cleared = em.end_combat(cleared, "expired")
+        if em.is_valid_manifest(manifest):
+            cleared["result"] = em.build_result(
+                manifest, "expired", int(combat.get("round", 1) or 1))
         return {"next": RouteType.STORY.value, "combat": cleared,
                 "enemies": [], "combat_target": None,
                 "messages": [SystemMessage(content="SYSTEM: COMBAT EXPIRED — "
@@ -160,24 +173,38 @@ def dm_router_node(state: GameState):
     # Fechar essa borda evita que contexto hostil antigo reabra um conflito no
     # turno imediatamente posterior a uma fuga.
     last_human = _last_human_text(messages)
+
+    # SPEC-203 R6: o 1º turno após um encontro encerrado (≠ morte) NÃO reabre
+    # combate por contexto residual — só hostilidade explícita reabre. A intenção
+    # NPC/LOOT/STORY do jogador continua sendo respeitada (revisão Astra: forçar
+    # STORY sequestrava "falo com o prisioneiro rendido").
+    resume_explore = bool(combat.get("phase") == "ended" and combat.get("result")
+                          and not combat.get("explore_resumed")
+                          and combat.get("outcome") != "death")
+
+    def _resumed(payload: dict) -> dict:
+        if resume_explore:
+            payload["combat"] = {**combat, "explore_resumed": True}
+        return payload
+
     # SPEC-229 R4: hostilidade explícita tem precedência; formas verbais fechadas.
     if (_EXPLICIT_STORY_RE.search(last_human)
             and not _EXPLICIT_HOSTILITY_RE.search(last_human)):
-        return _base_route_payload(RouteType.STORY, world)
+        return _resumed(_base_route_payload(RouteType.STORY, world))
 
     # SPEC-180: Jev is opt-in and limited to decisions its closed contract can
     # fully represent. Shadow never supplies a route; every other result uses
     # the existing CLASSIFY path. Python gates above retain precedence.
     from services.jev_rollout import decide_route
     if decide_route(state, last_human) == RouteType.STORY.value:
-        return _base_route_payload(RouteType.STORY, world)
+        return _resumed(_base_route_payload(RouteType.STORY, world))
 
     # SPEC-202 R2/R3: meta-pergunta ao narrador e descrição de cena são decididas
     # em Python, SEM chamar o CLASSIFY (zero invoke).
     from services import interlocutor
     pre = interlocutor.pre_classify(state, last_human)
     if pre is not None:
-        return _interlocutor_payload(pre, world)
+        return _resumed(_interlocutor_payload(pre, world))
 
     scene_names = ", ".join(
         interlocutor.canonical_npc_name(state, key)
@@ -204,14 +231,14 @@ def dm_router_node(state: GameState):
         decision = router_llm.invoke([SystemMessage(content=system_instruction)] + messages[-3:])
     except Exception as e:
         print(f"⚠️ Router Error: {e}")
-        return {**_base_route_payload(RouteType.STORY, world),
-                "interlocutor_reason": "classify_fallback"}
+        return _resumed({**_base_route_payload(RouteType.STORY, world),
+                         "interlocutor_reason": "classify_fallback"})
 
     # Sem API key (FallbackLLM) o invoke devolve um AIMessage, não um
     # RouterDecision. Nesse caso seguimos para o storyteller (modo degradado).
     if not isinstance(decision, RouterDecision):
-        return {**_base_route_payload(RouteType.STORY, world),
-                "interlocutor_reason": "classify_fallback"}
+        return _resumed({**_base_route_payload(RouteType.STORY, world),
+                         "interlocutor_reason": "classify_fallback"})
 
     # RouteType.NONE ("nenhuma intenção clara": input sem ação, lixo ou injeção)
     # NÃO é um nó do grafo — o mapping condicional de main.py só conhece
@@ -222,6 +249,10 @@ def dm_router_node(state: GameState):
     # o narrador descreve o ambiente em vez de derrubar o turno.
     if decision.route == RouteType.NONE:
         decision.route = RouteType.STORY
+    # SPEC-203 R6: pós-desfecho, COMBAT sem hostilidade explícita vira exploração.
+    if (resume_explore and decision.route == RouteType.COMBAT
+            and not _EXPLICIT_HOSTILITY_RE.search(last_human)):
+        decision.route = RouteType.STORY
 
     print(f"🚦 [ROUTER] {decision.route.value} -> Alvo: {decision.target}")
 
@@ -230,7 +261,7 @@ def dm_router_node(state: GameState):
     if decision.route in (RouteType.NPC, RouteType.STORY):
         resolution = interlocutor.post_classify(
             state, last_human, decision.route.value, decision.target)
-        return _interlocutor_payload(resolution, world)
+        return _resumed(_interlocutor_payload(resolution, world))
 
     response_payload = _base_route_payload(decision.route, world)
     response_payload["interlocutor_reason"] = "classify_story"
@@ -243,6 +274,15 @@ def dm_router_node(state: GameState):
     if decision.route == RouteType.COMBAT:
         target = decision.target or "Inimigos"
         response_payload["combat_target"] = target
+        # SPEC-203 R3(b): alvo que casa com NPC em cena vira referência canônica.
+        from services import npc_layers
+        folded_target = target.casefold()
+        for npc_name in npc_layers.npcs_in_scene(state):
+            if npc_name in (state.get("npcs") or {}) and (
+                    npc_name.casefold() in folded_target
+                    or folded_target in npc_name.casefold()):
+                response_payload["combat_target_ref"] = f"npc:{npc_name}"
+                break
         response_payload["combat_origin_hint"] = (
             "player_provoked"
             if _EXPLICIT_HOSTILITY_RE.search(last_human)
@@ -253,4 +293,4 @@ def dm_router_node(state: GameState):
             SystemMessage(content=f"SYSTEM: COMBAT START. TARGET_HINT: {target}")
         )
 
-    return response_payload
+    return _resumed(response_payload)

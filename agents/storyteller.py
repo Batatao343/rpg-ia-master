@@ -95,6 +95,15 @@ class StoryUpdate(BaseModel):
 _MONEY_CLAIM_RE = re.compile(r"\b(?:ouro|moedas?)\b", re.IGNORECASE)
 
 
+def encounter_handoff(enc: dict) -> dict:
+    """SPEC-203 R3(a): referência canônica one-shot do encontro sistêmico para o
+    spawn do combate (o `enemy_id` do bestiário não se perde no handoff)."""
+    enc = enc or {}
+    return {"enemy_id": str(enc.get("enemy_id") or ""),
+            "reason": str(enc.get("reason") or ""),
+            "hint": str(enc.get("hint") or "")}
+
+
 def _is_monetary_claim(value: object) -> bool:
     """Dinheiro é economia, nunca um item a resolver pelo nome livre do LLM."""
     return bool(_MONEY_CLAIM_RE.search(str(value or "")))
@@ -583,6 +592,7 @@ def storyteller_node(state: GameState):
                     "world": world,
                     "factions": factions,
                     "combat_target": enc["hint"],
+                    "combat_encounter_hint": encounter_handoff(enc),
                     "combat_origin_hint": from_encounter(
                         enc, world, trigger=("rest" if rested_player is not None else "travel"),
                     ),

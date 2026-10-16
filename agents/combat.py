@@ -160,15 +160,49 @@ def _bounded_enemy_groups(scan: EncounterScanner) -> List[tuple[str, int]]:
     return bounded
 
 
-def _spawn_v4_enemies(messages: List, target_hint: str, state: Optional[Dict]) -> tuple:
-    """Identifica os inimigos da cena (LLM CLASSIFY) + bestiário + orçamento de
-    encontro, e converte CADA um em ficha de combate v4 (`ensure_combat_sheet`).
-    O bestiário curado (conflito-15) já traz v4; o gerador legado é adaptado."""
+def _grounded_template(name: str, context: str, encounter_level: int) -> Dict:
+    """Factory do bestiário com trava de identidade (SPEC-203 R3/H3): se o
+    dedupe/gerador devolver OUTRA espécie, descarta e materializa o nome pedido."""
+    from services import encounter_manifest as em
+    template = generate_new_enemy(name, context=context, encounter_level=encounter_level)
+    if em.shares_identity(name, str(template.get("name") or "")) \
+            or em.shares_identity(name, str(template.get("id") or "")):
+        return template
+    print(f"⚠️ [COMBAT SPAWN] identidade divergente: pedido '{name}' → "
+          f"'{template.get('name')}' — mantendo o pedido")
+    from agents.bestiary import _slug, materialize_enemy_concept
+    return materialize_enemy_concept({
+        "name": name, "id": f"fallback_{_slug(name)}",
+        "description": "Criatura materializada pela trava de identidade.",
+        "categoria": template.get("categoria") or "padrao",
+        "arquetipo": template.get("arquetipo") or "bruto",
+    }, encounter_level=encounter_level)
+
+
+def _instances(template: Dict, count: int, next_by_template: Dict[str, int]) -> List[Dict]:
+    out = []
+    base_id = str(template.get("id") or "enemy")
+    for _ in range(count):
+        number = next_by_template.get(base_id, 0) + 1
+        next_by_template[base_id] = number
+        inst = dict(template)
+        inst["id"] = f"{base_id}_{number}"
+        inst["name"] = (f"{template['name']} {number}" if count > 1 else template["name"])
+        out.append(orch.ensure_combat_sheet(inst))
+    return out
+
+
+def _spawn_v4_enemies(messages: List, target_hint: str, state: Optional[Dict],
+                      meta: Optional[Dict] = None) -> tuple:
+    """Monta o elenco do encontro e converte CADA um em ficha v4.
+
+    SPEC-203 R3 — ordem determinística: (a) `enemy_id` do encontro sistêmico;
+    (b) NPC em cena; (c) alvo/ameaça já resolvida (nome exato do bestiário);
+    (d) só então o `EncounterScanner` (LLM CLASSIFY), com saída validada contra a
+    dica. `meta` (out-param) recebe source/target_ref/joined_ids/cut_ids."""
+    from services import encounter_manifest as em
+    meta = meta if meta is not None else {}
     print(f"⚡ [COMBAT] Preparando encontro. Dica: '{target_hint}'...")
-    llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
-    sys_prompt = (f"Analise a narrativa recente. O combate começou. Identifique QUAIS "
-                  f"inimigos estão presentes e QUANTOS. Use a dica: '{target_hint}'. "
-                  f"Ex.: 'Três orcs surgem' -> [{{name:'Orc', count:3}}].")
     enemies: List[Dict] = []
     flavor = "Algo hostil emerge."
     world = (state or {}).get("world") or {}
@@ -182,48 +216,87 @@ def _spawn_v4_enemies(messages: List, target_hint: str, state: Optional[Dict]) -
         f"{target_hint}; local={world.get('current_location', 'desconhecido')}; "
         f"nível_do_encontro={encounter_level}"
     )
-    try:
-        scan = llm.with_structured_output(EncounterScanner).invoke(
-            [SystemMessage(content=sys_prompt)] + messages[-2:])
-        if isinstance(scan, EncounterScanner):
-            flavor = scan.flavor_text or flavor
-            # Primeiro fecha tipos/contagens; somente depois toca bestiário/factory.
-            groups = _bounded_enemy_groups(scan)
-            next_instance_by_template: Dict[str, int] = {}
-            for name, count in groups:
-                template = generate_new_enemy(
-                    name,
-                    context=mechanical_context,
-                    encounter_level=encounter_level,
-                )
-                base_id = str(template.get("id") or "enemy")
-                for _ in range(count):
-                    instance_number = next_instance_by_template.get(base_id, 0) + 1
-                    next_instance_by_template[base_id] = instance_number
-                    inst = dict(template)
-                    inst["id"] = f"{base_id}_{instance_number}"
-                    inst["name"] = (f"{template['name']} {instance_number}"
-                                    if count > 1 else template["name"])
-                    enemies.append(orch.ensure_combat_sheet(inst))
-    except Exception as e:
-        print(f"⚠️ [COMBAT SPAWN] {e}")
+    next_instance_by_template: Dict[str, int] = {}
+    protected: set = set()
+    canonical = em.resolve_canonical_source(
+        state or {}, target_hint, (state or {}).get("combat_encounter_hint"))
+    if canonical and canonical["kind"] == "bestiary":
+        from agents.bestiary import template_by_id
+        for bid, count in canonical["groups"]:
+            template = template_by_id(bid, encounter_level=encounter_level)
+            if template:
+                enemies += _instances(template, count, next_instance_by_template)
+                protected.add(bid)
+        if enemies:
+            meta.update(source=canonical["source"], target_ref=canonical["target_ref"])
+            flavor = f"{enemies[0].get('name', 'Algo')} avança contra você."
+    elif canonical and canonical["kind"] == "npc":
+        npc = dict(((state or {}).get("npcs") or {}).get(canonical["npc_name"]) or {})
+        sheet = prep.build_npc_combat_sheet({**npc, "name": canonical["npc_name"]})
+        enemies = [orch.ensure_combat_sheet(sheet)]
+        protected.add(str(sheet.get("id")))
+        meta.update(source="npc_in_scene", target_ref=canonical["target_ref"])
+        flavor = f"{canonical['npc_name']} se volta contra você."
+
+    if not enemies:
+        llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
+        sys_prompt = (f"Analise a narrativa recente. O combate começou. Identifique QUAIS "
+                      f"inimigos estão presentes e QUANTOS. Use a dica: '{target_hint}'. "
+                      f"Ex.: 'Três orcs surgem' -> [{{name:'Orc', count:3}}].")
+        try:
+            scan = llm.with_structured_output(EncounterScanner).invoke(
+                [SystemMessage(content=sys_prompt)] + messages[-2:])
+            if isinstance(scan, EncounterScanner):
+                flavor = scan.flavor_text or flavor
+                # Primeiro fecha tipos/contagens; somente depois toca bestiário/factory.
+                groups = _bounded_enemy_groups(scan)
+                if not em.is_generic_hint(target_hint):
+                    # R3(d): saída do scanner precisa casar com a dica (fauna da
+                    # prosa não entra). Nada casou → a própria dica vira o grupo.
+                    grounded = [(n, c) for n, c in groups
+                                if em.shares_identity(target_hint, n)]
+                    if len(grounded) != len(groups):
+                        print("⚠️ [COMBAT SPAWN] scanner fora da dica descartado: "
+                              f"{[n for n, _c in groups if (n, _c) not in grounded]}")
+                    groups = grounded or [(str(target_hint).strip(),
+                                           em.hint_count(target_hint))]
+                for name, count in groups:
+                    template = _grounded_template(name, mechanical_context, encounter_level)
+                    enemies += _instances(template, count, next_instance_by_template)
+                if enemies:
+                    meta.update(source="scanner", target_ref=str(target_hint or ""))
+        except Exception as e:
+            print(f"⚠️ [COMBAT SPAWN] {e}")
 
     if not enemies:
         enemies = [orch.ensure_combat_sheet(
             {"id": "sombrio_1", "name": "Inimigo Sombrio", "type": "padrao",
              "virtudes": {"forca": 2, "agilidade": 2, "corpo": 2, "mente": 1, "carisma": 1}})]
+        meta.update(source="fallback", target_ref=str(target_hint or ""))
+        print("⚠️ [COMBAT SPAWN] source=fallback (Inimigo Sombrio)")
 
     # Orçamento determinístico do encontro (mesma lógica da Fase 4.6, escala nova).
     if state is not None:
-        enemies, flavor = _apply_encounter_budget(enemies, state, flavor)
+        enemies, flavor = _apply_encounter_budget(
+            enemies, state, flavor, protected=protected or None, report=meta)
     return enemies, flavor
 
 
-def _apply_encounter_budget(enemies: List[Dict], state: Dict, flavor: str) -> tuple:
+def _apply_encounter_budget(enemies: List[Dict], state: Dict, flavor: str, *,
+                            protected: Optional[set] = None,
+                            report: Optional[Dict] = None) -> tuple:
+    """SPEC-203 R4: clamp/fill seguem a regra numérica, mas o alvo canônico não
+    perde vaga por variedade e todo corte/reforço é reportado (ids) para virar
+    evento de composição no manifesto."""
+    report = report if report is not None else {}
     try:
         import encounter_budget as eb
         import party as party_mod
         from gamedata import get_location
+        from services import encounter_manifest as em
+        if protected is None:
+            bid = em.resolve_bestiary_name(str(state.get("combat_target") or ""))
+            protected = {bid} if bid else set()
         world = state.get("world") or {}
         danger = int(world.pop("encounter_eff_danger", None) or world.get("danger_level", 1) or 1)
         level = int((state.get("player") or {}).get("level", 1) or 1)
@@ -232,12 +305,18 @@ def _apply_encounter_budget(enemies: List[Dict], state: Dict, flavor: str) -> tu
         n_allies = (len(party_mod.active_allies(state))
                     + len(party_mod.scene_allies(state, excluded=enemy_refs)))
         budget = eb.encounter_budget(level, danger, n_allies)
-        enemies, cut = eb.clamp_encounter(enemies, budget, player_level=level)
+        before_ids = [str(e.get("id")) for e in enemies]
+        enemies, cut = eb.clamp_encounter(enemies, budget, player_level=level,
+                                          protected=protected)
+        kept_ids = {str(e.get("id")) for e in enemies}
         loc = get_location(world.get("current_location_id", "")) or {}
         enemies, fill = eb.fill_encounter(
             enemies, budget, loc, danger, turn=int(world.get("turn_count", 0) or 0),
             make_instance=lambda t, i: orch.ensure_combat_sheet(
                 {**t, "id": f"{t.get('id', 'enemy')}_{i}"}))
+        report["cut_ids"] = [i for i in before_ids if i not in kept_ids]
+        report["joined_ids"] = [str(e.get("id")) for e in enemies
+                                if str(e.get("id")) not in kept_ids]
         extra = " ".join(cut + fill)
         if extra:
             flavor = f"{flavor} {extra}".strip()
@@ -599,8 +678,13 @@ def _narrate_fall(player: Dict, logs: List[str], killer: str = "") -> str:
 
 def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
              spawned_flavor: Optional[str], intent: str, victory: bool,
-             world_ctx: str, aberturas: Optional[List[str]] = None) -> str:
+             world_ctx: str, aberturas: Optional[List[str]] = None,
+             manifest: Optional[Dict] = None) -> str:
     from services import prose_guard
+    canonical = sorted({p.get("species_label", "") for p in
+                        (manifest or {}).get("participants") or [] if p.get("species_label")})
+    elenco = ("Elenco canônico (espécies EXATAS; não renomeie nem troque por fauna): "
+              + ", ".join(canonical)) if canonical else ""
     log_str = "\n".join(l for l in logs if l) or "Nada acontece."
     alive = [f"{e['name']} (Vit {e.get('vitalidade', 0)}/{e.get('max_vitalidade', 0)})"
              for e in enemies if e.get("status") == "ativo"]
@@ -621,6 +705,7 @@ def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
     </log_mecanico>
     Herói: {player.get('name')} Vit {player.get('vitalidade')}/{player.get('max_vitalidade')}
     Inimigos ativos: {', '.join(alive) if alive else 'nenhum'}
+    {elenco}
     {fecho}{varie}
     """)
     try:
@@ -632,12 +717,54 @@ def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
         if isinstance(text, list):
             text = " ".join(p.get("text", "") if isinstance(p, dict) else str(p) for p in text)
         if text.strip():
-            return text
+            # SPEC-203 R9: prosa que troca a espécie do elenco é neutralizada
+            # (cai no texto determinístico); o estado nunca é reescrito.
+            drift = prose_guard.species_drift(text, manifest) if manifest else []
+            if not drift:
+                return text
+            prose_guard.log_species_drift(drift, where="combate")
     except Exception as e:
         print(f"⚠️ [COMBAT NARRATE] {e}")
     prefix = (spawned_flavor + "\n\n") if spawned_flavor else ""
     suffix = "\n\nVitória! O campo silencia." if victory else "\n\nO que você faz?"
     return f"⚔️ {prefix}" + "\n".join(f"• {l}" for l in logs if l) + suffix
+
+
+# ==========================================================================
+# SPEC-203 — desfecho do encontro
+# ==========================================================================
+def _encounter_outcome(*, player: Dict, enemies: List[Dict], hero_fled: bool,
+                       player_dead: bool) -> str:
+    if player_dead:
+        return "death"
+    if hero_fled:
+        return "fled"
+    remaining = [e for e in enemies if e.get("status") == "ativo" and not e.get("dead")]
+    if remaining or not player.get("conscious", True):
+        return "defeat"
+    dead = [e for e in enemies if e.get("dead") or e.get("status") == "morto"]
+    surrendered = [e for e in enemies if e.get("surrendered") or e.get("status") == "rendido"]
+    if surrendered and not dead:
+        return "surrendered_enemy"
+    return "victory"
+
+
+def _finish_encounter(combat_meta: Dict, enemies: List[Dict], outcome: str, *,
+                      loot: bool) -> Dict:
+    """Leva o encontro a `ended` e grava o snapshot do desfecho (R7)."""
+    from services import encounter_manifest as em
+    meta = dict(combat_meta)
+    round_ = int(meta.get("round", 0) or 0)
+    manifest = meta.get("encounter")
+    if em.is_valid_manifest(manifest):
+        manifest = em.sync_statuses(manifest, enemies, round_)
+        meta["encounter"] = manifest
+    meta = em.end_combat(meta, outcome)
+    if em.is_valid_manifest(manifest):
+        meta["result"] = em.build_result(manifest, outcome, round_,
+                                         loot=loot and outcome == "victory")
+    meta["active"] = False
+    return meta
 
 
 # ==========================================================================
@@ -688,11 +815,14 @@ def combat_node(state: GameState):
     # Um encontro pode chegar aqui já com `enemies` preenchido (router, save v4,
     # testes/e2e). Nesse caso preservamos os combatentes e apenas construímos a
     # cena ausente; só pedimos spawn quando não há inimigo ativo.
+    from services import encounter_manifest as em
+    spawn_meta: Dict = {}
     if is_start or not scene:
         import party as party_mod
         party = party_mod.backfill_party(state.get("party") or [])
         if not [e for e in enemies if e.get("status") == "ativo" and not e.get("dead")]:
-            enemies, spawned_flavor = _spawn_v4_enemies(messages, combat_target, state)
+            enemies, spawned_flavor = _spawn_v4_enemies(
+                messages, combat_target, state, spawn_meta)
         enemy_refs = [str(value) for enemy in enemies
                       for value in (enemy.get("id"), enemy.get("name")) if value]
         if combat_target:
@@ -714,7 +844,26 @@ def combat_node(state: GameState):
                        "origin": materialize(combat_meta, state.get("combat_origin_hint")),
                        "instance_id": conflict_instance_id,
                        "encounter_level": scene.get("encounter_level", 1)}
+        # SPEC-203 R1/R5: manifesto congelado no spawn → fase `entering`.
+        combat_meta = em.safe_transition(combat_meta, "entering")
+        combat_meta["encounter"] = em.build_manifest(
+            enemies,
+            source=(spawn_meta.get("source")
+                    or ("simulation" if is_simulation else "legacy_migrated")),
+            origin=combat_meta["origin"], encounter_id=conflict_instance_id,
+            target_ref=spawn_meta.get("target_ref") or str(combat_target or ""),
+            scene=scene, joined_ids=spawn_meta.get("joined_ids") or (),
+            cut_ids=spawn_meta.get("cut_ids") or ())
         print(f"⚔️ Combate: {[e['name'] for e in enemies]}")
+    else:
+        # R2: leitura por rodada — manifesto é a verdade; nunca reclassifica.
+        if not em.is_valid_manifest(combat_meta.get("encounter")):
+            combat_meta["encounter"] = em.manifest_from_legacy(
+                enemies, combat_meta, game_id=str(state.get("game_id") or "game"))
+        if combat_meta.get("phase") not in ("active",):
+            combat_meta["phase"], combat_meta["outcome"] = "active", None
+        combat_meta["encounter"], enemies, _violations = em.reconcile_roster(
+            combat_meta["encounter"], enemies, int(combat_meta.get("round", 0) or 0))
 
     active = [e for e in enemies if e.get("status") == "ativo" and not e.get("dead")]
     if not active:
@@ -744,6 +893,10 @@ def combat_node(state: GameState):
         )
         combat_meta["last_player_action"] = _canonical_player_action(
             None, {}, attempted=False)
+        early_outcome = _encounter_outcome(player=player, enemies=enemies,
+                                           hero_fled=False, player_dead=False)
+        combat_meta = _finish_encounter(combat_meta, enemies, early_outcome,
+                                        loot=not is_simulation)
         return {"messages": [AIMessage(content="O silêncio retorna ao campo. Vitória.")],
                 "next": "loot", "combat_target": None, "enemies": [],
                 "conflict_summary": conflict_sum,
@@ -1008,7 +1161,8 @@ def combat_node(state: GameState):
         world_pack = build_context_pack(state, query=f"{loc} {intent}",
                                         purpose="combat_narration", token_budget=1200)
         narrative = _narrate(player, enemies, logs, spawned_flavor, intent, victory,
-                             world_pack.world_state_block, aberturas)
+                             world_pack.world_state_block, aberturas,
+                             manifest=combat_meta.get("encounter"))
     # ---- Resumo canônico do conflito (conflito-12) na saída ----
     conflict_sum = None
     if combat_over:
@@ -1051,6 +1205,19 @@ def combat_node(state: GameState):
         cards.reset_card_usage({"player": player}, "cena")
         combat_meta["scene"] = None
         combat_meta.pop("scene_allies", None)
+        # SPEC-203 R5/R7: resolving → ended + snapshot do desfecho.
+        combat_meta = _finish_encounter(
+            combat_meta, enemies,
+            _encounter_outcome(player=player, enemies=enemies, hero_fled=hero_fled,
+                               player_dead=player_dead),
+            loot=bool(victory) and not is_simulation)
+    else:
+        # Narração de entrada enviada → encontro confirmado (entering→active).
+        if combat_meta.get("phase") == "entering":
+            combat_meta = em.safe_transition(combat_meta, "active")
+        if em.is_valid_manifest(combat_meta.get("encounter")):
+            combat_meta["encounter"] = em.sync_statuses(
+                combat_meta["encounter"], enemies, int(combat_meta.get("round", 0) or 0))
     result = {
         "messages": [AIMessage(content=narrative)],
         "player": player,
@@ -1062,6 +1229,8 @@ def combat_node(state: GameState):
         "party": _merge_formal_party(party, allies),
         "combat_declaration": None,   # consumida (não vaza para o próximo turno)
         "combat_origin_hint": None,
+        "combat_encounter_hint": None,  # SPEC-203: one-shot consumido
+        "combat_target_ref": None,
     }
     if conflict_sum is not None:
         result["conflict_summary"] = conflict_sum
@@ -1256,6 +1425,10 @@ def _apply_flee_travel(state: Dict, result: Dict, flee_dest_id: str, player: Dic
             previous_combat.get("last_player_action") or {}
         ),
     }
+    # SPEC-203: o desfecho (fase/manifesto/resultado) sobrevive à viagem de fuga.
+    for key in ("phase", "outcome", "encounter", "result"):
+        if key in previous_combat:
+            result["combat"][key] = previous_combat[key]
     result["enemies"] = []
     result["combat_target"] = None
     result["next"] = None

@@ -756,6 +756,19 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
         return None
 
 
+def _normalize_combat_on_load(raw_data: Dict[str, Any]) -> Dict[str, Any]:
+    combat = raw_data.get("combat") or {}
+    if not combat:
+        return {}
+    try:
+        from services.encounter_manifest import normalize_combat
+        return normalize_combat(combat, raw_data.get("enemies") or [],
+                                game_id=str(raw_data.get("game_id") or "game"))
+    except Exception as exc:  # nunca derruba o load
+        print(f"⚠️ [SAVE] combate não normalizado: {exc}")
+        return combat
+
+
 def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
     """Reconstrói o GameState a partir do dict salvo (fonte única — save vivo E
     checkpoint reusam). Aplica o pipeline de migrations."""
@@ -831,7 +844,10 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         # --- Recupera Transicionais ---
         "combat_target": raw_data.get("combat_target"),
         "loot_source": raw_data.get("loot_source"),
-        "combat": raw_data.get("combat", {}),
+        # SPEC-203: normalização ADITIVA e idempotente (sem bump de schema):
+        # combate ativo legado ganha manifesto `legacy_migrated`; sem combate
+        # ativo ganha phase=ended/outcome preservado.
+        "combat": _normalize_combat_on_load(raw_data),
         "conflict_summary": raw_data.get("conflict_summary"),
 
         # --- Recupera Mensagens ---

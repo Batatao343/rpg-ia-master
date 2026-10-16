@@ -115,6 +115,7 @@ export class DeterministicBackend {
     const current = structuredClone(this.states.get(gid) ?? gameState(gid));
     current.speaker = { kind: "narrator", id: "narrator", name: "Narrador", reason: "classify_story" };
     current.world.turn_count += 1;
+    current.combat_result = {};  // SPEC-203: só no turno de término
     current.continuity = { ...(current.continuity!), canonical_turn: current.world.turn_count };
     if (/Brumalta/i.test(input)) {
       current.current_location = "Brumalta"; current.world.location = "Brumalta"; current.world.location_id = "brumalta";
@@ -126,6 +127,15 @@ export class DeterministicBackend {
     } else if (current.combat.active) {
       current.combat.round += 1; current.combat.active = false; current.combat.enemies = [];
       current.message = "O último saqueador cai; o combate termina."; current.message_type = "COMBAT";
+      // SPEC-203: desfecho mecânico derivado + recibo SPEC-199 do turno de término.
+      const receipt = `rc-${current.world.turn_count}`;
+      current.combat.phase = "ended"; current.combat.outcome = "victory";
+      current.turn_outcome = { receipt_id: receipt, turn: current.world.turn_count, xp_delta: 50,
+        level_delta: 0, gold_delta: 0, items_gained: [], quests_completed: [], source: "combat" };
+      current.combat_result = { encounter_id: `${gid}:0:1`, outcome: "victory",
+        participants: [{ participant_id: "enemy_saqueador_1", species_label: "Saqueador", final_status: "morto" }],
+        xp_event_ref: receipt, loot_ref: null, ended_round: current.combat.round,
+        result_event_id: `res-${current.world.turn_count}` };
     } else if (/rastro|quest|pegada/i.test(input)) {
       current.quest.side = current.quest.side.map((q) => ({ ...q, status: "completed", resolved_turn: current.world.turn_count }));
       current.quest.main.current_step = 1; current.message = "Os rastros revelam a passagem secreta.";

@@ -1177,3 +1177,12 @@ select {
 .outcome-chip { padding: 0.3rem 0.7rem; border: 1px solid var(--line); border-radius: var(--r-pill);
   background: var(--surface-2); color: var(--accent); font-size: 0.85rem; animation: outcome-in 0.25s ease-out; }
 @keyframes outcome-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* SPEC-203: painel de desfecho do combate (isolado; o shell SPEC-204 decide o layout) */
+.combat-outcome { margin: 0.75rem auto; max-width: 34rem; padding: 1rem 1.25rem;
+  border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2);
+  display: grid; gap: 0.6rem; }
+.combat-outcome__title { margin: 0; font-size: 1.15rem; color: var(--accent); }
+.combat-outcome__cast, .combat-outcome__rewards { margin: 0; padding-left: 1.1rem; }
+.combat-outcome__rewards { color: var(--accent); }
+.combat-outcome__continue { justify-self: end; }

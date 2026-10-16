@@ -3,6 +3,8 @@ import type { ActionOptions, GameResponse, LogEntry, TurnOutcome } from "../type
 import { StoryLog } from "./StoryLog";
 import { Hud } from "./Hud";
 import { OutcomeToast } from "./OutcomeToast";
+import { CombatOutcomePanel } from "./CombatOutcomePanel";
+import { resultFrom, shouldShowResult } from "../combatOutcome";
 import { LevelUpModal, type LevelUpPick } from "./LevelUpModal";
 import { OnboardingHint, onboardingDismissed } from "./OnboardingHint";
 import { CardHand } from "./CardHand";
@@ -44,6 +46,8 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
   const [luDismissed, setLuDismissed] = useState(false);
   const [reading, setReading] = useState(false); // memorial: ler a crônica
   const [reactionCardId, setReactionCardId] = useState<string | undefined>();
+  // SPEC-203 R8: "Continuar" fecha só o painel (estado local; reload o reexibe).
+  const [dismissedResult, setDismissedResult] = useState<string | null>(null);
 
   const w = data?.world;
   // spec itens-vivos-e-luz: chip de luz no relógio (escuro sem fonte / iluminado).
@@ -149,6 +153,13 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
         <div className="narrative-stage">
           <SceneArtwork scene={data?.visual?.scene} />
           <OutcomeToast outcome={data?.turn_outcome?.receipt_id ? (data.turn_outcome as TurnOutcome) : null} />
+          {(() => {
+            const result = resultFrom(data?.combat_result);
+            return result && shouldShowResult(result, dismissedResult) ? (
+              <CombatOutcomePanel result={result} outcome={data?.turn_outcome}
+                onContinue={() => setDismissedResult(result.result_event_id)} />
+            ) : null;
+          })()}
           <StoryLog entries={log} thinking={thinking} thinkingLabel={thinkingLabel} />
         </div>
         <Hud data={data} open={hudOpen} onEquip={onEquip} busy={busy}
