@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "8729ac7ecddd9f4449289b50efa9690a52da5f5e",
+  "commit_sha": "7e5f9b36233cfa31bfac3500b27ac047192cf9e5",
   "edge_counts": {
-    "calls": 11190,
-    "contains": 535,
-    "defines": 6679,
-    "imports": 1121,
-    "likely_test_for": 681,
+    "calls": 11228,
+    "contains": 536,
+    "defines": 6694,
+    "imports": 1125,
+    "likely_test_for": 685,
     "route_to": 58
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:e3446012b1c524425754ab874dc14f9973db0d9c887e9324da2b654bc2ced00b",
+  "graph_hash": "sha256:120c5d077390c6c723b50beb753acb273172ca59fd5032693c8fa5461850fc0e",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -364,6 +364,7 @@
     "tests/test_beats_visibilidade.py",
     "tests/test_blob_contract.py",
     "tests/test_browser_local.py",
+    "tests/test_bug_combate_morte_aliados.py",
     "tests/test_bug_contabilidade_recompensas.py",
     "tests/test_bug_economia_integridade.py",
     "tests/test_bug_intencao_parsers.py",
@@ -665,12 +666,12 @@
     "artifact": 9,
     "class": 598,
     "endpoint": 58,
-    "file": 609,
-    "function": 2096,
+    "file": 610,
+    "function": 2098,
     "method": 595,
-    "module": 535,
-    "test": 3390
+    "module": 536,
+    "test": 3403
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:03a08630c77af7e9f204592c6f378f1eecd7fb24b729c5a003952137621ddb17"
+  "source_tree_hash": "sha256:4e041c3e52d7e73b32cf51f8f90eb4ea429ecf6d4555d4788eb13405990453c8"
 }
