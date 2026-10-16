@@ -35,6 +35,9 @@ from main import app as game_graph
 import gamedata
 import persistence as persistence_module
 from persistence import save_game_state, load_game_state, save_path, _serialize_messages, IncompatibleSaveError
+from infrastructure.contracts import (
+    CsrfError, SessionSecretError, Unauthorized as _Unauthorized, public_auth_code,
+)
 from character_creator import create_player_character
 from gamedata import CLASSES, load_json_data, seed_factions
 from llm_setup import (
@@ -75,6 +78,23 @@ async def _incompatible_save_handler(_request, _exc):
                   "atualize o servidor antes de continuar.",
         "code": "save_schema_newer",
     })
+
+
+@app.exception_handler(_Unauthorized)
+async def _unauthorized_handler(_request, exc):
+    """SPEC-220 R3: 401 com código fechado; a mensagem interna fica só no servidor."""
+    return JSONResponse(status_code=401, content={"detail": public_auth_code(exc)})
+
+
+@app.exception_handler(CsrfError)
+async def _csrf_handler(_request, exc):
+    """SPEC-220 R10: Origin/CSRF => 403, para o cliente não disparar refresh/logout."""
+    return JSONResponse(status_code=403, content={"detail": exc.code})
+
+
+@app.exception_handler(SessionSecretError)
+async def _session_secret_handler(_request, _exc):
+    return JSONResponse(status_code=503, content={"detail": "server_misconfigured"})
 
 
 # Fase 10 (R5): CORS restrito por default; configurável via RPG_CORS_ORIGINS
@@ -120,37 +140,12 @@ async def _session_boundary(request: Request, call_next):
         return await call_next(request)
     from infrastructure.contracts import Unauthorized
     from infrastructure.request_context import reset_current_principal, set_current_principal
-    from infrastructure.runtime import get_runtime
-    from services.auth_sessions import (
-        ACCESS_COOKIE, CSRF_COOKIE, CsrfSigner, validate_mutation_request,
-    )
+    from services.auth_sessions import CSRF_COOKIE, CsrfSigner, validate_mutation_request
 
+    # SPEC-220 R8: o ``try`` cobre só identidade + CSRF; ``call_next`` fica fora,
+    # então um ValueError do handler volta a ser 500 genérico (nunca 401).
     try:
-        try:
-            principal = get_runtime().identity_verifier.verify(request.cookies.get(ACCESS_COOKIE))
-        except Unauthorized:
-            if request.url.path != "/account/delete":
-                raise
-            from services.account_security import proof_owner
-            from infrastructure.contracts import Principal
-            from services.auth_sessions import ACCESS_COOKIE
-            receipt = request.cookies.get("rpg_deletion")
-            if receipt:
-                owner = proof_owner(receipt, "delete", max_age=604800)
-            else:
-                # Crash after DB revocation but before Set-Cookie: a recent
-                # password proof bound to this SAME stale access cookie can
-                # resume only an existing tombstone, never start a deletion.
-                if not request.cookies.get(ACCESS_COOKIE):
-                    raise Unauthorized("account_delete_not_requested")
-                owner = proof_owner(request.cookies.get("rpg_recent"), "recent",
-                                    request.cookies[ACCESS_COOKIE])
-            with get_runtime().game_store.pool.connection() as db:
-                requested = db.execute("select 1 from app.account_deletions where owner_id=%s",
-                                       (owner,)).fetchone()
-            if not requested:
-                raise Unauthorized("account_delete_not_requested")
-            principal = Principal(owner, "deletion-retry", str(owner))
+        principal = _boundary_principal(request)
         if request.method not in {"GET", "HEAD", "OPTIONS"}:
             secret = os.getenv("RPG_SESSION_SECRET", "")
             signer = CsrfSigner(secret)
@@ -160,15 +155,49 @@ async def _session_boundary(request: Request, call_next):
                 origin=request.headers.get("origin"),
                 allowed_origins=set(_CORS_ORIGINS), signer=signer,
             )
-        token = set_current_principal(principal)
-        try:
-            from observability.telemetry import correlation_scope
-            with correlation_scope(owner_id=principal.user_id):
-                return await call_next(request)
-        finally:
-            reset_current_principal(token)
-    except (Unauthorized, ValueError) as exc:
-        return JSONResponse({"detail": str(exc)}, status_code=401)
+    except CsrfError as exc:
+        return JSONResponse({"detail": exc.code}, status_code=403)
+    except Unauthorized as exc:
+        return JSONResponse({"detail": public_auth_code(exc)}, status_code=401)
+    except ValueError:  # segredo de sessão curto/ausente (CsrfSigner/proof)
+        return JSONResponse({"detail": "server_misconfigured"}, status_code=503)
+    token = set_current_principal(principal)
+    try:
+        from observability.telemetry import correlation_scope
+        with correlation_scope(owner_id=principal.user_id):
+            return await call_next(request)
+    finally:
+        reset_current_principal(token)
+
+
+def _boundary_principal(request: Request):
+    from infrastructure.contracts import Principal, Unauthorized
+    from infrastructure.runtime import get_runtime
+    from services.auth_sessions import ACCESS_COOKIE
+
+    try:
+        return get_runtime().identity_verifier.verify(request.cookies.get(ACCESS_COOKIE))
+    except Unauthorized:
+        if request.url.path != "/account/delete":
+            raise
+    from services.account_security import proof_owner
+    receipt = request.cookies.get("rpg_deletion")
+    if receipt:
+        owner = proof_owner(receipt, "delete", max_age=604800)
+    else:
+        # Crash after DB revocation but before Set-Cookie: a recent
+        # password proof bound to this SAME stale access cookie can
+        # resume only an existing tombstone, never start a deletion.
+        if not request.cookies.get(ACCESS_COOKIE):
+            raise Unauthorized("account_delete_not_requested")
+        owner = proof_owner(request.cookies.get("rpg_recent"), "recent",
+                            request.cookies[ACCESS_COOKIE])
+    with get_runtime().game_store.pool.connection() as db:
+        requested = db.execute("select 1 from app.account_deletions where owner_id=%s",
+                               (owner,)).fetchone()
+    if not requested:
+        raise Unauthorized("account_delete_not_requested")
+    return Principal(owner, "deletion-retry", str(owner))
 
 
 # SPEC-192 F6: SPA CSP. Google Fonts are linked from web/index.html (styles+fonts); Stripe checkout is a
@@ -236,8 +265,13 @@ async def _correlation_boundary(request: Request, call_next):
 
 class AuthRequest(BaseModel):
     email: str = Field(min_length=3, max_length=320)
+    # Login aceita senhas legadas >=8; criação/troca exigem >=10 (SPEC-220 R9).
     password: str = Field(min_length=8, max_length=256)
     captcha_token: str | None = Field(default=None, max_length=4096)
+
+
+class SignupRequest(AuthRequest):
+    password: str = Field(min_length=10, max_length=256)
 
 
 @app.get("/auth/config")
@@ -318,28 +352,38 @@ def auth_login(body: AuthRequest, request: Request, response: Response):
     from infrastructure.contracts import Unauthorized
     from infrastructure.runtime import get_runtime
 
+    from services.account_security import auth_limit, auth_success, captcha_config
+    runtime = get_runtime()
+    provider = runtime.identity_verifier
+    captcha_mode = captcha_config()["mode"]
+    if captcha_mode not in {"app", "gotrue"}:
+        raise HTTPException(503, "captcha_unavailable")
+    if captcha_mode == "gotrue":
+        _auth_abuse(request, action="login", email=body.email, captcha_token=body.captcha_token)
+    else:
+        _require_allowed_origin(request)  # SPEC-220 R5: login CSRF
+        auth_limit(runtime, request, action="login", email=body.email)
     try:
-        provider = get_runtime().identity_verifier
-        from services.account_security import auth_limit, captcha_config
-        captcha_mode = captcha_config()["mode"]
-        if captcha_mode not in {"app", "gotrue"}:
-            raise HTTPException(503, "captcha_unavailable")
         if captcha_mode == "gotrue":
-            _auth_abuse(request, action="login", email=body.email, captcha_token=body.captcha_token)
             tokens = provider.login(body.email, body.password, captcha_token=body.captcha_token)
         else:
-            auth_limit(get_runtime(), request, action="login", email=body.email)
             tokens = provider.login(body.email, body.password)
-        provider.verify(tokens.access_token)
-        csrf = _set_session_cookies(response, tokens, request=request)
-        _set_recent_cookie(response, tokens.user_id, tokens.access_token)
-        return {"authenticated": True, "csrf_token": csrf}
     except Unauthorized as exc:
-        raise HTTPException(status_code=401, detail=str(exc)) from exc
+        # SPEC-220 R4: só a falha de credencial conta no bucket por e-mail.
+        auth_limit(runtime, request, action="login", email=body.email, stage="failure")
+        raise HTTPException(status_code=401, detail=public_auth_code(exc)) from None
+    auth_success(runtime, action="login", email=body.email, request=request)
+    try:
+        provider.verify(tokens.access_token)
+    except Unauthorized as exc:
+        raise HTTPException(status_code=401, detail=public_auth_code(exc)) from None
+    csrf = _set_session_cookies(response, tokens, request=request)
+    _set_recent_cookie(response, tokens.user_id, tokens.access_token)
+    return {"authenticated": True, "csrf_token": csrf}
 
 
 @app.post("/auth/signup")
-def auth_signup(body: AuthRequest, request: Request, response: Response):
+def auth_signup(body: SignupRequest, request: Request, response: Response):
     if not _database_profile():
         raise HTTPException(status_code=404, detail="auth desativada no perfil legacy")
     from infrastructure.contracts import Unauthorized
@@ -365,7 +409,7 @@ def auth_signup(body: AuthRequest, request: Request, response: Response):
         if _email_confirmation_required():
             response.status_code = 202
             return {"authenticated": False, "message": GENERIC_MESSAGE}
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+        raise HTTPException(status_code=400, detail=public_auth_code(exc)) from None
 
 
 def _email_confirmation_required() -> bool:
@@ -387,13 +431,17 @@ def _lifecycle_runtime():
     return runtime
 
 
+def _require_allowed_origin(request: Request) -> None:
+    """SPEC-220 R5: rotas públicas de /auth só aceitam Origin da allowlist."""
+    if request.headers.get("origin") not in _CORS_ORIGINS:
+        raise HTTPException(403, "origin_denied")
+
+
 def _auth_abuse(request: Request, *, action: str, email: str = "", captcha_token: str | None = None) -> None:
     from infrastructure.runtime import get_runtime
     from infrastructure.contracts import Unauthorized
     from services.account_security import auth_limit, validate_captcha
-    origin = request.headers.get("origin")
-    if origin not in _CORS_ORIGINS:
-        raise HTTPException(403, "origin_invalid")
+    _require_allowed_origin(request)
     runtime = get_runtime()
     auth_limit(runtime, request, action=action, email=email)
     from services.account_security import captcha_config
@@ -407,7 +455,7 @@ def _auth_abuse(request: Request, *, action: str, email: str = "", captcha_token
         except ValueError:
             raise HTTPException(503, "captcha_unavailable") from None
         except Unauthorized as exc:
-            raise HTTPException(403, str(exc)) from None
+            raise HTTPException(403, public_auth_code(exc)) from None
 
 
 class EmailRequest(BaseModel):
@@ -422,7 +470,7 @@ class VerifyEmailRequest(BaseModel):
 
 class ResetPasswordRequest(BaseModel):
     token_hash: str = Field(min_length=10, max_length=512)
-    new_password: str = Field(min_length=8, max_length=256)
+    new_password: str = Field(min_length=10, max_length=256)
 
 
 @app.post("/auth/reset/request", status_code=202)
@@ -466,7 +514,7 @@ def auth_verify_email(body: VerifyEmailRequest, request: Request, response: Resp
         runtime.identity_verifier.verify(tokens.access_token)
         return {"authenticated": True, "csrf_token": _set_session_cookies(response, tokens, request=request)}
     except Unauthorized as exc:
-        raise HTTPException(400, str(exc)) from None
+        raise HTTPException(400, public_auth_code(exc)) from None
 
 
 def _clear_auth_cookies(response: Response, *, keep_csrf: bool = False) -> None:
@@ -487,7 +535,7 @@ def auth_reset_confirm(body: ResetPasswordRequest, request: Request, response: R
     try:
         runtime.identity_verifier.reset_password(body.token_hash, body.new_password)
     except Unauthorized as exc:
-        raise HTTPException(400, str(exc)) from None
+        raise HTTPException(400, public_auth_code(exc)) from None
     _clear_auth_cookies(response)
     return {"authenticated": False, "message": "Senha atualizada. Entre novamente."}
 
@@ -515,7 +563,7 @@ def auth_reauthenticate(body: ReauthRequest, request: Request, response: Respons
         _set_recent_cookie(response, owner, access)
         return {"recent": True}
     except Unauthorized as exc:
-        raise HTTPException(401, str(exc)) from None
+        raise HTTPException(401, public_auth_code(exc)) from None
 
 
 def _require_recent(request: Request, owner) -> None:
@@ -640,29 +688,69 @@ def auth_refresh(request: Request, response: Response):
         _validate_auth_csrf(request)
         token = request.cookies.get(REFRESH_COOKIE)
         if not token:
-            raise Unauthorized("sessão ausente")
+            raise Unauthorized("session_missing")
         tokens = get_runtime().identity_verifier.refresh(token)
         get_runtime().identity_verifier.verify(tokens.access_token)
         csrf = _set_session_cookies(response, tokens, clear_deletion=False, request=request)
         return {"authenticated": True, "csrf_token": csrf}
     except Unauthorized as exc:
-        raise HTTPException(status_code=401, detail=str(exc)) from exc
+        raise HTTPException(status_code=401, detail=public_auth_code(exc)) from None
 
 
 @app.post("/auth/logout", status_code=204)
+# SPEC-220 R1: o cookie de refresh tem path /auth/refresh; só este alias o recebe.
+@app.post("/auth/refresh/logout", status_code=204)
 def auth_logout(request: Request, response: Response):
     from infrastructure.runtime import get_runtime
     from services.auth_sessions import ACCESS_COOKIE, CSRF_COOKIE, REFRESH_COOKIE
 
-    _validate_auth_csrf(request)
-    access = request.cookies.get(ACCESS_COOKIE)
-    if access:
-        get_runtime().identity_verifier.logout(access)
+    _validate_auth_csrf(request)  # CsrfError => 403 (handler), nunca 500
+    _revoke_session(get_runtime().identity_verifier, request.cookies.get(ACCESS_COOKIE),
+                    request.cookies.get(REFRESH_COOKIE))
     response.delete_cookie(ACCESS_COOKIE, path="/")
     response.delete_cookie(CSRF_COOKIE, path="/")
     response.delete_cookie(REFRESH_COOKIE, path="/auth/refresh")
     response.delete_cookie("rpg_recent", path="/")
     response.delete_cookie("rpg_deletion", path="/account/delete")
+
+
+def _revoke_session(identity, access: str | None, refresh: str | None) -> None:
+    """SPEC-220 R1/R2: "Sair" encerra a sessão server-side, refresh incluído.
+
+    Access válido => logout global; access ausente/vencido => troca o refresh e
+    revoga com o access novo; owner conhecido => ``revoke_all`` (D-A). Idempotente:
+    refresh já inválido ou upstream fora do ar nunca vira 500 (cookies saem igual).
+    """
+    from infrastructure.contracts import Unauthorized
+    from observability.telemetry import correlation, safe_json
+
+    owner = None
+    stage = "verify"
+    try:
+        if access:
+            try:
+                owner = identity.verify(access).user_id
+            except Unauthorized:
+                owner = None
+            if owner is not None:
+                stage = "logout"
+                identity.logout(access)
+        if owner is None and refresh:
+            stage = "refresh"
+            tokens = identity.refresh(refresh)
+            owner = tokens.user_id
+            stage = "logout"
+            identity.logout(tokens.access_token)
+        if owner is not None and hasattr(identity, "revoke_all"):
+            stage = "revoke_all"
+            identity.revoke_all(owner)
+    except Unauthorized:
+        return  # refresh já rotacionado/revogado: nada a revogar
+    except Exception as exc:  # upstream/DB fora do ar: cookies ainda são limpos
+        logging.getLogger("rpg.account").warning(safe_json({
+            "event": "auth.logout.revoke_failed", "stage": stage,
+            "error_type": type(exc).__name__, "request_id": correlation().get("request_id"),
+        }))
 
 # Fase 10 (R7): 1 linha JSON por turno no stderr (base de observabilidade).
 _turn_logger = logging.getLogger("rpg.turn")

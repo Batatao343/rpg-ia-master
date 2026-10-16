@@ -116,12 +116,14 @@ export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, noti
           <label htmlFor="auth-password">{mode === "reset_link" ? "Nova senha" : "Senha"}</label>
           <input id="auth-password" type="password"
             autoComplete={mode === "login" ? "current-password" : "new-password"} required
-            minLength={8} value={password} onChange={event => setPassword(event.target.value)} />
+            minLength={mode === "login" ? 8 : 10} aria-describedby={mode === "login" ? undefined : "auth-password-hint"}
+            value={password} onChange={event => setPassword(event.target.value)} />
+          {mode !== "login" && <small id="auth-password-hint" className="muted">Mínimo de 10 caracteres.</small>}
         </div>}
         {mode === "reset_link" && <div className="field">
           <label htmlFor="auth-password-confirm">Repita a nova senha</label>
           <input id="auth-password-confirm" type="password" autoComplete="new-password" required
-            minLength={8} value={confirmPassword} onChange={event => setConfirmPassword(event.target.value)} />
+            minLength={10} value={confirmPassword} onChange={event => setConfirmPassword(event.target.value)} />
         </div>}
         {needsCaptcha && <TurnstileChallenge required siteKey={config?.captcha?.site_key ?? null}
           action={captchaAction} revision={captchaRevision} onToken={setCaptchaToken} />}

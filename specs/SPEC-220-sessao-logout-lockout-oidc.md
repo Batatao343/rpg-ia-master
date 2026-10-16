@@ -1,7 +1,7 @@
 # SPEC-220 — Sessão: revogação no logout, erros 401 consistentes, lockout por e-mail e OIDC
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `in-progress` (implementação + gates locais + revisão Sol APPROVED; faltam o smoke staging §6 após deploy e a aplicação da `SESSION_POLICY` no Auth remoto pelo dono)
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** nenhuma · evolui SPEC-190/193 `done`; usa o `client_ip` da SPEC-219 se já existir, mas NÃO a exige (índice corrigido) (ordem final 2026-10-15)
 > **Desbloqueia:** gate da SPEC-197; ativação futura de OIDC (ordem final 2026-10-15)
 > **Origem:** auditoria de segurança 2026-10-15 — achados SESS-04, SESS-05/AUTHZ-08, SESS-07/AUTHZ-10(b), AUTHZ-09, INFRA-01, INFRA-07, INFRA-08
@@ -100,11 +100,11 @@ Objetivo: "Sair" sempre encerra a sessão server-side (refresh incluído); rotas
 
 ## 5. Critérios de aceite
 
-- [ ] Etapa 0 vermelha no HEAD, verde ao final; R1–R7 cobertos; `uv run pytest` verde; GoTrue local (`-m infra_local`) verde no caso de logout.
-- [ ] Nenhuma rota `/auth/*` devolve 5xx para entrada do cliente (teste fuzz leve: cookies/headers vazios, inválidos, CSRF errado).
+- [x] Etapa 0 vermelha no HEAD, verde ao final; R1–R7 cobertos; `uv run pytest` verde; GoTrue local (`-m infra_local`) verde no caso de logout.
+- [x] Nenhuma rota `/auth/*` devolve 5xx para entrada do cliente (teste fuzz leve: cookies/headers vazios, inválidos, CSRF errado).
 - [ ] Smoke staging: login → esperar/forçar expiração do access (ou apagar o cookie `rpg_access` no DevTools) → "Sair" → `POST /auth/refresh` manual com o refresh antigo = 401.
-- [ ] 5 logins corretos seguidos do mesmo e-mail não geram 429; 11 senhas erradas geram 429; login correto depois de 3 erros zera o contador.
-- [ ] Revisão Sol independente APPROVED.
+- [x] 5 logins corretos seguidos do mesmo e-mail não geram 429; 11 senhas erradas geram 429; login correto depois de 3 erros zera o contador. (offline + GoTrue local; staging pendente)
+- [x] Revisão Sol independente APPROVED (2026-10-16, com correções — ver §10 e `handoffs/SPEC-220-SOL-independent-review.md`).
 
 ## 6. Smoke test
 
@@ -127,3 +127,15 @@ Staging, sem LLM: fluxo de logout acima (2 contas); lockout com senha errada ×1
 
 - Saída de `uv run pytest` completa + `-m infra_local` (GoTrue local) com o caso de logout; vermelhos da Etapa 0.
 - Transcrição do smoke §6 (status codes), `docs/secXX/README.md` com tabela de códigos de erro e decisões D-A..D-C; parecer Sol em `handoffs/`; atualização de `ESTADO_ATUAL.md`/`ROADMAP.md`.
+
+## 10. Registro de execução (2026-10-16)
+
+- **Defaults de decisão:** D-A sim (`revoke_all` sempre que o owner é conhecido); D-C adotado (10 falhas/15 min login; (e-mail,IP) 5/15 min + só-e-mail 20/h).
+- **D-B (desvio):** em vez de bloquear `auth_mode=oidc`, R6 foi implementado completo **sem dependência nova** (`cryptography` já é core desde a SPEC-194). Continua fail-closed: sem `RPG_OIDC_ISSUER`/`RPG_OIDC_JWKS_URL`/`RPG_OIDC_AUDIENCE` o `RuntimeConfig` recusa. Bloquear quebraria os perfis `portable`/`hosted`.
+- **R1 (desvio de rota):** o cookie de refresh tem path `/auth/refresh` e não chega a `/auth/logout`. Foi criado o alias `POST /auth/refresh/logout` (usado pelo front); `/auth/logout` segue válido. O path do cookie não mudou, para não duplicar cookies Android persistidos (SPEC-193).
+- **R2 (desvio):** o GoTrue não expõe logout-por-id na Admin API. `revoke_all` usa `app.runtime_revoke_auth` (a mesma função privilegiada da exclusão SPEC-190) via pool do backend.
+- **R3:** lista fechada estendida com códigos públicos já existentes (`credentials_invalid`, `link_invalid_or_expired`, `signup_failed`, `password_reset_failed`, `account_deleted`, `server_misconfigured`). Mensagens internas de `Unauthorized(...)` são mapeadas por `public_auth_code`. O teste AST garante que todo literal mapeia para a lista.
+- **R9 (desvio):** `min_length=10` só em signup e reset. O login mantém ≥8, para não trancar senhas legadas. Aplicar `SESSION_POLICY` no Auth remoto é **passo do dono** (não cumprido).
+- Evidência: [docs/spec220/README.md](../docs/spec220/README.md).
+
+- **Revisão Sol (2026-10-16):** APPROVED com três correções aplicadas no WT: (1) bucket de falhas do login passou de só-e-mail para **(e-mail, IP)** 10/15 min — 10 senhas erradas de um IP atacante não trancam mais a vítima em outro IP (o IP 20/15 min segue limitando força bruta distribuída; risco residual: vítima e atacante atrás do mesmo NAT); (2) OIDC: kid desconhecido força no máximo um refetch de JWKS por 60 s (sem amplificação ao IdP); (3) OIDC: `exp`/`nbf` exigem NumericDate finito (string/bool/NaN/inf recusados). Smoke local §6-equivalente (uvicorn perfil `local` + GoTrue/Postgres locais, 2 contas) 51/51 em `docs/spec220/evidence/local_smoke.json`.

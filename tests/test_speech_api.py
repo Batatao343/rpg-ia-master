@@ -84,7 +84,7 @@ def test_session_and_csrf_precede_audio_processing(speech_client):
     client.cookies.clear()
     assert client.post('/account/transcriptions', headers=headers, content=payload).status_code == 401
     client.cookies.set('rpg_access', 'valid')
-    assert client.post('/account/transcriptions', headers=headers, content=payload).status_code == 401
+    assert client.post('/account/transcriptions', headers=headers, content=payload).status_code == 403  # SPEC-220 R10
     assert calls == []
 
 

@@ -28,6 +28,24 @@ RATE_LIMITS = {
     "rate_limit_anonymous_users": 10,
 }
 SECRET_FIELDS = {"security_captcha_secret"}
+# SPEC-220 R9 (INFRA-07): política de senha/sessão declarada e diffada, nunca default implícito.
+SESSION_POLICY = {
+    "password_min_length": 10,
+    "refresh_token_rotation_enabled": True,
+    "security_refresh_token_reuse_interval": 10,
+    "jwt_exp": 3600,
+    "security_update_password_require_reauthentication": True,
+    "disable_signup": False,
+}
+
+
+def validate_redirects(redirects: list[str]) -> None:
+    """Allow-list de redirect sem curinga e sem http:// fora de localhost."""
+    for url in redirects:
+        if "*" in url:
+            raise common.GuardError(f"uri_allow_list com curinga recusado: {url}")
+        if url.startswith("http://") and not url.startswith(("http://localhost", "http://127.0.0.1")):
+            raise common.GuardError(f"uri_allow_list http:// fora de localhost recusado: {url}")
 
 
 def desired_config(env: Mapping[str, str], turnstile_test_keys: bool = False) -> dict[str, Any]:
@@ -38,6 +56,7 @@ def desired_config(env: Mapping[str, str], turnstile_test_keys: bool = False) ->
     if not site:
         raise common.GuardError("RPG_STAGING_SITE_URL ausente")
     redirects = [u.strip() for u in env.get("RPG_STAGING_REDIRECT_URLS", site).split(",") if u.strip()]
+    validate_redirects(redirects)
     cfg: dict[str, Any] = {
         "mailer_autoconfirm": False,
         "security_captcha_enabled": True,
@@ -47,6 +66,7 @@ def desired_config(env: Mapping[str, str], turnstile_test_keys: bool = False) ->
         "uri_allow_list": ",".join(redirects),
     }
     cfg.update(RATE_LIMITS)
+    cfg.update(SESSION_POLICY)
     return cfg
 
 

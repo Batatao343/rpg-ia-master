@@ -523,6 +523,21 @@ class MemoryRateLimiter:
             self._buckets[key] = (started, count)
             return RateLimitDecision(True, limit - count, 0)
 
+    def peek(self, key: str, *, limit: int, window_seconds: int) -> RateLimitDecision:
+        """SPEC-220: inspect a bucket without consuming it."""
+        now = self._clock()
+        with self._lock:
+            started, count = self._buckets.get(key, (now, 0))
+            if now - started >= window_seconds:
+                return RateLimitDecision(True, limit, 0)
+            if count >= limit:
+                return RateLimitDecision(False, 0, max(1, int(window_seconds - (now - started))))
+            return RateLimitDecision(True, limit - count, 0)
+
+    def reset(self, key: str) -> None:
+        with self._lock:
+            self._buckets.pop(key, None)
+
 
 class FixedIdentityVerifier:
     def __init__(self, principal: Principal) -> None:

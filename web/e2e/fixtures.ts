@@ -247,7 +247,7 @@ export class DeterministicBackend {
 
     if (path === "/auth/config") return this.json(route, { required: this.authRequired, authenticated: this.authenticated, user_id: this.authenticated ? this.userId : undefined });
     if (path === "/auth/signup" || path === "/auth/login") { this.authenticated = true; return this.json(route, { authenticated: true, csrf_token: "fixture" }); }
-    if (path === "/auth/logout") { this.authenticated = false; return this.json(route, null); }
+    if (path === "/auth/logout" || path === "/auth/refresh/logout") { this.authenticated = false; return this.json(route, null); }
     if (path === "/auth/refresh") {
       this.refreshCount += 1;
       if (this.refreshGate) await this.refreshGate.promise;

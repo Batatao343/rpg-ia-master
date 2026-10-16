@@ -33,6 +33,44 @@ class Forbidden(InfrastructureError):
     pass
 
 
+# SPEC-220 R3: única lista de códigos que uma resposta 401/403/503 de sessão
+# pode carregar. Mensagens internas (str(exc)) nunca saem na resposta.
+AUTH_ERROR_CODES = frozenset({
+    "session_missing", "session_invalid", "csrf_invalid", "origin_denied",
+    "captcha_required", "captcha_invalid", "recent_session_required",
+    "account_delete_not_requested", "credentials_invalid", "link_invalid_or_expired",
+    "signup_failed", "password_reset_failed", "account_deleted", "server_misconfigured",
+})
+_AUTH_CODE_ALIASES = {
+    "sessão ausente": "session_missing", "token ausente": "session_missing",
+    "principal ausente": "session_missing",
+    "credenciais inválidas": "credentials_invalid",
+    "não foi possível criar a conta": "signup_failed",
+    "account_deleted_or_invalid_blob_owner": "account_deleted",
+    "Origin ausente": "origin_denied", "Origin não permitido": "origin_denied",
+    "CSRF inválido": "csrf_invalid",
+}
+
+
+def public_auth_code(exc: BaseException) -> str:
+    """Mapeia qualquer erro de sessão para um código público da lista fechada."""
+    code = getattr(exc, "code", None) or (str(exc.args[0]) if exc.args else "")
+    code = _AUTH_CODE_ALIASES.get(code, code)
+    return code if code in AUTH_ERROR_CODES else "session_invalid"
+
+
+class CsrfError(ValueError):
+    """SPEC-220 R10: Origin/CSRF inválido => 403 (o cliente não deve tentar refresh)."""
+
+    def __init__(self, code: str) -> None:
+        self.code = code if code in {"csrf_invalid", "origin_denied"} else "csrf_invalid"
+        super().__init__(self.code)
+
+
+class SessionSecretError(ValueError):
+    """Segredo de sessão ausente/curto: 503 server_misconfigured, sem mensagem interna."""
+
+
 class StaleVersion(Conflict):
     pass
 
@@ -258,6 +296,7 @@ class TurnCoordinator(Protocol):
 
 class RateLimiter(Protocol):
     def consume(self, key: str, *, limit: int, window_seconds: int) -> RateLimitDecision: ...
+    # SPEC-220: adapters também expõem ``peek`` (sem consumir) e ``reset(key)``.
 
 
 class IdentityVerifier(Protocol):

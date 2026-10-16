@@ -42,11 +42,13 @@ class PostgresAccountLifecycle:
             db.execute("select pg_advisory_xact_lock(hashtextextended(%s,190))", (str(owner),))
             if db.execute("select 1 from app.account_deletions where owner_id=%s", (owner,)).fetchone():
                 return
-            from services.account_security import auth_email_bucket_keys
+            from services.account_security import auth_email_bucket_keys, auth_email_bucket_prefixes
             email = db.execute("select app.runtime_auth_email(%s) as email", (owner,)).fetchone()["email"]
             if email:
-                db.execute("delete from app.rate_limit_buckets where bucket_key=any(%s)",
-                           (list(auth_email_bucket_keys(email)),))
+                db.execute("""delete from app.rate_limit_buckets where bucket_key=any(%s)
+                    or exists (select 1 from unnest(%s::text[]) p(prefix)
+                               where starts_with(bucket_key, p.prefix))""",
+                           (list(auth_email_bucket_keys(email)), list(auth_email_bucket_prefixes(email))))
             prefix = f"users/{owner}/"
             keys = {row["name"] for row in db.execute("""select name from storage.objects
                 where bucket_id=%s and starts_with(name,%s)""", (self.blobs.bucket, prefix)).fetchall()}

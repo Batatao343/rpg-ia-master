@@ -175,6 +175,8 @@ class RuntimeConfig:
     supabase_service_role_key: str = field(default="", repr=False)
     oidc_userinfo_url: str = ""
     oidc_issuer: str = ""
+    oidc_jwks_url: str = ""
+    oidc_audience: str = ""
     db_pool_min_size: int = 0
     db_pool_max_size: int = 4
     db_pool_timeout: float = 5.0
@@ -224,6 +226,8 @@ class RuntimeConfig:
             supabase_service_role_key=values.get("SUPABASE_SERVICE_ROLE_KEY", "").strip(),
             oidc_userinfo_url=values.get("RPG_OIDC_USERINFO_URL", "").strip(),
             oidc_issuer=values.get("RPG_OIDC_ISSUER", "").strip(),
+            oidc_jwks_url=values.get("RPG_OIDC_JWKS_URL", "").strip(),
+            oidc_audience=values.get("RPG_OIDC_AUDIENCE", "").strip(),
             db_pool_min_size=pool_min,
             db_pool_max_size=pool_max,
             db_pool_timeout=pool_timeout,
@@ -298,9 +302,11 @@ class RuntimeConfig:
                 raise ValueError(f"perfil {self.profile} exige auth OIDC")
             if self.blob_store != "s3":
                 raise ValueError(f"perfil {self.profile} exige BlobStore S3")
-            if not self.oidc_userinfo_url or not self.oidc_issuer:
+        if self.auth_mode == "oidc":
+            # SPEC-220 R6: OIDC só com validação JWT local completa (fail-closed).
+            if not self.oidc_issuer or not self.oidc_jwks_url or not self.oidc_audience:
                 raise ValueError(
-                    f"perfil {self.profile} exige RPG_OIDC_USERINFO_URL e RPG_OIDC_ISSUER"
+                    f"perfil {self.profile} exige RPG_OIDC_ISSUER, RPG_OIDC_JWKS_URL e RPG_OIDC_AUDIENCE"
                 )
         if self.profile == "hosted-supabase":
             if self.auth_mode != "supabase" or self.blob_store != "supabase":
@@ -412,7 +418,10 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
             )
         elif config.auth_mode == "oidc":
             from infrastructure.oidc_identity import OidcIdentityProvider
-            identity = OidcIdentityProvider(config.oidc_userinfo_url, config.oidc_issuer)
+            identity = OidcIdentityProvider(
+                config.oidc_userinfo_url, config.oidc_issuer,
+                jwks_url=config.oidc_jwks_url, audience=config.oidc_audience,
+            )
         else:
             raise ValueError(f"auth não suportada: {config.auth_mode}")
         def embed_query(text: str):

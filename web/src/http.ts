@@ -42,10 +42,17 @@ export function formatDetail(detail: unknown, fallback: string): { code: string;
   return { code: fallback, message: fallback };
 }
 
+/** SPEC-220 R10: Origin/CSRF => 403; é página desatualizada, não sessão expirada. */
+export const STALE_PAGE_CODES = new Set(['csrf_invalid', 'origin_denied']);
+export const STALE_PAGE_MESSAGE = 'A proteção desta página expirou. Recarregue a página e tente de novo.';
+
 async function errorFor(response: Response): Promise<HttpError> {
   const fallback = response.statusText || 'Falha na requisição';
   let formatted = { code: fallback, message: fallback };
   try { formatted = formatDetail((await response.json()).detail, fallback); } catch { /* non-JSON */ }
+  if (response.status === 403 && STALE_PAGE_CODES.has(formatted.code)) {
+    formatted = { code: formatted.code, message: STALE_PAGE_MESSAGE };
+  }
   return new HttpError(response.status, formatted.code, formatted.message);
 }
 

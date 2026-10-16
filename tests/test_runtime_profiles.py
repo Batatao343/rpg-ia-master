@@ -37,12 +37,13 @@ def test_portable_exige_oidc_e_s3_sem_supabase():
         "RPG_RUNTIME_PROFILE": "portable",
         "DATABASE_URL": "postgresql://localhost/postgres",
     }
-    with pytest.raises(ValueError, match="RPG_OIDC_USERINFO_URL"):
+    with pytest.raises(ValueError, match="RPG_OIDC_JWKS_URL"):  # SPEC-220 R6
         RuntimeConfig.from_env(base)
     config = RuntimeConfig.from_env({
         **base,
         "RPG_OIDC_USERINFO_URL": "https://identity.example/userinfo",
         "RPG_OIDC_ISSUER": "https://identity.example",
+        "RPG_OIDC_JWKS_URL": "https://identity.example/jwks", "RPG_OIDC_AUDIENCE": "rpg-api",
     })
     assert config.blob_store == "s3"
     assert config.auth_mode == "oidc"

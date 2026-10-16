@@ -47,7 +47,7 @@ def test_checkout_requires_auth_csrf_and_rejects_client_price(checkout_http):
     request = {"sku_id": "allowed", "request_id": str(uuid4())}
     assert c.client.post("/account/checkout", json=request).status_code == 401
     c.client.cookies.set("rpg_access", "session")
-    assert c.client.post("/account/checkout", json=request).status_code == 401
+    assert c.client.post("/account/checkout", json=request).status_code == 403  # SPEC-220 R10
     c.client.cookies.set("rpg_csrf", c.token)
     headers = {"x-csrf-token": c.token, "origin": api._CORS_ORIGINS[0]}
     assert c.client.post("/account/checkout", json={**request, "gross_brl": "0.01", "shard_milli": "999999"}, headers=headers).status_code == 422

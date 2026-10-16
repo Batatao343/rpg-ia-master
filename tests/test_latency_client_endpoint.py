@@ -99,7 +99,7 @@ def test_requires_csrf_and_session(monkeypatch):
     headers = {"origin": "http://localhost:5173", "x-csrf-token": csrf}
     assert client.post(PATH, json=_body(), headers=headers).status_code == 401   # sem sessao
     client.cookies.set("rpg_access", "valid")
-    assert client.post(PATH, json=_body(), headers=headers).status_code == 401   # sem cookie CSRF
+    assert client.post(PATH, json=_body(), headers=headers).status_code == 403   # sem cookie CSRF (SPEC-220 R10)
     client.cookies.set("rpg_csrf", csrf)
     assert client.post(PATH, json=_body(), headers=headers).status_code == 204
 

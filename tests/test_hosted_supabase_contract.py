@@ -49,6 +49,7 @@ def test_new_profile_and_legacy_contracts() -> None:
         "RPG_RUNTIME_PROFILE": "portable", "DATABASE_URL": "postgresql://localhost/postgres",
         "RPG_OIDC_USERINFO_URL": "https://identity.example/userinfo",
         "RPG_OIDC_ISSUER": "https://identity.example",
+        "RPG_OIDC_JWKS_URL": "https://identity.example/jwks", "RPG_OIDC_AUDIENCE": "rpg-api",
     })
     assert (portable.auth_mode, portable.blob_store) == ("oidc", "s3")
     legacy_hosted = RuntimeConfig.from_env({
@@ -56,6 +57,7 @@ def test_new_profile_and_legacy_contracts() -> None:
         "DATABASE_URL": "postgresql://user:fake@db.example.com:5432/postgres",
         "RPG_OIDC_USERINFO_URL": "https://identity.example/userinfo",
         "RPG_OIDC_ISSUER": "https://identity.example",
+        "RPG_OIDC_JWKS_URL": "https://identity.example/jwks", "RPG_OIDC_AUDIENCE": "rpg-api",
     })
     assert (legacy_hosted.auth_mode, legacy_hosted.blob_store) == ("oidc", "s3")
     with pytest.raises(ValueError, match="OIDC"):
@@ -87,6 +89,7 @@ def test_legacy_bind_and_hosted_dsn_are_fail_closed() -> None:
         "DATABASE_URL": "postgresql://user:fake@db.example.com:5432/postgres",
         "RPG_OIDC_USERINFO_URL": "https://identity.example/userinfo",
         "RPG_OIDC_ISSUER": "https://identity.example",
+        "RPG_OIDC_JWKS_URL": "https://identity.example/jwks", "RPG_OIDC_AUDIENCE": "rpg-api",
     }
     for dsn in (
         "host=127.0.0.1 dbname=postgres",

@@ -126,3 +126,22 @@ test('object and string details are preserved (R4)', async () => {
   assert.equal(formatDetail({ foo: 1 }, 'x').message, '{"foo":1}');
   assert.equal(formatDetail(undefined, 'Falha').message, 'Falha');
 });
+
+test('SPEC-220: 403 csrf/origin asks for reload and never refreshes or expires the session', async () => {
+  const { http, HttpError, STALE_PAGE_MESSAGE } = await load('http');
+  globalThis.document = { cookie: 'rpg_csrf=abc' };
+  const events = [];
+  globalThis.window = { dispatchEvent: event => events.push(event.type) };
+  let calls = 0;
+  globalThis.fetch = async url => {
+    calls++;
+    assert.notEqual(url, '/auth/refresh');
+    return new Response('{"detail":"csrf_invalid"}', { status: 403 });
+  };
+  await assert.rejects(http('/game/action', { method: 'POST' }),
+    error => error instanceof HttpError && error.status === 403 && error.code === 'csrf_invalid'
+      && error.message === STALE_PAGE_MESSAGE);
+  assert.equal(calls, 1);
+  assert.deepEqual(events, []);
+  delete globalThis.window;
+});

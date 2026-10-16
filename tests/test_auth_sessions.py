@@ -4,7 +4,7 @@ from uuid import uuid4
 
 import pytest
 
-from infrastructure.contracts import Principal, Unauthorized
+from infrastructure.contracts import CsrfError, Principal, Unauthorized
 from services.auth_sessions import CsrfSigner, cookie_settings, principal_from_session, validate_mutation_request
 
 
@@ -21,7 +21,7 @@ def test_csrf_exige_cookie_header_assinados_e_origin_permitida():
     for changed in ({"header_token": "nope"}, {"origin": "https://evil.invalid"}):
         values = dict(cookie_token=token, header_token=token, origin="http://127.0.0.1:5173")
         values.update(changed)
-        with pytest.raises(Unauthorized):
+        with pytest.raises(CsrfError):  # SPEC-220 R10: 403, nao 401
             validate_mutation_request(allowed_origins={"http://127.0.0.1:5173"}, signer=signer, **values)
 
 

@@ -192,7 +192,8 @@ def test_deletion_removes_address_derived_auth_rate_buckets(deletion_case):
     from services.account_security import auth_email_bucket_keys
     c=deletion_case
     email=f"{c.a.user_id}@example.test"
-    keys=auth_email_bucket_keys(email)
+    from services.account_security import auth_email_bucket_prefixes
+    keys=auth_email_bucket_keys(email)+tuple(p+"iphash" for p in auth_email_bucket_prefixes(email))  # SPEC-220
     for key in keys:
         c.db.execute("""insert into app.rate_limit_buckets
             (bucket_key,window_started_at,window_seconds,request_count)

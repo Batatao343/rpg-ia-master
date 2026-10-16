@@ -54,7 +54,9 @@ export const signup = (email: string, password: string, captchaToken?: string) =
     method: "POST",
     body: JSON.stringify({ email, password, ...(captchaToken ? { captcha_token: captchaToken } : {}) }),
   });
-export const logout = () => req<void>("/auth/logout", { method: "POST" });
+// SPEC-220 R1: sob /auth/refresh para receber o cookie de refresh (path /auth/refresh)
+// e revogá-lo no servidor mesmo com o access vencido.
+export const logout = () => req<void>("/auth/refresh/logout", { method: "POST" });
 export const requestPasswordReset = (email: string, captchaToken?: string) =>
   req<{ message: string }>("/auth/reset/request", { method: "POST",
     body: JSON.stringify({ email, ...(captchaToken ? { captcha_token: captchaToken } : {}) }) });

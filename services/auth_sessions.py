@@ -15,7 +15,7 @@ from typing import Protocol
 from urllib.parse import urlsplit
 from uuid import UUID
 
-from infrastructure.contracts import Principal, Unauthorized
+from infrastructure.contracts import CsrfError, Principal, SessionSecretError, Unauthorized
 
 
 ACCESS_COOKIE = "rpg_access"
@@ -41,7 +41,7 @@ class IdentityProvider(Protocol):
 class CsrfSigner:
     def __init__(self, secret: str) -> None:
         if len(secret) < 32:
-            raise ValueError("RPG_SESSION_SECRET precisa ter ao menos 32 caracteres")
+            raise SessionSecretError("RPG_SESSION_SECRET precisa ter ao menos 32 caracteres")
         self._secret = secret.encode("utf-8")
 
     def issue(self) -> str:
@@ -54,7 +54,7 @@ class CsrfSigner:
             return False
         nonce, signature = token.rsplit(".", 1)
         expected = hmac.new(self._secret, nonce.encode(), hashlib.sha256).hexdigest()
-        return hmac.compare_digest(signature, expected)
+        return hmac.compare_digest(signature.encode(), expected.encode())
 
 
 def validate_mutation_request(
@@ -65,15 +65,20 @@ def validate_mutation_request(
     allowed_origins: set[str],
     signer: CsrfSigner,
 ) -> None:
+    # SPEC-220 R10: falha de Origin/CSRF é 403 (CsrfError), nunca 401 de sessão.
     if not origin:
-        raise Unauthorized("Origin ausente")
-    normalized = f"{urlsplit(origin).scheme}://{urlsplit(origin).netloc}"
-    if normalized not in allowed_origins:
-        raise Unauthorized("Origin não permitido")
-    if not cookie_token or not header_token or not hmac.compare_digest(cookie_token, header_token):
-        raise Unauthorized("CSRF inválido")
+        raise CsrfError("origin_denied")
+    try:
+        parts = urlsplit(origin)
+    except ValueError:
+        raise CsrfError("origin_denied") from None
+    if f"{parts.scheme}://{parts.netloc}" not in allowed_origins:
+        raise CsrfError("origin_denied")
+    if not cookie_token or not header_token or not hmac.compare_digest(
+            cookie_token.encode(), header_token.encode()):
+        raise CsrfError("csrf_invalid")
     if not signer.verify(cookie_token):
-        raise Unauthorized("CSRF inválido")
+        raise CsrfError("csrf_invalid")
 
 
 def cookie_settings(*, secure: bool, refresh: bool = False) -> dict[str, object]:

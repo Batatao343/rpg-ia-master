@@ -93,6 +93,6 @@ ação, narrativa, prompt ou URL assinada.
 ## Perfil portátil
 
 `portable` usa Postgres+pgvector, S3 compatível e OIDC UserInfo. Configure
-`RPG_OIDC_USERINFO_URL`, `RPG_OIDC_ISSUER`, `RPG_S3_BUCKET` e credenciais S3 do
+`RPG_OIDC_ISSUER`, `RPG_OIDC_JWKS_URL`, `RPG_OIDC_AUDIENCE` (SPEC-220; `RPG_OIDC_USERINFO_URL` opcional), `RPG_S3_BUCKET` e credenciais S3 do
 ambiente. Password grant do Supabase não faz parte desse perfil; login/PKCE será
 certificado somente na futura spec cloud, após autorização e orçamento.

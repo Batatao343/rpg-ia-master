@@ -26,7 +26,9 @@ def _create_local_user(email: str, password: str) -> None:
 
 
 def _login(client: TestClient, email: str, password: str) -> str:
-    response = client.post("/auth/login", json={"email": email, "password": password})
+    # SPEC-220 R5: login exige Origin da allowlist.
+    response = client.post("/auth/login", json={"email": email, "password": password},
+                           headers={"Origin": "http://localhost:5173"})
     if response.status_code != 200:
         raise RuntimeError(f"login local falhou: {response.status_code}")
     return str(response.json()["csrf_token"])

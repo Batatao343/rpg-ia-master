@@ -143,6 +143,31 @@ class SupabaseIdentityProvider:
         if response.status_code not in (200, 204):
             raise Unauthorized("sessão inválida")
 
+    def logout_via_refresh(self, refresh_token: str) -> bool:
+        """SPEC-220 R1: access vencido => troca o refresh e revoga globalmente.
+
+        Tolerante: refresh já rotacionado/revogado (401/404) devolve False sem exceção.
+        """
+        try:
+            tokens = self.refresh(refresh_token)
+            self.logout(tokens.access_token)
+            return True
+        except Unauthorized:
+            return False
+
+    def revoke_all(self, user_id: UUID) -> bool:
+        """SPEC-220 R2 (D-A): apaga todas as sessões/refresh do owner no Auth.
+
+        Usa a mesma função privilegiada da exclusão de conta (SPEC-190); o GoTrue
+        não expõe logout-por-id na Admin API. Sem pool => False (R1 basta).
+        """
+        if self.pool is None:
+            return False
+        with self.pool.connection() as db:
+            # O pool real faz commit ao sair do contexto (psycopg_pool).
+            db.execute("select app.runtime_revoke_auth(%s)", (user_id,))
+        return True
+
     def verify(self, access_token: str | None) -> Principal:
         if not access_token:
             raise Unauthorized("sessão ausente")

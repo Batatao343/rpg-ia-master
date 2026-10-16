@@ -1,0 +1,298 @@
+{
+  "spec": "SPEC-220",
+  "kind": "local smoke (§6 equivalente; staging pendente)",
+  "date": "2026-10-16T20:38:08",
+  "profile": "local",
+  "gotrue": "http://127.0.0.1:55321",
+  "all_ok": true,
+  "steps": [
+    {
+      "step": "A: login sem Origin",
+      "status": 403,
+      "detail": "origin_denied",
+      "ok": true
+    },
+    {
+      "step": "A: login correto #1",
+      "status": 200,
+      "detail": null,
+      "ok": true
+    },
+    {
+      "step": "A: login correto #2",
+      "status": 200,
+      "detail": null,
+      "ok": true
+    },
+    {
+      "step": "A: login correto #3",
+      "status": 200,
+      "detail": null,
+      "ok": true
+    },
+    {
+      "step": "A: login correto #4",
+      "status": 200,
+      "detail": null,
+      "ok": true
+    },
+    {
+      "step": "A: login correto #5",
+      "status": 200,
+      "detail": null,
+      "ok": true
+    },
+    {
+      "step": "A: logout CSRF errado",
+      "status": 403,
+      "detail": "csrf_invalid",
+      "ok": true
+    },
+    {
+      "step": "A: logout com access apagado",
+      "status": 204,
+      "detail": null,
+      "ok": true
+    },
+    {
+      "step": "A: refresh antigo capturado",
+      "status": null,
+      "ok": true
+    },
+    {
+      "step": "A: /auth/refresh com refresh antigo",
+      "status": 401,
+      "detail": "session_invalid",
+      "ok": true
+    },
+    {
+      "step": "B: login sem Origin",
+      "status": 403,
+      "detail": "origin_denied",
+      "ok": true
+    },
+    {
+      "step": "B: login correto #1",
+      "status": 200,
+      "detail": null,
+      "ok": true
+    },
+    {
+      "step": "B: login correto #2",
+      "status": 200,
+      "detail": null,
+      "ok": true
+    },
+    {
+      "step": "B: login correto #3",
+      "status": 200,
+      "detail": null,
+      "ok": true
+    },
+    {
+      "step": "B: login correto #4",
+      "status": 200,
+      "detail": null,
+      "ok": true
+    },
+    {
+      "step": "B: login correto #5",
+      "status": 200,
+      "detail": null,
+      "ok": true
+    },
+    {
+      "step": "B: logout CSRF errado",
+      "status": 403,
+      "detail": "csrf_invalid",
+      "ok": true
+    },
+    {
+      "step": "B: logout com access apagado",
+      "status": 204,
+      "detail": null,
+      "ok": true
+    },
+    {
+      "step": "B: refresh antigo capturado",
+      "status": null,
+      "ok": true
+    },
+    {
+      "step": "B: /auth/refresh com refresh antigo",
+      "status": 401,
+      "detail": "session_invalid",
+      "ok": true
+    },
+    {
+      "step": "lockout: errada #1",
+      "status": 401,
+      "detail": "credentials_invalid",
+      "ok": true
+    },
+    {
+      "step": "lockout: errada #2",
+      "status": 401,
+      "detail": "credentials_invalid",
+      "ok": true
+    },
+    {
+      "step": "lockout: errada #3",
+      "status": 401,
+      "detail": "credentials_invalid",
+      "ok": true
+    },
+    {
+      "step": "lockout: correta após 3 erros (zera)",
+      "status": 200,
+      "detail": null,
+      "ok": true
+    },
+    {
+      "step": "lockout: errada pós-reset #1",
+      "status": 401,
+      "detail": "credentials_invalid",
+      "ok": true
+    },
+    {
+      "step": "lockout: errada pós-reset #2",
+      "status": 401,
+      "detail": "credentials_invalid",
+      "ok": true
+    },
+    {
+      "step": "lockout: errada pós-reset #3",
+      "status": 401,
+      "detail": "credentials_invalid",
+      "ok": true
+    },
+    {
+      "step": "lockout: errada pós-reset #4",
+      "status": 401,
+      "detail": "credentials_invalid",
+      "ok": true
+    },
+    {
+      "step": "lockout: errada pós-reset #5",
+      "status": 401,
+      "detail": "credentials_invalid",
+      "ok": true
+    },
+    {
+      "step": "lockout: errada pós-reset #6",
+      "status": 401,
+      "detail": "credentials_invalid",
+      "ok": true
+    },
+    {
+      "step": "lockout: errada pós-reset #7",
+      "status": 401,
+      "detail": "credentials_invalid",
+      "ok": true
+    },
+    {
+      "step": "lockout: errada pós-reset #8",
+      "status": 401,
+      "detail": "credentials_invalid",
+      "ok": true
+    },
+    {
+      "step": "lockout: errada pós-reset #9",
+      "status": 401,
+      "detail": "credentials_invalid",
+      "ok": true
+    },
+    {
+      "step": "lockout: errada pós-reset #10",
+      "status": 401,
+      "detail": "credentials_invalid",
+      "ok": true
+    },
+    {
+      "step": "lockout: 11ª errada",
+      "status": 429,
+      "detail": "auth_rate_limit",
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/logout",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/logout",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/logout",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/logout",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/refresh/logout",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/refresh/logout",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/refresh/logout",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/refresh/logout",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/refresh",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/refresh",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/refresh",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/refresh",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/reauth",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/reauth",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/reauth",
+      "status": 403,
+      "ok": true
+    },
+    {
+      "step": "fuzz /auth/reauth",
+      "status": 403,
+      "ok": true
+    }
+  ]
+}

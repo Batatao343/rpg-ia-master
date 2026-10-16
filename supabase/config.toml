@@ -35,7 +35,11 @@ additional_redirect_urls = ["http://localhost:5173"]
 jwt_expiry = 3600
 enable_signup = true
 enable_anonymous_sign_ins = false
-minimum_password_length = 8
+# SPEC-220 R9: espelha scripts/staging/auth_config.py SESSION_POLICY.
+minimum_password_length = 10
+password_requirements = ""
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
 
 [auth.email]
 enable_confirmations = true

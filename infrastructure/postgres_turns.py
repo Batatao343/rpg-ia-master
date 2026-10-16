@@ -578,3 +578,25 @@ class PostgresRateLimiter:
         count = int(row["request_count"])
         return RateLimitDecision(count <= limit, max(0, limit - count),
                                  int(row["retry_after"]) if count > limit else 0)
+
+    def peek(self, key: str, *, limit: int, window_seconds: int) -> RateLimitDecision:
+        """SPEC-220: inspect a bucket without consuming it (expired window = empty)."""
+        with self.pool.connection() as connection:
+            row = connection.execute(
+                """
+                select request_count,
+                  greatest(0,extract(epoch from window_started_at
+                    + make_interval(secs => %s) - now()))::integer as retry_after
+                from app.rate_limit_buckets
+                where bucket_key=%s and window_started_at + make_interval(secs => %s) > now()
+                """,
+                (window_seconds, key, window_seconds),
+            ).fetchone()
+        count = int(row["request_count"]) if row else 0
+        if count >= limit:
+            return RateLimitDecision(False, 0, max(1, int(row["retry_after"])))
+        return RateLimitDecision(True, limit - count, 0)
+
+    def reset(self, key: str) -> None:
+        with self.pool.connection() as connection, connection.transaction():
+            connection.execute("delete from app.rate_limit_buckets where bucket_key=%s", (key,))
