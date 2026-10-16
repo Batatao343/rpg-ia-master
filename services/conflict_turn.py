@@ -331,6 +331,12 @@ def _resolve_support_card(scene, actor, actor_id, actors_by_id, step, card, out)
             target["dead"] = False
             target["vitalidade"] = max(1, int(target.get("vitalidade", 0) or 0))
             target["scar_pending"] = True
+            target["last_stand_pending"] = False
+            target["stabilization_attempts"] = 0
+            tid = step.target_id if step.target_id in actors_by_id else actor_id
+            scars = out.setdefault("scars_pending", [])
+            if tid not in scars:
+                scars.append(tid)
             out["logs"].append(f"{name} estabiliza {target.get('name', 'o alvo')}.")
         else:
             out["logs"].append(f"{name}: o alvo não está em Estado Terminal.")

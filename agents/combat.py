@@ -658,8 +658,8 @@ def combat_node(state: GameState):
                       for value in (enemy.get("id"), enemy.get("name")) if value]
         if combat_target:
             enemy_refs.append(str(combat_target))
-        allies = [orch.ensure_combat_sheet(dict(a)) for a in party if a.get("active")] \
-            + [orch.ensure_combat_sheet(dict(a)) for a in
+        allies = [orch.ensure_combat_sheet(dict(a), is_ally=True) for a in party if a.get("active")] \
+            + [orch.ensure_combat_sheet(dict(a), is_ally=True) for a in
                party_mod.scene_allies(state, excluded=enemy_refs)]
         scene = _prepare_scene(state, enemies, player, allies)
         bestiary_knowledge = disc.record_encounter(bestiary_knowledge, enemies, turn)
@@ -685,8 +685,8 @@ def combat_node(state: GameState):
                       for value in (enemy.get("id"), enemy.get("name")) if value]
         scene_tr = (combat_meta.get("scene_allies")
                     or party_mod.scene_allies(state, excluded=enemy_refs))
-        allies = [orch.ensure_combat_sheet(dict(a)) for a in party if a.get("active")] \
-            + [orch.ensure_combat_sheet(dict(a)) for a in scene_tr]
+        allies = [orch.ensure_combat_sheet(dict(a), is_ally=True) for a in party if a.get("active")] \
+            + [orch.ensure_combat_sheet(dict(a), is_ally=True) for a in scene_tr]
         # Saves legados podem ter somente o status textual. O summary precisa das
         # flags canônicas usadas por build_summary.
         for participant in enemies + allies:
@@ -723,8 +723,9 @@ def combat_node(state: GameState):
                   for value in (enemy.get("id"), enemy.get("name")) if value]
     scene_tr = (combat_meta.get("scene_allies")
                 or party_mod.scene_allies(state, excluded=enemy_refs))
-    allies = [orch.ensure_combat_sheet(dict(a)) for a in party if a.get("active")] \
-        + [orch.ensure_combat_sheet(dict(a)) for a in scene_tr]
+    allies = [orch.ensure_combat_sheet(dict(a), is_ally=True) for a in party if a.get("active")] \
+        + [orch.ensure_combat_sheet(dict(a), is_ally=True) for a in scene_tr
+           if not (a.get("dead") or a.get("status") == "morto")]
     player["_party_active"] = bool(allies)
     ally_ids = [a.get("id") or a.get("name") for a in allies]
 
@@ -930,6 +931,9 @@ def combat_node(state: GameState):
     combat_over = bool(out.get("ended")) or hero_fled or player_dead
     if combat_over and not player_dead:
         for participant in [player] + allies:
+            if (not participant.get("dead") and not participant.get("estado_terminal")
+                    and not death_flow.critical_spaces_full(participant)):
+                death_flow.reset_terminal_episode(participant)   # SPEC-231 R6
             recovery_state = death_flow.post_combat_consciousness(participant)
             participant["post_combat_state"] = recovery_state
             if recovery_state == "inconsciente":
@@ -989,6 +993,13 @@ def combat_node(state: GameState):
         narrative, aberturas[0] if aberturas else "", where="combate")
 
     # ---- Montagem do resultado (contrato preservado) ----
+    # SPEC-231 R4: o snapshot de aliados transitórios carrega as fichas PÓS-rodada.
+    if scene_tr:
+        live_tr = {str(a.get("id") or a.get("name")): a
+                   for a in allies if a.get("transient")}
+        scene_tr = [live_tr.get(str(a.get("id") or a.get("name")), a)
+                    for a in scene_tr]
+        combat_meta["scene_allies"] = scene_tr
     combat_meta["active"] = not combat_over
     combat_meta["initiative"] = list(out.get("initiative") or [])
     combat_meta["last_player_action"] = last_player_action
@@ -1229,8 +1240,10 @@ def _reflect_scene_allies(state: Dict, scene_tr: List[Dict], allies: List[Dict],
         import gamedata
         gamedata.sync_legacy_hp_aliases(npc)
         if live.get("dead") or live.get("status") == "morto":
+            # SPEC-230 R4: mesmo formato de apply_npc_death (status/in_scene/died_turn).
             npc["status"] = "morto"
             npc["in_scene"] = False
+            npc.setdefault("died_turn", int((state.get("world") or {}).get("turn_count", 0) or 0))
         npcs_out[key] = npc
     return npcs_out
 

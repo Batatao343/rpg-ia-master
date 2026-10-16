@@ -56,7 +56,8 @@ def _derive_virtudes(actor: dict) -> Dict[str, int]:
     return {k: virtude_value(actor, k) for k in _VIRTUDES}
 
 
-def ensure_combat_sheet(actor: dict, *, is_player: bool = False) -> dict:
+def ensure_combat_sheet(actor: dict, *, is_player: bool = False,
+                        is_ally: bool = False) -> dict:
     """Normaliza `actor` (mutando) para a ficha de combate v4 que o motor novo
     consome: Virtudes 0-5, Vitalidade/espaços de Ferimento por Corpo, Esquiva,
     categoria canônica (07) e um perfil tático default para inimigo. Idempotente —
@@ -97,6 +98,8 @@ def ensure_combat_sheet(actor: dict, *, is_player: bool = False) -> dict:
             ]
     else:
         cat = _CATEGORIA_ALIAS.get(str(actor.get("categoria") or "").strip().lower())
+        if is_ally or actor.get("transient") or actor.get("origin_npc") is not None:
+            cat = "companheiro"   # SPEC-231 R3: aliado nunca é "padrao" nem tem política de bestiário
         if not cat:
             cat = _CATEGORIA_ALIAS.get(str(actor.get("type") or "").strip().lower(), "padrao")
         actor["categoria"] = cat if cat in _KNOWN_CATEGORIAS else "padrao"
@@ -901,6 +904,10 @@ def _resolve_actor_turn(scene: dict, actor: dict, actor_id: str, actors_by_id: D
     for did in sub.get("deaths", []):
         if did not in out["deaths"]:
             out["deaths"].append(did)
+    for sid in sub.get("scars_pending", []):   # SPEC-231 R8: carta estabilizar
+        scars = out.setdefault("scars_pending", [])
+        if sid not in scars:
+            scars.append(sid)
 
     # Gatilhos de classe do JOGADOR a partir do que o turno produziu.
     player = actors_by_id.get(_player_id(sides))
@@ -1057,19 +1064,26 @@ def _resolve_last_stands(scene: dict, actors_by_id: Dict[str, dict],
 
 
 def _stabilizer_for(down_id: str, actors_by_id: Dict[str, dict],
-                    sides: Dict[str, List[str]]) -> Optional[dict]:
-    same_side = None
-    for side, ids in sides.items():
-        if down_id in ids:
-            same_side = ids
-            break
-    for aid in (same_side or []):
+                    sides: Dict[str, List[str]], *,
+                    scene: Optional[dict] = None) -> Optional[dict]:
+    """SPEC-231 R1/R2: hero+ally são UM lado. Ordem: party ativa, aliado
+    transitório, depois maior Agilidade (D-B: sem exigir adjacência)."""
+    candidates = []
+    for aid in _same_side_ids(down_id, sides):
         if aid == down_id:
             continue
         a = actors_by_id.get(aid)
         if _alive(a) and not a.get("estado_terminal"):
-            return a
-    return None
+            candidates.append(a)
+    if not candidates:
+        return None
+
+    def rank(a: dict):
+        tier = 0 if a.get("is_player") else (2 if a.get("transient") else 1)
+        agi = int((a.get("virtudes") or {}).get("agilidade", 0) or 0)
+        return (tier, -agi)
+
+    return sorted(candidates, key=rank)[0]
 
 
 # ==========================================================================

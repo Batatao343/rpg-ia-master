@@ -1,6 +1,6 @@
 # SPEC-231 — Combate: fluxo de morte com aliados, categoria de companheiro e persistência de aliados de cena
 
-> **Status:** `draft`
+> **Status:** `done`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** nenhuma · SPEC-068 conflito-07-morte-rendicao-captura, SPEC-055 aliados-em-combate e SPEC-060 checkpoints-morte `done` são corrigidas (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-203, SPEC-212, SPEC-232 (ordem final 2026-10-15)
@@ -120,11 +120,11 @@ aliado` com aliado em cena = 0; `deaths_log` coerente.
 
 ## 5. Critérios de aceite
 
-- [ ] 7 testes vermelhos → verdes; `tests/test_death_flow.py`, `test_aliados_combate.py`, `test_conflito_*.py`,
+- [x] 7 testes vermelhos → verdes; `tests/test_death_flow.py`, `test_aliados_combate.py`, `test_conflito_*.py`,
       `test_cutover_audit.py` verdes.
-- [ ] `uv run pytest` verde; playtest offline com run_id.
-- [ ] Saves antigos com `combat.scene_allies` em snapshot continuam carregando (o formato é o mesmo).
-- [ ] Guard de FallbackLLM mantido em `generate_scar` (sem site novo).
+- [x] `uv run pytest` verde; playtest offline com run_id.
+- [x] Saves antigos com `combat.scene_allies` em snapshot continuam carregando (o formato é o mesmo).
+- [x] Guard de FallbackLLM mantido em `generate_scar` (sem site novo).
 
 ## 6. Smoke test com LLM real
 
@@ -149,3 +149,10 @@ aliado` com aliado em cena = 0; `deaths_log` coerente.
 
 - `uv run pytest` completo; testes antes/depois; run_id dos playtests `recrutador`/`combate`.
 - `docs/<spec>/README.md` com os scripts `combate/r1.py`, `r8.py`, `r11.py` transcritos e revisão `Sol` independente.
+
+## 10. Execução (2026-10-16)
+
+- Decisões: D-A default (não resetar sem tratar o Crítico; reset só ao tratar o Ferimento ou ao fim do conflito sem Crítico cheio); D-B default (qualquer aliado consciente e não-terminal; sem adjacência; ordem party → transitório → Agilidade).
+- Desvio menor: `_revive` zera `stabilization_attempts` (R7) preservando o valor em `res["attempts"]`; `ensure_combat_sheet` também força `companheiro` para fichas com `transient`/`origin_npc`.
+- SPEC-226 (XP por transição vivo→morto) preservada. Playtests offline: `recrutador` 20261016-022456-507850 e `combate` 20261016-022500-708445, 0 erros.
+- Smoke real (seção 6) não executado (sem LLM real); mecânica é determinística e coberta por testes.

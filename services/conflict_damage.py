@@ -398,4 +398,10 @@ def rest_treat_wounds(target: dict, rest: str = "curto", *,
             for w in fer["critico"]:
                 w["suprimida"] = True  # comum só estabiliza
 
+    if not fer["critico"]:
+        # SPEC-231 R6: Crítico tratado → o próximo quase-morte reabre Última Ação.
+        target["last_stand_resolved"] = False
+        target["last_stand_pending"] = False
+        target["stabilization_attempts"] = 0
+
     return {"removidos": removidos, "kit_cargas": kit_cargas}

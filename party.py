@@ -227,7 +227,7 @@ def make_companion_from_npc(npc: Dict, name: str) -> Dict:
             "damage": "1d6",
         }]
     from services.conflict_orchestrator import ensure_combat_sheet
-    normalized = ensure_combat_sheet(comp)
+    normalized = ensure_combat_sheet(comp, is_ally=True)
     normalized["defense"] = int(normalized["esquiva"])
     return normalized
 

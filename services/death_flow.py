@@ -141,6 +141,15 @@ def enter_terminal_state(participant: dict) -> dict:
     return {"estado_terminal": True}
 
 
+def reset_terminal_episode(participant: dict) -> None:
+    """SPEC-231 R6/R7: fecha o episódio terminal — Última Ação volta a ser possível
+    e o contador de estabilização recomeça. Só deve ser chamado quando o Ferimento
+    Crítico cheio deixou de existir (ou o ator saiu do Terminal)."""
+    participant["last_stand_resolved"] = False
+    participant["last_stand_pending"] = False
+    participant["stabilization_attempts"] = 0
+
+
 def _revive(target: dict, *, fraction: Optional[float] = None, minimum_one: bool = False,
             auto: bool = False, kit_cargas: int = 0, log: str = "") -> dict:
     maxv = int(target.get("max_vitalidade", 0) or 0)
@@ -153,9 +162,11 @@ def _revive(target: dict, *, fraction: Optional[float] = None, minimum_one: bool
     target["scar_pending"] = True   # sobreviveu ao fluxo completo → Cicatriz (R6)
     import gamedata
     gamedata.sync_legacy_hp_aliases(target)
+    attempts = int(target.get("stabilization_attempts", 0))
+    target["stabilization_attempts"] = 0   # R7: contador por episódio terminal
     return {"revived": True, "dead": False, "auto": auto, "kit_cargas": kit_cargas,
             "vitalidade": target["vitalidade"],
-            "attempts": int(target.get("stabilization_attempts", 0)), "log": log}
+            "attempts": attempts, "log": log}
 
 
 def _die(target: dict, cause: str) -> dict:
