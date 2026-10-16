@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "27518042861bafbf49d103c6e4c14f87b670ecdd",
+  "commit_sha": "9ff4f35f5445971dcad1d8c4071a19bea4ff5cb4",
   "edge_counts": {
-    "calls": 10819,
-    "contains": 525,
-    "defines": 6474,
-    "imports": 1097,
-    "likely_test_for": 661,
+    "calls": 10890,
+    "contains": 526,
+    "defines": 6506,
+    "imports": 1100,
+    "likely_test_for": 664,
     "route_to": 58
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:0a31275a26e55cc69532ffb15656e29b92f8823b03e1718377e2e9c38ababfc5",
+  "graph_hash": "sha256:0838033d159b085eac18e385853592af98e5cc567197ab12613d0683c6659a39",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -362,6 +362,7 @@
     "tests/test_beats_visibilidade.py",
     "tests/test_blob_contract.py",
     "tests/test_browser_local.py",
+    "tests/test_bug_economia_integridade.py",
     "tests/test_campaign_grounding_deferred.py",
     "tests/test_chaos_local.py",
     "tests/test_checkout_integrity.py",
@@ -655,12 +656,12 @@
     "artifact": 9,
     "class": 587,
     "endpoint": 58,
-    "file": 599,
-    "function": 2050,
+    "file": 600,
+    "function": 2063,
     "method": 593,
-    "module": 525,
-    "test": 3244
+    "module": 526,
+    "test": 3263
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:4d5069db2c37fea45a46afac7f284c0fd0e9824c50242e4d70ca0f224b3b7d74"
+  "source_tree_hash": "sha256:8c7600a2be2e82ad4a241fd27cf788e10f0f5c4cd4aaa90401c06a430e7a5f2d"
 }
