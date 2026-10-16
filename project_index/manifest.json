@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "5a6c8a666835c3003045804d74c8c19aae7323cb",
+  "commit_sha": "736e94539a41038cea33edca6cbbd44274e316db",
   "edge_counts": {
-    "calls": 10890,
-    "contains": 526,
-    "defines": 6506,
-    "imports": 1100,
-    "likely_test_for": 664,
+    "calls": 10910,
+    "contains": 528,
+    "defines": 6525,
+    "imports": 1103,
+    "likely_test_for": 667,
     "route_to": 58
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:c03d4c29f2e6631798458e4947fa85020e9db23d12e5709e5b6cf17785c38653",
+  "graph_hash": "sha256:38cb98a0a414262763eb0ba680c0eced06b26c2d5ca31b25cbfda6be51f1c723",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -284,6 +284,7 @@
     "services/image_pricing.py",
     "services/image_quotes.py",
     "services/input_normalization.py",
+    "services/intent_guard.py",
     "services/jev_decision.py",
     "services/jev_rollout.py",
     "services/job_fence.py",
@@ -363,6 +364,7 @@
     "tests/test_blob_contract.py",
     "tests/test_browser_local.py",
     "tests/test_bug_economia_integridade.py",
+    "tests/test_bug_intencao_parsers.py",
     "tests/test_campaign_grounding_deferred.py",
     "tests/test_chaos_local.py",
     "tests/test_checkout_integrity.py",
@@ -656,12 +658,12 @@
     "artifact": 9,
     "class": 587,
     "endpoint": 58,
-    "file": 600,
-    "function": 2063,
+    "file": 602,
+    "function": 2067,
     "method": 593,
-    "module": 526,
-    "test": 3263
+    "module": 528,
+    "test": 3278
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:8c7600a2be2e82ad4a241fd27cf788e10f0f5c4cd4aaa90401c06a430e7a5f2d"
+  "source_tree_hash": "sha256:ec22b440cb1f2e9d36b325fc2c3e64ceb4bbf0f30bb75fc10e3922532d84fe74"
 }

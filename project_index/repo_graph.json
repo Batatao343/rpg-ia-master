@@ -1,5 +1,5 @@
 {
-  "commit_sha": "5a6c8a666835c3003045804d74c8c19aae7323cb",
+  "commit_sha": "736e94539a41038cea33edca6cbbd44274e316db",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -3118,6 +3118,17 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "services/intent_guard.py",
+        "line": 1
+      },
+      "source": "file:services/intent_guard.py",
+      "target": "module:services.intent_guard",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "services/jev_decision.py",
         "line": 1
       },
@@ -4806,6 +4817,50 @@
       },
       "source": "file:tests/test_bug_economia_integridade.py",
       "target": "module:tests.test_bug_economia_integridade",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 9
+      },
+      "source": "file:tests/test_bug_intencao_parsers.py",
+      "target": "file:agents/router.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 8
+      },
+      "source": "file:tests/test_bug_intencao_parsers.py",
+      "target": "file:gamedata.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 10
+      },
+      "source": "file:tests/test_bug_intencao_parsers.py",
+      "target": "file:world_utils.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 1
+      },
+      "source": "file:tests/test_bug_intencao_parsers.py",
+      "target": "module:tests.test_bug_intencao_parsers",
       "type": "contains"
     },
     {
@@ -8993,7 +9048,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 15
+        "line": 28
       },
       "source": "file:tests/test_jev_target_loot_experiment.py",
       "target": "file:services/jev_decision.py",
@@ -14449,7 +14504,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1153
+        "line": 1157
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._apply_flee_travel",
@@ -14460,7 +14515,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1107
+        "line": 1111
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._apply_weather_hazard",
@@ -14471,7 +14526,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1068
+        "line": 1072
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._attempt_flee",
@@ -14493,7 +14548,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1059
+        "line": 1063
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._can_attempt_flee",
@@ -14603,7 +14658,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1212
+        "line": 1216
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._merge_formal_party",
@@ -14680,7 +14735,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1187
+        "line": 1191
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._reflect_scene_allies",
@@ -14691,7 +14746,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1134
+        "line": 1138
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._register_environmental_damage_terminal",
@@ -33798,7 +33853,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 16
+        "line": 18
       },
       "source": "module:services.chase",
       "target": "module:services.conflict_resolution",
@@ -33809,7 +33864,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 17
+        "line": 19
       },
       "source": "module:services.chase",
       "target": "module:services.tactical_profile",
@@ -33820,7 +33875,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 173
+        "line": 182
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase._weighted_choice",
@@ -33831,7 +33886,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 162
+        "line": 171
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.abandon_companion",
@@ -33842,7 +33897,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 104
+        "line": 113
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.approach_virtude",
@@ -33853,7 +33908,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 70
+        "line": 79
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.can_resume",
@@ -33864,7 +33919,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 235
+        "line": 244
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.can_volunteer_sacrifice",
@@ -33875,7 +33930,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 260
+        "line": 269
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.chase_attack",
@@ -33886,7 +33941,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 96
+        "line": 105
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.chase_conductor",
@@ -33897,7 +33952,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 109
+        "line": 118
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.chase_difficulty",
@@ -33908,7 +33963,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 42
+        "line": 51
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.initial_track",
@@ -33919,7 +33974,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 117
+        "line": 126
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.luck_roll",
@@ -33930,7 +33985,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 128
+        "line": 137
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.luck_to_advantage",
@@ -33941,7 +33996,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 248
+        "line": 257
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.offer_sacrifice",
@@ -33952,7 +34007,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 135
+        "line": 144
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.resolve_chase_round",
@@ -33963,7 +34018,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 184
+        "line": 193
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.simulate_abandoned_companion",
@@ -33974,7 +34029,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 56
+        "line": 65
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.start_chase",
@@ -33985,7 +34040,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 47
+        "line": 56
       },
       "source": "module:services.chase",
       "target": "symbol:services.chase.will_pursue",
@@ -35987,7 +36042,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_summary.py",
-        "line": 328
+        "line": 335
       },
       "source": "module:services.conflict_summary",
       "target": "symbol:services.conflict_summary.narrative_or_fallback",
@@ -39643,6 +39698,17 @@
       },
       "source": "module:services.input_normalization",
       "target": "symbol:services.input_normalization.optional_entity_ref",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/intent_guard.py",
+        "line": 8
+      },
+      "source": "module:services.intent_guard",
+      "target": "symbol:services.intent_guard.log_intent_guard",
       "type": "defines"
     },
     {
@@ -47211,6 +47277,193 @@
       },
       "source": "module:tests.test_bug_economia_integridade",
       "target": "symbol:tests.test_bug_economia_integridade.test_sold_item_is_unequipped",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 9
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "module:agents.router",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 8
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "module:gamedata",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 10
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "module:world_utils",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 42
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "symbol:tests.test_bug_intencao_parsers._state",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 17
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "symbol:tests.test_bug_intencao_parsers._world",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 76
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "symbol:tests.test_bug_intencao_parsers.test_flee_neg",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 82
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "symbol:tests.test_bug_intencao_parsers.test_flee_pos",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 111
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "symbol:tests.test_bug_intencao_parsers.test_flee_regex_common_forms",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 50
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "symbol:tests.test_bug_intencao_parsers.test_local_movement_not_refused",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 87
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "symbol:tests.test_bug_intencao_parsers.test_narrative_validator_sentence_scope",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 64
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "symbol:tests.test_bug_intencao_parsers.test_router_precedence",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 70
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "symbol:tests.test_bug_intencao_parsers.test_router_story",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 101
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "symbol:tests.test_bug_intencao_parsers.test_story_shortcut_infinitives_need_auxiliary",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 29
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "symbol:tests.test_bug_intencao_parsers.test_travel_neg",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 24
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "symbol:tests.test_bug_intencao_parsers.test_travel_pos",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 57
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "symbol:tests.test_bug_intencao_parsers.test_unknown_toponym_refused",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 33
+      },
+      "source": "module:tests.test_bug_intencao_parsers",
+      "target": "symbol:tests.test_bug_intencao_parsers.test_vou_ao_finds_destination_and_travels",
       "type": "defines"
     },
     {
@@ -65324,7 +65577,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 15
+        "line": 28
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "module:services.jev_decision",
@@ -65335,7 +65588,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 18
+        "line": 31
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
@@ -65346,7 +65599,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 73
+        "line": 18
+      },
+      "source": "module:tests.test_jev_target_loot_experiment",
+      "target": "symbol:tests.test_jev_target_loot_experiment._legacy_story_gate",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_target_loot_experiment.py",
+        "line": 86
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_ambiguous_alias_and_unknown_target_fail_closed",
@@ -65357,7 +65621,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 47
+        "line": 60
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_candidate_drops_expected_and_source_labels",
@@ -65368,7 +65632,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 147
+        "line": 160
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback",
@@ -65379,7 +65643,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 99
+        "line": 112
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_conflicting_known_graph_id_is_unrepresentable",
@@ -65390,7 +65654,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 22
+        "line": 35
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_corpus_is_frozen_before_any_provider_call",
@@ -65401,7 +65665,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 84
+        "line": 97
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_graph_identity_and_visibility_override_untrusted_runtime_id",
@@ -65412,7 +65676,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 108
+        "line": 121
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_hidden_enemy_is_not_an_option",
@@ -65423,7 +65687,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 116
+        "line": 129
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_hiding_from_another_observer_keeps_enemy_visible_to_player",
@@ -65434,7 +65698,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 166
+        "line": 179
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block",
@@ -65445,7 +65709,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 318
+        "line": 331
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts",
@@ -65456,7 +65720,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 39
+        "line": 52
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_mismatched_corpus_lock_fails_closed",
@@ -65467,7 +65731,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 58
+        "line": 71
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_only_visible_canonical_scene_ids_become_target_options",
@@ -65478,7 +65742,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 228
+        "line": 241
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_over_twenty_is_reported_without_truncating_candidates",
@@ -65489,7 +65753,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 124
+        "line": 137
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_present_ally_wins_over_offscene_npc_cache_row",
@@ -65500,7 +65764,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 184
+        "line": 197
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls",
@@ -65511,7 +65775,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 261
+        "line": 274
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
@@ -65522,7 +65786,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 216
+        "line": 229
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence",
@@ -65533,7 +65797,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 336
+        "line": 349
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
@@ -65544,7 +65808,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 205
+        "line": 218
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_rejects_product_code_change",
@@ -65555,7 +65819,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 236
+        "line": 249
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_score_keeps_unrepresentable_in_semantic_denominator",
@@ -65566,7 +65830,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 133
+        "line": 146
       },
       "source": "module:tests.test_jev_target_loot_experiment",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_spoof_id_cannot_expose_graph_secret",
@@ -81835,7 +82099,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 596
+        "line": 91
+      },
+      "source": "module:world_utils",
+      "target": "symbol:world_utils._all_location_names",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 634
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._bestiary_by_faction",
@@ -81846,7 +82121,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 462
+        "line": 500
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._direction_sign",
@@ -81857,7 +82132,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 454
+        "line": 492
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._disposition_for",
@@ -81868,7 +82143,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 531
+        "line": 569
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._effective_danger",
@@ -81890,7 +82165,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 866
+        "line": 904
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._has_light_source",
@@ -81901,7 +82176,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 540
+        "line": 578
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._hostile_ruler",
@@ -81912,7 +82187,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 581
+        "line": 619
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._pop_active_alert",
@@ -81923,7 +82198,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 318
+        "line": 356
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._raise_danger",
@@ -81934,7 +82209,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 795
+        "line": 833
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._weather_table",
@@ -81956,7 +82231,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 286
+        "line": 324
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.advance_factions",
@@ -81967,7 +82242,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 827
+        "line": 865
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.advance_weather",
@@ -81978,7 +82253,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 416
+        "line": 454
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.apply_faction_reveal",
@@ -81989,7 +82264,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 472
+        "line": 510
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.apply_reputation",
@@ -82000,7 +82275,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 179
+        "line": 217
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.apply_rest",
@@ -82011,7 +82286,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 154
+        "line": 192
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.apply_travel",
@@ -82022,7 +82297,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 712
+        "line": 750
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.check_encounter",
@@ -82033,7 +82308,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1110
+        "line": 1148
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.clock_label",
@@ -82044,7 +82319,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 958
+        "line": 996
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.detection_check",
@@ -82055,7 +82330,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 403
+        "line": 441
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.ensure_faction_intel",
@@ -82066,7 +82341,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 270
+        "line": 308
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.ensure_factions",
@@ -82088,7 +82363,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 119
+        "line": 157
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.find_travel_destination",
@@ -82099,7 +82374,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 698
+        "line": 736
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.forced_encounter_danger",
@@ -82110,7 +82385,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 101
+        "line": 139
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.invalid_travel_message",
@@ -82132,7 +82407,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 69
+        "line": 99
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.is_travel_intent",
@@ -82143,7 +82418,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 673
+        "line": 711
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.last_safe_location",
@@ -82154,7 +82429,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 888
+        "line": 926
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.light_level",
@@ -82165,7 +82440,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 807
+        "line": 81
+      },
+      "source": "module:world_utils",
+      "target": "symbol:world_utils.looks_like_toponym",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 845
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.maybe_start_global_weather",
@@ -82176,7 +82462,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 604
+        "line": 642
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.pick_encounter_enemy",
@@ -82187,7 +82473,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 519
+        "line": 557
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.recovery_rest_safe",
@@ -82198,7 +82484,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 554
+        "line": 592
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.register_flee_alert",
@@ -82209,7 +82495,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 331
+        "line": 369
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.resolve_faction_completions",
@@ -82220,7 +82506,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1092
+        "line": 1130
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.resolve_track",
@@ -82231,7 +82517,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 987
+        "line": 1025
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.resolve_trap",
@@ -82242,7 +82528,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 978
+        "line": 1016
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.roll_encounter_type",
@@ -82253,7 +82539,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1115
+        "line": 1153
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.starting_world",
@@ -82264,7 +82550,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 132
+        "line": 170
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.travel_cost",
@@ -82275,7 +82561,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 938
+        "line": 976
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.trigger_global_weather",
@@ -82286,7 +82572,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 912
+        "line": 950
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.weather_effects",
@@ -83617,17 +83903,6 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1076
-      },
-      "source": "symbol:agents.combat._attempt_flee",
-      "target": "symbol:agents.combat.FleeDecision",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
         "line": 1080
       },
       "source": "symbol:agents.combat._attempt_flee",
@@ -83639,7 +83914,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1095
+        "line": 1084
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat.FleeDecision",
@@ -83650,7 +83925,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1104
+        "line": 1099
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat.FleeDecision",
@@ -83661,7 +83936,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1075
+        "line": 1108
+      },
+      "source": "symbol:agents.combat._attempt_flee",
+      "target": "symbol:agents.combat.FleeDecision",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1079
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat._can_attempt_flee",
@@ -83716,7 +84002,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1223
+        "line": 1227
       },
       "source": "symbol:agents.combat._merge_formal_party",
       "target": "symbol:agents.combat._mirror_vitals",
@@ -84090,7 +84376,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1204
+        "line": 1208
       },
       "source": "symbol:agents.combat._reflect_scene_allies",
       "target": "symbol:gamedata.sync_legacy_hp_aliases",
@@ -84101,7 +84387,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1147
+        "line": 1151
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:gamedata.sync_legacy_hp_aliases",
@@ -84112,7 +84398,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1141
+        "line": 1145
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:services.death_flow.critical_spaces_full",
@@ -84123,7 +84409,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1149
+        "line": 1153
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:services.death_flow.should_trigger_last_stand",
@@ -84134,7 +84420,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1150
+        "line": 1154
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:services.death_flow.trigger_last_stand",
@@ -84222,7 +84508,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1047
+        "line": 1051
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._apply_flee_travel",
@@ -84233,7 +84519,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 789
+        "line": 793
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._apply_weather_hazard",
@@ -84244,7 +84530,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 794
+        "line": 798
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._attempt_flee",
@@ -84255,7 +84541,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 792
+        "line": 796
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._can_attempt_flee",
@@ -84277,7 +84563,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 880
+        "line": 884
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._canonical_player_action",
@@ -84288,7 +84574,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 840
+        "line": 844
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._default_card_target",
@@ -84299,7 +84585,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 960
+        "line": 964
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._downed_identity_tokens",
@@ -84310,7 +84596,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 785
+        "line": 789
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._early_game_reaction_initiator",
@@ -84321,7 +84607,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 799
+        "line": 803
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._enforce_flee_attempt_limit",
@@ -84332,7 +84618,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 798
+        "line": 802
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._is_valid_flee_destination",
@@ -84343,7 +84629,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1005
+        "line": 1009
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._kill_events",
@@ -84365,32 +84651,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 989
+        "line": 993
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._merge_formal_party",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 895
-      },
-      "source": "symbol:agents.combat.combat_node",
-      "target": "symbol:agents.combat._mirror_vitals",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 897
-      },
-      "source": "symbol:agents.combat.combat_node",
-      "target": "symbol:agents.combat._mirror_vitals",
       "type": "calls"
     },
     {
@@ -84409,7 +84673,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 944
+        "line": 901
+      },
+      "source": "symbol:agents.combat.combat_node",
+      "target": "symbol:agents.combat._mirror_vitals",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 903
+      },
+      "source": "symbol:agents.combat.combat_node",
+      "target": "symbol:agents.combat._mirror_vitals",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 948
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._narrate",
@@ -84420,7 +84706,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 937
+        "line": 941
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._narrate_fall",
@@ -84431,7 +84717,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 830
+        "line": 834
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._parse_turn_declaration",
@@ -84453,7 +84739,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1002
+        "line": 1006
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._reflect_scene_allies",
@@ -84464,7 +84750,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 790
+        "line": 794
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._register_environmental_damage_terminal",
@@ -84486,7 +84772,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 902
+        "line": 906
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:llm_setup.get_llm",
@@ -84585,7 +84871,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 848
+        "line": 852
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -84607,7 +84893,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 950
+        "line": 954
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:services.conflict_summary.build_summary",
@@ -84618,7 +84904,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 965
+        "line": 969
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:services.conflict_summary.narrative_or_fallback",
@@ -84640,7 +84926,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 822
+        "line": 826
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -84651,7 +84937,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 824
+        "line": 828
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -84662,7 +84948,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 942
+        "line": 946
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:services.context_builder.build_context_pack",
@@ -84673,7 +84959,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 901
+        "line": 905
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:services.death_flow.check_scar_required",
@@ -84684,7 +84970,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 903
+        "line": 907
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:services.death_flow.generate_scar",
@@ -84695,7 +84981,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 914
+        "line": 918
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:services.death_flow.post_combat_consciousness",
@@ -84717,7 +85003,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 907
+        "line": 911
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:services.discovery.record_kills",
@@ -85575,7 +85861,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 146
+        "line": 148
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:agents.router._base_route_payload",
@@ -85586,7 +85872,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 153
+        "line": 155
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:agents.router._base_route_payload",
@@ -85597,7 +85883,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 193
+        "line": 195
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:agents.router._base_route_payload",
@@ -85630,7 +85916,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 167
+        "line": 169
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:llm_setup.get_llm",
@@ -85641,7 +85927,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 208
+        "line": 210
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:services.input_normalization.optional_entity_ref",
@@ -85718,7 +86004,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 688
+        "line": 690
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller.StoryUpdate",
@@ -85729,7 +86015,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 688
+        "line": 690
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -85740,7 +86026,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 739
+        "line": 741
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -85751,7 +86037,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 751
+        "line": 753
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -85762,7 +86048,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1019
+        "line": 1021
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -85773,7 +86059,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 882
+        "line": 884
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._is_monetary_claim",
@@ -85784,7 +86070,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 597
+        "line": 599
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._npc_fallback_clause",
@@ -85795,7 +86081,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 594
+        "line": 596
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._quests_ativas_block",
@@ -85806,7 +86092,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 929
+        "line": 931
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._reward_confirmation",
@@ -85817,7 +86103,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 592
+        "line": 594
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._scene_canonical_entities",
@@ -85828,7 +86114,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 834
+        "line": 836
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._with_new_npc",
@@ -85839,7 +86125,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 519
+        "line": 521
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.world_simulator.simulate_world",
@@ -85850,7 +86136,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 579
+        "line": 581
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:llm_setup.get_llm",
@@ -85861,7 +86147,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 534
+        "line": 536
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.context_builder.build_context_pack",
@@ -85872,7 +86158,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 488
+        "line": 490
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.discovery.record_rumor",
@@ -85883,7 +86169,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 986
+        "line": 988
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.register_proposed_quests",
@@ -85894,7 +86180,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 992
+        "line": 994
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.sync_action_progress",
@@ -85905,7 +86191,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 989
+        "line": 991
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.sync_location_progress",
@@ -85916,7 +86202,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 331
+        "line": 333
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.advance_factions",
@@ -85927,7 +86213,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 367
+        "line": 369
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.advance_factions",
@@ -85938,7 +86224,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 785
+        "line": 787
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.apply_reputation",
@@ -85949,7 +86235,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 365
+        "line": 367
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.apply_rest",
@@ -85960,7 +86246,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 330
+        "line": 332
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.apply_travel",
@@ -85971,7 +86257,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 422
+        "line": 424
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.check_encounter",
@@ -85982,7 +86268,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 373
+        "line": 375
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.clock_label",
@@ -85993,7 +86279,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 377
+        "line": 379
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.clock_label",
@@ -86004,7 +86290,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 620
+        "line": 622
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.clock_label",
@@ -86059,7 +86345,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 359
+        "line": 361
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.is_rest",
@@ -86081,7 +86367,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 332
+        "line": 334
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.resolve_faction_completions",
@@ -86092,7 +86378,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 368
+        "line": 370
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.resolve_faction_completions",
@@ -123437,7 +123723,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 87
+        "line": 96
       },
       "source": "symbol:services.chase.can_resume",
       "target": "symbol:services.chase.will_pursue",
@@ -123448,7 +123734,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 111
+        "line": 120
       },
       "source": "symbol:services.chase.chase_difficulty",
       "target": "symbol:services.conflict_resolution.virtude_value",
@@ -123459,7 +123745,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 251
+        "line": 260
       },
       "source": "symbol:services.chase.offer_sacrifice",
       "target": "symbol:services.chase.can_volunteer_sacrifice",
@@ -123470,7 +123756,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 141
+        "line": 150
       },
       "source": "symbol:services.chase.resolve_chase_round",
       "target": "symbol:services.chase.luck_to_advantage",
@@ -123481,7 +123767,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 142
+        "line": 151
       },
       "source": "symbol:services.chase.resolve_chase_round",
       "target": "symbol:services.conflict_resolution.roll_kept",
@@ -123492,7 +123778,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 218
+        "line": 227
       },
       "source": "symbol:services.chase.simulate_abandoned_companion",
       "target": "symbol:services.chase._weighted_choice",
@@ -123503,7 +123789,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 197
+        "line": 206
       },
       "source": "symbol:services.chase.simulate_abandoned_companion",
       "target": "symbol:services.conflict_resolution.virtude_value",
@@ -123514,7 +123800,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 62
+        "line": 71
       },
       "source": "symbol:services.chase.start_chase",
       "target": "symbol:services.chase.initial_track",
@@ -123525,7 +123811,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/chase.py",
-        "line": 63
+        "line": 72
       },
       "source": "symbol:services.chase.start_chase",
       "target": "symbol:services.chase.will_pursue",
@@ -127518,7 +127804,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_summary.py",
-        "line": 333
+        "line": 340
       },
       "source": "symbol:services.conflict_summary.narrative_or_fallback",
       "target": "symbol:services.conflict_summary.canonical_summary_text",
@@ -127529,11 +127815,22 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_summary.py",
-        "line": 330
+        "line": 337
       },
       "source": "symbol:services.conflict_summary.narrative_or_fallback",
       "target": "symbol:services.conflict_summary.validate_narrative_text",
       "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_summary.py",
+        "line": 317
+      },
+      "source": "symbol:services.conflict_summary.validate_narrative_text",
+      "target": "symbol:services.conflict_summary.validate_narrative_text._subject_hit",
+      "type": "defines"
     },
     {
       "confidence": "static_best_effort",
@@ -146783,6 +147080,182 @@
       },
       "source": "symbol:tests.test_bug_economia_integridade.test_sold_item_is_unequipped",
       "target": "symbol:tests.test_bug_economia_integridade._state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 18
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers._world",
+      "target": "symbol:gamedata.get_location",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 52
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_local_movement_not_refused",
+      "target": "symbol:tests.test_bug_intencao_parsers._state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 52
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_local_movement_not_refused",
+      "target": "symbol:tests.test_bug_intencao_parsers._world",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 65
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_router_precedence",
+      "target": "symbol:agents.router.dm_router_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 65
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_router_precedence",
+      "target": "symbol:tests.test_bug_intencao_parsers._world",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 71
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_router_story",
+      "target": "symbol:agents.router.dm_router_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 71
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_router_story",
+      "target": "symbol:tests.test_bug_intencao_parsers._world",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 30
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_travel_neg",
+      "target": "symbol:tests.test_bug_intencao_parsers._world",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 30
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_travel_neg",
+      "target": "symbol:world_utils.is_travel_intent",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 25
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_travel_pos",
+      "target": "symbol:tests.test_bug_intencao_parsers._world",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 25
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_travel_pos",
+      "target": "symbol:world_utils.is_travel_intent",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 59
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_unknown_toponym_refused",
+      "target": "symbol:tests.test_bug_intencao_parsers._state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 59
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_unknown_toponym_refused",
+      "target": "symbol:tests.test_bug_intencao_parsers._world",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 38
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_vou_ao_finds_destination_and_travels",
+      "target": "symbol:tests.test_bug_intencao_parsers._state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 35
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_vou_ao_finds_destination_and_travels",
+      "target": "symbol:tests.test_bug_intencao_parsers._world",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_intencao_parsers.py",
+        "line": 36
+      },
+      "source": "symbol:tests.test_bug_intencao_parsers.test_vou_ao_finds_destination_and_travels",
+      "target": "symbol:world_utils.find_travel_destination",
       "type": "calls"
     },
     {
@@ -181253,7 +181726,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 19
+        "line": 32
       },
       "source": "symbol:tests.test_jev_target_loot_experiment._case",
       "target": "symbol:evals.experiments.jev_target_loot.load_cases",
@@ -181264,7 +181737,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 78
+        "line": 91
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_ambiguous_alias_and_unknown_target_fail_closed",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -181275,7 +181748,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 79
+        "line": 92
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_ambiguous_alias_and_unknown_target_fail_closed",
       "target": "symbol:evals.experiments.jev_target_loot.canonical_target",
@@ -181286,7 +181759,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 80
+        "line": 93
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_ambiguous_alias_and_unknown_target_fail_closed",
       "target": "symbol:evals.experiments.jev_target_loot.canonical_target",
@@ -181297,7 +181770,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 81
+        "line": 94
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_ambiguous_alias_and_unknown_target_fail_closed",
       "target": "symbol:evals.experiments.jev_target_loot.canonical_target",
@@ -181308,7 +181781,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 49
+        "line": 62
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_candidate_drops_expected_and_source_labels",
       "target": "symbol:evals.experiments.jev_router_ab._candidate",
@@ -181319,7 +181792,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 48
+        "line": 61
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_candidate_drops_expected_and_source_labels",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
@@ -181330,7 +181803,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 162
+        "line": 175
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -181341,7 +181814,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 162
+        "line": 175
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback",
       "target": "symbol:evals.experiments.jev_target_loot._arm_a",
@@ -181352,7 +181825,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 162
+        "line": 175
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -181363,7 +181836,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 162
+        "line": 175
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
@@ -181374,7 +181847,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 155
+        "line": 168
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback.Adapter",
@@ -181385,7 +181858,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 149
+        "line": 162
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback.captured",
@@ -181396,7 +181869,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 156
+        "line": 169
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback.Adapter",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback.Adapter.execute",
@@ -181407,7 +181880,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 103
+        "line": 116
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_conflicting_known_graph_id_is_unrepresentable",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -181418,7 +181891,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 35
+        "line": 48
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_corpus_is_frozen_before_any_provider_call",
       "target": "symbol:evals.experiments.jev_target_loot._required_calls",
@@ -181429,7 +181902,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 23
+        "line": 36
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_corpus_is_frozen_before_any_provider_call",
       "target": "symbol:evals.experiments.jev_target_loot.load_cases",
@@ -181440,7 +181913,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 28
+        "line": 41
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_corpus_is_frozen_before_any_provider_call",
       "target": "symbol:evals.experiments.jev_target_loot.preflight",
@@ -181451,7 +181924,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 89
+        "line": 102
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_graph_identity_and_visibility_override_untrusted_runtime_id",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -181462,31 +181935,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 91
+        "line": 104
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_graph_identity_and_visibility_override_untrusted_runtime_id",
-      "target": "symbol:evals.experiments.jev_target_loot._target_options",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 96
-      },
-      "source": "symbol:tests.test_jev_target_loot_experiment.test_graph_identity_and_visibility_override_untrusted_runtime_id",
-      "target": "symbol:evals.experiments.jev_target_loot._target_options",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 113
-      },
-      "source": "symbol:tests.test_jev_target_loot_experiment.test_hidden_enemy_is_not_an_option",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
       "type": "calls"
     },
@@ -181497,6 +181948,28 @@
         "file": "tests/test_jev_target_loot_experiment.py",
         "line": 109
       },
+      "source": "symbol:tests.test_jev_target_loot_experiment.test_graph_identity_and_visibility_override_untrusted_runtime_id",
+      "target": "symbol:evals.experiments.jev_target_loot._target_options",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_target_loot_experiment.py",
+        "line": 126
+      },
+      "source": "symbol:tests.test_jev_target_loot_experiment.test_hidden_enemy_is_not_an_option",
+      "target": "symbol:evals.experiments.jev_target_loot._target_options",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_target_loot_experiment.py",
+        "line": 122
+      },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_hidden_enemy_is_not_an_option",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
       "type": "calls"
@@ -181506,7 +181979,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 121
+        "line": 134
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_hiding_from_another_observer_keeps_enemy_visible_to_player",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -181517,7 +181990,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 117
+        "line": 130
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_hiding_from_another_observer_keeps_enemy_visible_to_player",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
@@ -181528,7 +182001,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 178
+        "line": 191
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -181539,7 +182012,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 177
+        "line": 190
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block",
       "target": "symbol:evals.experiments.jev_target_loot._arm_b",
@@ -181550,7 +182023,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 170
+        "line": 183
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block",
       "target": "symbol:services.jev_decision.ChoiceAnswer",
@@ -181561,7 +182034,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 169
+        "line": 182
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block",
       "target": "symbol:services.jev_decision.DecisionResult",
@@ -181572,7 +182045,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 172
+        "line": 185
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block",
       "target": "symbol:services.jev_decision.Usage",
@@ -181583,7 +182056,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 177
+        "line": 190
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
@@ -181594,7 +182067,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 167
+        "line": 180
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block.Backend",
@@ -181605,7 +182078,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 168
+        "line": 181
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block.Backend",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block.Backend.decide",
@@ -181616,7 +182089,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 170
+        "line": 183
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block.Backend.decide",
       "target": "symbol:services.jev_decision.ChoiceAnswer",
@@ -181627,7 +182100,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 169
+        "line": 182
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block.Backend.decide",
       "target": "symbol:services.jev_decision.DecisionResult",
@@ -181638,7 +182111,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 172
+        "line": 185
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block.Backend.decide",
       "target": "symbol:services.jev_decision.Usage",
@@ -181649,7 +182122,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 332
+        "line": 345
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -181660,7 +182133,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 332
+        "line": 345
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts",
       "target": "symbol:evals.experiments.jev_target_loot.run",
@@ -181671,7 +182144,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 326
+        "line": 339
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts.forbidden_backend",
@@ -181682,7 +182155,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 44
+        "line": 57
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_mismatched_corpus_lock_fails_closed",
       "target": "symbol:evals.experiments.jev_target_loot.load_cases",
@@ -181693,7 +182166,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 59
+        "line": 72
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_only_visible_canonical_scene_ids_become_target_options",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -181704,7 +182177,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 60
+        "line": 73
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_only_visible_canonical_scene_ids_become_target_options",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -181715,7 +182188,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 61
+        "line": 74
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_only_visible_canonical_scene_ids_become_target_options",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -181726,7 +182199,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 62
+        "line": 75
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_only_visible_canonical_scene_ids_become_target_options",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -181737,7 +182210,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 68
+        "line": 81
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_only_visible_canonical_scene_ids_become_target_options",
       "target": "symbol:evals.experiments.jev_target_loot.canonical_target",
@@ -181748,7 +182221,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 70
+        "line": 83
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_only_visible_canonical_scene_ids_become_target_options",
       "target": "symbol:evals.experiments.jev_target_loot.canonical_target",
@@ -181759,7 +182232,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 59
+        "line": 72
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_only_visible_canonical_scene_ids_become_target_options",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
@@ -181770,7 +182243,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 60
+        "line": 73
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_only_visible_canonical_scene_ids_become_target_options",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
@@ -181781,7 +182254,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 61
+        "line": 74
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_only_visible_canonical_scene_ids_become_target_options",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
@@ -181792,7 +182265,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 62
+        "line": 75
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_only_visible_canonical_scene_ids_become_target_options",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
@@ -181803,7 +182276,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 229
+        "line": 242
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_over_twenty_is_reported_without_truncating_candidates",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -181814,7 +182287,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 229
+        "line": 242
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_over_twenty_is_reported_without_truncating_candidates",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
@@ -181825,7 +182298,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 130
+        "line": 143
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_present_ally_wins_over_offscene_npc_cache_row",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -181836,7 +182309,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 197
+        "line": 210
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -181847,7 +182320,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 199
+        "line": 212
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls",
       "target": "symbol:evals.experiments.jev_target_loot._arm_a",
@@ -181858,7 +182331,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 199
+        "line": 212
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -181869,7 +182342,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 198
+        "line": 211
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
@@ -181880,7 +182353,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 189
+        "line": 202
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls.GateAdapter",
@@ -181891,7 +182364,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 186
+        "line": 199
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls.captured",
@@ -181902,7 +182375,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 190
+        "line": 203
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls.GateAdapter",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls.GateAdapter.execute",
@@ -181913,7 +182386,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 305
+        "line": 318
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -181924,7 +182397,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 305
+        "line": 318
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
       "target": "symbol:evals.experiments.jev_target_loot.run",
@@ -181935,7 +182408,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 268
+        "line": 281
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend",
@@ -181946,7 +182419,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 280
+        "line": 293
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.arm_a",
@@ -181957,7 +182430,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 285
+        "line": 298
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.arm_b",
@@ -181968,7 +182441,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 294
+        "line": 307
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.checked_score",
@@ -181979,7 +182452,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 272
+        "line": 285
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__enter__",
@@ -181990,7 +182463,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 275
+        "line": 288
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__exit__",
@@ -182001,7 +182474,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 269
+        "line": 282
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__init__",
@@ -182012,7 +182485,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 225
+        "line": 238
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence",
       "target": "symbol:evals.experiments.jev_target_loot._assert_resume_code_drift",
@@ -182023,7 +182496,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 217
+        "line": 230
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence.git_probe",
@@ -182034,7 +182507,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 365
+        "line": 378
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -182045,7 +182518,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 403
+        "line": 416
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -182056,7 +182529,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 406
+        "line": 419
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:evals.experiments.jev_router_ab.Budget",
@@ -182067,7 +182540,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 342
+        "line": 355
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:evals.experiments.jev_target_loot.load_cases",
@@ -182078,7 +182551,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 343
+        "line": 356
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:evals.experiments.jev_target_loot.preflight",
@@ -182089,7 +182562,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 403
+        "line": 416
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:evals.experiments.jev_target_loot.run",
@@ -182100,7 +182573,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 406
+        "line": 419
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:evals.experiments.jev_target_loot.run",
@@ -182111,7 +182584,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 374
+        "line": 387
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend",
@@ -182122,7 +182595,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 384
+        "line": 397
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.arm_a",
@@ -182133,7 +182606,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 391
+        "line": 404
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.arm_b",
@@ -182144,7 +182617,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 378
+        "line": 391
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__enter__",
@@ -182155,7 +182628,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 381
+        "line": 394
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__exit__",
@@ -182166,7 +182639,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 375
+        "line": 388
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__init__",
@@ -182177,7 +182650,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 213
+        "line": 226
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_rejects_product_code_change",
       "target": "symbol:evals.experiments.jev_target_loot._assert_resume_code_drift",
@@ -182188,7 +182661,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 206
+        "line": 219
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_resume_rejects_product_code_change",
       "target": "symbol:tests.test_jev_target_loot_experiment.test_resume_rejects_product_code_change.git_probe",
@@ -182199,7 +182672,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 250
+        "line": 263
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_score_keeps_unrepresentable_in_semantic_denominator",
       "target": "symbol:evals.experiments.jev_target_loot.score",
@@ -182210,7 +182683,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 237
+        "line": 250
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_score_keeps_unrepresentable_in_semantic_denominator",
       "target": "symbol:tests.test_jev_target_loot_experiment._case",
@@ -182221,7 +182694,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_target_loot_experiment.py",
-        "line": 141
+        "line": 154
       },
       "source": "symbol:tests.test_jev_target_loot_experiment.test_spoof_id_cannot_expose_graph_secret",
       "target": "symbol:evals.experiments.jev_target_loot._target_options",
@@ -216508,7 +216981,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 536
+        "line": 93
+      },
+      "source": "symbol:world_utils._all_location_names",
+      "target": "symbol:world_utils._fold_txt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 574
       },
       "source": "symbol:world_utils._effective_danger",
       "target": "symbol:gamedata.get_location",
@@ -216519,7 +217003,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 545
+        "line": 583
       },
       "source": "symbol:world_utils._hostile_ruler",
       "target": "symbol:world_utils.ensure_factions",
@@ -216530,7 +217014,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 323
+        "line": 361
       },
       "source": "symbol:world_utils._raise_danger",
       "target": "symbol:gamedata.get_location",
@@ -216541,7 +217025,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 294
+        "line": 332
       },
       "source": "symbol:world_utils.advance_factions",
       "target": "symbol:world_utils.ensure_factions",
@@ -216552,7 +217036,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 837
+        "line": 875
       },
       "source": "symbol:world_utils.advance_weather",
       "target": "symbol:world_utils._weather_table",
@@ -216563,7 +217047,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 846
+        "line": 884
       },
       "source": "symbol:world_utils.advance_weather",
       "target": "symbol:world_utils.maybe_start_global_weather",
@@ -216574,7 +217058,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 423
+        "line": 461
       },
       "source": "symbol:world_utils.apply_faction_reveal",
       "target": "symbol:world_utils.ensure_faction_intel",
@@ -216585,7 +217069,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 425
+        "line": 463
       },
       "source": "symbol:world_utils.apply_faction_reveal",
       "target": "symbol:world_utils.ensure_factions",
@@ -216596,7 +217080,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 434
+        "line": 472
       },
       "source": "symbol:world_utils.apply_faction_reveal",
       "target": "symbol:world_utils.ensure_factions",
@@ -216607,7 +217091,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 483
+        "line": 521
       },
       "source": "symbol:world_utils.apply_reputation",
       "target": "symbol:world_utils._direction_sign",
@@ -216618,7 +217102,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 495
+        "line": 533
       },
       "source": "symbol:world_utils.apply_reputation",
       "target": "symbol:world_utils._disposition_for",
@@ -216629,7 +217113,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 482
+        "line": 520
       },
       "source": "symbol:world_utils.apply_reputation",
       "target": "symbol:world_utils.ensure_factions",
@@ -216640,7 +217124,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 192
+        "line": 230
       },
       "source": "symbol:world_utils.apply_rest",
       "target": "symbol:gamedata.sync_legacy_hp_aliases",
@@ -216651,7 +217135,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 244
+        "line": 282
       },
       "source": "symbol:world_utils.apply_rest",
       "target": "symbol:gamedata.sync_legacy_hp_aliases",
@@ -216662,7 +217146,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 207
+        "line": 245
       },
       "source": "symbol:world_utils.apply_rest",
       "target": "symbol:gamedata.sync_vitality",
@@ -216673,7 +217157,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 221
+        "line": 259
       },
       "source": "symbol:world_utils.apply_rest",
       "target": "symbol:world_utils._fold_txt",
@@ -216684,7 +217168,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 188
+        "line": 226
       },
       "source": "symbol:world_utils.apply_rest",
       "target": "symbol:world_utils.advance_clock",
@@ -216695,7 +217179,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 261
+        "line": 299
       },
       "source": "symbol:world_utils.apply_rest",
       "target": "symbol:world_utils.advance_clock",
@@ -216706,7 +217190,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 189
+        "line": 227
       },
       "source": "symbol:world_utils.apply_rest",
       "target": "symbol:world_utils.advance_weather",
@@ -216717,7 +217201,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 262
+        "line": 300
       },
       "source": "symbol:world_utils.apply_rest",
       "target": "symbol:world_utils.advance_weather",
@@ -216728,7 +217212,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 186
+        "line": 224
       },
       "source": "symbol:world_utils.apply_rest",
       "target": "symbol:world_utils.weather_effects",
@@ -216739,7 +217223,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 170
+        "line": 208
       },
       "source": "symbol:world_utils.apply_travel",
       "target": "symbol:world_utils.advance_clock",
@@ -216750,7 +217234,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 175
+        "line": 213
       },
       "source": "symbol:world_utils.apply_travel",
       "target": "symbol:world_utils.advance_clock",
@@ -216761,7 +217245,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 172
+        "line": 210
       },
       "source": "symbol:world_utils.apply_travel",
       "target": "symbol:world_utils.advance_weather",
@@ -216772,7 +217256,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 161
+        "line": 199
       },
       "source": "symbol:world_utils.apply_travel",
       "target": "symbol:world_utils.travel_cost",
@@ -216783,7 +217267,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 173
+        "line": 211
       },
       "source": "symbol:world_utils.apply_travel",
       "target": "symbol:world_utils.weather_effects",
@@ -216794,7 +217278,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 739
+        "line": 777
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:gamedata.get_location",
@@ -216805,7 +217289,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 736
+        "line": 774
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils._effective_danger",
@@ -216816,7 +217300,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 738
+        "line": 776
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils._hostile_ruler",
@@ -216827,7 +217311,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 749
+        "line": 787
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils._pop_active_alert",
@@ -216838,7 +217322,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 727
+        "line": 765
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.ensure_faction_intel",
@@ -216849,7 +217333,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 745
+        "line": 783
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.forced_encounter_danger",
@@ -216860,7 +217344,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 759
+        "line": 797
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.pick_encounter_enemy",
@@ -216871,7 +217355,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 777
+        "line": 815
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.pick_encounter_enemy",
@@ -216882,7 +217366,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 273
+        "line": 311
       },
       "source": "symbol:world_utils.ensure_factions",
       "target": "symbol:gamedata.seed_factions",
@@ -216915,7 +217399,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 126
+        "line": 164
       },
       "source": "symbol:world_utils.find_travel_destination",
       "target": "symbol:gamedata.get_connections",
@@ -216926,7 +217410,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 124
+        "line": 162
       },
       "source": "symbol:world_utils.find_travel_destination",
       "target": "symbol:world_utils._fold_txt",
@@ -216937,7 +217421,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 127
+        "line": 165
       },
       "source": "symbol:world_utils.find_travel_destination",
       "target": "symbol:world_utils._fold_txt",
@@ -216948,7 +217432,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 109
+        "line": 147
       },
       "source": "symbol:world_utils.invalid_travel_message",
       "target": "symbol:gamedata.get_connections",
@@ -216959,7 +217443,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 106
+        "line": 144
       },
       "source": "symbol:world_utils.invalid_travel_message",
       "target": "symbol:gamedata.get_location",
@@ -216970,7 +217454,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 103
+        "line": 141
       },
       "source": "symbol:world_utils.invalid_travel_message",
       "target": "symbol:world_utils.find_travel_destination",
@@ -216981,7 +217465,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 103
+        "line": 141
       },
       "source": "symbol:world_utils.invalid_travel_message",
       "target": "symbol:world_utils.is_travel_intent",
@@ -216992,7 +217476,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 77
+        "line": 130
+      },
+      "source": "symbol:world_utils.is_travel_intent",
+      "target": "symbol:world_utils._all_location_names",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 114
       },
       "source": "symbol:world_utils.is_travel_intent",
       "target": "symbol:world_utils._fold_txt",
@@ -217003,7 +217498,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 679
+        "line": 134
+      },
+      "source": "symbol:world_utils.is_travel_intent",
+      "target": "symbol:world_utils.looks_like_toponym",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 717
       },
       "source": "symbol:world_utils.last_safe_location",
       "target": "symbol:gamedata.get_location",
@@ -217014,7 +217520,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 684
+        "line": 722
       },
       "source": "symbol:world_utils.last_safe_location",
       "target": "symbol:gamedata.get_location",
@@ -217025,7 +217531,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 899
+        "line": 937
       },
       "source": "symbol:world_utils.light_level",
       "target": "symbol:world_utils._has_light_source",
@@ -217036,7 +217542,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 823
+        "line": 87
+      },
+      "source": "symbol:world_utils.looks_like_toponym",
+      "target": "symbol:world_utils._fold_txt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 861
       },
       "source": "symbol:world_utils.maybe_start_global_weather",
       "target": "symbol:world_utils.trigger_global_weather",
@@ -217047,7 +217564,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 622
+        "line": 660
       },
       "source": "symbol:world_utils.pick_encounter_enemy",
       "target": "symbol:world_utils._bestiary_by_faction",
@@ -217058,7 +217575,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 634
+        "line": 672
       },
       "source": "symbol:world_utils.pick_encounter_enemy",
       "target": "symbol:world_utils.pick_encounter_enemy.tier",
@@ -217069,7 +217586,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 565
+        "line": 603
       },
       "source": "symbol:world_utils.register_flee_alert",
       "target": "symbol:gamedata.get_location",
@@ -217080,7 +217597,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 373
+        "line": 411
       },
       "source": "symbol:world_utils.resolve_faction_completions",
       "target": "symbol:world_utils._raise_danger",
@@ -217091,7 +217608,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 378
+        "line": 416
       },
       "source": "symbol:world_utils.resolve_faction_completions",
       "target": "symbol:world_utils._raise_danger",
@@ -217102,7 +217619,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 344
+        "line": 382
       },
       "source": "symbol:world_utils.resolve_faction_completions",
       "target": "symbol:world_utils.ensure_faction_intel",
@@ -217113,7 +217630,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 342
+        "line": 380
       },
       "source": "symbol:world_utils.resolve_faction_completions",
       "target": "symbol:world_utils.ensure_factions",
@@ -217124,7 +217641,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1097
+        "line": 1135
       },
       "source": "symbol:world_utils.resolve_track",
       "target": "symbol:world_utils.pick_encounter_enemy",
@@ -217135,7 +217652,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1031
+        "line": 1069
       },
       "source": "symbol:world_utils.resolve_trap",
       "target": "symbol:gamedata.sync_vitality",
@@ -217146,7 +217663,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1117
+        "line": 1155
       },
       "source": "symbol:world_utils.starting_world",
       "target": "symbol:gamedata.start_location_for_region",
@@ -217157,7 +217674,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1120
+        "line": 1158
       },
       "source": "symbol:world_utils.starting_world",
       "target": "symbol:world_utils._weather_table",
@@ -217168,7 +217685,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 142
+        "line": 180
       },
       "source": "symbol:world_utils.travel_cost",
       "target": "symbol:gamedata.get_location",
@@ -217179,7 +217696,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 917
+        "line": 955
       },
       "source": "symbol:world_utils.weather_effects",
       "target": "symbol:world_utils._weather_table",
@@ -219323,6 +219840,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:services/intent_guard.py",
+      "kind": "file",
+      "line": 1,
+      "path": "services/intent_guard.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:services/jev_decision.py",
       "kind": "file",
       "line": 1,
@@ -219873,6 +220397,13 @@
       "kind": "file",
       "line": 1,
       "path": "tests/test_bug_economia_integridade.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_bug_intencao_parsers.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_bug_intencao_parsers.py",
       "qualified_name": null
     },
     {
@@ -223432,6 +223963,13 @@
       "qualified_name": "services.input_normalization"
     },
     {
+      "id": "module:services.intent_guard",
+      "kind": "module",
+      "line": 1,
+      "path": "services/intent_guard.py",
+      "qualified_name": "services.intent_guard"
+    },
+    {
       "id": "module:services.jev_decision",
       "kind": "module",
       "line": 1,
@@ -223983,6 +224521,13 @@
       "line": 1,
       "path": "tests/test_bug_economia_integridade.py",
       "qualified_name": "tests.test_bug_economia_integridade"
+    },
+    {
+      "id": "module:tests.test_bug_intencao_parsers",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers"
     },
     {
       "id": "module:tests.test_campaign_grounding_deferred",
@@ -225814,21 +226359,21 @@
     {
       "id": "symbol:agents.combat._apply_flee_travel",
       "kind": "function",
-      "line": 1153,
+      "line": 1157,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._apply_flee_travel"
     },
     {
       "id": "symbol:agents.combat._apply_weather_hazard",
       "kind": "function",
-      "line": 1107,
+      "line": 1111,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._apply_weather_hazard"
     },
     {
       "id": "symbol:agents.combat._attempt_flee",
       "kind": "function",
-      "line": 1068,
+      "line": 1072,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._attempt_flee"
     },
@@ -225842,7 +226387,7 @@
     {
       "id": "symbol:agents.combat._can_attempt_flee",
       "kind": "function",
-      "line": 1059,
+      "line": 1063,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._can_attempt_flee"
     },
@@ -225912,7 +226457,7 @@
     {
       "id": "symbol:agents.combat._merge_formal_party",
       "kind": "function",
-      "line": 1212,
+      "line": 1216,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._merge_formal_party"
     },
@@ -225968,14 +226513,14 @@
     {
       "id": "symbol:agents.combat._reflect_scene_allies",
       "kind": "function",
-      "line": 1187,
+      "line": 1191,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._reflect_scene_allies"
     },
     {
       "id": "symbol:agents.combat._register_environmental_damage_terminal",
       "kind": "function",
-      "line": 1134,
+      "line": 1138,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._register_environmental_damage_terminal"
     },
@@ -239863,112 +240408,112 @@
     {
       "id": "symbol:services.chase._weighted_choice",
       "kind": "function",
-      "line": 173,
+      "line": 182,
       "path": "services/chase.py",
       "qualified_name": "services.chase._weighted_choice"
     },
     {
       "id": "symbol:services.chase.abandon_companion",
       "kind": "function",
-      "line": 162,
+      "line": 171,
       "path": "services/chase.py",
       "qualified_name": "services.chase.abandon_companion"
     },
     {
       "id": "symbol:services.chase.approach_virtude",
       "kind": "function",
-      "line": 104,
+      "line": 113,
       "path": "services/chase.py",
       "qualified_name": "services.chase.approach_virtude"
     },
     {
       "id": "symbol:services.chase.can_resume",
       "kind": "function",
-      "line": 70,
+      "line": 79,
       "path": "services/chase.py",
       "qualified_name": "services.chase.can_resume"
     },
     {
       "id": "symbol:services.chase.can_volunteer_sacrifice",
       "kind": "function",
-      "line": 235,
+      "line": 244,
       "path": "services/chase.py",
       "qualified_name": "services.chase.can_volunteer_sacrifice"
     },
     {
       "id": "symbol:services.chase.chase_attack",
       "kind": "function",
-      "line": 260,
+      "line": 269,
       "path": "services/chase.py",
       "qualified_name": "services.chase.chase_attack"
     },
     {
       "id": "symbol:services.chase.chase_conductor",
       "kind": "function",
-      "line": 96,
+      "line": 105,
       "path": "services/chase.py",
       "qualified_name": "services.chase.chase_conductor"
     },
     {
       "id": "symbol:services.chase.chase_difficulty",
       "kind": "function",
-      "line": 109,
+      "line": 118,
       "path": "services/chase.py",
       "qualified_name": "services.chase.chase_difficulty"
     },
     {
       "id": "symbol:services.chase.initial_track",
       "kind": "function",
-      "line": 42,
+      "line": 51,
       "path": "services/chase.py",
       "qualified_name": "services.chase.initial_track"
     },
     {
       "id": "symbol:services.chase.luck_roll",
       "kind": "function",
-      "line": 117,
+      "line": 126,
       "path": "services/chase.py",
       "qualified_name": "services.chase.luck_roll"
     },
     {
       "id": "symbol:services.chase.luck_to_advantage",
       "kind": "function",
-      "line": 128,
+      "line": 137,
       "path": "services/chase.py",
       "qualified_name": "services.chase.luck_to_advantage"
     },
     {
       "id": "symbol:services.chase.offer_sacrifice",
       "kind": "function",
-      "line": 248,
+      "line": 257,
       "path": "services/chase.py",
       "qualified_name": "services.chase.offer_sacrifice"
     },
     {
       "id": "symbol:services.chase.resolve_chase_round",
       "kind": "function",
-      "line": 135,
+      "line": 144,
       "path": "services/chase.py",
       "qualified_name": "services.chase.resolve_chase_round"
     },
     {
       "id": "symbol:services.chase.simulate_abandoned_companion",
       "kind": "function",
-      "line": 184,
+      "line": 193,
       "path": "services/chase.py",
       "qualified_name": "services.chase.simulate_abandoned_companion"
     },
     {
       "id": "symbol:services.chase.start_chase",
       "kind": "function",
-      "line": 56,
+      "line": 65,
       "path": "services/chase.py",
       "qualified_name": "services.chase.start_chase"
     },
     {
       "id": "symbol:services.chase.will_pursue",
       "kind": "function",
-      "line": 47,
+      "line": 56,
       "path": "services/chase.py",
       "qualified_name": "services.chase.will_pursue"
     },
@@ -241137,7 +241682,7 @@
     {
       "id": "symbol:services.conflict_summary.narrative_or_fallback",
       "kind": "function",
-      "line": 328,
+      "line": 335,
       "path": "services/conflict_summary.py",
       "qualified_name": "services.conflict_summary.narrative_or_fallback"
     },
@@ -241168,6 +241713,13 @@
       "line": 306,
       "path": "services/conflict_summary.py",
       "qualified_name": "services.conflict_summary.validate_narrative_text"
+    },
+    {
+      "id": "symbol:services.conflict_summary.validate_narrative_text._subject_hit",
+      "kind": "function",
+      "line": 317,
+      "path": "services/conflict_summary.py",
+      "qualified_name": "services.conflict_summary.validate_narrative_text._subject_hit"
     },
     {
       "id": "symbol:services.conflict_turn.TurnDeclaration",
@@ -243464,6 +244016,13 @@
       "line": 23,
       "path": "services/input_normalization.py",
       "qualified_name": "services.input_normalization.optional_entity_ref"
+    },
+    {
+      "id": "symbol:services.intent_guard.log_intent_guard",
+      "kind": "function",
+      "line": 8,
+      "path": "services/intent_guard.py",
+      "qualified_name": "services.intent_guard.log_intent_guard"
     },
     {
       "id": "symbol:services.jev_decision.ChoiceAnswer",
@@ -248840,6 +249399,104 @@
       "line": 57,
       "path": "tests/test_bug_economia_integridade.py",
       "qualified_name": "tests.test_bug_economia_integridade.test_sold_item_is_unequipped"
+    },
+    {
+      "id": "symbol:tests.test_bug_intencao_parsers._state",
+      "kind": "test",
+      "line": 42,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers._state"
+    },
+    {
+      "id": "symbol:tests.test_bug_intencao_parsers._world",
+      "kind": "test",
+      "line": 17,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers._world"
+    },
+    {
+      "id": "symbol:tests.test_bug_intencao_parsers.test_flee_neg",
+      "kind": "test",
+      "line": 76,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers.test_flee_neg"
+    },
+    {
+      "id": "symbol:tests.test_bug_intencao_parsers.test_flee_pos",
+      "kind": "test",
+      "line": 82,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers.test_flee_pos"
+    },
+    {
+      "id": "symbol:tests.test_bug_intencao_parsers.test_flee_regex_common_forms",
+      "kind": "test",
+      "line": 111,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers.test_flee_regex_common_forms"
+    },
+    {
+      "id": "symbol:tests.test_bug_intencao_parsers.test_local_movement_not_refused",
+      "kind": "test",
+      "line": 50,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers.test_local_movement_not_refused"
+    },
+    {
+      "id": "symbol:tests.test_bug_intencao_parsers.test_narrative_validator_sentence_scope",
+      "kind": "test",
+      "line": 87,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers.test_narrative_validator_sentence_scope"
+    },
+    {
+      "id": "symbol:tests.test_bug_intencao_parsers.test_router_precedence",
+      "kind": "test",
+      "line": 64,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers.test_router_precedence"
+    },
+    {
+      "id": "symbol:tests.test_bug_intencao_parsers.test_router_story",
+      "kind": "test",
+      "line": 70,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers.test_router_story"
+    },
+    {
+      "id": "symbol:tests.test_bug_intencao_parsers.test_story_shortcut_infinitives_need_auxiliary",
+      "kind": "test",
+      "line": 101,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers.test_story_shortcut_infinitives_need_auxiliary"
+    },
+    {
+      "id": "symbol:tests.test_bug_intencao_parsers.test_travel_neg",
+      "kind": "test",
+      "line": 29,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers.test_travel_neg"
+    },
+    {
+      "id": "symbol:tests.test_bug_intencao_parsers.test_travel_pos",
+      "kind": "test",
+      "line": 24,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers.test_travel_pos"
+    },
+    {
+      "id": "symbol:tests.test_bug_intencao_parsers.test_unknown_toponym_refused",
+      "kind": "test",
+      "line": 57,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers.test_unknown_toponym_refused"
+    },
+    {
+      "id": "symbol:tests.test_bug_intencao_parsers.test_vou_ao_finds_destination_and_travels",
+      "kind": "test",
+      "line": 33,
+      "path": "tests/test_bug_intencao_parsers.py",
+      "qualified_name": "tests.test_bug_intencao_parsers.test_vou_ao_finds_destination_and_travels"
     },
     {
       "id": "symbol:tests.test_campaign_grounding_deferred._state",
@@ -260086,322 +260743,329 @@
     {
       "id": "symbol:tests.test_jev_target_loot_experiment._case",
       "kind": "test",
-      "line": 18,
+      "line": 31,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment._case"
     },
     {
+      "id": "symbol:tests.test_jev_target_loot_experiment._legacy_story_gate",
+      "kind": "test",
+      "line": 18,
+      "path": "tests/test_jev_target_loot_experiment.py",
+      "qualified_name": "tests.test_jev_target_loot_experiment._legacy_story_gate"
+    },
+    {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_ambiguous_alias_and_unknown_target_fail_closed",
       "kind": "test",
-      "line": 73,
+      "line": 86,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_ambiguous_alias_and_unknown_target_fail_closed"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_candidate_drops_expected_and_source_labels",
       "kind": "test",
-      "line": 47,
+      "line": 60,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_candidate_drops_expected_and_source_labels"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback",
       "kind": "test",
-      "line": 147,
+      "line": 160,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback.Adapter",
       "kind": "class",
-      "line": 155,
+      "line": 168,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback.Adapter"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback.Adapter.execute",
       "kind": "test",
-      "line": 156,
+      "line": 169,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback.Adapter.execute"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback.captured",
       "kind": "test",
-      "line": 149,
+      "line": 162,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_classify_auth_failure_blocks_even_after_fallback.captured"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_conflicting_known_graph_id_is_unrepresentable",
       "kind": "test",
-      "line": 99,
+      "line": 112,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_conflicting_known_graph_id_is_unrepresentable"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_corpus_is_frozen_before_any_provider_call",
       "kind": "test",
-      "line": 22,
+      "line": 35,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_corpus_is_frozen_before_any_provider_call"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_graph_identity_and_visibility_override_untrusted_runtime_id",
       "kind": "test",
-      "line": 84,
+      "line": 97,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_graph_identity_and_visibility_override_untrusted_runtime_id"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_hidden_enemy_is_not_an_option",
       "kind": "test",
-      "line": 108,
+      "line": 121,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_hidden_enemy_is_not_an_option"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_hiding_from_another_observer_keeps_enemy_visible_to_player",
       "kind": "test",
-      "line": 116,
+      "line": 129,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_hiding_from_another_observer_keeps_enemy_visible_to_player"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block",
       "kind": "test",
-      "line": 166,
+      "line": 179,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block.Backend",
       "kind": "class",
-      "line": 167,
+      "line": 180,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block.Backend"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block.Backend.decide",
       "kind": "test",
-      "line": 168,
+      "line": 181,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_jev_response_survives_reported_cost_block.Backend.decide"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts",
       "kind": "test",
-      "line": 318,
+      "line": 331,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts.forbidden_backend",
       "kind": "test",
-      "line": 326,
+      "line": 339,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_live_rejects_dirty_checkout_before_backend_or_artifacts.forbidden_backend"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_mismatched_corpus_lock_fails_closed",
       "kind": "test",
-      "line": 39,
+      "line": 52,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_mismatched_corpus_lock_fails_closed"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_only_visible_canonical_scene_ids_become_target_options",
       "kind": "test",
-      "line": 58,
+      "line": 71,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_only_visible_canonical_scene_ids_become_target_options"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_over_twenty_is_reported_without_truncating_candidates",
       "kind": "test",
-      "line": 228,
+      "line": 241,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_over_twenty_is_reported_without_truncating_candidates"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_present_ally_wins_over_offscene_npc_cache_row",
       "kind": "test",
-      "line": 124,
+      "line": 137,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_present_ally_wins_over_offscene_npc_cache_row"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls",
       "kind": "test",
-      "line": 184,
+      "line": 197,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls.GateAdapter",
       "kind": "class",
-      "line": 189,
+      "line": 202,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls.GateAdapter"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls.GateAdapter.execute",
       "kind": "test",
-      "line": 190,
+      "line": 203,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls.GateAdapter.execute"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls.captured",
       "kind": "test",
-      "line": 186,
+      "line": 199,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_python_gate_current_router_needs_zero_provider_calls.captured"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider",
       "kind": "test",
-      "line": 261,
+      "line": 274,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend",
       "kind": "class",
-      "line": 268,
+      "line": 281,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__enter__",
       "kind": "test",
-      "line": 272,
+      "line": 285,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__enter__"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__exit__",
       "kind": "test",
-      "line": 275,
+      "line": 288,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__exit__"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__init__",
       "kind": "test",
-      "line": 269,
+      "line": 282,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.OfflineBackend.__init__"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.arm_a",
       "kind": "test",
-      "line": 280,
+      "line": 293,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.arm_a"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.arm_b",
       "kind": "test",
-      "line": 285,
+      "line": 298,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.arm_b"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.checked_score",
       "kind": "test",
-      "line": 294,
+      "line": 307,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider.checked_score"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence",
       "kind": "test",
-      "line": 216,
+      "line": 229,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence.git_probe",
       "kind": "test",
-      "line": 217,
+      "line": 230,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_allows_its_own_review_evidence.git_probe"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget",
       "kind": "test",
-      "line": 336,
+      "line": 349,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend",
       "kind": "class",
-      "line": 374,
+      "line": 387,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__enter__",
       "kind": "test",
-      "line": 378,
+      "line": 391,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__enter__"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__exit__",
       "kind": "test",
-      "line": 381,
+      "line": 394,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__exit__"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__init__",
       "kind": "test",
-      "line": 375,
+      "line": 388,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.OfflineBackend.__init__"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.arm_a",
       "kind": "test",
-      "line": 384,
+      "line": 397,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.arm_a"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.arm_b",
       "kind": "test",
-      "line": 391,
+      "line": 404,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_preserves_prior_raw_and_cumulative_budget.arm_b"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_rejects_product_code_change",
       "kind": "test",
-      "line": 205,
+      "line": 218,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_rejects_product_code_change"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_resume_rejects_product_code_change.git_probe",
       "kind": "test",
-      "line": 206,
+      "line": 219,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_resume_rejects_product_code_change.git_probe"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_score_keeps_unrepresentable_in_semantic_denominator",
       "kind": "test",
-      "line": 236,
+      "line": 249,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_score_keeps_unrepresentable_in_semantic_denominator"
     },
     {
       "id": "symbol:tests.test_jev_target_loot_experiment.test_spoof_id_cannot_expose_graph_secret",
       "kind": "test",
-      "line": 133,
+      "line": 146,
       "path": "tests/test_jev_target_loot_experiment.py",
       "qualified_name": "tests.test_jev_target_loot_experiment.test_spoof_id_cannot_expose_graph_secret"
     },
@@ -270780,30 +271444,37 @@
       "qualified_name": "workers.run_worker.main"
     },
     {
+      "id": "symbol:world_utils._all_location_names",
+      "kind": "function",
+      "line": 91,
+      "path": "world_utils.py",
+      "qualified_name": "world_utils._all_location_names"
+    },
+    {
       "id": "symbol:world_utils._bestiary_by_faction",
       "kind": "function",
-      "line": 596,
+      "line": 634,
       "path": "world_utils.py",
       "qualified_name": "world_utils._bestiary_by_faction"
     },
     {
       "id": "symbol:world_utils._direction_sign",
       "kind": "function",
-      "line": 462,
+      "line": 500,
       "path": "world_utils.py",
       "qualified_name": "world_utils._direction_sign"
     },
     {
       "id": "symbol:world_utils._disposition_for",
       "kind": "function",
-      "line": 454,
+      "line": 492,
       "path": "world_utils.py",
       "qualified_name": "world_utils._disposition_for"
     },
     {
       "id": "symbol:world_utils._effective_danger",
       "kind": "function",
-      "line": 531,
+      "line": 569,
       "path": "world_utils.py",
       "qualified_name": "world_utils._effective_danger"
     },
@@ -270817,35 +271488,35 @@
     {
       "id": "symbol:world_utils._has_light_source",
       "kind": "function",
-      "line": 866,
+      "line": 904,
       "path": "world_utils.py",
       "qualified_name": "world_utils._has_light_source"
     },
     {
       "id": "symbol:world_utils._hostile_ruler",
       "kind": "function",
-      "line": 540,
+      "line": 578,
       "path": "world_utils.py",
       "qualified_name": "world_utils._hostile_ruler"
     },
     {
       "id": "symbol:world_utils._pop_active_alert",
       "kind": "function",
-      "line": 581,
+      "line": 619,
       "path": "world_utils.py",
       "qualified_name": "world_utils._pop_active_alert"
     },
     {
       "id": "symbol:world_utils._raise_danger",
       "kind": "function",
-      "line": 318,
+      "line": 356,
       "path": "world_utils.py",
       "qualified_name": "world_utils._raise_danger"
     },
     {
       "id": "symbol:world_utils._weather_table",
       "kind": "function",
-      "line": 795,
+      "line": 833,
       "path": "world_utils.py",
       "qualified_name": "world_utils._weather_table"
     },
@@ -270859,77 +271530,77 @@
     {
       "id": "symbol:world_utils.advance_factions",
       "kind": "function",
-      "line": 286,
+      "line": 324,
       "path": "world_utils.py",
       "qualified_name": "world_utils.advance_factions"
     },
     {
       "id": "symbol:world_utils.advance_weather",
       "kind": "function",
-      "line": 827,
+      "line": 865,
       "path": "world_utils.py",
       "qualified_name": "world_utils.advance_weather"
     },
     {
       "id": "symbol:world_utils.apply_faction_reveal",
       "kind": "function",
-      "line": 416,
+      "line": 454,
       "path": "world_utils.py",
       "qualified_name": "world_utils.apply_faction_reveal"
     },
     {
       "id": "symbol:world_utils.apply_reputation",
       "kind": "function",
-      "line": 472,
+      "line": 510,
       "path": "world_utils.py",
       "qualified_name": "world_utils.apply_reputation"
     },
     {
       "id": "symbol:world_utils.apply_rest",
       "kind": "function",
-      "line": 179,
+      "line": 217,
       "path": "world_utils.py",
       "qualified_name": "world_utils.apply_rest"
     },
     {
       "id": "symbol:world_utils.apply_travel",
       "kind": "function",
-      "line": 154,
+      "line": 192,
       "path": "world_utils.py",
       "qualified_name": "world_utils.apply_travel"
     },
     {
       "id": "symbol:world_utils.check_encounter",
       "kind": "function",
-      "line": 712,
+      "line": 750,
       "path": "world_utils.py",
       "qualified_name": "world_utils.check_encounter"
     },
     {
       "id": "symbol:world_utils.clock_label",
       "kind": "function",
-      "line": 1110,
+      "line": 1148,
       "path": "world_utils.py",
       "qualified_name": "world_utils.clock_label"
     },
     {
       "id": "symbol:world_utils.detection_check",
       "kind": "function",
-      "line": 958,
+      "line": 996,
       "path": "world_utils.py",
       "qualified_name": "world_utils.detection_check"
     },
     {
       "id": "symbol:world_utils.ensure_faction_intel",
       "kind": "function",
-      "line": 403,
+      "line": 441,
       "path": "world_utils.py",
       "qualified_name": "world_utils.ensure_faction_intel"
     },
     {
       "id": "symbol:world_utils.ensure_factions",
       "kind": "function",
-      "line": 270,
+      "line": 308,
       "path": "world_utils.py",
       "qualified_name": "world_utils.ensure_factions"
     },
@@ -270943,21 +271614,21 @@
     {
       "id": "symbol:world_utils.find_travel_destination",
       "kind": "function",
-      "line": 119,
+      "line": 157,
       "path": "world_utils.py",
       "qualified_name": "world_utils.find_travel_destination"
     },
     {
       "id": "symbol:world_utils.forced_encounter_danger",
       "kind": "function",
-      "line": 698,
+      "line": 736,
       "path": "world_utils.py",
       "qualified_name": "world_utils.forced_encounter_danger"
     },
     {
       "id": "symbol:world_utils.invalid_travel_message",
       "kind": "function",
-      "line": 101,
+      "line": 139,
       "path": "world_utils.py",
       "qualified_name": "world_utils.invalid_travel_message"
     },
@@ -270971,116 +271642,123 @@
     {
       "id": "symbol:world_utils.is_travel_intent",
       "kind": "function",
-      "line": 69,
+      "line": 99,
       "path": "world_utils.py",
       "qualified_name": "world_utils.is_travel_intent"
     },
     {
       "id": "symbol:world_utils.last_safe_location",
       "kind": "function",
-      "line": 673,
+      "line": 711,
       "path": "world_utils.py",
       "qualified_name": "world_utils.last_safe_location"
     },
     {
       "id": "symbol:world_utils.light_level",
       "kind": "function",
-      "line": 888,
+      "line": 926,
       "path": "world_utils.py",
       "qualified_name": "world_utils.light_level"
     },
     {
+      "id": "symbol:world_utils.looks_like_toponym",
+      "kind": "function",
+      "line": 81,
+      "path": "world_utils.py",
+      "qualified_name": "world_utils.looks_like_toponym"
+    },
+    {
       "id": "symbol:world_utils.maybe_start_global_weather",
       "kind": "function",
-      "line": 807,
+      "line": 845,
       "path": "world_utils.py",
       "qualified_name": "world_utils.maybe_start_global_weather"
     },
     {
       "id": "symbol:world_utils.pick_encounter_enemy",
       "kind": "function",
-      "line": 604,
+      "line": 642,
       "path": "world_utils.py",
       "qualified_name": "world_utils.pick_encounter_enemy"
     },
     {
       "id": "symbol:world_utils.pick_encounter_enemy.tier",
       "kind": "function",
-      "line": 634,
+      "line": 672,
       "path": "world_utils.py",
       "qualified_name": "world_utils.pick_encounter_enemy.tier"
     },
     {
       "id": "symbol:world_utils.recovery_rest_safe",
       "kind": "function",
-      "line": 519,
+      "line": 557,
       "path": "world_utils.py",
       "qualified_name": "world_utils.recovery_rest_safe"
     },
     {
       "id": "symbol:world_utils.register_flee_alert",
       "kind": "function",
-      "line": 554,
+      "line": 592,
       "path": "world_utils.py",
       "qualified_name": "world_utils.register_flee_alert"
     },
     {
       "id": "symbol:world_utils.resolve_faction_completions",
       "kind": "function",
-      "line": 331,
+      "line": 369,
       "path": "world_utils.py",
       "qualified_name": "world_utils.resolve_faction_completions"
     },
     {
       "id": "symbol:world_utils.resolve_track",
       "kind": "function",
-      "line": 1092,
+      "line": 1130,
       "path": "world_utils.py",
       "qualified_name": "world_utils.resolve_track"
     },
     {
       "id": "symbol:world_utils.resolve_trap",
       "kind": "function",
-      "line": 987,
+      "line": 1025,
       "path": "world_utils.py",
       "qualified_name": "world_utils.resolve_trap"
     },
     {
       "id": "symbol:world_utils.roll_encounter_type",
       "kind": "function",
-      "line": 978,
+      "line": 1016,
       "path": "world_utils.py",
       "qualified_name": "world_utils.roll_encounter_type"
     },
     {
       "id": "symbol:world_utils.starting_world",
       "kind": "function",
-      "line": 1115,
+      "line": 1153,
       "path": "world_utils.py",
       "qualified_name": "world_utils.starting_world"
     },
     {
       "id": "symbol:world_utils.travel_cost",
       "kind": "function",
-      "line": 132,
+      "line": 170,
       "path": "world_utils.py",
       "qualified_name": "world_utils.travel_cost"
     },
     {
       "id": "symbol:world_utils.trigger_global_weather",
       "kind": "function",
-      "line": 938,
+      "line": 976,
       "path": "world_utils.py",
       "qualified_name": "world_utils.trigger_global_weather"
     },
     {
       "id": "symbol:world_utils.weather_effects",
       "kind": "function",
-      "line": 912,
+      "line": 950,
       "path": "world_utils.py",
       "qualified_name": "world_utils.weather_effects"
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:8c7600a2be2e82ad4a241fd27cf788e10f0f5c4cd4aaa90401c06a430e7a5f2d"
+  "source_tree_hash": "sha256:ec22b440cb1f2e9d36b325fc2c3e64ceb4bbf0f30bb75fc10e3922532d84fe74"
 }
