@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "1256f4d9256f6074f6f2724810c602c62ffe761f",
+  "commit_sha": "48239ef500ce5fbe2b00defdad5b4d6c807ab440",
   "edge_counts": {
-    "calls": 13081,
-    "contains": 582,
-    "defines": 7650,
-    "imports": 1242,
-    "likely_test_for": 777,
+    "calls": 13310,
+    "contains": 587,
+    "defines": 7765,
+    "imports": 1248,
+    "likely_test_for": 783,
     "route_to": 59
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:6549baf38b1e399c182d2595c6976ded1ecfba3b58ace7b9630bcaee90587375",
+  "graph_hash": "sha256:57b7a8f53fc211ce6157a08f7862779dfc517dd2ff791f08d57895e2b48e4441",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -316,6 +316,7 @@
     "services/operation_recovery.py",
     "services/player_knowledge.py",
     "services/presentation_history.py",
+    "services/projections.py",
     "services/prologue.py",
     "services/prompt_guard.py",
     "services/prose_guard.py",
@@ -558,6 +559,9 @@
     "tests/test_progression_v4.py",
     "tests/test_project_index.py",
     "tests/test_project_index_ab_harness.py",
+    "tests/test_projection_api.py",
+    "tests/test_projection_db_local.py",
+    "tests/test_projections.py",
     "tests/test_prologue.py",
     "tests/test_prompt_guard.py",
     "tests/test_prompt_injection_corpus.py",
@@ -727,6 +731,7 @@
     "workers/dynamic_art_jobs.py",
     "workers/embedding_jobs.py",
     "workers/job_worker.py",
+    "workers/projection_jobs.py",
     "workers/run_worker.py",
     "world_utils.py"
   ],
@@ -736,14 +741,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 656,
+    "class": 662,
     "endpoint": 59,
-    "file": 682,
-    "function": 2399,
-    "method": 650,
-    "module": 582,
-    "test": 3945
+    "file": 687,
+    "function": 2438,
+    "method": 653,
+    "module": 587,
+    "test": 4012
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:9efe2f823681adbefd5235124536997f09403c2c1a1c7434d9e0364b9cdf21a7"
+  "source_tree_hash": "sha256:8926f82da834183a12b55f5af379de743fcca55165fc9525b71b783d863512ec"
 }
