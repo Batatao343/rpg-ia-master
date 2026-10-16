@@ -1,6 +1,6 @@
 # SPEC-204 — Shell chat + contexto: split view e cinco abas navegáveis
 
-> **Status:** `in-progress` (implementação entregue; faltam autoria de eval F07/F17–F19, revisão Sol independente e smoke §6 — ver §10)
+> **Status:** `done` (implementação + revisão Sol + smoke §6 + eval F07/F17–F19, registry 1.8.0 — ver §10/§11)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-201 `done` (matriz de efeitos — informa, não bloqueia layout), SPEC-235 `done` (ciclo de ação pendente confiável) · SPEC-172 `done` (F01–F16), SPEC-077 `done` (contrato tático evoluído sem mudar API) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-205, SPEC-208, SPEC-209, SPEC-210, SPEC-211, SPEC-212, SPEC-216 (ordem final 2026-10-15)
@@ -149,14 +149,14 @@ Pré-condição: tarefa de eval separada (EVAL_AUTHORING_REQUIRED) entregou F17�
 ## 5. Critérios de aceite
 
 - [x] Desktop 1440×900: chat solo, split 50/50, contexto solo, alternância das 5 abas, iniciar/encerrar combate — capturas por estado (`docs/spec204/capturas/`).
-- [x] Nenhum DOM com três regiões de conteúdo simultâneas (assert em `workspace-shell.spec.ts`; F17/F08 dependem da eval).
+- [x] Nenhum DOM com três regiões de conteúdo simultâneas (assert em `workspace-shell.spec.ts` e em F17).
 - [x] Divisor operável só por teclado e só por ponteiro; limites mínimos respeitados; clique dentro das superfícies não é capturado pelo divisor.
-- [x] Draft, scroll, foco no composer e `PendingOperation` sobrevivem a 10 trocas de aba/modo (teste do executor; F19 pendente da eval).
-- [x] Troca de jogo com SSE pendente não vaza draft/aba/scroll (F15 verde + teste do executor; F19 pendente).
+- [x] Draft, scroll, foco no composer e `PendingOperation` sobrevivem a 10 trocas de aba/modo (teste do executor + F19).
+- [x] Troca de jogo com SSE pendente não vaza draft/aba/scroll (F15 + F19 + teste do executor).
 - [x] Reload restaura modo/ratio/aba do save; storage bloqueado não gera `console.error`.
 - [x] Todo conteúdo das 8 abas antigas acessível (teste de inventário R5 em `web/tests/workspaceModel.test.mjs`).
 - [x] `CardHand`/`ReactionPrompt`/`SceneZones`/`WoundTrack` renderizam só na aba Combate.
-- [ ] F01–F19 100% — **F07 vermelha por mudança legítima de seletor** (Pessoas → Codex) e F17–F19 não autoradas: `handoffs/SPEC-204-eval-authoring.md`. pageerror/console.error/5xx = 0, axe serious/critical = 0 e overflow = 0 em 320/390/768/1440 nas jornadas verdes e nos testes do executor.
+- [x] F01–F19 100% (19/19, `frontend_eval_report.py --check` exit 0): F07 adaptada a Codex › Pessoas sem afrouxar asserts; F17–F19 autoradas na tarefa de eval. pageerror/console.error/failed requests/5xx = 0, axe serious/critical = 0 e overflow = 0 em 320/390/768/1440.
 - [x] `prefers-reduced-motion: reduce` sem animação de layout.
 - [x] Level-up, morte, resultado do laboratório e lightbox cobrem o viewport, prendem e devolvem foco, sem alterar o workspace (R16); laboratório de combate abre em split/Combate (R17).
 - [x] CSS novo só em `web/src/workspace.css`; diff em `styles.css` só remoção.
@@ -193,11 +193,11 @@ Provider real: não aplicável. Não há structured output novo.
 
 ## 9. Evidência requerida
 
-- Relatório em `docs/spec204/README.md`: capturas 1440×900 dos três modos + combate, saída do `frontend_eval_report.py` (F01–F19), contagem axe/console/overflow.
-- Saída de `node --test` (reducer/storage) e `npm run build`.
-- `uv run pytest` final (contagem completa) e `git diff --stat` mostrando `styles.css` só com remoções e backend intocado.
-- Handoff da tarefa de eval (F17–F19 + seletores) referenciado, com hash do commit que a fixou antes da implementação.
-- Parecer de revisão Sol independente em `handoffs/SPEC-204-SOL-independent-review.md`.
+- [x] Relatório em `docs/spec204/README.md`: capturas 1440×900 dos três modos + combate, saída do `frontend_eval_report.py` (F01–F19), contagem axe/console/overflow.
+- [x] Saída de `node --test` (reducer/storage) e `npm run build`.
+- [x] `uv run pytest` final (contagem completa) e `git diff --stat` mostrando `styles.css` só com remoções e backend intocado.
+- [x] Handoff da tarefa de eval (F17–F19 + seletores) referenciado (`handoffs/SPEC-204-eval-authoring.md`). Desvio: a eval foi autorada **depois** da implementação (ver §10); commit próprio `test(e2e): adapt F07 and author F17-F19 …`.
+- [x] Parecer de revisão Sol independente em `handoffs/SPEC-204-SOL-independent-review.md` (APPROVED_WITH_FOLLOWUPS; achados menores listados no parecer).
 
 ## 10. Execução (2026-10-16)
 
@@ -242,3 +242,25 @@ Fora do escopo da shell e **não** corrigido: A01 (hitbox do Create), A04, A14, 
 **Pendências para `done`:** (1) eval: F07 adaptada + F17–F19 + relock; (2) revisão Sol
 independente (`handoffs/SPEC-204-SOL-independent-review.md`); (3) ~~smoke §6~~ executado na revisão Sol
 (uvicorn + MockLLM, verde — `docs/spec204/README.md` § Smoke §6).
+
+## 11. Eval (2026-10-16, tarefa separada — autor ≠ implementador)
+
+- **F07** adaptada: abre Codex › Pessoas (`tablist` "Seções do Codex", `aria-selected`) antes e
+  depois do reload; mesmos oráculos (Borin visível, resposta do NPC, memória "Prometeu mostrar a rota.").
+- **F17 workspace_modes:** overlay de level-up cobre 1440px e prende foco sem mudar o workspace;
+  split 50/50 no primeiro uso; divisor por teclado (5%/Shift 10%/Home/End/Enter) com chat ≥ 380px e
+  painel ≥ 360px; ponteiro (~35%) e clique nas superfícies sem mover o divisor; modos Chat/Painel
+  com composer visível e ≤ 2 regiões; reload restaura modo/ratio/aba; 320/390/768 sem "Dividido",
+  uma superfície, sem overflow; laboratório abre em split/Combate sem `GET /game/codex`.
+- **F18 tabs_history:** 5 abas com `aria-controls`/`tabpanel`; setas/Home/End com foco roving;
+  Voltar/Avançar (desabilitados nas pontas, avanço descartado ao navegar); `Alt+←/→`; atalhos
+  inertes no composer (exceto `Ctrl+1`); `Ctrl+2..6`; `Ctrl+\` split ↔ último solo; `Esc` no painel
+  foca o composer sem mudar modo/aba.
+- **F19 workspace_preservation:** SSE pendente + rascunho + scroll fora do fim sobrevivem a 10 trocas
+  de aba/modo (chave `valoria:pending` intacta, `Agir` `aria-busy`); troca de jogo com SSE pendente não
+  vaza rascunho/aba/scroll/narração; voltar a Ayla restaura rascunho e aba; rascunho nunca em
+  `localStorage`.
+- `critical-journeys.yaml` + `frontend_eval_report.py` (F01–F19) + `tests/test_eval_frontend.py`;
+  `EVALUATOR_VERSION`/registry **1.8.0**, relock por `python -m evals.core.governance lock`, `check` verde.
+  F17–F19 têm `test.setTimeout(90_000)` (jornadas longas; asserts inalterados). Publicar exige
+  aprovação do environment `eval-governance` (régua protegida alterada).

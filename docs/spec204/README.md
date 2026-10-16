@@ -1,7 +1,7 @@
 # SPEC-204 — evidência de execução (shell chat + contexto)
 
-Status: `in-progress` — implementação entregue; pendem autoria de eval (F07 adaptada, F17–F19),
-revisão Sol independente e smoke §6 com `uvicorn` + MockLLM. Detalhe e desvios: §10 da spec.
+Status: `done` — implementação, revisão Sol, smoke §6 e eval (F07 adaptada + F17–F19, registry
+1.8.0) entregues. Detalhe e desvios: §10/§11 da spec.
 
 ## O que mudou
 
@@ -32,7 +32,7 @@ revisão Sol independente e smoke §6 com `uvicorn` + MockLLM. Detalhe e desvios
 | `npm test` (Node) | **72/72** (22 novos em `tests/workspaceModel.test.mjs`: reducer, clamp, storage, store, inventário R5) |
 | `npm run build` | verde |
 | `e2e/workspace-shell.spec.ts` (novo, 1440/390, axe) | **11/11** |
-| `e2e/critical-journeys.spec.ts` | **15/16** — F07 vermelha por seletor legítimo (Pessoas → Codex); ajuste proposto validado localmente em `handoffs/SPEC-204-eval-authoring.md` |
+| `e2e/critical-journeys.spec.ts` | executor: 15/16 (F07 por seletor legítimo). **Após a eval: 19/19** (ver § Eval) |
 | demais e2e (suíte completa: 65 passed, 19 skipped) | `image-quote` 7/7 (390px ajustado); `voice-input` "native Chromium MediaRecorder" falha **também no HEAD** (Chromium local grava `audio/wav`); `pending-discard @1440` e `account-lifecycle` (timing) falharam só sob carga concorrente e passam isolados |
 | `uv run pytest -q --ignore=tests/test_project_index.py` | **2761 passed, 168 skipped**, exit 0 |
 
@@ -57,9 +57,26 @@ saves criados por `POST /game/new` (MockLLM). Log em `smoke/smoke-log.txt`, capt
 4. 1024px + reduced-motion: modo único (chat/painel), rascunho intacto, sem transição, overflow 0;
    390px painel único, overflow 0. `pageerror`/`console.error` = 0.
 
+## Eval (tarefa separada, 2026-10-16)
+
+F07 adaptada (Codex › Pessoas) e F17 `workspace_modes`, F18 `tabs_history`, F19
+`workspace_preservation` autoradas em `web/e2e/critical-journeys.spec.ts` (detalhe em §11 da spec).
+`EVALUATOR_VERSION` e registry **1.8.0**; `evals/manifest.lock.json` regerado por
+`python -m evals.core.governance lock` e `check` verde. Rodada completa (Chromium local, porta
+temporária): **19/19**; `frontend_eval_report.py --check` exit 0:
+
+```
+journeys: registered 19, executed 19, passed 19
+frontend_critical_journey_pass_rate=1.0; page_errors=0; console_errors=0; failed_requests=0;
+5xx=0; horizontal_overflow=0; a11y_serious_critical=0; hard_gates_passed=true
+```
+
+`uv run pytest` completo (sem pipe, após rebuild do Project Index): **2896 passed, 168 skipped**, exit 0.
+
+Publicar exige aprovação do environment `eval-governance` (régua protegida alterada).
+
 ## Limites
 
-- `frontend_eval_report.py` ainda só reconhece F01–F16 (`JOURNEY_RE`); F17–F19 dependem da eval.
 - `reducedMotion: "reduce"` do `playwright.config.ts` não chega ao Chromium local (verificado via
   `matchMedia`); os testes do executor emulam por página.
 - Mobile definitivo é SPEC-216; < 1100px aqui é "uma superfície por vez" com composer fixo.

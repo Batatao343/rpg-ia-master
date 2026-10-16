@@ -12,7 +12,8 @@ import subprocess
 from pathlib import Path
 from typing import Any, Iterable
 
-JOURNEY_RE = re.compile(r"^(F(?:0[1-9]|1[0-6]))\s+")
+JOURNEY_COUNT = 19
+JOURNEY_RE = re.compile(r"^(F(?:0[1-9]|1[0-9]))\s+")
 
 
 def _specs(suites: Iterable[dict[str, Any]]) -> Iterable[dict[str, Any]]:
@@ -56,14 +57,14 @@ def summarize(report: dict[str, Any]) -> dict[str, Any]:
         "frontend_horizontal_overflow_cases": 0 if journeys.get("F16") else 1,
         "frontend_a11y_serious_critical": joined.count("A11Y serious/critical:"),
     }
-    complete = set(journeys) == {f"F{i:02d}" for i in range(1, 17)}
+    complete = set(journeys) == {f"F{i:02d}" for i in range(1, JOURNEY_COUNT + 1)}
     hard_pass = complete and metrics["frontend_critical_journey_pass_rate"] == 1.0 and all(
         value == 0 for key, value in metrics.items() if key != "frontend_critical_journey_pass_rate"
     )
     return {
         "schema_version": 1,
         "source": "playwright-json",
-        "journeys": {"registered": 16, "executed": total, "passed": passed, "results": journeys},
+        "journeys": {"registered": JOURNEY_COUNT, "executed": total, "passed": passed, "results": journeys},
         "metrics": metrics,
         "hard_gates_passed": hard_pass,
     }
@@ -79,7 +80,7 @@ def measurement_identity(root: Path) -> dict[str, str]:
     package = json.loads((root / "web/package.json").read_text(encoding="utf-8"))
     return {
         "product_sha": os.getenv("GITHUB_SHA") or git.stdout.strip(),
-        "evaluator_version": "1.7.0",
+        "evaluator_version": "1.8.0",
         "metrics_registry_hash": digest(root / "evals/metrics-registry.yaml"),
         "journey_manifest_hash": digest(root / "web/e2e/critical-journeys.yaml"),
         "platform": platform.platform(),

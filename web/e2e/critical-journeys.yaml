@@ -16,3 +16,6 @@ journeys:
   - { id: F14, name: network_failure_recovery, hard: true }
   - { id: F15, name: game_switch_inflight, hard: true }
   - { id: F16, name: responsive_navigation, hard: true }
+  - { id: F17, name: workspace_modes, hard: true }
+  - { id: F18, name: tabs_history, hard: true }
+  - { id: F19, name: workspace_preservation, hard: true }

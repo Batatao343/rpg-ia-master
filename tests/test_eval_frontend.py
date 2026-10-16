@@ -12,9 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
 
 
-def test_frontend_manifest_and_playwright_suite_cover_f01_to_f16():
+def test_frontend_manifest_and_playwright_suite_cover_f01_to_f19():
     manifest = yaml.safe_load((WEB / "e2e/critical-journeys.yaml").read_text(encoding="utf-8"))
-    expected = [f"F{i:02d}" for i in range(1, 17)]
+    expected = [f"F{i:02d}" for i in range(1, 20)]
     assert [row["id"] for row in manifest["journeys"]] == expected
     assert all(row["hard"] for row in manifest["journeys"])
     source = (WEB / "e2e/critical-journeys.spec.ts").read_text(encoding="utf-8")
@@ -58,13 +58,16 @@ def test_frontend_metrics_are_blocking_and_have_hard_limits():
     assert all(registry[name]["blocking"] and "hard_limit" in registry[name] for name in names)
 
 
-def test_frontend_report_requires_all_sixteen_journeys():
+def test_frontend_report_requires_all_nineteen_journeys():
     specs = []
-    for number in range(1, 17):
+    for number in range(1, 20):
         specs.append({"title": f"F{number:02d} fixture", "tests": [{"results": [{"status": "passed"}]}]})
     summary = summarize({"suites": [{"specs": specs}]})
     assert summary["hard_gates_passed"] is True
     assert summary["metrics"]["frontend_critical_journey_pass_rate"] == 1.0
+    assert summary["journeys"]["registered"] == 19
+    missing = summarize({"suites": [{"specs": specs[:16]}]})
+    assert missing["hard_gates_passed"] is False
     specs[-1]["tests"][0]["results"][0] = {
         "status": "failed", "error": {"message": "A11Y serious/critical: color-contrast"}
     }

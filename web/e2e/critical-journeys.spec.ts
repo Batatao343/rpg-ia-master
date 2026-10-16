@@ -115,16 +115,22 @@ test("F06 map_travel", async ({ page }) => {
   await assertA11y(page);
 });
 
+async function openPeople(page: Page) {
+  // SPEC-204 (D1/P1): "Pessoas" deixou de ser aba de topo e virou seção do Codex.
+  await page.getByRole("tablist", { name: "Abas do painel" }).getByRole("tab", { name: "Codex" }).click();
+  const section = page.getByRole("tablist", { name: "Seções do Codex" }).getByRole("tab", { name: "Pessoas" });
+  await section.click();
+  await expect(section).toHaveAttribute("aria-selected", "true");
+}
+
 test("F07 npc_interaction", async ({ page }) => {
   await openGame(page);
-  await page.getByRole("button", { name: /Ficha/ }).click();
-  await page.getByRole("tab", { name: "Pessoas" }).click();
+  await openPeople(page);
   await expect(page.getByText("Borin", { exact: true })).toBeVisible();
-  await page.getByRole("button", { name: /Ficha/ }).click();
   await submitAction(page, "Converso com Borin");
   await expect(page.getByText("Borin, o barqueiro, responde sem desviar o olhar.")).toBeVisible();
   await page.reload(); await page.getByRole("button", { name: /^Ayla/ }).click();
-  await page.getByRole("button", { name: /Ficha/ }).click(); await page.getByRole("tab", { name: "Pessoas" }).click();
+  await openPeople(page);
   await expect(page.getByText("Prometeu mostrar a rota.")).toBeVisible();
   await assertA11y(page);
 });
@@ -263,5 +269,289 @@ test("F16 responsive_navigation", async ({ page }) => {
     if (viewport.width <= 480) await page.getByRole("button", { name: "Fechar ficha" }).click();
     else await ficha.click();
   }
+  await assertA11y(page);
+});
+
+// --- SPEC-204: workspace chat + contexto (F17–F19) -------------------------------------------
+const DESKTOP = { width: 1440, height: 900 };
+const chatRegion = (page: Page) => page.getByRole("region", { name: "Chat da aventura" });
+const contextRegion = (page: Page) => page.getByRole("region", { name: "Painel de contexto" });
+const composerBox = (page: Page) => page.getByRole("textbox", { name: "Sua ação" });
+const divider = (page: Page) => page.getByRole("separator", { name: "Redimensionar chat e painel" });
+const modeButton = (page: Page, name: "Chat" | "Dividido" | "Painel") =>
+  page.getByRole("group", { name: "Modo de exibição" }).getByRole("button", { name, exact: true });
+const panelTab = (page: Page, name: string) =>
+  page.getByRole("tablist", { name: "Abas do painel" }).getByRole("tab", { name, exact: true });
+
+async function expectTab(page: Page, name: string) {
+  await expect(panelTab(page, name)).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tablist", { name: "Abas do painel" }).locator('[role="tab"][aria-selected="true"]')).toHaveCount(1);
+}
+
+/** R1: no máximo duas superfícies de conteúdo; dock tático/gaveta antigos não existem. */
+async function expectAtMostTwoSurfaces(page: Page) {
+  const visible = await page.evaluate(() =>
+    Array.from(document.querySelectorAll('[aria-label="Chat da aventura"], [aria-label="Painel de contexto"], .tactical-dock, aside.hud'))
+      .filter((el) => (el as HTMLElement).offsetParent !== null).length);
+  expect(visible).toBeGreaterThanOrEqual(1);
+  expect(visible).toBeLessThanOrEqual(2);
+  await expect(page.locator(".tactical-dock, aside.hud")).toHaveCount(0);
+}
+
+async function expectNoOverflow(page: Page) {
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+}
+
+async function relogInto(page: Page, backend: { authenticated: boolean }, name: string) {
+  backend.authenticated = false;
+  await page.evaluate(() => window.dispatchEvent(new Event("rpg:auth-expired")));
+  await expect(page.getByRole("heading", { name: "Retorne à fogueira" })).toBeVisible();
+  await page.getByLabel("E-mail").fill("ayla@example.test"); await page.getByLabel("Senha").fill("segredo-valoria");
+  await page.getByRole("button", { name: "Entrar" }).click();
+  await page.getByRole("button", { name: new RegExp(`^${name}`) }).click();
+  await expect(page.getByText(name, { exact: true }).first()).toBeVisible();
+}
+
+test("F17 workspace_modes", async ({ page, backend }) => {
+  // Jornada longa (vários modos/viewports/reloads): orçamento de tempo próprio, mesmos asserts.
+  test.setTimeout(90_000);
+  await page.setViewportSize(DESKTOP);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const state = backend.states.get("game-a")!;
+  state.player_stats.pending_choices = [{ id: "level-2", level: 2, kind: "attribute" }];
+  state.player_stats.level_up = { pending: state.player_stats.pending_choices };
+  await openGame(page);
+
+  // R16: overlay cobre o viewport, prende o foco e não altera o workspace.
+  const overlay = page.getByRole("dialog");
+  await expect(overlay).toContainText("Nível 2 alcançado");
+  const cover = (await overlay.boundingBox())!;
+  expect(cover.width).toBeGreaterThanOrEqual(DESKTOP.width - 10);
+  for (let i = 0; i < 8; i++) await page.keyboard.press("Tab");
+  expect(await page.evaluate(() => !!document.activeElement?.closest('[role="dialog"]'))).toBe(true);
+  await page.keyboard.press("Escape");
+  await expect(overlay).toHaveCount(0);
+
+  // R2: primeiro uso do save em ≥1100px abre split 50/50.
+  await expect(chatRegion(page)).toBeVisible(); await expect(contextRegion(page)).toBeVisible();
+  await expect(modeButton(page, "Dividido")).toHaveAttribute("aria-pressed", "true");
+  await expect(divider(page)).toHaveAttribute("aria-orientation", "vertical");
+  await expect(divider(page)).toHaveAttribute("aria-valuenow", "50");
+  const [c0, x0] = [(await chatRegion(page).boundingBox())!, (await contextRegion(page).boundingBox())!];
+  expect(Math.abs(c0.width - x0.width) / (c0.width + x0.width)).toBeLessThan(0.06);
+  await expectAtMostTwoSurfaces(page);
+
+  // R3: divisor por teclado — passos, limites mínimos em px e retorno a 50%.
+  const sep = divider(page);
+  await sep.focus();
+  await page.keyboard.press("ArrowRight"); await expect(sep).toHaveAttribute("aria-valuenow", "55");
+  await page.keyboard.press("Shift+ArrowLeft"); await expect(sep).toHaveAttribute("aria-valuenow", "45");
+  await page.keyboard.press("ArrowLeft"); await expect(sep).toHaveAttribute("aria-valuenow", "40");
+  await page.keyboard.press("Home");
+  await expect(sep).toHaveAttribute("aria-valuenow", (await sep.getAttribute("aria-valuemin"))!);
+  expect((await chatRegion(page).boundingBox())!.width).toBeGreaterThanOrEqual(379);
+  await page.keyboard.press("End");
+  const max = Number(await sep.getAttribute("aria-valuemax"));
+  await expect(sep).toHaveAttribute("aria-valuenow", String(max));
+  expect((await contextRegion(page).boundingBox())!.width).toBeGreaterThanOrEqual(359);
+  await page.keyboard.press("Enter"); await expect(sep).toHaveAttribute("aria-valuenow", "50");
+
+  // R3: divisor por ponteiro (~35%) e clique nas superfícies não move o divisor.
+  const handle = (await sep.boundingBox())!;
+  const wsBox = (await page.locator(".ws").boundingBox())!;
+  await page.mouse.move(handle.x + handle.width / 2, handle.y + 150);
+  await page.mouse.down();
+  await page.mouse.move(wsBox.x + wsBox.width * 0.35, handle.y + 170, { steps: 6 });
+  await page.mouse.up();
+  const dragged = Number(await sep.getAttribute("aria-valuenow"));
+  expect(dragged).toBeGreaterThanOrEqual(31); expect(dragged).toBeLessThanOrEqual(39);
+  await panelTab(page, "Mapa").click();
+  await chatRegion(page).click({ position: { x: 30, y: 200 } });
+  await expect(sep).toHaveAttribute("aria-valuenow", String(dragged));
+
+  // R1: chat solo e painel solo; composer sempre visível; nunca três regiões.
+  await modeButton(page, "Chat").click();
+  await expect(modeButton(page, "Chat")).toHaveAttribute("aria-pressed", "true");
+  await expect(contextRegion(page)).toBeHidden(); await expect(divider(page)).toHaveCount(0);
+  await expect(composerBox(page)).toBeVisible(); await expectAtMostTwoSurfaces(page);
+  await modeButton(page, "Painel").click();
+  await expect(modeButton(page, "Painel")).toHaveAttribute("aria-pressed", "true");
+  await expect(chatRegion(page)).toBeHidden(); await expect(contextRegion(page)).toBeVisible();
+  await expect(composerBox(page)).toBeVisible(); await expectAtMostTwoSurfaces(page);
+  await modeButton(page, "Dividido").click();
+  await expect(divider(page)).toHaveAttribute("aria-valuenow", String(dragged));
+
+  // R9: reload restaura modo, proporção e aba do save.
+  await page.reload(); await page.getByRole("button", { name: /^Ayla/ }).click();
+  await expect(modeButton(page, "Dividido")).toHaveAttribute("aria-pressed", "true");
+  await expect(divider(page)).toHaveAttribute("aria-valuenow", String(dragged));
+  await expectTab(page, "Mapa");
+
+  // R12: abaixo de 1100px só uma superfície, sem modo Dividido e sem overflow.
+  for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 768, height: 1024 }]) {
+    await page.setViewportSize(viewport);
+    await expect(modeButton(page, "Dividido")).toHaveCount(0);
+    await expect(divider(page)).toHaveCount(0);
+    expect((await chatRegion(page).isVisible()) !== (await contextRegion(page).isVisible())).toBe(true);
+    await expect(composerBox(page)).toBeVisible();
+    await expectNoOverflow(page);
+  }
+  await page.setViewportSize(DESKTOP);
+  await expect(divider(page)).toHaveAttribute("aria-valuenow", String(dragged));
+  await expectNoOverflow(page);
+
+  // R17: laboratório abre em split com Combate e não consulta o Codex da campanha.
+  state.combat_simulation = { enabled: true, finished: false, outcome: null } as typeof state.combat_simulation;
+  state.combat.active = true; state.combat.round = 1; state.combat.cards = state.player_stats.cards;
+  state.combat.enemies = [{ id: "e1", name: "Saqueador", hp: 6, max_hp: 6, vitalidade: 6, max_vitalidade: 6, esquiva: 9, protecao: 0, integridade_atual: null, integridade_max: null, recursos_visiveis: {}, conditions: [], revealed_cards: [], revealed_resistances: [] }];
+  state.player_stats.pending_choices = []; state.player_stats.level_up = { pending: [] };
+  const codexBefore = backend.requests.filter((r) => r.path === "/game/codex").length;
+  await page.reload(); await page.getByRole("button", { name: /^Ayla/ }).click();
+  await expectTab(page, "Combate");
+  await expect(divider(page)).toBeVisible();
+  await expect(page.locator("#ws-panel-combate").getByRole("heading", { name: "Sua mão" })).toBeVisible();
+  await panelTab(page, "Codex").click();
+  await expect(page.locator("#ws-panel-codex").getByText(/Laboratório de combate: sem campanha/)).toBeVisible();
+  await panelTab(page, "Bestiário").click(); await panelTab(page, "Mapa").click();
+  await expect(page.locator("#ws-panel-mapa").getByText(/Laboratório de combate: sem campanha/)).toBeVisible();
+  expect(backend.requests.filter((r) => r.path === "/game/codex").length).toBe(codexBefore);
+  await expectAtMostTwoSurfaces(page);
+  await assertA11y(page);
+});
+
+test("F18 tabs_history", async ({ page }) => {
+  // Jornada longa (vários modos/viewports/reloads): orçamento de tempo próprio, mesmos asserts.
+  test.setTimeout(90_000);
+  await page.setViewportSize(DESKTOP);
+  await openGame(page);
+  const tablist = page.getByRole("tablist", { name: "Abas do painel" });
+  await expect(tablist.getByRole("tab")).toHaveText(["Codex", "Personagem", "Combate", "Bestiário", "Mapa"]);
+  for (const [name, id] of [["Codex", "codex"], ["Personagem", "personagem"], ["Combate", "combate"], ["Bestiário", "bestiario"], ["Mapa", "mapa"]]) {
+    await expect(panelTab(page, name)).toHaveAttribute("aria-controls", `ws-panel-${id}`);
+    await expect(page.locator(`#ws-panel-${id}`)).toHaveAttribute("role", "tabpanel");
+  }
+  await expectTab(page, "Personagem");
+  const back = page.getByRole("button", { name: "Voltar para a aba anterior" });
+  const forward = page.getByRole("button", { name: "Avançar para a próxima aba" });
+  await expect(back).toBeDisabled(); await expect(forward).toBeDisabled();
+
+  // R4: foco roving por setas/Home/End.
+  await panelTab(page, "Personagem").focus();
+  await page.keyboard.press("ArrowRight"); await expectTab(page, "Combate"); await expect(panelTab(page, "Combate")).toBeFocused();
+  await page.keyboard.press("ArrowLeft"); await expectTab(page, "Personagem"); await expect(panelTab(page, "Personagem")).toBeFocused();
+  await page.keyboard.press("End"); await expectTab(page, "Mapa"); await expect(panelTab(page, "Mapa")).toBeFocused();
+  await expect(page.getByRole("button", { name: "Brumalta" })).toBeVisible();
+  await page.keyboard.press("Home"); await expectTab(page, "Codex"); await expect(panelTab(page, "Codex")).toBeFocused();
+
+  // R6: histórico tipo navegador — Personagem → Combate → Personagem → Mapa → Codex.
+  await back.click(); await expectTab(page, "Mapa");
+  await back.click(); await expectTab(page, "Personagem");
+  await forward.click(); await expectTab(page, "Mapa");
+  await forward.click(); await expectTab(page, "Codex");
+  await expect(forward).toBeDisabled();
+  // Navegar depois de voltar descarta o "avançar".
+  await back.click(); await expectTab(page, "Mapa");
+  await panelTab(page, "Bestiário").click(); await expectTab(page, "Bestiário");
+  await expect(forward).toBeDisabled();
+  await panelTab(page, "Bestiário").focus();
+  await page.keyboard.press("Alt+ArrowLeft"); await expectTab(page, "Mapa");
+  await page.keyboard.press("Alt+ArrowRight"); await expectTab(page, "Bestiário");
+
+  // Atalhos não disparam dentro do composer (exceto Esc e Ctrl+1) e não sujam o texto.
+  await composerBox(page).fill("rascunho");
+  await composerBox(page).focus();
+  await page.keyboard.press("Alt+ArrowLeft"); await page.keyboard.press("Control+3");
+  await expectTab(page, "Bestiário");
+  await expect(composerBox(page)).toHaveValue("rascunho");
+
+  // Ctrl+1 → chat solo, inclusive a partir do composer.
+  await page.keyboard.press("Control+1");
+  await expect(contextRegion(page)).toBeHidden(); await expect(modeButton(page, "Chat")).toHaveAttribute("aria-pressed", "true");
+  // Ctrl+2..6 abrem a aba N (e trazem o painel de volta).
+  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+  for (const [key, name] of [["2", "Codex"], ["3", "Personagem"], ["4", "Combate"], ["5", "Bestiário"], ["6", "Mapa"]]) {
+    await page.keyboard.press(`Control+${key}`);
+    await expectTab(page, name); await expect(contextRegion(page)).toBeVisible();
+  }
+  // Ctrl+\ alterna split ↔ último modo solo (painel, aqui).
+  await modeButton(page, "Painel").click(); await modeButton(page, "Dividido").click();
+  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+  await page.keyboard.press("Control+\\");
+  await expect(modeButton(page, "Painel")).toHaveAttribute("aria-pressed", "true"); await expect(chatRegion(page)).toBeHidden();
+  await page.keyboard.press("Control+\\");
+  await expect(modeButton(page, "Dividido")).toHaveAttribute("aria-pressed", "true"); await expect(divider(page)).toBeVisible();
+
+  // Esc no painel devolve foco ao composer sem mudar modo nem aba.
+  await panelTab(page, "Mapa").focus();
+  await page.keyboard.press("Escape");
+  await expect(composerBox(page)).toBeFocused();
+  await expect(modeButton(page, "Dividido")).toHaveAttribute("aria-pressed", "true");
+  await expectTab(page, "Mapa");
+  await expect(composerBox(page)).toHaveValue("rascunho");
+  await assertA11y(page);
+});
+
+test("F19 workspace_preservation", async ({ page, backend }) => {
+  // Jornada longa (vários modos/viewports/reloads): orçamento de tempo próprio, mesmos asserts.
+  test.setTimeout(90_000);
+  await page.setViewportSize(DESKTOP);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const history = backend.histories.get("game-a")!;
+  for (let i = 1; i <= 30; i++) {
+    history.push({ id: `f19-p${i}`, turn: i, epoch: 1, role: "player", text: `Passo antigo ${i}`, type: "STORY" });
+    history.push({ id: `f19-n${i}`, turn: i, epoch: 1, role: "narrator", text: `Registro extenso ${i}. `.repeat(12), type: "STORY" });
+  }
+  backend.delayStream();
+  await openGame(page);
+  await panelTab(page, "Mapa").click();
+
+  // Ação em voo (SSE pendente) + rascunho novo + scroll fora do fim.
+  await submitAction(page, "Ação lenta de Ayla");
+  await expect.poll(() => backend.requests.filter((r) => r.path === "/game/action/stream").length).toBe(1);
+  const pendingKeys = () => page.evaluate(() => Object.keys(localStorage).filter((k) => k.startsWith("valoria:pending")).sort());
+  const pendingBefore = await pendingKeys();
+  expect(pendingBefore).toHaveLength(1);
+  const draft = "Rascunho de Ayla ainda não enviado";
+  await composerBox(page).fill(draft);
+  const story = page.getByRole("region", { name: "Narrativa" });
+  await story.evaluate((el) => { el.scrollTop = 240; el.dispatchEvent(new Event("scroll")); });
+  expect(await story.evaluate((el) => el.scrollHeight - el.clientHeight - el.scrollTop)).toBeGreaterThan(200);
+
+  // R7: 10 trocas de aba/modo não tocam rascunho, scroll nem a operação pendente.
+  const steps: Array<["tab" | "mode", string]> = [["tab", "Codex"], ["mode", "Painel"], ["tab", "Combate"], ["mode", "Chat"],
+    ["mode", "Dividido"], ["tab", "Bestiário"], ["tab", "Personagem"], ["mode", "Painel"], ["tab", "Mapa"], ["mode", "Dividido"]];
+  for (const [kind, name] of steps) {
+    if (kind === "tab") await panelTab(page, name).click();
+    else await modeButton(page, name as "Chat" | "Dividido" | "Painel").click();
+  }
+  await expect(composerBox(page)).toHaveValue(draft);
+  expect(await story.evaluate((el) => el.scrollTop)).toBe(240);
+  expect(await pendingKeys()).toEqual(pendingBefore);
+  await expect(page.getByRole("button", { name: "Agir" })).toHaveAttribute("aria-busy", "true");
+  // Foco: Esc no painel volta ao composer com o rascunho intacto.
+  await panelTab(page, "Mapa").focus(); await page.keyboard.press("Escape");
+  await expect(composerBox(page)).toBeFocused(); await expect(composerBox(page)).toHaveValue(draft);
+
+  // R8: trocar de jogo com SSE pendente não vaza rascunho, aba nem scroll.
+  await relogInto(page, backend, "Breno");
+  await expect(composerBox(page)).toHaveValue("");
+  await expectTab(page, "Personagem");
+  await expect(page.getByText("Breno observa Brumalta.")).toBeVisible();
+  expect(await page.getByRole("region", { name: "Narrativa" }).evaluate((el) => el.scrollTop)).toBeLessThan(240);
+  backend.releaseStream();
+  await expect.poll(() => backend.histories.get("game-a")!.some((e) => e.text === "Ação lenta de Ayla")).toBe(true);
+  await expect(page.getByText("O mundo responde a: Ação lenta de Ayla")).toHaveCount(0);
+  await expect(page.getByText("Ação lenta de Ayla", { exact: true })).toHaveCount(0);
+
+  // Voltar ao jogo anterior na mesma página restaura o rascunho e a aba dele.
+  await relogInto(page, backend, "Ayla");
+  await expect(composerBox(page)).toHaveValue(draft);
+  await expectTab(page, "Mapa");
+  await expect(page.getByText("Ação lenta de Ayla", { exact: true })).toHaveCount(1);
+  // §8 P3: rascunho nunca em disco; layout sim, por owner+game.
+  const stored = await page.evaluate(() => Object.entries(localStorage).map(([k, v]) => `${k}=${v}`).join("|"));
+  expect(stored).not.toContain(draft);
+  expect(stored).toContain("valoria:workspace:v1:fixture-user:game-a");
+  await expectNoOverflow(page);
   await assertA11y(page);
 });
