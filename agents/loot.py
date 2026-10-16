@@ -250,7 +250,7 @@ def loot_node(state: GameState):
             },
         }
         # SPEC-226 R10: ganho (venda) / gasto (compra/craft) individual no baseline.
-        _bl = record_gain(state.get("turn_baseline"), "gold", delta)
+        _bl = record_gain(state.get("turn_baseline"), "gold", delta, "loot")
         if _bl is not state.get("turn_baseline"):
             result["turn_baseline"] = _bl
         # Fase 6.2: posse de item único muda de mãos → evento do motor na fila
@@ -321,7 +321,7 @@ def loot_node(state: GameState):
     }
     if conflict_summary:
         result["conflict_summary"] = conflict_summary
-    _bl = record_gain(state.get("turn_baseline"), "gold", int(roll["gold"]))  # SPEC-226 R10
+    _bl = record_gain(state.get("turn_baseline"), "gold", int(roll["gold"]), "loot")  # SPEC-226 R10
     if _bl is not state.get("turn_baseline"):
         result["turn_baseline"] = _bl
     if unique_events:

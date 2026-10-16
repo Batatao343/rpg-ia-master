@@ -72,18 +72,17 @@ def test_lifecycle_oracle_does_not_trust_the_guard_decision() -> None:
 
 
 def test_receipt_marker_is_not_authority_and_render_is_idempotent() -> None:
+    # SPEC-199 R3: o recibo numerico saiu da prosa (vai em turn_outcome).
     outcome = {"gold_delta": 20}
     text = render_player_message("Uma pista surgiu.\n[RESULTADO] Nada mudou.", outcome)
-    assert "+20 ouro" in text and "Nada mudou" not in text
+    assert "Nada mudou" not in text and "[RESULTADO]" not in text and "+20" not in text
     assert "Uma pista surgiu" in text
-    assert text.count("[RESULTADO]") == 1
     assert render_player_message(text, outcome) == text
 
 
 def test_gold_gain_does_not_contradict_no_item_gain() -> None:
     text = render_player_message("Nenhum item foi obtido.", {"gold_delta": 20})
     assert "Nenhum item foi obtido." in text
-    assert "+20 ouro" in text
 
 
 @pytest.mark.parametrize("text", [

@@ -459,6 +459,15 @@ export interface PartyMember {
   status: string; // "ativo" | "morto"
 }
 
+export interface TurnOutcome {
+  receipt_id: string; turn: number;
+  xp_delta: number; level_delta: number; level_after?: number;
+  gold_delta: number;
+  items_gained: { id: string; name: string; qty: number }[];
+  quests_completed: { id: string; title: string }[];
+  source: "combat" | "loot" | "story" | "quest" | "exploration" | "mixed" | "none";
+}
+
 export interface GameResponse {
   timeline_epoch?: number;
   art_offers?: { offer_id: string; type: "npc" | "scene" }[];
@@ -485,6 +494,7 @@ export interface GameResponse {
   death?: DeathView;
   continuity?: ContinuityView;
   combat_simulation: CombatSimulationMeta;
+  turn_outcome?: Partial<TurnOutcome>;  // {} quando não há ganho
   visual: VisualResponse;
 }
 

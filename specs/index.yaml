@@ -3503,7 +3503,7 @@ specs:
   lineage_note: Imported approved v5 package; implementation not started
 - id: SPEC-199
   slug: combate-xp-fora-da-prosa
-  status: draft
+  status: done
   path: specs/SPEC-199-combate-xp-fora-da-prosa.md
   created_commit: null
   created_at: '2026-10-15'

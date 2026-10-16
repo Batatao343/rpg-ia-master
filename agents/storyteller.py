@@ -373,7 +373,8 @@ def storyteller_node(state: GameState):
             discovery_player = _pl
             turn_bl = record_gain(turn_bl, "gold",
                                   int(_pl.get("gold", 0) or 0)
-                                  - int((state.get("player") or {}).get("gold", 0) or 0))
+                                  - int((state.get("player") or {}).get("gold", 0) or 0),
+                                  "exploration")
         if travel_periods == 0:
             travel_note = (
                 f"O jogador ENTROU em {dest['name']} (mesma cidade — o tempo não passou). "
@@ -533,7 +534,7 @@ def storyteller_node(state: GameState):
                 )
                 rested_player = new_p  # reusa o encanamento de player existente
                 turn_bl = record_gain(turn_bl, "xp", int(new_p.get("xp", 0) or 0)
-                                      - int(base_p.get("xp", 0) or 0))
+                                      - int(base_p.get("xp", 0) or 0), "exploration")
                 world_note = "ENCONTRO NA ESTRADA (armadilha — números JÁ resolvidos, narre-os):\n" \
                     + "\n".join(trap_logs)
                 if info:
@@ -857,7 +858,7 @@ def storyteller_node(state: GameState):
                       else discovery_player if discovery_player is not None
                       else dict(state.get("player") or {}))
             leveled_player, level_up_events = grant_xp(base_p, XP_PER_BEAT)
-            turn_bl = record_gain(turn_bl, "xp", XP_PER_BEAT)
+            turn_bl = record_gain(turn_bl, "xp", XP_PER_BEAT, "beat")
         if beat_done:
             beats[current_step] = {**beats[current_step], "status": "done"}
             new_step = current_step + 1

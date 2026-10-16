@@ -991,7 +991,8 @@ def combat_node(state: GameState):
         if xp:
             player, level_up_events = pg.grant_xp(player, xp)
             kill_xp = xp
-            logs.append(f"+{xp} XP" + (f" — NÍVEL {player['level']}!" if level_up_events else ""))
+            # SPEC-199 R1: XP/nível NÃO entram em `logs` (nem na prosa/fallbacks);
+            # chegam à UI por `last_turn_outcome` -> `turn_outcome`.
 
     # ---- Narração ----
     from services import prose_guard
@@ -1070,7 +1071,7 @@ def combat_node(state: GameState):
         result["bestiary_knowledge"] = bestiary_knowledge
     if kill_xp:
         from services.turn_outcome import record_gain
-        _bl = record_gain(state.get("turn_baseline"), "xp", kill_xp)
+        _bl = record_gain(state.get("turn_baseline"), "xp", kill_xp, "combat")
         if _bl is not state.get("turn_baseline"):
             result["turn_baseline"] = _bl
 

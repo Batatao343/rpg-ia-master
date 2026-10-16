@@ -87,7 +87,8 @@ def test_recompensa_tardia_de_quest_reconcilia_a_mesma_resposta(turn):
     outcome = finalize_outcome(after)
     message = outcome["player_message"]
     assert "nada novo" not in message.casefold()
-    assert "+20 ouro" in message and "+100 XP" in message
+    assert "XP" not in message and "ouro" not in message  # SPEC-199: numeros em turn_outcome
+    assert outcome["gold_delta"] == 20 and outcome["xp_delta"] == 100
     assert outcome["quests_completed"] == ["q1"]
     assert player_facing_message({**after, "last_turn_outcome": outcome}) == message
     assert finalize_outcome({**after, "last_turn_outcome": outcome})["receipt_id"] == outcome["receipt_id"]
@@ -168,7 +169,7 @@ def test_resultado_e_progresso_de_interacao_sobrevivem_save_load():
 
     assert loaded["last_turn_outcome"] == state["last_turn_outcome"]
     assert loaded["last_interaction_outcome"] == state["last_interaction_outcome"]
-    assert player_facing_message(loaded).endswith("+20 ouro")
+    assert player_facing_message(loaded) == "Missão concluída."  # SPEC-199 R7: strip legado
     legacy = _raw_to_state({**raw, "last_turn_outcome": None,
                             "last_interaction_outcome": None})
     assert legacy["last_turn_outcome"] == {}

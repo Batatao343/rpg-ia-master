@@ -1094,6 +1094,7 @@ class GameResponse(BaseModel):
     death: Dict[str, Any] = {}  # conflito-16: Última Ação/Terminal/estabilização
     continuity: Dict[str, Any] = {}
     combat_simulation: Dict[str, Any] = {}
+    turn_outcome: Dict[str, Any] = {}  # SPEC-199: ganhos do turno (XP/ouro/itens/missões)
     visual: VisualResponse
 
 # --- HELPER: FORMATA RESPOSTA ---
@@ -1129,7 +1130,10 @@ def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> Gam
             "defeat" if state.get("death_pending") else
             "victory" if not active else None
         )
+    from services.turn_outcome import public_outcome
+    turn_outcome = {} if simulation.get("enabled") else public_outcome(state.get("last_turn_outcome"))
     return GameResponse(
+        turn_outcome=turn_outcome,
         timeline_epoch=int((state.get('continuity') or {}).get('timeline_epoch', 0)),
         portrait_generation_id=next((str(row['generation_id'])
             for row in reversed(state.get('art_generation_ledger') or [])

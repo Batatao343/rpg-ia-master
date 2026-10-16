@@ -370,9 +370,9 @@ def process_pending_events(state: Dict) -> Dict:
         from services.turn_outcome import record_gain
         bl = state.get("turn_baseline")
         for _ in range(quests_completed):
-            bl = record_gain(bl, "xp", XP_PER_QUEST)
+            bl = record_gain(bl, "xp", XP_PER_QUEST, "quest")
         for _ in range(quests_completed if quest_reward_gold else 0):
-            bl = record_gain(bl, "gold", quest_reward_gold // quests_completed)
+            bl = record_gain(bl, "gold", quest_reward_gold // quests_completed, "quest")
         if bl is not state.get("turn_baseline"):
             updates["turn_baseline"] = bl
         for prop in lvl_props:

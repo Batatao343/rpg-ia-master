@@ -1,6 +1,6 @@
 # SPEC-199 — XP e números de recompensa fora da prosa do narrador
 
-> **Status:** `draft`
+> **Status:** `done`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** SPEC-226 `done` (quantidade de XP correta antes de projetar o evento) · SPEC-144 e SPEC-077 `done` são evoluídas, não reabertas. R12 (cura no inimigo) foi transferido para a SPEC-232 (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-203, SPEC-205, SPEC-212 (ordem final 2026-10-15)
@@ -41,7 +41,7 @@ Objetivo: (1) nenhum número de recompensa (XP, nível ganho, ouro/itens/quests 
 - **R9** — [R] Fallbacks determinísticos sem números de recompensa: `_narrate_fall` e o fallback de `_narrate` não contêm XP/nível/ouro/itens-quantidade. Linhas de dano em `logs` permanecem nesta spec (decisão D-A, seção 8).
 - **R10** — [R] Inventário de vazamentos entregue na etapa 1 em `docs/spec199/README.md`: todo ponto que concatena número mecânico de recompensa na mensagem (`combat`, `loot` compra/venda/saque, `storyteller` beat/armadilha, `event_processor` quest), classificado "corrigido aqui" ou "adiado + spec sugerida". Corrigido aqui: combate + recibo `[RESULTADO]`. Linhas `[SISTEMA]` do `loot` seguem D-B.
 - **R11** — [R] Modo simulação (`combat_simulation`) não concede XP (já `not is_simulation`) e o `turn_outcome` fica `{}`.
-- **R12** — [F] Bug confirmado por leitura de código (coordenador, 2026-10-15): carta benéfica (`efeito.kind` em `_default_card_target`, ex.: `cura`) jogada pela UI sem `target_id` recebe o 1º inimigo ativo em `api.py::_apply_action_options` (~l.3178); `agents/combat.py` (~l.843) só troca alvo inválido, e o inimigo é válido — a cura vai para o inimigo (`services/conflict_turn.py::_resolve_support_card`). Correção aqui: o default de alvo para `kind=card` usa `_default_card_target(card, primeiro_inimigo)` também na borda da API; teste de reprodução primeiro (carta de cura sem alvo → Vitalidade do jogador sobe, do inimigo não). Isto antecipa o R12 de reprodução da SPEC-205, que passa a apenas verificar a regressão.
+- **R12** — [MOVIDO PARA SPEC-232, ja na main; nao implementado aqui] Bug confirmado por leitura de código (coordenador, 2026-10-15): carta benéfica (`efeito.kind` em `_default_card_target`, ex.: `cura`) jogada pela UI sem `target_id` recebe o 1º inimigo ativo em `api.py::_apply_action_options` (~l.3178); `agents/combat.py` (~l.843) só troca alvo inválido, e o inimigo é válido — a cura vai para o inimigo (`services/conflict_turn.py::_resolve_support_card`). Correção aqui: o default de alvo para `kind=card` usa `_default_card_target(card, primeiro_inimigo)` também na borda da API; teste de reprodução primeiro (carta de cura sem alvo → Vitalidade do jogador sobe, do inimigo não). Isto antecipa o R12 de reprodução da SPEC-205, que passa a apenas verificar a regressão.
 
 > **Nota de escopo (revisão 2026-10-15):** R12 é um bug de alvo de carta, não de XP; entra
 > aqui por ser pequeno, já reproduzido em leitura de código e bloquear o playtest de combate.
@@ -157,22 +157,22 @@ export interface TurnOutcome {
 
 ## 5. Critérios de aceite
 
-- [ ] Prompt de `_narrate`, `_narrate_fall` e fallbacks não contêm XP, nível ganho, ouro nem itens-quantidade de recompensa (R1, R9).
-- [ ] Mensagem do chat (POST e chunks SSE) não contém `[RESULTADO]` nem `+N XP` em turno com ganho (R3, R5).
-- [ ] `GameResponse.turn_outcome` presente em POST, SSE `state` e `/game/state`, idêntico entre POST e SSE (R4, R5).
-- [ ] Replay com mesmo `action_id`: um único grant de XP, mesmo `receipt_id` (R6).
-- [ ] Round-trip de save com `last_turn_outcome`, e save legado sem o campo / com `[RESULTADO]` no texto (R7).
-- [ ] Chip mostra XP/nível/ouro/itens/missões uma vez por `receipt_id`, `aria-live`, sem nova biblioteca e sem alterar layout (R8).
-- [ ] Nenhuma mudança de regra de XP; testes de progressão existentes intocados e verdes.
-- [ ] Carta benéfica sem `target_id` pela API afeta o jogador; carta ofensiva sem alvo segue o 1º
+- [x] Prompt de `_narrate`, `_narrate_fall` e fallbacks não contêm XP, nível ganho, ouro nem itens-quantidade de recompensa (R1, R9).
+- [x] Mensagem do chat (POST e chunks SSE) não contém `[RESULTADO]` nem `+N XP` em turno com ganho (R3, R5).
+- [x] `GameResponse.turn_outcome` presente em POST, SSE `state` e `/game/state`, idêntico entre POST e SSE (R4, R5).
+- [x] Replay com mesmo `action_id`: um único grant de XP, mesmo `receipt_id` (R6).
+- [x] Round-trip de save com `last_turn_outcome`, e save legado sem o campo / com `[RESULTADO]` no texto (R7).
+- [x] Chip mostra XP/nível/ouro/itens/missões uma vez por `receipt_id`, `aria-live`, sem nova biblioteca e sem alterar layout (R8).
+- [x] Nenhuma mudança de regra de XP; testes de progressão existentes intocados e verdes.
+- [x] Carta benéfica sem `target_id` pela API afeta o jogador; carta ofensiva sem alvo segue o 1º
       inimigo ativo; `target_id` explícito preservado (R12, Etapa 5b).
-- [ ] **Contrato compartilhado:** `turn_outcome` (`PublicOutcome`) é o único "evento de
+- [x] **Contrato compartilhado:** `turn_outcome` (`PublicOutcome`) é o único "evento de
       recompensa/XP" para SPEC-203 (`combat_result.xp_event_ref = receipt_id`), SPEC-205,
       SPEC-209 e SPEC-212; nenhuma delas cria campo paralelo de XP.
-- [ ] `docs/spec199/README.md` com inventário R10 e D-B resolvido.
-- [ ] `uv run pytest` verde (suíte completa offline); `npm run build` verde; Ruff verde.
-- [ ] Saves antigos continuam carregando.
-- [ ] Nenhum `with_structured_output` novo (sem guard adicional).
+- [x] `docs/spec199/README.md` com inventário R10 e D-B resolvido.
+- [x] `uv run pytest` verde (suíte completa offline); `npm run build` verde; Ruff verde.
+- [x] Saves antigos continuam carregando.
+- [x] Nenhum `with_structured_output` novo (sem guard adicional).
 
 ## 6. Smoke test
 

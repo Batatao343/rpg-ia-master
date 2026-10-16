@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import type { ActionOptions, GameResponse, LogEntry } from "../types";
+import type { ActionOptions, GameResponse, LogEntry, TurnOutcome } from "../types";
 import { StoryLog } from "./StoryLog";
 import { Hud } from "./Hud";
+import { OutcomeToast } from "./OutcomeToast";
 import { LevelUpModal, type LevelUpPick } from "./LevelUpModal";
 import { OnboardingHint, onboardingDismissed } from "./OnboardingHint";
 import { CardHand } from "./CardHand";
@@ -147,6 +148,7 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
       <div className="stage">
         <div className="narrative-stage">
           <SceneArtwork scene={data?.visual?.scene} />
+          <OutcomeToast outcome={data?.turn_outcome?.receipt_id ? (data.turn_outcome as TurnOutcome) : null} />
           <StoryLog entries={log} thinking={thinking} thinkingLabel={thinkingLabel} />
         </div>
         <Hud data={data} open={hudOpen} onEquip={onEquip} busy={busy}

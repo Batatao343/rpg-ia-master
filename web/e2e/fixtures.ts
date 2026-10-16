@@ -127,6 +127,11 @@ export class DeterministicBackend {
       current.quest.side = current.quest.side.map((q) => ({ ...q, status: "completed", resolved_turn: current.world.turn_count }));
       current.quest.main.current_step = 1; current.message = "Os rastros revelam a passagem secreta.";
     } else current.message = `O mundo responde a: ${input}`;
+    if (/vitória/i.test(input)) {  // SPEC-199: turno com ganho estruturado
+      current.message = "O último saqueador cai.";
+      current.turn_outcome = { receipt_id: `rc-${current.world.turn_count}`, turn: current.world.turn_count,
+        xp_delta: 50, level_delta: 0, gold_delta: 0, items_gained: [], quests_completed: [], source: "combat" };
+    }
     this.states.set(gid, current);
     const history = this.histories.get(gid) ?? [];
     const turn = current.world.turn_count;
