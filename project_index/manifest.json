@@ -1,11 +1,11 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "85d10ef5332b69d8286f539211670cdcbfcdc85b",
+  "commit_sha": "27518042861bafbf49d103c6e4c14f87b670ecdd",
   "edge_counts": {
-    "calls": 10811,
-    "contains": 524,
-    "defines": 6471,
-    "imports": 1093,
+    "calls": 10819,
+    "contains": 525,
+    "defines": 6474,
+    "imports": 1097,
     "likely_test_for": 661,
     "route_to": 58
   },
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:ee3186ca531235fcfed0f6a75f29d430c80bf40f38f1384e9bb333803368f0fe",
+  "graph_hash": "sha256:0a31275a26e55cc69532ffb15656e29b92f8823b03e1718377e2e9c38ababfc5",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -208,6 +208,7 @@
     "scripts/staging/account_deletion_recovery.py",
     "scripts/staging/auth_config.py",
     "scripts/staging/backup_restore.py",
+    "scripts/staging/browser_voice_smoke.py",
     "scripts/staging/common.py",
     "scripts/staging/e2e_session.py",
     "scripts/staging/incident_drill.py",
@@ -654,12 +655,12 @@
     "artifact": 9,
     "class": 587,
     "endpoint": 58,
-    "file": 598,
-    "function": 2047,
+    "file": 599,
+    "function": 2050,
     "method": 593,
-    "module": 524,
+    "module": 525,
     "test": 3244
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:d58b473e8a73e5ae599d328155ea18178ae1bd8906ae4961f720458c12318b8e"
+  "source_tree_hash": "sha256:4d5069db2c37fea45a46afac7f284c0fd0e9824c50242e4d70ca0f224b3b7d74"
 }

@@ -1,5 +1,5 @@
 {
-  "commit_sha": "85d10ef5332b69d8286f539211670cdcbfcdc85b",
+  "commit_sha": "27518042861bafbf49d103c6e4c14f87b670ecdd",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -2276,6 +2276,17 @@
       },
       "source": "file:scripts/staging/backup_restore.py",
       "target": "module:scripts.staging.backup_restore",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 1
+      },
+      "source": "file:scripts/staging/browser_voice_smoke.py",
+      "target": "module:scripts.staging.browser_voice_smoke",
       "type": "contains"
     },
     {
@@ -30733,6 +30744,83 @@
       },
       "source": "module:scripts.staging.backup_restore",
       "target": "symbol:scripts.staging.backup_restore.verify",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 15
+      },
+      "source": "module:scripts.staging.browser_voice_smoke",
+      "target": "module:scripts.staging",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 16
+      },
+      "source": "module:scripts.staging.browser_voice_smoke",
+      "target": "module:scripts.staging.synthetic_data",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 17
+      },
+      "source": "module:scripts.staging.browser_voice_smoke",
+      "target": "module:scripts.staging.two_user_smoke",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 18
+      },
+      "source": "module:scripts.staging.browser_voice_smoke",
+      "target": "module:scripts.staging.voice_smoke",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 23
+      },
+      "source": "module:scripts.staging.browser_voice_smoke",
+      "target": "symbol:scripts.staging.browser_voice_smoke._chrome",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 107
+      },
+      "source": "module:scripts.staging.browser_voice_smoke",
+      "target": "symbol:scripts.staging.browser_voice_smoke.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 31
+      },
+      "source": "module:scripts.staging.browser_voice_smoke",
+      "target": "symbol:scripts.staging.browser_voice_smoke.run",
       "type": "defines"
     },
     {
@@ -118348,6 +118436,94 @@
       },
       "source": "symbol:scripts.staging.backup_restore.verify",
       "target": "symbol:scripts.staging.backup_restore.list_objects",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 112
+      },
+      "source": "symbol:scripts.staging.browser_voice_smoke.main",
+      "target": "symbol:scripts.staging.browser_voice_smoke.run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 112
+      },
+      "source": "symbol:scripts.staging.browser_voice_smoke.main",
+      "target": "symbol:scripts.staging.s192.load_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 57
+      },
+      "source": "symbol:scripts.staging.browser_voice_smoke.run",
+      "target": "symbol:scripts.staging.browser_voice_smoke._chrome",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 36
+      },
+      "source": "symbol:scripts.staging.browser_voice_smoke.run",
+      "target": "symbol:scripts.staging.s192.Admin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 37
+      },
+      "source": "symbol:scripts.staging.browser_voice_smoke.run",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 44
+      },
+      "source": "symbol:scripts.staging.browser_voice_smoke.run",
+      "target": "symbol:scripts.staging.synthetic_data.seed_wallet_prereqs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 39
+      },
+      "source": "symbol:scripts.staging.browser_voice_smoke.run",
+      "target": "symbol:scripts.staging.two_user_smoke.User",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/browser_voice_smoke.py",
+        "line": 54
+      },
+      "source": "symbol:scripts.staging.browser_voice_smoke.run",
+      "target": "symbol:scripts.staging.voice_smoke.synthetic_wav",
       "type": "calls"
     },
     {
@@ -217405,6 +217581,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:scripts/staging/browser_voice_smoke.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/staging/browser_voice_smoke.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:scripts/staging/common.py",
       "kind": "file",
       "line": 1,
@@ -221498,6 +221681,13 @@
       "line": 1,
       "path": "scripts/staging/backup_restore.py",
       "qualified_name": "scripts.staging.backup_restore"
+    },
+    {
+      "id": "module:scripts.staging.browser_voice_smoke",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/staging/browser_voice_smoke.py",
+      "qualified_name": "scripts.staging.browser_voice_smoke"
     },
     {
       "id": "module:scripts.staging.common",
@@ -236611,6 +236801,27 @@
       "line": 202,
       "path": "scripts/staging/backup_restore.py",
       "qualified_name": "scripts.staging.backup_restore.verify"
+    },
+    {
+      "id": "symbol:scripts.staging.browser_voice_smoke._chrome",
+      "kind": "function",
+      "line": 23,
+      "path": "scripts/staging/browser_voice_smoke.py",
+      "qualified_name": "scripts.staging.browser_voice_smoke._chrome"
+    },
+    {
+      "id": "symbol:scripts.staging.browser_voice_smoke.main",
+      "kind": "function",
+      "line": 107,
+      "path": "scripts/staging/browser_voice_smoke.py",
+      "qualified_name": "scripts.staging.browser_voice_smoke.main"
+    },
+    {
+      "id": "symbol:scripts.staging.browser_voice_smoke.run",
+      "kind": "function",
+      "line": 31,
+      "path": "scripts/staging/browser_voice_smoke.py",
+      "qualified_name": "scripts.staging.browser_voice_smoke.run"
     },
     {
       "id": "symbol:scripts.staging.common.GuardError",
@@ -269423,5 +269634,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:d58b473e8a73e5ae599d328155ea18178ae1bd8906ae4961f720458c12318b8e"
+  "source_tree_hash": "sha256:4d5069db2c37fea45a46afac7f284c0fd0e9824c50242e4d70ca0f224b3b7d74"
 }
