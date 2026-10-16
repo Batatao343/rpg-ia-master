@@ -1,6 +1,8 @@
 # SPEC-198 — Publicação Google Play
 
 > **Status:** `in-progress`
+
+> **16/10 — aguardando o usuário (decisão explícita: "deixa awaiting").** Toda a parte autônoma está entregue e publicada; o fechamento depende apenas dos insumos listados em [decision-request](../docs/spec197/decision-request.md) (contas pagas, chaves, dados jurídicos, Play Console/package ID/service account e go/no-go). Retomar a partir dessa lista.
 > **Depende de:** SPEC-197 `done`
 > **EXECUTOR_MODEL obrigatório:** `Terra`
 > **EXECUTOR_EFFORT obrigatório:** `High`
