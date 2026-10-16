@@ -6,7 +6,9 @@ import { playAdapter } from "./purchases";
 import { installNativeLifecycle } from "./native/lifecycle";
 import { decideBack } from "./native/backPolicy";
 import { safeStorage } from "./safeStorage";
-import { preparePending, loadPending, clearPending, clearOwner, shouldClearPending, type PendingOperation } from "./pendingOperation";
+import { preparePending, loadPending, clearPending, clearOwner as clearPendingOwner, shouldClearPending, type PendingOperation } from "./pendingOperation";
+import { clearWorkspaceOwner } from "./workspace/workspaceStorage";
+import { forgetAllChatSessions } from "./workspace/chatSessionStore";
 import { looksDegraded, speakerFromHistory } from "./lib";
 import type { ActionOptions, CombatSimulatorPayload, GameResponse, CreatePayload, LogEntry, SaveSummary } from "./types";
 import { Banner, type BannerState } from "./components/Banner";
@@ -23,6 +25,13 @@ import { AccountScreen, shards } from "./components/AccountScreen";
 import { ImageQuoteDialog } from "./components/ImageQuoteDialog";
 import { GeneratedArtCard } from "./components/GeneratedArtCard";
 import { TurnLatencyTracker, reportClientLatency } from "./lib/turnLatency";
+
+/** Logout/troca de dono: pendências, layout do workspace e rascunhos em memória (SPEC-204 R9). */
+function clearOwner(owner: string) {
+  clearPendingOwner(owner);
+  clearWorkspaceOwner(owner);
+  forgetAllChatSessions();
+}
 
 const LS_KEY = "cronicas_game_id";
 
@@ -867,6 +876,7 @@ export function App() {
               onLogout={authRequired ? handleLogout : undefined}
               onAccount={authRequired ? () => { accountReturn.current = "play"; setScreen("account"); } : undefined}
               accountBalance={accountBalance}
+              owner={renderedOwner}
             />
           </motion.div>
         )}

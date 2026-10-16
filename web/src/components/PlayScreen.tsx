@@ -1,27 +1,9 @@
-import { useEffect, useState } from "react";
-import type { ActionOptions, GameResponse, LogEntry, TurnOutcome } from "../types";
-import { StoryLog } from "./StoryLog";
-import { Hud } from "./Hud";
-import { OutcomeToast } from "./OutcomeToast";
-import { CombatOutcomePanel } from "./CombatOutcomePanel";
-import { resultFrom, shouldShowResult } from "../combatOutcome";
+import { useEffect, useRef, useState } from "react";
+import type { ActionOptions, GameResponse, LogEntry } from "../types";
 import { LevelUpModal, type LevelUpPick } from "./LevelUpModal";
-import { OnboardingHint, onboardingDismissed } from "./OnboardingHint";
-import { CardHand } from "./CardHand";
-import { ReactionPrompt } from "./ReactionPrompt";
-import { SceneZones } from "./SceneZones";
-import { WoundTrack } from "./WoundTrack";
-import { SceneArtwork } from "./SceneArtwork";
 import { shards } from "./AccountScreen";
-import { useVoiceInput } from "../voice/useVoiceInput";
-
-const TACTICAL_MANEUVERS = [
-  { label: "Engajar", kind: "maneuver" as const, maneuver: "engajar" as const },
-  { label: "Guardar", kind: "maneuver" as const, maneuver: "guardar" as const },
-  { label: "Esconder-se", kind: "maneuver" as const, maneuver: "esconder" as const },
-  { label: "Procurar", kind: "maneuver" as const, maneuver: "procurar" as const },
-  { label: "Fugir", kind: "flee" as const },
-];
+import { Workspace, type WorkspaceHandle } from "../workspace/Workspace";
+import { useModalFocus } from "../workspace/useModalFocus";
 
 interface Props {
   data: GameResponse | null;
@@ -36,18 +18,16 @@ interface Props {
   onLogout?: () => void;
   onAccount?: () => void;
   accountBalance?: string | null;
+  /** Dono da sessão: escopo da preferência de layout (SPEC-204 R9). */
+  owner?: string;
 }
 
-export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction, onNew, onLevelUp, onEquip, onLogout, onAccount, accountBalance }: Props) {
-  const [input, setInput] = useState("");
-  const voice = useVoiceInput(text => setInput(current => current ? `${current}${/\s$/.test(current) ? "" : " "}${text}` : text), data?.game_id);
-  const voiceActive = voice.requesting || ["recording", "uploading", "transcribing"].includes(voice.phase);
-  const [hudOpen, setHudOpen] = useState(false);
+/** SPEC-204: orquestrador da tela de jogo — topbar + workspace (chat + UM painel)
+ *  + overlays. Controles táticos vivem só na aba Combate do workspace. */
+export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction, onNew, onLevelUp, onEquip, onLogout, onAccount, accountBalance, owner = "legacy" }: Props) {
   const [luDismissed, setLuDismissed] = useState(false);
   const [reading, setReading] = useState(false); // memorial: ler a crônica
-  const [reactionCardId, setReactionCardId] = useState<string | undefined>();
-  // SPEC-203 R8: "Continuar" fecha só o painel (estado local; reload o reexibe).
-  const [dismissedResult, setDismissedResult] = useState<string | null>(null);
+  const workspace = useRef<WorkspaceHandle>(null);
 
   const w = data?.world;
   // spec itens-vivos-e-luz: chip de luz no relógio (escuro sem fonte / iluminado).
@@ -59,46 +39,18 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
   const clock = (w?.period ? `Dia ${w.day} · ${w.period}` : "Dia 1 · Amanhecer")
     + (w?.weather ? ` · ${w.weather}` : "")
     + lightChip;
-  // spec mapa-sublocais: interiores do local atual + saída quando dentro de um
-  const interiorsHere = w?.interiors?.here ?? [];
-  const exitTo = w?.interiors?.exit_to ?? null;
   const gameOver = !!data?.game_over;
   const deathPending = !!data?.death_pending;
   const simulation = !!data?.combat_simulation?.enabled;
   const simulationFinished = simulation && !!data?.combat_simulation?.finished;
   const blocked = gameOver || deathPending || simulationFinished;
   const fighting = !!data?.combat?.active;
-  const combat = data?.combat;
-  const maneuvers = fighting && !blocked
-    ? (simulation
-      ? [{ label: "Ataque básico", kind: "attack" as const }, ...TACTICAL_MANEUVERS]
-      : TACTICAL_MANEUVERS)
-    : [];
-  // spec polish-sessao (R6): onboarding no 1º turno (dismissible por jogo)
-  const showOnboard =
-    !simulation && !blocked && (data?.world?.turn_count ?? 99) <= 1
-    && !onboardingDismissed(data?.game_id ?? null);
 
   // Fase 4.1: escolha pendente reabre o modal quando MUDA (novo level up).
   const pending = data?.player_stats?.pending_choices ?? [];
   const pendingKey = pending[0]?.id ?? "";
   useEffect(() => setLuDismissed(false), [pendingKey]);
-  useEffect(() => {
-    const selected = combat?.cards?.find((card) => card.id === reactionCardId);
-    if (reactionCardId && (!selected || !selected.ready)) setReactionCardId(undefined);
-  }, [combat?.cards, reactionCardId]);
   const showLevelUp = pending.length > 0 && !luDismissed && !blocked && !fighting;
-
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (busy || blocked) return;
-    const text = input.trim();
-    if (!text) return;
-    // Explicit text submission cancels any outstanding capture/transcript.
-    if (voiceActive) voice.cancel();
-    setInput("");
-    onAction(text, { reaction_card_id: reactionCardId });
-  }
 
   return (
     <div className={"play" + (fighting ? " is-combat" : "")}>
@@ -115,13 +67,15 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
           </button>}
           {simulation && <span className="laboratory-flag">Laboratório</span>}
           {fighting && <span className="combat-flag">⚔ Combate</span>}
-          {pending.length > 0 && !showLevelUp && !blocked && (
+          {/* Fica montado com o modal aberto: o foco volta a ele ao fechar (R16). */}
+          {pending.length > 0 && !blocked && (
             <button className="iconbtn iconbtn--levelup" type="button"
                     onClick={() => setLuDismissed(false)}>
               ⬆ Nível!
             </button>
           )}
-          <button className="iconbtn" type="button" onClick={() => setHudOpen((v) => !v)}>
+          {/* Atalho para Personagem (SPEC-204): não fecha nem desloca o chat. */}
+          <button className="iconbtn" type="button" onClick={() => workspace.current?.openTab("personagem")}>
             ☰ Ficha
           </button>
           <button className="iconbtn" type="button" disabled={busy} onClick={onNew}>
@@ -132,126 +86,9 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
         </div>
       </header>
 
-      {(interiorsHere.length > 0 || exitTo) && !fighting && !blocked && (
-        <div className="placesbar">
-          {exitTo && (
-            <button className="placechip placechip--exit" type="button" disabled={busy}
-                    onClick={() => onAction(`Saio para ${exitTo.name}`)}>
-              ↩ Sair para {exitTo.name}
-            </button>
-          )}
-          {interiorsHere.map((i) => (
-            <button key={i.id} className="placechip" type="button" disabled={busy}
-                    onClick={() => onAction(`Entro em ${i.name}`)}>
-              ⌂ {i.name}
-            </button>
-          ))}
-        </div>
-      )}
-
-      <div className="stage">
-        <div className="narrative-stage">
-          <SceneArtwork scene={data?.visual?.scene} />
-          <OutcomeToast outcome={data?.turn_outcome?.receipt_id ? (data.turn_outcome as TurnOutcome) : null} />
-          {(() => {
-            const result = resultFrom(data?.combat_result);
-            return result && shouldShowResult(result, dismissedResult) ? (
-              <CombatOutcomePanel result={result} outcome={data?.turn_outcome}
-                onContinue={() => setDismissedResult(result.result_event_id)} />
-            ) : null;
-          })()}
-          <StoryLog entries={log} thinking={thinking} thinkingLabel={thinkingLabel} />
-        </div>
-        <Hud data={data} open={hudOpen} onEquip={onEquip} busy={busy}
-          onTravel={(locationName) => onAction(`Viajo para ${locationName}`)}
-          onClose={() => setHudOpen(false)} />
-      </div>
-
-      {showOnboard && data?.game_id && <OnboardingHint gameId={data.game_id} />}
-
-      {fighting && combat && !blocked && (
-        <div className="tactical-dock">
-          <CardHand
-            cards={combat.cards}
-            enemies={combat.enemies}
-            busy={busy}
-            reactionCardId={reactionCardId}
-            onPlay={onAction}
-          />
-          <ReactionPrompt
-            cards={combat.cards}
-            selected={reactionCardId}
-            disabled={busy}
-            onSelect={setReactionCardId}
-          />
-          <div className="tactical-dock__status">
-            <WoundTrack wounds={combat.wounds} compact />
-            <SceneZones scene={combat.scene} chase={combat.chase} />
-          </div>
-        </div>
-      )}
-
-      {maneuvers.length > 0 && (
-        <div className="actionchips" role="group" aria-label="Manobras táticas">
-          {maneuvers.map((maneuver) => (
-            <button key={maneuver.label} className="actionchip" type="button" disabled={busy}
-                    onClick={() => onAction(maneuver.label, {
-                      action_kind: maneuver.kind,
-                      maneuver: "maneuver" in maneuver ? maneuver.maneuver : undefined,
-                      reaction_card_id: reactionCardId,
-                    })}>
-              {maneuver.label}
-            </button>
-          ))}
-        </div>
-      )}
-
-      <form className="actionbar" onSubmit={submit}>
-        <div className="actionbar__composer">
-        <input
-          type="text"
-          aria-label="Sua ação"
-          autoComplete="off"
-          disabled={blocked}
-          placeholder={
-            gameOver
-              ? "Memorial — a crônica permanece."
-              : simulationFinished
-                ? "Simulação encerrada."
-              : deathPending
-                ? "A Roda do Abismo aguarda sua escolha."
-              : fighting
-                ? simulation
-                  ? "Texto livre executa um ataque básico; use os controles para ações precisas."
-                  : "O inimigo avança — o que você faz?"
-                : "O que você faz?  (ex.: examino a porta, ataco o vulto, pergunto sobre o rei)"
-          }
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button className="btn voice-button" type="button"
-          disabled={blocked || (voice.phase !== "recording" && (busy || voiceActive))}
-          aria-label={voice.phase === "recording" ? "Parar gravação" : "Gravar ação por voz"}
-          aria-pressed={voice.phase === "recording"}
-          onClick={voice.phase === "recording" ? voice.stop : voice.start}>
-          {voice.phase === "recording" ? "Parar" : "Voz"}
-        </button>
-        <button className="btn btn--primary" type="submit" disabled={busy || blocked} aria-label="Agir">
-          {busy ? "…" : fighting ? "Lutar" : "Agir"}
-        </button>
-        </div>
-        <div className="voice-status" data-voice-state={voice.phase}>
-          <span role={voice.phase === "error" ? "alert" : "status"} aria-live="polite" aria-atomic="true">
-            {voice.message}
-          </span>
-          {voice.phase === "recording" && <span className="voice-timer" aria-label="Tempo de gravação">
-            {String(voice.seconds).padStart(2, "0")} / 60 s
-          </span>}
-          {voiceActive && <button type="button" className="iconbtn" onClick={voice.cancel}>
-            Cancelar voz
-          </button>}
-        </div>
-      </form>
+      <Workspace key={data?.game_id ?? "sem-jogo"} ref={workspace} owner={owner} data={data} log={log}
+        thinking={thinking} thinkingLabel={thinkingLabel} busy={busy} blocked={blocked}
+        onAction={onAction} onEquip={onEquip} />
 
       {showLevelUp && data && (
         <LevelUpModal
@@ -264,7 +101,7 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
       )}
 
       {simulationFinished && (
-        <div className="overlay simulation-result" role="dialog" aria-modal="true" aria-labelledby="simulation-result-title">
+        <ModalOverlay className="overlay simulation-result" labelledBy="simulation-result-title">
           <div className="overlay__inner">
             <p className="kicker">Laboratório encerrado</p>
             <p id="simulation-result-title" className="overlay__big">
@@ -277,25 +114,36 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
               Configurar nova simulação
             </button>
           </div>
-        </div>
+        </ModalOverlay>
       )}
 
       {gameOver && !reading && !simulation && (
-        <div className="overlay">
+        <ModalOverlay className="overlay" labelledBy="game-over-title">
           <div className="overlay__inner">
-            <p className="overlay__big">VOCÊ MORREU</p>
+            <p id="game-over-title" className="overlay__big">VOCÊ MORREU</p>
             <p className="muted">O fio do destino se rompeu.</p>
             <button className="btn btn--primary" type="button" onClick={onNew}>
               Começar de novo
             </button>
-            {/* spec polish-sessao (R3): memorial abre em modo leitura */}
+            {/* spec polish-sessao (R3): memorial abre em modo leitura — Codex › Crônica */}
             <button className="btn" type="button"
-                    onClick={() => { setReading(true); setHudOpen(true); }}>
+                    onClick={() => { setReading(true); workspace.current?.openTab("codex", { codexSection: "cronica" }); }}>
               Ler a crônica
             </button>
           </div>
-        </div>
+        </ModalOverlay>
       )}
+    </div>
+  );
+}
+
+/** Overlay modal de viewport inteiro com foco preso e devolvido (SPEC-204 R16). */
+function ModalOverlay({ className, labelledBy, children }: { className: string; labelledBy: string; children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useModalFocus(ref);
+  return (
+    <div ref={ref} className={className} role="dialog" aria-modal="true" aria-labelledby={labelledBy} tabIndex={-1}>
+      {children}
     </div>
   );
 }

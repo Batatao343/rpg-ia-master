@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useModalFocus } from "../workspace/useModalFocus";
 import { motion } from "motion/react";
 import type { EligibleAbility, PlayerStats } from "../types";
 
@@ -27,6 +28,9 @@ export function LevelUpModal({ player, busy, onChoose, onLater }: Props) {
   const choice = player.pending_choices[0];
   const lu = player.level_up ?? {};
   const [picked, setPicked] = useState<LevelUpPick | null>(null);
+  const overlay = useRef<HTMLDivElement>(null);
+  // SPEC-204 R16 / SPEC-201 A09: foco preso no diálogo; Esc = "mais tarde".
+  useModalFocus(overlay, onLater);
   if (!choice) return null;
 
   const isCard = choice.kind === "carta" || choice.kind === "ability";
@@ -40,12 +44,13 @@ export function LevelUpModal({ player, busy, onChoose, onLater }: Props) {
       : isCard ? "Expanda seu Acervo" : "Fortaleça uma Virtude";
 
   return (
-    <div className="overlay overlay--levelup" role="dialog" aria-modal="true">
+    <div ref={overlay} className="overlay overlay--levelup" role="dialog" aria-modal="true"
+      aria-labelledby="lvlup-title" tabIndex={-1}>
       <motion.div className="lvlup" initial={{ opacity: 0, y: 14, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}>
         <p className="lvlup__kicker">Nível {choice.level} alcançado</p>
-        <h2 className="lvlup__title">{title}</h2>
+        <h2 id="lvlup-title" className="lvlup__title">{title}</h2>
 
         {isSubclass ? (
           <div className="lvlup__groups">

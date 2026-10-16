@@ -175,8 +175,9 @@ def test_frontend_contract_contains_visual_flow():
     app = (root / "App.tsx").read_text(encoding="utf-8")
     create = (root / "components" / "CreateScreen.tsx").read_text(encoding="utf-8")
     story = (root / "components" / "StoryLog.tsx").read_text(encoding="utf-8")
-    play = (root / "components" / "PlayScreen.tsx").read_text(encoding="utf-8")
+    # SPEC-204: a arte de cena vive na superfície do chat do workspace.
+    chat = (root / "workspace" / "ChatSurface.tsx").read_text(encoding="utf-8")
     assert "visual: r.visual?.cue" in app
     assert "visuals?.races" in create and "visuals?.classes" in create
     assert "VisualArtwork" in story
-    assert "SceneArtwork" in play
+    assert "SceneArtwork" in chat

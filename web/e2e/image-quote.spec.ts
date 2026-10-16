@@ -56,6 +56,8 @@ for (const width of [390, 1440]) {
     expect(confirmed).toHaveLength(1);
     expect(confirmed[0]).toMatchObject({ quote_id: quoteId, confirmed: true });
     expect(confirmed[0].action_id).toMatch(/^[0-9a-f-]{36}$/);
+    // SPEC-204: abaixo de 1100px o painel Personagem é uma superfície própria (não gaveta oculta).
+    if (width < 1100) await page.getByRole("button", { name: /Ficha/ }).click();
     await expect(page.getByRole("img", { name: "Retrato do personagem" })).toBeVisible();
     await expect(page.getByText(/Resultado financeiro incerto/)).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);

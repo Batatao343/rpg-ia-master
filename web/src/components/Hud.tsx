@@ -1,128 +1,31 @@
 import { useEffect, useRef, useState } from "react";
-import { GeneratedPortrait } from './GeneratedPortrait';
 import { mdLite, pct, prettyItem } from "../lib";
 import { searchChronicle } from "../api";
 import type { ChronicleChapter, ChronicleSearchHit, CombatBlock, Condition, FactionView, GameResponse, NpcView } from "../types";
-import { CodexTab } from "./CodexTab";
-import { QuestsTab } from "./QuestsTab";
-import { WorldMap } from "./WorldMap";
-import { Medallion } from "./ornaments";
 import { SceneZones } from "./SceneZones";
 import { WoundTrack } from "./WoundTrack";
 
-type Tab = "ficha" | "combate" | "personagens" | "mapa" | "faccoes" | "missoes" | "cronica" | "codex";
+export type EquipFn = (pick: { item_id?: string; unequip_slot?: string }) => void;
 
-type EquipFn = (pick: { item_id?: string; unequip_slot?: string }) => void;
+/* SPEC-204: o antigo <aside class="hud"> com tablist própria e auto-troca por
+   combate deixou de existir. Este módulo agora só exporta os painéis, montados
+   pelas abas do workspace (web/src/workspace/). */
 
-export function Hud({ data, open, onEquip, busy, onTravel, onClose }: {
-  data: GameResponse | null; open: boolean; onEquip?: EquipFn; busy?: boolean;
-  onTravel?: (locationName: string) => void;
-  onClose?: () => void;
-}) {
-  const p = data?.player_stats;
-  const sub = [p?.class_name, p?.race].filter(Boolean).join(" · ") || "—";
-  const fighting = !!data?.combat?.active;
-
-  const [tab, setTab] = useState<Tab>("ficha");
-
-  // auto-troca: entra na luta → Combate; sai da luta → Ficha.
-  const wasFighting = useRef(false);
-  useEffect(() => {
-    if (fighting && !wasFighting.current) setTab("combate");
-    if (!fighting && wasFighting.current) setTab("ficha");
-    wasFighting.current = fighting;
-  }, [fighting]);
-
-  // ênfase de dano: queda de Vitalidade do herói entre turnos.
+/** Ênfase de dano: incrementa quando a Vitalidade do herói cai entre turnos. */
+export function useVitalityHit(vitality: number | undefined): number {
   const prevVitality = useRef<number | null>(null);
   const [vitalityHit, setVitalityHit] = useState(0);
   useEffect(() => {
-    const vitality = p?.vitalidade;
     if (vitality == null) return;
     if (prevVitality.current != null && vitality < prevVitality.current) {
       setVitalityHit((n) => n + 1);
     }
     prevVitality.current = vitality;
-  }, [p?.vitalidade]);
-
-  const tabs: Array<[Tab, string]> = [
-    ["ficha", "Ficha"],
-    ["combate", "Combate"],
-    ["personagens", "Pessoas"],
-    ["mapa", "Mapa"],
-    ["faccoes", "Fações"],
-    ["missoes", "Missões"],
-    ["cronica", "Crônica"],
-    ["codex", "Codex"],
-  ];
-
-  return (
-    <aside className={"hud" + (open ? " is-open" : "")} aria-label="Ficha do personagem">
-      <div className="hud__head">
-        <span className="hud__medallion"><Medallion size={36} /></span>
-        <div className="hud__id">
-          <p className="hud__name">{p?.name || "—"}</p>
-          <p className="hud__sub">{sub}</p>
-        </div>
-        {onClose && <button type="button" className="hud__close iconbtn"
-          aria-label="Fechar ficha" onClick={onClose}>×</button>}
-      </div>
-
-      <nav className="tabs" role="tablist">
-        {tabs.map(([id, label]) => (
-          <button
-            key={id}
-            role="tab"
-            aria-selected={tab === id}
-            className={
-              "tab" +
-              (tab === id ? " is-active" : "") +
-              (id === "combate" ? " is-combat" + (fighting ? " has-fight" : "") : "")
-            }
-            onClick={() => setTab(id)}
-          >
-            {label}
-          </button>
-        ))}
-      </nav>
-
-      <div className="tabpanel" role="tabpanel" tabIndex={0}>
-        {tab === 'ficha' && data?.portrait_generation_id && <GeneratedPortrait
-          key={`${data.game_id}:${data.portrait_generation_id}`}
-          gameId={data.game_id} generationId={data.portrait_generation_id} />}
-        {tab === "ficha" && <FichaTab data={data} hpHitKey={vitalityHit} onEquip={onEquip} busy={busy} />}
-        {tab === "combate" && <CombatTab c={data?.combat} hitKey={vitalityHit} party={data?.party ?? []} />}
-        {tab === "personagens" && <PeopleTab npcs={data?.npcs ?? []} />}
-        {tab === "mapa" && (
-          <div>
-            <p className="hud__label">Mapa do mundo</p>
-            <WorldMap
-              visited={data?.world.visited ?? []}
-              currentId={data?.world.location_id ?? ""}
-              controlled={data?.world.controlled ?? {}}
-              dangerOverrides={data?.world.danger_overrides ?? {}}
-              markers={data?.quest.markers ?? []}
-              overlays={data?.world.map_overlays}
-              currentTurn={data?.world.turn_count ?? 0}
-              blockedRoutes={data?.world.blocked_routes ?? []}
-              onTravel={(location) => onTravel?.(location.name)}
-            />
-          </div>
-        )}
-        {tab === "faccoes" && <FactionsTab factions={data?.factions ?? []} />}
-        {tab === "missoes" && <QuestsTab quest={data?.quest} />}
-        {tab === "cronica" && (
-          <ChronicleTab chapters={data?.chronicle ?? []} gameId={data?.game_id} />
-        )}
-        {tab === "codex" && (
-          <CodexTab gameId={data?.game_id} turnCount={data?.world.turn_count} open={tab === "codex"} />
-        )}
-      </div>
-    </aside>
-  );
+  }, [vitality]);
+  return vitalityHit;
 }
 
-function FichaTab({ data, hpHitKey, onEquip, busy }: {
+export function FichaTab({ data, hpHitKey, onEquip, busy }: {
   data: GameResponse | null; hpHitKey: number; onEquip?: EquipFn; busy?: boolean;
 }) {
   const p = data?.player_stats;
@@ -217,7 +120,7 @@ function FichaTab({ data, hpHitKey, onEquip, busy }: {
   );
 }
 
-function PeopleTab({ npcs }: { npcs: NpcView[] }) {
+export function PeopleTab({ npcs }: { npcs: NpcView[] }) {
   if (!npcs.length) {
     return (
       <div>
@@ -271,7 +174,7 @@ function ReputationSparkline({ history }: { history: FactionView["history"] }) {
   );
 }
 
-function FactionsTab({ factions }: { factions: FactionView[] }) {
+export function FactionsTab({ factions }: { factions: FactionView[] }) {
   if (!factions.length) {
     return (
       <div>
@@ -334,7 +237,7 @@ function FactionsTab({ factions }: { factions: FactionView[] }) {
   );
 }
 
-function ChronicleTab({ chapters, gameId }: { chapters: ChronicleChapter[]; gameId?: string }) {
+export function ChronicleTab({ chapters, gameId }: { chapters: ChronicleChapter[]; gameId?: string }) {
   const [query, setQuery] = useState("");
   const [hits, setHits] = useState<ChronicleSearchHit[]>([]);
   const [searchMode, setSearchMode] = useState<string>("");
@@ -447,7 +350,7 @@ function ChronicleTab({ chapters, gameId }: { chapters: ChronicleChapter[]; game
   );
 }
 
-function PartyBars({ party }: { party: import("../types").PartyMember[] }) {
+export function PartyBars({ party }: { party: import("../types").PartyMember[] }) {
   const shown = party;
   if (!shown.length) return null;
   return (
@@ -471,7 +374,7 @@ function PartyBars({ party }: { party: import("../types").PartyMember[] }) {
   );
 }
 
-function CombatTab({ c, hitKey, party }: {
+export function CombatTab({ c, hitKey, party }: {
   c: CombatBlock | undefined; hitKey: number; party: import("../types").PartyMember[];
 }) {
   if (!c || !c.active || !c.enemies.length) {

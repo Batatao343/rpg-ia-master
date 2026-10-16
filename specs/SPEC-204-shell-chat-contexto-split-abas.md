@@ -1,7 +1,7 @@
 # SPEC-204 — Shell chat + contexto: split view e cinco abas navegáveis
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `in-progress` (implementação entregue; faltam autoria de eval F07/F17–F19, revisão Sol independente e smoke §6 — ver §10)
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-201 `done` (matriz de efeitos — informa, não bloqueia layout), SPEC-235 `done` (ciclo de ação pendente confiável) · SPEC-172 `done` (F01–F16), SPEC-077 `done` (contrato tático evoluído sem mudar API) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-205, SPEC-208, SPEC-209, SPEC-210, SPEC-211, SPEC-212, SPEC-216 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 02
@@ -148,20 +148,20 @@ Pré-condição: tarefa de eval separada (EVAL_AUTHORING_REQUIRED) entregou F17�
 
 ## 5. Critérios de aceite
 
-- [ ] Desktop 1440×900: chat solo, split 50/50, contexto solo, alternância das 5 abas, iniciar/encerrar combate — capturas por estado.
-- [ ] Nenhum DOM com três regiões de conteúdo simultâneas (assert em F17 e F08).
-- [ ] Divisor operável só por teclado e só por ponteiro; limites mínimos respeitados; clique dentro das superfícies não é capturado pelo divisor.
-- [ ] Draft, scroll, foco no composer e `PendingOperation` sobrevivem a 10 trocas de aba/modo (F19).
-- [ ] Troca de jogo com SSE pendente não vaza draft/aba/scroll (F15 + F19).
-- [ ] Reload restaura modo/ratio/aba do save; storage bloqueado não gera `console.error`.
-- [ ] Todo conteúdo das 8 abas antigas acessível (teste de inventário R5).
-- [ ] `CardHand`/`ReactionPrompt`/`SceneZones`/`WoundTrack` renderizam só na aba Combate.
-- [ ] F01–F19 100%; `pageerror`/`console.error`/5xx inesperado = 0; axe serious/critical = 0; overflow = 0 em 320/390/768/1440.
-- [ ] `prefers-reduced-motion: reduce` sem animação de layout.
-- [ ] Level-up, morte, resultado do laboratório e lightbox cobrem o viewport, prendem e devolvem foco, sem alterar o workspace (R16); laboratório de combate abre em split/Combate (R17).
-- [ ] CSS novo só em `web/src/workspace.css`; diff em `styles.css` só remoção.
-- [ ] `npm run build`, `node --test`, `uv run pytest` verdes; nenhum arquivo em `evals/protected-paths.txt` alterado pelo executor.
-- [ ] Nenhuma mudança de API/save (diff em `api.py`, `state.py`, `persistence.py` vazio).
+- [x] Desktop 1440×900: chat solo, split 50/50, contexto solo, alternância das 5 abas, iniciar/encerrar combate — capturas por estado (`docs/spec204/capturas/`).
+- [x] Nenhum DOM com três regiões de conteúdo simultâneas (assert em `workspace-shell.spec.ts`; F17/F08 dependem da eval).
+- [x] Divisor operável só por teclado e só por ponteiro; limites mínimos respeitados; clique dentro das superfícies não é capturado pelo divisor.
+- [x] Draft, scroll, foco no composer e `PendingOperation` sobrevivem a 10 trocas de aba/modo (teste do executor; F19 pendente da eval).
+- [x] Troca de jogo com SSE pendente não vaza draft/aba/scroll (F15 verde + teste do executor; F19 pendente).
+- [x] Reload restaura modo/ratio/aba do save; storage bloqueado não gera `console.error`.
+- [x] Todo conteúdo das 8 abas antigas acessível (teste de inventário R5 em `web/tests/workspaceModel.test.mjs`).
+- [x] `CardHand`/`ReactionPrompt`/`SceneZones`/`WoundTrack` renderizam só na aba Combate.
+- [ ] F01–F19 100% — **F07 vermelha por mudança legítima de seletor** (Pessoas → Codex) e F17–F19 não autoradas: `handoffs/SPEC-204-eval-authoring.md`. pageerror/console.error/5xx = 0, axe serious/critical = 0 e overflow = 0 em 320/390/768/1440 nas jornadas verdes e nos testes do executor.
+- [x] `prefers-reduced-motion: reduce` sem animação de layout.
+- [x] Level-up, morte, resultado do laboratório e lightbox cobrem o viewport, prendem e devolvem foco, sem alterar o workspace (R16); laboratório de combate abre em split/Combate (R17).
+- [x] CSS novo só em `web/src/workspace.css`; diff em `styles.css` só remoção.
+- [x] `npm run build`, `node --test`, `uv run pytest` verdes; nenhum arquivo em `evals/protected-paths.txt` alterado pelo executor.
+- [x] Nenhuma mudança de API/save (diff em `api.py`, `state.py`, `persistence.py` vazio).
 
 ## 6. Smoke
 
@@ -198,3 +198,47 @@ Provider real: não aplicável. Não há structured output novo.
 - `uv run pytest` final (contagem completa) e `git diff --stat` mostrando `styles.css` só com remoções e backend intocado.
 - Handoff da tarefa de eval (F17–F19 + seletores) referenciado, com hash do commit que a fixou antes da implementação.
 - Parecer de revisão Sol independente em `handoffs/SPEC-204-SOL-independent-review.md`.
+
+## 10. Execução (2026-10-16)
+
+Evidência: [`docs/spec204/README.md`](../docs/spec204/README.md). Handoff de eval:
+[`handoffs/SPEC-204-eval-authoring.md`](../handoffs/SPEC-204-eval-authoring.md).
+
+**Defaults de decisão aplicados (§8):** P1 = 5 abas (Codex, Personagem, Combate, Bestiário, Mapa);
+Pessoas, Fações (reputação + registros do Codex) e Crônica viram seções do Codex; Missões vira
+"Jornada · Missões" em Personagem. P2 = barra global mínima (Vitalidade, Entropia, selo "em combate";
+local/relógio seguem no topo); controles táticos só na aba Combate; início de combate abre split
+50/50 com Combate; ao encerrar, a aba Combate permanece com aviso "Combate encerrado". P3 = rascunho
+só em memória (`chatSessionStore`), nunca em disco. P4 = histórico só em memória (sem `pushState`).
+
+**Desvios registrados:**
+- **Ordem de execução:** a tarefa de eval (EVAL_AUTHORING_REQUIRED) não precedeu a implementação;
+  o executor manteve seletores antigos para preservar F01–F16 e escreveu o handoff. Resultado:
+  15/16 verdes; F07 aguarda a eval.
+- **R16 (botão de gaveta ≥ 1100px):** o botão `☰ Ficha` foi mantido em todas as larguras como
+  atalho que abre a aba Personagem (não é mais gaveta nem alterna o chat), para não quebrar F02,
+  F06, F09, F12, F13 e F16. A eval pode removê-lo ≥ 1100px depois de adaptar F16.
+- **Composer:** fica visível em todos os modos (sob o chat no split; largura total em chat/contexto),
+  o que viabiliza `Esc` no painel "devolver foco ao composer sem mudar de modo" (R6).
+- **R12 abaixo de 900px:** a gaveta antiga foi aposentada; abaixo de 1100px o painel ocupa a
+  área do chat (uma superfície por vez), com o composer visível. Preferência `split` fica gravada
+  (`lastSolo` decide a superfície única).
+- **R14:** remoção das regras mortas de `styles.css` (`.stage`, `.hud`/gaveta, `.hud__head`,
+  `.hud__close`, `.tactical-dock*`) feita no mesmo diff de trabalho; o coordenador pode separá-la
+  em commit próprio (só deleções).
+- **Contraste:** `.combat-empty` (`--faint`) falhava axe 4,08:1 no painel; `workspace.css` usa
+  `--muted` dentro dos painéis.
+- **Teste existente ajustado:** `web/e2e/image-quote.spec.ts` (SPEC-188, 390px) abre a Ficha antes
+  de procurar o retrato (antes o HUD oculto contava como "visível"); `tests/test_visual_assets.py`
+  procura `SceneArtwork` em `workspace/ChatSurface.tsx`.
+
+**SPEC-201 aplicada no escopo da shell:** A06/M19 (tablists com foco roving e setas/Home/End —
+painel, Codex e Personagem); A07/M20 (sem auto-troca para Ficha ao fim do combate; aviso
+explícito); A08/M09 (`role="log"` + `aria-live="polite"` + `aria-busy` durante streaming);
+A09/M26 (LevelUp/Morte/laboratório/memorial com foco inicial, Tab preso, retorno de foco,
+`aria-labelledby`; Esc = "mais tarde" no level-up); A13 (botão "Enviando…" + `aria-busy`).
+Fora do escopo da shell e **não** corrigido: A01 (hitbox do Create), A04, A14, A18, A19.
+
+**Pendências para `done`:** (1) eval: F07 adaptada + F17–F19 + relock; (2) revisão Sol
+independente (`handoffs/SPEC-204-SOL-independent-review.md`); (3) ~~smoke §6~~ executado na revisão Sol
+(uvicorn + MockLLM, verde — `docs/spec204/README.md` § Smoke §6).

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, memo, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { mdLite, roleLabel } from "../lib";
 import { useTypewriter } from "../hooks/useTypewriter";
@@ -6,21 +6,57 @@ import type { LogEntry } from "../types";
 import { VisualArtwork } from "./VisualArtwork";
 import { shards } from "./AccountScreen";
 
-export function StoryLog({ entries, thinking, thinkingLabel }: {
+/** Distância (px) do fim considerada "no fim" para o auto-scroll (SPEC-204 R7). */
+const BOTTOM_SLACK = 48;
+
+/** Memoizado (SPEC-204): trocar aba/modo/ratio re-renderiza o Workspace, não a narrativa. */
+export const StoryLog = memo(function StoryLog({ entries, thinking, thinkingLabel, active = true, initialScroll, onScrollPosition }: {
   entries: LogEntry[];
   thinking: boolean;
   thinkingLabel?: string | null;
+  /** Falso quando a superfície do chat está oculta (modo só-contexto). */
+  active?: boolean;
+  initialScroll?: { scrollTop: number | null; atBottom: boolean };
+  onScrollPosition?: (scrollTop: number, atBottom: boolean) => void;
 }) {
   const storyRef = useRef<HTMLElement>(null);
+  const position = useRef({ top: initialScroll?.scrollTop ?? null, atBottom: initialScroll?.atBottom ?? true });
+  const lastEntryId = useRef<number | null>(null);
 
+  // Restaura a posição ao montar e sempre que a superfície volta a aparecer.
+  useLayoutEffect(() => {
+    const s = storyRef.current;
+    if (!s || !active) return;
+    s.scrollTop = position.current.atBottom || position.current.top == null ? s.scrollHeight : position.current.top;
+  }, [active]);
+
+  // Auto-scroll só quando o jogador já está no fim ou acabou de agir.
   useEffect(() => {
     const s = storyRef.current;
-    if (s) s.scrollTop = s.scrollHeight;
-  }, [entries, thinking]);
+    const last = entries[entries.length - 1];
+    const ownNew = !!last && last.role === "player" && last.id !== lastEntryId.current;
+    lastEntryId.current = last?.id ?? null;
+    if (!s || !active) return;
+    if (position.current.atBottom || ownNew) {
+      s.scrollTop = s.scrollHeight;
+      position.current = { top: s.scrollTop, atBottom: true };
+    }
+  }, [entries, thinking, active]);
+
+  function onScroll() {
+    const s = storyRef.current;
+    if (!s || !active || s.clientHeight === 0) return;
+    const atBottom = s.scrollHeight - s.scrollTop - s.clientHeight <= BOTTOM_SLACK;
+    position.current = { top: s.scrollTop, atBottom };
+    onScrollPosition?.(s.scrollTop, atBottom);
+  }
+
+  const streaming = entries.some((entry) => entry.streaming);
 
   return (
-    <section className="story" aria-label="Narrativa" ref={storyRef} tabIndex={0}>
-      <div className="log">
+    <section className="story" aria-label="Narrativa" ref={storyRef} tabIndex={0} onScroll={onScroll}>
+      {/* SPEC-201 A08: um anúncio por bloco novo; aria-busy segura a leitura enquanto o texto escorre. */}
+      <div className="log" role="log" aria-live="polite" aria-relevant="additions" aria-busy={streaming || thinking}>
         {entries.map((e, i) => {
           const prev = entries[i - 1];
           // Fleuron entre dois turnos de narração seguidos: separa beats como
@@ -48,7 +84,7 @@ export function StoryLog({ entries, thinking, thinkingLabel }: {
       )}
     </section>
   );
-}
+});
 
 function LogEntryItem({ entry }: { entry: LogEntry }) {
   const displayedText = useTypewriter(entry.text, entry.streaming, entry.onTypewriterDone);

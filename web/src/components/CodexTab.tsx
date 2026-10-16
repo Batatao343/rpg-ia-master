@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { getCodex } from "../api";
 import { mdLite } from "../lib";
 import type { KnowledgeNote, KnowledgeStamp, PlayerCodex } from "../types";
 import { categoryCount, knowledgeBadgeText, knowledgeTooltip } from "../codexKnowledge";
+import { RovingTablist } from "../workspace/RovingTablist";
 
 type Category = "locations" | "factions" | "characters" | "creatures" | "secrets";
 
@@ -43,66 +44,135 @@ function KnowledgeNotes({ notes }: { notes?: KnowledgeNote[] }) {
   );
 }
 
+/** Seção extra do Codex (SPEC-204 D1): Pessoas, Fações-reputação, Crônica. */
+export interface CodexSection {
+  id: string;
+  label: string;
+  /** Insere a seção logo antes desta categoria (default: no fim). */
+  before?: Category;
+  render: (codex: PlayerCodex | null) => ReactNode;
+}
+
+/** Codex do jogador (`GET /game/codex`) — compartilhado pelas abas Codex e Bestiário. */
+export function usePlayerCodex(gameId: string | null | undefined, turnCount: number | undefined, open: boolean) {
+  const [codex, setCodex] = useState<PlayerCodex | null>(null);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (!open || !gameId) return;
+    let active = true;
+    setLoading(true);
+    getCodex(gameId)
+      .then((value) => { if (active) setCodex(value); })
+      .catch(() => { if (active) setCodex(null); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [open, gameId, turnCount]);
+  return { codex, loading };
+}
+
 export function CodexTab({
   gameId,
   turnCount,
   open,
+  excludeCategories = [],
+  sections = [],
+  unavailable,
+  section,
+  onSection,
 }: {
   gameId: string | null | undefined;
   turnCount: number | undefined;
   open: boolean;
+  excludeCategories?: Category[];
+  sections?: CodexSection[];
+  /** Ex.: laboratório de combate — explica e não consulta a API. */
+  unavailable?: string;
+  /** Seção controlada pelo workspace (ex.: "Ler a crônica" no memorial). */
+  section?: string;
+  onSection?: (id: string) => void;
 }) {
-  const [codex, setCodex] = useState<PlayerCodex | null>(null);
-  const [category, setCategory] = useState<Category>("locations");
-  const [loading, setLoading] = useState(false);
+  const { codex, loading } = usePlayerCodex(gameId, turnCount, open && !unavailable);
+  const categories = CATEGORIES.filter(([id]) => !excludeCategories.includes(id));
+  const order: string[] = [];
+  for (const [id] of categories) {
+    for (const extra of sections) if (extra.before === id) order.push(extra.id);
+    order.push(id);
+  }
+  for (const extra of sections) if (!extra.before) order.push(extra.id);
+  const [ownCategory, setOwnCategory] = useState<string>(order[0] ?? "locations");
+  const category = section && order.includes(section) ? section : ownCategory;
+  const setCategory = (id: string) => { setOwnCategory(id); onSection?.(id); };
 
-  useEffect(() => {
-    if (!open || !gameId) return;
-    setLoading(true);
-    getCodex(gameId)
-      .then(setCodex)
-      .catch(() => setCodex(null))
-      .finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, gameId, turnCount]);
-
-  if (!open) return null;
-
-  if (loading && !codex) {
+  if (unavailable) {
     return (
       <div>
         <p className="hud__label">Codex</p>
-        <p className="combat-empty">Consultando os registros da jornada…</p>
+        <p className="combat-empty">{unavailable}</p>
       </div>
     );
   }
 
-  if (!codex) {
-    return (
-      <div>
-        <p className="hud__label">Codex</p>
-        <p className="combat-empty">Nada registrado ainda — explore o mundo.</p>
-      </div>
-    );
-  }
+  const items = order.map((id) => {
+    const extraSection = sections.find((section) => section.id === id);
+    if (extraSection) return { id, label: extraSection.label };
+    const label = CATEGORIES.find(([cat]) => cat === id)?.[1] ?? id;
+    return { id, label: codex ? `${label} (${categoryCount(codex, id as Category)})` : label };
+  });
+  const extra = sections.find((section) => section.id === category);
 
   return (
     <div>
       <p className="hud__label">Codex do jogador</p>
-      <nav className="codex-cats" role="tablist">
-        {CATEGORIES.map(([id, label]) => (
-          <button
-            key={id}
-            role="tab"
-            aria-selected={category === id}
-            className={"codex-cat" + (category === id ? " is-active" : "")}
-            onClick={() => setCategory(id)}
-          >
-            {label} ({categoryCount(codex, id)})
-          </button>
-        ))}
-      </nav>
+      <RovingTablist items={items} selected={category} onSelect={setCategory}
+        label="Seções do Codex" idPrefix="codex" className="codex-cats" tabClassName="codex-cat" controlsActiveOnly />
+      <div role="tabpanel" id={`codex-panel-${category}`} aria-labelledby={`codex-tab-${category}`} className="codex-section">
+        {extra ? extra.render(codex) : loading && !codex ? (
+          <p className="combat-empty">Consultando os registros da jornada…</p>
+        ) : !codex ? (
+          <p className="combat-empty">Nada registrado ainda — explore o mundo.</p>
+        ) : (
+          <CodexCategory codex={codex} category={category as Category} />
+        )}
+      </div>
+    </div>
+  );
+}
 
+export function CreatureList({ creatures }: { creatures: PlayerCodex["creatures"] }) {
+  if (!creatures.length) return <p className="combat-empty">Nenhuma criatura registrada ainda.</p>;
+  return (
+    <ul className="codex-list codex-list--beasts">
+      {creatures.map((cr) => (
+        <li key={cr.id} className={"codex-entry codex-beast codex-beast--tier" + cr.tier}>
+          <div className="codex-beast__top">
+            <span className="codex-beast__seal" title={cr.tier_name}>{TIER_ROMAN[cr.tier]}</span>
+            <div>
+              <p className="codex-entry__name">{cr.name} <KnowledgeBadge stamp={cr.knowledge} /></p>
+              <p className="codex-entry__meta">{cr.tier_name}{cr.regions?.length ? ` · ${cr.regions.join(", ")}` : ""}</p>
+            </div>
+          </div>
+          {cr.description && <p className="codex-entry__body">{cr.description}</p>}
+          {cr.max_hp != null && (
+            <p className="codex-entry__meta">HP {cr.max_hp} · Defesa {cr.defense}</p>
+          )}
+          {Array.isArray(cr.attacks) && cr.attacks.length > 0 && (
+            <p className="codex-entry__meta">
+              Ataques: {cr.attacks.map((a) => (typeof a === "string" ? a : a.name)).join(", ")}
+            </p>
+          )}
+          {cr.loot && cr.loot.length > 0 && (
+            <p className="codex-entry__meta">Loot: {cr.loot.join(", ")}</p>
+          )}
+          <KnowledgeNotes notes={cr.notes} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export function CodexCategory({ codex, category }: { codex: PlayerCodex; category: Category }) {
+  return (
+    <>
       {category === "locations" && (
         codex.locations.length ? (
           <ul className="codex-list">
@@ -172,38 +242,7 @@ export function CodexTab({
         )
       )}
 
-      {category === "creatures" && (
-        codex.creatures.length ? (
-          <ul className="codex-list codex-list--beasts">
-            {codex.creatures.map((cr) => (
-              <li key={cr.id} className={"codex-entry codex-beast codex-beast--tier" + cr.tier}>
-                <div className="codex-beast__top">
-                  <span className="codex-beast__seal" title={cr.tier_name}>{TIER_ROMAN[cr.tier]}</span>
-                  <div>
-                    <p className="codex-entry__name">{cr.name} <KnowledgeBadge stamp={cr.knowledge} /></p>
-                    <p className="codex-entry__meta">{cr.tier_name}{cr.regions?.length ? ` · ${cr.regions.join(", ")}` : ""}</p>
-                  </div>
-                </div>
-                {cr.description && <p className="codex-entry__body">{cr.description}</p>}
-                {cr.max_hp != null && (
-                  <p className="codex-entry__meta">HP {cr.max_hp} · Defesa {cr.defense}</p>
-                )}
-                {Array.isArray(cr.attacks) && cr.attacks.length > 0 && (
-                  <p className="codex-entry__meta">
-                    Ataques: {cr.attacks.map((a) => (typeof a === "string" ? a : a.name)).join(", ")}
-                  </p>
-                )}
-                {cr.loot && cr.loot.length > 0 && (
-                  <p className="codex-entry__meta">Loot: {cr.loot.join(", ")}</p>
-                )}
-                <KnowledgeNotes notes={cr.notes} />
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="combat-empty">Nenhuma criatura registrada ainda.</p>
-        )
-      )}
+      {category === "creatures" && <CreatureList creatures={codex.creatures} />}
 
       {category === "secrets" && (
         codex.secrets.length ? (
@@ -220,6 +259,6 @@ export function CodexTab({
           <p className="combat-empty">Nenhum segredo revelado ainda.</p>
         )
       )}
-    </div>
+    </>
   );
 }

@@ -1,0 +1,14 @@
+split inicial aria-valuenow=50
+turno 1: draft intacto após Codex/Mapa/Personagem; regiões visíveis=2
+turno 2: draft intacto após Codex/Mapa/Personagem; regiões visíveis=2
+turno 3: draft intacto após Codex/Mapa/Personagem; regiões visíveis=2
+combate iniciado=true
+ao iniciar: modo=split, aba=Combate, ratio=50, foco=BODY, regiões=2
+Carta jogada
+combate encerrado=true; aba Combate ainda selecionada=true; aviso=true
+após teclado: aria-valuenow=70
+após reload SmokeA: aria-valuenow=70
+SmokeB: modo=split, ratio=50, draft="", aba=Personagem
+1024 reduced: draft intacto; modo=chat; transition=1e-05s; overflowX=0; regiões=1
+390: modo=context; overflowX=0; regiões=1
+erros: []

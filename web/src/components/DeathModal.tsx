@@ -1,4 +1,6 @@
+import { useRef } from "react";
 import { motion } from "motion/react";
+import { useModalFocus } from "../workspace/useModalFocus";
 import type { DeathView } from "../types";
 
 interface Props {
@@ -12,6 +14,9 @@ interface Props {
  *  checkpoint (a saga segue, perdendo o progresso desde ali) ou aceitar o fim
  *  (memorial: a crônica encerra). O memorial nunca é imposto; é decisão do jogador. */
 export function DeathModal({ busy, onContinue, onAccept, death }: Props) {
+  const overlay = useRef<HTMLDivElement>(null);
+  // SPEC-204 R16 / SPEC-201 A09: decisão obrigatória — foco preso, sem Esc.
+  useModalFocus(overlay);
   const action = death?.last_action;
   // SPEC-228: sem checkpoint real, "Continuar" daria 409 no_restore_point.
   const noRestorePoint = death != null && death.will_restore_turn === null;
@@ -19,7 +24,8 @@ export function DeathModal({ busy, onContinue, onAccept, death }: Props) {
     ? `Carta ${death?.last_action_label || action.card_id || "desconhecida"}`
     : action?.kind ? action.kind.replace(/_/g, " ") : "não registrada";
   return (
-    <div className="overlay overlay--death" role="dialog" aria-modal="true">
+    <div ref={overlay} className="overlay overlay--death" role="dialog" aria-modal="true"
+      aria-labelledby="death-title" tabIndex={-1}>
       <motion.div
         className="death-card"
         initial={{ opacity: 0, y: 16, scale: 0.98 }}
@@ -27,7 +33,7 @@ export function DeathModal({ busy, onContinue, onAccept, death }: Props) {
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="death-card__sigil" aria-hidden>☠</div>
-        <h2 className="death-card__title">Você tombou</h2>
+        <h2 id="death-title" className="death-card__title">Você tombou</h2>
         <p className="death-card__body">
           A escuridão te engole — mas a Roda do Abismo ainda não decidiu. Voltar ao
           último respiro seguro, ou aceitar o fim aqui?

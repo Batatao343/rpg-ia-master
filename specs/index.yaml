@@ -3592,7 +3592,7 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-204
   slug: shell-chat-contexto-split-abas
-  status: draft
+  status: in-progress
   path: specs/SPEC-204-shell-chat-contexto-split-abas.md
   created_commit: null
   created_at: '2026-10-15'
