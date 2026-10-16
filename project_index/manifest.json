@@ -1,13 +1,13 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "a1dae302402f47f318b4ae05d2454d96158f6014",
+  "commit_sha": "14cc468f6b056ff393ffa0eb1cc90abd3cce1d7a",
   "edge_counts": {
-    "calls": 13406,
-    "contains": 589,
-    "defines": 7805,
-    "imports": 1254,
-    "likely_test_for": 786,
-    "route_to": 59
+    "calls": 13531,
+    "contains": 591,
+    "defines": 7896,
+    "imports": 1260,
+    "likely_test_for": 791,
+    "route_to": 60
   },
   "excluded_prefixes": [
     ".agents",
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:96716f28913c5fdf5886196d021f0ecfffb04f429f194472510c037f9336d4ea",
+  "graph_hash": "sha256:a4b9cc9017c7dbc742a82df74bdde0e7c099f10f2e6549171bc00ddc7451da1c",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -584,6 +584,8 @@
     "tests/test_runtime_profiles.py",
     "tests/test_runtime_role_local.py",
     "tests/test_s3_blob.py",
+    "tests/test_session_hardening.py",
+    "tests/test_session_hardening_local.py",
     "tests/test_shard_pricing.py",
     "tests/test_shard_pricing_local.py",
     "tests/test_speaker_contract.py",
@@ -749,14 +751,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 663,
-    "endpoint": 59,
-    "file": 695,
-    "function": 2449,
-    "method": 654,
-    "module": 589,
-    "test": 4039
+    "class": 668,
+    "endpoint": 60,
+    "file": 697,
+    "function": 2467,
+    "method": 666,
+    "module": 591,
+    "test": 4095
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:681e69972ffa6b0a02acc3f25b6b1dffd9f6096ba828a46d21a3eb86165ec51c"
+  "source_tree_hash": "sha256:cde3982d95c121d5ef26c1bbfbc1fa717f074a65197ce10059daeb6164156073"
 }
