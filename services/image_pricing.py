@@ -8,7 +8,7 @@ from hashlib import sha256
 import json
 from pathlib import Path
 
-from services.shard_pricing import PricingUnavailable
+from services.shard_pricing import PricingUnavailable, rate_card_max_age
 from services.usage_metering import UsageEvent
 
 
@@ -19,7 +19,8 @@ IMAGE_PRICING_VERSION = _CARD["version"] + "-" + sha256(_BYTES).hexdigest()[:16]
 
 def require_image_prices(model: str, at: datetime) -> None:
     observed = datetime.fromisoformat(_CARD["observed_at"])
-    if model != _CARD["model"] or not timedelta(0) <= at.astimezone(timezone.utc) - observed <= timedelta(days=7):
+    age = at.astimezone(timezone.utc) - observed
+    if model != _CARD["model"] or not timedelta(0) <= age <= rate_card_max_age():
         raise PricingUnavailable("image model/rate card unavailable or stale")
 
 

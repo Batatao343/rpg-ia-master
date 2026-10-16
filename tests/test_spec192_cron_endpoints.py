@@ -189,9 +189,23 @@ def test_operations_endpoint(monkeypatch):
                         lambda pool, n: {"orphans_seen": 2, "released": 2})
     monkeypatch.setattr("services.retention.purge_expired",  # SPEC-222 R7
                         lambda pool: {"purged_jobs": 3})
+    # SPEC-236 R4: the same cron also sweeps orphan wallet reservations.
+    monkeypatch.setattr("services.wallet_recovery.recover_wallet_reservations",
+                        lambda pool, n: {"wallet_seen": 1, "wallet_released": 1, "wallet_errors": 0})
     body = client.post("/internal/cron/operations", headers=H).json()
-    assert body["released"] == 2 and body["ok"] is True
+    assert body["released"] == 2 and body["ok"] is True and body["wallet_released"] == 1
     assert body["purged_jobs"] == 3
+
+
+def test_operations_endpoint_reports_wallet_sweep_failure(monkeypatch):
+    monkeypatch.setattr(cron_internal, "_runtime", lambda: _runtime(object()))
+    monkeypatch.setattr("services.operation_recovery.recover_expired",
+                        lambda pool, n: {"orphans_seen": 0, "released": 0})
+    monkeypatch.setattr("services.retention.purge_expired", lambda pool: {"purged_jobs": 0})
+    response = client.post("/internal/cron/operations", headers=H)
+    body = response.json()  # object() pool: the sweep fails, operations result is still reported
+    assert response.status_code == 500 and body["ok"] is False
+    assert body["wallet_sweep_error"] == "AttributeError" and body["released"] == 0
 
 
 def test_security_headers_csp():

@@ -21,7 +21,7 @@ import wave
 
 import httpx
 
-from services.speech_pricing import speech_event
+from services.speech_pricing import is_definitive_no_charge, speech_event
 from services.usage_metering import UsageEvent
 
 MAX_AUDIO_BYTES = 8 * 1024 * 1024
@@ -233,9 +233,15 @@ async def transcribe_audio(payload: bytes, mime: str, operation_id: UUID,
                         reading = await (provider or HttpSpeechProvider()).transcribe(candidate, audio)
                     success = (200 <= reading.status < 300 and isinstance(reading.text, str)
                                and 0 < len(reading.text.strip()) <= MAX_TRANSCRIPT_CHARS)
-                    event = speech_event(operation_id, ordinal, candidate.provider, candidate.model,
-                                         "success" if success else "error", reading.usage,
-                                         duration=duration if 200 <= reading.status < 300 and candidate.provider == "groq" else None)
+                    if is_definitive_no_charge(reading.status):
+                        # SPEC-236 R5: HTTP 4xx/429 received -> provider rejected, no charge.
+                        event = speech_event(operation_id, ordinal, candidate.provider,
+                                             candidate.model, "rejected", {},
+                                             definitive_no_charge=True)
+                    else:
+                        event = speech_event(operation_id, ordinal, candidate.provider, candidate.model,
+                                             "success" if success else "error", reading.usage,
+                                             duration=duration if 200 <= reading.status < 300 and candidate.provider == "groq" else None)
                     circuit.record(candidate, success)
                     if success:
                         text = reading.text.strip()

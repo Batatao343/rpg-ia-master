@@ -23,7 +23,19 @@ _UNKNOWN_PER_MILLION = Decimal("100.00")
 _MONEY_QUANTUM = Decimal("0.000000001")
 _EVENT_NAMESPACE = UUID("0fd267e9-c99d-48a1-9235-02bcde642da8")
 
-CostBasis = Literal["provider_reported", "token_priced", "rate_card", "estimated"]
+CostBasis = Literal["provider_reported", "token_priced", "rate_card", "estimated",
+                    "failed_no_usage", "definitive_no_charge"]
+# SPEC-236 R1: an attempt that failed and reported no usage is auditable but costs zero and
+# never enters spend sums (daily cap, FinOps, turn cost). The US$ 1 floor survives only as a
+# wallet reservation bound (``quote_attempt_ceiling``), never as a recorded spend fact.
+NO_SPEND_BASES = frozenset({"failed_no_usage", "definitive_no_charge"})
+FAILED_NO_USAGE_VERSION = "failed-no-usage-v1"
+# Outcomes where the provider answered (and may have charged) even without a usage block.
+# ``stream_interrupted``: the stream broke after the first chunk, so the provider generated (and
+# billed) tokens although the final usage block never arrived -> conservative estimate.
+_RECEIVED_OUTCOMES = frozenset({"success", "response", "ok", "completed",
+                                "invalid_structured", "invalid_response",
+                                "stream_interrupted"})
 
 
 @dataclass(frozen=True)
@@ -45,6 +57,11 @@ class UsageEvent:
     cost_basis: CostBasis
     pricing_version: str
     billing_exact: bool
+    counts_as_spend: bool = True
+
+
+def spend_counts(cost_basis: str) -> bool:
+    return cost_basis not in NO_SPEND_BASES
 
 
 def _nonnegative_int(value: object) -> int | None:
@@ -132,8 +149,10 @@ def normalize_attempts(
 ) -> list[UsageEvent]:
     """One content-free event per network attempt, including known billable errors.
 
-    Skipped candidates never reached a provider. Missing usage on a network
-    attempt becomes a marked estimate so unknown charges cannot become zero.
+    Skipped candidates never reached a provider. A network attempt that FAILED
+    without any usage reading is recorded as ``failed_no_usage`` (zero cost, not
+    billing-exact, outside spend sums). Missing usage on an answered attempt
+    becomes a marked conservative estimate so unknown charges cannot become zero.
     """
     events: list[UsageEvent] = []
     for ordinal, attempt in enumerate(attempts):
@@ -153,7 +172,15 @@ def normalize_attempts(
             cached = None
         card = _MODELS.get(f"{provider}:{model}")
         reported = _money(reading.get("provider_cost_usd"))
-        if reported is not None:
+        outcome = str(attempt.get("outcome") or "unknown")[:40]
+        no_usage = reported is None and all(
+            value is None for value in (inputs, outputs, audio, image))
+        if no_usage and outcome not in _RECEIVED_OUTCOMES:
+            cost, basis, exact, version = (
+                Decimal("0"), "failed_no_usage", False,
+                FAILED_NO_USAGE_VERSION,
+            )
+        elif reported is not None:
             cost, basis, exact, version = (
                 reported, "provider_reported", True, "provider-reported-v1",
             )
@@ -179,7 +206,7 @@ def normalize_attempts(
             category=category,
             provider=provider,
             model=model,
-            outcome=str(attempt.get("outcome") or "unknown")[:40],
+            outcome=outcome,
             input_units=inputs,
             output_units=outputs,
             cached_units=cached,
@@ -189,12 +216,14 @@ def normalize_attempts(
             cost_basis=basis,
             pricing_version=version,
             billing_exact=exact,
+            counts_as_spend=spend_counts(basis),
         ))
     return events
 
 
 def operation_cost(events: Sequence[UsageEvent]) -> Decimal:
-    return sum((item.cost_usd for item in events), Decimal("0"))
+    """Spend of one operation: only events that count as spend (SPEC-236 R2)."""
+    return sum((item.cost_usd for item in events if item.counts_as_spend), Decimal("0"))
 
 
 def exact_billable_cost(events: Sequence[UsageEvent]) -> Decimal | None:

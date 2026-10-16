@@ -130,7 +130,7 @@ class PgVectorMemoryStore:
         ).fetchone()
         if row is None:
             existing = connection.execute(
-                "select content,metadata,owner_id,game_id,npc_id,scope,timeline_epoch from app.memory_documents where id=%s",
+                "select content,metadata,owner_id,game_id,npc_id,scope,timeline_epoch,embedding_status from app.memory_documents where id=%s",
                 (intent.document.document_id,),
             ).fetchone()
             comparable = MemoryWriteIntent(
@@ -149,6 +149,10 @@ class PgVectorMemoryStore:
                 document=replace(intent.document, metadata=comparison_metadata)))
             if intent_sha256(comparable) != identity_digest:
                 raise Conflict("memory_id reutilizado com conteúdo divergente")
+            if existing["embedding_status"] == "pending":
+                # SPEC-236 R9: a dead embedding job would leave the fact lexical-only forever.
+                from infrastructure.postgres_jobs import revive_dead_job
+                revive_dead_job(connection, "embed_memory", intent.document.document_id)
             return
         connection.execute(
             """

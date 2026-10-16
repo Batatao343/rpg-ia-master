@@ -167,7 +167,7 @@ class PostgresAccountReader:
                     and e.owner_id=r.owner_id and e.entry_type='settle'
                   where r.owner_id=%s group by r.usage_operation_id
                 ), usage_basis as (
-                  select u.operation_id,count(*) as events,bool_and(u.billing_exact) as exact
+                  select u.operation_id,count(*) as events,bool_and(u.billing_exact or not u.counts_as_spend) as exact
                   from app.usage_events u join selected s on s.operation_id=u.operation_id
                   where u.owner_id=%s group by u.operation_id
                 )
@@ -201,7 +201,7 @@ class PostgresAccountReader:
                     and e.owner_id=r.owner_id and e.entry_type='settle'
                   where r.owner_id=%s group by r.usage_operation_id
                 ), usage_basis as (
-                  select u.operation_id,count(*) as events,bool_and(u.billing_exact) as exact
+                  select u.operation_id,count(*) as events,bool_and(u.billing_exact or not u.counts_as_spend) as exact
                   from app.usage_events u join selected s on s.operation_id=u.operation_id
                   where u.owner_id=%s group by u.operation_id
                 )

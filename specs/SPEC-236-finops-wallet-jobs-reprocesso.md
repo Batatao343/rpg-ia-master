@@ -1,7 +1,8 @@
 # SPEC-236 — FinOps/wallet/jobs: custo fantasma de falhas, teto diário cross-day, reservas órfãs, STT incerto, refund parcial pré-crédito, lease e poison jobs
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `in-progress` — código + testes offline/Postgres local entregues (2026-10-16); faltam o smoke
+> real em staging (§6) e a revisão independente `Sol`/Astra (§9). Evidência: [docs/spec236/README.md](../docs/spec236/README.md).
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** nenhuma · SPEC-182/184/186/188/189/195/196 `done` e o teto diário da SPEC-197 são corrigidos (ordem final 2026-10-15)
 > **Desbloqueia:** gate da SPEC-197/198 (custos e teto diário confiáveis); custo exato da SPEC-200 (ordem final 2026-10-15)
 > **Origem:** auditoria de bugs 2026-10-15 — achados BUG-08-01..08-09, 04-02, 04-03, 04-08 (`achados/08-billing-jobs.md`, `04-persistencia-concorrencia.md`)
@@ -142,12 +143,17 @@ update app.usage_events set counts_as_spend=false
 
 ## 5. Critérios de aceite
 
-- [ ] Testes de reprodução vermelhos → verdes; `tests/test_usage_metering.py`, `test_spec197_daily_cap.py`,
+- [x] Testes de reprodução vermelhos → verdes; `tests/test_usage_metering.py`, `test_spec197_daily_cap.py`,
       `test_speech_finance_local.py` (caso `unknown_timeout` reclassificado conforme R5), `test_wallet_local.py`,
       `test_spec189*`/`test_spec195*`, `test_postgres_jobs_local.py` verdes ou diff justificado.
-- [ ] `uv run pytest` verde; `-m infra_local` verde em Supabase local; migration idempotente aplicada 2× sem erro.
-- [ ] FinOps dashboard/alertas: falhas de provider em painel próprio; `cost_spike` sem disparo por falha.
-- [ ] Guard de FallbackLLM: não se aplica.
+      (Diffs justificados: `test_usage_metering` — falha sem usage agora custa 0; `test_image_pricing` — janela 30 d;
+      `test_spec192_cron_endpoints` — o cron `/operations` também varre a wallet. O caso `unknown_timeout` segue
+      `uncertain` sem mudar: timeout continua `unknown`.)
+- [x] `uv run pytest` verde; `-m infra_local` verde em Supabase local; migration idempotente aplicada 2× sem erro.
+- [x] FinOps dashboard/alertas: falhas de provider em painel próprio; `cost_spike` sem disparo por falha.
+      (Resumo do cron `provider_failures_no_usage[_by_provider]`, relatório `finops-spend-v2`; regras Prometheus
+      `FinopsRateCardExpiring`/`FinopsWalletUncertainHold`/`FinopsWalletSpendAnomaly`.)
+- [x] Guard de FallbackLLM: não se aplica.
 
 ## 6. Smoke test com LLM real (staging, custo mínimo)
 
@@ -165,9 +171,42 @@ update app.usage_events set counts_as_spend=false
 
 ## 8. Pontos de decisão do dono
 
+> **Decisões aplicadas (2026-10-16, defaults autorizados pelo dono para esta onda):** D-A = manter o piso em
+> `quote_attempt_ceiling` (só reserva; nunca em `usage_events`); D-B = 30 d (`RPG_RATE_CARD_MAX_AGE_DAYS`) com
+> alerta T−3 d (`RPG_RATE_CARD_WARN_DAYS`); D-C = 5xx continua `unknown` (só 4xx/429 recebidos são definitivos).
+
 - **D-A (piso de US$ 1 em reserva):** manter em `quote_attempt_ceiling` (default) ou reduzir ao máximo do rate card.
 - **D-B (janela de rate card):** 30 d (default) ou 14 d com alerta T−3.
 - **D-C (STT `definitive_no_charge` em 5xx):** tratar 5xx com corpo como definitivo (default não — `unknown`).
+
+## 8.1 Desvios registrados na implementação (2026-10-16)
+
+- **R1:** `failed_no_usage` vale para falhas de rede/transporte (`invoke_error`, `stream_error`, `http_error`,
+  `transport_error`, `unknown`, ...). Respostas RECEBIDAS sem bloco de usage (`invalid_structured`,
+  `invalid_response`, `success`/`response`) seguem na estimativa conservadora: o provedor respondeu e pode ter
+  cobrado. Backfill da migration espelha a regra (e exige ausência de unidades medidas).
+- **R2:** coluna `counts_as_spend` NÃO entra no digest do evento (o digest legado continua idêntico em replays);
+  ela deriva do `cost_basis`. CHECK novo: base sem gasto ⇒ `cost_usd=0` e `counts_as_spend=false`.
+- **R3:** o trip que justifica o override precisa estar no MESMO dia-de-teto (`since ≤ trip ≤ re-enable` e
+  `trip < since+1d`).
+- **R4:** a varredura roda no cron `/internal/cron/operations` com carência `RPG_WALLET_RECOVERY_GRACE_SECONDS`
+  (default 900 s, mínimo 60) para nunca disputar um request ainda terminando. Reservas de imagem pertencem ao job:
+  só job `dead`/`cancelled` (ex.: lease expirado no teto, R9) entrega a reserva à varredura (release se pré-dispatch,
+  `uncertain` se ticket emitido; geração `failed`).
+- **R5:** retenção PARCIAL (só o teto das `unknown`) não é representável sem mudar o schema append-only
+  (`wallet_reservations` exige `settled=released=0` enquanto aberta e uma única entrada settle/release por reserva).
+  Implementado: 4xx/429 recebidos viram evento EXATO de custo zero (`definitive_no_charge`) e a reserva liquida e
+  libera tudo; havendo `unknown`, a reserva inteira fica `uncertain` (≤ `RPG_SPEECH_MAX_RESERVE_MILLI`) até o
+  operador usar `scripts/admin_wallet_reconcile.py`, que agora LIQUIDA o uso exato já persistido e libera o resto
+  (antes recusava "no-charge contraditório"). O CLI só aceita reserva `uncertain`.
+- **R7:** o exemplo "25 d → warning" da Etapa 0 é incompatível com T−3 d sobre 30 d; teste usa 28 d → warning,
+  25 d → sem alerta, 31 d → `PricingUnavailable`.
+- **R10:** o excesso fica em `wallet_reservations.financial_anomaly_milli` (coluna nova) para qualquer reserva, além
+  de `art_generations` para imagem. A variável do teto é `RPG_DAILY_SPEND_CAP_BRL` (a spec citava `RPG_DAILY_CAP_BRL`);
+  opt-out do fail-closed: `RPG_KILL_SWITCH_CAP_FAIL_OPEN=1`. O TTL do adiamento usa o relógio do banco
+  (`art_generations.created_at`); falha ao checar o TTL mantém o adiamento (nunca quebra a pausa).
+- **R9:** reativação de job `dead`/`cancelled` tem cooldown de 15 min (`DEAD_JOB_REVIVE_COOLDOWN`) para que o
+  re-enqueue automático a cada turno não recrie um loop pago.
 
 ## 9. Evidência requerida
 

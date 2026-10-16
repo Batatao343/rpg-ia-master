@@ -88,6 +88,7 @@ LLMAttemptOutcome = Literal[
     "circuit_open",
     "invoke_error",
     "stream_error",
+    "stream_interrupted",  # SPEC-236: cut AFTER the first chunk (provider answered)
     "invalid_structured",
     "success",
 ]
@@ -969,7 +970,7 @@ class RoutedLLM:
                     attempt_index=idx,
                     latency_ms=latency_ms,
                     fell_back=fell_back,
-                    outcome="stream_error",
+                    outcome="stream_interrupted",
                     error="consumer_closed",
                     structured=structured,
                     usage=usage_snapshot,
@@ -985,7 +986,7 @@ class RoutedLLM:
                     attempt_index=idx,
                     latency_ms=latency_ms,
                     fell_back=fell_back,
-                    outcome="stream_error",
+                    outcome="stream_interrupted",
                     error=str(e),
                     structured=structured,
                     usage=usage_snapshot,

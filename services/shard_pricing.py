@@ -32,6 +32,25 @@ INSTALLED_RATE_CARD_OBSERVED_AT = datetime.combine(
 )
 
 
+DEFAULT_RATE_CARD_MAX_AGE_DAYS = 30
+
+
+def rate_card_max_age() -> timedelta:
+    """Freshness window of the installed image/STT rate cards (SPEC-236 R7, D-B default 30 d).
+
+    ``RPG_RATE_CARD_MAX_AGE_DAYS`` (1..365). An invalid value falls back to the default instead
+    of silently widening the window."""
+    import os
+    raw = os.getenv("RPG_RATE_CARD_MAX_AGE_DAYS", "").strip()
+    try:
+        days = int(raw) if raw else DEFAULT_RATE_CARD_MAX_AGE_DAYS
+    except ValueError:
+        days = DEFAULT_RATE_CARD_MAX_AGE_DAYS
+    if not 1 <= days <= 365:
+        days = DEFAULT_RATE_CARD_MAX_AGE_DAYS
+    return timedelta(days=days)
+
+
 class PricingUnavailable(ValueError):
     """A quote cannot safely authorize a purchase or usage debit."""
 
@@ -268,9 +287,14 @@ def quote_usage(events: Sequence[UsageEvent], version: PricingVersion, *, at: da
         from services.image_pricing import IMAGE_PRICING_VERSION
         image_card = (event.cost_basis == "rate_card" and event.category == "image"
                       and event.provider == "openai" and event.pricing_version == IMAGE_PRICING_VERSION)
+        # SPEC-236 R5: a received STT rejection (4xx/429) is an exact zero, never spend.
+        speech_rejected = (event.cost_basis == "definitive_no_charge" and event.cost_usd == 0
+                           and event.category == "speech_to_text"
+                           and event.pricing_version == SPEECH_PRICING_VERSION)
         if event.cost_basis == "token_priced" and event.pricing_version != version.rate_card_version:
             raise PricingUnavailable("rate card de usage diverge da versão")
-        if event.cost_basis not in {"token_priced", "provider_reported"} and not (speech_card or image_card):
+        if event.cost_basis not in {"token_priced", "provider_reported"} and not (
+                speech_card or image_card or speech_rejected):
             raise PricingUnavailable("origem de custo não faturável")
         _numeric(event.cost_usd, 18, 9)
     with localcontext() as context:

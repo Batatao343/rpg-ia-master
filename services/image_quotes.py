@@ -164,6 +164,34 @@ class ImageQuoteRepository:
                                (generation_id,))
             return dict(row)
 
+    def release_if_deferred_too_long(self, generation_id: UUID, max_age: timedelta) -> bool:
+        """SPEC-236 R10: a job paused by the image kill switch must not hold Estilhas forever.
+
+        Past ``max_age`` since confirmation, a still pre-dispatch reservation is released and the
+        generation fails with ``deferred_timeout``. A ticketed reservation is never touched here."""
+        with self.pool.connection() as connection, connection.transaction():
+            lock_art_game(connection, generation_id)
+            require_job_fence(connection)
+            # Database clock on both sides: created_at defaults to now() at confirmation.
+            row = connection.execute(
+                "select *, created_at <= now() - %s as expired from app.art_generations "
+                "where generation_id=%s for update",
+                (max_age, generation_id)).fetchone()
+            if (not row or not row["image_quote_id"] or row["status"] != "pending"
+                    or not row["expired"]):
+                return False
+            principal = Principal(row["owner_id"], "worker", str(row["owner_id"]))
+            reservation = self.wallet._locked_reservation(connection, principal,
+                                                          row["wallet_reservation_id"])
+            if reservation["status"] != "reserved":
+                return False
+            self.wallet.release_pre_effect(principal, reservation["reservation_id"],
+                                           fence_token=row["image_quote_id"], connection=connection)
+            connection.execute(
+                "update app.art_generations set status='failed',error_code='deferred_timeout',"
+                "updated_at=now() where generation_id=%s", (generation_id,))
+            return True
+
     def hold_or_release(self, generation_id: UUID) -> None:
         """Pre-dispatch failure releases; any ticket or observed effect retains funds."""
         with self.pool.connection() as connection, connection.transaction():

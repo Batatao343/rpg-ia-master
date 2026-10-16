@@ -117,10 +117,18 @@ def cron_operations(request: Request):
     def task():
         from services.operation_recovery import recover_expired
         from services.retention import purge_expired
+        from services.wallet_recovery import recover_wallet_reservations
         pool = _runtime().game_store.pool
-        recovered = recover_expired(pool, 50)
+        released = recover_expired(pool, 50)
+        # SPEC-236 R4: abandoned operations no longer strand wallet reservations. A sweep
+        # failure never hides the operations result; it is reported (non-2xx) instead.
+        try:
+            wallet = recover_wallet_reservations(
+                pool, int(os.getenv("RPG_CRON_MAX_WALLET_RECOVERY", "50")))
+        except Exception as exc:
+            wallet = {"wallet_errors": 1, "wallet_sweep_error": type(exc).__name__}
         # SPEC-222 R7: TTL of terminal technical metadata, count-only output.
-        return {**recovered, **purge_expired(pool), "failed": 0}
+        return {**released, **wallet, **purge_expired(pool), "failed": wallet["wallet_errors"]}
     return _run("operations", task)
 
 

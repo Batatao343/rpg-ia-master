@@ -27,8 +27,8 @@ def speech_bound(provider: str, model: str) -> Decimal | None:
 def require_speech_prices(at: datetime) -> None:
     observed = datetime.fromisoformat(_CARD["observed_at"]).replace(tzinfo=timezone.utc)
     age = at.astimezone(timezone.utc) - observed
-    if age < timedelta(0) or age > timedelta(days=7):
-        from services.shard_pricing import PricingUnavailable
+    from services.shard_pricing import PricingUnavailable, rate_card_max_age
+    if age < timedelta(0) or age > rate_card_max_age():
         raise PricingUnavailable("speech rate card stale")
 
 
@@ -46,9 +46,23 @@ def _integer(value: object) -> int | None:
     return value if isinstance(value, int) and not isinstance(value, bool) and value >= 0 else None
 
 
+def is_definitive_no_charge(status: int) -> bool:
+    """SPEC-236 R5 (D-C default): a received HTTP 4xx (incl. 429) is a definitive rejection
+    without charge. 5xx, timeouts and cancellations stay ``unknown`` (held)."""
+    return isinstance(status, int) and not isinstance(status, bool) and 400 <= status <= 499
+
+
 def speech_event(operation_id: UUID, ordinal: int, provider: str, model: str,
-                 outcome: str, usage: dict, *, duration: Decimal | None = None) -> UsageEvent:
-    """Unknown attempts remain nonbillable estimates; no transcript enters this DTO."""
+                 outcome: str, usage: dict, *, duration: Decimal | None = None,
+                 definitive_no_charge: bool = False) -> UsageEvent:
+    """Unknown attempts remain nonbillable estimates; no transcript enters this DTO.
+
+    A definitive provider rejection is an EXACT zero (it can settle), never spend."""
+    if definitive_no_charge:
+        return UsageEvent(uuid5(_NAMESPACE, f"{operation_id}:{ordinal}"), operation_id,
+                          "speech", ordinal, "speech_to_text", provider, model, outcome,
+                          None, None, None, None, None, Decimal("0"), "definitive_no_charge",
+                          SPEECH_PRICING_VERSION, True, False)
     card = _MODELS.get(f"{provider}:{model}")
     inputs, outputs = _integer(usage.get("input_tokens")), _integer(usage.get("output_tokens"))
     audio = _integer(usage.get("audio_tokens"))

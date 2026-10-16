@@ -8,8 +8,9 @@ from pathlib import Path
 
 from services import finops
 from services.finops_alerts import (
-    AlertInputs, Thresholds, evaluate_alerts, installed_freshness, publish_alert_metrics, publish_evaluation_age,
-    publish_margin_metrics, publish_switch_metrics,
+    AlertInputs, Thresholds, evaluate_alerts, failed_no_usage_by_provider, installed_freshness,
+    publish_alert_metrics, publish_evaluation_age, publish_margin_metrics, publish_switch_metrics,
+    spend_groups,
 )
 from services.daily_spend_cap import evaluate_daily_cap
 from services.finops_alerts import Alert
@@ -29,7 +30,8 @@ def run_finops(reader, now: datetime | None = None, *, report_days: int | None =
     purchases = reader.purchases(since, now)
     usage = reader.owner_usage(since, now)
     window_cost: dict[str, Decimal] = {}
-    for g in reader.usage_groups(since, now):
+    window_groups = reader.usage_groups(since, now)
+    for g in spend_groups(window_groups):
         grp = finops.COST_GROUPS.get(g.category, "other")
         window_cost[grp] = window_cost.get(grp, Decimal("0")) + g.cost_usd
     ops = reader.ops_counts(since, now)
@@ -45,17 +47,21 @@ def run_finops(reader, now: datetime | None = None, *, report_days: int | None =
     base = []
     for i in range(1, baselines + 1):
         by: dict[str, Decimal] = {}
-        for g in reader.usage_groups(now - span * (i + 1), now - span * i):
+        for g in spend_groups(reader.usage_groups(now - span * (i + 1), now - span * i)):
             by[g.provider] = by.get(g.provider, Decimal("0")) + g.cost_usd
         base.append(by)
     n_mis, abs_mis = reader.wallet_mismatch()
+    holds = getattr(reader, "wallet_holds", None)
+    uncertain, uncertain_age, anomalies = holds(now) if holds is not None else (0, 0.0, 0)
     off = sorted(k for k, v in get_switches().snapshot().items() if not v)
     alerts = evaluate_alerts(AlertInputs(
         usage_groups=groups_now, freshness=[*fresh, *installed_freshness()],
         wallet_mismatch_accounts=n_mis, wallet_mismatch_abs_milli=abs_mis,
         backlogs=reader.backlogs(now), baseline_cost_by_provider=base, skus=report.skus,
         switches_off=off, unpriced_purchases=report.unpriced_purchases,
-        unpriced_versions=report.missing_pricing), now, Thresholds.from_env())
+        unpriced_versions=report.missing_pricing, wallet_uncertain=uncertain,
+        wallet_uncertain_oldest_seconds=uncertain_age, wallet_anomalies=anomalies),
+        now, Thresholds.from_env())
     # Daily spend cap (opt-in via RPG_DAILY_SPEND_CAP_BRL): auto-off only, never auto-on.
     cap_summary: dict = {}
     cap_failed = 0
@@ -86,6 +92,13 @@ def run_finops(reader, now: datetime | None = None, *, report_days: int | None =
             "skus_below_target": sum(1 for s in report.skus if s.meets_target is False),
             "switches_off": len(off), "purchases": sum(r.purchases for r in report.rows),
             "unpriced_purchases": report.unpriced_purchases,
+            # SPEC-236 R2: spend sums exclude failed attempts without usage (report v2); those
+            # are shown apart as a count per provider, never as cost.
+            "report_version": "finops-spend-v2",
+            "provider_failures_no_usage": sum(failed_no_usage_by_provider(window_groups).values()),
+            "provider_failures_no_usage_by_provider": ",".join(
+                f"{p}={n}" for p, n in failed_no_usage_by_provider(groups_now).items()),
+            "wallet_uncertain_holds": uncertain,
             **cap_summary, "report": finops.report_to_dict(report)}
     if recorder is not None:
         try:

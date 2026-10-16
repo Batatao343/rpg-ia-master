@@ -15,6 +15,28 @@ from infrastructure.contracts import JobRequest, LeaseHeld, LeasedJob, NotFound
 from infrastructure.postgres import PostgresPool
 
 
+# SPEC-236 R9: a dead/cancelled job for a document that is still pending is revived on the next
+# enqueue of the same (kind, dedupe_key), but at most once per cooldown so an automatic
+# re-enqueue on every turn cannot turn a persistent failure back into a paid retry loop.
+DEAD_JOB_REVIVE_COOLDOWN = timedelta(minutes=15)
+
+
+def revive_dead_job(connection, kind: str, dedupe_key: str,
+                    cooldown: timedelta = DEAD_JOB_REVIVE_COOLDOWN) -> bool:
+    """Requeue a dead/cancelled job with fresh attempts; True when one was revived."""
+    result = connection.execute(
+        """
+        update app.jobs set status='queued', attempts=0, available_at=now(),
+          last_error_code=null, lease_token=null, lease_owner=null, lease_until=null,
+          updated_at=now()
+        where kind=%s and dedupe_key=%s and status in ('dead','cancelled')
+          and updated_at <= now() - %s
+        """,
+        (kind, dedupe_key, cooldown),
+    )
+    return result.rowcount == 1
+
+
 class PostgresJobQueue:
     def __init__(self, pool: PostgresPool, *, lease_seconds: int = 90) -> None:
         if lease_seconds <= 0:
@@ -48,6 +70,23 @@ class PostgresJobQueue:
         lease_token = uuid4()
         interval = timedelta(seconds=self.lease_seconds)
         with self.pool.connection() as connection, connection.transaction():
+            # SPEC-236 R9: a handler that keeps killing its process (timeout/OOM) used to be
+            # re-leased forever. Expired leases that already spent max_attempts go dead instead.
+            connection.execute(
+                """
+                with poisoned as (
+                  select id from app.jobs
+                  where kind = any(%s) and status='running' and lease_until < now()
+                    and attempts >= max_attempts
+                  for update skip locked
+                )
+                update app.jobs j set status='dead',
+                  last_error_code='lease_expired_max_attempts', lease_token=null,
+                  lease_owner=null, lease_until=null, updated_at=now()
+                from poisoned where j.id=poisoned.id
+                """,
+                (list(kinds),),
+            )
             rows = connection.execute(
                 """
                 with picked as (
@@ -55,7 +94,7 @@ class PostgresJobQueue:
                   where kind = any(%s)
                     and (
                       (status in ('queued','retry') and available_at <= now()) or
-                      (status='running' and lease_until < now())
+                      (status='running' and lease_until < now() and attempts < max_attempts)
                     )
                   order by available_at, created_at, id
                   limit %s

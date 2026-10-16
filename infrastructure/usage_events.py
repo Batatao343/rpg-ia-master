@@ -56,8 +56,8 @@ def append_usage_events(connection, *, owner_id: UUID, operation_id: UUID,
               (event_id,operation_id,owner_id,game_id,component,attempt_ordinal,
                category,provider,model,outcome,input_units,output_units,cached_units,
                audio_units,image_units,cost_usd,cost_basis,pricing_version,
-               billing_exact,event_sha256)
-            values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+               billing_exact,event_sha256,counts_as_spend)
+            values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             on conflict (operation_id,component,attempt_ordinal) do nothing
             returning event_sha256""",
             (
@@ -67,6 +67,7 @@ def append_usage_events(connection, *, owner_id: UUID, operation_id: UUID,
                 event.output_units, event.cached_units, event.audio_units,
                 event.image_units, event.cost_usd, event.cost_basis,
                 event.pricing_version, event.billing_exact, digest,
+                event.counts_as_spend,
             ),
         ).fetchone()
         if row is not None:

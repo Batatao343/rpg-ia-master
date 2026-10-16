@@ -534,7 +534,7 @@ def test_stream_yield_depois_erro_nao_emite_falso_sucesso(monkeypatch):
     chunks = list(routed.stream([HumanMessage(content="oi")]))
 
     assert [chunk.content for chunk in chunks] == ["parcial de p1"]
-    assert [event.outcome for event in tentativas] == ["stream_error"]
+    assert [event.outcome for event in tentativas] == ["stream_interrupted"]
     assert tentativas[0].error == "p1 boom-midstream"
     assert sucessos_legados == []
 

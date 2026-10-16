@@ -352,6 +352,11 @@ class StripePayments:
             outcome = "queued_reconciliation"
             if kind == "refund" and amount < row["gross_cents"]:
                 status = row["status"]  # partial refund: purchase stays paid
+        elif kind == "refund" and amount < row["gross_cents"]:
+            # SPEC-236 R6: a PARTIAL refund delivered before the paid Checkout must not block the
+            # credit of a paid purchase. The order keeps its status, the Checkout credits in
+            # full, and the reconciler (SPEC-195) then claws back the proportional share.
+            status, outcome = row["status"], "pending_partial_refund"
         db.execute("""insert into app.payment_financial_events
             (financial_id,order_id,stripe_event_id,kind,provider_reference,amount_cents,currency,outcome)
             values (%s,%s,%s,%s,%s,%s,%s,%s)""",

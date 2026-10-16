@@ -270,10 +270,13 @@ class PostgresTurnCoordinator:
                     operation_id=claim.operation_id, game_id=claim.game_id,
                     events=usage_events,
                 )
-            ledger_cost = connection.execute(
-                "select sum(cost_usd) as total from app.usage_events where operation_id=%s",
+            # SPEC-236 R2: failures without usage are facts, not spend.
+            ledger = connection.execute(
+                "select count(*) as n, coalesce(sum(cost_usd) filter (where counts_as_spend), 0)"
+                " as total from app.usage_events where operation_id=%s",
                 (claim.operation_id,),
-            ).fetchone()["total"]
+            ).fetchone()
+            ledger_cost = ledger["total"] if ledger["n"] else None
             consolidated_cost = (
                 ledger_cost if ledger_cost is not None
                 else max(Decimal("0"), Decimal(str(llm_cost_usd)))
@@ -446,6 +449,18 @@ class PostgresTurnCoordinator:
                     raise Conflict('operation_request_mismatch')
             return row["receipt"] if row["status"] == "completed" else None
 
+    @staticmethod
+    def _status(connection, claim: OperationClaim) -> str | None:
+        row = connection.execute(
+            "select status from app.operations where id=%s", (claim.operation_id,),
+        ).fetchone()
+        return row["status"] if row else None
+
+    def is_completed(self, claim: OperationClaim) -> bool:
+        """True once this operation's receipt is durably committed (SPEC-236 R8)."""
+        with self.pool.connection() as connection:
+            return self._status(connection, claim) == "completed"
+
     def heartbeat(self, claim: OperationClaim) -> None:
         interval = timedelta(seconds=self.lease_seconds)
         with self.pool.connection() as connection, connection.transaction():
@@ -461,6 +476,10 @@ class PostgresTurnCoordinator:
                 (interval, claim.operation_id, claim.lease_token),
             )
             if result.rowcount != 1:
+                # SPEC-236 R8: commit_game/complete clears the lease token in the same
+                # transaction that stores the receipt. A tick that lands after it is benign.
+                if self._status(connection, claim) == "completed":
+                    return
                 raise LeaseHeld("fencing token inválido")
             if claim.game_id is not None:
                 connection.execute(

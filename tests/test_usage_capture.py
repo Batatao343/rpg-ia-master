@@ -111,6 +111,6 @@ def test_closed_stream_still_emits_one_attempt_without_content(monkeypatch) -> N
     assert next(stream).content == "SECRET_FIRST_CHUNK"
     stream.close()
     assert len(events) == 1
-    assert events[0].outcome == "stream_error"
+    assert events[0].outcome == "stream_interrupted"
     assert events[0].error == "consumer_closed"
     assert "SECRET" not in repr(events[0])

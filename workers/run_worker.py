@@ -22,6 +22,16 @@ from workers.embedding_jobs import embed_memory_job
 from workers.job_worker import JobWorker
 
 
+def image_defer_max_age():
+    """SPEC-236 R10: how long a kill-switch-paused image job may keep its reservation."""
+    from datetime import timedelta
+    try:
+        hours = float(os.getenv("RPG_IMAGE_DEFER_MAX_HOURS", "6"))
+    except ValueError:
+        hours = 6.0
+    return timedelta(hours=max(0.0, hours) if hours == hours else 6.0)
+
+
 def build_handlers():
     runtime = get_runtime()
     if not runtime.resources:
@@ -36,15 +46,23 @@ def build_handlers():
         generation_id = UUID(str(payload["generation"]["generation_id"]))
         from infrastructure.contracts import JobDeferred
         from services.kill_switches import IMAGE, get_switches
+        finance = ImageQuoteRepository(pool)
         if not get_switches().is_enabled(IMAGE):
             # SPEC-196 F5: paused, not failed. Reservation stays held; the job resumes when the
             # switch is turned back on (no attempt consumed, no release, no provider call).
+            # SPEC-236 R10: ...but only for RPG_IMAGE_DEFER_MAX_HOURS (default 6 h); then the
+            # pre-dispatch reservation is released and the generation fails (deferred_timeout).
+            try:
+                released = finance.release_if_deferred_too_long(generation_id, image_defer_max_age())
+            except Exception:
+                released = False  # never let the TTL check break the pause; retry next defer
+            if released:
+                return {"status": "released_deferred", "generation_id": str(generation_id)}
             raise JobDeferred("image_generation_disabled", 60.0)
         owner_id, game_id = UUID(str(payload["owner_id"])), UUID(str(payload["game_id"]))
         repository = DynamicArtRepository(
             pool, model="", profile_version="",
         )
-        finance = ImageQuoteRepository(pool)
         try:
             generation = repository.get(Principal(owner_id, "worker", str(owner_id)), generation_id)
             if not generation or generation["game_id"] != game_id or not generation.get("image_quote_id"):

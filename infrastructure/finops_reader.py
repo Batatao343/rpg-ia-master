@@ -34,6 +34,7 @@ class FinopsReader(Protocol):
     def ops_counts(self, since: datetime, until: datetime) -> OpsCounts: ...
     def wallet_mismatch(self) -> tuple[int, int]: ...
     def backlogs(self, now: datetime) -> list[Backlog]: ...
+    def wallet_holds(self, now: datetime) -> tuple[int, float, int]: ...
 
 
 def _fees(raw: Mapping) -> dict[str, FeeRate]:
@@ -111,6 +112,7 @@ class PostgresFinopsReader:
         with self.pool.connection() as db:
             rows = db.execute("""select owner_id::text as owner_key, category, sum(cost_usd) as usd
                 from app.usage_events where created_at >= %s and created_at < %s
+                  and counts_as_spend
                 group by 1,2""", (since, until)).fetchall()
         acc: dict[str, dict[str, Decimal]] = {}
         for r in rows:
@@ -122,11 +124,14 @@ class PostgresFinopsReader:
     def usage_groups(self, since, until):
         with self.pool.connection() as db:
             rows = db.execute("""select provider, model, category, pricing_version, cost_basis,
-                outcome, count(*) as n, sum(cost_usd) as usd from app.usage_events
-                where created_at >= %s and created_at < %s group by 1,2,3,4,5,6""",
+                outcome, counts_as_spend, count(*) as n, sum(cost_usd) as usd from app.usage_events
+                where created_at >= %s and created_at < %s group by 1,2,3,4,5,6,7""",
                               (since, until)).fetchall()
+        # SPEC-236 R2: non-spend groups keep their count (provider-failure panel) but never cost.
         return [UsageGroup(r["provider"], r["model"], r["category"], r["pricing_version"],
-                           r["cost_basis"], r["outcome"], int(r["n"]), Decimal(r["usd"]))
+                           r["cost_basis"], r["outcome"], int(r["n"]),
+                           Decimal(r["usd"]) if r["counts_as_spend"] else Decimal("0"),
+                           bool(r["counts_as_spend"]))
                 for r in rows]
 
     def ops_counts(self, since, until):
@@ -137,7 +142,7 @@ class PostgresFinopsReader:
                 coalesce(sum(e.audio_units) filter (where e.category='speech_to_text'
                     and e.provider = any(%s)),0) as voice_ms,
                 coalesce(sum(e.cost_usd) filter (where e.category='speech_to_text'
-                    and e.provider = any(%s)),0) as voice_cost
+                    and e.provider = any(%s) and e.counts_as_spend),0) as voice_cost
                 from app.usage_events e join app.operations o on o.id=e.operation_id
                 where e.created_at >= %s and e.created_at < %s""",
                              (list(SUCCESS), list(DURATION_STT_PROVIDERS),
@@ -153,6 +158,15 @@ class PostgresFinopsReader:
                 from app.wallet_accounts a left join app.wallet_entries e on e.owner_id=a.owner_id
                 group by a.owner_id, a.available_milli, a.reserved_milli) t where d <> 0""").fetchone()
         return int(row["n"]), int(row["total"])
+
+    def wallet_holds(self, now):
+        """SPEC-236 R4/R10: (uncertain reservations, oldest age s, capped anomalies). Owner-free."""
+        with self.pool.connection() as db:
+            row = db.execute("""select count(*) filter (where status='uncertain') as n,
+                extract(epoch from (%s - min(created_at) filter (where status='uncertain'))) as age,
+                count(*) filter (where financial_anomaly_milli > 0) as anomalies
+                from app.wallet_reservations""", (now,)).fetchone()
+        return int(row["n"] or 0), float(row["age"] or 0), int(row["anomalies"] or 0)
 
     def backlogs(self, now):
         with self.pool.connection() as db:
@@ -181,6 +195,7 @@ class FakeFinopsReader:
     ops: OpsCounts = field(default_factory=OpsCounts)
     mismatch: tuple[int, int] = (0, 0)
     backlog_list: list[Backlog] = field(default_factory=list)
+    holds: tuple[int, float, int] = (0, 0.0, 0)
 
     def pricing(self):
         return self.pricing_refs, self.freshness
@@ -202,6 +217,9 @@ class FakeFinopsReader:
 
     def backlogs(self, now):
         return self.backlog_list
+
+    def wallet_holds(self, now):
+        return self.holds
 
 
 class PostgresFinopsEvaluationStore:

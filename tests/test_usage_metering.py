@@ -54,9 +54,11 @@ def test_pre_response_timeout_is_reserved_and_skipped_candidates_are_not_billed(
     ]
     events = normalize_attempts(attempts, operation_id=OPERATION)
     assert len(events) == 1
-    assert events[0].cost_basis == "estimated"
+    # SPEC-236 R1: a failed attempt without usage is auditable but costs zero (no phantom US$1);
+    # it stays non-exact, so wallet settlement still cannot treat it as a known charge.
+    assert events[0].cost_basis == "failed_no_usage"
     assert events[0].billing_exact is False
-    assert events[0].cost_usd > 0
+    assert events[0].cost_usd == 0 and events[0].counts_as_spend is False
 
 
 def test_billable_error_uses_reported_units_and_provider_cost_takes_precedence() -> None:

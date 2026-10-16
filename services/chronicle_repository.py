@@ -59,6 +59,17 @@ class ChronicleRepository:
                      source_hash, PROFILE_VERSION),
                 ).fetchone()
                 if not row:
+                    # SPEC-236 R9: digest still pending but its job died -> revive (cooldown).
+                    pending = connection.execute(
+                        """select 1 from app.chronicle_digests where game_id=%s
+                          and timeline_epoch=%s and chapter_id=%s and source_hash=%s
+                          and profile_version=%s and status='pending'""",
+                        (game_id, epoch, chapter["chapter_id"], source_hash, PROFILE_VERSION),
+                    ).fetchone()
+                    if pending:
+                        from infrastructure.postgres_jobs import revive_dead_job
+                        if revive_dead_job(connection, "compress_chronicle", dedupe):
+                            queued += 1
                     continue
                 connection.execute(
                     """insert into app.jobs

@@ -1,8 +1,10 @@
 """Server-side kill switches (SPEC-196 R4).
 
 A switch is ``enabled`` unless a row (or the emergency env override) explicitly
-turns it off. Failure to read the store NEVER disables a feature: the cache keeps
-the last good snapshot, or "all enabled" when none exists (fail-safe default).
+turns it off. Failure to read the store keeps the last good snapshot, or "all
+enabled" when none exists (fail-safe default) — except the keys listed in
+``RPG_KILL_SWITCH_FAIL_CLOSED`` and, when ``RPG_DAILY_SPEND_CAP_BRL`` is set,
+``image_generation``/``stt_fallback_expensive`` (SPEC-236 R10: fail closed).
 Reading/continuing existing campaigns is never gated by any switch here.
 
 Keys: ``image_generation``, ``stt_fallback_expensive``, ``model:<provider>/<model>``,
@@ -84,11 +86,27 @@ class MemorySwitchStore:
         return list(reversed(self.audit_rows))[:limit]
 
 
+def _daily_cap_configured() -> bool:
+    """Same rule as ``daily_spend_cap.cap_from_env`` (kept local: that module imports this one)."""
+    from decimal import Decimal, InvalidOperation
+    raw = os.getenv("RPG_DAILY_SPEND_CAP_BRL", "").strip()
+    try:
+        return bool(raw) and Decimal(raw) > 0
+    except InvalidOperation:
+        return False
+
+
 def _fail_closed_keys() -> set[str]:
     """RPG_KILL_SWITCH_FAIL_CLOSED=new_purchases,image_generation: keys that become OFF when the
     store is unreadable AND no good snapshot was ever loaded (default: none, i.e. fail open)."""
     raw = os.getenv("RPG_KILL_SWITCH_FAIL_CLOSED", "")
-    return {k.strip() for k in raw.split(",") if KEY_RE.fullmatch(k.strip())}
+    keys = {k.strip() for k in raw.split(",") if KEY_RE.fullmatch(k.strip())}
+    # SPEC-236 R10: with the daily spend cap configured, the switches the cap protects fail
+    # CLOSED on a cold start with an unreadable store (otherwise a DB incident would reopen
+    # image/STT-fallback spend that the cap had cut). Opt out: RPG_KILL_SWITCH_CAP_FAIL_OPEN=1.
+    if _daily_cap_configured() and os.getenv("RPG_KILL_SWITCH_CAP_FAIL_OPEN", "") != "1":
+        keys |= {IMAGE, STT_FALLBACK}
+    return keys
 
 
 def _env_off() -> set[str]:

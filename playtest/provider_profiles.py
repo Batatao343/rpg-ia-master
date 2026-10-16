@@ -94,6 +94,7 @@ class ProviderPacer:
             )
         network_attempt = status in {
             "success", "invoke_error", "invalid_structured", "stream_error",
+            "stream_interrupted",
         }
         if provider != "groq" or model != "openai/gpt-oss-120b" or not network_attempt:
             return

@@ -27,7 +27,10 @@ _ID_LIKE = re.compile(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-|^[0-9a-fA-F]{24,}$|@")
 _SAFE = re.compile(r"^[A-Za-z0-9_.:/+-]{1,60}$")
 ALERT_KINDS = ("unknown_pricing", "stale_rate_card", "cost_spike", "expensive_fallback",
                "wallet_mismatch", "webhook_backlog", "provider_failure", "margin_below_target",
-               "finops_unknown_purchase_pricing", "daily_spend_cap")
+               "finops_unknown_purchase_pricing", "daily_spend_cap", "rate_card_expiring",
+               "wallet_uncertain_hold", "wallet_spend_anomaly")
+# Installed provider rate cards that need an early renewal warning (fx has its own cadence).
+EXPIRING_CARD_NAMES = frozenset({"llm", "image", "speech", "rate_card"})
 
 
 def safe_label(value: object) -> str:
@@ -64,6 +67,21 @@ class UsageGroup:
     outcome: str
     count: int
     cost_usd: Decimal
+    counts_as_spend: bool = True  # SPEC-236 R2: failed attempts without usage are not spend
+
+
+def spend_groups(groups: Iterable[UsageGroup]) -> list[UsageGroup]:
+    """Only groups that are real (or conservatively estimated) spend."""
+    return [g for g in groups if g.counts_as_spend]
+
+
+def failed_no_usage_by_provider(groups: Iterable[UsageGroup]) -> dict[str, int]:
+    """Separate 'provider failures' panel (SPEC-236 R2): count, never cost."""
+    out: dict[str, int] = {}
+    for g in groups:
+        if not g.counts_as_spend:
+            out[g.provider] = out.get(g.provider, 0) + g.count
+    return dict(sorted(out.items()))
 
 
 @dataclass(frozen=True)
@@ -114,13 +132,16 @@ class AlertInputs:
     baseline_cost_by_provider: Sequence[Mapping[str, Decimal]] = ()  # previous windows
     skus: Sequence[SkuMargin] = ()
     switches_off: Sequence[str] = ()
+    wallet_uncertain: int = 0
+    wallet_uncertain_oldest_seconds: float = 0.0
+    wallet_anomalies: int = 0
     unpriced_purchases: int = 0
     unpriced_versions: Sequence[str] = ()
 
 
 def unknown_pricing(groups: Iterable[UsageGroup]) -> list[Alert]:
     seen: dict[tuple, int] = {}
-    for g in groups:
+    for g in spend_groups(groups):
         if g.pricing_version in UNKNOWN_PRICING_VERSIONS:
             seen[(g.provider, g.model)] = seen.get((g.provider, g.model), 0) + g.count
     return [Alert("unknown_pricing", f"{n} usage event(s) without a rate card for {p}/{m}",
@@ -140,9 +161,46 @@ def stale_rate_cards(items: Iterable[Freshness], now: datetime) -> list[Alert]:
     return out
 
 
+def expiring_rate_cards(items: Iterable[Freshness], now: datetime,
+                        warn: timedelta | None = None) -> list[Alert]:
+    """SPEC-236 R7: non-blocking warning from T-``RPG_RATE_CARD_WARN_DAYS`` (default 3 d) until
+    the card expires; at expiry ``stale_rate_cards`` takes over as the blocking alert."""
+    if warn is None:
+        try:
+            warn = timedelta(days=max(0, int(os.getenv("RPG_RATE_CARD_WARN_DAYS", "3"))))
+        except ValueError:
+            warn = timedelta(days=3)
+    out = []
+    for f in items:
+        if f.name not in EXPIRING_CARD_NAMES:
+            continue
+        remaining = f.max_age - (now - f.observed_at)
+        if timedelta(0) <= remaining <= warn and now >= f.observed_at:
+            out.append(Alert("rate_card_expiring",
+                             f"{f.name} rate card expires in {remaining.total_seconds() / 86400:.1f}d;"
+                             " renew it (docs/spec197/runbooks/budget.md)",
+                             provider=f.name, value=remaining.total_seconds() / 86400))
+    return out
+
+
+def wallet_holds(uncertain: int, oldest_age_seconds: float, anomalies: int = 0) -> list[Alert]:
+    """SPEC-236 R4/R10: funds retained for manual reconciliation, and capped over-ceiling costs."""
+    out = []
+    if uncertain > 0:
+        out.append(Alert("wallet_uncertain_hold",
+                         f"{uncertain} wallet reservation(s) held as uncertain; oldest "
+                         f"{oldest_age_seconds:.0f}s (scripts/admin_wallet_reconcile.py)",
+                         value=float(uncertain)))
+    if anomalies > 0:
+        out.append(Alert("wallet_spend_anomaly",
+                         f"{anomalies} settlement(s) capped at the confirmed ceiling",
+                         value=float(anomalies)))
+    return out
+
+
 def _by_provider(groups: Iterable[UsageGroup]) -> dict[str, Decimal]:
     totals: dict[str, Decimal] = {}
-    for g in groups:
+    for g in spend_groups(groups):
         totals[g.provider] = totals.get(g.provider, Decimal("0")) + g.cost_usd
     return totals
 
@@ -164,7 +222,7 @@ def cost_spike(groups: Iterable[UsageGroup], baselines: Sequence[Mapping[str, De
 
 
 def expensive_fallback(groups: Iterable[UsageGroup], t: Thresholds) -> list[Alert]:
-    llm = [g for g in groups if g.category in {"llm", "decision"}]
+    llm = [g for g in spend_groups(groups) if g.category in {"llm", "decision"}]
     total = sum((g.cost_usd for g in llm), Decimal("0"))
     if total < Decimal(str(t.fallback_min_usd)):
         return []
@@ -230,6 +288,9 @@ def evaluate_alerts(inputs: AlertInputs, now: datetime,
                     thresholds: Thresholds | None = None) -> list[Alert]:
     t = thresholds or Thresholds.from_env()
     return [*unknown_pricing(inputs.usage_groups), *stale_rate_cards(inputs.freshness, now),
+            *expiring_rate_cards(inputs.freshness, now),
+            *wallet_holds(inputs.wallet_uncertain, inputs.wallet_uncertain_oldest_seconds,
+                          inputs.wallet_anomalies),
             *cost_spike(inputs.usage_groups, inputs.baseline_cost_by_provider, t),
             *expensive_fallback(inputs.usage_groups, t),
             *wallet_mismatch(inputs.wallet_mismatch_accounts, inputs.wallet_mismatch_abs_milli),
@@ -249,10 +310,12 @@ def installed_freshness() -> list[Freshness]:
         return datetime.fromisoformat(card["observed_at"]).replace(tzinfo=timezone.utc) \
             if "T" not in card["observed_at"] else datetime.fromisoformat(card["observed_at"])
 
+    from services.shard_pricing import rate_card_max_age
     llm_days = int(os.getenv("RPG_FINOPS_LLM_CARD_MAX_AGE_DAYS", "30"))
+    window = rate_card_max_age()  # same window the pricing guards enforce (SPEC-236 R7)
     return [Freshness("llm", INSTALLED_RATE_CARD_OBSERVED_AT, timedelta(days=llm_days)),
-            Freshness("image", seen(image_card), timedelta(days=7)),
-            Freshness("speech", seen(speech_card), timedelta(days=7))]
+            Freshness("image", seen(image_card), window),
+            Freshness("speech", seen(speech_card), window)]
 
 
 def require_paid_effect(category: str, *, now: datetime | None = None) -> None:

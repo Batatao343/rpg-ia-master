@@ -41,6 +41,19 @@ groups:
         expr: rpg_finops_alert_active{kind="daily_spend_cap"} == 1
         labels: {severity: critical}
         annotations: {summary: "daily spend cap hit: image_generation + stt_fallback_expensive were switched off by system:finops; a human must re-enable"}
+      - alert: FinopsRateCardExpiring
+        expr: rpg_finops_alert_active{kind="rate_card_expiring"} == 1
+        labels: {severity: warning}
+        annotations: {summary: "image/STT/LLM rate card expires within RPG_RATE_CARD_WARN_DAYS; renew it before it turns stale (SPEC-236 R7)"}
+      - alert: FinopsWalletUncertainHold
+        expr: rpg_finops_alert_active{kind="wallet_uncertain_hold"} == 1
+        for: 1h
+        labels: {severity: warning}
+        annotations: {summary: "player funds held as uncertain; reconcile with provider proof via scripts/admin_wallet_reconcile.py (SPEC-236 R4/R5)"}
+      - alert: FinopsWalletSpendAnomaly
+        expr: rpg_finops_alert_active{kind="wallet_spend_anomaly"} == 1
+        labels: {severity: warning}
+        annotations: {summary: "a settlement exceeded its confirmed ceiling and was capped (SPEC-236 R10)"}
       - alert: FinopsKillSwitchActive
         expr: rpg_finops_kill_switch_off > 0
         labels: {severity: info}

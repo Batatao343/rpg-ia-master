@@ -921,8 +921,11 @@ def _llm_log_fields(events: Optional[List[dict]],
         "llm_providers": dict(Counter(e.get("provider") or "?" for e in events)),
         "fell_back": any(e.get("fell_back") for e in events),
         "cost_usd_est": round(float(operation_cost(normalized)), 9),
-        "cost_basis": "estimated" if any(not item.billing_exact for item in normalized)
+        "cost_basis": "estimated" if any(not item.billing_exact for item in normalized
+                                         if item.counts_as_spend)
                       else "normalized",
+        # SPEC-236 R2: provider failures without usage are counted apart, never as spend.
+        "llm_failed_no_usage": sum(1 for item in normalized if not item.counts_as_spend),
     }
 
 

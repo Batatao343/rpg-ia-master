@@ -50,7 +50,8 @@ def test_unpublished_model_and_stale_card_cannot_authorize_dispatch():
     with pytest.raises(PricingUnavailable):
         require_image_prices("unpublished", datetime(2026, 10, 12, tzinfo=timezone.utc))
     with pytest.raises(PricingUnavailable):
-        require_image_prices(MODEL, datetime(2026, 10, 20, tzinfo=timezone.utc))
+        # SPEC-236 R7: default window is 30 d (RPG_RATE_CARD_MAX_AGE_DAYS), was a fixed 7 d.
+        require_image_prices(MODEL, datetime(2026, 11, 12, tzinfo=timezone.utc))
     assert not reading(USAGE, "unpublished").billing_exact
 
 

@@ -505,6 +505,7 @@ class PostgresWallet:
                 e["cached_units"], e["audio_units"], e["image_units"],
                 Decimal(e["cost_usd"]), e["cost_basis"],
                 e["pricing_version"], e["billing_exact"],
+                bool(e.get("counts_as_spend", True)),
             ) for e in events]
             version_row = connection.execute(
                 "select * from app.pricing_versions where version_id=%s",
@@ -522,15 +523,22 @@ class PostgresWallet:
                 ).fetchone()
                 if row["reference_type"] != "image" or not image:
                     raise WalletConflict("teto de imagem sem quote confirmado")
-                if debit > int(row["ceiling_milli"]):
+            if debit > int(row["ceiling_milli"]):
+                # SPEC-236 R10: the player never pays above the confirmed ceiling. The excess is
+                # recorded exactly once (settlement is terminal) for FinOps instead of making
+                # every settlement retry fail and the reservation hang in effect_started.
+                excess = debit - int(row["ceiling_milli"])
+                if cap_confirmed_image:
                     connection.execute(
                         "update app.art_generations set financial_anomaly_milli=%s "
                         "where wallet_reservation_id=%s",
-                        (debit - int(row["ceiling_milli"]), reservation_id),
+                        (excess, reservation_id),
                     )
-                    debit = int(row["ceiling_milli"])
-            if debit > int(row["ceiling_milli"]):
-                raise SpendCeilingExceeded("custo real excedeu teto confirmado")
+                connection.execute(
+                    "update app.wallet_reservations set financial_anomaly_milli=%s "
+                    "where reservation_id=%s", (excess, reservation_id),
+                )
+                debit = int(row["ceiling_milli"])
             for event in events:
                 connection.execute(
                     """insert into app.wallet_settled_usage
@@ -605,6 +613,8 @@ class PostgresWallet:
 
         Never invoked from a failed operation, timeout or client request alone.
         The evidence reference and actor stay in the durable reservation receipt.
+        SPEC-236 R5: the proof covers the UNKNOWN attempts. Exact usage already persisted
+        for the same operation (e.g. the fallback that answered) is settled, never waived.
         """
         if not isinstance(actor_id, UUID):
             raise WalletConflict("reconciliação exige ator")
@@ -614,22 +624,54 @@ class PostgresWallet:
             row = self._locked_reservation(connection, principal, reservation_id)
             if row["fence_token"] != fence_token:
                 raise UncertainEffect("worker perdeu fence financeiro")
-            if row["status"] == "released":
+            if row["status"] in ("released", "settled"):
                 if row["reconciliation_reason"] != reason:
                     raise WalletConflict("reconciliação replay divergente")
                 return _reservation(row)
             if row["status"] not in ("effect_started", "uncertain"):
                 raise WalletConflict("reconciliação só aceita efeito com ticket")
+            exact = []
             if row["usage_operation_id"] is not None:
-                observed = connection.execute(
-                    "select 1 from app.usage_events where operation_id=%s and owner_id=%s "
-                    "and billing_exact limit 1",
+                exact = connection.execute(
+                    "select * from app.usage_events where operation_id=%s and owner_id=%s "
+                    "and billing_exact order by event_id",
                     (row["usage_operation_id"], principal.user_id),
-                ).fetchone()
-                if observed:
-                    raise WalletConflict("usage exato persistido; no-charge contraditório")
-            return self._terminal_transfer(connection, row, 0, (),
-                                           status="released", reason=reason)
+                ).fetchall()
+            if not exact:
+                return self._terminal_transfer(connection, row, 0, (),
+                                               status="released", reason=reason)
+            readings = [UsageEvent(
+                e["event_id"], e["operation_id"], e["component"], e["attempt_ordinal"],
+                e["category"], e["provider"], e["model"], e["outcome"], e["input_units"],
+                e["output_units"], e["cached_units"], e["audio_units"], e["image_units"],
+                Decimal(e["cost_usd"]), e["cost_basis"], e["pricing_version"],
+                e["billing_exact"], bool(e.get("counts_as_spend", True)),
+            ) for e in exact]
+            version_row = connection.execute(
+                "select * from app.pricing_versions where version_id=%s",
+                (row["pricing_version_id"],),
+            ).fetchone()
+            debit = quote_usage(readings, version_from_record(version_row),
+                                at=datetime.now(timezone.utc),
+                                authorized_snapshot=True).shard_milli_debited
+            if debit > int(row["ceiling_milli"]):
+                connection.execute(
+                    "update app.wallet_reservations set financial_anomaly_milli=%s "
+                    "where reservation_id=%s",
+                    (debit - int(row["ceiling_milli"]), reservation_id))
+                debit = int(row["ceiling_milli"])
+            for event in exact:
+                connection.execute(
+                    """insert into app.wallet_settled_usage
+                    (usage_event_id,reservation_id,owner_id,event_sha256,cost_usd,
+                     cost_basis,pricing_version) values (%s,%s,%s,%s,%s,%s,%s)""",
+                    (event["event_id"], reservation_id, principal.user_id,
+                     event["event_sha256"], event["cost_usd"],
+                     event["cost_basis"], event["pricing_version"]),
+                )
+            return self._terminal_transfer(connection, row, debit,
+                                           [e["event_id"] for e in exact],
+                                           status="settled", reason=reason)
 
 
 @contextmanager

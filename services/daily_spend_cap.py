@@ -81,7 +81,15 @@ def _manually_reenabled(store, key: str, since: datetime) -> bool:
     at = _ts(last.get("at") or last.get("created_at"))
     if last.get("actor_id") == ACTOR or not last.get("enabled") or at is None or at < since:
         return False
-    return any(a.get("actor_id") == ACTOR and a.get("enabled") is False for a in rows[1:])
+
+    # SPEC-236 R3: the human re-enable only shields the cap day of the trip it answered. A trip
+    # from a previous cap day plus a re-enable this morning must NOT disarm today's cap.
+    def same_day_trip(row) -> bool:
+        trip_at = _ts(row.get("at") or row.get("created_at"))
+        return (row.get("actor_id") == ACTOR and row.get("enabled") is False
+                and trip_at is not None and since <= trip_at <= at
+                and trip_at < since + timedelta(days=1))
+    return any(same_day_trip(a) for a in rows[1:])
 
 
 def day_start(now: datetime) -> datetime:
@@ -121,7 +129,9 @@ def evaluate_daily_cap(reader, store, now: datetime, fx_usd_brl: Decimal | None,
         return res
     fx = fx_usd_brl or DEFAULT_FX
     since = day_start(now)
-    usd = sum((g.cost_usd for g in reader.usage_groups(since, now)), Decimal("0"))
+    # SPEC-236 R2: a provider failure without usage is not spend; it can never trip the cap.
+    usd = sum((g.cost_usd for g in reader.usage_groups(since, now) if g.counts_as_spend),
+              Decimal("0"))
     res.spent_brl = usd * fx
     res.exceeded = res.spent_brl > cap
     if not res.exceeded:
