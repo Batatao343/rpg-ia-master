@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "905c98ab25429aaa82f6595d5afdca7678d7ee5e",
+  "commit_sha": "de2c2b1d8ea31eb8b8d3ede1806d1ed4d41777c4",
   "edge_counts": {
-    "calls": 11254,
-    "contains": 538,
-    "defines": 6710,
-    "imports": 1129,
-    "likely_test_for": 689,
+    "calls": 11283,
+    "contains": 539,
+    "defines": 6737,
+    "imports": 1132,
+    "likely_test_for": 692,
     "route_to": 58
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:66046bf68fde87fe5557f548cfe5655c12f43ada1d56ee7a0c83a4233c1bb906",
+  "graph_hash": "sha256:d3eac466ef54fc421e5ef841e69be6fc22f3e9adf1b96a154c10a2ea505373fc",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -371,6 +371,7 @@
     "tests/test_bug_intencao_parsers.py",
     "tests/test_bug_memoria_resiliencia.py",
     "tests/test_bug_morte_checkpoint.py",
+    "tests/test_bug_mundo_perigo_luz_clima.py",
     "tests/test_bug_npc_ciclo_de_vida.py",
     "tests/test_campaign_grounding_deferred.py",
     "tests/test_chaos_local.py",
@@ -668,14 +669,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 598,
+    "class": 600,
     "endpoint": 58,
-    "file": 614,
-    "function": 2100,
+    "file": 615,
+    "function": 2105,
     "method": 595,
-    "module": 538,
-    "test": 3417
+    "module": 539,
+    "test": 3437
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:61c421f010a0ecee6f81fd68b00f63097b1a68911d76fac86c8a4336fb16002c"
+  "source_tree_hash": "sha256:729302fd10030772c6d8b8652a43c87d1f24946a9e49d328774efc4ca5b99997"
 }
