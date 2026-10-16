@@ -144,7 +144,7 @@ def loot_node(state: GameState):
     conflict_summary = dict(state.get("conflict_summary") or {})
 
     # restock determinístico pelo relógio (barato, idempotente)
-    world = economy.restock(world)
+    world = economy.restock(world, projection=state.get("world_projection"))
     work_state = {**state, "player": player, "world": world}
 
     # =========================================================
@@ -207,6 +207,7 @@ def loot_node(state: GameState):
                 (outcome.get("player") or player).get("gold", gold_before) or 0
             ),
             "gold_delta": int(outcome.get("gold_delta", 0) or 0),
+            "unequipped": list(outcome.get("unequipped") or []),
             "inventory_before": inventory_before,
             "inventory_after": list(
                 (outcome.get("player") or player).get("inventory") or []

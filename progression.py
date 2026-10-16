@@ -383,3 +383,58 @@ def apply_choice(player: Dict, choice_id: str, *,
                 "type": "class_apex_unlocked", "card_id": apex_id, "level": 20,
             }]
     return p, None
+
+
+def auto_resolve_choices(player: Dict, *, max_passes: int = 25) -> Dict:
+    """Resolve TODAS as pending_choices de forma determinística (menor Virtude,
+    primeira subclasse elegível, primeira Carta por id…). Usado na criação em nível
+    alto (SPEC-227 R9). Mesmas regras do harness `start_level`; sem aleatoriedade."""
+    from services import cards
+
+    p = dict(player)
+    for _ in range(max_passes):
+        applied_any = False
+        for choice in list(p.get("pending_choices") or []):
+            kind = str(choice.get("kind") or "")
+            kwargs: Dict[str, str] = {}
+            if kind == "virtude":
+                virtues = p.get("virtudes") or {}
+                eligible = [k for k in gamedata.VIRTUDES
+                            if int(virtues.get(k, 0) or 0) < gamedata.VIRTUDE_MAX]
+                if eligible:
+                    kwargs["virtude"] = min(
+                        eligible, key=lambda k: (int(virtues.get(k, 0) or 0), k))
+            elif kind == "subclass":
+                subs = eligible_subclasses(p)
+                if subs:
+                    kwargs["subclass_id"] = str(subs[0]["id"])
+            elif kind == "virtue_mastery":
+                vcs = [r for r in p.get("virtue_cards") or []
+                       if int(r.get("mastery", 0) or 0) < 2]
+                if vcs:
+                    kwargs["virtue_card_id"] = str(min(vcs, key=lambda r: (
+                        int(r.get("mastery", 0) or 0), str(r.get("card_id", ""))))["card_id"])
+            elif kind == "carta":
+                elig = sorted(eligible_cards(p))
+                if elig:
+                    kwargs["card_id"] = elig[0]
+                else:
+                    evolved = p.get("evolved_cards") or {}
+                    evolvable = sorted(
+                        c for c in (p.get("known_cards") or [])
+                        if c not in evolved and (cards.get_card(c) or {}).get("evolucao"))
+                    if evolvable:
+                        kwargs.update(evolve_card_id=evolvable[0], caminho="A")
+            if not kwargs:
+                continue
+            updated, error = apply_choice(p, str(choice.get("id") or ""), **kwargs)
+            if not error:
+                p = updated
+                applied_any = True
+        if not applied_any or not p.get("pending_choices"):
+            break
+    known = list(dict.fromkeys(p.get("known_cards") or []))
+    ranked = sorted(known, key=lambda c: (
+        int((cards.get_card(c) or {}).get("level_req", 1) or 1), c), reverse=True)
+    p["prepared_cards"] = ranked[:gamedata.prepared_slots_for_level(p.get("level", 1))]
+    return p

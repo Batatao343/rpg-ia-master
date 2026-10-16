@@ -33,8 +33,12 @@ def _player(**over):
          "attributes": {"str": 14, "dex": 12, "con": 12, "int": 10, "wis": 14, "cha": 10},
          "known_abilities": ["ataque_basico"], "active_conditions": [],
          "equipment": {"weapon": "espada", "armor": None, "accessory": "anel_ac"},
+         # SPEC-227 R5: slot só vale com posse -> o fixture possui o que equipa
          "inventory": []}
     p.update(over)
+    if "inventory" not in over:
+        p["inventory"] = [{"id": v, "qty": 1}
+                          for v in (p.get("equipment") or {}).values() if v]
     return p
 
 

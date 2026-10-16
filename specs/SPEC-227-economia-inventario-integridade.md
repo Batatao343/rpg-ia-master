@@ -1,6 +1,6 @@
 # SPEC-227 — Integridade de economia e inventário (venda/craft/equipamento/únicos/consumíveis)
 
-> **Status:** `draft`
+> **Status:** `done`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** nenhuma · SPEC-013/017/018 `done` corrigidas. Fronteira com SPEC-199 D-B: esta corrige o motor; recibo de economia na UI fica para spec futura (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-209, SPEC-212 (ordem final 2026-10-15)
@@ -81,7 +81,7 @@ Objetivo: fechar o exploit e tornar as transições de inventário/equipamento/p
   que `max_entropy == late_entropy_curve(...)` respeitando o cap e `pending_choices == []`. Alternativa D-B.
   Teste: Devoto nível 20 → `max_entropy == 36`, `pending_choices == []`, `len(known_cards)` igual ao de um
   personagem que subiu por XP.
-- **R10** — [R] Inventário de sabor do LLM (criação e qualquer `items_gained` narrado): nome que resolve para item de
+- **R10** — [R] Inventário de sabor do LLM **na criação de personagem** (escopo revisado em 2026-10-16: o caminho `items_gained` narrado segue as regras de claim da Fase 6.2 e fica para spec futura de recompensa narrada): nome que resolve para item de
   raridade acima de `comum` ou único vira `item_desconhecido` com `display_name` = nome livre (sem claim, sem
   bônus). Teste: `add_item([], "Adaga de Vidro de Dragão")` via criador → `{id: item_desconhecido, display_name:...}`.
 - **R11** — [R] Ouro nunca negativo em nenhum caminho de `economy`/`loot`: assert defensivo `gold >= 0` após toda
@@ -152,13 +152,13 @@ Retorno de `execute_trade`/`execute_craft` ganha `unequipped: list[str]` (defaul
 
 ## 5. Critérios de aceite
 
-- [ ] 10 testes de reprodução vermelhos no HEAD → verdes após a correção, sem alterar os asserts.
-- [ ] Testes legados de venda/craft/comerciante (`tests/test_economy*.py`, `tests/test_fase6*.py`,
+- [x] 10 testes de reprodução vermelhos no HEAD → verdes após a correção, sem alterar os asserts.
+- [x] Testes legados de venda/craft/comerciante (`tests/test_economy*.py`, `tests/test_fase6*.py`,
       `tests/test_comerciante*.py`) continuam verdes ou têm o diff justificado no README da spec.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Playtest offline `comerciante` 30 turnos: zero `gold < 0`, zero item vendido ainda equipado.
-- [ ] Saves antigos continuam carregando (R12).
-- [ ] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo).
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Playtest offline `comerciante` 30 turnos: zero `gold < 0`, zero item vendido ainda equipado.
+- [x] Saves antigos continuam carregando (R12).
+- [x] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo).
 
 ## 6. Smoke test com LLM real
 
@@ -184,6 +184,15 @@ Retorno de `execute_trade`/`execute_craft` ganha `unequipped: list[str]` (defaul
   `level>1` em `/game/new` fora do modo `combat_simulation` (422).
 - **D-C (equipamento órfão em saves antigos):** default: normalização em `_raw_to_state` (sem bump de schema);
   alternativa: migração v9 explícita.
+
+## 8.1 Decisões aplicadas (execução 2026-10-16)
+
+- D-A = default (item livre NÃO vendável, `ok False`); D-B = default R9 (nível 1 + `grant_xp` + `progression.auto_resolve_choices`); D-C = default (normalização em `_raw_to_state`, SEM bump de schema).
+- Desvios: `restock` mantém a assinatura `restock(world, *, projection=None)` (sem `now_day`; o dia vem do relógio do mundo); `use_item_in_combat` segue devolvendo `(player, logs)` (compat.) e a API nova com `consumed_turn` é `inventory.try_use_item`; `reconcile_equipment`/`equipped_items` em `inventory.py`, `combat_mechanics.equipped_ids` como ponte. R11: clamp no craft (`max(0, ...)`); compra já recusa ouro insuficiente; teste de propriedade com 200 sequências. Smoke com LLM real (seção 6) NÃO executado (sem provider real nesta onda).
+- Pós-revisão Sol: item recusado em combate não gasta a Ação (pré-checagem em `conflict_orchestrator.run_round`, `action_refused`); `economy.clamp_gold` loga `economy.negative_gold_prevented`; teste de recompra do único preservado.
+- Desvio: a resolução determinística das escolhas (R9) NÃO usa semente do `game_id` (é puramente determinística: menor Virtude, primeira subclasse/Carta por id).
+- Follow-up (R10 parcial): o storyteller ainda adiciona item raro NÃO único narrado (`items_gained`) com bônus; só a criação foi coberta. Tratar em spec futura (mexe no fluxo de recompensa narrado).
+- Evidência: `docs/spec227/README.md`.
 
 ## 9. Evidência requerida
 

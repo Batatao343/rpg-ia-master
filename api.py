@@ -2716,7 +2716,7 @@ def _create_game(req: CreateCharacterRequest, claim):
             "class_name": final_char["class_name"],
             "race": final_char["race"],
             "level": final_char["level"],
-            "xp": 0,
+            "xp": final_char.get("xp", 0),
             "hp": final_char["hp"],
             "max_hp": final_char["max_hp"],
             # spec refatoracao-sistema-classes: Entropia é o pool das 5 classes.
@@ -2742,6 +2742,10 @@ def _create_game(req: CreateCharacterRequest, claim):
             "virtue_cards": final_char.get("virtue_cards", []),
             "evolved_cards": final_char.get("evolved_cards", {}),
             "pending_choices": final_char.get("pending_choices", []),
+            # SPEC-227 R9: nível > 1 sobe pelo pipeline de XP — carrega o rastro.
+            **{k: final_char[k] for k in
+               ("subclass", "progression_events", "progression_grants")
+               if k in final_char},
             "defense": final_char["defense"],
             "attack_bonus": final_char.get("attack_bonus", 0),
             "active_conditions": [],

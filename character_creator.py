@@ -278,6 +278,11 @@ def create_player_character(user_input: Dict[str, Any], *,
     raw_level = str(user_input.get("level", "1"))
     clean_level = "".join(filter(str.isdigit, raw_level))
     level = int(clean_level) if clean_level else 1
+    # SPEC-227 R9: a ficha nasce SEMPRE no nível 1; nível > 1 sobe pelo pipeline
+    # oficial de XP (curva/cap de Entropia, pending_choices resolvidas) no fim.
+    target_level = max(1, min(gamedata.NIVEL_MAX, level))
+    level = 1
+    user_input = {**user_input, "level": 1}
 
     # 1. BUSCA DADOS OFICIAIS (A "Regra")
     class_data = _get_class_data(p_class)
@@ -357,8 +362,13 @@ def create_player_character(user_input: Dict[str, Any], *,
     inv: List[Dict] = []
     for iid in class_data.get("starting_equipment", []) or []:
         inv = add_item(inv, iid, 1)
+    from inventory import resolve_flavor_item
     for free_name in flavor_data.get("inventory", []) or []:
-        inv = add_item(inv, str(free_name), 1)
+        flavor = resolve_flavor_item(str(free_name))
+        if flavor["id"] == "item_desconhecido":
+            inv = _append_free(inv, flavor.get("display_name") or str(free_name))
+        else:
+            inv = add_item(inv, flavor["id"], 1)
     sheet["inventory"] = inv
 
     # 7. TRAITS RACIAIS (Fase 2.5b) — ANTES de defesa/ataque (bônus de Virtude reflete)
@@ -373,7 +383,33 @@ def create_player_character(user_input: Dict[str, Any], *,
     racial_def_bonus = int(sheet.get("defense", 0) or 0) - 10 if "defense" in sheet else 0
     sheet["defense"] = max(base_def, 10 + int(virtudes.get("agilidade", 0))) + max(0, racial_def_bonus)
     sheet["attack_bonus"] = _calculate_attack_bonus(p_class, sheet["virtudes"], level)
+    if target_level > 1:
+        sheet = _level_up_deterministic(sheet, target_level)
+        sheet["attack_bonus"] = _calculate_attack_bonus(p_class, sheet["virtudes"], target_level)
     return sheet
+
+
+def _append_free(inv: List[Dict], name: str) -> List[Dict]:
+    """Nome livre que colide com raro/único: entra como `item_desconhecido`."""
+    from inventory import UNKNOWN_ID
+    out = [dict(e) for e in inv]
+    for e in out:
+        if e.get("id") == UNKNOWN_ID and e.get("display_name") == name:
+            e["qty"] = int(e.get("qty", 1)) + 1
+            return out
+    out.append({"id": UNKNOWN_ID, "qty": 1, "display_name": name})
+    return out
+
+
+def _level_up_deterministic(sheet: Dict[str, Any], target_level: int) -> Dict[str, Any]:
+    """Sobe o nível 1 -> target_level por XP e resolve as escolhas de forma
+    determinística (progression.auto_resolve_choices). Vitalidade/Entropia cheias."""
+    import progression
+    player, _events = progression.grant_xp(sheet, int(gamedata.XP_TABLE[int(target_level)]))
+    player = progression.auto_resolve_choices(player)
+    gamedata.sync_player_vitals(player, heal_to_full=True)
+    player["entropy"] = int(player.get("max_entropy", player.get("entropy", 0)) or 0)
+    return player
 
 def _get_region_lore(region_name: str) -> str:
     if not RAG_AVAILABLE: return ""

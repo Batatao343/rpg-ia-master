@@ -200,6 +200,13 @@ def learned_passives(entity: Dict, *, abilities_db=None) -> List[Dict]:
     return []
 
 
+def equipped_ids(entity: Dict) -> List[str]:
+    """SPEC-227 R5: ids dos slots de equipamento COM posse no inventário —
+    slot órfão (item vendido/perdido) não dá bônus nem passiva."""
+    from inventory import equipped_items
+    return equipped_items(entity)
+
+
 def item_passives(entity: Dict, *, artifacts_db=None) -> List[Dict]:
     """spec itens-vivos-e-luz (R1): passive_effects dos itens EQUIPADOS (slots).
     Mesmo vocabulário das passivas de classe/habilidade. Sem `equipment` (fichas
@@ -208,7 +215,7 @@ def item_passives(entity: Dict, *, artifacts_db=None) -> List[Dict]:
     db = artifacts_db if artifacts_db is not None else ARTIFACTS_DB
     equipment = entity.get("equipment")
     if isinstance(equipment, dict):
-        ids = [v for v in equipment.values() if v]
+        ids = equipped_ids(entity)
     else:
         ids = [e.get("id") if isinstance(e, dict) else e
                for e in (entity.get("inventory") or [])]
@@ -720,13 +727,13 @@ def compute_player_combat_stats(player: Dict) -> Dict:
 
     equipment = player.get("equipment")
     if isinstance(equipment, dict):
-        equipped_ids = [v for v in equipment.values() if v]
+        equipped_ids_ = equipped_ids(player)
     else:
         # legado: inventário de strings OU estruturado ({id, qty}) sem slots
-        equipped_ids = [e.get("id") if isinstance(e, dict) else e
+        equipped_ids_ = [e.get("id") if isinstance(e, dict) else e
                         for e in (player.get("inventory") or [])]
 
-    for item_id in equipped_ids:
+    for item_id in equipped_ids_:
         item = ARTIFACTS_DB.get(item_id)
         if not item:
             continue

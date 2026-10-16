@@ -1132,6 +1132,28 @@ def apply_effect_spec(scene: dict, actors_by_id: Dict[str, dict], effect: dict,
 # ==========================================================================
 # Rodada completa
 # ==========================================================================
+def _refused_player_item(actors_by_id, sides, declarations) -> str:
+    """Motivo da recusa se o protagonista declarou um item que `try_use_item`
+    recusaria (sem mutar nada); '' caso contrário."""
+    import inventory
+    pid = _player_id(sides)
+    decl = (declarations or {}).get(pid) if pid else None
+    player = actors_by_id.get(pid) if pid else None
+    if decl is None or player is None:
+        return ""
+    if not isinstance(decl, ct.TurnDeclaration):
+        decl = ct.TurnDeclaration(**decl)
+    for step in (decl.pre_acao, decl.acao, decl.pos_acao):
+        if step is None or str(step.kind or "").lower() != "item":
+            continue
+        target = actors_by_id.get(step.target_id) if step.target_id else None
+        res = inventory.try_use_item(
+            player, step.item_id or step.object_id or "", target=target)
+        if not res["ok"]:
+            return res["reason"]
+    return ""
+
+
 def run_round(scene: dict, actors_by_id: Dict[str, dict], sides: Dict[str, List[str]],
               state: Optional[dict] = None, *, declarations: Optional[dict] = None,
               prepared_abyss: Optional[List[dict]] = None, scene_state: Optional[dict] = None,
@@ -1156,6 +1178,13 @@ def run_round(scene: dict, actors_by_id: Dict[str, dict], sides: Dict[str, List[
         actor_id for actor_id, actor in actors_by_id.items()
         if actor.get("last_stand_pending")
     )
+    refusal = _refused_player_item(actors_by_id, sides, declarations)
+    if refusal:
+        # SPEC-227 R8: item recusado (ex.: Vitalidade cheia) NÃO gasta a Ação nem
+        # dá turno aos inimigos — nada na cena é tocado, o jogador redeclara.
+        out["logs"].append(refusal)
+        out["action_refused"] = True
+        return out
     cs.advance_tactical_state(scene)
     player = _find_player(actors_by_id, sides)
     player_id = _player_id(sides)

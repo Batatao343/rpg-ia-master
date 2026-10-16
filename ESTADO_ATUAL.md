@@ -8,6 +8,7 @@
 > rate cards de imagem/STT vencem em 19/10. Caminho crítico até o gate 212: 226 → 199 → 203 → 205 → 208 → 209 → 212
 > (231 → 232 antes da 205). Cadeia de `SCHEMA_VERSION`: 228 → (227) → 202 → 203 → 207 → 213 → 215. Nenhum código
 > de produto alterado.
+> **SPEC-227 `done` (16/10):** ouro infinito fechado (venda/craft atômicos, exigem mercador), equipamento sem posse sem bônus, item recusado não gasta turno nem Ação, nível alto via XP; 18 testes; smoke real TradeIntent ok.
 
 > **15/10 — SPEC-196 `done`: FinOps, margin guard e kill switches.** Margem por SKU/canal/versão de preço
 > (gross, taxa de canal, custo variável, contribuição; infra fixa separada), alertas Prometheus sem ids de

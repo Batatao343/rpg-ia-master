@@ -4073,7 +4073,7 @@ specs:
   lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
 - id: SPEC-227
   slug: economia-inventario-integridade
-  status: draft
+  status: done
   path: specs/SPEC-227-economia-inventario-integridade.md
   created_commit: null
   created_at: '2026-10-15'

@@ -836,6 +836,16 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         from services.actor_lifecycle import sanitize_interturn_state
         state = sanitize_interturn_state(state)
         state["needs_replan"] = True
+    # SPEC-227 R12: equipamento sem posse (venda antiga) é reconciliado no load,
+    # idempotente e sem tocar no ouro. Sem bump de schema (D-C default).
+    try:
+        from inventory import reconcile_equipment
+        player = state.get("player")
+        inventory_ok = all(isinstance(e, dict) for e in (player or {}).get("inventory") or [])
+        if isinstance(player, dict) and isinstance(player.get("equipment"), dict) and inventory_ok:
+            state["player"], _ = reconcile_equipment(player)
+    except Exception:  # pragma: no cover - nunca quebrar o load por isso
+        pass
     return state
 
 

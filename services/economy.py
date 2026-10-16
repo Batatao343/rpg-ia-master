@@ -12,12 +12,14 @@ LLM NUNCA decide preço; `gold_value` proposto pela IA para item novo é ignorad
 from __future__ import annotations
 
 import copy
+import logging
 import random
 from typing import Any, Dict, List, Mapping, Optional, Tuple, TypedDict
 
 from gamedata import ARTIFACTS_DB, get_location, load_json_data
-from inventory import (add_item, find_in_inventory, get_qty, item_display,
-                       make_entry, remove_item, resolve_item_name, _fold)
+from inventory import (add_item, find_entry_in_inventory, get_qty, item_display,
+                       make_entry, reconcile_equipment, remove_item,
+                       resolve_item_name, _fold, UNKNOWN_ID)
 from services import graph_resolver as gr
 
 RECIPES: Dict[str, dict] = load_json_data("recipes.json") or {}
@@ -197,14 +199,34 @@ def _ensure_stock(world: dict, mid: str, merchant: dict) -> Dict[str, int]:
     return stocks[mid]
 
 
-def restock(world: dict) -> dict:
-    """Reabastece mercadores vencidos pelo relógio (determinístico, idempotente)."""
+def clamp_gold(player: dict, value: int) -> int:
+    """SPEC-227 R11: ouro nunca negativo; quando o clamp atua, loga
+    `economy.negative_gold_prevented` (estruturado) e devolve 0."""
+    value = int(value)
+    if value < 0:
+        logging.getLogger("rpg.economy").warning(
+            "economy.negative_gold_prevented",
+            extra={"event": "economy.negative_gold_prevented", "attempted_gold": value,
+                   "player": str((player or {}).get("name", ""))})
+        return 0
+    return value
+
+
+def restock(world: dict, *, projection: Optional[dict] = None) -> dict:
+    """Reabastece mercadores vencidos pelo relógio (determinístico, idempotente).
+    SPEC-227 R6: item ÚNICO que o próprio mercador segura (jogador vendeu) sobrevive
+    ao restock; o estoque base nunca apaga posse registrada."""
     day = int((world.get("world_clock") or {}).get("day", 1) or 1)
     stocks = world.get("merchant_stocks") or {}
     last = world.setdefault("merchant_restock_day", {})
+    from inventory import is_unique
     for mid, m in MERCHANTS.items():
         if mid in stocks and day - int(last.get(mid, day)) >= int(m.get("restock_days", 3)):
-            stocks[mid] = dict(m.get("base_stock") or {})
+            held = {iid: q for iid, q in (stocks[mid] or {}).items()
+                    if q and is_unique(iid) and (
+                        unique_holder(iid, projection) == mid
+                        or (projection is None and iid not in (m.get("base_stock") or {})))}
+            stocks[mid] = {**(m.get("base_stock") or {}), **held}
             last[mid] = day
     return world
 
@@ -331,7 +353,7 @@ def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
         total = unit * qty
         if int(player.get("gold", 0)) < total:
             return {"ok": False, "reason": f"Ouro insuficiente ({player.get('gold', 0)}/{total})."}
-        player["gold"] = int(player.get("gold", 0)) - total
+        player["gold"] = clamp_gold(player, int(player.get("gold", 0)) - total)
         player["inventory"] = add_item(player["inventory"], iid, qty)
         world["merchant_stocks"][mid][iid] = world["merchant_stocks"][mid].get(iid, 0) - qty
         out = {"ok": True, "mode": "buy", "item_id": iid,
@@ -344,19 +366,30 @@ def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
         return out
 
     if mode == "sell":
-        iid = find_in_inventory(player["inventory"], item_ref)
-        if not iid:
+        entry = find_entry_in_inventory(player["inventory"], item_ref)
+        if not entry:
             return {"ok": False, "reason": f"Você não tem '{item_ref}' para vender."}
+        iid = entry["id"]
+        if iid == UNKNOWN_ID:
+            return {"ok": False, "reason": "Esse item não tem valor de mercado."}
         if get_qty(player["inventory"], iid) < qty:
             return {"ok": False, "reason": "Quantidade insuficiente."}
-        mid, merchant = (merchants_at(location_id) or [(None, {})])[0]
+        here = merchants_at(location_id)
+        if not here:
+            return {"ok": False, "reason": "Não há mercador neste local para comprar isso."}
+        mid, merchant = here[0]
         unit = price(iid, mode="sell", state=state, merchant=merchant or None)
         total = unit * qty
-        player["inventory"], _ = remove_item(player["inventory"], iid, qty)
+        new_inv, removed = remove_item(player["inventory"], iid, qty)
+        if not removed:
+            return {"ok": False, "reason": "Não foi possível separar o item para a venda."}
+        player["inventory"] = new_inv
+        player, unequipped = reconcile_equipment(player)
         player["gold"] = int(player.get("gold", 0)) + total  # sinal em PYTHON, sempre
         out = {"ok": True, "mode": "sell", "item_id": iid,
                "item_name": item_display(make_entry(iid)), "qty": qty,
-               "gold_delta": total, "player": player, "world": world}
+               "gold_delta": total, "player": player, "world": world,
+               "unequipped": unequipped}
         # Fase 6.2: vender um único → mercador SEGURA o item (recomprável,
         # nunca volta ao pool de drop) e a perda entra no event_log.
         from inventory import is_unique
@@ -418,16 +451,22 @@ def execute_craft(state: dict, item_ref: str) -> dict:
     if not is_unique_available(recipe.get("result_id", ""), state.get("world_projection")):
         return {"ok": False, "reason": "Esse artefato já existe no mundo — não há como forjar outro."}
 
+    work_inv = player["inventory"]
     for iid, need in (recipe.get("ingredients") or {}).items():
-        player["inventory"], _ = remove_item(player["inventory"], iid, int(need))
-    player["gold"] = int(player.get("gold", 0)) - cost
+        work_inv, removed = remove_item(work_inv, iid, int(need))
+        if not removed:
+            return {"ok": False, "reason": f"Não foi possível separar o ingrediente: {item_display(make_entry(iid))}."}
+    player["inventory"] = work_inv
+    player, unequipped = reconcile_equipment(player)
+    player["gold"] = clamp_gold(player, int(player.get("gold", 0)) - cost)
     result_id = recipe.get("result_id")
     player["inventory"] = add_item(player["inventory"], result_id,
                                    int(recipe.get("result_qty", 1) or 1))
     return {"ok": True, "mode": "craft", "recipe_id": rid, "item_id": result_id,
             "item_name": item_display(make_entry(result_id)),
             "qty": int(recipe.get("result_qty", 1) or 1),
-            "gold_delta": -cost, "player": player, "world": dict(world)}
+            "gold_delta": -cost, "player": player, "world": dict(world),
+            "unequipped": unequipped}
 
 
 # ---------------------------------------------------------------------------

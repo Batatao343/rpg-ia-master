@@ -91,20 +91,35 @@ def add_item(inv: List[Dict], id_or_name: str, qty: int = 1) -> List[Dict]:
     return out
 
 
-def remove_item(inv: List[Dict], item_id: str, qty: int = 1) -> Tuple[List[Dict], bool]:
-    """Decrementa/remove. False se não tinha quantidade suficiente (inv intocado)."""
-    out = [dict(e) for e in inv or []]
-    for i, e in enumerate(out):
-        if e.get("id") == item_id or item_display(e) == item_id:
-            have = int(e.get("qty", 1))
-            if have < qty:
-                return inv, False
-            if have == qty:
-                out.pop(i)
-            else:
-                e["qty"] = have - qty
-            return out, True
-    return inv, False
+def remove_item(inv: List[Dict], item_id: str, qty: int = 1, *,
+                display_name: Optional[str] = None) -> Tuple[List[Dict], bool]:
+    """Consome `qty` ATRAVÉS de todas as entradas do mesmo item (não-empilháveis
+    vivem em entradas separadas). Soma insuficiente -> (inv original, False), sem
+    mutar nada. `display_name` desambigua itens livres (`item_desconhecido`)."""
+    qty = max(1, int(qty or 1))
+    matches = [
+        i for i, e in enumerate(inv or [])
+        if (e.get("id") == item_id or item_display(e) == item_id)
+        and (display_name is None or e.get("display_name") == display_name)
+    ]
+    if sum(int(inv[i].get("qty", 1)) for i in matches) < qty:
+        return inv, False
+    # entradas sem display_name primeiro, depois ordem da lista
+    matches.sort(key=lambda i: (bool(inv[i].get("display_name")), i))
+    out = [dict(e) for e in inv]
+    left = qty
+    drop = set()
+    for i in matches:
+        if left <= 0:
+            break
+        have = int(out[i].get("qty", 1))
+        take = min(have, left)
+        left -= take
+        if take == have:
+            drop.add(i)
+        else:
+            out[i]["qty"] = have - take
+    return [e for i, e in enumerate(out) if i not in drop], True
 
 
 def get_qty(inv: List[Dict], item_id: str) -> int:
@@ -127,6 +142,39 @@ def find_in_inventory(inv: List[Dict], ref: str) -> Optional[str]:
         if folded and folded in _fold(item_display(e)):
             return e.get("id")
     return None
+
+
+def find_entry_in_inventory(inv: List[Dict], ref: str) -> Optional[Dict]:
+    """Como `find_in_inventory`, mas devolve a ENTRADA ({id, qty, display_name?}) —
+    itens livres precisam do display_name para não confundir `item_desconhecido`."""
+    if not ref:
+        return None
+    rid = resolve_item_name(ref)
+    if rid:
+        for e in inv or []:
+            if e.get("id") == rid:
+                return dict(e)
+    folded = _fold(ref)
+    for e in inv or []:
+        if folded and folded in _fold(item_display(e)):
+            return dict(e)
+    return None
+
+
+def resolve_flavor_item(name: str) -> Dict:
+    """Entrada SEGURA para nome livre vindo do LLM (sabor de criação/narração):
+    só itens comuns resolvem; raro+ ou único vira `item_desconhecido` (sem claim,
+    sem bônus). Usa a mesma escala de raridade da economia."""
+    iid = resolve_item_name(name)
+    if iid:
+        item = ARTIFACTS_DB.get(iid) or {}
+        rarity = str(item.get("rarity", "comum")).lower()
+        if not is_unique(iid) and rarity in _COMMON_RARITIES:
+            return {"id": iid, "qty": 1}
+    return {"id": UNKNOWN_ID, "qty": 1, "display_name": str(name)}
+
+
+_COMMON_RARITIES = {"comum", "common"}
 
 
 # ---------------------------------------------------------------------------
@@ -172,12 +220,50 @@ def unequip(player: Dict, slot: str) -> Tuple[Dict, Optional[str]]:
     return p, None
 
 
+def equipped_items(player: Dict) -> List[str]:
+    """Ids dos slots preenchidos COM posse no inventário (slot órfão não conta)."""
+    inv_ = player.get("inventory") or []
+    return [v for v in (player.get("equipment") or {}).values()
+            if v and has_item(inv_, v)]
+
+
+def reconcile_equipment(player: Dict) -> Tuple[Dict, List[str]]:
+    """Esvazia slots cujo item não está mais no inventário. Pura (cópia)."""
+    p = dict(player)
+    eq = dict(p.get("equipment") or {})
+    removed = [slot for slot, v in eq.items()
+               if v and not has_item(p.get("inventory") or [], v)]
+    for slot in removed:
+        eq[slot] = None
+    if "equipment" in p or removed:
+        p["equipment"] = eq
+    return p, removed
+
+
 # ---------------------------------------------------------------------------
 # Uso em combate (Fase 4.3 R4) — resolução 100% Python
 # ---------------------------------------------------------------------------
 def use_item_in_combat(player: Dict, item_ref: str,
                        target: Optional[Dict] = None) -> Tuple[Dict, List[str]]:
-    """Consome 1 unidade e aplica o efeito mecânico. Retorna (player, logs).
+    """Wrapper de compatibilidade de `try_use_item` -> (player, logs)."""
+    res = try_use_item(player, item_ref, target)
+    return res["player"], res["logs"]
+
+
+def _vitality_full(p: Dict) -> bool:
+    if p.get("vitalidade") is not None or isinstance(p.get("virtudes"), dict):
+        import gamedata
+        q = dict(p)
+        gamedata.sync_vitality(q)
+        return int(q.get("vitalidade", 0) or 0) >= int(q.get("max_vitalidade", 0) or 0)
+    return int(p.get("hp", 0) or 0) >= int(p.get("max_hp", p.get("hp", 0)) or 0)
+
+
+def try_use_item(player: Dict, item_ref: str, target: Optional[Dict] = None,
+                 rng=None) -> Dict:
+    """SPEC-227 R8: valida ANTES de consumir. Retorna
+    {ok, reason, consumed_turn, logs, player}; recusa deixa player/inventário
+    intactos e `consumed_turn=False`. Consome 1 unidade e aplica o efeito mecânico.
 
     Efeitos suportados: `mechanics.heal` ("2d4+2"), `mechanics.effects` (lista
     tipada 4.2 — buffs no PRÓPRIO usuário; spec itens-vivos-e-luz R5: debuff/dot/
@@ -186,13 +272,17 @@ def use_item_in_combat(player: Dict, item_ref: str,
     inventário/efeito nenhum -> log de falha, turno NÃO consumido pelo chamador."""
     import combat_mechanics as cm
 
+    def _refuse(msg: str) -> Dict:
+        return {"ok": False, "reason": msg, "consumed_turn": False,
+                "logs": [msg], "player": player}
+
     inv = player.get("inventory") or []
     iid = find_in_inventory(inv, item_ref)
     if not iid or iid == UNKNOWN_ID:
-        return player, [f"Não há '{item_ref}' utilizável no inventário."]
+        return _refuse(f"Não há '{item_ref}' utilizável no inventário.")
     item = ARTIFACTS_DB.get(iid) or {}
     if str(item.get("type", "")).lower() not in ("consumable", "potion"):
-        return player, [f"{item.get('name', iid)} não é consumível."]
+        return _refuse(f"{item.get('name', iid)} não é consumível.")
 
     mech = item.get("mechanics") or {}
     heal_formula = mech.get("heal")
@@ -204,13 +294,20 @@ def use_item_in_combat(player: Dict, item_ref: str,
     effects = [e for e in (mech.get("effects") or []) if isinstance(e, dict)]
 
     if not heal_formula and not effects:
-        return player, [f"{item.get('name', iid)} não tem efeito utilizável em combate."]
+        return _refuse(f"{item.get('name', iid)} não tem efeito utilizável em combate.")
+
+    hostile = [e for e in effects if e.get("kind") in ("debuff", "dot", "control")]
+    no_target = not target or target.get("status", "ativo") != "ativo"
+    if no_target and hostile and not heal_formula and len(hostile) == len(effects):
+        return _refuse(f"{item.get('name', iid)}: sem alvo válido para o efeito.")
+    if heal_formula and not effects and _vitality_full(player):
+        return _refuse("Vitalidade já está cheia.")
 
     p = dict(player)
     logs: List[str] = []
     new_inv, ok = remove_item(inv, iid, 1)
     if not ok:
-        return player, [f"Não há '{item_ref}' no inventário."]
+        return _refuse(f"Não há '{item_ref}' no inventário.")
     p["inventory"] = new_inv
 
     if heal_formula:
@@ -259,7 +356,7 @@ def use_item_in_combat(player: Dict, item_ref: str,
                                 f"(save {roll} vs CD {dc}).")
                     continue
             logs.append(cm.apply_condition(target, cond))
-    return p, logs
+    return {"ok": True, "reason": "", "consumed_turn": True, "logs": logs, "player": p}
 
 
 # ---------------------------------------------------------------------------
