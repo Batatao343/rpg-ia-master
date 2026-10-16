@@ -92,6 +92,12 @@ def append_chronicle_job_attempt(pool, job, attempts: Sequence[dict]) -> None:
                         operation_kind="chronicle_compress", category="llm")
 
 
+def append_projection_job_attempt(pool, job, attempts: Sequence[dict]) -> None:
+    """SPEC-213: chamadas SMART da projeção adiada do arquivista (modo B/A-DB)."""
+    _append_job_attempt(pool, job, attempts, job_kind="project_archive",
+                        operation_kind="archive_projection", category="llm")
+
+
 def _append_job_attempt(pool, job, attempts: Sequence[dict], *, job_kind: str,
                         operation_kind: str, category: str) -> None:
     if not attempts:

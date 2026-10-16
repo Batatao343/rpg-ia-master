@@ -137,7 +137,8 @@ function renderTab(id: ContextTab, props: ContextSurfaceProps): ReactNode {
             </>
           ) },
         { id: "cronica", label: "Crônica",
-          render: () => <ChronicleTab chapters={data?.chronicle ?? []} gameId={data?.game_id} /> },
+          render: () => <ChronicleTab chapters={data?.chronicle ?? []} gameId={data?.game_id}
+                                projectionStatus={data?.projections?.chronicle?.status} /> },
       ];
       return <CodexTab gameId={data?.game_id} turnCount={data?.world.turn_count} open={open}
         excludeCategories={["creatures", "factions"]} sections={sections}

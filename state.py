@@ -440,6 +440,11 @@ class GameState(TypedDict):
     # visibilidade, delta mínimo, erros (enum fechado) e timing SPEC-200. Escrito
     # só por services.audit_trace.record_turn_trace na finalização do turno.
     audit_trace: List[Dict[str, Any]]
+    # SPEC-213: versão canônica × projeções derivadas (summary/memory/chronicle).
+    # Dono: services.projections (stamp no commit do turno; apply com CAS de versão).
+    projection_state: Dict[str, Any]
+    # SPEC-213: linha de base mínima (ids) da projeção adiada; None quando em dia.
+    pending_derived: Optional[Dict[str, Any]]
     art_generation_ledger: List[Dict[str, Any]]
     art_offers: List[Dict[str, Any]]
     art_arc_budgets: Dict[str, Dict[str, Any]]

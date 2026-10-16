@@ -37,6 +37,32 @@ def reclaimable(existing: Mapping[str, Any], *, game_id: UUID | None, kind: str,
     return existing["base_game_version"] == base_version
 
 
+def enqueue_projection_outbox(connection, pool, *, principal: Principal, game_id: UUID,
+                              document: Mapping[str, Any], epoch_advanced: bool) -> None:
+    """SPEC-213 R9(b)/R7b: na MESMA transação do commit, cancela projeções de
+    época antiga (restore) e enfileira ``project_archive`` do derivado adiado."""
+    from infrastructure.contracts import JobRequest
+    from infrastructure.postgres_jobs import PostgresJobQueue
+    from services import projections
+
+    if epoch_advanced:
+        connection.execute(
+            """update app.jobs set status='cancelled',last_error_code='epoch_mismatch',
+              updated_at=now()
+            where game_id=%s and owner_id=%s and kind=%s and status in ('queued','retry')""",
+            (game_id, principal.user_id, projections.JOB_KIND),
+        )
+    payload = projections.job_payload(dict(document))
+    if payload is None:
+        return
+    PostgresJobQueue(pool).enqueue(JobRequest(
+        projections.JOB_KIND,
+        projections.dedupe_key(game_id, payload["epoch"], payload["action_id"]),
+        {**payload, "owner_id": str(principal.user_id)},
+        owner_id=principal.user_id, game_id=game_id, max_attempts=5,
+    ), connection=connection)
+
+
 class PostgresTurnCoordinator:
     def __init__(self, pool: PostgresPool, *, lease_seconds: int = 180) -> None:
         self.pool = pool
@@ -209,6 +235,10 @@ class PostgresTurnCoordinator:
                     version=committed_version)
             PostgresGameStore._insert_events(
                 connection, principal.user_id, claim.game_id, document,
+            )
+            enqueue_projection_outbox(
+                connection, self.pool, principal=principal, game_id=claim.game_id,
+                document=document, epoch_advanced=new_epoch > old_epoch,
             )
             world = document.get("world") or {}
             continuity = document.get("continuity") or {}

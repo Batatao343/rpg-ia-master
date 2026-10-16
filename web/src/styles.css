@@ -497,6 +497,8 @@ select {
   font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--accent); margin: 0 0 0.6rem;
 }
+/* SPEC-213 R13: selo discreto de projeção (crônica). */
+.projection-seal { margin-left: 0.5rem; font-size: 0.72em; letter-spacing: normal; text-transform: none; font-style: italic; }
 .hud__label::after { content: ""; flex: 1 1 auto; height: 1px; margin-left: 0.7rem; background: linear-gradient(90deg, var(--line-soft), transparent); }
 .hud__label--sub { margin-top: 0.7rem; color: var(--faint); font-size: 0.62rem; }
 

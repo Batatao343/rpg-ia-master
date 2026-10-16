@@ -1383,6 +1383,27 @@ def check_reproducibility(seed: int = 7, rounds: int = 6) -> bool:
     return _one_run() == _one_run()
 
 
+def check_projection_ahead(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    """SPEC-213 R6: derivado nunca à frente do canônico; e alerta de falhas seguidas."""
+    raw = state.get("projection_state")
+    if not isinstance(raw, dict):
+        return []
+    out: List[Violation] = []
+    canonical = int(raw.get("canonical_version", 0) or 0)
+    for name in ("summary", "memory", "chronicle"):
+        entry = raw.get(name) or {}
+        projected = int(entry.get("projected_version", 0) or 0)
+        if projected > canonical:
+            out.append(_V("projection.ahead_of_canonical", "error", turn,
+                          f"{name}: projected_version {projected} > canonical {canonical}",
+                          projection=name))
+        if entry.get("status") == "failed" and int(entry.get("attempts", 0) or 0) >= 3:
+            out.append(_V("projection.failed_streak", "warning", turn,
+                          f"{name}: projeção falhou {entry.get('attempts')}x seguidas",
+                          projection=name))
+    return out
+
+
 Check = Callable[[dict, Optional[dict], int], List[Violation]]
 
 CHECKS: List[Check] = [
@@ -1397,6 +1418,7 @@ CHECKS: List[Check] = [
     check_repeated_opening, check_interaction_no_progress, check_meta_leak,
     check_phantom_ally, check_false_player_death,
     check_encounter_identity, check_encounter_phase, check_unproven_event,
+    check_projection_ahead,
 ]
 
 

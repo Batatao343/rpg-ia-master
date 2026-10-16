@@ -847,6 +847,18 @@ def _run_turn(game_graph, state: dict, *,
     return final, route
 
 
+def _run_turn_projected(game_graph, state: dict, **kwargs) -> tuple[dict, str]:
+    """SPEC-213: turno + drenagem determinística da projeção adiada (paridade com
+    `inline`). Sem `RPG_PROJECTION_MODE=post_response` é idêntico a `_run_turn`."""
+    from services.projections import deferral_scope, has_pending, run_pending, stamp_commit
+    with deferral_scope():
+        new_state, route = _run_turn(game_graph, state, **kwargs)
+    new_state = stamp_commit(dict(new_state), None)
+    if has_pending(new_state):
+        new_state = run_pending(new_state)
+    return new_state, route
+
+
 def _observed_resolved_action(node_observations: Optional[dict]) -> dict:
     """Resultado mecânico emitido pelo combat node neste invoke, ou vazio.
 
@@ -1131,7 +1143,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 turn_input_state = state
                 try:
                     new_state, rec.route = _run_with_watchdog(
-                        lambda: _run_turn(
+                        lambda: _run_turn_projected(
                             game_graph,
                             state,
                             nodes_executed=nodes,

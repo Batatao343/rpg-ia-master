@@ -237,7 +237,20 @@ export function FactionsTab({ factions }: { factions: FactionView[] }) {
   );
 }
 
-export function ChronicleTab({ chapters, gameId }: { chapters: ChronicleChapter[]; gameId?: string }) {
+/** SPEC-213 R13: selo discreto do status da projeção da crônica (sem rede extra). */
+function ProjectionSeal({ status }: { status?: string }) {
+  const label = status === "pending" || status === "stale" ? "atualizando…"
+    : status === "failed" ? "não atualizado" : "";
+  return (
+    <span className="projection-seal muted" aria-live="polite" data-status={status ?? "completed"}>
+      {label}
+    </span>
+  );
+}
+
+export function ChronicleTab({ chapters, gameId, projectionStatus }: {
+  chapters: ChronicleChapter[]; gameId?: string; projectionStatus?: string;
+}) {
   const [query, setQuery] = useState("");
   const [hits, setHits] = useState<ChronicleSearchHit[]>([]);
   const [searchMode, setSearchMode] = useState<string>("");
@@ -267,7 +280,7 @@ export function ChronicleTab({ chapters, gameId }: { chapters: ChronicleChapter[
   if (!chapters.length) {
     return (
       <div>
-        <p className="hud__label">Crônica</p>
+        <p className="hud__label">Crônica <ProjectionSeal status={projectionStatus} /></p>
         <p className="combat-empty">Nenhum feito digno de canção — ainda.</p>
       </div>
     );
@@ -286,7 +299,7 @@ export function ChronicleTab({ chapters, gameId }: { chapters: ChronicleChapter[
   return (
     <div>
       <div className="chron-tools">
-        <p className="hud__label">Crônica da jornada</p>
+        <p className="hud__label">Crônica da jornada <ProjectionSeal status={projectionStatus} /></p>
         {gameId && (
           <a className="iconbtn" href={"/game/chronicle/export?game_id=" + encodeURIComponent(gameId)}
              download title="Baixar a crônica como .txt">

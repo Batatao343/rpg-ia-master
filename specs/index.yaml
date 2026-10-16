@@ -3823,7 +3823,7 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-213
   slug: arquivista-projecoes-assincronas
-  status: draft
+  status: done
   path: specs/SPEC-213-arquivista-projecoes-assincronas.md
   created_commit: null
   created_at: '2026-10-15'

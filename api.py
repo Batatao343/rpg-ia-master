@@ -1183,6 +1183,8 @@ class GameResponse(BaseModel):
     combat_simulation: Dict[str, Any] = {}
     turn_outcome: Dict[str, Any] = {}  # SPEC-199: ganhos do turno (XP/ouro/itens/missões)
     combat_result: Dict[str, Any] = {}  # SPEC-203: desfecho do encontro (turno de término)
+    # SPEC-213 R13: só status/versões das projeções derivadas (nunca conteúdo).
+    projections: Dict[str, Any] = {}
     visual: VisualResponse
 
 # --- HELPER: FORMATA RESPOSTA ---
@@ -1225,7 +1227,9 @@ def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> Gam
         )
     from services.turn_outcome import public_outcome
     turn_outcome = {} if simulation.get("enabled") else public_outcome(state.get("last_turn_outcome"))
+    from services.projections import projection_status_view
     return GameResponse(
+        projections=projection_status_view(state),
         turn_outcome=turn_outcome,
         combat_result={} if simulation.get("enabled") else _combat_result(state),
         timeline_epoch=int((state.get('continuity') or {}).get('timeline_epoch', 0)),
@@ -2198,8 +2202,8 @@ def get_current_state(game_id: Optional[str] = None):
 
     file_to_load = None
     file_to_load = _resolve_save_file(game_id)
-        
-    state = load_game_state(file_to_load)
+
+    state = _load_unlocked_or_locked(file_to_load, game_id)
 
     if not state:
         raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
@@ -3651,34 +3655,41 @@ def _record_audit_trace(new_state: dict, previous_state: dict, *, action_id, tim
 def _run_turn(state: dict, input_text: str,
               action_id: Optional[str] = None, *, claim=None,
               request_hash: str = "", progress=None,
-              timeline=None) -> GameResponse:
+              timeline=None, out: Optional[dict] = None,
+              pre_drain: bool = False) -> GameResponse:
     from services.turn_effects import effect_scope
     from services.audit_trace import collecting as _audit_collecting
     from rag import embedding_usage_scope
     with effect_scope(), embedding_usage_scope(_embedding_telemetry_hook), _audit_collecting():
         return _run_turn_collected(state, input_text, action_id, claim=claim,
                                    request_hash=request_hash, progress=progress,
-                                   timeline=timeline)
+                                   timeline=timeline, out=out, pre_drain=pre_drain)
 
 
 def _run_turn_collected(state: dict, input_text: str,
               action_id: Optional[str] = None, *, claim=None,
               request_hash: str = "", progress=None,
-              timeline=None) -> GameResponse:
+              timeline=None, out: Optional[dict] = None,
+              pre_drain: bool = False) -> GameResponse:
     """Miolo do turno (spec streaming-turno-sse R2): grafo + save + log.
     Compartilhado pelo POST clássico e pelo stream — carga/validações ficam
     nos endpoints. Levanta HTTPException(500) genérica em falha (A6)."""
     from observability import latency as _lat
     if timeline is None:
         timeline = _lat.TurnTimeline(transport="post")
-    _append_player_input(state, input_text)
     t0 = time.monotonic()
-    eventos_antes = len(state.get("event_log", []))
-    rejections_antes = len(state.get("event_rejections", []) or [])
     acc_token = _llm_turn_events.set([])
     attempt_token = _llm_attempt_events.set([])
     embedding_token = _embedding_attempt_events.set([])
     timeline_token = _lat.bind(timeline)
+    if pre_drain:
+        # SPEC-213 (perfil DB): projeção pendente drenada na cerca do turno, com o
+        # uso de LLM no ledger do turno e a memória no mesmo commit; ANTES da ação
+        # nova entrar no histórico (o derivado só vê o canônico já commitado).
+        state = _pre_drain_in_turn(state)
+    _append_player_input(state, input_text)
+    eventos_antes = len(state.get("event_log", []))
+    rejections_antes = len(state.get("event_rejections", []) or [])
 
     def _timeline_progress(chunk):
         # SPEC-200 R3: atribuicao por intervalo entre updates (criterio da SPEC-116).
@@ -3707,6 +3718,10 @@ def _run_turn_collected(state: dict, input_text: str,
                                                        action_key=visual_key))
             _enqueue_turn_art(previous_state, new_state, visual_key)
             _mark_action_processed(new_state, action_id)
+            # SPEC-213 R4: versão canônica sobe 1 por turno commitado; derivados
+            # adiados (modo A) ficam `pending` e são drenados pelo dono do lock.
+            from services.projections import stamp_commit
+            stamp_commit(new_state, action_id)
             checkpoint = _prepare_checkpoint(new_state, state)
             _prepare_chronicle_derivatives(new_state)
             response = format_response(new_state, cue_action_key=visual_key)
@@ -3739,6 +3754,8 @@ def _run_turn_collected(state: dict, input_text: str,
             time.monotonic() - t0,
         )
         _emit_turn_latency_metrics(timeline, route_label)
+        if out is not None:
+            out["state"] = new_state
         return response
     except Exception as e:
         from observability.metrics import metrics
@@ -3782,7 +3799,113 @@ def _run_turn_collected(state: dict, input_text: str,
         _embedding_attempt_events.reset(embedding_token)
 
 
-def _execute_action(req: ActionRequest, *, progress=None, timeline=None) -> GameResponse:
+def _load_unlocked_or_locked(file_to_load, game_id: Optional[str]):
+    """Leitura sem lock (caminho comum); se falhar no perfil legacy, relê sob o
+    lock do jogo. SPEC-213: com a projeção pós-resposta o save é regravado logo
+    após a entrega, e no Windows uma leitura concorrente ao `os.replace` pode
+    falhar transitoriamente — sob o lock não há escritor concorrente."""
+    state = load_game_state(file_to_load)
+    if not state and game_id and not _database_profile():
+        with _game_lock(game_id):
+            state = load_game_state(file_to_load)
+    return state
+
+
+def _projection_owner() -> bool:
+    """SPEC-213 R9/R10: a API é dona da projeção em todos os perfis. Legacy: o
+    lock de processo segura o turno até drenar (modo A). Perfis com banco: o
+    commit do turno grava o job `project_archive` (outbox, modo B) e a própria
+    API o executa logo após responder; worker/cron e o próximo turno (dentro da
+    sua cerca) são os fallbacks duráveis."""
+    return True
+
+
+def _pre_drain_in_turn(state: dict) -> dict:
+    """Perfil DB: projeção pendente drenada DENTRO da cerca do turno (R10/R15),
+    antes da ação do jogador entrar no histórico; memória vai no mesmo commit."""
+    from services.projections import has_pending, run_pending
+    if not has_pending(state):
+        return state
+    try:
+        return run_pending(state)
+    except Exception as exc:
+        print(f"⚠️ [PROJECTION] pre_turn: {type(exc).__name__}")
+        return state
+
+
+def _await_projection_db(state: dict, game_id: Optional[str]) -> dict:
+    """R10 em perfil DB: se o job da projeção pendente está RODANDO (outra
+    request/worker), espera até `RPG_PROJECTION_WAIT_SECONDS` e relê o jogo, em
+    vez de repetir o LLM. Fila parada/sem dono → segue; o turno drena na cerca."""
+    from services import projections
+    plan = projections.normalize_plan(state.get("pending_derived"))
+    if plan is None or plan["canonical_version"] is None or not plan["action_id"]:
+        return state
+    try:
+        from infrastructure.runtime import get_runtime
+        status = getattr(get_runtime().job_queue, "status", None)
+        if not callable(status):
+            return state
+        key = projections.dedupe_key(state.get("game_id"), plan["epoch"], plan["action_id"])
+        deadline = time.monotonic() + projections.wait_seconds()
+        waited = False
+        while time.monotonic() < deadline:
+            row = status(projections.JOB_KIND, key)
+            if not row or row["status"] != "running" or not row["leased"]:
+                break
+            waited = True
+            time.sleep(0.2)
+        if waited:
+            fresh = load_game_state(_resolve_save_file(game_id))
+            return fresh or state
+    except Exception as exc:
+        print(f"⚠️ [PROJECTION] await: {type(exc).__name__}")
+    return state
+
+
+def _drain_projection_db(state: dict) -> None:
+    """Perfil DB, pós-resposta: arrenda o PRÓPRIO job do outbox e o executa com
+    o ciclo normal de lease/fence da fila (nunca thread nova; R9). Nunca levanta."""
+    from services import projections
+    payload = projections.job_payload(state)
+    if payload is None:
+        return
+    try:
+        from infrastructure.runtime import get_runtime
+        from workers.job_worker import JobWorker
+        from workers.projection_jobs import make_handler
+        runtime = get_runtime()
+        lease_key = getattr(runtime.job_queue, "lease_key", None)
+        if not callable(lease_key) or not runtime.resources:
+            return
+        job = lease_key("api-post-response", projections.JOB_KIND,
+                        projections.dedupe_key(payload["game_id"], payload["epoch"],
+                                               payload["action_id"]))
+        if job is None:
+            return
+        handler = make_handler(runtime.resources[0], runtime.memory_store)
+        JobWorker(runtime.job_queue, {projections.JOB_KIND: handler},
+                  worker_id="api-post-response").run_leased(job)
+    except Exception as exc:
+        print(f"⚠️ [PROJECTION] post_response(db): {type(exc).__name__}")
+
+
+def _drain_projection(state: dict, *, where: str) -> dict:
+    """Executa a projeção pendente sob o lock do turno e persiste. Nunca levanta."""
+    from services.projections import has_pending, run_pending
+    if not has_pending(state):
+        return state
+    try:
+        drained = run_pending(state)
+        _require_saved(drained, detail=f"projeção ({where})")
+        return drained
+    except Exception as exc:
+        print(f"⚠️ [PROJECTION] {where}: {type(exc).__name__}")
+        return state
+
+
+def _execute_action(req: ActionRequest, *, progress=None, timeline=None,
+                    on_response=None) -> GameResponse:
     from infrastructure.runtime import get_runtime
     from observability import latency as _lat
     from services.turn_execution import operation_scope
@@ -3809,6 +3932,9 @@ def _execute_action(req: ActionRequest, *, progress=None, timeline=None) -> Game
         if not _database_profile():
             persistence_module.ensure_synthetic_checkpoint(state)   # SPEC-228 R4
         operation_wait_started = _lat.now()
+        if _database_profile():
+            # SPEC-213 R10: projeção do turno anterior em execução → espera e relê.
+            state = _await_projection_db(state, req.game_id)
         claim, request_hash, receipt = _begin_turn_operation(state, req)
         if _database_profile():
             timeline.extra["lock_wait_ms"] += int(round(
@@ -3823,9 +3949,28 @@ def _execute_action(req: ActionRequest, *, progress=None, timeline=None) -> Game
             if state.get("death_pending"):
                 raise HTTPException(409, "Você tombou. Resolva a tela de morte.")
             _apply_action_options(state, req)
-            return _run_turn(state, req.input_text, req.action_id, claim=claim,
-                             request_hash=request_hash, progress=progress,
-                             timeline=timeline)
+            from services.projections import deferral_scope, projection_mode
+            owner = _projection_owner()
+            db = _database_profile()
+            if owner and not db:
+                # R15: projeção pendente (crash/falha anterior) roda antes do grafo.
+                state = _drain_projection(state, where="pre_turn")
+            holder: dict = {}
+            with deferral_scope(owner and projection_mode() == "post_response"):
+                response = _run_turn(state, req.input_text, req.action_id, claim=claim,
+                                     request_hash=request_hash, progress=progress,
+                                     timeline=timeline, out=holder,
+                                     pre_drain=owner and db)
+        # Fora da cerca do turno (já commitado; o heartbeat do lease do turno não
+        # pode falhar a request depois da entrega), mas ainda sob o lock legacy.
+        if on_response is not None:
+            on_response(response)       # SSE: narração sai ANTES dos derivados
+        if owner and holder.get("state") is not None:
+            if db:
+                _drain_projection_db(holder["state"])
+            else:
+                _drain_projection(holder["state"], where="post_response")
+        return response
 
 
 def _publish_timeline(timeline, outcome: str) -> None:
@@ -3983,10 +4128,17 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
             from infrastructure.request_context import principal_scope
             context = principal_scope(principal) if principal is not None else nullcontext()
             with context:
+                delivered = {"done": False}
+
+                def _deliver(response):
+                    delivered["done"] = True
+                    q.put(("response", response))
+
                 response = _execute_action(
                     req, progress=lambda chunk: q.put(("chunk", chunk)),
-                    timeline=timeline)
-                q.put(("response", response))
+                    timeline=timeline, on_response=_deliver)
+                if not delivered["done"]:
+                    q.put(("response", response))
         except HTTPException as exc:
             q.put(("http_error", {"detail": exc.detail, "code": exc.status_code}))
         except Exception as exc:
@@ -4053,7 +4205,7 @@ def game_action_stream(req: ActionRequest):
     from observability import latency as _lat
     timeline = _lat.TurnTimeline(transport="stream")   # t0 = entrada do handler (ACK servidor)
     file_to_load = _resolve_save_file(req.game_id)
-    state = load_game_state(file_to_load)
+    state = _load_unlocked_or_locked(file_to_load, req.game_id)
     if not state:
         raise HTTPException(status_code=404, detail="Jogo não encontrado.")
     if not req.game_id and not _database_profile() and state.get("game_id"):

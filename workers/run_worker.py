@@ -1,4 +1,4 @@
-"""Worker local/portátil para embeddings, crônica e arte dinâmica."""
+"""Worker local/portátil para embeddings, crônica, arte dinâmica e projeções (SPEC-213)."""
 
 from __future__ import annotations
 
@@ -125,10 +125,14 @@ def build_handlers():
         ChronicleRepository(pool, runtime.memory_store).complete(payload, digest)
         return {"status": digest["status"], "source_hash": digest["source_hash"]}
 
+    from workers.projection_jobs import make_handler as make_projection_handler
+    project = make_projection_handler(pool, runtime.memory_store)
+
     return {
         "generate_dynamic_art": generate,
         "embed_memory": embed,
         "compress_chronicle": compress,
+        "project_archive": project,
     }
 
 

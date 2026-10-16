@@ -215,31 +215,28 @@ def _should_archive(state: GameState, turn: int) -> bool:
     return (turn - last) >= _ARCHIVE_EVERY
 
 
-def archive_node(state: GameState):
-    from langgraph.types import Overwrite
-    from services.narrative_evidence import build_evidence, guard_current_messages, validate_narrative
-
-    # Validate after event processing, before feeding prose back to the model.
-    event_updates = process_pending_events(state)
-    effective = {**state, **event_updates}
+def _validate_derived(result: dict, state: GameState, evidence, audit: list, *,
+                      deferred: bool = False) -> None:
+    """Revalida resumo e prosa da crônica derivados contra a evidência canônica
+    (SPEC-213 R7: sempre o estado canônico ATUAL, inclusive quando adiados)."""
     from observability.latency import accumulate as _timed  # SPEC-200 R4 (so mede)
-    with _timed('archivist_validate_ms'):
-        messages, audit = guard_current_messages(effective)
-    effective['messages'] = messages
-    evidence = build_evidence(effective)
-    # Keep the pre-event baseline for new-event memory detection. Processing the
-    # same pending queue twice loses that baseline even if application is deduped.
-    result = _archive_node({**state, 'messages': messages}, event_updates=event_updates)
+    from services.narrative_evidence import validate_narrative
+    from services.projections import strip_dead_npc_presence
+    canonical = {**state, **evidence.state}
     if 'narrative_summary' in result:
         with _timed('archivist_validate_ms'):
             check = validate_narrative(result['narrative_summary'], evidence, channel='summary')
         from services.memory_summary import compact_summary as _compact
+        text = check.text
+        audit.extend(check.rejections)
+        if text and deferred:
+            text, dead = strip_dead_npc_presence(text, canonical)
+            audit.extend(dead)
         result['narrative_summary'] = (
-            check.text
+            text
             or _compact(state.get('narrative_summary', '') or '')
             or 'A aventura segue.'
         )
-        audit.extend(check.rejections)
     if 'chronicle' in result:
         from copy import deepcopy
         chapters = deepcopy(result['chronicle'])
@@ -249,10 +246,76 @@ def archive_node(state: GameState):
                     continue
                 with _timed('archivist_validate_ms'):
                     check = validate_narrative(entry.get('text', ''), evidence, channel='chronicle')
-                entry['text'] = check.text
+                text = check.text
                 audit.extend(check.rejections)
+                if text and deferred:
+                    text, dead = strip_dead_npc_presence(text, canonical)
+                    audit.extend(dead)
+                entry['text'] = text
             chapter['entries'] = [entry for entry in chapter.get('entries', []) if entry.get('text')]
         result['chronicle'] = chapters
+
+
+def archive_node(state: GameState):
+    from langgraph.types import Overwrite
+    from services.narrative_evidence import build_evidence, guard_current_messages
+    from services import projections
+
+    # Validate after event processing, before feeding prose back to the model.
+    event_updates = process_pending_events(state)
+    effective = {**state, **event_updates}
+    from observability.latency import accumulate as _timed  # SPEC-200 R4 (so mede)
+    with _timed('archivist_validate_ms'):
+        messages, audit = guard_current_messages(effective)
+    effective['messages'] = messages
+    turn = int((effective.get('world') or {}).get('turn_count', 0) or 0)
+    if (
+        projections.deferral_active()
+        and effective.get('game_id')
+        and _should_archive(effective, turn)
+    ):
+        # SPEC-213 modo A: canônico (eventos/guard da prosa) fica no turno; resumo,
+        # fatos do LLM e prosa da crônica viram projeção drenada pelo dono do lock.
+        prior_ids = {
+            str(event.get('event_id'))
+            for event in (state.get('event_log') or [])
+            if isinstance(event, dict) and event.get('event_id')
+        }
+        new_ids = [
+            str(event['event_id'])
+            for event in (effective.get('event_log') or [])
+            if isinstance(event, dict) and event.get('event_id')
+            and str(event['event_id']) not in prior_ids
+        ]
+        prior_rejections = {
+            _rejection_identity(row) for row in (state.get('event_rejections') or [])
+        }
+        new_rejections = any(
+            _rejection_identity(row) not in prior_rejections
+            for row in (event_updates.get('event_rejections', state.get('event_rejections')) or [])
+        )
+        epoch = int((effective.get('continuity') or {}).get('timeline_epoch', 0) or 0)
+        # Revisão Astra: projeção anterior ainda pendente (falhou, aguarda retry)
+        # não pode perder a linha de base dos eventos do seu turno ao ser sucedida.
+        earlier = projections.normalize_plan(state.get('pending_derived'))
+        if earlier is not None and earlier.get('epoch') == epoch:
+            new_ids = [*earlier['new_event_ids'],
+                       *[x for x in new_ids if x not in earlier['new_event_ids']]]
+            new_rejections = new_rejections or earlier['new_rejections']
+        result = dict(event_updates)
+        result['pending_derived'] = projections.make_plan(
+            new_event_ids=new_ids, new_rejections=new_rejections, turn=turn, epoch=epoch,
+        )
+        if audit:
+            result['evidence_rejections'] = [*(state.get('evidence_rejections') or []), *audit][-64:]
+        if messages != list(state.get('messages') or []):
+            result['messages'] = Overwrite(messages)
+        return result
+    evidence = build_evidence(effective)
+    # Keep the pre-event baseline for new-event memory detection. Processing the
+    # same pending queue twice loses that baseline even if application is deduped.
+    result = _archive_node({**state, 'messages': messages}, event_updates=event_updates)
+    _validate_derived(result, state, evidence, audit)
     if audit:
         result['evidence_rejections'] = [*(state.get('evidence_rejections') or []), *audit][-64:]
     if messages != list(state.get('messages') or []):
@@ -260,7 +323,22 @@ def archive_node(state: GameState):
     return result
 
 
-def _archive_node(state: GameState, *, event_updates: dict | None = None):
+def run_derived_projection(state: GameState, plan: dict) -> dict:
+    """SPEC-213: executor da projeção adiada. Roda sobre o estado canônico JÁ
+    commitado (eventos aplicados, prosa ao jogador guardada) usando a linha de base
+    do plano para detectar os eventos novos daquele turno. Mesmo prompt/LLM."""
+    from services.narrative_evidence import build_evidence
+    evidence = build_evidence(state)
+    audit: list = []
+    result = _archive_node(state, event_updates={}, baseline=plan)
+    _validate_derived(result, state, evidence, audit, deferred=True)
+    if audit:
+        result['evidence_rejections'] = [*(state.get('evidence_rejections') or []), *audit][-64:]
+    return result
+
+
+def _archive_node(state: GameState, *, event_updates: dict | None = None,
+                  baseline: dict | None = None):
     """
     Compacta o histórico recente em um resumo e extrai fatos para o RAG.
     Roda com cadência (evento relevante OU a cada ~10 turnos) — não em todo turno.
@@ -283,6 +361,10 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None):
         for event in (state.get("event_log") or [])
         if isinstance(event, dict) and event.get("event_id")
     }
+    if baseline is not None:
+        # SPEC-213: projeção adiada — o estado já contém os eventos do turno; a
+        # linha de base do plano diz quais eram novos.
+        prior_event_ids -= {str(x) for x in (baseline.get("new_event_ids") or [])}
     effective_state = {**state, **event_updates}
     new_events = [
         event for event in (effective_state.get("event_log") or [])
@@ -556,6 +638,8 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None):
         _rejection_identity(row) not in prior_rejection_ids
         for row in processed_rejection_rows
     )
+    if baseline is not None:
+        new_rejections = bool(baseline.get("new_rejections"))
     narrative_rejections = list(state.get("narrative_rejections") or [])
 
     # Summary já confirmado é lixo transitório repetido: limpa sem chamar LLM,

@@ -84,6 +84,45 @@ class PostgresJobQueue:
             for row in rows
         ]
 
+    def lease_key(self, worker_id: str, kind: str, dedupe_key: str) -> LeasedJob | None:
+        """SPEC-213: o dono do turno executa o PRÓPRIO job do outbox logo após a
+        resposta (modo A em perfil DB), sob o mesmo lease/fencing da fila."""
+        lease_token = uuid4()
+        interval = timedelta(seconds=self.lease_seconds)
+        with self.pool.connection() as connection, connection.transaction():
+            row = connection.execute(
+                """
+                update app.jobs j set
+                  status='running', attempts=j.attempts+1, lease_token=%s,
+                  lease_owner=%s, lease_until=now()+%s, updated_at=now()
+                where j.id = (
+                  select id from app.jobs where kind=%s and dedupe_key=%s
+                    and status in ('queued','retry')
+                  for update skip locked)
+                returning j.*
+                """,
+                (lease_token, worker_id, interval, kind, dedupe_key),
+            ).fetchone()
+        if not row:
+            return None
+        return LeasedJob(
+            job_id=row["id"], lease_token=row["lease_token"],
+            request=JobRequest(
+                kind=row["kind"], dedupe_key=row["dedupe_key"], payload=row["payload"],
+                owner_id=row["owner_id"], game_id=row["game_id"],
+                max_attempts=row["max_attempts"],
+            ),
+            attempt=row["attempts"],
+        )
+
+    def status(self, kind: str, dedupe_key: str) -> dict[str, Any] | None:
+        with self.pool.connection() as connection:
+            return connection.execute(
+                """select status, coalesce(lease_until > now(), false) as leased
+                from app.jobs where kind=%s and dedupe_key=%s""",
+                (kind, dedupe_key),
+            ).fetchone()
+
     @staticmethod
     def _require_running(connection, job_id: UUID, lease_token: UUID) -> dict[str, Any]:
         row = connection.execute(

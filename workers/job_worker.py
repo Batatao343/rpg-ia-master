@@ -29,6 +29,11 @@ class JobWorker:
             self._run(job)
         return len(jobs)
 
+    def run_leased(self, job: LeasedJob) -> None:
+        """Executa um job já arrendado por quem chama (SPEC-213: o dono do turno
+        roda o próprio outbox logo após responder), com o mesmo ciclo de fence."""
+        self._run(job)
+
     def _run(self, job: LeasedJob) -> None:
         from observability.telemetry import span
 

@@ -1,7 +1,14 @@
 # SPEC-213 — Arquivista: canônico síncrono e projeções derivadas fora do hot path
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `done` — gate §0 atingido em 2026-10-16 (offline, ver `docs/spec213/gate.md`); modo A
+> (`post_response`) em legacy e perfis com banco (outbox `project_archive` em `app.jobs` + execução pela própria
+> API após responder; worker/cron e o próximo turno na cerca como fallbacks); revisão Astra independente com
+> correções; smokes browser (Chromium 1440) e real (8 turnos DeepSeek, US$ 0,032 est.) executados — evidência em
+> `docs/spec213/README.md`. Defaults §8: P1–P5 recomendados; **rollout segue `inline`** (P2 aguarda o dono).
+> **Nota de schema (execução 2026-10-16):** sem bump — `projection_state`/`pending_derived` são campos
+> aditivos com default no load (regra da onda: `SCHEMA_VERSION` fixo em 8); onde a spec diz "v8→v9", leia
+> "normalização aditiva idempotente".
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-200 `done` (baseline/gate), SPEC-228 `done` (ordem save/checkpoint), SPEC-234 `done` (hot path do arquivista corrigido) · referências `done`: SPEC-093, SPEC-107, SPEC-111, SPEC-124, SPEC-170, SPEC-192 (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-214 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 10
@@ -277,14 +284,14 @@ canônico + último resumo válido. Worker parado (modo B) → jobs acumulam; ao
 
 ## 5. Critérios de aceite
 
-- [ ] `docs/spec213/gate.md` com `movable_ms`, N, perfis e decisão P1; gate de entrada (§0) registrado com números da SPEC-200 na aprovação.
-- [ ] R1–R16 (incl. R7b) cobertos pelos testes nomeados; `uv run pytest` verde.
-- [ ] Regressão SPEC-170 sem edição: `uv run python -m evals --root . run --dataset datasets/regression/memory_context.jsonl --run-id spec213-<modo>` (suítes `memory_write`, `memory_retrieval`, `context_grounding`, `generation_boundary`) em `inline` e `post_response`, com deltas zero nos hard gates (leaks = 0, budget = 0) via `python -m evals compare`.
-- [ ] `uv run pytest -m infra_local` verde para Etapa 5.
-- [ ] TTLT p50/p95 medido com o harness da SPEC-200 nos modos `inline` vs `post_response`; ganho reportado sem otimismo (mesmo dataset/seed).
-- [ ] Playtest offline 14 perfis × 30 turnos: zero `projection.ahead_of_canonical`, zero erro.
-- [ ] Saves v8 carregam; round-trip v9.
-- [ ] Nenhum `with_structured_output` novo (se houver, guard FallbackLLM).
+- [x] `docs/spec213/gate.md` com `movable_ms`, N, perfis e decisão P1; gate de entrada (§0) registrado com números da SPEC-200 na aprovação.
+- [x] R1–R16 (incl. R7b) cobertos pelos testes nomeados; `uv run pytest` verde (números finais e desvios em `docs/spec213/README.md`).
+- [x] Regressão SPEC-170 sem edição: `uv run python -m evals --root . run --dataset datasets/regression/memory_context.jsonl --run-id spec213-<modo>` (suítes `memory_write`, `memory_retrieval`, `context_grounding`, `generation_boundary`) em `inline` e `post_response`, com deltas zero nos hard gates (leaks = 0, budget = 0) via `python -m evals compare`.
+- [x] `uv run pytest -m infra_local` verde para Etapa 5 (`tests/test_projection_db_local.py`: 8 + e2e HTTP opt-in no perfil `local`; demais infra_local afetados verdes).
+- [x] TTLT p50/p95 medido com o harness da SPEC-200 nos modos `inline` vs `post_response`; ganho reportado sem otimismo (mesmo dataset/seed).
+- [x] Playtest offline 14 perfis × 30 turnos: zero `projection.ahead_of_canonical`, zero erro.
+- [x] Saves v8 carregam; round-trip (campo aditivo, sem bump — regra da onda).
+- [x] Nenhum `with_structured_output` novo (se houver, guard FallbackLLM).
 
 ## 6. Smoke
 

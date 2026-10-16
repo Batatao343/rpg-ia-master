@@ -545,6 +545,16 @@ def _atomic_write_json(file_path: str, data: Dict[str, Any]) -> None:
         raise
 
 
+def _projection_state(raw, state):
+    from services.projections import normalize_projection_state
+    return normalize_projection_state(raw, state)
+
+
+def _projection_plan(raw):
+    from services.projections import normalize_plan
+    return normalize_plan(raw)
+
+
 def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
     """Monta o dict serializável a partir do GameState (fonte única — save vivo
     E checkpoint reusam, pra nunca divergirem de campo)."""
@@ -587,6 +597,9 @@ def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
         "presentation_history": list(state.get("presentation_history") or []),
         # SPEC-207 (aditivo, sem bump): ring buffer de refs por turno p/ auditoria.
         "audit_trace": normalize_audit_trace(state.get("audit_trace")),
+        # SPEC-213 (aditivo, sem bump): versão canônica + status das projeções.
+        "projection_state": _projection_state(state.get("projection_state"), state),
+        "pending_derived": _projection_plan(state.get("pending_derived")),
         "art_generation_ledger": deepcopy(state.get("art_generation_ledger") or []),
         "art_arc_budgets": deepcopy(state.get("art_arc_budgets") or {}),
         "art_offers": deepcopy(state.get("art_offers") or []),
@@ -878,6 +891,10 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         from services.actor_lifecycle import sanitize_interturn_state
         state = sanitize_interturn_state(state)
         state["needs_replan"] = True
+    # SPEC-213 (aditivo, sem bump): save v8 sem a chave nasce `completed` em
+    # canonical_version = continuity.session_action_count (R16).
+    state["projection_state"] = _projection_state(raw_data.get("projection_state"), state)
+    state["pending_derived"] = _projection_plan(raw_data.get("pending_derived"))
     # SPEC-227 R12: equipamento sem posse (venda antiga) é reconciliado no load,
     # idempotente e sem tocar no ouro. Sem bump de schema (D-C default).
     try:

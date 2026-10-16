@@ -536,7 +536,17 @@ export interface GameResponse {
   combat_simulation: CombatSimulationMeta;
   turn_outcome?: Partial<TurnOutcome>;  // {} quando não há ganho
   combat_result?: CombatResultView | Record<string, never>;  // SPEC-203: {} fora do turno de término
+  projections?: ProjectionsView | Record<string, never>;  // SPEC-213 R13: só status
   visual: VisualResponse;
+}
+
+/** SPEC-213 R13: status das projeções derivadas (resumo/memória/crônica). */
+export type ProjectionStatus = "pending" | "completed" | "failed" | "stale";
+export interface ProjectionsView {
+  canonical_version: number;
+  summary: { status: ProjectionStatus; projected_version: number };
+  memory: { status: ProjectionStatus; projected_version: number };
+  chronicle: { status: ProjectionStatus; projected_version: number };
 }
 
 export interface VisualVariant {

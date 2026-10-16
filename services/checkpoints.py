@@ -189,4 +189,8 @@ def resolve_death_choice(state: dict, choice: str, *,
     restored["game_over"] = False
     from services.continuity import after_restore
     restored["continuity"] = after_restore(state, restored)
+    # SPEC-213 R4/R7b (revisão Astra): a versão canônica nunca volta no restore
+    # (carrega a da linha do tempo viva) e a projeção da época antiga é cancelada.
+    from services.projections import carry_over_restore
+    carry_over_restore(state, restored)
     return restored
