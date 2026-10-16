@@ -1,14 +1,14 @@
 {
-  "commit_sha": "7e5f9b36233cfa31bfac3500b27ac047192cf9e5",
+  "commit_sha": "905c98ab25429aaa82f6595d5afdca7678d7ee5e",
   "edges": [
     {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3697
+        "line": 3729
       },
-      "source": "endpoint:DELETE:/game/save/{game_id}:api.py:3698",
+      "source": "endpoint:DELETE:/game/save/{game_id}:api.py:3730",
       "target": "symbol:api.delete_save_endpoint",
       "type": "route_to"
     },
@@ -17,9 +17,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2021
+        "line": 2022
       },
-      "source": "endpoint:GET:/account/balance:api.py:2022",
+      "source": "endpoint:GET:/account/balance:api.py:2023",
       "target": "symbol:api.account_balance",
       "type": "route_to"
     },
@@ -28,9 +28,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2048
+        "line": 2049
       },
-      "source": "endpoint:GET:/account/checkout/skus:api.py:2049",
+      "source": "endpoint:GET:/account/checkout/skus:api.py:2050",
       "target": "symbol:api.checkout_skus",
       "type": "route_to"
     },
@@ -39,9 +39,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2167
+        "line": 2168
       },
-      "source": "endpoint:GET:/account/checkout/{order_id}:api.py:2168",
+      "source": "endpoint:GET:/account/checkout/{order_id}:api.py:2169",
       "target": "symbol:api.checkout_status",
       "type": "route_to"
     },
@@ -61,9 +61,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2131
+        "line": 2132
       },
-      "source": "endpoint:GET:/account/purchases/google/products:api.py:2132",
+      "source": "endpoint:GET:/account/purchases/google/products:api.py:2133",
       "target": "symbol:api.google_play_products",
       "type": "route_to"
     },
@@ -72,9 +72,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2112
+        "line": 2113
       },
-      "source": "endpoint:GET:/account/purchases/google/profile:api.py:2113",
+      "source": "endpoint:GET:/account/purchases/google/profile:api.py:2114",
       "target": "symbol:api.google_play_profile",
       "type": "route_to"
     },
@@ -83,9 +83,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2265
+        "line": 2266
       },
-      "source": "endpoint:GET:/account/purchases:api.py:2266",
+      "source": "endpoint:GET:/account/purchases:api.py:2267",
       "target": "symbol:api.account_purchases",
       "type": "route_to"
     },
@@ -94,9 +94,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2283
+        "line": 2284
       },
-      "source": "endpoint:GET:/account/series:api.py:2284",
+      "source": "endpoint:GET:/account/series:api.py:2285",
       "target": "symbol:api.account_series",
       "type": "route_to"
     },
@@ -105,9 +105,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2274
+        "line": 2275
       },
-      "source": "endpoint:GET:/account/usage:api.py:2275",
+      "source": "endpoint:GET:/account/usage:api.py:2276",
       "target": "symbol:api.account_usage",
       "type": "route_to"
     },
@@ -127,9 +127,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1878
+        "line": 1879
       },
-      "source": "endpoint:GET:/data/combat-simulator:api.py:1879",
+      "source": "endpoint:GET:/data/combat-simulator:api.py:1880",
       "target": "symbol:api.get_combat_simulator_options",
       "type": "route_to"
     },
@@ -138,9 +138,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1932
+        "line": 1933
       },
-      "source": "endpoint:GET:/data/map:api.py:1933",
+      "source": "endpoint:GET:/data/map:api.py:1934",
       "target": "symbol:api.get_world_map",
       "type": "route_to"
     },
@@ -149,9 +149,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1920
+        "line": 1921
       },
-      "source": "endpoint:GET:/data/onboarding:api.py:1921",
+      "source": "endpoint:GET:/data/onboarding:api.py:1922",
       "target": "symbol:api.get_onboarding",
       "type": "route_to"
     },
@@ -160,9 +160,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1908
+        "line": 1909
       },
-      "source": "endpoint:GET:/data/options:api.py:1909",
+      "source": "endpoint:GET:/data/options:api.py:1910",
       "target": "symbol:api.get_creation_options",
       "type": "route_to"
     },
@@ -171,9 +171,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3779
+        "line": 3811
       },
-      "source": "endpoint:GET:/game/chronicle/export:api.py:3780",
+      "source": "endpoint:GET:/game/chronicle/export:api.py:3812",
       "target": "symbol:api.export_chronicle",
       "type": "route_to"
     },
@@ -182,9 +182,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1965
+        "line": 1966
       },
-      "source": "endpoint:GET:/game/codex:api.py:1966",
+      "source": "endpoint:GET:/game/codex:api.py:1967",
       "target": "symbol:api.get_player_codex",
       "type": "route_to"
     },
@@ -193,9 +193,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1976
+        "line": 1977
       },
-      "source": "endpoint:GET:/game/history:api.py:1977",
+      "source": "endpoint:GET:/game/history:api.py:1978",
       "target": "symbol:api.game_history",
       "type": "route_to"
     },
@@ -204,9 +204,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3690
+        "line": 3722
       },
-      "source": "endpoint:GET:/game/saves:api.py:3691",
+      "source": "endpoint:GET:/game/saves:api.py:3723",
       "target": "symbol:api.get_saves",
       "type": "route_to"
     },
@@ -215,9 +215,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1946
+        "line": 1947
       },
-      "source": "endpoint:GET:/game/state:api.py:1947",
+      "source": "endpoint:GET:/game/state:api.py:1948",
       "target": "symbol:api.get_current_state",
       "type": "route_to"
     },
@@ -226,9 +226,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2580
+        "line": 2581
       },
-      "source": "endpoint:GET:/game/{game_id}/art/{generation_id}:api.py:2581",
+      "source": "endpoint:GET:/game/{game_id}/art/{generation_id}:api.py:2582",
       "target": "symbol:api.dynamic_art_status",
       "type": "route_to"
     },
@@ -237,9 +237,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2292
+        "line": 2293
       },
-      "source": "endpoint:GET:/game/{game_id}/operations/{operation_id}/cost:api.py:2293",
+      "source": "endpoint:GET:/game/{game_id}/operations/{operation_id}/cost:api.py:2294",
       "target": "symbol:api.turn_cost",
       "type": "route_to"
     },
@@ -248,9 +248,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2311
+        "line": 2312
       },
-      "source": "endpoint:GET:/game/{game_id}/operations/{operation_id}:api.py:2312",
+      "source": "endpoint:GET:/game/{game_id}/operations/{operation_id}:api.py:2313",
       "target": "symbol:api.operation_status",
       "type": "route_to"
     },
@@ -259,9 +259,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1628
+        "line": 1629
       },
-      "source": "endpoint:GET:/health:api.py:1629",
+      "source": "endpoint:GET:/health:api.py:1630",
       "target": "symbol:api.health_check",
       "type": "route_to"
     },
@@ -270,9 +270,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1637
+        "line": 1638
       },
-      "source": "endpoint:GET:/metrics:api.py:1638",
+      "source": "endpoint:GET:/metrics:api.py:1639",
       "target": "symbol:api.prometheus_metrics",
       "type": "route_to"
     },
@@ -292,9 +292,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2064
+        "line": 2065
       },
-      "source": "endpoint:POST:/account/checkout:api.py:2065",
+      "source": "endpoint:POST:/account/checkout:api.py:2066",
       "target": "symbol:api.checkout_create",
       "type": "route_to"
     },
@@ -314,9 +314,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2142
+        "line": 2143
       },
-      "source": "endpoint:POST:/account/purchases/google/verify:api.py:2143",
+      "source": "endpoint:POST:/account/purchases/google/verify:api.py:2144",
       "target": "symbol:api.google_play_verify",
       "type": "route_to"
     },
@@ -325,9 +325,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2213
+        "line": 2214
       },
-      "source": "endpoint:POST:/account/transcriptions:api.py:2214",
+      "source": "endpoint:POST:/account/transcriptions:api.py:2215",
       "target": "symbol:api.account_transcription",
       "type": "route_to"
     },
@@ -446,9 +446,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3532
+        "line": 3564
       },
-      "source": "endpoint:POST:/game/action/stream:api.py:3533",
+      "source": "endpoint:POST:/game/action/stream:api.py:3565",
       "target": "symbol:api.game_action_stream",
       "type": "route_to"
     },
@@ -457,9 +457,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3400
+        "line": 3432
       },
-      "source": "endpoint:POST:/game/action:api.py:3401",
+      "source": "endpoint:POST:/game/action:api.py:3433",
       "target": "symbol:api.game_action",
       "type": "route_to"
     },
@@ -468,9 +468,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2398
+        "line": 2399
       },
-      "source": "endpoint:POST:/game/art/brief:api.py:2399",
+      "source": "endpoint:POST:/game/art/brief:api.py:2400",
       "target": "symbol:api.preview_player_art_brief",
       "type": "route_to"
     },
@@ -479,9 +479,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3746
+        "line": 3778
       },
-      "source": "endpoint:POST:/game/chronicle/search:api.py:3747",
+      "source": "endpoint:POST:/game/chronicle/search:api.py:3779",
       "target": "symbol:api.search_chronicle_endpoint",
       "type": "route_to"
     },
@@ -490,9 +490,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1883
+        "line": 1884
       },
-      "source": "endpoint:POST:/game/combat-simulator:api.py:1884",
+      "source": "endpoint:POST:/game/combat-simulator:api.py:1885",
       "target": "symbol:api.new_combat_simulator",
       "type": "route_to"
     },
@@ -501,9 +501,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3411
+        "line": 3443
       },
-      "source": "endpoint:POST:/game/death:api.py:3412",
+      "source": "endpoint:POST:/game/death:api.py:3444",
       "target": "symbol:api.game_death",
       "type": "route_to"
     },
@@ -512,9 +512,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3555
+        "line": 3587
       },
-      "source": "endpoint:POST:/game/equip:api.py:3556",
+      "source": "endpoint:POST:/game/equip:api.py:3588",
       "target": "symbol:api.game_equip",
       "type": "route_to"
     },
@@ -523,9 +523,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3600
+        "line": 3632
       },
-      "source": "endpoint:POST:/game/levelup:api.py:3601",
+      "source": "endpoint:POST:/game/levelup:api.py:3633",
       "target": "symbol:api.game_levelup",
       "type": "route_to"
     },
@@ -534,9 +534,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2678
+        "line": 2679
       },
-      "source": "endpoint:POST:/game/new:api.py:2679",
+      "source": "endpoint:POST:/game/new:api.py:2680",
       "target": "symbol:api.new_game",
       "type": "route_to"
     },
@@ -545,10 +545,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2337
+        "line": 2338
       },
-      "source": "endpoint:POST:/game/prologue:api.py:2338",
+      "source": "endpoint:POST:/game/prologue:api.py:2339",
       "target": "symbol:api.game_prologue",
+      "type": "route_to"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 2524
+      },
+      "source": "endpoint:POST:/game/{game_id}/art/confirm:api.py:2525",
+      "target": "symbol:api.confirm_player_art",
       "type": "route_to"
     },
     {
@@ -558,7 +569,7 @@
         "file": "api.py",
         "line": 2523
       },
-      "source": "endpoint:POST:/game/{game_id}/art/confirm:api.py:2524",
+      "source": "endpoint:POST:/game/{game_id}/art/player/confirm:api.py:2525",
       "target": "symbol:api.confirm_player_art",
       "type": "route_to"
     },
@@ -567,20 +578,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2522
+        "line": 2475
       },
-      "source": "endpoint:POST:/game/{game_id}/art/player/confirm:api.py:2524",
-      "target": "symbol:api.confirm_player_art",
-      "type": "route_to"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 2474
-      },
-      "source": "endpoint:POST:/game/{game_id}/art/quote:api.py:2475",
+      "source": "endpoint:POST:/game/{game_id}/art/quote:api.py:2476",
       "target": "symbol:api.create_image_quote",
       "type": "route_to"
     },
@@ -589,9 +589,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2644
+        "line": 2645
       },
-      "source": "endpoint:POST:/game/{game_id}/art/{generation_id}/quality:api.py:2645",
+      "source": "endpoint:POST:/game/{game_id}/art/{generation_id}/quality:api.py:2646",
       "target": "symbol:api.dynamic_art_quality",
       "type": "route_to"
     },
@@ -622,9 +622,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2180
+        "line": 2181
       },
-      "source": "endpoint:POST:/payments/stripe/webhook:api.py:2181",
+      "source": "endpoint:POST:/payments/stripe/webhook:api.py:2182",
       "target": "symbol:api.stripe_webhook",
       "type": "route_to"
     },
@@ -4784,6 +4784,39 @@
       },
       "source": "file:tests/test_browser_local.py",
       "target": "module:tests.test_browser_local",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 13
+      },
+      "source": "file:tests/test_bug_api_pending_erros.py",
+      "target": "file:infrastructure/postgres_turns.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 12
+      },
+      "source": "file:tests/test_bug_api_pending_erros.py",
+      "target": "file:persistence.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 1
+      },
+      "source": "file:tests/test_bug_api_pending_erros.py",
+      "target": "module:tests.test_bug_api_pending_erros",
       "type": "contains"
     },
     {
@@ -12850,6 +12883,39 @@
       "type": "contains"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 9
+      },
+      "source": "file:tests/test_spec235_reclaim_local.py",
+      "target": "file:infrastructure/contracts.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 10
+      },
+      "source": "file:tests/test_spec235_reclaim_local.py",
+      "target": "file:tests/test_postgres_jobs_local.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec235_reclaim_local.py",
+      "target": "module:tests.test_spec235_reclaim_local",
+      "type": "contains"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
@@ -16341,7 +16407,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2042
+        "line": 2043
       },
       "source": "module:api",
       "target": "symbol:api.CheckoutRequest",
@@ -16385,7 +16451,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3405
+        "line": 3437
       },
       "source": "module:api",
       "target": "symbol:api.DeathChoiceRequest",
@@ -16440,7 +16506,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2105
+        "line": 2106
       },
       "source": "module:api",
       "target": "symbol:api.GooglePlayVerifyRequest",
@@ -16484,7 +16550,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3678
+        "line": 3710
       },
       "source": "module:api",
       "target": "symbol:api.SaveSummary",
@@ -16583,7 +16649,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2013
+        "line": 2014
       },
       "source": "module:api",
       "target": "symbol:api._account_reader",
@@ -16594,7 +16660,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2883
+        "line": 2884
       },
       "source": "module:api",
       "target": "symbol:api._action_already_processed",
@@ -16616,7 +16682,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2873
+        "line": 2874
       },
       "source": "module:api",
       "target": "symbol:api._append_player_input",
@@ -16627,7 +16693,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3214
+        "line": 3246
       },
       "source": "module:api",
       "target": "symbol:api._apply_action_options",
@@ -16660,7 +16726,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3048
+        "line": 3080
       },
       "source": "module:api",
       "target": "symbol:api._begin_create_operation",
@@ -16671,7 +16737,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3009
+        "line": 3033
       },
       "source": "module:api",
       "target": "symbol:api._begin_state_mutation",
@@ -16682,7 +16748,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2972
+        "line": 2973
       },
       "source": "module:api",
       "target": "symbol:api._begin_turn_operation",
@@ -16693,7 +16759,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1754
+        "line": 1755
       },
       "source": "module:api",
       "target": "symbol:api._build_combat_simulator_state",
@@ -16715,7 +16781,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1220
+        "line": 1221
       },
       "source": "module:api",
       "target": "symbol:api._cards_block",
@@ -16726,7 +16792,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1366
+        "line": 1367
       },
       "source": "module:api",
       "target": "symbol:api._chronicle_block",
@@ -16748,7 +16814,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1437
+        "line": 1438
       },
       "source": "module:api",
       "target": "symbol:api._combat_block",
@@ -16759,7 +16825,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3086
+        "line": 3118
       },
       "source": "module:api",
       "target": "symbol:api._commit_state_mutation",
@@ -16770,7 +16836,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3120
+        "line": 3152
       },
       "source": "module:api",
       "target": "symbol:api._commit_turn",
@@ -16781,7 +16847,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1313
+        "line": 1314
       },
       "source": "module:api",
       "target": "symbol:api._continuity_block",
@@ -16803,7 +16869,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2707
+        "line": 2708
       },
       "source": "module:api",
       "target": "symbol:api._create_game",
@@ -16825,7 +16891,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1273
+        "line": 1274
       },
       "source": "module:api",
       "target": "symbol:api._death_block",
@@ -16858,7 +16924,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2406
+        "line": 2407
       },
       "source": "module:api",
       "target": "symbol:api._enqueue_art_generation",
@@ -16869,7 +16935,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2419
+        "line": 2420
       },
       "source": "module:api",
       "target": "symbol:api._enqueue_turn_art",
@@ -16880,7 +16946,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3365
+        "line": 3397
       },
       "source": "module:api",
       "target": "symbol:api._execute_action",
@@ -16891,7 +16957,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1386
+        "line": 1387
       },
       "source": "module:api",
       "target": "symbol:api._factions_block",
@@ -16902,10 +16968,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3110
+        "line": 3142
       },
       "source": "module:api",
       "target": "symbol:api._fail_operation",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3010
+      },
+      "source": "module:api",
+      "target": "symbol:api._failed_pending_operation",
       "type": "defines"
     },
     {
@@ -16924,7 +17001,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2083
+        "line": 2084
       },
       "source": "module:api",
       "target": "symbol:api._google_play",
@@ -16935,7 +17012,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2437
+        "line": 2438
       },
       "source": "module:api",
       "target": "symbol:api._guard_image_effect",
@@ -16946,7 +17023,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2451
+        "line": 2452
       },
       "source": "module:api",
       "target": "symbol:api._image_finance",
@@ -16968,7 +17045,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1611
+        "line": 1612
       },
       "source": "module:api",
       "target": "symbol:api._interiors_block",
@@ -16990,7 +17067,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1320
+        "line": 1321
       },
       "source": "module:api",
       "target": "symbol:api._levelup_block",
@@ -17023,7 +17100,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3252
+        "line": 3284
       },
       "source": "module:api",
       "target": "symbol:api._log_turn",
@@ -17034,7 +17111,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2887
+        "line": 2888
       },
       "source": "module:api",
       "target": "symbol:api._mark_action_processed",
@@ -17045,7 +17122,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2357
+        "line": 2358
       },
       "source": "module:api",
       "target": "symbol:api._meter_auxiliary_operation",
@@ -17056,7 +17133,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1427
+        "line": 1428
       },
       "source": "module:api",
       "target": "symbol:api._npcs_block",
@@ -17067,7 +17144,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2955
+        "line": 2956
       },
       "source": "module:api",
       "target": "symbol:api._operation_hash",
@@ -17078,7 +17155,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2901
+        "line": 2902
       },
       "source": "module:api",
       "target": "symbol:api._prepare_checkpoint",
@@ -17089,7 +17166,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2919
+        "line": 2920
       },
       "source": "module:api",
       "target": "symbol:api._prepare_chronicle_derivatives",
@@ -17111,7 +17188,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1543
+        "line": 1544
       },
       "source": "module:api",
       "target": "symbol:api._quest_block",
@@ -17144,7 +17221,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2058
+        "line": 2059
       },
       "source": "module:api",
       "target": "symbol:api._refuse_android_stripe",
@@ -17188,7 +17265,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2896
+        "line": 2897
       },
       "source": "module:api",
       "target": "symbol:api._require_saved",
@@ -17210,7 +17287,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3273
+        "line": 3305
       },
       "source": "module:api",
       "target": "symbol:api._run_turn",
@@ -17221,7 +17298,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3283
+        "line": 3315
       },
       "source": "module:api",
       "target": "symbol:api._run_turn_collected",
@@ -17232,7 +17309,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2935
+        "line": 2936
       },
       "source": "module:api",
       "target": "symbol:api._schedule_chronicle_jobs",
@@ -17276,7 +17353,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3464
+        "line": 3496
       },
       "source": "module:api",
       "target": "symbol:api._sse",
@@ -17287,7 +17364,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3468
+        "line": 3500
       },
       "source": "module:api",
       "target": "symbol:api._stream_turn",
@@ -17298,7 +17375,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2027
+        "line": 2028
       },
       "source": "module:api",
       "target": "symbol:api._stripe_payments",
@@ -17342,7 +17419,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2463
+        "line": 2464
       },
       "source": "module:api",
       "target": "symbol:api._validate_image_request",
@@ -17353,7 +17430,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2962
+        "line": 2963
       },
       "source": "module:api",
       "target": "symbol:api._validated_receipt",
@@ -17364,7 +17441,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1571
+        "line": 1572
       },
       "source": "module:api",
       "target": "symbol:api._world_block",
@@ -17375,7 +17452,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3199
+        "line": 3231
       },
       "source": "module:api",
       "target": "symbol:api._write_checkpoint_if_due",
@@ -17386,7 +17463,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2022
+        "line": 2023
       },
       "source": "module:api",
       "target": "symbol:api.account_balance",
@@ -17419,7 +17496,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2266
+        "line": 2267
       },
       "source": "module:api",
       "target": "symbol:api.account_purchases",
@@ -17430,7 +17507,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2284
+        "line": 2285
       },
       "source": "module:api",
       "target": "symbol:api.account_series",
@@ -17441,7 +17518,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2214
+        "line": 2215
       },
       "source": "module:api",
       "target": "symbol:api.account_transcription",
@@ -17452,7 +17529,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2275
+        "line": 2276
       },
       "source": "module:api",
       "target": "symbol:api.account_usage",
@@ -17562,7 +17639,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2065
+        "line": 2066
       },
       "source": "module:api",
       "target": "symbol:api.checkout_create",
@@ -17573,7 +17650,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2049
+        "line": 2050
       },
       "source": "module:api",
       "target": "symbol:api.checkout_skus",
@@ -17584,7 +17661,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2168
+        "line": 2169
       },
       "source": "module:api",
       "target": "symbol:api.checkout_status",
@@ -17595,7 +17672,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1724
+        "line": 1725
       },
       "source": "module:api",
       "target": "symbol:api.combat_simulator_options",
@@ -17606,7 +17683,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2524
+        "line": 2525
       },
       "source": "module:api",
       "target": "symbol:api.confirm_player_art",
@@ -17617,7 +17694,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2475
+        "line": 2476
       },
       "source": "module:api",
       "target": "symbol:api.create_image_quote",
@@ -17628,7 +17705,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3698
+        "line": 3730
       },
       "source": "module:api",
       "target": "symbol:api.delete_save_endpoint",
@@ -17639,7 +17716,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2645
+        "line": 2646
       },
       "source": "module:api",
       "target": "symbol:api.dynamic_art_quality",
@@ -17650,7 +17727,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2581
+        "line": 2582
       },
       "source": "module:api",
       "target": "symbol:api.dynamic_art_status",
@@ -17661,7 +17738,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3780
+        "line": 3812
       },
       "source": "module:api",
       "target": "symbol:api.export_chronicle",
@@ -17683,7 +17760,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3401
+        "line": 3433
       },
       "source": "module:api",
       "target": "symbol:api.game_action",
@@ -17694,7 +17771,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3533
+        "line": 3565
       },
       "source": "module:api",
       "target": "symbol:api.game_action_stream",
@@ -17705,7 +17782,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3412
+        "line": 3444
       },
       "source": "module:api",
       "target": "symbol:api.game_death",
@@ -17716,7 +17793,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3556
+        "line": 3588
       },
       "source": "module:api",
       "target": "symbol:api.game_equip",
@@ -17727,7 +17804,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1977
+        "line": 1978
       },
       "source": "module:api",
       "target": "symbol:api.game_history",
@@ -17738,7 +17815,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3601
+        "line": 3633
       },
       "source": "module:api",
       "target": "symbol:api.game_levelup",
@@ -17749,7 +17826,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2338
+        "line": 2339
       },
       "source": "module:api",
       "target": "symbol:api.game_prologue",
@@ -17760,7 +17837,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1879
+        "line": 1880
       },
       "source": "module:api",
       "target": "symbol:api.get_combat_simulator_options",
@@ -17771,7 +17848,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1909
+        "line": 1910
       },
       "source": "module:api",
       "target": "symbol:api.get_creation_options",
@@ -17782,7 +17859,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1947
+        "line": 1948
       },
       "source": "module:api",
       "target": "symbol:api.get_current_state",
@@ -17793,7 +17870,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1921
+        "line": 1922
       },
       "source": "module:api",
       "target": "symbol:api.get_onboarding",
@@ -17804,7 +17881,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1966
+        "line": 1967
       },
       "source": "module:api",
       "target": "symbol:api.get_player_codex",
@@ -17815,7 +17892,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3691
+        "line": 3723
       },
       "source": "module:api",
       "target": "symbol:api.get_saves",
@@ -17826,7 +17903,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1933
+        "line": 1934
       },
       "source": "module:api",
       "target": "symbol:api.get_world_map",
@@ -17837,7 +17914,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2132
+        "line": 2133
       },
       "source": "module:api",
       "target": "symbol:api.google_play_products",
@@ -17848,7 +17925,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2113
+        "line": 2114
       },
       "source": "module:api",
       "target": "symbol:api.google_play_profile",
@@ -17859,7 +17936,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2143
+        "line": 2144
       },
       "source": "module:api",
       "target": "symbol:api.google_play_verify",
@@ -17870,7 +17947,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1629
+        "line": 1630
       },
       "source": "module:api",
       "target": "symbol:api.health_check",
@@ -17881,7 +17958,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1884
+        "line": 1885
       },
       "source": "module:api",
       "target": "symbol:api.new_combat_simulator",
@@ -17892,7 +17969,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2679
+        "line": 2680
       },
       "source": "module:api",
       "target": "symbol:api.new_game",
@@ -17903,7 +17980,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2312
+        "line": 2313
       },
       "source": "module:api",
       "target": "symbol:api.operation_status",
@@ -17914,7 +17991,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2399
+        "line": 2400
       },
       "source": "module:api",
       "target": "symbol:api.preview_player_art_brief",
@@ -17925,7 +18002,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1638
+        "line": 1639
       },
       "source": "module:api",
       "target": "symbol:api.prometheus_metrics",
@@ -17936,7 +18013,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3747
+        "line": 3779
       },
       "source": "module:api",
       "target": "symbol:api.search_chronicle_endpoint",
@@ -17947,7 +18024,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2181
+        "line": 2182
       },
       "source": "module:api",
       "target": "symbol:api.stripe_webhook",
@@ -17958,7 +18035,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2293
+        "line": 2294
       },
       "source": "module:api",
       "target": "symbol:api.turn_cost",
@@ -21995,7 +22072,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 504
+        "line": 519
       },
       "source": "module:infrastructure.postgres_turns",
       "target": "symbol:infrastructure.postgres_turns.PostgresRateLimiter",
@@ -22006,10 +22083,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 25
+        "line": 40
       },
       "source": "module:infrastructure.postgres_turns",
       "target": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/postgres_turns.py",
+        "line": 25
+      },
+      "source": "module:infrastructure.postgres_turns",
+      "target": "symbol:infrastructure.postgres_turns.reclaimable",
       "type": "defines"
     },
     {
@@ -47717,6 +47805,127 @@
       },
       "source": "module:tests.test_browser_local",
       "target": "symbol:tests.test_browser_local.test_browser_real_desktop_mobile_opt_in",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 13
+      },
+      "source": "module:tests.test_bug_api_pending_erros",
+      "target": "module:infrastructure.postgres_turns",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 12
+      },
+      "source": "module:tests.test_bug_api_pending_erros",
+      "target": "module:persistence",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 16
+      },
+      "source": "module:tests.test_bug_api_pending_erros",
+      "target": "symbol:tests.test_bug_api_pending_erros._row",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 68
+      },
+      "source": "module:tests.test_bug_api_pending_erros",
+      "target": "symbol:tests.test_bug_api_pending_erros.client",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 94
+      },
+      "source": "module:tests.test_bug_api_pending_erros",
+      "target": "symbol:tests.test_bug_api_pending_erros.test_abyss_tier_hidden_zero",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 101
+      },
+      "source": "module:tests.test_bug_api_pending_erros",
+      "target": "symbol:tests.test_bug_api_pending_erros.test_backstory_null",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 76
+      },
+      "source": "module:tests.test_bug_api_pending_erros",
+      "target": "symbol:tests.test_bug_api_pending_erros.test_chronicle_export_unicode_name",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 53
+      },
+      "source": "module:tests.test_bug_api_pending_erros",
+      "target": "symbol:tests.test_bug_api_pending_erros.test_death_not_gated_by_failed_pending",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 35
+      },
+      "source": "module:tests.test_bug_api_pending_erros",
+      "target": "symbol:tests.test_bug_api_pending_erros.test_equip_with_failed_pending_409",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 22
+      },
+      "source": "module:tests.test_bug_api_pending_erros",
+      "target": "symbol:tests.test_bug_api_pending_erros.test_failed_operation_reclaim_after_version_bump",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 27
+      },
+      "source": "module:tests.test_bug_api_pending_erros",
+      "target": "symbol:tests.test_bug_api_pending_erros.test_reclaim_strict_for_running_and_completed_and_foreign",
       "type": "defines"
     },
     {
@@ -80228,6 +80437,83 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 9
+      },
+      "source": "module:tests.test_spec235_reclaim_local",
+      "target": "module:infrastructure.contracts",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 10
+      },
+      "source": "module:tests.test_spec235_reclaim_local",
+      "target": "module:tests.test_postgres_jobs_local",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 20
+      },
+      "source": "module:tests.test_spec235_reclaim_local",
+      "target": "symbol:tests.test_spec235_reclaim_local._op_row",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 15
+      },
+      "source": "module:tests.test_spec235_reclaim_local",
+      "target": "symbol:tests.test_spec235_reclaim_local._principal",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 115
+      },
+      "source": "module:tests.test_spec235_reclaim_local",
+      "target": "symbol:tests.test_spec235_reclaim_local.test_equip_and_levelup_gate_pending_operation_against_real_operations",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 28
+      },
+      "source": "module:tests.test_spec235_reclaim_local",
+      "target": "symbol:tests.test_spec235_reclaim_local.test_failed_reclaim_after_version_bump_and_strict_cases",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 94
+      },
+      "source": "module:tests.test_spec235_reclaim_local",
+      "target": "symbol:tests.test_spec235_reclaim_local.test_running_operation_with_changed_version_stays_strict",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 47
       },
@@ -88798,7 +89084,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2014
+        "line": 2015
       },
       "source": "symbol:api._account_reader",
       "target": "symbol:api._database_profile",
@@ -88820,7 +89106,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3067
+        "line": 3099
       },
       "source": "symbol:api._begin_create_operation",
       "target": "symbol:api._begin_create_operation.receipt_fn",
@@ -88831,7 +89117,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3049
+        "line": 3081
       },
       "source": "symbol:api._begin_create_operation",
       "target": "symbol:api._database_profile",
@@ -88842,7 +89128,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3068
+        "line": 3100
       },
       "source": "symbol:api._begin_create_operation",
       "target": "symbol:api._validated_receipt",
@@ -88853,7 +89139,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3068
+        "line": 3100
       },
       "source": "symbol:api._begin_create_operation.receipt_fn",
       "target": "symbol:api._validated_receipt",
@@ -88864,7 +89150,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3028
+        "line": 3052
       },
       "source": "symbol:api._begin_state_mutation",
       "target": "symbol:api._begin_state_mutation.receipt_fn",
@@ -88875,7 +89161,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3011
+        "line": 3035
       },
       "source": "symbol:api._begin_state_mutation",
       "target": "symbol:api._database_profile",
@@ -88886,7 +89172,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3029
+        "line": 3059
+      },
+      "source": "symbol:api._begin_state_mutation",
+      "target": "symbol:api._failed_pending_operation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3053
       },
       "source": "symbol:api._begin_state_mutation",
       "target": "symbol:api._validated_receipt",
@@ -88897,7 +89194,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3029
+        "line": 3053
       },
       "source": "symbol:api._begin_state_mutation.receipt_fn",
       "target": "symbol:api._validated_receipt",
@@ -88908,7 +89205,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2986
+        "line": 2987
       },
       "source": "symbol:api._begin_turn_operation",
       "target": "symbol:api._begin_turn_operation.receipt_fn",
@@ -88919,7 +89216,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2974
+        "line": 2975
       },
       "source": "symbol:api._begin_turn_operation",
       "target": "symbol:api._database_profile",
@@ -88930,7 +89227,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2985
+        "line": 2986
       },
       "source": "symbol:api._begin_turn_operation",
       "target": "symbol:api._operation_hash",
@@ -88941,7 +89238,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2987
+        "line": 2988
       },
       "source": "symbol:api._begin_turn_operation",
       "target": "symbol:api._validated_receipt",
@@ -88952,7 +89249,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2987
+        "line": 2988
       },
       "source": "symbol:api._begin_turn_operation.receipt_fn",
       "target": "symbol:api._validated_receipt",
@@ -88963,7 +89260,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1759
+        "line": 1760
       },
       "source": "symbol:api._build_combat_simulator_state",
       "target": "symbol:character_creator.create_player_character",
@@ -88974,7 +89271,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1805
+        "line": 1806
       },
       "source": "symbol:api._build_combat_simulator_state",
       "target": "symbol:world_utils.starting_world",
@@ -89018,7 +89315,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1522
+        "line": 1523
       },
       "source": "symbol:api._combat_block",
       "target": "symbol:api._cards_block",
@@ -89029,7 +89326,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1445
+        "line": 1446
       },
       "source": "symbol:api._combat_block",
       "target": "symbol:api._combat_block._conds",
@@ -89040,7 +89337,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3089
+        "line": 3121
       },
       "source": "symbol:api._commit_state_mutation",
       "target": "symbol:api._require_saved",
@@ -89051,7 +89348,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3149
+        "line": 3181
       },
       "source": "symbol:api._commit_turn",
       "target": "symbol:api._require_saved",
@@ -89062,7 +89359,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3150
+        "line": 3182
       },
       "source": "symbol:api._commit_turn",
       "target": "symbol:api._schedule_chronicle_jobs",
@@ -89073,7 +89370,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3196
+        "line": 3228
       },
       "source": "symbol:api._commit_turn",
       "target": "symbol:api._schedule_chronicle_jobs",
@@ -89084,7 +89381,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3160
+        "line": 3192
       },
       "source": "symbol:api._commit_turn",
       "target": "symbol:api._usage_attempts",
@@ -89095,7 +89392,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3159
+        "line": 3191
       },
       "source": "symbol:api._commit_turn",
       "target": "symbol:services.usage_metering.normalize_attempts",
@@ -89106,7 +89403,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3164
+        "line": 3196
       },
       "source": "symbol:api._commit_turn",
       "target": "symbol:services.usage_metering.normalize_attempts",
@@ -89117,7 +89414,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3178
+        "line": 3210
       },
       "source": "symbol:api._commit_turn",
       "target": "symbol:services.usage_metering.operation_cost",
@@ -89128,7 +89425,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2855
+        "line": 2856
       },
       "source": "symbol:api._create_game",
       "target": "symbol:api._captured_usage",
@@ -89139,7 +89436,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2846
+        "line": 2847
       },
       "source": "symbol:api._create_game",
       "target": "symbol:api.format_response",
@@ -89150,7 +89447,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2720
+        "line": 2721
       },
       "source": "symbol:api._create_game",
       "target": "symbol:character_creator.create_player_character",
@@ -89161,7 +89458,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2795
+        "line": 2796
       },
       "source": "symbol:api._create_game",
       "target": "symbol:gamedata.seed_factions",
@@ -89172,7 +89469,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2722
+        "line": 2723
       },
       "source": "symbol:api._create_game",
       "target": "symbol:gamedata.sync_vitality",
@@ -89183,7 +89480,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2859
+        "line": 2860
       },
       "source": "symbol:api._create_game",
       "target": "symbol:persistence.save_game_state",
@@ -89194,7 +89491,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2816
+        "line": 2817
       },
       "source": "symbol:api._create_game",
       "target": "symbol:progression.normalize_player_progression",
@@ -89205,7 +89502,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2737
+        "line": 2738
       },
       "source": "symbol:api._create_game",
       "target": "symbol:services.chronicle.default_chapter_title",
@@ -89216,7 +89513,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2823
+        "line": 2824
       },
       "source": "symbol:api._create_game",
       "target": "symbol:services.prologue.scenario_to_state_seed",
@@ -89227,7 +89524,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2844
+        "line": 2845
       },
       "source": "symbol:api._create_game",
       "target": "symbol:services.visual_catalog.resolve_turn_visual_state",
@@ -89238,7 +89535,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2788
+        "line": 2789
       },
       "source": "symbol:api._create_game",
       "target": "symbol:world_utils.starting_world",
@@ -89249,7 +89546,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1283
+        "line": 1284
       },
       "source": "symbol:api._death_block",
       "target": "symbol:api._continuity_block",
@@ -89260,7 +89557,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1289
+        "line": 1290
       },
       "source": "symbol:api._death_block",
       "target": "symbol:persistence.checkpoint_turn",
@@ -89271,7 +89568,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2434
+        "line": 2435
       },
       "source": "symbol:api._enqueue_turn_art",
       "target": "symbol:api._enqueue_art_generation",
@@ -89282,7 +89579,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3389
+        "line": 3421
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._action_already_processed",
@@ -89293,7 +89590,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3395
+        "line": 3427
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._apply_action_options",
@@ -89304,7 +89601,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3385
+        "line": 3417
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._begin_turn_operation",
@@ -89315,7 +89612,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3368
+        "line": 3400
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._database_profile",
@@ -89326,7 +89623,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3378
+        "line": 3410
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._database_profile",
@@ -89337,7 +89634,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3383
+        "line": 3415
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._database_profile",
@@ -89348,7 +89645,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3378
+        "line": 3410
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._game_lock",
@@ -89359,7 +89656,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3392
+        "line": 3424
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._reject_archived",
@@ -89370,7 +89667,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3391
+        "line": 3423
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._reject_memorial",
@@ -89381,7 +89678,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3380
+        "line": 3412
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._resolve_save_file",
@@ -89392,7 +89689,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3396
+        "line": 3428
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._run_turn",
@@ -89403,7 +89700,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3390
+        "line": 3422
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api.format_response",
@@ -89414,7 +89711,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3384
+        "line": 3416
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:persistence.ensure_synthetic_checkpoint",
@@ -89425,7 +89722,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3370
+        "line": 3402
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:persistence.get_latest_save_file",
@@ -89436,7 +89733,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3380
+        "line": 3412
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:persistence.load_game_state",
@@ -89447,7 +89744,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3374
+        "line": 3406
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:persistence.save_path",
@@ -89458,7 +89755,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1421
+        "line": 1422
       },
       "source": "symbol:api._factions_block",
       "target": "symbol:services.state_views.reputation_history",
@@ -89469,7 +89766,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1422
+        "line": 1423
       },
       "source": "symbol:api._factions_block",
       "target": "symbol:services.state_views.stability_label",
@@ -89491,7 +89788,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2084
+        "line": 2085
       },
       "source": "symbol:api._google_play",
       "target": "symbol:api._database_profile",
@@ -89502,7 +89799,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2455
+        "line": 2456
       },
       "source": "symbol:api._image_finance",
       "target": "symbol:api._database_profile",
@@ -89513,7 +89810,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2458
+        "line": 2459
       },
       "source": "symbol:api._image_finance",
       "target": "symbol:api._guard_image_effect",
@@ -89524,7 +89821,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1361
+        "line": 1362
       },
       "source": "symbol:api._levelup_block",
       "target": "symbol:gamedata.card_tier_for_level",
@@ -89535,7 +89832,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1362
+        "line": 1363
       },
       "source": "symbol:api._levelup_block",
       "target": "symbol:gamedata.prepared_slots_for_level",
@@ -89546,7 +89843,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1358
+        "line": 1359
       },
       "source": "symbol:api._levelup_block",
       "target": "symbol:progression.effective_virtue_card_stage",
@@ -89557,7 +89854,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1327
+        "line": 1328
       },
       "source": "symbol:api._levelup_block",
       "target": "symbol:progression.eligible_cards",
@@ -89568,7 +89865,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1353
+        "line": 1354
       },
       "source": "symbol:api._levelup_block",
       "target": "symbol:progression.eligible_subclasses",
@@ -89579,7 +89876,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1352
+        "line": 1353
       },
       "source": "symbol:api._levelup_block",
       "target": "symbol:progression.player_branch",
@@ -89634,7 +89931,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3269
+        "line": 3301
       },
       "source": "symbol:api._log_turn",
       "target": "symbol:api._llm_log_fields",
@@ -89645,7 +89942,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2383
+        "line": 2384
       },
       "source": "symbol:api._meter_auxiliary_operation",
       "target": "symbol:api._captured_usage",
@@ -89656,7 +89953,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2388
+        "line": 2389
       },
       "source": "symbol:api._meter_auxiliary_operation",
       "target": "symbol:api._captured_usage",
@@ -89667,7 +89964,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2363
+        "line": 2364
       },
       "source": "symbol:api._meter_auxiliary_operation",
       "target": "symbol:api._database_profile",
@@ -89678,7 +89975,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2908
+        "line": 2909
       },
       "source": "symbol:api._prepare_checkpoint",
       "target": "symbol:api._database_profile",
@@ -89689,7 +89986,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2921
+        "line": 2922
       },
       "source": "symbol:api._prepare_chronicle_derivatives",
       "target": "symbol:api._database_profile",
@@ -89700,7 +89997,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1568
+        "line": 1569
       },
       "source": "symbol:api._quest_block",
       "target": "symbol:services.quest_log.quest_markers",
@@ -89733,7 +90030,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2897
+        "line": 2898
       },
       "source": "symbol:api._require_saved",
       "target": "symbol:persistence.save_game_state",
@@ -89755,7 +90052,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3279
+        "line": 3311
       },
       "source": "symbol:api._run_turn",
       "target": "symbol:api._run_turn_collected",
@@ -89766,7 +90063,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3289
+        "line": 3321
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._append_player_input",
@@ -89777,7 +90074,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3310
+        "line": 3342
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._commit_turn",
@@ -89788,7 +90085,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3303
+        "line": 3335
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._enqueue_turn_art",
@@ -89799,7 +90096,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3316
+        "line": 3348
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._log_turn",
@@ -89810,7 +90107,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3353
+        "line": 3385
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._log_turn",
@@ -89821,7 +90118,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3304
+        "line": 3336
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._mark_action_processed",
@@ -89832,7 +90129,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3305
+        "line": 3337
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._prepare_checkpoint",
@@ -89843,7 +90140,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3306
+        "line": 3338
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._prepare_chronicle_derivatives",
@@ -89854,7 +90151,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3340
+        "line": 3372
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._usage_attempts",
@@ -89865,7 +90162,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3307
+        "line": 3339
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api.format_response",
@@ -89876,10 +90173,43 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3324
+        "line": 3356
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:llm_setup.is_simulated",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3365
+      },
+      "source": "symbol:api._run_turn_collected",
+      "target": "symbol:llm_setup.is_simulated",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3371
+      },
+      "source": "symbol:api._run_turn_collected",
+      "target": "symbol:services.usage_metering.normalize_attempts",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3376
+      },
+      "source": "symbol:api._run_turn_collected",
+      "target": "symbol:services.usage_metering.normalize_attempts",
       "type": "calls"
     },
     {
@@ -89890,39 +90220,6 @@
         "line": 3333
       },
       "source": "symbol:api._run_turn_collected",
-      "target": "symbol:llm_setup.is_simulated",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3339
-      },
-      "source": "symbol:api._run_turn_collected",
-      "target": "symbol:services.usage_metering.normalize_attempts",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3344
-      },
-      "source": "symbol:api._run_turn_collected",
-      "target": "symbol:services.usage_metering.normalize_attempts",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3301
-      },
-      "source": "symbol:api._run_turn_collected",
       "target": "symbol:services.visual_catalog.resolve_turn_visual_state",
       "type": "calls"
     },
@@ -89931,7 +90228,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2936
+        "line": 2937
       },
       "source": "symbol:api._schedule_chronicle_jobs",
       "target": "symbol:api._database_profile",
@@ -89964,7 +90261,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3488
+        "line": 3520
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._execute_action",
@@ -89975,7 +90272,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3480
+        "line": 3512
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._sse",
@@ -89986,7 +90283,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3504
+        "line": 3536
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._sse",
@@ -89997,7 +90294,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3507
+        "line": 3539
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._sse",
@@ -90008,7 +90305,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3515
+        "line": 3547
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._sse",
@@ -90019,7 +90316,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3517
+        "line": 3549
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._sse",
@@ -90030,7 +90327,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3521
+        "line": 3553
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._sse",
@@ -90041,7 +90338,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3524
+        "line": 3556
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._sse",
@@ -90052,7 +90349,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3527
+        "line": 3559
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._sse",
@@ -90063,7 +90360,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3528
+        "line": 3560
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._sse",
@@ -90074,7 +90371,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3483
+        "line": 3515
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._stream_turn._worker",
@@ -90085,7 +90382,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3488
+        "line": 3520
       },
       "source": "symbol:api._stream_turn._worker",
       "target": "symbol:api._execute_action",
@@ -90096,7 +90393,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2028
+        "line": 2029
       },
       "source": "symbol:api._stripe_payments",
       "target": "symbol:api._database_profile",
@@ -90107,7 +90404,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2465
+        "line": 2466
       },
       "source": "symbol:api._validate_image_request",
       "target": "symbol:api._reject_archived",
@@ -90118,7 +90415,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2464
+        "line": 2465
       },
       "source": "symbol:api._validate_image_request",
       "target": "symbol:api._reject_memorial",
@@ -90129,7 +90426,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1607
+        "line": 1608
       },
       "source": "symbol:api._world_block",
       "target": "symbol:api._interiors_block",
@@ -90140,7 +90437,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1597
+        "line": 1598
       },
       "source": "symbol:api._world_block",
       "target": "symbol:services.state_views.active_threats",
@@ -90151,7 +90448,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1596
+        "line": 1597
       },
       "source": "symbol:api._world_block",
       "target": "symbol:services.state_views.recent_control_changes",
@@ -90162,7 +90459,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1593
+        "line": 1594
       },
       "source": "symbol:api._world_block",
       "target": "symbol:services.state_views.visible_controllers",
@@ -90173,7 +90470,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3211
+        "line": 3243
       },
       "source": "symbol:api._write_checkpoint_if_due",
       "target": "symbol:api._require_saved",
@@ -90184,7 +90481,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2024
+        "line": 2025
       },
       "source": "symbol:api.account_balance",
       "target": "symbol:api._account_reader",
@@ -90250,7 +90547,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2269
+        "line": 2270
       },
       "source": "symbol:api.account_purchases",
       "target": "symbol:api._account_reader",
@@ -90261,7 +90558,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2287
+        "line": 2288
       },
       "source": "symbol:api.account_series",
       "target": "symbol:api._account_reader",
@@ -90272,7 +90569,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2224
+        "line": 2225
       },
       "source": "symbol:api.account_transcription",
       "target": "symbol:api._database_profile",
@@ -90283,7 +90580,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2278
+        "line": 2279
       },
       "source": "symbol:api.account_usage",
       "target": "symbol:api._account_reader",
@@ -90580,7 +90877,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2066
+        "line": 2067
       },
       "source": "symbol:api.checkout_create",
       "target": "symbol:api._refuse_android_stripe",
@@ -90591,7 +90888,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2072
+        "line": 2073
       },
       "source": "symbol:api.checkout_create",
       "target": "symbol:api._stripe_payments",
@@ -90602,7 +90899,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2050
+        "line": 2051
       },
       "source": "symbol:api.checkout_skus",
       "target": "symbol:api._refuse_android_stripe",
@@ -90613,7 +90910,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2053
+        "line": 2054
       },
       "source": "symbol:api.checkout_skus",
       "target": "symbol:api._stripe_payments",
@@ -90624,7 +90921,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2172
+        "line": 2173
       },
       "source": "symbol:api.checkout_status",
       "target": "symbol:api._stripe_payments",
@@ -90635,7 +90932,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2549
+        "line": 2550
       },
       "source": "symbol:api.confirm_player_art",
       "target": "symbol:api._begin_state_mutation",
@@ -90646,7 +90943,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2565
+        "line": 2566
       },
       "source": "symbol:api.confirm_player_art",
       "target": "symbol:api._commit_state_mutation",
@@ -90657,7 +90954,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2573
+        "line": 2574
       },
       "source": "symbol:api.confirm_player_art",
       "target": "symbol:api._fail_operation",
@@ -90668,65 +90965,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2576
+        "line": 2577
       },
       "source": "symbol:api.confirm_player_art",
       "target": "symbol:api._fail_operation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 2547
-      },
-      "source": "symbol:api.confirm_player_art",
-      "target": "symbol:api._guard_image_effect",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 2533
-      },
-      "source": "symbol:api.confirm_player_art",
-      "target": "symbol:api._image_finance",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 2546
-      },
-      "source": "symbol:api.confirm_player_art",
-      "target": "symbol:api._public_art_refs",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 2566
-      },
-      "source": "symbol:api.confirm_player_art",
-      "target": "symbol:api._public_art_refs",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 2535
-      },
-      "source": "symbol:api.confirm_player_art",
-      "target": "symbol:api._resolve_save_file",
       "type": "calls"
     },
     {
@@ -90737,6 +90979,61 @@
         "line": 2548
       },
       "source": "symbol:api.confirm_player_art",
+      "target": "symbol:api._guard_image_effect",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 2534
+      },
+      "source": "symbol:api.confirm_player_art",
+      "target": "symbol:api._image_finance",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 2547
+      },
+      "source": "symbol:api.confirm_player_art",
+      "target": "symbol:api._public_art_refs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 2567
+      },
+      "source": "symbol:api.confirm_player_art",
+      "target": "symbol:api._public_art_refs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 2536
+      },
+      "source": "symbol:api.confirm_player_art",
+      "target": "symbol:api._resolve_save_file",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 2549
+      },
+      "source": "symbol:api.confirm_player_art",
       "target": "symbol:api._validate_image_request",
       "type": "calls"
     },
@@ -90745,7 +91042,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2535
+        "line": 2536
       },
       "source": "symbol:api.confirm_player_art",
       "target": "symbol:persistence.load_game_state",
@@ -90756,7 +91053,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2481
+        "line": 2482
       },
       "source": "symbol:api.create_image_quote",
       "target": "symbol:api._image_finance",
@@ -90767,7 +91064,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2482
+        "line": 2483
       },
       "source": "symbol:api.create_image_quote",
       "target": "symbol:api._resolve_save_file",
@@ -90778,7 +91075,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2485
+        "line": 2486
       },
       "source": "symbol:api.create_image_quote",
       "target": "symbol:api._validate_image_request",
@@ -90789,7 +91086,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2510
+        "line": 2511
       },
       "source": "symbol:api.create_image_quote",
       "target": "symbol:gamedata.load_json_data",
@@ -90800,7 +91097,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2482
+        "line": 2483
       },
       "source": "symbol:api.create_image_quote",
       "target": "symbol:persistence.load_game_state",
@@ -90811,7 +91108,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3701
+        "line": 3733
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._database_profile",
@@ -90822,7 +91119,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3734
+        "line": 3766
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._fail_operation",
@@ -90833,7 +91130,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3737
+        "line": 3769
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._game_lock",
@@ -90844,7 +91141,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2649
+        "line": 2650
       },
       "source": "symbol:api.dynamic_art_quality",
       "target": "symbol:api._database_profile",
@@ -90855,7 +91152,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2646
+        "line": 2647
       },
       "source": "symbol:api.dynamic_art_quality",
       "target": "symbol:api._resolve_save_file",
@@ -90866,7 +91163,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2655
+        "line": 2656
       },
       "source": "symbol:api.dynamic_art_quality",
       "target": "symbol:gamedata.load_json_data",
@@ -90877,7 +91174,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2646
+        "line": 2647
       },
       "source": "symbol:api.dynamic_art_quality",
       "target": "symbol:persistence.load_game_state",
@@ -90888,7 +91185,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2673
+        "line": 2674
       },
       "source": "symbol:api.dynamic_art_quality",
       "target": "symbol:persistence.save_game_state",
@@ -90899,7 +91196,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2585
+        "line": 2586
       },
       "source": "symbol:api.dynamic_art_status",
       "target": "symbol:api._database_profile",
@@ -90910,7 +91207,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2582
+        "line": 2583
       },
       "source": "symbol:api.dynamic_art_status",
       "target": "symbol:api._resolve_save_file",
@@ -90921,7 +91218,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2596
+        "line": 2597
       },
       "source": "symbol:api.dynamic_art_status",
       "target": "symbol:gamedata.load_json_data",
@@ -90932,7 +91229,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2582
+        "line": 2583
       },
       "source": "symbol:api.dynamic_art_status",
       "target": "symbol:persistence.load_game_state",
@@ -90943,7 +91240,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3783
+        "line": 3815
       },
       "source": "symbol:api.export_chronicle",
       "target": "symbol:api._resolve_save_file",
@@ -90954,7 +91251,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3784
+        "line": 3816
       },
       "source": "symbol:api.export_chronicle",
       "target": "symbol:persistence.load_game_state",
@@ -91163,7 +91460,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3402
+        "line": 3434
       },
       "source": "symbol:api.game_action",
       "target": "symbol:api._execute_action",
@@ -91174,7 +91471,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3541
+        "line": 3573
       },
       "source": "symbol:api.game_action_stream",
       "target": "symbol:api._database_profile",
@@ -91185,7 +91482,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3545
+        "line": 3577
       },
       "source": "symbol:api.game_action_stream",
       "target": "symbol:api._database_profile",
@@ -91196,7 +91493,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3537
+        "line": 3569
       },
       "source": "symbol:api.game_action_stream",
       "target": "symbol:api._resolve_save_file",
@@ -91207,7 +91504,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3548
+        "line": 3580
       },
       "source": "symbol:api.game_action_stream",
       "target": "symbol:api._stream_turn",
@@ -91218,7 +91515,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3538
+        "line": 3570
       },
       "source": "symbol:api.game_action_stream",
       "target": "symbol:persistence.load_game_state",
@@ -91229,10 +91526,87 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3422
+        "line": 3454
       },
       "source": "symbol:api.game_death",
       "target": "symbol:api._begin_state_mutation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3482
+      },
+      "source": "symbol:api.game_death",
+      "target": "symbol:api._commit_state_mutation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3448
+      },
+      "source": "symbol:api.game_death",
+      "target": "symbol:api._database_profile",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3469
+      },
+      "source": "symbol:api.game_death",
+      "target": "symbol:api._fail_operation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3475
+      },
+      "source": "symbol:api.game_death",
+      "target": "symbol:api._fail_operation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3448
+      },
+      "source": "symbol:api.game_death",
+      "target": "symbol:api._game_lock",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3463
+      },
+      "source": "symbol:api.game_death",
+      "target": "symbol:api._reject_archived",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3465
+      },
+      "source": "symbol:api.game_death",
+      "target": "symbol:api._reject_archived",
       "type": "calls"
     },
     {
@@ -91243,83 +91617,6 @@
         "line": 3450
       },
       "source": "symbol:api.game_death",
-      "target": "symbol:api._commit_state_mutation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3416
-      },
-      "source": "symbol:api.game_death",
-      "target": "symbol:api._database_profile",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3437
-      },
-      "source": "symbol:api.game_death",
-      "target": "symbol:api._fail_operation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3443
-      },
-      "source": "symbol:api.game_death",
-      "target": "symbol:api._fail_operation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3416
-      },
-      "source": "symbol:api.game_death",
-      "target": "symbol:api._game_lock",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3431
-      },
-      "source": "symbol:api.game_death",
-      "target": "symbol:api._reject_archived",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3433
-      },
-      "source": "symbol:api.game_death",
-      "target": "symbol:api._reject_archived",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3418
-      },
-      "source": "symbol:api.game_death",
       "target": "symbol:api._resolve_save_file",
       "type": "calls"
     },
@@ -91328,7 +91625,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3449
+        "line": 3481
       },
       "source": "symbol:api.game_death",
       "target": "symbol:api.format_response",
@@ -91339,7 +91636,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3419
+        "line": 3451
       },
       "source": "symbol:api.game_death",
       "target": "symbol:persistence.load_game_state",
@@ -91350,7 +91647,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3565
+        "line": 3597
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._begin_state_mutation",
@@ -91361,7 +91658,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3596
+        "line": 3628
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._commit_state_mutation",
@@ -91372,7 +91669,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3559
+        "line": 3591
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._database_profile",
@@ -91383,7 +91680,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3584
+        "line": 3616
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._fail_operation",
@@ -91394,7 +91691,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3587
+        "line": 3619
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._fail_operation",
@@ -91405,7 +91702,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3559
+        "line": 3591
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._game_lock",
@@ -91416,7 +91713,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3594
+        "line": 3626
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._inventory_block",
@@ -91427,7 +91724,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3574
+        "line": 3606
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._reject_archived",
@@ -91438,7 +91735,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3575
+        "line": 3607
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._reject_memorial",
@@ -91449,7 +91746,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3561
+        "line": 3593
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._resolve_save_file",
@@ -91460,7 +91757,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3562
+        "line": 3594
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:persistence.load_game_state",
@@ -91471,7 +91768,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1991
+        "line": 1992
       },
       "source": "symbol:api.game_history",
       "target": "symbol:api._database_profile",
@@ -91482,7 +91779,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1978
+        "line": 1979
       },
       "source": "symbol:api.game_history",
       "target": "symbol:api._resolve_save_file",
@@ -91493,7 +91790,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1978
+        "line": 1979
       },
       "source": "symbol:api.game_history",
       "target": "symbol:persistence.load_game_state",
@@ -91504,7 +91801,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3613
+        "line": 3645
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._begin_state_mutation",
@@ -91515,7 +91812,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3667
+        "line": 3699
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._cards_block",
@@ -91526,7 +91823,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3672
+        "line": 3704
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._commit_state_mutation",
@@ -91537,109 +91834,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3607
+        "line": 3639
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._database_profile",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3633
-      },
-      "source": "symbol:api.game_levelup",
-      "target": "symbol:api._fail_operation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3607
-      },
-      "source": "symbol:api.game_levelup",
-      "target": "symbol:api._game_lock",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3669
-      },
-      "source": "symbol:api.game_levelup",
-      "target": "symbol:api._levelup_block",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3622
-      },
-      "source": "symbol:api.game_levelup",
-      "target": "symbol:api._reject_archived",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3623
-      },
-      "source": "symbol:api.game_levelup",
-      "target": "symbol:api._reject_memorial",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3609
-      },
-      "source": "symbol:api.game_levelup",
-      "target": "symbol:api._resolve_save_file",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3610
-      },
-      "source": "symbol:api.game_levelup",
-      "target": "symbol:persistence.load_game_state",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3627
-      },
-      "source": "symbol:api.game_levelup",
-      "target": "symbol:progression.apply_choice",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 3643
-      },
-      "source": "symbol:api.game_levelup",
-      "target": "symbol:progression.eligible_subclasses",
       "type": "calls"
     },
     {
@@ -91650,7 +91848,7 @@
         "line": 3665
       },
       "source": "symbol:api.game_levelup",
-      "target": "symbol:progression.xp_to_next",
+      "target": "symbol:api._fail_operation",
       "type": "calls"
     },
     {
@@ -91658,10 +91856,98 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2351
+        "line": 3639
       },
-      "source": "symbol:api.game_prologue",
-      "target": "symbol:api._meter_auxiliary_operation",
+      "source": "symbol:api.game_levelup",
+      "target": "symbol:api._game_lock",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3701
+      },
+      "source": "symbol:api.game_levelup",
+      "target": "symbol:api._levelup_block",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3654
+      },
+      "source": "symbol:api.game_levelup",
+      "target": "symbol:api._reject_archived",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3655
+      },
+      "source": "symbol:api.game_levelup",
+      "target": "symbol:api._reject_memorial",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3641
+      },
+      "source": "symbol:api.game_levelup",
+      "target": "symbol:api._resolve_save_file",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3642
+      },
+      "source": "symbol:api.game_levelup",
+      "target": "symbol:persistence.load_game_state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3659
+      },
+      "source": "symbol:api.game_levelup",
+      "target": "symbol:progression.apply_choice",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3675
+      },
+      "source": "symbol:api.game_levelup",
+      "target": "symbol:progression.eligible_subclasses",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 3697
+      },
+      "source": "symbol:api.game_levelup",
+      "target": "symbol:progression.xp_to_next",
       "type": "calls"
     },
     {
@@ -91672,6 +91958,17 @@
         "line": 2352
       },
       "source": "symbol:api.game_prologue",
+      "target": "symbol:api._meter_auxiliary_operation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 2353
+      },
+      "source": "symbol:api.game_prologue",
       "target": "symbol:services.prologue.build_start_scenario",
       "type": "calls"
     },
@@ -91680,7 +91977,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1880
+        "line": 1881
       },
       "source": "symbol:api.get_combat_simulator_options",
       "target": "symbol:api.combat_simulator_options",
@@ -91691,7 +91988,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1910
+        "line": 1911
       },
       "source": "symbol:api.get_creation_options",
       "target": "symbol:gamedata.load_json_data",
@@ -91702,7 +91999,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1917
+        "line": 1918
       },
       "source": "symbol:api.get_creation_options",
       "target": "symbol:services.visual_catalog.creation_visuals",
@@ -91713,7 +92010,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1957
+        "line": 1958
       },
       "source": "symbol:api.get_current_state",
       "target": "symbol:api._resolve_save_file",
@@ -91724,7 +92021,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1963
+        "line": 1964
       },
       "source": "symbol:api.get_current_state",
       "target": "symbol:api.format_response",
@@ -91735,7 +92032,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1959
+        "line": 1960
       },
       "source": "symbol:api.get_current_state",
       "target": "symbol:persistence.load_game_state",
@@ -91746,7 +92043,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1926
+        "line": 1927
       },
       "source": "symbol:api.get_onboarding",
       "target": "symbol:gamedata.load_json_data",
@@ -91757,7 +92054,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1969
+        "line": 1970
       },
       "source": "symbol:api.get_player_codex",
       "target": "symbol:api._resolve_save_file",
@@ -91768,7 +92065,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1970
+        "line": 1971
       },
       "source": "symbol:api.get_player_codex",
       "target": "symbol:persistence.load_game_state",
@@ -91779,7 +92076,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1974
+        "line": 1975
       },
       "source": "symbol:api.get_player_codex",
       "target": "symbol:services.discovery.player_codex",
@@ -91790,7 +92087,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1939
+        "line": 1940
       },
       "source": "symbol:api.get_world_map",
       "target": "symbol:gamedata.load_json_data",
@@ -91801,7 +92098,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2136
+        "line": 2137
       },
       "source": "symbol:api.google_play_products",
       "target": "symbol:api._database_profile",
@@ -91812,7 +92109,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2150
+        "line": 2151
       },
       "source": "symbol:api.google_play_verify",
       "target": "symbol:api._google_play",
@@ -91823,32 +92120,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1885
+        "line": 1886
       },
       "source": "symbol:api.new_combat_simulator",
       "target": "symbol:api._begin_create_operation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 1889
-      },
-      "source": "symbol:api.new_combat_simulator",
-      "target": "symbol:api._build_combat_simulator_state",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 1903
-      },
-      "source": "symbol:api.new_combat_simulator",
-      "target": "symbol:api._fail_operation",
       "type": "calls"
     },
     {
@@ -91859,6 +92134,28 @@
         "line": 1890
       },
       "source": "symbol:api.new_combat_simulator",
+      "target": "symbol:api._build_combat_simulator_state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 1904
+      },
+      "source": "symbol:api.new_combat_simulator",
+      "target": "symbol:api._fail_operation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 1891
+      },
+      "source": "symbol:api.new_combat_simulator",
       "target": "symbol:api.format_response",
       "type": "calls"
     },
@@ -91867,7 +92164,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1899
+        "line": 1900
       },
       "source": "symbol:api.new_combat_simulator",
       "target": "symbol:persistence.save_game_state",
@@ -91878,7 +92175,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2684
+        "line": 2685
       },
       "source": "symbol:api.new_game",
       "target": "symbol:api._begin_create_operation",
@@ -91889,7 +92186,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2697
+        "line": 2698
       },
       "source": "symbol:api.new_game",
       "target": "symbol:api._captured_usage",
@@ -91900,7 +92197,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2692
+        "line": 2693
       },
       "source": "symbol:api.new_game",
       "target": "symbol:api._create_game",
@@ -91911,7 +92208,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2321
+        "line": 2322
       },
       "source": "symbol:api.operation_status",
       "target": "symbol:api._action_already_processed",
@@ -91922,7 +92219,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2320
+        "line": 2321
       },
       "source": "symbol:api.operation_status",
       "target": "symbol:api._database_profile",
@@ -91933,7 +92230,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2313
+        "line": 2314
       },
       "source": "symbol:api.operation_status",
       "target": "symbol:api._resolve_save_file",
@@ -91944,7 +92241,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2313
+        "line": 2314
       },
       "source": "symbol:api.operation_status",
       "target": "symbol:persistence.load_game_state",
@@ -91955,7 +92252,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 1640
+        "line": 1641
       },
       "source": "symbol:api.prometheus_metrics",
       "target": "symbol:api._database_profile",
@@ -91966,7 +92263,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3754
+        "line": 3786
       },
       "source": "symbol:api.search_chronicle_endpoint",
       "target": "symbol:api._database_profile",
@@ -91977,7 +92274,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3762
+        "line": 3794
       },
       "source": "symbol:api.search_chronicle_endpoint",
       "target": "symbol:api._meter_auxiliary_operation",
@@ -91988,7 +92285,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3748
+        "line": 3780
       },
       "source": "symbol:api.search_chronicle_endpoint",
       "target": "symbol:api._resolve_save_file",
@@ -91999,7 +92296,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 3748
+        "line": 3780
       },
       "source": "symbol:api.search_chronicle_endpoint",
       "target": "symbol:persistence.load_game_state",
@@ -92010,7 +92307,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2205
+        "line": 2206
       },
       "source": "symbol:api.stripe_webhook",
       "target": "symbol:api._stripe_payments",
@@ -92021,7 +92318,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2302
+        "line": 2303
       },
       "source": "symbol:api.turn_cost",
       "target": "symbol:api._account_reader",
@@ -92032,7 +92329,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2297
+        "line": 2298
       },
       "source": "symbol:api.turn_cost",
       "target": "symbol:api._database_profile",
@@ -92043,7 +92340,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2294
+        "line": 2295
       },
       "source": "symbol:api.turn_cost",
       "target": "symbol:api._resolve_save_file",
@@ -92054,7 +92351,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 2294
+        "line": 2295
       },
       "source": "symbol:api.turn_cost",
       "target": "symbol:persistence.load_game_state",
@@ -100733,7 +101030,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 505
+        "line": 520
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresRateLimiter",
       "target": "symbol:infrastructure.postgres_turns.PostgresRateLimiter.__init__",
@@ -100744,7 +101041,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 508
+        "line": 523
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresRateLimiter",
       "target": "symbol:infrastructure.postgres_turns.PostgresRateLimiter.consume",
@@ -100755,7 +101052,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 534
+        "line": 549
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresRateLimiter.consume",
       "target": "symbol:infrastructure.contracts.RateLimitDecision",
@@ -100766,7 +101063,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 26
+        "line": 41
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator",
       "target": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.__init__",
@@ -100777,7 +101074,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 30
+        "line": 45
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator",
       "target": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.claim",
@@ -100788,7 +101085,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 270
+        "line": 285
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator",
       "target": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.commit_create",
@@ -100799,7 +101096,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 347
+        "line": 362
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator",
       "target": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.commit_delete",
@@ -100810,7 +101107,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 118
+        "line": 133
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator",
       "target": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.commit_game",
@@ -100821,7 +101118,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 421
+        "line": 436
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator",
       "target": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.complete",
@@ -100832,7 +101129,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 462
+        "line": 477
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator",
       "target": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.fail",
@@ -100843,7 +101140,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 396
+        "line": 411
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator",
       "target": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.heartbeat",
@@ -100854,7 +101151,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 378
+        "line": 393
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator",
       "target": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.receipt",
@@ -100865,7 +101162,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 85
+        "line": 100
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.claim",
       "target": "symbol:infrastructure.contracts.Conflict",
@@ -100876,7 +101173,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 88
+        "line": 103
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.claim",
       "target": "symbol:infrastructure.contracts.Conflict",
@@ -100887,7 +101184,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 91
+        "line": 105
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.claim",
       "target": "symbol:infrastructure.contracts.Conflict",
@@ -100898,7 +101195,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 93
+        "line": 107
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.claim",
       "target": "symbol:infrastructure.contracts.Conflict",
@@ -100909,7 +101206,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 65
+        "line": 80
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.claim",
       "target": "symbol:infrastructure.contracts.LeaseHeld",
@@ -100920,7 +101217,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 99
+        "line": 113
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.claim",
       "target": "symbol:infrastructure.contracts.LeaseHeld",
@@ -100931,7 +101228,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 56
+        "line": 71
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.claim",
       "target": "symbol:infrastructure.contracts.NotFound",
@@ -100942,7 +101239,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 116
+        "line": 131
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.claim",
       "target": "symbol:infrastructure.contracts.OperationClaim",
@@ -100953,7 +101250,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 58
+        "line": 73
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.claim",
       "target": "symbol:infrastructure.contracts.StaleVersion",
@@ -100964,7 +101261,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 290
+        "line": 104
+      },
+      "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.claim",
+      "target": "symbol:infrastructure.postgres_turns.reclaimable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/postgres_turns.py",
+        "line": 305
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.commit_create",
       "target": "symbol:infrastructure.contracts.LeaseHeld",
@@ -100975,7 +101283,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 361
+        "line": 376
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.commit_delete",
       "target": "symbol:infrastructure.contracts.LeaseHeld",
@@ -100986,7 +101294,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 367
+        "line": 382
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.commit_delete",
       "target": "symbol:infrastructure.contracts.NotFound",
@@ -100997,7 +101305,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 144
+        "line": 159
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.commit_game",
       "target": "symbol:infrastructure.contracts.Conflict",
@@ -101008,7 +101316,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 157
+        "line": 172
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.commit_game",
       "target": "symbol:infrastructure.contracts.LeaseHeld",
@@ -101019,21 +101327,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 184
+        "line": 199
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.commit_game",
       "target": "symbol:infrastructure.contracts.StaleVersion",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "infrastructure/postgres_turns.py",
-        "line": 435
-      },
-      "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.complete",
-      "target": "symbol:infrastructure.contracts.LeaseHeld",
       "type": "calls"
     },
     {
@@ -101052,7 +101349,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 475
+        "line": 465
+      },
+      "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.complete",
+      "target": "symbol:infrastructure.contracts.LeaseHeld",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/postgres_turns.py",
+        "line": 490
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.fail",
       "target": "symbol:infrastructure.contracts.LeaseHeld",
@@ -101063,7 +101371,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 492
+        "line": 507
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.fail",
       "target": "symbol:infrastructure.contracts.LeaseHeld",
@@ -101074,7 +101382,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 411
+        "line": 426
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.heartbeat",
       "target": "symbol:infrastructure.contracts.LeaseHeld",
@@ -101085,7 +101393,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/postgres_turns.py",
-        "line": 393
+        "line": 408
       },
       "source": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.receipt",
       "target": "symbol:infrastructure.contracts.Conflict",
@@ -149456,6 +149764,138 @@
       },
       "source": "symbol:tests.test_browser_local.test_browser_real_desktop_mobile_opt_in",
       "target": "symbol:scripts.browser_local.run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 24
+      },
+      "source": "symbol:tests.test_bug_api_pending_erros.test_failed_operation_reclaim_after_version_bump",
+      "target": "symbol:infrastructure.postgres_turns.reclaimable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 24
+      },
+      "source": "symbol:tests.test_bug_api_pending_erros.test_failed_operation_reclaim_after_version_bump",
+      "target": "symbol:tests.test_bug_api_pending_erros._row",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 28
+      },
+      "source": "symbol:tests.test_bug_api_pending_erros.test_reclaim_strict_for_running_and_completed_and_foreign",
+      "target": "symbol:infrastructure.postgres_turns.reclaimable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 29
+      },
+      "source": "symbol:tests.test_bug_api_pending_erros.test_reclaim_strict_for_running_and_completed_and_foreign",
+      "target": "symbol:infrastructure.postgres_turns.reclaimable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 30
+      },
+      "source": "symbol:tests.test_bug_api_pending_erros.test_reclaim_strict_for_running_and_completed_and_foreign",
+      "target": "symbol:infrastructure.postgres_turns.reclaimable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 31
+      },
+      "source": "symbol:tests.test_bug_api_pending_erros.test_reclaim_strict_for_running_and_completed_and_foreign",
+      "target": "symbol:infrastructure.postgres_turns.reclaimable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 32
+      },
+      "source": "symbol:tests.test_bug_api_pending_erros.test_reclaim_strict_for_running_and_completed_and_foreign",
+      "target": "symbol:infrastructure.postgres_turns.reclaimable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 28
+      },
+      "source": "symbol:tests.test_bug_api_pending_erros.test_reclaim_strict_for_running_and_completed_and_foreign",
+      "target": "symbol:tests.test_bug_api_pending_erros._row",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 29
+      },
+      "source": "symbol:tests.test_bug_api_pending_erros.test_reclaim_strict_for_running_and_completed_and_foreign",
+      "target": "symbol:tests.test_bug_api_pending_erros._row",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 30
+      },
+      "source": "symbol:tests.test_bug_api_pending_erros.test_reclaim_strict_for_running_and_completed_and_foreign",
+      "target": "symbol:tests.test_bug_api_pending_erros._row",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 31
+      },
+      "source": "symbol:tests.test_bug_api_pending_erros.test_reclaim_strict_for_running_and_completed_and_foreign",
+      "target": "symbol:tests.test_bug_api_pending_erros._row",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_api_pending_erros.py",
+        "line": 32
+      },
+      "source": "symbol:tests.test_bug_api_pending_erros.test_reclaim_strict_for_running_and_completed_and_foreign",
+      "target": "symbol:tests.test_bug_api_pending_erros._row",
       "type": "calls"
     },
     {
@@ -214010,6 +214450,138 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 17
+      },
+      "source": "symbol:tests.test_spec235_reclaim_local._principal",
+      "target": "symbol:infrastructure.contracts.Principal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 122
+      },
+      "source": "symbol:tests.test_spec235_reclaim_local.test_equip_and_levelup_gate_pending_operation_against_real_operations",
+      "target": "symbol:tests.test_postgres_jobs_local._state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 121
+      },
+      "source": "symbol:tests.test_spec235_reclaim_local.test_equip_and_levelup_gate_pending_operation_against_real_operations",
+      "target": "symbol:tests.test_spec235_reclaim_local._principal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 31
+      },
+      "source": "symbol:tests.test_spec235_reclaim_local.test_failed_reclaim_after_version_bump_and_strict_cases",
+      "target": "symbol:tests.test_postgres_jobs_local._state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 38
+      },
+      "source": "symbol:tests.test_spec235_reclaim_local.test_failed_reclaim_after_version_bump_and_strict_cases",
+      "target": "symbol:tests.test_postgres_jobs_local._state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 74
+      },
+      "source": "symbol:tests.test_spec235_reclaim_local.test_failed_reclaim_after_version_bump_and_strict_cases",
+      "target": "symbol:tests.test_postgres_jobs_local._state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 57
+      },
+      "source": "symbol:tests.test_spec235_reclaim_local.test_failed_reclaim_after_version_bump_and_strict_cases",
+      "target": "symbol:tests.test_spec235_reclaim_local._op_row",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 62
+      },
+      "source": "symbol:tests.test_spec235_reclaim_local.test_failed_reclaim_after_version_bump_and_strict_cases",
+      "target": "symbol:tests.test_spec235_reclaim_local._op_row",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 30
+      },
+      "source": "symbol:tests.test_spec235_reclaim_local.test_failed_reclaim_after_version_bump_and_strict_cases",
+      "target": "symbol:tests.test_spec235_reclaim_local._principal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 46
+      },
+      "source": "symbol:tests.test_spec235_reclaim_local.test_failed_reclaim_after_version_bump_and_strict_cases",
+      "target": "symbol:tests.test_spec235_reclaim_local._principal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 97
+      },
+      "source": "symbol:tests.test_spec235_reclaim_local.test_running_operation_with_changed_version_stays_strict",
+      "target": "symbol:tests.test_postgres_jobs_local._state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec235_reclaim_local.py",
+        "line": 96
+      },
+      "source": "symbol:tests.test_spec235_reclaim_local.test_running_operation_with_changed_version_stays_strict",
+      "target": "symbol:tests.test_spec235_reclaim_local._principal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 49
       },
@@ -223653,30 +224225,30 @@
       "qualified_name": null
     },
     {
-      "id": "endpoint:DELETE:/game/save/{game_id}:api.py:3698",
+      "id": "endpoint:DELETE:/game/save/{game_id}:api.py:3730",
       "kind": "endpoint",
-      "line": 3697,
+      "line": 3729,
       "path": "api.py",
       "qualified_name": "DELETE /game/save/{game_id}"
     },
     {
-      "id": "endpoint:GET:/account/balance:api.py:2022",
+      "id": "endpoint:GET:/account/balance:api.py:2023",
       "kind": "endpoint",
-      "line": 2021,
+      "line": 2022,
       "path": "api.py",
       "qualified_name": "GET /account/balance"
     },
     {
-      "id": "endpoint:GET:/account/checkout/skus:api.py:2049",
+      "id": "endpoint:GET:/account/checkout/skus:api.py:2050",
       "kind": "endpoint",
-      "line": 2048,
+      "line": 2049,
       "path": "api.py",
       "qualified_name": "GET /account/checkout/skus"
     },
     {
-      "id": "endpoint:GET:/account/checkout/{order_id}:api.py:2168",
+      "id": "endpoint:GET:/account/checkout/{order_id}:api.py:2169",
       "kind": "endpoint",
-      "line": 2167,
+      "line": 2168,
       "path": "api.py",
       "qualified_name": "GET /account/checkout/{order_id}"
     },
@@ -223688,37 +224260,37 @@
       "qualified_name": "GET /account/export"
     },
     {
-      "id": "endpoint:GET:/account/purchases/google/products:api.py:2132",
+      "id": "endpoint:GET:/account/purchases/google/products:api.py:2133",
       "kind": "endpoint",
-      "line": 2131,
+      "line": 2132,
       "path": "api.py",
       "qualified_name": "GET /account/purchases/google/products"
     },
     {
-      "id": "endpoint:GET:/account/purchases/google/profile:api.py:2113",
+      "id": "endpoint:GET:/account/purchases/google/profile:api.py:2114",
       "kind": "endpoint",
-      "line": 2112,
+      "line": 2113,
       "path": "api.py",
       "qualified_name": "GET /account/purchases/google/profile"
     },
     {
-      "id": "endpoint:GET:/account/purchases:api.py:2266",
+      "id": "endpoint:GET:/account/purchases:api.py:2267",
       "kind": "endpoint",
-      "line": 2265,
+      "line": 2266,
       "path": "api.py",
       "qualified_name": "GET /account/purchases"
     },
     {
-      "id": "endpoint:GET:/account/series:api.py:2284",
+      "id": "endpoint:GET:/account/series:api.py:2285",
       "kind": "endpoint",
-      "line": 2283,
+      "line": 2284,
       "path": "api.py",
       "qualified_name": "GET /account/series"
     },
     {
-      "id": "endpoint:GET:/account/usage:api.py:2275",
+      "id": "endpoint:GET:/account/usage:api.py:2276",
       "kind": "endpoint",
-      "line": 2274,
+      "line": 2275,
       "path": "api.py",
       "qualified_name": "GET /account/usage"
     },
@@ -223730,100 +224302,100 @@
       "qualified_name": "GET /auth/config"
     },
     {
-      "id": "endpoint:GET:/data/combat-simulator:api.py:1879",
+      "id": "endpoint:GET:/data/combat-simulator:api.py:1880",
       "kind": "endpoint",
-      "line": 1878,
+      "line": 1879,
       "path": "api.py",
       "qualified_name": "GET /data/combat-simulator"
     },
     {
-      "id": "endpoint:GET:/data/map:api.py:1933",
+      "id": "endpoint:GET:/data/map:api.py:1934",
       "kind": "endpoint",
-      "line": 1932,
+      "line": 1933,
       "path": "api.py",
       "qualified_name": "GET /data/map"
     },
     {
-      "id": "endpoint:GET:/data/onboarding:api.py:1921",
+      "id": "endpoint:GET:/data/onboarding:api.py:1922",
       "kind": "endpoint",
-      "line": 1920,
+      "line": 1921,
       "path": "api.py",
       "qualified_name": "GET /data/onboarding"
     },
     {
-      "id": "endpoint:GET:/data/options:api.py:1909",
+      "id": "endpoint:GET:/data/options:api.py:1910",
       "kind": "endpoint",
-      "line": 1908,
+      "line": 1909,
       "path": "api.py",
       "qualified_name": "GET /data/options"
     },
     {
-      "id": "endpoint:GET:/game/chronicle/export:api.py:3780",
+      "id": "endpoint:GET:/game/chronicle/export:api.py:3812",
       "kind": "endpoint",
-      "line": 3779,
+      "line": 3811,
       "path": "api.py",
       "qualified_name": "GET /game/chronicle/export"
     },
     {
-      "id": "endpoint:GET:/game/codex:api.py:1966",
+      "id": "endpoint:GET:/game/codex:api.py:1967",
       "kind": "endpoint",
-      "line": 1965,
+      "line": 1966,
       "path": "api.py",
       "qualified_name": "GET /game/codex"
     },
     {
-      "id": "endpoint:GET:/game/history:api.py:1977",
+      "id": "endpoint:GET:/game/history:api.py:1978",
       "kind": "endpoint",
-      "line": 1976,
+      "line": 1977,
       "path": "api.py",
       "qualified_name": "GET /game/history"
     },
     {
-      "id": "endpoint:GET:/game/saves:api.py:3691",
+      "id": "endpoint:GET:/game/saves:api.py:3723",
       "kind": "endpoint",
-      "line": 3690,
+      "line": 3722,
       "path": "api.py",
       "qualified_name": "GET /game/saves"
     },
     {
-      "id": "endpoint:GET:/game/state:api.py:1947",
+      "id": "endpoint:GET:/game/state:api.py:1948",
       "kind": "endpoint",
-      "line": 1946,
+      "line": 1947,
       "path": "api.py",
       "qualified_name": "GET /game/state"
     },
     {
-      "id": "endpoint:GET:/game/{game_id}/art/{generation_id}:api.py:2581",
+      "id": "endpoint:GET:/game/{game_id}/art/{generation_id}:api.py:2582",
       "kind": "endpoint",
-      "line": 2580,
+      "line": 2581,
       "path": "api.py",
       "qualified_name": "GET /game/{game_id}/art/{generation_id}"
     },
     {
-      "id": "endpoint:GET:/game/{game_id}/operations/{operation_id}/cost:api.py:2293",
+      "id": "endpoint:GET:/game/{game_id}/operations/{operation_id}/cost:api.py:2294",
       "kind": "endpoint",
-      "line": 2292,
+      "line": 2293,
       "path": "api.py",
       "qualified_name": "GET /game/{game_id}/operations/{operation_id}/cost"
     },
     {
-      "id": "endpoint:GET:/game/{game_id}/operations/{operation_id}:api.py:2312",
+      "id": "endpoint:GET:/game/{game_id}/operations/{operation_id}:api.py:2313",
       "kind": "endpoint",
-      "line": 2311,
+      "line": 2312,
       "path": "api.py",
       "qualified_name": "GET /game/{game_id}/operations/{operation_id}"
     },
     {
-      "id": "endpoint:GET:/health:api.py:1629",
+      "id": "endpoint:GET:/health:api.py:1630",
       "kind": "endpoint",
-      "line": 1628,
+      "line": 1629,
       "path": "api.py",
       "qualified_name": "GET /health"
     },
     {
-      "id": "endpoint:GET:/metrics:api.py:1638",
+      "id": "endpoint:GET:/metrics:api.py:1639",
       "kind": "endpoint",
-      "line": 1637,
+      "line": 1638,
       "path": "api.py",
       "qualified_name": "GET /metrics"
     },
@@ -223835,9 +224407,9 @@
       "qualified_name": "POST /account-deletions"
     },
     {
-      "id": "endpoint:POST:/account/checkout:api.py:2065",
+      "id": "endpoint:POST:/account/checkout:api.py:2066",
       "kind": "endpoint",
-      "line": 2064,
+      "line": 2065,
       "path": "api.py",
       "qualified_name": "POST /account/checkout"
     },
@@ -223849,16 +224421,16 @@
       "qualified_name": "POST /account/delete"
     },
     {
-      "id": "endpoint:POST:/account/purchases/google/verify:api.py:2143",
+      "id": "endpoint:POST:/account/purchases/google/verify:api.py:2144",
       "kind": "endpoint",
-      "line": 2142,
+      "line": 2143,
       "path": "api.py",
       "qualified_name": "POST /account/purchases/google/verify"
     },
     {
-      "id": "endpoint:POST:/account/transcriptions:api.py:2214",
+      "id": "endpoint:POST:/account/transcriptions:api.py:2215",
       "kind": "endpoint",
-      "line": 2213,
+      "line": 2214,
       "path": "api.py",
       "qualified_name": "POST /account/transcriptions"
     },
@@ -223933,100 +224505,100 @@
       "qualified_name": "POST /finops"
     },
     {
-      "id": "endpoint:POST:/game/action/stream:api.py:3533",
+      "id": "endpoint:POST:/game/action/stream:api.py:3565",
       "kind": "endpoint",
-      "line": 3532,
+      "line": 3564,
       "path": "api.py",
       "qualified_name": "POST /game/action/stream"
     },
     {
-      "id": "endpoint:POST:/game/action:api.py:3401",
+      "id": "endpoint:POST:/game/action:api.py:3433",
       "kind": "endpoint",
-      "line": 3400,
+      "line": 3432,
       "path": "api.py",
       "qualified_name": "POST /game/action"
     },
     {
-      "id": "endpoint:POST:/game/art/brief:api.py:2399",
+      "id": "endpoint:POST:/game/art/brief:api.py:2400",
       "kind": "endpoint",
-      "line": 2398,
+      "line": 2399,
       "path": "api.py",
       "qualified_name": "POST /game/art/brief"
     },
     {
-      "id": "endpoint:POST:/game/chronicle/search:api.py:3747",
+      "id": "endpoint:POST:/game/chronicle/search:api.py:3779",
       "kind": "endpoint",
-      "line": 3746,
+      "line": 3778,
       "path": "api.py",
       "qualified_name": "POST /game/chronicle/search"
     },
     {
-      "id": "endpoint:POST:/game/combat-simulator:api.py:1884",
+      "id": "endpoint:POST:/game/combat-simulator:api.py:1885",
       "kind": "endpoint",
-      "line": 1883,
+      "line": 1884,
       "path": "api.py",
       "qualified_name": "POST /game/combat-simulator"
     },
     {
-      "id": "endpoint:POST:/game/death:api.py:3412",
+      "id": "endpoint:POST:/game/death:api.py:3444",
       "kind": "endpoint",
-      "line": 3411,
+      "line": 3443,
       "path": "api.py",
       "qualified_name": "POST /game/death"
     },
     {
-      "id": "endpoint:POST:/game/equip:api.py:3556",
+      "id": "endpoint:POST:/game/equip:api.py:3588",
       "kind": "endpoint",
-      "line": 3555,
+      "line": 3587,
       "path": "api.py",
       "qualified_name": "POST /game/equip"
     },
     {
-      "id": "endpoint:POST:/game/levelup:api.py:3601",
+      "id": "endpoint:POST:/game/levelup:api.py:3633",
       "kind": "endpoint",
-      "line": 3600,
+      "line": 3632,
       "path": "api.py",
       "qualified_name": "POST /game/levelup"
     },
     {
-      "id": "endpoint:POST:/game/new:api.py:2679",
+      "id": "endpoint:POST:/game/new:api.py:2680",
       "kind": "endpoint",
-      "line": 2678,
+      "line": 2679,
       "path": "api.py",
       "qualified_name": "POST /game/new"
     },
     {
-      "id": "endpoint:POST:/game/prologue:api.py:2338",
+      "id": "endpoint:POST:/game/prologue:api.py:2339",
       "kind": "endpoint",
-      "line": 2337,
+      "line": 2338,
       "path": "api.py",
       "qualified_name": "POST /game/prologue"
     },
     {
-      "id": "endpoint:POST:/game/{game_id}/art/confirm:api.py:2524",
+      "id": "endpoint:POST:/game/{game_id}/art/confirm:api.py:2525",
       "kind": "endpoint",
-      "line": 2523,
+      "line": 2524,
       "path": "api.py",
       "qualified_name": "POST /game/{game_id}/art/confirm"
     },
     {
-      "id": "endpoint:POST:/game/{game_id}/art/player/confirm:api.py:2524",
+      "id": "endpoint:POST:/game/{game_id}/art/player/confirm:api.py:2525",
       "kind": "endpoint",
-      "line": 2522,
+      "line": 2523,
       "path": "api.py",
       "qualified_name": "POST /game/{game_id}/art/player/confirm"
     },
     {
-      "id": "endpoint:POST:/game/{game_id}/art/quote:api.py:2475",
+      "id": "endpoint:POST:/game/{game_id}/art/quote:api.py:2476",
       "kind": "endpoint",
-      "line": 2474,
+      "line": 2475,
       "path": "api.py",
       "qualified_name": "POST /game/{game_id}/art/quote"
     },
     {
-      "id": "endpoint:POST:/game/{game_id}/art/{generation_id}/quality:api.py:2645",
+      "id": "endpoint:POST:/game/{game_id}/art/{generation_id}/quality:api.py:2646",
       "kind": "endpoint",
-      "line": 2644,
+      "line": 2645,
       "path": "api.py",
       "qualified_name": "POST /game/{game_id}/art/{generation_id}/quality"
     },
@@ -224045,9 +224617,9 @@
       "qualified_name": "POST /operations"
     },
     {
-      "id": "endpoint:POST:/payments/stripe/webhook:api.py:2181",
+      "id": "endpoint:POST:/payments/stripe/webhook:api.py:2182",
       "kind": "endpoint",
-      "line": 2180,
+      "line": 2181,
       "path": "api.py",
       "qualified_name": "POST /payments/stripe/webhook"
     },
@@ -226285,6 +226857,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_bug_api_pending_erros.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_bug_api_pending_erros.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_bug_combate_morte_aliados.py",
       "kind": "file",
       "line": 1,
@@ -227643,6 +228222,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_spec235_reclaim_local.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec235_reclaim_local.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_spec_index.py",
       "kind": "file",
       "line": 1,
@@ -227892,6 +228478,13 @@
       "kind": "file",
       "line": 1,
       "path": "web/e2e/image-quote.spec.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/e2e/pending-discard.spec.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/e2e/pending-discard.spec.ts",
       "qualified_name": null
     },
     {
@@ -228207,6 +228800,13 @@
       "kind": "file",
       "line": 1,
       "path": "web/src/purchases/webStripe.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/safeStorage.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/safeStorage.ts",
       "qualified_name": null
     },
     {
@@ -230464,6 +231064,13 @@
       "qualified_name": "tests.test_browser_local"
     },
     {
+      "id": "module:tests.test_bug_api_pending_erros",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_bug_api_pending_erros.py",
+      "qualified_name": "tests.test_bug_api_pending_erros"
+    },
+    {
       "id": "module:tests.test_bug_combate_morte_aliados",
       "kind": "module",
       "line": 1,
@@ -231822,6 +232429,13 @@
       "qualified_name": "tests.test_spec234_pgvector_profile_local"
     },
     {
+      "id": "module:tests.test_spec235_reclaim_local",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec235_reclaim_local.py",
+      "qualified_name": "tests.test_spec235_reclaim_local"
+    },
+    {
       "id": "module:tests.test_spec_index",
       "kind": "module",
       "line": 1,
@@ -232993,7 +233607,7 @@
     {
       "id": "symbol:api.CheckoutRequest",
       "kind": "class",
-      "line": 2042,
+      "line": 2043,
       "path": "api.py",
       "qualified_name": "api.CheckoutRequest"
     },
@@ -233056,7 +233670,7 @@
     {
       "id": "symbol:api.DeathChoiceRequest",
       "kind": "class",
-      "line": 3405,
+      "line": 3437,
       "path": "api.py",
       "qualified_name": "api.DeathChoiceRequest"
     },
@@ -233091,7 +233705,7 @@
     {
       "id": "symbol:api.GooglePlayVerifyRequest",
       "kind": "class",
-      "line": 2105,
+      "line": 2106,
       "path": "api.py",
       "qualified_name": "api.GooglePlayVerifyRequest"
     },
@@ -233119,7 +233733,7 @@
     {
       "id": "symbol:api.SaveSummary",
       "kind": "class",
-      "line": 3678,
+      "line": 3710,
       "path": "api.py",
       "qualified_name": "api.SaveSummary"
     },
@@ -233182,14 +233796,14 @@
     {
       "id": "symbol:api._account_reader",
       "kind": "function",
-      "line": 2013,
+      "line": 2014,
       "path": "api.py",
       "qualified_name": "api._account_reader"
     },
     {
       "id": "symbol:api._action_already_processed",
       "kind": "function",
-      "line": 2883,
+      "line": 2884,
       "path": "api.py",
       "qualified_name": "api._action_already_processed"
     },
@@ -233203,14 +233817,14 @@
     {
       "id": "symbol:api._append_player_input",
       "kind": "function",
-      "line": 2873,
+      "line": 2874,
       "path": "api.py",
       "qualified_name": "api._append_player_input"
     },
     {
       "id": "symbol:api._apply_action_options",
       "kind": "function",
-      "line": 3214,
+      "line": 3246,
       "path": "api.py",
       "qualified_name": "api._apply_action_options"
     },
@@ -233231,49 +233845,49 @@
     {
       "id": "symbol:api._begin_create_operation",
       "kind": "function",
-      "line": 3048,
+      "line": 3080,
       "path": "api.py",
       "qualified_name": "api._begin_create_operation"
     },
     {
       "id": "symbol:api._begin_create_operation.receipt_fn",
       "kind": "function",
-      "line": 3067,
+      "line": 3099,
       "path": "api.py",
       "qualified_name": "api._begin_create_operation.receipt_fn"
     },
     {
       "id": "symbol:api._begin_state_mutation",
       "kind": "function",
-      "line": 3009,
+      "line": 3033,
       "path": "api.py",
       "qualified_name": "api._begin_state_mutation"
     },
     {
       "id": "symbol:api._begin_state_mutation.receipt_fn",
       "kind": "function",
-      "line": 3028,
+      "line": 3052,
       "path": "api.py",
       "qualified_name": "api._begin_state_mutation.receipt_fn"
     },
     {
       "id": "symbol:api._begin_turn_operation",
       "kind": "function",
-      "line": 2972,
+      "line": 2973,
       "path": "api.py",
       "qualified_name": "api._begin_turn_operation"
     },
     {
       "id": "symbol:api._begin_turn_operation.receipt_fn",
       "kind": "function",
-      "line": 2986,
+      "line": 2987,
       "path": "api.py",
       "qualified_name": "api._begin_turn_operation.receipt_fn"
     },
     {
       "id": "symbol:api._build_combat_simulator_state",
       "kind": "function",
-      "line": 1754,
+      "line": 1755,
       "path": "api.py",
       "qualified_name": "api._build_combat_simulator_state"
     },
@@ -233287,14 +233901,14 @@
     {
       "id": "symbol:api._cards_block",
       "kind": "function",
-      "line": 1220,
+      "line": 1221,
       "path": "api.py",
       "qualified_name": "api._cards_block"
     },
     {
       "id": "symbol:api._chronicle_block",
       "kind": "function",
-      "line": 1366,
+      "line": 1367,
       "path": "api.py",
       "qualified_name": "api._chronicle_block"
     },
@@ -233308,35 +233922,35 @@
     {
       "id": "symbol:api._combat_block",
       "kind": "function",
-      "line": 1437,
+      "line": 1438,
       "path": "api.py",
       "qualified_name": "api._combat_block"
     },
     {
       "id": "symbol:api._combat_block._conds",
       "kind": "function",
-      "line": 1445,
+      "line": 1446,
       "path": "api.py",
       "qualified_name": "api._combat_block._conds"
     },
     {
       "id": "symbol:api._commit_state_mutation",
       "kind": "function",
-      "line": 3086,
+      "line": 3118,
       "path": "api.py",
       "qualified_name": "api._commit_state_mutation"
     },
     {
       "id": "symbol:api._commit_turn",
       "kind": "function",
-      "line": 3120,
+      "line": 3152,
       "path": "api.py",
       "qualified_name": "api._commit_turn"
     },
     {
       "id": "symbol:api._continuity_block",
       "kind": "function",
-      "line": 1313,
+      "line": 1314,
       "path": "api.py",
       "qualified_name": "api._continuity_block"
     },
@@ -233350,7 +233964,7 @@
     {
       "id": "symbol:api._create_game",
       "kind": "function",
-      "line": 2707,
+      "line": 2708,
       "path": "api.py",
       "qualified_name": "api._create_game"
     },
@@ -233364,7 +233978,7 @@
     {
       "id": "symbol:api._death_block",
       "kind": "function",
-      "line": 1273,
+      "line": 1274,
       "path": "api.py",
       "qualified_name": "api._death_block"
     },
@@ -233385,37 +233999,44 @@
     {
       "id": "symbol:api._enqueue_art_generation",
       "kind": "function",
-      "line": 2406,
+      "line": 2407,
       "path": "api.py",
       "qualified_name": "api._enqueue_art_generation"
     },
     {
       "id": "symbol:api._enqueue_turn_art",
       "kind": "function",
-      "line": 2419,
+      "line": 2420,
       "path": "api.py",
       "qualified_name": "api._enqueue_turn_art"
     },
     {
       "id": "symbol:api._execute_action",
       "kind": "function",
-      "line": 3365,
+      "line": 3397,
       "path": "api.py",
       "qualified_name": "api._execute_action"
     },
     {
       "id": "symbol:api._factions_block",
       "kind": "function",
-      "line": 1386,
+      "line": 1387,
       "path": "api.py",
       "qualified_name": "api._factions_block"
     },
     {
       "id": "symbol:api._fail_operation",
       "kind": "function",
-      "line": 3110,
+      "line": 3142,
       "path": "api.py",
       "qualified_name": "api._fail_operation"
+    },
+    {
+      "id": "symbol:api._failed_pending_operation",
+      "kind": "function",
+      "line": 3010,
+      "path": "api.py",
+      "qualified_name": "api._failed_pending_operation"
     },
     {
       "id": "symbol:api._game_lock",
@@ -233427,21 +234048,21 @@
     {
       "id": "symbol:api._google_play",
       "kind": "function",
-      "line": 2083,
+      "line": 2084,
       "path": "api.py",
       "qualified_name": "api._google_play"
     },
     {
       "id": "symbol:api._guard_image_effect",
       "kind": "function",
-      "line": 2437,
+      "line": 2438,
       "path": "api.py",
       "qualified_name": "api._guard_image_effect"
     },
     {
       "id": "symbol:api._image_finance",
       "kind": "function",
-      "line": 2451,
+      "line": 2452,
       "path": "api.py",
       "qualified_name": "api._image_finance"
     },
@@ -233455,7 +234076,7 @@
     {
       "id": "symbol:api._interiors_block",
       "kind": "function",
-      "line": 1611,
+      "line": 1612,
       "path": "api.py",
       "qualified_name": "api._interiors_block"
     },
@@ -233469,7 +234090,7 @@
     {
       "id": "symbol:api._levelup_block",
       "kind": "function",
-      "line": 1320,
+      "line": 1321,
       "path": "api.py",
       "qualified_name": "api._levelup_block"
     },
@@ -233490,49 +234111,49 @@
     {
       "id": "symbol:api._log_turn",
       "kind": "function",
-      "line": 3252,
+      "line": 3284,
       "path": "api.py",
       "qualified_name": "api._log_turn"
     },
     {
       "id": "symbol:api._mark_action_processed",
       "kind": "function",
-      "line": 2887,
+      "line": 2888,
       "path": "api.py",
       "qualified_name": "api._mark_action_processed"
     },
     {
       "id": "symbol:api._meter_auxiliary_operation",
       "kind": "function",
-      "line": 2357,
+      "line": 2358,
       "path": "api.py",
       "qualified_name": "api._meter_auxiliary_operation"
     },
     {
       "id": "symbol:api._npcs_block",
       "kind": "function",
-      "line": 1427,
+      "line": 1428,
       "path": "api.py",
       "qualified_name": "api._npcs_block"
     },
     {
       "id": "symbol:api._operation_hash",
       "kind": "function",
-      "line": 2955,
+      "line": 2956,
       "path": "api.py",
       "qualified_name": "api._operation_hash"
     },
     {
       "id": "symbol:api._prepare_checkpoint",
       "kind": "function",
-      "line": 2901,
+      "line": 2902,
       "path": "api.py",
       "qualified_name": "api._prepare_checkpoint"
     },
     {
       "id": "symbol:api._prepare_chronicle_derivatives",
       "kind": "function",
-      "line": 2919,
+      "line": 2920,
       "path": "api.py",
       "qualified_name": "api._prepare_chronicle_derivatives"
     },
@@ -233546,7 +234167,7 @@
     {
       "id": "symbol:api._quest_block",
       "kind": "function",
-      "line": 1543,
+      "line": 1544,
       "path": "api.py",
       "qualified_name": "api._quest_block"
     },
@@ -233567,7 +234188,7 @@
     {
       "id": "symbol:api._refuse_android_stripe",
       "kind": "function",
-      "line": 2058,
+      "line": 2059,
       "path": "api.py",
       "qualified_name": "api._refuse_android_stripe"
     },
@@ -233595,7 +234216,7 @@
     {
       "id": "symbol:api._require_saved",
       "kind": "function",
-      "line": 2896,
+      "line": 2897,
       "path": "api.py",
       "qualified_name": "api._require_saved"
     },
@@ -233609,21 +234230,21 @@
     {
       "id": "symbol:api._run_turn",
       "kind": "function",
-      "line": 3273,
+      "line": 3305,
       "path": "api.py",
       "qualified_name": "api._run_turn"
     },
     {
       "id": "symbol:api._run_turn_collected",
       "kind": "function",
-      "line": 3283,
+      "line": 3315,
       "path": "api.py",
       "qualified_name": "api._run_turn_collected"
     },
     {
       "id": "symbol:api._schedule_chronicle_jobs",
       "kind": "function",
-      "line": 2935,
+      "line": 2936,
       "path": "api.py",
       "qualified_name": "api._schedule_chronicle_jobs"
     },
@@ -233651,28 +234272,28 @@
     {
       "id": "symbol:api._sse",
       "kind": "function",
-      "line": 3464,
+      "line": 3496,
       "path": "api.py",
       "qualified_name": "api._sse"
     },
     {
       "id": "symbol:api._stream_turn",
       "kind": "function",
-      "line": 3468,
+      "line": 3500,
       "path": "api.py",
       "qualified_name": "api._stream_turn"
     },
     {
       "id": "symbol:api._stream_turn._worker",
       "kind": "function",
-      "line": 3483,
+      "line": 3515,
       "path": "api.py",
       "qualified_name": "api._stream_turn._worker"
     },
     {
       "id": "symbol:api._stripe_payments",
       "kind": "function",
-      "line": 2027,
+      "line": 2028,
       "path": "api.py",
       "qualified_name": "api._stripe_payments"
     },
@@ -233700,35 +234321,35 @@
     {
       "id": "symbol:api._validate_image_request",
       "kind": "function",
-      "line": 2463,
+      "line": 2464,
       "path": "api.py",
       "qualified_name": "api._validate_image_request"
     },
     {
       "id": "symbol:api._validated_receipt",
       "kind": "function",
-      "line": 2962,
+      "line": 2963,
       "path": "api.py",
       "qualified_name": "api._validated_receipt"
     },
     {
       "id": "symbol:api._world_block",
       "kind": "function",
-      "line": 1571,
+      "line": 1572,
       "path": "api.py",
       "qualified_name": "api._world_block"
     },
     {
       "id": "symbol:api._write_checkpoint_if_due",
       "kind": "function",
-      "line": 3199,
+      "line": 3231,
       "path": "api.py",
       "qualified_name": "api._write_checkpoint_if_due"
     },
     {
       "id": "symbol:api.account_balance",
       "kind": "function",
-      "line": 2022,
+      "line": 2023,
       "path": "api.py",
       "qualified_name": "api.account_balance"
     },
@@ -233749,28 +234370,28 @@
     {
       "id": "symbol:api.account_purchases",
       "kind": "function",
-      "line": 2266,
+      "line": 2267,
       "path": "api.py",
       "qualified_name": "api.account_purchases"
     },
     {
       "id": "symbol:api.account_series",
       "kind": "function",
-      "line": 2284,
+      "line": 2285,
       "path": "api.py",
       "qualified_name": "api.account_series"
     },
     {
       "id": "symbol:api.account_transcription",
       "kind": "function",
-      "line": 2214,
+      "line": 2215,
       "path": "api.py",
       "qualified_name": "api.account_transcription"
     },
     {
       "id": "symbol:api.account_usage",
       "kind": "function",
-      "line": 2275,
+      "line": 2276,
       "path": "api.py",
       "qualified_name": "api.account_usage"
     },
@@ -233840,70 +234461,70 @@
     {
       "id": "symbol:api.checkout_create",
       "kind": "function",
-      "line": 2065,
+      "line": 2066,
       "path": "api.py",
       "qualified_name": "api.checkout_create"
     },
     {
       "id": "symbol:api.checkout_skus",
       "kind": "function",
-      "line": 2049,
+      "line": 2050,
       "path": "api.py",
       "qualified_name": "api.checkout_skus"
     },
     {
       "id": "symbol:api.checkout_status",
       "kind": "function",
-      "line": 2168,
+      "line": 2169,
       "path": "api.py",
       "qualified_name": "api.checkout_status"
     },
     {
       "id": "symbol:api.combat_simulator_options",
       "kind": "function",
-      "line": 1724,
+      "line": 1725,
       "path": "api.py",
       "qualified_name": "api.combat_simulator_options"
     },
     {
       "id": "symbol:api.confirm_player_art",
       "kind": "function",
-      "line": 2524,
+      "line": 2525,
       "path": "api.py",
       "qualified_name": "api.confirm_player_art"
     },
     {
       "id": "symbol:api.create_image_quote",
       "kind": "function",
-      "line": 2475,
+      "line": 2476,
       "path": "api.py",
       "qualified_name": "api.create_image_quote"
     },
     {
       "id": "symbol:api.delete_save_endpoint",
       "kind": "function",
-      "line": 3698,
+      "line": 3730,
       "path": "api.py",
       "qualified_name": "api.delete_save_endpoint"
     },
     {
       "id": "symbol:api.dynamic_art_quality",
       "kind": "function",
-      "line": 2645,
+      "line": 2646,
       "path": "api.py",
       "qualified_name": "api.dynamic_art_quality"
     },
     {
       "id": "symbol:api.dynamic_art_status",
       "kind": "function",
-      "line": 2581,
+      "line": 2582,
       "path": "api.py",
       "qualified_name": "api.dynamic_art_status"
     },
     {
       "id": "symbol:api.export_chronicle",
       "kind": "function",
-      "line": 3780,
+      "line": 3812,
       "path": "api.py",
       "qualified_name": "api.export_chronicle"
     },
@@ -233917,182 +234538,182 @@
     {
       "id": "symbol:api.game_action",
       "kind": "function",
-      "line": 3401,
+      "line": 3433,
       "path": "api.py",
       "qualified_name": "api.game_action"
     },
     {
       "id": "symbol:api.game_action_stream",
       "kind": "function",
-      "line": 3533,
+      "line": 3565,
       "path": "api.py",
       "qualified_name": "api.game_action_stream"
     },
     {
       "id": "symbol:api.game_death",
       "kind": "function",
-      "line": 3412,
+      "line": 3444,
       "path": "api.py",
       "qualified_name": "api.game_death"
     },
     {
       "id": "symbol:api.game_equip",
       "kind": "function",
-      "line": 3556,
+      "line": 3588,
       "path": "api.py",
       "qualified_name": "api.game_equip"
     },
     {
       "id": "symbol:api.game_history",
       "kind": "function",
-      "line": 1977,
+      "line": 1978,
       "path": "api.py",
       "qualified_name": "api.game_history"
     },
     {
       "id": "symbol:api.game_levelup",
       "kind": "function",
-      "line": 3601,
+      "line": 3633,
       "path": "api.py",
       "qualified_name": "api.game_levelup"
     },
     {
       "id": "symbol:api.game_prologue",
       "kind": "function",
-      "line": 2338,
+      "line": 2339,
       "path": "api.py",
       "qualified_name": "api.game_prologue"
     },
     {
       "id": "symbol:api.get_combat_simulator_options",
       "kind": "function",
-      "line": 1879,
+      "line": 1880,
       "path": "api.py",
       "qualified_name": "api.get_combat_simulator_options"
     },
     {
       "id": "symbol:api.get_creation_options",
       "kind": "function",
-      "line": 1909,
+      "line": 1910,
       "path": "api.py",
       "qualified_name": "api.get_creation_options"
     },
     {
       "id": "symbol:api.get_current_state",
       "kind": "function",
-      "line": 1947,
+      "line": 1948,
       "path": "api.py",
       "qualified_name": "api.get_current_state"
     },
     {
       "id": "symbol:api.get_onboarding",
       "kind": "function",
-      "line": 1921,
+      "line": 1922,
       "path": "api.py",
       "qualified_name": "api.get_onboarding"
     },
     {
       "id": "symbol:api.get_player_codex",
       "kind": "function",
-      "line": 1966,
+      "line": 1967,
       "path": "api.py",
       "qualified_name": "api.get_player_codex"
     },
     {
       "id": "symbol:api.get_saves",
       "kind": "function",
-      "line": 3691,
+      "line": 3723,
       "path": "api.py",
       "qualified_name": "api.get_saves"
     },
     {
       "id": "symbol:api.get_world_map",
       "kind": "function",
-      "line": 1933,
+      "line": 1934,
       "path": "api.py",
       "qualified_name": "api.get_world_map"
     },
     {
       "id": "symbol:api.google_play_products",
       "kind": "function",
-      "line": 2132,
+      "line": 2133,
       "path": "api.py",
       "qualified_name": "api.google_play_products"
     },
     {
       "id": "symbol:api.google_play_profile",
       "kind": "function",
-      "line": 2113,
+      "line": 2114,
       "path": "api.py",
       "qualified_name": "api.google_play_profile"
     },
     {
       "id": "symbol:api.google_play_verify",
       "kind": "function",
-      "line": 2143,
+      "line": 2144,
       "path": "api.py",
       "qualified_name": "api.google_play_verify"
     },
     {
       "id": "symbol:api.health_check",
       "kind": "function",
-      "line": 1629,
+      "line": 1630,
       "path": "api.py",
       "qualified_name": "api.health_check"
     },
     {
       "id": "symbol:api.new_combat_simulator",
       "kind": "function",
-      "line": 1884,
+      "line": 1885,
       "path": "api.py",
       "qualified_name": "api.new_combat_simulator"
     },
     {
       "id": "symbol:api.new_game",
       "kind": "function",
-      "line": 2679,
+      "line": 2680,
       "path": "api.py",
       "qualified_name": "api.new_game"
     },
     {
       "id": "symbol:api.operation_status",
       "kind": "function",
-      "line": 2312,
+      "line": 2313,
       "path": "api.py",
       "qualified_name": "api.operation_status"
     },
     {
       "id": "symbol:api.preview_player_art_brief",
       "kind": "function",
-      "line": 2399,
+      "line": 2400,
       "path": "api.py",
       "qualified_name": "api.preview_player_art_brief"
     },
     {
       "id": "symbol:api.prometheus_metrics",
       "kind": "function",
-      "line": 1638,
+      "line": 1639,
       "path": "api.py",
       "qualified_name": "api.prometheus_metrics"
     },
     {
       "id": "symbol:api.search_chronicle_endpoint",
       "kind": "function",
-      "line": 3747,
+      "line": 3779,
       "path": "api.py",
       "qualified_name": "api.search_chronicle_endpoint"
     },
     {
       "id": "symbol:api.stripe_webhook",
       "kind": "function",
-      "line": 2181,
+      "line": 2182,
       "path": "api.py",
       "qualified_name": "api.stripe_webhook"
     },
     {
       "id": "symbol:api.turn_cost",
       "kind": "function",
-      "line": 2293,
+      "line": 2294,
       "path": "api.py",
       "qualified_name": "api.turn_cost"
     },
@@ -237627,93 +238248,100 @@
     {
       "id": "symbol:infrastructure.postgres_turns.PostgresRateLimiter",
       "kind": "class",
-      "line": 504,
+      "line": 519,
       "path": "infrastructure/postgres_turns.py",
       "qualified_name": "infrastructure.postgres_turns.PostgresRateLimiter"
     },
     {
       "id": "symbol:infrastructure.postgres_turns.PostgresRateLimiter.__init__",
       "kind": "method",
-      "line": 505,
+      "line": 520,
       "path": "infrastructure/postgres_turns.py",
       "qualified_name": "infrastructure.postgres_turns.PostgresRateLimiter.__init__"
     },
     {
       "id": "symbol:infrastructure.postgres_turns.PostgresRateLimiter.consume",
       "kind": "method",
-      "line": 508,
+      "line": 523,
       "path": "infrastructure/postgres_turns.py",
       "qualified_name": "infrastructure.postgres_turns.PostgresRateLimiter.consume"
     },
     {
       "id": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator",
       "kind": "class",
-      "line": 25,
+      "line": 40,
       "path": "infrastructure/postgres_turns.py",
       "qualified_name": "infrastructure.postgres_turns.PostgresTurnCoordinator"
     },
     {
       "id": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.__init__",
       "kind": "method",
-      "line": 26,
+      "line": 41,
       "path": "infrastructure/postgres_turns.py",
       "qualified_name": "infrastructure.postgres_turns.PostgresTurnCoordinator.__init__"
     },
     {
       "id": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.claim",
       "kind": "method",
-      "line": 30,
+      "line": 45,
       "path": "infrastructure/postgres_turns.py",
       "qualified_name": "infrastructure.postgres_turns.PostgresTurnCoordinator.claim"
     },
     {
       "id": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.commit_create",
       "kind": "method",
-      "line": 270,
+      "line": 285,
       "path": "infrastructure/postgres_turns.py",
       "qualified_name": "infrastructure.postgres_turns.PostgresTurnCoordinator.commit_create"
     },
     {
       "id": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.commit_delete",
       "kind": "method",
-      "line": 347,
+      "line": 362,
       "path": "infrastructure/postgres_turns.py",
       "qualified_name": "infrastructure.postgres_turns.PostgresTurnCoordinator.commit_delete"
     },
     {
       "id": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.commit_game",
       "kind": "method",
-      "line": 118,
+      "line": 133,
       "path": "infrastructure/postgres_turns.py",
       "qualified_name": "infrastructure.postgres_turns.PostgresTurnCoordinator.commit_game"
     },
     {
       "id": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.complete",
       "kind": "method",
-      "line": 421,
+      "line": 436,
       "path": "infrastructure/postgres_turns.py",
       "qualified_name": "infrastructure.postgres_turns.PostgresTurnCoordinator.complete"
     },
     {
       "id": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.fail",
       "kind": "method",
-      "line": 462,
+      "line": 477,
       "path": "infrastructure/postgres_turns.py",
       "qualified_name": "infrastructure.postgres_turns.PostgresTurnCoordinator.fail"
     },
     {
       "id": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.heartbeat",
       "kind": "method",
-      "line": 396,
+      "line": 411,
       "path": "infrastructure/postgres_turns.py",
       "qualified_name": "infrastructure.postgres_turns.PostgresTurnCoordinator.heartbeat"
     },
     {
       "id": "symbol:infrastructure.postgres_turns.PostgresTurnCoordinator.receipt",
       "kind": "method",
-      "line": 378,
+      "line": 393,
       "path": "infrastructure/postgres_turns.py",
       "qualified_name": "infrastructure.postgres_turns.PostgresTurnCoordinator.receipt"
+    },
+    {
+      "id": "symbol:infrastructure.postgres_turns.reclaimable",
+      "kind": "function",
+      "line": 25,
+      "path": "infrastructure/postgres_turns.py",
+      "qualified_name": "infrastructure.postgres_turns.reclaimable"
     },
     {
       "id": "symbol:infrastructure.pricing_catalog.quote_published_sku",
@@ -255508,6 +256136,69 @@
       "line": 20,
       "path": "tests/test_browser_local.py",
       "qualified_name": "tests.test_browser_local.test_browser_real_desktop_mobile_opt_in"
+    },
+    {
+      "id": "symbol:tests.test_bug_api_pending_erros._row",
+      "kind": "test",
+      "line": 16,
+      "path": "tests/test_bug_api_pending_erros.py",
+      "qualified_name": "tests.test_bug_api_pending_erros._row"
+    },
+    {
+      "id": "symbol:tests.test_bug_api_pending_erros.client",
+      "kind": "test",
+      "line": 68,
+      "path": "tests/test_bug_api_pending_erros.py",
+      "qualified_name": "tests.test_bug_api_pending_erros.client"
+    },
+    {
+      "id": "symbol:tests.test_bug_api_pending_erros.test_abyss_tier_hidden_zero",
+      "kind": "test",
+      "line": 94,
+      "path": "tests/test_bug_api_pending_erros.py",
+      "qualified_name": "tests.test_bug_api_pending_erros.test_abyss_tier_hidden_zero"
+    },
+    {
+      "id": "symbol:tests.test_bug_api_pending_erros.test_backstory_null",
+      "kind": "test",
+      "line": 101,
+      "path": "tests/test_bug_api_pending_erros.py",
+      "qualified_name": "tests.test_bug_api_pending_erros.test_backstory_null"
+    },
+    {
+      "id": "symbol:tests.test_bug_api_pending_erros.test_chronicle_export_unicode_name",
+      "kind": "test",
+      "line": 76,
+      "path": "tests/test_bug_api_pending_erros.py",
+      "qualified_name": "tests.test_bug_api_pending_erros.test_chronicle_export_unicode_name"
+    },
+    {
+      "id": "symbol:tests.test_bug_api_pending_erros.test_death_not_gated_by_failed_pending",
+      "kind": "test",
+      "line": 53,
+      "path": "tests/test_bug_api_pending_erros.py",
+      "qualified_name": "tests.test_bug_api_pending_erros.test_death_not_gated_by_failed_pending"
+    },
+    {
+      "id": "symbol:tests.test_bug_api_pending_erros.test_equip_with_failed_pending_409",
+      "kind": "test",
+      "line": 35,
+      "path": "tests/test_bug_api_pending_erros.py",
+      "qualified_name": "tests.test_bug_api_pending_erros.test_equip_with_failed_pending_409"
+    },
+    {
+      "id": "symbol:tests.test_bug_api_pending_erros.test_failed_operation_reclaim_after_version_bump",
+      "kind": "test",
+      "line": 22,
+      "path": "tests/test_bug_api_pending_erros.py",
+      "qualified_name": "tests.test_bug_api_pending_erros.test_failed_operation_reclaim_after_version_bump"
+    },
+    {
+      "id": "symbol:tests.test_bug_api_pending_erros.test_reclaim_strict_for_running_and_completed_and_foreign",
+      "kind": "test",
+      "line": 27,
+      "path": "tests/test_bug_api_pending_erros.py",
+      "qualified_name": "tests.test_bug_api_pending_erros.test_reclaim_strict_for_running_and_completed_and_foreign"
     },
     {
       "id": "symbol:tests.test_bug_combate_morte_aliados._fighter",
@@ -276139,6 +276830,41 @@
       "qualified_name": "tests.test_spec234_pgvector_profile_local.test_spec234_profile_ensure_migrate_and_isolation"
     },
     {
+      "id": "symbol:tests.test_spec235_reclaim_local._op_row",
+      "kind": "test",
+      "line": 20,
+      "path": "tests/test_spec235_reclaim_local.py",
+      "qualified_name": "tests.test_spec235_reclaim_local._op_row"
+    },
+    {
+      "id": "symbol:tests.test_spec235_reclaim_local._principal",
+      "kind": "test",
+      "line": 15,
+      "path": "tests/test_spec235_reclaim_local.py",
+      "qualified_name": "tests.test_spec235_reclaim_local._principal"
+    },
+    {
+      "id": "symbol:tests.test_spec235_reclaim_local.test_equip_and_levelup_gate_pending_operation_against_real_operations",
+      "kind": "test",
+      "line": 115,
+      "path": "tests/test_spec235_reclaim_local.py",
+      "qualified_name": "tests.test_spec235_reclaim_local.test_equip_and_levelup_gate_pending_operation_against_real_operations"
+    },
+    {
+      "id": "symbol:tests.test_spec235_reclaim_local.test_failed_reclaim_after_version_bump_and_strict_cases",
+      "kind": "test",
+      "line": 28,
+      "path": "tests/test_spec235_reclaim_local.py",
+      "qualified_name": "tests.test_spec235_reclaim_local.test_failed_reclaim_after_version_bump_and_strict_cases"
+    },
+    {
+      "id": "symbol:tests.test_spec235_reclaim_local.test_running_operation_with_changed_version_stays_strict",
+      "kind": "test",
+      "line": 94,
+      "path": "tests/test_spec235_reclaim_local.py",
+      "qualified_name": "tests.test_spec235_reclaim_local.test_running_operation_with_changed_version_stays_strict"
+    },
+    {
       "id": "symbol:tests.test_spec_index._apply",
       "kind": "test",
       "line": 47,
@@ -278940,5 +279666,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:4e041c3e52d7e73b32cf51f8f90eb4ea429ecf6d4555d4788eb13405990453c8"
+  "source_tree_hash": "sha256:61c421f010a0ecee6f81fd68b00f63097b1a68911d76fac86c8a4336fb16002c"
 }

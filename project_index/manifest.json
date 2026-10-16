@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "7e5f9b36233cfa31bfac3500b27ac047192cf9e5",
+  "commit_sha": "905c98ab25429aaa82f6595d5afdca7678d7ee5e",
   "edge_counts": {
-    "calls": 11228,
-    "contains": 536,
-    "defines": 6694,
-    "imports": 1125,
-    "likely_test_for": 685,
+    "calls": 11254,
+    "contains": 538,
+    "defines": 6710,
+    "imports": 1129,
+    "likely_test_for": 689,
     "route_to": 58
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:120c5d077390c6c723b50beb753acb273172ca59fd5032693c8fa5461850fc0e",
+  "graph_hash": "sha256:66046bf68fde87fe5557f548cfe5655c12f43ada1d56ee7a0c83a4233c1bb906",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -364,6 +364,7 @@
     "tests/test_beats_visibilidade.py",
     "tests/test_blob_contract.py",
     "tests/test_browser_local.py",
+    "tests/test_bug_api_pending_erros.py",
     "tests/test_bug_combate_morte_aliados.py",
     "tests/test_bug_contabilidade_recompensas.py",
     "tests/test_bug_economia_integridade.py",
@@ -558,6 +559,7 @@
     "tests/test_spec197_runtime_role.py",
     "tests/test_spec198_rename_package.py",
     "tests/test_spec234_pgvector_profile_local.py",
+    "tests/test_spec235_reclaim_local.py",
     "tests/test_spec_index.py",
     "tests/test_spec_migration_safety.py",
     "tests/test_speech_api.py",
@@ -594,6 +596,7 @@
     "web/e2e/critical-journeys.spec.ts",
     "web/e2e/fixtures.ts",
     "web/e2e/image-quote.spec.ts",
+    "web/e2e/pending-discard.spec.ts",
     "web/e2e/visual-surfaces.spec.ts",
     "web/e2e/voice-input.spec.ts",
     "web/package.json",
@@ -640,6 +643,7 @@
     "web/src/purchases/index.ts",
     "web/src/purchases/types.ts",
     "web/src/purchases/webStripe.ts",
+    "web/src/safeStorage.ts",
     "web/src/types.ts",
     "web/src/voice/controller.ts",
     "web/src/voice/recorder.ts",
@@ -666,12 +670,12 @@
     "artifact": 9,
     "class": 598,
     "endpoint": 58,
-    "file": 610,
-    "function": 2098,
+    "file": 614,
+    "function": 2100,
     "method": 595,
-    "module": 536,
-    "test": 3403
+    "module": 538,
+    "test": 3417
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:4e041c3e52d7e73b32cf51f8f90eb4ea429ecf6d4555d4788eb13405990453c8"
+  "source_tree_hash": "sha256:61c421f010a0ecee6f81fd68b00f63097b1a68911d76fac86c8a4336fb16002c"
 }
