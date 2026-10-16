@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "cce8d853cce27058cd2ddb3f96f924bd1a9df36a",
+  "commit_sha": "ce83fb244c9aa9f3536e7205edf2263683c5f085",
   "edge_counts": {
-    "calls": 12874,
-    "contains": 574,
-    "defines": 7503,
-    "imports": 1224,
-    "likely_test_for": 767,
+    "calls": 13070,
+    "contains": 579,
+    "defines": 7611,
+    "imports": 1238,
+    "likely_test_for": 774,
     "route_to": 59
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:491e8424d0a9359c532ecfbf9ea5792c853558264770f187fb8445a56c0eaa03",
+  "graph_hash": "sha256:8a9b23010b4776ccbe10493528f38e039d7326ce219152d013d0ff9f5d7cf8b7",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -315,6 +315,7 @@
     "services/player_knowledge.py",
     "services/presentation_history.py",
     "services/prologue.py",
+    "services/prompt_guard.py",
     "services/prose_guard.py",
     "services/purchase_reconciliation.py",
     "services/quest_log.py",
@@ -521,6 +522,7 @@
     "tests/test_mvp.py",
     "tests/test_narrative_evidence.py",
     "tests/test_npc_camadas.py",
+    "tests/test_npc_catalog_scope.py",
     "tests/test_npc_fallback.py",
     "tests/test_npc_identity_grounding.py",
     "tests/test_npc_memory.py",
@@ -555,6 +557,8 @@
     "tests/test_project_index.py",
     "tests/test_project_index_ab_harness.py",
     "tests/test_prologue.py",
+    "tests/test_prompt_guard.py",
+    "tests/test_prompt_injection_corpus.py",
     "tests/test_prose_guard.py",
     "tests/test_readiness_report.py",
     "tests/test_remediacao_comerciante_real.py",
@@ -623,6 +627,7 @@
     "tests/test_weather_global.py",
     "tests/test_worker_fence_local.py",
     "tests/test_worker_lease_lifecycle.py",
+    "tests/test_world_event_proof.py",
     "tests/test_world_sim.py",
     "vercel_app.py",
     "web/capacitor.config.ts",
@@ -716,14 +721,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 650,
+    "class": 654,
     "endpoint": 59,
-    "file": 662,
-    "function": 2361,
-    "method": 640,
-    "module": 574,
-    "test": 3852
+    "file": 667,
+    "function": 2393,
+    "method": 641,
+    "module": 579,
+    "test": 3923
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:b66e9aee4459a7806e45338282db2c40a0a07db9a3bb188d409781aa3f2bda6f"
+  "source_tree_hash": "sha256:5a60b7db7c3ebc78d1148c4101d6188085459d3364f5f22ebcc148efa98f2133"
 }
