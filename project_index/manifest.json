@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "48239ef500ce5fbe2b00defdad5b4d6c807ab440",
+  "commit_sha": "a1dae302402f47f318b4ae05d2454d96158f6014",
   "edge_counts": {
-    "calls": 13310,
-    "contains": 587,
-    "defines": 7765,
-    "imports": 1248,
-    "likely_test_for": 783,
+    "calls": 13406,
+    "contains": 589,
+    "defines": 7805,
+    "imports": 1254,
+    "likely_test_for": 786,
     "route_to": 59
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:57b7a8f53fc211ce6157a08f7862779dfc517dd2ff791f08d57895e2b48e4441",
+  "graph_hash": "sha256:96716f28913c5fdf5886196d021f0ecfffb04f429f194472510c037f9336d4ea",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -265,6 +265,7 @@
     "services/chronicle_search.py",
     "services/codex_loader.py",
     "services/combat_origin.py",
+    "services/combat_targeting.py",
     "services/conflict_damage.py",
     "services/conflict_orchestrator.py",
     "services/conflict_resolution.py",
@@ -406,6 +407,7 @@
     "tests/test_classes_refactor.py",
     "tests/test_combat_lifecycle.py",
     "tests/test_combat_simulator.py",
+    "tests/test_combat_targeting.py",
     "tests/test_combat_xp_outside_prose.py",
     "tests/test_conflict_summary_lifecycle.py",
     "tests/test_conflito16_frontend.py",
@@ -641,6 +643,7 @@
     "web/e2e/account-lifecycle.spec.ts",
     "web/e2e/account.spec.ts",
     "web/e2e/checkout.spec.ts",
+    "web/e2e/combat-gesture.spec.ts",
     "web/e2e/combat-outcome.spec.ts",
     "web/e2e/critical-journeys.spec.ts",
     "web/e2e/diagnostics/spec201-capture.spec.ts",
@@ -658,6 +661,11 @@
     "web/src/api.ts",
     "web/src/App.tsx",
     "web/src/codexKnowledge.ts",
+    "web/src/combat/Arena.tsx",
+    "web/src/combat/CardTooltip.tsx",
+    "web/src/combat/TargetChip.tsx",
+    "web/src/combat/targeting.ts",
+    "web/src/combat/useTargeting.ts",
     "web/src/combatOutcome.ts",
     "web/src/components/AccountScreen.tsx",
     "web/src/components/ArtworkDialog.tsx",
@@ -741,14 +749,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 662,
+    "class": 663,
     "endpoint": 59,
-    "file": 687,
-    "function": 2438,
-    "method": 653,
-    "module": 587,
-    "test": 4012
+    "file": 695,
+    "function": 2449,
+    "method": 654,
+    "module": 589,
+    "test": 4039
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:8926f82da834183a12b55f5af379de743fcca55165fc9525b71b783d863512ec"
+  "source_tree_hash": "sha256:681e69972ffa6b0a02acc3f25b6b1dffd9f6096ba828a46d21a3eb86165ec51c"
 }
