@@ -22,7 +22,7 @@ export function OutcomeToast({ outcome }: { outcome?: TurnOutcome | null }) {
   }, [outcome]);
 
   return (
-    <div className="outcome-toast" role="status" aria-live="polite">
+    <div className="outcome-toast" aria-live="polite" aria-atomic="true">
       {lines.map((l) => <span key={l} className="outcome-chip">{l}</span>)}
     </div>
   );
