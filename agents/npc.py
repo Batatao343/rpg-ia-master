@@ -615,6 +615,7 @@ def npc_actor_node(state: GameState):
         fato = (f'Turno {turn}: o jogador disse "{player_said}"; '
                 f'{npc_data.get("name", npc_name)} respondeu "{npc_said}".')
         npc_data['memory'].append(fato)
+        npc_data['memory'] = npc_data['memory'][-20:]  # SPEC-234 R11
 
         # spec npcs-3-camadas (R7): interação conta; trait maduro é revelado (Python).
         npc_data, trait_revelados = npc_layers.tick_interaction(npc_data)

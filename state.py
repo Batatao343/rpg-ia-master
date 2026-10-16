@@ -396,6 +396,7 @@ class MemoryFact(TypedDict, total=False):
     source_id: Optional[str]
     source_turn: Optional[int]
     canonical_entity_ids: List[str]
+    vector_status: Literal["written", "pending", "failed"]  # SPEC-234
 
 
 class WorldProjection(TypedDict, total=False):

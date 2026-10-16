@@ -13,6 +13,7 @@
 > **SPEC-230 `done` (16/10):** guard de structured output em `generate_new_npc`/librarian (fallback nunca vai ao cache; cache quebrado saneado no load), NPC morto sai de cena/party e não dialoga, relação ±1 por turno em Python, varredura AST de guards.
 > **SPEC-228 `done` (16/10):** morte sem ponto de retorno → 409 `no_restore_point` (não revive mais com Vitalidade 1); save de schema mais novo recusado sem regravar (guard antes dos bumps); checkpoint antes do save; crash entre os dois descarta checkpoint adiantado; smoke real ok.
 > **SPEC-226 `done` (16/10):** XP/recompensa 1× por fato canônico (abate não repete por rodada nem após reload, quest não paga 2×, beat+baú preserva o baú), ganhos registrados por turno (`record_gain`), reputação revertida se o evento é rejeitado.
+> **SPEC-234 `done` (16/10):** arquivista não congela com índice vetorial fora (ledger primário + retry a cada 3 turnos), segredo libera por ID de entidade validado, override de embeddings respeitado, perfil de embedding pgvector por provider (rodar `scripts/migrate_embedding_profile.py` no deploy), métrica `rpg_rag_degraded_total`.
 
 > **15/10 — SPEC-196 `done`: FinOps, margin guard e kill switches.** Margem por SKU/canal/versão de preço
 > (gross, taxa de canal, custo variável, contribuição; infra fixa separada), alertas Prometheus sem ids de

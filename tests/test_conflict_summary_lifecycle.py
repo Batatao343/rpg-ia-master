@@ -316,7 +316,7 @@ def test_archivist_falha_rag_preserva_summary_e_retry_sem_cronica(monkeypatch):
     state = {
         "game_id": "game-retry",
         "messages": [AIMessage(content="O Brutamontes caiu.")],
-        "world": {"turn_count": 7},
+        "world": {"turn_count": 6},
         "narrative_summary": "Antes da luta.",
         "archive_due": True,
         "archivist_last_run": 0,
@@ -330,21 +330,31 @@ def test_archivist_falha_rag_preserva_summary_e_retry_sem_cronica(monkeypatch):
     assert attempts == [
         ("game-retry", ["Brutamontes morreu no conflito."]),
     ]
-    assert failed["conflict_summary"] == pending
+    # SPEC-234 R1: o ledger e a fonte primaria. Falha do indice NAO congela o
+    # turno: o contrato canonico e consumido e a copia vetorial fica pendente.
+    assert failed["conflict_summary"] is None
     assert failed["archive_due"] is True
     assert failed["rag_persistence_error"]
-    assert "chronicle" not in failed
-    assert "archivist_last_run" not in failed
+    assert failed["archivist_last_run"] == 6
+    assert [f["vector_status"] for f in failed["memory_facts"]] == ["pending"]
+    assert len(failed["pending_memory_facts"]) == 1
+    assert sum(
+        entry["kind"] == "conflict"
+        for chapter in failed["chronicle"]
+        for entry in chapter["entries"]
+    ) == 1
 
     monkeypatch.setattr(
         archivist,
         "add_memory_to_session",
         lambda game_id, facts: attempts.append((game_id, list(facts))) or True,
     )
-    retried = archivist.archive_node({**state, **failed})
+    retried = {**state, **failed}
+    retried = {**retried, **archivist.archive_node(retried)}
     assert retried["conflict_summary"] is None
-    assert retried["archive_due"] is False
+    assert retried["pending_memory_facts"] == []
     assert retried["rag_persistence_error"] is None
+    assert {f["vector_status"] for f in retried["memory_facts"]} == {"written"}
     assert sum(
         entry["kind"] == "conflict"
         for chapter in retried["chronicle"]
@@ -369,7 +379,7 @@ def test_archivist_canonical_only_bloqueia_so_fatos_e_limpa_apos_commit(
     state = {
         "game_id": "game-policy",
         "messages": [AIMessage(content="Um rumor atravessa a praça.")],
-        "world": {"turn_count": 8},
+        "world": {"turn_count": 9},
         "narrative_summary": "A praça estava calma.",
         "archive_due": True,
         "archivist_last_run": 0,
@@ -383,32 +393,27 @@ def test_archivist_canonical_only_bloqueia_so_fatos_e_limpa_apos_commit(
     assert attempts == [["A praça recebeu um rumor validado."]]
     assert "dragão secreto" not in " ".join(attempts[0]).casefold()
     assert failed["narrative_summary"] == "O rumor mudou o humor da praça."
+    # SPEC-234: politica consumida (ledger e duravel); vetor pendente p/ retry.
     assert failed["archive_due"] is True
-    assert failed["memory_fact_policy"] == "canonical_only"
-    assert failed["memory_canonical_facts"] == [
-        "A praça recebeu um rumor validado.",
-    ]
+    assert failed["memory_fact_policy"] is None
+    assert failed["memory_canonical_facts"] == []
+    assert len(failed["pending_memory_facts"]) == 1
 
     succeeds = True
     retried = archivist.archive_node({**state, **failed})
-    assert retried["narrative_summary"] == "O rumor mudou o humor da praça."
-    assert retried["archive_due"] is False
-    assert retried["memory_fact_policy"] is None
-    assert retried["memory_canonical_facts"] == []
-    assert retried.get("chronicle", []) == []
-    assert attempts == [
-        ["A praça recebeu um rumor validado."],
-        ["A praça recebeu um rumor validado."],
+    assert retried["pending_memory_facts"] == []
+    assert retried["rag_persistence_error"] is None
+    assert not [
+        entry for chapter in retried.get("chronicle", [])
+        for entry in chapter["entries"] if entry["kind"] == "conflict"
     ]
+    assert attempts[0] == ["A praça recebeu um rumor validado."]
+    assert attempts[1] == ["A praça recebeu um rumor validado."]
 
 
 def test_archivist_nao_confirma_retry_vazio_nem_apaga_erro_previo(monkeypatch):
     monkeypatch.setattr(
-        archivist,
-        "get_llm",
-        lambda **_kwargs: (_ for _ in ()).throw(
-            AssertionError("retry sem payload não deve gastar LLM")
-        ),
+        archivist, "get_llm", lambda **_kwargs: _PolicyArchivistLLM(),
     )
     monkeypatch.setattr(
         archivist,
@@ -433,11 +438,12 @@ def test_archivist_nao_confirma_retry_vazio_nem_apaga_erro_previo(monkeypatch):
 
     out = archivist.archive_node(state)
 
-    assert out["archive_due"] is True
-    assert out["memory_fact_policy"] == "canonical_only"
-    assert out["memory_canonical_facts"] == []
-    assert out["rag_persistence_error"] == state["rag_persistence_error"]
-    assert "archivist_last_run" not in out
+    # SPEC-234: o erro e derivado das filas pendentes (nenhuma aqui); um erro
+    # antigo sem fila nao congela o turno nem fica preso para sempre.
+    assert out["archive_due"] is False
+    assert out["memory_fact_policy"] is None
+    assert out["rag_persistence_error"] is None
+    assert out["archivist_last_run"] == 9
 
 
 def test_archivist_retry_npc_falha_depois_confirma_e_limpa(monkeypatch):
@@ -481,8 +487,8 @@ def test_archivist_retry_npc_falha_depois_confirma_e_limpa(monkeypatch):
     failed = archivist.archive_node(state)
     assert failed["pending_npc_memory"] == state["pending_npc_memory"]
     assert failed["archive_due"] is True
-    assert failed["memory_fact_policy"] == "canonical_only"
     assert failed["rag_persistence_error"]
+    assert failed["archivist_last_run"] == 9  # o resumo/turno NAO congelam
     assert attempts == [(
         "game-npc-retry",
         "npc_aldric",
@@ -522,11 +528,7 @@ def test_archivist_retry_npc_remove_so_sucessos(monkeypatch):
 
     monkeypatch.setattr(archivist, "add_npc_memory", persist_npc)
     monkeypatch.setattr(
-        archivist,
-        "get_llm",
-        lambda **_kwargs: (_ for _ in ()).throw(
-            AssertionError("fila parcialmente falha não confirma o archive")
-        ),
+        archivist, "get_llm", lambda **_kwargs: _PolicyArchivistLLM(),
     )
     out = archivist.archive_node({
         "game_id": "game-npc-partial",

@@ -542,6 +542,28 @@ def check_rag_persistence(
     )]
 
 
+def check_summary_frozen(
+    state: dict, prev: Optional[dict], turn: int,
+) -> List[Violation]:
+    """SPEC-234: o resumo de curto prazo nunca congela por falha do indice.
+
+    O arquivista roda a cada <=10 turnos (ou por evento); `archivist_last_run`
+    atrasado alem da folga indica o loop de retry vetorial que antes travava tudo.
+    """
+    current = int((state.get("world") or {}).get("turn_count", 0) or 0)
+    last = int(state.get("archivist_last_run", 0) or 0)
+    if current >= 14 and current - last > 13:
+        return [_V(
+            "memory.summary_frozen",
+            "error",
+            turn,
+            f"resumo narrativo congelado: arquivista parado no turno {last} (atual {current}).",
+            archivist_last_run=last,
+            turn_count=current,
+        )]
+    return []
+
+
 def check_memory_provenance(
     state: dict, prev: Optional[dict], turn: int,
 ) -> List[Violation]:
@@ -1264,7 +1286,7 @@ CHECKS: List[Check] = [
     check_campaign_grounding, check_reward_feedback, check_knowledge,
     check_lifecycle, check_combat_zombie, check_effect_catalog,
     check_invalid_sentinels, check_rag_persistence, check_summary_lifecycle,
-    check_memory_provenance,
+    check_memory_provenance, check_summary_frozen,
     check_duplicate_consumed_summary,
     check_recycled_npc, check_actor_lifecycle,
     check_repeated_opening, check_interaction_no_progress, check_meta_leak,

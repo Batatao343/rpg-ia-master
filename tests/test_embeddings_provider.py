@@ -252,3 +252,28 @@ def test_ingest_e_query_round_trip(tmp_path, monkeypatch):
     rag.add_memory_to_session("g", ["O dragão dorme na Montanha Cinza."])
     out = rag.query_rag("onde dorme o dragão?", index_name="lore", game_id="g")
     assert "dragão" in out
+
+
+# --- SPEC-234 R4: override + alias de credencial ----------------------------
+
+def test_embeddings_override_reopens_pinned_index(tmp_path, monkeypatch):
+    monkeypatch.setattr(rag, "_dep_present", lambda _p: True)
+    monkeypatch.setattr(rag, "SAVES_DIR", str(tmp_path))
+    monkeypatch.setenv("RPG_EMBEDDINGS", "ollama")  # sem OLLAMA_HOST
+    assert rag.add_memory_to_session("g1", ["O dragao dorme na montanha."]) is not False
+    assert rag.add_memory_to_session("g1", ["A taverna fica ao norte."]) is not False
+    assert rag.query_session_memory("dragao", "g1") != ""
+
+
+def test_jina_auth_token_alias_counts_as_available(monkeypatch):
+    monkeypatch.setenv("JINA_AUTH_TOKEN", "tok")
+    monkeypatch.setattr(rag, "_dep_present", lambda _p: True)
+    assert rag._provider_available("jina") is True
+
+
+def test_index_with_other_model_is_disabled(tmp_path, monkeypatch):
+    monkeypatch.setenv("JINA_API_KEY", "x")
+    monkeypatch.setattr(rag, "_dep_present", lambda _p: True)
+    (tmp_path / "embeddings_meta.json").write_text(
+        json.dumps({"provider": "jina", "model": "outro-modelo"}), encoding="utf-8")
+    assert rag._embeddings_for_index(str(tmp_path)) is None

@@ -358,7 +358,7 @@ class _JinaEmbeddingsHTTPX(Embeddings):
 
 
 def _build_jina():
-    api_key = os.getenv("JINA_API_KEY") or os.getenv("JINA_AUTH_TOKEN")
+    api_key = _jina_key()
     if not api_key:
         raise ValueError("JINA_API_KEY não configurada")
     timeout_seconds = float(os.getenv("EMBEDDING_TIMEOUT_SECONDS", "30"))
@@ -401,6 +401,11 @@ _EMBEDDING_BUILDERS: Dict[str, Callable[[], object]] = _default_builders()
 
 # --- Disponibilidade + resolução da cadeia ----------------------------------
 
+def _jina_key() -> str:
+    """Helper unico da credencial Jina (SPEC-234 R4): API_KEY ou AUTH_TOKEN."""
+    return os.getenv("JINA_API_KEY") or os.getenv("JINA_AUTH_TOKEN") or ""
+
+
 def _dep_present(provider: str) -> bool:
     """True se a dependência Python do provider está instalada."""
     import importlib.util as _u
@@ -417,14 +422,17 @@ def _provider_available(provider: str) -> bool:
     """Candidato disponível na RESOLUÇÃO: key presente (quando aplicável) + dep.
     Ollama não usa key (roda local); gate é só a dep instalada."""
     if provider == "jina":
-        return bool(os.getenv("JINA_API_KEY")) and _dep_present("jina")
+        return bool(_jina_key()) and _dep_present("jina")
     if provider == "openai":
         return bool(os.getenv("OPENAI_API_KEY")) and _dep_present("openai")
     if provider == "ollama":
         # Pacote instalado não significa que o daemon local está disponível.
         # A rota automática exige host explícito; RPG_EMBEDDINGS=ollama segue
         # como opt-in e é tratado antes desta função.
-        return bool(os.getenv("OLLAMA_HOST")) and _dep_present("ollama")
+        override = (os.getenv("RPG_EMBEDDINGS") or "").strip().lower()
+        return (
+            bool(os.getenv("OLLAMA_HOST")) or override == "ollama"
+        ) and _dep_present("ollama")
     if provider == "gemini":
         return bool(os.getenv("GOOGLE_API_KEY")) and _dep_present("gemini")
     return False
@@ -459,6 +467,46 @@ def get_embeddings_for(provider: str) -> Optional[object]:
         return None
     _embeddings_cache[provider] = emb
     return _scoped_embeddings(provider, emb)
+
+
+# SPEC-234 R9: dimensao do vetor por provider (o pgvector so aceita 1024).
+_PROVIDER_DIMS: Dict[str, int] = {
+    "jina": 1024, "openai": 1024, "ollama": 1024, "gemini": 3072,
+}
+PGVECTOR_DIMENSIONS = 1024
+
+
+def embedding_profile_id(provider: Optional[str] = None) -> str:
+    """ID do perfil de embedding: `{provider}-{modelo}-{dim}` (R9).
+
+    Sem provider resolvido devolve o perfil legado `local-1024`.
+    """
+    provider = (provider or _resolve_provider() or "").strip().lower()
+    if not provider:
+        return "local-1024"
+    model = _PROVIDER_MODELS.get(provider, "?").split("/")[-1]
+    dims = _PROVIDER_DIMS.get(provider, PGVECTOR_DIMENSIONS)
+    return re.sub(r"[^a-z0-9._-]+", "-", f"{provider}-{model}-{dims}".lower())
+
+
+def validate_pgvector_provider(provider: Optional[str] = None) -> None:
+    """Recusa, na inicializacao, provider cuja dimensao != 1024 (R9)."""
+    provider = (provider or _resolve_provider() or "").strip().lower()
+    dims = _PROVIDER_DIMS.get(provider)
+    if provider and dims is not None and dims != PGVECTOR_DIMENSIONS:
+        raise ValueError(
+            f"provider de embeddings '{provider}' gera {dims} dimensões; "
+            f"o pgvector exige {PGVECTOR_DIMENSIONS}. Use jina, openai (1024) ou ollama bge-m3."
+        )
+
+
+def _note_degraded(source: str) -> None:
+    """Metrica `rpg_rag_degraded_total{source}` junto do WARNING (R10)."""
+    try:
+        from observability.metrics import metrics
+        metrics.increment("rpg_rag_degraded_total", {"source": source})
+    except Exception:  # pragma: no cover - telemetria nunca derruba a consulta
+        pass
 
 
 def active_provider() -> Optional[str]:
@@ -530,19 +578,44 @@ def _embeddings_for_index(dir_path: str) -> Optional[object]:
         provider = meta.get("provider")
         if not provider:
             return get_embeddings()
-    if not _provider_available(provider):
+    override = (os.getenv("RPG_EMBEDDINGS") or "").strip().lower()
+    if meta is not None and meta.get("model") not in (None, "?"):
+        expected = _PROVIDER_MODELS.get(provider)
+        if expected and meta.get("model") != expected:
+            _LOG.warning(
+                "Índice '%s' gerado com o modelo '%s' (atual '%s') — índice "
+                "DESATIVADO para não misturar vetores. Re-indexe.",
+                dir_path, meta.get("model"), expected,
+            )
+            _note_degraded("index_disabled")
+            return None
+    if override != provider and not _provider_available(provider):
         _LOG.warning(
             "Índice '%s' pinado no provider '%s', indisponível agora — índice "
             "DESATIVADO. Reponha a key ou re-indexe (uv run python rag.py).",
             dir_path, provider,
         )
+        _note_degraded("index_disabled")
         return None
     return get_embeddings_for(provider)
 
 
 def _save_index(db, path: str, provider: str) -> None:
     """save_local + grava a meta do provider (pin)."""
-    db.save_local(path)
+    # SPEC-234 R10: grava em diretorio temporario e troca arquivo a arquivo,
+    # para uma falha no meio nao deixar o indice meio escrito.
+    import shutil
+    import tempfile
+    parent = os.path.dirname(os.path.abspath(path)) or "."
+    os.makedirs(parent, exist_ok=True)
+    tmp = tempfile.mkdtemp(prefix=".idx-", dir=parent)
+    try:
+        db.save_local(tmp)
+        os.makedirs(path, exist_ok=True)
+        for name in os.listdir(tmp):
+            os.replace(os.path.join(tmp, name), os.path.join(path, name))
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
     if not _write_meta(path, provider):
         raise OSError(f"falha ao gravar metadata do índice em {path}")
 
@@ -739,7 +812,7 @@ def query_session_memory(query: str, game_id: str) -> str:
             text=query, scope="session", principal=current_principal(),
             game_id=uuid.UUID(str(game_id)), k=6,
         ))
-        return "\n---\n".join(document.text for document in documents)
+        return _format_memory_documents(documents)  # SPEC-234 R9
     return _format_memory_documents(_query_session_documents(query, game_id, k=6))
 
 
@@ -799,7 +872,7 @@ def query_global_by_vector(vector: List[float], index_name: str = "lore",
         documents = get_runtime().memory_store.query(MemoryQuery(
             text="", scope="rules" if index_name == "rules" else "lore",
             max_visibility=max_visibility, k=2, vector=tuple(vector),
-            embedding_profile_id="local-1024",
+            embedding_profile_id=embedding_profile_id(),
         ))
         return "\n---\n".join(document.text for document in documents if document.text)
     path = get_global_db_path(index_name)
@@ -820,6 +893,8 @@ def query_global_by_vector(vector: List[float], index_name: str = "lore",
         )
         return _format_documents(evidence)
     except Exception:
+        _LOG.warning("RAG: consulta degradada (rpg.rag.degraded)", exc_info=True)
+        _note_degraded("global")
         return ""
 
 
@@ -832,9 +907,9 @@ def query_session_by_vector(vector: List[float], game_id: str, *, k: int = 6) ->
         documents = get_runtime().memory_store.query(MemoryQuery(
             text="", scope="session", principal=current_principal(),
             game_id=uuid.UUID(str(game_id)), k=k, vector=tuple(vector),
-            embedding_profile_id="local-1024",
+            embedding_profile_id=embedding_profile_id(),
         ))
-        return "\n---\n".join(document.text for document in documents if document.text)
+        return _format_memory_documents(documents)  # SPEC-234 R9
     path = _get_session_path(game_id)
     if not vector or not _has_faiss_index(path):
         return ""
@@ -848,6 +923,8 @@ def query_session_by_vector(vector: List[float], game_id: str, *, k: int = 6) ->
         )
         return _format_memory_documents(evidence)
     except Exception:
+        _LOG.warning("RAG: consulta degradada (rpg.rag.degraded)", exc_info=True)
+        _note_degraded("session")
         return ""
 
 
@@ -860,9 +937,9 @@ def query_npc_by_vector(vector: List[float], game_id: str, npc_id: str, *, k: in
         documents = get_runtime().memory_store.query(MemoryQuery(
             text="", scope="npc", principal=current_principal(),
             game_id=uuid.UUID(str(game_id)), npc_id=npc_id, k=k,
-            vector=tuple(vector), embedding_profile_id="local-1024",
+            vector=tuple(vector), embedding_profile_id=embedding_profile_id(),
         ))
-        return "\n---\n".join(document.text for document in documents if document.text)
+        return _format_memory_documents(documents)  # SPEC-234 R9
     path = _get_npc_path(game_id, npc_id)
     if not vector or not _has_faiss_index(path):
         return ""
@@ -876,6 +953,8 @@ def query_npc_by_vector(vector: List[float], game_id: str, npc_id: str, *, k: in
         )
         return _format_memory_documents(evidence)
     except Exception:
+        _LOG.warning("RAG: consulta degradada (rpg.rag.degraded)", exc_info=True)
+        _note_degraded("npc")
         return ""
 
 
@@ -1279,7 +1358,7 @@ def query_npc_memory(game_id: str, npc_id: str, query: str, k: int = 3) -> str:
             text=query, scope="npc", principal=current_principal(),
             game_id=uuid.UUID(str(game_id)), npc_id=npc_id, k=k,
         ))
-        return "\n---\n".join(document.text for document in documents)
+        return _format_memory_documents(documents)  # SPEC-234 R9
 
     npc_path = _get_npc_path(game_id, npc_id)
     if not _has_faiss_index(npc_path):
@@ -1293,6 +1372,8 @@ def query_npc_memory(game_id: str, npc_id: str, query: str, k: int = 3) -> str:
         db = FAISS.load_local(npc_path, embeddings, allow_dangerous_deserialization=True)
         docs = db.similarity_search(query, k=k)
     except Exception:
+        _LOG.warning("RAG: consulta degradada (rpg.rag.degraded)", exc_info=True)
+        _note_degraded("query_npc_memory")
         return ""
 
     return _format_memory_documents(docs)

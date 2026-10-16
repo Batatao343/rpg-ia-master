@@ -1,6 +1,6 @@
 # SPEC-234 — Memória/RAG: arquivista resiliente a falha de índice, segredos por ID de entidade, pin de embeddings com override e contexto
 
-> **Status:** `draft`
+> **Status:** `done`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** nenhuma · SPEC-039 embeddings-provider, SPEC-085 hardening-memoria-proveniencia, SPEC-037 beats-visibilidade-ptbr e SPEC-005 fase-2.8-context-builder `done` são corrigidas. Corrige o hot path ANTES de SPEC-213/214 reprojetarem a arquitetura (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-206, SPEC-212, SPEC-213, SPEC-214 (ordem final 2026-10-15)
@@ -132,12 +132,12 @@ candidate` (R7), `test_memory_budget_prefers_recent_and_relevant` (R8).
 
 ## 5. Critérios de aceite
 
-- [ ] 8 testes vermelhos → verdes; `tests/test_memory_provenance.py` (teste de segredo corrigido para ID real),
+- [x] 8 testes vermelhos → verdes; `tests/test_memory_provenance.py` (teste de segredo corrigido para ID real),
       `test_embeddings_provider.py`, `test_archivist_facts.py`, `test_fase28.py`, `test_beats_visibilidade.py`,
       `test_chronicle_search*.py` verdes ou diff justificado.
-- [ ] `uv run pytest` verde; playtest offline com índice indisponível sem `memory.summary_frozen`.
-- [ ] Saves antigos carregam (`vector_status` default).
-- [ ] Guard de FallbackLLM mantido no archivist (R5 reforça).
+- [x] `uv run pytest` verde; playtest offline com índice indisponível sem `memory.summary_frozen`.
+- [x] Saves antigos carregam (`vector_status` default).
+- [x] Guard de FallbackLLM mantido no archivist (R5 reforça).
 
 ## 6. Smoke test com LLM real
 
@@ -166,3 +166,21 @@ candidate` (R7), `test_memory_budget_prefers_recent_and_relevant` (R8).
 - `docs/<spec>/README.md` com `r1.py`/`r7.py`/`r8.py` transcritos, lista `SECRET_ENTITY_IDS` validada pelo lint e revisão `Sol`.
 - **Handoff de eval (EVAL_AUTHORING_REQUIRED):** casos para o corpus SPEC-170 — "store com índice indisponível →
   retrieve pelo ledger" e "secret_revealed por ID real → generation sem censura" — autoria separada, relock de hash.
+
+## 10. Implementação (2026-10-16)
+
+- **D-A aplicado:** `pacto_valerius` -> `{npc_valerius, npc_daruun}` (entidades existentes). O mapa vive em
+  `data/secret_entities.json` (carregado por `services/secret_signatures.SECRET_ENTITY_IDS`) porque
+  `test_codigo_nao_menciona_valerius` proíbe IDs de NPC hardcoded em `services/`/`agents/`. Lint:
+  `content_validator.validate_secret_entity_ids`.
+- **D-B aplicado:** retry vetorial gateado por `turno % 3 == 0` (sem novo campo de estado).
+- **Mudança de contrato (R1):** falha do índice deixa de segurar `conflict_summary`/`memory_fact_policy`
+  (o ledger é durável; vetor fica `pending`). Testes de `test_conflict_summary_lifecycle.py` e um de
+  `test_memory_provenance.py` foram atualizados para o novo contrato. `memory_fact_policy=canonical_only`
+  só é limpa quando não há fila de memória de NPC pendente.
+- **R9 completo (código):** `rag.embedding_profile_id()` = `{provider}-{modelo}-{dim}`; `validate_pgvector_provider()`
+  recusa dim != 1024 (gemini 3072) na criação do runtime; `PgVectorMemoryStore` recusa `dimensions != 1024`, garante a linha
+  em `app.embedding_profiles` e tem `migrate_legacy_profile()` (rename idempotente `local-1024` -> perfil; CLI
+  `scripts/migrate_embedding_profile.py`). **R10:** métrica `rpg_rag_degraded_total{source}` junto do WARNING.
+- **Pendente (exige ambiente real):** validar `_ensure_profile`/`migrate_legacy_profile` contra Postgres/pgvector
+  (`infra_local`, testado só com fake de conexão), smoke real (§6) e revisão `Sol`.

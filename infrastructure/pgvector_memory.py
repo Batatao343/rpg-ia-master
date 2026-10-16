@@ -23,12 +23,60 @@ def vector_literal(values: Sequence[float], dimensions: int = 1024) -> str:
     return "[" + ",".join(format(float(value), ".9g") for value in values) + "]"
 
 
+def configured_profile_id() -> str:
+    """Perfil de embedding do provider configurado (SPEC-234 R9).
+
+    Fonte única para TODO adapter pgvector do processo (turno, worker, consulta):
+    staging com um perfil e `set_embedding`/consulta com outro deixaria o
+    documento órfão (Conflict no worker, nunca recuperado semanticamente).
+    """
+    try:
+        import rag
+
+        return rag.embedding_profile_id()
+    except Exception:  # pragma: no cover - rag indisponível: perfil legado
+        return "local-1024"
+
+
 class PgVectorMemoryStore:
     def __init__(self, pool: PostgresPool, *, profile_id: str = "local-1024",
-                 embedder: Embedder | None = None) -> None:
+                 embedder: Embedder | None = None, dimensions: int = 1024) -> None:
+        if dimensions != 1024:  # SPEC-234 R9: coluna vector(1024)
+            raise ValueError(f"pgvector exige 1024 dimensões, recebido {dimensions}")
         self.pool = pool
         self.profile_id = profile_id
         self.embedder = embedder
+        self.dimensions = dimensions
+        self._profile_ready = False
+
+    def _ensure_profile(self, connection) -> None:
+        """Garante a linha de `app.embedding_profiles` do perfil configurado."""
+        if self._profile_ready or self.profile_id == "local-1024":
+            return
+        provider, _, rest = self.profile_id.partition("-")
+        connection.execute(
+            """insert into app.embedding_profiles(id,provider,model,dimensions,status,activated_at)
+            values (%s,%s,%s,%s,'active',now()) on conflict (id) do nothing""",
+            (self.profile_id, provider, rest, self.dimensions),
+        )
+        self._profile_ready = True
+
+    def migrate_legacy_profile(self, legacy: str = "local-1024") -> int:
+        """Migra documentos do perfil legado para o perfil do provider (idempotente).
+
+        Os vetores existentes foram gerados pelo provider configurado, entao o
+        rename preserva embeddings 'ready'. Devolve quantas linhas mudaram.
+        """
+        if self.profile_id == legacy:
+            return 0
+        with self.pool.connection() as connection, connection.transaction():
+            self._profile_ready = False
+            self._ensure_profile(connection)
+            result = connection.execute(
+                "update app.memory_documents set embedding_profile_id=%s where embedding_profile_id=%s",
+                (self.profile_id, legacy),
+            )
+            return int(getattr(result, "rowcount", 0) or 0)
 
     @staticmethod
     def _scope_values(intent: MemoryWriteIntent) -> tuple[Any, Any, Any]:
@@ -56,6 +104,7 @@ class PgVectorMemoryStore:
 
     def stage_on(self, connection, intent: MemoryWriteIntent) -> None:
         intent = normalized_intent(intent)
+        self._ensure_profile(connection)
         owner_id, game_id, npc_id = self._scope_values(intent)
         metadata = intent.document.metadata
         digest = hashlib.sha256(intent.document.text.encode("utf-8")).hexdigest()
@@ -172,8 +221,9 @@ class PgVectorMemoryStore:
                 rows = connection.execute(
                     f"""select *,1-(embedding <=> %s::extensions.vector) as score
                     from app.memory_documents where {where} and embedding_status='ready'
+                      and embedding_profile_id=%s
                     order by embedding <=> %s::extensions.vector limit %s""",
-                    [vector, *params, vector, request.k],
+                    [vector, *params, self.profile_id, vector, request.k],
                 ).fetchall()
                 for row in rows:
                     document = self._document(row, float(row["score"]))

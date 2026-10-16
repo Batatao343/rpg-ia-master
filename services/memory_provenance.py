@@ -14,7 +14,7 @@ from typing import Dict, Iterable, List, Literal, Optional
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-from services.secret_signatures import SECRET_SIGNATURES
+from services.secret_signatures import SECRET_ENTITY_IDS, SECRET_SIGNATURES
 
 MemoryProvenance = Literal[
     "canonical_event",
@@ -59,6 +59,8 @@ class MemoryFactRecord(BaseModel):
     source_id: Optional[str] = None
     source_turn: Optional[int] = Field(default=None, ge=0)
     canonical_entity_ids: List[str] = Field(default_factory=list)
+    # SPEC-234 R1: estado da copia vetorial derivada (ledger e a fonte primaria).
+    vector_status: Literal["written", "pending", "failed"] = "written"
 
     @field_validator("text", mode="before")
     @classmethod
@@ -157,13 +159,18 @@ def accepted_secret_ids(state: dict) -> set[str]:
     for event in state.get("event_log", []) or []:
         if not isinstance(event, dict) or event.get("type") != "secret_revealed":
             continue
-        payload = event.get("payload") or {}
-        for candidate in (
-            event.get("target_id"), payload.get("secret_id"), payload.get("id")
-        ):
-            cleaned = _clean_text(candidate, 120)
-            if cleaned:
-                revealed.add(cleaned)
+        # SPEC-234 R3 (revisão Sol): só o `target_id` é validado contra o grafo
+        # (`world_validators._v_secret_revealed`); ids no payload vêm do LLM e
+        # NÃO podem liberar segredo de outra entidade. A chave de segredo é
+        # derivada do mapa explícito por ID real.
+        target = _clean_text(event.get("target_id"), 120)
+        if not target:
+            continue
+        revealed.add(target)
+        folded_target = target.casefold()
+        for secret_id, entity_ids in SECRET_ENTITY_IDS.items():
+            if any(entity.casefold() == folded_target for entity in entity_ids):
+                revealed.add(secret_id)
     return revealed
 
 
@@ -512,7 +519,19 @@ def commit_memory_facts(existing: Iterable | None, new: Iterable | None) -> tupl
         if new_rank > old_rank:
             by_text[key] = item
             promotions += 1
+    order = list(dict.fromkeys(order))  # SPEC-234 R11: sem duplicatas
     return [by_text[key] for key in order][-MAX_MEMORY_FACTS:], promotions
+
+
+def set_vector_status(ledger: Iterable | None, memory_ids: Iterable[str], status: str) -> List[dict]:
+    """Marca o estado da copia vetorial de registros do ledger (SPEC-234 R1)."""
+    ids = set(memory_ids)
+    out: List[dict] = []
+    for item in normalize_memory_facts(ledger):
+        if item["memory_id"] in ids:
+            item = {**item, "vector_status": status}
+        out.append(item)
+    return out
 
 
 def memory_metadata(record: dict) -> dict:

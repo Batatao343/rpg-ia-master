@@ -23,6 +23,7 @@ LABELS = {
     "rpg_llm_duration_seconds": {"provider", "tier", "outcome"},
     "rpg_llm_cost_usd_total": {"provider", "tier", "basis"},
     "rpg_rag_duration_seconds": {"scope", "outcome"},
+    "rpg_rag_degraded_total": {"source"},  # SPEC-234 R10 (source fechado: lore|session|npc|...)
     "rpg_memory_embedding_backlog": {"status"},
     "rpg_jobs": {"kind", "status"},
     "rpg_job_oldest_age_seconds": {"kind"},

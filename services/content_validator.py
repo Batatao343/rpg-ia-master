@@ -852,6 +852,27 @@ def validate_visual_assets(catalog_path: str = VISUAL_CATALOG_PATH,
     return findings
 
 
+def validate_secret_entity_ids(graph_dir: str = GRAPH_DIR) -> List[Finding]:
+    """SPEC-234 R3 - todo ID de `SECRET_ENTITY_IDS` precisa existir no grafo."""
+    from services.secret_signatures import SECRET_ENTITY_IDS, SECRET_SIGNATURES
+
+    merged = _merged_entities(graph_dir)
+    path = os.path.join("services", "secret_signatures.py")
+    findings: List[Finding] = []
+    for secret_id in SECRET_SIGNATURES:
+        if not SECRET_ENTITY_IDS.get(secret_id):
+            findings.append(Finding(
+                "secret_entity_ids", "error", path, secret_id,
+                "segredo sem entidade-alvo em SECRET_ENTITY_IDS"))
+    for secret_id, entity_ids in SECRET_ENTITY_IDS.items():
+        for entity_id in sorted(entity_ids):
+            if entity_id not in merged:
+                findings.append(Finding(
+                    "secret_entity_ids", "error", path, entity_id,
+                    f"SECRET_ENTITY_IDS['{secret_id}'] referencia id que não existe no grafo"))
+    return findings
+
+
 def validate_all(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR,
                  overrides_path: str = OVERRIDES_PATH) -> List[Finding]:
     """Roda todos os validadores; aplica whitelist; ordena por
@@ -863,6 +884,8 @@ def validate_all(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR,
     findings.extend(validate_aliases(graph_dir))
     findings.extend(validate_visibility(codex_dir, graph_dir))
     findings.extend(validate_overrides(codex_dir, overrides_path, graph_dir))
+    if graph_dir == GRAPH_DIR:
+        findings.extend(validate_secret_entity_ids(graph_dir))
     if codex_dir == CODEX_DIR and graph_dir == GRAPH_DIR:
         findings.extend(validate_encoding())
         findings.extend(validate_cards())

@@ -33,6 +33,29 @@ SECRET_SIGNATURES: Dict[str, List[str]] = {
     ],
 }
 
+# SPEC-234 R3: chave de segredo -> IDs REAIS de entidade do grafo que, quando alvo
+# de um `secret_revealed` aceito, liberam o segredo. (D-A: `pacto_valerius` mapeia
+# para as entidades existentes envolvidas; nao ha entidade propria.) Fonte:
+# data/secret_entities.json; o lint valida que cada ID existe no grafo.
+def _load_secret_entity_ids() -> Dict[str, frozenset]:
+    import json
+    import os
+
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "data", "secret_entities.json")
+    try:
+        with open(path, encoding="utf-8") as fh:
+            raw = json.load(fh)
+    except (OSError, ValueError):
+        return {}
+    return {
+        key: frozenset(str(item) for item in value)
+        for key, value in raw.items()
+        if not key.startswith("_") and isinstance(value, list)
+    }
+
+
+SECRET_ENTITY_IDS: Dict[str, frozenset] = _load_secret_entity_ids()
+
 # Rumor PÚBLICO neutro que substitui o beat vazado (R2) — nada revela a verdade.
 PUBLIC_RUMOR: Dict[str, str] = {
     "pacto_valerius": "os boatos em torno da ascensão de Valerius",
@@ -57,8 +80,11 @@ def revealed_corpus(state: dict) -> str:
         if isinstance(ev, dict) and ev.get("type") == "secret_revealed":
             parts.append(str(ev.get("payload", {})))
             parts.append(str(ev.get("target_id", "")))
-    facts = (state.get("world_projection", {}) or {}).get("facts", {}) or {}
-    for f in facts.values():
+    projection = state.get("world_projection", {}) or {}
+    facts = projection.get("revealed_facts") or projection.get("facts") or {}
+    if isinstance(facts, dict):
+        facts = list(facts.values())
+    for f in facts:
         parts.append(str(f))
     # (3) conhecimento diegético já adquirido pelo jogador
     parts.append(str(state.get("narrative_summary", "") or ""))

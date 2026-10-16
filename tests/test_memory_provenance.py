@@ -345,7 +345,7 @@ def test_segredo_exige_secret_revealed_aceito_para_o_mesmo_id() -> None:
     assert reason == "unrevealed_secret:pacto_valerius"
 
     reveal = _event("evt-reveal", event_type="secret_revealed")
-    reveal["target_id"] = "pacto_valerius"
+    reveal["target_id"] = "npc_valerius"
     accepted, reason = validate_memory_fact(
         {**fact, "source_id": "evt-reveal"},
         {"event_log": [reveal]},
@@ -396,7 +396,7 @@ def test_archivist_falha_atomica_deixa_fato_pendente_e_retry_nao_duplica(
     monkeypatch.setattr(archivist, "add_memory_to_session", persist)
     state = {
         "game_id": "memory-test",
-        "world": {"turn_count": 10},
+        "world": {"turn_count": 9},  # janela de retry vetorial: turno % 3 == 0
         "archive_due": True,
         "messages": [],
         "narrative_summary": "Antes.",
@@ -404,7 +404,8 @@ def test_archivist_falha_atomica_deixa_fato_pendente_e_retry_nao_duplica(
     failed = archivist.archive_node(state)
     assert failed["archive_due"] is True
     assert len(failed["pending_memory_facts"]) == 1
-    assert failed.get("memory_facts", []) == []
+    # SPEC-234: o ledger e a fonte primaria e ja guarda o fato (pendente no indice).
+    assert [f["vector_status"] for f in failed["memory_facts"]] == ["pending"]
 
     retried = archivist.archive_node({**state, **failed})
     assert retried["pending_memory_facts"] == []

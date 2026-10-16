@@ -78,6 +78,8 @@ def search_chronicle(chronicle: list[dict[str, Any]], query: str, *, top_k: int 
             documents[f"{chapter['chapter_id']}:digest"] = (chapter, None, "digest")
     hits = []
     for document_id, _score, sources in fused:
+        if document_id not in documents:  # SPEC-234 R7: candidato semantico stale
+            continue
         chapter, entry, source_kind = documents[document_id]
         digest = chapter.get("digest") or {}
         text = entry.get("text", "") if entry else digest.get("summary", "")

@@ -24,6 +24,7 @@ from services.memory_provenance import (
     sanitize_inventory_grounding,
     sanitize_location_grounding,
     sanitize_npc_identity_grounding,
+    set_vector_status,
     validate_memory_fact,
 )
 from services.prose_guard import sanitize_meta_preamble
@@ -72,8 +73,16 @@ class MemoryUpdate(BaseModel):
         return out
 
 
+_ERROR_SUMMARY_PREFIXES = (
+    "erro", "error", "⚠", "falha", "não foi possível", "nao foi possivel",
+    "todos os provedores", "llm indisponível", "llm indisponivel",
+)
+
+
 def _extract_summary_plain(llm, context_msgs: list, current_summary: str) -> str:
     """Fallback plain-text: pede só o resumo sem JSON schema. Retorna string ou ''."""
+    if getattr(llm, "is_fallback", False):
+        return ""  # SPEC-234 R5: a mensagem de erro do FallbackLLM nunca vira resumo
     try:
         res = llm.invoke([
             SystemMessage(content=(
@@ -85,12 +94,16 @@ def _extract_summary_plain(llm, context_msgs: list, current_summary: str) -> str
         text = getattr(res, "content", "") or ""
         if isinstance(text, list):
             text = " ".join(p.get("text", "") if isinstance(p, dict) else str(p) for p in text)
-        return text.strip()
+        text = text.strip()
+        if text.lower().startswith(_ERROR_SUMMARY_PREFIXES):
+            return ""
+        return text
     except Exception as e:
         print(f"⚠️ [ARCHIVIST] Fallback texto falhou: {e}")
         return ""
 
 
+_VECTOR_RETRY_EVERY = 3  # SPEC-234 R1/D-B: no maximo 1 retry vetorial a cada 3 turnos
 _ARCHIVE_EVERY = 10  # turnos sem evento relevante antes de forçar um arquivamento
 
 
@@ -189,9 +202,12 @@ def _should_archive(state: GameState, turn: int) -> bool:
         state.get("archive_due")
         or state.get("conflict_summary")
         or state.get("memory_fact_policy") == "canonical_only"
-        or state.get("pending_memory_facts")
         or state.get("pending_npc_memory")
     ):
+        return True
+    # SPEC-234 §7: fatos pendentes (índice fora) só reabrem o arquivista na janela de
+    # retry vetorial — não a cada turno, para não pagar um SMART por turno.
+    if state.get("pending_memory_facts") and int(turn) % _VECTOR_RETRY_EVERY == 0:
         return True
     last = int(state.get("archivist_last_run", 0) or 0)
     return (turn - last) >= _ARCHIVE_EVERY
@@ -212,7 +228,12 @@ def archive_node(state: GameState):
     result = _archive_node({**state, 'messages': messages}, event_updates=event_updates)
     if 'narrative_summary' in result:
         check = validate_narrative(result['narrative_summary'], evidence, channel='summary')
-        result['narrative_summary'] = check.text
+        from services.memory_summary import compact_summary as _compact
+        result['narrative_summary'] = (
+            check.text
+            or _compact(state.get('narrative_summary', '') or '')
+            or 'A aventura segue.'
+        )
         audit.extend(check.rejections)
     if 'chronicle' in result:
         from copy import deepcopy
@@ -317,30 +338,39 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None):
         memory_rejections = bounded_audit_rows(
             [*memory_rejections, *retry_rejections], limit=MAX_MEMORY_REJECTIONS,
         )
-        if retry_records and not _persist_memory_records(game_id, retry_records):
-            return {
-                **event_updates,
-                "archive_due": True,
-                "memory_facts": memory_facts,
-                "pending_memory_facts": retry_records,
-                "memory_rejections": memory_rejections,
-                "memory_promotions": memory_promotions,
-                "rag_persistence_error": "Falha ao persistir memória de sessão pendente.",
-            }
-        memory_facts, promoted = commit_memory_facts(memory_facts, retry_records)
-        if promoted:
-            memory_promotions = bounded_audit_rows([
-                *memory_promotions,
-                {"turn": int(turn), "count": promoted, "reason": "canonical_source"},
-            ], limit=MAX_MEMORY_PROMOTIONS)
-        pending_memory_facts = []
+        retry_due = int(turn) % _VECTOR_RETRY_EVERY == 0
+        if retry_records and retry_due and _persist_memory_records(game_id, retry_records):
+            memory_facts, promoted = commit_memory_facts(memory_facts, retry_records)
+            memory_facts = set_vector_status(
+                memory_facts, [item["memory_id"] for item in retry_records], "written",
+            )
+            if promoted:
+                memory_promotions = bounded_audit_rows([
+                    *memory_promotions,
+                    {"turn": int(turn), "count": promoted, "reason": "canonical_source"},
+                ], limit=MAX_MEMORY_PROMOTIONS)
+            pending_memory_facts = []
+        else:
+            # Indice indisponivel (ou fora da janela de retry): o ledger e a
+            # fonte primaria e ja contem os fatos; o turno segue (SPEC-234 R1).
+            pending_memory_facts = retry_records
+            if retry_records:
+                memory_facts, _ = commit_memory_facts(memory_facts, retry_records)
+                memory_facts = set_vector_status(
+                    memory_facts, [item["memory_id"] for item in retry_records],
+                    "pending",
+                )
+                print("⚠️ [ARCHIVIST] Índice vetorial indisponível; ledger mantém os fatos pendentes.")
         event_updates = {
             **event_updates,
             "memory_facts": memory_facts,
-            "pending_memory_facts": [],
+            "pending_memory_facts": pending_memory_facts,
             "memory_rejections": memory_rejections,
             "memory_promotions": memory_promotions,
-            "rag_persistence_error": None,
+            "rag_persistence_error": (
+                "Falha ao persistir memória de sessão pendente."
+                if pending_memory_facts else None
+            ),
         }
         effective_state = {**state, **event_updates}
 
@@ -351,7 +381,10 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None):
         state.get("pending_npc_memory")
     )
     npc_retry_committed = False
-    if pending_npc_memory:
+    remaining_npc_memory: list = []
+    if pending_npc_memory and int(turn) % _VECTOR_RETRY_EVERY != 0:
+        remaining_npc_memory = list(pending_npc_memory)  # fora da janela de retry
+    elif pending_npc_memory:
         remaining_npc_memory = []
         committed_npc_records = []
         for write in pending_npc_memory:
@@ -412,22 +445,15 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None):
             waiting_ids = ", ".join(dict.fromkeys(
                 write["npc_id"] for write in remaining_npc_memory
             ))
-            return {
-                **event_updates,
-                "archive_due": True,
-                "memory_fact_policy": (
-                    state.get("memory_fact_policy") or "canonical_only"
-                ),
-                "memory_canonical_facts": list(
-                    state.get("memory_canonical_facts") or []
-                ),
-                "rag_persistence_error": (
-                    state.get("rag_persistence_error")
-                    or f"Falha ao persistir memória de {waiting_ids}."
-                ),
-            }
-        npc_retry_committed = True
-        event_updates["rag_persistence_error"] = None
+            event_updates["rag_persistence_error"] = (
+                event_updates.get("rag_persistence_error")
+                or state.get("rag_persistence_error")
+                or f"Falha ao persistir memória de {waiting_ids}."
+            )
+        else:
+            npc_retry_committed = True
+            if not pending_memory_facts:
+                event_updates["rag_persistence_error"] = None
 
     from services.memory_summary import compact_summary
     current_summary = compact_summary(
@@ -569,20 +595,6 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None):
         conflict_summary_service.canonical_summary_text(conflict_summary)
         if conflict_summary else ""
     )
-    prior_rag_error = (
-        None if npc_retry_committed else state.get("rag_persistence_error")
-    )
-    if canonical_only and prior_rag_error and not authoritative_records:
-        # ``persist([])`` é no-op, não um commit. Em especial, uma falha prévia
-        # do índice de NPC chega aqui com canonical_only e sem fatos globais:
-        # não podemos apagar o erro nem confirmar o archive sem qualquer write.
-        return {
-            **event_updates,
-            "archive_due": True,
-            "memory_fact_policy": memory_fact_policy,
-            "memory_canonical_facts": policy_facts,
-            "rag_persistence_error": prior_rag_error,
-        }
     suppress_free_facts = bool(
         conflict_summary
         or duplicate_conflict
@@ -623,12 +635,20 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None):
         if not to_write:
             return True
         if not _persist_memory_records(game_id, to_write):
+            # SPEC-234 R1: o ledger e a fonte primaria; a copia vetorial fica
+            # pendente para retry com backoff e o turno NAO congela.
             pending_memory_facts = normalize_memory_facts(
                 [*pending_memory_facts, *to_write], pending=True,
             )
+            memory_facts = set_vector_status(
+                prospective, [item["memory_id"] for item in to_write], "pending",
+            )
+            from rag import _note_degraded
+            _note_degraded("session_write")
             return False
-        memory_facts = prospective
-        pending_memory_facts = []
+        memory_facts = set_vector_status(
+            prospective, [item["memory_id"] for item in to_write], "written",
+        )
         if promoted:
             memory_promotions = bounded_audit_rows([
                 *memory_promotions,
@@ -706,7 +726,7 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None):
                   "Ativando fallback de texto (fatos/crônica perdidos neste turno)...")
             summary = (current_summary if suppress_free_facts and not conflict_summary
                        else _extract_summary_plain(llm, context_msgs, current_summary))
-            rag_ok = persist_records(authoritative_records)
+            rag_ok = persist_records(authoritative_records) and not pending_memory_facts
             grounded_summary, summary_rejections = sanitize_location_grounding(summary)
             grounded_summary, inventory_rejections = sanitize_inventory_grounding(
                 grounded_summary, effective_state,
@@ -751,23 +771,13 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None):
                 updates = {
                     **memory_state_updates(),
                     "narrative_summary": summary,
-                    "rag_persistence_error": None if rag_ok else "Falha ao persistir fatos canônicos.",
+                    "rag_persistence_error": None if rag_ok else (
+                        event_updates.get("rag_persistence_error")
+                        or "Falha ao persistir fatos canônicos."
+                    ),
                 }
-                if not rag_ok and (conflict_summary or canonical_only):
-                    # O contrato canônico só pode ser consumido depois que sua
-                    # memória durável existe. Mantém a fila para retry.
-                    updates["archive_due"] = True
-                    if conflict_summary:
-                        updates["conflict_summary"] = conflict_summary
-                    elif duplicate_conflict:
-                        updates["conflict_summary"] = None
-                        updates["consumed_conflict_ids"] = consumed_conflict_ids
-                    if canonical_only:
-                        updates["memory_fact_policy"] = memory_fact_policy
-                        updates["memory_canonical_facts"] = policy_facts
-                    return {**event_updates, **updates}
                 updates["archivist_last_run"] = turn
-                updates["archive_due"] = bool(pending_memory_facts)
+                updates["archive_due"] = bool(pending_memory_facts or remaining_npc_memory)
                 if conflict_summary:
                     updates["conflict_summary"] = None
                     updates["consumed_conflict_ids"] = (
@@ -783,7 +793,7 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None):
                     updates["consumed_conflict_ids"] = consumed_conflict_ids
                 if narrative_rejections:
                     updates["narrative_rejections"] = []
-                if canonical_only:
+                if canonical_only and not remaining_npc_memory:
                     updates["memory_fact_policy"] = None
                     updates["memory_canonical_facts"] = []
                 return {**event_updates, **updates}
@@ -810,10 +820,14 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None):
             *authoritative_records,
             *inference_records,
         ]
-        rag_ok = persist_records(records)
+        rag_ok = persist_records(records) and not (
+            pending_memory_facts or remaining_npc_memory
+        )
         updates.update(memory_state_updates())
         updates["rag_persistence_error"] = (
-            None if rag_ok else "Falha ao persistir memória de sessão.")
+            None if rag_ok else (
+                event_updates.get("rag_persistence_error")
+                or "Falha ao persistir memória de sessão."))
 
         # 2. Resumo (curto prazo)
         summary_candidate = (
@@ -865,24 +879,9 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None):
             grounded_summary or current_summary,
         )
 
-        if not rag_ok and (conflict_summary or canonical_only):
-            # Não confirma o turno nem cria Crônica antes do commit durável.
-            # `archive_due=True` e o resumo canônico preservado tornam o retry
-            # explícito no próximo archivist.
-            updates["archive_due"] = True
-            if conflict_summary:
-                updates["conflict_summary"] = conflict_summary
-            elif duplicate_conflict:
-                updates["conflict_summary"] = None
-                updates["consumed_conflict_ids"] = consumed_conflict_ids
-            if canonical_only:
-                updates["memory_fact_policy"] = memory_fact_policy
-                updates["memory_canonical_facts"] = policy_facts
-            return {**event_updates, **updates}
-
         if narrative_rejections:
             updates["narrative_rejections"] = []
-        if canonical_only:
+        if canonical_only and not remaining_npc_memory:
             updates["memory_fact_policy"] = None
             updates["memory_canonical_facts"] = []
 
@@ -909,7 +908,7 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None):
             updates["chronicle"] = base_chron
 
         updates["archivist_last_run"] = turn
-        updates["archive_due"] = bool(pending_memory_facts)
+        updates["archive_due"] = bool(pending_memory_facts or remaining_npc_memory)
 
         return {**event_updates, **updates}
 

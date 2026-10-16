@@ -201,10 +201,16 @@ def collect_dynamic_facts(state: Dict, *, purpose: str, query: str,
         ))
 
     # --- current_state: quem controla o local + eventos ocorridos + segredos revelados ---
-    controller = gr.get_current_controller(current_loc, projection) if current_loc else None
+    # SPEC-234 R6: o grafo e indexado por ID; o nome so serve para scoring/texto.
+    # Controlador `hidden` so aparece para o planner (include_hidden).
+    loc_id = str(world.get("current_location_id") or "") or current_loc
+    controller = (
+        gr.get_current_controller(loc_id, projection, include_hidden=include_hidden)
+        if loc_id else None
+    )
     if controller:
-        add(f"Quem controla {_name(current_loc)} agora: {_name(controller)}.",
-            "current_state", impact=1.0, turns_ago=0, sid=f"ctrl:{current_loc}")
+        add(f"Quem controla {_name(loc_id)} agora: {_name(controller)}.",
+            "current_state", impact=1.0, turns_ago=0, sid=f"ctrl:{loc_id}")
 
     for ev in (state.get("event_log", []) or [])[-100:]:
         text = render_event(ev, projection)
@@ -220,10 +226,11 @@ def collect_dynamic_facts(state: Dict, *, purpose: str, query: str,
             "current_state", impact=0.8, turns_ago=max(0, current_turn - turn), sid=eid)
 
     # --- active_location: resumo dinâmico do local atual ---
-    summ = (projection.get("location_summaries", {}) or {}).get(current_loc)
+    summaries = projection.get("location_summaries", {}) or {}
+    summ = summaries.get(loc_id) or summaries.get(current_loc)
     if summ:
-        add(f"Local {_name(current_loc)}: {summ}", "active_location",
-            impact=0.6, turns_ago=0, sid=f"summ:{current_loc}")
+        add(f"Local {_name(loc_id)}: {summ}", "active_location",
+            impact=0.6, turns_ago=0, sid=f"summ:{loc_id}")
 
     # --- relations: edges efetivas relevantes ao local/cena ---
     seen_edges = set()
@@ -511,17 +518,6 @@ def build_context_pack(state: Dict, query: str, purpose: str,
     if summary and not find_strict_unrevealed(summary, state):
         add_memory_part(f"[RESUMO NARRATIVO | speculative] {summary}")
 
-    # O ledger auditável dá continuidade mesmo se o índice estiver temporariamente
-    # indisponível. Conteúdo com assinatura secreta não revelada falha fechado.
-    for record in active_memory_facts(
-        state.get("memory_facts"),
-        current_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
-        state=state,
-    )[-20:]:
-        if find_strict_unrevealed(record["text"], state):
-            continue
-        add_memory_part(format_memory_fact(record))
-
     if game_id:
         session_memory = source_text.get("session", "")
         if session_memory:
@@ -530,6 +526,18 @@ def build_context_pack(state: Dict, query: str, purpose: str,
         npc_mem = source_text.get("npc", "")
         if npc_mem:
             add_memory_part(npc_mem, legacy_if_unlabeled=True)
+    # SPEC-234 R8: ordem sob orcamento = resumo, RAG relevante, ledger do mais
+    # NOVO para o mais antigo (o score decresce com a posicao).
+    # O ledger auditável dá continuidade mesmo se o índice estiver temporariamente
+    # indisponível. Conteúdo com assinatura secreta não revelada falha fechado.
+    for record in active_memory_facts(
+        state.get("memory_facts"),
+        current_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
+        state=state,
+    )[-20:][::-1]:
+        if find_strict_unrevealed(record["text"], state):
+            continue
+        add_memory_part(format_memory_fact(record))
     memory_text = "\n".join(memory_parts)
 
     budget = ContextBudget(max_tokens=token_budget)

@@ -184,10 +184,11 @@ class PostgresTurnCoordinator:
                 raise StaleVersion("versão/lease do jogo divergiu no commit")
             committed_version = int(row["version"])
             from services.turn_effects import current_effects
-            from infrastructure.pgvector_memory import PgVectorMemoryStore
+            from infrastructure.pgvector_memory import PgVectorMemoryStore, configured_profile_id
             effects = current_effects()
             if effects is not None:
-                effects.flush(connection, memory_store=PgVectorMemoryStore(self.pool),
+                effects.flush(connection, memory_store=PgVectorMemoryStore(
+                    self.pool, profile_id=configured_profile_id()),
                     principal=principal, game_id=claim.game_id,
                     epoch=int((document.get('continuity') or {}).get('timeline_epoch', 0)),
                     version=committed_version)
@@ -304,10 +305,11 @@ class PostgresTurnCoordinator:
             ).fetchone()
             version = int(row["version"])
             from services.turn_effects import current_effects
-            from infrastructure.pgvector_memory import PgVectorMemoryStore
+            from infrastructure.pgvector_memory import PgVectorMemoryStore, configured_profile_id
             effects = current_effects()
             if effects is not None:
-                effects.flush(connection, memory_store=PgVectorMemoryStore(self.pool),
+                effects.flush(connection, memory_store=PgVectorMemoryStore(
+                    self.pool, profile_id=configured_profile_id()),
                     principal=principal, game_id=game_id,
                     epoch=int((document.get('continuity') or {}).get('timeline_epoch', 0)),
                     version=version)

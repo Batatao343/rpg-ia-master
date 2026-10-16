@@ -103,7 +103,12 @@ def _reason(sentence: str, evidence: EvidenceSnapshot) -> str | None:
 
 def validate_narrative(text: str, evidence: EvidenceSnapshot, *, channel: str) -> NarrativeCheck:
     accepted, rejected = [], []
-    for sentence in re.split(r'(?<=[.!?])\s+|\n+', str(text or '')):
+    # SPEC-234 R11: guarda o separador original (paragrafos/quebras) de cada frase.
+    pieces = re.split(r'((?<=[.!?])\s+|\n+)', str(text or ''))
+    pending_sep = ''
+    for index in range(0, len(pieces), 2):
+        sentence = pieces[index]
+        sep_before = pieces[index - 1] if index else ''
         if not sentence.strip():
             continue
         reason = _reason(sentence, evidence)
@@ -111,9 +116,10 @@ def validate_narrative(text: str, evidence: EvidenceSnapshot, *, channel: str) -
             rejected.append({'channel': channel, 'reason': reason,
                              'turn': str(evidence.turn)})  # never log private text
         else:
-            accepted.append(sentence)
+            accepted.append((sep_before if accepted else '', sentence))
     # Preserve original formatting if unchanged (combat log, dialogue, poetry).
-    cleaned = str(text or '') if not rejected else ' '.join(accepted).strip()
+    cleaned = str(text or '') if not rejected else ''.join(
+        sep + sentence for sep, sentence in accepted).strip()
     return NarrativeCheck(cleaned, rejected[-32:], [])
 
 

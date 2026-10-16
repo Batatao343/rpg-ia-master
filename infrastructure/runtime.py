@@ -362,7 +362,7 @@ def build_legacy_runtime(config: RuntimeConfig | None = None) -> InfrastructureR
 def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
     """Compõe adapters compartilhando um único pool; falha antes de servir."""
     config.validate()
-    from infrastructure.pgvector_memory import PgVectorMemoryStore
+    from infrastructure.pgvector_memory import PgVectorMemoryStore, configured_profile_id
     from infrastructure.postgres import PostgresGameStore, PostgresPool
     from infrastructure.postgres_catalog import PostgresRuntimeCatalogStore
     from infrastructure.postgres_jobs import PostgresJobQueue
@@ -425,7 +425,11 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
                 raise ValueError(f"embedding incompatível: {len(values)} dimensões")
             return values
 
-        memory_store = PgVectorMemoryStore(pool, embedder=embed_query)
+        import rag as _rag
+        _rag.validate_pgvector_provider()  # SPEC-234 R9: recusa dimensao != 1024
+        memory_store = PgVectorMemoryStore(
+            pool, embedder=embed_query, profile_id=configured_profile_id(),
+        )
         return InfrastructureRuntime(
             config=config,
             game_store=PostgresGameStore(pool),
