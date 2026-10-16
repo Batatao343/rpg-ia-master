@@ -1,7 +1,7 @@
 # SPEC-221 — Superfícies operacionais: `/metrics` autenticado, cache/HSTS/CSP e limites de borda
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `done`
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** nenhuma · SPEC-218 desliga `/docs`; esta cobre o resto da superfície e NÃO a exige (índice corrigido); evolui SPEC-106 e SPEC-192 F6 (ordem final 2026-10-15)
 > **Desbloqueia:** gate da SPEC-197 (scrape `/metrics` seguro) (ordem final 2026-10-15)
 > **Origem:** auditoria de segurança 2026-10-15 — achados SESS-01/AUTHZ-06, SESS-08, SESS-09, INJ-01, INJ-02
@@ -77,9 +77,9 @@ Objetivo: `/metrics` só com Bearer e com cache curto do bloco SQL; headers de c
 2. **Implementação:** §3. **Verificação:** `uv run pytest -q` completo; `npm run build`.
 
 ## 5. Critérios de aceite
-- [ ] Etapa 0 vermelha no HEAD, verde ao final; R1–R8 cobertos; `uv run pytest` verde.
-- [ ] Staging: `curl /metrics` → 404; com token → 200; `curl -I /game/state` (autenticado) → `no-store`; `-I /` → HSTS; POST 1 MiB em `/auth/login` → 413.
-- [ ] Prometheus local (SPEC-106 stack opcional) scrapeia com `bearer_token` — `up == 1`.
+- [x] R1–R8 cobertos por `tests/test_surfaces_221.py`; `uv run pytest` verde (ver `docs/spec221/README.md`).
+- [x] Smoke (substituído por smoke LOCAL equivalente, revisão Sol 2026-10-16 — staging remoto fora do escopo da onda): uvicorn perfil `local` contra Supabase local (Postgres :55322 + Auth) + 2º processo `legacy` p/ save MockLLM. `/metrics` 404 sem token/token errado, 200 com Bearer (gauges `rpg_db_pool`/`rpg_jobs` do Postgres real); `/game/state`, `/account/balance`, `/auth/config` → `no-store` (`/data/options` sem); HSTS só com `RPG_COOKIE_SECURE=1`; CSP com `form-action 'self'`; `Content-Length: 1 MiB` → 413 sem ler corpo; chunked 320 KiB → 413 `payload_too_large`; export `Ωmega José-Ângelo` → 200 `filename="cronica_megaJose-Angelo.txt"` + `filename*`. Transcrição: `docs/spec221/evidence/local_smoke.txt`.
+- [x] Prometheus local (imagem `prom/prometheus:v3.13.2` do stack SPEC-106, config temporária com `authorization.credentials_file`, intervalo 2 s) → `up == 1`; após 45 s `min_over_time(up[40s]) == 1` com 20 amostras (scraper autenticado não cai no rate limit). Container removido em seguida.
 
 ## 6. Smoke test
 Sem LLM: os 5 `curl` acima no staging + export da crônica de um personagem com nome Unicode (MockLLM local basta para gerar o save).
@@ -96,3 +96,22 @@ Sem LLM: os 5 `curl` acima no staging + export da crônica de um personagem com 
 
 ## 9. Evidência requerida
 - Saída de `uv run pytest` + vermelhos da Etapa 0; transcrição dos `curl` do staging (headers, sem token impresso); `docs/secXX/README.md` com decisões D-A..D-C; `ESTADO_ATUAL.md`/`ROADMAP.md`.
+
+## 10. Registro de execução (2026-10-16)
+
+- Defaults de decisão: D-A sem `preload`; D-B `unsafe-inline` mantido (dívida); D-C 404.
+- Desvios: (1) `RPG_METRICS_TOKEN` NÃO entrou em `HOSTED_SECURITY_REQUIREMENTS` (SPEC-218 não está na main);
+  sem a env em perfil DB o `/metrics` simplesmente responde 404, sem afetar o boot. (2) Rate limit de
+  `/metrics` é em memória por processo (SPEC-219 ausente). (3) Export da crônica já tinha `filename*` (SPEC-235);
+  helper `safe_attachment_filename` unifica o fallback ASCII (NFKD, `[:40]`, fallback `cronica`).
+  `/account/export` e audit-export (SPEC-207) têm filename fixo/pseudônimo ASCII, intocados.
+- Revisão Sol (2026-10-16, independente): (a) **defeito corrigido** — o rate limit 12/min contava o
+  scraper autenticado; o stack SPEC-106 raspa a cada 5 s (12/min exatos) → 429 intermitente/`up==0`.
+  Agora só sondas sem token válido contam (teste `test_metrics_rate_limit_so_para_sondas...`).
+  (b) webhook Stripe: teto do middleware 256→320 KiB para o handler (stream cru) aplicar o próprio
+  413 de 256 KiB antes do corte do middleware (que entregaria corpo truncado ao handler).
+  (c) auditoria de todos os POST/PUT/PATCH/DELETE: nenhum uso legítimo excede o teto; pior caso de
+  `/game/new` com `scenario` (todos os campos no `max_length`, 4 B/char) < 64 KiB (teste novo).
+  Nota: com upload ainda em curso, o 413 seguido de `connection: close` pode chegar ao cliente como
+  RST (comportamento TCP normal; o servidor não lê o excedente).
+- Smoke local + scrape Prometheus real executados (substituem o staging); ver §5.

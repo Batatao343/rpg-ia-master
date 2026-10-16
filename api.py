@@ -94,6 +94,16 @@ app.add_middleware(
 )
 
 
+from services.body_limit import BodyLimitMiddleware  # SPEC-221 R6
+
+app.add_middleware(BodyLimitMiddleware, default_limit=256 * 1024, per_path={
+    "/account/transcriptions": 8 * 1024 * 1024 + 64 * 1024,
+    # > MAX_WEBHOOK_BYTES: o handler (stream cru) responde o proprio 413 antes do corte do middleware.
+    "/payments/stripe/webhook": 256 * 1024 + 64 * 1024,
+    "/game/new": 64 * 1024,
+    "/game/prologue": 64 * 1024,
+})
+
 from services.cron_internal import router as _cron_router
 app.include_router(_cron_router)  # SPEC-192: bearer-secret auth, no cookies/CSRF flow
 
@@ -171,7 +181,7 @@ CONTENT_SECURITY_POLICY = (
     "img-src 'self' data: blob: https://*.supabase.co; "
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
     "font-src 'self' data: https://fonts.gstatic.com; "
-    "media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
+    "media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'"
 )
 _DOCS_PATHS = {"/docs", "/redoc", "/openapi.json", "/docs/oauth2-redirect"}
 
@@ -214,6 +224,11 @@ async def _correlation_boundary(request: Request, call_next):
         response.headers.setdefault("Referrer-Policy", "same-origin")
         response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(self), geolocation=()")
         response.headers.setdefault("X-Frame-Options", "DENY")
+        if request.url.path.startswith(("/game", "/account", "/auth")):
+            response.headers.setdefault("Cache-Control", "no-store")  # SPEC-221 R4
+        if os.getenv("RPG_COOKIE_SECURE", "0") == "1":
+            response.headers.setdefault("Strict-Transport-Security",
+                                        "max-age=63072000; includeSubDomains")
         if request.url.path not in _DOCS_PATHS:  # swagger UI loads CDN scripts
             response.headers.setdefault("Content-Security-Policy", CONTENT_SECURITY_POLICY)
         return response
@@ -869,9 +884,35 @@ def _rate_limit_max() -> int:
         return 30
 
 
+_METRICS_RATE_PER_MIN = 12
+_metrics_hits: Dict[str, deque] = defaultdict(deque)
+
+
+async def _rate_limit_metrics(request: Request, call_next):
+    """SPEC-221 R3: classe propria para /metrics (12/min por IP, em memoria por processo).
+
+    Revisao Sol: o scraper autenticado NAO conta — o stack SPEC-106 raspa a cada 5 s (12/min
+    exatos) e cairia em 429 intermitente (up==0). Sondas sem token valido seguem limitadas; o
+    custo de DB do scraper legitimo ja e limitado pelo cache SQL (R2)."""
+    if os.getenv("RPG_METRICS_TOKEN") and _metrics_authorized(request):
+        return await call_next(request)
+    ip = request.client.host if request.client else "?"
+    now = time.monotonic()
+    hits = _metrics_hits[ip]
+    while hits and now - hits[0] > _RATE_WINDOW_S:
+        hits.popleft()
+    if len(hits) >= _METRICS_RATE_PER_MIN:
+        return JSONResponse(status_code=429, content={"detail": "rate_limited"},
+                            headers={"Retry-After": "60"})
+    hits.append(now)
+    return await call_next(request)
+
+
 @app.middleware("http")
 async def _rate_limit(request: Request, call_next):
     limit = _rate_limit_max()
+    if limit > 0 and request.url.path == "/metrics":
+        return await _rate_limit_metrics(request, call_next)
     # Auditoria A2: equip/levelup também mutam o save — entram na janela.
     if limit > 0 and (request.url.path in ("/game/action", "/game/action/stream",
                                            "/game/new", "/game/combat-simulator",
@@ -1791,72 +1832,112 @@ def client_latency(report: ClientLatencyReport):
     return Response(status_code=204)
 
 
-@app.get("/metrics", include_in_schema=False)
-def prometheus_metrics():
-    from observability.metrics import metrics
-    if _database_profile():
+def _metrics_authorized(request: Request) -> bool:
+    """SPEC-221 R1: Bearer RPG_METRICS_TOKEN (>=32 chars). Perfil DB sem token valido = fechado."""
+    import hmac
+    token = os.getenv("RPG_METRICS_TOKEN", "")
+    if not token:
+        return not _database_profile()  # legacy/local sem env: scrape local aberto
+    if len(token) < 32:
+        return False
+    header = request.headers.get("authorization", "")
+    scheme, _, supplied = header.partition(" ")
+    if scheme.lower() != "bearer" or not supplied:
+        return False
+    return hmac.compare_digest(supplied.strip().encode(), token.encode())
+
+
+class _MetricsSqlCache:
+    """SPEC-221 R2: o bloco SQL do /metrics roda no maximo 1x por ttl por processo."""
+
+    def __init__(self) -> None:
+        self._at = 0.0
+        self._lock = threading.Lock()
+
+    def ttl_s(self) -> float:
         try:
-            from infrastructure.runtime import get_runtime
-            runtime = get_runtime()
-            pool = getattr(runtime.job_queue, "pool", None)
-            if pool is not None:
-                with pool.connection() as connection:
-                    rows = connection.execute(
-                        """
-                        select kind,status,count(*)::int as count,
-                          coalesce(extract(epoch from now()-min(created_at)),0) as oldest
-                        from app.jobs group by kind,status
-                        """
-                    ).fetchall()
-                    operations = connection.execute(
-                        """
-                        select kind,coalesce(max(extract(epoch from now()-started_at)),0) as age
-                        from app.operations where status='running' group by kind
-                        """
-                    ).fetchall()
-                    embedding = connection.execute(
-                        """
-                        select embedding_status,count(*)::int as count
-                        from app.memory_documents where discarded_at is null
-                        group by embedding_status
-                        """
-                    ).fetchall()
-                kinds: set[str] = set()
-                for row in rows:
-                    kind, status = str(row["kind"]), str(row["status"])
-                    kinds.add(kind)
-                    metrics.set_gauge(
-                        "rpg_jobs", {"kind": kind, "status": status}, row["count"],
-                    )
-                for kind in kinds:
-                    ages = [
-                        float(row["oldest"] or 0) for row in rows
-                        if str(row["kind"]) == kind
-                        and str(row["status"]) in {"queued", "retry", "running"}
-                    ]
-                    metrics.set_gauge(
-                        "rpg_job_oldest_age_seconds", {"kind": kind},
-                        max(ages, default=0.0),
-                    )
-                for row in operations:
-                    metrics.set_gauge(
-                        "rpg_operation_lease_age_seconds", {"kind": str(row["kind"])},
-                        float(row["age"] or 0),
-                    )
-                for row in embedding:
-                    metrics.set_gauge(
-                        "rpg_memory_embedding_backlog",
-                        {"status": str(row["embedding_status"])}, row["count"],
-                    )
-                stats = getattr(getattr(pool, "_pool", None), "get_stats", lambda: {})()
-                for source, label in (
-                    ("pool_available", "available"),
-                    ("pool_size", "size"),
-                    ("requests_waiting", "waiting"),
-                ):
-                    metrics.set_gauge("rpg_db_pool", {"state": label}, stats.get(source, 0))
-        except Exception:
-            pass
+            return float(os.getenv("RPG_METRICS_SQL_CACHE_S", "15"))
+        except ValueError:
+            return 15.0
+
+    def refresh(self, loader) -> None:
+        with self._lock:
+            now = time.monotonic()
+            if self._at and now - self._at < self.ttl_s():
+                return
+            self._at = now
+        loader()
+
+    def reset(self) -> None:
+        self._at = 0.0
+
+
+_metrics_sql_cache = _MetricsSqlCache()
+
+
+def _load_metrics_sql() -> None:
+    from observability.metrics import metrics
+    try:
+        from infrastructure.runtime import get_runtime
+        runtime = get_runtime()
+        pool = getattr(runtime.job_queue, "pool", None)
+        if pool is not None:
+            with pool.connection() as connection:
+                rows = connection.execute(
+                    """
+                    select kind,status,count(*)::int as count,
+                      coalesce(extract(epoch from now()-min(created_at)),0) as oldest
+                    from app.jobs group by kind,status
+                    """
+                ).fetchall()
+                operations = connection.execute(
+                    """
+                    select kind,coalesce(max(extract(epoch from now()-started_at)),0) as age
+                    from app.operations where status='running' group by kind
+                    """
+                ).fetchall()
+                embedding = connection.execute(
+                    """
+                    select embedding_status,count(*)::int as count
+                    from app.memory_documents where discarded_at is null
+                    group by embedding_status
+                    """
+                ).fetchall()
+            kinds: set[str] = set()
+            for row in rows:
+                kind, status = str(row["kind"]), str(row["status"])
+                kinds.add(kind)
+                metrics.set_gauge("rpg_jobs", {"kind": kind, "status": status}, row["count"])
+            for kind in kinds:
+                ages = [
+                    float(row["oldest"] or 0) for row in rows
+                    if str(row["kind"]) == kind
+                    and str(row["status"]) in {"queued", "retry", "running"}
+                ]
+                metrics.set_gauge("rpg_job_oldest_age_seconds", {"kind": kind},
+                                  max(ages, default=0.0))
+            for row in operations:
+                metrics.set_gauge("rpg_operation_lease_age_seconds", {"kind": str(row["kind"])},
+                                  float(row["age"] or 0))
+            for row in embedding:
+                metrics.set_gauge("rpg_memory_embedding_backlog",
+                                  {"status": str(row["embedding_status"])}, row["count"])
+            stats = getattr(getattr(pool, "_pool", None), "get_stats", lambda: {})()
+            for source, label in (("pool_available", "available"), ("pool_size", "size"),
+                                  ("requests_waiting", "waiting")):
+                metrics.set_gauge("rpg_db_pool", {"state": label}, stats.get(source, 0))
+        metrics.set_gauge("rpg_metrics_db_error", {}, 0)
+    except Exception:
+        metrics.set_gauge("rpg_metrics_db_error", {}, 1)  # mantem ultimos valores
+
+
+@app.get("/metrics", include_in_schema=False)
+def prometheus_metrics(request: Request):
+    from observability.metrics import metrics
+    if not _metrics_authorized(request):
+        return Response(status_code=404)
+    if _database_profile():
+        _metrics_sql_cache.refresh(_load_metrics_sql)
     try:
         from pathlib import Path
         manifests = list(Path(
@@ -4238,14 +4319,10 @@ def export_chronicle(game_id: Optional[str] = None):
                 marker = "•" if e.get("kind") == "milestone" else "—"
                 lines.append(f"{marker} [t{e.get('turn', 0)}] {e['text']}")
         lines.append("")
-    import unicodedata
-    from urllib.parse import quote
-    raw_name = "".join(c for c in str(player.get("name", "")) if c.isalnum())
-    ascii_name = "".join(
-        c for c in unicodedata.normalize("NFKD", raw_name) if c.isascii() and (c.isalnum() or c in "_-")
-    ) or "cronica"
+    from services.body_limit import safe_attachment_filename
+    ascii_name, quoted = safe_attachment_filename(str(player.get("name", "")))
     disposition = (f'attachment; filename="cronica_{ascii_name}.txt"; '
-                   f"filename*=UTF-8''{quote('cronica_' + (raw_name or 'cronica') + '.txt')}")
+                   f"filename*=UTF-8''cronica_{quoted}.txt")
     return PlainTextResponse("\n".join(lines), headers={"Content-Disposition": disposition})
 
 

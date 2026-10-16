@@ -60,6 +60,21 @@ npm run build                  # web/dist passa a ser servido pela API
 npm run dev                    # :5173 com proxy para :8000
 ```
 
+### Superficies operacionais (SPEC-221)
+
+- `/metrics`: em perfis Postgres exige `Authorization: Bearer $RPG_METRICS_TOKEN` (>=32 chars)
+  e responde **404** sem token valido (ou se a env nao estiver definida; nada e exposto, o boot
+  nao muda). Em `legacy` sem a env o scrape segue aberto; com a env, exige. Sondas sem token
+  valido: 12 req/min/IP (quando `RPG_RATE_LIMIT>0`; scraper autenticado isento) e bloco SQL cacheado 15 s (`RPG_METRICS_SQL_CACHE_S`); falha de DB
+  mantem os ultimos valores e publica `rpg_metrics_db_error 1`. Prometheus local: adicione
+  `authorization: {credentials_file: /etc/prometheus/metrics_token}` ao job `valoria-api`.
+- Respostas de `/game`, `/account` e `/auth` saem com `Cache-Control: no-store`; HSTS
+  (`max-age=63072000; includeSubDomains`, sem `preload`) so com `RPG_COOKIE_SECURE=1`; CSP com
+  `form-action 'self'` (`style-src 'unsafe-inline'` mantido, divida registrada).
+- Teto de body (HTTP 413 `payload_too_large`): 256 KiB por default, 64 KiB em `/game/new` e
+  `/game/prologue`, 8 MiB+64 KiB em `/account/transcriptions`, 320 KiB no webhook Stripe (o handler
+  aplica o proprio teto de 256 KiB). Upload chunked sem `Content-Length` e cortado por contagem.
+
 ---
 
 ## Fluxo de um turno

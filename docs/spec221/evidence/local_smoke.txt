@@ -1,0 +1,20 @@
+A health profile: HTTP 200 {}
+   {"status":"online","engine":"RPG IA v9.0 Hybrid Memory","git_sha":""}
+1a A GET /metrics sem token: HTTP 404 {}
+1b A GET /metrics token errado: HTTP 404 {}
+1c A GET /metrics Bearer <token>: HTTP 200 {"content-type": "text/plain; version=0.0.4; charset=utf-8"}
+   gauges: rpg_db_pool{state="available"} 1.0, rpg_db_pool{state="size"} 1.0, rpg_db_pool{state="waiting"} 0.0, rpg_jobs{kind="fence-77ae32e7-884b-4693-b7b7-b0a380b98579",status="succeeded"} 1.0, rpg_jobs{kind="fence-77b18851-c641-481c-bfa2-e105702f2e6c",status="succeeded"} 1.0, rpg_jobs{kind="fence-d736dd26-a785-4113-baaa-2e899514249c",status="succeeded"} 1.0
+2a A GET /game/state (sem sessao): HTTP 401 {"cache-control": "no-store"}
+2b A GET /account/balance (sem sessao): HTTP 401 {"cache-control": "no-store"}
+2c A GET /auth/config: HTTP 200 {"cache-control": "no-store"}
+2d A GET /data/options: HTTP 200 {"cache-control": null}
+3a A HEAD / (RPG_COOKIE_SECURE=1): HTTP 200 {"strict-transport-security": "max-age=63072000; includeSubDomains", "content-security-policy": "default-src 'self'; connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data: blob: https://*.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'"}
+3b B HEAD / (sem cookie secure): HTTP 200 {"strict-transport-security": null}
+4a A POST /auth/login Content-Length 1 MiB (corpo nao enviado): HTTP/1.1 413 Content Too Large | 
+4b A POST /auth/login chunked 320 KiB (sem Content-Length): HTTP/1.1 413 Content Too Large | {"detail": "payload_too_large"} | enviados 327680B
+4c A POST /auth/login pequeno: HTTP 401 {}
+5a B POST /game/new nome unicode: HTTP 200
+5b B GET /game/chronicle/export: HTTP 200 {"content-disposition": "attachment; filename=\"cronica_megaJose-Angelo.txt\"; filename*=UTF-8''cronica_%CE%A9megaJos%C3%A9-%C3%82ngelo.txt", "cache-control": "no-store"}
+6  Prometheus up{job=valoria-api} = 1
+   apos 45 s: min_over_time(up[40s]) = 1, amostras = 20
+   target health=up lastError='' url=http://host.docker.internal:8721/metrics
