@@ -5,7 +5,8 @@ import { isNativeApp, isAndroidClient } from "./native/platform";
 import { playAdapter } from "./purchases";
 import { installNativeLifecycle } from "./native/lifecycle";
 import { decideBack } from "./native/backPolicy";
-import { preparePending, loadPending, clearPending, clearOwner, type PendingOperation } from "./pendingOperation";
+import { safeStorage } from "./safeStorage";
+import { preparePending, loadPending, clearPending, clearOwner, shouldClearPending, type PendingOperation } from "./pendingOperation";
 import { looksDegraded } from "./lib";
 import type { ActionOptions, CombatSimulatorPayload, GameResponse, CreatePayload, LogEntry, SaveSummary } from "./types";
 import { Banner, type BannerState } from "./components/Banner";
@@ -73,8 +74,9 @@ export function App() {
     setImageError("");
   }
 
-  const gameId = useRef<string | null>(localStorage.getItem(LS_KEY));
+  const gameId = useRef<string | null>(safeStorage.get(LS_KEY));
   const logSeq = useRef(0);
+  const volatileWarned = useRef(false);
   const session = useRef(0);
   const owner = useRef('legacy');
   const [pending, setPending] = useState<PendingOperation | null>(null);
@@ -149,7 +151,7 @@ export function App() {
         owner.current = config.user_id || "legacy";
         if (hasEmailActionLink) {
           clearOwner(owner.current);
-          localStorage.removeItem(LS_KEY);
+          safeStorage.remove(LS_KEY);
           gameId.current = null;
           setPending(null);
           setScreen("auth");
@@ -175,13 +177,13 @@ export function App() {
         setScreen(checkoutReturnRequested() ? "account" : accountReturn.current);
       } catch {
         // API antiga/sem saves — mantém o fluxo clássico de "continuar última".
-        const saved = localStorage.getItem(LS_KEY);
+        const saved = safeStorage.get(LS_KEY);
         if (!saved) { if (active) setScreen("create"); return; }
         try {
           const response = await api.getState(saved);
           if (active) { setContinueData(response); setScreen("create"); }
         } catch {
-          localStorage.removeItem(LS_KEY);
+          safeStorage.remove(LS_KEY);
           if (active) setScreen("create");
         }
       }
@@ -234,7 +236,7 @@ export function App() {
     clearOwner(owner.current);
     owner.current = "legacy";
     setPending(null);
-    localStorage.removeItem(LS_KEY);
+    safeStorage.remove(LS_KEY);
     gameId.current = null;
     setData(null); setContinueData(null); setLog([]);
     setBanner(null); setPhaseLabel(null); setThinking(false);
@@ -266,7 +268,7 @@ export function App() {
       resetImageQuote();
       clearOwner(owner.current);
       setPending(null);
-      localStorage.removeItem(LS_KEY);
+      safeStorage.remove(LS_KEY);
       gameId.current = null;
       setData(null);
       setLog([]);
@@ -311,19 +313,19 @@ export function App() {
     const generation = session.current;
     const entryId = logSeq.current++;
     gameId.current = r.game_id || gameId.current;
-    if (gameId.current) localStorage.setItem(LS_KEY, gameId.current);
+    if (gameId.current) safeStorage.set(LS_KEY, gameId.current);
 
     // Cria entrada com streaming=true, que ativa efeito typewriter
     setLog((prev) => [
       ...prev,
-      { id: entryId, text: r.message, role: "narrator", type: r.message_type || "STORY", streaming: true, visual: r.visual?.cue }
+      { id: entryId, text: r.message, role: "narrator", type: r.message_type || "STORY", streaming: true, visual: r.visual?.cue,
+        // Fim REAL da animação (SPEC-235 R7), não um timer fixo que corta textos longos.
+        onTypewriterDone: () => {
+          if (session.current !== generation) return;
+          setLog(p => p.map(entry => entry.id === entryId
+            ? { ...entry, streaming: false, onTypewriterDone: undefined } : entry));
+        } }
     ]);
-
-    // Após animação estar completa (300ms), finaliza a entrada
-    setTimeout(() => {
-      if (session.current !== generation) return;
-      setLog(prev => prev.map(entry => entry.id === entryId ? { ...entry, streaming: false } : entry));
-    }, 300);
 
     setData(r);
     if (!r.combat_simulation?.enabled && r.simulated && !simNoticed.current) {
@@ -499,6 +501,10 @@ export function App() {
       if (old && old.payload.input_text !== text) throw new Error("Resolva a ação pendente antes de enviar outra.");
       const operation = await preparePending(user, gid, text, { ...options });
       setPending(operation);
+      if (operation.volatile && !volatileWarned.current) {
+        volatileWarned.current = true;
+        setBanner({ msg: "O armazenamento do navegador está bloqueado: sua retomada não sobrevive a recarga.", kind: "warn" });
+      }
       const requestOptions = { ...operation.payload, action_id: operation.operation_id } as ActionOptions;
       const status = await api.getOperation(gid, operation.operation_id);
       if (status.status === "completed") {
@@ -538,8 +544,11 @@ export function App() {
       } catch (error) {
         if (!active()) return;
         if (error instanceof api.HttpError && error.status < 500) {
-          // A definitive validation failure can be edited; a conflict must be resolved.
-          if ([400, 422].includes(error.status)) { clearPending(user, gid); setPending(null); }
+          // A definitive refusal can never be retried as-is: release the input (SPEC-235 R2).
+          if (shouldClearPending(error.status, error.code)) {
+            clearPending(user, gid); setPending(null);
+            throw new Error(error.message + " A ação pendente foi descartada; você pode enviar uma nova.");
+          }
           throw error;
         }
         const orphan = streamEntryId.current;
@@ -555,6 +564,14 @@ export function App() {
     } finally {
       if (active()) { setThinking(false); setPhaseLabel(null); setBusy(false); }
     }
+  }
+
+  function discardPending() {
+    const gid = gameId.current;
+    if (!gid) return;
+    clearPending(owner.current, gid);
+    setPending(null);
+    setBanner({ msg: "Ação pendente descartada. Você pode enviar uma nova ação.", kind: "warn" });
   }
 
   async function loadHistory(gid: string, generation: number) {
@@ -587,7 +604,7 @@ export function App() {
       const r = await api.getState(gid);
       if (session.current !== generation) return;
       gameId.current = gid;
-      localStorage.setItem(LS_KEY, gid);
+      safeStorage.set(LS_KEY, gid);
       setScreen("play"); setLog([]); setData(r);
       const saved = loadPending(owner.current, gid);
       setPending(saved);
@@ -611,7 +628,7 @@ export function App() {
       await api.deleteSave(gid);
       if (gameId.current === gid) {
         gameId.current = null;
-        localStorage.removeItem(LS_KEY);
+        safeStorage.remove(LS_KEY);
       }
       const list = await api.getSaves();
       setSaves(list);
@@ -722,10 +739,16 @@ export function App() {
           onClick={() => { accountReturn.current = screen; setScreen("account"); }}>
           Conta{accountBalance !== null ? ` · ${shards(accountBalance)} Estilhas` : ""}
         </button>}
-      {screen === "play" && pending && <button className="pending-operation btn" disabled={busy}
-        onClick={() => void handleAction(pending.payload.input_text)}>
-        Consultar / retomar ação pendente
-      </button>}
+      {screen === "play" && pending && <div className="pending-operation" role="group" aria-label="Ação pendente">
+        <button className="btn btn--primary" type="button" disabled={busy}
+          onClick={() => void handleAction(pending.payload.input_text)}>
+          Consultar / retomar ação pendente
+        </button>
+        <button className="btn btn--ghost pending-operation__discard" type="button" disabled={busy}
+          onClick={discardPending}>
+          Descartar ação pendente
+        </button>
+      </div>}
       {authRequired && screen !== "auth" && screen !== "play" && screen !== "account" && (
         <button className="session-logout btn btn--ghost" disabled={busy}
           onClick={() => void handleLogout()}>

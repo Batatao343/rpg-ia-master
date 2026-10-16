@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { safeStorage } from "../safeStorage";
 
 // spec polish-sessao (R6): painel dismissible do 1º turno — ensina os comandos
 // que o motor entende. 100% frontend; "dispensado" fica em localStorage por jogo.
@@ -13,7 +14,7 @@ const EXAMPLES = [
 const LS_PREFIX = "cronicas_onboard_";
 
 export function onboardingDismissed(gameId: string | null): boolean {
-  return !gameId || localStorage.getItem(LS_PREFIX + gameId) === "1";
+  return !gameId || safeStorage.get(LS_PREFIX + gameId) === "1";
 }
 
 export function OnboardingHint({ gameId }: { gameId: string }) {
@@ -28,7 +29,7 @@ export function OnboardingHint({ gameId }: { gameId: string }) {
           type="button"
           aria-label="Dispensar dica"
           onClick={() => {
-            localStorage.setItem(LS_PREFIX + gameId, "1");
+            safeStorage.set(LS_PREFIX + gameId, "1");
             setHidden(true);
           }}
         >

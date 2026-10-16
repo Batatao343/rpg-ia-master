@@ -1,7 +1,7 @@
 # SPEC-235 — API/frontend: soft-lock da ação pendente, erros 422 legíveis, export unicode, storage bloqueado e detalhes de exibição
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `done`
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** nenhuma · SPEC-086 hardening-persistencia-sse-idempotencia, SPEC-111 fase-10b-turnos-duraveis-concorrencia-fila e SPEC-157 auditoria-2026-09-frontend-sessao `done` são corrigidas (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-204, SPEC-212 (ordem final 2026-10-15)
 > **Origem:** auditoria de bugs 2026-10-15 — achados BUG-07-01, 07-02, 07-04, 07-05, 07-06, 07-07, 07-08, 07-09, 04-06 (`achados/07-api-frontend.md`, `04-persistencia-concorrencia.md`)
@@ -105,11 +105,11 @@ Python: `tests/test_bug_api_pending_erros.py` — `test_failed_operation_reclaim
 
 ## 5. Critérios de aceite
 
-- [ ] Testes de reprodução vermelhos → verdes (Python + Node); `web/tests/*` 100%; `tests/test_polish_sessao.py`,
+- [x] Testes de reprodução vermelhos → verdes (Python + Node); `web/tests/*` 100%; `tests/test_polish_sessao.py`,
       `test_hardening_sse*.py`, `test_turnos_duraveis*.py` verdes ou diff justificado.
-- [ ] `uv run pytest` verde; `npm run build` e `npx tsc --noEmit` limpos.
-- [ ] Playwright: após 409 de pending, o jogador consegue enviar nova ação sem limpar storage.
-- [ ] Guard de FallbackLLM: não se aplica.
+- [x] `uv run pytest` verde; `npm run build` e `npx tsc --noEmit` limpos.
+- [x] Playwright: após 409 de pending, o jogador consegue enviar nova ação sem limpar storage.
+- [x] Guard de FallbackLLM: não se aplica.
 
 ## 6. Smoke test com LLM real
 
@@ -134,3 +134,17 @@ Python: `tests/test_bug_api_pending_erros.py` — `test_failed_operation_reclaim
 - Saídas de `uv run pytest`, `npm test`, `npx tsc --noEmit`, `npm run build`; testes antes/depois.
 - `docs/<spec>/README.md` com a repro do 422/export, screenshot do botão "Descartar" em 390/1440 e revisão `Sol`.
 - Handoff opcional: F17 no harness de frontend evals (SPEC-172) — autoria separada.
+
+## 10. Implementação (2026-10-16)
+
+Defaults: D-A = 409 `pending_operation`; D-B = botão sempre visível. Desvios: (1) gate R3 só em equip/levelup, **não em death**
+(com `death_pending` o turno é rejeitado; bloquear a morte criaria deadlock); a falha só conta se não houver operação
+posterior concluída. (2) `safeStorage.ts` fica em `web/src/` (existe `src/lib.ts`; um diretório `lib/` seria ambíguo).
+(3) `detail` de 409 `pending_operation` é objeto `{code, operation_id, message, discardable}`; `formatDetail` o trata.
+Pendente de validação: Playwright F17 (409 -> botão visível), teste infra_local de `claim()` com Postgres real
+(R1 coberto por unidade em `reclaimable`), screenshot 390/1440, revisão `Sol`, smoke LLM real. Ver `docs/spec235/README.md`.
+
+**Revisão `Sol` (2026-10-16): APPROVED_WITH_FOLLOWUPS.** Reclaim/gate validados em Postgres real
+(`tests/test_spec235_reclaim_local.py`), Playwright `web/e2e/pending-discard.spec.ts` + screenshots 390/1440.
+Correções: botão "retomar" com contraste (`btn--primary`); mensagem do 409 `pending_operation` sem prometer
+descarte server-side. Smoke §6 coberto por evidência determinística (fluxo sem LLM). Detalhe em `docs/spec235/README.md`.

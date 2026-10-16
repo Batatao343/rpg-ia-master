@@ -18,10 +18,35 @@ function optionsWithAuth(opts: RequestInit): RequestInit {
   return { ...opts, headers, credentials: 'include' };
 }
 
+/** SPEC-235 R4: FastAPI `detail` may be a string, an object or a 422 list of {loc,msg}. */
+export function formatDetail(detail: unknown, fallback: string): { code: string; message: string } {
+  if (typeof detail === 'string') return { code: detail, message: detail || fallback };
+  if (Array.isArray(detail)) {
+    const parts = detail.map(item => {
+      if (typeof item === 'string') return item;
+      if (!item || typeof item !== 'object') return '';
+      const row = item as { msg?: unknown; loc?: unknown };
+      const where = Array.isArray(row.loc) ? row.loc.slice(1).join('.') : '';
+      const msg = typeof row.msg === 'string' ? row.msg : '';
+      return where && msg ? `${where}: ${msg}` : msg || where;
+    }).filter(Boolean);
+    const message = parts.join('; ') || fallback;
+    return { code: 'validation_error', message };
+  }
+  if (detail && typeof detail === 'object') {
+    const row = detail as { code?: unknown; msg?: unknown; message?: unknown };
+    const message = typeof row.message === 'string' ? row.message
+      : typeof row.msg === 'string' ? row.msg : JSON.stringify(detail);
+    return { code: typeof row.code === 'string' ? row.code : message, message };
+  }
+  return { code: fallback, message: fallback };
+}
+
 async function errorFor(response: Response): Promise<HttpError> {
-  let detail = response.statusText || 'Falha na requisição';
-  try { detail = String((await response.json()).detail || detail); } catch { /* non-JSON */ }
-  return new HttpError(response.status, detail, detail);
+  const fallback = response.statusText || 'Falha na requisição';
+  let formatted = { code: fallback, message: fallback };
+  try { formatted = formatDetail((await response.json()).detail, fallback); } catch { /* non-JSON */ }
+  return new HttpError(response.status, formatted.code, formatted.message);
 }
 
 // SPEC-193: one-shot cookie-session refresh used by the native boot (never loops).

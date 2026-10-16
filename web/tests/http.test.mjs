@@ -102,3 +102,27 @@ test('Android client marker is sent only inside the Capacitor native shell', asy
   delete globalThis.Capacitor;
   assert.deepEqual(seen, [null, 'android', 'android']);
 });
+
+test('422 detail list becomes a readable message (R4)', async () => {
+  const { http } = await load('http');
+  globalThis.document = { cookie: '' };
+  globalThis.fetch = async () => new Response(JSON.stringify({ detail: [
+    { type: 'value_error', loc: ['body', 'class_name'], msg: 'classe desconhecida' },
+    { loc: ['body', 'scenario', 'beats'], msg: 'muitos beats' },
+  ] }), { status: 422 });
+  await assert.rejects(http('/game/new', { method: 'POST', body: '{}' }), error => {
+    assert.equal(error.status, 422);
+    assert.equal(error.message, 'class_name: classe desconhecida; scenario.beats: muitos beats');
+    assert.ok(!error.message.includes('[object Object]'));
+    return true;
+  });
+});
+
+test('object and string details are preserved (R4)', async () => {
+  const { formatDetail } = await load('http');
+  assert.deepEqual(formatDetail('operation_conflict', 'x'), { code: 'operation_conflict', message: 'operation_conflict' });
+  assert.deepEqual(formatDetail({ code: 'pending_operation', message: 'Há pendência' }, 'x'),
+    { code: 'pending_operation', message: 'Há pendência' });
+  assert.equal(formatDetail({ foo: 1 }, 'x').message, '{"foo":1}');
+  assert.equal(formatDetail(undefined, 'Falha').message, 'Falha');
+});

@@ -1,15 +1,18 @@
+import { safeStorage } from './safeStorage';
 // Cookies carry credentials. This store contains only the player's pending command.
 export interface PendingOperation {
   version: 1; owner: string; game_id: string; operation_id: string;
   payload: { input_text: string; game_id: string; [key: string]: unknown };
   request_hash: string; created_at: number;
+  /** SPEC-235 R6: persisted in memory only (storage blocked); lost on reload. */
+  volatile?: boolean;
 }
 const PREFIX = 'valoria:pending:v1:';
 const key = (owner: string, game: string) => PREFIX + owner + ':' + game;
 
 export function loadPending(owner: string, game: string): PendingOperation | null {
   try {
-    const row = JSON.parse(localStorage.getItem(key(owner, game)) || 'null');
+    const row = JSON.parse(safeStorage.get(key(owner, game)) || 'null');
     if (row?.version !== 1 || row.owner !== owner || row.game_id !== game ||
         typeof row.operation_id !== 'string' || !/^[0-9a-f-]{36}$/i.test(row.operation_id) ||
         row.payload?.game_id !== game || typeof row.payload?.input_text !== 'string' ||
@@ -31,12 +34,20 @@ export async function preparePending(owner: string, game: string, input: string,
   const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(sorted));
   const row: PendingOperation = { version: 1, owner, game_id: game, operation_id: crypto.randomUUID(),
     payload, request_hash: Array.from(new Uint8Array(hash), b => b.toString(16).padStart(2, '0')).join(''), created_at: Date.now() };
-  // Do not send if persistence fails: reload must retain identity.
-  localStorage.setItem(key(owner, game), JSON.stringify(row));
+  // Storage blocked: keep going in memory (identity survives retries, not a reload).
+  if (!safeStorage.set(key(owner, game), JSON.stringify(row))) row.volatile = true;
   return row;
 }
 
-export function clearPending(owner: string, game: string) { localStorage.removeItem(key(owner, game)); }
+/** SPEC-235 R2: a definitive API refusal means the pending command can never be retried as-is. */
+const TRANSIENT_CODES = new Set(['operation_in_progress', 'stale_version', 'game_busy']);
+export function shouldClearPending(status: number, code: string): boolean {
+  if (status === 400 || status === 404 || status === 422) return true;
+  if (status === 409) return !TRANSIENT_CODES.has(code);
+  return false;
+}
+
+export function clearPending(owner: string, game: string) { safeStorage.remove(key(owner, game)); }
 export function clearOwner(owner: string) {
-  Object.keys(localStorage).filter(k => k.startsWith(PREFIX + owner + ':')).forEach(k => localStorage.removeItem(k));
+  safeStorage.keys().filter(k => k.startsWith(PREFIX + owner + ':')).forEach(k => safeStorage.remove(k));
 }

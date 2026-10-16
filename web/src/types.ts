@@ -703,4 +703,5 @@ export interface LogEntry {
   type: MessageType;
   streaming?: boolean;  // true enquanto texto está sendo revelado (typewriter)
   visual?: VisualCue | null;
+  onTypewriterDone?: () => void;  // fim real da animação (SPEC-235 R7)
 }

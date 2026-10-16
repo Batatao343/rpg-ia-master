@@ -22,6 +22,21 @@ from infrastructure.postgres import PostgresPool
 from services.usage_metering import UsageEvent
 
 
+def reclaimable(existing: Mapping[str, Any], *, game_id: UUID | None, kind: str,
+                base_version: int | None) -> bool:
+    """SPEC-235 R1: may an existing operation row be re-claimed by the same key?
+
+    Same game/kind is always required. A different base version is tolerated only
+    for a ``failed`` operation (nothing was committed, so the retry may legitimately
+    run against a newer game version, e.g. after an equip); ``completed``/``running``
+    keep the strict contract."""
+    if existing["game_id"] != game_id or existing["kind"] != kind:
+        return False
+    if existing["status"] == "failed":
+        return True
+    return existing["base_game_version"] == base_version
+
+
 class PostgresTurnCoordinator:
     def __init__(self, pool: PostgresPool, *, lease_seconds: int = 180) -> None:
         self.pool = pool
@@ -86,8 +101,7 @@ class PostgresTurnCoordinator:
             if not inserted:
                 if existing["request_sha256"] != request_hash:
                     raise Conflict("idempotency key reutilizada com request divergente")
-                if (existing["game_id"] != game_id or existing["kind"] != kind
-                        or existing["base_game_version"] != base_version):
+                if not reclaimable(existing, game_id=game_id, kind=kind, base_version=base_version):
                     raise Conflict("idempotency key reutilizada com operação divergente")
                 if existing["status"] == "completed":
                     raise Conflict("operation_completed")
@@ -100,10 +114,11 @@ class PostgresTurnCoordinator:
                 connection.execute(
                     """
                     update app.operations set status='running',lease_token=%s,
-                      lease_until=now()+%s,heartbeat_at=now(),error_code=null
+                      lease_until=now()+%s,heartbeat_at=now(),error_code=null,
+                      base_game_version=%s
                     where id=%s
                     """,
-                    (token, interval, operation_id),
+                    (token, interval, base_version, operation_id),
                 )
             if game_id is not None and exclusive:
                 connection.execute(

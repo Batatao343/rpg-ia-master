@@ -1,15 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+/** SPEC-235 R7: entries that do not animate (history) must render full text on frame 1. */
+export function typewriterInitial(text: string, enabled: boolean): string {
+  return enabled ? "" : text;
+}
+
+/** One animation tick: advance by 1-8 chars; `done` when the whole text is revealed. */
+export function typewriterStep(text: string, idx: number, rand: number = Math.random()):
+  { idx: number; done: boolean } {
+  const next = idx + 1 + Math.floor(rand * 8);
+  return { idx: next, done: next >= text.length };
+}
 
 /**
  * Hook para revelar texto progressivamente (efeito typewriter).
- * Completa quase instantaneamente (30ms por 50 chars) para parecer natural.
+ * `onDone` dispara quando a animação termina (substitui timers fixos).
  */
-export function useTypewriter(text: string, enabled: boolean = true) {
-  const [displayedText, setDisplayedText] = useState("");
+export function useTypewriter(text: string, enabled: boolean = true, onDone?: () => void) {
+  const [displayedText, setDisplayedText] = useState(() => typewriterInitial(text, enabled));
+  const doneRef = useRef(onDone);
+  doneRef.current = onDone;
 
   useEffect(() => {
     if (!enabled || !text) {
       setDisplayedText(text);
+      if (enabled) doneRef.current?.();
       return;
     }
 
@@ -21,10 +36,12 @@ export function useTypewriter(text: string, enabled: boolean = true) {
       return prev;
     });
     const interval = setInterval(() => {
-      idx += 1 + Math.floor(Math.random() * 8);  // 1-8 chars por frame
-      if (idx >= text.length) {
+      const step = typewriterStep(text, idx);
+      idx = step.idx;
+      if (step.done) {
         setDisplayedText(text);
         clearInterval(interval);
+        doneRef.current?.();
       } else {
         setDisplayedText(text.slice(0, idx));
       }

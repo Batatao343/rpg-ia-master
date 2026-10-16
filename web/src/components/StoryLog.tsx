@@ -51,7 +51,7 @@ export function StoryLog({ entries, thinking, thinkingLabel }: {
 }
 
 function LogEntryItem({ entry }: { entry: LogEntry }) {
-  const displayedText = useTypewriter(entry.text, entry.streaming);
+  const displayedText = useTypewriter(entry.text, entry.streaming, entry.onTypewriterDone);
   const [costOpen, setCostOpen] = useState(false);
   const technical = entry.technicalCostUsd && /[1-9]/.test(entry.technicalCostUsd)
     ? `${entry.technicalCostExact ? "Custo técnico registrado" : "Estimativa de custo técnico"}: US$ ${entry.technicalCostUsd.replace(".", ",")}`

@@ -861,7 +861,7 @@ class CreateCharacterRequest(BaseModel):
     class_name: str = Field(max_length=40)
     region: str = Field(max_length=60)
     level: int = Field(1, ge=1, le=20)
-    backstory: Optional[str] = Field("", max_length=2000)
+    backstory: Optional[str] = Field("", max_length=2000)  # null -> "" (SPEC-235 R9)
     appearance: str = Field("", max_length=1000)
     visual_exclusions: str = Field("", max_length=500)
     # spec inicio-personalizado (R4): cenário aprovado no passo de prólogo.
@@ -1213,7 +1213,8 @@ def _abyss_tier_view(player: dict) -> str:
     import combat_mechanics as _cm
     cfg = _cm.entropy_config(player)
     if (cfg.get("abyss") or {}).get("hidden"):
-        return "?"
+        # SPEC-235 R8: sem Carga não há o que ocultar — chip some até acumular.
+        return "?" if int(player.get("abyss_charge", 0) or 0) > 0 else "nenhum"
     return _cm.abyss_tier(player)
 
 
@@ -2345,7 +2346,7 @@ def game_prologue(req: CreateCharacterRequest):
         "class_name": req.class_name,
         "race": req.race,
         "region": req.region,
-        "backstory": req.backstory,
+        "backstory": req.backstory or "",
         "level": req.level,
     }
     with _meter_auxiliary_operation("prologue"):
@@ -2712,7 +2713,7 @@ def _create_game(req: CreateCharacterRequest, claim):
         "class_name": req.class_name,
         "race": req.race,
         "region": req.region,
-        "backstory": req.backstory,
+        "backstory": req.backstory or "",
         "level": req.level,
         "appearance": req.appearance,
         "visual_exclusions": req.visual_exclusions,
@@ -2731,7 +2732,7 @@ def _create_game(req: CreateCharacterRequest, claim):
         "processed_action_ids": [],
         "visual_seen_entity_ids": [],
         "visual_cue_ledger": [],
-        "narrative_summary": f"A jornada de {req.name} começa em {final_char['region']}. {req.backstory}",
+        "narrative_summary": f"A jornada de {req.name} começa em {final_char['region']}. {req.backstory or ''}",
         "archivist_last_run": 0,
         # Fase 3.1: capítulo 1 existe desde o turno 0 (determinístico, sem LLM)
         "chronicle": [{"title": default_chapter_title(final_char["region"]),
@@ -3006,6 +3007,29 @@ def _begin_turn_operation(state: dict, req: ActionRequest):
     return claim, request_hash, None
 
 
+def _failed_pending_operation(state: dict) -> Optional[str]:
+    """SPEC-235 R3: id da operação ``turn`` falha ainda não superada (perfil durável).
+
+    Uma falha é "superada" quando uma operação posterior do mesmo jogo concluiu.
+    ``death`` fica fora do gate de propósito: com ``death_pending`` o turno é
+    rejeitado, então bloquear a morte criaria um deadlock."""
+    from infrastructure.request_context import current_principal
+    from infrastructure.runtime import get_runtime
+    gid = uuid.UUID(str(state["game_id"]))
+    with get_runtime().resources[0].connection() as connection:
+        row = connection.execute(
+            """
+            select f.id from app.operations f
+            where f.game_id=%s and f.owner_id=%s and f.kind='turn' and f.status='failed'
+              and f.started_at > coalesce((select max(c.finished_at) from app.operations c
+                    where c.game_id=f.game_id and c.status='completed'), '-infinity'::timestamptz)
+            order by f.started_at desc limit 1
+            """,
+            (gid, current_principal().user_id),
+        ).fetchone()
+    return str(row["id"]) if row else None
+
+
 def _begin_state_mutation(state: dict, *, action_id: Optional[str], kind: str,
                           payload: dict[str, Any]):
     if not _database_profile():
@@ -3031,6 +3055,14 @@ def _begin_state_mutation(state: dict, *, action_id: Optional[str], kind: str,
     receipt = receipt_fn()
     if receipt and "response" in receipt:
         return None, request_hash, receipt["response"]
+    if kind in ("equip", "levelup"):
+        pending_op = _failed_pending_operation(state)
+        if pending_op:
+            raise HTTPException(status_code=409, detail={
+                "code": "pending_operation", "operation_id": pending_op,
+                "message": ("Há uma ação que falhou e ainda não foi superada. Retome-a ou conclua "
+                            "uma nova ação antes desta alteração."),
+                "discardable": True})
     try:
         claim = runtime.turn_coordinator.claim(
             principal, operation_id, game_id=uuid.UUID(str(state["game_id"])),
@@ -3801,10 +3833,15 @@ def export_chronicle(game_id: Optional[str] = None):
                 marker = "•" if e.get("kind") == "milestone" else "—"
                 lines.append(f"{marker} [t{e.get('turn', 0)}] {e['text']}")
         lines.append("")
-    hero = "".join(c for c in player.get("name", "cronica") if c.isalnum()) or "cronica"
-    return PlainTextResponse(
-        "\n".join(lines),
-        headers={"Content-Disposition": f'attachment; filename="cronica_{hero}.txt"'})
+    import unicodedata
+    from urllib.parse import quote
+    raw_name = "".join(c for c in str(player.get("name", "")) if c.isalnum())
+    ascii_name = "".join(
+        c for c in unicodedata.normalize("NFKD", raw_name) if c.isascii() and (c.isalnum() or c in "_-")
+    ) or "cronica"
+    disposition = (f'attachment; filename="cronica_{ascii_name}.txt"; '
+                   f"filename*=UTF-8''{quote('cronica_' + (raw_name or 'cronica') + '.txt')}")
+    return PlainTextResponse("\n".join(lines), headers={"Content-Disposition": disposition})
 
 
 # --- FRONTEND ESTÁTICO ---
