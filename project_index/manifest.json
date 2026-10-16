@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "c80c9b759ceb5ed10d5e207bdd8bb61790090f45",
+  "commit_sha": "53e26d8f4267b6f7caa40289a29b8765ce18f9e2",
   "edge_counts": {
-    "calls": 10942,
-    "contains": 530,
-    "defines": 6552,
-    "imports": 1106,
-    "likely_test_for": 670,
+    "calls": 11079,
+    "contains": 531,
+    "defines": 6593,
+    "imports": 1111,
+    "likely_test_for": 674,
     "route_to": 58
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:5949827cf1cd76f5a1170e0ac9c1870c424182f80b4e7af34de36e2f73fc6302",
+  "graph_hash": "sha256:20bcc155eec8bcd584561f2f98b218c9b52b6f27e3660100d0d9d0d7e6628a24",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -365,6 +365,7 @@
     "tests/test_browser_local.py",
     "tests/test_bug_economia_integridade.py",
     "tests/test_bug_intencao_parsers.py",
+    "tests/test_bug_morte_checkpoint.py",
     "tests/test_bug_npc_ciclo_de_vida.py",
     "tests/test_campaign_grounding_deferred.py",
     "tests/test_chaos_local.py",
@@ -658,14 +659,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 589,
+    "class": 593,
     "endpoint": 58,
-    "file": 604,
-    "function": 2073,
+    "file": 605,
+    "function": 2080,
     "method": 593,
-    "module": 530,
-    "test": 3297
+    "module": 531,
+    "test": 3327
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:81000e4855f7837e23b7c4065d637ad0a46b7e7f2fd636026627375a3a66a524"
+  "source_tree_hash": "sha256:b0c5a17451f6de550b947758d7ef2c2476b6d0cc4ed1dacbc49be60aabaf92c9"
 }
