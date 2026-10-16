@@ -52,6 +52,24 @@ export function gameState(gameId = "game-a", name = "Ayla"): GameResponse {
   };
 }
 
+const fixtureEnemy = (id: string, name: string, vit = 6) => ({ id, name, hp: vit, max_hp: 6, vitalidade: vit, max_vitalidade: 6,
+  esquiva: 9, protecao: 0, integridade_atual: null, integridade_max: null, recursos_visiveis: {}, conditions: [],
+  revealed_cards: [], revealed_resistances: [] });
+
+/** SPEC-205: recalcula `valid_targets` como o servidor atual (inimigos vivos; suporte mira o herói). */
+function refreshTargets(state: GameResponse) {
+  const alive = state.combat.enemies.map((e) => e.id);
+  state.combat.cards = state.combat.cards.map((c) => {
+    if (c.valid_targets === undefined || c.type !== "ativa" || c.invalid_reason === "no_entropy") return c;
+    const targets = c.target_kind === "self" ? ["player"] : alive;
+    return { ...c, valid_targets: targets, invalid_reason: targets.length ? null : "no_valid_target" };
+  });
+  state.combat.basic_actions = (state.combat.basic_actions ?? []).map((a) =>
+    a.kind === "attack" ? { ...a, valid_targets: alive, invalid_reason: alive.length ? null : "no_valid_target" } : a);
+  state.combat.scene = { ...state.combat.scene, positions: state.combat.scene.positions.filter((p) =>
+    p.participant_id === "player" || alive.includes(p.participant_id)) };
+}
+
 type Deferred = { promise: Promise<void>; resolve: () => void };
 const deferred = (): Deferred => {
   let resolve!: () => void;
@@ -73,6 +91,10 @@ export class DeterministicBackend {
   expectedConsole: RegExp[] = [];
   operations = new Map<string, { signature: string; response: GameResponse; gameId: string; ownerId: string }>();
   failNextTurn = false;
+  /** SPEC-205: ações estruturadas de combate ferem o alvo (-4 Vitalidade) em vez de encerrar o combate. */
+  combatHits = false;
+  /** SPEC-205 R9: alvos que o servidor já considera inválidos (cliente com estado velho) → `invalid_target`. */
+  staleTargets = new Set<string>();
   private delayedStream: Deferred | null = null;
   private expirePaths = new Set<string>();
   private refreshGate: Deferred | null = null;
@@ -95,6 +117,66 @@ export class DeterministicBackend {
       game_over: !!state.game_over, combat_simulation: false, updated_at: 1 };
   }
 
+  /** SPEC-205: combate ativo no contrato atual (`valid_targets`/`invalid_reason`/`basic_actions`). */
+  armCombat(gid: string, enemies: Array<[string, string]> = [["e1", "Saqueador"]]) {
+    const state = this.states.get(gid)!;
+    const [golpe, aparar] = state.player_stats.cards;
+    state.combat.active = true; state.combat.round = 1;
+    state.combat.enemies = enemies.map(([id, name]) => fixtureEnemy(id, name));
+    state.combat.cards = [
+      { ...golpe, valid_targets: [], invalid_reason: null },
+      { ...golpe, id: "folego", name: "Fôlego", description: "Recupera o fôlego", effect_kind: "cura", target_kind: "self",
+        valid_targets: ["player"], invalid_reason: null },
+      { ...golpe, id: "cataclismo", name: "Cataclismo", description: "Ruína em área", cost: 9, ready: false,
+        valid_targets: [], invalid_reason: "no_entropy" },
+      aparar,
+    ];
+    state.combat.basic_actions = [
+      { kind: "attack", valid_targets: [], invalid_reason: null, cost: 0 },
+      { kind: "maneuver", maneuver: "guardar", valid_targets: [], invalid_reason: null, cost: 0 },
+      { kind: "flee", valid_targets: [], invalid_reason: null, cost: 0 },
+    ];
+    const pos = (id: string, name: string) => ({ participant_id: id, participant_name: name, zone_id: "ponte", distance: "proximo",
+      posture: "neutro", concealment: "visivel", engaged_with: [], engaged_names: [] });
+    state.combat.scene = { zones: [{ id: "ponte", name: "Ponte", connections: [] }],
+      positions: [pos("player", state.player_stats.name), ...enemies.map(([id, name]) => pos(id, name))] };
+    refreshTargets(state);
+    return state;
+  }
+
+  /** Resolve ação estruturada de combate de forma determinística (só com `combatHits`). */
+  private combatHit(current: GameResponse, body: Record<string, unknown> | null): boolean {
+    if (!this.combatHits || !current.combat.active || !body || (!body.card_id && !body.action_kind)) return false;
+    const card = current.combat.cards.find((c) => c.id === body.card_id);
+    current.combat.round += 1; current.message_type = "COMBAT";
+    if (card) current.player_stats.entropy -= card.cost;
+    if (card?.target_kind === "self") {
+      current.message = `Você usa ${card.name} e recupera o fôlego.`;
+      return true;
+    }
+    const target = current.combat.enemies.find((e) => e.id === body.target_id);
+    if (target) {
+      target.vitalidade -= 4; target.hp = target.vitalidade;
+      current.message = `${card?.name ?? "Seu ataque"} atinge ${target.name}.`;
+      if (target.vitalidade <= 0) current.combat.enemies = current.combat.enemies.filter((e) => e !== target);
+    } else current.message = "O golpe corta o ar.";
+    if (!current.combat.enemies.length) { current.combat.active = false; current.message = "O último saqueador cai; o combate termina."; }
+    refreshTargets(current);
+    return true;
+  }
+
+  private rejectStale(gid: string, body: Record<string, unknown> | null) {
+    const target = String(body?.target_id ?? "");
+    const state = this.states.get(gid);
+    if (!target || !state?.combat.active || !this.staleTargets.has(target)) return null;
+    // O alvo já caiu no servidor: o estado novo some com ele; nenhum turno, Entropia ou histórico.
+    this.staleTargets.delete(target);
+    state.combat.enemies = state.combat.enemies.filter((e) => e.id !== target);
+    refreshTargets(state);
+    return { code: 409, detail: { code: "invalid_target", invalid_reason: "target_dead",
+      message: "O alvo escolhido deixou de ser válido. Escolha de novo." } };
+  }
+
   allowFailure(pattern: RegExp) { this.unexpectedAllowed.push(pattern); }
   allowConsole(pattern: RegExp) { this.expectedConsole.push(pattern); }
   delayStream() { this.delayedStream = deferred(); }
@@ -111,13 +193,15 @@ export class DeterministicBackend {
     try { return JSON.parse(raw) as Record<string, unknown>; } catch { return null; }
   }
 
-  private actionResult(gid: string, input: string): GameResponse {
+  private actionResult(gid: string, input: string, body: Record<string, unknown> | null = null): GameResponse {
     const current = structuredClone(this.states.get(gid) ?? gameState(gid));
     current.speaker = { kind: "narrator", id: "narrator", name: "Narrador", reason: "classify_story" };
     current.world.turn_count += 1;
     current.combat_result = {};  // SPEC-203: só no turno de término
     current.continuity = { ...(current.continuity!), canonical_turn: current.world.turn_count };
-    if (/Brumalta/i.test(input)) {
+    if (this.combatHit(current, body)) {
+      // SPEC-205: resolvido acima (dano determinístico no alvo declarado).
+    } else if (/Brumalta/i.test(input)) {
       current.current_location = "Brumalta"; current.world.location = "Brumalta"; current.world.location_id = "brumalta";
       current.message = "A trilha termina nos portões de Brumalta.";
     } else if (/Borin|convers/i.test(input)) {
@@ -231,7 +315,9 @@ export class DeterministicBackend {
     }
     if (path === "/game/action/stream") {
       const gid = String(body?.game_id ?? "game-a"); const input = String(body?.input_text ?? ""); const actionId = String(body?.action_id ?? "");
-      const result = this.actionResult(gid, input); this.operations.set(actionId, { signature: JSON.stringify(body), response: result, gameId: gid, ownerId: this.userId });
+      const stale = this.rejectStale(gid, body);  // SSE de erro como o api.py real (`http_error`)
+      if (stale) return route.fulfill({ status: 200, contentType: "text/event-stream", body: `event: error\ndata: ${JSON.stringify(stale)}\n\n` });
+      const result = this.actionResult(gid, input, body); this.operations.set(actionId, { signature: JSON.stringify(body), response: result, gameId: gid, ownerId: this.userId });
       if (this.delayedStream) await this.delayedStream.promise;
       if (this.failNextTurn) return route.abort("failed");
       const sse = `event: phase\ndata: {"node":"storyteller"}\n\nevent: narrative\ndata: ${JSON.stringify({ chunk: result.message, done: true })}\n\nevent: state\ndata: ${JSON.stringify(result)}\n\n`;
@@ -243,7 +329,9 @@ export class DeterministicBackend {
       const signature = JSON.stringify(body); const existing = this.operations.get(actionId);
       if (existing && existing.signature !== signature) return this.json(route, { detail: "idempotency conflict" }, 409);
       if (existing) return this.json(route, existing.response);
-      const result = this.actionResult(gid, input); this.operations.set(actionId, { signature, response: result, gameId: gid, ownerId: this.userId }); return this.json(route, result);
+      const stale = this.rejectStale(gid, body);
+      if (stale) return this.json(route, { detail: stale.detail }, 409);
+      const result = this.actionResult(gid, input, body); this.operations.set(actionId, { signature, response: result, gameId: gid, ownerId: this.userId }); return this.json(route, result);
     }
     if (path === "/game/death") {
       const gid = String(body?.game_id ?? "game-a"); const state = structuredClone(this.states.get(gid) ?? gameState(gid));

@@ -1,7 +1,7 @@
 # SPEC-205 — Combate por gesto: carta, mira e alvo direto
 
-> **Status:** `in-progress` (implementação e testes concluídos 2026-10-16; revisão Sol aprovada; falta a autoria das jornadas F novas — ver `handoffs/SPEC-205-eval-authoring.md`)
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `done` (2026-10-16; implementação, revisão Sol e jornadas F20–F24 autoradas em tarefa separada)
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-199 `done` (resultado fora da prosa), SPEC-203 `done` (identidade estável de elenco), SPEC-204 `done` (aba Combate), SPEC-232 `done` (efeitos reais de Carta/Reação + alvo default de carta) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-208, SPEC-209, SPEC-212, SPEC-216 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 03
@@ -138,6 +138,7 @@ Registrar handoff `EVAL_AUTHORING_REQUIRED` (jornadas novas) sem tocar `evals/`.
 - [x] Servidor antigo/cliente antigo: campos opcionais, sem quebra.
 - [x] `uv run pytest` verde; `npm run build` verde; Playwright do combate verde; sem edição em `evals/`.
 - [x] Revisão Sol independente registrada (`handoffs/SPEC-205-SOL-independent-review.md`, APPROVED_WITH_FIXES).
+- [x] Jornadas F governadas autoradas em tarefa separada (EVAL_AUTHORING): F20 `combat_gesture_target`, F21 `combat_gesture_direct`, F22 `combat_gesture_cancel`, F23 `combat_gesture_keyboard`, F24 `combat_invalid_target_reaim`; F08 adaptada ao 2º gesto; evaluator 1.9.0, lock refeito, `governance check` verde.
 
 ## 6. Smoke
 
@@ -165,6 +166,8 @@ Offline (MockLLM, padrão): campanha de combate determinística, jogar uma carta
 - Resultado do teste de reprodução H (falhou/passou antes da correção) anexado.
 - Captura/JSON de uma jogada real offline mostrando HP só após resposta.
 - Handoff de evals (jornadas novas) e parecer de revisão Sol em `handoffs/`.
+
+**Atendido (2026-10-16):** suíte `uv run pytest` completa verde; build web verde; `critical-journeys` (F01–F24) verde em Chromium com guards de console/pageerror/5xx/requestfailed, Axe serious/critical = 0 e viewports 320/390/768/1440 sem overflow; HP só após a resposta coberto por F20 (resposta SSE atrasada, backend já mutado, UI mantém 6/6 até a entrega); timings de gesto anotados em F20 (`clicks_to_action=2 failed_clicks=0`); reprodução H registrada no README; handoff de evals e parecer Sol em `handoffs/`. Evidência: `docs/spec205/README.md`.
 
 
 ## Registro de execução (2026-10-16)

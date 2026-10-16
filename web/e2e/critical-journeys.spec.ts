@@ -136,16 +136,20 @@ test("F07 npc_interaction", async ({ page }) => {
 });
 
 test("F08 combat_core", async ({ page, backend }) => {
-  const state = backend.states.get("game-a")!;
-  state.combat.active = true; state.combat.round = 1;
-  state.combat.cards = state.player_stats.cards;
-  state.combat.enemies = [{ id: "e1", name: "Saqueador", hp: 6, max_hp: 6, vitalidade: 6, max_vitalidade: 6, esquiva: 9, protecao: 0, integridade_atual: null, integridade_max: null, recursos_visiveis: {}, conditions: [], revealed_cards: [], revealed_resistances: [] }];
+  // SPEC-205: contrato atual (`valid_targets`) — carta com alvo exige o 2º gesto (clicar o alvo).
+  backend.armCombat("game-a", [["e1", "Saqueador"]]);
   await openGame(page);
   await expect(page.getByText(/Combate/).first()).toBeVisible();
   await page.getByRole("button", { name: /Aparar/ }).click();
-  await page.getByRole("button", { name: "Jogar Carta" }).click();
+  await page.getByRole("button", { name: /^Jogar Carta Golpe do Véu/ }).click();
+  await expect(page.locator(".aimbar")).toContainText("Mirando Golpe do Véu: escolha um alvo");
+  expect(backend.requests.filter((r) => r.path.startsWith("/game/action"))).toHaveLength(0);
+  await page.getByRole("button", { name: /^Alvo: Saqueador/ }).click();
   await expect(page.getByText("O último saqueador cai; o combate termina.")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Sua mão" })).toHaveCount(0);
+  const sent = backend.requests.filter((r) => r.path.startsWith("/game/action"));
+  expect(sent).toHaveLength(1);
+  expect(sent[0].body).toMatchObject({ card_id: "golpe", target_id: "e1", reaction_card_id: "aparar" });
   expect(backend.states.get("game-a")?.combat.round).toBe(2);
   await assertA11y(page);
 });
@@ -553,5 +557,213 @@ test("F19 workspace_preservation", async ({ page, backend }) => {
   expect(stored).not.toContain(draft);
   expect(stored).toContain("valoria:workspace:v1:fixture-user:game-a");
   await expectNoOverflow(page);
+  await assertA11y(page);
+});
+
+// --- SPEC-205: combate por gesto (F20–F24) ---------------------------------------------------
+const combatPanel = (page: Page) => page.locator("#ws-panel-combate");
+const handCard = (page: Page, name: string) => combatPanel(page).getByRole("button", { name: new RegExp(`^Jogar Carta ${name}`) });
+const targetChip = (page: Page, name: string) => combatPanel(page).getByRole("button", { name: new RegExp(`^Alvo: ${name}`) });
+const participant = (page: Page, id: string) => combatPanel(page).locator(`[data-participant="${id}"], [data-target="${id}"]`);
+const aimbar = (page: Page) => combatPanel(page).locator(".aimbar");
+const combatActions = (backend: { requests: Array<{ path: string; body: Record<string, unknown> | null }> }) =>
+  backend.requests.filter((r) => r.path === "/game/action/stream" || r.path === "/game/action");
+
+async function openCombat(page: Page) {
+  await openGame(page);
+  await panelTab(page, "Combate").click();
+  await expect(combatPanel(page).getByRole("heading", { name: "Sua mão" })).toBeVisible();
+  await expect(aimbar(page)).toContainText("Escolha uma carta ou ação");
+}
+
+test("F20 combat_gesture_target", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  backend.armCombat("game-a", [["e1", "Saqueador"], ["e2", "Bandoleiro"]]);
+  backend.combatHits = true;
+  await openCombat(page);
+  await expect(combatPanel(page).locator("select")).toHaveCount(0);
+  await expect(combatPanel(page).getByRole("button", { name: "Jogar Carta", exact: true })).toHaveCount(0);
+
+  // Gesto 1: a carta entra em mira (aria-pressed, aimbar, alvos válidos como botões) e nada é enviado.
+  const started = Date.now();
+  await handCard(page, "Golpe do Véu").click();
+  await expect(handCard(page, "Golpe do Véu")).toHaveAttribute("aria-pressed", "true");
+  await expect(aimbar(page)).toContainText("Mirando Golpe do Véu: escolha um alvo");
+  await expect(combatPanel(page).locator('[aria-live="polite"]').first()).toHaveText("Mirando Golpe do Véu: escolha um alvo.");
+  await expect(targetChip(page, "Saqueador")).toBeVisible(); await expect(targetChip(page, "Bandoleiro")).toBeVisible();
+  await expect(combatPanel(page).getByRole("button", { name: /^Ayla: alvo inválido/ })).toHaveAttribute("aria-disabled", "true");
+  expect(combatActions(backend)).toHaveLength(0);
+
+  // Gesto 2 com duplo clique e resposta atrasada: 1 request; HP só muda depois da resposta.
+  backend.delayStream();
+  await targetChip(page, "Bandoleiro").dblclick();
+  await expect.poll(() => combatActions(backend).length).toBe(1);
+  test.info().annotations.push({ type: "gesture", description: `clicks_to_action=2 failed_clicks=0 ms=${Date.now() - started}` });
+  const body = combatActions(backend)[0].body!;
+  expect(body).toMatchObject({ card_id: "golpe", target_id: "e2", input_text: "Uso Golpe do Véu em Bandoleiro." });
+  expect(String(body.action_id)).toMatch(/^[0-9a-f-]{36}$/);
+  expect(backend.states.get("game-a")!.combat.enemies.find((e) => e.id === "e2")!.vitalidade).toBe(2);
+  await expect(aimbar(page)).toContainText("Enviando");
+  await expect(participant(page, "e2")).toContainText("6/6");
+  await expect(participant(page, "e1")).toContainText("6/6");
+  await handCard(page, "Golpe do Véu").click({ force: true });
+  expect(combatActions(backend)).toHaveLength(1);
+  backend.releaseStream();
+  await expect(participant(page, "e2")).toContainText("2/6");
+  await expect(participant(page, "e1")).toContainText("6/6");
+  await expect(aimbar(page)).toContainText("Escolha uma carta ou ação");
+  await expect(handCard(page, "Golpe do Véu")).toHaveAttribute("aria-pressed", "false");
+  expect(combatActions(backend)).toHaveLength(1);
+  expect(backend.histories.get("game-a")!.filter((e) => e.role === "player" && e.text === "Uso Golpe do Véu em Bandoleiro.")).toHaveLength(1);
+  // R19: mão, ações e alvos nunca se sobrepõem no split 1440×900.
+  const boxes = await combatPanel(page).locator(".combat-card, .actionchip, .tchip").evaluateAll((els) =>
+    els.map((e) => { const r = e.getBoundingClientRect(); return { l: r.left, r: r.right, t: r.top, b: r.bottom }; }));
+  expect(boxes.length).toBeGreaterThan(5);
+  for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
+    const [a, b] = [boxes[i], boxes[j]];
+    expect(a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t, `sobreposição ${i}×${j}`).toBe(false);
+  }
+  await expectNoOverflow(page);
+  await assertA11y(page);
+});
+
+test("F21 combat_gesture_direct", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  backend.armCombat("game-a", [["e1", "Saqueador"]]);
+  backend.combatHits = true;
+  await openCombat(page);
+  // Carta sem alvo: 1 clique, sem `target_id`, sem passar pela mira.
+  await handCard(page, "Fôlego").click();
+  await expect.poll(() => combatActions(backend).length).toBe(1);
+  const support = combatActions(backend)[0].body!;
+  expect(support.card_id).toBe("folego");
+  expect(support.target_id ?? null).toBeNull();
+  await expect.poll(() => backend.states.get("game-a")!.combat.round).toBe(2);
+  await expect(aimbar(page)).toContainText("Escolha uma carta ou ação");
+  // Ataque básico no jogo real (não simulação): 1 alvo válido = 1 clique, `action_kind` estruturado.
+  expect(backend.states.get("game-a")!.combat_simulation?.enabled).toBe(false);
+  const attack = combatPanel(page).getByRole("group", { name: "Manobras táticas" }).getByRole("button", { name: "Ataque básico" });
+  await attack.click();
+  await expect.poll(() => combatActions(backend).length).toBe(2);
+  expect(combatActions(backend)[1].body).toMatchObject({ action_kind: "attack", target_id: "e1" });
+  expect(combatActions(backend)[1].body!.card_id ?? null).toBeNull();
+  await expect(participant(page, "e1")).toContainText("2/6");
+  // Viewports do registry: a aba Combate não gera overflow horizontal.
+  for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 768, height: 1024 }, DESKTOP]) {
+    await page.setViewportSize(viewport);
+    if (!(await contextRegion(page).isVisible())) await modeButton(page, "Painel").click();
+    await expect(handCard(page, "Golpe do Véu")).toBeVisible();
+    await expectNoOverflow(page);
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
+  await assertA11y(page);
+});
+
+test("F22 combat_gesture_cancel", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  backend.armCombat("game-a", [["e1", "Saqueador"], ["e2", "Bandoleiro"]]);
+  await openCombat(page);
+  const golpe = handCard(page, "Golpe do Véu");
+  // Esc cancela, devolve o foco à carta e não envia nada.
+  await golpe.click();
+  await expect(aimbar(page)).toContainText("Mirando Golpe do Véu");
+  await page.keyboard.press("Escape");
+  await expect(aimbar(page)).toContainText("Escolha uma carta ou ação");
+  await expect(golpe).toHaveAttribute("aria-pressed", "false");
+  await expect(golpe).toBeFocused();
+  await expect(combatPanel(page).getByRole("button", { name: /^Alvo:/ })).toHaveCount(0);
+  // Clique fora da arena cancela.
+  await golpe.click();
+  await expect(aimbar(page)).toContainText("Mirando Golpe do Véu");
+  await page.locator("header.topbar").click({ position: { x: 5, y: 5 } });
+  await expect(aimbar(page)).toContainText("Escolha uma carta ou ação");
+  // Clicar de novo na carta selecionada cancela; trocar de origem substitui a mira.
+  await golpe.click();
+  await expect(aimbar(page)).toContainText("Mirando Golpe do Véu");
+  await golpe.click();
+  await expect(aimbar(page)).toContainText("Escolha uma carta ou ação");
+  await golpe.click();
+  await combatPanel(page).getByRole("button", { name: "Ataque básico" }).click();
+  await expect(aimbar(page)).toContainText("Mirando Ataque básico: escolha um alvo");
+  await expect(golpe).toHaveAttribute("aria-pressed", "false");
+  await combatPanel(page).getByRole("button", { name: "Cancelar (Esc)" }).click();
+  await expect(aimbar(page)).toContainText("Escolha uma carta ou ação");
+  // Carta indisponível: aria-disabled + motivo visível; clique não envia nem mira.
+  const caro = handCard(page, "Cataclismo");
+  await expect(caro).toHaveAttribute("aria-disabled", "true");
+  await expect(caro).toContainText("Entropia insuficiente");
+  await caro.click({ force: true });
+  await expect(aimbar(page)).toContainText("Escolha uma carta ou ação");
+  expect(combatActions(backend)).toHaveLength(0);
+  await assertA11y(page);
+});
+
+test("F23 combat_gesture_keyboard", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  backend.armCombat("game-a", [["e1", "Saqueador"], ["e2", "Bandoleiro"]]);
+  backend.combatHits = true;
+  await openCombat(page);
+  const golpe = handCard(page, "Golpe do Véu");
+  await golpe.focus();
+  await expect(combatPanel(page).locator(".card-detail")).toContainText("Custo: 1E");
+  // Enter entra em mira e leva o foco ao 1º alvo válido; setas circulam; Esc volta à carta.
+  await page.keyboard.press("Enter");
+  await expect(targetChip(page, "Saqueador")).toBeFocused();
+  await page.keyboard.press("ArrowRight"); await expect(targetChip(page, "Bandoleiro")).toBeFocused();
+  await page.keyboard.press("ArrowRight"); await expect(targetChip(page, "Saqueador")).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(golpe).toBeFocused();
+  await expect(aimbar(page)).toContainText("Escolha uma carta ou ação");
+  expect(combatActions(backend)).toHaveLength(0);
+  // Atalho numérico (P2) abre a mira; setas + Enter no alvo executam.
+  await page.keyboard.press("1");
+  await expect(aimbar(page)).toContainText("Mirando Golpe do Véu");
+  await expect(targetChip(page, "Saqueador")).toBeFocused();
+  await page.keyboard.press("ArrowLeft"); await expect(targetChip(page, "Bandoleiro")).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect.poll(() => combatActions(backend).length).toBe(1);
+  expect(combatActions(backend)[0].body).toMatchObject({ card_id: "golpe", target_id: "e2" });
+  await expect(participant(page, "e2")).toContainText("2/6");
+  // Atalhos não disparam enquanto se digita no composer.
+  await composerBox(page).fill("rascunho");
+  await composerBox(page).focus();
+  await page.keyboard.press("1");
+  await expect(composerBox(page)).toHaveValue("rascunho1");
+  await expect(aimbar(page)).toContainText("Escolha uma carta ou ação");
+  expect(combatActions(backend)).toHaveLength(1);
+  await assertA11y(page);
+});
+
+test("F24 combat_invalid_target_reaim", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  backend.armCombat("game-a", [["e1", "Saqueador"], ["e2", "Bandoleiro"]]);
+  backend.combatHits = true;
+  backend.staleTargets.add("e2");
+  await openCombat(page);
+  const statesBefore = backend.requests.filter((r) => r.path === "/game/state").length;
+  await handCard(page, "Golpe do Véu").click();
+  await targetChip(page, "Bandoleiro").click();
+  // 409 `invalid_target`: motivo visível, estado novo buscado, nenhum turno/Entropia/histórico.
+  await expect(page.getByText(/O alvo escolhido deixou de ser válido/)).toBeVisible();
+  await expect.poll(() => backend.requests.filter((r) => r.path === "/game/state").length).toBeGreaterThan(statesBefore);
+  await expect(participant(page, "e2")).toHaveCount(0);
+  await expect(participant(page, "e1")).toContainText("6/6");
+  expect(backend.states.get("game-a")!.combat.round).toBe(1);
+  expect(backend.states.get("game-a")!.player_stats.entropy).toBe(8);
+  expect(backend.histories.get("game-a")!.some((e) => e.role === "player" && /Golpe/.test(e.text))).toBe(false);
+  const pending = await page.evaluate(() => Object.keys(localStorage).filter((k) => k.startsWith("valoria:pending")));
+  expect(pending).toEqual([]);
+  // Refaz a mira com o estado novo: só o alvo vivo é oferecido; a nova ação usa outro action_id.
+  await expect(aimbar(page)).toContainText("Escolha uma carta ou ação");
+  await handCard(page, "Golpe do Véu").click();
+  await expect(combatPanel(page).getByRole("button", { name: /^Alvo:/ })).toHaveCount(1);
+  await targetChip(page, "Saqueador").click();
+  await expect.poll(() => combatActions(backend).length).toBe(2);
+  const [rejected, accepted] = combatActions(backend);
+  expect(rejected.body).toMatchObject({ card_id: "golpe", target_id: "e2" });
+  expect(accepted.body).toMatchObject({ card_id: "golpe", target_id: "e1" });
+  expect(accepted.body!.action_id).not.toBe(rejected.body!.action_id);
+  await expect(participant(page, "e1")).toContainText("2/6");
+  expect(backend.states.get("game-a")!.combat.round).toBe(2);
   await assertA11y(page);
 });

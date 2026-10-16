@@ -23,4 +23,20 @@ agora tambem cobrindo "inimigo enviado pela UI para Carta de suporte".
 ## Limites
 - `out_of_zone` e reservado (a cena nao impoe alcance a Cartas); `cooldown` = bloqueio temporario por silencio.
 - Metricas de cliques/tempo: roteiro Playwright determinista usa 2 cliques (carta com alvo) e 1 (sem alvo/ataque com 1 alvo), 0 cliques falhos.
-- Jornadas F novas: ver `handoffs/SPEC-205-eval-authoring.md`. Revisao Sol independente: pendente.
+- Revisao Sol independente: APPROVED_WITH_FIXES (`handoffs/SPEC-205-SOL-independent-review.md`).
+
+## Jornadas F (autoria de eval separada, 2026-10-16)
+- `web/e2e/critical-journeys.{yaml,spec.ts}`: F20 `combat_gesture_target` (2 gestos, duplo clique = 1 request, HP so apos a
+  resposta SSE atrasada, sem sobreposicao mao/acoes/alvos em 1440x900 split), F21 `combat_gesture_direct` (carta de suporte e
+  ataque basico com 1 alvo em 1 clique, sem `target_id` no suporte; 320/390/768/1440 sem overflow), F22 `combat_gesture_cancel`
+  (Esc, clique fora, re-clique, troca de origem, "Cancelar (Esc)", carta indisponivel com motivo; zero request), F23
+  `combat_gesture_keyboard` (Enter/setas/Esc/atalho 1; atalho ignorado no composer), F24 `combat_invalid_target_reaim`
+  (409 `invalid_target` via SSE: motivo visivel, estado novo, zero turno/Entropia/historico/pendente; nova mira so com alvo vivo,
+  novo `action_id`). Todas com guards console/pageerror/5xx/requestfailed e Axe serious/critical.
+- F08 adaptada: a fixture agora expoe `valid_targets` (`backend.armCombat`), entao a carta exige o 2o gesto (clicar o alvo);
+  oraculos mantidos e reforcados (1 request com `card_id`/`target_id`/`reaction_card_id`).
+- Fixture deterministica: `armCombat`, `combatHits` (dano -4 no alvo declarado, opt-in) e `staleTargets` (409 `invalid_target`
+  como o `api.py` real: evento SSE `error`). Comportamento default inalterado para as demais specs.
+- `scripts/frontend_eval_report.py` reconhece F01-F24 (`JOURNEY_COUNT = 24`); evaluator 1.8.0 -> 1.9.0; lock refeito por
+  `python -m evals.core.governance lock`; `governance check` verde.
+- Publicar exige aprovacao do environment `eval-governance` (regua/manifest protegidos).

@@ -19,3 +19,8 @@ journeys:
   - { id: F17, name: workspace_modes, hard: true }
   - { id: F18, name: tabs_history, hard: true }
   - { id: F19, name: workspace_preservation, hard: true }
+  - { id: F20, name: combat_gesture_target, hard: true }
+  - { id: F21, name: combat_gesture_direct, hard: true }
+  - { id: F22, name: combat_gesture_cancel, hard: true }
+  - { id: F23, name: combat_gesture_keyboard, hard: true }
+  - { id: F24, name: combat_invalid_target_reaim, hard: true }
