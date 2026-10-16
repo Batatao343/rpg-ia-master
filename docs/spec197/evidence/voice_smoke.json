@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-16T03:39:04.545463+00:00",
+  "base": "https://rpg-ia-master-staging.vercel.app",
+  "checks": {
+    "db": {
+      "audio_or_transcript_columns": "none (usage_events carries metadata only)",
+      "billing_exact": true,
+      "ok": true,
+      "reservation_status": "settled",
+      "usage_events": 1,
+      "usage_outcome": "success"
+    },
+    "login": {
+      "ok": true,
+      "status": 200
+    },
+    "replay": {
+      "ok": true,
+      "status": 409
+    },
+    "transcription": {
+      "audio_bytes": 48044,
+      "audio_seconds": 1.5,
+      "billing_status": "settled",
+      "detail": null,
+      "ok": true,
+      "provider": "groq",
+      "status": 200,
+      "transcript_chars": 23
+    },
+    "wallet": {
+      "available_after": "310",
+      "available_before": "311",
+      "ok": true,
+      "reserved_after": "0",
+      "usage_status": 200,
+      "voice_usage_rows": 1
+    }
+  },
+  "cleanup": {
+    "user_delete_status": 200
+  },
+  "deployed_git_sha": "cefe363ab3023f8b853ee4bf054e26e4004a364c",
+  "ok": true
+}

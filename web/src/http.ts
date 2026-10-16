@@ -87,6 +87,8 @@ export function uploadAudio(audio: Blob, operationId: string, signal: AbortSigna
           speech_insufficient_balance: 'Saldo insuficiente para transcrever. Continue digitando.',
           speech_rate_limit: 'Muitas gravações seguidas. Aguarde um minuto ou continue digitando.',
           audio_bytes: 'Áudio muito grande. Grave uma ação mais curta.',
+          audio_decoder_unavailable: 'Este navegador não conseguiu preparar o áudio para o servidor. Continue digitando.',
+          audio_mime: 'Formato de áudio não aceito. Continue digitando.',
           audio_duration: 'Áudio longo demais. Grave até 60 segundos.',
         };
         const detail = messages[code] || (code.includes(' ') ? code : 'Não foi possível transcrever o áudio. Continue digitando.');

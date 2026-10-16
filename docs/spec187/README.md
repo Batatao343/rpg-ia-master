@@ -85,3 +85,14 @@ Executor Sol High substituiu Terra High com autorização explícita do usuário
 em 12/10/2026 após `handoffs/SPEC-187-Terra-review.md`. Uso de tier superior para
 implementação bounded registrado como custo não otimizado. A spec não exige
 review independente; não é declarada uma revisão de modelo inexistente.
+
+
+## Addendum: transcodificação WAV no cliente (hosted sem ffmpeg)
+
+A Vercel não tem ffmpeg e o servidor só decodifica WAV PCM via stdlib. Após parar a gravação,
+`web/src/voice/wav.ts` (`transcodeToWav`) decodifica o Blob com `AudioContext.decodeAudioData`,
+reamostra para mono 16 kHz via `OfflineAudioContext` e embrulha em WAV PCM16 (60 s ~ 1,9 MB, abaixo
+dos 8 MiB do servidor); o upload sai como `audio/wav`. Se o Web Audio faltar ou a decodificação falhar,
+o Blob original é enviado. Sem ffmpeg no servidor, um formato não-WAV retorna o código estável
+`audio_decoder_unavailable` (HTTP 503), mapeado em `http.ts` para mensagem amigável (`audio_mime`/415 idem).
+Limites, cancelamento e liberação do microfone permanecem inalterados.

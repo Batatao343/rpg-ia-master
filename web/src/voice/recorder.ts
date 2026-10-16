@@ -1,3 +1,5 @@
+import { transcodeToWav } from "./wav";
+
 export const MAX_RECORDING_MS = 60_000;
 export const MAX_AUDIO_BYTES = 8 * 1024 * 1024;
 const MIME_TYPES = ["audio/webm;codecs=opus", "audio/ogg;codecs=opus", "audio/mp4", "audio/webm", "audio/ogg"];
@@ -73,7 +75,10 @@ export const webRecorder: RecorderAdapter = {
       signal.removeEventListener("abort", cancel);
       if (cancelled) reject(new DOMException("Cancelado", "AbortError"));
       else if (failure) reject(failure);
-      else resolve(new Blob(chunks, { type: recorder.mimeType || mimeType }));
+      else {
+        const raw = new Blob(chunks, { type: recorder.mimeType || mimeType });
+        void transcodeToWav(raw).then(resolve, () => resolve(raw));
+      }
       chunks = [];
     };
     signal.addEventListener("abort", cancel, { once: true });

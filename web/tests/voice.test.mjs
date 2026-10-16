@@ -9,7 +9,9 @@ async function load(name, replacements = {}) {
   const { outputText } = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 }});
   return `data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`;
 }
-const recorderUrl = await load('voice/recorder');
+const wavUrl = await load('voice/wav');
+const { encodeWav, transcodeToWav } = await import(wavUrl);
+const recorderUrl = await load('voice/recorder', { '"./wav"': JSON.stringify(wavUrl) });
 const { VoiceController } = await import(await load('voice/controller', { '"./recorder"': JSON.stringify(recorderUrl) }));
 const { webRecorder } = await import(recorderUrl);
 const deferred = () => { let resolve; const promise = new Promise(r => { resolve = r; }); return { promise, resolve }; };
@@ -128,4 +130,31 @@ test('unsupported/missing recorder or MIME returns text fallback; cancel discard
   delete globalThis.MediaRecorder; await assert.rejects(webRecorder.start(new AbortController().signal), /indisponível/);
   const f = mediaFixture(); const abort = new AbortController(); const capture = await webRecorder.start(abort.signal);
   abort.abort(); await assert.rejects(capture.stop(), { name: 'AbortError' }); assert.equal(f.stops(), 1); assert.ok(f.releases());
+});
+
+test('WAV encoder writes a valid mono 16 kHz PCM16 header, length and clips samples', () => {
+  const wav = encodeWav(new Float32Array([0, 1, -1, 2, -2, 0.5]), 16000);
+  const v = new DataView(wav.buffer); const tag = o => String.fromCharCode(...wav.slice(o, o + 4));
+  assert.equal(wav.length, 44 + 12); assert.equal(tag(0), 'RIFF'); assert.equal(tag(8), 'WAVE'); assert.equal(tag(36), 'data');
+  assert.equal(v.getUint32(4, true), 36 + 12); assert.equal(v.getUint16(20, true), 1); assert.equal(v.getUint16(22, true), 1);
+  assert.equal(v.getUint32(24, true), 16000); assert.equal(v.getUint32(28, true), 32000); assert.equal(v.getUint16(34, true), 16);
+  assert.equal(v.getUint32(40, true), 12);
+  assert.deepEqual([1, 2, 3, 4, 5].map(i => v.getInt16(44 + i * 2, true)), [32767, -32768, 32767, -32768, 16384]);
+});
+
+test('transcodeToWav uploads audio/wav via Web Audio and falls back to the original blob on failure', async () => {
+  const rendered = { getChannelData: () => new Float32Array(1600) };
+  globalThis.AudioContext = class { async decodeAudioData() { return { duration: 0.1 }; } async close() {} };
+  globalThis.OfflineAudioContext = class {
+    constructor(ch, len, rate) { assert.deepEqual([ch, len, rate], [1, 1600, 16000]); }
+    createBufferSource() { return { connect() {}, start() {} }; } get destination() { return {}; }
+    async startRendering() { return rendered; }
+  };
+  const out = await transcodeToWav(new Blob(['webm'], { type: 'audio/webm;codecs=opus' }));
+  assert.equal(out.type, 'audio/wav'); assert.equal(out.size, 44 + 3200);
+  globalThis.AudioContext = class { async decodeAudioData() { throw new Error('bad'); } };
+  const original = new Blob(['webm'], { type: 'audio/webm' });
+  assert.equal(await transcodeToWav(original), original);
+  delete globalThis.AudioContext; delete globalThis.OfflineAudioContext;
+  assert.equal(await transcodeToWav(original), original);
 });

@@ -116,8 +116,8 @@ def run(base: str, env: dict[str, str]) -> dict:
                                                                  "Content-Type": "audio/webm",
                                                                  "X-Operation-Id": str(uuid4())}, content=b"\x1a\x45\xdf\xa3")
         ck["voice"] = {"status": vr.status_code, "detail": (vr.json() if vr.content else {}).get("detail"),
-                       "result": "not_configured" if vr.status_code == 503 else "needs_review",
-                       "ok": vr.status_code == 503 and "speech" in str(vr.text)}
+                       "result": "covered_by_voice_smoke (invalid-webm probe only)" if vr.status_code in (422, 503) else "needs_review",
+                       "ok": vr.status_code in (422, 503)}
         # Stripe checkout needs STRIPE test keys in the deployment
         skus = a.get("/account/checkout/skus")
         ck["stripe_test_purchase"] = {"skus_status": skus.status_code, "skus": (skus.json() if skus.status_code == 200 else None),

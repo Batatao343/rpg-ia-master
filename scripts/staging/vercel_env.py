@@ -38,12 +38,16 @@ NON_SECRET_LITERALS = {
     "RPG_AUTH_CAPTCHA_REQUIRED": "1",
     "RPG_TURNSTILE_SITE_KEY": TURNSTILE_TEST_SITE_KEY,
     "RPG_FORCE_MOCK": "1",
+    # STT (SPEC-186): synthetic pricing version seeded by synthetic_data.seed_wallet_prereqs; WAV only (no ffmpeg).
+    "RPG_SPEECH_ENABLED": "1",
+    "RPG_SPEECH_PRICING_VERSION": "spec197-restore-b",
 }
 # Preview: só flags inertes. Sem DATABASE_URL/SUPABASE_*/RPG_*_SECRET.
 PREVIEW_LITERALS = {"RPG_RUNTIME_PROFILE": "hosted-supabase", "RPG_BIND_HOST": "0.0.0.0",
                     "RPG_FORCE_MOCK": "1"}
 # SPEC-194: HMAC key for Play obfuscated account ids (>=32 chars). Pushed only when present in the env files.
-OPTIONAL_SECRET_FROM_FILE = ("RPG_PLAY_ACCOUNT_KEY",)
+# SPEC-197 R6 voice: Groq only (no OPENAI_API_KEY => no paid STT fallback candidate).
+OPTIONAL_SECRET_FROM_FILE = ("RPG_PLAY_ACCOUNT_KEY", "GROQ_API_KEY")
 FORBIDDEN_IN_PREVIEW = frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE)
 
 

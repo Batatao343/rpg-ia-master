@@ -165,6 +165,15 @@ def test_compressed_decoder_absence_fails_before_reserve(monkeypatch, tmp_path):
         prepare_audio(b'\x1aE\xdf\xa3' + b'bad', 'audio/webm', tmp_path)
 
 
+def test_missing_ffmpeg_gives_stable_503_code_for_every_compressed_format(monkeypatch, tmp_path):
+    monkeypatch.setenv('RPG_SPEECH_FFMPEG', str(tmp_path / 'absent.exe'))
+    for mime, head in (('audio/webm', bytes([0x1a, 0x45, 0xdf, 0xa3])), ('audio/ogg', b'OggS'),
+                       ('audio/mp4', bytes(4) + b'ftypmp42')):
+        with pytest.raises(SpeechError) as caught:
+            prepare_audio(head + b'bad', mime, tmp_path)
+        assert (caught.value.code, caught.value.status) == ('audio_decoder_unavailable', 503)
+
+
 def test_compressed_decode_ignores_spoofed_metadata_and_bounds_process(monkeypatch, tmp_path):
     def decode(command, **kwargs):
         assert command[1:3] == ['-nostdin', '-v']

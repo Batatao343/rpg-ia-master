@@ -121,3 +121,20 @@ def test_sse_disconnect_exactly_one_turn_predicate():
     from scripts.staging.sse_disconnect import exactly_one_turn
     assert exactly_one_turn(0, 0, 1) and exactly_one_turn(0, 1, 1)
     assert not exactly_one_turn(0, 1, 2) and not exactly_one_turn(0, 0, 0)
+
+
+def test_voice_smoke_synthetic_wav_is_valid_pcm():
+    import io
+    import wave
+    from scripts.staging.voice_smoke import synthetic_wav
+    with wave.open(io.BytesIO(synthetic_wav(1.0)), "rb") as w:
+        assert (w.getnchannels(), w.getsampwidth(), w.getframerate(), w.getnframes()) == (1, 2, 16000, 16000)
+
+
+def test_vercel_env_groq_and_speech_flags_production_only():
+    from scripts.staging.vercel_env import build_env
+    files = {k: "x" for k in ("DATABASE_URL", "SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_SERVICE_ROLE_KEY",
+                              "RPG_SESSION_SECRET", "RPG_CRON_SECRET", "JINA_API_KEY", "GROQ_API_KEY")}
+    prod, prev = build_env(files)
+    assert prod["RPG_SPEECH_ENABLED"] == "1" and "GROQ_API_KEY" in prod and "OPENAI_API_KEY" not in prod
+    assert "GROQ_API_KEY" not in prev and "RPG_SPEECH_ENABLED" not in prev
