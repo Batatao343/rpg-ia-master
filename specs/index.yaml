@@ -3501,3 +3501,725 @@ specs:
   tie_breaker: null
   lineage_ambiguous: false
   lineage_note: Imported approved v5 package; implementation not started
+- id: SPEC-199
+  slug: combate-xp-fora-da-prosa
+  status: draft
+  path: specs/SPEC-199-combate-xp-fora-da-prosa.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-226
+  depends_on_raw:
+  - SPEC-226
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-200
+  slug: latencia-baseline-ttft-ttlt
+  status: draft
+  path: specs/SPEC-200-latencia-baseline-ttft-ttlt.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-201
+  slug: diagnostico-matriz-efeitos-ux
+  status: draft
+  path: specs/SPEC-201-diagnostico-matriz-efeitos-ux.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-202
+  slug: interlocutor-automatico-narrador-npc
+  status: draft
+  path: specs/SPEC-202-interlocutor-automatico-narrador-npc.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-228
+  - SPEC-229
+  - SPEC-230
+  depends_on_raw:
+  - SPEC-228
+  - SPEC-229
+  - SPEC-230
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-203
+  slug: manifesto-encontro-elenco-desfecho
+  status: draft
+  path: specs/SPEC-203-manifesto-encontro-elenco-desfecho.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-199
+  - SPEC-228
+  - SPEC-231
+  depends_on_raw:
+  - SPEC-199
+  - SPEC-228
+  - SPEC-231
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-204
+  slug: shell-chat-contexto-split-abas
+  status: draft
+  path: specs/SPEC-204-shell-chat-contexto-split-abas.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-201
+  - SPEC-235
+  depends_on_raw:
+  - SPEC-201
+  - SPEC-235
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-205
+  slug: combate-gesto-alvo-direto
+  status: draft
+  path: specs/SPEC-205-combate-gesto-alvo-direto.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-199
+  - SPEC-203
+  - SPEC-204
+  - SPEC-232
+  depends_on_raw:
+  - SPEC-199
+  - SPEC-203
+  - SPEC-204
+  - SPEC-232
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-206
+  slug: taxonomia-conhecimento-visivel-jogador
+  status: draft
+  path: specs/SPEC-206-taxonomia-conhecimento-visivel-jogador.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-234
+  depends_on_raw:
+  - SPEC-234
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-207
+  slug: export-sessao-auditoria-beta
+  status: draft
+  path: specs/SPEC-207-export-sessao-auditoria-beta.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-200
+  - SPEC-206
+  - SPEC-228
+  depends_on_raw:
+  - SPEC-200
+  - SPEC-206
+  - SPEC-228
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-208
+  slug: design-system-efeitos-implementacao
+  status: draft
+  path: specs/SPEC-208-design-system-efeitos-implementacao.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-201
+  - SPEC-204
+  - SPEC-205
+  depends_on_raw:
+  - SPEC-201
+  - SPEC-204
+  - SPEC-205
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-209
+  slug: menu-combate-deck-personagem
+  status: draft
+  path: specs/SPEC-209-menu-combate-deck-personagem.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-203
+  - SPEC-204
+  - SPEC-205
+  - SPEC-208
+  - SPEC-227
+  depends_on_raw:
+  - SPEC-203
+  - SPEC-204
+  - SPEC-205
+  - SPEC-208
+  - SPEC-227
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-210
+  slug: menu-mapa-viagem
+  status: draft
+  path: specs/SPEC-210-menu-mapa-viagem.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-204
+  - SPEC-208
+  - SPEC-229
+  - SPEC-233
+  depends_on_raw:
+  - SPEC-204
+  - SPEC-208
+  - SPEC-229
+  - SPEC-233
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-211
+  slug: menu-codex-bestiario-dossies
+  status: draft
+  path: specs/SPEC-211-menu-codex-bestiario-dossies.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-204
+  - SPEC-206
+  - SPEC-208
+  depends_on_raw:
+  - SPEC-204
+  - SPEC-206
+  - SPEC-208
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-212
+  slug: beta-gameplay-gate-desktop
+  status: draft
+  path: specs/SPEC-212-beta-gameplay-gate-desktop.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-199
+  - SPEC-200
+  - SPEC-202
+  - SPEC-203
+  - SPEC-204
+  - SPEC-205
+  - SPEC-206
+  - SPEC-207
+  - SPEC-209
+  - SPEC-210
+  - SPEC-211
+  - SPEC-218
+  - SPEC-219
+  - SPEC-226
+  - SPEC-227
+  - SPEC-228
+  - SPEC-229
+  - SPEC-230
+  - SPEC-231
+  - SPEC-232
+  - SPEC-233
+  - SPEC-234
+  - SPEC-235
+  depends_on_raw:
+  - SPEC-199
+  - SPEC-200
+  - SPEC-202
+  - SPEC-203
+  - SPEC-204
+  - SPEC-205
+  - SPEC-206
+  - SPEC-207
+  - SPEC-209
+  - SPEC-210
+  - SPEC-211
+  - SPEC-218
+  - SPEC-219
+  - SPEC-226
+  - SPEC-227
+  - SPEC-228
+  - SPEC-229
+  - SPEC-230
+  - SPEC-231
+  - SPEC-232
+  - SPEC-233
+  - SPEC-234
+  - SPEC-235
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-213
+  slug: arquivista-projecoes-assincronas
+  status: draft
+  path: specs/SPEC-213-arquivista-projecoes-assincronas.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-200
+  - SPEC-228
+  - SPEC-234
+  depends_on_raw:
+  - SPEC-200
+  - SPEC-228
+  - SPEC-234
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-214
+  slug: memoria-hierarquica-cache-cena
+  status: draft
+  path: specs/SPEC-214-memoria-hierarquica-cache-cena.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-200
+  - SPEC-213
+  - SPEC-234
+  depends_on_raw:
+  - SPEC-200
+  - SPEC-213
+  - SPEC-234
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-215
+  slug: conhecimento-por-npc-propagacao
+  status: draft
+  path: specs/SPEC-215-conhecimento-por-npc-propagacao.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-202
+  - SPEC-206
+  - SPEC-214
+  - SPEC-223
+  - SPEC-230
+  depends_on_raw:
+  - SPEC-202
+  - SPEC-206
+  - SPEC-214
+  - SPEC-223
+  - SPEC-230
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-216
+  slug: mobile-single-pane
+  status: draft
+  path: specs/SPEC-216-mobile-single-pane.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-204
+  - SPEC-205
+  - SPEC-212
+  depends_on_raw:
+  - SPEC-204
+  - SPEC-205
+  - SPEC-212
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-217
+  slug: jev-reavaliacao-condicional
+  status: draft
+  path: specs/SPEC-217-jev-reavaliacao-condicional.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-200
+  - SPEC-214
+  depends_on_raw:
+  - SPEC-200
+  - SPEC-214
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
+- id: SPEC-218
+  slug: fail-closed-perfil-config-hosted
+  status: draft
+  path: specs/SPEC-218-fail-closed-perfil-config-hosted.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from security audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-219
+  slug: cota-por-owner-rate-limit-proxy
+  status: draft
+  path: specs/SPEC-219-cota-por-owner-rate-limit-proxy.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-218
+  depends_on_raw:
+  - SPEC-218
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from security audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-220
+  slug: sessao-logout-lockout-oidc
+  status: draft
+  path: specs/SPEC-220-sessao-logout-lockout-oidc.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from security audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-221
+  slug: superficies-operacionais-headers
+  status: draft
+  path: specs/SPEC-221-superficies-operacionais-headers.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from security audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-222
+  slug: privacidade-lgpd-logs-retencao
+  status: draft
+  path: specs/SPEC-222-privacidade-lgpd-logs-retencao.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from security audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-223
+  slug: llm-autoridade-mecanica-prompt-injection
+  status: draft
+  path: specs/SPEC-223-llm-autoridade-mecanica-prompt-injection.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-226
+  - SPEC-230
+  depends_on_raw:
+  - SPEC-226
+  - SPEC-230
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from security audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-224
+  slug: rls-efetivo-role-minimo-storage
+  status: draft
+  path: specs/SPEC-224-rls-efetivo-role-minimo-storage.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-218
+  depends_on_raw:
+  - SPEC-218
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from security audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-225
+  slug: supply-chain-ci-release-hygiene
+  status: draft
+  path: specs/SPEC-225-supply-chain-ci-release-hygiene.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from security audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-226
+  slug: contabilidade-recompensas-xp
+  status: draft
+  path: specs/SPEC-226-contabilidade-recompensas-xp.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-227
+  slug: economia-inventario-integridade
+  status: draft
+  path: specs/SPEC-227-economia-inventario-integridade.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-228
+  slug: morte-checkpoint-persistencia
+  status: draft
+  path: specs/SPEC-228-morte-checkpoint-persistencia.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-229
+  slug: intencao-viagem-fuga-router
+  status: draft
+  path: specs/SPEC-229-intencao-viagem-fuga-router.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-230
+  slug: npc-ciclo-de-vida-guard
+  status: draft
+  path: specs/SPEC-230-npc-ciclo-de-vida-guard.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-231
+  slug: combate-morte-aliados
+  status: draft
+  path: specs/SPEC-231-combate-morte-aliados.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-232
+  slug: combate-modificadores-passivas-reacoes
+  status: draft
+  path: specs/SPEC-232-combate-modificadores-passivas-reacoes.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-231
+  depends_on_raw:
+  - SPEC-231
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-233
+  slug: mundo-perigo-clima-luz-storyteller
+  status: draft
+  path: specs/SPEC-233-mundo-perigo-clima-luz-storyteller.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-234
+  slug: memoria-rag-arquivista-resiliencia
+  status: draft
+  path: specs/SPEC-234-memoria-rag-arquivista-resiliencia.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-235
+  slug: api-frontend-pending-erros
+  status: draft
+  path: specs/SPEC-235-api-frontend-pending-erros.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-236
+  slug: finops-wallet-jobs-reprocesso
+  status: draft
+  path: specs/SPEC-236-finops-wallet-jobs-reprocesso.md
+  created_commit: null
+  created_at: '2026-10-15'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval

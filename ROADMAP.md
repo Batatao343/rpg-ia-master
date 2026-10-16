@@ -1,5 +1,14 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **15–16/10 — 38 specs `draft` aguardando aprovação (SPEC-199–236); ordem em `proximas-specs/ORDEM_SPECS_2026-10-15.md`.**
+> 199–217 = onda "beta desktop" (pacote `proximas-specs/`, revisada por Opus); 218–225 = auditoria de segurança
+> (1 alta: perfil `legacy` sem auth é o default e `Procfile` escuta 0.0.0.0 → SPEC-218); 226–236 = auditoria de bugs
+> funcionais (21 altas, ex.: ouro infinito vendendo não-empilháveis, XP de abate re-concedido por rodada, buffs/
+> passivas inertes, soft-lock 409 de ação pendente). Relatórios em `proximas-specs/novas-specs/`. Onda 0 urgente:
+> rate cards de imagem/STT vencem em 19/10. Caminho crítico até o gate 212: 226 → 199 → 203 → 205 → 208 → 209 → 212
+> (231 → 232 antes da 205). Cadeia de `SCHEMA_VERSION`: 228 → (227) → 202 → 203 → 207 → 213 → 215. Nenhum código
+> de produto alterado.
+
 > **15/10 — SPEC-196 `done`: FinOps, margin guard e kill switches.** Margem por SKU/canal/versão de preço
 > (gross, taxa de canal, custo variável, contribuição; infra fixa separada), alertas Prometheus sem ids de
 > usuário, rate card ausente/velho bloqueia novo efeito caro (nunca custo zero) e kill switches server-side
