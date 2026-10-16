@@ -51,6 +51,7 @@
         "memory_write",
         "ranking",
         "narrative_claim",
+        "player_knowledge",
         "property",
         "judge"
       ],

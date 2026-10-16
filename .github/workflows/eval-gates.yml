@@ -74,6 +74,7 @@ jobs:
           --suite memory_write --suite memory_retrieval
           --suite context_grounding --suite generation_boundary
           --suite narrative_claims
+          --suite player_knowledge
           --run-id ci-${{ github.run_id }}-${{ github.run_attempt }}
           --output readiness_artifacts/evals
       - uses: actions/upload-artifact@v4
@@ -96,6 +97,7 @@ jobs:
           uv run pytest
           tests/test_eval_state_rules.py tests/test_eval_routing.py
           tests/test_eval_memory_context.py tests/test_eval_narrative_npc.py
+          tests/test_eval_player_knowledge.py
       - run: uv run python -m playtest run --all --turns 3
       - uses: actions/upload-artifact@v4
         if: always()

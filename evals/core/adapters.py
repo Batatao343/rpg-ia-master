@@ -10,6 +10,7 @@ from contextlib import redirect_stdout
 from dataclasses import asdict, dataclass
 import copy
 from io import StringIO
+import json
 import os
 import tempfile
 from typing import Any, Protocol
@@ -640,6 +641,126 @@ class NarrativeClaimAdapter:
         return AdapterOutput(actual=actual)
 
 
+_PLAYER_KNOWLEDGE_KEYS = {
+    "locations": "id",
+    "factions": "id",
+    "characters": "name",
+    "creatures": "id",
+    "secrets": "entity_id",
+}
+
+
+def _apply_codex_mutation(codex: dict[str, Any], mutation: Any) -> None:
+    """Apply one fixture-authored mutation to a projected Codex (oracle probes)."""
+
+    if not isinstance(mutation, dict) or not isinstance(mutation.get("path"), str):
+        raise AdapterError("player_knowledge mutation requires op and path")
+    operation = mutation.get("op")
+    parts = mutation["path"].split(".")
+    parent: Any = codex
+    for part in parts[:-1]:
+        if isinstance(parent, list) and part.isdigit() and int(part) < len(parent):
+            parent = parent[int(part)]
+        elif isinstance(parent, dict) and part in parent:
+            parent = parent[part]
+        else:
+            raise AdapterError(f"mutation path not found: {mutation['path']}")
+    last = parts[-1]
+    if isinstance(parent, list):
+        if not last.isdigit() or int(last) >= len(parent):
+            raise AdapterError(f"mutation path not found: {mutation['path']}")
+        key: Any = int(last)
+    elif isinstance(parent, dict):
+        key = last
+    else:
+        raise AdapterError(f"mutation path not found: {mutation['path']}")
+    value = copy.deepcopy(mutation.get("value"))
+    if operation == "set":
+        parent[key] = value
+    elif operation == "append":
+        target = parent[key] if isinstance(parent, list) or key in parent else None
+        if not isinstance(target, list):
+            raise AdapterError("append mutation requires a list target")
+        target.append(value)
+    elif operation == "delete":
+        if isinstance(parent, dict) and key not in parent:
+            raise AdapterError(f"mutation path not found: {mutation['path']}")
+        del parent[key]
+    else:
+        raise AdapterError(f"unsupported player_knowledge mutation: {operation!r}")
+
+
+class PlayerKnowledgeAdapter:
+    """Observe the player-facing Codex projection and its leak oracle (SPEC-206)."""
+
+    adapter_id = "player_knowledge"
+
+    def execute(self, case: AdapterCase) -> AdapterOutput:
+        if not isinstance(case.input, dict):
+            raise AdapterError("player_knowledge requires object input")
+        operation = str(case.input.get("operation") or "project")
+        state = copy.deepcopy(case.input.get("state"))
+        if not isinstance(state, dict):
+            raise AdapterError("player_knowledge requires input.state object")
+
+        from services.discovery import player_codex
+        from services.player_knowledge import CATEGORIES, assert_no_player_leak
+
+        codex = player_codex(copy.deepcopy(state))
+        if operation == "project":
+            entries: dict[str, dict[str, Any]] = {}
+            notes: dict[str, list[dict[str, Any]]] = {}
+            for category in CATEGORIES:
+                key_field = _PLAYER_KNOWLEDGE_KEYS[category]
+                rows: dict[str, Any] = {}
+                for entry in codex.get(category) or []:
+                    if not isinstance(entry, dict):
+                        raise AdapterError(f"non-object entry in {category}")
+                    key = str(entry.get(key_field) or "")
+                    if not key or key in rows:
+                        raise AdapterError(f"missing or duplicate {category} key: {key!r}")
+                    rows[key] = copy.deepcopy(entry.get("knowledge"))
+                    entry_notes = [
+                        {
+                            "text": note.get("text"),
+                            "knowledge_kind": note.get("knowledge_kind"),
+                            "certainty": note.get("certainty"),
+                            "source_kind": note.get("source_kind"),
+                            "label": note.get("label"),
+                        }
+                        for note in entry.get("notes") or []
+                        if isinstance(note, dict)
+                    ]
+                    if entry_notes:
+                        notes[f"{category}/{key}"] = entry_notes
+                entries[category] = rows
+            meta = codex.get("meta") if isinstance(codex.get("meta"), dict) else {}
+            actual = {
+                "operation": operation,
+                "entries": entries,
+                "notes": notes,
+                "counts": copy.deepcopy(meta.get("counts")),
+                "list_lengths": {
+                    category: len(codex.get(category) or []) for category in CATEGORIES
+                },
+                "redactions": meta.get("redactions"),
+                "oracle_problems": sorted(assert_no_player_leak(codex, state)),
+                "codex_json": json.dumps(codex, ensure_ascii=False, sort_keys=True),
+            }
+            return AdapterOutput(actual=actual)
+        if operation == "oracle_mutation":
+            mutations = case.input.get("mutations")
+            if not isinstance(mutations, list):
+                raise AdapterError("oracle_mutation requires input.mutations list")
+            for mutation in mutations:
+                _apply_codex_mutation(codex, mutation)
+            return AdapterOutput(actual={
+                "operation": operation,
+                "oracle_problems": sorted(assert_no_player_leak(codex, state)),
+            })
+        raise AdapterError(f"unsupported player_knowledge operation: {operation}")
+
+
 class AdapterRegistry:
     """Small explicit suite registry; unknown suites fail closed."""
 
@@ -671,6 +792,7 @@ def default_registry() -> AdapterRegistry:
             "context_grounding": ContextGroundingAdapter(),
             "generation_boundary": GenerationBoundaryAdapter(),
             "narrative_claims": NarrativeClaimAdapter(),
+            "player_knowledge": PlayerKnowledgeAdapter(),
         }
     )
 
@@ -684,6 +806,7 @@ __all__ = [
     "FixtureActualAdapter",
     "PlaytestInvariantsAdapter",
     "NarrativeClaimAdapter",
+    "PlayerKnowledgeAdapter",
     "StateRulesAdapter",
     "RoutingAdapter",
     "MemoryWriteAdapter",

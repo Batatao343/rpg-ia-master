@@ -18,6 +18,7 @@ from evals.evaluators import (
     ExactEvaluator,
     MemoryWriteEvaluator,
     NarrativeClaimEvaluator,
+    PlayerKnowledgeEvaluator,
     ProjectionEvaluator,
     RetrievalEvaluator,
     RoutingEvaluator,
@@ -198,6 +199,46 @@ def _metric_values(
                 else 0.0
                 for case in identity_cases
             )
+    knowledge_cases = [case for case in eligible if case.oracle == "player_knowledge"]
+    projected = [
+        case
+        for case in knowledge_cases
+        if isinstance(case.input, dict) and (case.input.get("operation") or "project") == "project"
+    ]
+    mutated = [
+        case
+        for case in knowledge_cases
+        if isinstance(case.input, dict) and case.input.get("operation") == "oracle_mutation"
+    ]
+
+    def _value(case: EvalCase, name: str, missing: float) -> float:
+        result = result_by_id.get(case.id)
+        return result.metric_values.get(name, missing) if result else missing
+
+    if projected:
+        values["player_knowledge_leak_count"] = sum(
+            _value(case, "player_knowledge_leak_count", 1.0) for case in projected
+        )
+        values["player_knowledge_count_consistency"] = sum(
+            _value(case, "player_knowledge_count_consistency", 0.0) for case in projected
+        ) / len(projected)
+        stamped = [
+            case
+            for case in projected
+            if isinstance(case.expected, dict)
+            and (
+                any((case.expected.get("entries") or {}).get(c) for c in case.expected.get("entries") or {})
+                or bool(case.expected.get("notes"))
+            )
+        ]
+        if stamped:
+            values["player_knowledge_kind_accuracy"] = sum(
+                _value(case, "player_knowledge_kind_accuracy", 0.0) for case in stamped
+            ) / len(stamped)
+    if mutated:
+        values["player_knowledge_oracle_detection"] = sum(
+            _value(case, "player_knowledge_oracle_detection", 0.0) for case in mutated
+        ) / len(mutated)
     return values
 
 
@@ -329,6 +370,7 @@ def run_eval(
         "memory_write": MemoryWriteEvaluator(),
         "ranking": RetrievalEvaluator(),
         "narrative_claim": NarrativeClaimEvaluator(),
+        "player_knowledge": PlayerKnowledgeEvaluator(),
     }
     random_state = random.getstate()
     random.seed(seed)

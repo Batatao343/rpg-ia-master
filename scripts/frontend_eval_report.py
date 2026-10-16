@@ -79,7 +79,7 @@ def measurement_identity(root: Path) -> dict[str, str]:
     package = json.loads((root / "web/package.json").read_text(encoding="utf-8"))
     return {
         "product_sha": os.getenv("GITHUB_SHA") or git.stdout.strip(),
-        "evaluator_version": "1.6.0",
+        "evaluator_version": "1.7.0",
         "metrics_registry_hash": digest(root / "evals/metrics-registry.yaml"),
         "journey_manifest_hash": digest(root / "web/e2e/critical-journeys.yaml"),
         "platform": platform.platform(),

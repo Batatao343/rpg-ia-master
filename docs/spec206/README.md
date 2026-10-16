@@ -1,8 +1,7 @@
 # SPEC-206 — evidência (taxonomia de conhecimento visível ao jogador)
 
-**Status:** `in-progress` — código + testes offline prontos; faltam corpus de eval
-(autoria separada, ver `handoffs/SPEC-206-eval-authoring.md`), revisão Astra e
-screenshots 390/1440 da aba Codex.
+**Status:** `done` — código + testes offline, revisão Astra, screenshots 390/1440 e
+corpus de eval `player_knowledge` (autoria separada) concluídos.
 
 ## O que mudou
 
@@ -90,4 +89,47 @@ Depois (trecho):
   `codex-locations-390.webp`, `codex-characters-390.webp`,
   `codex-locations-1440.webp`, `codex-characters-1440.webp` — selos, notas e
   contagem `meta.counts`, sem overflow horizontal.
-- Gate restante p/ `done`: corpus `player_knowledge` (autoria separada).
+- Gate restante p/ `done`: corpus `player_knowledge` (autoria separada) — atendido abaixo.
+
+## Corpus de eval `player_knowledge` (autoria separada, 2026-10-16)
+
+Régua 1.6.0 → 1.7.0 (oracle novo `player_knowledge`). Arquivos: `evals/core/adapters.py`
+(`PlayerKnowledgeAdapter`), `evals/core/runner.py` (agregação), `evals/core/schemas.py`
+(oracle + versão), `evals/evaluators/player_knowledge.py`, `evals/metrics-registry.yaml`
+(4 métricas), `evals/datasets/regression/player_knowledge.jsonl` (29 casos),
+`evals/manifest.lock.json` + `evals/eval-case.schema.json` (regerados por `lock`),
+`tests/test_eval_player_knowledge.py`, `.github/workflows/eval-gates.yml`,
+versão em `tests/test_ci_eval_gates.py` e `scripts/frontend_eval_report.py`.
+
+Cobertura (20 projeções + 9 mutações do oráculo): local `hidden` sem reveal some
+(id/nome/contagem); NPC com nome de entidade oculta redigido; nota sem âncora visível
+ou citando oculta some; reveal só da entidade mantém nome-assinatura redigido; reveal
+canônico por `target_id` (entidade + segredo) libera como `fact`/`event:…`; ids no
+`payload` do LLM **não** liberam; prosa e `known_secrets` não liberam; `npc_claim`
+repetido segue `report` e boato marcado fica fora das notas; bestiário seen→`rumor`,
+fought→`fact`; NPC mentioned/met/lore; facção sem objetivo (goal vazio) e com intel
+velha (`stale`); assinatura em nota → `PUBLIC_RUMOR`; em `goal` → entrada omitida;
+assinatura sem acento/com quebra de linha redigida; legado → "Relato não verificado";
+save legado em string projeta sem nota; proveniência canônica com/sem fonte; contagem
+multi-categoria; save vazio; oráculo pega ramos a/b/c/d (arte por id, assinatura,
+acento+quebra, contagem, meta ausente, rumor/relato promovido a fato, kind fora da
+taxonomia) e passa limpo no Codex íntegro.
+
+Comandos e resultado:
+
+```
+uv run python -m evals.core.governance lock --root . --dataset <7 datasets regression>
+uv run python -m evals.core.governance check --root .   # eval governance valid: 7 dataset(s)
+uv run python -m evals --root . run --dataset datasets/regression/player_knowledge.jsonl --run-id pk-dev-1
+# passed=true, hard_failures=[]; player_knowledge_leak_count=0.0,
+# player_knowledge_kind_accuracy=1.0, player_knowledge_count_consistency=1.0,
+# player_knowledge_oracle_detection=1.0 (29/29)
+uv run python -m evals run --suite state_rules … --suite narrative_claims --suite player_knowledge
+# (comando do CI) passed=true, hard_failures=[]; métricas das suites antigas inalteradas
+uv run pytest -p no:warnings --ignore=tests/test_project_index.py -q   # exit 0, zero falhas (2026-10-16)
+```
+
+**Publicação:** o diff altera caminhos protegidos (`evals/core`, `evals/evaluators`,
+`evals/datasets/regression`, `evals/manifest.lock.json`, `evals/metrics-registry.yaml`,
+schema gerado); o job `eval-gates` exigirá aprovação do environment `eval-governance`
+pelo dono no PR/push.

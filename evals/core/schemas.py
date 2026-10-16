@@ -10,7 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from evals.core.hashing import case_selection_hash
 
 
-EVALUATOR_VERSION = "1.6.0"
+EVALUATOR_VERSION = "1.7.0"
 
 OracleKind = Literal[
     "exact",
@@ -19,6 +19,7 @@ OracleKind = Literal[
     "memory_write",
     "ranking",
     "narrative_claim",
+    "player_knowledge",
     "property",
     "judge",
 ]

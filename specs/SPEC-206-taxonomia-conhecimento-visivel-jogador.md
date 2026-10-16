@@ -1,6 +1,6 @@
 # SPEC-206 — Taxonomia de conhecimento visível ao jogador
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-234 `done` (mapa segredo↔entidade) · SPEC-007, SPEC-024, SPEC-028, SPEC-085, SPEC-149 e SPEC-171 `done` não reabertas (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-207, SPEC-211, SPEC-212, SPEC-215 (ordem final 2026-10-15)
@@ -337,8 +337,9 @@ archivist e `memory_provenance.commit_memory_facts` → `memory_facts`.
 ## 5. Critérios de aceite
 
 - [x] R1–R14 cobertos pelos testes nomeados na §4.
-- [ ] O corpus `player_knowledge` foi autorado em tarefa separada, travado e
-      passa 100% com zero vazamento.
+- [x] O corpus `player_knowledge` foi autorado em tarefa separada, travado e
+      passa 100% com zero vazamento (29 casos, `evals/datasets/regression/player_knowledge.jsonl`;
+      ver §10 e `docs/spec206/README.md`).
 - [x] O oráculo `assert_no_player_leak` passa em todos os saves-fixture de
       `tests/` que exercitam `/game/codex`.
 - [x] Nenhum arquivo de `evals/` protegido foi alterado pelo implementador
@@ -406,11 +407,16 @@ ele é opt-in, com teto de 10 requests e US$ 0,05.
   (save sintético), lista de arquivos alterados e parecer Astra.
 - Screenshot da aba Codex em 390 e 1440 px.
 
+**Atendido (2026-10-16):** todos os itens acima. Corpus `player_knowledge` com 29
+casos (20 de projeção + 9 de mutação do oráculo) cobre cada item da lista; métricas
+`player_knowledge_leak_count = 0`, `player_knowledge_kind_accuracy = 1.0`,
+`player_knowledge_count_consistency = 1.0`, `player_knowledge_oracle_detection = 1.0`.
+
 ## 10. Registro de execução (2026-10-16)
 
-**Status `in-progress`** — implementação, testes offline, revisão Astra e
-screenshots concluídos; resta **um** gate: o corpus `player_knowledge` (autoria
-separada, `evals/` protegido). Histórico dos três gates originais: (1) corpus `player_knowledge` autorado/travado em
+**Status `done`** — implementação, testes offline, revisão Astra,
+screenshots e o corpus `player_knowledge` (autoria
+separada, `evals/` protegido; registro ao fim desta seção) concluídos. Histórico dos três gates originais: (1) corpus `player_knowledge` autorado/travado em
 tarefa separada (handoff `handoffs/SPEC-206-eval-authoring.md`); (2) revisão Astra
 independente; (3) screenshots 390/1440 da aba Codex (smoke browser §6.4).
 
@@ -456,3 +462,18 @@ fecha R4 (60 entidades ocultas: 59 docs Codex + o Verme); `GameResponse.npcs`/
 (nenhuma é NPC/local/facção jogável) e não foram tocados; `/data/map` inalterado
 (achado SPEC-210 não piora). `meta.redactions` é agregado aprovado por R6.
 Screenshots 390/1440 em `docs/spec206/codex-*.webp`.
+
+**Corpus de eval `player_knowledge` (autoria separada, 2026-10-16) — `done`.**
+Tarefa de autoria separada da implementação (produto em `f623f10` intocado).
+Régua 1.6.0 → **1.7.0**: novo oracle `player_knowledge`, `PlayerKnowledgeAdapter`
+(projeção `services.discovery.player_codex` + oráculo `assert_no_player_leak`, e
+modo `oracle_mutation` que injeta vazamento fixture-authored), evaluator
+`evals/evaluators/player_knowledge.py` (verifica fragmentos proibidos com
+normalização própria NFKD+casefold+espaços, independente do scanner do produto) e
+4 métricas bloqueantes no registry. Dataset travado via
+`python -m evals.core.governance lock`; 29 casos determinísticos, zero LLM/provider.
+Testes known-good/known-bad em `tests/test_eval_player_knowledge.py` (projeção sem
+filtro, reveal por payload, rumor promovido, drift de contagem, oráculo cego, erro de
+adapter). CI: `--suite player_knowledge` + o teste novo em `eval-gates.yml`. Ao
+publicar, o diff toca caminhos protegidos de `evals/` e o CI exige aprovação do
+environment `eval-governance` pelo dono.

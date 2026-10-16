@@ -1,5 +1,5 @@
 schema_version: 1
-evaluator_version: 1.6.0
+evaluator_version: 1.7.0
 metrics:
   exact_match:
     direction: higher
@@ -222,3 +222,44 @@ metrics:
     denominator: judge-eligible NPC samples successfully scored
     exclusions:
       - samples with provider failure or invalid judge schema
+  player_knowledge_leak_count:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: count
+    numerator: projection cases whose product leak oracle is non-empty or whose serialized Codex keeps a fixture-labelled forbidden fragment (accent-folded)
+    denominator: all valid player_knowledge projection cases executed; adapter errors count as one leak
+    exclusions:
+      - oracle_mutation cases, which leak on purpose to probe the oracle
+    hard_limit: 0.0
+  player_knowledge_kind_accuracy:
+    direction: higher
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: sum of per-case ratios of fixture-expected entry and note stamps whose knowledge_kind matches
+    denominator: player_knowledge projection cases with at least one expected entry or note; adapter errors count as zero
+    exclusions:
+      - projection cases whose fixture expects an empty Codex
+      - oracle_mutation cases
+    hard_limit: 1.0
+  player_knowledge_count_consistency:
+    direction: higher
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: projection cases whose meta.counts equals the filtered list length in all five categories
+    denominator: all valid player_knowledge projection cases executed; adapter errors count as zero
+    exclusions:
+      - oracle_mutation cases
+    hard_limit: 1.0
+  player_knowledge_oracle_detection:
+    direction: higher
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: oracle_mutation cases whose product oracle reports exactly the fixture-labelled problem classes
+    denominator: all valid player_knowledge oracle_mutation cases executed; adapter errors count as zero
+    exclusions:
+      - projection cases
+    hard_limit: 1.0
